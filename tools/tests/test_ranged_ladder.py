@@ -270,7 +270,7 @@ class RepoSpecTests(unittest.TestCase):
         s = self.spec
         self.assertEqual(rl.cell("mirkwood", "Bow", 10, s), rl.Cell(speed=108, damage=65, accuracy=99))
         self.assertEqual(rl.cell("mirkwood", "Bow", 9, s).accuracy, 98)
-        self.assertEqual(rl.skill_cell("mirkwood", 10, s), 410)
+        self.assertEqual(rl.skill_cell("mirkwood", 10, s), 320)   # the curve's 260 + 10 * (7 - 1)
         self.assertEqual(rl.cell("rivendell", "Bow", 2, s), rl.Cell(speed=85, damage=46, accuracy=87))
         self.assertEqual(rl.cell("erebor", "Bow", 5, s).damage, rl.cell("rivendell", "Bow", 5, s).damage)
         self.assertEqual(rl.cell("dunland", "Bow", 6, s).speed, 66)
@@ -815,8 +815,8 @@ class RebalanceTroopsAgreementTests(unittest.TestCase):
             recs = {r["id"]: r for r in rbt.process_file(str(path), item_classes={"ladder_rohan_bow_t4": "Bow",
                                                                                   "sword": "OneHanded"})}
         self.assertEqual(recs["rohan_test_archer"]["new"]["Bow"], rl.skill_cell("rohan", 4, spec))
-        self.assertEqual(rl.skill_cell("rohan", 4, spec), 100)                   # 130 + 10 * (7 - 10)
-        self.assertNotEqual(recs["rohan_test_foot"]["new"]["Bow"], 100)         # no launcher: the level curve
+        self.assertEqual(rl.skill_cell("rohan", 4, spec), 88)                    # 100 + 4 * (7 - 10)
+        self.assertNotEqual(recs["rohan_test_foot"]["new"]["Bow"], 88)          # no launcher: the role table
 
     def test_the_iron_hills_nobles_take_their_erebor_cell_in_a_rebaseline(self):
         # Second review (#617): #617 put the noble crossbow line on the Erebor cells (Mike,

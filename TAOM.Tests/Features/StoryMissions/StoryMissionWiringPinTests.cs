@@ -118,9 +118,25 @@ public class StoryMissionWiringPinTests
         // saved decline; the behavior saves nothing, so the verdict is applied in the init the engine runs when the mission returns.
         var offer = Source("Main/Features/StoryMissions/Hooks/StoryOfferBehavior.cs");
 
-        StringAssert.Contains(offer, "() => { if (MapPopupGate.IsMapFreeUnderPopup()) _menus.EnsureMenuOpen(MenuId); }, Later), true, false);");
-        StringAssert.Contains(offer, "OfferCondition, _ => { Decline(); _menus.ExitToLast(); }, isLeave: false, index: 1);");
-        StringAssert.Contains(offer, "private void OnInit(MenuCallbackArgs args) { if (_offer != null && _verdict is { } verdict && _result == null) _result = _service.Apply(_offer, verdict);");
+        StringAssert.Contains(offer, "StoryOfferPopup.Show(offer, () => { if (MapPopupGate.IsMapFreeUnderPopup()) _menus.EnsureMenuOpen(MenuId); }, Later);");
+        StringAssert.Contains(Source("Main/Features/StoryMissions/Hooks/StoryOfferPopup.cs"), "ride, later), true, false);");
+        StringAssert.Contains(offer, "OfferCondition, _ => { Decline(); _menus.ExitToLast(); }, isLeave: false, index: 2);");
+        StringAssert.Contains(offer, "private void OnInit(MenuCallbackArgs args) { if (_offer != null && _verdict is { } verdict && _result == null) _result = _service.Apply(_offer.Window, _side, verdict);");
         StringAssert.Contains(offer, "private void Continue(MenuCallbackArgs args) { Clear(); _menus.ExitToLast(); }");
+    }
+
+    [TestMethod]
+    public void TheStoryOffer_BothSidesAreMissionOptions_AndContinueIsTheOnlyLeave()
+    {
+        // #1326: a menu hotkey runs the first leave option, so neither side nor the saved decline may be one.
+        var offer = Source("Main/Features/StoryMissions/Hooks/StoryOfferBehavior.cs");
+
+        StringAssert.Contains(offer, "a => SideCondition(a, StorySide.Defending), _ => Launch(StorySide.Defending), isLeave: false, index: 0);");
+        StringAssert.Contains(offer, "a => SideCondition(a, StorySide.Attacking), _ => Launch(StorySide.Attacking), isLeave: false, index: 1);");
+        StringAssert.Contains(offer, "var shown = OfferCondition(args) && (side == StorySide.Attacking ? _offer!.Choices.Attack : _offer!.Choices.Defend); args.optionLeaveType = GameMenuOption.LeaveType.Mission;");
+        // A swapped pair would open the defence for "Storm" and apply its held walls as a won attack, which gives the fortress away.
+        StringAssert.Contains(offer, "_side = side; var missionId = side == StorySide.Attacking ? _offer.Window.AttackMissionId : _offer.Window.MissionId;");
+        Assert.AreEqual(1, Regex.Matches(offer, "isLeave: true").Count, "Continue only");
+        StringAssert.Contains(offer, "ContinueCondition, Continue, isLeave: true, index: 3);");
     }
 }

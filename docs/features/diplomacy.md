@@ -67,7 +67,7 @@ WarOfTheRingBehavior --> IWarOfTheRingService.CheckPhaseTransition (both events)
 Harmony Patch11_Diplomacy
   AllianceCampaignBehavior.EndAlliance [Prefix] -> IOnAllianceAction.ShouldPreventAllianceEnd  (+ [diag] log)
   DeclareWarAction.ApplyInternal       [Prefix] -> IOnAllianceAction.ShouldPreventWarDeclaration -> IWarOfTheRingService.GetWarVeto (Permanent first, then WarEnded, then the same-side rule, then the phase rule; a player-caused war skips the phase rule)
-  AllianceCampaignBehavior.StartCallToWarAgreement [Prefix] -> IOnAllianceAction.ShouldPreventWarDeclaration (same veto, before any gold moves)
+  AllianceCampaignBehavior.StartCallToWarAgreement [Prefix, Priority.High] -> IOnAllianceAction.ShouldPreventWarDeclaration (same veto, before any gold moves; High so it runs before Coop's prefix, #1343)
   AllianceCampaignBehavior.OnCallToWarAgreementProposedByPlayerKingdom [Prefix] -> same veto, so a one-clan player kingdom gets no map notice for a refused war
   ProposeCallToWarAgreementDecision.IsAllowed / AcceptCallToWarAgreementDecision.IsAllowed [Prefix] -> same veto, result false, so vanilla cancels the ballot before the player sees it
   MakePeaceAction.ApplyInternal        [Prefix] -> IOnPeaceAction.ShouldPreventPeace
@@ -246,6 +246,10 @@ economy of the bands and needs the maintainer's call first.
 - `GetHeroesForEffectiveRelation` calls `base`, then, when the service is active and one effective hero is the player, puts the OTHER effective hero back to the hero it was asked about, so a relation lands on the lord dealt with instead of his clan leader. AI-to-AI pairs stay vanilla.
 - `GetRelationCostOfDisbandingArmy` returns -(28 to 32) for an army's leader, so the player loses 28 to 32 relation with him (vanilla loses 4). A member keeps vanilla's -1.
 - `GetRelationChangeAfterClanLeaderIsDead` returns 0 for the player when a clan's leader changes (death, a leader changing clan, a member elected king), so an heir keeps the relation he earned himself, instead of inheriting 0.7 of the dead leader's.
+
+### War declaration lines
+
+`DeclareWarAction_ApplyInternal_Patch` writes `[Diplomacy] War declaration allowed: <a> -> <b> (<DeclareWarDetail>)` at INFO for each kingdom war it lets through, and `DiplomacyBehavior` writes `[Diplomacy] Call to war started: <caller> calls <called> against <target>` from the engine's `OnCallToWarAgreementStartedEvent`, which comes after the engine's ally check and before the declaration (#1283). A war between a kingdom and a rebel clan has no line. On a co-op peer that defers to the host, "allowed" means TAOM deferred, not that its rules passed, and a Coop client can log one war twice: once for its own attempt and once when the host's war replays.
 
 ## Configuration
 

@@ -13,13 +13,13 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="53" />
-            <skill id="Riding" value="28" />
-            <skill id="OneHanded" value="85" />
-            <skill id="TwoHanded" value="55" />
-            <skill id="Polearm" value="60" />
-            <skill id="Bow" value="0" />
-            <skill id="Crossbow" value="0" />
+            <skill id="Athletics" value="40" />
+            <skill id="Riding" value="15" />
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="20" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="15" />
             <skill id="Throwing" value="15" />
         </skills>
         <upgrade_targets>
@@ -48,14 +48,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="85" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="110" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="90" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="70" />
+            <skill id="Riding" value="30" />
+            <skill id="OneHanded" value="70" />
+            <skill id="TwoHanded" value="35" />
+            <skill id="Polearm" value="35" />
+            <skill id="Bow" value="30" />
+            <skill id="Crossbow" value="30" />
+            <skill id="Throwing" value="30" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.balcoth_axeman" />
@@ -85,14 +85,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="100" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="145" />
-            <skill id="TwoHanded" value="110" />
-            <skill id="Polearm" value="125" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="40" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.balcoth_veteran_axeman" />
@@ -121,14 +121,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="100" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="110" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="100" />
-            <skill id="Bow" value="130" />
-            <skill id="Crossbow" value="20" />
-            <skill id="Throwing" value="35" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="40" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.wainrider_veteran_archer" />
@@ -171,13 +171,13 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="130" />
-            <skill id="Riding" value="218" />
-            <skill id="OneHanded" value="140" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="125" />
-            <skill id="Bow" value="170" />
-            <skill id="Crossbow" value="20" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="140" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="65" />
+            <skill id="Bow" value="130" />
+            <skill id="Crossbow" value="50" />
             <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets>
@@ -211,13 +211,13 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="150" />
-            <skill id="Riding" value="273" />
-            <skill id="OneHanded" value="180" />
-            <skill id="TwoHanded" value="95" />
-            <skill id="Polearm" value="155" />
-            <skill id="Bow" value="205" />
-            <skill id="Crossbow" value="20" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="170" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="80" />
+            <skill id="Bow" value="156" />
+            <skill id="Crossbow" value="60" />
             <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets />
@@ -249,14 +249,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="38" />
-            <skill id="OneHanded" value="185" />
-            <skill id="TwoHanded" value="160" />
-            <skill id="Polearm" value="170" />
-            <skill id="Bow" value="10" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="50" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="65" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="115" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -284,14 +284,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="110" />
-            <skill id="Riding" value="38" />
-            <skill id="OneHanded" value="140" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="110" />
-            <skill id="Bow" value="170" />
-            <skill id="Crossbow" value="25" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="50" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="65" />
+            <skill id="Bow" value="130" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.wainrider_wind_arrow_sharpshooter" />
@@ -322,14 +322,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="120" />
-            <skill id="Riding" value="43" />
-            <skill id="OneHanded" value="165" />
-            <skill id="TwoHanded" value="100" />
-            <skill id="Polearm" value="115" />
-            <skill id="Bow" value="205" />
-            <skill id="Crossbow" value="30" />
-            <skill id="Throwing" value="55" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="60" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="80" />
+            <skill id="Bow" value="156" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -360,13 +360,13 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="53" />
-            <skill id="Riding" value="28" />
-            <skill id="OneHanded" value="85" />
-            <skill id="TwoHanded" value="55" />
-            <skill id="Polearm" value="60" />
-            <skill id="Bow" value="0" />
-            <skill id="Crossbow" value="0" />
+            <skill id="Athletics" value="40" />
+            <skill id="Riding" value="15" />
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="20" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="15" />
             <skill id="Throwing" value="15" />
         </skills>
         <upgrade_targets>
@@ -397,14 +397,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="85" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="110" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="90" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="70" />
+            <skill id="Riding" value="30" />
+            <skill id="OneHanded" value="70" />
+            <skill id="TwoHanded" value="35" />
+            <skill id="Polearm" value="35" />
+            <skill id="Bow" value="30" />
+            <skill id="Crossbow" value="30" />
+            <skill id="Throwing" value="30" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.far_rhun_infantry" />
@@ -433,14 +433,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="90" />
-            <skill id="Riding" value="113" />
-            <skill id="OneHanded" value="85" />
-            <skill id="TwoHanded" value="55" />
-            <skill id="Polearm" value="115" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="20" />
+            <skill id="Athletics" value="40" />
+            <skill id="Riding" value="75" />
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="35" />
+            <skill id="Polearm" value="75" />
+            <skill id="Bow" value="30" />
+            <skill id="Crossbow" value="30" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.far_rhun_cavalry" />
@@ -472,14 +472,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="100" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="145" />
-            <skill id="TwoHanded" value="110" />
-            <skill id="Polearm" value="125" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="40" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.far_rhun_gate_guard" />
@@ -508,14 +508,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="138" />
-            <skill id="OneHanded" value="115" />
-            <skill id="TwoHanded" value="60" />
-            <skill id="Polearm" value="160" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="50" />
+            <skill id="Riding" value="110" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.far_rhun_cataphract" />
@@ -548,14 +548,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="138" />
-            <skill id="OneHanded" value="115" />
-            <skill id="TwoHanded" value="60" />
-            <skill id="Polearm" value="160" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="50" />
+            <skill id="Riding" value="110" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -586,14 +586,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="38" />
-            <skill id="OneHanded" value="185" />
-            <skill id="TwoHanded" value="155" />
-            <skill id="Polearm" value="175" />
-            <skill id="Bow" value="10" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="50" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="65" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="115" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.far_rhun_iron_legionary" />
@@ -623,14 +623,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="120" />
-            <skill id="Riding" value="178" />
-            <skill id="OneHanded" value="170" />
-            <skill id="TwoHanded" value="80" />
-            <skill id="Polearm" value="210" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="35" />
+            <skill id="Athletics" value="65" />
+            <skill id="Riding" value="140" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="140" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.far_rhun_iron_cataphract" />
@@ -662,14 +662,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="125" />
-            <skill id="Riding" value="43" />
-            <skill id="OneHanded" value="250" />
-            <skill id="TwoHanded" value="210" />
-            <skill id="Polearm" value="230" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="75" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="60" />
+            <skill id="OneHanded" value="155" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="80" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="135" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -697,14 +697,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="135" />
-            <skill id="Riding" value="228" />
-            <skill id="OneHanded" value="220" />
-            <skill id="TwoHanded" value="100" />
-            <skill id="Polearm" value="265" />
-            <skill id="Bow" value="25" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="80" />
+            <skill id="Riding" value="170" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -736,14 +736,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="65" />
-            <skill id="Riding" value="83" />
-            <skill id="OneHanded" value="75" />
-            <skill id="TwoHanded" value="35" />
-            <skill id="Polearm" value="55" />
-            <skill id="Bow" value="0" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="10" />
+            <skill id="Athletics" value="20" />
+            <skill id="Riding" value="45" />
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="20" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="15" />
+            <skill id="Throwing" value="15" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.kharaghul_rider" />
@@ -773,14 +773,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="90" />
-            <skill id="Riding" value="113" />
-            <skill id="OneHanded" value="80" />
-            <skill id="TwoHanded" value="50" />
-            <skill id="Polearm" value="115" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="20" />
+            <skill id="Athletics" value="35" />
+            <skill id="Riding" value="75" />
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="35" />
+            <skill id="Polearm" value="75" />
+            <skill id="Bow" value="30" />
+            <skill id="Crossbow" value="30" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.kharaghul_raider" />
@@ -813,14 +813,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="138" />
-            <skill id="OneHanded" value="115" />
-            <skill id="TwoHanded" value="60" />
-            <skill id="Polearm" value="160" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="50" />
+            <skill id="Riding" value="110" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="85" />
         </skills>
         <Equipments>
             <EquipmentRoster>
@@ -849,14 +849,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="138" />
-            <skill id="OneHanded" value="115" />
-            <skill id="TwoHanded" value="60" />
-            <skill id="Polearm" value="160" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="50" />
+            <skill id="Riding" value="110" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.kharaghul_nokor" />
@@ -889,14 +889,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="115" />
-            <skill id="Riding" value="168" />
-            <skill id="OneHanded" value="115" />
-            <skill id="TwoHanded" value="55" />
-            <skill id="Polearm" value="115" />
-            <skill id="Bow" value="130" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="40" />
+            <skill id="Athletics" value="50" />
+            <skill id="Riding" value="110" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="75" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.kharaghul_horse_archer" />
@@ -928,14 +928,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="130" />
-            <skill id="Riding" value="218" />
-            <skill id="OneHanded" value="140" />
-            <skill id="TwoHanded" value="75" />
-            <skill id="Polearm" value="125" />
-            <skill id="Bow" value="170" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="50" />
+            <skill id="Athletics" value="65" />
+            <skill id="Riding" value="140" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="75" />
+            <skill id="Bow" value="130" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.kharaghul_keshig" />
@@ -968,14 +968,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="135" />
-            <skill id="Riding" value="228" />
-            <skill id="OneHanded" value="220" />
-            <skill id="TwoHanded" value="100" />
-            <skill id="Polearm" value="265" />
-            <skill id="Bow" value="25" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="80" />
+            <skill id="Riding" value="170" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.kharaghul_ashkur_nokor" />
@@ -1007,13 +1007,13 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="150" />
-            <skill id="Riding" value="273" />
-            <skill id="OneHanded" value="155" />
-            <skill id="TwoHanded" value="95" />
-            <skill id="Polearm" value="180" />
-            <skill id="Bow" value="205" />
-            <skill id="Crossbow" value="20" />
+            <skill id="Athletics" value="80" />
+            <skill id="Riding" value="170" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="140" />
+            <skill id="Bow" value="156" />
+            <skill id="Crossbow" value="60" />
             <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
@@ -1047,14 +1047,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="155" />
-            <skill id="Riding" value="288" />
-            <skill id="OneHanded" value="270" />
-            <skill id="TwoHanded" value="130" />
-            <skill id="Polearm" value="315" />
-            <skill id="Bow" value="35" />
-            <skill id="Crossbow" value="20" />
-            <skill id="Throwing" value="55" />
+            <skill id="Athletics" value="95" />
+            <skill id="Riding" value="200" />
+            <skill id="OneHanded" value="165" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="195" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="75" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -1084,14 +1084,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="165" />
-            <skill id="Riding" value="328" />
-            <skill id="OneHanded" value="215" />
-            <skill id="TwoHanded" value="115" />
-            <skill id="Polearm" value="180" />
-            <skill id="Bow" value="245" />
-            <skill id="Crossbow" value="25" />
-            <skill id="Throwing" value="70" />
+            <skill id="Athletics" value="95" />
+            <skill id="Riding" value="200" />
+            <skill id="OneHanded" value="160" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="140" />
+            <skill id="Bow" value="182" />
+            <skill id="Crossbow" value="75" />
+            <skill id="Throwing" value="75" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -1124,13 +1124,13 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="53" />
-            <skill id="Riding" value="28" />
-            <skill id="OneHanded" value="85" />
-            <skill id="TwoHanded" value="55" />
-            <skill id="Polearm" value="60" />
-            <skill id="Bow" value="0" />
-            <skill id="Crossbow" value="0" />
+            <skill id="Athletics" value="40" />
+            <skill id="Riding" value="15" />
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="20" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="15" />
             <skill id="Throwing" value="15" />
         </skills>
         <upgrade_targets>
@@ -1165,14 +1165,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="85" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="110" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="90" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="70" />
+            <skill id="Riding" value="30" />
+            <skill id="OneHanded" value="70" />
+            <skill id="TwoHanded" value="35" />
+            <skill id="Polearm" value="35" />
+            <skill id="Bow" value="30" />
+            <skill id="Crossbow" value="30" />
+            <skill id="Throwing" value="30" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.sagarun_skirmisher" />
@@ -1207,14 +1207,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="110" />
-            <skill id="Riding" value="38" />
-            <skill id="OneHanded" value="140" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="110" />
-            <skill id="Bow" value="170" />
-            <skill id="Crossbow" value="25" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="50" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="65" />
+            <skill id="Bow" value="130" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.sagarun_marine" />
@@ -1256,14 +1256,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="110" />
-            <skill id="Riding" value="38" />
-            <skill id="OneHanded" value="140" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="110" />
-            <skill id="Bow" value="25" />
-            <skill id="Crossbow" value="170" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="50" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="65" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="130" />
+            <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.sagarun_naffatun" />
@@ -1302,14 +1302,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="125" />
-            <skill id="Riding" value="43" />
-            <skill id="OneHanded" value="250" />
-            <skill id="TwoHanded" value="210" />
-            <skill id="Polearm" value="230" />
-            <skill id="Bow" value="170" />
-            <skill id="Crossbow" value="25" />
-            <skill id="Throwing" value="75" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="60" />
+            <skill id="OneHanded" value="155" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="80" />
+            <skill id="Bow" value="130" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="135" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.sagarun_storm_forged_marine" />
@@ -1349,14 +1349,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="125" />
-            <skill id="Riding" value="43" />
-            <skill id="OneHanded" value="250" />
-            <skill id="TwoHanded" value="210" />
-            <skill id="Polearm" value="230" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="195" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="60" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="80" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="150" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.sagarun_storm_helmed_naffatun" />
@@ -1396,14 +1396,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="120" />
-            <skill id="Riding" value="43" />
-            <skill id="OneHanded" value="165" />
-            <skill id="TwoHanded" value="100" />
-            <skill id="Polearm" value="115" />
-            <skill id="Bow" value="30" />
-            <skill id="Crossbow" value="205" />
-            <skill id="Throwing" value="55" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="60" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="80" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="156" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.sagarun_storm_marked_arbalest" />
@@ -1445,14 +1445,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="145" />
-            <skill id="Riding" value="48" />
-            <skill id="OneHanded" value="290" />
-            <skill id="TwoHanded" value="250" />
-            <skill id="Polearm" value="270" />
-            <skill id="Bow" value="170" />
-            <skill id="Crossbow" value="25" />
-            <skill id="Throwing" value="85" />
+            <skill id="Athletics" value="185" />
+            <skill id="Riding" value="75" />
+            <skill id="OneHanded" value="180" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="90" />
+            <skill id="Bow" value="130" />
+            <skill id="Crossbow" value="75" />
+            <skill id="Throwing" value="160" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -1490,14 +1490,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="145" />
-            <skill id="Riding" value="48" />
-            <skill id="OneHanded" value="290" />
-            <skill id="TwoHanded" value="250" />
-            <skill id="Polearm" value="270" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="235" />
+            <skill id="Athletics" value="185" />
+            <skill id="Riding" value="75" />
+            <skill id="OneHanded" value="165" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="90" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="75" />
+            <skill id="Throwing" value="175" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -1535,14 +1535,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="135" />
-            <skill id="Riding" value="48" />
-            <skill id="OneHanded" value="195" />
-            <skill id="TwoHanded" value="120" />
-            <skill id="Polearm" value="135" />
-            <skill id="Bow" value="40" />
-            <skill id="Crossbow" value="245" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="185" />
+            <skill id="Riding" value="75" />
+            <skill id="OneHanded" value="160" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="90" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="182" />
+            <skill id="Throwing" value="75" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -1584,14 +1584,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="38" />
-            <skill id="Riding" value="23" />
-            <skill id="OneHanded" value="43" />
-            <skill id="TwoHanded" value="18" />
-            <skill id="Polearm" value="28" />
-            <skill id="Bow" value="0" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="5" />
+            <skill id="Athletics" value="20" />
+            <skill id="Riding" value="10" />
+            <skill id="OneHanded" value="20" />
+            <skill id="TwoHanded" value="10" />
+            <skill id="Polearm" value="10" />
+            <skill id="Bow" value="10" />
+            <skill id="Crossbow" value="10" />
+            <skill id="Throwing" value="10" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.easterling_militia" />
@@ -1619,13 +1619,13 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="53" />
-            <skill id="Riding" value="28" />
-            <skill id="OneHanded" value="85" />
-            <skill id="TwoHanded" value="55" />
-            <skill id="Polearm" value="60" />
-            <skill id="Bow" value="0" />
-            <skill id="Crossbow" value="0" />
+            <skill id="Athletics" value="40" />
+            <skill id="Riding" value="15" />
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="20" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="15" />
             <skill id="Throwing" value="15" />
         </skills>
         <upgrade_targets>
@@ -1654,13 +1654,13 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="55" />
-            <skill id="Riding" value="28" />
-            <skill id="OneHanded" value="45" />
-            <skill id="TwoHanded" value="25" />
-            <skill id="Polearm" value="30" />
-            <skill id="Bow" value="55" />
-            <skill id="Crossbow" value="5" />
+            <skill id="Athletics" value="40" />
+            <skill id="Riding" value="15" />
+            <skill id="OneHanded" value="35" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="20" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="15" />
             <skill id="Throwing" value="15" />
         </skills>
         <upgrade_targets>
@@ -1691,14 +1691,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="85" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="110" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="90" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="70" />
+            <skill id="Riding" value="30" />
+            <skill id="OneHanded" value="70" />
+            <skill id="TwoHanded" value="35" />
+            <skill id="Polearm" value="35" />
+            <skill id="Bow" value="30" />
+            <skill id="Crossbow" value="30" />
+            <skill id="Throwing" value="30" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.easterling_swordsman_new" />
@@ -1729,14 +1729,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="90" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="70" />
-            <skill id="TwoHanded" value="45" />
-            <skill id="Polearm" value="60" />
-            <skill id="Bow" value="85" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="70" />
+            <skill id="Riding" value="30" />
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="35" />
+            <skill id="Polearm" value="35" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="30" />
+            <skill id="Throwing" value="30" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.easterling_archer_new" />
@@ -1767,14 +1767,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="100" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="140" />
-            <skill id="TwoHanded" value="110" />
-            <skill id="Polearm" value="130" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="40" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.easterling_veteran_swordsman_new" />
@@ -1803,14 +1803,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="100" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="110" />
-            <skill id="TwoHanded" value="110" />
-            <skill id="Polearm" value="160" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="40" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.easterling_veteran_halberdier_new" />
@@ -1840,14 +1840,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="138" />
-            <skill id="OneHanded" value="115" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="160" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="70" />
+            <skill id="Riding" value="110" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.easterling_veteran_cavalry" />
@@ -1880,14 +1880,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="100" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="100" />
-            <skill id="TwoHanded" value="65" />
-            <skill id="Polearm" value="85" />
-            <skill id="Bow" value="130" />
-            <skill id="Crossbow" value="20" />
-            <skill id="Throwing" value="35" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="40" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.easterling_veteran_archer_new" />
@@ -1918,14 +1918,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="38" />
-            <skill id="OneHanded" value="190" />
-            <skill id="TwoHanded" value="155" />
-            <skill id="Polearm" value="170" />
-            <skill id="Bow" value="10" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="50" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="65" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="115" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -1953,14 +1953,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="38" />
-            <skill id="OneHanded" value="160" />
-            <skill id="TwoHanded" value="155" />
-            <skill id="Polearm" value="200" />
-            <skill id="Bow" value="10" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="50" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="140" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -1988,14 +1988,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="120" />
-            <skill id="Riding" value="178" />
-            <skill id="OneHanded" value="170" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="210" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="35" />
+            <skill id="Athletics" value="70" />
+            <skill id="Riding" value="140" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="140" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -2025,14 +2025,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="110" />
-            <skill id="Riding" value="38" />
-            <skill id="OneHanded" value="140" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="105" />
-            <skill id="Bow" value="170" />
-            <skill id="Crossbow" value="25" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="50" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="65" />
+            <skill id="Bow" value="130" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -2063,14 +2063,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="85" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="110" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="90" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="70" />
+            <skill id="Riding" value="30" />
+            <skill id="OneHanded" value="70" />
+            <skill id="TwoHanded" value="35" />
+            <skill id="Polearm" value="35" />
+            <skill id="Bow" value="30" />
+            <skill id="Crossbow" value="30" />
+            <skill id="Throwing" value="30" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.loke_rim_footman" />
@@ -2100,14 +2100,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="100" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="145" />
-            <skill id="TwoHanded" value="110" />
-            <skill id="Polearm" value="125" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="40" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="95" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.loke_rim_cavalry" />
@@ -2148,14 +2148,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="100" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="110" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="100" />
-            <skill id="Bow" value="130" />
-            <skill id="Crossbow" value="20" />
-            <skill id="Throwing" value="35" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="40" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.loke_rim_archer" />
@@ -2197,14 +2197,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="120" />
-            <skill id="Riding" value="178" />
-            <skill id="OneHanded" value="170" />
-            <skill id="TwoHanded" value="110" />
-            <skill id="Polearm" value="210" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="140" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="140" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.loke_rim_cataphract" />
@@ -2256,14 +2256,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="38" />
-            <skill id="OneHanded" value="185" />
-            <skill id="TwoHanded" value="155" />
-            <skill id="Polearm" value="175" />
-            <skill id="Bow" value="10" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="50" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="125" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.loke_rim_shieldguard" />
@@ -2304,14 +2304,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="110" />
-            <skill id="Riding" value="38" />
-            <skill id="OneHanded" value="140" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="110" />
-            <skill id="Bow" value="170" />
-            <skill id="Crossbow" value="25" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="50" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="65" />
+            <skill id="Bow" value="130" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.loke_rim_marksman" />
@@ -2353,14 +2353,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="135" />
-            <skill id="Riding" value="228" />
-            <skill id="OneHanded" value="220" />
-            <skill id="TwoHanded" value="110" />
-            <skill id="Polearm" value="265" />
-            <skill id="Bow" value="25" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="170" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.loke_rim_gilded_cataphract" />
@@ -2412,14 +2412,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="125" />
-            <skill id="Riding" value="43" />
-            <skill id="OneHanded" value="245" />
-            <skill id="TwoHanded" value="210" />
-            <skill id="Polearm" value="235" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="75" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="60" />
+            <skill id="OneHanded" value="155" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="150" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.loke_rim_gilded_shieldguard" />
@@ -2469,14 +2469,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="125" />
-            <skill id="Riding" value="43" />
-            <skill id="OneHanded" value="230" />
-            <skill id="TwoHanded" value="250" />
-            <skill id="Polearm" value="210" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="75" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="60" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="125" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.loke_rim_gilded_champion" />
@@ -2520,14 +2520,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="120" />
-            <skill id="Riding" value="43" />
-            <skill id="OneHanded" value="165" />
-            <skill id="TwoHanded" value="100" />
-            <skill id="Polearm" value="115" />
-            <skill id="Bow" value="205" />
-            <skill id="Crossbow" value="30" />
-            <skill id="Throwing" value="55" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="60" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="80" />
+            <skill id="Bow" value="156" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.loke_rim_gilded_marksman" />
@@ -2580,14 +2580,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="155" />
-            <skill id="Riding" value="288" />
-            <skill id="OneHanded" value="270" />
-            <skill id="TwoHanded" value="130" />
-            <skill id="Polearm" value="315" />
-            <skill id="Bow" value="35" />
-            <skill id="Crossbow" value="20" />
-            <skill id="Throwing" value="55" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="200" />
+            <skill id="OneHanded" value="165" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="195" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="75" />
+            <skill id="Throwing" value="75" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -2637,14 +2637,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="145" />
-            <skill id="Riding" value="48" />
-            <skill id="OneHanded" value="285" />
-            <skill id="TwoHanded" value="250" />
-            <skill id="Polearm" value="275" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="85" />
+            <skill id="Athletics" value="185" />
+            <skill id="Riding" value="75" />
+            <skill id="OneHanded" value="180" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="175" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="75" />
+            <skill id="Throwing" value="75" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -2692,14 +2692,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="145" />
-            <skill id="Riding" value="48" />
-            <skill id="OneHanded" value="270" />
-            <skill id="TwoHanded" value="290" />
-            <skill id="Polearm" value="250" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="85" />
+            <skill id="Athletics" value="185" />
+            <skill id="Riding" value="75" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="125" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="75" />
+            <skill id="Throwing" value="75" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -2741,14 +2741,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="135" />
-            <skill id="Riding" value="48" />
-            <skill id="OneHanded" value="195" />
-            <skill id="TwoHanded" value="120" />
-            <skill id="Polearm" value="135" />
-            <skill id="Bow" value="245" />
-            <skill id="Crossbow" value="40" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="185" />
+            <skill id="Riding" value="75" />
+            <skill id="OneHanded" value="160" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="90" />
+            <skill id="Bow" value="182" />
+            <skill id="Crossbow" value="75" />
+            <skill id="Throwing" value="75" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -2790,14 +2790,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="100" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="145" />
-            <skill id="TwoHanded" value="110" />
-            <skill id="Polearm" value="125" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="40" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dragon_wrath_disciple" />
@@ -2827,14 +2827,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="125" />
-            <skill id="Riding" value="43" />
-            <skill id="OneHanded" value="250" />
-            <skill id="TwoHanded" value="210" />
-            <skill id="Polearm" value="230" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="75" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="60" />
+            <skill id="OneHanded" value="155" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="150" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dragon_wrath_lancer" />
@@ -2875,14 +2875,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="120" />
-            <skill id="Riding" value="43" />
-            <skill id="OneHanded" value="165" />
-            <skill id="TwoHanded" value="110" />
-            <skill id="Polearm" value="145" />
-            <skill id="Bow" value="205" />
-            <skill id="Crossbow" value="30" />
-            <skill id="Throwing" value="55" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="60" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="80" />
+            <skill id="Bow" value="156" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dragon_wrath_longbowman" />
@@ -2924,13 +2924,13 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="155" />
-            <skill id="Riding" value="288" />
-            <skill id="OneHanded" value="255" />
-            <skill id="TwoHanded" value="210" />
-            <skill id="Polearm" value="330" />
-            <skill id="Bow" value="35" />
-            <skill id="Crossbow" value="20" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="200" />
+            <skill id="OneHanded" value="165" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="195" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="75" />
             <skill id="Throwing" value="75" />
         </skills>
         <upgrade_targets>
@@ -2973,14 +2973,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="145" />
-            <skill id="Riding" value="48" />
-            <skill id="OneHanded" value="290" />
-            <skill id="TwoHanded" value="250" />
-            <skill id="Polearm" value="270" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="85" />
+            <skill id="Athletics" value="185" />
+            <skill id="Riding" value="75" />
+            <skill id="OneHanded" value="180" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="175" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="75" />
+            <skill id="Throwing" value="75" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dragon_wrath_ash_shieldguard" />
@@ -3021,14 +3021,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="135" />
-            <skill id="Riding" value="48" />
-            <skill id="OneHanded" value="195" />
-            <skill id="TwoHanded" value="120" />
-            <skill id="Polearm" value="145" />
-            <skill id="Bow" value="245" />
-            <skill id="Crossbow" value="40" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="185" />
+            <skill id="Riding" value="75" />
+            <skill id="OneHanded" value="160" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="90" />
+            <skill id="Bow" value="182" />
+            <skill id="Crossbow" value="75" />
+            <skill id="Throwing" value="75" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dragon_wrath_ash_marksman" />
@@ -3070,14 +3070,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="175" />
-            <skill id="Riding" value="338" />
-            <skill id="OneHanded" value="310" />
-            <skill id="TwoHanded" value="210" />
-            <skill id="Polearm" value="355" />
-            <skill id="Bow" value="40" />
-            <skill id="Crossbow" value="25" />
-            <skill id="Throwing" value="75" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="225" />
+            <skill id="OneHanded" value="185" />
+            <skill id="TwoHanded" value="105" />
+            <skill id="Polearm" value="225" />
+            <skill id="Bow" value="85" />
+            <skill id="Crossbow" value="85" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dragon_wrath_obsidian_knight" />
@@ -3129,14 +3129,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="165" />
-            <skill id="Riding" value="53" />
-            <skill id="OneHanded" value="325" />
-            <skill id="TwoHanded" value="290" />
-            <skill id="Polearm" value="310" />
-            <skill id="Bow" value="25" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="95" />
+            <skill id="Athletics" value="215" />
+            <skill id="Riding" value="85" />
+            <skill id="OneHanded" value="210" />
+            <skill id="TwoHanded" value="105" />
+            <skill id="Polearm" value="200" />
+            <skill id="Bow" value="85" />
+            <skill id="Crossbow" value="85" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dragon_wrath_obsidian_shieldmaster" />
@@ -3186,14 +3186,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="165" />
-            <skill id="Riding" value="53" />
-            <skill id="OneHanded" value="310" />
-            <skill id="TwoHanded" value="325" />
-            <skill id="Polearm" value="290" />
-            <skill id="Bow" value="25" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="95" />
+            <skill id="Athletics" value="215" />
+            <skill id="Riding" value="85" />
+            <skill id="OneHanded" value="180" />
+            <skill id="TwoHanded" value="210" />
+            <skill id="Polearm" value="175" />
+            <skill id="Bow" value="85" />
+            <skill id="Crossbow" value="85" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dragon_wrath_obsidian_war_reaver" />
@@ -3229,14 +3229,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="155" />
-            <skill id="Riding" value="53" />
-            <skill id="OneHanded" value="220" />
-            <skill id="TwoHanded" value="140" />
-            <skill id="Polearm" value="155" />
-            <skill id="Bow" value="280" />
-            <skill id="Crossbow" value="45" />
-            <skill id="Throwing" value="75" />
+            <skill id="Athletics" value="215" />
+            <skill id="Riding" value="85" />
+            <skill id="OneHanded" value="185" />
+            <skill id="TwoHanded" value="105" />
+            <skill id="Polearm" value="105" />
+            <skill id="Bow" value="208" />
+            <skill id="Crossbow" value="85" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dragon_wrath_obsidian_warbow" />
@@ -3278,14 +3278,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="190" />
-            <skill id="Riding" value="378" />
-            <skill id="OneHanded" value="340" />
-            <skill id="TwoHanded" value="210" />
-            <skill id="Polearm" value="385" />
-            <skill id="Bow" value="45" />
-            <skill id="Crossbow" value="30" />
-            <skill id="Throwing" value="75" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="255" />
+            <skill id="OneHanded" value="210" />
+            <skill id="TwoHanded" value="115" />
+            <skill id="Polearm" value="255" />
+            <skill id="Bow" value="95" />
+            <skill id="Crossbow" value="95" />
+            <skill id="Throwing" value="95" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -3335,13 +3335,13 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="180" />
-            <skill id="Riding" value="58" />
-            <skill id="OneHanded" value="345" />
-            <skill id="TwoHanded" value="310" />
-            <skill id="Polearm" value="330" />
-            <skill id="Bow" value="30" />
-            <skill id="Crossbow" value="20" />
+            <skill id="Athletics" value="240" />
+            <skill id="Riding" value="95" />
+            <skill id="OneHanded" value="235" />
+            <skill id="TwoHanded" value="115" />
+            <skill id="Polearm" value="225" />
+            <skill id="Bow" value="95" />
+            <skill id="Crossbow" value="95" />
             <skill id="Throwing" value="95" />
         </skills>
         <upgrade_targets />
@@ -3390,13 +3390,13 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="180" />
-            <skill id="Riding" value="58" />
-            <skill id="OneHanded" value="315" />
-            <skill id="TwoHanded" value="345" />
-            <skill id="Polearm" value="325" />
-            <skill id="Bow" value="30" />
-            <skill id="Crossbow" value="20" />
+            <skill id="Athletics" value="240" />
+            <skill id="Riding" value="95" />
+            <skill id="OneHanded" value="180" />
+            <skill id="TwoHanded" value="235" />
+            <skill id="Polearm" value="175" />
+            <skill id="Bow" value="95" />
+            <skill id="Crossbow" value="95" />
             <skill id="Throwing" value="95" />
         </skills>
         <upgrade_targets />
@@ -3431,14 +3431,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="170" />
-            <skill id="Riding" value="58" />
-            <skill id="OneHanded" value="240" />
-            <skill id="TwoHanded" value="160" />
-            <skill id="Polearm" value="175" />
-            <skill id="Bow" value="300" />
-            <skill id="Crossbow" value="50" />
-            <skill id="Throwing" value="75" />
+            <skill id="Athletics" value="240" />
+            <skill id="Riding" value="95" />
+            <skill id="OneHanded" value="210" />
+            <skill id="TwoHanded" value="115" />
+            <skill id="Polearm" value="115" />
+            <skill id="Bow" value="234" />
+            <skill id="Crossbow" value="95" />
+            <skill id="Throwing" value="95" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -3487,14 +3487,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="85" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="90" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="110" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="70" />
+            <skill id="Riding" value="30" />
+            <skill id="OneHanded" value="65" />
+            <skill id="TwoHanded" value="35" />
+            <skill id="Polearm" value="75" />
+            <skill id="Bow" value="30" />
+            <skill id="Crossbow" value="30" />
+            <skill id="Throwing" value="30" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.wain_footman" />
@@ -3522,14 +3522,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="100" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="125" />
-            <skill id="TwoHanded" value="110" />
-            <skill id="Polearm" value="145" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="40" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.wain_glaiveman" />
@@ -3560,14 +3560,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="38" />
-            <skill id="OneHanded" value="160" />
-            <skill id="TwoHanded" value="155" />
-            <skill id="Polearm" value="200" />
-            <skill id="Bow" value="10" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="50" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="140" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.wain_iron_glaive" />
@@ -3597,14 +3597,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="120" />
-            <skill id="Riding" value="178" />
-            <skill id="OneHanded" value="170" />
-            <skill id="TwoHanded" value="110" />
-            <skill id="Polearm" value="210" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="140" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="140" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.wainrider_cavalry" />
@@ -3636,14 +3636,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="125" />
-            <skill id="Riding" value="43" />
-            <skill id="OneHanded" value="215" />
-            <skill id="TwoHanded" value="210" />
-            <skill id="Polearm" value="265" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="75" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="60" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.wain_darkhan" />
@@ -3672,14 +3672,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="135" />
-            <skill id="Riding" value="228" />
-            <skill id="OneHanded" value="220" />
-            <skill id="TwoHanded" value="110" />
-            <skill id="Polearm" value="265" />
-            <skill id="Bow" value="25" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="170" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.wainrider_khans_chosen" />
@@ -3712,14 +3712,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="145" />
-            <skill id="Riding" value="48" />
-            <skill id="OneHanded" value="270" />
-            <skill id="TwoHanded" value="250" />
-            <skill id="Polearm" value="290" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="85" />
+            <skill id="Athletics" value="185" />
+            <skill id="Riding" value="75" />
+            <skill id="OneHanded" value="165" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="195" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="75" />
+            <skill id="Throwing" value="160" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -3747,14 +3747,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="175" />
-            <skill id="Riding" value="338" />
-            <skill id="OneHanded" value="310" />
-            <skill id="TwoHanded" value="160" />
-            <skill id="Polearm" value="355" />
-            <skill id="Bow" value="40" />
-            <skill id="Crossbow" value="25" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="225" />
+            <skill id="OneHanded" value="185" />
+            <skill id="TwoHanded" value="105" />
+            <skill id="Polearm" value="225" />
+            <skill id="Bow" value="85" />
+            <skill id="Crossbow" value="85" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -3783,14 +3783,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="175" />
-            <skill id="Riding" value="338" />
-            <skill id="OneHanded" value="310" />
-            <skill id="TwoHanded" value="160" />
-            <skill id="Polearm" value="355" />
-            <skill id="Bow" value="40" />
-            <skill id="Crossbow" value="25" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="225" />
+            <skill id="OneHanded" value="185" />
+            <skill id="TwoHanded" value="105" />
+            <skill id="Polearm" value="225" />
+            <skill id="Bow" value="85" />
+            <skill id="Crossbow" value="85" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.wainrider_warlord_chariot" />
@@ -3823,14 +3823,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="190" />
-            <skill id="Riding" value="378" />
-            <skill id="OneHanded" value="340" />
-            <skill id="TwoHanded" value="180" />
-            <skill id="Polearm" value="385" />
-            <skill id="Bow" value="45" />
-            <skill id="Crossbow" value="30" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="120" />
+            <skill id="Riding" value="255" />
+            <skill id="OneHanded" value="185" />
+            <skill id="TwoHanded" value="115" />
+            <skill id="Polearm" value="255" />
+            <skill id="Bow" value="95" />
+            <skill id="Crossbow" value="95" />
+            <skill id="Throwing" value="95" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -3862,14 +3862,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="100" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="110" />
-            <skill id="TwoHanded" value="110" />
-            <skill id="Polearm" value="160" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="40" />
+            <skill id="OneHanded" value="50" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.rhun_militia_veteran_spearman" />
@@ -3905,14 +3905,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="100" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="100" />
-            <skill id="TwoHanded" value="65" />
-            <skill id="Polearm" value="85" />
-            <skill id="Bow" value="55" />
-            <skill id="Crossbow" value="20" />
-            <skill id="Throwing" value="35" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="40" />
+            <skill id="OneHanded" value="35" />
+            <skill id="TwoHanded" value="35" />
+            <skill id="Polearm" value="35" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.rhun_militia_veteran_archer" />
@@ -3951,13 +3951,13 @@
         </face>
         <skills>
             <skill id="Athletics" value="115" />
-            <skill id="Riding" value="48" />
-            <skill id="OneHanded" value="125" />
-            <skill id="TwoHanded" value="125" />
-            <skill id="Polearm" value="175" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="60" />
+            <skill id="Riding" value="50" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="60" />
+            <skill id="Polearm" value="120" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -3986,12 +3986,12 @@
         </face>
         <skills>
             <skill id="Athletics" value="115" />
-            <skill id="Riding" value="48" />
-            <skill id="OneHanded" value="115" />
-            <skill id="TwoHanded" value="80" />
-            <skill id="Polearm" value="100" />
-            <skill id="Bow" value="85" />
-            <skill id="Crossbow" value="35" />
+            <skill id="Riding" value="50" />
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="60" />
+            <skill id="Polearm" value="60" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
             <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets />
@@ -4025,13 +4025,13 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="53" />
-            <skill id="Riding" value="28" />
-            <skill id="OneHanded" value="85" />
-            <skill id="TwoHanded" value="55" />
-            <skill id="Polearm" value="60" />
-            <skill id="Bow" value="0" />
-            <skill id="Crossbow" value="0" />
+            <skill id="Athletics" value="40" />
+            <skill id="Riding" value="15" />
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="20" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="15" />
             <skill id="Throwing" value="15" />
         </skills>
         <upgrade_targets>
@@ -4059,14 +4059,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="85" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="110" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="90" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="70" />
+            <skill id="Riding" value="30" />
+            <skill id="OneHanded" value="70" />
+            <skill id="TwoHanded" value="35" />
+            <skill id="Polearm" value="35" />
+            <skill id="Bow" value="30" />
+            <skill id="Crossbow" value="30" />
+            <skill id="Throwing" value="30" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.black_sun_raider" />
@@ -4096,14 +4096,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="100" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="145" />
-            <skill id="TwoHanded" value="110" />
-            <skill id="Polearm" value="125" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="40" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.black_sun_reaver" />
@@ -4132,14 +4132,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="100" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="110" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="100" />
-            <skill id="Bow" value="130" />
-            <skill id="Crossbow" value="20" />
-            <skill id="Throwing" value="35" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="40" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.black_sun_archer" />
@@ -4171,14 +4171,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="38" />
-            <skill id="OneHanded" value="185" />
-            <skill id="TwoHanded" value="160" />
-            <skill id="Polearm" value="170" />
-            <skill id="Bow" value="10" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="50" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="65" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.black_sun_executioner" />
@@ -4207,14 +4207,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="110" />
-            <skill id="Riding" value="38" />
-            <skill id="OneHanded" value="140" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="110" />
-            <skill id="Bow" value="170" />
-            <skill id="Crossbow" value="25" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="50" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="65" />
+            <skill id="Bow" value="130" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.black_sun_longbowman" />
@@ -4246,14 +4246,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="125" />
-            <skill id="Riding" value="43" />
-            <skill id="OneHanded" value="230" />
-            <skill id="TwoHanded" value="250" />
-            <skill id="Polearm" value="210" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="75" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="60" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="80" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.black_sun_scourge" />
@@ -4282,14 +4282,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="120" />
-            <skill id="Riding" value="43" />
-            <skill id="OneHanded" value="165" />
-            <skill id="TwoHanded" value="100" />
-            <skill id="Polearm" value="115" />
-            <skill id="Bow" value="205" />
-            <skill id="Crossbow" value="30" />
-            <skill id="Throwing" value="55" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="60" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="80" />
+            <skill id="Bow" value="156" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.black_sun_marksman" />
@@ -4321,14 +4321,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="145" />
-            <skill id="Riding" value="48" />
-            <skill id="OneHanded" value="270" />
-            <skill id="TwoHanded" value="290" />
-            <skill id="Polearm" value="250" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="85" />
+            <skill id="Athletics" value="185" />
+            <skill id="Riding" value="75" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="90" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="75" />
+            <skill id="Throwing" value="75" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -4355,14 +4355,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="135" />
-            <skill id="Riding" value="48" />
-            <skill id="OneHanded" value="195" />
-            <skill id="TwoHanded" value="120" />
-            <skill id="Polearm" value="135" />
-            <skill id="Bow" value="245" />
-            <skill id="Crossbow" value="40" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="185" />
+            <skill id="Riding" value="75" />
+            <skill id="OneHanded" value="160" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="90" />
+            <skill id="Bow" value="182" />
+            <skill id="Crossbow" value="75" />
+            <skill id="Throwing" value="75" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.black_sun_chosen_marksman" />
@@ -4394,14 +4394,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="155" />
-            <skill id="Riding" value="53" />
-            <skill id="OneHanded" value="220" />
-            <skill id="TwoHanded" value="140" />
-            <skill id="Polearm" value="155" />
-            <skill id="Bow" value="280" />
-            <skill id="Crossbow" value="45" />
-            <skill id="Throwing" value="75" />
+            <skill id="Athletics" value="215" />
+            <skill id="Riding" value="85" />
+            <skill id="OneHanded" value="185" />
+            <skill id="TwoHanded" value="105" />
+            <skill id="Polearm" value="105" />
+            <skill id="Bow" value="208" />
+            <skill id="Crossbow" value="85" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -4435,13 +4435,13 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="53" />
-            <skill id="Riding" value="28" />
-            <skill id="OneHanded" value="85" />
-            <skill id="TwoHanded" value="55" />
-            <skill id="Polearm" value="60" />
-            <skill id="Bow" value="0" />
-            <skill id="Crossbow" value="0" />
+            <skill id="Athletics" value="40" />
+            <skill id="Riding" value="15" />
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="20" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="15" />
             <skill id="Throwing" value="15" />
         </skills>
         <upgrade_targets>
@@ -4469,14 +4469,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="85" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="110" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="90" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="70" />
+            <skill id="Riding" value="30" />
+            <skill id="OneHanded" value="70" />
+            <skill id="TwoHanded" value="35" />
+            <skill id="Polearm" value="35" />
+            <skill id="Bow" value="30" />
+            <skill id="Crossbow" value="30" />
+            <skill id="Throwing" value="30" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.darkhun_infantry" />
@@ -4506,14 +4506,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="100" />
-            <skill id="Riding" value="33" />
-            <skill id="OneHanded" value="145" />
-            <skill id="TwoHanded" value="110" />
-            <skill id="Polearm" value="125" />
-            <skill id="Bow" value="5" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="40" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="95" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.darkhun_veteran_infantry" />
@@ -4544,14 +4544,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="138" />
-            <skill id="OneHanded" value="115" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="160" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="70" />
+            <skill id="Riding" value="110" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.darkhun_cavalry" />
@@ -4584,14 +4584,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="105" />
-            <skill id="Riding" value="38" />
-            <skill id="OneHanded" value="185" />
-            <skill id="TwoHanded" value="155" />
-            <skill id="Polearm" value="175" />
-            <skill id="Bow" value="10" />
-            <skill id="Crossbow" value="5" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="50" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="125" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.darkhun_guard" />
@@ -4622,14 +4622,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="120" />
-            <skill id="Riding" value="178" />
-            <skill id="OneHanded" value="170" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="210" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="35" />
+            <skill id="Athletics" value="70" />
+            <skill id="Riding" value="140" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="140" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.darkhun_veteran_cavalry" />
@@ -4662,14 +4662,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="125" />
-            <skill id="Riding" value="43" />
-            <skill id="OneHanded" value="250" />
-            <skill id="TwoHanded" value="210" />
-            <skill id="Polearm" value="230" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="75" />
+            <skill id="Athletics" value="160" />
+            <skill id="Riding" value="60" />
+            <skill id="OneHanded" value="155" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="150" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.darkhun_ironbound" />
@@ -4700,14 +4700,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="135" />
-            <skill id="Riding" value="228" />
-            <skill id="OneHanded" value="220" />
-            <skill id="TwoHanded" value="100" />
-            <skill id="Polearm" value="265" />
-            <skill id="Bow" value="25" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="45" />
+            <skill id="Athletics" value="80" />
+            <skill id="Riding" value="170" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="60" />
+            <skill id="Crossbow" value="60" />
+            <skill id="Throwing" value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.darkhun_knight" />
@@ -4740,14 +4740,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="145" />
-            <skill id="Riding" value="48" />
-            <skill id="OneHanded" value="290" />
-            <skill id="TwoHanded" value="250" />
-            <skill id="Polearm" value="270" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="85" />
+            <skill id="Athletics" value="185" />
+            <skill id="Riding" value="75" />
+            <skill id="OneHanded" value="180" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="175" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="75" />
+            <skill id="Throwing" value="75" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -4776,14 +4776,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="155" />
-            <skill id="Riding" value="288" />
-            <skill id="OneHanded" value="270" />
-            <skill id="TwoHanded" value="130" />
-            <skill id="Polearm" value="315" />
-            <skill id="Bow" value="35" />
-            <skill id="Crossbow" value="20" />
-            <skill id="Throwing" value="55" />
+            <skill id="Athletics" value="95" />
+            <skill id="Riding" value="200" />
+            <skill id="OneHanded" value="165" />
+            <skill id="TwoHanded" value="90" />
+            <skill id="Polearm" value="195" />
+            <skill id="Bow" value="75" />
+            <skill id="Crossbow" value="75" />
+            <skill id="Throwing" value="75" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.darkhun_cultist_knight" />
@@ -4816,14 +4816,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="175" />
-            <skill id="Riding" value="338" />
-            <skill id="OneHanded" value="310" />
-            <skill id="TwoHanded" value="160" />
-            <skill id="Polearm" value="355" />
-            <skill id="Bow" value="40" />
-            <skill id="Crossbow" value="25" />
-            <skill id="Throwing" value="65" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="225" />
+            <skill id="OneHanded" value="185" />
+            <skill id="TwoHanded" value="105" />
+            <skill id="Polearm" value="225" />
+            <skill id="Bow" value="85" />
+            <skill id="Crossbow" value="85" />
+            <skill id="Throwing" value="85" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -4854,14 +4854,14 @@
             <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
-            <skill id="Athletics" value="120" />
-            <skill id="Riding" value="178" />
-            <skill id="OneHanded" value="170" />
-            <skill id="TwoHanded" value="80" />
-            <skill id="Polearm" value="210" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="10" />
-            <skill id="Throwing" value="35" />
+            <skill id="Athletics" value="65" />
+            <skill id="Riding" value="140" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="140" />
+            <skill id="Bow" value="50" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.kharaghul_nokor" />

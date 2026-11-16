@@ -45,7 +45,7 @@ internal static class CheatMenuMenus
         Option(starter, CheatMenuIds.Root, "taom_cheat_opt_troops", "{=taom_cheat_opt_troops}Troops...", i++,
             Shown, () => GameMenu.SwitchToMenu(CheatMenuIds.Troops));
         Option(starter, CheatMenuIds.Root, "taom_cheat_opt_relation", "{=taom_cheat_opt_relation}Relations: +20 with every lord of a kingdom...", i++,
-            Shown, () => Pick("{=taom_cheat_pick_kingdom}Choose a kingdom", world.Kingdoms(),
+            Shown, () => Pick("taom_cheat_opt_relation", "{=taom_cheat_pick_kingdom}Choose a kingdom", world.Kingdoms(),
                 id => CheatMenuTexts.Show(service.AddRelation(id, RelationStep))));
         Option(starter, CheatMenuIds.Root, "taom_cheat_opt_heal", "{=taom_cheat_opt_heal}Heal your party and your heroes", i++,
             Shown, () => CheatMenuTexts.Show(service.Heal()));
@@ -64,7 +64,7 @@ internal static class CheatMenuMenus
         {
             var k = kind;
             Option(starter, CheatMenuIds.Teleport, id, label, i++, Shown,
-                () => Pick("{=taom_cheat_pick_settlement}Choose where to teleport", world.Settlements(k), TeleportTo(service)));
+                () => Pick(id, "{=taom_cheat_pick_settlement}Choose where to teleport", world.Settlements(k), TeleportTo(service)));
         }
         Leave(starter, CheatMenuIds.Teleport, "taom_cheat_tp_back", "{=taom_cheat_opt_back}Back", i,
             () => GameMenu.SwitchToMenu(CheatMenuIds.Root));
@@ -76,9 +76,37 @@ internal static class CheatMenuMenus
             Shown, () => CheatMenuTexts.Show(service.AddTroops(elite: false, TroopStep)));
         Option(starter, CheatMenuIds.Troops, "taom_cheat_troops_elite", "{=taom_cheat_troops_elite}+10 elite recruits", 1,
             Shown, () => CheatMenuTexts.Show(service.AddTroops(elite: true, TroopStep)));
-        Leave(starter, CheatMenuIds.Troops, "taom_cheat_troops_back", "{=taom_cheat_opt_back}Back", 2,
+        Option(starter, CheatMenuIds.Troops, "taom_cheat_troops_any", "{=taom_cheat_troops_any}+10 of any troop of your faction...", 2,
+            Shown, () => PickFactionTroop(service));
+        Option(starter, CheatMenuIds.Troops, "taom_cheat_troops_screen", "{=taom_cheat_troops_screen}Every troop (party screen)...", 3,
+            Shown, () =>
+            {
+                var outcome = service.OpenCheatPartyScreen();
+                if (!outcome.Ok) CheatMenuTexts.Show(outcome);
+            });
+        Leave(starter, CheatMenuIds.Troops, "taom_cheat_troops_back", "{=taom_cheat_opt_back}Back", 4,
             () => GameMenu.SwitchToMenu(CheatMenuIds.Root));
     }
+
+    // Every regular troop of the faction, lowest tier first (CheatTroopList); the list's search box finds one by name.
+    private static void PickFactionTroop(CheatMenuService service)
+    {
+        var troops = service.FactionTroops();
+        if (troops.Count == 0)
+        {
+            CheatMenuTexts.Show(new CheatOutcome(CheatOutcomeKind.NothingToDo));
+            return;
+        }
+        Pick("taom_cheat_troops_any", "{=taom_cheat_pick_troop}Choose a troop: 10 of it join your party",
+            troops.Select(t => (t.Id, TroopLabel(t))).ToList(),
+            id => CheatMenuTexts.Show(service.AddFactionTroop(id, TroopStep)));
+    }
+
+    internal static string TroopLabel(CheatTroopFacts t) =>
+        new TextObject("{=taom_cheat_troop_row}Tier {TIER}: {NAME}")
+            .SetTextVariable("TIER", t.Tier)
+            .SetTextVariable("NAME", t.Name)
+            .ToString();
 
     // The menu closes BEFORE the party moves: case 12 crashed on a settlement menu left open behind a teleport.
     internal static Action<string> TeleportTo(CheatMenuService service) => id =>
@@ -118,7 +146,7 @@ internal static class CheatMenuMenus
             args => { args.optionLeaveType = GameMenuOption.LeaveType.Leave; return true; },
             _ => act(), isLeave: true, index: index);
 
-    private static void Pick(string title, IReadOnlyList<(string Id, string Name)> choices, Action<string> onPicked)
+    private static void Pick(string optionId, string title, IReadOnlyList<(string Id, string Name)> choices, Action<string> onPicked)
     {
         var elements = choices.Select(c => new InquiryElement(c.Id, c.Name, null)).ToList();
         MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
@@ -130,7 +158,7 @@ internal static class CheatMenuMenus
             maxSelectableOptionCount: 1,
             affirmativeText: new TextObject("{=taom_cheat_pick_ok}Choose").ToString(),
             negativeText: new TextObject("{=taom_cheat_pick_cancel}Cancel").ToString(),
-            affirmativeAction: chosen => Guarded(title, () =>
+            affirmativeAction: chosen => Guarded(optionId, () =>
             {
                 if (chosen != null && chosen.Count > 0 && chosen[0].Identifier is string id)
                     onPicked(id);

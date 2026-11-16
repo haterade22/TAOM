@@ -507,6 +507,7 @@ class Validator:
         issues += self._worn_armour_limits()
         issues += self._enlistment_kit_rank_regressions()
         issues += self._armour_mesh_tier_ladder()
+        issues += self._lord_armour_range()
         issues += self._upgrade_tier_collapse()
         issues += self._ranged_ladder_inversions()
         issues += self._melee_ladder_inversions()
@@ -1782,9 +1783,9 @@ class Validator:
                 if all(f.cross_kind for f in found) and main == tp.THROWING:
                     listed = "in" if entry_id in THROWN_PRIMARY_TROOP_IDS else "not in"
                     head = (f"thrower below its melee skill: {head} Throwing keeps its value on disk; "
-                            f"the troop is {listed} THROWN_PRIMARY_TROOP_IDS, so the formula gives "
-                            f"Throwing {'the Ranged Bow curve' if listed == 'in' else 'its group curve'} "
-                            f"(the number is in rebalance_troops.py --fix-purpose). Decide the value (#343)")
+                            f"the troop is {listed} THROWN_PRIMARY_TROOP_IDS. A javelin in Item0 is the "
+                            f"main weapon, so the role table gives Throwing the main number, at the top "
+                            f"of its weapons (rebalance_troops.py --apply). Decide the value (#343)")
                 elif all(f.cross_kind for f in found):
                     head = (f"melee skill above the launcher's ladder cell: {head} Values never cross "
                             f"from melee to launcher, so no reorder fixes this; the launcher's value is "
@@ -1899,7 +1900,7 @@ class Validator:
     # A skill the target never declares reads as 0 in the engine (CharacterObject.GetSkillValue),
     # so an omitted <skill> element is a drop, not a "leave it alone". 34 troops shipped that way.
     #
-    # The one exemption is militia to militia. Militia are pinned to the level-21 baseline whatever
+    # The one exemption is militia to militia. Militia take the tier 4 row of the role table whatever
     # their real level so village defence stays costly, which makes a militia promotion flat by
     # design. The exemption is keyed off what a culture BINDS, never off the word "militia" in a
     # name -- name matching is what produced the bug.
@@ -1984,11 +1985,16 @@ class Validator:
                         if sm and im and sm.group(1) in self._ARMOUR_SLOTS:
                             slots[sm.group(1)] = im.group(1)
                     sets.append(slots)
+                # Culture and race pick the troops a lord of the same culture is held to (LORD_ARMOUR_RANGE).
+                culm = self._CULTURE_ATTR_RE.search(attrs)
+                racem = self._RACE_ATTR_RE.search(attrs)
                 troops[idm.group(1)] = {
                     "file": rel, "line": line, "skills": skills, "upgrades": upgrades,
                     "templated": bool(tmpl),
                     "level": int(lvlm.group(1)) if lvlm else None,
                     "sets": sets,
+                    "culture": culm.group(1) if culm else None,
+                    "race": racem.group(1) if racem else None,
                 }
 
         # A gate that silently checks nothing is worse than no gate. Both upgrade checks read two
@@ -2015,6 +2021,8 @@ class Validator:
         return self._upgrade_index_cache
 
     _LEVEL_ATTR_RE = re.compile(r"""(?<![A-Za-z_])level=["'](\d+)["']""")
+    _CULTURE_ATTR_RE = re.compile(r"""(?<![A-Za-z_])culture=["']Culture\.([^"']+)["']""")
+    _RACE_ATTR_RE = re.compile(r"""(?<![A-Za-z_])race=["']([^"']+)["']""")
 
     # -- pass 4h: upgrade edges the engine prices at zero ------------------- #
     # Vanilla DefaultPartyTroopUpgradeModel.GetXpCostForUpgrade sums a per-tier table over
@@ -2569,9 +2577,13 @@ class Validator:
             ))
         promoted = ger.promoter_owned_cultures(text)
         for high, earlier, reasons in ger.enlistment_kit_findings(kits, stats, weapon_info):
+            # A dropped category is no regression: the player keeps every earlier kit. The repair
+            # tool's dry run lists them; only a lower armour total or a weaker weapon is a finding.
+            reasons = ger.regression_reasons(reasons)
+            if not reasons:
+                continue
             culture = high[0]
             rid = "enlist_" + "_".join(high)
-            repairable = any(kind != "dropped" for kind, _text in reasons)
             if culture in promoted:
                 repair = self._promoted_repair(ger, kits, stats, weapon_info, earlier, high)
             elif culture == "default":
@@ -2580,18 +2592,13 @@ class Validator:
             else:
                 repair = (f"python tools/generate_enlistment_rosters.py --repair-ranks --culture {culture} plans "
                           "the change from the culture's troop gear, or says it found none; read it, then add --apply")
-            note = []
-            if repairable:
-                note.append(f"Repair: {repair}.")
-            if any(kind == "dropped" for kind, _text in reasons):
-                note.append("A dropped category is never repaired by a tool: decide whether this kit should carry it.")
             at = text.find(f'id="{rid}"')
             issues.append(Issue(
                 severity=ENLISTMENT_KIT_RANK_SEVERITY, code=ENLISTMENT_KIT_RANK_CODE, file=self._rel(path),
                 line=text.count("\n", 0, at) + 1 if at >= 0 else 0, entry_id=rid,
                 message=("the kit is weaker than what the player drew before it ("
                          + ", ".join("enlist_" + "_".join(c) for c in earlier) + "): "
-                         + "; ".join(t for _kind, t in reasons) + ". " + " ".join(note)),
+                         + "; ".join(t for _kind, t in reasons) + f". Repair: {repair}."),
             ))
         return issues
 
@@ -2606,8 +2613,9 @@ class Validator:
                     f"the source with --repair-ranks --culture <source> --apply, then run {rerun}")
         pairs = [((src,) + c[1:] if c[0] == culture else c, c) for c in list(earlier) + [high]]
         source_clean = (all(s in kits for s, _c in pairs)
-                        and not ger.rank_regressions([(s, kits[s]) for s, _c in pairs[:-1]], kits[pairs[-1][0]],
-                                                     stats, weapon_info, mounted=high[1] == "cavalry"))
+                        and not ger.regression_reasons(ger.rank_regressions(
+                            [(s, kits[s]) for s, _c in pairs[:-1]], kits[pairs[-1][0]],
+                            stats, weapon_info, mounted=high[1] == "cavalry")))
         if mapped and source_clean:
             changed = [f"{slot} {kits[s][slot]} -> {kits[c][slot]}"
                        for s, c in pairs
@@ -2663,6 +2671,88 @@ class Validator:
                 ),
             ))
         return issues
+
+    # -- LORD_ARMOUR_RANGE -------------------------------------------------- #
+    # A hero wears one whole battle set (Hero.SetInitialValuesFromCharacter), so a lord's figure on
+    # each part is his worst whole set, held to the culture's best elite-band troop on that part (of
+    # the lord's race when the culture has one; a culture with none, Khand or the Abanissa, takes the
+    # culture of its templates). Only a part more than TOLERANCE (and SHORT_MIN_POINTS) under warns.
+    # His best whole set over that troop plus CEILING_MARGIN is the ceiling. Every lord a generic
+    # template alone dresses wears the same sets, so the template is one row naming them; a lord with
+    # a roster of his own and the fallback and ruler rosters are a row each. The rule, the reference
+    # and the fixer are tools/fix_lord_kits.py (#1271); the values are the install's.
+    def _lord_armour_range(self) -> list:
+        stats = getattr(self.reg, "item_armour_stats", None) or {}
+        if not stats:
+            return []   # no install: skipped, and validate_moduledata.main announces it
+        lk = _lord_kits()
+
+        def tooling(file, message):
+            return Issue(severity=Severity.WARNING, code="LORD_ARMOUR_RANGE", file=file, line=0,
+                         entry_id="(tooling)", message=message)
+
+        if lk is None:
+            return [tooling("tools/fix_lord_kits.py",
+                            "tools/fix_lord_kits.py cannot be imported, so this pass checked nothing "
+                            "against LORD_ARMOUR_RANGE. Not checked is not clean.")]
+        items = {iid: {"stats": s} for iid, s in stats.items()}
+        troops, _ = self._upgrade_troop_index()
+        exempt = set(self._ARMOUR_LADDER_EXEMPT) | set(self._BODYLESS_BY_DESIGN)
+        reference = lk.reference_troops(troops, exempt)
+        sets_dir = self.moduledata / "equipmentsets"
+        templates = lk.dat.load_battle_templates(str(sets_dir))
+        failures = []
+        lords = lk.load_lords(self.moduledata, failures)
+        issues = [tooling(self._rel(Path(path)),
+                          f"this file could not be parsed ({err}), so its lords were not judged "
+                          f"against LORD_ARMOUR_RANGE") for path, err in failures]
+        if not lords:
+            issues.append(tooling("characters/", "the pass read no lords from characters/*.xml or "
+                                                 "lords.xslt, so LORD_ARMOUR_RANGE checked nothing"))
+            return issues
+        fallback = lk.fallback_lords(lk.load_fallback_rosters(sets_dir / "taom_lord_template_equipment.xml"), lords)
+        generic = lk.load_generic_templates(sorted(sets_dir.glob("taom_equipment_sets_*.xml")))
+        cultures = {rid: t["culture"] for rid, t in generic.items()}
+        groups = {}
+        for row in lk.judge_lords(lords + fallback, templates, reference, items, cultures):
+            if not (row["short"] or row["over"]):
+                continue
+            if row["generic"]:
+                groups.setdefault((row["generic"], row["culture"], row["judged_as"], row["race"]), []).append(row)
+                continue
+            judged = "" if row["judged_as"] == row["culture"] else f" (judged as {row['judged_as']}, the culture of his templates)"
+            where = dict(file=self._rel(Path(row["file"])), line=row["line"], entry_id=row["lord"])
+            issues += self._lord_range_issues(lk, row, where, f"a {row['culture']} lord{judged}",
+                                              "a named lord's own roster is a hand decision")
+        for (tmpl, culture, judged_as, _race), rows in sorted(groups.items(), key=lambda kv: str(kv[0])):
+            ids = sorted(r["lord"] for r in rows)
+            shown = ", ".join(ids[:6]) + (", ..." if len(ids) > 6 else "")
+            judged = "" if judged_as == culture else f" (judged as {judged_as}, the culture of their templates)"
+            path = generic[tmpl[0]]["file"] if tmpl[0] in generic else rows[0]["file"]
+            where = dict(file=self._rel(Path(path)), line=0, entry_id=", ".join(tmpl))
+            who = (f"the generic template {', '.join(tmpl)}, worn by {len(ids)} "
+                   f"lord{'s' if len(ids) > 1 else ''} ({shown}) of {culture}{judged},")
+            issues += self._lord_range_issues(lk, rows[0], where, who,
+                                              "the template is planned by python tools/fix_lord_kits.py "
+                                              "(lord pool first, then elite troop pieces)")
+        return issues
+
+    @staticmethod
+    def _lord_range_issues(lk, row, where, who, fix) -> list:
+        out = []
+        if row["short"]:
+            parts = ", ".join(f"{p} {w} < {r} ({t})" for p, (w, r, t) in row["short"].items())
+            out.append(Issue(severity=Severity.WARNING, code="LORD_ARMOUR_RANGE", **where, message=(
+                f"floor: {who} whose worst whole battle set is more than "
+                f"{round(lk.TOLERANCE * 100)} percent and {lk.SHORT_MIN_POINTS} points under the culture's "
+                f"best elite-band troop on {parts}. A hero wears one set entire; {fix}")))
+        if row["over"]:
+            parts = ", ".join(f"{p} {b} > {lim}" for p, (b, lim) in row["over"].items())
+            out.append(Issue(severity=Severity.WARNING, code="LORD_ARMOUR_RANGE", **where, message=(
+                f"ceiling: {who} whose best whole battle set passes the culture's best elite-band troop "
+                f"plus {lk.CEILING_MARGIN} on {parts}. Check the piece against python "
+                f"tools/fix_lord_kits.py's pool table before a restat")))
+        return out
 
     def _mounted_dwarves(self) -> list:
         mounted_rosters = self._mounted_rosters()
@@ -3148,6 +3238,35 @@ def build_item_class_registry(moduledata, game_modules) -> dict:
     return classes
 
 
+_ATTR_DIFFICULTY_RE = re.compile(r'\bdifficulty="(\d+)"')
+
+
+def build_mount_difficulty_registry(moduledata, game_modules) -> dict:
+    """Map horse item id -> its XML difficulty, over the item roots build_item_class_registry reads.
+    The engine mounts an agent only when Riding >= that difficulty (Agent.CheckSkillForMounting,
+    ItemObject.Difficulty), so the troop writer floors a rider's Riding at it."""
+    moduledata = Path(moduledata)
+    game_modules = Path(game_modules) if game_modules else None
+    item_roots = []
+    if game_modules:
+        for name in ("SandBoxCore", "SandBox", "Native", "StoryMode", "CustomBattle",
+                     "LOTRLOME_Armory", "ADOD_Beasts", "NavalDLC"):
+            item_roots.append(game_modules / name / "ModuleData")
+    item_roots.append(moduledata)
+    mounts = {}
+    for root in item_roots:
+        if not root.exists():
+            continue
+        for xml in root.rglob("*.xml"):
+            for m in _ITEM_OPEN_RE.finditer(_read_stripped(xml)):
+                tag = m.group(0)
+                mid, mtype = _ATTR_ID_RE.search(tag), _ATTR_TYPE_RE.search(tag)
+                if mid and mtype and mtype.group(1) == "Horse":
+                    diff = _ATTR_DIFFICULTY_RE.search(tag)
+                    mounts[mid.group(1)] = int(diff.group(1)) if diff else 0
+    return mounts
+
+
 # --------------------------------------------------------------------------- #
 # Harness / mount family-type registries                                       #
 # --------------------------------------------------------------------------- #
@@ -3369,6 +3488,14 @@ def _curve():
     try:
         import rebalance_armor as _ra  # stdlib-only sibling; guarded so the validator never needs it
         return _ra
+    except Exception:
+        return None
+
+
+def _lord_kits():
+    try:
+        import fix_lord_kits as _lk  # the lord kit rule; guarded like _curve so a broken import is stated
+        return _lk
     except Exception:
         return None
 

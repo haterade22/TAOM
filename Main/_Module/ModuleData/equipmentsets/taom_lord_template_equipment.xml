@@ -12,11 +12,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
     			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-    			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
-    			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-    			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+    			<Equipment slot="Head" id="Item.sk_gd_lam_nob_helmet_lord_a" />
+    			<Equipment slot="Body" id="Item.sk_gd_lam_inf_chest_lord_a" />
+    			<Equipment slot="Cape" id="Item.sk_gd_lam_cape_noble_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gd_sere_bracer_lord_a" />
+    			<Equipment slot="Leg" id="Item.sk_gd_sere_grvs_lord_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -26,11 +26,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
     			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-    			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
-    			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-    			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+    			<Equipment slot="Head" id="Item.sk_gd_lam_nob_helmet_lord_a" />
+    			<Equipment slot="Body" id="Item.sk_gd_lam_inf_chest_lord_a" />
+    			<Equipment slot="Cape" id="Item.sk_gd_lam_cape_noble_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gd_sere_bracer_lord_a" />
+    			<Equipment slot="Leg" id="Item.sk_gd_sere_grvs_lord_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -96,11 +96,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
     			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-    			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
-    			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-    			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+    			<Equipment slot="Head" id="Item.sk_gd_lam_nob_helmet_lord_a" />
+    			<Equipment slot="Body" id="Item.sk_gd_lam_inf_chest_lord_a" />
+    			<Equipment slot="Cape" id="Item.sk_gd_lam_cape_noble_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gd_sere_bracer_lord_a" />
+    			<Equipment slot="Leg" id="Item.sk_gd_sere_grvs_lord_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -110,11 +110,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
     			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-    			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
-    			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-    			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+    			<Equipment slot="Head" id="Item.sk_gd_lam_nob_helmet_lord_a" />
+    			<Equipment slot="Body" id="Item.sk_gd_lam_inf_chest_lord_a" />
+    			<Equipment slot="Cape" id="Item.sk_gd_lam_cape_noble_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gd_sere_bracer_lord_a" />
+    			<Equipment slot="Leg" id="Item.sk_gd_sere_grvs_lord_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -157,8 +157,8 @@
     			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_elite_a1" />
     			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_elite_a1" />
     			<Equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_f" />
+    			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_f" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -171,8 +171,8 @@
     			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_elite_a1" />
     			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_elite_a1" />
     			<Equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_f" />
+    			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_f" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -241,8 +241,8 @@
     			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_elite_a1" />
     			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_elite_a1" />
     			<Equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_f" />
+    			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_f" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -255,8 +255,8 @@
     			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_elite_a1" />
     			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_elite_a1" />
     			<Equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_a" />
+    			<Equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_f" />
+    			<Equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_heavy_f" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -296,11 +296,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
     			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
-    			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_a" />
-    			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+    			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_c" />
+    			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" />
   </EquipmentRoster>
@@ -308,11 +308,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
     			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
-    			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_a" />
-    			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+    			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_c" />
+    			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -368,11 +368,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
     			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
-    			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_a" />
-    			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+    			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_c" />
+    			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" />
   </EquipmentRoster>
@@ -380,11 +380,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
     			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
-    			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_a" />
-    			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+    			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_c" />
+    			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -418,11 +418,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
     			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-    			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
-    			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
-    			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
-    			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
-    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+    			<Equipment slot="Head" id="Item.rivendell_helmet_elite" />
+    			<Equipment slot="Body" id="Item.rivendell_torso_lord1" />
+    			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
+    			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves2_silver" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -432,11 +432,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
     			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-    			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
-    			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
-    			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
-    			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
-    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+    			<Equipment slot="Head" id="Item.rivendell_helmet_elite" />
+    			<Equipment slot="Body" id="Item.rivendell_torso_lord1" />
+    			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
+    			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves2_silver" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -502,11 +502,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
     			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-    			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
-    			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
-    			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
-    			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
-    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+    			<Equipment slot="Head" id="Item.rivendell_helmet_elite" />
+    			<Equipment slot="Body" id="Item.rivendell_torso_lord1" />
+    			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
+    			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves2_silver" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -516,11 +516,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
     			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-    			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
-    			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
-    			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
-    			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
-    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+    			<Equipment slot="Head" id="Item.rivendell_helmet_elite" />
+    			<Equipment slot="Body" id="Item.rivendell_torso_lord1" />
+    			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
+    			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves2_silver" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -560,7 +560,7 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
     			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-    			<Equipment slot="Head" id="Item.sk_ll_gl_helmet_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_ll_mw_helmet_lord_a" />
     			<Equipment slot="Body" id="Item.sk_ll_gl_chest_heavy_a" />
     			<Equipment slot="Cape" id="Item.sk_ll_gl_pauld_heavy_a" />
     			<Equipment slot="Gloves" id="Item.sk_ll_gl_bracer_heavy_a" />
@@ -574,7 +574,7 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
     			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-    			<Equipment slot="Head" id="Item.sk_ll_gl_helmet_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_ll_mw_helmet_lord_a" />
     			<Equipment slot="Body" id="Item.sk_ll_gl_chest_heavy_a" />
     			<Equipment slot="Cape" id="Item.sk_ll_gl_pauld_heavy_a" />
     			<Equipment slot="Gloves" id="Item.sk_ll_gl_bracer_heavy_a" />
@@ -644,7 +644,7 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
     			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-    			<Equipment slot="Head" id="Item.sk_ll_gl_helmet_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_ll_mw_helmet_lord_a" />
     			<Equipment slot="Body" id="Item.sk_ll_gl_chest_heavy_a" />
     			<Equipment slot="Cape" id="Item.sk_ll_gl_pauld_heavy_a" />
     			<Equipment slot="Gloves" id="Item.sk_ll_gl_bracer_heavy_a" />
@@ -658,7 +658,7 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
     			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-    			<Equipment slot="Head" id="Item.sk_ll_gl_helmet_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_ll_mw_helmet_lord_a" />
     			<Equipment slot="Body" id="Item.sk_ll_gl_chest_heavy_a" />
     			<Equipment slot="Cape" id="Item.sk_ll_gl_pauld_heavy_a" />
     			<Equipment slot="Gloves" id="Item.sk_ll_gl_bracer_heavy_a" />
@@ -703,10 +703,10 @@
     			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
     			<Equipment slot="Item1" id="Item.wm_mirkwood_shield_a02" />
     			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
-    			<Equipment slot="Body" id="Item.mkwd_inf3_chest" />
+    			<Equipment slot="Body" id="Item.taom_lord_mkwd_inf3_chest" />
     			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
-    			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-    			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+    			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
+    			<Equipment slot="Leg" id="Item.taom_lord_mkwd_inf3_greaves" />
     			<Equipment slot="HorseHarness" id="Item.taom_elk_saddle_a" />
     			<Equipment slot="Horse" id="Item.taom_animalia_moose_a" />
     		</EquipmentSet>
@@ -717,10 +717,10 @@
     			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
     			<Equipment slot="Item1" id="Item.wm_mirkwood_shield_a02" />
     			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
-    			<Equipment slot="Body" id="Item.mkwd_inf3_chest" />
+    			<Equipment slot="Body" id="Item.taom_lord_mkwd_inf3_chest" />
     			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
-    			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-    			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+    			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
+    			<Equipment slot="Leg" id="Item.taom_lord_mkwd_inf3_greaves" />
     			<Equipment slot="HorseHarness" id="Item.taom_elk_saddle_a" />
     			<Equipment slot="Horse" id="Item.taom_animalia_moose_a" />
     		</EquipmentSet>
@@ -787,10 +787,10 @@
     			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
     			<Equipment slot="Item1" id="Item.wm_mirkwood_shield_a02" />
     			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
-    			<Equipment slot="Body" id="Item.mkwd_inf3_chest" />
+    			<Equipment slot="Body" id="Item.taom_lord_mkwd_inf3_chest" />
     			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
-    			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-    			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+    			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
+    			<Equipment slot="Leg" id="Item.taom_lord_mkwd_inf3_greaves" />
     			<Equipment slot="HorseHarness" id="Item.taom_elk_saddle_a" />
     			<Equipment slot="Horse" id="Item.taom_animalia_moose_a" />
     		</EquipmentSet>
@@ -801,10 +801,10 @@
     			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
     			<Equipment slot="Item1" id="Item.wm_mirkwood_shield_a02" />
     			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
-    			<Equipment slot="Body" id="Item.mkwd_inf3_chest" />
+    			<Equipment slot="Body" id="Item.taom_lord_mkwd_inf3_chest" />
     			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
-    			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-    			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+    			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
+    			<Equipment slot="Leg" id="Item.taom_lord_mkwd_inf3_greaves" />
     			<Equipment slot="HorseHarness" id="Item.taom_elk_saddle_a" />
     			<Equipment slot="Horse" id="Item.taom_animalia_moose_a" />
     		</EquipmentSet>
@@ -844,12 +844,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
-    			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
-    			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
-    			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+    			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_command_ar1" />
+    			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_a3" />
+    			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_ar2" />
+    			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar2" />
     			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
     			<Equipment slot="Horse" id="Item.warg_brown" />
+    			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br2" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" />
   </EquipmentRoster>
@@ -857,12 +858,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
-    			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
-    			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
-    			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+    			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_command_ar1" />
+    			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_a3" />
+    			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_ar2" />
+    			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar2" />
     			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
     			<Equipment slot="Horse" id="Item.warg_brown" />
+    			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br2" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -922,12 +924,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
-    			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
-    			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
-    			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+    			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_command_ar1" />
+    			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_a3" />
+    			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_ar2" />
+    			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar2" />
     			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
     			<Equipment slot="Horse" id="Item.warg_brown" />
+    			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br2" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" />
   </EquipmentRoster>
@@ -935,12 +938,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
-    			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
-    			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
-    			<Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+    			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_command_ar1" />
+    			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_a3" />
+    			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_ar2" />
+    			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar2" />
     			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
     			<Equipment slot="Horse" id="Item.warg_brown" />
+    			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br2" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -976,11 +980,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a03" />
     			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
-    			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_a" />
+    			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_a" />
+    			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_a" />
+    			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_a" />
     			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
     			<Equipment slot="Horse" id="Item.warg_brown" />
     		</EquipmentSet>
@@ -990,11 +994,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a03" />
     			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
-    			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_a" />
+    			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_a" />
+    			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_a" />
+    			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_a" />
     			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
     			<Equipment slot="Horse" id="Item.warg_brown" />
     		</EquipmentSet>
@@ -1060,11 +1064,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a03" />
     			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
-    			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_a" />
+    			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_a" />
+    			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_a" />
+    			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_a" />
     			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
     			<Equipment slot="Horse" id="Item.warg_brown" />
     		</EquipmentSet>
@@ -1074,11 +1078,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a03" />
     			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
-    			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_a" />
+    			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_a" />
+    			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_a" />
+    			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_a" />
     			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
     			<Equipment slot="Horse" id="Item.warg_brown" />
     		</EquipmentSet>
@@ -1118,11 +1122,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
     			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_a" />
-    			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_dg_uruk_helmet_lord_a" />
+    			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_a" />
+    			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_elite_a" />
+    			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_lord_a" />
     			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
     			<Equipment slot="Horse" id="Item.warg_brown" />
     		</EquipmentSet>
@@ -1132,11 +1136,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
     			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_a" />
-    			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_dg_uruk_helmet_lord_a" />
+    			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_a" />
+    			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_elite_a" />
+    			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_lord_a" />
     			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
     			<Equipment slot="Horse" id="Item.warg_brown" />
     		</EquipmentSet>
@@ -1202,11 +1206,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
     			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_a" />
-    			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_dg_uruk_helmet_lord_a" />
+    			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_a" />
+    			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_elite_a" />
+    			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_lord_a" />
     			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
     			<Equipment slot="Horse" id="Item.warg_brown" />
     		</EquipmentSet>
@@ -1216,11 +1220,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
     			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_a" />
-    			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_dg_uruk_helmet_lord_a" />
+    			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_a" />
+    			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_elite_a" />
+    			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_lord_a" />
     			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
     			<Equipment slot="Horse" id="Item.warg_brown" />
     		</EquipmentSet>
@@ -1261,7 +1265,7 @@
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
     			<Equipment slot="Head" id="Item.sk_md_num_inf_helmet_lord_a" />
-    			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
+    			<Equipment slot="Body" id="Item.sm_md_num_inf_chest_elite_a" />
     			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_lord_a" />
     			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
     			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_cape_elite_a" />
@@ -1275,7 +1279,7 @@
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
     			<Equipment slot="Head" id="Item.sk_md_num_inf_helmet_lord_a" />
-    			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
+    			<Equipment slot="Body" id="Item.sm_md_num_inf_chest_elite_a" />
     			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_lord_a" />
     			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
     			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_cape_elite_a" />
@@ -1345,7 +1349,7 @@
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
     			<Equipment slot="Head" id="Item.sk_md_num_inf_helmet_lord_a" />
-    			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
+    			<Equipment slot="Body" id="Item.sm_md_num_inf_chest_elite_a" />
     			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_lord_a" />
     			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
     			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_cape_elite_a" />
@@ -1359,7 +1363,7 @@
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
     			<Equipment slot="Head" id="Item.sk_md_num_inf_helmet_lord_a" />
-    			<Equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
+    			<Equipment slot="Body" id="Item.sm_md_num_inf_chest_elite_a" />
     			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_lord_a" />
     			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
     			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_cape_elite_a" />
@@ -1402,12 +1406,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" />
   </EquipmentRoster>
@@ -1415,12 +1420,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -1506,12 +1512,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" />
   </EquipmentRoster>
@@ -1519,12 +1526,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -1560,12 +1568,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" />
   </EquipmentRoster>
@@ -1573,12 +1582,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -1664,12 +1674,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" />
   </EquipmentRoster>
@@ -1677,12 +1688,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -1718,11 +1730,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
     			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
-    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
-    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
-    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Head" id="Item.cts_rohan_helmet_captain" />
+    			<Equipment slot="Body" id="Item.cts_rohan_armor_captain" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_captain_shoulder" />
     			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
-    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_captain_boots1" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -1732,11 +1744,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
     			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
-    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
-    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
-    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Head" id="Item.cts_rohan_helmet_captain" />
+    			<Equipment slot="Body" id="Item.cts_rohan_armor_captain" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_captain_shoulder" />
     			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
-    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_captain_boots1" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -1802,11 +1814,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
     			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
-    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
-    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
-    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Head" id="Item.cts_rohan_helmet_captain" />
+    			<Equipment slot="Body" id="Item.cts_rohan_armor_captain" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_captain_shoulder" />
     			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
-    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_captain_boots1" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -1816,11 +1828,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
     			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
-    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
-    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
-    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Head" id="Item.cts_rohan_helmet_captain" />
+    			<Equipment slot="Body" id="Item.cts_rohan_armor_captain" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_captain_shoulder" />
     			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
-    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_captain_boots1" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -1858,8 +1870,8 @@
   <!-- ==================== EMPIRE ==================== -->
   <EquipmentRoster id="taom_empire_lord_battle_male" culture="Culture.empire">
     <EquipmentSet>
-                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
-                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
+                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_lord_a" />
+                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_lord_a" />
                 <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
                 <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
                 <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
@@ -1871,8 +1883,8 @@
   </EquipmentRoster>
   <EquipmentRoster id="taom_empire_lord_battle_female" culture="Culture.empire">
     <EquipmentSet>
-                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
-                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
+                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_lord_a" />
+                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_lord_a" />
                 <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
                 <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
                 <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
@@ -1936,8 +1948,8 @@
   </EquipmentRoster>
   <EquipmentRoster id="taom_empire_ruler_battle_male" culture="Culture.empire">
     <EquipmentSet>
-                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
-                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
+                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_lord_a" />
+                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_lord_a" />
                 <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
                 <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
                 <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
@@ -1949,8 +1961,8 @@
   </EquipmentRoster>
   <EquipmentRoster id="taom_empire_ruler_battle_female" culture="Culture.empire">
     <EquipmentSet>
-                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
-                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
+                <Equipment slot="Head" id="Item.dunland_caerdh_helmet_lord_a" />
+                <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_lord_a" />
                 <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
                 <Equipment slot="Gloves" id="Item.dunland_caerdh_bracer_heavy_a" />
                 <Equipment slot="Cape" id="Item.dunland_caerdh_pauldron_elite_a" />
@@ -1992,12 +2004,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" />
   </EquipmentRoster>
@@ -2005,12 +2018,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -2070,12 +2084,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" />
   </EquipmentRoster>
@@ -2083,12 +2098,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -2124,12 +2140,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
-    			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
-    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
+    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_lord_a" />
+    			<Equipment slot="Body" id="Item.sk_rh_loke_chest_lord_a" />
+    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_elite_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_rh_loke_cape_plate_heavy_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" />
   </EquipmentRoster>
@@ -2137,12 +2154,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
-    			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
-    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
+    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_lord_a" />
+    			<Equipment slot="Body" id="Item.sk_rh_loke_chest_lord_a" />
+    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_elite_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_rh_loke_cape_plate_heavy_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -2202,12 +2220,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
-    			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
-    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
+    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_lord_a" />
+    			<Equipment slot="Body" id="Item.sk_rh_loke_chest_lord_a" />
+    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_elite_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_rh_loke_cape_plate_heavy_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" />
   </EquipmentRoster>
@@ -2215,12 +2234,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
-    			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
-    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
+    			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_lord_a" />
+    			<Equipment slot="Body" id="Item.sk_rh_loke_chest_lord_a" />
+    			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
+    			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_elite_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_rh_loke_cape_plate_heavy_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -2256,11 +2276,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
     			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
-    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -2270,11 +2290,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
     			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
-    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -2340,11 +2360,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
     			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
-    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -2354,11 +2374,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
     			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
-    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -2398,12 +2418,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" />
   </EquipmentRoster>
@@ -2411,12 +2432,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -2502,12 +2524,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" />
   </EquipmentRoster>
@@ -2515,12 +2538,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -2560,7 +2584,7 @@
     			<Equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
     			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
     			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
-    			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+    			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
     			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
     			<Equipment slot="Horse" id="Item.warg_brown" />
     		</EquipmentSet>
@@ -2574,7 +2598,7 @@
     			<Equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
     			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
     			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
-    			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+    			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
     			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
     			<Equipment slot="Horse" id="Item.warg_brown" />
     		</EquipmentSet>
@@ -2644,7 +2668,7 @@
     			<Equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
     			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
     			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
-    			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+    			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
     			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
     			<Equipment slot="Horse" id="Item.warg_brown" />
     		</EquipmentSet>
@@ -2658,7 +2682,7 @@
     			<Equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
     			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
     			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
-    			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+    			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
     			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
     			<Equipment slot="Horse" id="Item.warg_brown" />
     		</EquipmentSet>
@@ -2843,10 +2867,10 @@
     			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
     			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
     			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
-    			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+    			<Equipment slot="Body" id="Item.rivendell_torso_lord1" />
     			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
-    			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
-    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+    			<Equipment slot="Gloves" id="Item.rivendell_vambraces_1_silvergold" />
+    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves2_silver" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -2857,10 +2881,10 @@
     			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
     			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
     			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
-    			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+    			<Equipment slot="Body" id="Item.rivendell_torso_lord1" />
     			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
-    			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
-    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+    			<Equipment slot="Gloves" id="Item.rivendell_vambraces_1_silvergold" />
+    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves2_silver" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -2927,10 +2951,10 @@
     			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
     			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
     			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
-    			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+    			<Equipment slot="Body" id="Item.rivendell_torso_lord1" />
     			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
-    			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
-    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+    			<Equipment slot="Gloves" id="Item.rivendell_vambraces_1_silvergold" />
+    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves2_silver" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -2941,10 +2965,10 @@
     			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
     			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
     			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
-    			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+    			<Equipment slot="Body" id="Item.rivendell_torso_lord1" />
     			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
-    			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
-    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+    			<Equipment slot="Gloves" id="Item.rivendell_vambraces_1_silvergold" />
+    			<Equipment slot="Leg" id="Item.rivendell_boots_greaves2_silver" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3128,11 +3152,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
     			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-    			<Equipment slot="Head" id="Item.sk_ar_art_helmet_noble_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_a" />
-    			<Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
-    			<Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
+    			<Equipment slot="Head" id="Item.sk_ar_art_helmet_noble_prince_b" />
+    			<Equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_b" />
+    			<Equipment slot="Cape" id="Item.sk_ar_art_pauld_cape_noble_elite_b" />
+    			<Equipment slot="Gloves" id="Item.sk_ar_art_bracer_noble_elite_a" />
+    			<Equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_elite_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3142,11 +3166,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
     			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-    			<Equipment slot="Head" id="Item.sk_ar_art_helmet_noble_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_a" />
-    			<Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
-    			<Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
+    			<Equipment slot="Head" id="Item.sk_ar_art_helmet_noble_prince_b" />
+    			<Equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_b" />
+    			<Equipment slot="Cape" id="Item.sk_ar_art_pauld_cape_noble_elite_b" />
+    			<Equipment slot="Gloves" id="Item.sk_ar_art_bracer_noble_elite_a" />
+    			<Equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_elite_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3212,11 +3236,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
     			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-    			<Equipment slot="Head" id="Item.sk_ar_art_helmet_noble_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_a" />
-    			<Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
-    			<Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
+    			<Equipment slot="Head" id="Item.sk_ar_art_helmet_noble_prince_b" />
+    			<Equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_b" />
+    			<Equipment slot="Cape" id="Item.sk_ar_art_pauld_cape_noble_elite_b" />
+    			<Equipment slot="Gloves" id="Item.sk_ar_art_bracer_noble_elite_a" />
+    			<Equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_elite_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3226,11 +3250,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
     			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-    			<Equipment slot="Head" id="Item.sk_ar_art_helmet_noble_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_a" />
-    			<Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
-    			<Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
+    			<Equipment slot="Head" id="Item.sk_ar_art_helmet_noble_prince_b" />
+    			<Equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_b" />
+    			<Equipment slot="Cape" id="Item.sk_ar_art_pauld_cape_noble_elite_b" />
+    			<Equipment slot="Gloves" id="Item.sk_ar_art_bracer_noble_elite_a" />
+    			<Equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_elite_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3271,11 +3295,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
     			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-    			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
-    			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-    			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+    			<Equipment slot="Head" id="Item.sk_gd_lam_nob_helmet_lord_a" />
+    			<Equipment slot="Body" id="Item.sk_gd_lam_inf_chest_lord_a" />
+    			<Equipment slot="Cape" id="Item.sk_gd_lam_cape_noble_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gd_sere_bracer_lord_a" />
+    			<Equipment slot="Leg" id="Item.sk_gd_sere_grvs_lord_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3285,11 +3309,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
     			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-    			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
-    			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-    			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+    			<Equipment slot="Head" id="Item.sk_gd_lam_nob_helmet_lord_a" />
+    			<Equipment slot="Body" id="Item.sk_gd_lam_inf_chest_lord_a" />
+    			<Equipment slot="Cape" id="Item.sk_gd_lam_cape_noble_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gd_sere_bracer_lord_a" />
+    			<Equipment slot="Leg" id="Item.sk_gd_sere_grvs_lord_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3355,11 +3379,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
     			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-    			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
-    			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-    			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+    			<Equipment slot="Head" id="Item.sk_gd_lam_nob_helmet_lord_a" />
+    			<Equipment slot="Body" id="Item.sk_gd_lam_inf_chest_lord_a" />
+    			<Equipment slot="Cape" id="Item.sk_gd_lam_cape_noble_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gd_sere_bracer_lord_a" />
+    			<Equipment slot="Leg" id="Item.sk_gd_sere_grvs_lord_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3369,11 +3393,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
     			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-    			<Equipment slot="Head" id="Item.sk_gd_mns_cita_helmet_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_gd_mns_citadel_chest_med_a" />
-    			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-    			<Equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+    			<Equipment slot="Head" id="Item.sk_gd_lam_nob_helmet_lord_a" />
+    			<Equipment slot="Body" id="Item.sk_gd_lam_inf_chest_lord_a" />
+    			<Equipment slot="Cape" id="Item.sk_gd_lam_cape_noble_a" />
+    			<Equipment slot="Gloves" id="Item.sk_gd_sere_bracer_lord_a" />
+    			<Equipment slot="Leg" id="Item.sk_gd_sere_grvs_lord_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3414,11 +3438,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
     			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-    			<Equipment slot="Head" id="Item.sk_ar_art_helmet_noble_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_a" />
-    			<Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
-    			<Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
+    			<Equipment slot="Head" id="Item.sk_ar_art_helmet_noble_prince_b" />
+    			<Equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_b" />
+    			<Equipment slot="Cape" id="Item.sk_ar_art_pauld_cape_noble_elite_b" />
+    			<Equipment slot="Gloves" id="Item.sk_ar_art_bracer_noble_elite_a" />
+    			<Equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_elite_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3428,11 +3452,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
     			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-    			<Equipment slot="Head" id="Item.sk_ar_art_helmet_noble_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_a" />
-    			<Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
-    			<Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
+    			<Equipment slot="Head" id="Item.sk_ar_art_helmet_noble_prince_b" />
+    			<Equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_b" />
+    			<Equipment slot="Cape" id="Item.sk_ar_art_pauld_cape_noble_elite_b" />
+    			<Equipment slot="Gloves" id="Item.sk_ar_art_bracer_noble_elite_a" />
+    			<Equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_elite_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3498,11 +3522,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
     			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-    			<Equipment slot="Head" id="Item.sk_ar_art_helmet_noble_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_a" />
-    			<Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
-    			<Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
+    			<Equipment slot="Head" id="Item.sk_ar_art_helmet_noble_prince_b" />
+    			<Equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_b" />
+    			<Equipment slot="Cape" id="Item.sk_ar_art_pauld_cape_noble_elite_b" />
+    			<Equipment slot="Gloves" id="Item.sk_ar_art_bracer_noble_elite_a" />
+    			<Equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_elite_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3512,11 +3536,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
     			<Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-    			<Equipment slot="Head" id="Item.sk_ar_art_helmet_noble_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_a" />
-    			<Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
-    			<Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
+    			<Equipment slot="Head" id="Item.sk_ar_art_helmet_noble_prince_b" />
+    			<Equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_b" />
+    			<Equipment slot="Cape" id="Item.sk_ar_art_pauld_cape_noble_elite_b" />
+    			<Equipment slot="Gloves" id="Item.sk_ar_art_bracer_noble_elite_a" />
+    			<Equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_elite_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3557,11 +3581,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
     			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
-    			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_a" />
-    			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+    			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_c" />
+    			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" />
   </EquipmentRoster>
@@ -3569,11 +3593,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
     			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
-    			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_a" />
-    			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+    			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_c" />
+    			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -3629,11 +3653,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
     			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
-    			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_a" />
-    			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+    			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_c" />
+    			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" />
   </EquipmentRoster>
@@ -3641,11 +3665,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
     			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
-    			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_a" />
-    			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_plate_heavy_a" />
-    			<Equipment slot="Cape" id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_a" />
-    			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_heavy_a" />
-    			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_heavy_a" />
+    			<Equipment slot="Head" id="Item.sk_dwarf_dain_helmet_elite_a" />
+    			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_a" />
+    			<Equipment slot="Cape" id="Item.sk_dwarf_dain_pauldron_heavy_b" />
+    			<Equipment slot="Gloves" id="Item.sk_dwarf_dain_bracer_heavy_c" />
+    			<Equipment slot="Leg" id="Item.sk_dwarf_dain_boots_elite_b" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -3680,11 +3704,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
     			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
-    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3694,11 +3718,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
     			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
-    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3764,11 +3788,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
     			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
-    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3778,11 +3802,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
     			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
-    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3823,11 +3847,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
     			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
-    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3837,11 +3861,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
     			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
-    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3907,11 +3931,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
     			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
-    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3921,11 +3945,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
     			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
-    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3966,11 +3990,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
     			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
-    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -3980,11 +4004,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
     			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
-    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -4050,11 +4074,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
     			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
-    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -4064,11 +4088,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
     			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
-    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
-    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -4109,11 +4133,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
     			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
-    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
-    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
-    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Head" id="Item.cts_rohan_helmet_captain" />
+    			<Equipment slot="Body" id="Item.cts_rohan_armor_captain" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_captain_shoulder" />
     			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
-    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_captain_boots1" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -4123,11 +4147,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
     			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
-    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
-    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
-    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Head" id="Item.cts_rohan_helmet_captain" />
+    			<Equipment slot="Body" id="Item.cts_rohan_armor_captain" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_captain_shoulder" />
     			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
-    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_captain_boots1" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -4193,11 +4217,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
     			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
-    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
-    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
-    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Head" id="Item.cts_rohan_helmet_captain" />
+    			<Equipment slot="Body" id="Item.cts_rohan_armor_captain" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_captain_shoulder" />
     			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
-    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_captain_boots1" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>
@@ -4207,11 +4231,11 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
     			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
-    			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
-    			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
-    			<Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+    			<Equipment slot="Head" id="Item.cts_rohan_helmet_captain" />
+    			<Equipment slot="Body" id="Item.cts_rohan_armor_captain" />
+    			<Equipment slot="Cape" id="Item.cts_rohan_captain_shoulder" />
     			<Equipment slot="Gloves" id="Item.cts_rohan_royal_guard_gloves" />
-    			<Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+    			<Equipment slot="Leg" id="Item.cts_rohan_captain_boots1" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
     		</EquipmentSet>

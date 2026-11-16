@@ -1273,3 +1273,14 @@ Removing the Hostile row between Gondor and Dunland stops Full War from declarin
 **Prevent:** before keying a rule on `CurrentSettlement` or `PlayerEncounter` state, read the engine order from the encounter's start to the menu that asks; prove a gate rule with the step that opens the gate, not with a hand-set flag.
 
 **Source:** `docs/reviews/rca-pr1332-hostile-peace-2026-11-15.md`
+### A list of what stops campaign time includes TAOM's own pause calls (#1075, 2026-11-15)
+The scenario driver handled every engine pause the slice review listed (inquiries, scene notifications, menus, the time lock, focus loss). The first unattended run still stood 9 minutes on day 2: a War Chronicle story window called `GameStateManager.RegisterActiveStateDisableRequest` (`RealmsPopupLayer.cs:57-61`), and the status read `screen=Map time_locked=0` the whole time.
+- **Why missed:** the review read the engine's pause sources and no lens grepped TAOM's own code for the same call.
+- **Prevent:** before you list what can stop time for a driver or a watchdog, grep the repo for `RegisterActiveStateDisableRequest` and `TimeControlModeLock` as well as the engine. Each caller is a pause the driver must see or close.
+- **Source:** [rca-scenario-event-window-2026-11-15.md](../rca-scenario-event-window-2026-11-15.md), finding 1, first game run.
+
+### A balance run needs a line for each question it must answer (#1283, 2026-11-15)
+The first 150-day AI run showed Dunland and Gondor at peace on day 134, so they had been at war, but no line said how the war began. The Diplomacy patch logged only the declarations it refused, and for a call to war the war line names the called realm, not the caller.
+- **Why missed:** the patch was written to veto, and the reading procedure asked who called the war without a line to answer it.
+- **Prevent:** for each question in a feature's "How to verify in game", name the log line that answers it and the step that reads it. Log the allowed outcome as well as the refused one when a run must explain a state.
+- **Source:** [rca-faction-balance-run-2026-11-15.md](../rca-faction-balance-run-2026-11-15.md), findings 1 to 3.

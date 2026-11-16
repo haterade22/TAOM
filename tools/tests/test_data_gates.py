@@ -206,6 +206,24 @@ class SelectionTests(unittest.TestCase):
                      "Main/_Module/ModuleData/troops/troops_gondor.xml", LIVE_ARMORY):
             self.assertIn("placeholder-weapons", _ids(dg.select(dg.GATES, [path])), path)
 
+    def test_the_lord_variant_inputs_select_its_check_the_class_table_and_the_mesh_scan(self):
+        """The variants are priced from the Armory sources through the curve and judged against the
+        rosters, and the class table and the mesh scan read the variant file (#1333)."""
+        gate = next(g for g in dg.GATES if g.id == "lord-armour-variants")
+        self.assertEqual(gate.cmd, ("python", "tools/generate_lord_armour_variants.py", "--check"))
+        for path in ("Main/_Module/ModuleData/lord_armour/lord_armour_variants.xml", "tools/lord_armour_variants.json",
+                     "tools/generate_lord_armour_variants.py", "tools/derive_armor_tiers.py", "tools/fix_lord_kits.py",
+                     "tools/rebalance_armor.py", "tools/rebalance_troops.py", "tools/taom_schema.py",
+                     "Main/_Module/SubModule.xml", "Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_harad.xml",
+                     "Main/_Module/ModuleData/taom_wanderers.xml", LIVE_ARMORY,
+                     # The repo trace of an Armory restat (a source's weight, material or share can change)
+                     # and the item loader the generator imports for the reference pieces.
+                     "tools/data/armor_roster_tiers.json", "tools/fix_upgrade_armour_regressions.py"):
+            self.assertIn("lord-armour-variants", _ids(dg.select(dg.GATES, [path])), path)
+        variant_file = _ids(dg.select(dg.GATES, ["Main/_Module/ModuleData/lord_armour/lord_armour_variants.xml"]))
+        self.assertIn("armour-classes", variant_file)
+        self.assertIn("lord-variant-meshes", variant_file)
+
     def test_an_unrelated_tool_does_not_select_the_placeholder_verify_gate(self):
         self.assertNotIn("placeholder-weapons", _ids(dg.select(dg.GATES, ["tools/data_gates.py"])))
 

@@ -75,6 +75,61 @@ public class ShippedCombatMechanicsConfigTests
     }
 
     [TestMethod]
+    public void ShippedConfig_SkillWindow_IsScaledToTheTroopSkillCurve()
+    {
+        // #343: the troop skill curve now tops out at 260 where it reached 390, so the skill window
+        // was scaled by 260/390 (dead zone 30 to 20, target delta 200 to 135; the race bonuses
+        // in the next test). The compiled
+        // defaults are what an invalid file reverts to, so both surfaces agree.
+        var shipped = _sut.GetConfig().CrushThrough;
+        var compiled = new CombatMechanicsConfig().CrushThrough;
+
+        Assert.AreEqual(20, shipped.SkillDeadZone);
+        Assert.AreEqual(135, shipped.SkillTargetDelta);
+        Assert.AreEqual(compiled.SkillDeadZone, shipped.SkillDeadZone);
+        Assert.AreEqual(compiled.SkillTargetDelta, shipped.SkillTargetDelta);
+    }
+
+    [TestMethod]
+    public void ShippedConfig_SkillCurveExponent_KeepsTheCurveShapeOverTheScaledWindow()
+    {
+        // #343: the window between the dead zone and the target delta shrank from 170 skill points
+        // to 115, so the exponent grows by 170/115. Halfway through the window the chance is then
+        // the same share of its full value as with the old tuning (30, 200, 0.008097).
+        var shipped = _sut.GetConfig().CrushThrough;
+        var compiled = new CombatMechanicsConfig().CrushThrough;
+
+        double before = ShareAtHalfWindow(200 - 30, 0.008097);
+        double now = ShareAtHalfWindow(shipped.SkillTargetDelta - shipped.SkillDeadZone, shipped.SkillCurveExponent);
+
+        Assert.AreEqual(before, now, 0.001);
+        Assert.AreEqual(compiled.SkillCurveExponent, shipped.SkillCurveExponent, 0.000001f);
+    }
+
+    // CrushThroughService.EvaluateSkillCurve: (1 - e^(-(delta - deadZone) * exponent)) / (1 - e^(-window * exponent)).
+    private static double ShareAtHalfWindow(double window, double exponent) =>
+        (1.0 - Math.Exp(-(window / 2.0) * exponent)) / (1.0 - Math.Exp(-window * exponent));
+
+    [TestMethod]
+    public void ShippedConfig_RaceCrushBonuses_AreScaledWithTheSkillWindow()
+    {
+        // #343: the race bonuses are added to the weapon-skill gap, so they were scaled by 260/390
+        // with the window (elf and Sauron attack 20 to 13, dwarf defence 15 to 10). The compiled
+        // rows are what an invalid file reverts to, so both surfaces agree.
+        var shipped = _sut.GetConfig().RaceModifiers;
+        var compiled = new CombatMechanicsConfig().RaceModifiers;
+
+        Assert.AreEqual(13f, shipped["elf"].CtbAttackBonus, 0.0001f);
+        Assert.AreEqual(13f, shipped["sauron"].CtbAttackBonus, 0.0001f);
+        Assert.AreEqual(10f, shipped["dwarf"].CtbDefenseBonus, 0.0001f);
+        foreach (var race in new[] { "elf", "sauron", "dwarf" })
+        {
+            Assert.AreEqual(compiled[race].CtbAttackBonus, shipped[race].CtbAttackBonus, 0.0001f, race);
+            Assert.AreEqual(compiled[race].CtbDefenseBonus, shipped[race].CtbDefenseBonus, 0.0001f, race);
+        }
+    }
+
+    [TestMethod]
     public void ShippedConfig_OnlyTrollsDwarvesAndSauronResistAHorse()
     {
         // Once the weight term stops protecting the 160-weight victims, the race rows are the

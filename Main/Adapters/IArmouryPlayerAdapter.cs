@@ -6,7 +6,8 @@ namespace TAOM.Adapters;
 
 /// <summary>
 /// The player's side of an armoury visit (docs/features/armour-acquisition.md): who they are, their
-/// purse, and their party inventory. Pieces are handled stack by stack with their quality modifier,
+/// purse, and their party inventory. "The player" is the hero this adapter acts for: the main hero, or a co-op
+/// guest's hero for <c>ArmouryPlayerAdapter.ForHero</c> (#1329). Pieces are handled stack by stack with their quality modifier,
 /// never through the modifier-dropping ItemObject overloads (adapters.md, "Modifier-Preserving Overloads").
 /// </summary>
 public interface IArmouryPlayerAdapter

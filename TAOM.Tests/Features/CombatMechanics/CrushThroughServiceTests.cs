@@ -40,8 +40,8 @@ public class CrushThroughServiceTests
         _sut = new CrushThroughService(_configProvider, _settings, _resolver, _raceManager, _logger);
     }
 
-    // Defaults describe an otherwise-crushing attack: overhead swing, delta 200 (== target delta,
-    // chance exactly 0.5 at max-chance 0.5), energy 100 (full ramp), roll 0.
+    // Defaults describe an otherwise-crushing attack: overhead swing, delta 200 (over the target
+    // delta, so the curve is at its top: chance 0.5 at max-chance 0.5), energy 100 (full ramp), roll 0.
     private static CrushThroughContext Ctx(
         float energy = 100f,
         bool isSwing = true,
@@ -82,7 +82,7 @@ public class CrushThroughServiceTests
     [TestMethod]
     public void DecideCrushThrough_DeltaEqualsDeadZone_ReturnsNull()
     {
-        var result = _sut.DecideCrushThrough(Ctx(attackerSkill: 30, roll: 0f));
+        var result = _sut.DecideCrushThrough(Ctx(attackerSkill: 20, roll: 0f));
 
         Assert.IsNull(result);
     }
@@ -90,7 +90,7 @@ public class CrushThroughServiceTests
     [TestMethod]
     public void DecideCrushThrough_DeltaJustAboveDeadZone_RollZero_Crushes()
     {
-        var result = _sut.DecideCrushThrough(Ctx(attackerSkill: 31, roll: 0f));
+        var result = _sut.DecideCrushThrough(Ctx(attackerSkill: 21, roll: 0f));
 
         Assert.AreEqual(true, result);
     }
@@ -100,8 +100,8 @@ public class CrushThroughServiceTests
     {
         // Numerator and denominator of the curve share the same float shape, so delta == target
         // delta must produce chance == 0.5 EXACTLY: 0.499 crushes, 0.5 does not (strict <).
-        var justBelow = _sut.DecideCrushThrough(Ctx(attackerSkill: 200, roll: 0.499f));
-        var atChance = _sut.DecideCrushThrough(Ctx(attackerSkill: 200, roll: 0.5f));
+        var justBelow = _sut.DecideCrushThrough(Ctx(attackerSkill: 135, roll: 0.499f));
+        var atChance = _sut.DecideCrushThrough(Ctx(attackerSkill: 135, roll: 0.5f));
 
         Assert.AreEqual(true, justBelow);
         Assert.IsNull(atChance);

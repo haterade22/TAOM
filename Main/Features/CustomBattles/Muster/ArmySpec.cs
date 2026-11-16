@@ -57,14 +57,21 @@ public sealed class ArmySpec
                 var who = MBObjectManager.Instance.GetObject<BasicCharacterObject>(u.Troop ?? "");
                 if (who == null) problems.Add($"{name}: no troop '{u.Troop}'");
                 else if (who.IsHero && u.Count != 1) problems.Add($"{name}: {u.Troop} is a hero, there is only one of him");
-                int roles = (u.Banner ? 1 : 0) + (u.Captain ? 1 : 0) + (u.Horn ? 1 : 0);
-                if (u.Count < Math.Max(1, roles)) problems.Add($"{name}: {u.Troop} has {u.Count}, needs at least {Math.Max(1, roles)} for its roles");
+                int least = MinimumCount(u.Banner, u.Captain, u.Horn);
+                if (u.Count < least) problems.Add($"{name}: {u.Troop} has {u.Count}, needs at least {least} for its roles");
                 total += Math.Max(0, u.Count);
             }
         }
         if (total > MaxTroops) problems.Add($"{total} troops, the engine takes at most {MaxTroops}");
         return problems;
     }
+
+    /// <summary>
+    /// The fewest men a unit can have for its roles. The bearer and the horn blower are soldiers of the unit, but the
+    /// captain is another troop that takes one of the number, so the unit keeps at least one soldier of its own.
+    /// </summary>
+    public static int MinimumCount(bool banner, bool captain, bool horn) =>
+        (captain ? 1 : 0) + Math.Max(1, (banner ? 1 : 0) + (horn ? 1 : 0));
 
     public static uint? ParseColor(string? hex)
     {

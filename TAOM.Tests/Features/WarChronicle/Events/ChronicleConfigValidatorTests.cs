@@ -827,6 +827,28 @@ public class ChronicleConfigValidatorTests
     }
 
     [TestMethod]
+    public void Parse_AStoryWithAnAttackMission_ReadsIt()
+    {
+        var story = Parse(StorySiege(new JObject { ["mission"] = "helms_deep_defend", ["attackMission"] = "helms_deep_attack" })).Single().Story!;
+
+        Assert.AreEqual(0, _warnings.Count, string.Join("\n", _warnings));
+        Assert.AreEqual("helms_deep_attack", story.AttackMissionId);
+    }
+
+    [TestMethod]
+    [DataRow(null)]
+    [DataRow("")]
+    [DataRow("  ")]
+    public void Parse_AStoryWithNoAttackMission_OffersNoAttack(string? attack)
+    {
+        var block = new JObject { ["mission"] = "helms_deep_defend" };
+        if (attack != null)
+            block["attackMission"] = attack;
+
+        Assert.IsNull(Parse(StorySiege(block)).Single().Story!.AttackMissionId);
+    }
+
+    [TestMethod]
     public void Parse_AnUnknownStoryKey_WarnsAndKeepsTheStory()
     {
         var story = Parse(StorySiege(new JObject { ["mission"] = "helms_deep_defend", ["side"] = "Attack" })).Single().Story;
