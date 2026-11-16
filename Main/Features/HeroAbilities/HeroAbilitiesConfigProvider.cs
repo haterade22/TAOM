@@ -33,6 +33,8 @@ public sealed class HeroAbilitiesConfigProvider : IHeroAbilitiesConfigProvider
     private const float MaxOtherPercent = 300f;
     private const float MaxExtraArrowSpread = 20f;
     private const float MaxExtraArrowRange = 150f;
+    private const float MaxKeepDistance = 10f;
+    private const float MaxStepBack = 12f;
     private const int MaxExtraArrows = 3;
 
     private static readonly Regex AbilityId = new Regex("^[a-z0-9_]{1,63}$", RegexOptions.CultureInvariant);
@@ -149,6 +151,8 @@ public sealed class HeroAbilitiesConfigProvider : IHeroAbilitiesConfigProvider
             ExtraArrowItem = item,
             ExtraArrowSpreadMeters = InRange(ranged.ExtraArrowSpreadMeters, MaxExtraArrowSpread, $"{label}: extraArrowSpreadMeters"),
             ExtraArrowRangeMeters = InRange(ranged.ExtraArrowRangeMeters, MaxExtraArrowRange, $"{label}: extraArrowRangeMeters"),
+            KeepDistanceMeters = InRange(ranged.KeepDistanceMeters, MaxKeepDistance, $"{label}: keepDistanceMeters"),
+            StepBackMeters = InRange(ranged.StepBackMeters, MaxStepBack, $"{label}: stepBackMeters"),
         };
     }
 

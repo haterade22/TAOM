@@ -20,7 +20,7 @@ internal sealed class HeroRangedTallies<TBody> where TBody : class
 
     internal IEnumerable<HeroRangedTally> All => _byBody.Values;
 
-    /// <summary>The tally of this body. A new one takes the kit's switches (no kit: both off) and the next serial among
+    /// <summary>The tally of this body. A new one takes the kit's switches (no kit: every switch off) and the next serial among
     /// this mission's bodies of the same hero.</summary>
     internal HeroRangedTally Of(TBody body, HeroRangedConfig? kit)
     {
@@ -31,7 +31,8 @@ internal sealed class HeroRangedTallies<TBody> where TBody : class
         foreach (var other in _byBody.Values)
             if (other.HeroId == heroId)
                 serial++;
-        tally = new HeroRangedTally(heroId, serial) { ZeroAimError = kit?.ZeroAimError == true, PierceShields = kit?.PierceShields == true };
+        tally = new HeroRangedTally(heroId, serial) { ZeroAimError = kit?.ZeroAimError == true, PierceShields = kit?.PierceShields == true,
+            KeepDistance = kit != null && kit.KeepDistanceMeters > 0f && kit.StepBackMeters > 0f };
         _byBody[body] = tally;
         return tally;
     }

@@ -2075,3 +2075,11 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 **Prevent:** in a repeat line, a condition or clickable condition reads `CurrentProcessedRepeatObject`; a consequence reads `SelectedRepeatObject` (vanilla's marriage and caravan consequences do; TAOM's `GiftConversationAdapter` does). When you patch one half of a vanilla repeat line, read the other half's getter too.
 
 **Source:** /deep-review of #1350, Data flow lens item 3 and Engine compatibility lens finding 1.
+
+### A scripted move is proven by where the body went, and its gate is the engine's own (#1415, 2026-11-16)
+
+**Why missed:** the keep-distance step counted a step when `HumanAIComponent.SetScriptedPositionAndDirectionTimed` returned, and the check passed on that count. Whether the agent walks there is native: the formation's Move order is a Hold state that caps his speed as he leaves his slot (`HumanAIComponent.cs:622-633, :673-687`). The guard beside it was a hand list (player, mount, fleeing) that missed four conditions of `Agent.CanBeAssignedForScriptedMovement` (`Agent.cs:3242-3249`).
+
+**Prevent:** store the start and the target at the call, and at the end of the hold count the move only when the body covered part of the step along its line. Gate a scripted move with `CanBeAssignedForScriptedMovement()` after a `HumanAIComponent` null check. Build a test point as the engine builds the target: copy his `GetWorldPosition()` and `SetVec2`, not a new `WorldPosition`.
+
+**Source:** [rca-legolas-keep-distance-2026-11-16.md](../rca-legolas-keep-distance-2026-11-16.md) findings 1 to 3.
