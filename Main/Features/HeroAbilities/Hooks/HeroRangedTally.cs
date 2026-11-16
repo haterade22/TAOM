@@ -31,6 +31,7 @@ internal sealed class HeroRangedTally
     // The kit's switches: with one off, its check is a skip (reason=off).
     internal bool ZeroAimError { get; set; }
     internal bool PierceShields { get; set; }
+    internal bool KeepDistance { get; set; }
 
     // hits
     internal int Shots { get; set; }
@@ -58,6 +59,13 @@ internal sealed class HeroRangedTally
     internal int DeadShooter { get; set; }
     internal int Calls { get; set; }
     internal int Kills { get; set; }
+
+    // keep-distance (#1415): steps called, steps he walked (half the step or more by the end of the hold), threats with no
+    // usable point, and seconds sampled with a melee weapon in hand
+    internal int Steps { get; set; }
+    internal int Moved { get; set; }
+    internal int Cornered { get; set; }
+    internal int MeleeSeconds { get; set; }
 
     /// <summary>One of his missiles met an enemy (blocked or not).</summary>
     internal void MissileHit(object? victim, int index, bool extra, bool blockedShield, bool blockedWeapon, bool shieldBroken)

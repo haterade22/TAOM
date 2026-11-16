@@ -247,6 +247,15 @@ def _armory_catalogue(modules: Path) -> tuple:
 
 
 @functools.lru_cache(maxsize=2)
+def _shield_ids(modules: Path) -> frozenset:
+    """Every shield item id in the installed modules, once per install path per process."""
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import melee_catalogue as mc
+    return frozenset(mc.load_shield_ids(modules))
+
+
+@functools.lru_cache(maxsize=2)
 def _vanilla_priced(modules: Path) -> dict:
     """The priced vanilla melee weapons (SandBoxCore and SandBox), once per install path. The melee
     ladder prices only the Armory, but a vanilla lance can be couched too and a troop may carry one."""
@@ -395,33 +404,36 @@ def couchable_item_ids(modules: Path, ph_dir: Path) -> set:
     return mc.couchable_ids({**_vanilla_priced(Path(modules)), **priced, **ph_priced})
 
 
-def melee_pass_rows(troops, priced, spec):
+def melee_pass_rows(troops, priced, spec, shields=frozenset()):
     """(kits, carried) for the melee ladder gate, rows built the way tools/restat_melee_blades.py
     prices a troop. The craft key stands where the culture was, because a troop id prefix can pick
     the row (the Black Numenoreans are filed under mordor but forge at their own craft), and the
     attack flags are the dominant ones, because a spear whose thrust out-damages its swing takes its
     class top from the thrust. Rows from t.culture and the raw damage flags judge a troop against a
     different weapon than the restat arms it with. `carried` ends with (carrier tier, craft key) so
-    blow_findings holds an ordinary weapon to the tier limit of its carrier."""
+    blow_findings holds an ordinary weapon to the tier limit of its carrier. A troop that carries one
+    of `shields` is priced on the modes a shield allows (melee_catalogue.Priced.with_shield), as
+    tools/fix_melee_ladder.py does: a spear behind a shield only thrusts."""
     import sys as _sys
     _sys.path.insert(0, str(Path(__file__).resolve().parent))
     import melee_ladder as ml
     kits, carried = [], []
     for t in troops:
         craft = ml.craft_key(t.id, t.culture, spec)
-        best = [(priced[i].best_dps, i) for i in t.items if i in priced]
+        shielded = any(i in shields for i in t.items)
+        held = {i: (priced[i].with_shield() if shielded else priced[i]) for i in t.items if i in priced}
+        best = [(p.best_dps, i) for i, p in held.items()]
         if best:
             # A tie names the smallest id, as analyze_melee_ladder.py does (#1379).
             dps, iid = min(best, key=lambda b: (-b[0], b[1]))
-            p = priced[iid]
-            kits.append((t.id, craft, t.tier, iid, dps, p.blade_piece, p.item.template,
-                         *ml.dominant_flags(p.item.template, p.swing_damage, p.thrust_damage,
+            p = held[iid]
+            kits.append((t.id, craft, t.tier, iid, dps, p.blade_piece, p.class_template,
+                         *ml.dominant_flags(p.class_template, p.swing_damage, p.thrust_damage,
                                             p.swing_dps, p.thrust_dps, spec)))
-        for i in sorted(t.items):
-            if i in priced:
-                p = priced[i]
-                carried.append((t.id, i, p.item.template, p.blade_piece, p.swing_damage,
-                                p.thrust_damage, p.swing_dps, p.thrust_dps, t.tier, craft))
+        for i in sorted(held):
+            p = held[i]
+            carried.append((t.id, i, p.class_template, p.blade_piece, p.swing_damage,
+                            p.thrust_damage, p.swing_dps, p.thrust_dps, t.tier, craft))
     return kits, carried
 
 
@@ -597,7 +609,7 @@ class Validator:
             ))
 
         by_id = {t.id: t for t in troops}
-        kits, carried = melee_pass_rows(troops, priced, spec)
+        kits, carried = melee_pass_rows(troops, priced, spec, _shield_ids(modules))
         for f in ml.findings(kits, spec, min_gap=1.0):
             troop = by_id.get(f.troop)
             issues.append(Issue(

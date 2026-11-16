@@ -12,12 +12,13 @@ parses the space-separated key=value tokens after it:
     t=kingdom cid day phase k side ai war towns castles pts base loss cap str pris tier vr pe
     t=side    cid day side pts base alive
     t=share   cid day share                (free / (free + evil), "na" when both are 0)
+    t=garrison cid day k forts men fit     (#1283: the men in a kingdom's garrisons; fit excludes the wounded)
     t=event   cid day ev=tier|destroyed|chronicle|pledge plus that event's own keys
     t=load    cid day                      (a save was loaded; day is the save's own day)
 
 Rules: an unknown v exits 2; a malformed line is skipped and counted (the first one is printed as a
 WARNING); a save-reload re-emits days, so per campaign (cid) the LAST kingdom line per (day, k), side
-line per (day, side) and share line per day win, and exact repeated events collapse to one. Chronicle
+line per (day, side), share line per day and garrison line per (day, k) win, and exact repeated events collapse to one. Chronicle
 resolutions (ev=chronicle, one per event outcome: Occurred, Held, Fell, Lapsed or Skipped) are listed by
 day and counted per outcome, one per event id: the last line read, even an exact repeat of an earlier one. A
 realm that pledged to a side (ev=pledge, War Pledge) is listed once, by the last line read for its kingdom; from
@@ -28,7 +29,7 @@ so a later load of a save that holds the pledge lists it again. Until such a kin
 ends on the day of the load, a realm destroyed that day), a pledge that a load took back stays listed. Logs are
 read oldest first (by the taom_debug_ name stamp, else file time), so the newer process wins whatever
 the argument order. A load is a rewind: a t=load line at day S drops every stored record of that cid
-(kingdom, side and share lines, events, chronicle resolutions) with a day after S, which belongs to the
+(kingdom, side, share and garrison lines, events, chronicle resolutions) with a day after S, which belongs to the
 run the player abandoned. Day S is kept from both runs: on a load the engine waits only the elapsed part
 of the day before the next daily tick (Campaign.CreateCampaignEvents, v1.5.5 Campaign.cs:1024-1030), so
 a save made in the first half of elapsed day S can tick day S again, and the old run's day-S events
@@ -78,6 +79,7 @@ DEFAULT_LOG_GLOB = os.path.join(
 KINGDOM_KEYS = ('phase', 'k', 'side', 'ai', 'war', 'towns', 'castles', 'pts', 'base', 'loss', 'cap',
                 'str', 'pris', 'tier', 'vr', 'pe')
 SIDE_KEYS = ('side', 'pts', 'base', 'alive')
+GARRISON_KEYS = ('k', 'forts', 'men', 'fit')   # #1283: the men in a kingdom's garrisons
 EVENT_KEYS = {
     'tier': ('k', 'from', 'to', 'loss'),
     'destroyed': ('k',),
@@ -115,6 +117,7 @@ class Campaign:
         self.kingdoms = {}   # (day, k) -> field dict
         self.sides = {}      # (day, side) -> field dict
         self.shares = {}     # day -> float or None (na)
+        self.garrisons = {}  # (day, k) -> field dict
         self.events = []     # de-duplicated, in first-read order
         self._event_seen = set()  # event keys already in self.events
         self._chronicle_reads = []  # (day, id, outcome), repeats included, in read order
@@ -169,6 +172,7 @@ class Campaign:
         self.kingdoms = {key: rec for key, rec in self.kingdoms.items() if key[0] <= day}
         self.sides = {key: rec for key, rec in self.sides.items() if key[0] <= day}
         self.shares = {d: s for d, s in self.shares.items() if d <= day}
+        self.garrisons = {key: rec for key, rec in self.garrisons.items() if key[0] <= day}
         self.events = [(d, f) for d, f in self.events if d <= day]
         self._event_seen = {_event_key(f) for _, f in self.events}
         self._chronicle_reads = [r for r in self._chronicle_reads if r[0] <= day]
@@ -243,6 +247,13 @@ def _ingest(parsed, fields):
         if 'share' not in fields:
             raise ValueError('missing share')
         parsed.campaign(fields['cid']).shares[day] = _opt_float(fields['share'])
+    elif kind == 'garrison':
+        missing = [k for k in GARRISON_KEYS if k not in fields]
+        if missing:
+            raise ValueError('missing ' + missing[0])
+        for key in ('forts', 'men', 'fit'):
+            _num(fields[key], int)
+        parsed.campaign(fields['cid']).garrisons[(day, fields['k'])] = fields
     elif kind == 'load':
         parsed.campaign(fields['cid']).load(day)
     elif kind == 'event':
@@ -420,6 +431,13 @@ def compute_metrics(camp):
             net[side] = int(last['pts']) - start
     m['net_change'] = net
 
+    series = {}
+    for (day, k), rec in sorted(camp.garrisons.items()):
+        series.setdefault(k, []).append((day, int(rec['men']), int(rec['fit']), int(rec['forts'])))
+    # Per kingdom: the first row, the row with the fewest men (earliest on a tie) and the last row.
+    m['garrisons'] = {k: (rows[0], min(rows, key=lambda r: (r[1], r[0])), rows[-1])
+                      for k, rows in series.items()}
+
     m['target_share_pass'] = (m['in_band_fraction'] is not None
                               and m['in_band_fraction'] >= SHARE_TARGET_FRACTION)
     verdict, why = _capital_verdict(camp, loss)
@@ -494,6 +512,13 @@ def format_report(cid, m):
         out.extend(f'  {d}  {i}  {o}' for d, i, o in m['chronicle'])
         out.append('  resolutions by outcome: '
                    + ', '.join(f'{o} {n}' for o, n in sorted(m['chronicle_counts'].items())))
+    else:
+        out.append('  none')
+    out.append('')
+    out.append('Garrisons (day: men/fit in forts; first, fewest men, last)')
+    if m['garrisons']:
+        for k, rows in sorted(m['garrisons'].items()):
+            out.append(f'  {k}: ' + ', '.join(f'day {d}: {men}/{fit} in {forts}' for d, men, fit, forts in rows))
     else:
         out.append('  none')
     out.append('')

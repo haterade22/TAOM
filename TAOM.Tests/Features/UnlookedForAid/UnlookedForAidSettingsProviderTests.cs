@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.UnlookedForAid;
 
@@ -28,9 +29,9 @@ public class UnlookedForAidSettingsProviderTests
         // MCM reads these attributes by name; MCMv5 is runtime-only here, so the test does too.
         var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.EnableUnlookedForAid))!;
 
-        Assert.AreEqual("World/Help Unlooked-For", Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName"));
+        Assert.AreEqual("World/Help Unlooked-For", McmText.Plain(Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName") as string));
         var value = Attribute(property, "SettingPropertyBoolAttribute");
-        Assert.AreEqual("Lords stop fleeing sieges", Read(value, "DisplayName"));
+        Assert.AreEqual("Lords stop fleeing sieges", McmText.Plain(Read(value, "DisplayName") as string));
         Assert.AreEqual(false, Read(value, "RequireRestart"), "read on every avoid question");
         StringAssert.Contains((string)Read(value, "HintText"), "at least half as strong");
     }

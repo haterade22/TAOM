@@ -204,6 +204,82 @@ public class LongDefeatDirectorHeroTests
         Assert.AreEqual(1, rig.Field.HeroSpawns.Count, "one spawn for one free hero");
     }
 
+    // #1370: before any lane holds a defender formation the castle tactic merges its foot formations into one off AI control
+    // (TacticDefendCastle.cs:621-624), which is the heroes' formation 7 once a hero stands, so a free hero waits for the first lane pick.
+    [TestMethod]
+    public void AFreeHero_WaitsUntilAWallLaneHoldsADefenderFormation()
+    {
+        var rig = NewRig(free: new[] { new HeroSpawn("aragorn", "taom_hero_aragorn", 3f) });
+        rig.Field.LanesAssigned = false;
+        Assert.IsTrue(rig.Director.Start());
+
+        rig.Director.Tick(0.1f);
+        rig.Director.Tick(0.1f);
+        Assert.AreEqual(0, rig.Field.HeroSpawns.Count, "no lane holds a defender formation yet");
+
+        rig.Field.LanesAssigned = true;
+        rig.Director.Tick(0.1f);
+
+        Assert.AreEqual(1, rig.Field.HeroSpawns.Count);
+        Assert.AreEqual(HeroState.Standing, StateOf(rig));
+        rig.Director.Tick(0.1f);
+        Assert.AreEqual(1, rig.Field.HeroSpawns.Count, "one spawn for one free hero");
+        Assert.IsFalse(rig.Log.Lines.Any(l => l.Contains("no wall lane")), "the lanes came in time");
+    }
+
+    [TestMethod]
+    public void AFreeHero_SpawnsAtTheWaitLimit_WhenNoLaneEverHoldsAFormation()
+    {
+        var rig = NewRig(free: new[] { new HeroSpawn("aragorn", "taom_hero_aragorn", 3f) });
+        rig.Field.LanesAssigned = false;
+        Assert.IsTrue(rig.Director.Start());
+
+        for (var i = 0; i < 49; i++)
+            rig.Director.Tick(0.1f);
+        Assert.AreEqual(0, rig.Field.HeroSpawns.Count, "4.9 s is inside the limit");
+
+        rig.Director.Tick(0.2f);
+
+        Assert.AreEqual(1, rig.Field.HeroSpawns.Count);
+        Assert.IsTrue(rig.Log.Lines.Any(l => l.Contains("[Hero] no wall lane holds a defender formation after 5 s; the heroes spawn now")), string.Join("\n", rig.Log.Lines));
+    }
+
+    // The wait clock starts again for each queue: a hero bought after an earlier timeout waits his own 5 s.
+    [TestMethod]
+    public void AHeroQueuedAfterATimeout_WaitsAFreshLimit()
+    {
+        var legolas = new HeroOffer("legolas", "{=K_L}Legolas", "", "taom_hero_legolas", 250, 3f);
+        var rig = NewRig(heroes: new[] { Aragorn, legolas }, free: new[] { new HeroSpawn("aragorn", "taom_hero_aragorn", 3f) });
+        rig.Field.LanesAssigned = false;
+        Assert.IsTrue(rig.Director.Start());
+        for (var i = 0; i < 51; i++)
+            rig.Director.Tick(0.1f);
+        Assert.AreEqual(1, rig.Field.HeroSpawns.Count, "the free hero spawned at the limit");
+
+        Assert.AreEqual(HeroResult.Ok, rig.Session.TryBuyHero("legolas"));
+        for (var i = 0; i < 48; i++)
+            rig.Director.Tick(0.1f);
+        Assert.AreEqual(1, rig.Field.HeroSpawns.Count, "the bought hero waits a fresh 5 s");
+
+        rig.Director.Tick(0.3f);
+        Assert.AreEqual(2, rig.Field.HeroSpawns.Count);
+    }
+
+    [TestMethod]
+    public void ABoughtHero_WithTheLanesAssigned_IsNotHeld()
+    {
+        var rig = NewRig();
+        Assert.IsTrue(rig.Director.Start());
+        rig.Director.Tick(0.1f);
+
+        Assert.AreEqual(HeroResult.Ok, rig.Session.TryBuyHero("aragorn"));
+        rig.Director.Tick(0.1f);
+
+        Assert.AreEqual(1, rig.Field.HeroSpawns.Count, "a shop hero comes after the tactic's first pick");
+        var lanes = rig.Field.Calls.IndexOf("LanesAssigned:True");
+        Assert.IsTrue(lanes >= 0 && lanes < rig.Field.Calls.IndexOf("SpawnHero"), "the lanes are read before the spawn: " + string.Join(",", rig.Field.Calls));
+    }
+
     [TestMethod]
     public void AFreeHerosFall_WritesTheFallLine()
     {

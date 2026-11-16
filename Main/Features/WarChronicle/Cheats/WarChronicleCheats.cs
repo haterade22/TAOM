@@ -73,7 +73,8 @@ public static class WarChronicleCheats
         TaomConsole.RunInCampaign(strings, LedgerUsage, _ =>
         {
             var kingdoms = IoC.Resolve<IKingdomWarSnapshotAdapter>().GetKingdoms();
-            var lines = IoC.Resolve<WarLedgerService>().BuildDailyLines(kingdoms);
+            var ledger = IoC.Resolve<WarLedgerService>();
+            var lines = ledger.BuildDailyLines(kingdoms).Concat(ledger.BuildGarrisonLines(kingdoms)).ToList();
             return lines.Count == 0 ? "[WarLedger] No kingdoms to report." : string.Join("\n", lines);
         });
 }

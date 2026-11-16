@@ -117,7 +117,7 @@ public class ChronicleShippedContentTests
     public void EveryText_IsAKeyRegisteredInTheWotrStringsWithTheSameEnglish()
     {
         var registered = XDocument.Load(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "taom_wotr_strings.xml"))
-            .Root!.Elements("string").ToDictionary(s => (string)s.Attribute("id")!, s => (string)s.Attribute("text")!);
+            .Root!.Elements("string").ToDictionary(s => (string)s.Attribute("id")!, s => RegisteredEnglish(s));
         var keyed = new Regex(@"^\{=(?<key>taom_wc_[a-z]+_[a-z]+)\}(?<english>.+)$");
 
         var texts = JToken.Parse(Json).SelectTokens("$..title").Concat(JToken.Parse(Json).SelectTokens("$..text"))
@@ -159,7 +159,16 @@ public class ChronicleShippedContentTests
             .Root!.Elements("string").SingleOrDefault(s => (string)s.Attribute("id")! == id);
 
         Assert.IsNotNull(row, id + " is not registered");
-        Assert.AreEqual(english, (string)row!.Attribute("text")!);
+        Assert.AreEqual(english, RegisteredEnglish(row!));
+    }
+
+    /// <summary>A registry row's English: its text after the <c>{=id}</c> key it opens with (GameTextRowsAreKeyedTests).</summary>
+    private static string RegisteredEnglish(XElement row)
+    {
+        var text = (string)row.Attribute("text")!;
+        var key = "{=" + (string)row.Attribute("id")! + "}";
+        Assert.IsTrue(text.StartsWith(key, System.StringComparison.Ordinal), "not keyed by its id: " + text);
+        return text.Substring(key.Length);
     }
 
     private static string Pair(string a, string b) => string.CompareOrdinal(a, b) < 0 ? a + "|" + b : b + "|" + a;

@@ -240,7 +240,7 @@ public class LocalizationKeyConsistencyTests
 
     /// <summary>
     /// The English an untranslated language row keeps, by id: the default of a <c>{=key}Default</c> row, and the whole
-    /// text of a plain GameText row (<c>taom_wotr_strings.xml</c> holds only plain rows, which code looks up by id).
+    /// text of a plain GameText row (none is left since #1385: GameTextRowsAreKeyedTests).
     /// The first source that has an id wins, as in <see cref="RegisteredEnglish"/>.
     /// </summary>
     internal static Dictionary<string, string> EnglishPlaceholders()
@@ -287,6 +287,40 @@ public class LocalizationKeyConsistencyTests
         Assert.IsFalse(CSharpDefault.IsMatch("\"{=taom_x}Part one \" + rest"));
     }
 
+    private static readonly Regex KeyedPart = new Regex(@"^\{=([A-Za-z0-9_]+)\}(.*)$", RegexOptions.Singleline);
+
+    /// <summary>
+    /// An MCM group path ("{=a}Battle Tactics/{=b}Mixed Formations") is one literal, but MCM splits it on '/' and
+    /// translates each part, so each part is its own key and row (#1385 Phase 4; the harvester's group_parts).
+    /// </summary>
+    internal static IEnumerable<(string Key, string Default)> McmGroupParts(string key, string inline)
+    {
+        if (!key.StartsWith("taom_mcm_group_", StringComparison.Ordinal))
+        {
+            yield return (key, inline);
+            yield break;
+        }
+        var parts = inline.Split('/');
+        yield return (key, parts[0]);
+        foreach (var part in parts.Skip(1))
+        {
+            var m = KeyedPart.Match(part);
+            if (m.Success) yield return (m.Groups[1].Value, m.Groups[2].Value);
+        }
+    }
+
+    [TestMethod]
+    public void McmGroupParts_KeyedPath_GivesEachPartItsOwnKey()
+    {
+        CollectionAssert.AreEqual(
+            new[] { ("taom_mcm_group_a", "Battle Tactics"), ("taom_mcm_group_b", "Mixed Formations") },
+            McmGroupParts("taom_mcm_group_a", "Battle Tactics/{=taom_mcm_group_b}Mixed Formations").ToArray());
+        CollectionAssert.AreEqual(new[] { ("taom_x", "a/{=taom_y}b") }, McmGroupParts("taom_x", "a/{=taom_y}b").ToArray());
+        CollectionAssert.AreEqual(new[] { ("taom_mcm_group_a", "A") }, McmGroupParts("taom_mcm_group_a", "A/B").ToArray());
+        CollectionAssert.AreEqual(new[] { ("taom_mcm_group_a", "A"), ("taom_mcm_group_b", "B"), ("taom_mcm_group_c", "C") },
+            McmGroupParts("taom_mcm_group_a", "A/{=taom_mcm_group_b}B/{=taom_mcm_group_c}C").ToArray());
+    }
+
     [TestMethod]
     public void EveryCSharpDefault_OfARegisteredTaomKey_MatchesTheRegisteredEnglish()
     {
@@ -307,16 +341,16 @@ public class LocalizationKeyConsistencyTests
                     continue;
                 }
                 foreach (Match m in CSharpDefault.Matches(lines[n]))
+                foreach (var (key, inline) in McmGroupParts(m.Groups[1].Value, UnescapeCSharp(m.Groups[2].Value)))
                 {
-                    if (!registered.TryGetValue(m.Groups[1].Value, out var english))
+                    if (!registered.TryGetValue(key, out var english))
                     {
                         continue;   // registration itself is UnregisteredLocalizationKeyBaselineTests' job
                     }
                     checkedSites++;
-                    var inline = UnescapeCSharp(m.Groups[2].Value);
                     if (!string.Equals(inline, english, StringComparison.Ordinal))
                     {
-                        problems.Add($"{Path.GetFileName(file)}:{n + 1} {m.Groups[1].Value}: code \"{inline}\" vs registered \"{english}\"");
+                        problems.Add($"{Path.GetFileName(file)}:{n + 1} {key}: code \"{inline}\" vs registered \"{english}\"");
                     }
                 }
             }

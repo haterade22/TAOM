@@ -57,8 +57,8 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler", "MissionGauntletOrderOfBattleUIHandler", "_isActive", "Field", "OOBOverlayService.cs:64")]
     [DataRow("TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler", "MissionGauntletOrderOfBattleUIHandler", "_dataSource", "Field", "OOBOverlayService.cs:65")]
     // --- CompanionTactics role tooltips (RoleTooltipDecorator.cs) + manual patch (ManualPatchApplicator.cs) ---
-    [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Party.PartyCharacterVM", "PartyCharacterVM", "TypeIconData", "Property", "RoleTooltipDecorator.cs:40")]
-    [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "_cachedTooltipProperties", "Field", "RoleTooltipDecorator.cs:41")]
+    [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Party.PartyCharacterVM", "PartyCharacterVM", "TypeIconData", "Property", "RoleTooltipDecorator.cs:41")]
+    [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "_cachedTooltipProperties", "Field", "RoleTooltipDecorator.cs:42")]
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "GetCaptainTooltip", "Method", "ManualPatchApplicator.cs:85 (manual patch)")]
     // --- Realms encyclopedia Titles page (TitleEncyclopediaPagePatch.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.Encyclopedia.EncyclopediaPage", "EncyclopediaPage", "_identifierTypes", "Field", "TitleEncyclopediaPagePatch.cs:28")]
@@ -84,7 +84,7 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.Agent", "Agent", "SetMountAgent", "Method", "Agent_Die_SpiderDismount_Patch.cs:35 (Patch47)")]
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement.Categories.ClanPartiesVM", "ClanPartiesVM", "OnPartySelection", "Method", "RefugeClanScreenPatch.cs:45")]
     // --- AdvancedCombat custom attacks (CustomAttacksUtils.cs) ---
-    [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "RegisterBlow", "Method", "CustomAttacksUtils.cs:61")]
+    [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "RegisterBlow", "Method", "CustomAttacksUtils.cs:62")]
     // --- MissionPerf tick profiler: the private wait it times at its call site (MissionTickProfilerInstaller.cs) ---
     [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "WaitTickCompletion", "Method", "MissionTickProfilerInstaller.cs:31,54")]
     // --- MissionPerf attribution: the protected internal script tick it binds and swaps (MissionAttributionInstaller.cs) ---

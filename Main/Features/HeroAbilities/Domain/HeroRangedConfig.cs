@@ -26,4 +26,10 @@ public sealed class HeroRangedConfig
 
     // Metres, at most 150: the farthest target an extra arrow reaches.
     public float ExtraArrowRangeMeters { get; set; }
+
+    // Metres, at most 10: an enemy soldier this near is a melee threat, and he steps away (#1415). 0 = never.
+    public float KeepDistanceMeters { get; set; }
+
+    // Metres, at most 12: how far one step takes him; about what a run covers in the 2.5 s hold. 0 = never.
+    public float StepBackMeters { get; set; }
 }

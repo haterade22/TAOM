@@ -4,6 +4,42 @@
   <xsl:template match="@*|node()">
     <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
   </xsl:template>
+  <xsl:template match="WeaponDescription[@id='Mace']/AvailablePieces">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+      <AvailablePiece id="taom_ph_sm_dg_khml_1h_mace_a_t9_blade"/>
+      <AvailablePiece id="taom_ph_wm_dol_goldur_1h_mace_a02_t7_blade"/>
+      <AvailablePiece id="taom_ph_wm_gundabad_mace_a01_t7_blade"/>
+    </xsl:copy>
+  </xsl:template>
+  <xsl:template match="WeaponDescription[@id='OneHandedAxe']/AvailablePieces">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+      <AvailablePiece id="taom_ph_wm_gondor_lossarnach_1h_axe_black_ash_a_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_gundabad_axe_a01_t7_blade"/>
+      <AvailablePiece id="taom_ph_wm_gundabad_axe_a02_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_gundabad_axe_a03_t8_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_ws_axe_1h_a01_t5_blade"/>
+    </xsl:copy>
+  </xsl:template>
+  <xsl:template match="WeaponDescription[@id='OneHandedBastardSword']/AvailablePieces">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+      <AvailablePiece id="taom_ph_isengard_berserker_sword_2h_t5_blade"/>
+      <AvailablePiece id="taom_ph_isengard_berserker_sword_2h_t6_blade"/>
+      <AvailablePiece id="taom_ph_numenorean_bastard_heavy_a_t4_blade"/>
+      <AvailablePiece id="taom_ph_numenorean_bastard_heavy_b_t4_blade"/>
+    </xsl:copy>
+  </xsl:template>
+  <xsl:template match="WeaponDescription[@id='OneHandedBastardSwordAlternative']/AvailablePieces">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+      <AvailablePiece id="taom_ph_isengard_berserker_sword_2h_t5_blade"/>
+      <AvailablePiece id="taom_ph_isengard_berserker_sword_2h_t6_blade"/>
+      <AvailablePiece id="taom_ph_numenorean_bastard_heavy_a_t4_blade"/>
+      <AvailablePiece id="taom_ph_numenorean_bastard_heavy_b_t4_blade"/>
+    </xsl:copy>
+  </xsl:template>
   <xsl:template match="WeaponDescription[@id='OneHandedPolearm']/AvailablePieces">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
@@ -23,20 +59,67 @@
       <AvailablePiece id="taom_ph_gundabad_spear_a02_t4_blade"/>
       <AvailablePiece id="taom_ph_gundabad_spear_a03_t5_blade"/>
       <AvailablePiece id="taom_ph_gundabad_spear_a03_t8_blade"/>
-      <AvailablePiece id="taom_ph_lothlorien_spear_t6_blade"/>
+      <AvailablePiece id="taom_ph_isengard_spear_b_t6_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_spear_a01_t2_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_spear_a01_t8_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_spear_a02_t2_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_spear_a02_t8_blade"/>
+      <AvailablePiece id="taom_ph_sm_dwarf_erebor_spear_a_t2_blade"/>
+      <AvailablePiece id="taom_ph_sm_dwarf_erebor_spear_a_t6_blade"/>
+      <AvailablePiece id="taom_ph_sm_dwarf_erebor_spear_b_t4_blade"/>
+      <AvailablePiece id="taom_ph_sm_uruk_halberd_b_t9_blade"/>
+      <AvailablePiece id="taom_ph_sm_uruk_halberd_j_t7_blade"/>
+      <AvailablePiece id="taom_ph_wm_dol_goldur_halberd_a01_t1_blade"/>
+      <AvailablePiece id="taom_ph_wm_dol_goldur_halberd_a02_t1_blade"/>
+      <AvailablePiece id="taom_ph_wm_dol_goldur_halberd_a03_t1_blade"/>
+      <AvailablePiece id="taom_ph_wm_dol_goldur_halberd_a04_t1_blade"/>
+      <AvailablePiece id="taom_ph_wm_gondor_spear_b_cardolan_t4_blade"/>
+      <AvailablePiece id="taom_ph_wm_gondor_spear_b_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_gundabad_spear_a02_t3_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_spear_a_t7_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_ws_spear_a01_t5_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_ws_spear_a02_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_ws_spear_a03_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_swan_knight_lance_a_t5_blade"/>
+      <AvailablePiece id="taom_ph_wm_swan_knight_lance_a_t6_blade"/>
     </xsl:copy>
   </xsl:template>
   <xsl:template match="WeaponDescription[@id='OneHandedSword']/AvailablePieces">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
       <AvailablePiece id="taom_ph_isengard_1h_sword_t7_blade"/>
+      <AvailablePiece id="taom_ph_isengard_berserker_sword_2h_t5_blade"/>
+      <AvailablePiece id="taom_ph_isengard_berserker_sword_2h_t6_blade"/>
       <AvailablePiece id="taom_ph_mirkwood_sword_t10_blade"/>
       <AvailablePiece id="taom_ph_mirkwood_sword_t8_blade"/>
+      <AvailablePiece id="taom_ph_sm_dwarf_iron_sword_a_t6_blade"/>
+      <AvailablePiece id="taom_ph_sm_dwarf_iron_sword_b_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_gondor_sword_a03_t10_blade"/>
+      <AvailablePiece id="taom_ph_wm_rivendell_sword_a01_black_t10_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_ws_sword_a01_t5_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_ws_sword_a02_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_ws_sword_a03_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_swan_knight_sworda_t7_blade"/>
+      <AvailablePiece id="taom_ph_wm_swan_knight_swordb_t9_blade"/>
+    </xsl:copy>
+  </xsl:template>
+  <xsl:template match="WeaponDescription[@id='TwoHandedAxe']/AvailablePieces">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+      <AvailablePiece id="taom_ph_dale_great_axe_a_t5_blade"/>
+    </xsl:copy>
+  </xsl:template>
+  <xsl:template match="WeaponDescription[@id='TwoHandedMace']/AvailablePieces">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+      <AvailablePiece id="taom_ph_sm_rh_drag_2h_mace_b_t9_blade"/>
     </xsl:copy>
   </xsl:template>
   <xsl:template match="WeaponDescription[@id='TwoHandedPolearm']/AvailablePieces">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
+      <AvailablePiece id="taom_ph_dale_poleaxe_a_t6_blade"/>
+      <AvailablePiece id="taom_ph_dale_poleaxe_a_t7_blade"/>
       <AvailablePiece id="taom_ph_erebor_spear_a_t4_blade"/>
       <AvailablePiece id="taom_ph_erebor_spear_a_t8_blade"/>
       <AvailablePiece id="taom_ph_erebor_spear_b_t4_blade"/>
@@ -53,12 +136,40 @@
       <AvailablePiece id="taom_ph_gundabad_spear_a02_t4_blade"/>
       <AvailablePiece id="taom_ph_gundabad_spear_a03_t5_blade"/>
       <AvailablePiece id="taom_ph_gundabad_spear_a03_t8_blade"/>
-      <AvailablePiece id="taom_ph_lothlorien_spear_t6_blade"/>
+      <AvailablePiece id="taom_ph_isengard_spear_b_t6_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_glaive_a01_t8_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_spear_a01_t2_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_spear_a01_t8_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_spear_a02_t2_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_spear_a02_t8_blade"/>
+      <AvailablePiece id="taom_ph_numenorean_poleaxe_heavy_t8_blade"/>
+      <AvailablePiece id="taom_ph_sm_dwarf_erebor_spear_a_t2_blade"/>
+      <AvailablePiece id="taom_ph_sm_dwarf_erebor_spear_a_t6_blade"/>
+      <AvailablePiece id="taom_ph_sm_dwarf_erebor_spear_b_t4_blade"/>
+      <AvailablePiece id="taom_ph_sm_uruk_halberd_b_t9_blade"/>
+      <AvailablePiece id="taom_ph_sm_uruk_halberd_j_t7_blade"/>
+      <AvailablePiece id="taom_ph_wm_dol_goldur_halberd_a01_t1_blade"/>
+      <AvailablePiece id="taom_ph_wm_dol_goldur_halberd_a02_t1_blade"/>
+      <AvailablePiece id="taom_ph_wm_dol_goldur_halberd_a03_t1_blade"/>
+      <AvailablePiece id="taom_ph_wm_dol_goldur_halberd_a04_t1_blade"/>
+      <AvailablePiece id="taom_ph_wm_gondor_spear_b_cardolan_t4_blade"/>
+      <AvailablePiece id="taom_ph_wm_gondor_spear_b_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_gundabad_spear_a02_t3_blade"/>
+      <AvailablePiece id="taom_ph_wm_mordor_set1_polearm_a01_t4_blade"/>
+      <AvailablePiece id="taom_ph_wm_mordor_set1_polearm_a01_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_spear_a_t7_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_ws_spear_a01_t5_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_ws_spear_a02_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_ws_spear_a03_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_swan_knight_lance_a_t5_blade"/>
+      <AvailablePiece id="taom_ph_wm_swan_knight_lance_a_t6_blade"/>
     </xsl:copy>
   </xsl:template>
   <xsl:template match="WeaponDescription[@id='TwoHandedPolearm_Bracing']/AvailablePieces">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
+      <AvailablePiece id="taom_ph_dale_poleaxe_a_t6_blade"/>
+      <AvailablePiece id="taom_ph_dale_poleaxe_a_t7_blade"/>
       <AvailablePiece id="taom_ph_erebor_spear_a_t4_blade"/>
       <AvailablePiece id="taom_ph_erebor_spear_a_t8_blade"/>
       <AvailablePiece id="taom_ph_erebor_spear_b_t4_blade"/>
@@ -75,12 +186,37 @@
       <AvailablePiece id="taom_ph_gundabad_spear_a02_t4_blade"/>
       <AvailablePiece id="taom_ph_gundabad_spear_a03_t5_blade"/>
       <AvailablePiece id="taom_ph_gundabad_spear_a03_t8_blade"/>
-      <AvailablePiece id="taom_ph_lothlorien_spear_t6_blade"/>
+      <AvailablePiece id="taom_ph_isengard_spear_b_t6_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_glaive_a01_t8_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_spear_a01_t2_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_spear_a01_t8_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_spear_a02_t2_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_spear_a02_t8_blade"/>
+      <AvailablePiece id="taom_ph_sm_dwarf_erebor_spear_a_t2_blade"/>
+      <AvailablePiece id="taom_ph_sm_dwarf_erebor_spear_a_t6_blade"/>
+      <AvailablePiece id="taom_ph_sm_dwarf_erebor_spear_b_t4_blade"/>
+      <AvailablePiece id="taom_ph_sm_uruk_halberd_b_t9_blade"/>
+      <AvailablePiece id="taom_ph_sm_uruk_halberd_j_t7_blade"/>
+      <AvailablePiece id="taom_ph_wm_dol_goldur_halberd_a01_t1_blade"/>
+      <AvailablePiece id="taom_ph_wm_dol_goldur_halberd_a02_t1_blade"/>
+      <AvailablePiece id="taom_ph_wm_dol_goldur_halberd_a03_t1_blade"/>
+      <AvailablePiece id="taom_ph_wm_dol_goldur_halberd_a04_t1_blade"/>
+      <AvailablePiece id="taom_ph_wm_gondor_spear_b_cardolan_t4_blade"/>
+      <AvailablePiece id="taom_ph_wm_gondor_spear_b_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_gundabad_spear_a02_t3_blade"/>
+      <AvailablePiece id="taom_ph_wm_mordor_set1_polearm_a01_t4_blade"/>
+      <AvailablePiece id="taom_ph_wm_mordor_set1_polearm_a01_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_spear_a_t7_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_ws_spear_a01_t5_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_ws_spear_a02_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_ws_spear_a03_t6_blade"/>
     </xsl:copy>
   </xsl:template>
   <xsl:template match="WeaponDescription[@id='TwoHandedPolearm_Couchable']/AvailablePieces">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
+      <AvailablePiece id="taom_ph_dale_poleaxe_a_t6_blade"/>
+      <AvailablePiece id="taom_ph_dale_poleaxe_a_t7_blade"/>
       <AvailablePiece id="taom_ph_erebor_spear_a_t4_blade"/>
       <AvailablePiece id="taom_ph_erebor_spear_a_t8_blade"/>
       <AvailablePiece id="taom_ph_erebor_spear_b_t4_blade"/>
@@ -97,7 +233,43 @@
       <AvailablePiece id="taom_ph_gundabad_spear_a02_t4_blade"/>
       <AvailablePiece id="taom_ph_gundabad_spear_a03_t5_blade"/>
       <AvailablePiece id="taom_ph_gundabad_spear_a03_t8_blade"/>
-      <AvailablePiece id="taom_ph_lothlorien_spear_t6_blade"/>
+      <AvailablePiece id="taom_ph_isengard_spear_b_t6_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_glaive_a01_t8_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_spear_a01_t2_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_spear_a01_t8_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_spear_a02_t2_blade"/>
+      <AvailablePiece id="taom_ph_mirkwood_spear_a02_t8_blade"/>
+      <AvailablePiece id="taom_ph_sm_dwarf_erebor_spear_a_t2_blade"/>
+      <AvailablePiece id="taom_ph_sm_dwarf_erebor_spear_a_t6_blade"/>
+      <AvailablePiece id="taom_ph_sm_dwarf_erebor_spear_b_t4_blade"/>
+      <AvailablePiece id="taom_ph_sm_uruk_halberd_b_t9_blade"/>
+      <AvailablePiece id="taom_ph_sm_uruk_halberd_j_t7_blade"/>
+      <AvailablePiece id="taom_ph_wm_gondor_spear_b_cardolan_t4_blade"/>
+      <AvailablePiece id="taom_ph_wm_gondor_spear_b_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_gundabad_spear_a02_t3_blade"/>
+      <AvailablePiece id="taom_ph_wm_mordor_set1_polearm_a01_t4_blade"/>
+      <AvailablePiece id="taom_ph_wm_mordor_set1_polearm_a01_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_spear_a_t7_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_ws_spear_a01_t5_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_ws_spear_a02_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_rohan_ws_spear_a03_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_swan_knight_lance_a_t5_blade"/>
+      <AvailablePiece id="taom_ph_wm_swan_knight_lance_a_t6_blade"/>
+    </xsl:copy>
+  </xsl:template>
+  <xsl:template match="WeaponDescription[@id='TwoHandedSword']/AvailablePieces">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+      <AvailablePiece id="taom_ph_isengard_berserker_sword_2h_t5_blade"/>
+      <AvailablePiece id="taom_ph_isengard_berserker_sword_2h_t6_blade"/>
+      <AvailablePiece id="taom_ph_numenorean_bastard_heavy_a_t4_blade"/>
+      <AvailablePiece id="taom_ph_numenorean_bastard_heavy_b_t4_blade"/>
+      <AvailablePiece id="taom_ph_numenorean_greatsword_heavy_a_t7_blade"/>
+      <AvailablePiece id="taom_ph_numenorean_greatsword_heavy_b_t6_blade"/>
+      <AvailablePiece id="taom_ph_numenorean_greatsword_heavy_b_t7_blade"/>
+      <AvailablePiece id="taom_ph_numenorean_greatsword_medium_a_t6_blade"/>
+      <AvailablePiece id="taom_ph_numenorean_greatsword_medium_b_t6_blade"/>
+      <AvailablePiece id="taom_ph_wm_gondor_lamedon_2h_sword_c_t6_blade"/>
     </xsl:copy>
   </xsl:template>
 </xsl:stylesheet>

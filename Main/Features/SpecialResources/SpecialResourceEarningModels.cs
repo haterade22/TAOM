@@ -95,7 +95,7 @@ public sealed class DailyOutcome
     public TextObject DailyLine { get; set; }
     public bool DailyLineYellow { get; set; }
     public TextObject Overdraft { get; set; }
-    public string Warning { get; set; }
+    public TextObject Warning { get; set; }
     public IReadOnlyList<TroopDesertionEntry> Desertions { get; set; } = Array.Empty<TroopDesertionEntry>();
     public bool GraceLogged { get; set; }
 }

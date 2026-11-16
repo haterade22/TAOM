@@ -26,6 +26,7 @@ public class RealmBordersMapView : MapView
     private readonly Dictionary<string, float> _labelHeights = new Dictionary<string, float>();
     private RealmBorderService? _borders;
     private RealmAtlasService? _atlas;
+    private IRealmBordersSettings? _settings;
     private IRealmMapAdapter? _map;
     private IMapTerrainAdapter? _terrain;
     private RealmBordersKeys? _keys;
@@ -43,6 +44,7 @@ public class RealmBordersMapView : MapView
         base.CreateLayout();
         _borders = IoC.Resolve<RealmBorderService>();
         _atlas = IoC.Resolve<RealmAtlasService>();
+        _settings = IoC.Resolve<IRealmBordersSettings>();
         _map = IoC.Resolve<IRealmMapAdapter>();
         _terrain = IoC.Resolve<IMapTerrainAdapter>();
         _keys = new RealmBordersKeys();
@@ -106,6 +108,8 @@ public class RealmBordersMapView : MapView
             return;
         var labels = _borders.Labels;
         _names.SetLabels(labels, _nameOf, _borders.NameVersion);
+        if (_settings != null)
+            _names.SetScale(_settings.NameScale);
         if (camera == null)
         {
             _names.Place(0f, 1f, 1f, _project);

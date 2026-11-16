@@ -2,6 +2,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.WardensTally;
@@ -55,7 +56,7 @@ public class WardensTallySettingsProviderTests
     {
         var group = Attribute(Switch, "SettingPropertyGroupAttribute");
 
-        Assert.AreEqual("World/Warden's Tally", Read(group, "GroupName"));
+        Assert.AreEqual("World/Warden's Tally", McmText.Plain(Read(group, "GroupName") as string));
         Assert.AreEqual(Order, Read(group, "GroupOrder"));
         Assert.AreEqual(0, Read(Attribute(Switch, "SettingPropertyBoolAttribute"), "Order"));
 

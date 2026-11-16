@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using TAOM.Features.QuickActions.Models;
 
 namespace TAOM.Features.QuickActions;
@@ -20,7 +19,4 @@ public interface IQuickActionsService
 
     /// <summary>Strips player main hero's battle + civilian equipment to inventory.</summary>
     QuickActionResult UnequipAll();
-
-    /// <summary>Used by the inquiry construction: textual labels for the four actions.</summary>
-    IReadOnlyList<(QuickActionType type, string label, string description)> GetMenuOptions();
 }

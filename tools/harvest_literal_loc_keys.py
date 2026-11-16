@@ -97,20 +97,64 @@ def escape_xml_attr(text: str) -> str:
                 .replace("<", "&lt;").replace(">", "&gt;"))
 
 
-def declared_keys():
-    """key -> (default_text, repo_relative_path, line_no), first declaration wins."""
-    found = OrderedDict()
+def code_files():
+    """(repo_relative_path, text) of each C# source file under CODE_ROOTS, build output skipped."""
     for cs in sorted(p for sub in CODE_ROOTS for p in (REPO_ROOT / sub).rglob("*.cs")):
         if any(part in ("bin", "obj") for part in cs.parts):
             continue
-        text = read_text(cs)
-        rel = cs.relative_to(REPO_ROOT).as_posix()
+        yield cs.relative_to(REPO_ROOT).as_posix(), read_text(cs)
+
+
+# A literal that goes on with + "...", + $"...", + @"...", + $@"..." or + @$"...": LITERAL reads one
+# literal, so the row would hold only the first part of the English (#1385). Not caught, and absent
+# from the code today: a comment between the literal and the +, or + ("...").
+CONTINUED = re.compile(r'\s*\+\s*(?:\$@?|@\$?)?"')
+
+
+def continued_literals(text):
+    """(key, line_no) for each {=KEY} literal in text that goes on with + and another literal."""
+    return [(m.group(2), text.count("\n", 0, m.start()) + 1)
+            for m in LITERAL.finditer(text) if CONTINUED.match(text, m.end())]
+
+
+def split_keys():
+    """key -> (repo_relative_path, line_no) for each key whose default is split over joined literals."""
+    found = {}
+    for rel, text in code_files():
+        for key, line in continued_literals(text):
+            found.setdefault(key, (rel, line))
+    return found
+
+
+# An MCM settings group path: MCM splits it on '/' before it translates each part, so each part has its own key
+# (#1385 Phase 4), and LITERAL reads the first key with the rest of the path as its default.
+MCM_GROUP_PREFIX = "taom_mcm_group_"
+# A nested part's key needs a TAOM prefix too: a vanilla key in taom_module_strings.xml would override the vanilla text.
+KEYED_PART = re.compile(r"^\{=((?:" + "|".join(map(re.escape, LOC_KEY_PREFIXES)) + r")[A-Za-z0-9_]+)\}(.*)$", re.S)
+
+
+def group_parts(key, default):
+    """[(key, default)] for each part of an MCM group path; any other literal is one part."""
+    if not key.startswith(MCM_GROUP_PREFIX):
+        return [(key, default)]
+    first, *rest = default.split("/")
+    parts = [(key, first)]
+    for part in rest:
+        m = KEYED_PART.match(part)
+        if m:   # an unkeyed part has no row to write; McmSettingsTextIsKeyedTests reports it
+            parts.append((m.group(1), m.group(2)))
+    return parts
+
+
+def declared_keys():
+    """key -> (default_text, repo_relative_path, line_no), first declaration wins."""
+    found = OrderedDict()
+    for rel, text in code_files():
         for m in LITERAL.finditer(text):
-            key = m.group(2)
-            if key in found:
-                continue
-            default = unescape(m.group(3), m.group(1) == "$")
-            found[key] = (default, rel, text.count("\n", 0, m.start()) + 1)
+            line = text.count("\n", 0, m.start()) + 1
+            for key, default in group_parts(m.group(2), unescape(m.group(3), m.group(1) == "$")):
+                if key not in found:
+                    found[key] = (default, rel, line)
     return found
 
 
@@ -211,6 +255,15 @@ def main():
         print(f"\n  REFUSING: {len(raw)} key(s) have a default with \\n, \\r or \\t, which the XML "
               f"attribute would read back as a space. Write {{newline}} for a line break:", file=sys.stderr)
         for k, _d, rel, line in raw:
+            print(f"    {k}  ({rel}:{line})", file=sys.stderr)
+        return 1
+
+    split_at = split_keys()
+    split = [(k, *split_at[k]) for k, _d, _r, _l in missing if k in split_at]
+    if split:
+        print(f"\n  REFUSING: {len(split)} key(s) have a default split over literals joined with +, and only "
+              f"the first part would be registered. Write each default as one literal:", file=sys.stderr)
+        for k, rel, line in split:
             print(f"    {k}  ({rel}:{line})", file=sys.stderr)
         return 1
 

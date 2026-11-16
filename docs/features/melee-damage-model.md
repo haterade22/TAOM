@@ -13,7 +13,10 @@ Three pieces:
 - **`tools/melee_catalogue.py`** is the wiring: it reads the installed modules the way the
   engine merges them, works out which usage modes each item has, and prices them. Since #1372 it
   applies the stylesheets each module's `SubModule.xml` `<XmlName>` rows name and leaves out the
-  modules TAOM lists as incompatible (NavalDLC), by the shield gate's rule.
+  modules TAOM lists as incompatible (NavalDLC), by the shield gate's rule. Since #1375 it reads only
+  the modules TAOM loads with (its dependencies and LoadBeforeThis metadata), so AWOIAF_Armoury,
+  Multiplayer and StoryMode do not count. Since #1398 it skips data files that only multiplayer or
+  editor rows name (Native's `mp_crafting_pieces.xml`, `mpitems.xml`).
 - **`tools/analyze_melee_ladder.py`** is a read-only report over the result. It has no
   `--apply` and no write path into any ModuleData.
 
@@ -443,6 +446,67 @@ other weapon. The grouping is the author's reading of the lore and waits for the
 blade above its hero limit, each factor by its own limits, and leaves one below it alone, or one that only
 ladder-exempt troops carry.
 
+### Tier tolerance (2026-11-16)
+
+A troop one or two tiers up already fights harder with the same weapon. Weapon skill raises blow damage
+(+0.15% per point one handed, +0.16% two handed, +0.07% polearm) and attack speed (+0.07%, +0.06%, +0.06%), so
+a tier step adds about 4 to 6% DPS for swords and axes and about 3% for polearms, against weapon targets that
+rise 3 to 9% per tier. The maintainer (2026-11-16): tier 5 and tier 6 may share one weapon, because the tier 6
+troop swings faster and wears more armour.
+
+`melee_ladder.judge` decides which troops are out of band, for the validator (through `findings()`) and for
+`fix_melee_ladder.py`. A weapon under its carrier's band is "ok" when it sits inside the band of a tier up to
+`under_tolerance_tiers` (2) below; `melee_ladder.tolerance_floor` is that lowest accepted DPS, and the
+`MELEE_LADDER_INVERSION` warning names it ("accepted from N"). A weapon over its band is never excused. The
+tolerance only decides who is flagged: a replacement the fixer picks must sit inside the strict band of its own
+class (`pick_substitute`, step 4), and `restat_melee_blades.py` still prices a blade onto the exact target of
+its weakest carrier. `analyze_melee_ladder.py` keeps its own report and does not read the tolerance. On
+2026-11-16 the tolerance took `MELEE_LADDER_INVERSION` from 270 to 146 warnings.
+
+### A troop with a shield (2026-11-16)
+
+A troop that carries a shield wields its weapon in the modes a shield allows. An Armory spear has a one handed
+thrust mode (`OneHandedPolearm`, usage set `onehanded_polearm_block_long_rshield_thrust`, flag
+`requires_shield`) and a two handed swing and thrust mode (`polearm_block_long_shield_swing_thrust`, flag
+`requires_no_shield`). The spearman never swings the spear. A bastard sword's shield mode is a one handed
+sword. The ladder judged both on the two handed mode before this change.
+
+- `melee_catalogue.Priced.with_shield()` keeps only the modes whose usage set has no `requires_no_shield`.
+  When no mode allows a shield, or the primary mode refuses one, the weapon is judged whole (the troop draws
+  it without the shield). On 2026-11-16 ten weapons had a primary that refuses a shield and a couch mode that
+  allows one, all two handed polearms (`dale_war_spear_a`, `mirkwood_glaive_a01`, `wm_mordor_set1_polearm_a01`
+  to `_a04` and others). `Priced.class_template` is the class the held mode fights as (its description's
+  `weapon_class`).
+- Which mode an agent with a shield draws is not verified in the engine source. The usage flags are read in
+  native code (`TaleWorlds.Native.dll`); in managed code only `CampaignUIHelper` reads `requires_no_shield`, for
+  the tooltip. The rule above matches what the flags allow. An in-game check is owed: a Gondor spearman with a
+  shield must thrust one handed and never swing two handed.
+- A troop "carries a shield" when any of its battle sets holds one, the same reading as the fixer's shield
+  guard (`troop_carries_shield`).
+- `OneHandedPolearm` has its own class limit: thrust 45 per blow and 37 DPS. Vanilla's 55 one handed polearm
+  modes thrust 42 at most (median 32) and 35.4 DPS at most (median 25.8), measured 2026-11-16 over SandBoxCore
+  and SandBox. Judged on the two handed thrust top of 45 DPS, every shield spear inside vanilla's range read as
+  under-armed.
+- The validator (`melee_pass_rows`), `fix_melee_ladder.py` and `restat_melee_blades.py` all price a shield
+  carrier through `with_shield`. The restat sets a blade's target in the mode its weakest carrier holds, and
+  holds every mode of every weapon on the blade inside its class limit, because a player or a troop without a
+  shield can still use the two handed mode. An unworn weapon on a blade whose weakest carrier has a shield is
+  held to that carrier's tier limit in the shield modes, and to its class limit only in the other modes.
+- `generate_placeholder_weapons.py` bands a placeholder on the shield modes when every carrier has a shield,
+  and holds each carrier row to the tier limit of the mode it wields. On 2026-11-16 this retired
+  `taom_ph_lothlorien_spear_t6`: its riders carry a shield, and `he_spear`'s one handed thrust (30.6 DPS)
+  already sat at their tier 6 limit (30.9), so the four slots carry `he_spear` again.
+- The fixer's upgrade ceiling (`pick_substitute`, step 5b) reads each upgrade target's weapons as that target
+  wields them. Where a troop without a shield upgrades to one with a shield, or back, the two weapons are
+  compared in different modes.
+
+Measured on 2026-11-16 with the live Armory: `MELEE_LADDER_INVERSION` 146 to 125. The restat dry run went
+from 1 blade (`dunland_caerdh_spear_head_e`, planned on trunk before this change) to 10: nine shield spear
+blades come down 2 to 7% to the one handed polearm tier limit, and `numenorean_sword_blade_d_elite` goes up 6%. Most shield spears are now in band. The Numenorean bastard swords
+are not: their one handed mode sustains 37 DPS, where vanilla's bastard swords sustain a median of 61 in the
+same mode, and a blade restat cannot raise the one handed mode without taking the two handed mode over its
+class limit.
+
 ### `--limits-only`
 
 `python tools/restat_melee_blades.py --limits-only` lowers only the blades above a class or hero limit. It
@@ -506,12 +570,12 @@ restat of the same day; the restat has since been applied (see "Not done, and kn
 
 ### Not done, and known problems
 
-- **The Armory blades were restated on 2026-11-14; the troop swaps were not made.** The restat wrote 203 blade
+- **The Armory blades were restated on 2026-11-14; the troop swaps followed on 2026-11-16.** The restat wrote 203 blade
   pieces and a second run plans 0. The counts above are the dry runs and simulations made before it.
   `generate_career_kits.py`, `generate_starter_kit.py` and `generate_placeholder_weapons.py` ran after it.
-  `fix_melee_ladder.py` did not: it broke the weapon category rule ("A troop keeps its weapon category", below), so the 318
-  `MELEE_LADDER_INVERSION` warnings it was meant to remove stay. The tool holds the rule since 2026-11-16; its
-  roster pass is still not applied. The order of the apply and its results are in
+  `fix_melee_ladder.py` did not then: it broke the weapon category rule ("A troop keeps its weapon category",
+  below). It holds the rule since 2026-11-16 and its roster pass was applied that day; the counts are in that
+  section. The order of the apply and its results are in
   [armor-balance.md](./armor-balance.md#the-apply-sequence-2026-11-14-1271).
 - A blade is priced for its lowest wearer and held to that wearer's tier limit, so a blade worn across more
   than two tiers leaves its upper wearers light. 62 of the 204 worn non-hero blades span more than two tiers
@@ -644,10 +708,11 @@ either way; this is the fixed point, not a stopping place chosen early.
 
 ### Three guards, each of which was wrong once
 
-1. **Couchable weapons, asymmetrically.** `ComputeBlowMagnitudeMelee` feeds the attacker's
-   closing speed into `CalculateStrikeMagnitudeForThrust` as `extraLinearSpeed`, where it is
-   added to the thrust speed and the sum is **squared**. A couched lance therefore already
-   lands several times the standing-thrust magnitude this model computes, so RAISING one is
+1. **Couchable weapons, asymmetrically.** A couch is a passive usage. On v1.5.7
+   `ComputeBlowMagnitudeMelee` sends it to `CalculateBaseBlowMagnitudeForPassiveUsage`
+   (`MissionCombatMechanicsHelper.cs:661-671`), which computes a thrust with zero thrust speed
+   and 0.83 times the closing speed (`CombatStatCalculator.cs:53-56`). The blow therefore comes
+   from the charge, not from the thrust this model computes, so RAISING a couchable weapon is
    refused. The first version refused to move them at all, which protected
    `wm_gundabad_spear_a02` at 164 DPS in the hands of tier-3 militia, the single worst weapon
    the audit found. Lowering is safe and is now allowed.
@@ -790,10 +855,40 @@ at 33, so it was not applied. All polearms share the template `TwoHandedPolearm`
 inside its own class band. Now `weapon_category` keys a candidate on the template and, for a polearm, on
 its main attack (swing or thrust, by the higher DPS), on its couch usage and on whether its primary usage
 refuses a shield; a candidate of another category is never picked. Same category means the same band, so
-an under-armed weapon is only ever swapped for a stronger one. The dry run of 2026-11-16 plans 125 swaps
-across 118 troops, none across a category, none lower for an under-armed weapon
-(`RosterFixerWeaponCategoryTests` pins both). The roster pass is a balance change of its own and is not
-applied.
+an under-armed weapon is only ever swapped for a stronger one (`RosterFixerWeaponCategoryTests`).
+
+The roster pass under this rule was applied on 2026-11-16 with two more rules, each found by the review of
+its first apply:
+
+- **No swap in a generated troop file.** A troop file that a generator writes whole (the eight realm files,
+  `troops_lothlorien.xml`, `troops_gundabad_snow.xml`; `GENERATED_TROOP_FILES`) is reported, not swapped: the
+  generator's next `--apply` would undo the swap. Change such a weapon in the generator. The first apply wrote
+  into seven realm files and `test_generator_regions_in_sync` failed on all seven
+  (`RosterFixerGeneratedFileTests`).
+- **No swap above the upgrade.** Troops are planned from the highest level down, and a candidate may not beat
+  the best weapon that any of the troop's upgrade targets carries on the same template and main attack, after
+  their own swaps. The first apply gave `dale_footman` a 78 DPS poleaxe while its upgrade `dale_spearman` kept
+  a 60 DPS winged spear (`RosterFixerUpgradeCeilingTests`).
+
+Result (`python tools/fix_melee_ladder.py --apply` on 2026-11-16): 82 swaps on 75 troops in 13 troop files,
+35 distinct old and new weapon pairs, all for under-armed weapons; none across a category, none weaker, no
+new upgrade inversion. 538 weapon slots stay unresolved: 160 in generated files, 11 held by an upgrade's
+weapon, the rest with no in-band candidate of the category or over the carrier's tier limit. The same day the
+16 Lothlorien slots the fixer could swap were changed in `generate_lothlorien_troops.py` (each troop's own
+sword or spear line, the fixer's pick); 144 slots in generated files remain.
+`mordor_uruk_shieldguard` is exempt (`tools/melee_ladders.json`): the only candidate was an Uruk halberd,
+and its main weapon is an open decision (rca-black-uruk-weapons-2026-11-07 F1). `generate_career_kits.py
+--apply` then changed 8 career kit ids and `wire_starter_kit_rosters.py --apply` 6 player start rosters.
+`python tools/validate_moduledata.py` reported 304 `MELEE_LADDER_INVERSION` warnings before the pass and
+270 after (2026-11-16).
+
+Most of the residue is slots whose culture owns no weapon of the category in band. The owner's answer
+(2026-11-16): a tier clone of the weapon the troop carries, restated to its tier and named as the next Roman
+numerals of that weapon's line ([placeholder-weapons.md](placeholder-weapons.md), "Tier clones"). Only a
+clone that reaches the band is made: 58 clones take 172 slots, generated troop files included (their
+generators apply the same swap). The clone keeps the donor's weapon category, since only its blade differs.
+`python tools/validate_moduledata.py` then reports 40 `MELEE_LADDER_INVERSION` warnings, against 125 on trunk
+c25b221aa; `MELEE_BLOW_CEILING` stays at 9 (2026-11-16).
 
 ## Key Files
 
@@ -827,6 +922,11 @@ armoured troop (see "Class limits"). After the apply and a full restart:
 
 ## Changelog
 
+- v2.0.40 (16 Nov 2026, #631): a weapon up to two tiers under its carrier's band is accepted (tier
+  tolerance), and a troop with a shield is judged on the modes a shield allows, with a new
+  `OneHandedPolearm` class limit from vanilla. `MELEE_LADDER_INVERSION` 270 to 125; the restat plans 10
+  small blade changes, not yet written to the Armory. The placeholder generator follows the same rule and
+  retires `taom_ph_lothlorien_spear_t6`.
 - 2026-11-14: class limits on one blow and on DPS, per-class tier targets over ten tiers with a craft table,
   tier limits, hero limits by maker group, `--limits-only`, and a DPS cap in whole damage points (#1271).
   Built and dry run; the Armory is not yet restated.
@@ -841,6 +941,14 @@ armoured troop (see "Class limits"). After the apply and a full restart:
   now goes to the first item id in sorted order, in the report and in the validator's melee gate, so a
   `MELEE_LADDER` warning names the same weapon as `LADDER.md`; `test_analyze_melee_ladder_order.py` runs six
   hash seeds.
+- v2.0.40 (16 Nov 2026, #1375): the catalogue and the shield gate read only TAOM's playset and follow the
+  engine's row rules (`.xsl` before `.xslt`, rows for other game types skipped, modules keyed by `<Id>`).
+  AWOIAF_Armoury's 280 crafting pieces left the ladder (2292 to 2012 loaded). The ladder, the generators,
+  the validator and the troop roster page gave the same output on TAOM's weapons.
+- v2.0.40 (16 Nov 2026, #1398): the catalogue skips data files that only multiplayer or editor rows name,
+  reads one `<XmlName>` per row and compares module ids without case, as the engine does. Native's 435
+  multiplayer pieces left the ladder (2012 to 1577 loaded). The ladder, the generators, the validator and the
+  troop roster page gave the same output on TAOM's weapons.
 
 ## GitHub Issue
 
@@ -850,6 +958,8 @@ armoured troop (see "Class limits"). After the apply and a full restart:
 - The melee ladder umbrella is #631.
 - #1372: the catalogue loads modules and stylesheets by the shield gate's rule.
 - #1379: the report gives the same output on every run.
+- #1375: the catalogue reads only the modules TAOM loads with.
+- #1398: the catalogue skips multiplayer-only data files.
 
 ## Related
 

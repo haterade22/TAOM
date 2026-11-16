@@ -112,13 +112,13 @@ public class LordCourtesiesWiringTests
     {
         var src = RepoPaths.ReadSource("Main/Features/TaomSettings.cs", stripComments: true);
 
-        Assert.IsTrue(src.Contains("[SettingPropertyGroup(\"World/Lord Courtesies\", GroupOrder = 63)]"));
+        Assert.IsTrue(src.Contains("[SettingPropertyGroup(\"{=taom_mcm_group_world}World/{=taom_mcm_group_lord_courtesies}Lord Courtesies\", GroupOrder = 63)]"));
         Assert.IsTrue(src.Contains("public bool EnableTroopGifts { get; set; } = true;"));
         Assert.IsTrue(src.Contains("public bool EnableDomainReveal { get; set; } = true;"));
         Assert.AreEqual(1, src.Split(new[] { "GroupOrder = 63" }, System.StringSplitOptions.None).Length - 1,
             "GroupOrder 63 is used by another group");
-        Assert.IsTrue(src.Contains("[SettingPropertyBool(\"Enable Troop Gifts\", Order = 0, RequireRestart = false,"));
-        Assert.IsTrue(src.Contains("[SettingPropertyBool(\"Enable Domain Reveal\", Order = 1, RequireRestart = false,"));
+        Assert.IsTrue(src.Contains("[SettingPropertyBool(\"{=taom_mcm_EnableTroopGifts}Enable Troop Gifts\", Order = 0, RequireRestart = false,"));
+        Assert.IsTrue(src.Contains("[SettingPropertyBool(\"{=taom_mcm_EnableDomainReveal}Enable Domain Reveal\", Order = 1, RequireRestart = false,"));
     }
 
     [TestMethod]
@@ -214,8 +214,8 @@ public class LordCourtesiesWiringTests
     public void TheGiftHint_NamesBothSwitchesThePaymentNeeds()
     {
         var src = RepoPaths.ReadSource("Main/Features/TaomSettings.cs");
-        var start = src.IndexOf("\"Enable Troop Gifts\"", System.StringComparison.Ordinal);
-        var hint = src.Substring(start, src.IndexOf("EnableTroopGifts", start, System.StringComparison.Ordinal) - start);
+        var start = src.IndexOf("}Enable Troop Gifts\"", System.StringComparison.Ordinal);
+        var hint = src.Substring(start, src.IndexOf("public bool EnableTroopGifts", start, System.StringComparison.Ordinal) - start);
 
         Assert.IsTrue(hint.Contains("Bonds of Battle"));
         Assert.IsTrue(hint.Contains("Troop Gifts Win Lords' Favour"));
@@ -226,8 +226,8 @@ public class LordCourtesiesWiringTests
     public void TheBondsHandoverHint_NamesItsSecondCaller()
     {
         var src = RepoPaths.ReadSource("Main/Features/TaomSettings.cs");
-        var start = src.IndexOf("\"Troop Gifts Win Lords' Favour\"", System.StringComparison.Ordinal);
-        var hint = src.Substring(start, src.IndexOf("BondsTroopHandoverEnabled", start, System.StringComparison.Ordinal) - start);
+        var start = src.IndexOf("}Troop Gifts Win Lords' Favour\"", System.StringComparison.Ordinal);
+        var hint = src.Substring(start, src.IndexOf("public bool BondsTroopHandoverEnabled", start, System.StringComparison.Ordinal) - start);
 
         Assert.IsTrue(hint.Contains("Lord Courtesies"));
         Assert.IsTrue(hint.Contains("Default: on."));

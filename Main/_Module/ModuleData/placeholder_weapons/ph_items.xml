@@ -352,22 +352,1253 @@
         </Pieces>
     </CraftedItem>
 
-    <!-- PLACEHOLDER taom_ph_lothlorien_spear_t6: look of he_spear, tier 6 ladder target -->
+    <!-- PLACEHOLDER taom_ph_dale_great_axe_a_t5: look of dale_great_axe_a, tier 5 ladder target -->
+    <CraftedItem id="taom_ph_dale_great_axe_a_t5" name="{=taom_ph_dale_great_axe_a_t5_name}[Dale] Dale Great Axe II" crafting_template="TwoHandedAxe" is_merchandise="false" culture="Culture.sturgia">
+        <Pieces>
+            <Piece id="taom_ph_dale_great_axe_a_t5_blade" Type="Blade" scale_factor="100" />
+            <Piece id="wm_dale_ws_2h_axe_a01_handle" Type="Handle" scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_dale_poleaxe_a_t6: look of dale_poleaxe_a, tier 6 ladder target -->
+    <CraftedItem id="taom_ph_dale_poleaxe_a_t6" name="{=taom_ph_dale_poleaxe_a_t6_name}[Dale] Dale Poleaxe II" crafting_template="TwoHandedPolearm" is_merchandise="false" culture="Culture.sturgia" modifier_group="polearm">
+        <Pieces>
+            <Piece id="taom_ph_dale_poleaxe_a_t6_blade" Type="Blade" scale_factor="100" />
+            <Piece id="wm_dale_ws_spear_a02_handle" Type="Handle" scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_dale_poleaxe_a_t7: look of dale_poleaxe_a, tier 7 ladder target -->
+    <CraftedItem id="taom_ph_dale_poleaxe_a_t7" name="{=taom_ph_dale_poleaxe_a_t7_name}[Dale] Dale Poleaxe III" crafting_template="TwoHandedPolearm" is_merchandise="false" culture="Culture.sturgia" modifier_group="polearm">
+        <Pieces>
+            <Piece id="taom_ph_dale_poleaxe_a_t7_blade" Type="Blade" scale_factor="100" />
+            <Piece id="wm_dale_ws_spear_a02_handle" Type="Handle" scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_isengard_berserker_sword_2h_t5: look of isengard_berserker_sword_2h, tier 5 ladder target -->
     <CraftedItem
-        id="taom_ph_lothlorien_spear_t6"
-        name="{=taom_ph_lothlorien_spear_t6_name}[Lothlorien] Galadhrim Spear"
+        id="taom_ph_isengard_berserker_sword_2h_t5"
+        name="{=taom_ph_isengard_berserker_sword_2h_t5_name}[Isengard] Berserker Sword 2H II"
+        crafting_template="TwoHandedSword"
+        is_merchandise="false"
+        culture="Culture.isengard">
+        <Pieces>
+            <Piece
+                id="taom_ph_isengard_berserker_sword_2h_t5_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_isengard_berserker_sword_a01_guard"
+                Type="Guard"
+                scale_factor="100" />
+            <Piece
+                id="wm_isengard_berserker_sword_a01_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_isengard_berserker_sword_2h_t6: look of isengard_berserker_sword_2h, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_isengard_berserker_sword_2h_t6"
+        name="{=taom_ph_isengard_berserker_sword_2h_t6_name}[Isengard] Berserker Sword 2H III"
+        crafting_template="TwoHandedSword"
+        is_merchandise="false"
+        culture="Culture.isengard">
+        <Pieces>
+            <Piece
+                id="taom_ph_isengard_berserker_sword_2h_t6_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_isengard_berserker_sword_a01_guard"
+                Type="Guard"
+                scale_factor="100" />
+            <Piece
+                id="wm_isengard_berserker_sword_a01_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_isengard_spear_b_t6: look of isengard_spear_b, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_isengard_spear_b_t6"
+        name="{=taom_ph_isengard_spear_b_t6_name}[Isengard] Spear III"
         crafting_template="TwoHandedPolearm"
-        culture="Culture.rivendell"
+        culture="Culture.isengard"
         is_merchandise="false"
         modifier_group="polearm">
         <Pieces>
             <Piece
-                id="taom_ph_lothlorien_spear_t6_blade"
+                id="taom_ph_isengard_spear_b_t6_blade"
                 Type="Blade"
                 scale_factor="100" />
             <Piece
-                id="wm_elven_spear_shaft"
+                id="wm_isengard_1h_spear_b01_handle"
                 Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_mirkwood_glaive_a01_t8: look of mirkwood_glaive_a01, tier 8 ladder target -->
+    <CraftedItem
+        id="taom_ph_mirkwood_glaive_a01_t8"
+        name="{=taom_ph_mirkwood_glaive_a01_t8_name}[Mirkwood] Glaive II"
+        crafting_template="TwoHandedPolearm"
+        is_merchandise="false">
+        <Pieces>
+            <Piece
+                id="taom_ph_mirkwood_glaive_a01_t8_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_mirkwood_glaive_a01_handle"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="wm_mirkwood_glaive_a01_pommel"
+                Type="Pommel"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_mirkwood_spear_a01_t2: look of mirkwood_spear_a01, tier 2 ladder target -->
+    <CraftedItem
+        id="taom_ph_mirkwood_spear_a01_t2"
+        name="{=taom_ph_mirkwood_spear_a01_t2_name}[Mirkwood] Spear III"
+        crafting_template="TwoHandedPolearm"
+        is_merchandise="false">
+        <Pieces>
+            <Piece
+                id="taom_ph_mirkwood_spear_a01_t2_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_mirkwood_spear_a01_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_mirkwood_spear_a01_t8: look of mirkwood_spear_a01, tier 8 ladder target -->
+    <CraftedItem
+        id="taom_ph_mirkwood_spear_a01_t8"
+        name="{=taom_ph_mirkwood_spear_a01_t8_name}[Mirkwood] Spear V"
+        crafting_template="TwoHandedPolearm"
+        is_merchandise="false">
+        <Pieces>
+            <Piece
+                id="taom_ph_mirkwood_spear_a01_t8_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_mirkwood_spear_a01_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_mirkwood_spear_a02_t2: look of mirkwood_spear_a02, tier 2 ladder target -->
+    <CraftedItem
+        id="taom_ph_mirkwood_spear_a02_t2"
+        name="{=taom_ph_mirkwood_spear_a02_t2_name}[Mirkwood] Spear IV"
+        crafting_template="TwoHandedPolearm"
+        is_merchandise="false">
+        <Pieces>
+            <Piece
+                id="taom_ph_mirkwood_spear_a02_t2_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_mirkwood_spear_a02_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_mirkwood_spear_a02_t8: look of mirkwood_spear_a02, tier 8 ladder target -->
+    <CraftedItem
+        id="taom_ph_mirkwood_spear_a02_t8"
+        name="{=taom_ph_mirkwood_spear_a02_t8_name}[Mirkwood] Spear VI"
+        crafting_template="TwoHandedPolearm"
+        is_merchandise="false">
+        <Pieces>
+            <Piece
+                id="taom_ph_mirkwood_spear_a02_t8_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_mirkwood_spear_a02_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_numenorean_bastard_heavy_a_t4: look of numenorean_bastard_heavy_a, tier 4 ladder target -->
+    <CraftedItem
+        id="taom_ph_numenorean_bastard_heavy_a_t4"
+        name="{=taom_ph_numenorean_bastard_heavy_a_t4_name}[Númenor] Bastard Sword Elite A II"
+        crafting_template="TwoHandedSword"
+        is_merchandise="false"
+        value="22000">
+        <Pieces>
+            <Piece
+                id="taom_ph_numenorean_bastard_heavy_a_t4_blade"
+                Type="Blade"
+                scale_factor="105" />
+            <Piece
+                id="numenorean_sword_guard_a"
+                Type="Guard"
+                scale_factor="105" />
+            <Piece
+                id="numenorean_sword_handle_d"
+                Type="Handle"
+                scale_factor="105" />
+            <Piece
+                id="numenorean_sword_pommel_c"
+                Type="Pommel"
+                scale_factor="105" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_numenorean_bastard_heavy_b_t4: look of numenorean_bastard_heavy_b, tier 4 ladder target -->
+    <CraftedItem
+        id="taom_ph_numenorean_bastard_heavy_b_t4"
+        name="{=taom_ph_numenorean_bastard_heavy_b_t4_name}[Númenor] Bastard Sword Elite B II"
+        crafting_template="TwoHandedSword"
+        is_merchandise="false"
+        value="22000">
+        <Pieces>
+            <Piece
+                id="taom_ph_numenorean_bastard_heavy_b_t4_blade"
+                Type="Blade"
+                scale_factor="105" />
+            <Piece
+                id="numenorean_sword_guard_b"
+                Type="Guard"
+                scale_factor="105" />
+            <Piece
+                id="numenorean_sword_handle_c"
+                Type="Handle"
+                scale_factor="105" />
+            <Piece
+                id="numenorean_sword_pommel_b"
+                Type="Pommel"
+                scale_factor="105" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_numenorean_greatsword_heavy_a_t7: look of numenorean_greatsword_heavy_a, tier 7 ladder target -->
+    <CraftedItem
+        id="taom_ph_numenorean_greatsword_heavy_a_t7"
+        name="{=taom_ph_numenorean_greatsword_heavy_a_t7_name}[Númenor] Greatsword Elite A II"
+        crafting_template="TwoHandedSword"
+        is_merchandise="false"
+        value="20000">
+        <Pieces>
+            <Piece
+                id="taom_ph_numenorean_greatsword_heavy_a_t7_blade"
+                Type="Blade"
+                scale_factor="110" />
+            <Piece
+                id="numenorean_sword_guard_d"
+                Type="Guard"
+                scale_factor="110" />
+            <Piece
+                id="numenorean_sword_handle_a"
+                Type="Handle"
+                scale_factor="110" />
+            <Piece
+                id="numenorean_sword_pommel_d"
+                Type="Pommel"
+                scale_factor="110" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_numenorean_greatsword_heavy_b_t6: look of numenorean_greatsword_heavy_b, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_numenorean_greatsword_heavy_b_t6"
+        name="{=taom_ph_numenorean_greatsword_heavy_b_t6_name}[Númenor] Greatsword Elite B II"
+        crafting_template="TwoHandedSword"
+        is_merchandise="false"
+        value="20000">
+        <Pieces>
+            <Piece
+                id="taom_ph_numenorean_greatsword_heavy_b_t6_blade"
+                Type="Blade"
+                scale_factor="110" />
+            <Piece
+                id="numenorean_sword_guard_e"
+                Type="Guard"
+                scale_factor="110" />
+            <Piece
+                id="numenorean_sword_handle_b"
+                Type="Handle"
+                scale_factor="110" />
+            <Piece
+                id="numenorean_sword_pommel_d"
+                Type="Pommel"
+                scale_factor="110" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_numenorean_greatsword_heavy_b_t7: look of numenorean_greatsword_heavy_b, tier 7 ladder target -->
+    <CraftedItem
+        id="taom_ph_numenorean_greatsword_heavy_b_t7"
+        name="{=taom_ph_numenorean_greatsword_heavy_b_t7_name}[Númenor] Greatsword Elite B III"
+        crafting_template="TwoHandedSword"
+        is_merchandise="false"
+        value="20000">
+        <Pieces>
+            <Piece
+                id="taom_ph_numenorean_greatsword_heavy_b_t7_blade"
+                Type="Blade"
+                scale_factor="110" />
+            <Piece
+                id="numenorean_sword_guard_e"
+                Type="Guard"
+                scale_factor="110" />
+            <Piece
+                id="numenorean_sword_handle_b"
+                Type="Handle"
+                scale_factor="110" />
+            <Piece
+                id="numenorean_sword_pommel_d"
+                Type="Pommel"
+                scale_factor="110" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_numenorean_greatsword_medium_a_t6: look of numenorean_greatsword_medium_a, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_numenorean_greatsword_medium_a_t6"
+        name="{=taom_ph_numenorean_greatsword_medium_a_t6_name}[Númenor] Greatsword Heavy A II"
+        crafting_template="TwoHandedSword"
+        is_merchandise="false"
+        value="12000">
+        <Pieces>
+            <Piece
+                id="taom_ph_numenorean_greatsword_medium_a_t6_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="numenorean_sword_guard_c"
+                Type="Guard"
+                scale_factor="100" />
+            <Piece
+                id="numenorean_sword_handle_a"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="numenorean_sword_pommel_a"
+                Type="Pommel"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_numenorean_greatsword_medium_b_t6: look of numenorean_greatsword_medium_b, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_numenorean_greatsword_medium_b_t6"
+        name="{=taom_ph_numenorean_greatsword_medium_b_t6_name}[Númenor] Greatsword Heavy B II"
+        crafting_template="TwoHandedSword"
+        is_merchandise="false"
+        value="12000">
+        <Pieces>
+            <Piece
+                id="taom_ph_numenorean_greatsword_medium_b_t6_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="numenorean_sword_guard_d"
+                Type="Guard"
+                scale_factor="100" />
+            <Piece
+                id="numenorean_sword_handle_b"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="numenorean_sword_pommel_a"
+                Type="Pommel"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_numenorean_poleaxe_heavy_t8: look of numenorean_poleaxe_heavy, tier 8 ladder target -->
+    <CraftedItem
+        id="taom_ph_numenorean_poleaxe_heavy_t8"
+        name="{=taom_ph_numenorean_poleaxe_heavy_t8_name}[Númenor] Poleaxe Heavy II"
+        crafting_template="TwoHandedPolearm"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_numenorean_poleaxe_heavy_t8_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="sm_ar_art_poleaxe_handle_a"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="sm_ar_art_poleaxe_pommel_a"
+                Type="Pommel"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_sm_dg_khml_1h_mace_a_t9: look of sm_dg_khml_1h_mace_a, tier 9 ladder target -->
+    <CraftedItem
+        id="taom_ph_sm_dg_khml_1h_mace_a_t9"
+        name="{=taom_ph_sm_dg_khml_1h_mace_a_t9_name}[Rhûn] Khamul Mace III"
+        crafting_template="Mace"
+        culture="Culture.khuzait"
+        is_merchandise="false"
+        modifier_group="mace">
+        <Pieces>
+            <Piece
+                id="taom_ph_sm_dg_khml_1h_mace_a_t9_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="sm_dg_khml_axe_handle_c"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_sm_dwarf_erebor_spear_a_t6: look of sm_dwarf_erebor_spear_a, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_sm_dwarf_erebor_spear_a_t6"
+        name="{=taom_ph_sm_dwarf_erebor_spear_a_t6_name}[Erebor] Spear V"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.erebor"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_sm_dwarf_erebor_spear_a_t6_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="sm_dwarf_erebor_spear_handle_a"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="sm_dwarf_erebor_spear_pommel_a"
+                Type="Pommel"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_sm_dwarf_erebor_spear_b_t4: look of sm_dwarf_erebor_spear_b, tier 4 ladder target -->
+    <CraftedItem
+        id="taom_ph_sm_dwarf_erebor_spear_b_t4"
+        name="{=taom_ph_sm_dwarf_erebor_spear_b_t4_name}[Erebor] Spear IV"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.erebor"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_sm_dwarf_erebor_spear_b_t4_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="sm_dwarf_erebor_spear_handle_b"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="sm_dwarf_erebor_spear_pommel_b"
+                Type="Pommel"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_sm_dwarf_erebor_spear_a_t2: look of sm_dwarf_erebor_spear_a, tier 2 ladder target -->
+    <CraftedItem
+        id="taom_ph_sm_dwarf_erebor_spear_a_t2"
+        name="{=taom_ph_sm_dwarf_erebor_spear_a_t2_name}[Erebor] Spear III"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.erebor"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_sm_dwarf_erebor_spear_a_t2_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="sm_dwarf_erebor_spear_handle_a"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="sm_dwarf_erebor_spear_pommel_a"
+                Type="Pommel"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_sm_dwarf_iron_sword_a_t6: look of sm_dwarf_iron_sword_a, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_sm_dwarf_iron_sword_a_t6"
+        name="{=taom_ph_sm_dwarf_iron_sword_a_t6_name}[Iron Hills] Sword A II"
+        crafting_template="OneHandedSword"
+        is_merchandise="false"
+        culture="Culture.erebor">
+        <Pieces>
+            <Piece
+                id="taom_ph_sm_dwarf_iron_sword_a_t6_blade"
+                Type="Blade"
+                scale_factor="70" />
+            <Piece
+                id="sm_dwarf_sword_guard_a"
+                Type="Guard"
+                scale_factor="80" />
+            <Piece
+                id="sm_dwarf_iron_sword_handle_a"
+                Type="Handle"
+                scale_factor="80" />
+            <Piece
+                id="sm_dwarf_iron_sword_pommel_a"
+                Type="Pommel"
+                scale_factor="80" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_sm_dwarf_iron_sword_b_t6: look of sm_dwarf_iron_sword_b, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_sm_dwarf_iron_sword_b_t6"
+        name="{=taom_ph_sm_dwarf_iron_sword_b_t6_name}[Iron Hills] Sword B II"
+        crafting_template="OneHandedSword"
+        is_merchandise="false"
+        culture="Culture.erebor">
+        <Pieces>
+            <Piece
+                id="taom_ph_sm_dwarf_iron_sword_b_t6_blade"
+                Type="Blade"
+                scale_factor="70" />
+            <Piece
+                id="sm_dwarf_sword_guard_b"
+                Type="Guard"
+                scale_factor="80" />
+            <Piece
+                id="sm_dwarf_iron_sword_handle_b"
+                Type="Handle"
+                scale_factor="80" />
+            <Piece
+                id="sm_dwarf_iron_sword_pommel_b"
+                Type="Pommel"
+                scale_factor="80" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_sm_rh_drag_2h_mace_b_t9: look of sm_rh_drag_2h_mace_b, tier 9 ladder target -->
+    <CraftedItem
+        id="taom_ph_sm_rh_drag_2h_mace_b_t9"
+        name="{=taom_ph_sm_rh_drag_2h_mace_b_t9_name}[Rhûn] Dragon Two-Handed Mace III"
+        crafting_template="TwoHandedMace"
+        culture="Culture.khuzait"
+        is_merchandise="false"
+        modifier_group="mace">
+        <Pieces>
+            <Piece
+                id="taom_ph_sm_rh_drag_2h_mace_b_t9_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="sm_rh_drag_axe_handle_b"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_sm_uruk_halberd_b_t9: look of sm_uruk_halberd_b, tier 9 ladder target -->
+    <CraftedItem
+        id="taom_ph_sm_uruk_halberd_b_t9"
+        name="{=taom_ph_sm_uruk_halberd_b_t9_name}[Mordor] Uruk Halberd XIV"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.mordor"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_sm_uruk_halberd_b_t9_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="sm_uruk_halberd_guard_a1"
+                Type="Guard"
+                scale_factor="100" />
+            <Piece
+                id="sm_uruk_halberd_handle_a1"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="sm_uruk_halberd_pommel_a1"
+                Type="Pommel"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_sm_uruk_halberd_j_t7: look of sm_uruk_halberd_j, tier 7 ladder target -->
+    <CraftedItem
+        id="taom_ph_sm_uruk_halberd_j_t7"
+        name="{=taom_ph_sm_uruk_halberd_j_t7_name}[Mordor] Uruk Halberd XIII"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.mordor"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_sm_uruk_halberd_j_t7_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="sm_uruk_halberd_guard_a2"
+                Type="Guard"
+                scale_factor="100" />
+            <Piece
+                id="sm_uruk_halberd_handle_a1"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="sm_uruk_halberd_pommel_a3"
+                Type="Pommel"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_dol_goldur_1h_mace_a02_t7: look of wm_dol_goldur_1h_mace_a02, tier 7 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_dol_goldur_1h_mace_a02_t7"
+        name="{=taom_ph_wm_dol_goldur_1h_mace_a02_t7_name}[Dol Guldur] Dol Guldur Mace IV"
+        crafting_template="Mace"
+        is_merchandise="false"
+        culture="Culture.dolguldur"
+        modifier_group="mace">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_dol_goldur_1h_mace_a02_t7_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_dol_goldur_1h_mace_a02_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_dol_goldur_halberd_a01_t1: look of wm_dol_goldur_halberd_a01, tier 1 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_dol_goldur_halberd_a01_t1"
+        name="{=taom_ph_wm_dol_goldur_halberd_a01_t1_name}[Dol Guldur] Dol Guldur Halberd VI"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.dolguldur"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_dol_goldur_halberd_a01_t1_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_dol_goldur_2h_halberd_a01_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_dol_goldur_halberd_a02_t1: look of wm_dol_goldur_halberd_a02, tier 1 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_dol_goldur_halberd_a02_t1"
+        name="{=taom_ph_wm_dol_goldur_halberd_a02_t1_name}[Dol Guldur] Dol Guldur Halberd VII"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.dolguldur"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_dol_goldur_halberd_a02_t1_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_dol_goldur_2h_halberd_a02_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_dol_goldur_halberd_a03_t1: look of wm_dol_goldur_halberd_a03, tier 1 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_dol_goldur_halberd_a03_t1"
+        name="{=taom_ph_wm_dol_goldur_halberd_a03_t1_name}[Dol Guldur] Dol Guldur Halberd IX"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.dolguldur"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_dol_goldur_halberd_a03_t1_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_dol_goldur_2h_halberd_a01_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_dol_goldur_halberd_a04_t1: look of wm_dol_goldur_halberd_a04, tier 1 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_dol_goldur_halberd_a04_t1"
+        name="{=taom_ph_wm_dol_goldur_halberd_a04_t1_name}[Dol Guldur] Dol Guldur Halberd VIII"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.dolguldur"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_dol_goldur_halberd_a04_t1_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_dol_goldur_2h_halberd_a02_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_gondor_lamedon_2h_sword_c_t6: look of wm_gondor_lamedon_2h_sword_c, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_gondor_lamedon_2h_sword_c_t6"
+        name="{=taom_ph_wm_gondor_lamedon_2h_sword_c_t6_name}[Gondor] Lamedon Greatsword Elite A II"
+        crafting_template="TwoHandedSword"
+        is_merchandise="false"
+        culture="Culture.gondor">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_gondor_lamedon_2h_sword_c_t6_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_lamedon_2h_sword_a_guard"
+                Type="Guard"
+                scale_factor="100" />
+            <Piece
+                id="wm_lamedon_2h_sword_a_hilt"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="wm_lamedon_2h_sword_a_pommel"
+                Type="Pommel"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_gondor_lossarnach_1h_axe_black_ash_a_t6: look of wm_gondor_lossarnach_1h_axe_black_ash_a, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_gondor_lossarnach_1h_axe_black_ash_a_t6"
+        name="{=taom_ph_wm_gondor_lossarnach_1h_axe_black_ash_a_t6_name}[Gondor] Lossarnach Axe Heavy II"
+        crafting_template="OneHandedAxe"
+        is_merchandise="false"
+        culture="Culture.gondor">
+        <Pieces>
+            <Piece id="taom_ph_wm_gondor_lossarnach_1h_axe_black_ash_a_t6_blade" Type="Blade" scale_factor="100" />
+            <Piece id="wm_lossarnach_1h_axe_black_ash_handle" Type="Handle" scale_factor="100" />
+            <Piece id="wm_lossarnach_1h_axe_black_ash_pommel" Type="Pommel" scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_gondor_spear_b_t6: look of wm_gondor_spear_b, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_gondor_spear_b_t6"
+        name="{=taom_ph_wm_gondor_spear_b_t6_name}[Gondor] Heavy Spear II"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.gondor"
+        is_merchandise="false"
+        value="6000"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_gondor_spear_b_t6_blade"
+                Type="Blade"
+                scale_factor="110" />
+            <Piece
+                id="wm_gondor_spear_b_shaft"
+                Type="Handle"
+                scale_factor="110" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_gondor_spear_b_cardolan_t4: look of wm_gondor_spear_b_cardolan, tier 4 ladder target -->
+    <CraftedItem id="taom_ph_wm_gondor_spear_b_cardolan_t4" name="{=taom_ph_wm_gondor_spear_b_cardolan_t4_name}[Gondor] Heavy Spear - Cardolan II" crafting_template="TwoHandedPolearm" culture="Culture.gondor" is_merchandise="false" value="6000" modifier_group="polearm">
+        <Pieces>
+            <Piece id="taom_ph_wm_gondor_spear_b_cardolan_t4_blade" Type="Blade" scale_factor="110" />
+            <Piece id="wm_gondor_spear_flag_cardolan" Type="Guard" scale_factor="110" />
+            <Piece id="wm_gondor_spear_b_shaft" Type="Handle" scale_factor="110" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_gondor_sword_a03_t10: look of wm_gondor_sword_a03, tier 10 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_gondor_sword_a03_t10"
+        name="{=taom_ph_wm_gondor_sword_a03_t10_name}[Gondor] Sword Elite A II"
+        crafting_template="OneHandedSword"
+        is_merchandise="false"
+        culture="Culture.gondor">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_gondor_sword_a03_t10_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_gondor_sword_a03_guard"
+                Type="Guard"
+                scale_factor="100" />
+            <Piece
+                id="wm_gondor_sword_a03_hilt"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="wm_gondor_sword_a03_pommel"
+                Type="Pommel"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_gundabad_axe_a01_t7: look of wm_gundabad_axe_a01, tier 7 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_gundabad_axe_a01_t7"
+        name="{=taom_ph_wm_gundabad_axe_a01_t7_name}[Gundabad] Axe V"
+        crafting_template="OneHandedAxe"
+        is_merchandise="false"
+        culture="Culture.gundabad">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_gundabad_axe_a01_t7_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_gundabad_axe_a01_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_gundabad_axe_a02_t6: look of wm_gundabad_axe_a02, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_gundabad_axe_a02_t6"
+        name="{=taom_ph_wm_gundabad_axe_a02_t6_name}[Gundabad] Axe IV"
+        crafting_template="OneHandedAxe"
+        is_merchandise="false"
+        culture="Culture.gundabad">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_gundabad_axe_a02_t6_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_gundabad_axe_a02_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_gundabad_axe_a03_t8: look of wm_gundabad_axe_a03, tier 8 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_gundabad_axe_a03_t8"
+        name="{=taom_ph_wm_gundabad_axe_a03_t8_name}[Gundabad] Axe VI"
+        crafting_template="OneHandedAxe"
+        is_merchandise="false"
+        culture="Culture.gundabad">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_gundabad_axe_a03_t8_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_gundabad_axe_a03_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_gundabad_mace_a01_t7: look of wm_gundabad_mace_a01, tier 7 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_gundabad_mace_a01_t7"
+        name="{=taom_ph_wm_gundabad_mace_a01_t7_name}[Gundabad] Mace III"
+        crafting_template="Mace"
+        is_merchandise="false"
+        culture="Culture.gundabad"
+        modifier_group="mace">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_gundabad_mace_a01_t7_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_gundabad_mace_a01_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_gundabad_spear_a02_t3: look of wm_gundabad_spear_a02, tier 3 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_gundabad_spear_a02_t3"
+        name="{=taom_ph_wm_gundabad_spear_a02_t3_name}[Gundabad] Spear IV"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.gundabad"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_gundabad_spear_a02_t3_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_gundabad_spear_a02_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_mordor_set1_polearm_a01_t4: look of wm_mordor_set1_polearm_a01, tier 4 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_mordor_set1_polearm_a01_t4"
+        name="{=taom_ph_wm_mordor_set1_polearm_a01_t4_name}[Mordor] Orc Polearm V"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.mordor"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_mordor_set1_polearm_a01_t4_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_mordor_set1_polearm_a01_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_mordor_set1_polearm_a01_t6: look of wm_mordor_set1_polearm_a01, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_mordor_set1_polearm_a01_t6"
+        name="{=taom_ph_wm_mordor_set1_polearm_a01_t6_name}[Mordor] Orc Polearm VI"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.mordor"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_mordor_set1_polearm_a01_t6_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_mordor_set1_polearm_a01_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_rivendell_sword_a01_black_t10: look of wm_rivendell_sword_a01_black, tier 10 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_rivendell_sword_a01_black_t10"
+        name="{=taom_ph_wm_rivendell_sword_a01_black_t10_name}[Rivendell] Rivendell Sword I Black II"
+        crafting_template="OneHandedSword"
+        is_merchandise="false"
+        culture="Culture.rivendell">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_rivendell_sword_a01_black_t10_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_rivendell_sword_a01_black_guard"
+                Type="Guard"
+                scale_factor="100" />
+            <Piece
+                id="wm_rivendell_sword_a01_black_handle"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="wm_rivendell_sword_a01_black_pommel"
+                Type="Pommel"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_rohan_spear_a_t7: look of wm_rohan_spear_a, tier 7 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_rohan_spear_a_t7"
+        name="{=taom_ph_wm_rohan_spear_a_t7_name}[Rohan] Spear XVI"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.vlandia"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_rohan_spear_a_t7_blade" Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="sm_ro_rohan_spear_handle_a" Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_rohan_ws_axe_1h_a01_t5: look of wm_rohan_ws_axe_1h_a01, tier 5 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_rohan_ws_axe_1h_a01_t5"
+        name="{=taom_ph_wm_rohan_ws_axe_1h_a01_t5_name}[Rohan] One-Handed Axe II"
+        crafting_template="OneHandedAxe"
+        is_merchandise="false"
+        culture="Culture.vlandia">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_rohan_ws_axe_1h_a01_t5_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_rohan_ws_axe_1h_a01_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_rohan_ws_spear_a01_t5: look of wm_rohan_ws_spear_a01, tier 5 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_rohan_ws_spear_a01_t5"
+        name="{=taom_ph_wm_rohan_ws_spear_a01_t5_name}[Rohan] Spear XIII"
+        crafting_template="TwoHandedPolearm"
+        is_merchandise="false"
+        culture="Culture.vlandia">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_rohan_ws_spear_a01_t5_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_rohan_ws_spear_a01_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_rohan_ws_spear_a02_t6: look of wm_rohan_ws_spear_a02, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_rohan_ws_spear_a02_t6"
+        name="{=taom_ph_wm_rohan_ws_spear_a02_t6_name}[Rohan] Spear XV"
+        crafting_template="TwoHandedPolearm"
+        is_merchandise="false"
+        culture="Culture.vlandia">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_rohan_ws_spear_a02_t6_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_rohan_ws_spear_a02_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_rohan_ws_spear_a03_t6: look of wm_rohan_ws_spear_a03, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_rohan_ws_spear_a03_t6"
+        name="{=taom_ph_wm_rohan_ws_spear_a03_t6_name}[Rohan] Spear XIV"
+        crafting_template="TwoHandedPolearm"
+        is_merchandise="false"
+        culture="Culture.vlandia">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_rohan_ws_spear_a03_t6_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_rohan_ws_spear_a03_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_rohan_ws_sword_a01_t5: look of wm_rohan_ws_sword_a01, tier 5 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_rohan_ws_sword_a01_t5"
+        name="{=taom_ph_wm_rohan_ws_sword_a01_t5_name}[Rohan] Sword IV"
+        crafting_template="OneHandedSword"
+        is_merchandise="false"
+        culture="Culture.vlandia">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_rohan_ws_sword_a01_t5_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_rohan_ws_sword_a01_guard"
+                Type="Guard"
+                scale_factor="100" />
+            <Piece
+                id="wm_rohan_ws_sword_a01_handle"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="wm_rohan_ws_sword_a01_pommel"
+                Type="Pommel"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_rohan_ws_sword_a02_t6: look of wm_rohan_ws_sword_a02, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_rohan_ws_sword_a02_t6"
+        name="{=taom_ph_wm_rohan_ws_sword_a02_t6_name}[Rohan] Sword VI"
+        crafting_template="OneHandedSword"
+        is_merchandise="false"
+        culture="Culture.vlandia">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_rohan_ws_sword_a02_t6_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_rohan_ws_sword_a02_guard"
+                Type="Guard"
+                scale_factor="100" />
+            <Piece
+                id="wm_rohan_ws_sword_a02_handle"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="wm_rohan_ws_sword_a02_pommel"
+                Type="Pommel"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_rohan_ws_sword_a03_t6: look of wm_rohan_ws_sword_a03, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_rohan_ws_sword_a03_t6"
+        name="{=taom_ph_wm_rohan_ws_sword_a03_t6_name}[Rohan] Sword V"
+        crafting_template="OneHandedSword"
+        is_merchandise="false"
+        culture="Culture.vlandia">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_rohan_ws_sword_a03_t6_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_rohan_ws_sword_a03_guard"
+                Type="Guard"
+                scale_factor="100" />
+            <Piece
+                id="wm_rohan_ws_sword_a03_handle"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="wm_rohan_ws_sword_a03_pommel"
+                Type="Pommel"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_swan_knight_lance_a_t5: look of wm_swan_knight_lance_a, tier 5 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_swan_knight_lance_a_t5"
+        name="{=taom_ph_wm_swan_knight_lance_a_t5_name}[Gondor] Swan Knight Lance III"
+        crafting_template="TwoHandedPolearm"
+        is_merchandise="false"
+        culture="Culture.gondor"
+        value="4000"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_swan_knight_lance_a_t5_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_swan_knight_lance_handle_a"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_swan_knight_lance_a_t6: look of wm_swan_knight_lance_a, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_swan_knight_lance_a_t6"
+        name="{=taom_ph_wm_swan_knight_lance_a_t6_name}[Gondor] Swan Knight Lance IV"
+        crafting_template="TwoHandedPolearm"
+        is_merchandise="false"
+        culture="Culture.gondor"
+        value="4000"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_swan_knight_lance_a_t6_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_swan_knight_lance_handle_a"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_swan_knight_sworda_t7: look of wm_swan_knight_sworda, tier 7 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_swan_knight_sworda_t7"
+        name="{=taom_ph_wm_swan_knight_sworda_t7_name}[Gondor] Swan Knight Sword A II"
+        crafting_template="OneHandedSword"
+        is_merchandise="false"
+        culture="Culture.gondor">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_swan_knight_sworda_t7_blade"
+                Type="Blade"
+                scale_factor="110" />
+            <Piece
+                id="wm_swan_knight_sword_a_guard"
+                Type="Guard"
+                scale_factor="100" />
+            <Piece
+                id="wm_swan_knight_sword_a_hilt"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="wm_swan_knight_sword_a_pommel"
+                Type="Pommel"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_wm_swan_knight_swordb_t9: look of wm_swan_knight_swordb, tier 9 ladder target -->
+    <CraftedItem
+        id="taom_ph_wm_swan_knight_swordb_t9"
+        name="{=taom_ph_wm_swan_knight_swordb_t9_name}[Gondor] Swan Knight Sword B II"
+        crafting_template="OneHandedSword"
+        is_merchandise="false"
+        culture="Culture.gondor">
+        <Pieces>
+            <Piece
+                id="taom_ph_wm_swan_knight_swordb_t9_blade"
+                Type="Blade"
+                scale_factor="110" />
+            <Piece
+                id="wm_swan_knight_sword_b_guard"
+                Type="Guard"
+                scale_factor="100" />
+            <Piece
+                id="wm_swan_knight_sword_b_hilt"
+                Type="Handle"
+                scale_factor="100" />
+            <Piece
+                id="wm_swan_knight_sword_b_pommel"
+                Type="Pommel"
                 scale_factor="100" />
         </Pieces>
     </CraftedItem>

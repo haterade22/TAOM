@@ -35,8 +35,30 @@ class PlainItemTests(unittest.TestCase):
         write(modules / "SandBoxCore" / "ModuleData" / "shields.xml",
               '<Items><Item id="round_shield" Type="Shield"/></Items>\n')
         own = tmp / "own" / "SubModule.xml"
-        write(own, '<Module><Id value="TAOM"/><IncompatibleModules><Module Id="NavalDLC"/>'
+        write(own, '<Module><Id value="TAOM"/><DependedModules><DependedModule Id="SandBoxCore"/>'
+                   '</DependedModules><IncompatibleModules><Module Id="NavalDLC"/>'
                    '</IncompatibleModules></Module>\n')
+        old = mc.TAOM_SUBMODULE
+        mc.TAOM_SUBMODULE = own
+        self.addCleanup(setattr, mc, "TAOM_SUBMODULE", old)
+        self.assertEqual(page.load_plain_items(modules)["round_shield"].type, "Shield")
+
+
+    def test_a_multiplayer_only_item_file_is_left_out(self):
+        """#1398: Native's mpitems.xml loads only in multiplayer; its stub must not replace the item."""
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, tmp, ignore_errors=True)
+        modules = tmp / "Modules"
+        write(modules / "Native" / "SubModule.xml",
+              '<Module><Id value="Native"/><Xmls><XmlNode><XmlName id="Items" path="mpitems"/>'
+              '<IncludedGameTypes><GameType value="MultiplayerGame"/></IncludedGameTypes></XmlNode>'
+              '</Xmls></Module>\n')
+        write(modules / "Native" / "ModuleData" / "mpitems.xml", '<Items><Item id="round_shield"/></Items>\n')
+        write(modules / "SandBoxCore" / "ModuleData" / "shields.xml",
+              '<Items><Item id="round_shield" Type="Shield"/></Items>\n')
+        own = tmp / "own" / "SubModule.xml"
+        write(own, '<Module><Id value="TAOM"/><DependedModules><DependedModule Id="SandBoxCore"/>'
+                   '</DependedModules></Module>\n')
         old = mc.TAOM_SUBMODULE
         mc.TAOM_SUBMODULE = own
         self.addCleanup(setattr, mc, "TAOM_SUBMODULE", old)

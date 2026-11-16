@@ -36,7 +36,7 @@ public class VanillaKeyOverrideTests
     private static readonly Regex RowId = new Regex("<string\\s+id=\"([^\"]+)\"", RegexOptions.Compiled);
 
     /// <summary>The reason codes of <c>kept-vanilla-key-rows.txt</c>, whose header words each one.</summary>
-    private static readonly HashSet<string> ReasonTags = new(StringComparer.Ordinal) { "variable", "gender-tag", "article" };
+    private static readonly HashSet<string> ReasonTags = new(StringComparer.Ordinal) { "variable", "gender-tag", "article", "wording" };
 
     private static string LanguagesPath => Path.Combine(RepoRoot, "Main", "_Module", "ModuleData", "Languages");
 
@@ -95,6 +95,33 @@ public class VanillaKeyOverrideTests
             "language rows (an English-only override keeps its English row in taom_module_strings.xml), give " +
             "the changed text a TAOM key, or list the pair in kept-vanilla-key-rows.txt with its reason:\n  " +
             string.Join("\n  ", problems.Take(40)));
+    }
+
+    /// <summary>
+    /// A kept row that repeats vanilla's own row changes nothing and would hide a later TaleWorlds fix to it
+    /// (#1385: 19 of the CN team's rows equalled SandBox's).
+    /// </summary>
+    [TestMethod]
+    public void KeptRows_NoneRepeatsVanillasOwnRow()
+    {
+        var repeats = new List<string>();
+        foreach (var language in LoadKeptRows().GroupBy(k => k.Language))
+        {
+            var vanilla = VanillaLocalizationKeys.TranslatedRows(language.Key);
+            var ours = new Dictionary<string, string>(StringComparer.Ordinal);
+            foreach (var file in Directory.EnumerateFiles(Path.Combine(LanguagesPath, language.Key), "std_taom_*.xml"))
+            {
+                foreach (var row in System.Xml.Linq.XDocument.Load(file).Descendants("string"))
+                    ours[(string)row.Attribute("id")!] = (string?)row.Attribute("text") ?? "";
+            }
+            repeats.AddRange(language
+                .Where(k => ours.TryGetValue(k.Id, out var text) && vanilla.TryGetValue(k.Id, out var theirs) && text == theirs)
+                .Select(k => $"{k.Language} {k.Id}"));
+        }
+        repeats.Sort(StringComparer.Ordinal);
+        Assert.AreEqual(0, repeats.Count,
+            $"{repeats.Count} kept row(s) repeat vanilla's own row; delete each row, its kept-vanilla-key-rows.txt line and " +
+            "its cache entry:\n  " + string.Join("\n  ", repeats.Take(40)));
     }
 
     [TestMethod]

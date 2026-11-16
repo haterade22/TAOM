@@ -48,10 +48,10 @@ public class TaomMumakilPlatform : UsableMachine
     private bool _seatsInitialised;
 
     public override TextObject GetActionTextForStandingPoint(UsableMissionObject usableGameObject)
-        => new TextObject("Climb");
+        => new TextObject("{=taom_mumakil_climb}Climb");
 
     public override TextObject GetDescriptionText(WeakGameEntity gameEntity, Agent requesterAgent)
-        => new TextObject("Mumakil Platform");
+        => new TextObject("{=taom_mumakil_platform}Mumakil Platform");
 
     // 0 = vanilla detachment never assigns anyone here; the crew are placed by MumakilCrewSpawner.
     protected override float GetDetachmentWeightAux(BattleSideEnum side) => 0f;

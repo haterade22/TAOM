@@ -65,7 +65,7 @@ internal sealed partial class LongDefeatDirector
             _field.FinishInitialSpawn();
 
         if (fx.SpawnHeroes.Count > 0)
-            SpawnHeroes(fx.SpawnHeroes);
+            QueueHeroes(fx.SpawnHeroes);
 
         if (fx.StartWave is { } start)
         {

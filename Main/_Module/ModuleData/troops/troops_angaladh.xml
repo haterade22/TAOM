@@ -787,7 +787,7 @@
     <upgrade_targets></upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.dale_poleaxe_a" />
+        <equipment slot="Item0" id="Item.taom_ph_dale_poleaxe_a_t7" />
         <equipment slot="Item1" id="Item.dale_sword_a" />
         <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a04" />
         <equipment slot="Body" id="Item.sk_dale_chest_infrantry_a04" />
@@ -796,7 +796,7 @@
         <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a04" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.dale_poleaxe_a" />
+        <equipment slot="Item0" id="Item.taom_ph_dale_poleaxe_a_t7" />
         <equipment slot="Item1" id="Item.dale_sword_a" />
         <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b04" />
         <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b04" />

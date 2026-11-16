@@ -89,7 +89,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_erebor_spear_b_t4: donor blade sm_dwarf_erebor_spear_blade_b, damage_factor swing x1.188, thrust x1.188 -->
+    <!-- taom_ph_erebor_spear_b_t4: donor blade sm_dwarf_erebor_spear_blade_b, damage_factor swing x1.225, thrust x1.225 -->
     <CraftingPiece
         id="taom_ph_erebor_spear_b_t4_blade"
         name="{=taom_ph_erebor_spear_b_t4_blade_name}Erebor Spear Blade B (placeholder)"
@@ -109,10 +109,10 @@
             body_name="bo_sm_dwarf_erebor_spear_blade_b">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.07" />
+                damage_factor="2.14" />
             <Swing
                 damage_type="Cut"
-                damage_factor="0.90" />
+                damage_factor="0.93" />
         </BladeData>
         <Flags>
             <Flag
@@ -278,7 +278,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gondor_spear_b_gondor_t5: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.254, thrust x1.254 -->
+    <!-- taom_ph_gondor_spear_b_gondor_t5: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.295, thrust x1.295 -->
     <CraftingPiece
         id="taom_ph_gondor_spear_b_gondor_t5_blade"
         name="{=taom_ph_gondor_spear_b_gondor_t5_blade_name}Gondor Spear Head C (placeholder)"
@@ -294,7 +294,7 @@
             body_name="bo_wm_gondor_spear_b_blade">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.31" />
+                damage_factor="2.39" />
         </BladeData>
         <Flags>
             <Flag
@@ -350,7 +350,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gondor_spear_b_swan_t5: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.254, thrust x1.254 -->
+    <!-- taom_ph_gondor_spear_b_swan_t5: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.295, thrust x1.295 -->
     <CraftingPiece
         id="taom_ph_gondor_spear_b_swan_t5_blade"
         name="{=taom_ph_gondor_spear_b_swan_t5_blade_name}Gondor Spear Head C (placeholder)"
@@ -366,7 +366,7 @@
             body_name="bo_wm_gondor_spear_b_blade">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.31" />
+                damage_factor="2.39" />
         </BladeData>
         <Flags>
             <Flag
@@ -386,7 +386,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gondor_spear_b_t8: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.431, thrust x1.431 -->
+    <!-- taom_ph_gondor_spear_b_t8: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.474, thrust x1.474 -->
     <CraftingPiece
         id="taom_ph_gondor_spear_b_t8_blade"
         name="{=taom_ph_gondor_spear_b_t8_blade_name}Gondor Spear Head C (placeholder)"
@@ -402,7 +402,7 @@
             body_name="bo_wm_gondor_spear_b_blade">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.64" />
+                damage_factor="2.72" />
         </BladeData>
         <Flags>
             <Flag
@@ -422,7 +422,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gondor_spear_b_gondor_t8: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.476, thrust x1.476 -->
+    <!-- taom_ph_gondor_spear_b_gondor_t8: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.534, thrust x1.534 -->
     <CraftingPiece
         id="taom_ph_gondor_spear_b_gondor_t8_blade"
         name="{=taom_ph_gondor_spear_b_gondor_t8_blade_name}Gondor Spear Head C (placeholder)"
@@ -438,7 +438,7 @@
             body_name="bo_wm_gondor_spear_b_blade">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.73" />
+                damage_factor="2.83" />
         </BladeData>
         <Flags>
             <Flag
@@ -458,7 +458,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gondor_spear_b_pg_t8: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.476, thrust x1.476 -->
+    <!-- taom_ph_gondor_spear_b_pg_t8: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.534, thrust x1.534 -->
     <CraftingPiece
         id="taom_ph_gondor_spear_b_pg_t8_blade"
         name="{=taom_ph_gondor_spear_b_pg_t8_blade_name}Gondor Spear Head C (placeholder)"
@@ -474,7 +474,7 @@
             body_name="bo_wm_gondor_spear_b_blade">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.73" />
+                damage_factor="2.83" />
         </BladeData>
         <Flags>
             <Flag
@@ -494,7 +494,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gondor_spear_b_swan_t8: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.476, thrust x1.476 -->
+    <!-- taom_ph_gondor_spear_b_swan_t8: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.534, thrust x1.534 -->
     <CraftingPiece
         id="taom_ph_gondor_spear_b_swan_t8_blade"
         name="{=taom_ph_gondor_spear_b_swan_t8_blade_name}Gondor Spear Head C (placeholder)"
@@ -510,7 +510,7 @@
             body_name="bo_wm_gondor_spear_b_blade">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.73" />
+                damage_factor="2.83" />
         </BladeData>
         <Flags>
             <Flag
@@ -530,7 +530,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gondor_spear_a_t8: donor blade wm_gondor_spear_a_blade, damage_factor swing x1.431, thrust x1.431 -->
+    <!-- taom_ph_gondor_spear_a_t8: donor blade wm_gondor_spear_a_blade, damage_factor swing x1.466, thrust x1.466 -->
     <CraftingPiece
         id="taom_ph_gondor_spear_a_t8_blade"
         name="{=taom_ph_gondor_spear_a_t8_blade_name}Gondor Spear Head D (placeholder)"
@@ -546,7 +546,7 @@
             body_name="bo_wm_gondor_spear_a_blade">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.68" />
+                damage_factor="2.75" />
         </BladeData>
         <Flags>
             <Flag
@@ -677,7 +677,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gundabad_spear_a03_t5: donor blade wm_gundabad_spear_a03_blade, damage_factor swing x1.335, thrust x1.000 -->
+    <!-- taom_ph_gundabad_spear_a03_t5: donor blade wm_gundabad_spear_a03_blade, damage_factor swing x1.374, thrust x1.000 -->
     <CraftingPiece
         id="taom_ph_gundabad_spear_a03_t5_blade"
         name="{=taom_ph_gundabad_spear_a03_t5_blade_name}Gundabad Orc Spear Blade III (placeholder)"
@@ -693,7 +693,7 @@
             holster_mesh="">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.10" />
+                damage_factor="2.02" />
             <Swing
                 damage_type="Cut"
                 damage_factor="3.25" />
@@ -712,7 +712,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gundabad_spear_a03_t8: donor blade wm_gundabad_spear_a03_blade, damage_factor swing x1.497, thrust x1.119 -->
+    <!-- taom_ph_gundabad_spear_a03_t8: donor blade wm_gundabad_spear_a03_blade, damage_factor swing x1.170, thrust x1.105 -->
     <CraftingPiece
         id="taom_ph_gundabad_spear_a03_t8_blade"
         name="{=taom_ph_gundabad_spear_a03_t8_blade_name}Gundabad Orc Spear Blade III (placeholder)"
@@ -728,10 +728,10 @@
             holster_mesh="">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.36" />
+                damage_factor="2.24" />
             <Swing
                 damage_type="Cut"
-                damage_factor="3.65" />
+                damage_factor="2.77" />
         </BladeData>
         <Flags>
             <Flag
@@ -747,28 +747,1102 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_lothlorien_spear_t6: donor blade wm_elven_spear_blade, damage_factor swing x1.688, thrust x1.000 -->
+    <!-- taom_ph_dale_great_axe_a_t5: donor blade wm_dale_ws_2h_axe_a01_blade, damage_factor swing x1.135, thrust x1.135 -->
+    <CraftingPiece id="taom_ph_dale_great_axe_a_t5_blade" name="{=taom_ph_dale_great_axe_a_t5_blade_name}Dale Great Axe Head (placeholder)" tier="4" piece_type="Blade" mesh="wm_dale_ws_2h_axe_a01_blade" length="25" weight="2.4">
+        <BladeData stack_amount="3" blade_length="25" blade_width="42.57" physics_material="metal_weapon" body_name="bo_wm_dale_ws_2h_axe_a01_blade">
+            <Swing damage_type="Cut" damage_factor="3.04" />
+        </BladeData>
+        <BuildData piece_offset="0" next_piece_offset="0" previous_piece_offset="24" />
+        <Flags><Flag name="BonusAgainstShield" /><Flag name="CanDismount" /><Flag name="CanKnockDown" /></Flags>
+        <Materials><Material id="Iron5" count="9" /></Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_dale_poleaxe_a_t6: donor blade wm_dale_ws_polearm_head_a03, damage_factor swing x1.355, thrust x1.277 -->
+    <CraftingPiece id="taom_ph_dale_poleaxe_a_t6_blade" name="{=taom_ph_dale_poleaxe_a_t6_blade_name}Dale Poleaxe Head (placeholder)" tier="3" piece_type="Blade" mesh="wm_dale_ws_polearm_head_a03" length="43.03" weight="1.1">
+        <BladeData stack_amount="3" physics_material="metal_weapon" body_name="bo_wm_dale_ws_polearm_head_a03">
+            <Thrust damage_type="Pierce" damage_factor="2.29" />
+            <Swing damage_type="Cut" damage_factor="3.16" />
+        </BladeData>
+        <BuildData piece_offset="0" next_piece_offset="0" previous_piece_offset="0" />
+        <Flags><Flag name="CanKnockDown" /><Flag name="CanDismount" /><Flag name="BonusAgainstShield" /></Flags>
+        <Materials><Material id="Iron4" count="3" /></Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_dale_poleaxe_a_t7: donor blade wm_dale_ws_polearm_head_a03, damage_factor swing x1.355, thrust x1.277 -->
+    <CraftingPiece id="taom_ph_dale_poleaxe_a_t7_blade" name="{=taom_ph_dale_poleaxe_a_t7_blade_name}Dale Poleaxe Head (placeholder)" tier="3" piece_type="Blade" mesh="wm_dale_ws_polearm_head_a03" length="43.03" weight="1.1">
+        <BladeData stack_amount="3" physics_material="metal_weapon" body_name="bo_wm_dale_ws_polearm_head_a03">
+            <Thrust damage_type="Pierce" damage_factor="2.29" />
+            <Swing damage_type="Cut" damage_factor="3.16" />
+        </BladeData>
+        <BuildData piece_offset="0" next_piece_offset="0" previous_piece_offset="0" />
+        <Flags><Flag name="CanKnockDown" /><Flag name="CanDismount" /><Flag name="BonusAgainstShield" /></Flags>
+        <Materials><Material id="Iron4" count="3" /></Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_isengard_berserker_sword_2h_t5: donor blade wm_isengard_berserker_sword_a01_blade, damage_factor swing x1.300, thrust x1.300 -->
     <CraftingPiece
-        id="taom_ph_lothlorien_spear_t6_blade"
-        name="{=taom_ph_lothlorien_spear_t6_blade_name}High Elven Spear Blade (placeholder)"
+        id="taom_ph_isengard_berserker_sword_2h_t5_blade"
+        name="{=taom_ph_isengard_berserker_sword_2h_t5_blade_name}Isengard Berserker Blade A (placeholder)"
         tier="4"
         piece_type="Blade"
-        mesh="wm_elven_spear_blade"
-        length="110.32"
-        weight="0.2136">
+        mesh="wm_isengard_berserker_sword_a01_blade"
+        length="99.6"
+        weight="1.1"
+        excluded_item_usage_features="thrust">
         <BladeData
-            stack_amount="4"
+            stack_amount="3"
             physics_material="metal_weapon"
-            body_name="bo_wm_elven_spear_blade"
-            holster_mesh="throwing_spear_quiver_1_1"
-            holster_body_name="bo_throwing_spear_quiver_1_1"
-            holster_mesh_length="68.9">
-            <Thrust
-                damage_type="Pierce"
-                damage_factor="2.43" />
+            body_name="bo_wm_isengard_berserker_sword_a01_blade"
+            holster_mesh="">
             <Swing
                 damage_type="Cut"
-                damage_factor="4.75" />
+                damage_factor="3.17" />
+        </BladeData>
+        <BuildData
+            piece_offset="-18"
+            previous_piece_offset="0"
+            next_piece_offset="0" />
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_isengard_berserker_sword_2h_t6: donor blade wm_isengard_berserker_sword_a01_blade, damage_factor swing x1.321, thrust x1.321 -->
+    <CraftingPiece
+        id="taom_ph_isengard_berserker_sword_2h_t6_blade"
+        name="{=taom_ph_isengard_berserker_sword_2h_t6_blade_name}Isengard Berserker Blade A (placeholder)"
+        tier="4"
+        piece_type="Blade"
+        mesh="wm_isengard_berserker_sword_a01_blade"
+        length="99.6"
+        weight="1.1"
+        excluded_item_usage_features="thrust">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_isengard_berserker_sword_a01_blade"
+            holster_mesh="">
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.22" />
+        </BladeData>
+        <BuildData
+            piece_offset="-18"
+            previous_piece_offset="0"
+            next_piece_offset="0" />
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_isengard_spear_b_t6: donor blade wm_isengard_1h_spear_b01_blade, damage_factor swing x1.354, thrust x1.314 -->
+    <CraftingPiece
+        id="taom_ph_isengard_spear_b_t6_blade"
+        name="{=taom_ph_isengard_spear_b_t6_blade_name}Isengard Spear Blade B01 (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_isengard_1h_spear_b01_blade"
+        length="80"
+        weight="0.87">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_isengard_1h_spear_b01_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.41" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="0.70" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_mirkwood_glaive_a01_t8: donor blade wm_mirkwood_glaive_a01_blade, damage_factor swing x1.385, thrust x1.182 -->
+    <CraftingPiece
+        id="taom_ph_mirkwood_glaive_a01_t8_blade"
+        name="{=taom_ph_mirkwood_glaive_a01_t8_blade_name}[Mirkwood] Glaive Blade (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_mirkwood_glaive_a01_blade"
+        length="75"
+        weight="1.19">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_mirkwood_glaive_a01_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.57" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="4.23" />
+        </BladeData>
+        <BuildData
+            piece_offset="0"
+            previous_piece_offset="0"
+            next_piece_offset="0" />
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_mirkwood_spear_a01_t2: donor blade wm_mirkwood_spear_a01_blade, damage_factor swing x1.355, thrust x1.341 -->
+    <CraftingPiece
+        id="taom_ph_mirkwood_spear_a01_t2_blade"
+        name="{=taom_ph_mirkwood_spear_a01_t2_blade_name}[Mirkwood] Spear Blade I (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_mirkwood_spear_a01_blade"
+        length="79"
+        weight="0.99">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_mirkwood_spear_a01_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="1.98" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="2.22" />
+        </BladeData>
+        <BuildData
+            piece_offset="0"
+            previous_piece_offset="0"
+            next_piece_offset="0" />
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_mirkwood_spear_a01_t8: donor blade wm_mirkwood_spear_a01_blade, damage_factor swing x1.930, thrust x1.878 -->
+    <CraftingPiece
+        id="taom_ph_mirkwood_spear_a01_t8_blade"
+        name="{=taom_ph_mirkwood_spear_a01_t8_blade_name}[Mirkwood] Spear Blade I (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_mirkwood_spear_a01_blade"
+        length="79"
+        weight="0.99">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_mirkwood_spear_a01_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.77" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.16" />
+        </BladeData>
+        <BuildData
+            piece_offset="0"
+            previous_piece_offset="0"
+            next_piece_offset="0" />
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_mirkwood_spear_a02_t2: donor blade wm_mirkwood_spear_a02_blade, damage_factor swing x1.426, thrust x1.410 -->
+    <CraftingPiece
+        id="taom_ph_mirkwood_spear_a02_t2_blade"
+        name="{=taom_ph_mirkwood_spear_a02_t2_blade_name}[Mirkwood] Spear Blade II (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_mirkwood_spear_a02_blade"
+        length="65"
+        weight="0.99">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_mirkwood_spear_a02_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.01" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="2.26" />
+        </BladeData>
+        <BuildData
+            piece_offset="0"
+            previous_piece_offset="0"
+            next_piece_offset="0" />
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_mirkwood_spear_a02_t8: donor blade wm_mirkwood_spear_a02_blade, damage_factor swing x2.032, thrust x1.974 -->
+    <CraftingPiece
+        id="taom_ph_mirkwood_spear_a02_t8_blade"
+        name="{=taom_ph_mirkwood_spear_a02_t8_blade_name}[Mirkwood] Spear Blade II (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_mirkwood_spear_a02_blade"
+        length="65"
+        weight="0.99">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_mirkwood_spear_a02_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.82" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.23" />
+        </BladeData>
+        <BuildData
+            piece_offset="0"
+            previous_piece_offset="0"
+            next_piece_offset="0" />
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_numenorean_bastard_heavy_a_t4: donor blade numenorean_sword_blade_d_elite, damage_factor swing x1.174, thrust x1.196 -->
+    <CraftingPiece
+        id="taom_ph_numenorean_bastard_heavy_a_t4_blade"
+        name="{=taom_ph_numenorean_bastard_heavy_a_t4_blade_name}Numenorean Sword Blade D (Elite) (placeholder)"
+        tier="4"
+        piece_type="Blade"
+        mesh="numenorean_sword_blade_d"
+        length="114.61"
+        weight="0.95">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_numenorean_sword_blade_d"
+            holster_mesh="numenorean_sword_scabbard_a">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.54" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.30" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_numenorean_bastard_heavy_b_t4: donor blade numenorean_sword_blade_d_elite, damage_factor swing x1.102, thrust x1.137 -->
+    <CraftingPiece
+        id="taom_ph_numenorean_bastard_heavy_b_t4_blade"
+        name="{=taom_ph_numenorean_bastard_heavy_b_t4_blade_name}Numenorean Sword Blade D (Elite) (placeholder)"
+        tier="4"
+        piece_type="Blade"
+        mesh="numenorean_sword_blade_d"
+        length="114.61"
+        weight="0.95">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_numenorean_sword_blade_d"
+            holster_mesh="numenorean_sword_scabbard_a">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.42" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.09" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_numenorean_greatsword_heavy_a_t7: donor blade numenorean_sword_blade_b, damage_factor swing x1.186, thrust x1.193 -->
+    <CraftingPiece
+        id="taom_ph_numenorean_greatsword_heavy_a_t7_blade"
+        name="{=taom_ph_numenorean_greatsword_heavy_a_t7_blade_name}Numenorean Sword Blade B (placeholder)"
+        tier="4"
+        piece_type="Blade"
+        mesh="numenorean_sword_blade_b"
+        length="114.61"
+        weight="0.95">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_numenorean_sword_blade_b"
+            holster_mesh="numenorean_sword_scabbard_a">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.82" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.30" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_numenorean_greatsword_heavy_b_t6: donor blade numenorean_sword_blade_b, damage_factor swing x1.158, thrust x1.145 -->
+    <CraftingPiece
+        id="taom_ph_numenorean_greatsword_heavy_b_t6_blade"
+        name="{=taom_ph_numenorean_greatsword_heavy_b_t6_blade_name}Numenorean Sword Blade B (placeholder)"
+        tier="4"
+        piece_type="Blade"
+        mesh="numenorean_sword_blade_b"
+        length="114.61"
+        weight="0.95">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_numenorean_sword_blade_b"
+            holster_mesh="numenorean_sword_scabbard_a">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.71" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.23" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_numenorean_greatsword_heavy_b_t7: donor blade numenorean_sword_blade_b, damage_factor swing x1.198, thrust x1.193 -->
+    <CraftingPiece
+        id="taom_ph_numenorean_greatsword_heavy_b_t7_blade"
+        name="{=taom_ph_numenorean_greatsword_heavy_b_t7_blade_name}Numenorean Sword Blade B (placeholder)"
+        tier="4"
+        piece_type="Blade"
+        mesh="numenorean_sword_blade_b"
+        length="114.61"
+        weight="0.95">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_numenorean_sword_blade_b"
+            holster_mesh="numenorean_sword_scabbard_a">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.82" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.34" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_numenorean_greatsword_medium_a_t6: donor blade numenorean_sword_blade_a, damage_factor swing x1.289, thrust x1.094 -->
+    <CraftingPiece
+        id="taom_ph_numenorean_greatsword_medium_a_t6_blade"
+        name="{=taom_ph_numenorean_greatsword_medium_a_t6_blade_name}Numenorean Sword Blade A (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="numenorean_sword_blade_a"
+        length="114.61"
+        weight="0.95">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_numenorean_sword_blade_a"
+            holster_mesh="numenorean_sword_scabbard_a">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.68" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.69" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_numenorean_greatsword_medium_b_t6: donor blade numenorean_sword_blade_a, damage_factor swing x1.289, thrust x1.094 -->
+    <CraftingPiece
+        id="taom_ph_numenorean_greatsword_medium_b_t6_blade"
+        name="{=taom_ph_numenorean_greatsword_medium_b_t6_blade_name}Numenorean Sword Blade A (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="numenorean_sword_blade_a"
+        length="114.61"
+        weight="0.95">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_numenorean_sword_blade_a"
+            holster_mesh="numenorean_sword_scabbard_a">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.68" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.69" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_numenorean_poleaxe_heavy_t8: donor blade sm_ar_art_poleaxe_blade_a, damage_factor swing x1.164, thrust x1.203 -->
+    <CraftingPiece
+        id="taom_ph_numenorean_poleaxe_heavy_t8_blade"
+        name="{=taom_ph_numenorean_poleaxe_heavy_t8_blade_name}Arnor Poleaxe Blade (Heavy) (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="sm_ar_art_poleaxe_blade_a"
+        length="28"
+        weight="1.15">
+        <BuildData
+            piece_offset="0"
+            previous_piece_offset="0"
+            next_piece_offset="0" />
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_sm_ar_art_poleaxe_blade_a"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.64" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.59" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_sm_dg_khml_1h_mace_a_t9: donor blade sm_dg_khml_mace_blade_1h_a, damage_factor swing x1.259, thrust x1.259 -->
+    <CraftingPiece
+        id="taom_ph_sm_dg_khml_1h_mace_a_t9_blade"
+        name="{=taom_ph_sm_dg_khml_1h_mace_a_t9_blade_name}Khamul Mace 1H Head A (placeholder)"
+        tier="2"
+        piece_type="Blade"
+        mesh="sm_dg_khml_mace_blade_1h_a"
+        length="20.5"
+        distance_to_next_piece="0"
+        distance_to_previous_piece="0"
+        weight="0.734"
+        excluded_item_usage_features="thrust">
+        <BuildData
+            piece_offset="-15" />
+        <BladeData
+            stack_amount="3"
+            blade_length="20.5"
+            physics_material="metal_weapon"
+            body_name="bo_sm_rh_loke_mace_blade_1h_a">
+            <Swing
+                damage_type="Blunt"
+                damage_factor="3.17" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="CanBePickedUpFromCorpse"
+                type="ItemFlags" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron3"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_sm_dwarf_erebor_spear_a_t6: donor blade sm_dwarf_erebor_spear_blade_a, damage_factor swing x1.824, thrust x1.753 -->
+    <CraftingPiece
+        id="taom_ph_sm_dwarf_erebor_spear_a_t6_blade"
+        name="{=taom_ph_sm_dwarf_erebor_spear_a_t6_blade_name}Erebor Spear Blade A (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="sm_dwarf_erebor_spear_blade_a"
+        length="50.33"
+        distance_to_next_piece="0"
+        distance_to_previous_piece="0"
+        weight="1.0">
+        <BuildData
+            piece_offset="0" />
+        <BladeData
+            stack_amount="3"
+            blade_length="50.33"
+            physics_material="metal_weapon"
+            body_name="bo_sm_dwarf_erebor_spear_blade_a">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.78" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="1.38" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="CanBePickedUpFromCorpse"
+                type="ItemFlags" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron3"
+                count="3" />
+            <Material
+                id="Iron2"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_sm_dwarf_erebor_spear_b_t4: donor blade sm_dwarf_erebor_spear_blade_b, damage_factor swing x1.451, thrust x1.395 -->
+    <CraftingPiece
+        id="taom_ph_sm_dwarf_erebor_spear_b_t4_blade"
+        name="{=taom_ph_sm_dwarf_erebor_spear_b_t4_blade_name}Erebor Spear Blade B (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="sm_dwarf_erebor_spear_blade_b"
+        length="73.70"
+        distance_to_next_piece="0"
+        distance_to_previous_piece="0"
+        weight="1.0">
+        <BuildData
+            piece_offset="0" />
+        <BladeData
+            stack_amount="3"
+            blade_length="73.70"
+            physics_material="metal_weapon"
+            body_name="bo_sm_dwarf_erebor_spear_blade_b">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.44" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="1.10" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="CanBePickedUpFromCorpse"
+                type="ItemFlags" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron3"
+                count="3" />
+            <Material
+                id="Iron2"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_sm_dwarf_erebor_spear_a_t2: donor blade sm_dwarf_erebor_spear_blade_a, damage_factor swing x1.368, thrust x1.308 -->
+    <CraftingPiece
+        id="taom_ph_sm_dwarf_erebor_spear_a_t2_blade"
+        name="{=taom_ph_sm_dwarf_erebor_spear_a_t2_blade_name}Erebor Spear Blade A (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="sm_dwarf_erebor_spear_blade_a"
+        length="50.33"
+        distance_to_next_piece="0"
+        distance_to_previous_piece="0"
+        weight="1.0">
+        <BuildData
+            piece_offset="0" />
+        <BladeData
+            stack_amount="3"
+            blade_length="50.33"
+            physics_material="metal_weapon"
+            body_name="bo_sm_dwarf_erebor_spear_blade_a">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.08" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="1.03" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="CanBePickedUpFromCorpse"
+                type="ItemFlags" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron3"
+                count="3" />
+            <Material
+                id="Iron2"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_sm_dwarf_iron_sword_a_t6: donor blade sm_dwarf_iron_sword_blade_a, damage_factor swing x1.336, thrust x1.328 -->
+    <CraftingPiece
+        id="taom_ph_sm_dwarf_iron_sword_a_t6_blade"
+        name="{=taom_ph_sm_dwarf_iron_sword_a_t6_blade_name}Iron Hills  Sword Blade A (placeholder)"
+        tier="5"
+        piece_type="Blade"
+        mesh="sm_dwarf_iron_sword_blade_a"
+        length="100"
+        weight="1.07">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_sm_dwarf_iron_sword_blade_a"
+            holster_mesh="sm_dwarf_iron_sword_scabbard_a">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.88" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="4.34" />
+        </BladeData>
+        <BuildData
+            piece_offset="0"
+            previous_piece_offset="0"
+            next_piece_offset="0" />
+        <Flags>
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_sm_dwarf_iron_sword_b_t6: donor blade sm_dwarf_iron_sword_blade_a, damage_factor swing x1.336, thrust x1.328 -->
+    <CraftingPiece
+        id="taom_ph_sm_dwarf_iron_sword_b_t6_blade"
+        name="{=taom_ph_sm_dwarf_iron_sword_b_t6_blade_name}Iron Hills  Sword Blade A (placeholder)"
+        tier="5"
+        piece_type="Blade"
+        mesh="sm_dwarf_iron_sword_blade_a"
+        length="100"
+        weight="1.07">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_sm_dwarf_iron_sword_blade_a"
+            holster_mesh="sm_dwarf_iron_sword_scabbard_a">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.88" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="4.34" />
+        </BladeData>
+        <BuildData
+            piece_offset="0"
+            previous_piece_offset="0"
+            next_piece_offset="0" />
+        <Flags>
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_sm_rh_drag_2h_mace_b_t9: donor blade sm_rh_drag_mace_blade_2h_b, damage_factor swing x1.031, thrust x1.031 -->
+    <CraftingPiece
+        id="taom_ph_sm_rh_drag_2h_mace_b_t9_blade"
+        name="{=taom_ph_sm_rh_drag_2h_mace_b_t9_blade_name}Dragon Mace 2H Head B (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="sm_rh_drag_mace_blade_2h_b"
+        length="27"
+        distance_to_next_piece="0"
+        distance_to_previous_piece="0"
+        weight="1.73">
+        <BuildData
+            piece_offset="-23" />
+        <BladeData
+            stack_amount="3"
+            blade_length="27"
+            physics_material="metal_weapon"
+            body_name="bo_sm_rh_loke_mace_blade_2h_b">
+            <Swing
+                damage_type="Blunt"
+                damage_factor="3.15" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanCrushThrough" />
+            <Flag
+                name="CanBePickedUpFromCorpse"
+                type="ItemFlags" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron3"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_sm_uruk_halberd_b_t9: donor blade sm_uruk_halberd_blade_a2, damage_factor swing x1.142, thrust x1.131 -->
+    <CraftingPiece
+        id="taom_ph_sm_uruk_halberd_b_t9_blade"
+        name="{=taom_ph_sm_uruk_halberd_b_t9_blade_name}Uruk Halberd Blade A2 (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="sm_uruk_halberd_blade_a2"
+        length="59.77"
+        weight="0.87">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_uruk_halberd_blade_a2"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.51" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="4.58" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_sm_uruk_halberd_j_t7: donor blade sm_uruk_halberd_blade_a3, damage_factor swing x1.367, thrust x1.327 -->
+    <CraftingPiece
+        id="taom_ph_sm_uruk_halberd_j_t7_blade"
+        name="{=taom_ph_sm_uruk_halberd_j_t7_blade_name}Uruk Halberd Blade A3 (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="sm_uruk_halberd_blade_a3"
+        length="62.94"
+        weight="0.87">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_uruk_halberd_blade_a3"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.38" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="4.44" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_dol_goldur_1h_mace_a02_t7: donor blade wm_dol_goldur_1h_mace_a02_blade, damage_factor swing x1.381, thrust x1.381 -->
+    <CraftingPiece
+        id="taom_ph_wm_dol_goldur_1h_mace_a02_t7_blade"
+        name="{=taom_ph_wm_dol_goldur_1h_mace_a02_t7_blade_name}Dol Guldur Orc Mace 1H Head II (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_dol_goldur_1h_mace_a02_blade"
+        length="25.75"
+        distance_to_next_piece="0"
+        distance_to_previous_piece="0"
+        weight="0.68"
+        excluded_item_usage_features="thrust">
+        <BuildData
+            piece_offset="0" />
+        <BladeData
+            stack_amount="3"
+            blade_length="25.75"
+            physics_material="metal_weapon"
+            body_name="bo_wm_dol_goldur_1h_mace_a02_blade">
+            <Swing
+                damage_type="Blunt"
+                damage_factor="3.25" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="CanBePickedUpFromCorpse"
+                type="ItemFlags" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron3"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_dol_goldur_halberd_a01_t1: donor blade wm_dol_goldur_2h_halberd_a01_blade, damage_factor swing x2.108, thrust x2.136 -->
+    <CraftingPiece
+        id="taom_ph_wm_dol_goldur_halberd_a01_t1_blade"
+        name="{=taom_ph_wm_dol_goldur_halberd_a01_t1_blade_name}Dol Guldur Orc Spear Blade I (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_dol_goldur_halberd_a01_blade"
+        length="77.81"
+        weight="0.87">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_dol_goldur_halberd_a01_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="1.06" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="2.38" />
         </BladeData>
         <Flags>
             <Flag
@@ -783,8 +1857,1057 @@
         </Flags>
         <Materials>
             <Material
-                id="Iron2"
-                count="1" />
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_dol_goldur_halberd_a02_t1: donor blade wm_dol_goldur_2h_halberd_a02_blade, damage_factor swing x2.111, thrust x2.138 -->
+    <CraftingPiece
+        id="taom_ph_wm_dol_goldur_halberd_a02_t1_blade"
+        name="{=taom_ph_wm_dol_goldur_halberd_a02_t1_blade_name}Dol Guldur Orc Spear Blade II (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_dol_goldur_halberd_a02_blade"
+        length="67.89"
+        weight="0.87">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_dol_goldur_halberd_a02_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="1.38" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="2.32" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_dol_goldur_halberd_a03_t1: donor blade wm_dol_goldur_2h_halberd_a03_blade, damage_factor swing x2.108, thrust x2.131 -->
+    <CraftingPiece
+        id="taom_ph_wm_dol_goldur_halberd_a03_t1_blade"
+        name="{=taom_ph_wm_dol_goldur_halberd_a03_t1_blade_name}Dol Guldur Orc Spear Blade III (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_dol_goldur_halberd_a03_blade"
+        length="76.37"
+        weight="0.87">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_dol_goldur_halberd_a03_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="1.06" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="2.38" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_dol_goldur_halberd_a04_t1: donor blade wm_dol_goldur_2h_halberd_a04_blade, damage_factor swing x2.111, thrust x2.138 -->
+    <CraftingPiece
+        id="taom_ph_wm_dol_goldur_halberd_a04_t1_blade"
+        name="{=taom_ph_wm_dol_goldur_halberd_a04_t1_blade_name}Dol Guldur Orc Spear Blade IV (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_dol_goldur_halberd_a04_blade"
+        length="67.89"
+        weight="0.87">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_dol_goldur_halberd_a04_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="1.06" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="2.32" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_gondor_lamedon_2h_sword_c_t6: donor blade numenorean_sword_blade_b, damage_factor swing x1.124, thrust x1.173 -->
+    <CraftingPiece
+        id="taom_ph_wm_gondor_lamedon_2h_sword_c_t6_blade"
+        name="{=taom_ph_wm_gondor_lamedon_2h_sword_c_t6_blade_name}Numenorean Sword Blade B (placeholder)"
+        tier="4"
+        piece_type="Blade"
+        mesh="numenorean_sword_blade_b"
+        length="114.61"
+        weight="0.95">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_numenorean_sword_blade_b"
+            holster_mesh="numenorean_sword_scabbard_a">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.77" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.13" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_gondor_lossarnach_1h_axe_black_ash_a_t6: donor blade wm_lossarnach_1h_axe_black_ash_blade, damage_factor swing x1.410, thrust x1.410 -->
+    <CraftingPiece
+        id="taom_ph_wm_gondor_lossarnach_1h_axe_black_ash_a_t6_blade"
+        name="{=taom_ph_wm_gondor_lossarnach_1h_axe_black_ash_a_t6_blade_name}Gondor Lossarnach 1H Black Ash Axe Blade A (placeholder)"
+        tier="4"
+        piece_type="Blade"
+        mesh="wm_lossarnach_1h_axe_black_ash_blade"
+        length="14"
+        distance_to_next_piece="0"
+        distance_to_previous_piece="0"
+        weight="0.734">
+        <BuildData
+            piece_offset="-14"
+            previous_piece_offset="0"
+            next_piece_offset="0" />
+        <BladeData stack_amount="3" blade_length="28.47" blade_width="23.45" physics_material="metal_weapon" body_name="bo_wm_lossarnach_1h_axe__blade">
+            <Swing damage_type="Cut" damage_factor="3.19" />
+        </BladeData>
+		<Flags>
+			<Flag
+                name="BonusAgainstShield" />
+			<Flag
+                name="CanKnockDown" />
+			<Flag
+                name="CanDismount" />			
+			<Flag
+                name="CanPenetrateShield" />
+			<Flag
+                name="CanCrushThrough" />
+			<Flag
+                name="CanBePickedUpFromCorpse"
+                type="ItemFlags" />
+			<Flag
+                name="Civilian"
+                type="ItemFlags" />
+		</Flags>
+        <Materials>
+            <Material id="Iron3" count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_gondor_spear_b_t6: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.378, thrust x1.378 -->
+    <CraftingPiece
+        id="taom_ph_wm_gondor_spear_b_t6_blade"
+        name="{=taom_ph_wm_gondor_spear_b_t6_blade_name}Gondor Spear Head C (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_gondor_spear_b_blade"
+        length="50"
+        weight="1.10"
+        excluded_item_usage_features="swing">
+        <BladeData
+            stack_amount="3"
+            physics_material="wood_weapon"
+            body_name="bo_wm_gondor_spear_b_blade">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.54" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="NotStackable"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron5"
+                count="2" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_gondor_spear_b_cardolan_t4: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.295, thrust x1.295 -->
+    <CraftingPiece
+        id="taom_ph_wm_gondor_spear_b_cardolan_t4_blade"
+        name="{=taom_ph_wm_gondor_spear_b_cardolan_t4_blade_name}Gondor Spear Head C (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_gondor_spear_b_blade"
+        length="50"
+        weight="1.10"
+        excluded_item_usage_features="swing">
+        <BladeData
+            stack_amount="3"
+            physics_material="wood_weapon"
+            body_name="bo_wm_gondor_spear_b_blade">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.39" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="NotStackable"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron5"
+                count="2" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_gondor_sword_a03_t10: donor blade wm_gondor_sword_a03_blade, damage_factor swing x1.417, thrust x1.423 -->
+    <CraftingPiece
+        id="taom_ph_wm_gondor_sword_a03_t10_blade"
+        name="{=taom_ph_wm_gondor_sword_a03_t10_blade_name}Gondor Sword Blade Elite A (placeholder)"
+        tier="4"
+        piece_type="Blade"
+        mesh="wm_gondor_sword_a03_blade"
+        length="73.92"
+        weight="0.83">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_gondor_sword_a03"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="3.34" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="4.60" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="5" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_gundabad_axe_a01_t7: donor blade wm_gundabad_axe_a01_blade, damage_factor swing x1.460, thrust x1.460 -->
+    <CraftingPiece
+        id="taom_ph_wm_gundabad_axe_a01_t7_blade"
+        name="{=taom_ph_wm_gundabad_axe_a01_t7_blade_name}Gundabad Orc Axe 1H Blade I (placeholder)"
+        tier="2"
+        piece_type="Blade"
+        mesh="wm_gundabad_axe_a01_blade"
+        length="40.27"
+        distance_to_next_piece="0"
+        distance_to_previous_piece="0"
+        weight="0.95">
+        <BuildData
+            piece_offset="0" />
+        <BladeData
+            stack_amount="3"
+            blade_length="40.27"
+            blade_width="18.14"
+            physics_material="metal_weapon"
+            body_name="bo_wm_gundabad_axe_a01_blade">
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.08" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="CanBePickedUpFromCorpse"
+                type="ItemFlags" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron3"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_gundabad_axe_a02_t6: donor blade wm_gundabad_axe_a02_blade, damage_factor swing x1.338, thrust x1.338 -->
+    <CraftingPiece
+        id="taom_ph_wm_gundabad_axe_a02_t6_blade"
+        name="{=taom_ph_wm_gundabad_axe_a02_t6_blade_name}Gundabad Orc Axe 1H Blade II (placeholder)"
+        tier="2"
+        piece_type="Blade"
+        mesh="wm_gundabad_axe_a02_blade"
+        length="21.5"
+        distance_to_next_piece="0"
+        distance_to_previous_piece="0"
+        weight="0.64">
+        <BuildData
+            piece_offset="0" />
+        <BladeData
+            stack_amount="3"
+            blade_length="21.5"
+            blade_width="30.19"
+            physics_material="metal_weapon"
+            body_name="bo_wm_gundabad_axe_a02_blade">
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.30" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="CanBePickedUpFromCorpse"
+                type="ItemFlags" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron3"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_gundabad_axe_a03_t8: donor blade wm_gundabad_axe_a03_blade, damage_factor swing x1.423, thrust x1.423 -->
+    <CraftingPiece
+        id="taom_ph_wm_gundabad_axe_a03_t8_blade"
+        name="{=taom_ph_wm_gundabad_axe_a03_t8_blade_name}Gundabad Orc Axe 1H Blade III (placeholder)"
+        tier="2"
+        piece_type="Blade"
+        mesh="wm_gundabad_axe_a03_blade"
+        length="50"
+        distance_to_next_piece="0"
+        distance_to_previous_piece="0"
+        weight="0.55">
+        <BuildData
+            piece_offset="0" />
+        <BladeData
+            stack_amount="3"
+            blade_length="50"
+            blade_width="17.69"
+            physics_material="metal_weapon"
+            body_name="bo_wm_gundabad_axe_a03_blade">
+            <Swing
+                damage_type="Cut"
+                damage_factor="4.50" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="CanBePickedUpFromCorpse"
+                type="ItemFlags" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron3"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_gundabad_mace_a01_t7: donor blade wm_gundabad_mace_a01_blade, damage_factor swing x1.438, thrust x1.438 -->
+    <CraftingPiece
+        id="taom_ph_wm_gundabad_mace_a01_t7_blade"
+        name="{=taom_ph_wm_gundabad_mace_a01_t7_blade_name}Gundabad Orc Axe 1H Head I (placeholder)"
+        tier="2"
+        piece_type="Blade"
+        mesh="wm_gundabad_mace_a01_blade"
+        length="72"
+        distance_to_next_piece="0"
+        distance_to_previous_piece="0"
+        weight="1.2"
+        excluded_item_usage_features="thrust">
+        <BuildData
+            piece_offset="0" />
+        <BladeData
+            stack_amount="3"
+            blade_length="72"
+            physics_material="metal_weapon"
+            body_name="bo_wm_gundabad_mace_a01_blade">
+            <Swing
+                damage_type="Blunt"
+                damage_factor="2.67" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="CanPenetrateShield" />
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanCrushThrough" />
+            <Flag
+                name="CanBePickedUpFromCorpse"
+                type="ItemFlags" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron3"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_gundabad_spear_a02_t3: donor blade wm_gundabad_spear_a02_blade, damage_factor swing x1.571, thrust x1.578 -->
+    <CraftingPiece
+        id="taom_ph_wm_gundabad_spear_a02_t3_blade"
+        name="{=taom_ph_wm_gundabad_spear_a02_t3_blade_name}Gundabad Orc Spear Blade II (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_gundabad_spear_a02_blade"
+        length="30"
+        weight="1.05">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_gundabad_spear_a02_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="1.65" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="2.84" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_mordor_set1_polearm_a01_t4: donor blade wm_mordor_set1_polearm_a01_blade, damage_factor swing x1.410, thrust x1.182 -->
+    <CraftingPiece
+        id="taom_ph_wm_mordor_set1_polearm_a01_t4_blade"
+        name="{=taom_ph_wm_mordor_set1_polearm_a01_t4_blade_name}Mordor Orc Polearm Blade A (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_mordor_set1_polearm_a01_blade"
+        length="30.64"
+        weight="1.04">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_mordor_set1_polearm_a01_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.04" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.60" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_mordor_set1_polearm_a01_t6: donor blade wm_mordor_set1_polearm_a01_blade, damage_factor swing x1.612, thrust x1.327 -->
+    <CraftingPiece
+        id="taom_ph_wm_mordor_set1_polearm_a01_t6_blade"
+        name="{=taom_ph_wm_mordor_set1_polearm_a01_t6_blade_name}Mordor Orc Polearm Blade A (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_mordor_set1_polearm_a01_blade"
+        length="30.64"
+        weight="1.04">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_mordor_set1_polearm_a01_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.29" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="4.12" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_rivendell_sword_a01_black_t10: donor blade wm_rivendell_sword_a01_black_blade, damage_factor swing x1.268, thrust x1.282 -->
+    <CraftingPiece
+        id="taom_ph_wm_rivendell_sword_a01_black_t10_blade"
+        name="{=taom_ph_wm_rivendell_sword_a01_black_t10_blade_name}Rivendell Sword Blade Black (placeholder)"
+        tier="5"
+        piece_type="Blade"
+        mesh="wm_rivendell_sword_a01_black_blade"
+        length="90.87"
+        weight="0.93">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_rivendell_sword_a01_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="3.64" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="4.75" />
+        </BladeData>
+        <BuildData
+            piece_offset="0"
+            previous_piece_offset="0"
+            next_piece_offset="0" />
+        <Flags>
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_rohan_spear_a_t7: donor blade sm_ro_rohan_spear_blade_a, damage_factor swing x1.284, thrust x1.284 -->
+    <CraftingPiece
+        id="taom_ph_wm_rohan_spear_a_t7_blade"
+        name="{=taom_ph_wm_rohan_spear_a_t7_blade_name}Rohan Spear Head A (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="sm_ro_rohan_spear_blade_a"
+        length="60"
+        weight="0.9"
+        excluded_item_usage_features="swing">
+        <BladeData
+            stack_amount="3"
+            physics_material="wood_weapon"
+            body_name="bo_sm_ro_rohan_spear_blade_a">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.86" />
+        </BladeData>
+        <BuildData
+            piece_offset="0" />
+        <Flags>
+            <Flag name="CanKnockDown" />
+            <Flag name="CanDismount" />
+            <Flag name="CanHook" />
+            <Flag name="NotStackable" type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material id="Iron5" count="5" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_rohan_ws_axe_1h_a01_t5: donor blade wm_rohan_ws_axe_1h_a01_blade, damage_factor swing x1.308, thrust x1.308 -->
+    <CraftingPiece
+        id="taom_ph_wm_rohan_ws_axe_1h_a01_t5_blade"
+        name="{=taom_ph_wm_rohan_ws_axe_1h_a01_t5_blade_name}Rohan 1H Axe Blade A (placeholder)"
+        tier="2"
+        piece_type="Blade"
+        mesh="wm_rohan_ws_axe_1h_a01_blade"
+        length="15.87"
+        distance_to_next_piece="0"
+        distance_to_previous_piece="0"
+        weight="0.334">
+        <BuildData
+            piece_offset="0" />
+        <BladeData
+            stack_amount="3"
+            blade_length="15.87"
+            blade_width="20.24"
+            physics_material="metal_weapon"
+            body_name="bo_wm_rohan_ws_axe_1h_a01_blade">
+            <Swing
+                damage_type="Cut"
+                damage_factor="4.64" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="BonusAgainstShield" />
+            <Flag
+                name="CanBePickedUpFromCorpse"
+                type="ItemFlags" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron3"
+                count="3" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_rohan_ws_spear_a01_t5: donor blade wm_rohan_ws_spear_a01_blade, damage_factor swing x1.484, thrust x1.449 -->
+    <CraftingPiece
+        id="taom_ph_wm_rohan_ws_spear_a01_t5_blade"
+        name="{=taom_ph_wm_rohan_ws_spear_a01_t5_blade_name}Rohan Spear WS A Blade (placeholder)"
+        tier="2"
+        piece_type="Blade"
+        mesh="wm_rohan_ws_spear_a01_blade"
+        length="52.41"
+        weight="1.47">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_rohan_ws_spear_a01_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.49" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="0.99" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_rohan_ws_spear_a02_t6: donor blade wm_rohan_ws_spear_a02_blade, damage_factor swing x1.509, thrust x1.475 -->
+    <CraftingPiece
+        id="taom_ph_wm_rohan_ws_spear_a02_t6_blade"
+        name="{=taom_ph_wm_rohan_ws_spear_a02_t6_blade_name}Rohan Spear WS B Blade (placeholder)"
+        tier="2"
+        piece_type="Blade"
+        mesh="wm_rohan_ws_spear_a02_blade"
+        length="45.30"
+        weight="1.67">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_rohan_ws_spear_a02_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.75" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="1.10" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_rohan_ws_spear_a03_t6: donor blade wm_rohan_ws_spear_a03_blade, damage_factor swing x1.371, thrust x1.325 -->
+    <CraftingPiece
+        id="taom_ph_wm_rohan_ws_spear_a03_t6_blade"
+        name="{=taom_ph_wm_rohan_ws_spear_a03_t6_blade_name}Rohan Spear WS C Blade (placeholder)"
+        tier="2"
+        piece_type="Blade"
+        mesh="wm_rohan_ws_spear_a03_blade"
+        length="68.33"
+        weight="1.87">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_rohan_ws_spear_a03_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.79" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="1.08" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_rohan_ws_sword_a01_t5: donor blade wm_rohan_ws_sword_a01_blade, damage_factor swing x1.360, thrust x1.377 -->
+    <CraftingPiece
+        id="taom_ph_wm_rohan_ws_sword_a01_t5_blade"
+        name="{=taom_ph_wm_rohan_ws_sword_a01_t5_blade_name}Rohan Sword A Blade (placeholder)"
+        tier="2"
+        piece_type="Blade"
+        mesh="wm_rohan_ws_sword_a01_blade"
+        length="70.86"
+        weight="0.67">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_rohan_ws_sword_a01_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.21" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.71" />
+        </BladeData>
+        <BuildData
+            piece_offset="0"
+            previous_piece_offset="0"
+            next_piece_offset="0" />
+        <Flags>
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_rohan_ws_sword_a02_t6: donor blade wm_rohan_ws_sword_a02_blade, damage_factor swing x1.388, thrust x1.380 -->
+    <CraftingPiece
+        id="taom_ph_wm_rohan_ws_sword_a02_t6_blade"
+        name="{=taom_ph_wm_rohan_ws_sword_a02_t6_blade_name}Rohan Sword B Blade (placeholder)"
+        tier="2"
+        piece_type="Blade"
+        mesh="wm_rohan_ws_sword_a02_blade"
+        length="91.06"
+        weight="0.87">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_rohan_ws_sword_a02_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.78" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.83" />
+        </BladeData>
+        <BuildData
+            piece_offset="0"
+            previous_piece_offset="0"
+            next_piece_offset="0" />
+        <Flags>
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_rohan_ws_sword_a03_t6: donor blade wm_rohan_ws_sword_a03_blade, damage_factor swing x1.336, thrust x1.336 -->
+    <CraftingPiece
+        id="taom_ph_wm_rohan_ws_sword_a03_t6_blade"
+        name="{=taom_ph_wm_rohan_ws_sword_a03_t6_blade_name}Rohan Sword C Blade (placeholder)"
+        tier="2"
+        piece_type="Blade"
+        mesh="wm_rohan_ws_sword_a03_blade"
+        length="88.90"
+        weight="0.89">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_rohan_ws_sword_a03_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.76" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.80" />
+        </BladeData>
+        <BuildData
+            piece_offset="0"
+            previous_piece_offset="0"
+            next_piece_offset="0" />
+        <Flags>
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="9" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_swan_knight_lance_a_t5: donor blade wm_swan_knight_lance_blade_a, damage_factor swing x1.260, thrust x1.260 -->
+    <CraftingPiece
+        id="taom_ph_wm_swan_knight_lance_a_t5_blade"
+        name="{=taom_ph_wm_swan_knight_lance_a_t5_blade_name}[Gondor] Swan Knight Lance Head I (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_swan_knight_lance_blade_blade_a"
+        length="212"
+        weight="1.10"
+        excluded_item_usage_features="swing">
+		<BuildData
+			piece_offset="0"
+			previous_piece_offset="36"
+			next_piece_offset="0" />
+        <BladeData
+            stack_amount="3"
+            physics_material="wood_weapon"
+            body_name="bo_wm_swan_knight_lance_blade">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.62" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="NotStackable"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron5"
+                count="2" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_swan_knight_lance_a_t6: donor blade wm_swan_knight_lance_blade_a, damage_factor swing x1.371, thrust x1.371 -->
+    <CraftingPiece
+        id="taom_ph_wm_swan_knight_lance_a_t6_blade"
+        name="{=taom_ph_wm_swan_knight_lance_a_t6_blade_name}[Gondor] Swan Knight Lance Head I (placeholder)"
+        tier="3"
+        piece_type="Blade"
+        mesh="wm_swan_knight_lance_blade_blade_a"
+        length="212"
+        weight="1.10"
+        excluded_item_usage_features="swing">
+		<BuildData
+			piece_offset="0"
+			previous_piece_offset="36"
+			next_piece_offset="0" />
+        <BladeData
+            stack_amount="3"
+            physics_material="wood_weapon"
+            body_name="bo_wm_swan_knight_lance_blade">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="2.85" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="CanKnockDown" />
+            <Flag
+                name="CanDismount" />
+            <Flag
+                name="CanHook" />
+            <Flag
+                name="NotStackable"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron5"
+                count="2" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_swan_knight_sworda_t7: donor blade wm_swan_knight_sword_a_blade, damage_factor swing x1.184, thrust x1.196 -->
+    <CraftingPiece
+        id="taom_ph_wm_swan_knight_sworda_t7_blade"
+        name="{=taom_ph_wm_swan_knight_sworda_t7_blade_name}Swan Knight Sword Blade A (placeholder)"
+        tier="4"
+        piece_type="Blade"
+        mesh="wm_swan_knight_sword_a_blade"
+        length="105.06"
+        weight=".90">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_swan_knight_sword_a_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="3.03" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="3.88" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="5" />
+        </Materials>
+    </CraftingPiece>
+
+    <!-- taom_ph_wm_swan_knight_swordb_t9: donor blade wm_swan_knight_sword_b_blade, damage_factor swing x1.159, thrust x1.156 -->
+    <CraftingPiece
+        id="taom_ph_wm_swan_knight_swordb_t9_blade"
+        name="{=taom_ph_wm_swan_knight_swordb_t9_blade_name}Swan Knight Sword Blade B (placeholder)"
+        tier="4"
+        piece_type="Blade"
+        mesh="wm_swan_knight_sword_b_blade"
+        length="105.06"
+        weight="0.90">
+        <BladeData
+            stack_amount="3"
+            physics_material="metal_weapon"
+            body_name="bo_wm_swan_knight_sword_b_blade"
+            holster_mesh="">
+            <Thrust
+                damage_type="Pierce"
+                damage_factor="3.18" />
+            <Swing
+                damage_type="Cut"
+                damage_factor="4.14" />
+        </BladeData>
+        <Flags>
+            <Flag
+                name="Civilian"
+                type="ItemFlags" />
+        </Flags>
+        <Materials>
+            <Material
+                id="Iron6"
+                count="5" />
         </Materials>
     </CraftingPiece>
 </CraftingPieces>

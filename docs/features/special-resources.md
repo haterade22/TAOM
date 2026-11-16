@@ -120,6 +120,8 @@ Tiers are sorted by threshold at parse time. `GetCurrentTier()` reverse-walks to
 
 Multiple `<Kingdom>` and `<Culture>` child elements map to the same resource (many-to-one).
 
+The provider shows `display_name` under the key `taom_res_name_<id>`, and each tier's `name` and `description` under `taom_res_tier_<id>_<level>_name` and `_desc`, so a translated row applies (#1385). It resolves them once, when the config first loads, so after a language change in a running game the names stay in the first language until the game restarts. A changed or added text needs its English row in `taom_module_strings.xml`; `SpecialResourceConfigProviderTextTests` names the row to write.
+
 ### Troop Costs: `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml`
 
 ```xml
@@ -380,7 +382,8 @@ question. Do not duplicate any of that here.
 2. Or add `<Kingdom>`/`<Culture>` children to an existing resource for shared balance
 3. Add `<Troop>` rows to `troop_resource_costs.xml` for T6+ troops
 4. Add a 33x33 PNG icon to `Main/_Module/GUI/SpriteParts/ui_taom/SpecialResources/` and reference it as `icon_sprite="SpecialResources\<file name without extension>"`; then re-run the sprite generator and verify the bake, per [gui-sprite-system.md](gui-sprite-system.md) (a loose PNG alone renders blank)
-5. No C# changes needed — fully data-driven
+5. Register the English rows of the new `display_name` and tier texts in `taom_module_strings.xml` (the test above names them)
+6. No C# change is needed: the feature is data-driven
 
 ## How to Tune Earning Rates
 

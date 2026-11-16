@@ -44,6 +44,13 @@ def sh(day, share, cid="c1"):
     return f"{PFX}[WarLedger] v=1 t=share cid={cid} day={day} share={share}"
 
 
+def gl(day, k="a", forts=1, men=5, fit=5, cid="c1", drop=None):
+    line = f"{PFX}[WarLedger] v=1 t=garrison cid={cid} day={day} k={k} forts={forts} men={men} fit={fit}"
+    if drop:
+        line = " ".join(t for t in line.split(" ") if not t.startswith(drop + "="))
+    return line
+
+
 def ev_destroyed(day, k, cid="c1"):
     return f"{PFX}[WarLedger] v=1 t=event cid={cid} day={day} ev=destroyed k={k}"
 
@@ -94,6 +101,14 @@ class ParserTests(unittest.TestCase):
         self.assertEqual((p.ledger_lines, p.malformed), (1, 1), line)
         self.assertEqual(p.campaigns, {}, line)
 
+    def test_garrison_line_missing_a_key_is_malformed(self):
+        for key in ("k", "forts", "men", "fit"):
+            self.assert_malformed(gl(3, drop=key))
+
+    def test_garrison_line_with_a_non_integer_count_is_malformed(self):
+        for key in ("forts", "men", "fit"):
+            self.assert_malformed(gl(3, **{key: "x"}))
+
     def test_non_finite_shares_are_malformed(self):
         for text in ("nan", "inf", "-inf"):
             self.assert_malformed(sh(6, text))
@@ -137,10 +152,11 @@ class ParserTests(unittest.TestCase):
         self.assertIn("2", str(ctx.exception))
 
     def test_reload_keeps_last_line(self):
-        p = parse([kl(5, "gondor", pts=10), sh(5, "0.9"), sl(5, "free", 1), ev_destroyed(5, "x"),
-                   kl(5, "gondor", pts=99), sh(5, "0.5"), sl(5, "free", 2), ev_destroyed(5, "x")])
+        p = parse([kl(5, "gondor", pts=10), sh(5, "0.9"), sl(5, "free", 1), ev_destroyed(5, "x"), gl(5, men=10),
+                   kl(5, "gondor", pts=99), sh(5, "0.5"), sl(5, "free", 2), ev_destroyed(5, "x"), gl(5, men=99)])
         c = p.campaigns["c1"]
         self.assertEqual(c.kingdoms[(5, "gondor")]["pts"], "99")
+        self.assertEqual(c.garrisons[(5, "a")]["men"], "99")
         self.assertEqual(c.shares[5], 0.5)
         self.assertEqual(c.sides[(5, "free")]["pts"], "2")
         self.assertEqual(len(c.events), 1)
@@ -197,6 +213,8 @@ class FixtureTests(unittest.TestCase):
         self.assertEqual([f["k"] for f in by_kind["destroyed"]], ["vlandia"])
         self.assertEqual((by_kind["chronicle"][0]["id"], by_kind["chronicle"][0]["outcome"]), ("hornburg", "Held"))
         self.assertEqual([(f["k"], f["side"], f["by"]) for f in by_kind["pledge"]], [("cardolan", "free", "ai")])
+        gar = c.garrisons[(12, "bluecraig")]
+        self.assertEqual((gar["forts"], gar["men"], gar["fit"]), ("3", "450", "400"))
         clamped = [f for f in by_kind["tier"] if f["k"] == "k"][0]
         self.assertEqual((clamped["from"], clamped["to"], clamped["loss"]), ("0", "2", "0.000"))
 
@@ -764,6 +782,16 @@ class ReportTests(unittest.TestCase):
             self.assertIn(expected, out)
         self.assertIn("a capture counts for both kingdoms", text)
 
+    def test_report_lists_first_fewest_and_last_garrison_rows(self):
+        lines = [sh(1, "0.5"), gl(1, "bc", forts=6, men=900, fit=850), gl(2, "bc", forts=5, men=300, fit=200),
+                 gl(3, "bc", forts=5, men=300, fit=300), gl(4, "bc", forts=4, men=500, fit=480)]
+        out = awl.format_report("c1", metrics(lines)).splitlines()
+        self.assertIn("  bc: day 1: 900/850 in 6, day 2: 300/200 in 5, day 4: 500/480 in 4", out)
+
+    def test_report_without_garrison_lines_says_none(self):
+        text = awl.format_report("c1", metrics([sh(1, "0.5")]))
+        self.assertIn("Garrisons (day: men/fit in forts; first, fewest men, last)\n  none\n", text)
+
     def test_report_names_the_capital_verdict_and_its_reason(self):
         text = awl.format_report("c1", metrics([kl(150, "a", cap="0")]))
         self.assertIn("(b) earliest capital loss on day >= 120: UNKNOWN (", text)
@@ -800,9 +828,11 @@ class OrderingTests(unittest.TestCase):
 
 
 def day_block(day, share, k_pts=10, cid="c1"):
-    """One daily tick as WarLedgerService writes it: kingdom lines, the three side lines, then the share."""
+    """One daily tick as WarLedgerService writes it: kingdom lines, the three side lines, the share, then
+    the garrison lines."""
     return [kl(day, "gondor", pts=k_pts, cid=cid), sl(day, "free", k_pts, cid=cid),
-            sl(day, "evil", 10, cid=cid), sl(day, "neutral", 0, cid=cid), sh(day, share, cid=cid)]
+            sl(day, "evil", 10, cid=cid), sl(day, "neutral", 0, cid=cid), sh(day, share, cid=cid),
+            gl(day, "gondor", cid=cid)]
 
 
 def ev_load(day, cid="c1"):
@@ -819,6 +849,10 @@ def tick(day, share, k_pts=10, chronicle=(), tiers=(), cid="c1"):
 
 
 class LoadMarkerTests(unittest.TestCase):
+    def test_a_load_drops_the_later_garrison_lines(self):
+        p = parse([gl(3), gl(4), ev_load(3)])
+        self.assertEqual(list(p.campaigns["c1"].garrisons), [(3, "a")])
+
     """A load writes `t=load day=S`: every record of that campaign after day S belongs to the abandoned run.
 
     On a load the engine waits only the elapsed part of the day before the next daily tick

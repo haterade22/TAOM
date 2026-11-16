@@ -19,7 +19,7 @@ internal static class SpecialResourceToasts
         {
             if (!notice.IsLocal) continue;
             InformationManager.DisplayMessage(new InformationMessage(
-                $"+{notice.Earned:F0} {notice.ResourceName} from {notice.Source}",
+                SpecialResourceMessages.Earned(notice.ResourceName, notice.Earned, notice.Source).ToString(),
                 Colors.Green));
         }
     }
@@ -40,7 +40,7 @@ internal static class SpecialResourceToasts
             InformationManager.DisplayMessage(new InformationMessage(outcome.Overdraft.ToString(), Colors.Red));
 
         if (outcome.Warning != null)
-            InformationManager.DisplayMessage(new InformationMessage(outcome.Warning, Colors.Yellow));
+            InformationManager.DisplayMessage(new InformationMessage(outcome.Warning.ToString(), Colors.Yellow));
     }
 
     public static void Desertion(int totalDeserted, string resourceName)

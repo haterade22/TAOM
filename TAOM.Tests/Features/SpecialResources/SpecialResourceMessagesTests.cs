@@ -91,4 +91,54 @@ public class SpecialResourceMessagesTests
         Assert.AreEqual("0.05", SpecialResourceMessages.FormatAmount(0.05f));
         Assert.AreEqual("1.25", SpecialResourceMessages.FormatAmount(1.25f));
     }
+
+    [TestMethod]
+    public void Earned_BindsAmountResourceAndTheSourceWord()
+    {
+        var message = SpecialResourceMessages.Earned("War Spoils", 12.4f, "raid");
+
+        Assert.AreEqual("{=taom_res_earned}+{AMOUNT} {RESOURCE} from {SOURCE}", message.Value);
+        Assert.AreEqual("12.4", message.Attributes["AMOUNT"]);
+        Assert.AreEqual("War Spoils", message.Attributes["RESOURCE"]);
+        Assert.AreEqual("{=taom_res_source_raid}raid", ((TextObject)message.Attributes["SOURCE"]).Value);
+    }
+
+    [DataTestMethod]
+    [DataRow("victory")]
+    [DataRow("raid")]
+    [DataRow("hideout")]
+    [DataRow("tournament")]
+    [DataRow("prisoners")]
+    public void SourceText_EachEarningSource_HasItsOwnKey(string source)
+    {
+        Assert.AreEqual("{=taom_res_source_" + source + "}" + source, SpecialResourceMessages.SourceText(source).Value);
+    }
+
+    [TestMethod]
+    public void SourceText_UnknownSource_ShowsAsWritten()
+    {
+        Assert.AreEqual("{=!}siege", SpecialResourceMessages.SourceText("siege").Value);
+    }
+
+    [TestMethod]
+    public void RunningOut_BindsBalanceAndDailyLossAsSlots()
+    {
+        var message = SpecialResourceMessages.RunningOut("Gems", balance: 5f, netPerDay: -6f);
+
+        StringAssert.Contains(message.Value, "{=taom_res_running_out}");
+        AssertNoBakedNumber(message);
+        Assert.AreEqual("Gems", message.Attributes["RESOURCE"]);
+        Assert.AreEqual("5", message.Attributes["BALANCE"]);
+        Assert.AreEqual("6", message.Attributes["LOSS"]);
+    }
+
+    [TestMethod]
+    public void RunningOut_FractionalAmounts_ReadAsWritten()
+    {
+        // Upkeep rates such as 0.2 and 0.05 are common in the data; rounding showed "0 left, losing 0/day".
+        var message = SpecialResourceMessages.RunningOut("Gems", balance: 0.3f, netPerDay: -0.25f);
+
+        Assert.AreEqual("0.3", message.Attributes["BALANCE"]);
+        Assert.AreEqual("0.25", message.Attributes["LOSS"]);
+    }
 }

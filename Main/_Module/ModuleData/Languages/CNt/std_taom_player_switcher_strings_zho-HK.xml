@@ -7,17 +7,17 @@
   </tags>
   <strings>
     <string id="taom_ps_group_kingdom" text="王室" />
-    <string id="taom_ps_group_clans" text="氏族首領" />
+    <string id="taom_ps_group_clans" text="家族領袖" />
     <string id="taom_ps_group_wanderers" text="流浪者" />
     <string id="taom_ps_none" text="無" />
-    <string id="taom_ps_switched" text="你現在扮演 {HERO}。" />
-    <string id="taom_ps_failed" text="你無法取代 {HERO} 的身分。將繼續使用你原本的角色。" />
-    <string id="taom_ps_unavailable" text="角色切換器無法啟動，本次遊戲中已停用。" />
-    <string id="taom_ps_join_title" text="向國王宣誓？" />
-    <string id="taom_ps_join_body" text="你的氏族孤立無援。{KINGDOM} 願意接受你的誓言與旗幟。現在加入他們嗎？" />
+    <string id="taom_ps_switched" text="你現在開始扮演{HERO}。" />
+    <string id="taom_ps_failed" text="你無法接替{HERO}，將繼續操控自己的角色。" />
+    <string id="taom_ps_unavailable" text="角色切換功能無法啓動，本次遊戲中已停用。" />
+    <string id="taom_ps_join_title" text="向君主宣誓效忠？" />
+    <string id="taom_ps_join_body" text="你的家族目前保持獨立。{KINGDOM}願意接受你的效忠，讓你的旗幟加入他們的行列。現在加入嗎？" />
     <string id="taom_ps_join_yes" text="宣誓效忠" />
     <string id="taom_ps_join_no" text="保持獨立" />
-    <string id="taom_ps_partial" text="你現在是 {HERO}，但部分交接未能完成。請查看日誌。" />
-    <string id="taom_ps_clan_leader_repaired" text="你現在統領{CLAN}。王國投票與家族決議再次承認你的地位。" />
+    <string id="taom_ps_partial" text="你現在開始扮演{HERO}，但角色交接未能全部完成。詳情請查看日誌。" />
+    <string id="taom_ps_clan_leader_repaired" text="你現在是{CLAN}的領袖，王國投票和家族決策會再次承認你的身份。" />
   </strings>
 </base>

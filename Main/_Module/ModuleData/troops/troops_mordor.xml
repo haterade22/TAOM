@@ -1317,7 +1317,7 @@
                     id="Item.sm_mordor_shield_mid_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.isengard_berserker_sword_2h" />
+                    id="Item.taom_ph_isengard_berserker_sword_2h_t6" />
                 <equipment
                     slot="Head"
                     id="Item.sk_uruk_mordor_helmet_elite_a1" />
@@ -1712,7 +1712,7 @@
                     id="Item.sm_mordor_shield_mid_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.isengard_berserker_sword_2h" />
+                    id="Item.taom_ph_isengard_berserker_sword_2h_t6" />
                 <equipment
                     slot="Head"
                     id="Item.sk_uruk_mordor_helmet_elite_a2" />
@@ -1867,7 +1867,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_halberd_j" />
+                    id="Item.taom_ph_sm_uruk_halberd_j_t7" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_mordor_shield_tower_b" />
@@ -1936,7 +1936,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_uruk_halberd_j" />
+                    id="Item.taom_ph_sm_uruk_halberd_j_t7" />
                 <equipment
                     slot="Item1"
                     id="Item.sm_mordor_shield_tower_a" />
@@ -2433,7 +2433,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.ladder_mordor_bow_t3" />
                 <equipment slot="Item1" id="Item.default_arrows" />
-                <equipment slot="Item2" id="Item.wm_mordor_set1_axe_a01" />
+                <equipment slot="Item2" id="Item.wm_gundabad_axe_a02" />
                 <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_medium_b2" />
                 <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
                 <equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_b" />
@@ -2591,7 +2591,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+        <equipment slot="Item0" id="Item.wm_gundabad_axe_a02" />
         <equipment slot="Item1" id="Item.sm_mordor_shield_small_b" />
         <equipment slot="Head" id="Item.sk_md_orc_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
@@ -2698,7 +2698,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
+        <equipment slot="Item0" id="Item.taom_ph_wm_mordor_set1_polearm_a01_t4" />
         <equipment slot="Item1" id="Item.wm_mordor_set1_mace_a01" />
         <equipment slot="Head" id="Item.sk_md_orc_vgd_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_c" />
@@ -2955,7 +2955,7 @@
     <Equipments>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a03" />
-        <equipment slot="Item1" id="Item.wm_mordor_set1_axe_a01" />
+        <equipment slot="Item1" id="Item.wm_gundabad_axe_a02" />
         <equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_med_a" />
         <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
@@ -2993,7 +2993,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
+        <equipment slot="Item0" id="Item.taom_ph_wm_mordor_set1_polearm_a01_t4" />
         <equipment slot="Item1" id="Item.wm_mordor_set1_mace_a01" />
         <equipment slot="Head" id="Item.sk_md_orc_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
@@ -3030,7 +3030,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
+        <equipment slot="Item0" id="Item.taom_ph_wm_mordor_set1_polearm_a01_t4" />
         <equipment slot="Item1" id="Item.sm_md_num_sword_1h_a" />
         <equipment slot="Head" id="Item.sk_md_orc_brt_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
@@ -3493,7 +3493,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
+        <equipment slot="Item0" id="Item.taom_ph_wm_mordor_set1_polearm_a01_t4" />
         <equipment slot="Head" id="Item.sk_md_mor_pik_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_md_mor_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_md_mor_pik_pauld_med_a" />
@@ -3598,7 +3598,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
+        <equipment slot="Item0" id="Item.taom_ph_wm_mordor_set1_polearm_a01_t4" />
         <equipment slot="Head" id="Item.sk_md_mor_pik_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_md_mor_inf_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_md_mor_pik_pauld_heavy_a" />
@@ -3688,7 +3688,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_med_a" />
-        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_a" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_med_a" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_med_a" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_med_a" />
@@ -3737,7 +3737,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item0" id="Item.taom_ph_sm_uruk_halberd_j_t7" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_med_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_med_a" />
@@ -3749,7 +3749,7 @@
         <equipment slot="HorseHarness" id="Item.sm_md_num_barding_heavy_b" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item0" id="Item.taom_ph_sm_uruk_halberd_j_t7" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_med_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_med_a" />
@@ -3788,7 +3788,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item0" id="Item.taom_ph_sm_uruk_halberd_j_t7" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_heavy_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_heavy_a" />
@@ -3800,7 +3800,7 @@
         <equipment slot="HorseHarness" id="Item.sm_md_num_barding_elite_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item0" id="Item.taom_ph_sm_uruk_halberd_j_t7" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_heavy_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_heavy_b" />
@@ -3837,7 +3837,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item0" id="Item.taom_ph_sm_uruk_halberd_b_t9" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_heavy_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_elite_a" />
@@ -3849,7 +3849,7 @@
         <equipment slot="HorseHarness" id="Item.sm_md_num_barding_lord_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item0" id="Item.taom_ph_sm_uruk_halberd_b_t9" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_heavy_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_elite_b" />
@@ -3888,7 +3888,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_a" />
+        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Item1" id="Item.sm_md_num_inf_shield_med_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_a" />
         <equipment slot="Head" id="Item.sk_md_num_inf_helmet_med_a" />

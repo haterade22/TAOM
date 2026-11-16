@@ -410,10 +410,10 @@ public class NotableServicesWiringTests
     {
         var src = Source("Main/Features/TaomSettings.cs");
 
-        StringAssert.Contains(src, "[SettingPropertyGroup(\"World/Notable Services\", GroupOrder = 77)]");
+        StringAssert.Contains(src, "[SettingPropertyGroup(\"{=taom_mcm_group_world}World/{=taom_mcm_group_notable_services}Notable Services\", GroupOrder = 77)]");
         StringAssert.Contains(src, "public bool EnableNotableServices { get; set; } = true;");
         Assert.AreEqual(1, Regex.Matches(src, "GroupOrder = 77\\b").Count, "GroupOrder 77 is used by another group");
-        StringAssert.Contains(src, "[SettingPropertyBool(\"Enable Notable Services\", Order = 0, RequireRestart = false,");
+        StringAssert.Contains(src, "[SettingPropertyBool(\"{=taom_mcm_EnableNotableServices}Enable Notable Services\", Order = 0, RequireRestart = false,");
     }
 
     [TestCategory("RequiresGame")]

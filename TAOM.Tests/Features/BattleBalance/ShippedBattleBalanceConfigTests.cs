@@ -104,6 +104,77 @@ public class ShippedBattleBalanceConfigTests
         Assert.AreEqual(0, unknown.Count, $"survival bonus keys that are no playable culture: {string.Join(", ", unknown)}");
     }
 
+    // #1283: Blue Craig fell in three 150-day runs, alone in the far west against its neighbours. Its defenders get
+    // +10% advantage in a siege of a fortification it owns, and the survival bonus of Arthedain and Ered Luin.
+    [TestMethod]
+    public void ShippedConfig_BlueCraig_HasTheSiegeDefenceBonusAndTheArthedainSurvivalBonus()
+    {
+        var config = LoadShippedFileOnly();
+
+        Assert.IsNotNull(config.SiegeDefence?.DefenderAdvantageBonuses, "the file lost SiegeDefence.DefenderAdvantageBonuses");
+        Assert.AreEqual(0.1f, config.SiegeDefence.DefenderAdvantageBonuses["bluecraig"], 0.001f);
+        Assert.AreEqual(config.CasualtyRatios.CulturalSurvivalBonuses["arthedain"],
+            config.CasualtyRatios.CulturalSurvivalBonuses["bluecraig"], 0.001f);
+    }
+
+    [TestMethod]
+    public void ShippedConfig_EverySiegeDefenceKey_IsAMainCultureId()
+    {
+        var cultures = CultureDataFixture.MainCultureIds();
+
+        var unknown = LoadShippedFileOnly().SiegeDefence.DefenderAdvantageBonuses.Keys
+            .Where(key => !cultures.Contains(key)).OrderBy(key => key).ToList();
+
+        Assert.AreEqual(0, unknown.Count, $"siege defence keys that are no playable culture: {string.Join(", ", unknown)}");
+    }
+
+    // #1283: Blue Craig's garrisons cost no wages or food and grow by two free troops a day.
+    [TestMethod]
+    public void ShippedConfig_BlueCraig_HasFreeUpkeepAndGarrisonGrowth()
+    {
+        var section = LoadShippedFileOnly().SiegeDefence;
+
+        Assert.IsNotNull(section.UpkeepFreeGarrisons, "the file lost SiegeDefence.UpkeepFreeGarrisons");
+        Assert.IsTrue(section.UpkeepFreeGarrisons["bluecraig"]);
+        Assert.IsNotNull(section.DailyGarrisonGrowth, "the file lost SiegeDefence.DailyGarrisonGrowth");
+        Assert.AreEqual(2f, section.DailyGarrisonGrowth["bluecraig"], 0.001f);
+    }
+
+    [TestMethod]
+    public void CompiledDefaults_GarrisonUpkeep_MatchTheShippedFile()
+    {
+        var shipped = LoadShippedFileOnly().SiegeDefence;
+        var compiled = new BattleBalanceConfig().SiegeDefence;
+
+        CollectionAssert.AreEquivalent(shipped.UpkeepFreeGarrisons.ToList(), compiled.UpkeepFreeGarrisons.ToList());
+        CollectionAssert.AreEquivalent(shipped.DailyGarrisonGrowth.Keys.ToList(), compiled.DailyGarrisonGrowth.Keys.ToList());
+        foreach (var pair in shipped.DailyGarrisonGrowth)
+            Assert.AreEqual(pair.Value, compiled.DailyGarrisonGrowth[pair.Key], 0.001f, pair.Key);
+    }
+
+    [TestMethod]
+    public void ShippedConfig_EveryGarrisonUpkeepKey_IsAMainCultureId()
+    {
+        var cultures = CultureDataFixture.MainCultureIds();
+        var section = LoadShippedFileOnly().SiegeDefence;
+
+        var unknown = section.UpkeepFreeGarrisons.Keys.Concat(section.DailyGarrisonGrowth.Keys)
+            .Where(key => !cultures.Contains(key)).Distinct().OrderBy(key => key).ToList();
+
+        Assert.AreEqual(0, unknown.Count, $"garrison upkeep keys that are no playable culture: {string.Join(", ", unknown)}");
+    }
+
+    [TestMethod]
+    public void CompiledDefaults_SiegeDefence_MatchTheShippedFile()
+    {
+        var shipped = LoadShippedFileOnly().SiegeDefence.DefenderAdvantageBonuses;
+        var compiled = new BattleBalanceConfig().SiegeDefence.DefenderAdvantageBonuses;
+
+        CollectionAssert.AreEquivalent(shipped.Keys.ToList(), compiled.Keys.ToList());
+        foreach (var pair in shipped)
+            Assert.AreEqual(pair.Value, compiled[pair.Key], 0.001f, pair.Key);
+    }
+
     /// <summary>
     /// The compiled table is what a missing or unreadable file falls back to, so it carries every
     /// culture row the shipped file does (the #749 fix mirrored Lindon by hand; nothing checked it).

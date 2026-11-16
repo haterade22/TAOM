@@ -133,7 +133,7 @@ public sealed class EliteEmissaryInquiryPresenter
                 {
                     if (chosen == null || chosen.Count == 0) return;
                     if (chosen[0].Identifier is EmissaryTroopOffer offer)
-                        OpenQuantityPicker(settlement, owner, heroId, offer, currency, offerList.PlayerBalance);
+                        OpenQuantityPicker(settlement, owner, heroId, offer, currency, offerList.PlayerBalance, offerList.ResourceDisplayName);
                 },
                 negativeAction: _ => { });
 
@@ -145,7 +145,8 @@ public sealed class EliteEmissaryInquiryPresenter
         }
     }
 
-    private void OpenQuantityPicker(Settlement settlement, SettlementOwnerInfo owner, string heroId, EmissaryTroopOffer offer, string resourceName, double balance)
+    private void OpenQuantityPicker(Settlement settlement, SettlementOwnerInfo owner, string heroId, EmissaryTroopOffer offer, string resourceName, double balance,
+        string? localResourceName)
     {
         try
         {
@@ -193,7 +194,7 @@ public sealed class EliteEmissaryInquiryPresenter
                 {
                     if (chosen == null || chosen.Count == 0) return;
                     if (chosen[0].Identifier is int qty)
-                        ExecutePurchase(owner, heroId, offer.TroopId, qty);
+                        ExecutePurchase(owner, heroId, offer.TroopId, qty, localResourceName);
                 },
                 negativeAction: _ => { });
 
@@ -205,13 +206,13 @@ public sealed class EliteEmissaryInquiryPresenter
         }
     }
 
-    private void ExecutePurchase(SettlementOwnerInfo owner, string heroId, string troopId, int qty)
+    private void ExecutePurchase(SettlementOwnerInfo owner, string heroId, string troopId, int qty, string? localResourceName)
     {
         if (_guestTrade.IsGuest)
         {
             AskHost(new GuestTradeRequest(GuestTradeAction.EmissaryBuy, owner.SettlementId, troopId, Quantity: qty),
                 reply => ShowResult(EmissaryPurchaseResult.Of((EmissaryPurchaseStatus)reply.Status, troopId, reply.Quantity,
-                    reply.TotalCost, reply.ResourceName), troopId));
+                    reply.TotalCost, GuestResultResourceName(reply.ResourceName, localResourceName)), troopId));
             return;
         }
 
@@ -259,6 +260,13 @@ public sealed class EliteEmissaryInquiryPresenter
                 break;
         }
     }
+
+    /// <summary>
+    /// The resource a guest's purchase result names. The host's reply says resource (its name) or gold (null);
+    /// each machine localizes the name itself, so the guest shows its own name when it has one (#1385).
+    /// </summary>
+    internal static string? GuestResultResourceName(string? hostName, string? localName) =>
+        hostName is null ? null : localName ?? hostName;
 
     private static string CurrencyName(string resourceName) =>
         resourceName ?? new TextObject("{=taom_emissary_denars}denars").ToString();

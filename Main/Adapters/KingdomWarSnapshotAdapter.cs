@@ -11,7 +11,8 @@ namespace TAOM.Adapters;
 /// against the installed v1.5.4 decompile: <c>Kingdom.Fiefs</c> (towns and castles, villages are not
 /// in it), <c>Kingdom.InitialHomeSettlement</c>, <c>Settlement.OwnerClan</c>, <c>Clan.Kingdom</c>,
 /// <c>Kingdom.CurrentTotalStrength</c>, <c>Kingdom.Clans</c>, <c>Clan.Heroes</c>, <c>Hero.IsPrisoner</c>,
-/// <c>Campaign.UniqueGameId</c> and <c>CampaignTimeModel.CampaignStartTime</c>.
+/// <c>Campaign.UniqueGameId</c> and <c>CampaignTimeModel.CampaignStartTime</c>. Checked against v1.5.7:
+/// <c>Fief.GarrisonParty</c>, <c>PartyBase.NumberOfAllMembers</c> and <c>NumberOfHealthyMembers</c>.
 /// </summary>
 public sealed class KingdomWarSnapshotAdapter : IKingdomWarSnapshotAdapter
 {
@@ -62,6 +63,8 @@ public sealed class KingdomWarSnapshotAdapter : IKingdomWarSnapshotAdapter
     {
         var towns = 0;
         var castles = 0;
+        var garrisonMen = 0;
+        var garrisonHealthy = 0;
         var fiefs = kingdom.Fiefs;
         for (var i = 0; i < fiefs.Count; i++)
         {
@@ -72,6 +75,11 @@ public sealed class KingdomWarSnapshotAdapter : IKingdomWarSnapshotAdapter
                 castles++;
             else
                 towns++;
+            var garrison = fief.GarrisonParty?.Party;
+            if (garrison == null)
+                continue;
+            garrisonMen += garrison.NumberOfAllMembers;
+            garrisonHealthy += garrison.NumberOfHealthyMembers;
         }
 
         var strength = kingdom.CurrentTotalStrength;
@@ -87,6 +95,8 @@ public sealed class KingdomWarSnapshotAdapter : IKingdomWarSnapshotAdapter
             HomeHeld = IsHomeHeld(kingdom),
             Strength = FiniteFloatValidator.IsFinite(strength) ? strength : -1f,
             PrisonerLords = CountPrisonerLords(kingdom),
+            GarrisonMen = garrisonMen,
+            GarrisonHealthy = garrisonHealthy,
         };
     }
 

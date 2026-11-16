@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.SeatOfSeeing;
 
@@ -89,14 +90,14 @@ public class SeatSettingsProviderTests
     {
         var first = typeof(TaomSettings).GetProperty(nameof(TaomSettings.SeatEnabled))!;
         var group = Attribute(first, "SettingPropertyGroupAttribute")!;
-        Assert.AreEqual(Group, Read(group, "GroupName"));
+        Assert.AreEqual(Group, McmText.Plain(Read(group, "GroupName") as string));
         var order = (int)Read(group, "GroupOrder");
         Assert.AreNotEqual(0, order, "MCM ignores a GroupOrder on any later property, so the first carries it");
 
         var others = typeof(TaomSettings).GetProperties()
             .Select(p => Attribute(p, "SettingPropertyGroupAttribute"))
-            .Where(a => a != null && (string)Read(a, "GroupName") != Group && (int)Read(a, "GroupOrder") == order)
-            .Select(a => (string)Read(a!, "GroupName"))
+            .Where(a => a != null && McmText.Plain(Read(a, "GroupName") as string) != Group && (int)Read(a, "GroupOrder") == order)
+            .Select(a => McmText.Plain(Read(a!, "GroupName") as string))
             .ToList();
         Assert.AreEqual(0, others.Count, "another group uses GroupOrder " + order + ": " + string.Join(", ", others));
     }
@@ -114,7 +115,7 @@ public class SeatSettingsProviderTests
         var property = typeof(TaomSettings).GetProperty(name)!;
 
         var group = Attribute(property, "SettingPropertyGroupAttribute")!;
-        Assert.AreEqual(Group, Read(group, "GroupName"));
+        Assert.AreEqual(Group, McmText.Plain(Read(group, "GroupName") as string));
         var bool_ = Attribute(property, "SettingPropertyBoolAttribute")!;
         Assert.AreEqual(false, Read(bool_, "RequireRestart"));
         var hint = (string)Read(bool_, "HintText");

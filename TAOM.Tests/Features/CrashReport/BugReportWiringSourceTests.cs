@@ -47,7 +47,7 @@ public class BugReportWiringSourceTests
         var src = RepoPaths.ReadSource("Main/Features/CrashReport/CrashReportSettings.cs", stripComments: true);
 
         StringAssert.Matches(src, new Regex(
-            @"\[SettingPropertyButton\(""Make Bug Report""[\s\S]*?public System\.Action MakeBugReportAction \{ get; set; \} = static \(\) => (BugReport\.)?BugReportStartup\.MakeAndShow\("));
+            @"\[SettingPropertyButton\(""(\{=[A-Za-z0-9_]+\})?Make Bug Report""[\s\S]*?public System\.Action MakeBugReportAction \{ get; set; \} = static \(\) => (BugReport\.)?BugReportStartup\.MakeAndShow\("));
     }
 
     [TestMethod]

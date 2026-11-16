@@ -1,5 +1,5 @@
 # In-game check for #1370 (the free heroes' formation in the Helm's Deep story mission: the garrison's Infantry formation is moved into the heroes' formation and out again by the repair
-# during the preparation before the first wave), read by tools/ingame_verdict.py. The issue is OPEN and no fix is in the tree: this row is the check that is red on the bug.
+# during the preparation before the first wave), read by tools/ingame_verdict.py. The fix holds the heroes until the castle tactic's first lane pick (at most 5 s); this row is red on the bug.
 # The defect is read from the hunters line, the #1337 wave-clear line: its moved_out= is the running total of every soldier the heroes' repair took out of the heroes' group in the
 # whole run, so a repair after the lord's fall counts too. Run 20261116-075342 reads moved_out=1517 and run 20261116-081024 reads moved_out=1481. The row judges moved_out only: a hunters line of
 # either result passes it with moved_out=0 and fails it with moved_out above 0. The other fields belong to tools/ingame_checks/1366.toml.
@@ -8,7 +8,7 @@
 issue = 1370
 title = "Story missions: the free heroes' formation takes no soldier of the garrison"
 # fixed_in names the trunk commit this manifest was written on; a fix commit replaces it, and only a build that holds it counts. The docs commit of the feature sets it (the main session does that).
-fixed_in = "a4cedd4c2"
+fixed_in = "de891ce4e"
 logs = ["taom"]
 
 [[check]]

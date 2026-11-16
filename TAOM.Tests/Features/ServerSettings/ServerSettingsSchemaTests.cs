@@ -86,7 +86,17 @@ public class ServerSettingsSchemaTests
             CollectionAssert.AreEqual(expected, actual, type.Name);
         }
 
-        Assert.AreEqual(560, ServerSettingsSchema.All.Count);
+        Assert.AreEqual(561, ServerSettingsSchema.All.Count);
+    }
+
+    [TestMethod]
+    public void DescriptorGroups_AreThePlainEnglishPath()
+    {
+        // Each MCM group part carries a {=key} (#1385); the defaults reference names the group in English.
+        var keyed = ServerSettingsSchema.All.Where(d => d.Group.Contains("{=")).Select(d => d.Name + ": " + d.Group).ToList();
+
+        Assert.AreEqual(0, keyed.Count, "descriptor groups with a key: " + string.Join(", ", keyed.Take(10)));
+        Assert.AreEqual("World/Realms", ServerSettingsSchema.ByName[nameof(TaomSettings.RealmsClaimPricePercent)].Group);
     }
 
     [TestMethod]

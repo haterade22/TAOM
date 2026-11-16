@@ -22,6 +22,7 @@
       "lothlorien": 0.5,
       "erebor": 0.3,
       "eredluin": 0.3,
+      "bluecraig": 0.3,
       "rivendell": 0.4,
       "lindon": 0.4,
       "mirkwood": 0.4,
@@ -38,5 +39,16 @@
   },
   "AutoResolve": {
     "PowerRatioExponent": 0.5
+  },
+  "SiegeDefence": {
+    "DefenderAdvantageBonuses": {
+      "bluecraig": 0.1
+    },
+    "UpkeepFreeGarrisons": {
+      "bluecraig": true
+    },
+    "DailyGarrisonGrowth": {
+      "bluecraig": 2
+    }
   }
 }

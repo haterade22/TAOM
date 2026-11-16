@@ -1631,3 +1631,43 @@ The first #1390 gate scanned `*.xml` attributes only. The stylesheets carry abou
 - **Why missed:** the scan reused the generator's `ATTR_KEY_PATTERN`, which was written for the category sources, and the backlog was designed for shrinking, not growth.
 - **Prevent:** before a gate trusts a regex, list every file type and text position the data uses (`grep -c '{=' --include` per extension). Give an allowlist a count, and give a scan a floor.
 - **Source:** the #1390 tier 2 review, Tooling findings 1 and 2, Data flow trace 5.
+
+### A settlement name always has variables set, so "has Attributes" does not mean "uses a variable" (#1391, 2026-11-16)
+The first #1391 fix read settlement names through `KingdomNames.OwnText`, which keeps the resolved text when `TextObject.Attributes` is not empty. `Settlement.Deserialize` and `PartyBase.SetCustomName` set IS_SETTLEMENT, IS_CASTLE, IS_TOWN and IS_HIDEOUT on every settlement name, so the fix changed nothing for county, barony and lordship titles. Its unit test passed because it built a bare `TextObject`.
+- **Why missed:** a rule proven for kingdom names was reused for another engine type, and the test built the input by hand instead of the way the engine builds it.
+- **Prevent:** before a rule reads `Attributes` or `Value` of an engine `TextObject`, read where the engine creates and changes that object; give the test the engine-shaped object (here, with the four flags set).
+- **Source:** the #1391 tier 1 review, Data flow trace 1 and Engine compatibility finding 1.
+### A brush value that a binding overwrites is a mirror: pin it to its source in a test (#1380, 2026-11-16)
+The realm-name brushes declare `FontSize` 34 and 42, and each label binds `Brush.FontSize` to `RealmNamesVM`'s size, which overwrites the brush value on the label's own brush clone. A later edit to a brush alone would change nothing on screen, and only a comment said the brush matched the constants.
+- **Why missed:** the constants were the source of truth, and the brush was edited by hand to match.
+- **Prevent:** when a prefab binds a brush property, pin the brush's own value to its source in a test (`RealmNamesPrefabTests.Brushes_DeclareTheViewModelsBaseSizes`). The general rule is the lord inline-skills entry in `data-content-cultures.md`: gate the mirror, not the comment.
+- **Source:** [rca-realm-name-size-2026-11-16.md](../rca-realm-name-size-2026-11-16.md) finding 1.
+
+### Text from a translation team is checked against the English it was made from, and every name list as a set (#1385, 2026-11-16)
+The first Chinese import (24d636cc5) took the team's text wherever its placeholders matched our English. The team had translated older English, so 28 ids per language went back to names our English had dropped (Auredhir showed as Aeglir), and 23 ids per language named other houses than our English. Its first fix compared only the drop's base version with now, so a row added after the base and reworded later still came in. The collision guard then covered the troop and Armory lists, and the second import gave the lord Amandir the name of the lord Vorondir.
+- **Why missed:** the importer was written from the drop's language files alone and judged each row by itself. The drop's own `SubModule.xml` named its version and git held every English text, but neither was read, and no one screened the name lists the reviewers had not named.
+- **Prevent:** before outside text replaces ours, read which English it was made from and compare every text the id had since then, not only the two ends (`english_after`). Judge each list a player picks from as a set, and run the guard over every name file, not only the ones where damage was seen. A translated name list can rename with our English unchanged: screen for it (`KEEP_OURS`).
+- **Source:** [rca-cn-import-2026-11-16.md](../rca-cn-import-2026-11-16.md) rows 1, 3, 4, 5 and 18.
+### A player-facing reason must be true in every mode of the rule it explains (#1408, 2026-11-16)
+The first #1408 hint said "This realm will not let its people serve your side." Under the "Only Good Rejects Evil" mode the block fires only for a Free player at an Evil settlement, and the setting says the Free side does the refusing, so the sentence named the wrong side. The fix says what is true in both modes: "Your side may not take volunteers from this realm."
+- **Why missed:** the sentence was written for the default Symmetric mode, and the service's other branch was not read.
+- **Prevent:** before writing a reason line, read every branch of the decision it explains, including each setting mode, and check the sentence against each one.
+- **Source:** the #1408 tier 1 review, Data flow trace 16.
+
+### A name localized on each machine reaches the other machine in the sender's language (#1385, 2026-11-16)
+Phase 2 of #1385 made special resource names resolve through `{=taom_res_name_<id>}`. The emissary's co-op reply carries the host's `ResourceDisplayName` to the guest, so a guest in another language saw the host's name in the result toast, while the offer list beside it used the guest's own. The same change imported 19 rows of the team's Chinese that were vanilla's own row for that key, which changed nothing and would hide a TaleWorlds fix.
+- **Why missed:** each check stayed on one side. The names were traced to their readers on one machine, and the team's text was compared with our English, never with vanilla's Chinese.
+- **Prevent:** when a value becomes localized, grep every co-op message field it reaches; send an id and resolve on the receiver. Before a row overrides a vanilla key in a language, compare it with vanilla's row in that language (`VanillaKeyOverrideTests.KeptRows_NoneRepeatsVanillasOwnRow`).
+- **Source:** [rca-cn-phase2-2026-11-16.md](../rca-cn-phase2-2026-11-16.md) rows 1 and 2.
+
+### A sentence is translated whole, or its parts stay English (#1385, 2026-11-16)
+Phase 3 of #1385 keyed sentence templates and the words set into them as text variables. The import matched the team's Chinese to our English one whole string at a time; the team had written the templates as `{0}` format strings or fragments, so only the words matched. A Chinese player then saw Chinese words inside English sentences, where the whole line had been English before. The same phase registered three rows with half their English, because the harvester reads one C# literal and the default was split with `+`.
+- **Why missed:** each check read one string. Nothing compared a template with the parts it holds, and the gate that compares rows with C# also read only the first literal.
+- **Prevent:** when a word gets a translated row, check that every sentence it is set into has one too; take a team's format string with its slots renamed to our variables. Write each `{=KEY}` default as one literal (the harvester refuses a split one).
+- **Source:** [rca-cn-phase3-2026-11-16.md](../rca-cn-phase3-2026-11-16.md) rows 2 and 15.
+
+### A gate that flags a translator's text is a hypothesis about the gate too (#1385, 2026-11-16)
+Phase 4 imported the Chinese team's text for 1,130 MCM keys. `LanguageTextIntegrityTests` flagged 7 hints, and the builder dropped them. Six of the flagged words were code names the English row also holds (`taom.tactic_status`, `event:/ui/transfer`, `taom_debug.log`): the gate's identifier pattern did not know dotted commands, sound paths or `.log` files. The same phase wrote a rule about MCM group names into the guide and checked the data once by script, with no test, so the next language pass could break it unseen.
+- **Why missed:** a red gate read as bad data, and a one-off script read as a gate.
+- **Prevent:** when a gate flags a row, read the English row before dropping the translation; if the English carries the same token, fix the gate with a data test. A rule written into a guide gets a test in the same commit (`McmSettingsTextIsKeyedTests.NoChildGroupText_ContainsItsParentsText_InAnyLanguage`).
+- **Source:** [rca-cn-phase4-2026-11-16.md](../rca-cn-phase4-2026-11-16.md) rows 2 and 3.

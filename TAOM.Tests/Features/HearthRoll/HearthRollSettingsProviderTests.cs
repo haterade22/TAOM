@@ -2,6 +2,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.HearthRoll;
@@ -40,7 +41,7 @@ public class HearthRollSettingsProviderTests
     {
         var group = Attribute(Tint, "SettingPropertyGroupAttribute");
 
-        Assert.AreEqual("Hearth Roll", Read(group, "GroupName"));
+        Assert.AreEqual("Hearth Roll", McmText.Plain(Read(group, "GroupName") as string));
         Assert.AreEqual(69, Read(group, "GroupOrder"), "Help Unlooked-For is 68");
         Assert.AreEqual(0, Read(Attribute(Tint, "SettingPropertyBoolAttribute"), "Order"));
     }

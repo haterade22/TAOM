@@ -293,6 +293,66 @@ Run the AI pipeline (Option A), then open each file and refine the AI translatio
 
 ---
 
+## Chinese: the team's text is the reference
+
+The Chinese team (RuiNova, BLCC) translates TAOM for its players and ships the work as a module of its
+own, `TAOM_CN` (#1385). For Simplified (`CNs`) and Traditional (`CNt`) Chinese, their text replaces the
+AI draft. We import each drop they send, and the AI translator then drafts only the rows that still
+hold English.
+
+```bash
+# Dry run: writes only the report. Read it before --apply.
+python -I tools/import_team_translations.py --lang CNs --lang CNt --from <TAOM_CN.zip> --report <out.json>
+# Then the repo files, and the live TAOM_Map and Armory files (each backed up first):
+python -I tools/import_team_translations.py --lang CNs --lang CNt --from <TAOM_CN.zip> --report <out.json> --module TAOM --module TAOM_Map --module Armory --apply
+```
+
+What decides a row (the tool's docstring has the full list):
+
+- **An override wins.** `tools/translation_overrides/cns.json` and `cnt.json` beat the team's text in
+  the importer, as in every other tool. Put a hand correction to a Chinese row there, or the next
+  import replaces it.
+- **A stale row keeps ours.** The importer takes the TAOM version that the drop's `SubModule.xml`
+  depends on (or `--base`) as the English the team translated. When our English for an id changed in
+  any commit after it, their text can translate words we no longer show, so the importer keeps our row
+  and lists it under `stale`. The v2.0.38 drop also held the Realms titles, which came after the
+  v2.0.38 tag, so the team worked from a later trunk build, and some `stale` rows may already match our
+  English. Our kept row can be stale as well: an English edit that reset no language row leaves both
+  texts on the old words. Reset such a row by the checklist in "Changing English Text That Is Already
+  Translated".
+- **A name stays the same entity.** `KEEP_OURS` in the tool lists ids where the team's text names
+  another lord, clan or name list than our English. To rename, change the English first; the team then
+  translates the new name.
+- **Names stay distinct.** In troop and lord names and Armory items, no two ids with different English may
+  share one Chinese name. An Armory name gets its English tier (`IV`) appended when the team's text
+  drops it.
+
+After an import, send the team the report's `stale`, `kept_ours`, `collisions`, `rejected`,
+`ours_untranslated_they_lack` and `ours_drafted_they_lack` lists. From them we need only their
+`ModuleData/Languages/CNs` and `CNt` folders, and the TAOM build they translated: the release tag, or
+the commit of a trunk build. Pass it to the importer as `--base`.
+TAOM_Map and the Armory are live installs, so a reinstall reverts their imported rows: run the import
+again for those modules afterwards.
+
+The team's module also patched text that TAOM showed without a key: the MCM settings, C# literals
+(landmarks, the custom battle screen, the quick actions), the War of the Ring strings, the siege
+defense and special resource texts, and a few prefab labels. #1385 keyed all of these at the source,
+so each now has a key and an English row, and the team translates it in the language files. A key
+whose CNs or CNt row does not exist yet shows English; the importer only replaces rows, so such a row
+is added first (the hand-off lists them). Their
+`HardcodedTextPatcher`, `RuntimeTranslations*.xml`, file overrides and XSLTs are then not needed. A
+text that still shows in English with every row translated is a missing key in TAOM: report it as an
+issue, never patch it at runtime. The Phase 3 and 4 rows were matched from their
+`RuntimeTranslations*.xml` by exact English; the importer does not read those files.
+
+An MCM group path has one key per part (`{=taom_mcm_group_world}World/{=taom_mcm_group_realms}Realms`),
+because MCM splits the path on `/` before it translates each part. MCM then removes the parent's
+translated text from the child's, so a child group's text must not contain its parent's text, and a
+parent's text must not be empty (MCM then hides the whole TAOM page). Gate:
+`McmSettingsTextIsKeyedTests.NoChildGroupText_ContainsItsParentsText_InAnyLanguage`.
+
+---
+
 ## Changing English Text That Is Already Translated
 
 Adding a new key works. **Changing the English of a key that already has translations does not.** No

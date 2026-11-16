@@ -7,6 +7,49 @@ public class BattleBalanceConfig
     public TroopPowerSection TroopPower { get; set; } = new();
     public CasualtyRatiosSection CasualtyRatios { get; set; } = new();
     public AutoResolveSection AutoResolve { get; set; } = new();
+    public SiegeDefenceSection SiegeDefence { get; set; } = new();
+
+    /// <summary>Siege defence and garrison upkeep by realm culture (#1283). See <see cref="GarrisonUpkeep"/>.</summary>
+    public class SiegeDefenceSection
+    {
+        /// <summary>
+        /// Culture id to a factor, in [0, 1], added to the defenders' battle advantage in an auto-resolved siege of a
+        /// fortification whose realm has that culture. The engine gives the attackers -0.1 in every siege; 0.1 gives
+        /// the defenders +10%. Blue Craig stands alone in the far west against its neighbours.
+        /// </summary>
+        public Dictionary<string, float> DefenderAdvantageBonuses { get; set; } = new()
+        {
+            ["bluecraig"] = 0.1f
+        };
+
+        public float GetDefenderAdvantageBonus(string cultureId) =>
+            cultureId != null && DefenderAdvantageBonuses.TryGetValue(cultureId, out var v) ? v : 0f;
+
+        /// <summary>
+        /// Realm culture id to true when that realm's garrisons cost no wages, eat no food and take no starvation wounds. A
+        /// dictionary, not a list: the JSON merges into the compiled table, so <c>false</c> turns a compiled row off.
+        /// </summary>
+        public Dictionary<string, bool> UpkeepFreeGarrisons { get; set; } = new()
+        {
+            ["bluecraig"] = true
+        };
+
+        /// <summary>
+        /// Realm culture id to free basic troops each of its fortifications gains a day, in [0, 20], whole troops (the
+        /// engine drops the fraction). Not during a siege, and never past the garrison size limit. Free only with an
+        /// UpkeepFreeGarrisons row: without one the growth is wage-capped and its troops cost wages.
+        /// </summary>
+        public Dictionary<string, float> DailyGarrisonGrowth { get; set; } = new()
+        {
+            ["bluecraig"] = 2f
+        };
+
+        public bool IsUpkeepFree(string cultureId) =>
+            cultureId != null && UpkeepFreeGarrisons != null && UpkeepFreeGarrisons.TryGetValue(cultureId, out var free) && free;
+
+        public float GetDailyGarrisonGrowth(string cultureId) =>
+            cultureId != null && DailyGarrisonGrowth != null && DailyGarrisonGrowth.TryGetValue(cultureId, out var v) ? v : 0f;
+    }
 
     /// <summary>Auto-resolve tuning (#1283). See <see cref="AutoResolveQualityMath"/>.</summary>
     public class AutoResolveSection
@@ -42,7 +85,7 @@ public class BattleBalanceConfig
             ["erebor"] = 0.3f,    ["rivendell"] = 0.4f,  ["lindon"] = 0.4f,
             ["mirkwood"] = 0.4f,
             ["arthedain"] = 0.3f, ["cardolan"] = 0.3f,  ["rhudaur"] = 0.2f,
-            ["eredluin"] = 0.3f,
+            ["eredluin"] = 0.3f, ["bluecraig"] = 0.3f,
             ["anduinvale"] = 0.1f, ["angaladh"] = 0.1f,
             ["dorwinion"] = 0.1f, ["southrhovanion"] = 0.2f,
             ["gundabad"] = -0.1f,  ["dolguldur"] = -0.1f

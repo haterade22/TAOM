@@ -224,7 +224,7 @@ public class SettingsFingerprintTests
         // guards nothing. The count is the guard that can fail: add a setting anywhere below and
         // one of these numbers moves, which is the moment to decide what it is. The same numbers
         // are quoted in docs/features/coop-interop.md.
-        AssertSplit(typeof(TaomSettings), reflected: 526, covered: 363);
+        AssertSplit(typeof(TaomSettings), reflected: 527, covered: 363);
         AssertSplit(typeof(BattleLoadDiagnosticsSettings), reflected: 21, covered: 0);
         AssertSplit(typeof(BlowDiagnosticsSettings), reflected: 1, covered: 0);
         AssertSplit(typeof(CrashReportSettings), reflected: 12, covered: 0);
@@ -435,6 +435,17 @@ public class SettingsFingerprintTests
         Assert.IsTrue(
             log.Lines.Any(l => l.Contains("could not read") || l.StartsWith("WARN")),
             "expected the log to say it read no settings; got: " + string.Join(" | ", log.Lines));
+    }
+
+    [TestMethod]
+    public void TheRealSettings_GroupByTheirPlainEnglishRoot()
+    {
+        // Each MCM group part carries a {=key} (#1385). The hash and the divergence notice use the English
+        // path without keys, so a hash taken before the keys were added still matches.
+        var groups = SettingsFingerprint.Compute(new TaomSettings()).ByGroup.Keys.ToList();
+
+        Assert.AreEqual(0, groups.Count(g => g.Contains("{=")), "groups with a key: " + string.Join(", ", groups));
+        CollectionAssert.Contains(groups, "World");
     }
 
     [TestMethod]

@@ -154,8 +154,9 @@ public class SupplyOrderPrefabBindingTests
         // Label text belongs on the VM as a TextObject-built property bound with @. {=!} is the
         // engine's own "no localization" marker on text-variable bodies and is legitimate.
         // LocalizedText="{=key}..." is not literal text: FactionUI's FrontEndTextWidget and
-        // FrontEndRichTextWidget resolve it through TextObject (#704), and
-        // FactionUIPrefabLocalizationTests keeps it on those two widgets.
+        // FrontEndRichTextWidget resolve it through TextObject (#704), as FrontEndEditableTextWidget
+        // does for LocalizedDefaultSearchText (#1385); FactionUIPrefabLocalizationTests keeps each
+        // attribute on its widgets.
         var prefabRoot = Path.Combine(RepoRoot, @"Main\_Module\GUI\PreFabs");
         var offenders = new List<string>();
         foreach (var file in Directory.GetFiles(prefabRoot, "*.xml", SearchOption.AllDirectories))
@@ -163,7 +164,7 @@ public class SupplyOrderPrefabBindingTests
             var lines = File.ReadAllLines(file);
             for (int i = 0; i < lines.Length; i++)
             {
-                var line = lines[i].Replace("LocalizedText=\"{=", "");
+                var line = lines[i].Replace("LocalizedText=\"{=", "").Replace("LocalizedDefaultSearchText=\"{=", "");
                 if (line.Contains("Text=\"{=") && !line.Contains("Text=\"{=!}"))
                     offenders.Add($"{file}:{i + 1}");
             }

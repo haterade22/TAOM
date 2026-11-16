@@ -90,11 +90,12 @@ class ControlCharacterRefusalTests(unittest.TestCase):
     def test_control_character_rows_PlainDefaults_ListNothing(self):
         self.assertEqual([], h.control_character_rows(_rows("x")))
 
-    def _main(self, mode, declared):
+    def _main(self, mode, declared, split=None, registered=None):
         out, err = io.StringIO(), io.StringIO()
         with mock.patch.object(sys, "argv", ["harvest_literal_loc_keys.py", mode]), \
              mock.patch.object(h, "declared_keys", return_value=declared), \
-             mock.patch.object(h, "registered_keys", return_value=set()), \
+             mock.patch.object(h, "registered_keys", return_value=registered or set()), \
+             mock.patch.object(h, "split_keys", return_value=split or {}), \
              mock.patch.object(h, "insert_rows") as insert, \
              contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
             code = h.main()
@@ -120,6 +121,110 @@ class ControlCharacterRefusalTests(unittest.TestCase):
         code, insert, _err = self._main("--apply", {"taom_ok": ("Fine", "Main/Features/Foo/Foo.cs", 1)})
         self.assertEqual(0, code)
         insert.assert_called_once()
+
+
+class SplitLiteralRefusalTests(unittest.TestCase):
+    """#1385: LITERAL reads one C# literal, so a default split as "{=key}Half " + "rest" registered only
+    its first half (three rows in Phase 3, caught by reading the rows)."""
+
+    _main = ControlCharacterRefusalTests._main
+
+    def test_continued_literals_PlusAndAnotherLiteral_IsListedWithItsLine(self):
+        text = 'x();\nnew TextObject("{=taom_a}Half " +\n    "rest");'
+        self.assertEqual([("taom_a", 2)], h.continued_literals(text))
+
+    def test_continued_literals_InterpolatedContinuation_IsListed(self):
+        self.assertEqual([("taom_b", 1)], h.continued_literals('"{=taom_b}One " + $"two {n}"'))
+
+    def test_continued_literals_WholeLiteralOrPlusAVariable_ListsNothing(self):
+        self.assertEqual([], h.continued_literals('"{=taom_c}Whole" + name; "{=taom_d}Also whole";'))
+
+    def test_continued_literals_NewlineBeforePlus_IsListed(self):
+        # The shape of all three Phase 3 rows: the + starts the next line.
+        text = 'var s = new TextObject("{=taom_e}Half "\r\n        + "rest");'
+        self.assertEqual([("taom_e", 1)], h.continued_literals(text))
+
+    def test_continued_literals_VerbatimContinuations_AreListed(self):
+        for tail in ('@"rest"', '$@"rest {n}"', '@$"rest {n}"'):
+            with self.subTest(tail=tail):
+                self.assertEqual([("taom_f", 1)], h.continued_literals('"{=taom_f}Half " + ' + tail))
+
+    def test_continued_literals_ConcatenationLaterInTheFile_ListsNothing(self):
+        self.assertEqual([], h.continued_literals('Use("{=taom_g}Whole");\nvar s = "a" + "b";'))
+
+    def test_split_keys_SyntheticTree_FindsTheSplitSite(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            cs = root / "Main" / "Features" / "Foo" / "A.cs"
+            cs.parent.mkdir(parents=True)
+            h.write_text(cs, 'class A {\r\n  T t = new T("{=taom_s}Half "\r\n    + "rest");\r\n'
+                             '  T u = new T("{=taom_w}Whole");\r\n}\r\n')
+            with mock.patch.object(h, "REPO_ROOT", root):
+                self.assertEqual({"taom_s": ("Main/Features/Foo/A.cs", 2)}, h.split_keys())
+
+    def test_split_keys_RealTree_HasNone(self):
+        # The guard judges only new keys; this keeps a registered key from being split later, which no
+        # other gate sees (LocalizationKeyConsistencyTests compares the first literal only).
+        self.assertGreater(sum(1 for _ in h.code_files()), 1000, "the walk found almost no C# files")
+        self.assertEqual({}, h.split_keys())
+
+    def test_main_DryRunWithASplitKey_Refuses(self):
+        code, _insert, err = self._main("--dry-run", {"taom_split": ("Half ", "Main/A.cs", 4)},
+                                        split={"taom_split": ("Main/A.cs", 4)})
+        self.assertEqual(1, code)
+        self.assertIn("taom_split  (Main/A.cs:4)", err)
+
+    def test_main_NewSplitKey_RefusesWithItsPlace(self):
+        code, insert, err = self._main("--apply", {"taom_split": ("Half ", "Main/A.cs", 4)},
+                                       split={"taom_split": ("Main/A.cs", 4)})
+        self.assertEqual(1, code)
+        insert.assert_not_called()
+        self.assertIn("taom_split  (Main/A.cs:4)", err)
+
+    def test_main_SplitKeyAlreadyRegistered_IsNotJudged(self):
+        code, insert, _err = self._main("--apply", {"taom_old": ("Half ", "Main/A.cs", 4)},
+                                        split={"taom_old": ("Main/A.cs", 4)}, registered={"taom_old"})
+        self.assertEqual(0, code)
+        insert.assert_not_called()
+
+
+class McmGroupPathTests(unittest.TestCase):
+    """#1385 Phase 4: MCM splits a group path on '/' and translates each part, so each part carries its own key.
+    LITERAL reads the first key with the whole rest of the path as its default."""
+
+    def test_group_parts_TwoKeyedParts_GiveTwoRows(self):
+        self.assertEqual([("taom_mcm_group_a", "Battle Tactics"), ("taom_mcm_group_b", "Mixed Formations")],
+                         h.group_parts("taom_mcm_group_a", "Battle Tactics/{=taom_mcm_group_b}Mixed Formations"))
+
+    def test_group_parts_OnePart_IsUnchanged(self):
+        self.assertEqual([("taom_mcm_group_a", "Realm Borders")], h.group_parts("taom_mcm_group_a", "Realm Borders"))
+
+    def test_group_parts_OtherKeyWithASlash_IsUnchanged(self):
+        # Only an MCM group key is a path; any other default keeps its slash.
+        self.assertEqual([("taom_x", "a/{=taom_y}b")], h.group_parts("taom_x", "a/{=taom_y}b"))
+
+    def test_group_parts_UnkeyedChild_KeepsOnlyTheFirstPart(self):
+        # MCM looks up the first part alone, so its row never holds the rest of the path.
+        self.assertEqual([("taom_mcm_group_a", "A")], h.group_parts("taom_mcm_group_a", "A/B"))
+
+    def test_group_parts_ThreeParts_GiveThreeRows(self):
+        self.assertEqual([("taom_mcm_group_a", "A"), ("taom_mcm_group_b", "B"), ("taom_mcm_group_c", "C")],
+                         h.group_parts("taom_mcm_group_a", "A/{=taom_mcm_group_b}B/{=taom_mcm_group_c}C"))
+
+    def test_group_parts_NonTaomNestedKey_IsNotDeclared(self):
+        # A vanilla key in taom_module_strings.xml overrides the vanilla text, so the harvester never registers one.
+        self.assertEqual([("taom_mcm_group_a", "A")], h.group_parts("taom_mcm_group_a", "A/{=Xy12Ab34}Diplomacy"))
+
+    def test_declared_keys_GroupPath_RegistersEachPart(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            cs = root / "Main" / "Features" / "S.cs"
+            cs.parent.mkdir(parents=True)
+            h.write_text(cs, '[SettingPropertyGroup("{=taom_mcm_group_a}A/{=taom_mcm_group_b}B")]\r\n')
+            with mock.patch.object(h, "REPO_ROOT", root):
+                found = h.declared_keys()
+        self.assertEqual({"taom_mcm_group_a": ("A", "Main/Features/S.cs", 1),
+                          "taom_mcm_group_b": ("B", "Main/Features/S.cs", 1)}, dict(found))
 
 
 class InsertRowsBlankLineTests(unittest.TestCase):

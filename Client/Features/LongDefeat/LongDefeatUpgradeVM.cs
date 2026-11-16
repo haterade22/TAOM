@@ -55,7 +55,7 @@ public sealed class LongDefeatUpgradeVM : LongDefeatViewModel
             PriceText = LongDefeatHudText.UpgradePrice(row.Step.Price);
         }
 
-        DetailText = LongDefeatHudText.UpgradeDetail(row.Standing, row.Affordable);
+        DetailText = row.Affordable > 0 ? LongDefeatHudText.UpgradeDeal(row.Standing, row.Affordable, row.Step.Price) : LongDefeatHudText.UpgradeDetail(row.Standing, row.Affordable);
         CanAfford = row.Affordable > 0;
     }
 }

@@ -37,7 +37,21 @@ WHAT IT WRITES (all in the repo; the unversioned Armory is only read)
   Main/_Module/ModuleData/troops/troops_*.xml
       every troop of a listed culture whose tier is inside `tiers` and whose battle kit carries the
       donor gets the placeholder in each slot that held the donor (fix_upgrade_armour_regressions
-      .write_changes: BOM and newlines kept, every file parsed before any is written).
+      .write_changes: BOM and newlines kept, every file parsed before any is written). The rule is
+      `placeholder_for`, and the troop generators that write a whole file
+      (fix_melee_ladder.GENERATED_TROOP_FILES: realm_troops.py for the realms,
+      generate_lothlorien_troops.py, generate_snow_orc_troops.py) call it as they render, so this
+      tool writes no swap into their files: it lists the ones still owed and --verify fails until
+      that generator runs with --apply.
+
+TIER CLONES (owner, 2026-11-16)
+-------------------------------
+Most entries are tier clones: a copy of the weapon a troop carries, restated to its tier, for a slot
+the roster pass could not fill from the troop's own culture. Each is named as the next Roman numerals
+of its donor's line, and the tool refuses a numbered line that repeats a numeral or falls in DPS at a
+step a placeholder takes part in (`line_faults`). The spec rules that need no Armory (tag, unique id,
+tier inside its span, one entry per donor, culture and tier, one craft row per entry) are checked when
+the spec loads (`check_spec`), so every generator that reads the swap rule gets a checked spec.
 
 Dry run by default; `--apply` writes; a second `--apply` writes nothing; `--verify` exits 1 when the
 generated files or the troops differ from the spec. Needs the installed Armory and lxml (the shared
@@ -51,7 +65,9 @@ USAGE
 from __future__ import annotations
 
 import argparse
+import collections
 import dataclasses
+import functools
 import json
 import re
 import sys
@@ -62,6 +78,7 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "tools"))
 
 import analyze_melee_ladder as report  # noqa: E402
+import fix_melee_ladder as roster  # noqa: E402
 import melee_catalogue as mc  # noqa: E402
 import melee_damage as md  # noqa: E402
 import melee_ladder as ladder  # noqa: E402
@@ -114,12 +131,148 @@ def scale_factors(piece_xml: str, k: float, k_thrust: float | None = None) -> st
     return out
 
 
+def check_spec(spec, lspec=None):
+    """Raise PlaceholderError on a spec rule that needs no install; return the spec.
+
+    One entry per (donor, culture, tier) keeps `placeholder_for` to one match. The cultures of one
+    entry share a craft row, because the band is rated by the first culture (`spec_craft`)."""
+    lspec = ladder.load_spec() if lspec is None else lspec
+    by_id = {}
+    for w in spec["weapons"]:
+        wid = w["id"]
+        if not wid.startswith(spec["tag"]):
+            raise PlaceholderError(f"{wid} does not start with the tag {spec['tag']}")
+        if wid in by_id:
+            raise PlaceholderError(f"duplicate id {wid}")
+        if not w["tiers"][0] <= w["tier"] <= w["tiers"][1]:
+            raise PlaceholderError(f"{wid}: tier {w['tier']} is outside its tiers {w['tiers']}")
+        rows = {repr(lspec["craft"].get(c, lspec["craft_default"])) for c in w["cultures"]}
+        if len(rows) > 1:
+            raise PlaceholderError(f"{wid}: its cultures {w['cultures']} have different craft rows")
+        for other in by_id.values():
+            if (other["donor"] == w["donor"] and set(other["cultures"]) & set(w["cultures"])
+                    and other["tiers"][0] <= w["tiers"][1] and w["tiers"][0] <= other["tiers"][1]):
+                raise PlaceholderError(f"{wid} and {other['id']} serve the same donor, culture and tier")
+        by_id[wid] = w
+    return spec
+
+
+@functools.lru_cache(maxsize=1)
+def load_spec():
+    return check_spec(json.loads(SPEC.read_text(encoding="utf-8")))
+
+
+def spec_weapons():
+    """The spec's entries: the rows `placeholder_for` reads by default."""
+    return tuple(load_spec()["weapons"])
+
+
+def serves(w, culture, tier):
+    """True when the entry goes to a troop of this culture at this melee-ladder tier."""
+    return culture in w["cultures"] and w["tiers"][0] <= tier <= w["tiers"][1]
+
+
+def placeholder_for(item_id, culture, tier, weapons=None):
+    """The placeholder that replaces `item_id` on a troop of `culture` at melee-ladder `tier`, else
+    `item_id`. The one swap rule: step 4 below and every generator of a whole troop file call it."""
+    for w in spec_weapons() if weapons is None else weapons:
+        if w["donor"] == item_id and serves(w, culture, tier):
+            return w["id"]
+    return item_id
+
+
+def placeholder_for_troop(item_id, troop_id, culture, level, weapons=None):
+    """`placeholder_for` at the troop's melee-ladder tier (analyze_melee_ladder.melee_tier). A troop
+    the melee ladder exempts (melee_ladders.json `exempt_troops`) keeps its weapon."""
+    if ladder.is_exempt_troop(troop_id, ladder_spec()):
+        return item_id
+    return placeholder_for(item_id, culture, report.melee_tier(troop_id, level), weapons)
+
+
+@functools.lru_cache(maxsize=1)
+def ladder_spec():
+    return ladder.load_spec()
+
+
+def split_generated(swaps):
+    """(swaps this tool writes, swaps owed by a generator): a troop file a generator writes whole gets
+    the placeholder from that generator, or its next --apply would undo the swap."""
+    writable, owed = [], []
+    for s in swaps:
+        (owed if Path(s["file"]).name in roster.GENERATED_TROOP_FILES else writable).append(s)
+    return writable, owed
+
+
 def carriers_of(w, troops):
     """The troops that hold or will hold this placeholder: a listed culture, a tier inside `tiers`,
-    and the donor (or the placeholder itself after an earlier --apply) in the battle kit."""
+    and the donor (or the placeholder itself after an earlier --apply) in the battle kit. A troop the
+    melee ladder exempts keeps its donor (`placeholder_for_troop`)."""
     return [t for t in troops
-            if t.culture in w["cultures"] and w["tiers"][0] <= t.tier <= w["tiers"][1]
-            and (w["id"] in t.items or w["donor"] in t.items)]
+            if serves(w, t.culture, t.tier) and (w["id"] in t.items or w["donor"] in t.items)
+            and not ladder.is_exempt_troop(t.id, ladder_spec())]
+
+
+def roman(n):
+    return report.roman(n)
+
+
+def numbered_lines(names_dps, placeholder_ids):
+    """{line: [(rank, DPS or None, id, is placeholder)]} sorted by rank, from {id: (name, DPS)}."""
+    lines = collections.defaultdict(list)
+    for iid, (name, dps) in names_dps.items():
+        key = report.line_key(name)
+        if key:
+            lines[key[0]].append((report.NUMERAL_RANK[key[1]], dps, iid, iid in placeholder_ids))
+    return {line: sorted(m, key=lambda x: (x[0], x[2])) for line, m in lines.items()}
+
+
+def line_faults(lines):
+    """A numeral used twice in a line, or a step a placeholder takes part in where DPS falls (more than
+    analyze_melee_ladder.DPS_TOLERANCE). A step between two Armory weapons is the Armory's own."""
+    faults = []
+    for line, members in sorted(lines.items()):
+        ranks = collections.Counter(m[0] for m in members)
+        for rank, n in sorted(ranks.items()):
+            if n > 1:
+                ids = ", ".join(m[2] for m in members if m[0] == rank)
+                faults.append(f"{line}: numeral {roman(rank)} is used {n} times ({ids})")
+        ordered = sorted(members, key=lambda m: (m[0], m[2]))
+        for a, b in zip(ordered, ordered[1:]):
+            if not (a[3] or b[3]) or a[1] is None or b[1] is None:
+                continue
+            if b[1] < a[1] - report.DPS_TOLERANCE:
+                faults.append(f"{line}: {b[2]} ({roman(b[0])}, {b[1]:.1f} DPS) falls below "
+                              f"{a[2]} ({roman(a[0])}, {a[1]:.1f} DPS)")
+    return faults
+
+
+def placeholder_line_faults(cat, priced, spec, new_prices):
+    """`line_faults` over every numbered line that holds a placeholder: the Armory's item names (priced
+    where the engine port can) plus each placeholder at its own price."""
+    names_dps = {iid: (it.name, priced[iid].best_dps if iid in priced else None)
+                 for iid, it in cat.items.items() if not iid.startswith(spec["tag"])}
+    ph = {w["id"] for w in spec["weapons"]}
+    for w in spec["weapons"]:
+        names_dps[w["id"]] = (w["name"], new_prices[w["id"]].best_dps)
+    lines = numbered_lines(names_dps, ph)
+    return line_faults({k: v for k, v in lines.items() if any(m[3] for m in v)})
+
+
+def plan_from_install(modules):
+    """(spec, cat, priced, troops, build() result) from the installed modules and this tree's troops:
+    the one loader `main` and `live_line_faults` share."""
+    spec = load_spec()
+    cat = mc.load(modules, item_modules={ARMORY})
+    priced, _failures = mc.price_all(cat)
+    troops = report.load_troops(report.TROOPS)
+    built = build(spec, cat, priced, troops, modules / ARMORY, frozenset(mc.load_shield_ids(modules)))
+    return spec, cat, priced, troops, built
+
+
+def live_line_faults():
+    """`placeholder_line_faults` on the installed Armory and this tree's spec (the LiveInstall test)."""
+    spec, cat, priced, _troops, (_p, _i, plan, _s, _d, _t) = plan_from_install(report.MODULES)
+    return placeholder_line_faults(cat, priced, spec, price_new(cat, plan))
 
 
 def spec_craft(w, lspec):
@@ -139,48 +292,71 @@ def carrier_rows(w, users, lspec):
     return rows
 
 
-def row_breaches(priced_weapon, rows, lspec):
-    """[((tier, craft key), troop ids, breaches)] for each row whose tier limit the weapon is over."""
+def row_views(p, ids, shielded, default_held):
+    """The weapon as the carriers of one row wield it: behind a shield only the modes a shield allows
+    (melee_catalogue.Priced.with_shield), else the whole weapon. A row with no carrier (the spec row)
+    takes `default_held`, the view the placeholder is banded on."""
+    if not ids:
+        return [p.with_shield() if default_held else p]
+    views = []
+    if any(i in shielded for i in ids):
+        views.append(p.with_shield())
+    if any(i not in shielded for i in ids):
+        views.append(p)
+    return views
+
+
+def row_breaches(priced_weapon, rows, lspec, shielded=frozenset(), default_held=False):
+    """[((tier, craft key), troop ids, breaches)] for each row whose tier limit the weapon is over,
+    each carrier judged in the mode it holds (`row_views`)."""
     out = []
     for (tier, craft), ids in sorted(rows.items()):
-        over = ladder.limit_breaches(
-            ladder.tier_limit(priced_weapon.item.template, tier, craft, lspec),
-            priced_weapon.swing_damage, priced_weapon.thrust_damage,
-            priced_weapon.swing_dps, priced_weapon.thrust_dps)
+        over = []
+        for v in row_views(priced_weapon, ids, shielded, default_held):
+            over += ladder.limit_breaches(
+                ladder.tier_limit(v.class_template, tier, craft, lspec),
+                v.swing_damage, v.thrust_damage, v.swing_dps, v.thrust_dps)
         if over:
             out.append(((tier, craft), ids, over))
     return out
 
 
-def build(spec, cat, priced, troops, armory):
-    tag = spec["tag"]
+def shield_carriers(users, shields):
+    """(ids of the carriers with a shield, whether every carrier has one). A placeholder whose every
+    carrier holds a shield is banded on the modes a shield allows."""
+    shielded = frozenset(t.id for t in users if any(i in shields for i in t.items))
+    return shielded, bool(users) and len(shielded) == len(users)
+
+
+def build(spec, cat, priced, troops, armory, shields=frozenset()):
     lspec = ladder.load_spec()
     pieces, items, plan, swaps = [], [], [], []
     desc_add, tmpl_add = {}, {}
-    by_id = {}
+    check_spec(spec, lspec)
     for w in spec["weapons"]:
         wid = w["id"]
-        if not wid.startswith(tag):
-            raise PlaceholderError(f"{wid} does not start with the tag {tag}")
-        if wid in by_id:
-            raise PlaceholderError(f"duplicate id {wid}")
-        by_id[wid] = w
         donor = priced.get(w["donor"])
         if donor is None:
             raise PlaceholderError(f"donor {w['donor']} is not a priced Armory melee weapon")
         culture = spec_craft(w, lspec)
+        users = carriers_of(w, troops)
+        rows = carrier_rows(w, users, lspec)
+        shielded, all_held = shield_carriers(users, shields)
         # The donor's class decides the band (melee_ladder.target), so each class spreads over the
         # ten tiers; its attacks decide which of the class limits it tops out at. A donor that
         # thrusts harder than it swings is a spear (dominant_flags), whatever its template says.
+        # When every carrier holds a shield, the band is the one of the mode they wield (a spear's
+        # one handed thrust), as the validator judges them.
         template = cat.items[w["donor"]].template
-        band = ladder.band(w["tier"], culture, lspec, template,
-                           *ladder.dominant_flags(template, donor.swing_damage, donor.thrust_damage,
-                                                  donor.swing_dps, donor.thrust_dps, lspec))
+        aim = donor.with_shield() if all_held else donor
+        band = ladder.band(w["tier"], culture, lspec, aim.class_template,
+                           *ladder.dominant_flags(aim.class_template, aim.swing_damage, aim.thrust_damage,
+                                                  aim.swing_dps, aim.thrust_dps, lspec))
         # blend < 1 (owner choice) lands part way: donor DPS + blend x (ladder target - donor DPS).
         blend = float(w.get("blend", 1.0))
         if not 0.0 < blend <= 1.0:
             raise PlaceholderError(f"{wid}: blend must be in (0, 1]")
-        k = (donor.best_dps + blend * (band.target - donor.best_dps)) / donor.best_dps
+        k = (aim.best_dps + blend * (band.target - aim.best_dps)) / aim.best_dps
         # The tier limit (melee_ladders.json `class_limits` scaled to the placeholder's tier and
         # culture) binds before the tier target: a top tier target would let a one handed sword
         # swing past any tier's blow, and a tier 4 placeholder may not carry a tier 10 blow either.
@@ -190,20 +366,25 @@ def build(spec, cat, priced, troops, armory):
         # Each attack has its own damage_factor and is held by its own limits (#1296, as
         # restat_melee_blades.class_ratios does): one factor for both would stop a spear's swing
         # because its thrust is at the thrust limit. An attack the donor lacks follows the other.
-        users = carriers_of(w, troops)
-        rows = carrier_rows(w, users, lspec)
+        # Each carrier is held in the mode it wields (row_views). A shield view also keeps the whole
+        # weapon inside its class limit: a player or a troop without a shield can use the other modes.
+        checks = [(ladder.tier_limit(v.class_template, tier, craft, lspec), v)
+                  for (tier, craft), ids in rows.items()
+                  for v in row_views(donor, ids, shielded, all_held)]
+        if shielded:
+            checks.append((ladder.class_limit(template, lspec), donor))
 
-        def attack_cap(swing, thrust, swing_dps, thrust_dps):
-            return min(ladder.max_factor(ladder.tier_limit(template, tier, craft, lspec),
-                                         swing, thrust, swing_dps, thrust_dps)
-                       for tier, craft in rows)
-        k_swing = min(k, attack_cap(donor.swing_damage, 0, donor.swing_dps, 0.0))
-        k_thrust = min(k, attack_cap(0, donor.thrust_damage, 0.0, donor.thrust_dps))
+        def attack_cap(swing: bool) -> float:
+            return min(ladder.max_factor(limit, v.swing_damage, 0, v.swing_dps, 0.0) if swing
+                       else ladder.max_factor(limit, 0, v.thrust_damage, 0.0, v.thrust_dps)
+                       for limit, v in checks)
+        k_swing = min(k, attack_cap(True))
+        k_thrust = min(k, attack_cap(False))
         if not donor.swing_damage:
             k_swing = k_thrust
         if not donor.thrust_damage:
             k_thrust = k_swing
-        effective = max(donor.swing_dps * k_swing, donor.thrust_dps * k_thrust) / donor.best_dps
+        effective = max(aim.swing_dps * k_swing, aim.thrust_dps * k_thrust) / aim.best_dps
         capped = effective < k - 1e-9
         k = effective
         blade_id = donor.blade_piece
@@ -232,9 +413,9 @@ def build(spec, cat, priced, troops, armory):
         pieces.append(f"    <!-- {wid}: donor blade {blade_id}, damage_factor swing x{k_swing:.3f}, thrust x{k_thrust:.3f} -->\n    {piece_xml}")
         items.append(f"    <!-- PLACEHOLDER {wid}: look of {w['donor']}, tier {w['tier']} ladder target -->\n    {item_xml}")
         for t in users:
-            if w["id"] not in t.items:  # not yet swapped by an earlier --apply
-                for slot in sorted(t.slots_of.get(w["donor"], ())):
-                    swaps.append({"file": t.path, "troop": t.id, "slot": slot, "old": w["donor"], "new": wid})
+            new = placeholder_for(w["donor"], t.culture, t.tier, spec["weapons"])
+            for slot in sorted(t.slots_of.get(w["donor"], ())):  # empty after an earlier --apply
+                swaps.append({"file": t.path, "troop": t.id, "slot": slot, "old": w["donor"], "new": new})
         plan.append((w, donor, band, k, new_blade, piece_xml, users, capped))
     return pieces, items, plan, swaps, desc_add, tmpl_add
 
@@ -315,11 +496,9 @@ def main(argv=None) -> int:
     if not armory.is_dir():
         print(f"SKIPPED: no Armory at {armory}", file=sys.stderr)
         return 2
-    spec = json.loads(SPEC.read_text(encoding="utf-8"))
-    cat = mc.load(modules, item_modules={ARMORY})
-    priced, failures = mc.price_all(cat)
-    troops = report.load_troops(report.TROOPS)
-    pieces, items, plan, swaps, desc_add, tmpl_add = build(spec, cat, priced, troops, armory)
+    spec, cat, priced, troops, built = plan_from_install(modules)
+    pieces, items, plan, swaps, desc_add, tmpl_add = built
+    shields = frozenset(mc.load_shield_ids(modules))
     new_prices = price_new(cat, plan)
     lspec = ladder.load_spec()
 
@@ -336,11 +515,17 @@ def main(argv=None) -> int:
     print(f"placeholder weapons: {len(plan)}; troop slots to swap: {len(swaps)}")
     for w, donor, band, k, new_blade, _, users, capped in plan:
         p = new_prices[w["id"]]
-        print(f"  {w['id']}: donor {w['donor']} {donor.best_dps:.0f} DPS -> {p.best_dps:.0f} DPS "
-              f"(T{w['tier']} band {band.low:.0f}-{band.high:.0f}, target {band.target:.0f}; x{k:.2f}); "
+        shielded, all_held = shield_carriers(users, shields)
+        # DPS and band are those of the view the placeholder is banded on (`build`): the shield
+        # modes when every carrier has a shield. Swing and thrust are the whole weapon's.
+        aim_donor = donor.with_shield() if all_held else donor
+        aim_p = p.with_shield() if all_held else p
+        print(f"  {w['id']}: donor {w['donor']} {aim_donor.best_dps:.0f} DPS -> {aim_p.best_dps:.0f} DPS"
+              + (" in its shield modes" if all_held else "")
+              + f" (T{w['tier']} band {band.low:.0f}-{band.high:.0f}, target {band.target:.0f}; x{k:.2f}); "
               f"swing {p.swing_damage}, thrust {p.thrust_damage}; {len(users)} troops: "
               + ", ".join(f"{t.id} T{t.tier}" for t in sorted(users, key=lambda t: (t.tier, t.id))))
-        over = row_breaches(p, carrier_rows(w, users, lspec), lspec)
+        over = row_breaches(p, carrier_rows(w, users, lspec), lspec, shielded, all_held)
         if over:
             raise PlaceholderError(
                 f"{w['id']} is over its tier limit: "
@@ -348,19 +533,23 @@ def main(argv=None) -> int:
                             + ", ".join(f"{s} {v:.0f} > {m}" for s, v, m in b)
                             for (tier, craft), ids, b in over))
         if capped:
-            if not donor.best_dps < p.best_dps <= band.high:
-                raise PlaceholderError(f"{w['id']} prices at {p.best_dps:.1f}: its tier limit leaves "
+            if not aim_donor.best_dps < aim_p.best_dps <= band.high:
+                raise PlaceholderError(f"{w['id']} prices at {aim_p.best_dps:.1f}: its tier limit leaves "
                                        "no room above its donor; remove it from the spec")
-            print(f"    (tier limit of {p.item.template}: held under the tier target)")
+            print(f"    (tier limit of {aim_p.class_template}: held under the tier target)")
         elif float(w.get("blend", 1.0)) == 1.0:
-            if not band.low <= p.best_dps <= band.high:
-                raise PlaceholderError(f"{w['id']} prices at {p.best_dps:.1f}, outside its band")
-        elif not donor.best_dps < p.best_dps <= band.high:
+            if not band.low <= aim_p.best_dps <= band.high:
+                raise PlaceholderError(f"{w['id']} prices at {aim_p.best_dps:.1f}, outside its band")
+        elif not aim_donor.best_dps < aim_p.best_dps <= band.high:
             raise PlaceholderError(f"{w['id']} prices at {p.best_dps:.1f}: a blend must beat its donor and stay under the band top")
         else:
             print(f"    (blend {w['blend']}: deliberately below the band)")
         if not users:
             raise PlaceholderError(f"{w['id']} has no troop; remove it from the spec")
+    faults = placeholder_line_faults(cat, priced, spec, new_prices)
+    if faults:
+        raise PlaceholderError("a numbered line breaks:\n  " + "\n  ".join(faults))
+    swaps, owed = split_generated(swaps)
 
     stale = []
     if not PIECES_FILE.exists() or PIECES_FILE.read_bytes().decode("utf-8") != pieces_text:
@@ -374,6 +563,10 @@ def main(argv=None) -> int:
         stale.append("Main/_Module/SubModule.xml")
     if swaps:
         stale.append(f"{len(swaps)} troop slots")
+    if owed:
+        owners = collections.Counter(roster.GENERATED_TROOP_FILES[Path(s["file"]).name] for s in owed)
+        stale.append(f"{len(owed)} troop slots in generated files, owed by "
+                     + ", ".join(f"{g} --apply ({n})" for g, n in sorted(owners.items())))
     if args.verify:
         print("verify:", "OK" if not stale else "DRIFT: " + "; ".join(stale))
         return 0 if not stale else 1
@@ -390,6 +583,8 @@ def main(argv=None) -> int:
     if swaps:
         print(f"wrote {write_changes(swaps)} roster file(s)")
     print("written:", "; ".join(stale) or "nothing")
+    if owed:
+        print("NEXT: run the generators named above with --apply; this tool does not write their files")
     return 0
 
 

@@ -10,7 +10,7 @@ namespace TAOM.Features.WarChronicle.Ledger;
 
 /// <summary>
 /// The daily war ledger (docs/features/war-chronicle.md, "The war ledger"): one <c>[WarLedger]</c> line per
-/// kingdom per day, three side lines, a Free-share line, and one-off event lines. The lines go to the
+/// kingdom per day, three side lines, a Free-share line, a garrison line per kingdom, and one-off event lines. The lines go to the
 /// TAOM debug log through <see cref="IModLogger.LogInfo"/> (INFO reaches the file and is flushed at
 /// once, <c>FileLogger.Enqueue</c>), where <c>tools/analyze_war_ledger.py</c> reads them. Stateless:
 /// every number comes from the snapshots, the baselines, the tier store, the effect registry and the
@@ -91,9 +91,29 @@ public sealed class WarLedgerService
         return lines;
     }
 
+    /// <summary>#1283: a garrison line per kingdom, after the share line. Empty without kingdoms.</summary>
+    public IReadOnlyList<string> BuildGarrisonLines(IReadOnlyList<KingdomWarSnapshot> kingdoms)
+    {
+        var lines = new List<string>();
+        if (kingdoms == null || kingdoms.Count == 0)
+            return lines;
+
+        var campaignId = _snapshots.GetCampaignId();
+        var day = _snapshots.GetElapsedDay();
+        foreach (var kingdom in kingdoms)
+        {
+            if (kingdom != null)
+                lines.Add(WarLedgerFormatter.Garrison(campaignId, day, kingdom));
+        }
+
+        return lines;
+    }
+
     public void WriteDaily(IReadOnlyList<KingdomWarSnapshot> kingdoms)
     {
         foreach (var line in BuildDailyLines(kingdoms))
+            _logger.LogInfo(line);
+        foreach (var line in BuildGarrisonLines(kingdoms))
             _logger.LogInfo(line);
     }
 

@@ -220,6 +220,81 @@ public class BattleBalanceConfigProviderValidationTests
         _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("AutoResolve is null")));
     }
 
+    [TestMethod]
+    public void Validate_NullSiegeDefenceSection_RevertsToTheCompiledSection()
+    {
+        var result = _sut.Validate(new BattleBalanceConfig { SiegeDefence = null });
+
+        Assert.AreEqual(0.1f, result.SiegeDefence.DefenderAdvantageBonuses["bluecraig"], 0.0001f);
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("SiegeDefence is null")));
+    }
+
+    [TestMethod]
+    public void Validate_NullDefenderAdvantageTable_RevertsToTheCompiledTable()
+    {
+        var config = new BattleBalanceConfig();
+        config.SiegeDefence.DefenderAdvantageBonuses = null;
+
+        var result = _sut.Validate(config);
+
+        Assert.AreEqual(0.1f, result.SiegeDefence.DefenderAdvantageBonuses["bluecraig"], 0.0001f);
+    }
+
+    [DataTestMethod]
+    [DataRow(-0.1f)]
+    [DataRow(1.5f)]
+    [DataRow(float.NaN)]
+    public void Validate_DefenderAdvantageBonusOutsideZeroToOne_RevertsOrRemovesTheRow(float bad)
+    {
+        var config = new BattleBalanceConfig();
+        config.SiegeDefence.DefenderAdvantageBonuses["bluecraig"] = bad;
+        config.SiegeDefence.DefenderAdvantageBonuses["gondor"] = bad;
+
+        var result = _sut.Validate(config);
+
+        Assert.AreEqual(0.1f, result.SiegeDefence.DefenderAdvantageBonuses["bluecraig"], 0.0001f);
+        Assert.IsFalse(result.SiegeDefence.DefenderAdvantageBonuses.ContainsKey("gondor"));
+    }
+
+    [TestMethod]
+    public void Validate_NullUpkeepFreeList_RevertsToTheCompiledList()
+    {
+        var config = new BattleBalanceConfig();
+        config.SiegeDefence.UpkeepFreeGarrisons = null;
+
+        var result = _sut.Validate(config);
+
+        Assert.IsTrue(result.SiegeDefence.UpkeepFreeGarrisons["bluecraig"]);
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("SiegeDefence.UpkeepFreeGarrisons is null")));
+    }
+
+    [TestMethod]
+    public void Validate_NullDailyGarrisonGrowthTable_RevertsToTheCompiledTable()
+    {
+        var config = new BattleBalanceConfig();
+        config.SiegeDefence.DailyGarrisonGrowth = null;
+
+        var result = _sut.Validate(config);
+
+        Assert.AreEqual(2f, result.SiegeDefence.DailyGarrisonGrowth["bluecraig"], 0.0001f);
+    }
+
+    [DataTestMethod]
+    [DataRow(-1f)]
+    [DataRow(21f)]
+    [DataRow(float.NaN)]
+    public void Validate_DailyGarrisonGrowthOutsideZeroToTwenty_RevertsOrRemovesTheRow(float bad)
+    {
+        var config = new BattleBalanceConfig();
+        config.SiegeDefence.DailyGarrisonGrowth["bluecraig"] = bad;
+        config.SiegeDefence.DailyGarrisonGrowth["gondor"] = bad;
+
+        var result = _sut.Validate(config);
+
+        Assert.AreEqual(2f, result.SiegeDefence.DailyGarrisonGrowth["bluecraig"], 0.0001f);
+        Assert.IsFalse(result.SiegeDefence.DailyGarrisonGrowth.ContainsKey("gondor"));
+    }
+
     // The tests above build the config in C#. These two go through the file and Newtonsoft, which merges JSON
     // keys into the compiled dictionaries and sets a section to null on a JSON null.
     [TestMethod]

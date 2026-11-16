@@ -1124,7 +1124,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.dunland_caerdh_axe_2h_c" />
+                    id="Item.dunland_caerdh_axe_2h_b" />
                 <equipment
                     slot="Item1"
                     id="Item.northern_javelin_3_t4" />
@@ -1587,7 +1587,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.dunland_caerdh_axe_2h_c" />
+                    id="Item.dunland_caerdh_axe_2h_d" />
                 <equipment
                     slot="Item2"
                     id="Item.northern_javelin_3_t4" />
@@ -2600,7 +2600,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.dunland_caerdh_spear_b" />
+                    id="Item.dunland_caerdh_spear_e" />
                 <equipment
                     slot="Item1"
                     id="Item.dunland_wulf_shield_heavy_c" />
@@ -2674,7 +2674,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.dunland_caerdh_spear_c" />
+                    id="Item.dunland_caerdh_spear_e" />
                 <equipment
                     slot="Item1"
                     id="Item.dunland_wulf_shield_heavy_d" />
@@ -2830,7 +2830,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.dunland_caerdh_spear_c" />
+                    id="Item.dunland_caerdh_spear_e" />
                 <equipment
                     slot="Item1"
                     id="Item.dunland_wulf_shield_heavy_a" />

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Generate Main/_Module/ModuleData/troops/troops_lothlorien.xml, Lothlorien's own troop trees.
 
-The T6-T7 riders carry taom_ph_lothlorien_spear_t6, a placeholder of he_spear that
-tools/generate_placeholder_weapons.py owns (#1296). When it is retired, put the real spear back here.
+The T6-T7 riders carry he_spear. Its placeholder taom_ph_lothlorien_spear_t6 (#1296) was retired on
+2026-11-16 (#631): the riders carry a shield, so they hold the spear in its one handed thrust, and that
+mode already sits at the tier 6 limit.
 
 Until this file Lothlorien fielded Rivendell's tree whole. The trees and the armour roles are
 KEYforce's (2026-11-04); tier T<n> is level 6 + (n-1)*5, so T4 is level 21 and T9 level 46.
@@ -47,6 +48,9 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import generate_placeholder_weapons as placeholders  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "Main" / "_Module" / "ModuleData" / "troops" / "troops_lothlorien.xml"
@@ -143,7 +147,7 @@ TROOPS = [
        "Leg": [rg("boots_light_a")]},
       ups=("lorien_spearman", "lorien_bowman"), basic=True),
     T("lorien_spearman", "Lórien Spearman", 5, "Infantry",
-      shield_line("wm_rivendell_spear_a01", "wm_elven_shield_a", ("mirkwood_sword_a01", "wm_rivendell_sword_a02_silver")),
+      shield_line("wm_rivendell_spear_a01", "wm_elven_shield_a", ("wm_rivendell_sword_a01_black", "wm_rivendell_sword_a02_silver")),
       {"Head": [rg("helmet_med_a")], "Cape": [rg("pauld_light_a")], "Body": [rg("chest_med_a")],
        "Leg": [rg("boots_light_a")]},
       ups=("lorien_infantry", "lorien_rider")),
@@ -153,16 +157,16 @@ TROOPS = [
        "Gloves": [rg("bracer_med_a")], "Leg": [rg("grvs_med_a")]},
       ups=("lorien_warden",)),
     T("lorien_warden", "Lórien Warden", 7, "Infantry",
-      shield_line("wm_rivendell_spear_a01_silver", "wm_elven_shield_b", ("wm_rivendell_sword_a01_silver", "wm_rivendell_sword_a02_black")),
+      shield_line("wm_rivendell_spear_a01_silver", "wm_elven_shield_b", ("wm_rivendell_sword_a01_black", "wm_rivendell_sword_a02_black")),
       {"Head": [rg("helmet_med_a")], "Cape": [rg("pauld_med_a")], "Body": [rg("chest_heavy_a")],
        "Gloves": [rg("bracer_med_a")], "Leg": [rg("grvs_med_a")]}),
     T("lorien_rider", "Lórien Rider", 6, "Cavalry",
-      shield_line("taom_ph_lothlorien_spear_t6", "wm_elven_shield_b", ("mirkwood_sword_a01", "wm_rivendell_sword_a01_black")),
+      shield_line("he_spear", "wm_elven_shield_b", ("mirkwood_sword_a01", "wm_rivendell_sword_a01_black")),
       {"Head": [rg("helmet_med_b")], "Cape": [rg("pauld_med_a")], "Body": [rg("chest_med_a")],
        "Gloves": [rg("bracer_med_a")], "Leg": [rg("grvs_med_a")]},
       ups=("lorien_lancer",), horse=LIGHT_HORSE),
     T("lorien_lancer", "Lórien Lancer", 7, "Cavalry",
-      shield_line("taom_ph_lothlorien_spear_t6", "wm_rivendell_shield_a02_silver", ("wm_rivendell_sword_a01_silver", "wm_rivendell_sword_a02_black")),
+      shield_line("he_spear", "wm_rivendell_shield_a02_silver", ("wm_rivendell_sword_a01_black", "wm_rivendell_sword_a02_black")),
       {"Head": [rg("helmet_med_b")], "Cape": [rg("pauld_med_a")], "Body": [rg("chest_heavy_a")],
        "Gloves": [rg("bracer_med_a")], "Leg": [rg("grvs_med_a")]},
       horse=GOOD_HORSE),
@@ -183,36 +187,36 @@ TROOPS = [
 
     # ---------------- Marchwardens (Talas Duiren) ----------------
     T("lorien_mw_sentry", "Marchwarden Sentry", 5, "Ranged",
-      archer(5, ("he_sword", "mirkwood_sword_a01"), ARROWS_B),
+      archer(5, ("he_sword", "wm_rivendell_sword_a01_black"), ARROWS_B),
       {"Head": [mw("helmet_arc_med_a"), mw("helmet_arc_med_b")],
        "Body": [mw("chest_med_a"), mw("chest_med_b")],
        "Gloves": [mw("bracer_med_a")], "Leg": [mw("grvs_med_a")]},
       ups=("lorien_mw_archer", "lorien_mw_skirmisher"), basic=True),
     T("lorien_mw_archer", "Marchwarden Archer", 6, "Ranged",
-      archer(6, ("he_sword", "mirkwood_sword_a01"), ARROWS_B),
+      archer(6, ("he_sword", "wm_rivendell_sword_a01_black"), ARROWS_B),
       {"Head": [mw("helmet_arc_med_a"), mw("helmet_arc_med_b")], "Cape": [mw("pauld_med_a")],
        "Body": [mw("chest_med_a"), mw("chest_med_b")],
        "Gloves": [mw("bracer_med_a")], "Leg": [mw("grvs_med_a")]},
       ups=("lorien_mw_ranger", "lorien_mw_outrider")),
     T("lorien_mw_ranger", "Marchwarden Ranger", 7, "Ranged",
-      archer(7, ("he_sword", "wm_rivendell_sword_a01_silver"), ARROWS_C),
+      archer(7, ("he_sword", "wm_rivendell_sword_a02_black"), ARROWS_C),
       {"Head": [mw("helmet_arc_heavy_a"), mw("helmet_arc_heavy_b")], "Cape": [mw("pauld_med_a")],
        "Body": [mw("chest_heavy_a"), mw("chest_heavy_b")],
        "Gloves": [mw("bracer_heavy_a")], "Leg": [mw("grvs_med_a")]},
       ups=("lorien_mw_high_ranger",)),
     T("lorien_mw_high_ranger", "Marchwarden High Ranger", 8, "Ranged",
-      archer(8, ("wm_gf_knight_longsword", "wm_rivendell_sword_a01_silver"), ARROWS_D),
+      archer(8, ("wm_gf_knight_longsword", "wm_rivendell_sword_a02_black"), ARROWS_D),
       {"Head": [mw("helmet_arc_heavy_a"), mw("helmet_arc_heavy_b")], "Cape": [mw("pauld_heavy_a")],
        "Body": [mw("chest_heavy_a"), mw("chest_heavy_b")],
        "Gloves": [mw("bracer_heavy_a")], "Leg": [mw("grvs_heavy_a")]}),
     T("lorien_mw_outrider", "Marchwarden Outrider", 7, "HorseArcher",
-      archer(7, ("he_sword", "mirkwood_sword_a01"), ARROWS_C),
+      archer(7, ("he_sword", "wm_rivendell_sword_a02_black"), ARROWS_C),
       {"Head": [mw("helmet_arc_heavy_a"), mw("helmet_arc_heavy_b")], "Cape": [mw("pauld_med_a")],
        "Body": [mw("chest_med_a"), mw("chest_med_b")],
        "Gloves": [mw("bracer_med_a")], "Leg": [mw("grvs_med_a")]},
       ups=("lorien_mw_dawnrider",), horse=LIGHT_HORSE),
     T("lorien_mw_dawnrider", "Marchwarden Dawnrider", 8, "HorseArcher",
-      archer(8, ("wm_gf_knight_longsword", "wm_rivendell_sword_a01_silver"), ARROWS_D),
+      archer(8, ("wm_gf_knight_longsword", "wm_rivendell_sword_a02_black"), ARROWS_D),
       {"Head": [mw("helmet_arc_heavy_b"), mw("helmet_arc_heavy_a")], "Cape": [mw("pauld_heavy_a")],
        "Body": [mw("chest_heavy_a"), mw("chest_heavy_b")],
        "Gloves": [mw("bracer_heavy_a")], "Leg": [mw("grvs_heavy_a")]},
@@ -246,37 +250,37 @@ TROOPS = [
        "Gloves": [gl("bracer_heavy_a")], "Leg": [gl("grvs_med_a")]},
       ups=("lorien_gl_bladeguard", "lorien_gl_infantry", "lorien_gl_archer"), basic=True),
     T("lorien_gl_bladeguard", "Galadhrim Bladeguard", 7, "Infantry",
-      two_hander("wm_gf_knight_longsword", ("he_sword", "wm_rivendell_sword_a02_silver")),
+      two_hander("wm_gf_knight_longsword", ("he_sword", "wm_rivendell_sword_a02_black")),
       {"Head": [gl("helmet_heavy_c")], "Cape": [gl("pauld_heavy_a")],
        "Body": [gl("chest_heavy_a"), gl("chest_heavy_b")],
        "Gloves": [gl("bracer_heavy_a")], "Leg": [gl("grvs_heavy_a")]},
       ups=("lorien_gl_blademaster",)),
     T("lorien_gl_blademaster", "Galadhrim Blademaster", 8, "Infantry",
-      two_hander("wm_gf_knight_longsword", ("he_sword", "wm_rivendell_sword_a02_silver")),
+      two_hander("wm_gf_knight_longsword", ("he_sword", "wm_rivendell_sword_a02_black")),
       {"Head": [gl("helmet_heavy_c")], "Cape": [gl("pauld_cape_heavy_a")],
        "Body": [gl("chest_elite_a"), gl("chest_elite_b")],
        "Gloves": [gl("bracer_heavy_a")], "Leg": [gl("grvs_heavy_a")]},
       ups=("lorien_gl_highblade",)),
     T("lorien_gl_highblade", "Galadhrim Highblade", 9, "Infantry",
-      two_hander("wm_gf_knight_longsword", ("wm_rivendell_sword_a02_silver", "he_sword")),
+      two_hander("wm_gf_knight_longsword", ("wm_rivendell_sword_a02_black", "he_sword")),
       {"Head": [ml("helmet_heavy_c")], "Cape": [ml("pauld_cape_heavy_a")],
        "Body": [ml("chest_heavy_a"), ml("chest_heavy_b")],
        "Gloves": [ml("bracer_heavy_a")], "Leg": [ml("grvs_heavy_a")]}),
     T("lorien_gl_infantry", "Galadhrim Infantry", 7, "Infantry",
-      shield_line("wm_rivendell_spear_a01_silver", "wm_elven_shield_b", ("wm_rivendell_sword_a02_silver", "wm_rivendell_sword_a02_black")),
+      shield_line("wm_rivendell_spear_a01_silver", "wm_elven_shield_b", ("wm_rivendell_sword_a01_black", "wm_rivendell_sword_a02_black")),
       {"Head": [gl("helmet_heavy_a")], "Cape": [gl("pauld_heavy_a")],
        "Body": [gl("chest_heavy_a"), gl("chest_heavy_b")],
        "Gloves": [gl("bracer_heavy_a")], "Leg": [gl("grvs_heavy_a")]},
       ups=("lorien_gl_sentinel",)),
     T("lorien_gl_sentinel", "Galadhrim Sentinel", 8, "Infantry",
-      shield_line("wm_rivendell_spear_a01_silver", "wm_rivendell_shield_a02_silver", ("wm_rivendell_sword_a02_silver", "wm_rivendell_sword_a02_black")),
+      shield_line("wm_rivendell_spear_a01_black", "wm_rivendell_shield_a02_silver", ("wm_rivendell_sword_a02_silver", "wm_rivendell_sword_a02_black")),
       {"Head": [gl("helmet_heavy_a")], "Cape": [gl("pauld_heavy_a")],
        "Body": [gl("chest_elite_a"), gl("chest_elite_b")],
        "Gloves": [gl("bracer_heavy_a")], "Leg": [gl("grvs_heavy_a")]},
       ups=("lorien_gl_mallorn_defender",)),
     # T9 sidearms: the strongest one-handers the elves own today (melee band 86-143 DPS at tier 9).
     T("lorien_gl_mallorn_defender", "Mallorn Defender", 9, "Infantry",
-      shield_line("wm_rivendell_spear_a01_silver", "wm_rivendell_shield_a02_silver", ("wm_rivendell_sword_a02_black", "wm_rivendell_sword_a01_black")),
+      shield_line("wm_rivendell_spear_a01_black", "wm_rivendell_shield_a02_silver", ("wm_rivendell_sword_a02_black", "wm_rivendell_sword_a01_black")),
       {"Head": [ml("helmet_heavy_a")], "Cape": [ml("pauld_heavy_a")],
        "Body": [ml("chest_heavy_a"), ml("chest_heavy_b")],
        "Gloves": [ml("bracer_heavy_a")], "Leg": [ml("grvs_heavy_a")]}),
@@ -376,6 +380,9 @@ def render(troops, skills_by_id):
             lines.append("    </upgrade_targets>")
         lines.append("    <Equipments>")
         for eq in sets_of(t):
+            # A tier clone of tools/placeholder_weapons.json replaces its donor, by the placeholder tool's rule.
+            eq = {s: placeholders.placeholder_for_troop(v, t["id"], "lothlorien", TIER_LEVEL[t["tier"]])
+                  if s.startswith("Item") else v for s, v in eq.items()}
             lines.append("      <EquipmentRoster>")
             lines += [f'        <equipment slot="{s}" id="Item.{eq[s]}" />' for s in SLOT_ORDER if s in eq]
             lines.append("      </EquipmentRoster>")

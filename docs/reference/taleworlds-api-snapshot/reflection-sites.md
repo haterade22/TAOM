@@ -47,8 +47,8 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…ViewModelCollection.CharacterDeveloper.SkillVM` | `_heroItem` | field | `LoremastersLineSkillAccess.cs:40` | Loremaster's Line: the hero's preview attributes for the learning-rate probe |
 | `…GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler` | `_isActive` | field | `OOBOverlayService.cs:64` | CompanionTactics OOB overlay attach |
 | `…MissionGauntletOrderOfBattleUIHandler` | `_dataSource` | field | `OOBOverlayService.cs:65` | CompanionTactics OOB overlay data |
-| `…ViewModelCollection.Party.PartyCharacterVM` | `TypeIconData` | property | `RoleTooltipDecorator.cs:40` | Companion role tooltip |
-| `…ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM` | `_cachedTooltipProperties` | field | `RoleTooltipDecorator.cs:41` | Companion role tooltip cache bust |
+| `…ViewModelCollection.Party.PartyCharacterVM` | `TypeIconData` | property | `RoleTooltipDecorator.cs:41` | Companion role tooltip |
+| `…ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM` | `_cachedTooltipProperties` | field | `RoleTooltipDecorator.cs:42` | Companion role tooltip cache bust |
 | `…OrderOfBattleHeroItemVM` | `GetCaptainTooltip` | method | `ManualPatchApplicator.cs:85` (manual patch) | Captain tooltip role hint |
 | `…ViewModelCollection.FaceGenerator.FaceGenVM` | `_selectedRace` | field | `FaceGenRaceSelectorRebuilder.cs:208` | CC culture-restricted race dropdown |
 | `SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView` | `SpawnNonHumanNarrativeMenuCharacter` | method | `CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:154` | Patch20 narrative mount guard: the `TargetMethod` of its prefix |
@@ -59,7 +59,7 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…CustomBattle.CustomBattleSideVM` | `OnCultureSelection` | method | `CustomBattleSideVM_Constructor_Patch.cs:24` | CustomBattles faction injection |
 | `…ViewModelCollection.ClanManagement.Categories.ClanPartiesVM` | `OnPartySelection` | method (private) | `RefugeClanScreenPatch.cs:45` | Refuge clan screen: a refuge row's selection handler is the VM's own. Missing: the method handle is null and the postfix adds no refuge rows |
 | `TaleWorlds.MountAndBlade.Agent` | `SetMountAgent` | method (private) | `Agent_Die_SpiderDismount_Patch.cs:35` | Patch47 dismount-before-death for every creature mount: severs the rider link before native `Die`. Missing: `Initialize` prints one red line and the guard is off for every creature mount |
-| `TaleWorlds.MountAndBlade.Mission` | `RegisterBlow` | method | `CustomAttacksUtils.cs:61` | AdvancedCombat custom attacks |
+| `TaleWorlds.MountAndBlade.Mission` | `RegisterBlow` | method | `CustomAttacksUtils.cs:62` | AdvancedCombat custom attacks |
 | `TaleWorlds.MountAndBlade.Mission` | `WaitTickCompletion` | method | `MissionTickProfilerInstaller.cs:31,54` | Patch97 tick profiler: the wait's open delegate and its call-site swap |
 | `TaleWorlds.Engine.ScriptComponentBehavior` | `OnTick` | method (protected internal virtual) | `MissionAttributionInstaller.cs:35,66` | Patch97 attribution (plan 041): the script tick's open delegate and its call-site swap. Missing: one WARNING, per-component script attribution off, the script totals stay |
 | `TaleWorlds.CampaignSystem.MbEvent`1` | `_nonSerializedListenerList` | field | `TickEventListenerWalker.cs:47` | Patch101 map profiler: the TickEvent listener walk. Missing: the walk stays unbound and listeners are not attributed (one warning) |
@@ -229,6 +229,7 @@ These resolve the target *type* from a live instance (`instance.GetType()…`), 
 | `FactionMap/Hooks/CultureStageViewCreatedHook.cs`, `CultureStageViewTickHook.cs`, `CultureStageProgressionService.cs:30,38` | `viewInstance.GetType().GetField(...)` | CC culture-stage view type resolved from the live view instance |
 | `CharacterCreation/Hooks/CharacterCreationNarrativeStageView_RefreshAgentVisuals_BodySync_Patch.cs:39`, `CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:200` | `__instance?.GetType().GetField("_characterCreationManager", …)` | field name fixed, but type comes from the patched instance |
 | `CrashReport/Collectors/*` (`HarmonyCorrelationCollector`, `StackFrameSnapshotBuilder`, `McmSettingsCollector`), `CrashReport/Adapters/ButterLibExceptionHandlerAdapter.cs` | `frame.GetMethod()`, `settingsInstance.GetType().GetProperty(...)`; `McmSettingsCollector.StringifyValue` also reads `SelectedValue` by name off an MCM `Dropdown` | reflects over arbitrary stack frames / optional third-party (ButterLib, MCM) types that may be absent |
+| `CoopInterop/SettingsFingerprint.cs` (`GroupOf`, `Render`) | `GetProperty("GroupName")` off the MCM `SettingPropertyGroupAttribute`, and `SelectedIndex` / `SelectedValue` by name off an MCM `Dropdown` | the attribute and dropdown are read by member name, so a renamed MCM member puts every setting in "(ungrouped)" with no error |
 | `Dependencies/Foundation/IncompatibleModDetector.cs:~220` | `moduleInfo.GetType().GetProperty("Id")` | `ModuleInfo.Id` is read off each element returned by `ModuleHelper.GetActiveModules` (the method itself is a Category B row); the element type comes from the live list |
 
 ---

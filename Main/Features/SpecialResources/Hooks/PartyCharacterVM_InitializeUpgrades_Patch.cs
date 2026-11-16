@@ -2,6 +2,7 @@ using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Party;
 using TAOM.Core.Logging;
+using TaleWorlds.Localization;
 
 namespace TAOM.Features.SpecialResources.Hooks;
 
@@ -51,8 +52,10 @@ public static class PartyCharacterVM_InitializeUpgrades_Patch
             {
                 var clamped = System.Math.Max(0, maxAffordable);
                 var isDisabled = clamped == 0;
-                var costHint = string.Concat(resourceName, " cost: ", resourceCost.ToString(),
-                    " per troop (have ", ((int)currentAmount).ToString(), ")");
+                var costHint = new TextObject("{=taom_res_upgrade_cost_hint}{RESOURCE} cost: {COST} per troop (have {HAVE})")
+                    .SetTextVariable("RESOURCE", resourceName)
+                    .SetTextVariable("COST", resourceCost.ToString())
+                    .SetTextVariable("HAVE", ((int)currentAmount).ToString()).ToString();
 
                 _logger?.LogDebug($"[SpecRes] Patch26-UI: {__instance.Character.StringId}→{targetId} cost={resourceCost} available={currentAmount:F0} clamped={clamped}/{upgrade.AvailableUpgrades}");
 
