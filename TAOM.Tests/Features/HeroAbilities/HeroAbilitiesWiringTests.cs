@@ -453,7 +453,7 @@ public class HeroAbilitiesWiringTests
         var call = At(hit, "_executor.TryKill(");
 
         Assert.IsTrue(At(hit, "!AgentSlotIdentity.IsCurrentOccupant(hero) || !hero.IsActive() || hero.IsFadingOut()") < call,
-            "TakeDamage refuses a fading attacker (CustomAttacksUtils.cs:170)");
+            "TakeDamage refuses a fading attacker (CustomAttacksUtils.cs:185)");
         Assert.IsTrue(At(hit, "t.DeadShooter++;") < call);
         Assert.IsTrue(At(hit, "e.BlockedShield || e.BlockedWeapon") < call, "never a kill on a blocked hit");
         Assert.IsTrue(At(hit, "t.Exempt++;") < call, "an extra arrow never rolls");

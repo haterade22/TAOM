@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using TAOM.Features.HeroRace.Diagnostics;
 using TaleWorlds.MountAndBlade;
+using TAOM.Core.Diagnostics;
+using System.Threading;
 
 namespace TAOM.Features.HeroRace;
 
@@ -148,14 +150,29 @@ public static class ActionIndexCacheRepair
 
                 bool ok = RepairFields(phase, IsRoundTripUsable());
                 if (ok) _completed = true;
+                ReportIfSpent(ok, _attempts, phase);
                 return ok;
             }
         }
         catch (Exception e)
         {
             TableauDiagnostics.LogError($"ActionIndexCacheRepair ({phase}) failed: {e}");
+            ReportIfSpent(false, Volatile.Read(ref _attempts), phase);
             return false;
         }
+    }
+
+    /// <summary>The #1185 notice id for characters lying flat in UI tableaus (#1223).</summary>
+    internal const string SelfDisableId = "HeroRace.ActionIndexRepair";
+
+    /// <summary>
+    /// Reports the repair as off once the last allowed pass failed (#1223). A deferral before action types load is
+    /// normal and never reaches here: it returns before a pass is counted.
+    /// </summary>
+    internal static void ReportIfSpent(bool ok, int attempts, string phase)
+    {
+        if (!ok && attempts >= MaxAttempts)
+            SelfDisables.Report(SelfDisableId, $"{MaxAttempts} repair passes failed (last: {phase})");
     }
 
     /// <summary>
