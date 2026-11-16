@@ -5172,3 +5172,9 @@ The Kit's sprite generation re-saved all 13 GUI `_tex.tpac` files. I copied back
 - **Why missed:** the fix searched for the defect in the file the issue named, not for other code with the same shape.
 - **Prevent:** when fixing a helper, grep for its copies (the function name, "Copied in shape from", the same loop) and fix or file each in the same change. Before reusing a loader, read what each caller adds on top of it.
 - **Source:** issue #1372.
+
+### A loop over a set decides ties by hash order (melee ladder report, #1379, 2026-11-16)
+`analyze_melee_ladder.py` looped over `Troop.items`, a frozenset, and kept the first of two equal weapons, so one row of the report named a different axe from run to run on the same data. Python salts string hashes per process, so a test inside one process never sees the change.
+- **Why missed:** each run looked stable; only two runs side by side, or two `PYTHONHASHSEED` values, show it.
+- **Prevent:** when output depends on the order of a set (a tie-break, the first match, a dict filled from it), loop over `sorted(...)`. Prove a generator or report deterministic by running it under two or more `PYTHONHASHSEED` values in subprocesses.
+- **Source:** issue #1379.
