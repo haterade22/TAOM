@@ -5451,5 +5451,8 @@
 	<!-- AlignmentDesertion -->
 	<string id="taom_recruit_slot_would_desert" text="{=taom_recruit_slot_would_desert}This volunteer would desert your party: their people will not serve your side." />
 	<string id="taom_recruit_slot_behind_deserter" text="{=taom_recruit_slot_behind_deserter}An earlier volunteer here would desert your party, and volunteers are recruited in order." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- AlignmentDesertion -->
+	<string id="taom_recruit_slot_realm_refuses" text="{=taom_recruit_slot_realm_refuses}Your side may not take volunteers from this realm." />
 
 </strings>

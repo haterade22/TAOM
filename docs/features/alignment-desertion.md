@@ -187,8 +187,9 @@ AI trip estimate counts the same slots.
 - The player index is inclusive and the AI bound exclusive (see Volunteer index convention); the cap follows
   each recruit reader exactly. The hint's relation search is the one reader it does not follow, so Patch157
   replaces that hint.
-- A notable whose volunteers TAOM's alignment block refuses (`TaomVolunteerModel` returns -1) still shows
-  vanilla's "You need 0" on every slot; that is outside this feature.
+- A notable whose volunteers TAOM's alignment recruitment block refuses (`TaomVolunteerModel` returns -1)
+  had "You need 0" on every slot too. Patch157 names the block on those slots first (#1408): the block comes
+  before the cap in the model, so no desertion reason applies there.
 
 ## Battle rosters
 

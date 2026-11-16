@@ -3,6 +3,7 @@ using DryIoc;
 using TAOM.Composition;
 using TAOM.Core.Logging;
 using TAOM.Features.AlignmentDesertion.Hooks;
+using TAOM.Features.AlignmentRecruitment;
 using TAOM.Features.CoopInterop;
 
 namespace TAOM.Features.AlignmentDesertion;
@@ -31,7 +32,8 @@ internal sealed class AlignmentDesertionModule : TaomFeatureModule
     {
         Patch150_ConformityTick_Prefix.Initialize(resolver.Resolve<IDesertionRecruitGuard>(),
             resolver.Resolve<ICoopSessionProvider>(), resolver.Resolve<IModLogger>());
-        Patch157_RecruitSlotHint_Prefix.Initialize(resolver.Resolve<IDesertionRecruitGuard>(), resolver.Resolve<IModLogger>());
+        Patch157_RecruitSlotHint_Prefix.Initialize(resolver.Resolve<IDesertionRecruitGuard>(),
+            resolver.Resolve<IRecruitmentAlignmentService>(), resolver.Resolve<IModLogger>());
     }
 
     public override IReadOnlyList<PatchCategoryDecl> PatchCategories => Categories;
