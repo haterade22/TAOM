@@ -46,7 +46,8 @@ before the stop.
   last new `compile_shader` line (a net for a mission that ends without another frame), and gives up after 15 minutes.
   The count has no "of about N": on 15 Nov the queue said 1,192 and 706 lines came before the wait ended.
 - **The loading-screen line.** A postfix on the internal `LoadingWindowViewModel.Update` (called every frame from
-  `GauntletDefaultLoadingWindowManager.OnLateTick`) writes the line into `DescriptionText` while the notice is up. TAOM's
+  `GauntletDefaultLoadingWindowManager.OnLateTick`) writes the line into `DescriptionText` while the notice is up and the current mission state is still in its
+  render wait. TAOM's
   `TAOMLoadingWindow.xml` shows `DescriptionText` in its bottom bar; in single player nothing else writes it. The line is
   set in the frames before the stop and stays through it, and it shows in every display mode, also where the window
   might not.
@@ -90,9 +91,11 @@ notice closed after S s` and, when the net closes it, `[BattleShaderNotice] no s
 
 ### Limits
 
-- The loading-screen line clears only on the frame the mission ticks. No engine path was found that ends a
-  mission state during the wait without that frame (#1308 review, lens 5 F2); if one existed, the line would
-  stay until the next mission's first frame.
+- The service clears the loading-screen line on the frame the mission ticks. The writer also requires the engine's
+  render wait on the current mission state (`FirstMissionTickAfterLoading` with the mission `Continuing`, the test
+  the `OnTick` hook uses). Once a mission state is finalized, `OnFinalize` clears `MissionState.Current`, so nothing
+  writes the line again; a line already on the window stays until the window's next enable clears it. No engine
+  path that ends a mission state during its wait was found (#1308 review, lens 5 F2).
 - The parked Patch21 (`LoadingScreen_ShaderProgress_Patch`) writes the same `DescriptionText`. Before it is
   re-enabled, keep the two writers apart: its shader walk loads cold missions on purpose.
 
@@ -106,8 +109,8 @@ notice closed after S s` and, when the net closes it, `[BattleShaderNotice] no s
 
 - `TAOM.Tests/Features/BattleShaderNotice/BattleShaderNoticeGateTests.cs`: 11 tests (threshold either side, unreadable
   count, a count that rises later, no second start, stop, nothing after the stop, the next load).
-- `TAOM.Tests/Features/BattleShaderNotice/BattleShaderNoticeServiceTests.cs`: 10 tests (start with the texts, the line,
-  warm load, stop clears the line, ordinary frames, dedicated server, texts or window failing, the start log line).
+- `TAOM.Tests/Features/BattleShaderNotice/BattleShaderNoticeServiceTests.cs` (start with the texts, the line,
+  warm load, stop clears the line, ordinary frames, dedicated server, texts or window failing, the start log line, the line only during the render wait).
 - `TAOM.Tests/Features/ShaderCompileNotice/ShaderCompileNoticeModeTests.cs`: 13 tests (start position, show rule and
   idle close per mode, the startup mode unchanged).
 - The thread, the window and the frame timing are engine and OS boundaries: in game only.

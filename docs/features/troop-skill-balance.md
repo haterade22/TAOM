@@ -360,7 +360,7 @@ The checks owed for the ten tier curve (#343, 2026-11-15). An existing save is e
 4. A campaign battle between two armies of about the same tier. Fights between same-tier troops last several blows; an elite kills a recruit in one or two. No troop group stands idle or flees at once (the AI level reads the skill).
 5. A Fords of War match. The troll copies fight as before (they keep their old values), and a militia copy fights like its campaign twin, not like a recruit.
 6. Crush-through. An elite against a recruit has a skill lead over 135, so it crushes through a block at the full configured chance; two troops of the same tier have a lead under 20 and do not.
-7. Shield bash (Hammerhand). Note how often a bash knocks a troop down. The chance reads the Athletics lead, which is smaller on this curve; the maintainer decides whether to scale the window.
+7. Shield bash (Hammerhand). The chance reads the Athletics lead, and a higher tier's lead over a lower tier is larger on this curve (between foot troops one tier apart the mean chance went from 22 to 30 percent, two tiers apart from 33 to 53). An elite on foot should knock a recruit down with most bashes, and two troops of the same tier seldom do. The window is unchanged.
 
 ## Changelog
 

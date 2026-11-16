@@ -2824,3 +2824,34 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 **Prevent:** a push that skips the full suite adds `FullyQualifiedName~Composition` to its filter whenever it touches `TaomClientComposition`, `FeatureModules` or a feature module, and says in the commit body which suite ran.
 
 **Source:** `docs/reviews/rca-scenario-autorun-2026-11-15.md`
+
+### A relay test against a collaborator that refuses everything pins no field (#1329, 2026-11-15)
+
+**Why missed:** the guest trade relay test used a host that answered every request "not a free leader", so only the refusal crossed the wire. Dropping `Status`, `Balance` or the new armoury level from the reply, or swapping `Subject` and `Target` in the request, left every test green.
+
+**Prevent:** a relay or adapter between two formats gets one test per direction that asserts every field, through a collaborator that returns a full result.
+
+**Source:** `docs/reviews/rca-coop-guest-trade-2026-11-15.md` (Class 4)
+### A plan that names a call is checked against the gates on that call's type (#1326, 2026-11-15)
+
+**Why missed:** the approved plan for the story side gate told `StoryOfferService` to call `ResolveSide(kingdom id, mission row culture)`. `SidePairScanTests` (#957) allows the two-argument call only to listed types, because a kingdom zipped with another entity's culture sides a Neutral realm wrongly. The design pass checked the entry-point and service-signature gates only, and the filtered run while building named the feature's own tests, so the first full run was the first to see it.
+
+**Prevent:** when a design names a call on a shared service, grep `TAOM.Tests` for that service's type name and read every gate that scans its callers, before the first line is written. While building, add those gates to the filtered run.
+
+**Source:** [rca-story-side-gate-2026-11-15.md](../rca-story-side-gate-2026-11-15.md) finding 1.
+
+### A check's pass pattern lists what correct code writes with shipped data, and a wrong line has a fail pattern (#1326, 2026-11-15)
+
+**Why missed:** the `offer.shown` line gained `choices=` and `side=`, and the manifest's pass pattern was widened to every value the code can ever write. `NoteShown` only calls `Pass`, so the check passed for an evil player who was asked to defend, which is the fault the change fixes.
+
+**Prevent:** write a pass pattern from the lines correct code writes with the data that ships now, and give the known wrong line its own fail pattern. A later phase that ships new data widens the pattern in the same commit.
+
+**Source:** [rca-story-side-gate-2026-11-15.md](../rca-story-side-gate-2026-11-15.md) finding 4.
+
+### When two rules feed one decision, each gets a case the other leaves open (#1326, 2026-11-15)
+
+**Why missed:** the story side gate decides from the player's alignment and from his kingdom's tie to the window. Every tie test used Isengard, Dunland or Rohan, whose alignment alone gives the same answer, so the tie could be removed from the service with every test green.
+
+**Prevent:** for each rule of a combined decision, write one case in which the other rules allow everything (here a neutral realm on each side), and prove it by forcing the rule off once: the new case must be the one that fails.
+
+**Source:** [rca-story-side-gate-2026-11-15.md](../rca-story-side-gate-2026-11-15.md) finding 6.

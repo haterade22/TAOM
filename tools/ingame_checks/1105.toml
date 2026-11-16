@@ -110,10 +110,11 @@ claim = "taom.story_open opens each of minas_tirith_defend, osgiliath_defend, pe
 # once per campaign and window when the popup opens; the result line once per campaign, window and verdict, when the menu returns from the mission.
 [[check]]
 id = "taom.story-missions.offer.shown"
-needs = "a campaign at the Full War: taom.chronicle_open hornburg confirm, then the popup appears on the free map"
+needs = "a campaign at the Full War, as a free player or a neutral player whose realm has not pledged (taom.print_war_pledges): taom.chronicle_open hornburg confirm, then the popup appears on the free map"
 reached = ['\[Check\] id=taom\.story-missions\.offer\.shown result=']
-pass = ['\[Check\] id=taom\.story-missions\.offer\.shown result=pass mission=helms_deep_defend target=town_V2$']
-fail = ['\[Check\] id=taom\.story-missions\.offer\.shown result=fail']
+pass = ['\[Check\] id=taom\.story-missions\.offer\.shown result=pass mission=helms_deep_defend target=town_V2 choices=Defend side=(Free|Neutral)$']
+# No attack mission ships (#1326), so an evil player has no side to take: a shown line for one is the fault this check exists to catch.
+fail = ['\[Check\] id=taom\.story-missions\.offer\.shown result=fail', '\[Check\] id=taom\.story-missions\.offer\.shown result=pass .* side=Evil$']
 absence = "not-reached"
 
 [[check]]
@@ -123,6 +124,9 @@ reached = ['\[Check\] id=taom\.story-missions\.offer\.result result=']
 pass = ['\[Check\] id=taom\.story-missions\.offer\.result result=pass verdict=(Won result=Held|Lost result=Fell taker=(isengard|empire))$']
 fail = ['\[Check\] id=taom\.story-missions\.offer\.result result=fail']
 absence = "not-reached"
+
+[[human]]
+claim = "#1326, one campaign per side at an open Hornburg window (taom.chronicle_open hornburg confirm): a free player (Rohan, Gondor) gets the popup and the menu shows Defend the walls and Let fate decide, with no Storm the walls; a neutral player whose realm has not pledged (Khand, Dorwinion; taom.print_war_pledges) gets the same while no attack mission ships; an evil player (Mordor, Harad) and a player of Isengard or Dunland get no popup. The shown line reads choices=Defend and the player's side"
 
 [[human]]
 claim = "a won Helm's Deep defence: taom.chronicle_status shows hornburg Held, and two days later The Last March of the Ents occurs"

@@ -51,11 +51,29 @@ lesson already on file.
 The first launch of the run crashed during boot in the NVIDIA driver (`nvwgf2umx.dll+0x1681799`). The install's
 `RuntimeDataCache` held a 4096x512 cache for `ui_taom_bannericons_2`, and the banner commits had made the sheet 4096x1024. The two
 banner sheet caches were moved to `E:\Temp\rdc-backup-20261115-bannericons`, and the game built them again on the next launch.
-The trap is already on file in `docs/reference/banner-icon-generation.md`. Whether a player who updates in place can meet the same
-crash is UNVERIFIED and is the maintainer's release decision.
+The trap is already on file in `docs/reference/banner-icon-generation.md`. A player who updates in place can keep the old cache. The
+maintainer's decision (2026-11-15): players do a clean install, and the release note says so. The trap is in the banner doc.
 
 ## In-game checks owed
 
 A run with the fix (`python tools/run_scenario.py --days 3` after `pwsh ./build.ps1`) should log
 `event window closed n=1 phase=Running` within seconds of `[WarChronicle] 'breaking' Occurred`, pass day 2 without a gap, and show
 no `[TAOM.Realms]` error.
+
+## Review of the shared build check (F5, 2026-11-15)
+
+The maintainer chose one rule for the three launchers: `tools/autorun_build.py` reads the checkout once at launch, the judge applies
+the full stale-build checks, and each PASS names the build. The review ran at tier 2: lens 5 and the tooling lens at `high`. Codex is
+owed after 2026-11-20. Neither lens found a HIGH or MED defect.
+
+| # | Sev | Finding (source) | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| 10 | LOW | The scenario judge skipped the build check when no checkout was passed; its two siblings fail (both lenses) | Uneven default | The old `head=NOT_CHECKED` default was carried over | Fixed: `checkout=None` fails; the tests call a helper that passes a checkout, and a new test fails without the rule |
+| 11 | LOW | The PASS label had no build time, so two dirty builds of one HEAD in a `--runs` batch read the same (both lenses) | Batch blind spot | Reading at launch cannot see a redeploy between runs | Fixed: `build_label` adds the build time; the seat-of-seeing doc lists the case, and RCA row 42 of 2026-11-04 says the rule reversed it |
+| 12 | LOW | A no-checkout test passed on the old code: its token `checkout` is in every stale message (tooling lens) | Weak assert | The token was chosen from the new text alone | Fixed: both tests read `not read at launch` |
+| 13 | LOW | `import subprocess` left unused in `run_long_defeat.py` (both lenses) | Dead import | Ruff ran before the last removal | Fixed |
+| 14 | LOW | Three `tools/README.md` rows lost a verb or a closing parenthesis, and one row had 2 cells in a 3-column table (both lenses) | Doc grammar | `lint_docs` does not read table prose | Fixed |
+| 15 | LOW | `unattended-game-runs.md` described the check for one launcher only (lens 5) | Doc scope | The doc was outside the edit list | Fixed: one paragraph for all three |
+| 16 | LOW | Two tests ran real git (`captured_arm`, `test_armed_text_uses_the_parsed_arguments`) (lens 5) | Test isolation | The pattern predates the change | Fixed for those two. NOT APPLIED: about 30 Long Defeat tests set `ld.checkout` without a cleanup, as they set `tree_head` before; the suite passes in its order |
+
+UNVERIFIED (tooling lens): the `TAOM.Dependencies=` half of the stamp is not compared; no producer of a split pair is known.

@@ -9,13 +9,16 @@ import json
 import os
 import sys
 import tempfile
+import subprocess
 import unittest
+from datetime import datetime
 from pathlib import Path
 from types import SimpleNamespace
 from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import autorun_build  # noqa: E402
 import run_fords_autorun as runner  # noqa: E402
 import run_scenario as rs  # noqa: E402
 
@@ -68,13 +71,20 @@ def good_done(**overrides):
     return done
 
 
-GOOD_LOG = "\n".join([PASS_LINE, UNLOAD_LINE])
+HEAD = "a" * 40
+BASE_LOG = "\n".join([PASS_LINE, UNLOAD_LINE])
 STAMP_LINE = ("[2026-11-15 09:00:00] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261115-090000Z+{} TAOM.Dependencies=v0.1.0.0"
               " (pair OK)")
+GOOD_LOG = BASE_LOG + "\n" + STAMP_LINE.format(HEAD)
 
 
 def stamped_log(sha):
-    return GOOD_LOG + "\n" + STAMP_LINE.format(sha)
+    return BASE_LOG + "\n" + STAMP_LINE.format(sha)
+
+
+def judge(done, report_json, log_text=None, armed=None):
+    """rs.judge with the clean checkout of HEAD that main would read at launch, for the tests of the other conditions."""
+    return rs.judge(done, report_json, log_text, armed=armed, checkout=(HEAD, {}))
 
 
 class ArmTextTests(unittest.TestCase):
@@ -163,83 +173,110 @@ class ArgumentTests(unittest.TestCase):
 
 class JudgeTests(unittest.TestCase):
     def test_ok(self):
-        self.assertEqual(rs.judge(good_done(), None, GOOD_LOG)[0], 0)
+        self.assertEqual(judge(good_done(), None, GOOD_LOG)[0], 0)
 
     def test_more_days_than_wanted_passes(self):
-        self.assertEqual(rs.judge(good_done(days_run="4"), None, GOOD_LOG)[0], 0)
+        self.assertEqual(judge(good_done(days_run="4"), None, GOOD_LOG)[0], 0)
 
     def test_no_done_file(self):
-        code, why = rs.judge({}, None, GOOD_LOG)
+        code, why = judge({}, None, GOOD_LOG)
         self.assertEqual(code, 1)
         self.assertIn("no done file", why)
 
     def test_short_days(self):
-        code, why = rs.judge(good_done(days_run="2"), None, GOOD_LOG)
+        code, why = judge(good_done(days_run="2"), None, GOOD_LOG)
         self.assertEqual(code, 1)
         self.assertIn("days_run=2", why)
 
     def test_unreadable_days(self):
-        code, why = rs.judge(good_done(days_run="many"), None, GOOD_LOG)
+        code, why = judge(good_done(days_run="many"), None, GOOD_LOG)
         self.assertEqual(code, 1)
         self.assertIn("days_run", why)
 
     def test_non_ok_reason(self):
         for reason in ("stalled", "wall_limit", "map_timeout", "creation_failed", "start_refused", "creation_timeout"):
             with self.subTest(reason=reason):
-                code, why = rs.judge(good_done(reason=reason), None, GOOD_LOG)
+                code, why = judge(good_done(reason=reason), None, GOOD_LOG)
                 self.assertEqual(code, 1)
                 self.assertIn("reason=" + reason, why)
 
     def test_missing_pass_line(self):
-        code, why = rs.judge(good_done(), None, UNLOAD_LINE)
+        code, why = judge(good_done(), None, UNLOAD_LINE)
         self.assertEqual(code, 1)
         self.assertIn("result=pass", why)
 
     def test_fail_line_is_not_a_pass(self):
         log = "[Check] id=taom.autorun.campaign-new.done result=fail\n" + UNLOAD_LINE
-        self.assertEqual(rs.judge(good_done(), None, log)[0], 1)
+        self.assertEqual(judge(good_done(), None, log)[0], 1)
 
     def test_no_log(self):
-        code, why = rs.judge(good_done(), None, None)
+        code, why = judge(good_done(), None, None)
         self.assertEqual(code, 1)
         self.assertIn("no TAOM log copy", why)
 
     def test_crash_line_before_the_driver_started_fails(self):
         log = "[2026-11-15 08:59:59] [ERROR] [CrashReport] init failed: X\n" + GOOD_LOG
-        code, why = rs.judge(good_done(started="2026-11-15T09:00:00"), None, log)
+        code, why = judge(good_done(started="2026-11-15T09:00:00"), None, log)
         self.assertEqual(code, 1)
         self.assertIn("CrashReport", why)
 
     def test_done_file_must_echo_the_armed_plan(self):
         armed = SimpleNamespace(kind="campaign-new", culture="gondor", days=150, scenario="campaign-new")
-        code, why = rs.judge(good_done(culture="gondor", scenario="campaign-new"), None, GOOD_LOG, armed=armed)
+        code, why = judge(good_done(culture="gondor", scenario="campaign-new"), None, GOOD_LOG, armed=armed)
         self.assertEqual(code, 1)
         self.assertIn("days_wanted=3", why)
         done = good_done(culture="gondor", scenario="campaign-new", days_run="150", days_wanted="150")
-        self.assertEqual(rs.judge(done, None, GOOD_LOG, armed=armed)[0], 0)
+        self.assertEqual(judge(done, None, GOOD_LOG, armed=armed)[0], 0)
 
     def test_arm_file_warning_in_the_log_fails(self):
         log = GOOD_LOG + "\n[2026-11-15 09:00:01] [WARNING] [Autorun][Scenario] arm file: speed '1e-50' is not a number above 0"
-        code, why = rs.judge(good_done(), None, log)
+        code, why = judge(good_done(), None, log)
         self.assertEqual(code, 1)
         self.assertIn("arm file", why)
 
     def test_build_must_be_this_tree(self):
         head = "a" * 40
-        stamped = GOOD_LOG + "\n[2026-11-15 09:00:00] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261115-090000Z+{} TAOM.Dependencies=v0.1.0.0 (pair OK)"
-        cases = (("b" * 40, 1), (head, 0), (head + ".dirty", 0))
-        for sha, want in cases:
+        stamped = BASE_LOG + "\n[2026-11-15 09:00:00] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261115-090000Z+{} TAOM.Dependencies=v0.1.0.0 (pair OK)"
+        edited = {"Main/a.cs": datetime(2026, 11, 15, 8, 0, 0)}
+        cases = (("b" * 40, {}, 1), (head, {}, 0), (head + ".dirty", edited, 0))
+        for sha, changed, want in cases:
             with self.subTest(sha=sha):
-                self.assertEqual(rs.judge(good_done(), None, stamped.format(sha), head=head)[0], want)
-        code, why = rs.judge(good_done(), None, GOOD_LOG, head=head)
+                self.assertEqual(rs.judge(good_done(), None, stamped.format(sha), checkout=(head, changed))[0], want)
+        code, why = rs.judge(good_done(), None, BASE_LOG, checkout=(head, {}))
         self.assertEqual(code, 1)
         self.assertIn("BuildStamp", why)
 
+    def test_a_dirty_stamp_with_a_clean_tree_fails(self):
+        head = "a" * 40
+        code, why = rs.judge(good_done(), None, stamped_log(head + ".dirty"), checkout=(head, {}))
+        self.assertEqual(code, 1)
+        self.assertIn("this tree has none", why)
+
+    def test_a_clean_stamp_with_an_uncommitted_watched_file_fails(self):
+        head = "a" * 40
+        code, why = rs.judge(good_done(), None, stamped_log(head), checkout=(head, {"Main/a.cs": datetime(2026, 11, 15, 8, 0, 0)}))
+        self.assertEqual(code, 1)
+        self.assertIn("Main/a.cs", why)
+
+    def test_a_watched_file_edited_after_the_build_fails(self):
+        head = "a" * 40
+        code, why = rs.judge(good_done(), None, stamped_log(head + ".dirty"), checkout=(head, {"Main/a.cs": datetime(2026, 11, 15, 9, 30, 0)}))
+        self.assertEqual(code, 1)
+        self.assertIn("changed after the build", why)
+
+    def test_a_mismatch_stamp_fails(self):
+        head = "a" * 40
+        log = BASE_LOG + "\n" + STAMP_LINE.format(head).replace("(pair OK)", "MISMATCH built 2d apart")
+        code, why = rs.judge(good_done(), None, log, checkout=(head, {}))
+        self.assertEqual(code, 1)
+        self.assertIn("MISMATCH", why)
+
     def test_a_pass_names_the_build_it_proves(self):
         head = "a" * 40
-        for sha, label in ((head, "aaaaaaaaa"), (head + ".dirty", "aaaaaaaaa.dirty")):
+        edited = {"Main/a.cs": datetime(2026, 11, 15, 8, 0, 0)}
+        for sha, changed, label in ((head, {}, "aaaaaaaaa built 20261115-090000 UTC"), (head + ".dirty", edited, "aaaaaaaaa.dirty built 20261115-090000 UTC")):
             with self.subTest(sha=sha):
-                code, why = rs.judge(good_done(), None, stamped_log(sha), head=head)
+                code, why = rs.judge(good_done(), None, stamped_log(sha), checkout=(head, changed))
                 self.assertEqual(code, 0)
                 self.assertTrue(why.startswith(f"build {label}, reason=ok, "), why)
 
@@ -248,18 +285,23 @@ class JudgeTests(unittest.TestCase):
         self.assertIn('"[Autorun][Scenario] "', source)
         self.assertIn('"arm file: "', source)
 
+    def test_a_judge_with_no_checkout_fails(self):
+        code, why = rs.judge(good_done(), None, GOOD_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("not read at launch", why)
+
     def test_crash_marker(self):
-        code, why = rs.judge(good_done(), None, GOOD_LOG + "\n" + CRASH_LINE)
+        code, why = judge(good_done(), None, GOOD_LOG + "\n" + CRASH_LINE)
         self.assertEqual(code, 1)
         self.assertIn("CrashReport", why)
 
     def test_missing_unload_line(self):
-        code, why = rs.judge(good_done(), None, PASS_LINE)
+        code, why = judge(good_done(), None, PASS_LINE)
         self.assertEqual(code, 1)
         self.assertIn("unload", why)
 
     def test_every_failure_gets_its_own_reason(self):
-        code, why = rs.judge(good_done(reason="stalled", days_run="1"), None, "")
+        code, why = judge(good_done(reason="stalled", days_run="1"), None, "")
         self.assertEqual(code, 1)
         self.assertIn("reason=stalled", why)
         self.assertIn("days_run=1", why)
@@ -274,7 +316,8 @@ class MainWiringTests(unittest.TestCase):
         saved = {name: getattr(runner, name) for name in NAMES}
         self.addCleanup(lambda: [setattr(runner, name, value) for name, value in saved.items()])
 
-    def run_main(self, argv, head="a" * 40):
+    def run_main(self, argv, state=("a" * 40, {})):
+        """Runs main with autorun_build.checkout_state answering from state (an exception or a list of answers is used as side_effect)."""
         captured = {}
 
         def fake_main(rest):
@@ -294,8 +337,11 @@ class MainWiringTests(unittest.TestCase):
         saved = {name: getattr(runner, name) for name in names}
         try:
             runner.main = fake_main
-            with mock.patch.object(rs, "tree_head_sha", return_value=head):
+            kind = {"side_effect": state} if isinstance(state, (Exception, list)) else {"return_value": state}
+            with mock.patch.object(autorun_build, "checkout_state", **kind) as git, contextlib.redirect_stdout(io.StringIO()) as out:
                 code = rs.main(argv)
+            captured["git"] = git
+            captured["out"] = out.getvalue()
         finally:
             for name, value in saved.items():
                 setattr(runner, name, value)
@@ -317,21 +363,35 @@ class MainWiringTests(unittest.TestCase):
         code, why = got["judge"](good_done(culture="gondor", scenario="campaign-new"), None, stamped_log("b" * 40))
         self.assertEqual(code, 1)
         self.assertIn("days_wanted=3", why)
-        self.assertIn("is not this tree's HEAD aaaaaaaaa", why)
+        self.assertIn("this checkout is aaaaaaaaa", why)
 
-    def test_unknown_head_is_refused_at_launch(self):
-        code, got = self.run_main(["--days", "3"], head=None)
+    def test_a_git_that_fails_at_launch_returns_1_and_starts_nothing(self):
+        for error in (OSError("git exited 128"), subprocess.TimeoutExpired("git", 60)):
+            with self.subTest(error=type(error).__name__):
+                code, got = self.run_main(["--days", "3"], state=error)
+                self.assertEqual(code, 1)
+                self.assertNotIn("rest", got)
+                self.assertIn("cannot read the checkout from git", got["out"])
+
+    def test_runner_judge_compares_with_the_checkout_read_at_launch(self):
+        # A commit or an edit made while the game runs must not fail the run as a stale deploy.
+        moved = ("b" * 40, {"Main/a.cs": datetime(2026, 11, 15, 9, 30, 0)})
+        _, got = self.run_main(["--days", "3"], state=[("a" * 40, {}), moved])
+        code, why = got["judge"](good_done(culture="gondor", scenario="campaign-new"), None, stamped_log("a" * 40))
+        self.assertEqual(code, 0, why)
+        self.assertEqual(got["git"].call_count, 1)
+
+    def test_runner_judge_rejects_a_dirty_stamp_when_the_tree_was_clean_at_launch(self):
+        _, got = self.run_main(["--days", "3"])
+        code, why = got["judge"](good_done(), None, stamped_log("a" * 40 + ".dirty"))
         self.assertEqual(code, 1)
-        self.assertNotIn("rest", got)
+        self.assertIn("this tree has none", why)
 
-    def test_runner_judge_compares_with_the_head_read_at_launch(self):
-        # A commit made while the game runs must not fail the run as a stale deploy.
-        _, got = self.run_main(["--days", "3"], head="a" * 40)
-        seen = {}
-        with mock.patch.object(rs, "tree_head_sha", return_value="b" * 40), \
-                mock.patch.object(rs, "judge", side_effect=lambda *a: seen.setdefault("head", a[4]) and (0, "")):
-            got["judge"](good_done(), None, GOOD_LOG)
-        self.assertEqual(seen["head"], "a" * 40)
+    def test_runner_judge_rejects_a_clean_stamp_when_a_watched_file_was_edited_at_launch(self):
+        _, got = self.run_main(["--days", "3"], state=("a" * 40, {"Main/a.cs": datetime(2026, 11, 15, 8, 0, 0)}))
+        code, why = got["judge"](good_done(), None, stamped_log("a" * 40))
+        self.assertEqual(code, 1)
+        self.assertIn("Main/a.cs", why)
 
     def test_help_names_this_tools_arguments(self):
         out = io.StringIO()
@@ -352,7 +412,8 @@ class MainWiringTests(unittest.TestCase):
 
         try:
             runner.main = fake_main
-            rs.main(["--days", "10", "--culture", "vlandia"])
+            with mock.patch.object(autorun_build, "checkout_state", return_value=(HEAD, {})):
+                rs.main(["--days", "10", "--culture", "vlandia"])
         finally:
             runner.main = original
         text, wall = seen["result"]
