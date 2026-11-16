@@ -2824,3 +2824,12 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 **Prevent:** a push that skips the full suite adds `FullyQualifiedName~Composition` to its filter whenever it touches `TaomClientComposition`, `FeatureModules` or a feature module, and says in the commit body which suite ran.
 
 **Source:** `docs/reviews/rca-scenario-autorun-2026-11-15.md`
+
+### A source test of a flag pins the line that consumes it, not only the call sites (#1340, 2026-11-16)
+`MenuNotice_OkClosesTheGame_OnlyForTheWrongVersionPopup` asserted the two `Show(..., flag)` calls in `Tick` and the helper that computed the flag, but nothing read `Show`, so a `Show` that ignored the flag still passed. The repo's `Body()` helper matches braces from the first `{`, so on an expression-bodied member it returns the first `{=KEY}` in a string instead of the body.
+
+**Why missed:** the test was written to the decision (which popup quits) rather than to the effect (the quit action reaches `InquiryData`).
+
+**Prevent:** a source-reading test of a bool or mode flag also asserts the consuming expression (here `quitOnOk ? QuitGame`). For an expression-bodied member, slice the source up to the next member instead of calling `Body()`.
+
+**Source:** [rca-game-version-warning-2026-11-16.md](../rca-game-version-warning-2026-11-16.md) finding F9.

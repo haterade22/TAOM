@@ -228,13 +228,21 @@ public class GameVersionCheckTests
     [TestMethod]
     public void MenuNotice_OkClosesTheGame_OnlyForTheWrongVersionPopup()
     {
-        Assert.IsTrue(global::TAOM.Dependencies.MissingTaomNotice.QuitsOnOk("TAOM is turned off"));
-        Assert.IsFalse(global::TAOM.Dependencies.MissingTaomNotice.QuitsOnOk(null));
+        var source = RepoPaths.ReadSource("Dependencies/MissingTaomNotice.cs", stripComments: true);
 
-        // Tick passes the version text through the decision and the missing-TAOM text with none.
-        var tick = Body(RepoPaths.ReadSource("Dependencies/MissingTaomNotice.cs", stripComments: true), "internal static void Tick()");
-        StringAssert.Contains(tick, "Show(versionText, QuitsOnOk(versionText))");
-        StringAssert.Contains(tick, "Show(Text(reason), QuitsOnOk(null))");
+        // Tick: the version popup quits, the missing-TAOM popup does not.
+        var tick = Body(source, "internal static void Tick()");
+        StringAssert.Contains(tick, "Show(versionText, quitOnOk: true)");
+        StringAssert.Contains(tick, "Show(Text(reason), quitOnOk: false)");
+
+        // Show: the flag really wires the quit and the Exit Game label (a Show that ignored it would pass the above).
+        // Show is expression-bodied, so Body() (brace matching) can't cut it: take the text up to the next method.
+        var showStart = source.IndexOf("private static void Show(", StringComparison.Ordinal);
+        var showEnd = source.IndexOf("private static void QuitGame()", StringComparison.Ordinal);
+        Assert.IsTrue(showStart >= 0 && showEnd > showStart, "Show must sit before QuitGame in MissingTaomNotice");
+        var show = source.Substring(showStart, showEnd - showStart);
+        StringAssert.Contains(show, "quitOnOk ? QuitGame : (Action?)null");
+        StringAssert.Contains(show, "quitOnOk ? new TextObject(\"{=YbpzLHzk}Exit Game\")");
     }
 
     [TestMethod]

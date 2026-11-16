@@ -41,7 +41,7 @@ internal static class MissingTaomNotice
             if (versionText != null)
             {
                 DiagLog.Log("Dependencies", "MissingTaomNotice: showing the wrong-game-version notice");
-                Show(versionText, QuitsOnOk(versionText));
+                Show(versionText, quitOnOk: true);
                 return;
             }
 
@@ -50,7 +50,7 @@ internal static class MissingTaomNotice
             DiagLog.Log("Dependencies", $"MissingTaomNotice: reason={reason}, loaded={string.Join(",", loaded)}");
             if (reason == MissingTaomReason.None) return;
 
-            Show(Text(reason), QuitsOnOk(null));
+            Show(Text(reason), quitOnOk: false);
         }
         catch (Exception ex)
         {
@@ -59,19 +59,19 @@ internal static class MissingTaomNotice
     }
 
     /// <summary>
-    /// Only the wrong-game-version popup closes the game on Ok (owner, 16 Nov 2026): its text tells the player to
-    /// close the game and TAOM's code is off, so there is nothing to play. The missing-TAOM popup keeps a plain Ok.
+    /// Only the wrong-game-version popup closes the game (owner, 16 Nov 2026): TAOM's code is off, so there is
+    /// nothing to play. Its button is Native's "Exit Game" (a Native key, so it translates without TAOM's
+    /// language files). The missing-TAOM popup keeps a plain Ok that only closes the popup.
     /// </summary>
-    internal static bool QuitsOnOk(string? versionText) => versionText != null;
-
     private static void Show(string text, bool quitOnOk) =>
         InformationManager.ShowInquiry(new InquiryData(
             "TAOM", text, true, false,
-            new TextObject("{=oHaWR73d}Ok").ToString(), string.Empty,
+            quitOnOk ? new TextObject("{=YbpzLHzk}Exit Game").ToString() : new TextObject("{=oHaWR73d}Ok").ToString(),
+            string.Empty,
             quitOnOk ? QuitGame : (Action?)null, null));
 
     // NoInlining: the engine call sits here so a member missing on another game version fails this method, not Show.
-    // Utilities.QuitGame is the call the engine's own Exit button and TAOM's autorun hosts use.
+    // Utilities.QuitGame is the call TAOM's autorun hosts use at the main menu.
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static void QuitGame()
     {

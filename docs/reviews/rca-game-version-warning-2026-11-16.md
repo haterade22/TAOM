@@ -29,3 +29,13 @@ The first pass checked behaviour on the installed 1.5.7 game, where the Kit path
 - `Notice_ChecksServerAndTestMode_First_AndCatchesEverything`: the Kit check sits after the server guard and before the mismatch branch.
 - `IsEditorBin_AssemblyPath_TrueOnlyForTheModdingKitBin` already covers the path rule.
 - `ReadSubModule_ShippedTaomFile_PinsTheGameVersionTheRepoTargets`: pin compared with `.claude/pinned-game-version.txt`.
+
+## Follow-up review: Ok closes the game (873e04f98, 2026-11-16)
+
+Lens 5 at effort high (tier 2: startup UI, no patch or save data). No CRITICAL, HIGH or MEDIUM; 3 LOW, fixed in the next commit. Filtered tests (GameVersionCheckTests, MissingTaomCheckTests) pass 36 of 36.
+
+| # | Sev | Bug | Category | Why Missed | Preventive Action |
+|---|-----|-----|----------|-----------|-------------------|
+| F8 | LOW | The `QuitGame` helper comment said `Utilities.QuitGame` is the call the engine's own Exit button uses. The Exit button calls `MBInitialScreenBase.DoExitButtonAction()` (`MBAPI.IMBScreen.OnExitButtonClick`). | Comment accuracy | The claim was written from the autorun hosts and generalised without reading the Exit option in `ViewSubModule`. | Comment now names only the autorun hosts, which do call it at the main menu. |
+| F9 | LOW | `MenuNotice_OkClosesTheGame_OnlyForTheWrongVersionPopup` checked `QuitsOnOk` and the two `Tick` call strings, but not that `Show` passes `QuitGame` when the flag is true; a `Show` that ignored the flag passed. `QuitsOnOk` was a one-line `!= null` that existed only to be tested. | Test gate scope | The test pinned the decision, not the line that consumes it. | `QuitsOnOk` removed; `Tick` passes `quitOnOk: true` and `false`; the test also reads `Show` and asserts the `QuitGame` action and the label. `Body()` matches braces, so it cannot cut an expression-bodied member: the test slices from `Show(` to the next method. |
+| F10 | LOW | The button on a popup that quits the game said Ok. | UX consistency | The owner decision covered what Ok does, not its label. | The quitting popup's button is Native's `{=YbpzLHzk}Exit Game`, which translates without TAOM's language files; the missing-TAOM popup keeps Ok. |
