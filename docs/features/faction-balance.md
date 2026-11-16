@@ -159,7 +159,7 @@ Gondor having no Dunland front.
 
 ## Still owed
 
-- Blue Craig fell in both runs with Dunland's refusal (capital day 75 and day 53): the maintainer decides whether Blue Craig needs help, which would change gameplay (#1283).
+- Blue Craig: on the maintainer's decision (2026-11-16) its Hostile rows with the six distant free realms are removed, so Full War opens wars only with Arthedain, Ered Luin and Rivendell (and Lindon, which Rivendell can call in). A fifth run should show whether its capital holds past day 120 ([diplomacy.md](diplomacy.md), #1283).
 - Gondor's survival row (0.3, shared with Arthedain) and its tier 7+ party template stacks: not changed, because the second run
   closed the gap. Revisit only if a later run shows the gap again.
 - A Codex review of 5101f151b and of these changes: the account's usage limit blocks Codex until 2026-11-20.
@@ -168,6 +168,7 @@ Gondor having no Dunland front.
 
 ## Changelog
 
+- 2026-11-16: Blue Craig keeps Hostile rows only with its Eriador neighbours (#1283).
 - 2026-11-16: Fourth 150-day run recorded; Blue Craig fell again (#1283).
 - 2026-11-15: First 150-day run recorded; Harad's clans raised to tier 5; allowed war declarations logged (#1283).
 - 2026-11-15: Page created. Mordor holds captured forts, Isengard's seven tier-3 clans raised to tier 5, auto-resolve exponent 0.5 (#1283).

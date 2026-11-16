@@ -19,7 +19,7 @@ namespace TAOM.Tests.Features.Diplomacy;
 [TestClass]
 public class DiplomacyShippedConfigTests
 {
-    // The free realms every evil realm is set against (diplomacy.json, 2026-10-07).
+    // The free realms the evil realms are set against (diplomacy.json, 2026-10-07); Blue Craig keeps only its neighbours (#1283).
     private static readonly string[] CoreFreeRealms =
         { "empire_w", "vlandia", "erebor", "sturgia", "rivendell", "lothlorien", "mirkwood" };
 
@@ -59,6 +59,17 @@ public class DiplomacyShippedConfigTests
 
         Assert.IsTrue(dunlandFoes.Contains("vlandia"), "Dunland lost its Hostile row with Rohan");
         Assert.IsFalse(dunlandFoes.Contains("empire_w"), "Dunland is Hostile to Gondor again");
+    }
+
+    // Blue Craig, in the far west, was Hostile to nine free realms, so Full War opened ten wars on it on day 2 and it fell in
+    // both 150-day runs with Dunland's refusal (#1283). It keeps only its Eriador neighbours.
+    [TestMethod]
+    public void ShippedConfig_BlueCraig_IsHostileOnlyToItsNeighbours()
+    {
+        var blueCraigFoes = HostileTo(ShippedRelationships(), "bluecraig").OrderBy(k => k).ToArray();
+
+        CollectionAssert.AreEqual(new[] { "arthedain", "eredluin", "rivendell" }, blueCraigFoes,
+            "Blue Craig's Hostile rows changed: " + string.Join(", ", blueCraigFoes));
     }
 
     // Arthedain and Ered Luin, the free realms added after the core seven, carry the same Hostile rows.
