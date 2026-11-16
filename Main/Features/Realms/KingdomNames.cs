@@ -52,12 +52,13 @@ internal sealed class KingdomNames
 
     /// <summary>
     /// The text kept for a kingdom's own name: the raw text with its {=key}, so it follows a change of language, but the
-    /// resolved text when the name carries a variable, which the record cannot keep (#1316).
+    /// resolved text when the name has variables set (Attributes), which the record cannot keep (#1316). A settlement
+    /// name always has variables set, so it is read by <see cref="WorldSnapshotReader.SettlementNameText"/> instead.
     /// </summary>
     internal static string OwnText(string? rawName, bool hasVariables, Func<string> resolved, string fallback) =>
         rawName == null ? fallback : hasVariables ? resolved() : rawName;
 
-    private static string OwnText(TextObject? name, string fallback) =>
+    internal static string OwnText(TextObject? name, string fallback) =>
         OwnText(name?.Value, name?.Attributes is { Count: > 0 }, () => name!.ToString(), fallback);
 
     public string Save() => KingdomNameRecords.Write(_originals);

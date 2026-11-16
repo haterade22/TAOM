@@ -76,10 +76,14 @@ TaomMilitaryPowerModel       TaomCombatSimulationModel       TaomPartyHealingMod
     "EnableCulturalSurvivalBonuses": true,
     "CulturalSurvivalBonuses": {
       "gondor": 0.3, "vlandia": 0.2, "lothlorien": 0.5,
-      "erebor": 0.3, "eredluin": 0.3, "rivendell": 0.4, "lindon": 0.4, "mirkwood": 0.4, "arthedain": 0.3,
+      "erebor": 0.3, "eredluin": 0.3, "bluecraig": 0.3, "rivendell": 0.4, "lindon": 0.4, "mirkwood": 0.4, "arthedain": 0.3,
       "cardolan": 0.3, "rhudaur": 0.2, "anduinvale": 0.1, "angaladh": 0.1, "dorwinion": 0.1, "southrhovanion": 0.2,
       "gundabad": -0.1, "dolguldur": -0.1
     }
+  },
+  "AutoResolve": { "PowerRatioExponent": 0.5 },
+  "SiegeDefence": {
+    "DefenderAdvantageBonuses": { "bluecraig": 0.1 }
   }
 }
 ```
@@ -89,6 +93,7 @@ TaomMilitaryPowerModel       TaomCombatSimulationModel       TaomPartyHealingMod
 | `TroopPower.TierPower` | `T0..T10` | float | Per-tier power; consulted when `OverrideVanillaTierPower=true` for ≤T6, always for ≥T7 |
 | `CasualtyRatios.EnableCulturalSurvivalBonuses` | bool | Master kill switch on cultural bonus application |
 | `CasualtyRatios.CulturalSurvivalBonuses` | `<cultureId>` | float | bonus > 0 reduces death chance; bonus < 0 increases it. Formula: `newDeathChance = vanillaDeathChance * (1 - bonus)` |
+| `SiegeDefence.DefenderAdvantageBonuses` | `<cultureId>` | float | Factor added to the defenders' battle advantage in an auto-resolved siege assault of a fortification that culture owns; see "Siege defence by culture" |
 
 ### MCM (TaomSettings)
 
@@ -162,6 +167,12 @@ TAOM rescales the exponent to `AutoResolve.PowerRatioExponent` (shipped 0.5, #12
 
 Only the simulated battle changes. It changes for every simulated battle, the player's Send troops and the player's raids included; real-time battles never reach `SimulateHit`. The AI's strength estimates (war declaration, army gathering, siege targets, flee) sum `N x P` through `GetPowerOfParty` and do not read the exponent. `SimulateHit` reads the two troop powers again (`GetTroopPower` with the side, the simulation context and the leader hero's `PowerModifier`) and scales the final number through `AutoResolveQualityMath.Apply`, so the Armory_TAOM postfix on this override still sees one result. The base reads the internal `LeaderSimulationModifier`, which the engine caches at event start, after a load and when the leader party leaves. So the two reads differ only after a side's leader hero dies or is replaced during the event, by a few percent. The scaled damage also feeds hero wounds and deaths and the troops' XP (`MapEventSide`, lines 928-946), so expect more lord wounds against large hosts and faster upgrades for weak troops. 0.7 restores vanilla; 0 ignores quality. A gear (armour) factor was considered and not added: Gondor has the heaviest armour, so it would widen the lead #1283 reported.
 
+## Siege defence by culture
+
+In an auto-resolved siege assault the engine gives the attackers `AddFactor(-0.1)` on their battle advantage (`DefaultCombatSimulationModel.GetBattleAdvantage`, lines 278-286), and each simulated strike's damage is multiplied by the striker's advantage (`SimulateHit`, line 21). `TaomCombatSimulationModel.GetBattleAdvantage` adds a factor to the defenders' side when the besieged fortification's realm (`Settlement.MapFaction`) has a culture with a `SiegeDefence.DefenderAdvantageBonuses` row. `MapEvent.SimulateBattleRound` reads both advantages once per round. A sally-out is a different battle type and gets no bonus. An assault that a relief party joins from outside the walls becomes `SiegeOutside` (`SiegeAssaultEventComponent.OnAddInvolvedParty`), and from then on neither the bonus nor the attackers' -0.1 applies.
+
+The shipped row is `bluecraig` 0.1 (#1283): Blue Craig stands alone in the far west, on a land-navigation island it shares only with its Eriador neighbours, and it lost its capital in three 150-day runs. With a defender with no Tactics bonus, its strikes do about 10% more damage. Blue Craig also gets the survival bonus of Arthedain and Ered Luin (0.3). The bonus keys on the fortification's realm, not on the town's culture, so a Blue Craig town that another realm takes loses it, and a town Blue Craig takes gains it. Live battles are unchanged: they do not read the battle advantage. `GetSettlementAdvantage` was considered and not used: it changes the defenders' strike count only above 100 town or 30 castle defenders, and it also delays the AI's assault decision (`BesiegerCamp`), which can starve a garrison.
+
 ## How to Add a Cultural Survival Bonus for a New Culture
 
 1. Edit [Main/_Module/ModuleData/configs/battle_balance_config.json](../../Main/_Module/ModuleData/configs/battle_balance_config.json).
@@ -175,6 +186,7 @@ Use the MCM panel: **TAOM → Troop Power → Tier7Power / Tier8Power / Tier9Pow
 
 ## Changelog
 
+- 2026-11-16: Siege defence by culture (#1283): `SiegeDefence.DefenderAdvantageBonuses` adds a factor to the defenders' battle advantage in an auto-resolved siege of a fortification that culture owns. Blue Craig gets 0.1, and the survival bonus 0.3 of Arthedain and Ered Luin.
 - 2026-11-15: Auto-resolve raises the power ratio to 0.5, not vanilla's 0.7 (`AutoResolve.PowerRatioExponent`, #1283), so troop numbers count for more than troop quality; see "Auto-resolve: numbers over quality".
 - 2026-11-15: `BattleBalanceConfigProvider` reverts a bad survival value to that culture's compiled row, not to 0, so a typo in a penalty row (Gundabad -0.1) no longer deletes the penalty (#1291). A bad row with no compiled row is removed, so the lookup's own fallback decides: 0 for survival, the tier formula for power (before, a bad `T11` became 1.0, not the formula's 5.46). A `null` section or table now reverts to the compiled one; before, a `"CasualtyRatios": null` reached `SurvivalChanceLine.Apply`, which reads the section with no null check (`SurvivalChanceLine.cs:30`). Any reversion ends with one summary warning that counts the values.
 - 2026-11-14: Mordor's -0.2 survival row is removed from the JSON and the compiled default (#1283). The row multiplied the death chance of a wounded regular by 1.2. With no Medicine bonus on either side (no surgeon skill in the party, no Doctor's Oath in the enemy's) the engine's chance is 1 / (1 + level x 0.02), so a troop of level 10 or below never survived a cut or pierce blow, and a level 26 troop survived 21% of the time, against 34% with no row and 54% for Gondor. Mirkwood gets Rivendell's 0.4; it had no row.

@@ -2911,3 +2911,7 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 **Prevent:** before a cause is named for "A fails and B does not", state what B must show if the cause is right, and read it in a log or a run of B. Instrument both modes with the same lines, not only the failing one. A fix whose reason is a difference between two modes is not built until that difference is seen in evidence from both.
 
 **Source:** [rca-hero-weapons-2026-11-16.md](../rca-hero-weapons-2026-11-16.md) finding 1.
+### A test that calls a static member runs the class's static constructor (#1223, 2026-11-16)
+The #1223 tests called a pure helper on `CustomAttacksUtils`. Any static call runs its explicit static constructor, which binds the engine and prints through `Debug`, so the tests needed `RequiresGame`. The same change moved lines in that file, and three `file:line` pins in a comment, a test message and a feature doc went stale; only the reflection pin has a gate.
+- **Prevent:** before you tag a test of a pure helper as engine-free, check whether its class has a static constructor. After you insert lines in a file, `grep -rn '<File>.cs:'` for its pins.
+- **Source:** the #1223 tier 1 review, Data flow T9 and T10.

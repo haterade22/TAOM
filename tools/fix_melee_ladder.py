@@ -30,6 +30,7 @@ from __future__ import annotations
 import argparse
 import collections
 import sys
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
@@ -38,6 +39,7 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "tools"))
 
 import analyze_melee_ladder as report  # noqa: E402
+import generate_new_faction_kingdoms as kingdoms  # noqa: E402
 import melee_catalogue as mc  # noqa: E402
 import melee_ladder as ladder  # noqa: E402
 from fix_upgrade_armour_regressions import write_changes  # noqa: E402
@@ -51,7 +53,27 @@ WEAPON_SLOTS = ("Item0", "Item1", "Item2", "Item3")
 # A usage set carrying this flag cannot be paired with a shield. Handing such a polearm to a
 # shield-carrying troop is the trap CLAUDE.md records as having shipped three times: the troop
 # holds the weapon until combat starts and then never draws it. No error, no log.
-NO_SHIELD_FLAG = "requires_no_shield"
+NO_SHIELD_FLAG = mc.NO_SHIELD_FLAG
+
+
+# Troop files a generator writes whole. A swap written into one is undone by the generator's next
+# --apply, so a weapon there is changed in the generator. What catches a hand edit: the realm files,
+# test_generator_regions_in_sync; troops_lothlorien.xml, test_generated_files (the shipped file is
+# the generator's exact output); troops_gundabad_snow.xml, nothing (its generator has no --check).
+GENERATED_TROOP_FILES = {
+    **{f"troops_{realm}.xml": f"generate_{realm}_troops.py" for realm in kingdoms.REGENERATABLE},
+    "troops_lothlorien.xml": "generate_lothlorien_troops.py",
+    "troops_gundabad_snow.xml": "generate_snow_orc_troops.py",
+}
+GENERATED_REASON = "its troop file is written by "
+# Troop generators whose output is NOT the shipped file: each scaffolded a tree that was then
+# rostered by hand, so a swap in that troop file is safe. A new generate_*_troops.py must be named
+# in one of the two tables (RosterFixerGeneratedFileTests globs for them).
+SCAFFOLDERS = {
+    "generate_dale_troops.py": "troops_dale.xml moved past it (skill restats, slot passes); it has not run since 60f873f32",
+    "generate_gondor_troops.py": "scaffolder; troops_gondor.xml was re-rostered by hand (its STATUS note)",
+    "generate_rhun_troops.py": "scaffolder; it writes troops_rhun.xml, the shipped tree is troops_rhun_new.xml (its STATUS note)",
+}
 
 
 class FixError(Exception):
@@ -91,20 +113,40 @@ def shield_forbidden(cat: mc.Catalogue, item: mc.Item) -> bool:
     return NO_SHIELD_FLAG in cat.usage_flags.get(usage, frozenset())
 
 
-def weapon_category(cat: mc.Catalogue, p: mc.Priced, couchable: frozenset[str]) -> tuple:
+def weapon_category(cat: mc.Catalogue, p: mc.Priced, couchable: frozenset[str], spec: dict) -> tuple:
     """The weapon category a troop is built for: a swap never leaves it.
 
     The maintainer's rule (2026-11-14, docs/features/melee-damage-model.md "A troop keeps its
     weapon category"): sword and shield, two handed sword or axe, spear and shield, spear that
-    lances, polearms, pikes, bows. Read here as the crafting template; for a polearm, whether it
-    swings or thrusts (the attack with the higher DPS); whether it can be couched; and whether its
-    primary usage refuses a shield. All polearms share one template, which is how a poleaxe once
-    became a short spear.
+    lances, polearms, pikes, bows. Read here as the crafting template; for a template in the
+    polearm craft column, whether it swings or thrusts (`ladder.dominant_flags`, the reading the
+    bands use); whether it can be couched; and whether its primary usage refuses a shield. All
+    polearms share one template, which is how a poleaxe once became a short spear.
     """
     attack = None
-    if "Polearm" in p.item.template:
-        attack = "swing" if p.swing_dps >= p.thrust_dps else "thrust"
+    if spec.get("craft_column", {}).get(p.item.template) == "polearm":
+        swings, _thrusts = ladder.dominant_flags(p.item.template, p.swing_damage, p.thrust_damage,
+                                                 p.swing_dps, p.thrust_dps, spec)
+        attack = "swing" if swings else "thrust"
     return (p.item.template, attack, p.item.id in couchable, shield_forbidden(cat, p.item))
+
+
+def load_upgrade_targets(root: Path) -> dict[str, tuple[str, ...]]:
+    """troop id -> the troop ids it upgrades to, read from `<upgrade_target id="NPCCharacter.x"/>`."""
+    out: dict[str, tuple[str, ...]] = {}
+    for path in sorted(root.glob("troops_*.xml")):
+        try:
+            tree = ET.parse(path).getroot()
+        except (ET.ParseError, OSError):
+            continue
+        for node in tree.iter("NPCCharacter"):
+            targets = tuple(
+                ref.split(".", 1)[-1]
+                for up in node.iter("upgrade_target") if (ref := up.get("id"))
+            )
+            if node.get("id") and targets:
+                out[node.get("id")] = targets
+    return out
 
 
 def describe_category(category: tuple) -> str:
@@ -180,6 +222,7 @@ def pick_substitute(
     spec: dict,
     taken: frozenset[str] = frozenset(),
     couchable: frozenset[str] = frozenset(),
+    ceiling: float | None = None,
 ) -> tuple[mc.Priced | None, str]:
     """The best replacement for `current`, or (None, why not).
 
@@ -195,6 +238,9 @@ def pick_substitute(
          unless nothing else is in band. A halberd and a spear share a template but not a curve.
       5. Inside the carrier's tier limit (`fits_limit`). A band is a DPS window, and a slow heavy
          weapon sits in it while showing a blow the troop's tier may not carry.
+      5b. Not above `ceiling`: the best DPS the troop's upgrade targets carry on the same band
+         (template and main attack).
+         A swap that makes a troop stronger than what it upgrades to inverts its tree.
       6. Not already in the troop's kit (`taken`).
       7. Same named line as the weapon it replaces, so `[Gondor] Sword II` becomes
          `[Gondor] Sword IV` rather than a different Gondorian family.
@@ -210,8 +256,8 @@ def pick_substitute(
     candidates = culture_pool.get(current.item.template, [])
     if not candidates:
         return None, f"this culture fields no other {current.item.template}"
-    category = weapon_category(cat, current, couchable)
-    candidates = [c for c in candidates if weapon_category(cat, c, couchable) == category]
+    category = weapon_category(cat, current, couchable, spec)
+    candidates = [c for c in candidates if weapon_category(cat, c, couchable, spec) == category]
     if not candidates:
         return None, f"this culture fields no other weapon of its category ({describe_category(category)})"
 
@@ -230,6 +276,15 @@ def pick_substitute(
             "of this troop's tier and craft"
         )
     usable = within
+
+    if ceiling is not None:
+        below = [c for c in usable if c.best_dps <= ceiling]
+        if not below:
+            return None, (
+                f"every in-band {current.item.template} this culture owns beats the "
+                "weapon of the same template and main attack that the troop's upgrade carries"
+            )
+        usable = below
 
     if needs_shield_safe:
         safe = [c for c in usable if not shield_forbidden(cat, c.item)]
@@ -278,18 +333,54 @@ def plan(
     spec: dict,
     shields: set[str],
     cultures: set[str] | None = None,
+    upgrade_targets: dict[str, tuple[str, ...]] | None = None,
 ) -> tuple[list[Swap], list[tuple[report.Troop, str, str]]]:
-    """(swaps to make, troops that could not be fixed with a reason each)."""
+    """(swaps to make, troops that could not be fixed with a reason each).
+
+    Troops are planned from the highest level down, so each troop's upgrade targets already hold
+    their final weapons when its own ceiling is read (`upgrade_targets`: troop id -> target ids).
+    """
     pool = build_pool(priced, troops)
     couchable = frozenset(mc.couchable_ids(priced))
+    upgrade_targets = upgrade_targets or {}
+    by_id = {t.id: t for t in troops}
+    carried: dict[str, set[str]] = {}   # troop id -> its items after its own swaps
     swaps: list[Swap] = []
     unresolved: list[tuple[report.Troop, str, str]] = []
 
-    for troop in troops:
+    def category_of(p: mc.Priced) -> tuple:
+        return weapon_category(cat, p, couchable, spec)
+
+    # The ceiling compares template and main attack only (the band a weapon is judged on): a two
+    # handed only halberd that upgrades to a shield-safe winged spear still swings on the same band.
+    def band_key(p: mc.Priced) -> tuple:
+        return category_of(p)[:2]
+
+    def held(p: mc.Priced, items) -> mc.Priced:
+        """The weapon as a troop with these items wields it: behind a shield, only the modes a
+        shield allows (`Priced.with_shield`), so a shield spearman's spear is judged by its thrust."""
+        return p.with_shield() if any(i in shields for i in items) else p
+
+    def best_carried(tid: str, key: tuple) -> float | None:
+        items = carried.get(tid)
+        if items is None:
+            items = by_id[tid].items if tid in by_id else ()
+        views = [held(priced[i], items) for i in items if i in priced]
+        dps = [v.best_dps for v in views if v.best_dps > 0 and band_key(v) == key]
+        return max(dps) if dps else None
+
+    def ceiling_for(troop: report.Troop, p: mc.Priced) -> float | None:
+        category = band_key(p)
+        caps = [b for tid in upgrade_targets.get(troop.id, ())
+                if (b := best_carried(tid, category)) is not None]
+        return min(caps) if caps else None
+
+    for troop in sorted(troops, key=lambda t: -t.level):
         if ladder.is_exempt_troop(troop.id, spec):
             continue
         if cultures and troop.culture not in cultures:
             continue
+        generator = GENERATED_TROOP_FILES.get(Path(troop.file).name)
         carries_shield = troop_carries_shield(troop, shields)
 
         # A weapon is judged by its own class's band (melee_ladder.target), so the band follows
@@ -299,30 +390,42 @@ def plan(
         craft = ladder.craft_key(troop.id, troop.culture, spec)
 
         def band_of(p: mc.Priced) -> ladder.Band:
-            return ladder.band(troop.tier, craft, spec, p.item.template,
-                               *ladder.dominant_flags(p.item.template, p.swing_damage,
+            return ladder.band(troop.tier, craft, spec, p.class_template,
+                               *ladder.dominant_flags(p.class_template, p.swing_damage,
                                                       p.thrust_damage, p.swing_dps,
                                                       p.thrust_dps, spec))
 
         def fits_limit(p: mc.Priced) -> bool:
-            limit = ladder.tier_limit(p.item.template, troop.tier, craft, spec)
+            limit = ladder.tier_limit(p.class_template, troop.tier, craft, spec)
             return not ladder.limit_breaches(limit, p.swing_damage, p.thrust_damage,
                                              p.swing_dps, p.thrust_dps)
 
         def out_of_band(iid: str) -> bool:
             p = priced.get(iid)
-            return p is not None and p.best_dps > 0 and band_of(p).verdict(p.best_dps) != "ok"
+            p = held(p, troop.items) if p is not None else None
+            return p is not None and p.best_dps > 0 and ladder.judge(
+                troop.tier, craft, spec, p.best_dps, p.class_template,
+                *ladder.dominant_flags(p.class_template, p.swing_damage, p.thrust_damage,
+                                       p.swing_dps, p.thrust_dps, spec)) != "ok"
 
         # What the troop keeps, plus each replacement as it is chosen: never hand out a copy.
         taken = {iid for iid in troop.items if not out_of_band(iid)}
+        final = set(troop.items)
+        carried[troop.id] = final
 
         for iid in sorted(troop.items):
             if not out_of_band(iid):
                 continue
-            p = priced[iid]
+            p = held(priced[iid], troop.items)
+            if generator:
+                unresolved.append((troop, iid, f"{GENERATED_REASON}{generator}: change the weapon there"))
+                continue
+            culture_pool = pool.get(troop.culture, {})
+            if carries_shield:
+                culture_pool = {k: [c.with_shield() for c in v] for k, v in culture_pool.items()}
             replacement, why = pick_substitute(
-                p, band_of, fits_limit, pool.get(troop.culture, {}), cat, carries_shield, spec,
-                frozenset(taken), couchable,
+                p, band_of, fits_limit, culture_pool, cat, carries_shield, spec,
+                frozenset(taken), couchable, ceiling_for(troop, p),
             )
             if replacement is None:
                 unresolved.append((troop, iid, why))
@@ -332,6 +435,8 @@ def plan(
             if not slots:
                 unresolved.append((troop, iid, "could not locate the item's equipment slot"))
                 continue
+            final.discard(iid)
+            final.add(replacement.item.id)
             # One swap per slot: the same weapon sits in two slots on six troops, and a swap
             # keyed on (slot, old) would otherwise replace one and leave the other behind.
             for slot in sorted(slots):
@@ -377,7 +482,8 @@ def main(argv=None) -> int:
         print(f"WARNING: exempt troops that no longer exist: {', '.join(stale)}")
 
     cultures = set(args.culture) if args.culture else None
-    swaps, unresolved = plan(priced, cat, troops, spec, shields, cultures)
+    swaps, unresolved = plan(priced, cat, troops, spec, shields, cultures,
+                             load_upgrade_targets(TROOPS))
 
     print(f"melee ladder roster pass (#631): {len(priced)} weapons, {len(troops)} troops")
     if failures:
@@ -408,7 +514,13 @@ def main(argv=None) -> int:
 
     if unresolved:
         print(f"\nUnresolved ({len(unresolved)}), these need a hand decision or pass 2:")
-        seen = collections.Counter(why for _t, _i, why in unresolved)
+        generated = collections.Counter(
+            why.split(GENERATED_REASON, 1)[1].split(":", 1)[0]
+            for _t, _i, why in unresolved if GENERATED_REASON in why)
+        if generated:
+            print(f"  {sum(generated.values()):4d}  in troop files a generator writes (change the "
+                  f"generator): {', '.join(f'{g} {n}' for g, n in sorted(generated.items()))}")
+        seen = collections.Counter(why for _t, _i, why in unresolved if GENERATED_REASON not in why)
         for why, n in seen.most_common(10):
             print(f"  {n:4d}  {why}")
 

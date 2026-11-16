@@ -77,7 +77,7 @@ public sealed class TitleTree
 
         var vassals = below
             .OrderByDescending(t => t.Rank)
-            .ThenBy(t => t.Name, StringComparer.Ordinal)
+            .ThenBy(t => ShownName(t.Name), StringComparer.Ordinal)
             .ToList();
         var lordships = vassals.Where(t => t.Rank == TitleRank.Lordship).ToList();
         var unfold = title.Id == focus.Id || lordships.Any(t => t.Id == focus.Id);
@@ -88,5 +88,12 @@ public sealed class TitleTree
             unfold ? 0 : lordships.Count,
             drawn.Select(t => BuildNode(catalog, t, focus, landsOf, childLands)).ToList(),
             isLands);
+    }
+
+    /// <summary>A title name without its leading {=key}: the English text it shows, for a stable order.</summary>
+    private static string ShownName(string name)
+    {
+        var end = name.StartsWith("{=", StringComparison.Ordinal) ? name.IndexOf('}') : -1;
+        return end < 0 ? name : name.Substring(end + 1);
     }
 }

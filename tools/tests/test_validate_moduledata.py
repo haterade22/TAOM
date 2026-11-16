@@ -2718,8 +2718,8 @@ class MeleePassRowsTests(unittest.TestCase):
     @staticmethod
     def _weapon(template, swing, thrust, swing_dps, thrust_dps, blade="blade_a"):
         from types import SimpleNamespace as NS
-        return NS(item=NS(template=template), blade_piece=blade, best_dps=max(swing_dps, thrust_dps),
-                  swing_damage=swing, thrust_damage=thrust, swing_dps=swing_dps, thrust_dps=thrust_dps)
+        return NS(item=NS(template=template), class_template=template, blade_piece=blade,
+                  best_dps=max(swing_dps, thrust_dps), swing_damage=swing, thrust_damage=thrust, swing_dps=swing_dps, thrust_dps=thrust_dps)
 
     @staticmethod
     def _troop(tid, culture, tier, items):
@@ -2745,6 +2745,22 @@ class MeleePassRowsTests(unittest.TestCase):
                               self._troop("t_sword", "gondor", 5, ["sword"])], priced)
         flags = {k[0]: k[-2:] for k in kits}
         self.assertEqual(flags, {"t_spear": (False, True), "t_halberd": (True, True), "t_sword": (True, True)})
+
+    def test_a_troop_with_a_shield_is_priced_on_the_modes_a_shield_allows(self):
+        """A spear behind a shield only thrusts (its two handed swing mode is requires_no_shield)."""
+        full = self._weapon("OneHandedPolearm", 90, 40, 80, 20)
+        held = self._weapon("OneHandedPolearm", 0, 40, 0, 20)
+        held.class_template = "Pike"   # the band follows the class of the mode the troop holds
+        full.with_shield = lambda: held
+        kits, carried = ts.melee_pass_rows(
+            [self._troop("t_shield", "gondor", 5, ["spear", "sh"]),
+             self._troop("t_bare", "gondor", 5, ["spear"])],
+            {"spear": full}, self.SPEC, shields={"sh"})
+        rows = {k[0]: (k[4], k[6], k[-2:]) for k in kits}
+        self.assertEqual(rows, {"t_shield": (20, "Pike", (False, True)),
+                                "t_bare": (80, "OneHandedPolearm", (True, True))})
+        self.assertEqual([(c[0], c[2], c[4], c[6]) for c in carried],
+                         [("t_shield", "Pike", 0, 0), ("t_bare", "OneHandedPolearm", 90, 80)])
 
     def test_a_troop_with_no_priced_weapon_has_no_kit_row_and_no_carried_row(self):
         kits, carried = self._rows([self._troop("t_bare", "gondor", 5, ["unknown"])],

@@ -139,20 +139,43 @@ def carrier_rows(w, users, lspec):
     return rows
 
 
-def row_breaches(priced_weapon, rows, lspec):
-    """[((tier, craft key), troop ids, breaches)] for each row whose tier limit the weapon is over."""
+def row_views(p, ids, shielded, default_held):
+    """The weapon as the carriers of one row wield it: behind a shield only the modes a shield allows
+    (melee_catalogue.Priced.with_shield), else the whole weapon. A row with no carrier (the spec row)
+    takes `default_held`, the view the placeholder is banded on."""
+    if not ids:
+        return [p.with_shield() if default_held else p]
+    views = []
+    if any(i in shielded for i in ids):
+        views.append(p.with_shield())
+    if any(i not in shielded for i in ids):
+        views.append(p)
+    return views
+
+
+def row_breaches(priced_weapon, rows, lspec, shielded=frozenset(), default_held=False):
+    """[((tier, craft key), troop ids, breaches)] for each row whose tier limit the weapon is over,
+    each carrier judged in the mode it holds (`row_views`)."""
     out = []
     for (tier, craft), ids in sorted(rows.items()):
-        over = ladder.limit_breaches(
-            ladder.tier_limit(priced_weapon.item.template, tier, craft, lspec),
-            priced_weapon.swing_damage, priced_weapon.thrust_damage,
-            priced_weapon.swing_dps, priced_weapon.thrust_dps)
+        over = []
+        for v in row_views(priced_weapon, ids, shielded, default_held):
+            over += ladder.limit_breaches(
+                ladder.tier_limit(v.class_template, tier, craft, lspec),
+                v.swing_damage, v.thrust_damage, v.swing_dps, v.thrust_dps)
         if over:
             out.append(((tier, craft), ids, over))
     return out
 
 
-def build(spec, cat, priced, troops, armory):
+def shield_carriers(users, shields):
+    """(ids of the carriers with a shield, whether every carrier has one). A placeholder whose every
+    carrier holds a shield is banded on the modes a shield allows."""
+    shielded = frozenset(t.id for t in users if any(i in shields for i in t.items))
+    return shielded, bool(users) and len(shielded) == len(users)
+
+
+def build(spec, cat, priced, troops, armory, shields=frozenset()):
     tag = spec["tag"]
     lspec = ladder.load_spec()
     pieces, items, plan, swaps = [], [], [], []
@@ -169,18 +192,24 @@ def build(spec, cat, priced, troops, armory):
         if donor is None:
             raise PlaceholderError(f"donor {w['donor']} is not a priced Armory melee weapon")
         culture = spec_craft(w, lspec)
+        users = carriers_of(w, troops)
+        rows = carrier_rows(w, users, lspec)
+        shielded, all_held = shield_carriers(users, shields)
         # The donor's class decides the band (melee_ladder.target), so each class spreads over the
         # ten tiers; its attacks decide which of the class limits it tops out at. A donor that
         # thrusts harder than it swings is a spear (dominant_flags), whatever its template says.
+        # When every carrier holds a shield, the band is the one of the mode they wield (a spear's
+        # one handed thrust), as the validator judges them.
         template = cat.items[w["donor"]].template
-        band = ladder.band(w["tier"], culture, lspec, template,
-                           *ladder.dominant_flags(template, donor.swing_damage, donor.thrust_damage,
-                                                  donor.swing_dps, donor.thrust_dps, lspec))
+        aim = donor.with_shield() if all_held else donor
+        band = ladder.band(w["tier"], culture, lspec, aim.class_template,
+                           *ladder.dominant_flags(aim.class_template, aim.swing_damage, aim.thrust_damage,
+                                                  aim.swing_dps, aim.thrust_dps, lspec))
         # blend < 1 (owner choice) lands part way: donor DPS + blend x (ladder target - donor DPS).
         blend = float(w.get("blend", 1.0))
         if not 0.0 < blend <= 1.0:
             raise PlaceholderError(f"{wid}: blend must be in (0, 1]")
-        k = (donor.best_dps + blend * (band.target - donor.best_dps)) / donor.best_dps
+        k = (aim.best_dps + blend * (band.target - aim.best_dps)) / aim.best_dps
         # The tier limit (melee_ladders.json `class_limits` scaled to the placeholder's tier and
         # culture) binds before the tier target: a top tier target would let a one handed sword
         # swing past any tier's blow, and a tier 4 placeholder may not carry a tier 10 blow either.
@@ -190,20 +219,25 @@ def build(spec, cat, priced, troops, armory):
         # Each attack has its own damage_factor and is held by its own limits (#1296, as
         # restat_melee_blades.class_ratios does): one factor for both would stop a spear's swing
         # because its thrust is at the thrust limit. An attack the donor lacks follows the other.
-        users = carriers_of(w, troops)
-        rows = carrier_rows(w, users, lspec)
+        # Each carrier is held in the mode it wields (row_views). A shield view also keeps the whole
+        # weapon inside its class limit: a player or a troop without a shield can use the other modes.
+        checks = [(ladder.tier_limit(v.class_template, tier, craft, lspec), v)
+                  for (tier, craft), ids in rows.items()
+                  for v in row_views(donor, ids, shielded, all_held)]
+        if shielded:
+            checks.append((ladder.class_limit(template, lspec), donor))
 
-        def attack_cap(swing, thrust, swing_dps, thrust_dps):
-            return min(ladder.max_factor(ladder.tier_limit(template, tier, craft, lspec),
-                                         swing, thrust, swing_dps, thrust_dps)
-                       for tier, craft in rows)
-        k_swing = min(k, attack_cap(donor.swing_damage, 0, donor.swing_dps, 0.0))
-        k_thrust = min(k, attack_cap(0, donor.thrust_damage, 0.0, donor.thrust_dps))
+        def attack_cap(swing: bool) -> float:
+            return min(ladder.max_factor(limit, v.swing_damage, 0, v.swing_dps, 0.0) if swing
+                       else ladder.max_factor(limit, 0, v.thrust_damage, 0.0, v.thrust_dps)
+                       for limit, v in checks)
+        k_swing = min(k, attack_cap(True))
+        k_thrust = min(k, attack_cap(False))
         if not donor.swing_damage:
             k_swing = k_thrust
         if not donor.thrust_damage:
             k_thrust = k_swing
-        effective = max(donor.swing_dps * k_swing, donor.thrust_dps * k_thrust) / donor.best_dps
+        effective = max(aim.swing_dps * k_swing, aim.thrust_dps * k_thrust) / aim.best_dps
         capped = effective < k - 1e-9
         k = effective
         blade_id = donor.blade_piece
@@ -319,7 +353,8 @@ def main(argv=None) -> int:
     cat = mc.load(modules, item_modules={ARMORY})
     priced, failures = mc.price_all(cat)
     troops = report.load_troops(report.TROOPS)
-    pieces, items, plan, swaps, desc_add, tmpl_add = build(spec, cat, priced, troops, armory)
+    shields = frozenset(mc.load_shield_ids(modules))
+    pieces, items, plan, swaps, desc_add, tmpl_add = build(spec, cat, priced, troops, armory, shields)
     new_prices = price_new(cat, plan)
     lspec = ladder.load_spec()
 
@@ -336,11 +371,17 @@ def main(argv=None) -> int:
     print(f"placeholder weapons: {len(plan)}; troop slots to swap: {len(swaps)}")
     for w, donor, band, k, new_blade, _, users, capped in plan:
         p = new_prices[w["id"]]
-        print(f"  {w['id']}: donor {w['donor']} {donor.best_dps:.0f} DPS -> {p.best_dps:.0f} DPS "
-              f"(T{w['tier']} band {band.low:.0f}-{band.high:.0f}, target {band.target:.0f}; x{k:.2f}); "
+        shielded, all_held = shield_carriers(users, shields)
+        # DPS and band are those of the view the placeholder is banded on (`build`): the shield
+        # modes when every carrier has a shield. Swing and thrust are the whole weapon's.
+        aim_donor = donor.with_shield() if all_held else donor
+        aim_p = p.with_shield() if all_held else p
+        print(f"  {w['id']}: donor {w['donor']} {aim_donor.best_dps:.0f} DPS -> {aim_p.best_dps:.0f} DPS"
+              + (" in its shield modes" if all_held else "")
+              + f" (T{w['tier']} band {band.low:.0f}-{band.high:.0f}, target {band.target:.0f}; x{k:.2f}); "
               f"swing {p.swing_damage}, thrust {p.thrust_damage}; {len(users)} troops: "
               + ", ".join(f"{t.id} T{t.tier}" for t in sorted(users, key=lambda t: (t.tier, t.id))))
-        over = row_breaches(p, carrier_rows(w, users, lspec), lspec)
+        over = row_breaches(p, carrier_rows(w, users, lspec), lspec, shielded, all_held)
         if over:
             raise PlaceholderError(
                 f"{w['id']} is over its tier limit: "
@@ -348,14 +389,14 @@ def main(argv=None) -> int:
                             + ", ".join(f"{s} {v:.0f} > {m}" for s, v, m in b)
                             for (tier, craft), ids, b in over))
         if capped:
-            if not donor.best_dps < p.best_dps <= band.high:
-                raise PlaceholderError(f"{w['id']} prices at {p.best_dps:.1f}: its tier limit leaves "
+            if not aim_donor.best_dps < aim_p.best_dps <= band.high:
+                raise PlaceholderError(f"{w['id']} prices at {aim_p.best_dps:.1f}: its tier limit leaves "
                                        "no room above its donor; remove it from the spec")
-            print(f"    (tier limit of {p.item.template}: held under the tier target)")
+            print(f"    (tier limit of {aim_p.class_template}: held under the tier target)")
         elif float(w.get("blend", 1.0)) == 1.0:
-            if not band.low <= p.best_dps <= band.high:
-                raise PlaceholderError(f"{w['id']} prices at {p.best_dps:.1f}, outside its band")
-        elif not donor.best_dps < p.best_dps <= band.high:
+            if not band.low <= aim_p.best_dps <= band.high:
+                raise PlaceholderError(f"{w['id']} prices at {aim_p.best_dps:.1f}, outside its band")
+        elif not aim_donor.best_dps < aim_p.best_dps <= band.high:
             raise PlaceholderError(f"{w['id']} prices at {p.best_dps:.1f}: a blend must beat its donor and stay under the band top")
         else:
             print(f"    (blend {w['blend']}: deliberately below the band)")

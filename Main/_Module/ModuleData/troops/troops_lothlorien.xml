@@ -206,7 +206,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
         <equipment slot="Item1" id="Item.wm_elven_shield_a" />
-        <equipment slot="Item2" id="Item.mirkwood_sword_a01" />
+        <equipment slot="Item2" id="Item.wm_rivendell_sword_a01_black" />
         <equipment slot="Head" id="Item.sk_ll_rg_helmet_med_a" />
         <equipment slot="Cape" id="Item.sk_ll_rg_pauld_light_a" />
         <equipment slot="Body" id="Item.sk_ll_rg_chest_med_a" />
@@ -295,7 +295,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_rivendell_spear_a01_silver" />
         <equipment slot="Item1" id="Item.wm_elven_shield_b" />
-        <equipment slot="Item2" id="Item.wm_rivendell_sword_a01_silver" />
+        <equipment slot="Item2" id="Item.wm_rivendell_sword_a01_black" />
         <equipment slot="Head" id="Item.sk_ll_rg_helmet_med_a" />
         <equipment slot="Cape" id="Item.sk_ll_rg_pauld_med_a" />
         <equipment slot="Body" id="Item.sk_ll_rg_chest_heavy_a" />
@@ -340,7 +340,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.taom_ph_lothlorien_spear_t6" />
+        <equipment slot="Item0" id="Item.he_spear" />
         <equipment slot="Item1" id="Item.wm_elven_shield_b" />
         <equipment slot="Item2" id="Item.mirkwood_sword_a01" />
         <equipment slot="Head" id="Item.sk_ll_rg_helmet_med_b" />
@@ -352,7 +352,7 @@
         <equipment slot="HorseHarness" id="Item.saddle_of_aeneas" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.taom_ph_lothlorien_spear_t6" />
+        <equipment slot="Item0" id="Item.he_spear" />
         <equipment slot="Item1" id="Item.wm_elven_shield_b" />
         <equipment slot="Item2" id="Item.wm_rivendell_sword_a01_black" />
         <equipment slot="Head" id="Item.sk_ll_rg_helmet_med_b" />
@@ -388,9 +388,9 @@
     </skills>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.taom_ph_lothlorien_spear_t6" />
+        <equipment slot="Item0" id="Item.he_spear" />
         <equipment slot="Item1" id="Item.wm_rivendell_shield_a02_silver" />
-        <equipment slot="Item2" id="Item.wm_rivendell_sword_a01_silver" />
+        <equipment slot="Item2" id="Item.wm_rivendell_sword_a01_black" />
         <equipment slot="Head" id="Item.sk_ll_rg_helmet_med_b" />
         <equipment slot="Cape" id="Item.sk_ll_rg_pauld_med_a" />
         <equipment slot="Body" id="Item.sk_ll_rg_chest_heavy_a" />
@@ -400,7 +400,7 @@
         <equipment slot="HorseHarness" id="Item.fortunas_choice" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.taom_ph_lothlorien_spear_t6" />
+        <equipment slot="Item0" id="Item.he_spear" />
         <equipment slot="Item1" id="Item.wm_rivendell_shield_a02_silver" />
         <equipment slot="Item2" id="Item.wm_rivendell_sword_a02_black" />
         <equipment slot="Head" id="Item.sk_ll_rg_helmet_med_b" />
@@ -596,7 +596,7 @@
         <equipment slot="Item0" id="Item.ladder_lothlorien_bow_t5" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v2_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_q2v3" />
-        <equipment slot="Item3" id="Item.mirkwood_sword_a01" />
+        <equipment slot="Item3" id="Item.wm_rivendell_sword_a01_black" />
         <equipment slot="Head" id="Item.sk_ll_mw_helmet_arc_med_b" />
         <equipment slot="Body" id="Item.sk_ll_mw_chest_med_b" />
         <equipment slot="Gloves" id="Item.sk_ll_mw_bracer_med_a" />
@@ -645,7 +645,7 @@
         <equipment slot="Item0" id="Item.ladder_lothlorien_bow_t6" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v2_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_q2v3" />
-        <equipment slot="Item3" id="Item.mirkwood_sword_a01" />
+        <equipment slot="Item3" id="Item.wm_rivendell_sword_a01_black" />
         <equipment slot="Head" id="Item.sk_ll_mw_helmet_arc_med_b" />
         <equipment slot="Cape" id="Item.sk_ll_mw_pauld_med_a" />
         <equipment slot="Body" id="Item.sk_ll_mw_chest_med_b" />
@@ -694,7 +694,7 @@
         <equipment slot="Item0" id="Item.ladder_lothlorien_bow_t7" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v3_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_q3v3" />
-        <equipment slot="Item3" id="Item.wm_rivendell_sword_a01_silver" />
+        <equipment slot="Item3" id="Item.wm_rivendell_sword_a02_black" />
         <equipment slot="Head" id="Item.sk_ll_mw_helmet_arc_heavy_b" />
         <equipment slot="Cape" id="Item.sk_ll_mw_pauld_med_a" />
         <equipment slot="Body" id="Item.sk_ll_mw_chest_heavy_b" />
@@ -740,7 +740,7 @@
         <equipment slot="Item0" id="Item.ladder_lothlorien_bow_t8" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v4_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_q4v3" />
-        <equipment slot="Item3" id="Item.wm_rivendell_sword_a01_silver" />
+        <equipment slot="Item3" id="Item.wm_rivendell_sword_a02_black" />
         <equipment slot="Head" id="Item.sk_ll_mw_helmet_arc_heavy_b" />
         <equipment slot="Cape" id="Item.sk_ll_mw_pauld_heavy_a" />
         <equipment slot="Body" id="Item.sk_ll_mw_chest_heavy_b" />
@@ -791,7 +791,7 @@
         <equipment slot="Item0" id="Item.ladder_lothlorien_bow_t7" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v3_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_q3v3" />
-        <equipment slot="Item3" id="Item.mirkwood_sword_a01" />
+        <equipment slot="Item3" id="Item.wm_rivendell_sword_a02_black" />
         <equipment slot="Head" id="Item.sk_ll_mw_helmet_arc_heavy_b" />
         <equipment slot="Cape" id="Item.sk_ll_mw_pauld_med_a" />
         <equipment slot="Body" id="Item.sk_ll_mw_chest_med_b" />
@@ -841,7 +841,7 @@
         <equipment slot="Item0" id="Item.ladder_lothlorien_bow_t8" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v4_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_q4v3" />
-        <equipment slot="Item3" id="Item.wm_rivendell_sword_a01_silver" />
+        <equipment slot="Item3" id="Item.wm_rivendell_sword_a02_black" />
         <equipment slot="Head" id="Item.sk_ll_mw_helmet_arc_heavy_a" />
         <equipment slot="Cape" id="Item.sk_ll_mw_pauld_heavy_a" />
         <equipment slot="Body" id="Item.sk_ll_mw_chest_heavy_b" />
@@ -1080,7 +1080,7 @@
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gf_knight_longsword" />
-        <equipment slot="Item1" id="Item.wm_rivendell_sword_a02_silver" />
+        <equipment slot="Item1" id="Item.wm_rivendell_sword_a02_black" />
         <equipment slot="Head" id="Item.sk_ll_gl_helmet_heavy_c" />
         <equipment slot="Cape" id="Item.sk_ll_gl_pauld_heavy_a" />
         <equipment slot="Body" id="Item.sk_ll_gl_chest_heavy_b" />
@@ -1125,7 +1125,7 @@
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gf_knight_longsword" />
-        <equipment slot="Item1" id="Item.wm_rivendell_sword_a02_silver" />
+        <equipment slot="Item1" id="Item.wm_rivendell_sword_a02_black" />
         <equipment slot="Head" id="Item.sk_ll_gl_helmet_heavy_c" />
         <equipment slot="Cape" id="Item.sk_ll_gl_pauld_cape_heavy_a" />
         <equipment slot="Body" id="Item.sk_ll_gl_chest_elite_b" />
@@ -1158,7 +1158,7 @@
     <Equipments>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gf_knight_longsword" />
-        <equipment slot="Item1" id="Item.wm_rivendell_sword_a02_silver" />
+        <equipment slot="Item1" id="Item.wm_rivendell_sword_a02_black" />
         <equipment slot="Head" id="Item.sk_ll_ml_helmet_heavy_c" />
         <equipment slot="Cape" id="Item.sk_ll_ml_pauld_cape_heavy_a" />
         <equipment slot="Body" id="Item.sk_ll_ml_chest_heavy_a" />
@@ -1204,7 +1204,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_rivendell_spear_a01_silver" />
         <equipment slot="Item1" id="Item.wm_elven_shield_b" />
-        <equipment slot="Item2" id="Item.wm_rivendell_sword_a02_silver" />
+        <equipment slot="Item2" id="Item.wm_rivendell_sword_a01_black" />
         <equipment slot="Head" id="Item.sk_ll_gl_helmet_heavy_a" />
         <equipment slot="Cape" id="Item.sk_ll_gl_pauld_heavy_a" />
         <equipment slot="Body" id="Item.sk_ll_gl_chest_heavy_a" />
@@ -1249,7 +1249,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01_silver" />
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01_black" />
         <equipment slot="Item1" id="Item.wm_rivendell_shield_a02_silver" />
         <equipment slot="Item2" id="Item.wm_rivendell_sword_a02_silver" />
         <equipment slot="Head" id="Item.sk_ll_gl_helmet_heavy_a" />
@@ -1259,7 +1259,7 @@
         <equipment slot="Leg" id="Item.sk_ll_gl_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01_silver" />
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01_black" />
         <equipment slot="Item1" id="Item.wm_rivendell_shield_a02_silver" />
         <equipment slot="Item2" id="Item.wm_rivendell_sword_a02_black" />
         <equipment slot="Head" id="Item.sk_ll_gl_helmet_heavy_a" />
@@ -1293,7 +1293,7 @@
     </skills>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01_silver" />
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01_black" />
         <equipment slot="Item1" id="Item.wm_rivendell_shield_a02_silver" />
         <equipment slot="Item2" id="Item.wm_rivendell_sword_a02_black" />
         <equipment slot="Head" id="Item.sk_ll_ml_helmet_heavy_a" />
@@ -1303,7 +1303,7 @@
         <equipment slot="Leg" id="Item.sk_ll_ml_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01_silver" />
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01_black" />
         <equipment slot="Item1" id="Item.wm_rivendell_shield_a02_silver" />
         <equipment slot="Item2" id="Item.wm_rivendell_sword_a01_black" />
         <equipment slot="Head" id="Item.sk_ll_ml_helmet_heavy_a" />
@@ -1494,7 +1494,7 @@
         <equipment slot="Item0" id="Item.ladder_lothlorien_bow_t5" />
         <equipment slot="Item1" id="Item.wm_elven_arrow_v2_a" />
         <equipment slot="Item2" id="Item.wm_elven_arrow_q2v3" />
-        <equipment slot="Item3" id="Item.mirkwood_sword_a01" />
+        <equipment slot="Item3" id="Item.wm_rivendell_sword_a01_black" />
         <equipment slot="Head" id="Item.sk_ll_mw_helmet_arc_med_b" />
         <equipment slot="Body" id="Item.sk_ll_mw_chest_med_b" />
         <equipment slot="Gloves" id="Item.sk_ll_mw_bracer_med_a" />

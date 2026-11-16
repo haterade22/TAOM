@@ -15,6 +15,17 @@ public sealed class RealmNamesVM : ViewModel
     /// <summary>Names show only once the borders are this opaque, so they never float over a close-up.</summary>
     public const float MinimumAlpha = 0.35f;
 
+    /// <summary>The aniron size at 100%, as the TaomRealmBorders.Name brush declares it.</summary>
+    public const int AnironFontSize = 34;
+
+    /// <summary>
+    /// The plain-font size at 100%: larger than aniron, because a Chinese, Japanese or Korean name of two
+    /// to five characters spans far less of the map than a name in spaced capitals.
+    /// </summary>
+    public const int PlainFontSize = 42;
+
+    private float _scale = 1f;
+
     private readonly List<(RealmNameItemVM Item, RealmLabel Label)> _placed = new List<(RealmNameItemVM Item, RealmLabel Label)>();
     private MBBindingList<RealmNameItemVM> _items = new MBBindingList<RealmNameItemVM>();
     private IReadOnlyList<RealmLabel> _labels = Array.Empty<RealmLabel>();
@@ -62,7 +73,7 @@ public sealed class RealmNamesVM : ViewModel
             var (text, aniron) = RealmNameLettering.Letter(raw);
             if (text.Length == 0)
                 continue;
-            var item = new RealmNameItemVM { Name = text, UseTolkienFont = aniron };
+            var item = new RealmNameItemVM { Name = text, UseTolkienFont = aniron, FontSize = FontSizeFor(aniron) };
             items.Add(item);
             _placed.Add((item, label));
             _rawNames.Add(raw);
@@ -83,8 +94,25 @@ public sealed class RealmNamesVM : ViewModel
             _rawNames[i] = raw;
             _placed[i].Item.Name = text;
             _placed[i].Item.UseTolkienFont = aniron;
+            _placed[i].Item.FontSize = FontSizeFor(aniron);
         }
     }
+
+    /// <summary>
+    /// Sets the player's size multiplier (already validated by the settings provider) and re-sizes every
+    /// name when it changed; otherwise one comparison, since the map view calls it every frame.
+    /// </summary>
+    public void SetScale(float scale)
+    {
+        if (scale == _scale)
+            return;
+        _scale = scale;
+        foreach (var (item, _) in _placed)
+            item.FontSize = FontSizeFor(item.UseTolkienFont);
+    }
+
+    private int FontSizeFor(bool aniron) =>
+        (int)Math.Round((aniron ? AnironFontSize : PlainFontSize) * _scale);
 
     /// <summary>
     /// Places every name for this frame. <paramref name="project"/> maps a label to screen pixels and

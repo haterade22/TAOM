@@ -21,6 +21,9 @@ public sealed class RealmBordersSettingsProvider : IRealmBordersSettings
     public const float DefaultFillStrength = 0.5f;
     public const float MinimumFillStrength = 0.05f;
     public const float MaximumFillStrength = 0.8f;
+    public const float DefaultNameScale = 1f;
+    public const float MinimumNameScale = 0.5f;
+    public const float MaximumNameScale = 2.5f;
 
     /// <summary>The blend dropdown: "Material default", then the engine's modes in their enum order. Never reorder: MCM keeps the index.</summary>
     public static readonly string[] BlendModeChoices =
@@ -77,10 +80,12 @@ public sealed class RealmBordersSettingsProvider : IRealmBordersSettings
     private const string WidthSetting = "Border Width";
     private const string FadeSetting = "Fade In From Camera Distance / Full Opacity Distance";
     private const string FillStrengthSetting = "Realm Colour Strength";
+    private const string NameScaleSetting = "Realm Name Size";
     private const string YourRealmLabel = "Your Realm";
 
     private static readonly string DefaultWidthText = Text(DefaultWidthScale);
     private static readonly string DefaultFillStrengthText = Text(DefaultFillStrength);
+    private static readonly string DefaultNameScaleText = Text(DefaultNameScale);
     private static readonly string DefaultFadeText = $"{Text(DefaultFadeStartDistance)} / {Text(DefaultFullOpacityDistance)}";
 
     private readonly IModLogger _logger;
@@ -121,6 +126,8 @@ public sealed class RealmBordersSettingsProvider : IRealmBordersSettings
     public bool DrawThroughTerrain => Settings?.RealmBordersDrawThroughTerrain ?? true;
 
     public bool RealmNames => Settings?.RealmBordersNames ?? true;
+
+    public float NameScale => CheckedNameScale(Settings?.RealmBordersNameScale);
 
     public bool CrossingNotices => Settings?.RealmBordersCrossingNotices ?? true;
 
@@ -222,6 +229,14 @@ public sealed class RealmBordersSettingsProvider : IRealmBordersSettings
         bool bad = raw.HasValue && !FiniteFloatValidator.IsFiniteInRange(raw.Value, MinimumFillStrength, MaximumFillStrength);
         Report(FillStrengthSetting, bad ? Text(raw) : null, DefaultFillStrengthText);
         return Sane(raw, MinimumFillStrength, MaximumFillStrength, DefaultFillStrength);
+    }
+
+    /// <summary>The realm-name size multiplier, or the default with a warning when the setting is unusable.</summary>
+    internal float CheckedNameScale(float? raw)
+    {
+        bool bad = raw.HasValue && !FiniteFloatValidator.IsFiniteInRange(raw.Value, MinimumNameScale, MaximumNameScale);
+        Report(NameScaleSetting, bad ? Text(raw) : null, DefaultNameScaleText);
+        return Sane(raw, MinimumNameScale, MaximumNameScale, DefaultNameScale);
     }
 
     /// <summary>The fade pair, or both defaults with a warning when the pair is unusable. No settings is no warning.</summary>

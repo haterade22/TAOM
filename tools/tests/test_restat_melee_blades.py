@@ -916,5 +916,69 @@ class SharedBladeTests(TmpCase):
         assert held and "zzz_heavy" in held[0] and "OneHandedSword" in held[0], notes
 
 
+SHIELD_POLEARM = {"swing": None, "thrust": 45, "swing_dps": None, "thrust_dps": 37}
+
+
+def shield_spear(item_id, thrust_damage=20):
+    """A spear as the Armory builds one: a one handed thrust mode a shield allows (primary) and a
+    two handed swing and thrust mode that refuses a shield."""
+    one = cata.Usage("OneHandedPolearm", True, (), "onehanded_polearm_block_long_rshield_thrust",
+                     frozenset({"thrust"}),
+                     md.WeaponStats(thrust_damage=thrust_damage, raw_thrust_speed=12.0),
+                     class_template="OneHandedPolearm")
+    two = cata.Usage("TwoHandedPolearm", False, (), "polearm_block_long_shield_swing_thrust",
+                     frozenset({"swing", "thrust"}),
+                     md.WeaponStats(swing_damage=60, raw_swing_speed=20.8,
+                                    thrust_damage=thrust_damage + 6, raw_thrust_speed=12.0),
+                     shield_ok=False, class_template="TwoHandedPolearm")
+    return cata.Priced(
+        item=cata.Item(item_id, item_id, "", "TwoHandedPolearm", (("blade_one", "Blade", 100),), "src"),
+        usages=(one, two), blade_piece="blade_one", tier=3,
+    )
+
+
+def shield_spec():
+    return tier_spec(
+        class_limits={"OneHandedSword": SWORD, "TwoHandedPolearm": POLEARM,
+                      "OneHandedPolearm": SHIELD_POLEARM},
+        craft_column={"OneHandedSword": "sword", "TwoHandedPolearm": "polearm",
+                      "OneHandedPolearm": "polearm"})
+
+
+class ShieldCarrierTests(TmpCase):
+    """A troop with a shield wields a spear in its one handed thrust mode (2026-11-16), so the restat
+    prices the blade on that mode for it, as the gate and the fixer judge it."""
+
+    def test_a_shield_carrier_prices_the_blade_on_the_thrust_it_holds(self):
+        cat = catalogue_with_pieces()
+        p = shield_spear("sp")
+        troops = [troop("t", 26, "rivendell", ["sp", "sh"])]   # tier 5, craft 1.0
+        plans, _ = restat.build_plans({"sp": p}, cat, troops, shield_spec(), shields={"sh"})
+        assert len(plans) == 1
+        ratio_t = plans[0].new_thrust / plans[0].old_thrust
+        target = ladder.target(5, "rivendell", shield_spec(), "OneHandedPolearm", False, True)
+        # The target is the tier limit: the restat lands just under it (half point margin, factor rounded down).
+        assert target - 1.5 <= p.with_shield().thrust_dps * ratio_t <= target
+
+    def test_without_a_shield_the_same_troop_prices_the_two_handed_swing(self):
+        cat = catalogue_with_pieces()
+        p = shield_spear("sp")
+        troops = [troop("t", 26, "rivendell", ["sp"])]
+        plans, _ = restat.build_plans({"sp": p}, cat, troops, shield_spec(), shields={"sh"})
+        ratio_s = plans[0].new_swing / plans[0].old_swing
+        target = ladder.target(5, "rivendell", shield_spec(), "TwoHandedPolearm", True, True)
+        assert target - 1.5 <= p.swing_dps * ratio_s <= target
+
+    def test_the_two_handed_mode_stays_inside_its_class_limit(self):
+        """A player without a shield can still swing it: the mode nobody in a troop uses keeps a limit."""
+        cat = catalogue_with_pieces()
+        p = shield_spear("sp", thrust_damage=5)
+        troops = [troop("t", 51, "rivendell", ["sp", "sh"])]   # tier 10: a large thrust raise
+        plans, _ = restat.build_plans({"sp": p}, cat, troops, shield_spec(), shields={"sh"})
+        ratio_s = plans[0].new_swing / plans[0].old_swing
+        assert p.swing_damage * ratio_s <= POLEARM["swing"] + 1e-9
+        assert p.swing_dps * ratio_s <= POLEARM["swing_dps"] + 1e-9
+
+
 if __name__ == "__main__":
     unittest.main()

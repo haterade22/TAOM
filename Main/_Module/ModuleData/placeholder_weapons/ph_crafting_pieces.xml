@@ -89,7 +89,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_erebor_spear_b_t4: donor blade sm_dwarf_erebor_spear_blade_b, damage_factor swing x1.188, thrust x1.188 -->
+    <!-- taom_ph_erebor_spear_b_t4: donor blade sm_dwarf_erebor_spear_blade_b, damage_factor swing x1.225, thrust x1.225 -->
     <CraftingPiece
         id="taom_ph_erebor_spear_b_t4_blade"
         name="{=taom_ph_erebor_spear_b_t4_blade_name}Erebor Spear Blade B (placeholder)"
@@ -109,10 +109,10 @@
             body_name="bo_sm_dwarf_erebor_spear_blade_b">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.07" />
+                damage_factor="2.14" />
             <Swing
                 damage_type="Cut"
-                damage_factor="0.90" />
+                damage_factor="0.93" />
         </BladeData>
         <Flags>
             <Flag
@@ -278,7 +278,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gondor_spear_b_gondor_t5: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.254, thrust x1.254 -->
+    <!-- taom_ph_gondor_spear_b_gondor_t5: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.295, thrust x1.295 -->
     <CraftingPiece
         id="taom_ph_gondor_spear_b_gondor_t5_blade"
         name="{=taom_ph_gondor_spear_b_gondor_t5_blade_name}Gondor Spear Head C (placeholder)"
@@ -294,7 +294,7 @@
             body_name="bo_wm_gondor_spear_b_blade">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.31" />
+                damage_factor="2.39" />
         </BladeData>
         <Flags>
             <Flag
@@ -350,7 +350,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gondor_spear_b_swan_t5: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.254, thrust x1.254 -->
+    <!-- taom_ph_gondor_spear_b_swan_t5: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.295, thrust x1.295 -->
     <CraftingPiece
         id="taom_ph_gondor_spear_b_swan_t5_blade"
         name="{=taom_ph_gondor_spear_b_swan_t5_blade_name}Gondor Spear Head C (placeholder)"
@@ -366,7 +366,7 @@
             body_name="bo_wm_gondor_spear_b_blade">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.31" />
+                damage_factor="2.39" />
         </BladeData>
         <Flags>
             <Flag
@@ -386,7 +386,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gondor_spear_b_t8: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.431, thrust x1.431 -->
+    <!-- taom_ph_gondor_spear_b_t8: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.474, thrust x1.474 -->
     <CraftingPiece
         id="taom_ph_gondor_spear_b_t8_blade"
         name="{=taom_ph_gondor_spear_b_t8_blade_name}Gondor Spear Head C (placeholder)"
@@ -402,7 +402,7 @@
             body_name="bo_wm_gondor_spear_b_blade">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.64" />
+                damage_factor="2.72" />
         </BladeData>
         <Flags>
             <Flag
@@ -422,7 +422,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gondor_spear_b_gondor_t8: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.476, thrust x1.476 -->
+    <!-- taom_ph_gondor_spear_b_gondor_t8: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.534, thrust x1.534 -->
     <CraftingPiece
         id="taom_ph_gondor_spear_b_gondor_t8_blade"
         name="{=taom_ph_gondor_spear_b_gondor_t8_blade_name}Gondor Spear Head C (placeholder)"
@@ -438,7 +438,7 @@
             body_name="bo_wm_gondor_spear_b_blade">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.73" />
+                damage_factor="2.83" />
         </BladeData>
         <Flags>
             <Flag
@@ -458,7 +458,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gondor_spear_b_pg_t8: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.476, thrust x1.476 -->
+    <!-- taom_ph_gondor_spear_b_pg_t8: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.534, thrust x1.534 -->
     <CraftingPiece
         id="taom_ph_gondor_spear_b_pg_t8_blade"
         name="{=taom_ph_gondor_spear_b_pg_t8_blade_name}Gondor Spear Head C (placeholder)"
@@ -474,7 +474,7 @@
             body_name="bo_wm_gondor_spear_b_blade">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.73" />
+                damage_factor="2.83" />
         </BladeData>
         <Flags>
             <Flag
@@ -494,7 +494,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gondor_spear_b_swan_t8: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.476, thrust x1.476 -->
+    <!-- taom_ph_gondor_spear_b_swan_t8: donor blade wm_gondor_spear_b_blade, damage_factor swing x1.534, thrust x1.534 -->
     <CraftingPiece
         id="taom_ph_gondor_spear_b_swan_t8_blade"
         name="{=taom_ph_gondor_spear_b_swan_t8_blade_name}Gondor Spear Head C (placeholder)"
@@ -510,7 +510,7 @@
             body_name="bo_wm_gondor_spear_b_blade">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.73" />
+                damage_factor="2.83" />
         </BladeData>
         <Flags>
             <Flag
@@ -530,7 +530,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gondor_spear_a_t8: donor blade wm_gondor_spear_a_blade, damage_factor swing x1.431, thrust x1.431 -->
+    <!-- taom_ph_gondor_spear_a_t8: donor blade wm_gondor_spear_a_blade, damage_factor swing x1.466, thrust x1.466 -->
     <CraftingPiece
         id="taom_ph_gondor_spear_a_t8_blade"
         name="{=taom_ph_gondor_spear_a_t8_blade_name}Gondor Spear Head D (placeholder)"
@@ -546,7 +546,7 @@
             body_name="bo_wm_gondor_spear_a_blade">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.68" />
+                damage_factor="2.75" />
         </BladeData>
         <Flags>
             <Flag
@@ -677,7 +677,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gundabad_spear_a03_t5: donor blade wm_gundabad_spear_a03_blade, damage_factor swing x1.335, thrust x1.000 -->
+    <!-- taom_ph_gundabad_spear_a03_t5: donor blade wm_gundabad_spear_a03_blade, damage_factor swing x1.340, thrust x0.966 -->
     <CraftingPiece
         id="taom_ph_gundabad_spear_a03_t5_blade"
         name="{=taom_ph_gundabad_spear_a03_t5_blade_name}Gundabad Orc Spear Blade III (placeholder)"
@@ -693,10 +693,10 @@
             holster_mesh="">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.10" />
+                damage_factor="2.03" />
             <Swing
                 damage_type="Cut"
-                damage_factor="3.25" />
+                damage_factor="3.26" />
         </BladeData>
         <Flags>
             <Flag
@@ -712,7 +712,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gundabad_spear_a03_t8: donor blade wm_gundabad_spear_a03_blade, damage_factor swing x1.497, thrust x1.119 -->
+    <!-- taom_ph_gundabad_spear_a03_t8: donor blade wm_gundabad_spear_a03_blade, damage_factor swing x1.129, thrust x1.068 -->
     <CraftingPiece
         id="taom_ph_gundabad_spear_a03_t8_blade"
         name="{=taom_ph_gundabad_spear_a03_t8_blade_name}Gundabad Orc Spear Blade III (placeholder)"
@@ -728,10 +728,10 @@
             holster_mesh="">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.36" />
+                damage_factor="2.25" />
             <Swing
                 damage_type="Cut"
-                damage_factor="3.65" />
+                damage_factor="2.75" />
         </BladeData>
         <Flags>
             <Flag
@@ -744,47 +744,6 @@
             <Material
                 id="Iron6"
                 count="9" />
-        </Materials>
-    </CraftingPiece>
-
-    <!-- taom_ph_lothlorien_spear_t6: donor blade wm_elven_spear_blade, damage_factor swing x1.688, thrust x1.000 -->
-    <CraftingPiece
-        id="taom_ph_lothlorien_spear_t6_blade"
-        name="{=taom_ph_lothlorien_spear_t6_blade_name}High Elven Spear Blade (placeholder)"
-        tier="4"
-        piece_type="Blade"
-        mesh="wm_elven_spear_blade"
-        length="110.32"
-        weight="0.2136">
-        <BladeData
-            stack_amount="4"
-            physics_material="metal_weapon"
-            body_name="bo_wm_elven_spear_blade"
-            holster_mesh="throwing_spear_quiver_1_1"
-            holster_body_name="bo_throwing_spear_quiver_1_1"
-            holster_mesh_length="68.9">
-            <Thrust
-                damage_type="Pierce"
-                damage_factor="2.43" />
-            <Swing
-                damage_type="Cut"
-                damage_factor="4.75" />
-        </BladeData>
-        <Flags>
-            <Flag
-                name="CanKnockDown" />
-            <Flag
-                name="CanDismount" />
-            <Flag
-                name="CanHook" />
-            <Flag
-                name="Civilian"
-                type="ItemFlags" />
-        </Flags>
-        <Materials>
-            <Material
-                id="Iron2"
-                count="1" />
         </Materials>
     </CraftingPiece>
 </CraftingPieces>

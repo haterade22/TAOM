@@ -26,6 +26,7 @@ Most of the gap lives in engine rules that a data file cannot see: party slots f
 | Isengard's seven tier-3 clans raised to tier 5: 24 party slots to 31 | `characters/clans.xml` | this page |
 | Harad's eight tier-3 and tier-4 clans raised to tier 5: 19 party slots to 27 | `spclans.xslt` | this page, "Harad party slots" |
 | Auto-resolve power ratio exponent 0.7 to 0.5: numbers outweigh quality | `AutoResolve.PowerRatioExponent` in `configs/battle_balance_config.json` | [battle-balance.md](battle-balance.md) "Auto-resolve: numbers over quality" |
+| Blue Craig's defenders get +10% advantage in an auto-resolved siege of its own fortification, and survival 0.3 | `SiegeDefence.DefenderAdvantageBonuses` and `CulturalSurvivalBonuses` in `configs/battle_balance_config.json` | [battle-balance.md](battle-balance.md) "Siege defence by culture" |
 
 ### Isengard party slots
 
@@ -45,6 +46,7 @@ See the linked feature docs for each file. The two new fields:
 |---|---|---|---|
 | `CapturedFortHold.Factions` | `army_targeting.json` | `["empire_s"]` | Realms whose armies hold a captured fort whatever their side |
 | `AutoResolve.PowerRatioExponent` | `battle_balance_config.json` | 0.5 | Exponent of the power ratio in a simulated strike (vanilla 0.7) |
+| `SiegeDefence.DefenderAdvantageBonuses` | `battle_balance_config.json` | `bluecraig` 0.1 | Factor on the defenders' advantage in an auto-resolved siege of a fortification that culture owns |
 
 ## Key Files
 
@@ -135,9 +137,76 @@ The gap stayed below the first run's 15,231 but grew from day 1, where the secon
 Blue Craig lost its capital on day 75 and was destroyed on day 99. In the second run Blue Craig lived with 1 town. Each run is one
 campaign, so these runs cannot say whether Dunland's peace with Gondor freed Gondor to fight Blue Craig.
 
+## The fourth 150-day run
+
+Run `E:\Temp\scenario-runs\20261116-100801` (trunk `9dc562c62`, built 2026-11-16 16:01 UTC, with the refusal and the #1350 and #1381
+dialogue fixes) passed 150 of 150 days with a clean unload. Dunland again refused three calls to war against Gondor, and the log has no
+war declaration between the two realms.
+
+| Day 150 | Second run | Third run | Fourth run |
+|---|---|---|---|
+| Gondor towns/castles, strength | 9/9, 21,631 | 11/15, 23,883 | 10/15, 24,060 |
+| Mordor towns/castles, strength | 7/11, 15,523 | 6/10, 13,734 | 7/10, 15,468 |
+| Gondor to Mordor gap (day 1 gap) | 6,108 (8,674) | 10,149 (6,466) | 8,592 (8,646) |
+| Harad towns/castles | 6/16 | 5/10 | 5/9 |
+| Dunland towns/castles | 3/6 | 4/6 | 4/6 |
+| Blue Craig capital lost, destroyed | no, no | day 75, day 99 | day 53, day 122 |
+
+The free share stayed within 0.4 to 0.6 on all 150 days (maximum deviation 0.042, no lead change), and the gap held level with day 1.
+The capital target failed again, earlier: Blue Craig lost its capital on day 53 and was destroyed on day 122. In the second, third and
+fourth runs, ten free realms declared war on Blue Craig on day 2 (Gondor, Dale, Rohan, Erebor, Lorien, Rivendell, Mirkwood, and Lindon
+called in by Rivendell; Blue Craig declared on Arthedain and Ered Luin), so its enemies did not change between runs. Blue Craig fell in
+both runs with Dunland's refusal and lived in the one run without it. Three campaigns cannot prove the cause, but the pattern fits
+Gondor having no Dunland front.
+
+## The fifth 150-day run
+
+Run `E:\Temp\scenario-runs\20261116-104744` (trunk `ab43768ce`, built 2026-11-16 16:47 UTC, with Blue Craig Hostile only to its
+neighbours) passed 150 of 150 days with a clean unload. Blue Craig started with four wars instead of ten: Rivendell, Arthedain and Ered
+Luin by its Hostile rows, and Lindon, which Arthedain called in. Dunland refused two calls to war against Gondor and stayed at peace
+with it.
+
+| Day 150 | Fourth run | Fifth run |
+|---|---|---|
+| Gondor towns/castles, strength | 10/15, 24,060 | 10/13, 24,910 |
+| Mordor towns/castles, strength | 7/10, 15,468 | 9/11, 16,883 |
+| Gondor to Mordor gap (day 1 gap) | 8,592 (8,646) | 8,027 (6,206) |
+| Rohan towns/castles | 5/3 | 3/1 |
+| Arthedain towns/castles | 2/6 | 0/5 |
+| Blue Craig capital lost, destroyed | day 53, day 122 | day 73, day 113 |
+
+The free share stayed within 0.4 to 0.6 on all 150 days (maximum deviation 0.033). Blue Craig still fell: it lost its capital 20 days
+later than in the fourth run and was destroyed 9 days earlier. Its four neighbours alone took it, so the six distant wars were not
+what decided its fate; Blue Craig sits on a closed land-navigation island and can reach no other realm (`WarTheaterAndReachTests`),
+so it cannot carry the war to anyone. Arthedain also lost its capital, on day 78, and ended with no town. Rohan fell from 7 towns and
+7 castles to 3 and 1.
+
+## The sixth 150-day run
+
+Run `E:\Temp\scenario-runs\20261116-114451` (trunk `3d2c1fb27`, built 2026-11-16 17:44 UTC, with Blue Craig's siege defence bonus
+0.1 and survival bonus 0.3) passed 150 of 150 days with a clean unload. Blue Craig had the same four enemies as in the fifth run:
+Arthedain and Ered Luin, on which it declared war, Rivendell, and Lindon, which a call to war brought in. Dunland refused one call to
+war against Gondor and stayed at peace with it.
+
+| Day 150 | Fifth run | Sixth run |
+|---|---|---|
+| Gondor towns/castles, strength | 10/13, 24,910 | 11/17, 27,782 |
+| Mordor towns/castles, strength | 9/11, 16,883 | 6/9, 13,420 |
+| Gondor to Mordor gap (day 1 gap) | 8,027 (6,206) | 14,362 (8,336) |
+| Rohan towns/castles | 3/1 | 7/6 |
+| Arthedain towns/castles | 0/5 | 2/6 |
+| Blue Craig capital lost, destroyed | day 73, day 113 | day 54, day 140 |
+
+The free share stayed within 0.4 to 0.6 on all 150 days (mean deviation 0.044, maximum 0.074 on day 149). Blue Craig lost three of its
+four castles by day 30, then its capital on day 54 and its last castle on day 74. Its last town held alone from day 74
+to day 140, 27 days longer than the realm lasted in the fifth run. The capital, however, fell
+19 days earlier than in the fifth run. With one run per change, part of both differences is chance. No capital other than Blue Craig's
+fell. Gondor ended 14,362 strength ahead of Mordor, the widest gap of the last three runs, and Mordor held 6 towns and 9 castles.
+
 ## Still owed
 
-- Blue Craig fell on day 75 of the third run: watch its capital in the next run before any change (#1283).
+- Blue Craig fell in the sixth run too, with its siege defence bonus: capital day 54, destroyed day 140. The maintainer decides whether it needs more (a larger bonus, stronger garrisons) or may fall (#1283).
+- The Gondor to Mordor gap widened to 14,362 in the sixth run (8,027 in the fifth). Watch it in the next run before any change (#1283).
 - Gondor's survival row (0.3, shared with Arthedain) and its tier 7+ party template stacks: not changed, because the second run
   closed the gap. Revisit only if a later run shows the gap again.
 - A Codex review of 5101f151b and of these changes: the account's usage limit blocks Codex until 2026-11-20.
@@ -146,6 +215,11 @@ campaign, so these runs cannot say whether Dunland's peace with Gondor freed Gon
 
 ## Changelog
 
+- 2026-11-16: Sixth 150-day run recorded; Blue Craig, with its siege defence bonus, lasts to day 140 but loses its capital on day 54 (#1283).
+- 2026-11-16: Blue Craig gets a siege defence bonus of 0.1 and the survival bonus 0.3 (#1283).
+- 2026-11-16: Fifth 150-day run recorded; Blue Craig still falls with four wars (#1283).
+- 2026-11-16: Blue Craig keeps Hostile rows only with its Eriador neighbours (#1283).
+- 2026-11-16: Fourth 150-day run recorded; Blue Craig fell again (#1283).
 - 2026-11-15: First 150-day run recorded; Harad's clans raised to tier 5; allowed war declarations logged (#1283).
 - 2026-11-15: Page created. Mordor holds captured forts, Isengard's seven tier-3 clans raised to tier 5, auto-resolve exponent 0.5 (#1283).
 - 2026-11-14: Dunland-Gondor Hostile row removed, Mordor survival row removed, Mirkwood survival row added (#1283, 5832fc5c6).

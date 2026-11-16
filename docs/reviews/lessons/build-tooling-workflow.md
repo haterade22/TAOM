@@ -5178,3 +5178,21 @@ The Kit's sprite generation re-saved all 13 GUI `_tex.tpac` files. I copied back
 - **Why missed:** each run looked stable; only two runs side by side, or two `PYTHONHASHSEED` values, show it.
 - **Prevent:** when output depends on the order of a set (a tie-break, the first match, a dict filled from it), loop over `sorted(...)`. Prove a generator or report deterministic by running it under two or more `PYTHONHASHSEED` values in subprocesses.
 - **Source:** issue #1379.
+
+### A gate that mirrors engine loading needs the engine's module set too (shield gate and catalogue, #1375, 2026-11-16)
+After #1354 the gate and the catalogue found stylesheets through `SubModule.xml` rows, but they still read every installed module, so AWOIAF_Armoury's 280 crafting pieces and its items counted in a TAOM campaign where it never loads. They also read `.xslt` where the engine reads `.xsl` first, applied rows meant for multiplayer, and keyed modules by folder name (SandBox's Id is `Sandbox`).
+- **Why missed:** each fix copied one rule of `MBObjectManager.GetMergedXmlForManaged` at a time; no test listed the whole function's branches.
+- **Prevent:** when a tool mirrors an engine loader, list every branch of the engine function (module active, game type, file suffix, file or folder) in the docstring or a test map, and make each one either a test or bad input (exit 2) that names what the tool does not model.
+- **Source:** issue #1375.
+
+### A tool that models one game mode must name every mode the mod plays (shield gate, #1398, 2026-11-16)
+The first #1398 change kept only rows for Campaign. On the live install that dropped TAOM's own Fords of War `fords_items.xml` (a CustomGame row) from the gate, and it made 429 pieces that Native's campaign `weapon_descriptions.xml` lists, but only its multiplayer file defines, read as dangling. The side-by-side run against trunk showed both before any commit.
+- **Why missed:** the issue text named only the multiplayer files to drop; nobody listed the game types TAOM itself uses.
+- **Prevent:** before filtering data by game type, list the files the filter drops on the live install (one line of Python over `other_game_files`) and read each name. Name the mod's game types in one constant (`GAME_TYPES`).
+- **Source:** issue #1398.
+
+### A ladder rule reaches every tool that prices against the ladder (shield view, #631, 2026-11-16)
+The shield view (a troop with a shield is judged on the modes a shield allows) went into the validator, the fixer and the blade restat, but not into `generate_placeholder_weapons.py`. The generator banded and capped placeholders for shield carriers on the two handed mode, and the validator then flagged one of them over its tier limit.
+- **Why missed:** the consumers were found by grepping the calls that judge troops (`findings`, `judge`, `band`). The generator caps with `tier_limit` and `max_factor` row by row and never calls them.
+- **Prevent:** before changing how the ladder judges a weapon, grep every caller of `melee_ladder.` (`tier_limit`, `max_factor`, `class_limit`, `band`, `target`, `judge`, `findings`) and of `melee_catalogue.price_all`, and list each tool as changed or as left on purpose.
+- **Source:** [RCA](../rca-melee-tier-tolerance-2026-11-16.md) F1.

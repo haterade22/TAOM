@@ -70,7 +70,8 @@ public class TaomVolunteerModel : DefaultVolunteerModel
     /// is off, on entry and hourly alike) and <see cref="IRecruitmentAlignmentService.IsRecruitmentBlocked"/>.
     /// The player's own hero is never blocked by the castle rule; companion-led clan parties count as AI
     /// lords. <c>Patch114_AiVolunteerEstimate_Postfix</c> (#887) is the twin that extracts the same keys for AI trip
-    /// scoring; change both together. This is a boundary that extracts ids + falls through to base (gamemodels.md rule 4).
+    /// scoring, and <c>Patch157_RecruitSlotHint_Prefix</c> (#1408) asks the same block for the recruit slot hint;
+    /// change all three together. This is a boundary that extracts ids + falls through to base (gamemodels.md rule 4).
     /// Last, <see cref="IDesertionRecruitGuard.CapHeroIndex"/> stops the index before the first volunteer that alignment
     /// desertion would take from the buyer (a captured fief's old-culture volunteers), so nobody buys a deserter.
     /// </summary>

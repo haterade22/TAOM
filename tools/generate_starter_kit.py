@@ -29,7 +29,8 @@ donor's blade is registered only in Native).
 
 Plain items (bows, arrows, shields, armour) carry literal numbers, which are min()-ed against
 the anchor. Every clone ships `is_merchandise="false"` (out of loot, shops, workshops and
-tournament prizes; the player can still sell it), `difficulty="0"`, and no `value=`.
+tournament prizes; the player can still sell it) and `difficulty="0"`. A crafted clone carries
+`value="150"` (CRAFTED_STARTER_VALUE); a plain clone carries no `value=`.
 
 RULES THIS TOOL FOLLOWS (tools/README.md "XML I/O convention")
 ---------------------------------------------------------------

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.RealmBorders.Domain;
@@ -53,6 +54,68 @@ public class RealmNamesVMTests
         names.Place(1f, 1920f, 1080f, _ => (false, 0f, 0f));
 
         Assert.IsFalse(names.Items.Single().IsShown);
+    }
+
+    [TestMethod]
+    public void SetLabels_LetteredName_TakesTheAnironBaseSize()
+    {
+        var item = WithGondor().Items.Single();
+
+        Assert.AreEqual(RealmNamesVM.AnironFontSize, item.FontSize);
+    }
+
+    [TestMethod]
+    public void SetLabels_ChineseName_TakesTheLargerPlainBaseSize()
+    {
+        var names = new RealmNamesVM();
+        names.SetLabels(new[] { new RealmLabel("empire_w", new MapPoint(10f, 20f), 900) }, _ => "刚铎");
+
+        var item = names.Items.Single();
+        Assert.IsFalse(item.UseTolkienFont, "a Chinese name has no aniron glyphs");
+        Assert.AreEqual(RealmNamesVM.PlainFontSize, item.FontSize);
+        Assert.IsTrue(RealmNamesVM.PlainFontSize > RealmNamesVM.AnironFontSize,
+            "two to five CJK characters must not read smaller than a spaced Latin name");
+    }
+
+    [TestMethod]
+    public void SetScale_ScalesEveryNameFromItsBase()
+    {
+        var names = new RealmNamesVM();
+        names.SetLabels(new[]
+        {
+            new RealmLabel("empire_w", new MapPoint(10f, 20f), 900),
+            new RealmLabel("khuzait", new MapPoint(30f, 40f), 900),
+        }, realm => realm == "empire_w" ? "Gondor" : "鲁恩");
+
+        names.SetScale(1.5f);
+
+        Assert.AreEqual((int)Math.Round(RealmNamesVM.AnironFontSize * 1.5f), names.Items[0].FontSize);
+        Assert.AreEqual((int)Math.Round(RealmNamesVM.PlainFontSize * 1.5f), names.Items[1].FontSize);
+    }
+
+    [TestMethod]
+    public void SetLabels_AfterAScale_NewNamesKeepTheScale()
+    {
+        var names = new RealmNamesVM();
+        names.SetScale(2f);
+
+        names.SetLabels(new[] { new RealmLabel("empire_w", new MapPoint(10f, 20f), 900) }, _ => "Gondor");
+
+        Assert.AreEqual(RealmNamesVM.AnironFontSize * 2, names.Items.Single().FontSize);
+    }
+
+    [TestMethod]
+    public void SetLabels_RenameToAnotherScript_TakesThatScriptsBase()
+    {
+        var labels = new[] { new RealmLabel("erebor", new MapPoint(10f, 20f), 900) };
+        var name = "Erebor";
+        var names = new RealmNamesVM();
+        names.SetLabels(labels, _ => name, 1);
+
+        name = "埃雷博";
+        names.SetLabels(labels, _ => name, 2);
+
+        Assert.AreEqual(RealmNamesVM.PlainFontSize, names.Items.Single().FontSize);
     }
 
     [TestMethod]

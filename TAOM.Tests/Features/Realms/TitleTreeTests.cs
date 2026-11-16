@@ -23,6 +23,23 @@ public class TitleTreeTests
     private static TitleTreeNode Find(TitleTreeNode node, string id) =>
         node.Title.Id == id ? node : node.Children.Select(c => Find(c, id)).FirstOrDefault(n => n != null)!;
 
+    // #1391: map-made names keep their {=key} so a language change translates them; vassals still sort by the
+    // name shown, not by the key.
+    [TestMethod]
+    public void Sorts_vassals_by_the_shown_name_not_by_the_key()
+    {
+        var catalog = new TitleCatalog(new[]
+        {
+            new TitleDefinition("c", TitleRank.County, "{=c}C", null, "town"),
+            new TitleDefinition("l1", TitleRank.Lordship, "{=zz}Alpha", "c", "v1"),
+            new TitleDefinition("l2", TitleRank.Lordship, "{=aa}Beta", "c", "v2"),
+        });
+
+        var tree = TitleTree.Build(catalog, "c")!;
+
+        CollectionAssert.AreEqual(new[] { "l1", "l2" }, tree.Root.Children.Select(n => n.Title.Id).ToArray());
+    }
+
     [TestMethod]
     public void Roots_at_the_highest_liege_and_marks_only_the_focus()
     {

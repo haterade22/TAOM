@@ -276,5 +276,62 @@ class PlaceholderCarrierLoadingTests(unittest.TestCase):
             '<Equipment slot="Item0" id="Item.donor" />'))
 
 
+def shield_spear_donor() -> tuple[cata.Catalogue, dict]:
+    """A spear as the Armory builds one: a one handed thrust mode a shield allows (primary) and a two
+    handed swing and thrust mode that refuses a shield."""
+    one = cata.Usage("OneHandedPolearm", True, (), "onehanded_polearm_block_long_rshield_thrust",
+                     frozenset({"thrust"}), md.WeaponStats(thrust_damage=20, raw_thrust_speed=12.0),
+                     class_template="OneHandedPolearm")
+    two = cata.Usage("TwoHandedPolearm", False, (), "polearm_block_long_shield_swing_thrust",
+                     frozenset({"swing", "thrust"}),
+                     md.WeaponStats(swing_damage=60, raw_swing_speed=20.8, thrust_damage=26, raw_thrust_speed=12.0),
+                     shield_ok=False, class_template="TwoHandedPolearm")
+    cat, _ = donor_weapon("TwoHandedPolearm", one)
+    item = cat.items["donor"]
+    return cat, {"donor": cata.Priced(item=item, usages=(one, two), blade_piece="blade_one", tier=3)}
+
+
+class PlaceholderShieldCarrierTests(unittest.TestCase):
+    """A troop with a shield wields a spear in its one handed thrust mode (2026-11-16): the generator
+    bands and caps a placeholder for such carriers in that mode, as the validator judges them."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.root = armory(Path(self._tmp.name))
+        self.lspec = ladder.load_spec()
+
+    def test_shield_carriers_band_the_placeholder_on_the_one_handed_thrust(self):
+        cat, priced = shield_spear_donor()
+        troops = [carrier("spearman", 26, "nowhere", ("donor", "sh"))]   # tier 5
+        _p, _i, plan, _s, _d, _t = gen.build(spec_for(5), cat, priced, troops, self.root, shields={"sh"})
+        band = plan[0][2]
+        self.assertAlmostEqual(band.target, ladder.target(5, "nowhere", self.lspec, "OneHandedPolearm", False, True))
+
+    def test_the_placeholder_is_not_over_the_limit_of_the_mode_its_carriers_hold(self):
+        cat, priced = shield_spear_donor()
+        donor = priced["donor"]
+        troops = [carrier("spearman", 51, "nowhere", ("donor", "sh"))]   # tier 10: a large raise
+        spec = spec_for(10)
+        _p, _i, plan, _s, _d, _t = gen.build(spec, cat, priced, troops, self.root, shields={"sh"})
+        k = plan[0][3]
+        held = donor.with_shield()
+        limit = ladder.tier_limit("OneHandedPolearm", 10, "nowhere", self.lspec)
+        self.assertLessEqual(k, ladder.max_factor(limit, 0, held.thrust_damage, 0.0, held.thrust_dps) + 1e-9)
+        rows = gen.carrier_rows(spec["weapons"][0], troops, self.lspec)
+        self.assertEqual(gen.row_breaches(donor, rows, self.lspec, shielded={"spearman"}, default_held=True), [])
+        # The two handed mode still reaches a player without a shield: it stays inside its class limit.
+        full = ladder.class_limit("TwoHandedPolearm", self.lspec)
+        self.assertLessEqual(k, ladder.max_factor(full, donor.swing_damage, donor.thrust_damage,
+                                                  donor.swing_dps, donor.thrust_dps) + 1e-9)
+
+    def test_without_a_shield_the_same_carrier_is_judged_on_the_whole_weapon(self):
+        cat, priced = shield_spear_donor()
+        troops = [carrier("halberdier", 26, "nowhere")]
+        _p, _i, plan, _s, _d, _t = gen.build(spec_for(5), cat, priced, troops, self.root, shields={"sh"})
+        band = plan[0][2]
+        self.assertAlmostEqual(band.target, ladder.target(5, "nowhere", self.lspec, "TwoHandedPolearm", True, True))
+
+
 if __name__ == "__main__":
     unittest.main()
