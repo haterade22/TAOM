@@ -143,6 +143,7 @@ settings of its own.
 |------|---------|
 | `CoopCompat/CoopCompatSubModule.cs` | Entry point: at the first campaign start, starts the transport, builds the services and adds the campaign behavior; at the main menu, starts the Long Defeat session link |
 | `CoopCompat/_Module/SubModule.xml` | Module manifest: depends on TAOM and Coop, untagged so it loads on a client and on a dedicated server |
+| `CoopCompat/_Module/README.txt` | Player README: what the module does, what to install, load order, the old 0.3.25 build trap, the join and trade messages. Update it when a player message changes |
 | `CoopCompat/TAOM.CoopCompat.csproj` | The scanned DLL; deploys both DLLs to the Client and Server bins; skips the build when no Coop is found at `CoopBinDir` |
 | `CoopCompat/Coop/TAOM.CoopCompat.Coop.csproj` | The DLL that holds every Coop-backed type; not named in `SubModule.xml` |
 | `CoopCompat/Coop/Transport/CoopTransport.cs` | The Coop binding |
@@ -242,7 +243,7 @@ settings of its own.
 The TAOM download carries `Modules/TAOM.CoopCompat` beside `Modules/TAOM`. The player gets Coop from
 BannerlordCoop's own release. `tools/package_release.py` refuses any file in the module's `bin`
 folders other than `TAOM.CoopCompat.dll` and `TAOM.CoopCompat.Coop.dll`, and any `.dll` or `.exe`
-elsewhere in the module, so no Coop, server or library binary can ship in it. The co-op dedicated server is private and is not in any TAOM package. A
+elsewhere in the module, so no Coop, server or library binary can ship in it. The player README (`README.txt`) ships at the module root; the build copies it with `SubModule.xml`. The co-op dedicated server is private and is not in any TAOM package. A
 server operator adds `TAOM.CoopCompat` to the server's module list after TAOM; its place against Coop
 and `DedicatedServer.Windows` does not matter.
 

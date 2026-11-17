@@ -110,7 +110,7 @@
 		</GetFileHash>
 		<Error Condition="'$(_TaomBuiltCoreHash)' != '$(_TaomInstalledCoreHash)'"
 		       Text="The TAOM.dll installed in $(_TaomCoreBin)\Win64_Shipping_Client differs from the core TAOM.CoopCompat was built against. Rebuild TAOM (Main) so both deploy together, then build again." />
-		<Copy SourceFiles="_Module\SubModule.xml" DestinationFolder="$(_TaomCompatModule)\" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="_Module\SubModule.xml;_Module\README.txt" DestinationFolder="$(_TaomCompatModule)\" SkipUnchangedFiles="true" />
 		<Copy SourceFiles="@(_TaomCompatFiles)" DestinationFolder="$(_TaomCompatModule)\bin\Win64_Shipping_Client\" SkipUnchangedFiles="true" />
 		<Copy SourceFiles="@(_TaomCompatFiles)" DestinationFolder="$(_TaomCompatModule)\bin\Win64_Shipping_Server\" SkipUnchangedFiles="true" />
 		<Message Importance="high" Text="TAOM.CoopCompat: deployed @(_TaomCompatFiles->Count()) files into the Client and Server bins under $(_TaomCompatModule)\bin\" />
