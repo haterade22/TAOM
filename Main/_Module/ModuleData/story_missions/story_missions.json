@@ -13,7 +13,7 @@
         { "troop": "rohan_westfold_militiaman", "class": "Infantry", "count": 100 },
         { "troop": "rohan_eastfold_skirmisher", "class": "Ranged", "count": 50 }
       ],
-      "muster": {"foot": {"x": 186.91, "y": 141.235, "z": 3.749, "fx": 0.75, "fy": 0.662}, "archers": {"x": 197.678, "y": 151.557, "z": 1.728, "fx": 0.739, "fy": 0.673}},
+      "muster": {"foot": {"x": 199.589, "y": 151.634, "z": 1.492, "fx": 0.721, "fy": 0.693}, "archers": {"x": 197.678, "y": 151.557, "z": 1.728, "fx": 0.739, "fy": 0.673}},
       "heroes": [{"id": "aragorn", "troop": "taom_hero_aragorn", "healthFactor": 3.0}, {"id": "legolas", "troop": "taom_hero_legolas", "healthFactor": 3.0}, {"id": "gimli", "troop": "taom_hero_gimli", "healthFactor": 3.0}],
       "roster": {
         "waves": [
@@ -37,7 +37,7 @@
         { "troop": "rohan_westfold_militiaman", "class": "Infantry", "count": 100 },
         { "troop": "rohan_eastfold_skirmisher", "class": "Ranged", "count": 50 }
       ],
-      "muster": {"foot": {"x": 186.91, "y": 141.235, "z": 3.749, "fx": 0.75, "fy": 0.662}, "archers": {"x": 197.678, "y": 151.557, "z": 1.728, "fx": 0.739, "fy": 0.673}},
+      "muster": {"foot": {"x": 199.589, "y": 151.634, "z": 1.492, "fx": 0.721, "fy": 0.693}, "archers": {"x": 197.678, "y": 151.557, "z": 1.728, "fx": 0.739, "fy": 0.673}},
       "heroes": [{"id": "aragorn", "troop": "taom_hero_aragorn", "healthFactor": 3.0}, {"id": "legolas", "troop": "taom_hero_legolas", "healthFactor": 3.0}, {"id": "gimli", "troop": "taom_hero_gimli", "healthFactor": 3.0}],
       "roster": {
         "waves": [

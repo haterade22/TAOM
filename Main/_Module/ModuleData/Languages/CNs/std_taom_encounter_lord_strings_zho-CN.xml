@@ -6,248 +6,248 @@
     <tag language="Simplified Chinese" />
   </tags>
   <strings>
-    <string id="taom_enc_context_line_west_liege_first" text="My liege, your banner flies over my hall as it flies over the realm. My riders and my sword are yours to command." />
-    <string id="taom_enc_context_line_west_liege_met" text="Well met again, my liege. My oath stands as firm as on the day I swore it, and the watch is kept." />
-    <string id="taom_enc_context_line_west_ally_first" text="Hail, traveller. From Fornost to Minas Tirith, those who stand against the Shadow have found courtesy among us, though I would know your purpose first." />
-    <string id="taom_enc_context_line_west_ally_met" text="Hail again. The roads have not grown kinder since we last met, so a friendly banner upon them is welcome." />
-    <string id="taom_enc_context_line_west_rival_first" text="You ride armed through lands held in the name of Elendil's heirs. State your business plainly and be brief." />
-    <string id="taom_enc_context_line_west_rival_met" text="So we meet again. I have not forgotten our last dealing, and I will be watching your hands while we speak." />
-    <string id="taom_enc_context_line_west_foe_first" text="Your banner is known to me, and it has never been a friend to this realm. Speak quickly, if you must speak at all." />
-    <string id="taom_enc_context_line_west_foe_met" text="You again. Every league you ride upon this soil is stolen, and I mean to see each one paid for." />
-    <string id="taom_enc_context_line_west_kin_first" text="Well met. It gladdens me to find one who keeps the old ways on these roads, for there are fewer of us with every passing year." />
-    <string id="taom_enc_context_line_west_kin_met" text="Well met again. Sit with me a while if you can; there is news from the North and the South both, and little of it good." />
-    <string id="taom_enc_surrender_demand_west_rival_1" text="You have overstepped, and the law of this realm is plain. Lay down your arms and you will be held with honour until terms are made." />
-    <string id="taom_enc_surrender_demand_west_rival_2" text="My company outnumbers yours many times over. Yield now, and no one need bleed for a quarrel that words could settle." />
-    <string id="taom_enc_surrender_demand_west_foe_1" text="By the oath I swore to my realm, you will go no further. Throw down your weapons or be cut down where you stand." />
-    <string id="taom_enc_surrender_demand_west_foe_2" text="You are surrounded, and I have little mercy to spare for the enemies of the West. Surrender, and you may yet live to see a cell." />
-    <string id="taom_enc_surrender_demand_west_kin_1" text="It grieves me to raise steel against one of our own blood, yet my oath leaves me no other road. Yield, and I swear you will be treated with honour." />
-    <string id="taom_enc_surrender_demand_west_kin_2" text="Stand down, I beg you. Our forebears did not cross the Sea so that their heirs might kill one another on a muddy road." />
-    <string id="taom_enc_surrender_offer_west_rival" text="The day is yours. I yield, and I trust you to hold me by the customs of honourable war." />
-    <string id="taom_enc_prisoner_released_west_rival" text="Then I leave in your debt, and I do not forget my debts, whatever comes between our banners." />
-    <string id="taom_enc_surrender_offer_west_foe" text="I am beaten, and I yield my sword. Do as you will with me, but the West will remember this day." />
-    <string id="taom_enc_prisoner_released_west_foe" text="I did not look for mercy from you. I will think on it, though it changes nothing between our realms." />
-    <string id="taom_enc_surrender_offer_west_kin" text="Enough. I will spend no more lives of our own blood on this field, and I yield to you." />
-    <string id="taom_enc_prisoner_released_west_kin" text="I hoped you would show the grace of our line, and you have. Go well, and may the old blood one day stand under a single banner again." />
-    <string id="taom_enc_hero_leave_west_liege" text="By your leave, my liege. I return to my post, and the watch goes on." />
-    <string id="taom_enc_hero_leave_west_ally" text="Fare well. May the Valar guard your road and bring you safe to your hearth." />
-    <string id="taom_enc_hero_leave_west_rival" text="We are done here. Ride on, and keep to the open road while you are in our lands." />
-    <string id="taom_enc_hero_leave_west_foe" text="Go. The beacons will burn for you before long." />
-    <string id="taom_enc_hero_leave_west_kin" text="Go safely. And whatever befalls, remember the White Tree and the kings who first planted it." />
-    <string id="taom_enc_context_line_rohirrim_liege_first" text="My liege, the riders of my éored are yours to command. Say where the Mark has need of us, and we will ride." />
-    <string id="taom_enc_context_line_rohirrim_liege_met" text="The oath I swore you still holds, my liege, and our horses are rested. We wait on your word." />
-    <string id="taom_enc_context_line_rohirrim_ally_first" text="Well met on the open plain. Those who cross the Mark in peace have no quarrel with us, and some find friends here." />
-    <string id="taom_enc_context_line_rohirrim_ally_met" text="Good to see your banner on the grasslands again. We have shared the road before, and I would gladly share it once more." />
-    <string id="taom_enc_context_line_rohirrim_rival_first" text="Rein in. You ride on the grass of the Riddermark, and I have not yet decided whether you are welcome on it." />
-    <string id="taom_enc_context_line_rohirrim_rival_met" text="You again. My riders remember your banner, and they do not count it among their friends." />
-    <string id="taom_enc_context_line_rohirrim_foe_first" text="You stand with the enemies of the Mark. Every rider here is sworn to drive you back the way you came." />
-    <string id="taom_enc_context_line_rohirrim_foe_met" text="So you dare return to our plains. My riders have not forgotten you, and their spears are sharp." />
-    <string id="taom_enc_context_line_rohirrim_kin_first" text="I knew you for a friend by the way you sit your horse. Ride with us a while; the plains are wide and the news is grim." />
-    <string id="taom_enc_context_line_rohirrim_kin_met" text="It does me good to see a friendly face out here. Share the ale skin and tell me what you have seen along the Entwash." />
-    <string id="taom_enc_surrender_demand_rohirrim_rival_1" text="We have run you down, and no one outrides my éored on open ground. Lay down your arms and you will be treated fairly." />
-    <string id="taom_enc_surrender_demand_rohirrim_rival_2" text="Your horses are spent and mine are fresh. Yield now, and no blood need be spilled between us today." />
-    <string id="taom_enc_surrender_demand_rohirrim_foe_1" text="You have harried the Mark long enough. Throw down your weapons, or my riders will trample you into the grass." />
-    <string id="taom_enc_surrender_demand_rohirrim_foe_2" text="By the blood of Eorl, you will not leave these plains armed. Yield, or face the charge." />
-    <string id="taom_enc_surrender_demand_rohirrim_kin_1" text="I would rather share a saddle-skin of ale with you than a field of blood. Yield, and you will be dealt with honourably." />
-    <string id="taom_enc_surrender_demand_rohirrim_kin_2" text="Enough. We grew up on the same grass under the same sky, and I would rather take your sword than your life. Give it to me." />
-    <string id="taom_enc_surrender_offer_rohirrim_rival" text="The field is yours. I yield, and I trust you to keep the old customs of the plains." />
-    <string id="taom_enc_prisoner_released_rohirrim_rival" text="You let me ride free. I will remember it, and so will my riders." />
-    <string id="taom_enc_surrender_offer_rohirrim_foe" text="My horse is down and my riders are scattered. I yield, though it shames me before my forebears." />
-    <string id="taom_enc_prisoner_released_rohirrim_foe" text="Mercy was the last thing I looked for from you. It settles nothing between us, but I will not forget it." />
-    <string id="taom_enc_surrender_offer_rohirrim_kin" text="You rode better than I did today. I yield, and I am glad it was you who bested me and no stranger." />
-    <string id="taom_enc_prisoner_released_rohirrim_kin" text="Free again, and by your hand. Should you ever need a spear at your side, send word to my hall." />
-    <string id="taom_enc_hero_leave_rohirrim_liege" text="By your leave, my liege. My riders await your call." />
-    <string id="taom_enc_hero_leave_rohirrim_ally" text="Good grass and clear skies on your road. Ride well." />
-    <string id="taom_enc_hero_leave_rohirrim_rival" text="Ride on, then, and keep your blades sheathed while you cross the Mark." />
-    <string id="taom_enc_hero_leave_rohirrim_foe" text="Go. When next we meet, our spears will be lowered for the charge." />
-    <string id="taom_enc_hero_leave_rohirrim_kin" text="Ride safe. There is always a seat for you at our fire, and a fresh horse in our stables." />
-    <string id="taom_enc_context_line_northmen_liege_first" text="My liege, well met on the road. The steadings are quiet and the granaries full, and my riders are yours to send where you will." />
-    <string id="taom_enc_context_line_northmen_liege_met" text="Good to see you again, my liege. Say the word and my spears go with you, as my oath bound them." />
-    <string id="taom_enc_context_line_northmen_ally_first" text="Well met. We have no quarrel with you, and the roads of the North are long enough for two companies to pass in peace." />
-    <string id="taom_enc_context_line_northmen_ally_met" text="You again, and on good terms still. Trade has gone well along the rivers this season, and I hope your road has treated you as well." />
-    <string id="taom_enc_context_line_northmen_rival_first" text="Hold there. I do not know you, and in these lands we like to know who rides armed past our steadings." />
-    <string id="taom_enc_context_line_northmen_rival_met" text="We have crossed paths before, and I have not forgotten how it went. Keep your hands where my archers can see them." />
-    <string id="taom_enc_context_line_northmen_foe_first" text="You ride under a banner that wishes ill on the free North. My bowstrings are strung and my riders are restless." />
-    <string id="taom_enc_context_line_northmen_foe_met" text="Back in our vales, are you? Your side has burned enough of our harvests, and I mean to see that you pay for them." />
-    <string id="taom_enc_context_line_northmen_kin_first" text="Well met, neighbour. It does me good to see a face from the river country out here on the road." />
-    <string id="taom_enc_context_line_northmen_kin_met" text="There you are again. Sit a while if you can spare it, there is bread and honey in the wagon and news from home." />
-    <string id="taom_enc_surrender_demand_northmen_rival_1" text="You are outnumbered and far from help. Give up your arms and you will be treated fairly, as is our custom." />
-    <string id="taom_enc_surrender_demand_northmen_rival_2" text="I would rather settle this with a fair bargain than with arrows. Yield now, and we can talk of ransom like sensible people." />
-    <string id="taom_enc_surrender_demand_northmen_foe_1" text="You have trampled our fields long enough. Lay down your weapons, or my archers will empty their quivers into your ranks." />
-    <string id="taom_enc_surrender_demand_northmen_foe_2" text="Every steading you burned has sent riders to my banner. Throw down your arms now, for I will not ask a second time." />
-    <string id="taom_enc_surrender_demand_northmen_kin_1" text="My oath binds me to this, though it sits ill with me. Yield, and no blood of ours need be spilled today." />
-    <string id="taom_enc_surrender_demand_northmen_kin_2" text="We are both children of the river and the wood, and I take no joy in this. Put up your sword and come quietly." />
-    <string id="taom_enc_surrender_offer_northmen_rival" text="You have the better of me today. I yield, and I trust you to deal with me as fairly as I would have dealt with you." />
-    <string id="taom_enc_prisoner_released_northmen_rival" text="You let me go without a ransom? That is a debt, and in the North we pay our debts." />
-    <string id="taom_enc_surrender_offer_northmen_foe" text="My riders are broken and I will not waste the rest of them. I yield, though it sticks in my throat." />
-    <string id="taom_enc_prisoner_released_northmen_foe" text="Free to go, am I? I will take it, but do not think one kindness buys back all the fields you burned." />
-    <string id="taom_enc_surrender_offer_northmen_kin" text="Enough. I will not see more of our own laid in barrows over this quarrel. I yield to you." />
-    <string id="taom_enc_prisoner_released_northmen_kin" text="You have a good heart, neighbour. When this feud is over, the first cup at my table is yours." />
-    <string id="taom_enc_hero_leave_northmen_liege" text="By your leave, my liege. May the road be dry and a warm hall wait for you at its end." />
-    <string id="taom_enc_hero_leave_northmen_ally" text="Fair winds and full barns to you. We will meet again at some market or other." />
-    <string id="taom_enc_hero_leave_northmen_rival" text="Go on your way, then. I will be watching which way it leads." />
-    <string id="taom_enc_hero_leave_northmen_foe" text="Get off our roads, and pray my scouts lose your trail." />
-    <string id="taom_enc_hero_leave_northmen_kin" text="Keep safe, neighbour, and keep the fire lit. The East is never as quiet as it looks." />
-    <string id="taom_enc_context_line_dunlendings_liege_first" text="The clans stand behind you, my chief. Point to where the horse-lords must pay, and my spears will go there." />
-    <string id="taom_enc_context_line_dunlendings_liege_met" text="My chief. The hill clans keep faith with you, and my warband waits on your word." />
-    <string id="taom_enc_context_line_dunlendings_ally_first" text="You come to us openly, so I will deal with you openly. Dunland keeps good faith with those who keep it first." />
-    <string id="taom_enc_context_line_dunlendings_ally_met" text="Back on our roads again. There is a place at our fires for a friend of the clans, so long as you stay one." />
-    <string id="taom_enc_context_line_dunlendings_rival_first" text="I do not know you, and in these hills a stranger is a thing to be watched. Speak, and keep your hand away from your sword." />
-    <string id="taom_enc_context_line_dunlendings_rival_met" text="You again. The clans have long memories, and mine holds nothing good of you yet." />
-    <string id="taom_enc_context_line_dunlendings_foe_first" text="You ride through hills that were ours before any horse-lord was born. Every step you take here is a debt I mean to collect." />
-    <string id="taom_enc_context_line_dunlendings_foe_met" text="I have not forgotten you, and neither have the graves of my clan. Say what you came to say." />
-    <string id="taom_enc_context_line_dunlendings_kin_first" text="Peat smoke on your cloak, the same as mine. Sit with me a while; the valley lords can wait for their reckoning." />
-    <string id="taom_enc_context_line_dunlendings_kin_met" text="Well met again. The fires in the high glens have burned low since you went away, and it is good to see a face from home." />
-    <string id="taom_enc_surrender_demand_dunlendings_rival_1" text="My spears hem you in on three sides. Lay down your arms and you walk away from this alive." />
-    <string id="taom_enc_surrender_demand_dunlendings_rival_2" text="The hills give one warning and no more. Yield now, or the crows settle the rest." />
-    <string id="taom_enc_surrender_demand_dunlendings_foe_1" text="The horse-lords took our valleys and called it their right. By the same right I take you today, so throw down your weapons." />
-    <string id="taom_enc_surrender_demand_dunlendings_foe_2" text="The White Hand promised these lands back to the clans, and you stand on them. Yield, or be buried in them." />
-    <string id="taom_enc_surrender_demand_dunlendings_kin_1" text="The hills have enough of their own in the ground already. Yield, and you will be held as kin until this is settled." />
-    <string id="taom_enc_surrender_demand_dunlendings_kin_2" text="We drank from the same streams, you and I. Give up your sword before I have to spill your blood into them." />
-    <string id="taom_enc_surrender_offer_dunlendings_rival" text="Enough. My clan has bled for this day, and I yield to you. See that you treat us fairly." />
-    <string id="taom_enc_prisoner_released_dunlendings_rival" text="Freed, with my sword back in my hand. I will think long on that before we meet again." />
-    <string id="taom_enc_surrender_offer_dunlendings_foe" text="Take my sword, then. Dunland has lost battles before and still stands, and it will stand long after you." />
-    <string id="taom_enc_prisoner_released_dunlendings_foe" text="You let me go. One kindness does not wash out the old wrongs, and the clans will not forget them." />
-    <string id="taom_enc_surrender_offer_dunlendings_kin" text="You fought like one born in the high glens. I yield, and there is less shame in yielding to blood of the hills." />
-    <string id="taom_enc_prisoner_released_dunlendings_kin" text="Blood answers to blood, it seems. I owe you a debt now, and the hills pay what they owe." />
-    <string id="taom_enc_hero_leave_dunlendings_liege" text="By your leave, my chief. The clans will be ready when you call." />
-    <string id="taom_enc_hero_leave_dunlendings_ally" text="Go safely through the hills. Keep to the open tracks, where my scouts can see you coming." />
-    <string id="taom_enc_hero_leave_dunlendings_rival" text="Go, then. And keep your distance from my hall." />
-    <string id="taom_enc_hero_leave_dunlendings_foe" text="Go. The clans will be waiting in every glen you cross." />
-    <string id="taom_enc_hero_leave_dunlendings_kin" text="Go well, and keep the old fires burning wherever the road takes you." />
-    <string id="taom_enc_context_line_southrons_liege_first" text="The sun rises on my sovereign. My spears and my house stand ready for your word." />
-    <string id="taom_enc_context_line_southrons_liege_met" text="Welcome again, my liege. The South is quiet under your hand, and I mean to keep it so." />
-    <string id="taom_enc_context_line_southrons_ally_first" text="You ride under no banner I have cause to hate. Speak plainly, and the South will hear you out." />
-    <string id="taom_enc_context_line_southrons_ally_met" text="Our paths cross again. You have kept faith with us so far, and I have kept count." />
-    <string id="taom_enc_context_line_southrons_rival_first" text="I know your banner, and I do not trust it. Say what you came to say, and keep your hand away from your sword." />
-    <string id="taom_enc_context_line_southrons_rival_met" text="You again. The sun is hot today and so is my temper, so choose your words with care." />
-    <string id="taom_enc_context_line_southrons_foe_first" text="The serpent banner bows to no stranger. You stand in the path of the South, and that is a poor place to stand." />
-    <string id="taom_enc_context_line_southrons_foe_met" text="I have not forgotten our last meeting. The South keeps its grudges as long as it keeps its oaths." />
-    <string id="taom_enc_context_line_southrons_kin_first" text="Well met under the same sun. It is good to see a face that knows the heat of home." />
-    <string id="taom_enc_context_line_southrons_kin_met" text="Again our roads meet, and I am glad of it. There is shade enough here for two who share a homeland." />
-    <string id="taom_enc_surrender_demand_southrons_rival_1" text="You have strayed into the reach of the South, and my riders outnumber yours. Lay down your arms and I will be merciful." />
-    <string id="taom_enc_surrender_demand_southrons_rival_2" text="Count my spears before you answer. Yield now, and you may yet see another sunrise." />
-    <string id="taom_enc_surrender_demand_southrons_foe_1" text="Under the serpent banner there is no mercy for those who make war on the South. Throw down your blades, or the jackals will have you by nightfall." />
-    <string id="taom_enc_surrender_demand_southrons_foe_2" text="The South has waited long for this day. Surrender and live in chains, or fight and die in the dust." />
-    <string id="taom_enc_surrender_demand_southrons_kin_1" text="The sun will not shine on kin killing kin today if I can help it. Yield, and we settle this as kin." />
-    <string id="taom_enc_surrender_demand_southrons_kin_2" text="We drink the same water and curse the same enemies, yet here we stand. Put up your weapons before blood is spilled between us." />
-    <string id="taom_enc_surrender_offer_southrons_rival" text="I yield. Treat me fairly, and my house will remember it." />
-    <string id="taom_enc_prisoner_released_southrons_rival" text="You open the gate and ask nothing. My house will weigh what that means." />
-    <string id="taom_enc_surrender_offer_southrons_foe" text="My warriors lie in the dust, and I will not waste the rest. Take my sword, and take your victory." />
-    <string id="taom_enc_prisoner_released_southrons_foe" text="You let me go, but do not mistake this for peace. When our banners meet again, I will not be the one in chains." />
-    <string id="taom_enc_surrender_offer_southrons_kin" text="You fought like a true child of the sun. I yield to you, and there is no shame in it." />
-    <string id="taom_enc_prisoner_released_southrons_kin" text="You have shown mercy as the old ways teach. I will remember it when the spears are raised again." />
-    <string id="taom_enc_hero_leave_southrons_liege" text="By your leave. May the sun favour your reign." />
-    <string id="taom_enc_hero_leave_southrons_ally" text="Go with the sun at your back, and may your road always find water." />
-    <string id="taom_enc_hero_leave_southrons_rival" text="Enough talk. Ride on before my patience wears any thinner." />
-    <string id="taom_enc_hero_leave_southrons_foe" text="Go, and count the days until the serpent finds you." />
-    <string id="taom_enc_hero_leave_southrons_kin" text="Farewell. May the South keep you safe until our roads cross again." />
-    <string id="taom_enc_context_line_easterlings_liege_first" text="My oath is yours, and so is every rider under my banner. Say where the wagons should roll and we will roll." />
-    <string id="taom_enc_context_line_easterlings_liege_met" text="You find my war-band ready, as I swore it would be. The horses are fed and the spears are sharp for your command." />
-    <string id="taom_enc_context_line_easterlings_ally_first" text="Our banners are not crossed, so I will hear you. Speak plainly, as the steppe teaches." />
-    <string id="taom_enc_context_line_easterlings_ally_met" text="We meet again on open ground, and still at peace. My riders will keep their bows unstrung while we talk." />
-    <string id="taom_enc_context_line_easterlings_rival_first" text="I know your colours, and I do not trust them. My riders are watching your hands." />
-    <string id="taom_enc_context_line_easterlings_rival_met" text="You again. The wind carries talk of you through every camp in the East, and little of it is kind." />
-    <string id="taom_enc_context_line_easterlings_foe_first" text="A stranger who rides against my lord's cause. Choose your words well, for they may be your last." />
-    <string id="taom_enc_context_line_easterlings_foe_met" text="We have crossed blades before, and my clan still counts that debt. Say what you came to say." />
-    <string id="taom_enc_context_line_easterlings_kin_first" text="Welcome, child of the wide grass. Share my fire and my brew, as our clans have always done." />
-    <string id="taom_enc_context_line_easterlings_kin_met" text="The road brings you back to my wagons. Sit, and tell me what news comes from the camps." />
-    <string id="taom_enc_surrender_demand_easterlings_rival_1" text="Your little band is ringed by my riders. Throw down your arms and I will remember you were sensible." />
-    <string id="taom_enc_surrender_demand_easterlings_rival_2" text="The war-horns have sounded and my spears are lowered. Yield to me now, or be trampled where you stand." />
-    <string id="taom_enc_surrender_demand_easterlings_foe_1" text="I swore an oath to break those who stand against my lord, and you stand in front of me. Kneel, or my chariots ride you down." />
-    <string id="taom_enc_surrender_demand_easterlings_foe_2" text="My riders have run you to ground like a lame colt. Give up your sword and your silver, or the crows will have the rest." />
-    <string id="taom_enc_surrender_demand_easterlings_kin_1" text="The war sets clan against clan, and I must follow it. Yield to me, and you will be treated with honour." />
-    <string id="taom_enc_surrender_demand_easterlings_kin_2" text="Our forebears rode together under one banner, yet here we are. Lay down your spear and spare our clans this grief." />
-    <string id="taom_enc_surrender_offer_easterlings_rival" text="My war-band is broken and my horse is spent. I yield to you, though it galls me to say it." />
-    <string id="taom_enc_prisoner_released_easterlings_rival" text="You let me ride free. I will remember it, though I make you no promise of friendship." />
-    <string id="taom_enc_surrender_offer_easterlings_foe" text="Take my sword, then. My lord will hear of this day, and the East forgets nothing." />
-    <string id="taom_enc_prisoner_released_easterlings_foe" text="You free an enemy who has sworn to destroy you. The East will not thank you, and neither will I." />
-    <string id="taom_enc_surrender_offer_easterlings_kin" text="You fought as our elders taught us, and I am beaten. I give you my sword with my clan's honour still on it." />
-    <string id="taom_enc_prisoner_released_easterlings_kin" text="Freed by one of my own blood. When our clans gather again, I will tell them of this." />
-    <string id="taom_enc_hero_leave_easterlings_liege" text="By your leave, I return to my riders. Send for me and the war-band will come." />
-    <string id="taom_enc_hero_leave_easterlings_ally" text="Go in peace while the peace holds. May your road be dry and your horses sound." />
-    <string id="taom_enc_hero_leave_easterlings_rival" text="Keep your distance from my camp, and we will keep ours from yours." />
-    <string id="taom_enc_hero_leave_easterlings_foe" text="Ride on. The steppe is wide, but my riders know every hoofprint on it." />
-    <string id="taom_enc_hero_leave_easterlings_kin" text="May the grass be green wherever you ride. My fire is yours whenever you return." />
-    <string id="taom_enc_context_line_elves_liege_first" text="We have watched for your coming through many nights. Our bows and our counsel are yours to command, my liege." />
-    <string id="taom_enc_context_line_elves_liege_met" text="My liege, the road brings you back to us. Speak, and we will hear you as we have heard few others." />
-    <string id="taom_enc_context_line_elves_ally_first" text="We know of you, though we have not met. Our realm keeps peace with yours, and we will keep it while you do." />
-    <string id="taom_enc_context_line_elves_ally_met" text="Well met again under open sky. Friendship is rare in these waning days, and we do not spend it lightly." />
-    <string id="taom_enc_context_line_elves_rival_first" text="You ride where our scouts have marked your passing for some days. State your purpose plainly; our patience is long, though it has an end." />
-    <string id="taom_enc_context_line_elves_rival_met" text="We meet again at the edge of our lands. We remember every road you have taken near our borders, and we have not yet decided what they mean." />
-    <string id="taom_enc_context_line_elves_foe_first" text="You stand before an old people with a long memory. Of those who came against us in arms, few are remembered by anyone but us." />
-    <string id="taom_enc_context_line_elves_foe_met" text="We have not forgotten our last meeting. Nothing is forgotten among us, least of all the harm done to our realm." />
-    <string id="taom_enc_context_line_elves_kin_first" text="The starlight finds us both on this road. It gladdens the heart to meet one of our own so far from the trees of home." />
-    <string id="taom_enc_context_line_elves_kin_met" text="Again our paths cross, and the years between are as nothing. Come, share what you have seen since we parted." />
-    <string id="taom_enc_surrender_demand_elves_rival_1" text="Our arrows are on the string and your company is ringed about. Lay down your arms, and no blood need stain this ground." />
-    <string id="taom_enc_surrender_demand_elves_rival_2" text="You have wandered too long where you were not welcome. Yield to us now, and you will be treated with more grace than you have shown." />
-    <string id="taom_enc_surrender_demand_elves_foe_1" text="We held this land against darker enemies long before your line began. Yield, or fall here on this field." />
-    <string id="taom_enc_surrender_demand_elves_foe_2" text="You are surrounded, and our archers do not miss twice. Cast down your weapons and live to see another dawn." />
-    <string id="taom_enc_surrender_demand_elves_kin_1" text="It grieves us to draw bows against one of our own, yet we will. Yield, and let there be no kinslaying this day." />
-    <string id="taom_enc_surrender_demand_elves_kin_2" text="Our people have shed one another's blood before, and wept for it through long ages. Put up your sword and spare us that sorrow again." />
-    <string id="taom_enc_surrender_offer_elves_rival" text="We lower our bows. Our lives are in your keeping now." />
-    <string id="taom_enc_prisoner_released_elves_rival" text="You show more grace than we looked for. We will remember this, as we remember all things." />
-    <string id="taom_enc_surrender_offer_elves_foe" text="Our strength is spent and the field is lost. We yield, though the stars will see this end with sorrow." />
-    <string id="taom_enc_prisoner_released_elves_foe" text="You set us free, yet nothing of what lies between our peoples is mended. Go, before we think better of our thanks." />
-    <string id="taom_enc_surrender_offer_elves_kin" text="Enough. We will not fight our own kin to the last. Take our swords; we yield to you." />
-    <string id="taom_enc_prisoner_released_elves_kin" text="You remember what we share, even now. Let this mercy stand between us when the Sea calls us home." />
-    <string id="taom_enc_hero_leave_elves_liege" text="Your will is ours to carry out. May the stars watch over your road, my liege." />
-    <string id="taom_enc_hero_leave_elves_ally" text="Go in peace. The paths of friends cross again sooner than one expects." />
-    <string id="taom_enc_hero_leave_elves_rival" text="Take your leave, and keep your distance from our borders. We will be watching." />
-    <string id="taom_enc_hero_leave_elves_foe" text="Go from our sight. The trees will tell us where you walk." />
-    <string id="taom_enc_hero_leave_elves_kin" text="Farewell, until our roads meet once more. The light grows dim in Middle-earth, but not so dim that friends lose each other." />
-    <string id="taom_enc_context_line_dwarves_liege_first" text="My liege. The forges of my hold burn at your word, and every axe in it is yours to call." />
-    <string id="taom_enc_context_line_dwarves_liege_met" text="Back on the road, my liege. The clans are glad of your rule, and your enemies grow fewer for it." />
-    <string id="taom_enc_context_line_dwarves_ally_first" text="You come openly, so I will speak openly. We keep faith with those who keep faith with us, and we keep count as well." />
-    <string id="taom_enc_context_line_dwarves_ally_met" text="We meet again. Your name stands well in our ledgers so far. See that it stays there." />
-    <string id="taom_enc_context_line_dwarves_rival_first" text="I have heard your name spoken in our halls, and seldom kindly. Say what you want and be brief." />
-    <string id="taom_enc_context_line_dwarves_rival_met" text="You again. Every slight you have done us is cut into stone, and stone keeps well." />
-    <string id="taom_enc_context_line_dwarves_foe_first" text="Stand where you are. Your cause is the enemy of the halls of my people, and I have sworn on my grandsires' tombs to answer it." />
-    <string id="taom_enc_context_line_dwarves_foe_met" text="Last we met you cost us dear, and that debt is written down in stone. We have outlasted worse enemies than you." />
-    <string id="taom_enc_context_line_dwarves_kin_first" text="Well met, cousin. It warms the heart to see a face from the deep halls this far from the forges." />
-    <string id="taom_enc_context_line_dwarves_kin_met" text="Hail again, cousin. There is ale in the wagon and news from home, if you can spare the time to hear it." />
-    <string id="taom_enc_surrender_demand_dwarves_rival_1" text="Your road ends at my shield-wall. Lay down your arms and you will be held fairly until your ransom is paid in full." />
-    <string id="taom_enc_surrender_demand_dwarves_rival_2" text="There is no quarrel between us worth dying for. Yield now and we will settle the matter in gold." />
-    <string id="taom_enc_surrender_demand_dwarves_foe_1" text="Throw down your weapons. Our halls have waited long to see you in chains, and I would sooner bring you in alive." />
-    <string id="taom_enc_surrender_demand_dwarves_foe_2" text="Yield, or be buried where you stand. The mountain takes the dead of our enemies and gives back nothing." />
-    <string id="taom_enc_surrender_demand_dwarves_kin_1" text="Put up your axe, cousin. I have no wish to shed the blood of our own line over this, but I will if you force it." />
-    <string id="taom_enc_surrender_demand_dwarves_kin_2" text="Lay down your arms. Our clans can mend this with gold and oaths, and there is no mending a split skull." />
-    <string id="taom_enc_surrender_offer_dwarves_rival" text="Enough. I yield, and I will pay what my ransom is worth. Reckon it fairly, for I will check your sums." />
-    <string id="taom_enc_prisoner_released_dwarves_rival" text="Freed without ransom? Then I owe you a debt, and I always pay my debts." />
-    <string id="taom_enc_surrender_offer_dwarves_foe" text="I yield, though it galls me past words. My kin will remember the price of it." />
-    <string id="taom_enc_prisoner_released_dwarves_foe" text="You set me loose. The war stands as it was, yet this one deed I will mark in your favour." />
-    <string id="taom_enc_surrender_offer_dwarves_kin" text="I yield to you, cousin. Let the shame of it stay within the clans, where such things belong." />
-    <string id="taom_enc_prisoner_released_dwarves_kin" text="Unbound by your own hand, cousin. My clan will hear of this, and they will count it to your honour." />
-    <string id="taom_enc_hero_leave_dwarves_liege" text="By your leave, then. My hold stands ready whenever you call on it." />
-    <string id="taom_enc_hero_leave_dwarves_ally" text="Safe roads to you. May your dealings with us stay as honest as they have been." />
-    <string id="taom_enc_hero_leave_dwarves_rival" text="Go, then. And mind whose halls you trouble." />
-    <string id="taom_enc_hero_leave_dwarves_foe" text="Get gone while I allow it. Next time the axes will do my talking." />
-    <string id="taom_enc_hero_leave_dwarves_kin" text="Stone beneath your feet, cousin, and fire in your forge." />
-    <string id="taom_enc_context_line_orcs_liege_first" text="Great One! We heard you were on the road and the whole band ran ahead to clear it. Say the word and heads roll for you." />
-    <string id="taom_enc_context_line_orcs_liege_met" text="Back again, Great One, and every whip in my band still cracks in your name. Nobody here has slacked since last time, I made sure of it." />
-    <string id="taom_enc_context_line_orcs_ally_first" text="Hold your spears, you lot, this one is no enemy of ours today. Stay where my scouts can see you and we'll get along fine." />
-    <string id="taom_enc_context_line_orcs_ally_met" text="You again. Last time you kept your word and nobody got stabbed, so I call that a good start." />
-    <string id="taom_enc_context_line_orcs_rival_first" text="Stop right there. We may serve the same masters, but my band sharpens its knives on strangers all the same." />
-    <string id="taom_enc_context_line_orcs_rival_met" text="Back sniffing round my road, are you? I remember your face, and I remember who grabbed the last share." />
-    <string id="taom_enc_context_line_orcs_foe_first" text="Well, look what crawled out of the bushes. Fresh meat, and it came to us on its own feet." />
-    <string id="taom_enc_context_line_orcs_foe_met" text="You again, maggot. Last time you got lucky, and my cook has kept the pot warm ever since." />
-    <string id="taom_enc_context_line_orcs_kin_first" text="Ha, a proper face for once, scarred and ugly as the rest of us. Sit by the fire if you can stand the smell." />
-    <string id="taom_enc_context_line_orcs_kin_met" text="Still alive, you old gutter-rat? Grab a bone, there's meat left on this one." />
-    <string id="taom_enc_surrender_demand_orcs_rival_1" text="Same masters or no, you've crossed my band once too often. Throw down your blades, or we settle it the old way." />
-    <string id="taom_enc_surrender_demand_orcs_rival_2" text="Stand still and drop your gear. Behave, and I'll tell the overseers you came in quietly." />
-    <string id="taom_enc_surrender_demand_orcs_foe_1" text="Nowhere to run, dung-crawler, we've sniffed you out. Throw your iron in the dirt and maybe you'll live long enough to dig in the pits." />
-    <string id="taom_enc_surrender_demand_orcs_foe_2" text="Down on your knees and hand over your weapons. Fight us, and the pack eats well tonight." />
-    <string id="taom_enc_surrender_demand_orcs_kin_1" text="Drop it, scum. You know how it goes: the stronger band takes the spoils, and today that's mine." />
-    <string id="taom_enc_surrender_demand_orcs_kin_2" text="Yield now and I'll only take your boots and your share. Make me fight for it and I'll have your hide as well." />
-    <string id="taom_enc_surrender_offer_orcs_rival" text="Enough, enough! Take what you want and we'll call it square. The masters can sort out the grudge later." />
-    <string id="taom_enc_prisoner_released_orcs_rival" text="Letting me go? Huh. I won't forget it, and I won't forgive it either." />
-    <string id="taom_enc_surrender_offer_orcs_foe" text="All right, put the blade down, I yield! A live captive fetches a better price than a corpse." />
-    <string id="taom_enc_prisoner_released_orcs_foe" text="Soft, that's what you are, and soft things get trampled. Next time we meet I won't be so careless." />
-    <string id="taom_enc_surrender_offer_orcs_kin" text="Ugh, you win, curse your teeth. Take the spoils and let me crawl off with what's left of my band." />
-    <string id="taom_enc_prisoner_released_orcs_kin" text="You let me walk? Daft, but I'll remember it. Next time I catch you short, maybe I'll let you keep your ears." />
-    <string id="taom_enc_hero_leave_orcs_liege" text="Your will, Great One. If anyone in my band slacks, I'll flog them bloody myself." />
-    <string id="taom_enc_hero_leave_orcs_ally" text="Off you go, then. Keep clear of my scouts after dark, they stab first and sniff after." />
-    <string id="taom_enc_hero_leave_orcs_rival" text="Get gone. Turn your back near my camp for too long and see what happens." />
-    <string id="taom_enc_hero_leave_orcs_foe" text="Run along, worm. The road is long and my band is hungry." />
-    <string id="taom_enc_hero_leave_orcs_kin" text="Go on, then, and watch out for the whips. They're always looking for someone to blame." />
+    <string id="taom_enc_context_line_west_liege_first" text="我的君主，您的旗帜飘扬在我的厅堂之上，正如飘扬在全境之上。我的骑手与我的剑，任您调遣。" />
+    <string id="taom_enc_context_line_west_liege_met" text="又见面了，我的君主。我的誓言如立誓之日那般坚定，守望也从未松懈。" />
+    <string id="taom_enc_context_line_west_ally_first" text="旅人，你好。从佛诺斯特到米那斯提力斯，凡抵抗阴影者在我们这里都受礼遇，不过我想先知道你的来意。" />
+    <string id="taom_enc_context_line_west_ally_met" text="再会。自上次一别，道路并未变得更太平，因此路上见到友善的旗帜总是好事。" />
+    <string id="taom_enc_context_line_west_rival_first" text="你带着武器骑行在以埃兰迪尔继承人之名掌管的土地上。把来意说明白，简短些。" />
+    <string id="taom_enc_context_line_west_rival_met" text="又碰上了。上次的交道我可没忘，说话时我会盯着你的手。" />
+    <string id="taom_enc_context_line_west_foe_first" text="你的旗帜我认得，它从来不是这片国土的朋友。若非说不可，就快些说。" />
+    <string id="taom_enc_context_line_west_foe_met" text="又是你。你在这片土地上骑行的每一里格都是偷来的，我要让你一一偿还。" />
+    <string id="taom_enc_context_line_west_kin_first" text="幸会。在这些道路上还能遇到恪守古风之人，令我欣慰，因为我们这样的人一年比一年少了。" />
+    <string id="taom_enc_context_line_west_kin_met" text="再会。若方便，就与我同坐片刻；北方与南方都有消息传来，好消息却寥寥无几。" />
+    <string id="taom_enc_surrender_demand_west_rival_1" text="你越界了，这片国土的法度明明白白。放下武器，在议定条款之前你会受到体面的看管。" />
+    <string id="taom_enc_surrender_demand_west_rival_2" text="我的队伍数倍于你。现在投降，就不必为一场言语可解的争端流血。" />
+    <string id="taom_enc_surrender_demand_west_foe_1" text="凭我对国土立下的誓言，你休想再前进一步。扔下武器，否则就地伏诛。" />
+    <string id="taom_enc_surrender_demand_west_foe_2" text="你已被包围，而我对西方的敌人没有多少慈悲可言。投降吧，你或许还能活着住进牢房。" />
+    <string id="taom_enc_surrender_demand_west_kin_1" text="对同族血脉拔剑令我痛心，然而誓言不给我别的路可走。投降吧，我发誓会以礼相待。" />
+    <string id="taom_enc_surrender_demand_west_kin_2" text="住手吧，我恳求你。我们的先祖渡海而来，不是为了让后裔在泥泞的路上自相残杀。" />
+    <string id="taom_enc_surrender_offer_west_rival" text="今日是你赢了。我投降，并相信你会按光荣战争的惯例对待我。" />
+    <string id="taom_enc_prisoner_released_west_rival" text="那我便欠你一份人情，而我从不忘记欠下的债，无论两面旗帜之间会生出什么。" />
+    <string id="taom_enc_surrender_offer_west_foe" text="我败了，交出我的剑。随你处置，但西方会记住今日。" />
+    <string id="taom_enc_prisoner_released_west_foe" text="我本没指望从你那里得到宽赦。我会记在心里，尽管这改变不了两国之间的事。" />
+    <string id="taom_enc_surrender_offer_west_kin" text="够了。我不愿在这片战场上再耗费同族的性命，我向你投降。" />
+    <string id="taom_enc_prisoner_released_west_kin" text="我本盼你能显出我们血脉的风度，你做到了。一路顺遂，愿古老的血脉终有一日重聚于同一面旗帜之下。" />
+    <string id="taom_enc_hero_leave_west_liege" text="请容我告退，我的君主。我这就回岗位，守望不会中断。" />
+    <string id="taom_enc_hero_leave_west_ally" text="一路平安。愿维拉守护你的道路，让你安然归家。" />
+    <string id="taom_enc_hero_leave_west_rival" text="我们到此为止。走吧，在我们的土地上请走大路。" />
+    <string id="taom_enc_hero_leave_west_foe" text="走吧。要不了多久，烽火就会为你而燃。" />
+    <string id="taom_enc_hero_leave_west_kin" text="平安上路。无论遭逢何事，都要记得白树，以及最初栽下它的诸王。" />
+    <string id="taom_enc_context_line_rohirrim_liege_first" text="我的君主，我这支骑队听您调遣。只要说出马克何处需要我们，我们即刻驰往。" />
+    <string id="taom_enc_context_line_rohirrim_liege_met" text="我向您立下的誓言仍然有效，我的君主，战马也已歇足。我们只等您一句话。" />
+    <string id="taom_enc_context_line_rohirrim_ally_first" text="旷野相逢，幸会。凡是和平穿过马克的人，与我们无怨无仇，有些还能在此结交朋友。" />
+    <string id="taom_enc_context_line_rohirrim_ally_met" text="又在草原上见到你的旗帜，真好。我们曾同行一程，我很乐意再同行一回。" />
+    <string id="taom_enc_context_line_rohirrim_rival_first" text="勒住马。你踏着的是里德马克的草地，我还没决定要不要欢迎你。" />
+    <string id="taom_enc_context_line_rohirrim_rival_met" text="又是你。我的骑手们记得你的旗帜，而且没把它算作朋友。" />
+    <string id="taom_enc_context_line_rohirrim_foe_first" text="你与马克的敌人为伍。这里每一名骑手都立誓要把你赶回老路。" />
+    <string id="taom_enc_context_line_rohirrim_foe_met" text="你竟敢重返我们的平原。我的骑手没有忘记你，他们的长矛很锋利。" />
+    <string id="taom_enc_context_line_rohirrim_kin_first" text="看你骑马的姿势，我就知道你是朋友。与我们同行一程吧；平原辽阔，消息却不妙。" />
+    <string id="taom_enc_context_line_rohirrim_kin_met" text="在这荒野见到一张友善的面孔真是舒心。来喝口酒囊里的麦酒，说说你在恩特河沿岸所见。" />
+    <string id="taom_enc_surrender_demand_rohirrim_rival_1" text="我们追上你了，旷野之上没人能跑过我的骑队。放下武器，你会受到公正对待。" />
+    <string id="taom_enc_surrender_demand_rohirrim_rival_2" text="你的马力竭了，我的还精神。现在投降，今天我们之间不必流血。" />
+    <string id="taom_enc_surrender_demand_rohirrim_foe_1" text="你骚扰马克够久了。扔下武器，否则我的骑手会把你踏进草里。" />
+    <string id="taom_enc_surrender_demand_rohirrim_foe_2" text="以伊奥尔的血起誓，你休想带着武器离开这片平原。投降，否则迎接冲锋。" />
+    <string id="taom_enc_surrender_demand_rohirrim_kin_1" text="比起血染战场，我更愿与你共饮一囊马酒。投降吧，你会得到体面的对待。" />
+    <string id="taom_enc_surrender_demand_rohirrim_kin_2" text="够了。我们在同一片草地、同一片天空下长大，我宁愿收下你的剑，也不愿取你的命。交给我吧。" />
+    <string id="taom_enc_surrender_offer_rohirrim_rival" text="战场归你了。我投降，也相信你会遵守平原上的古老规矩。" />
+    <string id="taom_enc_prisoner_released_rohirrim_rival" text="你放我自由离去。我会记住，我的骑手们也会。" />
+    <string id="taom_enc_surrender_offer_rohirrim_foe" text="我的马倒下了，骑手也散了。我投降，纵然这让我愧对先祖。" />
+    <string id="taom_enc_prisoner_released_rohirrim_foe" text="我最没料到的就是你的宽恕。这并不能了结我们之间的事，但我不会忘记。" />
+    <string id="taom_enc_surrender_offer_rohirrim_kin" text="今天你骑得比我好。我投降，而且庆幸胜我的是你，不是陌生人。" />
+    <string id="taom_enc_prisoner_released_rohirrim_kin" text="我又自由了，还是出自你手。若你何时需要一杆长矛在侧，捎个信到我的厅堂来。" />
+    <string id="taom_enc_hero_leave_rohirrim_liege" text="请容我告退，我的君主。我的骑手们等候您的召唤。" />
+    <string id="taom_enc_hero_leave_rohirrim_ally" text="愿你一路青草肥美、天朗气清。走好。" />
+    <string id="taom_enc_hero_leave_rohirrim_rival" text="那就走吧，穿过马克时把刀剑留在鞘里。" />
+    <string id="taom_enc_hero_leave_rohirrim_foe" text="走吧。下次相遇，我们的长矛会平端着冲锋。" />
+    <string id="taom_enc_hero_leave_rohirrim_kin" text="一路平安。我们的火边永远有你的座位，马厩里也总有一匹新马。" />
+    <string id="taom_enc_context_line_northmen_liege_first" text="我的君主，路上相逢，幸会。农庄安宁，谷仓充盈，我的骑手任您差遣。" />
+    <string id="taom_enc_context_line_northmen_liege_met" text="又见到您真好，我的君主。您一句话，我的长矛便随您同行，正如誓言所约。" />
+    <string id="taom_enc_context_line_northmen_ally_first" text="幸会。我们与你无怨无仇，北方的道路够宽，容得下两支队伍和平而过。" />
+    <string id="taom_enc_context_line_northmen_ally_met" text="又是你，而且仍然交好。这一季沿河的贸易顺利，但愿你的路途也同样顺遂。" />
+    <string id="taom_enc_context_line_northmen_rival_first" text="站住。我不认识你，在这片土地上，我们喜欢弄清是谁带着武器经过我们的农庄。" />
+    <string id="taom_enc_context_line_northmen_rival_met" text="我们从前打过照面，上次的事我可没忘。把手放在我的弓手看得见的地方。" />
+    <string id="taom_enc_context_line_northmen_foe_first" text="你所打的旗帜对自由的北方心怀恶意。我的弓弦已上，骑手们正按捺不住。" />
+    <string id="taom_enc_context_line_northmen_foe_met" text="又回到我们的河谷来了？你们那边烧掉的收成已经够多了，我要让你们为此付出代价。" />
+    <string id="taom_enc_context_line_northmen_kin_first" text="幸会，邻人。能在这路上见到一张来自河川之地的面孔，真让我高兴。" />
+    <string id="taom_enc_context_line_northmen_kin_met" text="你又来了。若有空闲就坐一会儿，车上有面包和蜂蜜，还有家乡的消息。" />
+    <string id="taom_enc_surrender_demand_northmen_rival_1" text="你寡不敌众，又远离援手。交出武器，你会得到公正的对待，这是我们的规矩。" />
+    <string id="taom_enc_surrender_demand_northmen_rival_2" text="我宁愿用一桩公道的买卖了结此事，而不是用箭。现在投降，我们可以像明理人一样谈赎金。" />
+    <string id="taom_enc_surrender_demand_northmen_foe_1" text="你们践踏我们的田地够久了。放下武器，否则我的弓手会把箭囊全射进你们的阵中。" />
+    <string id="taom_enc_surrender_demand_northmen_foe_2" text="你烧毁的每一座农庄都派了骑手到我的旗下。现在就扔下武器，我不会问第二遍。" />
+    <string id="taom_enc_surrender_demand_northmen_kin_1" text="誓言使我不得不如此，尽管我心中难安。投降吧，今天不必流我们自己人的血。" />
+    <string id="taom_enc_surrender_demand_northmen_kin_2" text="你我都是河流与森林之子，我并不以此为乐。收起你的剑，安静地跟我走。" />
+    <string id="taom_enc_surrender_offer_northmen_rival" text="今天是你胜过了我。我投降，也相信你会像我本会对待你那样公正地待我。" />
+    <string id="taom_enc_prisoner_released_northmen_rival" text="你不要赎金就放我走？这是一笔人情债，而在北方，我们都是要还债的。" />
+    <string id="taom_enc_surrender_offer_northmen_foe" text="我的骑手已被击溃，我不愿再白白葬送剩下的人。我投降，尽管这话说出口很难。" />
+    <string id="taom_enc_prisoner_released_northmen_foe" text="我可以走了，是吗？我领这份情，但别以为一次善意就能买回你烧掉的所有田地。" />
+    <string id="taom_enc_surrender_offer_northmen_kin" text="够了。我不愿再看到我们自己人为这场争端躺进坟冢。我向你投降。" />
+    <string id="taom_enc_prisoner_released_northmen_kin" text="你有一副好心肠，邻人。等这场宿怨了结，我桌上的第一杯酒归你。" />
+    <string id="taom_enc_hero_leave_northmen_liege" text="请容我告退，我的君主。愿道路干爽，尽头有温暖的厅堂等着您。" />
+    <string id="taom_enc_hero_leave_northmen_ally" text="愿你顺风顺水、仓廪丰盈。我们还会在哪个集市上再见的。" />
+    <string id="taom_enc_hero_leave_northmen_rival" text="那就上路吧。我会看着你往哪儿走。" />
+    <string id="taom_enc_hero_leave_northmen_foe" text="滚出我们的道路，祈祷我的斥候跟丢你的踪迹。" />
+    <string id="taom_enc_hero_leave_northmen_kin" text="保重，邻人，别让炉火熄了。东方从来不像看上去那么平静。" />
+    <string id="taom_enc_context_line_dunlendings_liege_first" text="各氏族都站在您身后，我的首领。指出该让那些驭马者偿还的地方，我的长矛就去那里。" />
+    <string id="taom_enc_context_line_dunlendings_liege_met" text="我的首领。山地氏族对您守信，我的战团等候您的命令。" />
+    <string id="taom_enc_context_line_dunlendings_ally_first" text="你坦诚地来见我们，那我也坦诚地对你。黑蛮地对先守信的人守信。" />
+    <string id="taom_enc_context_line_dunlendings_ally_met" text="又回到我们的路上了。氏族的火堆旁有朋友的位置，只要你一直是朋友。" />
+    <string id="taom_enc_context_line_dunlendings_rival_first" text="我不认识你，而在这些山里，陌生人是需要提防的东西。交谈吧，手离你的剑远一点。" />
+    <string id="taom_enc_context_line_dunlendings_rival_met" text="又是你。氏族的记性很长，而我对你还没记下什么好事。" />
+    <string id="taom_enc_context_line_dunlendings_foe_first" text="你骑行的这些山丘，在任何驭马者出生之前就是我们的。你在这里的每一步都是一笔我要讨回的债。" />
+    <string id="taom_enc_context_line_dunlendings_foe_met" text="我没有忘记你，我族的坟墓也没有。说你要说的话吧。" />
+    <string id="taom_enc_context_line_dunlendings_kin_first" text="你斗篷上有泥炭烟味，和我的一样。坐下来陪我待一会儿；山谷里的领主们等得起他们的清算。" />
+    <string id="taom_enc_context_line_dunlendings_kin_met" text="又见面了，真好。你走后，高谷中的火堆都烧得低了，能见到家乡的面孔真让人高兴。" />
+    <string id="taom_enc_surrender_demand_dunlendings_rival_1" text="我的长矛已从三面围住你。放下武器，你就能活着离开。" />
+    <string id="taom_enc_surrender_demand_dunlendings_rival_2" text="山丘只给一次警告，不会有第二次。现在投降，否则剩下的事交给乌鸦。" />
+    <string id="taom_enc_surrender_demand_dunlendings_foe_1" text="驭马者夺走我们的河谷，还说那是他们的权利。凭同样的权利，我今天拿下你，扔下武器吧。" />
+    <string id="taom_enc_surrender_demand_dunlendings_foe_2" text="白手许诺把这些土地还给氏族，而你正站在上面。投降，否则就埋在这里。" />
+    <string id="taom_enc_surrender_demand_dunlendings_kin_1" text="这些山丘底下埋的自己人已经够多了。投降吧，在此事了结前你会被当作族人对待。" />
+    <string id="taom_enc_surrender_demand_dunlendings_kin_2" text="你我喝的是同一条溪水。放下你的剑，别逼我把你的血洒进去。" />
+    <string id="taom_enc_surrender_offer_dunlendings_rival" text="够了。我的氏族为今天流够了血，我向你投降。望你公正地待我们。" />
+    <string id="taom_enc_prisoner_released_dunlendings_rival" text="被释放了，剑也回到了我手里。再见面之前，我会好好想想这件事。" />
+    <string id="taom_enc_surrender_offer_dunlendings_foe" text="那就拿走我的剑吧。黑蛮地从前也输过仗，照样屹立至今，而且会比你活得更久。" />
+    <string id="taom_enc_prisoner_released_dunlendings_foe" text="你放了我。一次善举洗不掉旧日的冤屈，氏族也不会忘记它们。" />
+    <string id="taom_enc_surrender_offer_dunlendings_kin" text="你打起来像是生在高谷之中的人。我降了，向山地之血低头，羞耻也少些。" />
+    <string id="taom_enc_prisoner_released_dunlendings_kin" text="看来血终究要回应血。如今我欠你一笔，而山地从不赖账。" />
+    <string id="taom_enc_hero_leave_dunlendings_liege" text="容我告退，我的首领。只要你召唤，各氏族随时待命。" />
+    <string id="taom_enc_hero_leave_dunlendings_ally" text="平安穿过群山。走开阔的小道，那样我的斥候才能远远看见你来。" />
+    <string id="taom_enc_hero_leave_dunlendings_rival" text="那就走吧。离我的厅堂远一点。" />
+    <string id="taom_enc_hero_leave_dunlendings_foe" text="走吧。你跨过的每一道山谷里，都会有氏族在等着你。" />
+    <string id="taom_enc_hero_leave_dunlendings_kin" text="一路走好，无论路通向何方，都让那古老的火不灭。" />
+    <string id="taom_enc_context_line_southrons_liege_first" text="太阳为我的君主升起。我的长矛与我的家族，静候你一言。" />
+    <string id="taom_enc_context_line_southrons_liege_met" text="再度欢迎，我的君主。南方在你手下安宁，我也打算让它一直如此。" />
+    <string id="taom_enc_context_line_southrons_ally_first" text="你所举的旗，我没有理由憎恨。直说吧，南方会听你说完。" />
+    <string id="taom_enc_context_line_southrons_ally_met" text="我们的路又交会了。至今你对我们守信，而我一笔一笔记着。" />
+    <string id="taom_enc_context_line_southrons_rival_first" text="我认得你的旗，我也不信任它。有话就说，手别靠近剑柄。" />
+    <string id="taom_enc_context_line_southrons_rival_met" text="又是你。今天日头很毒，我的脾气也是，说话当心些。" />
+    <string id="taom_enc_context_line_southrons_foe_first" text="巨蛇之旗不向外人低头。你挡在南方的路上，那可不是个好地方。" />
+    <string id="taom_enc_context_line_southrons_foe_met" text="上次的会面我没有忘。南方记恨有多久，守誓就有多久。" />
+    <string id="taom_enc_context_line_southrons_kin_first" text="同在一轮太阳下相遇，幸会。能见到一张懂得故乡酷热的脸，真好。" />
+    <string id="taom_enc_context_line_southrons_kin_met" text="我们的路又碰在一处，我很高兴。这里的荫凉，够两个同乡人用。" />
+    <string id="taom_enc_surrender_demand_southrons_rival_1" text="你闯进了南方的地界，我的骑手多过你的。放下武器，我会宽大处置。" />
+    <string id="taom_enc_surrender_demand_southrons_rival_2" text="回答之前，先数数我的长矛。现在投降，也许还能再见一次日出。" />
+    <string id="taom_enc_surrender_demand_southrons_foe_1" text="在巨蛇之旗下，向南方开战的人没有慈悲。丢下刀剑，否则天黑之前豺狗就会来收你。" />
+    <string id="taom_enc_surrender_demand_southrons_foe_2" text="南方等这一天已经很久了。投降，戴着镣铐活着；或者交战，死在尘土里。" />
+    <string id="taom_enc_surrender_demand_southrons_kin_1" text="只要我做得到，今天太阳就不会照见同族相残。降了吧，我们以同族的方式了结此事。" />
+    <string id="taom_enc_surrender_demand_southrons_kin_2" text="我们喝同一口水，咒骂同一群敌人，如今却对峙于此。在血流之前，收起你的武器。" />
+    <string id="taom_enc_surrender_offer_southrons_rival" text="我降了。公道待我，我的家族会记得。" />
+    <string id="taom_enc_prisoner_released_southrons_rival" text="你打开牢门，却什么都不要。我的家族会掂量这其中的分量。" />
+    <string id="taom_enc_surrender_offer_southrons_foe" text="我的战士已躺在尘土里，剩下的我不愿再白白葬送。拿走我的剑，拿走你的胜利。" />
+    <string id="taom_enc_prisoner_released_southrons_foe" text="你放我走，但别把这当成和平。等我们的旗帜再度相遇，戴镣铐的不会是我。" />
+    <string id="taom_enc_surrender_offer_southrons_kin" text="你打起来像个真正的太阳之子。我向你投降，这并不可耻。" />
+    <string id="taom_enc_prisoner_released_southrons_kin" text="你依古老的规矩施了慈悲。等长矛再度举起时，我会记得。" />
+    <string id="taom_enc_hero_leave_southrons_liege" text="容我告退。愿太阳眷顾你的治世。" />
+    <string id="taom_enc_hero_leave_southrons_ally" text="背着太阳上路吧，愿你的路上总能寻到水。" />
+    <string id="taom_enc_hero_leave_southrons_rival" text="说够了。趁我的耐心还没更薄，快骑马走吧。" />
+    <string id="taom_enc_hero_leave_southrons_foe" text="走吧，数着日子等巨蛇找上你。" />
+    <string id="taom_enc_hero_leave_southrons_kin" text="再会。愿南方护你平安，直到我们的路再次交会。" />
+    <string id="taom_enc_context_line_easterlings_liege_first" text="我的誓言归你，我旗下的每一名骑手也归你。说吧，车队该往哪里滚，我们就往哪里滚。" />
+    <string id="taom_enc_context_line_easterlings_liege_met" text="如我所誓，我的战团已整装待发。马已喂饱，矛已磨利，听候你的号令。" />
+    <string id="taom_enc_context_line_easterlings_ally_first" text="我们的旗帜并未交锋，所以我愿意听。像草原教导的那样，直说吧。" />
+    <string id="taom_enc_context_line_easterlings_ally_met" text="我们又在旷野相遇，仍是和平。谈话期间，我的骑手不会上弦。" />
+    <string id="taom_enc_context_line_easterlings_rival_first" text="我认得你的旗色，我不信任它。我的骑手盯着你的手。" />
+    <string id="taom_enc_context_line_easterlings_rival_met" text="又是你。风把关于你的闲话吹遍东方的每一座营地，而其中好话不多。" />
+    <string id="taom_enc_context_line_easterlings_foe_first" text="一个与我主君为敌的陌生人。说话当心些，这或许是你最后几句话。" />
+    <string id="taom_enc_context_line_easterlings_foe_met" text="我们从前交过手，我的部族还记着这笔账。有话就说吧。" />
+    <string id="taom_enc_context_line_easterlings_kin_first" text="欢迎你，辽阔草原之子。来分享我的篝火和我的酒，正如我们各部族历来所为。" />
+    <string id="taom_enc_context_line_easterlings_kin_met" text="路又把你带回我的车阵旁。坐下吧，说说营地那边有什么消息。" />
+    <string id="taom_enc_surrender_demand_easterlings_rival_1" text="你这支小队已被我的骑手围住。放下兵器，我会记得你识时务。" />
+    <string id="taom_enc_surrender_demand_easterlings_rival_2" text="战号已响，我的长矛已经放平。现在降了，否则就地被踏成泥。" />
+    <string id="taom_enc_surrender_demand_easterlings_foe_1" text="我发过誓，要击垮一切与我主君作对的人，而你正挡在我面前。跪下，不然我的战车碾过去。" />
+    <string id="taom_enc_surrender_demand_easterlings_foe_2" text="我的骑手把你追得像匹跛马一样走投无路。交出你的剑和你的银子，剩下的留给乌鸦。" />
+    <string id="taom_enc_surrender_demand_easterlings_kin_1" text="战争让部族与部族为敌，我只能随之而行。向我投降，你会得到应有的礼遇。" />
+    <string id="taom_enc_surrender_demand_easterlings_kin_2" text="我们的先祖曾在同一面旗下并辔而行，如今却走到这一步。放下长矛，别让我们的部族再添这份悲伤。" />
+    <string id="taom_enc_surrender_offer_easterlings_rival" text="我的战团已溃，我的马已力竭。我向你投降，尽管说出口叫我难堪。" />
+    <string id="taom_enc_prisoner_released_easterlings_rival" text="你放我自由离去。我会记着这件事，但别指望我许下什么交情。" />
+    <string id="taom_enc_surrender_offer_easterlings_foe" text="那就拿去我的剑吧。我的主君会知道今日之事，而东方从不遗忘。" />
+    <string id="taom_enc_prisoner_released_easterlings_foe" text="你放走了一个立誓要毁灭你的敌人。东方不会因此谢你，我也不会。" />
+    <string id="taom_enc_surrender_offer_easterlings_kin" text="你按我们长辈所授的方式作战，而我败了。我将这把仍带着部族荣誉的剑交给你。" />
+    <string id="taom_enc_prisoner_released_easterlings_kin" text="被同血脉之人放还。等我们各部族再度聚首，我会把这事讲给他们听。" />
+    <string id="taom_enc_hero_leave_easterlings_liege" text="若蒙准许，我这就回到我的骑手那里。派人来召我，战团便会前来。" />
+    <string id="taom_enc_hero_leave_easterlings_ally" text="趁和平还在，平安地去吧。愿你路途干爽，马匹康健。" />
+    <string id="taom_enc_hero_leave_easterlings_rival" text="离我的营地远些，我们也不会靠近你的。" />
+    <string id="taom_enc_hero_leave_easterlings_foe" text="走吧。草原辽阔，但我的骑手认得上面每一个蹄印。" />
+    <string id="taom_enc_hero_leave_easterlings_kin" text="愿你所到之处青草常绿。你随时回来，我的篝火都为你而燃。" />
+    <string id="taom_enc_context_line_elves_liege_first" text="我们已守望你的到来许多个夜晚。我们的弓与谋略皆听您差遣，我的君上。" />
+    <string id="taom_enc_context_line_elves_liege_met" text="君上，道路又把您带回我们身边。请说吧，我们会聆听您，这是少有人能得的。" />
+    <string id="taom_enc_context_line_elves_ally_first" text="我们虽未谋面，却早已听闻你的名字。我们的国度与你们和睦，只要你守约，我们便守下去。" />
+    <string id="taom_enc_context_line_elves_ally_met" text="又在这朗朗天幕下相逢，真好。在这衰微的岁月里友谊难得，我们不会轻易挥霍。" />
+    <string id="taom_enc_context_line_elves_rival_first" text="你所行之处，我们的哨探已记下你的行踪多日。把来意说明白；我们的耐心很长，却也有尽头。" />
+    <string id="taom_enc_context_line_elves_rival_met" text="我们又在我们疆域的边缘相遇。你在我们边境附近走过的每一条路，我们都记得，只是还未断定那意味着什么。" />
+    <string id="taom_enc_context_line_elves_foe_first" text="你面前是一个记忆悠长的古老种族。那些曾持兵刃来犯我们的人，除了我们，几乎无人再记得。" />
+    <string id="taom_enc_context_line_elves_foe_met" text="我们没有忘记上次的会面。在我们之中无一事被遗忘，尤其是加于我们国度的伤害。" />
+    <string id="taom_enc_context_line_elves_kin_first" text="星光在这条路上同时照见你我。在远离故乡林木的地方遇见同族，令人心生欢喜。" />
+    <string id="taom_enc_context_line_elves_kin_met" text="我们的路再度交汇，其间的岁月恍若无物。来吧，说说自分别以来你所见的一切。" />
+    <string id="taom_enc_surrender_demand_elves_rival_1" text="我们的箭已搭弦，你的队伍已被围住。放下兵器，这片土地便不必染血。" />
+    <string id="taom_enc_surrender_demand_elves_rival_2" text="你在不受欢迎之地徘徊得太久了。现在投降，你将得到比你所表现的更多的宽厚。" />
+    <string id="taom_enc_surrender_demand_elves_foe_1" text="早在你的血脉开始之前，我们就在此抵御过更黑暗的敌人。投降，否则倒在这片原野上。" />
+    <string id="taom_enc_surrender_demand_elves_foe_2" text="你已被包围，我们的弓手不会失手第二次。抛下武器，还能再见一个黎明。" />
+    <string id="taom_enc_surrender_demand_elves_kin_1" text="向同族张弓令我们悲痛，但我们仍会这么做。投降吧，今日不要有同族相残。" />
+    <string id="taom_enc_surrender_demand_elves_kin_2" text="我们的族人曾彼此流血，并为此在漫长的岁月中哀哭。收起你的剑，别让我们再尝那份悲恸。" />
+    <string id="taom_enc_surrender_offer_elves_rival" text="我们放下弓。如今我们的性命交在你手中。" />
+    <string id="taom_enc_prisoner_released_elves_rival" text="你比我们预料的更为宽厚。我们会记住这件事，正如我们记住一切。" />
+    <string id="taom_enc_surrender_offer_elves_foe" text="我们力竭了，此战已败。我们投降，纵使群星将带着悲伤看见这结局。" />
+    <string id="taom_enc_prisoner_released_elves_foe" text="你放了我们，可我们两族之间的裂痕半分未补。走吧，趁我们还没收回这声谢。" />
+    <string id="taom_enc_surrender_offer_elves_kin" text="够了。我们不会与同族血战到底。收下我们的剑，我们向你投降。" />
+    <string id="taom_enc_prisoner_released_elves_kin" text="即便此刻，你仍记得我们共有的东西。愿这份仁慈长存于你我之间，直到大海召唤我们归乡。" />
+    <string id="taom_enc_hero_leave_elves_liege" text="你的意志由我们执行。愿群星照看你的道路，我的君主。" />
+    <string id="taom_enc_hero_leave_elves_ally" text="平安地去吧。朋友的道路总比预想中更早再度交汇。" />
+    <string id="taom_enc_hero_leave_elves_rival" text="请便，但离我们的边境远些。我们会盯着你。" />
+    <string id="taom_enc_hero_leave_elves_foe" text="从我们眼前消失。树木会告诉我们你走到了哪里。" />
+    <string id="taom_enc_hero_leave_elves_kin" text="再会，直到我们的路再次相交。中洲的光芒日渐黯淡，却还不至于让朋友彼此失散。" />
+    <string id="taom_enc_context_line_dwarves_liege_first" text="我的君主。我堡中的炉火因你一言而燃，其中每一把斧子都听候你的召唤。" />
+    <string id="taom_enc_context_line_dwarves_liege_met" text="又上路了，我的君主。各氏族乐于受你统治，你的敌人也因此越来越少。" />
+    <string id="taom_enc_context_line_dwarves_ally_first" text="你来得坦荡，那我也说得坦荡。谁对我们守信，我们就对谁守信——账我们也一笔笔记着。" />
+    <string id="taom_enc_context_line_dwarves_ally_met" text="又见面了。到目前为止，你的名字在我们的账簿上还算干净。记得让它一直干净下去。" />
+    <string id="taom_enc_context_line_dwarves_rival_first" text="我在我们的大厅里听过你的名字，却少有好话。说你想要什么，简短点。" />
+    <string id="taom_enc_context_line_dwarves_rival_met" text="又是你。你给我们的每一次轻慢都刻在石头上，而石头不会忘。" />
+    <string id="taom_enc_context_line_dwarves_foe_first" text="站住别动。你的事业与我族的大厅为敌，我已对先祖的陵墓起誓要作出回应。" />
+    <string id="taom_enc_context_line_dwarves_foe_met" text="上次相遇你让我们损失惨重，那笔债刻在石上。比你更难缠的敌人我们都熬过来了。" />
+    <string id="taom_enc_context_line_dwarves_kin_first" text="幸会，老乡。在离炉火这么远的地方见到深厅来的面孔，真叫人心头一暖。" />
+    <string id="taom_enc_context_line_dwarves_kin_met" text="又见面了，老乡。车上有麦酒，还有家乡的消息，你若有空就听听。" />
+    <string id="taom_enc_surrender_demand_dwarves_rival_1" text="你的路到我的盾墙为止。放下武器，在赎金付清之前你会受到公正对待。" />
+    <string id="taom_enc_surrender_demand_dwarves_rival_2" text="我们之间没有什么值得拼命的争端。现在投降，这事用金子了结。" />
+    <string id="taom_enc_surrender_demand_dwarves_foe_1" text="扔下武器。我们的大厅等着看你戴上镣铐已经很久了，我宁愿把你活着带回去。" />
+    <string id="taom_enc_surrender_demand_dwarves_foe_2" text="投降，否则就埋在原地。山脉收下敌人的尸骨，从不归还。" />
+    <string id="taom_enc_surrender_demand_dwarves_kin_1" text="收起你的斧子，老乡。我不愿为这种事流自家血脉的血，但你若逼我，我就会动手。" />
+    <string id="taom_enc_surrender_demand_dwarves_kin_2" text="放下武器。我们的氏族可以用金子和誓言弥合此事，可裂开的头颅是补不回来的。" />
+    <string id="taom_enc_surrender_offer_dwarves_rival" text="够了。我投降，我的赎金值多少就付多少。算得公道些，我会核对你的数目。" />
+    <string id="taom_enc_prisoner_released_dwarves_rival" text="不要赎金就放了我？那我欠你一笔债，而我的债从来都还。" />
+    <string id="taom_enc_surrender_offer_dwarves_foe" text="我投降，尽管窝囊得难以言说。我的族人会记住这笔代价。" />
+    <string id="taom_enc_prisoner_released_dwarves_foe" text="你放了我。战事仍旧如故，但这一件事我会记在你的功劳簿上。" />
+    <string id="taom_enc_surrender_offer_dwarves_kin" text="我向你投降，老乡。让这份耻辱留在氏族之内吧，这种事本就该留在那里。" />
+    <string id="taom_enc_prisoner_released_dwarves_kin" text="是你亲手解开了我的绳索，老乡。我的氏族会听说此事，并将其算作你的荣誉。" />
+    <string id="taom_enc_hero_leave_dwarves_liege" text="那么就此告辞。你何时召唤，我的要塞何时就位。" />
+    <string id="taom_enc_hero_leave_dwarves_ally" text="一路平安。愿你与我们的往来始终像从前那样诚实。" />
+    <string id="taom_enc_hero_leave_dwarves_rival" text="那就走吧。也当心你惊扰的是谁家的大厅。" />
+    <string id="taom_enc_hero_leave_dwarves_foe" text="趁我还允许，赶紧滚。下次由斧头替我说话。" />
+    <string id="taom_enc_hero_leave_dwarves_kin" text="愿你脚下有磐石，炉中有烈火，老乡。" />
+    <string id="taom_enc_context_line_orcs_liege_first" text="伟大的主上！我们听说你在路上，整支队伍都跑到前头去清道了。你一句话，就有人头落地。" />
+    <string id="taom_enc_context_line_orcs_liege_met" text="又回来了，伟大的主上，我队里的每一条鞭子仍以你的名义抽响。上次之后没人敢偷懒，这我保证。" />
+    <string id="taom_enc_context_line_orcs_ally_first" text="矛都收着点，你们这帮家伙，这家伙今天不是咱们的敌人。待在我斥候看得见的地方，咱们就相安无事。" />
+    <string id="taom_enc_context_line_orcs_ally_met" text="又是你。上次你守了信，也没人挨刀子，这算个好开头。" />
+    <string id="taom_enc_context_line_orcs_rival_first" text="就站在那儿别动。我们或许效忠同一个主子，可我这帮人照样拿生人磨刀。" />
+    <string id="taom_enc_context_line_orcs_rival_met" text="又跑来我的路上嗅来嗅去了？我记得你这张脸，也记得上回是谁抢走了最后一份。" />
+    <string id="taom_enc_context_line_orcs_foe_first" text="瞧瞧，什么东西从灌木丛里爬出来了。新鲜的肉，还是自己走着送上门的。" />
+    <string id="taom_enc_context_line_orcs_foe_met" text="又是你，蛆虫。上回算你走运，我的厨子从那以后就一直把锅温着。" />
+    <string id="taom_enc_context_line_orcs_kin_first" text="哈，总算见着张像样的脸，跟我们一样又丑又带疤。受得了这味儿就坐到火边来。" />
+    <string id="taom_enc_context_line_orcs_kin_met" text="还活着呢，你这只老阴沟耗子？抓根骨头吧，这上头还剩点肉。" />
+    <string id="taom_enc_surrender_demand_orcs_rival_1" text="不管是不是同一个主子，你挡我这帮人的道挡得太多次了。扔下刀子，不然就按老规矩了断。" />
+    <string id="taom_enc_surrender_demand_orcs_rival_2" text="站着别动，把家伙都扔了。老实点，我就跟监工说你是乖乖来的。" />
+    <string id="taom_enc_surrender_demand_orcs_foe_1" text="没处跑了，爬粪的，我们早嗅出你了。把铁器丢到土里，兴许你还能活到去矿坑里挖土。" />
+    <string id="taom_enc_surrender_demand_orcs_foe_2" text="跪下，交出武器。敢打，今晚这群弟兄就能吃顿好的。" />
+    <string id="taom_enc_surrender_demand_orcs_kin_1" text="扔了，渣滓。你知道规矩：强的那帮拿战利品，今天强的是我。" />
+    <string id="taom_enc_surrender_demand_orcs_kin_2" text="现在投降，我只拿你的靴子和你那份。逼我动手，我连你的皮也一并剥了。" />
+    <string id="taom_enc_surrender_offer_orcs_rival" text="够了，够了！想要什么拿走，就当两清。这笔仇让主子们日后去算。" />
+    <string id="taom_enc_prisoner_released_orcs_rival" text="放我走？哼。我不会忘，也不会领情。" />
+    <string id="taom_enc_surrender_offer_orcs_foe" text="好吧，把刀放下，我降了！活俘虏可比尸体值钱。" />
+    <string id="taom_enc_prisoner_released_orcs_foe" text="软，你就是软，软东西都是被踩烂的。下回碰上，我可不会这么大意。" />
+    <string id="taom_enc_surrender_offer_orcs_kin" text="呃，你赢了，咒你的牙。拿走战利品，让我带着剩下的人爬走吧。" />
+    <string id="taom_enc_prisoner_released_orcs_kin" text="你放我走？蠢，不过我记下了。下回我逮住你落单，兴许会让你留着耳朵。" />
+    <string id="taom_enc_hero_leave_orcs_liege" text="遵命，伟大的主上。我手下谁要偷懒，我亲自把他抽得见血。" />
+    <string id="taom_enc_hero_leave_orcs_ally" text="那就走吧。天黑后离我的斥候远点，他们是先捅刀再闻味。" />
+    <string id="taom_enc_hero_leave_orcs_rival" text="滚吧。在我营地边上把后背露太久，看会有什么下场。" />
+    <string id="taom_enc_hero_leave_orcs_foe" text="快滚吧，虫子。路还长，我这帮人正饿着。" />
+    <string id="taom_enc_hero_leave_orcs_kin" text="那就走吧，当心鞭子。他们总在找人顶罪。" />
   </strings>
 </base>

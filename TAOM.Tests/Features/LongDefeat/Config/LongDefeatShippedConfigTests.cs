@@ -671,6 +671,21 @@ public class LongDefeatShippedConfigTests
     // The Cavalry sally point: Mike recorded it in game on 2026-11-16 (taom.ld_record sally) on the slope outside the Deeping Wall,
     // facing down toward the wall, so the mounted lord rides out from there at each wave's start.
     [TestMethod]
+    public void ShippedHelmsDeep_FootMustersOnMikesSecondRecord_BesideTheArchers()
+    {
+        // #1142: the 2026-11-04 point put the line's back rows on a ledge 3 m above the navmesh, 14 m behind it. Mike recorded the
+        // foot point again on 2026-11-17, beside the archers' point, where the archer batches never spawned a soldier off the navmesh.
+        var (catalog, _) = Load();
+        var foot = catalog.Fortresses.Single(f => f.Id == "helms").Muster!.Foot!;
+
+        Assert.AreEqual(199.589f, foot.X, 0.01f);
+        Assert.AreEqual(151.634f, foot.Y, 0.01f);
+        Assert.AreEqual(1.492f, foot.Z, 0.01f);
+        Assert.AreEqual(0.721f, foot.Fx, 0.01f);
+        Assert.AreEqual(0.693f, foot.Fy, 0.01f);
+    }
+
+    [TestMethod]
     public void ShippedHelmsDeep_HasTheRecordedSallyPointOnTheSlope()
     {
         var (catalog, _) = Load();

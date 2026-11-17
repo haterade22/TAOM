@@ -100,6 +100,17 @@ public class ShippedStoryMissionsTests
         Assert.AreEqual(keys.Count, keys.Distinct().Count());
     }
 
+    // #1142: the story rows muster where the Long Defeat does, on Mike's second foot record (199.589, 151.634, 1.492).
+    [TestMethod]
+    public void HelmsDeepDefence_FootMustersOnTheSecondRecord()
+    {
+        var foot = Helms().Muster!.Foot!;
+
+        Assert.AreEqual(199.589f, foot.X, 0.01f);
+        Assert.AreEqual(151.634f, foot.Y, 0.01f);
+        Assert.AreEqual(1.492f, foot.Z, 0.01f);
+    }
+
     [TestMethod]
     public void HelmsDeepAttack_MirrorsTheDefence()
     {

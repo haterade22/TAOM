@@ -466,16 +466,16 @@
     <string id="zulgor_description" text="祖爾戈是一名翼獸繁育者，通過孵化兇惡巨獸的卵來擴大可哈穆爾的空中勢力。" />
     <string id="zulgora_description" text="祖爾戈拉是影紗編織者，製造幻象迷惑敵人，如同故事中索隆的欺騙手段。" />
     <string id="zulgoth_description" text="祖爾戈斯是奧克儀式師，會按照奧克習俗中暗示的做法向黑暗力量獻祭。他的儀式爲氏族的行動祈求力量。" />
-    <string id="lord_AN1_1_description" text="阿維吉爾二世，雅西頓國王，阿維都伊與伊西鐸的後裔；他據守佛諾斯特以抗剛達巴的半獸人，並與卡多蘭和魯道爾的親族維持著不安的和平。" />
-    <string id="lord_CA1_1_description" text="阿蘭希爾，卡多蘭國王，埃雅仁都爾次子的後裔；他在卡拉斯戈薩德守著古墳諸王的冠冕。" />
-    <string id="lord_RH1_1_description" text="貝烈苟恩，魯道爾國王，埃雅仁都爾三子的後裔，卡美斯布林與三角洲丘陵人的領主。" />
-    <string id="lord_LN3_1_description" text="麥卡薩瑪，剛多林的潘洛德之子，石柱家族與雪塔家族的繼承人，鎮守盧恩灣北臂的佛隆德。" />
-    <string id="lord_EL1_1_description" text="法林二世，藍色山脈之王，出身德林古爾家族，索林廳堂之主，與貝磊勾斯特的寬膝族及諾格羅德的火鬚族共守藍色山脈。" />
-    <string id="lord_AND1_1_description" text="英戈瑪，安加拉茲國王，林中人之城的領主；他守衛幽暗密林的邊緣，抵禦多爾哥多的陰影。" />
+    <string id="lord_AN1_1_description" text="阿拉納斯，阿塞丹國王，阿維杜伊與伊熙爾杜的繼承人，據守佛諾斯特以抵禦貢達巴德的半獸人，並與卡多藍和魯道爾的親族維持着不穩的和平。" />
+    <string id="lord_CA1_1_description" text="奧斯希爾，卡多藍國王，埃阿蘭督爾次子的繼承人，在卡拉斯戈沙德保管着長眠古冢諸王的王冠。" />
+    <string id="lord_RH1_1_description" text="埃拉瑪斯，魯道爾國王，埃雅仁都三子的繼承人，卡梅斯布林之主，亦統領三角洲的丘陵人。" />
+    <string id="lord_LN3_1_description" text="邁卡薩瑪，剛多林的潘羅德之子，石柱家族與雪塔家族的繼承人，鎮守露恩灣北臂的佛瀧德。" />
+    <string id="lord_EL1_1_description" text="法林二世，埃瑞德路因國王，德林古爾家族之人，梭林大廳之主，與貝烈戈斯特的寬膀族和諾格羅德的火鬚族一同據守藍色山脈。" />
+    <string id="lord_AND1_1_description" text="塞奧德米羅，安加拉茲國王，林中居民鎮的領主，守護黑森林邊緣以抗多古爾都的陰影。" />
     <string id="lord_AV1_1_description" text="格里姆貝奧恩是貝奧恩的兒子，也是貝奧恩一族的首領。他守衛高隘口和老渡口，絕不讓奧克穿過安都因河谷。" />
-    <string id="lord_DO1_1_description" text="奧斯特里克，多溫尼安國王，葡園堡的領主；他的美酒沿奔流河而上，送往河谷邦與幽暗密林的精靈。" />
-    <string id="lord_SRH1_1_description" text="維杜瑪，南羅凡尼安國王，維杜加德的領主；他馳騁於幽暗密林以南的平原，仍記得戰車民的往事。" />
-    <string id="haldir_lothlorien_description" text="哈爾迪爾，邊境哨衛，一如書中羅瑞安的邊疆守衛，以無聲而精準的巡邏守護著金色森林的邊界。" />
-    <string id="orophin_lothlorien_description" text="歐洛芬，警醒的弓手，如電影中的邊境守衛般徹夜守望，他的箭矢射倒了被多爾哥多陰影腐化的野獸。" />
+    <string id="lord_DO1_1_description" text="哈溫，多溫尼安國王，葡萄洲之主，他的酒沿奔流河北上，運往河谷邦與黑森林的精靈。" />
+    <string id="lord_SRH1_1_description" text="蘇尼耶弗雷多，南羅瓦尼安國王，維杜加德的領主，馳騁於黑森林以南的平原，仍記得戰車民的過往。" />
+    <string id="haldir_lothlorien_description" text="哈爾迪爾是一名邊境哨兵，正如書中羅瑞恩的邊境守衛，以沉靜而精準的巡邏守護金色森林的邊界。" />
+    <string id="orophin_lothlorien_description" text="歐洛芬是一名警醒的弓手，如同影片中的邊境守衛般守望，他的箭矢射倒被多古爾都陰影腐化的野獸。" />
   </strings>
 </base>

@@ -2239,10 +2239,10 @@
     <string id="aom_response_2.spc_wanderer_anduinvale_0_text" text="拿别人的粮食送人，你这信使可不称职。" />
     <string id="aom_backstory_d.spc_wanderer_anduinvale_0_text" text="不论是口信、钱袋还是伤员，交给我吧。你指哪儿，我就送到哪儿。" />
     <string id="aom_generic_backstory.spc_wanderer_anduinvale_0_text" text="跑河谷邮路的骑手，认得卡尔岩到金鸢尾沼地的每个渡口。只要路上还有东西要送，我们就去。" />
-    <string id="aom_prebackstory.spc_wanderer_anduinvale_1_text" text="我的姓氏比我的家产古老。你听说过贝奥恩家族吗？" />
-    <string id="aom_backstory_a.spc_wanderer_anduinvale_1_text" text="我家自称与贝奥恩家族有亲，所以我从小就学带兵和骑马。后来我升为老林路上三十名枪兵的指挥。" />
+    <string id="aom_prebackstory.spc_wanderer_anduinvale_1_text" text="我的名字比我的家境更古老。你听说过贝奥恩一族吗？" />
+    <string id="aom_backstory_a.spc_wanderer_anduinvale_1_text" text="我家自称是贝奥恩一族的亲族，所以我从小就学带兵、学骑马，后来升到带领三十名矛手，驻守旧森林路。" />
     <string id="aom_backstory_b.spc_wanderer_anduinvale_1_text" text="我带着三十名矛手守大河的一处渡口，山里下来了一支人数更多的奥克队伍。我的队长连夜撤走，只留下命令，让我们死守。我守住了，可援军赶到之前，死了十一个人。" />
-    <string id="aom_backstory_c.spc_wanderer_anduinvale_1_text" text="老渡口的人称颂这场坚守，随后却悄悄把我从每次任命中略过，因为我当众说出了队长的逃跑。那十一个名字我一直记着。不肯为上位者说谎的人，没几扇门会为他敞开。" />
+    <string id="aom_backstory_c.spc_wanderer_anduinvale_1_text" text="老渡口的梅尔布尔吉人夸我们守住了阵线，后来每次任命指挥官，却都悄悄把我跳过去，就因为我当众说出了队长逃跑的事。那十一个名字，我一直记着。一个不肯替上司撒谎的人，能走的门可不多。" />
     <string id="aom_response_1.spc_wanderer_anduinvale_1_text" text="你做到了荣誉要求你做的事。" />
     <string id="aom_response_2.spc_wanderer_anduinvale_1_text" text="也许你队长比你更看得清战局。" />
     <string id="aom_backstory_d.spc_wanderer_anduinvale_1_text" text="你若需要一个能守住阵线、也对手下守信的人，我可以替你带一队兵。" />
@@ -2280,13 +2280,13 @@
     <string id="aom_backstory_d.spc_wanderer_anduinvale_5_text" text="你若用得上一个知道自己错在哪里的人，我愿替你持矛，努力比上回站得更稳。" />
     <string id="aom_generic_backstory.spc_wanderer_anduinvale_5_text" text="守卫队一招呼，大河的渔民就拿起船钩和长矛。可喊杀声响起来时，我们不是人人都站得住。" />
     <string id="aom_prebackstory.spc_wanderer_anduinvale_6_text" text="你也带弓？好，那你就懂了。" />
-    <string id="aom_backstory_a.spc_wanderer_anduinvale_6_text" text="二十岁时我是河谷地最好的弓手,箭袋上插着一支黑羽箭,以向卡罗克的守卫者致敬。蜜酒镇仲夏集市上的大赛,本该稳稳属于我,而我极想赢。" />
+    <string id="aom_backstory_a.spc_wanderer_anduinvale_6_text" text="我二十岁时就是河谷地带最好的弓手，为了向卡尔岩的赛尔修达致敬，箭袋上插着一支黑羽箭。蜂蜜草甸仲夏集市的射箭大赛，我本来胜券在握，而我也非赢不可。" />
     <string id="aom_backstory_b.spc_wanderer_anduinvale_6_text" text="一个金鸢尾堡来的对手，射得跟我一样好。所以决赛前夜，我把他的弓弦割开了三分之一。他在射箭线上一拉弓，弦就崩断，抽过他的脸。他们在我包里找到了割下的弦头。" />
     <string id="aom_backstory_c.spc_wanderer_anduinvale_6_text" text="他们收走了我的羽箭，还不准我再进箭场。我还是比厅里任何人都射得好，他们也知道，可这改变不了什么。我不后悔想赢，只后悔被抓到。" />
     <string id="aom_response_1.spc_wanderer_anduinvale_6_text" text="你这样的箭术，不该白白荒废。" />
     <string id="aom_response_2.spc_wanderer_anduinvale_6_text" text="割断对手弓弦的人，就活该禁赛。" />
     <string id="aom_backstory_d.spc_wanderer_anduinvale_6_text" text="雇我吧，你指哪儿，我的箭就射到哪儿。别指望我做别的。" />
-    <string id="aom_generic_backstory.spc_wanderer_anduinvale_6_text" text="河谷地的弓手听着守卫者的传奇长大,每逢节庆便上靶场较射。我们中有些人,哪里酬劳公道就把弓带到哪里。" />
+    <string id="aom_generic_backstory.spc_wanderer_anduinvale_6_text" text="河谷地的弓兵是听着卡尔岩的传说长大的，每逢节庆都要去靶场射箭。我们中有些人只要工钱公道，就会带着弓去任何地方。" />
     <string id="aom_prebackstory.spc_wanderer_anduinvale_7_text" text="一位老骑手，一匹好马，看路没有比这更靠得住的。" />
     <string id="aom_backstory_a.spc_wanderer_anduinvale_7_text" text="贝奥恩大厅一根根架起木梁时，我父亲还是个孩子。我从小看着河谷里渐渐布满农庄。在高隘口的邮路上，我跑了二十年，来往于隘口上方的老哨所和大厅之间传递消息。" />
     <string id="aom_backstory_b.spc_wanderer_anduinvale_7_text" text="有年春天，哨兵发现山里的半兽人正在集结，我骑马赶去禀报议事会。长老说哨兵讲的不过是闲话，让我等了三个星期。等他肯信，隘口下的村庄已经烧光了。" />
@@ -2296,13 +2296,13 @@
     <string id="aom_backstory_d.spc_wanderer_anduinvale_7_text" text="我熟悉山路，也知道不听警告的人都是什么心思。我可以替你在前头探路。" />
     <string id="aom_generic_backstory.spc_wanderer_anduinvale_7_text" text="我出身高隘口守望队的骑手，替河谷看守山路。我们发出的警告靠得住，至于长老怎么处置，那是他们的事。" />
     <string id="aom_prebackstory.spc_wanderer_anduinvale_8_text" text="苦地方养出硬心肠的人。别指望我赔不是。" />
-    <string id="aom_backstory_a.spc_wanderer_anduinvale_8_text" text="我曾在高隘口大道上做军士,河谷地的矛手在那里与卡罗克的守卫者并肩,抵挡从山中下来的一切。守卫者教会我把矛握稳、把阵线合紧,不浪费任何东西——怜悯也包括在内。" />
-    <string id="aom_backstory_b.spc_wanderer_anduinvale_8_text" text="我们抓住了一伙烧毁三座农庄的半兽人劫掠者,我没有押着俘虏走上好几天去枷刑柱,而是就地处决了他们。我的队长说那是谋杀。护林卫没有说话,我当作他们默许了。" />
+    <string id="aom_backstory_a.spc_wanderer_anduinvale_8_text" text="我曾在高隘口大道当军士，河谷地的矛手在那里跟卡尔岩的赛尔修达并肩作战，抵挡山中来的敌人。赛尔修达教我端稳长矛、守紧阵线，什么都别浪费，怜悯也一样。" />
+    <string id="aom_backstory_b.spc_wanderer_anduinvale_8_text" text="我们抓到一伙烧了三处农庄的半兽人劫掠者。我不愿押着他们走几天去上枷，就把俘虏杀了。队长说这是谋杀。赛尔修达什么也没说，我就当他们赞同。" />
     <string id="aom_backstory_c.spc_wanderer_anduinvale_8_text" text="他们结清饷钱，就把我赶了出来，连句话都没有。再来一次，我还是会这么做。那条路上的农庄，那年剩下的日子都平平安安。" />
     <string id="aom_response_1.spc_wanderer_anduinvale_8_text" text="肯作艰难的决定，道路才能太平。" />
     <string id="aom_response_2.spc_wanderer_anduinvale_8_text" text="杀俘虏就是谋杀，没什么可说的。" />
     <string id="aom_backstory_d.spc_wanderer_anduinvale_8_text" text="我打得狠，也不退缩。你若合意，就把我放在阵线最前头。" />
-    <string id="aom_generic_backstory.spc_wanderer_anduinvale_8_text" text="河谷地的枪兵与护林卫一同守着高隘口大道,那里的差事并不轻松。我们学会了它,也永远忘不掉。" />
+    <string id="aom_generic_backstory.spc_wanderer_anduinvale_8_text" text="河谷地的矛手与赛尔修达一同扼守高隘口大道，那里的活计可不温和。我们学会了，也绝不会忘。" />
     <string id="aom_prebackstory.spc_wanderer_anduinvale_9_text" text="听说过吗？卡尔岩的草甸今年太平不太平？" />
     <string id="aom_backstory_a.spc_wanderer_anduinvale_9_text" text="我在卡尔岩下的草甸养马、驯马。那里草甜，马也结实。我还没走稳就会骑马，山谷里的坐骑，有一半都经过我调教。" />
     <string id="aom_backstory_b.spc_wanderer_anduinvale_9_text" text="收获时节，奥克下来抢走了马群，也掳走了半个村子的人。我骑马去贝奥恩大厅求援，可议事会非要等到天亮才肯听我说。我便召集农工，自己追了上去。" />
@@ -2319,8 +2319,8 @@
     <string id="aom_response_2.spc_wanderer_angaladh_0_text" text="拿别人的粮食送人，你这信使可不称职。" />
     <string id="aom_backstory_d.spc_wanderer_angaladh_0_text" text="不论是口信、钱袋还是伤员，交给我吧。你指哪儿，我就送到哪儿。" />
     <string id="aom_generic_backstory.spc_wanderer_angaladh_0_text" text="跑密林路的骑手，认得森林之门到铁木厅的每处林间空地。只要路上还有东西要送，我们就去。" />
-    <string id="aom_prebackstory.spc_wanderer_angaladh_1_text" text="我的姓氏比我的家底古老得多。你可听过安加拉兹家族?" />
-    <string id="aom_backstory_a.spc_wanderer_angaladh_1_text" text="我家自称与安加拉兹家族以及林人的古代诸王有血缘,所以我从小就被教着统兵骑马。后来我在古老林道上统领三十支长枪。" />
+    <string id="aom_prebackstory.spc_wanderer_angaladh_1_text" text="我的姓氏比我的家产古老。你听说过瓦尔丹丁家族吗？" />
+    <string id="aom_backstory_a.spc_wanderer_angaladh_1_text" text="我家自称与瓦尔丹丁家族以及林中居民的古代诸王有亲，所以我自幼就被教导如何带兵、如何骑马。后来我统领了旧林道上的三十杆长矛。" />
     <string id="aom_backstory_b.spc_wanderer_angaladh_1_text" text="我带着三十名矛手守荆棘溪附近的一处渡口，南边来了一支人数更多的奥克队伍。我的队长连夜撤走，只留下命令，让我们死守。我守住了，可援军赶到之前，死了十一个人。" />
     <string id="aom_backstory_c.spc_wanderer_angaladh_1_text" text="议事会夸我们守住渡口，后来每次任命指挥官，却都悄悄把我跳过去，就因为我当众说出了队长逃跑的事。那十一个名字，我一直记着。一个不肯替上司撒谎的人，能走的门可不多。" />
     <string id="aom_response_1.spc_wanderer_angaladh_1_text" text="你做到了荣誉要求你做的事。" />
@@ -2360,7 +2360,7 @@
     <string id="aom_backstory_d.spc_wanderer_angaladh_5_text" text="你若用得上一个知道自己错在哪里的人，我愿替你持矛，努力比上回站得更稳。" />
     <string id="aom_generic_backstory.spc_wanderer_angaladh_5_text" text="守卫队一招呼，黑森林边缘的伐木工就拿起猎猪矛。可喊杀声响起来时，我们不是人人都站得住。" />
     <string id="aom_prebackstory.spc_wanderer_angaladh_6_text" text="你也带弓？好，那你就懂了。" />
-    <string id="aom_backstory_a.spc_wanderer_angaladh_6_text" text="二十岁时,我是林人中最好的弓手,箭袋上插着一支黑羽箭,以敬森林大道的守林人。林人镇仲夏集市上的大赛本该是我的,除非我自己输掉——我太想赢了。" />
+    <string id="aom_backstory_a.spc_wanderer_angaladh_6_text" text="我二十岁时就是林中居民里最好的弓手，为了向梅洛阿金家族致敬，箭袋上插着一支黑羽箭。林中居民镇仲夏集市的射箭大赛，我本来胜券在握，而我也非赢不可。" />
     <string id="aom_backstory_b.spc_wanderer_angaladh_6_text" text="一个铁木厅来的对手，射得跟我一样好。所以决赛前夜，我把他的弓弦割断了三分之一。他在射箭线上一拉弓，弦就崩断，抽过他的脸。他们在我包里找到了割下的弦头。" />
     <string id="aom_backstory_c.spc_wanderer_angaladh_6_text" text="他们收走了我的羽箭，还不准我再进箭场。我还是比厅里任何人都射得好，他们也知道，可这改变不了什么。我不后悔想赢，只后悔被抓到。" />
     <string id="aom_response_1.spc_wanderer_angaladh_6_text" text="你这样的箭术，不该白白荒废。" />
@@ -2376,7 +2376,7 @@
     <string id="aom_backstory_d.spc_wanderer_angaladh_7_text" text="我熟悉南方道路，也知道不听警告的人都是什么心思。我可以替你在前头探路。" />
     <string id="aom_generic_backstory.spc_wanderer_angaladh_7_text" text="我出身埃敏杜伊尔守望队的骑手，替林中居民看守南方道路。我们发出的警告靠得住，至于领主怎么处置，那是他们的事。" />
     <string id="aom_prebackstory.spc_wanderer_angaladh_8_text" text="苦地方养出硬心肠的人。别指望我赔不是。" />
-    <string id="aom_backstory_a.spc_wanderer_angaladh_8_text" text="我在埃敏杜尔大道上当过军士,那里林人的矛手与埃敏杜尔的守望者并肩而立,迎战从多尔古都上来的一切东西。守望者教我把矛持稳、把阵线合紧,什么都不许浪费——怜悯也在其中。" />
+    <string id="aom_backstory_a.spc_wanderer_angaladh_8_text" text="我曾在埃敏杜尔大道当军士，林中居民的矛手在那里跟法迪林家族并肩作战，抵挡多古尔都来的敌人。法迪林家族教我端稳长矛、守紧阵线，什么都别浪费，怜悯也一样。" />
     <string id="aom_backstory_b.spc_wanderer_angaladh_8_text" text="我们抓到一伙受雇于多古尔都、烧了三处农庄的劫掠者。我不愿押着他们走几天去上枷，就把俘虏杀了。队长说这是谋杀。守望者什么也没说，我就当他们赞同。" />
     <string id="aom_backstory_c.spc_wanderer_angaladh_8_text" text="他们结清饷钱，就把我赶了出来，连句话都没有。再来一次，我还是会这么做。那条路上的农庄，那年剩下的日子都平平安安。" />
     <string id="aom_response_1.spc_wanderer_angaladh_8_text" text="肯作艰难的决定，道路才能太平。" />
@@ -2399,8 +2399,8 @@
     <string id="aom_response_2.spc_wanderer_dorwinion_0_text" text="拿别人的粮食送人，你这信使可不称职。" />
     <string id="aom_backstory_d.spc_wanderer_dorwinion_0_text" text="不论是口信、钱袋还是伤员，交给我吧。你指哪儿，我就送到哪儿。" />
     <string id="aom_generic_backstory.spc_wanderer_dorwinion_0_text" text="跑多温尼安邮路的骑手，认得葡萄洲到鲁恩内海的每个码头。只要路上还有东西要送，我们就去。" />
-    <string id="aom_prebackstory.spc_wanderer_dorwinion_1_text" text="我的姓氏比我的家产古老。你可听说过葡园镇家族?" />
-    <string id="aom_backstory_a.spc_wanderer_dorwinion_1_text" text="我家自称与葡园镇家族有亲,他们在河上开辟了最早的梯田,所以我自幼便学会带兵与骑马。后来我升任,统领东路上的三十杆长枪。" />
+    <string id="aom_prebackstory.spc_wanderer_dorwinion_1_text" text="我的姓氏比我的家产古老。你听说过科尔达纳家族吗？" />
+    <string id="aom_backstory_a.spc_wanderer_dorwinion_1_text" text="我家自称与科尔达纳家族有亲，正是他们在河上开辟了第一批梯田，所以我自幼就被教导如何带兵、如何骑马。后来我统领了东方大道上的三十杆长矛。" />
     <string id="aom_backstory_b.spc_wanderer_dorwinion_1_text" text="我带着三十名矛手守红水河的一处渡口，东边来了一支人数更多的敌军。我的队长连夜撤走，只留下命令，让我们死守。我守住了，可援军赶到之前，死了十一个人。" />
     <string id="aom_backstory_c.spc_wanderer_dorwinion_1_text" text="议事会夸我们守住渡口，后来每次任命指挥官，却都悄悄把我跳过去，就因为我当众说出了队长逃跑的事。那十一个名字，我一直记着。一个不肯替上司撒谎的人，能走的门可不多。" />
     <string id="aom_response_1.spc_wanderer_dorwinion_1_text" text="你做到了荣誉要求你做的事。" />
@@ -2496,7 +2496,7 @@
     <string id="aom_backstory_d.spc_wanderer_southrhovanion_2_text" text="你若愿意，我有使不完的力气，也有一双好眼睛。" />
     <string id="aom_generic_backstory.spc_wanderer_southrhovanion_2_text" text="维杜加德的年轻骑手，都是听着壮烈冲锋的故事长大的。我们有些人早早就懂得，真正的敌人并不打旗号。" />
     <string id="aom_prebackstory.spc_wanderer_southrhovanion_3_text" text="丢了荣誉，比受什么伤都难熬……" />
-    <string id="aom_backstory_a.spc_wanderer_southrhovanion_3_text" text="我曾是西境附近一座小厅堂的领主，效忠于南林的骑手。我的子民仰仗我提供庇护与公正。我有精良的骑手、坚固的城墙和肥沃的草场。这本该足够了。" />
+    <string id="aom_backstory_a.spc_wanderer_southrhovanion_3_text" text="我曾是西境附近一座小厅的领主，向南林的卢克蕾西亚宣誓效忠。我的人指望我带来保护和公正。我有优秀的骑手、坚固的墙，还有肥沃的草场。这本该足够。" />
     <string id="aom_backstory_b.spc_wanderer_southrhovanion_3_text" text="总管阿尔德伍尔夫带着税吏上门，索要平时两倍的贡赋。我提出异议，他就指控我在国库空虚时私藏财富。他拿出一批文书，虽是伪造，却做得像真的，声称我跟战车民做过买卖。" />
     <string id="aom_backstory_c.spc_wanderer_southrhovanion_3_text" text="国王信他的总管，夺了我的土地和头衔，还告诉我的百姓，我是叛徒。如今我成了没有厅堂的领主，到处流浪。既然说话洗不清名声，我就靠行动把它挣回来。" />
     <string id="aom_response_1.spc_wanderer_southrhovanion_3_text" text="阿尔德伍尔夫已经毁了不少好人。" />

@@ -534,6 +534,27 @@ def _line(lang: str, team_count: int, plan: Plan) -> str:
             f"untranslated and {len(plan.ours_drafted_they_lack)} drafted")
 
 
+def history_at(base: str | None, modules: list[str], source) -> tuple:
+    """Our English at the team's base and after it, for TAOM; (None, None) when TAOM is not read. A run without a
+    known base stops: a stale row (its English changed since the team's base) would pass as the team's text.
+    Called once per run, so each source file's history is read once (the readers cache by path)."""
+    if "TAOM" not in modules:
+        return None, None
+    if not base:
+        raise SystemExit(f"--from {source}: its SubModule.xml names no TAOM version; pass --base <tag>")
+    if not ref_exists(base):
+        raise SystemExit(f"--base {base}: not a commit or tag in this repo (git fetch --tags?)")
+    return english_at(base), english_after(base)
+
+
+def our_targets(lang: str, modules: list[str], then=None, later=None) -> list[Target]:
+    """Our language files for the modules; TAOM's carry the history from history_at."""
+    targets = []
+    for module in modules:
+        targets.extend(taom_targets(lang, base=then, later=later) if module == "TAOM" else live_targets(lang, module))
+    return targets
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__.split("\n\n", 1)[0])
     p.add_argument("--lang", action="append", required=True, choices=TEAM_LANGS)
@@ -554,23 +575,15 @@ def main(argv=None) -> int:
     with Drop(args.source) as drop:
         base = args.base or base_version(drop)
         teams = {lang: team_rows(drop, lang, problems) for lang in langs}
-    if "TAOM" in modules:
-        if not base:
-            raise SystemExit(f"--from {args.source}: its SubModule.xml names no TAOM version; pass --base <tag>")
-        if not ref_exists(base):
-            raise SystemExit(f"--base {base}: not a commit or tag in this repo (git fetch --tags?)")
+    then, later = history_at(base, modules, args.source)
     report = {"source": str(args.source), "modules": modules, "base": base, "applied": args.apply,
               "problems": problems, "languages": []}
-    then, later = english_at(base), english_after(base)  # read only for TAOM, once per source file (cached)
     try:
         for lang in langs:
             team = teams[lang]
             if not team:
                 problems.append(f"{lang}: the drop holds no rows under ModuleData/Languages/{lang}")
-            targets = []
-            for module in modules:
-                targets.extend(taom_targets(lang, base=then, later=later) if module == "TAOM"
-                               else live_targets(lang, module))
+            targets = our_targets(lang, modules, then, later)
             plan = make_plan(team, targets, load_overrides(lang), tuple(args.skip_prefix))
             entry = summary(lang, plan)
             entry["team_rows"] = len(team)

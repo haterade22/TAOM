@@ -32,64 +32,64 @@
     <string id="taom_wotr_continue" text="繼續" />
     <string id="taom_wotr_chronicle_events" text="戰事紀要" />
     <string id="taom_wc_siege_lost" text="戰鬥尚未分出勝負，{TARGET}便已易手。" />
-    <string id="taom_wc_fellowship_title" text="魔戒遠征隊啟程" />
-    <string id="taom_wc_fellowship_occurred" text="九名行者秘密離開瑞文戴爾，攜至尊魔戒南行。愛隆的家族正匯聚力量。" />
+    <string id="taom_wc_fellowship_title" text="遠征隊啟程" />
+    <string id="taom_wc_fellowship_occurred" text="九名行者秘密離開幽谷，帶著至尊魔戒南行。埃爾隆德家族正在聚集力量。" />
     <string id="taom_wc_khazaddum_title" text="凱薩督姆之橋" />
-    <string id="taom_wc_khazaddum_occurred" text="在摩瑞亞的深處，灰袍朝聖者與炎魔一同墜落。迷霧山脈的半獸人蜂擁而出，自由民族為之哀悼。" />
-    <string id="taom_wc_breaking_title" text="遠征隊的離散" />
-    <string id="taom_wc_breaking_occurred" text="在帕斯加蘭，強獸人撲向遠征隊。波羅莫為護衛哈比人而死，剛鐸失去了它的繼承人。" />
-    <string id="taom_wc_theoden_title" text="希優頓王" />
-    <string id="taom_wc_theoden_occurred" text="擺脫了巧言的讒言，希優頓重新執起佩劍。驃騎國為其國王集結。" />
+    <string id="taom_wc_khazaddum_occurred" text="在摩瑞亞深處，灰袍朝聖者與炎魔一同墜落。迷霧山脈的半獸人蜂擁而出，自由人民為之哀悼。" />
+    <string id="taom_wc_breaking_title" text="遠征隊的分裂" />
+    <string id="taom_wc_breaking_occurred" text="在帕斯加蘭，烏魯克撲向遠征隊。波洛米爾為保護哈比人而死，剛鐸失去了它的繼承人。" />
+    <string id="taom_wc_theoden_title" text="希奧頓王" />
+    <string id="taom_wc_theoden_occurred" text="擺脫了巧言的讒言，希奧頓重新執起寶劍。裏德馬克向它的國王集結。" />
     <string id="taom_wc_hornburg_title" text="號角堡之戰" />
-    <string id="taom_wc_hornburg_open" text="艾辛格的大軍與登蘭德的山地人進軍 {TARGET}。此戰必須在 {DAYS} 日內分出勝負。" />
-    <string id="taom_wc_hornburg_lapsed" text="{TARGET} 未遭攻擊。艾辛格的集結轉向了別處。" />
-    <string id="taom_wc_hornburg_held" text="號角堡撐過了長夜，艾辛格的大軍在它的城牆前潰散。" />
-    <string id="taom_wc_hornburg_fell" text="{TARGET} 陷落，白手統治了西伏谷。" />
-    <string id="taom_wc_ents_title" text="樹人的最後進軍" />
-    <string id="taom_wc_ents_occurred" text="范貢森林的樹人衝下艾辛格，淹沒了薩魯曼的坑窖。白手的熔爐就此沉寂。" />
-    <string id="taom_wc_lorien_title" text="羅斯洛立安遇襲" />
-    <string id="taom_wc_lorien_open" text="黑影自多爾哥多出擊，襲向黃金森林。{TARGET} 必須堅守 {DAYS} 日。" />
-    <string id="taom_wc_lorien_lapsed" text="多爾哥多的大軍始終未抵達 {TARGET}。" />
-    <string id="taom_wc_lorien_held" text="女皇的力量屹立不搖，多爾哥多的大軍自黃金森林退卻。" />
-    <string id="taom_wc_lorien_fell" text="{TARGET} 陷入火海，羅斯洛立安的光芒日漸黯淡。" />
-    <string id="taom_wc_osgiliath_title" text="奧斯吉力亞斯的陷落" />
-    <string id="taom_wc_osgiliath_open" text="魔窟大軍渡過安都因河，直逼 {TARGET}。剛鐸必須守住這座廢墟之城 {DAYS} 日。" />
-    <string id="taom_wc_osgiliath_lapsed" text="魔多並未進犯 {TARGET}，大河依舊平靜。" />
-    <string id="taom_wc_osgiliath_held" text="法拉墨守住了安都因河的渡口，魔窟大軍撤退了。" />
-    <string id="taom_wc_osgiliath_fell" text="{TARGET} 陷落，通往米那斯提力斯的道路門戶洞開。" />
+    <string id="taom_wc_hornburg_open" text="艾森加德的大軍與黑蠻地的山民向{TARGET}進發。此戰必須在{DAYS}天內分出勝負。" />
+    <string id="taom_wc_hornburg_lapsed" text="{TARGET}並未遭到進攻。艾森加德的兵馬轉向了別處。" />
+    <string id="taom_wc_hornburg_held" text="號角堡徹夜堅守，艾森加德的大軍在城牆前崩潰。" />
+    <string id="taom_wc_hornburg_fell" text="{TARGET}陷落，白手統治了西伏爾德。" />
+    <string id="taom_wc_ents_title" text="樹人的最後行軍" />
+    <string id="taom_wc_ents_occurred" text="范貢森林的樹人衝下艾森加德，淹沒了薩茹曼的深坑。白手的鍛爐歸於沉寂。" />
+    <string id="taom_wc_lorien_title" text="洛絲羅瑞恩遭襲" />
+    <string id="taom_wc_lorien_open" text="黑影自多古爾都而出，攻打金色森林。{TARGET}必須堅守{DAYS}天。" />
+    <string id="taom_wc_lorien_lapsed" text="多古爾都的大軍始終未能抵達{TARGET}。" />
+    <string id="taom_wc_lorien_held" text="夫人的力量堅守不墜，多古爾都的大軍自金色森林退卻。" />
+    <string id="taom_wc_lorien_fell" text="{TARGET}陷入火海，洛絲羅瑞恩的光輝日漸黯淡。" />
+    <string id="taom_wc_osgiliath_title" text="歐斯吉利亞斯的陷落" />
+    <string id="taom_wc_osgiliath_open" text="魔窟大軍渡過安都因河，直撲{TARGET}。剛鐸必須守住這座廢城{DAYS}天。" />
+    <string id="taom_wc_osgiliath_lapsed" text="魔多並未進犯{TARGET}，河面依舊平靜。" />
+    <string id="taom_wc_osgiliath_held" text="法拉米爾守住了安都因河的渡口，魔窟大軍退了回去。" />
+    <string id="taom_wc_osgiliath_fell" text="{TARGET}陷落，通往米那斯提力斯的道路就此敞開。" />
     <string id="taom_wc_dale_title" text="河谷邦之戰" />
-    <string id="taom_wc_dale_open" text="東方人與多爾哥多的爪牙進軍河谷邦王國。{TARGET} 必須堅守 {DAYS} 日。" />
-    <string id="taom_wc_dale_lapsed" text="東方人轉身離去，{TARGET} 得以倖免。" />
-    <string id="taom_wc_dale_held" text="河谷邦的人類與伊魯伯的矮人並肩而戰，東方人的大軍被擊退。" />
-    <string id="taom_wc_dale_fell" text="{TARGET} 落入東方人之手，伊魯伯的矮人出兵馳援他們的盟友。" />
-    <string id="taom_wc_corsairs_title" text="昂巴的海盜" />
-    <string id="taom_wc_corsairs_open" text="昂巴的黑帆沿安都因河逼近 {TARGET}。剛鐸必須守住該港 {DAYS} 天。" />
-    <string id="taom_wc_corsairs_lapsed" text="海盜徘徊於海上，{TARGET} 得享安寧。" />
-    <string id="taom_wc_corsairs_held" text="昂巴的艦隊被逐出 {TARGET}，剛鐸南方諸領振奮不已。" />
-    <string id="taom_wc_corsairs_fell" text="海盜奪取了 {TARGET}，他們的船隻控制了河道。" />
-    <string id="taom_wc_north_title" text="北方之戰" />
-    <string id="taom_wc_north_open" text="剛達巴的半獸人與登蘭德的丘陵人南下進犯北方。{TARGET} 必須堅守 {DAYS} 天。" />
-    <string id="taom_wc_north_lapsed" text="北方的戰火未及 {TARGET}。" />
-    <string id="taom_wc_north_held" text="遊俠與雅西頓的人類守住了 {TARGET}，北方依然自由。" />
-    <string id="taom_wc_north_fell" text="{TARGET} 陷落，陰影蔓延至伊利雅德。" />
+    <string id="taom_wc_dale_open" text="東夷與多古爾都僕從向河谷邦的疆域進軍。{TARGET}必須堅守{DAYS}天。" />
+    <string id="taom_wc_dale_lapsed" text="東夷轉道而去，{TARGET}得以倖免。" />
+    <string id="taom_wc_dale_held" text="河谷邦的人類與孤山矮人並肩而立，東夷大軍被擊退了。" />
+    <string id="taom_wc_dale_fell" text="{TARGET}落入東夷之手，孤山矮人出兵馳援他們的朋友。" />
+    <string id="taom_wc_corsairs_title" text="烏姆巴爾的海盜" />
+    <string id="taom_wc_corsairs_open" text="烏姆巴爾的黑帆沿安都因河而上，直撲{TARGET}。剛鐸必須守住這座港口{DAYS}天。" />
+    <string id="taom_wc_corsairs_lapsed" text="海盜滯留海上，{TARGET}得以平安無事。" />
+    <string id="taom_wc_corsairs_held" text="烏姆巴爾的艦隊被逐出{TARGET}，剛鐸南方的封地士氣大振。" />
+    <string id="taom_wc_corsairs_fell" text="海盜奪取了{TARGET}，他們的船隻控制了河道。" />
+    <string id="taom_wc_north_title" text="北方的戰爭" />
+    <string id="taom_wc_north_open" text="貢達巴德的奧克與黑蠻地的山民南下進犯北方。{TARGET}必須堅守{DAYS}天。" />
+    <string id="taom_wc_north_lapsed" text="北方的戰火並未波及{TARGET}。" />
+    <string id="taom_wc_north_held" text="遊民與阿塞丹的人們守住了{TARGET}，北方依舊自由。" />
+    <string id="taom_wc_north_fell" text="{TARGET}陷落了，陰影蔓延至整個埃利阿多。" />
     <string id="taom_wc_gondor_title" text="剛鐸之圍" />
-    <string id="taom_wc_gondor_open" text="戒靈之王率領魔多大軍進攻 {TARGET}。此城必須堅守 {DAYS} 天。" />
-    <string id="taom_wc_gondor_lapsed" text="魔多的大軍按兵不動，{TARGET} 在昏暗的天空下靜待。" />
-    <string id="taom_wc_gondor_held" text="洛汗騎兵於黎明時分趕到，{TARGET} 之圍在佩蘭諾平原上被解。" />
-    <string id="taom_wc_gondor_fell" text="{TARGET} 的城門被攻破，白城落入魔多之手。" />
+    <string id="taom_wc_gondor_open" text="那茲古爾之王率領魔多大軍進攻{TARGET}。這座城必須堅守{DAYS}天。" />
+    <string id="taom_wc_gondor_lapsed" text="魔多的大軍按兵不動，{TARGET}在陰暗的天空下等待着。" />
+    <string id="taom_wc_gondor_held" text="洛希爾人在黎明時分趕到，{TARGET}之圍在佩蘭諾平原上被解除了。" />
+    <string id="taom_wc_gondor_fell" text="{TARGET}的城門被攻破，白城落入魔多之手。" />
     <string id="taom_wc_blackgate_title" text="黑門開啟" />
-    <string id="taom_wc_blackgate_occurred" text="西方的將領們進軍魔拉南，欲引開魔眼對持戒人的注視。戰爭的命運如今繫於至尊魔戒。" />
-    <string id="taom_wc_hornburg_fate" text="The host of Isengard storms {TARGET} through the night, and at dawn the Hornburg still stands." />
-    <string id="taom_event_category_chronicle" text="War Chronicle" />
-    <string id="taom_event_category_coronation" text="Coronation" />
-    <string id="taom_event_effects" text="Effects" />
-    <string id="taom_event_effect_days" text="For {DAYS} days" />
-    <string id="taom_event_side_free" text="Free Peoples" />
-    <string id="taom_event_side_evil" text="The Shadow" />
-    <string id="taom_event_effect_volunteers" text="Volunteer recruitment rate" />
-    <string id="taom_event_effect_escape" text="Additional escape roll" />
-    <string id="taom_event_effect_momentum" text="War of the Ring momentum" />
-    <string id="taom_event_effect_note" text="Values are this event's contributions before caps, and the caps apply even to a single effect. Your own clan's fiefs and lords are never affected." />
-    <string id="taom_event_effect_escape_note" text="The additional escape roll's chance is the shown percentage of a lord's usual escape chance." />
+    <string id="taom_wc_blackgate_occurred" text="西方的將領們進軍魔拉南，要將那隻眼從魔戒持有者身上引開。戰爭的命運如今繫於魔戒之上。" />
+    <string id="taom_wc_hornburg_fate" text="艾森加德的大軍徹夜猛攻{TARGET}，黎明時號角堡依然屹立。" />
+    <string id="taom_event_category_chronicle" text="戰爭紀事" />
+    <string id="taom_event_category_coronation" text="加冕" />
+    <string id="taom_event_effects" text="效果" />
+    <string id="taom_event_effect_days" text="持續{DAYS}天" />
+    <string id="taom_event_side_free" text="自由人民" />
+    <string id="taom_event_side_evil" text="陰影" />
+    <string id="taom_event_effect_volunteers" text="志願兵徵募率" />
+    <string id="taom_event_effect_escape" text="額外逃脫判定" />
+    <string id="taom_event_effect_momentum" text="魔戒大戰局勢" />
+    <string id="taom_event_effect_note" text="此處數值為本事件在上限之前的貢獻，且上限即使對單一效果也同樣適用。你自己氏族的封地與領主永遠不受影響。" />
+    <string id="taom_event_effect_escape_note" text="額外逃脫判定的概率，為所示百分比乘以領主通常的逃脫概率。" />
   </strings>
 </base>
