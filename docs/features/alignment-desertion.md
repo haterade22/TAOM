@@ -145,7 +145,7 @@ Found by the conflict audit (13 Nov 2026): vanilla AI lords recruited enemy-side
 cost), AI lords and garrisons bought a captured fief's old-culture volunteers before culture conversion, and
 the next daily tick removed them again. `IAlignmentDesertionService.WouldDesert(owner, isPlayerOwned,
 isGarrison, troopCulture)` answers the same question as `CalculateDesertion` for one troop (a matrix test pins
-the two together), and `DesertionRecruitGuard` asks it at these recruit seams (tavern mercenaries are not covered, see Known limits):
+the two together), and `DesertionRecruitGuard` asks it at these recruit seams:
 
 | Seam | Where | Effect |
 |---|---|---|
@@ -154,6 +154,8 @@ the two together), and `DesertionRecruitGuard` asks it at these recruit seams (t
 | Garrison auto-recruit | `TaomVolunteerModel.MaximumIndexGarrisonCanRecruitFromHero` | Slot count capped the same way, under the garrison switches |
 | AI trip estimate | `Patch114_AiVolunteerEstimate_Postfix` | Estimate recounted without those volunteers, so no trip for nothing |
 | Prisoner conformity | `Patch150_ConformityTick_Prefix` (#1189) | A blocked stack gets no conformity and the tick moves on to the next stack |
+| AI tavern hire | `Patch158_AiMercenaryHire_Prefix` (#1189) | A lord party skips the hire: no gold paid, the town keeps its mercenaries (caravans are never guarded) |
+| Player tavern hire | `Patch158_MercenaryMenu_Postfix`, `Patch158_MercenaryDialog_Postfix` (#1189) | The backstreet "Recruit" option is disabled with the cause in its tooltip; the tavern mercenary refuses instead of offering |
 
 The owner is resolved as the behavior does (leader's clan, owner clan for a garrison, the co-op skips of
 `DesertionOwnerPolicy`), so every switch (master, player, AI, parties, garrisons, rate 0) turns the guard off
@@ -174,11 +176,10 @@ AI trip estimate counts the same slots.
 
 ### Known limits
 
-- Tavern mercenaries are not guarded. The AI hire reads `GetMercenaryData(settlement.Town).TroopType`
-  (`RecruitmentCampaignBehavior.cs:477`) and the player's tavern conversation adds
-  `CharacterObject.OneToOneConversationCharacter` to the roster (`BuyMercenaries`, line 812). The troop comes
-  from the town culture's `BasicMercenaryTroops` (line 362). None of these asks a model whether the troop may be recruited (only `PartyWageModel`, for the price), so no
-  model override can refuse them.
+- Tavern mercenaries are guarded by Harmony patches, not a model: vanilla takes the town's mercenary troop
+  (`GetMercenaryData(town).TroopType`, rolled from the town culture's `BasicMercenaryTroops` or caravan guard, or
+  an upgrade of either) and asks no model whether it may be recruited, only `PartyWageModel` for the price. A town keeps the same mercenary troop until its
+  daily update rolls a new one, so a refused player may find a different troop there later.
 - A volunteer slot locked by the cap stays locked until the notable's volunteers change (culture conversion).
   Its hint names the cause (Patch157): the volunteer would desert, or an earlier volunteer would (an empty slot
   too). The slot just before the first deserter opens with relation, and its hint shows that relation. Vanilla's
