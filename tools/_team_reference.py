@@ -26,6 +26,8 @@ EXPRESSION = re.compile(r"\{[^{}]*\}")  # {VAR}, {?VAR}: a placeholder's words a
 TERM_MAX_WORDS = 4
 TERM_MAX_CHARS = 40
 SINGLE_WORD_MIN_CHARS = 4      # "On" or "Yes" alone would rewrite every sentence that holds the word
+CONFIRMED_MIN_CHARS = 3        # "Orc" is a term once the team's sentences confirm it
+CONFIRM_MIN_SENTENCES = 2      # team sentences that must confirm a three-letter word
 EXAMPLE_MIN_WORDS = 6
 EXAMPLE_MAX_CHARS = 300        # a long encyclopedia text would fill the request
 EXAMPLE_MIN_SCORE = 2          # content words an example shares with one entry
@@ -44,7 +46,17 @@ def words(text: str) -> list[str]:
 def single_word_term(word: str) -> bool:
     """A name or a capitalised game term. A lowercase word is a context label in the team's text ("horse" is
     骑兵队, a cavalry unit), and an all-caps word is a screen label such as GENDER."""
-    return len(word) >= SINGLE_WORD_MIN_CHARS and word[0].isupper() and not word.isupper()
+    return len(word) >= CONFIRMED_MIN_CHARS and word[0].isupper() and not word.isupper()
+
+
+def _keys(ws: list[str]):
+    """Each term key in a list of words: one word with its case, two to TERM_MAX_WORDS words without."""
+    lower = [w.lower() for w in ws]
+    for i, w in enumerate(ws):
+        yield (w,)
+        for n in range(2, TERM_MAX_WORDS + 1):
+            if i + n <= len(ws):
+                yield tuple(lower[i:i + n])
 
 
 def content_words(text: str) -> set[str]:
@@ -67,7 +79,7 @@ class Reference:
             if not ws:
                 continue
             if (len(ws) <= TERM_MAX_WORDS and len(en) <= TERM_MAX_CHARS and "{" not in en and "{" not in zh
-                    and content_words(en) and (len(ws) > 1 or single_word_term(ws[0]))):
+                    and (single_word_term(ws[0]) if len(ws) == 1 else bool(content_words(en)))):
                 key = (ws[0],) if len(ws) == 1 else tuple(w.lower() for w in ws)
                 self._terms.setdefault(key, (en, zh))
             if len(ws) >= EXAMPLE_MIN_WORDS and len(en) <= EXAMPLE_MAX_CHARS:
@@ -75,6 +87,25 @@ class Reference:
                 for w in cw:
                     self._by_word[w].append(len(self._examples))
                 self._examples.append((en, zh, cw))
+        self._confirm_terms()
+
+    def _confirm_terms(self) -> None:
+        """Keeps a term only where the team's longer rows that hold its English mostly hold its text too. The
+        team's name row can name another person than its own sentences do (Findariel is 吕西卡 in the name
+        row and 芬达瑞尔 in her description). A short single word needs that confirmation."""
+        support: Counter = Counter()
+        hits: Counter = Counter()
+        for en, zh in self.pairs.items():
+            ws = words(en)
+            for key in set(_keys(ws)):
+                term = self._terms.get(key)
+                if term and len(ws) > len(key):
+                    support[key] += 1
+                    hits[key] += term[1] in zh
+        for key in list(self._terms):
+            if 2 * hits[key] < support[key] or (len(key) == 1 and len(key[0]) < SINGLE_WORD_MIN_CHARS
+                                                and support[key] < CONFIRM_MIN_SENTENCES):
+                del self._terms[key]
 
     def __bool__(self) -> bool:
         return bool(self.pairs)
@@ -82,16 +113,7 @@ class Reference:
     def terms(self, texts: list[str], cap: int = 80) -> list[tuple[str, str]]:
         """The terms whose English occurs in texts: a single word with its case, more words without.
         Longest first, then alphabetical; at most cap."""
-        found: set[tuple[str, str]] = set()
-        for text in texts:
-            ws = words(text)
-            lower = [w.lower() for w in ws]
-            for i, w in enumerate(ws):
-                if (w,) in self._terms:
-                    found.add(self._terms[(w,)])
-                for n in range(2, TERM_MAX_WORDS + 1):
-                    if i + n <= len(ws) and (key := tuple(lower[i:i + n])) in self._terms:
-                        found.add(self._terms[key])
+        found = {self._terms[key] for text in texts for key in _keys(words(text)) if key in self._terms}
         return sorted(found, key=lambda t: (-len(words(t[0])), -len(t[0]), t[0]))[:cap]
 
     def examples(self, texts: list[str], k: int = 6) -> list[tuple[str, str]]:
@@ -120,7 +142,8 @@ class Reference:
             lines += [f"{en} => {zh}" for en, zh in terms]
         if examples:
             lines.append("STYLE EXAMPLES: the team's own translations of similar lines. Match their wording, "
-                         "punctuation and register:")
+                         "punctuation and register, but never copy a name from an example into an entry that "
+                         "does not hold that name:")
             for en, zh in examples:
                 lines += [f"EN: {en}", f"ZH: {zh}"]
         return "\n".join(lines)

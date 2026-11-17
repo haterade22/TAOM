@@ -32,7 +32,7 @@ PAIRS = [
     ["Rohan", "洛汗"],
     ["GENDER", "性别"],
     ["horse", "骑兵队"],
-    ["Riders of Rohan guard the plains of the Riddermark against raiders", "洛汗骠骑守护里德马克平原，抵御劫掠者。"],
+    ["Riders of Rohan guard the plains of the Riddermark against raiders", "罗翰骠骑守护里德马克平原，抵御劫掠者。"],
     ["Archers of Gondor hold the walls of Minas Tirith", "刚铎弓箭手坚守米那斯提力斯的城墙。"],
     ["A short line", "短句"],
 ]
@@ -70,6 +70,30 @@ class TermTests(unittest.TestCase):
 
     def test_terms_AllCapsSingleWord_IsNeverATerm(self):
         self.assertEqual([], self.reference.terms(["GENDER"]))
+
+    def test_terms_TheTeamsSentencesUseAnotherText_IsNotATerm(self):
+        # The team's name row says 吕西卡, its own sentences about her say 芬达瑞尔.
+        reference = ref.Reference(PAIRS + [
+            ["Findariel", "吕西卡"],
+            ["Findariel, wife of Ciryandur, manages the household", "芬达瑞尔是奇瑞安杜尔的妻子，管理家中事务。"],
+            ["Findariel rides out with her guard at dawn", "芬达瑞尔黎明时与卫队一同出行。"],
+        ])
+        self.assertEqual([], [t for t in reference.terms(["Findariel"]) if t[0] == "Findariel"])
+
+    def test_terms_ThreeLetterWord_TheTeamsSentencesConfirm_IsATerm(self):
+        reference = ref.Reference(PAIRS + [
+            ["Orc", "奥克"],
+            ["Orc raiders burn the farms of the west", "奥克劫掠者焚烧西部的农庄。"],
+            ["An Orc captain leads the warband north", "一名奥克队长带领战帮北上。"],
+        ])
+        self.assertIn(("Orc", "奥克"), reference.terms(["Dol Guldur Orc Axe"]))
+
+    def test_terms_ThreeLetterWord_WithoutTeamSentences_IsNeverATerm(self):
+        self.assertEqual([], ref.Reference([["All", "全部"]]).terms(["All troops hold"]))
+
+    def test_guide_TellsTheModelNotToCopyNamesFromExamples(self):
+        guide = ref.Reference(PAIRS).guide("Simplified Chinese", ["Archers of Gondor guard the walls of the city"])
+        self.assertIn("never copy a name from an example", guide)
 
     def test_terms_WordInsideAPlaceholder_IsNotATerm(self):
         self.assertEqual([], self.reference.terms(["{Gondor} {?Minas Tirith}x{?}y{\?}"]))

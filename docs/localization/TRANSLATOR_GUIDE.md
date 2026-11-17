@@ -357,7 +357,9 @@ text. For each batch of CNs or CNt rows, `translate_with_claude.py` adds two thi
 team's terms whose English occurs in the batch (names and game terms of at most four words), and up to
 six of the team's sentences that share the most words with one entry, as style examples. The prompt
 tells the model that the team's text wins over its own choices and over the published-Tolkien rule.
-Rebuild the reference after each import:
+A term goes when the team's own sentences that hold its English mostly use another text: some of the
+team's lord name rows name another person than the description they wrote for that lord. Rebuild the
+reference after each import:
 
 ```bash
 python -I tools/build_translation_reference.py --lang CNs --lang CNt --from <TAOM_CN.zip> --module TAOM --module TAOM_Map --module Armory --apply
