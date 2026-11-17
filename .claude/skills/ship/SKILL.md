@@ -25,7 +25,7 @@ Run the **mandatory** completion sequence from [completion-workflow.md](../../..
 5. Harness notifies on completion — auto-resume, verify each finding against TAOM source + decompiled vanilla, implement confirmed fixes.
 
 ### Phase 3 — Self-review of our fixes
-6. `/review-codex` again against the post-fix diff. Verify + fix. Write the Phase 3e RCA for **every** confirmed bug (not just HIGH; see Step 3e in `.claude/skills/deep-review/SKILL.md`).
+6. `/review-codex` again against the post-fix diff. Verify + fix. Write the Phase 3e RCA for a confirmed bug that is CRITICAL or HIGH, reached a player or repeats a recorded cause; Step 3e in `.claude/skills/deep-review/SKILL.md` has the rule, and a systemic MEDIUM or LOW finding gets a lessons entry only.
 
 ### Phase 4 — Close out
 7. `/verify` — final build + tests green.

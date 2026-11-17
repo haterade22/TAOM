@@ -8,6 +8,8 @@
 # Time budget: it never runs past 9 s from its first command (8.5 s, plus the 0.5 s kill grace).
 # The tool gets what is left as `timeout` and as `--budget`, so each gh call is shortened to fit; under 1 s left it is
 # not run at all.
+# The UPSTREAM AHEAD lines print at most once in seven days, by the stamp .claude/logs/.upstream-ahead-printed;
+# the maintainer approved that on 2026-11-17 (docs/reviews/harness-retro-2026-11-17.md P3). RELEASE and NOTE lines always print.
 # Fail-open, never silent: gh missing, logged out, offline or slow, a crash or a spent budget prints an UNCHECKED note,
 # because silence would read as "nothing new". The tool itself prints the note for a missing state file.
 # SessionStart hooks run in parallel, so these lines can land before or after session-start.sh's. tools/test_hooks.sh 7l.
@@ -46,7 +48,17 @@ if [[ -n "${PYBIN:-}" && -f tools/upstream_watch.py ]]; then
     elif [[ $UPSTREAM_RC -ne 0 ]]; then
       echo "NOTE: upstream review drift UNCHECKED this session (the status call exited ${UPSTREAM_RC})."
     elif [[ -n "$UPSTREAM_STATUS" ]]; then
-      printf '%s\n' "$UPSTREAM_STATUS"
+      # The AHEAD lines print at most once in seven days (harness retro 2026-11-17, P3: 49 sessions printed
+      # the banner in a week and one acted on it). A stamp younger than seven days drops them. RELEASE and
+      # NOTE lines print every time, so a failure never goes quiet. find -mtime +6 lists a stamp of seven days or older.
+      UP_STAMP=".claude/logs/.upstream-ahead-printed"
+      if [[ -f "$UP_STAMP" && -z "$(find "$UP_STAMP" -mtime +6 2>/dev/null)" ]]; then
+        UPSTREAM_STATUS=$(printf '%s\n' "$UPSTREAM_STATUS" | grep -v '^UPSTREAM AHEAD:')
+      elif printf '%s\n' "$UPSTREAM_STATUS" | grep -q '^UPSTREAM AHEAD:'; then
+        mkdir -p .claude/logs 2>/dev/null
+        { : > "$UP_STAMP"; } 2>/dev/null
+      fi
+      [[ -n "$UPSTREAM_STATUS" ]] && printf '%s\n' "$UPSTREAM_STATUS"
     fi
   fi
 else
