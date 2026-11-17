@@ -44,6 +44,8 @@ public class AlignmentDesertionWiringTests
             foreach (var f in fields)
                 f!.SetValue(null, null);
             Patch150_ConformityTick_Prefix.Initialize(null!, null!, null!);
+            Patch158_AiMercenaryHire_Prefix.Initialize(null!, null!, null!);
+            TavernMercenaries.Initialize(null!, null!);
         }
     }
 }
