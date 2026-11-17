@@ -52,10 +52,10 @@ lance clone; `rohan_edoras_meduseld_master_spearman` can brace on foot; `rgl_log
 
 ## Follow-ups
 
-FOLLOW-UP #631: compare a placeholder in `line_faults` with the last priced member before it, so an unpriced neighbour does not hide a DPS fall (F5).
-FOLLOW-UP #631: apply `placeholder_for_troop` in `promote_borrowed_cultures.py`, or list its whole-file outputs in `GENERATED_TROOP_FILES` (F9).
-FOLLOW-UP #631: price placeholders in `fix_melee_ladder.best_carried`, so a clone on an upgrade target sets the upgrade ceiling (F10).
-FOLLOW-UP #631: band a placeholder on its carriers' shared craft row (through `craft_troop_prefix`) instead of the clone id's (F11).
+FOLLOW-UP #1422: compare a placeholder in `line_faults` with the last priced member before it, so an unpriced neighbour does not hide a DPS fall (F5).
+FOLLOW-UP #1422: apply `placeholder_for_troop` in `promote_borrowed_cultures.py`, or list its whole-file outputs in `GENERATED_TROOP_FILES` (F9).
+FOLLOW-UP #1422: price placeholders in `fix_melee_ladder.best_carried`, so a clone on an upgrade target sets the upgrade ceiling (F10).
+FOLLOW-UP #1422: band a placeholder on its carriers' shared craft row (through `craft_troop_prefix`) instead of the clone id's (F11).
 
 ## Lesson
 
