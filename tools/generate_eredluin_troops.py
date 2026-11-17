@@ -65,7 +65,9 @@ MILITIA = {"eredluin_militia_spearman": "eredluin_militia_veteran_spearman",
 REALM = rt.Realm(culture=CULTURE, label="[Ered Luin]", script="generate_eredluin_troops.py",
                  pt_marker="TAOM-EREDLUIN-PT", militia=MILITIA, merc_source=MERC_SOURCE,
                  merc_name="Hired Noble", armour_prefix="sk_dwarf_", race="dwarf",
-                 body="fighter_erebor", ladder_line="erebor")
+                 body="fighter_erebor", ladder_line="erebor",
+                 civilian_kits=({"Body": "sk_dwarf_tunic_normal_a", "Leg": "sk_dwarf_erebor_boots_light_a"},
+                                {"Body": "sk_dwarf_tunic_normal_b", "Leg": "sk_dwarf_erebor_boots_light_a"}))
 
 SKILLS = rt.SKILLS
 MILITIA_ELITE_BONUS = rt.MILITIA_ELITE_BONUS

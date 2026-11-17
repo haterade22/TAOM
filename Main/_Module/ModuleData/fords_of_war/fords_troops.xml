@@ -6464,9 +6464,14 @@
                     slot="Leg"
                     id="Item.sk_dwarf_erebor_greaves_elite_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="battania_troop_civilian_template_t1"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_dwarf_tunic_noble_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_dwarf_tunic_noble_b" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -6626,9 +6631,14 @@
                     slot="Leg"
                     id="Item.sk_dwarf_erebor_greaves_elite_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="battania_troop_civilian_template_t1"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_dwarf_tunic_noble_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_dwarf_tunic_noble_b" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -6788,9 +6798,14 @@
                     slot="Leg"
                     id="Item.sk_dwarf_erebor_greaves_heavy_d" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="battania_troop_civilian_template_t1"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+                <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
