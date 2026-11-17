@@ -2139,6 +2139,36 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Co-op.** The AI prefix skips a replicated mutation and the guard reads per-peer settings, so it is `GatedForCoop`: while `ICoopSessionProvider.ShouldDeferToHost` holds, every hire runs vanilla. The two postfixes only change what this peer's player is offered. A co-op guest's own client answers for the guest as the local player, while the server's desertion skips a remote player's clan, so a guest can be refused mercenaries the server would not take away; the volunteer cap and Patch157 behave the same way. **Tests:** `DesertionMercenaryPatchTests` (the prefix's blocked, allowed, co-op, null and throw paths; the three targets and their parameter names; both `CheckRecruiting` branches still hiring through the target; the category attaching one patch to each target and the JIT). A fault keeps vanilla and is logged once. **ACTIVE**, not yet checked in game.
 
+## Patch159_HelpDefendersArmyLeader
+
+**Target:** `PlayerEncounter.RestartPlayerEncounter(PartyBase defenderParty, PartyBase attackerParty, bool forcePlayerOutFromSettlement, bool isPlayerEncounterRestartedForRaid)` (public static, Prefix that may replace `defenderParty`)
+
+**Feature:** MapEventGuard, `Main/Features/MapEventGuard/Hooks/Patch159_HelpDefendersArmyLeader.cs`. **Status:** ACTIVE (#1429, 2026-11-17). Ported from Silas He's v1.5.6 fix package (his `HelpDefendersGuard`, save019).
+
+**The crash.** v1.5.7 `game_menu_join_encounter_help_defenders_on_consequence` restarts the encounter with `SiegeEvent.BesiegerCamp.LeaderParty.Party` as the defender. The camp leader is picked by rank, so it can be attached to an army it does not lead. Silas traced the throw: the siege event puts the army leader on the attacker side, the side setter drags the attached party along, the defender side empties, the half-built event finalizes itself and a nested removal throws. A save made afterwards is broken. TAOM has not reproduced it.
+
+**The rule** (`ShouldUseArmyLeader`, tested on every input): the player is the attacker; the defender is not the main party, is in no map event, does not lead its army and is attached to the army leader; the army leader shares its besieger camp, is not the main party and is in no map event. Then the defender becomes the army leader's party, the engine's own path when the camp leader leads its army. The v1.5.7 callers that pass the main party as the attacker are listed in the patch's doc comment; only help defenders meets the rule. The prefix catches its own throw and leaves the call unchanged.
+
+## Patch160_LoadRetryStop
+
+**Target:** `SandBox.SandBoxGameManager.DoLoadingForGameManager(GameManagerLoadingSteps, out GameManagerLoadingSteps)` (protected override, Prefix plus a void Finalizer)
+
+**Feature:** EngineBugGuards, `Main/Features/EngineBugGuards/Hooks/Patch160_LoadRetryStop.cs`, applied in `OnSubModuleLoad`. **Status:** ACTIVE (#1429, 2026-11-17). Ported from Silas He's `LoadFailureGuard`.
+
+**The hang.** Step 3 sets `_loadedGameResult` to null before `Game.Current.DoLoading()`. When a later line throws, no engine frame catches it before the native tick. TAOM's crash-capture finalizer on `Module.OnApplicationTick` (Patch37, on by default) swallows it, the step number does not advance, and the next frame runs step 3 again with no result, for ever. The last engine log line is "Initializing saved game begin...".
+
+**The fix.** The finalizer logs the first throw of each load with its stack and returns nothing, so the exception continues as before. The prefix stops step 3 of a saved-game load whose result is gone (only a retry can be in that state), sets `nextStep` to `None`, logs once, disables the global loading window as vanilla's `PreloadScreen.OnLoadCancelled` does, and shows one inquiry with a Quit Game button. Whether the inquiry renders and takes a click is unverified in TAOM.
+
+**PatchShield exclusion.** The target is on `PatchShieldPolicy.ExcludedTargetMethods`. The override sets `nextStep` to `None` on its first line, and `GameManagerBase` reads `None` from step 5 as "loading finished", so a shield swallow of a missing-API exception would open the map on a half-loaded campaign, and the unpatch after it would strip this prefix. `Patch160LoadRetryStopTests.PatchShield_DoesNotShieldTheTarget` walks the real target.
+
+## Patch161_SceneTableauNullSceneGuard
+
+**Target:** `TaleWorlds.MountAndBlade.View.Tableaus.SceneTableau.CreateTexture()` (private instance, Prefix; `[ClientOnly]`)
+
+**Feature:** EngineBugGuards, `Main/Features/EngineBugGuards/Hooks/Patch161_SceneTableauNullSceneGuard.cs`, applied in `OnSubModuleLoad`. **Status:** ACTIVE (#1429, 2026-11-17). Ported from Silas He's `SceneTableauGuard` (his crash a0dfdff3, as the wedding notification opened).
+
+**The crash.** `SetTargetSize` always ends in `CreateTexture()`, which allocates a render target and a scene view, then passes `_tableauScene` to `SceneView.SetScene`; with no scene that throws a managed NullReferenceException (v1.5.7 SceneView.cs:20-23). Silas reports it closed the game. The prefix skips the texture while the scene is null. That tableau is a throwaway: when the scene arrives, `SceneTextureProvider` builds a new tableau for it, and the widget's next size update makes the texture there. The null test is a plain reference test. One warning per game process.
+
 ## Realms manual patches (no category)
 
 **Targets (v1.5.7):** three classes in `Main/Features/Realms/Hooks/` and `TitleEncyclopediaPagePatch` in `Client/Features/Realms/Encyclopedia/`, each applied by hand with its own Harmony id, outside any patch category, so `PatchShield` and the category list do not see them. Feature: [realms.md](../features/realms.md).

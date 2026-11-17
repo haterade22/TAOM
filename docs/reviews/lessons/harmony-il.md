@@ -1003,6 +1003,11 @@ never patched before did not do.
   list after PatchShield's pass 2 (`PatchShieldPolicy` exclusions decide it) and word any rethrow or swallow claim for
   that list, not for TAOM's own finalizer alone.
 - **Source:** `docs/reviews/rca-xml-merge-load-time-2026-10-02.md` finding 5.
+- **Repeat (#1429, 2026-11-17):** Patch160 patched `SandBoxGameManager.DoLoadingForGameManager`, whose first line sets
+  `nextStep = None`, a value the caller reads from step 5 as "loading finished". A shield swallow there would have
+  returned that sentinel and opened a half-loaded campaign. When the target pre-sets an out parameter or a return
+  value before its work, a swallow returns that early value: put the target on `ExcludedTargetMethods` with a test
+  that walks it, or show that the early value is safe. Source: `docs/reviews/rca-engine-bug-guards-2026-11-17.md` finding 1.
 
 ### A per-call cost needs a per-call measurement; an incident's average is not one (2026-10)
 From #331's round-2 fix (July 2026) until plan 034, PatchShield's comments, two lessons and three docs priced binding `__originalMethod` at about fifty microseconds per call. That figure was #331's 104 to 109 s tournament-exit stall divided by an estimated call count, on a workload that also ran 8,276 gen0 collections. A benchmark on .NET Framework 4.8.1 with Harmony 2.4.2 (plan 034) measured the binding at about 63 ns per call over a finalizer that takes only `__exception`, 1,145 ns with 8 threads contending, and 241 bytes per call (5,355 gen0 collections over 140 million calls). At the isolated single-threaded cost two million calls take about 0.13 s, so the stall's size came from something the average hid; the allocation is the likelier multiplier, unmeasured in game. PatchShield's finalizers now take only `__exception` and find the shielded method from the stack after a throw (`PatchShield.ResolveShieldedOriginal`). A stand-in finalizer of that shape added about 3.5 ns per call in the Debug benchmark (5.4 against 1.9 ns for a postfix-only patched method; 0.6 ns optimized); the shipped finalizers were not benchmarked themselves.

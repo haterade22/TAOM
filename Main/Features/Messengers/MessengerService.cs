@@ -77,7 +77,9 @@ public class MessengerService : IMessengerService
         if (!CanReceive(target))
             return MessengerArrivalVerdict.Lost;
 
-        if (target.IsInPlayerParty)
+        // The arrival meets the target's party, and PlayerEncounter.SetupFields throws when that is the player's own party
+        // or the army party the player is attached to (#1429). The player can talk to either hero directly.
+        if (target.IsInPlayerParty || target.IsInPartyPlayerIsAttachedTo)
             return MessengerArrivalVerdict.Confused;
 
         // The engine ends these three states itself (v1.5.7): HeroSpawnCampaignBehavior.OnHeroDailyTick settles a fugitive
