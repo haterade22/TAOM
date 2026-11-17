@@ -1517,3 +1517,8 @@ Patch158's first AI prefix sat on `RecruitmentCampaignBehavior.ApplyRecruitMerce
 - **Why missed:** the target was picked as the narrowest method, with no look at its size or at who compiles its callers first.
 - **Prevent:** before patching a small private method (under about 32 bytes of IL, `ilspycmd -il` prints the code size), check whether Coop or another mod patches a caller; if so, patch a larger method on the same path and filter by argument.
 - **Source:** the #1189 item 1 tier 1 review, Engine compatibility F1 and Data flow trace 7 (both UNVERIFIED on a live server).
+### A value a transpiler hands back into vanilla's control flow can hit vanilla's sentinel (#1430, 2026-11-17)
+The Transfer All transpiler replaced vanilla's headcount budget `num` with a weighted one. Vanilla reads `num <= 0` as "the target is full, move everything" (v1.5.7 PartyScreenLogic.cs:1015-1018). The weighted planner returned 0 both for "no room" and for "some room, but the first eligible troop is too heavy", so a near-full party moved its whole roster. The fix returns at least 1 when there is room.
+- **Why missed:** the builder checked that 0 matches vanilla's full-party press and wrote a test that fixed 0 as intended, but did not list every input that produces 0. The ported original had the same case.
+- **Prevent:** when a transpiler or prefix substitutes a value that vanilla's code then branches on, list vanilla's special values for it (0, -1, null, empty) and, for each, every input that makes your code produce it. Test each input.
+- **Source:** RCA `docs/reviews/rca-troop-weight-transfer-2026-11-17.md` finding 1 (Lens 5 and Lens 2 independently).

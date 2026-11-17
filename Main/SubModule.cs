@@ -532,7 +532,9 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IOnClanPartyItemUpdateProperties>(),
             IoC.Resolve<IOnRecruitmentVMRefreshPartyProperties>(),
             IoC.Resolve<IOnCampaignUIHelperGetPartyHealthTooltip>(),
-            IoC.Resolve<IOnPartyCharacterVMRefreshValues>());
+            IoC.Resolve<IOnPartyCharacterVMRefreshValues>(),
+            IoC.Resolve<IOnPartyScreenLogicTransfer>(),
+            logger);
 
         // ADR-013: TaleWorlds.MountAndBlade.CustomBattle exists nowhere on a dedicated server, and these hooks name it.
         if (!ClientComposition.IsDedicatedServer())
