@@ -1111,7 +1111,7 @@
     <string id="taom_cc_taom_education_rhudaur_6_text" text="沿东西大道捡拾谋生。" />
     <string id="taom_cc_taom_education_rhudaur_6_desc" text="你在最后大桥与风云顶之间的道路上长大，替人传话赚钱，也卖些旅人遗下的东西。道路教会你手脚要快、嘴要更快，还要知道什么时候该消失。" />
     <string id="taom_cc_taom_parent_eredluin_1_text" text="梭林大厅贵族" />
-    <string id="taom_cc_taom_parent_eredluin_1_desc" text="你的家族属于德林古尔家族，与法林国王同宗，挥舞巨斧，率领战士守护蓝色山脉中索林大殿的荣耀。" />
+    <string id="taom_cc_taom_parent_eredluin_1_desc" text="你家属于德林古尔家族，与法林国王有亲，挥舞巨斧，率领那些在蓝色山脉守护梭林大厅荣誉的战士。" />
     <string id="taom_cc_taom_parent_eredluin_2_text" text="诺格罗德锻造大师" />
     <string id="taom_cc_taom_parent_eredluin_2_desc" text="你家在诺格罗德经营锻炉，火须族从远古时代起就在这里打铁。家里打造的刀剑和锁子甲，向西卖给林顿精灵，向东则沿矮人路运走，每一件都能卖出价钱。" />
     <string id="taom_cc_taom_parent_eredluin_3_text" text="多米德山矿工" />
@@ -1158,8 +1158,8 @@
     <string id="taom_cc_taom_education_eredluin_5_desc" text="你从小就帮着清点梭林大厅的铁、粮食和钱币，学习记账，筹划山中要塞度过漫长冬季所需的补给。这份工作让你做事有条理，也学会从战略角度看待资源。" />
     <string id="taom_cc_taom_education_eredluin_6_text" text="巡逻山麓和矮人路。" />
     <string id="taom_cc_taom_education_eredluin_6_desc" text="你跟随外围哨兵行走在蓝色山脉东麓，学习追踪奥克劫掠者，在矮人路沿线的松林中借助掩护射击。山里的空气让你的感官更敏锐，拉开距离也成了你的优势。" />
-    <string id="taom_cc_taom_parent_anduinvale_1_text" text="贝奥恩家族" />
-    <string id="taom_cc_taom_parent_anduinvale_1_desc" text="你的家族属于贝奥恩家族，是格林贝奥恩的亲族与伙伴。他们在贝奥恩的厅堂中手持巨斧，骑着河谷地健壮的小马，领主之命所指，无处不往。" />
+    <string id="taom_cc_taom_parent_anduinvale_1_text" text="贝奥恩一族" />
+    <string id="taom_cc_taom_parent_anduinvale_1_desc" text="你家属于贝奥恩一族，是格里姆贝奥恩的亲族与同伴，在贝奥恩的厅堂中持握巨斧，骑着河谷地结实的矮种马，首领之命所至，无处不往。" />
     <string id="taom_cc_taom_parent_anduinvale_2_text" text="老渡口商人" />
     <string id="taom_cc_taom_parent_anduinvale_2_desc" text="你家在老渡口经营商行，从高隘口下来的道路就在这里与河流相接。蜂蜜、兽皮和木材运过河，卖给林中居民与黑森林精灵，每辆货车都得交费。" />
     <string id="taom_cc_taom_parent_anduinvale_3_text" text="安都因河谷自由农民" />
@@ -1170,15 +1170,15 @@
     <string id="taom_cc_taom_parent_anduinvale_5_desc" text="你的家人在河东的黑森林边缘打猎，猎取鹿和野猪，也留意林间的蜘蛛和多古尔都仆从。" />
     <string id="taom_cc_taom_parent_anduinvale_6_text" text="金鸢尾河流浪者" />
     <string id="taom_cc_taom_parent_anduinvale_6_desc" text="你的家人沿金鸢尾河与安都因河岸漂泊，找到什么就卖什么，拿得到的也不会放过。他们明白，摆渡人听到的事，总比说出来的多。" />
-    <string id="taom_cc_taom_parent_angaladh_1_text" text="安加拉兹家族" />
-    <string id="taom_cc_taom_parent_angaladh_1_desc" text="你的家族属于安加拉兹家族，是英戈玛王的亲族，在他位于林中人城的厅堂里手持巨斧，并沿着林中大道统领森林征召兵。" />
+    <string id="taom_cc_taom_parent_angaladh_1_text" text="瓦尔丹丁" />
+    <string id="taom_cc_taom_parent_angaladh_1_desc" text="你家属于瓦尔丹丁家族，与西奥德米罗国王有亲，在他位于林中居民镇的厅堂里持握巨斧，并率领森林征召兵沿林道行进。" />
     <string id="taom_cc_taom_parent_angaladh_2_text" text="林中居民镇商人" />
     <string id="taom_cc_taom_parent_angaladh_2_desc" text="你家在林中居民镇经营商行。木材、毛皮和蜂蜜从林间空地运来，再沿密林路运走，每批货物都得交费。" />
     <string id="taom_cc_taom_parent_angaladh_3_text" text="林间开垦农民" />
     <string id="taom_cc_taom_parent_angaladh_3_desc" text="你的家人在森林中砍出一片空地耕种，冬天伐木，春天播种。门边总备着长矛，因为蜘蛛和狼从树林里出来的次数，比这里下雨还勤。" />
     <string id="taom_cc_taom_parent_angaladh_4_text" text="铁木厅木匠" />
     <string id="taom_cc_taom_parent_angaladh_4_desc" text="你的家人是铁木厅的木匠和斧匠，砍伐带有深色心材的树木，厅堂的名字正是来自这种木材。他们还为林中居民的宽刃斧装上斧柄。" />
-    <string id="taom_cc_taom_parent_angaladh_5_text" text="林中大道的护林人" />
+    <string id="taom_cc_taom_parent_angaladh_5_text" text="梅洛阿金家族" />
     <string id="taom_cc_taom_parent_angaladh_5_desc" text="你的家人是密林路的守卫，带着弓和短斧巡行这条路，保持道路畅通，赶走蜘蛛。很少有人感谢他们，可这条路一直走得通。" />
     <string id="taom_cc_taom_parent_angaladh_6_text" text="荆棘堡流放者" />
     <string id="taom_cc_taom_parent_angaladh_6_desc" text="你的家人住在荆棘堡边境长满荆棘的地带，靠从森林和路上弄来的东西过活。他们明白，陌生人的嘴再紧，钱袋也未必那么紧。" />
@@ -1194,7 +1194,7 @@
     <string id="taom_cc_taom_youth_anduinvale_5_desc" text="你在贝奥恩大厅的亲随中拿起战斧，在酋长的注视下，于院场中学习用矛和刀剑并肩作战。" />
     <string id="taom_cc_taom_youth_anduinvale_6_text" text="随河上商人旅行。" />
     <string id="taom_cc_taom_youth_anduinvale_6_desc" text="你随河上商人沿安都因河往返，照看船只与货物，学会应付过路费、守卫，还有心存疑虑的陌生人。" />
-    <string id="taom_cc_taom_youth_angaladh_1_text" text="为英戈玛王传递急信。" />
+    <string id="taom_cc_taom_youth_angaladh_1_text" text="为西奥德米罗国王传递急件。" />
     <string id="taom_cc_taom_youth_angaladh_1_desc" text="你往来于林中居民镇和外围要塞之间，沿森林小径从一座要塞跑向下一座，传达国王的命令。" />
     <string id="taom_cc_taom_youth_angaladh_2_text" text="守卫森林之门的木栅围墙。" />
     <string id="taom_cc_taom_youth_angaladh_2_desc" text="你曾在森林之门的围墙上服役，从平台上向下方道路的狼和半兽人放箭，学会几个弓手该如何守住一条狭道。" />
@@ -1207,7 +1207,7 @@
     <string id="taom_cc_taom_youth_angaladh_6_text" text="沿密林路贩卖货物。" />
     <string id="taom_cc_taom_youth_angaladh_6_desc" text="你背着小刀、线和蜜饼，沿密林路往返，学会应付饥饿的陌生人、收路费的守卫，以及拿不准的买卖。" />
     <string id="taom_cc_taom_adulthood_anduinvale_1_text" text="你与格里姆贝奥恩并肩守住了卡尔岩渡口。" />
-    <string id="taom_cc_taom_adulthood_anduinvale_1_desc" text="当半兽人大军自高隘口南下、欲将河谷一分为二时，你与贝奥恩家族的斧兵守在浅滩上，直到河谷骑手绕到他们侧翼。那一夜，大厅中传颂着你的名字。" />
+    <string id="taom_cc_taom_adulthood_anduinvale_1_desc" text="当一支半兽人大军自高隘口南下，欲将河谷地一分为二时，你与贝奥恩一族的斧兵一同守在浅滩，直到河谷骑手绕到他们侧翼。那一夜，厅堂中传诵着你的名字。" />
     <string id="taom_cc_taom_adulthood_anduinvale_2_text" text="你在老渡口开办了自由集市。" />
     <string id="taom_cc_taom_adulthood_anduinvale_2_desc" text="你让贝奥恩一族、林中居民和黑森林精灵坐到同一张桌前，谈妥老渡口的通行费用，让蜂蜜和木材能顺利过河，不再为此争吵。格里姆贝奥恩的总管不会忘记，是谁装满了仓库。" />
     <string id="taom_cc_taom_adulthood_anduinvale_3_text" text="半兽人袭击后，你重建了东岸的农场。" />
@@ -1218,7 +1218,7 @@
     <string id="taom_cc_taom_adulthood_anduinvale_5_desc" text="南方的阴影日益扩张，林中居民的家庭纷纷穿过树林向北逃。你沿着奥克斥候不知道的小路带他们渡河，一个孩子也没丢。格里姆贝奥恩握住了你的手。" />
     <string id="taom_cc_taom_adulthood_anduinvale_6_text" text="你捣毁了老渡口的一个半兽人销赃团伙。" />
     <string id="taom_cc_taom_adulthood_anduinvale_6_desc" text="接连几个月，迷雾山脉来的赃物不断出现在沿河的后屋交易中。你追查这门买卖，找到幕后的人，把他们交给守卫，也留下了一点银子，算是自己的辛苦钱。" />
-    <string id="taom_cc_taom_adulthood_angaladh_1_text" text="你与英戈玛王一同守住了森林大门。" />
+    <string id="taom_cc_taom_adulthood_angaladh_1_text" text="你与西奥德米罗国王一同守住了森林之门。" />
     <string id="taom_cc_taom_adulthood_angaladh_1_desc" text="奥克大军从多古尔都前来强攻森林之门时，你与国王的矛兵坚守通道，直到林道守卫从树丛间绕过来。当晚，大厅里的人谈起了你的名字。" />
     <string id="taom_cc_taom_adulthood_angaladh_2_text" text="你与贝奥恩一族建立了木材集市。" />
     <string id="taom_cc_taom_adulthood_angaladh_2_desc" text="你渡过安都因河，把安加拉兹木材生意的道理向贝奥恩一族讲得明明白白，一个月内就建起了定期集市。国王的总管记住了你的名字。" />
@@ -1242,7 +1242,7 @@
     <string id="taom_cc_taom_education_anduinvale_5_desc" text="你随猎人行走在黑森林边缘和卡尔岩多石的坡地，学会悄无声息地移动，朝黑影放箭。很快，你就用弓射倒了第一个半兽人。" />
     <string id="taom_cc_taom_education_anduinvale_6_text" text="在金鸢尾河岸边勉强度日。" />
     <string id="taom_cc_taom_education_anduinvale_6_desc" text="你在金鸢尾河的芦苇屋和码头之间长大，替人跑腿赚钱，卖些河水带来的东西。河水教会你手脚要快、嘴要更快，还要知道什么时候该消失。" />
-    <string id="taom_cc_taom_education_angaladh_1_text" text="在英格玛王的厅堂中受训。" />
+    <string id="taom_cc_taom_education_angaladh_1_text" text="在西奥德米罗国王的厅堂中受训。" />
     <string id="taom_cc_taom_education_angaladh_1_desc" text="你从小与国王的家臣一起生活在林中居民镇，对着树桩练习挥舞巨斧，学习全副武装在树木之间行动。每块淤青都是教训，古老的森林歌谣则教你明白，林中居民彼此该承担什么。" />
     <string id="taom_cc_taom_education_angaladh_2_text" text="在林中居民镇的木料场清点木材。" />
     <string id="taom_cc_taom_education_angaladh_2_desc" text="年轻时，你在林中居民镇的木料场清点原木和木板，学会与贝奥恩一族和商队领队讲价，也能分清好木料与朽木。" />
@@ -1254,8 +1254,8 @@
     <string id="taom_cc_taom_education_angaladh_5_desc" text="你跟着埃敏杜伊尔山下的林道守卫，学会踩着落叶悄无声息地行进，朝黑影放箭。很快，你就用弓射倒了第一只蜘蛛。" />
     <string id="taom_cc_taom_education_angaladh_6_text" text="在森林之门周围勉强度日。" />
     <string id="taom_cc_taom_education_angaladh_6_desc" text="你在森林之门外的简陋棚屋间长大，替旅人跑腿，卖些路上遗落的东西。道路教会你手脚要快、嘴要更快，还要知道什么时候该消失。" />
-    <string id="taom_cc_taom_parent_dorwinion_1_text" text="奥斯特里克王的家臣" />
-    <string id="taom_cc_taom_parent_dorwinion_1_desc" text="你的家族在藤园奥斯特里克王的厅堂中效力，随其家臣骑行，沿着河道传达王的号令，无论酒庄与王国何处需要。" />
+    <string id="taom_cc_taom_parent_dorwinion_1_text" text="哈温国王的家臣" />
+    <string id="taom_cc_taom_parent_dorwinion_1_desc" text="你的家族在葡萄洲哈温国王的厅堂中效力，随侍其左右，凡酿酒与王国所需，便沿着河道传递他的旨意。" />
     <string id="taom_cc_taom_parent_dorwinion_2_text" text="红水酒商" />
     <string id="taom_cc_taom_parent_dorwinion_2_desc" text="你家在红水经营酒行，把酒桶顺河运走，再运过鲁恩内海，每只酒桶离开码头前都得交费。" />
     <string id="taom_cc_taom_parent_dorwinion_3_text" text="葡萄园农民" />
@@ -1266,8 +1266,8 @@
     <string id="taom_cc_taom_parent_dorwinion_5_desc" text="你的家人在奔流河沿岸的芦苇丛和河边树林中打猎，捕捉禽鸟和鹿，送往海门集市，也始终留意水面上的动静。" />
     <string id="taom_cc_taom_parent_dorwinion_6_text" text="海门码头流浪者" />
     <string id="taom_cc_taom_parent_dorwinion_6_desc" text="你的家人在海门的码头间讨生活，替船上干活赚钱，也明白港务官听到的事，总比说出来的多。" />
-    <string id="taom_cc_taom_parent_southrhovanion_1_text" text="维杜马尔王的扈从" />
-    <string id="taom_cc_taom_parent_southrhovanion_1_desc" text="你的家族在维杜加德维杜马尔王的厅堂中效力，随其家臣骑行，将他的长矛带往平原上任何需要之处。" />
+    <string id="taom_cc_taom_parent_southrhovanion_1_text" text="苏涅弗雷多国王的侍从" />
+    <string id="taom_cc_taom_parent_southrhovanion_1_desc" text="你的家族在维杜加德苏涅弗雷多国王的厅堂中效力，随侍其左右，凡平原所需，便为他执矛而战。" />
     <string id="taom_cc_taom_parent_southrhovanion_2_text" text="南林马商" />
     <string id="taom_cc_taom_parent_southrhovanion_2_desc" text="你的家人在南林贩马，把马群赶到集市，将坐骑卖给森林与东边海岸之间的各路领主。" />
     <string id="taom_cc_taom_parent_southrhovanion_3_text" text="北境自耕农" />
@@ -1321,12 +1321,12 @@
     <string id="taom_cc_taom_adulthood_southrhovanion_3_text" text="你击退了初秋袭击北境的战车民。" />
     <string id="taom_cc_taom_adulthood_southrhovanion_3_desc" text="劫掠者专挑收获季节发动袭击，那时农庄缺少防备。你召集征召兵，在溪流渡口徒步迎敌，把他们挡在那里，直到骑兵赶到。" />
     <string id="taom_cc_taom_adulthood_southrhovanion_4_text" text="你锻造的剑被国王选作亲随卫队的佩剑。" />
-    <string id="taom_cc_taom_adulthood_southrhovanion_4_desc" text="这笔订单来自王室马厩：要一柄可挂于鞍侧、拔出毫不迟滞的剑。当维都马尔为自己的骑手选中你的样式时，你的名声便成了。" />
+    <string id="taom_cc_taom_adulthood_southrhovanion_4_desc" text="委托来自国王的马厩：需要一把能挂在马鞍上、拔出时毫不迟滞的剑。当苏涅弗雷多为自己的骑手选中你的样式时，你的名声便成了。" />
     <string id="taom_cc_taom_adulthood_southrhovanion_5_text" text="你追踪到了测绘通往西境路线的斥候。" />
     <string id="taom_cc_taom_adulthood_southrhovanion_5_desc" text="你注意到有人暗中侦察的痕迹：被重新扶直的草、翻动过的石头，还有掩埋过的火堆。你循着踪迹向南，及时带回报告，让骑兵能够采取行动。" />
     <string id="taom_cc_taom_adulthood_southrhovanion_6_text" text="你揭露了潜伏在维杜加德的间谍。" />
     <string id="taom_cc_taom_adulthood_southrhovanion_6_desc" text="这名间谍在城里待了两年，一直把马群与驻军的消息送往东方。你盯着他，直到摸清他的活动规律，再把他交给国王手下的守卫。" />
-    <string id="taom_cc_taom_education_dorwinion_1_text" text="在奥斯特里克王的厅堂中受训。" />
+    <string id="taom_cc_taom_education_dorwinion_1_text" text="在哈温国王的厅堂中受训。" />
     <string id="taom_cc_taom_education_dorwinion_1_desc" text="你从小与国王的家臣一起生活在葡萄洲，在老卫士指导下学习全副武装骑马、挥舞重兵器。每块淤青都是教训，大厅里的歌谣则教你明白，自己该为领主承担什么。" />
     <string id="taom_cc_taom_education_dorwinion_2_text" text="在红水酒行做文书。" />
     <string id="taom_cc_taom_education_dorwinion_2_desc" text="你在红水酒窖里学习记账、招揽买家。每桶酒都要品尝，每个价格都要争论，你也学会分清公道买卖与花言巧语。" />
@@ -1338,7 +1338,7 @@
     <string id="taom_cc_taom_education_dorwinion_5_desc" text="你随捕鸟人行走在沼泽与河边树林，学会悄无声息地移动，向芦苇之间的黑影放箭。" />
     <string id="taom_cc_taom_education_dorwinion_6_text" text="在海门码头勉强度日。" />
     <string id="taom_cc_taom_education_dorwinion_6_desc" text="你在海门的码头工人和小偷之间长大，替人跑腿赚钱，卖些从驳船上掉下来的东西。港口教会你手脚要快、嘴要更快，还要知道什么时候该消失。" />
-    <string id="taom_cc_taom_education_southrhovanion_1_text" text="随维都马尔王的侍从一同习骑。" />
+    <string id="taom_cc_taom_education_southrhovanion_1_text" text="随苏涅弗雷多国王的侍从一同骑马受训。" />
     <string id="taom_cc_taom_education_southrhovanion_1_desc" text="年轻时，你在维杜加德的王家亲随中学习骑战。老骑兵教你在马背上熬过漫长的一天，坐得稳、拿稳矛，也稳住自己的脾气。" />
     <string id="taom_cc_taom_education_southrhovanion_2_text" text="在南林的马市贩马。" />
     <string id="taom_cc_taom_education_southrhovanion_2_desc" text="你带着价格和账目，往来于南林马市与平原上的小要塞，学会看一眼就能判断坐骑，听买家说几句话就能摸清对方。" />

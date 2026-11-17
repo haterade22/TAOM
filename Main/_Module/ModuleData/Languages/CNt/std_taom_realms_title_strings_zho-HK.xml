@@ -6,8 +6,8 @@
     <tag language="Traditional Chinese" />
   </tags>
   <strings>
-    <string id="realms_clan_telcontar" text="House of Telcontar" />
-    <string id="realms_clan_telcontar_short" text="Telcontar" />
+    <string id="realms_clan_telcontar" text="泰爾康泰家族" />
+    <string id="realms_clan_telcontar_short" text="泰爾康泰" />
     <string id="realms_coronation_button" text="國王萬歲！" />
     <string id="realms_coronation_heading" text="王者歸來" />
     <string id="realms_coronation_text" text="在米那斯提力斯城門前，剛鐸宰相獻上他職位的白色權杖，國王又把它交還給他。隨後，古代諸王的王冠被戴在{HERO}頭上。{newline}多年之後，伊熙爾杜的繼承人終於坐上剛鐸王座，{CLAN}以{SEAT}爲都統治這個王國。" />
@@ -122,73 +122,73 @@
     <string id="realms_duchy_westemnet" text="西埃姆內特" />
     <string id="realms_duchy_westfold" text="西伏爾德" />
     <string id="realms_duchy_zirakzigil" text="茲拉格齊吉爾" />
-    <string id="realms_holder_count_harad" text="Tarb {NAME}" />
-    <string id="realms_holder_countess_harad" text="Tarbah {NAME}" />
-    <string id="realms_holder_duchess_harad" text="Autarbah {NAME}" />
-    <string id="realms_holder_duke_harad" text="Autarb {NAME}" />
+    <string id="realms_holder_count_harad" text="塔爾卜 {NAME}" />
+    <string id="realms_holder_countess_harad" text="塔爾芭 {NAME}" />
+    <string id="realms_holder_duchess_harad" text="奧塔爾芭 {NAME}" />
+    <string id="realms_holder_duke_harad" text="奧塔爾卜 {NAME}" />
     <string id="realms_holder_high_king" text="至高王 {NAME}" />
-    <string id="realms_holder_high_king_harad" text="Chák Taskral {NAME}" />
+    <string id="realms_holder_high_king_harad" text="查克·塔斯克拉爾 {NAME}" />
     <string id="realms_holder_high_queen" text="至高女王 {NAME}" />
-    <string id="realms_holder_high_queen_harad" text="Chák Taskralah {NAME}" />
+    <string id="realms_holder_high_queen_harad" text="查克·塔斯克拉拉 {NAME}" />
     <string id="realms_holder_king" text="國王 {NAME}" />
     <string id="realms_holder_king_elf" text="阿拉恩 {NAME}" />
-    <string id="realms_holder_king_harad" text="Taskral {NAME}" />
+    <string id="realms_holder_king_harad" text="塔斯克拉爾 {NAME}" />
     <string id="realms_holder_lady" text="女領主 {NAME}" />
     <string id="realms_holder_lady_elf" text="希瑞爾 {NAME}" />
     <string id="realms_holder_lord" text="領主 {NAME}" />
     <string id="realms_holder_lord_dwarf" text="烏茲巴德 {NAME}" />
     <string id="realms_holder_lord_elf" text="希爾 {NAME}" />
-    <string id="realms_holder_marshal" text="Marshal {NAME}" />
-    <string id="realms_holder_prince" text="Prince {NAME}" />
-    <string id="realms_holder_princess" text="Princess {NAME}" />
+    <string id="realms_holder_marshal" text="元帥 {NAME}" />
+    <string id="realms_holder_prince" text="王子 {NAME}" />
+    <string id="realms_holder_princess" text="公主 {NAME}" />
     <string id="realms_holder_queen" text="女王 {NAME}" />
     <string id="realms_holder_queen_elf" text="貝瑞絲 {NAME}" />
-    <string id="realms_holder_queen_harad" text="Taskralah {NAME}" />
-    <string id="realms_holder_steward" text="Steward {NAME}" />
-    <string id="realms_of_barad_dur" text="Barad-dûr" />
-    <string id="realms_of_gondor" text="Gondor" />
-    <string id="realms_of_the_mark" text="the Mark" />
+    <string id="realms_holder_queen_harad" text="塔斯克拉拉 {NAME}" />
+    <string id="realms_holder_steward" text="宰相 {NAME}" />
+    <string id="realms_of_barad_dur" text="巴拉多" />
+    <string id="realms_of_gondor" text="剛鐸" />
+    <string id="realms_of_the_mark" text="馬克" />
     <string id="realms_office_lieutenant" text="巴拉督爾副官" />
     <string id="realms_office_marshal_1" text="馬克大元帥" />
     <string id="realms_office_marshal_2" text="馬克的第二元帥" />
     <string id="realms_office_marshal_3" text="馬克的第三元帥" />
     <string id="realms_office_steward_gondor" text="剛鐸宰相" />
     <string id="realms_prefix_dol_amroth" text="{NAME}親王國" />
-    <string id="realms_prefix_ered_luin" text="Mansion of Ered Luin" />
-    <string id="realms_prefix_gabilgathol" text="Mansion of Gabilgathol" />
+    <string id="realms_prefix_ered_luin" text="埃瑞德路因宅邸" />
+    <string id="realms_prefix_gabilgathol" text="加比加梭爾宅邸" />
     <string id="realms_prefix_gondor_fief" text="{NAME}封邑" />
-    <string id="realms_prefix_harwan" text="Taskralan of Harwan" />
+    <string id="realms_prefix_harwan" text="哈萬塔斯克拉爾領地" />
     <string id="realms_prefix_reunited" text="重聯王國" />
     <string id="realms_rank_barony" text="{NAME}男爵領" />
     <string id="realms_rank_barony_dwarf" text="{NAME}礦窟" />
     <string id="realms_rank_county" text="{NAME}伯爵領" />
     <string id="realms_rank_county_elf" text="{NAME}庇護所" />
-    <string id="realms_rank_county_harad" text="Tarba of {NAME}" />
+    <string id="realms_rank_county_harad" text="{NAME}塔爾巴領地" />
     <string id="realms_rank_county_orc" text="{NAME}要塞" />
     <string id="realms_rank_duchy" text="{NAME}公爵領" />
     <string id="realms_rank_duchy_dwarf" text="{NAME}堡" />
     <string id="realms_rank_duchy_elf" text="{NAME}庇護所" />
-    <string id="realms_rank_duchy_harad" text="Autara of {NAME}" />
+    <string id="realms_rank_duchy_harad" text="{NAME}奧塔拉領地" />
     <string id="realms_rank_duchy_orc" text="{NAME}軍閥領" />
     <string id="realms_rank_empire" text="{NAME}至高王國" />
     <string id="realms_rank_empire_dwarf" text="{NAME}王權" />
     <string id="realms_rank_kingdom" text="{NAME}王國" />
     <string id="realms_rank_kingdom_dwarf" text="{NAME}宅邸" />
     <string id="realms_rank_kingdom_elf" text="{NAME}王國" />
-    <string id="realms_rank_kingdom_harad" text="Taskralan of {NAME}" />
+    <string id="realms_rank_kingdom_harad" text="{NAME}塔斯克拉爾領地" />
     <string id="realms_rank_kingdom_orc" text="{NAME}統御領" />
     <string id="realms_rank_lordship" text="{NAME}領主領" />
     <string id="realms_rank_union" text="{NAME}重聯王國" />
-    <string id="realms_rank_union_dwarf" text="High Kingship of {NAME}" />
-    <string id="realms_realm_greenwood" text="Greenwood" />
-    <string id="realms_realm_misty_mountains" text="Misty Mountains" />
-    <string id="realms_realm_reunited" text="Reunited Kingdom" />
+    <string id="realms_rank_union_dwarf" text="{NAME}至高王權" />
+    <string id="realms_realm_greenwood" text="綠林" />
+    <string id="realms_realm_misty_mountains" text="迷霧山脈" />
+    <string id="realms_realm_reunited" text="重聯王國" />
     <string id="realms_title_arnor" text="阿爾諾" />
     <string id="realms_title_durins_folk" text="都林一族" />
-    <string id="realms_title_eredluin" text="Ered Luin" />
-    <string id="realms_title_greenwood" text="Greenwood" />
-    <string id="realms_title_haradwaith" text="Haradwaith" />
-    <string id="realms_title_khazad_dum" text="Khazad-dûm" />
+    <string id="realms_title_eredluin" text="埃瑞德路因" />
+    <string id="realms_title_greenwood" text="綠林" />
+    <string id="realms_title_haradwaith" text="哈拉德威治" />
+    <string id="realms_title_khazad_dum" text="卡扎督姆" />
     <string id="realms_title_misty_mountains" text="迷霧山脈" />
     <string id="realms_title_reunited" text="剛鐸與阿爾諾" />
     <string id="realms_title_rhovanion" text="羅瓦尼安" />

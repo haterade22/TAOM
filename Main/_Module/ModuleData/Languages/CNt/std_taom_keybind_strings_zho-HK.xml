@@ -47,9 +47,9 @@
     <string id="taom_key_seat_slow_desc" text="戰鬥中將時間速度降低一檔，最低爲正常速度的四分之一。默認按鍵爲 Page Down。" />
     <string id="taom_key_seat_stay" text="暫停戰鬥（TAOM）" />
     <string id="taom_key_seat_stay_desc" text="戰鬥中取消加速並暫停，再按一次即可繼續。暫停時仍可自由移動指揮視角。默認按鍵爲 Home。" />
-    <string id="taom_key_cheat_menu" text="Open Cheat Menu (TAOM)" />
-    <string id="taom_key_cheat_menu_desc" text="Opens the TAOM cheat menu on the campaign map, like the Cheats button. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
-    <string id="taom_key_battle_cheat_menu" text="Open Battle Cheat Menu (TAOM)" />
-    <string id="taom_key_battle_cheat_menu_desc" text="Opens the TAOM battle cheat list in a mission, like the Cheats item in the Esc menu. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
+    <string id="taom_key_cheat_menu" text="打開作弊菜單（TAOM）" />
+    <string id="taom_key_cheat_menu_desc" text="在戰役地圖上打開TAOM作弊菜單，與作弊按鈕相同。僅在單人模式且模組選項中開啓“啓用作弊菜單”時有效。默認爲H。" />
+    <string id="taom_key_battle_cheat_menu" text="打開戰鬥作弊菜單（TAOM）" />
+    <string id="taom_key_battle_cheat_menu_desc" text="在戰鬥中打開TAOM戰鬥作弊列表，與Esc菜單中的作弊項相同。僅在單人模式且模組選項中開啓“啓用作弊菜單”時有效。默認爲H。" />
   </strings>
 </base>

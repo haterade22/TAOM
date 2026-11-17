@@ -63,6 +63,38 @@ class PlaceholderTests(unittest.TestCase):
         self.assertNotIn("[Gondor]", counts)
         self.assertEqual(counts["[rb:x]"], 1)
 
+    def test_placeholders_match_ExtraSquareBracket_IsRejected(self):
+        # The engine removes each [...] from a line, so a stray [ hides the rest of it, and a plain [...] after
+        # [rb:X] takes the reaction slot, which CampaignMissionComponent then looks up and fails on (#1421 F3).
+        ok, why = twc.placeholders_match("Go now.[rb:unsure]", "现在走吧。[rb:unsure][注]")
+        self.assertFalse(ok)
+        self.assertIn("__[__", why)
+
+    def test_placeholders_match_UnclosedSquareBracket_IsRejected(self):
+        ok, _ = twc.placeholders_match("[Gondor] Sword", "[刚铎剑")
+        self.assertFalse(ok)
+
+    def test_placeholders_match_StrayBrace_IsRejected(self):
+        ok, why = twc.placeholders_match("Hello {FIRSTNAME}.", "你好 {FIRSTNAME}}。")
+        self.assertFalse(ok)
+        self.assertIn("__}__", why)
+
+    def test_placeholders_match_AddedEngineSelection_Passes(self):
+        # Portuguese needs gender agreement; {#GENDER(X)}..{#}..{\#} is the engine's selection syntax (MBTextParser).
+        english = "{CLAN} has been eliminated."
+        brazil = (r"{#GENDER(CLAN)}O {#}A {#}Os {#}As {#}{\#}{CLAN} {#GENDER(CLAN)}foi eliminado{#}foi eliminada{#}"
+                  r"foram eliminados{#}foram eliminadas{#}foi eliminado{\#}.")
+        ok, why = twc.placeholders_match(english, brazil)
+        self.assertTrue(ok, why)
+
+    def test_placeholders_match_AddedEngineField_Passes(self):
+        ok, why = twc.placeholders_match("{COUNT} swords", r"{COUNT} {@Plural}espada{\@}")
+        self.assertTrue(ok, why)
+
+    def test_placeholders_match_TranslatedCultureTag_Passes(self):
+        ok, _ = twc.placeholders_match("[Gondor] Sword", "[刚铎]剑")
+        self.assertTrue(ok)
+
 
 if __name__ == "__main__":
     unittest.main()

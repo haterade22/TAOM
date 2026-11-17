@@ -1677,3 +1677,9 @@ Phase 4 imported the Chinese team's text for 1,130 MCM keys. `LanguageTextIntegr
 - **Why missed:** a sample read as the rule, and only good input was tested.
 - **Prevent:** measure a text-matching rule over the whole data and many batches before it ships; strip markup before a word match; a writer of a tracked data file refuses an empty result.
 - **Source:** [rca-cn-style-2026-11-16.md](../rca-cn-style-2026-11-16.md) rows 1 to 3.
+
+### A tool that decides "the team's text" asks the importer, never a copy of its rule (#1421, 2026-11-17)
+The #1421 re-draft script and the reference builder each tested "this row holds the team's text" as `team[id] == current`. The importer writes an Armory name with its English tier appended and refuses a stale row (our English changed after the team's base), so 993 Armory rows per language holding the team's text were re-drafted, and 142 CNs and 105 CNt rows holding the team's text for old English went into the reference as the standard. The builder's base check was a third copy: it warned and wrote. Two later checks were scoped to the rows a step meant to change, and missed rows the step changed too (a collision the re-draft freed; English rows the paid run drafted).
+- **Why missed:** each script wrote the short form of a rule the importer already holds, and each check read the list it expected to change.
+- **Prevent:** a tool that needs the importer's decision calls it (`make_plan(...).cache`, `history_at`, `our_targets`); after a bulk write, re-run the importer's dry run over every module and check every row the write could reach, not the planned list.
+- **Source:** [rca-cn-style-2026-11-16.md](../rca-cn-style-2026-11-16.md) rows 9 to 11, 18, 20 and 22.

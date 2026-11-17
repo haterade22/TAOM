@@ -21,6 +21,7 @@ from pathlib import Path
 REFERENCE_DIR = Path(__file__).resolve().parent / "translation_reference"
 TEAM_LANGUAGES = ("CNs", "CNt")  # languages a translation team owns; each should have a reference file
 
+POSSESSIVE = re.compile(r"['’]s\b")  # "Forlong's Gloves" names Forlong
 WORD = re.compile(r"\w+(?:['’]\w+)*")
 EXPRESSION = re.compile(r"\{[^{}]*\}")  # {VAR}, {?VAR}: a placeholder's words are not the English
 TERM_MAX_WORDS = 4
@@ -40,7 +41,7 @@ STOPWORDS = frozenset("""
 
 
 def words(text: str) -> list[str]:
-    return WORD.findall(EXPRESSION.sub(" ", text))
+    return WORD.findall(POSSESSIVE.sub("", EXPRESSION.sub(" ", text)))
 
 
 def single_word_term(word: str) -> bool:
