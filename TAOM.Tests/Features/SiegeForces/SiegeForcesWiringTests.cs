@@ -6,6 +6,7 @@ using DryIoc;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Features.ServerSettings;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
@@ -329,7 +330,7 @@ public class SiegeForcesWiringTests
         Assert.IsTrue(new TaomSettings().EnableSiegeTroopPicker);
 
         var group = Attribute(property, "SettingPropertyGroupAttribute");
-        Assert.AreEqual("Battle Tactics/Siege Forces", group.GetType().GetProperty("GroupName")!.GetValue(group));
+        Assert.AreEqual("Battle Tactics/Siege Forces", McmText.Plain(group.GetType().GetProperty("GroupName")!.GetValue(group) as string));
         Assert.AreEqual(25, (int)group.GetType().GetProperty("GroupOrder")!.GetValue(group)!,
             "MCM creates a group from its first property and ignores a GroupOrder on any later one");
 
@@ -347,7 +348,7 @@ public class SiegeForcesWiringTests
             .Where(p => p.Name != nameof(TaomSettings.EnableSiegeTroopPicker))
             .Select(p => p.GetCustomAttributes(inherit: false).FirstOrDefault(a => a.GetType().Name == "SettingPropertyGroupAttribute"))
             .Where(a => a != null)
-            .Select(a => (Name: (string)a!.GetType().GetProperty("GroupName")!.GetValue(a)!, Order: (int)a.GetType().GetProperty("GroupOrder")!.GetValue(a)!))
+            .Select(a => (Name: McmText.Plain((string)a!.GetType().GetProperty("GroupName")!.GetValue(a)!), Order: (int)a.GetType().GetProperty("GroupOrder")!.GetValue(a)!))
             .Where(g => g.Name.StartsWith("Battle Tactics/", StringComparison.Ordinal) && g.Order != 0)
             .ToList();
 

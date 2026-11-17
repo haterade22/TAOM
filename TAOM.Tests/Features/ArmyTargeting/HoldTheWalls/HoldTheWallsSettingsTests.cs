@@ -2,6 +2,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.ArmyTargeting;
 
@@ -38,18 +39,18 @@ public class HoldTheWallsSettingsTests
     public void TheSetting_IsInTheAiStrategicIntelligenceGroup_WithoutARestart()
     {
         // MCM reads these attributes by name; MCMv5 is runtime-only here, so the test does too.
-        Assert.AreEqual("AI Strategic Intelligence", Read(Attribute("SettingPropertyGroupAttribute"), "GroupName"));
+        Assert.AreEqual("AI Strategic Intelligence", McmText.Plain(Read(Attribute("SettingPropertyGroupAttribute"), "GroupName") as string));
         var value = Attribute("SettingPropertyBoolAttribute");
-        Assert.AreEqual("Good armies hold captured forts", Read(value, "DisplayName"));
+        Assert.AreEqual("Good armies hold captured forts", McmText.Plain(Read(value, "DisplayName") as string));
         Assert.AreEqual(false, Read(value, "RequireRestart"), "the pass reads the switch every hour: a restart is never needed");
     }
 
     [TestMethod]
-    public void TheHint_IsPlainEnglish_AndNamesTheMasterSwitchAndTheDefault()
+    public void TheHint_IsKeyed_AndNamesTheMasterSwitchAndTheDefault()
     {
         var hint = (string)Read(Attribute("SettingPropertyBoolAttribute"), "HintText");
 
-        Assert.IsFalse(hint.Contains("{="), "MCM hints are not localisation keys");
+        StringAssert.StartsWith(hint, "{=taom_mcm_", "MCM hints carry a taom_mcm_ key (#1385)");
         StringAssert.Contains(hint, "AI Strategic Intelligence");
         StringAssert.Contains(hint, "Default: on");
     }

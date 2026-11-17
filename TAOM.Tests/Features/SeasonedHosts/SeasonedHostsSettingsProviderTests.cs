@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.SeasonedHosts;
 using TAOM.Tests.Infrastructure;
@@ -101,7 +102,7 @@ public class SeasonedHostsSettingsProviderTests
     {
         var source = RepoPaths.ReadSource("Main/Features/TaomSettings.cs", stripComments: true);
 
-        Assert.IsTrue(source.Contains("[SettingPropertyGroup(\"World/Seasoned Hosts\", GroupOrder = 73)]"));
+        Assert.IsTrue(source.Contains("[SettingPropertyGroup(\"{=taom_mcm_group_world}World/{=taom_mcm_group_seasoned_hosts}Seasoned Hosts\", GroupOrder = 73)]"));
         Assert.AreEqual(1, source.Split(new[] { "GroupOrder = 73" }, System.StringSplitOptions.None).Length - 1,
             "GroupOrder 73 is used by another group");
     }
@@ -120,7 +121,7 @@ public class SeasonedHostsSettingsProviderTests
     {
         var property = typeof(TaomSettings).GetProperty(name)!;
 
-        Assert.AreEqual("World/Seasoned Hosts", Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName"));
+        Assert.AreEqual("World/Seasoned Hosts", McmText.Plain(Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName") as string));
         var value = Attribute(property, kind);
         Assert.AreEqual(false, Read(value, "RequireRestart"));
         StringAssert.StartsWith((string)Read(value, "DisplayName"), "{=" + key + "}");

@@ -1659,3 +1659,15 @@ Phase 2 of #1385 made special resource names resolve through `{=taom_res_name_<i
 - **Why missed:** each check stayed on one side. The names were traced to their readers on one machine, and the team's text was compared with our English, never with vanilla's Chinese.
 - **Prevent:** when a value becomes localized, grep every co-op message field it reaches; send an id and resolve on the receiver. Before a row overrides a vanilla key in a language, compare it with vanilla's row in that language (`VanillaKeyOverrideTests.KeptRows_NoneRepeatsVanillasOwnRow`).
 - **Source:** [rca-cn-phase2-2026-11-16.md](../rca-cn-phase2-2026-11-16.md) rows 1 and 2.
+
+### A sentence is translated whole, or its parts stay English (#1385, 2026-11-16)
+Phase 3 of #1385 keyed sentence templates and the words set into them as text variables. The import matched the team's Chinese to our English one whole string at a time; the team had written the templates as `{0}` format strings or fragments, so only the words matched. A Chinese player then saw Chinese words inside English sentences, where the whole line had been English before. The same phase registered three rows with half their English, because the harvester reads one C# literal and the default was split with `+`.
+- **Why missed:** each check read one string. Nothing compared a template with the parts it holds, and the gate that compares rows with C# also read only the first literal.
+- **Prevent:** when a word gets a translated row, check that every sentence it is set into has one too; take a team's format string with its slots renamed to our variables. Write each `{=KEY}` default as one literal (the harvester refuses a split one).
+- **Source:** [rca-cn-phase3-2026-11-16.md](../rca-cn-phase3-2026-11-16.md) rows 2 and 15.
+
+### A gate that flags a translator's text is a hypothesis about the gate too (#1385, 2026-11-16)
+Phase 4 imported the Chinese team's text for 1,130 MCM keys. `LanguageTextIntegrityTests` flagged 7 hints, and the builder dropped them. Six of the flagged words were code names the English row also holds (`taom.tactic_status`, `event:/ui/transfer`, `taom_debug.log`): the gate's identifier pattern did not know dotted commands, sound paths or `.log` files. The same phase wrote a rule about MCM group names into the guide and checked the data once by script, with no test, so the next language pass could break it unseen.
+- **Why missed:** a red gate read as bad data, and a one-off script read as a gate.
+- **Prevent:** when a gate flags a row, read the English row before dropping the translation; if the English carries the same token, fix the gate with a data test. A rule written into a guide gets a test in the same commit (`McmSettingsTextIsKeyedTests.NoChildGroupText_ContainsItsParentsText_InAnyLanguage`).
+- **Source:** [rca-cn-phase4-2026-11-16.md](../rca-cn-phase4-2026-11-16.md) rows 2 and 3.

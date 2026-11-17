@@ -195,10 +195,28 @@ public class WarLedgerServiceTests
     }
 
     [TestMethod]
+    public void BuildGarrisonLines_OneLinePerKingdom_WithItsGarrisonCounts()
+    {
+        var gondor = Kingdom("empire_w", "gondor", 3, 1);
+        gondor.GarrisonMen = 900;
+        gondor.GarrisonHealthy = 850;
+        var kingdoms = new[] { gondor, null!, Kingdom("empire_s", "mordor", 2, 2) };
+
+        var lines = _sut.BuildGarrisonLines(kingdoms);
+
+        CollectionAssert.AreEqual(new[]
+        {
+            "[WarLedger] v=1 t=garrison cid=c1 day=12 k=empire_w forts=4 men=900 fit=850",
+            "[WarLedger] v=1 t=garrison cid=c1 day=12 k=empire_s forts=4 men=0 fit=0",
+        }, lines.ToArray());
+        Assert.AreEqual(0, _sut.BuildGarrisonLines(null!).Count);
+    }
+
+    [TestMethod]
     public void WriteDaily_LogsEveryLineAtInfo()
     {
         var kingdoms = new[] { Kingdom("empire_w", "gondor", 3, 1) };
-        var expected = _sut.BuildDailyLines(kingdoms);
+        var expected = _sut.BuildDailyLines(kingdoms).Concat(_sut.BuildGarrisonLines(kingdoms)).ToList();
 
         _sut.WriteDaily(kingdoms);
 

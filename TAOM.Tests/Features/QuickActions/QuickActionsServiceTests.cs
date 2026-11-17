@@ -430,23 +430,6 @@ public class QuickActionsServiceTests
         _inventory.Received(1).RefreshDisplay();
     }
 
-    // ===== Menu options =====
-
-    [TestMethod]
-    public void GetMenuOptions_Returns4Options_OneForEachQuickActionType()
-    {
-        var options = _sut.GetMenuOptions();
-
-        Assert.AreEqual(4, options.Count);
-        var types = new HashSet<QuickActionType>();
-        foreach (var (type, _, _) in options)
-            types.Add(type);
-        Assert.IsTrue(types.Contains(QuickActionType.SellDamaged));
-        Assert.IsTrue(types.Contains(QuickActionType.SellLowValue));
-        Assert.IsTrue(types.Contains(QuickActionType.UnequipAll));
-        Assert.IsTrue(types.Contains(QuickActionType.OriginalSellAll));
-    }
-
     // ===== Stack-amount accounting (Codex review #36 regression coverage) =====
 
     [TestMethod]

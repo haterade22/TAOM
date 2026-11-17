@@ -218,16 +218,16 @@ public class CompanionRoleServiceTests
     [TestMethod]
     public void GetRoleShortText_KnownRoles_ReturnsExpectedLabels()
     {
-        Assert.AreEqual("BOW", _sut.GetRoleShortText(CombatRole.Archer));
-        Assert.AreEqual("XBW", _sut.GetRoleShortText(CombatRole.Crossbow));
-        Assert.AreEqual("INF", _sut.GetRoleShortText(CombatRole.ShieldInfantry));
-        Assert.AreEqual("2H", _sut.GetRoleShortText(CombatRole.TwoHanded));
-        Assert.AreEqual("POL", _sut.GetRoleShortText(CombatRole.Polearm));
-        Assert.AreEqual("CAV", _sut.GetRoleShortText(CombatRole.Cavalry));
-        Assert.AreEqual("H.AR", _sut.GetRoleShortText(CombatRole.HorseArcher));
-        Assert.AreEqual("SKR", _sut.GetRoleShortText(CombatRole.Skirmisher));
-        Assert.AreEqual("1H", _sut.GetRoleShortText(CombatRole.OneHanded));
-        Assert.AreEqual("SLG", _sut.GetRoleShortText(CombatRole.Slinger));
+        Assert.AreEqual("{=taom_role_bow}BOW", _sut.GetRoleShortText(CombatRole.Archer));
+        Assert.AreEqual("{=taom_role_xbw}XBW", _sut.GetRoleShortText(CombatRole.Crossbow));
+        Assert.AreEqual("{=taom_role_inf}INF", _sut.GetRoleShortText(CombatRole.ShieldInfantry));
+        Assert.AreEqual("{=taom_role_2h}2H", _sut.GetRoleShortText(CombatRole.TwoHanded));
+        Assert.AreEqual("{=taom_role_pol}POL", _sut.GetRoleShortText(CombatRole.Polearm));
+        Assert.AreEqual("{=taom_role_cav}CAV", _sut.GetRoleShortText(CombatRole.Cavalry));
+        Assert.AreEqual("{=taom_role_har}H.AR", _sut.GetRoleShortText(CombatRole.HorseArcher));
+        Assert.AreEqual("{=taom_role_skr}SKR", _sut.GetRoleShortText(CombatRole.Skirmisher));
+        Assert.AreEqual("{=taom_role_1h}1H", _sut.GetRoleShortText(CombatRole.OneHanded));
+        Assert.AreEqual("{=taom_role_slg}SLG", _sut.GetRoleShortText(CombatRole.Slinger));
         Assert.AreEqual("", _sut.GetRoleShortText(CombatRole.Unknown));
     }
 

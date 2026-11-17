@@ -1,6 +1,7 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.CreatureBandits;
+using TAOM.Features.ServerSettings;
 using TAOM.Features.Spider;
 using TaleWorlds.Core;
 
@@ -111,7 +112,7 @@ public class CreatureBanditTuningTests
             .Where(p => p.Name.StartsWith("CreatureBandit", System.StringComparison.Ordinal))
             .Select(p => (p.Name, Group: p.GetCustomAttributes(inherit: false)
                 .Where(a => a.GetType().Name == "SettingPropertyGroupAttribute")
-                .Select(a => (string)a.GetType().GetProperty("GroupName")!.GetValue(a))
+                .Select(a => McmText.Plain((string)a.GetType().GetProperty("GroupName")!.GetValue(a)))
                 .Single()))
             .ToList();
 

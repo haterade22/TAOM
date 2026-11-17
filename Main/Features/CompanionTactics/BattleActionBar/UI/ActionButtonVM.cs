@@ -1,6 +1,7 @@
 using System;
 using TaleWorlds.Library;
 using TAOM.Features.CompanionTactics.BattleActionBar.Models;
+using TaleWorlds.Localization;
 
 namespace TAOM.Features.CompanionTactics.BattleActionBar.UI;
 
@@ -46,7 +47,7 @@ public sealed class ActionButtonVM : ViewModel
     public ActionButtonVM(BattleAction action, Action onExecuted = null)
     {
         ActionId = action.Id;
-        DisplayText = action.Label;
+        DisplayText = new TextObject(action.Label).ToString();
         CategoryColor = MapCategoryColor(action.Category);
         MappedStance = MapStance(action.Id);
         _executeAction = action.Execute;

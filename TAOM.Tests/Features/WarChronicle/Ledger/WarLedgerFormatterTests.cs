@@ -211,6 +211,26 @@ public class WarLedgerFormatterTests
     }
 
     [TestMethod]
+    public void Garrison_IsTheGoldenLine()
+    {
+        var k = new KingdomWarSnapshot { Id = "bluecraig", Towns = 2, Castles = 3, GarrisonMen = 812, GarrisonHealthy = 640 };
+
+        Assert.AreEqual(
+            "[WarLedger] v=1 t=garrison cid=c1 day=30 k=bluecraig forts=5 men=812 fit=640",
+            WarLedgerFormatter.Garrison("c1", 30, k));
+    }
+
+    [TestMethod]
+    public void Garrison_NegativeCountsReadAsZero()
+    {
+        var k = new KingdomWarSnapshot { Id = "a b", Towns = -1, Castles = 0, GarrisonMen = -3, GarrisonHealthy = -1 };
+
+        Assert.AreEqual(
+            "[WarLedger] v=1 t=garrison cid=c1 day=1 k=a_b forts=0 men=0 fit=0",
+            WarLedgerFormatter.Garrison("c1", 1, k));
+    }
+
+    [TestMethod]
     public void Fixture_IsExactlyWhatTheFormatterWrites()
     {
         var fixture = RepoPaths.ReadSource("tools/tests/fixtures/war_ledger_v1.txt")
@@ -231,6 +251,7 @@ public class WarLedgerFormatterTests
             WarLedgerFormatter.ChronicleEvent("c1", 71, "hornburg", "Held"),
             WarLedgerFormatter.TierEvent("c1", 41, "k", -2, 7, float.NaN),
             WarLedgerFormatter.PledgeEvent("c1", 72, "cardolan", FactionSide.Free, byAi: true),
+            WarLedgerFormatter.Garrison("c1", 12, new KingdomWarSnapshot { Id = "bluecraig", Towns = 2, Castles = 1, GarrisonMen = 450, GarrisonHealthy = 400 }),
             WarLedgerFormatter.Load("c1", 72),
         };
 

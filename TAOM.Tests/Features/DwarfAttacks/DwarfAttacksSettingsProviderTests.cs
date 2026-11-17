@@ -49,7 +49,7 @@ public class DwarfAttacksSettingsProviderTests
     public void SettingsGroup_HasItsOwnGroupOrder()
     {
         string source = File.ReadAllText(Path.Combine(RepoRoot(), "Main", "Features", "TaomSettings.cs"));
-        Assert.IsTrue(source.Contains("[SettingPropertyGroup(\"Battle Tactics/Dwarf Attacks\", GroupOrder = 84)]"));
+        Assert.IsTrue(source.Contains("[SettingPropertyGroup(\"{=taom_mcm_group_battle_tactics}Battle Tactics/{=taom_mcm_group_dwarf_attacks}Dwarf Attacks\", GroupOrder = 84)]"));
         Assert.AreEqual(1, source.Split(new[] { "GroupOrder = 84" }, StringSplitOptions.None).Length - 1,
             "GroupOrder 84 is used by another group");
     }

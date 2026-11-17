@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.LostFooting;
 
@@ -54,20 +55,20 @@ public class LostFootingSettingsProviderTests
     {
         var first = typeof(TaomSettings).GetProperty(nameof(TaomSettings.LostFootingCensus))!;
         var group = Attribute(first, "SettingPropertyGroupAttribute")!;
-        Assert.AreEqual(Group, Read(group, "GroupName"));
+        Assert.AreEqual(Group, McmText.Plain(Read(group, "GroupName") as string));
         var order = (int)Read(group, "GroupOrder");
         Assert.AreNotEqual(0, order, "MCM ignores a GroupOrder on any later property, so the first carries it");
 
         var others = typeof(TaomSettings).GetProperties()
             .Select(p => Attribute(p, "SettingPropertyGroupAttribute"))
-            .Where(a => a != null && (string)Read(a, "GroupName") != Group && (int)Read(a, "GroupOrder") == order)
-            .Select(a => (string)Read(a!, "GroupName"))
+            .Where(a => a != null && McmText.Plain(Read(a, "GroupName") as string) != Group && (int)Read(a, "GroupOrder") == order)
+            .Select(a => McmText.Plain(Read(a!, "GroupName") as string))
             .ToList();
         Assert.AreEqual(0, others.Count, "another group uses GroupOrder " + order + ": " + string.Join(", ", others));
     }
 
     [TestMethod]
-    public void TheToggle_IsPlainEnglish_NeedsNoRestart_AndDefaultsOn()
+    public void TheToggle_IsKeyed_NeedsNoRestart_AndDefaultsOn()
     {
         var p = typeof(TaomSettings).GetProperty(nameof(TaomSettings.LostFootingCensus))!;
         var value = p.GetCustomAttributes(inherit: false).Single(a => a.GetType().Name == "SettingPropertyBoolAttribute");
@@ -75,7 +76,7 @@ public class LostFootingSettingsProviderTests
         Assert.AreEqual(false, Read(value, "RequireRestart"));
         var hint = (string)Read(value, "HintText");
         var name = (string)Read(value, "DisplayName");
-        Assert.IsFalse(hint.Contains("{=") || name.Contains("{="), "plain English, like its neighbours");
+        Assert.IsTrue(hint.StartsWith("{=taom_mcm_") && name.StartsWith("{=taom_mcm_"), "keyed, like its neighbours (#1385)");
         Assert.IsFalse(hint.IndexOf((char)0x2014) >= 0 || hint.IndexOf((char)0x2013) >= 0, "no em or en dash");
         StringAssert.Contains(hint, "Default: on.");
         StringAssert.Contains(hint, "[LostFooting]");

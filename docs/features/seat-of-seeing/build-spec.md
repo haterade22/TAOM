@@ -429,7 +429,7 @@ the last two stay. S4's boundary prefix (8.2) also covers a stand-fast hero left
 controller of the hero. A hit on the player's warg calls `SwitchMainAgentController(true)`, which turns
 vanilla's controller off and that one on, and the end of the rage calls `SwitchMainAgentController(false)`,
 which reverses it (`PrepareOnFirstCall`, `FinishRageMode`). `OnWargDied` also calls the swap back with no rage
-running (`OnWargDied.cs:38-39`, `FinishRageMode.cs:36`), for example when an arrow kills a calm warg. The controller reads game keys
+running (`OnWargDied.cs:38-39`, `FinishRageMode.cs:38`), for example when an arrow kills a calm warg. The controller reads game keys
 while it holds the hero, and in it key 15, the Seat's sink key, dismounts (592-610). So the Seat and a rage do not mix. The rage is the
 game saying "you lost control", and it already shows its own message.
 

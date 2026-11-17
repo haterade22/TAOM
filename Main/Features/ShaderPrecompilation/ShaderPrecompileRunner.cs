@@ -8,6 +8,7 @@ using TaleWorlds.Engine;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.Localization;
 
 namespace TAOM.Features.ShaderPrecompilation;
 
@@ -376,10 +377,14 @@ public sealed class ShaderPrecompileRunner
         _ownedMission = null;
         EnterState(RunState.Complete);
         long total = NowMs() - _walkStartedMs;
-        string aborted = _abortedItems == 0 ? "0 aborted" : $"{_abortedItems} aborted, see the log";
+        var aborted = _abortedItems == 0
+            ? new TextObject("{=taom_spc_none_aborted}0 aborted")
+            : new TextObject("{=taom_spc_aborted}{COUNT} aborted, see the log").SetTextVariable("COUNT", _abortedItems);
         if (_rosterDiscovered)
         {
-            StatusLine = $"Shader pre-compilation COMPLETE: {_plan.Count} items, {aborted}, in {FormatElapsed(Sec(total))}. You can play now.";
+            StatusLine = new TextObject("{=taom_spc_complete}Shader pre-compilation COMPLETE: {ITEMS} items, {ABORTED}, in {TIME}. You can play now.")
+                .SetTextVariable("ITEMS", _plan.Count).SetTextVariable("ABORTED", aborted)
+                .SetTextVariable("TIME", FormatElapsed(Sec(total))).ToString();
             _logger?.LogInfo($"[ShaderPrecompilation] === WALK COMPLETE: {_plan.Count} items, {_abortedItems} aborted in {FormatElapsed(Sec(total))} ===");
         }
         else
@@ -387,7 +392,8 @@ public sealed class ShaderPrecompileRunner
             // Batch 1 never handed the roster over (it timed out, failed to start, or found no
             // characters), so no troop shader was compiled and nothing was re-planned. Say so: the
             // whole point of the walk is the troop pass, and "COMPLETE" here would be a lie.
-            StatusLine = $"Shader pre-compilation INCOMPLETE: no troop shaders were compiled because the first batch never loaded ({aborted}, {FormatElapsed(Sec(total))}). Check the log and run it again.";
+            StatusLine = new TextObject("{=taom_spc_incomplete}Shader pre-compilation INCOMPLETE: no troop shaders were compiled because the first batch never loaded ({ABORTED}, {TIME}). Check the log and run it again.")
+                .SetTextVariable("ABORTED", aborted).SetTextVariable("TIME", FormatElapsed(Sec(total))).ToString();
             _logger?.LogError($"[ShaderPrecompilation] === WALK INCOMPLETE: the roster was never discovered, no troop shaders compiled; {_plan.Count} items, {_abortedItems} aborted in {FormatElapsed(Sec(total))} ===");
         }
         // IsActive flips false here, so show the completion line directly (the tick won't fire again).
@@ -405,7 +411,7 @@ public sealed class ShaderPrecompileRunner
         if (!IsActive || _cancelRequested) return;
         _cancelRequested = true;
         _logger?.LogWarning($"[ShaderPrecompilation] walk CANCELLED by user at item {_index + 1}/{_plan.Count} (state {_state}); tearing down");
-        StatusLine = "Shader pre-compilation cancelling...";
+        StatusLine = new TextObject("{=taom_spc_cancelling}Shader pre-compilation cancelling...").ToString();
         if (_state == RunState.Ending) return;   // teardown already requested; TickEnding will finish as cancelled
         BeginEnd();
     }
@@ -416,7 +422,7 @@ public sealed class ShaderPrecompileRunner
         _ownedMission = null;
         _cancelRequested = false;
         EnterState(RunState.Idle);                               // IsActive -> false; a fresh Begin() may run later
-        StatusLine = "Shader pre-compilation cancelled.";
+        StatusLine = new TextObject("{=taom_spc_cancelled}Shader pre-compilation cancelled.").ToString();
         _logger?.LogInfo("[ShaderPrecompilation] === WALK CANCELLED ===");
         try { InformationManager.DisplayMessage(new InformationMessage(StatusLine)); } catch { }
         _active = null;
@@ -424,7 +430,8 @@ public sealed class ShaderPrecompileRunner
 
     // The walk stops without touching the current game: the player took over (another mission started)
     // or the game refused to shut down. Nothing is torn down and nothing else is started.
-    private void Abandon(string reason) => StopWalk(reason, "Shader pre-compilation stopped: another battle was started. Run it again from the main menu.");
+    private void Abandon(string reason) => StopWalk(reason,
+        new TextObject("{=taom_spc_stopped_battle}Shader pre-compilation stopped: another battle was started. Run it again from the main menu.").ToString());
 
     private void StopWalk(string reason, string status = null)
     {
@@ -432,7 +439,8 @@ public sealed class ShaderPrecompileRunner
         _ownedMission = null;
         _cancelRequested = false;
         EnterState(RunState.Idle);
-        StatusLine = status ?? $"Shader pre-compilation stopped: {reason}. Quit to the main menu and run it again.";
+        StatusLine = status ?? new TextObject("{=taom_spc_stopped}Shader pre-compilation stopped: {REASON}. Quit to the main menu and run it again.")
+            .SetTextVariable("REASON", reason).ToString();
         try { InformationManager.DisplayMessage(new InformationMessage(StatusLine)); } catch { }
         _active = null;
     }
@@ -455,9 +463,8 @@ public sealed class ShaderPrecompileRunner
         try
         {
             InformationManager.DisplayMessage(new InformationMessage(
-                $"{skippedCount} scene(s) crashed your GPU on a previous shader pre-compile. To help fix it, send the " +
-                "latest Bannerlord 'Application Error' from Windows Event Viewer (eventvwr.msc -> Windows Logs -> " +
-                "Application) to the TAOM author. Details are in the Logs folder.",
+                new TextObject("{=taom_spc_gpu_crash}{COUNT} scene(s) crashed your GPU on a previous shader pre-compile. To help fix it, send the latest Bannerlord 'Application Error' from Windows Event Viewer (eventvwr.msc -> Windows Logs -> Application) to the TAOM author. Details are in the Logs folder.")
+                    .SetTextVariable("COUNT", skippedCount).ToString(),
                 new Color(1f, 0.7f, 0.3f)));
         }
         catch { /* never break the walk over a toast */ }
@@ -473,9 +480,13 @@ public sealed class ShaderPrecompileRunner
                     : _state == RunState.Starting ? Sec(now - _stateEnteredMs)
                     : 0;
         int totalSec = Sec(now - _walkStartedMs);
-        string rem = remaining < 0 ? "loading" : $"{remaining} shaders";
-        StatusLine = $"Pre-compiling shaders — {_index + 1}/{_plan.Count}: {item.Description} — {rem} " +
-                     $"(item {FormatElapsed(itemSec)}, total {FormatElapsed(totalSec)}) — Ctrl+Shift+K to cancel";
+        var rem = remaining < 0
+            ? new TextObject("{=taom_spc_loading}loading")
+            : new TextObject("{=taom_spc_shaders_left}{COUNT} shaders").SetTextVariable("COUNT", remaining);
+        StatusLine = new TextObject("{=taom_spc_progress}Pre-compiling shaders — {INDEX}/{TOTAL}: {ITEM} — {REMAINING} (item {ITEM_TIME}, total {TOTAL_TIME}) — Ctrl+Shift+K to cancel")
+            .SetTextVariable("INDEX", _index + 1).SetTextVariable("TOTAL", _plan.Count)
+            .SetTextVariable("ITEM", item.Description).SetTextVariable("REMAINING", rem)
+            .SetTextVariable("ITEM_TIME", FormatElapsed(itemSec)).SetTextVariable("TOTAL_TIME", FormatElapsed(totalSec)).ToString();
         _lastStatusMs = now;
     }
 

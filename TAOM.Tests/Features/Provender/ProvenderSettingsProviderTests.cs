@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.Provender;
 using TAOM.Tests.Infrastructure;
@@ -164,14 +165,14 @@ public class ProvenderSettingsProviderTests
     {
         var source = RepoPaths.ReadSource("Main/Features/TaomSettings.cs", stripComments: true);
 
-        Assert.IsTrue(source.Contains("[SettingPropertyGroup(\"Provender-master\", GroupOrder = 70)]"));
+        Assert.IsTrue(source.Contains("[SettingPropertyGroup(\"{=taom_mcm_group_provender_master}Provender-master\", GroupOrder = 70)]"));
         Assert.AreEqual(1, source.Split(new[] { "GroupOrder = 70" }, StringSplitOptions.None).Length - 1, "GroupOrder 70 is used by another group");
 
         var grouped = Properties();
         Assert.AreEqual(11, grouped.Length, "enable, low food days, livestock kept, the two pay tiers' gold and morale, the wage days kept and the three remote-sale values");
         foreach (var property in grouped)
         {
-            Assert.AreEqual("Provender-master", Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName"), property.Name);
+            Assert.AreEqual("Provender-master", McmText.Plain(Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName") as string), property.Name);
             Assert.AreEqual(false, Read(ValueAttribute(property), "RequireRestart"), property.Name + ": every value is read when an order is judged");
         }
     }

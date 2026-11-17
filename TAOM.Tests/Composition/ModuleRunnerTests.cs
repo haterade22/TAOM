@@ -244,10 +244,11 @@ public class ModuleRunnerTests
         runner.RegisterServices(container);
         runner.RunPhase(ApplyPhase.ProcessLoad, _ => true, container);
 
-        Assert.AreEqual(
-            "TAOM: feature modules failed and are off this session: A (service registration), B (ProcessLoad). "
-            + "The TAOM log names the cause.",
-            runner.TakeFaultSummary());
+        var summary = runner.TakeFaultSummary();
+        Assert.IsNotNull(summary);
+        Assert.AreEqual("{=taom_module_fault_summary}TAOM: feature modules failed and are off this session: "
+            + "{MODULES}. The TAOM log names the cause.", summary!.Value);
+        Assert.AreEqual("A (service registration), B (ProcessLoad)", summary.Attributes["MODULES"]);
         Assert.IsNull(runner.TakeFaultSummary());
     }
 

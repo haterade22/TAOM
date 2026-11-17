@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.FieldCamp;
@@ -114,7 +115,7 @@ public class CampActivitySettingsTests
 
         Assert.AreEqual(0.0, System.Convert.ToDouble(Read(attribute, "MinValue")));
         Assert.AreEqual(50.0, System.Convert.ToDouble(Read(attribute, "MaxValue")));
-        Assert.AreEqual("Field Camps", Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName"));
+        Assert.AreEqual("Field Camps", McmText.Plain(Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName") as string));
         var hint = (string)Read(attribute, "HintText");
         StringAssert.Contains(hint, "only while the camp panel is open (Camp Options, then Manage camp)");
         StringAssert.Contains(hint, "set both to 0 to turn rest healing off");
@@ -135,7 +136,7 @@ public class CampActivitySettingsTests
     public void StartInCamp_ShipsOff_InFieldCamps()
     {
         Assert.IsFalse(new TaomSettings().CampStartInCamp);
-        Assert.AreEqual("Field Camps", Read(Attribute(nameof(TaomSettings.CampStartInCamp), "SettingPropertyGroupAttribute"), "GroupName"));
+        Assert.AreEqual("Field Camps", McmText.Plain(Read(Attribute(nameof(TaomSettings.CampStartInCamp), "SettingPropertyGroupAttribute"), "GroupName") as string));
     }
 
     private static object Attribute(string property, string typeName) =>
@@ -153,7 +154,7 @@ public class CampActivitySettingsTests
 
         Assert.AreEqual(min, System.Convert.ToDouble(Read(attribute, "MinValue")));
         Assert.AreEqual(max, System.Convert.ToDouble(Read(attribute, "MaxValue")));
-        Assert.AreEqual("Field Camps", Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName"));
+        Assert.AreEqual("Field Camps", McmText.Plain(Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName") as string));
     }
 
     [TestMethod]

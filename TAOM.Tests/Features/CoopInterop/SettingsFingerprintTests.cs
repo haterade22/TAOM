@@ -438,6 +438,17 @@ public class SettingsFingerprintTests
     }
 
     [TestMethod]
+    public void TheRealSettings_GroupByTheirPlainEnglishRoot()
+    {
+        // Each MCM group part carries a {=key} (#1385). The hash and the divergence notice use the English
+        // path without keys, so a hash taken before the keys were added still matches.
+        var groups = SettingsFingerprint.Compute(new TaomSettings()).ByGroup.Keys.ToList();
+
+        Assert.AreEqual(0, groups.Count(g => g.Contains("{=")), "groups with a key: " + string.Join(", ", groups));
+        CollectionAssert.Contains(groups, "World");
+    }
+
+    [TestMethod]
     public void TheRealSettings_HashWithoutThrowing_AndCoverMostOfThem()
     {
         var report = SettingsFingerprint.Compute(new TaomSettings());
