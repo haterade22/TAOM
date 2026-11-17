@@ -42,7 +42,14 @@
         <equipment slot="Body" id="Item.sk_dwarf_iron_chest_light_b" />
         <equipment slot="Leg" id="Item.sk_dwarf_iron_boots_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -88,7 +95,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_iron_gloves_a" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -135,7 +149,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_b" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_b" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -184,7 +205,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_iron_bracer_med_b2" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_e" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -233,7 +261,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_iron_bracer_heavy_c7" />
         <equipment slot="Leg" id="Item.sk_dwarf_iron_boots_heavy_a2" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -280,7 +315,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_iron_bracer_elite_c4" />
         <equipment slot="Leg" id="Item.sk_dwarf_iron_boots_elite_b3" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -327,7 +369,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_iron_bracer_light_c1" />
         <equipment slot="Leg" id="Item.sk_dwarf_iron_boots_med_c1" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -374,7 +423,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_iron_bracer_med_b1" />
         <equipment slot="Leg" id="Item.sk_dwarf_iron_boots_med_b1" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -419,7 +475,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_iron_bracer_heavy_c9" />
         <equipment slot="Leg" id="Item.sk_dwarf_iron_boots_heavy_b2" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -466,7 +529,14 @@
         <equipment slot="Body" id="Item.sk_dwarf_iron_chest_light_b" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -515,7 +585,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_b" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_b" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -564,7 +641,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -611,7 +695,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_iron_gloves_a" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -660,7 +751,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_c" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_c" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -709,7 +807,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_f" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -758,7 +863,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_iron_bracer_heavy_c8" />
         <equipment slot="Leg" id="Item.sk_dwarf_iron_boots_heavy_b3" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -807,7 +919,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_elite_b" />
         <equipment slot="Leg" id="Item.sk_dwarf_iron_boots_elite_a3" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -854,7 +973,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_elite_d" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_greaves_elite_b" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -905,7 +1031,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_b" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_b" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -956,7 +1089,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_iron_bracer_med_a2" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -1007,7 +1147,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_iron_bracer_heavy_c9" />
         <equipment slot="Leg" id="Item.sk_dwarf_iron_boots_heavy_c2" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -1056,7 +1203,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_iron_bracer_elite_c2" />
         <equipment slot="Leg" id="Item.sk_dwarf_iron_boots_elite_c2" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -1099,7 +1253,14 @@
         <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_b" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -1144,7 +1305,14 @@
         <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_b" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -1189,7 +1357,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_b" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_b" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -1236,7 +1411,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_b" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_b" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 
@@ -1279,7 +1461,14 @@
         <equipment slot="Gloves" id="Item.sk_dwarf_iron_gloves_a" />
         <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
       </EquipmentRoster>
-      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+        <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 </NPCCharacters>

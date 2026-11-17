@@ -218,6 +218,46 @@ class RealmDesignTests(unittest.TestCase):
                 self.assertIn(gen.REALM.label, npc.get("name"))
                 self.assertEqual(npc.get("culture"), f"Culture.{gen.CULTURE}")
 
+    def test_a_realm_with_a_race_wears_its_own_civilian_kit_and_a_human_realm_the_shared_template(self):
+        """A promoted companion copies its troop's civilian kit (#1431): a Battanian template on a dwarf put
+        the Highland Tartan on it. A realm with a race writes inline civilian rosters and no template
+        reference; a human realm (no race) writes exactly the shared template."""
+        racial = 0
+        for gen in GENERATORS:
+            with self.subTest(culture=gen.CULTURE):
+                root = ET.fromstring(gen.troops_xml(built(gen), "\r\n").encode("utf-8"))
+                npcs = root.findall("NPCCharacter")
+                self.assertTrue(npcs, "the realm wrote no troops, so nothing was checked")
+                for npc in npcs:
+                    equipments = npc.find("Equipments")
+                    sets = [s.get("id") for s in equipments.findall("EquipmentSet")]
+                    if not gen.REALM.race:
+                        self.assertEqual(sets, [rt.CIVILIAN_SET], npc.get("id"))
+                        continue
+                    racial += 1
+                    self.assertEqual(sets, [], npc.get("id"))
+                    civilian = [r for r in equipments.findall("EquipmentRoster") if r.get("civilian") == "true"]
+                    bodies = sorted(e.get("id") for r in civilian for e in r.findall("equipment")
+                                    if e.get("slot") == "Body")
+                    self.assertEqual(len(bodies), 2, npc.get("id"))
+                    self.assertTrue(all(b.startswith("Item.sk_dwarf_tunic_") for b in bodies), (npc.get("id"), bodies))
+        self.assertTrue(racial, "no realm with a race was checked")
+
+    def _civilian_kit_errors(self, kits):
+        """Self-check errors for the first Ered Luin troop when its realm carries `kits`."""
+        realm = dataclasses.replace(gelt.REALM, civilian_kits=kits)
+        probe = dataclasses.replace(built(gelt)[0], realm=realm, upgrades=[])
+        return rt.self_check(lambda: [], [probe])
+
+    def test_a_realm_with_a_race_and_no_civilian_kit_fails_the_self_check(self):
+        for kits in (None, ()):
+            errors = self._civilian_kit_errors(kits)
+            self.assertTrue(any("NONHUMAN_CIVILIAN_TEMPLATE" in e for e in errors), (kits, errors))
+
+    def test_a_realm_with_a_race_and_a_civilian_kit_passes_that_rule(self):
+        errors = self._civilian_kit_errors(gelt.REALM.civilian_kits)
+        self.assertFalse(any("NONHUMAN_CIVILIAN_TEMPLATE" in e for e in errors), errors)
+
 
 class BorrowedArmourAnchorTests(unittest.TestCase):
     """The class table and the restat band an armour piece by its lowest battle wearer. A realm that

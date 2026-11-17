@@ -367,6 +367,15 @@ ever fielded — not a concern at any realistic party size.
   is raised unpaused), then check that the companion carries that name, that the map stays still
   while the box is open, and that it resumes at the old speed when the box closes. If typing is
   blocked, put the rename prompt back to unpaused and hold the clock another way.
+- 2026-11-17: a promoted dwarf wears its own tunic in the civilian slots (#1431). The Erebor,
+  Ered Luin and Fords of War dwarf troops ended with a reference to a vanilla Battanian civilian
+  template, which the engine loader turns into a civilian set for the troop
+  (`BasicCharacterObject.Deserialize`, v1.5.7 lines 387-412), so `CreateCompanionFromTroop` copied
+  the Highland Tartan and never reached its battle-kit fallback. Each reference is now two inline
+  dwarf tunic rosters (`Realm.civilian_kits` for the generated Ered Luin file). Gate:
+  `DwarfCivilianKitTests`. A companion promoted before this change keeps the clothes stored on
+  the hero. Other races and the human realms still carry the reference (#1433); dwarf tunics
+  carry no `Civilian` item flag, so civilian mode refuses to re-equip them (#1432).
 
 ## Firing a promoted companion (#486)
 
@@ -520,6 +529,21 @@ are absent while besieging; save, reload, then dismiss (the origin troop must su
 confirm the stipend returns and no death notification appears; `taom.fc_status` shows one fewer
 promoted companion.
 
+## How to verify in game
+
+Owed for #1431. Preconditions: a restart after the build, the full desktop module set, a save with
+dwarf soldiers in the party.
+
+1. Promote an Erebor noble-line soldier (for example `erebor_noble_guard`) with Field Commission.
+   Open the companion's inventory and switch to the civilian tab. Pass: Body is an [Erebor] Noble
+   Tunic, Leg is [Erebor] Leather Boots I, and no Highland Tartan shows.
+2. Promote an Ered Luin soldier and an `erebor_oathsworn` soldier. Pass: Body is an [Erebor]
+   Civilian Tunic.
+3. In one companion's civilian tab, take the tunic off and put it back. This checks #1432: record
+   whether "cannot be equipped with civilian equipment" appears.
+
+Companions promoted before the change keep their stored tartan; that is expected.
+
 ## GitHub Issue
 
 - **#376** — Battlefield Promotions (Field Commission native rewrite). **Open**: code complete,
@@ -535,6 +559,9 @@ promoted companion.
   **Open**, blocked on `ANTHROPIC_API_KEY` not being set in the build environment.
 - **#540**: dismiss a promoted companion back to the ranks. **Open**: code complete, wired and
   reviewed; every in-game path is still owed (see "Owed in-game smoke" above).
+- **#1431**: a promoted dwarf wore the Highland Tartan in the civilian slots. Code complete; the in-game
+  check is under "How to verify in game". Follow-ups: #1432 (no `Civilian` item flag on dwarf tunics),
+  #1433 (other races and human realms).
 
 ---
 

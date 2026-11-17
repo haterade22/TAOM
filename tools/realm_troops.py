@@ -58,6 +58,10 @@ class Realm:
     race: str = None             # the race= attribute every troop carries; None for men (no attribute)
     body: str = BODY             # the face_key_template BodyProperty
     ladder_line: str = None      # the ranged-ladder line its bows come from; None means the culture's own
+    civilian_kits: tuple = None  # two {slot: item id without the Item. prefix} dicts, written as inline
+                                 # civilian rosters; None keeps the shared Battanian CIVILIAN_SET. A realm
+                                 # with a race must set it: the template would dress a promoted companion
+                                 # in human clothes (#1431), and self_check refuses it (NONHUMAN_CIVILIAN_TEMPLATE)
 
     @property
     def troops_file(self) -> Path:
@@ -177,7 +181,13 @@ class Troop:
                 lines.append(f'        <equipment slot="Horse" id="Item.{self.horse[0]}" />')
                 lines.append(f'        <equipment slot="HorseHarness" id="Item.{self.horse[1]}" />')
             lines.append("      </EquipmentRoster>")
-        lines.append(f'      <EquipmentSet id="{CIVILIAN_SET}" equipmentType="Civilian" />')
+        if self.realm.civilian_kits:
+            for kit in self.realm.civilian_kits:
+                lines.append('      <EquipmentRoster civilian="true">')
+                lines += [f'        <equipment slot="{slot}" id="Item.{item}" />' for slot, item in kit.items()]
+                lines.append("      </EquipmentRoster>")
+        else:
+            lines.append(f'      <EquipmentSet id="{CIVILIAN_SET}" equipmentType="Civilian" />')
         lines += ["    </Equipments>", "  </NPCCharacter>"]
         return nl.join(lines)
 
@@ -339,6 +349,8 @@ def self_check(party_templates, troops):
             errors.append(f"{tr.id}: no Body armour (MISSING_BODY_ARMOUR)")
         if tr.realm and tr.realm.race == "dwarf" and (tr.horse or tr.group in ("Cavalry", "HorseArcher")):
             errors.append(f"{tr.id}: a mounted dwarf (MOUNTED_DWARF)")
+        if tr.realm and tr.realm.race and not tr.realm.civilian_kits:
+            errors.append(f"{tr.id}: a {tr.realm.race} troop wears the human civilian template (NONHUMAN_CIVILIAN_TEMPLATE)")
         for w in sorted(set(ra + rb) & named_weapon_ids()):
             errors.append(f"{tr.id}: carries named weapon {w} (NAMED_WEAPON_ON_TROOP)")
         shields = any("shield" in w for w in ra + rb)
