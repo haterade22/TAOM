@@ -26,6 +26,8 @@ internal sealed class HeroAbilitiesModule : TaomFeatureModule
             var runtime = r.Resolve<HeroAbilityRuntime>();
             return new HeroRangedMissionLogic(runtime, new SignatureInstantKill(r.Resolve<ISignatureStrikeService>(), r.Resolve<ISignatureAgentRoster>(), r.Resolve<ISignatureStrikeRegistry>(), runtime.Outcomes, runtime.Logger));
         }),
+        // The balance tally: kills, damage dealt and taken, time alive. Log lines only.
+        MissionBehaviorDecl.Of((_, r) => new HeroCombatLogic(r.Resolve<HeroAbilityRuntime>())),
     };
 
     public override string Id => "HeroAbilities";

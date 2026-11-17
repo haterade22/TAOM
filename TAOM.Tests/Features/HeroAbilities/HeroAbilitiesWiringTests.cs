@@ -347,6 +347,18 @@ public class HeroAbilitiesWiringTests
     }
 
     [TestMethod]
+    public void CombatTally_IsLocal_AndTheModuleAddsIt()
+    {
+        Assert.AreEqual(TAOM.Features.CoopInterop.Missions.CoopMissionRole.Local,
+            TAOM.Features.CoopInterop.Missions.CoopMissionRoles.Of(typeof(TAOM.Features.HeroAbilities.Hooks.HeroCombatLogic)));
+        StringAssert.Contains(Read("HeroAbilitiesModule.cs"), "new HeroCombatLogic(r.Resolve<HeroAbilityRuntime>())");
+        // The capped health a blow removes, not the raw blow with its overkill.
+        var logic = Read("Hooks/HeroCombatLogic.cs");
+        StringAssert.Contains(logic, "public override void OnScoreHit(");
+        Assert.IsFalse(logic.Contains("OnAgentHit("), "OnAgentHit carries the raw blow");
+    }
+
+    [TestMethod]
     public void RangedLogic_IsAgentOwner()
     {
         Assert.AreEqual(TAOM.Features.CoopInterop.Missions.CoopMissionRole.AgentOwner,
