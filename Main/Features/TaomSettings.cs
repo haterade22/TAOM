@@ -1511,7 +1511,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_combat_mechanics}Combat Mechanics")]
     [SettingPropertyBool("{=taom_cleave_mcm_enable}Cleaving Blows", Order = 18, RequireRestart = false,
-        HintText = "{=taom_cleave_mcm_enable_hint}Your swings with a two-handed axe, mace, sword or polearm can cut through one enemy and strike the next. Each enemy after the first takes less damage. Armour slows the blade, a kill or a clear skill lead over the victim carries it further, and a shield block, a thrust or a swing from horseback never cuts through. Only the character you control, unless the AI option below is on. Trolls and other big creatures keep their own cleave. The numbers live in combat_mechanics_config.json. Default: on.")]
+        HintText = "{=taom_cleave_mcm_enable_hint}Your swings with a two-handed axe, mace, sword or polearm can cut through one enemy and strike the next. Each enemy after the first takes less damage. Armour slows the blade, and a kill or a clear skill lead over the victim carries it further. Cleaving Blows never applies to a shield block, a thrust or a swing from horseback. Only the character you control, unless the AI option below is on. Trolls and other big creatures keep their own cleave. The numbers live in combat_mechanics_config.json. Default: on.")]
     public bool EnableCleavingBlows { get; set; } = true;
 
     [SettingPropertyGroup("{=taom_mcm_group_combat_mechanics}Combat Mechanics")]

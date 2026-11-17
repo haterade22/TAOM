@@ -173,7 +173,7 @@ Inverting the two thresholds reverts **both** to defaults, not just the offender
 | `cleavingBlows.killCarryBonus` / `skillCarryBonus` | float | 0.15 / 0.10 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:346-347` |
 | `cleavingBlows.maxCarryFactor` | float | 0.75 | above 0, at most 0.95 | `CombatMechanicsConfigProvider.cs:349` |
 | `cleavingBlows.minRemainingMomentum` | float | 0.25 | `[0, 1]`, below `maxCarryFactor` (else both revert) | `CombatMechanicsConfigProvider.cs:350, 355` |
-| `cleavingBlows.includeMountedAttackers` | bool | false | the MCM hint's "a swing from horseback never cuts through" holds only while this is false | `CombatMechanicsConfigProvider.cs:343`, `CleavingBlowService.cs:54, 132` |
+| `cleavingBlows.includeMountedAttackers` | bool | false | while false, a swing from horseback gets vanilla's carry (a two-handed axe or mace still cuts through at vanilla's rate; a sword or polearm stops at the first man) | `CombatMechanicsConfigProvider.cs:343`, `CleavingBlowService.cs:54, 132` |
 | `cleavingBlows.maxTargetsPerSwing` | int | 3 | `[3, 5]` (3 is vanilla's best case for an axe) | `CombatMechanicsConfigProvider.cs:351` |
 | `creatures.unstoppableDamageThresholds.<monsterId>` | int | 5 entries, 10 to 30 | `[0, 500]`, else the entry is removed | `CombatMechanicsConfigProvider.cs:227` |
 | `raceModifiers.<race>.ctbAttackBonus` / `ctbDefenseBonus` | float | 10 to 13 (dwarf defence 10, elf and Sauron attack 13: scaled by 260/390 with the skill window, #343) | `[0, 300]` | `CombatMechanicsConfigProvider.cs:317-318` |

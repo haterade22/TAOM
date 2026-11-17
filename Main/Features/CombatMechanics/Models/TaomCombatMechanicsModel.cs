@@ -17,7 +17,7 @@ namespace TAOM.Features.CombatMechanics.Models;
 // passives ride along via inheritance — only ONE AgentApplyDamageModel can be registered.
 // Thin boundary per gamemodels.md rule 4: each override is base plus one call per feature, in
 // the order that matters; every feature keeps its extraction, and the hits it declines, in its
-// own Hooks/ facade (CombatMechanicsHooks for the five combat services, #737).
+// own Hooks/ facade (CombatMechanicsHooks for the six combat services, #737).
 public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
 {
     private readonly CombatMechanicsHooks _combat;

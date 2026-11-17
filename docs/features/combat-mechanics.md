@@ -379,7 +379,9 @@ polearm still gets `null`; the player's result never depends on the switch.
 `Chain { LastCarried, Hits }`, so entries die with the agent object and nothing clears between missions. Per qualifying hit,
 under `lock (chain)`: `hit = (LastCarried > 0 && originalMomentum == LastCarried) ? Hits + 1 : 1` (exact float equality on
 purpose: the engine hands back the value we returned), then `next` is 0 when `hit >= maxTargets`, and `Hits` and `LastCarried` are
-stored. A fresh swing starts at 1.0, which a carried value (at most 0.75) never equals, so the counter resets by itself. The lock
+stored. A fresh swing starts at 1.0, or possibly 1.15 for a heavy attack (native's `heavy_attack_momentum_multiplier` in
+`native_parameters.xml`, UNVERIFIED), which a carried value (at most 0.75 of that start) never equals, so the counter resets by
+itself. The lock
 is the default the thread rules ask for; the engine declares the callback single-threaded (see the thread row in
 [mission-frame-threads-and-native-costs.md](../reference/engine/mission-frame-threads-and-native-costs.md)), uncontended. The rule
 is deterministic: no random roll.
@@ -396,7 +398,10 @@ the AI switch on, a humanoid creature with a listed two-handed weapon falls to t
 **Co-op.** No mission runs on the co-op authority process, so the damage model never runs on a dedicated server. Each client runs
 its own battle: its own human is `Controller Player` (kind Player), other peers' humans are puppets (kind None, vanilla), so each
 human cleaves on the peer that owns him. The three new MCM properties join the settings fingerprint by include-by-default
-(`CoopSettingsRelevance`).
+(`CoopSettingsRelevance`). A blow on an agent another peer owns is forwarded by Coop's `BattleBlowInterceptPatch` (a prefix
+on `Agent.RegisterBlow`), so the victim's local health has not dropped when the rule runs: such a kill reads as non-fatal and
+gets the skill term (at most 0.10) instead of the kill bonus (0.15). Only the attacker's peer computes the momentum, so this is
+no desync.
 
 **Configuration** (`combat_mechanics_config.json`, block `cleavingBlows`, restart to reload):
 
@@ -429,7 +434,8 @@ does under half the victim's health, else SlicedThrough.
 
 **UNVERIFIED:**
 
-1. A swing starts at momentum 1.0 and native hands the value we return back unchanged to the next hit of the same swing. The cap is
+1. A swing starts at momentum 1.0 (a heavy attack possibly at 1.15) and native hands the value we return back unchanged to the
+   next hit of the same swing. The cap is
    exact only if this holds; if native changes it, the count restarts and only the floor bounds the swing.
 2. Whether co-op ever computes a remote human's blow on a non-owner peer; if so that peer gives vanilla momentum for it.
 3. The feel and the numbers in play (nothing here has been seen running).
@@ -439,16 +445,21 @@ hits; MCM Combat Mechanics: master on, Cleaving Blows on, AI off, Max Targets 3;
 tier 1 to 2 infantry, walking into a packed group):
 
 1. Side swings into 2 or 3 packed men: up to 3 "Delivered" lines per swing, each smaller than the one before; the axe passes through
-   a man it does not kill instead of sticking.
+   a man it does not kill instead of sticking (vanilla sticks only when the hit is also under half his health).
 2. The same with a two-handed sword: it now also hits a second man (vanilla never does).
-3. A thrust with a two-handed polearm, and a swing from horseback: one man only (the horseback line of the MCM hint holds only while
-   `includeMountedAttackers` is false).
+3. A thrust with a two-handed polearm: one man only. A swing from horseback: the rule does not apply while
+   `includeMountedAttackers` is false, so a two-handed sword stops at the first man and a two-handed axe or mace keeps vanilla's
+   carry (1, then 0.5, then 0.25).
 4. A swing a shield blocks: it stops at the shield.
 5. Max Targets 3: never more than 3 lines per swing over 20 swings.
 6. Cap proof: Max Targets 3 against 4 or more weak men in a tight row, each killed by one blow (the kill bonus keeps the momentum
    above the floor). If 4 lines ever appear, native changed the momentum between hits and the counter restarted: report it (the
    floor still bounds the swing).
-7. Cleaving Blows off: the sword stops at the first man; the axe sticks in a man it does not kill (vanilla).
+7. Cleaving Blows off: the sword stops at the first man; the axe sticks in a man it does not kill when the hit is under half his
+   health (vanilla).
+11. A qualifying axe swing into a horse (rider or riderless): no exception in the log, and the hit lands as normal (the victim's
+    wield slots are read only when it can wield a weapon).
+12. A fully readied (heavy) swing in check 6: the cap still holds.
 8. AI switch on, the player standing back: AI two-handed troops visibly cut through a packed line; AI spearmen and one-handers do
    not. Optional: the MCM page "TAOM - Blow Diagnostics" on; `[BlowDiag]` lines show bursts of blows with falling `mag=` from one
    swing.

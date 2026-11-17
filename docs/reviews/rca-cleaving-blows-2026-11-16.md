@@ -66,3 +66,21 @@ of `2490ef5506`. The mod options and the English text are unchanged, so no langu
 ## Not run
 
 Codex (`/review-codex`) was not run and is owed before merge. Nothing here was checked in game.
+
+## Maintainer review (2026-11-17)
+
+`/deep-review` tier 1 (damage model) on PR #1428 at 48224ff02: lens 5 data flow, lens 2 engine compatibility and lens 7 XML, each
+at the definition's effort. No HIGH or MEDIUM finding. Codex did not run: it is out of usage. Each finding was checked against the
+code or the v1.5.7 decompile before the fix.
+
+| # | Sev | Finding | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| R1 | LOW (UNVERIFIED) | The context read the victim's wield slots and `Equipment` on every qualifying hit, a horse included. A mount gets no mission equipment (`Mission.CreateHorseAgentFromRosterElements` never calls `InitializeMissionEquipment`), and vanilla reads a victim's wielded item only behind `AgentFlag.CanWieldWeapon` (`AttackInformation.cs:173`). If native leaves a mount's wield index set, the hit throws inside `MeleeHitCallback` | Engine read without vanilla's guard | Trunk's helper read only the attacker, who is always human | Fixed: `CanWield` gate before the victim read; in-game check 11 |
+| R2 | LOW | The MCM hint said a swing from horseback never cuts through. The rule declines it and vanilla then carries a mounted two-handed axe or mace as before | Feature text described vanilla | The rule's own gate was the visible fact | Fixed: the hint (English only, no language rows yet), `configs-balance.md` and check 3 |
+| R3 | LOW | In co-op a kill on an agent another peer owns reads as non-fatal (Coop's `BattleBlowInterceptPatch` forwards the blow), so it gets the skill term, not the kill bonus | Co-op path not in the doc | The single-player order was traced | Fixed: a line in the doc's co-op paragraph and the lesson qualified; no code change (no reliable pre-blow health) |
+| R4 | LOW (UNVERIFIED) | A heavy attack may start at momentum 1.15 (`heavy_attack_momentum_multiplier`), not 1.0 | Engine claim | Native only | Fixed: wording in the service comment and the doc; check 12 |
+| R5 | LOW | The JSON comment added both bonuses on every hit and named JSON fields that MCM overrides | Comment drift | Written before the kill-or-skill fix (A) | Fixed: the comment states kill-or-skill and the MCM override |
+| R6 | LOW | The ShrugOff comment named only TAOM sources; vanilla sets it on any weak non-fatal hit | Comment | Same | Fixed |
+| R7 | LOW | The campaign model's header still said five combat services | Comment count | Same | Fixed |
+
+The English hint text changed (R2); the twelve language files have no rows for these keys yet, so no translated row goes stale.

@@ -243,7 +243,7 @@ public sealed class CombatMechanicsHooks
             absorbedByArmor: b.AbsorbedByArmor,
             weaponClassName: GetWeaponClassName(usage),
             attackerWeaponSkill: GetSkillValue(attacker, usage),
-            victimWeaponSkill: GetSkillValue(victim, GetWieldedUsageItem(victim)));
+            victimWeaponSkill: GetSkillValue(victim, CanWield(victim) ? GetWieldedUsageItem(victim) : null));
     }
 
     private static ChargeKnockdownContext BuildChargeKnockdownContext(Agent attackerAgent, Agent victimAgent, in AttackCollisionData collisionData, in Blow blow)
@@ -304,6 +304,11 @@ public sealed class CombatMechanicsHooks
         if (index == EquipmentIndex.None) index = agent.GetPrimaryWieldedItemIndex();
         return index != EquipmentIndex.None ? agent.Equipment[index].CurrentUsageItem : null;
     }
+
+    // A mount has no mission equipment, so its wield slots are never read; the same gate as vanilla's AttackInformation
+    // (v1.5.7 :173) before it reads a victim's wielded item.
+    private static bool CanWield(Agent agent)
+        => agent != null && (agent.GetAgentFlags() & AgentFlag.CanWieldWeapon) != AgentFlag.None;
 
     private static int GetSkillValue(Agent agent, WeaponComponentData item)
     {

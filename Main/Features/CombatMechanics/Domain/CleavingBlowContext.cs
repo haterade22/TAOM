@@ -30,7 +30,8 @@ public readonly struct CleavingBlowContext
     // The weapon's other bone hit, not the one that cuts.
     public readonly bool HitWithAnotherBone;
 
-    // The blow carries the engine's ShrugOff flag (troll stagger immunity and a live Stand Fast set it).
+    // The blow carries the engine's ShrugOff flag: vanilla sets it on a non-fatal hit at or under the stagger threshold (a weak
+    // follow-on hit then bounces and ends the swing); troll stagger immunity, a live Stand Fast and career passives set it too.
     public readonly bool VictimShruggedOff;
 
     // The victim's health is spent after this blow.

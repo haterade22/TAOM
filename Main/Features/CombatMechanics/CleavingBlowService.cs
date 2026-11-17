@@ -9,12 +9,14 @@ namespace TAOM.Features.CombatMechanics;
 // CombatMechanicsHooks): the config is read once in the constructor; only the three MCM-backed getters are read per call.
 // No LINQ, no allocation per call beyond one chain per attacker.
 //
-// The rule: carry = classFactor x (1 - armourShare) + killBonus + skillBonus x skillCurve, capped at maxCarryFactor; the next
-// momentum is the original times that carry, 0 below the floor or once the swing has struck maxTargets enemies.
+// The rule: carry = classFactor x (1 - armourShare), plus killBonus on a kill or skillBonus x skillCurve on any other hit, capped
+// at maxCarryFactor; the next momentum is the original times that carry, 0 below the floor or once the swing has struck
+// maxTargets enemies.
 public sealed class CleavingBlowService : ICleavingBlowService
 {
     // Assumed, not verified (combat-mechanics.md UNVERIFIED 1): one per attacker object. The engine hands back the momentum we returned, so a hit whose incoming momentum equals the
-    // last value we carried is the next hit of the same swing; a fresh swing starts at 1.0, which a carried value never is.
+    // last value we carried is the next hit of the same swing; a fresh swing starts at 1.0 (a heavy attack possibly at 1.15, native's
+    // heavy_attack_momentum_multiplier, UNVERIFIED), which a carried value (at most maxCarryFactor x that start) never is.
     private sealed class Chain
     {
         public float LastCarried;
