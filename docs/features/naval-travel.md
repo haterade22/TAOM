@@ -150,6 +150,10 @@ sea has no path that can throw. **Open question [yotthani]:** a night probe on g
 there, but the test behind the log line cannot be read. That is not enough to re-enable Patch57. Cheapest check: a new
 campaign on v1.5.7 with TAOM's module list, logging `MobileParty.All.Count(p => p.IsCurrentlyAtSea)` daily for 30 days.
 
+### Wrapper guard (`Patch159_NavalLandPathfindGuard`)
+
+Patch57 covers one caller. Vanilla v1.5.7 has three managed callers of `MapScene.GetNearestFaceCenterForPositionWithPath`: `AIMoveToNearestLandBehavior.AiHourlyTick`, `MobilePartyAi.GetBestMoveToNearestLandBehavior` (a party whose saved behaviour is `MoveToNearestLandOrPort` keeps calling it) and `MobileParty.MovePartyToTheClosestLand` (raft state change). Patch159 is a Prefix on the wrapper itself: it never calls the native method and returns the gate of the nearest town, castle or village (pure `NavalLandFallback.NearestIndex`). It is independent of `EnableNavalTravel`. The native search indexes the nav-mesh region map, which the engine fills only when a module named NavalDLC is loaded (`IScene.SetNavMeshRegionMap` returns early otherwise). TAOM never loads NavalDLC, so the map is null and the search faults; that is why the guard is unconditional. Patch57 stays parked: re-enabled, it would skip the hourly rescue that Patch159 makes safe. Applied in `SubModule.OnSubModuleLoad`. What happens next (lens review 18 Nov, not verified in game): the party gets a land point and computes a normal path from its sea face; the A* path bodies do not read the region map. A party whose path fails stays at sea and asks again, without crashing; a one-time repair at load (move every party found at sea to land) is a possible follow-up.
+
 ## Configuration
 
 **JSON:** `Main/_Module/ModuleData/naval_travel/naval_travel_config.json` (validated by
