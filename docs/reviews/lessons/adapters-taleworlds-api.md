@@ -2076,6 +2076,14 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 
 **Source:** /deep-review of #1350, Data flow lens item 3 and Engine compatibility lens finding 1.
 
+### Reading the victim's state after RegisterBlow on a fatal hit reads a dead agent (Cleaving Blows, 2026-11-16)
+
+**Why missed:** the momentum and reaction seams run after `RegisterBlow`, so on a kill the victim has already died (in single
+player and on the co-op peer that owns the victim; on another peer Coop forwards the blow and the victim's health is unchanged): `Die` drops his weapons (`OnWeaponDrop` sets the slot to Invalid, `Agent.cs:3458-3462`, `:5529-5532`) and his wielded-item skill reads 0. The skill term then gave every kill the full bonus.
+
+**Prevent:** in a seam that runs after the blow, treat any read of the victim's equipment or skills as untrustworthy when `Health <= 0`: skip the term on a fatal hit, or read it before `RegisterBlow`. Back the premise with a `[BlowDiag]` line until it is seen in game.
+
+**Source:** [rca-cleaving-blows-2026-11-16.md](../rca-cleaving-blows-2026-11-16.md) finding A.
 ### An engine state a fix depends on is read with the lines that clear it (#1370, 2026-11-16)
 
 **Why missed:** the #1370 fix holds the heroes until a siege lane stores a defender formation, and its comments said the castle tactic keeps each lane's first formation (`TacticDefendCastle.cs:665-679`). The same method clears every inactive lane each tick (`:921-924`) and refills a later lane from every formation with units (`:481-493, :701-735`), so formation 7 still took a lane 21 s into the probe run.

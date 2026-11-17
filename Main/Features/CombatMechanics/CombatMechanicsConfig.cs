@@ -15,6 +15,7 @@ public class CombatMechanicsConfig
     public CreatureCombatConfig Creatures { get; set; } = new CreatureCombatConfig();
     public ShieldPenetrationConfig ShieldPenetration { get; set; } = new ShieldPenetrationConfig();
     public ShieldBashConfig ShieldBash { get; set; } = new ShieldBashConfig();
+    public CleavingBlowsConfig CleavingBlows { get; set; } = new CleavingBlowsConfig();
 
     // Keyed by race NAME (precedent: raceage/race_age_config.json). Keys are validated against
     // IRaceManager.IsValidRaceName lazily (RaceCombatModifiersResolver) because the race registry
@@ -152,6 +153,37 @@ public class ShieldBashConfig
 
     // The player resists: an AI bash on the main agent falls this fraction as often as on anyone else.
     public float PlayerVictimChanceFactor { get; set; } = 0.5f;
+}
+
+// Cleaving Blows: a two-handed swing carries on to the next enemy. The compiled values are the revert-to target when the JSON
+// fails validation, so they must match the shipped JSON, and AiEnabled must stay false here (a malformed edit must not
+// switch the AI path on).
+public class CleavingBlowsConfig
+{
+    public bool Enabled { get; set; } = true;
+    public bool AiEnabled { get; set; } = false;
+
+    // WeaponClass enum member name to the share of the momentum a hit hands on (before armour and bonuses).
+    public Dictionary<string, float> WeaponClassCarry { get; set; } = new Dictionary<string, float>
+    {
+        ["TwoHandedAxe"] = 0.6f,
+        ["TwoHandedMace"] = 0.6f,
+        ["TwoHandedSword"] = 0.5f,
+        ["TwoHandedPolearm"] = 0.4f,
+    };
+
+    // The classes an AI soldier may cleave with once AiEnabled is on; each needs a WeaponClassCarry row.
+    public List<string> AiWeaponClasses { get; set; } = new List<string>
+    {
+        "TwoHandedAxe", "TwoHandedMace", "TwoHandedSword",
+    };
+
+    public float KillCarryBonus { get; set; } = 0.15f;
+    public float SkillCarryBonus { get; set; } = 0.1f;
+    public float MaxCarryFactor { get; set; } = 0.75f;
+    public float MinRemainingMomentum { get; set; } = 0.25f;
+    public int MaxTargetsPerSwing { get; set; } = 3;
+    public bool IncludeMountedAttackers { get; set; } = false;
 }
 
 public class CreatureCombatConfig

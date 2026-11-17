@@ -76,6 +76,7 @@ public class CombatMechanicsConfigProvider : ICombatMechanicsConfigProvider
             Creatures = ValidateCreatures(parsed.Creatures, ref rejected),
             ShieldPenetration = ValidateShieldPenetration(parsed.ShieldPenetration, ref rejected),
             ShieldBash = ValidateShieldBash(parsed.ShieldBash, ref rejected),
+            CleavingBlows = ValidateCleavingBlows(parsed.CleavingBlows, ref rejected),
             RaceModifiers = ValidateRaceModifiers(parsed.RaceModifiers, ref rejected),
         };
 
@@ -323,6 +324,104 @@ public class CombatMechanicsConfigProvider : ICombatMechanicsConfigProvider
 
         return sanitized;
     }
+
+    private CleavingBlowsConfig ValidateCleavingBlows(CleavingBlowsConfig parsed, ref bool rejected)
+    {
+        var defaults = new CleavingBlowsConfig();
+        if (parsed == null)
+        {
+            _logger.LogWarning("CombatMechanicsConfigProvider: cleavingBlows section is null, reverting to defaults");
+            rejected = true;
+            return defaults;
+        }
+
+        var carry = ValidateCleaveCarryMap(parsed.WeaponClassCarry, defaults.WeaponClassCarry, ref rejected);
+        var sanitized = new CleavingBlowsConfig
+        {
+            Enabled = parsed.Enabled,
+            AiEnabled = parsed.AiEnabled,
+            IncludeMountedAttackers = parsed.IncludeMountedAttackers,
+            WeaponClassCarry = carry,
+            AiWeaponClasses = ValidateCleaveAiClasses(parsed.AiWeaponClasses, defaults.AiWeaponClasses, carry, ref rejected),
+            KillCarryBonus = CheckFiniteInRange(parsed.KillCarryBonus, 0f, 1f, defaults.KillCarryBonus, "cleavingBlows.killCarryBonus", ref rejected),
+            SkillCarryBonus = CheckFiniteInRange(parsed.SkillCarryBonus, 0f, 1f, defaults.SkillCarryBonus, "cleavingBlows.skillCarryBonus", ref rejected),
+            // Below 1 so the momentum always falls from hit to hit.
+            MaxCarryFactor = CheckFiniteAboveExclusiveMin(parsed.MaxCarryFactor, 0f, 0.95f, defaults.MaxCarryFactor, "cleavingBlows.maxCarryFactor", ref rejected),
+            MinRemainingMomentum = CheckFiniteInRange(parsed.MinRemainingMomentum, 0f, 1f, defaults.MinRemainingMomentum, "cleavingBlows.minRemainingMomentum", ref rejected),
+            MaxTargetsPerSwing = CheckIntInRange(parsed.MaxTargetsPerSwing, 3, 5, defaults.MaxTargetsPerSwing, "cleavingBlows.maxTargetsPerSwing", ref rejected),
+        };
+
+        // A floor at or above the ceiling means no hit could ever carry on.
+        if (sanitized.MinRemainingMomentum >= sanitized.MaxCarryFactor)
+        {
+            _logger.LogWarning($"CombatMechanicsConfigProvider: cleavingBlows.minRemainingMomentum={sanitized.MinRemainingMomentum} must be below maxCarryFactor={sanitized.MaxCarryFactor}, reverting both to defaults {defaults.MinRemainingMomentum}/{defaults.MaxCarryFactor}");
+            sanitized.MinRemainingMomentum = defaults.MinRemainingMomentum;
+            sanitized.MaxCarryFactor = defaults.MaxCarryFactor;
+            rejected = true;
+        }
+
+        return sanitized;
+    }
+
+    // A bad row is dropped (the author must see it); the JSON map REPLACES the compiled one, so a one-row map means one class.
+    private Dictionary<string, float> ValidateCleaveCarryMap(Dictionary<string, float> parsed, Dictionary<string, float> fallback, ref bool rejected)
+    {
+        if (parsed == null)
+        {
+            _logger.LogWarning("CombatMechanicsConfigProvider: cleavingBlows.weaponClassCarry is null, reverting to defaults");
+            rejected = true;
+            return new Dictionary<string, float>(fallback, StringComparer.Ordinal);
+        }
+
+        var kept = new Dictionary<string, float>(parsed.Count, StringComparer.Ordinal);
+        foreach (var pair in parsed)
+        {
+            if (!IsWeaponClassMember(pair.Key) || !FiniteFloatValidator.IsFinite(pair.Value) || !(pair.Value > 0f) || pair.Value > 1f)
+            {
+                _logger.LogWarning($"CombatMechanicsConfigProvider: cleavingBlows.weaponClassCarry['{pair.Key}'] = {pair.Value} is not a WeaponClass member with a finite factor in (0,1], dropping the entry");
+                rejected = true;
+                continue;
+            }
+
+            kept[pair.Key] = pair.Value;
+        }
+
+        return kept;
+    }
+
+    // An AI class without a carry factor could never carry anything, so it is dropped like a typo'd name.
+    private List<string> ValidateCleaveAiClasses(List<string> parsed, List<string> fallback, Dictionary<string, float> carry, ref bool rejected)
+    {
+        if (parsed == null)
+        {
+            _logger.LogWarning("CombatMechanicsConfigProvider: cleavingBlows.aiWeaponClasses is null, reverting to defaults");
+            rejected = true;
+            parsed = fallback;
+        }
+
+        var kept = new List<string>(parsed.Count);
+        foreach (var name in parsed)
+        {
+            if (!IsWeaponClassMember(name) || !carry.ContainsKey(name))
+            {
+                _logger.LogWarning($"CombatMechanicsConfigProvider: cleavingBlows.aiWeaponClasses entry '{name}' is not a WeaponClass member with a weaponClassCarry row, entry removed");
+                rejected = true;
+                continue;
+            }
+
+            kept.Add(name);
+        }
+
+        return kept;
+    }
+
+    // Case-sensitive by design (the enum member casing is the documented contract). TryParse accepts a numeric string such as
+    // "5" and IsDefined accepts its value, so the name must also match the member's own name.
+    private static bool IsWeaponClassMember(string name)
+        => !string.IsNullOrEmpty(name)
+            && Enum.TryParse<WeaponClass>(name, ignoreCase: false, out var weaponClass)
+            && Enum.IsDefined(typeof(WeaponClass), weaponClass)
+            && string.Equals(weaponClass.ToString(), name, StringComparison.Ordinal);
 
     private List<string> ValidateWeaponClasses(List<string> parsed, List<string> fallback, ref bool rejected)
     {

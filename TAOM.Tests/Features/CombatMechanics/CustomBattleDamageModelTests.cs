@@ -61,8 +61,8 @@ public class CustomBattleDamageModelTests
         ["ApplyDamageScaling"] = "base,CreatureSiegeHooks.ScaleGateDamage",
         ["ApplyGeneralDamageModifiers"] = "base,CombatMechanicsHooks.ShieldPierceFloor",
         ["DecideCrushedThrough"] = "RaceAbilityHooks.CrushVerdict,CombatMechanicsHooks.CrushThrough,base",
-        ["CalculateRemainingMomentum"] = "CombatMechanicsHooks.CleaveMomentum,base",
-        ["DecideWeaponCollisionReaction"] = "base,CombatMechanicsHooks.CollisionReaction",
+        ["CalculateRemainingMomentum"] = "CombatMechanicsHooks.CleaveMomentum,CombatMechanicsHooks.CleavingBlowMomentum,base",
+        ["DecideWeaponCollisionReaction"] = "base,CombatMechanicsHooks.CollisionReaction,CombatMechanicsHooks.CleavingBlowReaction",
         ["DecideAgentShrugOffBlow"] = "base,CombatMechanicsHooks.IsUnstoppable,RaceAbilityHooks.ShrugsOff",
         ["CalculateStaggerThresholdDamage"] = "base,CombatMechanicsHooks.StaggerThreshold",
         ["DecideAgentKnockedDownByBlow"] = "SignatureStrikeVerdicts.Decide,CombatMechanicsHooks.ChargeKnockdown,CombatMechanicsHooks.ShieldBashKnockdown,base",
@@ -153,9 +153,11 @@ public class CustomBattleDamageModelTests
     [DataRow("DecideCrushedThrough", "_combat.CrushThrough(attackerAgent, defenderAgent, totalAttackEnergy, attackDirection, strikeType, defendItem, isPassiveUsageHit)")]
     [DataRow("DecideCrushedThrough", "base.DecideCrushedThrough(attackerAgent, defenderAgent, totalAttackEnergy, attackDirection, strikeType, defendItem, isPassiveUsageHit)")]
     [DataRow("CalculateRemainingMomentum", "_combat.CleaveMomentum(attacker, originalMomentum, in collisionData)")]
+    [DataRow("CalculateRemainingMomentum", "_combat.CleavingBlowMomentum(originalMomentum, in b, in collisionData, attacker, victim, in attackerWeapon, isCrushThrough)")]
     [DataRow("CalculateRemainingMomentum", "base.CalculateRemainingMomentum(originalMomentum, in b, in collisionData, attacker, victim, in attackerWeapon, isCrushThrough)")]
     [DataRow("DecideWeaponCollisionReaction", "base.DecideWeaponCollisionReaction(in registeredBlow, in collisionData, attacker, defender, in attackerWeapon, isFatalHit, isShruggedOff, momentumRemaining, out colReaction)")]
     [DataRow("DecideWeaponCollisionReaction", "_combat.CollisionReaction(attacker, momentumRemaining, in collisionData, colReaction)")]
+    [DataRow("DecideWeaponCollisionReaction", "_combat.CleavingBlowReaction(in registeredBlow, in collisionData, attacker, defender, in attackerWeapon, momentumRemaining, colReaction)")]
     [DataRow("DecideAgentShrugOffBlow", "base.DecideAgentShrugOffBlow(victimAgent, in collisionData, in blow)")]
     [DataRow("DecideAgentShrugOffBlow", "_combat.IsUnstoppable(victimAgent, in collisionData)")]
     [DataRow("DecideAgentShrugOffBlow", "RaceAbilityHooks.ShrugsOff(victimAgent)")]
@@ -319,7 +321,8 @@ public class CustomBattleDamageModelTests
         var settings = Substitute.For<ICombatMechanicsSettingsProvider>();
         var creature = Substitute.For<ICreatureCombatService>();
         var hooks = new CombatMechanicsHooks(Substitute.For<ICrushThroughService>(), Substitute.For<IChargeKnockdownService>(),
-            creature, Substitute.For<IShieldPenetrationService>(), Substitute.For<IShieldBashKnockdownService>(), Substitute.For<ICareerAgentStatService>(), settings);
+            creature, Substitute.For<IShieldPenetrationService>(), Substitute.For<IShieldBashKnockdownService>(), Substitute.For<ICareerAgentStatService>(), settings,
+            Substitute.For<ICleavingBlowService>(), Substitute.For<TAOM.Features.BlowDiagnostics.IBlowDiagnosticService>());
         return (Activator.CreateInstance(Twin, hooks, null, null)!, settings, creature);
     }
 

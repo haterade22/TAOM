@@ -305,4 +305,45 @@ public class ShippedCombatMechanicsConfigTests
             "The MCM default and the shipped JSON 'enabled' must agree, or a fresh install and a " +
             "config-only reader disagree about whether the mechanic is on.");
     }
+
+    // Cleaving Blows. The compiled values are the revert-to target on a validation failure, and the MCM defaults are the
+    // third surface; the AI path ships off on all three.
+    [TestMethod]
+    public void ShippedConfig_CleavingBlows_MatchesCompiledDefaults()
+    {
+        var shipped = _sut.GetConfig().CleavingBlows;
+        var compiled = new CleavingBlowsConfig();
+
+        Assert.AreEqual(compiled.Enabled, shipped.Enabled);
+        Assert.AreEqual(compiled.AiEnabled, shipped.AiEnabled);
+        Assert.AreEqual(compiled.WeaponClassCarry.Count, shipped.WeaponClassCarry.Count);
+        foreach (var pair in compiled.WeaponClassCarry)
+            Assert.AreEqual(pair.Value, shipped.WeaponClassCarry[pair.Key], 0.0001f, pair.Key);
+        CollectionAssert.AreEqual(compiled.AiWeaponClasses, shipped.AiWeaponClasses);
+        Assert.AreEqual(compiled.KillCarryBonus, shipped.KillCarryBonus, 0.0001f);
+        Assert.AreEqual(compiled.SkillCarryBonus, shipped.SkillCarryBonus, 0.0001f);
+        Assert.AreEqual(compiled.MaxCarryFactor, shipped.MaxCarryFactor, 0.0001f);
+        Assert.AreEqual(compiled.MinRemainingMomentum, shipped.MinRemainingMomentum, 0.0001f);
+        Assert.AreEqual(compiled.MaxTargetsPerSwing, shipped.MaxTargetsPerSwing);
+        Assert.AreEqual(compiled.IncludeMountedAttackers, shipped.IncludeMountedAttackers);
+    }
+
+    [TestMethod]
+    public void ShippedConfig_CleavingBlows_AiShipsOff()
+    {
+        Assert.IsFalse(_sut.GetConfig().CleavingBlows.AiEnabled);
+        Assert.IsFalse(new CleavingBlowsConfig().AiEnabled);
+        Assert.IsFalse(new TaomSettings().EnableCleavingBlowsForAi);
+    }
+
+    [TestMethod]
+    public void McmDefault_CleavingBlows_MatchesShippedConfig()
+    {
+        var shipped = _sut.GetConfig().CleavingBlows;
+        var settings = new TaomSettings();
+
+        Assert.AreEqual(shipped.Enabled, settings.EnableCleavingBlows);
+        Assert.AreEqual(shipped.AiEnabled, settings.EnableCleavingBlowsForAi);
+        Assert.AreEqual(shipped.MaxTargetsPerSwing, settings.CleavingBlowsMaxTargets);
+    }
 }

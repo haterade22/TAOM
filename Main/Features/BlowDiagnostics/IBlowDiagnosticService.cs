@@ -15,4 +15,7 @@ public interface IBlowDiagnosticService
     void LogBlow(BlowDiagRecord record);
     void LogDeath(BlowDiagRecord record);
     void LogSiegeShot(string missileItemId, string side);
+
+    // Cleaving Blows: the two skills a fatal hit read, to show whether the victim's reads 0 once his weapon has dropped.
+    void LogCleaveFatalSkill(int attackerSkill, int victimSkill);
 }

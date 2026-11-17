@@ -42,6 +42,10 @@ public class CombatMechanicsSettingsProviderTests
         Assert.AreEqual(json.MinPenetrationFactor, settings.ChargeMinPenetrationFactor, 0.0001f);
         Assert.IsTrue(settings.EnableCultureChargeDamage);
         Assert.AreEqual(new ShieldBashConfig().Enabled, settings.EnableShieldBashKnockdown);
+        var cleave = new CleavingBlowsConfig();
+        Assert.AreEqual(cleave.Enabled, settings.EnableCleavingBlows);
+        Assert.AreEqual(cleave.AiEnabled, settings.EnableCleavingBlowsForAi);
+        Assert.AreEqual(cleave.MaxTargetsPerSwing, settings.CleavingBlowsMaxTargets);
     }
 
     [TestMethod]
@@ -136,6 +140,9 @@ public class CombatMechanicsSettingsProviderTests
             (s => s.EnableRaceCombatModifiers = false, p => p.RaceCombatModifiersEnabled, false),
             (s => s.EnableCultureChargeDamage = false, p => p.CultureChargeDamageEnabled, false),
             (s => s.EnableShieldBashKnockdown = false, p => p.ShieldBashKnockdownEnabled, false),
+            (s => s.EnableCleavingBlows = false, p => p.CleavingBlowsEnabled, false),
+            (s => s.EnableCleavingBlowsForAi = true, p => p.CleavingBlowsAiEnabled, true),
+            (s => s.CleavingBlowsMaxTargets = 5, p => p.CleavingBlowsMaxTargets, 5),
             (s => s.CrushThroughMaxChance = 0.25f, p => p.CrushThroughMaxChance, 0.25f),
             (s => s.ChargeAutoKnockdownRatio = 10, p => p.ChargeAutoKnockdownWeightRatio, 10f),
             (s => s.ChargeNeutralWeightRatio = 4f, p => p.ChargeNeutralWeightRatio, 4f),
@@ -214,5 +221,73 @@ public class CombatMechanicsSettingsProviderTests
         Assert.IsFalse(sut.RaceCombatModifiersEnabled, nameof(sut.RaceCombatModifiersEnabled));
         Assert.IsFalse(sut.CultureChargeDamageEnabled, nameof(sut.CultureChargeDamageEnabled));
         Assert.IsFalse(sut.ShieldBashKnockdownEnabled, nameof(sut.ShieldBashKnockdownEnabled));
+        Assert.IsFalse(sut.CleavingBlowsEnabled, nameof(sut.CleavingBlowsEnabled));
+        Assert.IsFalse(sut.CleavingBlowsAiEnabled, nameof(sut.CleavingBlowsAiEnabled));
+    }
+
+    [TestMethod]
+    public void CleavingBlowsEnabled_FoldsTheMaster()
+    {
+        var mcm = new TaomSettings();
+        var sut = WarmProviderOn(mcm);
+        Assert.IsTrue(sut.CleavingBlowsEnabled);
+
+        mcm.EnableCombatMechanics = false;
+
+        Assert.IsFalse(sut.CleavingBlowsEnabled);
+    }
+
+    [TestMethod]
+    public void CleavingBlowsAiEnabled_IsFalseWithTheMasterOffEvenWhenTheAiSwitchIsOn()
+    {
+        var mcm = new TaomSettings { EnableCleavingBlowsForAi = true };
+        var sut = WarmProviderOn(mcm);
+        Assert.IsTrue(sut.CleavingBlowsAiEnabled);
+
+        mcm.EnableCombatMechanics = false;
+
+        Assert.IsFalse(sut.CleavingBlowsAiEnabled);
+    }
+
+    [TestMethod]
+    public void CleavingBlowsAiEnabled_IsFalseWithTheFeatureOffEvenWhenTheAiSwitchIsOn()
+    {
+        var mcm = new TaomSettings { EnableCleavingBlowsForAi = true };
+        var sut = WarmProviderOn(mcm);
+
+        mcm.EnableCleavingBlows = false;
+
+        Assert.IsFalse(sut.CleavingBlowsAiEnabled);
+    }
+
+    [TestMethod]
+    public void NoMcm_CleavingBlows_FallBackToJson_AiOffByDefault()
+    {
+        Assert.IsTrue(_sut.CleavingBlowsEnabled);
+        Assert.IsFalse(_sut.CleavingBlowsAiEnabled);
+        Assert.AreEqual(3, _sut.CleavingBlowsMaxTargets);
+
+        _config.CleavingBlows.AiEnabled = true;
+        _config.CleavingBlows.MaxTargetsPerSwing = 4;
+
+        Assert.IsTrue(_sut.CleavingBlowsAiEnabled);
+        Assert.AreEqual(4, _sut.CleavingBlowsMaxTargets);
+
+        _config.CleavingBlows.Enabled = false;
+
+        Assert.IsFalse(_sut.CleavingBlowsAiEnabled);
+    }
+
+    [DataTestMethod]
+    [DataRow(1, 3)]
+    [DataRow(2, 3)]
+    [DataRow(9, 5)]
+    [DataRow(4, 4)]
+    public void CleavingBlowsMaxTargets_ClampsTheSliderToThreeToFive(int mcmValue, int expected)
+    {
+        var mcm = new TaomSettings { CleavingBlowsMaxTargets = mcmValue };
+        var sut = WarmProviderOn(mcm);
+
+        Assert.AreEqual(expected, sut.CleavingBlowsMaxTargets);
     }
 }

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Seven battle-feel mechanics layered onto the single `AgentApplyDamageModel` slot: skill-based crush-through-block, monster auto-crush-through, orc shield-crush-through, creature cleave, creature stagger immunity (unstoppable), weight-driven charge knockdown, and config-granted shield penetration, plus a per-race combat-modifier table (dwarf/elf/orc flavor) that feeds several of them. All config/MCM-toggleable; master toggle off restores exactly the pre-feature behavior. An eighth mechanic since #610 rides the `AgentStatCalculateModel` slot instead: the per-culture cavalry charge multiplier (`IChargeDamageService` + `MountChargeDamageApplier`, applied from both the campaign and the Custom Battle stat model). A ninth, Hammerhand (#895), rides the damage model again: a shield bash or kick can knock a man down (see [Hammerhand](#hammerhand-shield-bash-and-kick-knockdown-895)).
+Seven battle-feel mechanics layered onto the single `AgentApplyDamageModel` slot: skill-based crush-through-block, monster auto-crush-through, orc shield-crush-through, creature cleave, creature stagger immunity (unstoppable), weight-driven charge knockdown, and config-granted shield penetration, plus a per-race combat-modifier table (dwarf/elf/orc flavor) that feeds several of them. All config/MCM-toggleable; master toggle off restores exactly the pre-feature behavior. An eighth mechanic since #610 rides the `AgentStatCalculateModel` slot instead: the per-culture cavalry charge multiplier (`IChargeDamageService` + `MountChargeDamageApplier`, applied from both the campaign and the Custom Battle stat model). A ninth, Hammerhand (#895), rides the damage model again: a shield bash or kick can knock a man down (see [Hammerhand](#hammerhand-shield-bash-and-kick-knockdown-895)). A tenth, Cleaving Blows, rides `CalculateRemainingMomentum` and `DecideWeaponCollisionReaction`: a two-handed swing by the agent a human controls can cut through several enemies (see [Cleaving Blows](#cleaving-blows)).
 
 **Custom Battle (#788):** the seven mechanics, Hammerhand (#895), the per-race table (its `baseHitPoints` row excepted: Custom Battle reads health from the Monster's `hit_points`) and the horse charge penetration slider run in Custom Battle too, through `TaomCustomBattleDamageModel` (see [Custom Battle](#custom-battle)). Before #788 they were campaign-only: the campaign model derives from SandBox's, which cannot run outside a campaign, and Custom Battle's only TAOM damage model carried the creature, race-ability and siege hooks and none of these. The career passives, the career crush hold and the Refuge reduction stay campaign-only (they read heroes and parties).
 
@@ -25,14 +25,14 @@ TaomCombatMechanicsModel : TaomAgentApplyDamageModel (CareerSystem, now abstract
 
 Career damage passives ride along via inheritance; the CareerSystem parent is `abstract` since 2026-07-02 (registered only through this derived model — see `GameModelOverrideBindingTests`, which exempts abstract models from the registration gate).
 
-Thin model → `CombatMechanicsHooks` → five pure services (ADR-002/007; gamemodels.md rule 4): every override is base plus one call per feature, and the hooks extract primitives/DTOs at the boundary and delegate (#737). Services precompute `HashSet`/`Dictionary` lookups at construction (per-hit hot path: no LINQ or allocation per call) and take caller-supplied random rolls so probability tests are deterministic.
+Thin model → `CombatMechanicsHooks` → six pure services (ADR-002/007; gamemodels.md rule 4): every override is base plus one call per feature, and the hooks extract primitives/DTOs at the boundary and delegate (#737). Services precompute `HashSet`/`Dictionary` lookups at construction (per-hit hot path: no LINQ or allocation per call) and take caller-supplied random rolls so probability tests are deterministic.
 
 | Override | Service | Mechanic |
 |---|---|---|
 | `DecideCrushedThrough` | `CrushThroughService` | race-ability verdict first (Stand Fast holds, Berserk forces; [race-abilities.md](race-abilities.md)) → monster auto-CTB → orc shield-CTB → skill CTB curve; `?? base` keeps the vanilla 58f path; campaign model only, the whole verdict then passes through `CareerTroopHooks.ApplyCrushHold` (#769 E10): a crush-through on a defending troop whose leader holds the `TroopCrushHold` pip can become a hold, and a hold is never turned into a crush |
 | `ApplyDamageAmplifications` | `RaceAbilityHooks` | a live race ability's melee or ranged damage, after the career amplification the parent model applies |
-| `CalculateRemainingMomentum` | `CreatureCombatService` | cleave momentum 0.3× for listed creatures (default zeroes momentum for ordinary weapons) |
-| `DecideWeaponCollisionReaction` | `CreatureCombatService` | force `SlicedThrough` — prevents chain-termination on Bounced/Stuck branches (shield block, axe <50% HP, shrug-off, wrong bone) |
+| `CalculateRemainingMomentum` | `CreatureCombatService` | cleave momentum 0.3× for listed creatures (default zeroes momentum for ordinary weapons); then `CleavingBlowService` (Cleaving Blows) for a qualifying swing |
+| `DecideWeaponCollisionReaction` | `CreatureCombatService` | force `SlicedThrough`: prevents chain-termination on Bounced/Stuck branches (shield block, axe <50% HP, shrug-off, wrong bone); then `CleavingBlowService` (Cleaving Blows) for a qualifying swing |
 | `DecideAgentShrugOffBlow` | `CreatureCombatService` | base (vanilla + career) OR per-creature damage threshold OR a live race ability's shrug-off (`RaceAbilityHooks.ShrugsOff`); true sets `BlowFlags.ShrugOff`, which suppresses knock-back, knockdown and dismount for weapon hits (intended); an alternative attack still knocks back (`MissionCombatMechanicsHelper` :63-66), and Hammerhand ignores the flag because vanilla sets it on nearly every bash and kick (see Hammerhand) |
 | `CalculateStaggerThresholdDamage` | `CreatureCombatService` | × race `staggerThresholdMultiplier`; vanilla shrug-off re-enters this via the REGISTERED model, so the multiplier feeds vanilla stagger automatically |
 | `DecideAgentKnockedDownByBlow` | `ChargeKnockdownService` | a signature slam first (`SignatureStrikeVerdicts`), then the weight-driven two-branch rules (below), which `CombatMechanicsHooks.ChargeKnockdown` asks for a horse charge only, then Hammerhand (`ShieldBashKnockdownService`, below), which `CombatMechanicsHooks.ShieldBashKnockdown` asks for a shield bash or kick only; every other hit is base |
@@ -308,13 +308,175 @@ Read Athletics on the character screen or the encyclopedia unit page.
 **Localization.** The MCM name and hint are plain English like the rest of the Combat Mechanics group and this batch's other
 features (Fell Foes, Lost Footing); no `/localize` run.
 
+### Cleaving Blows
+
+A swing with a two-handed weapon can cut through one enemy and strike the next. Owner ask, 2026-11-16: on for the agent a human
+controls; an AI path for two-handed troops is built and tested but ships off. Our own design, no third-party code. There is no
+GitHub issue number: the maintainer waived a new issue for this work.
+
+**What the engine does.** The momentum a hit leaves is what the next hit of the swing is scaled by (`ComputeBlowMagnitudeMelee`
+multiplies the base magnitude by the momentum remaining). `Mission.MeleeHitCallback` asks `CalculateRemainingMomentum` twice: first
+with `isCrushThrough: true` and a default `Blow` when the hit crushed through, then with the real blow after `RegisterBlow`. Right
+after the second ask it calls `DecideWeaponCollisionReaction`. Outside a crush-through (0.3) and a couched or braced hit (0.5),
+vanilla carries momentum only for a two-handed axe or mace (`CanHitMultipleTargets`) on a non-thrust hit with the weapon's own
+bone: `orig x (1 - absorbed / inflicted) x 0.5`, 0 below 0.25.
+
+**Who counts.** The attacker must be human and on foot (`includeMountedAttackers` ships false), and either
+
+- player controlled (`Agent.IsPlayerControlled`: the main agent, a soldier taken over, a co-op human on his own peer), or
+- AI controlled (`IsAIControlled`), only while the AI switch is on and the current weapon usage class is in `aiWeaponClasses`.
+
+Any other attacker (a co-op puppet) gets vanilla. The weapon class is that of the current usage item, so a bastard sword in its
+one-handed grip does not count.
+
+**Which weapons.** Carry factor per class (`weaponClassCarry`): TwoHandedAxe 0.60, TwoHandedMace 0.60, TwoHandedSword 0.50,
+TwoHandedPolearm 0.40 (swings only). Any other class is vanilla. AI classes (`aiWeaponClasses`): TwoHandedAxe, TwoHandedMace,
+TwoHandedSword, so AI spear and glaive lines keep vanilla even with the AI switch on. An AI class needs a carry factor.
+
+**Which hits.** All of these must hold, else the rule answers `null` and the chain falls through to vanilla: a swing (never a
+thrust), not an alternative attack (bash, kick), not a passive attack (couched or braced), not a horse charge, a collider agent,
+not shield blocked (`AttackBlockedWithShield` or `CollidedWithShieldOnBack`), not `HitWithAnotherBone`, not shrugged off (the
+`ShrugOff` blow flag, which also covers troll stagger immunity and a live Stand Fast), damage above 0, `AbsorbedByArmor >= 0` and
+finite, `originalMomentum > 0` and finite, and never the crush-through call (vanilla's 0.3 stands). Each gate is a positive
+requirement, so a NaN fails it.
+
+**How much.**
+
+```
+armourShare = absorbed / (absorbed + inflicted)
+carry       = classFactor * (1 - armourShare)
+            + (isFatal ? killCarryBonus : 0)
+            + skillCarryBonus * SkillGapCurve(attackerSkill - victimSkill)   // 0 on a fatal hit
+carry       = min(carry, maxCarryFactor)
+next        = originalMomentum * carry
+if !(next >= minRemainingMomentum) next = 0
+if hit >= maxTargetsPerSwing       next = 0
+```
+
+A returned 0 is an answer, not a decline: the rule owns the hit and the swing ends. The skill term reuses the crush-through skill
+window (`crushThrough.skillDeadZone`, `skillTargetDelta`, `skillCurveExponent`) through `SkillGapCurve`, extracted from
+`CrushThroughService` with no change of result. The attacker's skill is his value for his weapon's `RelevantSkill`; the victim's is
+his value for his wielded item (offhand, else primary; 0 for a horse or no character). On a fatal hit the skill term is 0: the
+victim's weapon may already be dropped (`Die` then `OnWeaponDrop` empties the slot, `Agent.cs:3458-3462`, `:5529-5532`), so his skill
+could read 0 and give every kill the full term; the kill bonus covers kills. No race term. For a player's two-handed axe
+or mace the result is never below vanilla on a carried hit (`a/(a+i) <= a/i`, 0.6 > 0.5, the bonuses are not negative, the floor is
+vanilla's), and vanilla's best case is 3 targets (1, 0.5, 0.25), so the default cap of 3 never cuts a hit vanilla would land;
+`CleavingBlowServiceTests` pins both.
+
+**Reaction.** When the rule qualifies and `momentumRemaining > 0`, `CleavingBlowReaction` forces `SlicedThrough`, so an axe no
+longer sticks in a man it carried through. When the rule returned 0 (floor or cap) the vanilla reaction stands: an axe sticks in a man
+it does not kill when the hit does under half his health, and slices through otherwise. Shield blocks are excluded and stay Bounced.
+
+**The AI switch.** JSON `cleavingBlows.aiEnabled` false (the compiled default is also false, so a malformed edit cannot switch it
+on); MCM `EnableCleavingBlowsForAi`, default false. `CleavingBlowsAiEnabled` folds the master and `CleavingBlowsEnabled`, so AI
+needs the feature on. The `aiWeaponClasses` list is the extension point for "two-handed units"; a per-troop or per-culture list is
+not built. Tested both ways: off, an AI two-handed axe hit gets `null`; on, the same hit carries; on, an AI one-hander or
+polearm still gets `null`; the player's result never depends on the switch.
+
+**The chain counter (max targets per swing).** The key is the attacker `Agent` object (handed to the service as `object`), never
+`Agent.Index`: a deleted agent's index is handed to whoever spawns next
+(`docs/reviews/lessons/adapters-taleworlds-api.md`). The store is a `ConditionalWeakTable<object, Chain>` with
+`Chain { LastCarried, Hits }`, so entries die with the agent object and nothing clears between missions. Per qualifying hit,
+under `lock (chain)`: `hit = (LastCarried > 0 && originalMomentum == LastCarried) ? Hits + 1 : 1` (exact float equality on
+purpose: the engine hands back the value we returned), then `next` is 0 when `hit >= maxTargets`, and `Hits` and `LastCarried` are
+stored. A fresh swing starts at 1.0, or possibly 1.15 for a heavy attack (native's `heavy_attack_momentum_multiplier` in
+`native_parameters.xml`, UNVERIFIED), which a carried value (at most 0.75 of that start) never equals, so the counter resets by
+itself. The lock
+is the default the thread rules ask for; the engine declares the callback single-threaded (see the thread row in
+[mission-frame-threads-and-native-costs.md](../reference/engine/mission-frame-threads-and-native-costs.md)), uncontended. The rule
+is deterministic: no random roll.
+
+**No double application.** Momentum, both models: `CleaveMomentum` (creatures) `??` `CleavingBlowMomentum` `??` `base`. A listed
+creature (troll, mumak, Sauron) is answered by creature cleave and never reaches this rule. Reaction: creature `CollisionReaction`,
+then `CleavingBlowReaction`; both only force `SlicedThrough`. The crush-through call is always declined here; the real call for the
+same hit sees the 0.3-reduced momentum and the rule applies on top of it, as vanilla does for an axe. With Creature Cleave off and
+the AI switch on, a humanoid creature with a listed two-handed weapon falls to this rule: one application.
+
+**Custom Battle.** The same two delegate lines are in `TaomCustomBattleDamageModel` in the same order;
+`CustomBattleDamageModelTests` compares the IL call order of both models. The settings are global MCM values.
+
+**Co-op.** No mission runs on the co-op authority process, so the damage model never runs on a dedicated server. Each client runs
+its own battle: its own human is `Controller Player` (kind Player), other peers' humans are puppets (kind None, vanilla), so each
+human cleaves on the peer that owns him. The three new MCM properties join the settings fingerprint by include-by-default
+(`CoopSettingsRelevance`). A blow on an agent another peer owns is forwarded by Coop's `BattleBlowInterceptPatch` (a prefix
+on `Agent.RegisterBlow`), so the victim's local health has not dropped when the rule runs: such a kill reads as non-fatal and
+gets the skill term (at most 0.10) instead of the kill bonus (0.15). Only the attacker's peer computes the momentum, so this is
+no desync.
+
+**Configuration** (`combat_mechanics_config.json`, block `cleavingBlows`, restart to reload):
+
+| Field | Default | Rule (bad value reverts to the default with a warning) |
+|---|---|---|
+| `enabled` | true | |
+| `aiEnabled` | false | |
+| `weaponClassCarry` | axe 0.6, mace 0.6, sword 0.5, polearm 0.4 | key a `WeaponClass` member (case-sensitive, not a number), value finite in (0, 1]; a bad row is dropped; the map replaces the defaults |
+| `aiWeaponClasses` | axe, mace, sword | each a `WeaponClass` member with a `weaponClassCarry` row; a bad entry is dropped |
+| `killCarryBonus` | 0.15 | finite in [0, 1] |
+| `skillCarryBonus` | 0.10 | finite in [0, 1] |
+| `maxCarryFactor` | 0.75 | finite in (0, 0.95] |
+| `minRemainingMomentum` | 0.25 | finite in [0, 1], and below `maxCarryFactor` (else both revert) |
+| `maxTargetsPerSwing` | 3 | int in [3, 5], the slider's range (3 is vanilla's best case for an axe: 1, 0.5, 0.25) |
+| `includeMountedAttackers` | false | |
+
+MCM, group "Combat Mechanics": `EnableCleavingBlows` (default on), `EnableCleavingBlowsForAi` (default off), and
+`CleavingBlowsMaxTargets` (3 to 5, default 3; a floor of 2 would reach fewer men than vanilla's axe, which lands 3 hits). Their names and hints are `{=KEY}` text, six keys (`taom_cleave_mcm_enable`,
+`taom_cleave_mcm_enable_hint`, `taom_cleave_mcm_ai`, `taom_cleave_mcm_ai_hint`, `taom_cleave_mcm_max_targets`,
+`taom_cleave_mcm_max_targets_hint`) registered in `taom_module_strings.xml`. The twelve language files do not have them yet, so
+`LanguageFileCoverageTests.EveryLanguage_DeclaresARowForEveryEnglishKey` is red for exactly these six keys until the languages
+are seeded.
+
+**Engine facts** (v1.5.7, read from the installed DLLs): `CalculateRemainingMomentum` is reached only from
+`MissionCombatMechanicsHelper.UpdateMomentumRemaining`, called twice from `Mission.MeleeHitCallback`; `MeleeHitCallback` is
+`[MBCallback(null, false)]` (not multi-thread callable), pinned by `CleavingBlowWiringTests.MeleeHitCallback_IsDeclaredSingleThreaded`;
+`DecideWeaponCollisionReaction` runs right after the momentum update with `isFatalHit = victim.Health <= 0f`; the vanilla reaction
+is Bounced for a shield block, no damage, another bone or a non-fatal shrugged-off hit, Stuck for an axe that does not kill and
+does under half the victim's health, else SlicedThrough.
+
+**UNVERIFIED:**
+
+1. A swing starts at momentum 1.0 (a heavy attack possibly at 1.15) and native hands the value we return back unchanged to the
+   next hit of the same swing. The cap is
+   exact only if this holds; if native changes it, the count restarts and only the floor bounds the swing.
+2. Whether co-op ever computes a remote human's blow on a non-owner peer; if so that peer gives vanilla momentum for it.
+3. The feel and the numbers in play (nothing here has been seen running).
+
+**Owed in game** (Custom Battle, local build; Options > Gameplay > Report Damage on, so the "Delivered N damage" lines count the
+hits; MCM Combat Mechanics: master on, Cleaving Blows on, AI off, Max Targets 3; the player on foot with a two-handed axe against
+tier 1 to 2 infantry, walking into a packed group):
+
+1. Side swings into 2 or 3 packed men: up to 3 "Delivered" lines per swing, each smaller than the one before; the axe passes through
+   a man it does not kill instead of sticking (vanilla sticks only when the hit is also under half his health).
+2. The same with a two-handed sword: it now also hits a second man (vanilla never does).
+3. A thrust with a two-handed polearm: one man only. A swing from horseback: the rule does not apply while
+   `includeMountedAttackers` is false, so a two-handed sword stops at the first man and a two-handed axe or mace keeps vanilla's
+   carry (1, then 0.5, then 0.25).
+4. A swing a shield blocks: it stops at the shield.
+5. Max Targets 3: never more than 3 lines per swing over 20 swings.
+6. Cap proof: Max Targets 3 against 4 or more weak men in a tight row, each killed by one blow (the kill bonus keeps the momentum
+   above the floor). If 4 lines ever appear, native changed the momentum between hits and the counter restarted: report it (the
+   floor still bounds the swing).
+7. Cleaving Blows off: the sword stops at the first man; the axe sticks in a man it does not kill when the hit is under half his
+   health (vanilla).
+11. A qualifying axe swing into a horse (rider or riderless): no exception in the log, and the hit lands as normal (the victim's
+    wield slots are read only when it can wield a weapon).
+12. A fully readied (heavy) swing in check 6: the cap still holds.
+8. AI switch on, the player standing back: AI two-handed troops visibly cut through a packed line; AI spearmen and one-handers do
+   not. Optional: the MCM page "TAOM - Blow Diagnostics" on; `[BlowDiag]` lines show bursts of blows with falling `mag=` from one
+   swing.
+9. Trolls (Creature Cleave on) behave as before.
+10. Kill skill premise: MCM page "TAOM - Blow Diagnostics" on, kill a few men with the axe and read the `[BlowDiag] cleave-fatal
+    attackerSkill=... victimSkill=...` lines in the newest log. A `victimSkill=0` on a man who carried a weapon confirms that a
+    dead man's weapon reads empty (the reason the skill term is 0 on a kill); a normal value means the term could be restored.
+
+A campaign field battle with the same weapon, checks 1 and 7, covers the campaign model.
+
 ## Configuration
 
 **The skill window (#343, 2026-11-15).** `crushThrough.skillDeadZone` is 20 and `skillTargetDelta` 135, scaled by 260/390 from 30 and 200 when the troop skill curve's top fell from 390 to 260 ([troop-skill-balance.md](troop-skill-balance.md)); the compiled defaults match, and `ShippedCombatMechanicsConfigTests` pins both. For a player with a weapon skill of about 300, the extra chance is now at its full value against any troop whose weapon skill is 165 or less (Gondor's tier 6 main weapon and every tier below it) and is zero against a troop within 20 points; before, the full value needed a gap of 200. The window between the two limits shrank from 170 skill points to 115, so `skillCurveExponent` grew by 170/115, from 0.008097 to 0.01197 (2026-11-15, the session's call under the maintainer's word to act on its recommendation): the curve has the same shape over the new window, and halfway through it the chance is 0.666 of its full value as before (`ShippedConfig_SkillCurveExponent_KeepsTheCurveShapeOverTheScaledWindow`). The race bonuses are added to the gap (`CrushThroughService.EvaluateSkillCurve`), so they were scaled by 260/390 too: `ctbAttackBonus` 20 to 13 for elves and Sauron, `ctbDefenseBonus` 15 to 10 for dwarves (compiled defaults the same, pinned by `ShippedCombatMechanicsConfigTests`). No other value in the file is added to or compared with the gap: `extraCrushThroughEnergyThreshold` and `energyRampMarginFactor` act on swing energy.
 
 `Main/_Module/ModuleData/combat_mechanics/combat_mechanics_config.json`: per-mechanic enables, all curve constants, creature id lists, unstoppable damage thresholds, shield-pen item/class lists, and the `raceModifiers` table (keyed by race NAME, `raceage/race_age_config.json` precedent). Validated by `CombatMechanicsConfigProvider` (`FiniteFloatValidator` before every range check; ordering invariants; unknown `weaponClasses` entries skipped via `Enum.TryParse<WeaponClass>`; revert-to-default + summary warning). Deserialized with `ObjectCreationHandling.Replace` so JSON lists/dicts replace compiled defaults instead of append-merging. **Reload scope: full application restart** (Singleton provider). A `raceModifiers` row may also set `baseHitPoints` (0 to 1,000; 0 or absent means the engine's 100): `TaomCharacterStatsModel.MaxHitpoints` adds `baseHitPoints` less 100 through `IRaceCombatModifiersResolver.BaseHitPointsBonus`, so it reaches every campaign agent built from a character of that race. Only `cave_troll` and `hill_troll` set it (200, 2026-09-25). Custom Battle does not read the campaign model: its health is the race Monster's `hit_points` in the Armory, which `TrollHitPointsLiveDataTests` (LiveInstall) keeps equal to this value.
 
-MCM: "Combat Mechanics" group (GroupOrder 24), 18 members as of 2026-10-20: the master, 11 per-mechanic toggles (skill crush-through, monster crush-through, orc shield crush-through, creature cleave, creature stagger immunity, weight-based charge knockdown, shield penetration, race combat modifiers, culture charge damage, signature strikes, Hammerhand) and 6 sliders (`CrushThroughMaxChance`, `ChargeAutoKnockdownRatio` (renamed from `ChargeAutoKnockdownWeightRatio` in #1017, so the default of 6 reaches saved settings), `ChargeNeutralWeightRatio`, `ChargeHorsePenetration`, `ChargeMinPenetrationFactor`, `SignatureStrikeCooldownMultiplier`). MCM merges over JSON per read (`CombatMechanicsSettingsProvider`, `SettingClamp`).
+MCM: "Combat Mechanics" group (GroupOrder 24), 21 members as of 2026-11-16: the master, 12 per-mechanic toggles (skill crush-through, monster crush-through, orc shield crush-through, creature cleave, creature stagger immunity, weight-based charge knockdown, shield penetration, race combat modifiers, culture charge damage, signature strikes, Hammerhand, Cleaving Blows), the Cleaving Blows AI toggle and 7 sliders (`CrushThroughMaxChance`, `ChargeAutoKnockdownRatio` (renamed from `ChargeAutoKnockdownWeightRatio` in #1017, so the default of 6 reaches saved settings), `ChargeNeutralWeightRatio`, `ChargeHorsePenetration`, `ChargeMinPenetrationFactor`, `SignatureStrikeCooldownMultiplier`, `CleavingBlowsMaxTargets`); the three new members are `EnableCleavingBlows`, `EnableCleavingBlowsForAi` and `CleavingBlowsMaxTargets`. MCM merges over JSON per read (`CombatMechanicsSettingsProvider`, `SettingClamp`).
 
 ## Key Files
 
@@ -322,21 +484,23 @@ MCM: "Combat Mechanics" group (GroupOrder 24), 18 members as of 2026-10-20: the 
 |---|---|
 | `Main/Features/CombatMechanics/Models/TaomCombatMechanicsModel.cs` | The 13 overrides, each base plus one call per feature; under ADR-002's 150 lines (`CombatMechanicsModelInvariantsTests` pins the exact set, the ceiling and which agent reaches which seam) |
 | `Main/Features/CombatMechanics/Models/TaomCustomBattleDamageModel.cs` | Custom Battle's twin (#788) on `CustomAgentApplyDamageModel`: the same 13 overrides, no career passives and no Refuge; `CustomBattleDamageModelTests` pins the base, the override set, the call order against the campaign model and the registration |
-| `Main/Features/CombatMechanics/Hooks/CombatMechanicsHooks.cs` | The campaign model's and the twin's boundary to the five services, one method per seam, with the context builders and primitive extractors (#737) |
+| `Main/Features/CombatMechanics/Hooks/CombatMechanicsHooks.cs` | The campaign model's and the twin's boundary to the six services, one method per seam, with the context builders and primitive extractors (#737) |
 | `Main/Features/CombatMechanics/ChargeDamageService.cs` | Per-culture charge multiplier table (#610): case-insensitive, built once, 1.0 for null/unlisted/off |
 | `Main/Features/CombatMechanics/Hooks/MountChargeDamageApplier.cs` | The mount-side post-pass shared by both `AgentStatCalculateModel` slots; the rider hop (`RiderAgent`) with the engine evidence |
 | `Main/Features/CombatMechanics/CrushThroughService.cs` | Skill CTB curve + monster auto-CTB + orc shield-CTB |
 | `Main/Features/CombatMechanics/ChargeKnockdownService.cs` | Weight-driven two-branch charge knockdown |
 | `Main/Features/CombatMechanics/ShieldBashKnockdownService.cs` | Hammerhand (#895): the shield bash and kick knockdown chance; `true` or `null`, never `false` |
+| `Main/Features/CombatMechanics/CleavingBlowService.cs` | Cleaving Blows: the carry formula, the gates and the per-swing chain counter; `float?` momentum (null declines, 0 ends the swing) and the slice-through verdict |
+| `Main/Features/CombatMechanics/SkillGapCurve.cs` | The skill-gap curve shared by crush-through and Cleaving Blows |
 | `Main/Features/CombatMechanics/CreatureCombatService.cs` | Cleave (momentum + reaction), unstoppable, stagger multiplier |
 | `Main/Features/CombatMechanics/ShieldPenetrationService.cs` | Penetration flag grants + runtime-flag shield-damage correction |
 | `Main/Features/CombatMechanics/RaceCombatModifiersResolver.cs` | Race-name-keyed modifier table → per-raceId cache |
 | `Main/Features/CombatMechanics/CombatMechanicsConfigProvider.cs` | JSON load + full semantic validation |
 | `Main/Features/CombatMechanics/CombatMechanicsSettingsProvider.cs` | MCM-over-JSON merge, master-toggle folding |
-| `Main/Features/CombatMechanics/Domain/*.cs` | `CrushThroughContext`, `ChargeKnockdownContext`, `ShieldBashContext`, `RaceCombatModifiers` |
+| `Main/Features/CombatMechanics/Domain/*.cs` | `CrushThroughContext`, `ChargeKnockdownContext`, `ShieldBashContext`, `CleavingBlowContext` (with `CleaveAttackerKind`), `RaceCombatModifiers` |
 | `Main/Features/CareerSystem/Models/TaomAgentApplyDamageModel.cs` | Parent (abstract since 2026-07-02) |
 | `Main/SubModule.cs` (`RegisterSpecialResourcesAndCareers`, `RegisterCustomBattleModels`) | One registration per game type: `campaignStarter.AddModel<AgentApplyDamageModel>(new TaomCombatMechanicsModel(...))` and `basicStarter.AddModel<AgentApplyDamageModel>(new TaomCustomBattleDamageModel(...))`, each handed `CombatMechanicsHooks` from the container; the charge service is passed to `TaomAgentStatCalculateModel` and to the Custom Battle stat model |
-| `TAOM.Tests/Features/CombatMechanics/*` | Service/provider/resolver tests + `CombatMechanicsModelInvariantsTests` (derivation + abstract parent + exact override set + line ceiling + agent-per-seam pins) + `CombatMechanicsHooksTests` + `CombatMechanicsContainerWiringTests` + `CustomBattleDamageModelTests` (the Custom Battle twin) + `ShieldBashKnockdownServiceTests` and `ShieldBashWiringTests` (Hammerhand: the decision matrix, and the source pins for the cheap gate and the chain order in both models) |
+| `TAOM.Tests/Features/CombatMechanics/*` | Service/provider/resolver tests + `CombatMechanicsModelInvariantsTests` (derivation + abstract parent + exact override set + line ceiling + agent-per-seam pins) + `CombatMechanicsHooksTests` + `CombatMechanicsContainerWiringTests` + `CustomBattleDamageModelTests` (the Custom Battle twin) + `ShieldBashKnockdownServiceTests` and `ShieldBashWiringTests` (Hammerhand: the decision matrix, and the source pins for the cheap gate and the chain order in both models) + `SkillGapCurveTests`, `CleavingBlowServiceTests` and `CleavingBlowWiringTests` (Cleaving Blows: the curve, the decision matrix with the chain counter, and the model order, thread declaration and counter source pins) |
 
 ## Dependencies
 
@@ -353,6 +517,7 @@ MCM: "Combat Mechanics" group (GroupOrder 24), 18 members as of 2026-10-20: the 
 - **Make a weapon pierce shields**: set `shieldPenetration.enabled` true, flip the "Shield Penetration" MCM toggle on, and add the item id to `shieldPenetration.itemIds` (preferred) or its class to `weaponClasses`. All three ship off/empty. Prefer item ids: a class grant hits every weapon of that class in every culture, player and AI alike. Leave `runtimeShieldDamageCorrectionEnabled` off unless you have measured a native underestimation for that specific class in `ComputeBlowDamageOnShield`. It does not exist for `Javelin` or `ThrowingAxe`, which the engine multiplies by class.
 - **Tune charge knockdown**: four MCM sliders, live: `Charge Neutral Weight Ratio` (where the weight term equals vanilla), `Charge Penetration` (the base; 0.5 and up floors an ordinary man on any head-on hit that does damage), `Charge Min Penetration Factor` (1.0 = never below vanilla for heavy victims; 0.25 = the old feel), `Auto-Knockdown Weight Ratio` (6 = horse + man vs man from any angle; 8 = wargs and chariots only). Per-race resistance stays in `raceModifiers` (JSON, restart).
 - **Tune Hammerhand**: the `shieldBash` block in the JSON (restart): the chance band, `kickChanceFactor` and `playerVictimChanceFactor`. The `Hammerhand (Shield Bash Knockdown)` toggle turns it off live. Per-race resistance is the same `raceModifiers.knockdownResistanceMultiplier` the charge rules use.
+- **Tune Cleaving Blows**: the `cleavingBlows` block in the JSON (restart): the class factors, the bonuses, `maxCarryFactor`, the floor, and the AI class list. The `Cleaving Blows` toggle and the `Max Targets` slider apply live; the AI toggle ships off.
 - **Tune charge damage by culture**: `chargeDamage.cultureMultipliers` in the JSON (restart); the `Culture Charge Damage` toggle turns the table off live.
 
 ## Performance
@@ -365,6 +530,7 @@ All overrides are per-hit. Services precompute lookups at construction (monster-
 - The native shield-damage underestimation (TW forums 470085/470117) was re-checked against 1.4.8 on 2026-08-17 and does not apply to any class the config could reach: `ComputeBlowDamageOnShield` multiplies `Javelin` and `ThrowingAxe` by class and never reads the penetration flags. `runtimeShieldDamageCorrectionEnabled` now ships false. Owed: the in-game A/B (#320 item 4) confirming shields stop javelins again, and that an `Impale` perk holder still pierces.
 - Monster-id lists (`monsterCrushMonsterIds`, `cleaveMonsterIds`, `unstoppableDamageThresholds` keys) and `orcShieldCrushRaces` are syntax-cleaned but not resolvability-validated — a typoed id is inert (never matches) and logs no warning, unlike `raceModifiers` keys which get lazy unknown-name warnings. Deliberate (Codex P3, 2026-07-02): the monster registry is engine state, and adding an adapter for a typo diagnostic fails the simplicity criterion. Double-check ids against the Monster XMLs when editing.
 - Cleave chains through shield blocks only when the block takes damage — a zero-shield-damage block (`InflictedDamage == 0`) keeps vanilla's Bounced termination (Codex P3; MCM hint wording matches).
+- Cleaving Blows: the target count restarts after a hit the rule declines in mid swing (a shrugged-off hit, a crush-through), so only the floor bounds such a swing; the cap is exact only if native hands the momentum back unchanged (UNVERIFIED, in-game check 6); mounted attackers are off (`includeMountedAttackers`); the AI path ships off.
 - Per-race `knockdownResistanceMultiplier` feeds the owned charge branch and Hammerhand's bash and kick chance; extending it to vanilla weapon knockdowns belongs in `TaomAgentStatCalculateModel.GetKnockDownResistance`.
 - Troll Monster weight (160) equals uruk, so weight alone cannot tell them apart; since #610 the `cave_troll` / `hill_troll` race rows carry `knockdownResistanceMultiplier` 4.0 and the min penetration factor 1.0 gives every heavy victim vanilla's rule, so a horse floors an uruk like a man and never a troll. Raising troll weights in LOTRLOME `monsters.xml` is no longer needed for this.
 - TAOM's synthetic creature blows (spider/elephant BT via `RegisterBlow`) ask no damage-model method in either mode, so none of this feature's overrides touch them, Custom Battle's twin included. Spot-check in control battles that the unstoppable thresholds don't neuter the creatures' feel when ordinary hits land on them.

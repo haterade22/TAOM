@@ -168,6 +168,13 @@ Inverting the two thresholds reverts **both** to defaults, not just the offender
 | `chargeKnockdown.horseChargePenetration` | float | 0.4 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:153` |
 | `shieldBash.minChancePercent` / `maxChancePercent` | float | 10 / 75 | `[0, 100]`, min at most max (a swapped band reverts both) | `CombatMechanicsConfigProvider.cs:309-310, 318` |
 | `shieldBash.kickChanceFactor` / `playerVictimChanceFactor` | float | 0.5 / 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:311-312` |
+| `cleavingBlows.enabled` / `aiEnabled` | bool | true / false (the AI path ships off) | | `CombatMechanicsConfigProvider.cs:341-342` |
+| `cleavingBlows.weaponClassCarry` / `aiWeaponClasses` | map / list | axe 0.6, mace 0.6, sword 0.5, polearm 0.4 / axe, mace, sword | key a `WeaponClass` member, value in `(0, 1]`; an AI class needs a carry row; a bad entry is dropped | `CombatMechanicsConfigProvider.cs:344-345` |
+| `cleavingBlows.killCarryBonus` / `skillCarryBonus` | float | 0.15 / 0.10 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:346-347` |
+| `cleavingBlows.maxCarryFactor` | float | 0.75 | above 0, at most 0.95 | `CombatMechanicsConfigProvider.cs:349` |
+| `cleavingBlows.minRemainingMomentum` | float | 0.25 | `[0, 1]`, below `maxCarryFactor` (else both revert) | `CombatMechanicsConfigProvider.cs:350, 355` |
+| `cleavingBlows.includeMountedAttackers` | bool | false | while false, a swing from horseback gets vanilla's carry (a two-handed axe or mace still cuts through at vanilla's rate; a sword or polearm stops at the first man) | `CombatMechanicsConfigProvider.cs:343`, `CleavingBlowService.cs:54, 132` |
+| `cleavingBlows.maxTargetsPerSwing` | int | 3 | `[3, 5]` (3 is vanilla's best case for an axe) | `CombatMechanicsConfigProvider.cs:351` |
 | `creatures.unstoppableDamageThresholds.<monsterId>` | int | 5 entries, 10 to 30 | `[0, 500]`, else the entry is removed | `CombatMechanicsConfigProvider.cs:227` |
 | `raceModifiers.<race>.ctbAttackBonus` / `ctbDefenseBonus` | float | 10 to 13 (dwarf defence 10, elf and Sauron attack 13: scaled by 260/390 with the skill window, #343) | `[0, 300]` | `CombatMechanicsConfigProvider.cs:317-318` |
 | `raceModifiers.<race>.knockdownResistanceMultiplier` / `staggerThresholdMultiplier` | float | 1.25 to 3.0 | `[0, 100]` | `CombatMechanicsConfigProvider.cs:319-320` |
@@ -301,7 +308,7 @@ The shipped file carries **2,326 `<PassiveEffect>` elements across 30 types**, o
 
 <!-- measured: python ElementTree structure walk over troop_weights.xml, troop_resource_costs.xml, special_resources_config.xml, startup_resources_config.xml and taom_career_choices.xml 2026-09-05; the StartupResources culture count re-measured 2026-11-03 -->
 
-The JSON configs nest by object rather than element: `TroopPower.TierPower` and `CasualtyRatios.CulturalSurvivalBonuses` in `battle_balance_config.json`; `crushThrough`, `chargeKnockdown`, `creatures`, `shieldPenetration`, `shieldBash` and `raceModifiers` in `combat_mechanics_config.json`; `races` in `race_age_config.json`; `defaults`, `culture_overrides` and `clan_overrides` in `initial_child_generation.json`; `fieldDuties`, `interactiveDuties` and `incidents` in `enlistment_duties.json`.
+The JSON configs nest by object rather than element: `TroopPower.TierPower` and `CasualtyRatios.CulturalSurvivalBonuses` in `battle_balance_config.json`; `crushThrough`, `chargeKnockdown`, `creatures`, `shieldPenetration`, `shieldBash`, `cleavingBlows` and `raceModifiers` in `combat_mechanics_config.json`; `races` in `race_age_config.json`; `defaults`, `culture_overrides` and `clan_overrides` in `initial_child_generation.json`; `fieldDuties`, `interactiveDuties` and `incidents` in `enlistment_duties.json`.
 
 ## Worked example
 

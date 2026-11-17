@@ -28,6 +28,8 @@ public class CombatMechanicsContainerWiringTests
         container.RegisterInstance(Substitute.For<IRaceManager>());
         // Registered by the CareerSystem feature; Hammerhand's immunity check reads a hero's shrug-off passive through it.
         container.RegisterInstance(Substitute.For<ICareerAgentStatService>());
+        // Registered by the BlowDiagnostics feature; Cleaving Blows logs a fatal hit's skills through it when the diagnostic page is on.
+        container.RegisterInstance(Substitute.For<TAOM.Features.BlowDiagnostics.IBlowDiagnosticService>());
         CombatMechanicsIoC.RegisterCombatMechanicsFeature(container);
 
         // The registration is pinned on its own, so the check does not lean on how Validate treats an unregistered type.
