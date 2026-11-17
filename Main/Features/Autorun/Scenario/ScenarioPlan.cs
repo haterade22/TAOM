@@ -65,6 +65,9 @@ internal sealed class ScenarioPlan
 
     public bool Quit { get; internal init; }
 
+    /// <summary>Console command lines (<c>command=</c>, repeatable) run once when the map is ready, in order (#1434).</summary>
+    public IReadOnlyList<string> Commands { get; internal init; } = Array.Empty<string>();
+
     internal static ScenarioPlan Resolve() =>
         Resolve(Environment.GetEnvironmentVariable, File.Exists, path => File.ReadAllText(path, Encoding.UTF8));
 
@@ -98,7 +101,7 @@ internal sealed class ScenarioPlan
     /// <summary>One line for the log: every value the run will use.</summary>
     internal string Describe() =>
         "kind=" + Kind + " scenario=" + Scenario + " mission=" + MissionId + " mission_limit_seconds=" + Num(MissionLimitSeconds) + " culture=" + Culture + " days=" + Days + " speed=" + Num(Speed)
-        + " stall_seconds=" + Num(StallSeconds) + " wall_limit_seconds=" + Num(WallLimitSeconds) + " quit=" + (Quit ? 1 : 0)
+        + " stall_seconds=" + Num(StallSeconds) + " wall_limit_seconds=" + Num(WallLimitSeconds) + " quit=" + (Quit ? 1 : 0) + " commands=" + Commands.Count
         + " out=" + OutFolder + " arm=" + ArmPath;
 
     internal static string Num(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);

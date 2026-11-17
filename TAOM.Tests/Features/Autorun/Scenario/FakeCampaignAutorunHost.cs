@@ -179,4 +179,13 @@ internal sealed class FakeCampaignAutorunHost : ICampaignAutorunHost
     }
 
     public StoryOutcome? StoryVerdict => Verdict;
+
+    public readonly List<string> CommandsRun = new();
+    public Func<string, string> CommandResult = c => "out of " + c;
+
+    public string RunConsoleCommand(string commandLine)
+    {
+        CommandsRun.Add(commandLine);
+        return CommandResult(commandLine);
+    }
 }

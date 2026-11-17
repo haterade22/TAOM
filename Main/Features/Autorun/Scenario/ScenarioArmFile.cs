@@ -19,6 +19,7 @@ internal static class ScenarioArmFile
         var speed = ScenarioPlan.DefaultSpeed;
         double stall = ScenarioPlan.DefaultStallSeconds, wallLimit = ScenarioPlan.DefaultWallLimitSeconds, missionLimit = ScenarioPlan.DefaultMissionLimitSeconds;
         var quit = false;
+        var commands = new List<string>();
 
         foreach (var raw in text.TrimStart('﻿').Split('\n'))
         {
@@ -48,6 +49,9 @@ internal static class ScenarioArmFile
                 case "stall_seconds": stall = Seconds(key, value, stall, warnings); break;
                 case "wall_limit_seconds": wallLimit = Seconds(key, value, wallLimit, warnings); break;
                 case "quit": quit = Flag(key, value, quit, warnings); break;
+                case "command":
+                    if (value.Length > 0) commands.Add(value);
+                    break;
                 default: warnings.Add("unknown key '" + key + "' ignored"); break;
             }
         }
@@ -66,7 +70,7 @@ internal static class ScenarioArmFile
         {
             Armed = true, Warnings = warnings, ArmPath = path, Kind = kind, OutFolder = outFolder!, Scenario = scenario, Culture = culture,
             Days = days, Speed = speed, StallSeconds = stall, WallLimitSeconds = wallLimit, Quit = quit,
-            MissionId = story ? mission : "-", MissionLimitSeconds = missionLimit,
+            MissionId = story ? mission : "-", MissionLimitSeconds = missionLimit, Commands = commands,
         };
     }
 

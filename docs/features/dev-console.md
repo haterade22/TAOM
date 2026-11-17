@@ -395,21 +395,39 @@ A feature doc pairs these commands with the observable result that proves each s
 The one command with no feature doc to link out to — no single feature owns settlement navmesh — so it
 is documented here.
 
-Each settlement's entrance (`GatePosition` for towns and castles, `Position` otherwise) is resolved to
-a `PathFaceRecord` through `IMapScene.GetFaceIndex`. **`IsValid()` returns true for every face the
-field report named**, so an off-mesh check finds nothing: those faces sit on navmesh *islands* the rest
-of the map cannot path to. `FaceIslandIndex` is the engine's own connected-component id — two faces
-with different island indices have no path between them at any cost — so the main landmass is derived
-as the island index the most settlements agree on rather than hardcoded, which keeps the audit correct
-across map edits and engine bumps. Every disagreeing settlement is then probed with
-`GetAccessiblePointNearPosition` at radii 1, 2, 4, 8, 16, 32, and the first hit on the main island is
-printed as a replacement coordinate the engine computed rather than a value to guess at.
+Each settlement's entrance is its `GatePosition`: `gate_posX`/`gate_posY` when the row has them, else
+`posX`/`posY` (v1.5.7 `Settlement.cs:961-967`). It is resolved to a `PathFaceRecord` through
+`IMapScene.GetFaceIndex`, and three checks run, cheapest first:
 
-**The corrected coordinates do not exist yet.** The auditor ships; producing them takes one in-game
-campaign run, and applying them is a separate edit against the LIVE
-`TAOM_Map/ModuleData/settlements.xml` (the repo has no settlement file since 2026-11-14). The three destinations reported as wedging AI parties are
-`town_MM2` (the only one of the three with a gate position), `hideout_desert_7` and
-`castle_village_MM1_2`; all three ids resolve in the live map file.
+1. **Island.** `FaceIslandIndex` is the engine's connected-component id. The main landmass is the island
+   index the most settlements agree on, derived rather than hardcoded so it survives map edits and engine
+   bumps. `IsValid()` is true for a face on another island, so an off-mesh check alone finds nothing.
+2. **Terrain.** A face whose group is in
+   `PartyNavigationModel.GetInvalidTerrainTypesForNavigationType(Default)` is one land parties may not use.
+3. **Path.** Each entrance that passes the first two is path-tested from its three nearest town or castle
+   entrances, with the excluded terrain, region-switch costs, agent radius 0.3 and
+   `Campaign.PathFindingMaxCostLimit` that vanilla's distance cache uses (v1.5.7 `SandBoxNavigationCache`
+   :23-25, :84, :89). Each successful path joins two entrances into a group, and the largest group is the
+   main map. A smaller group that no main-map entrance was tested against gets one try from the nearest
+   one. Two pocket entrances that reach only each other therefore fail (the Orthanc and Isengard gates
+   are 2.7 apart). The pure rules are in `SettlementEntranceRules`.
+
+The island check alone passed every entrance Silas He's report named (#1434). The new audit's run of
+2026-11-17 reported 14: five of his seven and nine more; Orthanc and Isengard passed its path check. Their
+faces are on the main island, but on excluded terrain or cut off by it, so the distance cache holds them at 1E+30 and
+armies never arrive. For each failure the audit probes `GetAccessiblePointNearPosition` at radii 0.5 to
+32 and prints the first point that passes the island and terrain checks and that a path from the
+nearest main-map towns or castles reaches. A point the engine finds stays on the input's island. An off-mesh entrance gets no suggestion: the engine
+returns the input unchanged, so the report says to move it by hand.
+
+Run it unattended with `python tools/run_scenario.py --days 1 --command taom.audit_settlement_entrances`
+(it needs `cheat_mode = 1`); the output goes to `commands.txt` in the run folder. Fix each entrance in
+the map editor, or in `scene.xscene` and the LIVE `TAOM_Map/ModuleData/settlements.xml` together, never in
+the XML alone, then rebuild the distance
+cache ([settlements.md](../modding/settlements.md) step 7). `python tools/check_settlement_entrances.py
+--check` (data gate `map-entrances`) fails while any of the 14 old values remains. The three
+destinations reported on 2026-08-03 were `town_MM2`, `hideout_desert_7` (also one of the 14) and
+`castle_village_MM1_2`.
 
 ## Files
 
@@ -427,7 +445,8 @@ campaign run, and applying them is a separate edit against the LIVE
 | `Main/Features/DevConsole/Cheats/PlayerStateDumpCheats.cs` | `print_player_state`: reads the links defensively, because the whole point is surviving a player state already suspected of being malformed |
 | `Main/Features/DevConsole/Cheats/InputStateDumpCheats.cs` | `print_input_state`: captures `ScreenManager.FocusedLayer` plus `SortedLayers` and appends the layer table. Walks `SortedLayers` rather than the top screen's own layers because its getter appends the global layers, and the campaign-map resource bar lives on one of those |
 | `Main/Features/BattleLoadDiagnostics/Cheats/MemoryProbeCheats.cs` | `print_memory` — thin entry point over `IEngineMemoryStatsReader` + `MemoryProbeReportFormatter`. No static fields at all, deliberately: a `.cctor` touching engine or IoC state runs during the engine's own discovery pass |
-| `Main/Features/DevConsole/Cheats/SettlementEntranceCheats.cs` | `audit_settlement_entrances` — navmesh-island check over every settlement entrance. DevConsole-owned because no feature owns settlement navmesh |
+| `Main/Features/DevConsole/Cheats/SettlementEntranceCheats.cs` | `audit_settlement_entrances`: island, terrain and path check over every settlement entrance, with the engine calls. DevConsole-owned because no feature owns settlement navmesh |
+| `Main/Features/DevConsole/Cheats/SettlementEntranceRules.cs` | The audit's pure rules: the verdict, the nearest references, and the path groups that decide which entrances reach the main map (#1434) |
 | `Main/Features/MarriageAlignment/Cheats/MarriageAlignmentCheats.cs` | `print_marriages`: cross-alignment married couples, with the feature's toggle state in the header. Feature-owned. Exists because the #542 block covers FUTURE marriages only, so the fix working looks like nothing happening and needs a measurement rather than an observation |
 | `Main/Features/<X>/Cheats/` | Feature-owned commands (momentum, party size, town economy, special resources) |
 | `Main/SubModule.cs` | Calls the audit from `OnBeforeInitialModuleScreenSetAsRoot`, fail-open |
@@ -454,13 +473,17 @@ engine-querying half (the *interpretation* is tested), and `TaomConsole`'s help 
 host the gate always fails first, so the `usage ?? string.Empty` guard on that path is defensive code
 with no reachable test. Adding a seam purely to reach it would be ceremony; it is one line.
 
-`audit_settlement_entrances` has **no dedicated test**. Unlike `print_patches` (`PatchReportFormatter`)
-and `print_agent_info` (`MissionReportFormatter`), its island derivation and output formatting are
-inline in the cheat class with no pure formatter extracted, so the assembly-wide binding tests are its
-only coverage.
+`TAOM.Tests/Features/DevConsole/SettlementEntranceRulesTests.cs` covers the audit's rules: each verdict,
+the reference choice, and the path groups (a pocket that reaches only itself, a cluster that needs the
+extra try, an entrance that failed a cheap check, a village no path reaches). The engine calls and the
+output text are verified in game only.
 
 ## Changelog
 
+- **2026-11-17** (#1434): `taom.audit_settlement_entrances` adds the terrain and path checks vanilla's
+  distance cache applies. The island check alone passed the unreachable entrances in Silas He's
+  report; the first run found 14 and the entrances were moved in `scene.xscene` and `settlements.xml`. Paths join entrances into groups, and only the largest group counts as the main map.
+  Unattended runs reach it through `run_scenario.py --command`.
 - **2026-11-10**: Added `taom.print_war_pledges` (Tier A) and `taom.add_war_pledge` (Tier C) for War Pledge (#1113).
 - **2026-08-07** — Added `taom.print_memory [label] [gpu]` (Tier A, cheat gate) for the commit-attribution
   matrix in `docs/investigations/native-commit-audit-2026-08.md`. Recorded above that **`RunAnywhere`

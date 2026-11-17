@@ -264,6 +264,62 @@ public class ScenarioAutorunDriverTests
         Assert.AreEqual("Running", driver.PhaseName);
     }
 
+    // #1434: an unattended run can run console diagnostics once the map is ready; each output goes to the log and to
+    // commands.txt in the run folder.
+    [TestMethod]
+    public void Tick_MapSettled_RunsEachArmedCommandOnceAndWritesItsOutput()
+    {
+        var driver = ToRunning("command=taom.audit_settlement_entrances\ncommand=taom.other 2 x\n");
+        Run(driver, 5);
+
+        CollectionAssert.AreEqual(new[] { "taom.audit_settlement_entrances", "taom.other 2 x" }, _host.CommandsRun);
+        var file = _host.Files[ScenarioAutorunDriver.CommandsFile];
+        StringAssert.Contains(file, "> taom.audit_settlement_entrances\nout of taom.audit_settlement_entrances");
+        StringAssert.Contains(file, "> taom.other 2 x\nout of taom.other 2 x");
+        Assert.AreEqual(1, InfoLogs("command taom.audit_settlement_entrances"));
+    }
+
+    [TestMethod]
+    public void Tick_ACommandThatThrows_IsReportedAndTheRunGoesOn()
+    {
+        _host.CommandResult = c => c == "taom.bad" ? throw new InvalidOperationException("boom") : "ok";
+        var driver = ToRunning("command=taom.bad\ncommand=taom.good\n");
+
+        CollectionAssert.AreEqual(new[] { "taom.bad", "taom.good" }, _host.CommandsRun);
+        StringAssert.Contains(_host.Files[ScenarioAutorunDriver.CommandsFile], "InvalidOperationException: boom");
+        Assert.AreEqual("Running", driver.PhaseName);
+    }
+
+    // Lens 5 (#1434 review): the frame that runs the commands is long, and the next tick's dt measures it. That time must
+    // not count against the stall clock or the wall limit of the phase that follows.
+    [TestMethod]
+    public void Tick_TheFrameAfterTheCommands_IsNotChargedToTheNextPhase()
+    {
+        var driver = Driver("command=taom.slow\nstall_seconds=30\nwall_limit_seconds=40\ndays=50\n");
+        _host.OnStart = () => _host.ScreenValue = AutorunScreen.CharacterCreation;
+        Run(driver, 5);
+        _host.ScreenValue = AutorunScreen.Map;
+        _host.Days = 10.4;
+        for (var i = 0; i < 30 && _host.CommandsRun.Count == 0; i++)
+            driver.Tick(1f);
+        Assert.AreEqual(1, _host.CommandsRun.Count);
+
+        driver.Tick(1000f);
+        Run(driver, 20);
+
+        Assert.AreEqual("Running", driver.PhaseName);
+        Assert.IsFalse(_host.Files.ContainsKey(ScenarioAutorunDone.DoneFile));
+    }
+
+    [TestMethod]
+    public void Tick_NoCommandsArmed_RunsNoneAndWritesNoFile()
+    {
+        ToRunning();
+
+        Assert.AreEqual(0, _host.CommandsRun.Count);
+        Assert.IsFalse(_host.Files.ContainsKey(ScenarioAutorunDriver.CommandsFile));
+    }
+
     [TestMethod]
     public void Tick_MapLeftBeforeSettling_RestartsTheSettle()
     {

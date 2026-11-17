@@ -332,9 +332,9 @@ public class ScenarioPlanTests
     [TestMethod]
     public void Describe_NamesEveryValue()
     {
-        var text = Resolve(Head + "scenario=smoke\nquit=1\n").Describe();
+        var text = Resolve(Head + "scenario=smoke\nquit=1\ncommand=taom.a\ncommand=taom.b 2\n").Describe();
 
-        foreach (var part in new[] { "kind=campaign-new", "scenario=smoke", "mission=-", "mission_limit_seconds=1200", "culture=gondor", "days=3", "speed=15", "stall_seconds=600", "wall_limit_seconds=3600", "quit=1", "out=E:\\x\\out", "arm=" + ArmPath })
+        foreach (var part in new[] { "kind=campaign-new", "scenario=smoke", "mission=-", "mission_limit_seconds=1200", "culture=gondor", "days=3", "speed=15", "stall_seconds=600", "wall_limit_seconds=3600", "quit=1", "commands=2", "out=E:\\x\\out", "arm=" + ArmPath })
             StringAssert.Contains(text, part);
     }
 }
