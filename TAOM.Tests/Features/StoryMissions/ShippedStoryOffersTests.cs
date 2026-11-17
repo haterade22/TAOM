@@ -15,7 +15,7 @@ namespace TAOM.Tests.Features.StoryMissions;
 
 /// <summary>
 /// The shipped story offers (#1105 slice 4): every <c>story.mission</c> in the REAL <c>war_chronicle.json</c> names a defence the REAL
-/// <c>story_missions.json</c> loads, and none names a <c>story.attackMission</c> while the launcher refuses one (#1326). The
+/// <c>story_missions.json</c> loads, and none names a <c>story.attackMission</c> until the maintainer decides the key (#1409 step 6). The
 /// chronicle's loader cannot see the catalog, and an unknown id is silent until the window opens. The side gate reads each kingdom of a story window from the alignment
 /// table, where an unlisted id is silently Neutral, so every one must be listed.
 /// </summary>
@@ -43,9 +43,9 @@ public class ShippedStoryOffersTests
         {
             Assert.IsTrue(catalog.TryGet(definition.Story!.MissionId, out var mission), $"'{definition.Id}' offers unknown story mission '{definition.Story.MissionId}'");
             Assert.AreEqual(StorySide.Defending, mission.Side, $"'{definition.Id}': story.mission is the defence");
-            // StoryMissionLauncher.Launch still refuses an attacking mission (StoryMissionLauncherTests), so a shipped attackMission
-            // would give its players a side that can never open. The attack phase of #1325 replaces this line with the row's check.
-            Assert.IsNull(definition.Story.AttackMissionId, $"'{definition.Id}' names an attackMission before the launcher accepts one");
+            // The launcher opens helms_deep_attack, but the maintainer has not decided whether the Hornburg window offers it (#1409 step 6),
+            // so no shipped window names an attackMission yet. Adding the key replaces this line with the row's check.
+            Assert.IsNull(definition.Story.AttackMissionId, $"'{definition.Id}' names an attackMission before the maintainer has decided the key");
         }
     }
 

@@ -206,18 +206,46 @@ to day 140, 27 days longer than the realm lasted in the fifth run. The capital, 
 19 days earlier than in the fifth run. With one run per change, part of both differences is chance. No capital other than Blue Craig's
 fell. Gondor ended 14,362 strength ahead of Mordor, the widest gap of the last three runs, and Mordor held 6 towns and 9 castles.
 
+## The 300-day runs
+
+Five runs of 300 days, each with a clean unload, tested Blue Craig's free garrisons (#1283). Runs 1 to 3 changed only
+`DailyGarrisonGrowth`; runs A and B also raised `DefenderAdvantageBonuses` from 0.1 to 0.4 in the deployed config, which was
+restored after each test. Runs 2, 3, A and B logged the new `t=garrison` ledger line.
+
+| Run (`E:\Temp\scenario-runs\...`) | Build | Growth, defence | Blue Craig capital lost, destroyed | Lindon joined by | Sieges of Blue Craig held by | Gondor to Mordor gap, day 300 |
+|---|---|---|---|---|---|---|
+| 1 (`20261116-135428`) | `829b047d0` | 2, 0.1 | day 55, day 88 | call to war | Lindon 7 | 12,693 |
+| 2 (`20261116-154124`) | `9e7c0178e` | 2, 0.1 | held, day 251 | kingdom decision | Ered Luin 11 | 808 |
+| 3 (`20261116-162421`) | `9e7c0178e` | 3, 0.1 | day 58, day 94 | call to war | Lindon 4, Ered Luin 2 | 15,069 |
+| A (`20261116-165321`) | `9e7c0178e` | 2, 0.4 | day 61, day 112 | call to war | Lindon 6, Ered Luin 1 | 15,205 |
+| B (`20261116-172137`) | `9e7c0178e` | 2, 0.4 | day 85, day 129 | call to war | Ered Luin 5, Lindon 4 | 18,786 |
+
+"Sieges held by" counts the `[HoldTheWalls]` lines of lords holding a Blue Craig fortification, by the lord id's realm prefix.
+
+The free garrisons work: Blue Craig's garrisons grew from about 200 men per fortification on day 1 to 400 to 650, and still fell.
+Neither lever moved the outcome beyond chance: the two runs at the shipped values ended 160 days apart, and growth 3 and defence
+0.4 did no better than growth 2 and defence 0.1. In every run Blue Craig had the same four enemies: it declared war on Arthedain and
+Ered Luin, Rivendell declared war on it, and Lindon joined. Blue Craig lasted to day 251 only in run 2, where Lindon joined by its
+own decision and no Lindon lord besieged a Blue Craig fortification. With five runs this is a correlation, not a proof.
+
+Other capitals lost: Gondor's on day 15 in run 2 (it never lost one in the other runs), and late losses for Dale, Harad, Rohan
+and Arthedain. The Gondor to Mordor gap on day 300 was 12,693 to 18,786 in four runs and 808 in run 2.
+
 ## Still owed
 
-- Blue Craig fell in the sixth run too, with its siege defence bonus: capital day 54, destroyed day 140. The maintainer's target (2026-11-16) is that it may fall, but not before about day 300. Its garrisons now need no gold or food and grow by 2 troops a day; 300-day runs tune `DailyGarrisonGrowth` until the realm lasts that long (#1283).
-- The Gondor to Mordor gap widened to 14,362 in the sixth run (8,027 in the fifth). Watch it in the next run before any change (#1283).
+- Blue Craig still falls before the maintainer's target of about day 300 (2026-11-16): days 88 to 251 in five 300-day runs. Garrison growth and the siege defence bonus did not move it beyond chance; the runs point at Lindon's lords, who join through a call to war. The next lever was diplomacy; the maintainer chose to keep the current values and end the tuning (2026-11-16, #1283).
+- Gondor lost its capital on day 15 in one 300-day run. Watch it in the next runs (#1283).
+- The Gondor to Mordor gap widened to 14,362 in the sixth run (8,027 in the fifth), and was 12,693 to 18,786 on day 300 in four of five 300-day runs. Watch it before any change (#1283).
 - Gondor's survival row (0.3, shared with Arthedain) and its tier 7+ party template stacks: not changed, because the second run
   closed the gap. Revisit only if a later run shows the gap again.
-- A Codex review of 5101f151b and of these changes: the account's usage limit blocks Codex until 2026-11-20.
 - Isengard in `CapturedFortHold.Factions`: decide from the run.
 - A gear (armour) factor in auto-resolve: considered and not added, because Gondor has the heaviest armour and the factor would widen the lead #1283 reported.
 
 ## Changelog
 
+- 2026-11-16: The maintainer waives the Codex review of the #1283 changes.
+- 2026-11-16: Blue Craig tuning ends: the maintainer keeps growth 2 and defence 0.1, and Blue Craig may fall before day 300 (#1283).
+- 2026-11-16: Five 300-day runs recorded; Blue Craig falls on day 88 to 251, and garrison growth and the siege defence bonus do not change that (#1283).
 - 2026-11-16: Blue Craig's garrisons cost no wages or food, take no starvation wounds, and grow by 2 free troops a day (#1283).
 - 2026-11-16: Sixth 150-day run recorded; Blue Craig, with its siege defence bonus, lasts to day 140 but loses its capital on day 54 (#1283).
 - 2026-11-16: Blue Craig gets a siege defence bonus of 0.1 and the survival bonus 0.3 (#1283).

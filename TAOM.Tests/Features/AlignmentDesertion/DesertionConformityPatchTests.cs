@@ -203,7 +203,7 @@ public class DesertionConformityPatchTests
         Assert.IsNull(module.ParkedReason);
         Assert.IsFalse(module.OwnsSaveData);
         CollectionAssert.AreEqual(
-            new[] { AlignmentDesertionModule.PatchCategory, AlignmentDesertionModule.HintPatchCategory },
+            new[] { AlignmentDesertionModule.PatchCategory, AlignmentDesertionModule.HintPatchCategory, AlignmentDesertionModule.MercenaryPatchCategory },
             module.PatchCategories.Select(c => c.Category).ToArray());
         Assert.IsTrue(module.PatchCategories.All(c => c.Phase == ApplyPhase.GameInit));
         Assert.AreEqual(0, module.CampaignBehaviors.Count + module.GameModels.Count + module.MissionBehaviors.Count);

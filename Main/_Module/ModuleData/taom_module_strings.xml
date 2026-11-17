@@ -6898,6 +6898,10 @@
 	<string id="taom_mcm_group_dwarf_attacks" text="{=taom_mcm_group_dwarf_attacks}Dwarf Attacks" />
 	<string id="taom_mcm_group_special_resources" text="{=taom_mcm_group_special_resources}Special Resources" />
 	<string id="taom_mcm_group_accessibility" text="{=taom_mcm_group_accessibility}Accessibility" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- AlignmentDesertion -->
+	<string id="taom_mercenary_menu_would_desert" text="{=taom_mercenary_menu_would_desert}These mercenaries would desert your party: their people will not serve your side." />
+	<string id="taom_mercenary_refuses_your_side" text="{=taom_mercenary_refuses_your_side}Fight for your side? No coin buys that. Find your swords elsewhere." />
 	<!-- TaomSettings.cs -->
 	<string id="taom_cleave_mcm_enable" text="{=taom_cleave_mcm_enable}Cleaving Blows" />
 	<string id="taom_cleave_mcm_enable_hint" text="{=taom_cleave_mcm_enable_hint}Your swings with a two-handed axe, mace, sword or polearm can cut through one enemy and strike the next. Each enemy after the first takes less damage. Armour slows the blade, a kill or a clear skill lead over the victim carries it further, and a shield block, a thrust or a swing from horseback never cuts through. Only the character you control, unless the AI option below is on. Trolls and other big creatures keep their own cleave. The numbers live in combat_mechanics_config.json. Default: on." />

@@ -1,0 +1,29 @@
+# RCA: the Helm's Deep attack battle, slices before the spikes (#1409)
+
+Findings from the tier 1 review of the uncommitted worktree `feat/hero-attack` over 1d1fd4501: the player on the attacker team of the hosted Long Defeat run, the enemy heroes in the garrison's class formations under the AI, the launcher that accepts an attacking row, the row `helms_deep_attack`, the story driver's side, and `tools/ingame_checks/1409.toml`. One wave ran four lenses (5 Data flow, 2 Engine compatibility, 7 XML and ModuleData, Tooling). It found no CRITICAL and no HIGH, so no second wave ran. The Codex pass did not run: the maintainer said to skip it while the account has no usage.
+
+| # | Sev | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|---|
+| 1 | MED | Four rows of the 1409 manifest (general, hero, ended, player-start) read the exact failure this change can cause as NOT REACHED, not FAIL. Each row's reached pattern was the line itself and its fail list held only `result=fail`, but the wrong case writes a pass line: the general check passes with `side=defender`, the hero check passes on the defence path, and the end line passes with `side=Defending`. A run that put the player on the wrong team would read NOT REACHED, and `run_scenario.py` takes the side from the row, so it would exit 0 | A manifest written for the line's result field, not for the wrong world that still passes | The rows were written from the pass lines the C# writes. The lord-fell row already had a wrong-side fail pattern, and the four rows were not compared with it | Fail patterns for each wrong-side line in 1409.toml, and `AttackManifestTests` cases that build each wrong line and assert FAIL through `ingame_verdict.judge_check`. Lesson 1 |
+| 2 | MED | `run_scenario.py` read `story_missions.json` again in the judge, after the game quit. An edit to the row during an unattended run made the judge refuse a good run ("not a story mission of this checkout"), against the tool's own rule that the checkout is read once, at launch | A second read of a file the run already read | The side lookup was added where it was used (the judge), not where the arguments are parsed | The side is read once in `parse_own` and kept; a test judges a good run with the JSON gone |
+| 3 | LOW | The JSON was read as plain UTF-8, so a BOM made every story row disappear with a message that blamed the row. The game reads the same file through `File.ReadAllText`, which accepts a BOM | A reader stricter than the game's reader | One of 116 ModuleData JSON files has a BOM; none of the story file's tests used one | `utf-8-sig`, a message that names both causes, two tests |
+| 4 | LOW | `HostedRunOutcomeLog.GeneralId` and `LordFellId` had no test that ties them to the rename of the Long Defeat ids, so a rename of the source id would leave the 1409 rows NOT REACHED with every gate green | A constant pinned only by the literal gate | The sibling ids had such a test; the two new ones were added without it | `TheGeneralAndLordFellIds_AreTheRenamedLongDefeatIds` |
+| 5 | LOW | Comments and doc text that the change made false: the spawn swap comment ("every spawn", but not the player's own), the reserved batch slot comments (untrue in an attack), the general row comment (`main_on_team` cannot read false), the rgl note (overclaimed what the tactic cannot do), the engines comment ("or" where the row needs all three), Gimli's pattern still accepting his pre-#1373 axe, `fixed_in` described as the feature commit, and five places in `story-missions.md` and two in code that still said the launcher refuses an attack | Text written before the code it describes changed | Each sits outside the lines the change edited | Each corrected; a Known limits section in `story-missions.md` names the latent readers (findings below) |
+| 6 | LOW | Three campaign-result human claims (won or lost attack to Fell or Held, the per-alignment options) cannot be checked on this build, because the `attackMission` key is the maintainer's decision and not built | Claims written for the finished feature | The manifest lists the end state | Each claim now says it is owed only after the key lands |
+| 7 | LOW | A takeover after the player's death in an attack writes a false `taom.story-missions.hosted.wave result=fail` (the taken soldier is skipped by Read and Fell and booked as the player). No manifest reads that id | A count that assumes the player never holds a wave soldier | The takeover path is a human check only | Named in the takeover claim; no code change |
+
+Not applied:
+
+- A log line for a player body booked as a wave kill (Tooling F3), so that the lord-fell row can fail on the bug it is there for. It changes behaviour and is a follow-up; the human claim covers it until then.
+- Code for the latent readers that still treat the player's body as a wave soldier in an attack (the side-keyed hooks, effect sampling, the sally helpers). No story plan reaches them; adding code now would be for a case nobody built.
+
+FOLLOW-UP (#1409): the player-body loss line (Tooling F3).
+
+## Root-cause pattern
+
+Findings 1 and 7 share one habit: a check was written for what the code writes when it works, and the wrong world was assumed to write a fail line. Here the wrong world writes a pass line with a different field. Findings 2 and 3 are a tool that reads the same file twice and more strictly than the game.
+
+## Why each reviewer missed these
+
+- **The builders** wrote the manifest from the C# pass lines and tested that the pass patterns match them.
+- **Lens 7** simulated each wrong line through `judge_check` and found the NOT REACHED reads. **The tooling lens** ran the judge after an edit to the JSON and with a BOM copy. **Lens 2** read each engine claim in the new comments against the source. **Lens 5** traced the batch slot and the latent readers.

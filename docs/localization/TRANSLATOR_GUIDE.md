@@ -165,6 +165,8 @@ The `{?CONDITION}...{?}...{\?}` syntax handles gender. Translate the words insid
 
 Equipment names in Armory files often start with culture tags like `[Gondor]`, `[Mordor]`. Keep the brackets; translate or transliterate the inner word per your language convention. This rule covers culture tags only; conversation animation tags (next section) are never translated.
 
+Keep the count of every `[`, `]`, `{` and `}` equal to the English. The engine removes each `[...]` from a line, so a stray `[` hides the rest of it, and a plain `[...]` after an `[rb:...]` tag takes that tag's place. The translator pipeline and the team importer reject a row whose counts differ. The engine's own grammar functions, `{#GENDER(X)}...{#}...{\#}` and `{@Plural}...{\@}`, are not counted, so a language may add them.
+
 ### Conversation animation tags
 
 Dialogue rows can end in tags such as `[ib:closed]` or `[rf:convo_bemused]`. Copy them exactly and untranslated; the translator pipeline rejects a translation that drops or changes one. `ib` and `rb` set the speaker's body, `if` and `rf` the face. Their position in the sentence does not matter, so move one if your language needs it, but keep the count.
@@ -350,6 +352,28 @@ because MCM splits the path on `/` before it translates each part. MCM then remo
 translated text from the child's, so a child group's text must not contain its parent's text, and a
 parent's text must not be empty (MCM then hides the whole TAOM page). Gate:
 `McmSettingsTextIsKeyedTests.NoChildGroupText_ContainsItsParentsText_InAnyLanguage`.
+
+The AI translator follows the team too (#1421). `tools/translation_reference/cns.json` and `cnt.json`
+hold an English and Chinese pair for every row of ours, in all three modules, that carries the team's
+text. For each batch of CNs or CNt rows, `translate_with_claude.py` adds two things to the request: the
+team's terms whose English occurs in the batch (names and game terms of at most four words), and up to
+six of the team's sentences that share the most words with one entry, as style examples. The prompt
+tells the model that the team's text wins over its own choices and over the published-Tolkien rule.
+A term goes when the team's own sentences that hold its English mostly use another text: some of the
+team's lord name rows name another person than the description they wrote for that lord. A possessive
+still names the term: "Forlong's Gloves" gets `Forlong`.
+
+A row counts as the team's text only as the importer would write it: the team's text, with the English
+tier appended to an Armory name. A stale row (our English changed after the team's base), a kept, rejected
+or overridden row is ours and stays out, so the builder reads our English at the same base as the
+importer and stops when TAOM has no known base. Rebuild the reference after each import, with the same
+`--base` (or none, when the drop's `SubModule.xml` names the right build):
+
+```bash
+python -I tools/build_translation_reference.py --lang CNs --lang CNt --from <TAOM_CN.zip> --module TAOM --module TAOM_Map --module Armory [--base <tag>] --apply
+```
+
+A language with no reference file gets the same request as before.
 
 ---
 

@@ -40,7 +40,7 @@ internal sealed class StoryMissionLauncher
         _outcomes = outcomes;
     }
 
-    /// <summary>True once the mission is open. An unknown id, the attacking side, no campaign, a missing culture or troop, or an engine failure logs an error and returns false.</summary>
+    /// <summary>True once the mission is open. An unknown id, no campaign, a missing culture or troop, or an engine failure logs an error and returns false.</summary>
     /// <param name="onVerdict">Optional: called once on the main thread with the mission's verdict (the story offer applies it after the mission).</param>
     public bool Launch(string missionId, bool autoplay, Action<StoryOutcome>? onVerdict = null)
     {
@@ -48,8 +48,6 @@ internal sealed class StoryMissionLauncher
         {
             if (!_catalog.TryGet(missionId, out var definition))
                 return Refuse($"unknown story mission '{missionId}'");
-            if (definition.Side != StorySide.Defending)
-                return Refuse($"'{definition.Id}' is an attacking mission; the player cannot take the attacking side yet");
             if (Campaign.Current == null || Game.Current?.PlayerTroop == null)
                 return Refuse("a story mission needs a running campaign");
 
@@ -92,7 +90,7 @@ internal sealed class StoryMissionLauncher
         {
             new BattleSpawnLogic("battle_set"),
             new MissionOptionsComponent(),
-            new MissionCombatantsLogic(null, defender, defender, attacker, Mission.MissionTeamAITypeEnum.Siege, isPlayerSergeant: false),
+            new MissionCombatantsLogic(null, side == StorySide.Attacking ? attacker : defender, defender, attacker, Mission.MissionTeamAITypeEnum.Siege, isPlayerSergeant: false),
             new SiegeMissionPreparationHandler(false, false, new[] { 1f, 1f }, true),
             new AgentHumanAILogic(),
             new AmmoSupplyLogic(new List<BattleSideEnum> { BattleSideEnum.Defender }),

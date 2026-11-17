@@ -56,6 +56,12 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
 
     private Team Side(bool attackers) => attackers ? _mission.AttackerTeam : _mission.DefenderTeam;
 
+    // The team the player fights on (#1409): the attacker team only when the mission made it the player's team (a story attack, where MissionCombatantsLogic sets
+    // PlayerTeam = AttackerTeam), else the defender team as before. PlayerTeam itself is never taken as the team: a Coop follower keeps the defender team whatever Coop does with it.
+    private Team PlayerSideTeam => _mission.AttackerTeam is { } attackers && ReferenceEquals(_mission.PlayerTeam, attackers) ? attackers : _mission.DefenderTeam;
+
+    private bool PlayerAttacks => PlayerSideTeam is { } team && ReferenceEquals(team, _mission.AttackerTeam);
+
     private static FormationClass Class(FormationSlot slot) => slot == FormationSlot.Ranged ? FormationClass.Ranged : FormationClass.Infantry;
 
     private static LdPoint Point(Vec3 v) => new(v.x, v.y, v.z);
@@ -346,7 +352,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         var data = _mission.GetAgentBuildDataToSpawnTroop(new BasicBattleAgentOrigin(troop), playerSide, true, false, reinforcement, count, index, initialPosition, initialDirection, formationIndex: cls)
             .Banner(team.Banner);
         // In a Coop session (#1280) Coop adds a defender ally team, and the engine puts a plain origin there (Mission.cs:5229-5233), so the
-        // garrison would stand off DefenderTeam. In a solo run the engine already picked this team, and nothing changes.
+        // garrison would stand off DefenderTeam. In a solo defence the engine already picked this team, and nothing changes. In a story attack (#1409)
+        // PlayerTeam is the attacker team, so the engine picks the opposite team for every spawn but the player's own (GetAgentTeam, Mission.cs:5220-5235), and this moves it.
         if (data.AgentTeam != team)
             data.Team(team).ClothingColor1(team.Color).ClothingColor2(team.Color2).Formation(team.GetFormation(data.AgentFormation?.FormationIndex ?? cls));
         if (kit != null)
@@ -392,7 +399,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     {
         ClearSplit();
         _defendersCharge = true;
-        _mission.DefenderTeam.DelegateCommandToAI();
+        PlayerSideTeam.DelegateCommandToAI();
         var attackers = _mission.AttackerTeam;
         var defenders = _mission.DefenderTeam;
         SetOnlyTactic(attackers, new TacticCharge(attackers));
@@ -467,7 +474,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
             return 0;
         }
 
-        var left = _mission.AttackerTeam.ActiveAgents.Where(a => a.IsHuman && a.IsActive() && !a.IsRunningAway).Take(count).ToList();
+        var left = _mission.AttackerTeam.ActiveAgents.Where(a => a.IsHuman && a.IsActive() && !a.IsRunningAway && !ReferenceEquals(a, _mission.MainAgent)).Take(count).ToList();
         _logger.LogInfo($"[LongDefeat][Wave] felling {left.Count} straggler(s), kills owned by {(mainStands ? "the player's body" : "defender " + owner.Character?.StringId)}");
         foreach (var agent in left)
         {
@@ -505,11 +512,12 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         return left.Count;
     }
 
-    // The player's body while it stands, else a standing defender with a formation, else any standing defender; null when no defender stands.
+    // The player's body while it stands on the defender team, else a standing defender with a formation, else any standing defender; null when no defender stands.
+    // In a story attack (#1409) the player is an attacker, and a straggler felled by his own lord's hand would be a kill of his own man.
     private Agent? LivingOwner()
     {
         var main = _mission.MainAgent;
-        return main != null && main.IsActive() ? main : StandingDefenders().FirstOrDefault(a => a.Formation != null) ?? StandingDefenders().FirstOrDefault();
+        return main != null && main.IsActive() && ReferenceEquals(main.Team, _mission.DefenderTeam) ? main : StandingDefenders().FirstOrDefault(a => a.Formation != null) ?? StandingDefenders().FirstOrDefault();
     }
 
     private IEnumerable<Agent> StandingDefenders() => _mission.DefenderTeam.ActiveAgents.Where(a => a.IsHuman && a.IsActive());
@@ -517,7 +525,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     public bool AdoptMain(bool aiDriven)
     {
         var main = _mission.MainAgent;
-        var team = _mission.DefenderTeam;
+        var team = PlayerSideTeam;
         if (main == null || team == null)
             return false;
 

@@ -240,6 +240,75 @@ public class HeroRangedChecksTests
         AssertManifestReads(HeroRangedChecks.ArrowKillId, v);
     }
 
+    // ---- keep-distance (#1415, tools/ingame_checks/1415.toml) ----
+
+    [TestMethod]
+    public void KeepDistance_OneRealMove_Pass()
+    {
+        var v = HeroRangedChecks.KeepDistance(Hero, on: true, steps: 4, moved: 1, cornered: 2, meleeSeconds: 7);
+
+        Assert.AreEqual(CheckResult.Pass, v.Result);
+        Assert.AreEqual("hero=taom_hero_legolas steps=4 moved=1 cornered=2 melee_seconds=7", v.Detail);
+        AssertManifestReads(HeroRangedChecks.KeepDistanceId, v, "1415.toml");
+    }
+
+    // A step is the call; moved is his body covering half the step by the end of the hold. Calls alone prove nothing.
+    [TestMethod]
+    public void KeepDistance_TenStepsNoneMoved_Fail()
+    {
+        var v = HeroRangedChecks.KeepDistance(Hero, true, steps: 10, moved: 0, cornered: 0, meleeSeconds: 0);
+
+        Assert.AreEqual(CheckResult.Fail, v.Result);
+        AssertManifestReads(HeroRangedChecks.KeepDistanceId, v, "1415.toml");
+    }
+
+    [TestMethod]
+    public void KeepDistance_NineStepsNoneMoved_Skip()
+    {
+        var v = HeroRangedChecks.KeepDistance(Hero, true, steps: 9, moved: 0, cornered: 0, meleeSeconds: 0);
+
+        Assert.AreEqual(CheckResult.Skip, v.Result);
+        StringAssert.StartsWith(v.Detail, "reason=few-threats ");
+    }
+
+    [TestMethod]
+    public void KeepDistance_TenCorneredNoStep_Fail()
+    {
+        var v = HeroRangedChecks.KeepDistance(Hero, true, steps: 0, moved: 0, cornered: 10, meleeSeconds: 30);
+
+        Assert.AreEqual(CheckResult.Fail, v.Result);
+        AssertManifestReads(HeroRangedChecks.KeepDistanceId, v, "1415.toml");
+    }
+
+    [TestMethod]
+    public void KeepDistance_NineCorneredNoStep_Skip()
+    {
+        var v = HeroRangedChecks.KeepDistance(Hero, true, 0, 0, 9, 0);
+
+        Assert.AreEqual(CheckResult.Skip, v.Result);
+        Assert.AreEqual("reason=few-threats hero=taom_hero_legolas steps=0 moved=0 cornered=9 melee_seconds=0", v.Detail);
+        AssertManifestReads(HeroRangedChecks.KeepDistanceId, v, "1415.toml");
+    }
+
+    [TestMethod]
+    public void KeepDistance_NoThreat_Skip()
+    {
+        var v = HeroRangedChecks.KeepDistance(Hero, true, 0, 0, 0, 0);
+
+        Assert.AreEqual(CheckResult.Skip, v.Result);
+        StringAssert.StartsWith(v.Detail, "reason=no-threat ");
+    }
+
+    [TestMethod]
+    public void KeepDistance_Off_Skip()
+    {
+        var v = HeroRangedChecks.KeepDistance(Hero, false, 0, 0, 0, 0);
+
+        Assert.AreEqual(CheckResult.Skip, v.Result);
+        StringAssert.StartsWith(v.Detail, "reason=off ");
+        AssertManifestReads(HeroRangedChecks.KeepDistanceId, v, "1415.toml");
+    }
+
     // ---- the mission-end writer ----
 
     [TestMethod]
@@ -250,7 +319,7 @@ public class HeroRangedChecksTests
 
         HeroRangedChecks.WriteEnd(log, "hr3", tally);
 
-        foreach (var id in new[] { HeroRangedChecks.PrecisionId, HeroRangedChecks.HitsId, HeroRangedChecks.PierceId, HeroRangedChecks.MultiShotId, HeroRangedChecks.ArrowKillId })
+        foreach (var id in new[] { HeroRangedChecks.PrecisionId, HeroRangedChecks.HitsId, HeroRangedChecks.PierceId, HeroRangedChecks.MultiShotId, HeroRangedChecks.ArrowKillId, HeroRangedChecks.KeepDistanceId })
         {
             var lines = log.Of(id);
             Assert.AreEqual(1, lines.Count, id);
@@ -275,6 +344,19 @@ public class HeroRangedChecksTests
     }
 
     [TestMethod]
+    public void WriteEnd_KeepDistanceReadsTheKitSwitchTheTallyHolds()
+    {
+        var off = new RecordingOutcomeLog();
+        var on = new RecordingOutcomeLog();
+
+        HeroRangedChecks.WriteEnd(off, "hr1", new HeroRangedTally(Hero, 1) { Steps = 3, Moved = 1 });
+        HeroRangedChecks.WriteEnd(on, "hr1", new HeroRangedTally(Hero, 1) { Steps = 3, Moved = 1, KeepDistance = true });
+
+        StringAssert.Contains(off.Of(HeroRangedChecks.KeepDistanceId)[0], "reason=off ");
+        Assert.IsTrue(on.Has("pass", HeroRangedChecks.KeepDistanceId));
+    }
+
+    [TestMethod]
     public void WriteEnd_PrecisionAlreadyWritten_NoSecondPrecisionLine()
     {
         var log = new RecordingOutcomeLog();
@@ -288,19 +370,19 @@ public class HeroRangedChecksTests
     [TestMethod]
     public void EveryId_IsAValidOutcomeId()
     {
-        foreach (var id in new[] { HeroRangedChecks.PrecisionId, HeroRangedChecks.HitsId, HeroRangedChecks.PierceId, HeroRangedChecks.MultiShotId, HeroRangedChecks.ArrowKillId })
+        foreach (var id in new[] { HeroRangedChecks.PrecisionId, HeroRangedChecks.HitsId, HeroRangedChecks.PierceId, HeroRangedChecks.MultiShotId, HeroRangedChecks.ArrowKillId, HeroRangedChecks.KeepDistanceId })
             Assert.IsTrue(Regex.IsMatch(id, @"^[a-z0-9]+(\.[a-z0-9-]+)+$"), id);
     }
 
     // ---- the manifest ----
 
     // The pass or fail line the outcome log writes ("[Check] id=<id> result=<r> <detail>", OutcomeLog.cs) must match a
-    // pattern of its own result in 1361.toml and none of the other; a skip matches neither.
-    private static void AssertManifestReads(string id, CheckVerdict v)
+    // pattern of its own result in the manifest (1361.toml unless named) and none of the other; a skip matches neither.
+    private static void AssertManifestReads(string id, CheckVerdict v, string manifest = "1361.toml")
     {
         var result = v.Result == CheckResult.Pass ? "pass" : v.Result == CheckResult.Fail ? "fail" : "skip";
         var line = $"2026-11-16 12:00:00 [INFO] [Check] id={id} result={result} {v.Detail}";
-        var (pass, fail) = Patterns(id);
+        var (pass, fail) = Patterns(id, manifest);
 
         var passHit = pass.Any(p => Regex.IsMatch(line, p));
         var failHit = fail.Any(p => Regex.IsMatch(line, p));
@@ -308,9 +390,9 @@ public class HeroRangedChecksTests
         Assert.AreEqual(v.Result == CheckResult.Fail, failHit, "fail patterns against: " + line);
     }
 
-    private static (List<string> Pass, List<string> Fail) Patterns(string id)
+    private static (List<string> Pass, List<string> Fail) Patterns(string id, string manifest)
     {
-        var toml = File.ReadAllText(RepoPaths.RepoPath("tools", "ingame_checks", "1361.toml")).Replace("\r\n", "\n");
+        var toml = File.ReadAllText(RepoPaths.RepoPath("tools", "ingame_checks", manifest)).Replace("\r\n", "\n");
         var blocks = toml.Split(new[] { "[[check]]" }, StringSplitOptions.None);
         var block = blocks.Single(b => b.Contains($"\nid = \"{id}\"\n"));
         return (Quoted(Section(block, "pass")), Quoted(Section(block, "fail")));

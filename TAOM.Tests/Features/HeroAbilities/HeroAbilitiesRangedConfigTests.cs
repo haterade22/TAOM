@@ -70,6 +70,50 @@ public class HeroAbilitiesRangedConfigTests
         _logger.DidNotReceive().LogWarning(Arg.Any<string>());
     }
 
+    // #1415: the step away from a melee threat.
+    [TestMethod]
+    public void Load_KeepDistance_KeepsBothValues()
+    {
+        var ranged = LoadKit(Ranged("\"keepDistanceMeters\":5,\"stepBackMeters\":8")).Ranged!;
+
+        Assert.AreEqual(5f, ranged.KeepDistanceMeters);
+        Assert.AreEqual(8f, ranged.StepBackMeters);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Load_NoKeepDistance_IsOff()
+    {
+        var ranged = LoadKit(GoodRanged).Ranged!;
+
+        Assert.AreEqual(0f, ranged.KeepDistanceMeters);
+        Assert.AreEqual(0f, ranged.StepBackMeters);
+    }
+
+    [DataTestMethod]
+    [DataRow("11")]
+    [DataRow("-1")]
+    [DataRow("NaN")]
+    public void Load_KeepDistanceOutside0To10_ZeroedWithWarning(string value)
+    {
+        var ranged = LoadKit(Ranged("\"keepDistanceMeters\":" + value + ",\"stepBackMeters\":8")).Ranged!;
+
+        Assert.AreEqual(0f, ranged.KeepDistanceMeters);
+        AssertWarned("keepDistanceMeters");
+    }
+
+    [DataTestMethod]
+    [DataRow("13")]
+    [DataRow("-1")]
+    [DataRow("NaN")]
+    public void Load_StepBackOutside0To12_ZeroedWithWarning(string value)
+    {
+        var ranged = LoadKit(Ranged("\"keepDistanceMeters\":5,\"stepBackMeters\":" + value)).Ranged!;
+
+        Assert.AreEqual(0f, ranged.StepBackMeters);
+        AssertWarned("stepBackMeters");
+    }
+
     [TestMethod]
     public void Load_NoRangedBlock_RangedIsNull() => Assert.IsNull(LoadKit("").Ranged);
 

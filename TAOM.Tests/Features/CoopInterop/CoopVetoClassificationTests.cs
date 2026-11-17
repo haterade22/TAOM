@@ -85,6 +85,10 @@ public class CoopVetoClassificationTests
             "Alignment desertion (#1189): skips RecruitPrisonersCampaignBehavior.GenerateConformityForTroop, a replicated " +
             "mutation (prisoner XP), for a stack the recruit guard blocks. The guard reads per-peer MCM switches, which no " +
             "co-op mod exchanges. The prefix runs vanilla while ICoopSessionProvider.ShouldDeferToHost holds."),
+        ["Patch158_AiMercenaryHire_Prefix"] = new(CoopVeto.GatedForCoop,
+            "Alignment desertion tavern hire (#1189 item 1): skips RecruitmentCampaignBehavior.ApplyRecruitMercenary, a " +
+            "replicated mutation (roster, gold, town mercenary count), for a troop the recruit guard blocks. The guard reads " +
+            "per-peer MCM switches, so the prefix runs vanilla while ICoopSessionProvider.ShouldDeferToHost holds."),
         ["Patch157_RecruitSlotHint_Prefix"] = new(CoopVeto.ReviewedSafe,
             "Alignment desertion recruit hint (#1189): skips RecruitVolunteerTroopVM.ExecuteBeginHint, which only " +
             "shows a tooltip on this peer's screen. Nothing it skips changes campaign state."),
@@ -677,7 +681,7 @@ public class CoopVetoClassificationTests
     [TestMethod]
     public void GatedVetoes_AreExactlyThePinnedSet()
     {
-        // Pins the seven diplomacy gates (D1), Seasoned Hosts' Patch118 (#890) and Alignment Desertion's Patch150 (#1189). If a gate is removed, this fails
+        // Pins the seven diplomacy gates (D1), Seasoned Hosts' Patch118 (#890) and Alignment Desertion's Patch150 and Patch158 (#1189). If a gate is removed, this fails
         // rather than the divergence silently returning; the failure mode is a corrupted co-op save, which no other test can catch.
         var gated = Registry
             .Where(kv => kv.Value.Veto == CoopVeto.GatedForCoop)
@@ -696,6 +700,7 @@ public class CoopVetoClassificationTests
                 "MakePeaceAction_ApplyInternal_Patch",
                 "Patch118_ProjectStewardXp",
                 "Patch150_ConformityTick_Prefix",
+                "Patch158_AiMercenaryHire_Prefix",
                 "ProposeCallToWarAgreementDecision_IsAllowed_Patch",
             },
             gated.ToArray());

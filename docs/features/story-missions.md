@@ -38,7 +38,8 @@ bar and a player who can take a soldier after death.
 - **Launch** (`StoryMissionLauncher`): `MissionState.OpenNew` with the Long Defeat's siege behavior
   list and no map event, as Host Review opens its mission. Each launch gets its own
   `LongDefeatSession`. It never assigns `Game.PlayerTroop`, which in a campaign is the player's hero.
-  The launcher refuses the attacking side, a missing culture and a missing troop, and logs why.
+  The launcher refuses a missing culture and a missing troop, and logs why. A row with side `Attack`
+  makes the attacker combatant the player's team (#1409).
 - **Run plan** (`StoryPlanBuilder`): the row's garrison, waves, rules and free heroes. There is no shop, gold,
   fortification, affix, boon or class, and the run stops after the authored waves.
 - **Verdict** (`StoryVerdict`, `StoryEndWatch`): the run's side-neutral end reason becomes a win or a
@@ -55,8 +56,8 @@ bar and a player who can take a soldier after death.
 
 - **Source:** a War Chronicle siege with a `story` block (`war_chronicle.json`; the Hornburg names
   `helms_deep_defend`). The block may also name an `attackMission`, the same battle from the
-  attackers' side (#1326); no shipped window has one yet, because the launcher still refuses an
-  attacking mission. `IChronicleStoryPort.GetStoryOffers` lists each Active story window that the
+  attackers' side (#1326); no shipped window has one yet, because the maintainer has not decided the
+  key (#1409 step 6). `IChronicleStoryPort.GetStoryOffers` lists each Active story window that the
   player has not declined, that no attacker has besieged, and whose target the defender still holds
   (read live), while no chronicle announcement waits to show ([war-chronicle.md](war-chronicle.md)
   "The event chain", "Story offer"). The MCM switch "Offer Story Missions" (War of the Ring/War
@@ -218,18 +219,18 @@ mean the same thing by the same key.
 | `id` | string | The id that `taom.story_open` takes |
 | `name` | string | `{=KEY}English` display name |
 | `scene` | string | The scene the mission opens |
-| `side` | string | `Defend` (the launcher refuses the attacking side) |
+| `side` | string | `Defend` or `Attack`: the side the player fights on |
 | `defenderCulture`, `attackerCulture` | string | Culture ids of the two sides |
 | `music` | string | Optional: an `.ogg` path under the module's `ModuleSounds` folder |
 | `rules` | object | Long Defeat rule numbers, for example `preparationSeconds` |
-| `garrison` | array | The player's troops: `troop`, `class`, `count` |
+| `garrison` | array | The defenders' troops (the player's in a Defend row): `troop`, `class`, `count` |
 | `muster`, `keep` | object | Optional recorded points of the scene |
 | `heroes` | array | Optional free heroes, at most three: `id`, `troop`, optional `healthFactor` (#1366) |
 | `roster.waves` | array | Each wave: `count` and a weighted `mix` of troops |
 
 ### Current Values
 
-All seven rows are Defend missions with one wave. Only Helm's Deep names a music track
+Seven rows are Defend missions and `helms_deep_attack` is an Attack mission; every row has one wave. Only Helm's Deep names a music track
 (`StoryMusic/isengard_vs_rohan.ogg`). Four rows use stand-in scenes after one-wave probes on
 2026-11-10.
 
@@ -396,8 +397,8 @@ One number of that run is not healthy: the hunters line ends `retaken=1 moved_ou
 log line (`E:/Temp/scenario-runs/20261116-081024`, `moved_out=1481`) shows that about once a second during the preparation
 before the first wave (24 repairs in 21 seconds) the whole Infantry formation is moved into the heroes' formation and out
 again by the repair (20, then 40, 60, 80, 100 soldiers), and that the last repair comes in the second the wave starts, with none after it. It never shows in a
-Long Defeat (`moved_out=0` in every run there). The checks passed because the repair won each time. This is #1370, and it is
-open: no fix is in the tree.
+Long Defeat (`moved_out=0` in every run there). The checks passed because the repair won each time. This is #1370; the fix
+is below, and its proof run is owed.
 
 What is measured: the mover is the engine's castle tactic. Before the attackers exist no lane is active, so it defends only the
 lanes that have a gate, which is one lane (`TacticDefendCastle.cs:1005-1016`). It then has two melee formations for one lane:
@@ -406,10 +407,20 @@ the garrison's Infantry formation, under AI control, and the heroes' formation, 
 transfers every AI-controlled formation into it (`:208`). When the wave starts, more lanes are active than there are melee
 formations, and the consolidation stops.
 
-What is not known: why the Long Defeat never shows it. It has the same heroes, the same tactic and a muster of the same kind.
-Its opening split starts only after its muster (24 seconds after the heroes spawned in run 20261116-055255, with no repair in
-that window), so the split is not the reason. `tools/ingame_checks/1370.toml` holds the one check that is red on the defect:
-`moved_out=0` on the hunters line.
+Why the Long Defeat never shows it: the consolidation runs only while no lane holds a stored defender formation
+(`SiegeLane.GetLastAssignedFormation`; with one, the tactic skips a formation off AI control, `TacticDefendCastle.cs:590`).
+The tactic makes its first pick in the frame the garrison spawns. A Long Defeat hero is bought, so he spawns one frame later
+at the earliest, after that pick. The story mission's free heroes were spawned in the same frame as the garrison, before it.
+A probe run proved it (`E:/Temp/scenario-runs/20261116-125931`): with the heroes held until the first pick, the Middle lane
+kept formation 0, there were 0 repairs and `moved_out=0`.
+
+The fix: the director holds every hero the run asks for until a lane holds a defender formation, or for at most 5 s, then
+spawns him with the warning `[Hero] no wall lane holds a defender formation after 5 s; the heroes spawn now`
+(`LongDefeatDirector.Heroes.cs`, `ILongDefeatBattlefieldAdapter.DefenderLanesAssigned`). It guards the first pick only. A
+lane that becomes active later is picked from every formation with units, off AI control or not
+(`TacticDefendCastle.cs:481-493, 701-735`): in the probe run the Right lane took formation 7 about 21 s in, and the run still
+read `moved_out=0`. How often a later pick moves soldiers is not known; `tools/ingame_checks/1370.toml` reads `moved_out=0`
+on the hunters line, so a run measures it.
 
 Not proven: that an XML character no party holds survives a save and reload, and every row a person must look at (the order
 key, the take-over, the faces, the War Chronicle offer path).
@@ -430,11 +441,20 @@ Slices 2, 3 and 5 of #1105 are not built: field SAVE and KILL missions, the Brea
 the ATTACK side. Only the Hornburg offers a mission. Slice 4 was built before slices 2 and 3, because a
 player report showed the Hornburg ending with no battle (2026-11-13).
 
+## Known limits
+
+- In an Attack row (#1409) the player's body stands on the attacker team, and some Long Defeat code still treats it as a wave soldier or
+  the defender team as the player's. The hooks and effect sampling keyed by side (`LongDefeatStatHooks`, `LongDefeatCombatHooks`,
+  `LongDefeatEffectsAdapter`, morale, the gate watch) do not skip the main agent. The sally helpers do the same: `RemountPlayer` takes
+  `DefenderTeam`, and `NearestAttackerTo` includes the main agent. No story plan reaches this code today, because a story plan has no
+  affix, scaling, boon, shop or mounted class. It becomes live if a story attack gets one of them; fix it then.
+
 ## Changelog
 
 - 2026-11-16: #1373, Gimli's kit is now the Erebor two-handed axe `sm_dwarf_erebor_axe_2h_c`; the hunters line gains `weapons=`, and `tools/ingame_checks/1373.toml` reads both. Unplayed.
 - 2026-11-16: #1370, the churn of the garrison's foot through the heroes' formation before the first wave is measured and
-  checked by `tools/ingame_checks/1370.toml` (red on the bug). No fix yet; the issue is open.
+  checked by `tools/ingame_checks/1370.toml` (red on the bug). Fixed: the heroes wait for the castle tactic's first lane
+  pick, at most 5 s. Proof run owed.
 - 2026-11-16: #1366, Aragorn, Legolas and Gimli stand free with the garrison in the Helm's Deep
   defence of a campaign; the roster check at session start. After review: the heroes keep their own
   faces and, when taken over, their own health; the verdict tool's `scope_end` keeps a later Long

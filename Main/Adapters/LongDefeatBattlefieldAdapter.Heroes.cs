@@ -54,8 +54,11 @@ internal sealed partial class LongDefeatBattlefieldAdapter
             return new LdHeroReport(false, $"no character '{hero.TroopId}'");
 
         var team = Side(false);
-        var formation = team.GetFormation(HeroClass);
-        MoveHeroStrangersOut(formation, _heroes);
+        var hunt = HeroesHunt;
+        var cls = hunt ? HeroClass : troop.DefaultFormationClass == FormationClass.Ranged ? FormationClass.Ranged : FormationClass.Infantry;
+        var formation = team.GetFormation(cls);
+        if (hunt)
+            MoveHeroStrangersOut(formation, _heroes);
         _heroHome = place;
         if (!formation.HasBeenPositioned)
             formation.SetPositioning(new WorldPosition(_mission.Scene, new Vec3(place.X, place.Y, place.Z)), FacingOf(place));
@@ -64,7 +67,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         formation.BeginSpawn(1, false);
         try
         {
-            agent = Spawn(troop, team, true, HeroClass, true, 1, 0, false, kit: troop.FirstBattleEquipment, place: place, ownBody: true);
+            agent = Spawn(troop, team, true, cls, true, 1, 0, false, kit: troop.FirstBattleEquipment, place: place, ownBody: true);
         }
         finally
         {
@@ -78,13 +81,38 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         ScaleHealth(agent, hero.HealthFactor);
         HoldHero(hero.Id, agent);
         var held = _heroes;
-        PutHeroesBack(formation, held);
-        if (formation.IsAIControlled)
-            Post(formation);
+        if (hunt)
+        {
+            PutHeroesBack(formation, held);
+            if (formation.IsAIControlled)
+                Post(formation);
+        }
 
         return new LdHeroReport(true, null, agent.Character?.IsHero ?? false, agent.HasMount, agent.Formation?.Index ?? -1,
             before > 0f ? agent.HealthLimit / before : 0f, agent.WieldedWeapon.Item?.StringId ?? "", !formation.IsAIControlled,
-            Strangers(formation, held), formation.GetReadonlyMovementOrderReference().OrderEnum.ToString(), agent.Character is CharacterObject);
+            Strangers(formation, held), formation.GetReadonlyMovementOrderReference().OrderEnum.ToString(), agent.Character is CharacterObject, Enemy: !hunt);
+    }
+
+    // The heroes hunt for the player only when he defends. In a story attack (#1409) they are the enemy: each stands in the garrison's formation of his class
+    // (default_group sets DefaultFormationClass, BasicCharacterObject.cs:499) under the defenders' AI, never held off AI in formation 7. A formation off AI is
+    // the target the siege tactic consolidates into (TacticComponent.cs:191), the #1370 churn.
+    private bool HeroesHunt => !PlayerAttacks;
+
+    // SiegeLanes is the static list TeamAISiegeComponent builds for the mission; each lane stores one formation per team index.
+    public bool DefenderLanesAssigned()
+    {
+        var defenders = _mission.DefenderTeam;
+        var lanes = TeamAISiegeComponent.SiegeLanes;
+        if (defenders == null || lanes == null)
+            return false;
+
+        foreach (var lane in lanes)
+        {
+            if (lane.GetLastAssignedFormation(defenders.TeamIndex) != null)
+                return true;
+        }
+
+        return false;
     }
 
     // Main thread, every tick while a hero stands. Only reads when the group is whole and off AI control.
@@ -225,6 +253,9 @@ internal sealed partial class LongDefeatBattlefieldAdapter
     // ticks it at once), and a charge with no attacker left would turn to Stop where they stand.
     private void PostHunters()
     {
+        if (!HeroesHunt)
+            return;
+
         var formation = _mission.DefenderTeam?.GetFormation(HeroClass);
         if (formation == null)
             return;

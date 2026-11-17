@@ -109,6 +109,21 @@ or speed up the archers around him. His kit works where the gate opens: the Long
 - **Ranged allies.** `alliesRangedOnly` gives `allyEffects` only to allies with a bow or crossbow and ammunition
   (`Agent.IsRangedCached`).
 - No Legolas ability touches enemy morale: the Long Defeat holds every attacker (`LongDefeatMorale.HoldsAttacker`).
+- **He keeps out of melee (#1415).** The three heroes are one line formation posted at a wall lane, where the
+  attackers come over the wall, so without help he stands in the melee beside Aragorn and Gimli. Four times a second
+  `HeroKeepDistance` reads the enemy humans within `keepDistanceMeters` of him and on his level (2.5 m up or down).
+  When one stands there and his last step is 3 s old, `KeepDistanceRule` gives the direction away from them (each
+  weighted by 1 over its distance) and five points `stepBackMeters` away: straight, then turned 45 and 90 degrees each
+  side. The first point on the navmesh, inside the boundary, within 1.5 m of his height and with a walking path under
+  twice the step (the factor of vanilla's `ArrangementOrder.CreateStrategicAreas`, `ArrangementOrder.cs:347`, which
+  nothing calls in v1.5.7) gets the engine's timed scripted move,
+  `HumanAIComponent.SetScriptedPositionAndDirectionTimed`, with a rotation toward the threats (whether he turns to it
+  is UNVERIFIED). The engine releases him after 2.5 s (`HumanAIComponent.OnTick`); that his formation then takes him
+  back is UNVERIFIED. When the hold ends, the step counts as moved if his body covered half of it. With no usable point
+  he is cornered and fights with what the engine draws: his fourth item is `wm_legolas_sword`, a one-handed sword. A
+  step needs the engine's own gate, `Agent.CanBeAssignedForScriptedMovement` (AI-controlled, not fleeing, not using a
+  ladder or an object, no scripted move set), so a player at his controls, a fleeing body and an item pickup are never
+  moved; a mounted body is never moved either. He stays in the Three Hunters group, so key 8 still orders him.
 
 ### Component Diagram
 
@@ -149,6 +164,8 @@ A full restart is needed for a change (the provider is a lazy singleton). The fi
 | `ranged.extraArrowItem` | `^[a-z0-9_]{1,63}$` or empty | The extra arrow's item (`hero_abilities_items.xml`); else empty |
 | `ranged.extraArrowSpreadMeters` | 0..20 m | How near the target an extra arrow's enemy stands; else 0 |
 | `ranged.extraArrowRangeMeters` | 0..150 m | The farthest extra arrow target; else 0 |
+| `ranged.keepDistanceMeters` | 0..10 m | An enemy human this near, on his level, makes him step away (#1415); 0 = never; else 0 |
+| `ranged.stepBackMeters` | 0..12 m | The length of one step, about what a run covers in the 2.5 s hold; 0 = never; else 0 |
 | `abilities[].extraArrows` | 0..3 | Extra arrows per shot while it runs; 0 unless the kit has a ranged block with an item, a spread and a range above 0 |
 | `abilities[].alliesRangedOnly` | bool | `allyEffects` only for allies with a bow or crossbow and ammunition |
 
@@ -167,7 +184,8 @@ A full restart is needed for a change (the provider is a lazy singleton). The fi
 Gimli's passive: knockdown resistance 1000 %, knock-back resistance 300 %. The hero receives his `selfEffects` and
 his `allyEffects` together. The trigger counts are 3, not 5, because a wall lane takes attackers one ladder at a
 time. Legolas's ranged block: zero aim error, shield pierce, headshot kill chance 1.0, body kill chance 0.10, extra
-arrow `taom_legolas_arrow` within 10 m of his target and 120 m of him; outline `#7FD4FF`. "A ranged target within
+arrow `taom_legolas_arrow` within 10 m of his target and 120 m of him, a step of 8 m away from an enemy within 5 m;
+outline `#7FD4FF`. "A ranged target within
 40 m" needs his bow in his hand (`RaceAbilityService.cs:79-80`). Every number is a first guess for tuning.
 
 ## Key Files
@@ -187,15 +205,16 @@ arrow `taom_legolas_arrow` within 10 m of his target and 120 m of him; outline `
 | `Main/Features/HeroAbilities/Hooks/HeroMissionGate.cs` | The mission gate |
 | `Main/Features/DreadAura/Hooks/MoraleShock.cs` | The one-shot morale drain, shared with Signature Strikes |
 | `Main/Features/HeroAbilities/Domain/HeroRangedConfig.cs`, `HeroRangedRoster.cs`, `HeroBurst.cs` | The ranged block, the roster the models read, an extra-arrow window |
-| `Main/Features/HeroAbilities/Ranged/` | Pure: the extra arrows' targets (`ExtraShotPicker`) and aim (`ExtraShotAim`), the kill chance (`HeroRangedService`) |
+| `Main/Features/HeroAbilities/Ranged/` | Pure: the extra arrows' targets (`ExtraShotPicker`) and aim (`ExtraShotAim`), the kill chance (`HeroRangedService`), the step away (`KeepDistanceRule`) |
 | `Main/Features/HeroAbilities/Hooks/HeroRangedHooks.cs`, `HeroPrecisionApplier.cs` | What the stat and damage models ask: the zero aim error, the shield grant |
 | `Main/Features/HeroAbilities/Hooks/HeroRangedMissionLogic.cs` | Entry point of the ranged kit: the missile callbacks enqueue, the tick drains, check lines |
 | `Main/Features/HeroAbilities/Hooks/HeroMissileQueue.cs`, `HeroRangedTally.cs`, `HeroRangedTallies.cs`, `HeroRangedChecks.cs` | The callback queue, the counts of one hero body, one mission's tallies, the verdicts |
 | `Main/Features/HeroAbilities/Hooks/HeroMultiShotRunner.cs`, `HeroArrowKills.cs` | The extra arrows; the arrow's kill roll through `SignatureInstantKill` |
+| `Main/Features/HeroAbilities/Hooks/HeroKeepDistance.cs` | The step away from a melee threat, and the seconds with a melee weapon in hand (#1415) |
 | `Main/Features/CombatMechanics/ShieldPierceMath.cs` | The damage floor above the engine's shield pass-through threshold |
 | `Main/_Module/ModuleData/hero_abilities/hero_abilities.json` | Configuration |
 | `Main/_Module/ModuleData/hero_abilities/hero_abilities_items.xml` | `taom_legolas_arrow`, the extra arrow (loads for Campaign, CampaignStoryMode and CustomGame) |
-| `tools/ingame_checks/1359.toml`, `1361.toml`, `1366.toml` | The in-game check manifests (1366: the three heroes in the story mission of a campaign) |
+| `tools/ingame_checks/1359.toml`, `1361.toml`, `1366.toml`, `1415.toml` | The in-game check manifests (1366: the three heroes in the story mission of a campaign) |
 
 ## Dependencies
 
@@ -263,6 +282,12 @@ arrow `taom_legolas_arrow` within 10 m of his target and 120 m of him; outline `
    signature=taom_hero_legolas_arrow ... died=1`.
 7. No `[HeroAbilities] ranged kit disabled for this mission after` line.
 8. Only a person can see: Rapid Fire's faster draw, the extra arrows in flight, Archer's Eye on the archers around him.
+9. `python tools/ingame_verdict.py --issue 1415`: `taom.hero-abilities.keep-distance result=pass ... moved=<1 or
+   more>`. `steps=` counts the engine calls and `moved=` the steps his body walked (half the step by the end of the
+   hold); `cornered=` counts threats with no usable point. With no move, ten steps or ten cornered looks fail. The
+   manifest judges Long Defeat launches only, not the story mission. `melee_seconds=` counts
+   the seconds with a melee weapon in his hand, so it shows that he draws the sword. Only a person can see that he
+   backs off, turns and shoots, and never walks off the wall.
 
 ## Known limits
 
@@ -386,10 +411,13 @@ not known: these are single runs with no control.
   abilities. Proved by the unattended run 20261116-024002.
 - 2026-11-16: #1366 (Phase 6): the kits load in a campaign and the three stand free in the Helm's Deep story mission;
   the aura finds them by `HeroAuraService.SourceId`. Not yet opened in a game.
+- 2026-11-16: #1415: Legolas steps 8 m away from an enemy within 5 m, and fights with his sword when cornered. Not
+  yet opened in a game.
 
 ## GitHub Issue
 
 - **Issue:** #1359: Hero abilities: timed abilities and killing blows for Aragorn and Gimli
 - **Issue:** #1361: Hero abilities: Legolas's ranged kit
 - **Issue:** #1366: Phase 6 of #1325, the three heroes in the Helm's Deep story mission (in-game proof owed)
+- **Issue:** #1415: Legolas keeps out of melee range and uses his sword when cornered (in-game proof owed)
 - **Status:** Open

@@ -55,11 +55,11 @@ The plan listed the ladder's consumers by the calls that judge troops (`findings
 
 ## Follow-ups
 
-FOLLOW-UP #631: take the held view's class from the mode that gives the priced attack, not from the first shield mode (F4). No weapon differs today; a couch mode listed first would.
-FOLLOW-UP #631: read "carries a shield" per battle set, or add a gate that fails when a troop has a shield in some sets only (F5).
-FOLLOW-UP #631: price shield carriers through `with_shield` in `analyze_melee_ladder.py` and the roster page (`docs/reference/troop-rosters.html`), so the report agrees with the gate (F11).
-FOLLOW-UP #631: warn in the validator, fixer, restat and generator when `load_shield_ids` returns no id (F12).
-FOLLOW-UP #631: the Numenorean bastard swords' one handed mode sustains 37 DPS against vanilla's median 61; a blade restat cannot raise only that mode. The maintainer decides whether their shield carriers keep them.
+FOLLOW-UP #1422: take the held view's class from the mode that gives the priced attack, not from the first shield mode (F4). No weapon differs today; a couch mode listed first would.
+FOLLOW-UP #1422: read "carries a shield" per battle set, or add a gate that fails when a troop has a shield in some sets only (F5).
+FOLLOW-UP #1422: price shield carriers through `with_shield` in `analyze_melee_ladder.py` and the roster page (`docs/reference/troop-rosters.html`), so the report agrees with the gate (F11).
+FOLLOW-UP #1422: warn in the validator, fixer, restat and generator when `load_shield_ids` returns no id (F12).
+FOLLOW-UP #1422: the Numenorean bastard swords' one handed mode sustains 37 DPS against vanilla's median 61; a blade restat cannot raise only that mode. The maintainer decides whether their shield carriers keep them.
 
 ## Lesson
 

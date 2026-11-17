@@ -54,14 +54,21 @@ public class StoryMissionLauncherTests
     }
 
     [TestMethod]
-    public void Launch_AnAttackingMission_IsRefusedUntilThePlayerCanTakeThatSide()
+    public void Launch_AnAttackingMission_PassesTheSideCheck_AndIsRefusedOnlyForTheMissingCampaign()
     {
         var logger = Substitute.For<IModLogger>();
 
         var opened = Launcher(Mission("Attack"), logger).Launch("m1", false);
 
         Assert.IsFalse(opened);
-        logger.Received(1).LogError(Arg.Is<string>(s => s.Contains("m1") && s.Contains("attacking")));
+        logger.Received(1).LogError(Arg.Is<string>(s => s.Contains("running campaign")));
+        logger.DidNotReceive().LogError(Arg.Is<string>(s => s.Contains("attacking")));
+    }
+
+    [TestMethod]
+    public void TheLauncher_MakesTheAttackerThePlayersCombatant_ForAnAttackRow()
+    {
+        StringAssert.Contains(Source(), "new MissionCombatantsLogic(null, side == StorySide.Attacking ? attacker : defender, defender, attacker,");
     }
 
     [TestMethod]

@@ -22,11 +22,11 @@ public class LongDefeatMissionLogicTests
     [ClassInitialize]
     public static void Init(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext _) => GameAssemblies.EnsureLoaded();
 
-    private static LongDefeatMissionLogic Logic(FakeLongDefeatMenu? menu = null) =>
+    private static LongDefeatMissionLogic Logic(FakeLongDefeatMenu? menu = null, IModLogger? logger = null) =>
         new(new RunPlan("helms", new[] { new GarrisonRow("t", FormationSlot.Infantry, 1) },
                 new WavePlan(new[] { new WaveSpec(110, new[] { new WaveTroop("a", FormationSlot.Infantry, 1) }) }, new WaveScaling(10, 300)),
                 new ShopPlan(0, Array.Empty<ShopOffer>()), RunRules.Default, RunOptions.Default),
-            new LongDefeatSession(), Substitute.For<IModLogger>(), Substitute.For<IOutcomeLog>(), (menu ?? new FakeLongDefeatMenu()).EndGame, "m1");
+            new LongDefeatSession(), logger ?? Substitute.For<IModLogger>(), Substitute.For<IOutcomeLog>(), (menu ?? new FakeLongDefeatMenu()).EndGame, "m1");
 
     // The text of the first block after the marker, by brace depth.
     private static string BodyOf(string source, string marker)
@@ -97,6 +97,30 @@ public class LongDefeatMissionLogicTests
         logic.OnRetreatMission();
 
         Assert.AreEqual(1, menu.EndGames);
+    }
+
+    // #1409: a boundary retreat ends a run as Abandoned, so the line says where the main agent stood and what the mission's own boundary test said there.
+    [TestMethod]
+    public void OnRetreatMission_WithNoMainAgent_LogsMainNone_AndStillLeaves()
+    {
+        var menu = new FakeLongDefeatMenu();
+        var logger = Substitute.For<IModLogger>();
+
+        Logic(menu, logger).OnRetreatMission();
+
+        logger.Received(1).LogInfo("[LongDefeat][Player] retreat main=none");
+        Assert.AreEqual(1, menu.EndGames);
+    }
+
+    [TestMethod]
+    public void OnRetreatMission_LogsTheMainAgentsPlace_AndTheMissionsBoundaryTestThere_BeforeItLeaves()
+    {
+        var body = BodyOf(RepoPaths.ReadSource(LogicPath, stripComments: true), "override void OnRetreatMission");
+
+        StringAssert.Contains(body, "Mission?.MainAgent", "the unit tests run the logic with no mission");
+        StringAssert.Contains(body, "Mission.IsPositionInsideBoundaries(main.Position.AsVec2)", "the test MissionBoundaryCrossingHandler makes");
+        Assert.IsTrue(body.IndexOf("_logger.LogInfo(", StringComparison.Ordinal) >= 0
+            && body.IndexOf("_logger.LogInfo(", StringComparison.Ordinal) < body.IndexOf("_host.Leave()", StringComparison.Ordinal), body);
     }
 
     [TestMethod]

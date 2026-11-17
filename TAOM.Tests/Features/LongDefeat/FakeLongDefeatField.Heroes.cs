@@ -49,7 +49,19 @@ internal sealed partial class FakeLongDefeatField
             return answer;
         }
 
+        if (PlayerAttacks)
+            return new LdHeroReport(true, null, true, false, 0, hero.HealthFactor, "sword", Held: false, Strangers: 5, Order: "Move", Enemy: true);
+
         return new LdHeroReport(true, null, true, false, HeroGroup.FormationIndex, hero.HealthFactor, "sword", Held: true, Strangers: 0, Order: "Move");
+    }
+
+    /// <summary>What <see cref="DefenderLanesAssigned"/> answers (#1370); true unless a test holds the lanes empty.</summary>
+    public bool LanesAssigned { get; set; } = true;
+
+    public bool DefenderLanesAssigned()
+    {
+        Calls.Add("LanesAssigned:" + LanesAssigned);
+        return LanesAssigned;
     }
 
     /// <summary>What <see cref="HoldHunters"/> answers on each call.</summary>
