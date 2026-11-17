@@ -145,7 +145,7 @@ Releases ship from `bannerlord-1.5.x` only; never port or list a 1.4.5 port as o
      refuses it, dry runs included, so the dry run fails until it is pruned. So does any other TAOM
      file the release commit does not track: under `--require-build`, `stale_module_files` compares
      the copy list (outside `bin/`, `Shaders/D3D11/` and `RuntimeDataCache*`) with the commit's
-     `Main/_Module` tree, case-insensitively, and refuses with exit 2 on a stray file, a git
+     `Main/_Module` tree (`CoopCompat/_Module` for `TAOM.CoopCompat`), case-insensitively, and refuses with exit 2 on a stray file, a git
      failure or an empty tree. The message names the folder it checked (the `--source` module, the
      install or a channel folder): delete the file there, or commit it first if it is Kit output the
      repo has not taken yet. `TAOM.Dependencies` is exempt.

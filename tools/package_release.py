@@ -108,7 +108,7 @@ KNOWN_TOP_DIRS = frozenset({
 })
 
 KNOWN_TOP_FILES = frozenset({
-    "SubModule.xml", "THIRD-PARTY-LICENSES.txt", "coop-modules.txt",
+    "SubModule.xml", "THIRD-PARTY-LICENSES.txt", "coop-modules.txt", "README.txt",
     "engine_module.ini", "splash.bmp", "steam.target",
 })
 

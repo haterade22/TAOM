@@ -179,6 +179,8 @@ class TestConfidentExclusions(unittest.TestCase):
     def test_shipped_metadata_survives(self):
         self.assertEqual(act("SubModule.xml"), pr.COPY)
         self.assertEqual(act("THIRD-PARTY-LICENSES.txt"), pr.COPY)
+        # TAOM.CoopCompat ships a player README at its root (CoopCompat/_Module).
+        self.assertEqual(act("README.txt"), pr.COPY)
 
     def test_visual_studio_workspace_state_is_excluded(self):
         # `.vs` sits under GUI/, which is a KNOWN_TOP_DIR, so the include-list would
