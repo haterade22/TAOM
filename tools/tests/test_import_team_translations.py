@@ -317,11 +317,11 @@ class ImportTests(unittest.TestCase):
     def test_names_the_import_would_merge_keep_ours(self):
         english = {"foot": "[Gondor] Anfalas Footman", "inf": "[Gondor] Anfalas Infantry",
                    "archer": "[Gondor] Anfalas Archer"}
-        target = self.live_target(english, {"foot": "安法拉斯步卒", "inf": "安法拉斯步兵", "archer": "旧"},
+        target = self.live_target(english, {"foot": "[刚铎]安法拉斯步卒", "inf": "[刚铎]安法拉斯步兵", "archer": "旧"},
                                   tiers=False)
-        team = {"foot": ("安法拉斯步兵", "t"), "inf": ("安法拉斯步兵", "t"), "archer": ("安法拉斯弓手", "t")}
+        team = {"foot": ("[刚铎]安法拉斯步兵", "t"), "inf": ("[刚铎]安法拉斯步兵", "t"), "archer": ("[刚铎]安法拉斯弓手", "t")}
         plan = imp.make_plan(team, [target], {}, ())
-        self.assertEqual({"archer": "安法拉斯弓手"}, plan.writes[target.path])
+        self.assertEqual({"archer": "[刚铎]安法拉斯弓手"}, plan.writes[target.path])
         self.assertEqual(["foot"], [c["id"] for c in plan.collisions])
         self.assertNotIn("foot", plan.cache)
 

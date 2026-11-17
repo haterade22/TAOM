@@ -466,16 +466,16 @@
     <string id="zulgor_description" text="祖尔戈是一名翼兽繁育者，通过孵化凶恶巨兽的卵来扩大可哈穆尔的空中势力。" />
     <string id="zulgora_description" text="祖尔戈拉是影纱编织者，制造幻象迷惑敌人，如同故事中索隆的欺骗手段。" />
     <string id="zulgoth_description" text="祖尔戈斯是奥克仪式师，会按照奥克习俗中暗示的做法向黑暗力量献祭。他的仪式为氏族的行动祈求力量。" />
-    <string id="lord_AN1_1_description" text="阿尔维吉尔二世,阿尔桑丹之王,阿尔维杜伊与埃西铎的继承人。他据守佛诺斯特以抗刚达巴的奥克,并与卡多兰、鲁道尔的同族维持着不安的和平。" />
-    <string id="lord_CA1_1_description" text="阿兰希尔,卡多兰之王,埃雅仁都尔次子的继承人,在卡拉斯·戈夏德保有古冢诸王的王冠。" />
-    <string id="lord_RH1_1_description" text="贝烈苟恩,鲁道尔之王,埃雅仁都尔三子的继承人,卡梅斯·布林及三角地丘陵民的领主。" />
-    <string id="lord_LN3_1_description" text="迈卡萨玛，刚多林的彭洛德之子，柱之家族与雪之塔的继承人，镇守鲁恩湾北臂上的佛隆德。" />
-    <string id="lord_EL1_1_description" text="法林二世，埃瑞德路因之王，出自德林古尔家族，索林大殿之主，与贝烈勾斯特的宽膛族和诺格罗德的火须族共守蓝色山脉。" />
-    <string id="lord_AND1_1_description" text="英戈马尔,安加拉德之王,林中人之城的领主,在幽暗密林的边缘抵御多尔古都的阴影。" />
+    <string id="lord_AN1_1_description" text="阿拉纳斯，阿塞丹国王，阿维杜伊与伊熙尔杜的继承人。他据守佛诺斯特以抗贡达巴德的半兽人，并与卡多蓝、鲁道尔的亲族维持着不安的和平。" />
+    <string id="lord_CA1_1_description" text="奥斯希尔，卡多蓝国王，埃雅仁都尔次子的后裔，在卡拉斯戈沙德守着长眠古冢诸王的王冠。" />
+    <string id="lord_RH1_1_description" text="埃拉马斯，鲁道尔国王，埃兰都尔三子的继承人，卡梅斯布林之主，亦为河岬地带丘陵人的领主。" />
+    <string id="lord_LN3_1_description" text="迈卡萨玛，刚多林的彭洛德之子，柱之家族与雪塔的继承人，镇守鲁恩湾北臂上的佛泷德。" />
+    <string id="lord_EL1_1_description" text="法林二世，埃瑞德路因国王，德林古尔家族成员，梭林大厅之主，与贝烈戈斯特的阔膝族和诺格罗德的火须族共守蓝色山脉。" />
+    <string id="lord_AND1_1_description" text="西奥德米罗，安加拉兹国王，林中居民镇的领主，守卫黑森林边缘，抵御多古尔都的阴影。" />
     <string id="lord_AV1_1_description" text="格里姆贝奥恩是贝奥恩的儿子，也是贝奥恩一族的首领。他守卫高隘口和老渡口，绝不让奥克穿过安都因河谷。" />
-    <string id="lord_DO1_1_description" text="奥斯特里克,多尔温尼安之王,葡园堡的领主,他的美酒沿奔流河运往河谷邦与幽暗密林的精灵。" />
-    <string id="lord_SRH1_1_description" text="维杜马尔,南罗瓦尼安之王,维杜加德的领主,他驰骋于幽暗密林以南的平原,仍记得战车民的往事。" />
-    <string id="haldir_lothlorien_description" text="哈尔迪尔,边界哨卫,正如书中罗瑞恩的边境守卫一般,以无声而精准的巡逻守护着金色森林的边界。" />
-    <string id="orophin_lothlorien_description" text="欧洛芬,警觉的弓手,如影片中的边境守卫般执守岗位,他的箭矢射倒了被多尔古都阴影腐化的野兽。" />
+    <string id="lord_DO1_1_description" text="哈温，多温尼安国王，葡萄洲之主，他的美酒沿奔流河运往河谷邦与黑森林的精灵。" />
+    <string id="lord_SRH1_1_description" text="苏涅弗雷多，南罗瓦尼安国王，维杜加德之主，他驰骋于黑森林以南的平原，仍记得战车民。" />
+    <string id="haldir_lothlorien_description" text="哈尔迪尔是一名边境哨卫，一如书中的罗瑞恩边境守卫，以无声而精准的巡逻守护金色森林的边界。" />
+    <string id="orophin_lothlorien_description" text="欧洛芬是一名警觉的弓手，如同影片中的边境守卫般驻守瞭望，他的箭矢射倒被多古尔都阴影腐化的野兽。" />
   </strings>
 </base>

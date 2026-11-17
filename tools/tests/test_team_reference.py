@@ -46,6 +46,11 @@ class TermTests(unittest.TestCase):
     def setUp(self):
         self.reference = ref.Reference(PAIRS)
 
+    def test_terms_PossessiveOfATerm_FindsTheTerm(self):
+        r = ref.Reference([["Forlong", "佛朗"], ["Gondor", "刚铎"]])
+        self.assertIn(("Forlong", "佛朗"), r.terms(["[Gondor] Forlong's Gloves"]))
+        self.assertIn(("Forlong", "佛朗"), r.terms(["[Gondor] Forlong’s Gloves"]))
+
     def test_terms_MultiWordTerm_MatchesWithoutCase(self):
         self.assertIn(("Minas Tirith", "米那斯提力斯"), self.reference.terms(["the gates of minas tirith"]))
 
@@ -217,16 +222,43 @@ class BuildTests(unittest.TestCase):
     def tearDown(self):
         self.dir.cleanup()
 
+    def ours(self):
+        """main reads our fixture target, with no git history."""
+        stack = contextlib.ExitStack()
+        stack.enter_context(mock.patch.object(build, "history_at", return_value=(None, None)))
+        stack.enter_context(mock.patch.object(build, "our_targets", return_value=[self.target]))
+        return stack
+
     def pairs(self):
         with imp.Drop(self.zip) as drop:
             return build.reference_pairs(drop, "CNs", [self.target])
+
+    def test_reference_pairs_ArmoryNameWithTheTierTheImporterAdded_IsTheTeams(self):
+        # The importer writes the team's "刚铎" as "刚铎 II" for an Armory name whose English ends in a tier.
+        self.target.tiers = True
+        self.target.english["taom_gondor"] = "Gondor II"
+        self.target.current["taom_gondor"] = "刚铎 II"
+        self.assertIn(["Gondor II", "刚铎 II"], self.pairs())
+
+    def test_reference_pairs_StaleRow_IsNotTheTeams(self):
+        # The team translated "Old Gondor"; we renamed it since, so its text names something we no longer show.
+        self.target.english_then = {"taom_gondor": "Old Gondor"}
+        pairs = self.pairs()
+        self.assertNotIn(["Gondor", "刚铎"], pairs)
+        self.assertIn(["Enable Gondor", "启用刚铎"], pairs)
+
+    def test_reference_pairs_OverriddenRow_IsNotTheTeams(self):
+        with imp.Drop(self.zip) as drop:
+            pairs = build.reference_pairs(drop, "CNs", [self.target], overrides={"taom_gondor": "刚铎"})
+        self.assertNotIn(["Gondor", "刚铎"], pairs)
+        self.assertIn(["Enable Gondor", "启用刚铎"], pairs)
 
     def test_reference_pairs_TakeOnlyRowsThatHoldTheTeamsText(self):
         # taom_drafted is our draft and taom_kept is our KEEP_OURS row: neither is the team's text.
         self.assertEqual([["Enable Gondor", "启用刚铎"], ["Gondor", "刚铎"]], self.pairs())
 
     def test_main_DryRun_WritesNothing(self):
-        with mock.patch.object(build, "targets_for", return_value=[self.target]):
+        with self.ours():
             self.assertEqual(0, build.main(["--lang", "CNs", "--from", str(self.zip), "--out-dir", str(self.out)]))
         self.assertFalse(self.out.exists())
 
@@ -239,13 +271,20 @@ class BuildTests(unittest.TestCase):
         self.assertIn(["Rohan", "罗翰"], self.pairs())
 
     def test_main_DropWithoutRowsForTheLanguage_WritesNothingAndExits2(self):
-        with mock.patch.object(build, "targets_for", return_value=[self.target]):
+        with self.ours():
             code = build.main(["--lang", "CNt", "--from", str(self.zip), "--out-dir", str(self.out), "--apply"])
         self.assertEqual(2, code)
         self.assertFalse((self.out / "cnt.json").exists())
 
+    def test_main_TaomWithAnUnknownBase_StopsAndWritesNothing(self):
+        # Without our English at the team's base, a stale row would pass as the team's text.
+        with self.assertRaises(SystemExit):
+            build.main(["--lang", "CNs", "--from", str(self.zip), "--base", "no-such-ref-1421",
+                        "--out-dir", str(self.out), "--apply"])
+        self.assertFalse(self.out.exists())
+
     def test_main_Apply_WritesTheReference(self):
-        with mock.patch.object(build, "targets_for", return_value=[self.target]):
+        with self.ours():
             build.main(["--lang", "CNs", "--from", str(self.zip), "--out-dir", str(self.out), "--apply"])
         data = json.loads((self.out / "cns.json").read_text(encoding="utf-8"))
         self.assertEqual([["Enable Gondor", "启用刚铎"], ["Gondor", "刚铎"]], data["pairs"])

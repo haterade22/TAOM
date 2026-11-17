@@ -643,7 +643,7 @@
     <string id="aom_lord_LN1_3_name" text="纳尔迪尔" />
     <string id="aom_lord_LN1_4_name" text="卢内泽尔" />
     <string id="aom_lord_LN1_5_name" text="尼姆玟" />
-    <string id="aom_lord_LN1_6_name" text="林迪斯" />
+    <string id="aom_lord_LN1_6_name" text="林迪丝" />
     <string id="aom_lord_LN2_1_name" text="奥瑞希尔" />
     <string id="aom_lord_LN2_2_name" text="费伦" />
     <string id="aom_lord_LN2_3_name" text="阿拉多" />
@@ -963,7 +963,7 @@
     <string id="aom_lord_SH9_7_name" text="扎琳" />
     <string id="aom_lord_SH9_8_name" text="阿娜希塔" />
     <string id="aom_lord_SH9_9_name" text="巴哈拉" />
-    <string id="aom_lord_U1_11_name" text="吉米尔佐尔" />
+    <string id="aom_lord_U1_11_name" text="吉米尔佐" />
     <string id="aom_lord_U1_12_name" text="吉米尔松" />
     <string id="aom_lord_U1_13_name" text="法拉宗" />
     <string id="aom_lord_U1_1_name" text="阿尔-基密卡德" />
@@ -995,87 +995,87 @@
     <string id="aom_lord_rohan_2_1_name" text="伊森蒙德·凯尔迪金" />
     <string id="aom_lord_rohan_5_1_name" text="埃德维格·奥斯基特林" />
     <string id="aom_lord_rohan_9_1_name" text="敦赫雷·敦宁" />
-    <string id="aom_lord_AN1_1_name" text="阿维吉尔二世" />
-    <string id="aom_lord_AN1_2_name" text="马尔维吉尔" />
-    <string id="aom_lord_AN1_3_name" text="吉尔蕾恩" />
-    <string id="aom_lord_AN1_4_name" text="伊芙温" />
-    <string id="aom_lord_AN2_1_name" text="阿姆莱斯" />
-    <string id="aom_lord_AN2_2_name" text="凯勒法恩" />
-    <string id="aom_lord_AN2_3_name" text="菲瑞尔" />
-    <string id="aom_lord_AN2_4_name" text="埃兰温" />
-    <string id="aom_lord_AN3_1_name" text="阿吉勒布" />
-    <string id="aom_lord_AN3_2_name" text="阿拉佛" />
-    <string id="aom_lord_AN3_3_name" text="梅内利尔" />
-    <string id="aom_lord_AN3_4_name" text="希利弗伦" />
-    <string id="aom_lord_AN4_1_name" text="哈尔巴拉德" />
-    <string id="aom_lord_AN4_2_name" text="阿拉努伊尔" />
-    <string id="aom_lord_AN4_3_name" text="伊希尔温" />
-    <string id="aom_lord_AN4_4_name" text="卡尔温" />
-    <string id="aom_lord_AN5_1_name" text="凯勒布林多" />
-    <string id="aom_lord_AN5_2_name" text="阿维烈格" />
-    <string id="aom_lord_AN5_3_name" text="迈希尔" />
-    <string id="aom_lord_AN5_4_name" text="提尔温" />
-    <string id="aom_lord_S10_1_name" text="哈尔瓦德" />
-    <string id="aom_lord_S10_2_name" text="拉格恩希尔德" />
-    <string id="aom_lord_S10_3_name" text="阿恩凯尔" />
-    <string id="aom_lord_S10_4_name" text="托格里姆" />
-    <string id="aom_lord_S10_5_name" text="埃温德" />
-    <string id="aom_lord_S10_6_name" text="孙尼娃" />
-    <string id="aom_lord_S11_1_name" text="凯蒂尔" />
-    <string id="aom_lord_S11_2_name" text="古德伦" />
-    <string id="aom_lord_S11_3_name" text="奥尔姆" />
-    <string id="aom_lord_S11_4_name" text="斯库利" />
-    <string id="aom_lord_S11_5_name" text="维格迪丝" />
-    <string id="aom_lord_S11_6_name" text="赫拉芬" />
-    <string id="aom_lord_S12_1_name" text="奥塔尔" />
-    <string id="aom_lord_S12_2_name" text="阿莎" />
-    <string id="aom_lord_S12_3_name" text="盖尔蒙德" />
-    <string id="aom_lord_S12_4_name" text="比亚尼" />
-    <string id="aom_lord_S12_5_name" text="科尔贝因" />
-    <string id="aom_lord_S13_1_name" text="斯塔尔卡德" />
-    <string id="aom_lord_S13_2_name" text="托拉" />
-    <string id="aom_lord_S13_3_name" text="奥敦" />
-    <string id="aom_lord_S13_4_name" text="英瓦尔" />
-    <string id="aom_lord_S13_5_name" text="索尔薇格" />
-    <string id="aom_lord_S14_1_name" text="托尔莫德" />
-    <string id="aom_lord_S14_2_name" text="海尔嘉" />
-    <string id="aom_lord_S14_3_name" text="布林亚尔" />
-    <string id="aom_lord_S14_4_name" text="瓦尔加德" />
-    <string id="aom_lord_S14_5_name" text="伊尔莎" />
-    <string id="aom_lord_CA1_1_name" text="阿兰希尔" />
-    <string id="aom_lord_CA1_2_name" text="贝莱梭" />
-    <string id="aom_lord_CA1_3_name" text="埃兰迪丝" />
-    <string id="aom_lord_CA1_4_name" text="艾琳" />
-    <string id="aom_lord_CA2_1_name" text="卡拉梭" />
-    <string id="aom_lord_CA2_2_name" text="阿纳尔迪尔" />
-    <string id="aom_lord_CA2_3_name" text="戴瑞尔" />
-    <string id="aom_lord_CA2_4_name" text="艾莉奈尔" />
-    <string id="aom_lord_CA3_1_name" text="巴拉赫尔" />
-    <string id="aom_lord_CA3_2_name" text="卡勒农" />
-    <string id="aom_lord_CA3_3_name" text="格外伦" />
-    <string id="aom_lord_CA3_4_name" text="林迪丝" />
-    <string id="aom_lord_CA4_1_name" text="多沙尔" />
-    <string id="aom_lord_CA4_2_name" text="希尔路因" />
-    <string id="aom_lord_CA4_3_name" text="米尔雯" />
-    <string id="aom_lord_CA4_4_name" text="赛琳德" />
-    <string id="aom_lord_RH1_1_name" text="贝雷戈恩" />
-    <string id="aom_lord_RH1_2_name" text="卡多恩" />
-    <string id="aom_lord_RH1_3_name" text="吉尔温" />
-    <string id="aom_lord_RH1_4_name" text="布兰温" />
-    <string id="aom_lord_RH2_1_name" text="科兰" />
-    <string id="aom_lord_RH2_2_name" text="埃瑞德希尔" />
-    <string id="aom_lord_RH2_3_name" text="艾尔莉丝" />
-    <string id="aom_lord_RH2_4_name" text="海莱兹" />
-    <string id="aom_lord_RH3_1_name" text="戈兰" />
-    <string id="aom_lord_RH3_2_name" text="哈诺斯" />
-    <string id="aom_lord_RH3_3_name" text="奥尔温" />
-    <string id="aom_lord_RH3_4_name" text="塞伦" />
+    <string id="aom_lord_AN1_1_name" text="阿拉纳斯" />
+    <string id="aom_lord_AN1_2_name" text="阿兰博" />
+    <string id="aom_lord_AN1_3_name" text="凯勒布洛斯" />
+    <string id="aom_lord_AN1_4_name" text="帕露瑞恩" />
+    <string id="aom_lord_AN2_1_name" text="埃卢希尔" />
+    <string id="aom_lord_AN2_2_name" text="安度纳尔" />
+    <string id="aom_lord_AN2_3_name" text="塞琳德" />
+    <string id="aom_lord_AN2_4_name" text="波文" />
+    <string id="aom_lord_AN3_1_name" text="劳伦迪尔" />
+    <string id="aom_lord_AN3_2_name" text="卡斯塔瑞安" />
+    <string id="aom_lord_AN3_3_name" text="弥尔雅耶尔" />
+    <string id="aom_lord_AN3_4_name" text="林多瑞" />
+    <string id="aom_lord_AN4_1_name" text="贝烈加" />
+    <string id="aom_lord_AN4_2_name" text="泰列姆迈特" />
+    <string id="aom_lord_AN4_3_name" text="洛温德" />
+    <string id="aom_lord_AN4_4_name" text="瓦尔迪尔梅" />
+    <string id="aom_lord_AN5_1_name" text="埃斯泰尔莫" />
+    <string id="aom_lord_AN5_2_name" text="赫马奇尔" />
+    <string id="aom_lord_AN5_3_name" text="诺莉尔" />
+    <string id="aom_lord_AN5_4_name" text="芬维因" />
+    <string id="aom_lord_S10_1_name" text="兰德罗伊" />
+    <string id="aom_lord_S10_2_name" text="海尔嘉" />
+    <string id="aom_lord_S10_3_name" text="拉格纳" />
+    <string id="aom_lord_S10_4_name" text="克努特" />
+    <string id="aom_lord_S10_5_name" text="耶德瓦德" />
+    <string id="aom_lord_S10_6_name" text="玛丽亚" />
+    <string id="aom_lord_S11_1_name" text="西格特吕格" />
+    <string id="aom_lord_S11_2_name" text="博希尔德" />
+    <string id="aom_lord_S11_3_name" text="科尔比约恩" />
+    <string id="aom_lord_S11_4_name" text="阿斯格" />
+    <string id="aom_lord_S11_5_name" text="英格格德" />
+    <string id="aom_lord_S11_6_name" text="布里多芬" />
+    <string id="aom_lord_S12_1_name" text="赫尔吉" />
+    <string id="aom_lord_S12_2_name" text="埃丽卡" />
+    <string id="aom_lord_S12_3_name" text="弗雷德里克" />
+    <string id="aom_lord_S12_4_name" text="布拉格" />
+    <string id="aom_lord_S12_5_name" text="本格特" />
+    <string id="aom_lord_S13_1_name" text="阿尔内" />
+    <string id="aom_lord_S13_2_name" text="路易特加德" />
+    <string id="aom_lord_S13_3_name" text="托尔芬" />
+    <string id="aom_lord_S13_4_name" text="斯韦克尔" />
+    <string id="aom_lord_S13_5_name" text="英弗丽德" />
+    <string id="aom_lord_S14_1_name" text="斯滕" />
+    <string id="aom_lord_S14_2_name" text="埃德吉芙" />
+    <string id="aom_lord_S14_3_name" text="霍尔格" />
+    <string id="aom_lord_S14_4_name" text="斯特纳" />
+    <string id="aom_lord_S14_5_name" text="英格丽德" />
+    <string id="aom_lord_CA1_1_name" text="奥斯希尔" />
+    <string id="aom_lord_CA1_2_name" text="塔维吉尔" />
+    <string id="aom_lord_CA1_3_name" text="库路瑞恩" />
+    <string id="aom_lord_CA1_4_name" text="努妮丝" />
+    <string id="aom_lord_CA2_1_name" text="阿勒达米尔" />
+    <string id="aom_lord_CA2_2_name" text="弥伦杜尔" />
+    <string id="aom_lord_CA2_3_name" text="格外温" />
+    <string id="aom_lord_CA2_4_name" text="塞勒雯" />
+    <string id="aom_lord_CA3_1_name" text="埃洛恩" />
+    <string id="aom_lord_CA3_2_name" text="泰尔克瑞斯特" />
+    <string id="aom_lord_CA3_3_name" text="莱尔雯" />
+    <string id="aom_lord_CA3_4_name" text="法艾利芙林" />
+    <string id="aom_lord_CA4_1_name" text="迈安迪尔" />
+    <string id="aom_lord_CA4_2_name" text="格温多" />
+    <string id="aom_lord_CA4_3_name" text="希瑞尔" />
+    <string id="aom_lord_CA4_4_name" text="凯勒布琳黛" />
+    <string id="aom_lord_RH1_1_name" text="埃拉马斯" />
+    <string id="aom_lord_RH1_2_name" text="埃德希利安" />
+    <string id="aom_lord_RH1_3_name" text="西德雯" />
+    <string id="aom_lord_RH1_4_name" text="马利恩" />
+    <string id="aom_lord_RH2_1_name" text="卡拉塔" />
+    <string id="aom_lord_RH2_2_name" text="巴拉贡德" />
+    <string id="aom_lord_RH2_3_name" text="陶瑞恩" />
+    <string id="aom_lord_RH2_4_name" text="艾瑞恩" />
+    <string id="aom_lord_RH3_1_name" text="奥隆托" />
+    <string id="aom_lord_RH3_2_name" text="阿拉坦" />
+    <string id="aom_lord_RH3_3_name" text="奥尔雯" />
+    <string id="aom_lord_RH3_4_name" text="梅莱尼斯" />
     <string id="aom_lord_LN3_1_name" text="迈卡萨玛" />
     <string id="aom_lord_LN3_2_name" text="埃德塔瑞尔" />
     <string id="aom_lord_LN3_3_name" text="塔兰希尔" />
     <string id="aom_lord_LN3_4_name" text="宁洛塞尔" />
     <string id="aom_lord_LN4_1_name" text="安罗德" />
-    <string id="aom_lord_LN4_2_name" text="阿达涅尔" />
+    <string id="aom_lord_LN4_2_name" text="阿达奈尔" />
     <string id="aom_lord_LN4_3_name" text="梅吉尔希尔" />
     <string id="aom_lord_LN5_1_name" text="路伊诺尔" />
     <string id="aom_lord_LN5_2_name" text="凯勒布玟" />
@@ -1099,65 +1099,65 @@
     <string id="aom_lord_EL4_2_name" text="维尔菲尔" />
     <string id="aom_lord_EL4_3_name" text="拉格娜" />
     <string id="aom_lord_EL4_4_name" text="赫尔迪丝" />
-    <string id="aom_lord_AND1_1_name" text="英戈马" />
-    <string id="aom_lord_AND1_2_name" text="安西拉" />
-    <string id="aom_lord_AND1_3_name" text="古迪拉" />
-    <string id="aom_lord_AND1_4_name" text="里奎拉" />
-    <string id="aom_lord_AND2_1_name" text="赫罗迪瓦" />
-    <string id="aom_lord_AND2_2_name" text="盖萨" />
-    <string id="aom_lord_AND2_3_name" text="希尔迪瓦拉" />
-    <string id="aom_lord_AND2_4_name" text="苏尼尔达" />
-    <string id="aom_lord_AND3_1_name" text="柳德里克" />
-    <string id="aom_lord_AND3_2_name" text="万迪尔" />
-    <string id="aom_lord_AND3_3_name" text="威利斯温莎" />
-    <string id="aom_lord_AND3_4_name" text="安西瓦拉" />
+    <string id="aom_lord_AND1_1_name" text="西奥德米罗" />
+    <string id="aom_lord_AND1_2_name" text="瓦尔达诺" />
+    <string id="aom_lord_AND1_3_name" text="阿多辛达" />
+    <string id="aom_lord_AND1_4_name" text="里奇贝尔加" />
+    <string id="aom_lord_AND2_1_name" text="安布罗兹" />
+    <string id="aom_lord_AND2_2_name" text="阿里亚斯" />
+    <string id="aom_lord_AND2_3_name" text="蒙尼亚多姆娜" />
+    <string id="aom_lord_AND2_4_name" text="因贡迪斯" />
+    <string id="aom_lord_AND3_1_name" text="奥帕斯" />
+    <string id="aom_lord_AND3_2_name" text="阿奥里乔" />
+    <string id="aom_lord_AND3_3_name" text="西塞南达" />
+    <string id="aom_lord_AND3_4_name" text="古迪洛娜" />
     <string id="aom_lord_AV1_1_name" text="格里姆贝奥恩" />
-    <string id="aom_lord_AV1_2_name" text="奥斯贝奥恩" />
-    <string id="aom_lord_AV1_3_name" text="贝奥希尔德" />
-    <string id="aom_lord_AV1_4_name" text="阿尔德温" />
-    <string id="aom_lord_AV2_1_name" text="哈斯贝奥恩" />
-    <string id="aom_lord_AV2_2_name" text="埃德贝奥恩" />
-    <string id="aom_lord_AV2_3_name" text="希尔德堡" />
-    <string id="aom_lord_AV2_4_name" text="奥斯吉丝" />
-    <string id="aom_lord_AV3_1_name" text="格林伍尔夫" />
-    <string id="aom_lord_AV3_2_name" text="瑟斯坦" />
-    <string id="aom_lord_AV3_3_name" text="埃德温" />
-    <string id="aom_lord_AV3_4_name" text="伍尔夫伦" />
-    <string id="aom_lord_AV4_1_name" text="伍尔夫赫雷" />
-    <string id="aom_lord_AV4_2_name" text="布伦瓦尔德" />
-    <string id="aom_lord_AV4_3_name" text="米尔德吉丝" />
-    <string id="aom_lord_AV4_4_name" text="赫罗斯温" />
-    <string id="aom_lord_DO1_1_name" text="奥斯特里克" />
-    <string id="aom_lord_DO1_2_name" text="哈尔里克" />
-    <string id="aom_lord_DO1_3_name" text="阿尔迪丝" />
-    <string id="aom_lord_DO1_4_name" text="贝尔塔" />
-    <string id="aom_lord_DO2_1_name" text="托尔文" />
-    <string id="aom_lord_DO2_2_name" text="奥斯特马" />
-    <string id="aom_lord_DO2_3_name" text="吉塞拉" />
-    <string id="aom_lord_DO2_4_name" text="希尔德" />
-    <string id="aom_lord_DO3_1_name" text="格鲁尔夫" />
-    <string id="aom_lord_DO3_2_name" text="阿尔德温" />
-    <string id="aom_lord_DO3_3_name" text="伊尔姆加德" />
-    <string id="aom_lord_DO3_4_name" text="柳特加德" />
-    <string id="aom_lord_DO4_1_name" text="贝伦加尔" />
-    <string id="aom_lord_DO4_2_name" text="雷德里克" />
-    <string id="aom_lord_DO4_3_name" text="玛蒂尔德" />
-    <string id="aom_lord_DO4_4_name" text="奥达" />
-    <string id="aom_lord_SRH1_1_name" text="维杜马尔" />
-    <string id="aom_lord_SRH1_2_name" text="马尔赫温" />
-    <string id="aom_lord_SRH1_3_name" text="阿玛拉贝尔加" />
-    <string id="aom_lord_SRH1_4_name" text="希尔德贡德" />
-    <string id="aom_lord_SRH2_1_name" text="特拉萨里克" />
-    <string id="aom_lord_SRH2_2_name" text="维德里克" />
-    <string id="aom_lord_SRH2_3_name" text="斯万希尔达" />
-    <string id="aom_lord_SRH2_4_name" text="特奥德戈莎" />
-    <string id="aom_lord_SRH3_1_name" text="贝雷穆德" />
-    <string id="aom_lord_SRH3_2_name" text="贡德里克" />
-    <string id="aom_lord_SRH3_3_name" text="罗特鲁迪丝" />
-    <string id="aom_lord_SRH3_4_name" text="布伦希尔迪丝" />
-    <string id="aom_lord_SRH4_1_name" text="赫罗杜尔夫" />
-    <string id="aom_lord_SRH4_2_name" text="西吉里克" />
-    <string id="aom_lord_SRH4_3_name" text="安斯加德" />
-    <string id="aom_lord_SRH4_4_name" text="吉斯拉" />
+    <string id="aom_lord_AV1_2_name" text="奥尔贝奥恩" />
+    <string id="aom_lord_AV1_3_name" text="埃尔梅内贝尔加" />
+    <string id="aom_lord_AV1_4_name" text="维尼迪尔达" />
+    <string id="aom_lord_AV2_1_name" text="埃吉科" />
+    <string id="aom_lord_AV2_2_name" text="阿塔纳吉尔多" />
+    <string id="aom_lord_AV2_3_name" text="阿尔吉洛" />
+    <string id="aom_lord_AV2_4_name" text="西比莉娅" />
+    <string id="aom_lord_AV3_1_name" text="巴莱乔" />
+    <string id="aom_lord_AV3_2_name" text="迪亚科" />
+    <string id="aom_lord_AV3_3_name" text="帕特尔娜" />
+    <string id="aom_lord_AV3_4_name" text="埃尔东萨" />
+    <string id="aom_lord_AV4_1_name" text="马德鲁巴尔" />
+    <string id="aom_lord_AV4_2_name" text="马塔戈" />
+    <string id="aom_lord_AV4_3_name" text="梅德贝奥恩" />
+    <string id="aom_lord_AV4_4_name" text="埃吉洛娜" />
+    <string id="aom_lord_DO1_1_name" text="哈温" />
+    <string id="aom_lord_DO1_2_name" text="布拉多辛" />
+    <string id="aom_lord_DO1_3_name" text="西塞温" />
+    <string id="aom_lord_DO1_4_name" text="芙蕾雅" />
+    <string id="aom_lord_DO2_1_name" text="维杜马尔" />
+    <string id="aom_lord_DO2_2_name" text="戈多马尔" />
+    <string id="aom_lord_DO2_3_name" text="阿里贝尔加" />
+    <string id="aom_lord_DO2_4_name" text="维杜辛莎" />
+    <string id="aom_lord_DO3_1_name" text="斯温" />
+    <string id="aom_lord_DO3_2_name" text="哈沃德" />
+    <string id="aom_lord_DO3_3_name" text="索贝尔塔" />
+    <string id="aom_lord_DO3_4_name" text="马辛萨" />
+    <string id="aom_lord_DO4_1_name" text="里卡尔" />
+    <string id="aom_lord_DO4_2_name" text="塔拉斯" />
+    <string id="aom_lord_DO4_3_name" text="伊迪斯" />
+    <string id="aom_lord_DO4_4_name" text="阿斯塔" />
+    <string id="aom_lord_SRH1_1_name" text="苏涅弗雷多" />
+    <string id="aom_lord_SRH1_2_name" text="维杜吉尔德" />
+    <string id="aom_lord_SRH1_3_name" text="奥内卡" />
+    <string id="aom_lord_SRH1_4_name" text="英格尔" />
+    <string id="aom_lord_SRH2_1_name" text="阿拉西奥" />
+    <string id="aom_lord_SRH2_2_name" text="奥巴达" />
+    <string id="aom_lord_SRH2_3_name" text="阿拉贡特" />
+    <string id="aom_lord_SRH2_4_name" text="乌拉卡" />
+    <string id="aom_lord_SRH3_1_name" text="厄门里克" />
+    <string id="aom_lord_SRH3_2_name" text="古思弗里斯" />
+    <string id="aom_lord_SRH3_3_name" text="阿维娜" />
+    <string id="aom_lord_SRH3_4_name" text="朱迪丝" />
+    <string id="aom_lord_SRH4_1_name" text="瑟迪克" />
+    <string id="aom_lord_SRH4_2_name" text="赫洛西尔" />
+    <string id="aom_lord_SRH4_3_name" text="辛妮堡" />
+    <string id="aom_lord_SRH4_4_name" text="艾塞堡" />
   </strings>
 </base>

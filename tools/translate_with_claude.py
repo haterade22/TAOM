@@ -477,11 +477,14 @@ def save_cache(lang: str, cache: dict[str, str], cache_dir: Path = CACHE_DIR) ->
 # engine tokens ({newline}, {InvasionScenarioFactionId}). `{=key}` ids and `{?...}`
 # conditionals do not match: `=` and `?` are outside the identifier class.
 VAR_PATTERN = re.compile(r"\{[A-Za-z_][A-Za-z0-9_.]*\}")
-# Conditional structures: {?VAR}...{?}...{\?} OR {?VAR}...{\?}
+# Conditional structures: {?VAR}...{?}...{\?}. The engine needs the {?} (or {:}) else branch: after a branch
+# MBTextParser accepts only {?X}, {?} or {:}, so {?VAR}...{\?} alone fails to parse.
 # A head may be a name ({?PLURAL}) or an expression ({?DAYS>1}); {?} (the else) has no head and is not counted.
 CONDITIONAL_OPEN = re.compile(r"\{\?[^{}?]+\}")
 CONDITIONAL_MID = re.compile(r"\{\?\}")
 CONDITIONAL_CLOSE = re.compile(r"\{\\\?\}")
+# The engine's selection and field syntax (MBTextParser: SelectionStarter "{#", FieldStarter "{@").
+ENGINE_FUNCTION = re.compile(r"\{(?:[#@][^{}]*|\\[#@])\}")
 # Conversation animation tags ([ib:closed] body pose, [if:convo_angry] face; rb/rf the reactions), counted per exact tag.
 EXPRESSION_TAG = re.compile(r"\[(?:ib|if|rb|rf):[^\]]*\]")
 
@@ -504,11 +507,18 @@ def extract_placeholders(text: str) -> dict[str, int]:
     counts["__cond_close__"] = len(CONDITIONAL_CLOSE.findall(text))
     for m in EXPRESSION_TAG.findall(text):
         counts[m] = counts.get(m, 0) + 1
+    # Every bracket and brace: the engine strips each [...] (a stray [ hides the rest of the line, and a plain
+    # [...] after [rb:X] takes its reaction slot), and a stray brace breaks the tokenizer. The engine's selection
+    # and field functions ({#GENDER(X)}..{#}..{\#}, {@Plural}..{\@}) are a language's own grammar, so a
+    # translation may add them; they are left out of the count.
+    bare = ENGINE_FUNCTION.sub("", text)
+    for c in "[]{}":
+        counts[f"__{c}__"] = bare.count(c)
     return counts
 
 
 def placeholders_match(english: str, translated: str) -> tuple[bool, str]:
-    """Return (ok, reason): checks variable, conditional, grammar-tag and animation-tag preservation."""
+    """Return (ok, reason): checks variable, conditional, grammar-tag, animation-tag, bracket and brace preservation."""
     e = extract_placeholders(english)
     t = extract_placeholders(translated)
     if e != t:

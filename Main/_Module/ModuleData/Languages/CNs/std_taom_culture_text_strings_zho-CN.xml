@@ -1401,7 +1401,7 @@
     <string id="aom_mordor_female_name_20" text="戈尔莎" />
     <string id="aom_mordor_female_name_21" text="布尔迦" />
     <string id="aom_mordor_female_name_22" text="斯库尔娜" />
-    <string id="aom_mordor_female_name_23" text="古尔娜" />
+    <string id="aom_mordor_female_name_23" text="洛尔卡" />
     <string id="aom_mordor_female_name_24" text="乌夫莎" />
     <string id="aom_mordor_female_name_25" text="格里姆布尔" />
     <string id="aom_mordor_female_name_26" text="纳尔迦" />
@@ -1416,12 +1416,12 @@
     <string id="aom_mordor_female_name_34" text="布尔格娜" />
     <string id="aom_mordor_female_name_35" text="加什拉" />
     <string id="aom_mordor_female_name_36" text="克鲁莎" />
-    <string id="aom_mordor_female_name_37" text="卢尔迦" />
+    <string id="aom_mordor_female_name_37" text="佐尔格拉" />
     <string id="aom_mordor_female_name_38" text="杜格莎" />
     <string id="aom_mordor_female_name_39" text="斯库尔巴" />
     <string id="aom_mordor_female_name_4" text="穆尔扎格" />
     <string id="aom_mordor_female_name_40" text="加尔布娜" />
-    <string id="aom_mordor_female_name_41" text="努尔迦" />
+    <string id="aom_mordor_female_name_41" text="克拉拉" />
     <string id="aom_mordor_female_name_42" text="斯鲁莎" />
     <string id="aom_mordor_female_name_43" text="乌尔格娜" />
     <string id="aom_mordor_female_name_44" text="古尔布拉" />
@@ -1437,7 +1437,7 @@
     <string id="aom_mordor_female_name_8" text="斯拉克娜" />
     <string id="aom_mordor_female_name_9" text="格鲁莎" />
     <string id="aom_mordor_male_name_1" text="戈巴格" />
-    <string id="aom_mordor_male_name_10" text="波格" />
+    <string id="aom_mordor_male_name_10" text="波尔格" />
     <string id="aom_mordor_male_name_11" text="矛胡尔" />
     <string id="aom_mordor_male_name_12" text="乌格鲁克" />
     <string id="aom_mordor_male_name_13" text="加什纳克" />
@@ -1447,11 +1447,11 @@
     <string id="aom_mordor_male_name_17" text="格林布尔兹" />
     <string id="aom_mordor_male_name_18" text="布尔扎什" />
     <string id="aom_mordor_male_name_19" text="纳兹古尔" />
-    <string id="aom_mordor_male_name_2" text="夏格拉特" />
+    <string id="aom_mordor_male_name_2" text="沙格拉特" />
     <string id="aom_mordor_male_name_20" text="古尔斯拉克" />
     <string id="aom_mordor_male_name_21" text="斯库尔加特" />
     <string id="aom_mordor_male_name_22" text="奥尔加什" />
-    <string id="aom_mordor_male_name_23" text="卢格杜什" />
+    <string id="aom_mordor_male_name_23" text="路格都什" />
     <string id="aom_mordor_male_name_24" text="克鲁姆加特" />
     <string id="aom_mordor_male_name_25" text="萨鲁克" />
     <string id="aom_mordor_male_name_26" text="戈鲁尔" />
@@ -1475,16 +1475,16 @@
     <string id="aom_mordor_male_name_42" text="戈尔拉格" />
     <string id="aom_mordor_male_name_43" text="努尔兹加什" />
     <string id="aom_mordor_male_name_44" text="杜什戈布" />
-    <string id="aom_mordor_male_name_45" text="古尔巴格" />
+    <string id="aom_mordor_male_name_45" text="扎尔诺克" />
     <string id="aom_mordor_male_name_46" text="克里姆古尔" />
     <string id="aom_mordor_male_name_47" text="斯拉克努尔" />
     <string id="aom_mordor_male_name_48" text="斯卡鲁格" />
     <string id="aom_mordor_male_name_49" text="布尔戈尔" />
-    <string id="aom_mordor_male_name_5" text="拉格杜夫" />
+    <string id="aom_mordor_male_name_5" text="拉格都夫" />
     <string id="aom_mordor_male_name_50" text="格鲁巴什" />
-    <string id="aom_mordor_male_name_6" text="拉德布格" />
-    <string id="aom_mordor_male_name_7" text="乌夫萨克" />
-    <string id="aom_mordor_male_name_8" text="斯纳加" />
+    <string id="aom_mordor_male_name_6" text="拉得布格" />
+    <string id="aom_mordor_male_name_7" text="乌夫沙克" />
+    <string id="aom_mordor_male_name_8" text="斯那嘎" />
     <string id="aom_mordor_male_name_9" text="戈斯魔格" />
     <string id="aom_mordor_name" text="魔多" />
     <string id="aom_rivendell_clan_1" text="埃尔隆德家族" />
@@ -2038,7 +2038,7 @@
     <string id="aom_eredluin_clan_11" text="矮人路守护者" />
     <string id="aom_eredluin_clan_12" text="加米尔家族" />
     <string id="aom_eredluin_clan_2" text="德瓦林家族" />
-    <string id="aom_eredluin_clan_3" text="乌瑞家族" />
+    <string id="aom_eredluin_clan_3" text="乌里家族" />
     <string id="aom_eredluin_clan_4" text="埃尔德兰家族" />
     <string id="aom_eredluin_clan_5" text="弗雷林家族" />
     <string id="aom_eredluin_clan_6" text="纳维家族" />

@@ -554,15 +554,15 @@
     <string id="TAOM_clan_empire_south_7" text="布拉格祖基什" />
     <string id="TAOM_clan_empire_south_8" text="霍拉希姆" />
     <string id="TAOM_clan_empire_south_9" text="瓦烏林" />
-    <string id="TAOM_clan_sturgia_1" text="吉里昂家族" />
-    <string id="TAOM_clan_sturgia_2" text="巴德家族" />
-    <string id="TAOM_clan_sturgia_3" text="布蘭德家族" />
-    <string id="TAOM_clan_sturgia_4" text="貝恩家族" />
-    <string id="TAOM_clan_sturgia_5" text="河谷鎮家族" />
-    <string id="TAOM_clan_sturgia_6" text="河流家族" />
-    <string id="TAOM_clan_sturgia_7" text="弓箭手家族" />
-    <string id="TAOM_clan_sturgia_8" text="長湖家族" />
-    <string id="TAOM_clan_sturgia_9" text="屠龍者家族" />
+    <string id="TAOM_clan_sturgia_1" text="巴德家族" />
+    <string id="TAOM_clan_sturgia_2" text="穆勒" />
+    <string id="TAOM_clan_sturgia_3" text="歐帕林" />
+    <string id="TAOM_clan_sturgia_4" text="格蘭布魯克" />
+    <string id="TAOM_clan_sturgia_5" text="弗萊加" />
+    <string id="TAOM_clan_sturgia_6" text="泰利歐" />
+    <string id="TAOM_clan_sturgia_7" text="狼堡" />
+    <string id="TAOM_clan_sturgia_8" text="芙蕾雅" />
+    <string id="TAOM_clan_sturgia_9" text="阿恩斯提爾" />
     <string id="TAOM_clan_aserai_1" text="艾耶裏卡" />
     <string id="TAOM_clan_aserai_2" text="哈德諾邁阿" />
     <string id="TAOM_clan_aserai_3" text="卡馬拉卡" />
@@ -648,7 +648,7 @@
     <string id="aom_lord_1_4_name" text="“鐵爪”布倫希爾德" />
     <string id="aom_lord_1_5_name" text="“狂野者”奧瑟裏克" />
     <string id="aom_lord_1_6_name" text="“牛角”托瓦爾德" />
-    <string id="aom_lord_1_7_name" text="迪耐瑟二世" />
+    <string id="aom_lord_1_7_name" text="德內梭爾二世" />
     <string id="aom_lord_1_8_name" text="胡里歐涅絲" />
     <string id="aom_lord_1_9_name" text="伊姆拉希爾" />
     <string id="aom_lord_1_10_name" text="阿蘭尼爾" />
@@ -699,9 +699,9 @@
     <string id="aom_lord_1_67_name" text="“羽矢”埃奧爾溫" />
     <string id="aom_lord_1_40_name" text="德爾沃林" />
     <string id="aom_lord_1_46_name" text="彌羅斯" />
-    <string id="aom_lord_1_45_name" text="佛龍" />
+    <string id="aom_lord_1_45_name" text="佛朗" />
     <string id="aom_lord_1_57_name" text="巴拉諾爾" />
-    <string id="aom_lord_1_52_name" text="希路因" />
+    <string id="aom_lord_1_52_name" text="希爾路因" />
     <string id="aom_lord_1_53_name" text="安格博" />
     <string id="aom_lord_1_71_name" text="戈拉斯吉爾" />
     <string id="aom_lord_1_73_name" text="俄瓦戈斯" />
@@ -770,56 +770,56 @@
     <string id="aom_lord_1_69_2_name" text="多拉提拉" />
     <string id="aom_lord_1_72_1_name" text="維維安娜" />
     <string id="aom_lord_1_74_1_name" text="澤娜" />
-    <string id="aom_lord_2_1_name" text="巴德二世" />
-    <string id="aom_lord_2_2_name" text="阿絲塔" />
-    <string id="aom_lord_2_3_name" text="蘭德" />
-    <string id="aom_lord_2_4_name" text="西加" />
-    <string id="aom_lord_2_5_name" text="阿斯克" />
-    <string id="aom_lord_2_6_name" text="埃爾塔" />
-    <string id="aom_lord_2_7_name" text="西米爾" />
-    <string id="aom_lord_2_8_name" text="烏里克" />
-    <string id="aom_lord_2_9_name" text="雷克" />
-    <string id="aom_lord_2_10_name" text="瓦拉" />
-    <string id="aom_lord_2_11_name" text="伊德倫" />
-    <string id="aom_lord_2_111_name" text="羅茲沃爾" />
-    <string id="aom_lord_2_12_name" text="斯瓦娜" />
-    <string id="aom_lord_2_121_name" text="奧斯文" />
-    <string id="aom_lord_2_13_name" text="維達爾" />
-    <string id="aom_lord_2_14_name" text="伊斯凡" />
-    <string id="aom_lord_2_15_name" text="拉塔哥斯特" />
-    <string id="aom_lord_2_16_name" text="豪克" />
-    <string id="aom_lord_2_17_name" text="斯坦" />
-    <string id="aom_lord_2_18_name" text="烏爾夫" />
-    <string id="aom_lord_2_19_name" text="蓋爾" />
-    <string id="aom_lord_2_20_name" text="瓦爾" />
-    <string id="aom_lord_2_21_name" text="斯維多恩" />
-    <string id="aom_lord_2_22_name" text="拉紹內克" />
-    <string id="aom_lord_2_23_name" text="加爾登" />
-    <string id="aom_lord_2_24_name" text="阿爾瓦" />
-    <string id="aom_lord_2_4_1_name" text="阿波拉妮婭" />
-    <string id="aom_lord_2_7_1_name" text="米米爾" />
-    <string id="aom_lord_2_13_1_name" text="莉莉莎" />
-    <string id="aom_lord_2_13_2_name" text="安德魯塔" />
-    <string id="aom_lord_2_13_3_name" text="盧達" />
-    <string id="aom_lord_2_13_4_name" text="蒂塔" />
-    <string id="aom_lord_2_14_1_name" text="瓦爾卡娃" />
-    <string id="aom_lord_2_14_2_name" text="扎維蕾娜" />
-    <string id="aom_lord_2_14_3_name" text="維茲杜娜" />
-    <string id="aom_lord_2_15_1_name" text="雅恰娜" />
-    <string id="aom_lord_2_15_2_name" text="米蘭卡" />
-    <string id="aom_lord_2_15_3_name" text="維莉娜" />
-    <string id="aom_lord_2_15_4_name" text="博萬" />
-    <string id="aom_lord_2_16_1_name" text="提雅絲卡" />
-    <string id="aom_lord_2_17_1_name" text="德拉查" />
-    <string id="aom_lord_2_18_1_name" text="佐里卡" />
-    <string id="aom_lord_2_19_1_name" text="維托米拉" />
-    <string id="aom_lord_2_20_1_name" text="基莎" />
-    <string id="aom_lord_2_21_1_name" text="伊茲登卡" />
-    <string id="aom_lord_2_22_1_name" text="珍妮娃" />
-    <string id="aom_lord_2_23_1_name" text="茲拉特卡" />
-    <string id="aom_lord_2_24_1_name" text="佐琳娜" />
-    <string id="aom_dead_lord_2_1_name" text="老奧列克" />
-    <string id="aom_dead_lord_2_2_name" text="瓦拉" />
+    <string id="aom_lord_2_1_name" text="布蘭德" />
+    <string id="aom_lord_2_2_name" text="埃爾娜" />
+    <string id="aom_lord_2_3_name" text="奧拉夫" />
+    <string id="aom_lord_2_4_name" text="阿爾弗里德" />
+    <string id="aom_lord_2_5_name" text="巴爾德" />
+    <string id="aom_lord_2_6_name" text="西格麗德" />
+    <string id="aom_lord_2_7_name" text="巴德" />
+    <string id="aom_lord_2_8_name" text="希亞爾馬" />
+    <string id="aom_lord_2_9_name" text="托爾比約恩" />
+    <string id="aom_lord_2_10_name" text="希安娜" />
+    <string id="aom_lord_2_11_name" text="埃絲特" />
+    <string id="aom_lord_2_111_name" text="烏貝" />
+    <string id="aom_lord_2_12_name" text="索爾迪斯" />
+    <string id="aom_lord_2_121_name" text="英格瓦" />
+    <string id="aom_lord_2_13_name" text="布林諾夫" />
+    <string id="aom_lord_2_14_name" text="雷格娜" />
+    <string id="aom_lord_2_15_name" text="西蒙" />
+    <string id="aom_lord_2_16_name" text="羅蘭" />
+    <string id="aom_lord_2_17_name" text="麥斯威爾" />
+    <string id="aom_lord_2_18_name" text="凱提爾蒙德" />
+    <string id="aom_lord_2_19_name" text="吉瑞安" />
+    <string id="aom_lord_2_20_name" text="霍坎" />
+    <string id="aom_lord_2_21_name" text="雅各布" />
+    <string id="aom_lord_2_22_name" text="霍爾登" />
+    <string id="aom_lord_2_23_name" text="拉格恩瓦爾德" />
+    <string id="aom_lord_2_24_name" text="史蒂夫隆" />
+    <string id="aom_lord_2_4_1_name" text="米克拉" />
+    <string id="aom_lord_2_7_1_name" text="布林" />
+    <string id="aom_lord_2_13_1_name" text="阿斯翠德" />
+    <string id="aom_lord_2_13_2_name" text="海拉" />
+    <string id="aom_lord_2_13_3_name" text="斯萬希爾德" />
+    <string id="aom_lord_2_13_4_name" text="波迪爾" />
+    <string id="aom_lord_2_14_1_name" text="蒂爾妲" />
+    <string id="aom_lord_2_14_2_name" text="柯黛莉亞" />
+    <string id="aom_lord_2_14_3_name" text="艾米莉亞" />
+    <string id="aom_lord_2_15_1_name" text="莉芙" />
+    <string id="aom_lord_2_15_2_name" text="塞西莉亞" />
+    <string id="aom_lord_2_15_3_name" text="珊娜" />
+    <string id="aom_lord_2_15_4_name" text="阿恩法斯特" />
+    <string id="aom_lord_2_16_1_name" text="貝雅塔" />
+    <string id="aom_lord_2_17_1_name" text="阿嘉莎" />
+    <string id="aom_lord_2_18_1_name" text="卡琳" />
+    <string id="aom_lord_2_19_1_name" text="奧瑟" />
+    <string id="aom_lord_2_20_1_name" text="格蕾特" />
+    <string id="aom_lord_2_21_1_name" text="瑪莎" />
+    <string id="aom_lord_2_22_1_name" text="拉格恩弗莉德" />
+    <string id="aom_lord_2_23_1_name" text="霍姆芙麗德" />
+    <string id="aom_lord_2_24_1_name" text="艾格溫" />
+    <string id="aom_dead_lord_2_1_name" text="老哈夫丹" />
+    <string id="aom_dead_lord_2_2_name" text="烏爾芙希爾德" />
     <string id="aom_lord_3_1_name" text="喀杜拉克" />
     <string id="aom_lord_3_2_name" text="哈莉達" />
     <string id="aom_lord_3_3_name" text="馬爾祖克" />
@@ -1023,11 +1023,11 @@
     <string id="aom_lord_NE9_d_name" text="“蛇擊”西爾瓦" />
     <string id="aom_lord_NE9_l_name" text="“破鱗者”瓦爾索爾" />
     <string id="aom_lord_NE9_s_name" text="“斷牙”魯裏克" />
-    <string id="aom_lord_S8_u_name" text="加利克" />
-    <string id="aom_lord_S9_c_name" text="佛林" />
-    <string id="aom_lord_S9_l_name" text="奧瓦爾" />
-    <string id="aom_lord_S9_m_name" text="達基拉" />
-    <string id="aom_lord_S9_u_name" text="查斯提米爾" />
+    <string id="aom_lord_S8_u_name" text="奧爾瓦" />
+    <string id="aom_lord_S9_c_name" text="古納爾" />
+    <string id="aom_lord_S9_l_name" text="托爾吉爾斯" />
+    <string id="aom_lord_S9_m_name" text="古德倫" />
+    <string id="aom_lord_S9_u_name" text="阿斯比約恩" />
     <string id="aom_lord_SE8_c_name" text="沙格拉拉" />
     <string id="aom_lord_SE9_c1_name" text="帕加里奧斯" />
     <string id="aom_lord_SE9_c2_name" text="迪亞斯卡" />
@@ -1038,8 +1038,8 @@
     <string id="aom_lord_WE9_l_name" text="杜因希爾" />
     <string id="aom_lord_WE9_u_name" text="杜伊林" />
     <string id="aom_lord_WE9_u2_name" text="羅斯芬" />
-    <string id="TAOM_hero_dead_2_1" text="老者歐雷克在保衛河谷邦、抵禦東夷劫掠者時陣亡。他的犧牲確保了山道的安全，全國歌謠皆傳頌其名。" />
-    <string id="TAOM_hero_dead_2_2" text="瓦拉是河谷邦的貴族女子，死於戰後的冬季瘟疫。她以對平民的慷慨施捨而聞名。" />
+    <string id="TAOM_hero_dead_2_1" text="老哈夫丹在抵禦東夷劫掠者、保衛河谷邦時陣亡。他的犧牲守住了山口，全王國的歌謠都傳頌著他。" />
+    <string id="TAOM_hero_dead_2_2" text="烏爾維德是河谷邦的貴婦，死於戰後那場冬日瘟疫。她以對平民的慷慨施捨而聞名。" />
     <string id="TAOM_hero_dead_3_1" text="尼姆爾是一位哈拉德人軍閥，曾在黑門之戰中率領沙漠騎兵。他死於剛鐸人的箭下，在南方卻被尊爲殉道者。" />
     <string id="TAOM_hero_dead_6_1" text="兀兒渾是一位偉大的可汗，最早將東夷各部族統一在魯恩的旗幟下。他的征服將黃金國度的邊界推進到了魯恩內海岸邊。" />
     <string id="TAOM_hero_dead_6_2" text="歲侖是一位受人尊敬的那顏，在與自由人民的戰鬥中陣亡。他的遺孀古爾提姆如今以堅定的決心領導着氏族。" />
@@ -1191,55 +1191,55 @@
     <string id="TAOM_hero_SE9_s" text="一位擁有黑暗力量的黑色努曼諾爾女巫。" />
     <string id="TAOM_hero_SE9_c1" text="黑色努曼諾爾家族的繼承人,受過黑暗術法的訓練。" />
     <string id="TAOM_hero_SE9_c2" text="黑色努曼諾爾領主的次子。" />
-    <string id="TAOM_hero_2_1" text="巴德二世,河谷邦國王,是殺死史矛革的傳奇人物弓箭手巴德的孫子。他統治著孤山腳下繁榮的王國,與孤山的矮人結盟。" />
-    <string id="TAOM_hero_2_2" text="雅絲妲是河谷邦的王后，以智慧與優雅深受愛戴。" />
-    <string id="TAOM_hero_2_13_1" text="莉莉莎是巴德家族貴族之女。" />
-    <string id="TAOM_hero_2_13_2" text="安德魯塔在國王的家臣之中任職。" />
-    <string id="TAOM_hero_2_13_3" text="露達是河谷邦的年輕貴族女子。" />
-    <string id="TAOM_hero_2_13_4" text="泰塔是河谷邦的貴族之女。" />
-    <string id="TAOM_hero_2_7" text="西米爾是河谷邦的王子，其父王位的繼承人。" />
-    <string id="TAOM_hero_2_7_1" text="米米爾是河谷邦王室的王子。" />
-    <string id="TAOM_hero_2_10" text="瓦拉是河谷邦的公主，受過外交與治國之術的訓練。" />
-    <string id="TAOM_hero_2_13" text="維達是北方邊疆的領主，抵禦東夷人的入侵。" />
-    <string id="TAOM_hero_2_3" text="蘭德是河谷邦的領主，東方谷地的守護者，維繫著與伊魯伯矮人的古老盟約。" />
-    <string id="TAOM_hero_2_4" text="希嘉是都靈血脈的矮人貴族女子。" />
-    <string id="TAOM_hero_2_4_1" text="阿波拉妮亞是出身高貴的矮人少女。" />
-    <string id="TAOM_hero_2_8" text="烏里克是孤山的矮人王子，精通鍛造與戰事。" />
-    <string id="TAOM_hero_2_11" text="伊德倫是皇家衛隊的矮人戰士。" />
-    <string id="TAOM_hero_2_111" text="羅茲沃爾是守衛山門的矮人戰士。" />
-    <string id="TAOM_hero_2_5" text="阿斯克是河谷邦的領主，掌管孤山與長湖之間的貿易路線。" />
-    <string id="TAOM_hero_2_6" text="艾塔是歐力的妻子,以寶石切割技藝聞名。" />
-    <string id="TAOM_hero_2_9" text="萊克是歐力領地的繼承人,接受過貿易與戰鬥的雙重訓練。" />
-    <string id="TAOM_hero_2_12" text="斯瓦娜是貿易家族的女兒。" />
-    <string id="TAOM_hero_2_121" text="奧斯文管理著山脈與城市之間的商隊。" />
-    <string id="TAOM_hero_2_14" text="伊斯凡是東境邊疆的領主,守衛著長湖。" />
-    <string id="TAOM_hero_2_14_1" text="瓦爾卡瓦是伊斯凡領主的妻子。" />
-    <string id="TAOM_hero_2_14_2" text="扎維雷娜是東境領地的繼承人。" />
-    <string id="TAOM_hero_2_14_3" text="維茲杜娜是東境邊疆的年輕貴族。" />
-    <string id="TAOM_hero_2_16" text="豪克是河谷邦的領主，主掌集市道路與冬季商隊。" />
-    <string id="TAOM_hero_2_16_1" text="緹亞絲卡是豪克之妻，精通療癒之術。" />
-    <string id="TAOM_hero_2_21" text="斯維多恩統率長湖鎮的守備隊。" />
-    <string id="TAOM_hero_2_21_1" text="伊茲登卡管理長湖鎮的事務。" />
-    <string id="TAOM_hero_2_17" text="斯坦因是河谷邦的領主，因在惡龍伏誅後的歲月中堅守北門而為人銘記。" />
-    <string id="TAOM_hero_2_17_1" text="德拉查保存著舊王的記憶。" />
-    <string id="TAOM_hero_2_22" text="拉肖內克統率河谷鎮的戰士。" />
-    <string id="TAOM_hero_2_22_1" text="熱涅娃是拉肖內克的妻子。" />
-    <string id="TAOM_hero_2_24" text="阿爾瓦是河谷鎮衛隊的隊長。" />
-    <string id="TAOM_hero_2_24_1" text="佐里娜是河谷鎮的貴族女士。" />
-    <string id="TAOM_hero_2_18" text="烏爾夫是河谷邦的領主，奔流河上河防隊的隊長。" />
-    <string id="TAOM_hero_2_18_1" text="佐莉卡是烏爾夫之妻，奔流河畔其廳堂的女主人。" />
-    <string id="TAOM_hero_2_23" text="加爾登統率河谷鎮的南方守備隊。" />
-    <string id="TAOM_hero_2_23_1" text="茲拉特卡是加爾登的女兒。" />
-    <string id="TAOM_hero_2_15" text="拉塔戈斯特是位智慧的顧問,就國家大事向國王獻策。" />
-    <string id="TAOM_hero_2_15_1" text="雅查娜在王室宮廷任職。" />
-    <string id="TAOM_hero_2_15_2" text="米蘭卡是宮廷的貴族女性。" />
-    <string id="TAOM_hero_2_15_3" text="維利娜侍奉皇室家族。" />
-    <string id="TAOM_hero_2_15_4" text="博萬是河谷鎮的年輕貴族。" />
-    <string id="TAOM_hero_2_19" text="蓋爾是河谷邦聲名遠播的戰士，與吉瑞安的古老血脈有親。" />
-    <string id="TAOM_hero_2_19_1" text="薇朵蜜拉與蓋爾並肩效力。" />
-    <string id="TAOM_hero_2_20" text="瓦爾是河谷邦的長者，傳承學識與療癒之術。" />
-    <string id="TAOM_hero_2_20_1" text="琪莎是瓦爾之妻，精通草藥學識。" />
-    <string id="TAOM_hero_S8_u" text="加利克是一位飽經風霜的老兵，守衛著山中的殿堂。" />
+    <string id="TAOM_hero_2_1" text="河谷邦國王布蘭德，是射殺斯毛格的傳奇弓手巴德之孫。他統治着孤山腳下這個繁榮的王國，與孤山矮人結盟。" />
+    <string id="TAOM_hero_2_2" text="埃爾娜是河谷邦女王，以智慧與優雅廣受愛戴。" />
+    <string id="TAOM_hero_2_13_1" text="阿斯翠德是巴德族貴族之家的女兒。" />
+    <string id="TAOM_hero_2_13_2" text="海拉在國王的宮中任職。" />
+    <string id="TAOM_hero_2_13_3" text="斯萬希爾德是河谷邦的年輕貴族女子。" />
+    <string id="TAOM_hero_2_13_4" text="波迪爾是河谷邦的貴族之女。" />
+    <string id="TAOM_hero_2_7" text="巴德是河谷邦的王子，其父王位的繼承人。" />
+    <string id="TAOM_hero_2_7_1" text="布林是河谷邦王室的王子。" />
+    <string id="TAOM_hero_2_10" text="希安娜是河谷邦的公主，受過外交與治國之術的訓練。" />
+    <string id="TAOM_hero_2_13" text="布林諾夫是北方邊境的領主，防備東夷的入侵。" />
+    <string id="TAOM_hero_2_3" text="奧拉夫是河谷邦的領主，東方谷地的守護者，維繫著與孤山矮人的古老盟約。" />
+    <string id="TAOM_hero_2_4" text="阿爾弗里德是都林血脈的矮人貴族女子。" />
+    <string id="TAOM_hero_2_4_1" text="米克拉是出身高貴的矮人少女。" />
+    <string id="TAOM_hero_2_8" text="希亞爾馬是孤山的矮人王子，精通鍛造與戰事。" />
+    <string id="TAOM_hero_2_11" text="埃絲特是王室衛隊的矮人戰士。" />
+    <string id="TAOM_hero_2_111" text="烏貝是守衛山門的矮人戰士。" />
+    <string id="TAOM_hero_2_5" text="巴爾德是河谷邦的領主，掌管孤山與長湖之間的貿易路線。" />
+    <string id="TAOM_hero_2_6" text="西格麗德是歐力的妻子，以寶石切割的技藝聞名。" />
+    <string id="TAOM_hero_2_9" text="托爾比約恩是歐瑞領地的繼承人，兼習經商與戰鬥。" />
+    <string id="TAOM_hero_2_12" text="索爾迪斯是商會之家的女兒。" />
+    <string id="TAOM_hero_2_121" text="英格瓦掌管孤山與城市之間往來的商隊。" />
+    <string id="TAOM_hero_2_14" text="雷格娜是東方邊境的領主，守衛著長湖。" />
+    <string id="TAOM_hero_2_14_1" text="蒂爾妲是雷格娜領主的妻子。" />
+    <string id="TAOM_hero_2_14_2" text="柯黛莉亞是東方領地的繼承人。" />
+    <string id="TAOM_hero_2_14_3" text="艾米莉亞是東方邊境的年輕貴族。" />
+    <string id="TAOM_hero_2_16" text="羅蘭是河谷邦的領主，掌管集市商道與冬季商隊。" />
+    <string id="TAOM_hero_2_16_1" text="貝雅塔是羅蘭的妻子，精通醫術。" />
+    <string id="TAOM_hero_2_21" text="雅各布統領長湖鎮的守軍。" />
+    <string id="TAOM_hero_2_21_1" text="瑪莎掌管長湖鎮的事務。" />
+    <string id="TAOM_hero_2_17" text="麥斯威爾是河谷邦的領主，因在巨龍覆滅後的歲月裡堅守北門而為人銘記。" />
+    <string id="TAOM_hero_2_17_1" text="阿嘉莎讓老國王的記憶長存不滅。" />
+    <string id="TAOM_hero_2_22" text="霍爾登統領河谷邦的戰士。" />
+    <string id="TAOM_hero_2_22_1" text="拉格恩弗莉德是霍爾登的妻子。" />
+    <string id="TAOM_hero_2_24" text="史蒂夫隆是河谷邦衛隊的隊長。" />
+    <string id="TAOM_hero_2_24_1" text="艾格溫是河谷邦的貴族夫人。" />
+    <string id="TAOM_hero_2_18" text="凱提爾蒙德是河谷邦的領主，奔流河上河巡隊的隊長。" />
+    <string id="TAOM_hero_2_18_1" text="卡琳是凱提爾蒙德的妻子，奔流河畔他廳堂的女主人。" />
+    <string id="TAOM_hero_2_23" text="拉格恩瓦爾德統領河谷邦的南方守軍。" />
+    <string id="TAOM_hero_2_23_1" text="霍姆芙麗德是拉格恩瓦爾德的女兒。" />
+    <string id="TAOM_hero_2_15" text="西蒙是一位睿智的謀士，在國事上為國王出謀劃策。" />
+    <string id="TAOM_hero_2_15_1" text="莉芙在王室宮廷中任職。" />
+    <string id="TAOM_hero_2_15_2" text="塞西莉亞是宮廷中的貴族女子。" />
+    <string id="TAOM_hero_2_15_3" text="珊娜侍奉於王室家中。" />
+    <string id="TAOM_hero_2_15_4" text="阿恩法斯特是河谷邦一位年輕的貴族。" />
+    <string id="TAOM_hero_2_19" text="吉瑞安是河谷邦聲名顯赫的戰士，以古河谷城的末代領主為名。" />
+    <string id="TAOM_hero_2_19_1" text="奧瑟與吉瑞安並肩效力。" />
+    <string id="TAOM_hero_2_20" text="霍坎是河谷邦的長者，掌管傳說知識與醫術。" />
+    <string id="TAOM_hero_2_20_1" text="格蕾特是霍坎的妻子，精通草藥知識。" />
+    <string id="TAOM_hero_S8_u" text="奧爾瓦是一名飽經風霜的老兵，守衛著山中廳堂。" />
     <string id="TAOM_hero_3_1" text="卡杜拉克是哈拉德的塔斯克拉爾，也是南方諸軍的最高統帥。他率領猛獁戰象對抗族人的敵人，並與魔多結盟對抗剛鐸。" />
     <string id="TAOM_hero_3_2" text="哈莉達是喀杜拉克的妻子，也是一位地位尊貴的哈拉德貴婦。" />
     <string id="TAOM_hero_3_7" text="迪尤爾是塔斯克拉爾的繼承人，受過猛獁騎手之道的訓練。" />
@@ -1429,10 +1429,10 @@
     <string id="TAOM_hero_V11_u" text="沃勒裏克是一名老練的騎手，爲領主出謀劃策。" />
     <string id="TAOM_hero_V11_c1" text="埃蘭達拉是西部谷地領地的繼承人。" />
     <string id="TAOM_hero_V11_c2" text="達古尼克是西部谷地領主的第二個孩子。" />
-    <string id="TAOM_hero_S9_l" text="歐爾瓦是河谷邦的貴族，守衛著北方的通路。" />
-    <string id="TAOM_hero_S9_m" text="妲琪拉是北方一支巴德族氏族的女族長。" />
-    <string id="TAOM_hero_S9_c" text="佛林姆是北方領地的年輕繼承人。" />
-    <string id="TAOM_hero_S9_u" text="查斯提米爾是北方駐軍中久歷戰陣的武士。" />
+    <string id="TAOM_hero_S9_l" text="托爾吉爾斯是一名河谷邦貴族，守衛北方的入口要道。" />
+    <string id="TAOM_hero_S9_m" text="古德倫是北方一支巴德氏族的女族長。" />
+    <string id="TAOM_hero_S9_c" text="古納爾是北方領地的年輕繼承人。" />
+    <string id="TAOM_hero_S9_u" text="阿斯比約恩是北方守軍中一名經驗豐富的戰士。" />
     <string id="TAOM_hero_K9_l" text="馬沙基安家族的瓦拉思米爾是遙遠東方部族的酋長，只有在自己樂意時才聽從魯恩的命令。" />
     <string id="TAOM_hero_K9_s" text="辭溫是這位遠方酋長的妻子，在丈夫出征時負責管理營地。" />
     <string id="TAOM_hero_K9_c1" text="阿勒塗是魯恩內海以東部族領地的繼承人。" />
@@ -1479,255 +1479,255 @@
     <string id="TAOM_hero_SE9_c1_bn" text="齊古爾貝爾是奇立斯納爾吉爾的繼承人，學過黑暗法術。他的名字意爲“敬愛巫師的人”。努門諾爾人還不知道索隆的真面目時，曾稱他爲“巫師”。" />
     <string id="TAOM_hero_SE9_c2_bn" text="辛拉辛是“劍之主”的第二個孩子，也是兩個孩子中更危險的那個。她繼承了母親的天賦，卻半點耐心也沒繼承。" />
     <string id="aom_aserai_cb_name" text="哈萬" />
-    <string id="aom_dale_male_name_1" text="Arnulf" />
-    <string id="aom_dale_male_name_2" text="Bjarki" />
-    <string id="aom_dale_male_name_3" text="Eirik" />
-    <string id="aom_dale_male_name_4" text="Hallbjorn" />
-    <string id="aom_dale_male_name_5" text="Ingvald" />
-    <string id="aom_dale_male_name_6" text="Kjartan" />
-    <string id="aom_dale_male_name_7" text="Sigvard" />
-    <string id="aom_dale_male_name_8" text="Torvald" />
-    <string id="aom_dale_male_name_9" text="Ulfrik" />
-    <string id="aom_dale_male_name_10" text="Vigmar" />
-    <string id="aom_dale_male_name_11" text="Asmund" />
-    <string id="aom_dale_male_name_12" text="Dagfinn" />
-    <string id="aom_dale_male_name_13" text="Egil" />
-    <string id="aom_dale_male_name_14" text="Finnvald" />
-    <string id="aom_dale_male_name_15" text="Gisli" />
-    <string id="aom_dale_male_name_16" text="Hallstein" />
-    <string id="aom_dale_male_name_17" text="Hrolf" />
-    <string id="aom_dale_male_name_18" text="Ivar" />
-    <string id="aom_dale_male_name_19" text="Jorund" />
-    <string id="aom_dale_male_name_20" text="Kolgrim" />
-    <string id="aom_dale_male_name_21" text="Leidolf" />
-    <string id="aom_dale_male_name_22" text="Mord" />
-    <string id="aom_dale_male_name_23" text="Njal" />
-    <string id="aom_dale_male_name_24" text="Oddvar" />
-    <string id="aom_dale_male_name_25" text="Ragnvald" />
-    <string id="aom_dale_male_name_26" text="Sindri" />
-    <string id="aom_dale_male_name_27" text="Steinar" />
-    <string id="aom_dale_male_name_28" text="Thorgrim" />
-    <string id="aom_dale_male_name_29" text="Tryggve" />
-    <string id="aom_dale_male_name_30" text="Vemund" />
-    <string id="aom_dale_male_name_31" text="Alfvin" />
-    <string id="aom_dale_male_name_32" text="Bersi" />
-    <string id="aom_dale_male_name_33" text="Eystein" />
-    <string id="aom_dale_male_name_34" text="Gunnar" />
-    <string id="aom_dale_male_name_35" text="Hreidar" />
-    <string id="aom_dale_male_name_36" text="Hjalmar" />
-    <string id="aom_dale_male_name_37" text="Ingolf" />
-    <string id="aom_dale_male_name_38" text="Kari" />
-    <string id="aom_dale_male_name_39" text="Ljot" />
-    <string id="aom_dale_male_name_40" text="Ormar" />
-    <string id="aom_dale_male_name_41" text="Ranulf" />
-    <string id="aom_dale_male_name_42" text="Skeggi" />
-    <string id="aom_dale_male_name_43" text="Svein" />
-    <string id="aom_dale_male_name_44" text="Thrand" />
-    <string id="aom_dale_male_name_45" text="Torstein" />
-    <string id="aom_dale_male_name_46" text="Vebrand" />
-    <string id="aom_dale_male_name_47" text="Vestar" />
-    <string id="aom_dale_male_name_48" text="Yngvar" />
-    <string id="aom_dale_male_name_49" text="Asgeir" />
-    <string id="aom_dale_male_name_50" text="Hakon" />
-    <string id="aom_dale_female_name_1" text="Astrid" />
-    <string id="aom_dale_female_name_2" text="Bergljot" />
-    <string id="aom_dale_female_name_3" text="Dagny" />
-    <string id="aom_dale_female_name_4" text="Eldrid" />
-    <string id="aom_dale_female_name_5" text="Freydis" />
-    <string id="aom_dale_female_name_6" text="Gudny" />
-    <string id="aom_dale_female_name_7" text="Halla" />
-    <string id="aom_dale_female_name_8" text="Hildegunn" />
-    <string id="aom_dale_female_name_9" text="Ingrid" />
-    <string id="aom_dale_female_name_10" text="Jorunn" />
-    <string id="aom_dale_female_name_11" text="Ketilrid" />
-    <string id="aom_dale_female_name_12" text="Liv" />
-    <string id="aom_dale_female_name_13" text="Malfrid" />
-    <string id="aom_dale_female_name_14" text="Oddny" />
-    <string id="aom_dale_female_name_15" text="Hrefna" />
-    <string id="aom_dale_female_name_16" text="Ranveig" />
-    <string id="aom_dale_female_name_17" text="Sigrun" />
-    <string id="aom_dale_female_name_18" text="Sigyn" />
-    <string id="aom_dale_female_name_19" text="Svala" />
-    <string id="aom_dale_female_name_20" text="Thurid" />
-    <string id="aom_dale_female_name_21" text="Thorhild" />
-    <string id="aom_dale_female_name_22" text="Ulfhild" />
-    <string id="aom_dale_female_name_23" text="Unn" />
-    <string id="aom_dale_female_name_24" text="Vilborg" />
-    <string id="aom_dale_female_name_25" text="Ylva" />
-    <string id="aom_dale_female_name_26" text="Alfhild" />
-    <string id="aom_dale_female_name_27" text="Asny" />
-    <string id="aom_dale_female_name_28" text="Bodil" />
-    <string id="aom_dale_female_name_29" text="Edda" />
-    <string id="aom_dale_female_name_30" text="Embla" />
-    <string id="aom_dale_female_name_31" text="Fridgerd" />
-    <string id="aom_dale_female_name_32" text="Gerd" />
-    <string id="aom_dale_female_name_33" text="Gunnhild" />
-    <string id="aom_dale_female_name_34" text="Herdis" />
-    <string id="aom_dale_female_name_35" text="Hervor" />
-    <string id="aom_dale_female_name_36" text="Idun" />
-    <string id="aom_dale_female_name_37" text="Jofrid" />
-    <string id="aom_dale_female_name_38" text="Ljufa" />
-    <string id="aom_dale_female_name_39" text="Magnhild" />
-    <string id="aom_dale_female_name_40" text="Nanna" />
-    <string id="aom_dale_female_name_41" text="Rondis" />
-    <string id="aom_dale_female_name_42" text="Saldis" />
-    <string id="aom_dale_female_name_43" text="Signy" />
-    <string id="aom_dale_female_name_44" text="Steinunn" />
-    <string id="aom_dale_female_name_45" text="Thordis" />
-    <string id="aom_dale_female_name_46" text="Torunn" />
-    <string id="aom_dale_female_name_47" text="Valdis" />
-    <string id="aom_dale_female_name_48" text="Vebjorg" />
-    <string id="aom_dale_female_name_49" text="Yngvild" />
-    <string id="aom_dale_female_name_50" text="Aud" />
-    <string id="aom_dale_clan_name_01" text="Kjartansons" />
-    <string id="aom_dale_clan_name_02" text="Ingvaldsons" />
-    <string id="aom_dale_clan_name_03" text="Hallsteinsons" />
-    <string id="aom_dale_clan_name_04" text="Steinarsons" />
-    <string id="aom_dale_clan_name_05" text="Ragnvaldsons" />
-    <string id="aom_dale_clan_name_06" text="Dagfinnsons" />
-    <string id="aom_dale_clan_name_07" text="Torvaldsons" />
-    <string id="aom_dale_clan_name_08" text="Eysteinsons" />
-    <string id="aom_dale_clan_name_09" text="Sigvardsons" />
-    <string id="aom_dale_clan_name_10" text="Asmundsons" />
-    <string id="aom_khand_male_name_1" text="Arvak" />
-    <string id="aom_khand_male_name_2" text="Baghan" />
-    <string id="aom_khand_male_name_3" text="Chagir" />
-    <string id="aom_khand_male_name_4" text="Dastan" />
-    <string id="aom_khand_male_name_5" text="Erkhan" />
-    <string id="aom_khand_male_name_6" text="Gazur" />
-    <string id="aom_khand_male_name_7" text="Haldar" />
-    <string id="aom_khand_male_name_8" text="Ilkar" />
-    <string id="aom_khand_male_name_9" text="Jamuq" />
-    <string id="aom_khand_male_name_10" text="Kaidar" />
-    <string id="aom_khand_male_name_11" text="Kutlu" />
-    <string id="aom_khand_male_name_12" text="Mazar" />
-    <string id="aom_khand_male_name_13" text="Nogai" />
-    <string id="aom_khand_male_name_14" text="Ozgan" />
-    <string id="aom_khand_male_name_15" text="Qorchi" />
-    <string id="aom_khand_male_name_16" text="Rasul" />
-    <string id="aom_khand_male_name_17" text="Sadrak" />
-    <string id="aom_khand_male_name_18" text="Tarqan" />
-    <string id="aom_khand_male_name_19" text="Tolui" />
-    <string id="aom_khand_male_name_20" text="Ujin" />
-    <string id="aom_khand_male_name_21" text="Vardan" />
-    <string id="aom_khand_male_name_22" text="Yesun" />
-    <string id="aom_khand_male_name_23" text="Zaidar" />
-    <string id="aom_khand_male_name_24" text="Altan" />
-    <string id="aom_khand_male_name_25" text="Bekir" />
-    <string id="aom_khand_male_name_26" text="Chorman" />
-    <string id="aom_khand_male_name_27" text="Daruk" />
-    <string id="aom_khand_male_name_28" text="Esen" />
-    <string id="aom_khand_male_name_29" text="Ghazan" />
-    <string id="aom_khand_male_name_30" text="Harzan" />
-    <string id="aom_khand_male_name_31" text="Ilgiz" />
-    <string id="aom_khand_male_name_32" text="Jochar" />
-    <string id="aom_khand_male_name_33" text="Kertu" />
-    <string id="aom_khand_male_name_34" text="Mergen" />
-    <string id="aom_khand_male_name_35" text="Nasir" />
-    <string id="aom_khand_male_name_36" text="Oktai" />
-    <string id="aom_khand_male_name_37" text="Parvan" />
-    <string id="aom_khand_male_name_38" text="Qadan" />
-    <string id="aom_khand_male_name_39" text="Rustam" />
-    <string id="aom_khand_male_name_40" text="Sartak" />
-    <string id="aom_khand_male_name_41" text="Tavrik" />
-    <string id="aom_khand_male_name_42" text="Uzbar" />
-    <string id="aom_khand_male_name_43" text="Varzan" />
-    <string id="aom_khand_male_name_44" text="Yamur" />
-    <string id="aom_khand_male_name_45" text="Zhaqar" />
-    <string id="aom_khand_male_name_46" text="Akbar" />
-    <string id="aom_khand_male_name_47" text="Borjan" />
-    <string id="aom_khand_male_name_48" text="Dalvar" />
-    <string id="aom_khand_male_name_49" text="Ferokh" />
-    <string id="aom_khand_male_name_50" text="Gurzan" />
-    <string id="aom_khand_female_name_1" text="Aisulu" />
-    <string id="aom_khand_female_name_2" text="Banu" />
-    <string id="aom_khand_female_name_3" text="Chichek" />
-    <string id="aom_khand_female_name_4" text="Dilara" />
-    <string id="aom_khand_female_name_5" text="Elif" />
-    <string id="aom_khand_female_name_6" text="Feruza" />
-    <string id="aom_khand_female_name_7" text="Gulnar" />
-    <string id="aom_khand_female_name_8" text="Hadiya" />
-    <string id="aom_khand_female_name_9" text="Ilsu" />
-    <string id="aom_khand_female_name_10" text="Javra" />
-    <string id="aom_khand_female_name_11" text="Kamila" />
-    <string id="aom_khand_female_name_12" text="Laleh" />
-    <string id="aom_khand_female_name_13" text="Mahsa" />
-    <string id="aom_khand_female_name_14" text="Nergis" />
-    <string id="aom_khand_female_name_15" text="Oyuna" />
-    <string id="aom_khand_female_name_16" text="Parisa" />
-    <string id="aom_khand_female_name_17" text="Qutlugh" />
-    <string id="aom_khand_female_name_18" text="Roxana" />
-    <string id="aom_khand_female_name_19" text="Saghira" />
-    <string id="aom_khand_female_name_20" text="Tamar" />
-    <string id="aom_khand_female_name_21" text="Ulduz" />
-    <string id="aom_khand_female_name_22" text="Varda" />
-    <string id="aom_khand_female_name_23" text="Yasira" />
-    <string id="aom_khand_female_name_24" text="Zulfiya" />
-    <string id="aom_khand_female_name_25" text="Aybike" />
-    <string id="aom_khand_female_name_26" text="Bolorma" />
-    <string id="aom_khand_female_name_27" text="Chaghra" />
-    <string id="aom_khand_female_name_28" text="Dinara" />
-    <string id="aom_khand_female_name_29" text="Esenkul" />
-    <string id="aom_khand_female_name_30" text="Farah" />
-    <string id="aom_khand_female_name_31" text="Gulzar" />
-    <string id="aom_khand_female_name_32" text="Hulan" />
-    <string id="aom_khand_female_name_33" text="Inara" />
-    <string id="aom_khand_female_name_34" text="Jarqa" />
-    <string id="aom_khand_female_name_35" text="Kesira" />
-    <string id="aom_khand_female_name_36" text="Marjan" />
-    <string id="aom_khand_female_name_37" text="Nilufar" />
-    <string id="aom_khand_female_name_38" text="Oktya" />
-    <string id="aom_khand_female_name_39" text="Qandra" />
-    <string id="aom_khand_female_name_40" text="Rahila" />
-    <string id="aom_khand_female_name_41" text="Sanaz" />
-    <string id="aom_khand_female_name_42" text="Tuyana" />
-    <string id="aom_khand_female_name_43" text="Umay" />
-    <string id="aom_khand_female_name_44" text="Vashti" />
-    <string id="aom_khand_female_name_45" text="Yildiz" />
-    <string id="aom_khand_female_name_46" text="Zeynab" />
-    <string id="aom_khand_female_name_47" text="Ardana" />
-    <string id="aom_khand_female_name_48" text="Burla" />
-    <string id="aom_khand_female_name_49" text="Soraya" />
-    <string id="aom_khand_female_name_50" text="Temira" />
-    <string id="aom_khand_clan_name_01" text="Red Riders" />
-    <string id="aom_khand_clan_name_02" text="Bronze Lances" />
-    <string id="aom_khand_clan_name_03" text="Dust Wolves" />
-    <string id="aom_khand_clan_name_04" text="Crimson Tents" />
-    <string id="aom_khand_clan_name_05" text="Ashen Hooves" />
-    <string id="aom_khand_clan_name_06" text="Sons of the Scorched Plain" />
-    <string id="aom_khand_clan_name_07" text="Black Horsetails" />
-    <string id="aom_khand_clan_name_08" text="Copper Bows" />
-    <string id="aom_khand_clan_name_09" text="Dune Hawks" />
-    <string id="aom_khand_clan_name_10" text="Iron Bridles" />
-    <string id="taom_lord_intro_dale_1" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, one of the old houses of Dale." />
-    <string id="taom_lord_intro_dale_2" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. Our name is known in every hall of Dale and on every quay of the Long Lake." />
-    <string id="taom_lord_intro_dale_3" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. My forefathers came home to Dale when the dragon was slain, and swore to hold the vale beneath the Mountain. We have kept that oath." />
-    <string id="taom_lord_intro_khand_1" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, one of the old blood-lines of Khand." />
-    <string id="taom_lord_intro_khand_2" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. No clan of the Variags is more feared, from the borders of Mordor to the southern sands." />
-    <string id="taom_lord_intro_khand_3" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. There is hardly a tribe in Khand that has not left a chieftain's skull in our tents." />
-    <string id="taom_lord_intro_khand_4" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. The tale goes that our first chieftain rode out of the east on a horse that never tired. If every clan that tells that tale were telling the truth, the plains would have run out of horses long ago." />
-    <string id="taom_lord_intro_rohan_1" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. My house has ridden for the Kings of the Mark since the days of Eorl." />
-    <string id="taom_lord_intro_rohan_2" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, a house well remembered in the songs of the Riddermark." />
-    <string id="taom_lord_intro_rohan_3" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. They say our founder won his lands by outriding a king's messenger to the Golden Hall. He never did tell us what the message was." />
-    <string id="taom_lord_intro_harad_1" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, a house of the Haradrim." />
-    <string id="taom_lord_intro_harad_2" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, the oldest and proudest line under the sun of Harad." />
-    <string id="taom_lord_intro_rhun_1" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. Our name is sung at every wagon-fire in Rhun, from the shores of the inland sea to the far plains." />
-    <string id="taom_lord_intro_rhun_2" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. My clan has served the lords of Rhun for generations." />
-    <string id="taom_lord_intro_dunland_1" text="I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}. My kin held these hills long before the horse-lords came." />
-    <string id="taom_lord_intro_dunland_2" text="I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}. My family keeps its word and its feuds alike, as the old ways of Dunland demand." />
-    <string id="taom_lord_intro_dunland_3" text="I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}. I take no great pride in my lineage, but we have always stood between our hill-folk and those who would harm them." />
-    <string id="taom_lord_intro_dunland_4" text="I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}, one of the proudest clans of Dunland." />
-    <string id="taom_lord_intro_dunland_5" text="I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}, one of the proudest clans of Dunland. No house has put more horse-thieves of the Mark into the ground." />
-    <string id="taom_clan_intro_company_of_the_boar" text="If you're ever looking for stout fighters, friend, you should think about hiring the Corsair Blades. The hardest crossbowmen ever to sail out of Umbar march under our banner. Because if you don't hire us, your enemy might." />
-    <string id="taom_clan_intro_legion_of_the_betrayed" text="If you ever find yourself in a position to hire warriors, you should consider the Grey Company. Our fathers were the lords of Arnor, and we have kept watch over the North since their kingdom fell. Pay us, and you will have the word of the Dúnedain with our swords." />
-    <string id="taom_clan_intro_ghilman" text="Perhaps one day we shall see each other on a battlefield. You shall know the Serpent Guard by the speed of our horses and the sting of our arrows. If we are on your side, you may rejoice. If we are your enemy, you may save yourself a great deal of trouble by running away before the fighting starts." />
-    <string id="taom_clan_intro_brotherhood_of_woods" text="The Strawheads took our fathers' valleys and drove us up into the hills. Whatever we take back from a horse-lord or a king's man was ours to begin with. You'll hear us called robbers and brigands. Don't believe a word of it." />
-    <string id="taom_clan_intro_hidden_hand" text="When you walk these roads, my friend, know that nothing escapes the notice of the Dark Tower. Lords and kings come and go, but the servants of the Mouth remain." />
-    <string id="taom_clan_intro_lakepike" text="They call us the Wreckers, but we prefer to be known as the free folk of the reed-beds. No Master of Lake-town and no King in Dale can make us bow our heads and scrape our knees. Know that, and we can probably get along fine." />
-    <string id="taom_clan_intro_wolfskins" text="Perhaps you've heard of the Ravagers, traveller. We are beasts. Know that so long as we eat no cooked meat and sleep under no roof, the laws of Khand cannot touch us. So tread carefully with us." />
-    <string id="taom_clan_intro_eleftheroi" text="You may have heard of us: the Beornings. We keep the High Pass and the Ford of Carrock, and no Orc crosses our lands and lives. Honest travellers pay their toll and go in peace. Those who come to raid will learn that we have very large teeth." />
-    <string id="taom_clan_intro_jawwal" text="Perhaps you have not heard of the Sand-Riders. Well, when you cross the deep desert of Harad, far from well and spring, in a land that the city-lords scorn, then you are in our domain." />
-    <string id="taom_clan_intro_beni_zilal" text="The Blind Eye sees what others miss. We keep the secrets of Harad, and we watch from the shadows. Make foes of us at your peril." />
-    <string id="taom_clan_intro_embers_of_flame" text="You may have heard whispers of us. Men call us the Cult of the Lidless Eye. Long ago, in Númenor, our forefathers bent the knee to the Dark Lord. Until his day comes, we keep our silence. But when it comes, all who scorned him will answer for it." />
+    <string id="aom_dale_male_name_1" text="阿努爾夫" />
+    <string id="aom_dale_male_name_2" text="比亞基" />
+    <string id="aom_dale_male_name_3" text="艾瑞克" />
+    <string id="aom_dale_male_name_4" text="哈爾比約恩" />
+    <string id="aom_dale_male_name_5" text="英格瓦德" />
+    <string id="aom_dale_male_name_6" text="夏爾坦" />
+    <string id="aom_dale_male_name_7" text="西格瓦德" />
+    <string id="aom_dale_male_name_8" text="赫拉夫恩凱爾" />
+    <string id="aom_dale_male_name_9" text="烏爾夫里克" />
+    <string id="aom_dale_male_name_10" text="維格馬" />
+    <string id="aom_dale_male_name_11" text="阿斯蒙德" />
+    <string id="aom_dale_male_name_12" text="達格芬" />
+    <string id="aom_dale_male_name_13" text="埃吉爾" />
+    <string id="aom_dale_male_name_14" text="芬瓦德" />
+    <string id="aom_dale_male_name_15" text="吉斯利" />
+    <string id="aom_dale_male_name_16" text="哈爾斯坦" />
+    <string id="aom_dale_male_name_17" text="赫羅夫" />
+    <string id="aom_dale_male_name_18" text="伊瓦爾" />
+    <string id="aom_dale_male_name_19" text="約倫德" />
+    <string id="aom_dale_male_name_20" text="科爾格里姆" />
+    <string id="aom_dale_male_name_21" text="雷多夫" />
+    <string id="aom_dale_male_name_22" text="莫德" />
+    <string id="aom_dale_male_name_23" text="尼亞爾" />
+    <string id="aom_dale_male_name_24" text="奧德瓦" />
+    <string id="aom_dale_male_name_25" text="拉格恩瓦爾德" />
+    <string id="aom_dale_male_name_26" text="辛德里" />
+    <string id="aom_dale_male_name_27" text="斯泰納" />
+    <string id="aom_dale_male_name_28" text="索格里姆" />
+    <string id="aom_dale_male_name_29" text="特里格維" />
+    <string id="aom_dale_male_name_30" text="維蒙德" />
+    <string id="aom_dale_male_name_31" text="阿爾夫溫" />
+    <string id="aom_dale_male_name_32" text="貝爾西" />
+    <string id="aom_dale_male_name_33" text="埃斯泰因" />
+    <string id="aom_dale_male_name_34" text="古納爾" />
+    <string id="aom_dale_male_name_35" text="赫雷達" />
+    <string id="aom_dale_male_name_36" text="希亞爾馬" />
+    <string id="aom_dale_male_name_37" text="英格夫" />
+    <string id="aom_dale_male_name_38" text="卡里" />
+    <string id="aom_dale_male_name_39" text="略特" />
+    <string id="aom_dale_male_name_40" text="奧爾馬" />
+    <string id="aom_dale_male_name_41" text="拉努夫" />
+    <string id="aom_dale_male_name_42" text="斯凱吉" />
+    <string id="aom_dale_male_name_43" text="斯韋恩" />
+    <string id="aom_dale_male_name_44" text="特蘭德" />
+    <string id="aom_dale_male_name_45" text="托爾斯泰因" />
+    <string id="aom_dale_male_name_46" text="維布蘭德" />
+    <string id="aom_dale_male_name_47" text="維斯塔" />
+    <string id="aom_dale_male_name_48" text="英格瓦" />
+    <string id="aom_dale_male_name_49" text="阿斯蓋爾" />
+    <string id="aom_dale_male_name_50" text="哈康" />
+    <string id="aom_dale_female_name_1" text="哈爾薇格" />
+    <string id="aom_dale_female_name_2" text="貝格柳特" />
+    <string id="aom_dale_female_name_3" text="達格妮" />
+    <string id="aom_dale_female_name_4" text="埃爾德莉德" />
+    <string id="aom_dale_female_name_5" text="貢沃爾" />
+    <string id="aom_dale_female_name_6" text="古德妮" />
+    <string id="aom_dale_female_name_7" text="哈拉" />
+    <string id="aom_dale_female_name_8" text="希爾德貢" />
+    <string id="aom_dale_female_name_9" text="英格麗德" />
+    <string id="aom_dale_female_name_10" text="約倫" />
+    <string id="aom_dale_female_name_11" text="凱蒂爾莉德" />
+    <string id="aom_dale_female_name_12" text="莉芙" />
+    <string id="aom_dale_female_name_13" text="瑪爾芙莉德" />
+    <string id="aom_dale_female_name_14" text="奧德妮" />
+    <string id="aom_dale_female_name_15" text="赫雷芙娜" />
+    <string id="aom_dale_female_name_16" text="蘭薇格" />
+    <string id="aom_dale_female_name_17" text="英格倫" />
+    <string id="aom_dale_female_name_18" text="西格恩" />
+    <string id="aom_dale_female_name_19" text="阿斯蓋爾德" />
+    <string id="aom_dale_female_name_20" text="圖莉德" />
+    <string id="aom_dale_female_name_21" text="索希爾德" />
+    <string id="aom_dale_female_name_22" text="烏爾芙希爾德" />
+    <string id="aom_dale_female_name_23" text="溫恩" />
+    <string id="aom_dale_female_name_24" text="維爾博格" />
+    <string id="aom_dale_female_name_25" text="伊爾瓦" />
+    <string id="aom_dale_female_name_26" text="阿爾芙希爾德" />
+    <string id="aom_dale_female_name_27" text="阿斯妮" />
+    <string id="aom_dale_female_name_28" text="波迪爾" />
+    <string id="aom_dale_female_name_29" text="埃達" />
+    <string id="aom_dale_female_name_30" text="恩布拉" />
+    <string id="aom_dale_female_name_31" text="弗莉德蓋爾德" />
+    <string id="aom_dale_female_name_32" text="蓋爾德" />
+    <string id="aom_dale_female_name_33" text="貢希爾德" />
+    <string id="aom_dale_female_name_34" text="赫爾迪絲" />
+    <string id="aom_dale_female_name_35" text="赫爾沃" />
+    <string id="aom_dale_female_name_36" text="伊敦" />
+    <string id="aom_dale_female_name_37" text="尤弗麗德" />
+    <string id="aom_dale_female_name_38" text="柳法" />
+    <string id="aom_dale_female_name_39" text="瑪格希爾德" />
+    <string id="aom_dale_female_name_40" text="南娜" />
+    <string id="aom_dale_female_name_41" text="蓉狄絲" />
+    <string id="aom_dale_female_name_42" text="薩爾狄絲" />
+    <string id="aom_dale_female_name_43" text="西格妮" />
+    <string id="aom_dale_female_name_44" text="斯泰農" />
+    <string id="aom_dale_female_name_45" text="索爾迪斯" />
+    <string id="aom_dale_female_name_46" text="托倫" />
+    <string id="aom_dale_female_name_47" text="瓦爾狄絲" />
+    <string id="aom_dale_female_name_48" text="薇比約格" />
+    <string id="aom_dale_female_name_49" text="英格希爾德" />
+    <string id="aom_dale_female_name_50" text="奧德" />
+    <string id="aom_dale_clan_name_01" text="夏坦森家族" />
+    <string id="aom_dale_clan_name_02" text="英瓦德森家族" />
+    <string id="aom_dale_clan_name_03" text="霍斯泰因森家族" />
+    <string id="aom_dale_clan_name_04" text="斯泰納森家族" />
+    <string id="aom_dale_clan_name_05" text="拉格瓦德森家族" />
+    <string id="aom_dale_clan_name_06" text="達格芬森家族" />
+    <string id="aom_dale_clan_name_07" text="托瓦德森家族" />
+    <string id="aom_dale_clan_name_08" text="艾斯泰因森家族" />
+    <string id="aom_dale_clan_name_09" text="西格瓦德森家族" />
+    <string id="aom_dale_clan_name_10" text="阿斯蒙德森家族" />
+    <string id="aom_khand_male_name_1" text="阿爾瓦克" />
+    <string id="aom_khand_male_name_2" text="巴罕" />
+    <string id="aom_khand_male_name_3" text="恰吉爾" />
+    <string id="aom_khand_male_name_4" text="達斯坦" />
+    <string id="aom_khand_male_name_5" text="厄爾汗" />
+    <string id="aom_khand_male_name_6" text="加祖爾" />
+    <string id="aom_khand_male_name_7" text="哈爾達爾" />
+    <string id="aom_khand_male_name_8" text="伊爾卡爾" />
+    <string id="aom_khand_male_name_9" text="札木克" />
+    <string id="aom_khand_male_name_10" text="凱達爾" />
+    <string id="aom_khand_male_name_11" text="庫特魯" />
+    <string id="aom_khand_male_name_12" text="馬札爾" />
+    <string id="aom_khand_male_name_13" text="阿爾斯蘭" />
+    <string id="aom_khand_male_name_14" text="奧茲甘" />
+    <string id="aom_khand_male_name_15" text="闊兒赤" />
+    <string id="aom_khand_male_name_16" text="拉蘇爾" />
+    <string id="aom_khand_male_name_17" text="薩德拉克" />
+    <string id="aom_khand_male_name_18" text="塔爾坎" />
+    <string id="aom_khand_male_name_19" text="托雷" />
+    <string id="aom_khand_male_name_20" text="烏金" />
+    <string id="aom_khand_male_name_21" text="瓦爾丹" />
+    <string id="aom_khand_male_name_22" text="也孫" />
+    <string id="aom_khand_male_name_23" text="扎伊達爾" />
+    <string id="aom_khand_male_name_24" text="阿勒壇" />
+    <string id="aom_khand_male_name_25" text="貝基爾" />
+    <string id="aom_khand_male_name_26" text="綽兒曼" />
+    <string id="aom_khand_male_name_27" text="達魯克" />
+    <string id="aom_khand_male_name_28" text="額森" />
+    <string id="aom_khand_male_name_29" text="合贊" />
+    <string id="aom_khand_male_name_30" text="哈爾贊" />
+    <string id="aom_khand_male_name_31" text="伊爾吉茲" />
+    <string id="aom_khand_male_name_32" text="焦哈爾" />
+    <string id="aom_khand_male_name_33" text="凱爾圖" />
+    <string id="aom_khand_male_name_34" text="默爾根" />
+    <string id="aom_khand_male_name_35" text="納西爾" />
+    <string id="aom_khand_male_name_36" text="窩闊台" />
+    <string id="aom_khand_male_name_37" text="帕爾萬" />
+    <string id="aom_khand_male_name_38" text="合丹" />
+    <string id="aom_khand_male_name_39" text="魯斯塔姆" />
+    <string id="aom_khand_male_name_40" text="撒兒塔克" />
+    <string id="aom_khand_male_name_41" text="塔夫里克" />
+    <string id="aom_khand_male_name_42" text="烏茲巴爾" />
+    <string id="aom_khand_male_name_43" text="瓦爾贊" />
+    <string id="aom_khand_male_name_44" text="雅穆爾" />
+    <string id="aom_khand_male_name_45" text="扎卡爾" />
+    <string id="aom_khand_male_name_46" text="阿克巴" />
+    <string id="aom_khand_male_name_47" text="博爾贊" />
+    <string id="aom_khand_male_name_48" text="達爾瓦爾" />
+    <string id="aom_khand_male_name_49" text="費羅赫" />
+    <string id="aom_khand_male_name_50" text="古爾贊" />
+    <string id="aom_khand_female_name_1" text="艾蘇魯" />
+    <string id="aom_khand_female_name_2" text="芭努" />
+    <string id="aom_khand_female_name_3" text="奇切克" />
+    <string id="aom_khand_female_name_4" text="迪拉拉" />
+    <string id="aom_khand_female_name_5" text="艾莉芙" />
+    <string id="aom_khand_female_name_6" text="費魯扎" />
+    <string id="aom_khand_female_name_7" text="古爾娜" />
+    <string id="aom_khand_female_name_8" text="哈蒂婭" />
+    <string id="aom_khand_female_name_9" text="伊爾蘇" />
+    <string id="aom_khand_female_name_10" text="雅芙拉" />
+    <string id="aom_khand_female_name_11" text="卡米拉" />
+    <string id="aom_khand_female_name_12" text="拉蕾" />
+    <string id="aom_khand_female_name_13" text="瑪莎" />
+    <string id="aom_khand_female_name_14" text="內爾吉斯" />
+    <string id="aom_khand_female_name_15" text="歐尤娜" />
+    <string id="aom_khand_female_name_16" text="帕莉莎" />
+    <string id="aom_khand_female_name_17" text="托列格涅" />
+    <string id="aom_khand_female_name_18" text="羅克珊娜" />
+    <string id="aom_khand_female_name_19" text="薩姬拉" />
+    <string id="aom_khand_female_name_20" text="塔瑪爾" />
+    <string id="aom_khand_female_name_21" text="烏爾杜茲" />
+    <string id="aom_khand_female_name_22" text="瓦爾妲" />
+    <string id="aom_khand_female_name_23" text="雅希拉" />
+    <string id="aom_khand_female_name_24" text="祖爾菲雅" />
+    <string id="aom_khand_female_name_25" text="艾比克" />
+    <string id="aom_khand_female_name_26" text="博洛爾瑪" />
+    <string id="aom_khand_female_name_27" text="查格拉" />
+    <string id="aom_khand_female_name_28" text="迪娜拉" />
+    <string id="aom_khand_female_name_29" text="埃森庫爾" />
+    <string id="aom_khand_female_name_30" text="法拉" />
+    <string id="aom_khand_female_name_31" text="古爾扎爾" />
+    <string id="aom_khand_female_name_32" text="胡蘭" />
+    <string id="aom_khand_female_name_33" text="伊娜拉" />
+    <string id="aom_khand_female_name_34" text="雅爾卡" />
+    <string id="aom_khand_female_name_35" text="凱希拉" />
+    <string id="aom_khand_female_name_36" text="瑪爾然" />
+    <string id="aom_khand_female_name_37" text="尼露法" />
+    <string id="aom_khand_female_name_38" text="奧克蒂雅" />
+    <string id="aom_khand_female_name_39" text="坎德拉" />
+    <string id="aom_khand_female_name_40" text="拉希拉" />
+    <string id="aom_khand_female_name_41" text="薩娜茲" />
+    <string id="aom_khand_female_name_42" text="圖雅娜" />
+    <string id="aom_khand_female_name_43" text="烏邁" />
+    <string id="aom_khand_female_name_44" text="瓦實提" />
+    <string id="aom_khand_female_name_45" text="伊爾迪茲" />
+    <string id="aom_khand_female_name_46" text="澤娜布" />
+    <string id="aom_khand_female_name_47" text="阿爾達娜" />
+    <string id="aom_khand_female_name_48" text="布爾拉" />
+    <string id="aom_khand_female_name_49" text="索拉雅" />
+    <string id="aom_khand_female_name_50" text="泰米拉" />
+    <string id="aom_khand_clan_name_01" text="赤騎者" />
+    <string id="aom_khand_clan_name_02" text="青銅長槍" />
+    <string id="aom_khand_clan_name_03" text="塵狼" />
+    <string id="aom_khand_clan_name_04" text="緋紅帳幕" />
+    <string id="aom_khand_clan_name_05" text="灰燼之蹄" />
+    <string id="aom_khand_clan_name_06" text="焦原之子" />
+    <string id="aom_khand_clan_name_07" text="黑馬尾" />
+    <string id="aom_khand_clan_name_08" text="赤銅之弓" />
+    <string id="aom_khand_clan_name_09" text="沙丘之鷹" />
+    <string id="aom_khand_clan_name_10" text="鐵轡" />
+    <string id="taom_lord_intro_dale_1" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}，河谷邦的古老家族之一。" />
+    <string id="taom_lord_intro_dale_2" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}。我們的名字在河谷邦的每一座廳堂、長湖的每一處碼頭都有人知曉。" />
+    <string id="taom_lord_intro_dale_3" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}。惡龍被斬殺之後，我的先祖便回到河谷邦，立誓守住孤山腳下的這片谷地。那個誓言，我們一直守着。" />
+    <string id="taom_lord_intro_khand_1" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}，可汗德的古老血脈之一。" />
+    <string id="taom_lord_intro_khand_2" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}。從魔多邊境到南方的沙地，沒有哪個瓦里亞格人的氏族比我們更令人畏懼。" />
+    <string id="taom_lord_intro_khand_3" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}。可汗德幾乎沒有哪個部族，不曾把酋長的頭骨留在我們的帳篷裏。" />
+    <string id="taom_lord_intro_khand_4" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}。傳說我們的第一位酋長騎着一匹永不疲倦的馬從東方而來。要是每個講這故事的氏族說的都是真話，平原上的馬早就不夠用了。" />
+    <string id="taom_lord_intro_rohan_1" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}。從伊奧爾的時代起，我的家族就爲馬克的國王們披甲上馬。" />
+    <string id="taom_lord_intro_rohan_2" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}，一個在裏德馬克之歌裏被牢牢記住的家族。" />
+    <string id="taom_lord_intro_rohan_3" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}。據說我們的先祖靠着比國王的信使更早騎到金殿，贏下了自家的土地。他始終沒告訴我們那封信寫的是什麼。" />
+    <string id="taom_lord_intro_harad_1" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}，哈拉德人的一個家族。" />
+    <string id="taom_lord_intro_harad_2" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}，哈拉德烈日之下最古老、最驕傲的血脈。" />
+    <string id="taom_lord_intro_rhun_1" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}。從內海之濱到遙遠的平原，魯恩每一堆車旁的篝火邊都唱着我們的名字。" />
+    <string id="taom_lord_intro_rhun_2" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}。我的氏族世代侍奉魯恩的領主。" />
+    <string id="taom_lord_intro_dunland_1" text="我是{CONVERSATION_CHARACTER.LINK}，{CLAN_NAME}家族的人。遠在那些馭馬者到來之前，這些山就由我的族人掌管。" />
+    <string id="taom_lord_intro_dunland_2" text="我是{CONVERSATION_CHARACTER.LINK}，{CLAN_NAME}家族的人。按照黑蠻地的老規矩，我的家族守得住承諾，也記得住仇怨。" />
+    <string id="taom_lord_intro_dunland_3" text="我是{CONVERSATION_CHARACTER.LINK}，{CLAN_NAME}家族的人。我對自己的血統沒什麼可誇耀的，但我們一直擋在山地族人與想傷害他們的人之間。" />
+    <string id="taom_lord_intro_dunland_4" text="我是{CONVERSATION_CHARACTER.LINK}，{CLAN_NAME}家族的人，黑蠻地最驕傲的氏族之一。" />
+    <string id="taom_lord_intro_dunland_5" text="我是{CONVERSATION_CHARACTER.LINK}，{CLAN_NAME}家族的人，黑蠻地最驕傲的氏族之一。沒有哪個家族埋掉過比我們更多的馬克偷馬賊。" />
+    <string id="taom_clan_intro_company_of_the_boar" text="朋友，你要是什麼時候缺硬手，就該考慮僱海盜刀鋒。從烏姆巴爾出海的最強弩手都在我們的旗下行軍。因爲你不僱我們，你的敵人說不定就會僱。" />
+    <string id="taom_clan_intro_legion_of_the_betrayed" text="你若哪天有機會僱傭戰士，不妨考慮灰衣勁旅。我們的先祖是阿爾諾的領主，自那個王國覆滅以來，我們便守望着北方。付我們報酬，你得到的不只是我們的劍，還有杜內丹人的承諾。" />
+    <string id="taom_clan_intro_ghilman" text="也許有一天我們會在戰場上相見。你會憑我們馬匹的疾速和箭矢的刺痛認出巨蛇衛隊。我們若與你同一陣線，你大可慶幸；我們若是你的敵人，你最好在開打之前就跑，省下許多麻煩。" />
+    <string id="taom_clan_intro_brotherhood_of_woods" text="那些草頭佬奪走了我們祖輩的河谷，把我們趕進山裏。我們從馭馬者或國王的人手上拿回來的東西，本來就是我們的。你會聽見別人管我們叫強盜、土匪。一個字也別信。" />
+    <string id="taom_clan_intro_hidden_hand" text="朋友，你走在這些路上時，要記得沒有什麼能逃過黑塔的眼睛。領主和國王來來去去，但索倫之口的僕從長存。" />
+    <string id="taom_clan_intro_lakepike" text="他們叫我們誘船者，可我們更願意被稱作蘆葦蕩裏的自由民。長湖鎮的鎮長也好，河谷邦的國王也好，都沒法讓我們低頭屈膝。記住這一點，我們多半能處得不錯。" />
+    <string id="taom_clan_intro_wolfskins" text="旅人，也許你聽說過劫掠團。我們是野獸。要知道，只要我們不吃熟肉、不在屋頂下睡覺，可汗德的律法就碰不到我們。所以跟我們打交道，腳步放輕些。" />
+    <string id="taom_clan_intro_eleftheroi" text="你或許聽過我們：貝奧恩一族。我們守衛高隘口與卡爾巖渡口，沒有哪個奧克能越過我們的土地還活著。誠實的旅人付了過路費便可平安前行。來劫掠的人則會知道，我們的牙齒非常大。" />
+    <string id="taom_clan_intro_jawwal" text="你或許沒聽過沙騎者。那麼，當你穿越哈拉德深處的沙漠，遠離水井與泉源，身處城邦領主們不屑一顧的土地時，你就已身在我們的領域。" />
+    <string id="taom_clan_intro_beni_zilal" text="盲眼會能看見他人忽略之物。我們守著哈拉德的祕密，自陰影中窺視。與我們為敵，後果自負。" />
+    <string id="taom_clan_intro_embers_of_flame" text="你或許聽過關於我們的低語。人們稱我們為無瞼魔眼教團。很久以前，在努曼諾爾，我們的先祖向黑暗魔君屈膝。在他的時代來臨之前，我們保持緘默。但當那一日到來，所有輕蔑他的人都將為此付出代價。" />
   </strings>
 </base>

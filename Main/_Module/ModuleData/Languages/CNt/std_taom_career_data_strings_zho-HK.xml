@@ -807,7 +807,7 @@
     <string id="taom_career_grp_knight_of_arthedain_t1_a" text="北崗槍騎兵" />
     <string id="taom_career_grp_knight_of_arthedain_t1_b" text="暮暗湖守望者" />
     <string id="taom_career_grp_knight_of_arthedain_t2_a" text="七星騎手" />
-    <string id="taom_career_grp_knight_of_arthedain_t2_b" text="阿維吉爾的盾牆" />
+    <string id="taom_career_grp_knight_of_arthedain_t2_b" text="阿拉納斯的盾牆" />
     <string id="taom_career_grp_knight_of_arthedain_t3_a" text="銀冠騎士" />
     <string id="taom_career_grp_knight_of_arthedain_t3_b" text="佛諾斯特衝鋒" />
     <string id="taom_career_grp_ranger_of_the_north_t1_a" text="綠大道獵手" />
@@ -987,12 +987,12 @@
     <string id="taom_career_grp_captain_of_cameth_brin_t1_b" text="蒼泉河渡口守衛" />
     <string id="taom_career_grp_captain_of_cameth_brin_t2_a" text="冷原先鋒" />
     <string id="taom_career_grp_captain_of_cameth_brin_t2_b" text="最後大橋之劍" />
-    <string id="taom_career_grp_captain_of_cameth_brin_t3_a" text="貝烈戈恩的大軍" />
+    <string id="taom_career_grp_captain_of_cameth_brin_t3_a" text="埃拉瑪斯的大軍" />
     <string id="taom_career_grp_captain_of_cameth_brin_t3_b" text="卡梅斯布林高塔領主" />
     <string id="taom_career_grp_knight_of_cardolan_t1_a" text="明希瑞亞斯槍騎兵" />
     <string id="taom_career_grp_knight_of_cardolan_t1_b" text="沙巴德守望者" />
     <string id="taom_career_grp_knight_of_cardolan_t2_a" text="平原騎手" />
-    <string id="taom_career_grp_knight_of_cardolan_t2_b" text="阿蘭希爾盾牆" />
+    <string id="taom_career_grp_knight_of_cardolan_t2_b" text="奧斯希爾的盾牆" />
     <string id="taom_career_grp_knight_of_cardolan_t3_a" text="綠大道騎士" />
     <string id="taom_career_grp_knight_of_cardolan_t3_b" text="卡拉斯戈沙德衝鋒" />
     <string id="taom_career_grp_ranger_of_the_angle_t1_a" text="東大道獵手" />
@@ -1004,14 +1004,14 @@
     <string id="taom_career_grp_rider_of_the_fells_t1_a" text="河角地槍騎兵" />
     <string id="taom_career_grp_rider_of_the_fells_t1_b" text="響水河守望者" />
     <string id="taom_career_grp_rider_of_the_fells_t2_a" text="高地騎手" />
-    <string id="taom_career_grp_rider_of_the_fells_t2_b" text="貝烈苟恩盾牆" />
+    <string id="taom_career_grp_rider_of_the_fells_t2_b" text="埃拉瑪斯的盾牆" />
     <string id="taom_career_grp_rider_of_the_fells_t3_a" text="埃滕荒原騎士" />
     <string id="taom_career_grp_rider_of_the_fells_t3_b" text="卡梅斯布林衝鋒" />
     <string id="taom_career_grp_warden_of_tyrn_gorthad_t1_a" text="丘崗守望者" />
     <string id="taom_career_grp_warden_of_tyrn_gorthad_t1_b" text="灰水河渡口守衛" />
     <string id="taom_career_grp_warden_of_tyrn_gorthad_t2_a" text="南崗先鋒" />
     <string id="taom_career_grp_warden_of_tyrn_gorthad_t2_b" text="薩恩渡口之劍" />
-    <string id="taom_career_grp_warden_of_tyrn_gorthad_t3_a" text="阿蘭希爾之軍" />
+    <string id="taom_career_grp_warden_of_tyrn_gorthad_t3_a" text="奧斯希爾的軍旅" />
     <string id="taom_career_grp_warden_of_tyrn_gorthad_t3_b" text="王家古冢守衛" />
     <string id="taom_career_knight_of_cardolan" text="卡多藍騎士" />
     <string id="taom_career_knight_of_cardolan_desc" text="南部王國的披甲勇士，雷霆般的衝鋒已擊潰無數敵陣。卡多藍騎士將嚴明的軍紀與卡拉斯戈沙德引以爲傲的騎兵傳統融爲一體，成爲堅不可摧的鋼鐵壁壘。" />
@@ -1403,7 +1403,7 @@
     <string id="taom_career_archer_of_eastbank" text="東岸射手" />
     <string id="taom_career_archer_of_eastbank_desc" text="河谷的林中居民弓手，從黑森林邊緣與金鳶尾河岸放箭，傳承着百發百中的射術。" />
     <string id="taom_career_axe_warden_of_beorns_hall" text="貝奧恩大廳持斧守望者" />
-    <string id="taom_career_axe_warden_of_beorns_hall_desc" text="比翁家族中肩膀寬闊的斧兵，守衛河谷地的渡口與山徑，抵禦半獸人與惡狼。" />
+    <string id="taom_career_axe_warden_of_beorns_hall_desc" text="貝奧恩一族中肩膀寬闊的斧手，據守河谷地的渡口與山隘，抵禦半獸人與惡狼。" />
     <string id="taom_career_grp_archer_of_eastbank_t1_a" text="金鳶尾河弓手" />
     <string id="taom_career_grp_archer_of_eastbank_t1_b" text="黑森林邊緣守望" />
     <string id="taom_career_grp_archer_of_eastbank_t2_a" text="林中居民傳人" />
@@ -1420,7 +1420,7 @@
     <string id="taom_career_grp_hewer_of_ironwood_hall_t1_b" text="密林路劈砍手" />
     <string id="taom_career_grp_hewer_of_ironwood_hall_t2_a" text="心材之斧" />
     <string id="taom_career_grp_hewer_of_ironwood_hall_t2_b" text="埃敏杜伊爾劈斬" />
-    <string id="taom_career_grp_hewer_of_ironwood_hall_t3_a" text="英格瑪王的巨斧" />
+    <string id="taom_career_grp_hewer_of_ironwood_hall_t3_a" text="塞奧德米羅國王的巨斧" />
     <string id="taom_career_grp_hewer_of_ironwood_hall_t3_b" text="黑暗密林伐木者" />
     <string id="taom_career_grp_rider_of_the_vales_t1_a" text="金鳶尾河騎手" />
     <string id="taom_career_grp_rider_of_the_vales_t1_b" text="古道守望者" />
@@ -1430,16 +1430,16 @@
     <string id="taom_career_grp_rider_of_the_vales_t3_b" text="酋長傳令騎手" />
     <string id="taom_career_grp_warden_of_the_forest_gate_t1_a" text="林中居民鎮矛兵" />
     <string id="taom_career_grp_warden_of_the_forest_gate_t1_b" text="森林之門盾牆" />
-    <string id="taom_career_grp_warden_of_the_forest_gate_t2_a" text="英戈瑪之槍" />
+    <string id="taom_career_grp_warden_of_the_forest_gate_t2_a" text="塞奧德米羅之矛" />
     <string id="taom_career_grp_warden_of_the_forest_gate_t2_b" text="密林路壁壘" />
-    <string id="taom_career_grp_warden_of_the_forest_gate_t3_a" text="英戈瑪王的前鋒" />
+    <string id="taom_career_grp_warden_of_the_forest_gate_t3_a" text="塞奧德米羅國王的前鋒" />
     <string id="taom_career_grp_warden_of_the_forest_gate_t3_b" text="荊棘堡最後堅守" />
     <string id="taom_career_grp_woodward_of_the_forest_road_t1_a" text="荊棘堡弓手" />
     <string id="taom_career_grp_woodward_of_the_forest_road_t1_b" text="密林路守望" />
     <string id="taom_career_grp_woodward_of_the_forest_road_t2_a" text="林道守衛傳人" />
     <string id="taom_career_grp_woodward_of_the_forest_road_t2_b" text="鴞眼射手" />
     <string id="taom_career_grp_woodward_of_the_forest_road_t3_a" text="埃敏杜伊爾蜘蛛殺手" />
-    <string id="taom_career_grp_woodward_of_the_forest_road_t3_b" text="英戈瑪血脈之弓" />
+    <string id="taom_career_grp_woodward_of_the_forest_road_t3_b" text="塞奧德米羅王族之弓" />
     <string id="taom_career_hewer_of_ironwood_hall" text="鐵木廳伐木手" />
     <string id="taom_career_hewer_of_ironwood_hall_desc" text="安加拉茲的鐵木伐木手，雙手揮舞巨斧，劈開盾牌，連同盾後的奧克一併斬倒。" />
     <string id="taom_career_rank1_archer_of_eastbank" text="金鳶尾河弓手" />
@@ -1640,7 +1640,7 @@
     <string id="taom_career_grp_bowman_of_redwater_t2_a" text="紅水弓手傳人" />
     <string id="taom_career_grp_bowman_of_redwater_t2_b" text="隼眼射手" />
     <string id="taom_career_grp_bowman_of_redwater_t3_a" text="海門劫掠者剋星" />
-    <string id="taom_career_grp_bowman_of_redwater_t3_b" text="奧斯崔克王血脈之弓" />
+    <string id="taom_career_grp_bowman_of_redwater_t3_b" text="哈溫王族之弓" />
     <string id="taom_career_grp_marksman_of_westmark_t1_a" text="西境之鷹" />
     <string id="taom_career_grp_marksman_of_westmark_t1_b" text="西部平原守望者" />
     <string id="taom_career_grp_marksman_of_westmark_t2_a" text="徵召軍隊長" />
@@ -1661,9 +1661,9 @@
     <string id="taom_career_grp_river_rider_of_seagate_t3_b" text="國王傳令騎手" />
     <string id="taom_career_grp_spear_warden_of_vinewatch_t1_a" text="紅水河葡萄園守衛" />
     <string id="taom_career_grp_spear_warden_of_vinewatch_t1_b" text="梯田盾牆" />
-    <string id="taom_career_grp_spear_warden_of_vinewatch_t2_a" text="奧斯崔克王之槍" />
+    <string id="taom_career_grp_spear_warden_of_vinewatch_t2_a" text="哈溫國王之矛" />
     <string id="taom_career_grp_spear_warden_of_vinewatch_t2_b" text="紅水河壁壘" />
-    <string id="taom_career_grp_spear_warden_of_vinewatch_t3_a" text="奧斯崔克王的前鋒" />
+    <string id="taom_career_grp_spear_warden_of_vinewatch_t3_a" text="哈溫國王的先鋒" />
     <string id="taom_career_grp_spear_warden_of_vinewatch_t3_b" text="日牆最後堅守" />
     <string id="taom_career_grp_warden_of_wainwatch_t1_a" text="戰車哨站之門" />
     <string id="taom_career_grp_warden_of_wainwatch_t1_b" text="平原守望" />

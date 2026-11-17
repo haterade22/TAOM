@@ -2743,7 +2743,7 @@
 
     <string id="taom_faction_khudorom_of_khand_weakness_2" text="僱傭兵隊長忠於金幣，不忠於領主" />
 
-    <string id="taom_faction_kingdom_of_angaladh_desc" text="安加拉斯的林人居住在幽暗密林西緣之下，他們的先祖在堅硬如鐵、斧砍作響的林木間闢出家園。英格瑪國王的弓手守望著窄道。此國置身魔戒聖戰之外，但森林南方的陰影年年增長。" />
+    <string id="taom_faction_kingdom_of_angaladh_desc" text="安加拉茲的林中居民住在黑森林西部的林緣，他們的先祖在堅硬如鐵、斧砍作響的樹木之間開墾出農莊。塞奧德米羅國王的弓手守望着窄道。這個國家沒有捲入魔戒大戰，但森林南方的陰影年復一年地增長。" />
 
     <string id="taom_faction_kingdom_of_angaladh_name" text="安加拉茲王國" />
 
@@ -2854,7 +2854,7 @@
 
     <string id="taom_faction_kingdom_of_dale_weakness_2" text="固執的議會影響外交" />
 
-    <string id="taom_faction_kingdom_of_dorwinion_desc" text="多溫尼安的釀酒人占據著盧恩海上方溫暖的山坡，他們的紅酒在每一座出得起價錢的大廳中都備受珍視。奧斯崔克國王在藤堡統治。此國置身於魔戒之戰以外，但內海對岸的東方人，年復一年地用更貪婪的目光打量這片富庶而守備薄弱的土地。" />
+    <string id="taom_faction_kingdom_of_dorwinion_desc" text="多溫尼安的釀酒人佔據着魯恩內海之上溫暖的坡地，他們的紅酒在每一座付得起價錢的大廳裏都備受珍視。哈溫國王於葡萄洲統治。此邦沒有捲入魔戒大戰，但內海對岸的東夷，一年比一年更貪婪地盯着這片富饒而守備薄弱的土地。" />
 
     <string id="taom_faction_kingdom_of_dorwinion_name" text="多溫尼安王國" />
 
@@ -3303,7 +3303,7 @@
 
     <string id="taom_faction_kingdom_of_rohan_weakness_2" text="馬克出騎後，海爾姆深谷會暴露" />
 
-    <string id="taom_faction_kingdom_of_south_rhovanion_desc" text="南羅馬尼安的北方人馳騁於幽暗密林南緣與魯恩海之間的遼闊平原，他們是養馬之民，也是遠在北方的伊歐希歐德人的親族。維杜馬爾國王坐鎮維杜加德，古代諸王的塚墓矗立於他的草原之上。此國置身魔戒聖戰之外，然而戰車民曾兩度將其擊潰，平原上的騎手們至今不忘。" />
+    <string id="taom_faction_kingdom_of_south_rhovanion_desc" text="南羅瓦尼安的北方人馳騁於黑森林南緣與魯恩海之間的廣闊平原，他們是馬匹的養育者，也是遙遠北方伊歐西歐德人的親族。蘇尼耶弗雷多國王據守維杜加德，古代君王的古冢立於他的草原之上。這個國家沒有捲入魔戒大戰，但戰車民曾兩度將其擊垮，平原上的騎手至今未忘。" />
 
     <string id="taom_faction_kingdom_of_south_rhovanion_name" text="南羅瓦尼安王國" />
 
@@ -5132,11 +5132,11 @@
 
     <string id="taom_fui_weaknesses" text="劣勢" />
 
-    <string id="taom_fui_realm_not_playable" text="該勢力不可選" />
+    <string id="taom_fui_realm_not_playable" text="該國度不可遊玩" />
 
     <string id="taom_fui_perks" text="特長" />
 
-    <string id="taom_fui_special_units" text="特殊兵種" />
+    <string id="taom_fui_special_units" text="特殊單位" />
 
     <string id="taom_fui_bonuses" text="加成" />
 
@@ -5144,7 +5144,7 @@
 
     <string id="taom_fui_paused" text="已暫停" />
 
-    <string id="taom_ency_hero_history" text="經歷" />
+    <string id="taom_ency_hero_history" text="歷史" />
 
     <string id="taom_fui_confirm" text="確認" />
 
@@ -7507,7 +7507,7 @@
     <string id="taom_marshal_fire_on_word" text="弓兵拉弓待命，等候你下令，最多保持14秒。" />
     <string id="taom_marshal_word_given" text="射擊命令已下達。" />
     <string id="taom_marshal_mcm_outlines" text="單位輪廓" />
-    <string id="taom_marshal_mcm_outlines_hint" text="當指令面板開啟時,或按住顯示標示鍵(預設左 Alt)時,你所選部隊的士兵會顯示金色輪廓,而被其中之一標記或衝鋒的敵方部隊會顯示紅色輪廓。下達衝鋒令時按住「標記,不要移動」(預設左 Ctrl),即可標記敵方部隊而不移動:標記可引導弓手與其他遠程士兵,而近身肉搏的士兵則自行選擇對手。預設:開啟。" />
+    <string id="taom_marshal_mcm_outlines_hint" text="命令面板打開時，或按住顯示指示器按鍵（默認左 Alt）時，所選編隊的士兵會顯示金色輪廓，被其標記或衝鋒的敵方編隊會顯示紅色輪廓。下達衝鋒命令時按住“標記，不移動”（默認左 Ctrl），即可只標記敵方編隊而不移動：標記用於引導弓兵等遠程士兵，近戰士兵仍自行選擇交戰對象。此設置在默認值改爲關閉時被重命名，因此你先前保存的數值已被重置：若需要請重新開啓。默認：關閉。" />
     <string id="taom_seat_hero_fell" text="你的英雄已倒下。按“控制這名士兵”接管一名士兵，默認Delete，除非已改鍵。" />
     <string id="taom_seat_take_nobody" text="那裏沒有可接管的士兵。" />
     <string id="taom_seat_take_refused" text="你不能接管那名士兵。" />
@@ -7770,22 +7770,22 @@
     <string id="taom_war_pledge_joined_evil" text="{REALM}在魔戒大戰中加入暗影一方。" />
     <string id="taom_war_pledge_mcm_enabled" text="啓用參戰誓約" />
     <string id="taom_war_pledge_mcm_enabled_hint" text="開啓後，中立國家可以正式加入魔戒大戰，並一直參戰。全面戰爭期間，戰局條上落後至少25點的一方會號召傾向自己的中立國家參戰：可汗德、魯道爾、烏姆巴爾、沙加納和阿巴尼薩傾向暗影，卡多藍和多溫尼安傾向自由人民。參戰國會向另一方的全部國家宣戰，而且只要魔戒大戰仍在繼續，這些戰爭就不能以議和結束。每次只有一個國家加入，默認間隔30天，除非war_pledge.json另有規定；玩家統治的國家絕不會被自動拉入。需要開啓戰局優勢統計。關閉後，AI不再吸納新的參戰國，但已經加入的國家不會退出。默認：開啓。" />
-    <string id="taom_res_tt_per_battle_ref" text="每場 {SIZE} 人規模的戰鬥" />
-    <string id="taom_specres_mcm_gold_rate_hint_base" text="當「精銳部隊僅需金幣」開啟時，使者的金幣價格為該部隊的基礎使者費用乘以此數值。資源價格亦為同一基礎費用的倍數。預設：200。" />
+    <string id="taom_res_tt_per_battle_ref" text="每場{SIZE}人規模的戰鬥" />
+    <string id="taom_specres_mcm_gold_rate_hint_base" text="開啓「精銳部隊僅消耗金幣」後，使者的金幣價格爲該兵種的使者基礎費用乘以此數值。資源價格同樣是該基礎費用的倍數。默認：200。" />
     <string id="taom_realms_mcm_claim_price" text="宣稱費用（%）" />
     <string id="taom_realms_mcm_claim_price_hint" text="購買頭銜宣稱的費用，按realms_titles.xml中價格的百分比計算。基礎費用從男爵領的40到王國的500不等，使用所屬民族的專屬資源。AI領主使用金幣支付，採用相同百分比。範圍：10至500。默認：100。" />
     <string id="taom_realms_mcm_influence_cost" text="頭銜影響力費用（%）" />
     <string id="taom_realms_mcm_influence_cost_hint" text="奪取、設立、恢復或剝奪頭銜所需的影響力，按realms_titles.xml中費用的百分比計算。設爲100時，爲阿拉貢恢復剛鐸王位需要2500影響力。也作用於AI領主。範圍：10至500。默認：100。" />
     <string id="taom_realms_mcm_ai_claims" text="AI領主行使宣稱" />
     <string id="taom_realms_mcm_ai_claims_hint" text="開啓後，AI領主每週會購買宣稱、奪取已有宣稱的頭銜、在本陣營掌握的領土上設立空缺頭銜，以及恢復王位。關閉後，只有你能進行這些操作；AI已經擁有的宣稱仍然保留。默認：開啓。" />
-    <string id="taom_realms_mcm_tribute_recv" text="來自封臣的貢賦" />
-    <string id="taom_realms_mcm_tribute_recv_hint" text="開啟時，在你的王國中，凡其領主持有的頭銜直屬於你氏族頭銜之下的氏族，皆會將其領地每日收入的一部分繳給你的氏族。此數額會顯示在預期金幣變化中。對 AI 領主同樣適用。收取與繳納為獨立設定：若僅開啟此項，宗主獲得金幣而封臣不會損失。預設：開啟。" />
-    <string id="taom_realms_mcm_tribute_recv_pct" text="來自封臣的貢賦（%）" />
-    <string id="taom_realms_mcm_tribute_recv_pct_hint" text="封臣氏族每日領地收入中繳給其宗主氏族的比例。若一氏族有多位宗主，則在他們之間分攤。範圍 1 至 25。預設：5。" />
-    <string id="taom_realms_mcm_tribute_pay" text="繳予宗主的貢賦" />
-    <string id="taom_realms_mcm_tribute_pay_hint" text="開啟時，你的氏族會向每個宗主氏族（即其領主在你的王國中持有直屬於你某一頭銜之上的頭銜者）繳納其領地每日收入的一部分。此數額會顯示在預期金幣變化中。對 AI 領主同樣適用。無法全額繳納的氏族當日則分文不付。若僅開啟此項，封臣損失金幣而宗主不會獲得。預設：開啟。" />
-    <string id="taom_realms_mcm_tribute_pay_pct" text="繳予宗主的貢賦（%）" />
-    <string id="taom_realms_mcm_tribute_pay_pct_hint" text="氏族每日領地收入中繳給其宗主氏族的比例，若有多位宗主則在他們之間分攤。範圍 1 至 25。預設：5。" />
+    <string id="taom_realms_mcm_tribute_recv" text="封臣進貢" />
+    <string id="taom_realms_mcm_tribute_recv_hint" text="開啓後，在你的國境內，凡其領主持有的頭銜直接低於你家族頭銜的家族，都會將其領地每日收入的一部分進貢給你的家族。此項會顯示在預期金幣變化中。對AI領主同樣生效。收取與支付是彼此獨立的：只開啓本項時，宗主獲得金幣而封臣不會損失。默認：開啓。" />
+    <string id="taom_realms_mcm_tribute_recv_pct" text="封臣進貢（%）" />
+    <string id="taom_realms_mcm_tribute_recv_pct_hint" text="宗主家族從封臣家族領地每日收入中獲得的比例。若某家族有多個宗主家族，則在他們之間均分。取值1至25。默認：5。" />
+    <string id="taom_realms_mcm_tribute_pay" text="向宗主進貢" />
+    <string id="taom_realms_mcm_tribute_pay_hint" text="開啓後，你的家族會向每個宗主家族（即在你的國境內，其領主持有的頭銜直接高於你某個頭銜的家族）支付其領地每日收入的一部分。此項會顯示在預期金幣變化中。對AI領主同樣生效。若某家族無力支付全部貢金，當日則分文不付。只開啓本項時，封臣損失金幣而宗主不會獲得。默認：開啓。" />
+    <string id="taom_realms_mcm_tribute_pay_pct" text="向宗主進貢（%）" />
+    <string id="taom_realms_mcm_tribute_pay_pct_hint" text="家族向宗主家族支付的領地每日收入比例；若有多個宗主家族，則在他們之間均分。取值1至25。默認：5。" />
     <string id="taom_realms_mcm_office_influence" text="官職影響力（%）" />
     <string id="taom_realms_mcm_office_influence_hint" text="剛鐸宰相、洛汗元帥等官職每週向任職者家族提供的影響力，按realms_titles.xml中數值的百分比計算。0爲停止提供。範圍：0至300。默認：100。" />
     <string id="taom_realms_mcm_resentment" text="封地爭議引發不滿" />
@@ -7793,7 +7793,7 @@
     <string id="taom_realms_mcm_liege_pull" text="宗主好感增長" />
     <string id="taom_realms_mcm_liege_pull_hint" text="開啓後，封臣與宗主分屬不同家族時，封臣每週都會小幅增加對宗主頭銜持有者的好感，最多升至30點關係。默認：開啓。" />
     <string id="taom_realms_mcm_army_discount" text="宗主召集軍團折扣" />
-    <string id="taom_realms_mcm_army_discount_hint" text="開啟時，召集封臣加入軍隊只需耗費宗主一半的影響力。關閉時，則按原版遊戲計算。預設：開啟。" />
+    <string id="taom_realms_mcm_army_discount_hint" text="開啓後，召集封臣加入軍團時，其宗主只需花費一半影響力。此效果不與「國王徵召」的統治者折扣疊加：兩者同時適用時取較大者。關閉後，文化特長和「國王徵召」等其他折扣仍然生效。默認：開啓。" />
     <string id="taom_realms_mcm_family_grants" text="向子女分封領地" />
     <string id="taom_realms_mcm_family_grants_hint" text="開啓後，AI領主會把較低級的頭銜授予成年子女。關閉後，他們會保留這些頭銜；已經授予的頭銜不會收回，開局時預設的分封也會保留，例如波洛米爾的西歐斯吉利亞斯。默認：開啓。" />
     <string id="taom_realms_mcm_title_styles" text="顯示領主稱謂和頭銜" />
@@ -7832,210 +7832,210 @@
     <string id="taom_banner_category_dwarven" text="矮人" />
     <string id="taom_banner_category_dunlending" text="黑蠻地人" />
     <string id="taom_banner_category_misc" text="雜項" />
-    <string id="taom_coopcompat_settings_differ" text="你的 TAOM 設定與房主在以下項目不同：{GROUPS}。合作模式對你而言可能有不同表現。" />
-    <string id="taom_coopcompat_build_mismatch" text="你的 TAOM 版本與房主的版本不同。合作模式可能失去同步或運作異常。請安裝與房主相同的 TAOM 下載版本。" />
-    <string id="taom_battlehud_mcm_colour_mode" text="戰鬥介面顏色" />
-    <string id="taom_battlehud_mcm_colour_mode_hint" text="僅變更圓形戰鬥介面上的三個環：你的角色生命、坐騎生命與盾牌。預設維持其石質外觀與配色。其他每個選項會在深色軌道上以純色繪製這些環，使該類型色覺者更容易分辨。環的順序與填充方式維持不變，因此位置與長度也有助於區分。專長能力中心、彈藥數量及其他所有畫面皆不變更。變更會在目前戰鬥中立即生效，無須重新啟動。" />
-    <string id="taom_hero_auras_mcm_enabled" text="啟用英雄光環" />
-    <string id="taom_hero_auras_mcm_enabled_hint" text="具名英雄會以各自的方式強化身邊的友軍：戴因的矮人站得更穩，亞拉岡的人類更能沉住氣，精靈領主的弓箭手射得更快。只有列於 hero_auras.json 中的英雄才具備光環。若光環與士兵自身的種族能力提供相同效果，取較強者計算，兩者不會疊加。將於下一次光環脈動時生效。" />
+    <string id="taom_coopcompat_settings_differ" text="你的TAOM設置與房主在以下方面不同：{GROUPS}。合作模式中你的體驗可能有所差異。" />
+    <string id="taom_coopcompat_build_mismatch" text="你的TAOM版本與房主不同。合作模式可能失步或異常。請安裝與房主相同的TAOM下載版本。" />
+    <string id="taom_battlehud_mcm_colour_mode" text="戰鬥HUD配色" />
+    <string id="taom_battlehud_mcm_colour_mode_hint" text="僅改變圓形戰鬥HUD的三個環：你的角色生命、坐騎生命與盾牌。默認保持其石質外觀與配色。其餘選項會在深色底軌上，以更易分辨的純色繪製這些環，適配對應類型的色覺。環的順序與填充方式不變，因此位置與長度同樣可供分辨。職業能力的中心圖示、彈藥計數及其他所有界面均不改變。更改在當前戰鬥中立即生效，無需重啓。" />
+    <string id="taom_hero_auras_mcm_enabled" text="啓用英雄光環" />
+    <string id="taom_hero_auras_mcm_enabled_hint" text="具名英雄會以各自的方式強化附近的友軍：戴因的矮人站得更穩，亞拉岡的人類更為沉著，精靈領主的弓手拉弓更快。只有hero_auras.json中列出的英雄纔擁有光環。當光環與士兵自身的種族能力提供相同效果時，取較強者，二者不疊加。自下一次光環脈衝起生效。" />
     <string id="taom_hero_auras_mcm_strength" text="英雄光環強度" />
-    <string id="taom_hero_auras_mcm_strength_hint" text="倍增所有光環的加成。1.0 為 hero_auras.json 中設定的原始數值；0 則關閉所有光環。士氣下限與開關式效果（如無視擊倒）不受縮放影響。預設值：1.0。" />
-    <string id="taom_messenger_waiting" text="Your messenger cannot find {HERO_NAME} yet and will wait until they can be reached." />
-    <string id="taom_char_title" text="Character" />
-    <string id="taom_char_perk_or" text="or" />
-    <string id="taom_char_attribute_points" text="Attribute Points" />
-    <string id="taom_char_perk_tier_locked" text="Locked" />
-    <string id="taom_char_no_traits" text="No notable traits" />
-    <string id="taom_story_offer_body" text="The hour of {TARGET} has come. Will you ride to its walls and fight the battle yourself, or let fate decide?" />
-    <string id="taom_story_offer_ride" text="Ride to {TARGET}" />
-    <string id="taom_story_offer_fate" text="Let fate decide" />
-    <string id="taom_story_offer_defend" text="Defend the walls" />
-    <string id="taom_story_offer_continue" text="Continue" />
-    <string id="taom_story_offer_none" text="The moment has passed." />
-    <string id="taom_story_offer_won" text="The walls of {TARGET} held, and the host breaks against them." />
-    <string id="taom_story_offer_lost" text="The walls of {TARGET} are lost." />
-    <string id="taom_story_offer_undecided" text="The battle for {TARGET} is not decided. The call may come again." />
-    <string id="taom_story_offer_menu" text="The host of the enemy gathers before {TARGET}. Time stands until you choose." />
-    <string id="taom_story_offer_failed" text="The story battle could not open. The taom log says why." />
-    <string id="taom_wc_mcm_story" text="Offer Story Missions" />
-    <string id="taom_wc_mcm_story_hint" text="When a great siege opens (the Battle of the Hornburg), offers you its battle to fight yourself. A win holds the fortress; a loss gives it to the attackers. If you let fate decide, the map decides, and a siege that nobody attacks ends as in the book. Off: no offer, and the map and fate decide. Not offered in co-op or while enlisted. Default on." />
-    <string id="taom_story_offer_later" text="Not now" />
-    <string id="taom_realms_ui_primary" text="Make primary title" />
-    <string id="taom_realms_ui_primary_ask" text="Be known by the {TITLE} from now on? Your style and party name follow your primary title, and so does your realm's banner where the title has one." />
-    <string id="taom_patch_self_disabled" text="TAOM: some fixes turned themselves off: {FEATURES}. They stay off for the rest of this battle or this session; the TAOM log names the cause." />
-    <string id="taom_bugreport_offer_title" text="TAOM: the last game ended unexpectedly" />
-    <string id="taom_bugreport_offer_text" text="Your last game closed without TAOM's normal shutdown. That happens after a crash, after a freeze you had to close, or when the game was stopped some other way.{newline}{newline}Make a bug report now? TAOM puts the logs from that game into one zip file that you can attach to your report." />
-    <string id="taom_bugreport_offer_yes" text="Make bug report" />
-    <string id="taom_bugreport_offer_no" text="No" />
-    <string id="taom_bugreport_done_title" text="TAOM bug report" />
-    <string id="taom_bugreport_done_text" text="Your bug report is ready:{newline}{PATH}{newline}{newline}Attach this file to your bug report and say what you were doing when the problem happened." />
-    <string id="taom_bugreport_failed_text" text="The bug report could not be written. Please attach the newest taom_debug log from this folder instead:{newline}{PATH}" />
-    <string id="taom_bugreport_close" text="Close" />
-    <string id="taom_bugreport_open_folder" text="Open folder" />
-    <string id="taom_cheat_bad_amount" text="That amount is not allowed. The limit is {MAX}." />
-    <string id="taom_cheat_battle_done_heal_self" text="You are back to full health, and so is your mount if you ride one." />
-    <string id="taom_cheat_battle_done_heal_side" text="{NUMBER} soldiers and mounts of your side are back to full health." />
-    <string id="taom_cheat_battle_done_kill" text="{NUMBER} enemies were killed." />
-    <string id="taom_cheat_battle_done_rout" text="{NUMBER} enemies are fleeing." />
-    <string id="taom_cheat_battle_done_spawn_ally" text="{NUMBER} allied troops joined the battle." />
-    <string id="taom_cheat_battle_done_spawn_enemy" text="{NUMBER} enemy troops joined the battle." />
-    <string id="taom_cheat_battle_item" text="Cheats" />
-    <string id="taom_cheat_battle_none" text="Start a battle first. Battle cheats work only while a battle is on." />
-    <string id="taom_cheat_battle_nothing" text="Nothing changed: there is nobody in this battle this cheat can act on." />
-    <string id="taom_cheat_battle_opt_heal_self" text="Heal yourself" />
-    <string id="taom_cheat_battle_opt_heal_side" text="Heal your side" />
-    <string id="taom_cheat_battle_opt_kill" text="Kill all enemies" />
-    <string id="taom_cheat_battle_opt_rout" text="Rout the enemy" />
-    <string id="taom_cheat_battle_opt_spawn_ally" text="+10 allied troops" />
-    <string id="taom_cheat_battle_opt_spawn_enemy" text="+10 enemy troops" />
-    <string id="taom_cheat_battle_text" text="Cheats change this battle. New troops are copies of soldiers already on that side." />
-    <string id="taom_cheat_battle_title" text="Battle cheats" />
-    <string id="taom_cheat_coop" text="Cheats are not available in co-op." />
-    <string id="taom_cheat_failed" text="That cheat failed. The TAOM log has the details." />
-    <string id="taom_cheat_done" text="Done: {NAME} {NUMBER}" />
-    <string id="taom_cheat_mcm_enable" text="Enable Cheat Menu" />
-    <string id="taom_cheat_mcm_enable_hint" text="Adds a Cheats button to the bottom bar of the campaign map. It opens a menu that teleports your party to a settlement and gives gold, troops, your special resource, influence, renown and relations, and heals your party. In a mission, the Esc menu has a Cheats item (or press H) that heals you or your side, routs or kills the enemy, or adds 10 allied or enemy troops. Cheats change your save, and most cannot be undone. The button appears the next time the campaign map opens, for example after loading a save. The H key on the campaign map also opens the menu (change either key under Options, Keybindings). Single-player only. Default: off." />
-    <string id="taom_cheat_mcm_group" text="Cheat Menu" />
-    <string id="taom_cheat_menu_text" text="TAOM cheat menu. Cheats change your save, and most cannot be undone." />
-    <string id="taom_cheat_nav_busy" text="The cheat menu opens from the free campaign map." />
-    <string id="taom_cheat_nav_label" text="Cheats" />
-    <string id="taom_cheat_nothing" text="Nothing changed: your hero has nothing this cheat can give to." />
-    <string id="taom_cheat_opt_back" text="Back" />
-    <string id="taom_cheat_opt_close" text="Close" />
-    <string id="taom_cheat_opt_gold" text="Gold: +10,000 denars" />
-    <string id="taom_cheat_opt_heal" text="Heal your party and your heroes" />
-    <string id="taom_cheat_opt_influence" text="Influence: +100" />
-    <string id="taom_cheat_opt_relation" text="Relations: +20 with every lord of a kingdom..." />
-    <string id="taom_cheat_opt_renown" text="Renown: +100" />
-    <string id="taom_cheat_opt_resource" text="Special resource: +1,000" />
-    <string id="taom_cheat_opt_teleport" text="Teleport to a settlement..." />
-    <string id="taom_cheat_opt_troops" text="Troops..." />
-    <string id="taom_cheat_pick_cancel" text="Cancel" />
-    <string id="taom_cheat_pick_kingdom" text="Choose a kingdom" />
-    <string id="taom_cheat_pick_ok" text="Choose" />
-    <string id="taom_cheat_pick_settlement" text="Choose where to teleport" />
-    <string id="taom_cheat_teleport_text" text="Teleport to a settlement's gate. You arrive outside and enter as usual." />
-    <string id="taom_cheat_tp_army" text="Leave the army first. Only an army's leader can teleport it." />
-    <string id="taom_cheat_tp_camp" text="Break camp first, then teleport." />
-    <string id="taom_cheat_tp_castles" text="Castles..." />
-    <string id="taom_cheat_tp_encounter" text="Finish the battle or encounter first." />
-    <string id="taom_cheat_tp_mission" text="You cannot teleport during a battle or a scene." />
-    <string id="taom_cheat_tp_nocampaign" text="Start or load a campaign first." />
-    <string id="taom_cheat_tp_parked" text="You cannot teleport while you serve in another lord's party." />
-    <string id="taom_cheat_tp_prisoner" text="You cannot teleport while you are a prisoner." />
-    <string id="taom_cheat_tp_sea" text="Go ashore first, then teleport." />
-    <string id="taom_cheat_tp_settlement" text="Leave the settlement first, then teleport." />
-    <string id="taom_cheat_tp_siege" text="End the siege first." />
-    <string id="taom_cheat_tp_towns" text="Towns..." />
-    <string id="taom_cheat_tp_villages" text="Villages..." />
-    <string id="taom_cheat_troops_basic" text="+10 basic recruits" />
-    <string id="taom_cheat_troops_elite" text="+10 elite recruits" />
-    <string id="taom_cheat_troops_text" text="Add recruits of your culture to your party." />
-    <string id="taom_cheat_unknown" text="Nothing called &quot;{NAME}&quot; was found." />
-    <string id="TAOM_LD_Up_Axemen" text="Militia to Westfold Axemen" />
-    <string id="TAOM_LD_Up_VeteranAxemen" text="Axemen to Veteran Axemen" />
-    <string id="TAOM_LD_Up_HeavyAxemen" text="Axemen to Heavy Axemen" />
-    <string id="TAOM_LD_Up_Helmingas" text="Veteran Axemen to Helmingas Axemen" />
-    <string id="TAOM_LD_Up_HelmingasHeavy" text="Heavy Axemen to Helmingas Heavy Axemen" />
-    <string id="TAOM_LD_Up_Bowmen" text="Yeomen to Eastfold Bowmen" />
-    <string id="TAOM_LD_Up_VeteranBowmen" text="Bowmen to Veteran Bowmen" />
-    <string id="TAOM_LD_Up_RoyalGuard" text="King's Knights to the King's Royal Guard" />
-    <string id="TAOM_LD_Up_Riders" text="Royal Guard to the Riders of Rohan" />
-    <string id="TAOM_LD_Hud_UpgradesTitle" text="Upgrade your soldiers" />
-    <string id="TAOM_LD_Hud_UpgradeDetail" text="{STANDING} standing, gold for {AFFORDABLE}" />
-    <string id="TAOM_LD_Hud_UpgradePrice" text="{PRICE} gold each" />
-    <string id="TAOM_LD_Notice_UnknownUpgrade" text="That upgrade is not for sale." />
-    <string id="TAOM_LD_Notice_NoneToUpgrade" text="No soldier of that troop is left to upgrade." />
-    <string id="taom_realms_tree_selected" text="Selected title" />
-    <string id="taom_realms_tree_holder" text="Holder" />
-    <string id="taom_realms_tree_liege" text="Liege" />
-    <string id="taom_realms_tree_subordinates" text="Subordinate titles" />
-    <string id="taom_cheat_battle_done_god_off" text="God mode is off. You and any mount you ride take damage again." />
-    <string id="taom_cheat_battle_done_god_on" text="God mode is on. You and any mount you ride take no damage until you turn it off or the battle ends." />
-    <string id="taom_cheat_battle_opt_god_off" text="God mode: off" />
-    <string id="taom_cheat_battle_opt_god_on" text="God mode: on" />
-    <string id="taom_realms_mcm_rename_own" text="Your Realm Takes Your Title's Name" />
-    <string id="taom_realms_mcm_rename_own_hint" text="When on, a realm you rule is named after the higher title you hold, as Erebor becomes Durin's Folk, and takes its own name back when you lose that title. When off, your realm keeps its own name; one already renamed takes it back within a day. Default: on." />
-    <string id="taom_realms_mcm_rename_ai" text="AI Realms Take Their Titles' Names" />
-    <string id="taom_realms_mcm_rename_ai_hint" text="When on, a realm ruled by an AI lord is named after the higher title its ruler holds. When off, every such realm keeps its own name; one already renamed takes it back within a day. Default: on." />
-    <string id="taom_realms_mcm_own_banner" text="Your Realm's Banner" />
-    <string id="taom_realms_mcm_own_banner_hint" text="The banner of a realm you rule. Title banner (default): the banner of your primary title when it has one, such as the Kingdom of Gondor's, else the realm's own. Realm's own banner: the realm keeps the banner it has; a realm you founded keeps the banner you made. Your house banner: the realm flies your clan's own banner on its towns, in battle and on the clan screen, even a realm you inherit, and follows when you edit it. Your parties on the map fly your house banner either way. Only the title banner choice lets a coronation give your clan and realm the crowned house's banner. Changes show within a day." />
-    <string id="taom_realms_mcm_ai_banners" text="AI Realms Fly Title Banners" />
-    <string id="taom_realms_mcm_ai_banners_hint" text="When on, a realm ruled by an AI lord flies the banner of its ruler's primary title when it has one. When off, every such realm keeps its own banner; one already changed takes it back within a day. Default: on." />
-    <string id="taom_battle_shader_notice_title" text="Preparing this scene: {COUNT} shaders compiled" />
-    <string id="taom_battle_shader_notice_detail" text="The game is compiling shaders for this scene. It is not frozen. This can take a minute or two." />
-    <string id="taom_battle_shader_loading_line" text="Compiling shaders for this scene. This can take a minute or two; the game is not frozen." />
-    <string id="taom_startup_alert_war_sails" text="War Sails is loaded, but TAOM does not support it. Close the game, untick War Sails in the launcher, and start again." />
-    <string id="taom_bundled_library_copies_body" text="TAOM.Dependencies already provides Harmony, ButterLib, UIExtenderEx and MCM, so these separate copies are not needed:{NEWLINE}{NEWLINE}{LIST}{NEWLINE}{NEWLINE}Unsubscribe from a Steam Workshop copy. A copy in the Modules folder took the place of TAOM's own small module with that name: reinstall TAOM to put it back, and do not delete the folder, or mods that need the library stop loading." />
-    <string id="taom_bundled_library_copy_workshop" text="{NAME} {VERSION}, Steam Workshop" />
-    <string id="taom_bundled_library_copy_modules" text="{NAME} {VERSION}, folder {FOLDER}" />
-    <string id="taom_cheat_done_gold" text="Gold given. You now have {NUMBER} denars." />
-    <string id="taom_cheat_done_influence" text="Gained {NUMBER} influence." />
-    <string id="taom_cheat_done_renown" text="Gained {NUMBER} renown." />
-    <string id="taom_cheat_done_heal" text="Your party is healed. Soldiers healed: {NUMBER}." />
-    <string id="taom_fcamp_block_disorganized" text="the party is still disorganized; wait a few hours." />
-    <string id="taom_fcamp_block_encounter" text="the party is in an encounter." />
-    <string id="taom_fcamp_block_menu" text="a menu or window is open; close it first." />
-    <string id="taom_fcamp_btn_blocked" text="Cannot camp now: {REASON}" />
-    <string id="TAOM_LD_Coop_NoCoop" text="Co-op needs the Coop mod loaded." />
-    <string id="TAOM_LD_Coop_BadPayload" text="The host's run could not be read. Install the same TAOM as the host." />
-    <string id="TAOM_LD_Coop_BadAddress" text="Enter the host's address as address:port, for example 192.168.1.20:4200." />
-    <string id="TAOM_LD_Coop_HostLeft" text="The host left, so the run ended." />
-    <string id="TAOM_LD_Coop_RunEnded" text="The run ended at wave {WAVE}. Waves cleared: {WAVES}. Kills: {KILLS}." />
-    <string id="TAOM_LD_Coop_MenuOption" text="The Long Defeat (co-op)" />
-    <string id="TAOM_LD_Coop_MenuHint" text="Hold a fortress with other players over the Coop mod. One player hosts; the others join by address." />
-    <string id="TAOM_LD_Coop_Prompt_Desc" text="Host a run for other players, or join a run another player hosts." />
-    <string id="TAOM_LD_Coop_Host" text="Host a run" />
-    <string id="TAOM_LD_Coop_Join" text="Join a run" />
-    <string id="TAOM_LD_Coop_JoinText" text="The host's address and port, for example 192.168.1.20:4200." />
-    <string id="taom_story_offer_attack" text="Storm the walls" />
-    <string id="taom_story_offer_body_both" text="The hour of {TARGET} has come. Will you ride there and choose your side of its walls, or let fate decide?" />
-    <string id="taom_story_offer_body_attack" text="The hour of {TARGET} has come. Will you march on its walls and lead the assault yourself, or let fate decide?" />
-    <string id="taom_story_offer_march" text="March on {TARGET}" />
-    <string id="taom_story_offer_repulsed" text="Your assault on {TARGET} is thrown back, and its walls hold." />
-    <string id="taom_story_offer_stormed" text="The walls of {TARGET} are stormed, and the fortress falls." />
-    <string id="taom_story_offer_menu_host" text="A host gathers before the walls of {TARGET}. Time stands until you choose." />
-    <string id="taom_guest_trade_not_leader" text="The host cannot trade for you while you do not lead a free party." />
-    <string id="taom_guest_trade_not_here" text="The host cannot trade for you here: your party is not in this settlement, or it is in a battle or a siege." />
-    <string id="taom_guest_trade_no_armoury" text="The host finds no armourer at work in this town." />
-    <string id="taom_guest_trade_failed" text="The host could not complete this. Try again." />
-    <string id="taom_guest_trade_busy" text="The host has not answered your last request yet." />
-    <string id="taom_guest_trade_no_link" text="The host cannot be reached." />
-    <string id="taom_guest_trade_no_answer" text="The host did not answer your last request. Try again." />
-    <string id="taom_cheat_pick_troop" text="Choose a troop: 10 of it join your party" />
-    <string id="taom_cheat_troop_row" text="Tier {TIER}: {NAME}" />
-    <string id="taom_cheat_troops_any" text="+10 of any troop of your faction..." />
-    <string id="taom_cheat_troops_screen" text="Every troop (party screen)..." />
-    <string id="taom_cheat_done_relation" text="Lords of {NAME} whose relation changed: {NUMBER}." />
-    <string id="taom_cheat_done_teleport" text="You are at the gate of {NAME}." />
-    <string id="taom_rf_warden_ranks" text="Your promoted warden returns to the ranks as {TROOP}." />
-    <string id="taom_hostile_peace_mcm_access" text="Enemy Realms Close Their Gates" />
-    <string id="taom_hostile_peace_mcm_access_hint" text="When enabled (default), the towns and castles of a sworn enemy realm treat you as they would in war, even while your realms are at peace: you enter a town only in disguise, a castle not at all, and you cannot trade, recruit or rest in its villages. Your own fiefs are not affected. When off, the base game's rules apply. Applies at once, no restart." />
-    <string id="taom_hostile_peace_mcm_agreements" text="No Trade Agreements With Enemy Realms" />
-    <string id="taom_hostile_peace_mcm_agreements_hint" text="When enabled (default), a Free realm and a realm of the Shadow never sign a trade agreement, neither by the AI nor by your own kingdom's vote. An agreement signed before this was switched on runs to its end. When off, the base game's rules apply. Applies at once, no restart." />
-    <string id="taom_hostile_peace_mcm_caravans" text="No Caravan Trade With Enemy Realms" />
-    <string id="taom_hostile_peace_mcm_caravans_hint" text="When enabled (default), caravans of a Free realm do not trade in the towns of a realm of the Shadow, and the reverse, while the two are at peace before the War of the Ring. Realms that are not sworn enemies trade as before. When off, the base game's rules apply. Applies at once, no restart." />
-    <string id="taom_hostile_peace_mcm_alliances" text="Allow Player Alliances With Anyone" />
-    <string id="taom_hostile_peace_mcm_alliances_hint" text="When off (default), a kingdom you rule cannot ally with a realm on the other side of the war: a Free kingdom does not ally with the Shadow, and the reverse. Realms of the Neutral side can ally with anyone. A kingdom you founded takes the side of its culture. Alliances you already have are kept. When on, your kingdom may ally with any realm, as before. AI realms keep their own rules either way. Applies at once, no restart." />
-    <string id="taom_hostile_peace_no_alliance" text="Your realms stand on opposite sides of the war and cannot be allied." />
-    <string id="taom_hostile_peace_no_trade" text="Your realms are enemies in all but war. They will not trade." />
-    <string id="TAOM_LD_Hero_Aragorn_Text" text="The heir of Isildur, sword in hand. If he falls, he can be called again." />
-    <string id="TAOM_LD_Hero_Legolas_Text" text="The prince of Mirkwood and his bow. If he falls, he can be called again." />
-    <string id="TAOM_LD_Hero_Gimli_Text" text="The son of Glóin and his axe. If he falls, he can be called again." />
-    <string id="TAOM_LD_Hud_HeroesTitle" text="Heroes" />
-    <string id="TAOM_LD_Hud_HeroPending" text="On his way" />
-    <string id="TAOM_LD_Hud_HeroStanding" text="On the field" />
-    <string id="TAOM_LD_Notice_UnknownHero" text="That hero is not for sale." />
-    <string id="TAOM_LD_Notice_HeroAlive" text="That hero is already with you." />
-    <string id="taom_hero_ability_aragorn_for_frodo" text="For Frodo!" />
-    <string id="taom_hero_ability_aragorn_isildurs_heir" text="Heir of Isildur" />
-    <string id="taom_hero_ability_gimli_baruk_khazad" text="Baruk Khazâd!" />
-    <string id="taom_hero_ability_gimli_still_standing" text="Still Standing" />
-    <string id="taom_hero_ability_legolas_rapid_fire" text="Rapid Fire" />
-    <string id="taom_hero_ability_legolas_many_arrows" text="Many Arrows" />
-    <string id="taom_hero_ability_legolas_archers_eye" text="Archer's Eye" />
-    <string id="taom_hero_ability_cast_ally" text="{HERO}: {ABILITY}" />
-    <string id="taom_hero_ability_cast_enemy" text="Enemy {HERO}: {ABILITY}" />
+    <string id="taom_hero_auras_mcm_strength_hint" text="所有光環加成的倍率。1.0為hero_auras.json中設定的原值；0為關閉所有光環。士氣下限以及諸如免疫擊退之類的開關型效果不受倍率影響。默認：1.0。" />
+    <string id="taom_messenger_waiting" text="你的信使暫時找不到{HERO_NAME}，將一直等到能夠聯繫上為止。" />
+    <string id="taom_char_title" text="角色" />
+    <string id="taom_char_perk_or" text="或" />
+    <string id="taom_char_attribute_points" text="屬性點" />
+    <string id="taom_char_perk_tier_locked" text="已鎖定" />
+    <string id="taom_char_no_traits" text="無顯著特質" />
+    <string id="taom_story_offer_body" text="{TARGET}的時刻已到。你要親自策馬前往城下，親手打這一仗，還是交由命運決定？" />
+    <string id="taom_story_offer_ride" text="馳往{TARGET}" />
+    <string id="taom_story_offer_fate" text="交由命運決定" />
+    <string id="taom_story_offer_defend" text="守衛城牆" />
+    <string id="taom_story_offer_continue" text="繼續" />
+    <string id="taom_story_offer_none" text="時機已經過去。" />
+    <string id="taom_story_offer_won" text="{TARGET}的城牆守住了，敵軍在牆前潰散。" />
+    <string id="taom_story_offer_lost" text="{TARGET}的城牆失守了。" />
+    <string id="taom_story_offer_undecided" text="{TARGET}之戰尚未分出勝負。召喚或許會再度傳來。" />
+    <string id="taom_story_offer_menu" text="敵人的大軍已聚集於{TARGET}之前。在你做出選擇前，時間靜止。" />
+    <string id="taom_story_offer_failed" text="劇情戰鬥無法開啓。原因見 TAOM 日誌。" />
+    <string id="taom_wc_mcm_story" text="提供劇情任務" />
+    <string id="taom_wc_mcm_story_hint" text="當一場大圍城開始時（號角堡之戰），會向你提供親自參戰的機會。勝利可保住要塞；失敗則要塞落入攻方之手。若交由命運決定，則由大地圖判定，而無人進攻的圍城將依原著結局收場。關閉：不再提供選擇，一切由大地圖與命運決定。合作模式或從軍期間不提供。默認開啓。" />
+    <string id="taom_story_offer_later" text="暫不" />
+    <string id="taom_realms_ui_primary" text="設為主要頭銜" />
+    <string id="taom_realms_ui_primary_ask" text="從此以{TITLE}之名為人所知？你的稱謂與部隊名稱將隨主要頭銜而定，若該頭銜帶有旗幟，你的王國旗幟亦然。" />
+    <string id="taom_patch_self_disabled" text="TAOM：部分修復已自行關閉：{FEATURES}。它們將在本場戰鬥或本次遊戲的剩餘時間內保持關閉；具體原因見 TAOM 日誌。" />
+    <string id="taom_bugreport_offer_title" text="TAOM：上一局遊戲意外結束" />
+    <string id="taom_bugreport_offer_text" text="你上一次遊戲並未經由 TAOM 的正常流程關閉。這通常發生在崩潰、卡死後被迫關閉，或遊戲以其他方式中止時。{newline}{newline}現在要製作錯誤報告嗎？TAOM 會把該次遊戲的日誌打包成一個 zip 檔，供你附在報告中。" />
+    <string id="taom_bugreport_offer_yes" text="製作錯誤報告" />
+    <string id="taom_bugreport_offer_no" text="否" />
+    <string id="taom_bugreport_done_title" text="TAOM 錯誤報告" />
+    <string id="taom_bugreport_done_text" text="你的錯誤報告已準備好：{newline}{PATH}{newline}{newline}請將此檔案附在你的錯誤報告中，並說明問題發生時你正在做什麼。" />
+    <string id="taom_bugreport_failed_text" text="無法寫入錯誤報告。請改爲附上此資料夾中最新的 taom_debug 日誌：{newline}{PATH}" />
+    <string id="taom_bugreport_close" text="關閉" />
+    <string id="taom_bugreport_open_folder" text="打開資料夾" />
+    <string id="taom_cheat_bad_amount" text="不允許該數量。上限爲 {MAX}。" />
+    <string id="taom_cheat_battle_done_heal_self" text="你已恢復滿血，若你有坐騎，坐騎也一併恢復。" />
+    <string id="taom_cheat_battle_done_heal_side" text="你方 {NUMBER} 名士兵與坐騎已恢復滿血。" />
+    <string id="taom_cheat_battle_done_kill" text="{NUMBER} 名敵人被擊殺。" />
+    <string id="taom_cheat_battle_done_rout" text="{NUMBER} 名敵人正在潰逃。" />
+    <string id="taom_cheat_battle_done_spawn_ally" text="{NUMBER} 名友軍加入了戰鬥。" />
+    <string id="taom_cheat_battle_done_spawn_enemy" text="{NUMBER} 名敵軍加入了戰鬥。" />
+    <string id="taom_cheat_battle_item" text="作弊" />
+    <string id="taom_cheat_battle_none" text="請先開始一場戰鬥。戰鬥作弊只在戰鬥進行中有效。" />
+    <string id="taom_cheat_battle_nothing" text="沒有變化：這場戰鬥中沒有此作弊可作用的對象。" />
+    <string id="taom_cheat_battle_opt_heal_self" text="治療自己" />
+    <string id="taom_cheat_battle_opt_heal_side" text="治療我方" />
+    <string id="taom_cheat_battle_opt_kill" text="擊殺所有敵人" />
+    <string id="taom_cheat_battle_opt_rout" text="使敵人潰逃" />
+    <string id="taom_cheat_battle_opt_spawn_ally" text="+10 友軍士兵" />
+    <string id="taom_cheat_battle_opt_spawn_enemy" text="+10 敵軍士兵" />
+    <string id="taom_cheat_battle_text" text="作弊會改變這場戰鬥。新增的士兵是該方已有士兵的複製。" />
+    <string id="taom_cheat_battle_title" text="戰鬥作弊" />
+    <string id="taom_cheat_coop" text="合作模式中無法使用作弊。" />
+    <string id="taom_cheat_failed" text="該作弊執行失敗。詳情請見 TAOM 日誌。" />
+    <string id="taom_cheat_done" text="完成：{NAME} {NUMBER}" />
+    <string id="taom_cheat_mcm_enable" text="啓用作弊選單" />
+    <string id="taom_cheat_mcm_enable_hint" text="在戰役地圖底部欄增加一個“作弊”按鈕。它會打開一個選單，可將你的隊伍傳送至定居點，並給予金錢、士兵、你的特殊資源、影響力、聲望與關係，還能治療你的隊伍。在戰鬥任務中，Esc 選單裏有“作弊”項目（或按 H），可治療你或我方、使敵人潰逃或將其擊殺，或增加 10 名友軍或敵軍士兵。作弊會改變你的存檔，且多數無法撤銷。該按鈕將在下次打開戰役地圖時出現，例如讀取存檔後。在戰役地圖上按 H 鍵也可打開選單（可在“選項 → 按鍵設置”中改綁其中一項）。僅限單人模式。默認：關閉。" />
+    <string id="taom_cheat_mcm_group" text="作弊選單" />
+    <string id="taom_cheat_menu_text" text="TAOM 作弊選單。作弊會改變你的存檔，且多數無法撤銷。" />
+    <string id="taom_cheat_nav_busy" text="作弊選單需在自由的戰役地圖上打開。" />
+    <string id="taom_cheat_nav_label" text="作弊" />
+    <string id="taom_cheat_nothing" text="沒有變化：你的英雄沒有此作弊可給予的對象。" />
+    <string id="taom_cheat_opt_back" text="返回" />
+    <string id="taom_cheat_opt_close" text="關閉" />
+    <string id="taom_cheat_opt_gold" text="金錢：+10,000第納爾" />
+    <string id="taom_cheat_opt_heal" text="治癒你的部隊和英雄" />
+    <string id="taom_cheat_opt_influence" text="影響力：+100" />
+    <string id="taom_cheat_opt_relation" text="關係：與某個王國的所有領主+20……" />
+    <string id="taom_cheat_opt_renown" text="聲望：+100" />
+    <string id="taom_cheat_opt_resource" text="特殊資源：+1,000" />
+    <string id="taom_cheat_opt_teleport" text="傳送到某個定居點……" />
+    <string id="taom_cheat_opt_troops" text="士兵……" />
+    <string id="taom_cheat_pick_cancel" text="取消" />
+    <string id="taom_cheat_pick_kingdom" text="選擇一個王國" />
+    <string id="taom_cheat_pick_ok" text="選擇" />
+    <string id="taom_cheat_pick_settlement" text="選擇傳送目的地" />
+    <string id="taom_cheat_teleport_text" text="傳送到定居點的城門。你會抵達外部，並照常進入。" />
+    <string id="taom_cheat_tp_army" text="請先離開軍隊。只有軍隊首領才能傳送軍隊。" />
+    <string id="taom_cheat_tp_camp" text="請先拔營，然後再傳送。" />
+    <string id="taom_cheat_tp_castles" text="城堡……" />
+    <string id="taom_cheat_tp_encounter" text="請先結束戰鬥或遭遇。" />
+    <string id="taom_cheat_tp_mission" text="你無法在戰鬥或場景中傳送。" />
+    <string id="taom_cheat_tp_nocampaign" text="請先開始或載入一場戰役。" />
+    <string id="taom_cheat_tp_parked" text="你在其他領主的部隊中效力時無法傳送。" />
+    <string id="taom_cheat_tp_prisoner" text="你身爲俘虜時無法傳送。" />
+    <string id="taom_cheat_tp_sea" text="請先上岸，然後再傳送。" />
+    <string id="taom_cheat_tp_settlement" text="請先離開定居點，然後再傳送。" />
+    <string id="taom_cheat_tp_siege" text="請先結束圍城。" />
+    <string id="taom_cheat_tp_towns" text="城鎮……" />
+    <string id="taom_cheat_tp_villages" text="村莊……" />
+    <string id="taom_cheat_troops_basic" text="+10名基礎新兵" />
+    <string id="taom_cheat_troops_elite" text="+10名精銳新兵" />
+    <string id="taom_cheat_troops_text" text="將你所屬文化的新兵加入隊伍。" />
+    <string id="taom_cheat_unknown" text="找不到名爲“{NAME}”的內容。" />
+    <string id="TAOM_LD_Up_Axemen" text="民兵升級爲西伏爾德斧兵" />
+    <string id="TAOM_LD_Up_VeteranAxemen" text="斧兵升級爲老兵斧兵" />
+    <string id="TAOM_LD_Up_HeavyAxemen" text="斧兵升級爲重裝斧兵" />
+    <string id="TAOM_LD_Up_Helmingas" text="老兵斧兵升級爲海爾姆族斧兵" />
+    <string id="TAOM_LD_Up_HelmingasHeavy" text="重裝斧兵升級爲海爾姆族重裝斧兵" />
+    <string id="TAOM_LD_Up_Bowmen" text="自耕農升級爲東伏爾德弓兵" />
+    <string id="TAOM_LD_Up_VeteranBowmen" text="弓兵升級爲老兵弓兵" />
+    <string id="TAOM_LD_Up_RoyalGuard" text="國王騎士升級爲國王禁衛" />
+    <string id="TAOM_LD_Up_Riders" text="國王禁衛升級爲洛汗驃騎" />
+    <string id="TAOM_LD_Hud_UpgradesTitle" text="升級你的士兵" />
+    <string id="TAOM_LD_Hud_UpgradeDetail" text="聲望 {STANDING}，金幣足夠升級 {AFFORDABLE} 個" />
+    <string id="TAOM_LD_Hud_UpgradePrice" text="每名 {PRICE} 金幣" />
+    <string id="TAOM_LD_Notice_UnknownUpgrade" text="該升級不出售。" />
+    <string id="TAOM_LD_Notice_NoneToUpgrade" text="該兵種已無士兵可供升級。" />
+    <string id="taom_realms_tree_selected" text="已選頭銜" />
+    <string id="taom_realms_tree_holder" text="持有者" />
+    <string id="taom_realms_tree_liege" text="宗主" />
+    <string id="taom_realms_tree_subordinates" text="從屬頭銜" />
+    <string id="taom_cheat_battle_done_god_off" text="無敵模式已關閉。你和你的坐騎會再次受到傷害。" />
+    <string id="taom_cheat_battle_done_god_on" text="無敵模式已開啓。在你關閉它或戰鬥結束前，你和你的坐騎不會受到傷害。" />
+    <string id="taom_cheat_battle_opt_god_off" text="無敵模式：關閉" />
+    <string id="taom_cheat_battle_opt_god_on" text="無敵模式：開啓" />
+    <string id="taom_realms_mcm_rename_own" text="你的國度採用你頭銜的名稱" />
+    <string id="taom_realms_mcm_rename_own_hint" text="開啓後，你統治的國度會以你所持有的較高頭銜命名，例如孤山變爲都林一族；當你失去該頭銜時，國度會恢復原名。關閉後，你的國度保留自己的名稱；已改名的國度會在一天內恢復原名。默認：開啓。" />
+    <string id="taom_realms_mcm_rename_ai" text="AI國度採用其頭銜的名稱" />
+    <string id="taom_realms_mcm_rename_ai_hint" text="開啓後，由AI領主統治的國度會以其統治者所持有的較高頭銜命名。關閉後，所有此類國度都保留自己的名稱；已改名的國度會在一天內恢復原名。默認：開啓。" />
+    <string id="taom_realms_mcm_own_banner" text="你的國度旗幟" />
+    <string id="taom_realms_mcm_own_banner_hint" text="你所統治國度使用的旗幟。頭銜旗幟（默認）：若你的主要頭銜帶有旗幟，則使用該旗幟，例如剛鐸王國的旗幟，否則使用國度自己的旗幟。國度自有旗幟：國度保留其現有旗幟；你所創建的國度保留你製作的旗幟。你的家徽：國度會在城鎮、戰鬥和家族界面上懸掛你家族自己的旗幟，即使是你繼承的國度也是如此，並會隨你的編輯同步更新。無論哪種選擇，你在地圖上的部隊都懸掛你的家徽。只有選擇頭銜旗幟時，加冕才能讓你的家族與國度獲得受冕家族的旗幟。變更會在一天內顯示。" />
+    <string id="taom_realms_mcm_ai_banners" text="AI國度懸掛頭銜旗幟" />
+    <string id="taom_realms_mcm_ai_banners_hint" text="開啓後，由AI領主統治的國度在其統治者的主要頭銜帶有旗幟時懸掛該旗幟。關閉後，所有此類國度都保留自己的旗幟；已變更的國度會在一天內恢復原旗。默認：開啓。" />
+    <string id="taom_battle_shader_notice_title" text="正在準備此場景：已編譯 {COUNT} 個着色器" />
+    <string id="taom_battle_shader_notice_detail" text="遊戲正在爲此場景編譯着色器，並未卡死。這可能需要一兩分鐘。" />
+    <string id="taom_battle_shader_loading_line" text="正在爲此場景編譯着色器。這可能需要一兩分鐘；遊戲並未卡死。" />
+    <string id="taom_startup_alert_war_sails" text="已加載《戰帆》，但 TAOM 不支持它。請關閉遊戲，在啓動器中取消勾選《戰帆》後重新開始。" />
+    <string id="taom_bundled_library_copies_body" text="TAOM.Dependencies 已提供 Harmony、ButterLib、UIExtenderEx 與 MCM，因此不需要以下這些單獨的副本：{NEWLINE}{NEWLINE}{LIST}{NEWLINE}{NEWLINE}請取消訂閱創意工坊中的副本。位於 Modules 文件夾中的副本佔據了 TAOM 自帶同名小模塊的位置：請重新安裝 TAOM 以恢復它，且不要刪除該文件夾，否則依賴該庫的模組將無法加載。" />
+    <string id="taom_bundled_library_copy_workshop" text="{NAME} {VERSION}，Steam 創意工坊" />
+    <string id="taom_bundled_library_copy_modules" text="{NAME} {VERSION}，文件夾 {FOLDER}" />
+    <string id="taom_cheat_done_gold" text="已給予金幣。你現在擁有{NUMBER}第納爾。" />
+    <string id="taom_cheat_done_influence" text="獲得{NUMBER}影響力。" />
+    <string id="taom_cheat_done_renown" text="獲得{NUMBER}聲望。" />
+    <string id="taom_cheat_done_heal" text="你的部隊已治癒。治癒士兵數：{NUMBER}。" />
+    <string id="taom_fcamp_block_disorganized" text="隊伍仍處於混亂狀態；請等待數小時。" />
+    <string id="taom_fcamp_block_encounter" text="隊伍正處於遭遇之中。" />
+    <string id="taom_fcamp_block_menu" text="有菜單或窗口處於打開狀態；請先關閉。" />
+    <string id="taom_fcamp_btn_blocked" text="當前無法紮營：{REASON}" />
+    <string id="TAOM_LD_Coop_NoCoop" text="合作模式需要載入 Coop 模組。" />
+    <string id="TAOM_LD_Coop_BadPayload" text="無法讀取主機的進度。請安裝與主機相同的 TAOM。" />
+    <string id="TAOM_LD_Coop_BadAddress" text="請按「地址:端口」格式輸入主機地址，例如 192.168.1.20:4200。" />
+    <string id="TAOM_LD_Coop_HostLeft" text="主機已離開，本局結束。" />
+    <string id="TAOM_LD_Coop_RunEnded" text="本局在第 {WAVE} 波結束。已清除波數：{WAVES}。擊殺：{KILLS}。" />
+    <string id="TAOM_LD_Coop_MenuOption" text="漫長的敗仗（合作）" />
+    <string id="TAOM_LD_Coop_MenuHint" text="通過 Coop 模組與其他玩家共同守衛要塞。由一名玩家開設主機，其他人通過地址加入。" />
+    <string id="TAOM_LD_Coop_Prompt_Desc" text="爲其他玩家開設一局，或加入其他玩家開設的一局。" />
+    <string id="TAOM_LD_Coop_Host" text="開設一局" />
+    <string id="TAOM_LD_Coop_Join" text="加入一局" />
+    <string id="TAOM_LD_Coop_JoinText" text="主機的地址和端口，例如 192.168.1.20:4200。" />
+    <string id="taom_story_offer_attack" text="強攻城牆" />
+    <string id="taom_story_offer_body_both" text="{TARGET}的時刻已至。你要親赴其地，選擇自己站在城牆的哪一邊，還是任憑命運決定？" />
+    <string id="taom_story_offer_body_attack" text="{TARGET}的時刻已至。你要進軍其城牆、親自率領攻勢，還是任憑命運決定？" />
+    <string id="taom_story_offer_march" text="進軍{TARGET}" />
+    <string id="taom_story_offer_repulsed" text="你對{TARGET}的攻勢被擊退，其城牆屹立未破。" />
+    <string id="taom_story_offer_stormed" text="{TARGET}的城牆被攻破，這座要塞陷落了。" />
+    <string id="taom_story_offer_menu_host" text="大軍在{TARGET}的城牆前集結。在你做出抉擇前，時間靜止。" />
+    <string id="taom_guest_trade_not_leader" text="你未率領一支自由部隊時，主機無法替你交易。" />
+    <string id="taom_guest_trade_not_here" text="主機無法在此替你交易：你的部隊不在這座聚落中，或正處於戰鬥或圍城之中。" />
+    <string id="taom_guest_trade_no_armoury" text="主機在這座城鎮中找不到正在營業的武具匠。" />
+    <string id="taom_guest_trade_failed" text="主機無法完成此操作。請重試。" />
+    <string id="taom_guest_trade_busy" text="主機尚未回應你上一次的請求。" />
+    <string id="taom_guest_trade_no_link" text="無法連接到主機。" />
+    <string id="taom_guest_trade_no_answer" text="主機未回應你上一次的請求。請重試。" />
+    <string id="taom_cheat_pick_troop" text="選擇一種士兵：10名加入你的部隊" />
+    <string id="taom_cheat_troop_row" text="等級 {TIER}：{NAME}" />
+    <string id="taom_cheat_troops_any" text="+10名你所屬勢力的任意士兵……" />
+    <string id="taom_cheat_troops_screen" text="所有兵種（隊伍界面）…" />
+    <string id="taom_cheat_done_relation" text="{NAME}中關係發生變化的領主數：{NUMBER}。" />
+    <string id="taom_cheat_done_teleport" text="你已身處{NAME}的城門前。" />
+    <string id="taom_rf_warden_ranks" text="你晉升的守望者以{TROOP}的身份重回行伍。" />
+    <string id="taom_hostile_peace_mcm_access" text="敵對國家緊閉城門" />
+    <string id="taom_hostile_peace_mcm_access_hint" text="開啓後（默認），死敵國家的城鎮與城堡會像戰時一樣對待你，即使雙方處於和平：你只能喬裝進入城鎮，完全無法進入城堡，也不能在其村莊交易、招募或休整。你自己的封地不受影響。關閉時適用原版規則。立即生效，無需重啓。" />
+    <string id="taom_hostile_peace_mcm_agreements" text="不與敵對國家簽訂貿易協定" />
+    <string id="taom_hostile_peace_mcm_agreements_hint" text="開啓後（默認），自由人民國家與暗影國家絕不簽訂貿易協定，無論是AI還是你自己王國的投票。本項開啓前已簽訂的協定會延續到期滿。關閉時適用原版規則。立即生效，無需重啓。" />
+    <string id="taom_hostile_peace_mcm_caravans" text="不與敵對國家進行商隊貿易" />
+    <string id="taom_hostile_peace_mcm_caravans_hint" text="開啓後（默認），在魔戒大戰之前的和平時期，自由人民國家的商隊不會在暗影國家的城鎮交易，反之亦然。並非死敵的國家照常貿易。關閉時適用原版規則。立即生效，無需重啓。" />
+    <string id="taom_hostile_peace_mcm_alliances" text="允許玩家與任何勢力結盟" />
+    <string id="taom_hostile_peace_mcm_alliances_hint" text="關閉時（默認），你統治的王國不能與戰爭另一方的國家結盟：自由人民王國不會與暗影陣營結盟，反之亦然。中立陣營的國家可與任何勢力結盟。你所創建的王國歸屬其文化所在的陣營。已有的同盟會保留。開啓後，你的王國可以像原版那樣與任何國家結盟。無論如何，AI國家仍遵循自己的規則。立即生效，無需重啓。" />
+    <string id="taom_hostile_peace_no_alliance" text="你們的國家分屬戰爭的兩方，無法結盟。" />
+    <string id="taom_hostile_peace_no_trade" text="你們的國家除未開戰外與敵人無異。他們不會進行貿易。" />
+    <string id="TAOM_LD_Hero_Aragorn_Text" text="伊熙爾杜的繼承人，手持長劍。若他倒下，可再次召喚。" />
+    <string id="TAOM_LD_Hero_Legolas_Text" text="黑森林的王子與他的弓。若他倒下，可再次召喚。" />
+    <string id="TAOM_LD_Hero_Gimli_Text" text="格羅音之子與他的戰斧。若他倒下，可再次召喚。" />
+    <string id="TAOM_LD_Hud_HeroesTitle" text="英雄" />
+    <string id="TAOM_LD_Hud_HeroPending" text="正在趕來" />
+    <string id="TAOM_LD_Hud_HeroStanding" text="在戰場上" />
+    <string id="TAOM_LD_Notice_UnknownHero" text="該英雄不出售。" />
+    <string id="TAOM_LD_Notice_HeroAlive" text="該英雄已在你身邊。" />
+    <string id="taom_hero_ability_aragorn_for_frodo" text="為了佛羅多！" />
+    <string id="taom_hero_ability_aragorn_isildurs_heir" text="伊熙爾杜的子嗣" />
+    <string id="taom_hero_ability_gimli_baruk_khazad" text="Baruk Khazâd！" />
+    <string id="taom_hero_ability_gimli_still_standing" text="屹立不倒" />
+    <string id="taom_hero_ability_legolas_rapid_fire" text="速射" />
+    <string id="taom_hero_ability_legolas_many_arrows" text="萬箭齊發" />
+    <string id="taom_hero_ability_legolas_archers_eye" text="神射之眼" />
+    <string id="taom_hero_ability_cast_ally" text="{HERO}：{ABILITY}" />
+    <string id="taom_hero_ability_cast_enemy" text="敵方{HERO}：{ABILITY}" />
     <string id="realms_ui_cost" text="{AMOUNT} {RESOURCE}" />
     <string id="realms_ui_no_resource" text="你的族羣沒有可用於購買宣稱的資源。" />
     <string id="realms_ui_low_resource" text="你擁有{AMOUNT}{RESOURCE}。" />
@@ -8053,12 +8053,12 @@
     <string id="realms_ui_refuse_far" text="其領地與你的封地不接壤。" />
     <string id="realms_ui_refuse_owned" text="你的家族必須先擁有其封地。" />
     <string id="realms_ui_refuse_vassals" text="你本人、你的家族與封臣必須持有其半數以上土地。" />
-    <string id="realms_ui_refuse_foothold" text="You, your clan or your vassals must first hold one of its lands." />
+    <string id="realms_ui_refuse_foothold" text="你本人、你的家族或你的封臣必須先持有其中一處領地。" />
     <string id="realms_ui_refuse_outside" text="持有者不效忠於你的國度。" />
     <string id="realms_ui_refuse_serving" text="宣稱者必須效忠於該國度。" />
     <string id="realms_ui_refuse_restore_only" text="只有歷代國王的繼承人才能登上這個王位。" />
     <string id="realms_ui_refuse_not_vacant" text="此頭銜並未空缺。" />
-    <string id="realms_ui_refuse_culture" text="Only its own people can take up this title." />
+    <string id="realms_ui_refuse_culture" text="只有其本族之人才能承襲此頭銜。" />
     <string id="realms_ui_refuse" text="無法執行。" />
     <string id="realms_enc_title" text="頭銜" />
     <string id="realms_enc_realm_title" text="國家頭銜" />
@@ -8102,7 +8102,7 @@
     <string id="realms_ui_none_cap" text="無" />
     <string id="realms_enc_claimant" text="1名宣稱者" />
     <string id="realms_enc_claimants" text="{COUNT}名宣稱者" />
-    <string id="realms_page_lands" text="Lands it lies over, its vassals once formed" />
+    <string id="realms_page_lands" text="其疆域所涵蓋之地，曾由其封臣所組成" />
     <string id="realms_ui_vassals" text="下屬頭銜" />
     <string id="realms_page_rank_realm" text="{REALM}，{RANK}" />
     <string id="realms_page_owned_by" text="歸{OWNER}所有" />
@@ -8138,8 +8138,8 @@
     <string id="realms_ui_grant_title" text="僅授予頭銜：土地仍歸原領主所有。" />
     <string id="realms_ui_grant_ask_fief" text="將{TITLE}頭銜及其封地一併授予{HERO}？" />
     <string id="realms_ui_grant_ask" text="將{TITLE}頭銜授予{HERO}？" />
-    <string id="realms_ui_coronation_ask_player" text="Your clan will become the {CLAN} and rule {KINGDOM} from {SEAT}." />
-    <string id="realms_ui_coronation_ask_player_no_seat" text="Your clan will become the {CLAN} and rule {KINGDOM}." />
+    <string id="realms_ui_coronation_ask_player" text="你的家族將成為{CLAN}，並自{SEAT}統治{KINGDOM}。" />
+    <string id="realms_ui_coronation_ask_player_no_seat" text="你的家族將成為{CLAN}，並統治{KINGDOM}。" />
     <string id="realms_ui_coronation_ask" text="{HERO}將離開你的家族，建立{CLAN}，並在{SEAT}統治{KINGDOM}。" />
     <string id="realms_ui_coronation_ask_no_seat" text="{HERO}將離開你的家族，建立{CLAN}，並統治{KINGDOM}。" />
     <string id="realms_ui_coronation_player" text="你將不再統治{KINGDOM}。" />
@@ -8149,7 +8149,7 @@
     <string id="realms_claim_fabricated" text="僞造宣稱" />
     <string id="realms_claim_ancestral" text="祖傳宣稱" />
     <string id="realms_claims_on" text="對{TITLE}的宣稱" />
-    <string id="realms_tree_lands" text="Lies under the realm above once it is formed." />
+    <string id="realms_tree_lands" text="一旦上方的國度建立，此地便歸其所屬。" />
     <string id="realms_tree_lordship" text="+1個領主頭銜" />
     <string id="realms_tree_lordships" text="+{COUNT}個領主頭銜" />
     <string id="realms_ui_you" text="（你）" />
@@ -8190,17 +8190,17 @@
     <string id="realms_ui_rank_empire" text="高級頭銜" />
     <string id="realms_news_coronation" text="{HERO}在{SEAT}加冕。{CLAN}開始統治{KINGDOM}。" />
     <string id="realms_coronation_text_default" text="{HERO}在{SEAT}加冕，{CLAN}開始統治{REALM}。" />
-    <string id="realms_coronation_line_house_player" text="Your clan becomes the {CLAN}, the ruling house of {REALM}." />
+    <string id="realms_coronation_line_house_player" text="你的家族成為{CLAN}，即{REALM}的統治家族。" />
     <string id="realms_coronation_line_house" text="{HERO}建立了{CLAN}，成爲統治{REALM}的王室。" />
-    <string id="realms_coronation_line_titles_lordships_player" text="You hold by right: {TITLES} and {COUNT} lordships." />
-    <string id="realms_coronation_line_titles_player" text="You hold by right: {TITLES}." />
+    <string id="realms_coronation_line_titles_lordships_player" text="你依權持有：{TITLES}與{COUNT}處領主封地。" />
+    <string id="realms_coronation_line_titles_player" text="你依權持有：{TITLES}。" />
     <string id="realms_coronation_line_titles_lordships" text="他依法持有以下頭銜：{TITLES}，以及{COUNT}個領主頭銜。" />
     <string id="realms_coronation_line_titles" text="他依法持有以下頭銜：{TITLES}。" />
     <string id="realms_coronation_line_office" text="{NAME}繼續擔任{OFFICE}，效忠國王。" />
     <string id="realms_coronation_line_relation" text="{HERO}對你的好感增加了（+{AMOUNT}）。" />
     <string id="realms_coronation_line_paid" text="你的家族支付了{AMOUNT}影響力。" />
-    <string id="realms_finance_tribute_in" text="Tribute from Vassals" />
-    <string id="realms_finance_tribute_out" text="Tribute to Liege" />
+    <string id="realms_finance_tribute_in" text="封臣進貢" />
+    <string id="realms_finance_tribute_out" text="向宗主進貢" />
     <string id="realms_msg_office_vacant" text="{OLD}不再擔任{OFFICE}。" />
     <string id="realms_msg_office_follows" text="{HERO}接任了{OFFICE}。" />
     <string id="realms_msg_office_appointed" text="{HERO}被任命爲{OFFICE}。" />
@@ -8225,19 +8225,19 @@
     <string id="TAOM_CrashReport_Title" text="TAOM 檢測到崩潰" />
     <string id="TAOM_CrashReport_Continue" text="繼續（有風險）" />
     <string id="TAOM_CrashReport_OpenBundle" text="打開診斷包文件夾" />
-    <string id="taom_call_to_war_refused" text="{CALLED_KINGDOM} will not go to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="taom_cheat_opt_unlimited_party" text="Unlimited party: {STATE}" />
-    <string id="taom_cheat_state_off" text="off" />
-    <string id="taom_cheat_state_on" text="on" />
-    <string id="taom_cheat_unlimited_party_hint" text="While on, your party has no troop limit, and troops of enemy or opposite-alignment cultures in it do not desert because of their culture. Turning it off keeps every troop, but the usual rules apply again: men over the troop limit start to desert, morale drops and the party is slower." />
-    <string id="taom_cheat_unlimited_party_bonus" text="Unlimited party (cheat)" />
-    <string id="taom_cheat_unlimited_party_off" text="Unlimited party is off: the size limit and desertion apply again." />
-    <string id="taom_cheat_unlimited_party_on" text="Unlimited party is on: no size limit, and enemy troops in your party do not desert because of their culture." />
-    <string id="taom_realm_borders_mcm_name_size" text="國家名稱大小" />
-    <string id="taom_realm_borders_mcm_name_size_hint" text="放大或縮小地圖上的國家名稱。默認：100%。" />
-    <string id="taom_recruit_slot_would_desert" text="This volunteer would desert your party: their people will not serve your side." />
-    <string id="taom_recruit_slot_behind_deserter" text="An earlier volunteer here would desert your party, and volunteers are recruited in order." />
-    <string id="taom_recruit_slot_realm_refuses" text="Your side may not take volunteers from this realm." />
+    <string id="taom_call_to_war_refused" text="{CALLED_KINGDOM}不願對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。" />
+    <string id="taom_cheat_opt_unlimited_party" text="無限部隊規模：{STATE}" />
+    <string id="taom_cheat_state_off" text="關閉" />
+    <string id="taom_cheat_state_on" text="開啓" />
+    <string id="taom_cheat_unlimited_party_hint" text="開啓時，你的部隊沒有人數上限，部隊中敵對或立場對立文化的士兵也不會因文化原因開小差。關閉後，所有士兵都會保留，但常規規則重新生效：超出人數上限的士兵會開始開小差，士氣下降，部隊行軍速度變慢。" />
+    <string id="taom_cheat_unlimited_party_bonus" text="無限部隊規模（作弊）" />
+    <string id="taom_cheat_unlimited_party_off" text="無限部隊規模已關閉：人數上限和開小差重新生效。" />
+    <string id="taom_cheat_unlimited_party_on" text="無限部隊規模已開啓：沒有人數上限，部隊中的敵方士兵也不會因文化原因開小差。" />
+    <string id="taom_realm_borders_mcm_name_size" text="國度名稱大小" />
+    <string id="taom_realm_borders_mcm_name_size_hint" text="使地圖上的王國名稱變大或變小。默認：100%。" />
+    <string id="taom_recruit_slot_would_desert" text="這名志願兵會從你的部隊逃走：他的族人不會為你這一方效力。" />
+    <string id="taom_recruit_slot_behind_deserter" text="此處較前的一名志願兵會從你的部隊逃走，而志願兵是按順序招募的。" />
+    <string id="taom_recruit_slot_realm_refuses" text="你這一方不能從這個國家招募志願兵。" />
     <string id="taom_siege_defense_default_title" text="{attacker}正在圍攻{settlement}！" />
     <string id="taom_siege_defense_default_body" text="你願意響應號召，前往支援守軍嗎？你必須在{days}天內趕到。" />
     <string id="taom_siege_defense_default_accept_button" text="協助防守" />
@@ -8334,129 +8334,129 @@
     <string id="taom_siege_defense_abanissa_accept_button" text="守住它！" />
     <string id="taom_siege_defense_abanissa_accept_message" text="出發，保衛{settlement}！" />
     <string id="taom_siege_defense_abanissa_reward_message" text="你的人民感謝你。影響力+{influence}，關係+{relation}。" />
-    <string id="taom_res_name_war_spoils" text="戰爭戰利品" />
+    <string id="taom_res_name_war_spoils" text="戰利品" />
     <string id="taom_res_name_gems" text="寶石" />
-    <string id="taom_res_tier_gems_1_name" text="礦工學徒" />
-    <string id="taom_res_tier_gems_1_desc" text="矮人的採礦效率提高。兵種升級費用-5%。" />
+    <string id="taom_res_tier_gems_1_name" text="學徒礦工" />
+    <string id="taom_res_tier_gems_1_desc" text="矮人的採礦效率提升。部隊升級費用 -5%。" />
     <string id="taom_res_tier_gems_2_name" text="熟練鐵匠" />
-    <string id="taom_res_tier_gems_2_desc" text="孤山的熔爐火光明亮。附魔費用-8%，部隊士氣+5%。" />
-    <string id="taom_res_tier_gems_3_name" text="寶庫總管" />
-    <string id="taom_res_tier_gems_3_desc" text="孤山的財富源源不斷。部隊軍餉-12%，部隊人數上限+3。" />
-    <string id="taom_res_name_caster" text="卡斯塔爾" />
+    <string id="taom_res_tier_gems_2_desc" text="孤山的鍛爐燒得明亮。附魔費用 -8%，+5% 部隊士氣。" />
+    <string id="taom_res_tier_gems_3_name" text="司庫大師" />
+    <string id="taom_res_tier_gems_3_desc" text="孤山的財富源源流動。部隊工資 -12%，+3 部隊規模。" />
+    <string id="taom_res_name_caster" text="卡斯塔" />
     <string id="taom_res_name_marks" text="馬克" />
-    <string id="taom_res_name_elven_wine" text="精靈葡萄酒" />
+    <string id="taom_res_name_elven_wine" text="精靈酒" />
     <string id="taom_res_name_lake_fish" text="湖魚" />
     <string id="taom_res_name_war_drums" text="戰鼓" />
-    <string id="taom_res_name_tribal_relics" text="部族聖物" />
-    <string id="taom_res_name_dunlending_ale" text="黑蠻地麥酒" />
-    <string id="taom_res_name_plunder" text="掠奪品" />
+    <string id="taom_res_name_tribal_relics" text="部族遺物" />
+    <string id="taom_res_name_dunlending_ale" text="登蘭德麥酒" />
+    <string id="taom_res_name_plunder" text="掠奪" />
     <string id="taom_res_name_war_banners" text="戰旗" />
-    <string id="0cdXddA9" text="{KINGDOM1_LINK}已與{KINGDOM2_LINK}結盟。" />
-    <string id="1rbg3Hz2" text="{FACTION_1}與{FACTION_2}不再是敵人。" />
-    <string id="0aXG8dvJ" text="與{KINGDOM_NAME}議和。不支付貢金。" />
-    <string id="0CsbbwtN" text="號召{CALLED_KINGDOM}對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰" />
-    <string id="1aQAmENB" text="{ENEMY_KINGDOM_INFORMAL_NAME}也許很強，但他們的土地富庶，正適合奪取。" />
-    <string id="1V8f9vRM" text="一名信使帶着{PROPOSER_KINGDOM}的結盟提議來到你的王庭。" />
-    <string id="21yUheIy" text="{KINGDOM_NAME}由崛起中的{CULTURE_ADJECTIVE}軍閥{RULER.NAME}於{CREATION_YEAR}年創建。" />
-    <string id="22LCyCoA" text="我可以向你的國家提供{GOLD}{GOLD_ICON}，讓你們向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。" />
-    <string id="2b1xZGaQ" text="與{KINGDOM_NAME}議和。我國將在{TRIBUTE_DURATION}天內每天支付{TRIBUTE_AMOUNT}貢金。" />
-    <string id="2BVDp7Tg" text="{KINGDOM}將停止執行{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
-    <string id="2KaXj3Qa" text="{NEARBY_ENEMY_FACTION}的劫掠迫使許多農民離開家園。有土地的人通常還會回去，但不少貧苦者正在尋找新的住處。你在村外營地裏和其中幾人交談。這裏沒有土地可分給他們。他們似乎很願意當佃戶，但他們和村裏根基更深的家族之間總有可能發生摩擦。" />
-    <string id="2mVZORaE" text="{FACTION_NAME}的追隨者" />
-    <string id="4fXpOe4N" text="一名信使從{CLAN_NAME}抵達。他們扣押了{CAPTIVE_HERO.NAME}，並索要{GOLD_AMOUNT}{GOLD_ICON}贖金。" />
-    <string id="4GgfFDWG" text="正在與{KINGDOM_NAME}議和" />
-    <string id="4pmvrnmN" text="{SETTLEMENT_LINK}城堡屬於{LORD.LINK}，此人是{FACTION_TERM}的{FACTION_OFFICIAL}。{KEEP_INFO}" />
-    <string id="5bza9sDs" text="聽到這事我很遺憾。你找不到比{FACTION_NAME}更好的僱主，這點我可以保證。" />
-    <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME}佔據了我們的祖地，並壓迫我們的親族。" />
-    <string id="9WDK03GW" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}選擇不與{KINGDOM}開戰。" />
-    <string id="aE7OQDMS" text="與{KINGDOM_NAME}結盟。" />
-    <string id="amdgO9Hr" text="我是{CONVERSATION_HERO.FIRSTNAME}。我是名爲{FACTION_NAME}的團體中一名謙卑的追隨者，{DIVINITY}選中我們在這個時代傳達他們的訊息。" />
-    <string id="aQAI99d4" text="正在向{KINGDOM_NAME}宣戰" />
-    <string id="AwCnrOan" text="作爲{RULER_NAME_AND_TITLE}，你必須決定是否花費{CALL_TO_WAR_COST}{GOLD_ICON}號召{CALLED_KINGDOM}對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。" />
-    <string id="awoeb3br" text="{FACTION_LEADER}將決定{KINGDOM_CONSIDERING_PEACE_NAME}是否與{KINGDOM_NAME}議和。你可以選擇自己對此決定的立場。" />
-    <string id="AXsbnTBb" text="{QUEST_GIVER.LINK}已與{ENEMYFACTION_INFORMALNAME}議和。你與{QUEST_GIVER.LINK}的協議已取消。" />
-    <string id="az3K3j4C" text="現在我們比{ENEMY_KINGDOM_INFORMAL_NAME}更強。應該趁現在出擊。" />
-    <string id="B818zx3W" text="你的家族正在與一些勢力交戰，而{KINGDOM}與這些勢力處於和平。" />
-    <string id="Bk3Wqy5j" text="{RULER.NAME}已決定不響應{CALLING_KINGDOM}的號召，也不會對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。" />
-    <string id="BlVjIlZF" text="{FACTION_LEADER}將決定{KINGDOM_CONSIDERING_PEACE_NAME}是否通過在{TRIBUTE_DURATION}天內支付{TRIBUTE_AMOUNT}貢金來與{KINGDOM_NAME}議和。你可以選擇自己對此決定的立場。" />
-    <string id="bXN2fbcv" text="你的部下把{SETTLEMENT_NAME}的居民視作{SETTLEMENT_CULTURE_NAME}中誤入歧途的臣民，而不是敵人，因此對待他們還算寬厚。" />
-    <string id="Cf0amFBD" text="接受{CALLING_KINGDOM}的參戰號召，爲{CALL_TO_WAR_PAYMENT}{GOLD_ICON}對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰" />
+    <string id="0cdXddA9" text="{KINGDOM1_LINK} 已與 {KINGDOM2_LINK} 結成同盟。" />
+    <string id="1rbg3Hz2" text="{FACTION_1} 與 {FACTION_2} 不再是敵人。" />
+    <string id="0aXG8dvJ" text="與 {KINGDOM_NAME} 議和。不支付任何貢金。" />
+    <string id="0CsbbwtN" text="號召 {CALLED_KINGDOM} 對 {KINGDOM_TO_CALL_TO_WAR_AGAINST} 宣戰" />
+    <string id="1aQAmENB" text="{ENEMY_KINGDOM_INFORMAL_NAME} 或許強大，但他們的土地富庶，正是奪取的好時機。" />
+    <string id="1V8f9vRM" text="一名信使帶着 {PROPOSER_KINGDOM} 的結盟提議來到了你國家的宮廷。" />
+    <string id="21yUheIy" text="{KINGDOM_NAME} 由 {RULER.NAME} 創立於 {CREATION_YEAR} 年，他是一位崛起中的{CULTURE_ADJECTIVE}軍閥。" />
+    <string id="22LCyCoA" text="我可以向貴國提供 {GOLD}{GOLD_ICON}，以換取你們向 {KINGDOM_TO_CALL_TO_WAR_AGAINST} 宣戰。" />
+    <string id="2b1xZGaQ" text="與 {KINGDOM_NAME} 議和。我國將在 {TRIBUTE_DURATION} 天內每日支付 {TRIBUTE_AMOUNT} 貢金。" />
+    <string id="2BVDp7Tg" text="{KINGDOM} 將停止{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
+    <string id="2KaXj3Qa" text="{NEARBY_ENEMY_FACTION} 的劫掠迫使許多農夫背井離鄉。有田地的人通常會返回故土，但更貧窮的人大多在尋找新的安身之所。你與幾位在村外紮營的人交談。這裏沒有多餘的土地給他們。他們似乎很願意當佃戶，但與村中根基深厚的家族之間總有可能生出摩擦。" />
+    <string id="2mVZORaE" text="{FACTION_NAME} 的僕從" />
+    <string id="4fXpOe4N" text="一名信使從 {CLAN_NAME} 前來。他們扣押了 {CAPTIVE_HERO.NAME}，索要 {GOLD_AMOUNT}{GOLD_ICON} 贖金。" />
+    <string id="4GgfFDWG" text="與 {KINGDOM_NAME} 議和" />
+    <string id="4pmvrnmN" text="{SETTLEMENT_LINK} 的城堡歸 {LORD.LINK} 所有，他是 {FACTION_TERM} 的 {FACTION_OFFICIAL}。{KEEP_INFO}" />
+    <string id="5bza9sDs" text="聽到這個我很遺憾。請放心，你再也找不到比 {FACTION_NAME} 更好的僱主了。" />
+    <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME} 佔據了我們祖先的土地，壓迫我們的族人。" />
+    <string id="9WDK03GW" text="{AGGRESSOR_KINGDOM} 的 {AGGRESSOR_RULER.NAME} 選擇不對 {KINGDOM} 開戰。" />
+    <string id="aE7OQDMS" text="與 {KINGDOM_NAME} 結盟。" />
+    <string id="amdgO9Hr" text="我是 {CONVERSATION_HERO.FIRSTNAME}。我是名爲 {FACTION_NAME} 的團體的一名卑微追隨者，{DIVINITY} 揀選了我們，在這個紀元中傳達他們的訊息。" />
+    <string id="aQAI99d4" text="向 {KINGDOM_NAME} 宣戰" />
+    <string id="AwCnrOan" text="身爲 {RULER_NAME_AND_TITLE}，你必須決定是否以 {CALL_TO_WAR_COST}{GOLD_ICON} 號召 {CALLED_KINGDOM} 對 {KINGDOM_TO_CALL_TO_WAR_AGAINST} 開戰。" />
+    <string id="awoeb3br" text="{FACTION_LEADER} 將決定 {KINGDOM_CONSIDERING_PEACE_NAME} 是否與 {KINGDOM_NAME} 議和。你可以選擇自己對此決議的立場。" />
+    <string id="AXsbnTBb" text="{QUEST_GIVER.LINK} 已與 {ENEMYFACTION_INFORMALNAME} 議和。你與 {QUEST_GIVER.LINK} 的約定已被取消。" />
+    <string id="az3K3j4C" text="眼下我們比 {ENEMY_KINGDOM_INFORMAL_NAME} 更強。我們應趁勢出擊。" />
+    <string id="B818zx3W" text="你的家族正與 {KINGDOM} 保持和平的勢力交戰。" />
+    <string id="Bk3Wqy5j" text="{RULER.NAME} 決定不響應 {CALLING_KINGDOM} 的號召，不會向 {KINGDOM_TO_CALL_TO_WAR_AGAINST} 開戰。" />
+    <string id="BlVjIlZF" text="{FACTION_LEADER} 將決定 {KINGDOM_CONSIDERING_PEACE_NAME} 是否以在 {TRIBUTE_DURATION} 天內支付 {TRIBUTE_AMOUNT} 貢金的條件與 {KINGDOM_NAME} 議和。你可以選擇自己對此決議的立場。" />
+    <string id="bXN2fbcv" text="你的部下把 {SETTLEMENT_NAME} 的居民視作 {SETTLEMENT_CULTURE_NAME} 迷途的子民而非敵人，對他們相對寬待。" />
+    <string id="Cf0amFBD" text="接受 {CALLING_KINGDOM} 的號召，以 {CALL_TO_WAR_PAYMENT}{GOLD_ICON} 對 {KINGDOM_TO_CALL_TO_WAR_AGAINST} 開戰" />
     <string id="CswzBb02" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}已決定與{KINGDOM}議和。" />
-    <string id="dDsJyerw" text="號召{CALLED_KINGDOM}對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。" />
+    <string id="dDsJyerw" text="號召{CALLED_KINGDOM}向{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。" />
     <string id="dEsIQDo3" text="是時候號召我們的盟友{CALLED_KINGDOM}參戰了！" />
-    <string id="dPOOmYGQ" text="你以爲{KINGDOM}的領主和戰士會眼看自己的人民被綁架而無動於衷嗎？你最好放我們走！" />
-    <string id="drZC1Frp" text="{KINGDOM_NAME}由一羣{CULTURE_ADJECTIVE}叛軍的領袖{RULER.NAME}於{CREATION_YEAR}年創建。" />
-    <string id="eAhgrwkZ" text="作爲{RULER_NAME_AND_TITLE}，你必須決定是否與{KINGDOM_NAME}結盟。" />
-    <string id="efTah9rk" text="我無權代表{ENEMY_INFORMAL_NAME}議和。我們的議會應該決定是否提出和平，以及條件是什麼。" />
-    <string id="eiGl6XBr" text="投票決定是否響應{CALLING_KINGDOM}的號召，以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}爲報酬對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。" />
-    <string id="EqevKYZD" text="作爲{RULER_NAME_AND_TITLE}，你必須決定是否花費{CALL_TO_WAR_COST}{GOLD_ICON}號召{CALLED_KINGDOM}對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰" />
-    <string id="eTylgLCc" text="一名來自{KINGDOM_NAME}的信使已經抵達。他們向你提出結盟。你的王國將投票決定是否接受這個提議。" />
-    <string id="eUWYqwE6" text="{CALLING_KINGDOM}不再與{KINGDOM_TO_CALL_TO_WAR_AGAINST}交戰。" />
-    <string id="faUooB7V" text="{KINGDOM}不會採納{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
-    <string id="FuNbouTu" text="一名來自{KINGDOM_NAME}的信使已經抵達。他們號召你的王國對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。你的王國將投票決定是否接受這個提議。" />
-    <string id="gf2Lje7o" text="{RULER.NAME}已決定不號召{CALLED_KINGDOM}對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。" />
-    <string id="Gj5d9y2g" text="{KINGDOM}的{RULER.NAME}已決定與{OTHER_KINGDOM}簽署貿易協定。" />
-    <string id="gNf0ALKw" text="一名來自{MAP_FACTION_NAME}的信使已經抵達。他們向你提出無條件議和。你的王國將投票決定是否接受這個提議。" />
-    <string id="h9bWTLgK" text="是時候加入盟友{KINGDOM_NAME}的戰爭了。" />
-    <string id="IB1xsVEr" text="一名來自{MAP_FACTION_NAME}的信使已經抵達。他們向你提出無條件議和。你的封臣已將決定權交給你。" />
-    <string id="INfHUqxT" text="{RULER.NAME}已決定與{KINGDOM_NAME}結盟。" />
-    <string id="iOmgCFDI" text="投票決定是否與{KINGDOM_NAME}結盟。" />
-    <string id="ItueKmqd" text="你的家族現在正與{QUEST_GIVER_SETTLEMENT_FACTION}交戰。你與{QUEST_GIVER.LINK}的契約已取消。" />
-    <string id="JJQ0Hp4m" text="一名來自{MAP_FACTION_NAME}的信使已經抵達。{MAP_FACTION_NAME}願每天支付{GOLD_AMOUNT}{GOLD_ICON}貢金，以結束你們兩國之間的戰爭。你的封臣已將決定權交給你。" />
-    <string id="jnYwiCAz" text="{KINGDOM}將繼續執行{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
-    <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME}目前比我們更強。我們需要時間積蓄力量。" />
-    <string id="JQligd8z" text="{KINGDOM}議會已選擇{KING.NAME}作爲新統治者。" />
-    <string id="KFHj7ckm" text="作爲統治者，你必須決定是否與{KINGDOM_NAME}議和" />
-    <string id="KlATZEbb" text="正在與{KINGDOM_NAME}結盟。" />
-    <string id="KSrNutEO" text="{FACTION_LEADER}將決定是否向{KINGDOM_NAME}宣戰。你可以選擇自己對此決定的立場。" />
-    <string id="L81DPSom" text="作爲{RULER_NAME_AND_TITLE}，你必須決定你的國家是否響應{CALLING_KINGDOM}的號召，並以{CALL_TO_WAR_COST}{GOLD_ICON}爲代價向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。" />
-    <string id="Lbs2bNlg" text="{KINGDOM}將開始執行{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
-    <string id="lseJ70y0" text="你的國家正在與{KINGDOM_NAME}交戰。" />
+    <string id="dPOOmYGQ" text="你以爲{KINGDOM}的領主與戰士會在自己的子民被擄走時袖手旁觀嗎？你最好放我們走！" />
+    <string id="drZC1Frp" text="{KINGDOM_NAME}由一羣{CULTURE_ADJECTIVE}叛軍的首領{RULER.NAME}於{CREATION_YEAR}年創建。" />
+    <string id="eAhgrwkZ" text="身爲{RULER_NAME_AND_TITLE}，你必須決定是否與{KINGDOM_NAME}結成聯盟。" />
+    <string id="efTah9rk" text="我無權代表{ENEMY_INFORMAL_NAME}議和。是否提出和議以及條件如何，應由我們的議會決定。" />
+    <string id="eiGl6XBr" text="投票決定是否以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代價響應{CALLING_KINGDOM}的號召，向{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。" />
+    <string id="EqevKYZD" text="身爲{RULER_NAME_AND_TITLE}，你必須決定是否花費{CALL_TO_WAR_COST}{GOLD_ICON}號召{CALLED_KINGDOM}向{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰" />
+    <string id="eTylgLCc" text="一名信使自{KINGDOM_NAME}而來。他們向你提出結盟。你的王國將投票決定是否接受這項提議。" />
+    <string id="eUWYqwE6" text="{CALLING_KINGDOM}已不再與{KINGDOM_TO_CALL_TO_WAR_AGAINST}交戰。" />
+    <string id="faUooB7V" text="{KINGDOM}將不會{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
+    <string id="FuNbouTu" text="一名信使自{KINGDOM_NAME}而來。他們號召你的王國向{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。你的王國將投票決定是否接受這項提議。" />
+    <string id="gf2Lje7o" text="{RULER.NAME}決定不號召{CALLED_KINGDOM}向{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。" />
+    <string id="Gj5d9y2g" text="{KINGDOM}的{RULER.NAME}決定與{OTHER_KINGDOM}簽訂貿易協定。" />
+    <string id="gNf0ALKw" text="一名信使自{MAP_FACTION_NAME}而來。他們向你提出無條件和平。你的王國將投票決定是否接受這項提議。" />
+    <string id="h9bWTLgK" text="是時候加入我們的盟友{KINGDOM_NAME}的戰爭了。" />
+    <string id="IB1xsVEr" text="一名信使自{MAP_FACTION_NAME}而來。他們向你提出無條件和平。你的封臣將此決定交由你定奪。" />
+    <string id="INfHUqxT" text="{RULER.NAME}決定與{KINGDOM_NAME}結成聯盟。" />
+    <string id="iOmgCFDI" text="投票決定是否與{KINGDOM_NAME}結成聯盟。" />
+    <string id="ItueKmqd" text="你的氏族現在與{QUEST_GIVER_SETTLEMENT_FACTION}處於交戰狀態。你與{QUEST_GIVER.LINK}的契約已被取消。" />
+    <string id="JJQ0Hp4m" text="一名信使自{MAP_FACTION_NAME}而來。{MAP_FACTION_NAME}願每日支付{GOLD_AMOUNT} {GOLD_ICON}的貢金，以結束兩國之間的戰爭。你的封臣將此決定交由你定奪。" />
+    <string id="jnYwiCAz" text="{KINGDOM}將繼續{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
+    <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME}目前比我們強大。我們需要時間積蓄實力。" />
+    <string id="JQligd8z" text="{KINGDOM}的議會選出{KING.NAME}成爲統治者。" />
+    <string id="KFHj7ckm" text="身爲統治者，你必須決定是否與{KINGDOM_NAME}議和" />
+    <string id="KlATZEbb" text="與{KINGDOM_NAME}結成聯盟。" />
+    <string id="KSrNutEO" text="{FACTION_LEADER}將決定是否向{KINGDOM_NAME}宣戰。你可以就此決定表明立場。" />
+    <string id="L81DPSom" text="身爲{RULER_NAME_AND_TITLE}，你必須決定你的國度是否要以{CALL_TO_WAR_COST}{GOLD_ICON}的代價響應{CALLING_KINGDOM}的號召，向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。" />
+    <string id="Lbs2bNlg" text="{KINGDOM}將開始{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
+    <string id="lseJ70y0" text="你的國度正與{KINGDOM_NAME}交戰。" />
     <string id="LVX2x6Jf" text="我想終止與{SERVED_FACTION}的契約。" />
-    <string id="m69pvful" text="{KINGDOM_LEADER}將決定你的國家是否響應{CALLING_KINGDOM}的號召，並以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}爲報酬向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。你可以選擇自己對此決定的立場。" />
+    <string id="m69pvful" text="{KINGDOM_LEADER}將決定你的國度是否要以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代價響應{CALLING_KINGDOM}的號召，向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。你可以就此決定表明立場。" />
     <string id="mfYzCeGR" text="{CHARACTER.NAME}曾是{CHARACTER_FACTION_SHORT}的{TITLE}。{FURTHER_DETAILS}" />
-    <string id="mvkKP6OE" text="{RULER.NAME}選擇不將{CLAN}家族逐出{KINGDOM}。" />
-    <string id="n4I3pWOn" text="作爲統治者，你必須決定是否通過在{TRIBUTE_DURATION}天內支付{TRIBUTE_AMOUNT}貢金來與{KINGDOM_NAME}議和。" />
-    <string id="Nd0Vhkxn" text="一名來自{MAP_FACTION_NAME}的信使已經抵達。如果你同意每天支付{GOLD_AMOUNT}{GOLD_ICON}貢金，他們願意與你議和。你的封臣已將決定權交給你。" />
-    <string id="NFuezpbG" text="{CALLED_KINGDOM}已經在與{KINGDOM_NAME}交戰。" />
-    <string id="NjPMRWbW" text="與{KINGDOM_NAME}議和。我國將在{TRIBUTE_DURATION}天內每天收到{TRIBUTE_AMOUNT}貢金。" />
-    <string id="nkvT88r2" text="你的錢不足，無法號召{CALLED_KINGDOM}對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。" />
-    <string id="NuYzgBZB" text="你做得太過分了。{KINGDOM}不會容忍自己的商隊被摧毀。" />
-    <string id="o4IxXHnB" text="{RULER.NAME}已決定不與{KINGDOM_NAME}結盟。" />
-    <string id="o69PZuce" text="{OLD_LEADER.LINK}不再是{CLAN_NAME}的首領。{NEW_LEADER.LINK}已接管家族統治權。" />
-    <string id="O9XpB5Ah" text="作爲統治者，你必須決定是否與{KINGDOM}簽署貿易協定" />
-    <string id="oAw74q3r" text="作爲{RULER_NAME_AND_TITLE}，你必須決定你的國家是否響應{CALLING_KINGDOM}的號召，並以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}爲報酬向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。" />
-    <string id="Oi20UrO2" text="我們對{TARGET_SETTLEMENT_FACTION_INFORMAL_NAME}的戰爭進展還算順利。但有人說，我們花了這麼多鮮血和銀幣，卻還沒有拿出足夠的成果。現在如果能取得一場明確勝利，將會大有好處。我想看到我們的旗幟飄揚在{TARGET_SETTLEMENT}的塔樓上。[ib:normal2][if:convo_thinking]" />
-    <string id="OlIWwLbP" text="是的。事情與對{ENEMYFACTION_INFORMALNAME}的戰爭有關。[ib:closed][if:convo_pondering]我們需要牽制他們一部分兵力，而最簡單的辦法就是襲擊他們的村莊。這很殘酷，平民會很難受，但他們的領主必須追擊襲擊者，也就無法對我們做同樣的事。如果你接下這件事，成功後我會給你報酬。" />
-    <string id="PneX4Ayw" text="一名信使帶着{KINGDOM_NAME}要求對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰的號召，來到你的王庭。" />
-    <string id="PutoRsWp" text="一名信使從{CLAN_NAME}抵達。如果你釋放{CAPTIVE_HERO.NAME}，他們願意支付{GOLD_AMOUNT}{GOLD_ICON}贖金。" />
-    <string id="q3wD0rbq" text="{SETTLEMENT_LINK}由{LORD.LINK}治理，此人是{FACTION_TERM}的{FACTION_OFFICIAL}。{KEEP_INFO}" />
+    <string id="mvkKP6OE" text="{RULER.NAME}選擇不將{CLAN}氏族逐出{KINGDOM}。" />
+    <string id="n4I3pWOn" text="身爲統治者，你必須決定是否以每日支付{TRIBUTE_AMOUNT}貢金、爲期{TRIBUTE_DURATION}天的條件與{KINGDOM_NAME}議和。" />
+    <string id="Nd0Vhkxn" text="一名信使自{MAP_FACTION_NAME}而來。只要你同意每日支付{GOLD_AMOUNT} {GOLD_ICON}的貢金，他們便願意議和。你的封臣將此決定交由你定奪。" />
+    <string id="NFuezpbG" text="{CALLED_KINGDOM}已經與{KINGDOM_NAME}處於交戰狀態。" />
+    <string id="NjPMRWbW" text="與{KINGDOM_NAME}議和。我們的王國將在{TRIBUTE_DURATION}天內每日獲得{TRIBUTE_AMOUNT}貢金。" />
+    <string id="nkvT88r2" text="你沒有足夠的錢號召{CALLED_KINGDOM}向{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。" />
+    <string id="NuYzgBZB" text="你做得太過分了。{KINGDOM}不會坐視自己的商隊被摧毀。" />
+    <string id="o4IxXHnB" text="{RULER.NAME}決定不與{KINGDOM_NAME}結盟。" />
+    <string id="o69PZuce" text="{OLD_LEADER.LINK}不再是{CLAN_NAME}的首領。{NEW_LEADER.LINK}已接任該家族的統領。" />
+    <string id="O9XpB5Ah" text="身爲統治者，你必須決定是否與{KINGDOM}簽訂貿易協定" />
+    <string id="oAw74q3r" text="身爲{RULER_NAME_AND_TITLE}，你必須決定你的王國是否要響應{CALLING_KINGDOM}的號召，以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代價向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。" />
+    <string id="Oi20UrO2" text="我們與{TARGET_SETTLEMENT_FACTION_INFORMAL_NAME}的戰事還算順利。但有人說，我們流了這麼多血、花了這麼多銀錢，卻沒什麼拿得出手的戰果。此時若能取得一場明確的勝利，大有裨益。我想看到我們的旗幟飄揚在{TARGET_SETTLEMENT}的塔樓上。[ib:normal2][if:convo_thinking]" />
+    <string id="OlIWwLbP" text="是的。事關與{ENEMYFACTION_INFORMALNAME}的戰爭。[ib:closed][if:convo_pondering]我們需要牽制他們一部分兵力，最簡單的辦法就是劫掠他們的村莊。這是殘酷的差事，百姓將受苦，但他們的領主必須去追剿劫掠者，也就無暇對我們做同樣的事。你若接下此事並且成功，我自會重賞。" />
+    <string id="PneX4Ayw" text="一名信使帶着{KINGDOM_NAME}號召對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰的提議，抵達了你王國的宮廷。" />
+    <string id="PutoRsWp" text="一名信使從{CLAN_NAME}前來。若你釋放{CAPTIVE_HERO.NAME}，他們願支付{GOLD_AMOUNT}{GOLD_ICON}作爲贖金。" />
+    <string id="q3wD0rbq" text="{SETTLEMENT_LINK}由{LORD.LINK}治理，他是{FACTION_TERM}的{FACTION_OFFICIAL}。{KEEP_INFO}" />
     <string id="q9DnHVcZ" text="加入{KINGDOM_NAME}的戰爭不符合我們的利益。" />
-    <string id="qgN9o2ip" text="是時候號召我們的盟友{KINGDOM_NAME}對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰了！你的王國將投票決定是否向他們提出參戰協議。" />
-    <string id="qN3x2usk" text="投票決定是否花費{CALL_TO_WAR_COST}{GOLD_ICON}號召{CALLED_KINGDOM}對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。" />
-    <string id="r0Kq0aeB" text="{FACTION_LEADER}將決定是否花費{CALL_TO_WAR_COST}{GOLD_ICON}號召{CALLED_KINGDOM}對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。你可以選擇自己對此決定的立場。" />
-    <string id="RVDojUOM" text="{SETTLEMENT_LINK}周邊土地大多屬於{LORD.LINK}，此人是{FACTION_TERM}的{FACTION_OFFICIAL}。{PROSPERITY_INFO}" />
-    <string id="sbFboHmV" text="一名來自{MAP_FACTION_NAME}的信使已經抵達。如果你同意每天支付{GOLD_AMOUNT}{GOLD_ICON}貢金，他們願意與你議和。你的王國將投票決定是否接受這個提議。" />
-    <string id="Shk9QCDg" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}已對{KINGDOM}宣戰。" />
-    <string id="SR9FC5jH" text="一名來自{MAP_FACTION_NAME}的信使帶來了和平提議。{MAP_FACTION_NAME}願每天支付{GOLD_AMOUNT}{GOLD_ICON}貢金，以結束你們兩國之間的戰爭。你的王國將投票決定是否接受這個提議。" />
+    <string id="qgN9o2ip" text="是時候號召我們的盟友{KINGDOM_NAME}向{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰了！你的王國將投票決定是否向他們提出參戰號召。" />
+    <string id="qN3x2usk" text="就是否以{CALL_TO_WAR_COST}{GOLD_ICON}號召{CALLED_KINGDOM}向{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰進行投票。" />
+    <string id="r0Kq0aeB" text="{FACTION_LEADER}將決定是否以{CALL_TO_WAR_COST}{GOLD_ICON}號召{CALLED_KINGDOM}向{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。你可以選擇自己對此決定的立場。" />
+    <string id="RVDojUOM" text="{SETTLEMENT_LINK}周圍的土地大多屬於{LORD.LINK}，他是{FACTION_TERM}的{FACTION_OFFICIAL}。{PROSPERITY_INFO}" />
+    <string id="sbFboHmV" text="一名信使從{MAP_FACTION_NAME}前來。若你同意每日繳納{GOLD_AMOUNT}{GOLD_ICON}的貢金，他們願意議和。你的王國將投票決定是否接受。" />
+    <string id="Shk9QCDg" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}向{KINGDOM}宣戰了。" />
+    <string id="SR9FC5jH" text="一名信使帶着和平提議從{MAP_FACTION_NAME}前來。爲結束兩國間的戰爭，{MAP_FACTION_NAME}願每日支付{GOLD_AMOUNT}{GOLD_ICON}的貢金。你的王國將投票決定是否接受。" />
     <string id="syGyjjKE" text="響應{CALLING_KINGDOM}的號召，向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。" />
-    <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME}想僱傭你作爲僱傭兵，並按你爲他們作戰獲得的每點影響力支付{GOLD_AMOUNT}{GOLD_ICON}。你接受嗎？" />
-    <string id="UQq4ekeu" text="{KINGDOM}的{RULER.NAME}已選擇不與{OTHER_KINGDOM}簽署貿易協定。" />
+    <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME}願僱你爲傭兵，你爲他們作戰所獲的每點影響力可得{GOLD_AMOUNT}{GOLD_ICON}。你接受嗎？" />
+    <string id="UQq4ekeu" text="{KINGDOM}的{RULER.NAME}選擇不與{OTHER_KINGDOM}簽訂貿易協定。" />
     <string id="uWdj1X2c" text="{CHARACTER.NAME}曾是{CHARACTER_FACTION_SHORT}的成員。{FURTHER_DETAILS}" />
-    <string id="UWzQsHA2" text="{SETTLEMENT_LINK}由{LORD.LINK}治理，此人是{FACTION_TERM}的{FACTION_OFFICIAL}。{PROSPERITY_INFO} {MORALE_INFO}" />
-    <string id="vf2pb7Ts" text="{RULER.NAME}已響應{CALLING_KINGDOM}的號召，並向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。" />
-    <string id="Vg5RmOqL" text="{FACTION_LEADER}將決定{KINGDOM}是否與{OTHER_KINGDOM}簽署貿易協定。你可以選擇自己對此決定的立場。" />
-    <string id="VWoHoUin" text="我們和{ENEMY_INFORMAL_NAME}之間不會有和平，就像狼不會和羊講和一樣。" />
+    <string id="UWzQsHA2" text="{SETTLEMENT_LINK}由{LORD.LINK}治理，他是{FACTION_TERM}的{FACTION_OFFICIAL}。{PROSPERITY_INFO} {MORALE_INFO}" />
+    <string id="vf2pb7Ts" text="{RULER.NAME}響應了{CALLING_KINGDOM}的號召，向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。" />
+    <string id="Vg5RmOqL" text="{FACTION_LEADER}將決定{KINGDOM}是否與{OTHER_KINGDOM}簽訂貿易協定。你可以選擇自己對此決定的立場。" />
+    <string id="VWoHoUin" text="我們與{ENEMY_INFORMAL_NAME}之間不會有和平，正如狼不會與羊講和。" />
     <string id="wijL0mTy" text="{FACTION_LEADER}將決定是否與{KINGDOM_NAME}結盟。你可以選擇自己對此決定的立場。" />
-    <string id="wsDNxArW" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}已選擇不與{KINGDOM}議和。" />
-    <string id="xhK4zMec" text="{RULER.NAME}已決定號召{CALLED_KINGDOM}對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。" />
-    <string id="xKev8i5B" text="{CALLING_KINGDOM_LINK}向{CALLED_KINGDOM_LINK}發出的對{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}開戰號召已經結束。" />
-    <string id="xM97H0oR" text="投票支持向{KINGDOM_NAME}宣戰。" />
+    <string id="wsDNxArW" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}選擇不與{KINGDOM}議和。" />
+    <string id="xhK4zMec" text="{RULER.NAME}決定號召{CALLED_KINGDOM}向{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。" />
+    <string id="xKev8i5B" text="{CALLING_KINGDOM_LINK}向{CALLED_KINGDOM_LINK}發出的、對{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}開戰的號召已經結束。" />
+    <string id="xM97H0oR" text="投票決定是否向{KINGDOM_NAME}宣戰。" />
     <string id="yAOQnMVw" text="你是{FACTION}的人，對吧？那你就是我的俘虜了。" />
-    <string id="YT4OvaAG" text="很好。你可以認爲自己已經受到{FACTION_NAME}的保護。你必須在明天這個時候前完成旅程，否則我們可能會再向你收取一筆費用。" />
-    <string id="yUYNlQhU" text="很好，我會讓手下寫一份簡單契約。我代表{KINGDOM_FORMAL_NAME}歡迎你。願你的劍能好好用在我們的敵人身上。" />
-    <string id="zd9sawl9" text="你已經與{KINGDOM_NAME}結盟。" />
-    <string id="zXuo0Wbj" text="正在與{KINGDOM}簽署貿易協定" />
+    <string id="YT4OvaAG" text="很好。你如今受{FACTION_NAME}的保護。你須在明日此時之前完成旅程，否則我們可能會再向你收取一筆費用。" />
+    <string id="yUYNlQhU" text="很好，我會讓手下擬一份簡單的契約。我謹代表{KINGDOM_FORMAL_NAME}歡迎你。願你的劍能好好用在我們的敵人身上。" />
+    <string id="zd9sawl9" text="你已經與{KINGDOM_NAME}結盟了。" />
+    <string id="zXuo0Wbj" text="與{KINGDOM}簽訂貿易協定" />
     <string id="taom_bab_brace" text="架槍迎擊騎兵" />
     <string id="taom_bab_free_fire" text="自由射擊" />
     <string id="taom_bab_hold_fire" text="停止射擊" />
@@ -8466,7 +8466,7 @@
     <string id="taom_bab_skirmish" text="散兵作戰" />
     <string id="taom_bab_testudo" text="龜甲陣" />
     <string id="taom_bab_volley_fire" text="齊射" />
-    <string id="taom_career_ability_ready" text="職業技能已就緒！按 {KEY} 發動。" />
+    <string id="taom_career_ability_ready" text="職業能力已就緒！按 {KEY} 發動。" />
     <string id="taom_ep_button" text="預設" />
     <string id="taom_ep_mount_no" text="否" />
     <string id="taom_ep_mount_yes" text="是" />
@@ -8514,15 +8514,15 @@
     <string id="taom_spc_stopped_battle" text="着色器預編譯已停止：另一場戰鬥已經開始。請返回主菜單重新運行。" />
     <string id="taom_warg_rage_over" text="你又能控制座狼了！" />
     <string id="taom_warg_rage_start" text="你的座狼陷入狂怒，失去了控制！" />
-    <string id="taom_res_earned" text="通過{SOURCE}獲得{AMOUNT}{RESOURCE}" />
-    <string id="taom_res_running_out" text="{RESOURCE}即將耗盡：剩餘{BALANCE}，每天減少{LOSS}。" />
-    <string id="taom_spc_complete" text="着色器預編譯完成：共{ITEMS}項，{ABORTED}，用時{TIME}。現在可以開始遊戲了。" />
-    <string id="taom_spc_aborted" text="{COUNT}項已中止，詳情請查看日誌" />
-    <string id="taom_spc_shaders_left" text="{COUNT}個着色器" />
-    <string id="taom_qa_sell_low_value" text="出售低價物品（不超過{DENARS}第納爾）" />
-    <string id="taom_career_ability_charging" text="職業技能還在充能，剩餘{SECONDS}秒。" />
-    <string id="taom_spc_progress" text="正在預編譯着色器：{INDEX}/{TOTAL}，{ITEM}，{REMAINING}。（當前項用時：{ITEM_TIME}，總用時：{TOTAL_TIME}）。按 Ctrl+Shift+K 取消" />
-    <string id="taom_mf_layout_changed" text="[混合編隊]陣型（{SCOPE}）→ {LAYOUT}" />
+    <string id="taom_res_earned" text="從 {SOURCE} 獲得 +{AMOUNT} {RESOURCE}" />
+    <string id="taom_res_running_out" text="{RESOURCE} 即將耗盡：剩餘 {BALANCE}，每日損失 {LOSS}" />
+    <string id="taom_spc_complete" text="着色器預編譯完成：{ITEMS} 個物品，{ABORTED}，耗時 {TIME}。現在可以開始遊戲了。" />
+    <string id="taom_spc_aborted" text="{COUNT} 項已中止，請查看日誌" />
+    <string id="taom_spc_shaders_left" text="{COUNT} 個着色器" />
+    <string id="taom_qa_sell_low_value" text="出售低價物品（≤{DENARS} 第納爾）" />
+    <string id="taom_career_ability_charging" text="職業能力仍在充能中——剩餘 {SECONDS} 秒。" />
+    <string id="taom_spc_progress" text="正在預編譯着色器 — {INDEX}/{TOTAL}：{ITEM} — {REMAINING}（本項 {ITEM_TIME}，總計 {TOTAL_TIME}） — 按 Ctrl+Shift+K 取消" />
+    <string id="taom_mf_layout_changed" text="[混合陣型] 佈局（{SCOPE}）→ {LAYOUT}" />
     <string id="taom_mcm_AIBluntDamageChance" text="AI戰鬥鈍擊概率" />
     <string id="taom_mcm_AIBluntDamageChance_hint" text="AI之間的戰鬥中，結算爲鈍擊傷害的概率。原版爲0.10。" />
     <string id="taom_mcm_AiGarrisonScale" text="駐軍人數倍率" />
