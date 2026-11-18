@@ -54,8 +54,8 @@ internal enum PurchaseKind
 /// <summary>
 /// One thing bought, in order. <c>BeforeWave</c> is the wave that starts next; <c>Id</c> is the offer of a pack, the step of an upgrade (#1161), the id of a hero (#1337) and empty for the rest; <c>Level</c> is the level a
 /// level kind reached and 0 for the rest; <c>BasePrice</c> is shop.json's price and <c>Price</c> what was paid after the boons' price factor (D29), which an upgrade does not take: its price is
-/// <c>BasePrice</c> times <see cref="Count"/>, the soldiers the field replaced (0 for every other kind); <c>Share</c> is the missing share a repair mended and the share of the missing health care
-/// returned, 0 for the rest.
+/// <c>BasePrice</c> times <see cref="Count"/>, the soldiers the field replaced (0 for every other kind); <c>Share</c> is a repair's priced share (each gate's missing share times its size against the largest gate, summed)
+/// and the share of the missing health care returned, 0 for the rest.
 /// </summary>
 internal sealed record FortPurchase(int BeforeWave, PurchaseKind Kind, string Id, int Level, int BasePrice, int Price, float Share, IReadOnlyList<float>? Shares = null)
 {

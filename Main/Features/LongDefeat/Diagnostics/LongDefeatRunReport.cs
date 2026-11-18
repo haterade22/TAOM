@@ -121,7 +121,7 @@ internal static class LongDefeatRunReport
 
     private static readonly string[] PurchaseKinds = { "pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel", "upgrade", "hero" };
 
-    /// <summary>One purchase: the wave it precedes, its kind, the offer (a pack's), the step (an upgrade's) or the hero's id (a hero's), the level a level kind reached, shop.json's price and the price paid (an upgrade's for one soldier, and its <c>count</c>), and the share (a repair's missing share summed over its gates, care's heal share) to three decimals; a repair also lists each gate's own share in <c>shares</c>.</summary>
+    /// <summary>One purchase: the wave it precedes, its kind, the offer (a pack's), the step (an upgrade's) or the hero's id (a hero's), the level a level kind reached, shop.json's price and the price paid (an upgrade's for one soldier, and its <c>count</c>), and the share (a repair's priced share summed over its gates, care's heal share) to three decimals; a repair also lists each gate's own share in <c>shares</c>.</summary>
     private static JObject Purchase(FortPurchase p)
     {
         var row = new JObject
@@ -135,7 +135,7 @@ internal static class LongDefeatRunReport
             ["share"] = Math.Round((double)p.Share, 3, MidpointRounding.AwayFromZero),
         };
 
-        // A repair is priced per gate (D18), so its row lists each gate's missing share beside the total; a row with no list is a one-gate repair.
+        // A repair is priced per gate (D18), so its row lists each gate's priced share (missing share times its size against the largest gate) beside the total; a row with no list is a one-gate repair.
         if (p.Kind == PurchaseKind.GateRepair)
             row["shares"] = new JArray((p.Shares ?? new[] { p.Share }).Select(s => Math.Round((double)s, 3, MidpointRounding.AwayFromZero)));
         // An upgrade (#1161) is priced per soldier: basePrice is the step's price for one, price is what the soldiers replaced cost, and count says how many.
