@@ -34,6 +34,9 @@ internal sealed partial class FakeLongDefeatField
     /// <summary>What a sample of attackers behind the gates answers while a gate stands; -1 (nothing measured) once every gate is down, as the real field does.</summary>
     public int BehindGate { get; set; }
 
+    /// <summary>The gate indices each sample was given.</summary>
+    public List<List<int>> GatesAsked { get; } = new();
+
     /// <summary>The inside point each sample was given.</summary>
     public List<LdPoint?> SamplesAsked { get; } = new();
 
@@ -82,11 +85,12 @@ internal sealed partial class FakeLongDefeatField
         return new LdGateWrite(changes, 1, HiddenStanding, ResetFound);
     }
 
-    public int AttackersBehindGates(LdPoint? inside)
+    public int AttackersBehindGates(LdPoint? inside, IReadOnlyCollection<int> gates)
     {
         SamplesAsked.Add(inside);
+        GatesAsked.Add(gates.ToList());
         Calls.Add("Behind");
-        return Gates.Any(g => !g.Destroyed) ? BehindGate : -1;
+        return gates.Any(i => i < Gates.Count && !Gates[i].Destroyed) ? BehindGate : -1;
     }
 
     public IReadOnlyList<LdPointFacts> PointsUsable(IReadOnlyList<LdPlace> points)
@@ -189,10 +193,13 @@ internal sealed partial class FakeLongDefeatField
     public void HitGates(float damage)
     {
         for (var i = 0; i < Gates.Count; i++)
-        {
-            var g = Gates[i];
-            var hp = Math.Max(0f, g.HitPoints - damage);
-            Gates[i] = Restated(g, hp, g.MaxHitPoints, hp <= 0f, hp <= 0f);
-        }
+            HitGate(i, damage);
+    }
+
+    public void HitGate(int index, float damage)
+    {
+        var g = Gates[index];
+        var hp = Math.Max(0f, g.HitPoints - damage);
+        Gates[index] = Restated(g, hp, g.MaxHitPoints, hp <= 0f, hp <= 0f);
     }
 }

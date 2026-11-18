@@ -16,6 +16,9 @@ internal sealed partial class LongDefeatDirector
 
     private static float GateHitPoints(IEnumerable<LdGateFacts> gates) => gates.Sum(g => g.Destroyed ? 0f : System.Math.Max(0f, g.HitPoints));
 
+    // The watched gates only: a repair closes the gates it touched and leaves the others as they are, so a second gate that stands open or falls says nothing about the repair.
+    private static IEnumerable<LdGateFacts> Watched(GateWatch watch, IReadOnlyList<LdGateFacts> gates) => watch.Gates.Where(i => i < gates.Count).Select(i => gates[i]);
+
     /// <summary>
     /// A gate level bought since the last tick (D18): every visible gate's maximum becomes its vanilla maximum times <paramref name="factor"/>, keeping a standing gate's share of hit points. A watch already open
     /// is moved to the new hit points, because keeping the share less one point is not a blow.
@@ -28,7 +31,8 @@ internal sealed partial class LongDefeatDirector
         var write = _fort.SetGateLevel(factor);
         var level = _run.GateLevel;
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.GateLevelId, "l" + level, LongDefeatGateChecks.GateLevel(level, factor, write));
-        _gateWatch?.Rebase(GateHitPoints(write.Gates.Select(g => g.After)));
+        if (_gateWatch is { } watch)
+            watch.Rebase(GateHitPoints(Watched(watch, write.Gates.Select(g => g.After).ToList())));
         _logger.LogInfo($"{Tag}[Gates] level {level}: factor {F2(factor)}, " + string.Join("; ", write.Gates.Select(g => $"hit points {F1(g.Before.HitPoints)} of {F1(g.Before.MaxHitPoints)} to {F1(g.After.HitPoints)} of {F1(g.After.MaxHitPoints)}")));
     }
 
@@ -46,15 +50,16 @@ internal sealed partial class LongDefeatDirector
         var write = _fort.RepairGates(factor);
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.GateRepairId, "w" + wave, LongDefeatGateChecks.GateRepair(wave, factor, write));
         _logger.LogInfo($"{Tag}[Gates] repair before wave {wave}: path {write.Path}, " + string.Join("; ", write.Touched.Select(g => $"hit points {F1(g.Before.HitPoints)} to {F1(g.After.HitPoints)} of {F1(g.After.MaxHitPoints)}, defenders within {GateRules.NearRadius:F0} m {g.Near}")));
-        if (write.Touched.Any())
-            _gateWatch = new GateWatch(wave, GateHitPoints(write.Gates.Select(g => g.After)), write.Path);
+        var touched = write.Gates.Select((g, i) => (g, i)).Where(t => t.g.Touched).ToList();
+        if (touched.Count > 0)
+            _gateWatch = new GateWatch(wave, GateHitPoints(touched.Select(t => t.g.After)), write.Path, touched.Select(t => t.i).ToList());
     }
 
     /// <summary>The 5-second state line's sample of the watch: attackers behind a standing repaired gate's plane. The inside is the keep.</summary>
     private void SampleGateWatch()
     {
         if (_gateWatch is { } watch && _fort != null)
-            watch.Sample(_fort.AttackersBehindGates(_keepAt));
+            watch.Sample(_fort.AttackersBehindGates(_keepAt, watch.Gates));
     }
 
     /// <summary>Writes the open watch's <c>gate-attacked</c> line, once: at the next clear, or at the run's end (<paramref name="endedRun"/>). The gates are read now, from the gate objects.</summary>
@@ -64,7 +69,7 @@ internal sealed partial class LongDefeatDirector
             return;
 
         _gateWatch = null;
-        var gates = _fort.ReadGates();
+        var gates = Watched(watch, _fort.ReadGates()).ToList();
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.GateAttackedId, "w" + watch.Wave,
             LongDefeatGateChecks.GateAttacked(watch, GateHitPoints(gates), gates.Any(g => g.Destroyed), endedRun));
     }
