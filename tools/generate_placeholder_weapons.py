@@ -194,15 +194,6 @@ def ladder_spec():
     return ladder.load_spec()
 
 
-def split_generated(swaps):
-    """(swaps this tool writes, swaps owed by a generator): a troop file a generator writes whole gets
-    the placeholder from that generator, or its next --apply would undo the swap."""
-    writable, owed = [], []
-    for s in swaps:
-        (owed if Path(s["file"]).name in roster.GENERATED_TROOP_FILES else writable).append(s)
-    return writable, owed
-
-
 def carriers_of(w, troops):
     """The troops that hold or will hold this placeholder: a listed culture, a tier inside `tiers`,
     and the donor (or the placeholder itself after an earlier --apply) in the battle kit. A troop the
@@ -549,7 +540,7 @@ def main(argv=None) -> int:
     faults = placeholder_line_faults(cat, priced, spec, new_prices)
     if faults:
         raise PlaceholderError("a numbered line breaks:\n  " + "\n  ".join(faults))
-    swaps, owed = split_generated(swaps)
+    swaps, owed = roster.split_generated(swaps)
 
     stale = []
     if not PIECES_FILE.exists() or PIECES_FILE.read_bytes().decode("utf-8") != pieces_text:

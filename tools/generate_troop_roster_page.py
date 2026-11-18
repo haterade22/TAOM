@@ -117,7 +117,8 @@ def load_plain_items(modules: Path) -> dict[str, ItemInfo]:
                 root = LET.parse(str(path), LET.XMLParser(recover=True, huge_tree=True)).getroot()
             except (LET.XMLSyntaxError, OSError):
                 continue
-            if root is None:
+            # Only item files: armour_classes.xml has <Item id> rows under <ArmourClasses> (#1443).
+            if root is None or root.tag != "Items":
                 continue
             for node in root.iter("Item"):
                 iid = node.get("id")

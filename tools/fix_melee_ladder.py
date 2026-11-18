@@ -66,6 +66,16 @@ GENERATED_TROOP_FILES = {
     "troops_gundabad_snow.xml": "generate_snow_orc_troops.py",
 }
 GENERATED_REASON = "its troop file is written by "
+
+
+def split_generated(swaps):
+    """(swaps a tool may write, swaps owed by a generator) of [{file, ...}]: a troop file a generator writes
+    whole (GENERATED_TROOP_FILES) takes the swap from that generator, or its next --apply would undo it.
+    generate_armour_band_clones.py and generate_placeholder_weapons.py split their swaps here."""
+    writable, owed = [], []
+    for s in swaps:
+        (owed if Path(s["file"]).name in GENERATED_TROOP_FILES else writable).append(s)
+    return writable, owed
 # Troop generators whose output is NOT the shipped file: each scaffolded a tree that was then
 # rostered by hand, so a swap in that troop file is safe. A new generate_*_troops.py must be named
 # in one of the two tables (RosterFixerGeneratedFileTests globs for them).

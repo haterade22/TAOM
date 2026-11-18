@@ -856,7 +856,7 @@
                     id="Item.sk_uruk_hai_bracer_heavy_a1" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_uruk_hai_greaves_heavy_a1" />
+                    id="Item.taom_band_hv_sk_uruk_hai_greaves_heavy_a1" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1144,7 +1144,7 @@
                     id="Item.sk_uruk_hai_bracer_heavy_b1" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_uruk_hai_greaves_heavy_a1" />
+                    id="Item.taom_band_hv_sk_uruk_hai_greaves_heavy_a1" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1207,7 +1207,7 @@
                     id="Item.sk_uruk_hai_plate_med_b1" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                    id="Item.taom_band_hv_sk_uruk_hai_pauldron_heavy_a1" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_uruk_hai_bracer_heavy_b1" />
@@ -1282,7 +1282,7 @@
                     id="Item.sk_uruk_hai_bracer_heavy_a1" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_uruk_hai_greaves_heavy_a1" />
+                    id="Item.taom_band_hv_sk_uruk_hai_greaves_heavy_a1" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -2003,7 +2003,7 @@
                     id="Item.sk_uruk_hai_helmet_officer_a4" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                    id="Item.taom_band_hv_sk_uruk_hai_pauldron_heavy_a1" />
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_hai_plate_heavy_a1" />
@@ -2012,7 +2012,7 @@
                     id="Item.sk_uruk_hai_bracer_heavy_a1" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_uruk_hai_greaves_heavy_a1" />
+                    id="Item.taom_band_hv_sk_uruk_hai_greaves_heavy_a1" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -2026,7 +2026,7 @@
                     id="Item.sk_uruk_hai_helmet_officer_a4" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                    id="Item.taom_band_hv_sk_uruk_hai_pauldron_heavy_a1" />
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_hai_plate_heavy_a1" />
@@ -2049,7 +2049,7 @@
                     id="Item.sk_uruk_hai_helmet_officer_a4" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                    id="Item.taom_band_hv_sk_uruk_hai_pauldron_heavy_a1" />
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_hai_plate_heavy_a1" />
@@ -2072,7 +2072,7 @@
                     id="Item.sk_uruk_hai_helmet_officer_a4" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                    id="Item.taom_band_hv_sk_uruk_hai_pauldron_heavy_a1" />
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_hai_plate_heavy_a1" />
@@ -3802,7 +3802,7 @@
                     id="Item.sk_uruk_hai_helmet_officer_a4" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                    id="Item.taom_band_hv_sk_uruk_hai_pauldron_heavy_a1" />
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_hai_plate_heavy_a1" />
@@ -3811,7 +3811,7 @@
                     id="Item.sk_uruk_hai_bracer_heavy_a1" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_uruk_hai_greaves_heavy_a1" />
+                    id="Item.taom_band_hv_sk_uruk_hai_greaves_heavy_a1" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -3825,7 +3825,7 @@
                     id="Item.sk_uruk_hai_helmet_officer_a4" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                    id="Item.taom_band_hv_sk_uruk_hai_pauldron_heavy_a1" />
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_hai_plate_heavy_a1" />
@@ -3848,7 +3848,7 @@
                     id="Item.sk_uruk_hai_helmet_officer_a4" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                    id="Item.taom_band_hv_sk_uruk_hai_pauldron_heavy_a1" />
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_hai_plate_heavy_a1" />
@@ -3871,7 +3871,7 @@
                     id="Item.sk_uruk_hai_helmet_officer_a4" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                    id="Item.taom_band_hv_sk_uruk_hai_pauldron_heavy_a1" />
                 <equipment
                     slot="Body"
                     id="Item.sk_uruk_hai_plate_heavy_a1" />

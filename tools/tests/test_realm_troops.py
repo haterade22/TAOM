@@ -26,6 +26,7 @@ import xml.etree.ElementTree as ET
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import derive_armor_tiers as dat  # noqa: E402
+import generate_armour_band_clones as gbc  # noqa: E402
 import generate_anduinvale_troops as gavt  # noqa: E402
 import generate_angaladh_troops as gaht  # noqa: E402
 import generate_cardolan_troops as gct  # noqa: E402
@@ -71,6 +72,16 @@ BANDS = ("light", "medium", "heavy", "elite")
 
 def built(gen):
     return gen.add_mercenary(gen.clamp_skills(gen.build()))
+
+
+ARMOUR_SLOTS = ("Head", "Body", "Cape", "Gloves", "Leg")
+
+
+def worn_gear(t):
+    """The troop's battle sets as realm_troops renders them: a shared-down piece becomes its band clone or
+    upgrade (tools/armour_band_clones.json), so the roster gates judge what the troop file holds."""
+    return [{slot: gbc.armour_for_troop(item, t.id, t.level) if slot in ARMOUR_SLOTS else item
+             for slot, item in gear.items()} for gear in t.gear]
 
 
 def setUpModule():
@@ -276,7 +287,7 @@ class BorrowedArmourAnchorTests(unittest.TestCase):
         bad = []
         for t in troops:
             band = BANDS.index(ra.level_to_band(t.level))
-            for gear in t.gear:
+            for gear in worn_gear(t):
                 for slot, item in gear.items():
                     if item in lowest and band < BANDS.index(ra.level_to_band(lowest[item])):
                         bad.append(f"{t.id} L{t.level} {slot} {item} (worn from L{lowest[item]} elsewhere)")
@@ -343,7 +354,7 @@ class DaleRealmTests(unittest.TestCase):
     @staticmethod
     def worn_too_low(troops, lowest):
         return [f"{t.id} L{t.level} {slot} {item} (Dale wears it from L{lowest[item]})"
-                for t in troops for gear in t.gear for slot, item in gear.items()
+                for t in troops for gear in worn_gear(t) for slot, item in gear.items()
                 if item in lowest and t.level < lowest[item]]
 
     def test_the_fixed_ids_other_work_depends_on_exist(self):
@@ -364,7 +375,7 @@ class DaleRealmTests(unittest.TestCase):
         self.assertTrue(lowest, "read no Dale troop: the gate would check nothing")
         for gen in DALE_REALMS:
             troops = built(gen)
-            worn = {item for t in troops for gear in t.gear for item in gear.values()}
+            worn = {item for t in troops for gear in worn_gear(t) for item in gear.values()}
             self.assertTrue(worn & set(lowest), f"{gen.CULTURE} wears no Dale piece the gate can read")
             self.assertEqual(self.worn_too_low(troops, lowest), [], gen.CULTURE)
 

@@ -24,7 +24,9 @@
 #       touches; a missing marker counts every file), and git status in its own folder still
 #       lists it, so a reverted edit stays silent. -nt is checked first and git runs only for
 #       those, at most 50 times, inside the 10 s registration. The reason names up to three.
-#    b. Only when (a) finds nothing: C# no ledger holds. The recorder sees only Edit and Write,
+#    b. Only when (a) finds nothing, and only in a linked worktree (the shared main checkout skips
+#       this branch: C# changed there by a merge, a pull or another session is never this
+#       session's, harness-retro-2026-11-17 P1): C# no ledger holds. The recorder sees only Edit and Write,
 #       so C# changed through Bash or PowerShell (sed -i, git checkout --theirs, a heredoc, a
 #       generator) never reaches a ledger. A dirty *.cs in the payload cwd's work tree (as in
 #       path 2) counts when it is newer than <id>.verified (before the session's first build:
@@ -149,6 +151,16 @@ if [[ -n "$TAOM_SID" ]]; then
   REF=$S_VERIFIED; [[ -f "$REF" ]] || REF=$MARKER
   WANT=3; [[ -f "$S_TREE_REMINDED" ]] && WANT=1
   enter_payload_tree
+  # The shared main checkout on trunk skips this branch. C# that a merge, a pull or another session changes there
+  # is never this session's, and no Edit or Write lands on trunk since the trunk edit gate (17e5dd35b): all
+  # 15 such blocks in the week to 2026-11-17 were answered "not my files" (docs/reviews/harness-retro-2026-11-17.md
+  # P1). A linked worktree has one owner and keeps the branch. Its .git is a file, the main checkout's a folder.
+  # A main checkout on a feature branch keeps it too: the trunk gate tells sessions to make such a branch.
+  TOP=$(git rev-parse --show-toplevel 2>/dev/null)
+  if [[ -n "$TOP" && -d "$TOP/.git" && "$(git symbolic-ref -q --short HEAD 2>/dev/null)" == bannerlord-1.5.x ]]; then
+    rm -f "$S_TREE_REMINDED" 2>/dev/null || true
+    exit 0
+  fi
   list_dirty_cs
   UNCLAIMED=()
   NEWER=""
@@ -156,7 +168,6 @@ if [[ -n "$TAOM_SID" ]]; then
     [[ "$f" -nt "$REF" ]] && NEWER+="$f"$'\n'
   done
   if [[ -n "$NEWER" ]]; then
-    TOP=$(git rev-parse --show-toplevel 2>/dev/null)
     # Claims: every other session's ledger in this checkout's folder and in the work tree's own
     # (a session launched in that worktree keeps its ledger there). The own ledger is skipped by
     # name, since git and CLAUDE_PROJECT_DIR can spell one folder two ways; a folder read twice is

@@ -182,6 +182,33 @@ class NeedsAVariant(unittest.TestCase):
         with self.assertRaisesRegex(glv.VariantError, 'as it is'):
             glv.check_needed('mkwd_inf3_chest_silver', 'body', 'mirkwood', {'body_armor': 48}, {'anchorLevel': 41})
 
+    def test_a_shipped_variant_whose_source_reaches_the_lord_band_stays(self):
+        # A save can hold a shipped variant, and the restat can raise its source to the lord band (the
+        # Mirkwood band clone sources, 2026-11-17): the row stays, at the generator's own values.
+        glv.check_needed('mkwd_inf3_chest_silver', 'body', 'mirkwood', {'body_armor': 48}, {'anchorLevel': 41},
+                         shipped=True)
+        glv.check_needed('mkwd_inf3_chest_silver', 'body', 'mirkwood', {'body_armor': 60}, {'anchorLevel': 41},
+                         shipped=True)
+
+    def test_a_shipped_row_survives_the_plan_and_a_new_one_is_refused(self):
+        spec = {'cultures': {'mirkwood': [{'source': 'mkwd_inf3_chest', 'reason': 'r'}]}}
+        with tempfile.TemporaryDirectory() as tmp:
+            armory = Path(tmp) / 'items'
+            (armory / 'mirkwood').mkdir(parents=True)
+            (armory / 'mirkwood' / 'body_armors.xml').write_bytes(
+                ('<Items>\r\n' + SOURCE.replace('body_armor="8"', 'body_armor="48"') + '\r\n</Items>\r\n').encode('utf-8'))
+            rows = glv.plan(spec, armory, {}, {}, shipped={'taom_lord_mkwd_inf3_chest'})
+            with self.assertRaisesRegex(glv.VariantError, 'as it is'):
+                glv.plan(spec, armory, {}, {})
+        self.assertEqual([r[1] for r in rows], ['mkwd_inf3_chest'])
+        self.assertEqual(rows[0][4]['body_armor'], _lord('body', 'mirkwood'))
+
+    def test_the_shipped_ids_are_the_variants_in_the_file_outside_comments(self):
+        text = ('<Items>\n    <!-- taom_lord_a: x -->\n    <Item id="taom_lord_a" />\n'
+                '    <!-- <Item id="taom_lord_gone" /> -->\n    <Item\n        id="taom_lord_b" />\n</Items>\n')
+        self.assertEqual(glv.shipped_ids(text), {'taom_lord_a', 'taom_lord_b'})
+        self.assertEqual(glv.shipped_ids(None), set())
+
     def test_a_lord_line_piece_no_troop_wears_is_refused(self):
         # The restat restates an unworn lord-line piece a lord wears at the lord band
         # (rebalance_armor._roster_first_plan), so no variant is needed.

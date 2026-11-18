@@ -167,7 +167,7 @@
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
                 <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
                 <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+                <equipment slot="Cape" id="Item.taom_band_hv_sk_dale_lake_town_shoulder_mariner_a03" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.dale_great_axe_a" />
@@ -176,7 +176,7 @@
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
                 <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
                 <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+                <equipment slot="Cape" id="Item.taom_band_hv_sk_dale_lake_town_shoulder_mariner_a03" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -206,20 +206,20 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.dale_winged_spear_a" />
                 <equipment slot="Item1" id="Item.dale_sword_a" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a04" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+                <equipment slot="Head" id="Item.taom_band_hv_sk_dale_lake_town_helmet_mariner_a04" />
+                <equipment slot="Body" id="Item.taom_band_hv_sk_dale_lake_town_chest_mariner_a04" />
+                <equipment slot="Gloves" id="Item.taom_band_hv_sk_dale_lake_town_bracers_mariner_a04" />
+                <equipment slot="Leg" id="Item.taom_band_hv_sk_dale_lake_town_boots_mariner_a04" />
+                <equipment slot="Cape" id="Item.taom_band_hv_sk_dale_lake_town_shoulder_mariner_a03" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.taom_ph_dale_great_axe_a_t5" />
                 <equipment slot="Item1" id="Item.dale_sword_a" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a04" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+                <equipment slot="Head" id="Item.taom_band_hv_sk_dale_lake_town_helmet_mariner_a04" />
+                <equipment slot="Body" id="Item.taom_band_hv_sk_dale_lake_town_chest_mariner_a04" />
+                <equipment slot="Gloves" id="Item.taom_band_hv_sk_dale_lake_town_bracers_mariner_a04" />
+                <equipment slot="Leg" id="Item.taom_band_hv_sk_dale_lake_town_boots_mariner_a04" />
+                <equipment slot="Cape" id="Item.taom_band_hv_sk_dale_lake_town_shoulder_mariner_a03" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -345,7 +345,7 @@
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b03" />
                 <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b03" />
                 <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b03" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b03" />
+                <equipment slot="Cape" id="Item.taom_band_hv_sk_dale_lake_town_shoulder_mariner_b03" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.dale_winged_spear_a" />
@@ -354,7 +354,7 @@
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b03" />
                 <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b03" />
                 <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b03" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b03" />
+                <equipment slot="Cape" id="Item.taom_band_hv_sk_dale_lake_town_shoulder_mariner_b03" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1165,11 +1165,11 @@
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Horse" id="Item.charger" />
                 <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b04" />
-                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_b04" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b04" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b04" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b04" />
+                <equipment slot="Head" id="Item.taom_band_hv_sk_dale_helmet_chivlary_b04" />
+                <equipment slot="Body" id="Item.taom_band_hv_sk_dale_chest_chivalry_b04" />
+                <equipment slot="Gloves" id="Item.taom_band_hv_sk_dale_gauntlet_chivlary_b04" />
+                <equipment slot="Leg" id="Item.taom_band_hv_sk_dale_boots_chivlary_b04" />
+                <equipment slot="Cape" id="Item.taom_band_hv_sk_dale_shoulder_chivlary_b04" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>

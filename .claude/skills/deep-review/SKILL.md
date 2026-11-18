@@ -72,10 +72,10 @@ Pick the highest tier any file in scope reaches, and say the tier and why in one
 | Tier | The change touches | Codex (Step 0) | Claude lenses, one wave |
 |---|---|---|---|
 | 1 | A Harmony patch, a GameModel, save data or a save definer, co-op authority or sync, DI timing or composition, native or engine calls, a mission or campaign tick, live `TAOM_Map` or Armory data | `ultra` | 5 Data flow, 2 Engine compatibility, plus 7 XML for XML and Tooling for scripts |
-| 2 | Moves between assemblies, build and deploy targets, release tooling, gates and tests, UI that reads game state | `xhigh` | 5 Data flow, plus 7 XML for XML and Tooling for scripts, at `effort: "high"` |
+| 2 | Moves between assemblies, build and deploy targets, release tooling, gates and tests, UI that reads game state, plain C# and repo XML or XSLT that no tier 1 row names | `xhigh` | 5 Data flow, plus 7 XML for XML and Tooling for scripts, at `effort: "high"` |
 | 3 | Docs, comments, harness text only | none | none: `python tools/lint_docs.py --fail-on-drift` and a read |
 
-**Second wave:** only when the first wave or Codex reports a CRITICAL or HIGH. It runs the remaining lenses in scope from the table below on the files involved, at `effort: "high"`, with those findings in SCOPE NOTES. A finding at MEDIUM or below is fixed and verified with tests, not re-reviewed. Lens 1 Standards, 3 Efficiency, 4 Completeness and 6 Design run only in a second wave or when Mike asks for a full review: on 2026-10-22 they found mostly naming, citation and comment items that the fix pass and `/verify` catch. Step 3e RCA still applies to every confirmed finding.
+**Second wave:** only when the first wave or Codex reports a CRITICAL or HIGH. It runs the remaining lenses in scope from the table below on the files involved, at `effort: "high"`, with those findings in SCOPE NOTES. A finding at MEDIUM or below is fixed and verified with tests, not re-reviewed. Lens 1 Standards, 3 Efficiency, 4 Completeness and 6 Design run only in a second wave or when Mike asks for a full review: on 2026-10-22 they found mostly naming, citation and comment items that the fix pass and `/verify` catch. Step 3e says which confirmed findings need an RCA file.
 
 ### Which lenses run (their domains)
 
@@ -192,13 +192,13 @@ FOLLOW-UP:   [pre-existing code outside the change; its issue number, or why non
 VERDICT: READY FOR COMMIT / NEEDS FIXES
 ```
 
-## Step 3e: Root Cause Analysis (MANDATORY — BLOCKING GATE before commit)
+## Step 3e: Root Cause Analysis (a blocking gate before commit, for the findings named here)
 
-If any agent (or Codex pre-review, if Step 0 ran) returned ANY confirmed finding (any severity, including LOW), Phase 3e RCA applies before the closing commit. It is not optional, not severity-gated, not "only HIGH." *"Do NOT skip this step. The point is not just to fix bugs, it's to make the same category of bug impossible in future features."*
+Write an RCA file when a confirmed finding (from any agent, or from the Codex pre-review if Step 0 ran) is CRITICAL or HIGH (Agent 7's CRITICAL and a Codex P1 count), reached a player, or repeats a cause already recorded (grep `docs/reviews/rca-*.md` and `docs/reviews/lessons/`). Every other confirmed finding, MEDIUM or LOW, is fixed and proved by its tests and needs no RCA file; when it shows a systemic pattern it still gets its lessons entry below. The point is not just to fix bugs, it is to make the same category of bug impossible in future features. (Mike, 2026-11-17, harness retro P2: new RCA files per week went 27, 49, 96, and the lens-yield table credits lenses from 28 of 698 RCA files. This narrows the rule drafted as D3 on 2026-11-03.)
 
-The recurring failure is conflating severity with importance for RCA: we patch LOW symptoms but never extract the systemic lesson, and the same category of bug ships again. Three examples on file: Career cooldown review #31 (NaN gate), EditorCacheRebuild review #38 (NaN gate again), scene-scripts CS_Road 2026-05-13 (NaN gate, THIRD time). All caught by the same rule that was scope-gapped on each project.
+The recurring failure is patching a symptom and never extracting the systemic lesson, so the same category of bug ships again. Severity decides whether an RCA file is written, never whether the lesson is recorded. Three examples on file: Career cooldown review #31 (NaN gate), EditorCacheRebuild review #38 (NaN gate again), scene-scripts CS_Road 2026-05-13 (NaN gate, THIRD time). All caught by the same rule that was scope-gapped on each project.
 
-**For EVERY confirmed finding (not just HIGH/MED):**
+**For each finding that needs an RCA file:**
 
 **First, confirm it is actually confirmed.** Per `.claude/rules/evidence-over-claims.md`, a finding is "confirmed" only if you (or the agent) re-read the actual TAOM source / decompiled vanilla and verified the bug exists — not because an agent reported it confidently. If you took an agent's finding on faith, re-read the code now; an unverified finding is re-flagged for investigation, not entered into RCA.
 
@@ -218,7 +218,7 @@ The recurring failure is conflating severity with importance for RCA: we patch L
 
 **A deferred finding needs an owner.** Every uppercase `FOLLOW-UP` line you write in an RCA cites an issue (`#<number>`) or says `no issue:` and why; `python tools/lint_docs.py --fail-on-drift` fails on a new line that does neither (#984), and the commit hook runs the same check on the staged RCA. To mention the marker in passing, put it in backticks (`` `FOLLOW-UP` ``); an issue number in backticks does not count as a citation.
 
-**This file MUST exist BEFORE the closing commit.** The commit message should reference the RCA path.
+**When an RCA file is required, it MUST exist BEFORE the closing commit.** The commit message should reference its path.
 
 If the RCA reveals a rule that's already documented but wasn't followed (scope gap or agent prompt missing the rule), update the rule file or agent prompt in a follow-up commit. Commit graph: review → fixes → RCA → preventive-rule update.
 

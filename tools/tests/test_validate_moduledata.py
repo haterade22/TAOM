@@ -2992,6 +2992,112 @@ class ArmourMeshTierLadderTests(unittest.TestCase):
         (self.md / "characters").mkdir()
         self.assertEqual(self._run(6, "sk_x_chest_lord_a", tid="villager_x", file="characters/npcs_x.xml"), [])
 
+
+class TopTierArmourWornLowTests(unittest.TestCase):
+    """TOP_TIER_ARMOUR_WORN_LOW (2026-11-17): an Armory piece a troop of level 36+ and a troop of level 30 or
+    lower both wear in battle. The restat prices it at the low troop's band, so the top-tier troop wears low
+    armour (the Mirkwood palace guard chest at body 8 on a level 51 guard). One warning per piece; the scope
+    is rebalance_armor.shared_down_pieces, the rule tools/generate_armour_band_clones.py plans from."""
+
+    NPC = """  <NPCCharacter id="{id}" level="{level}" default_group="Infantry">
+    <Equipments>
+      <EquipmentRoster><equipment slot="Body" id="Item.{body}" /></EquipmentRoster>
+      <EquipmentRoster civilian="true"><equipment slot="Body" id="Item.civ_coat" /></EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+"""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        (self.md / "troops").mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _run(self, troops, folders):
+        body = "".join(self.NPC.format(id=t, level=lv, body=b) for t, lv, b in troops)
+        _write(self.md / "troops" / "troops_x.xml",
+               '<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n' + body + "</NPCCharacters>\n")
+        regs = ts.Registries(items=set(), item_def_files={}, npccharacters=set(), cultures=set(),
+                             party_templates=set(), item_folder=folders)
+        return [i for i in ts.Validator(self.md, self.schemas, regs).run() if i.code == "TOP_TIER_ARMOUR_WORN_LOW"]
+
+    def test_a_piece_a_top_tier_and_a_low_troop_wear_warns_once(self):
+        issues = self._run([("x_guard", 51, "x_body"), ("x_warden", 41, "x_body"), ("x_militia", 11, "x_body")],
+                           {"x_body": "mirkwood"})
+        self.assertEqual(len(issues), 1)
+        self.assertEqual(issues[0].severity, ts.Severity.WARNING)
+        self.assertEqual(issues[0].entry_id, "x_body")
+        self.assertIn("x_militia", issues[0].message)
+        self.assertIn("generate_armour_band_clones", issues[0].message)
+
+    def test_a_piece_under_level_36_or_off_the_armory_or_a_clone_is_clean(self):
+        self.assertEqual(self._run([("a", 31, "x_body"), ("b", 11, "x_body")], {"x_body": "mirkwood"}), [])
+        self.assertEqual(self._run([("a", 41, "x_body"), ("b", 11, "x_body")], {"x_body": None}), [])
+        clone = "taom_band_lt_x_body"
+        self.assertEqual(self._run([("a", 41, clone), ("b", 11, clone)], {clone: "mirkwood"}), [])
+
+    def test_a_clone_takes_its_source_folder(self):
+        items = Path(self._tmp.name) / "items"
+        _write(items / "LOTRLOME_items" / "mirkwood" / "body_armors.xml",
+               '<Items><Item id="x_body"><ItemComponent><Armor body_armor="8" /></ItemComponent></Item></Items>')
+        _write(items / "armour_band_clones" / "armour_band_clones.xml",
+               '<Items><Item id="taom_band_lt_x_body"><ItemComponent><Armor body_armor="8" /></ItemComponent>'
+               '</Item></Items>')
+        folders = ts.build_item_folders([items])
+        self.assertEqual(folders["x_body"], "mirkwood")
+        self.assertEqual(folders["taom_band_lt_x_body"], "mirkwood")
+
+
+class BandCloneSourceWornLowTests(unittest.TestCase):
+    """BAND_CLONE_SOURCE_WORN_LOW (review 2026-11-17): a set below the elite band that names the source of an armour
+    band clone. The restat prices the source at the elite band, so an NPC, a kit or a low troop's civilian set
+    that still names it gets elite armour (the Mirkwood recruit enlistment kits from 23 to 90)."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _run(self, files, sources=("x_body",)):
+        import generate_armour_band_clones as gbc
+        for rel, text in files.items():
+            _write(self.md / rel, text)
+        regs = ts.Registries(items=set(), item_def_files={}, npccharacters=set(), cultures=set(),
+                             party_templates=set(), item_folder={})
+        spec = {"clones": {s: ["light"] for s in sources}, "upgrades": {}, "fallback": []}
+        with mock.patch.object(gbc, "load_spec", return_value=spec):
+            return [i for i in ts.Validator(self.md, self.schemas, regs).run() if i.code == "BAND_CLONE_SOURCE_WORN_LOW"]
+
+    def test_a_low_npc_and_an_unlevelled_kit_warn_and_a_lord_does_not(self):
+        npcs = ('<NPCCharacters>\n'
+                '  <NPCCharacter id="guard_x" level="16" occupation="Soldier"><Equipments><EquipmentRoster>'
+                '<equipment slot="Body" id="Item.x_body" /></EquipmentRoster></Equipments></NPCCharacter>\n'
+                '  <NPCCharacter id="lord_x" occupation="Lord" is_hero="true"><Equipments><EquipmentRoster>'
+                '<equipment slot="Body" id="Item.x_body" /></EquipmentRoster></Equipments></NPCCharacter>\n'
+                '</NPCCharacters>\n')
+        kits = ('<EquipmentRosters>\n  <EquipmentRoster id="mother_x"><EquipmentSet>'
+                '<Equipment slot="Body" id="Item.x_body" /></EquipmentSet></EquipmentRoster>\n</EquipmentRosters>\n')
+        issues = self._run({"characters/npcs_x.xml": npcs, "equipmentsets/taom_char_creation_equipment.xml": kits,
+                            "equipmentsets/taom_lord_template_equipment.xml": kits})
+        self.assertEqual(sorted((i.file.replace("\\", "/").split("ModuleData/")[-1], i.entry_id) for i in issues),
+                         [("characters/npcs_x.xml", "guard_x"), ("equipmentsets/taom_char_creation_equipment.xml",
+                                                                  "mother_x")])
+        self.assertTrue(all(i.severity == ts.Severity.WARNING for i in issues))
+        self.assertIn("x_body", issues[0].message)
+        self.assertIn("generate_armour_band_clones", issues[0].message)
+
+    def test_no_clone_source_is_clean(self):
+        npcs = ('<NPCCharacters><NPCCharacter id="guard_x" level="16"><Equipments><EquipmentRoster>'
+                '<equipment slot="Body" id="Item.x_body" /></EquipmentRoster></Equipments></NPCCharacter>'
+                '</NPCCharacters>\n')
+        self.assertEqual(self._run({"characters/npcs_x.xml": npcs}, sources=()), [])
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
 

@@ -15,6 +15,8 @@ family, falls back to the source's item, appends a slot the target never fills, 
 militia-to-militia edges and the bare-chested-by-design troops' Body and Cape, demotes hero kit
 on low troops before judging, and is idempotent.
 """
+import contextlib
+import io
 import os
 import re
 import sys
@@ -176,6 +178,50 @@ class ClampTests(unittest.TestCase):
         _, changes, after = self._plan()
         self.assertEqual([c["troop"] for c in changes], ["b", "c"])
         self.assertEqual(after, [])
+
+    def test_a_slot_the_band_clone_plan_owns_is_never_touched_nor_handed_out(self):
+        # Review 2026-11-17: the repair loop moved three Mirkwood troops off the palace guard chest, an A source
+        # (tools/armour_band_clones.json), and put one cape on 16 royal slots. A source on its top wearer, a clone
+        # on its low wearer and an upgrade on its troop belong to generate_armour_band_clones.py.
+        self.items["src_helm"] = _item("src_helm", "cx", "head_armors.xml", 10)
+        self.items["taom_band_lt_x"] = _item("taom_band_lt_x", "cx", "head_armors.xml", 10)
+        self.items["up_helm"] = _item("up_helm", "cx", "head_armors.xml", 10)
+        self.items["src_glove"] = _item("src_glove", "cx", "arm_armors.xml", 30)
+        owned = (frozenset({"src_helm", "src_glove"}), frozenset({("kid_c", "up_helm")}))
+        self._write_troops(
+            _npc("parent", 16, ["kid_a", "kid_b", "kid_c"], [{"Head": "other_helm_a", "Gloves": "src_glove"}]),
+            _npc("kid_a", 21, [], [{"Head": "src_helm"}]),
+            _npc("kid_b", 21, [], [{"Head": "taom_band_lt_x"}]),
+            _npc("kid_c", 21, [], [{"Head": "up_helm"}]))
+        troops = fx.load_troops(str(self.md))
+        changes = fx.plan_fixes(troops, self.items, set(), owned=owned)
+        self.assertEqual([c for c in changes if c["slot"] == "Head"], [])
+        # the Gloves slot is free, but the parent's A source is never the fallback
+        self.assertFalse([c for c in changes if c.get("new") == "src_glove"])
+
+    def test_the_owned_slots_come_from_the_spec(self):
+        import generate_armour_band_clones as gbc
+        spec = {"clones": {"p": ["light"]}, "upgrades": {"q": {"to": "r", "troops": ["t"]}}, "fallback": []}
+        from unittest import mock
+        with mock.patch.object(gbc, "load_spec", return_value=spec):
+            plan = fx.band_clone_plan()
+        self.assertEqual(plan, (frozenset({"p"}), frozenset({("t", "r")})))
+        self.assertTrue(fx.owned_by_band_plan("fow_t", "r", plan))
+        self.assertTrue(fx.owned_by_band_plan("u", "taom_band_md_z", plan))
+        self.assertFalse(fx.owned_by_band_plan("u", "r", plan))
+
+    def test_a_broken_spec_stops_the_fixer(self):
+        import generate_armour_band_clones as gbc
+        from unittest import mock
+        broken = mock.Mock(side_effect=gbc.CloneError("the spec x cannot be read: bad"))
+        with mock.patch.object(gbc, "load_spec", broken):
+            with self.assertRaises(gbc.CloneError):
+                fx.band_clone_plan()
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = fx.main(["--game-modules", str(self.md)])
+        self.assertEqual(code, 2)
+        self.assertIn("the spec x cannot be read", out.getvalue())
 
     def test_write_is_byte_faithful_and_idempotent(self):
         self._write_troops(
