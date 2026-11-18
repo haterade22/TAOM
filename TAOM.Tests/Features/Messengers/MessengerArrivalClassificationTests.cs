@@ -34,7 +34,8 @@ public class MessengerArrivalClassificationTests
 
     // Facts consistent with the engine for one state: IsDead, IsFugitive and IsPrisoner read HeroState, and IsAlive is
     // !IsDead (v1.5.7 Hero.cs:303-319).
-    private static HeroSnapshot Snap(MessengerHeroState state, bool wanderer = false, bool child = false, bool inPlayerParty = false, bool special = false) =>
+    private static HeroSnapshot Snap(MessengerHeroState state, bool wanderer = false, bool child = false, bool inPlayerParty = false, bool special = false,
+        bool inPartyPlayerIsAttachedTo = false) =>
         new HeroSnapshot("hero_1",
             isAlive: state != MessengerHeroState.Dead,
             isPrisoner: state == MessengerHeroState.Prisoner,
@@ -44,7 +45,8 @@ public class MessengerArrivalClassificationTests
             isWanderer: wanderer,
             isHumanPlayerCharacter: false,
             isInPlayerParty: inPlayerParty,
-            isSpecial: special);
+            isSpecial: special,
+            isInPartyPlayerIsAttachedTo: inPartyPlayerIsAttachedTo);
 
     private MessengerArrivalVerdict Classify(HeroSnapshot target, bool playerAvailable = true, bool inMapEvent = false) =>
         _sut.ClassifyArrival(target, playerAvailable: playerAvailable, targetPartyInMapEvent: inMapEvent);
@@ -137,6 +139,20 @@ public class MessengerArrivalClassificationTests
         => Assert.AreEqual(MessengerArrivalVerdict.Confused,
             Classify(Snap(MessengerHeroState.Active, child: true, inPlayerParty: true), playerAvailable: false, inMapEvent: true));
 
+    // #1429 (Silas He's crash cf5730c5): the in-person dialog may send a messenger to a hero of the player's own army,
+    // and a player can join that army while the messenger travels. When the hero then rides in the army party the
+    // player is attached to, outside a settlement, the arrival meets that party and PlayerEncounter.SetupFields
+    // throws. The player can talk to that hero directly, as with a hero in the player's own party.
+    [TestMethod]
+    public void ClassifyArrival_ReachableTargetInThePartyThePlayerIsAttachedTo_IsConfused()
+        => Assert.AreEqual(MessengerArrivalVerdict.Confused,
+            Classify(Snap(MessengerHeroState.Active, inPartyPlayerIsAttachedTo: true)));
+
+    [TestMethod]
+    public void ClassifyArrival_DeadTargetInThePartyThePlayerIsAttachedTo_IsLostBeforeConfused()
+        => Assert.AreEqual(MessengerArrivalVerdict.Lost,
+            Classify(Snap(MessengerHeroState.Dead, inPartyPlayerIsAttachedTo: true)));
+
     [TestMethod]
     public void ClassifyArrival_ReachableChild_Waits()
     {
@@ -169,13 +185,15 @@ public class MessengerArrivalClassificationTests
         foreach (var wanderer in Both)
         foreach (var special in Both)
         foreach (var child in Both)
-        foreach (var inParty in Both)
+        foreach (var inOwnParty in Both)
+        foreach (var inHostParty in Both)
         foreach (var playerAvailable in Both)
         foreach (var inMapEvent in Both)
         {
             cells++;
-            var verdict = Classify(Snap(state, wanderer, child, inParty, special), playerAvailable, inMapEvent);
-            var cell = $"{state} wanderer={wanderer} special={special} child={child} inParty={inParty} player={playerAvailable} battle={inMapEvent}";
+            var verdict = Classify(Snap(state, wanderer, child, inOwnParty, special, inHostParty), playerAvailable, inMapEvent);
+            var inParty = inOwnParty || inHostParty;
+            var cell = $"{state} wanderer={wanderer} special={special} child={child} inParty={inOwnParty} inHost={inHostParty} player={playerAvailable} battle={inMapEvent}";
 
             // The other inputs never rescue a hero that cannot receive, and never lose one that can.
             var lostAlone = Classify(Snap(state, wanderer, special: special)) == MessengerArrivalVerdict.Lost;
@@ -193,7 +211,7 @@ public class MessengerArrivalClassificationTests
                 problems.Add($"{cell}: WaitForTarget must mean a state the engine ends, got {verdict}");
         }
 
-        Assert.AreEqual(512, cells);
+        Assert.AreEqual(1024, cells);
         Assert.AreEqual(0, problems.Count, string.Join(Environment.NewLine, problems));
     }
 

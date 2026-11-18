@@ -5202,3 +5202,9 @@ The placeholder spec's overlap check, which keeps `placeholder_for` to one match
 - **Why missed:** the check was written when `build()` was the spec's only reader, and the port added readers without moving it.
 - **Prevent:** when a data file gains a second reader, put its validation where the file loads (`load_spec`), not in one consumer, and test the rule in both directions.
 - **Source:** [RCA](../rca-melee-tier-clones-2026-11-16.md) F1.
+
+### Before a batch in a long-lived worktree, read what trunk changed in its files (#1439, 2026-11-17)
+A port ran in one worktree all day while trunk moved 7 commits ahead. Batch D fixed the civilian sets of 47 dwarf troops that trunk had fixed that morning in #1431, a different way, with a generator field and a self-check that collide with the port's at the merge.
+- **Why missed:** the batch compared the external fix with the worktree, and the plan compared it with trunk only at the start of the day. The trunk commit was in the git log shown at session start. Lens 7 found it by comparing the branch with trunk.
+- **Prevent:** before each batch or sub-task in a worktree, run `git log HEAD..bannerlord-1.5.x -- <files the batch will touch>` and read each hit. Brief review lenses with that output, so a reviewer does not inherit the stale premise.
+- **Source:** docs/reviews/rca-silas-port-data-2026-11-17.md F1.

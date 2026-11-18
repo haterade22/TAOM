@@ -221,4 +221,57 @@ public class ProvincePartitionerTests
         Assert.AreEqual(ProvinceMap.Unclaimed, map.ProvinceAt(1.5f, float.PositiveInfinity));
         Assert.AreEqual(ProvinceMap.Unclaimed, map.ProvinceAt(float.NegativeInfinity, 1.5f));
     }
+
+    // #1444 (Silas He): a town of another realm within about 24 cost units of a village took the village's own cell
+    // (head starts 30 and 6), so the village sat in the other realm's colour. Town at column 3, village at column 10.
+    private static ProvinceMap TownBesideVillage(int guardRadius) =>
+        ProvincePartitioner.Partition(Grid(30, 1), new[] { Seed(0, 3.5f, 0.5f, headStart: 30f), Seed(1, 10.5f, 0.5f, headStart: 6f) },
+            new PartitionSettings { MaxClaim = 1e9f, PocketCells = 0, SeedGuardRadius = guardRadius });
+
+    [TestMethod]
+    public void Partition_SeedOverrunByAStrongerNeighbour_TakesBackItsOwnCell()
+    {
+        var map = TownBesideVillage(guardRadius: 4);
+
+        Assert.AreEqual(1, map[10, 0], "the village's own cell");
+        Assert.AreEqual(1, map[7, 0], "3 cells from the village and 4 from the town: nearer the village");
+        Assert.AreEqual(1, map[14, 0], "the edge of the guard radius");
+        Assert.AreEqual(0, map[6, 0], "nearer the town, so it stays the town's");
+        Assert.AreEqual(0, map[3, 0], "the town keeps its own cell");
+    }
+
+    [TestMethod]
+    public void Partition_GuardRadiusZero_LeavesTheFloodAsItWas()
+        => Assert.AreEqual(0, TownBesideVillage(guardRadius: 0)[10, 0], "without the guard the town's flood takes the village cell");
+
+    // Two villages of different provinces, both overrun by one town: each must keep its own cell whatever the seed
+    // order (the first guard let the last seed in the list win every cell both claimed).
+    [DataTestMethod]
+    [DataRow(false)]
+    [DataRow(true)]
+    public void Partition_TwoOverrunSeeds_EachKeepsItsOwnCell_InEitherOrder(bool reversed)
+    {
+        var town = Seed(0, 10.5f, 0.5f, headStart: 30f);
+        var a = Seed(1, 5.5f, 0.5f, headStart: 6f);
+        var b = Seed(2, 5.5f, 3.5f, headStart: 6f);
+        var seeds = reversed ? new[] { town, b, a } : new[] { town, a, b };
+
+        var map = ProvincePartitioner.Partition(Grid(20, 8), seeds,
+            new PartitionSettings { MaxClaim = 1e9f, PocketCells = 0, SeedGuardRadius = 4 });
+
+        Assert.AreEqual(1, map[5, 0], "village A's own cell");
+        Assert.AreEqual(2, map[5, 3], "village B's own cell");
+    }
+
+    [TestMethod]
+    public void Partition_GuardTakesBack_OnlyCellsAnotherProvinceClaimed()
+    {
+        var grid = Grid(30, 1, (12, 0, TerrainClass.Water));
+
+        var map = ProvincePartitioner.Partition(grid, new[] { Seed(0, 3.5f, 0.5f, headStart: 30f), Seed(1, 10.5f, 0.5f, headStart: 6f) },
+            new PartitionSettings { MaxClaim = 1e9f, PocketCells = 0, SeedGuardRadius = 4 });
+
+        Assert.AreEqual(ProvinceMap.Unclaimed, map[12, 0], "water is never claimed, guard or not");
+        Assert.AreEqual(1, map[10, 0]);
+    }
 }

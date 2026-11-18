@@ -18,7 +18,8 @@ namespace TAOM.Features.TroopWeight;
 /// <see cref="TroopWeightPenaltyScope"/>, and keeps vanilla's raw frame):
 /// <code>raw &gt; deflated  ⟺  raw &gt; base − surplus  ⟺  raw + surplus &gt; base  ⟺  weighted &gt; base</code>
 /// which is why vanilla's own over-capacity warning flags (all of which compare raw against the deflated
-/// limit) stay correct without being touched. Nothing here may be used to make a gameplay decision.
+/// limit) stay correct while that limit is live. The party screen freezes it at open, so the header restates
+/// the main side's flag there (#1430). Nothing here may be used to make a gameplay decision.
 /// </summary>
 public static class TroopWeightDisplay
 {

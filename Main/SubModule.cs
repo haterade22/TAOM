@@ -326,6 +326,19 @@ public class SubModule : MBSubModuleBase
         // tick of a loaded save. See docs/features/naval-travel.md.
         Features.NavalTravel.Hooks.Patch168_NavalLandPathfindGuard.Initialize(IoC.Resolve<IModLogger>());
         TryPatchCategory("Patch168_NavalLandPathfindGuard");
+        // Patch160 and Patch161 (#1429, engine bugs from Silas He's fix package; docs/features/engine-bug-guards.md).
+        // Applied here because a save load and a 3D scene widget can both run before any campaign exists.
+        Features.EngineBugGuards.Hooks.Patch160_LoadRetryStop.Initialize(IoC.Resolve<IModLogger>());
+        TryPatchCategory("Patch160_LoadRetryStop");
+        Features.EngineBugGuards.Hooks.Patch161_SceneTableauNullSceneGuard.Initialize(IoC.Resolve<IModLogger>());
+        TryPatchCategory("Patch161_SceneTableauNullSceneGuard");
+        // Patch162 to Patch167 (#1444, display and text bugs from the same package): stateless, applied with the guards.
+        TryPatchCategory("Patch162_ExecutionNoticeClosable");
+        TryPatchCategory("Patch163_EliteTierBadge");
+        TryPatchCategory("Patch164_DecisionRulerName");
+        TryPatchCategory("Patch165_ArmyFoodDays");
+        TryPatchCategory("Patch166_FoundedKingdomFormalName");
+        TryPatchCategory("Patch167_DeadHeroOutfit"); // its Prepare skips it when a co-op module is loaded
 
         // Patch95_FactionUI: Kysaro's themed front end (#704): main menu, menu video and music, splash,
         // loading screens, the character-creation screens and the hero presets. Applied HERE because the
@@ -532,7 +545,9 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IOnClanPartyItemUpdateProperties>(),
             IoC.Resolve<IOnRecruitmentVMRefreshPartyProperties>(),
             IoC.Resolve<IOnCampaignUIHelperGetPartyHealthTooltip>(),
-            IoC.Resolve<IOnPartyCharacterVMRefreshValues>());
+            IoC.Resolve<IOnPartyCharacterVMRefreshValues>(),
+            IoC.Resolve<IOnPartyScreenLogicTransfer>(),
+            logger);
 
         // ADR-013: TaleWorlds.MountAndBlade.CustomBattle exists nowhere on a dedicated server, and these hooks name it.
         if (!ClientComposition.IsDedicatedServer())
@@ -1821,6 +1836,10 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<TAOM.Features.MapEventGuard.EmptyMeetingGuardService>(),
             IoC.Resolve<IModLogger>());
         TryPatchCategory("Patch143_EmptyMeetingGuard");
+        // Patch159 (#1429): help defenders starts the encounter against the army leader when the siege camp's leader
+        // is attached to that army. A game menu consequence, so the standard batch is early enough.
+        TAOM.Features.MapEventGuard.Hooks.Patch159_HelpDefendersArmyLeader.Initialize(IoC.Resolve<IModLogger>());
+        TryPatchCategory("Patch159_HelpDefendersArmyLeader");
         // Patch87 (#566): "Return to Army" leaves the town or castle when the player is an army
         // member who is NOT attached to the army. Vanilla only ever leaves a village, hides "Leave"
         // for every non-leader member, and the wait menu it opens instead has no exit. The target is

@@ -35,7 +35,11 @@ internal static class MessengerTargetReader
             sameArmy: army != null && mainParty != null && hero.PartyBelongedTo != null
                       && army.DoesLeaderPartyAndAttachedPartiesContain(mainParty)
                       && army.DoesLeaderPartyAndAttachedPartiesContain(hero.PartyBelongedTo),
-            isSpecial: hero.IsSpecial);
+            isSpecial: hero.IsSpecial,
+            // StartMessengerConversation meets the settlement first, so only a hero outside one reaches the army party.
+            isInPartyPlayerIsAttachedTo: hero.CurrentSettlement == null
+                                         && mainParty?.AttachedTo != null
+                                         && hero.PartyBelongedTo == mainParty.AttachedTo);
     }
 
     internal static MessengerQuoteInput ReadQuoteInput(Hero? hero, int travelDays)

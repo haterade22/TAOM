@@ -39,11 +39,14 @@ public static class ProvincePartitioner
 
         float[] classCost = ClassCosts(settings);
         var heap = new CellHeap(Math.Max(16, seeds.Count * 4));
+        var startCells = new int[seeds.Count];
         for (int s = 0; s < seeds.Count; s++)
         {
             ProvinceSeed seed = seeds[s];
+            startCells[s] = -1;
             if (!TryStartCell(grid, seed, settings.SeedSearchRadius, out int cell))
                 continue;
+            startCells[s] = cell;
             float start = -seed.HeadStart;
             if (start < cost[cell])
             {
@@ -80,6 +83,8 @@ public static class ProvincePartitioner
             }
         }
 
+        if (settings.SeedGuardRadius > 0)
+            GuardSeedCells(columns, rows, seeds, startCells, labels, settings.SeedGuardRadius);
         if (settings.PocketCells > 0)
             MergePockets(grid, labels, settings.PocketCells);
         return new ProvinceMap(columns, rows, grid.MinX, grid.MinY, grid.CellSize, labels);
@@ -96,6 +101,65 @@ public static class ProvincePartitioner
         costs[(int)TerrainClass.Water] = float.PositiveInfinity;
         return costs;
     }
+
+    /// <summary>
+    /// For each seed whose start cell went to another province, gives it back every cell within
+    /// <paramref name="radius"/> that another province claimed and that is nearer (in cells) to this seed than to every
+    /// seed of that province. Unclaimed cells (water, walls, the wild) stay unclaimed. It reads the flood's labels
+    /// only, and a cell two overrun seeds both claim goes to the nearer one (its own seed at distance 0), so the order
+    /// of the seeds does not matter.
+    /// </summary>
+    private static void GuardSeedCells(int columns, int rows, IReadOnlyList<ProvinceSeed> seeds, int[] startCells, int[] flood, int radius)
+    {
+        int[]? taken = null;
+        long[]? claim = null;
+        for (int s = 0; s < seeds.Count; s++)
+        {
+            int start = startCells[s];
+            int province = seeds[s].Province;
+            if (start < 0 || flood[start] == province)
+                continue;
+            taken ??= (int[])flood.Clone();
+            if (claim == null)
+            {
+                claim = new long[flood.Length];
+                for (int i = 0; i < claim.Length; i++)
+                    claim[i] = long.MaxValue;
+            }
+            int column = start % columns, row = start / columns;
+            for (int r = Math.Max(0, row - radius); r <= Math.Min(rows - 1, row + radius); r++)
+            {
+                for (int c = Math.Max(0, column - radius); c <= Math.Min(columns - 1, column + radius); c++)
+                {
+                    int cell = r * columns + c;
+                    int holder = flood[cell];
+                    if (holder == ProvinceMap.Unclaimed || holder == province)
+                        continue;
+                    long mine = Squared(c - column, r - row);
+                    if (mine > (long)radius * radius || mine >= claim[cell] || mine >= NearestSeedOf(holder, c, r, columns, seeds, startCells))
+                        continue;
+                    taken[cell] = province;
+                    claim[cell] = mine;
+                }
+            }
+        }
+        if (taken != null)
+            Array.Copy(taken, flood, flood.Length);
+    }
+
+    private static long NearestSeedOf(int province, int column, int row, int columns, IReadOnlyList<ProvinceSeed> seeds, int[] startCells)
+    {
+        long best = long.MaxValue;
+        for (int s = 0; s < seeds.Count; s++)
+        {
+            if (seeds[s].Province != province || startCells[s] < 0)
+                continue;
+            best = Math.Min(best, Squared(startCells[s] % columns - column, startCells[s] / columns - row));
+        }
+        return best;
+    }
+
+    private static long Squared(int dc, int dr) => (long)dc * dc + (long)dr * dr;
 
     private static bool IsBlocked(TerrainGrid grid, float[] classCost, int column, int row) =>
         float.IsPositiveInfinity(classCost[(int)grid[column, row]]);

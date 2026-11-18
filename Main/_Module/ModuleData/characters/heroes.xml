@@ -190,6 +190,8 @@
 	<Hero
 		id="lord_R1_2"
 		spouse="Hero.lord_R1_1"
+		father="Hero.lord_L1_2"
+		mother="Hero.lord_L1_1"
 		faction="Faction.clan_rivendell_1" />
 	<Hero
 		id="lord_R1_3"

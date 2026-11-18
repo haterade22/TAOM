@@ -130,6 +130,19 @@ public class CoopVetoClassificationTests
         ["Patch143_EmptyMeetingGuard"] = new(CoopVeto.ReviewedSafe,
             "Crash guard (#1099). It replaces only a meeting whose partner has no speaker, which would throw on every peer. " +
             "It reads the encounter and rosters and no TAOM SyncData or MCM value, and its Leave option is vanilla's own exit."),
+        ["Patch160_LoadRetryStop"] = new(CoopVeto.ReviewedSafe,
+            "Hang guard (#1429). It skips only step 3 of this process's own saved-game load after that step already threw " +
+            "and consumed its LoadResult, a retry that cannot succeed. The campaign has not finished loading and no session " +
+            "has started, so nothing replicated is skipped; it reads the game manager's own load state and no TAOM SyncData or MCM value."),
+        ["Patch161_SceneTableauNullSceneGuard"] = new(CoopVeto.ReviewedSafe,
+            "Crash guard (#1429), client-only UI. It skips a scene widget's render texture while the widget has no scene; " +
+            "the scene's own tableau makes it later. A Gauntlet texture is per-peer presentation, never campaign state."),
+        ["Patch163_CampaignTierBadge"] = new(CoopVeto.ReviewedSafe,
+            "Display fix (#1444), client-only UI. It replaces only the empty tier badge native returns above tier 7 with the tier 7 " +
+            "glyph; tiers 1 to 7 run native. The badge is a per-peer view model, never campaign state, and it reads no TAOM SyncData or MCM value."),
+        ["Patch163_CustomBattleTierBadge"] = new(CoopVeto.ReviewedSafe,
+            "Display fix (#1444), client-only UI in custom battle, which has no campaign and no co-op session. It replaces only the " +
+            "badge of a troop above tier 7; the rest runs native."),
         ["Patch142_SallyOutEmptyPartyGuard"] = new(CoopVeto.ReviewedSafe,
             "Crash guard (#1099). It stops a sally-out check only when the besieger leader is in the main party's " +
             "map event and has nobody left; the live-battle branch still runs. It reads only " +

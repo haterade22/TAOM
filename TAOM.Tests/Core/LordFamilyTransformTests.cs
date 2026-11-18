@@ -184,4 +184,21 @@ public class LordFamilyTransformTests
             "mother or spouse keeps vanilla's, and vanilla's is about a different character.\n" +
             string.Join("\n", faults));
     }
+
+    // Canon parents that the shipped data once left out (reported by Silas He, #1439):
+    // Éomer's are set in heroes.xslt, Celebrían's in characters/heroes.xml.
+    [DataTestMethod]
+    [DataRow("lord_4_3_1", "lord_rohan_10_1", "lord_4_3_3", DisplayName = "Éomer: Éomund and Théodwyn")]
+    [DataRow("lord_R1_2", "lord_L1_2", "lord_L1_1", DisplayName = "Celebrían: Celeborn and Galadriel")]
+    public void ACanonChild_HasBothCanonParents(string child, string father, string mother)
+    {
+        var vanilla = SandBoxModuleData();
+        if (vanilla == null)
+            Assert.Inconclusive("Bannerlord install not found; the overlays have nothing to run against here.");
+
+        var roster = BuildRoster(FindRepoRoot(), vanilla!);
+        Assert.IsTrue(roster.TryGetValue(child, out var p), $"{child} is not in the roster");
+        Assert.AreEqual(father, p!.Father, $"{child}'s father");
+        Assert.AreEqual(mother, p.Mother, $"{child}'s mother");
+    }
 }

@@ -116,4 +116,7 @@ internal interface ICampaignAutorunHost
 
     /// <summary>The verdict the mission opened after the last <see cref="OpenStoryMenu"/> reported, or null until it reports one.</summary>
     StoryOutcome? StoryVerdict { get; }
+
+    /// <summary>Runs one console command line ("name arg arg") as the console does and returns what it printed (#1434).</summary>
+    string RunConsoleCommand(string commandLine);
 }

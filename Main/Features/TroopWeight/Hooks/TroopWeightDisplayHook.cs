@@ -17,8 +17,8 @@ namespace TAOM.Features.TroopWeight.Hooks;
 /// Shows the elite tax as capacity USED instead of a shrunken limit (2026-09-06 usage-frame reframe).
 /// Every capacity readout renders <c>weighted-used / true-base</c> (19 / 20) where vanilla would render
 /// <c>raw / deflated</c> (10 / 11). Enforcement is untouched — see <see cref="TroopWeightDisplay"/> for
-/// the identity that makes the two frames the same cap, and why vanilla's over-capacity warning flags
-/// stay correct without being rewritten here.
+/// the identity that makes the two frames the same cap. The party screen freezes the deflated limit at
+/// open, so there the main side's warning flag is restated in the weighted frame (#1430).
 ///
 /// It deliberately does NOT touch headcounts (map nameplate, "X vs Y" encounter menu, battle, the
 /// Battle Ready / Wounded tooltip rows) — those keep reading raw so the body count always agrees with
@@ -31,8 +31,9 @@ namespace TAOM.Features.TroopWeight.Hooks;
 /// <c>CurrentPartySize &lt;= PartyCapacity</c>, and the party screen's done-path reads
 /// <c>IsMainTroopsLimitWarningEnabled</c> / <c>IsOtherTroopsLimitWarningEnabled</c>. So those prompts now
 /// fire in the weighted frame. That is intended — a warning should key off the same cap the player is
-/// looking at — and the booleans are equivalent to vanilla's for every weight the mod ships, because
-/// <c>raw &gt; deflated ⟺ weighted &gt; base</c> for a party that pays the penalty; a garrison or a patrol
+/// looking at — and against the live deflated limit the booleans are equivalent to vanilla's for every
+/// weight the mod ships, because <c>raw &gt; deflated ⟺ weighted &gt; base</c> for a party that pays the
+/// penalty (the party screen's frozen limit is the exception the header restates, #1430); a garrison or a patrol
 /// pays none (<see cref="TroopWeightPenaltyScope"/>), so its frames keep vanilla's raw text.
 /// `WeightedFrameIdentityTests` pins that equivalence so a
 /// future weight-table or clamp change cannot silently move a confirmation threshold. Nothing here
@@ -99,15 +100,19 @@ public class TroopWeightDisplayHook :
             if (logic == null)
                 return;
 
-            var main = BuildLabel(logic.RightOwnerParty, partyVm.MainPartyTroops, logic.RightPartyMembersSizeLimit);
+            var main = BuildLabel(logic, rightSide: true, logic.RightOwnerParty, partyVm.MainPartyTroops, logic.RightPartyMembersSizeLimit);
             if (main != null)
             {
                 partyVm.MainPartyTroopsLbl = main.Value.Label;
-                if (partyVm.IsMainTroopsLimitWarningEnabled && !main.Value.IsOverCapacity)
-                    partyVm.IsMainTroopsLimitWarningEnabled = false;
+                // Both ways on the main side, under vanilla's own gate for this flag (v1.5.7 PartyVM :3069): the header
+                // stays weighted while heavy troops are dragged in (#1430), so it can be over capacity while vanilla's
+                // raw test is not. The other side's gate reads a private mode, so that side only clears.
+                bool over = main.Value.IsOverCapacity && partyVm.AreMembersRelevantOnCurrentMode;
+                if (partyVm.IsMainTroopsLimitWarningEnabled != over)
+                    partyVm.IsMainTroopsLimitWarningEnabled = over;
             }
 
-            var other = BuildLabel(logic.LeftOwnerParty, partyVm.OtherPartyTroops, logic.LeftPartyMembersSizeLimit);
+            var other = BuildLabel(logic, rightSide: false, logic.LeftOwnerParty, partyVm.OtherPartyTroops, logic.LeftPartyMembersSizeLimit);
             if (other != null)
             {
                 partyVm.OtherPartyTroopsLbl = other.Value.Label;
@@ -125,9 +130,12 @@ public class TroopWeightDisplayHook :
     /// Rebuilds one side's troop header in the weighted frame, plus whether that frame considers the side
     /// over capacity. Returns null to keep vanilla's string untouched.
     ///
-    /// The count is summed from the SCREEN's list, not the live roster, so the header tracks pending
-    /// transfers while the player drags troops. The limit still comes from the live party, which is
-    /// correct: the party-size limit does not move until the transfer is applied.
+    /// The count is summed from the SCREEN's list, so the header tracks transfers while the player drags
+    /// troops. The normal screen edits the live roster (v1.5.7 <c>PartyScreenHelper.OpenPartyScreen</c> :53),
+    /// so the party's weight-deflated limit moves with the first heavy troop moved, while the screen's limit
+    /// was copied once at open (<c>PartyScreenLogic.Initialize</c> :491). Whether the screen's limit is the
+    /// party's own is therefore read from the verdict recorded at open (<see cref="PartyScreenOwnLimits"/>,
+    /// #1430); a live comparison there flipped the header back to vanilla's numbers after one transfer.
     ///
     /// <para>
     /// <b>Why the caller also needs <c>IsOverCapacity</c>.</b> Vanilla drives its red over-capacity tint
@@ -138,19 +146,22 @@ public class TroopWeightDisplayHook :
     /// remediation workflow the feature exists to prompt: a party whose surplus exceeded its whole base
     /// limit has its penalty clamped, so its frozen deflated limit is 1 while its true base is (say) 100.
     /// Drag the heavy troops off and the header reads a comfortable "30 / 100" directly beside vanilla's
-    /// still-red over-capacity tint. The caller therefore clears a stale tint — downgrade only, never
-    /// raising one, so no mode gate vanilla applied can be bypassed and no warning can be fabricated.
+    /// still-red over-capacity tint. The caller therefore clears a stale tint. On the main side it also raises
+    /// one under vanilla's own mode gate (#1430); the other side only clears, because its gate is private.
     /// </para>
     /// </summary>
     private (string Label, bool IsOverCapacity)? BuildLabel(
-        PartyBase party, MBBindingList<PartyCharacterVM> list, int screenLimit)
+        PartyScreenLogic logic, bool rightSide, PartyBase party, MBBindingList<PartyCharacterVM> list, int screenLimit)
     {
         if (party?.MemberRoster == null || list == null || !TroopWeightPenaltyScope.PaysSizePenalty(party))
             return null;
 
         // A quest or custom party screen can pass a limit that is not the party's own. Restating it against
         // this party's true base would print a fraction neither number belongs to, so leave those vanilla.
-        if (screenLimit != party.PartySizeLimit)
+        // The verdict was recorded when the screen opened; the live comparison is the fallback for a screen
+        // opened while the recording patch was not applied.
+        bool ownLimit = PartyScreenOwnLimits.IsOwnLimit(logic, rightSide) ?? screenLimit == party.PartySizeLimit;
+        if (!ownLimit)
             return null;
 
         var rows = new List<(string TroopId, int Number, int WoundedNumber)>(list.Count);

@@ -237,6 +237,11 @@ public static class PatchShieldPolicy
         "TaleWorlds.CampaignSystem.CampaignEventDispatcher.OnGameLoaded",
         "TaleWorlds.CampaignSystem.CampaignEventDispatcher.OnSessionStart",
         "TaleWorlds.CampaignSystem.CampaignEventDispatcher.OnAfterSessionStart",
+        // Patch160's target (#1429): the override sets nextStep to None on its first line, and GameManagerBase reads None
+        // from step 5 as "loading finished". A swallow here would open the map on a half-loaded campaign, and the unpatch
+        // after it would strip Patch160's prefix. Patch160LoadRetryStopTests walks the real target. Only TaleWorlds
+        // assemblies name the method (byte scan of the installed DLLs, 2026-11-17), so no mod loses the rescue.
+        "SandBox.SandBoxGameManager.DoLoadingForGameManager",
     };
 
     /// <summary>Whether a patch target's declaring type + method name is on the hot-method exclusion list.</summary>

@@ -1683,3 +1683,8 @@ The #1421 re-draft script and the reference builder each tested "this row holds 
 - **Why missed:** each script wrote the short form of a rule the importer already holds, and each check read the list it expected to change.
 - **Prevent:** a tool that needs the importer's decision calls it (`make_plan(...).cache`, `history_at`, `our_targets`); after a bulk write, re-run the importer's dry run over every module and check every row the write could reach, not the planned list.
 - **Source:** [rca-cn-style-2026-11-16.md](../rca-cn-style-2026-11-16.md) rows 9 to 11, 18, 20 and 22.
+### A display that stays in a new frame longer needs the flags that agreed with the old frame (#1430, 2026-11-17)
+The troop weight header only cleared vanilla's red over-capacity tint, never raised it, which was correct while the weighted header showed only when the weighted and raw frames agreed. #1430 made the header keep the weighted frame for the whole screen, so it could read over capacity with no tint and no Over Limit prompt. The fix raises the main side's tint under vanilla's own mode gate.
+- **Why missed:** the "downgrade only" rule depended on a precondition the change removed, and the rule's comment was not re-read.
+- **Prevent:** when a change makes a display show its frame in more states, read every flag, tint and prompt the old code set or left alone, and check each still agrees in the new states.
+- **Source:** RCA `docs/reviews/rca-troop-weight-transfer-2026-11-17.md` finding 2 (Lens 5).

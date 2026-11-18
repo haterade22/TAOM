@@ -14,6 +14,7 @@ namespace TAOM.Features.Autorun.Scenario;
 internal sealed class ScenarioAutorunDriver
 {
     private const string Prefix = "[Autorun][Scenario] ";
+    internal const string CommandsFile = "commands.txt";
 
     // The story phases stay before Exiting: Tick and Finish test _phase < Phase.Exiting.
     private enum Phase { Off, WaitMenu, Creation, WaitMap, MissionMenu, MissionOpen, InMission, MissionReturn, Running, Exiting, Done }
@@ -26,6 +27,9 @@ internal sealed class ScenarioAutorunDriver
 
     private Phase _phase;
     private double _wall, _phaseStart, _startWall, _held, _dayChanged, _lastStatus, _dt;
+
+    // The tick after the console commands: its dt measures the frame that ran them, which no phase timer may count (#1434).
+    private bool _skipNextDt;
     private int _dayStart = ScenarioRules.UnknownDay, _lastDay = ScenarioRules.UnknownDay;
     private int _inquiries, _notices, _eventWindows, _resets;
     private string _prepared = "";
@@ -69,7 +73,8 @@ internal sealed class ScenarioAutorunDriver
         if (_phase == Phase.Off || _phase == Phase.Done || !FiniteFloatValidator.IsFinite(dt) || !(dt > 0f))
             return;
 
-        _wall += _dt = dt;
+        _wall += _dt = _skipNextDt ? 0f : dt;
+        _skipNextDt = false;
         try
         {
             Step();
@@ -173,6 +178,7 @@ internal sealed class ScenarioAutorunDriver
             return;
         }
 
+        RunCommands();
         _dayChanged = _wall;
         Enter(_plan.Kind == ScenarioPlan.KindStoryMission ? Phase.MissionMenu : Phase.Running);
     }
@@ -402,6 +408,34 @@ internal sealed class ScenarioAutorunDriver
         _phase = next;
         _phaseStart = _wall;
         _held = 0.0;
+    }
+
+    // The armed console commands, once, on the settled map (#1434). A command that throws is reported in its place and the
+    // run goes on; the output goes to the log and to commands.txt in the run folder.
+    private void RunCommands()
+    {
+        if (_plan.Commands.Count == 0)
+            return;
+
+        var file = new System.Text.StringBuilder();
+        foreach (var command in _plan.Commands)
+        {
+            string output;
+            try
+            {
+                output = _host.RunConsoleCommand(command) ?? "";
+            }
+            catch (Exception ex)
+            {
+                output = "threw " + ex.GetType().Name + ": " + ex.Message;
+            }
+
+            _logger.LogInfo(Prefix + "command " + command + "\n" + output);
+            file.Append("> ").Append(command).Append('\n').Append(output).Append("\n\n");
+        }
+
+        Write(CommandsFile, file.ToString());
+        _skipNextDt = true;
     }
 
     private void Write(string name, string text) => Guarded("write " + name, () => _host.WriteFile(name, text));

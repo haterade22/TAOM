@@ -4256,10 +4256,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.nordic_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4267,14 +4267,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_sloven" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4282,14 +4279,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.long_woolen_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4297,17 +4291,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.layered_leather_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4316,10 +4304,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.tundra_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4328,10 +4316,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4340,10 +4328,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4352,10 +4340,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4364,10 +4352,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4375,14 +4363,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.long_woolen_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4390,14 +4375,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_sloven" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4405,17 +4387,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.layered_leather_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4424,10 +4400,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.tundra_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4435,14 +4411,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_sloven" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4451,10 +4424,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4462,17 +4435,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.layered_leather_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4481,10 +4448,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4493,10 +4460,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.tundra_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4504,14 +4471,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.long_woolen_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4519,14 +4483,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4534,14 +4495,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4550,10 +4508,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.nordic_hauberk" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.mail_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4561,14 +4519,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.merchants_fur_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4576,14 +4531,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4591,14 +4543,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4607,10 +4556,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_tabard" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4618,17 +4567,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4636,14 +4579,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4652,10 +4592,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.nordic_hauberk" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.mail_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4663,14 +4603,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.merchants_fur_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4678,14 +4615,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4693,14 +4627,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4709,10 +4640,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_tabard" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4720,17 +4651,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4738,14 +4663,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4754,10 +4676,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.nordic_hauberk" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.mail_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4765,14 +4687,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.merchants_fur_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4780,14 +4699,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4795,14 +4711,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4811,10 +4724,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_tabard" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4822,17 +4735,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4841,10 +4748,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.nordic_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4852,17 +4759,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.roughcloth_shortcoat" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.folded_town_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4870,14 +4771,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.bandit_fur_a" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4885,14 +4783,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.light_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4900,14 +4795,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4915,14 +4807,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.vlandia_bandit_cape_b" />
-			<Equipment
 				slot="Body"
-				id="Item.roughcloth_shortcoat" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4930,14 +4819,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.fur_hat" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4946,13 +4832,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.nordic_hauberk" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.mail_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4961,10 +4844,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.merchants_fur_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4973,10 +4856,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4985,10 +4868,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4997,10 +4880,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_tabard" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5008,14 +4891,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5024,13 +4904,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.long_woolen_tunic" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.folded_town_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5039,10 +4916,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5050,14 +4927,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.long_woolen_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5065,14 +4939,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.light_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5080,14 +4951,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.long_woolen_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5095,20 +4963,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5116,14 +4975,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5131,17 +4987,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_sloven" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5149,14 +4999,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.folded_town_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5164,14 +5011,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.tundra_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.rough_tied_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5179,14 +5023,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5194,17 +5035,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_tunic" />
-			<Equipment
-				slot="Gloves"
-				id="Item.armwraps" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.highland_leg_wrappings" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5212,20 +5047,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5233,17 +5059,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_sloven" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5251,14 +5071,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.folded_town_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5266,14 +5083,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.tundra_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.rough_tied_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5281,14 +5095,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5296,17 +5107,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_tunic" />
-			<Equipment
-				slot="Gloves"
-				id="Item.armwraps" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.highland_leg_wrappings" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5314,20 +5119,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5335,17 +5131,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.roughcloth_shortcoat" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.folded_town_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5353,17 +5143,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.layered_leather_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5372,10 +5156,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.tundra_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5383,14 +5167,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.tundra_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.rough_tied_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5398,14 +5179,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.vlandia_bandit_cape_b" />
-			<Equipment
 				slot="Body"
-				id="Item.roughcloth_shortcoat" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5414,10 +5192,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5426,10 +5204,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.nordic_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5437,14 +5215,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.goggled_helmet_over_leather" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_hauberk" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.mail_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5452,14 +5227,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.merchants_fur_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5467,14 +5239,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5483,10 +5252,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_tabard" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5494,17 +5263,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5512,20 +5275,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5533,14 +5287,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.goggled_helmet_over_leather" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_hauberk" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.mail_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5548,14 +5299,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.merchants_fur_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5563,14 +5311,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5579,10 +5324,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_tabard" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5590,17 +5335,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5608,20 +5347,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5629,14 +5359,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.goggled_helmet_over_leather" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_hauberk" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.mail_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5644,14 +5371,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.merchants_fur_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5659,14 +5383,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5675,10 +5396,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_tabard" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5686,17 +5407,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5704,20 +5419,11 @@
 		culture="Culture.erebor">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -25797,10 +25503,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.nordic_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -25808,14 +25514,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_sloven" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -25823,14 +25526,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.long_woolen_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -25838,17 +25538,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.layered_leather_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -25857,10 +25551,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.tundra_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -25869,10 +25563,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -25881,10 +25575,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -25893,10 +25587,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -25905,10 +25599,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -25916,14 +25610,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.long_woolen_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -25931,14 +25622,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_sloven" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -25946,17 +25634,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.layered_leather_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -25965,10 +25647,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.tundra_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -25976,14 +25658,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_sloven" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -25992,10 +25671,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26003,17 +25682,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.layered_leather_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26022,10 +25695,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26034,10 +25707,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.tundra_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26045,14 +25718,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.long_woolen_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26060,14 +25730,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26075,14 +25742,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26091,10 +25755,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.nordic_hauberk" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.mail_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26102,14 +25766,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.merchants_fur_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26117,14 +25778,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26132,14 +25790,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26148,10 +25803,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_tabard" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26159,17 +25814,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26177,14 +25826,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26193,10 +25839,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.nordic_hauberk" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.mail_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26204,14 +25850,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.merchants_fur_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26219,14 +25862,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26234,14 +25874,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26250,10 +25887,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_tabard" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26261,17 +25898,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26279,14 +25910,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26295,10 +25923,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.nordic_hauberk" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.mail_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26306,14 +25934,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.merchants_fur_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26321,14 +25946,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26336,14 +25958,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26352,10 +25971,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_tabard" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26363,17 +25982,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26382,10 +25995,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.nordic_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26393,17 +26006,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.roughcloth_shortcoat" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.folded_town_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26411,14 +26018,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.bandit_fur_a" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26426,14 +26030,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.light_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26441,14 +26042,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26456,14 +26054,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.vlandia_bandit_cape_b" />
-			<Equipment
 				slot="Body"
-				id="Item.roughcloth_shortcoat" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26471,14 +26066,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.fur_hat" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26487,13 +26079,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.nordic_hauberk" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.mail_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26502,10 +26091,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.merchants_fur_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26514,10 +26103,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26526,10 +26115,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26538,10 +26127,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_tabard" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26549,14 +26138,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26565,13 +26151,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.long_woolen_tunic" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.folded_town_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26580,10 +26163,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26591,14 +26174,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.long_woolen_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26606,14 +26186,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.light_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26621,14 +26198,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.long_woolen_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26636,20 +26210,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26657,14 +26222,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26672,17 +26234,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_sloven" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26690,14 +26246,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.folded_town_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26705,14 +26258,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.tundra_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.rough_tied_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26720,14 +26270,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26735,17 +26282,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_tunic" />
-			<Equipment
-				slot="Gloves"
-				id="Item.armwraps" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.highland_leg_wrappings" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26753,20 +26294,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26774,17 +26306,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_sloven" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26792,14 +26318,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.folded_town_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26807,14 +26330,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.tundra_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.rough_tied_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26822,14 +26342,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.roughhide_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26837,17 +26354,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_tunic" />
-			<Equipment
-				slot="Gloves"
-				id="Item.armwraps" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.highland_leg_wrappings" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26855,20 +26366,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26876,17 +26378,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.roughcloth_shortcoat" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.folded_town_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26894,17 +26390,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.layered_leather_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26913,10 +26403,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.tundra_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26924,14 +26414,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.tundra_tunic" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.rough_tied_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26939,14 +26426,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.vlandia_bandit_cape_b" />
-			<Equipment
 				slot="Body"
-				id="Item.roughcloth_shortcoat" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26955,10 +26439,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26967,10 +26451,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.nordic_tunic" />
+				id="Item.sk_dwarf_tunic_normal_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.woven_leather_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26978,14 +26462,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.goggled_helmet_over_leather" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_hauberk" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.mail_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -26993,14 +26474,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.merchants_fur_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -27008,14 +26486,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -27024,10 +26499,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_tabard" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -27035,17 +26510,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -27053,20 +26522,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -27074,14 +26534,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.goggled_helmet_over_leather" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_hauberk" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.mail_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -27089,14 +26546,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.merchants_fur_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -27104,14 +26558,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -27120,10 +26571,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_tabard" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -27131,17 +26582,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -27149,20 +26594,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -27170,14 +26606,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.goggled_helmet_over_leather" />
-			<Equipment
 				slot="Body"
-				id="Item.nordic_hauberk" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.mail_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -27185,14 +26618,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.merchants_fur_coat" />
+				id="Item.sk_dwarf_tunic_noble_a" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -27200,14 +26630,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.northern_fur_cap" />
-			<Equipment
 				slot="Body"
-				id="Item.heavy_nordic_tunic" />
+				id="Item.sk_dwarf_tunic_noble_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -27216,10 +26643,10 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Body"
-				id="Item.northern_leather_tabard" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.leather_cavalier_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -27227,17 +26654,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_fur_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.strapped_shoes" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -27245,20 +26666,11 @@
 		culture="Culture.eredluin">
 		<EquipmentSet>
 			<Equipment
-				slot="Head"
-				id="Item.nordic_leather_cap" />
-			<Equipment
-				slot="Cape"
-				id="Item.scarf" />
-			<Equipment
 				slot="Body"
-				id="Item.northern_leather_vest" />
-			<Equipment
-				slot="Gloves"
-				id="Item.northern_brass_bracers" />
+				id="Item.sk_dwarf_tunic_normal_b" />
 			<Equipment
 				slot="Leg"
-				id="Item.empire_horseman_boots" />
+				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

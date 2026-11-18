@@ -15,6 +15,11 @@ public sealed class HeroSnapshot
     public bool SameArmy { get; }
     /// <summary>Hero.IsSpecial: the engine's daily settle skips a fugitive or released hero of this occupation.</summary>
     public bool IsSpecial { get; }
+    /// <summary>
+    /// The hero rides, outside any settlement, in the army party the player's party is attached to. The arrival meets
+    /// that party, and PlayerEncounter.SetupFields throws for it (#1429).
+    /// </summary>
+    public bool IsInPartyPlayerIsAttachedTo { get; }
 
     public HeroSnapshot(
         string heroId,
@@ -28,7 +33,8 @@ public sealed class HeroSnapshot
         bool isInPlayerParty,
         bool sameSettlement = false,
         bool sameArmy = false,
-        bool isSpecial = false)
+        bool isSpecial = false,
+        bool isInPartyPlayerIsAttachedTo = false)
     {
         HeroId = heroId;
         IsAlive = isAlive;
@@ -42,5 +48,6 @@ public sealed class HeroSnapshot
         SameSettlement = sameSettlement;
         SameArmy = sameArmy;
         IsSpecial = isSpecial;
+        IsInPartyPlayerIsAttachedTo = isInPartyPlayerIsAttachedTo;
     }
 }

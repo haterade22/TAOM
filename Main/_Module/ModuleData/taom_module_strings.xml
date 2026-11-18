@@ -6918,5 +6918,10 @@
 	<string id="taom_cleave_mcm_ai_hint" text="{=taom_cleave_mcm_ai_hint}AI soldiers who swing a two-handed axe, mace or sword cut through enemies by the same rules. Every two-handed troop in both armies then hits a packed line harder. Needs Cleaving Blows on. Default: off." />
 	<string id="taom_cleave_mcm_max_targets" text="{=taom_cleave_mcm_max_targets}Cleaving Blows Max Targets" />
 	<string id="taom_cleave_mcm_max_targets_hint" text="{=taom_cleave_mcm_max_targets_hint}The most enemies one swing can strike, the first one included. Default 3. A swing often stops sooner: each enemy takes some of its force, and armour takes more." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- EngineBugGuards -->
+	<string id="taom_load_failed_title" text="{=taom_load_failed_title}The saved game failed to load" />
+	<string id="taom_load_failed_body" text="{=taom_load_failed_body}An error occurred while this save loaded, and the game cannot continue the load. The error is in the TAOM log. Quit the game, then send that log with a bug report." />
+	<string id="taom_load_failed_quit" text="{=taom_load_failed_quit}Quit Game" />
 
 </strings>

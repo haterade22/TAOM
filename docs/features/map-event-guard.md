@@ -182,6 +182,14 @@ aftermath flavour sentence is deliberately not reproduced, because it branches o
 `_playerEncounterAftermath` and `_wasPlayerArmyMember` and those were never assigned on this path
 either, so reproducing it would invent a decision the game did not make.
 
+## Patch159: help defenders against an attached camp leader
+
+"Help defenders" at a siege restarts the player encounter with the siege camp's leader party as the defender (v1.5.7 `game_menu_join_encounter_help_defenders_on_consequence`). The camp leader is picked by rank, so it can be attached to an army it does not lead. Silas He traced the crash in his v1.5.6 fix package: the siege event puts the army leader on the attacker side, the side setter drags the attached party along, the defender side empties and a nested removal throws; a save made afterwards is broken. TAOM has not reproduced it.
+
+`Patch159_HelpDefendersArmyLeader` is a prefix on `PlayerEncounter.RestartPlayerEncounter` that replaces the defender with the army leader's party when the player is the attacker, the defender is attached to an army leader in the same besieger camp, and neither party is the main party or in a map event (`ShouldUseArmyLeader`). That is the engine's own path when the camp leader leads its army. A swap writes `[MapEventGuard] help defenders: the camp leader ... the encounter starts against the army leader (Patch159)` to the TAOM log. Registry: [Patch159_HelpDefendersArmyLeader](../reference/harmony-patch-registry.md#patch159_helpdefendersarmyleader).
+
+**In game (owed, #1429):** join a siege as a defender's ally where the besieging camp is led by a lord attached to another lord's army, choose Help defenders, and check that the battle opens and the log line above appears.
+
 ## Stuck AI battles
 
 ### The report
@@ -417,6 +425,7 @@ would act on.
   verified in game.
 - 2026-11-13: Patch143 is applied under its own Harmony id, `TAOM.CrashGuards`, so PatchShield keeps it when
   a Refuge or Supply Lines patch on the same method breaks after a game update.
+- 2026-11-17: added `Patch159_HelpDefendersArmyLeader`, from Silas He's v1.5.6 fix package (#1429).
 
 ## GitHub Issue
 

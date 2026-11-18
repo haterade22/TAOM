@@ -17656,7 +17656,7 @@
     </NPCCharacter>
     <!-- Culture.khuzait -->
     <!-- Culture.lothlorien -->
-    <NPCCharacter id="lord_L1_1" race="elf" name="{=aom_lord_L1_1_name}Galadriel" age="31" voice="curt" is_female="true" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_L1_1_skills">
+    <NPCCharacter id="lord_L1_1" race="elf" name="{=aom_lord_L1_1_name}Galadriel" age="35" voice="curt" is_female="true" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_L1_1_skills">
         <face>
             <BodyProperties version="4" age="28.01" weight="0.0139" build="0.9583" key="0000700000003005E77CE80EEFF01FF018FE88105FBF11800FF60FEE8EBF68F100DE06030D71E0E0000000000000000000000000000000000000000043AC2103" />
             <hair_tags>
@@ -17701,7 +17701,7 @@
             <EquipmentSet id="galadriel_civ_equipment" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_L1_2" race="elf" name="{=aom_lord_L1_2_name}Celeborn" age="30" voice="ironic" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_L1_2_skills">
+    <NPCCharacter id="lord_L1_2" race="elf" name="{=aom_lord_L1_2_name}Celeborn" age="34" voice="ironic" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_L1_2_skills">
         <face>
             <BodyProperties version="4" age="32.01" weight="0.1968" build="0.9583" key="0000CC0000003003E77FF80E81B7100118EE88105FBF11800FF60FEE8F86686000EE36030E71E0E0000000000000000000000000000000000000000043CC4142" />
             <hair_tags>
