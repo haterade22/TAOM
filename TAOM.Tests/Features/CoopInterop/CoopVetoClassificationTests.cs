@@ -459,6 +459,9 @@ public class CoopVetoClassificationTests
         ["Patch57_NavalAtSeaLandRescueGuard"] = new(CoopVeto.Parked,
             "NavalTravel is PARKED (#120/#296) and the category is commented out in SubModule.cs. " +
             "It moves parties on the campaign map — re-classify before reviving."),
+        ["Patch168_NavalLandPathfindGuard"] = new(CoopVeto.ReviewedSafe,
+            "Replaces a native call that always crashes without NavalDLC. It runs only on the authority: " +
+            "Coop skips PartiesThink and the AI think events on clients."),
 
         // --- Mission start (#1028) ----------------------------------------------------------
         ["Mission_AddMissionBehavior_MissionStartGuard_Patch"] = new(CoopVeto.ReviewedSafe,

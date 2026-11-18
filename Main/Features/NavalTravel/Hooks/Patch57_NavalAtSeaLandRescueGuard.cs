@@ -5,7 +5,8 @@ using TAOM.Core.Logging;
 namespace TAOM.Features.NavalTravel.Hooks;
 
 /// <summary>
-/// Patch57 — prevents a native AV CTD introduced by enabling naval travel. The vanilla
+/// Patch57 (PARKED; Patch168 now guards the wrapper for every caller, so the rescue below is safe and runs).
+/// It prevented a native AV CTD introduced by enabling naval travel. The vanilla
 /// <c>AIMoveToNearestLandBehavior.AiHourlyTick</c> fires only for a party already
 /// <c>IsCurrentlyAtSea</c> (inert in vanilla TAOM, since nothing ever reaches sea) and calls the
 /// native cross-region land-pathfind <c>MapScene.GetNearestFaceCenterForPositionWithPath</c>. On

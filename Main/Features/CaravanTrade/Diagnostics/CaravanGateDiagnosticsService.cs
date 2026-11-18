@@ -19,7 +19,8 @@ namespace TAOM.Features.CaravanTrade.Diagnostics;
 ///
 /// Not modeled: the naval-only early-returns (<c>IsInRaftState</c>,
 /// <c>DefaultBehavior == MoveToNearestLandOrPort</c>). Naval travel is parked in TAOM (#296), so a
-/// naval caravan cannot reach those states in a shipped build. If naval is ever re-enabled, add them
+/// naval caravan rarely reaches those states: an old save can hold a caravan at sea, and since Patch168 the
+/// hourly rescue can give it <c>MoveToNearestLandOrPort</c>, which this diagnosis then misnames. Add them
 /// alongside <see cref="CaravanGate.InMapEvent"/> — they sit in the same <c>:625</c> guard.
 /// </summary>
 public class CaravanGateDiagnosticsService
