@@ -197,6 +197,8 @@ public static class CoopSettingsRelevance
         // with no session both answer as vanilla.
         "MarshalEnabled", "MarshalKeepArray", "MarshalArriveTogether", "MarshalShowOutlines", "MarshalHollowSquare", "MarshalSpacingRepair", "MarshalThrowersFirst",
         "SupplyShowRouteVisual",
+        // Whether YOUR game window pauses its input method outside text fields (#1447). A local window setting; no game state is read or written.
+        "ImeGuardEnabled",
         "NameplateFadeFarDistance", "NameplateFadeNearDistance",
         "EnableNameplateRelationColors", "NameplateRelationTintStrength",
         "NameplateNeutralPlateOpacity", "NameplateRelationPlateOpacity",

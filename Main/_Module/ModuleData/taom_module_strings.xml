@@ -6923,5 +6923,10 @@
 	<string id="taom_load_failed_title" text="{=taom_load_failed_title}The saved game failed to load" />
 	<string id="taom_load_failed_body" text="{=taom_load_failed_body}An error occurred while this save loaded, and the game cannot continue the load. The error is in the TAOM log. Quit the game, then send that log with a bug report." />
 	<string id="taom_load_failed_quit" text="{=taom_load_failed_quit}Quit Game" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_mcm_group_text_input" text="{=taom_mcm_group_text_input}Text Input" />
+	<string id="taom_mcm_ImeGuardEnabled" text="{=taom_mcm_ImeGuardEnabled}Pause the input method outside text fields" />
+	<string id="taom_mcm_ImeGuardEnabled_hint" text="{=taom_mcm_ImeGuardEnabled_hint}For Chinese, Japanese and Korean input methods. While the game is in front and no text field has focus, the input method is paused, so hotkeys on the map and in battle reach the game instead of opening its candidate window. A search, rename or other text field gets it back at once, and other programs are not affected. Applies immediately. Default: on." />
 
 </strings>

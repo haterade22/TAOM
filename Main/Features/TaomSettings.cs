@@ -1637,6 +1637,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "{=taom_hroad_mcm_enable_hint}Over a town's nameplate, show the small trade pop-ups the base game raises only for caravans, also when a villager delivers goods there and when a lord's party buys food there. Display only: the trades themselves are unchanged. Applies immediately. Default: on.")]
     public bool EnableHarvestRoadNotices { get; set; } = true;
 
+    // --- Map UI / Text Input ---
+
+    [SettingPropertyGroup("{=taom_mcm_group_map_ui}Map UI/{=taom_mcm_group_text_input}Text Input", GroupOrder = 43)]
+    [SettingPropertyBool("{=taom_mcm_ImeGuardEnabled}Pause the input method outside text fields", Order = 0, RequireRestart = false,
+        HintText = "{=taom_mcm_ImeGuardEnabled_hint}For Chinese, Japanese and Korean input methods. While the game is in front and no text field has focus, the input method is paused, so hotkeys on the map and in battle reach the game instead of opening its candidate window. A search, rename or other text field gets it back at once, and other programs are not affected. Applies immediately. Default: on.")]
+    public bool ImeGuardEnabled { get; set; } = true;
+
     // --- Map UI / Party Icons ---
 
     [SettingPropertyGroup("{=taom_mcm_group_map_ui}Map UI/{=taom_mcm_group_party_icons}Party Icons", GroupOrder = 41)]
