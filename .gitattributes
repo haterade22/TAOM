@@ -39,6 +39,11 @@ docs/reference/lotrlome-armory-snapshot/project.mbproj text eol=lf
 # <Bannerlord>\Shaders\Sources and compares them byte for byte, so Git must never convert them (#916).
 Main/_Module/Shaders/Sources/* -text
 
+# The armour band clone outputs: generate_armour_band_clones.py writes the spec LF and the clone file CRLF, and
+# its --check compares the bytes, so a checkout must not convert either (review 2026-11-17, F1).
+tools/armour_band_clones.json text eol=lf
+Main/_Module/ModuleData/armour_band_clones/armour_band_clones.xml text eol=crlf
+
 # The lessons files are append-only: two branches that each append a lesson at the end used to conflict,
 # and merge 70c164bb3 resolved that by keeping one side, which silently dropped the Dale lesson. union keeps
 # both sides' new lines. It cannot see a conflict, so two edits of the SAME existing line both survive:

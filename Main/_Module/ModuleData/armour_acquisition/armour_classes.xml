@@ -280,8 +280,8 @@
   <Item id="m_northern_armor_b1" class="heavy" />
   <Item id="m_northern_armor_b3" class="heavy" />
   <Item id="m_northern_cape_a" class="medium" />
-  <Item id="mirkwood_body" class="light" next="mkwd_inf3_chest_bronze" />
-  <Item id="mirkwood_boots" class="light" next="mkwd_inf3_greaves_bronze" />
+  <Item id="mirkwood_body" class="elite" />
+  <Item id="mirkwood_boots" class="elite" />
   <Item id="mirkwood_gloves" class="elite" />
   <Item id="mirkwood_helmet" class="heavy" next="mkwd_inf1_t3_helmet_gold_hc" />
   <Item id="mirkwood_shoulder" class="elite" />
@@ -301,10 +301,10 @@
   <Item id="mkwd_inf3_chest_bronze" class="medium" next="mkwd_inf3_chest_silver" />
   <Item id="mkwd_inf3_chest_silver" class="elite" />
   <Item id="mkwd_inf3_greaves" class="light" next="mkwd_inf3_greaves_bronze" />
-  <Item id="mkwd_inf3_greaves_bronze" class="medium" next="mkwd_inf3_greaves_silver" />
+  <Item id="mkwd_inf3_greaves_bronze" class="elite" />
   <Item id="mkwd_inf3_greaves_silver" class="elite" />
   <Item id="mkwd_inf3_pauldrons" class="elite" />
-  <Item id="mkwd_inf3_pauldrons_bronze" class="medium" next="mkwd_inf3_pauldrons_silver" />
+  <Item id="mkwd_inf3_pauldrons_bronze" class="elite" />
   <Item id="mkwd_inf3_pauldrons_silver" class="elite" />
   <Item id="mkwd_inf3_t1_helmet_gold_hc" class="medium" next="mirkwood_helmet" />
   <Item id="mkwd_inf3_t2_helmet_gold_hc" class="medium" next="mirkwood_helmet" />
@@ -340,7 +340,7 @@
   <Item id="rivendell_boots_greaves2" class="medium" next="rivendell_boots_greaves1_silvergold" />
   <Item id="rivendell_boots_greaves2_silver" class="elite" />
   <Item id="rivendell_boots_greaves2_silvergold" class="elite" />
-  <Item id="rivendell_boots_greaves3" class="medium" next="rivendell_boots_greaves1_silvergold" />
+  <Item id="rivendell_boots_greaves3" class="elite" />
   <Item id="rivendell_boots_greaves3_silver" class="elite" />
   <Item id="rivendell_boots_greaves3_silvergold" class="elite" />
   <Item id="rivendell_boots_greaves4" class="elite" />
@@ -400,7 +400,7 @@
   <Item id="rivendell_pauldron_leather_cape" class="elite" />
   <Item id="rivendell_pauldron_leather_robe" class="elite" />
   <Item id="rivendell_pauldron_tier1_cape" class="medium" next="rivendell_cape_b" />
-  <Item id="rivendell_pauldron_tier1_cape_silver" class="medium" next="rivendell_cape_b" />
+  <Item id="rivendell_pauldron_tier1_cape_silver" class="elite" />
   <Item id="rivendell_pauldron_tier1_cape_silvergold" class="elite" />
   <Item id="rivendell_pauldron_tier1_robe" class="elite" />
   <Item id="rivendell_pauldron_tier1_robe_silver" class="elite" />
@@ -485,11 +485,11 @@
   <Item id="roh_nbl_arm_b" class="heavy" next="roh_nbl_arm_r" />
   <Item id="roh_nbl_arm_g" class="heavy" next="roh_nbl_arm_r" />
   <Item id="roh_nbl_arm_r" class="elite" />
-  <Item id="roh_nbl_arm_y" class="heavy" next="roh_nbl_arm_r" />
+  <Item id="roh_nbl_arm_y" class="elite" />
   <Item id="roh_nbl_bts" class="heavy" next="cts_rohan_captain_boots1" />
   <Item id="roh_nbl_glv" class="heavy" next="cts_rohan_royal_guard_gloves" />
   <Item id="roh_nbl_gorg_tst_6" class="elite" />
-  <Item id="roh_nbl_hlm_cf" class="heavy" next="cts_rohan_helmet_captain" />
+  <Item id="roh_nbl_hlm_cf" class="elite" />
   <Item id="roh_nbl_shldr_c" class="elite" />
   <Item id="roh_nbl_shldr_cgs_2" class="elite" />
   <Item id="roh_nbl_shldr_cs" class="elite" />
@@ -520,8 +520,8 @@
   <Item id="sk_ar_art_bracer_noble_elite_a" class="elite" />
   <Item id="sk_ar_art_bracer_noble_heavy_a" class="heavy" next="sk_ar_art_bracer_noble_elite_a" />
   <Item id="sk_ar_art_bracer_noble_med_a" class="medium" next="sk_ar_art_bracer_noble_heavy_a" />
-  <Item id="sk_ar_art_cape_a" class="light" next="sk_ar_art_pauld_inf_med_a" />
-  <Item id="sk_ar_art_cape_b" class="light" next="sk_ar_art_pauld_inf_med_a" />
+  <Item id="sk_ar_art_cape_a" class="elite" />
+  <Item id="sk_ar_art_cape_b" class="elite" />
   <Item id="sk_ar_art_chainmail_full_a" class="medium" next="sk_ar_art_chest_inf_heavy_a" />
   <Item id="sk_ar_art_chainmail_full_b" class="medium" next="sk_ar_art_chest_inf_heavy_a" />
   <Item id="sk_ar_art_chainmail_half_a" class="light" next="sk_ar_art_chainmail_full_a" />
@@ -604,9 +604,9 @@
   <Item id="sk_dale_boots_chivlary_a03" class="heavy" next="sk_dale_boots_chivlary_a04" />
   <Item id="sk_dale_boots_chivlary_a04" class="elite" />
   <Item id="sk_dale_boots_chivlary_b01" class="medium" next="sk_dale_boots_chivlary_b02" />
-  <Item id="sk_dale_boots_chivlary_b02" class="heavy" next="sk_dale_boots_chivlary_a04" />
-  <Item id="sk_dale_boots_chivlary_b03" class="heavy" next="sk_dale_boots_chivlary_a04" />
-  <Item id="sk_dale_boots_chivlary_b04" class="heavy" next="sk_dale_boots_chivlary_a04" />
+  <Item id="sk_dale_boots_chivlary_b02" class="heavy" next="sk_dale_boots_chivlary_b04" />
+  <Item id="sk_dale_boots_chivlary_b03" class="heavy" next="sk_dale_boots_chivlary_b04" />
+  <Item id="sk_dale_boots_chivlary_b04" class="elite" />
   <Item id="sk_dale_boots_infrantry_a01" class="light" next="sk_dale_boots_infrantry_b01" />
   <Item id="sk_dale_boots_infrantry_a02" class="heavy" next="sk_dale_boots_infrantry_a04" />
   <Item id="sk_dale_boots_infrantry_a03" class="heavy" next="sk_dale_boots_infrantry_a04" />
@@ -628,9 +628,9 @@
   <Item id="sk_dale_chest_chivalry_a03" class="heavy" next="sk_dale_chest_chivalry_a04" />
   <Item id="sk_dale_chest_chivalry_a04" class="elite" />
   <Item id="sk_dale_chest_chivalry_b01" class="medium" next="sk_dale_chest_chivalry_b02" />
-  <Item id="sk_dale_chest_chivalry_b02" class="heavy" next="sk_dale_chest_chivalry_a04" />
-  <Item id="sk_dale_chest_chivalry_b03" class="heavy" next="sk_dale_chest_chivalry_a04" />
-  <Item id="sk_dale_chest_chivalry_b04" class="heavy" next="sk_dale_chest_chivalry_a04" />
+  <Item id="sk_dale_chest_chivalry_b02" class="heavy" next="sk_dale_chest_chivalry_b04" />
+  <Item id="sk_dale_chest_chivalry_b03" class="heavy" next="sk_dale_chest_chivalry_b04" />
+  <Item id="sk_dale_chest_chivalry_b04" class="elite" />
   <Item id="sk_dale_chest_infrantry_a01" class="light" next="sk_dale_chest_infrantry_b01" />
   <Item id="sk_dale_chest_infrantry_a02" class="heavy" next="sk_dale_chest_infrantry_a04" />
   <Item id="sk_dale_chest_infrantry_a03" class="heavy" next="sk_dale_chest_infrantry_a04" />
@@ -652,9 +652,9 @@
   <Item id="sk_dale_gauntlet_chivlary_a03" class="heavy" next="sk_dale_gauntlet_chivlary_a04" />
   <Item id="sk_dale_gauntlet_chivlary_a04" class="elite" />
   <Item id="sk_dale_gauntlet_chivlary_b01" class="medium" next="sk_dale_gauntlet_chivlary_b02" />
-  <Item id="sk_dale_gauntlet_chivlary_b02" class="heavy" next="sk_dale_gauntlet_chivlary_a04" />
-  <Item id="sk_dale_gauntlet_chivlary_b03" class="heavy" next="sk_dale_gauntlet_chivlary_a04" />
-  <Item id="sk_dale_gauntlet_chivlary_b04" class="heavy" next="sk_dale_gauntlet_chivlary_a04" />
+  <Item id="sk_dale_gauntlet_chivlary_b02" class="heavy" next="sk_dale_gauntlet_chivlary_b04" />
+  <Item id="sk_dale_gauntlet_chivlary_b03" class="heavy" next="sk_dale_gauntlet_chivlary_b04" />
+  <Item id="sk_dale_gauntlet_chivlary_b04" class="elite" />
   <Item id="sk_dale_gauntlet_infrantry_a01" class="light" next="sk_dale_gauntlet_infrantry_b01" />
   <Item id="sk_dale_gauntlet_infrantry_a02" class="heavy" next="sk_dale_gauntlet_infrantry_a04" />
   <Item id="sk_dale_gauntlet_infrantry_a03" class="heavy" next="sk_dale_gauntlet_infrantry_a04" />
@@ -676,9 +676,9 @@
   <Item id="sk_dale_helmet_chivlary_a03" class="heavy" next="sk_dale_helmet_chivlary_a04" />
   <Item id="sk_dale_helmet_chivlary_a04" class="elite" />
   <Item id="sk_dale_helmet_chivlary_b01" class="medium" next="sk_dale_helmet_chivlary_b02" />
-  <Item id="sk_dale_helmet_chivlary_b02" class="heavy" next="sk_dale_helmet_chivlary_a04" />
-  <Item id="sk_dale_helmet_chivlary_b03" class="heavy" next="sk_dale_helmet_chivlary_a04" />
-  <Item id="sk_dale_helmet_chivlary_b04" class="heavy" next="sk_dale_helmet_chivlary_a04" />
+  <Item id="sk_dale_helmet_chivlary_b02" class="heavy" next="sk_dale_helmet_chivlary_b04" />
+  <Item id="sk_dale_helmet_chivlary_b03" class="heavy" next="sk_dale_helmet_chivlary_b04" />
+  <Item id="sk_dale_helmet_chivlary_b04" class="elite" />
   <Item id="sk_dale_helmet_infrantry_a01" class="light" next="sk_dale_helmet_infrantry_b01" />
   <Item id="sk_dale_helmet_infrantry_a02" class="heavy" next="sk_dale_helmet_infrantry_a04" />
   <Item id="sk_dale_helmet_infrantry_a03" class="heavy" next="sk_dale_helmet_infrantry_a04" />
@@ -689,40 +689,40 @@
   <Item id="sk_dale_helmet_infrantry_b04" class="elite" />
   <Item id="sk_dale_lake_town_boots_mariner_a01" class="light" next="sk_dale_lake_town_boots_mariner_a02" />
   <Item id="sk_dale_lake_town_boots_mariner_a02" class="medium" next="sk_dale_lake_town_boots_mariner_a03" />
-  <Item id="sk_dale_lake_town_boots_mariner_a03" class="heavy" next="sk_dale_lake_town_boots_mariner_b04" />
-  <Item id="sk_dale_lake_town_boots_mariner_a04" class="heavy" next="sk_dale_lake_town_boots_mariner_b04" />
+  <Item id="sk_dale_lake_town_boots_mariner_a03" class="heavy" next="sk_dale_lake_town_boots_mariner_a04" />
+  <Item id="sk_dale_lake_town_boots_mariner_a04" class="elite" />
   <Item id="sk_dale_lake_town_boots_mariner_b01" class="medium" next="sk_dale_lake_town_boots_mariner_b02" />
   <Item id="sk_dale_lake_town_boots_mariner_b02" class="heavy" next="sk_dale_lake_town_boots_mariner_b04" />
   <Item id="sk_dale_lake_town_boots_mariner_b03" class="heavy" next="sk_dale_lake_town_boots_mariner_b04" />
   <Item id="sk_dale_lake_town_boots_mariner_b04" class="elite" />
   <Item id="sk_dale_lake_town_bracers_mariner_a01" class="light" next="sk_dale_lake_town_bracers_mariner_a02" />
   <Item id="sk_dale_lake_town_bracers_mariner_a02" class="medium" next="sk_dale_lake_town_bracers_mariner_a03" />
-  <Item id="sk_dale_lake_town_bracers_mariner_a03" class="heavy" next="sk_dale_lake_town_bracers_mariner_b04" />
-  <Item id="sk_dale_lake_town_bracers_mariner_a04" class="heavy" next="sk_dale_lake_town_bracers_mariner_b04" />
+  <Item id="sk_dale_lake_town_bracers_mariner_a03" class="heavy" next="sk_dale_lake_town_bracers_mariner_a04" />
+  <Item id="sk_dale_lake_town_bracers_mariner_a04" class="elite" />
   <Item id="sk_dale_lake_town_bracers_mariner_b01" class="medium" next="sk_dale_lake_town_bracers_mariner_b02" />
   <Item id="sk_dale_lake_town_bracers_mariner_b02" class="heavy" next="sk_dale_lake_town_bracers_mariner_b04" />
   <Item id="sk_dale_lake_town_bracers_mariner_b03" class="heavy" next="sk_dale_lake_town_bracers_mariner_b04" />
   <Item id="sk_dale_lake_town_bracers_mariner_b04" class="elite" />
   <Item id="sk_dale_lake_town_chest_mariner_a01" class="light" next="sk_dale_lake_town_chest_mariner_a02" />
   <Item id="sk_dale_lake_town_chest_mariner_a02" class="medium" next="sk_dale_lake_town_chest_mariner_a03" />
-  <Item id="sk_dale_lake_town_chest_mariner_a03" class="heavy" next="sk_dale_lake_town_chest_mariner_b04" />
-  <Item id="sk_dale_lake_town_chest_mariner_a04" class="heavy" next="sk_dale_lake_town_chest_mariner_b04" />
+  <Item id="sk_dale_lake_town_chest_mariner_a03" class="heavy" next="sk_dale_lake_town_chest_mariner_a04" />
+  <Item id="sk_dale_lake_town_chest_mariner_a04" class="elite" />
   <Item id="sk_dale_lake_town_chest_mariner_b01" class="medium" next="sk_dale_lake_town_chest_mariner_b02" />
   <Item id="sk_dale_lake_town_chest_mariner_b02" class="heavy" next="sk_dale_lake_town_chest_mariner_b04" />
   <Item id="sk_dale_lake_town_chest_mariner_b03" class="heavy" next="sk_dale_lake_town_chest_mariner_b04" />
   <Item id="sk_dale_lake_town_chest_mariner_b04" class="elite" />
   <Item id="sk_dale_lake_town_helmet_mariner_a01" class="light" next="sk_dale_lake_town_helmet_mariner_a02" />
   <Item id="sk_dale_lake_town_helmet_mariner_a02" class="medium" next="sk_dale_lake_town_helmet_mariner_a03" />
-  <Item id="sk_dale_lake_town_helmet_mariner_a03" class="heavy" next="sk_dale_lake_town_helmet_mariner_b04" />
-  <Item id="sk_dale_lake_town_helmet_mariner_a04" class="heavy" next="sk_dale_lake_town_helmet_mariner_b04" />
+  <Item id="sk_dale_lake_town_helmet_mariner_a03" class="heavy" next="sk_dale_lake_town_helmet_mariner_a04" />
+  <Item id="sk_dale_lake_town_helmet_mariner_a04" class="elite" />
   <Item id="sk_dale_lake_town_helmet_mariner_b01" class="medium" next="sk_dale_lake_town_helmet_mariner_b02" />
   <Item id="sk_dale_lake_town_helmet_mariner_b02" class="heavy" next="sk_dale_lake_town_helmet_mariner_b04" />
   <Item id="sk_dale_lake_town_helmet_mariner_b03" class="heavy" next="sk_dale_lake_town_helmet_mariner_b04" />
   <Item id="sk_dale_lake_town_helmet_mariner_b04" class="elite" />
   <Item id="sk_dale_lake_town_shoulder_mariner_a01" class="light" next="sk_dale_lake_town_shoulder_mariner_b01" />
-  <Item id="sk_dale_lake_town_shoulder_mariner_a03" class="heavy" next="sk_dale_shoulder_archer_a04" />
-  <Item id="sk_dale_lake_town_shoulder_mariner_b01" class="medium" next="sk_dale_lake_town_shoulder_mariner_b03" />
-  <Item id="sk_dale_lake_town_shoulder_mariner_b03" class="heavy" next="sk_dale_shoulder_archer_a04" />
+  <Item id="sk_dale_lake_town_shoulder_mariner_a03" class="elite" />
+  <Item id="sk_dale_lake_town_shoulder_mariner_b01" class="medium" next="sk_dale_shoulder_archer_a03" />
+  <Item id="sk_dale_lake_town_shoulder_mariner_b03" class="elite" />
   <Item id="sk_dale_shoulder_archer_a01" class="light" next="sk_dale_shoulder_archer_b01" />
   <Item id="sk_dale_shoulder_archer_a03" class="heavy" next="sk_dale_shoulder_archer_a04" />
   <Item id="sk_dale_shoulder_archer_a04" class="elite" />
@@ -734,9 +734,9 @@
   <Item id="sk_dale_shoulder_chivlary_a03" class="heavy" next="sk_dale_shoulder_chivlary_a04" />
   <Item id="sk_dale_shoulder_chivlary_a04" class="elite" />
   <Item id="sk_dale_shoulder_chivlary_b01" class="medium" next="sk_dale_shoulder_chivlary_b02" />
-  <Item id="sk_dale_shoulder_chivlary_b02" class="heavy" next="sk_dale_shoulder_chivlary_a04" />
-  <Item id="sk_dale_shoulder_chivlary_b03" class="heavy" next="sk_dale_shoulder_chivlary_a04" />
-  <Item id="sk_dale_shoulder_chivlary_b04" class="heavy" next="sk_dale_shoulder_chivlary_a04" />
+  <Item id="sk_dale_shoulder_chivlary_b02" class="heavy" next="sk_dale_shoulder_chivlary_b04" />
+  <Item id="sk_dale_shoulder_chivlary_b03" class="heavy" next="sk_dale_shoulder_chivlary_b04" />
+  <Item id="sk_dale_shoulder_chivlary_b04" class="elite" />
   <Item id="sk_dale_shoulder_infrantry_a01" class="light" next="sk_dale_shoulder_infrantry_b01" />
   <Item id="sk_dale_shoulder_infrantry_a02" class="heavy" next="sk_dale_shoulder_infrantry_a04" />
   <Item id="sk_dale_shoulder_infrantry_a03" class="heavy" next="sk_dale_shoulder_infrantry_a04" />
@@ -748,9 +748,9 @@
   <Item id="sk_dg_khml_bracer_heavy_a" class="elite" />
   <Item id="sk_dg_khml_bracer_heavy_b" class="elite" />
   <Item id="sk_dg_khml_bracer_heavy_c" class="elite" />
-  <Item id="sk_dg_khml_bracer_hplate_heavy_a" class="heavy" next="sk_dg_khml_bracer_heavy_a" />
-  <Item id="sk_dg_khml_bracer_hplate_light_a" class="medium" next="sk_dg_khml_bracer_hplate_heavy_a" />
-  <Item id="sk_dg_khml_bracer_hplate_med_a" class="heavy" next="sk_dg_khml_bracer_heavy_a" />
+  <Item id="sk_dg_khml_bracer_hplate_heavy_a" class="elite" />
+  <Item id="sk_dg_khml_bracer_hplate_light_a" class="medium" next="sk_dg_khml_bracer_hplate_med_a" />
+  <Item id="sk_dg_khml_bracer_hplate_med_a" class="heavy" next="sk_dg_khml_bracer_hplate_heavy_a" />
   <Item id="sk_dg_khml_bracer_lam_heavy_a" class="elite" />
   <Item id="sk_dg_khml_bracer_lam_light_a" class="light" next="sk_dg_khml_bracer_hplate_light_a" />
   <Item id="sk_dg_khml_bracer_lam_med_a" class="heavy" next="sk_dg_khml_bracer_lam_heavy_a" />
@@ -1486,7 +1486,7 @@
   <Item id="sk_gb_uruk_pauldron_heavy_a" class="heavy" next="sk_gb_uruk_pauldron_elite_a" />
   <Item id="sk_gb_uruk_pauldron_heavy_b" class="heavy" next="sk_gb_uruk_pauldron_elite_b" />
   <Item id="sk_gb_uruk_pauldron_heavy_c" class="heavy" next="sk_gb_uruk_pauldron_elite_c" />
-  <Item id="sk_gb_uruk_pauldron_heavy_d" class="heavy" next="sk_gb_uruk_pauldron_elite_d" />
+  <Item id="sk_gb_uruk_pauldron_heavy_d" class="elite" />
   <Item id="sk_gb_uruk_pauldron_light_a" class="heavy" next="sk_gb_uruk_pauldron_elite_a" />
   <Item id="sk_gb_uruk_pauldron_light_b" class="heavy" next="sk_gb_uruk_pauldron_elite_b" />
   <Item id="sk_gb_uruk_pauldron_med_a" class="medium" next="sk_gb_uruk_pauldron_heavy_a" />
@@ -2041,12 +2041,12 @@
   <Item id="sk_ll_rg_helmet_med_b" class="elite" next="sk_ll_mw_helmet_lord_a" />
   <Item id="sk_ll_rg_pauld_light_a" class="heavy" next="sk_ll_rg_pauld_med_a" />
   <Item id="sk_ll_rg_pauld_med_a" class="elite" />
-  <Item id="sk_md_mor_arc_bracer_heavy_a" class="heavy" />
-  <Item id="sk_md_mor_arc_bracer_heavy_b" class="heavy" />
+  <Item id="sk_md_mor_arc_bracer_heavy_a" class="heavy" next="sk_md_orc_bracer_heavy_a" />
+  <Item id="sk_md_mor_arc_bracer_heavy_b" class="heavy" next="sk_md_orc_bracer_heavy_a" />
   <Item id="sk_md_mor_arc_bracer_light_a" class="light" next="sk_md_mor_arc_bracer_med_a" />
   <Item id="sk_md_mor_arc_bracer_light_b" class="medium" next="sk_md_mor_arc_bracer_heavy_b" />
   <Item id="sk_md_mor_arc_bracer_med_a" class="medium" next="sk_md_mor_arc_bracer_heavy_a" />
-  <Item id="sk_md_mor_arc_bracer_med_b" class="heavy" />
+  <Item id="sk_md_mor_arc_bracer_med_b" class="heavy" next="sk_md_orc_bracer_heavy_a" />
   <Item id="sk_md_mor_arc_chest_heavy_a" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
   <Item id="sk_md_mor_arc_chest_heavy_b" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
   <Item id="sk_md_mor_arc_chest_heavy_c" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
@@ -2068,27 +2068,27 @@
   <Item id="sk_md_mor_arc_helmet_med_a" class="medium" next="sk_md_mor_arc_helmet_heavy_a" />
   <Item id="sk_md_mor_arc_helmet_med_b" class="medium" next="sk_md_mor_arc_helmet_heavy_b" />
   <Item id="sk_md_mor_arc_helmet_med_c" class="heavy" next="sk_md_mor_arc_helmet_elite_a" />
-  <Item id="sk_md_mor_arc_pauld_heavy_a" class="heavy" />
-  <Item id="sk_md_mor_arc_pauld_heavy_b" class="heavy" />
+  <Item id="sk_md_mor_arc_pauld_heavy_a" class="heavy" next="sk_md_orc_pauldron_heavy_a" />
+  <Item id="sk_md_mor_arc_pauld_heavy_b" class="heavy" next="sk_md_orc_pauldron_heavy_a" />
   <Item id="sk_md_mor_arc_pauld_light_a" class="light" next="sk_md_mor_arc_pauld_med_a" />
   <Item id="sk_md_mor_arc_pauld_light_b" class="light" next="sk_md_mor_arc_pauld_med_a" />
   <Item id="sk_md_mor_arc_pauld_med_a" class="medium" next="sk_md_mor_arc_pauld_heavy_a" />
-  <Item id="sk_md_mor_arc_pauld_med_b" class="heavy" />
-  <Item id="sk_md_mor_grvs_heavy_a" class="heavy" />
-  <Item id="sk_md_mor_grvs_heavy_b" class="heavy" />
-  <Item id="sk_md_mor_grvs_heavy_c" class="heavy" />
+  <Item id="sk_md_mor_arc_pauld_med_b" class="heavy" next="sk_md_orc_pauldron_heavy_a" />
+  <Item id="sk_md_mor_grvs_heavy_a" class="heavy" next="sk_md_orc_boots_heavy_a" />
+  <Item id="sk_md_mor_grvs_heavy_b" class="heavy" next="sk_md_orc_boots_heavy_a" />
+  <Item id="sk_md_mor_grvs_heavy_c" class="heavy" next="sk_md_orc_boots_heavy_a" />
   <Item id="sk_md_mor_grvs_light_a" class="light" next="sk_md_mor_grvs_med_a" />
   <Item id="sk_md_mor_grvs_light_b" class="light" next="sk_md_mor_grvs_med_a" />
   <Item id="sk_md_mor_grvs_light_c" class="light" next="sk_md_mor_grvs_med_a" />
   <Item id="sk_md_mor_grvs_med_a" class="medium" next="sk_md_mor_grvs_heavy_a" />
-  <Item id="sk_md_mor_grvs_med_b" class="heavy" />
-  <Item id="sk_md_mor_grvs_med_c" class="heavy" />
-  <Item id="sk_md_mor_inf_bracer_heavy_a" class="heavy" />
-  <Item id="sk_md_mor_inf_bracer_heavy_b" class="heavy" />
+  <Item id="sk_md_mor_grvs_med_b" class="heavy" next="sk_md_orc_boots_heavy_a" />
+  <Item id="sk_md_mor_grvs_med_c" class="heavy" next="sk_md_orc_boots_heavy_a" />
+  <Item id="sk_md_mor_inf_bracer_heavy_a" class="heavy" next="sk_md_orc_bracer_heavy_a" />
+  <Item id="sk_md_mor_inf_bracer_heavy_b" class="heavy" next="sk_md_orc_bracer_heavy_a" />
   <Item id="sk_md_mor_inf_bracer_light_a" class="light" next="sk_md_mor_inf_bracer_med_a" />
   <Item id="sk_md_mor_inf_bracer_light_b" class="light" next="sk_md_mor_inf_bracer_med_a" />
   <Item id="sk_md_mor_inf_bracer_med_a" class="medium" next="sk_md_mor_inf_bracer_heavy_a" />
-  <Item id="sk_md_mor_inf_bracer_med_b" class="heavy" />
+  <Item id="sk_md_mor_inf_bracer_med_b" class="heavy" next="sk_md_orc_bracer_heavy_a" />
   <Item id="sk_md_mor_inf_chest_heavy_a" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
   <Item id="sk_md_mor_inf_chest_heavy_b" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
   <Item id="sk_md_mor_inf_chest_heavy_c" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
@@ -2110,12 +2110,12 @@
   <Item id="sk_md_mor_inf_helmet_med_a" class="medium" next="sk_md_mor_inf_helmet_heavy_a" />
   <Item id="sk_md_mor_inf_helmet_med_b" class="medium" next="sk_md_mor_inf_helmet_heavy_b" />
   <Item id="sk_md_mor_inf_helmet_med_c" class="heavy" next="sk_md_mor_inf_helmet_elite_a" />
-  <Item id="sk_md_mor_inf_pauld_heavy_a" class="heavy" />
-  <Item id="sk_md_mor_inf_pauld_heavy_b" class="heavy" />
+  <Item id="sk_md_mor_inf_pauld_heavy_a" class="heavy" next="sk_md_orc_pauldron_heavy_a" />
+  <Item id="sk_md_mor_inf_pauld_heavy_b" class="heavy" next="sk_md_orc_pauldron_heavy_a" />
   <Item id="sk_md_mor_inf_pauld_light_a" class="light" next="sk_md_mor_inf_pauld_med_a" />
   <Item id="sk_md_mor_inf_pauld_light_b" class="light" next="sk_md_mor_inf_pauld_med_a" />
   <Item id="sk_md_mor_inf_pauld_med_a" class="medium" next="sk_md_mor_inf_pauld_heavy_a" />
-  <Item id="sk_md_mor_inf_pauld_med_b" class="heavy" />
+  <Item id="sk_md_mor_inf_pauld_med_b" class="heavy" next="sk_md_orc_pauldron_heavy_a" />
   <Item id="sk_md_mor_pik_helmet_elite_a" class="elite" />
   <Item id="sk_md_mor_pik_helmet_elite_b" class="elite" />
   <Item id="sk_md_mor_pik_helmet_heavy_a" class="heavy" next="sk_md_mor_pik_helmet_elite_a" />
@@ -2127,11 +2127,11 @@
   <Item id="sk_md_mor_pik_helmet_med_a" class="heavy" next="sk_md_mor_pik_helmet_elite_a" />
   <Item id="sk_md_mor_pik_helmet_med_b" class="medium" next="sk_md_mor_pik_helmet_heavy_b" />
   <Item id="sk_md_mor_pik_helmet_med_c" class="medium" next="sk_md_mor_pik_helmet_heavy_c" />
-  <Item id="sk_md_mor_pik_pauld_heavy_a" class="heavy" />
-  <Item id="sk_md_mor_pik_pauld_heavy_b" class="heavy" />
+  <Item id="sk_md_mor_pik_pauld_heavy_a" class="heavy" next="sk_md_orc_pauldron_heavy_a" />
+  <Item id="sk_md_mor_pik_pauld_heavy_b" class="heavy" next="sk_md_orc_pauldron_heavy_a" />
   <Item id="sk_md_mor_pik_pauld_light_a" class="light" next="sk_md_mor_pik_pauld_light_b" />
   <Item id="sk_md_mor_pik_pauld_light_b" class="medium" next="sk_md_mor_pik_pauld_heavy_b" />
-  <Item id="sk_md_mor_pik_pauld_med_a" class="heavy" />
+  <Item id="sk_md_mor_pik_pauld_med_a" class="heavy" next="sk_md_orc_pauldron_heavy_a" />
   <Item id="sk_md_mor_pik_pauld_med_b" class="medium" next="sk_md_mor_pik_pauld_heavy_b" />
   <Item id="sk_md_num_arc_bracer_elite_a" class="elite" next="sk_md_num_arc_bracer_lord_a" />
   <Item id="sk_md_num_arc_bracer_heavy_a" class="elite" next="sk_md_num_arc_bracer_lord_a" />
@@ -2186,17 +2186,17 @@
   <Item id="sk_md_orc_arc_helmet_heavy_a" class="elite" />
   <Item id="sk_md_orc_arc_helmet_med_a" class="heavy" next="sk_md_orc_arc_helmet_heavy_a" />
   <Item id="sk_md_orc_boots_a" class="light" next="sk_md_orc_boots_med_b" />
-  <Item id="sk_md_orc_boots_heavy_a" class="heavy" />
-  <Item id="sk_md_orc_boots_heavy_b" class="heavy" />
+  <Item id="sk_md_orc_boots_heavy_a" class="elite" />
+  <Item id="sk_md_orc_boots_heavy_b" class="heavy" next="sk_md_orc_boots_heavy_a" />
   <Item id="sk_md_orc_boots_light_a" class="light" next="sk_md_orc_boots_med_b" />
   <Item id="sk_md_orc_boots_light_b" class="light" next="sk_md_orc_boots_med_b" />
   <Item id="sk_md_orc_boots_med_a" class="light" next="sk_md_orc_boots_med_b" />
   <Item id="sk_md_orc_boots_med_b" class="medium" next="sk_md_orc_boots_heavy_b" />
-  <Item id="sk_md_orc_bracer_heavy_a" class="heavy" />
-  <Item id="sk_md_orc_bracer_heavy_b" class="heavy" />
+  <Item id="sk_md_orc_bracer_heavy_a" class="elite" />
+  <Item id="sk_md_orc_bracer_heavy_b" class="heavy" next="sk_md_orc_bracer_heavy_a" />
   <Item id="sk_md_orc_bracer_light_a" class="light" next="sk_md_orc_bracer_med_a" />
   <Item id="sk_md_orc_bracer_light_b" class="light" next="sk_md_orc_bracer_med_b" />
-  <Item id="sk_md_orc_bracer_med_a" class="medium" next="sk_md_orc_bracer_heavy_a" />
+  <Item id="sk_md_orc_bracer_med_a" class="medium" next="sk_md_orc_bracer_heavy_b" />
   <Item id="sk_md_orc_bracer_med_b" class="medium" next="sk_md_orc_bracer_heavy_b" />
   <Item id="sk_md_orc_brt_helmet_heavy_a" class="heavy" next="sk_md_orc_arc_helmet_heavy_a" />
   <Item id="sk_md_orc_brt_helmet_light_a" class="light" next="sk_md_orc_brt_helmet_med_a" />
@@ -2217,13 +2217,13 @@
   <Item id="sk_md_orc_inf_chest_med_d" class="light" next="sk_md_orc_inf_chest_med_b" />
   <Item id="sk_md_orc_inf_helmet_heavy_a" class="heavy" next="sk_md_orc_arc_helmet_heavy_a" />
   <Item id="sk_md_orc_inf_helmet_med_a" class="medium" next="sk_md_orc_inf_helmet_heavy_a" />
-  <Item id="sk_md_orc_pauldron_heavy_a" class="heavy" />
-  <Item id="sk_md_orc_pauldron_heavy_b" class="heavy" />
+  <Item id="sk_md_orc_pauldron_heavy_a" class="elite" />
+  <Item id="sk_md_orc_pauldron_heavy_b" class="heavy" next="sk_md_orc_pauldron_heavy_a" />
   <Item id="sk_md_orc_pauldron_light_a" class="light" next="sk_md_orc_pauldron_med_a" />
   <Item id="sk_md_orc_pauldron_light_b" class="light" next="sk_md_orc_pauldron_med_a" />
   <Item id="sk_md_orc_pauldron_light_c" class="light" next="sk_md_orc_pauldron_med_a" />
-  <Item id="sk_md_orc_pauldron_med_a" class="medium" next="sk_md_orc_pauldron_heavy_a" />
-  <Item id="sk_md_orc_pauldron_med_b" class="heavy" />
+  <Item id="sk_md_orc_pauldron_med_a" class="medium" next="sk_md_orc_pauldron_heavy_b" />
+  <Item id="sk_md_orc_pauldron_med_b" class="heavy" next="sk_md_orc_pauldron_heavy_a" />
   <Item id="sk_md_orc_pik_helmet_heavy_a" class="heavy" next="sk_md_orc_arc_helmet_heavy_a" />
   <Item id="sk_md_orc_pik_helmet_med_a" class="medium" next="sk_md_orc_pik_helmet_heavy_a" />
   <Item id="sk_md_orc_rdr_helmet_light_a" class="light" next="sk_md_orc_rdr_helmet_med_a" />
@@ -2453,25 +2453,25 @@
   <Item id="sk_rh_drag_scalemail_med_a" class="elite" next="sk_rh_drag_scalemail_lord_a" />
   <Item id="sk_rh_drag_scalemail_med_b" class="heavy" next="sk_rh_drag_scalemail_elite_b" />
   <Item id="sk_rh_loke_boots_a" class="light" next="sk_rh_loke_grvs_hplate_light_a" />
-  <Item id="sk_rh_loke_bracer_heavy_a" class="heavy" next="sk_rh_loke_bracer_heavy_c" />
-  <Item id="sk_rh_loke_bracer_heavy_b" class="heavy" next="sk_rh_loke_bracer_heavy_c" />
+  <Item id="sk_rh_loke_bracer_heavy_a" class="heavy" next="sk_rh_loke_bracer_heavy_b" />
+  <Item id="sk_rh_loke_bracer_heavy_b" class="elite" />
   <Item id="sk_rh_loke_bracer_heavy_c" class="elite" />
-  <Item id="sk_rh_loke_bracer_hplate_heavy_a" class="heavy" next="sk_rh_loke_bracer_heavy_c" />
+  <Item id="sk_rh_loke_bracer_hplate_heavy_a" class="heavy" next="sk_rh_loke_bracer_heavy_b" />
   <Item id="sk_rh_loke_bracer_hplate_light_a" class="medium" next="sk_rh_loke_bracer_hplate_heavy_a" />
-  <Item id="sk_rh_loke_bracer_hplate_med_a" class="heavy" next="sk_rh_loke_bracer_heavy_c" />
+  <Item id="sk_rh_loke_bracer_hplate_med_a" class="heavy" next="sk_rh_loke_bracer_heavy_b" />
   <Item id="sk_rh_loke_bracer_lam_heavy_a" class="elite" />
   <Item id="sk_rh_loke_bracer_lam_light_a" class="heavy" next="sk_rh_loke_bracer_lam_heavy_a" />
   <Item id="sk_rh_loke_bracer_lam_med_a" class="heavy" next="sk_rh_loke_bracer_lam_heavy_a" />
   <Item id="sk_rh_loke_bracer_light_a" class="light" next="sk_rh_loke_bracer_med_a" />
   <Item id="sk_rh_loke_bracer_med_a" class="medium" next="sk_rh_loke_bracer_heavy_a" />
-  <Item id="sk_rh_loke_bracer_med_b" class="medium" next="sk_rh_loke_bracer_heavy_b" />
+  <Item id="sk_rh_loke_bracer_med_b" class="medium" next="sk_rh_loke_bracer_heavy_a" />
   <Item id="sk_rh_loke_bracer_med_c" class="heavy" next="sk_rh_loke_bracer_heavy_c" />
   <Item id="sk_rh_loke_bracer_plate_heavy_a" class="elite" />
   <Item id="sk_rh_loke_bracer_plate_light_a" class="light" next="sk_rh_loke_bracer_plate_med_a" />
   <Item id="sk_rh_loke_bracer_plate_med_a" class="medium" next="sk_rh_loke_bracer_heavy_a" />
   <Item id="sk_rh_loke_bracer_scale_heavy_a" class="elite" />
   <Item id="sk_rh_loke_bracer_scale_med_a" class="heavy" next="sk_rh_loke_bracer_scale_heavy_a" />
-  <Item id="sk_rh_loke_cape_a" class="medium" next="sk_rh_loke_cape_hplate_heavy_a" />
+  <Item id="sk_rh_loke_cape_a" class="elite" />
   <Item id="sk_rh_loke_cape_b" class="medium" next="sk_rh_loke_cape_hplate_heavy_a" />
   <Item id="sk_rh_loke_cape_heavy_a" class="elite" />
   <Item id="sk_rh_loke_cape_heavy_b" class="elite" />
@@ -2734,17 +2734,17 @@
   <Item id="sk_uruk_hai_chainmail_a1" class="light" next="sk_uruk_hai_plate_light_a1" />
   <Item id="sk_uruk_hai_chainmail_a2" class="light" next="sk_uruk_hai_plate_light_a1" />
   <Item id="sk_uruk_hai_gloves_a1" class="light" next="sk_uruk_hai_bracer_medium_a1" />
-  <Item id="sk_uruk_hai_greaves_heavy_a1" class="heavy" next="sk_uruk_hai_greaves_heavy_a3" />
-  <Item id="sk_uruk_hai_greaves_heavy_a2" class="heavy" next="sk_uruk_hai_greaves_heavy_a3" />
+  <Item id="sk_uruk_hai_greaves_heavy_a1" class="elite" />
+  <Item id="sk_uruk_hai_greaves_heavy_a2" class="heavy" next="sk_uruk_hai_greaves_heavy_a1" />
   <Item id="sk_uruk_hai_greaves_heavy_a3" class="elite" />
-  <Item id="sk_uruk_hai_greaves_heavy_ar2" class="heavy" next="sk_uruk_hai_greaves_heavy_a3" />
-  <Item id="sk_uruk_hai_greaves_heavy_ar3" class="heavy" next="sk_uruk_hai_greaves_heavy_a3" />
+  <Item id="sk_uruk_hai_greaves_heavy_ar2" class="heavy" next="sk_uruk_hai_greaves_heavy_a1" />
+  <Item id="sk_uruk_hai_greaves_heavy_ar3" class="heavy" next="sk_uruk_hai_greaves_heavy_a1" />
   <Item id="sk_uruk_hai_greaves_medium_a1" class="light" next="sk_uruk_hai_greaves_medium_a2" />
   <Item id="sk_uruk_hai_greaves_medium_a2" class="medium" next="sk_uruk_hai_greaves_heavy_a2" />
   <Item id="sk_uruk_hai_greaves_medium_a3" class="heavy" next="sk_uruk_hai_greaves_heavy_a3" />
-  <Item id="sk_uruk_hai_greaves_medium_b1" class="heavy" next="sk_uruk_hai_greaves_heavy_a3" />
-  <Item id="sk_uruk_hai_greaves_medium_b2" class="heavy" next="sk_uruk_hai_greaves_heavy_a3" />
-  <Item id="sk_uruk_hai_greaves_medium_b3" class="medium" next="sk_uruk_hai_greaves_heavy_a1" />
+  <Item id="sk_uruk_hai_greaves_medium_b1" class="heavy" next="sk_uruk_hai_greaves_heavy_a1" />
+  <Item id="sk_uruk_hai_greaves_medium_b2" class="heavy" next="sk_uruk_hai_greaves_heavy_a1" />
+  <Item id="sk_uruk_hai_greaves_medium_b3" class="medium" next="sk_uruk_hai_greaves_heavy_a2" />
   <Item id="sk_uruk_hai_helmet_bers_a1" class="heavy" next="sk_uruk_hai_helmet_bers_a2" />
   <Item id="sk_uruk_hai_helmet_bers_a2" class="elite" />
   <Item id="sk_uruk_hai_helmet_bers_a3" class="heavy" next="sk_uruk_hai_helmet_bers_a2" />
@@ -2809,8 +2809,8 @@
   <Item id="sk_uruk_hai_helmet_sword_med_a2" class="heavy" next="sk_uruk_hai_helmet_sword_heavy_a2" />
   <Item id="sk_uruk_hai_helmet_sword_med_a3" class="medium" next="sk_uruk_hai_helmet_sword_heavy_a3" />
   <Item id="sk_uruk_hai_helmet_sword_med_a4" class="light" next="sk_uruk_hai_helmet_sword_light_a4" />
-  <Item id="sk_uruk_hai_pauldron_heavy_a1" class="heavy" next="sk_uruk_hai_pauldron_heavy_a3" />
-  <Item id="sk_uruk_hai_pauldron_heavy_a2" class="heavy" next="sk_uruk_hai_pauldron_heavy_a3" />
+  <Item id="sk_uruk_hai_pauldron_heavy_a1" class="elite" />
+  <Item id="sk_uruk_hai_pauldron_heavy_a2" class="heavy" next="sk_uruk_hai_pauldron_heavy_a1" />
   <Item id="sk_uruk_hai_pauldron_heavy_a3" class="elite" />
   <Item id="sk_uruk_hai_pauldron_heavy_b1" class="elite" />
   <Item id="sk_uruk_hai_pauldron_heavy_b2" class="elite" />
@@ -2820,8 +2820,8 @@
   <Item id="sk_uruk_hai_pauldron_light_a1" class="light" next="sk_uruk_hai_pauldron_light_a3" />
   <Item id="sk_uruk_hai_pauldron_light_a2" class="light" next="sk_uruk_hai_pauldron_light_a3" />
   <Item id="sk_uruk_hai_pauldron_light_a3" class="medium" next="sk_uruk_hai_pauldron_med_a3" />
-  <Item id="sk_uruk_hai_pauldron_med_a1" class="heavy" next="sk_uruk_hai_pauldron_heavy_a3" />
-  <Item id="sk_uruk_hai_pauldron_med_a2" class="heavy" next="sk_uruk_hai_pauldron_heavy_a3" />
+  <Item id="sk_uruk_hai_pauldron_med_a1" class="heavy" next="sk_uruk_hai_pauldron_heavy_a1" />
+  <Item id="sk_uruk_hai_pauldron_med_a2" class="heavy" next="sk_uruk_hai_pauldron_heavy_a1" />
   <Item id="sk_uruk_hai_pauldron_med_a3" class="heavy" next="sk_uruk_hai_pauldron_heavy_a3" />
   <Item id="sk_uruk_hai_plate_elite_a1" class="elite" />
   <Item id="sk_uruk_hai_plate_elite_a2" class="elite" />
@@ -2975,6 +2975,46 @@
   <Item id="sm_md_num_inf_pauld_elite_b" class="elite" />
   <Item id="sm_md_num_inf_pauld_heavy_a" class="elite" />
   <Item id="sm_md_num_inf_pauld_med_a" class="heavy" next="sm_md_num_inf_pauld_elite_a" />
+  <Item id="taom_band_hv_mkwd_inf3_greaves_bronze" class="named" />
+  <Item id="taom_band_hv_mkwd_inf3_pauldrons_bronze" class="named" />
+  <Item id="taom_band_hv_rivendell_boots_greaves3" class="named" />
+  <Item id="taom_band_hv_roh_nbl_hlm_cf" class="named" />
+  <Item id="taom_band_hv_sk_ar_art_cape_a" class="named" />
+  <Item id="taom_band_hv_sk_ar_art_cape_b" class="named" />
+  <Item id="taom_band_hv_sk_dale_boots_chivlary_b04" class="named" />
+  <Item id="taom_band_hv_sk_dale_chest_chivalry_b04" class="named" />
+  <Item id="taom_band_hv_sk_dale_gauntlet_chivlary_b04" class="named" />
+  <Item id="taom_band_hv_sk_dale_helmet_chivlary_b04" class="named" />
+  <Item id="taom_band_hv_sk_dale_lake_town_boots_mariner_a04" class="named" />
+  <Item id="taom_band_hv_sk_dale_lake_town_bracers_mariner_a04" class="named" />
+  <Item id="taom_band_hv_sk_dale_lake_town_chest_mariner_a04" class="named" />
+  <Item id="taom_band_hv_sk_dale_lake_town_helmet_mariner_a04" class="named" />
+  <Item id="taom_band_hv_sk_dale_lake_town_shoulder_mariner_a03" class="named" />
+  <Item id="taom_band_hv_sk_dale_lake_town_shoulder_mariner_b03" class="named" />
+  <Item id="taom_band_hv_sk_dale_shoulder_chivlary_b04" class="named" />
+  <Item id="taom_band_hv_sk_dg_khml_bracer_hplate_heavy_a" class="named" />
+  <Item id="taom_band_hv_sk_rh_loke_bracer_heavy_b" class="named" />
+  <Item id="taom_band_hv_sk_uruk_hai_greaves_heavy_a1" class="named" />
+  <Item id="taom_band_hv_sk_uruk_hai_pauldron_heavy_a1" class="named" />
+  <Item id="taom_band_lt_mirkwood_body" class="named" />
+  <Item id="taom_band_lt_mirkwood_boots" class="named" />
+  <Item id="taom_band_lt_mkwd_inf3_greaves_bronze" class="named" />
+  <Item id="taom_band_lt_mkwd_inf3_pauldrons_bronze" class="named" />
+  <Item id="taom_band_lt_rivendell_boots_greaves3" class="named" />
+  <Item id="taom_band_lt_rivendell_pauldron_tier1_cape_silver" class="named" />
+  <Item id="taom_band_lt_sk_ar_art_cape_a" class="named" />
+  <Item id="taom_band_lt_sk_ar_art_cape_b" class="named" />
+  <Item id="taom_band_lt_sk_dale_lake_town_shoulder_mariner_a03" class="named" />
+  <Item id="taom_band_lt_sk_rh_loke_bracer_heavy_b" class="named" />
+  <Item id="taom_band_md_mirkwood_body" class="named" />
+  <Item id="taom_band_md_mirkwood_boots" class="named" />
+  <Item id="taom_band_md_mkwd_inf3_greaves_bronze" class="named" />
+  <Item id="taom_band_md_mkwd_inf3_pauldrons_bronze" class="named" />
+  <Item id="taom_band_md_rivendell_boots_greaves3" class="named" />
+  <Item id="taom_band_md_rivendell_pauldron_tier1_cape_silver" class="named" />
+  <Item id="taom_band_md_sk_ar_art_cape_a" class="named" />
+  <Item id="taom_band_md_sk_ar_art_cape_b" class="named" />
+  <Item id="taom_band_md_sk_rh_loke_bracer_heavy_b" class="named" />
   <Item id="taom_lord_mirkwood_body" class="named" />
   <Item id="taom_lord_mirkwood_boots" class="named" />
   <Item id="taom_lord_mkwd_inf3_chest" class="named" />

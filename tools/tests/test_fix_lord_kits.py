@@ -323,6 +323,18 @@ def _y_world(**extra_items):
     return items, troops, templates, lords
 
 
+class RuleBPieces(unittest.TestCase):
+    def test_an_armour_band_clone_is_never_a_rule_b_piece(self):
+        # A clone no troop wears (a retired one) passed the "no troop wears it" door (review 2026-11-17).
+        items = {'y_chest_elite_a': {'folder': 'y', 'type': 'BodyArmor', 'name': 'A'},
+                 'taom_band_lt_y_chest_elite_a': {'folder': 'y', 'type': 'BodyArmor', 'name': 'A'},
+                 'y_chest_b': {'folder': 'y', 'type': 'BodyArmor', 'name': 'B'}}
+        ctx = {'wearers': {}, 'fam_races': {}, 'worn': set()}
+        got = lk._rule_b_pieces('y', None, 'Body', ctx, items, {'y'})
+        self.assertNotIn('taom_band_lt_y_chest_elite_a', got)
+        self.assertIn('y_chest_b', got)
+
+
 class ToleranceAssignment(unittest.TestCase):
     def _plan(self, **extra):
         items, troops, templates, lords = _y_world(**extra)

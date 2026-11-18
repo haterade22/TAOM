@@ -38,7 +38,9 @@ the wrong fix when the parent is the anomaly. A slot the parent fills and the ch
 gets the chosen item appended to every battle set. The same old item is replaced by the same new item in every set, so sets stay interchangeable
 slot by slot. Militia-to-militia edges are exempt for the same reason the skill clamp exempts them:
 militia are a design island. Upgrade sources in characters/npcs_*.xml (the villager_* entries)
-take part read-only.
+take part read-only. A slot the armour band clones own (tools/armour_band_clones.json: a clone's source,
+a clone, an upgrade on its troop) is never replaced, and none of those items is handed out
+(owned_by_band_plan): generate_armour_band_clones.py would undo either on its next run.
 
 Runs in topological order over the whole DAG so a raise propagates down a chain. Dry-run by
 default; --apply writes byte-faithfully (BOM and newline style preserved, ElementTree parse before
@@ -158,6 +160,12 @@ def load_item_armour(game_modules, moduledata=None):
                     'type': it.get('Type'),
                     'name': rb.get_display_name(it.get('name', '') or ''),
                 }
+    # An armour band clone (tools/generate_armour_band_clones.py) is a repo item in its source's line.
+    import rebalance_armor as ra
+    for iid, rec in items.items():
+        parts = ra.band_clone_parts(iid)
+        if parts and rec['folder'] is None and parts[0] in items:
+            rec['folder'] = items[parts[0]]['folder']
     return items
 
 
@@ -329,8 +337,29 @@ def find_regressions(troops, items, militia):
     return sorted(out, key=lambda r: -(r[2] - r[3]))
 
 
-def pick_replacement(child, slot, old_item, need, parent_item, items):
-    """The item to put in `slot` so its value is >= need. See the module docstring."""
+def band_clone_plan():
+    """(the clone sources, {(troop id, replacement)} of the upgrades) of tools/armour_band_clones.json: the slots the
+    armour band clones own (owned_by_band_plan). A spec that cannot be read raises
+    generate_armour_band_clones.CloneError: the fixer would hand out a slot the clone plan owns."""
+    import generate_armour_band_clones as gbc
+    spec = gbc.load_spec()
+    targets = {(t, row['to']) for row in spec.get('upgrades', {}).values() for t in row['troops']}
+    return frozenset(spec.get('clones', {})), frozenset(targets)
+
+
+def owned_by_band_plan(troop_id, item, plan):
+    """True when generate_armour_band_clones.py owns this troop's slot (review 2026-11-17): an A source on its top
+    wearer, a clone on its low wearer, an upgrade on its troop (a Fords of War copy as its campaign troop). The
+    clamp neither replaces such an item nor hands one out: the next clone plan would undo either."""
+    import generate_armour_band_clones as gbc
+    import rebalance_armor as ra
+    sources, targets = plan
+    return item in sources or bool(ra.band_clone_parts(item)) or (gbc.rule_id(troop_id), item) in targets
+
+
+def pick_replacement(child, slot, old_item, need, parent_item, items, banned=frozenset()):
+    """The item to put in `slot` so its value is >= need. See the module docstring. A `banned` item (the band
+    clone plan's sources, clones and upgrades) is never picked."""
     key = (child['id'], slot)
     if key in OVERRIDES:
         return OVERRIDES[key], 'override'
@@ -340,21 +369,26 @@ def pick_replacement(child, slot, old_item, need, parent_item, items):
         cands = [
             (v['value'], iid) for iid, v in items.items()
             if v['folder'] == here['folder'] and v['file'] == here['file']
-            and family(iid) == fam and v['value'] + 1e-9 >= need
+            and family(iid) == fam and v['value'] + 1e-9 >= need and iid not in banned
         ]
         if cands:
             cands.sort()
             return cands[0][1], 'family'
-    if parent_item and parent_item in items and items[parent_item]['value'] + 1e-9 >= need:
+    if (parent_item and parent_item in items and parent_item not in banned
+            and items[parent_item]['value'] + 1e-9 >= need):
         return parent_item, 'parent'
     return None, 'none'
 
 
-def plan_fixes(troops, items, militia):
+def plan_fixes(troops, items, militia, owned=None):
     """Mutates the in-memory troops so a raise propagates, and returns the change list.
 
-    Each change: {'troop', 'file', 'slot', 'old', 'new', 'how', 'parent', 'need', ...}.
+    Each change: {'troop', 'file', 'slot', 'old', 'new', 'how', 'parent', 'need', ...}. A slot the armour band
+    clones own (`owned`, band_clone_plan() by default; owned_by_band_plan) is left as it is.
     """
+    import rebalance_armor as ra
+    owned = band_clone_plan() if owned is None else owned
+    banned = set(owned[0]) | {to for _t, to in owned[1]} | {i for i in items if ra.band_clone_parts(i)}
     order, children = topological_order(troops)
     changes = demote_hero_kit(troops, items)
     for pid in order:
@@ -387,13 +421,13 @@ def plan_fixes(troops, items, militia):
                 for st in child['sets']:
                     old = st.get(slot)
                     val = items.get(old, {}).get('value', 0) if old else 0
-                    if val + 1e-9 >= need:
+                    if val + 1e-9 >= need or (old and owned_by_band_plan(cid, old, owned)):
                         continue
                     if old in replaced:
                         if replaced[old] is not None:
                             st[slot] = replaced[old]
                         continue
-                    new, how = pick_replacement(child, slot, old, need, parent_item, items)
+                    new, how = pick_replacement(child, slot, old, need, parent_item, items, banned)
                     if new is None:
                         replaced[old] = None
                         changes.append({'troop': cid, 'file': child['file'], 'slot': slot,
@@ -524,6 +558,12 @@ def main(argv=None):
               '       Item armour values come from the install; pass --game-modules.'
               % args.game_modules)
         return 2
+    import generate_armour_band_clones as gbc
+    try:
+        owned = band_clone_plan()
+    except gbc.CloneError as exc:
+        print('ERROR: %s' % exc)
+        return 2
 
     items = load_item_armour(args.game_modules)
     troops = load_troops()
@@ -536,7 +576,7 @@ def main(argv=None):
     for p, c, pt, ct in before:
         print('  %s (%.0f) -> %s (%.0f)  drop %.0f' % (p, pt, c, ct, pt - ct))
 
-    changes = plan_fixes(troops, items, militia)
+    changes = plan_fixes(troops, items, militia, owned=owned)
     unresolved = [c for c in changes if c['new'] is None]
     resolved = [c for c in changes if c['new'] is not None]
     print('\nSlot replacements planned: %d (%d family, %d parent fallback, %d override, '

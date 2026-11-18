@@ -227,7 +227,7 @@
         <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
         <equipment slot="Item1" id="Item.wm_rohan_shield_b01_gbw" />
         <equipment slot="Item2" id="Item.vlandia_axe_2_t4" />
-        <equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
+        <equipment slot="Head" id="Item.taom_band_hv_roh_nbl_hlm_cf" />
         <equipment slot="Body" id="Item.cts_rohan_armor222" />
         <equipment slot="Cape" id="Item.cts_roha_cape1" />
         <equipment slot="Gloves" id="Item.roh_nbl_glv" />
@@ -581,7 +581,7 @@
         <equipment slot="Item1" id="Item.wm_rohan_shield_b01_gbw" />
         <equipment slot="Item2" id="Item.vlandia_axe_2_t4" />
         <equipment slot="Item3" id="Item.eastern_javelin_3_t4" />
-        <equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
+        <equipment slot="Head" id="Item.taom_band_hv_roh_nbl_hlm_cf" />
         <equipment slot="Body" id="Item.roh_nbl_arm_g" />
         <equipment slot="Cape" id="Item.cts_roha_cape1" />
         <equipment slot="Gloves" id="Item.roh_nbl_glv" />
@@ -847,7 +847,7 @@
         <equipment slot="Item1" id="Item.piercing_arrows" />
         <equipment slot="Item2" id="Item.wm_rohan_shield_a03_ybw" />
         <equipment slot="Item3" id="Item.vlandia_sword_2_t3" />
-        <equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
+        <equipment slot="Head" id="Item.taom_band_hv_roh_nbl_hlm_cf" />
         <equipment slot="Body" id="Item.cts_rohan_armor2" />
         <equipment slot="Cape" id="Item.cts_roha_cape1" />
         <equipment slot="Gloves" id="Item.roh_nbl_glv" />

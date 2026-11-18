@@ -62,7 +62,7 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.eastern_spear_4_t4" />
 			<Equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
-			<Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
+			<Equipment slot="Body" id="Item.roh_nbl_arm_y" />
 			<Equipment slot="Cape" id="Item.roh_nbl_shldr_cgs_2" />
 			<Equipment slot="Gloves" id="Item.roh_nbl_glv" />
 			<Equipment slot="Leg" id="Item.cts_rohan_captain_boots1" />

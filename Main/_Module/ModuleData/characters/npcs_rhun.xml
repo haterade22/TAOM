@@ -98,7 +98,7 @@
 				<equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_med_c" />
 				<equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
 				<equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_hv_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -197,7 +197,7 @@
 				<equipment slot="Item1" id="Item.desert_round_shield" />
 				<equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
 				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_md_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
@@ -205,7 +205,7 @@
 				<equipment slot="Item1" id="Item.desert_round_shield" />
 				<equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
 				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_md_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -432,7 +432,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
@@ -442,7 +442,7 @@
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
@@ -460,7 +460,7 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
@@ -472,7 +472,7 @@
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
@@ -490,7 +490,7 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
@@ -500,7 +500,7 @@
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
@@ -705,13 +705,13 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
 				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_md_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
 				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_md_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>
@@ -839,12 +839,12 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -873,12 +873,12 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -970,12 +970,12 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -1004,12 +1004,12 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -1022,12 +1022,12 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 		</Equipments>
@@ -1068,12 +1068,12 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
-				<equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+				<equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 		</Equipments>

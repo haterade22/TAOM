@@ -1493,6 +1493,16 @@
         <GameType value="EditorGame"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- Armour band clones (tools/generate_armour_band_clones.py): ids start with taom_band_ -->
+    <XmlNode>
+      <XmlName id="Items" path="armour_band_clones/armour_band_clones"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+        <GameType value="CustomGame"/>
+        <GameType value="EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
     <!-- Stylesheet-only rows (no .xml): they must apply after LOTRLOME_Armory's, which replace these lists -->
     <XmlNode>
       <XmlName id="WeaponDescriptions" path="placeholder_weapons/ph_weapon_descriptions"/>

@@ -31,7 +31,7 @@
         <equipment slot="Item1" id="Item.dunland_wulf_shield_light_a" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_inf_light_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_half_a" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+        <equipment slot="Cape" id="Item.taom_band_lt_sk_ar_art_cape_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_boots_a" />
       </EquipmentRoster>
       <EquipmentRoster>
@@ -39,7 +39,7 @@
         <equipment slot="Item1" id="Item.dunland_wulf_shield_light_b" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_inf_light_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_half_b" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_b" />
+        <equipment slot="Cape" id="Item.taom_band_lt_sk_ar_art_cape_b" />
         <equipment slot="Leg" id="Item.sk_ar_art_boots_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
@@ -257,7 +257,7 @@
         <equipment slot="Item2" id="Item.taom_ph_numenorean_bastard_heavy_a_t4" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_noble_med_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_a" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+        <equipment slot="Cape" id="Item.taom_band_hv_sk_ar_art_cape_a" />
         <equipment slot="Gloves" id="Item.sk_ar_art_bracer_noble_med_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_med_a" />
         <equipment slot="Horse" id="Item.t2_empire_horse" />
@@ -269,7 +269,7 @@
         <equipment slot="Item2" id="Item.taom_ph_numenorean_bastard_heavy_b_t4" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_noble_med_b" />
         <equipment slot="Body" id="Item.sk_ar_art_chest_noble_med_b" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_b" />
+        <equipment slot="Cape" id="Item.taom_band_hv_sk_ar_art_cape_b" />
         <equipment slot="Gloves" id="Item.sk_ar_art_bracer_noble_med_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_med_a" />
         <equipment slot="Horse" id="Item.t2_empire_horse" />
@@ -310,7 +310,7 @@
         <equipment slot="Item1" id="Item.sm_gd_shield_a1" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_noble_light_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_half_a" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+        <equipment slot="Cape" id="Item.taom_band_lt_sk_ar_art_cape_a" />
         <equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_light_a" />
       </EquipmentRoster>
@@ -319,7 +319,7 @@
         <equipment slot="Item1" id="Item.sm_gd_shield_a3" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_noble_light_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_half_b" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_b" />
+        <equipment slot="Cape" id="Item.taom_band_lt_sk_ar_art_cape_b" />
         <equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_light_a" />
       </EquipmentRoster>
@@ -358,7 +358,7 @@
         <equipment slot="Item3" id="Item.numenorean_bastard_heavy_a" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_noble_light_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_half_a" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+        <equipment slot="Cape" id="Item.taom_band_md_sk_ar_art_cape_a" />
         <equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_light_a" />
       </EquipmentRoster>
@@ -369,7 +369,7 @@
         <equipment slot="Item3" id="Item.numenorean_bastard_heavy_a" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_noble_light_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_half_b" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_b" />
+        <equipment slot="Cape" id="Item.taom_band_md_sk_ar_art_cape_b" />
         <equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_light_a" />
       </EquipmentRoster>
@@ -408,7 +408,7 @@
         <equipment slot="Item3" id="Item.taom_ph_numenorean_bastard_heavy_b_t4" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_noble_med_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_full_a" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+        <equipment slot="Cape" id="Item.taom_band_hv_sk_ar_art_cape_a" />
         <equipment slot="Gloves" id="Item.sk_ar_art_bracer_noble_med_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_med_a" />
       </EquipmentRoster>
@@ -419,7 +419,7 @@
         <equipment slot="Item3" id="Item.taom_ph_numenorean_bastard_heavy_b_t4" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_noble_med_b" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_full_b" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_b" />
+        <equipment slot="Cape" id="Item.taom_band_hv_sk_ar_art_cape_b" />
         <equipment slot="Gloves" id="Item.sk_ar_art_bracer_noble_med_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_med_a" />
       </EquipmentRoster>
@@ -458,7 +458,7 @@
         <equipment slot="Item3" id="Item.numenorean_bastard_elite_a" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_noble_heavy_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_full_a" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+        <equipment slot="Cape" id="Item.taom_band_hv_sk_ar_art_cape_a" />
         <equipment slot="Gloves" id="Item.sk_ar_art_bracer_noble_heavy_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_heavy_a" />
       </EquipmentRoster>
@@ -469,7 +469,7 @@
         <equipment slot="Item3" id="Item.numenorean_bastard_elite_a" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_noble_heavy_b" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_full_b" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_b" />
+        <equipment slot="Cape" id="Item.taom_band_hv_sk_ar_art_cape_b" />
         <equipment slot="Gloves" id="Item.sk_ar_art_bracer_noble_heavy_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_heavy_a" />
       </EquipmentRoster>
@@ -781,7 +781,7 @@
         <equipment slot="Item2" id="Item.sturgia_axe_2_t2" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_inf_light_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_half_a" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+        <equipment slot="Cape" id="Item.taom_band_lt_sk_ar_art_cape_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_boots_a" />
       </EquipmentRoster>
       <EquipmentRoster>
@@ -790,7 +790,7 @@
         <equipment slot="Item2" id="Item.sturgia_axe_2_t2" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_inf_light_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_half_b" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_b" />
+        <equipment slot="Cape" id="Item.taom_band_lt_sk_ar_art_cape_b" />
         <equipment slot="Leg" id="Item.sk_ar_art_boots_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
@@ -828,7 +828,7 @@
         <equipment slot="Item3" id="Item.sturgia_axe_2_t2" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_inf_light_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_half_a" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+        <equipment slot="Cape" id="Item.taom_band_lt_sk_ar_art_cape_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_boots_a" />
       </EquipmentRoster>
       <EquipmentRoster>
@@ -838,7 +838,7 @@
         <equipment slot="Item3" id="Item.sturgia_axe_2_t2" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_inf_light_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_half_b" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_b" />
+        <equipment slot="Cape" id="Item.taom_band_lt_sk_ar_art_cape_b" />
         <equipment slot="Leg" id="Item.sk_ar_art_boots_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
@@ -920,7 +920,7 @@
         <equipment slot="Item3" id="Item.dunland_caerdh_axe_1h_b" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_inf_med_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_full_a" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+        <equipment slot="Cape" id="Item.taom_band_md_sk_ar_art_cape_a" />
         <equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
       </EquipmentRoster>
@@ -931,7 +931,7 @@
         <equipment slot="Item3" id="Item.dunland_caerdh_axe_1h_b" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_inf_med_b" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_full_b" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_b" />
+        <equipment slot="Cape" id="Item.taom_band_md_sk_ar_art_cape_b" />
         <equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
       </EquipmentRoster>
@@ -966,7 +966,7 @@
         <equipment slot="Item1" id="Item.sm_gd_shield_a1" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_noble_light_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_half_a" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+        <equipment slot="Cape" id="Item.taom_band_lt_sk_ar_art_cape_a" />
         <equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_light_a" />
       </EquipmentRoster>
@@ -975,7 +975,7 @@
         <equipment slot="Item1" id="Item.sm_gd_shield_a3" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_noble_light_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_half_b" />
-        <equipment slot="Cape" id="Item.sk_ar_art_cape_b" />
+        <equipment slot="Cape" id="Item.taom_band_lt_sk_ar_art_cape_b" />
         <equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
         <equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_light_a" />
       </EquipmentRoster>

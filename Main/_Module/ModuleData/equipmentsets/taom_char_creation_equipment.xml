@@ -4692,7 +4692,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 			<Equipment
 				slot="Cape"
 				id="Item.mirkwood_shoulder" />
@@ -4707,7 +4707,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<!--1.Retainer-->
@@ -4720,7 +4720,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 			<Equipment
 				slot="Head"
 				id="Item.mkwd_inf1_t1_helmet_gold_hc" />
@@ -4738,7 +4738,7 @@
 				id="Item.mkwd_inf3_chest_bronze" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 			<Equipment
 				slot="Head"
 				id="Item.mkwd_inf1_t1_helmet_silver_hc" />
@@ -4754,7 +4754,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4766,7 +4766,7 @@
 				id="Item.mkwd_inf3_chest_silver" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 			<Equipment
 				slot="Head"
 				id="Item.mkwd_inf1_t1_helmet_gold_hc" />
@@ -4782,7 +4782,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4794,7 +4794,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<!--4.Artisan-->
@@ -4807,7 +4807,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 			<Equipment
 				slot="Cape"
 				id="Item.mirkwood_shoulder" />
@@ -4822,7 +4822,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<!--5.Hunter-->
@@ -4835,7 +4835,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4847,7 +4847,7 @@
 				id="Item.mkwd_inf3_chest_bronze" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 			<Equipment
 				slot="Cape"
 				id="Item.mirkwood_shoulder" />
@@ -4866,7 +4866,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4878,7 +4878,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<!-- Childhood & Education age -->
@@ -4903,7 +4903,7 @@
 				id="Item.mkwd_inf3_chest_silver" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4927,7 +4927,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4951,7 +4951,7 @@
 				id="Item.mkwd_inf3_chest_silver" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4975,7 +4975,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4999,7 +4999,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5023,7 +5023,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5047,7 +5047,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5071,7 +5071,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5095,7 +5095,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5119,7 +5119,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5143,7 +5143,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -5167,7 +5167,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<!-- Adult careers -->
@@ -5850,7 +5850,7 @@
 				id="Item.mkwd_inf3_vambraces_bronze" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 		<EquipmentSet
 			equipmentType="Civilian">
@@ -5862,7 +5862,7 @@
 				id="Item.mkwd_inf3_chest" />
 			<Equipment
 				slot="Leg"
-				id="Item.mirkwood_boots" />
+				id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<!-- ═══ Culture: ISENGARD ═══ -->
@@ -10529,7 +10529,7 @@
 				id="Item.sk_rh_loke_chest_light_a" />
 			<Equipment
 				slot="Gloves"
-				id="Item.sk_rh_loke_bracer_heavy_b" />
+				id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 			<Equipment
 				slot="Leg"
 				id="Item.sk_rh_loke_boots_a" />
@@ -18735,7 +18735,7 @@
 				id="Item.sk_ar_art_boots_a" />
 			<Equipment
 				slot="Cape"
-				id="Item.sk_ar_art_cape_a" />
+				id="Item.taom_band_lt_sk_ar_art_cape_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -18766,7 +18766,7 @@
 				id="Item.ithilien_hood" />
 			<Equipment
 				slot="Cape"
-				id="Item.sk_ar_art_cape_a" />
+				id="Item.taom_band_lt_sk_ar_art_cape_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -18850,7 +18850,7 @@
 				id="Item.sk_ar_art_boots_a" />
 			<Equipment
 				slot="Cape"
-				id="Item.sk_ar_art_cape_a" />
+				id="Item.taom_band_lt_sk_ar_art_cape_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -18890,7 +18890,7 @@
 				id="Item.sk_ar_art_grvs_inf_light_a" />
 			<Equipment
 				slot="Cape"
-				id="Item.sk_ar_art_cape_a" />
+				id="Item.taom_band_lt_sk_ar_art_cape_a" />
 			<Equipment
 				slot="Head"
 				id="Item.ithilien_hood" />
@@ -22448,7 +22448,7 @@
 				id="Item.sk_ar_art_boots_a" />
 			<Equipment
 				slot="Cape"
-				id="Item.sk_ar_art_cape_a" />
+				id="Item.taom_band_lt_sk_ar_art_cape_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -22479,7 +22479,7 @@
 				id="Item.ithilien_hood" />
 			<Equipment
 				slot="Cape"
-				id="Item.sk_ar_art_cape_a" />
+				id="Item.taom_band_lt_sk_ar_art_cape_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -22563,7 +22563,7 @@
 				id="Item.sk_ar_art_boots_a" />
 			<Equipment
 				slot="Cape"
-				id="Item.sk_ar_art_cape_a" />
+				id="Item.taom_band_lt_sk_ar_art_cape_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -22603,7 +22603,7 @@
 				id="Item.sk_ar_art_grvs_inf_light_a" />
 			<Equipment
 				slot="Cape"
-				id="Item.sk_ar_art_cape_a" />
+				id="Item.taom_band_lt_sk_ar_art_cape_a" />
 			<Equipment
 				slot="Head"
 				id="Item.ithilien_hood" />

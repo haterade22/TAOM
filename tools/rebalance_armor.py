@@ -21,6 +21,7 @@ import sys
 import glob
 import re
 import csv
+import statistics
 from collections import defaultdict
 
 
@@ -295,7 +296,9 @@ MORDOR_LORD_KIT_LINE = 'mordor_numenorean'
 
 
 def kingdom_key(item_id, culture):
-    """The KINGDOM_CAPS key for an item, or None when the culture has no cap (legacy curve)."""
+    """The KINGDOM_CAPS key for an item, or None when the culture has no cap (legacy curve). A band clone
+    takes its source's line."""
+    item_id = band_clone_source(item_id) if item_id else item_id
     for prefix, key in LINE_PREFIXES:
         if (item_id or '').startswith(prefix):
             return key
@@ -320,6 +323,80 @@ def worn_band(record):
     """The band of the lowest wearer in a derive_armor_tiers record, or None when nobody wears the item."""
     level = record.get('anchorLevel') if isinstance(record, dict) else None
     return None if level is None else level_to_band(int(level))
+
+
+# Armour band clones (2026-11-17, the maintainer's word). A piece that a troop of tier 7 to 10 (level
+# TOP_TIER_LEVEL or higher) and a troop of level 30 or lower both wear in battle is "shared down": priced at
+# its lowest wearer's band, the low troop drags it down for the top-tier troop (the Mirkwood palace guard
+# chest at body 8 on a level 51 guard). Each band of its low wearers wears a clone instead, a TAOM item
+# with the same look at that band's values (tools/generate_armour_band_clones.py), so the source keeps
+# only elite-band wearers and prices at the elite band. The id names the band in a code that carries no
+# tier token, so mesh_tier_of and the lord-line token read a clone as its source.
+TOP_TIER_LEVEL = 36
+BAND_CLONE_PREFIX = 'taom_band_'
+BAND_CLONE_CODES = {'light': 'lt', 'medium': 'md', 'heavy': 'hv'}
+_BAND_CLONE_RE = re.compile(r'^%s(%s)_(.+)$' % (BAND_CLONE_PREFIX, '|'.join(BAND_CLONE_CODES.values())))
+
+
+def band_clone_id(source_id, band):
+    """The id of the clone of `source_id` at `band` (light, medium or heavy; an elite wearer keeps the source)."""
+    if band not in BAND_CLONE_CODES:
+        raise ValueError(f"no band clone at {band!r}: only {', '.join(BAND_CLONE_CODES)}")
+    return f"{BAND_CLONE_PREFIX}{BAND_CLONE_CODES[band]}_{source_id}"
+
+
+def band_clone_parts(item_id):
+    """(source id, band) of a band clone id, or None for any other id."""
+    m = _BAND_CLONE_RE.match(item_id or '')
+    if not m:
+        return None
+    return m.group(2), next(b for b, c in BAND_CLONE_CODES.items() if c == m.group(1))
+
+
+def band_clone_source(item_id):
+    """The source a band clone copies, or the id itself when it is no clone."""
+    parts = band_clone_parts(item_id)
+    return parts[0] if parts else item_id
+
+
+def wearer_band(level, item_id, noble=False):
+    """The band a troop of this level anchors `item_id` at: a noble-line troop at noble_anchor_level, as
+    derive_armor_tiers.parse_rosters records it."""
+    return level_to_band(noble_anchor_level(level, item_id) if noble else level)
+
+
+def shared_down_pieces(troops, exempt=(), noble=(), exempt_items=(), eligible=None, source_of=None):
+    """{item: {'top': [troop ids], 'low': {band: [troop ids]}}} for every armour item that a troop of level
+    TOP_TIER_LEVEL or higher and a troop below the elite band both wear in a battle set. The one scope rule
+    of the band clones, read by their generator and by the validator (TOP_TIER_ARMOUR_WORN_LOW).
+
+    `troops` is {id: {'level': int|None, 'sets': [{slot: item id}]}} (fix_upgrade_armour_regressions.load_troops,
+    the validator's troop index). A level is the troop's anchor (wearer_band): a `noble` troop anchors a band
+    up. Unlevelled and `exempt` troops and `exempt_items` (troop, item) pairs never count, as in
+    derive_armor_tiers.parse_rosters. `eligible(item id)` filters the items, and `source_of` maps an id
+    before it is judged (the generator reads a clone as its source)."""
+    tops, lows = defaultdict(set), defaultdict(lambda: defaultdict(set))
+    for tid, rec in troops.items():
+        level = rec.get('level')
+        if level is None or tid in exempt:
+            continue
+        for st in rec.get('sets') or ():
+            for slot in MESH_LADDER_SLOTS:
+                iid = st.get(slot)
+                if not iid:
+                    continue
+                iid = source_of(iid) if source_of else iid
+                if (tid, iid) in exempt_items or (eligible is not None and not eligible(iid)):
+                    continue
+                anchor = noble_anchor_level(int(level), iid) if tid in noble else int(level)
+                band = level_to_band(anchor)
+                if anchor >= TOP_TIER_LEVEL:
+                    tops[iid].add(tid)
+                elif band != 'elite':
+                    lows[iid][band].add(tid)
+    return {iid: {'top': sorted(tops[iid]), 'low': {b: sorted(ts) for b, ts in sorted(
+                lows[iid].items(), key=lambda kv: TIERS.index(kv[0]))}}
+            for iid in sorted(set(tops) & set(lows))}
 
 
 # Worn armour limits (2026-11-14, #1271), judged on what a troop's battle sets add up to per region.
@@ -388,6 +465,97 @@ def kingdom_secondary(slot_type, stat, tier, primary, ratio):
     if TIERS.index(tier) < TIERS.index(SECONDARY_FROM_BAND) or ratio <= 0:
         return 0
     return int(math.floor(primary * min(ratio, SECONDARY_SHARE_CAP.get((slot_type, stat), 0.0)) + 0.5))
+
+
+# A piece the restat raises into the heavy or elite band from below it carries a 0 secondary (none exists below
+# the heavy band), so its own share is 0 and kingdom_secondary would keep it 0: the Mirkwood palace guard chest
+# priced at elite with no arm armour. Such a 0 takes the legacy row's share for the tier, or, for a stat the row
+# lacks (a chest's arm armour), the median share of its line's pieces at the heavy band or above that carry the
+# stat, hero and lord pieces left out (2026-11-17). A stat no such piece carries stays 0 and the restat lists it.
+# A raised chest that declares no leg armour at all takes the line's median leg share too, and the write adds
+# the attribute (review 2026-11-17: the Mirkwood palace guard chest, worn by the wardens, had no leg region
+# while their level 36 recruits' chests carried 19). No line share: no attribute.
+RAISED_SECONDARY_TIERS = ('heavy', 'elite')
+UNDECLARED_RAISED_SECONDARIES = {'body': ('leg_armor',)}
+
+
+def is_lord_armour(item_id):
+    """A lord line's own armour, as fix_lord_kits.lord_pool marks it: a lord-line token with no tier or the lord
+    tier (a noble line's `_elite_` piece is troop kit)."""
+    return is_lord_kit(item_id) and mesh_tier_of(item_id) in (None, 'lord')
+
+
+def line_secondary_shares(armory_dir):
+    """{(kingdom key, slot, stat): median share of the primary} over the Armory's pieces whose primary is at the
+    line's heavy curve value or above and that carry the stat (a SECONDARY_SHARE_CAP key), hero, lord and troll
+    kit left out. {} when the folder is missing."""
+    samples = defaultdict(list)
+    if not armory_dir or not os.path.isdir(armory_dir):
+        return {}
+    for folder in sorted(os.listdir(armory_dir)):
+        for fname, slot_type in SLOT_TYPES.items():
+            fp = os.path.join(armory_dir, folder, fname)
+            if not os.path.isfile(fp):
+                continue
+            try:
+                root = ET.parse(fp).getroot()
+            except ET.ParseError:
+                continue
+            primary_stat = GOVERNED_STATS[slot_type][0]
+            for item in root.findall('.//Item'):
+                iid, armor = item.get('id', ''), item.find('.//Armor')
+                if armor is None or not iid:
+                    continue
+                name = get_display_name(item.get('name', ''))
+                key = kingdom_key(iid, detect_culture(fp, name))
+                if key is None or is_excluded(iid, name) or is_monster_kit(iid) or is_lord_armour(iid):
+                    continue
+                values = parse_current_values(armor, slot_type)
+                p = values.get(primary_stat, 0)
+                if p <= 0 or p < cap_value(KINGDOM_CAPS[key], slot_type, SECONDARY_FROM_BAND):
+                    continue
+                for stat, v in values.items():
+                    if (slot_type, stat) in SECONDARY_SHARE_CAP and v > 0:
+                        samples[(key, slot_type, stat)].append(v / p)
+    return {k: statistics.median(v) for k, v in samples.items()}
+
+
+_LINE_SHARES = {}
+
+
+def armory_line_shares(armory_dir=None):
+    """line_secondary_shares of an Armory (the live one by default), read once per process."""
+    d = os.path.abspath(armory_dir or ARMORY_DIR)
+    if d not in _LINE_SHARES:
+        _LINE_SHARES[d] = line_secondary_shares(d)
+    return _LINE_SHARES[d]
+
+
+def raised_secondaries(slot_type, tier, item_id, culture, current_values, line_shares):
+    """{stat: share or None} for the 0 secondaries of a piece the restat raises into the heavy or elite band from
+    below it (its current primary is under the line's heavy curve value): the legacy row's share for the tier, or
+    the line's (line_secondary_shares) for a stat the row lacks, None when neither has one; plus, for a stat of
+    UNDECLARED_RAISED_SECONDARIES the piece does not declare, the line's share when it has one. {} for any other
+    piece."""
+    key = kingdom_key(item_id, culture)
+    primary_stat = GOVERNED_STATS[slot_type][0]
+    if (key is None or tier not in RAISED_SECONDARY_TIERS or
+            current_values.get(primary_stat, 0) >= cap_value(KINGDOM_CAPS[key], slot_type, SECONDARY_FROM_BAND)):
+        return {}
+    row = SLOT_BASELINES[slot_type][tier]
+    out = {}
+    for stat, cur in current_values.items():
+        if stat == primary_stat or cur != 0 or (slot_type, stat) not in SECONDARY_SHARE_CAP:
+            continue
+        if row.get(stat, 0) > 0 and row.get(primary_stat, 0) > 0:
+            out[stat] = row[stat] / row[primary_stat]
+        else:
+            out[stat] = (line_shares or {}).get((key, slot_type, stat))
+    for stat in UNDECLARED_RAISED_SECONDARIES.get(slot_type, ()):
+        share = (line_shares or {}).get((key, slot_type, stat))
+        if stat not in current_values and share:
+            out[stat] = share
+    return out
 
 
 # =============================================================================
@@ -940,6 +1108,23 @@ def _inside_comment(text, pos):
     return start != -1 and text.find('-->', start, pos) == -1
 
 
+def _add_armour_attribute(block, stat, value):
+    """`block` with stat="value" after the last armour attribute of its <Armor> element, behind the same
+    whitespace as that attribute (its own line in the Armory's one-attribute-per-line layout, as
+    generate_armour_band_clones._set_attr writes a clone); unchanged when the block has no <Armor> element
+    with one."""
+    m = re.search(r'<Armor\b[^>]*', block)
+    if not m:
+        return block
+    last = None
+    for a in re.finditer(r'(\s+)(?:head|body|arm|leg)_armor="[^"]*"', m.group(0)):
+        last = a
+    if last is None:
+        return block
+    at = m.start() + last.end()
+    return block[:at] + f'{last.group(1)}{stat}="{value}"' + block[at:]
+
+
 def apply_changes_via_regex(filepath, item_changes, backup_tag=None):
     """
     Apply stat/weight/material changes to XML file using regex. Returns True when the file was
@@ -989,12 +1174,15 @@ def apply_changes_via_regex(filepath, item_changes, backup_tag=None):
                 stat_pattern = re.compile(
                     r'(' + re.escape(stat) + r'=")([^"]*?)(")'
                 )
-                # Only replace if the attribute already exists
                 if stat_pattern.search(new_block):
                     new_block = stat_pattern.sub(
                         lambda m, v=changes[stat]: m.group(1) + str(v) + m.group(3),
                         new_block, count=1
                     )
+                else:
+                    # A stat the item does not declare (a raised chest's leg, UNDECLARED_RAISED_SECONDARIES):
+                    # added after the last armour attribute of its <Armor> element.
+                    new_block = _add_armour_attribute(new_block, stat, changes[stat])
 
         # Replace material_type and modifier_group
         if 'material_type' in changes:
@@ -1108,10 +1296,55 @@ def clamp_armour(slot_type, key, current_values, tier, headroom=0):
     return out
 
 
+def _restat_values(new_stats, slot_type, tier, culture, item_id, current_values, no_lower_armor=False,
+                   line_shares=None):
+    """The armour values a full restat writes for an item: each stat the item declares and the row
+    carries takes the row's value, then on the kingdom-cap curve every other declared stat is priced from
+    the item's own share of its primary, or, for a 0 on a piece raised into the heavy band from below it,
+    from raised_secondaries (line_shares: line_secondary_shares)."""
+    new_values = {}
+    for s in ['head_armor', 'body_armor', 'arm_armor', 'leg_armor']:
+        if s in current_values and s in new_stats:
+            tgt = new_stats[s]
+            # no_lower_armor: never reduce a stat (raise under-tiered items, keep the rest).
+            new_values[s] = max(tgt, current_values[s]) if no_lower_armor else tgt
+    # Kingdom-cap curve: the row carries the primary only; every other stat the item
+    # declares is priced from the item's own share of its primary (a 0 stays 0), so a
+    # Gondor chest keeps its arm_armor convention and a cape its arm_armor. Since
+    # 2026-11-14 the share is capped (SECONDARY_SHARE_CAP) and a secondary exists from
+    # the heavy band only, so a light or medium chest loses its arm and leg armour.
+    primary_stat = GOVERNED_STATS[slot_type][0]
+    if kingdom_key(item_id, culture) is not None and primary_stat in new_values:
+        old_p, new_p = current_values.get(primary_stat, 0), new_values[primary_stat]
+        raised = raised_secondaries(slot_type, tier, item_id, culture, current_values, line_shares)
+        declared = dict(current_values, **{s: 0 for s in raised if s not in current_values})
+        for s, cur in declared.items():
+            if s == primary_stat:
+                continue
+            if s in raised:
+                scaled = kingdom_secondary(slot_type, s, tier, new_p, raised[s] or 0)
+            else:
+                scaled = cur if cur <= 0 else kingdom_secondary(
+                    slot_type, s, tier, new_p, cur / old_p if old_p > 0 else 0)
+            new_values[s] = max(scaled, cur) if no_lower_armor else scaled
+    return new_values
+
+
+def restat_armour(slot_type, tier, culture, item_id, current_values, line_shares=None):
+    """(armour values, modifier_group) a full roster-first restat writes for an item at `tier`, with the
+    apply sequence's flags (weight and material_type kept): process_file's own arithmetic, so the band
+    clones (tools/generate_armour_band_clones.py) are priced as the restat would price their source.
+    line_shares defaults to the live Armory's (armory_line_shares)."""
+    new_stats = calculate_stats(tier, slot_type, culture, 0, item_id=item_id)
+    shares = armory_line_shares() if line_shares is None else line_shares
+    return (_restat_values(new_stats, slot_type, tier, culture, item_id, current_values, line_shares=shares),
+            new_stats['modifier_group'])
+
+
 def process_file(filepath, slot_type, dry_run=True, weights_only=False,
                  tier_source='keyword', roster_map=None, no_lower_armor=False,
                  materials_only=False, keep_materials=False, keep_weights=False,
-                 keep_material_type=False, backup_tag=None, written=None):
+                 keep_material_type=False, backup_tag=None, written=None, line_shares=None):
     """Process a single armor XML file. Returns list of change records. A `written` list receives the
     file's path when an apply really rewrote it (the caller counts files from that, not from the plan).
 
@@ -1147,6 +1380,9 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
     """
     roster_map = roster_map or {}
     filename = os.path.basename(filepath)
+    if line_shares is None:
+        # The share sample is the Armory the file belongs to (LOTRLOME_items/<folder>/<file>).
+        line_shares = line_secondary_shares(os.path.dirname(os.path.dirname(os.path.abspath(filepath))))
 
     tree = ET.parse(filepath)
     root = tree.getroot()
@@ -1234,6 +1470,7 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
             mode = 'full'
 
         # --- compute the new stats for the chosen mode ---
+        no_line_share = []
         if mode == 'skip':
             new_values, new_weight = {}, current_weight
             new_material, new_modifier, has_change = current_material, current_modifier, False
@@ -1256,26 +1493,10 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
                 new_material, new_modifier = new_stats['material_type'], new_stats['modifier_group']
                 has_change = (new_material != current_material or new_modifier != current_modifier)
             else:  # full re-stat: armor + weight + material
-                new_values = {}
-                for s in ['head_armor', 'body_armor', 'arm_armor', 'leg_armor']:
-                    if s in current_values and s in new_stats:
-                        tgt = new_stats[s]
-                        # no_lower_armor: never reduce a stat (raise under-tiered items, keep the rest).
-                        new_values[s] = max(tgt, current_values[s]) if no_lower_armor else tgt
-                # Kingdom-cap curve: the row carries the primary only; every other stat the item
-                # declares is priced from the item's own share of its primary (a 0 stays 0), so a
-                # Gondor chest keeps its arm_armor convention and a cape its arm_armor. Since
-                # 2026-11-14 the share is capped (SECONDARY_SHARE_CAP) and a secondary exists from
-                # the heavy band only, so a light or medium chest loses its arm and leg armour.
-                primary_stat = GOVERNED_STATS[slot_type][0]
-                if kingdom_key(item_id, culture) is not None and primary_stat in new_values:
-                    old_p, new_p = current_values.get(primary_stat, 0), new_values[primary_stat]
-                    for s, cur in current_values.items():
-                        if s == primary_stat:
-                            continue
-                        scaled = cur if cur <= 0 else kingdom_secondary(
-                            slot_type, s, tier, new_p, cur / old_p if old_p > 0 else 0)
-                        new_values[s] = max(scaled, cur) if no_lower_armor else scaled
+                new_values = _restat_values(new_stats, slot_type, tier, culture, item_id, current_values,
+                                            no_lower_armor, line_shares=line_shares)
+                no_line_share = sorted(s for s, share in raised_secondaries(
+                    slot_type, tier, item_id, culture, current_values, line_shares).items() if share is None)
                 # material/modifier is a CURVE-CORRECTNESS attribute, not an armor value, so
                 # no_lower_armor must NOT freeze it — that is how ~1000 items kept an unearned
                 # `plate` group. Use --keep-materials for the explicit opt-out.
@@ -1288,7 +1509,7 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
                     new_weight != current_weight or
                     new_material != current_material or
                     new_modifier != current_modifier or
-                    any(new_values.get(s) != current_values.get(s) for s in current_values)
+                    any(new_values.get(s) != current_values.get(s) for s in set(current_values) | set(new_values))
                 )
 
         # Record
@@ -1309,6 +1530,7 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
             'new_material': new_material,
             'old_modifier': current_modifier,
             'new_modifier': new_modifier,
+            'no_line_share': no_line_share,
         }
         changes.append(change_record)
 
@@ -1647,6 +1869,8 @@ def main():
     files_processed = 0
     files_written = []
     generator_owned = 0
+    # Read before any file is written, over every folder: a line's pieces are not only in the requested ones.
+    line_shares = line_secondary_shares(armory_dir)
 
     for culture_dir in culture_dirs:
         culture_path = os.path.join(armory_dir, culture_dir)
@@ -1661,6 +1885,7 @@ def main():
             if not args.check:
                 print(f"  Processing {culture_dir}/{armor_file}...")
             changes = process_file(filepath, slot_type, dry_run=dry_run, weights_only=args.weights_only,
+                                    line_shares=line_shares,
                                     tier_source=args.tier_source, roster_map=roster_map,
                                     no_lower_armor=args.no_lower_armor,
                                     materials_only=args.materials_only,
@@ -1679,6 +1904,12 @@ def main():
         sys.exit(0 if print_check(all_changes) else 1)
 
     print_report(all_changes)
+    unshared = [c for c in all_changes if c.get('no_line_share')]
+    if unshared:
+        print(f"\nRaised into the heavy band with no share for a secondary (left 0; no piece of the line at the "
+              f"heavy band or above carries it): {len(unshared)} item(s)")
+        for c in unshared:
+            print(f"  {c['file']:<34} {c['id']:<44} {c['tier']:<6} {', '.join(c['no_line_share'])}")
     if generator_owned:
         print(f"\nLeft {generator_owned} generator-owned item(s) (ids starting "
               f"{', '.join(GENERATOR_OWNED_ID_PREFIXES)}) to their generator; the report above does not list them.")

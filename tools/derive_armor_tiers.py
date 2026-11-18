@@ -80,6 +80,9 @@ REPORT_MD = os.path.join(REPORT_DIR, 'ROSTER-TIERS.md')
 LORD_VARIANT_PREFIX = 'taom_lord_'
 LORD_VARIANTS_SPEC = os.path.join(REPO_ROOT, 'tools', 'lord_armour_variants.json')
 LORD_VARIANTS_XML = os.path.join(MODULEDATA_DIR, 'lord_armour', 'lord_armour_variants.xml')
+# The armour band clones (tools/generate_armour_band_clones.py): a low troop's copy of a piece a tier 7 to 10
+# troop wears, read in the folder and slot of its source like a lord armour variant.
+BAND_CLONES_XML = os.path.join(MODULEDATA_DIR, 'armour_band_clones', 'armour_band_clones.xml')
 
 
 def lord_variant_source(item_id, spec=None):
@@ -356,7 +359,8 @@ def _index_entry(item, folder, slot_type):
 
 def build_armory_index():
     """Return item_id -> {folder, slot, primary, armour, weight, name, type}: the Armory's five slot
-    files of every folder, then the repo's lord armour variants in the folder and slot of their source."""
+    files of every folder, then the repo's lord armour variants and armour band clones in the folder and
+    slot of their source."""
     index = {}
     armory_dir = ra.ARMORY_DIR
     if not os.path.isdir(armory_dir):
@@ -377,13 +381,15 @@ def build_armory_index():
                 entry = _index_entry(item, folder, slot_type)
                 if entry is not None:
                     index[item.get('id')] = entry
-    if os.path.exists(LORD_VARIANTS_XML):
+    for path, source_of in ((LORD_VARIANTS_XML, lord_variant_source), (BAND_CLONES_XML, ra.band_clone_source)):
+        if not os.path.exists(path):
+            continue
         try:
-            root = ET.parse(LORD_VARIANTS_XML).getroot()
+            root = ET.parse(path).getroot()
         except ET.ParseError:
-            root = None
-        for item in (root.findall('.//Item') if root is not None else ()):
-            source = index.get(lord_variant_source(item.get('id', '')))
+            continue
+        for item in root.findall('.//Item'):
+            source = index.get(source_of(item.get('id', '')))
             entry = _index_entry(item, source['folder'], source['slot']) if source else None
             if entry is not None:
                 index[item.get('id')] = entry
