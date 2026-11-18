@@ -19,6 +19,10 @@ WHAT IT DOES
    you, and your troops, gold and items reach you through co-op.
 4. Fief elections. When a TAOM fief election starts, every player sees the
    same candidates and can vote.
+5. Load order check when you join. The host compares your load order of
+   TAOM and of the mods that add items, troops or factions with its own.
+   If they differ, you see a message. It only warns you; it never
+   disconnects you.
 
 
 WHAT YOU NEED
@@ -88,6 +92,13 @@ MESSAGES YOU CAN SEE
 "The host cannot trade for you here: ..."
     (Elite Emissary or armoury.) Your party must be in the settlement, and
     not in a battle or a siege. Nothing was charged.
+
+"Your mod load order differs from the host's: on the host ... loads before
+..."
+    Two of your mods load in the opposite order to the host's. A mod that
+    loads later replaces items and troops from earlier ones, so you can see
+    different gear or troops from the host's. Put your mods in the host's
+    order in the launcher, then restart the game.
 
 
 REPORTING A PROBLEM

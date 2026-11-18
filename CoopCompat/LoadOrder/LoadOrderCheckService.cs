@@ -26,8 +26,8 @@ public sealed class LoadOrderVerdict
 
 /// <summary>
 /// The co-op load order check. A client sends its order in the settings hello; the host compares it with its own,
-/// logs the result and answers in the reply, and the client tells the player. It warns and never blocks. The host's
-/// switch is read on every check, so a change applies to the next player who joins.
+/// logs the result and answers in the reply, and the client tells the player. It warns and never blocks. The switch
+/// is read on every check, in the co-op server process (see CoopSettingsProvider for where that process takes it from).
 /// </summary>
 public sealed class LoadOrderCheckService
 {
@@ -43,8 +43,20 @@ public sealed class LoadOrderCheckService
         _logger = logger;
     }
 
-    /// <summary>This game's module ids in load order, for the hello.</summary>
-    public string[] LocalOrder() => LoadOrderRules.LocalOrder(_modules.ActiveModules());
+    /// <summary>This game's module ids in load order, for the hello. Empty, with a warning, when the list cannot be read.</summary>
+    public string[] LocalOrder()
+    {
+        try
+        {
+            return LoadOrderRules.LocalOrder(_modules.ActiveModules());
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning("[CoopCompat] load order: could not read this game's module list, so the hello carries none: "
+                + ex.GetType().Name + ": " + ex.Message);
+            return Array.Empty<string>();
+        }
+    }
 
     /// <summary>Host side: compares a player's order with this game's. Never throws, so the hello reply always goes.</summary>
     public LoadOrderVerdict Check(string peer, string[] playerOrder)
@@ -53,13 +65,13 @@ public sealed class LoadOrderCheckService
         {
             if (!_warningEnabled())
             {
-                _logger.LogInfo("[CoopCompat] load order peer=" + peer + " not compared: the host's switch is off");
+                _logger.LogInfo("[CoopCompat] load order peer=" + peer + " not compared: the switch is off on this server");
                 return LoadOrderVerdict.None;
             }
 
             if (playerOrder == null || playerOrder.Length == 0)
             {
-                _logger.LogInfo("[CoopCompat] load order peer=" + peer + " not reported (an older TAOM.CoopCompat)");
+                _logger.LogInfo("[CoopCompat] load order peer=" + peer + " not reported (an older TAOM.CoopCompat, or the player could not read its module list)");
                 return LoadOrderVerdict.None;
             }
 

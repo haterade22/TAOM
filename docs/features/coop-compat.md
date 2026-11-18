@@ -4,7 +4,8 @@
 
 `TAOM.CoopCompat` is a separate module in the TAOM download that connects TAOM to BannerlordCoop.
 When a client joins a co-op campaign, it compares the client's TAOM build and simulation settings
-with the server's and tells the player about a difference. It also sends the server's War of the Ring
+with the server's and tells the player about a difference, and it warns a player whose data mods
+load in another order than the server's. It also sends the server's War of the Ring
 momentum to every client, so a client's War of the Ring screen shows the server's war. And it lets a
 guest buy from the Elite Emissary and use a town armoury: the guest's screen asks the host, and the
 host runs TAOM's own purchase or upgrade for the guest's hero (#1329).
@@ -70,6 +71,8 @@ current connection, never from the message, and every field is bounded before an
   of both module DLLs, and its settings fingerprint). The server compares it with its own and
   answers with a `CoopCompatHelloReply`. The client shows a notice for a build mismatch or for
   different settings groups. It warns and never disconnects.
+- `LoadOrder/LoadOrderCheckService`: the load order warning, carried by the same hello and reply.
+  See "Load order warning" below.
 - `Momentum/MomentumRelayService`: the server answers each hello with a `CoopCompatMomentumSnapshot`
   of the war state (`IMomentumStateStore.CaptureWarState`, without the per-player events). After a
   change it broadcasts again, at most once a minute of real time, plus once every 24 in-game hours.
@@ -132,10 +135,47 @@ SettingsHandshakeService     MomentumRelayService            GuestTradeRelayServ
   ISettingsNotice               MomentumRelayCampaignBehavior      |    IGuestTradeShops, IGuestTradeHeroAdapter
 ```
 
+### Load order warning
+
+Coop's join check compares the peers' module lists but not their order. The engine merges module XML
+in load order, so a later module's items or troops replace an earlier one's, and a player whose data
+mods load in another order sees other gear or troops than the host, with no hint. "Server" below is
+the co-op server process: under BannerlordCoop the hosting player is a client of it, like the others.
+
+- The client sends its active module ids in load order as `CoopCompatHello.ModuleOrder` (field 9),
+  at most 256, each at most 128 characters; a longer id is left out. `LoadOrder/ActiveModulesAdapter`
+  reads `ModuleHelper.GetActiveModules()`, which walks the loaded modules in the order
+  `InitializeModules` added them (the launcher's order), and each module's `SubModule.xml`. A
+  failed read is logged and sends no order; it is not kept, so the next read tries again.
+- The server compares (`LoadOrder/LoadOrderRules`) only TAOM's own block (`TAOM.Dependencies`,
+  `LOTRLOME_Armory`, `DualWield`, `TAOM_Map`, `TAOM`, `TAOM_AIO_Compat`) and every other
+  non-official module whose `SubModule.xml` lists object data (items, troops, cultures, factions,
+  settlements and the like; text-only entries do not count). It cuts both orders to the compared
+  modules that both sides have and reports the first pair that differs.
+- The server logs the result (`[CoopCompat] load order peer=<label> match` or `differ: ...` with both
+  orders, and once per process the compared modules with their count) and answers in
+  `CoopCompatHelloReply` fields 5 to 7 (`LoadOrderDiffers`, `LoadOrderHostFirst`,
+  `LoadOrderHostSecond`, the server's module names with their ids). The player gets one yellow line
+  naming the two modules. Nothing is blocked.
+- The order is compared only when both sides send the same `ProtocolVersion`, like the settings
+  groups; a client ignores the load order fields of a reply from another protocol.
+- The switch is read in the server process each time a hello arrives. Off, the server logs that it
+  did not compare. Where the server takes the value from is under Configuration.
+- `ProtocolVersion` stays 1. A v2.0.40 peer skips the new fields; a server that gets no
+  `ModuleOrder` from such a client logs "not reported" and warns nobody; a client that gets a reply
+  without the fields shows nothing. `OlderPeerLayoutTests` proves both directions on the bytes.
+
 ## Configuration
 
-None. The module reads TAOM's settings (`TaomSettingsPages.All()`) for the fingerprint and has no
-settings of its own.
+The module reads TAOM's settings (`TaomSettingsPages.All()`) for the fingerprint. TAOM's settings
+page has a Co-op group with one switch for this module: "Warn players whose load order differs from
+the host's" (`CoopLoadOrderWarning`, default on), read through
+`Main/Features/CoopInterop/CoopSettingsProvider.cs` in the co-op server process. A player's own
+value is never read, so it is excluded from the fingerprint. A dedicated server (the server build,
+`GameNetwork.IsDedicatedServer`) takes the value from `taom-server-settings.json`, which
+`ServerSettingsSource` reads once per process: set `"CoopLoadOrderWarning": false` there and restart
+the server ([server settings](server-settings.md)). The value in a player's own settings page does
+not reach that server.
 
 ## Key Files
 
@@ -154,7 +194,10 @@ settings of its own.
 | `CoopCompat/Sessions/LongDefeatSessionLink.cs` | Joins TAOM's Long Defeat co-op port to the session transport |
 | `CoopCompat/Handshake/SettingsHandshakeService.cs` | Build and settings handshake |
 | `CoopCompat/Handshake/BuildIdentity.cs` | Protocol, TAOM build text and MVIDs of this peer |
-| `CoopCompat/Handshake/InformationManagerSettingsNotice.cs` | The two player notices |
+| `CoopCompat/Handshake/InformationManagerSettingsNotice.cs` | The three player notices |
+| `CoopCompat/LoadOrder/LoadOrderRules.cs` | Which modules a load order check compares, and the first pair that differs |
+| `CoopCompat/LoadOrder/LoadOrderCheckService.cs` | The server's load order check and its log lines |
+| `CoopCompat/LoadOrder/ActiveModulesAdapter.cs` | The engine's active modules and their `SubModule.xml` |
 | `CoopCompat/Momentum/MomentumRelayService.cs` | War of the Ring momentum relay |
 | `CoopCompat/GuestTrade/GuestTradeRelayService.cs` | Guest trade relay (#1329) |
 | `CoopCompat/Decisions/DecisionTypeRegistration.cs` | Registers TAOM's fief election with Coop at the main menu and at the first campaign start (#1346) |
@@ -183,6 +226,11 @@ settings of its own.
   wire contract round trip (empty arrays come back empty, not null) and names, the transport binding to
   Coop, the manifest, the type scan gate (`TypeScanGateTests`), the reference gate over both DLLs, the
   service signature and entry point line count gates.
+- `TAOM.CoopCompat.Tests/LoadOrder/`: the load order rules and the server's check (the switch, an
+  empty or refused list, a failed module list read, the compare). `SettingsHandshakeServiceTests` covers the order in the hello
+  and the reply and the player notice; `OlderPeerLayoutTests` reads a v2.0.40 hello and reply into
+  the new types and back. `TAOM.Tests/Features/CoopInterop/CoopSettingsProviderTests.cs` covers the
+  switch.
 - `CoopModelPatchBaseCallGateTests` (#1151): Coop fixes vanilla rules with Harmony patches on
   `Default*Model` methods, and a TAOM override that never calls `base` hides them (#1141). The gate
   reads the Coop patches that the referenced Coop build declares by attribute (a target on the patch
@@ -237,6 +285,13 @@ settings of its own.
    `fief-election.read`; the client sees the same candidates as the host and can vote, and the fief
    goes to the clan the votes chose. The server's Coop log shows no "is not synced, so the server AI
    decides it" line for `TaomSettlementClaimantDecision`.
+6. Load order: with two community mods that add items or troops on every peer, swap their order on
+   one client, then join. Do not use `LOTRLOME_Armory` or `TAOM_Map`: TAOM's `SubModule.xml` asks for
+   them before TAOM, so a BUTR or BLSE launcher may sort them back or flag the swap. The client shows
+   one yellow line naming the two modules, and the server's taom log shows
+   `[CoopCompat] load order peer=<label> differ: ...`. Then set `"CoopLoadOrderWarning": false` in the
+   server's `taom-server-settings.json`, restart the server and join again: no line, and the server
+   logs `not compared: the switch is off on this server`.
 
 ## Distribution
 
@@ -263,6 +318,8 @@ module. A change on either side gets copied to the other. Coodsz merges and rele
 - 2026-11-15: guest trade (#1329): a guest buys from the Elite Emissary and uses the armoury through
   the host. Ported from minimalcash63's `TAOM.CoopEmissaryArmory`, with Sternab's request checks.
 - 2026-11-15: TAOM fief elections sync to players (#1346).
+- 2026-11-17: load order warning: the co-op server compares a joining player's data mod order with
+  its own and warns that player; the switch is in TAOM's Co-op settings group, read by the server.
 
 ## GitHub Issue
 

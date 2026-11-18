@@ -8,6 +8,7 @@ using TAOM.Core.Logging;
 using TAOM.CoopCompat.Decisions;
 using TAOM.CoopCompat.GuestTrade;
 using TAOM.CoopCompat.Handshake;
+using TAOM.CoopCompat.LoadOrder;
 using TAOM.CoopCompat.Momentum;
 using TAOM.CoopCompat.Sessions;
 using TAOM.CoopCompat.Transport;
@@ -115,8 +116,10 @@ public sealed class CoopCompatSubModule : MBSubModuleBase
     {
         var logger = IoC.Resolve<IModLogger>();
         var outcomes = IoC.Resolve<IOutcomeLog>();
+        var coopSettings = new CoopSettingsProvider();
+        var loadOrder = new LoadOrderCheckService(new ActiveModulesAdapter(), () => coopSettings.LoadOrderWarning, logger);
         _handshake = new SettingsHandshakeService(transport, () => SettingsFingerprint.ComputeAcross(TaomSettingsPages.All()),
-            BuildIdentity.FromLoadedAssemblies(), new InformationManagerSettingsNotice(), logger, outcomes);
+            BuildIdentity.FromLoadedAssemblies(), loadOrder, new InformationManagerSettingsNotice(), logger, outcomes);
         _momentum = new MomentumRelayService(transport, IoC.Resolve<IMomentumStateStore>(), logger, outcomes,
             () => Stopwatch.GetTimestamp() / (double)Stopwatch.Frequency, () => CampaignTime.Now.ToHours);
         _guestTrade = new GuestTradeRelayService(transport, IoC.Resolve<GuestTradeClient>(), IoC.Resolve<GuestTradeHost>(), logger);

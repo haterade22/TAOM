@@ -19,12 +19,12 @@ public class WireContractNamesTests
 
     [TestMethod]
     public void Hello_Layout() => Assert.AreEqual(
-        "TAOM.CoopCompat.Messages.CoopCompatHello: 1=ProtocolVersion, 2=TaomVersion, 3=TaomMvid, 4=CoopCompatMvid, 5=SettingsGlobal, 6=GroupNames, 7=GroupHashes, 8=Conclusive",
+        "TAOM.CoopCompat.Messages.CoopCompatHello: 1=ProtocolVersion, 2=TaomVersion, 3=TaomMvid, 4=CoopCompatMvid, 5=SettingsGlobal, 6=GroupNames, 7=GroupHashes, 8=Conclusive, 9=ModuleOrder",
         Layout(typeof(CoopCompatHello)));
 
     [TestMethod]
     public void HelloReply_Layout() => Assert.AreEqual(
-        "TAOM.CoopCompat.Messages.CoopCompatHelloReply: 1=ProtocolVersion, 2=Verdict, 3=DivergentGroups, 4=BuildMismatch",
+        "TAOM.CoopCompat.Messages.CoopCompatHelloReply: 1=ProtocolVersion, 2=Verdict, 3=DivergentGroups, 4=BuildMismatch, 5=LoadOrderDiffers, 6=LoadOrderHostFirst, 7=LoadOrderHostSecond",
         Layout(typeof(CoopCompatHelloReply)));
 
     [TestMethod]

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TAOM.CoopCompat.LoadOrder;
 using TAOM.CoopCompat.Messages;
 using TAOM.CoopCompat.Transport;
 using TAOM.Core.Logging;
@@ -18,8 +19,9 @@ public enum HandshakeVerdict
 }
 
 /// <summary>
-/// The settings and build handshake. A client sends its fingerprint when its campaign join completes;
-/// the server compares it with its own, logs the result and answers; the client tells the player.
+/// The settings and build handshake. A client sends its fingerprint and its module load order when its
+/// campaign join completes; the server compares both with its own, logs the result and answers; the
+/// client tells the player.
 /// It warns and never disconnects (decision D2). Each handler reads the role when its message
 /// arrives, because the session container changes on every host or join.
 /// </summary>
@@ -31,16 +33,18 @@ public sealed class SettingsHandshakeService
     private readonly ICoopTransport _transport;
     private readonly Func<FingerprintReport> _localFingerprint;
     private readonly BuildIdentity _identity;
+    private readonly LoadOrderCheckService _loadOrder;
     private readonly ISettingsNotice _notice;
     private readonly IModLogger _logger;
     private readonly IOutcomeLog _outcomes;
 
     public SettingsHandshakeService(ICoopTransport transport, Func<FingerprintReport> localFingerprint, BuildIdentity identity,
-        ISettingsNotice notice, IModLogger logger, IOutcomeLog outcomes)
+        LoadOrderCheckService loadOrder, ISettingsNotice notice, IModLogger logger, IOutcomeLog outcomes)
     {
         _transport = transport;
         _localFingerprint = localFingerprint;
         _identity = identity;
+        _loadOrder = loadOrder;
         _notice = notice;
         _logger = logger;
         _outcomes = outcomes;
@@ -65,6 +69,7 @@ public sealed class SettingsHandshakeService
             GroupNames = names,
             GroupHashes = names.Select(n => report.ByGroup[n]).ToArray(),
             Conclusive = report.IsConclusive,
+            ModuleOrder = _loadOrder.LocalOrder(),
         };
 
         if (_transport.SendToServer(hello))
@@ -93,12 +98,17 @@ public sealed class SettingsHandshakeService
         }
 
         LogServerSide(peer.Label, verdict, divergent, buildMismatch);
+        // Like the groups, the order is compared only when both sides speak the same protocol.
+        var loadOrder = protocolMatches ? _loadOrder.Check(peer.Label, hello.ModuleOrder) : LoadOrderVerdict.None;
         _transport.SendToPeer(peer, new CoopCompatHelloReply
         {
             ProtocolVersion = _identity.ProtocolVersion,
             Verdict = (int)verdict,
             DivergentGroups = divergent.ToArray(),
             BuildMismatch = buildMismatch,
+            LoadOrderDiffers = loadOrder.Differs,
+            LoadOrderHostFirst = loadOrder.HostFirst,
+            LoadOrderHostSecond = loadOrder.HostSecond,
         });
     }
 
@@ -163,6 +173,14 @@ public sealed class SettingsHandshakeService
         else if (verdict == HandshakeVerdict.Inconclusive)
         {
             _logger.LogInfo("[CoopCompat] settings could not be compared with the server");
+        }
+
+        if (!protocolMismatch && reply.LoadOrderDiffers)
+        {
+            var first = LoadOrderRules.Describe(reply.LoadOrderHostFirst ?? "", null);
+            var second = LoadOrderRules.Describe(reply.LoadOrderHostSecond ?? "", null);
+            _logger.LogWarning("[CoopCompat] load order differs from the server: on the server " + first + " loads before " + second);
+            _notice.LoadOrderDiffers(first, second);
         }
 
         var detail = "verdict=" + Word(verdict) + " groups=" + reply.DivergentGroups.Length + " build_mismatch=" + Flag(buildMismatch);

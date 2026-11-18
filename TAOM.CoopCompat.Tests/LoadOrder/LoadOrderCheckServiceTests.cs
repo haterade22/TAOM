@@ -49,6 +49,18 @@ public class LoadOrderCheckServiceTests
     }
 
     [TestMethod]
+    public void LocalOrder_TheModuleListThrows_SendsNoOrderAndLogs_ThenReadsAgain()
+    {
+        _modules.Throws = true;
+
+        Assert.AreEqual(0, _service.LocalOrder().Length);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("load order: could not read this game's module list") && s.Contains("boom")));
+
+        _modules.Throws = false;
+        Assert.AreEqual(6, _service.LocalOrder().Length);
+    }
+
+    [TestMethod]
     public void Check_SameOrder_Matches()
     {
         var verdict = _service.Check("7", new[] { "Native", "TAOM_Map", "LOTRLOME_Armory", "TAOM", "RBM" });
@@ -78,7 +90,7 @@ public class LoadOrderCheckServiceTests
         var verdict = _service.Check("7", new[] { "TAOM_Map", "RBM", "LOTRLOME_Armory", "TAOM" });
 
         Assert.IsFalse(verdict.Differs);
-        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("not compared: the host's switch is off")));
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("not compared: the switch is off on this server")));
     }
 
     [TestMethod]

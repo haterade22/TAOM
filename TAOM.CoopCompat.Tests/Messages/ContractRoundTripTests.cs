@@ -31,6 +31,7 @@ public class ContractRoundTripTests
         CollectionAssert.AreEqual(new[] { "Battle Tactics", "Momentum" }, back.GroupNames);
         CollectionAssert.AreEqual(new[] { "h1", "h2" }, back.GroupHashes);
         Assert.IsTrue(back.Conclusive);
+        CollectionAssert.AreEqual(new[] { "TAOM_Map", "TAOM" }, back.ModuleOrder);
     }
 
     [TestMethod]
@@ -42,6 +43,9 @@ public class ContractRoundTripTests
         Assert.AreEqual(2, back.Verdict);
         CollectionAssert.AreEqual(new[] { "Battle Tactics" }, back.DivergentGroups);
         Assert.IsTrue(back.BuildMismatch);
+        Assert.IsTrue(back.LoadOrderDiffers);
+        Assert.AreEqual("TAOM Map (TAOM_Map)", back.LoadOrderHostFirst);
+        Assert.AreEqual("TAOM", back.LoadOrderHostSecond);
     }
 
     [TestMethod]
@@ -116,6 +120,10 @@ public class ContractRoundTripTests
         Assert.AreEqual(0, reply.DivergentGroups.Length);
         Assert.IsNotNull(hello.GroupNames);
         Assert.IsNotNull(hello.GroupHashes);
+        Assert.IsNotNull(hello.ModuleOrder);
+        Assert.AreEqual(0, hello.ModuleOrder.Length);
+        Assert.AreEqual("", reply.LoadOrderHostFirst);
+        Assert.AreEqual("", reply.LoadOrderHostSecond);
         Assert.IsNotNull(snapshot.Keys);
         Assert.IsNotNull(snapshot.Values);
     }

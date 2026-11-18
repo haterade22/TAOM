@@ -15,6 +15,7 @@ internal static class ContractSamples
         GroupNames = new[] { "Battle Tactics", "Momentum" },
         GroupHashes = new[] { "h1", "h2" },
         Conclusive = true,
+        ModuleOrder = new[] { "TAOM_Map", "TAOM" },
     };
 
     public static CoopCompatHelloReply Reply() => new CoopCompatHelloReply
@@ -23,6 +24,9 @@ internal static class ContractSamples
         Verdict = 2,
         DivergentGroups = new[] { "Battle Tactics" },
         BuildMismatch = true,
+        LoadOrderDiffers = true,
+        LoadOrderHostFirst = "TAOM Map (TAOM_Map)",
+        LoadOrderHostSecond = "TAOM",
     };
 
     public static CoopCompatMomentumSnapshot Snapshot() => new CoopCompatMomentumSnapshot
