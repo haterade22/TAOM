@@ -137,6 +137,12 @@ public class CoopVetoClassificationTests
         ["Patch161_SceneTableauNullSceneGuard"] = new(CoopVeto.ReviewedSafe,
             "Crash guard (#1429), client-only UI. It skips a scene widget's render texture while the widget has no scene; " +
             "the scene's own tableau makes it later. A Gauntlet texture is per-peer presentation, never campaign state."),
+        ["Patch163_CampaignTierBadge"] = new(CoopVeto.ReviewedSafe,
+            "Display fix (#1444), client-only UI. It replaces only the empty tier badge native returns above tier 7 with the tier 7 " +
+            "glyph; tiers 1 to 7 run native. The badge is a per-peer view model, never campaign state, and it reads no TAOM SyncData or MCM value."),
+        ["Patch163_CustomBattleTierBadge"] = new(CoopVeto.ReviewedSafe,
+            "Display fix (#1444), client-only UI in custom battle, which has no campaign and no co-op session. It replaces only the " +
+            "badge of a troop above tier 7; the rest runs native."),
         ["Patch142_SallyOutEmptyPartyGuard"] = new(CoopVeto.ReviewedSafe,
             "Crash guard (#1099). It stops a sally-out check only when the besieger leader is in the main party's " +
             "map event and has nobody left; the live-battle branch still runs. It reads only " +

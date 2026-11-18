@@ -111,7 +111,11 @@ start (town 30, castle 18, village 6), and a multi-source Dijkstra flood (8 neig
 slip between two walls or two water cells) gives each cell to the cheapest seed within a claim of 190.
 Unclaimed land patches smaller than 150 cells join the province that surrounds most of them, so a
 stray hollow does not show as wild land. A seed sitting on a wall or on water starts from the nearest
-open cell within 5 cells. The boundaries between provinces are then traced once as oriented chains.
+open cell within 5 cells. A seed whose own cell another province's flood took (a village beside a foreign town
+inside about 24 cost units) then takes back each claimed cell within 4 cells that is nearer to it than to every seed
+of that cell's province, so the settlement sits in its own colour (#1444, from Silas He; `SeedGuardRadius`, 0 turns
+it off). Watchful Holds reads the same provinces for its gate, so a foreign town's garrison no longer harries a
+march on the cells a village takes back. The boundaries between provinces are then traced once as oriented chains.
 
 ### Choosing and drawing the borders
 
@@ -394,9 +398,9 @@ its best colour again in every campaign.
 
 ## Tests
 
-262 test methods in `TAOM.Tests/Features/RealmBorders/` (counted 2026-11-16 with `grep -c "\[TestMethod\]"`):
+265 test methods in `TAOM.Tests/Features/RealmBorders/` (counted 2026-11-18 with `grep -c "\[TestMethod\]"`):
 
-- `ProvincePartitionerTests` (16), `BoundaryTracerTests` (7), `RealmBorderSelectorTests` (7): the flood,
+- `ProvincePartitionerTests` (20), `BoundaryTracerTests` (7), `RealmBorderSelectorTests` (7): the flood,
   walls, rivers, diagonal ridges, pockets, water, NaN seeds and positions, chain tracing (saddles and
   four-province corners included) and joining.
 - `PolylineMathTests` (7), `StripBuilderTests` (7), `BorderPainterTests` (9), `BorderSupportTests` (22):
@@ -521,6 +525,8 @@ boxes below are still owed.
 
 - 2026-11-16: Realm Name Size in MCM, and the plain font for Chinese, Japanese and Korean names from size
   30 to 42 (#1380).
+- 2026-11-18: a village or castle overrun by a stronger neighbour's flood keeps its own cell and the cells nearer
+  to it (#1444, ported from Silas He's fix package).
 
 ## GitHub Issue
 

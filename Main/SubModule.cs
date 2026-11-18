@@ -326,6 +326,13 @@ public class SubModule : MBSubModuleBase
         TryPatchCategory("Patch160_LoadRetryStop");
         Features.EngineBugGuards.Hooks.Patch161_SceneTableauNullSceneGuard.Initialize(IoC.Resolve<IModLogger>());
         TryPatchCategory("Patch161_SceneTableauNullSceneGuard");
+        // Patch162 to Patch167 (#1444, display and text bugs from the same package): stateless, applied with the guards.
+        TryPatchCategory("Patch162_ExecutionNoticeClosable");
+        TryPatchCategory("Patch163_EliteTierBadge");
+        TryPatchCategory("Patch164_DecisionRulerName");
+        TryPatchCategory("Patch165_ArmyFoodDays");
+        TryPatchCategory("Patch166_FoundedKingdomFormalName");
+        TryPatchCategory("Patch167_DeadHeroOutfit"); // its Prepare skips it when a co-op module is loaded
 
         // Patch95_FactionUI: Kysaro's themed front end (#704): main menu, menu video and music, splash,
         // loading screens, the character-creation screens and the hero presets. Applied HERE because the

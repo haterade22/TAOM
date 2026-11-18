@@ -2169,6 +2169,54 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **The crash.** `SetTargetSize` always ends in `CreateTexture()`, which allocates a render target and a scene view, then passes `_tableauScene` to `SceneView.SetScene`; with no scene that throws a managed NullReferenceException (v1.5.7 SceneView.cs:20-23). Silas reports it closed the game. The prefix skips the texture while the scene is null. That tableau is a throwaway: when the scene arrives, `SceneTextureProvider` builds a new tableau for it, and the widget's next size update makes the texture there. The null test is a plain reference test. One warning per game process.
 
+## Patch162_ExecutionNoticeClosable
+
+**Target:** constructor `BloodFeudClanMemberExecutedLordMapNotificationItemVM(BloodFeudClanMemberExecutedLordMapNotification)` (Postfix; `[ClientOnly]`)
+
+**Feature:** EngineBugGuards, `Main/Features/EngineBugGuards/Hooks/Patch162_ExecutionNoticeClosable.cs`, applied in `OnSubModuleLoad`. **Status:** ACTIVE (#1444, 2026-11-18). Ported from Silas He's `DeathNotices.cs` (its closable part only).
+
+The constructor sets `ForceInspection = true` (v1.5.7 :13), which hides the notice's close button and blocks right-click removal, so each "clan member executed a lord" notice had to be opened. The postfix sets it back to false (Mike, 2026-11-18). The setter writes only outside development mode.
+
+## Patch163_EliteTierBadge
+
+**Targets:** `CampaignUIHelper.GetCharacterTierData(CharacterObject, bool)` (class `Patch163_CampaignTierBadge`) and `CustomBattleTroopTypeVM.GetCharacterTierData(BasicCharacterObject, bool)` (class `Patch163_CustomBattleTierBadge`). Both Prefix, both `[ClientOnly]`.
+
+**Feature:** EngineBugGuards, `Main/Features/EngineBugGuards/Hooks/Patch163_EliteTierBadge.cs`, applied in `OnSubModuleLoad`. **Status:** ACTIVE (#1444, 2026-11-18). Ported from Silas He's `ExtendedTierDisplay.cs`.
+
+Native returns an empty badge above tier 7 (v1.5.7 :1380), and custom battle clamps the tier to 7 first. For tiers 8 to 10 the prefix returns native's tier 7 glyph with native's `str_party_troop_tier` hint holding the real tier; tiers 1 to 7 run native. Decisions in `EngineDisplayRules`.
+
+## Patch164_DecisionRulerName
+
+**Targets:** `StartAllianceDecision.GetChooseDescription()`, `ProposeCallToWarAgreementDecision.GetChooseTitle()` and `GetChooseDescription()`, `AcceptCallToWarAgreementDecision.GetChooseDescription()` (Postfix, `TargetMethods`).
+
+**Feature:** EngineBugGuards, `Main/Features/EngineBugGuards/Hooks/Patch164_DecisionRulerName.cs`, applied in `OnSubModuleLoad`. **Status:** ACTIVE (#1444, 2026-11-18). Ported from Silas He's `DecisionRulerName` in `SiegeEncounterFixes.cs`.
+
+Native sets `RULER` on the outer text, but `{RULER.NAME}` sits in the nested `RULER_NAME_AND_TITLE` text, which then reads whichever hero another text set last. The postfix rebuilds the nested text with `RULER` set on it, as native's `AllianceCampaignBehavior` does (:158-160). For `ProposeCallToWarAgreementDecision` it also sets `CALLED_KINGDOM`, which native's `GetChooseDescription` uses but never sets (it sets `KINGDOM_NAME`).
+
+## Patch165_ArmyFoodDays
+
+**Target:** `CampaignUIHelper.GetArmyFoodTooltip(Army)` (Postfix; `[ClientOnly]`)
+
+**Feature:** EngineBugGuards, `Main/Features/EngineBugGuards/Hooks/Patch165_ArmyFoodDays.cs`, applied in `OnSubModuleLoad`. **Status:** ACTIVE (#1444, 2026-11-18). Ported from Silas He's `ArmyFoodTooltip.cs`.
+
+Native averages `Food / -FoodChange` over the parties (:712), so a party with no food loss makes the last row huge. The postfix writes native's `GetDaysUntilNoFood` of the army's total food and total change into the last row's value. Label and format stay native.
+
+## Patch166_FoundedKingdomFormalName
+
+**Target:** `KingdomManager.CreateKingdom(TextObject, TextObject, CultureObject, Clan, ...)` (Prefix, void)
+
+**Feature:** EngineBugGuards, `Main/Features/EngineBugGuards/Hooks/Patch166_FoundedKingdomFormalName.cs`, applied in `OnSubModuleLoad`. **Status:** ACTIVE (#1444, 2026-11-18). Ported from Silas He's `KingdomFormalName.cs`, without its repair of older saves.
+
+With no formal name passed, native builds "Kingdom of {founder clan}" (:127-131). When the player's own clan founds a kingdom (not a rebel clan) and no formal name was given, the prefix passes the chosen name through `str_generic_kingdom_formal_name`, as the kingdom screen's rename does.
+
+## Patch167_DeadHeroOutfit
+
+**Target:** `Hero.OnDeath()` (internal instance; Prefix and Postfix, `__state`)
+
+**Feature:** EngineBugGuards, `Main/Features/EngineBugGuards/Hooks/Patch167_DeadHeroOutfit.cs`, applied in `OnSubModuleLoad` only when no co-op module is loaded (Coop's own `OnDeath` prefix destroys and syncs the kits). **Status:** ACTIVE (#1444, 2026-11-18). Ported from Silas He's `DeadHeroOutfit.cs`, without its back-fill of older saves.
+
+`OnDeath` empties `_battleEquipment` and `_civilianEquipment` (:2027-2028), so a dead hero's encyclopedia page wears `Campaign.DeadBattleEquipment`, imperial gear that deforms on the dwarf skeleton. The prefix reads both kits, and the postfix puts each back if death emptied it, through delegates bound once to the private property accessors. Each dead hero now saves two Equipment objects.
+
 ## Realms manual patches (no category)
 
 **Targets (v1.5.7):** three classes in `Main/Features/Realms/Hooks/` and `TitleEncyclopediaPagePatch` in `Client/Features/Realms/Encyclopedia/`, each applied by hand with its own Harmony id, outside any patch category, so `PatchShield` and the category list do not see them. Feature: [realms.md](../features/realms.md).

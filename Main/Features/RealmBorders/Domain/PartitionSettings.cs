@@ -26,4 +26,11 @@ public sealed class PartitionSettings
 
     /// <summary>How many cells out a seed on a wall or on water looks for open ground to start from.</summary>
     public int SeedSearchRadius { get; init; } = 5;
+    /// <summary>
+    /// A seed whose own cell another province's flood took (a village 6 head start beside a foreign town's 30) takes back
+    /// each claimed cell within this many cells that is nearer to it than to every seed of the cell's holder, so the
+    /// settlement sits in its own colour (#1444, from Silas He). 0 disables it. Set from Silas's in-game value, not tuned
+    /// with <c>tools/realm_borders_preview.py</c>, which has no guard step.
+    /// </summary>
+    public int SeedGuardRadius { get; init; } = 4;
 }
