@@ -75,7 +75,7 @@
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-moduledata-validation.sh",
             "statusMessage": "Validating ModuleData refs before commit…",
             "timeout": 60
-          },   
+          },
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-doc-config-drift.sh",
@@ -177,6 +177,18 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/log-agent.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-subagent-verification.sh",
             "timeout": 10
           }
         ]

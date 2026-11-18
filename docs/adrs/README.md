@@ -20,6 +20,7 @@ Quick reference index for TAOM ADRs. See individual files for complete details w
 | [012](./012-graphify-code-graph-in-the-workflow.md) | graphify Code Graph in the Workflow | Map a TAOM type's dependents before changing or reviewing it; graphify runs only through `tools/graphify_taom.py`, and a hook denies its raw write verbs. Supersedes part of ADR-010's 2026-08-18 amendment | Accepted | Standard |
 | [013](./013-server-safe-core-client-ui-submodule.md) | Server-Safe Core, Client UI Submodule | `TAOM.dll` stays loadable on the co-op dedicated server; types that need client UI assemblies live in a small `TAOM.Client.dll` submodule with vanilla's client-only tags, and a gate keeps new UI types out of core | Accepted | Standard |
 | [014](./014-separate-coop-compat-module.md) | Separate Coop Compat Module | Compile-time Coop references live only in the `TAOM.CoopCompat` module, which ships in the TAOM download; `TAOM.dll` keeps reflection-only Coop detection | Accepted | Standard |
+| [015](./015-self-managing-project.md) | A Manager Session Runs the Project | One manager session selects, dispatches, checks and reports through `/manage`; state lives in `docs/goals.md` and GitHub; merge rights are earned in stages, and self-merge waits for an identity the workers do not hold | Accepted | Standard |
 
 ## Quick Rules Reference
 

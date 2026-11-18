@@ -10,15 +10,23 @@
 #   mark-verification-run.sh (PostToolUse Bash|PowerShell, PostToolUseFailure) touches <id>.verified
 #   check-verification-evidence.sh (Stop) reads <id>.edits and <id>.verified, reads every other
 #     session's .edits as claims, keeps <id>.reminded and <id>.tree.reminded
+#   check-subagent-verification.sh (SubagentStop) reads <id>.<aid>.aedits and <id>.<aid>.averified,
+#     keeps <id>.<aid>.areminded
 #
 # THE LEDGER
 # Folder: $CLAUDE_PROJECT_DIR/.claude/logs/sessions (gitignored with .claude/logs/). A subagent's
-# payload carries its parent's session_id, so its edits and builds count for the parent session.
+# payload carries its parent's session_id, so its edits and builds count for the parent session. It
+# also carries the subagent's agent_id, so the same edits and builds go to the agent's own files too.
 #   <id>.edits     one line per Edit or Write: <epoch><TAB><path>, path normalised as below
 #   <id>.verified  touched when a build or test ran (mtime is the signal)
 #   <id>.reminded  the Stop hook's streak marker for the session's own edits
 #   <id>.tree.reminded  its streak marker for C# that no ledger holds
 #   <id>.warned    <other id><TAB><path, as edited>: the cross-session notes already given
+#   <id>.<aid>.aedits     a subagent's edits, the same lines as <id>.edits
+#   <id>.<aid>.averified  touched when that subagent ran a build or test
+#   <id>.<aid>.areminded  the SubagentStop hook's streak marker for that subagent
+# The agent suffixes never match a *.edits, *.verified or *.reminded glob, so an agent's file is
+# never read as another session's claim.
 #
 # No Python here except the \u branch of taom_payload_file_path: the Stop and Bash hooks fire often,
 # and a regex on the raw payload is enough (the cwd regex in enter_payload_tree,
@@ -34,6 +42,16 @@ taom_session_id() {
     v=${v//[!A-Za-z0-9_-]/}
     # shellcheck disable=SC2034  # read by the hooks that source this file
     TAOM_SID=${v:0:64}
+}
+
+# TAOM_AID: the payload's agent_id, which only a subagent's payload carries, kept and cut the same
+# way; empty when absent. It names files, so a path or shell character never survives.
+taom_agent_id() {
+    local re='"agent_id"[[:space:]]*:[[:space:]]*"(([^"\\]|\\.)*)"' v=""
+    [[ "$1" =~ $re ]] && v=${BASH_REMATCH[1]}
+    v=${v//[!A-Za-z0-9_-]/}
+    # shellcheck disable=SC2034  # read by the hooks that source this file
+    TAOM_AID=${v:0:64}
 }
 
 # TAOM_LEDGER_DIR: the absolute ledger folder.
