@@ -6983,5 +6983,9 @@
 	<string id="taom_war_morale" text="{=taom_war_morale}Tidings of the war" />
 	<string id="taom_event_effect_morale" text="{=taom_event_effect_morale}Party morale" />
 	<string id="taom_event_effect_permanent" text="{=taom_event_effect_permanent}Permanent" />
+	<!-- TaomSettings.cs: Co-op -->
+	<string id="taom_mcm_group_coop" text="{=taom_mcm_group_coop}Co-op" />
+	<string id="taom_mcm_CoopLoadOrderWarning" text="{=taom_mcm_CoopLoadOrderWarning}Warn players whose load order differs from the host's" />
+	<string id="taom_mcm_CoopLoadOrderWarning_hint" text="{=taom_mcm_CoopLoadOrderWarning_hint}When a player joins a co-op campaign, the co-op server compares the order of TAOM and of every mod that adds items, troops or factions with its own, and tells a player whose order differs which two mods are the other way round. Nothing is blocked. The co-op server process reads this switch each time a player joins; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopLoadOrderWarning), which it reads once at start, so change it there and restart the server. Default: on." />
 
 </strings>

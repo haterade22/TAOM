@@ -3306,6 +3306,16 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public Dropdown<string> BattleHudColourMode { get; set; } = new Dropdown<string>(
         TAOM.Features.BattleHud.UI.BattleHudColourPalette.Choices, 0);
 
+    // --- Co-op (docs/features/coop-compat.md) ---
+
+    // Read by TAOM.CoopCompat in the co-op server process only, through CoopSettingsProvider; a player's own value is never
+    // read. On a dedicated server TaomSettings.Instance comes from taom-server-settings.json, loaded once per process
+    // (ServerSettingsSource). Instrumentation in CoopSettingsRelevance: it gates log lines and one notice to the joining player.
+    [SettingPropertyGroup("{=taom_mcm_group_coop}Co-op", GroupOrder = 8)]
+    [SettingPropertyBool("{=taom_mcm_CoopLoadOrderWarning}Warn players whose load order differs from the host's", Order = 0, RequireRestart = false,
+        HintText = "{=taom_mcm_CoopLoadOrderWarning_hint}When a player joins a co-op campaign, the co-op server compares the order of TAOM and of every mod that adds items, troops or factions with its own, and tells a player whose order differs which two mods are the other way round. Nothing is blocked. The co-op server process reads this switch each time a player joins; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopLoadOrderWarning), which it reads once at start, so change it there and restart the server. Default: on.")]
+    public bool CoopLoadOrderWarning { get; set; } = TAOM.Features.CoopInterop.CoopSettingsProvider.DefaultLoadOrderWarning;
+
     // --- Cheat Menu (docs/features/cheat-menu.md) ---
 
     [SettingPropertyGroup("{=taom_cheat_mcm_group}Cheat Menu", GroupOrder = 90)]

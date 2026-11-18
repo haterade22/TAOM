@@ -98,6 +98,9 @@ public static class CoopSettingsRelevance
         "LogScreenOpenTimes",
         // The bug report offer after an unexpected end (docs/features/crash-report.md): a main-menu notice, never a computation.
         "OfferBugReportAfterUnexpectedEnd",
+        // The co-op load order warning (docs/features/coop-compat.md): it gates log lines and one notice to the joining
+        // player, never a computation, and only the co-op server's value is read, so a client holding another value changes nothing.
+        "CoopLoadOrderWarning",
     };
 
     /// <summary>
