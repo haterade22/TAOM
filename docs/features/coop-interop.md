@@ -202,7 +202,8 @@ order ([TAOM.CoopCompat](coop-compat.md)). A dedicated server takes the value fr
 needs a server restart ([server settings](server-settings.md)). Only the server's value counts, so the
 switch is excluded from the settings fingerprint. The same group holds
 `CoopCareerSync` (Sync careers for co-op players), which stays in the fingerprint: see
-[Career sync](#career-sync-967).
+[Career sync](#career-sync-967), and `CoopGuestLadder` (Lords' Ladder for co-op players), also in the
+fingerprint: see [Lords' Ladder for co-op players](#lords-ladder-for-co-op-players).
 
 ## Layer 3 — host authority (session-varying)
 
@@ -664,6 +665,47 @@ fingerprint: it changes what the server stores and sends.
 shipped career taken to its limit), `CareerSyncHostTests`, `CareerSyncClientTests` (one report per
 action, stale answers dropped), `CareerSyncWiringTests`, `CoopSettingsProviderTests`.
 
+## Lords' Ladder for co-op players
+
+The lord's gear ladder ([armour-acquisition.md](armour-acquisition.md), #693) keeps each hero's rungs
+in `ArmourAcquisitionState` (`LadderClaimed` and `LadderReady`, one bit per `LadderSlot`, keyed by hero
+StringId), saved by the co-op server under `_taom_armourAcquisition`. A player's own copy is the one
+from the join save and goes stale, and in a session every human is a client, the hosting player too,
+so the server runs the ladder for its players through guest trade (#1329).
+
+**State.** A guest's armoury request (`ArmouryBalance`, and the two ladder actions) gets a
+`GuestLadderView` in `GuestTradeReply.Ladder`: the current rung's slot, whether it is done, whether
+this armoury's level on the server reaches the lord level, the lord's material with how many the rung
+needs and the party carries, and, for a done rung, at most 64 pieces it awards. `GuestTradeShops.Ladder`
+builds TAOM's own `LordsLadderService` with the guest hero's `ArmouryPlayerAdapter.ForHero`, the
+`GuestTradeShops.Armoury` shape. With the switch off the server builds no ladder at all, and a failure
+while it reads the rung logs and sends none, so the answer to the request itself never changes.
+
+**Actions.** `GuestTradeAction.LadderHandIn` (5) and `LadderClaim` (6) name the slot the guest saw
+(`Subject`, read with `LadderSlotRules.TryParse`, never a number) and, for a claim, the piece (`Target`).
+They take the armoury path of `GuestTradeHost`: the hero comes from the sender's connection, and the
+free-leader, same-town, out-of-battle and armoury checks apply as for an upgrade. `GuestLadderDesk` then
+checks what the armoury window checks for a local player, because `LordsLadderService.HandIn` does not
+check the town and `Claim` not the armoury level. The answer is a `GuestLadderOutcome` in `Status`:
+`RungChanged` for another slot, a hand-in on a done rung or a claim on one not done; `NotEnough`;
+`ArmouryLevel`; `NotAChoice`; `Off`; `NotDone` when every check passed but the materials could not be
+taken or the piece not given (an item not loaded on the server). A v2.0.40 server answers both actions
+`BadRequest` (`GuestTradeHost.IsWellFormed`); a guest sends them only after a reply carried a ladder,
+which a v2.0.40 server never sends. The rung quests ("Take up the commission") are not offered to
+guests: a career quest would run on the guest's PC only. A hand-in therefore completes no running rung
+quest on the server, as the local window does; a guest has none there.
+
+**Configuration.** TAOM's settings, Co-op, "Lords' Ladder for co-op players" (`CoopGuestLadder`,
+default on), read through `IArmourAcquisitionSettingsProvider.CoopGuestLadderEnabled` in the co-op
+server process for each armoury request, together with Armour Acquisition's own gate
+(`GuestTradeShops.LadderOpen`). A dedicated server takes it from `taom-server-settings.json`, which
+`ServerSettingsSource` reads once per process, so a change there needs a server restart
+([server settings](server-settings.md)). It is in the settings fingerprint: it changes what the server
+does to a player's party.
+
+**Tests.** `GuestLadderHostTests` (view, each outcome, the switch, bad requests, the caps),
+`ArmourAcquisitionSettingsProviderTests`, `CoopSettingsProviderTests` (the group and the hint).
+
 ## Mission behaviors (#967 C7)
 
 Every TAOM mission behavior has a co-op role in `CoopMissionRoles` (`Main/Features/CoopInterop/Missions/`), and
@@ -891,12 +933,12 @@ to characterise. The existing try/catch around acceptance is containment, not co
 
 ## What is NOT done
 
-- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **574** settings across
+- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **575** settings across
   four MCM classes (the 284 here counted `[SettingPropertyGroup]` lines alongside the properties;
-  the split is 540 in `TaomSettings`, 21 in `BattleLoadDiagnosticsSettings`, 12 in
+  the split is 541 in `TaomSettings`, 21 in `BattleLoadDiagnosticsSettings`, 12 in
   `CrashReportSettings` and 1 in `BlowDiagnosticsSettings`).
-  **371 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
-  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 371 are in
+  **372 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
+  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 372 are in
   `TaomSettings`. The 203 excluded (67 counted 2026-09-22, less the three Stall Watchdog settings removed 2026-11-12 with the load watchdog, less the Native Skin Fixes toggle removed with the feature 2026-10-05, the 38 Realm Borders settings added from 2026-09-30 to 2026-10-08, the Crash Report AfterStart dev trigger added 2026-10-01, the Battle Corpses advice toggle and button added 2026-10-01, and the thirteen Menus & Loading Screens settings added 2026-10-01, #704, and the three tick profiler settings added 2026-10-02, and the hitch probe toggle added 2026-10-02, and the Animation Clip Memory probe toggle added 2026-10-02, and the map profiler toggle added 2026-10-03, and the Load-Time Stamps toggle added 2026-10-03, and the Race Abilities war cry, message and debug-log toggles added 2026-10-04, and the Race Abilities glow toggle added 2026-10-04, and the Crash Report mission-start survival toggle added 2026-10-08, and the Crash Report skeleton buffer guard and watch toggles added 2026-10-08, and the Map Performance nameplate cull and map view release settings added 2026-10-08, and the War Chronicle announcements toggle added 2026-10-08, and the three Animation Variety settings and the swing alternative probe toggle added 2026-10-17, and the Hidden Hosts toggle added 2026-10-18, and the Fell Foes debug log toggle added 2026-10-19, the two Telchar's Mark settings added 2026-10-19, #875, the two Reeve's Ledger switches added 2026-10-19, #857, and the Lost Footing census toggle added 2026-10-20, #894, the Watch-Silver and Tidings of the Lists switches added 2026-10-21, #859, less the two Quick Actions "include equipped" toggles removed 2026-10-23, #925, and the Cardolan and Rhudaur realm colours added 2026-10-23, #978, and the Loremaster's Line switch added 2026-10-23, #877, and the Hearth Roll tint toggle added 2026-10-23, #906, and the six camp work, rest healing and start-in-camp settings added 2026-10-24, #860, and the Notable Services switch added 2026-10-24, #899, and the Harvest Road notices toggle added 2026-10-26, #912, and the Make Tools switch added 2026-10-26, #910, and the two Many Hammers switches added 2026-10-26, #911, and the Bandit Voices greetings toggle added 2026-10-26, #900, less the two Auto-Resolve Diagnostics toggles removed with the feature 2026-10-26, and the Inn Rounds switch and its two scales added 2026-10-26, #901, and the Prisoner Banners toggle added 2026-10-27, #902, and the Ered Luin realm colour added 2026-10-27, and the Warden's Tally switch added 2026-10-27, #903, and the Anduin Vale and Angáladh realm colours added 2026-10-28, and the Dorwinion and South Rhovanion realm colours added 2026-10-29, and the two Seat of Seeing settings added 2026-11-03, and the two Seat of Seeing pointer settings added 2026-11-04, and the three Marshal's Word settings added 2026-11-04 and the Outlines switch added with its stage M4, and the Hollow Square and Spacing Repair switches added with its stage M5 (the repair is read once at patch time and stays off whenever co-op is present, so no value of it reaches a co-op simulation), and the Throwers Throw First switch added 2026-11-05 (read only by a live session, which is off online), and the two Seat of Seeing settings for the hero's hand-off and the take of a soldier added 2026-11-04, and the Seat of Seeing rise setting added with its stage S7, and the Realms title styles toggle added 2026-11-11 (it renames parties and the conversation header only), and the Battle HUD Colours dropdown added 2026-11-12 (it recolours three rings of each player's own battle HUD), and the Hall Seats switch added 2026-11-13 (it decides which lords get an agent in the player's own lord's hall mission and writes no campaign state), and the Encounter Lines switch added 2026-11-13 (Patch149, conversation text only), the Offer Story Missions switch added 2026-11-13 (#1105; no story offer opens in a co-op session, so no value of it reaches a co-op simulation), the Crash Report bug report button and its next-start offer toggle added 2026-11-14 (a zip of logs and a main-menu notice), the Enable Cheat Menu switch added 2026-11-14 (every cheat refuses outside single player), and the five Screen Performance settings in `BattleLoadDiagnosticsSettings` added 2026-10-19, #851 to #854, and the Realm Name Size slider added 2026-11-16, #1380, and the IME guard switch added 2026-11-18, #1447, a local window setting, and the Show Stamina Bar switch added 2026-11-19, #1497, which draws or hides the player's own stamina bar, the two Battle Gear Loot settings added 2026-11-21, read only behind the single-player predicate, and the Co-op load order warning switch added 2026-11-17, which gates log lines and one notice to the joining player and is read by the co-op server only) are instrumentation, player-local convenience,
   presentation, two action buttons, and the three time-acceleration knobs, which do nothing on a co-op
   peer because `TimeAccelerationService` writes no multiplier while it defers; the list with its reasons is
@@ -909,7 +951,7 @@ to characterise. The existing try/catch around acceptance is containment, not co
   excluded name may stop matching a real property, and no two settings classes may share a
   property name.
 
-  `SettingsFingerprint` hashes those 371: one code per MCM group plus a global, culture-invariant
+  `SettingsFingerprint` hashes those 372: one code per MCM group plus a global, culture-invariant
   so a comma decimal separator cannot fake a mismatch — and `SettingsFingerprintLog` writes them
   to each peer's log under the co-op gate. Floats and doubles hash as their IEEE bit patterns
   (-0 folded to 0), not as runtime-formatted text, so a .NET 6 server and a net472 client agree on
@@ -918,7 +960,7 @@ to characterise. The existing try/catch around acceptance is containment, not co
   every diagnostics property is excluded so this moves no hash today (a test asserts exactly
   that), and it means a simulation-affecting setting added to a diagnostics page later is covered
   the day it lands. That makes the "compare settings manually" workaround a comparison of a few
-  short strings instead of 371 values read off two screens.
+  short strings instead of 372 values read off two screens.
 
   **All four classes are `AttributeGlobalSettings<T>`, and the reasoning above depends on it.**
   MCM has three scopes, and only one of them travels with a save. Verified against MCM 5.12.1:
@@ -937,12 +979,12 @@ to characterise. The existing try/catch around acceptance is containment, not co
   PerSave class would be equal by construction and need not be hashed; a PerCampaign one would
   need hashing more urgently than a global, not less.
 
-  **A matching fingerprint means the MCM settings agree, and nothing wider.** It covers the 371
+  **A matching fingerprint means the MCM settings agree, and nothing wider.** It covers the 372
   values on the four settings pages. It does not cover the `ModuleData` JSON/XML that several
   features fall back to when a setting is unset (on a client only; a server never reads them for an
   MCM-backed field), the `TAOM.Dependencies` flag files
   (`patchshield-disabled.flag`, `saveshield-swallow-disabled.flag`, `coop-force-active.flag`),
-  or any difference outside TAOM. None of those three flags gates a setting in the 371 (each
+  or any difference outside TAOM. None of those three flags gates a setting in the 372 (each
   governs a Dependencies-side shield with no MCM property), but the general point holds: read the
   log line as "our settings pages match", not as "our installs are equivalent".
 

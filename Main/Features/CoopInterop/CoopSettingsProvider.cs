@@ -7,7 +7,8 @@ namespace TAOM.Features.CoopInterop;
 /// <see cref="TaomSettings.Instance"/> is the instance
 /// ServerSettingsSource loads from taom-server-settings.json once per process, so a change there needs a server restart;
 /// in a process where MCM serves the settings, a change made in that process applies to the next read. Not a hot path.
-/// The settings object is taken once, on the first non-null read: MCM edits that one object in place.
+/// The settings object is taken once, on the first non-null read: MCM edits that one object in place. The group's third
+/// switch, CoopGuestLadder, is read through IArmourAcquisitionSettingsProvider, not here.
 /// </summary>
 public class CoopSettingsProvider
 {

@@ -9,6 +9,7 @@ using TAOM.Features.Arachnophobia;
 using TAOM.Features.ArmourAcquisition;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.CoopInterop.GuestTrade;
+using TAOM.Features.CultureMarketplace;
 using TAOM.Features.EliteEmissary;
 using TAOM.Features.SpecialResources;
 using TAOM.Features.TroopWeight;
@@ -40,7 +41,7 @@ public class GuestTradeWiringTests
             typeof(IEliteEmissarySettingsProvider), typeof(ISpecialResourceService), typeof(ISpecialResourceConfigProvider),
             typeof(ISpecialResourceSettingsProvider), typeof(IOutcomeLog), typeof(IArachnophobiaService), typeof(IArmourGateService),
             typeof(IArmourAcquisitionConfigProvider), typeof(IArmourAcquisitionSettingsProvider), typeof(IArmouryTownAdapter),
-            typeof(ISpecialResourceSpender),
+            typeof(ISpecialResourceSpender), typeof(ICultureMarketplaceConfigProvider),
         })
             container.RegisterInstance(service, Substitute.For(new[] { service }, new object[0]));
         container.Register<ArmourAcquisitionState>(Reuse.Singleton);

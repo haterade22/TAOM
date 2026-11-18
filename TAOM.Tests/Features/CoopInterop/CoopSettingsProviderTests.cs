@@ -78,7 +78,8 @@ public class CoopSettingsProviderTests
             .Select(p => p.Name)
             .ToArray();
 
-        CollectionAssert.AreEqual(new[] { nameof(TaomSettings.CoopLoadOrderWarning), nameof(TaomSettings.CoopCareerSync) }, holders);
+        CollectionAssert.AreEqual(new[] { nameof(TaomSettings.CoopLoadOrderWarning), nameof(TaomSettings.CoopCareerSync),
+            nameof(TaomSettings.CoopGuestLadder) }, holders);
     }
 
     [TestMethod]
@@ -140,4 +141,38 @@ public class CoopSettingsProviderTests
     public void TheCareerSyncSwitch_IsInTheFingerprint()
         // It changes what the server stores and sends; none of the four exclusion reasons fits (hub rule, Part 1 review).
         => Assert.IsFalse(CoopSettingsRelevance.IsExcluded(nameof(TaomSettings.CoopCareerSync)));
+
+    // ── Lords' Ladder for co-op players (docs/features/coop-interop.md, "Lords' Ladder for co-op players") ──
+
+    [TestMethod]
+    public void TheGuestLadderSetting_SitsInTheCoopGroup_AfterTheCareerSyncSwitch()
+    {
+        var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.CoopGuestLadder))!;
+        var group = Attribute(property, "SettingPropertyGroupAttribute");
+        var flag = Attribute(property, "SettingPropertyBoolAttribute");
+
+        Assert.AreEqual("Co-op", McmText.Plain(Read(group, "GroupName") as string));
+        Assert.AreEqual(8, Read(group, "GroupOrder"));
+        Assert.AreEqual(2, Read(flag, "Order"));
+        Assert.AreEqual("Lords' Ladder for co-op players", McmText.Plain(Read(flag, "DisplayName") as string));
+        Assert.AreEqual(false, Read(flag, "RequireRestart"));
+        Assert.IsTrue(new TaomSettings().CoopGuestLadder);
+    }
+
+    [TestMethod]
+    public void TheGuestLadderHint_SaysTheServerReadsIt_FromItsFile_AfterARestart()
+    {
+        var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.CoopGuestLadder))!;
+        var hint = McmText.Plain(Read(Attribute(property, "SettingPropertyBoolAttribute"), "HintText") as string);
+
+        StringAssert.Contains(hint, "co-op server process reads");
+        StringAssert.Contains(hint, "taom-server-settings.json (CoopGuestLadder)");
+        StringAssert.Contains(hint, "restart the server");
+        Assert.IsFalse(hint.Contains("no restart"), hint);
+    }
+
+    [TestMethod]
+    public void TheGuestLadderSwitch_IsInTheFingerprint()
+        // It changes what the server does to a player's party; none of the four exclusion reasons fits (Part 4 review).
+        => Assert.IsFalse(CoopSettingsRelevance.IsExcluded(nameof(TaomSettings.CoopGuestLadder)));
 }

@@ -3324,6 +3324,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "{=taom_mcm_CoopCareerSync_hint}When on, a career a co-op player picks or changes goes to the co-op server, which checks it with the career rules, keeps it in its save and shows it to the other players, so the career is still there after the player joins again. The co-op server process reads this switch each time a player reports a career; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopCareerSync), which it reads once at start, so change it there and restart the server. Off: each player's career stays only on that player's PC and is lost when the player joins again. Default: on.")]
     public bool CoopCareerSync { get; set; } = TAOM.Features.CoopInterop.CoopSettingsProvider.DefaultCareerSync;
 
+    // Read by the co-op server process through IArmourAcquisitionSettingsProvider (the guest armoury in
+    // Main/Features/CoopInterop/GuestTrade). In the fingerprint: it changes what the server does to a player's party.
+    [SettingPropertyGroup("{=taom_mcm_group_coop}Co-op", GroupOrder = 8)]
+    [SettingPropertyBool("{=taom_mcm_CoopGuestLadder}Lords' Ladder for co-op players", Order = 2, RequireRestart = false,
+        HintText = "{=taom_mcm_CoopGuestLadder_hint}When on, the co-op server runs the lord's gear ladder for each co-op player's hero: a player's armoury lists the rung the server keeps for that hero, takes the lord's materials for it and fits the claimed piece. The rung quests are not offered to co-op players. The co-op server process reads this switch each time a player uses an armoury; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopGuestLadder), which it reads once at start, so change it there and restart the server. Off: co-op players see no ladder at the armoury. Default: on.")]
+    public bool CoopGuestLadder { get; set; } = TAOM.Features.ArmourAcquisition.ArmourAcquisitionSettingsProvider.DefaultCoopGuestLadder;
+
     // --- Cheat Menu (docs/features/cheat-menu.md) ---
 
     [SettingPropertyGroup("{=taom_cheat_mcm_group}Cheat Menu", GroupOrder = 90)]
