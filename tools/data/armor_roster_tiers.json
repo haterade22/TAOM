@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-18 17:06:40",
+  "generatedAt": "2026-11-18 17:20:42",
   "armoryDir": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\LOTRLOME_Armory\\ModuleData\\LOTRLOME_items",
   "items": {
     "sk_ar_art_helmet_inf_light_a": {
@@ -66268,11 +66268,11 @@
       "culture": "mirkwood",
       "slot": "arm",
       "name": "[Mirkwood] Infantry Vambraces I",
-      "current": 4,
+      "current": 24,
       "armour": [
         0,
         0,
-        4,
+        24,
         0
       ],
       "weight": 0.4,
@@ -66285,8 +66285,8 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 24,
-      "delta": -20,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
