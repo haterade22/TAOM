@@ -715,6 +715,14 @@ The refusal reasons and the tooltip line each one gives the diamond (`CareerChoi
 13. At level 20 take F5 A (Veterans of the Citadel for the captain): `taom.career_perks` shows `TroopTraining` 15 for Infantry only, and an infantry stack gains 15 experience per troop on the next daily tick while a ranged or cavalry stack gains none from it. The evidence for each type is listed under "In-game checks, with the evidence each leaves".
 14. Open the career screen as the captain: the header bar shows the root perk line (`+5% melee damage.`, the root's own text) under the career description, and the Active Effects column lists `+5% damage` before any pick (the panel drops the melee and ranged mask: the known gap above). Take F1 A (`+15% melee damage`): that line reads `+20% damage`, once, not a second line. The captain's only keystone (F6 C) carries no passive, so check a keystone passive on a hero holding `black_uruk_captain`: take `black_uruk_captain_t1_a_key` (Iron Hide), whose description stays a gold keystone line while `+6% resistance` joins the passive lines beside the root's `+6 max health`. Judge the header bar too: the root line is centred in the cream brush like the description above it (check that alignment and that the colour reads as a separate line; the gold `CareerSystem.Effects.Keystone` brush is the alternative), and the fixed 185 px bar must not clip it. A text-metrics estimate from a review puts the tallest left column (a two-line root in German, Brazilian Portuguese or Russian) at about 120 px of the 185 px bar; Chinese, Japanese and Korean were not measured, so glance at one of them. **Owed:** the maintainer's in-game look, since the line and the sums are covered by unit tests and a prefab binding test but never rendered.
 
+## Co-op: career sync
+
+In a co-op session the career book of the co-op server process is the saved one. `CareerDataService`
+raises `HeroCareerChanged` after each mutator that changed a hero's entry, and `ApplyHeroCareer` writes
+one hero's entry without raising it; the co-op career sync uses the two to send a player's career to the
+server, check it with `CareerChoiceRules.CanTake`, store it and pass it on. See
+[coop-interop.md](coop-interop.md#career-sync-967).
+
 ## Campaign lifecycle: when a career may be assigned, and the repair pass
 
 Three rules hold this feature's state together. Breaking any one of them shows up to the player as

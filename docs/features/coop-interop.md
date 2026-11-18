@@ -200,7 +200,9 @@ player's own value is not read. TAOM.CoopCompat then warns a player whose data m
 order ([TAOM.CoopCompat](coop-compat.md)). A dedicated server takes the value from
 `taom-server-settings.json`, which `ServerSettingsSource` reads once per process, so a change there
 needs a server restart ([server settings](server-settings.md)). Only the server's value counts, so the
-switch is excluded from the settings fingerprint.
+switch is excluded from the settings fingerprint. The same group holds
+`CoopCareerSync` (Sync careers for co-op players), which stays in the fingerprint: see
+[Career sync](#career-sync-967).
 
 ## Layer 3 — host authority (session-varying)
 
@@ -416,7 +418,7 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `BannerInjectionBehavior` | `OnGameLoaded` (`IsAuthority`, #1086) | Rewrites `Clan.Banner` and `Kingdom.Banner` from this peer's config and exclusion list. It writes nothing when the host's banners already match, but it did write when the peers' data or exclusions differed. The new-game injection runs only while a campaign is built, and `SyncData` keeps the exclusion list. Pinned by `ClientWorldWriteGateTests`. |
 | `PlayerAllianceProposalBehavior` | the proposal line's condition (`ShouldDeferToHost`, #1086) | The consequence calls `DiplomacyService.FormPlayerAlliance`, which starts an alliance. A guest never sees the line. Pinned by `ClientWorldWriteGateTests`. |
 | `TournamentRewardsBehavior` | the skill award, in `TournamentSkillAwardService.Award` (`IsDedicatedServer`, `ShouldDeferToHost`, #1086) | The award adds skill XP to this peer's hero, which the host owns, so a guest gets none. The Join flow (`TournamentJoinService.BeginJoin`) stands down for a guest too: no prize swap, which writes the town's shared tournament, and no skill pick. Noting the hero count for the renown model stays ungated: it is transient and read on the same peer. Pinned by `TournamentSkillAwardServiceTests` and `TournamentJoinServiceTests`. |
-| `CareerSwitchDialogueBehavior` | the paid switch and the retrain, in `GauntletCareerScreen` (`ShouldDeferToHost`, #1086) | Both charge hero gold, which the host owns. A guest gets `{=taom_career_coop_gold_off}` and nothing changes. A free switch changes only this peer's career book, like every other career choice, until the career relay (#967). The dialog line itself only opens the screen. No unit test: the screen is a thin UI entry point. |
+| `CareerSwitchDialogueBehavior` | the paid switch and the retrain, in `GauntletCareerScreen` (`ShouldDeferToHost`, #1086) | Both charge hero gold, which the host owns. A guest gets `{=taom_career_coop_gold_off}` and nothing changes. A free switch changes this peer's career book, like every other career choice, and career sync then reports it to the server ([Career sync](#career-sync-967)). The dialog line itself only opens the screen. No unit test: the screen is a thin UI entry point. |
 | `ArmourAcquisitionCampaignBehavior` | `OnDailyTick`, `OnDailyTickSettlement` (`ShouldDeferToHost`) | The market sweep removes armour from town markets and the visiting armourer roll writes saved state. `OnSessionLaunched` resets state when no save record loaded this session (`_loadedThisSession` false): a new campaign, or a save made before the feature. |
 | `ArmouryMenuBehavior` | the armoury purchase, in `ArmouryPresenter` (`GuestTradeClient`, over `ShouldDeferToHost`) | Player action: with `TAOM.CoopCompat` a guest's upgrade runs on the host (#1329, [coop-compat.md](coop-compat.md)); without it the presenter refuses a guest before anything is bought. The menu option itself only opens it. |
 | `LordHarnessEventBehavior` | `OnPlayerBattleEnd` (`ShouldDeferToHost`, `IsDedicatedServer`) | The item grant and the relation change in the inquiry callbacks. |
@@ -492,7 +494,7 @@ entry can never pay out. The authority half is pinned by two tests in `CoopAutho
 
 `HiddenHostsPlainSightBehavior` (the remembered sightings) is deliberately ungated: it stamps this peer's memory rows, per-player presentation like the `HiddenHostsMemoryBehavior` rows below.
 
-`CareerCampaignBehavior` (the career book repair, migration and death clear) is deliberately ungated: it writes only the TAOM career book, this peer's save data, deterministically from the data and the save, and touches no engine object. Per-hero career state on the server is the career relay (#967).
+`CareerCampaignBehavior` (the career book repair, migration and death clear) is deliberately ungated: it writes only the TAOM career book, this peer's save data, deterministically from the data and the save, and touches no engine object. Per-hero career state on the server comes from [career sync](#career-sync-967).
 
 `CareerPersistenceBehavior` (the career book save and reset) is deliberately ungated: it resets or restores this peer's career book and nothing else.
 
@@ -532,7 +534,7 @@ entry can never pay out. The authority half is pinned by two tests in `CoopAutho
 
 `RacePersistenceBehavior` (the hero race map) is deliberately ungated: at session launch it restores hero races from the save's own map, which the engine save does not carry, then recaptures them into this peer's `SyncData`. It is deterministic from the same save, and every peer needs the races.
 
-`PlayerPossessionBehavior` (the hero takeover, [player-possession.md](player-possession.md)) is deliberately ungated: **a known limit, by decision (#1086)**. At the player switch (the hourly tick is the fallback) it sets the possessed hero's race, grants the start gold, applies the career and seeds special resources on the client, because only the client holds the player's choices. An `IsAuthority` gate would turn the feature off. The gold grant and the race write are shared state the server does not see, so they can be lost or diverge until a relay carries the choices to the server (#967). On a BannerlordCoop client the gold grant does nothing, because Coop's `GiveGoldAction.ApplyInternal` prefix lets only the server give gold.
+`PlayerPossessionBehavior` (the hero takeover, [player-possession.md](player-possession.md)) is deliberately ungated: **a known limit, by decision (#1086)**. At the player switch (the hourly tick is the fallback) it sets the possessed hero's race, grants the start gold, applies the career and seeds special resources on the client, because only the client holds the player's choices. An `IsAuthority` gate would turn the feature off. The gold grant and the race write are shared state the server does not see, so they can be lost or diverge until a relay carries the choices to the server (#967); the career itself reaches the server through [career sync](#career-sync-967). On a BannerlordCoop client the gold grant does nothing, because Coop's `GiveGoldAction.ApplyInternal` prefix lets only the server give gold.
 
 `CreatureBroodCampaignDiagBehavior` (the temporary brood and troll band battle and destruction lines, [creature-bandits.md](creature-bandits.md)) is deliberately ungated: it only writes log lines from campaign events each peer already receives, and changes no state.
 
@@ -593,6 +595,74 @@ Many Hammers (#911, [many-hammers.md](many-hammers.md)) is three client-side pat
 Bandit Voices (#900, [bandit-voices.md](bandit-voices.md)) is deliberately ungated: its postfix on the bandit greeting condition writes two local conversation text variables, skips no vanilla call and declares no campaign behavior, so `CoopGateDocCoverageTests` asks for no row. It stands down on a dedicated server and during a messenger conversation, and its roll uses TAOM's own random source, never the engine's shared stream, so a peer's conversation text cannot change what another peer simulates. `EnableBanditGreetings` is classified as presentation in `CoopSettingsRelevance`. No co-op session has run this build.
 
 `StagedSiegeCampaignLog` (the settlement lines after a staged battle, [staged-siege.md](staged-siege.md) "Run report", #1054) is deliberately ungated: it only writes two log lines, one when a map event ends and one when a settlement changes owner, and only for the settlement a staged battle recorded in `StagedSiegeSlot`. It mutates nothing and saves nothing (`SyncData` is empty). The staged siege itself is absent in co-op (it stands down on a client or replay, and the walls and hall services record the settlement only when armed), so the record is never set there and the handlers return at their first check.
+
+## Career sync (#967)
+
+A TAOM career lives in the career book (`CareerDataService`) of every process, and only the co-op
+server's book is saved: `CareerPersistenceBehavior.SyncData` writes every entry of
+`GetAllData()`, with no filter by hero (`CareerPersistenceBehavior.cs:47-65`). Before career sync, a
+career a player picked or changed stayed in that player's own book: it was gone after a rejoin and the
+other players never saw it. Career sync carries it to the server, which checks it, stores it and
+passes it on. Coop builds the join save with `Game.Current.Save` (Coop `SaveInterface.cs:112`) and the
+client loads it with `SaveManager.Load` (`GameStateInterface.cs:79`), so a stored career reaches every
+later join through the save. That the client's load restores the career book is Likely, not yet seen in
+game.
+
+| Piece | Role |
+|---|---|
+| `CareerDataService.HeroCareerChanged`, `ApplyHeroCareer` | The seam: the event fires after a mutator changed a hero's entry (never on load or reset); the apply writes one hero's entry and fires nothing. |
+| `CareerSync/CareerSyncSnapshot` | One hero's career in the form the book saves, choices in the order taken. |
+| `CareerSync/CareerSyncRules` | The server's check, pure. |
+| `CareerSync/CareerSyncHost` | Server: decides, stores, says what goes to the sender and to the others; raises `StoredCareerChanged` for changes the server makes itself. |
+| `CareerSync/CareerSyncClient` | Client: reports its own hero's career, writes what the server sends. |
+| `CareerSync/ICareerSyncLink`, `CareerSyncModule` | The way to the server, which TAOM.CoopCompat attaches ([coop-compat.md](coop-compat.md)); the registrations. |
+| `Adapters/ICareerSyncHeroAdapter`, `ICareerSyncNotice` | The server's hero lookup (by StringId, through `CampaignObjectManager.Find`); the player's refusal line. |
+
+**Flow.** When the client's campaign join is ready (Coop's `ClientCampaignReady`, which comes after
+`SwitchToPlayer`, so `PlayerPossessionBehavior` has already applied the picked career), the client sends
+a join report of its own hero. If the server already holds a career for that hero it keeps its own copy
+and sends it back only when the two differ; otherwise it checks and stores the report. After that a
+change only marks the hero, and the relay's frame tick sends one report, so a free career switch
+(clear, set, tree stamp, root) goes out once. Each report carries a sequence number that the server's
+answer echoes; the client drops an answer older than its last report, or one that arrives while a newer
+change waits. The server takes the hero from the sender's connection, never from the report.
+
+**The check** (`CareerSyncRules`): the career exists; the root choice comes first; every other choice is
+replayed in order through `CareerChoiceRules.CanTake` against `GetMaxChoicesForHero` for the hero's
+level on the server, so a foreign, duplicate or locked choice, a full fork, a keystone lock and one
+choice too many are refused; tiers are 1 to 3; a flag must be the career's `career_tree_vN` stamp or a
+`GrantAttributeFlag` reward of a career quest. A cleared career is accepted. Ids are capped at 128
+characters, lists at 64 entries. A refused report is logged and the sender gets the server's copy back
+with `{=taom_career_sync_refused}`; when the server holds nothing, the sender keeps its own and sees no line.
+
+**Known limits.**
+- Tier unlocks and quest flags are client-asserted: career quests run on the player's own machine
+  (`CareerQuestService.cs:117-125`), so the server can bound them but cannot prove them.
+- Eligibility for the hero's culture is logged, not enforced: a possessed hero can carry another culture
+  than the one picked.
+- The level check is strict: a choice taken right after a level-up that has not reached the server yet is
+  refused and set back (logged).
+- A guest hero's death clears its career on the server: `CareerCampaignBehavior.OnHeroKilled` skips only
+  `Hero.MainHero`, which on the server is nobody's, and the clear is passed on to every player.
+- The server's passive cache now holds every player's career, so server-side models that read career
+  passives (party healing, troop survival) apply them to players' parties. Intended; owed an in-game check.
+- Transitions are client-asserted: the server checks the career a report shows, never the step from
+  the copy it holds. So it does not see a fork pick refunded after the visit it was taken in
+  (`CareerChoiceRules.CanRefund`, lock on leave), nor whether the gold for a retrain or for leaving a
+  career that holds a fork pick was paid (`CareerSwitchService.GetSwitchCost`, `SwitchCareer`). The guest's
+  own client refuses the paid switch and the retrain (`{=taom_career_coop_gold_off}`, the
+  `CareerSwitchDialogueBehavior` row above); a modified client could still report the result.
+- A client without TAOM.CoopCompat keeps the old behaviour: its career stays on its own PC.
+
+**Configuration.** TAOM's settings, Co-op, "Sync careers for co-op players" (`CoopCareerSync`, default
+on), read through `CoopSettingsProvider` in the co-op server process for each report. A dedicated server
+takes it from `taom-server-settings.json`, which `ServerSettingsSource` reads once per process, so a
+change there needs a server restart ([server settings](server-settings.md)). It is in the settings
+fingerprint: it changes what the server stores and sends.
+
+**Tests.** `CareerDataServiceTests` (event and apply), `CareerSyncRulesTests` (each refusal, a real
+shipped career taken to its limit), `CareerSyncHostTests`, `CareerSyncClientTests` (one report per
+action, stale answers dropped), `CareerSyncWiringTests`, `CoopSettingsProviderTests`.
 
 ## Mission behaviors (#967 C7)
 
