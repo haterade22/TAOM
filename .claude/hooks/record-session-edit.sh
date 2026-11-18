@@ -12,8 +12,11 @@
 # WHAT IT DOES
 # 1. Appends <epoch><TAB><path> to .claude/logs/sessions/<session id>.edits on every call, for every
 #    file type. A subagent's payload carries its parent's session_id, so its edits count there.
-# 2. When that ledger is new, deletes ledger files older than 7 days. A ledger over 4,000 lines
-#    keeps its last 2,000 (the size cap in hook-authoring.md).
+#    When the payload also has an agent_id (a subagent's), the same line goes to
+#    <session id>.<agent id>.aedits too, which check-subagent-verification.sh (SubagentStop) reads.
+#    That append comes before every early exit below.
+# 2. When that ledger is new, deletes ledger and agent files older than 7 days. A ledger over 4,000
+#    lines keeps its last 2,000 (the size cap in hook-authoring.md).
 # 3. Cross-session note: when another session's ledger, modified in the last 24 hours, holds the same
 #    path (case folded) with an epoch in the last 24 hours, and this session has not been told about
 #    that (other session, path) pair (<id>.warned), it records the pairs, then sends one
@@ -50,10 +53,16 @@ NOW=${EPOCHSECONDS:-$(date +%s)}
 if [[ ! -f "$EDITS" ]]; then
     mkdir -p "$DIR" 2>/dev/null || exit 0
     # 10,080 minutes is 7 days. Bounded to the one folder.
-    find "$DIR" -maxdepth 1 -type f \( -name '*.edits' -o -name '*.verified' -o -name '*.reminded' -o -name '*.warned' \) \
-        -mmin +10080 -delete 2>/dev/null
+    find "$DIR" -maxdepth 1 -type f \( -name '*.edits' -o -name '*.verified' -o -name '*.reminded' -o -name '*.warned' \
+        -o -name '*.aedits' -o -name '*.averified' -o -name '*.areminded' \) -mmin +10080 -delete 2>/dev/null
 fi
 printf '%s\t%s\n' "$NOW" "$FILE_PATH" >> "$EDITS" 2>/dev/null || exit 0
+# A subagent's own ledger (_session_ledger.sh). Its suffix never matches the *.edits globs below or in
+# check-verification-evidence.sh, so it is never read as another session's claim.
+taom_agent_id "$INPUT"
+if [[ -n "$TAOM_AID" ]]; then
+    { printf '%s\t%s\n' "$NOW" "$FILE_PATH" >> "$DIR/$SID.$TAOM_AID.aedits"; } 2>/dev/null
+fi
 
 LINES=$(wc -l < "$EDITS" 2>/dev/null)
 LINES=${LINES//[!0-9]/}

@@ -67,7 +67,7 @@ hoc); `/deep-review` before every commit touching C# or XML/XSLT; `/verify` befo
 | Patch, model or reflection bindings after an engine or patch change | the binding gate: `docs/reference/taleworlds-api-snapshot/README.md` | |
 | An architectural decision | `docs/adrs/000-template.md` | |
 | Offer, don't auto-invoke | `/freeze`, `/unfreeze` | |
-| Never auto-invoke | `/review-codex` (paid), `/issue` (public) | |
+| Never auto-invoke | `/review-codex` (paid), `/issue` (public), `/manage` (public, starts workers) | |
 
 ## Subagents
 

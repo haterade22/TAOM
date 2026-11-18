@@ -24,6 +24,17 @@ A run is owed when in-game evidence is missing for the change, not for its own s
 If neither holds, or the check is outside Fords and Long Defeat (no driver exists for it), stop and say what a person must play instead. Do not run
 the game to feel safe.
 
+**Run now, or wait and run once** (Mike, 2026-11-18). The game takes the whole PC, so ask one question before each run: does the
+next step of your task depend on this result?
+
+- **Yes:** run now.
+- **No:** do not run yet. Write the owed check down where the run will find it (its manifest under `tools/ingame_checks/`, or a line
+  in your task list), go on with your tasks and sub-tasks, and do one run at the end that covers every check you collected.
+
+Either way, one run proves as much as it can. Before Phase 4, list what else is owed with
+`python tools/ingame_verdict.py --owed`, and choose the driver, scene and arguments that reach the most of those checks beside your
+own. A longer run that settles five checks beats five runs.
+
 ## Phase 2: Gate
 
 The maintainer's standing decision (2026-11-01): start without asking only when **no `Bannerlord.exe` is running and the PC has had
@@ -37,6 +48,7 @@ python tools/run_fords_autorun.py --dry-run
 The dry run prints the idle state and the preflight. If it says `ok`, go to Phase 3. If a game is running or the input age is under
 600 s, ask once with `AskUserQuestion` (run now, run later, or skip) unless the maintainer already said yes to a run this session.
 Only after that yes, pass `--require-idle-minutes 0` in Phase 4. Never kill or wait out someone's running game.
+A `/manage` tick never asks: when the dry run does not say `ok`, it skips the run and lists the check as still owed.
 
 ## Phase 3: Build and deploy the tree under test
 
@@ -78,6 +90,21 @@ With `--control-check`, also read the `[FordsOfWar][Control]` lines in the copie
 With `--screenshots`, the Fords runner leaves PNG files in the run folder: Read each one and quote what it shows against the claim. A `[[human]]` row stays a person's to check.
 
 A failed row is a finding to investigate, not to explain away. A crash goes to `/native-crash-triage` or `/investigate`.
+
+Then judge everything else the run reached, not only your own check: `python tools/ingame_verdict.py --owed --format md` (never
+`--post`). A verdict for another issue counts only when the deployed build holds that issue's change; put the run folder and the
+`[BuildStamp]` in a comment on that issue.
+
+**A defect outside your task** (an error, a failed row or a wrong result in code your change does not touch): do not fix it and do
+not drop it. In this order (Mike, 2026-11-18):
+
+1. Deconflict. `python tools/work_claims.py list --others` and `gh issue list --state open --search "<symptom or file>"`. When a
+   `manager-tick` claim is live, tell that session (SendMessage) and let it route the finding. With no manager, ask the session whose
+   claim covers that area.
+2. An open issue exists: add the run folder and the log lines to it as a comment.
+3. Nobody owns it and no issue exists: file one with `/issue`, with the run folder as its evidence. This is the maintainer's
+   standing word for a defect that a game run shows; no further ask is needed.
+4. Go on with your own task. Name the finding and its issue in the Phase 7 report.
 
 ## Phase 6: Restore
 

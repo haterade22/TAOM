@@ -836,7 +836,7 @@ if [[ -e "$AM" ]]; then
 else
     bad "control: the probe did not fire on this bash; 4f proves nothing until it is updated"
 fi
-ACOMMON='"session_id":"'"$PROBE"'","cwd":"'"$PROBE"'","transcript_path":"'"$PROBE"'","source":"'"$PROBE"'","error":"'"$PROBE"'","duration_ms":"'"$PROBE"'","stop_hook_active":"'"$PROBE"'"'
+ACOMMON='"session_id":"'"$PROBE"'","cwd":"'"$PROBE"'","transcript_path":"'"$PROBE"'","source":"'"$PROBE"'","error":"'"$PROBE"'","duration_ms":"'"$PROBE"'","stop_hook_active":"'"$PROBE"'","agent_id":"'"$PROBE"'"'
 AP=("bash|{\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"git commit -m $PROBE\"},\"hook_event_name\":\"PreToolUse\",$ACOMMON}"
     "edit|{\"tool_name\":\"Edit\",\"tool_input\":{\"file_path\":\"$PROBE\"},\"hook_event_name\":\"PreToolUse\",$ACOMMON}"
     "mcp|{\"tool_name\":\"mcp__taomprobe__x\",\"tool_input\":{},\"hook_event_name\":\"PreToolUse\",$ACOMMON}")
@@ -1309,9 +1309,17 @@ print(' '.join(sorted({h['command'].rsplit('/', 1)[-1]
 PY
 )
 [[ -z "$STOP_HOOKS" ]] && bad "no Stop registrations found in settings.json; the 7a discovery is broken"
-for name in $STOP_HOOKS; do
+# A SubagentStop hook reaches the subagent through the same channel, so the stderr rule binds it too.
+# Its block cases are in 7q; the sandbox loop below stays with the Stop hooks.
+SUBSTOP_HOOKS=$("$HPY" -c "
+import json
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+print(' '.join(sorted({h['command'].rsplit('/', 1)[-1]
+                       for g in d.get('hooks', {}).get('SubagentStop', [])
+                       for h in g.get('hooks', [])})))")
+for name in $STOP_HOOKS $SUBSTOP_HOOKS; do
     f=".claude/hooks/$name"
-    [[ -f "$f" ]] || { bad "$name is registered on Stop but missing from .claude/hooks/"; continue; }
+    [[ -f "$f" ]] || { bad "$name is registered on Stop or SubagentStop but missing from .claude/hooks/"; continue; }
     hit=$(grep -n '>&2' "$f" | grep -vE '^[0-9]+:[[:space:]]*#' | head -1 | cut -d: -f1)
     if [[ -n "$hit" ]]; then
         bad "$name:$hit writes to stderr, which Claude never sees from a Stop hook; use taom_stop_block"
@@ -4588,6 +4596,209 @@ NLINES=$(wc -l < "$NL/$SE.edits" | tr -d ' ')
     && ok "a ledger over 4,000 lines keeps its last 2,000" \
     || bad "a ledger of 4,001 lines kept $NLINES lines, last: $(tail -1 "$NL/$SE.edits")"
 rm -rf "$LR" "$NP"
+
+# ---------------------------------------------------------------------------
+head2 "7q. a subagent that edited C# is stopped once until it builds (check-subagent-verification)"
+# A subagent could end with edited C# and no build, and the parent's Stop reminder came once, after the
+# report. A subagent's payloads carry its parent's session_id plus its own agent_id, so the recorder
+# and the marker writer also keep <sid>.<aid>.aedits and <sid>.<aid>.averified, and the SubagentStop
+# hook blocks once per unbuilt streak under <sid>.<aid>.areminded. The new suffixes must never match
+# the *.edits globs that read another session's claims. Every step runs the real hooks against a
+# sandbox repo on a feature branch.
+SV="$SANDBOX/subagent-repo"
+SVL="$SV/.claude/logs/sessions"
+mkdir -p "$SV/Main" "$SV/.claude/logs"
+git -C "$SV" init -q 2>/dev/null
+printf 'class Foo {}\n' > "$SV/Main/Foo.cs"
+printf 'class Bar {}\n' > "$SV/Main/Bar.cs"
+git -C "$SV" add Main 2>/dev/null
+git -C "$SV" -c user.name=t -c user.email=t@example.invalid commit -qm init 2>/dev/null
+git -C "$SV" checkout -q -b feat/sv 2>/dev/null
+SV_M=$(cygpath -m "$SV" 2>/dev/null || echo "$SV")
+sv_pl() {  # $1 session id, $2 agent id (empty: a main-session call), $3 file_path: an Edit payload
+    "$HPY" -c 'import json, sys
+d = {"session_id": sys.argv[1], "hook_event_name": "PostToolUse", "tool_name": "Edit",
+     "tool_input": {"file_path": sys.argv[3], "old_string": "a", "new_string": "b"}}
+if sys.argv[2]: d.update(agent_id=sys.argv[2], agent_type="implementer")
+print(json.dumps(d))' "$1" "$2" "$3"
+}
+sv_rec() { lr_rec "$(sv_pl "$1" "$2" "$3")" "$SV"; }  # the recorder's stdout; rc and stderr as lr_rec keeps them
+sv_build() {  # $1 session id, $2 agent id: a dotnet test through the real marker writer
+    "$HPY" -c 'import json, sys
+d = {"session_id": sys.argv[1], "tool_name": "Bash", "hook_event_name": "PostToolUse",
+     "tool_input": {"command": "dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId="}}
+if sys.argv[2]: d.update(agent_id=sys.argv[2], agent_type="implementer")
+print(json.dumps(d))' "$1" "$2" \
+        | CLAUDE_PROJECT_DIR="$SV" timeout -k 2 10 bash "$REPO/.claude/hooks/mark-verification-run.sh" >/dev/null 2>&1
+}
+sv_stop_pl() {  # $1 session id, $2 agent id (empty: none), $3 stop_hook_active (default false)
+    "$HPY" -c 'import json, sys
+d = {"hook_event_name": "SubagentStop", "session_id": sys.argv[1], "agent_type": "implementer",
+     "stop_hook_active": sys.argv[3] == "true", "last_assistant_message": "x \"agent_id\":\"a1\""}
+if sys.argv[2]: d["agent_id"] = sys.argv[2]
+print(json.dumps(d))' "$1" "$2" "${3:-false}"
+}
+SV_REASON=""
+sv_expect() {  # $1 SubagentStop payload, $2 block|silent, $3 label, $4 text the reason must hold, $5 ERE it must not match
+    local out rc got
+    out=$(printf '%s' "$1" | CLAUDE_PROJECT_DIR="$SV" timeout -k 2 10 bash "$REPO/.claude/hooks/check-subagent-verification.sh" 2>"$SANDBOX/sv.err")
+    rc=$?
+    got=$(stop_shape "$out")
+    SV_REASON=$(printf '%s' "$out" | "$HPY" -c 'import json, sys
+try: print(json.loads(sys.stdin.read()).get("reason", ""))
+except Exception: pass' 2>/dev/null)
+    if [[ "$got" != "$2" || $rc != 0 || -s "$SANDBOX/sv.err" ]]; then
+        bad "check-subagent-verification: expected $2 ($3), got '$got', rc $rc, stderr: $(head -c 100 "$SANDBOX/sv.err" 2>/dev/null)"
+    elif [[ -n "${4:-}" && "$SV_REASON" != *"$4"* ]]; then
+        bad "check-subagent-verification ($3): the reason does not name '$4': ${SV_REASON:0:200}"
+    elif [[ -n "${5:-}" && "$SV_REASON" =~ $5 ]]; then
+        bad "check-subagent-verification ($3): the reason matches '$5': ${SV_REASON:0:200}"
+    else
+        ok "check-subagent-verification $3"
+    fi
+}
+sv_dirty() {  # $1 file under Main, $2 text: a dirty edit whose mtime is ahead of any marker
+    printf '%s\n' "$2" > "$SV/Main/$1"
+    touch -d "@$(( $(date +%s) + 3 ))" "$SV/Main/$1"
+}
+SV_NOW=$(date +%s)
+# The recorder: an agent's edit goes to the parent's ledger as before, and to the agent's own.
+sv_dirty Foo.cs 'class Foo { int a; }'
+note_none "$(sv_rec s1 a1 "$SV_M/Main/Foo.cs")" "is silent for a subagent's first edit of a file"
+if [[ -f "$SVL/s1.edits" && -f "$SVL/s1.a1.aedits" && "$(tail -1 "$SVL/s1.a1.aedits")" == "$(tail -1 "$SVL/s1.edits")" ]] \
+    && grep -qE $'^[0-9]+\t'"$SV_M/Main/Foo.cs\$" "$SVL/s1.a1.aedits"; then
+    ok "record-session-edit writes the agent's <sid>.<aid>.aedits and still the parent's <sid>.edits, one line each"
+else
+    bad "record-session-edit agent ledger wrong: $(ls -A "$SVL" 2>/dev/null | tr '\n' ' '), aedits: $(head -c 200 "$SVL/s1.a1.aedits" 2>/dev/null)"
+fi
+# The parent then edits the same file: the agent's .aedits is no other session's claim, so no note.
+note_none "$(sv_rec s1 '' "$SV_M/Main/Foo.cs")" "reads no agent ledger as another session's claim"
+SV_AE=$(find "$SVL" -maxdepth 1 -name '*.aedits' | wc -l | tr -d ' ')
+[[ "$SV_AE" == 1 ]] && ok "record-session-edit writes no agent ledger for a main-session edit" \
+    || bad "expected one .aedits after a main-session edit, found $SV_AE: $(ls -A "$SVL" | tr '\n' ' ')"
+# The SubagentStop hook needs both ids. Every payload's last_assistant_message holds an escaped
+# "agent_id":"a1", which is no id: read as one, the rows for no id and for agent a2 would block.
+sv_expect "$(sv_stop_pl s1 '')" silent "is silent for a payload with no agent id"
+# A ledger the hook would find under an empty session id: without it this row passes with no guard.
+cp "$SVL/s1.a1.aedits" "$SVL/.a1.aedits"
+sv_expect "$(sv_stop_pl '' a1)" silent "is silent for a payload with no session id"
+rm -f "$SVL/.a1.aedits" "$SVL/.a1.areminded"
+sv_expect "$(sv_stop_pl s1 a2)" silent "is silent for an agent with no ledger"
+sv_expect "$(sv_stop_pl s1 a1 true)" silent "is silent when stop_hook_active is true"
+[[ ! -e "$SVL/s1.a1.areminded" && ! -e "$SVL/s1.a2.areminded" ]] && ok "check-subagent-verification writes no marker when it stays silent" \
+    || bad "a silent check-subagent-verification wrote a streak marker: $(ls -A "$SVL" | tr '\n' ' ')"
+sv_expect "$(sv_stop_pl s1 a1)" block "blocks an agent that edited dirty C# with no build, and names the file" "($SV_M/Main/Foo.cs)"
+if [[ "$SV_REASON" == "check-subagent-verification: "* && "$SV_REASON" == *"dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId="* \
+      && "$SV_REASON" == *"dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId="* \
+      && "$SV_REASON" == *"If you are not claiming the work is done, say so in one line."* \
+      && "$SV_REASON" == *"This fires once per unbuilt streak."* ]]; then
+    ok "check-subagent-verification's reason names its hook, both commands, the decline line and the once-per-streak rule"
+else
+    bad "check-subagent-verification's reason is missing a required part: ${SV_REASON:0:400}"
+fi
+[[ -f "$SVL/s1.a1.areminded" ]] && ok "check-subagent-verification keeps its streak in <sid>.<aid>.areminded" \
+    || bad "no s1.a1.areminded after the block: $(ls -A "$SVL" | tr '\n' ' ')"
+sv_expect "$(sv_stop_pl s1 a1)" silent "is silent on the next stop: one block per streak"
+# Another agent's build, which also marks the parent session, does not end this agent's streak.
+rm -f "$SVL/s1.a1.areminded"
+touch -d "@$((SV_NOW - 10))" "$SV/Main/Foo.cs"
+sv_build s1 a2
+[[ -f "$SVL/s1.a2.averified" && -f "$SVL/s1.verified" && ! -e "$SVL/s1.a1.averified" ]] \
+    && ok "mark-verification-run touches the building agent's .averified and still the session's .verified" \
+    || bad "mark-verification-run agent markers wrong: $(ls -A "$SVL" | tr '\n' ' ')"
+sv_expect "$(sv_stop_pl s1 a1)" block "still blocks an agent after another agent's build" "Foo.cs"
+sv_build s1 a1
+sv_expect "$(sv_stop_pl s1 a1)" silent "is silent once the agent's own build ran"
+[[ ! -e "$SVL/s1.a1.areminded" ]] && ok "check-subagent-verification clears its marker once the agent built" \
+    || bad "s1.a1.areminded survived the agent's build: its next streak stays muted"
+# The next streak blocks again; a reverted edit is silent and clears the marker.
+sv_dirty Foo.cs 'class Foo { int b; }'
+sv_rec s1 a1 "$SV_M/Main/Foo.cs" >/dev/null
+sv_expect "$(sv_stop_pl s1 a1)" block "blocks again on the agent's next unbuilt edit" "Foo.cs"
+git -C "$SV" checkout -q -- Main/Foo.cs
+sv_expect "$(sv_stop_pl s1 a1)" silent "is silent once the agent's edit was reverted"
+[[ ! -e "$SVL/s1.a1.areminded" ]] && ok "check-subagent-verification clears its marker when the edit was reverted" \
+    || bad "s1.a1.areminded survived a reverted edit"
+# A continuation (stop_hook_active true) after the agent built still clears the marker, or the next
+# streak would stay muted (the plan 011 regression that 7a pins for the Stop hooks).
+sv_dirty Foo.cs 'class Foo { int c; }'
+sv_rec s1 a1 "$SV_M/Main/Foo.cs" >/dev/null
+sv_expect "$(sv_stop_pl s1 a1)" block "blocks at the start of a streak that ends in a continuation" "Foo.cs"
+touch -d "@$((SV_NOW - 10))" "$SV/Main/Foo.cs"
+sv_build s1 a1
+sv_expect "$(sv_stop_pl s1 a1 true)" silent "is silent in a continuation after the agent built"
+[[ ! -e "$SVL/s1.a1.areminded" ]] && ok "check-subagent-verification clears its marker in a continuation" \
+    || bad "s1.a1.areminded survived a continuation after the build: the next streak stays muted"
+git -C "$SV" checkout -q -- Main/Foo.cs
+# A new, untracked file still counts when the user's git config hides untracked files: the hook pins
+# --untracked-files=normal (lesson "Pin every git option a gate's answer depends on").
+sv_dirty Fresh.cs 'class Fresh {}'
+sv_rec s6 a6 "$SV_M/Main/Fresh.cs" >/dev/null
+export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=status.showUntrackedFiles GIT_CONFIG_VALUE_0=no
+sv_expect "$(sv_stop_pl s6 a6)" block "blocks for a new untracked file when git hides untracked files" "Fresh.cs"
+unset GIT_CONFIG_COUNT GIT_CONFIG_KEY_0 GIT_CONFIG_VALUE_0
+rm -f "$SV/Main/Fresh.cs"
+# Only C#, and at most three names, newest first.
+sv_dirty Notes.md 'notes'
+sv_rec s1 a4 "$SV_M/Main/Notes.md" >/dev/null
+sv_expect "$(sv_stop_pl s1 a4)" silent "is silent for an agent that edited only a non-C# file"
+rm -f "$SV/Main/Notes.md"
+for c in A B C D; do
+    sv_dirty "Cap$c.cs" "class Cap$c {}"
+    sv_rec s1 a3 "$SV_M/Main/Cap$c.cs" >/dev/null
+done
+sv_expect "$(sv_stop_pl s1 a3)" block "names the three newest of four edited files" \
+    "($SV_M/Main/CapD.cs, $SV_M/Main/CapC.cs, $SV_M/Main/CapB.cs)" 'CapA\.cs'
+rm -f "$SV"/Main/Cap?.cs
+# The parent's Stop hook is unchanged: it still reminds the parent for its agent's edit, and an agent
+# ledger is never read as a claim on C# that no session's ledger holds (branch 1b).
+LR_KEEP=${LR:-}; LR=$SV
+sv_dirty Bar.cs 'class Bar { int a; }'
+sv_rec s5 a5 "$SV_M/Main/Bar.cs" >/dev/null
+lr_expect "$(lr_stop_pl s5)" block "still reminds the parent session for its agent's edit" "this session edited C# after its last recorded build or test ($SV_M/Main/Bar.cs)"
+git -C "$SV" checkout -q -- Main/Bar.cs
+sv_dirty Shell.cs 'class Shell {}'
+printf '%s\t%s\n' "$(date +%s)" "$SV_M/Main/Shell.cs" > "$SVL/zz.ag.aedits"
+lr_expect "$(lr_stop_pl s6)" block "reads no agent ledger as a claim on C# no session's ledger holds" \
+    "no session's ledger holds it (Main/Shell.cs)"
+rm -f "$SV/Main/Shell.cs" "$SVL/zz.ag.aedits" "$SVL"/s6.*
+LR=$LR_KEEP
+# An agent id is kept to [A-Za-z0-9_-] and 64 characters: a path, shell or arithmetic probe in it
+# names no other folder and runs nothing.
+SV_EVIL="../x;${AO}touch $AM)\`touch $AM\`$PROBE"
+SV_SAFE=${SV_EVIL//[!A-Za-z0-9_-]/}; SV_SAFE=${SV_SAFE:0:64}
+sv_dirty Foo.cs 'class Foo { int e; }'
+printf '{"session_id":"sv","agent_id":"%s","hook_event_name":"PostToolUse","tool_name":"Edit","tool_input":{"file_path":"%s"}}' \
+    "$SV_EVIL" "$SV_M/Main/Foo.cs" > "$SANDBOX/sv-evil-edit.json"
+printf '{"session_id":"sv","agent_id":"%s","hook_event_name":"PostToolUse","tool_name":"Bash","tool_input":{"command":"dotnet build Main/TAOM.csproj"}}' \
+    "$SV_EVIL" > "$SANDBOX/sv-evil-build.json"
+printf '{"session_id":"sv","agent_id":"%s","hook_event_name":"SubagentStop","stop_hook_active":false}' "$SV_EVIL" > "$SANDBOX/sv-evil-stop.json"
+lr_rec "$(cat "$SANDBOX/sv-evil-edit.json")" "$SV" >/dev/null
+[[ -f "$SVL/sv.$SV_SAFE.aedits" ]] && ok "record-session-edit keeps an agent id to [A-Za-z0-9_-] and 64 characters" \
+    || bad "record-session-edit did not write sv.$SV_SAFE.aedits for a probe agent id: $(ls -A "$SVL" | tr '\n' ' ')"
+sv_expect "$(cat "$SANDBOX/sv-evil-stop.json")" block "blocks under a sanitized agent id" "Foo.cs"
+touch -d "@$((SV_NOW - 10))" "$SV/Main/Foo.cs"
+CLAUDE_PROJECT_DIR="$SV" timeout -k 2 10 bash "$REPO/.claude/hooks/mark-verification-run.sh" < "$SANDBOX/sv-evil-build.json" >/dev/null 2>&1
+sv_expect "$(cat "$SANDBOX/sv-evil-stop.json")" silent "is silent after the build of an agent with a sanitized id"
+SV_ODD=$(find "$SVL" -mindepth 1 -name '*[!A-Za-z0-9_.-]*' 2>/dev/null)
+if [[ -e "$AM" ]]; then
+    rm -f "$AM"; bad "a probe agent id ran as a command or as arithmetic"
+elif [[ -n "$SV_ODD" || -e "$SV/.claude/logs/x" || -e "$SV/.claude/x" ]]; then
+    bad "a probe agent id wrote a file outside the sanitized ledger names: $SV_ODD"
+else
+    ok "a probe agent id runs nothing and names no file outside the ledger folder"
+fi
+git -C "$SV" checkout -q -- Main/Foo.cs
+# Housekeeping: a new session's first edit deletes agent files older than 7 days, and only those.
+for s in aedits averified areminded; do
+    printf '1\tC:/old.cs\n' > "$SVL/old.ag.$s"; touch -d '8 days ago' "$SVL/old.ag.$s"
+done
+printf '1\tC:/old.cs\n' > "$SVL/two.ag.aedits"; touch -d '2 days ago' "$SVL/two.ag.aedits"
+sv_rec fresh-session '' "C:/proj/New.cs" >/dev/null
+[[ ! -e "$SVL/old.ag.aedits" && ! -e "$SVL/old.ag.averified" && ! -e "$SVL/old.ag.areminded" && -e "$SVL/two.ag.aedits" ]] \
+    && ok "a new ledger deletes agent files older than 7 days, and only those" \
+    || bad "the 7-day cleanup did not delete only the 8-day-old agent files: $(ls -A "$SVL" | tr '\n' ' ')"
+rm -rf "$SV"
 
 # ---------------------------------------------------------------------------
 head2 "8. tools/context_budget_scan.sh runs under set -u and measures the launch load"

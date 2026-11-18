@@ -3,8 +3,11 @@
 #
 # Touches .claude/logs/.verification-ran, and .claude/logs/sessions/<session id>.verified when the
 # payload has a session id (#1138, _session_ledger.sh), so the check-verification-evidence Stop
-# hook can tell whether C# source was edited AFTER the most recent verification.
-# Pairs with: check-verification-evidence.sh (Stop), record-session-edit.sh (the edit ledger).
+# hook can tell whether C# source was edited AFTER the most recent verification. When the payload
+# also has an agent_id (a subagent's build), it touches <session id>.<agent id>.averified too, which
+# check-subagent-verification.sh (SubagentStop) reads.
+# Pairs with: check-verification-evidence.sh (Stop), check-subagent-verification.sh (SubagentStop),
+# record-session-edit.sh (the edit ledger).
 #
 # Non-blocking; always exits 0. Concurrent invocations are safe: mkdir -p and
 # touch are idempotent and the hook never blocks.
@@ -118,6 +121,11 @@ if [[ $MARK -eq 1 ]]; then
       taom_ledger_dir
       mkdir -p "$TAOM_LEDGER_DIR" 2>/dev/null
       touch "$TAOM_LEDGER_DIR/$TAOM_SID.verified" 2>/dev/null || true
+      # The subagent's own marker: only its own build ends its SubagentStop streak.
+      taom_agent_id "$INPUT"
+      if [[ -n "$TAOM_AID" ]]; then
+        touch "$TAOM_LEDGER_DIR/$TAOM_SID.$TAOM_AID.averified" 2>/dev/null || true
+      fi
     fi
   fi
 fi

@@ -8,6 +8,8 @@ With no fresh user prompt, continue established work; don't start new work.
   step, a flagged cleanup. Save new ideas ("we could also refactor X") for the next interactive turn.
 - Reversible local actions (edits, tests, builds) are fine. Irreversible or shared ones (push, PR,
   branch delete, posting a comment) need authorization given for this run.
+- A `/manage` run the maintainer started (ADR-015) is the exception to both lines above: selecting
+  the next issue from `docs/goals.md` is its established work, and the ADR's stage is its authorization.
 - If the transcript doesn't make the next step obvious, stop and report rather than guess.
 - Once the run is established, never stop to ask "should I keep going?"; the user may be away. End
   only when the work is done, blocked, or the no-progress breaker below trips. Out of obvious

@@ -37,8 +37,10 @@ when the maintainer asks, drive execution, review and merge through agents. The 
   (`--issues` is the word to file); any paid call (Codex, the translator); protected-file edits;
   deleting what this run did not create; a deploy or a game run (`/game-run`), where a co-op session
   always goes first and the other sessions are told before and after. Ports to the other trunk are
-  his. Record every approval in PROGRESS.md "Authorizations" with its scope. Never ask him to paste a
-  key: a paid step reads it from an environment variable he sets.
+  his. A `/manage` run he started holds the words ADR-015 grants at its stage (its own branch pushes, issues,
+  idle game runs on the trunk build), never a merge. Record every approval in PROGRESS.md
+  "Authorizations" with its scope. Never ask him to paste a key: a paid step reads it from an
+  environment variable he sets.
 - **Models:** the scripts default every role to `claude-opus-5-5`. Choose a model and an effort per
   role and per item by [model-effort-selection](../../rules/model-effort-selection.md)
   (run-protocol "Models" has the table), and write the choice into PROGRESS.md. `deep-reviewer`
