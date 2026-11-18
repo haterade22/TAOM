@@ -17,6 +17,9 @@ Leg; the twohanded layout has no Item2) of each `player_career_{culture}_{archet
    needed to re-equip it), so a new character can put it back on;
 3. the lowest-level NON-VANILLA candidate first carried at level LEVEL_CAP or below wins;
    otherwise the lowest-level candidate at all (possibly vanilla). Ties: most carried, then id.
+4. a band clone a troop wears counts as its source, and a Body or Leg pick that is a band clone
+   source becomes its light clone (`career_armour`): the clone tool gives a career kit, a light-band
+   set, the same id.
 
 An item is vanilla when its mesh, or any crafting piece's mesh, is one vanilla SandBoxCore,
 Native or SandBox items or pieces use. Horse and HorseHarness are never touched. The file's
@@ -143,7 +146,8 @@ def placeholder_donors() -> dict[str, str]:
 def index_troop_gear(roots: list[ET.Element],
                      donor_of: dict[str, str] | None = None) -> dict[str, dict[str, tuple[int, int]]]:
     """culture -> item -> (lowest carrier level, entries naming it), battle gear of non-hero troops.
-    A placeholder is counted as its donor (`donor_of`, default the placeholder spec)."""
+    A placeholder is counted as its donor (`donor_of`, default the placeholder spec), a band clone as its source."""
+    import rebalance_armor as ra
     donor_of = placeholder_donors() if donor_of is None else donor_of
     found: dict[str, dict[str, list[int]]] = defaultdict(dict)
     for root in roots:
@@ -163,7 +167,7 @@ def index_troop_gear(roots: list[ET.Element],
                 item = _bare(eq.get("id"))
                 if not item:
                     continue
-                item = donor_of.get(item, item)
+                item = ra.band_clone_source(donor_of.get(item, item))
                 seen = found[culture].setdefault(item, [level, 0])
                 seen[0] = min(seen[0], level)
                 seen[1] += 1
@@ -248,12 +252,21 @@ def candidates(sources: Sources, culture: str, klass: str) -> list[Candidate]:
     return out
 
 
+def career_armour(item: str | None, table=None) -> str | None:
+    """The id a career kit carries for armour `item`: its light band clone when the clone spec has one
+    (generate_armour_band_clones.armour_for_band), else the item."""
+    import generate_armour_band_clones as gabc
+    return gabc.armour_for_band(item, "light", table)
+
+
 def derive_kits(sources: Sources) -> dict[tuple[str, str], dict[str, str | None]]:
     kits = {}
     for culture, archetype in sources.rosters:
-        kits[(culture, archetype)] = {
-            slot: pick(candidates(sources, culture, klass), is_launcher=klass in LAUNCHERS)
-            for slot, klass in slot_classes(culture, archetype).items()}
+        kit = {}
+        for slot, klass in slot_classes(culture, archetype).items():
+            item = pick(candidates(sources, culture, klass), is_launcher=klass in LAUNCHERS)
+            kit[slot] = career_armour(item) if klass in ARMOUR else item
+        kits[(culture, archetype)] = kit
     return kits
 
 

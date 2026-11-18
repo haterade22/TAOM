@@ -538,8 +538,8 @@
             <Equipment slot="Item0" id="Item.ladder_mirkwood_bow_t2" />
             <Equipment slot="Item1" id="Item.wm_mirkwood_arrow_a02" />
             <Equipment slot="Item2" id="Item.mirkwood_sword_a01" />
-            <Equipment slot="Body" id="Item.mkwd_inf3_chest" />
-            <Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+            <Equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
+            <Equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -548,8 +548,8 @@
             <Equipment slot="Item0" id="Item.ladder_mirkwood_bow_t2" />
             <Equipment slot="Item1" id="Item.wm_mirkwood_arrow_a02" />
             <Equipment slot="Item2" id="Item.mirkwood_sword_a01" />
-            <Equipment slot="Body" id="Item.mkwd_inf3_chest" />
-            <Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+            <Equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
+            <Equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -558,8 +558,8 @@
             <Equipment slot="Item0" id="Item.mirkwood_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
             <Equipment slot="Item2" id="Item.mirkwood_sword_a01" />
-            <Equipment slot="Body" id="Item.mkwd_inf3_chest" />
-            <Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+            <Equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
+            <Equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
             <Equipment slot="Horse" id="Item.taom_animalia_elk_a" />
             <Equipment slot="HorseHarness" id="Item.taom_elk_saddle_a" />
         </EquipmentSet>
@@ -570,8 +570,8 @@
             <Equipment slot="Item0" id="Item.mirkwood_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
             <Equipment slot="Item2" id="Item.mirkwood_sword_a01" />
-            <Equipment slot="Body" id="Item.mkwd_inf3_chest" />
-            <Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+            <Equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
+            <Equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
             <Equipment slot="Horse" id="Item.taom_animalia_elk_a" />
             <Equipment slot="HorseHarness" id="Item.taom_elk_saddle_a" />
         </EquipmentSet>
@@ -582,8 +582,8 @@
             <Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
             <Equipment slot="Item2" id="Item.mirkwood_spear_a01" />
-            <Equipment slot="Body" id="Item.mkwd_inf3_chest" />
-            <Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+            <Equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
+            <Equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -592,8 +592,8 @@
             <Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
             <Equipment slot="Item2" id="Item.mirkwood_spear_a01" />
-            <Equipment slot="Body" id="Item.mkwd_inf3_chest" />
-            <Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+            <Equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
+            <Equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
         </EquipmentSet>
     </EquipmentRoster>
 

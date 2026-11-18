@@ -785,6 +785,27 @@ class SizingAndUnionTests(unittest.TestCase):
         self.assertIn(("texture", "t1"), assets)
         self.assertIn(("MATERIAL_UNDECODED", "mat_bad", "P/AssetPackages/pack0.tpac"), assets.misses)
 
+    def test_material_texture_slots_keep_the_slot_of_each_texture(self):
+        # slot 0 is the engine's DiffuseMap; mesh_assets drops the slot, this helper keeps it
+        mat = ("material", "mat_s", guid_for("material:mat_s"),
+               encode_material_meta(SHADER, [(0, guid_for("texture:t_d")), (1, guid_for("texture:t_n")),
+                                             (0, guid_for("texture:t_d2")), (2, guid_for("texture:nowhere"))]), [])
+        index = build_index(self.root / "slots", [texture_item("t_d"), texture_item("t_n"), texture_item("t_d2"), mat,
+                                                  mesh_item("m", guid_for("material:mat_s"), render=b"r")])
+        slots = self.abem.material_texture_slots(index.get("metamesh", "m"), index)
+        self.assertEqual(slots, {0: {"t_d", "t_d2"}, 1: {"t_n"}})   # an unindexed texture is left out
+        # the existing readers are unchanged: the same textures, slot-less
+        assets = self.abem.mesh_assets(index.get("metamesh", "m"), index)
+        self.assertEqual(sorted(k for k in assets if k[0] == "texture"),
+                         [("texture", "t_d"), ("texture", "t_d2"), ("texture", "t_n")])
+
+    def test_material_texture_slots_are_empty_when_no_material_decodes(self):
+        bad = ("material", "mat_bad", guid_for("material:mat_bad"),
+               b"\xff" * 30 + guid_for("texture:t1") + b"\xff" * 30, [])
+        index = build_index(self.root / "bad2", [texture_item("t1"), bad,
+                                                mesh_item("m", guid_for("material:mat_bad"), render=b"r")])
+        self.assertEqual(self.abem.material_texture_slots(index.get("metamesh", "m"), index), {})
+
     def test_unindexed_texture_guid_is_reported(self):
         index = build_index(self.root / "tx", [material_item("mat_lost", ["nowhere"]),
                                               mesh_item("m", mat_guid("mat_lost"), render=b"r")])

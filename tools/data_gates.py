@@ -108,7 +108,9 @@ BAND_CLONE_GLOBS = ("*/armour_band_clones/*", "*tools/armour_band_clones.json", 
                     "*tools/realm_troops.py", "*tools/generate_lothlorien_troops.py", "*tools/generate_snow_orc_troops.py",
                     "*tools/generate_new_faction_kingdoms.py", "*tools/generate_lothlorien_armor.py",
                     "*tools/generate_enlistment_rosters.py", "*tools/loc_inline_backlog.json",
-                    "*tools/data/armor_roster_tiers.json", "*/submodule.xml") + ARMOUR_CURVE_GLOBS + TROOP_GLOBS + ARMORY_GLOBS
+                    "*tools/data/armor_roster_tiers.json", "*/submodule.xml", "*tools/scan_armour_colours.py",
+                    "*tools/armour_colour_overrides.json", "*tools/data/armour_colour_families.json"
+                    ) + ARMOUR_CURVE_GLOBS + TROOP_GLOBS + ARMORY_GLOBS
 CREATURE_GLOBS = ("*/action_sets.xml", "*/action_types.xml", "*/monster_usage_sets.xml", "*/monsters/*.xml",
                   "*/lotr_monster_*.xml")
 FBX_GLOBS = ("*/assetsources/*.fbx",)
@@ -135,7 +137,9 @@ GATES = (
          "TAOM_Map settlements", TROOP_GLOBS + MODULEDATA_GLOBS + ARMORY_GLOBS + MAP_GLOBS
          # The enlistment rank rule lives in the generator and prices weapons with these tools (#1290).
          + ("*tools/generate_enlistment_rosters.py", "*tools/melee_catalogue.py", "*tools/analyze_melee_ladder.py",
-            "*tools/ranged_ladder.py", "*tools/audit_polearm_shield_parity.py"),
+            "*tools/ranged_ladder.py", "*tools/audit_polearm_shield_parity.py",
+            # ARMOUR_COLOUR_CLASH reads the colour table and its scanner's clash rule (2026-11-18).
+            "*tools/data/armour_colour_families.json", "*tools/scan_armour_colours.py"),
          ("python", "tools/validate_moduledata.py"),
          (".claude/rules/moduledata-validation.md", ".claude/rules/troops.md", ".claude/rules/xml-data.md", CODES_DOC),
          note="read the warnings as well as the errors; settlement pins live in tools/settlement_assignments.json"),
@@ -143,7 +147,11 @@ GATES = (
          TROOP_GLOBS + ("*/taom_lord_skill_sets.xml", "*tools/apply_culture_skills_traits.py"),
          ("python", "-m", "unittest", "tools.tests.test_generator_regions_in_sync"), (".claude/rules/data-scripts.md",),
          note="a hand edit inside a generator's region fails it: change the generator's table, then --apply"),
-    Gate("career-kits", "troops, characters, rosters", TROOP_GLOBS,
+    Gate("career-kits", "troops, characters, rosters, the career tool, the band clone spec and tool",
+         # career_armour gives a career kit its light band clone through generate_armour_band_clones.armour_for_band,
+         # which reads the clone spec and prices through rebalance_armor.
+         TROOP_GLOBS + ("*tools/generate_career_kits.py", "*tools/armour_band_clones.json",
+                        "*tools/generate_armour_band_clones.py") + ARMOUR_CURVE_GLOBS,
          ("python", "tools/generate_career_kits.py", "--verify"), ("docs/features/career-system.md",),
          note="after any troop add or delete, re-run every generator check, not only the validator"),
     Gate("name-loc", "troops, characters, language files, name generator sources", TROOP_GLOBS + LANG_GLOBS + NAME_LOC_GLOBS,
@@ -225,8 +233,20 @@ GATES = (
               "worn by a level 36+ and a level 30- troop, TOP_TIER_ARMOUR_WORN_LOW; a low set naming a source, "
               "BAND_CLONE_SOURCE_WORN_LOW), a shipped clone or piece is gone, or a step is owed (NEXT: a "
               "generator's --apply, the loc key count); exit 2 is NOT RUN (no Armory slot file), 3 a crash; after "
-              "--apply run derive_armor_tiers.py, the restat dry run, fix_lord_kits.py --values planned, "
+              "--apply run scan_armour_colours.py --apply and this --check again (a new clone or pick needs its colour "
+              "row), then derive_armor_tiers.py, the restat dry run, fix_lord_kits.py --values planned, "
               "generate_armour_classes.py --apply, then derive_armor_tiers.py again (armor-balance.md, Commands)"),
+    Gate("armour-colours", "armour colour families, their overrides, the scanner, the Armory art, the clone and lord variant items",
+         ("*tools/scan_armour_colours.py", "*tools/armour_colour_overrides.json",
+          "*tools/data/armour_colour_families.json", "*tools/audit_battle_equipment_memory.py",
+          "*tools/audit_map_scene_memory.py",
+          # the art the scanner measures, and the TAOM items it reads through SubModule.xml
+          "*/lotrlome_armory/assetsources/*", "*/lotrlome_armory/assets/*", "*/lotrlome_armory/assetpackages/*",
+          "*/armour_band_clones/*", "*/lord_armour/*", "*/_module/submodule.xml") + ARMORY_GLOBS,
+         ("python", "tools/scan_armour_colours.py", "--check"), ("docs/features/armor-balance.md",),
+         note="exit 1 when tools/data/armour_colour_families.json differs from the install's art and the override file "
+              "(or an override row is bad); exit 2 is NOT RUN (no Armory, no texture image under the install, no numpy "
+              "or Pillow), exit 3 a crash; repair: --apply, then generate_armour_band_clones.py --check"),
     Gate("armour-band-clone-meshes", "armour band clones", ("*/armour_band_clones/*",),
          ("python", "tools/validate_mesh_refs.py", "--items", "Main/_Module/ModuleData/armour_band_clones",
           "--scan-bodies"),

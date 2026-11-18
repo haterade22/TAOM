@@ -2,7 +2,7 @@
   "_comment": "#1390: ModuleData files allowed to carry inline {=KEY}default text with no English row, with the number of such keys and why. InlineDataKeyTests fails on a file not listed here, on a count that differs, and on an entry whose keys are all registered. Fix a file by adding it to a generator category in generate_name_localization_strings.py, then drop its entry.",
   "files": {
     "armour_band_clones/armour_band_clones.xml": {
-      "keys": 24,
+      "keys": 27,
       "reason": "Armour band clones (2026-11-17) keep their Armory source's name key and text; the Armory's own language files translate those keys, so no TAOM row is owed."
     },
     "lord_armour/lord_armour_variants.xml": {
