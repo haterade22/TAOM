@@ -73,7 +73,7 @@ does today.
 | `SaveShield` on the `MISSION-INIT` chain | Swallows | Swallows (unchanged; a rethrow from `OnMissionTick` hangs the next frame, `Mission.cs:3749`, `:3594-3599`) |
 | Harmony census | Not written | Written at the end of `OnGameInitializationFinished` |
 | TAOM diplomacy veto (war / peace / alliance-end) | Enforced | **Off** — host is authoritative (see "Diplomacy ordering") |
-| TAOM time-acceleration UI (`MapBar` extra fast-forward + 4 layout patches + `MapTimeControlVM` mixin) | Registered | **Not registered** — BT owns `Campaign.TimeControlMode` |
+| TAOM time-acceleration UI (`MapBar` extra fast-forward + 4 layout patches + `MapTimeControlVM` mixin) | Registered | The five prefab extensions are **not registered**. The mixin is registered (since v2.0.40) and writes no multiplier, because every BT peer defers (`ShouldDeferToHost`); a click only calls vanilla's `ExecuteTimeControlChange`. BT owns `Campaign.TimeControlMode` |
 | Seasoned Hosts bonuses and steward skip ([seasoned-hosts.md](seasoned-hosts.md)) | AI lord skill XP multiplier and training bonus apply; the steward skip applies when its switch is on | **Off under BannerlordTogether, for a solo player too.** TAOM cannot read BT's host or client role, so `ShouldDeferToHost` holds on every peer: the two bonuses return the neutral answer and the Steward XP grant runs as vanilla. The learning floor still runs, from each peer's own setting. Under BannerlordCoop they apply on the host and off a client |
 | Eye of Sauron hunt ([eye-of-sauron.md](eye-of-sauron.md)) | Runs | **Off under BannerlordTogether, for a solo player too.** TAOM cannot read BT's host or client role, so `ShouldDeferToHost` holds on every peer: no hunt starts and a running one ends (the maintainer's call, E08). Under BannerlordCoop the hunt runs until a session goes live |
 
@@ -207,6 +207,11 @@ the client's first `OnGameStart` (since 2026-10-26; before that, `OnSubModuleLoa
 runtime check inside the mixin cannot un-inject an already-built widget. Solo play is untouched; the
 registered/suppressed counts are logged either way, which is the first thing to check if a TAOM
 widget goes missing.
+
+**Since v2.0.40** only the five prefab extensions carry `[CoopSuppressedUi]`. The mixin adds no widget and stays
+registered under co-op, because FactionUI's themed map bar binds its two fast-forward commands. Under BannerlordTogether
+every peer defers (`ShouldDeferToHost`), so the commands write no multiplier and only call vanilla's
+`ExecuteTimeControlChange`, the same call vanilla's own button makes.
 
 **Is the co-op flag reliable that early? Yes — verified, not assumed.** This is the only
 `CoopPresence` consumer that cannot self-correct later, so it mattered. Decompiled v1.4.7 (two
