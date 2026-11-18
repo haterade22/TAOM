@@ -37,6 +37,16 @@ namespace TAOM.Features.FactionUI.Campaign
                 _movieNode.SetSiblingIndex(last);
         }
 
+        // The root accepts events so GauntletLayer.HitTest counts the whole encyclopedia as a hit: the dimmer sits
+        // outside every movie, and without this a click there reached the screen under the encyclopedia (a Clan
+        // screen Done under it popped that screen and EncyclopediaData.OnTick then threw every frame). The root sits
+        // above every page, so it hands each event on to the header, the pages or the dimmer under it.
+        protected override bool OnPreviewMousePressed() => false;
+        protected override bool OnPreviewMouseReleased() => false;
+        protected override bool OnPreviewMouseAlternatePressed() => false;
+        protected override bool OnPreviewMouseAlternateReleased() => false;
+        protected override bool OnPreviewMouseMove() => false;
+
         protected override void OnDisconnectedFromRoot()
         {
             base.OnDisconnectedFromRoot();
