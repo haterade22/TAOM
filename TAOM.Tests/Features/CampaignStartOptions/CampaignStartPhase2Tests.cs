@@ -434,6 +434,21 @@ public class CampaignStartPhase2Tests
         StringAssert.Contains(sut.List(), "war_can_be_won", "list stays readable");
     }
 
+    [TestMethod]
+    public void Editor_OnACoopHost_RefusesToWrite()
+    {
+        PinAllAsMcm();
+        _coop.IsSessionActive.Returns(true);
+        var before = new Dictionary<string, object>(_data.Values);
+        var sut = Editor(out _);
+
+        var reply = sut.Set("war_can_be_won", "on");
+
+        StringAssert.Contains(reply, "Refused");
+        CollectionAssert.AreEquivalent(before, _data.Values);
+        _partySizeCache.DidNotReceive().InvalidateAll();
+    }
+
     [DataTestMethod]
     [DataRow("war_day1", "40", 40, 44)]
     [DataRow("war_day2", "80", 30, 80)]

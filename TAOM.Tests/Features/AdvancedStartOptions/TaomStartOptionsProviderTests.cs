@@ -412,6 +412,8 @@ public class TaomStartOptionsProviderTests
     {
         CampaignStartOptionKeys.StartDateOption, CampaignStartOptionKeys.CustomDay1Option,
         CampaignStartOptionKeys.CustomDay2Option, CampaignStartOptionKeys.TroopWeightOption,
+        CampaignStartOptionKeys.WarCanBeWonOption, CampaignStartOptionKeys.EyeHuntersOption,
+        CampaignStartOptionKeys.LargeAiArmiesOption, CampaignStartOptionKeys.AlignmentPresetOption,
     };
 
     private static readonly string[] CampaignListItemIds =
@@ -419,6 +421,8 @@ public class TaomStartOptionsProviderTests
         CampaignStartOptionKeys.WarOfTheRingScenarioItem, CampaignStartOptionKeys.SandboxScenarioItem,
         CampaignStartOptionKeys.StartEarlyItem, CampaignStartOptionKeys.StartStandardItem,
         CampaignStartOptionKeys.StartLateItem, CampaignStartOptionKeys.StartCustomItem,
+        CampaignStartOptionKeys.AlignmentStandardItem, CampaignStartOptionKeys.AlignmentStrictItem,
+        CampaignStartOptionKeys.AlignmentRelaxedItem,
     };
 
     [TestMethod]
@@ -447,7 +451,7 @@ public class TaomStartOptionsProviderTests
     public void TheScenarioValues_HaveTheirInGameNamesInModuleStrings()
     {
         // The Escape-menu summary reads str_advanced_start_value_name through GameTexts.FindText, and only for the
-        // Scenario list and the five vanilla scenario parameters, so the start-date and alignment items need no
+        // Scenario list and the six vanilla scenario parameters, so the start-date and alignment items need no
         // row. Vanilla's "none" row says "Default"; the same-id row here says Sandbox.
         var ids = StringIds("taom_module_strings.xml");
         var missing = new[] { CampaignStartOptionKeys.WarOfTheRingScenarioItem, CampaignStartOptionKeys.SandboxScenarioItem }

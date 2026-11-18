@@ -6,6 +6,7 @@ namespace TAOM.Adapters;
 /// <summary>
 /// The current campaign's Advanced Start Options data (<c>Campaign.Current.AdvancedStartData</c>), which
 /// the engine saves with the campaign. Typed values only, so the services above never see an engine type.
+/// T must be bool, int, uint, float or string: the engine registers only those AdvancedStartData&lt;T&gt; types for save.
 /// </summary>
 public interface IAdvancedStartDataAdapter
 {

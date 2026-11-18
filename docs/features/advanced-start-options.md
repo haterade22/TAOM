@@ -88,7 +88,7 @@ Two id families, two readers, two files (count the rows with the greps in the ta
 | Family | Reader | Manager it reads | File |
 |---|---|---|---|
 | `str_campaign_starting_options_item_name.<id>` (the list entry, and the `{Token}` interpolation in scenario text via `AdvancedStartOptions.SetTextVariables`), `_description.<option>`, `_item_description.<item>` | the main-menu screen: `AdvancedStartOptions.cs:62/73`, `AdvancedStartOption.cs:77`, `ListAdvancedStartOption.cs:64/70`, the category and locked-reason lookups in `SandBox.ViewModelCollection` | `Module.CurrentModule.GlobalTextManager` | **`global_strings.xml`** (`grep -c "str_campaign_starting_options" Main/_Module/ModuleData/global_strings.xml`) |
-| `str_advanced_start_value_name.<id>` (the in-game Escape menu's starting-options summary, `AdvancedStartData.GetDisplayName`; the engine reads it only for the `Scenario` list and the five vanilla scenario parameters) | `GameTexts.FindText` | `Game.GameTextManager` | **`taom_module_strings.xml`** (`grep -c "str_advanced_start_value_name" Main/_Module/ModuleData/taom_module_strings.xml`) |
+| `str_advanced_start_value_name.<id>` (the in-game Escape menu's starting-options summary, `AdvancedStartData.GetDisplayName`; the engine reads it only for the `Scenario` list and the six vanilla scenario parameters) | `GameTexts.FindText` | `Game.GameTextManager` | **`taom_module_strings.xml`** (`grep -c "str_advanced_start_value_name" Main/_Module/ModuleData/taom_module_strings.xml`) |
 
 **The two managers are different objects with different loaders.** `Module.CurrentModule.GlobalTextManager`
 (Module.cs:110) is filled once by `GameTextManager.LoadDefaultTexts` (Module.cs:278, before any submodule
@@ -192,7 +192,7 @@ block, so the pairing is refused rather than left to chance.
   Calradia scenario and United Empire are hidden since 2026-11-18, so the other four faction pickers cannot be reached.
   Then start a campaign and open the Escape menu's starting-options summary: the Scenario line must read "War of the
   Ring" or "Sandbox (no scripted war)" (the `taom_war_of_the_ring` and `none` rows). The kingdom value names are not
-  checked there: the engine reads value names only for the Scenario and the five vanilla scenario parameters. The checks for the per-campaign options are in [campaign-start-options.md](campaign-start-options.md).
+  checked there: the engine reads value names only for the Scenario and the six vanilla scenario parameters. The checks for the per-campaign options are in [campaign-start-options.md](campaign-start-options.md).
 - A translator run for the seven kingdom names still in English: Cardolan, Rhudaur, Ered Luin, Anduin Vale, Angáladh, Dorwinion and South Rhovanion (they exist in all 12 languages as English fallback).
 - Decide whether Lindon and Goblin-town should be excluded from the Vassal start rather than falling
   back, once the fallback has been seen in play.

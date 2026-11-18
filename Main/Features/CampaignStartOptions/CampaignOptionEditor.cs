@@ -12,8 +12,8 @@ namespace TAOM.Features.CampaignStartOptions;
 /// <summary>
 /// Shows and changes the start choices the current campaign pinned (the <c>taom.campaign_option</c> console command).
 /// Every value is validated before it is written into the campaign's own option store; a bad value changes nothing.
-/// A campaign that never pinned (an older save) has nothing to change: it follows MCM. A co-op client refuses to write
-/// (the pinned values are save-backed and the host owns them). A write that sticks also drops the cached party size
+/// A campaign that never pinned (an older save) has nothing to change: it follows MCM. Every peer of a co-op session
+/// refuses to write: a client does not own the save, and Coop does not send a host's change to the clients. A write that sticks also drops the cached party size
 /// limits, so Troop Weight and Large AI armies apply at once, as the MCM path does.
 /// </summary>
 public sealed class CampaignOptionEditor
@@ -105,6 +105,8 @@ public sealed class CampaignOptionEditor
 
         if (!CoopSessionPolicy.MayWriteSaveBackedState(_coop.IsCoopClient))
             return "Refused: a co-op client does not change the host's campaign start choices.";
+        if (_coop.IsSessionActive)
+            return "Refused: during a co-op session the clients would keep the old start choices. Change them in single player.";
 
         var entry = Entries.FirstOrDefault(e => string.Equals(e.Name, name, StringComparison.OrdinalIgnoreCase));
         if (entry == null) return $"Unknown option '{name}'. Options: {Names}.";

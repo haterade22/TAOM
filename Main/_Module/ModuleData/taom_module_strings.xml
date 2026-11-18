@@ -2515,7 +2515,7 @@
 	<string id="taom_align_desertion" text="{=taom_align_desertion}{COUNT} troops deserted — they refuse to serve a lord of the opposing alignment." />
 
 	<!-- CampaignStartOptions: the one message shown after loading a campaign whose pinned start choices differ from the mod options -->
-	<string id="taom_cso_keeps_choices" text="{=taom_cso_keeps_choices}This campaign keeps the start choices it was created with, so later changes to them in the TAOM mod options do not apply to it. The console command taom.campaign_option lists and changes them." />
+	<string id="taom_cso_keeps_choices" text="{=taom_cso_keeps_choices}This campaign keeps the start choices it was created with, so later changes to them in the TAOM mod options do not apply to it. With cheat mode on, the console command taom.campaign_option lists and changes them." />
 
 	<!-- TroopWeight — party-size-limit breakdown label (2026-07-11 count->limit rework) -->
 	<string id="taom_troop_weight_size" text="{=taom_troop_weight_size}Heavy troops" />
@@ -3136,7 +3136,7 @@
        ==================================================================== -->
 
 	<!-- Per-campaign start options: the Escape-menu name of each Scenario value. The engine reads value names only for the
-	     Scenario list and the five vanilla scenario parameters, so the start-date and alignment items need no row here.
+	     Scenario list and the six vanilla scenario parameters, so the start-date and alignment items need no row here.
 	     Vanilla's "none" row says "Default"; ours says Sandbox. -->
 	<string id="str_advanced_start_value_name.taom_war_of_the_ring" text="{=taom_aso_item_wotr}War of the Ring" />
 	<string id="str_advanced_start_value_name.none" text="{=taom_aso_item_sandbox}Sandbox (no scripted war)" />

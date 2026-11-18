@@ -122,8 +122,8 @@
 	<string id="str_campaign_starting_options_item_name.dorwinion" text="{=taom_aso_kingdom.dorwinion}Dorwinion" />
 	<string id="str_campaign_starting_options_item_name.southrhovanion" text="{=taom_aso_kingdom.southrhovanion}South Rhovanion" />
 
-	<!-- Scenario text that names Calradia directly. The United Empire scenario itself is
-	     removed by TaomStartOptionsProvider, so only the surviving scenarios are retitled. -->
+	<!-- Scenario text that names Calradia directly. The start screen no longer offers these scenarios
+	     (CampaignStartOptionsScreen hides them); the rows stay until a cleanup removes them. -->
 	<string id="str_campaign_starting_options_description.InvasionScenarioFactionId" text="{=taom_aso_desc_invasion}The faction that rules the majority of Middle-earth." />
 	<string id="str_campaign_starting_options_item_description.InvasionId" text="{=taom_aso_item_desc_invasion}{InvasionScenarioFactionId} dominates the vast majority of Middle-earth." />
 	<string id="str_campaign_starting_options_item_name.alternativecalradia" text="{=taom_aso_item_name_randomized}Randomized Middle-earth" />
@@ -167,7 +167,7 @@
 	<string id="str_campaign_starting_options_item_name.taom_alignment_standard" text="{=taom_aso_item_align_standard}Standard" />
 	<string id="str_campaign_starting_options_item_description.taom_alignment_standard" text="{=taom_aso_item_desc_align_standard}Follows the four alignment switches in the TAOM mod options." />
 	<string id="str_campaign_starting_options_item_name.taom_alignment_strict" text="{=taom_aso_item_align_strict}Strict" />
-	<string id="str_campaign_starting_options_item_description.taom_alignment_strict" text="{=taom_aso_item_desc_align_strict}Recruitment, marriage and desertion are blocked across the Free and Evil line, and your kingdom cannot ally across it." />
+	<string id="str_campaign_starting_options_item_description.taom_alignment_strict" text="{=taom_aso_item_desc_align_strict}Recruitment and marriage are blocked across the Free and Evil line, troops of the other side desert, and your kingdom cannot ally across it." />
 	<string id="str_campaign_starting_options_item_name.taom_alignment_relaxed" text="{=taom_aso_item_align_relaxed}Relaxed" />
 	<string id="str_campaign_starting_options_item_description.taom_alignment_relaxed" text="{=taom_aso_item_desc_align_relaxed}No alignment blocks and no alignment desertion, and your kingdom may ally with anyone." />
 

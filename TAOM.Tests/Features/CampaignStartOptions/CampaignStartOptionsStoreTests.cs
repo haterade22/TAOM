@@ -198,6 +198,7 @@ public class CampaignStartOptionsStoreTests
         SessionOver(sut).Begin();
 
         Assert.AreEqual((60, 90), sut.WarPhaseDays);
+        _logger.Received(1).LogInfo(Arg.Is<string>(m => m.StartsWith("CampaignStartOptions.Loaded:") && m.Contains("days=60/90")));
     }
 
     [TestMethod]

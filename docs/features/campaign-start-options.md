@@ -41,8 +41,8 @@ the engine (`CampaignOptions._advancedStartOptionsData`, `[SaveableField(26)]`) 
    `taom_rules` category with four Boolean toggles (Troop Weight, War can be won, Eye of Sauron hunters, Large AI armies) and the Alignment rules list. The vanilla war scenarios and United Empire are no longer offered
    (owner decision 2026-11-18); another mod's scenario item is kept. United Empire merges the factions that hold the
    three imperial StringIds (Dunland, Gondor and Mordor here) into a kingdom named "Calradian Empire", and its code branches
-   on `Culture.StringId == "empire"`, which is true only for Dunland in TAOM, so picking Gondor or Mordor as the unifier leaves
-   the player ruling an empty shell. Each default is what MCM, else the JSON, says.
+   on `Culture.StringId == "empire"`, which is true only for Dunland in TAOM, so a King, Vassal or Mercenary start in Gondor or
+   Mordor leaves the player in an empty, fief-less kingdom beside the merged one; the unifier pick does not change this. Each default is what MCM, else the JSON, says.
 2. **The pin** (`CampaignStartSession.Begin`, called from `SubModule.OnGameStart`): on a **new** campaign it resolves the
    screen's keys plus the defaults (`CampaignStartOptionsResolver`, pure) and adds the resolved keys to the campaign's own
    option data: `taom_cso_version` (1), `taom_cso_wotr`, `taom_cso_wotr_day1`, `taom_cso_wotr_day2`, `taom_cso_troop_weight`,
@@ -80,7 +80,8 @@ A preset fixes only these four master switches; the "Apply to player / AI / part
 ### Mismatch message
 
 `CampaignStartOptionsBehavior` (declared by `CampaignStartOptionsModule`, one instance per campaign start) listens to
-`OnSessionLaunchedEvent` and, once per game session, asks `CampaignStartMismatchNotice`. On a **loaded** campaign (never a
+`OnSessionLaunchedEvent` and, once per game session, asks `CampaignStartMismatchNotice`. `Begin()` also logs one
+`CampaignStartOptions.Loaded:` line with the pinned values of a loaded campaign, so a bug report shows the rules it runs. On a **loaded** campaign (never a
 new one) where any pinned value differs from what MCM, else JSON, gives a new campaign now (`CampaignStartMismatch`, pure),
 it shows one information message through `ICampaignStartNoticeAdapter` (text key `taom_cso_keeps_choices`) and logs
 `CampaignStartOptions.Mismatch`. Only pinned values count. The check is inside a try; a fault logs a warning and nothing else.
@@ -98,9 +99,16 @@ campaign's own option data, so a save keeps the change. It logs `CampaignStartOp
 what a changed value does mid-campaign is up to its feature (a phase that already fired stays fired). A write that
 sticks also drops the cached party size limits (`IPartySizeCacheInvalidator.InvalidateAll`, as the MCM path does), so
 `troop_weight` and `large_ai_armies` apply at once. A co-op client is refused, like the other save-backed cheats
-(`CoopSessionPolicy.MayWriteSaveBackedState`). Setting `war_day1` or `war_day2` while the stored pair is missing or
+(`CoopSessionPolicy.MayWriteSaveBackedState`). The host and a server console are refused too while a session is
+live: Coop does not send `AdvancedStartData` to the clients, so they would keep the old values until they rejoin. Setting `war_day1` or `war_day2` while the stored pair is missing or
 invalid writes both days, so the pair becomes valid. The MCM days are clamped once, in
 `CampaignStartDefaultsProvider.Current()`, so `list` and the mismatch check compare the same pair the pin writes.
+
+Side effects on other tools: the co-op settings fingerprint still hashes the MCM values of these rules, so in a pinned
+campaign a difference there no longer means the two peers simulate differently. On a dedicated server,
+`taom-server-settings.json` sets only the defaults for a new campaign for these keys; a pinned save keeps its own. The
+Escape menu names the scenario only when the player picked one that differs from the screen default, and a console
+`set war_of_the_ring` does not change that label.
 
 ### Component Diagram
 

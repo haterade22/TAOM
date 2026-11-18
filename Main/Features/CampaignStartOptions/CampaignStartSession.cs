@@ -33,6 +33,14 @@ public sealed class CampaignStartSession : ICampaignStartSession
             Pin();
             _store.Reload();
         }
+        else if (_store.IsPinned)
+        {
+            var days = _store.WarPhaseDays;
+            _logger.LogInfo(
+                $"CampaignStartOptions.Loaded: warOfTheRing={_store.WarOfTheRing} days={(days.HasValue ? $"{days.Value.Phase1Day}/{days.Value.Phase2Day}" : "")} "
+                + $"troopWeight={_store.TroopWeight} warCanBeWon={_store.MomentumVictory} eyeHunters={_store.EyeOfSauron} "
+                + $"largeAiArmies={_store.AiPartyScaling} alignment={_store.AlignmentPreset}");
+        }
     }
 
     private void Pin()
