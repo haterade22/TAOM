@@ -48,6 +48,16 @@ public class WireContractNamesTests
         Layout(typeof(CoopCompatTradeReply)));
 
     [TestMethod]
+    public void CareerReport_Layout() => Assert.AreEqual(
+        "TAOM.CoopCompat.Messages.CoopCompatCareerReport: 1=ProtocolVersion, 2=Sequence, 3=JoinReport, 4=HeroId, 5=CareerId, 6=Choices, 7=Tiers, 8=Flags",
+        Layout(typeof(CoopCompatCareerReport)));
+
+    [TestMethod]
+    public void CareerUpdate_Layout() => Assert.AreEqual(
+        "TAOM.CoopCompat.Messages.CoopCompatCareerUpdate: 1=ProtocolVersion, 2=Sequence, 3=HeroId, 4=CareerId, 5=Choices, 6=Tiers, 7=Flags, 8=Refused, 9=Known",
+        Layout(typeof(CoopCompatCareerUpdate)));
+
+    [TestMethod]
     public void EveryContractInTheNamespace_IsPinned()
     {
         var names = typeof(CoopCompatHello).Assembly.GetTypes()
@@ -56,6 +66,8 @@ public class WireContractNamesTests
 
         CollectionAssert.AreEqual(new[]
         {
+            "TAOM.CoopCompat.Messages.CoopCompatCareerReport",
+            "TAOM.CoopCompat.Messages.CoopCompatCareerUpdate",
             "TAOM.CoopCompat.Messages.CoopCompatHello",
             "TAOM.CoopCompat.Messages.CoopCompatHelloReply",
             "TAOM.CoopCompat.Messages.CoopCompatLdRunEnded",
@@ -70,7 +82,8 @@ public class WireContractNamesTests
     {
         // The constructor's initializers are what turn an empty repeated field back into an empty array.
         foreach (var t in new[] { typeof(CoopCompatHello), typeof(CoopCompatHelloReply), typeof(CoopCompatMomentumSnapshot),
-                     typeof(CoopCompatLdRunEnded), typeof(CoopCompatTradeRequest), typeof(CoopCompatTradeReply) })
+                     typeof(CoopCompatLdRunEnded), typeof(CoopCompatTradeRequest), typeof(CoopCompatTradeReply),
+                     typeof(CoopCompatCareerReport), typeof(CoopCompatCareerUpdate) })
         {
             var attr = (ProtoContractAttribute)t.GetCustomAttributes(typeof(ProtoContractAttribute), false).Single();
             Assert.IsFalse(attr.SkipConstructor, t.Name);
@@ -82,5 +95,7 @@ public class WireContractNamesTests
         Assert.IsTrue(typeof(IEvent).IsAssignableFrom(typeof(CoopCompatLdRunEnded)));
         Assert.IsTrue(typeof(ICommand).IsAssignableFrom(typeof(CoopCompatTradeRequest)));
         Assert.IsTrue(typeof(IEvent).IsAssignableFrom(typeof(CoopCompatTradeReply)));
+        Assert.IsTrue(typeof(ICommand).IsAssignableFrom(typeof(CoopCompatCareerReport)));
+        Assert.IsTrue(typeof(IEvent).IsAssignableFrom(typeof(CoopCompatCareerUpdate)));
     }
 }

@@ -61,6 +61,8 @@ public class CoopBindingTests
     {
         Method(typeof(INetwork), "Send", typeof(NetPeer), typeof(IMessage));
         Method(typeof(INetwork), "SendAll", typeof(IMessage));
+        // The career relay passes an accepted career to every player but its sender.
+        Method(typeof(INetwork), "SendAllBut", typeof(NetPeer), typeof(IMessage));
     }
 
     [TestMethod]

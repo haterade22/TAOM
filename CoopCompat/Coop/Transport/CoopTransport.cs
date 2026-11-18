@@ -48,6 +48,10 @@ public sealed class CoopTransport : ICoopTransport
 
     public event Action<CoopCompatTradeReply>? TradeReplyReceived;
 
+    public event Action<CoopPeer, string, CoopCompatCareerReport>? CareerReportReceived;
+
+    public event Action<CoopCompatCareerUpdate>? CareerUpdateReceived;
+
     public CoopRole CurrentRole
     {
         get
@@ -70,6 +74,8 @@ public sealed class CoopTransport : ICoopTransport
         broker.Subscribe<CoopCompatMomentumSnapshot>(OnSnapshot);
         broker.Subscribe<CoopCompatTradeRequest>(OnTradeRequest);
         broker.Subscribe<CoopCompatTradeReply>(OnTradeReply);
+        broker.Subscribe<CoopCompatCareerReport>(OnCareerReport);
+        broker.Subscribe<CoopCompatCareerUpdate>(OnCareerUpdate);
     }
 
     public bool SendToServer(CoopCompatHello message) => Send(CoopRole.Client, n => n.SendAll(message));
@@ -86,6 +92,16 @@ public sealed class CoopTransport : ICoopTransport
         peer.Handle is NetPeer target && Send(CoopRole.Server, n => n.Send(target, message));
 
     public bool Broadcast(CoopCompatMomentumSnapshot message) => Send(CoopRole.Server, n => n.SendAll(message));
+
+    public bool SendToServer(CoopCompatCareerReport message) => Send(CoopRole.Client, n => n.SendAll(message));
+
+    public bool SendToPeer(CoopPeer peer, CoopCompatCareerUpdate message) =>
+        peer.Handle is NetPeer target && Send(CoopRole.Server, n => n.Send(target, message));
+
+    public bool Broadcast(CoopCompatCareerUpdate message) => Send(CoopRole.Server, n => n.SendAll(message));
+
+    public bool BroadcastExcept(CoopPeer peer, CoopCompatCareerUpdate message) =>
+        peer.Handle is NetPeer excluded && Send(CoopRole.Server, n => n.SendAllBut(excluded, message));
 
     private bool Send(CoopRole required, Action<INetwork> send)
     {
@@ -148,6 +164,27 @@ public sealed class CoopTransport : ICoopTransport
 
         var reply = payload.What;
         _runOnGameThread(() => TradeReplyReceived?.Invoke(reply));
+    }
+
+    private void OnCareerReport(MessagePayload<CoopCompatCareerReport> payload)
+    {
+        if (CurrentRole != CoopRole.Server || payload.Who is not NetPeer netPeer) return;
+
+        var report = payload.What;
+        _runOnGameThread(() =>
+        {
+            // As for trade requests: the hero comes from the connection when the report is handled, never from the report.
+            var heroId = _heroOfPeer(netPeer) ?? "";
+            CareerReportReceived?.Invoke(new CoopPeer(netPeer, netPeer.Id.ToString()), heroId, report);
+        });
+    }
+
+    private void OnCareerUpdate(MessagePayload<CoopCompatCareerUpdate> payload)
+    {
+        if (CurrentRole != CoopRole.Client) return;
+
+        var update = payload.What;
+        _runOnGameThread(() => CareerUpdateReceived?.Invoke(update));
     }
 
     private static string? HeroOfConnectedPeer(NetPeer peer)

@@ -77,5 +77,30 @@ internal static class ContractSamples
         ArmouryLevel = 2,
     };
 
-    public static IMessage[] All() => new IMessage[] { Hello(), Reply(), Snapshot(), LdRunEnded(), TradeRequest(), TradeReply() };
+    public static CoopCompatCareerReport CareerReport() => new CoopCompatCareerReport
+    {
+        ProtocolVersion = 1,
+        Sequence = 9_000_000_001L,
+        JoinReport = true,
+        HeroId = "Player1",
+        CareerId = "ranger_of_ithilien",
+        Choices = new[] { "root", "fork_a" },
+        Tiers = new[] { 2, 3 },
+        Flags = new[] { "career_tree_v2" },
+    };
+
+    public static CoopCompatCareerUpdate CareerUpdate() => new CoopCompatCareerUpdate
+    {
+        ProtocolVersion = 1,
+        Sequence = 42,
+        HeroId = "Player2",
+        CareerId = "warden_of_fornost",
+        Choices = new[] { "root" },
+        Tiers = new[] { 2 },
+        Flags = new[] { "proven" },
+        Refused = true,
+        Known = true,
+    };
+
+    public static IMessage[] All() => new IMessage[] { Hello(), Reply(), Snapshot(), LdRunEnded(), TradeRequest(), TradeReply(), CareerReport(), CareerUpdate() };
 }

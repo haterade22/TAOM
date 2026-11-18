@@ -108,6 +108,55 @@ public class ContractRoundTripTests
     }
 
     [TestMethod]
+    public void CareerReport_RoundTrips()
+    {
+        var back = (CoopCompatCareerReport)RoundTrip(ContractSamples.CareerReport());
+
+        Assert.AreEqual(1, back.ProtocolVersion);
+        Assert.AreEqual(9_000_000_001L, back.Sequence);
+        Assert.IsTrue(back.JoinReport);
+        Assert.AreEqual("Player1", back.HeroId);
+        Assert.AreEqual("ranger_of_ithilien", back.CareerId);
+        CollectionAssert.AreEqual(new[] { "root", "fork_a" }, back.Choices, "the order is the order the choices were taken");
+        CollectionAssert.AreEqual(new[] { 2, 3 }, back.Tiers);
+        CollectionAssert.AreEqual(new[] { "career_tree_v2" }, back.Flags);
+    }
+
+    [TestMethod]
+    public void CareerUpdate_RoundTrips()
+    {
+        var back = (CoopCompatCareerUpdate)RoundTrip(ContractSamples.CareerUpdate());
+
+        Assert.AreEqual(1, back.ProtocolVersion);
+        Assert.AreEqual(42, back.Sequence);
+        Assert.AreEqual("Player2", back.HeroId);
+        Assert.AreEqual("warden_of_fornost", back.CareerId);
+        CollectionAssert.AreEqual(new[] { "root" }, back.Choices);
+        CollectionAssert.AreEqual(new[] { 2 }, back.Tiers);
+        CollectionAssert.AreEqual(new[] { "proven" }, back.Flags);
+        Assert.IsTrue(back.Refused);
+        Assert.IsTrue(back.Known);
+    }
+
+    [TestMethod]
+    public void CareerContracts_EmptyFields_RoundTripAsEmpty_NeverNull()
+    {
+        var report = (CoopCompatCareerReport)RoundTrip(new CoopCompatCareerReport { ProtocolVersion = 1 });
+        var update = (CoopCompatCareerUpdate)RoundTrip(new CoopCompatCareerUpdate { ProtocolVersion = 1 });
+
+        Assert.AreEqual("", report.HeroId);
+        Assert.AreEqual("", report.CareerId);
+        Assert.AreEqual(0, report.Choices.Length);
+        Assert.AreEqual(0, report.Tiers.Length);
+        Assert.AreEqual(0, report.Flags.Length);
+        Assert.AreEqual("", update.HeroId);
+        Assert.AreEqual("", update.CareerId);
+        Assert.AreEqual(0, update.Choices.Length);
+        Assert.AreEqual(0, update.Tiers.Length);
+        Assert.AreEqual(0, update.Flags.Length);
+    }
+
+    [TestMethod]
     public void EmptyArrays_RoundTripAsEmpty_NeverNull()
     {
         // protobuf-net writes nothing for an empty repeated field, so only the constructor's
@@ -155,7 +204,7 @@ public class ContractRoundTripTests
             ids.Add(id, type);
         }
 
-        Assert.AreEqual(6, ids.Count);
+        Assert.AreEqual(8, ids.Count);
     }
 
     [TestMethod]
