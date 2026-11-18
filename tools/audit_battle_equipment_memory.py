@@ -1038,6 +1038,23 @@ def material_assets(mat, index) -> AssetSet:
     return out
 
 
+def material_texture_slots(item, index) -> dict:
+    """{texture slot: {texture names}} over the materials of a metamesh. Slot 0 is the engine's
+    Material.MBTextureType.DiffuseMap. A material whose layout does not decode is left out, so the dict is
+    empty when none does (material_assets then falls back to a guid scan, which carries no slot)."""
+    out = {}
+    for g in sorted(amsm.scan_guids(item.meta, index.by_guid, "material")):
+        try:
+            pairs = amsm.parse_material_meta(index.by_guid[g].meta).textures
+        except (ValueError, struct.error, IndexError):
+            continue
+        for slot, tg in pairs:
+            tex = index.by_guid.get(tg)
+            if tex is not None and tex.kind == "texture":
+                out.setdefault(slot, set()).add(tex.name)
+    return out
+
+
 def mesh_assets(item, index) -> AssetSet:
     """A metamesh, its materials and their textures."""
     cache = _cache(index)

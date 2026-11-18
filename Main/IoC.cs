@@ -185,6 +185,7 @@ public static class IoC
         PreloadBodyGuardIoC.RegisterPreloadBodyGuardFeature(container);
         Features.SaveLoadDiagnostics.SaveLoadDiagnosticsIoC.RegisterSaveLoadDiagnosticsFeature(container);
         Features.BlowDiagnostics.BlowDiagnosticsIoC.RegisterBlowDiagnosticsFeature(container);
+        Features.ImeGuard.ImeGuardIoC.RegisterImeGuardFeature(container);
         NameplateFadeIoC.RegisterSettlementNameplateFadeFeature(container);
         NameplateRelationIoC.RegisterSettlementNameplateRelationFeature(container);
         MenuLinkColorsIoC.RegisterMenuLinkColorsFeature(container);

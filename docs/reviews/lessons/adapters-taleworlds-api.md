@@ -2098,3 +2098,11 @@ player and on the co-op peer that owns the victim; on another peer Coop forwards
 **Prevent:** store the start and the target at the call, and at the end of the hold count the move only when the body covered part of the step along its line. Gate a scripted move with `CanBeAssignedForScriptedMovement()` after a `HumanAIComponent` null check. Build a test point as the engine builds the target: copy his `GetWorldPosition()` and `SetVec2`, not a new `WorldPosition`.
 
 **Source:** [rca-legolas-keep-distance-2026-11-16.md](../rca-legolas-keep-distance-2026-11-16.md) findings 1 to 3.
+
+### Health removed by a blow comes from OnScoreHit, not OnAgentHit (#1435, 2026-11-17)
+
+**Why missed:** the first hero balance tally summed `Blow.InflictedDamage` in `OnAgentHit`. The engine caps the health a blow removes at the victim's health, and sets it to 0 for an Immortal agent, only in a local (`Agent.cs:5503-5507`), and passes that value only to `OnScoreHit` as `damagedHp` (`Mission.cs:5672`). So every killing blow added its overkill, and a blocked missile could add its shield damage. One unattended run was spent on the wrong numbers.
+
+**Prevent:** to count health dealt or lost, override `OnScoreHit` and skip `isBlocked` and `!(damagedHp > 0)`, as `LongDefeatMissionLogic` does. Use `OnAgentHit` only when the raw blow is the thing measured, and say so in the comment.
+
+**Source:** the tier 1 deep review of #1435 (data-flow T1, engine F1).

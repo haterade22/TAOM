@@ -333,10 +333,9 @@ public class SubModule : MBSubModuleBase
         Features.EngineBugGuards.Hooks.Patch161_SceneTableauNullSceneGuard.Initialize(IoC.Resolve<IModLogger>());
         TryPatchCategory("Patch161_SceneTableauNullSceneGuard");
         // Patch162 to Patch167 (#1444, display and text bugs from the same package): stateless, applied with the guards.
+        // Patch163 and Patch165 patch CampaignUIHelper, so they wait for OnGameInitializationFinished (GameTexts).
         TryPatchCategory("Patch162_ExecutionNoticeClosable");
-        TryPatchCategory("Patch163_EliteTierBadge");
         TryPatchCategory("Patch164_DecisionRulerName");
-        TryPatchCategory("Patch165_ArmyFoodDays");
         TryPatchCategory("Patch166_FoundedKingdomFormalName");
         TryPatchCategory("Patch167_DeadHeroOutfit"); // its Prepare skips it when a co-op module is loaded
 
@@ -1706,6 +1705,10 @@ public class SubModule : MBSubModuleBase
         // tooltip methods can run CampaignUIHelper's static initializer; the patches stay inert until the first themed
         // encyclopedia movie binds (EncyclopediaTroopNames.Active). A server has no client classes, so nothing applies there.
         TryPatchCategory("TAOM.EncyclopediaTroopNames");
+        // #1444's tier badge and army food fixes patch CampaignUIHelper too, so they wait here for the same reason
+        // (EarlyPatchStaticInitializerGateTests). Both are display only, and no tooltip opens before a game exists.
+        TryPatchCategory("Patch163_EliteTierBadge");
+        TryPatchCategory("Patch165_ArmyFoodDays");
         // Patch77 (#514) — attaches the Player Switcher panel to the character creation face
         // generator and tears it down again. The constructor postfix binds by arity: if a future
         // engine build declares a second BodyGeneratorView constructor, Prepare returns false and

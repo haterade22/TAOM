@@ -149,7 +149,7 @@ not for sale; each is a row of the mission's `heroes` list.
   the row reader the Long Defeat shop uses, so `hero=aragorn` means the same in both modes. A missing
   key is no hero and no warning; a value that is not an array gives no hero and one warning; a bad or
   repeated row is skipped with a warning; past three valid rows (`StoryHeroesReader.MaxHeroes`) the
-  rest are dropped with one warning. `helms_deep_defend` ships all three with `healthFactor` 3.0, the
+  rest are dropped with one warning. `helms_deep_defend` ships all three with `healthFactor` 8.0 (#1438), the
   factor of `shop.json`; `ShippedStoryMissionsTests` requires the two to agree.
 - **Plan:** `StoryPlanBuilder` sets `RunPlan.FreeHeroes` from the definition. `SurvivalRun.Begin`
   queues each free hero as pending (`QueueFreeHeroes`), so he holds one place under the garrison cap

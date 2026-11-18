@@ -2536,3 +2536,15 @@ The restat gave a chest raised into the elite band its line's arm and leg shares
 - **Why missed:** the rule iterated `current_values`, the attributes the file has, and the tests' pieces all declared both secondaries. The upgrade gate saw the edge, but it was read as a consequence of the plan, not of the restat.
 - **Prevent:** a rule that sets a stat from a share or a curve also covers the piece that lacks the attribute, with a test piece that has none; when an upgrade edge drops, compare the two pieces' attribute lists before blaming the plan.
 - **Source:** [rca-armour-band-clones-2026-11-17.md](../rca-armour-band-clones-2026-11-17.md), W1.
+
+### A swap rule that judges values alone can break how a set looks (armour colour families, 2026-11-18)
+The band clone upgrade pick (#1440) took a stronger piece of the same line and slot, judged on armour values only. Lines such as Mirkwood's ship one mesh in silver and in bronze under one line prefix, so the pick put silver chests and greaves into bronze sets. The maintainer saw it in game: a silver chest under bronze pauldrons. 107 more sets clashed on trunk than before #1440 (recounted on 2026-11-18).
+- **Why missed:** no tool knew an armour piece's colour; the reviews checked values, bands and wearers, and the screenshots came after the merge.
+- **Prevent:** a tool that swaps a visible piece judges the look too: the colour family (`tools/data/armour_colour_families.json`) beside the values, with a test of a same-line piece in another colour.
+- **Source:** [rca-armour-colour-sets-2026-11-18.md](../rca-armour-colour-sets-2026-11-18.md).
+
+### A rule that undoes its own writes by id must record what it wrote (armour band clone read-back, 2026-11-18)
+The clone tool wrote an upgrade's replacement into a top wearer's battle sets, and its next plan read every copy of that replacement back into the source by id. A set that wore the replacement natively was read back with the written ones, so a changed pick rewrote six slots of the Rivendell and Lindon marksmen (`rivendell_torso_infantry_tier2_silver` became `_silvergold` in battle sets 5 and 7). Other wearers held a target natively too and were safe only because their pick had not changed yet.
+- **Why missed:** the fixtures held one copy of an item per slot, and no shipped pick had changed since the first apply, so the roster never showed a native copy beside a written one.
+- **Prevent:** a rule that reverses its own writes records what it wrote (troop, battle set, slot) in its spec and reverses those positions only; test a wearer that holds the target natively beside a written copy, then change the pick.
+- **Source:** [rca-armour-colour-sets-2026-11-18.md](../rca-armour-colour-sets-2026-11-18.md), R13.

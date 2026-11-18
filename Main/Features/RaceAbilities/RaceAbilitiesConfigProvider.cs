@@ -362,6 +362,7 @@ public class RaceAbilitiesConfigProvider : IRaceAbilitiesConfigProvider
             MeleeDamagePercent = Check(parsed.MeleeDamagePercent, -95f, 300f, 0f, $"{field}.meleeDamagePercent", ref rejected),
             RangedDamagePercent = Check(parsed.RangedDamagePercent, -95f, 300f, 0f, $"{field}.rangedDamagePercent", ref rejected),
             DamageReductionPercent = Check(parsed.DamageReductionPercent, 0f, 90f, 0f, $"{field}.damageReductionPercent", ref rejected),
+            MissileDamageReductionPercent = Check(parsed.MissileDamageReductionPercent, 0f, 90f, 0f, $"{field}.missileDamageReductionPercent", ref rejected),
             KnockdownResistancePercent = Check(parsed.KnockdownResistancePercent, -95f, 1000f, 0f, $"{field}.knockdownResistancePercent", ref rejected),
             KnockbackResistancePercent = Check(parsed.KnockbackResistancePercent, -95f, 1000f, 0f, $"{field}.knockbackResistancePercent", ref rejected),
             DismountResistancePercent = Check(parsed.DismountResistancePercent, -95f, 1000f, 0f, $"{field}.dismountResistancePercent", ref rejected),

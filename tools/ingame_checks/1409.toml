@@ -71,9 +71,9 @@ scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "the same run: one line per enemy hero on the first tick"
 reached = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=']
 pass = [
-    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_aragorn is_hero=0 campaign=1 mounted=0 formation=0 held=0 strangers=[0-9]+ order=\S+ health_factor=3\.00 wanted_factor=3\.00 wielded=strider_sword side=enemy$',
-    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_legolas is_hero=0 campaign=1 mounted=0 formation=1 held=0 strangers=[0-9]+ order=\S+ health_factor=3\.00 wanted_factor=3\.00 wielded=wm_mirkwood_bow_a01 side=enemy$',
-    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_gimli is_hero=0 campaign=1 mounted=0 formation=0 held=0 strangers=[0-9]+ order=\S+ health_factor=3\.00 wanted_factor=3\.00 wielded=sm_dwarf_erebor_axe_2h_c side=enemy$',
+    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_aragorn is_hero=0 campaign=1 mounted=0 formation=0 held=0 strangers=[0-9]+ order=\S+ health_factor=([0-9.]+) wanted_factor=\1 wielded=strider_sword side=enemy$',
+    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_legolas is_hero=0 campaign=1 mounted=0 formation=1 held=0 strangers=[0-9]+ order=\S+ health_factor=([0-9.]+) wanted_factor=\1 wielded=wm_mirkwood_bow_a01 side=enemy$',
+    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_gimli is_hero=0 campaign=1 mounted=0 formation=0 held=0 strangers=[0-9]+ order=\S+ health_factor=([0-9.]+) wanted_factor=\1 wielded=sm_dwarf_erebor_axe_2h_c side=enemy$',
 ]
 fail = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=fail', '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass (?!.*side=enemy$)']
 absence = "not-reached"

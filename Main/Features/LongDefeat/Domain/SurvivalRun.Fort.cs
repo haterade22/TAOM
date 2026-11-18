@@ -60,7 +60,7 @@ internal sealed partial class SurvivalRun
         return result;
     }
 
-    /// <summary>Mends every visible gate, a broken one paying all of the repair price and a damaged one its missing share of it (D17, D18). The adapter does it on the next tick.</summary>
+    /// <summary>Mends every visible gate, a broken one paying all of the repair price and a damaged one its missing share of it, each times its size against the largest gate (D17, D18). The adapter does it on the next tick.</summary>
     public FortResult TryRepairGates()
     {
         var closed = Closed();
@@ -184,14 +184,19 @@ internal sealed partial class SurvivalRun
         if (_pendingRepair || _repairHandedOut)
             return Refuse(FortResult.NothingToRepair);
 
-        var missing = _gates.Select(g => g.MissingShare).Where(share => share >= GateMath.MinMissingShare).ToList();
-        if (missing.Count == 0)
+        // The gates the adapter will mend: missing a share, with a vanilla maximum to restore (a gate without one is never repaired, so it is never charged).
+        var mendable = _gates.Where(g => g.MissingShare >= GateMath.MinMissingShare && g.VanillaMax > 0f && !float.IsInfinity(g.VanillaMax)).ToList();
+        if (mendable.Count == 0)
             return Refuse(FortResult.NothingToRepair);
 
-        // One row acts on every visible gate and charges per gate (D18); the purchase keeps each gate's share, rounded as the report writes it, so the judge can replay the per-gate prices.
+        // One row acts on every visible gate and charges per gate (D18), each in proportion to its vanilla maximum against the largest gate's (Mike, 2026-11-18: Helm's Deep's 1000 inner gate pays a
+        // fifteenth of the 15000 outer gate's price). The purchase keeps each gate's priced share, rounded as the report writes it, so the judge can replay the per-gate prices; the priced share is floored
+        // at the smallest share a repair acts on, so the report never writes 0.
+        var largest = _gates.Where(g => g.VanillaMax > 0f && !float.IsInfinity(g.VanillaMax)).Max(g => g.VanillaMax);
+        var priced = mendable.Select(g => Math.Max(GateMath.MinMissingShare, g.MissingShare * Math.Min(1f, g.VanillaMax / largest))).ToList();
         var whole = FortPrice(gate.RepairPrice);
-        var shares = missing.Select(GateMath.ReportedShare).ToList();
-        return new Quote(FortResult.Ok, gate.RepairPrice, missing.Sum(share => GateMath.RepairPrice(whole, share)), shares.Sum(), 0, shares);
+        var shares = priced.Select(GateMath.ReportedShare).ToList();
+        return new Quote(FortResult.Ok, gate.RepairPrice, priced.Sum(share => GateMath.RepairPrice(whole, share)), shares.Sum(), 0, shares);
     }
 
     private Quote QuoteTowers()

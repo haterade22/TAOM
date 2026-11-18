@@ -2,7 +2,6 @@
 name: deep-review
 description: "Use before every commit touching C# or XML/XSLT, repo or live install; skip only config and docs. Risk-tiered senior reviewers report defects; a second wave follows a CRITICAL or HIGH."
 argument-hint: "[feature-name]"
-effort: max
 ---
 
 # Deep Review
@@ -13,7 +12,7 @@ Run this AFTER completing a feature or fix, BEFORE closing out.
 
 **While lenses run, act only on findings that change runtime behaviour:** editing a file an agent is reading invalidates its report. The one exception is a violation your own change introduced. The tell that you are about to break this is writing "this is polish, not a fix" and continuing anyway.
 
-**Every reviewer is the most senior role available** (Mike, 2026-09-18). Every lens runs as `subagent_type: deep-reviewer` (`.claude/agents/deep-reviewer.md`: Opus 5.5, `claude-opus-5-5`, at `effort: max`, read-only). **Never pass `model` on these Agent calls:** a per-invocation `model` overrides the definition's (`.claude/rules/harness-skills-agents.md`), which would quietly downgrade the reviewer. **Effort follows the tier (Mike, 2026-11-03, #1078):** a tier 1 first-wave lens and an adversarial escalation take the definition's `max`, so pass nothing; a tier 2 first-wave lens and every second-wave lens pass `effort: "high"`. On one diff, `high` cost 30% of `max` and found the shared MED and the same LOW items, but missed one MED that only `max` found.
+**Every reviewer is the most senior role available** (Mike, 2026-09-18). Every lens runs as `subagent_type: deep-reviewer` (`.claude/agents/deep-reviewer.md`: Opus 5.5, `claude-opus-5-5`, read-only). **Never pass `model` on these Agent calls:** a per-invocation `model` overrides the definition's (`.claude/rules/harness-skills-agents.md`), which would quietly downgrade the reviewer. **Never pass `effort` either:** every lens runs at the session's effort level (Mike, 2026-11-18).
 
 **The review does not stop at a report.** Two lenses (Agent 3 Efficiency, Agent 6 Design & Elegance) propose better ways to do what the change does; Step 4 applies them. The reviewers stay read-only; the orchestrator applies, after every lens has reported. When neither lens ran, Step 4 is N/A and the report says so.
 
@@ -72,10 +71,10 @@ Pick the highest tier any file in scope reaches, and say the tier and why in one
 | Tier | The change touches | Codex (Step 0) | Claude lenses, one wave |
 |---|---|---|---|
 | 1 | A Harmony patch, a GameModel, save data or a save definer, co-op authority or sync, DI timing or composition, native or engine calls, a mission or campaign tick, live `TAOM_Map` or Armory data | `ultra` | 5 Data flow, 2 Engine compatibility, plus 7 XML for XML and Tooling for scripts |
-| 2 | Moves between assemblies, build and deploy targets, release tooling, gates and tests, UI that reads game state, plain C# and repo XML or XSLT that no tier 1 row names | `xhigh` | 5 Data flow, plus 7 XML for XML and Tooling for scripts, at `effort: "high"` |
+| 2 | Moves between assemblies, build and deploy targets, release tooling, gates and tests, UI that reads game state, plain C# and repo XML or XSLT that no tier 1 row names | `xhigh` | 5 Data flow, plus 7 XML for XML and Tooling for scripts |
 | 3 | Docs, comments, harness text only | none | none: `python tools/lint_docs.py --fail-on-drift` and a read |
 
-**Second wave:** only when the first wave or Codex reports a CRITICAL or HIGH. It runs the remaining lenses in scope from the table below on the files involved, at `effort: "high"`, with those findings in SCOPE NOTES. A finding at MEDIUM or below is fixed and verified with tests, not re-reviewed. Lens 1 Standards, 3 Efficiency, 4 Completeness and 6 Design run only in a second wave or when Mike asks for a full review: on 2026-10-22 they found mostly naming, citation and comment items that the fix pass and `/verify` catch. Step 3e says which confirmed findings need an RCA file.
+**Second wave:** only when the first wave or Codex reports a CRITICAL or HIGH. It runs the remaining lenses in scope from the table below on the files involved, with those findings in SCOPE NOTES. A finding at MEDIUM or below is fixed and verified with tests, not re-reviewed. Lens 1 Standards, 3 Efficiency, 4 Completeness and 6 Design run only in a second wave or when Mike asks for a full review: on 2026-10-22 they found mostly naming, citation and comment items that the fix pass and `/verify` catch. Step 3e says which confirmed findings need an RCA file.
 
 ### Which lenses run (their domains)
 
@@ -116,7 +115,7 @@ Add only what the lens cannot know. The agent definition already carries the ope
 
 ## Step 2c: Adaptive Expansion (always evaluate)
 
-After the core agents complete, assess whether the findings warrant additional focused agents. There is NO upper limit on the total. Every additional agent is a `deep-reviewer` too, launched in waves of four like the core set. Before spawning one, ask whether an existing gate script answers its question: a deterministic check run once beats an agent re-deriving it ([agent-teams.md](../../../docs/ai-includes/agent-teams.md) "Budget").
+After the core agents complete, assess whether the findings warrant additional focused agents. Every additional agent is a `deep-reviewer` too, launched in waves of four like the core set. Before spawning one, ask whether an existing gate script answers its question: a deterministic check run once beats an agent re-deriving it ([agent-teams.md](../../../docs/ai-includes/agent-teams.md) "Budget").
 
 **Launch additional agents when:**
 - Agent 5 (Data Flow) finds gaps → launch per-gap investigation agents to trace the full chain and propose fixes
@@ -194,9 +193,9 @@ VERDICT: READY FOR COMMIT / NEEDS FIXES
 
 ## Step 3e: Root Cause Analysis (a blocking gate before commit, for the findings named here)
 
-Write an RCA file when a confirmed finding (from any agent, or from the Codex pre-review if Step 0 ran) is CRITICAL or HIGH (Agent 7's CRITICAL and a Codex P1 count), reached a player, or repeats a cause already recorded (grep `docs/reviews/rca-*.md` and `docs/reviews/lessons/`). Every other confirmed finding, MEDIUM or LOW, is fixed and proved by its tests and needs no RCA file; when it shows a systemic pattern it still gets its lessons entry below. The point is not just to fix bugs, it is to make the same category of bug impossible in future features. (Mike, 2026-11-17, harness retro P2: new RCA files per week went 27, 49, 96, and the lens-yield table credits lenses from 28 of 698 RCA files. This narrows the rule drafted as D3 on 2026-11-03.)
+Write an RCA file when a confirmed finding (from any agent, or from the Codex pre-review if Step 0 ran) is CRITICAL or HIGH (Agent 7's CRITICAL and a Codex P1 count), reached a player, or repeats a cause already recorded (grep `docs/reviews/rca-*.md` and `docs/reviews/lessons/`). Every other confirmed finding, MEDIUM or LOW, is fixed and proved by its tests and needs no RCA file; when it shows a systemic pattern it still gets its lessons entry below. The goal is to make the same category of bug impossible in future features.
 
-The recurring failure is patching a symptom and never extracting the systemic lesson, so the same category of bug ships again. Severity decides whether an RCA file is written, never whether the lesson is recorded. Three examples on file: Career cooldown review #31 (NaN gate), EditorCacheRebuild review #38 (NaN gate again), scene-scripts CS_Road 2026-05-13 (NaN gate, THIRD time). All caught by the same rule that was scope-gapped on each project.
+The recurring failure is patching a symptom and never extracting the systemic lesson, so the same category of bug ships again. Severity decides whether an RCA file is written, never whether the lesson is recorded.
 
 **For each finding that needs an RCA file:**
 
@@ -222,7 +221,7 @@ The recurring failure is patching a symptom and never extracting the systemic le
 
 If the RCA reveals a rule that's already documented but wasn't followed (scope gap or agent prompt missing the rule), update the rule file or agent prompt in a follow-up commit. Commit graph: review → fixes → RCA → preventive-rule update.
 
-## Step 4: Apply improvements (MANDATORY)
+## Step 4: Apply improvements
 
 A better way that the review found and left in a report is a better way nobody gets. When Agent 6 returns a KEEP proposal or Agent 3 an APPLY-scoped fix for the changed code (together, "proposals" below), the orchestrator applies it in this session. The reviewers never edit; you do.
 
@@ -244,7 +243,7 @@ Then fill in the IMPROVEMENTS lists and the VERDICT in the Step 3 report. READY 
 - Agent 5 (Data Flow) has historically been the most productive lens (no per-lens yield is measured yet).
 - If the verdict is NEEDS FIXES, list the fixes needed in priority order.
 
-## HIGH findings — no silent deferrals (MANDATORY)
+## HIGH findings: no silent deferrals
 
 If any agent reports a HIGH-severity finding (Agent 7's CRITICAL counts, as does a Codex P1):
 1. The default action is FIX. Implement the fix in the same session.
@@ -253,12 +252,12 @@ If any agent reports a HIGH-severity finding (Agent 7's CRITICAL counts, as does
    - A commit trailer `Deferred: <reason>` on the commit that would have fixed it
    - A `Known limitation:` paragraph in the commit body (it becomes the release's CHANGELOG entry)
 
-What is NOT allowed: quietly proceeding past a HIGH finding on informal reasoning ("only matters in case X") without writing the decision down. Past experience: Career System P2 (ally buff overwrite) was flagged HIGH by Agent 5 and dismissed; Codex independently caught the same bug later.
+What is NOT allowed: quietly proceeding past a HIGH finding on informal reasoning ("only matters in case X") without writing the decision down.
 
 ## Fix-loop guidance
 
 When the verdict is NEEDS FIXES and the user chooses to address findings now:
 
 - If a finding is structural (root cause unclear, multiple symptoms in one area), invoke **`/investigate`** instead of fixing directly — its 6-phase workflow auto-engages `/freeze` and enforces the Iron Law.
-- **Verify each fix at the OUTERMOST gate, not just the layer you edited.** When a fix makes a method's behavior unconditional (or changes its guard semantics), grep every CALLER of that method for early-outs that re-condition it before marking the finding fixed — and note that layer-local regression tests cannot see caller-level gates. (Codex review 72 caught a service-layer "unconditional close" fix bypassed by two hook-level `IsEnabled` gates one review after it shipped; RCA `rca-tournament-exit-hang-2026-07-06.md` finding #4.)
+- **Verify each fix at the OUTERMOST gate, not just the layer you edited.** When a fix makes a method's behavior unconditional (or changes its guard semantics), grep every CALLER of that method for early-outs that re-condition it before marking the finding fixed, and note that layer-local regression tests cannot see caller-level gates.
 - After fixes land, re-review the fix diff only when it fixed a CRITICAL or HIGH, or changed runtime behaviour in a tier 1 area: one Codex pass at `high` plus the lens that found it. Fixes for MEDIUM and lower are proven by their tests and `/verify`.

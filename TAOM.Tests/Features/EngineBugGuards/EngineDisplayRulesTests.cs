@@ -58,4 +58,17 @@ public class EngineDisplayRulesTests
         Assert.AreSame(other, EngineDisplayRules.KitAfterDeath(own, afterDeath: other), "a kit another patch set wins");
         Assert.IsNull(EngineDisplayRules.KitAfterDeath<object>(null, afterDeath: null), "no kit before death, none after");
     }
+
+    // #1446: TAOM's custom battle muster screen (TcbVM.Tier) had its own numerals up to VII.
+    [DataTestMethod]
+    [DataRow(0, "I")]
+    [DataRow(1, "I")]
+    [DataRow(4, "IV")]
+    [DataRow(7, "VII")]
+    [DataRow(8, "VIII")]
+    [DataRow(9, "IX")]
+    [DataRow(10, "X")]
+    [DataRow(11, "X")]
+    public void TierNumeral_ReadsUpToTen(int tier, string expected)
+        => Assert.AreEqual(expected, EngineDisplayRules.TierNumeral(tier));
 }

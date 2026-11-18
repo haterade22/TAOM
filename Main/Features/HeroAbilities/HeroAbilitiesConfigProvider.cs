@@ -242,6 +242,7 @@ public sealed class HeroAbilitiesConfigProvider : IHeroAbilitiesConfigProvider
     {
         var e = HeroEffectsCheck.Validate(label, parsed ?? new RaceAbilityEffects(), 100f, Reject);
         e.DamageReductionPercent = Cap(label, "damageReductionPercent", e.DamageReductionPercent, MaxDamageReduction);
+        e.MissileDamageReductionPercent = Cap(label, "missileDamageReductionPercent", e.MissileDamageReductionPercent, MaxDamageReduction);
         e.KnockdownResistancePercent = Cap(label, "knockdownResistancePercent", e.KnockdownResistancePercent, MaxResistance);
         e.KnockbackResistancePercent = Cap(label, "knockbackResistancePercent", e.KnockbackResistancePercent, MaxResistance);
         e.DismountResistancePercent = Cap(label, "dismountResistancePercent", e.DismountResistancePercent, MaxResistance);

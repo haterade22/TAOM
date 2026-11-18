@@ -456,11 +456,15 @@ _EQ_RE = re.compile(r'<equipment\b[^>]*?/>')
 
 
 def _rewrite_block(block, edits):
-    """Apply {(slot, old): new} to every battle set in one NPCCharacter block.
+    """Apply {(slot, old): new} to every battle set in one NPCCharacter block, and {(slot, old, n): new} to its
+    n-th battle set only (n counts the non-civilian sets that name an armour slot, in file order, from 0: the
+    index generate_armour_band_clones.load_troops gives a set). An n-keyed edit wins over a blanket one.
 
     old None means the slot was unfilled: the element is appended after the last equipment
     element of the set, cloning its indentation.
     """
+    counted = [0]
+
     def fix_set(m):
         tag, attrs, body = m.group(1), m.group(2), m.group(3)
         if body is None:  # self-closing: a template reference, nothing to rewrite
@@ -472,18 +476,25 @@ def _rewrite_block(block, edits):
             sm = re.search(r'\bslot="([^"]+)"', em.group(0))
             if sm:
                 present[sm.group(1)] = em
+        number = None
+        if any(s in ARMOUR_SLOTS for s in present):
+            number = counted[0]
+            counted[0] += 1
         new_body = body
         # Replace present slots first (right to left so spans stay valid).
         for slot, em in sorted(present.items(), key=lambda kv: -kv[1].start()):
             im = re.search(r'\bid="Item\.([^"]+)"', em.group(0))
             old = im.group(1) if im else None
-            new = edits.get((slot, old))
+            new = edits.get((slot, old, number), edits.get((slot, old)))
             if new is None:
                 continue
             tag_text = em.group(0).replace('id="Item.%s"' % old, 'id="Item.%s"' % new, 1)
             new_body = new_body[:em.start()] + tag_text + new_body[em.end():]
         # Then append the slots this set never filled.
-        for (slot, old), new in edits.items():
+        for key, new in edits.items():
+            if len(key) != 2:
+                continue
+            slot, old = key
             if old is not None or slot in present:
                 continue
             last = None
@@ -504,7 +515,12 @@ def write_changes(changes):
     for c in changes:
         if c['new'] is None:
             continue
-        by_file[c['file']][c['troop']][(c['slot'], c['old'])] = c['new']
+        edits = by_file[c['file']][c['troop']]
+        if c.get('set_indexes') is None:
+            edits[(c['slot'], c['old'])] = c['new']
+        else:   # only these battle sets (_rewrite_block): a slot that held the new item natively stays
+            for n in c['set_indexes']:
+                edits[(c['slot'], c['old'], n)] = c['new']
     # Every file is rewritten and parsed before any is written: a bad file late in the batch must
     # not leave the earlier ones half-applied (#617 review).
     pending = []

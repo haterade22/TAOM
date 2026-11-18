@@ -53,4 +53,10 @@ public static class EngineDisplayRules
     /// </summary>
     public static T? KitAfterDeath<T>(T? beforeDeath, T? afterDeath) where T : class
         => afterDeath ?? beforeDeath;
+
+    private static readonly string[] TierNumerals = { "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X" };
+
+    /// <summary>The Roman numeral for a tier, clamped to I..X (TAOM's <see cref="TaomMaxTier"/>).</summary>
+    public static string TierNumeral(int tier)
+        => TierNumerals[Math.Min(Math.Max(tier, 1), TaomMaxTier) - 1];
 }

@@ -45,7 +45,7 @@ A test comment or failure message that states an effect (what breaks, what impor
 
 A source-text test pins wiring only: this entry point calls that function, with these inputs, in this order. The decision itself goes in a pure type with behaviour tests. Check each pin against the cheapest edit that brings the defect back and keeps the pinned text (`docs/reviews/rca-muster-captain-2026-11-13.md`).
 
-## Skip-Guard Exhaustion (MANDATORY)
+## Skip-Guard Exhaustion
 
 When a service method has `if (condition) continue/return` guard clauses, write a test for **every entity state that should be skipped**, not just the obvious ones.
 

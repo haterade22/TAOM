@@ -250,11 +250,51 @@ class SelectionTests(unittest.TestCase):
                      "tools/realm_troops.py", "tools/generate_lothlorien_troops.py", "tools/generate_snow_orc_troops.py",
                      "Main/_Module/ModuleData/troops/troops_mirkwood.xml",
                      "Main/_Module/ModuleData/fords_of_war/fords_troops.xml", "Main/_Module/SubModule.xml",
-                     "tools/data/armor_roster_tiers.json", LIVE_ARMORY):
+                     "tools/data/armor_roster_tiers.json", LIVE_ARMORY,
+                     # the colour table the upgrade pick reads, its scanner and its overrides
+                     "tools/scan_armour_colours.py", "tools/armour_colour_overrides.json",
+                     "tools/data/armour_colour_families.json"):
             self.assertIn("armour-band-clones", _ids(dg.select(dg.GATES, [path])), path)
         clone_file = _ids(dg.select(dg.GATES, ["Main/_Module/ModuleData/armour_band_clones/armour_band_clones.xml"]))
         self.assertIn("armour-classes", clone_file)
         self.assertIn("armour-band-clone-meshes", clone_file)
+
+    def test_the_band_clone_note_says_to_rescan_the_colours_after_apply(self):
+        gate = next(g for g in dg.GATES if g.id == "armour-band-clones")
+        self.assertIn("scan_armour_colours.py --apply", gate.note)
+        self.assertLess(gate.note.index("scan_armour_colours.py --apply"), gate.note.index("derive_armor_tiers.py"))
+
+    def test_the_colour_check_reads_the_art_the_clone_file_the_lord_variants_and_the_submodule(self):
+        """The table is measured from the Armory's art and from the items TAOM adds (the clones, the lord variants,
+        read through SubModule.xml), so each of them stales it (review 2026-11-18)."""
+        gate = next(g for g in dg.GATES if g.id == "armour-colours")
+        self.assertEqual(gate.cmd, ("python", "tools/scan_armour_colours.py", "--check"))
+        live = "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/"
+        for path in ("tools/scan_armour_colours.py", "tools/armour_colour_overrides.json",
+                     "tools/data/armour_colour_families.json", "tools/audit_battle_equipment_memory.py",
+                     "tools/audit_map_scene_memory.py", LIVE_ARMORY, live + "AssetSources/chest/a.png",
+                     live + "Assets/textures/b.tpac", live + "AssetPackages/pack0.tpac",
+                     "Main/_Module/ModuleData/armour_band_clones/armour_band_clones.xml",
+                     "Main/_Module/ModuleData/lord_armour/lord_armour_variants.xml", "Main/_Module/SubModule.xml"):
+            self.assertIn("armour-colours", _ids(dg.select(dg.GATES, [path])), path)
+        self.assertIn("exit 2", gate.note)
+        self.assertNotIn("exit 0) without the install", gate.note)
+
+    def test_the_colour_scanner_exits_are_read_as_not_run_and_a_crash_or_stale_table_as_fail(self):
+        self.assertEqual(dg.verdict(2, "ERROR: no texture image under X; nothing can be measured")[0], "NOT RUN")
+        self.assertEqual(dg.verdict(2, "SKIPPED: no LOTRLOME_Armory under X; nothing was checked or written")[0], "NOT RUN")
+        self.assertEqual(dg.verdict(1, "rows that differ from armour_colour_families.json: 3")[0], "FAIL")
+        self.assertEqual(dg.verdict(3, "scan_armour_colours.py crashed; no verdict, exit 3")[0], "FAIL")
+
+    def test_the_validator_gate_reads_the_colour_table_and_its_scanner(self):
+        for path in ("tools/data/armour_colour_families.json", "tools/scan_armour_colours.py"):
+            self.assertIn("moduledata", _ids(dg.select(dg.GATES, [path])), path)
+
+    def test_the_career_kit_check_reads_the_clone_tool_and_the_armour_curve(self):
+        """generate_career_kits.career_armour reads the clone spec through generate_armour_band_clones.armour_for_band,
+        whose clone values come from rebalance_armor (review 2026-11-18)."""
+        for path in ("tools/generate_armour_band_clones.py", "tools/rebalance_armor.py"):
+            self.assertIn("career-kits", _ids(dg.select(dg.GATES, [path])), path)
 
     def test_the_band_clone_check_runs_on_the_mallorn_pricing(self):
         # generate_lothlorien_armor.ML_BAND_UP prices a Mallorn clone a band up (band_values), review 2026-11-17.

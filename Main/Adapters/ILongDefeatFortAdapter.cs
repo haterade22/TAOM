@@ -30,10 +30,10 @@ internal interface ILongDefeatFortAdapter
 
     /// <summary>
     /// How many standing attackers are within <see cref="GateRules.BehindDepth"/> behind a standing visible gate's plane (the inside is the side <paramref name="inside"/> lies on), within the door's width and
-    /// <see cref="GateRules.HeightBand"/> of its height, summed over the gates. -1 when no standing gate had a plane to measure (no inside point, a frame with no direction, every gate down): the sample is then not
-    /// counted. The 5-second sample of <c>gate-attacked</c>'s <c>through=</c>.
+    /// <see cref="GateRules.HeightBand"/> of its height, summed over the visible gates whose indices (in <see cref="ReadGates"/> order) are in <paramref name="gates"/>: the gates a repair touched. -1 when no such
+    /// standing gate had a plane to measure (no inside point, a frame with no direction, every gate down): the sample is then not counted. The 5-second sample of <c>gate-attacked</c>'s <c>through=</c>.
     /// </summary>
-    int AttackersBehindGates(LdPoint? inside);
+    int AttackersBehindGates(LdPoint? inside, IReadOnlyCollection<int> gates);
 
     /// <summary>Whether each point has a navmesh and lies inside the mission boundary, in the order given: the <c>fort-points</c> boot check.</summary>
     IReadOnlyList<LdPointFacts> PointsUsable(IReadOnlyList<LdPlace> points);

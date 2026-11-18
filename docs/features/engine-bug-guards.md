@@ -59,6 +59,12 @@ The #1444 display fixes, each a thin patch over a pure rule in `Domain/EngineDis
   applied while a co-op module is loaded (`CoopPresence.IsActive`): Coop destroys the dying hero's kits in its own
   `OnDeath` prefix and syncs both kit properties, so a restored kit would stay on the host only.
 
+A follow-up from that review (#1446): the custom battle muster screen
+(`Client/Features/CustomBattles/Muster/TcbVM.cs`) reads tiers up to X; it stopped at VII. The encounter food
+tooltip in the same issue needs no fix: every party's daily food change is at most -0.01
+(`DefaultMobilePartyFoodConsumptionModel.CalculateDailyFoodConsumptionf`, `LimitMax(-0.01f)`), so native's average
+never meets a party with no loss or a gain.
+
 Not ported from that package (triage on #1444): fixes trunk or v1.5.7 already has, Mike's earlier decisions, realm
 colour into the mountains and garrison starvation (Mike, 2026-11-18), and stranded AI parties (no repro yet).
 
@@ -73,7 +79,7 @@ references in the v1.5.7 decompile.
 | `Main/Features/EngineBugGuards/Hooks/Patch161_SceneTableauNullSceneGuard.cs` | Scene widget null-scene guard |
 | `Main/Features/EngineBugGuards/Hooks/Patch162_ExecutionNoticeClosable.cs` to `Patch167_DeadHeroOutfit.cs` | The #1444 display fixes |
 | `Main/Features/EngineBugGuards/Domain/EngineDisplayRules.cs` | Their pure decisions |
-| `Main/SubModule.cs` | Initializes and applies every category in `OnSubModuleLoad` |
+| `Main/SubModule.cs` | Initializes and applies every category in `OnSubModuleLoad`, except Patch163 and Patch165, which patch `CampaignUIHelper` and wait for the first `OnGameInitializationFinished` |
 | `Dependencies/Foundation/PatchShieldPolicy.cs` | Keeps PatchShield off Patch160's target |
 | `Main/_Module/ModuleData/taom_module_strings.xml` | `taom_load_failed_title`, `taom_load_failed_body`, `taom_load_failed_quit` |
 
@@ -89,7 +95,7 @@ references in the v1.5.7 decompile.
 - `TAOM.Tests/Features/EngineBugGuards/Patch161SceneTableauNullSceneGuardTests.cs`: the skip, the once-per-session
   warning, and the binding of `CreateTexture` and `_tableauScene`.
 - `TAOM.Tests/Features/EngineBugGuards/EngineDisplayRulesTests.cs`: the tier badge and custom battle tier, the formal
-  name rule and the dead hero's kit.
+  name rule, the dead hero's kit and the tier numerals up to X.
 - `TAOM.Tests/Features/EngineBugGuards/Patch167DeadHeroOutfitTests.cs`: the binding of the four kit accessors.
 - Patch162 to Patch167's targets are resolved by `HarmonyPatchBindingTests`; Patch163's prefixes are classified in
   `CoopVetoClassificationTests`.
@@ -111,14 +117,19 @@ read the log of a session where the failure happened.
    alliance or call-to-war vote names its own kingdom's ruler; the army food tooltip's last row is a normal number
    or "never"; a kingdom founded by the player shows the chosen name in the encyclopedia; a lord who dies keeps his
    own gear on his encyclopedia page; an execution notice closes with its button and by right-click.
+4. #1446: in custom battle, open the muster screen with a tier 9 troop: it reads "Tier IX".
 
 ## Changelog
 
 - 2026-11-17: feature created with Patch160 and Patch161, ported from Silas He's v1.5.6 fix package (#1429).
 - 2026-11-18: Patch162 to Patch167, display and text fixes from the same package (#1444).
+- 2026-11-18: the muster screen tier numerals up to X, a follow-up from the #1444 review (#1446).
+- 2026-11-18: Patch163 and Patch165 apply at the first `OnGameInitializationFinished`; from `OnSubModuleLoad` they
+  ran `CampaignUIHelper`'s static initializer before `GameTexts` existed, which broke that type for the process.
 
 ## GitHub Issue
 
 - **Issue:** #1429: [Crashes and hangs from Silas's v1.5.6 fix package](https://github.com/haterade22/TAOM/issues/1429)
 - **Issue:** #1444: [Display and text bugs from Silas's package (Batch E)](https://github.com/haterade22/TAOM/issues/1444)
+- **Issue:** #1446: encounter food tooltip average and the muster screen tier cap
 - **Status:** Open

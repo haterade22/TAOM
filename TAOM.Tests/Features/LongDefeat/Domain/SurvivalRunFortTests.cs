@@ -366,6 +366,57 @@ public class SurvivalRunFortTests
         Assert.AreEqual(5000 - 200 - 100, run.Gold);
     }
 
+    // Helm's Deep since 2026-11-18: the outer gate (15000) and a small inner gate (1000). Mike: the small gate costs less. Each gate pays in proportion to its vanilla maximum against the largest gate's.
+    [TestMethod]
+    public void ARepair_OfASmallerGate_PaysInProportionToItsSize()
+    {
+        var run = Begun(Plan());
+        run.Tick(Snap(40, Broken(), new LdGateFacts(4, 0f, 1000f, 1000f, true, false)));
+
+        Assert.AreEqual(FortResult.Ok, run.TryRepairGates());
+
+        Assert.AreEqual(5000 - 200 - 14, run.Gold, "200 for the outer gate, ceil(200 * 1000 / 15000) = 14 for the inner one");
+        var bought = run.FortSummary().Purchases.Single();
+        CollectionAssert.AreEqual(new[] { 1f, 0.067f }, bought.Shares!.ToArray(), "the report keeps each gate's priced share, so the judge replays 200 + 14");
+    }
+
+    [TestMethod]
+    public void ARepair_OfOnlyTheSmallerGate_PaysItsOwnShare_AndALevelledGateKeepsItsVanillaRatio()
+    {
+        var run = Begun(Plan());
+        run.TryBuyGateLevel();
+        run.Tick(Snap(40, new LdGateFacts(0, 22500f, 22500f, 15000f, false, false), new LdGateFacts(4, 0f, 1500f, 1000f, true, false)));
+
+        Assert.AreEqual(FortResult.Ok, run.TryRepairGates());
+
+        Assert.AreEqual(5000 - 200 - 14, run.Gold, "the level's factor is 1.5 on both gates, so the ratio is the vanilla one");
+    }
+
+    [TestMethod]
+    public void ARepair_OfATinyDentInTheSmallerGate_KeepsAShareTheReportCanWrite()
+    {
+        var run = Begun(Plan());
+        run.Tick(Snap(40, Dented(0f), new LdGateFacts(0, 999f, 1000f, 1000f, false, false)));
+
+        Assert.AreEqual(FortResult.Ok, run.TryRepairGates());
+
+        Assert.AreEqual(4999, run.Gold);
+        Assert.AreEqual(0.001f, run.FortSummary().Purchases.Single().Shares!.Single(), "0.001 * 1/15 is floored at the smallest share a repair acts on, so the report never writes 0");
+    }
+
+    [TestMethod]
+    public void ARepair_NeverChargesAGateWithAVanillaMaximumThatIsNotANumber_BecauseTheFieldNeverMendsIt()
+    {
+        var run = Begun(Plan());
+        run.Tick(Snap(40, Broken(), new LdGateFacts(4, 0f, float.NaN, float.NaN, true, false)));
+        Assert.AreEqual(FortResult.Ok, run.TryRepairGates());
+        Assert.AreEqual(5000 - 200, run.Gold, "only the outer gate is charged, at full size");
+
+        var alone = Begun(Plan());
+        alone.Tick(Snap(40, new LdGateFacts(4, 0f, float.NaN, float.NaN, true, false)));
+        Assert.AreEqual(FortResult.NothingToRepair, alone.TryRepairGates());
+    }
+
     // Found building Slice 5: the gate facts a quote reads are last tick's, so a repair bought but not yet written, or written this very tick, still reads as broken and sold twice (the second would pay for a gate that is whole).
     [TestMethod]
     public void ARepair_BoughtTwiceBeforeATick_IsSoldOnce()

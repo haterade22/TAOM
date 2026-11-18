@@ -207,6 +207,7 @@ public class ClientSubModuleTests
             typeof(TAOM.Adapters.ICampaignPresentationAdapter),
             typeof(TAOM.Features.Realms.IRealmsPopupAdapter),
             typeof(TAOM.Adapters.IEventWindowAdapter),
+            typeof(TAOM.Features.ImeGuard.IImeWindowAdapter),
         };
         var actual = container.GetServiceRegistrations().Select(r => r.ServiceType).ToArray();
         CollectionAssert.AreEquivalent(expected, actual);

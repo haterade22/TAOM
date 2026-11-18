@@ -370,6 +370,30 @@ public class LongDefeatDirectorGateTests
     }
 
     [TestMethod]
+    public void WithTwoGates_TheWatch_FollowsOnlyTheGateTheRepairTouched()
+    {
+        // Helm's Deep since 2026-11-18: the outer gate and a visible inner gate. The repair closes only the gate it acts on, so the inner gate may stand open or fall in the wave without saying anything about the repair.
+        var rig = NewRig();
+        rig.Field.Gates.Add(new LdGateFacts(0, 1000f, 1000f, 1000f, false, false));
+        rig.ClearWaveOne();
+        rig.Field.HitGate(0, 100000f);
+        rig.Tick();
+        Assert.AreEqual(FortResult.Ok, rig.Session.TryRepairGates());
+        rig.Tick();
+        rig.StartNextWave();
+
+        rig.Field.HitGate(1, 100000f);
+        rig.Field.HitGate(0, 3000f);
+        rig.PumpUntil(() => rig.Field.Count("Behind") > 0);
+        rig.ClearWave();
+
+        var lines = rig.Of(LongDefeatChecks.GateAttackedId);
+        Assert.AreEqual(1, lines.Count, string.Join("\n", rig.Outcomes.Lines));
+        StringAssert.StartsWith(lines[0], "w2 w=2 path=broken start=15000.0 now=12000.0 lost=3000.0 fell=false");
+        Assert.IsTrue(rig.Field.GatesAsked.All(g => g.SequenceEqual(new[] { 0 })), "only the repaired gate is sampled: " + string.Join(";", rig.Field.GatesAsked.Select(g => string.Join(",", g))));
+    }
+
+    [TestMethod]
     public void TheSampling_StopsAtTheClear_AndNeverRunsWithoutARepair()
     {
         var rig = NewRig();

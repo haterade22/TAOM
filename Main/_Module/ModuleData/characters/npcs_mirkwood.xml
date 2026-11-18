@@ -10,16 +10,16 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -72,10 +72,10 @@
 				<equipment slot="Item0" id="Item.mirkwood_sword_a01" />
 				<equipment slot="Item1" id="Item.wm_mirkwood_shield_a02" />
 				<equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_hv_mkwd_inf3_chest" />
 				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_hv_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -93,9 +93,9 @@
 				<equipment slot="Item0" id="Item.mirkwood_spear_a01" />
 				<equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
 				<equipment slot="Head" id="Item.mkwd_inf1_t2_helmet_gold_hc" />
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_hv_mkwd_inf3_chest" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_hv_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -113,7 +113,7 @@
 				<equipment slot="Item0" id="Item.mirkwood_sword_a01" />
 				<equipment slot="Item1" id="Item.wm_mirkwood_shield_a02" />
 				<equipment slot="Head" id="Item.mkwd_inf3_t4_helmet_gold_hc" />
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_hv_mkwd_inf3_chest_bronze" />
 				<equipment slot="Cape" id="Item.taom_band_hv_mkwd_inf3_pauldrons_bronze" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_hv_mkwd_inf3_greaves_bronze" />
@@ -171,17 +171,17 @@
 				<equipment slot="Item0" id="Item.mirkwood_spear_a01" />
 				<equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
 				<equipment slot="Head" id="Item.mkwd_inf1_t2_helmet_gold_hc" />
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_md_mkwd_inf3_chest" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_md_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.mirkwood_spear_a01" />
 				<equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
 				<equipment slot="Head" id="Item.mkwd_inf1_t2_helmet_gold_hc" />
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_md_mkwd_inf3_chest" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_md_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -192,14 +192,14 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -210,15 +210,15 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.mirkwood_sword_a01" />
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.mirkwood_sword_a01" />
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -228,12 +228,12 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
@@ -371,13 +371,13 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.mirkwood_sword_a01" />
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.mirkwood_sword_a01" />
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -390,16 +390,16 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.mirkwood_sword_a01" />
 				<equipment slot="Head" id="Item.mkwd_inf1_t2_helmet_gold_hc" />
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_md_mkwd_inf3_chest" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_md_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.mirkwood_sword_a01" />
 				<equipment slot="Head" id="Item.mkwd_inf1_t2_helmet_gold_hc" />
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_md_mkwd_inf3_chest" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_md_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -411,14 +411,14 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -443,12 +443,12 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Cape" id="Item.taom_band_lt_mkwd_inf3_pauldrons_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Cape" id="Item.taom_band_lt_mkwd_inf3_pauldrons_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
@@ -477,14 +477,14 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -494,12 +494,12 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
@@ -511,16 +511,16 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -547,13 +547,13 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Cape" id="Item.taom_band_lt_mkwd_inf3_pauldrons_bronze" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Cape" id="Item.taom_band_lt_mkwd_inf3_pauldrons_bronze" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
@@ -566,12 +566,12 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -598,11 +598,11 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
 		</Equipments>
@@ -612,16 +612,16 @@
 		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -632,14 +632,14 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -648,12 +648,12 @@
 		<Traits><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
@@ -682,12 +682,12 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Cape" id="Item.taom_band_lt_mkwd_inf3_pauldrons_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Cape" id="Item.taom_band_lt_mkwd_inf3_pauldrons_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
@@ -698,14 +698,14 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -728,12 +728,12 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
@@ -744,14 +744,14 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -778,11 +778,11 @@
 		<Traits><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
 		</Equipments>
@@ -794,14 +794,14 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
 				<equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -824,12 +824,12 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Cape" id="Item.taom_band_lt_mkwd_inf3_pauldrons_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Cape" id="Item.taom_band_lt_mkwd_inf3_pauldrons_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
@@ -1103,8 +1103,8 @@
 		<Equipments>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
-				<equipment slot="Body" id="Item.mkwd_inf3_chest" />
-				<equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest" />
+				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1115,7 +1115,7 @@
 		<Equipments>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
-				<equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
+				<equipment slot="Body" id="Item.taom_band_lt_mkwd_inf3_chest_bronze" />
 				<equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 			</EquipmentRoster>
 		</Equipments>

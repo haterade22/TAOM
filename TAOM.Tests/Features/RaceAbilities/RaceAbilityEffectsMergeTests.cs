@@ -31,6 +31,15 @@ public class RaceAbilityEffectsMergeTests
     }
 
     [TestMethod]
+    public void Combine_MissileReduction_TakesTheLarger()
+    {
+        var merged = RaceAbilityEffectsMerge.Combine(
+            new RaceAbilityEffects { MissileDamageReductionPercent = 30f }, new RaceAbilityEffects { MissileDamageReductionPercent = 10f });
+
+        Assert.AreEqual(30f, merged!.MissileDamageReductionPercent);
+    }
+
+    [TestMethod]
     public void Combine_BothPositive_TakesTheLargerNeverTheSum()
     {
         var merged = RaceAbilityEffectsMerge.Combine(

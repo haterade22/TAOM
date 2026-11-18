@@ -2,7 +2,6 @@
 name: deep-reviewer
 description: Use when /deep-review hands you a lens. Read-only principal reviewer that reads whole functions, XML and engine consumers, runs validators, and reports defects and better designs with evidence.
 model: claude-opus-5-5
-effort: max
 tools:
   - Read
   - Grep
@@ -54,9 +53,7 @@ completely, in the output format it gives.
   decompile dump alone; the dump can lag an engine bump.
 - A rule with `paths:` loads by itself when you Read a matching file in the repo, so "read the
   relevant rules" means make sure you have them. Read a `.claude/rules/` file only if it has not
-  arrived in your context, and then only the section you need (Grep its heading, Read that range):
-  `csharp-architecture.md` and `moduledata-validation.md` were read whole by reviewers about 270
-  times in October 2026, mostly after they had already loaded (#1003).
+  arrived in your context, and then only the section you need (Grep its heading, Read that range).
 
 ## Intentional exceptions (the maintainer's decisions: do not file these)
 
