@@ -305,7 +305,7 @@ Phase 3 ([phase3-plan.md](long-defeat/phase3-plan.md)) lets the lord spend gold 
 | Row | Levels and effect | Needs |
 |---|---|---|
 | Reinforce the gate | 3 levels (shipped: +50%, +100%, +150% hit points over a new gate; 200, 300 and 450 gold) | Nothing recorded; the gates are in the scene |
-| Repair the gate | Restores a broken or damaged gate to its levelled maximum (200 gold for a broken gate, less by the share of hit points it still has) | Nothing recorded |
+| Repair the gate | Restores a broken or damaged gate to its levelled maximum (200 gold for a broken gate, less by the share of hit points it still has; a smaller gate pays in proportion to its vanilla maximum against the largest gate's, so Helm's Deep's 1000 inner gate costs 14 when broken) | Nothing recorded |
 | Field care | Heals every standing defender, the lord included, by 0.75 of his missing health (150 gold), once an intermission; not sold in the preparation | Nothing recorded |
 | Elven Volley | Level 1 (350): 12 arrows, 45 s cooldown, aims itself at the densest group near the walls. Level 2 (300 more): 16 arrows, 40 s, aimed at the crosshair. Key `N` | `volley.origins` recorded |
 | High towers | Level 1 (250): 4 archers a tower. Level 2 (300): 8. Level 3 (400): the tower volley, 6 arrows every 30 s from each tower's own spots | Tower `posts` recorded; level 3 also needs a `tower_volley` spot |
