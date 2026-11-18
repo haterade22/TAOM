@@ -24,7 +24,7 @@ TRACE THESE DATA FLOWS:
    - **Master-toggle fold check (when any hint promises "off = vanilla/pre-feature behavior"):** enumerate EVERY override in the feature's GameModel(s)/patch(es), constant-returning getters included, and confirm each read path folds the master toggle (directly or via a settings-provider getter that folds it). One unconditionally read config value breaks the promise.
    - Source: CrashReport master toggle (2026-05-25, `docs/reviews/agents-md-review-lessons-archive.md`); CombatMechanics `GetHorseChargePenetration` (`docs/reviews/rca-combat-mechanics-2026-07-02.md`).
 
-2c. **DTO non-empty-output trace (MANDATORY):** For every DTO collection field (`IReadOnlyList<T>`, `List<T>`, etc.) populated by a collector in the changed files, trace whether non-empty values are actually produced under normal operation, not just whether the populator runs:
+2c. **DTO non-empty-output trace:** For every DTO collection field (`IReadOnlyList<T>`, `List<T>`, etc.) populated by a collector in the changed files, trace whether non-empty values are actually produced under normal operation, not just whether the populator runs:
    - Find the populator, trace every code path that adds items, and name each path's precondition (parameter non-null, branch taken).
    - Check the caller(s): is the precondition satisfied in production? A field that is structurally populated but whose precondition no caller meets is always empty: dead code, HIGH if the field appears in user-facing docs or the CHANGELOG.
    - Source: `HarmonyCorrelationCollector.Collect(stack, frames=null)` (Codex review 41, `docs/reviews/lessons/harmony-il.md`).

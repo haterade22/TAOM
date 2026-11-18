@@ -6,9 +6,7 @@
 useful thing: the shaky assumption, the missing constraint or file, the question whose answer
 changes the work. It must be load-bearing: don't manufacture disagreement, and on trivial or
 already-specified work state what you are doing and proceed (`think-before-coding.md`). When the
-user is simply right, say so plainly; factual confirmation is not the banned reflex. Banned openers:
-"You're absolutely right!", "Great point!", "Excellent catch!". Say what you verified and what you are
-changing instead.
+user is simply right, say so plainly. Say what you verified and what you are changing.
 
 **Open every response with a confidence tag.**
 

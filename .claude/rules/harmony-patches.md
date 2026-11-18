@@ -21,7 +21,7 @@ Every patch category's rationale, history, crash-guard semantics, and RCA links 
 [`docs/reference/harmony-patch-registry.md`](../../docs/reference/harmony-patch-registry.md) —
 read the target patch's section before changing it.
 
-## Research First (MANDATORY)
+## Research First
 ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 path <Type>`) before writing a patch. Verify:
 - Exact method signature (parameters, return types, access modifiers)
 - Whether the method is virtual, sealed, or static
@@ -55,7 +55,7 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 - A new patch number names one feature, and its category gets a `## <category>` heading in the registry: `PatchCategoryNumberTests` pins both.
 - Register in a `SubModule.cs` patch category (`[HarmonyPatchCategory]` + the SubModule apply batch — verify the apply TIMING fits the target: most apply in `OnGameInitializationFinished`, but targets that fire during new-game load/main menu need `OnSubModuleLoad`, e.g. `Patch58`/`Patch61`; see the registry)
 
-## MovementOrder postfixes: use a deferred mission-time category (MANDATORY)
+## MovementOrder postfixes: use a deferred mission-time category
 Any patch with `MovementOrder` in its postfix signature MUST go in its feature's own `Patch_MissionTime_<Feature>`
 category, applied at the first mission (`OnMissionBehaviorInitialize`) because `MovementOrder.cctor` reads `Mission.Current.CurrentTime`: null in
 `OnSubModuleLoad`/`OnGameInitializationFinished`. One category per feature, so a class that fails turns off only its own
@@ -73,7 +73,7 @@ plus a `NoRegistryHeading` row in `PatchCategoryNumberTests`; otherwise that tes
 - **No `ResetForUnload()` needed for a new patch.** Nothing reloads TAOM inside one process: the engine's only caller of `OnSubModuleUnloaded` is `Module.FinalizeModule` at shutdown (v1.5.3 `Module.cs:242-248,1296-1314`), and a rebuild means stopping the game and pressing Play again (Mike, 2026-09-24). A static service cache in a patch class therefore lives exactly as long as the process. The existing `ResetForUnload()` methods stay until their class is next touched, and `ResetForUnloadSweepTests` still requires every one that exists to be called from `OnSubModuleUnloaded`. A reload tool appearing later would change this; then the three once-per-process flags in `SubModule.cs` need resetting too (sprint finding COMP-05).
 - **Reflection in hot paths** — `AccessTools.Method` / `AccessTools.Field` lookups MUST be cached in a static field during `Initialize()`, never resolved inside `Prefix()`/`Postfix()`. Guard spawning calls the patch ~20x per settlement visit; uncached reflection means ~20 redundant lookups per entry.
 
-## Static State Machines: Sentinel-Collision Check (MANDATORY)
+## Static State Machines: Sentinel-Collision Check
 
 When a patch holds static state across frames AND drives that state from polling external values (engine counts, file sizes, MBObjectManager queries, vanilla VM properties), enumerate the four boundary states BEFORE writing the change-detection logic:
 
