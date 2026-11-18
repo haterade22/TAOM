@@ -58,7 +58,7 @@ Hooks (2)    (2 - Recruitment + Party VM)
       \   /
        \ /
   Harmony Patches (Patch17_TroopWeight)
-  [TaomSettings.EnableTroopWeight guard]
+  [ITroopWeightService.IsEnabled guard: campaign, then MCM]
 ```
 
 ## Phantom-Wounded Display Fix (2026-06-07)
@@ -90,7 +90,7 @@ All four compute `NumberOfAllMembers − NumberOfHealthyMembers`. Each gets a di
 | Encounter "X vs Y" menu item | `GameMenuPartyItemVM.RefreshCounts` | `PartySize` / `PartyWoundedSize` / `PartySizeLbl` |
 | Party map nameplate text | `Helpers.PartyBaseHelper.GetPartySizeText(PartyBase)` | Rebuilds the `str_party_health` TextObject with weighted `HEALTHY_NUM` / `WOUNDED_NUM` |
 
-All four run for **every** party (the `NumberOfAllMembers` weighting is not main-party-only), so enemy/ally party tooltips and nameplates with heavy troops are corrected too. All four gate on `TaomSettings.EnableTroopWeight` — toggling the feature off reverts every surface to vanilla.
+All four run for **every** party (the `NumberOfAllMembers` weighting is not main-party-only), so enemy/ally party tooltips and nameplates with heavy troops are corrected too. All four gate on `ITroopWeightService.IsEnabled` (the campaign's own start choice, then MCM): toggling the feature off reverts every surface to vanilla.
 
 ### Known property: separate-ceiling rounding
 
@@ -131,7 +131,7 @@ A postfix on `UpgradeReadyTroops` (`Patch17_TroopWeight`) runs once per party *a
 `ITroopWeightService.PlanShed(entries, limit)` sheds the lowest-value bodies first (ascending Tier,
 then Weight; never heroes/leader) until the weighted total is back within the limit — "fewer, better
 troops." Removals apply via `MemberRoster.AddToCounts(character, -count)`. Side benefit: over-cap
-*legacy* parties trim on their next upgrade tick too. Gated on `EnableTroopWeight`; event-gated
+*legacy* parties trim on their next upgrade tick too. Gated on `ITroopWeightService.IsEnabled`; event-gated
 `[TroopWeight][diag]` logging fires only when a shed happens (strip after in-game sign-off).
 
 ### Scope: leader-run parties only (2026-08-07)
@@ -304,7 +304,9 @@ raw > deflated  ⟺  raw > base − surplus  ⟺  raw + surplus > base  ⟺  wei
 So every vanilla over-capacity warning, `PartyVM.IsMainTroopsLimitWarningEnabled`
 (`RightPartyMembersSizeLimit < MemberRosters[1].TotalManCount`), the red tint on the Land Troop
 Capacity row, `RecruitmentVM.IsPartyCapacityWarningEnabled`: flips at exactly the same moment it did
-before and needed no rewriting. The recruit cap, the shed planner's budget, AI behaviour and save
+before and needed no rewriting. The identity holds against the live deflated limit; the party screen
+freezes that limit at open, so since #1430 the main side's flag is restated in the weighted frame there
+(see "Party screen transfers"). The recruit cap, the shed planner's budget, AI behaviour and save
 compatibility are all untouched.
 
 ### The tooltip
@@ -400,7 +402,8 @@ warning.
 
 `BuildLabel` now returns an `IsOverCapacity` verdict with the label, and the caller **clears a stale tint:
 downgrade only.** It never raises a warning vanilla did not, so no mode gate can be bypassed and no spurious
-warning fabricated. Found by the data-flow agent in `/deep-review`; RCA
+warning fabricated. (Superseded on the main side by #1430: the header stays weighted for the whole screen,
+so the main side's tint is now set both ways under vanilla's own mode gate. See "Party screen transfers".) Found by the data-flow agent in `/deep-review`; RCA
 [`rca-troopweight-usage-frame-2026-09-06.md`](../reviews/rca-troopweight-usage-frame-2026-09-06.md).
 
 ### This is not purely cosmetic
@@ -572,7 +575,38 @@ Rivendell block comment says "level 21 to 36 (2.0)" while the Lothlorien one say
 
 ### MCM Setting
 
-`TaomSettings.EnableTroopWeight` (default: `true`) — toggleable at runtime, checked by every patch before executing.
+`TaomSettings.EnableTroopWeight` (default: `true`) is the default a new campaign gets on the Advanced Start Options screen. A campaign that pinned its own choice follows that instead: campaign, then MCM, then on. The hooks check `ITroopWeightService.IsEnabled` before their try block (a source-order test pins it), and the party-size patches read the same answer. See [campaign-start-options.md](campaign-start-options.md).
+
+## Party screen transfers (2026-11-17, #1430)
+
+Two party screen defects from Silas He's fix package (v1.5.6), checked again on v1.5.7.
+
+**The header fell back to the headcount frame after the first heavy troop.** The header guard compared
+the screen's limit with `party.PartySizeLimit`. `PartyScreenLogic.Initialize` copies each limit once
+(v1.5.7 :491, :494), but the normal screen edits the live `MainParty.MemberRoster`
+(`PartyScreenHelper.OpenPartyScreen` :53; `CreateBasicInitDataWithMainParty` :81 does the same for the loot,
+manage and donate screens), so the party's weight-deflated limit moves with each heavy
+troop moved and the comparison fails. A postfix on `Initialize` now records, per side, whether the
+copied limit is its owner's own (`PartyScreenOwnLimits`, a `ConditionalWeakTable` keyed by the screen
+logic). The header reads that record; the live comparison stays only as the fallback for a screen with
+no record. Because the header now stays weighted while heavy troops are dragged in, the main side also
+raises vanilla's red tint (and so the Over Limit prompt at Done) when the weighted count passes the true
+base, under vanilla's own mode gate for that flag (`PartyVM` :3069). The other side's gate reads a private
+mode, so that side only clears a stale tint.
+
+**Transfer All overfilled the weighted cap.** `PartyScreenLogic.TransferAllTroops` (v1.5.7 :997-1045)
+budgets a headcount against the frozen limit. A transpiler inserts `num = Budget(num, this, command)`
+before vanilla's `num <= 0` test and moves that test's labels to the inserted load, so every branch that
+computed `num` passes through it. For members moved into a side that pays the size penalty and shows
+its own limit, `TroopWeightTransferHook` returns the free weighted slots (the true base less the target
+roster's weighted count) filled row by row in vanilla's order (`TroopTransferPlanning.WeightedFillBudget`):
+whole rows while they fit, the first row that does not fit clamped, then stop. With some room left but
+the first eligible troop too heavy for it, the budget is 1, as vanilla's own clamp would move: 0 would make
+vanilla move the whole roster (:1015-1018), which is right only when there is no room. Troop locks count only for
+rows moved out of the right side, as in vanilla (:1019, :1027). Every other case, and any failure, keeps
+vanilla's budget (one warning per process). Without its anchors the transpiler leaves the method vanilla
+and logs one warning per process; `TransferAllPatchTests` runs the rewrite over the installed IL, so an engine bump
+that moves the anchors fails there.
 
 ## Key Files
 
@@ -588,16 +622,19 @@ Rivendell block comment says "level 21 to 36 (2.0)" while the Lothlorien one say
 | `Main/Features/TroopWeight/TroopWeightPenaltyScope.cs` | `PaysSizePenalty`: garrisons and patrol parties pay no size penalty; read by the penalty and by every capacity display (2026-10-16) |
 | `Main/Features/TroopWeight/TroopShedPlanning.cs` | Engine-free `WeightedTroopEntry` / `ShedInstruction` types for the pure shed planner |
 | `Main/Features/TroopWeight/ITroopWeightXmlLoader.cs` + `TroopWeightXmlLoader.cs` | Loader interface + `IPathService` XML parser, graceful degradation on missing file |
-| `Main/Features/TroopWeight/TroopWeightIoC.cs` | `RegisterTroopWeightFeature()` + `InitializeHooks()` (6 patch initialisations) |
+| `Main/Features/TroopWeight/TroopWeightIoC.cs` | `RegisterTroopWeightFeature()` + `InitializeHooks()` (8 patch initialisations) |
 | `Main/Features/TroopWeight/Cheats/TroopWeightCheats.cs` | `taom.print_party_size`, prints the enforced and displayed frames side by side |
 | `Main/Features/TroopWeight/Hooks/PartyUpgraderUpgradeReadyTroops*` | Shed-on-upgrade: interface + boundary hook + postfix on `UpgradeReadyTroops` |
 | `Main/Features/TroopWeight/Hooks/TroopWeightDisplayHook.cs` | The one hook implementation behind all five display surfaces |
-| `Main/Features/TroopWeight/Hooks/IOn*.cs` | 6 hook interfaces: shed-on-upgrade + the 5 display surfaces |
-| `Main/Features/TroopWeight/Hooks/*_Patch.cs` | 6 Harmony patches, all `Patch17_TroopWeight`: `UpgradeReadyTroops` + `PartyVM.RefreshPartyInformation` + `CampaignUIHelper.GetMainPartyHealthTooltip` + `ClanPartyItemWithPartyVM` / `ClanPartyItemWithHeroVM` `.UpdateProperties` + `RecruitmentVM.RefreshPartyProperties` + `PartyCharacterVM.RefreshValues` |
+| `Main/Features/TroopWeight/Hooks/IOn*.cs` | 7 hook interfaces: shed-on-upgrade + the 5 display surfaces + the party screen transfer (#1430) |
+| `Main/Features/TroopWeight/Hooks/*_Patch.cs` | 8 Harmony patches, all `Patch17_TroopWeight`: `UpgradeReadyTroops` + `PartyVM.RefreshPartyInformation` + `CampaignUIHelper.GetMainPartyHealthTooltip` + `ClanPartyItemWithPartyVM` / `ClanPartyItemWithHeroVM` `.UpdateProperties` + `RecruitmentVM.RefreshPartyProperties` + `PartyCharacterVM.RefreshValues` + `PartyScreenLogic.Initialize` (postfix) + `PartyScreenLogic.TransferAllTroops` (transpiler) |
+| `Main/Features/TroopWeight/Hooks/TroopWeightTransferHook.cs` | The party screen hook: records each side's own-limit verdict at screen open, and Transfer All's weighted member budget (#1430) |
+| `Main/Features/TroopWeight/PartyScreenOwnLimits.cs` | Per-screen own-limit verdicts, a `ConditionalWeakTable` keyed by the `PartyScreenLogic` (#1430) |
+| `Main/Features/TroopWeight/TroopTransferPlanning.cs` | **Pure** `WeightedFillBudget`: how many troops fit the free weighted slots, row by row (#1430) |
 | `Main/Features/TroopWeight/Diagnostics/` | TEMPORARY diagnostics: the special-currency count diagnostic (separate investigation) and the main-roster loss diagnostic (`MainRosterLossDiagnostics` plus the two `TroopRoster_*_Patch` prefixes) |
 | `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` | Weight definitions, **224 live rows: 137 at 2.0, 79 at 3.0, six at 4.0, one at 12.0, one at 20.0.** A raw grep returns one more because a `cave_troll` row sits inside a comment block. Unlisted troops weigh 1.0 <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))" 2026-11-15 --> |
 | `Main/_Module/ModuleData/taom_module_strings.xml` | `{=taom_troop_weight_size}` (enforcement label, no longer rendered) + `{=taom_troop_weight_tag}` (row `×N` tag) |
-| `Main/Features/TaomSettings.cs` | MCM toggle (`EnableTroopWeight`) |
+| `Main/Features/TaomSettings.cs` | MCM toggle (`EnableTroopWeight`), the new-campaign default; `TroopWeightSettingsProvider` puts the campaign's choice first |
 
 ## Dependencies
 
@@ -618,6 +655,9 @@ Rivendell block comment says "level 21 to 36 (2.0)" while the Lothlorien one say
 - `PartyUpgraderShedGuardTests.cs`: the shed hook's guard order (bails on leaderless and main parties before reading the roster)
 - `TroopWeightCheatsFormatTests.cs`, `taom.print_party_size` rendering, including the enforced-vs-displayed frame pair
 - `TroopCountDiagnosticsFormatterTests.cs`: the TEMPORARY special-currency diagnostic formatter
+- `TroopTransferPlanningTests.cs`: the pure weighted fill: whole rows, the clamped row, ineligible rows skipped, float noise, bad weights, no room (0, which vanilla reads as "move everything", as it does for a full party) and some room with a too-heavy first troop (1)
+- `PartyScreenOwnLimitsTests.cs`: the verdict per side, a second `Initialize` replaces it, two screens never share one, and an unrecorded screen has none
+- `TransferAllPatchTests.cs`: the Transfer All rewrite on the installed v1.5.7 IL (one budget call, the moved labels, no anchors leaves the method unchanged, one warning across re-patches) and the header guard's and main-side tint's source
 - `MainRosterLossDiagnosticsTests.cs`: the TEMPORARY main-roster loss line formatter, caller-chain filter and `SubModule.cs` wiring
 
 ## How to Add a New Weighted Troop
@@ -644,6 +684,7 @@ Weight values are continuous floats — any positive value works. Common tiers:
 
 ## Changelog
 
+- 2026-11-17: party screen transfers (#1430, ported from Silas He's package): the header keeps the weighted frame after a heavy troop moves, and Transfer All fills the weighted cap instead of the headcount one. See "Party screen transfers".
 - 2026-10-16: the weight penalty exempts garrisons and patrol parties (`TroopWeightPenaltyScope`), and the capacity displays leave their raw frame alone. Vanilla desertion trims a garrison to its `PartySizeLimit` by a quarter of the excess a day, so a weight-deflated limit made elite garrisons desert while lords refilled them; a deflated patrol limit slowed elite patrols (found through yotthani's campaign runs and the review; see "Scope: leader-run parties only" above).
 - 2026-10-06: Lindon's 22 elite rows, each its Rivendell twin's weight (15 at 3.0, 7 at 2.0), plus the clone-parity test (#749). Lindon had no rows since it became its own culture in `cc1713eb3` (2026-08-11), so every Mithlond troop weighed 1.0.
 - 2026-09-14: `ClanPartyItemVM.UpdateProperties` went abstract at v1.5.0; the target table and the patch list now name the two concrete overrides the patch targets through `TargetMethods` (a resolvable-but-bodiless target had passed the binding gate; the gate refuses those now).
@@ -660,6 +701,7 @@ Weight values are continuous floats — any positive value works. Common tiers:
 - **Feature:** #41 — [feat: Troop Weight System — Elite unit party capacity](https://github.com/haterade22/TAOM/issues/41) — Closed
 - **Bug fix:** #45 — [fix: TroopWeight crashes and freezes from TroopRoster-level patches](https://github.com/haterade22/TAOM/issues/45) — Closed
 - **Feature:** #282 — [feat: AI lords respect troop weight on auto-upgrade (shed-on-upgrade) + fix unweighted UI counts](https://github.com/haterade22/TAOM/issues/282) — Closed
+- **Bug fix:** #1430: [Troop weight: party screen header and Transfer All from Silas's package](https://github.com/haterade22/TAOM/issues/1430)
 - **Bug fix:** #749: [Lindon troops take one party slot and get no survival bonus](https://github.com/haterade22/TAOM/issues/749)
 
 ---

@@ -166,6 +166,7 @@ Refusals added to the validation ladder, after "in your party" and before the go
 | Prisoner | Lost, with the "Messenger Lost" notice. The maintainer's decision: a messenger does not wait for a prisoner |
 | Dead, disabled, or not spawned and not a wanderer | Lost |
 | In the player's own party | The "Messenger Error" notice, and the messenger is removed |
+| In the army party the player's party is attached to, outside a settlement | The same notice, and the messenger is removed (#1429). The arrival meets that party, and `PlayerEncounter.SetupFields` throws for it (Silas He's crash cf5730c5). The in-person dialog can send to a hero of the player's army, and a player can join the army while the messenger travels, so the send check cannot catch this. In a settlement the arrival meets the settlement, so the row does not apply there |
 
 A reachable target also waits while the player is not free on the campaign map (a menu, an encounter or a mission is open), while the target is a child, and while the target's party is in a battle. A captive player is one of these cases: the captivity menu is open, so the messenger waits and is delivered after the release. Before #1133 it was dropped as "in your own party" when the target had no party, because the engine clears the main hero's party during captivity and the arrival compared the two parties directly.
 
@@ -277,6 +278,7 @@ The boundary classes (`MessengerCampaignBehavior`, the UI mixin, `MessengerTarge
 
 ## Changelog
 
+- 2026-11-17: a messenger whose target rides in the army party the player is attached to, outside a settlement, is removed with the "Messenger Error" notice instead of reaching `PlayerEncounter.SetupFields`, which threw (#1429, from Silas He's fix package).
 - 2026-11-13: a messenger that waits for its target writes one line to the message log; a fugitive or released hero of the Special occupation, whom the engine's daily settle skips, is lost on arrival and refused at the send, so that wait cannot be endless (#1133).
 - 2026-11-13: a messenger to a hero the engine will make Active again (a fugitive, a released hero, a hero travelling on orders) now waits and is delivered once the hero is Active; a messenger that arrives while the player is a captive waits for the release (it was dropped as "in your own party"); a prisoner target stays lost; the send check shares the arrival's state rule, so a disabled wanderer is refused and a released or travelling hero can be sent to (#1133).
 - 2026-10-23: the price grows with the distance to the target and is higher for a war, a stranger and a besieged town; the button shows it and the hint shows about how many days; a target in the same settlement or army is refused with a reason (#898). The base price keeps its MCM id and default and is shown as "Base Gold Cost". Docs: the encyclopedia mixin has no `SendMessengerCost` data source, and `EnableMessengers` needs no restart.

@@ -320,6 +320,25 @@ public class SubModule : MBSubModuleBase
         Features.SkipCampaignIntro.Hooks.Patch58_SkipCampaignIntro.Initialize(IoC.Resolve<IModLogger>());
         TryPatchCategory("Patch58_SkipCampaignIntro");
 
+        // Patch168_NavalLandPathfindGuard: the native nearest-land search behind MapScene's
+        // GetNearestFaceCenterForPositionWithPath crashes without NavalDLC (no nav-mesh region map). The prefix
+        // returns the nearest settlement gate instead. Applied here so it is attached before the first map
+        // tick of a loaded save. See docs/features/naval-travel.md.
+        Features.NavalTravel.Hooks.Patch168_NavalLandPathfindGuard.Initialize(IoC.Resolve<IModLogger>());
+        TryPatchCategory("Patch168_NavalLandPathfindGuard");
+        // Patch160 and Patch161 (#1429, engine bugs from Silas He's fix package; docs/features/engine-bug-guards.md).
+        // Applied here because a save load and a 3D scene widget can both run before any campaign exists.
+        Features.EngineBugGuards.Hooks.Patch160_LoadRetryStop.Initialize(IoC.Resolve<IModLogger>());
+        TryPatchCategory("Patch160_LoadRetryStop");
+        Features.EngineBugGuards.Hooks.Patch161_SceneTableauNullSceneGuard.Initialize(IoC.Resolve<IModLogger>());
+        TryPatchCategory("Patch161_SceneTableauNullSceneGuard");
+        // Patch162 to Patch167 (#1444, display and text bugs from the same package): stateless, applied with the guards.
+        // Patch163 and Patch165 patch CampaignUIHelper, so they wait for OnGameInitializationFinished (GameTexts).
+        TryPatchCategory("Patch162_ExecutionNoticeClosable");
+        TryPatchCategory("Patch164_DecisionRulerName");
+        TryPatchCategory("Patch166_FoundedKingdomFormalName");
+        TryPatchCategory("Patch167_DeadHeroOutfit"); // its Prepare skips it when a co-op module is loaded
+
         // Patch95_FactionUI: Kysaro's themed front end (#704): main menu, menu video and music, splash,
         // loading screens, the character-creation screens and the hero presets. Applied HERE because the
         // splash and the main menu render before any campaign, and the loading window's movie is built on
@@ -525,7 +544,9 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IOnClanPartyItemUpdateProperties>(),
             IoC.Resolve<IOnRecruitmentVMRefreshPartyProperties>(),
             IoC.Resolve<IOnCampaignUIHelperGetPartyHealthTooltip>(),
-            IoC.Resolve<IOnPartyCharacterVMRefreshValues>());
+            IoC.Resolve<IOnPartyCharacterVMRefreshValues>(),
+            IoC.Resolve<IOnPartyScreenLogicTransfer>(),
+            logger);
 
         // ADR-013: TaleWorlds.MountAndBlade.CustomBattle exists nowhere on a dedicated server, and these hooks name it.
         if (!ClientComposition.IsDedicatedServer())
@@ -935,6 +956,10 @@ public class SubModule : MBSubModuleBase
 
         if (gameStarterObject is CampaignGameStarter campaignStarter)
         {
+            // Campaign start options first: on a new campaign this pins the start screen's choices into the
+            // campaign's own options before any feature reads them (docs/features/campaign-start-options.md).
+            IoC.Resolve<TAOM.Features.CampaignStartOptions.ICampaignStartSession>().Begin();
+
             // Registration order is preserved exactly from the pre-extraction inline block:
             // vanilla-behavior removals precede their TAOM replacements, and the LotrIssues suppression
             // must run inside this OnGameStart (after Sandbox registered its behaviors) — so the
@@ -1680,6 +1705,10 @@ public class SubModule : MBSubModuleBase
         // tooltip methods can run CampaignUIHelper's static initializer; the patches stay inert until the first themed
         // encyclopedia movie binds (EncyclopediaTroopNames.Active). A server has no client classes, so nothing applies there.
         TryPatchCategory("TAOM.EncyclopediaTroopNames");
+        // #1444's tier badge and army food fixes patch CampaignUIHelper too, so they wait here for the same reason
+        // (EarlyPatchStaticInitializerGateTests). Both are display only, and no tooltip opens before a game exists.
+        TryPatchCategory("Patch163_EliteTierBadge");
+        TryPatchCategory("Patch165_ArmyFoodDays");
         // Patch77 (#514) — attaches the Player Switcher panel to the character creation face
         // generator and tears it down again. The constructor postfix binds by arity: if a future
         // engine build declares a second BodyGeneratorView constructor, Prepare returns false and
@@ -1810,6 +1839,10 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<TAOM.Features.MapEventGuard.EmptyMeetingGuardService>(),
             IoC.Resolve<IModLogger>());
         TryPatchCategory("Patch143_EmptyMeetingGuard");
+        // Patch159 (#1429): help defenders starts the encounter against the army leader when the siege camp's leader
+        // is attached to that army. A game menu consequence, so the standard batch is early enough.
+        TAOM.Features.MapEventGuard.Hooks.Patch159_HelpDefendersArmyLeader.Initialize(IoC.Resolve<IModLogger>());
+        TryPatchCategory("Patch159_HelpDefendersArmyLeader");
         // Patch87 (#566): "Return to Army" leaves the town or castle when the player is an army
         // member who is NOT attached to the army. Vanilla only ever leaves a village, hides "Leave"
         // for every non-leader member, and the wait menu it opens instead has no exit. The target is

@@ -9,6 +9,7 @@ public static class TroopWeightIoC
     public static void RegisterTroopWeightFeature(IContainer container)
     {
         container.Register<ITroopWeightXmlLoader, TroopWeightXmlLoader>(Reuse.Singleton);
+        container.Register<ITroopWeightSettingsProvider, TroopWeightSettingsProvider>(Reuse.Singleton);
         container.Register<ITroopWeightService, TroopWeightService>(Reuse.Singleton);
 
         // TEMPORARY: special-currency troop-count undercount diagnostic (separate investigation).
@@ -23,6 +24,9 @@ public static class TroopWeightIoC
         // denominator reads as "adding troops made my party smaller". RegisterMany so all five surfaces
         // share ONE singleton — they read the same per-party caches on the service.
         container.RegisterMany<TroopWeightDisplayHook>(Reuse.Singleton);
+
+        // Party screen transfers (#1430): the own-limit verdict at screen open, and Transfer All's weighted budget.
+        container.Register<IOnPartyScreenLogicTransfer, TroopWeightTransferHook>(Reuse.Singleton);
     }
 
     public static void InitializeHooks(
@@ -31,7 +35,9 @@ public static class TroopWeightIoC
         IOnClanPartyItemUpdateProperties clanScreenHook,
         IOnRecruitmentVMRefreshPartyProperties recruitmentHook,
         IOnCampaignUIHelperGetPartyHealthTooltip healthTooltipHook,
-        IOnPartyCharacterVMRefreshValues rowTagHook)
+        IOnPartyCharacterVMRefreshValues rowTagHook,
+        IOnPartyScreenLogicTransfer transferHook,
+        TAOM.Core.Logging.IModLogger logger)
     {
         PartyUpgraderUpgradeReadyTroops_Patch.Initialize(upgraderHook);
         PartyVM_RefreshPartyInformation_Patch.Initialize(partyScreenHook);
@@ -43,5 +49,7 @@ public static class TroopWeightIoC
         // client assembly — so the patch was searching for a label that could not be there.
         CampaignUIHelper_GetMainPartyHealthTooltip_Patch.Initialize(healthTooltipHook);
         PartyCharacterVM_RefreshValues_Patch.Initialize(rowTagHook);
+        PartyScreenLogic_Initialize_Patch.Initialize(transferHook);
+        PartyScreenLogic_TransferAllTroops_Patch.Initialize(transferHook, logger);
     }
 }

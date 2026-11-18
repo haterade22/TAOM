@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.CampaignStartOptions;
 using TAOM.Features.Diplomacy.Models;
 
 namespace TAOM.Features.Diplomacy;
@@ -11,6 +12,7 @@ public class WarOfTheRingService : IWarOfTheRingService
     private readonly IDiplomacyService _diplomacyService;
     private readonly IAllianceAdapter _allianceAdapter;
     private readonly ITaomSettingsProvider _settingsProvider;
+    private readonly ICampaignStartOptions _campaignOptions;
     private readonly IModLogger _logger;
     private readonly WarOfTheRingConfig _config;
     private readonly HashSet<string> _warnedSkippedWars = new HashSet<string>(StringComparer.Ordinal);
@@ -61,11 +63,13 @@ public class WarOfTheRingService : IWarOfTheRingService
         IDiplomacyService diplomacyService,
         IAllianceAdapter allianceAdapter,
         ITaomSettingsProvider settingsProvider,
+        ICampaignStartOptions campaignOptions,
         IModLogger logger)
     {
         _diplomacyService = diplomacyService;
         _allianceAdapter = allianceAdapter;
         _settingsProvider = settingsProvider;
+        _campaignOptions = campaignOptions;
         _logger = logger;
 
         _config = configProvider.LoadConfig();
@@ -199,11 +203,20 @@ public class WarOfTheRingService : IWarOfTheRingService
         }
     }
 
+    // Campaign start options first (the choice this campaign pinned, kept even where MCM is missing, such as
+    // a dedicated server), then MCM, then the JSON flag.
     private bool GetEffectiveEnabled()
     {
-        if (_settingsProvider.IsAvailable) return _settingsProvider.WarOfTheRingEnabled;
-        return _config.Enabled;
+        return _campaignOptions.WarOfTheRing ?? NewCampaignEnabled;
     }
+
+    public bool NewCampaignEnabled =>
+        _settingsProvider.IsAvailable ? _settingsProvider.WarOfTheRingEnabled : _config.Enabled;
+
+    public (int Phase1Day, int Phase2Day) NewCampaignPhaseDays =>
+        _settingsProvider.IsAvailable
+            ? (_settingsProvider.Phase1TriggerDay, _settingsProvider.Phase2TriggerDay)
+            : (_config.Phase1.TriggerDay, _config.Phase2.TriggerDay);
 
     // #765: the War Chronicle's phase anchors read the same clamped pair the transitions use.
     public int? GetEffectivePhaseDay(WarPhase phase)
@@ -242,10 +255,11 @@ public class WarOfTheRingService : IWarOfTheRingService
         if (_config.TestMode.Enabled)
             return (_config.TestMode.Phase1Day, _config.TestMode.Phase2Day);
 
-        if (_settingsProvider.IsAvailable)
-            return (_settingsProvider.Phase1TriggerDay, _settingsProvider.Phase2TriggerDay);
+        var pinnedDays = _campaignOptions.WarPhaseDays;
+        if (pinnedDays.HasValue)
+            return (pinnedDays.Value.Phase1Day, pinnedDays.Value.Phase2Day);
 
-        return (_config.Phase1.TriggerDay, _config.Phase2.TriggerDay);
+        return NewCampaignPhaseDays;
     }
 
     // #772: the phase turns first so that vanilla's OnWarDeclared listeners already treat every

@@ -184,6 +184,8 @@ The MCM options menu (via `Bannerlord.MCM.v5`) provides runtime overrides:
 
 For the master enable/disable toggle: MCM `WarOfTheRingEnabled` takes precedence over JSON `enabled` when MCM is available.
 
+**A campaign's own start choice comes first.** A new campaign pins its War of the Ring switch and start days on the Advanced Start Options screen. The pinned switch beats MCM and JSON; the pinned days sit between the two Test Mode rows (1 and 2) and the MCM sliders (3), and the clamp still applies. MCM and JSON are the defaults a new campaign gets; an older save has nothing pinned and follows the order above. See [campaign-start-options.md](campaign-start-options.md).
+
 **MCM values persist per player.** `TaomSettings` is an `AttributeGlobalSettings`, so MCM writes the chosen days to `Documents/Mount and Blade II Bannerlord/Configs/ModSettings/Global/TAOM/`. Retuning the C# defaults only reaches fresh installs — a player who has already launched the mod keeps their stored days until they move the sliders or delete that folder.
 
 JSON provides the structural data (which kingdoms fight, war declarations). MCM provides timing and toggle overrides.

@@ -1,3 +1,4 @@
+using TAOM.Features.CampaignStartOptions;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -64,7 +65,7 @@ public class WarOfTheRingWarVetoTests
     private WarOfTheRingService SutAt(WarPhase phase)
     {
         var sut = new WarOfTheRingService(
-            _configProvider, _diplomacyService, _allianceAdapter, _settingsProvider, _logger);
+            _configProvider, _diplomacyService, _allianceAdapter, _settingsProvider, Substitute.For<ICampaignStartOptions>(), _logger);
         sut.SetPhaseFromSave(phase);
         return sut;
     }
@@ -312,7 +313,7 @@ public class WarOfTheRingWarVetoTests
     public void CheckPhaseTransition_Phase1Day_PhaseIsIsengardWarWhenDeclareWarRuns()
     {
         var sut = new WarOfTheRingService(
-            _configProvider, _diplomacyService, _allianceAdapter, _settingsProvider, _logger);
+            _configProvider, _diplomacyService, _allianceAdapter, _settingsProvider, Substitute.For<ICampaignStartOptions>(), _logger);
         var phasesSeen = new List<WarPhase>();
         var vetoesSeen = new List<WarVeto>();
         _allianceAdapter.When(a => a.DeclareWar(Arg.Any<string>(), Arg.Any<string>())).Do(call =>

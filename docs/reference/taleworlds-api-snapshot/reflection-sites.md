@@ -28,6 +28,8 @@ In `TAOM.Dependencies`, `Dependencies/GameVersionNotice.cs` patches `Module.Chec
 
 A third-party site gated the same way: `Adapters/ButterLibDistanceMatrixAdapter.cs` (#740) finds ButterLib's internal `Bannerlord.ButterLib.Implementation.DistanceMatrix.DistanceMatrixSubSystem` by full name and reads its static `Instance`, then calls `IsEnabled` and `Disable()` on it. The type lives in a version-specific ButterLib DLL that ReflectionSiteBindingTests does not load, so `TAOM.Tests/Features/ButterLibDistanceMatrix/ButterLibDistanceMatrixBindingTests.cs` (`BindingVerification`) checks it against the newest implementation DLL tracked in `Dependencies/_Module/bin/`.
 
+`EngineBugGuards/Hooks/Patch167_DeadHeroOutfit.cs` (#1444) binds delegates to the private saveable auto-properties `Hero._battleEquipment` and `Hero._civilianEquipment` (getter and setter each) by name through `AccessTools.PropertyGetter` and `PropertySetter`. `Patch167DeadHeroOutfitTests.KitAccessors_BindAgainstTheInstalledEngine` (category `BindingVerification`) asserts all four bind on the installed engine.
+
 ---
 
 ## Category B — Auxiliary static-engine reflection (GATED)

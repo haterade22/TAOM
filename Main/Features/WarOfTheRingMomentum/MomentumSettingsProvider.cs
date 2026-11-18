@@ -1,5 +1,6 @@
 using System;
 using TAOM.Core.Validation;
+using TAOM.Features.CampaignStartOptions;
 using TAOM.Features.WarOfTheRingMomentum.Models;
 
 namespace TAOM.Features.WarOfTheRingMomentum;
@@ -13,10 +14,12 @@ namespace TAOM.Features.WarOfTheRingMomentum;
 public class MomentumSettingsProvider : IMomentumSettingsProvider
 {
     private readonly IMomentumConfigProvider _configProvider;
+    private readonly ICampaignStartOptions _campaign;
 
-    public MomentumSettingsProvider(IMomentumConfigProvider configProvider)
+    public MomentumSettingsProvider(IMomentumConfigProvider configProvider, ICampaignStartOptions campaign)
     {
         _configProvider = configProvider;
+        _campaign = campaign;
     }
 
     private MomentumConfig Config => _configProvider.GetConfig();
@@ -24,7 +27,9 @@ public class MomentumSettingsProvider : IMomentumSettingsProvider
 
     public bool MomentumEnabled => Mcm?.MomentumEnabled ?? Config.Enabled;
 
-    public bool VictoryEnabled => Mcm?.MomentumVictoryEnabled ?? Config.VictoryEnabled;
+    public bool VictoryEnabled => _campaign.MomentumVictory ?? VictoryNewCampaignDefault;
+
+    public bool VictoryNewCampaignDefault => Mcm?.MomentumVictoryEnabled ?? Config.VictoryEnabled;
 
     public int VictoryThreshold =>
         Mcm != null ? Math.Max(1, Mcm.MomentumVictoryThreshold) : Config.VictoryThreshold;

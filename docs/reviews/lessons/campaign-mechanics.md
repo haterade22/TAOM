@@ -1284,3 +1284,9 @@ The first 150-day AI run showed Dunland and Gondor at peace on day 134, so they 
 - **Why missed:** the patch was written to veto, and the reading procedure asked who called the war without a line to answer it.
 - **Prevent:** for each question in a feature's "How to verify in game", name the log line that answers it and the step that reads it. Log the allowed outcome as well as the refused one when a run must explain a state.
 - **Source:** [rca-faction-balance-run-2026-11-15.md](../rca-faction-balance-run-2026-11-15.md), findings 1 to 3.
+
+### A reachability check tests from points already shown to reach the main map (#1434, 2026-11-17)
+The settlement entrance audit gained a path check from each entrance's three nearest town or castle gates, and one successful path passed it. The references were only gates that passed the face checks, so two gates 2.72 apart inside one cut-off pocket (Orthanc and Isengard) could each vouch for the other. A failed record also got no references, so its suggested coordinate skipped the path test.
+- **Why missed:** the builder asked whether a path reaches the entrance, not whether the path's start is on the main map, and the tests used one fake path oracle per entrance.
+- **Prevent:** anchor a reachability check to a set proven connected: join each successful pair into a group and judge against the largest group, or start every path from one known main-map point. Assign the inputs of every record before any early `continue`, and run the cheap face checks before a native path query (the pathfinder does not bounds-check a face). Test with a pocket of two broken members.
+- **Source:** [rca-settlement-entrances-2026-11-17.md](../rca-settlement-entrances-2026-11-17.md), findings 1, 2 and 6.

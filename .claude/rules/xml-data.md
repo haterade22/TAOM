@@ -26,7 +26,7 @@ A `<Kingdom>` `name` is the bare realm name (`Erebor`, `Ered Luin`); "Kingdom of
 ## Region Codes
 Settlement and lord id prefixes: [id-cheatsheet](../../docs/modding/id-cheatsheet.md) Region prefixes. They are independent id spaces.
 
-## Config ID Cross-Reference (MANDATORY)
+## Config ID Cross-Reference
 
 After writing ANY XML/JSON config containing culture, kingdom, or settlement IDs, cross-reference EVERY ID against this table before moving on.
 

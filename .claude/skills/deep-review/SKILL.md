@@ -194,9 +194,9 @@ VERDICT: READY FOR COMMIT / NEEDS FIXES
 
 ## Step 3e: Root Cause Analysis (a blocking gate before commit, for the findings named here)
 
-Write an RCA file when a confirmed finding (from any agent, or from the Codex pre-review if Step 0 ran) is CRITICAL or HIGH (Agent 7's CRITICAL and a Codex P1 count), reached a player, or repeats a cause already recorded (grep `docs/reviews/rca-*.md` and `docs/reviews/lessons/`). Every other confirmed finding, MEDIUM or LOW, is fixed and proved by its tests and needs no RCA file; when it shows a systemic pattern it still gets its lessons entry below. The point is not just to fix bugs, it is to make the same category of bug impossible in future features. (Mike, 2026-11-17, harness retro P2: new RCA files per week went 27, 49, 96, and the lens-yield table credits lenses from 28 of 698 RCA files. This narrows the rule drafted as D3 on 2026-11-03.)
+Write an RCA file when a confirmed finding (from any agent, or from the Codex pre-review if Step 0 ran) is CRITICAL or HIGH (Agent 7's CRITICAL and a Codex P1 count), reached a player, or repeats a cause already recorded (grep `docs/reviews/rca-*.md` and `docs/reviews/lessons/`). Every other confirmed finding, MEDIUM or LOW, is fixed and proved by its tests and needs no RCA file; when it shows a systemic pattern it still gets its lessons entry below. The goal is to make the same category of bug impossible in future features.
 
-The recurring failure is patching a symptom and never extracting the systemic lesson, so the same category of bug ships again. Severity decides whether an RCA file is written, never whether the lesson is recorded. Three examples on file: Career cooldown review #31 (NaN gate), EditorCacheRebuild review #38 (NaN gate again), scene-scripts CS_Road 2026-05-13 (NaN gate, THIRD time). All caught by the same rule that was scope-gapped on each project.
+The recurring failure is patching a symptom and never extracting the systemic lesson, so the same category of bug ships again. Severity decides whether an RCA file is written, never whether the lesson is recorded.
 
 **For each finding that needs an RCA file:**
 
@@ -222,7 +222,7 @@ The recurring failure is patching a symptom and never extracting the systemic le
 
 If the RCA reveals a rule that's already documented but wasn't followed (scope gap or agent prompt missing the rule), update the rule file or agent prompt in a follow-up commit. Commit graph: review → fixes → RCA → preventive-rule update.
 
-## Step 4: Apply improvements (MANDATORY)
+## Step 4: Apply improvements
 
 A better way that the review found and left in a report is a better way nobody gets. When Agent 6 returns a KEEP proposal or Agent 3 an APPLY-scoped fix for the changed code (together, "proposals" below), the orchestrator applies it in this session. The reviewers never edit; you do.
 
@@ -244,7 +244,7 @@ Then fill in the IMPROVEMENTS lists and the VERDICT in the Step 3 report. READY 
 - Agent 5 (Data Flow) has historically been the most productive lens (no per-lens yield is measured yet).
 - If the verdict is NEEDS FIXES, list the fixes needed in priority order.
 
-## HIGH findings — no silent deferrals (MANDATORY)
+## HIGH findings: no silent deferrals
 
 If any agent reports a HIGH-severity finding (Agent 7's CRITICAL counts, as does a Codex P1):
 1. The default action is FIX. Implement the fix in the same session.
@@ -253,12 +253,12 @@ If any agent reports a HIGH-severity finding (Agent 7's CRITICAL counts, as does
    - A commit trailer `Deferred: <reason>` on the commit that would have fixed it
    - A `Known limitation:` paragraph in the commit body (it becomes the release's CHANGELOG entry)
 
-What is NOT allowed: quietly proceeding past a HIGH finding on informal reasoning ("only matters in case X") without writing the decision down. Past experience: Career System P2 (ally buff overwrite) was flagged HIGH by Agent 5 and dismissed; Codex independently caught the same bug later.
+What is NOT allowed: quietly proceeding past a HIGH finding on informal reasoning ("only matters in case X") without writing the decision down.
 
 ## Fix-loop guidance
 
 When the verdict is NEEDS FIXES and the user chooses to address findings now:
 
 - If a finding is structural (root cause unclear, multiple symptoms in one area), invoke **`/investigate`** instead of fixing directly — its 6-phase workflow auto-engages `/freeze` and enforces the Iron Law.
-- **Verify each fix at the OUTERMOST gate, not just the layer you edited.** When a fix makes a method's behavior unconditional (or changes its guard semantics), grep every CALLER of that method for early-outs that re-condition it before marking the finding fixed — and note that layer-local regression tests cannot see caller-level gates. (Codex review 72 caught a service-layer "unconditional close" fix bypassed by two hook-level `IsEnabled` gates one review after it shipped; RCA `rca-tournament-exit-hang-2026-07-06.md` finding #4.)
+- **Verify each fix at the OUTERMOST gate, not just the layer you edited.** When a fix makes a method's behavior unconditional (or changes its guard semantics), grep every CALLER of that method for early-outs that re-condition it before marking the finding fixed, and note that layer-local regression tests cannot see caller-level gates.
 - After fixes land, re-review the fix diff only when it fixed a CRITICAL or HIGH, or changed runtime behaviour in a tier 1 area: one Codex pass at `high` plus the lens that found it. Fixes for MEDIUM and lower are proven by their tests and `/verify`.

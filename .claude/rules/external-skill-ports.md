@@ -64,7 +64,7 @@ The root may be a plugin repo, a marketplace or one skill folder; the whole tree
 
 ## Frontmatter field check
 
-For every field in the upstream skill's frontmatter, verify it appears in **`.claude/rules/harness-facts.md`** ("Skill load semantics") as documented and consumed by current Claude Code. `tools/test_hooks.sh` 3b fails a key off the allowlist. A documented key missing from it goes into `SKILL_KEYS` and into harness-facts.md "Skill load semantics", with a doc URL. An undocumented key is dropped.
+For every field in the upstream skill's frontmatter, verify it appears in **`.claude/rules/harness-skills-agents.md`** ("Skill load semantics") as documented and consumed by current Claude Code. `tools/test_hooks.sh` 3b fails a key off the allowlist. A documented key missing from it goes into `SKILL_KEYS` and into harness-skills-agents.md "Skill load semantics", with a doc URL. An undocumented key is dropped.
 
 **Specific killshots from prior reviews:**
 

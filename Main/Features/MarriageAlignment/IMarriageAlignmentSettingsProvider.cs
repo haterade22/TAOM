@@ -7,6 +7,9 @@ namespace TAOM.Features.MarriageAlignment;
 public interface IMarriageAlignmentSettingsProvider
 {
     bool IsEnabled { get; }
+
+    /// <summary>What a new campaign gets for the master switch when its alignment preset is Standard: MCM, else JSON.</summary>
+    bool NewCampaignDefault { get; }
     bool ApplyToAi { get; }
     bool ApplyToPlayer { get; }
     bool SteerAiPartnerSearch { get; }

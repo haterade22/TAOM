@@ -28,7 +28,7 @@ Services NEVER accept sealed TaleWorlds types directly. Always wrap with adapter
 
 **The campaign statics are computed getters too.** `Hero.MainHero` (`CharacterObject.PlayerCharacter.HeroObject`) and `MobileParty.MainParty` (`Campaign.Current.MainParty`) throw with no campaign, which is every Custom Battle, so `Hero.MainHero?.` guards nothing there. Code a mission can reach reads `CharacterObject.PlayerCharacter?.HeroObject` (or `(Game.Current?.PlayerTroop as CharacterObject)?.HeroObject`, which also survives no Game) and `Campaign.Current?.MainParty`, or returns on `Campaign.Current == null` first (#97, #699). `PartyBase.MainParty` is the inverse case: it returns null only without a campaign, and with one it reads `Campaign.Current.MainParty.Party` (v1.5.5 `PartyBase.cs:209-219`), so it throws, `?.` included, while the stored main party is null. Check `Campaign.Current?.MainParty` and read `Campaign.Current?.MainParty?.Party`; `MainPartyNullCheckScanTests` fails a null comparison, `is null`, `??` or `?.` on the getter written directly or inside any number of its own parentheses, and passes a call argument (`Find (PartyBase.MainParty)?.X`); it cannot see a check through a local alias (`var p = PartyBase.MainParty; if (p == null)`), so review for that form, and it blanks comments but not strings, so a string holding the check fails it (#792).
 
-## A singleton adapter keeps no engine object after its operation (MANDATORY)
+## A singleton adapter keeps no engine object after its operation
 
 Adapters are `Reuse.Singleton`, and patches hold them in statics, so a field that keeps a `Hero`, a `Clan` or a list of
 them keeps that campaign reachable after a load. Return engine objects inside the snapshot a call hands back. When one
@@ -44,7 +44,7 @@ covers the fault path (`IAllegianceRelationAdapter.Release`; #952, repeated in #
 
 **Modifier-preserving overloads.** Before calling a `(ItemObject, ...)` overload, search for the `(EquipmentElement, ...)` form (v1.5.6 `ItemRoster.AddToCounts` has both, ItemRoster.cs:185,194). Prefer it and carry the full element in the adapter's data; services see opaque tokens (`PartyMountInventoryAdapter`, `MountSnapshot`). Never document a lost modifier as a limitation before checking the API.
 
-## Agent handles: identity is the object, liveness is the slot (MANDATORY)
+## Agent handles: identity is the object, liveness is the slot
 
 An adapter wrapping a deleted `Agent` keeps answering: its native-pointer members read the engine slot
 that agent's index now belongs to (#592). `MissionAdapterFactory` therefore keys by object reference,
@@ -53,7 +53,7 @@ Do not add an index-keyed cache beside it, do not hold an `IAgentAdapter` across
 re-asking `IsActive()`, and route every `SetActionChannel` through the clip-exists guard so a clip
 requested on the wrong monster is a TAOM log line, not a native warning of unknown consequence.
 
-## A destructible's shown stage must only move forward (MANDATORY)
+## A destructible's shown stage must only move forward
 
 Never raise a damaged `DestructableComponent`'s `HitPoint` (a heal, regeneration) unless the adapter has set
 `OnCalculateDestructionStateIndex` to keep the shown stage from moving backward: the engine does not, so a smaller heal
@@ -69,7 +69,7 @@ Read the raw culture through `BasicCharacterObject` and the raw name through its
 not help), and before calling a repair done, trace every member the protected method reads after the first throw
 ([repair](../../docs/features/stale-character-repair.md), #1076).
 
-## Relations and party-screen writes (MANDATORY)
+## Relations and party-screen writes
 
 - **Relations live on the owner the active DiplomacyModel returns** (`GetHeroesForEffectiveRelation`): his clan leader
   under the vanilla mapping and in co-op; the lord himself for the player's own pairs under Personal Relations (single

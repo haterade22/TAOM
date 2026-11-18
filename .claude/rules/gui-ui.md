@@ -17,7 +17,7 @@ paths:
 
 A new or changed screen also passes the [Gauntlet screen checklist](../../docs/reference/gauntlet-screen-checklist.md)
 in game: empty, many and long-text states, disabled reasons, a way out, consistency with vanilla.
-## Sprite AND Brush References (MANDATORY)
+## Sprite AND Brush References
 
 Before writing ANY `Sprite="X"` in XML or `GetSprite("X")` in C#:
 
@@ -31,13 +31,13 @@ Use the exact registered name, with no module prefix: a PNG at `SpriteParts/ui_t
 
 A loose PNG plus a hand-added manifest entry renders blank. Run the bake pipeline in [gui-sprite-system.md](../../docs/features/gui-sprite-system.md), verify both the bake and the in-game render, and say so in the `Not-tested:` trailer.
 
-## GUI Prefab Clones Go Stale Across Engine Versions (MANDATORY)
+## GUI Prefab Clones Go Stale Across Engine Versions
 
 TAOM ships full `<Prefab>` clones of many vanilla prefabs. Vanilla renames widget attributes between versions; a stale clone keeps the old one and the widget silently mis-renders. A prefab clone goes stale across versions: diff it against installed vanilla before editing and after an engine bump; gates and method in [gui-prefab-clones.md](../../docs/reference/gui-prefab-clones.md). Only the running game confirms a prefab renders.
 
 A clone can also stop consuming an engine signal with every attribute still valid: moving the `Sprite` off the widget the engine writes `Color` / `AlphaFactor` / `ColorFactor` to (vanilla's `SettlementNameplateItemWidget`) leaves those writes with nothing to draw, because `Widget.Render` never passes them to children. TAOM's nameplate redesign lost relation colour and plate transparency this way for five months (#591). When a clone re-parents visuals, list what the engine writes on the original element and make a custom container widget consume it: `docs/features/settlement-nameplate-relation.md`.
 
-## UIExtenderEx PrefabExtension Safety (MANDATORY)
+## UIExtenderEx PrefabExtension Safety
 
 Before injecting into ANY vanilla prefab container:
 
@@ -66,7 +66,7 @@ mapInfo.SecondaryInfoItems.Add(new MapInfoItemVM(...))
 ```
 A mod mutating a vanilla ViewModel collection it does not own can have its addition dropped without warning: `MapInfoVM.CreateItems()` calls `OnFinalize()` on every item, `Clear()`s both `PrimaryInfoItems` and `SecondaryInfoItems`, and re-adds only vanilla's nine. Anything a mixin added is gone. In v1.4.8 and v1.5.5 that method is called from exactly one site, the constructor (`MapInfoVM.cs:138`), before any mixin exists, so the hazard is real in shape but dormant in practice. If you add anyway, do it on every refresh behind `Contains`, so a rebuilt list gets the item back, and remove it when it no longer applies, as `SpecialResourceMapBarMixin` does (#958, #977). Never skip the first refresh: `MapBarVM.Initialize` runs it before the view loads and the next one comes 2 s later.
 
-## Custom GauntletLayer Input Wiring (MANDATORY)
+## Custom GauntletLayer Input Wiring
 
 When adding a custom `GauntletLayer` overlay that contains interactive widgets (buttons, click bindings, drag handles) to **either** a `ScreenBase` (via Harmony postfix on `OnInitialize`) **or** a `MissionScreen` (via `MissionView.OnMissionScreenInitialize`, `MissionLogic` overlay attach, or any other feature-overlay attach path), the layer MUST call `_layer.InputRestrictions.SetInputRestrictions(...)` after construction or it paints but never registers with the screen's input dispatcher — mouse clicks pass through. Pair with `_layer.InputRestrictions.ResetInputRestrictions()` in the teardown path before `RemoveLayer`.
 

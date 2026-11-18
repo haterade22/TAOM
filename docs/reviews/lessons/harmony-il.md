@@ -1003,6 +1003,11 @@ never patched before did not do.
   list after PatchShield's pass 2 (`PatchShieldPolicy` exclusions decide it) and word any rethrow or swallow claim for
   that list, not for TAOM's own finalizer alone.
 - **Source:** `docs/reviews/rca-xml-merge-load-time-2026-10-02.md` finding 5.
+- **Repeat (#1429, 2026-11-17):** Patch160 patched `SandBoxGameManager.DoLoadingForGameManager`, whose first line sets
+  `nextStep = None`, a value the caller reads from step 5 as "loading finished". A shield swallow there would have
+  returned that sentinel and opened a half-loaded campaign. When the target pre-sets an out parameter or a return
+  value before its work, a swallow returns that early value: put the target on `ExcludedTargetMethods` with a test
+  that walks it, or show that the early value is safe. Source: `docs/reviews/rca-engine-bug-guards-2026-11-17.md` finding 1.
 
 ### A per-call cost needs a per-call measurement; an incident's average is not one (2026-10)
 From #331's round-2 fix (July 2026) until plan 034, PatchShield's comments, two lessons and three docs priced binding `__originalMethod` at about fifty microseconds per call. That figure was #331's 104 to 109 s tournament-exit stall divided by an estimated call count, on a workload that also ran 8,276 gen0 collections. A benchmark on .NET Framework 4.8.1 with Harmony 2.4.2 (plan 034) measured the binding at about 63 ns per call over a finalizer that takes only `__exception`, 1,145 ns with 8 threads contending, and 241 bytes per call (5,355 gen0 collections over 140 million calls). At the isolated single-threaded cost two million calls take about 0.13 s, so the stall's size came from something the average hid; the allocation is the likelier multiplier, unmeasured in game. PatchShield's finalizers now take only `__exception` and find the shielded method from the stack after a throw (`PatchShield.ResolveShieldedOriginal`). A stand-in finalizer of that shape added about 3.5 ns per call in the Debug benchmark (5.4 against 1.9 ns for a postfix-only patched method; 0.6 ns optimized); the shipped finalizers were not benchmarked themselves.
@@ -1307,6 +1312,12 @@ narrative stage.
   `taom_debug_2026-10-26_16-34-58.log` (lines 201, 394-411) and `taom_debug_2026-10-26_16-37-09.log` (lines 197,
   209, 226, 436-455).
 
+- **Repeat, 2026-11-18:** #1444's Patch163 and Patch165 (ported from Silas He's package) patched
+  `CampaignUIHelper` from `OnSubModuleLoad`; Mike's debugger caught the NRE in `GameTexts.FindText` while
+  `TryPatchCategory("Patch165_ArmyFoodDays")` ran. Two review lenses and the full suite missed it: no test ran the
+  category at its real apply point. Gate now: `EarlyPatchStaticInitializerGateTests` fails when `OnSubModuleLoad`
+  applies a category that patches a type in its `NeedsAGame` list.
+
 ### A finalizer cannot tell a vanilla NRE from a foreign one: guard the read with a prefix (Patch123, 2026-10-26)
 Patch123 first contained vanilla `HeroHelper.GetLastSeenText`'s missing-leader `NullReferenceException` with a
 finalizer that judged by exception type. Codex proved it swallowed an NRE from another owner's throwing prefix. The
@@ -1512,3 +1523,8 @@ Patch158's first AI prefix sat on `RecruitmentCampaignBehavior.ApplyRecruitMerce
 - **Why missed:** the target was picked as the narrowest method, with no look at its size or at who compiles its callers first.
 - **Prevent:** before patching a small private method (under about 32 bytes of IL, `ilspycmd -il` prints the code size), check whether Coop or another mod patches a caller; if so, patch a larger method on the same path and filter by argument.
 - **Source:** the #1189 item 1 tier 1 review, Engine compatibility F1 and Data flow trace 7 (both UNVERIFIED on a live server).
+### A value a transpiler hands back into vanilla's control flow can hit vanilla's sentinel (#1430, 2026-11-17)
+The Transfer All transpiler replaced vanilla's headcount budget `num` with a weighted one. Vanilla reads `num <= 0` as "the target is full, move everything" (v1.5.7 PartyScreenLogic.cs:1015-1018). The weighted planner returned 0 both for "no room" and for "some room, but the first eligible troop is too heavy", so a near-full party moved its whole roster. The fix returns at least 1 when there is room.
+- **Why missed:** the builder checked that 0 matches vanilla's full-party press and wrote a test that fixed 0 as intended, but did not list every input that produces 0. The ported original had the same case.
+- **Prevent:** when a transpiler or prefix substitutes a value that vanilla's code then branches on, list vanilla's special values for it (0, -1, null, empty) and, for each, every input that makes your code produce it. Test each input.
+- **Source:** RCA `docs/reviews/rca-troop-weight-transfer-2026-11-17.md` finding 1 (Lens 5 and Lens 2 independently).

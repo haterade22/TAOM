@@ -13,6 +13,8 @@ Own arguments (everything else goes to the Fords runner, for example --dry-run, 
   --kind campaign-new|story-mission   --days N (campaign-new only: 1 to 1000, default 3)   --culture ID (default gondor)
   --speed X (campaign-new only: above 0, at most 30, default 15)   --scenario LABEL (default the kind)
   --stall-seconds N (campaign-new only, default 600)
+  --command LINE (repeatable, both kinds: a console command run once the map is ready; output in the TAOM log and commands.txt.
+  A taom.* command needs cheat_mode = 1 in engine_config.txt, or its output says cheat mode is disabled)
   --mission ID (story-mission only, required: a story mission id of Main/_Module/ModuleData/story_missions/story_missions.json, for
   example helms_deep_defend or helms_deep_attack; an unknown id is refused)
 
@@ -57,6 +59,7 @@ import run_long_defeat as long_defeat  # noqa: E402
 ENV_VAR = "TAOM_AUTORUN"
 DONE_FILE = "autorun_done.txt"
 STATUS_FILE = "autorun_status.txt"
+COMMANDS_FILE = "commands.txt"  # ScenarioAutorunDriver.CommandsFile
 RUNS_ROOT = r"E:\Temp\scenario-runs"
 KIND_CAMPAIGN = "campaign-new"
 KIND_STORY = "story-mission"
@@ -147,6 +150,12 @@ def stall_arg(text):
     return value
 
 
+def command_arg(text):
+    if "\n" in text or "\r" in text or not text.strip():
+        raise argparse.ArgumentTypeError("a console command is one non-empty line")
+    return text.strip()
+
+
 def build_own_parser():
     parser = argparse.ArgumentParser(description="Run one unattended scenario in the real game: a new campaign, or a new campaign and one story mission.",
                                      epilog=RUNNER_OPTIONS)
@@ -158,6 +167,9 @@ def build_own_parser():
     parser.add_argument("--speed", type=speed_arg, default=None,
                         help=f"campaign-new only: campaign speed, above 0 and at most {MAX_SPEED:g} (default {DEFAULT_SPEED:g})")
     parser.add_argument("--scenario", default=None, help="label written to the arm and done files (default the kind)")
+    parser.add_argument("--command", action="append", default=[], type=command_arg,
+                        help="a console command line to run once the map is ready, repeatable; the output goes to the TAOM log and "
+                             "commands.txt in the run folder (#1434)")
     parser.add_argument("--stall-seconds", type=stall_arg, default=None,
                         help=f"campaign-new only: seconds without campaign progress before the game ends the run (default {DEFAULT_STALL_SECONDS})")
     return parser
@@ -217,12 +229,12 @@ def arm_text_for(out, known, args):
         wall_limit = args.wall_limit if args.wall_limit else default_wall_limit(DEFAULT_DAYS, DEFAULT_MISSION_LIMIT_SECONDS)
         pairs = [("kind", known.kind), ("out", out), ("scenario", known.scenario), ("mission", known.mission),
                  ("mission_limit_seconds", DEFAULT_MISSION_LIMIT_SECONDS), ("culture", known.culture),
-                 ("wall_limit_seconds", number_text(wall_limit)), ("quit", 1)]
+                 ("wall_limit_seconds", number_text(wall_limit)), ("quit", 1)] + [("command", c) for c in known.command]
         return "".join(f"{key}={value}\n" for key, value in pairs), wall_limit
     wall_limit = args.wall_limit if args.wall_limit else default_wall_limit(known.days)
     pairs = [("kind", known.kind), ("out", out), ("scenario", known.scenario), ("culture", known.culture), ("days", known.days),
              ("speed", number_text(known.speed)), ("stall_seconds", known.stall_seconds),
-             ("wall_limit_seconds", number_text(wall_limit)), ("quit", 1)]
+             ("wall_limit_seconds", number_text(wall_limit)), ("quit", 1)] + [("command", c) for c in known.command]
     return "".join(f"{key}={value}\n" for key, value in pairs), wall_limit
 
 
@@ -368,7 +380,19 @@ def show_results(done_text, log_copy, report_json, say):
     stamp = [line for line in text.splitlines() if "[BuildStamp]" in line]
     print(stamp[0] if stamp else "no [BuildStamp] line")
     say("clean module unload line: " + ("present" if UNLOAD_LINE in text else "ABSENT"))
+    show_commands(Path(log_copy).parent, say)
     run_ledger(log_copy, say)
+
+
+def show_commands(folder, say):
+    """Prints commands.txt, the armed console commands' output, when the run wrote one (#1434)."""
+    path = Path(folder) / COMMANDS_FILE
+    if path.is_file():
+        print(f"---- {COMMANDS_FILE} ----\n" + path.read_text(encoding="utf-8", errors="replace").strip())
+        return
+    arm = Path(folder) / "arm.txt"
+    if arm.is_file() and "\ncommand=" in "\n" + arm.read_text(encoding="utf-8", errors="replace"):
+        say(f"the arm file asked for console commands, but the run wrote no {COMMANDS_FILE}")
 
 
 def show_story_results(done_text, log_copy, report_json, say):
@@ -387,6 +411,7 @@ def show_story_results(done_text, log_copy, report_json, say):
     stamp = [line for line in text.splitlines() if "[BuildStamp]" in line]
     print(stamp[0] if stamp else "no [BuildStamp] line")
     say("clean module unload line: " + ("present" if UNLOAD_LINE in text else "ABSENT"))
+    show_commands(Path(log_copy).parent, say)
 
 
 def main(argv=None):

@@ -21,7 +21,6 @@ public static class PartyUpgraderUpgradeReadyTroops_Patch
     [HarmonyPostfix]
     public static void Postfix(PartyBase party)
     {
-        if (!(TaomSettings.Instance?.EnableTroopWeight ?? true)) return;
         _hook?.OnUpgradeReadyTroops(party);
     }
 }

@@ -42,6 +42,10 @@ Two widgets in TAOM.Client:
 
 Each prefab's `PositionYOffset` is the 1080 result, which shows until the first late update.
 
+### Clicks stay on the encyclopedia
+
+`GauntletLayer.HitTest()` asks only whether a widget that accepts events covers the cursor, and ScreenManager gives the mouse to the screen under a layer that reports no hit. The dimmer sits on the layer root, outside every movie, so while the bar root took no events a click on the dim area reached the screen under the encyclopedia: the Clan screen's Done button popped the Clan screen and finalized the encyclopedia layer, and vanilla `EncyclopediaData.OnTick` then threw a NullReferenceException every frame in `GauntletLayer.IsFocusedOnInput` (the layer's `UIContext` was null). The bar root now accepts events and covers the viewport, so the layer reports a hit everywhere. Gauntlet hands each event to the first widget under the cursor whose preview accepts it, children before parents, and the root is above every page, so `EncyclopediaOverlayWidget` returns false from the press, release, alternate press, alternate release and mouse move previews. The header buttons, the pages and the dimmer under it get those events as before. Scroll, drag, drop and right stick previews are false by default.
+
 ### Component Diagram
 
 ```
@@ -61,7 +65,7 @@ None. The offsets are prefab attributes listed above.
 
 | File | Purpose |
 |------|---------|
-| `Client/Features/FactionUI/Campaign/EncyclopediaOverlayWidget.cs` | Layer order and the dimmer |
+| `Client/Features/FactionUI/Campaign/EncyclopediaOverlayWidget.cs` | Layer order, the dimmer, and the root that passes clicks on |
 | `Client/Features/FactionUI/Campaign/EncyclopediaFrameAnchorWidget.cs` | Frame math and canvas placement |
 | `Client/Features/FactionUI/Campaign/EncyclopediaPageLayoutWidget.cs` | Native detail page canvas (`IsDetailMovie`), same anchor |
 | `Main/_Module/GUI/PreFabs/FactionUI/TAOMEncyclopediaBar.xml` | Overlay root, dimmer, frame, search results |
@@ -77,7 +81,7 @@ None. The offsets are prefab attributes listed above.
 ## Tests
 
 - `TAOM.Tests/Features/FactionUI/EncyclopediaFrameAnchorWidgetTests.cs`: the frame top, the shipped 1080 coordinates, full-height and short viewports, 938 as the shortest height with no overlap, a NaN clearance, and the physical-to-logical conversion before and after the first layout.
-- `TAOM.Tests/Features/FactionUI/EncyclopediaOverlayPrefabTests.cs`: the bar root and its dimmer, the frame, list, detail page and navigation anchors.
+- `TAOM.Tests/Features/FactionUI/EncyclopediaOverlayPrefabTests.cs`: the bar root (accepts events, passes every mouse event on) and its dimmer, the frame, list, detail page and navigation anchors.
 
 ## How to verify in game
 
@@ -88,6 +92,7 @@ None. The offsets are prefab attributes listed above.
 3. Go back and forward several times between pages. The header buttons must keep working.
 4. Repeat at UI scales that give logical heights 900, 1080, 1280 and 1440, and on an ultrawide screen.
 5. With a gamepad, step through the header and the page. The focus order is not yet verified.
+6. Open the encyclopedia from the Clan screen and click the dim area above the Clan screen's Done button. Nothing must happen under the encyclopedia, and the game must not crash. Over the map, a click on the dim area must not move the party.
 
 ## Known limits
 
@@ -97,6 +102,7 @@ None. The offsets are prefab attributes listed above.
 ## Changelog
 
 - 2026-11-14: header and search results kept above every encyclopedia page; pages anchored to the shared frame (#1212).
+- 2026-11-17: clicks on the themed encyclopedia no longer reach the screen under it; the bar root accepts events and passes them on.
 
 ## GitHub Issue
 

@@ -71,4 +71,6 @@ internal sealed class NullCampaignAutorunHost : ICampaignAutorunHost
     public bool ChooseBackToMap() => false;
 
     public StoryOutcome? StoryVerdict => null;
+
+    public string RunConsoleCommand(string commandLine) => "";
 }

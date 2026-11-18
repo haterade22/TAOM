@@ -75,6 +75,7 @@ UTF-8 `key=value` lines. An unknown key or a bad value is a warning and keeps th
 | `stall_seconds` | number | Wall seconds with no new day before the run stops as `stalled` (default 600) |
 | `wall_limit_seconds` | number | Wall seconds from the campaign start before the run stops as `wall_limit` (default 3600) |
 | `quit` | flag | Quit the game after the run |
+| `command` | string, repeatable | A console command line run once when the map is ready, in order (#1434). Each output goes to the TAOM log and to `commands.txt` in `out`; a command that throws is reported there and the run goes on. The frame that runs them is not counted against the stall or wall clock. A `taom.*` command needs `cheat_mode = 1` |
 
 ### Done reasons
 

@@ -1,7 +1,7 @@
 <Prefab>
   <Window>
     <!--The overlay keeps this movie above each page movie and moves EncyclopediaBackdrop under all of them (#1212).-->
-    <EncyclopediaOverlayWidget Id="EncyclopediaOverlay" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" BackdropWidget="EncyclopediaBackdrop" DoNotAcceptEvents="true">
+    <EncyclopediaOverlayWidget Id="EncyclopediaOverlay" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" BackdropWidget="EncyclopediaBackdrop">
       <Children>
         <Widget Id="EncyclopediaBackdrop" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare" Color="#00000099" />
         <EncyclopediaFrameAnchorWidget Id="EncyclopediaFrame" SuggestedWidth="1728" SuggestedHeight="972" HorizontalAlignment="Center" VerticalAlignment="Top" PositionYOffset="54" FrameOffset="0" DoNotAcceptEvents="true">

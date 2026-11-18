@@ -43,7 +43,7 @@ A `CampaignBehaviorBase` that changes Hero, Settlement or Clan state on load lis
 
 **Config Providers MUST Validate:** config files, MCM settings and editor-visible fields validate at load, not only parse ([config-providers.md](config-providers.md)).
 
-## Singleton Services Holding Per-Campaign State MUST Have a Session-Reset Story (MANDATORY)
+## Singleton Services Holding Per-Campaign State MUST Have a Session-Reset Story
 
 TAOM services are `Reuse.Singleton`: they live for the PROCESS, not the campaign. A singleton that
 owns campaign data (an order book, a camp dictionary, a party-tracker cache) has two lifecycle
@@ -85,7 +85,7 @@ Every NaN comparison is false, so a gate's polarity decides.
 
 One NaN test per gate. When you touch a method, gate every float decision path in it, not only the lines you added. `float.IsFinite` does not exist on net472. Reviewed by lens 5 rule 4b. RCAs: `rca-combat-mechanics-2026-07-02.md`, `rca-troopweight-result-frame-2026-07-17.md`, `rca-settlement-food-2026-09-06.md`.
 
-## Lookup Functions With Fallbacks: Validate Before Lookup (MANDATORY)
+## Lookup Functions With Fallbacks: Validate Before Lookup
 
 A lookup that returns a default for unknown input (`RaceManager.GetRaceNameFromId` returns human) resolves names for logs; it does not validate. When a decision depends on the result, check validity first (`IsValidRaceId`) and treat invalid as not allowed. Test: the lookup returns its fallback and the caller rejects the input. `MBObjectManager.GetObject<T>` returns null for a missing id, so null-check it instead.
 
@@ -109,7 +109,7 @@ TAOM.Tests/Features/MyFeature/
 └── MyFeatureServiceTests.cs
 ```
 
-## Mission-scope agent handles and the engine's threads (MANDATORY)
+## Mission-scope agent handles and the engine's threads
 
 Two facts about `TaleWorlds.MountAndBlade.Agent` shape every mission-time feature (#592, #595; RCA
 `docs/reviews/rca-warg-clip-on-horse-2026-09-13.md`):

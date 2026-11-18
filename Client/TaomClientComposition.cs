@@ -73,5 +73,6 @@ internal sealed class TaomClientComposition : IClientComposition
         registrator.Register<ICampaignPresentationAdapter, CampaignPresentationAdapter>(Reuse.Singleton);
         registrator.Register<IRealmsPopupAdapter, RealmsPopupAdapter>(Reuse.Singleton);
         registrator.Register<IEventWindowAdapter, EventWindowAdapter>(Reuse.Singleton);
+        registrator.Register<TAOM.Features.ImeGuard.IImeWindowAdapter, TAOM.Client.Features.ImeGuard.ImeWindowAdapter>(Reuse.Singleton);
     }
 }

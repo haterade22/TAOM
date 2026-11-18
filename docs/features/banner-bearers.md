@@ -267,7 +267,7 @@ This is the feature's one real gap. Both reviews are static; the failure mode it
 - [`docs/features/mixed-formations.md`](mixed-formations.md) — Patch30 falls through for banner bearers so the engine can place them; removing that breaks this feature silently
 - [`docs/features/banner-color-persistence.md`](banner-color-persistence.md) — clan colours on the banner cloth (`Equipment.FillFrom(SpawnEquipment, Origin?.Banner)`)
 - [`docs/reviews/rca-banner-bearers-2026-07-16.md`](../reviews/rca-banner-bearers-2026-07-16.md) — both review passes; why four documented copies of the culture-id fact still shipped the bug
-- [`.claude/rules/xml-data.md`](../../.claude/rules/xml-data.md) — "Config ID Cross-Reference (MANDATORY)"; its `paths:` now include ModuleData JSON because of this feature
+- [`.claude/rules/xml-data.md`](../../.claude/rules/xml-data.md): "Config ID Cross-Reference"; its `paths:` now include ModuleData JSON because of this feature
 
 ---
 

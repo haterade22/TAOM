@@ -32,13 +32,39 @@ public class EncyclopediaOverlayPrefabTests
         float.Parse(element.GetAttribute(attribute), CultureInfo.InvariantCulture);
 
     [TestMethod]
-    public void BarRoot_IsTheOverlay_AndTakesNoInputOrDimmerItself()
+    public void BarRoot_IsTheOverlay_AcceptsEvents_AndHasNoDimmerItself()
     {
         var root = Bar();
 
         Assert.AreEqual("EncyclopediaOverlayWidget", root.Name);
-        Assert.AreEqual("true", root.GetAttribute("DoNotAcceptEvents"), "the bar now sits above the page: its root must let clicks through");
+        // GauntletLayer.HitTest asks only whether a widget that accepts events covers the cursor. The dimmer sits
+        // outside every movie, so a root without events let clicks fall through to the screen under the
+        // encyclopedia (a Clan screen Done under it crashed EncyclopediaData.OnTick). The root accepts events and
+        // the widget passes each click on (BarRoot_PassesEveryMouseEventOn).
+        Assert.AreEqual("", root.GetAttribute("DoNotAcceptEvents"), "a root without events lets clicks reach the screen under the encyclopedia");
         Assert.AreEqual("", root.GetAttribute("Sprite"), "a dimmer on the bar root would darken the page under it");
+    }
+
+    [TestMethod]
+    public void BarRoot_PassesEveryMouseEventOn()
+    {
+        // Gauntlet hands an event to the first widget under the cursor whose preview accepts it, children before
+        // parents. The root sits above every page, so a preview left true would take the page's clicks.
+        string[] previews =
+        {
+            "OnPreviewMousePressed", "OnPreviewMouseReleased", "OnPreviewMouseAlternatePressed",
+            "OnPreviewMouseAlternateReleased", "OnPreviewMouseMove",
+        };
+        var type = typeof(TAOM.Features.FactionUI.Campaign.EncyclopediaOverlayWidget);
+        // The overrides read no state, so an instance without a UIContext can answer them.
+        object widget = System.Runtime.Serialization.FormatterServices.GetUninitializedObject(type);
+        foreach (string name in previews)
+        {
+            var method = type.GetMethod(name, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            Assert.IsNotNull(method, name);
+            Assert.AreEqual(type, method!.DeclaringType, name + " must be overridden to return false");
+            Assert.AreEqual(false, method.Invoke(widget, null), name + " must return false");
+        }
     }
 
     [TestMethod]

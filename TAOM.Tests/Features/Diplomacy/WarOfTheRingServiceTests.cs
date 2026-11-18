@@ -1,3 +1,4 @@
+using TAOM.Features.CampaignStartOptions;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -64,7 +65,7 @@ public class WarOfTheRingServiceTests
 
     private void CreateSut()
     {
-        _sut = new WarOfTheRingService(_configProvider, _diplomacyService, _allianceAdapter, _settingsProvider, _logger);
+        _sut = new WarOfTheRingService(_configProvider, _diplomacyService, _allianceAdapter, _settingsProvider, Substitute.For<ICampaignStartOptions>(), _logger);
     }
 
     [TestMethod]

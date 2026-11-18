@@ -35,6 +35,7 @@ public sealed class ClientSubModule : MBSubModuleBase
     private CommandTrialAutostart? _commandTrial;
     private bool _autorunResolved;
     private bool _autorunFaulted;
+    private TAOM.Features.ImeGuard.ImeGuardService? _imeGuard;
 
     public ClientSubModule()
     {
@@ -72,6 +73,8 @@ public sealed class ClientSubModule : MBSubModuleBase
     protected override void OnSubModuleUnloaded()
     {
         base.OnSubModuleUnloaded();
+        // The IME guard's window thread hook goes before the engine's last GC (Module.FinalizeModule).
+        _imeGuard?.Shutdown();
         TAOM.Features.FactionUI.Campaign.EncyclopediaPictureCache.ReleaseAll();
     }
 
@@ -93,6 +96,15 @@ public sealed class ClientSubModule : MBSubModuleBase
     {
         base.OnApplicationTick(dt);
         Features.Realms.RealmsClient.Tick();
+        // The IME guard (#1447): Tick never throws, and a failure stops it for the session.
+        try
+        {
+            (_imeGuard ??= IoC.Resolve<TAOM.Features.ImeGuard.ImeGuardService>()).Tick();
+        }
+        catch
+        {
+            // swallow-ok: only the resolve can throw here, and then on every frame; the engine's tick must not throw.
+        }
         try
         {
             if (!_autorunResolved)

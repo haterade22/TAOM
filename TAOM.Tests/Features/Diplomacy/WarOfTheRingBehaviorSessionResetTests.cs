@@ -1,3 +1,4 @@
+using TAOM.Features.CampaignStartOptions;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -65,7 +66,7 @@ public class WarOfTheRingBehaviorSessionResetTests
         var alliances = Substitute.For<IAllianceAdapter>();
         alliances.GetAllKingdomIds().Returns(new List<string>());
         return new WarOfTheRingService(config, Substitute.For<IDiplomacyService>(), alliances, settings,
-            Substitute.For<IModLogger>());
+            Substitute.For<ICampaignStartOptions>(), Substitute.For<IModLogger>());
     }
 
     [TestMethod]

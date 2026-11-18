@@ -7,6 +7,9 @@ namespace TAOM.Features.AlignmentDesertion;
 public interface IAlignmentDesertionSettingsProvider
 {
     bool IsEnabled { get; }
+
+    /// <summary>What a new campaign gets for the master switch when its alignment preset is Standard: MCM, else JSON.</summary>
+    bool NewCampaignDefault { get; }
     float Rate { get; }
     bool ApplyToAi { get; }
     bool ApplyToPlayer { get; }

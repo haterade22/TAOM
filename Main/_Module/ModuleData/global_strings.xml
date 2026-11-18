@@ -122,11 +122,53 @@
 	<string id="str_campaign_starting_options_item_name.dorwinion" text="{=taom_aso_kingdom.dorwinion}Dorwinion" />
 	<string id="str_campaign_starting_options_item_name.southrhovanion" text="{=taom_aso_kingdom.southrhovanion}South Rhovanion" />
 
-	<!-- Scenario text that names Calradia directly. The United Empire scenario itself is
-	     removed by TaomStartOptionsProvider, so only the surviving scenarios are retitled. -->
+	<!-- Scenario text that names Calradia directly. The start screen no longer offers these scenarios
+	     (CampaignStartOptionsScreen hides them); the rows stay until a cleanup removes them. -->
 	<string id="str_campaign_starting_options_description.InvasionScenarioFactionId" text="{=taom_aso_desc_invasion}The faction that rules the majority of Middle-earth." />
 	<string id="str_campaign_starting_options_item_description.InvasionId" text="{=taom_aso_item_desc_invasion}{InvasionScenarioFactionId} dominates the vast majority of Middle-earth." />
 	<string id="str_campaign_starting_options_item_name.alternativecalradia" text="{=taom_aso_item_name_randomized}Randomized Middle-earth" />
 	<string id="str_campaign_starting_options_item_description.alternativecalradia" text="{=taom_aso_item_desc_randomized}Randomizes the starting state of Middle-earth to the degree of your choosing, within reason." />
+
+	<!-- Per-campaign start options (docs/features/campaign-start-options.md): the scenario list is War of the
+	     Ring or Sandbox, the start date, and the Middle-earth rules category. Menu-facing rows, so they live
+	     here and nowhere else (#604). item_name.none and item_description.none reuse a vanilla variation id;
+	     GlobalStringsOverrides is what makes the relabel win over Native's "Default". -->
+	<string id="str_campaign_starting_options_category_name.taom_rules" text="{=taom_aso_cat_rules}Middle-earth rules" />
+	<string id="str_campaign_starting_options_item_name.taom_war_of_the_ring" text="{=taom_aso_item_wotr}War of the Ring" />
+	<string id="str_campaign_starting_options_item_description.taom_war_of_the_ring" text="{=taom_aso_item_desc_wotr}The great war comes in phases: peace first, then the war of Isengard, then the full war. Choose when it begins under War of the Ring start." />
+	<string id="str_campaign_starting_options_item_name.none" text="{=taom_aso_item_sandbox}Sandbox (no scripted war)" />
+	<string id="str_campaign_starting_options_item_description.none" text="{=taom_aso_item_desc_sandbox}No War of the Ring. The world starts in its standard sandbox state and wars are left to the kingdoms." />
+	<string id="str_campaign_starting_options_name.taom_wotr_start" text="{=taom_aso_name_wotr_start}War of the Ring start" />
+	<string id="str_campaign_starting_options_description.taom_wotr_start" text="{=taom_aso_desc_wotr_start}When the war begins. Pick a preset, or Custom to set both days yourself." />
+	<string id="str_campaign_starting_options_item_name.taom_wotr_start_early" text="{=taom_aso_item_start_early}Early (day 10 and day 20)" />
+	<string id="str_campaign_starting_options_item_description.taom_wotr_start_early" text="{=taom_aso_item_desc_start_early}The war of Isengard begins on day 10 and the full war on day 20." />
+	<string id="str_campaign_starting_options_item_name.taom_wotr_start_standard" text="{=taom_aso_item_start_standard}Standard" />
+	<string id="str_campaign_starting_options_item_description.taom_wotr_start_standard" text="{=taom_aso_item_desc_start_standard}Uses the two days set in the TAOM mod options (day 30 and day 44 unless you changed them)." />
+	<string id="str_campaign_starting_options_item_name.taom_wotr_start_late" text="{=taom_aso_item_start_late}Late (day 60 and day 90)" />
+	<string id="str_campaign_starting_options_item_description.taom_wotr_start_late" text="{=taom_aso_item_desc_start_late}The war of Isengard begins on day 60 and the full war on day 90." />
+	<string id="str_campaign_starting_options_item_name.taom_wotr_start_custom" text="{=taom_aso_item_start_custom}Custom" />
+	<string id="str_campaign_starting_options_item_description.taom_wotr_start_custom" text="{=taom_aso_item_desc_start_custom}Set both days yourself with the two sliders below." />
+	<string id="str_campaign_starting_options_name.taom_wotr_custom_day1" text="{=taom_aso_name_custom_day1}War of Isengard starts on day" />
+	<string id="str_campaign_starting_options_description.taom_wotr_custom_day1" text="{=taom_aso_desc_custom_day1}The campaign day on which the first scripted wars begin." />
+	<string id="str_campaign_starting_options_name.taom_wotr_custom_day2" text="{=taom_aso_name_custom_day2}Full war starts on day" />
+	<string id="str_campaign_starting_options_description.taom_wotr_custom_day2" text="{=taom_aso_desc_custom_day2}The campaign day on which the full war begins. It always comes after the first day." />
+	<string id="str_campaign_starting_options_name.taom_troop_weight" text="{=taom_aso_name_troop_weight}Troop Weight" />
+	<string id="str_campaign_starting_options_description.taom_troop_weight" text="{=taom_aso_desc_troop_weight}Elite troops take more room in your party: elites 2x, level 41 and higher elites 3x, warg riders 2x, cave trolls 4x, mumakil 10x. This campaign keeps your choice." />
+
+	<!-- Phase 2 rules: three on/off rules and the Alignment rules preset (Standard follows the mod options). -->
+	<string id="str_campaign_starting_options_name.taom_war_can_be_won" text="{=taom_aso_name_war_can_be_won}War can be won" />
+	<string id="str_campaign_starting_options_description.taom_war_can_be_won" text="{=taom_aso_desc_war_can_be_won}On: one side can win the War of the Ring, which ends the war and makes peace. Off: the war is endless. This campaign keeps your choice." />
+	<string id="str_campaign_starting_options_name.taom_eye_hunters" text="{=taom_aso_name_eye_hunters}Eye of Sauron hunters" />
+	<string id="str_campaign_starting_options_description.taom_eye_hunters" text="{=taom_aso_desc_eye_hunters}Great deeds against the enemy draw a hunter: one of the Nine for a Free player, Glorfindel for an Evil one. Single player only. This campaign keeps your choice." />
+	<string id="str_campaign_starting_options_name.taom_large_ai_armies" text="{=taom_aso_name_large_ai_armies}Large AI armies" />
+	<string id="str_campaign_starting_options_description.taom_large_ai_armies" text="{=taom_aso_desc_large_ai_armies}AI lord parties keep the large rosters they spawn with instead of being trimmed to the vanilla cap. This campaign keeps your choice." />
+	<string id="str_campaign_starting_options_name.taom_alignment_preset" text="{=taom_aso_name_alignment_preset}Alignment rules" />
+	<string id="str_campaign_starting_options_description.taom_alignment_preset" text="{=taom_aso_desc_alignment_preset}How strictly the Free and Evil sides stay apart: recruitment, marriage, desertion and alliances. This campaign keeps your choice." />
+	<string id="str_campaign_starting_options_item_name.taom_alignment_standard" text="{=taom_aso_item_align_standard}Standard" />
+	<string id="str_campaign_starting_options_item_description.taom_alignment_standard" text="{=taom_aso_item_desc_align_standard}Follows the four alignment switches in the TAOM mod options." />
+	<string id="str_campaign_starting_options_item_name.taom_alignment_strict" text="{=taom_aso_item_align_strict}Strict" />
+	<string id="str_campaign_starting_options_item_description.taom_alignment_strict" text="{=taom_aso_item_desc_align_strict}Recruitment and marriage are blocked across the Free and Evil line, troops of the other side desert, and your kingdom cannot ally across it." />
+	<string id="str_campaign_starting_options_item_name.taom_alignment_relaxed" text="{=taom_aso_item_align_relaxed}Relaxed" />
+	<string id="str_campaign_starting_options_item_description.taom_alignment_relaxed" text="{=taom_aso_item_desc_align_relaxed}No alignment blocks and no alignment desertion, and your kingdom may ally with anyone." />
 
 </strings>

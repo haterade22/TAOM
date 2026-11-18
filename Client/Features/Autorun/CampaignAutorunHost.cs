@@ -233,6 +233,16 @@ internal sealed class CampaignAutorunHost : ICampaignAutorunHost
 
     public StoryOutcome? StoryVerdict => _storyVerdict;
 
+    // The console's own dispatch: the name, then the rest split on spaces (v1.5.7 CommandLineFunctionality.CallFunction :99).
+    public string RunConsoleCommand(string commandLine)
+    {
+        var line = (commandLine ?? "").Trim();
+        var space = line.IndexOf(' ');
+        var name = space < 0 ? line : line.Substring(0, space);
+        var args = space < 0 ? string.Empty : line.Substring(space + 1).Trim();
+        return CommandLineFunctionality.CallFunction(name, args, out _) ?? string.Empty;
+    }
+
     // The map's own menu only. Campaign.CurrentMenuContext also returns the MapState's context under a mission (it reads the active state's
     // predecessor), where no menu shows.
     private static MenuContext? MapMenuContext() => (GameStateManager.Current?.ActiveState as MapState)?.MenuContext;

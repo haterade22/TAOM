@@ -120,5 +120,6 @@ internal static class FeatureModules
         new Features.OrcBattleVoice.OrcBattleVoiceModule(),
         new Features.HostilePeace.HostilePeaceModule(),
         new Features.HeroAbilities.HeroAbilitiesModule(),
+        new Features.CampaignStartOptions.CampaignStartOptionsModule(),
     };
 }

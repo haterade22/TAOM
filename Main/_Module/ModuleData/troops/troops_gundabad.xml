@@ -1307,7 +1307,7 @@
               <equipment slot="Item2" id="Item.taom_ph_wm_gundabad_axe_a03_t8" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_d" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_lord_c" />
-              <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_cape_elite_c" />
+              <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_b" />
               <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_c" />
               <equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_c" />
               <equipment slot="Horse" id="Item.fell_warg" />
@@ -1331,7 +1331,7 @@
                     id="Item.sk_gb_uruk_chest_elite_d" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_gb_uruk_pauldron_cape_elite_a" />
+                    id="Item.sk_gb_uruk_pauldron_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gb_uruk_bracer_elite_b" />
@@ -1363,7 +1363,7 @@
                     id="Item.sk_gb_uruk_chest_elite_d" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_gb_uruk_pauldron_cape_elite_a" />
+                    id="Item.sk_gb_uruk_pauldron_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gb_uruk_bracer_elite_b" />
@@ -1395,7 +1395,7 @@
                     id="Item.sk_gb_uruk_chest_elite_d" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_gb_uruk_pauldron_cape_elite_a" />
+                    id="Item.sk_gb_uruk_pauldron_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gb_uruk_bracer_elite_b" />
@@ -1427,7 +1427,7 @@
                     id="Item.sk_gb_uruk_chest_elite_e" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_gb_uruk_pauldron_cape_elite_a" />
+                    id="Item.sk_gb_uruk_pauldron_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gb_uruk_bracer_elite_b" />
@@ -1459,7 +1459,7 @@
                     id="Item.sk_gb_uruk_chest_elite_f" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_gb_uruk_pauldron_cape_elite_a" />
+                    id="Item.sk_gb_uruk_pauldron_med_b" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_gb_uruk_bracer_elite_b" />

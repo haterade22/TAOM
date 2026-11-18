@@ -32,7 +32,6 @@ public static class ClanPartyItemVM_UpdateProperties_Patch
     [HarmonyPostfix]
     public static void Postfix(ClanPartyItemVM __instance)
     {
-        if (!(TaomSettings.Instance?.EnableTroopWeight ?? true)) return;
         _hook?.OnClanPartyItemUpdateProperties(__instance);
     }
 }

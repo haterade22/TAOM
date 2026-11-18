@@ -35,6 +35,7 @@ public class CoopPresenceReadGateTests
         ["Main/Features/CoopInterop/Hooks/CoopRecruitAttributionPatch.cs"] = "recruit attribution is only wanted while the Coop module is loaded",
         ["Main/Features/CoopInterop/Hooks/CoopUpgradeChargePatch.cs"] = "Prepare warns about a moved target only while the Coop module is loaded",
         ["Main/Features/MarshalsWord/Hooks/MarshalSpacingPatch.cs"] = "a patch-time decision: the spacing repair stays off wherever a second machine could compute another width",
+        ["Main/Features/EngineBugGuards/Hooks/Patch167_DeadHeroOutfit.cs"] = "a patch-time Prepare: Coop's own OnDeath prefix destroys and syncs the kits this patch would restore (#1444)",
     };
 
     private static List<string> FilesReadingPresence()

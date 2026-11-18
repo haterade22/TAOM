@@ -1,6 +1,7 @@
 using System;
 using TAOM.Core.Logging;
 using TAOM.Features.CustomBattles.Muster;
+using TAOM.Features.EngineBugGuards.Domain;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Core;
@@ -165,10 +166,11 @@ namespace TAOM.Client.Features.CustomBattles.Muster
             return end > 0 && end + 1 < n.Length ? n.Substring(end + 1).Trim() : n;
         }
 
+        /// <summary>The tier as Roman numerals up to TAOM's X (#1446); heroes show their own text and never reach this.</summary>
         internal static string Tier(BasicCharacterObject c)
         {
-            int t = Math.Max(1, Math.Min(7, (int)Math.Ceiling((c.Level - 5) / 5f)));
-            return new TextObject("{=taom_tcb_tier}Tier {TIER}").SetTextVariable("TIER", new[] { "I", "II", "III", "IV", "V", "VI", "VII" }[t - 1]).ToString();
+            int t = EngineDisplayRules.TroopTier(c.Level, isHero: false);
+            return new TextObject("{=taom_tcb_tier}Tier {TIER}").SetTextVariable("TIER", EngineDisplayRules.TierNumeral(t)).ToString();
         }
 
         /// <summary>Shift = 10, Ctrl = 100 per click.</summary>

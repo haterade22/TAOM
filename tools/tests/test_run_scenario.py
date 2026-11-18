@@ -113,6 +113,24 @@ class ArmTextTests(unittest.TestCase):
         plan = (root / "Main/Features/Autorun/Scenario/ScenarioPlan.cs").read_text(encoding="utf-8")
         self.assertIn(f'DefaultCulture = "{rs.DEFAULT_CULTURE}"', plan)
 
+    # #1434: console diagnostics in an unattended run, one command= line each, in order, for both kinds.
+    def test_commands_write_one_line_each_in_order(self):
+        for argv in ([], ["--kind", "story-mission", "--mission", "helms_deep_defend"]):
+            known, _ = parse(argv + ["--command", "taom.audit_settlement_entrances", "--command", "taom.other 2 x"])
+            text, _ = rs.arm_text_for(Path(r"E:\x"), known, SimpleNamespace(wall_limit=None))
+            lines = [line for line in text.splitlines() if line.startswith("command=")]
+            self.assertEqual(lines, ["command=taom.audit_settlement_entrances", "command=taom.other 2 x"])
+
+    def test_no_command_writes_no_command_line(self):
+        known, _ = parse([])
+        text, _ = rs.arm_text_for(Path(r"E:\x"), known, SimpleNamespace(wall_limit=None))
+        self.assertNotIn("command=", text)
+
+    def test_a_command_that_is_not_one_non_empty_line_is_refused(self):
+        for bad in ("taom.a\nkind=story-mission", "taom.a\rkind=x", "   "):
+            with self.subTest(bad=bad):
+                self.assertIn("one non-empty line", parse_fails(["--command", bad]))
+
     def test_custom_values(self):
         known, _ = parse(["--days", "30", "--culture", "sturgia", "--speed", "7.5", "--scenario", "war-30", "--stall-seconds", "900"])
         text, wall = rs.arm_text_for(Path(r"E:\x"), known, SimpleNamespace(wall_limit=None))
@@ -809,6 +827,22 @@ class StoryWiringTests(unittest.TestCase):
                     printer("", log, None, messages.append)
                 self.assertEqual([m for m in messages if "did not arm" in m], [want + " (got 'story-mission')"])
 
+    def test_both_printers_print_commands_txt_and_name_a_missing_one(self):
+        for printer in (rs.show_story_results, rs.show_results):
+            for written in (True, False):
+                with self.subTest(printer=printer.__name__, written=written), tempfile.TemporaryDirectory() as folder:
+                    log = Path(folder) / "taom_debug_x.log"
+                    log.write_text(STORY_LOG, encoding="utf-8")
+                    (Path(folder) / "arm.txt").write_text("kind=campaign-new\ncommand=taom.x\n", encoding="utf-8")
+                    if written:
+                        (Path(folder) / rs.COMMANDS_FILE).write_text("> taom.x\nTOKEN_1434\n", encoding="utf-8")
+                    out, messages = io.StringIO(), []
+                    with mock.patch.object(rs.subprocess, "run", return_value=SimpleNamespace(returncode=1, stdout="", stderr="")), \
+                            contextlib.redirect_stdout(out):
+                        printer("reason=ok\n", log, None, messages.append)
+                    self.assertEqual(written, "TOKEN_1434" in out.getvalue())
+                    self.assertEqual(not written, any("wrote no commands.txt" in m for m in messages))
+
     def test_the_printers_say_nothing_about_arming_for_an_armed_build(self):
         for printer in (rs.show_story_results, rs.show_results):
             with self.subTest(printer=printer.__name__), tempfile.TemporaryDirectory() as folder:
@@ -1090,6 +1124,8 @@ class StoryManifestTests(unittest.TestCase):
         driver = (scenario / "ScenarioAutorunDriver.cs").read_text(encoding="utf-8")
         for reason in ("mission_refused", "mission_not_opened", "mission_limit", "return_failed"):
             self.assertIn(reason, driver)
+        self.assertIn(f'CommandsFile = "{rs.COMMANDS_FILE}"', driver)
+        self.assertIn('case "command":', (scenario / "ScenarioArmFile.cs").read_text(encoding="utf-8"))
 
 if __name__ == "__main__":
     unittest.main()

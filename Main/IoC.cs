@@ -111,6 +111,7 @@ public static class IoC
         FactionMapIoC.RegisterFactionMapFeature(container);
         CharacterCreationIoC.RegisterCharacterCreationFeature(container);
         InitialChildGenerationIoC.RegisterInitialChildGenerationFeature(container);
+        Features.CampaignStartOptions.CampaignStartOptionsIoC.RegisterCampaignStartOptionsFeature(container);
         DiplomacyIoC.RegisterDiplomacyFeature(container);
         Features.WarOfTheRingMomentum.WarOfTheRingMomentumIoC.RegisterWarOfTheRingMomentumFeature(container);
         RaceAgeIoC.RegisterRaceAgeFeature(container);
@@ -184,6 +185,7 @@ public static class IoC
         PreloadBodyGuardIoC.RegisterPreloadBodyGuardFeature(container);
         Features.SaveLoadDiagnostics.SaveLoadDiagnosticsIoC.RegisterSaveLoadDiagnosticsFeature(container);
         Features.BlowDiagnostics.BlowDiagnosticsIoC.RegisterBlowDiagnosticsFeature(container);
+        Features.ImeGuard.ImeGuardIoC.RegisterImeGuardFeature(container);
         NameplateFadeIoC.RegisterSettlementNameplateFadeFeature(container);
         NameplateRelationIoC.RegisterSettlementNameplateRelationFeature(container);
         MenuLinkColorsIoC.RegisterMenuLinkColorsFeature(container);

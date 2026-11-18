@@ -1,3 +1,5 @@
+using TAOM.Features.CampaignStartOptions;
+
 namespace TAOM.Features.HostilePeace;
 
 /// <summary>The four switches, read live at each question: the MCM group "World/Hostile Peace" when MCM is up, else the JSON.</summary>
@@ -9,7 +11,11 @@ public interface IHostilePeaceSettingsProvider
 
     bool LimitTownAccess { get; }
 
+    /// <summary>The campaign's Alignment rules preset (Strict or Relaxed) first; Standard follows MCM, else JSON.</summary>
     bool AllowPlayerAlliancesWithAnyone { get; }
+
+    /// <summary>What a new campaign gets when its alignment preset is Standard: MCM, else JSON.</summary>
+    bool AllowPlayerAlliancesNewCampaignDefault { get; }
 }
 
 /// <summary>
@@ -25,16 +31,19 @@ public sealed class HostilePeaceSettingsProvider : IHostilePeaceSettingsProvider
     public const bool DefaultAllowPlayerAlliancesWithAnyone = false;
 
     private readonly IHostilePeaceConfigProvider _config;
+    private readonly ICampaignStartOptions _campaign;
     private TaomSettings? _settings;
 
-    public HostilePeaceSettingsProvider(IHostilePeaceConfigProvider config)
+    public HostilePeaceSettingsProvider(IHostilePeaceConfigProvider config, ICampaignStartOptions campaign)
     {
         _config = config;
+        _campaign = campaign;
     }
 
-    internal HostilePeaceSettingsProvider(IHostilePeaceConfigProvider config, TaomSettings settings)
+    internal HostilePeaceSettingsProvider(IHostilePeaceConfigProvider config, ICampaignStartOptions campaign, TaomSettings settings)
     {
         _config = config;
+        _campaign = campaign;
         _settings = settings;
     }
 
@@ -47,5 +56,8 @@ public sealed class HostilePeaceSettingsProvider : IHostilePeaceSettingsProvider
     public bool LimitTownAccess => Settings?.HostilePeaceLimitTownAccess ?? _config.Config.LimitTownAccess;
 
     public bool AllowPlayerAlliancesWithAnyone =>
+        _campaign.AlignmentRules?.AllianceWithAnyone ?? AllowPlayerAlliancesNewCampaignDefault;
+
+    public bool AllowPlayerAlliancesNewCampaignDefault =>
         Settings?.AllowPlayerAlliancesWithAnyone ?? _config.Config.AllowPlayerAlliancesWithAnyone;
 }
