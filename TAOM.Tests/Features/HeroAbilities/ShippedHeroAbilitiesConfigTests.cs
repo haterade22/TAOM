@@ -67,6 +67,14 @@ public class ShippedHeroAbilitiesConfigTests
             StringAssert.Contains(source, $"\"{ability.Id}\" => new TextObject(\"{{=taom_hero_ability_{ability.Id}}}");
     }
 
+    // None of the three carries a shield (#1438): each takes 30 % less from a missile.
+    [TestMethod]
+    public void ShippedConfig_EveryHero_HasThePassiveMissileReduction()
+    {
+        foreach (var kit in _sut.GetConfig().Heroes)
+            Assert.AreEqual(30f, kit.Passive.MissileDamageReductionPercent, kit.CharacterId);
+    }
+
     [TestMethod]
     public void ShippedConfig_Kits_AreAragornGimliAndLegolas()
     {

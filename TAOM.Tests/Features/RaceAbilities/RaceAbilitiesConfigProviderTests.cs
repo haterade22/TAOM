@@ -322,6 +322,8 @@ public class RaceAbilitiesConfigProviderTests
         new object[] { "rangedDamagePercent", "-96" },
         new object[] { "damageReductionPercent", "-1" },
         new object[] { "damageReductionPercent", "91" },
+        new object[] { "missileDamageReductionPercent", "-1" },
+        new object[] { "missileDamageReductionPercent", "91" },
         new object[] { "knockdownResistancePercent", "1001" },
         new object[] { "knockbackResistancePercent", "-96" },
         new object[] { "dismountResistancePercent", "1001" },

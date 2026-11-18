@@ -35,9 +35,9 @@ scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "in a loaded campaign: taom.story_open helms_deep_defend auto, choose Open the mission; one line per free hero on the first tick"
 reached = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=']
 pass = [
-    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_aragorn is_hero=0 campaign=1 mounted=0 formation=7 held=1 strangers=0 order=\S+ health_factor=3\.00 wanted_factor=3\.00 wielded=strider_sword$',
-    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_legolas is_hero=0 campaign=1 mounted=0 formation=7 held=1 strangers=0 order=\S+ health_factor=3\.00 wanted_factor=3\.00 wielded=wm_mirkwood_bow_a01$',
-    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_gimli is_hero=0 campaign=1 mounted=0 formation=7 held=1 strangers=0 order=\S+ health_factor=3\.00 wanted_factor=3\.00 wielded=sm_dwarf_(?:dain_axe_a|erebor_axe_2h_c)$',
+    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_aragorn is_hero=0 campaign=1 mounted=0 formation=7 held=1 strangers=0 order=\S+ health_factor=([0-9.]+) wanted_factor=\1 wielded=strider_sword$',
+    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_legolas is_hero=0 campaign=1 mounted=0 formation=7 held=1 strangers=0 order=\S+ health_factor=([0-9.]+) wanted_factor=\1 wielded=wm_mirkwood_bow_a01$',
+    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_gimli is_hero=0 campaign=1 mounted=0 formation=7 held=1 strangers=0 order=\S+ health_factor=([0-9.]+) wanted_factor=\1 wielded=sm_dwarf_(?:dain_axe_a|erebor_axe_2h_c)$',
 ]
 fail = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=fail']
 absence = "not-reached"

@@ -21,9 +21,9 @@
         { "from": "rohan_edoras_golden_hall_kings_own_rider", "to": "fow_rohan_edoras_golden_hall_supreme_rider", "price": 90, "name": "{=TAOM_LD_Up_Riders}Royal Guard to the Riders of Rohan" }
       ],
       "heroes": [
-        { "id": "aragorn", "troop": "taom_hero_aragorn", "price": 300, "healthFactor": 3.0, "name": "{=nc_aragorn_name}Aragorn", "text": "{=TAOM_LD_Hero_Aragorn_Text}The heir of Isildur, sword in hand. If he falls, he can be called again." },
-        { "id": "legolas", "troop": "taom_hero_legolas", "price": 250, "healthFactor": 3.0, "name": "{=nc_legolas_name}Legolas", "text": "{=TAOM_LD_Hero_Legolas_Text}The prince of Mirkwood and his bow. If he falls, he can be called again." },
-        { "id": "gimli", "troop": "taom_hero_gimli", "price": 250, "healthFactor": 3.0, "name": "{=nc_gimli_name}Gimli", "text": "{=TAOM_LD_Hero_Gimli_Text}The son of Glóin and his axe. If he falls, he can be called again." }
+        { "id": "aragorn", "troop": "taom_hero_aragorn", "price": 350, "healthFactor": 8.0, "name": "{=nc_aragorn_name}Aragorn", "text": "{=TAOM_LD_Hero_Aragorn_Text}The heir of Isildur, sword in hand. If he falls, he can be called again." },
+        { "id": "legolas", "troop": "taom_hero_legolas", "price": 300, "healthFactor": 8.0, "name": "{=nc_legolas_name}Legolas", "text": "{=TAOM_LD_Hero_Legolas_Text}The prince of Mirkwood and his bow. If he falls, he can be called again." },
+        { "id": "gimli", "troop": "taom_hero_gimli", "price": 300, "healthFactor": 8.0, "name": "{=nc_gimli_name}Gimli", "text": "{=TAOM_LD_Hero_Gimli_Text}The son of Glóin and his axe. If he falls, he can be called again." }
       ],
       "fortifications": {
         "gate": {
