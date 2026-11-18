@@ -4,6 +4,7 @@ using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TAOM.Core.Domain;
 using TAOM.Core.Logging;
+using TAOM.Features.AdvancedCombat;
 
 namespace TAOM.Features.MissionDiagnostic.Hooks;
 
@@ -21,7 +22,7 @@ public sealed class MissionDiagnosticBehavior : MissionLogic
     private bool _missionStartLogged;
     private bool _censusOpened;
     private bool _readingStopped;
-    private readonly PendingAgentReads<Agent> _pending = new();
+    private readonly PendingAgentReads<Agent> _pending;
     private float _actionSetWindowSecondsLeft = ActionSetWindowSeconds;
 
     public MissionDiagnosticBehavior(IMissionDiagnosticService service, IRaceManager raceManager, IModLogger logger)
@@ -29,10 +30,12 @@ public sealed class MissionDiagnosticBehavior : MissionLogic
         _service = service;
         _raceManager = raceManager;
         _logger = logger;
+        _pending = new PendingAgentReads<Agent>(message => _logger.LogWarning(message));
     }
 
     public override void OnMissionTick(float dt)
     {
+        MissionThreadGuard.MarkMainThread(); // this behavior owns a deferral queue, so it marks the thread itself (#634)
         // First-tick snapshot: dump the full MissionBehaviors + MissionLogics view
         // AFTER vanilla and all mods have added their behaviors. Mission ctor adds
         // them before tick begins, so first OnMissionTick is the right gate.
@@ -56,12 +59,8 @@ public sealed class MissionDiagnosticBehavior : MissionLogic
         }
     }
 
-    // Mission.CreateAgent raises OnAgentCreated; SpawnAgent, its mount and SpawnMonster all reach it. OnAgentBuild
-    // is not enough: SpawnMonster ends with BuildAgent(agent, null) and never raises it. The final action set is
-    // set after SpawnAgent returns: SandBox MissionAgentHandler runs agent.SetActionSet(..GetActionSet(
-    // locationCharacter.ActionSetCode)..) after Mission.SpawnAgent, as SpawnTroopWithAgentBuildData does for a
-    // suffix. So the agent is only queued here and read on the next tick. The census may open here: an agent can
-    // spawn before the first mission tick.
+    // Mission.CreateAgent raises this for SpawnAgent, its mount and SpawnMonster; the action set an agent keeps is set after
+    // SpawnAgent returns, so the agent is queued here and read on the next tick, and the census may open here (feature doc).
     public override void OnAgentCreated(Agent agent)
     {
         if (agent == null || _readingStopped) return;
@@ -69,11 +68,11 @@ public sealed class MissionDiagnosticBehavior : MissionLogic
         _pending.Add(agent);
     }
 
-    // Mission.OnAgentRemoved and Mission.OnAgentDeleted raise these; an agent gone before the next tick is not read.
+    // Native raises these on the thread it chooses (#634, #607): an off-thread drop waits for the next tick, before any read.
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow) =>
-        _pending.Remove(affectedAgent);
+        _pending.RemoveOrDefer("MissionDiagnosticBehavior.OnAgentRemoved", affectedAgent);
 
-    public override void OnAgentDeleted(Agent affectedAgent) => _pending.Remove(affectedAgent);
+    public override void OnAgentDeleted(Agent affectedAgent) => _pending.RemoveOrDefer("MissionDiagnosticBehavior.OnAgentDeleted", affectedAgent);
 
     private void ReadPendingAgents()
     {
