@@ -135,7 +135,7 @@ for MEM_F in "$HOME"/.claude/projects/*-"$(main_checkout_name)"/memory/MEMORY.md
     MEM_B=$(wc -c < "$MEM_F")
     MEM_L=$(wc -l < "$MEM_F")
     if [[ $MEM_L -gt 40 || $MEM_B -gt 4096 ]]; then
-        echo "NOTE: MEMORY.md is $MEM_L lines, $MEM_B bytes, over ADR-011's 40 lines and 4 KB. Move durable rules to the repo; delete pushed cards."
+        echo "NOTE: MEMORY.md is $MEM_L lines, $MEM_B bytes, over ADR-011's 40 lines and 4 KB. Move durable rules to the repo; delete pushed cards (python tools/memory_audit.py lists them)."
     fi
     break
 done
