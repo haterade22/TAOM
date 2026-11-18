@@ -2155,6 +2155,18 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **The rule** (`ShouldUseArmyLeader`, tested on every input): the player is the attacker; the defender is not the main party, is in no map event, does not lead its army and is attached to the army leader; the army leader shares its besieger camp, is not the main party and is in no map event. Then the defender becomes the army leader's party, the engine's own path when the camp leader leads its army. The v1.5.7 callers that pass the main party as the attacker are listed in the patch's doc comment; only help defenders meets the rule. The prefix catches its own throw and leaves the call unchanged.
 
+## Patch169_BattleEndHeroDeathSnapshot
+
+**Target:** `MapEventSide.HandleMapEventEndForPartyInternal(PartyBase party)` (internal, Transpiler)
+
+**Feature:** MapEventGuard, `Main/Features/MapEventGuard/Hooks/Patch169_BattleEndHeroDeathSnapshot.cs` and `BattleEndHeroDeathTranspiler.cs`. **Status:** ACTIVE (2026-11-18). Not yet checked in game.
+
+**The crash.** The method builds a lazy `party.MemberRoster.GetTroopRoster().WhereQ(hero, alive, DeathMark == DiedInBattle)` and kills each match in a `foreach`. `GetTroopRoster()` returns one cached list that `TroopRoster.ValidateTroopListCache` rebuilds in place when the roster changes, and `WhereQ` captured the list's `Count` once. A kill removes the hero from the roster; the next `GetTroopRoster()` call rebuilds the list shorter while the walk still counts to the old length: ArgumentOutOfRangeException. It needs two or more heroes of one party marked `DiedInBattle`, where a later kill in the walk is the party's current leader: the leader's heir scan in `KillCharacterAction.MakeDead` calls `GetTroopRoster()` after an earlier removal and rebuilds the list shorter. Roster reads from kill listeners are not checked. Lord Retinue makes such parties common.
+
+**The fix.** The one `LinQuick.WhereQ<TroopRosterElement>(List<TroopRosterElement>, Func<TroopRosterElement, bool>)` call (IL `call` on the generic instance over `List`1`, the only `WhereQ` in the method) becomes `BattleEndHeroDeathTranspiler.SnapshotWhere<TroopRosterElement>`, which copies the list at the call and returns `copy.WhereQ(predicate)`. Same heroes, same order, the filter still runs just before each kill. A count other than one leaves the method untouched, logs one warning and reports the patch as off (`SelfDisables`).
+
+**Co-op.** Not a veto (a transpiler, no skipped method): it changes only which list the loop reads, so every peer kills the same heroes in the same order. **Tests:** `Patch169BattleEndHeroDeathSnapshotTests` (the snapshot, the lazy filter, the site count and the real installed IL).
+
 ## Patch160_LoadRetryStop
 
 **Target:** `SandBox.SandBoxGameManager.DoLoadingForGameManager(GameManagerLoadingSteps, out GameManagerLoadingSteps)` (protected override, Prefix plus a void Finalizer)

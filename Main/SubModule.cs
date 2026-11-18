@@ -1843,6 +1843,10 @@ public class SubModule : MBSubModuleBase
         // is attached to that army. A game menu consequence, so the standard batch is early enough.
         TAOM.Features.MapEventGuard.Hooks.Patch159_HelpDefendersArmyLeader.Initialize(IoC.Resolve<IModLogger>());
         TryPatchCategory("Patch159_HelpDefendersArmyLeader");
+        // Patch169: the battle-end hero kill loop walks a private copy of the roster, so a leader's death
+        // (which rebuilds the cached roster list) cannot shrink the list under it. See docs/features/map-event-guard.md.
+        TAOM.Features.MapEventGuard.Hooks.Patch169_BattleEndHeroDeathSnapshot.Initialize(IoC.Resolve<IModLogger>());
+        TryPatchCategory("Patch169_BattleEndHeroDeathSnapshot");
         // Patch87 (#566): "Return to Army" leaves the town or castle when the player is an army
         // member who is NOT attached to the army. Vanilla only ever leaves a village, hides "Leave"
         // for every non-leader member, and the wait menu it opens instead has no exit. The target is

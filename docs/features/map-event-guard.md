@@ -190,6 +190,14 @@ either, so reproducing it would invent a decision the game did not make.
 
 **In game (owed, #1429):** join a siege as a defender's ally where the besieging camp is led by a lord attached to another lord's army, choose Help defenders, and check that the battle opens and the log line above appears.
 
+## Patch169: battle-end hero deaths in one party
+
+When a battle ends, vanilla `MapEventSide.HandleMapEventEndForPartyInternal` kills each hero of a party that is marked `DiedInBattle`. It walks a lazy filter over the roster's one cached troop list. A kill removes the hero, and the next read of that list rebuilds it shorter while the walk still counts to the old length: ArgumentOutOfRangeException (a player crash report). It needs two or more heroes of one party marked `DiedInBattle`, where a later kill in the walk is the party's current leader: the leader's heir scan in `KillCharacterAction.MakeDead` calls `GetTroopRoster()` after an earlier removal and rebuilds the list shorter. Roster reads from kill listeners are not checked. Lord Retinue makes such parties common.
+
+`Patch169_BattleEndHeroDeathSnapshot` is a transpiler that swaps the one `WhereQ` call for `BattleEndHeroDeathTranspiler.SnapshotWhere`, which walks a private copy of the list. The same heroes die in the same order and the filter still runs just before each kill. In a vanilla run that did not crash, a rebuild could shift the indices and skip a marked hero; the copy visits every original match, so such a hero now dies as marked. If the engine ever has no or several such calls, the method stays vanilla and the log and the patch-off notice say so. Registry: [Patch169_BattleEndHeroDeathSnapshot](../reference/harmony-patch-registry.md#patch169_battleendherodeathsnapshot).
+
+**In game (owed):** end a battle where one party loses two heroes and check that the map opens and the log has no `HandleMapEventEndForPartyInternal` exception.
+
 ## Stuck AI battles
 
 ### The report
@@ -426,6 +434,7 @@ would act on.
 - 2026-11-13: Patch143 is applied under its own Harmony id, `TAOM.CrashGuards`, so PatchShield keeps it when
   a Refuge or Supply Lines patch on the same method breaks after a game update.
 - 2026-11-17: added `Patch159_HelpDefendersArmyLeader`, from Silas He's v1.5.6 fix package (#1429).
+- 2026-11-18: added `Patch169_BattleEndHeroDeathSnapshot`, a transpiler for a vanilla battle-end crash when a party loses two heroes.
 
 ## GitHub Issue
 
