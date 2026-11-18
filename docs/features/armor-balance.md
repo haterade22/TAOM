@@ -85,7 +85,17 @@ cape's `arm_armor`) exists from the heavy band only (`SECONDARY_FROM_BAND`). Fro
 primary times the smaller of the item's own share of its primary and `SECONDARY_SHARE_CAP` for that
 slot and stat (chest arm 0.30, chest leg 0.40, cape arm 1.0), rounded half up
 (`kingdom_secondary`); below heavy it is 0. A light or medium chest therefore loses its arm and leg
-armour on the next apply; a 0 stat is also modifier-immune, so no loot roll lifts it. Weights and
+armour on the next apply; a 0 stat is also modifier-immune, so no loot roll lifts it. A piece the restat
+raises into the heavy or elite band from below it (its current primary under the line's heavy curve value)
+has an own share of 0, so its 0 secondaries take the legacy row's share for the tier instead, or, for a
+stat the row lacks (a chest's `arm_armor`), the median share of its line's pieces at the heavy band or
+above that carry the stat, hero and lord pieces left out (`raised_secondaries`, `line_secondary_shares`,
+2026-11-17). A raised chest takes its line's median leg share even when it declares no `leg_armor`
+(`UNDECLARED_RAISED_SECONDARIES`), and the apply adds the attribute on its own line: `mirkwood_body`
+goes to 0/48/8/19 like the line's other elite chests, where a level 36 recruit wearing
+`mkwd_inf3_chest` at 0/48/8/19 would otherwise lose armour when he upgrades to a warden. On
+2026-11-17 it moved that one piece of the 2,945 the restat plans. A stat no such piece carries stays
+0, and the dry run lists the piece. Weights and
 `material_type` are not touched (`--keep-weights`, `--keep-material-type`); `modifier_group`
 follows the band, and the three extremity slots (arm, leg, shoulder) share one loot table:
 civilian, light and medium roll `cloth_unarmoured` (+3), heavy, elite and lord roll `leather` (+7;
@@ -768,7 +778,9 @@ lowers when a lord wears it (`rebalance_armor._roster_first_plan`). An unworn lo
 restated at the lord band and needs none. The refusal tests the lord-line token only, while the restat
 raises such a piece only when it is also not hero-named (`rebalance_armor.py:1076`): an unworn,
 hero-named lord-line piece is refused too, on the safe side. A piece already at lord values is worn as
-it is. No Armory
+it is, but a shipped variant whose source the restat later raises to the lord band stays at the
+generator's values (`shipped_ids`; the four Mirkwood band clone sources, 2026-11-17), because a save can
+hold it. No Armory
 value changes: the Armory is only read, and `python tools/rebalance_armor.py --check` stays at 0.
 
 **The spec and the output.** `tools/lord_armour_variants.json` lists, per template culture (`aserai` is
@@ -930,6 +942,198 @@ daily tick of that town, when TAOM's sweep removes it as a gated `named` piece t
 (`ArmourAcquisitionCampaignBehavior.cs:89`, `ArmourStockSweepService.cs:37` to `:41`,
 `ArmourGateService.cs:141`, `ArmourClass.cs:45`); the sweep does not run while the armour gate is off.
 
+### Armour band clones and upgrades (2026-11-17)
+
+**The problem.** The roster-first restat prices an Armory piece at the band of its lowest battle wearer
+(`_roster_first_plan`, `worn_band`). When a troop of tier 7 to 10 and a low troop wear the same piece, the
+low troop drags it down for the top-tier troop. `mirkwood_body` (the palace guard chest) went from body 25
+to 8 on 2026-11-14, because two level 11 militia wear it beside the level 41 to 51 wardens, guardians and
+palace guards; `sk_md_orc_inf_chest_med_b` sits at body 13 on three level 36 goblins. The scope (the
+maintainer, 2026-11-17) is a piece worn in battle by a troop of level `rebalance_armor.TOP_TIER_LEVEL` (36)
+or higher and by a troop of level 30 or lower (`rebalance_armor.shared_down_pieces`, levels at their anchor:
+a noble line a band up, the ladder's exempt troops and `(troop, item)` pairs skipped). On trunk 642b1c482
+that was 101 pieces. Every other piece keeps its lowest-wearer price: the restat rule did not change.
+
+**Two treatments, one classifier** (`generate_armour_band_clones.treatment`):
+
+- **A, duplicate.** The piece is an elite troop's own armour that low troops borrow: an `_elite_` or
+  `_lord_` id, or a named piece with no tier token (the palace guard chest, "[Noldor] Gold Greaves III").
+  Each band of its low wearers wears a clone; the source keeps only its level 31+ wearers, so the next
+  derive gives it an elite anchor and the restat raises it to the elite band.
+- **B, upgrade.** The piece is a low or mid piece: a `_light_`, `_med_` or `_heavy_` id, or a name that
+  ends in the numeral I or II or says Infantry, Militia or Levy. Its level 36+ wearers swap to a stronger
+  piece of the same kingdom line and slot (`pick_upgrade`), and the piece keeps its price for its low
+  wearers. No clone.
+
+**The upgrade pick.** A candidate is a live Armory piece of the same slot file, Type and kingdom line
+(`kingdom_key`). It is not civilian, troll, hero-named, Mallorn (a band up by its generator) or a clone, and
+not lord armour (a lord-line token with no tier or the lord tier, as `fix_lord_kits.lord_pool` marks it)
+unless the source is of a lord line itself. A colour variant of the source (the same name without its
+colour) is never an upgrade. Its mesh tier is above the source's own and allowed by the ladder for each
+wearer, or it has none; no troop of level 30 or lower wears it, so it prices at the elite band and is never
+in scope itself. On the values the restat will write (the replacement at the elite band, the source at the
+band of its lowest wearer) it is at least the source on every region and above it on the primary. With each
+slot drawn from any battle set no wearer passes `WORN_ARMOUR_CEILING`. No wearer ends above a troop it
+upgrades into by more than the fallback (the source at the elite band) would put it: B is never worse than
+A on `UPGRADE_ARMOUR_REGRESSION`. The pick is the candidate of the longest id prefix shared with the source
+(its look family), then a tier inside the ladder (the lowest such tier), then the id. B pieces that find
+no candidate are judged again against the whole plan until a pass adds no pick; a B piece that still has
+none falls back to A, and the dry run gives the reason.
+
+**What a clone is.** A copy of the Armory item with the id `taom_band_<lt|md|hv>_<source>`
+(`rebalance_armor.band_clone_id`; the band code carries no tier token, so `mesh_tier_of`, `kingdom_key`
+and `is_lord_kit` read a clone as its source), `is_merchandise="false"`, and armour and `modifier_group` at
+its band by the restat's own arithmetic (`rebalance_armor.restat_armour`, which `process_file` now calls;
+a generator-owned source as its generator prices it), never above the source at the elite band. It is
+priced from the source as the restat leaves it (the source's values at the elite band), not from the live
+values, so the clone file is the same before and after the restat apply: a heavy clone of a source raised
+from the light band takes the source's new arm or leg share, a light or medium clone has none (a stat
+the restat adds to the source, such as `mirkwood_body`'s leg, is 0 on those clones). Mesh,
+culture, weight, material, flags and the name key and text are the source's. The Armory's own language
+files translate those keys, so `tools/loc_inline_backlog.json` lists the clone file with that reason.
+
+**Files.** `tools/generate_armour_band_clones.py` writes the plan `tools/armour_band_clones.json`
+(`clones`: source to bands; `upgrades`: source to the replacement and its troops; `fallback`), the clones
+in `Main/_Module/ModuleData/armour_band_clones/armour_band_clones.xml` (CRLF) with one `Items` node in
+`Main/_Module/SubModule.xml`, and the battle sets of `troops/troops_*.xml` and
+`fords_of_war/fords_troops.xml` (a `fow_` copy follows its campaign troop). A low troop's civilian sets take
+the clone of its band too, never an upgrade. A troop file a generator writes whole
+(`fix_melee_ladder.GENERATED_TROOP_FILES`) is not written: the realm generators (`realm_troops.py`),
+`generate_lothlorien_troops.py` and `generate_snow_orc_troops.py` call `armour_for_troop` as they render,
+and the dry run lists the swaps each still owes under `NEXT`. A plan made after an apply is the plan made
+before it: an upgrade is read back as its source (`applied`, the shipped spec's upgrades, and
+`as_planned_from`; two sources on one replacement for one troop stop the run), and a clone as its source
+(`band_clone_source`).
+
+**Every other wearer** (review 2026-11-17). A set outside the troop battle sets that names a source takes
+the clone of its wearer's band (`scan_wearers`, `planned_for`, written by `write_worn_swaps`): an NPC by
+its `level` (a guard at 16 wears the medium clone), an enlistment kit by its rank
+(`generate_enlistment_rosters.RANK_BANDS`: recruit light, soldier medium, veteran heavy, sergeant elite,
+so the sergeant keeps the source), and any set with no level (townsfolk, notables, wanderer and companion
+kits, character creation, child templates, the faction screen's `taom_fui_*` art characters) the light
+clone. A lord keeps the source: the lord files (`taom_equipment_sets_*.xml`,
+`taom_lord_template_equipment.xml`) and an `occupation="Lord"` NPC. These wearers widen the clone's band
+set (`wearer_bands`), so `sk_rh_loke_bracer_heavy_b` has a light, a medium and a heavy clone. The tools
+that write such sets whole apply the same rule: `generate_enlistment_rosters.kit_at_rank` puts each kit at
+its rank's clone (a clone is never read back as its source for a low rank), and
+`promote_borrowed_cultures.py` runs `band_text` on each block it clones (`band_block`; the Arthedain and Rhudaur recruit
+kits, cloned from Gondor's). `generate_char_creation_equipment.py` only appends new cultures and never
+re-renders one, so it needs nothing. The validator warns `BAND_CLONE_SOURCE_WORN_LOW` for a set below the
+elite band that still names a source (`sources_worn_low`, 0 after the apply).
+
+**Retired clones.** A shipped clone id never disappears: when no set wears it any more, `--apply` keeps it in
+the clone file (still not merchandise) and lists it under `retired` in the spec, because a save can hold
+it. `--check` fails when a shipped id is missing.
+
+**Who reads a clone.** `derive_armor_tiers.build_armory_index` reads the clone file after the lord
+variants, in the source's folder and slot; the class table classes a clone `named`;
+`fix_upgrade_armour_regressions.load_item_armour` and `taom_schema.build_item_folders` give it its source's
+folder; `fix_lord_kits.lord_pool` and `fix_lord_kits._rule_b_pieces` never take one;
+`fix_upgrade_armour_regressions.plan_fixes` leaves every slot the plan owns (a source, an upgrade of its
+troop, a clone) and never picks one as a replacement. `generate_career_kits.index_troop_gear` counts a clone
+as its own item at the level of the low troops that wear it, so a low career kit hands out the clone; an
+enlistment kit takes the clone of its rank. The validator warns `TOP_TIER_ARMOUR_WORN_LOW` for
+every piece still in scope (0 after the apply). Gates: `armour-band-clones` (`--check`) and
+`armour-band-clone-meshes`.
+
+**Where a clone can reach a player** (the engine lines of the variant table above):
+
+| Route | What happens to a clone | Where |
+|---|---|---|
+| Shops, workshops | `is_merchandise="false"`: no shop stocks it and no workshop makes it; the class table classes it `named`, which the market gate refuses | `ItemObject.cs:501`, `WorkshopsCampaignBehavior.cs:993`; `ArmourGateService.cs:141`, `:147` |
+| Tournament prizes | vanilla skips `NotMerchandise`, and TAOM's pool takes no `named` piece | `DefaultTournamentModel.cs:101`; `TournamentPrizeRules.cs:59` |
+| Loot from a defeated troop | never dropped: the casualty loot roll skips a `NotMerchandise` item, and a `named` piece never drops | `MapEvent.cs:1490`, `:1502`; [armour-acquisition.md](armour-acquisition.md) |
+| Armoury upgrade | a `named` piece is no upgrade source, and no row names a clone as `next` | `ArmouryUpgradeService.cs:49` to `:53` |
+| Lord kits | no lord set names a clone; `fix_lord_kits.py` never picks one | `fix_lord_kits.lord_pool`, `_rule_b_pieces` |
+| Enlistment kit (known route) | a recruit, soldier or veteran kit issues the clone of its rank; an honourable discharge takes the issued items back, but a desertion and an item the player equipped or sold keep it with him | `DischargeConsequenceService.ReclaimIssuedKit`; [enlistment.md](enlistment.md), "One kit rule" |
+| Character creation (known route) | a starting kit that named a source (Mirkwood boots, the Arnor capes, a Rhûn bracer) now names its light clone, so the player starts in it | `taom_char_creation_equipment.xml` |
+| Companions (known route) | a hired wanderer or a named companion (Elegost) wears the light clone, and the player can take it off him | `taom_wanderer_equipment.xml`, `named_companions.xml` |
+| Faction screen art | `taom_fui_*` characters are never spawned | `FactionScreenArt.cs:11` |
+
+On the player a clone moves and sells like a lord variant: a sold clone stays in the town's market until
+that town's next daily tick, when the sweep removes it as a `named` piece that is not merchandise (only
+while the armour gate is on).
+
+**The class change.** The 24 A and fallback sources are `elite` in `armour_classes.xml` now; on trunk
+642b1c482 16 were `heavy`, 4 `light` and 4 `medium` (`mirkwood_body`, `mirkwood_boots`,
+`sk_ar_art_cape_a` and `_b`; `mkwd_inf3_greaves_bronze`, `mkwd_inf3_pauldrons_bronze`,
+`rivendell_boots_greaves3`, `rivendell_pauldron_tier1_cape_silver`). With the armour gate on, the 8 former
+light and medium pieces no longer drop as loot or appear as tournament prizes, and a town sells them only
+at armoury level 2; the 16 former heavy pieces move from armoury level 1 to 2 (heavy already never
+dropped). The 40 clones are `named`. Measured with `python tools/generate_armour_classes.py --check` and a
+comparison of the table against trunk's.
+
+**The repo half needs the Armory half.** The clone file and the roster swaps price the sources at the elite
+band only after the restat apply writes the live Armory. Until then the sources keep their low live values,
+and the top-tier troops' upgrades and raised sources lift them over the troops they upgrade into: on the
+live Armory, `UPGRADE_ARMOUR_REGRESSION` goes from 1 (trunk) to 10 with this change. Ship the repo change
+and the restat apply together (the apply sequence below, step 4 and the loop of step 6).
+
+**Commands**, from the repo root, after a roster change or an Armory art drop:
+
+```
+python tools/generate_armour_band_clones.py                 # dry run: the plan and the table of pieces (--report PATH writes it)
+python tools/generate_armour_band_clones.py --apply         # write the rosters and other sets, the clones, SubModule.xml, the spec
+python tools/generate_<realm>_troops.py --apply             # each generator NEXT names, then
+python tools/generate_lothlorien_troops.py --apply          #   (and generate_snow_orc_troops.py when named)
+#   NEXT also names the clone file's name key count: set "keys" of
+#   armour_band_clones/armour_band_clones.xml in tools/loc_inline_backlog.json to it (InlineDataKeyTests)
+python tools/generate_armour_band_clones.py --check         # 0 clean, 1 drift or a step owed, 2 no Armory, 3 crash
+python tools/promote_borrowed_cultures.py --only arthedain --check   # and rhudaur: their cloned kits carry band_block
+python tools/derive_armor_tiers.py                           # before the restat, which reads the tracked map
+python tools/rebalance_armor.py --dry-run --all --tier-source roster-first --keep-weights --keep-material-type
+python tools/fix_lord_kits.py --values planned               # then --apply --values planned when it plans changes
+python tools/generate_armour_classes.py --apply
+python tools/derive_armor_tiers.py                           # last: the map records the lord and hero wearers as they end
+```
+
+`--apply` writes only stale files and lists them after `written:`; a step it cannot do itself is under
+`NEXT:`, and `--check` fails while one is owed. It refuses (exit 1, nothing written) when a piece the spec
+shipped is no longer live Armory armour, and exits 2 when no Armory slot file parses. The spec and the
+clone file are pinned to LF and CRLF in `.gitattributes`, and `--check` compares them with newlines made
+LF, so a checkout with `core.autocrlf` reads as clean.
+
+The restat apply (the apply sequence below) is the maintainer's step; until it runs, the originals keep
+their low prices in the live Armory, and the `armour-restat` data gate fails on the items the dry run
+changes.
+
+**Lord kits follow.** `fix_lord_kits.py` judges each lord against the elite troops of his culture. Those
+troops now wear the upgrades, so the reference rises and the lord templates move up with it: the tool ran
+with `--apply --values planned`, and `--check --values planned` exits 0. A piece a level 36 troop now
+wears leaves the lord pool (the pool takes pieces whose lowest troop wearer is level 41 or higher), but
+the lords that wore it keep it; nothing re-picks them.
+
+**Measured on 2026-11-17, after the review fixes** (worktree on trunk 642b1c482, the live Armory read and
+a copy of it restated): 101 pieces, A 20, B 77, fallback 4 (a B candidate must share the source's
+`culture` attribute, so `sk_dg_khml_bracer_hplate_heavy_a` lost its Dol Guldur pick and fell back); 40
+clones of 24 sources; 200 upgrade troop-piece pairs. 130 troop battle-set slots and 309 slots of other sets
+(10 files) name a clone. The restat on the copy changed 34 Armory items: the 24 A and fallback sources go
+up (`mirkwood_body` 0/8/0/0 to 0/48/8/19, its arm and leg from the Mirkwood line's shares); seven B replacements go
+up and three go down by 1 to the elite curve value (`rivendell_vambraces_1_silver` and `_2_silver` arm 27
+to 26, `whiterun_boots` leg 18 to 17). The palace guard goes from 50/21/35/3 (head/body/arm/leg) to
+50/61/43/41 and Bolg's Ironfang from 31/20/10/6 to 37/46/38/16. On that copy
+`generate_armour_band_clones.py --check` is OK, `rebalance_armor.py --check` 0 items,
+`fix_lord_kits.py --check --values live` 0 changes, `generate_armour_classes.py --check` current, and the
+validator gives `TOP_TIER_ARMOUR_WORN_LOW`, `BAND_CLONE_SOURCE_WORN_LOW` and
+`ENLISTMENT_KIT_RANK_REGRESSION` 0 each.
+
+**Known limits.** `UPGRADE_ARMOUR_REGRESSION` is 5 on the restated copy (1 on trunk, Umbar). In each edge
+the B pick gives the same total as the A fallback or a lower one (traced through `pick_upgrade`); the drops
+come from the rule itself, a level 36 troop wearing the elite band:
+
+- `gundabad_tracker` to `gundabad_dread_rider_of_the_tower` (178 to 174) and `ironpass_ram_vanguard` to
+  `ironpass_ram_marshal` (222 to 220): the level 41 troops wear lower pauldrons (18; 27 and 29) than the
+  level 36 troops' own (19 to 24; 30). The step 6 repair loop resolves both: on a copy of the repo,
+  `fix_upgrade_armour_regressions.py --apply` swapped those pauldrons and the Umbar edge, leaving the
+  2 edges below.
+- `rivendell_noble` and `lindon_noble` to their royal guards (214.04 to 214.00): one set of 24 wears the
+  raised `rivendell_pauldron_tier1_cape_silver`, whose arm share is 13 against 12 on the guards' capes. No
+  piece of 26.04 exists, so the repair loop leaves it. Claude accepted this edge under the maintainer's
+  standing word to act on its recommendations; the maintainer has not reviewed it.
+
+Until the restat apply, `rohan_bat_template_medium_e` wears `roh_nbl_arm_y` at its live 0/25/8/0 in place
+of 0/37/11/0.
+
 ### Open decisions for the maintainer (2026-11-14, #1271)
 
 1. **The loot table of heavy, elite and lord extremities: decided, `leather`.** Bracers, greaves and
@@ -1056,10 +1260,15 @@ close the game, the launcher and the dedicated server.
    `python tools/fix_upgrade_armour_regressions.py` reports the upgrade edges that now lower armour
    (14 on a copy after steps 4 and 5, against 4 today; for example `imladris_nobleman` head 53 to 20),
    and `python tools/fix_upgrade_armour_regressions.py --apply` rewrites the troop rosters. The
-   2026-09-13 curve apply needed the same loop (58 edges, 197 slot swaps). The rosters changed, so go
-   back to step 2, then step 3, and repeat steps 2 to 7 until step 3 plans `Changed: 0` and the
-   report finds no edge (when step 3 still plans changes, step 4 again with the same `--backup-tag`,
-   which keeps the first backup).
+   2026-09-13 curve apply needed the same loop (58 edges, 197 slot swaps). The fixer never touches a
+   slot the armour band clone plan owns (`band_clone_plan`): after it, run
+   `python tools/generate_armour_band_clones.py --check`, and on exit 1
+   `python tools/generate_armour_band_clones.py --apply` and the steps its `NEXT:` names (the
+   "Commands" of "Armour band clones and upgrades" above), because a repair can put a level 36 troop
+   and a level 30 one on the same piece again. The rosters changed, so go back to step 2, then step 3,
+   and repeat steps 2 to 7 until step 3 plans `Changed: 0`, the report finds no edge but the known
+   limits of the clone section, and the clone `--check` exits 0 (when step 3 still plans changes,
+   step 4 again with the same `--backup-tag`, which keeps the first backup).
 7. **REPO, carry the step 6 swaps into the troop generators.** A generator owns some troop files, and
    a roster repair edits them by hand: the generator's next run reverts the swap, and its sync test
    fails now. The owners are the realm files in `generate_new_faction_kingdoms.REGENERATABLE`
@@ -1082,6 +1291,9 @@ close the game, the launcher and the dedicated server.
       no `--check`, and `test_generated_files.py` in the next step checks it.
    4. Run `python -m pytest tools/tests/test_generator_regions_in_sync.py tools/tests/test_generated_files.py -q -p no:cacheprovider`.
       Both must pass before step 8.
+   5. The armour band clones: `python tools/generate_armour_band_clones.py --check` must exit 0 after
+      the regeneration. Its swaps reach the same generators through `armour_for_troop`, so a realm
+      generator's `--apply` keeps them, and the dry run lists any it still owes under `NEXT:`.
 8. **REPO.** `python tools/analyze_armor_balance.py --stdout` (0 kingdom invariant violations) and
    `python tools/analyze_kingdom_armour.py --stdout`. Then `python tools/generate_armour_classes.py --apply`
    and `python tools/generate_armour_classes.py --check`: it classes pieces with `calculate_stats`
@@ -1787,9 +1999,35 @@ loads at launch), each step pairs a check a tool can make with what only a perso
    Mirkwood or Harad lord's party. Known route: start a new campaign, pick a Harad lord (template `_b`
    to `_e`) on the faction screen as a preset, and the player wears his `Lord's` pieces; sell one in a
    town, and it is gone from that town's market the next day.
+11. Armour band clones (2026-11-17). After the restat apply of the apply sequence and a full restart.
+   Tool: `python tools/generate_armour_band_clones.py --check` and `python tools/rebalance_armor.py --check`
+   exit 0, and `python tools/validate_moduledata.py` reports `TOP_TIER_ARMOUR_WORN_LOW` and
+   `BAND_CLONE_SOURCE_WORN_LOW` 0 each. Person only:
+   1. The Palace Guard (`mirkwood_palaceguard`): the chest tooltip reads body 48, arm 8, leg 19, and the
+      troop sums to 50 head, 61 body, 43 arm and 41 leg in the encyclopedia.
+   2. Enlist with Mirkwood as an infantry recruit (`enlist_mirkwood_infantry_recruit`): the issued chest
+      has the palace guard chest's name and look at body 8, with no arm or leg line (the light clone).
+   3. No clone is in a town market, a tournament prize list or the loot screen after a battle with
+      Mirkwood's low troops (they wear the light clone).
+   4. On a save made before the change, a companion hired before it still wears what he wore: a hero's
+      equipment is saved, so the new wanderer kits reach only companions created after the change.
 
 ## Changelog
 
+- 2026-11-17: Review rounds of the armour band clones. Every set outside the troop battle sets now names
+  a clone too: the enlistment kits by rank (a recruit's kit issues the light clone), wanderer and
+  companion kits, character creation, NPCs by level and the child templates; a lord keeps the source
+  (warning `BAND_CLONE_SOURCE_WORN_LOW`). A chest the restat raises from below the heavy band now takes
+  its line's leg share even when it declares no leg armour: the palace guard chest reads 0/48/8/19, and
+  a Mirkwood recruit no longer loses armour when he upgrades to a warden.
+- 2026-11-17: A piece the restat raises into the heavy band from below it takes its arm and leg armour
+  from the legacy row, or from its line's heavier pieces, in place of 0. Band clones are priced from
+  their source as the restat leaves it, and the lord templates follow the stronger elite troops
+  (`fix_lord_kits.py --apply --values planned`).
+- 2026-11-17: Armour band clones and upgrades: a piece a level 36+ troop and a level 30- troop both wear
+  is no longer priced down for the top-tier troop. An elite piece gets a clone per low band; a low piece
+  gives its top-tier wearers a stronger piece of the same line (`tools/generate_armour_band_clones.py`,
+  gates `armour-band-clones` and `armour-band-clone-meshes`, warning `TOP_TIER_ARMOUR_WORN_LOW`).
 - 2026-11-15: Lord armour variants: TAOM copies of Armory pieces at the lord band, worn only by the lord
   templates (`tools/generate_lord_armour_variants.py`, gate `lord-armour-variants`); Mirkwood's four
   looks are back and each Harad template has its own chest and helmet, with no part lower than

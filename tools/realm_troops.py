@@ -22,6 +22,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable
 
+import generate_armour_band_clones as band_clones
 import generate_placeholder_weapons as placeholders
 import ranged_ladder as rl
 import rebalance_troops as rb
@@ -176,7 +177,9 @@ class Troop:
                 lines.append(f'        <equipment slot="Item{i}" id="Item.{w}" />')
             for slot in ("Head", "Body", "Cape", "Gloves", "Leg"):
                 if slot in gear:
-                    lines.append(f'        <equipment slot="{slot}" id="Item.{gear[slot]}" />')
+                    # A shared-down piece (tools/armour_band_clones.json): its band clone or upgrade.
+                    item = band_clones.armour_for_troop(gear[slot], self.id, self.level)
+                    lines.append(f'        <equipment slot="{slot}" id="Item.{item}" />')
             if self.horse:
                 lines.append(f'        <equipment slot="Horse" id="Item.{self.horse[0]}" />')
                 lines.append(f'        <equipment slot="HorseHarness" id="Item.{self.horse[1]}" />')
@@ -184,7 +187,11 @@ class Troop:
         if self.realm.civilian_kits:
             for kit in self.realm.civilian_kits:
                 lines.append('      <EquipmentRoster civilian="true">')
-                lines += [f'        <equipment slot="{slot}" id="Item.{item}" />' for slot, item in kit.items()]
+                for slot, item in kit.items():
+                    if slot in ("Head", "Body", "Cape", "Gloves", "Leg"):
+                        # A low troop's civilian set takes its band clone too, never an upgrade.
+                        item = band_clones.armour_for_troop(item, self.id, self.level, civilian=True)
+                    lines.append(f'        <equipment slot="{slot}" id="Item.{item}" />')
                 lines.append("      </EquipmentRoster>")
         else:
             lines.append(f'      <EquipmentSet id="{CIVILIAN_SET}" equipmentType="Civilian" />')

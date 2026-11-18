@@ -3560,6 +3560,8 @@ if [ "$1" != "tools/upstream_watch.py" ]; then printf taompy; exit 0; fi
 echo "$*" > "$UPFAKE_ARGS"
 case "$UPFAKE_MODE" in
     ahead) echo "UPSTREAM AHEAD: fake/repo has 3 new commits since the 2026-10-15 review (record r.md); run /upstream-review" ;;
+    both) echo "UPSTREAM AHEAD: fake/repo has 3 new commits since the 2026-10-15 review (record r.md); run /upstream-review"
+          echo "UPSTREAM RELEASE: fake/repo published v9 (last seen v8 on 2026-10-15; record r.md); update the record" ;;
     current) ;;
     rc2) exit 2 ;;
     crash) echo "Traceback (most recent call last): boom" >&2; exit 1 ;;
@@ -3581,6 +3583,37 @@ if grep -q '^UPSTREAM AHEAD: fake/repo has 3 new commits' <<< "$UP_OUT" && grep 
     ok "ahead: the tool's line is printed and the tool got a --budget"
 else
     bad "ahead: the UPSTREAM line is missing or the tool got no --budget ($(cat "$UP/args" 2>/dev/null))"
+fi
+# The AHEAD lines print at most once in seven days, by a stamp file (harness retro 2026-11-17, P3: 49
+# sessions printed the banner in a week and one acted on it). RELEASE and NOTE lines print every time.
+UP_STAMP="$UP/.claude/logs/.upstream-ahead-printed"
+if [[ -f "$UP_STAMP" ]]; then
+    ok "ahead: the stamp file is written when the AHEAD line prints"
+else
+    bad "ahead: no stamp file after the AHEAD line printed"
+fi
+up_run ahead
+if grep -q '^UPSTREAM AHEAD:' <<< "$UP_OUT"; then
+    bad "ahead twice inside seven days: the AHEAD line printed again"
+else
+    ok "ahead twice inside seven days: the second start prints no AHEAD line"
+fi
+up_run both
+if grep -q '^UPSTREAM RELEASE:' <<< "$UP_OUT" && ! grep -q '^UPSTREAM AHEAD:' <<< "$UP_OUT"; then
+    ok "a fresh stamp mutes only the AHEAD line: the RELEASE line still prints"
+else
+    bad "a fresh stamp: expected the RELEASE line without the AHEAD line, got '$(head -c 120 <<< "$UP_OUT")'"
+fi
+touch -d '8 days ago' "$UP_STAMP" 2>/dev/null
+up_run ahead
+if grep -q '^UPSTREAM AHEAD:' <<< "$UP_OUT"; then
+    if [[ -z "$(find "$UP_STAMP" -mtime +6 2>/dev/null)" ]]; then
+        ok "ahead after eight days: the AHEAD line prints again and the stamp is renewed"
+    else
+        bad "ahead after eight days: the stamp was not renewed"
+    fi
+else
+    bad "ahead after eight days: the AHEAD line stayed muted"
 fi
 up_run current
 if [[ -n "$UP_OUT" ]]; then
@@ -4127,14 +4160,21 @@ head2 "7o. the verification reminder judges the session's own edits; a file two 
 # mark-verification-run.sh touches <id>.verified, and the Stop hook judges the ledger's own C# first,
 # then C# that no ledger holds.
 # A payload with no session id keeps the tree-wide check. Every step runs the real hooks.
+# The reminder for C# no ledger holds (branch 1b) runs only in a linked worktree, which has one owner; the
+# shared main checkout skips it (harness retro 2026-11-17, P1). $LR_MAIN is that main checkout, and $LR a
+# linked worktree of it, so every row below that expects 1b runs where 1b applies.
+LR_MAIN="$SANDBOX/ledger-main"
 LR="$SANDBOX/ledger-repo"
 LL="$LR/.claude/logs/sessions"
-mkdir -p "$LR/Main" "$LR/.claude/logs"
-git -C "$LR" init -q 2>/dev/null
-printf 'class Foo {}\n' > "$LR/Main/Foo.cs"
-printf 'class Bar {}\n' > "$LR/Main/Bar.cs"
-git -C "$LR" add Main 2>/dev/null
-git -C "$LR" -c user.name=t -c user.email=t@example.invalid commit -qm init 2>/dev/null
+mkdir -p "$LR_MAIN/Main" "$LR_MAIN/.claude/logs"
+git -C "$LR_MAIN" init -q 2>/dev/null
+printf 'class Foo {}\n' > "$LR_MAIN/Main/Foo.cs"
+printf 'class Bar {}\n' > "$LR_MAIN/Main/Bar.cs"
+git -C "$LR_MAIN" add Main 2>/dev/null
+git -C "$LR_MAIN" -c user.name=t -c user.email=t@example.invalid commit -qm init 2>/dev/null
+git -C "$LR_MAIN" branch -M bannerlord-1.5.x 2>/dev/null
+git -C "$LR_MAIN" worktree add -q --detach "$LR" 2>/dev/null
+mkdir -p "$LR/.claude/logs"
 LR_M=$(cygpath -m "$LR" 2>/dev/null || echo "$LR")
 lr_pl() {  # $1 session id, $2 file_path, $3 JSON object merged in (a null value drops the key): an Edit payload
     "$HPY" -c 'import json, sys
@@ -4343,6 +4383,28 @@ for c in A B C D; do lr_dirty "Un$c.cs" "class Un$c {}"; done
 lr_expect "$(lr_stop_pl cap3)" block "names at most three files no ledger holds" \
     "(Main/UnA.cs, Main/UnB.cs, Main/UnC.cs)" 'UnD\.cs'
 rm -f "$LR"/Main/Un?.cs "$LL/cap3.tree.reminded"
+# The shared main checkout skips branch 1b: C# that a merge, a pull or another session changed there is
+# never this session's, and 15 of 15 such blocks in the 2026-11-10..17 window were answered "not mine".
+# The session's own Edit and Write ledger (branch 1a) still reminds there. $LR is swapped for $LR_MAIN so
+# the helpers above write into and judge the main checkout.
+LR_KEEP=$LR; LR=$LR_MAIN; LR_M_KEEP=$LR_M
+LR_M=$(cygpath -m "$LR_MAIN" 2>/dev/null || echo "$LR_MAIN")
+lr_dirty Shell.cs 'class Shell { int m; }'
+lr_expect "$(lr_stop_pl mc)" silent "is silent in the shared main checkout for dirty C# no ledger holds"
+[[ ! -e "$LR_MAIN/.claude/logs/sessions/mc.tree.reminded" ]] && ok "the main checkout writes no tree streak marker" \
+    || bad "the main checkout wrote mc.tree.reminded although branch 1b is skipped there"
+lr_dirty Foo.cs 'class Foo { int mc; }'
+lr_rec "$(lr_pl mc "$LR_M/Main/Foo.cs")" "$LR_MAIN" >/dev/null
+lr_expect "$(lr_stop_pl mc)" block "still reminds in the main checkout for the session's own edit (branch 1a)" "Foo.cs"
+rm -f "$LR_MAIN"/.claude/logs/sessions/mc.*
+git -C "$LR_MAIN" checkout -q -- Main/Foo.cs
+# On a feature branch the main checkout keeps branch 1b: the trunk gate tells sessions to make one.
+git -C "$LR_MAIN" checkout -q -b feat/x 2>/dev/null
+lr_expect "$(lr_stop_pl mc)" block "a main checkout on a feature branch keeps branch 1b" "Shell.cs"
+git -C "$LR_MAIN" checkout -q bannerlord-1.5.x 2>/dev/null
+git -C "$LR_MAIN" branch -q -D feat/x 2>/dev/null
+rm -f "$LR_MAIN/Main/Shell.cs" "$LR_MAIN"/.claude/logs/sessions/mc.*
+LR=$LR_KEEP; LR_M=$LR_M_KEEP
 # No session id or no path: silent, and nothing written.
 LR_BEFORE=$(ls -A "$LL" 2>/dev/null | wc -l)
 LR_OUT=$(lr_rec "$(lr_pl q "$LR_M/Main/Bar.cs" '{"session_id":null}')")

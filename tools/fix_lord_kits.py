@@ -457,8 +457,8 @@ def lord_pool(culture, items, troops, lord_battle_sets, template_sets=(), lowest
             if variants[iid] == culture:
                 slots[slot].append(iid)
             continue
-        if not slot or rec.get('folder') not in own or ra.is_monster_kit(iid):
-            continue
+        if not slot or rec.get('folder') not in own or ra.is_monster_kit(iid) or ra.band_clone_parts(iid):
+            continue   # an armour band clone is a low troop's copy, never lord armour
         if ra.mesh_tier_of(iid) == 'civilian' or ra.is_excluded(iid, rec.get('name')):
             continue
         # A tiered noble piece (`_noble_heavy_`) is a soldier grade of a noble line, not lord armour.
@@ -682,8 +682,8 @@ def _rule_b_pieces(culture, race, slot, ctx, items, folders):
             continue
         if ra.is_monster_kit(iid) or ra.mesh_tier_of(iid) == 'civilian' or ra.is_excluded(iid, rec.get('name')):
             continue
-        if iid.startswith(START_KIT_PREFIX):
-            continue
+        if iid.startswith(START_KIT_PREFIX) or ra.band_clone_parts(iid):
+            continue   # an armour band clone is a low troop's copy, never lord armour (as lord_pool)
         races = ctx['fam_races'].get(family_key(iid))
         if races and _race(race) not in races:
             continue
@@ -1126,6 +1126,7 @@ def planned_items(items):
     recs, _ = dat.derive()
     out = {k: dict(v, stats=dict(v.get('stats', {}))) for k, v in items.items()}
     changed = []
+    shares = ra.armory_line_shares()   # read once: the restat's share for a raised piece's secondary
     for folder in sorted(os.listdir(ra.ARMORY_DIR)):
         fpath = os.path.join(ra.ARMORY_DIR, folder)
         if not os.path.isdir(fpath):
@@ -1135,7 +1136,7 @@ def planned_items(items):
             if not os.path.exists(fp):
                 continue
             for c in ra.process_file(fp, slot, dry_run=True, tier_source='roster-first', roster_map=recs,
-                                     keep_weights=True, keep_material_type=True):
+                                     keep_weights=True, keep_material_type=True, line_shares=shares):
                 if c['status'] == 'CHANGED':
                     changed.append(dict(c, folder=folder))
                     if c['id'] in out:

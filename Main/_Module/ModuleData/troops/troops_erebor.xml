@@ -2564,7 +2564,7 @@
                     id="Item.sk_dwarf_erebor_helmet_plate_elite_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_erebor_chest_plate_heavy_b" />
+                    id="Item.sk_dwarf_erebor_chest_plate_elite_a" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_dwarf_erebor_pauldron_plate_heavy_b" />
@@ -5530,16 +5530,16 @@
                     id="Item.sk_dwarf_iron_helmet_elite_c2" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_dwarf_erebor_pauldron_plate_med_b" />
+                    id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_c" />
+                    id="Item.sk_dwarf_iron_chest_elite_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_dwarf_iron_bracer_heavy_c3" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_dwarf_iron_boots_heavy_b1" />
+                    id="Item.sk_dwarf_iron_boots_elite_a1" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -5553,16 +5553,16 @@
                     id="Item.sk_dwarf_iron_helmet_elite_a1" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_dwarf_erebor_pauldron_plate_med_a" />
+                    id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_d" />
+                    id="Item.sk_dwarf_iron_chest_elite_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_dwarf_iron_bracer_heavy_c2" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_dwarf_iron_boots_heavy_b2" />
+                    id="Item.sk_dwarf_iron_boots_elite_a1" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -5576,7 +5576,7 @@
                     id="Item.sk_dwarf_iron_helmet_elite_a2" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_dwarf_erebor_pauldron_plate_med_b" />
+                    id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_a" />
                 <equipment
                     slot="Body"
                     id="Item.sk_dwarf_iron_chest_heavy_e" />
@@ -6857,7 +6857,7 @@
                     id="Item.sk_dwarf_iron_chest_heavy_e" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_dwarf_erebor_pauldron_plate_med_b" />
+                    id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_dwarf_iron_bracer_heavy_c3" />
@@ -6921,7 +6921,7 @@
                     id="Item.sk_dwarf_iron_chest_heavy_e" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_dwarf_erebor_pauldron_plate_med_b" />
+                    id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_dwarf_iron_bracer_heavy_c3" />
@@ -7666,7 +7666,7 @@
                     id="Item.sk_dwarf_iron_helmet_heavy_d2" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_c" />
+                    id="Item.sk_dwarf_iron_chest_elite_a" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_dwarf_iron_pauldron_heavy_cape_b" />
@@ -7738,7 +7738,7 @@
                     id="Item.sk_dwarf_iron_helmet_elite_d1" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_c" />
+                    id="Item.sk_dwarf_iron_chest_elite_a" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_dwarf_iron_pauldron_heavy_cape_c" />
@@ -7807,7 +7807,7 @@
                     id="Item.sk_dwarf_iron_helmet_lord_d1" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_c" />
+                    id="Item.sk_dwarf_iron_chest_elite_a" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_dwarf_iron_pauldron_heavy_cape_c" />
@@ -7939,7 +7939,7 @@
                     id="Item.sk_dwarf_iron_helmet_heavy_d2" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_d" />
+                    id="Item.sk_dwarf_iron_chest_elite_a" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_dwarf_iron_pauldron_heavy_b" />
@@ -8002,7 +8002,7 @@
                     id="Item.sk_dwarf_iron_helmet_elite_d3" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_iron_chest_heavy_d" />
+                    id="Item.sk_dwarf_iron_chest_elite_a" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_dwarf_iron_pauldron_heavy_b" />

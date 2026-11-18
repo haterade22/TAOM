@@ -63,19 +63,19 @@
                     id="Item.wm_mirkwood_shield_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.mkwd_inf1_t1_helmet_gold_hc" />
+                    id="Item.mkwd_inf1_t3_helmet_gold_hc" />
                 <equipment
                     slot="Body"
-                    id="Item.mkwd_inf3_chest" />
+                    id="Item.mkwd_inf3_chest_silver" />
                 <equipment
                     slot="Cape"
                     id="Item.mkwd_inf3_pauldrons" />
                 <equipment
                     slot="Gloves"
-                    id="Item.mkwd_inf3_vambraces" />
+                    id="Item.mkwd_inf3_vambraces_bronze" />
                 <equipment
                     slot="Leg"
-                    id="Item.mkwd_inf3_greaves" />
+                    id="Item.mkwd_inf3_greaves_silver" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
@@ -135,16 +135,16 @@
                     id="Item.mkwd_inf1_t3_helmet_gold_hc" />
                 <equipment
                     slot="Body"
-                    id="Item.mkwd_inf3_chest" />
+                    id="Item.mkwd_inf3_chest_silver" />
                 <equipment
                     slot="Cape"
                     id="Item.mkwd_inf3_pauldrons" />
                 <equipment
                     slot="Gloves"
-                    id="Item.mkwd_inf3_vambraces" />
+                    id="Item.mkwd_inf3_vambraces_bronze" />
                 <equipment
                     slot="Leg"
-                    id="Item.mkwd_inf3_greaves" />
+                    id="Item.mkwd_inf3_greaves_silver" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
@@ -207,7 +207,7 @@
                     id="Item.mkwd_inf3_t3_helmet_gold_hc" />
                 <equipment
                     slot="Body"
-                    id="Item.mkwd_inf3_chest_bronze" />
+                    id="Item.mkwd_inf3_chest_silver" />
                 <equipment
                     slot="Cape"
                     id="Item.mkwd_inf3_pauldrons_bronze" />
@@ -354,7 +354,7 @@
                     id="Item.taom_ph_mirkwood_sword_t8" />
                 <equipment
                     slot="Head"
-                    id="Item.mkwd_inf1_t2_helmet_silver_hc" />
+                    id="Item.mkwd_inf1_t3_helmet_gold_hc" />
                 <equipment
                     slot="Body"
                     id="Item.mkwd_inf3_chest_silver" />
@@ -732,16 +732,16 @@
                     id="Item.mkwd_inf1_t4_helmet_gold_hc" />
                 <equipment
                     slot="Body"
-                    id="Item.mkwd_inf3_chest" />
+                    id="Item.mkwd_inf3_chest_silver" />
                 <equipment
                     slot="Cape"
                     id="Item.mkwd_inf3_pauldrons" />
                 <equipment
                     slot="Gloves"
-                    id="Item.mkwd_inf3_vambraces" />
+                    id="Item.mkwd_inf3_vambraces_bronze" />
                 <equipment
                     slot="Leg"
-                    id="Item.mkwd_inf3_greaves" />
+                    id="Item.mkwd_inf3_greaves_silver" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
@@ -801,7 +801,7 @@
                     id="Item.mkwd_inf3_t4_helmet_gold_hc" />
 				<equipment
                     slot="Body"
-                    id="Item.mkwd_inf3_chest_bronze" />
+                    id="Item.mkwd_inf3_chest_silver" />
 				<equipment
                     slot="Cape"
                     id="Item.mkwd_inf3_pauldrons_bronze" />
@@ -1016,10 +1016,10 @@
                     id="Item.mkwd_inf1_t1_helmet_gold_hc" />
                 <equipment
                     slot="Body"
-                    id="Item.mirkwood_body" />
+                    id="Item.taom_band_lt_mirkwood_body" />
                 <equipment
                     slot="Leg"
-                    id="Item.mirkwood_boots" />
+                    id="Item.taom_band_lt_mirkwood_boots" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1062,10 +1062,10 @@
                     id="Item.mirkwood_spear_a01" />
                 <equipment
                     slot="Body"
-                    id="Item.mirkwood_body" />
+                    id="Item.taom_band_lt_mirkwood_body" />
                 <equipment
                     slot="Leg"
-                    id="Item.mirkwood_boots" />
+                    id="Item.taom_band_lt_mirkwood_boots" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1125,10 +1125,10 @@
                     id="Item.mkwd_inf1_t1_helmet_gold_hc" />
                 <equipment
                     slot="Body"
-                    id="Item.mirkwood_body" />
+                    id="Item.taom_band_lt_mirkwood_body" />
                 <equipment
                     slot="Leg"
-                    id="Item.mirkwood_boots" />
+                    id="Item.taom_band_lt_mirkwood_boots" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1177,10 +1177,10 @@
                     id="Item.wm_mirkwood_arrow_a01" />
                 <equipment
                     slot="Body"
-                    id="Item.mirkwood_body" />
+                    id="Item.taom_band_lt_mirkwood_body" />
                 <equipment
                     slot="Leg"
-                    id="Item.mirkwood_boots" />
+                    id="Item.taom_band_lt_mirkwood_boots" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1266,10 +1266,10 @@
                     id="Item.mkwd_inf3_chest_bronze" />
                 <equipment
                     slot="Cape"
-                    id="Item.mkwd_inf3_pauldrons_bronze" />
+                    id="Item.taom_band_md_mkwd_inf3_pauldrons_bronze" />
                 <equipment
                     slot="Leg"
-                    id="Item.mkwd_inf3_greaves_bronze" />
+                    id="Item.taom_band_md_mkwd_inf3_greaves_bronze" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1424,10 +1424,10 @@
                     id="Item.mkwd_inf3_chest_bronze" />
                 <equipment
                     slot="Cape"
-                    id="Item.mkwd_inf3_pauldrons_bronze" />
+                    id="Item.taom_band_md_mkwd_inf3_pauldrons_bronze" />
                 <equipment
                     slot="Leg"
-                    id="Item.mkwd_inf3_greaves_bronze" />
+                    id="Item.taom_band_md_mkwd_inf3_greaves_bronze" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1523,19 +1523,19 @@
                     id="Item.wm_mirkwood_shield_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.mkwd_inf1_t1_helmet_gold_hc" />
+                    id="Item.mkwd_inf1_t3_helmet_gold_hc" />
                 <equipment
                     slot="Body"
-                    id="Item.mkwd_inf3_chest" />
+                    id="Item.mkwd_inf3_chest_silver" />
                 <equipment
                     slot="Cape"
                     id="Item.mkwd_inf3_pauldrons" />
                 <equipment
                     slot="Gloves"
-                    id="Item.mkwd_inf3_vambraces" />
+                    id="Item.mkwd_inf3_vambraces_bronze" />
                 <equipment
                     slot="Leg"
-                    id="Item.mkwd_inf3_greaves" />
+                    id="Item.mkwd_inf3_greaves_silver" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"

@@ -462,7 +462,9 @@ class SharedSwapRuleTests(unittest.TestCase):
         swaps = [{"file": "/x/troops_lothlorien.xml", "troop": "a", "slot": "Item0", "old": "d", "new": "p"},
                  {"file": "/x/troops_arthedain.xml", "troop": "b", "slot": "Item0", "old": "d", "new": "p"},
                  {"file": "/x/troops_gondor.xml", "troop": "c", "slot": "Item0", "old": "d", "new": "p"}]
-        writable, owed = gen.split_generated(swaps)
+        import fix_melee_ladder as fml
+        self.assertNotIn("split_generated", vars(gen))   # one copy, in fix_melee_ladder
+        writable, owed = fml.split_generated(swaps)
         self.assertEqual([s["troop"] for s in writable], ["c"])
         self.assertEqual([s["troop"] for s in owed], ["a", "b"])
 

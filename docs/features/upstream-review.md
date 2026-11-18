@@ -36,7 +36,9 @@ maintainer's word.
   BannerlordCoop, recorded in [coop-interop.md](coop-interop.md)); `seen` records the new tag.
 - `.claude/hooks/upstream-watch.sh` runs the check in a SessionStart registration of its own (10 s, the maintainer's
   request of 2026-10-16; SessionStart hooks run in parallel), with a deadline of 8.5 s from its first command, so a slow
-  GitHub can cost the upstream line but never the drift banners.
+  GitHub can cost the upstream line but never the drift banners. The `UPSTREAM AHEAD` lines print at most once in
+  seven days, by the stamp file `.claude/logs/.upstream-ahead-printed` (49 sessions printed the banner in the week
+  to 2026-11-17 and one acted on it); `UPSTREAM RELEASE` and the UNCHECKED notes print at every start.
 - `areas`: a blobless clone (no file contents, nothing checked out or run), the changed paths per area labelled `feature`
   or `in scope`, the commit subjects, and the full pinned head SHA that the review cites and later advances to.
 - `advance`: moves `reviewed` to the pinned head once the review's record lands (the record must be a file in the repo).
@@ -57,8 +59,8 @@ maintainer's word.
 
 - `tools/tests/test_upstream_watch.py`: the state file, the cache, the gh and git runners (injected), the brief, the
   advance validation and the fail-open paths.
-- `tools/test_hooks.sh` 7l: `upstream-watch.sh` with a stub tool (ahead, current, a resume, a failing tool, a hang) and
-  its registration.
+- `tools/test_hooks.sh` 7l: `upstream-watch.sh` with a stub tool (ahead, the weekly stamp, current, a resume, a
+  failing tool, a hang) and its registration.
 
 ## How to Run a Review
 
