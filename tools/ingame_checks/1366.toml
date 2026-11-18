@@ -97,7 +97,7 @@ fail = ['\[HeroAuras\] disabled for this mission after ']
 absence = "not-reached"
 
 [[human]]
-claim = "key 8 selects the three heroes as one group; Aragorn and Gimli hold the nearest wall lane and Legolas the high wall by the gate (#1438); a move order with key 8 moves all three"
+claim = "key 8 selects the three heroes as one group, and they hold the nearest wall lane"
 
 [[human]]
 claim = "after the player falls he can take control of a hero, that hero keeps his health and casts nothing while the player controls him"

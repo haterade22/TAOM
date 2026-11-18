@@ -124,11 +124,6 @@ or speed up the archers around him. His kit works where the gate opens: the Long
   step needs the engine's own gate, `Agent.CanBeAssignedForScriptedMovement` (AI-controlled, not fleeing, not using a
   ladder or an object, no scripted move set), so a player at his controls, a fleeing body and an item pickup are never
   moved; a mounted body is never moved either. He stays in the Three Hunters group, so key 8 still orders him.
-  Since #1438 he holds the high archer place nearest the outer gate under a scripted position
-  (docs/features/long-defeat.md, "The standing order at the wall"), so the step back does not start while that hold
-  stands; it applies when he has no high place or a player's order has released him. In an unattended Helm's Deep
-  run the keep-distance check therefore reads `reason=no-threat` for him, and the #1415 proof needs a released
-  Legolas or a fortress with no high archer place.
 
 ### Balance tally
 

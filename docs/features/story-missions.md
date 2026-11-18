@@ -182,8 +182,8 @@ not for sale; each is a row of the mission's `heroes` list.
   or a loaded save, through `StoryRosterBehavior` and `StoryRosterService`): the troop ids of every
   mission's plan and the extra arrow item of every hero kit that resolve to nothing. It is a log line
   at session start, so a new game and a loaded save in the same process write one line, not two.
-- **Not done:** no hero strip on the HUD, no message when a hero falls, no per-hero position beyond the field's own (Aragorn and Gimli at
-  the nearest wall lane, Legolas on the high wall by the gate, #1438), no `<Hero>` entry, and no
+- **Not done:** no hero strip on the HUD, no message when a hero falls, no per-hero position (the three
+  stand where the heroes' home place puts them, at the nearest wall lane), no `<Hero>` entry, and no
   unattended driver beyond the one defence mission of #1368 ([scenario autorun](scenario-autorun.md)).
 
 The feature declares no Harmony patch and no GameModel. Its one saved value, a declined offer, is a

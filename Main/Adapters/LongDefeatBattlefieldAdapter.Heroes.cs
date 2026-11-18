@@ -38,16 +38,6 @@ internal sealed partial class LongDefeatBattlefieldAdapter
     // Between the stalemate charge and the tactic's return (OrderCharge, RestoreDefenderTactic) the heroes charge with every other defender.
     private bool _defendersCharge;
 
-    // A ranged hero (#1438: Legolas) holds the high archer place nearest the outer gate, from where he shoots at the gate and at the attackers on
-    // the wall. He stays in the heroes' formation, and a scripted position holds him while the formation has the field's own wall order: the
-    // engine's move target takes the scripted place before any formation order, as for the elephant's howdah archers (docs/features/elephant.md).
-    // A player's order to the group releases him, so key 8 moves all three. Main thread only.
-    private readonly HashSet<Agent> _highHeroes = new();
-    private SplitPlace? _highPlace;
-    private bool _highPlaceRead;
-    private Vec3 _highPlaceAt;
-    private bool _highReleased;
-
     // The formation is positioned at the place before its first spawn, as the mounted lord's is (SpawnMounted): the spawn then finds it
     // positioned and never asks the deployment plan for a plan nobody added troops to. A hero's character has no horse and a battle set
     // of his own (ShippedMissionHeroesTests), and that first battle set goes in as the kit. In a Custom Game is_hero makes IsHero true and the
@@ -93,12 +83,9 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         var held = _heroes;
         if (hunt)
         {
-            if (troop.DefaultFormationClass == FormationClass.Ranged)
-                _highHeroes.Add(agent);
             PutHeroesBack(formation, held);
             if (formation.IsAIControlled)
                 Post(formation);
-            HoldHighHeroes();
         }
 
         return new LdHeroReport(true, null, agent.Character?.IsHero ?? false, agent.HasMount, agent.Formation?.Index ?? -1,
@@ -150,7 +137,6 @@ internal sealed partial class LongDefeatBattlefieldAdapter
 
         if (live == 0)
             return LdHuntersHold.Nothing;
-        HoldHighHeroes();
         if (!formation.IsAIControlled && whole && formation.CountOfUnits == live)
             return LdHuntersHold.Nothing;
 
@@ -329,82 +315,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         return Usable(position) ? new SplitPlace(position, FacingOf(place), DefaultWidth, FormationAI.BehaviorSide.Middle) : null;
     }
 
-    // The hold is put back whenever something clears his scripted flags (a ladder, a siege engine or an object he used: Agent.StopUsingGameObject
-    // and the machine detachments call DisableScriptedMovement). The step back (#1415) needs a body with no scripted move set
-    // (Agent.CanBeAssignedForScriptedMovement), so it does not start while he holds the place. The player's own body takes no AI script. In the
-    // stalemate charge, and under any order that is not the field's own wall order (a player's order to group 8), he is released once.
-    private void HoldHighHeroes()
-    {
-        if (_highHeroes.Count == 0)
-            return;
-
-        var hold = !_defendersCharge && OwnWallOrder();
-        if (!hold)
-        {
-            if (!_highReleased)
-                ReleaseHighHeroes();
-            _highReleased = true;
-            return;
-        }
-
-        _highReleased = false;
-        if (HighPlace() is not { } place)
-            return;
-
-        foreach (var agent in _highHeroes)
-        {
-            if (!OnDuty(agent) || agent.IsPlayerControlled || (agent.GetScriptedFlags() & Agent.AIScriptedFrameFlags.GoToPosition) != 0)
-                continue;
-
-            var at = place.Position;
-            agent.SetScriptedPositionAndDirection(ref at, place.Direction.RotationInRadians, false, Agent.AIScriptedFrameFlags.ConsiderRotation);
-        }
-    }
-
-    // The heroes' formation follows the Move to the wall lane the field gave it (Post), within the split's tolerance.
-    private bool OwnWallOrder()
-    {
-        var formation = _mission.DefenderTeam?.GetFormation(HeroClass);
-        if (formation == null || formation.IsAIControlled || !_heroPlaceRead || _heroPlace == null)
-            return false;
-
-        ref readonly var order = ref formation.GetReadonlyMovementOrderReference();
-        return order.OrderEnum == MovementOrder.MovementOrderEnum.Move && order.GetPosition(formation).Distance(_heroPlaceAt.AsVec2) <= OwnOrderTolerance;
-    }
-
-    private void ReleaseHighHeroes()
-    {
-        foreach (var agent in _highHeroes)
-        {
-            if (OnDuty(agent) && !agent.IsPlayerControlled)
-                agent.DisableScriptedMovement();
-        }
-    }
-
-    // The high archer place nearest the outer gate (the split's high archers take the one nearest their wall place). With none, a ranged hero
-    // stays with the group at the wall lane.
-    private SplitPlace? HighPlace()
-    {
-        if (_highPlaceRead)
-            return _highPlace;
-
-        _highPlaceRead = true;
-        _highPlace = ArcherPlace(true, GatePlace());
-        if (_highPlace is { } place)
-        {
-            _highPlaceAt = place.Position.GetGroundVec3();
-            _logger.LogInfo($"[LongDefeat][Heroes] a ranged hero holds the high wall at ({_highPlaceAt.x:F1}, {_highPlaceAt.y:F1}, {_highPlaceAt.z:F1})");
-        }
-        else
-        {
-            _logger.LogInfo("[LongDefeat][Heroes] the scene gives no high archer place: a ranged hero stands with the group");
-        }
-
-        return _highPlace;
-    }
-
     // Main thread. The group is read from the formation: an agent's IsAIControlled is true for every AI soldier, so it says nothing about the
-    // formation. The group is read also when no hero stands. A ranged hero held on the high wall is measured from that place.
+    // formation. The group is read also when no hero stands.
     public LdHeroesRead ReadHeroes()
     {
         var held = _heroes;
@@ -419,10 +331,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter
 
             var limit = agent.HealthLimit;
             var position = agent.Position;
-            var high = _highPlace != null && _highHeroes.Contains(agent);
-            var from = high ? _highPlaceAt : at;
-            var distance = place == null && !high ? float.NaN : position.AsVec2.Distance(from.AsVec2);
-            var height = place == null && !high ? float.NaN : Math.Abs(position.z - from.z);
+            var distance = place == null ? float.NaN : position.AsVec2.Distance(at.AsVec2);
+            var height = place == null ? float.NaN : Math.Abs(position.z - at.z);
             facts.Add(new LdHeroFacts(pair.Id, agent.KillCount, agent.Formation?.Index ?? -1, limit > 0f ? agent.Health / limit : 0f, distance, height, agent.IsPlayerControlled,
                 agent.WieldedWeapon.CurrentUsageItem?.WeaponClass.ToString() ?? "none"));
         }
@@ -491,10 +401,5 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         _heroHome = null;
         _heroPostedAt = 0f;
         _defendersCharge = false;
-        _highHeroes.Clear();
-        _highPlace = null;
-        _highPlaceRead = false;
-        _highPlaceAt = default;
-        _highReleased = false;
     }
 }
