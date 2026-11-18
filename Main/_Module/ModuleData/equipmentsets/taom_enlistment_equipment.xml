@@ -1882,7 +1882,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.mirkwood_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
-            <Equipment slot="Head" id="Item.mkwd_inf1_t1_helmet_gold_hc" />
+            <Equipment slot="Head" id="Item.taom_band_lt_mkwd_palace_t1_helmet_green_hc" />
             <Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
             <Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
         </EquipmentSet>
@@ -1892,7 +1892,7 @@
             <Equipment slot="Item0" id="Item.wm_mirkwood_bow_a01" />
             <Equipment slot="Item1" id="Item.wm_mirkwood_arrow_a01" />
             <Equipment slot="Item3" id="Item.mirkwood_sword_a01" />
-            <Equipment slot="Head" id="Item.mkwd_inf1_t1_helmet_gold_hc" />
+            <Equipment slot="Head" id="Item.taom_band_lt_mkwd_palace_t1_helmet_green_hc" />
             <Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
             <Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
         </EquipmentSet>
@@ -1900,7 +1900,7 @@
     <EquipmentRoster id="enlist_mirkwood_support_recruit" culture="Culture.mirkwood">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.mirkwood_spear_a01" />
-            <Equipment slot="Head" id="Item.mkwd_inf1_t1_helmet_gold_hc" />
+            <Equipment slot="Head" id="Item.taom_band_lt_mkwd_palace_t1_helmet_green_hc" />
             <Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
             <Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
         </EquipmentSet>
@@ -1913,7 +1913,7 @@
             <Equipment slot="Head" id="Item.mkwd_inf1_t2_helmet_gold_hc" />
             <Equipment slot="Body" id="Item.taom_band_md_mkwd_inf3_chest" />
             <Equipment slot="Leg" id="Item.taom_band_md_mkwd_inf3_greaves" />
-            <Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+            <Equipment slot="Gloves" id="Item.taom_band_md_mkwd_inf3_vambraces" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_mirkwood_archer_soldier" culture="Culture.mirkwood">
@@ -1924,7 +1924,7 @@
             <Equipment slot="Head" id="Item.mkwd_inf1_t2_helmet_gold_hc" />
             <Equipment slot="Body" id="Item.taom_band_md_mkwd_inf3_chest" />
             <Equipment slot="Leg" id="Item.taom_band_md_mkwd_inf3_greaves" />
-            <Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+            <Equipment slot="Gloves" id="Item.taom_band_md_mkwd_inf3_vambraces" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_mirkwood_support_soldier" culture="Culture.mirkwood">
@@ -1933,7 +1933,7 @@
             <Equipment slot="Head" id="Item.mkwd_inf1_t2_helmet_gold_hc" />
             <Equipment slot="Body" id="Item.taom_band_md_mkwd_inf3_chest" />
             <Equipment slot="Leg" id="Item.taom_band_md_mkwd_inf3_greaves" />
-            <Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+            <Equipment slot="Gloves" id="Item.taom_band_md_mkwd_inf3_vambraces" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_mirkwood_infantry_sergeant" culture="Culture.mirkwood">

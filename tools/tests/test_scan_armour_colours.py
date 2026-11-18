@@ -7,9 +7,10 @@ THE CONTRACT
 ------------
 Every armour piece has one colour family. A hand override wins, then a colour word in the id, mesh or
 a diffuse texture, then the measured texture colour (warm first, then silver that is not cloth, else
-neutral). gold and bronze are warm, silver is cold; a warm piece beside a cold one clashes, nothing
-else does. The upgrade pick of the band clone tool never puts a piece into a set where it clashes
-(the maintainer, 2026-11-18: a silver chest beside bronze pauldrons on the Mirkwood guards).
+neutral). gold, bronze and silver are three metal families; two pieces of different metals clash,
+nothing else does. The upgrade pick of the band clone tool never puts a piece into a set where it clashes
+(the maintainer, 2026-11-18: a silver chest beside bronze pauldrons on the Mirkwood guards; a set is all
+gold, all silver or all bronze).
 """
 import contextlib
 import importlib
@@ -95,20 +96,20 @@ class ClassifyTests(unittest.TestCase):
 
 
 class ClashTests(unittest.TestCase):
-    def test_warm_beside_silver_clashes_both_ways(self):
-        for warm in ("gold", "bronze"):
-            self.assertTrue(sac.clashes(warm, "silver"))
-            self.assertTrue(sac.clashes("silver", warm))
+    def test_two_different_metals_clash_both_ways(self):
+        for a, b in (("gold", "silver"), ("bronze", "silver"), ("gold", "bronze")):
+            self.assertTrue(sac.clashes(a, b))
+            self.assertTrue(sac.clashes(b, a))
 
-    def test_gold_beside_bronze_and_the_neutral_families_do_not(self):
-        self.assertFalse(sac.clashes("gold", "bronze"))
-        for other in ("silvergold", "neutral", "black", "unknown", "red"):
-            self.assertFalse(sac.clashes("silver", other))
-            self.assertFalse(sac.clashes("gold", other))
+    def test_the_same_metal_and_the_neutral_families_do_not(self):
+        for metal in ("gold", "bronze", "silver"):
+            self.assertFalse(sac.clashes(metal, metal))
+            for other in ("silvergold", "neutral", "black", "unknown", "red", "green"):
+                self.assertFalse(sac.clashes(metal, other))
 
     def test_set_clashes_names_each_pair_once(self):
         pairs = sac.set_clashes({"Body": "silver", "Cape": "bronze", "Head": "gold", "Leg": "neutral"})
-        self.assertEqual(pairs, [("Body", "Cape"), ("Body", "Head")])
+        self.assertEqual(pairs, [("Body", "Cape"), ("Body", "Head"), ("Cape", "Head")])
 
 
 class OverrideTests(unittest.TestCase):
@@ -360,8 +361,13 @@ class UpgradeColourRuleTests(unittest.TestCase):
                          "Cape pauld_bronze bronze")
 
     def test_a_same_family_pick_passes(self):
-        sets = [{"Body": "chest_bronze", "Head": "helm_gold", "Leg": "boots"}]
+        sets = [{"Body": "chest_bronze", "Cape": "pauld_bronze", "Leg": "boots"}]
         self.assertIsNone(gabc.colour_clash("chest_bronze", "chest_bronze", sets, self.COLOURS))
+
+    def test_a_bronze_pick_clashes_with_a_gold_helmet(self):
+        sets = [{"Body": "chest_bronze", "Head": "helm_gold", "Leg": "boots"}]
+        self.assertEqual(gabc.colour_clash("chest_bronze", "chest_bronze", sets, self.COLOURS),
+                         "Head helm_gold gold")
 
     def test_a_set_without_the_source_is_not_judged(self):
         sets = [{"Body": "other_chest", "Cape": "pauld_bronze"}]

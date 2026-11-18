@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-18 13:12:35",
+  "generatedAt": "2026-11-18 17:06:40",
   "armoryDir": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\LOTRLOME_Armory\\ModuleData\\LOTRLOME_items",
   "items": {
     "sk_ar_art_helmet_inf_light_a": {
@@ -65375,29 +65375,20 @@
         0
       ],
       "weight": 1.0,
-      "anchorLevel": 11,
-      "maxLevel": 11,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 0,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 12,
-      "delta": 0,
-      "status": "match",
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "mirkwood_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "mirkwood_militia_archer",
-          "level": 11
-        }
-      ]
+      "wearers": []
     },
     "mkwd_inf1_t1_helmet_silver_hc": {
       "culture": "mirkwood",
@@ -65411,29 +65402,20 @@
         0
       ],
       "weight": 1.0,
-      "anchorLevel": 11,
-      "maxLevel": 11,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 0,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 12,
-      "delta": 0,
-      "status": "match",
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "mirkwood_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "mirkwood_militia_archer",
-          "level": 11
-        }
-      ]
+      "wearers": []
     },
     "mkwd_inf1_t2_helmet_gold_hc": {
       "culture": "mirkwood",
@@ -65450,7 +65432,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 3,
+      "wearerCount": 1,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -65462,15 +65444,7 @@
       "shared": false,
       "wearers": [
         {
-          "troop": "mirkwood_militia_veteran_spearman",
-          "level": 16
-        },
-        {
           "troop": "mirkwood_stalkers_boss",
-          "level": 16
-        },
-        {
-          "troop": "mirkwood_militia_veteran_archer",
           "level": 16
         }
       ]
@@ -65487,29 +65461,20 @@
         0
       ],
       "weight": 1.6,
-      "anchorLevel": 16,
-      "maxLevel": 16,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 0,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 17,
-      "delta": 0,
-      "status": "match",
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "mirkwood_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mirkwood_militia_veteran_archer",
-          "level": 16
-        }
-      ]
+      "wearers": []
     },
     "mkwd_inf1_t3_helmet_gold_hc": {
       "culture": "mirkwood",
@@ -65690,25 +65655,20 @@
         0
       ],
       "weight": 1.6,
-      "anchorLevel": 16,
-      "maxLevel": 16,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 0,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 17,
-      "delta": 0,
-      "status": "match",
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "mirkwood_militia_veteran_spearman",
-          "level": 16
-        }
-      ]
+      "wearers": []
     },
     "mkwd_inf2_t3_helmet_silver_hc": {
       "culture": "mirkwood",
@@ -66316,35 +66276,35 @@
         0
       ],
       "weight": 0.4,
-      "anchorLevel": 11,
-      "maxLevel": 16,
-      "levelSpan": 5,
+      "anchorLevel": 36,
+      "maxLevel": 46,
+      "levelSpan": 10,
       "wearerCount": 4,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 4,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 24,
+      "delta": -20,
+      "status": "under",
       "line": null,
       "shared": false,
       "wearers": [
         {
-          "troop": "mirkwood_militia_spearman",
-          "level": 11
+          "troop": "mirkwood_recruit",
+          "level": 36
         },
         {
-          "troop": "mirkwood_militia_veteran_spearman",
-          "level": 16
+          "troop": "mirkwood_recruit_merc",
+          "level": 36
         },
         {
-          "troop": "mirkwood_stalkers_boss",
-          "level": 16
+          "troop": "mirkwood_woodsman",
+          "level": 41
         },
         {
-          "troop": "mirkwood_militia_veteran_archer",
-          "level": 16
+          "troop": "mirkwood_glaivesman",
+          "level": 46
         }
       ]
     },
@@ -66408,14 +66368,14 @@
         0
       ],
       "weight": 1.3,
-      "anchorLevel": 36,
+      "anchorLevel": 41,
       "maxLevel": 46,
-      "levelSpan": 10,
-      "wearerCount": 6,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
-      "tierSource": "roster(L36)",
+      "tierSource": "roster(L41)",
       "target": 24,
       "delta": 0,
       "status": "match",
@@ -66423,24 +66383,8 @@
       "shared": false,
       "wearers": [
         {
-          "troop": "mirkwood_recruit",
-          "level": 36
-        },
-        {
-          "troop": "mirkwood_recruit_merc",
-          "level": 36
-        },
-        {
-          "troop": "mirkwood_woodsman",
-          "level": 41
-        },
-        {
           "troop": "mirkwood_guards",
           "level": 41
-        },
-        {
-          "troop": "mirkwood_glaivesman",
-          "level": 46
         },
         {
           "troop": "mirkwood_swordsman",
@@ -114466,20 +114410,29 @@
         0
       ],
       "weight": 5.2,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 16,
+      "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 0,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 17,
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_veteran_spearman",
+          "level": 16
+        },
+        {
+          "troop": "mirkwood_militia_veteran_archer",
+          "level": 16
+        }
+      ]
     },
     "taom_band_lt_mirkwood_boots": {
       "culture": "mirkwood",
@@ -114529,33 +114482,42 @@
         8
       ],
       "weight": 1.0,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 16,
+      "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 0,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 8,
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_veteran_spearman",
+          "level": 16
+        },
+        {
+          "troop": "mirkwood_militia_veteran_archer",
+          "level": 16
+        }
+      ]
     },
-    "taom_band_lt_mkwd_inf3_chest": {
+    "taom_band_lt_mirkwood_gloves": {
       "culture": "mirkwood",
-      "slot": "body",
-      "name": "[Mirkwood] Infantry Chestplate I",
-      "current": 8,
+      "slot": "arm",
+      "name": "[Mirkwood] Palace Guard Glovves",
+      "current": 4,
       "armour": [
         0,
-        8,
         0,
+        4,
         0
       ],
-      "weight": 5.2,
+      "weight": 1.3,
       "anchorLevel": 11,
       "maxLevel": 11,
       "levelSpan": 0,
@@ -114564,7 +114526,7 @@
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L11)",
-      "target": 8,
+      "target": 4,
       "delta": 0,
       "status": "match",
       "line": null,
@@ -114579,6 +114541,137 @@
           "level": 11
         }
       ]
+    },
+    "taom_band_md_mirkwood_gloves": {
+      "culture": "mirkwood",
+      "slot": "arm",
+      "name": "[Mirkwood] Palace Guard Glovves",
+      "current": 8,
+      "armour": [
+        0,
+        0,
+        8,
+        0
+      ],
+      "weight": 1.3,
+      "anchorLevel": 16,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 8,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_veteran_spearman",
+          "level": 16
+        },
+        {
+          "troop": "mirkwood_militia_veteran_archer",
+          "level": 16
+        }
+      ]
+    },
+    "taom_band_lt_mirkwood_shoulder": {
+      "culture": "mirkwood",
+      "slot": "shoulder",
+      "name": "[Mirkwood] Palace Guard Shoulder",
+      "current": 2,
+      "armour": [
+        0,
+        2,
+        0,
+        0
+      ],
+      "weight": 5.9,
+      "anchorLevel": 11,
+      "maxLevel": 11,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "heroWorn": true,
+      "lordWorn": false,
+      "tier": "light",
+      "tierSource": "roster(L11)",
+      "target": 2,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_spearman",
+          "level": 11
+        }
+      ]
+    },
+    "taom_band_md_mirkwood_shoulder": {
+      "culture": "mirkwood",
+      "slot": "shoulder",
+      "name": "[Mirkwood] Palace Guard Shoulder",
+      "current": 5,
+      "armour": [
+        0,
+        5,
+        0,
+        0
+      ],
+      "weight": 5.9,
+      "anchorLevel": 16,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 5,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_veteran_spearman",
+          "level": 16
+        },
+        {
+          "troop": "mirkwood_militia_veteran_archer",
+          "level": 16
+        }
+      ]
+    },
+    "taom_band_lt_mkwd_inf3_chest": {
+      "culture": "mirkwood",
+      "slot": "body",
+      "name": "[Mirkwood] Infantry Chestplate I",
+      "current": 8,
+      "armour": [
+        0,
+        8,
+        0,
+        0
+      ],
+      "weight": 5.2,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": true,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
     },
     "taom_band_md_mkwd_inf3_chest": {
       "culture": "mirkwood",
@@ -114595,7 +114688,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 3,
+      "wearerCount": 1,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -114607,15 +114700,7 @@
       "shared": false,
       "wearers": [
         {
-          "troop": "mirkwood_militia_veteran_spearman",
-          "level": 16
-        },
-        {
           "troop": "mirkwood_stalkers_boss",
-          "level": 16
-        },
-        {
-          "troop": "mirkwood_militia_veteran_archer",
           "level": 16
         }
       ]
@@ -114674,42 +114759,6 @@
       "shared": false,
       "wearers": []
     },
-    "taom_band_md_mkwd_inf3_chest_bronze": {
-      "culture": "mirkwood",
-      "slot": "body",
-      "name": "[Mirkwood] Infantry Chestplate III",
-      "current": 17,
-      "armour": [
-        0,
-        17,
-        0,
-        0
-      ],
-      "weight": 8.5,
-      "anchorLevel": 16,
-      "maxLevel": 16,
-      "levelSpan": 0,
-      "wearerCount": 2,
-      "heroWorn": false,
-      "lordWorn": false,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 17,
-      "delta": 0,
-      "status": "match",
-      "line": null,
-      "shared": false,
-      "wearers": [
-        {
-          "troop": "mirkwood_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mirkwood_militia_veteran_archer",
-          "level": 16
-        }
-      ]
-    },
     "taom_band_hv_mkwd_inf3_chest_bronze": {
       "culture": "mirkwood",
       "slot": "body",
@@ -114749,29 +114798,20 @@
         3
       ],
       "weight": 1.0,
-      "anchorLevel": 11,
-      "maxLevel": 11,
+      "anchorLevel": null,
+      "maxLevel": null,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 0,
       "heroWorn": true,
       "lordWorn": false,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 3,
-      "delta": 0,
-      "status": "match",
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "mirkwood_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "mirkwood_militia_archer",
-          "level": 11
-        }
-      ]
+      "wearers": []
     },
     "taom_band_md_mkwd_inf3_greaves": {
       "culture": "mirkwood",
@@ -114788,7 +114828,7 @@
       "anchorLevel": 16,
       "maxLevel": 16,
       "levelSpan": 0,
-      "wearerCount": 3,
+      "wearerCount": 1,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -114800,15 +114840,7 @@
       "shared": false,
       "wearers": [
         {
-          "troop": "mirkwood_militia_veteran_spearman",
-          "level": 16
-        },
-        {
           "troop": "mirkwood_stalkers_boss",
-          "level": 16
-        },
-        {
-          "troop": "mirkwood_militia_veteran_archer",
           "level": 16
         }
       ]
@@ -114867,42 +114899,6 @@
       "shared": false,
       "wearers": []
     },
-    "taom_band_md_mkwd_inf3_greaves_bronze": {
-      "culture": "mirkwood",
-      "slot": "leg",
-      "name": "[Mirkwood] Greaves III",
-      "current": 8,
-      "armour": [
-        0,
-        0,
-        0,
-        8
-      ],
-      "weight": 1.6,
-      "anchorLevel": 16,
-      "maxLevel": 16,
-      "levelSpan": 0,
-      "wearerCount": 2,
-      "heroWorn": false,
-      "lordWorn": false,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 8,
-      "delta": 0,
-      "status": "match",
-      "line": null,
-      "shared": false,
-      "wearers": [
-        {
-          "troop": "mirkwood_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mirkwood_militia_veteran_archer",
-          "level": 16
-        }
-      ]
-    },
     "taom_band_hv_mkwd_inf3_greaves_bronze": {
       "culture": "mirkwood",
       "slot": "leg",
@@ -114957,42 +114953,6 @@
       "shared": false,
       "wearers": []
     },
-    "taom_band_md_mkwd_inf3_pauldrons_bronze": {
-      "culture": "mirkwood",
-      "slot": "shoulder",
-      "name": "[Mirkwood] Pauldrons III",
-      "current": 5,
-      "armour": [
-        0,
-        5,
-        0,
-        0
-      ],
-      "weight": 3.2,
-      "anchorLevel": 16,
-      "maxLevel": 16,
-      "levelSpan": 0,
-      "wearerCount": 2,
-      "heroWorn": false,
-      "lordWorn": false,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 5,
-      "delta": 0,
-      "status": "match",
-      "line": null,
-      "shared": false,
-      "wearers": [
-        {
-          "troop": "mirkwood_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mirkwood_militia_veteran_archer",
-          "level": 16
-        }
-      ]
-    },
     "taom_band_hv_mkwd_inf3_pauldrons_bronze": {
       "culture": "mirkwood",
       "slot": "shoulder",
@@ -115019,6 +114979,268 @@
       "line": null,
       "shared": false,
       "wearers": []
+    },
+    "taom_band_lt_mkwd_inf3_vambraces": {
+      "culture": "mirkwood",
+      "slot": "arm",
+      "name": "[Mirkwood] Infantry Vambraces I",
+      "current": 4,
+      "armour": [
+        0,
+        0,
+        4,
+        0
+      ],
+      "weight": 0.4,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_md_mkwd_inf3_vambraces": {
+      "culture": "mirkwood",
+      "slot": "arm",
+      "name": "[Mirkwood] Infantry Vambraces I",
+      "current": 8,
+      "armour": [
+        0,
+        0,
+        8,
+        0
+      ],
+      "weight": 0.4,
+      "anchorLevel": 16,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 8,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_stalkers_boss",
+          "level": 16
+        }
+      ]
+    },
+    "taom_band_hv_mkwd_inf3_vambraces": {
+      "culture": "mirkwood",
+      "slot": "arm",
+      "name": "[Mirkwood] Infantry Vambraces I",
+      "current": 16,
+      "armour": [
+        0,
+        0,
+        16,
+        0
+      ],
+      "weight": 0.4,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_lt_mkwd_palace_t1_helmet_green_hc": {
+      "culture": "mirkwood",
+      "slot": "head",
+      "name": "[Mirkwood] Palace Helmet T1",
+      "current": 12,
+      "armour": [
+        12,
+        0,
+        0,
+        0
+      ],
+      "weight": 2.9,
+      "anchorLevel": 11,
+      "maxLevel": 11,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "light",
+      "tierSource": "roster(L11)",
+      "target": 12,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_spearman",
+          "level": 11
+        },
+        {
+          "troop": "mirkwood_militia_archer",
+          "level": 11
+        }
+      ]
+    },
+    "taom_band_md_mkwd_palace_t1_helmet_green_hc": {
+      "culture": "mirkwood",
+      "slot": "head",
+      "name": "[Mirkwood] Palace Helmet T1",
+      "current": 17,
+      "armour": [
+        17,
+        0,
+        0,
+        0
+      ],
+      "weight": 2.9,
+      "anchorLevel": 16,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 17,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_veteran_spearman",
+          "level": 16
+        },
+        {
+          "troop": "mirkwood_militia_veteran_archer",
+          "level": 16
+        }
+      ]
+    },
+    "taom_band_lt_mkwd_palace_t2_helmet_green_hc": {
+      "culture": "mirkwood",
+      "slot": "head",
+      "name": "[Mirkwood] Palace Helmet T2",
+      "current": 12,
+      "armour": [
+        12,
+        0,
+        0,
+        0
+      ],
+      "weight": 2.9,
+      "anchorLevel": 11,
+      "maxLevel": 11,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "light",
+      "tierSource": "roster(L11)",
+      "target": 12,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_spearman",
+          "level": 11
+        },
+        {
+          "troop": "mirkwood_militia_archer",
+          "level": 11
+        }
+      ]
+    },
+    "taom_band_md_mkwd_palace_t2_helmet_green_hc": {
+      "culture": "mirkwood",
+      "slot": "head",
+      "name": "[Mirkwood] Palace Helmet T2",
+      "current": 17,
+      "armour": [
+        17,
+        0,
+        0,
+        0
+      ],
+      "weight": 2.9,
+      "anchorLevel": 16,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 17,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_veteran_spearman",
+          "level": 16
+        },
+        {
+          "troop": "mirkwood_militia_veteran_archer",
+          "level": 16
+        }
+      ]
+    },
+    "taom_band_md_mkwd_palace_t3_helmet_green_hc": {
+      "culture": "mirkwood",
+      "slot": "head",
+      "name": "[Mirkwood] Palace Helmet T3",
+      "current": 17,
+      "armour": [
+        17,
+        0,
+        0,
+        0
+      ],
+      "weight": 2.9,
+      "anchorLevel": 16,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 17,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_veteran_spearman",
+          "level": 16
+        }
+      ]
     },
     "taom_band_lt_rivendell_boots_greaves3": {
       "culture": "rivendell",
@@ -116241,6 +116463,87 @@
           "level": 26
         }
       ]
+    },
+    "taom_band_md_mkwd_inf3_chest_bronze": {
+      "culture": "mirkwood",
+      "slot": "body",
+      "name": "[Mirkwood] Infantry Chestplate III",
+      "current": 17,
+      "armour": [
+        0,
+        17,
+        0,
+        0
+      ],
+      "weight": 8.5,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_md_mkwd_inf3_greaves_bronze": {
+      "culture": "mirkwood",
+      "slot": "leg",
+      "name": "[Mirkwood] Greaves III",
+      "current": 8,
+      "armour": [
+        0,
+        0,
+        0,
+        8
+      ],
+      "weight": 1.6,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_md_mkwd_inf3_pauldrons_bronze": {
+      "culture": "mirkwood",
+      "slot": "shoulder",
+      "name": "[Mirkwood] Pauldrons III",
+      "current": 5,
+      "armour": [
+        0,
+        5,
+        0,
+        0
+      ],
+      "weight": 3.2,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
     }
   }
 }

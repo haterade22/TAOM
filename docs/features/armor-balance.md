@@ -1157,10 +1157,18 @@ upgrade pick (#1440) chose a stronger piece of the same line and slot by its val
 pieces into bronze sets. Every armour piece now has a colour family, the upgrade pick refuses a piece that
 clashes with the rest of a top wearer's set, and the validator reports troops whose sets clash.
 
-**The rule.** gold and bronze are warm, silver is cold. silvergold, black, neutral, unknown and the cloth
-colours (green, red, blue, white) clash with nothing. Two pieces of one set clash when one is warm and the
-other cold (`scan_armour_colours.clashes`); gold beside bronze does not clash. A set clashes when any two
-of its Head, Body, Cape, Gloves and Leg pieces do.
+**The rule.** gold, bronze and silver are the three metal families. silvergold, black, neutral, unknown and
+the cloth colours (green, red, blue, white) clash with nothing. Two pieces of one set clash when they are
+two different metals (`scan_armour_colours.clashes`): a set is all gold, all silver or all bronze (the
+maintainer, 2026-11-18, on the Mirkwood militia; until then gold beside bronze did not clash). A set clashes
+when any two of its Head, Body, Cape, Gloves and Leg pieces do. The measure tells gold from bronze only by
+which share is larger, so a warm piece it reads wrong needs an override row: the plain Mirkwood infantry
+line (`mkwd_inf3_chest`, `_greaves`, `_pauldrons`, `_vambraces`) is gold and the Palace Guard set
+(`mirkwood_body`, `_boots`, `_gloves`, `_helmet`, `_shoulder`) is green, both by the maintainer's word.
+After the split, `python tools/validate_moduledata.py --code ARMOUR_COLOUR_CLASH` reports 52 troops on
+2026-11-18 (41 before it): the 15 new ones mix gold and bronze (Mirkwood guards and swordsman, eleven Rhûn
+wain and Sagarun troops, two South Rhovanion troops) and go to step 2 (#1452), with a Kit check that the
+measure read each warm piece right.
 
 **Where a family comes from**, first match wins (`scan_armour_colours.build`):
 
@@ -1207,8 +1215,26 @@ those need a Kit check per piece (step 2, #1452).
 **The upgrade rule** (`generate_armour_band_clones.colour_clash`, called by `pick_upgrade`). A candidate
 upgrade is refused when its family clashes with a piece in any battle set of a top wearer, with the swaps
 the plan already made applied. When every candidate clashes, the piece falls back to treatment A (a band
-clone), and the report names the clash: `mkwd_inf3_chest_silver (silver) clashes with mirkwood_glaivesman
-Cape mkwd_inf3_pauldrons bronze`. The scanner exits 2 and writes nothing when
+clone), and the report names the clash: `mkwd_inf3_chest_bronze (bronze) clashes with mirkwood_glaivesman
+Cape mkwd_inf3_pauldrons gold`.
+
+**A source the plan leaves** (2026-11-18). When no battle troop of level 30 or lower wears a shipped source
+any more, its level 36+ wearers and the kits below the elite band (a villager, a wanderer, a character
+creation or enlistment kit) can still wear it:
+
+- A clone source stays cloned at those kits' bands (`kept_sources`, report treatment `kept`), so they keep a
+  clone of their band. Before, its clones retired and the kits went back to the elite source.
+- An upgrade stays (`held_upgrades`, report treatment `held`), so its top wearers keep the replacement they
+  already wear, unless the replacement now clashes in colour with one of their sets. A kit wears the held
+  source raw at its low price, as before.
+- A source a low battle troop still wears is neither: the plan treats it as a normal piece again.
+
+The Mirkwood militia moved to the green Palace Guard set on 2026-11-18. The bronze infantry chest, greaves
+and pauldrons are kept for the villager, wanderer and Fords kits. The T1 gold and T2 silver helmet upgrades
+are held, so the recruits and sentinels keep their T3 helmets. The `mkwd_inf3_vambraces` upgrade to the
+bronze vambraces dropped: bronze beside the gold chest of its wearers clashes. Those wearers wear the gold
+vambraces again, which the restat prices at the elite band (`rebalance_armor.py --check` lists the one item
+until the live apply). The scanner exits 2 and writes nothing when
 the install has no texture image (a packaged install ships no `AssetSources`) or no numpy or Pillow. The
 clone tool stops with a `CloneError` when the table is empty, or when a piece of the Armory it reads has no
 row (`colour_table`; repair `python tools/scan_armour_colours.py --apply`); on 2026-11-18 no piece lacked a

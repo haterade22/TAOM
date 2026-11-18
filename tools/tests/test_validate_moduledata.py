@@ -3052,7 +3052,7 @@ class TopTierArmourWornLowTests(unittest.TestCase):
 
 
 class ArmourColourClashTests(unittest.TestCase):
-    """ARMOUR_COLOUR_CLASH (2026-11-18): a battle set that puts a silver piece beside a gold or bronze one. The families
+    """ARMOUR_COLOUR_CLASH (2026-11-18): a battle set that puts two metals (gold, bronze, silver) side by side. The families
     come from tools/data/armour_colour_families.json through scan_armour_colours.family_of, the lookup the band clone
     tool's upgrade pick uses; a missing or empty table is one (table) warning, never a silent pass."""
 
@@ -3094,8 +3094,14 @@ class ArmourColourClashTests(unittest.TestCase):
 
     def test_a_pair_that_does_not_clash_is_clean(self):
         table = {"a": "gold", "b": "bronze", "c": "silver", "d": "neutral", "e": "silvergold"}
-        for body, cape in (("a", "b"), ("c", "d"), ("a", "e"), ("c", "c"), ("vanilla_chest", "a"), ("vanilla_chest", "c")):
+        for body, cape in (("c", "d"), ("a", "e"), ("c", "c"), ("vanilla_chest", "a"), ("vanilla_chest", "c")):
             self.assertEqual(self._run([("x_guard", body, cape)], table), [], (body, cape))
+
+    def test_gold_beside_bronze_warns(self):
+        # Since 2026-11-18 a set is all gold, all silver or all bronze (the maintainer, on the Mirkwood militia).
+        issues = self._run([("x_guard", "a", "b")], {"a": "gold", "b": "bronze"})
+        self.assertEqual(len(issues), 1)
+        self.assertIn("two metals", issues[0].message)
 
     def test_a_band_clone_reads_its_own_row_else_its_sources(self):
         table = {"chest": "silver", "cape_bronze": "bronze"}

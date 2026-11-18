@@ -43,6 +43,18 @@ did no longer do). `python tools/validate_moduledata.py` reports `ARMOUR_COLOUR_
 - R16: the C# mirror of the career kit rule compared exact ids. Root cause: `StarterKitCoverageTests.TroopBattleItemsByCulture` did not read a band clone as its source, as `generate_career_kits.index_troop_gear` does. Fix: `BandCloneSource` on both sides.
 - R17: documentation claimed more than the code did. Fix: the mesh chain (male non-slim pick, slot 0), what stops the scanner, the trailing colour suffix of the variant rule, the career tool reading a clone as its source, and the vanilla pieces with no row.
 
+## Review round 2: green militia and the gold and bronze split (tier 2, 2026-11-18)
+
+The maintainer saw a Mirkwood Militia Spearman in a gold helmet over the green Palace Guard chest. Decisions: the four militia troops (and their Fords copies) wear only the green Palace Guard set, and gold and bronze are separate families (a set is all gold, all silver or all bronze). Lenses 5 Data flow, 7 XML and Tooling at high; Codex skipped (out of usage).
+
+- R18 (HIGH): moving the militia off the bronze pieces retired their clones, and the clone tool sent the villager, wanderer, character creation and Fords kits that wore those clones back to the elite sources (body 48). Root cause: the scope counts battle troops only, so a source with only kit wearers left was dropped. Fix: `kept_sources` keeps such a source cloned at its kits' bands, with tests.
+- R19 (HIGH): the validator test `test_a_pair_that_does_not_clash_is_clean` still held gold beside bronze clean. Fix: the pair moved to a new test that it warns.
+- R20 (MEDIUM): two helmet upgrades (T1 gold and T2 silver to T3) dropped with the militia, though they stay in one colour; the recruits and sentinels would wear T1 and T2 helmets and the two helmets would become elite shop items. Root cause: an upgrade lived only while its source was shared down. Fix: `held_upgrades` keeps a shipped upgrade while no low battle troop wears its source and the replacement does not clash; only the vambraces upgrade drops (bronze beside gold).
+- R21 (MEDIUM): `kept_sources` kept a source cloned that low battle troops still wore. Fix: it requires no battle wearer of level 30 or lower (`low_anchor`), with a test.
+- R22 (MEDIUM): the validator message said "silver with gold or bronze". Fix: "two metals (gold, bronze, silver)".
+- R23 (LOW): the summary line counted kept rows as shared down; the spec description did not name kept or held rows; kept rows sorted after the scope. Fix: the line, the description and one sorted order.
+- R24 (LOW): the Mirkwood enlistment recruit kits kept the gold T1 helmet over the green chest. Fix: the green T1 helmet, as the militia wear.
+
 ## Deferred
 
 - FOLLOW-UP: #1452, step 2: the 200 sets that clashed before #1440, culture by culture with the maintainer's eye on each measured piece.
@@ -52,6 +64,9 @@ did no longer do). `python tools/validate_moduledata.py` reports `ARMOUR_COLOUR_
 - FOLLOW-UP: #1452, a cloth or leather texture can make a piece read warm (34 rows); each needs a Kit check, in step 2.
 - FOLLOW-UP: #1452, 10 `fow_` copies in `fords_troops.xml` have clashing sets that nothing reports; the validator reads `troops_*.xml` only.
 - FOLLOW-UP: #1452, lord template rosters, NPC rosters and equipment set rosters have no colour check (`ARMOUR_COLOUR_CLASH` reads `troops_*.xml` only).
+- FOLLOW-UP: #1452, the gold and bronze split reads a warm piece by the larger share, with no margin: 16 warm textures have the smaller share at half the larger or more, and one texture gives `sk_rh_loke_chest_light_b` bronze but `sk_rh_loke_pauldron_lam_light_a` gold. The 15 troops the split made visible (Mirkwood guards and swordsman, eleven Rhûn wain and Sagarun troops, two South Rhovanion troops) need a Kit check first; an ambiguity band (a `warm` family that clashes with silver only) is one option.
+- FOLLOW-UP: #1452, gold beside bronze in kits no gate checks: 21 character creation sets (16 Umbar), 9 wanderer sets and 1 NPC set (Mirkwood).
+- FOLLOW-UP: #1452, elite pieces never in the clone spec sit raw in light kits (`mkwd_inf3_pauldrons` 20 sets, `mkwd_inf3_vambraces_bronze` 12); `BAND_CLONE_SOURCE_WORN_LOW` sees spec sources only.
 - FOLLOW-UP: #1423, the restat apply on the live Armory for the three new clone sources (`mkwd_inf3_chest` 8 to 48, `mkwd_inf3_chest_bronze` 17 to 48, `mkwd_inf3_greaves` 3 to 22), then `generate_armour_classes.py --apply`, after the merge to trunk.
 
 ## Root-cause pattern
