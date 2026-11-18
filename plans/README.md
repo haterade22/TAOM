@@ -16,6 +16,9 @@ Three generations live here (plans 020 to 045 belong to the runs their rows name
   findings, verdicts and decisions are in
   [`_audit/2026-11-12-fable/REPORT.md`](_audit/2026-11-12-fable/REPORT.md). Every change of that run
   is on the branch `improve/2026-11-12-run` until the maintainer merges it.
+- **055 to 056**: the first `/manage` tick (ADR-015 stage 0), `2026-11-18-manage`, written against
+  `3164713da`. Its progress record is
+  [`_audit/2026-11-18-manage/PROGRESS.md`](_audit/2026-11-18-manage/PROGRESS.md).
 
 ## Execution order and status
 
@@ -77,6 +80,8 @@ BLOCKED (one-line reason), REJECTED (one-line rationale).
 | [052](_audit/2026-11-12-fable/REPORT.md) | Harness text: remove two duplicated passages from CLAUDE.md, raise the `/verify` discovery floors, run filtered tests per fix in `/review-codex` (no plan file; made by the orchestrator) | P3 | S | dx | none | MERGED into `bannerlord-1.5.x` (`db1c87d7c`, 2026-11-13; #1132); commit `e88fa0050` |
 | [053](_audit/2026-11-12-fable/REPORT.md) | Hooks: parse the edited path in bash in the polearm hook; cut session-start lines that repeat the harness's own context (no plan file; made by the orchestrator) | P3 | S | dx | none | MERGED into `bannerlord-1.5.x` (`db1c87d7c`, 2026-11-13; #1132); commit `2a913ecdf`; hook suite 1271 passed |
 | [054](_audit/2026-11-12-fable/REPORT.md) | Docs: correct wrong author guidance, add the Realms row to the feature map, add a search hint to the three navigation maps (no plan file; made by the orchestrator) | P3 | S | docs | none | MERGED into `bannerlord-1.5.x` (`db1c87d7c`, 2026-11-13; #1132); commit `4a9e001be` |
+| [055](055-enlistment-redirect-outside-attached.md) | Enlistment: keep the settlement-menu redirect armed for a player inside a settlement with no encounter in CommanderUnavailable | P1 | M | bug | none | PLANNED (#511); cold review 1 round, revised |
+| [056](056-agent-removed-off-thread-guards.md) | Missions: defer MissionDiagnosticBehavior's off-thread OnAgentRemoved and OnAgentDeleted writes; correct the thread table | P1 | S | bug | none | PLANNED (#607); cold review 1 round, revised |
 
 Plans 006 and 007 were written as P1 on the assumption that every player pays their boot and load
 seconds. A follow-up measured players at about 1 to 3 s (this desktop runs about 30 times slower), so
