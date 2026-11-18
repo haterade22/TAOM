@@ -448,7 +448,7 @@
 			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
 			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
-			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_rivendell_boots_greaves3" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
@@ -556,7 +556,7 @@
 			<Equipment slot="Body" id="Item.mkwd_inf3_chest" />
 			<Equipment slot="Cape" id="Item.mirkwood_shoulder" />
 			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
-			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
@@ -564,14 +564,14 @@
 			<Equipment slot="Item3" id="Item.wm_mirkwood_arrow_a01" />
 			<Equipment slot="Head" id="Item.mkwd_inf3_t2_helmet_gold_hc" />
 			<Equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
-			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_bronze" />
+			<Equipment slot="Cape" id="Item.taom_band_lt_mkwd_inf3_pauldrons_bronze" />
 			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
-			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
 			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
-			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
 			<Equipment slot="Cape" id="Item.mirkwood_shoulder" />
 			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
 			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
@@ -581,7 +581,7 @@
 			<Equipment slot="Item2" id="Item.highelf_longbowa" />
 			<Equipment slot="Item3" id="Item.wm_mirkwood_arrow_a01" />
 			<Equipment slot="Head" id="Item.mkwd_inf3_t2_helmet_gold_hc" />
-			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
 			<Equipment slot="Cape" id="Item.mirkwood_shoulder" />
 			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
 			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
@@ -591,18 +591,18 @@
 			<Equipment slot="Item2" id="Item.highelf_longbowa" />
 			<Equipment slot="Item3" id="Item.wm_mirkwood_arrow_a01" />
 			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
-			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
 			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
 			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
-			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
 			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
 			<Equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
-			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_bronze" />
+			<Equipment slot="Cape" id="Item.taom_band_lt_mkwd_inf3_pauldrons_bronze" />
 			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
-			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
@@ -612,7 +612,7 @@
 			<Equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
 			<Equipment slot="Cape" id="Item.mirkwood_shoulder" />
 			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
-			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.mirkwood_spear_a01" />
@@ -620,7 +620,7 @@
 			<Equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
 			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
 			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
-			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.mirkwood_glaive_a01" />
@@ -628,9 +628,9 @@
 			<Equipment slot="Item3" id="Item.wm_mirkwood_arrow_a01" />
 			<Equipment slot="Head" id="Item.mkwd_inf3_t2_helmet_gold_hc" />
 			<Equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
-			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_bronze" />
+			<Equipment slot="Cape" id="Item.taom_band_lt_mkwd_inf3_pauldrons_bronze" />
 			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
-			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
@@ -638,32 +638,32 @@
 			<Equipment slot="Body" id="Item.mkwd_inf3_chest_bronze" />
 			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
 			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
-			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
 			<Equipment slot="Item2" id="Item.highelf_longbowa" />
 			<Equipment slot="Item3" id="Item.wm_mirkwood_arrow_a01" />
 			<Equipment slot="Head" id="Item.mkwd_inf1_t4_helmet_gold_hc" />
-			<Equipment slot="Body" id="Item.mirkwood_body" />
+			<Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
 			<Equipment slot="Cape" id="Item.mirkwood_shoulder" />
 			<Equipment slot="Gloves" id="Item.mirkwood_gloves" />
-			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_bronze" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mkwd_inf3_greaves_bronze" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.mirkwood_spear_a01" />
-			<Equipment slot="Body" id="Item.mirkwood_body" />
-			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+			<Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.mirkwood_glaive_a01" />
-			<Equipment slot="Body" id="Item.mirkwood_body" />
-			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+			<Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.mirkwood_glaive_a01" />
-			<Equipment slot="Body" id="Item.mirkwood_body" />
-			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+			<Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -702,7 +702,7 @@
 			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
 			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
-			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_rivendell_boots_greaves3" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
@@ -721,7 +721,7 @@
 			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_b" />
 			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
-			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_rivendell_boots_greaves3" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
@@ -739,7 +739,7 @@
 			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
 			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
-			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_rivendell_boots_greaves3" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
@@ -758,7 +758,7 @@
 			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_b" />
 			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
-			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_rivendell_boots_greaves3" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
@@ -768,7 +768,7 @@
 			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
 			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
-			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_rivendell_boots_greaves3" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
@@ -1187,7 +1187,7 @@
 			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
 			<Equipment slot="Body" id="Item.sk_rh_loke_chest_light_a" />
 			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
-			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+			<Equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 		</EquipmentSet>
 		<EquipmentSet>
@@ -1224,7 +1224,7 @@
 			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_med_c" />
 			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
 			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
-			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+			<Equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 		</EquipmentSet>
 		<EquipmentSet>
@@ -1233,7 +1233,7 @@
 			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_med_c" />
 			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
 			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
-			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+			<Equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 		</EquipmentSet>
 		<EquipmentSet>
@@ -1242,7 +1242,7 @@
 			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_med_c" />
 			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_heavy_b" />
 			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
-			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+			<Equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 		</EquipmentSet>
 		<EquipmentSet>
@@ -1250,7 +1250,7 @@
 			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_elite_i" />
 			<Equipment slot="Body" id="Item.sk_rh_loke_scalemail_light_b" />
 			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_scale_heavy_a" />
-			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+			<Equipment slot="Gloves" id="Item.taom_band_lt_sk_rh_loke_bracer_heavy_b" />
 			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
@@ -1443,7 +1443,7 @@
 			<Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
 			<Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
 			<Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
-			<Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+			<Equipment slot="Cape" id="Item.taom_band_lt_sk_dale_lake_town_shoulder_mariner_a03" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.dale_great_axe_a" />
@@ -1452,7 +1452,7 @@
 			<Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
 			<Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
 			<Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
-			<Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+			<Equipment slot="Cape" id="Item.taom_band_lt_sk_dale_lake_town_shoulder_mariner_a03" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.ladder_dale_bow_t3" />
@@ -1726,7 +1726,7 @@
 			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
 			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
-			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_rivendell_boots_greaves3" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
@@ -2252,7 +2252,7 @@
 			<Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
 			<Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
 			<Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
-			<Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+			<Equipment slot="Cape" id="Item.taom_band_lt_sk_dale_lake_town_shoulder_mariner_a03" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.dale_great_axe_a" />
@@ -2261,7 +2261,7 @@
 			<Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
 			<Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
 			<Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
-			<Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+			<Equipment slot="Cape" id="Item.taom_band_lt_sk_dale_lake_town_shoulder_mariner_a03" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.ladder_dale_bow_t3" />
@@ -2336,7 +2336,7 @@
 			<Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
 			<Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
 			<Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
-			<Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+			<Equipment slot="Cape" id="Item.taom_band_lt_sk_dale_lake_town_shoulder_mariner_a03" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.dale_great_axe_a" />
@@ -2345,7 +2345,7 @@
 			<Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
 			<Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
 			<Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
-			<Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+			<Equipment slot="Cape" id="Item.taom_band_lt_sk_dale_lake_town_shoulder_mariner_a03" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.ladder_dale_bow_t3" />
@@ -2420,7 +2420,7 @@
 			<Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
 			<Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
 			<Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
-			<Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+			<Equipment slot="Cape" id="Item.taom_band_lt_sk_dale_lake_town_shoulder_mariner_a03" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.dale_great_axe_a" />
@@ -2429,7 +2429,7 @@
 			<Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
 			<Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
 			<Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
-			<Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+			<Equipment slot="Cape" id="Item.taom_band_lt_sk_dale_lake_town_shoulder_mariner_a03" />
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.ladder_dale_bow_t3" />

@@ -11,7 +11,7 @@
 			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_a3" />
 			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br2" />
 			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_ar2" />
-			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar2" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_a1" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
@@ -25,7 +25,7 @@
 			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_b3" />
 			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_br3" />
 			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_br2" />
-			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar3" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_a3" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>

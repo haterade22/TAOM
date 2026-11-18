@@ -643,7 +643,7 @@
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_heavy_c" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_d" />
                 <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_heavy_b" />
-                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+                <equipment slot="Gloves" id="Item.taom_band_hv_sk_rh_loke_bracer_heavy_b" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_b" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
@@ -1063,10 +1063,10 @@
                 <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_1h_axe_b" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_a" />
-                <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_d" />
-                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_heavy_b" />
+                <equipment slot="Body" id="Item.sk_rh_loke_chest_elite_a" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_cape_a" />
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
-                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_b" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_elite_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
@@ -1101,10 +1101,10 @@
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item3" id="Item.sm_rh_drag_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_a" />
-                <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_d" />
+                <equipment slot="Body" id="Item.sk_rh_loke_chest_elite_a" />
                 <equipment slot="Cape" id="Item.sk_rh_loke_cape_heavy_b" />
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
-                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_b" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_elite_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
@@ -4377,7 +4377,7 @@
                 <equipment slot="Body" id="Item.sk_rh_drag_chest_heavy_c" />
                 <equipment slot="Cape" id="Item.sk_rh_drag_cape_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_heavy_b" />
-                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_elite_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
@@ -4604,7 +4604,7 @@
                 <equipment slot="Head" id="Item.sk_dg_khml_helmet_arch_med_c" />
                 <equipment slot="Body" id="Item.sk_dg_khml_hplate_med_b" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_hplate_med_a" />
-                <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_hplate_heavy_a" />
+                <equipment slot="Gloves" id="Item.taom_band_hv_sk_dg_khml_bracer_hplate_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_dg_khml_grvs_hplate_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
@@ -4759,7 +4759,7 @@
                 <equipment slot="Body" id="Item.sk_dg_khml_hplate_heavy_b" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_cape_hplate_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_hplate_heavy_a" />
-                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_hplate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_elite_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
@@ -4797,7 +4797,7 @@
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_heavy_a" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_cape_scale_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_lam_heavy_a" />
-                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_elite_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />
@@ -4835,7 +4835,7 @@
                 <equipment slot="Body" id="Item.sk_dg_khml_chest_elite_b" />
                 <equipment slot="Cape" id="Item.sk_dg_khml_cape_scale_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_lam_heavy_a" />
-                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_scale_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_elite_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
             <equipment slot="Horse" id="Item.t3_aserai_horse" />

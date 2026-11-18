@@ -84,7 +84,7 @@ PLACEHOLDER_GLOBS = ("*/placeholder_weapons/*", "*tools/placeholder_weapons.json
                      "*tools/fix_melee_ladder.py", "*/troops/troops_*.xml",
                      # The catalogue's module set and loading rules (#1375).
                      "*/_module/submodule.xml", "*tools/audit_polearm_shield_parity.py",
-                     # The swap rule: melee_tier reads NOBLE_TROOPS, and split_generated reads the
+                     # The swap rule: melee_tier reads NOBLE_TROOPS, and fix_melee_ladder.split_generated reads the
                      # generated troop files that REGENERATABLE feeds.
                      "*tools/taom_schema.py", "*tools/generate_new_faction_kingdoms.py") + ARMORY_GLOBS
 # Both armour generators write stats through rebalance_armor.calculate_stats.
@@ -96,6 +96,19 @@ LORD_VARIANT_GLOBS = ("*/lord_armour/*", "*tools/lord_armour_variants.json", "*t
                       "*tools/derive_armor_tiers.py", "*tools/fix_lord_kits.py", "*tools/rebalance_troops.py",
                       "*tools/fix_upgrade_armour_regressions.py", "*tools/data/armor_roster_tiers.json",
                       "*/submodule.xml") + ARMOUR_CURVE_GLOBS + TROOP_GLOBS + ARMORY_GLOBS
+# The armour band clones and upgrades (2026-11-17): their output and spec, the generator and every tool it
+# imports, the sets it swaps (TROOP_GLOBS: troops, characters, equipment sets, companions; the Fords of War
+# copies), the generators of whole troop files that carry the swap and the list of those files
+# (generate_new_faction_kingdoms.REGENERATABLE), the enlistment generator (its rank bands), the Mallorn
+# pricing (generate_lothlorien_armor.ML_BAND_UP), the Armory sources it copies, the restat map and the name
+# key count its --check compares.
+BAND_CLONE_GLOBS = ("*/armour_band_clones/*", "*tools/armour_band_clones.json", "*tools/generate_armour_band_clones.py",
+                    "*tools/derive_armor_tiers.py", "*tools/fix_upgrade_armour_regressions.py",
+                    "*tools/rebalance_troops.py", "*tools/fix_melee_ladder.py", "*/fords_of_war/*",
+                    "*tools/realm_troops.py", "*tools/generate_lothlorien_troops.py", "*tools/generate_snow_orc_troops.py",
+                    "*tools/generate_new_faction_kingdoms.py", "*tools/generate_lothlorien_armor.py",
+                    "*tools/generate_enlistment_rosters.py", "*tools/loc_inline_backlog.json",
+                    "*tools/data/armor_roster_tiers.json", "*/submodule.xml") + ARMOUR_CURVE_GLOBS + TROOP_GLOBS + ARMORY_GLOBS
 CREATURE_GLOBS = ("*/action_sets.xml", "*/action_types.xml", "*/monster_usage_sets.xml", "*/monsters/*.xml",
                   "*/lotr_monster_*.xml")
 FBX_GLOBS = ("*/assetsources/*.fbx",)
@@ -160,8 +173,8 @@ GATES = (
     Gate("mesh-refs", "Armory weapons and pieces", ARMORY_GLOBS,
          ("python", "tools/validate_mesh_refs.py", "--scan-bodies"), (ARMORY_DOC,),
          note="every mesh= and body_name= resolves to a shipped asset; pending artist bo_ meshes are the expected exception"),
-    Gate("armour-classes", "Armory armour, troop rosters, the lord armour variants",
-         ARMORY_GLOBS + TROOP_GLOBS + ("*/lord_armour/*",),
+    Gate("armour-classes", "Armory armour, troop rosters, the lord armour variants, the armour band clones",
+         ARMORY_GLOBS + TROOP_GLOBS + ("*/lord_armour/*", "*/armour_band_clones/*"),
          ("python", "tools/generate_armour_classes.py", "--check"), (ARMORY_DOC,),
          note="exit 1 stale, 2 no Armory; re-run with --apply when stale"),
     Gate("armory-names", "Armory item and piece names", ARMORY_GLOBS,
@@ -198,13 +211,26 @@ GATES = (
     Gate("lord-armour-variants", "lord armour variants, their spec, the generator and its imports, rosters, Armory sources",
          LORD_VARIANT_GLOBS, ("python", "tools/generate_lord_armour_variants.py", "--check"),
          ("docs/features/armor-balance.md",),
-         note="exit 1 when the variants file or its SubModule node differs from the render, a source no longer "
-              "needs a variant, or a roster other than a generic lord template or a fallback or ruler roster names "
+         note="exit 1 when the variants file or its SubModule node differs from the render, a new row's source "
+              "needs no variant (a shipped row stays), or a roster other than a generic lord template or a fallback or ruler roster names "
               "one; exit 2 is NOT RUN (no install); after --apply run derive_armor_tiers.py and "
               "generate_armour_classes.py --apply"),
     Gate("lord-variant-meshes", "lord armour variants", ("*/lord_armour/*",),
          ("python", "tools/validate_mesh_refs.py", "--items", "Main/_Module/ModuleData/lord_armour", "--scan-bodies"),
          (ARMORY_DOC,), note="the mesh-refs gate scans the Armory only; a variant names an Armory mesh"),
+    Gate("armour-band-clones", "armour band clones and upgrades, their spec, the generator and its imports, rosters, "
+         "Armory sources", BAND_CLONE_GLOBS, ("python", "tools/generate_armour_band_clones.py", "--check"),
+         ("docs/features/armor-balance.md",),
+         note="exit 1 when the spec, the clone file, its SubModule node or a set differs from the plan (a piece "
+              "worn by a level 36+ and a level 30- troop, TOP_TIER_ARMOUR_WORN_LOW; a low set naming a source, "
+              "BAND_CLONE_SOURCE_WORN_LOW), a shipped clone or piece is gone, or a step is owed (NEXT: a "
+              "generator's --apply, the loc key count); exit 2 is NOT RUN (no Armory slot file), 3 a crash; after "
+              "--apply run derive_armor_tiers.py, the restat dry run, fix_lord_kits.py --values planned, "
+              "generate_armour_classes.py --apply, then derive_armor_tiers.py again (armor-balance.md, Commands)"),
+    Gate("armour-band-clone-meshes", "armour band clones", ("*/armour_band_clones/*",),
+         ("python", "tools/validate_mesh_refs.py", "--items", "Main/_Module/ModuleData/armour_band_clones",
+          "--scan-bodies"),
+         (ARMORY_DOC,), note="the mesh-refs gate scans the Armory only; a clone names its source's Armory mesh"),
     Gate("lorien-armor", "Lorien armour items and their generator",
          ARMORY_GLOBS + ARMOUR_CURVE_GLOBS + ("*tools/generate_lothlorien_armor.py",),
          ("python", "tools/generate_lothlorien_armor.py", "--check"), ("docs/features/lothlorien-snow-orcs.md",),

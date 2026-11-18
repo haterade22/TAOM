@@ -1905,10 +1905,10 @@
                     id="Item.sk_uruk_mordor_chainmail_elite_b1" />
                 <equipment
                     slot="Gloves"
-                    id="Item.sk_uruk_mordor_bracer_medium_c" />
+                    id="Item.sk_uruk_mordor_bracer_heavy_b" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_uruk_mordor_greaves_medium_a" />
+                    id="Item.sk_uruk_mordor_greaves_heavy_b" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1928,10 +1928,10 @@
                     id="Item.sk_uruk_mordor_chainmail_elite_c1" />
                 <equipment
                     slot="Gloves"
-                    id="Item.sk_uruk_mordor_bracer_medium_b" />
+                    id="Item.sk_uruk_mordor_bracer_heavy_b" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_uruk_mordor_greaves_medium_a" />
+                    id="Item.sk_uruk_mordor_greaves_heavy_b" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1951,10 +1951,10 @@
                     id="Item.sk_uruk_mordor_chainmail_elite_d1" />
                 <equipment
                     slot="Gloves"
-                    id="Item.sk_uruk_mordor_bracer_medium_c" />
+                    id="Item.sk_uruk_mordor_bracer_heavy_b" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_uruk_mordor_greaves_medium_b" />
+                    id="Item.sk_uruk_mordor_greaves_heavy_b" />
             </EquipmentRoster>
             <EquipmentRoster
                 civilian="true">
@@ -3743,7 +3743,7 @@
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_med_a" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_med_a" />
-        <equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_med_a" />
+        <equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_elite_a" />
         <equipment slot="Leg" id="Item.sm_md_num_grvs_med_a" />
         <equipment slot="Horse" id="Item.noble_horse_imperial" />
         <equipment slot="HorseHarness" id="Item.sm_md_num_barding_heavy_b" />
@@ -3755,7 +3755,7 @@
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_med_a" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_med_a" />
-        <equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_med_a" />
+        <equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_elite_a" />
         <equipment slot="Leg" id="Item.sm_md_num_grvs_med_a" />
         <equipment slot="Horse" id="Item.noble_horse_imperial" />
         <equipment slot="HorseHarness" id="Item.sm_md_num_barding_heavy_b" />
@@ -3940,8 +3940,8 @@
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_b" />
         <equipment slot="Head" id="Item.sk_md_num_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sm_md_num_inf_chest_heavy_b" />
-        <equipment slot="Cape" id="Item.sm_md_num_inf_pauld_med_a" />
-        <equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_med_a" />
+        <equipment slot="Cape" id="Item.sm_md_num_inf_pauld_cape_elite_a" />
+        <equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_elite_a" />
         <equipment slot="Leg" id="Item.sm_md_num_grvs_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
@@ -3950,7 +3950,7 @@
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_b" />
         <equipment slot="Head" id="Item.sk_md_num_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sm_md_num_inf_chest_heavy_b" />
-        <equipment slot="Cape" id="Item.sm_md_num_inf_pauld_med_a" />
+        <equipment slot="Cape" id="Item.sm_md_num_inf_pauld_cape_elite_a" />
         <equipment slot="Gloves" id="Item.sk_md_num_arc_bracer_med_a" />
         <equipment slot="Leg" id="Item.sm_md_num_grvs_med_a" />
       </EquipmentRoster>

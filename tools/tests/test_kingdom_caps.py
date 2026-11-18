@@ -17,6 +17,7 @@ with one dated backup per file.
 """
 import contextlib
 import io
+import math
 import os
 import re
 import shutil
@@ -1125,6 +1126,118 @@ class WornArmourTests(unittest.TestCase):
         low = {"head": 30, "body": 5, "arm": 0, "leg": 0}
         self.assertEqual(ra.worn_armour_breaches(46, low, low)["floor"], [("body", 5, 30)])
         self.assertEqual(ra.worn_armour_breaches(46, low, low, bodyless=True)["floor"], [])
+
+
+class RaisedSecondaryTests(unittest.TestCase):
+    """A piece the restat raises into the heavy or elite band from below it carries 0 secondaries (none
+    exist below the heavy band), so its own share is 0. Such a 0 takes the legacy row's share for the
+    tier, or, for a stat the row lacks (a chest's arm armour), the median share of the line's heavy or
+    better pieces that carry it, hero and lord pieces left out (2026-11-17)."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.armory = Path(self._tmp.name) / "LOTRLOME_items"
+        mirkwood = self.armory / "mirkwood"
+        arnor = self.armory / "arnor"
+        mirkwood.mkdir(parents=True)
+        arnor.mkdir(parents=True)
+        (mirkwood / "body_armors.xml").write_bytes(_file(
+            _item("mirkwood_body", "BodyArmor", body_armor=8, arm_armor=0),
+            _item("mkwd_inf3_chest", "BodyArmor", body_armor=8, arm_armor=0, leg_armor=0),
+            _item("mkwd_inf3_chest_silver", "BodyArmor", body_armor=48, arm_armor=8, leg_armor=19),
+            _item("legolas_body", "BodyArmor", body_armor=51, arm_armor=15, leg_armor=20),     # hero
+            _item("mkwd_lord_chest", "BodyArmor", body_armor=51, arm_armor=20, leg_armor=20),  # lord
+            _item("mkwd_x_chest_heavy_a", "BodyArmor", body_armor=40, arm_armor=0, leg_armor=15),
+            crlf=True))
+        (mirkwood / "shoulder_armors.xml").write_bytes(_file(
+            _item("mkwd_inf3_pauldrons_bronze", "Cape", body_armor=5, arm_armor=0)))
+        (arnor / "body_armors.xml").write_bytes(_file(
+            _item("sk_ar_x_chest", "BodyArmor", body_armor=8, arm_armor=0)))
+        elite = {"anchorLevel": 41, "tier": "elite", "tierSource": "roster(L41)"}
+        self.roster = {i: dict(elite) for i in ("mirkwood_body", "mkwd_inf3_chest", "mkwd_inf3_chest_silver",
+                                                 "mkwd_x_chest_heavy_a", "mkwd_inf3_pauldrons_bronze",
+                                                 "sk_ar_x_chest")}
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _run(self, folder, fname, slot):
+        return {c["id"]: c for c in ra.process_file(
+            str(self.armory / folder / fname), slot, dry_run=True, tier_source="roster-first",
+            roster_map=self.roster, keep_weights=True, keep_material_type=True)}
+
+    def test_the_line_share_leaves_out_hero_and_lord_pieces_and_low_pieces(self):
+        shares = ra.line_secondary_shares(str(self.armory))
+        # only mkwd_inf3_chest_silver counts for the arm: 8 / 48; the heavy chest with arm 0 carries none
+        self.assertAlmostEqual(shares[("mirkwood", "body", "arm_armor")], 8 / 48)
+        self.assertNotIn(("arnor", "body", "arm_armor"), shares)
+
+    def test_the_palace_guard_chest_raised_to_elite_takes_the_lines_arm_share(self):
+        by_id = self._run("mirkwood", "body_armors.xml", "body")
+        self.assertEqual(by_id["mirkwood_body"]["new_values"]["arm_armor"], 8)
+        self.assertEqual(by_id["mirkwood_body"]["new_values"]["body_armor"], 48)
+
+    def test_a_raised_chest_that_declares_no_leg_takes_the_lines_leg_share(self):
+        # Review 2026-11-17 wave 2: mirkwood_body declares no leg_armor, so at the elite band the wardens wore 0
+        # leg on the chest while their level 36 recruits' mkwd_inf3_chest carried 19. A raised body piece takes
+        # the median leg share of the line's heavy+ chests that carry leg (19/48 and 15/40, capped at 0.40).
+        shares = ra.line_secondary_shares(str(self.armory))
+        median = (19 / 48 + 15 / 40) / 2
+        self.assertAlmostEqual(shares[("mirkwood", "body", "leg_armor")], median)
+        by_id = self._run("mirkwood", "body_armors.xml", "body")
+        want = int(math.floor(48 * min(median, ra.SECONDARY_SHARE_CAP[("body", "leg_armor")]) + 0.5))
+        self.assertEqual(by_id["mirkwood_body"]["new_values"], {"body_armor": 48, "arm_armor": 8, "leg_armor": want})
+        self.assertEqual(by_id["mirkwood_body"]["status"], "CHANGED")
+
+    def test_an_undeclared_leg_is_never_added_where_the_line_has_none_or_off_the_body(self):
+        self.assertNotIn("leg_armor", self._run("arnor", "body_armors.xml", "body")["sk_ar_x_chest"]["new_values"])
+        self.assertNotIn("leg_armor",
+                         self._run("mirkwood", "shoulder_armors.xml", "shoulder")["mkwd_inf3_pauldrons_bronze"]["new_values"])
+        self.roster["mirkwood_body"] = {"anchorLevel": 16, "tier": "medium", "tierSource": "roster(L16)"}
+        self.assertNotIn("leg_armor", self._run("mirkwood", "body_armors.xml", "body")["mirkwood_body"]["new_values"])
+
+    def test_the_apply_writes_the_new_leg_attribute_and_a_second_run_plans_nothing(self):
+        path = self.armory / "mirkwood" / "body_armors.xml"
+        ra.process_file(str(path), "body", dry_run=False, tier_source="roster-first", roster_map=self.roster,
+                        keep_weights=True, keep_material_type=True, line_shares=ra.line_secondary_shares(str(self.armory)))
+        raw = path.read_bytes()
+        self.assertEqual(raw.count(b"\r\n"), raw.count(b"\n"))   # CRLF kept
+        block = raw.split(b'id="mirkwood_body"', 1)[1].split(b"</Item>", 1)[0]
+        self.assertRegex(block, rb'<Armor body_armor="48" arm_armor="8" leg_armor="\d+" material_type=')
+        again = self._run("mirkwood", "body_armors.xml", "body")
+        self.assertEqual(again["mirkwood_body"]["status"], "UNCHANGED")
+
+    def test_a_declared_zero_leg_still_takes_the_rows_share(self):
+        by_id = self._run("mirkwood", "body_armors.xml", "body")
+        # the leg takes the legacy row's share (28 / 50, capped at 0.40): 48 * 0.40 = 19.2
+        self.assertEqual(by_id["mkwd_inf3_chest"]["new_values"], {"body_armor": 48, "arm_armor": 8, "leg_armor": 19})
+
+    def test_a_piece_already_at_the_heavy_band_keeps_its_own_share(self):
+        by_id = self._run("mirkwood", "body_armors.xml", "body")
+        self.assertEqual(by_id["mkwd_x_chest_heavy_a"]["new_values"]["arm_armor"], 0)
+        self.assertEqual(by_id["mkwd_inf3_chest_silver"]["new_values"], {"body_armor": 48, "arm_armor": 8, "leg_armor": 19})
+
+    def test_a_raised_cape_takes_the_rows_arm_share(self):
+        by_id = self._run("mirkwood", "shoulder_armors.xml", "shoulder")
+        # 48 * 0.28 = 13; the elite row's arm share 17 / 19 = 0.89 is under the cape cap of 1.0: 11.6
+        self.assertEqual(by_id["mkwd_inf3_pauldrons_bronze"]["new_values"], {"body_armor": 13, "arm_armor": 12})
+
+    def test_a_stat_no_piece_of_the_line_carries_stays_zero_and_is_listed(self):
+        change = self._run("arnor", "body_armors.xml", "body")["sk_ar_x_chest"]
+        self.assertEqual(change["new_values"]["arm_armor"], 0)
+        self.assertEqual(change["no_line_share"], ["arm_armor"])
+        self.assertEqual(self._run("mirkwood", "body_armors.xml", "body")["mirkwood_body"]["no_line_share"], [])
+
+    def test_below_the_heavy_band_a_raised_piece_still_has_no_secondary(self):
+        self.roster["mirkwood_body"] = {"anchorLevel": 16, "tier": "medium", "tierSource": "roster(L16)"}
+        by_id = self._run("mirkwood", "body_armors.xml", "body")
+        self.assertEqual(by_id["mirkwood_body"]["new_values"]["arm_armor"], 0)
+
+    def test_restat_armour_takes_the_same_shares(self):
+        shares = ra.line_secondary_shares(str(self.armory))
+        values, _ = ra.restat_armour("body", "elite", "mirkwood", "mirkwood_body", {"body_armor": 8, "arm_armor": 0},
+                                     line_shares=shares)
+        self.assertEqual(values, self._run("mirkwood", "body_armors.xml", "body")["mirkwood_body"]["new_values"])
 
 
 if __name__ == "__main__":

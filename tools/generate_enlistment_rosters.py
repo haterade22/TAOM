@@ -344,9 +344,21 @@ TREE_ALIASES = {
 
 def placeholder_donors():
     """placeholder id -> its Armory donor (tools/placeholder_weapons.json). An enlistment kit, like a
-    career kit, never hands out a troop's restated tier clone: it takes the donor."""
+    career kit, never hands out a troop's restated tier clone: it takes the donor. An armour band clone
+    (tools/armour_band_clones.json) is NOT read as its source: the source is priced at the elite band, so
+    a recruit would draw elite armour (the Mirkwood recruit kits went from 23 to 90, review 2026-11-17).
+    kit_at_rank gives the kit the clone of its rank's band instead."""
     import generate_placeholder_weapons as gpw
     return {w['id']: w['donor'] for w in gpw.spec_weapons()}
+
+
+def kit_at_rank(slots, rank):
+    """The kit with each armour piece that has a band clone (tools/armour_band_clones.json) as the clone of the
+    rank's band (generate_armour_band_clones.enlist_rank_band; a sergeant, at the elite band, takes the source).
+    The donor may sit a band away from the rank (LEVEL_CAP), so its own clone is not always the kit's."""
+    import generate_armour_band_clones as gbc
+    band = gbc.enlist_rank_band(rank)
+    return {s: gbc.armour_for_band(i, band) if s in ARMOR_SLOTS else i for s, i in slots.items()}
 
 
 def _slot_items(equipment, donor_of):
@@ -1174,6 +1186,7 @@ def plan_rank_repairs(kits, armour_stats, weapon_info, skip=(), gear=None):
                 break
             new = _pick_armour(slot, lower[slot], same, own, armour_stats)
             if new is not None:
+                new = kit_at_rank({slot: new}, high[2])[slot]
                 edits.append((high, slot, upper.get(slot), new))
                 upper[slot] = new
     return edits, enlistment_kit_findings(work, armour_stats, weapon_info)
@@ -1532,7 +1545,7 @@ def main():
                 # Harad-sphere donors carry ladder_harad_bow_*, which need Bow 100 an enlistee
                 # cannot meet; comparing the donor kits instead suppressed a soldier cell whose
                 # issued bow differs from the recruit's (shaghana archer, steppe_heavy_bow).
-                slots = apply_issue_launcher(culture, assignment, rank, slots, classes)
+                slots = kit_at_rank(apply_issue_launcher(culture, assignment, rank, slots, classes), rank)
                 kit = frozenset(slots.items())
                 already = seen_kits.setdefault((culture, assignment), set())
                 if kit in already:
@@ -1552,6 +1565,7 @@ def main():
             if not filled:
                 # Nothing at this rank at all, so the resolver would leave the culture entirely.
                 donor, slots = rescue_rank(troops, rank, armory, universe, classes, zones)
+                slots = kit_at_rank(slots, rank)
                 rescued = frozenset(slots.items()) if donor is not None else None
                 if rescued is not None and rescued in seen_kits.get((culture, 'infantry'), set()):
                     donor = None   # the rescue would re-emit a lower rank; the descent covers it
