@@ -78,10 +78,66 @@ public class CoopSettingsProviderTests
             .Select(p => p.Name)
             .ToArray();
 
-        CollectionAssert.AreEqual(new[] { nameof(TaomSettings.CoopLoadOrderWarning) }, holders);
+        CollectionAssert.AreEqual(new[] { nameof(TaomSettings.CoopLoadOrderWarning), nameof(TaomSettings.CoopCareerSync) }, holders);
     }
 
     [TestMethod]
     public void TheLoadOrderSwitch_IsExcludedFromTheFingerprint()
         => Assert.IsTrue(CoopSettingsRelevance.IsExcluded(nameof(TaomSettings.CoopLoadOrderWarning)));
+
+    // ── Career sync (docs/features/coop-interop.md, "Career sync") ──
+
+    [TestMethod]
+    public void CareerSync_NoSettingsObject_IsOn()
+    {
+        Assert.IsTrue(new CoopSettingsProvider(null).CareerSync);
+    }
+
+    [TestMethod]
+    public void CareerSync_FreshSettingsObject_IsOn()
+    {
+        Assert.IsTrue(new TaomSettings().CoopCareerSync);
+        Assert.IsTrue(new CoopSettingsProvider(new TaomSettings()).CareerSync);
+    }
+
+    [TestMethod]
+    public void CareerSync_ReadsTheSettingsObjectLive()
+    {
+        var settings = new TaomSettings();
+        var provider = new CoopSettingsProvider(settings);
+
+        settings.CoopCareerSync = false;
+        Assert.IsFalse(provider.CareerSync);
+    }
+
+    [TestMethod]
+    public void TheCareerSyncSetting_SitsInTheCoopGroup_AfterTheLoadOrderSwitch()
+    {
+        var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.CoopCareerSync))!;
+        var group = Attribute(property, "SettingPropertyGroupAttribute");
+        var flag = Attribute(property, "SettingPropertyBoolAttribute");
+
+        Assert.AreEqual("Co-op", McmText.Plain(Read(group, "GroupName") as string));
+        Assert.AreEqual(8, Read(group, "GroupOrder"));
+        Assert.AreEqual(1, Read(flag, "Order"));
+        Assert.AreEqual("Sync careers for co-op players", McmText.Plain(Read(flag, "DisplayName") as string));
+        Assert.AreEqual(false, Read(flag, "RequireRestart"));
+    }
+
+    [TestMethod]
+    public void TheCareerSyncHint_SaysTheServerReadsIt_FromItsFile_AfterARestart()
+    {
+        var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.CoopCareerSync))!;
+        var hint = McmText.Plain(Read(Attribute(property, "SettingPropertyBoolAttribute"), "HintText") as string);
+
+        StringAssert.Contains(hint, "co-op server process reads");
+        StringAssert.Contains(hint, "taom-server-settings.json (CoopCareerSync)");
+        StringAssert.Contains(hint, "restart the server");
+        Assert.IsFalse(hint.Contains("no restart"), hint);
+    }
+
+    [TestMethod]
+    public void TheCareerSyncSwitch_IsInTheFingerprint()
+        // It changes what the server stores and sends; none of the four exclusion reasons fits (hub rule, Part 1 review).
+        => Assert.IsFalse(CoopSettingsRelevance.IsExcluded(nameof(TaomSettings.CoopCareerSync)));
 }

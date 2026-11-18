@@ -3316,6 +3316,14 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "{=taom_mcm_CoopLoadOrderWarning_hint}When a player joins a co-op campaign, the co-op server compares the order of TAOM and of every mod that adds items, troops or factions with its own, and tells a player whose order differs which two mods are the other way round. Nothing is blocked. The co-op server process reads this switch each time a player joins; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopLoadOrderWarning), which it reads once at start, so change it there and restart the server. Default: on.")]
     public bool CoopLoadOrderWarning { get; set; } = TAOM.Features.CoopInterop.CoopSettingsProvider.DefaultLoadOrderWarning;
 
+    // Read by CareerSyncHost (Main/Features/CoopInterop/CareerSync) in the co-op server process, through
+    // CoopSettingsProvider, for each report and each career change the server makes. In the fingerprint: it changes what
+    // the server stores and sends.
+    [SettingPropertyGroup("{=taom_mcm_group_coop}Co-op", GroupOrder = 8)]
+    [SettingPropertyBool("{=taom_mcm_CoopCareerSync}Sync careers for co-op players", Order = 1, RequireRestart = false,
+        HintText = "{=taom_mcm_CoopCareerSync_hint}When on, a career a co-op player picks or changes goes to the co-op server, which checks it with the career rules, keeps it in its save and shows it to the other players, so the career is still there after the player joins again. The co-op server process reads this switch each time a player reports a career; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopCareerSync), which it reads once at start, so change it there and restart the server. Off: each player's career stays only on that player's PC and is lost when the player joins again. Default: on.")]
+    public bool CoopCareerSync { get; set; } = TAOM.Features.CoopInterop.CoopSettingsProvider.DefaultCareerSync;
+
     // --- Cheat Menu (docs/features/cheat-menu.md) ---
 
     [SettingPropertyGroup("{=taom_cheat_mcm_group}Cheat Menu", GroupOrder = 90)]

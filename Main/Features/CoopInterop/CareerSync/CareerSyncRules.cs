@@ -18,6 +18,15 @@ public enum CareerSyncRefusal
     OverBudget,
     BadTier,
     UnknownFlag,
+
+    /// <summary>The report names another hero than the one the sender's connection controls, or none.</summary>
+    NotYourHero,
+
+    /// <summary>The server finds no hero with that id.</summary>
+    UnknownHero,
+
+    /// <summary>The server's career sync switch is off.</summary>
+    SwitchedOff,
 }
 
 /// <summary>
