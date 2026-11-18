@@ -2113,10 +2113,10 @@ path never walks him out. Until this fix `TryRedirectMenu` returned false in eve
 `EnlistedAttached`, so the mask was off for the whole grace window. `Campaign.Tick` pushes the
 generic state menu on every tick the map is not at a menu, and for an encounter-less party inside a
 fortification that is `town_outside` or `castle_outside`
-(`DefaultEncounterGameMenuModel.GetGenericStateMenu`, v1.5.7). Both menus open with
-`args.MenuTitle = PlayerEncounter.EncounterSettlement.Name`, and `EncounterSettlement` is
-`Current?.EncounterSettlementAux`, so with no encounter the init throws inside `GameMenu.RunOnInit`:
-a CTD of the #510 class, not a soft-lock.
+(`DefaultEncounterGameMenuModel.GetGenericStateMenu`, v1.5.7). Both menus' inits read
+`PlayerEncounter.EncounterSettlement` into a local and then set `args.MenuTitle` from its `Name`,
+and `EncounterSettlement` is `Current?.EncounterSettlementAux`, so with no encounter the init throws
+inside `GameMenu.RunOnInit`: a CTD of the #510 class, not a soft-lock.
 
 `TryRedirectMenu` now also redirects in `CommanderUnavailable` while the player is inside a
 settlement with no `PlayerEncounter` (`GetPresenceFlags()`: `IsInSettlement` and not
@@ -2125,6 +2125,15 @@ shape already had, and the battle and shore-leave exceptions still apply first. 
 change reaches the redirect: `GameMenu.ActivateGameMenu` calls `GameMenuManager.SetNextMenu` or
 `GameMenu.SwitchToMenu`, and `MenuContext.SwitchToMenu` calls `SetNextMenu` (v1.5.7). Pinned by the
 `TryRedirectMenu_CommanderUnavailable*` tests in `EnlistmentMenuServiceTests`.
+
+The mask also takes the settlement's own battle. When a map event starts at the settlement with no
+siege, `GetGenericStateMenu` returns `encounter` or `join_encounter`. While the player is in no map
+event himself the battle exception does not apply, so the grace player stays in the wait menu: he
+is not offered the defence from this shape. Both inits need a `PlayerEncounter` (v1.5.7):
+`game_menu_encounter_on_init` calls `PlayerEncounter.StartBattle()`, which is
+`Current.StartBattleInternal()`, and `game_menu_join_encounter_on_init` reads
+`PlayerEncounter.EncounteredBattle`, which dereferences `Current`. So either menu would throw here,
+as it would for an `EnlistedAttached` player in the same shape.
 
 The encounter term keeps the grace player's own town visits vanilla. In grace he can be loose on the
 map (a shore-leave pass is revoked on the state change and walks him out), and he may then enter a
@@ -2147,7 +2156,10 @@ Still open: inside a VILLAGE, `GetGenericStateMenu` returns null for an encounte
 the wait menu ever closed there the player would stand in the village with no menu and could not
 move (`MobileParty.DoUpdatePosition` returns while `CurrentSettlement` is set). Nothing found closes
 the wait menu in the grace window, so it is not fixed here. The root fix, a settlement encounter on
-the follow path, still collides with the battle path's R3 handling.
+the follow path, still collides with the battle path's R3 handling. Also open, in both states: under
+a siege `GetGenericStateMenu` can return `menu_siege_strategies`,
+`encounter_interrupted_siege_preparations` or `continue_siege_after_attack`, none of which is in
+`RedirectMenuIds`, so they flow; whether their inits survive with no encounter is unverified.
 
 ## A battle ending on the far side of the map tore the player out of his own (#551, 2026-09-06)
 
