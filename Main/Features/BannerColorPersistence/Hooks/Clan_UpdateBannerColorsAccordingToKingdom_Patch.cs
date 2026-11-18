@@ -28,6 +28,9 @@ public static class Clan_UpdateBannerColorsAccordingToKingdom_Patch
     [HarmonyPrefix]
     public static bool Prefix(Clan __instance)
     {
+        if (_service?.ShouldSkipLoadRepaint(Clan_PreAfterLoad_Patch.InClanLoad) ?? false)
+            return false;
+
         // Phase 9b #172 F2 — was `Prefix() => !_service.IsDriftGuardEnabled()`. That blocked the
         // method for ALL clans, including NPC clans changing kingdoms mid-campaign whose banner
         // colors then never synced to the new kingdom palette. The DriftGuard is specifically

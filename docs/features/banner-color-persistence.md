@@ -41,6 +41,8 @@ Patch15_BannerLayerLimit (Transpiler)
 
 Patch24_BannerDriftGuard
   └── Clan.UpdateBannerColorsAccordingToKingdom — Prefix, skip when enabled
+      (and on a co-op client inside Clan.PreAfterLoad, v2.0.40)
+  └── Clan.PreAfterLoad: Prefix and Finalizer, bracket for the load repaint
   └── Clan.UpdateBannerColor — Postfix, sync kingdom colors from ruling clan
 
 Patch23_BannerColorPersistence (the category patches; count them with
@@ -74,6 +76,21 @@ SubModule.OnGameInitializationFinished()
 
 ### Key Design Decisions
 
+- **A co-op client skips the load repaint (v2.0.40)**: installed v1.5.7 `Clan.PreAfterLoad` ends with
+  `UpdateBannerColorsAccordingToKingdom()`, which repaints the clan's banner in place (for a ruling clan, its kingdom's
+  banner) from `Kingdom.PrimaryBannerColor` and `SecondaryBannerColor`. Where those differ from the banner's own
+  colours the load recolours it: co-op testers saw Gondor's banner lose its black field after joining. On the authority
+  `BannerInjectionBehavior` restores TAOM's banners right after the load; a co-op client may not, because Co-op syncs
+  `Kingdom.Banner`, `Clan._banner` and the kingdom banner colours, and the server sets them (#1086). The client's join
+  save already holds the server's banners, so the drift-guard prefix returns false when
+  `IBannerColorService.ShouldSkipLoadRepaint(Clan_PreAfterLoad_Patch.InClanLoad)` is true: inside the load bracket and
+  `ICoopSessionProvider.IsCoopClient`. The client then writes nothing. Every other repaint stays vanilla: a kingdom
+  change later in the session, and BannerlordCoop's own server-side `PlayerBannerHandler.UpdateKingdomBannerColors`,
+  which calls the repaint outside a load. BannerlordCoop's `ClanBannerLoadRepairPatch` also prefixes
+  `Clan.PreAfterLoad` (a default banner for a saved one with no layers); the bracket does not depend on prefix order,
+  because only the original body reads the flag. The bracket opens and closes through Harmony's `__state`, so a nested
+  call or a stripped prefix cannot close the outer bracket. BannerlordTogether clients keep vanilla's repaint, because
+  TAOM cannot probe their role.
 - **Transpiler over Postfix for layer limit**: The transpiler inserts a `Brtrue_S` before `Ble_S` to skip the `RemoveRange` block entirely — zero allocations, zero string parsing, nothing to undo.
 - **Clan directly in SyncKingdomColors**: The `IBannerHeroAdapter.SyncKingdomColors` accepts `Clan` directly (not a string ID) to avoid LINQ enumeration at the adapter boundary.
 - **Kingdom colours follow the house only while they share a banner**: since Realms keeps a ruling house's banner apart from its realm's ("House and realm banners" in [realms.md](realms.md)), `SyncKingdomColors` leaves the kingdom's colours alone while house banners are on (`HouseBanners.IsActive`) and `clan.ClanOriginalBanner` (the house's own) and `kingdom.Banner` are different objects. With Realms off, or a save it could not read, the realm follows its ruling house again. The check needs both: each XML kingdom builds its own banner object from its `banner_key`, so the object test alone stopped the sync for every one of them (#1297). Recolouring the house banner no longer recolours the realm while house banners are on.
@@ -113,6 +130,7 @@ All flags default to `true` **except `EnableLayerLimitTranspiler`, which default
 | `Hooks/Banner_TryGetBannerDataFromCode_Transpiler.cs` | Patch15 — IL transpiler skipping RemoveRange |
 | `Hooks/Clan_UpdateBannerColorsAccordingToKingdom_Patch.cs` | Patch24 — drift guard Prefix |
 | `Hooks/Clan_UpdateBannerColor_Patch.cs` | Patch24 — kingdom color sync Postfix |
+| `Hooks/Clan_PreAfterLoad_Patch.cs` | Patch24: the `Clan.PreAfterLoad` bracket the co-op client's load-repaint skip reads |
 | `Hooks/BannerEditorView_OnTick_Patch.cs` | Patch23 — BannerPaste Ctrl+C/V; `MethodInfo` cached at Initialize |
 | `Hooks/MobilePartyVisualHelper_GetHumanAgentPartyVisual_Patch.cs` + `BannerColorTranspiler.cs` | No category, manual transpiler on the v1.5.x map-figure builder: appends a resolver call after each faction-colour read, stack-neutral, vanilla value passes through when TAOM holds no colour |
 | `Hooks/AgentVisuals_Create_Patch.cs` | Manual patch — disables color randomness when clan colors set |
@@ -142,6 +160,7 @@ All flags default to `true` **except `EnableLayerLimitTranspiler`, which default
 | `BannerTripletOrderingTests.cs` | banner triplet ordering |
 | `Clan_UpdateBannerColorsAccordingToKingdom_PatchTests.cs` | null service, disabled, null instance guards |
 | `Clan_UpdateBannerColor_PatchTests.cs` | null service, disabled, null instance guards |
+| `Clan_PreAfterLoad_PatchTests.cs` | the load bracket through real Harmony: set inside, cleared after a throw, kept across a nested call and a stripped prefix |
 | `SPInventoryVM_ArmorColor_PatchTests.cs` | the inventory postfix's target, clan colours, the stealth guard both ways, colours not wanted (#973) |
 | `ClanColoredCharacterCodeTests.cs` | `Recolor` bakes colours into `Code`, keeps every other field, passes null, empty and already-coloured codes through; the party patch's `AppliesTo` and parameter names; the `CharacterCode` binding pin (#993) |
 | `OrderOfBattleHeroItemVMPatchTests.cs` | `TargetMethods()` resolves both `RefreshInformation` and the `(Agent)` constructor (#993) |
@@ -172,6 +191,8 @@ Open the Banner Editor in-game, copy another clan's banner code from the encyclo
 
 ## Changelog
 
+- 2026-11-17 (v2.0.40): a joining co-op client keeps the server's kingdom and clan banners; it skips the repaint
+  `Clan.PreAfterLoad` runs from the kingdom colours (`Clan_PreAfterLoad_Patch`, `ShouldSkipLoadRepaint`).
 - 2026-10-24: portrait colours now render on the five `GetCharacterCode` screens (party, clan parties, `CampaignUIHelper`, `SandBoxUIHelper`, order of battle) (#993). The patches used to assign `CharacterCode.Color1/Color2` after `CreateFrom` had built the `Code` string, which is the only field the portrait renderer reads, so the colours never showed. `ClanColoredCharacterCode.Recolor` rebuilds the code through the 8-argument `CreateFrom`; null, empty and already-coloured codes pass through unchanged. Every hero's portrait (AI lords too) now shows his clan colours, matching battlefield armour. The order-of-battle patch now also hooks the `OrderOfBattleHeroItemVM(Agent)` constructor, which `OrderOfBattleVM` uses for every hero and which never calls `RefreshInformation`. The party-screen patch reads the target's own `type` and `side` arguments: `PartyCharacterVM` sets `IsPrisoner` (:1103) only after the `Troop` assignment (:1099) has run `GetCharacterCode`, so the old prisoner check always read false. A gate test now fails when a hook assigns `Color1` or `Color2` on a built code.
 - 2026-10-23: the inventory doll keeps the clan colours on every refresh, not only a character switch, and keeps vanilla's stealth colour in stealth mode (#973). The postfix moved from `UpdateCurrentCharacterIfPossible` to `UpdateCharacterArmorColor`.
 - 2026-05-14 — #187 `BannerTripletOrderingTests` (5 tests) verifying all 3 banner-triplet patches reference `IBannerColorService` + SubModule Initialize; #172 F2 scoped the Patch24 `UpdateBannerColorsAccordingToKingdom` Prefix to the player clan only (NPC clans get vanilla sync); #172 F3 added a `TargetMethod()` null-guard with logging.

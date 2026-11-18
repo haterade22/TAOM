@@ -206,9 +206,9 @@ UI colour persistence, 3D battle and conversation. NOT player-only: the `Mission
 
 ## Patch24_BannerDriftGuard
 
-**Target:** `Clan.UpdateBannerColorsAccordingToKingdom`, `Clan.UpdateBannerColor`
+**Target:** `Clan.UpdateBannerColorsAccordingToKingdom`, `Clan.UpdateBannerColor`, `Clan.PreAfterLoad` (prefix and void finalizer, v2.0.40)
 
-Block vanilla banner color drift during War of the Ring
+Block vanilla banner color drift during War of the Ring. Since v2.0.40 the `UpdateBannerColorsAccordingToKingdom` prefix also returns false on a co-op client inside `Clan.PreAfterLoad`, whose `Clan_PreAfterLoad_Patch` bracket opens and closes through `__state`; the client keeps the server's banners from its join save. BannerlordCoop's `ClanBannerLoadRepairPatch` prefixes `Clan.PreAfterLoad` too; order does not matter. Applied in the GameInit batch, which runs at the end of `Campaign.OnInitialize`, before `Campaign.OnGameLoaded` reaches `ObjectManager.PreAfterLoad`. See `docs/features/banner-color-persistence.md`
 
 ## Patch25_LocalizationOverride
 

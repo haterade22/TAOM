@@ -286,7 +286,9 @@ public class CoopVetoClassificationTests
         ["Clan_UpdateBannerColorsAccordingToKingdom_Patch"] = new(CoopVeto.ReviewedSafe,
             "Cosmetic only (banner colours). Condition is __instance != Clan.PlayerClan, which IS " +
             "per-peer — each player has their own clan — but the divergence is confined to banner " +
-            "tint and is inherent to co-op having two player clans."),
+            "tint and is inherent to co-op having two player clans. Since v2.0.40 it also skips the " +
+            "repaint on a co-op client inside Clan.PreAfterLoad: that repaint mutates the Banner objects " +
+            "in place, locally, and skipping it keeps the client equal to the server's saved banners."),
         ["PartyScreenLogic_AddCommand_Patch"] = new(CoopVeto.ReviewedSafe,
             "Blocks or clamps an upgrade, or outside a co-op session a party-screen prisoner recruit " +
             "(#563), the local player cannot afford. Reads _taom_specialResources, which is TAOM campaign state, but it gates " +
