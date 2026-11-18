@@ -14,7 +14,7 @@ Two rules for C# that writes a property of a TaleWorlds-owned ViewModel after co
 sprites, PrefabExtensions and layer input are in `gui-ui.md`. A Harmony patch or hook that writes such a
 property follows both rules; no path rule reaches it, so read this file by hand there.
 
-## TaleWorlds VM property setters: verify no-op early returns (MANDATORY)
+## TaleWorlds VM property setters: verify no-op early returns
 
 Before writing `vm.X = value` on any TaleWorlds-owned ViewModel property (especially anything ending in `Index`, `SelectedItem`, `Selected*`, or `Current*`), decompile the setter to confirm whether it returns early when `value == _backingField`. Many setters are guarded:
 
@@ -42,7 +42,7 @@ If the setter is guarded, **mutating the underlying collection then re-setting t
 
 **When this rule applies:** any C# that mutates TaleWorlds VM properties after construction (filter patches, refresh hooks, mid-mission UI updates). Read the setter with `taom-src` first; the guard is invisible at the call site.
 
-## TaleWorlds VM property notification: prefer public setter over reflected field+notify (MANDATORY)
+## TaleWorlds VM property notification: prefer public setter over reflected field+notify
 
 When you need to REPLACE an entire VM property's value (not just mutate the existing object), and the field is private but a public property wraps it, **always use the public property setter**. Do NOT reflect on the backing field and then try to fire the change notification yourself.
 
