@@ -1312,6 +1312,12 @@ narrative stage.
   `taom_debug_2026-10-26_16-34-58.log` (lines 201, 394-411) and `taom_debug_2026-10-26_16-37-09.log` (lines 197,
   209, 226, 436-455).
 
+- **Repeat, 2026-11-18:** #1444's Patch163 and Patch165 (ported from Silas He's package) patched
+  `CampaignUIHelper` from `OnSubModuleLoad`; Mike's debugger caught the NRE in `GameTexts.FindText` while
+  `TryPatchCategory("Patch165_ArmyFoodDays")` ran. Two review lenses and the full suite missed it: no test ran the
+  category at its real apply point. Gate now: `EarlyPatchStaticInitializerGateTests` fails when `OnSubModuleLoad`
+  applies a category that patches a type in its `NeedsAGame` list.
+
 ### A finalizer cannot tell a vanilla NRE from a foreign one: guard the read with a prefix (Patch123, 2026-10-26)
 Patch123 first contained vanilla `HeroHelper.GetLastSeenText`'s missing-leader `NullReferenceException` with a
 finalizer that judged by exception type. Codex proved it swallowed an NRE from another owner's throwing prefix. The

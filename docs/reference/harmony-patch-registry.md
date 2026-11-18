@@ -2187,7 +2187,7 @@ The constructor sets `ForceInspection = true` (v1.5.7 :13), which hides the noti
 
 **Targets:** `CampaignUIHelper.GetCharacterTierData(CharacterObject, bool)` (class `Patch163_CampaignTierBadge`) and `CustomBattleTroopTypeVM.GetCharacterTierData(BasicCharacterObject, bool)` (class `Patch163_CustomBattleTierBadge`). Both Prefix, both `[ClientOnly]`.
 
-**Feature:** EngineBugGuards, `Main/Features/EngineBugGuards/Hooks/Patch163_EliteTierBadge.cs`, applied in `OnSubModuleLoad`. **Status:** ACTIVE (#1444, 2026-11-18). Ported from Silas He's `ExtendedTierDisplay.cs`.
+**Feature:** EngineBugGuards, `Main/Features/EngineBugGuards/Hooks/Patch163_EliteTierBadge.cs`, applied at the first `OnGameInitializationFinished`, once per process: patching `CampaignUIHelper` runs its static initializer, which reads `GameTexts` (`CampaignUIHelper.cs:210`); applied from `OnSubModuleLoad` it threw and left the type broken for the process (fixed 2026-11-18, gate `EarlyPatchStaticInitializerGateTests`). **Status:** ACTIVE (#1444, 2026-11-18). Ported from Silas He's `ExtendedTierDisplay.cs`.
 
 Native returns an empty badge above tier 7 (v1.5.7 :1380), and custom battle clamps the tier to 7 first. For tiers 8 to 10 the prefix returns native's tier 7 glyph with native's `str_party_troop_tier` hint holding the real tier; tiers 1 to 7 run native. Decisions in `EngineDisplayRules`.
 
@@ -2203,7 +2203,7 @@ Native sets `RULER` on the outer text, but `{RULER.NAME}` sits in the nested `RU
 
 **Target:** `CampaignUIHelper.GetArmyFoodTooltip(Army)` (Postfix; `[ClientOnly]`)
 
-**Feature:** EngineBugGuards, `Main/Features/EngineBugGuards/Hooks/Patch165_ArmyFoodDays.cs`, applied in `OnSubModuleLoad`. **Status:** ACTIVE (#1444, 2026-11-18). Ported from Silas He's `ArmyFoodTooltip.cs`.
+**Feature:** EngineBugGuards, `Main/Features/EngineBugGuards/Hooks/Patch165_ArmyFoodDays.cs`, applied at the first `OnGameInitializationFinished`, once per process: patching `CampaignUIHelper` runs its static initializer, which reads `GameTexts` (`CampaignUIHelper.cs:210`); applied from `OnSubModuleLoad` it threw and left the type broken for the process (fixed 2026-11-18, gate `EarlyPatchStaticInitializerGateTests`). **Status:** ACTIVE (#1444, 2026-11-18). Ported from Silas He's `ArmyFoodTooltip.cs`.
 
 Native averages `Food / -FoodChange` over the parties (:712), so a party with no food loss makes the last row huge. The postfix writes native's `GetDaysUntilNoFood` of the army's total food and total change into the last row's value. Label and format stay native.
 
