@@ -21,6 +21,7 @@ public class ArmourAcquisitionStateTests
         state.LadderReady["main_hero"] = 4;   // the shoulders rung is done
         state.LordEventLastDay["main_hero"] = 77;
         state.VisitUntilDay["town_G1"] = 120;
+        state.PendingFinds["guest_hero"] = 5;
         return state;
     }
 
@@ -34,6 +35,22 @@ public class ArmourAcquisitionStateTests
         Assert.AreEqual(4, restored.LadderReady["main_hero"]);
         Assert.AreEqual(77, restored.LordEventLastDay["main_hero"]);
         Assert.AreEqual(120, restored.VisitUntilDay["town_G1"]);
+        Assert.AreEqual(5, restored.PendingFinds["guest_hero"]);
+    }
+
+    [DataTestMethod]
+    [DataRow("0")]
+    [DataRow("-3")]
+    [DataRow("1000")]
+    public void Decode_AFindOutsideOneTo999Units_IsSkipped(string raw)
+    {
+        // A co-op player's lord's materials the server holds until that player's party is free: 1 to 999 units.
+        var state = new ArmourAcquisitionState();
+
+        var skipped = state.Decode(new Dictionary<string, string> { ["find|h"] = raw });
+
+        Assert.AreEqual(1, skipped);
+        Assert.IsFalse(state.PendingFinds.ContainsKey("h"));
     }
 
     [TestMethod]
@@ -112,7 +129,8 @@ public class ArmourAcquisitionStateTests
 
         state.Reset();
 
-        Assert.AreEqual(0, state.LadderClaimed.Count + state.LadderReady.Count + state.LordEventLastDay.Count + state.VisitUntilDay.Count);
+        Assert.AreEqual(0, state.LadderClaimed.Count + state.LadderReady.Count + state.LordEventLastDay.Count + state.VisitUntilDay.Count
+            + state.PendingFinds.Count);
     }
 
     [TestMethod]

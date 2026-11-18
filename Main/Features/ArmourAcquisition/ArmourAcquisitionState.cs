@@ -37,12 +37,23 @@ public sealed class ArmourAcquisitionState
     /// <summary>Settlement id to the day a visiting master armourer leaves (the visit is over on that day).</summary>
     public Dictionary<string, int> VisitUntilDay { get; } = new(StringComparer.Ordinal);
 
+    /// <summary>The most units of lord's materials the co-op server holds for one hero.</summary>
+    public const int MaxPendingFindUnits = 999;
+
+    /// <summary>
+    /// Lord's materials a co-op player's hero found after a battle won, held by the co-op server until that hero's party
+    /// is free and out of battle (<c>GuestLadderFindService</c>), 1 to <see cref="MaxPendingFindUnits"/> units per hero.
+    /// The material is the hero's culture's at the hand-over. A v2.0.40 build skips the kind on load.
+    /// </summary>
+    public Dictionary<string, int> PendingFinds { get; } = new(StringComparer.Ordinal);
+
     public void Reset()
     {
         LadderClaimed.Clear();
         LadderReady.Clear();
         LordEventLastDay.Clear();
         VisitUntilDay.Clear();
+        PendingFinds.Clear();
     }
 
     public Dictionary<string, string> Encode()
@@ -52,6 +63,7 @@ public sealed class ArmourAcquisitionState
         Write(data, "ready", LadderReady);
         Write(data, "event", LordEventLastDay);
         Write(data, "visit", VisitUntilDay);
+        Write(data, "find", PendingFinds);
         return data;
     }
 
@@ -73,7 +85,8 @@ public sealed class ArmourAcquisitionState
             if (!IsKnown(kind))
                 continue;
             if (!int.TryParse(pair.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value)
-                || (kind is "rung" or "ready" && (value < 0 || value > LadderSlotRules.AllBits)))
+                || (kind is "rung" or "ready" && (value < 0 || value > LadderSlotRules.AllBits))
+                || (kind == "find" && (value < 1 || value > MaxPendingFindUnits)))
             {
                 skipped++;
                 continue;
@@ -83,7 +96,7 @@ public sealed class ArmourAcquisitionState
         return skipped;
     }
 
-    private static bool IsKnown(string kind) => kind is "rung" or "ready" or "event" or "visit";
+    private static bool IsKnown(string kind) => kind is "rung" or "ready" or "event" or "visit" or "find";
 
     private Dictionary<string, int> Target(string kind) => kind switch
     {
@@ -91,6 +104,7 @@ public sealed class ArmourAcquisitionState
         "ready" => LadderReady,
         "event" => LordEventLastDay,
         "visit" => VisitUntilDay,
+        "find" => PendingFinds,
         _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, "not a saved dictionary kind"),
     };
 

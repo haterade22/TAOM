@@ -167,6 +167,7 @@ public class CoopSettingsProviderTests
 
         StringAssert.Contains(hint, "co-op server process reads");
         StringAssert.Contains(hint, "taom-server-settings.json (CoopGuestLadder)");
+        StringAssert.Contains(hint, "materials already found are still given");
         StringAssert.Contains(hint, "restart the server");
         Assert.IsFalse(hint.Contains("no restart"), hint);
     }

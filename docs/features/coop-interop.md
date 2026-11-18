@@ -424,6 +424,7 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `ArmouryMenuBehavior` | the armoury purchase, in `ArmouryPresenter` (`GuestTradeClient`, over `ShouldDeferToHost`) | Player action: with `TAOM.CoopCompat` a guest's upgrade, ladder hand-in and ladder claim run on the server (#1329, [coop-compat.md](coop-compat.md), [Lords' Ladder for co-op players](#lords-ladder-for-co-op-players)); without it the presenter refuses a guest before anything is bought. The menu option itself only opens it. |
 | `LordHarnessEventBehavior` | `OnPlayerBattleEnd` (`ShouldDeferToHost`, `IsDedicatedServer`) | The item grant and the relation change in the inquiry callbacks. |
 | `LordsLadderBehavior` | `OnPlayerBattleEnd`, `OnHourlyTick` (`!ShouldDeferToHost && !IsDedicatedServer`) | The item grant and the quest progress. `OnQuestCompleted` stays ungated: it writes this peer's TAOM save data keyed to the quest owner, and its only consumer, the armoury, shows a guest the server's ladder state instead, and no rung quest (it refuses a guest without `TAOM.CoopCompat`). |
+| `GuestLadderFindBehavior` | `OnMapEventEnded`, `OnHourlyTick`, in `GuestLadderFindService` (`IsSessionActive && IsAuthority`; the roll also needs the ladder switch) | Rolls lord's materials for co-op players' heroes on a winning side and gives them to the party later ([Lords' Ladder for co-op players](#lords-ladder-for-co-op-players)). Server work: the find is saved state and the hand-over writes a party's inventory. It does nothing in single player, where `LordsLadderBehavior` rolls the main hero. Pinned by `GuestLadderFindServiceTests`. |
 | `HostReviewCampaignBehavior` | the camp menu option, in `HostReviewService` (`IsSessionActive`) | Player action: the review mission does not start in a co-op session. |
 | `StoryDevMenuBehavior` | the dev menu behind `taom.story_open`, in `StoryDevMenuBehavior.Open` (`CoopSessionPolicy.IsSinglePlayerAuthority`) | Dev console entry (#1105, slice 1): refused in a co-op session. The mission it opens writes nothing to the campaign, so a single-player run changes no shared state. |
 | `StoryOfferBehavior` | the story offer, in `StoryOfferService.NextOffer` (`CoopSessionPolicy.IsSinglePlayerAuthority`) | War Chronicle story offer (#1105, slice 4): no offer in a co-op session or on a dedicated server, so no peer opens the mission or applies its result; the Hornburg window then ends by the map or its fate on the host. |
@@ -702,15 +703,32 @@ claim list is the view's choices, named from the guest's own item data. The outc
 message line; the server's sync of the party inventory shows the change. A local player's window is
 unchanged (`LadderPresenter`).
 
+**Finds.** On the server of a live session `GuestLadderFindBehavior` hands each `MapEventEnded` to
+`GuestLadderFindService`. The winners come from the special resources' `SnapshotVictory`, which lists
+the winning side's leaders only on the authority of a live session, once per hero, with the player
+control from Coop's registry. For each co-op player's hero (`PlayerControl.Player`, not the local main
+hero) the service rolls TAOM's own `LordsLadderService.RollMaterialDrop` with no kills: the kills are
+counted on the player's PC, and the server takes no count from a client, so a co-op player finds
+materials at the base chance. `RollMaterialDrop` takes the hero and the culture as arguments and reads
+no player adapter, so the registered service serves every hero. The local main hero is rolled only by
+`LordsLadderBehavior`, so no hero is rolled twice for one battle. A find is saved in
+`ArmourAcquisitionState.PendingFinds` (`find|<heroId>`, 1 to 999 units; a v2.0.40 build skips the kind on
+load) and given on a later hourly tick, once the hero leads a free party out of battle, as the hero's
+culture's lord's material. A hero the server no longer has, a dead hero, a culture with no material and a
+material that cannot be added drop the find with a warning; a hand-over that throws keeps the find
+for a later hour and warns once. With the switch off nothing is rolled, and what was
+already found is still given. Known limit: a party that retreated from a won battle may still roll,
+since the winning side's list keeps it.
+
 **Configuration.** TAOM's settings, Co-op, "Lords' Ladder for co-op players" (`CoopGuestLadder`,
 default on), read through `IArmourAcquisitionSettingsProvider.CoopGuestLadderEnabled` in the co-op
-server process for each armoury request, together with Armour Acquisition's own gate
+server process for each armoury request and each battle's end, together with Armour Acquisition's own gate
 (`GuestTradeShops.LadderOpen`). A dedicated server takes it from `taom-server-settings.json`, which
 `ServerSettingsSource` reads once per process, so a change there needs a server restart
 ([server settings](server-settings.md)). It is in the settings fingerprint: it changes what the server
 does to a player's party.
 
-**Tests.** `GuestLadderHostTests` (view, each outcome, the switch, bad requests, the caps), `GuestLadderRowsTests`,
+**Tests.** `GuestLadderHostTests` (view, each outcome, the switch, bad requests, the caps), `GuestLadderRowsTests`, `GuestLadderFindServiceTests`, `ArmourAcquisitionStateTests`,
 `ArmourAcquisitionSettingsProviderTests`, `CoopSettingsProviderTests` (the group and the hint).
 
 ## Mission behaviors (#967 C7)

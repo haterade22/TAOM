@@ -41,12 +41,13 @@ public class GuestTradeWiringTests
             typeof(IEliteEmissarySettingsProvider), typeof(ISpecialResourceService), typeof(ISpecialResourceConfigProvider),
             typeof(ISpecialResourceSettingsProvider), typeof(IOutcomeLog), typeof(IArachnophobiaService), typeof(IArmourGateService),
             typeof(IArmourAcquisitionConfigProvider), typeof(IArmourAcquisitionSettingsProvider), typeof(IArmouryTownAdapter),
-            typeof(ISpecialResourceSpender), typeof(ICultureMarketplaceConfigProvider),
+            typeof(ISpecialResourceSpender), typeof(ICultureMarketplaceConfigProvider), typeof(IArmouryPlayerAdapter),
         })
             container.RegisterInstance(service, Substitute.For(new[] { service }, new object[0]));
         container.Register<ArmourAcquisitionState>(Reuse.Singleton);
         container.Register<VisitingArmourerService>(Reuse.Singleton);
         container.Register<ArmouryLevelService>(Reuse.Singleton);
+        container.Register<LordsLadderService>(Reuse.Singleton);
 
         new GuestTradeModule().RegisterServices(container);
 
@@ -54,5 +55,6 @@ public class GuestTradeWiringTests
         Assert.AreSame(container.Resolve<GuestTradeHost>(), container.Resolve<GuestTradeHost>());
         Assert.IsInstanceOfType(container.Resolve<IGuestTradeShops>(), typeof(GuestTradeShops));
         Assert.IsInstanceOfType(container.Resolve<IGuestTradeHeroAdapter>(), typeof(GuestTradeHeroAdapter));
+        Assert.AreSame(container.Resolve<GuestLadderFindService>(), container.Resolve<GuestLadderFindService>());
     }
 }
