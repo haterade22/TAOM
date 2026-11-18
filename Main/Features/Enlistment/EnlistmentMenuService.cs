@@ -109,7 +109,8 @@ public class EnlistmentMenuService : IEnlistmentMenuService
         if (string.IsNullOrEmpty(requestedMenuId) || requestedMenuId == ServiceWaitMenuId)
             return false;
 
-        if (_store.Record.State != EnlistmentState.EnlistedAttached)
+        var state = _store.Record.State;
+        if (state != EnlistmentState.EnlistedAttached && !IsGraceInsideSettlementWithoutEncounter(state))
             return false;
 
         // NEVER redirect a battle menu while the player is genuinely IN a map event.
@@ -169,4 +170,23 @@ public class EnlistmentMenuService : IEnlistmentMenuService
     /// </summary>
     private static bool IsSettlementMenu(string menuId) =>
         menuId == "town" || menuId == "castle" || menuId == "village";
+
+    /// <summary>
+    /// #511. The commander-lost grace window keeps the mask while the player stands inside a
+    /// settlement with no PlayerEncounter. The follow path put him there with EnterSettlementAction
+    /// alone, and the approach menus Campaign.Tick pushes for that shape (town_outside,
+    /// castle_outside) read PlayerEncounter.EncounterSettlement at init and throw. A grace player
+    /// who enters a town himself arrives WITH an encounter (StartSettlementEncounter starts it
+    /// before PlayerEncounter.Init enters the settlement and opens town_outside), so his visit stays
+    /// vanilla. Outside a settlement the grace player's menus flow as before. The state check comes
+    /// first, so no other state pays for the presence read.
+    /// </summary>
+    private bool IsGraceInsideSettlementWithoutEncounter(EnlistmentState state)
+    {
+        if (state != EnlistmentState.CommanderUnavailable)
+            return false;
+
+        var presence = _attachment.GetPresenceFlags();
+        return presence.IsInSettlement && !presence.HasPlayerEncounter;
+    }
 }

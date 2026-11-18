@@ -94,7 +94,8 @@ false (`GameMenu.GetMenuOptionConditionsHold`; the camp-menu incident of #567). 
 runs during load (Enable Enlistment turned off before loading, or the identity guard) fires from
 `OnGameLoaded`, before `MapState` exists, so `DischargeService.ExitServiceMenuIfOpen` sees no
 menu context and the persisted service-menu id re-entered with zero options. The Patch66 redirects
-do not repair it: `TryRedirectMenu` returns false for the service id and for any non-attached state.
+do not repair it: `TryRedirectMenu` returns false for the service id, and in every state but
+`EnlistedAttached` and the grace window inside a settlement with no encounter (#511).
 
 The menu condition is now `args => true` and each option gates itself on
 `IEnlistmentPlayerActionService.IsServing`. While nobody serves, the body reads "Your service has
@@ -117,8 +118,9 @@ an exit is the safer side. The Patch66 `EnterMenuMode` postfix is untouched.
 - Wait menu `taom_enlistment_service_wait` (`EnlistmentMenuBehavior` +
   `EnlistmentWaitMenuPresenter`; text built once per menu init; the wait-menu tick feeds the
   pump (whose cheap tier syncs the parked position) only while campaign time is stopped; the campaign tick
-  feeds it otherwise). Menu-guard policy in `EnlistmentMenuService`: redirect ONLY while
-  `EnlistedAttached`, from a config-driven id list (11 defaults incl. the 1.4.x naval
+  feeds it otherwise). Menu-guard policy in `EnlistmentMenuService`: redirect while
+  `EnlistedAttached`, and in `CommanderUnavailable` while the player is inside a settlement with
+  no `PlayerEncounter` (#511), from a config-driven id list (11 defaults incl. the 1.4.x naval
   `port_menu`/`naval_town_outside`), fail-open with a once-per-id diagnostic funnel.
 - Battle: `EnlistmentBattleBehavior` (MapEventStarted/Ended boundary) →
   `ServiceBattleService`. Ordering contract: state flips to `EnlistedBattle`
@@ -2101,32 +2103,51 @@ still sees the party until he unpauses). A revoke from a state change inside the
 (`Finish(true)` walks him out) and a revoke by a battle are left as before. This is a third
 re-attach trigger beside the two edges above; it fires only when a pass ends.
 
-### Known gap: the mask still disarms outside `EnlistedAttached` (#511)
+### The mask stays on in the grace window inside a settlement with no encounter (#511, 2026-11-18)
 
-The invariant above is enforced at the two sites that hand over a vanilla menu. It does NOT cover
-the state the follow path leaves behind. `TryRedirectMenu` and `EnsureServiceMenu` are both gated on
-`EnlistedAttached` alone, so in `CommanderUnavailable` the mask is off while the player is inside a
-settlement with no encounter, and `Campaign.Tick` force-pushes the generic state menu on every tick
-the player is not at one. For an encounter-less party inside a fortification that resolves to
-`town_outside`.
+The follow path places the player inside the commander's settlement with
+`EnterSettlementAction.ApplyForParty` alone, so there is no `PlayerEncounter`. When the commander is
+captured or loses his party during that stop, `ReconcileBlocked` moves the state to
+`CommanderUnavailable` and calls `RestorePresence()`, which leaves the player inside, and the grace
+path never walks him out. Until this fix `TryRedirectMenu` returned false in every state but
+`EnlistedAttached`, so the mask was off for the whole grace window. `Campaign.Tick` pushes the
+generic state menu on every tick the map is not at a menu, and for an encounter-less party inside a
+fortification that is `town_outside` or `castle_outside`
+(`DefaultEncounterGameMenuModel.GetGenericStateMenu`, v1.5.7). Both menus open with
+`args.MenuTitle = PlayerEncounter.EncounterSettlement.Name`, and `EncounterSettlement` is
+`Current?.EncounterSettlementAux`, so with no encounter the init throws inside `GameMenu.RunOnInit`:
+a CTD of the #510 class, not a soft-lock.
 
-**Corrected 2026-08-24, after the Codex round.** This section first claimed the failure was a
-soft-lock, on the grounds that `town_outside`'s Leave option calls `PlayerEncounter.Finish()`, which
-no-ops when `Current` is null. The player never reaches that option:
-`game_menu_town_outside_on_init` opens with `args.MenuTitle = PlayerEncounter.EncounterSettlement.Name`
-and `EncounterSettlement` is `Current?.EncounterSettlementAux`, so the menu NREs at init inside
-`GameMenu.RunOnInit`, which has no try/catch. The hazard is a CTD of the #510 class, not a soft-lock.
+`TryRedirectMenu` now also redirects in `CommanderUnavailable` while the player is inside a
+settlement with no `PlayerEncounter` (`GetPresenceFlags()`: `IsInSettlement` and not
+`HasPlayerEncounter`). That is the handling an `EnlistedAttached` player in the same encounter-less
+shape already had, and the battle and shore-leave exceptions still apply first. Every vanilla menu
+change reaches the redirect: `GameMenu.ActivateGameMenu` calls `GameMenuManager.SetNextMenu` or
+`GameMenu.SwitchToMenu`, and `MenuContext.SwitchToMenu` calls `SetNextMenu` (v1.5.7). Pinned by the
+`TryRedirectMenu_CommanderUnavailable*` tests in `EnlistmentMenuServiceTests`.
 
-**And the chain is harder to reach than first written.** `Campaign.Tick`'s push is gated on
-`MapState.AtMenu == false`, and nothing found in the `CommanderUnavailable` path closes the TAOM wait
-menu: every service option gates on `IsServing` (true across that state, as `IsEnlisted` is) and is
-registered `isLeave: false` so there is no Escape slot; the only isLeave option is hidden while anyone serves; and `EnsureServiceMenu`'s gate only stops the menu being
-RE-asserted, it never tears one down. So the smoke that would settle #511 is not "sit in a town with
-a dead commander", it is "find something that closes the wait menu in that state", plus the separate
-case of a vanilla `SwitchToMenu` swapping it, which needs no `AtMenu == false` at all.
+The encounter term keeps the grace player's own town visits vanilla. In grace he can be loose on the
+map (a shore-leave pass is revoked on the state change and walks him out), and he may then enter a
+town or castle himself. `EncounterManager.StartSettlementEncounter` starts a `PlayerEncounter`
+first, and `PlayerEncounter.Init` enters the settlement before it activates `town_outside` or
+`castle_outside` (v1.5.7), so that push arrives inside a settlement with an encounter. Those menus
+are safe. Masking them would hold him in the wait menu, with a live settlement encounter and only
+"Ask to be released" as an exit, for the rest of the grace window. Outside a settlement the grace
+player's menus flow as before.
 
-Tracked in #511 rather than fixed here because both candidate fixes need an in-game smoke, and the
-first collides with the battle path's R3 handling.
+Rejected: walking the player out of the settlement when the state changes. He would wait out the
+grace window visible on the open map instead of inside the walls, a save already in the shape would
+not be repaired, and `LeaveSettlementAction` fires the settlement-left events other listeners act
+on. Not widened to `IsEnlisted`: `EnlistedBattle` needs the battle menus, captivity menus are
+vanilla's, and a discharge sets `NotEnlisted` and builds a settlement encounter before it opens a
+settlement menu. `EnsureServiceMenu` keeps its `EnlistedAttached` gate: the redirect alone catches
+every push.
+
+Still open: inside a VILLAGE, `GetGenericStateMenu` returns null for an encounter-less party, so if
+the wait menu ever closed there the player would stand in the village with no menu and could not
+move (`MobileParty.DoUpdatePosition` returns while `CurrentSettlement` is set). Nothing found closes
+the wait menu in the grace window, so it is not fixed here. The root fix, a settlement encounter on
+the follow path, still collides with the battle path's R3 handling.
 
 ## A battle ending on the far side of the map tore the player out of his own (#551, 2026-09-06)
 

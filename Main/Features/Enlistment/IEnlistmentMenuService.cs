@@ -2,8 +2,11 @@ namespace TAOM.Features.Enlistment;
 
 /// <summary>
 /// The single menu-guard authority. Consulted by the Patch66 SetNextMenu prefix on every
-/// menu transition (hot path — decisions are a state read + one HashSet probe).
-/// Policy: redirect ONLY while EnlistedAttached. EnlistedBattle deliberately lets battle
+/// menu transition (hot path: decisions are a state read + one HashSet probe, plus a presence
+/// read only for a battle menu or in the grace window).
+/// Policy: redirect while EnlistedAttached, and while CommanderUnavailable with the player inside
+/// a settlement with no PlayerEncounter (#511: the follow path left him there without one, and the
+/// approach menus the engine pushes for that shape throw at init). EnlistedBattle deliberately lets battle
 /// menus through — the battle service transitions state BEFORE pushing encounter menus,
 /// and that ordering contract is what keeps commander battles joinable. The one member that acts
 /// in EnlistedBattle is <see cref="ShouldBlockBattleExit"/>, which hides vanilla exits from the

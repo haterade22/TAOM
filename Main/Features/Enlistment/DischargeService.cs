@@ -248,7 +248,8 @@ public class DischargeService : IDischargeService
             // d7d9f7d3). The tavern, arena, keep and town-centre walk go the same way through
             // LocationEncounter.
             //
-            // The redirect list cannot cover this: it is gated on EnlistedAttached, and step 8 has
+            // The redirect list cannot cover this: it is gated on EnlistedAttached (and on
+            // CommanderUnavailable inside a settlement with no encounter, #511), and step 8 has
             // already set the record to NotEnlisted by the time we get here. That is the whole bug.
             var encounterReady = _encounter.EnsureSettlementEncounter(settlementId);
             if (encounterReady && _gameMenu.EnsureMenuOpen(menuId))

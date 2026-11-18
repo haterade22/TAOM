@@ -36,7 +36,9 @@ public sealed class EnlistmentCoreConfig
     public double StaleBattleLatchDays { get; set; } = 1.0 / 24.0;
 
     /// <summary>
-    /// Native menu ids rewritten to the service wait menu while EnlistedAttached. Seeded
+    /// Native menu ids rewritten to the service wait menu while EnlistedAttached, and in
+    /// CommanderUnavailable while the player is inside a settlement with no PlayerEncounter
+    /// (#511). Seeded
     /// from the v1.4.7 EncounterGameMenuBehavior sweep (incl. the 1.4.x naval ids);
     /// fail-open — unknown menus flow through and are logged once per id instead.
     /// </summary>
