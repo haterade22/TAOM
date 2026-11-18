@@ -109,7 +109,7 @@ Kingdoms are resolved by StringId with `Kingdom.All.FirstOrDefault(k => k.String
 | `player.minimumPlayerEventsForVictory` | 5 | player events needed before either side can win |
 | `strengthRatioForMaxMomentum` | 4.0 | how many × stronger a side must be for the max daily award |
 
-**MCM** ("War of the Ring/Momentum" group, `TaomSettings`): `MomentumEnabled`, `ShowWarOfTheRingMapMeter`, **`MomentumVictoryEnabled`** (default off = endless), `MomentumVictoryThreshold` (100–2000), `MomentumParticipationMultiplier` (1.0–3.0), `MomentumRequirePlayerForVictory`, `MomentumMinPlayerEvents` (0–20). MCM values win over JSON; both surfaces clamp to the same ranges.
+**MCM** ("War of the Ring/Momentum" group, `TaomSettings`): `MomentumEnabled`, `ShowWarOfTheRingMapMeter`, **`MomentumVictoryEnabled`** (default off = endless), `MomentumVictoryThreshold` (100 to 2000), `MomentumParticipationMultiplier` (1.0 to 3.0), `MomentumRequirePlayerForVictory`, `MomentumMinPlayerEvents` (0 to 20). MCM values win over JSON; both surfaces clamp to the same ranges. `MomentumVictoryEnabled` is the default a new campaign gets for "War can be won"; a campaign that pinned its own choice follows that, then MCM, then JSON ([campaign-start-options.md](campaign-start-options.md)).
 
 Defaults equal LOTRAOM's shipped `momentum_config.xml`, so the out-of-box balance matches the donor (minus the 100× scale bug).
 

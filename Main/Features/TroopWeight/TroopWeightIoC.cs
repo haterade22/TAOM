@@ -9,6 +9,7 @@ public static class TroopWeightIoC
     public static void RegisterTroopWeightFeature(IContainer container)
     {
         container.Register<ITroopWeightXmlLoader, TroopWeightXmlLoader>(Reuse.Singleton);
+        container.Register<ITroopWeightSettingsProvider, TroopWeightSettingsProvider>(Reuse.Singleton);
         container.Register<ITroopWeightService, TroopWeightService>(Reuse.Singleton);
 
         // TEMPORARY: special-currency troop-count undercount diagnostic (separate investigation).

@@ -9,6 +9,10 @@ public interface IWarOfTheRingService
     // Whether the War of the Ring is switched on: MCM when available, else the JSON. Phase-independent
     // (IsWarOfTheRingActive is FullWar only).
     bool IsEnabled { get; }
+    // What a new campaign gets before it pins its own choice: MCM when available, else the JSON. No Test Mode,
+    // no campaign pin. The start-options screen, the pin and the mismatch check read these two.
+    bool NewCampaignEnabled { get; }
+    (int Phase1Day, int Phase2Day) NewCampaignPhaseDays { get; }
     // WotR Momentum #327 — None until EndWar is called.
     WarOutcome Outcome { get; }
     bool ShouldBlockPeace(string kingdomAId, string kingdomBId);

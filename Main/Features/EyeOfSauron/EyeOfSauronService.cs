@@ -242,7 +242,7 @@ public sealed class EyeOfSauronService : IEyeOfSauronHook
     public string TryStartHunt(bool ignoreScoreAndCooldown, bool dryRun = false)
     {
         if (IsHunting) return $"A hunt is already running ({_hunterHeroId}, party {_hunterPartyId}).";
-        if (!_settings.Enabled) return "Refused: the hunt is switched off in MCM.";
+        if (!_settings.Enabled) return "Refused: the hunt is switched off for this campaign or in MCM.";
         if (!IsSinglePlayer)
             return "Refused: single-player only, and a co-op session, a co-op mod TAOM cannot probe, or a dedicated server is live.";
 

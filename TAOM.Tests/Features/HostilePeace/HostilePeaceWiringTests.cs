@@ -62,6 +62,7 @@ public class HostilePeaceWiringTests
         container.RegisterInstance(Substitute.For<IPathService>());
         container.RegisterInstance(Substitute.For<IDiplomacyService>());
         container.RegisterInstance(Substitute.For<TAOM.Features.Execution.IAlignmentService>());
+        container.RegisterInstance(Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>());
 
         Assert.IsNotNull(container.Resolve<IHostilePeaceSettingsProvider>());
         Assert.AreSame(container.Resolve<HostilePeaceService>(), container.Resolve<HostilePeaceService>());
@@ -227,7 +228,7 @@ public class HostilePeaceWiringTests
             AllowPlayerAlliancesWithAnyone = true,
         };
 
-        var provider = new HostilePeaceSettingsProvider(config, settings);
+        var provider = new HostilePeaceSettingsProvider(config, NSubstitute.Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>(), settings);
 
         Assert.IsFalse(provider.BlockCaravanTrade);
         Assert.IsTrue(provider.BlockTradeAgreements);

@@ -13,6 +13,8 @@ Free and Dark Power realms stay at peace until the War of the Ring, but they do 
 | C, the player's access | The player meets their towns and castles as at war: a town only in disguise, a castle not at all (the gate and "Request entry to the castle" both), and no trade, recruits or rest in their villages | `TaomSettlementAccessModel`, `ProvenderWorldAdapter.RefusesPlayer` for the Provender-master |
 | D, the player's alliances | A kingdom the player rules does not ally across the Free/Evil line (any phase, peace or war) | `PlayerAllianceGate`, asked by `TaomAllianceModel`, `TaomKingdomDecisionPermissionModel` and `PlayerAllianceProposalBehavior` |
 
+Block D's switch (`AllowPlayerAlliancesWithAnyone`) follows the campaign's Alignment rules preset first (Strict or Relaxed pin it; Standard follows MCM), through `IHostilePeaceSettingsProvider`; see [campaign-start-options.md](campaign-start-options.md).
+
 No war is declared and no phase is read. Each block has one switch in MCM ("World/Hostile Peace") and in
 `ModuleData/diplomacy/hostile_peace.json`; MCM wins when it is loaded. A, B and C are blocks that default on; D's switch is
 "Allow Player Alliances With Anyone" (`allowPlayerAlliancesWithAnyone`), default off, which keeps the block on.

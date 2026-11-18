@@ -5,7 +5,7 @@ Bannerlord v1.5.2 on 2026-09-14. In-game check 2026-09-15 on v1.5.3 found the me
 file (#604, fixed the same day, see section 3); the picker and the Escape-menu summary smoke are owed again.
 **Code:** [`Main/Features/AdvancedStartOptions/TaomStartOptionsProvider.cs`](../../Main/Features/AdvancedStartOptions/TaomStartOptionsProvider.cs) ·
 [`Main/Features/LocalizationOverride/GlobalStringsOverrides.cs`](../../Main/Features/LocalizationOverride/GlobalStringsOverrides.cs)
-**Tests:** `TaomStartOptionsProviderTests` (the four war scenarios are removed only while the War of the Ring is enabled, and each id is a vanilla scenario; the kingdom list matches `taom_spkingdoms.xml`; the provider binds the
+**Tests:** `TaomStartOptionsProviderTests` (the scenario list is War of the Ring then Sandbox, each hidden id is a vanilla scenario, the start-date and slider conditions in both polarities; the kingdom list matches `taom_spkingdoms.xml`; the provider binds the
 way `AdvancedStartOptionsManager.Initialize` binds it, on the installed engine; each string family sits in the
 file its reader loads) · `GlobalStringsOverridesTests` (the append-first-wins fact and the replace, on the installed engine).
 **Related:** [`rca-v1.5.2-compile-2026-09-14.md`](../reviews/rca-v1.5.2-compile-2026-09-14.md) · the v1.5.2 entries in `CHANGELOG.md` · #604
@@ -57,21 +57,24 @@ Two independent reasons, either sufficient:
   deactivation and the redirect, leaving the player ruling an empty, fief-less shell beside the real
   merged kingdom.
 
-### 1b. The war scenarios are hidden while the War of the Ring is on
+### 1b. The scenario list is War of the Ring or Sandbox (2026-11-18)
 
-`LastStand`, `twofactionwar`, `InvasionId` and `alternativecalradia` declare wars when the campaign
-starts. With the War of the Ring enabled, the phase rule decides when wars begin, and a start war would
-be ended by `EndWarsForbiddenByPhase` on the first daily tick, so the provider removes the four
-scenarios from the list (`TaomStartOptionsProvider.WarScenarioIds`, the ids read from
-`SandBoxStartOptionsProvider`). `WarOfTheRingEnabled` reads `IWarOfTheRingService.IsEnabled`, the same
-MCM-or-JSON answer the diplomacy rule uses; `IoC.Configure` has already run when the menu opens. With
-the War of the Ring off, the four scenarios stay. See [war-of-the-ring.md](war-of-the-ring.md) for the
-phase rule.
+`LastStand`, `twofactionwar`, `InvasionId` and `alternativecalradia` declare wars when the campaign starts, which the
+War of the Ring's phase rule would end on the first daily tick. Owner decision 2026-11-18: they stay hidden, and
+`CampaignStartOptionsScreen` replaces the `Scenario` list with `taom_war_of_the_ring` (first, and the default when MCM or
+the JSON has the war on) and vanilla's `none`, relabelled "Sandbox (no scripted war)" through `GlobalStringsOverrides`.
+`CampaignStartOptionsScreen.HiddenScenarioIds` lists what is dropped (the four, United Empire and NavalDLC's
+`nordinvasion`); the items are copied, so another mod's scenario survives. The old `RemoveWarScenarios` and its
+`WarOfTheRingEnabled` seam are gone: the scenario choice now decides the war for that campaign. The start date, the two
+custom sliders and the "Middle-earth rules" category (Troop Weight, War can be won, Eye of Sauron hunters, Large AI armies, Alignment rules) are added beside it, and what the
+player picks is pinned into the save. All of that is in [campaign-start-options.md](campaign-start-options.md). See
+[war-of-the-ring.md](war-of-the-ring.md) for the phase rule.
 
 ### 2. TAOM's twenty-two kingdoms are added to every faction picker
 
-`KingdomId`, `LastStandKingdomId`, `InvasionScenarioFactionId`, `TwoFactionWarFaction1Id`,
-`TwoFactionWarFaction2Id`.
+`KingdomId`, the one faction picker still reachable. `LastStandKingdomId`, `InvasionScenarioFactionId`,
+`TwoFactionWarFaction1Id` and `TwoFactionWarFaction2Id` belong to the scenarios hidden since 2026-11-18, and
+`TaomStartOptionsProvider` no longer touches them.
 
 Small kingdoms are added too. `GiveStartingFiefs` degrades rather than throwing: it falls through to
 `FindFallbackStartingTown`, which guards every step with `if (list.Count > 0)`. **Lindon** and
@@ -80,12 +83,12 @@ receiving a castle. That is a gameplay quirk, not a crash.
 
 ### 3. The menu is re-localised, in two files, and one of them needs a runtime re-apply
 
-65 rows, two id families, two readers, two files. Which file a row sits in is the whole of #604.
+Two id families, two readers, two files (count the rows with the greps in the table). Which file a row sits in is the whole of #604.
 
 | Family | Reader | Manager it reads | File |
 |---|---|---|---|
-| `str_campaign_starting_options_item_name.<id>` (the list entry, and the `{Token}` interpolation in scenario text via `AdvancedStartOptions.SetTextVariables`), `_description.<option>`, `_item_description.<item>` | the main-menu screen: `AdvancedStartOptions.cs:62/73`, `AdvancedStartOption.cs:77`, `ListAdvancedStartOption.cs:64/70`, the category and locked-reason lookups in `SandBox.ViewModelCollection` | `Module.CurrentModule.GlobalTextManager` | **`global_strings.xml`** (34 rows) |
-| `str_advanced_start_value_name.<id>` (the in-game Escape menu's starting-options summary, `AdvancedStartData.GetDisplayName`) | `GameTexts.FindText` | `Game.GameTextManager` | **`taom_module_strings.xml`** (31 rows) |
+| `str_campaign_starting_options_item_name.<id>` (the list entry, and the `{Token}` interpolation in scenario text via `AdvancedStartOptions.SetTextVariables`), `_description.<option>`, `_item_description.<item>` | the main-menu screen: `AdvancedStartOptions.cs:62/73`, `AdvancedStartOption.cs:77`, `ListAdvancedStartOption.cs:64/70`, the category and locked-reason lookups in `SandBox.ViewModelCollection` | `Module.CurrentModule.GlobalTextManager` | **`global_strings.xml`** (`grep -c "str_campaign_starting_options" Main/_Module/ModuleData/global_strings.xml`) |
+| `str_advanced_start_value_name.<id>` (the in-game Escape menu's starting-options summary, `AdvancedStartData.GetDisplayName`; the engine reads it only for the `Scenario` list and the five vanilla scenario parameters) | `GameTexts.FindText` | `Game.GameTextManager` | **`taom_module_strings.xml`** (`grep -c "str_advanced_start_value_name" Main/_Module/ModuleData/taom_module_strings.xml`) |
 
 **The two managers are different objects with different loaders.** `Module.CurrentModule.GlobalTextManager`
 (Module.cs:110) is filled once by `GameTextManager.LoadDefaultTexts` (Module.cs:278, before any submodule
@@ -112,7 +115,7 @@ TaleWorlds ever makes `AddVariationWithId` replace, the pin fails and the class 
 delete rather than unexplained belt-and-braces.
 
 **The per-Game manager needs none of this.** Its `GameText` XMLs go through `MBObjectManager.MergeElements`,
-keyed on `@id` per `GameText.xsd`, and `MergeElementAttributes` overwrites `text`, so the 31 value-name
+keyed on `@id` per `GameText.xsd`, and `MergeElementAttributes` overwrites `text`, so the value-name
 rows override vanilla's by the ordinary merge and stay where they were. That is also why an XSLT is the
 right tool for in-game string overrides (`module_strings.xslt`) and the wrong one here.
 
@@ -182,13 +185,14 @@ block, so the pairing is refused rather than left to chance.
 
 ## Owed
 
-- In-game (owed again after #604): open the ASO screen, pick Last Stand, and confirm the Last Standing
-  Faction list reads Dunland / Gondor / Mordor / Dale / Harad / Rohan / Khand / Rhun then Erebor through
-  Goblins of Blue Craig, then Arthedain, Cardolan, Rhudaur, Ered Luin, Anduin Vale, Angáladh, Dorwinion and South Rhovanion, with no ERROR row, the description names the chosen kingdom, the Invasion and
-  Randomized texts say Middle-earth, and United Empire is absent. With the War of the Ring on, Last Stand,
-  2 Faction War, Invasion and the alternative Calradia scenario are absent too, so pick Last Stand only
-  with the War of the Ring switched off. Then start that campaign and open the
-  Escape menu's starting-options summary to confirm the in-game value names still resolve.
+- In-game (owed again after #604): open the ASO screen, pick the King start, and confirm the Kingdom list reads
+  Dunland / Gondor / Mordor / Dale / Harad / Rohan / Khand / Rhun then Erebor through Goblins of Blue Craig, then
+  Arthedain, Cardolan, Rhudaur, Ered Luin, Anduin Vale, Angáladh, Dorwinion and South Rhovanion, with no ERROR row, and
+  the scenario list reads War of the Ring and Sandbox only. Last Stand, 2 Faction War, Invasion, the alternative
+  Calradia scenario and United Empire are hidden since 2026-11-18, so the other four faction pickers cannot be reached.
+  Then start a campaign and open the Escape menu's starting-options summary: the Scenario line must read "War of the
+  Ring" or "Sandbox (no scripted war)" (the `taom_war_of_the_ring` and `none` rows). The kingdom value names are not
+  checked there: the engine reads value names only for the Scenario and the five vanilla scenario parameters. The checks for the per-campaign options are in [campaign-start-options.md](campaign-start-options.md).
 - A translator run for the seven kingdom names still in English: Cardolan, Rhudaur, Ered Luin, Anduin Vale, Angáladh, Dorwinion and South Rhovanion (they exist in all 12 languages as English fallback).
 - Decide whether Lindon and Goblin-town should be excluded from the Vassal start rather than falling
   back, once the fallback has been seen in play.

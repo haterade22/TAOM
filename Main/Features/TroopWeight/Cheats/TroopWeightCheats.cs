@@ -40,7 +40,7 @@ public static class TroopWeightCheats
 
             // Same read as TroopWeightService's own gate, so the report can never disagree with the
             // service about whether the feature is on.
-            var weightEnabled = TaomSettings.Instance?.EnableTroopWeight ?? true;
+            var weightEnabled = service.IsEnabled;
 
             return FormatPartySize(
                 party.Name?.ToString() ?? "Main party",

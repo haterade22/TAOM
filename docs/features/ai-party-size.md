@@ -5,7 +5,7 @@
 An opt-in scaling layer, **neutral by default**, that when raised through MCM lets AI lord parties
 hold more of the roster their party template spawns them with instead of being trimmed back to the
 vanilla party size limit within a day. One service consumed by three existing GameModels, seven MCM
-knobs, no new Harmony patch.
+knobs, no new Harmony patch. The master switch is read through `IAiPartyScalingSettingsProvider.Enabled`: a campaign's own "Large AI armies" start choice first, then MCM `EnableAiPartyScaling` (the new-campaign default); see [campaign-start-options.md](campaign-start-options.md).
 
 **An unconfigured install matches vanilla exactly.** Spawn and cap are independent in the engine:
 `FindAppropriateInitialRosterForMobileParty` fills each stack to `min + (max - min) * r` and never

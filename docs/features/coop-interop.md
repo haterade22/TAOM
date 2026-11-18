@@ -469,6 +469,8 @@ entry can never pay out. The authority half is pinned by two tests in `CoopAutho
 
 `RealmBordersCampaignBehavior` (the realm border lines and the crossing notice) is deliberately ungated: presentation only: it marks the borders dirty, shows the notice and attaches the map view, and registers nothing on a dedicated server.
 
+`CampaignStartOptionsBehavior` (the "this campaign keeps its own start choices" notice, [campaign-start-options.md](campaign-start-options.md)) is deliberately ungated: at session start it reads the campaign's pinned start choices and shows one local information message, so it writes nothing. The pin itself runs from `SubModule.OnGameStart` on a new campaign only, and every peer loads the host's campaign options with the save.
+
 `HiddenHostsBehavior` (the Hidden Hosts hint popup) is deliberately ungated: it writes two saved hint flags and shows a popup, this peer's own presentation.
 
 `StoryRosterBehavior` (the story roster check, #1366) is deliberately ungated: at session start it reads the story missions' troop ids and the hero kits' extra arrow items through the object manager and writes one `[Check]` line, so it changes no shared state.

@@ -179,6 +179,10 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(TAOM.Features.Encyclopedia.EncyclopediaSettingsProvider))]
     [DataRow(typeof(TAOM.Features.SettlementFood.Models.TaomSettlementFoodModel))]
     [DataRow(typeof(TAOM.Features.SettlementEconomy.Models.TaomSettlementEconomyModel))]
+    // Troop Weight: read by the party-size model, the party screens and the recruitment screen; the accessor takes the settings once.
+    [DataRow(typeof(TAOM.Features.TroopWeight.TroopWeightSettingsProvider))]
+    // AI party scaling: read on every party-size, food and wage recompute; the accessor takes the settings once.
+    [DataRow(typeof(TAOM.Features.AiPartySize.AiPartyScalingSettingsProvider))]
     public void OnlyTheLazySettingsAccessor_ReadsTheMcmInstance(Type provider)
     {
         var accessor = provider.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
@@ -310,6 +314,8 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(TAOM.Features.InnRounds.IInnRoundsSettingsProvider), typeof(TAOM.Features.InnRounds.InnRoundsSettingsProvider))]
     [DataRow(typeof(ISmithsMeasureSettingsProvider), typeof(SmithsMeasureSettingsProvider))]
     [DataRow(typeof(TAOM.Features.KingdomAllegiance.IKingdomAllegianceSettingsProvider), typeof(TAOM.Features.KingdomAllegiance.KingdomAllegianceSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.TroopWeight.ITroopWeightSettingsProvider), typeof(TAOM.Features.TroopWeight.TroopWeightSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.AiPartySize.IAiPartyScalingSettingsProvider), typeof(TAOM.Features.AiPartySize.AiPartyScalingSettingsProvider))]
     public void Provider_ResolvesFromARealContainer(Type service, Type implementation)
     {
         using var container = new Container();
@@ -498,7 +504,7 @@ public class CampaignHotPathSettingsProvidersTests
         var cfg = Substitute.For<IAlignmentDesertionConfigProvider>();
         cfg.GetConfig().Returns(new AlignmentDesertionConfig());
         var recruitment = Substitute.For<TAOM.Features.AlignmentRecruitment.IRecruitmentAlignmentSettingsProvider>();
-        var sut = new AlignmentDesertionSettingsProvider(cfg, recruitment, mcm);
+        var sut = new AlignmentDesertionSettingsProvider(cfg, recruitment, Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>(), mcm);
         Assert.IsTrue(sut.IsEnabled);
         Assert.AreEqual(0.5f, sut.Rate, 0.0001f);
         Assert.IsFalse(sut.GoodRejectsEvilOnly);
@@ -519,7 +525,7 @@ public class CampaignHotPathSettingsProvidersTests
         var cfg = Substitute.For<IAlignmentDesertionConfigProvider>();
         cfg.GetConfig().Returns(new AlignmentDesertionConfig());
         var recruitment = Substitute.For<TAOM.Features.AlignmentRecruitment.IRecruitmentAlignmentSettingsProvider>();
-        var sut = new AlignmentDesertionSettingsProvider(cfg, recruitment, new TaomSettings());
+        var sut = new AlignmentDesertionSettingsProvider(cfg, recruitment, Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>(), new TaomSettings());
         recruitment.GoodRejectsEvilOnly.Returns(true);
 
         recruitment.IsEnabled.Returns(false);
@@ -935,7 +941,7 @@ public class CampaignHotPathSettingsProvidersTests
             {
                 var config = Substitute.For<TAOM.Features.MarriageAlignment.IMarriageAlignmentConfigProvider>();
                 config.GetConfig().Returns(new TAOM.Features.MarriageAlignment.MarriageAlignmentConfig());
-                return new TAOM.Features.MarriageAlignment.MarriageAlignmentSettingsProvider(config);
+                return new TAOM.Features.MarriageAlignment.MarriageAlignmentSettingsProvider(config, Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>());
             },
             nameof(TAOM.Features.MarriageAlignment.MarriageAlignmentSettingsProvider.IsEnabled), nameof(TaomSettings.EnableMarriageAlignment)),
         [typeof(TAOM.Features.Encyclopedia.EncyclopediaSettingsProvider)] = (() => new TAOM.Features.Encyclopedia.EncyclopediaSettingsProvider(),
@@ -953,6 +959,12 @@ public class CampaignHotPathSettingsProvidersTests
                     Substitute.For<TAOM.Features.SettlementEconomy.ISettlementEconomyService>(), config);
             },
             "Enabled", nameof(TaomSettings.EnableSettlementEconomyTuning)),
+        [typeof(TAOM.Features.TroopWeight.TroopWeightSettingsProvider)] = (
+            () => new TAOM.Features.TroopWeight.TroopWeightSettingsProvider(Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>()),
+            nameof(TAOM.Features.TroopWeight.TroopWeightSettingsProvider.NewCampaignDefault), nameof(TaomSettings.EnableTroopWeight)),
+        [typeof(TAOM.Features.AiPartySize.AiPartyScalingSettingsProvider)] = (
+            () => new TAOM.Features.AiPartySize.AiPartyScalingSettingsProvider(Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>()),
+            nameof(TAOM.Features.AiPartySize.AiPartyScalingSettingsProvider.NewCampaignDefault), nameof(TaomSettings.EnableAiPartyScaling)),
     };
 
     [DataTestMethod]
@@ -964,6 +976,8 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(TAOM.Features.Encyclopedia.EncyclopediaSettingsProvider))]
     [DataRow(typeof(TAOM.Features.SettlementFood.Models.TaomSettlementFoodModel))]
     [DataRow(typeof(TAOM.Features.SettlementEconomy.Models.TaomSettlementEconomyModel))]
+    [DataRow(typeof(TAOM.Features.TroopWeight.TroopWeightSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.AiPartySize.AiPartyScalingSettingsProvider))]
     public void Provider_AsksMcmUntilItHasTheSettings_ThenNeverAgain_AndReadsThrough(Type provider)
     {
         var probe = ReadThroughProbes[provider];

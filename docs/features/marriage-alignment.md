@@ -131,6 +131,8 @@ field is ever added, the "Config Providers MUST Validate" rule applies to it in 
 
 ### MCM
 
+The master switch follows the campaign's Alignment rules preset first (Strict or Relaxed pin it; Standard follows MCM), through `IMarriageAlignmentSettingsProvider`; see [campaign-start-options.md](campaign-start-options.md).
+
 Group `World/Marriage Alignment` (GroupOrder 50): Enable Marriage Alignment Block, Apply To Player,
 Apply To AI Lords, Steer AI Partner Search. MCM overrides JSON at runtime.
 

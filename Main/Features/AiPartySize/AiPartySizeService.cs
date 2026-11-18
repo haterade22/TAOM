@@ -18,6 +18,13 @@ public enum PlayerClanScalingMode
 
 public class AiPartySizeService : IAiPartySizeService
 {
+    private readonly IAiPartyScalingSettingsProvider _scaling;
+
+    public AiPartySizeService(IAiPartyScalingSettingsProvider scaling)
+    {
+        _scaling = scaling;
+    }
+
     private static readonly TextObject LordHostText = new("{=taom_ai_party_size}Warlord's host");
     private static readonly TextObject GarrisonText = new("{=taom_ai_garrison_size}Fortified realm");
     private static readonly TextObject ForageText = new("{=taom_ai_forage}Campaign foraging");
@@ -101,14 +108,14 @@ public class AiPartySizeService : IAiPartySizeService
 
     public void ApplyAiLordScaling(PartyBase party, ref ExplainedNumber limit)
     {
+        if (!_scaling.Enabled)
+            return;
+
         // Read the settings singleton ONCE. MCM's GlobalSettings<T>.Instance is not a cached field:
         // each access is a ContainsKey plus an indexer on a static dictionary, then a TryGetValue in
         // the settings provider. This method runs per party whenever a party-size limit recomputes,
         // so three separate reads were three times that cost for one unchanging answer.
         var settings = TaomSettings.Instance;
-
-        if (!(settings?.EnableAiPartyScaling ?? true))
-            return;
 
         var mobileParty = party?.MobileParty;
         if (mobileParty == null)
@@ -156,19 +163,19 @@ public class AiPartySizeService : IAiPartySizeService
 
     public void ApplyGarrisonScaling(ref ExplainedNumber limit)
     {
-        var settings = TaomSettings.Instance;
-        if (!IsEnabled(settings))
+        if (!_scaling.Enabled)
             return;
 
+        var settings = TaomSettings.Instance;
         ApplyPartySizeScaling(ref limit, settings?.AiGarrisonScale ?? DefaultGarrisonFactor, 0f, GarrisonText);
     }
 
     public void ApplyAiFoodRelief(MobileParty party, ref ExplainedNumber consumption)
     {
-        var settings = TaomSettings.Instance;
-        if (!IsEnabled(settings) || party == null)
+        if (!_scaling.Enabled || party == null)
             return;
 
+        var settings = TaomSettings.Instance;
         if (!IsScalableAiLordParty(party.IsMainParty, party.IsLordParty, party.LeaderHero != null, IsPlayerClanParty(party)))
             return;
 
@@ -177,17 +184,15 @@ public class AiPartySizeService : IAiPartySizeService
 
     public void ApplyAiWageRelief(MobileParty party, ref ExplainedNumber wage)
     {
-        var settings = TaomSettings.Instance;
-        if (!IsEnabled(settings) || party == null)
+        if (!_scaling.Enabled || party == null)
             return;
 
+        var settings = TaomSettings.Instance;
         if (!IsScalableAiLordParty(party.IsMainParty, party.IsLordParty, party.LeaderHero != null, IsPlayerClanParty(party)))
             return;
 
         ApplyRelief(ref wage, settings?.AiPartyWageRelief ?? DefaultWageRelief, LevyText);
     }
-
-    private static bool IsEnabled(TaomSettings? settings) => settings?.EnableAiPartyScaling ?? true;
 
     /// <summary>
     /// Which parties this feature may touch. Non-lord parties (caravans, villagers, militia,

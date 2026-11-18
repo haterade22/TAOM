@@ -94,7 +94,7 @@ public sealed class SpecialResourceEventAdapter : ISpecialResourceEventAdapter
             // EnableTroopWeight — so toggling the feature off reverted this to raw "for free". The getter is
             // now raw always, so replicate the old toggle behaviour: weighted when on, raw when off
             // (deep-review 2026-07-11 GAP#2 — otherwise "off = vanilla" breaks for this consumer).
-            bool weightOn = TaomSettings.Instance?.EnableTroopWeight ?? true;
+            bool weightOn = _troopWeight.IsEnabled;
             var enemyCount = 0;
             var beatAFieldParty = false;
             foreach (var p in enemySide.Parties)

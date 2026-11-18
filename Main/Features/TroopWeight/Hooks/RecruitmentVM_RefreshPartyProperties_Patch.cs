@@ -21,7 +21,6 @@ public static class RecruitmentVM_RefreshPartyProperties_Patch
     [HarmonyPostfix]
     public static void Postfix(RecruitmentVM __instance)
     {
-        if (!(TaomSettings.Instance?.EnableTroopWeight ?? true)) return;
         _hook?.OnRecruitmentRefreshPartyProperties(__instance);
     }
 }

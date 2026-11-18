@@ -111,6 +111,7 @@ public static class IoC
         FactionMapIoC.RegisterFactionMapFeature(container);
         CharacterCreationIoC.RegisterCharacterCreationFeature(container);
         InitialChildGenerationIoC.RegisterInitialChildGenerationFeature(container);
+        Features.CampaignStartOptions.CampaignStartOptionsIoC.RegisterCampaignStartOptionsFeature(container);
         DiplomacyIoC.RegisterDiplomacyFeature(container);
         Features.WarOfTheRingMomentum.WarOfTheRingMomentumIoC.RegisterWarOfTheRingMomentumFeature(container);
         RaceAgeIoC.RegisterRaceAgeFeature(container);

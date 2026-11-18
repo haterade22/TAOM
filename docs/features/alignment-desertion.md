@@ -93,6 +93,8 @@ alignment_desertion_config.json        execution/alignment.json
 
 ### Config File: `Main/_Module/ModuleData/alignment_desertion/alignment_desertion_config.json`
 
+The master `Enabled` switch follows the campaign's Alignment rules preset first (Strict or Relaxed pin it; Standard follows MCM), through `IAlignmentDesertionSettingsProvider.IsEnabled`; see [campaign-start-options.md](campaign-start-options.md).
+
 JSON defaults; MCM overrides at runtime. Validated on load (singleton-cached — edits need an app restart).
 
 | Field | Type | Description |

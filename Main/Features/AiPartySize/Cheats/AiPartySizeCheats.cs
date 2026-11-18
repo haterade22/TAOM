@@ -40,8 +40,8 @@ public static class AiPartySizeCheats
                 return "Expected a positive whole number of rows.\n" + Usage;
 
             var settings = TaomSettings.Instance;
-            if (!(settings?.EnableAiPartyScaling ?? true))
-                return "AI party scaling is disabled in MCM, so the relief never runs for any party. "
+            if (!IoC.Resolve<IAiPartyScalingSettingsProvider>().Enabled)
+                return "AI party scaling is disabled (in this campaign's start choices or in MCM), so the relief never runs for any party. "
                      + "Nothing here would tell you about the relief itself.";
 
             float relief = settings?.AiPartyFoodRelief ?? AiPartySizeService.DefaultFoodRelief;

@@ -33,7 +33,7 @@ public class EyeOfSauronSettingsProviderTests
     [DynamicData(nameof(Floats), DynamicDataSourceType.Method)]
     public void FloatSetting_CompiledDefault_IsTheDesignDefault(string prop, string mcmProp, float def, float min, float max)
     {
-        Assert.AreEqual(def, ReadFloat(new EyeOfSauronSettingsProvider(new TaomSettings()), prop), 1e-5f);
+        Assert.AreEqual(def, ReadFloat(new EyeOfSauronSettingsProvider(new TaomSettings(), NSubstitute.Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>()), prop), 1e-5f);
     }
 
     [DataTestMethod]
@@ -43,7 +43,7 @@ public class EyeOfSauronSettingsProviderTests
         var mcm = new TaomSettings();
         Set(mcm, mcmProp, float.NaN);
 
-        Assert.AreEqual(def, ReadFloat(new EyeOfSauronSettingsProvider(mcm), prop), 1e-5f);
+        Assert.AreEqual(def, ReadFloat(new EyeOfSauronSettingsProvider(mcm, NSubstitute.Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>()), prop), 1e-5f);
     }
 
     [DataTestMethod]
@@ -52,10 +52,10 @@ public class EyeOfSauronSettingsProviderTests
     {
         var mcm = new TaomSettings();
         Set(mcm, mcmProp, float.PositiveInfinity);
-        Assert.AreEqual(def, ReadFloat(new EyeOfSauronSettingsProvider(mcm), prop), 1e-5f);
+        Assert.AreEqual(def, ReadFloat(new EyeOfSauronSettingsProvider(mcm, NSubstitute.Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>()), prop), 1e-5f);
 
         Set(mcm, mcmProp, float.NegativeInfinity);
-        Assert.AreEqual(def, ReadFloat(new EyeOfSauronSettingsProvider(mcm), prop), 1e-5f);
+        Assert.AreEqual(def, ReadFloat(new EyeOfSauronSettingsProvider(mcm, NSubstitute.Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>()), prop), 1e-5f);
     }
 
     [DataTestMethod]
@@ -64,17 +64,17 @@ public class EyeOfSauronSettingsProviderTests
     {
         var mcm = new TaomSettings();
         Set(mcm, mcmProp, min - 100f);
-        Assert.AreEqual(min, ReadFloat(new EyeOfSauronSettingsProvider(mcm), prop), 1e-5f);
+        Assert.AreEqual(min, ReadFloat(new EyeOfSauronSettingsProvider(mcm, NSubstitute.Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>()), prop), 1e-5f);
 
         Set(mcm, mcmProp, max + 100f);
-        Assert.AreEqual(max, ReadFloat(new EyeOfSauronSettingsProvider(mcm), prop), 1e-5f);
+        Assert.AreEqual(max, ReadFloat(new EyeOfSauronSettingsProvider(mcm, NSubstitute.Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>()), prop), 1e-5f);
     }
 
     [TestMethod]
     public void IntSettings_DefaultsAndClamps()
     {
         var mcm = new TaomSettings();
-        var sut = new EyeOfSauronSettingsProvider(mcm);
+        var sut = new EyeOfSauronSettingsProvider(mcm, NSubstitute.Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>());
         Assert.AreEqual(60, sut.CooldownDays);
         Assert.AreEqual(20, sut.HuntTimeoutDays);
         Assert.AreEqual(250, sut.HunterMaxTroops);
@@ -99,7 +99,7 @@ public class EyeOfSauronSettingsProviderTests
     public void ReadsThroughTheCachedSettings()
     {
         var mcm = new TaomSettings();
-        var sut = new EyeOfSauronSettingsProvider(mcm);
+        var sut = new EyeOfSauronSettingsProvider(mcm, NSubstitute.Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>());
         Assert.AreEqual(1.3f, sut.HunterSpeedMultiplier, 1e-5f);
 
         mcm.EyeOfSauronEnabled = false;

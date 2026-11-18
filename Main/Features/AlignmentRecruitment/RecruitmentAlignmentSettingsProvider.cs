@@ -1,4 +1,5 @@
 using TAOM.Features;
+using TAOM.Features.CampaignStartOptions;
 
 namespace TAOM.Features.AlignmentRecruitment;
 
@@ -20,12 +21,18 @@ public sealed class RecruitmentAlignmentSettingsProvider : IRecruitmentAlignment
     private TaomSettings? _settings;
     private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
 
-    public RecruitmentAlignmentSettingsProvider(IRecruitmentAlignmentConfigProvider configProvider)
+    private readonly ICampaignStartOptions _campaign;
+
+    public RecruitmentAlignmentSettingsProvider(IRecruitmentAlignmentConfigProvider configProvider, ICampaignStartOptions campaign)
     {
         _defaults = configProvider.GetConfig();
+        _campaign = campaign;
     }
 
-    public bool IsEnabled => Settings?.EnableAlignmentRecruitment ?? _defaults.Enabled;
+    // The campaign's Alignment rules preset (Strict or Relaxed) first; Standard pins nothing and follows MCM.
+    public bool IsEnabled => _campaign.AlignmentRules?.RecruitmentBlock ?? NewCampaignDefault;
+
+    public bool NewCampaignDefault => Settings?.EnableAlignmentRecruitment ?? _defaults.Enabled;
 
     public bool ApplyToAi => Settings?.EnableAlignmentRecruitmentAi ?? _defaults.ApplyToAi;
 

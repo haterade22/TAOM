@@ -58,7 +58,7 @@ Hooks (2)    (2 - Recruitment + Party VM)
       \   /
        \ /
   Harmony Patches (Patch17_TroopWeight)
-  [TaomSettings.EnableTroopWeight guard]
+  [ITroopWeightService.IsEnabled guard: campaign, then MCM]
 ```
 
 ## Phantom-Wounded Display Fix (2026-06-07)
@@ -90,7 +90,7 @@ All four compute `NumberOfAllMembers − NumberOfHealthyMembers`. Each gets a di
 | Encounter "X vs Y" menu item | `GameMenuPartyItemVM.RefreshCounts` | `PartySize` / `PartyWoundedSize` / `PartySizeLbl` |
 | Party map nameplate text | `Helpers.PartyBaseHelper.GetPartySizeText(PartyBase)` | Rebuilds the `str_party_health` TextObject with weighted `HEALTHY_NUM` / `WOUNDED_NUM` |
 
-All four run for **every** party (the `NumberOfAllMembers` weighting is not main-party-only), so enemy/ally party tooltips and nameplates with heavy troops are corrected too. All four gate on `TaomSettings.EnableTroopWeight` — toggling the feature off reverts every surface to vanilla.
+All four run for **every** party (the `NumberOfAllMembers` weighting is not main-party-only), so enemy/ally party tooltips and nameplates with heavy troops are corrected too. All four gate on `ITroopWeightService.IsEnabled` (the campaign's own start choice, then MCM): toggling the feature off reverts every surface to vanilla.
 
 ### Known property: separate-ceiling rounding
 
@@ -131,7 +131,7 @@ A postfix on `UpgradeReadyTroops` (`Patch17_TroopWeight`) runs once per party *a
 `ITroopWeightService.PlanShed(entries, limit)` sheds the lowest-value bodies first (ascending Tier,
 then Weight; never heroes/leader) until the weighted total is back within the limit — "fewer, better
 troops." Removals apply via `MemberRoster.AddToCounts(character, -count)`. Side benefit: over-cap
-*legacy* parties trim on their next upgrade tick too. Gated on `EnableTroopWeight`; event-gated
+*legacy* parties trim on their next upgrade tick too. Gated on `ITroopWeightService.IsEnabled`; event-gated
 `[TroopWeight][diag]` logging fires only when a shed happens (strip after in-game sign-off).
 
 ### Scope: leader-run parties only (2026-08-07)
@@ -572,7 +572,7 @@ Rivendell block comment says "level 21 to 36 (2.0)" while the Lothlorien one say
 
 ### MCM Setting
 
-`TaomSettings.EnableTroopWeight` (default: `true`) — toggleable at runtime, checked by every patch before executing.
+`TaomSettings.EnableTroopWeight` (default: `true`) is the default a new campaign gets on the Advanced Start Options screen. A campaign that pinned its own choice follows that instead: campaign, then MCM, then on. The hooks check `ITroopWeightService.IsEnabled` before their try block (a source-order test pins it), and the party-size patches read the same answer. See [campaign-start-options.md](campaign-start-options.md).
 
 ## Key Files
 
@@ -597,7 +597,7 @@ Rivendell block comment says "level 21 to 36 (2.0)" while the Lothlorien one say
 | `Main/Features/TroopWeight/Diagnostics/` | TEMPORARY diagnostics: the special-currency count diagnostic (separate investigation) and the main-roster loss diagnostic (`MainRosterLossDiagnostics` plus the two `TroopRoster_*_Patch` prefixes) |
 | `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` | Weight definitions, **224 live rows: 137 at 2.0, 79 at 3.0, six at 4.0, one at 12.0, one at 20.0.** A raw grep returns one more because a `cave_troll` row sits inside a comment block. Unlisted troops weigh 1.0 <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))" 2026-11-15 --> |
 | `Main/_Module/ModuleData/taom_module_strings.xml` | `{=taom_troop_weight_size}` (enforcement label, no longer rendered) + `{=taom_troop_weight_tag}` (row `×N` tag) |
-| `Main/Features/TaomSettings.cs` | MCM toggle (`EnableTroopWeight`) |
+| `Main/Features/TaomSettings.cs` | MCM toggle (`EnableTroopWeight`), the new-campaign default; `TroopWeightSettingsProvider` puts the campaign's choice first |
 
 ## Dependencies
 
