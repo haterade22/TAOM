@@ -1,7 +1,7 @@
 namespace TAOM.Features.NavalTravel;
 
 /// <summary>
-/// Pure decision for <c>Patch159_NavalLandPathfindGuard</c>: which land anchor replaces the crashing native
+/// Pure decision for <c>Patch168_NavalLandPathfindGuard</c>: which land anchor replaces the crashing native
 /// nearest-face search. No engine types, so it is unit-testable.
 /// </summary>
 public static class NavalLandFallback

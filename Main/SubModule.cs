@@ -320,12 +320,12 @@ public class SubModule : MBSubModuleBase
         Features.SkipCampaignIntro.Hooks.Patch58_SkipCampaignIntro.Initialize(IoC.Resolve<IModLogger>());
         TryPatchCategory("Patch58_SkipCampaignIntro");
 
-        // Patch159_NavalLandPathfindGuard: the native nearest-land search behind MapScene's
+        // Patch168_NavalLandPathfindGuard: the native nearest-land search behind MapScene's
         // GetNearestFaceCenterForPositionWithPath crashes without NavalDLC (no nav-mesh region map). The prefix
         // returns the nearest settlement gate instead. Applied here so it is attached before the first map
         // tick of a loaded save. See docs/features/naval-travel.md.
-        Features.NavalTravel.Hooks.Patch159_NavalLandPathfindGuard.Initialize(IoC.Resolve<IModLogger>());
-        TryPatchCategory("Patch159_NavalLandPathfindGuard");
+        Features.NavalTravel.Hooks.Patch168_NavalLandPathfindGuard.Initialize(IoC.Resolve<IModLogger>());
+        TryPatchCategory("Patch168_NavalLandPathfindGuard");
 
         // Patch95_FactionUI: Kysaro's themed front end (#704): main menu, menu video and music, splash,
         // loading screens, the character-creation screens and the hero presets. Applied HERE because the
