@@ -79,7 +79,7 @@ references in the v1.5.7 decompile.
 | `Main/Features/EngineBugGuards/Hooks/Patch161_SceneTableauNullSceneGuard.cs` | Scene widget null-scene guard |
 | `Main/Features/EngineBugGuards/Hooks/Patch162_ExecutionNoticeClosable.cs` to `Patch167_DeadHeroOutfit.cs` | The #1444 display fixes |
 | `Main/Features/EngineBugGuards/Domain/EngineDisplayRules.cs` | Their pure decisions |
-| `Main/SubModule.cs` | Initializes and applies every category in `OnSubModuleLoad` |
+| `Main/SubModule.cs` | Initializes and applies every category in `OnSubModuleLoad`, except Patch163 and Patch165, which patch `CampaignUIHelper` and wait for the first `OnGameInitializationFinished` |
 | `Dependencies/Foundation/PatchShieldPolicy.cs` | Keeps PatchShield off Patch160's target |
 | `Main/_Module/ModuleData/taom_module_strings.xml` | `taom_load_failed_title`, `taom_load_failed_body`, `taom_load_failed_quit` |
 
@@ -124,6 +124,8 @@ read the log of a session where the failure happened.
 - 2026-11-17: feature created with Patch160 and Patch161, ported from Silas He's v1.5.6 fix package (#1429).
 - 2026-11-18: Patch162 to Patch167, display and text fixes from the same package (#1444).
 - 2026-11-18: the muster screen tier numerals up to X, a follow-up from the #1444 review (#1446).
+- 2026-11-18: Patch163 and Patch165 apply at the first `OnGameInitializationFinished`; from `OnSubModuleLoad` they
+  ran `CampaignUIHelper`'s static initializer before `GameTexts` existed, which broke that type for the process.
 
 ## GitHub Issue
 
