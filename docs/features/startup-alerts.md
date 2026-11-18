@@ -85,6 +85,26 @@ one inquiry that lists every problem it found:
   while the launcher calls the game compatible. Logs `GameVersionNotice: game v..., TAOM ... pins Native ...: Match|Mismatch|Unknown`
   and `TAOM's code is off for this session: N submodule(s) of ...` to `diag.log`.
 
+### Engine load-error box
+
+- **Vanilla behavior:** when the guard above does not fire (the version check says Match or Unknown, a
+  stale TAOM.Dependencies as in #371, a mixed install, or a TAOM older than the guard), the engine box
+  still names no cause. Its text comes from the private `Module.GetAssemblyLoadResultsMessage(module, ...)`
+  (v1.5.7 `Module.cs:1199`), hardcoded English with no language key.
+- **Fix:** `GameVersionNotice.Run` calls `LoadErrorHint.TryInstall` on every client start, after the
+  server and Modding Kit skips. It patches that method with a postfix (same Harmony id) which, for TAOM
+  and the modules that depend on it, adds one paragraph from `GameVersionCheck.LoadErrorHint`: "This
+  error is usually caused by the wrong Bannerlord version." On a mismatch it names both versions and the
+  Steam Betas step; on a matching game it says the TAOM files may be mixed or out of date and to install
+  TAOM again with the TAOM launcher; with no pin or no game version it names no version. On a critical
+  error the engine's own "Please update or disable this mod" line follows; the non-critical "dependency
+  conflict" box (a failed `<Assemblies>` entry, which no TAOM submodule declares today) gets the paragraph
+  too. The paragraph is added once per process: the engine joins one message per failed submodule into
+  one box (`Module.cs:1144`), and `TAOM.Client` fails with `TAOM.dll`. The owners are the guard's own list
+  (`GameVersionNotice.OwnerModules`). Logs `LoadErrorHint: installed for ...` to `diag.log`.
+- **Limits:** nothing is added if TAOM.Dependencies is missing or fails to load, if `Run` fails on a far-off
+  game version, or if the method is gone (`not installed: target=False`). BUTR/BLSE boxes are not changed.
+
 ### Separate library copies
 
 - **Vanilla behavior:** the v1.5.7 launcher lists every `Modules\<dir>\SubModule.xml` and then every
@@ -155,6 +175,7 @@ ILoadedModuleIds         IModuleFolderReader
 | `Dependencies/MissingTaomNotice.cs`, `Dependencies/SubModule.cs` | The notice: armed at the menu hook, shown on the next tick; rows `taom_missing_taom_war_sails`, `taom_missing_taom_not_loaded` |
 | `Dependencies/Foundation/GameVersionCheck.cs` | Reads TAOM's Native pin, compares it with the game version, the box text (pure) |
 | `Dependencies/GameVersionNotice.cs`, `Dependencies/SubModule.cs` (constructor) | Turns TAOM's code off on a wrong version (prefix on `Module.CheckIfSubmoduleCanBeLoadable`), else the native box; `MissingTaomNotice` shows the menu popup |
+| `Dependencies/LoadErrorHint.cs` | Postfix on `Module.GetAssemblyLoadResultsMessage`: adds the wrong-version paragraph to the engine's box for TAOM |
 
 ## Tests
 
@@ -173,8 +194,9 @@ ILoadedModuleIds         IModuleFolderReader
   shipped file pins `v1.5.7.*`, other metadata, no pin, broken XML), the text, that the constructor runs
   the notice, the guard order (server/test, mismatch, turn code off, else box), which submodules are
   skipped, the engine target's shape (binds on the referenced game, has a try region so it is not
-  inlined), the menu popup before the missing-TAOM check; LiveInstall: the installed game matches the
-  shipped pin.
+  inlined), the menu popup before the missing-TAOM check; the load-error hint text (wrong version, right
+  version, unknown pin or game version), where `Run` installs it, its owner filter, and its engine
+  target's shape; LiveInstall: the installed game matches the shipped pin.
 
 ## How to verify in game
 
@@ -195,12 +217,19 @@ ILoadedModuleIds         IModuleFolderReader
    Start the game. Pass: no "Error while loading TAOM" box; at the main menu one TAOM popup names both
    versions and says TAOM is turned off, and Exit Game closes the game; `diag.log` has `GameVersionNotice: ... Mismatch` and `TAOM's code
    is off for this session`. Undo the edit afterwards. On a matching game: no popup, `diag.log` has `... Match`.
+6. **Engine load-error box.** Precondition: a matching game, and a deployed `TAOM.Client.dll` that cannot
+   load (back it up on E:, then replace it with a broken file). Start the game. A "Cannot load: ..." box
+   titled ERROR comes first (`AssemblyLoader.LoadFrom`); press Ok. Pass: the "Error while loading TAOM"
+   box has the paragraph "This error is usually caused by the wrong Bannerlord version..." once, before
+   "Please update or disable this mod"; `diag.log` has `LoadErrorHint: installed for TAOM`. Restore the
+   DLL afterwards. On a normal start the `installed for` line is the proof the patch applies.
 
 ## Changelog
 
 - 2026-11-15: added (War Sails and separate library copies).
 - 2026-11-15: TAOM.Dependencies says when the launcher dropped TAOM (War Sails ticked, or TAOM not loaded).
 - 2026-11-15: TAOM.Dependencies turns TAOM's code off and tells the player when the game is not the Bannerlord version TAOM was built for.
+- 2026-11-18: the engine's "Error while loading TAOM" box now says the usual cause is the wrong Bannerlord version (#1461).
 
 ## GitHub Issue
 

@@ -144,5 +144,30 @@ public static class GameVersionCheck
             "- Or, if a TAOM made for your game version is out, install it with the TAOM launcher.";
     }
 
+    /// <summary>
+    /// One paragraph that LoadErrorHint adds to the engine's own "could not be loaded due to a missing or conflicting
+    /// dependency" box for TAOM. Most players who see that box run the wrong Bannerlord version. Plain English, for
+    /// the reason <see cref="Text"/> gives. Never names a version that was not read.
+    /// </summary>
+    public static string LoadErrorHint(string? pin, string? taomVersion, int major, int minor, int revision)
+    {
+        const string cause = "This error is usually caused by the wrong Bannerlord version.";
+        var taom = string.IsNullOrEmpty(taomVersion) ? "This TAOM" : $"This TAOM ({taomVersion})";
+        if (ParsePin(pin) == null)
+            return cause + " Check that your game is the Bannerlord version this TAOM is made for.";
+
+        var wanted = DisplayPin(pin!);
+        var steam = $" In Steam, right-click Mount & Blade II: Bannerlord, choose Properties, then Betas, and pick {wanted}.";
+        if (major <= 0) return $"{cause} {taom} is made for Bannerlord {wanted}.{steam}";
+
+        var game = $"v{major}.{minor}.{revision}";
+        if (Evaluate(pin, major, minor, revision) == GameVersionMatch.Mismatch)
+            return $"{cause} {taom} is made for Bannerlord {wanted}, but your game is {game}.{steam}";
+
+        var lowerTaom = "t" + taom.Substring(1);
+        return $"{cause} Your game is {game}, the version {lowerTaom} is made for, so the TAOM files may be mixed or out of date. " +
+               "Install TAOM again with the TAOM launcher.";
+    }
+
     private static string? Blank(string? s) => string.IsNullOrWhiteSpace(s) ? null : s!.Trim();
 }
