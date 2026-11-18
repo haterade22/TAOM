@@ -5,7 +5,8 @@
 Plan 056 (#607) made `MissionDiagnosticBehavior` park an `OnAgentRemoved` or `OnAgentDeleted` drop that
 native raises off the main mission thread, and apply it at the next tick before any read. The tier 1
 review (Lens 2 Engine compatibility, Lens 5 Data flow) found no thread-safety defect and confirmed the
-plan's census of the 16 `OnAgentRemoved` overrides. It found two LOW defects: after a failed read the
+plan's census of the 16 `OnAgentRemoved` overrides for collections and match state; two harmless fault
+counters are plain increments (`FordsOfWarMissionLogic.cs:146`, `LongDefeatRunHost.cs:204`). It found two LOW defects: after a failed read the
 behavior kept parking drops that nothing would ever drain, and the feature doc's "first one per
 callback" warning line read as once per mission when it is once per game session. Both are fixed in
 the review's commit. Codex did not run.

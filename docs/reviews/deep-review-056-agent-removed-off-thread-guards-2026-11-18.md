@@ -93,8 +93,10 @@ thread; parked removals run before the batch snapshot (PendingAgentReads.cs:53-5
   `EnlistmentMeritMissionBehavior._killed` is a `ConcurrentQueue<string>` (:41);
   `CreatureScoreboardBridge` lives at `Hooks/CreatureScoreboardBridge.cs` and keeps a
   `ConcurrentDictionary` (:26), and `CreatureBanditDiag.Events` is a `ConcurrentQueue` (:36). The
-  plan's claim holds: no other `OnAgentRemoved` override writes TAOM shared state unguarded, apart from
-  the `FordsOfWarMissionLogic.Fault` counter the plan already names as harmless.
+  plan's claim holds for collections and match state: no other `OnAgentRemoved` override writes them
+  unguarded. Two harmless fault counters are plain increments that can run off the main thread:
+  `FordsOfWarMissionLogic.cs:146` (`++_faults`, which the plan names) and `LongDefeatRunHost.cs:204`
+  (reached through `Guarded` at `:78` and `:113` from `LongDefeatMissionLogic.cs:62-63`).
 
 ### Agent 6: Design and elegance
 
@@ -137,11 +139,13 @@ NOT IN SCOPE.
 APPLIED:     none. Agents 3 and 6 were skipped by tier, so no APPLY-scoped fix or KEEP proposal exists.
 NOT APPLIED: none.
 FOLLOW-UP:   no issue filed (an /improve lead files none; the orchestrator decides at wrap-up):
-             - the 5 `OnAgentDeleted` overrides nobody checked against the off-thread question:
-               BehaviorTreeMissionLogic.cs:318, CareerPerkMissionBehavior.cs:233,
-               CreatureBanditDiagnosticsBehavior.cs:64, LongDefeatMissionLogic.cs:68,
-               MountDespawnMissionBehavior.cs:86, plus the `_adapterFactory.Evict` call on
-               AdvancedCombatBehavior.cs:72 (plan :936-942 calls this census UNVERIFIED).
+             - the `OnAgentDeleted` overrides still open against the off-thread question:
+               CareerPerkMissionBehavior.cs:233 (`CareerAbilityBuffTracker.ClearAllyBuff`) and
+               AdvancedCombatBehavior.cs:72-76 (`_adapterFactory.Evict`,
+               `SpatialGrid.Instance?.Remove`). Checked and guarded: BehaviorTreeMissionLogic.cs:318,
+               MountDespawnMissionBehavior.cs:86, MixedFormationsMissionBehavior.cs:68,
+               SignatureStrikesMissionLogic.cs:57, CreatureBanditDiagnosticsBehavior.cs:64 and
+               LongDefeatMissionLogic.cs:68 (apart from the fault counter above).
              - `OnAgentCreated` adding inline assumes the engine raises it on the main thread
                (plan :947-951); a log that catches it off the thread needs the same deferral.
              - plans/056-agent-removed-off-thread-guards.md:952-953 still describes the pile-up this

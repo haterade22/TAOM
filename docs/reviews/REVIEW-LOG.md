@@ -5762,7 +5762,7 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 
 - **Scope:** `c63dbb0ce..a531bea73` on `improve/056-agent-removed-off-thread-guards`: `PendingAgentReads.RemoveOrDefer`, the behavior's main-thread mark and its two drop callbacks, two new test files and the feature doc.
 - **Codex:** not run (out of usage; a paid call needs the maintainer's word).
-- **Lenses:** Engine compatibility, 9 verified, 0 incompatible, 1 unverified doc claim (not a defect); Data flow, 10 flows, 0 gaps. The plan's census holds: none of the 16 `OnAgentRemoved` overrides writes TAOM shared state unguarded. 2 LOW confirmed and fixed, 2 false positives (the `OnAgentDeleted` thread wording and a pre-existing drain-to-snapshot window).
+- **Lenses:** Engine compatibility, 9 verified, 0 incompatible, 1 unverified doc claim (not a defect); Data flow, 10 flows, 0 gaps. The plan's census holds for collections and match state: none of the 16 `OnAgentRemoved` overrides writes them unguarded; two harmless fault counters (`FordsOfWarMissionLogic.cs:146`, `LongDefeatRunHost.cs:204`) are plain increments. 2 LOW confirmed and fixed, 2 false positives (the `OnAgentDeleted` thread wording and a pre-existing drain-to-snapshot window).
 - **Report:** `docs/reviews/deep-review-056-agent-removed-off-thread-guards-2026-11-18.md`; RCA `docs/reviews/rca-agent-removed-off-thread-guards-2026-11-18.md`.
 
 | # | Bug | Category | Why missed | Preventive action |
