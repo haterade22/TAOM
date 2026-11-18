@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-17 20:02:24",
+  "generatedAt": "2026-11-18 07:10:51",
   "armoryDir": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\LOTRLOME_Armory\\ModuleData\\LOTRLOME_items",
   "items": {
     "sk_ar_art_helmet_inf_light_a": {
@@ -2536,11 +2536,11 @@
       "culture": "arnor",
       "slot": "shoulder",
       "name": "[Arnor] Cape",
-      "current": 2,
+      "current": 13,
       "armour": [
         0,
-        2,
-        0,
+        13,
+        12,
         0
       ],
       "weight": 0.5,
@@ -2553,8 +2553,8 @@
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 13,
-      "delta": -11,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -2576,11 +2576,11 @@
       "culture": "arnor",
       "slot": "shoulder",
       "name": "[Arnor] Cape",
-      "current": 2,
+      "current": 13,
       "armour": [
         0,
-        2,
-        0,
+        13,
+        12,
         0
       ],
       "weight": 0.5,
@@ -2593,8 +2593,8 @@
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 13,
-      "delta": -11,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "b",
       "shared": false,
       "wearers": [
@@ -3981,9 +3981,9 @@
       "culture": "dale",
       "slot": "head",
       "name": "[Dale] Elite Knight Helmet B04",
-      "current": 37,
+      "current": 45,
       "armour": [
-        37,
+        45,
         0,
         0,
         0
@@ -3998,8 +3998,8 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 45,
-      "delta": -8,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "b",
       "shared": false,
       "wearers": [
@@ -4553,9 +4553,9 @@
       "culture": "dale",
       "slot": "head",
       "name": "[Dale] Lake-town Mariner Helmet A04",
-      "current": 37,
+      "current": 45,
       "armour": [
-        37,
+        45,
         0,
         0,
         0
@@ -4570,8 +4570,8 @@
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 45,
-      "delta": -8,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -5425,11 +5425,11 @@
       "culture": "dale",
       "slot": "body",
       "name": "[Dale] Elite Knight Armour B04",
-      "current": 29,
+      "current": 43,
       "armour": [
         0,
-        29,
-        9,
+        43,
+        13,
         0
       ],
       "weight": 18.9,
@@ -5442,8 +5442,8 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 43,
-      "delta": -14,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "b",
       "shared": false,
       "wearers": [
@@ -6013,11 +6013,11 @@
       "culture": "dale",
       "slot": "body",
       "name": "[Dale] Lake-town Mariner Armour A04",
-      "current": 29,
+      "current": 43,
       "armour": [
         0,
-        29,
-        7,
+        43,
+        10,
         0
       ],
       "weight": 18.9,
@@ -6030,8 +6030,8 @@
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 43,
-      "delta": -14,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -6885,11 +6885,11 @@
       "culture": "dale",
       "slot": "arm",
       "name": "[Dale] Elite Knight Gauntlets B04",
-      "current": 15,
+      "current": 22,
       "armour": [
         0,
         0,
-        15,
+        22,
         0
       ],
       "weight": 1.6,
@@ -6902,8 +6902,8 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 22,
-      "delta": -7,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "b",
       "shared": false,
       "wearers": [
@@ -7457,11 +7457,11 @@
       "culture": "dale",
       "slot": "arm",
       "name": "[Dale] Lake-town Mariner Bracers A04",
-      "current": 15,
+      "current": 22,
       "armour": [
         0,
         0,
-        15,
+        22,
         0
       ],
       "weight": 1.6,
@@ -7474,8 +7474,8 @@
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 22,
-      "delta": -7,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -8329,12 +8329,12 @@
       "culture": "dale",
       "slot": "leg",
       "name": "[Dale] Elite Knight Boots B04",
-      "current": 13,
+      "current": 19,
       "armour": [
         0,
         0,
         0,
-        13
+        19
       ],
       "weight": 3.7,
       "anchorLevel": 36,
@@ -8346,8 +8346,8 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 19,
-      "delta": -6,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "b",
       "shared": false,
       "wearers": [
@@ -8917,12 +8917,12 @@
       "culture": "dale",
       "slot": "leg",
       "name": "[Dale] Lake-town Mariner Boots A04",
-      "current": 13,
+      "current": 19,
       "armour": [
         0,
         0,
         0,
-        13
+        19
       ],
       "weight": 3.7,
       "anchorLevel": 31,
@@ -8934,8 +8934,8 @@
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 19,
-      "delta": -6,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -9733,11 +9733,11 @@
       "culture": "dale",
       "slot": "shoulder",
       "name": "[Dale] Elite Knight Pauldron B04",
-      "current": 8,
+      "current": 12,
       "armour": [
         0,
-        8,
-        7,
+        12,
+        11,
         0
       ],
       "weight": 7.4,
@@ -9750,8 +9750,8 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 12,
-      "delta": -4,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "b",
       "shared": false,
       "wearers": [
@@ -10233,11 +10233,11 @@
       "culture": "dale",
       "slot": "shoulder",
       "name": "[Dale] Lake-town Mariner Pauldron A03",
-      "current": 8,
+      "current": 12,
       "armour": [
         0,
-        8,
-        7,
+        12,
+        11,
         0
       ],
       "weight": 7.4,
@@ -10250,8 +10250,8 @@
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 12,
-      "delta": -4,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -10333,11 +10333,11 @@
       "culture": "dale",
       "slot": "shoulder",
       "name": "[Dale] Lake-town Elite Mariner Pauldron B03",
-      "current": 8,
+      "current": 12,
       "armour": [
         0,
-        8,
-        7,
+        12,
+        11,
         0
       ],
       "weight": 7.4,
@@ -10350,8 +10350,8 @@
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 12,
-      "delta": -4,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "b",
       "shared": false,
       "wearers": [
@@ -10377,9 +10377,9 @@
       "culture": "dol_guldur",
       "slot": "head",
       "name": "[Dol Guldur] Uruk Elite Helmet I",
-      "current": 41,
+      "current": 43,
       "armour": [
-        41,
+        43,
         0,
         0,
         0
@@ -10394,7 +10394,7 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 43,
-      "delta": -2,
+      "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
@@ -25151,7 +25151,7 @@
       "anchorLevel": 36,
       "maxLevel": 46,
       "levelSpan": 10,
-      "wearerCount": 5,
+      "wearerCount": 4,
       "heroWorn": true,
       "lordWorn": false,
       "tier": "elite",
@@ -25172,10 +25172,6 @@
         },
         {
           "troop": "erebor_noble_gate_warden",
-          "level": 41
-        },
-        {
-          "troop": "ironpass_ram_marshal",
           "level": 41
         },
         {
@@ -25299,7 +25295,7 @@
       "anchorLevel": 41,
       "maxLevel": 41,
       "levelSpan": 0,
-      "wearerCount": 3,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -25316,10 +25312,6 @@
         },
         {
           "troop": "erebor_noble_shield_breaker",
-          "level": 41
-        },
-        {
-          "troop": "ironpass_ram_marshal",
           "level": 41
         }
       ]
@@ -44411,9 +44403,9 @@
       ],
       "weight": 10.3,
       "anchorLevel": 36,
-      "maxLevel": 41,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "maxLevel": 36,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
@@ -44427,10 +44419,6 @@
         {
           "troop": "gundabad_veteran_berserker",
           "level": 36
-        },
-        {
-          "troop": "gundabad_dread_rider_of_the_tower",
-          "level": 41
         }
       ]
     },
@@ -44474,9 +44462,9 @@
       ],
       "weight": 10.3,
       "anchorLevel": 36,
-      "maxLevel": 41,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "maxLevel": 36,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
@@ -44490,10 +44478,6 @@
         {
           "troop": "gundabad_veteran_berserker",
           "level": 36
-        },
-        {
-          "troop": "gundabad_dread_rider_of_the_tower",
-          "level": 41
         }
       ]
     },
@@ -44796,11 +44780,11 @@
       "culture": "gundabad",
       "slot": "shoulder",
       "name": "[Gundabad] Pauldron Heavy IV",
-      "current": 8,
+      "current": 12,
       "armour": [
         0,
-        8,
-        6,
+        12,
+        9,
         0
       ],
       "weight": 8.0,
@@ -44813,8 +44797,8 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 12,
-      "delta": -4,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
@@ -44909,9 +44893,9 @@
       ],
       "weight": 5.8,
       "anchorLevel": 36,
-      "maxLevel": 36,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 41,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -44925,6 +44909,10 @@
         {
           "troop": "gundabad_tracker",
           "level": 36
+        },
+        {
+          "troop": "gundabad_dread_rider_of_the_tower",
+          "level": 41
         }
       ]
     },
@@ -55872,7 +55860,7 @@
       "anchorLevel": 36,
       "maxLevel": 46,
       "levelSpan": 10,
-      "wearerCount": 4,
+      "wearerCount": 5,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -55890,6 +55878,10 @@
         {
           "troop": "ironpass_ram_vanguard",
           "level": 36
+        },
+        {
+          "troop": "ironpass_ram_marshal",
+          "level": 41
         },
         {
           "troop": "iron_hills_noble_gate_warden",
@@ -60658,12 +60650,12 @@
       "culture": "isengard",
       "slot": "leg",
       "name": "[Isengard] Heavy Greaves I",
-      "current": 12,
+      "current": 18,
       "armour": [
         0,
         0,
         0,
-        12
+        18
       ],
       "weight": 4.0,
       "anchorLevel": 31,
@@ -60675,8 +60667,8 @@
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 18,
-      "delta": -6,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -61149,11 +61141,11 @@
       "culture": "isengard",
       "slot": "shoulder",
       "name": "[Isengard] Heavy Pauldrons I",
-      "current": 8,
+      "current": 11,
       "armour": [
         0,
-        8,
-        2,
+        11,
+        3,
         0
       ],
       "weight": 8.0,
@@ -61166,8 +61158,8 @@
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 11,
-      "delta": -3,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -66000,12 +65992,12 @@
       "culture": "mirkwood",
       "slot": "body",
       "name": "[Mirkwood] Palace Guard Body Armor",
-      "current": 8,
+      "current": 48,
       "armour": [
         0,
+        48,
         8,
-        0,
-        0
+        19
       ],
       "weight": 5.2,
       "anchorLevel": 41,
@@ -66017,8 +66009,8 @@
       "tier": "elite",
       "tierSource": "roster(L41)",
       "target": 48,
-      "delta": -40,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
@@ -66488,12 +66480,12 @@
       "culture": "mirkwood",
       "slot": "leg",
       "name": "[Mirkwood] Palace Guard Boots",
-      "current": 3,
+      "current": 22,
       "armour": [
         0,
         0,
         0,
-        3
+        22
       ],
       "weight": 1.0,
       "anchorLevel": 41,
@@ -66505,8 +66497,8 @@
       "tier": "elite",
       "tierSource": "roster(L41)",
       "target": 22,
-      "delta": -19,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
@@ -66694,12 +66686,12 @@
       "culture": "mirkwood",
       "slot": "leg",
       "name": "[Mirkwood] Greaves III",
-      "current": 8,
+      "current": 22,
       "armour": [
         0,
         0,
         0,
-        8
+        22
       ],
       "weight": 1.6,
       "anchorLevel": 41,
@@ -66711,8 +66703,8 @@
       "tier": "elite",
       "tierSource": "roster(L41)",
       "target": 22,
-      "delta": -14,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
@@ -66916,11 +66908,11 @@
       "culture": "mirkwood",
       "slot": "shoulder",
       "name": "[Mirkwood] Pauldrons III",
-      "current": 5,
+      "current": 13,
       "armour": [
         0,
-        5,
-        0,
+        13,
+        12,
         0
       ],
       "weight": 3.2,
@@ -66933,8 +66925,8 @@
       "tier": "elite",
       "tierSource": "roster(L41)",
       "target": 13,
-      "delta": -8,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
@@ -76612,11 +76604,11 @@
       "culture": "mordor",
       "slot": "arm",
       "name": "[Mordor] Mordor Orc Heavy Bracer I",
-      "current": 12,
+      "current": 18,
       "armour": [
         0,
         0,
-        12,
+        18,
         0
       ],
       "weight": 1.5,
@@ -76629,8 +76621,8 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 18,
-      "delta": -6,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -78384,12 +78376,12 @@
       "culture": "mordor",
       "slot": "leg",
       "name": "[Mordor] Mordor Orc Heavy Boots I",
-      "current": 11,
+      "current": 16,
       "armour": [
         0,
         0,
         0,
-        11
+        16
       ],
       "weight": 3.5,
       "anchorLevel": 36,
@@ -78401,8 +78393,8 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 16,
-      "delta": -5,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -79922,11 +79914,11 @@
       "culture": "mordor",
       "slot": "shoulder",
       "name": "[Mordor] Mordor Orc Heavy Pauldron I",
-      "current": 7,
+      "current": 10,
       "armour": [
         0,
-        7,
-        6,
+        10,
+        9,
         0
       ],
       "weight": 7.7,
@@ -79939,8 +79931,8 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 10,
-      "delta": -3,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -94253,11 +94245,11 @@
       "culture": "rhun",
       "slot": "arm",
       "name": "[Rh\u00fbn] Loke-Rim Heavy Spiky Bracers II",
-      "current": 16,
+      "current": 23,
       "armour": [
         0,
         0,
-        16,
+        23,
         0
       ],
       "weight": 1.4,
@@ -94270,8 +94262,8 @@
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 23,
-      "delta": -7,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "b",
       "shared": false,
       "wearers": [
@@ -95834,11 +95826,11 @@
       "culture": "rhun",
       "slot": "arm",
       "name": "[Rh\u00fbn] Khamul Heavy Half Plate Bracers",
-      "current": 14,
+      "current": 21,
       "armour": [
         0,
         0,
-        14,
+        21,
         0
       ],
       "weight": 2.4,
@@ -95851,8 +95843,8 @@
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 21,
-      "delta": -7,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -97561,11 +97553,11 @@
       "culture": "rhun",
       "slot": "shoulder",
       "name": "[Rh\u00fbn] Loke-Rim Noble Cape",
-      "current": 4,
+      "current": 13,
       "armour": [
         0,
-        4,
-        4,
+        13,
+        13,
         0
       ],
       "weight": 1.0,
@@ -97578,8 +97570,8 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 13,
-      "delta": -9,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
@@ -105566,11 +105558,11 @@
       "culture": "rivendell",
       "slot": "arm",
       "name": "[Noldor] Silver Vambrace I",
-      "current": 27,
+      "current": 26,
       "armour": [
         0,
         0,
-        27,
+        26,
         0
       ],
       "weight": 1.4,
@@ -105583,7 +105575,7 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 26,
-      "delta": 1,
+      "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
@@ -105634,11 +105626,11 @@
       "culture": "rivendell",
       "slot": "arm",
       "name": "[Noldor] Silver Vambrace II",
-      "current": 27,
+      "current": 26,
       "armour": [
         0,
         0,
-        27,
+        26,
         0
       ],
       "weight": 1.4,
@@ -105651,7 +105643,7 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 26,
-      "delta": 1,
+      "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
@@ -106321,12 +106313,12 @@
       "culture": "rivendell",
       "slot": "leg",
       "name": "[Noldor] Gold Greaves III",
-      "current": 8,
+      "current": 23,
       "armour": [
         0,
         0,
         0,
-        8
+        23
       ],
       "weight": 1.8,
       "anchorLevel": 31,
@@ -106338,8 +106330,8 @@
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 23,
-      "delta": -15,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
@@ -107530,11 +107522,11 @@
       "culture": "rivendell",
       "slot": "shoulder",
       "name": "[Noldor] Silver Tier One Cape",
-      "current": 5,
+      "current": 14,
       "armour": [
         0,
-        5,
-        0,
+        14,
+        13,
         0
       ],
       "weight": 3.5,
@@ -107547,8 +107539,8 @@
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 14,
-      "delta": -9,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
@@ -109041,9 +109033,9 @@
       "culture": "rohan",
       "slot": "head",
       "name": "[Rohan] Noble's Helmet",
-      "current": 32,
+      "current": 38,
       "armour": [
-        32,
+        38,
         0,
         0,
         0
@@ -109058,8 +109050,8 @@
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 38,
-      "delta": -6,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
@@ -110118,11 +110110,11 @@
       "culture": "rohan",
       "slot": "body",
       "name": "[Rohan] Scalemail Armour V - Yellow",
-      "current": 25,
+      "current": 37,
       "armour": [
         0,
-        25,
-        8,
+        37,
+        11,
         0
       ],
       "weight": 8.5,
@@ -110135,8 +110127,8 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 37,
-      "delta": -12,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
@@ -111551,12 +111543,12 @@
       "culture": "rohan",
       "slot": "leg",
       "name": "[Rohan] Royal Guard Boots II",
-      "current": 18,
+      "current": 17,
       "armour": [
         0,
         0,
         0,
-        18
+        17
       ],
       "weight": 2.6,
       "anchorLevel": 36,
@@ -111568,7 +111560,7 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 17,
-      "delta": 1,
+      "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
