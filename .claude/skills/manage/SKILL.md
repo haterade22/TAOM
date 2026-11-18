@@ -122,7 +122,8 @@ Done when each owed check is run, refused by the gate, or listed for a person.
 ### 5. Select
 
 Read `docs/goals.md` top to bottom, skipping "Not now". In each milestone take bugs before
-features, oldest first. Skip an issue that has a `triage-blocked-*` label, an assignee, an open
+features, oldest first. Skip an issue that has a `triage-blocked-*` label, the label
+`triage-needs-ingame` (its fix is shipped and step 4 owns its check), an assignee, an open
 pull request, a live claim in `python tools/work_claims.py list --others`, or a behaviour change
 the maintainer has not approved. Stop selecting at four items, at six open manager pull requests,
 or at eight worker runs today (count today's lines in `<state>/ticks.log`, dispatches and fix
