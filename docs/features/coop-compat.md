@@ -129,9 +129,9 @@ Coop MessageBroker / INetwork
     CoopTransport (TAOM.CoopCompat.Coop.dll)
           |  ICoopTransport
      /          \
-SettingsHandshakeService     MomentumRelayService            GuestTradeRelayService
+SettingsHandshakeService     MomentumRelayService            GuestTradeRelayService   CareerSyncRelayService
   |  SettingsFingerprint        |  IMomentumStateStore (TAOM.dll)  |  GuestTradeClient (guest, TAOM.dll)
-  |  BuildIdentity              |                                  |  GuestTradeHost (host, TAOM.dll)
+  |  BuildIdentity              |                                  |  GuestTradeHost (host, TAOM.dll)   CareerSyncClient, CareerSyncHost (TAOM.dll)
   ISettingsNotice               MomentumRelayCampaignBehavior      |    IGuestTradeShops, IGuestTradeHeroAdapter
 ```
 
@@ -164,6 +164,31 @@ the co-op server process: under BannerlordCoop the hosting player is a client of
 - `ProtocolVersion` stays 1. A v2.0.40 peer skips the new fields; a server that gets no
   `ModuleOrder` from such a client logs "not reported" and warns nobody; a client that gets a reply
   without the fields shows nothing. `OlderPeerLayoutTests` proves both directions on the bytes.
+
+### Career sync
+
+TAOM keeps careers in its career book, and only the co-op server's book is saved. The relay carries a
+player's career to the server and the server's careers back; TAOM decides
+([coop-interop.md](coop-interop.md#career-sync-967) has the rules and the known limits). "Server" is the
+co-op server process: the hosting player is a client of it, like the others.
+
+- `CareerSync/CareerSyncRelayService` attaches itself to TAOM's `CareerSyncClient`. At Coop's
+  `ClientCampaignReady` (after `SwitchToPlayer`, so the player plays its own hero) the client sends a
+  `CoopCompatCareerReport` with `JoinReport` set. After that the submodule's `OnApplicationTick` calls
+  the relay's `Tick`, and the client sends one report per action that changed its own hero's career.
+- The transport names the hero that the sender's current connection controls, as for guest trade; the
+  report's `HeroId` is only compared with it. `CareerSyncHost.Handle` returns what to send: an accepted
+  career goes to every player but the sender (`BroadcastExcept`, Coop's `INetwork.SendAllBut`); a refused
+  one, or a join report that differs from the server's saved copy, goes back to the sender only
+  (`SendToPeer`). A change the server makes itself (a death clear, a tree migration) goes to every
+  player (`Broadcast`), on the server only.
+- `CoopCompatCareerUpdate.Sequence` is the last report the server handled for that hero, so the
+  player's own client drops an answer to an older report. `Known` is false when the server holds no
+  entry for the hero, and the client then keeps its own copy.
+- No catch-up message on join: the join save already carries the server's career book, and Coop
+  queues messages for a peer that is still loading and replays them.
+- Two new contract types, `ProtocolVersion` 1. A peer without them drops them and keeps its careers on
+  its own PC, as before.
 
 ## Configuration
 
@@ -200,6 +225,9 @@ not reach that server.
 | `CoopCompat/LoadOrder/ActiveModulesAdapter.cs` | The engine's active modules and their `SubModule.xml` |
 | `CoopCompat/Momentum/MomentumRelayService.cs` | War of the Ring momentum relay |
 | `CoopCompat/GuestTrade/GuestTradeRelayService.cs` | Guest trade relay (#1329) |
+| `CoopCompat/CareerSync/CareerSyncRelayService.cs` | Career sync relay (#967) |
+| `CoopCompat/Coop/Messages/CoopCompatCareerReport.cs`, `CoopCompatCareerUpdate.cs` | The career sync messages |
+| `Main/Features/CoopInterop/CareerSync/` | TAOM's career sync: `CareerSyncClient`, `CareerSyncHost`, `CareerSyncRules` |
 | `CoopCompat/Decisions/DecisionTypeRegistration.cs` | Registers TAOM's fief election with Coop at the main menu and at the first campaign start (#1346) |
 | `CoopCompat/Coop/Decisions/CoopDecisionTypes.cs` | The one call into Coop's `KingdomDecisionTypeRegistry` |
 | `Main/Features/FiefGranting/FiefClaimantWire.cs`, `FiefClaimantWireData.cs` | The fief election payload and its checks |
@@ -214,8 +242,9 @@ not reach that server.
 ## Dependencies
 
 - `TAOM.dll`: `IModLogger`, `IOutcomeLog`, `IMomentumStateStore`, `SettingsFingerprint`,
-  `TaomSettingsPages`, `GuestTradeClient`, `GuestTradeHost`, resolved from TAOM's container.
-- BannerlordCoop's `IPlayerManager`: the hero behind a connection, for guest trade.
+  `TaomSettingsPages`, `GuestTradeClient`, `GuestTradeHost`, `CareerSyncClient`, `CareerSyncHost`, resolved
+  from TAOM's container.
+- BannerlordCoop's `IPlayerManager`: the hero behind a connection, for guest trade and career sync.
 - BannerlordCoop (`Common`, `Coop.Core`, `GameInterface` and Autofac from the Coop module):
   `MessageBroker`, `INetwork`, `ContainerProvider`, `ModInformation`, `GameThread`. Coop's DLLs are
   references only and never ship in the TAOM download.
@@ -246,6 +275,12 @@ not reach that server.
   match, request bounds) and the module wiring. `TAOM.CoopCompat.Tests/GuestTrade/` and the transport
   tests cover the relay's field mapping both ways, the protocol check, the connection check and the hero
   lookup. The presenters' guest branches have no unit test (thin Gauntlet code); step 4 below covers them.
+- `TAOM.CoopCompat.Tests/CareerSync/` runs the relay with TAOM's real career sync client and server
+  over the fake transport: the join report, one report per tick, the hero from the connection, an
+  accepted career to the others only, a refusal to the sender only, the server's own change, the
+  protocol check. The transport tests cover the two new events, the role checks and `BroadcastExcept`;
+  `SubModuleShapeTests` pins the frame tick. The rules, the client and the server are tested in
+  `TAOM.Tests/Features/CoopInterop/CareerSync/`.
 - `TAOM.Tests/Features/FiefGranting/FiefClaimantWireTests.cs` covers the fief election payload;
   `TAOM.CoopCompat.Tests/Decisions/` checks that the type reaches Coop's registry, once per process,
   and `SubModuleShapeTests` that both hooks call it. Building the decision from ids is engine code
@@ -292,6 +327,13 @@ not reach that server.
    `[CoopCompat] load order peer=<label> differ: ...`. Then set `"CoopLoadOrderWarning": false` in the
    server's `taom-server-settings.json`, restart the server and join again: no line, and the server
    logs `not compared: the switch is off on this server`.
+7. Career sync: a new player joins and picks a career in character creation. The server's taom log
+   shows `[CareerSync] stored '<career>' for '<hero>'`, and a second player sees that career on the
+   new player's hero. The new player takes a career choice: the server logs it stored again. The
+   player leaves and joins again: the career and the choice are still there. Save on the server,
+   reload, join: still there. Then set `"CoopCareerSync": false` in the server's
+   `taom-server-settings.json`, restart the server and change a career on a client: the server logs
+   `career sync is switched off on this server` once and stores nothing.
 
 ## Distribution
 
@@ -320,6 +362,8 @@ module. A change on either side gets copied to the other. Coodsz merges and rele
 - 2026-11-15: TAOM fief elections sync to players (#1346).
 - 2026-11-17: load order warning: the co-op server compares a joining player's data mod order with
   its own and warns that player; the switch is in TAOM's Co-op settings group, read by the server.
+- 2026-11-17: career sync (#967): a player's career goes to the co-op server, which checks it with
+  TAOM's career rules, keeps it in its save and passes it on to the other players.
 
 ## GitHub Issue
 

@@ -20,6 +20,9 @@ internal sealed class FakeCoopTransport : ICoopTransport
     public List<CoopCompatTradeRequest> TradeRequestsSent { get; } = new();
     public List<(CoopPeer Peer, CoopCompatTradeReply Reply)> TradeRepliesSent { get; } = new();
     public List<CoopCompatCareerReport> CareerReportsSent { get; } = new();
+
+    /// <summary>When true the career sends throw, as Coop's network can.</summary>
+    public bool CareerSendsThrow { get; set; }
     public List<(CoopPeer Peer, CoopCompatCareerUpdate Update)> CareerUpdatesToPeer { get; } = new();
     public List<CoopCompatCareerUpdate> CareerBroadcasts { get; } = new();
     public List<(CoopPeer Except, CoopCompatCareerUpdate Update)> CareerBroadcastsExcept { get; } = new();
@@ -81,6 +84,7 @@ internal sealed class FakeCoopTransport : ICoopTransport
 
     public bool SendToServer(CoopCompatCareerReport message)
     {
+        if (CareerSendsThrow) throw new InvalidOperationException("network down");
         if (!SendsSucceed) return false;
         CareerReportsSent.Add(message);
         return true;
@@ -95,6 +99,7 @@ internal sealed class FakeCoopTransport : ICoopTransport
 
     public bool Broadcast(CoopCompatCareerUpdate message)
     {
+        if (CareerSendsThrow) throw new InvalidOperationException("network down");
         if (!SendsSucceed) return false;
         CareerBroadcasts.Add(message);
         return true;

@@ -23,6 +23,8 @@ WHAT IT DOES
    TAOM and of the mods that add items, troops or factions with its own.
    If they differ, you see a message. It only warns you; it never
    disconnects you.
+6. Careers. Your TAOM career is kept by the host, so it is still there
+   when you join again, and the other players see it.
 
 
 WHAT YOU NEED
@@ -99,6 +101,11 @@ MESSAGES YOU CAN SEE
     loads later replaces items and troops from earlier ones, so you can see
     different gear or troops from the host's. Put your mods in the host's
     order in the launcher, then restart the game.
+
+"The co-op server did not accept that career change and keeps the career
+it has saved for you."
+    The host checked your career change against the career rules and did
+    not take it. You keep the career the host has saved for you.
 
 
 REPORTING A PROBLEM
