@@ -2126,8 +2126,9 @@ change reaches the redirect: `GameMenu.ActivateGameMenu` calls `GameMenuManager.
 `GameMenu.SwitchToMenu`, and `MenuContext.SwitchToMenu` calls `SetNextMenu` (v1.5.7). Pinned by the
 `TryRedirectMenu_CommanderUnavailable*` tests in `EnlistmentMenuServiceTests`.
 
-The mask also takes the settlement's own battle. When a map event starts at the settlement with no
-siege, `GetGenericStateMenu` returns `encounter` or `join_encounter`. While the player is in no map
+The mask also takes a town's or castle's own battle. When a map event starts at the town or castle
+with no siege, `GetGenericStateMenu` returns `encounter` or `join_encounter` (inside a village it
+returns null, as below). While the player is in no map
 event himself the battle exception does not apply, so the grace player stays in the wait menu: he
 is not offered the defence from this shape. Both inits need a `PlayerEncounter` (v1.5.7):
 `game_menu_encounter_on_init` calls `PlayerEncounter.StartBattle()`, which is
