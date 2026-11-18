@@ -13,7 +13,8 @@ namespace TAOM.Features.ArmourAcquisition.Hooks;
 /// <summary>
 /// The lord's gear ladder at a town armoury (#693): the rows <see cref="ArmouryPresenter"/> lists above its
 /// upgrades (take up the current rung, hand over its lord's materials, claim its piece) and what choosing one
-/// does. Every decision is <see cref="LordsLadderService"/>'s. The armoury has already turned a co-op guest away.
+/// does. Every decision is <see cref="LordsLadderService"/>'s. A co-op guest's armoury lists
+/// <see cref="GuestLadderPresenter"/>'s rows instead, from the co-op server's state.
 /// </summary>
 public sealed class LadderPresenter
 {

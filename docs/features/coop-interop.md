@@ -421,9 +421,9 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `TournamentRewardsBehavior` | the skill award, in `TournamentSkillAwardService.Award` (`IsDedicatedServer`, `ShouldDeferToHost`, #1086) | The award adds skill XP to this peer's hero, which the host owns, so a guest gets none. The Join flow (`TournamentJoinService.BeginJoin`) stands down for a guest too: no prize swap, which writes the town's shared tournament, and no skill pick. Noting the hero count for the renown model stays ungated: it is transient and read on the same peer. Pinned by `TournamentSkillAwardServiceTests` and `TournamentJoinServiceTests`. |
 | `CareerSwitchDialogueBehavior` | the paid switch and the retrain, in `GauntletCareerScreen` (`ShouldDeferToHost`, #1086) | Both charge hero gold, which the host owns. A guest gets `{=taom_career_coop_gold_off}` and nothing changes. A free switch changes this peer's career book, like every other career choice, and career sync then reports it to the server ([Career sync](#career-sync-967)). The dialog line itself only opens the screen. No unit test: the screen is a thin UI entry point. |
 | `ArmourAcquisitionCampaignBehavior` | `OnDailyTick`, `OnDailyTickSettlement` (`ShouldDeferToHost`) | The market sweep removes armour from town markets and the visiting armourer roll writes saved state. `OnSessionLaunched` resets state when no save record loaded this session (`_loadedThisSession` false): a new campaign, or a save made before the feature. |
-| `ArmouryMenuBehavior` | the armoury purchase, in `ArmouryPresenter` (`GuestTradeClient`, over `ShouldDeferToHost`) | Player action: with `TAOM.CoopCompat` a guest's upgrade runs on the host (#1329, [coop-compat.md](coop-compat.md)); without it the presenter refuses a guest before anything is bought. The menu option itself only opens it. |
+| `ArmouryMenuBehavior` | the armoury purchase, in `ArmouryPresenter` (`GuestTradeClient`, over `ShouldDeferToHost`) | Player action: with `TAOM.CoopCompat` a guest's upgrade, ladder hand-in and ladder claim run on the server (#1329, [coop-compat.md](coop-compat.md), [Lords' Ladder for co-op players](#lords-ladder-for-co-op-players)); without it the presenter refuses a guest before anything is bought. The menu option itself only opens it. |
 | `LordHarnessEventBehavior` | `OnPlayerBattleEnd` (`ShouldDeferToHost`, `IsDedicatedServer`) | The item grant and the relation change in the inquiry callbacks. |
-| `LordsLadderBehavior` | `OnPlayerBattleEnd`, `OnHourlyTick` (`!ShouldDeferToHost && !IsDedicatedServer`) | The item grant and the quest progress. `OnQuestCompleted` stays ungated: it writes this peer's TAOM save data keyed to the quest owner, and its only consumer, the armoury, shows a guest no ladder rows (it refuses a guest without `TAOM.CoopCompat`). |
+| `LordsLadderBehavior` | `OnPlayerBattleEnd`, `OnHourlyTick` (`!ShouldDeferToHost && !IsDedicatedServer`) | The item grant and the quest progress. `OnQuestCompleted` stays ungated: it writes this peer's TAOM save data keyed to the quest owner, and its only consumer, the armoury, shows a guest the server's ladder state instead, and no rung quest (it refuses a guest without `TAOM.CoopCompat`). |
 | `HostReviewCampaignBehavior` | the camp menu option, in `HostReviewService` (`IsSessionActive`) | Player action: the review mission does not start in a co-op session. |
 | `StoryDevMenuBehavior` | the dev menu behind `taom.story_open`, in `StoryDevMenuBehavior.Open` (`CoopSessionPolicy.IsSinglePlayerAuthority`) | Dev console entry (#1105, slice 1): refused in a co-op session. The mission it opens writes nothing to the campaign, so a single-player run changes no shared state. |
 | `StoryOfferBehavior` | the story offer, in `StoryOfferService.NextOffer` (`CoopSessionPolicy.IsSinglePlayerAuthority`) | War Chronicle story offer (#1105, slice 4): no offer in a co-op session or on a dedicated server, so no peer opens the mission or applies its result; the Hornburg window then ends by the map or its fate on the host. |
@@ -695,6 +695,13 @@ which a v2.0.40 server never sends. The rung quests ("Take up the commission") a
 guests: a career quest would run on the guest's PC only. A hand-in therefore completes no running rung
 quest on the server, as the local window does; a guest has none there.
 
+**Window.** `ArmouryPresenter.Show` lists a guest's ladder rows from the reply's view
+(`GuestLadderRows.Plan`, `GuestLadderPresenter`): the claim of a done rung, enabled at a lord-level
+armoury, or the hand-in of a rung that waits for materials, enabled when the party carries enough. The
+claim list is the view's choices, named from the guest's own item data. The outcome comes back as one
+message line; the server's sync of the party inventory shows the change. A local player's window is
+unchanged (`LadderPresenter`).
+
 **Configuration.** TAOM's settings, Co-op, "Lords' Ladder for co-op players" (`CoopGuestLadder`,
 default on), read through `IArmourAcquisitionSettingsProvider.CoopGuestLadderEnabled` in the co-op
 server process for each armoury request, together with Armour Acquisition's own gate
@@ -703,7 +710,7 @@ server process for each armoury request, together with Armour Acquisition's own 
 ([server settings](server-settings.md)). It is in the settings fingerprint: it changes what the server
 does to a player's party.
 
-**Tests.** `GuestLadderHostTests` (view, each outcome, the switch, bad requests, the caps),
+**Tests.** `GuestLadderHostTests` (view, each outcome, the switch, bad requests, the caps), `GuestLadderRowsTests`,
 `ArmourAcquisitionSettingsProviderTests`, `CoopSettingsProviderTests` (the group and the hint).
 
 ## Mission behaviors (#967 C7)

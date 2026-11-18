@@ -165,8 +165,10 @@ whether or not gating is enabled.
    character creation).
 8. **Co-op.** World changes (the sweep, visiting armourers) run on the campaign's authority. With
    `TAOM.CoopCompat`, a guest's armoury asks the host, which runs `ArmouryUpgradeService.Execute` for the
-   guest's hero and inventory (#1329, [coop-compat.md](coop-compat.md)); the guest sees no ladder rows.
-   Without it, the bench turns a co-op guest away before anything is charged (the EliteEmissary
+   guest's hero and inventory (#1329, [coop-compat.md](coop-compat.md)). The guest's ladder rows come from
+   the co-op server's view of its rung (`GuestLadderRows`, `GuestLadderPresenter`): a hand-in or a claim,
+   which the server runs for the guest's hero; no rung quest is offered to a guest
+   ([Lords' Ladder for co-op players](coop-interop.md#lords-ladder-for-co-op-players)). Without it, the bench turns a co-op guest away before anything is charged (the EliteEmissary
    "pay-real-get-phantom" finding). The ladder's battle hand-off and the event skip a guest and a
    dedicated server.
 
