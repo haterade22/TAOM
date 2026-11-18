@@ -75,6 +75,15 @@ internal static class ContractSamples
         Balance = 12.5f,
         HasArmouryLevel = true,
         ArmouryLevel = 2,
+        HasLadder = true,
+        LadderSlot = 3,
+        LadderReady = true,
+        LadderCanClaim = true,
+        LadderLordLevel = 3,
+        LadderMaterialId = "m_gondor",
+        LadderNeeded = 30,
+        LadderCarried = 12,
+        LadderChoices = new[] { "gd_lord_helm", "gd_lord_helm_b" },
     };
 
     public static CoopCompatCareerReport CareerReport() => new CoopCompatCareerReport

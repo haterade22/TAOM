@@ -1,6 +1,9 @@
+using System;
+using System.Linq;
 using TAOM.CoopCompat.Messages;
 using TAOM.CoopCompat.Transport;
 using TAOM.Core.Logging;
+using TAOM.Features.ArmourAcquisition.Domain;
 using TAOM.Features.CoopInterop.GuestTrade;
 
 namespace TAOM.CoopCompat.GuestTrade;
@@ -59,8 +62,21 @@ public sealed class GuestTradeRelayService : IGuestTradeLink
 
         _client.Receive(new GuestTradeReply(message.RequestId ?? "", (GuestTradeAction)message.Action, (GuestTradeRefusal)message.Refusal,
             message.Status, message.Quantity, message.TotalCost, OrNull(message.ResourceName), OrNull(message.ResourceId),
-            message.HasBalance ? message.Balance : null, message.HasArmouryLevel ? message.ArmouryLevel : null));
+            message.HasBalance ? message.Balance : null, message.HasArmouryLevel ? message.ArmouryLevel : null, LadderOf(message)));
     }
+
+    // The same caps the server applies; anything it would never send gives no view.
+    private static GuestLadderView? LadderOf(CoopCompatTradeReply message)
+    {
+        if (!message.HasLadder || !Enum.IsDefined(typeof(LadderSlot), message.LadderSlot))
+            return null;
+        var material = Fits(message.LadderMaterialId) ? message.LadderMaterialId : null;
+        var choices = (message.LadderChoices ?? Array.Empty<string>()).Where(Fits).Take(GuestLadderView.MaxChoices).ToList();
+        return new GuestLadderView((LadderSlot)message.LadderSlot, message.LadderReady, message.LadderCanClaim, message.LadderLordLevel,
+            material, material == null ? 0 : message.LadderNeeded, material == null ? 0 : message.LadderCarried, choices);
+    }
+
+    private static bool Fits(string? id) => !string.IsNullOrEmpty(id) && id!.Length <= GuestLadderView.MaxIdLength;
 
     private static CoopCompatTradeReply ToWire(GuestTradeReply reply) => new()
     {
@@ -77,6 +93,15 @@ public sealed class GuestTradeRelayService : IGuestTradeLink
         Balance = reply.Balance ?? 0f,
         HasArmouryLevel = reply.ArmouryLevel.HasValue,
         ArmouryLevel = reply.ArmouryLevel ?? 0,
+        HasLadder = reply.Ladder != null,
+        LadderSlot = (int)(reply.Ladder?.Slot ?? default),
+        LadderReady = reply.Ladder?.Ready ?? false,
+        LadderCanClaim = reply.Ladder?.CanClaim ?? false,
+        LadderLordLevel = reply.Ladder?.LordLevel ?? 0,
+        LadderMaterialId = reply.Ladder?.MaterialId ?? "",
+        LadderNeeded = reply.Ladder?.Needed ?? 0,
+        LadderCarried = reply.Ladder?.Carried ?? 0,
+        LadderChoices = reply.Ladder?.Choices.ToArray() ?? Array.Empty<string>(),
     };
 
     private bool SameProtocol(int version)

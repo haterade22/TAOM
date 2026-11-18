@@ -105,6 +105,28 @@ public class ContractRoundTripTests
         Assert.AreEqual(12.5f, back.Balance);
         Assert.IsTrue(back.HasArmouryLevel);
         Assert.AreEqual(2, back.ArmouryLevel);
+        Assert.IsTrue(back.HasLadder);
+        Assert.AreEqual(3, back.LadderSlot);
+        Assert.IsTrue(back.LadderReady);
+        Assert.IsTrue(back.LadderCanClaim);
+        Assert.AreEqual(3, back.LadderLordLevel);
+        Assert.AreEqual("m_gondor", back.LadderMaterialId);
+        Assert.AreEqual(30, back.LadderNeeded);
+        Assert.AreEqual(12, back.LadderCarried);
+        CollectionAssert.AreEqual(new[] { "gd_lord_helm", "gd_lord_helm_b" }, back.LadderChoices);
+    }
+
+    [TestMethod]
+    public void TradeReply_WithNoLadderChoices_RoundTripsAsAnEmptyList()
+    {
+        var sample = ContractSamples.TradeReply();
+        sample.LadderChoices = Array.Empty<string>();
+
+        var back = (CoopCompatTradeReply)RoundTrip(sample);
+
+        Assert.IsNotNull(back.LadderChoices);
+        Assert.AreEqual(0, back.LadderChoices.Length);
+        Assert.IsNotNull(new CoopCompatTradeReply().LadderChoices, "a fresh reply holds an empty list, never null");
     }
 
     [TestMethod]

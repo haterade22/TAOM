@@ -44,7 +44,9 @@ public class WireContractNamesTests
 
     [TestMethod]
     public void TradeReply_Layout() => Assert.AreEqual(
-        "TAOM.CoopCompat.Messages.CoopCompatTradeReply: 1=ProtocolVersion, 2=RequestId, 3=Action, 4=Refusal, 5=Status, 6=Quantity, 7=TotalCost, 8=ResourceName, 9=ResourceId, 10=HasBalance, 11=Balance, 12=HasArmouryLevel, 13=ArmouryLevel",
+        "TAOM.CoopCompat.Messages.CoopCompatTradeReply: 1=ProtocolVersion, 2=RequestId, 3=Action, 4=Refusal, 5=Status, 6=Quantity, 7=TotalCost, 8=ResourceName, 9=ResourceId, 10=HasBalance, 11=Balance, 12=HasArmouryLevel, 13=ArmouryLevel, "
+        + "14=HasLadder, 15=LadderSlot, 16=LadderReady, 17=LadderCanClaim, 18=LadderLordLevel, 19=LadderMaterialId, 20=LadderNeeded, "
+        + "21=LadderCarried, 22=LadderChoices",
         Layout(typeof(CoopCompatTradeReply)));
 
     [TestMethod]

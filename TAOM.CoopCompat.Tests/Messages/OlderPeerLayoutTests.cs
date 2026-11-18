@@ -8,8 +8,8 @@ using TAOM.CoopCompat.Messages;
 namespace TAOM.CoopCompat.Tests.Messages;
 
 /// <summary>
-/// A v2.0.40 peer knows the hello as fields 1 to 8 and the reply as fields 1 to 4. The load order fields were added
-/// after them, with ProtocolVersion unchanged, so both directions must still read. The old layouts are built in a
+/// A v2.0.40 peer knows the hello as fields 1 to 8, the reply as fields 1 to 4 and the trade reply as fields 1 to 13.
+/// The load order and the ladder fields were added after them, with ProtocolVersion unchanged, so both directions must still read. The old layouts are built in a
 /// model of their own, with no [ProtoContract] attribute, so Coop's type mapper never sees a second contract.
 /// The real types are read through protobuf-net's default model, the one Coop's serializer uses for a message body.
 /// </summary>
@@ -37,12 +37,32 @@ public class OlderPeerLayoutTests
         public bool BuildMismatch { get; set; }
     }
 
+    public sealed class V2040TradeReply
+    {
+        public int ProtocolVersion { get; set; }
+        public string RequestId { get; set; } = "";
+        public int Action { get; set; }
+        public int Refusal { get; set; }
+        public int Status { get; set; }
+        public int Quantity { get; set; }
+        public int TotalCost { get; set; }
+        public string ResourceName { get; set; } = "";
+        public string ResourceId { get; set; } = "";
+        public bool HasBalance { get; set; }
+        public float Balance { get; set; }
+        public bool HasArmouryLevel { get; set; }
+        public int ArmouryLevel { get; set; }
+    }
+
     private static RuntimeTypeModel V2040Model()
     {
         var model = RuntimeTypeModel.Create();
         model.Add(typeof(V2040Hello), false).Add(1, "ProtocolVersion").Add(2, "TaomVersion").Add(3, "TaomMvid").Add(4, "CoopCompatMvid")
             .Add(5, "SettingsGlobal").Add(6, "GroupNames").Add(7, "GroupHashes").Add(8, "Conclusive");
         model.Add(typeof(V2040Reply), false).Add(1, "ProtocolVersion").Add(2, "Verdict").Add(3, "DivergentGroups").Add(4, "BuildMismatch");
+        model.Add(typeof(V2040TradeReply), false).Add(1, "ProtocolVersion").Add(2, "RequestId").Add(3, "Action").Add(4, "Refusal")
+            .Add(5, "Status").Add(6, "Quantity").Add(7, "TotalCost").Add(8, "ResourceName").Add(9, "ResourceId").Add(10, "HasBalance")
+            .Add(11, "Balance").Add(12, "HasArmouryLevel").Add(13, "ArmouryLevel");
         return model;
     }
 
@@ -118,5 +138,33 @@ public class OlderPeerLayoutTests
         Assert.AreEqual(2, old.Verdict);
         CollectionAssert.AreEqual(new[] { "Battle Tactics" }, old.DivergentGroups);
         Assert.IsTrue(old.BuildMismatch);
+    }
+
+    [TestMethod]
+    public void TradeReply_FromAV2040Server_ReadsAsNoLadder()
+    {
+        var old = new V2040TradeReply { ProtocolVersion = 1, RequestId = "r1", Action = 3, HasArmouryLevel = true, ArmouryLevel = 2 };
+
+        var reply = (CoopCompatTradeReply)ReadAsCurrent(V2040Model(), old, typeof(CoopCompatTradeReply));
+
+        Assert.AreEqual("r1", reply.RequestId);
+        Assert.AreEqual(2, reply.ArmouryLevel);
+        Assert.IsFalse(reply.HasLadder);
+        Assert.IsNotNull(reply.LadderChoices);
+        Assert.AreEqual(0, reply.LadderChoices.Length);
+    }
+
+    [TestMethod]
+    public void TradeReply_ReadByAV2040Guest_KeepsEveryOldField()
+    {
+        var old = ReadAsV2040<V2040TradeReply>(V2040Model(), ContractSamples.TradeReply());
+
+        Assert.AreEqual(1, old.ProtocolVersion);
+        Assert.AreEqual("abc", old.RequestId);
+        Assert.AreEqual(6, old.Status);
+        Assert.AreEqual("horses", old.ResourceId);
+        Assert.IsTrue(old.HasBalance);
+        Assert.AreEqual(12.5f, old.Balance);
+        Assert.AreEqual(2, old.ArmouryLevel);
     }
 }

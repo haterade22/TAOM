@@ -25,6 +25,9 @@ WHAT IT DOES
    disconnects you.
 6. Careers. Your TAOM career is kept by the host, so it is still there
    when you join again, and the other players see it.
+7. Lords' Ladder. A town armoury shows your rung of the lord's gear
+   ladder. The host keeps your ladder, takes the lord's materials and fits
+   the piece you claim. Battles you win can give you lord's materials.
 
 
 WHAT YOU NEED
@@ -106,6 +109,18 @@ MESSAGES YOU CAN SEE
 it has saved for you."
     The host checked your career change against the career rules and did
     not take it. You keep the career the host has saved for you.
+
+"Your lord's gear has changed since you looked. Visit the armoury again."
+    (Lords' Ladder.) Your ladder changed on the host while the armoury was
+    open. Leave the armoury and open it again.
+
+"The armourer cannot fit that piece."
+    (Lords' Ladder.) That piece is not one you can claim now. Open the
+    armoury again and pick one of the pieces it lists.
+
+"The co-op server has turned off the Lords' Ladder for co-op players."
+    (Lords' Ladder.) The host has the ladder switched off for players.
+    Ask the host if you want it on.
 
 
 REPORTING A PROBLEM
