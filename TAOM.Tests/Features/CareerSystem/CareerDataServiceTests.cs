@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
@@ -283,5 +284,152 @@ public class CareerDataServiceTests
         _service.SetCareer("main_hero", "ranger");
         Assert.IsTrue(_service.TryAddChoice("main_hero", "ranger_root", 2));
         Assert.AreEqual(1, _service.GetChoiceCount("main_hero"));
+    }
+
+    // ── HeroCareerChanged and ApplyHeroCareer (co-op career sync, docs/features/coop-interop.md) ──
+
+    private List<string> RecordChanges()
+    {
+        var changed = new List<string>();
+        _service.HeroCareerChanged += changed.Add;
+        return changed;
+    }
+
+    [TestMethod]
+    public void SetCareer_AnyHero_RaisesHeroCareerChanged()
+    {
+        var changed = RecordChanges();
+
+        _service.SetCareer("Player1", "ranger");
+
+        CollectionAssert.AreEqual(new[] { "Player1" }, changed);
+    }
+
+    [TestMethod]
+    public void SetCareer_TheSameCareerAgain_RaisesNothing()
+    {
+        _service.SetCareer("Player1", "ranger");
+        var changed = RecordChanges();
+
+        _service.SetCareer("Player1", "ranger");
+
+        Assert.AreEqual(0, changed.Count);
+        Assert.AreEqual("ranger", _service.GetCareerStringId("Player1"));
+    }
+
+    [TestMethod]
+    public void ClearCareer_AnEmptyEntry_RaisesNothing()
+    {
+        // On the co-op server every death of a hero with an empty entry would otherwise send an empty career to every player.
+        _service.GetOrCreateData("lord_1_1");
+        var changed = RecordChanges();
+
+        _service.ClearCareer("lord_1_1");
+
+        Assert.AreEqual(0, changed.Count);
+    }
+
+    [TestMethod]
+    public void ClearCareer_AnEntryWithOnlyAFlag_Raises()
+    {
+        _service.SetFlag("Player1", "proven");
+        var changed = RecordChanges();
+
+        _service.ClearCareer("Player1");
+
+        CollectionAssert.AreEqual(new[] { "Player1" }, changed);
+        Assert.IsFalse(_service.HasFlag("Player1", "proven"));
+    }
+
+    [TestMethod]
+    public void TryAddChoice_RaisesOnlyWhenTheChoiceWasAdded()
+    {
+        _service.TryAddChoice("Player1", "a", 5);
+        var changed = RecordChanges();
+
+        _service.TryAddChoice("Player1", "a", 5);
+        _service.TryAddChoice("Player1", "b", 1);
+        _service.TryAddChoice("Player1", "c", 5);
+
+        CollectionAssert.AreEqual(new[] { "Player1" }, changed, "a duplicate and a full budget change nothing");
+    }
+
+    [TestMethod]
+    public void RemoveChoice_RaisesOnlyWhenAChoiceWasRemoved()
+    {
+        _service.TryAddChoice("Player1", "a", 5);
+        var changed = RecordChanges();
+
+        _service.RemoveChoice("Player1", "missing");
+        _service.RemoveChoice("unknown_hero", "a");
+        _service.RemoveChoice("Player1", "a");
+
+        CollectionAssert.AreEqual(new[] { "Player1" }, changed);
+    }
+
+    [TestMethod]
+    public void UnlockTierAndSetFlag_RaiseOnlyOnAChange()
+    {
+        var changed = RecordChanges();
+
+        _service.UnlockTier("Player1", 2);
+        _service.UnlockTier("Player1", 2);
+        _service.SetFlag("Player1", "proven");
+        _service.SetFlag("Player1", "proven");
+
+        CollectionAssert.AreEqual(new[] { "Player1", "Player1" }, changed);
+    }
+
+    [TestMethod]
+    public void ClearCareer_RaisesForAKnownHeroOnly()
+    {
+        _service.SetCareer("Player1", "ranger");
+        var changed = RecordChanges();
+
+        _service.ClearCareer("unknown_hero");
+        _service.ClearCareer("Player1");
+
+        CollectionAssert.AreEqual(new[] { "Player1" }, changed);
+    }
+
+    [TestMethod]
+    public void ApplyHeroCareer_ReplacesTheEntryWithCopies_AndRaisesNothing()
+    {
+        _service.SetCareer("Player1", "old");
+        _service.TryAddChoice("Player1", "old_root", 5);
+        var changed = RecordChanges();
+        var sent = new HeroCareerData("Player1") { CareerStringId = "ranger" };
+        sent.ChoiceIds.Add("ranger_root");
+        sent.TierUnlocks.Add(2);
+        sent.Flags.Add("career_tree_v2");
+
+        _service.ApplyHeroCareer(sent);
+        sent.ChoiceIds.Add("added_later");
+
+        Assert.AreEqual(0, changed.Count);
+        Assert.AreEqual("ranger", _service.GetCareerStringId("Player1"));
+        CollectionAssert.AreEqual(new[] { "ranger_root" }, _service.GetChoiceIds("Player1").ToList());
+        Assert.IsTrue(_service.IsTierUnlocked("Player1", 2));
+        Assert.IsTrue(_service.HasFlag("Player1", "career_tree_v2"));
+    }
+
+    [TestMethod]
+    public void ApplyHeroCareer_NullOrNoHeroId_ChangesNothing()
+    {
+        _service.ApplyHeroCareer(null);
+        _service.ApplyHeroCareer(new HeroCareerData());
+
+        Assert.AreEqual(0, _service.GetAllData().Count);
+    }
+
+    [TestMethod]
+    public void RestoreDataAndReset_RaiseNothing()
+    {
+        var changed = RecordChanges();
+
+        _service.RestoreData(new Dictionary<string, HeroCareerData> { ["Player1"] = new HeroCareerData("Player1") });
+        _service.ResetForNewCampaign();
+
+        Assert.AreEqual(0, changed.Count);
     }
 }

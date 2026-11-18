@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CareerSystem;
@@ -32,4 +33,19 @@ public interface ICareerDataService
 
     Dictionary<string, HeroCareerData> GetAllData();
     void RestoreData(Dictionary<string, HeroCareerData> data);
+
+    /// <summary>
+    /// Raised with the hero's StringId after SetCareer, TryAddChoice, RemoveChoice, UnlockTier, SetFlag or
+    /// ClearCareer changed that hero's entry; a call that changes nothing raises nothing. RestoreData,
+    /// ResetForNewCampaign and ApplyHeroCareer never raise it. The co-op career sync listens to it
+    /// (docs/features/coop-interop.md, "Career sync").
+    /// </summary>
+    event Action<string>? HeroCareerChanged;
+
+    /// <summary>
+    /// Replace one hero's entry with a copy of <paramref name="career"/>: the co-op career sync writes the
+    /// career the co-op server holds. Raises no <see cref="HeroCareerChanged"/>; a null career or one
+    /// with no hero id changes nothing.
+    /// </summary>
+    void ApplyHeroCareer(HeroCareerData? career);
 }
