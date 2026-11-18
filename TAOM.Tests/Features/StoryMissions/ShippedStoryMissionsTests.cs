@@ -152,7 +152,7 @@ public class ShippedStoryMissionsTests
 
         CollectionAssert.AreEqual(new[] { "aragorn", "legolas", "gimli" }, m.Heroes.Select(h => h.Id).ToArray());
         CollectionAssert.AreEqual(new[] { "taom_hero_aragorn", "taom_hero_legolas", "taom_hero_gimli" }, m.Heroes.Select(h => h.TroopId).ToArray());
-        Assert.IsTrue(m.Heroes.All(h => h.HealthFactor == 3f), "the Long Defeat shop's factor");
+        Assert.IsTrue(m.Heroes.All(h => h.HealthFactor == 8f), "the Long Defeat shop's factor: 800 health (#1438)");
         Assert.IsTrue(RunPlanTroops.AllTroopIds(StoryPlanBuilder.Build(m, RunOptions.Default)).Contains("taom_hero_legolas"));
     }
 

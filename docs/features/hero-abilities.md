@@ -124,6 +124,11 @@ or speed up the archers around him. His kit works where the gate opens: the Long
   step needs the engine's own gate, `Agent.CanBeAssignedForScriptedMovement` (AI-controlled, not fleeing, not using a
   ladder or an object, no scripted move set), so a player at his controls, a fleeing body and an item pickup are never
   moved; a mounted body is never moved either. He stays in the Three Hunters group, so key 8 still orders him.
+  Since #1438 he holds the high archer place nearest the outer gate under a scripted position
+  (docs/features/long-defeat.md, "The standing order at the wall"), so the step back does not start while that hold
+  stands; it applies when he has no high place or a player's order has released him. In an unattended Helm's Deep
+  run the keep-distance check therefore reads `reason=no-threat` for him, and the #1415 proof needs a released
+  Legolas or a fortress with no high archer place.
 
 ### Balance tally
 
@@ -204,7 +209,7 @@ A full restart is needed for a change (the provider is a lazy singleton). The fi
 | Many Arrows (`legolas_many_arrows`) | Legolas | 90 s / 12 s | a ranged target within 40 m and 5 enemies within 40 m | 2 extra arrows per shot |
 | Archer's Eye (`legolas_archers_eye`) | Legolas | 120 s / 20 s | 5 enemies within 40 m | ranged allies in 15 m: draw speed 20 %, aim error -50 %, ranged damage 15 % |
 
-Gimli's passive: knockdown resistance 1000 %, knock-back resistance 300 %. The hero receives his `selfEffects` and
+Gimli's passive: knockdown resistance 1000 %, knock-back resistance 300 %. Each of the three also has a missile damage reduction of 30 % in his passive (#1438), because none carries a shield: `missileDamageReductionPercent` is added to `damageReductionPercent` on a missile hit only, and the two together stop at 90 % (`RaceAbilityService.Reduce`). The hero receives his `selfEffects` and
 his `allyEffects` together. The trigger counts are 3, not 5, because a wall lane takes attackers one ladder at a
 time. Legolas's ranged block: zero aim error, shield pierce, headshot kill chance 1.0, body kill chance 0.10, extra
 arrow `taom_legolas_arrow` within 10 m of his target and 120 m of him, a step of 8 m away from an enemy within 5 m;
@@ -374,7 +379,7 @@ outline `#7FD4FF`. "A ranged target within
 - A buffed soldier counts as moved by an ability (`RaceAbilityHooks.HasLiveEffects`) while his buff lasts, so the
   Long Defeat's boon read-back passes him over for 12 to 15 s. With no plain soldier left its check is skipped
   (`reason=no-soldier`), never failed.
-- `HeroAurasConfigProvider` sets no upper bound on an aura's damage reduction; the hero abilities cap theirs at 90.
+- `HeroAurasConfigProvider` sets no upper bound on an aura's damage reduction; the hero abilities cap theirs at 90. Since #1438 `RaceAbilityService.Reduce` caps the reduction it applies at 90 in every case (the plain reduction plus, on a missile, `missileDamageReductionPercent`), so an aura above 90 gives 90.
 - **The 15 m clamp.** `HeroAbilityHost.InContact` once clamped its query to 15 m. With Legolas's 40 m trigger it would
   count no contact, and his fired check could never fail. The query now takes the trigger's range. Past 15 m the
   native query walks every agent (traps/mission.md, "Native branches"); it runs once a second per hero.

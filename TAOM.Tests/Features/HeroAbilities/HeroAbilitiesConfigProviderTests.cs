@@ -229,6 +229,17 @@ public class HeroAbilitiesConfigProviderTests
     }
 
     [TestMethod]
+    public void Load_MissileReductionAbove90_ZeroedWithWarning()
+    {
+        var ability = LoadOne(extra: "\"selfEffects\":{\"missileDamageReductionPercent\":91}");
+
+        Assert.AreEqual(0f, ability.SelfEffects.MissileDamageReductionPercent);
+        AssertWarned("missileDamageReductionPercent");
+        _sut = NewProvider();
+        Assert.AreEqual(90f, LoadOne(extra: "\"selfEffects\":{\"missileDamageReductionPercent\":90}").SelfEffects.MissileDamageReductionPercent);
+    }
+
+    [TestMethod]
     public void Load_DamageReductionAbove90_ZeroedWithWarning()
     {
         var ability = LoadOne(extra: "\"selfEffects\":{\"damageReductionPercent\":91}");

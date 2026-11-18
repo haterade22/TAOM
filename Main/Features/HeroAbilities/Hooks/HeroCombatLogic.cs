@@ -52,7 +52,7 @@ public sealed class HeroCombatLogic : MissionLogic
         }
         catch (Exception ex)
         {
-            Disable(ex, "OnAgentBuild");
+            LogAndDisable(ex, "OnAgentBuild");
         }
     }
 
@@ -123,7 +123,7 @@ public sealed class HeroCombatLogic : MissionLogic
         }
         catch (Exception ex)
         {
-            Disable(ex, "OnMissionTick");
+            LogAndDisable(ex, "OnMissionTick");
         }
     }
 
@@ -152,7 +152,7 @@ public sealed class HeroCombatLogic : MissionLogic
 
     private static bool IsEnemy(Agent a, Agent b) => a.Team != null && b.Team != null && a.Team.IsEnemyOf(b.Team);
 
-    private void Disable(Exception ex, string site)
+    private void LogAndDisable(Exception ex, string site)
     {
         _disabled = true;
         _deferred.Clear();

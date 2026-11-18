@@ -35,6 +35,7 @@ public static class RaceAbilityEffectsMerge
             MeleeDamagePercent = Higher(own.MeleeDamagePercent, aura.MeleeDamagePercent),
             RangedDamagePercent = Higher(own.RangedDamagePercent, aura.RangedDamagePercent),
             DamageReductionPercent = Higher(own.DamageReductionPercent, aura.DamageReductionPercent),
+            MissileDamageReductionPercent = Higher(own.MissileDamageReductionPercent, aura.MissileDamageReductionPercent),
             KnockdownResistancePercent = Higher(own.KnockdownResistancePercent, aura.KnockdownResistancePercent),
             KnockbackResistancePercent = Higher(own.KnockbackResistancePercent, aura.KnockbackResistancePercent),
             DismountResistancePercent = Higher(own.DismountResistancePercent, aura.DismountResistancePercent),

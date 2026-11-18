@@ -149,7 +149,7 @@ not for sale; each is a row of the mission's `heroes` list.
   the row reader the Long Defeat shop uses, so `hero=aragorn` means the same in both modes. A missing
   key is no hero and no warning; a value that is not an array gives no hero and one warning; a bad or
   repeated row is skipped with a warning; past three valid rows (`StoryHeroesReader.MaxHeroes`) the
-  rest are dropped with one warning. `helms_deep_defend` ships all three with `healthFactor` 3.0, the
+  rest are dropped with one warning. `helms_deep_defend` ships all three with `healthFactor` 8.0 (#1438), the
   factor of `shop.json`; `ShippedStoryMissionsTests` requires the two to agree.
 - **Plan:** `StoryPlanBuilder` sets `RunPlan.FreeHeroes` from the definition. `SurvivalRun.Begin`
   queues each free hero as pending (`QueueFreeHeroes`), so he holds one place under the garrison cap
@@ -182,8 +182,8 @@ not for sale; each is a row of the mission's `heroes` list.
   or a loaded save, through `StoryRosterBehavior` and `StoryRosterService`): the troop ids of every
   mission's plan and the extra arrow item of every hero kit that resolve to nothing. It is a log line
   at session start, so a new game and a loaded save in the same process write one line, not two.
-- **Not done:** no hero strip on the HUD, no message when a hero falls, no per-hero position (the three
-  stand where the heroes' home place puts them, at the nearest wall lane), no `<Hero>` entry, and no
+- **Not done:** no hero strip on the HUD, no message when a hero falls, no per-hero position beyond the field's own (Aragorn and Gimli at
+  the nearest wall lane, Legolas on the high wall by the gate, #1438), no `<Hero>` entry, and no
   unattended driver beyond the one defence mission of #1368 ([scenario autorun](scenario-autorun.md)).
 
 The feature declares no Harmony patch and no GameModel. Its one saved value, a declined offer, is a

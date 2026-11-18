@@ -269,7 +269,8 @@ public class LongDefeatHeroPinTests
         StringAssert.Contains(read, "formation.CountOfUnits");
         StringAssert.Contains(read, "formation.GetReadonlyMovementOrderReference()");
         StringAssert.Contains(read, "order.OrderEnum == MovementOrder.MovementOrderEnum.Move && order.GetPosition(formation).Distance(at.AsVec2) <= OwnOrderTolerance");
-        StringAssert.Contains(read, "Math.Abs(position.z - at.z)", "a hero at the foot of the wall is not at a place on top of it");
+        StringAssert.Contains(read, "Math.Abs(position.z - from.z)", "a hero at the foot of the wall is not at a place on top of it");
+        StringAssert.Contains(read, "var from = high ? _highPlaceAt : at;", "a ranged hero on the high wall is measured from his own place (#1438)");
         StringAssert.Contains(read, "own ? _mission.CurrentTime - _heroPostedAt : 0f");
         Assert.IsFalse(read.Contains("ActiveBehavior"), "a formation off AI control never ticks its AI");
         Assert.IsFalse(read.Contains("agent.IsAIControlled"), "every AI soldier answers true there");

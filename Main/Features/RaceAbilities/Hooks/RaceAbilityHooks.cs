@@ -161,7 +161,7 @@ public static class RaceAbilityHooks
         var effects = EffectsOf(runtime, attack.VictimAgent, out var live);
         if (effects == null)
             return damage;
-        var result = runtime.Service.Reduce(damage, effects, attack.IsVictimAgentMount, collision.IsFallDamage);
+        var result = runtime.Service.Reduce(damage, effects, attack.IsVictimAgentMount, collision.IsFallDamage, collision.IsMissile);
         if (result != damage && live != null)
         {
             runtime.Telemetry.Add(live.Profile.AbilityId, RaceAbilityStat.HitsReduced);

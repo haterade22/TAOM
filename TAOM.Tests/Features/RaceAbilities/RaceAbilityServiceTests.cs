@@ -603,18 +603,32 @@ public class RaceAbilityServiceTests
 
     [TestMethod]
     public void Reduce_TakesThePercentageOff() =>
-        Assert.AreEqual(40f, _sut.Reduce(50f, new RaceAbilityEffects { DamageReductionPercent = 20f }, victimIsMount: false, isFallDamage: false), 0.0001f);
+        Assert.AreEqual(40f, _sut.Reduce(50f, new RaceAbilityEffects { DamageReductionPercent = 20f }, victimIsMount: false, isFallDamage: false, isMissile: false), 0.0001f);
 
     [TestMethod]
-    public void Reduce_NoAbility_KeepsTheDamage() => Assert.AreEqual(50f, _sut.Reduce(50f, null, victimIsMount: false, isFallDamage: false), 0.0001f);
+    public void Reduce_AMissile_AddsTheMissileReduction() =>
+        Assert.AreEqual(25f, _sut.Reduce(50f, new RaceAbilityEffects { DamageReductionPercent = 20f, MissileDamageReductionPercent = 30f },
+            victimIsMount: false, isFallDamage: false, isMissile: true), 0.0001f);
+
+    [TestMethod]
+    public void Reduce_AMeleeHit_IgnoresTheMissileReduction() =>
+        Assert.AreEqual(50f, _sut.Reduce(50f, new RaceAbilityEffects { MissileDamageReductionPercent = 30f }, victimIsMount: false, isFallDamage: false, isMissile: false), 0.0001f);
+
+    [TestMethod]
+    public void Reduce_BothReductions_StopAt90() =>
+        Assert.AreEqual(5f, _sut.Reduce(50f, new RaceAbilityEffects { DamageReductionPercent = 80f, MissileDamageReductionPercent = 30f },
+            victimIsMount: false, isFallDamage: false, isMissile: true), 0.0001f);
+
+    [TestMethod]
+    public void Reduce_NoAbility_KeepsTheDamage() => Assert.AreEqual(50f, _sut.Reduce(50f, null, victimIsMount: false, isFallDamage: false, isMissile: false), 0.0001f);
 
     [TestMethod]
     public void Reduce_AFall_KeepsItsDamage() =>
-        Assert.AreEqual(50f, _sut.Reduce(50f, new RaceAbilityEffects { DamageReductionPercent = 20f }, victimIsMount: false, isFallDamage: true), 0.0001f);
+        Assert.AreEqual(50f, _sut.Reduce(50f, new RaceAbilityEffects { DamageReductionPercent = 20f }, victimIsMount: false, isFallDamage: true, isMissile: false), 0.0001f);
 
     [TestMethod]
     public void Reduce_NaNDamage_PassesItThrough() =>
-        Assert.IsTrue(float.IsNaN(_sut.Reduce(float.NaN, new RaceAbilityEffects { DamageReductionPercent = 20f }, victimIsMount: false, isFallDamage: false)));
+        Assert.IsTrue(float.IsNaN(_sut.Reduce(float.NaN, new RaceAbilityEffects { DamageReductionPercent = 20f }, victimIsMount: false, isFallDamage: false, isMissile: false)));
 
     // --- the percentage arithmetic every effect goes through ---
 
@@ -835,7 +849,7 @@ public class RaceAbilityServiceTests
 
     [TestMethod]
     public void Reduce_AHitOnTheHorse_IsTheHorses() =>
-        Assert.AreEqual(50f, _sut.Reduce(50f, new RaceAbilityEffects { DamageReductionPercent = 20f }, victimIsMount: true, isFallDamage: false), 0.0001f);
+        Assert.AreEqual(50f, _sut.Reduce(50f, new RaceAbilityEffects { DamageReductionPercent = 20f }, victimIsMount: true, isFallDamage: false, isMissile: false), 0.0001f);
 
     [TestMethod]
     public void MoraleOnEnd_AnActiveWindowEnding_PaysThePrice()
