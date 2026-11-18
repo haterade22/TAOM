@@ -5,17 +5,25 @@
     "wear in battle. clones: source -> the bands of its low wearers, which wear taom_band_<lt|md|hv>_<source>.",
     "upgrades: source -> the stronger piece its level 36+ wearers (troops) wear instead. fallback: B pieces",
     "(upgrade by the classifier) that found no stronger piece and are cloned instead. retired: clones no set",
-    "wears any more, kept in the clone file. Do not edit by hand: --apply rewrites it from the rosters, and",
+    "wears any more, kept in the clone file. A source no low battle troop wears any more, but a kit below the",
+    "elite band still does, keeps its clones (kept); a shipped upgrade stays unless it clashes (held). Do not edit by hand: --apply",
+    "rewrites it from the rosters, and",
     "--check fails when it is stale. docs/features/armor-balance.md."
   ],
   "clones": {
     "mirkwood_body": ["light", "medium"],
     "mirkwood_boots": ["light", "medium"],
+    "mirkwood_gloves": ["light", "medium"],
+    "mirkwood_shoulder": ["light", "medium"],
     "mkwd_inf3_chest": ["light", "medium", "heavy"],
-    "mkwd_inf3_chest_bronze": ["light", "medium", "heavy"],
+    "mkwd_inf3_chest_bronze": ["light", "heavy"],
     "mkwd_inf3_greaves": ["light", "medium", "heavy"],
-    "mkwd_inf3_greaves_bronze": ["light", "medium", "heavy"],
-    "mkwd_inf3_pauldrons_bronze": ["light", "medium", "heavy"],
+    "mkwd_inf3_greaves_bronze": ["light", "heavy"],
+    "mkwd_inf3_pauldrons_bronze": ["light", "heavy"],
+    "mkwd_inf3_vambraces": ["light", "medium", "heavy"],
+    "mkwd_palace_t1_helmet_green_hc": ["light", "medium"],
+    "mkwd_palace_t2_helmet_green_hc": ["light", "medium"],
+    "mkwd_palace_t3_helmet_green_hc": ["medium"],
     "rivendell_boots_greaves3": ["light", "medium", "heavy"],
     "rivendell_pauldron_tier1_cape_silver": ["light", "medium"],
     "roh_nbl_hlm_cf": ["heavy"],
@@ -45,7 +53,6 @@
     "cts_rohan_royal_guard_boots": {"to": "whiterun_boots", "troops": ["rohan_eastemnet_kings_own_lancer", "rohan_edoras_golden_hall_kings_own_rider", "rohan_westemnet_kings_own_rider", "rohan_wold_kings_own_horse_archer"], "wrote": {"rohan_eastemnet_kings_own_lancer": {"Leg": [0]}, "rohan_edoras_golden_hall_kings_own_rider": {"Leg": [0]}, "rohan_westemnet_kings_own_rider": {"Leg": [0]}, "rohan_wold_kings_own_horse_archer": {"Leg": [0]}}},
     "mkwd_inf1_t1_helmet_gold_hc": {"to": "mkwd_inf1_t3_helmet_gold_hc", "troops": ["mirkwood_recruit", "mirkwood_recruit_merc"], "wrote": {"fow_mirkwood_recruit": {"Head": [0]}, "mirkwood_recruit": {"Head": [0]}, "mirkwood_recruit_merc": {"Head": [0]}}},
     "mkwd_inf1_t2_helmet_silver_hc": {"to": "mkwd_inf1_t3_helmet_silver_hc", "troops": ["mirkwood_sentinels"], "wrote": {"fow_mirkwood_sentinels": {"Head": [0]}, "mirkwood_sentinels": {"Head": [0]}}},
-    "mkwd_inf3_vambraces": {"to": "mkwd_inf3_vambraces_bronze", "troops": ["mirkwood_glaivesman", "mirkwood_recruit", "mirkwood_recruit_merc", "mirkwood_woodsman"], "wrote": {"fow_mirkwood_recruit": {"Gloves": [0]}, "mirkwood_glaivesman": {"Gloves": [0]}, "mirkwood_recruit": {"Gloves": [0]}, "mirkwood_recruit_merc": {"Gloves": [0]}, "mirkwood_woodsman": {"Gloves": [0]}}},
     "rivendell_torso_infantry_tier2": {"to": "rivendell_torso_infantry_tier2_silvergold", "troops": ["imladris_marksman", "lindon_imladris_marksman"], "wrote": {"fow_imladris_marksman": {"Body": [11]}, "imladris_marksman": {"Body": [11]}, "lindon_imladris_marksman": {"Body": [11]}}},
     "rivendell_torso_infantry_tier3": {"to": "rivendell_torso_infantry_tier3_silvergold", "troops": ["imladris_marksman", "lindon_imladris_marksman"], "wrote": {"fow_imladris_marksman": {"Body": [12]}, "imladris_marksman": {"Body": [12]}, "lindon_imladris_marksman": {"Body": [12]}}},
     "rivendell_torso_light_armored_tier1": {"to": "rivendell_torso_infantry_tier2_silver", "troops": ["lindon_noble", "lindon_noble_merc", "rivendell_noble", "rivendell_noble_merc"], "wrote": {"lindon_noble": {"Body": [4]}, "lindon_noble_merc": {"Body": [4]}, "rivendell_noble": {"Body": [4]}, "rivendell_noble_merc": {"Body": [4]}}},
@@ -113,6 +120,6 @@
     "sk_uruk_mordor_greaves_medium_b": {"to": "sk_uruk_mordor_greaves_heavy_b", "troops": ["mordor_uruk_baraddurguard"], "wrote": {"fow_mordor_uruk_baraddurguard": {"Leg": [3]}, "mordor_uruk_baraddurguard": {"Leg": [3]}}},
     "sm_md_num_inf_pauld_med_a": {"to": "sm_md_num_inf_pauld_cape_elite_a", "troops": ["mordor_num_vet_infantry"], "wrote": {"mordor_num_vet_infantry": {"Cape": [0, 1]}}}
   },
-  "fallback": ["mkwd_inf3_chest", "mkwd_inf3_chest_bronze", "mkwd_inf3_greaves", "sk_dg_khml_bracer_hplate_heavy_a", "sk_rh_loke_bracer_heavy_b", "sk_uruk_hai_greaves_heavy_a1", "sk_uruk_hai_pauldron_heavy_a1"],
-  "retired": []
+  "fallback": ["mkwd_inf3_chest", "mkwd_inf3_greaves", "mkwd_inf3_vambraces", "sk_dg_khml_bracer_hplate_heavy_a", "sk_rh_loke_bracer_heavy_b", "sk_uruk_hai_greaves_heavy_a1", "sk_uruk_hai_pauldron_heavy_a1"],
+  "retired": ["taom_band_md_mkwd_inf3_chest_bronze", "taom_band_md_mkwd_inf3_greaves_bronze", "taom_band_md_mkwd_inf3_pauldrons_bronze"]
 }

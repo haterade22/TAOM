@@ -95,6 +95,88 @@
         <Flags />
     </Item>
 
+    <!-- taom_band_lt_mirkwood_gloves: mirkwood arm mirkwood_gloves at the light band, -/-/4/- (head/body/arm/leg); the source at the elite band 0/0/24/0 -->
+    <Item
+        id="taom_band_lt_mirkwood_gloves"
+        name="{=aom_mirkwood_gloves_name}[Mirkwood] Palace Guard Glovves"
+        mesh="mirkwood_gloves"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="1.3"
+        difficulty="0"
+        appearance="3"
+        Type="HandArmor">
+        <ItemComponent>
+            <Armor
+                arm_armor="4"
+                covers_hands="true"
+                modifier_group="cloth_unarmoured"
+                material_type="Plate" />
+        </ItemComponent>
+        <Flags />
+    </Item>
+
+    <!-- taom_band_md_mirkwood_gloves: mirkwood arm mirkwood_gloves at the medium band, -/-/8/- (head/body/arm/leg); the source at the elite band 0/0/24/0 -->
+    <Item
+        id="taom_band_md_mirkwood_gloves"
+        name="{=aom_mirkwood_gloves_name}[Mirkwood] Palace Guard Glovves"
+        mesh="mirkwood_gloves"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="1.3"
+        difficulty="0"
+        appearance="3"
+        Type="HandArmor">
+        <ItemComponent>
+            <Armor
+                arm_armor="8"
+                covers_hands="true"
+                modifier_group="cloth_unarmoured"
+                material_type="Plate" />
+        </ItemComponent>
+        <Flags />
+    </Item>
+
+    <!-- taom_band_lt_mirkwood_shoulder: mirkwood shoulder mirkwood_shoulder at the light band, -/2/0/- (head/body/arm/leg); the source at the elite band 0/13/11/0 -->
+    <Item
+        id="taom_band_lt_mirkwood_shoulder"
+        name="{=aom_mirkwood_shoulder_name}[Mirkwood] Palace Guard Shoulder"
+        mesh="mirkwood_shoulder"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="5.9"
+        appearance="6"
+        Type="Cape">
+        <ItemComponent>
+            <Armor
+                body_armor="2"
+                arm_armor="0"
+                modifier_group="cloth_unarmoured"
+                material_type="Plate" />
+        </ItemComponent>
+        <Flags />
+    </Item>
+
+    <!-- taom_band_md_mirkwood_shoulder: mirkwood shoulder mirkwood_shoulder at the medium band, -/5/0/- (head/body/arm/leg); the source at the elite band 0/13/11/0 -->
+    <Item
+        id="taom_band_md_mirkwood_shoulder"
+        name="{=aom_mirkwood_shoulder_name}[Mirkwood] Palace Guard Shoulder"
+        mesh="mirkwood_shoulder"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="5.9"
+        appearance="6"
+        Type="Cape">
+        <ItemComponent>
+            <Armor
+                body_armor="5"
+                arm_armor="0"
+                modifier_group="cloth_unarmoured"
+                material_type="Plate" />
+        </ItemComponent>
+        <Flags />
+    </Item>
+
     <!-- taom_band_lt_mkwd_inf3_chest: mirkwood body mkwd_inf3_chest at the light band, -/8/0/0 (head/body/arm/leg); the source at the elite band 0/48/8/19 -->
     <Item
         id="taom_band_lt_mkwd_inf3_chest"
@@ -193,32 +275,6 @@
                 has_gender_variations="false"
                 covers_body="true"
                 modifier_group="leather"
-                material_type="Plate" />
-        </ItemComponent>
-        <Flags
-            UseTeamColor="true" />
-    </Item>
-
-    <!-- taom_band_md_mkwd_inf3_chest_bronze: mirkwood body mkwd_inf3_chest_bronze at the medium band, -/17/0/0 (head/body/arm/leg); the source at the elite band 0/48/8/19 -->
-    <Item
-        id="taom_band_md_mkwd_inf3_chest_bronze"
-        name="{=aom_mkwd_inf3_chest_bronze_name}[Mirkwood] Infantry Chestplate III"
-        subtype="body_armor"
-        mesh="mkwd_inf3_chest_bronze"
-        culture="Culture.mirkwood"
-        is_merchandise="false"
-        weight="8.5"
-        difficulty="0"
-        appearance="1.5"
-        Type="BodyArmor">
-        <ItemComponent>
-            <Armor
-                body_armor="17"
-                arm_armor="0"
-                leg_armor="0"
-                has_gender_variations="false"
-                covers_body="true"
-                modifier_group="chain"
                 material_type="Plate" />
         </ItemComponent>
         <Flags
@@ -335,27 +391,6 @@
         <Flags />
     </Item>
 
-    <!-- taom_band_md_mkwd_inf3_greaves_bronze: mirkwood leg mkwd_inf3_greaves_bronze at the medium band, -/-/-/8 (head/body/arm/leg); the source at the elite band 0/0/0/22 -->
-    <Item
-        id="taom_band_md_mkwd_inf3_greaves_bronze"
-        name="{=aom_mkwd_inf3_greaves_bronze_name}[Mirkwood] Greaves III"
-        mesh="mkwd_inf3_greave_bronze"
-        culture="Culture.mirkwood"
-        is_merchandise="false"
-        weight="1.6"
-        difficulty="0"
-        appearance="3"
-        Type="LegArmor">
-        <ItemComponent>
-            <Armor
-                leg_armor="8"
-                covers_legs="true"
-                modifier_group="cloth_unarmoured"
-                material_type="Chainmail" />
-        </ItemComponent>
-        <Flags />
-    </Item>
-
     <!-- taom_band_hv_mkwd_inf3_greaves_bronze: mirkwood leg mkwd_inf3_greaves_bronze at the heavy band, -/-/-/15 (head/body/arm/leg); the source at the elite band 0/0/0/22 -->
     <Item
         id="taom_band_hv_mkwd_inf3_greaves_bronze"
@@ -397,26 +432,6 @@
         <Flags />
     </Item>
 
-    <!-- taom_band_md_mkwd_inf3_pauldrons_bronze: mirkwood shoulder mkwd_inf3_pauldrons_bronze at the medium band, -/5/0/- (head/body/arm/leg); the source at the elite band 0/13/12/0 -->
-    <Item
-        id="taom_band_md_mkwd_inf3_pauldrons_bronze"
-        name="{=aom_mkwd_inf3_pauldrons_bronze_name}[Mirkwood] Pauldrons III"
-        mesh="mkwd_inf3_pauldron_bronze"
-        culture="Culture.mirkwood"
-        is_merchandise="false"
-        weight="3.2"
-        appearance="6"
-        Type="Cape">
-        <ItemComponent>
-            <Armor
-                body_armor="5"
-                arm_armor="0"
-                modifier_group="cloth_unarmoured"
-                material_type="Chainmail" />
-        </ItemComponent>
-        <Flags />
-    </Item>
-
     <!-- taom_band_hv_mkwd_inf3_pauldrons_bronze: mirkwood shoulder mkwd_inf3_pauldrons_bronze at the heavy band, -/9/8/- (head/body/arm/leg); the source at the elite band 0/13/12/0 -->
     <Item
         id="taom_band_hv_mkwd_inf3_pauldrons_bronze"
@@ -435,6 +450,194 @@
                 material_type="Chainmail" />
         </ItemComponent>
         <Flags />
+    </Item>
+
+    <!-- taom_band_lt_mkwd_inf3_vambraces: mirkwood arm mkwd_inf3_vambraces at the light band, -/-/4/- (head/body/arm/leg); the source at the elite band 0/0/24/0 -->
+    <Item
+        id="taom_band_lt_mkwd_inf3_vambraces"
+        name="{=aom_mkwd_inf3_vambraces_name}[Mirkwood] Infantry Vambraces I"
+        mesh="mkwd_inf3_vambrace"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="0.4"
+        difficulty="0"
+        appearance="3"
+        Type="HandArmor">
+        <ItemComponent>
+            <Armor
+                arm_armor="4"
+                covers_hands="true"
+                modifier_group="cloth_unarmoured"
+                material_type="Chainmail" />
+        </ItemComponent>
+        <Flags />
+    </Item>
+
+    <!-- taom_band_md_mkwd_inf3_vambraces: mirkwood arm mkwd_inf3_vambraces at the medium band, -/-/8/- (head/body/arm/leg); the source at the elite band 0/0/24/0 -->
+    <Item
+        id="taom_band_md_mkwd_inf3_vambraces"
+        name="{=aom_mkwd_inf3_vambraces_name}[Mirkwood] Infantry Vambraces I"
+        mesh="mkwd_inf3_vambrace"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="0.4"
+        difficulty="0"
+        appearance="3"
+        Type="HandArmor">
+        <ItemComponent>
+            <Armor
+                arm_armor="8"
+                covers_hands="true"
+                modifier_group="cloth_unarmoured"
+                material_type="Chainmail" />
+        </ItemComponent>
+        <Flags />
+    </Item>
+
+    <!-- taom_band_hv_mkwd_inf3_vambraces: mirkwood arm mkwd_inf3_vambraces at the heavy band, -/-/16/- (head/body/arm/leg); the source at the elite band 0/0/24/0 -->
+    <Item
+        id="taom_band_hv_mkwd_inf3_vambraces"
+        name="{=aom_mkwd_inf3_vambraces_name}[Mirkwood] Infantry Vambraces I"
+        mesh="mkwd_inf3_vambrace"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="0.4"
+        difficulty="0"
+        appearance="3"
+        Type="HandArmor">
+        <ItemComponent>
+            <Armor
+                arm_armor="16"
+                covers_hands="true"
+                modifier_group="leather"
+                material_type="Chainmail" />
+        </ItemComponent>
+        <Flags />
+    </Item>
+
+    <!-- taom_band_lt_mkwd_palace_t1_helmet_green_hc: mirkwood head mkwd_palace_t1_helmet_green_hc at the light band, 12/-/-/- (head/body/arm/leg); the source at the elite band 50/0/0/0 -->
+    <Item
+        id="taom_band_lt_mkwd_palace_t1_helmet_green_hc"
+        name="{=aom_mkwd_palace_t1_helmet_green_hc_name}[Mirkwood] Palace Helmet T1"
+        subtype="head_armor"
+        mesh="mkwd_palace_t1_helmet_green_hc"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="2.9"
+        difficulty="0"
+        appearance="2"
+        Type="HeadArmor">
+        <ItemComponent>
+            <Armor
+                head_armor="12"
+                has_gender_variations="false"
+                hair_cover_type="all"
+                modifier_group="leather"
+                material_type="Plate"
+                beard_cover_type="all" />
+        </ItemComponent>
+        <Flags
+            UseTeamColor="false" />
+    </Item>
+
+    <!-- taom_band_md_mkwd_palace_t1_helmet_green_hc: mirkwood head mkwd_palace_t1_helmet_green_hc at the medium band, 17/-/-/- (head/body/arm/leg); the source at the elite band 50/0/0/0 -->
+    <Item
+        id="taom_band_md_mkwd_palace_t1_helmet_green_hc"
+        name="{=aom_mkwd_palace_t1_helmet_green_hc_name}[Mirkwood] Palace Helmet T1"
+        subtype="head_armor"
+        mesh="mkwd_palace_t1_helmet_green_hc"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="2.9"
+        difficulty="0"
+        appearance="2"
+        Type="HeadArmor">
+        <ItemComponent>
+            <Armor
+                head_armor="17"
+                has_gender_variations="false"
+                hair_cover_type="all"
+                modifier_group="chain"
+                material_type="Plate"
+                beard_cover_type="all" />
+        </ItemComponent>
+        <Flags
+            UseTeamColor="false" />
+    </Item>
+
+    <!-- taom_band_lt_mkwd_palace_t2_helmet_green_hc: mirkwood head mkwd_palace_t2_helmet_green_hc at the light band, 12/-/-/- (head/body/arm/leg); the source at the elite band 50/0/0/0 -->
+    <Item
+        id="taom_band_lt_mkwd_palace_t2_helmet_green_hc"
+        name="{=aom_mkwd_palace_t2_helmet_green_hc_name}[Mirkwood] Palace Helmet T2"
+        subtype="head_armor"
+        mesh="mkwd_palace_t2_helmet_green_hc"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="2.9"
+        difficulty="0"
+        appearance="2"
+        Type="HeadArmor">
+        <ItemComponent>
+            <Armor
+                head_armor="12"
+                has_gender_variations="false"
+                hair_cover_type="all"
+                modifier_group="leather"
+                material_type="Plate"
+                beard_cover_type="all" />
+        </ItemComponent>
+        <Flags
+            UseTeamColor="false" />
+    </Item>
+
+    <!-- taom_band_md_mkwd_palace_t2_helmet_green_hc: mirkwood head mkwd_palace_t2_helmet_green_hc at the medium band, 17/-/-/- (head/body/arm/leg); the source at the elite band 50/0/0/0 -->
+    <Item
+        id="taom_band_md_mkwd_palace_t2_helmet_green_hc"
+        name="{=aom_mkwd_palace_t2_helmet_green_hc_name}[Mirkwood] Palace Helmet T2"
+        subtype="head_armor"
+        mesh="mkwd_palace_t2_helmet_green_hc"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="2.9"
+        difficulty="0"
+        appearance="2"
+        Type="HeadArmor">
+        <ItemComponent>
+            <Armor
+                head_armor="17"
+                has_gender_variations="false"
+                hair_cover_type="all"
+                modifier_group="chain"
+                material_type="Plate"
+                beard_cover_type="all" />
+        </ItemComponent>
+        <Flags
+            UseTeamColor="false" />
+    </Item>
+
+    <!-- taom_band_md_mkwd_palace_t3_helmet_green_hc: mirkwood head mkwd_palace_t3_helmet_green_hc at the medium band, 17/-/-/- (head/body/arm/leg); the source at the elite band 50/0/0/0 -->
+    <Item
+        id="taom_band_md_mkwd_palace_t3_helmet_green_hc"
+        name="{=aom_mkwd_palace_t3_helmet_green_hc_name}[Mirkwood] Palace Helmet T3"
+        subtype="head_armor"
+        mesh="mkwd_palace_t3_helmet_green_hc"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="2.9"
+        difficulty="0"
+        appearance="2"
+        Type="HeadArmor">
+        <ItemComponent>
+            <Armor
+                head_armor="17"
+                has_gender_variations="false"
+                hair_cover_type="all"
+                modifier_group="chain"
+                material_type="Plate"
+                beard_cover_type="all" />
+        </ItemComponent>
+        <Flags
+            UseTeamColor="false" />
     </Item>
 
     <!-- taom_band_lt_rivendell_boots_greaves3: rivendell leg rivendell_boots_greaves3 at the light band, -/-/-/4 (head/body/arm/leg); the source at the elite band 0/0/0/23 -->
@@ -1030,6 +1233,73 @@
                 arm_armor="2"
                 modifier_group="leather"
                 material_type="Plate" />
+        </ItemComponent>
+        <Flags />
+    </Item>
+
+    <!-- taom_band_md_mkwd_inf3_chest_bronze: retired: no set wears it; kept so a save or a mod that names it still finds the item -->
+    <Item
+        id="taom_band_md_mkwd_inf3_chest_bronze"
+        name="{=aom_mkwd_inf3_chest_bronze_name}[Mirkwood] Infantry Chestplate III"
+        subtype="body_armor"
+        mesh="mkwd_inf3_chest_bronze"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="8.5"
+        difficulty="0"
+        appearance="1.5"
+        Type="BodyArmor">
+        <ItemComponent>
+            <Armor
+                body_armor="17"
+                arm_armor="0"
+                leg_armor="0"
+                has_gender_variations="false"
+                covers_body="true"
+                modifier_group="chain"
+                material_type="Plate" />
+        </ItemComponent>
+        <Flags
+            UseTeamColor="true" />
+    </Item>
+
+    <!-- taom_band_md_mkwd_inf3_greaves_bronze: retired: no set wears it; kept so a save or a mod that names it still finds the item -->
+    <Item
+        id="taom_band_md_mkwd_inf3_greaves_bronze"
+        name="{=aom_mkwd_inf3_greaves_bronze_name}[Mirkwood] Greaves III"
+        mesh="mkwd_inf3_greave_bronze"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="1.6"
+        difficulty="0"
+        appearance="3"
+        Type="LegArmor">
+        <ItemComponent>
+            <Armor
+                leg_armor="8"
+                covers_legs="true"
+                modifier_group="cloth_unarmoured"
+                material_type="Chainmail" />
+        </ItemComponent>
+        <Flags />
+    </Item>
+
+    <!-- taom_band_md_mkwd_inf3_pauldrons_bronze: retired: no set wears it; kept so a save or a mod that names it still finds the item -->
+    <Item
+        id="taom_band_md_mkwd_inf3_pauldrons_bronze"
+        name="{=aom_mkwd_inf3_pauldrons_bronze_name}[Mirkwood] Pauldrons III"
+        mesh="mkwd_inf3_pauldron_bronze"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="3.2"
+        appearance="6"
+        Type="Cape">
+        <ItemComponent>
+            <Armor
+                body_armor="5"
+                arm_armor="0"
+                modifier_group="cloth_unarmoured"
+                material_type="Chainmail" />
         </ItemComponent>
         <Flags />
     </Item>

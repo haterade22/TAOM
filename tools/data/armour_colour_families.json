@@ -1442,29 +1442,29 @@
    "texture": "t_northern_cape_a_d"
   },
   "mirkwood_body": {
-   "family": "neutral",
-   "how": "measured",
-   "texture": "mirkwood_body_d"
+   "family": "green",
+   "how": "override",
+   "texture": ""
   },
   "mirkwood_boots": {
-   "family": "neutral",
-   "how": "measured",
-   "texture": "mirkwood_boots_d"
+   "family": "green",
+   "how": "override",
+   "texture": ""
   },
   "mirkwood_gloves": {
-   "family": "neutral",
-   "how": "measured",
-   "texture": "mirkwood_gloves_d"
+   "family": "green",
+   "how": "override",
+   "texture": ""
   },
   "mirkwood_helmet": {
-   "family": "neutral",
-   "how": "measured",
-   "texture": "mirkwood_helmet_d"
+   "family": "green",
+   "how": "override",
+   "texture": ""
   },
   "mirkwood_shoulder": {
-   "family": "neutral",
-   "how": "measured",
-   "texture": "mirkwood_shoulder_d"
+   "family": "green",
+   "how": "override",
+   "texture": ""
   },
   "mkwd_inf1_t1_helmet_gold_hc": {
    "family": "gold",
@@ -1527,9 +1527,9 @@
    "texture": ""
   },
   "mkwd_inf3_chest": {
-   "family": "bronze",
-   "how": "measured",
-   "texture": "mkwd_inf3_torso3_d"
+   "family": "gold",
+   "how": "override",
+   "texture": ""
   },
   "mkwd_inf3_chest_bronze": {
    "family": "bronze",
@@ -1542,9 +1542,9 @@
    "texture": ""
   },
   "mkwd_inf3_greaves": {
-   "family": "bronze",
-   "how": "measured",
-   "texture": "mkwd_inf3_greaves1_d"
+   "family": "gold",
+   "how": "override",
+   "texture": ""
   },
   "mkwd_inf3_greaves_bronze": {
    "family": "bronze",
@@ -1557,9 +1557,9 @@
    "texture": ""
   },
   "mkwd_inf3_pauldrons": {
-   "family": "bronze",
-   "how": "measured",
-   "texture": "mkwd_inf3_pauldrons_uv1_d"
+   "family": "gold",
+   "how": "override",
+   "texture": ""
   },
   "mkwd_inf3_pauldrons_bronze": {
    "family": "bronze",
@@ -1592,9 +1592,9 @@
    "texture": ""
   },
   "mkwd_inf3_vambraces": {
-   "family": "bronze",
-   "how": "measured",
-   "texture": "mkwd_inf3_vambraces1_d"
+   "family": "gold",
+   "how": "override",
+   "texture": ""
   },
   "mkwd_inf3_vambraces_bronze": {
    "family": "bronze",
@@ -15847,9 +15847,9 @@
    "texture": "T_Uruk_Chest_Chainmail_A_d"
   },
   "taom_band_hv_mkwd_inf3_chest": {
-   "family": "bronze",
-   "how": "measured",
-   "texture": "mkwd_inf3_torso3_d"
+   "family": "gold",
+   "how": "override",
+   "texture": ""
   },
   "taom_band_hv_mkwd_inf3_chest_bronze": {
    "family": "bronze",
@@ -15857,9 +15857,9 @@
    "texture": ""
   },
   "taom_band_hv_mkwd_inf3_greaves": {
-   "family": "bronze",
-   "how": "measured",
-   "texture": "mkwd_inf3_greaves1_d"
+   "family": "gold",
+   "how": "override",
+   "texture": ""
   },
   "taom_band_hv_mkwd_inf3_greaves_bronze": {
    "family": "bronze",
@@ -15869,6 +15869,11 @@
   "taom_band_hv_mkwd_inf3_pauldrons_bronze": {
    "family": "bronze",
    "how": "word bronze",
+   "texture": ""
+  },
+  "taom_band_hv_mkwd_inf3_vambraces": {
+   "family": "gold",
+   "how": "override",
    "texture": ""
   },
   "taom_band_hv_rivendell_boots_greaves3": {
@@ -15967,19 +15972,29 @@
    "texture": "T_Uruk_Hai_Pauldrons_A1_d"
   },
   "taom_band_lt_mirkwood_body": {
-   "family": "neutral",
-   "how": "measured",
-   "texture": "mirkwood_body_d"
+   "family": "green",
+   "how": "override",
+   "texture": ""
   },
   "taom_band_lt_mirkwood_boots": {
-   "family": "neutral",
-   "how": "measured",
-   "texture": "mirkwood_boots_d"
+   "family": "green",
+   "how": "override",
+   "texture": ""
+  },
+  "taom_band_lt_mirkwood_gloves": {
+   "family": "green",
+   "how": "override",
+   "texture": ""
+  },
+  "taom_band_lt_mirkwood_shoulder": {
+   "family": "green",
+   "how": "override",
+   "texture": ""
   },
   "taom_band_lt_mkwd_inf3_chest": {
-   "family": "bronze",
-   "how": "measured",
-   "texture": "mkwd_inf3_torso3_d"
+   "family": "gold",
+   "how": "override",
+   "texture": ""
   },
   "taom_band_lt_mkwd_inf3_chest_bronze": {
    "family": "bronze",
@@ -15987,9 +16002,9 @@
    "texture": ""
   },
   "taom_band_lt_mkwd_inf3_greaves": {
-   "family": "bronze",
-   "how": "measured",
-   "texture": "mkwd_inf3_greaves1_d"
+   "family": "gold",
+   "how": "override",
+   "texture": ""
   },
   "taom_band_lt_mkwd_inf3_greaves_bronze": {
    "family": "bronze",
@@ -15999,6 +16014,21 @@
   "taom_band_lt_mkwd_inf3_pauldrons_bronze": {
    "family": "bronze",
    "how": "word bronze",
+   "texture": ""
+  },
+  "taom_band_lt_mkwd_inf3_vambraces": {
+   "family": "gold",
+   "how": "override",
+   "texture": ""
+  },
+  "taom_band_lt_mkwd_palace_t1_helmet_green_hc": {
+   "family": "green",
+   "how": "word green",
+   "texture": ""
+  },
+  "taom_band_lt_mkwd_palace_t2_helmet_green_hc": {
+   "family": "green",
+   "how": "word green",
    "texture": ""
   },
   "taom_band_lt_rivendell_boots_greaves3": {
@@ -16032,19 +16062,29 @@
    "texture": "t_rh_prop_a1_d"
   },
   "taom_band_md_mirkwood_body": {
-   "family": "neutral",
-   "how": "measured",
-   "texture": "mirkwood_body_d"
+   "family": "green",
+   "how": "override",
+   "texture": ""
   },
   "taom_band_md_mirkwood_boots": {
-   "family": "neutral",
-   "how": "measured",
-   "texture": "mirkwood_boots_d"
+   "family": "green",
+   "how": "override",
+   "texture": ""
+  },
+  "taom_band_md_mirkwood_gloves": {
+   "family": "green",
+   "how": "override",
+   "texture": ""
+  },
+  "taom_band_md_mirkwood_shoulder": {
+   "family": "green",
+   "how": "override",
+   "texture": ""
   },
   "taom_band_md_mkwd_inf3_chest": {
-   "family": "bronze",
-   "how": "measured",
-   "texture": "mkwd_inf3_torso3_d"
+   "family": "gold",
+   "how": "override",
+   "texture": ""
   },
   "taom_band_md_mkwd_inf3_chest_bronze": {
    "family": "bronze",
@@ -16052,9 +16092,9 @@
    "texture": ""
   },
   "taom_band_md_mkwd_inf3_greaves": {
-   "family": "bronze",
-   "how": "measured",
-   "texture": "mkwd_inf3_greaves1_d"
+   "family": "gold",
+   "how": "override",
+   "texture": ""
   },
   "taom_band_md_mkwd_inf3_greaves_bronze": {
    "family": "bronze",
@@ -16064,6 +16104,26 @@
   "taom_band_md_mkwd_inf3_pauldrons_bronze": {
    "family": "bronze",
    "how": "word bronze",
+   "texture": ""
+  },
+  "taom_band_md_mkwd_inf3_vambraces": {
+   "family": "gold",
+   "how": "override",
+   "texture": ""
+  },
+  "taom_band_md_mkwd_palace_t1_helmet_green_hc": {
+   "family": "green",
+   "how": "word green",
+   "texture": ""
+  },
+  "taom_band_md_mkwd_palace_t2_helmet_green_hc": {
+   "family": "green",
+   "how": "word green",
+   "texture": ""
+  },
+  "taom_band_md_mkwd_palace_t3_helmet_green_hc": {
+   "family": "green",
+   "how": "word green",
    "texture": ""
   },
   "taom_band_md_rivendell_boots_greaves3": {
@@ -16107,19 +16167,19 @@
    "texture": "elk_saddle_d"
   },
   "taom_lord_mirkwood_body": {
-   "family": "neutral",
-   "how": "measured",
-   "texture": "mirkwood_body_d"
+   "family": "green",
+   "how": "override",
+   "texture": ""
   },
   "taom_lord_mirkwood_boots": {
-   "family": "neutral",
-   "how": "measured",
-   "texture": "mirkwood_boots_d"
+   "family": "green",
+   "how": "override",
+   "texture": ""
   },
   "taom_lord_mkwd_inf3_chest": {
-   "family": "bronze",
-   "how": "measured",
-   "texture": "mkwd_inf3_torso3_d"
+   "family": "gold",
+   "how": "override",
+   "texture": ""
   },
   "taom_lord_mkwd_inf3_chest_bronze": {
    "family": "bronze",
@@ -16127,9 +16187,9 @@
    "texture": ""
   },
   "taom_lord_mkwd_inf3_greaves": {
-   "family": "bronze",
-   "how": "measured",
-   "texture": "mkwd_inf3_greaves1_d"
+   "family": "gold",
+   "how": "override",
+   "texture": ""
   },
   "taom_lord_mkwd_inf3_greaves_bronze": {
    "family": "bronze",

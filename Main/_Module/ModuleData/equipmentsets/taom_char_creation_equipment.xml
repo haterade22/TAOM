@@ -4695,7 +4695,7 @@
 				id="Item.taom_band_lt_mirkwood_boots" />
 			<Equipment
 				slot="Cape"
-				id="Item.mirkwood_shoulder" />
+				id="Item.taom_band_lt_mirkwood_shoulder" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4726,7 +4726,7 @@
 				id="Item.mkwd_inf1_t1_helmet_gold_hc" />
 			<Equipment
 				slot="Cape"
-				id="Item.mirkwood_shoulder" />
+				id="Item.taom_band_lt_mirkwood_shoulder" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4810,7 +4810,7 @@
 				id="Item.taom_band_lt_mirkwood_boots" />
 			<Equipment
 				slot="Cape"
-				id="Item.mirkwood_shoulder" />
+				id="Item.taom_band_lt_mirkwood_shoulder" />
 		</EquipmentSet>
 	</EquipmentRoster>
 	<EquipmentRoster
@@ -4850,7 +4850,7 @@
 				id="Item.taom_band_lt_mirkwood_boots" />
 			<Equipment
 				slot="Cape"
-				id="Item.mirkwood_shoulder" />
+				id="Item.taom_band_lt_mirkwood_shoulder" />
 			<Equipment
 				slot="Head"
 				id="Item.mkwd_inf1_t1_helmet_gold_hc" />

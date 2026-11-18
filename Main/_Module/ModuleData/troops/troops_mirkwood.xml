@@ -72,7 +72,7 @@
                     id="Item.mkwd_inf3_pauldrons" />
                 <equipment
                     slot="Gloves"
-                    id="Item.mkwd_inf3_vambraces_bronze" />
+                    id="Item.mkwd_inf3_vambraces" />
                 <equipment
                     slot="Leg"
                     id="Item.mkwd_inf3_greaves" />
@@ -141,7 +141,7 @@
                     id="Item.mkwd_inf3_pauldrons" />
                 <equipment
                     slot="Gloves"
-                    id="Item.mkwd_inf3_vambraces_bronze" />
+                    id="Item.mkwd_inf3_vambraces" />
                 <equipment
                     slot="Leg"
                     id="Item.mkwd_inf3_greaves" />
@@ -738,7 +738,7 @@
                     id="Item.mkwd_inf3_pauldrons" />
                 <equipment
                     slot="Gloves"
-                    id="Item.mkwd_inf3_vambraces_bronze" />
+                    id="Item.mkwd_inf3_vambraces" />
                 <equipment
                     slot="Leg"
                     id="Item.mkwd_inf3_greaves" />
@@ -1013,7 +1013,7 @@
                     id="Item.wm_mirkwood_shield_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.mkwd_inf1_t1_helmet_gold_hc" />
+                    id="Item.taom_band_lt_mkwd_palace_t1_helmet_green_hc" />
                 <equipment
                     slot="Body"
                     id="Item.taom_band_lt_mirkwood_body" />
@@ -1030,13 +1030,16 @@
                     id="Item.wm_mirkwood_shield_a02" />
                 <equipment
                     slot="Head"
-                    id="Item.mkwd_inf1_t1_helmet_silver_hc" />
+                    id="Item.taom_band_lt_mkwd_palace_t2_helmet_green_hc" />
                 <equipment
                     slot="Body"
-                    id="Item.taom_band_lt_mkwd_inf3_chest" />
+                    id="Item.taom_band_lt_mirkwood_body" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.taom_band_lt_mirkwood_gloves" />
                 <equipment
                     slot="Leg"
-                    id="Item.taom_band_lt_mkwd_inf3_greaves" />
+                    id="Item.taom_band_lt_mirkwood_boots" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1046,14 +1049,17 @@
                     slot="Item1"
                     id="Item.wm_mirkwood_shield_a03" />
                 <equipment
-                    slot="Body"
-                    id="Item.taom_band_lt_mkwd_inf3_chest" />
+                    slot="Head"
+                    id="Item.taom_band_lt_mkwd_palace_t1_helmet_green_hc" />
                 <equipment
-                    slot="Gloves"
-                    id="Item.mkwd_inf3_vambraces" />
+                    slot="Body"
+                    id="Item.taom_band_lt_mirkwood_body" />
+                <equipment
+                    slot="Cape"
+                    id="Item.taom_band_lt_mirkwood_shoulder" />
                 <equipment
                     slot="Leg"
-                    id="Item.taom_band_lt_mkwd_inf3_greaves" />
+                    id="Item.taom_band_lt_mirkwood_boots" />
             </EquipmentRoster>
             <EquipmentRoster
                 civilian="true">
@@ -1122,7 +1128,7 @@
                     id="Item.mirkwood_sword_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.mkwd_inf1_t1_helmet_gold_hc" />
+                    id="Item.taom_band_lt_mkwd_palace_t1_helmet_green_hc" />
                 <equipment
                     slot="Body"
                     id="Item.taom_band_lt_mirkwood_body" />
@@ -1142,10 +1148,13 @@
                     id="Item.mirkwood_sword_a01" />
                 <equipment
                     slot="Body"
-                    id="Item.taom_band_lt_mkwd_inf3_chest" />
+                    id="Item.taom_band_lt_mirkwood_body" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.taom_band_lt_mirkwood_gloves" />
                 <equipment
                     slot="Leg"
-                    id="Item.taom_band_lt_mkwd_inf3_greaves" />
+                    id="Item.taom_band_lt_mirkwood_boots" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1159,13 +1168,13 @@
                     id="Item.mirkwood_sword_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.mkwd_inf1_t1_helmet_silver_hc" />
+                    id="Item.taom_band_lt_mkwd_palace_t2_helmet_green_hc" />
                 <equipment
                     slot="Body"
-                    id="Item.taom_band_lt_mkwd_inf3_chest" />
+                    id="Item.taom_band_lt_mirkwood_body" />
                 <equipment
                     slot="Leg"
-                    id="Item.taom_band_lt_mkwd_inf3_greaves" />
+                    id="Item.taom_band_lt_mirkwood_boots" />
             </EquipmentRoster>
             <EquipmentRoster
                 civilian="true">
@@ -1237,16 +1246,19 @@
                     id="Item.mirkwood_sword_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.mkwd_inf1_t2_helmet_gold_hc" />
+                    id="Item.taom_band_md_mkwd_palace_t1_helmet_green_hc" />
                 <equipment
                     slot="Body"
-                    id="Item.taom_band_md_mkwd_inf3_chest" />
+                    id="Item.taom_band_md_mirkwood_body" />
+                <equipment
+                    slot="Cape"
+                    id="Item.taom_band_md_mirkwood_shoulder" />
                 <equipment
                     slot="Gloves"
-                    id="Item.mkwd_inf3_vambraces" />
+                    id="Item.taom_band_md_mirkwood_gloves" />
                 <equipment
                     slot="Leg"
-                    id="Item.taom_band_md_mkwd_inf3_greaves" />
+                    id="Item.taom_band_md_mirkwood_boots" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1260,16 +1272,19 @@
                     id="Item.mirkwood_sword_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.mkwd_inf1_t2_helmet_silver_hc" />
+                    id="Item.taom_band_md_mkwd_palace_t2_helmet_green_hc" />
                 <equipment
                     slot="Body"
-                    id="Item.taom_band_md_mkwd_inf3_chest_bronze" />
+                    id="Item.taom_band_md_mirkwood_body" />
                 <equipment
                     slot="Cape"
-                    id="Item.taom_band_md_mkwd_inf3_pauldrons_bronze" />
+                    id="Item.taom_band_md_mirkwood_shoulder" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.taom_band_md_mirkwood_gloves" />
                 <equipment
                     slot="Leg"
-                    id="Item.taom_band_md_mkwd_inf3_greaves_bronze" />
+                    id="Item.taom_band_md_mirkwood_boots" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1283,16 +1298,16 @@
                     id="Item.mirkwood_sword_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.mkwd_inf2_t2_helmet_silver_hc" />
+                    id="Item.taom_band_md_mkwd_palace_t3_helmet_green_hc" />
                 <equipment
                     slot="Body"
-                    id="Item.taom_band_md_mkwd_inf3_chest" />
+                    id="Item.taom_band_md_mirkwood_body" />
                 <equipment
                     slot="Gloves"
-                    id="Item.mkwd_inf3_vambraces" />
+                    id="Item.taom_band_md_mirkwood_gloves" />
                 <equipment
                     slot="Leg"
-                    id="Item.taom_band_md_mkwd_inf3_greaves" />
+                    id="Item.taom_band_md_mirkwood_boots" />
             </EquipmentRoster>
             <EquipmentRoster
                 civilian="true">
@@ -1337,7 +1352,7 @@
                 <equipment slot="Item3" id="Item.mirkwood_sword_a01" />
                 <equipment slot="Head" id="Item.mkwd_inf1_t2_helmet_gold_hc" />
                 <equipment slot="Body" id="Item.taom_band_md_mkwd_inf3_chest" />
-                <equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+                <equipment slot="Gloves" id="Item.taom_band_md_mkwd_inf3_vambraces" />
                 <equipment slot="Leg" id="Item.taom_band_md_mkwd_inf3_greaves" />
             </EquipmentRoster>
         </Equipments>
@@ -1395,16 +1410,16 @@
                     id="Item.mirkwood_sword_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.mkwd_inf1_t2_helmet_gold_hc" />
+                    id="Item.taom_band_md_mkwd_palace_t1_helmet_green_hc" />
                 <equipment
                     slot="Body"
-                    id="Item.taom_band_md_mkwd_inf3_chest" />
+                    id="Item.taom_band_md_mirkwood_body" />
                 <equipment
                     slot="Gloves"
-                    id="Item.mkwd_inf3_vambraces" />
+                    id="Item.taom_band_md_mirkwood_gloves" />
                 <equipment
                     slot="Leg"
-                    id="Item.taom_band_md_mkwd_inf3_greaves" />
+                    id="Item.taom_band_md_mirkwood_boots" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1418,16 +1433,19 @@
                     id="Item.mirkwood_sword_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.mkwd_inf1_t2_helmet_silver_hc" />
+                    id="Item.taom_band_md_mkwd_palace_t2_helmet_green_hc" />
                 <equipment
                     slot="Body"
-                    id="Item.taom_band_md_mkwd_inf3_chest_bronze" />
+                    id="Item.taom_band_md_mirkwood_body" />
                 <equipment
                     slot="Cape"
-                    id="Item.taom_band_md_mkwd_inf3_pauldrons_bronze" />
+                    id="Item.taom_band_md_mirkwood_shoulder" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.taom_band_md_mirkwood_gloves" />
                 <equipment
                     slot="Leg"
-                    id="Item.taom_band_md_mkwd_inf3_greaves_bronze" />
+                    id="Item.taom_band_md_mirkwood_boots" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1441,13 +1459,13 @@
                     id="Item.mirkwood_sword_a01" />
                 <equipment
                     slot="Body"
-                    id="Item.taom_band_md_mkwd_inf3_chest" />
+                    id="Item.taom_band_md_mirkwood_body" />
                 <equipment
                     slot="Gloves"
-                    id="Item.mkwd_inf3_vambraces" />
+                    id="Item.taom_band_md_mirkwood_gloves" />
                 <equipment
                     slot="Leg"
-                    id="Item.taom_band_md_mkwd_inf3_greaves" />
+                    id="Item.taom_band_md_mirkwood_boots" />
             </EquipmentRoster>
             <EquipmentRoster
                 civilian="true">
@@ -1532,7 +1550,7 @@
                     id="Item.mkwd_inf3_pauldrons" />
                 <equipment
                     slot="Gloves"
-                    id="Item.mkwd_inf3_vambraces_bronze" />
+                    id="Item.mkwd_inf3_vambraces" />
                 <equipment
                     slot="Leg"
                     id="Item.mkwd_inf3_greaves" />

@@ -36,6 +36,42 @@
   "rivendell_torso_light_light_tier4": {
    "family": "neutral",
    "why": "Kit thumbnail 2026-11-18: pale cloth with red, no plate; the measure reads its trim bronze"
+  },
+  "mkwd_inf3_chest": {
+   "family": "gold",
+   "why": "The maintainer, 2026-11-18: the plain Mirkwood infantry line is gold (the _silver and _bronze lines are the others); the measure reads it bronze"
+  },
+  "mkwd_inf3_greaves": {
+   "family": "gold",
+   "why": "The maintainer, 2026-11-18: the plain Mirkwood infantry line is gold (the _silver and _bronze lines are the others); the measure reads it bronze"
+  },
+  "mkwd_inf3_pauldrons": {
+   "family": "gold",
+   "why": "The maintainer, 2026-11-18: the plain Mirkwood infantry line is gold (the _silver and _bronze lines are the others); the measure reads it bronze"
+  },
+  "mkwd_inf3_vambraces": {
+   "family": "gold",
+   "why": "The maintainer, 2026-11-18: the plain Mirkwood infantry line is gold (the _silver and _bronze lines are the others); the measure reads it bronze"
+  },
+  "mirkwood_body": {
+   "family": "green",
+   "why": "The maintainer, 2026-11-18: the Palace Guard set is green; the measure reads it neutral (41% silver trim)"
+  },
+  "mirkwood_boots": {
+   "family": "green",
+   "why": "The maintainer, 2026-11-18: the Palace Guard set is green; the measure reads it neutral (41% silver trim)"
+  },
+  "mirkwood_gloves": {
+   "family": "green",
+   "why": "The maintainer, 2026-11-18: the Palace Guard set is green; the measure reads it neutral (41% silver trim)"
+  },
+  "mirkwood_helmet": {
+   "family": "green",
+   "why": "The maintainer, 2026-11-18: the Palace Guard set is green; the measure reads it neutral (41% silver trim)"
+  },
+  "mirkwood_shoulder": {
+   "family": "green",
+   "why": "The maintainer, 2026-11-18: the Palace Guard set is green; the measure reads it neutral (41% silver trim)"
   }
  },
  "prefixes": {

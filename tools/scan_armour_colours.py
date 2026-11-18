@@ -38,9 +38,10 @@ their source when they have none of their own (override_chain).
 
 FAMILIES AND CLASHES
 --------------------
-gold and bronze are warm, silver is cold; silvergold, black, neutral, unknown and the cloth colours
-clash with nothing. Two pieces clash when one is warm and the other cold (clashes()). Gold beside
-bronze does not clash (the maintainer accepted a gold helmet over bronze plate, 2026-11-18).
+gold, bronze and silver are the three metal families; silvergold, black, neutral, unknown and the cloth
+colours clash with nothing. Two pieces clash when they are two different metals (clashes()): a set is all
+gold, all silver or all bronze (the maintainer, 2026-11-18, on the Mirkwood militia). The measure tells
+gold from bronze by which share is larger, so a warm piece the measure reads wrong needs an override row.
 
 USAGE
 -----
@@ -81,8 +82,7 @@ IMAGE_ROOTS = ("LOTRLOME_Armory/AssetSources", "LOTRLOME_Armory/Assets", "Native
 IMAGE_EXTS = (".png", ".tga", ".dds", ".jpg")
 
 FAMILIES = ("gold", "bronze", "silver", "silvergold", "black", "green", "red", "blue", "white", "neutral", "unknown")
-WARM = frozenset({"gold", "bronze"})
-COLD = frozenset({"silver"})
+METALS = frozenset({"gold", "bronze", "silver"})
 # Longest first: silvergold before silver and gold.
 WORDS = (("silvergold", "silvergold"), ("silver_gold", "silvergold"), ("goldsilver", "silvergold"),
          ("silver", "silver"), ("steel", "silver"), ("gold", "gold"), ("brass", "gold"),
@@ -170,8 +170,8 @@ def classify_textures(measured):
 
 
 def clashes(a, b):
-    """True when family `a` beside family `b` looks wrong: one warm (gold, bronze), the other silver."""
-    return (a in WARM and b in COLD) or (a in COLD and b in WARM)
+    """True when family `a` beside family `b` looks wrong: two different metals (gold, bronze, silver)."""
+    return a != b and a in METALS and b in METALS
 
 
 def set_clashes(families):

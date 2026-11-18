@@ -2548,3 +2548,7 @@ The clone tool wrote an upgrade's replacement into a top wearer's battle sets, a
 - **Why missed:** the fixtures held one copy of an item per slot, and no shipped pick had changed since the first apply, so the roster never showed a native copy beside a written one.
 - **Prevent:** a rule that reverses its own writes records what it wrote (troop, battle set, slot) in its spec and reverses those positions only; test a wearer that holds the target natively beside a written copy, then change the pick.
 - **Source:** [rca-armour-colour-sets-2026-11-18.md](../rca-armour-colour-sets-2026-11-18.md), R13.
+
+### A plan that rebuilds its scope from one kind of wearer drops what other wearers still need (green militia, 2026-11-18)
+
+Moving the Mirkwood militia off the bronze pieces made the band clone tool retire clones that villager, wanderer and Fords kits still wore, and drop two helmet upgrades that still matched in colour. The scope counted battle troops only. Rule: when a tool rebuilds a plan from scratch, a row it shipped stays until no wearer of any kind needs it (`kept_sources`, `held_upgrades`). Evidence: docs/reviews/rca-armour-colour-sets-2026-11-18.md R18, R20.

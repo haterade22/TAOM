@@ -732,7 +732,8 @@ class ShippedSpecTests(unittest.TestCase):
         table = gbc.spec_table()
         self.assertGreater(len(table) + len(gbc.spec_upgrades()), 0)
         ids = {i.get("id") for i in ET.parse(gbc.OUT_FILE).getroot().iter("Item")}
-        self.assertEqual(ids, set(table.values()))
+        # A retired clone stays in the file (retired_blocks), so the file holds the planned and the retired ids.
+        self.assertEqual(ids, set(table.values()) | set(gbc.load_spec().get("retired", [])))
 
     def test_the_submodule_loads_the_clone_file(self):
         text = gbc.SUBMODULE.read_text(encoding="utf-8-sig")
@@ -978,6 +979,24 @@ class RetentionTests(unittest.TestCase):
         self.assertIn("retired", got[0][1])
         self.assertEqual(gbc.retired_blocks(self.OLD, {"taom_band_lt_p"}, {"taom_band_lt_p"}), [])
 
+    def test_a_shipped_source_out_of_scope_keeps_its_clones_while_another_set_wears_one(self):
+        # The Mirkwood militia left the bronze pieces (2026-11-18): villager and wanderer kits still wear their
+        # light clones, so the source stays cloned at their bands, never back to the elite source.
+        shipped = {"p": ["light", "medium"], "q": ["light"], "r": ["medium"], "s": ["light"]}
+        scope = {"r": {"top": ["t"], "low": {"medium": ["m"]}}}
+        bands = {"p": {"light"}, "r": {"medium"}, "s": {"light"}}
+        self.assertEqual(gbc.kept_sources(shipped, scope, bands, {"p", "q", "r"}, {"p": 41}), ["p"])
+
+    def test_a_source_a_low_battle_troop_still_wears_is_not_kept(self):
+        # Its top wearers left: the restat prices it at its low troops' band, so its clones retire.
+        self.assertEqual(gbc.kept_sources({"p": ["light"]}, {}, {"p": {"light"}}, {"p"}, {"p": 11}), [])
+        self.assertEqual(gbc.kept_sources({"p": ["light"]}, {}, {"p": {"light"}}, {"p"}, {}), ["p"])
+
+    def test_a_shipped_upgrade_source_out_of_scope_is_kept_too(self):
+        # A B source the plan no longer upgrades goes back to the elite band; a kit that wore it raw keeps a clone.
+        self.assertEqual(gbc.kept_sources({"u": {"to": "v"}}, {}, {"u": {"light"}}, {"u"}, {"u": 36}), ["u"])
+
+
     def test_a_shipped_clone_missing_from_the_file_is_an_error(self):
         with self.assertRaises(gbc.CloneError):
             gbc.retired_blocks(self.OLD, {"taom_band_md_q"}, set())
@@ -992,6 +1011,27 @@ class RetentionTests(unittest.TestCase):
         for bad in (["x"], ["taom_band_md_q"]):
             with self.assertRaises(gbc.CloneError, msg=bad):
                 gbc.check_spec({"clones": {"q": ["medium"]}, "upgrades": {}, "retired": bad})
+
+
+class HeldUpgradeTests(unittest.TestCase):
+    """A shipped upgrade whose source no low battle troop wears any more stays while the replacement clashes with
+    no top wearer's set (2026-11-18: the Mirkwood recruits and sentinels keep their T3 helmets when the militia
+    leave the T1 and T2 helmets)."""
+
+    ROW = {"to": "v", "troops": ["t"], "wrote": {"t": {"Head": [0]}}}
+
+    def held(self, scope=None, low=None, live=("u", "v"), clash=None):
+        return gbc.held_upgrades({"u": self.ROW}, scope or {}, low or {"u": 36}, set(live), lambda src, row: clash)
+
+    def test_held_when_no_low_battle_troop_wears_the_source_and_nothing_clashes(self):
+        self.assertEqual(self.held(), {"u": {"to": "v", "troops": ["t"]}})
+        self.assertEqual(self.held(low={"x": 11}), {"u": {"to": "v", "troops": ["t"]}})
+
+    def test_dropped_on_a_clash_in_scope_on_a_low_battle_wearer_or_a_missing_piece(self):
+        self.assertEqual(self.held(clash="Cape p gold"), {})
+        self.assertEqual(self.held(scope={"u": {}}), {})
+        self.assertEqual(self.held(low={"u": 11}), {})
+        self.assertEqual(self.held(live=("u",)), {})
 
 
 class DeriveSeesTheClonesTests(unittest.TestCase):

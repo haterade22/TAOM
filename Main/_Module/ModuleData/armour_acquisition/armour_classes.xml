@@ -310,7 +310,7 @@
   <Item id="mkwd_inf3_t2_helmet_gold_hc" class="medium" next="mirkwood_helmet" />
   <Item id="mkwd_inf3_t3_helmet_gold_hc" class="elite" />
   <Item id="mkwd_inf3_t4_helmet_gold_hc" class="elite" />
-  <Item id="mkwd_inf3_vambraces" class="light" next="mkwd_inf3_vambraces_bronze" />
+  <Item id="mkwd_inf3_vambraces" class="elite" />
   <Item id="mkwd_inf3_vambraces_bronze" class="elite" />
   <Item id="mkwd_inf3_vambraces_silver" class="elite" />
   <Item id="mkwd_palace_t1_helmet_green_hc" class="elite" />
@@ -2980,6 +2980,7 @@
   <Item id="taom_band_hv_mkwd_inf3_greaves" class="named" />
   <Item id="taom_band_hv_mkwd_inf3_greaves_bronze" class="named" />
   <Item id="taom_band_hv_mkwd_inf3_pauldrons_bronze" class="named" />
+  <Item id="taom_band_hv_mkwd_inf3_vambraces" class="named" />
   <Item id="taom_band_hv_rivendell_boots_greaves3" class="named" />
   <Item id="taom_band_hv_roh_nbl_hlm_cf" class="named" />
   <Item id="taom_band_hv_sk_ar_art_cape_a" class="named" />
@@ -3001,11 +3002,16 @@
   <Item id="taom_band_hv_sk_uruk_hai_pauldron_heavy_a1" class="named" />
   <Item id="taom_band_lt_mirkwood_body" class="named" />
   <Item id="taom_band_lt_mirkwood_boots" class="named" />
+  <Item id="taom_band_lt_mirkwood_gloves" class="named" />
+  <Item id="taom_band_lt_mirkwood_shoulder" class="named" />
   <Item id="taom_band_lt_mkwd_inf3_chest" class="named" />
   <Item id="taom_band_lt_mkwd_inf3_chest_bronze" class="named" />
   <Item id="taom_band_lt_mkwd_inf3_greaves" class="named" />
   <Item id="taom_band_lt_mkwd_inf3_greaves_bronze" class="named" />
   <Item id="taom_band_lt_mkwd_inf3_pauldrons_bronze" class="named" />
+  <Item id="taom_band_lt_mkwd_inf3_vambraces" class="named" />
+  <Item id="taom_band_lt_mkwd_palace_t1_helmet_green_hc" class="named" />
+  <Item id="taom_band_lt_mkwd_palace_t2_helmet_green_hc" class="named" />
   <Item id="taom_band_lt_rivendell_boots_greaves3" class="named" />
   <Item id="taom_band_lt_rivendell_pauldron_tier1_cape_silver" class="named" />
   <Item id="taom_band_lt_sk_ar_art_cape_a" class="named" />
@@ -3014,11 +3020,17 @@
   <Item id="taom_band_lt_sk_rh_loke_bracer_heavy_b" class="named" />
   <Item id="taom_band_md_mirkwood_body" class="named" />
   <Item id="taom_band_md_mirkwood_boots" class="named" />
+  <Item id="taom_band_md_mirkwood_gloves" class="named" />
+  <Item id="taom_band_md_mirkwood_shoulder" class="named" />
   <Item id="taom_band_md_mkwd_inf3_chest" class="named" />
   <Item id="taom_band_md_mkwd_inf3_chest_bronze" class="named" />
   <Item id="taom_band_md_mkwd_inf3_greaves" class="named" />
   <Item id="taom_band_md_mkwd_inf3_greaves_bronze" class="named" />
   <Item id="taom_band_md_mkwd_inf3_pauldrons_bronze" class="named" />
+  <Item id="taom_band_md_mkwd_inf3_vambraces" class="named" />
+  <Item id="taom_band_md_mkwd_palace_t1_helmet_green_hc" class="named" />
+  <Item id="taom_band_md_mkwd_palace_t2_helmet_green_hc" class="named" />
+  <Item id="taom_band_md_mkwd_palace_t3_helmet_green_hc" class="named" />
   <Item id="taom_band_md_rivendell_boots_greaves3" class="named" />
   <Item id="taom_band_md_rivendell_pauldron_tier1_cape_silver" class="named" />
   <Item id="taom_band_md_sk_ar_art_cape_a" class="named" />
