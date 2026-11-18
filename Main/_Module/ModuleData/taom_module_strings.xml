@@ -5193,6 +5193,7 @@
 	<!-- InformationManagerSettingsNotice -->
 	<string id="taom_coopcompat_settings_differ" text="{=taom_coopcompat_settings_differ}Your TAOM settings differ from the host's in: {GROUPS}. Co-op may behave differently for you." />
 	<string id="taom_coopcompat_build_mismatch" text="{=taom_coopcompat_build_mismatch}Your TAOM build is not the host's build. Co-op can desync or misbehave. Install the same TAOM download as the host." />
+	<string id="taom_coopcompat_load_order_differs" text="{=taom_coopcompat_load_order_differs}Your mod load order differs from the host's: on the host {FIRST} loads before {SECOND}, for you after it. A mod that loads later replaces items and troops from earlier ones, so you may see other gear or troops than the host. Load your mods in the host's order and restart the game." />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- TaomSettings.cs -->
 	<string id="taom_hero_auras_mcm_enabled" text="{=taom_hero_auras_mcm_enabled}Enable Hero Auras" />
