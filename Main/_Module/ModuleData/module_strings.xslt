@@ -105,4 +105,9 @@
 	<xsl:template match="string[@id='str_faction_informal_name_for_culture.sturgia']"/>
 	<xsl:template match="string[@id='str_neutral_term_for_culture.sturgia']"/>
 
+	<!-- Remove vanilla lords' political philosophy speeches (world_lore_strings.xml, 50 strings). The dialog finds
+	     them by hero id and faction leader id, and TAOM reuses vanilla lord ids, so a Middle-earth lord would talk
+	     about the Empire and Calradia. Without the string the option is not offered (#1439, from Silas He). -->
+	<xsl:template match="string[starts-with(@id, 'str_political_philosophy_')]"/>
+
 </xsl:stylesheet>
