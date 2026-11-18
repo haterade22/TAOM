@@ -520,6 +520,8 @@ class Validator:
         issues += self._worn_armour_limits()
         issues += self._enlistment_kit_rank_regressions()
         issues += self._armour_mesh_tier_ladder()
+        issues += self._top_tier_armour_worn_low()
+        issues += self._band_clone_source_worn_low()
         issues += self._lord_armour_range()
         issues += self._upgrade_tier_collapse()
         issues += self._ranged_ladder_inversions()
@@ -2686,6 +2688,74 @@ class Validator:
             ))
         return issues
 
+    # -- TOP_TIER_ARMOUR_WORN_LOW ------------------------------------------- #
+    # The restat prices an Armory piece at its lowest battle wearer's band, so a troop of level 30 or lower
+    # in a piece a tier 7 to 10 troop (rebalance_armor.TOP_TIER_LEVEL, 36) also wears drags it down for that
+    # troop (the Mirkwood palace guard chest at body 8 on a level 51 guard, 2026-11-14). One warning per piece:
+    # tools/generate_armour_band_clones.py gives its low wearers a band clone or its top wearers a stronger
+    # piece. The scope is rebalance_armor.shared_down_pieces, the generator's own rule, over troops_*.xml
+    # with the ladder's exemptions; a warning because the Armory is unversioned.
+    def _top_tier_armour_worn_low(self) -> list:
+        ra = _curve()
+        folders = getattr(self.reg, "item_folder", None) or {}
+        if ra is None or not hasattr(ra, "shared_down_pieces") or not folders:
+            return []
+        troops, _ = self._upgrade_troop_index()
+        scoped = {tid: rec for tid, rec in troops.items()
+                  if re.split(r"[\\/]", rec["file"])[-1].startswith("troops_")}
+
+        def eligible(iid):
+            return (folders.get(iid) is not None and not ra.band_clone_parts(iid)
+                    and ra.mesh_tier_of(iid) != "civilian" and not ra.is_monster_kit(iid))
+
+        issues = []
+        shared = ra.shared_down_pieces(scoped, exempt=set(self._ARMOUR_LADDER_EXEMPT),
+                                       noble=set(self._NOBLE_LINE_TROOPS),
+                                       exempt_items=set(self._ARMOUR_LADDER_EXEMPT_ITEMS), eligible=eligible)
+        for iid, rec in shared.items():
+            top = scoped[rec["top"][0]]
+            low = ", ".join(f'{band} {len(ids)} ({ids[0]})' for band, ids in rec["low"].items())
+            issues.append(Issue(
+                severity=Severity.WARNING, code="TOP_TIER_ARMOUR_WORN_LOW",
+                file=top["file"], line=top["line"], entry_id=iid,
+                message=(
+                    f'{iid} is worn in battle by {len(rec["top"])} troop(s) of level {ra.TOP_TIER_LEVEL}+ '
+                    f'({rec["top"][0]}) and by troops of level 30 or lower: {low}. The restat prices it at '
+                    f'its lowest wearer\'s band, so the top-tier troop wears low armour: run '
+                    f'tools/generate_armour_band_clones.py (dry run, then --apply), then re-derive and restat'
+                ),
+            ))
+        return issues
+
+    # -- BAND_CLONE_SOURCE_WORN_LOW ------------------------------------------ #
+    # The restat prices the source of an armour band clone at the elite band, so a set below that band that
+    # still names it gets elite armour: the Mirkwood recruit enlistment kits went from 23 to 90 (review
+    # 2026-11-17). Every set of ModuleData that is not a lord's or an elite-band troop's battle set takes the
+    # clone of its band (generate_armour_band_clones.sources_worn_low, the generator's own rule). A warning,
+    # one per set and slot.
+    def _band_clone_source_worn_low(self) -> list:
+        try:
+            import generate_armour_band_clones as gbc
+            worn = gbc.sources_worn_low(self.moduledata)
+        except Exception as exc:  # the rule needs its spec; a broken import is stated, not hidden
+            return [Issue(severity=Severity.WARNING, code="BAND_CLONE_SOURCE_WORN_LOW", file="tools", line=0,
+                          entry_id="generate_armour_band_clones",
+                          message=f"the band clone rule could not run: {exc}")]
+        issues = []
+        for w in worn:
+            band = w.band
+            issues.append(Issue(
+                severity=Severity.WARNING, code="BAND_CLONE_SOURCE_WORN_LOW",
+                file=self._rel(self.moduledata / w.file), line=w.line, entry_id=w.container,
+                message=(
+                    f'{w.container} ({"civilian" if w.civilian else "battle"} set, {w.slot}) wears {w.item}, the '
+                    f'source of an armour band clone, at the {band} band. The restat prices the source at the elite '
+                    f'band: run tools/generate_armour_band_clones.py --apply (it writes the {band} clone), or the '
+                    f'generator that owns the file'
+                ),
+            ))
+        return issues
+
     # -- LORD_ARMOUR_RANGE -------------------------------------------------- #
     # A hero wears one whole battle set (Hero.SetInitialValuesFromCharacter), so a lord's figure on
     # each part is his worst whole set, held to the culture's best elite-band troop on that part (of
@@ -3590,6 +3660,13 @@ def build_item_folders(item_roots) -> dict:
                 idm = re.search(r'\bid="([^"]+)"', im.group(1))
                 if idm:
                     folders[idm.group(1)] = folder
+    # An armour band clone (tools/generate_armour_band_clones.py) is a repo item priced in its source's line.
+    ra = _curve()
+    if ra is not None and hasattr(ra, "band_clone_parts"):
+        for iid in list(folders):
+            parts = ra.band_clone_parts(iid)
+            if parts and folders[iid] is None and folders.get(parts[0]):
+                folders[iid] = folders[parts[0]]
     return folders
 
 

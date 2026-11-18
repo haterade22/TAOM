@@ -42,6 +42,7 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _gamedir import DEFAULT_GAME_ROOT, game_modules  # noqa: E402
+import generate_armour_band_clones as band_clones  # noqa: E402
 import generate_placeholder_weapons as placeholders  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -251,6 +252,9 @@ def render(troops, skills_by_id):
             # A tier clone of tools/placeholder_weapons.json replaces its donor, by the placeholder tool's rule.
             eq = {s: placeholders.placeholder_for_troop(v, t["id"], "gundabad", TIER_LEVEL[t["tier"]])
                   if s.startswith("Item") else v for s, v in eq.items()}
+            # A shared-down piece (tools/armour_band_clones.json): its band clone or upgrade.
+            eq = {s: band_clones.armour_for_troop(v, t["id"], TIER_LEVEL[t["tier"]]) if s in ARMOUR_SLOTS else v
+                  for s, v in eq.items()}
             lines.append("      <EquipmentRoster>")
             lines += [f'        <equipment slot="{s}" id="Item.{eq[s]}" />' for s in SLOT_ORDER if s in eq]
             lines.append("      </EquipmentRoster>")

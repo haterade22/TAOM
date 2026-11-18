@@ -296,7 +296,7 @@
         <equipment slot="Item0" id="Item.wm_rivendell_spear_a01_silver" />
         <equipment slot="Item1" id="Item.wm_elven_shield_b" />
         <equipment slot="Item2" id="Item.wm_rivendell_sword_a01_black" />
-        <equipment slot="Head" id="Item.sk_ll_rg_helmet_med_a" />
+        <equipment slot="Head" id="Item.sk_ll_mw_helmet_elite_a" />
         <equipment slot="Cape" id="Item.sk_ll_rg_pauld_med_a" />
         <equipment slot="Body" id="Item.sk_ll_rg_chest_heavy_a" />
         <equipment slot="Gloves" id="Item.sk_ll_rg_bracer_med_a" />
@@ -306,7 +306,7 @@
         <equipment slot="Item0" id="Item.wm_rivendell_spear_a01_silver" />
         <equipment slot="Item1" id="Item.wm_elven_shield_b" />
         <equipment slot="Item2" id="Item.wm_rivendell_sword_a02_black" />
-        <equipment slot="Head" id="Item.sk_ll_rg_helmet_med_a" />
+        <equipment slot="Head" id="Item.sk_ll_mw_helmet_elite_a" />
         <equipment slot="Cape" id="Item.sk_ll_rg_pauld_med_a" />
         <equipment slot="Body" id="Item.sk_ll_rg_chest_heavy_a" />
         <equipment slot="Gloves" id="Item.sk_ll_rg_bracer_med_a" />
@@ -538,7 +538,7 @@
         <equipment slot="Item3" id="Item.wm_rivendell_sword_a02_black" />
         <equipment slot="Head" id="Item.sk_ll_rg_helmet_med_b" />
         <equipment slot="Cape" id="Item.sk_ll_rg_pauld_med_a" />
-        <equipment slot="Body" id="Item.sk_ll_rg_chest_med_a" />
+        <equipment slot="Body" id="Item.sk_ll_rg_chest_heavy_a" />
         <equipment slot="Gloves" id="Item.sk_ll_rg_bracer_med_a" />
         <equipment slot="Leg" id="Item.sk_ll_rg_grvs_med_a" />
       </EquipmentRoster>
@@ -549,7 +549,7 @@
         <equipment slot="Item3" id="Item.wm_rivendell_sword_a01_black" />
         <equipment slot="Head" id="Item.sk_ll_rg_helmet_med_b" />
         <equipment slot="Cape" id="Item.sk_ll_rg_pauld_med_a" />
-        <equipment slot="Body" id="Item.sk_ll_rg_chest_med_a" />
+        <equipment slot="Body" id="Item.sk_ll_rg_chest_heavy_a" />
         <equipment slot="Gloves" id="Item.sk_ll_rg_bracer_med_a" />
         <equipment slot="Leg" id="Item.sk_ll_rg_grvs_med_a" />
       </EquipmentRoster>
@@ -688,7 +688,7 @@
         <equipment slot="Cape" id="Item.sk_ll_mw_pauld_med_a" />
         <equipment slot="Body" id="Item.sk_ll_mw_chest_heavy_a" />
         <equipment slot="Gloves" id="Item.sk_ll_mw_bracer_heavy_a" />
-        <equipment slot="Leg" id="Item.sk_ll_mw_grvs_med_a" />
+        <equipment slot="Leg" id="Item.sk_ll_mw_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.ladder_lothlorien_bow_t7" />
@@ -699,7 +699,7 @@
         <equipment slot="Cape" id="Item.sk_ll_mw_pauld_med_a" />
         <equipment slot="Body" id="Item.sk_ll_mw_chest_heavy_b" />
         <equipment slot="Gloves" id="Item.sk_ll_mw_bracer_heavy_a" />
-        <equipment slot="Leg" id="Item.sk_ll_mw_grvs_med_a" />
+        <equipment slot="Leg" id="Item.sk_ll_mw_grvs_heavy_a" />
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
@@ -781,9 +781,9 @@
         <equipment slot="Item3" id="Item.he_sword" />
         <equipment slot="Head" id="Item.sk_ll_mw_helmet_arc_heavy_a" />
         <equipment slot="Cape" id="Item.sk_ll_mw_pauld_med_a" />
-        <equipment slot="Body" id="Item.sk_ll_mw_chest_med_a" />
-        <equipment slot="Gloves" id="Item.sk_ll_mw_bracer_med_a" />
-        <equipment slot="Leg" id="Item.sk_ll_mw_grvs_med_a" />
+        <equipment slot="Body" id="Item.sk_ll_mw_chest_heavy_a" />
+        <equipment slot="Gloves" id="Item.sk_ll_mw_bracer_heavy_a" />
+        <equipment slot="Leg" id="Item.sk_ll_mw_grvs_heavy_a" />
         <equipment slot="Horse" id="Item.noble_horse_southern" />
         <equipment slot="HorseHarness" id="Item.saddle_of_aeneas" />
       </EquipmentRoster>
@@ -794,9 +794,9 @@
         <equipment slot="Item3" id="Item.wm_rivendell_sword_a02_black" />
         <equipment slot="Head" id="Item.sk_ll_mw_helmet_arc_heavy_b" />
         <equipment slot="Cape" id="Item.sk_ll_mw_pauld_med_a" />
-        <equipment slot="Body" id="Item.sk_ll_mw_chest_med_b" />
-        <equipment slot="Gloves" id="Item.sk_ll_mw_bracer_med_a" />
-        <equipment slot="Leg" id="Item.sk_ll_mw_grvs_med_a" />
+        <equipment slot="Body" id="Item.sk_ll_mw_chest_heavy_a" />
+        <equipment slot="Gloves" id="Item.sk_ll_mw_bracer_heavy_a" />
+        <equipment slot="Leg" id="Item.sk_ll_mw_grvs_heavy_a" />
         <equipment slot="Horse" id="Item.noble_horse_southern" />
         <equipment slot="HorseHarness" id="Item.saddle_of_aeneas" />
       </EquipmentRoster>
@@ -933,7 +933,7 @@
         <equipment slot="Cape" id="Item.sk_ll_mw_pauld_heavy_a" />
         <equipment slot="Body" id="Item.sk_ll_mw_chest_heavy_a" />
         <equipment slot="Gloves" id="Item.sk_ll_mw_bracer_heavy_a" />
-        <equipment slot="Leg" id="Item.sk_ll_mw_grvs_med_a" />
+        <equipment slot="Leg" id="Item.sk_ll_mw_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_rivendell_sword_a01_black" />
@@ -944,7 +944,7 @@
         <equipment slot="Cape" id="Item.sk_ll_mw_pauld_heavy_a" />
         <equipment slot="Body" id="Item.sk_ll_mw_chest_heavy_b" />
         <equipment slot="Gloves" id="Item.sk_ll_mw_bracer_heavy_a" />
-        <equipment slot="Leg" id="Item.sk_ll_mw_grvs_med_a" />
+        <equipment slot="Leg" id="Item.sk_ll_mw_grvs_heavy_a" />
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>

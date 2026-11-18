@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-15 16:35:13",
+  "generatedAt": "2026-11-17 20:02:24",
   "armoryDir": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\LOTRLOME_Armory\\ModuleData\\LOTRLOME_items",
   "items": {
     "sk_ar_art_helmet_inf_light_a": {
@@ -2544,100 +2544,20 @@
         0
       ],
       "weight": 0.5,
-      "anchorLevel": 6,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 30,
-      "wearerCount": 23,
-      "heroWorn": true,
+      "levelSpan": 5,
+      "wearerCount": 3,
+      "heroWorn": false,
       "lordWorn": false,
-      "tier": "light",
-      "tierSource": "roster(L6)",
-      "target": 2,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 13,
+      "delta": -11,
+      "status": "under",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "arthedain_levy",
-          "level": 6
-        },
-        {
-          "troop": "rhudaur_levy",
-          "level": 6
-        },
-        {
-          "troop": "arthedain_dunadan_youth",
-          "level": 11
-        },
-        {
-          "troop": "arthedain_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "arthedain_militia_archer",
-          "level": 11
-        },
-        {
-          "troop": "arthedain_dunadan_youth_merc",
-          "level": 11
-        },
-        {
-          "troop": "rhudaur_dunadan",
-          "level": 11
-        },
-        {
-          "troop": "rhudaur_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "rhudaur_militia_archer",
-          "level": 11
-        },
-        {
-          "troop": "rhudaur_dunadan_merc",
-          "level": 11
-        },
-        {
-          "troop": "arthedain_ranger_of_the_north",
-          "level": 16
-        },
-        {
-          "troop": "arthedain_militia_veteran_archer",
-          "level": 16
-        },
-        {
-          "troop": "rhudaur_angle_ranger",
-          "level": 16
-        },
-        {
-          "troop": "rhudaur_militia_veteran_archer",
-          "level": 16
-        },
-        {
-          "troop": "arthedain_ranger",
-          "level": 21
-        },
-        {
-          "troop": "arthedain_outrider",
-          "level": 21
-        },
-        {
-          "troop": "rhudaur_hill_rider",
-          "level": 21
-        },
-        {
-          "troop": "rhudaur_ranger",
-          "level": 21
-        },
-        {
-          "troop": "arthedain_veteran_ranger",
-          "level": 26
-        },
-        {
-          "troop": "rhudaur_veteran_ranger",
-          "level": 26
-        },
         {
           "troop": "arthedain_ranger_captain",
           "level": 31
@@ -2664,100 +2584,20 @@
         0
       ],
       "weight": 0.5,
-      "anchorLevel": 6,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 30,
-      "wearerCount": 23,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "light",
-      "tierSource": "roster(L6)",
-      "target": 2,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 13,
+      "delta": -11,
+      "status": "under",
       "line": "b",
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "arthedain_levy",
-          "level": 6
-        },
-        {
-          "troop": "rhudaur_levy",
-          "level": 6
-        },
-        {
-          "troop": "arthedain_dunadan_youth",
-          "level": 11
-        },
-        {
-          "troop": "arthedain_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "arthedain_militia_archer",
-          "level": 11
-        },
-        {
-          "troop": "arthedain_dunadan_youth_merc",
-          "level": 11
-        },
-        {
-          "troop": "rhudaur_dunadan",
-          "level": 11
-        },
-        {
-          "troop": "rhudaur_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "rhudaur_militia_archer",
-          "level": 11
-        },
-        {
-          "troop": "rhudaur_dunadan_merc",
-          "level": 11
-        },
-        {
-          "troop": "arthedain_ranger_of_the_north",
-          "level": 16
-        },
-        {
-          "troop": "arthedain_militia_veteran_archer",
-          "level": 16
-        },
-        {
-          "troop": "rhudaur_angle_ranger",
-          "level": 16
-        },
-        {
-          "troop": "rhudaur_militia_veteran_archer",
-          "level": 16
-        },
-        {
-          "troop": "arthedain_ranger",
-          "level": 21
-        },
-        {
-          "troop": "arthedain_outrider",
-          "level": 21
-        },
-        {
-          "troop": "rhudaur_hill_rider",
-          "level": 21
-        },
-        {
-          "troop": "rhudaur_ranger",
-          "level": 21
-        },
-        {
-          "troop": "arthedain_veteran_ranger",
-          "level": 26
-        },
-        {
-          "troop": "rhudaur_veteran_ranger",
-          "level": 26
-        },
         {
           "troop": "arthedain_ranger_captain",
           "level": 31
@@ -4149,24 +3989,20 @@
         0
       ],
       "weight": 3.7,
-      "anchorLevel": 26,
+      "anchorLevel": 36,
       "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "heroWorn": true,
       "lordWorn": true,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 37,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 45,
+      "delta": -8,
+      "status": "under",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_veteran_northman_scout",
-          "level": 26
-        },
         {
           "troop": "dorwinion_vineholm_guard",
           "level": 36
@@ -4725,40 +4561,20 @@
         0
       ],
       "weight": 3.7,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 8,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "heroWorn": true,
       "lordWorn": true,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 37,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 45,
+      "delta": -8,
+      "status": "under",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "anduinvale_axe_lord",
-          "level": 26
-        },
-        {
-          "troop": "anduinvale_bear_guard",
-          "level": 26
-        },
-        {
-          "troop": "angaladh_veteran_forest_guard",
-          "level": 26
-        },
-        {
-          "troop": "dale_lake_town_veteran",
-          "level": 26
-        },
-        {
-          "troop": "dorwinion_veteran_redwater_guard",
-          "level": 26
-        },
         {
           "troop": "angaladh_forest_warden",
           "level": 31
@@ -5617,24 +5433,20 @@
         0
       ],
       "weight": 18.9,
-      "anchorLevel": 26,
+      "anchorLevel": 36,
       "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 29,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 43,
+      "delta": -14,
+      "status": "under",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_veteran_northman_scout",
-          "level": 26
-        },
         {
           "troop": "dorwinion_vineholm_guard",
           "level": 36
@@ -6209,40 +6021,20 @@
         0
       ],
       "weight": 18.9,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 8,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 29,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 43,
+      "delta": -14,
+      "status": "under",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "anduinvale_axe_lord",
-          "level": 26
-        },
-        {
-          "troop": "anduinvale_bear_guard",
-          "level": 26
-        },
-        {
-          "troop": "angaladh_veteran_forest_guard",
-          "level": 26
-        },
-        {
-          "troop": "dale_lake_town_veteran",
-          "level": 26
-        },
-        {
-          "troop": "dorwinion_veteran_redwater_guard",
-          "level": 26
-        },
         {
           "troop": "angaladh_forest_warden",
           "level": 31
@@ -7101,24 +6893,20 @@
         0
       ],
       "weight": 1.6,
-      "anchorLevel": 26,
+      "anchorLevel": 36,
       "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 15,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 22,
+      "delta": -7,
+      "status": "under",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_veteran_northman_scout",
-          "level": 26
-        },
         {
           "troop": "dorwinion_vineholm_guard",
           "level": 36
@@ -7677,40 +7465,20 @@
         0
       ],
       "weight": 1.6,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 8,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "heroWorn": true,
       "lordWorn": true,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 15,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 22,
+      "delta": -7,
+      "status": "under",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "anduinvale_axe_lord",
-          "level": 26
-        },
-        {
-          "troop": "anduinvale_bear_guard",
-          "level": 26
-        },
-        {
-          "troop": "angaladh_veteran_forest_guard",
-          "level": 26
-        },
-        {
-          "troop": "dale_lake_town_veteran",
-          "level": 26
-        },
-        {
-          "troop": "dorwinion_veteran_redwater_guard",
-          "level": 26
-        },
         {
           "troop": "angaladh_forest_warden",
           "level": 31
@@ -8569,24 +8337,20 @@
         13
       ],
       "weight": 3.7,
-      "anchorLevel": 26,
+      "anchorLevel": 36,
       "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 13,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 19,
+      "delta": -6,
+      "status": "under",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_veteran_northman_scout",
-          "level": 26
-        },
         {
           "troop": "dorwinion_vineholm_guard",
           "level": 36
@@ -9161,40 +8925,20 @@
         13
       ],
       "weight": 3.7,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 8,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 13,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 19,
+      "delta": -6,
+      "status": "under",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "anduinvale_axe_lord",
-          "level": 26
-        },
-        {
-          "troop": "anduinvale_bear_guard",
-          "level": 26
-        },
-        {
-          "troop": "angaladh_veteran_forest_guard",
-          "level": 26
-        },
-        {
-          "troop": "dale_lake_town_veteran",
-          "level": 26
-        },
-        {
-          "troop": "dorwinion_veteran_redwater_guard",
-          "level": 26
-        },
         {
           "troop": "angaladh_forest_warden",
           "level": 31
@@ -9997,24 +9741,20 @@
         0
       ],
       "weight": 7.4,
-      "anchorLevel": 26,
+      "anchorLevel": 36,
       "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 2,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "heroWorn": true,
       "lordWorn": true,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 8,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 12,
+      "delta": -4,
+      "status": "under",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "dale_veteran_northman_scout",
-          "level": 26
-        },
         {
           "troop": "dorwinion_vineholm_guard",
           "level": 36
@@ -10501,56 +10241,20 @@
         0
       ],
       "weight": 7.4,
-      "anchorLevel": 21,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 12,
-      "heroWorn": true,
+      "levelSpan": 5,
+      "wearerCount": 3,
+      "heroWorn": false,
       "lordWorn": false,
-      "tier": "heavy",
-      "tierSource": "roster(L21)",
-      "target": 8,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 12,
+      "delta": -4,
+      "status": "under",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "anduinvale_great_axe",
-          "level": 21
-        },
-        {
-          "troop": "angaladh_forest_guard",
-          "level": 21
-        },
-        {
-          "troop": "dale_lake_town_mariner",
-          "level": 21
-        },
-        {
-          "troop": "dorwinion_redwater_guard",
-          "level": 21
-        },
-        {
-          "troop": "anduinvale_axe_lord",
-          "level": 26
-        },
-        {
-          "troop": "anduinvale_bear_guard",
-          "level": 26
-        },
-        {
-          "troop": "angaladh_veteran_forest_guard",
-          "level": 26
-        },
-        {
-          "troop": "dale_lake_town_veteran",
-          "level": 26
-        },
-        {
-          "troop": "dorwinion_veteran_redwater_guard",
-          "level": 26
-        },
         {
           "troop": "angaladh_forest_warden",
           "level": 31
@@ -10637,40 +10341,20 @@
         0
       ],
       "weight": 7.4,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 9,
+      "levelSpan": 5,
+      "wearerCount": 4,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 8,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 12,
+      "delta": -4,
+      "status": "under",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "anduinvale_axe_lord",
-          "level": 26
-        },
-        {
-          "troop": "anduinvale_bear_guard",
-          "level": 26
-        },
-        {
-          "troop": "angaladh_veteran_forest_guard",
-          "level": 26
-        },
-        {
-          "troop": "dale_veteran_spearman",
-          "level": 26
-        },
-        {
-          "troop": "dorwinion_veteran_redwater_guard",
-          "level": 26
-        },
         {
           "troop": "angaladh_forest_warden",
           "level": 31
@@ -10701,20 +10385,29 @@
         0
       ],
       "weight": 5.5,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
-      "wearerCount": 0,
+      "wearerCount": 2,
       "heroWorn": true,
       "lordWorn": false,
       "tier": "elite",
-      "tierSource": "id-keyword",
+      "tierSource": "roster(L36)",
       "target": 43,
       "delta": -2,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "dg_uruk_black_guard",
+          "level": 36
+        },
+        {
+          "troop": "dg_uruk_black_sharpshooter",
+          "level": 36
+        }
+      ]
     },
     "sk_dg_uruk_helmet_elite_b": {
       "culture": "dol_guldur",
@@ -10945,9 +10638,9 @@
       ],
       "weight": 4.7,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 2,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "heroWorn": true,
       "lordWorn": false,
       "tier": "heavy",
@@ -10961,10 +10654,6 @@
         {
           "troop": "dg_orc_archer",
           "level": 26
-        },
-        {
-          "troop": "dg_uruk_black_guard",
-          "level": 36
         }
       ]
     },
@@ -11045,9 +10734,9 @@
       ],
       "weight": 5.3,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 2,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -11061,10 +10750,6 @@
         {
           "troop": "dg_orc_archer",
           "level": 26
-        },
-        {
-          "troop": "dg_uruk_black_sharpshooter",
-          "level": 36
         }
       ]
     },
@@ -14956,7 +14641,7 @@
       "anchorLevel": 36,
       "maxLevel": 36,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -14969,6 +14654,10 @@
       "wearers": [
         {
           "troop": "dg_uruk_black_slayer",
+          "level": 36
+        },
+        {
+          "troop": "dg_fell_warg_rider",
           "level": 36
         }
       ]
@@ -15378,9 +15067,9 @@
       ],
       "weight": 9.0,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 2,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -15394,10 +15083,6 @@
         {
           "troop": "dg_orc_archer",
           "level": 26
-        },
-        {
-          "troop": "dg_fell_warg_rider",
-          "level": 36
         }
       ]
     },
@@ -22767,9 +22452,9 @@
       ],
       "weight": 22.5,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 4,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -22791,10 +22476,6 @@
         {
           "troop": "erebor_noble_axe_guard",
           "level": 31
-        },
-        {
-          "troop": "erebor_noble_veteran_axe_guard",
-          "level": 36
         }
       ]
     },
@@ -25467,20 +25148,28 @@
         0
       ],
       "weight": 6.0,
-      "anchorLevel": 41,
+      "anchorLevel": 36,
       "maxLevel": 46,
-      "levelSpan": 5,
-      "wearerCount": 3,
+      "levelSpan": 10,
+      "wearerCount": 5,
       "heroWorn": true,
       "lordWorn": false,
       "tier": "elite",
-      "tierSource": "roster(L41)",
+      "tierSource": "roster(L36)",
       "target": 15,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "ironpass_mountain_guard",
+          "level": 36
+        },
+        {
+          "troop": "ironpass_ram_vanguard",
+          "level": 36
+        },
         {
           "troop": "erebor_noble_gate_warden",
           "level": 41
@@ -26064,9 +25753,9 @@
       ],
       "weight": 5.8,
       "anchorLevel": 21,
-      "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 6,
+      "maxLevel": 26,
+      "levelSpan": 5,
+      "wearerCount": 5,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -26075,7 +25764,7 @@
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "erebor_noble_longbeard",
@@ -26096,10 +25785,6 @@
         {
           "troop": "erebor_noble_infantry",
           "level": 26
-        },
-        {
-          "troop": "ironpass_mountain_guard",
-          "level": 36
         }
       ]
     },
@@ -26116,9 +25801,9 @@
       ],
       "weight": 6.0,
       "anchorLevel": 21,
-      "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 11,
+      "maxLevel": 31,
+      "levelSpan": 10,
+      "wearerCount": 9,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -26127,7 +25812,7 @@
       "delta": 0,
       "status": "match",
       "line": "b",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "eredluin_broadbeam_shieldguard",
@@ -26164,14 +25849,6 @@
         {
           "troop": "ironpass_ram_breaker",
           "level": 31
-        },
-        {
-          "troop": "ironpass_mountain_guard",
-          "level": 36
-        },
-        {
-          "troop": "ironpass_ram_vanguard",
-          "level": 36
         }
       ]
     },
@@ -26483,9 +26160,9 @@
       ],
       "weight": 3.5,
       "anchorLevel": 19,
-      "maxLevel": 41,
-      "levelSpan": 22,
-      "wearerCount": 30,
+      "maxLevel": 31,
+      "levelSpan": 12,
+      "wearerCount": 23,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -26494,7 +26171,7 @@
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "gondor_ring_militia",
@@ -26587,34 +26264,6 @@
         {
           "troop": "gondor_ano_vet_infantry",
           "level": 31
-        },
-        {
-          "troop": "gondor_leb_sea_guard",
-          "level": 36
-        },
-        {
-          "troop": "gondor_pel_vet_infantry",
-          "level": 36
-        },
-        {
-          "troop": "gondor_tol_sharpshooter",
-          "level": 36
-        },
-        {
-          "troop": "gondor_met_sun_warden",
-          "level": 36
-        },
-        {
-          "troop": "gondor_met_composite_archer",
-          "level": 36
-        },
-        {
-          "troop": "gondor_pel_anchor_guard",
-          "level": 41
-        },
-        {
-          "troop": "gondor_met_sun_knight",
-          "level": 41
         }
       ]
     },
@@ -30086,7 +29735,7 @@
       "anchorLevel": 36,
       "maxLevel": 46,
       "levelSpan": 10,
-      "wearerCount": 4,
+      "wearerCount": 11,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
@@ -30102,11 +29751,39 @@
           "level": 36
         },
         {
+          "troop": "gondor_leb_sea_guard",
+          "level": 36
+        },
+        {
+          "troop": "gondor_pel_vet_infantry",
+          "level": 36
+        },
+        {
           "troop": "gondor_da_knight",
           "level": 36
         },
         {
+          "troop": "gondor_tol_sharpshooter",
+          "level": 36
+        },
+        {
+          "troop": "gondor_met_sun_warden",
+          "level": 36
+        },
+        {
+          "troop": "gondor_met_composite_archer",
+          "level": 36
+        },
+        {
+          "troop": "gondor_pel_anchor_guard",
+          "level": 41
+        },
+        {
           "troop": "gondor_da_vet_knight",
+          "level": 41
+        },
+        {
+          "troop": "gondor_met_sun_knight",
           "level": 41
         },
         {
@@ -33329,9 +33006,9 @@
       ],
       "weight": 18.0,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 3,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -33349,10 +33026,6 @@
         {
           "troop": "gondor_leb_longbowman",
           "level": 31
-        },
-        {
-          "troop": "gondor_leb_sea_guard",
-          "level": 36
         }
       ]
     },
@@ -33369,9 +33042,9 @@
       ],
       "weight": 18.0,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 3,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -33389,10 +33062,6 @@
         {
           "troop": "gondor_leb_longbowman",
           "level": 31
-        },
-        {
-          "troop": "gondor_leb_sea_guard",
-          "level": 36
         }
       ]
     },
@@ -33931,20 +33600,24 @@
         0
       ],
       "weight": 22.0,
-      "anchorLevel": 41,
+      "anchorLevel": 36,
       "maxLevel": 41,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
-      "tierSource": "roster(L41)",
+      "tierSource": "roster(L36)",
       "target": 46,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "gondor_leb_sea_guard",
+          "level": 36
+        },
         {
           "troop": "gondor_cal_vale_knight",
           "level": 41
@@ -35508,9 +35181,9 @@
       ],
       "weight": 1.0,
       "anchorLevel": 16,
-      "maxLevel": 41,
-      "levelSpan": 25,
-      "wearerCount": 72,
+      "maxLevel": 31,
+      "levelSpan": 15,
+      "wearerCount": 58,
       "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
@@ -35752,62 +35425,6 @@
         {
           "troop": "gondor_pg_vet_cavalry",
           "level": 31
-        },
-        {
-          "troop": "gondor_leb_sea_guard",
-          "level": 36
-        },
-        {
-          "troop": "gondor_pel_vet_infantry",
-          "level": 36
-        },
-        {
-          "troop": "gondor_tol_sharpshooter",
-          "level": 36
-        },
-        {
-          "troop": "gondor_brv_ranger",
-          "level": 36
-        },
-        {
-          "troop": "gondor_brv_shadowhunter",
-          "level": 36
-        },
-        {
-          "troop": "gondor_met_sun_warden",
-          "level": 36
-        },
-        {
-          "troop": "gondor_met_composite_archer",
-          "level": 36
-        },
-        {
-          "troop": "gondor_mt_sergeant",
-          "level": 36
-        },
-        {
-          "troop": "gondor_mt_longbowman",
-          "level": 36
-        },
-        {
-          "troop": "gondor_pel_anchor_guard",
-          "level": 41
-        },
-        {
-          "troop": "gondor_brv_shadowbow",
-          "level": 41
-        },
-        {
-          "troop": "gondor_met_sun_knight",
-          "level": 41
-        },
-        {
-          "troop": "gondor_mt_captain",
-          "level": 41
-        },
-        {
-          "troop": "gondor_mt_sharpshooter",
-          "level": 41
         }
       ]
     },
@@ -35876,9 +35493,9 @@
       ],
       "weight": 1.5,
       "anchorLevel": 26,
-      "maxLevel": 46,
-      "levelSpan": 20,
-      "wearerCount": 16,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 9,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "heavy",
@@ -35887,7 +35504,7 @@
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "cardolan_veteran_barrow_guard",
@@ -35924,34 +35541,6 @@
         {
           "troop": "gondor_arn_vet_infantry",
           "level": 31
-        },
-        {
-          "troop": "gondor_arn_vet_knight",
-          "level": 36
-        },
-        {
-          "troop": "gondor_ith_sergeant",
-          "level": 36
-        },
-        {
-          "troop": "gondor_ith_longbowman",
-          "level": 36
-        },
-        {
-          "troop": "gondor_ith_captain",
-          "level": 41
-        },
-        {
-          "troop": "gondor_ith_sharpshooter",
-          "level": 41
-        },
-        {
-          "troop": "gondor_ith_moon_guard",
-          "level": 46
-        },
-        {
-          "troop": "gondor_mt_fountain_guard",
-          "level": 46
         }
       ]
     },
@@ -35968,9 +35557,9 @@
       ],
       "weight": 2.0,
       "anchorLevel": 36,
-      "maxLevel": 41,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "maxLevel": 46,
+      "levelSpan": 10,
+      "wearerCount": 24,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
@@ -35982,12 +35571,100 @@
       "shared": false,
       "wearers": [
         {
+          "troop": "gondor_leb_sea_guard",
+          "level": 36
+        },
+        {
+          "troop": "gondor_pel_vet_infantry",
+          "level": 36
+        },
+        {
+          "troop": "gondor_ring_warden",
+          "level": 36
+        },
+        {
+          "troop": "gondor_tol_sharpshooter",
+          "level": 36
+        },
+        {
+          "troop": "gondor_arn_vet_knight",
+          "level": 36
+        },
+        {
           "troop": "gondor_arn_foot_knight",
           "level": 36
         },
         {
+          "troop": "gondor_brv_ranger",
+          "level": 36
+        },
+        {
+          "troop": "gondor_brv_shadowhunter",
+          "level": 36
+        },
+        {
+          "troop": "gondor_met_sun_warden",
+          "level": 36
+        },
+        {
+          "troop": "gondor_met_composite_archer",
+          "level": 36
+        },
+        {
+          "troop": "gondor_ith_sergeant",
+          "level": 36
+        },
+        {
+          "troop": "gondor_ith_longbowman",
+          "level": 36
+        },
+        {
+          "troop": "gondor_mt_sergeant",
+          "level": 36
+        },
+        {
+          "troop": "gondor_mt_longbowman",
+          "level": 36
+        },
+        {
+          "troop": "gondor_pel_anchor_guard",
+          "level": 41
+        },
+        {
           "troop": "gondor_arn_hill_knight",
           "level": 41
+        },
+        {
+          "troop": "gondor_brv_shadowbow",
+          "level": 41
+        },
+        {
+          "troop": "gondor_met_sun_knight",
+          "level": 41
+        },
+        {
+          "troop": "gondor_ith_captain",
+          "level": 41
+        },
+        {
+          "troop": "gondor_ith_sharpshooter",
+          "level": 41
+        },
+        {
+          "troop": "gondor_mt_captain",
+          "level": 41
+        },
+        {
+          "troop": "gondor_mt_sharpshooter",
+          "level": 41
+        },
+        {
+          "troop": "gondor_ith_moon_guard",
+          "level": 46
+        },
+        {
+          "troop": "gondor_mt_fountain_guard",
+          "level": 46
         }
       ]
     },
@@ -36808,9 +36485,9 @@
       ],
       "weight": 1.0,
       "anchorLevel": 19,
-      "maxLevel": 36,
-      "levelSpan": 17,
-      "wearerCount": 4,
+      "maxLevel": 31,
+      "levelSpan": 12,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -36819,7 +36496,7 @@
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "gondor_ring_footman",
@@ -36832,10 +36509,6 @@
         {
           "troop": "gondor_ring_spearman",
           "level": 31
-        },
-        {
-          "troop": "gondor_ring_warden",
-          "level": 36
         }
       ]
     },
@@ -37127,9 +36800,9 @@
       ],
       "weight": 2.5,
       "anchorLevel": 16,
-      "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 58,
+      "maxLevel": 31,
+      "levelSpan": 15,
+      "wearerCount": 56,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "medium",
@@ -37363,14 +37036,6 @@
         {
           "troop": "gondor_mt_veteran",
           "level": 31
-        },
-        {
-          "troop": "gondor_mt_sergeant",
-          "level": 36
-        },
-        {
-          "troop": "gondor_mt_longbowman",
-          "level": 36
         }
       ]
     },
@@ -37387,9 +37052,9 @@
       ],
       "weight": 3.5,
       "anchorLevel": 26,
-      "maxLevel": 46,
-      "levelSpan": 20,
-      "wearerCount": 56,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 38,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -37398,7 +37063,7 @@
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "cardolan_veteran_barrow_guard",
@@ -37551,78 +37216,6 @@
         {
           "troop": "gondor_pg_vet_cavalry",
           "level": 31
-        },
-        {
-          "troop": "gondor_loss_noble_captain",
-          "level": 36
-        },
-        {
-          "troop": "gondor_leb_sea_guard",
-          "level": 36
-        },
-        {
-          "troop": "gondor_pel_vet_infantry",
-          "level": 36
-        },
-        {
-          "troop": "gondor_ring_warden",
-          "level": 36
-        },
-        {
-          "troop": "gondor_tol_sharpshooter",
-          "level": 36
-        },
-        {
-          "troop": "gondor_brv_ranger",
-          "level": 36
-        },
-        {
-          "troop": "gondor_brv_shadowhunter",
-          "level": 36
-        },
-        {
-          "troop": "gondor_met_sun_warden",
-          "level": 36
-        },
-        {
-          "troop": "gondor_met_composite_archer",
-          "level": 36
-        },
-        {
-          "troop": "gondor_ca_pikewarden",
-          "level": 36
-        },
-        {
-          "troop": "gondor_ca_warden",
-          "level": 36
-        },
-        {
-          "troop": "gondor_osg_dome_guard",
-          "level": 36
-        },
-        {
-          "troop": "gondor_pel_anchor_guard",
-          "level": 41
-        },
-        {
-          "troop": "gondor_brv_shadowbow",
-          "level": 41
-        },
-        {
-          "troop": "gondor_met_sun_knight",
-          "level": 41
-        },
-        {
-          "troop": "gondor_mt_captain",
-          "level": 41
-        },
-        {
-          "troop": "gondor_mt_sharpshooter",
-          "level": 41
-        },
-        {
-          "troop": "gondor_mt_fountain_guard",
-          "level": 46
         }
       ]
     },
@@ -37795,9 +37388,9 @@
       ],
       "weight": 3.5,
       "anchorLevel": 36,
-      "maxLevel": 41,
-      "levelSpan": 5,
-      "wearerCount": 3,
+      "maxLevel": 46,
+      "levelSpan": 10,
+      "wearerCount": 23,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
@@ -37809,8 +37402,68 @@
       "shared": false,
       "wearers": [
         {
+          "troop": "gondor_loss_noble_captain",
+          "level": 36
+        },
+        {
+          "troop": "gondor_leb_sea_guard",
+          "level": 36
+        },
+        {
+          "troop": "gondor_pel_vet_infantry",
+          "level": 36
+        },
+        {
+          "troop": "gondor_ring_warden",
+          "level": 36
+        },
+        {
+          "troop": "gondor_tol_sharpshooter",
+          "level": 36
+        },
+        {
           "troop": "gondor_arn_foot_knight",
           "level": 36
+        },
+        {
+          "troop": "gondor_brv_ranger",
+          "level": 36
+        },
+        {
+          "troop": "gondor_brv_shadowhunter",
+          "level": 36
+        },
+        {
+          "troop": "gondor_met_sun_warden",
+          "level": 36
+        },
+        {
+          "troop": "gondor_met_composite_archer",
+          "level": 36
+        },
+        {
+          "troop": "gondor_ca_pikewarden",
+          "level": 36
+        },
+        {
+          "troop": "gondor_ca_warden",
+          "level": 36
+        },
+        {
+          "troop": "gondor_osg_dome_guard",
+          "level": 36
+        },
+        {
+          "troop": "gondor_mt_sergeant",
+          "level": 36
+        },
+        {
+          "troop": "gondor_mt_longbowman",
+          "level": 36
+        },
+        {
+          "troop": "gondor_pel_anchor_guard",
+          "level": 41
         },
         {
           "troop": "gondor_cal_vale_knight",
@@ -37819,6 +37472,26 @@
         {
           "troop": "gondor_arn_hill_knight",
           "level": 41
+        },
+        {
+          "troop": "gondor_brv_shadowbow",
+          "level": 41
+        },
+        {
+          "troop": "gondor_met_sun_knight",
+          "level": 41
+        },
+        {
+          "troop": "gondor_mt_captain",
+          "level": 41
+        },
+        {
+          "troop": "gondor_mt_sharpshooter",
+          "level": 41
+        },
+        {
+          "troop": "gondor_mt_fountain_guard",
+          "level": 46
         }
       ]
     },
@@ -41462,7 +41135,7 @@
       "anchorLevel": 36,
       "maxLevel": 36,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
@@ -41473,6 +41146,10 @@
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "gundabad_tracker",
+          "level": 36
+        },
         {
           "troop": "gundabad_chosen_of_tharzog",
           "level": 36
@@ -41736,9 +41413,9 @@
       ],
       "weight": 4.0,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 2,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -41752,10 +41429,6 @@
         {
           "troop": "gundabad_brute",
           "level": 26
-        },
-        {
-          "troop": "gundabad_tracker",
-          "level": 36
         }
       ]
     },
@@ -41883,9 +41556,9 @@
       ],
       "weight": 4.0,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 4,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -41907,10 +41580,6 @@
         {
           "troop": "gundabad_archer",
           "level": 26
-        },
-        {
-          "troop": "gundabad_tracker",
-          "level": 36
         }
       ]
     },
@@ -45135,20 +44804,25 @@
         0
       ],
       "weight": 8.0,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
-      "wearerCount": 0,
+      "wearerCount": 1,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "heavy",
-      "tierSource": "id-keyword",
-      "target": 8,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 12,
+      "delta": -4,
+      "status": "under",
       "line": null,
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "gundabad_tracker",
+          "level": 36
+        }
+      ]
     },
     "sk_gb_uruk_pauldron_med_a": {
       "culture": "gundabad",
@@ -45267,9 +44941,9 @@
       ],
       "weight": 3.4,
       "anchorLevel": 21,
-      "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 5,
+      "maxLevel": 31,
+      "levelSpan": 10,
+      "wearerCount": 4,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -45278,7 +44952,7 @@
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "gundabad_scout",
@@ -45295,10 +44969,6 @@
         {
           "troop": "gundabad_wolf_lord",
           "level": 31
-        },
-        {
-          "troop": "gundabad_tracker",
-          "level": 36
         }
       ]
     },
@@ -45315,9 +44985,9 @@
       ],
       "weight": 3.4,
       "anchorLevel": 21,
-      "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 5,
+      "maxLevel": 31,
+      "levelSpan": 10,
+      "wearerCount": 4,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -45326,7 +44996,7 @@
       "delta": 0,
       "status": "match",
       "line": "b",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "gundabad_scout",
@@ -45343,10 +45013,6 @@
         {
           "troop": "gundabad_wolf_lord",
           "level": 31
-        },
-        {
-          "troop": "gundabad_tracker",
-          "level": 36
         }
       ]
     },
@@ -52289,9 +51955,9 @@
       ],
       "weight": 18.0,
       "anchorLevel": 31,
-      "maxLevel": 31,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "maxLevel": 46,
+      "levelSpan": 15,
+      "wearerCount": 7,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -52300,11 +51966,35 @@
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": false,
+      "shared": true,
       "wearers": [
         {
           "troop": "eredluin_halls_warden",
           "level": 31
+        },
+        {
+          "troop": "ironpass_mountain_guard",
+          "level": 36
+        },
+        {
+          "troop": "iron_hills_noble_shield_guard",
+          "level": 36
+        },
+        {
+          "troop": "iron_hills_noble_anvilguard",
+          "level": 36
+        },
+        {
+          "troop": "iron_hills_noble_gate_warden",
+          "level": 41
+        },
+        {
+          "troop": "iron_hills_noble_ironbreaker",
+          "level": 41
+        },
+        {
+          "troop": "iron_hills_noble_royal_warden",
+          "level": 46
         }
       ]
     },
@@ -52585,9 +52275,9 @@
       ],
       "weight": 25.0,
       "anchorLevel": 21,
-      "maxLevel": 46,
-      "levelSpan": 25,
-      "wearerCount": 18,
+      "maxLevel": 31,
+      "levelSpan": 10,
+      "wearerCount": 14,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -52596,7 +52286,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "ironpass_infantry",
@@ -52653,22 +52343,6 @@
         {
           "troop": "iron_hills_noble_hammer_guard",
           "level": 31
-        },
-        {
-          "troop": "ironpass_mountain_guard",
-          "level": 36
-        },
-        {
-          "troop": "iron_hills_noble_shield_guard",
-          "level": 36
-        },
-        {
-          "troop": "iron_hills_noble_gate_warden",
-          "level": 41
-        },
-        {
-          "troop": "iron_hills_noble_royal_warden",
-          "level": 46
         }
       ]
     },
@@ -52685,9 +52359,9 @@
       ],
       "weight": 26.0,
       "anchorLevel": 26,
-      "maxLevel": 41,
-      "levelSpan": 15,
-      "wearerCount": 10,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 7,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -52696,7 +52370,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "ironpass_axeman",
@@ -52725,18 +52399,6 @@
         {
           "troop": "ironpass_sharpshooter",
           "level": 31
-        },
-        {
-          "troop": "ironpass_mountain_guard",
-          "level": 36
-        },
-        {
-          "troop": "iron_hills_noble_anvilguard",
-          "level": 36
-        },
-        {
-          "troop": "iron_hills_noble_ironbreaker",
-          "level": 41
         }
       ]
     },
@@ -55197,9 +54859,9 @@
       ],
       "weight": 3.5,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 6,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 5,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -55229,10 +54891,6 @@
         {
           "troop": "ironpass_sharpshooter",
           "level": 31
-        },
-        {
-          "troop": "ironpass_mountain_guard",
-          "level": 36
         }
       ]
     },
@@ -55249,9 +54907,9 @@
       ],
       "weight": 3.6,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 6,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 5,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -55281,10 +54939,6 @@
         {
           "troop": "ironpass_ram_breaker",
           "level": 31
-        },
-        {
-          "troop": "ironpass_mountain_guard",
-          "level": 36
         }
       ]
     },
@@ -61012,40 +60666,20 @@
         12
       ],
       "weight": 4.0,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 41,
-      "levelSpan": 15,
-      "wearerCount": 10,
-      "heroWorn": false,
-      "lordWorn": false,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 12,
-      "delta": 0,
-      "status": "match",
+      "levelSpan": 10,
+      "wearerCount": 5,
+      "heroWorn": true,
+      "lordWorn": true,
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 18,
+      "delta": -6,
+      "status": "under",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "urukhai_slayer",
-          "level": 26
-        },
-        {
-          "troop": "urukhai_pikeman",
-          "level": 26
-        },
-        {
-          "troop": "urukhai_infantry",
-          "level": 26
-        },
-        {
-          "troop": "orthanc_chosen",
-          "level": 26
-        },
-        {
-          "troop": "orthanc_chosen_merc",
-          "level": 26
-        },
         {
           "troop": "urukhai_berserker",
           "level": 31
@@ -61140,8 +60774,8 @@
       "maxLevel": 36,
       "levelSpan": 0,
       "wearerCount": 1,
-      "heroWorn": false,
-      "lordWorn": false,
+      "heroWorn": true,
+      "lordWorn": true,
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 18,
@@ -61523,32 +61157,20 @@
         0
       ],
       "weight": 8.0,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 8,
+      "levelSpan": 5,
+      "wearerCount": 5,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 8,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 11,
+      "delta": -3,
+      "status": "under",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "urukhai_veteranspearman",
-          "level": 26
-        },
-        {
-          "troop": "orthanc_chosen",
-          "level": 26
-        },
-        {
-          "troop": "orthanc_chosen_merc",
-          "level": 26
-        },
         {
           "troop": "urukhai_reaver",
           "level": 31
@@ -62084,9 +61706,9 @@
       ],
       "weight": 2.4,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 3,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -62104,10 +61726,6 @@
         {
           "troop": "lorien_infantry",
           "level": 31
-        },
-        {
-          "troop": "lorien_warden",
-          "level": 36
         }
       ]
     },
@@ -62266,20 +61884,24 @@
         0
       ],
       "weight": 3.1,
-      "anchorLevel": 41,
+      "anchorLevel": 36,
       "maxLevel": 41,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
-      "tierSource": "roster(L41)",
+      "tierSource": "roster(L36)",
       "target": 49,
       "delta": 0,
       "status": "generator-owned",
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "lorien_warden",
+          "level": 36
+        },
         {
           "troop": "lorien_mw_waystalker",
           "level": 41
@@ -63120,9 +62742,9 @@
       ],
       "weight": 12.6,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 5,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 4,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -63148,10 +62770,6 @@
         {
           "troop": "lorien_archer",
           "level": 31
-        },
-        {
-          "troop": "lorien_longbowman",
-          "level": 36
         }
       ]
     },
@@ -63170,7 +62788,7 @@
       "anchorLevel": 36,
       "maxLevel": 36,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -63188,6 +62806,10 @@
         {
           "troop": "lorien_lancer",
           "level": 36
+        },
+        {
+          "troop": "lorien_longbowman",
+          "level": 36
         }
       ]
     },
@@ -63204,9 +62826,9 @@
       ],
       "weight": 12.6,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 5,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 4,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -63232,10 +62854,6 @@
         {
           "troop": "lorien_mw_skirmisher",
           "level": 31
-        },
-        {
-          "troop": "lorien_mw_outrider",
-          "level": 36
         }
       ]
     },
@@ -63252,9 +62870,9 @@
       ],
       "weight": 12.6,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 5,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 4,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -63280,10 +62898,6 @@
         {
           "troop": "lorien_mw_skirmisher",
           "level": 31
-        },
-        {
-          "troop": "lorien_mw_outrider",
-          "level": 36
         }
       ]
     },
@@ -63302,7 +62916,7 @@
       "anchorLevel": 36,
       "maxLevel": 41,
       "levelSpan": 5,
-      "wearerCount": 5,
+      "wearerCount": 6,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
@@ -63315,6 +62929,10 @@
       "wearers": [
         {
           "troop": "lorien_mw_ranger",
+          "level": 36
+        },
+        {
+          "troop": "lorien_mw_outrider",
           "level": 36
         },
         {
@@ -63833,9 +63451,9 @@
       ],
       "weight": 1.0,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 5,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 4,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -63861,10 +63479,6 @@
         {
           "troop": "lorien_mw_skirmisher",
           "level": 31
-        },
-        {
-          "troop": "lorien_mw_outrider",
-          "level": 36
         }
       ]
     },
@@ -63883,7 +63497,7 @@
       "anchorLevel": 36,
       "maxLevel": 41,
       "levelSpan": 5,
-      "wearerCount": 5,
+      "wearerCount": 6,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
@@ -63896,6 +63510,10 @@
       "wearers": [
         {
           "troop": "lorien_mw_ranger",
+          "level": 36
+        },
+        {
+          "troop": "lorien_mw_outrider",
           "level": 36
         },
         {
@@ -64216,9 +63834,9 @@
       ],
       "weight": 2.4,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 7,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 4,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -64244,18 +63862,6 @@
         {
           "troop": "lorien_mw_skirmisher",
           "level": 31
-        },
-        {
-          "troop": "lorien_mw_ranger",
-          "level": 36
-        },
-        {
-          "troop": "lorien_mw_outrider",
-          "level": 36
-        },
-        {
-          "troop": "lorien_mw_ambusher",
-          "level": 36
         }
       ]
     },
@@ -64271,20 +63877,32 @@
         21
       ],
       "weight": 2.8,
-      "anchorLevel": 41,
+      "anchorLevel": 36,
       "maxLevel": 41,
-      "levelSpan": 0,
-      "wearerCount": 3,
+      "levelSpan": 5,
+      "wearerCount": 6,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
-      "tierSource": "roster(L41)",
+      "tierSource": "roster(L36)",
       "target": 21,
       "delta": 0,
       "status": "generator-owned",
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "lorien_mw_ranger",
+          "level": 36
+        },
+        {
+          "troop": "lorien_mw_outrider",
+          "level": 36
+        },
+        {
+          "troop": "lorien_mw_ambusher",
+          "level": 36
+        },
         {
           "troop": "lorien_mw_high_ranger",
           "level": 41
@@ -65766,9 +65384,9 @@
       ],
       "weight": 1.0,
       "anchorLevel": 11,
-      "maxLevel": 36,
-      "levelSpan": 25,
-      "wearerCount": 4,
+      "maxLevel": 11,
+      "levelSpan": 0,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "light",
@@ -65777,7 +65395,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "mirkwood_militia_spearman",
@@ -65786,14 +65404,6 @@
         {
           "troop": "mirkwood_militia_archer",
           "level": 11
-        },
-        {
-          "troop": "mirkwood_recruit",
-          "level": 36
-        },
-        {
-          "troop": "mirkwood_recruit_merc",
-          "level": 36
         }
       ]
     },
@@ -65886,9 +65496,9 @@
       ],
       "weight": 1.6,
       "anchorLevel": 16,
-      "maxLevel": 41,
-      "levelSpan": 25,
-      "wearerCount": 3,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -65897,7 +65507,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "mirkwood_militia_veteran_spearman",
@@ -65906,10 +65516,6 @@
         {
           "troop": "mirkwood_militia_veteran_archer",
           "level": 16
-        },
-        {
-          "troop": "mirkwood_sentinels",
-          "level": 41
         }
       ]
     },
@@ -65925,14 +65531,14 @@
         0
       ],
       "weight": 2.9,
-      "anchorLevel": 41,
+      "anchorLevel": 36,
       "maxLevel": 41,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "levelSpan": 5,
+      "wearerCount": 4,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
-      "tierSource": "roster(L41)",
+      "tierSource": "roster(L36)",
       "target": 50,
       "delta": 0,
       "status": "match",
@@ -65940,7 +65546,19 @@
       "shared": false,
       "wearers": [
         {
+          "troop": "mirkwood_recruit",
+          "level": 36
+        },
+        {
+          "troop": "mirkwood_recruit_merc",
+          "level": 36
+        },
+        {
           "troop": "mirkwood_woodsman",
+          "level": 41
+        },
+        {
+          "troop": "mirkwood_sentinels",
           "level": 41
         }
       ]
@@ -66390,28 +66008,20 @@
         0
       ],
       "weight": 5.2,
-      "anchorLevel": 11,
+      "anchorLevel": 41,
       "maxLevel": 51,
-      "levelSpan": 40,
-      "wearerCount": 5,
-      "heroWorn": true,
+      "levelSpan": 10,
+      "wearerCount": 3,
+      "heroWorn": false,
       "lordWorn": false,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 8,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L41)",
+      "target": 48,
+      "delta": -40,
+      "status": "under",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "mirkwood_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "mirkwood_militia_archer",
-          "level": 11
-        },
         {
           "troop": "mirkwood_wardens",
           "level": 41
@@ -66493,9 +66103,9 @@
       ],
       "weight": 5.2,
       "anchorLevel": 11,
-      "maxLevel": 46,
-      "levelSpan": 35,
-      "wearerCount": 9,
+      "maxLevel": 16,
+      "levelSpan": 5,
+      "wearerCount": 5,
       "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
@@ -66504,7 +66114,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "mirkwood_militia_spearman",
@@ -66525,22 +66135,6 @@
         {
           "troop": "mirkwood_militia_veteran_archer",
           "level": 16
-        },
-        {
-          "troop": "mirkwood_recruit",
-          "level": 36
-        },
-        {
-          "troop": "mirkwood_recruit_merc",
-          "level": 36
-        },
-        {
-          "troop": "mirkwood_woodsman",
-          "level": 41
-        },
-        {
-          "troop": "mirkwood_glaivesman",
-          "level": 46
         }
       ]
     },
@@ -66556,20 +66150,36 @@
         19
       ],
       "weight": 14.3,
-      "anchorLevel": 41,
+      "anchorLevel": 36,
       "maxLevel": 51,
-      "levelSpan": 10,
-      "wearerCount": 5,
+      "levelSpan": 15,
+      "wearerCount": 11,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
-      "tierSource": "roster(L41)",
+      "tierSource": "roster(L36)",
       "target": 48,
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": false,
+      "shared": true,
       "wearers": [
+        {
+          "troop": "mirkwood_recruit",
+          "level": 36
+        },
+        {
+          "troop": "mirkwood_recruit_merc",
+          "level": 36
+        },
+        {
+          "troop": "mirkwood_woodsman",
+          "level": 41
+        },
+        {
+          "troop": "mirkwood_guards",
+          "level": 41
+        },
         {
           "troop": "mirkwood_sentinels",
           "level": 41
@@ -66584,6 +66194,14 @@
         },
         {
           "troop": "mirkwood_borderwardens",
+          "level": 46
+        },
+        {
+          "troop": "mirkwood_glaivesman",
+          "level": 46
+        },
+        {
+          "troop": "mirkwood_swordsman",
           "level": 46
         },
         {
@@ -66605,9 +66223,9 @@
       ],
       "weight": 8.5,
       "anchorLevel": 16,
-      "maxLevel": 46,
-      "levelSpan": 30,
-      "wearerCount": 4,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 2,
       "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
@@ -66616,7 +66234,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "mirkwood_militia_veteran_spearman",
@@ -66625,14 +66243,6 @@
         {
           "troop": "mirkwood_militia_veteran_archer",
           "level": 16
-        },
-        {
-          "troop": "mirkwood_guards",
-          "level": 41
-        },
-        {
-          "troop": "mirkwood_swordsman",
-          "level": 46
         }
       ]
     },
@@ -66743,9 +66353,9 @@
       ],
       "weight": 0.4,
       "anchorLevel": 11,
-      "maxLevel": 46,
-      "levelSpan": 35,
-      "wearerCount": 8,
+      "maxLevel": 16,
+      "levelSpan": 5,
+      "wearerCount": 4,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "light",
@@ -66754,7 +66364,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "mirkwood_militia_spearman",
@@ -66771,22 +66381,6 @@
         {
           "troop": "mirkwood_militia_veteran_archer",
           "level": 16
-        },
-        {
-          "troop": "mirkwood_recruit",
-          "level": 36
-        },
-        {
-          "troop": "mirkwood_recruit_merc",
-          "level": 36
-        },
-        {
-          "troop": "mirkwood_woodsman",
-          "level": 41
-        },
-        {
-          "troop": "mirkwood_glaivesman",
-          "level": 46
         }
       ]
     },
@@ -66850,14 +66444,14 @@
         0
       ],
       "weight": 1.3,
-      "anchorLevel": 41,
+      "anchorLevel": 36,
       "maxLevel": 46,
-      "levelSpan": 5,
-      "wearerCount": 2,
+      "levelSpan": 10,
+      "wearerCount": 6,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
-      "tierSource": "roster(L41)",
+      "tierSource": "roster(L36)",
       "target": 24,
       "delta": 0,
       "status": "match",
@@ -66865,8 +66459,24 @@
       "shared": false,
       "wearers": [
         {
+          "troop": "mirkwood_recruit",
+          "level": 36
+        },
+        {
+          "troop": "mirkwood_recruit_merc",
+          "level": 36
+        },
+        {
+          "troop": "mirkwood_woodsman",
+          "level": 41
+        },
+        {
           "troop": "mirkwood_guards",
           "level": 41
+        },
+        {
+          "troop": "mirkwood_glaivesman",
+          "level": 46
         },
         {
           "troop": "mirkwood_swordsman",
@@ -66886,28 +66496,20 @@
         3
       ],
       "weight": 1.0,
-      "anchorLevel": 11,
+      "anchorLevel": 41,
       "maxLevel": 51,
-      "levelSpan": 40,
-      "wearerCount": 5,
-      "heroWorn": true,
+      "levelSpan": 10,
+      "wearerCount": 3,
+      "heroWorn": false,
       "lordWorn": false,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 3,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L41)",
+      "target": 22,
+      "delta": -19,
+      "status": "under",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "mirkwood_militia_spearman",
-          "level": 11
-        },
-        {
-          "troop": "mirkwood_militia_archer",
-          "level": 11
-        },
         {
           "troop": "mirkwood_wardens",
           "level": 41
@@ -66989,9 +66591,9 @@
       ],
       "weight": 1.0,
       "anchorLevel": 11,
-      "maxLevel": 46,
-      "levelSpan": 35,
-      "wearerCount": 9,
+      "maxLevel": 16,
+      "levelSpan": 5,
+      "wearerCount": 5,
       "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
@@ -67000,7 +66602,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "mirkwood_militia_spearman",
@@ -67021,22 +66623,6 @@
         {
           "troop": "mirkwood_militia_veteran_archer",
           "level": 16
-        },
-        {
-          "troop": "mirkwood_recruit",
-          "level": 36
-        },
-        {
-          "troop": "mirkwood_recruit_merc",
-          "level": 36
-        },
-        {
-          "troop": "mirkwood_woodsman",
-          "level": 41
-        },
-        {
-          "troop": "mirkwood_glaivesman",
-          "level": 46
         }
       ]
     },
@@ -67052,20 +66638,32 @@
         22
       ],
       "weight": 2.6,
-      "anchorLevel": 41,
+      "anchorLevel": 36,
       "maxLevel": 51,
-      "levelSpan": 10,
-      "wearerCount": 5,
+      "levelSpan": 15,
+      "wearerCount": 9,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
-      "tierSource": "roster(L41)",
+      "tierSource": "roster(L36)",
       "target": 22,
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": false,
+      "shared": true,
       "wearers": [
+        {
+          "troop": "mirkwood_recruit",
+          "level": 36
+        },
+        {
+          "troop": "mirkwood_recruit_merc",
+          "level": 36
+        },
+        {
+          "troop": "mirkwood_woodsman",
+          "level": 41
+        },
         {
           "troop": "mirkwood_sentinels",
           "level": 41
@@ -67080,6 +66678,10 @@
         },
         {
           "troop": "mirkwood_borderwardens",
+          "level": 46
+        },
+        {
+          "troop": "mirkwood_glaivesman",
           "level": 46
         },
         {
@@ -67100,28 +66702,20 @@
         8
       ],
       "weight": 1.6,
-      "anchorLevel": 16,
+      "anchorLevel": 41,
       "maxLevel": 46,
-      "levelSpan": 30,
-      "wearerCount": 4,
-      "heroWorn": true,
+      "levelSpan": 5,
+      "wearerCount": 2,
+      "heroWorn": false,
       "lordWorn": false,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 8,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L41)",
+      "target": 22,
+      "delta": -14,
+      "status": "under",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "mirkwood_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mirkwood_militia_veteran_archer",
-          "level": 16
-        },
         {
           "troop": "mirkwood_guards",
           "level": 41
@@ -67330,28 +66924,20 @@
         0
       ],
       "weight": 3.2,
-      "anchorLevel": 16,
+      "anchorLevel": 41,
       "maxLevel": 46,
-      "levelSpan": 30,
-      "wearerCount": 4,
-      "heroWorn": true,
+      "levelSpan": 5,
+      "wearerCount": 2,
+      "heroWorn": false,
       "lordWorn": false,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 5,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L41)",
+      "target": 13,
+      "delta": -8,
+      "status": "under",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "mirkwood_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "mirkwood_militia_veteran_archer",
-          "level": 16
-        },
         {
           "troop": "mirkwood_guards",
           "level": 41
@@ -69854,8 +69440,8 @@
       "maxLevel": 31,
       "levelSpan": 5,
       "wearerCount": 6,
-      "heroWorn": true,
-      "lordWorn": true,
+      "heroWorn": false,
+      "lordWorn": false,
       "tier": "heavy",
       "tierSource": "roster(L26)",
       "target": 31,
@@ -69951,9 +69537,9 @@
       ],
       "weight": 3.5,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 4,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 3,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "heavy",
@@ -69975,10 +69561,6 @@
         {
           "troop": "goblin_brute",
           "level": 26
-        },
-        {
-          "troop": "goblin_chosen_of_tharzog",
-          "level": 36
         }
       ]
     },
@@ -70227,9 +69809,9 @@
       ],
       "weight": 3.5,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 5,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 2,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "heavy",
@@ -70247,18 +69829,6 @@
         {
           "troop": "goblin_archer",
           "level": 26
-        },
-        {
-          "troop": "goblin_bolgs_ironfang",
-          "level": 36
-        },
-        {
-          "troop": "bluecraig_bolgs_ironfang",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_bolgs_ironfang",
-          "level": 36
         }
       ]
     },
@@ -70532,20 +70102,37 @@
         0
       ],
       "weight": 4.5,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
-      "wearerCount": 0,
-      "heroWorn": false,
-      "lordWorn": false,
+      "wearerCount": 4,
+      "heroWorn": true,
+      "lordWorn": true,
       "tier": "elite",
-      "tierSource": "id-keyword",
+      "tierSource": "roster(L36)",
       "target": 37,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "goblin_chosen_of_tharzog",
+          "level": 36
+        },
+        {
+          "troop": "goblin_bolgs_ironfang",
+          "level": 36
+        },
+        {
+          "troop": "bluecraig_bolgs_ironfang",
+          "level": 36
+        },
+        {
+          "troop": "mistymountainorcs_bolgs_ironfang",
+          "level": 36
+        }
+      ]
     },
     "sk_md_mor_arc_helmet_elite_b": {
       "culture": "mordor",
@@ -70563,8 +70150,8 @@
       "maxLevel": null,
       "levelSpan": 0,
       "wearerCount": 0,
-      "heroWorn": false,
-      "lordWorn": false,
+      "heroWorn": true,
+      "lordWorn": true,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 37,
@@ -70909,8 +70496,8 @@
       "maxLevel": null,
       "levelSpan": 0,
       "wearerCount": 0,
-      "heroWorn": false,
-      "lordWorn": false,
+      "heroWorn": true,
+      "lordWorn": true,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 37,
@@ -70936,8 +70523,8 @@
       "maxLevel": null,
       "levelSpan": 0,
       "wearerCount": 0,
-      "heroWorn": false,
-      "lordWorn": false,
+      "heroWorn": true,
+      "lordWorn": true,
       "tier": "elite",
       "tierSource": "id-keyword",
       "target": 37,
@@ -74135,8 +73722,8 @@
       "maxLevel": 26,
       "levelSpan": 0,
       "wearerCount": 2,
-      "heroWorn": true,
-      "lordWorn": true,
+      "heroWorn": false,
+      "lordWorn": false,
       "tier": "heavy",
       "tierSource": "roster(L26)",
       "target": 24,
@@ -74482,9 +74069,9 @@
       ],
       "weight": 13.0,
       "anchorLevel": 16,
-      "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 26,
+      "maxLevel": 31,
+      "levelSpan": 15,
+      "wearerCount": 23,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -74586,18 +74173,6 @@
         {
           "troop": "goblin_veteran_sword_warrior",
           "level": 31
-        },
-        {
-          "troop": "goblin_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "goblin_chosen_of_tharzog",
-          "level": 36
-        },
-        {
-          "troop": "goblin_bolgs_ironfang",
-          "level": 36
         }
       ]
     },
@@ -74798,11 +74373,11 @@
       ],
       "weight": 18.0,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 6,
-      "heroWorn": true,
-      "lordWorn": true,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 3,
+      "heroWorn": false,
+      "lordWorn": false,
       "tier": "heavy",
       "tierSource": "roster(L26)",
       "target": 24,
@@ -74822,18 +74397,6 @@
         {
           "troop": "goblin_veteran_spear_warrior",
           "level": 31
-        },
-        {
-          "troop": "goblin_guardian_of_the_tower",
-          "level": 36
-        },
-        {
-          "troop": "bluecraig_bolgs_ironfang",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_bolgs_ironfang",
-          "level": 36
         }
       ]
     },
@@ -74876,20 +74439,45 @@
         0
       ],
       "weight": 22.0,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
-      "wearerCount": 0,
-      "heroWorn": false,
-      "lordWorn": false,
+      "wearerCount": 6,
+      "heroWorn": true,
+      "lordWorn": true,
       "tier": "elite",
-      "tierSource": "id-keyword",
+      "tierSource": "roster(L36)",
       "target": 36,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "goblin_veteran_berserker",
+          "level": 36
+        },
+        {
+          "troop": "goblin_chosen_of_tharzog",
+          "level": 36
+        },
+        {
+          "troop": "goblin_guardian_of_the_tower",
+          "level": 36
+        },
+        {
+          "troop": "goblin_bolgs_ironfang",
+          "level": 36
+        },
+        {
+          "troop": "bluecraig_bolgs_ironfang",
+          "level": 36
+        },
+        {
+          "troop": "mistymountainorcs_bolgs_ironfang",
+          "level": 36
+        }
+      ]
     },
     "sk_md_mor_arc_chest_light_a": {
       "culture": "mordor",
@@ -76162,9 +75750,9 @@
       ],
       "weight": 1.0,
       "anchorLevel": 11,
-      "maxLevel": 36,
-      "levelSpan": 25,
-      "wearerCount": 7,
+      "maxLevel": 31,
+      "levelSpan": 20,
+      "wearerCount": 6,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "light",
@@ -76198,10 +75786,6 @@
         {
           "troop": "mordor_uruk_shieldguard",
           "level": 31
-        },
-        {
-          "troop": "mordor_uruk_baraddurguard",
-          "level": 36
         }
       ]
     },
@@ -76218,9 +75802,9 @@
       ],
       "weight": 1.0,
       "anchorLevel": 11,
-      "maxLevel": 36,
-      "levelSpan": 25,
-      "wearerCount": 8,
+      "maxLevel": 31,
+      "levelSpan": 20,
+      "wearerCount": 7,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "light",
@@ -76258,10 +75842,6 @@
         {
           "troop": "mordor_uruk_shieldguard",
           "level": 31
-        },
-        {
-          "troop": "mordor_uruk_baraddurguard",
-          "level": 36
         }
       ]
     },
@@ -76364,7 +75944,7 @@
       "anchorLevel": 31,
       "maxLevel": 36,
       "levelSpan": 5,
-      "wearerCount": 3,
+      "wearerCount": 4,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
@@ -76385,6 +75965,10 @@
         },
         {
           "troop": "mordor_uruk_captain",
+          "level": 36
+        },
+        {
+          "troop": "mordor_uruk_baraddurguard",
           "level": 36
         }
       ]
@@ -76821,11 +76405,11 @@
       ],
       "weight": 1.0,
       "anchorLevel": 16,
-      "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 34,
-      "heroWorn": true,
-      "lordWorn": true,
+      "maxLevel": 31,
+      "levelSpan": 15,
+      "wearerCount": 28,
+      "heroWorn": false,
+      "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 6,
@@ -76945,30 +76529,6 @@
         {
           "troop": "goblin_veteran_spear_warrior",
           "level": 31
-        },
-        {
-          "troop": "goblin_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "goblin_chosen_of_tharzog",
-          "level": 36
-        },
-        {
-          "troop": "goblin_guardian_of_the_tower",
-          "level": 36
-        },
-        {
-          "troop": "goblin_bolgs_ironfang",
-          "level": 36
-        },
-        {
-          "troop": "bluecraig_bolgs_ironfang",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_bolgs_ironfang",
-          "level": 36
         }
       ]
     },
@@ -76985,11 +76545,11 @@
       ],
       "weight": 1.0,
       "anchorLevel": 16,
-      "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 13,
-      "heroWorn": true,
-      "lordWorn": true,
+      "maxLevel": 31,
+      "levelSpan": 15,
+      "wearerCount": 12,
+      "heroWorn": false,
+      "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 6,
@@ -77045,10 +76605,6 @@
         {
           "troop": "goblin_veteran_spear_warrior",
           "level": 31
-        },
-        {
-          "troop": "goblin_veteran_berserker",
-          "level": 36
         }
       ]
     },
@@ -77064,20 +76620,45 @@
         0
       ],
       "weight": 1.5,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
-      "wearerCount": 0,
+      "wearerCount": 6,
       "heroWorn": true,
       "lordWorn": true,
-      "tier": "heavy",
-      "tierSource": "id-keyword",
-      "target": 12,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 18,
+      "delta": -6,
+      "status": "under",
       "line": "a",
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "goblin_veteran_berserker",
+          "level": 36
+        },
+        {
+          "troop": "goblin_chosen_of_tharzog",
+          "level": 36
+        },
+        {
+          "troop": "goblin_guardian_of_the_tower",
+          "level": 36
+        },
+        {
+          "troop": "goblin_bolgs_ironfang",
+          "level": 36
+        },
+        {
+          "troop": "bluecraig_bolgs_ironfang",
+          "level": 36
+        },
+        {
+          "troop": "mistymountainorcs_bolgs_ironfang",
+          "level": 36
+        }
+      ]
     },
     "sk_md_orc_bracer_heavy_b": {
       "culture": "mordor",
@@ -77095,8 +76676,8 @@
       "maxLevel": null,
       "levelSpan": 0,
       "wearerCount": 0,
-      "heroWorn": false,
-      "lordWorn": false,
+      "heroWorn": true,
+      "lordWorn": true,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 12,
@@ -77685,9 +77266,9 @@
       ],
       "weight": 2.2,
       "anchorLevel": 21,
-      "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 7,
+      "maxLevel": 31,
+      "levelSpan": 10,
+      "wearerCount": 5,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -77696,7 +77277,7 @@
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "umbar_corsairs_boss",
@@ -77717,14 +77298,6 @@
         {
           "troop": "umbar_elite_root0000",
           "level": 31
-        },
-        {
-          "troop": "mordor_num_vet_cavalry",
-          "level": 36
-        },
-        {
-          "troop": "mordor_num_vet_infantry",
-          "level": 36
         }
       ]
     },
@@ -77776,20 +77349,28 @@
         0
       ],
       "weight": 2.8,
-      "anchorLevel": 46,
+      "anchorLevel": 36,
       "maxLevel": 46,
-      "levelSpan": 0,
-      "wearerCount": 2,
+      "levelSpan": 10,
+      "wearerCount": 4,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
-      "tierSource": "roster(L46)",
+      "tierSource": "roster(L36)",
       "target": 23,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "mordor_num_vet_cavalry",
+          "level": 36
+        },
+        {
+          "troop": "mordor_num_vet_infantry",
+          "level": 36
+        },
         {
           "troop": "mordor_num_temple_knight",
           "level": 46
@@ -77892,9 +77473,9 @@
       ],
       "weight": 1.6,
       "anchorLevel": 16,
-      "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 8,
+      "maxLevel": 31,
+      "levelSpan": 15,
+      "wearerCount": 7,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -77932,10 +77513,6 @@
         {
           "troop": "mordor_uruk_shieldguard",
           "level": 31
-        },
-        {
-          "troop": "mordor_uruk_baraddurguard",
-          "level": 36
         }
       ]
     },
@@ -77952,9 +77529,9 @@
       ],
       "weight": 1.6,
       "anchorLevel": 16,
-      "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 7,
+      "maxLevel": 31,
+      "levelSpan": 15,
+      "wearerCount": 6,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -77988,10 +77565,6 @@
         {
           "troop": "mordor_uruk_shieldguard",
           "level": 31
-        },
-        {
-          "troop": "mordor_uruk_baraddurguard",
-          "level": 36
         }
       ]
     },
@@ -78094,7 +77667,7 @@
       "anchorLevel": 31,
       "maxLevel": 36,
       "levelSpan": 5,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
@@ -78111,6 +77684,10 @@
         },
         {
           "troop": "mordor_uruk_captain",
+          "level": 36
+        },
+        {
+          "troop": "mordor_uruk_baraddurguard",
           "level": 36
         }
       ]
@@ -78608,11 +78185,11 @@
       ],
       "weight": 2.5,
       "anchorLevel": 11,
-      "maxLevel": 36,
-      "levelSpan": 25,
-      "wearerCount": 16,
-      "heroWorn": true,
-      "lordWorn": true,
+      "maxLevel": 26,
+      "levelSpan": 15,
+      "wearerCount": 14,
+      "heroWorn": false,
+      "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L11)",
       "target": 3,
@@ -78676,14 +78253,6 @@
         {
           "troop": "goblin_archer",
           "level": 26
-        },
-        {
-          "troop": "bluecraig_bolgs_ironfang",
-          "level": 36
-        },
-        {
-          "troop": "mistymountainorcs_bolgs_ironfang",
-          "level": 36
         }
       ]
     },
@@ -78700,11 +78269,11 @@
       ],
       "weight": 2.5,
       "anchorLevel": 16,
-      "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 28,
-      "heroWorn": true,
-      "lordWorn": true,
+      "maxLevel": 31,
+      "levelSpan": 15,
+      "wearerCount": 24,
+      "heroWorn": false,
+      "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 6,
@@ -78808,22 +78377,6 @@
         {
           "troop": "goblin_veteran_spear_warrior",
           "level": 31
-        },
-        {
-          "troop": "goblin_veteran_berserker",
-          "level": 36
-        },
-        {
-          "troop": "goblin_chosen_of_tharzog",
-          "level": 36
-        },
-        {
-          "troop": "goblin_guardian_of_the_tower",
-          "level": 36
-        },
-        {
-          "troop": "goblin_bolgs_ironfang",
-          "level": 36
         }
       ]
     },
@@ -78839,20 +78392,45 @@
         11
       ],
       "weight": 3.5,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
-      "wearerCount": 0,
-      "heroWorn": false,
-      "lordWorn": false,
-      "tier": "heavy",
-      "tierSource": "id-keyword",
-      "target": 11,
-      "delta": 0,
-      "status": "match",
+      "wearerCount": 6,
+      "heroWorn": true,
+      "lordWorn": true,
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 16,
+      "delta": -5,
+      "status": "under",
       "line": "a",
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "goblin_veteran_berserker",
+          "level": 36
+        },
+        {
+          "troop": "goblin_chosen_of_tharzog",
+          "level": 36
+        },
+        {
+          "troop": "goblin_guardian_of_the_tower",
+          "level": 36
+        },
+        {
+          "troop": "goblin_bolgs_ironfang",
+          "level": 36
+        },
+        {
+          "troop": "bluecraig_bolgs_ironfang",
+          "level": 36
+        },
+        {
+          "troop": "mistymountainorcs_bolgs_ironfang",
+          "level": 36
+        }
+      ]
     },
     "sk_md_orc_boots_heavy_b": {
       "culture": "mordor",
@@ -80161,11 +79739,11 @@
       ],
       "weight": 5.5,
       "anchorLevel": 16,
-      "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 24,
-      "heroWorn": true,
-      "lordWorn": true,
+      "maxLevel": 31,
+      "levelSpan": 15,
+      "wearerCount": 23,
+      "heroWorn": false,
+      "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
       "target": 4,
@@ -80265,10 +79843,6 @@
         {
           "troop": "goblin_veteran_spear_warrior",
           "level": 31
-        },
-        {
-          "troop": "goblin_veteran_berserker",
-          "level": 36
         }
       ]
     },
@@ -80285,9 +79859,9 @@
       ],
       "weight": 5.5,
       "anchorLevel": 21,
-      "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 16,
+      "maxLevel": 31,
+      "levelSpan": 10,
+      "wearerCount": 11,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "heavy",
@@ -80296,7 +79870,7 @@
       "delta": 0,
       "status": "match",
       "line": "b",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "isengard_orc_warg_ravager_v2",
@@ -80341,6 +79915,38 @@
         {
           "troop": "goblin_veteran_spear_warrior",
           "level": 31
+        }
+      ]
+    },
+    "sk_md_orc_pauldron_heavy_a": {
+      "culture": "mordor",
+      "slot": "shoulder",
+      "name": "[Mordor] Mordor Orc Heavy Pauldron I",
+      "current": 7,
+      "armour": [
+        0,
+        7,
+        6,
+        0
+      ],
+      "weight": 7.7,
+      "anchorLevel": 36,
+      "maxLevel": 36,
+      "levelSpan": 0,
+      "wearerCount": 6,
+      "heroWorn": true,
+      "lordWorn": true,
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 10,
+      "delta": -3,
+      "status": "under",
+      "line": "a",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "goblin_veteran_berserker",
+          "level": 36
         },
         {
           "troop": "goblin_chosen_of_tharzog",
@@ -80364,33 +79970,6 @@
         }
       ]
     },
-    "sk_md_orc_pauldron_heavy_a": {
-      "culture": "mordor",
-      "slot": "shoulder",
-      "name": "[Mordor] Mordor Orc Heavy Pauldron I",
-      "current": 7,
-      "armour": [
-        0,
-        7,
-        6,
-        0
-      ],
-      "weight": 7.7,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "heroWorn": false,
-      "lordWorn": false,
-      "tier": "heavy",
-      "tierSource": "id-keyword",
-      "target": 7,
-      "delta": 0,
-      "status": "match",
-      "line": "a",
-      "shared": false,
-      "wearers": []
-    },
     "sk_md_orc_pauldron_heavy_b": {
       "culture": "mordor",
       "slot": "shoulder",
@@ -80407,8 +79986,8 @@
       "maxLevel": null,
       "levelSpan": 0,
       "wearerCount": 0,
-      "heroWorn": false,
-      "lordWorn": false,
+      "heroWorn": true,
+      "lordWorn": true,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 7,
@@ -80584,8 +80163,8 @@
       "maxLevel": null,
       "levelSpan": 0,
       "wearerCount": 0,
-      "heroWorn": false,
-      "lordWorn": false,
+      "heroWorn": true,
+      "lordWorn": true,
       "tier": "heavy",
       "tierSource": "id-keyword",
       "target": 7,
@@ -81261,9 +80840,9 @@
       ],
       "weight": 9.9,
       "anchorLevel": 21,
-      "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 4,
+      "maxLevel": 31,
+      "levelSpan": 10,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -81272,7 +80851,7 @@
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "umbar_corsairs_boss",
@@ -81285,10 +80864,6 @@
         {
           "troop": "umbar_elite_root0000",
           "level": 31
-        },
-        {
-          "troop": "mordor_num_vet_infantry",
-          "level": 36
         }
       ]
     },
@@ -81496,20 +81071,24 @@
         0
       ],
       "weight": 12.1,
-      "anchorLevel": 46,
+      "anchorLevel": 36,
       "maxLevel": 46,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "levelSpan": 10,
+      "wearerCount": 2,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
-      "tierSource": "roster(L46)",
+      "tierSource": "roster(L36)",
       "target": 13,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "mordor_num_vet_infantry",
+          "level": 36
+        },
         {
           "troop": "mordor_num_temple_guard",
           "level": 46
@@ -87078,9 +86657,9 @@
       ],
       "weight": 2.0,
       "anchorLevel": 26,
-      "maxLevel": 46,
-      "levelSpan": 20,
-      "wearerCount": 6,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -87089,7 +86668,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "dg_khamul_shadow_disciple",
@@ -87102,18 +86681,6 @@
         {
           "troop": "dg_khamul_shadow_archer",
           "level": 31
-        },
-        {
-          "troop": "dg_khamul_shadow_marksman",
-          "level": 36
-        },
-        {
-          "troop": "dg_khamul_veiled_marksman",
-          "level": 41
-        },
-        {
-          "troop": "dg_khamul_shadow_bowman",
-          "level": 46
         }
       ]
     },
@@ -87237,14 +86804,14 @@
         0
       ],
       "weight": 2.5,
-      "anchorLevel": 46,
+      "anchorLevel": 36,
       "maxLevel": 46,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "levelSpan": 10,
+      "wearerCount": 4,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
-      "tierSource": "roster(L46)",
+      "tierSource": "roster(L36)",
       "target": 43,
       "delta": 0,
       "status": "match",
@@ -87252,7 +86819,19 @@
       "shared": false,
       "wearers": [
         {
+          "troop": "dg_khamul_shadow_marksman",
+          "level": 36
+        },
+        {
+          "troop": "dg_khamul_veiled_marksman",
+          "level": 41
+        },
+        {
           "troop": "dg_khamul_shadow_guard",
+          "level": 46
+        },
+        {
+          "troop": "dg_khamul_shadow_bowman",
           "level": 46
         }
       ]
@@ -89289,9 +88868,9 @@
       ],
       "weight": 2.2,
       "anchorLevel": 26,
-      "maxLevel": 41,
-      "levelSpan": 15,
-      "wearerCount": 2,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 1,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -89300,15 +88879,11 @@
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "darkhun_cavalry",
           "level": 26
-        },
-        {
-          "troop": "dg_khamul_veiled_reaper",
-          "level": 41
         }
       ]
     },
@@ -89399,7 +88974,7 @@
       "anchorLevel": 41,
       "maxLevel": 41,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -89410,6 +88985,10 @@
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "dg_khamul_veiled_reaper",
+          "level": 41
+        },
         {
           "troop": "darkhun_cultist_knight",
           "level": 41
@@ -90670,9 +90249,9 @@
       ],
       "weight": 16.2,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 7,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 5,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -90702,14 +90281,6 @@
         {
           "troop": "kharaghul_keshig",
           "level": 31
-        },
-        {
-          "troop": "kharaghul_ashkur_nokor",
-          "level": 36
-        },
-        {
-          "troop": "kharaghul_karash_keshig",
-          "level": 36
         }
       ]
     },
@@ -91220,20 +90791,29 @@
         18
       ],
       "weight": 19.8,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
-      "wearerCount": 0,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
-      "tierSource": "id-keyword",
+      "tierSource": "roster(L36)",
       "target": 46,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "kharaghul_ashkur_nokor",
+          "level": 36
+        },
+        {
+          "troop": "kharaghul_karash_keshig",
+          "level": 36
+        }
+      ]
     },
     "sk_rh_loke_chest_elite_b": {
       "culture": "rhun",
@@ -93284,9 +92864,9 @@
       ],
       "weight": 14.0,
       "anchorLevel": 26,
-      "maxLevel": 46,
-      "levelSpan": 20,
-      "wearerCount": 4,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -93295,7 +92875,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "darkhun_cavalry",
@@ -93304,14 +92884,6 @@
         {
           "troop": "darkhun_veteran_cavalry",
           "level": 31
-        },
-        {
-          "troop": "dg_khamul_veiled_reaper",
-          "level": 41
-        },
-        {
-          "troop": "dg_khamul_shadow_reaper",
-          "level": 46
         }
       ]
     },
@@ -93789,20 +93361,29 @@
         16
       ],
       "weight": 18.0,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
+      "anchorLevel": 41,
+      "maxLevel": 46,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
-      "tierSource": "id-keyword",
+      "tierSource": "roster(L41)",
       "target": 41,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "dg_khamul_veiled_reaper",
+          "level": 41
+        },
+        {
+          "troop": "dg_khamul_shadow_reaper",
+          "level": 46
+        }
+      ]
     },
     "sk_dg_khml_chest_elite_b": {
       "culture": "rhun",
@@ -94179,9 +93760,9 @@
       ],
       "weight": 15.0,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 3,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -94199,10 +93780,6 @@
         {
           "troop": "dg_khamul_shadow_infantry",
           "level": 31
-        },
-        {
-          "troop": "dg_khamul_shadow_warden",
-          "level": 36
         }
       ]
     },
@@ -94298,20 +93875,25 @@
         16
       ],
       "weight": 23.0,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
-      "wearerCount": 0,
+      "wearerCount": 1,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
-      "tierSource": "id-keyword",
+      "tierSource": "roster(L36)",
       "target": 41,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "dg_khamul_shadow_warden",
+          "level": 36
+        }
+      ]
     },
     "sk_dg_khml_plate_elite_b": {
       "culture": "rhun",
@@ -94679,24 +94261,20 @@
         0
       ],
       "weight": 1.4,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 5,
-      "heroWorn": true,
+      "levelSpan": 5,
+      "wearerCount": 4,
+      "heroWorn": false,
       "lordWorn": false,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 16,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 23,
+      "delta": -7,
+      "status": "under",
       "line": "b",
       "shared": false,
       "wearers": [
-        {
-          "troop": "far_rhun_cataphract",
-          "level": 26
-        },
         {
           "troop": "wainrider_wind_arrow_sharpshooter",
           "level": 31
@@ -96264,24 +95842,20 @@
         0
       ],
       "weight": 2.4,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 3,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 14,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 21,
+      "delta": -7,
+      "status": "under",
       "line": "a",
       "shared": false,
       "wearers": [
-        {
-          "troop": "darkhun_veteran_infantry",
-          "level": 26
-        },
         {
           "troop": "darkhun_guard",
           "level": 31
@@ -96305,9 +95879,9 @@
       ],
       "weight": 1.2,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 3,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -96325,10 +95899,6 @@
         {
           "troop": "dg_khamul_shadow_infantry",
           "level": 31
-        },
-        {
-          "troop": "dg_khamul_shadow_warden",
-          "level": 36
         }
       ]
     },
@@ -96380,20 +95950,24 @@
         0
       ],
       "weight": 2.6,
-      "anchorLevel": 46,
+      "anchorLevel": 36,
       "maxLevel": 46,
-      "levelSpan": 0,
-      "wearerCount": 2,
+      "levelSpan": 10,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
-      "tierSource": "roster(L46)",
+      "tierSource": "roster(L36)",
       "target": 21,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "dg_khamul_shadow_warden",
+          "level": 36
+        },
         {
           "troop": "dg_khamul_shadow_knight",
           "level": 46
@@ -96693,9 +96267,9 @@
       ],
       "weight": 3.1,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 8,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 6,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -96729,14 +96303,6 @@
         {
           "troop": "kharaghul_keshig",
           "level": 31
-        },
-        {
-          "troop": "kharaghul_ashkur_nokor",
-          "level": 36
-        },
-        {
-          "troop": "kharaghul_karash_keshig",
-          "level": 36
         }
       ]
     },
@@ -97057,7 +96623,7 @@
       "anchorLevel": 36,
       "maxLevel": 36,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 4,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
@@ -97068,6 +96634,14 @@
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "kharaghul_ashkur_nokor",
+          "level": 36
+        },
+        {
+          "troop": "kharaghul_karash_keshig",
+          "level": 36
+        },
         {
           "troop": "loke_rim_gilded_cataphract",
           "level": 36
@@ -97145,9 +96719,9 @@
       ],
       "weight": 3.1,
       "anchorLevel": 21,
-      "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 4,
+      "maxLevel": 31,
+      "levelSpan": 10,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -97156,7 +96730,7 @@
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "black_sun_scout",
@@ -97169,10 +96743,6 @@
         {
           "troop": "black_sun_longbowman",
           "level": 31
-        },
-        {
-          "troop": "black_sun_marksman",
-          "level": 36
         }
       ]
     },
@@ -97510,20 +97080,24 @@
         21
       ],
       "weight": 3.6,
-      "anchorLevel": 46,
+      "anchorLevel": 36,
       "maxLevel": 46,
-      "levelSpan": 0,
-      "wearerCount": 2,
+      "levelSpan": 10,
+      "wearerCount": 3,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
-      "tierSource": "roster(L46)",
+      "tierSource": "roster(L36)",
       "target": 21,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "black_sun_marksman",
+          "level": 36
+        },
         {
           "troop": "dragon_wrath_obsidian_knight",
           "level": 46
@@ -97724,9 +97298,9 @@
       ],
       "weight": 3.0,
       "anchorLevel": 21,
-      "maxLevel": 41,
-      "levelSpan": 20,
-      "wearerCount": 5,
+      "maxLevel": 31,
+      "levelSpan": 10,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -97735,7 +97309,7 @@
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "darkhun_horseman",
@@ -97748,14 +97322,6 @@
         {
           "troop": "darkhun_veteran_cavalry",
           "level": 31
-        },
-        {
-          "troop": "darkhun_knight",
-          "level": 36
-        },
-        {
-          "troop": "darkhun_cultist_knight",
-          "level": 41
         }
       ]
     },
@@ -97808,9 +97374,9 @@
       ],
       "weight": 3.2,
       "anchorLevel": 21,
-      "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 4,
+      "maxLevel": 31,
+      "levelSpan": 10,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -97819,7 +97385,7 @@
       "delta": 0,
       "status": "match",
       "line": "a",
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "darkhun_infantry",
@@ -97832,10 +97398,6 @@
         {
           "troop": "darkhun_guard",
           "level": 31
-        },
-        {
-          "troop": "darkhun_ironbound",
-          "level": 36
         }
       ]
     },
@@ -97959,20 +97521,32 @@
         18
       ],
       "weight": 3.8,
-      "anchorLevel": 46,
+      "anchorLevel": 36,
       "maxLevel": 46,
-      "levelSpan": 0,
-      "wearerCount": 2,
+      "levelSpan": 10,
+      "wearerCount": 5,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
-      "tierSource": "roster(L46)",
+      "tierSource": "roster(L36)",
       "target": 18,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "darkhun_ironbound",
+          "level": 36
+        },
+        {
+          "troop": "darkhun_knight",
+          "level": 36
+        },
+        {
+          "troop": "darkhun_cultist_knight",
+          "level": 41
+        },
         {
           "troop": "dg_khamul_shadow_knight",
           "level": 46
@@ -97995,20 +97569,25 @@
         0
       ],
       "weight": 1.0,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
-      "wearerCount": 0,
+      "wearerCount": 1,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 13,
+      "delta": -9,
+      "status": "under",
       "line": "a",
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "kharaghul_ashkur_nokor",
+          "level": 36
+        }
+      ]
     },
     "sk_rh_loke_cape_b": {
       "culture": "rhun",
@@ -98382,9 +97961,9 @@
       ],
       "weight": 6.3,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 3,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -98402,10 +97981,6 @@
         {
           "troop": "far_rhun_iron_legionary",
           "level": 31
-        },
-        {
-          "troop": "kharaghul_ashkur_nokor",
-          "level": 36
         }
       ]
     },
@@ -100593,9 +100168,9 @@
       ],
       "weight": 3.0,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 3,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -100613,10 +100188,6 @@
         {
           "troop": "dg_khamul_shadow_infantry",
           "level": 31
-        },
-        {
-          "troop": "dg_khamul_shadow_warden",
-          "level": 36
         }
       ]
     },
@@ -100668,20 +100239,24 @@
         0
       ],
       "weight": 7.5,
-      "anchorLevel": 41,
+      "anchorLevel": 36,
       "maxLevel": 46,
-      "levelSpan": 5,
-      "wearerCount": 4,
+      "levelSpan": 10,
+      "wearerCount": 5,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
-      "tierSource": "roster(L41)",
+      "tierSource": "roster(L36)",
       "target": 11,
       "delta": 0,
       "status": "match",
       "line": "a",
       "shared": false,
       "wearers": [
+        {
+          "troop": "dg_khamul_shadow_warden",
+          "level": 36
+        },
         {
           "troop": "dg_khamul_veiled_knight",
           "level": 41
@@ -103417,9 +102992,9 @@
       ],
       "weight": 9.1,
       "anchorLevel": 16,
-      "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 8,
+      "maxLevel": 31,
+      "levelSpan": 15,
+      "wearerCount": 6,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -103453,14 +103028,6 @@
         {
           "troop": "imladris_swordguard",
           "level": 31
-        },
-        {
-          "troop": "lindon_imladris_marksman",
-          "level": 36
-        },
-        {
-          "troop": "imladris_marksman",
-          "level": 36
         }
       ]
     },
@@ -103477,9 +103044,9 @@
       ],
       "weight": 9.1,
       "anchorLevel": 16,
-      "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 6,
+      "maxLevel": 31,
+      "levelSpan": 15,
+      "wearerCount": 4,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -103505,14 +103072,6 @@
         {
           "troop": "imladris_swordguard",
           "level": 31
-        },
-        {
-          "troop": "lindon_imladris_marksman",
-          "level": 36
-        },
-        {
-          "troop": "imladris_marksman",
-          "level": 36
         }
       ]
     },
@@ -103565,9 +103124,9 @@
       ],
       "weight": 5.6,
       "anchorLevel": 16,
-      "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 8,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 4,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -103576,7 +103135,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "lindon_militia_veteran_spearman",
@@ -103593,22 +103152,6 @@
         {
           "troop": "rivendell_militia_veteran_archer",
           "level": 16
-        },
-        {
-          "troop": "lindon_noble",
-          "level": 36
-        },
-        {
-          "troop": "lindon_noble_merc",
-          "level": 36
-        },
-        {
-          "troop": "rivendell_noble",
-          "level": 36
-        },
-        {
-          "troop": "rivendell_noble_merc",
-          "level": 36
         }
       ]
     },
@@ -103661,9 +103204,9 @@
       ],
       "weight": 5.6,
       "anchorLevel": 16,
-      "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 6,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -103672,7 +103215,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "lindon_militia_veteran_archer",
@@ -103681,22 +103224,6 @@
         {
           "troop": "rivendell_militia_veteran_archer",
           "level": 16
-        },
-        {
-          "troop": "lindon_noble",
-          "level": 36
-        },
-        {
-          "troop": "lindon_noble_merc",
-          "level": 36
-        },
-        {
-          "troop": "rivendell_noble",
-          "level": 36
-        },
-        {
-          "troop": "rivendell_noble_merc",
-          "level": 36
         }
       ]
     },
@@ -104095,7 +103622,7 @@
       "anchorLevel": 31,
       "maxLevel": 36,
       "levelSpan": 5,
-      "wearerCount": 4,
+      "wearerCount": 8,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -104119,7 +103646,23 @@
           "level": 36
         },
         {
+          "troop": "lindon_noble",
+          "level": 36
+        },
+        {
+          "troop": "lindon_noble_merc",
+          "level": 36
+        },
+        {
           "troop": "imladris_marksman",
+          "level": 36
+        },
+        {
+          "troop": "rivendell_noble",
+          "level": 36
+        },
+        {
+          "troop": "rivendell_noble_merc",
           "level": 36
         }
       ]
@@ -104208,9 +103751,9 @@
       ],
       "weight": 5.6,
       "anchorLevel": 16,
-      "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 6,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -104219,7 +103762,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "lindon_militia_veteran_archer",
@@ -104228,22 +103771,6 @@
         {
           "troop": "rivendell_militia_veteran_archer",
           "level": 16
-        },
-        {
-          "troop": "lindon_noble",
-          "level": 36
-        },
-        {
-          "troop": "lindon_noble_merc",
-          "level": 36
-        },
-        {
-          "troop": "rivendell_noble",
-          "level": 36
-        },
-        {
-          "troop": "rivendell_noble_merc",
-          "level": 36
         }
       ]
     },
@@ -105086,9 +104613,9 @@
       ],
       "weight": 5.6,
       "anchorLevel": 16,
-      "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 6,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -105097,7 +104624,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "lindon_militia_veteran_archer",
@@ -105106,22 +104633,6 @@
         {
           "troop": "rivendell_militia_veteran_archer",
           "level": 16
-        },
-        {
-          "troop": "lindon_noble",
-          "level": 36
-        },
-        {
-          "troop": "lindon_noble_merc",
-          "level": 36
-        },
-        {
-          "troop": "rivendell_noble",
-          "level": 36
-        },
-        {
-          "troop": "rivendell_noble_merc",
-          "level": 36
         }
       ]
     },
@@ -105908,9 +105419,9 @@
       ],
       "weight": 0.4,
       "anchorLevel": 11,
-      "maxLevel": 41,
-      "levelSpan": 30,
-      "wearerCount": 18,
+      "maxLevel": 31,
+      "levelSpan": 20,
+      "wearerCount": 8,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "light",
@@ -105952,46 +105463,6 @@
         {
           "troop": "imladris_swordguard",
           "level": 31
-        },
-        {
-          "troop": "lindon_imladris_nobleman",
-          "level": 36
-        },
-        {
-          "troop": "lindon_imladris_marksman",
-          "level": 36
-        },
-        {
-          "troop": "lindon_imladris_guardsman",
-          "level": 36
-        },
-        {
-          "troop": "imladris_nobleman",
-          "level": 36
-        },
-        {
-          "troop": "imladris_marksman",
-          "level": 36
-        },
-        {
-          "troop": "imladris_guardsman",
-          "level": 36
-        },
-        {
-          "troop": "lindon_imladris_blademaster",
-          "level": 41
-        },
-        {
-          "troop": "lindon_battlemaster_of_the_first_age",
-          "level": 41
-        },
-        {
-          "troop": "imladris_blademaster",
-          "level": 41
-        },
-        {
-          "troop": "battlemaster_of_the_first_age",
-          "level": 41
         }
       ]
     },
@@ -106008,9 +105479,9 @@
       ],
       "weight": 0.7,
       "anchorLevel": 16,
-      "maxLevel": 41,
-      "levelSpan": 25,
-      "wearerCount": 14,
+      "maxLevel": 31,
+      "levelSpan": 15,
+      "wearerCount": 6,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -106044,38 +105515,6 @@
         {
           "troop": "imladris_swordguard",
           "level": 31
-        },
-        {
-          "troop": "lindon_imladris_nobleman",
-          "level": 36
-        },
-        {
-          "troop": "imladris_nobleman",
-          "level": 36
-        },
-        {
-          "troop": "lindon_imladris_blademaster",
-          "level": 41
-        },
-        {
-          "troop": "lindon_battlemaster_of_the_first_age",
-          "level": 41
-        },
-        {
-          "troop": "lindon_imladris_marchwarden",
-          "level": 41
-        },
-        {
-          "troop": "imladris_blademaster",
-          "level": 41
-        },
-        {
-          "troop": "battlemaster_of_the_first_age",
-          "level": 41
-        },
-        {
-          "troop": "imladris_marchwarden",
-          "level": 41
         }
       ]
     },
@@ -106135,20 +105574,61 @@
         0
       ],
       "weight": 1.4,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
+      "anchorLevel": 36,
+      "maxLevel": 41,
+      "levelSpan": 5,
+      "wearerCount": 10,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 26,
+      "delta": 1,
+      "status": "match",
       "line": null,
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "lindon_imladris_nobleman",
+          "level": 36
+        },
+        {
+          "troop": "lindon_imladris_marksman",
+          "level": 36
+        },
+        {
+          "troop": "lindon_imladris_guardsman",
+          "level": 36
+        },
+        {
+          "troop": "imladris_nobleman",
+          "level": 36
+        },
+        {
+          "troop": "imladris_marksman",
+          "level": 36
+        },
+        {
+          "troop": "imladris_guardsman",
+          "level": 36
+        },
+        {
+          "troop": "lindon_imladris_blademaster",
+          "level": 41
+        },
+        {
+          "troop": "lindon_battlemaster_of_the_first_age",
+          "level": 41
+        },
+        {
+          "troop": "imladris_blademaster",
+          "level": 41
+        },
+        {
+          "troop": "battlemaster_of_the_first_age",
+          "level": 41
+        }
+      ]
     },
     "rivendell_vambraces_2_silver": {
       "culture": "rivendell",
@@ -106162,20 +105642,53 @@
         0
       ],
       "weight": 1.4,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
+      "anchorLevel": 36,
+      "maxLevel": 41,
+      "levelSpan": 5,
+      "wearerCount": 8,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 26,
+      "delta": 1,
+      "status": "match",
       "line": null,
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "lindon_imladris_nobleman",
+          "level": 36
+        },
+        {
+          "troop": "imladris_nobleman",
+          "level": 36
+        },
+        {
+          "troop": "lindon_imladris_blademaster",
+          "level": 41
+        },
+        {
+          "troop": "lindon_battlemaster_of_the_first_age",
+          "level": 41
+        },
+        {
+          "troop": "lindon_imladris_marchwarden",
+          "level": 41
+        },
+        {
+          "troop": "imladris_blademaster",
+          "level": 41
+        },
+        {
+          "troop": "battlemaster_of_the_first_age",
+          "level": 41
+        },
+        {
+          "troop": "imladris_marchwarden",
+          "level": 41
+        }
+      ]
     },
     "rivendell_vambraces_3_silver": {
       "culture": "rivendell",
@@ -106816,28 +106329,20 @@
         8
       ],
       "weight": 1.8,
-      "anchorLevel": 16,
+      "anchorLevel": 31,
       "maxLevel": 41,
-      "levelSpan": 25,
-      "wearerCount": 12,
-      "heroWorn": true,
+      "levelSpan": 10,
+      "wearerCount": 10,
+      "heroWorn": false,
       "lordWorn": false,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 8,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 23,
+      "delta": -15,
+      "status": "under",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "lindon_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "rivendell_militia_veteran_spearman",
-          "level": 16
-        },
         {
           "troop": "lindon_imladris_swordguard",
           "level": 31
@@ -108033,28 +107538,20 @@
         0
       ],
       "weight": 3.5,
-      "anchorLevel": 16,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 8,
+      "levelSpan": 5,
+      "wearerCount": 6,
       "heroWorn": true,
       "lordWorn": true,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 5,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 14,
+      "delta": -9,
+      "status": "under",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "lindon_militia_veteran_spearman",
-          "level": 16
-        },
-        {
-          "troop": "rivendell_militia_veteran_spearman",
-          "level": 16
-        },
         {
           "troop": "lindon_imladris_swordguard",
           "level": 31
@@ -109552,36 +109049,20 @@
         0
       ],
       "weight": 3.1,
-      "anchorLevel": 26,
+      "anchorLevel": 31,
       "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 9,
+      "levelSpan": 5,
+      "wearerCount": 5,
       "heroWorn": true,
       "lordWorn": true,
-      "tier": "heavy",
-      "tierSource": "roster(L26)",
-      "target": 32,
-      "delta": 0,
-      "status": "match",
+      "tier": "elite",
+      "tierSource": "roster(L31)",
+      "target": 38,
+      "delta": -6,
+      "status": "under",
       "line": null,
       "shared": false,
       "wearers": [
-        {
-          "troop": "rohan_edoras_golden_hall_elite_rider",
-          "level": 26
-        },
-        {
-          "troop": "southrhovanion_veteran_ford_guard",
-          "level": 26
-        },
-        {
-          "troop": "southrhovanion_horse_thane",
-          "level": 26
-        },
-        {
-          "troop": "southrhovanion_veteran_horse_archer",
-          "level": 26
-        },
         {
           "troop": "rohan_edoras_golden_hall_eorlingas_rider",
           "level": 31
@@ -109755,8 +109236,8 @@
       "maxLevel": 36,
       "levelSpan": 5,
       "wearerCount": 8,
-      "heroWorn": true,
-      "lordWorn": true,
+      "heroWorn": false,
+      "lordWorn": false,
       "tier": "elite",
       "tierSource": "roster(L31)",
       "target": 37,
@@ -110575,9 +110056,9 @@
       ],
       "weight": 16.2,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 5,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 4,
       "heroWorn": true,
       "lordWorn": false,
       "tier": "heavy",
@@ -110603,10 +110084,6 @@
         {
           "troop": "southrhovanion_horse_thane",
           "level": 26
-        },
-        {
-          "troop": "rohan_wold_kings_own_horse_archer",
-          "level": 36
         }
       ]
     },
@@ -110649,20 +110126,25 @@
         0
       ],
       "weight": 8.5,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 36,
+      "maxLevel": 36,
       "levelSpan": 0,
-      "wearerCount": 0,
-      "heroWorn": false,
-      "lordWorn": false,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
+      "wearerCount": 1,
+      "heroWorn": true,
+      "lordWorn": true,
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 37,
+      "delta": -12,
+      "status": "under",
       "line": null,
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "rohan_wold_kings_own_horse_archer",
+          "level": 36
+        }
+      ]
     },
     "cts_rohan_armor11": {
       "culture": "rohan",
@@ -111273,9 +110755,9 @@
       ],
       "weight": 1.8,
       "anchorLevel": 31,
-      "maxLevel": 36,
-      "levelSpan": 5,
-      "wearerCount": 6,
+      "maxLevel": 41,
+      "levelSpan": 10,
+      "wearerCount": 9,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
@@ -111299,6 +110781,10 @@
           "level": 31
         },
         {
+          "troop": "rohan_wold_kings_own_horse_archer",
+          "level": 36
+        },
+        {
           "troop": "rohan_westemnet_kings_own_rider",
           "level": 36
         },
@@ -111307,8 +110793,16 @@
           "level": 36
         },
         {
+          "troop": "rohan_edoras_golden_hall_kings_own_rider",
+          "level": 36
+        },
+        {
           "troop": "southrhovanion_horse_lord",
           "level": 36
+        },
+        {
+          "troop": "rohan_edoras_golden_hall_supreme_rider",
+          "level": 41
         }
       ]
     },
@@ -111754,9 +111248,9 @@
       ],
       "weight": 1.4,
       "anchorLevel": 26,
-      "maxLevel": 36,
-      "levelSpan": 10,
-      "wearerCount": 9,
+      "maxLevel": 31,
+      "levelSpan": 5,
+      "wearerCount": 8,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "heavy",
@@ -111798,10 +111292,6 @@
         {
           "troop": "rohan_edoras_meduseld_master_spearman",
           "level": 31
-        },
-        {
-          "troop": "rohan_wold_kings_own_horse_archer",
-          "level": 36
         }
       ]
     },
@@ -111818,9 +111308,9 @@
       ],
       "weight": 0.9,
       "anchorLevel": 16,
-      "maxLevel": 41,
-      "levelSpan": 25,
-      "wearerCount": 12,
+      "maxLevel": 31,
+      "levelSpan": 15,
+      "wearerCount": 10,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -111870,14 +111360,6 @@
         {
           "troop": "rohan_edoras_master_swordsman",
           "level": 31
-        },
-        {
-          "troop": "rohan_edoras_golden_hall_kings_own_rider",
-          "level": 36
-        },
-        {
-          "troop": "rohan_edoras_golden_hall_supreme_rider",
-          "level": 41
         }
       ]
     },
@@ -111894,9 +111376,9 @@
       ],
       "weight": 0.9,
       "anchorLevel": 16,
-      "maxLevel": 41,
-      "levelSpan": 25,
-      "wearerCount": 9,
+      "maxLevel": 31,
+      "levelSpan": 15,
+      "wearerCount": 7,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -111934,14 +111416,6 @@
         {
           "troop": "rohan_edoras_master_swordsman",
           "level": 31
-        },
-        {
-          "troop": "rohan_edoras_golden_hall_kings_own_rider",
-          "level": 36
-        },
-        {
-          "troop": "rohan_edoras_golden_hall_supreme_rider",
-          "level": 41
         }
       ]
     },
@@ -112022,9 +111496,9 @@
       ],
       "weight": 3.1,
       "anchorLevel": 21,
-      "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 13,
+      "maxLevel": 31,
+      "levelSpan": 10,
+      "wearerCount": 9,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -112033,7 +111507,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "rohan_edoras_meduseld_veteran_spearman",
@@ -112070,7 +111544,35 @@
         {
           "troop": "rohan_edoras_meduseld_master_spearman",
           "level": 31
-        },
+        }
+      ]
+    },
+    "whiterun_boots": {
+      "culture": "rohan",
+      "slot": "leg",
+      "name": "[Rohan] Royal Guard Boots II",
+      "current": 18,
+      "armour": [
+        0,
+        0,
+        0,
+        18
+      ],
+      "weight": 2.6,
+      "anchorLevel": 36,
+      "maxLevel": 36,
+      "levelSpan": 0,
+      "wearerCount": 4,
+      "heroWorn": true,
+      "lordWorn": true,
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 17,
+      "delta": 1,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
         {
           "troop": "rohan_wold_kings_own_horse_archer",
           "level": 36
@@ -112089,33 +111591,6 @@
         }
       ]
     },
-    "whiterun_boots": {
-      "culture": "rohan",
-      "slot": "leg",
-      "name": "[Rohan] Royal Guard Boots II",
-      "current": 18,
-      "armour": [
-        0,
-        0,
-        0,
-        18
-      ],
-      "weight": 2.6,
-      "anchorLevel": null,
-      "maxLevel": null,
-      "levelSpan": 0,
-      "wearerCount": 0,
-      "heroWorn": true,
-      "lordWorn": true,
-      "tier": null,
-      "tierSource": "unworn",
-      "target": null,
-      "delta": null,
-      "status": "unworn",
-      "line": null,
-      "shared": false,
-      "wearers": []
-    },
     "cts_rohan_boots1": {
       "culture": "rohan",
       "slot": "leg",
@@ -112129,9 +111604,9 @@
       ],
       "weight": 2.2,
       "anchorLevel": 16,
-      "maxLevel": 36,
-      "levelSpan": 20,
-      "wearerCount": 21,
+      "maxLevel": 31,
+      "levelSpan": 15,
+      "wearerCount": 20,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "medium",
@@ -112221,10 +111696,6 @@
         {
           "troop": "rohan_edoras_meduseld_master_spearman",
           "level": 31
-        },
-        {
-          "troop": "rohan_edoras_golden_hall_kings_own_rider",
-          "level": 36
         }
       ]
     },
@@ -112644,9 +112115,9 @@
       ],
       "weight": 3.1,
       "anchorLevel": 21,
-      "maxLevel": 36,
-      "levelSpan": 15,
-      "wearerCount": 4,
+      "maxLevel": 31,
+      "levelSpan": 10,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "heavy",
@@ -112655,7 +112126,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
         {
           "troop": "rohan_edoras_veteran_swordsman",
@@ -112668,10 +112139,6 @@
         {
           "troop": "rohan_edoras_golden_hall_eorlingas_rider",
           "level": 31
-        },
-        {
-          "troop": "rohan_edoras_golden_hall_kings_own_rider",
-          "level": 36
         }
       ]
     },
@@ -114558,7 +114025,7 @@
       "armour": [
         0,
         14,
-        12,
+        13,
         0
       ],
       "weight": 3.2,
@@ -115008,6 +114475,1534 @@
       "line": null,
       "shared": false,
       "wearers": []
+    },
+    "taom_band_lt_mirkwood_body": {
+      "culture": "mirkwood",
+      "slot": "body",
+      "name": "[Mirkwood] Palace Guard Body Armor",
+      "current": 8,
+      "armour": [
+        0,
+        8,
+        0,
+        0
+      ],
+      "weight": 5.2,
+      "anchorLevel": 11,
+      "maxLevel": 11,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "heroWorn": true,
+      "lordWorn": false,
+      "tier": "light",
+      "tierSource": "roster(L11)",
+      "target": 8,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_spearman",
+          "level": 11
+        },
+        {
+          "troop": "mirkwood_militia_archer",
+          "level": 11
+        }
+      ]
+    },
+    "taom_band_md_mirkwood_body": {
+      "culture": "mirkwood",
+      "slot": "body",
+      "name": "[Mirkwood] Palace Guard Body Armor",
+      "current": 17,
+      "armour": [
+        0,
+        17,
+        0,
+        0
+      ],
+      "weight": 5.2,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_lt_mirkwood_boots": {
+      "culture": "mirkwood",
+      "slot": "leg",
+      "name": "[Mirkwood] Palace Guard Boots",
+      "current": 3,
+      "armour": [
+        0,
+        0,
+        0,
+        3
+      ],
+      "weight": 1.0,
+      "anchorLevel": 11,
+      "maxLevel": 11,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "heroWorn": true,
+      "lordWorn": false,
+      "tier": "light",
+      "tierSource": "roster(L11)",
+      "target": 3,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_spearman",
+          "level": 11
+        },
+        {
+          "troop": "mirkwood_militia_archer",
+          "level": 11
+        }
+      ]
+    },
+    "taom_band_md_mirkwood_boots": {
+      "culture": "mirkwood",
+      "slot": "leg",
+      "name": "[Mirkwood] Palace Guard Boots",
+      "current": 8,
+      "armour": [
+        0,
+        0,
+        0,
+        8
+      ],
+      "weight": 1.0,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_lt_mkwd_inf3_greaves_bronze": {
+      "culture": "mirkwood",
+      "slot": "leg",
+      "name": "[Mirkwood] Greaves III",
+      "current": 3,
+      "armour": [
+        0,
+        0,
+        0,
+        3
+      ],
+      "weight": 1.6,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": true,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_md_mkwd_inf3_greaves_bronze": {
+      "culture": "mirkwood",
+      "slot": "leg",
+      "name": "[Mirkwood] Greaves III",
+      "current": 8,
+      "armour": [
+        0,
+        0,
+        0,
+        8
+      ],
+      "weight": 1.6,
+      "anchorLevel": 16,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 8,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_veteran_spearman",
+          "level": 16
+        },
+        {
+          "troop": "mirkwood_militia_veteran_archer",
+          "level": 16
+        }
+      ]
+    },
+    "taom_band_hv_mkwd_inf3_greaves_bronze": {
+      "culture": "mirkwood",
+      "slot": "leg",
+      "name": "[Mirkwood] Greaves III",
+      "current": 15,
+      "armour": [
+        0,
+        0,
+        0,
+        15
+      ],
+      "weight": 1.6,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_lt_mkwd_inf3_pauldrons_bronze": {
+      "culture": "mirkwood",
+      "slot": "shoulder",
+      "name": "[Mirkwood] Pauldrons III",
+      "current": 2,
+      "armour": [
+        0,
+        2,
+        0,
+        0
+      ],
+      "weight": 3.2,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": true,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_md_mkwd_inf3_pauldrons_bronze": {
+      "culture": "mirkwood",
+      "slot": "shoulder",
+      "name": "[Mirkwood] Pauldrons III",
+      "current": 5,
+      "armour": [
+        0,
+        5,
+        0,
+        0
+      ],
+      "weight": 3.2,
+      "anchorLevel": 16,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 5,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_veteran_spearman",
+          "level": 16
+        },
+        {
+          "troop": "mirkwood_militia_veteran_archer",
+          "level": 16
+        }
+      ]
+    },
+    "taom_band_hv_mkwd_inf3_pauldrons_bronze": {
+      "culture": "mirkwood",
+      "slot": "shoulder",
+      "name": "[Mirkwood] Pauldrons III",
+      "current": 9,
+      "armour": [
+        0,
+        9,
+        8,
+        0
+      ],
+      "weight": 3.2,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_lt_rivendell_boots_greaves3": {
+      "culture": "rivendell",
+      "slot": "leg",
+      "name": "[Noldor] Gold Greaves III",
+      "current": 4,
+      "armour": [
+        0,
+        0,
+        0,
+        4
+      ],
+      "weight": 1.8,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": true,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_md_rivendell_boots_greaves3": {
+      "culture": "rivendell",
+      "slot": "leg",
+      "name": "[Noldor] Gold Greaves III",
+      "current": 8,
+      "armour": [
+        0,
+        0,
+        0,
+        8
+      ],
+      "weight": 1.8,
+      "anchorLevel": 16,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 8,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "lindon_militia_veteran_spearman",
+          "level": 16
+        },
+        {
+          "troop": "rivendell_militia_veteran_spearman",
+          "level": 16
+        }
+      ]
+    },
+    "taom_band_hv_rivendell_boots_greaves3": {
+      "culture": "rivendell",
+      "slot": "leg",
+      "name": "[Noldor] Gold Greaves III",
+      "current": 16,
+      "armour": [
+        0,
+        0,
+        0,
+        16
+      ],
+      "weight": 1.8,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_lt_rivendell_pauldron_tier1_cape_silver": {
+      "culture": "rivendell",
+      "slot": "shoulder",
+      "name": "[Noldor] Silver Tier One Cape",
+      "current": 2,
+      "armour": [
+        0,
+        2,
+        0,
+        0
+      ],
+      "weight": 3.5,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_md_rivendell_pauldron_tier1_cape_silver": {
+      "culture": "rivendell",
+      "slot": "shoulder",
+      "name": "[Noldor] Silver Tier One Cape",
+      "current": 5,
+      "armour": [
+        0,
+        5,
+        0,
+        0
+      ],
+      "weight": 3.5,
+      "anchorLevel": 16,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 5,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "lindon_militia_veteran_spearman",
+          "level": 16
+        },
+        {
+          "troop": "rivendell_militia_veteran_spearman",
+          "level": 16
+        }
+      ]
+    },
+    "taom_band_hv_roh_nbl_hlm_cf": {
+      "culture": "rohan",
+      "slot": "head",
+      "name": "[Rohan] Noble's Helmet",
+      "current": 32,
+      "armour": [
+        32,
+        0,
+        0,
+        0
+      ],
+      "weight": 3.1,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 4,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 32,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "rohan_edoras_golden_hall_elite_rider",
+          "level": 26
+        },
+        {
+          "troop": "southrhovanion_veteran_ford_guard",
+          "level": 26
+        },
+        {
+          "troop": "southrhovanion_horse_thane",
+          "level": 26
+        },
+        {
+          "troop": "southrhovanion_veteran_horse_archer",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_lt_sk_ar_art_cape_a": {
+      "culture": "arnor",
+      "slot": "shoulder",
+      "name": "[Arnor] Cape",
+      "current": 2,
+      "armour": [
+        0,
+        2,
+        0,
+        0
+      ],
+      "weight": 0.5,
+      "anchorLevel": 6,
+      "maxLevel": 11,
+      "levelSpan": 5,
+      "wearerCount": 10,
+      "heroWorn": true,
+      "lordWorn": false,
+      "tier": "light",
+      "tierSource": "roster(L6)",
+      "target": 2,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "arthedain_levy",
+          "level": 6
+        },
+        {
+          "troop": "rhudaur_levy",
+          "level": 6
+        },
+        {
+          "troop": "arthedain_dunadan_youth",
+          "level": 11
+        },
+        {
+          "troop": "arthedain_militia_spearman",
+          "level": 11
+        },
+        {
+          "troop": "arthedain_militia_archer",
+          "level": 11
+        },
+        {
+          "troop": "arthedain_dunadan_youth_merc",
+          "level": 11
+        },
+        {
+          "troop": "rhudaur_dunadan",
+          "level": 11
+        },
+        {
+          "troop": "rhudaur_militia_spearman",
+          "level": 11
+        },
+        {
+          "troop": "rhudaur_militia_archer",
+          "level": 11
+        },
+        {
+          "troop": "rhudaur_dunadan_merc",
+          "level": 11
+        }
+      ]
+    },
+    "taom_band_md_sk_ar_art_cape_a": {
+      "culture": "arnor",
+      "slot": "shoulder",
+      "name": "[Arnor] Cape",
+      "current": 5,
+      "armour": [
+        0,
+        5,
+        0,
+        0
+      ],
+      "weight": 0.5,
+      "anchorLevel": 16,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 4,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 5,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "arthedain_ranger_of_the_north",
+          "level": 16
+        },
+        {
+          "troop": "arthedain_militia_veteran_archer",
+          "level": 16
+        },
+        {
+          "troop": "rhudaur_angle_ranger",
+          "level": 16
+        },
+        {
+          "troop": "rhudaur_militia_veteran_archer",
+          "level": 16
+        }
+      ]
+    },
+    "taom_band_hv_sk_ar_art_cape_a": {
+      "culture": "arnor",
+      "slot": "shoulder",
+      "name": "[Arnor] Cape",
+      "current": 9,
+      "armour": [
+        0,
+        9,
+        8,
+        0
+      ],
+      "weight": 0.5,
+      "anchorLevel": 21,
+      "maxLevel": 26,
+      "levelSpan": 5,
+      "wearerCount": 6,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 9,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "arthedain_ranger",
+          "level": 21
+        },
+        {
+          "troop": "arthedain_outrider",
+          "level": 21
+        },
+        {
+          "troop": "rhudaur_hill_rider",
+          "level": 21
+        },
+        {
+          "troop": "rhudaur_ranger",
+          "level": 21
+        },
+        {
+          "troop": "arthedain_veteran_ranger",
+          "level": 26
+        },
+        {
+          "troop": "rhudaur_veteran_ranger",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_lt_sk_ar_art_cape_b": {
+      "culture": "arnor",
+      "slot": "shoulder",
+      "name": "[Arnor] Cape",
+      "current": 2,
+      "armour": [
+        0,
+        2,
+        0,
+        0
+      ],
+      "weight": 0.5,
+      "anchorLevel": 6,
+      "maxLevel": 11,
+      "levelSpan": 5,
+      "wearerCount": 10,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "light",
+      "tierSource": "roster(L6)",
+      "target": 2,
+      "delta": 0,
+      "status": "match",
+      "line": "b",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "arthedain_levy",
+          "level": 6
+        },
+        {
+          "troop": "rhudaur_levy",
+          "level": 6
+        },
+        {
+          "troop": "arthedain_dunadan_youth",
+          "level": 11
+        },
+        {
+          "troop": "arthedain_militia_spearman",
+          "level": 11
+        },
+        {
+          "troop": "arthedain_militia_archer",
+          "level": 11
+        },
+        {
+          "troop": "arthedain_dunadan_youth_merc",
+          "level": 11
+        },
+        {
+          "troop": "rhudaur_dunadan",
+          "level": 11
+        },
+        {
+          "troop": "rhudaur_militia_spearman",
+          "level": 11
+        },
+        {
+          "troop": "rhudaur_militia_archer",
+          "level": 11
+        },
+        {
+          "troop": "rhudaur_dunadan_merc",
+          "level": 11
+        }
+      ]
+    },
+    "taom_band_md_sk_ar_art_cape_b": {
+      "culture": "arnor",
+      "slot": "shoulder",
+      "name": "[Arnor] Cape",
+      "current": 5,
+      "armour": [
+        0,
+        5,
+        0,
+        0
+      ],
+      "weight": 0.5,
+      "anchorLevel": 16,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 4,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 5,
+      "delta": 0,
+      "status": "match",
+      "line": "b",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "arthedain_ranger_of_the_north",
+          "level": 16
+        },
+        {
+          "troop": "arthedain_militia_veteran_archer",
+          "level": 16
+        },
+        {
+          "troop": "rhudaur_angle_ranger",
+          "level": 16
+        },
+        {
+          "troop": "rhudaur_militia_veteran_archer",
+          "level": 16
+        }
+      ]
+    },
+    "taom_band_hv_sk_ar_art_cape_b": {
+      "culture": "arnor",
+      "slot": "shoulder",
+      "name": "[Arnor] Cape",
+      "current": 9,
+      "armour": [
+        0,
+        9,
+        8,
+        0
+      ],
+      "weight": 0.5,
+      "anchorLevel": 21,
+      "maxLevel": 26,
+      "levelSpan": 5,
+      "wearerCount": 6,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 9,
+      "delta": 0,
+      "status": "match",
+      "line": "b",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "arthedain_ranger",
+          "level": 21
+        },
+        {
+          "troop": "arthedain_outrider",
+          "level": 21
+        },
+        {
+          "troop": "rhudaur_hill_rider",
+          "level": 21
+        },
+        {
+          "troop": "rhudaur_ranger",
+          "level": 21
+        },
+        {
+          "troop": "arthedain_veteran_ranger",
+          "level": 26
+        },
+        {
+          "troop": "rhudaur_veteran_ranger",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_hv_sk_dale_boots_chivlary_b04": {
+      "culture": "dale",
+      "slot": "leg",
+      "name": "[Dale] Elite Knight Boots B04",
+      "current": 13,
+      "armour": [
+        0,
+        0,
+        0,
+        13
+      ],
+      "weight": 3.7,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 13,
+      "delta": 0,
+      "status": "match",
+      "line": "b",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "dale_veteran_northman_scout",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_hv_sk_dale_chest_chivalry_b04": {
+      "culture": "dale",
+      "slot": "body",
+      "name": "[Dale] Elite Knight Armour B04",
+      "current": 29,
+      "armour": [
+        0,
+        29,
+        9,
+        0
+      ],
+      "weight": 18.9,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 29,
+      "delta": 0,
+      "status": "match",
+      "line": "b",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "dale_veteran_northman_scout",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_hv_sk_dale_gauntlet_chivlary_b04": {
+      "culture": "dale",
+      "slot": "arm",
+      "name": "[Dale] Elite Knight Gauntlets B04",
+      "current": 15,
+      "armour": [
+        0,
+        0,
+        15,
+        0
+      ],
+      "weight": 1.6,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 15,
+      "delta": 0,
+      "status": "match",
+      "line": "b",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "dale_veteran_northman_scout",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_hv_sk_dale_helmet_chivlary_b04": {
+      "culture": "dale",
+      "slot": "head",
+      "name": "[Dale] Elite Knight Helmet B04",
+      "current": 37,
+      "armour": [
+        37,
+        0,
+        0,
+        0
+      ],
+      "weight": 3.7,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 37,
+      "delta": 0,
+      "status": "match",
+      "line": "b",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "dale_veteran_northman_scout",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_hv_sk_dale_lake_town_boots_mariner_a04": {
+      "culture": "dale",
+      "slot": "leg",
+      "name": "[Dale] Lake-town Mariner Boots A04",
+      "current": 13,
+      "armour": [
+        0,
+        0,
+        0,
+        13
+      ],
+      "weight": 3.7,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 5,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 13,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "anduinvale_axe_lord",
+          "level": 26
+        },
+        {
+          "troop": "anduinvale_bear_guard",
+          "level": 26
+        },
+        {
+          "troop": "angaladh_veteran_forest_guard",
+          "level": 26
+        },
+        {
+          "troop": "dale_lake_town_veteran",
+          "level": 26
+        },
+        {
+          "troop": "dorwinion_veteran_redwater_guard",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_hv_sk_dale_lake_town_bracers_mariner_a04": {
+      "culture": "dale",
+      "slot": "arm",
+      "name": "[Dale] Lake-town Mariner Bracers A04",
+      "current": 15,
+      "armour": [
+        0,
+        0,
+        15,
+        0
+      ],
+      "weight": 1.6,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 5,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 15,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "anduinvale_axe_lord",
+          "level": 26
+        },
+        {
+          "troop": "anduinvale_bear_guard",
+          "level": 26
+        },
+        {
+          "troop": "angaladh_veteran_forest_guard",
+          "level": 26
+        },
+        {
+          "troop": "dale_lake_town_veteran",
+          "level": 26
+        },
+        {
+          "troop": "dorwinion_veteran_redwater_guard",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_hv_sk_dale_lake_town_chest_mariner_a04": {
+      "culture": "dale",
+      "slot": "body",
+      "name": "[Dale] Lake-town Mariner Armour A04",
+      "current": 29,
+      "armour": [
+        0,
+        29,
+        7,
+        0
+      ],
+      "weight": 18.9,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 5,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 29,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "anduinvale_axe_lord",
+          "level": 26
+        },
+        {
+          "troop": "anduinvale_bear_guard",
+          "level": 26
+        },
+        {
+          "troop": "angaladh_veteran_forest_guard",
+          "level": 26
+        },
+        {
+          "troop": "dale_lake_town_veteran",
+          "level": 26
+        },
+        {
+          "troop": "dorwinion_veteran_redwater_guard",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_hv_sk_dale_lake_town_helmet_mariner_a04": {
+      "culture": "dale",
+      "slot": "head",
+      "name": "[Dale] Lake-town Mariner Helmet A04",
+      "current": 37,
+      "armour": [
+        37,
+        0,
+        0,
+        0
+      ],
+      "weight": 3.7,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 5,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 37,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "anduinvale_axe_lord",
+          "level": 26
+        },
+        {
+          "troop": "anduinvale_bear_guard",
+          "level": 26
+        },
+        {
+          "troop": "angaladh_veteran_forest_guard",
+          "level": 26
+        },
+        {
+          "troop": "dale_lake_town_veteran",
+          "level": 26
+        },
+        {
+          "troop": "dorwinion_veteran_redwater_guard",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_lt_sk_dale_lake_town_shoulder_mariner_a03": {
+      "culture": "dale",
+      "slot": "shoulder",
+      "name": "[Dale] Lake-town Mariner Pauldron A03",
+      "current": 2,
+      "armour": [
+        0,
+        2,
+        0,
+        0
+      ],
+      "weight": 7.4,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": true,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": "a",
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_hv_sk_dale_lake_town_shoulder_mariner_a03": {
+      "culture": "dale",
+      "slot": "shoulder",
+      "name": "[Dale] Lake-town Mariner Pauldron A03",
+      "current": 8,
+      "armour": [
+        0,
+        8,
+        7,
+        0
+      ],
+      "weight": 7.4,
+      "anchorLevel": 21,
+      "maxLevel": 26,
+      "levelSpan": 5,
+      "wearerCount": 9,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L21)",
+      "target": 8,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "anduinvale_great_axe",
+          "level": 21
+        },
+        {
+          "troop": "angaladh_forest_guard",
+          "level": 21
+        },
+        {
+          "troop": "dale_lake_town_mariner",
+          "level": 21
+        },
+        {
+          "troop": "dorwinion_redwater_guard",
+          "level": 21
+        },
+        {
+          "troop": "anduinvale_axe_lord",
+          "level": 26
+        },
+        {
+          "troop": "anduinvale_bear_guard",
+          "level": 26
+        },
+        {
+          "troop": "angaladh_veteran_forest_guard",
+          "level": 26
+        },
+        {
+          "troop": "dale_lake_town_veteran",
+          "level": 26
+        },
+        {
+          "troop": "dorwinion_veteran_redwater_guard",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_hv_sk_dale_lake_town_shoulder_mariner_b03": {
+      "culture": "dale",
+      "slot": "shoulder",
+      "name": "[Dale] Lake-town Elite Mariner Pauldron B03",
+      "current": 8,
+      "armour": [
+        0,
+        8,
+        7,
+        0
+      ],
+      "weight": 7.4,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 5,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 8,
+      "delta": 0,
+      "status": "match",
+      "line": "b",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "anduinvale_axe_lord",
+          "level": 26
+        },
+        {
+          "troop": "anduinvale_bear_guard",
+          "level": 26
+        },
+        {
+          "troop": "angaladh_veteran_forest_guard",
+          "level": 26
+        },
+        {
+          "troop": "dale_veteran_spearman",
+          "level": 26
+        },
+        {
+          "troop": "dorwinion_veteran_redwater_guard",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_hv_sk_dale_shoulder_chivlary_b04": {
+      "culture": "dale",
+      "slot": "shoulder",
+      "name": "[Dale] Elite Knight Pauldron B04",
+      "current": 8,
+      "armour": [
+        0,
+        8,
+        7,
+        0
+      ],
+      "weight": 7.4,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 8,
+      "delta": 0,
+      "status": "match",
+      "line": "b",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "dale_veteran_northman_scout",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_hv_sk_dg_khml_bracer_hplate_heavy_a": {
+      "culture": "rhun",
+      "slot": "arm",
+      "name": "[Rh\u00fbn] Khamul Heavy Half Plate Bracers",
+      "current": 14,
+      "armour": [
+        0,
+        0,
+        14,
+        0
+      ],
+      "weight": 2.4,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 14,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "darkhun_veteran_infantry",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_lt_sk_rh_loke_bracer_heavy_b": {
+      "culture": "rhun",
+      "slot": "arm",
+      "name": "[Rh\u00fbn] Loke-Rim Heavy Spiky Bracers II",
+      "current": 4,
+      "armour": [
+        0,
+        0,
+        4,
+        0
+      ],
+      "weight": 1.4,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": true,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "id-keyword",
+      "target": 16,
+      "delta": -12,
+      "status": "under",
+      "line": "b",
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_md_sk_rh_loke_bracer_heavy_b": {
+      "culture": "rhun",
+      "slot": "arm",
+      "name": "[Rh\u00fbn] Loke-Rim Heavy Spiky Bracers II",
+      "current": 8,
+      "armour": [
+        0,
+        0,
+        8,
+        0
+      ],
+      "weight": 1.4,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "id-keyword",
+      "target": 16,
+      "delta": -8,
+      "status": "under",
+      "line": "b",
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_hv_sk_rh_loke_bracer_heavy_b": {
+      "culture": "rhun",
+      "slot": "arm",
+      "name": "[Rh\u00fbn] Loke-Rim Heavy Spiky Bracers II",
+      "current": 16,
+      "armour": [
+        0,
+        0,
+        16,
+        0
+      ],
+      "weight": 1.4,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 1,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 16,
+      "delta": 0,
+      "status": "match",
+      "line": "b",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "far_rhun_cataphract",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_hv_sk_uruk_hai_greaves_heavy_a1": {
+      "culture": "isengard",
+      "slot": "leg",
+      "name": "[Isengard] Heavy Greaves I",
+      "current": 12,
+      "armour": [
+        0,
+        0,
+        0,
+        12
+      ],
+      "weight": 4.0,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 5,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 12,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "urukhai_slayer",
+          "level": 26
+        },
+        {
+          "troop": "urukhai_pikeman",
+          "level": 26
+        },
+        {
+          "troop": "urukhai_infantry",
+          "level": 26
+        },
+        {
+          "troop": "orthanc_chosen",
+          "level": 26
+        },
+        {
+          "troop": "orthanc_chosen_merc",
+          "level": 26
+        }
+      ]
+    },
+    "taom_band_hv_sk_uruk_hai_pauldron_heavy_a1": {
+      "culture": "isengard",
+      "slot": "shoulder",
+      "name": "[Isengard] Heavy Pauldrons I",
+      "current": 8,
+      "armour": [
+        0,
+        8,
+        2,
+        0
+      ],
+      "weight": 8.0,
+      "anchorLevel": 26,
+      "maxLevel": 26,
+      "levelSpan": 0,
+      "wearerCount": 3,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "heavy",
+      "tierSource": "roster(L26)",
+      "target": 8,
+      "delta": 0,
+      "status": "match",
+      "line": "a",
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "urukhai_veteranspearman",
+          "level": 26
+        },
+        {
+          "troop": "orthanc_chosen",
+          "level": 26
+        },
+        {
+          "troop": "orthanc_chosen_merc",
+          "level": 26
+        }
+      ]
     }
   }
 }
