@@ -3477,7 +3477,7 @@ class HeroJudgeTests(unittest.TestCase):
     """A run that bought a hero owes the game's own pass line for him (#1337): the line carries what the engine made of the body."""
 
     HEAD_LINE = "[2026-11-15 20:00:00] [INFO] [Check] id=taom.long-defeat.hero result={} "
-    PRICES = {"aragorn": 300, "legolas": 250, "gimli": 250}
+    PRICES = ld.shipped_heroes("helms")
 
     def setUp(self):
         ld.target_waves = 2
@@ -3631,7 +3631,7 @@ class ShippedHeroesTests(unittest.TestCase):
     """shipped_heroes reads the heroes of the fortress's shop as the game's HeroesReader keeps them (#1325)."""
 
     def test_the_shipped_shop_lists_the_three_heroes(self):
-        self.assertEqual({"aragorn": 300, "legolas": 250, "gimli": 250}, ld.shipped_heroes("helms"))
+        self.assertEqual({"aragorn": 350, "legolas": 300, "gimli": 300}, ld.shipped_heroes("helms"))
 
     def test_a_shop_with_no_heroes_key_lists_none(self):
         with tempfile.TemporaryDirectory() as folder:

@@ -250,6 +250,7 @@ public sealed class RaceAbilityService
             MeleeDamagePercent = Percent(effects.MeleeDamagePercent + extraMeleePercent, factor, 300f),
             RangedDamagePercent = Percent(effects.RangedDamagePercent, factor, 300f),
             DamageReductionPercent = Math.Min(90f, Math.Max(0f, effects.DamageReductionPercent * factor)),
+            MissileDamageReductionPercent = Math.Min(90f, Math.Max(0f, effects.MissileDamageReductionPercent * factor)),
             KnockdownResistancePercent = Percent(effects.KnockdownResistancePercent, factor, 1000f),
             KnockbackResistancePercent = Percent(effects.KnockbackResistancePercent, factor, 1000f),
             DismountResistancePercent = Percent(effects.DismountResistancePercent, factor, 1000f),
@@ -316,9 +317,12 @@ public sealed class RaceAbilityService
             ? damage
             : Times(damage, isMissile ? attacker.RangedDamagePercent : attacker.MeleeDamagePercent);
 
-    // Blows on the soldier's own body only: a hit on his horse is the horse's, and a fall keeps its damage.
-    public float Reduce(float damage, RaceAbilityEffects? victim, bool victimIsMount, bool isFallDamage) =>
-        victim == null || victimIsMount || isFallDamage ? damage : Times(damage, -victim.DamageReductionPercent);
+    // Blows on the soldier's own body only: a hit on his horse is the horse's, and a fall keeps its damage. A missile also takes
+    // MissileDamageReductionPercent off; the two together stop at 90, the cap each has alone.
+    public float Reduce(float damage, RaceAbilityEffects? victim, bool victimIsMount, bool isFallDamage, bool isMissile) =>
+        victim == null || victimIsMount || isFallDamage
+            ? damage
+            : Times(damage, -Math.Min(90f, victim.DamageReductionPercent + (isMissile ? victim.MissileDamageReductionPercent : 0f)));
 
     // Vanilla answers float.MaxValue for a non-human; scaling that overflows, so it stays as it was.
     public float ScaleResistance(float baseResistance, float percent) => Times(baseResistance, percent);

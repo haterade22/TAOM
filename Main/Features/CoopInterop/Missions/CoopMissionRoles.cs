@@ -103,6 +103,8 @@ public static class CoopMissionRoles
         // TAOM.Client [DefaultView] types, added by the engine (ADR-013); ClientViewRows_MatchTheClientTypeNames pins the strings.
         ["AutonomousMovementPlayerController"] = CoopMissionRole.Local,
         [nameof(SiegePropDiagnosticsMissionBehavior)] = CoopMissionRole.Local,
+        // Reads hits and removals and writes log lines only.
+        [nameof(HeroCombatLogic)] = CoopMissionRole.Local,
         [nameof(MountDespawnMissionBehavior)] = CoopMissionRole.Local,
         [nameof(EnlistmentBattleRoleMissionBehavior)] = CoopMissionRole.Local,
         [nameof(EnlistmentBattleFormationMissionBehavior)] = CoopMissionRole.Local,

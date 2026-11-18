@@ -184,6 +184,9 @@ public class RaceAbilityEffects
     // Every hit the soldier takes (not his horse), applied in the damage model.
     public float DamageReductionPercent { get; set; }
 
+    // Missile hits only, added to DamageReductionPercent; the two together stop at 90 (the heroes, who carry no shield, #1438).
+    public float MissileDamageReductionPercent { get; set; }
+
     public float KnockdownResistancePercent { get; set; }
 
     // Read by the engine for missiles, crush-throughs and wide-grip thrusts only: a frontal horse charge, a

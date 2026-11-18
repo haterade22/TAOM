@@ -54,6 +54,7 @@ internal static class HeroEffectsCheck
             MeleeDamagePercent = Gain(e.MeleeDamagePercent, "meleeDamagePercent"),
             RangedDamagePercent = Gain(e.RangedDamagePercent, "rangedDamagePercent"),
             DamageReductionPercent = Gain(e.DamageReductionPercent, "damageReductionPercent"),
+            MissileDamageReductionPercent = Gain(e.MissileDamageReductionPercent, "missileDamageReductionPercent"),
             KnockdownResistancePercent = Gain(e.KnockdownResistancePercent, "knockdownResistancePercent"),
             KnockbackResistancePercent = Gain(e.KnockbackResistancePercent, "knockbackResistancePercent"),
             DismountResistancePercent = Gain(e.DismountResistancePercent, "dismountResistancePercent"),

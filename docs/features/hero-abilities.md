@@ -125,6 +125,29 @@ or speed up the archers around him. His kit works where the gate opens: the Long
   ladder or an object, no scripted move set), so a player at his controls, a fleeing body and an item pickup are never
   moved; a mounted body is never moved either. He stays in the Three Hunters group, so key 8 still orders him.
 
+### Balance tally
+
+`HeroCombatLogic` measures the three heroes for balance work and changes nothing in the fight. It runs under the same
+gate as the abilities: the Long Defeat and the Helm's Deep story mission. For each body of a hero with a kit it writes
+one `[HeroAbilities][Combat]` line when he leaves the battle, one for each body still standing at mission end, and one
+`summary` line for each hero across his bodies:
+
+```
+[HeroAbilities][Combat] hero=taom_hero_gimli body=1 state=fell alive_s=312 kills=41 dealt=5120 hits=96 taken=2210 hit_by=71 max_health=540 health=0 killer=<troop> blow=melee played=0 state_engine=Killed
+[HeroAbilities][Combat] summary hero=taom_hero_gimli bodies=2 falls=1 alive_s=640 kills=70 dealt=8800 taken=3100 kills_per_min=6.6 dealt_per_min=825 taken_per_min=291
+```
+
+- `dealt` and `taken` are health removed, from `OnScoreHit`'s `damagedHp`: the engine caps a blow at the victim's
+  health (`Agent.cs:5503-5507`), so overkill is not counted, and a blocked hit counts nothing. `OnAgentHit` carries
+  the raw blow and is not used.
+- `kills` counts enemies killed or knocked out with him as the affector. An instant kill and an extra arrow both name
+  him, so both count. The instant kills of each hero are also in the `[SignatureStrikes] instant kill` lines.
+- `state=fell` is killed or knocked out; `state=fled` is any other removal, which `falls=` does not count.
+- `played=1` marks a body the player took over (#1366): his own play is in that body's figures.
+- `alive_s` of a standing body ends at the battle's result, not at the mission's close a few seconds later.
+- `max_health` is the highest health limit seen, read once a second, because the spawn scales the health after the
+  agent is built.
+
 ### Component Diagram
 
 ```
@@ -181,7 +204,7 @@ A full restart is needed for a change (the provider is a lazy singleton). The fi
 | Many Arrows (`legolas_many_arrows`) | Legolas | 90 s / 12 s | a ranged target within 40 m and 5 enemies within 40 m | 2 extra arrows per shot |
 | Archer's Eye (`legolas_archers_eye`) | Legolas | 120 s / 20 s | 5 enemies within 40 m | ranged allies in 15 m: draw speed 20 %, aim error -50 %, ranged damage 15 % |
 
-Gimli's passive: knockdown resistance 1000 %, knock-back resistance 300 %. The hero receives his `selfEffects` and
+Gimli's passive: knockdown resistance 1000 %, knock-back resistance 300 %. Each of the three also has a missile damage reduction of 30 % in his passive (#1438), because none carries a shield: `missileDamageReductionPercent` is added to `damageReductionPercent` on a missile hit only, and the two together stop at 90 % (`RaceAbilityService.Reduce`). The hero receives his `selfEffects` and
 his `allyEffects` together. The trigger counts are 3, not 5, because a wall lane takes attackers one ladder at a
 time. Legolas's ranged block: zero aim error, shield pierce, headshot kill chance 1.0, body kill chance 0.10, extra
 arrow `taom_legolas_arrow` within 10 m of his target and 120 m of him, a step of 8 m away from an enemy within 5 m;
@@ -211,6 +234,7 @@ outline `#7FD4FF`. "A ranged target within
 | `Main/Features/HeroAbilities/Hooks/HeroMissileQueue.cs`, `HeroRangedTally.cs`, `HeroRangedTallies.cs`, `HeroRangedChecks.cs` | The callback queue, the counts of one hero body, one mission's tallies, the verdicts |
 | `Main/Features/HeroAbilities/Hooks/HeroMultiShotRunner.cs`, `HeroArrowKills.cs` | The extra arrows; the arrow's kill roll through `SignatureInstantKill` |
 | `Main/Features/HeroAbilities/Hooks/HeroKeepDistance.cs` | The step away from a melee threat, and the seconds with a melee weapon in hand (#1415) |
+| `Main/Features/HeroAbilities/Hooks/HeroCombatLogic.cs`, `Domain/HeroCombatLedger.cs`, `HeroCombatSheet.cs` | The balance tally: kills, health dealt and taken, time alive, what felled him |
 | `Main/Features/CombatMechanics/ShieldPierceMath.cs` | The damage floor above the engine's shield pass-through threshold |
 | `Main/_Module/ModuleData/hero_abilities/hero_abilities.json` | Configuration |
 | `Main/_Module/ModuleData/hero_abilities/hero_abilities_items.xml` | `taom_legolas_arrow`, the extra arrow (loads for Campaign, CampaignStoryMode and CustomGame) |
@@ -350,7 +374,7 @@ outline `#7FD4FF`. "A ranged target within
 - A buffed soldier counts as moved by an ability (`RaceAbilityHooks.HasLiveEffects`) while his buff lasts, so the
   Long Defeat's boon read-back passes him over for 12 to 15 s. With no plain soldier left its check is skipped
   (`reason=no-soldier`), never failed.
-- `HeroAurasConfigProvider` sets no upper bound on an aura's damage reduction; the hero abilities cap theirs at 90.
+- `HeroAurasConfigProvider` sets no upper bound on an aura's damage reduction; the hero abilities cap theirs at 90. Since #1438 `RaceAbilityService.Reduce` caps the reduction it applies at 90 in every case (the plain reduction plus, on a missile, `missileDamageReductionPercent`), so an aura above 90 gives 90.
 - **The 15 m clamp.** `HeroAbilityHost.InContact` once clamped its query to 15 m. With Legolas's 40 m trigger it would
   count no contact, and his fired check could never fail. The query now takes the trigger's range. Past 15 m the
   native query walks every agent (traps/mission.md, "Native branches"); it runs once a second per hero.
