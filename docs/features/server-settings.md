@@ -224,6 +224,9 @@ re-read during play.
 3. Change the value, then restart the server.
 4. Check the boot line: the key appears as `set <Name> = <value>`, and the reverted and unknown counts are 0.
 
+The rules a campaign pins at its start ([campaign-start-options.md](campaign-start-options.md)) follow this file only for
+a new campaign. A save that pinned them keeps its own values.
+
 ## Changelog
 
 - 2026-10-23: First version (ADR-013 batch B8). All four settings classes; the client crash bundle now lists TAOM settings as a side effect. A loader throw has its own state and boot line (`LoaderFailed`), separate from an unreadable file.

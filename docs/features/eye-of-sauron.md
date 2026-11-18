@@ -138,7 +138,7 @@ provider reverts a non-finite float to its default before clamping it into the s
 
 | Setting | Default | Range | Meaning |
 |---|---|---|---|
-| `EyeOfSauronEnabled` | on | | Master switch; turning it off ends a running hunt within the hour |
+| `EyeOfSauronEnabled` | on | | Master switch; turning it off ends a running hunt within the hour. This is the default for a new campaign: a campaign that pinned its own choice follows that, so MCM is the live answer only for an unpinned save ([campaign-start-options.md](campaign-start-options.md)) |
 | `EyeThreshold` | 10 | 1 to 100 | Decayed deed score that draws a hunt |
 | `EyeHalfLifeDays` | 30 | 1 to 365 | Days for a score to halve |
 | `EyeCooldownDays` | 60 | 0 to 365 | Days after a hunt ends before another can start |

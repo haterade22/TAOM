@@ -14,6 +14,7 @@ public class TroopWeightService : ITroopWeightService
 {
     private readonly IModLogger _logger;
     private readonly ITroopWeightXmlLoader _xmlLoader;
+    private readonly ITroopWeightSettingsProvider _settings;
     private Dictionary<string, float> _weights;
 
     // Per-party weighted (healthy, wounded) cache for the display surfaces. GetWeightedHealthAndWounded
@@ -29,13 +30,16 @@ public class TroopWeightService : ITroopWeightService
         public int Wounded;
     }
 
-    public TroopWeightService(IModLogger logger, ITroopWeightXmlLoader xmlLoader)
+    public TroopWeightService(IModLogger logger, ITroopWeightXmlLoader xmlLoader, ITroopWeightSettingsProvider settings)
     {
         _logger = logger;
         _xmlLoader = xmlLoader;
+        _settings = settings;
         _weights = xmlLoader.GetTroopWeights();
         _logger.LogInfo($"[TroopWeight] Service initialized with {_weights.Count} weighted troop definitions");
     }
+
+    public bool IsEnabled => _settings.IsEnabled;
 
     public float GetTroopWeight(string troopStringId)
     {
@@ -102,7 +106,7 @@ public class TroopWeightService : ITroopWeightService
 
     public void ApplyPartySizeWeightPenalty(PartyBase party, ref ExplainedNumber limit, bool includeDescriptions)
     {
-        if (!(TaomSettings.Instance?.EnableTroopWeight ?? true))
+        if (!IsEnabled)
             return;
         if (party?.MemberRoster == null)
             return;

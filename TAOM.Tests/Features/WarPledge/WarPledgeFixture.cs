@@ -1,3 +1,4 @@
+using TAOM.Features.CampaignStartOptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -96,7 +97,7 @@ internal sealed class WarPledgeFixture
         {
             Phase2 = new PhaseConfig { TriggerDay = 44, AutoWarBetweenHostileTiers = true, BlockPeaceBetweenHostileTiers = BlockPeace },
         });
-        Wotr = new WarOfTheRingService(wotrConfig, Diplomacy, Alliance, WotrSettings, Substitute.For<IModLogger>());
+        Wotr = new WarOfTheRingService(wotrConfig, Diplomacy, Alliance, WotrSettings, Substitute.For<ICampaignStartOptions>(), Substitute.For<IModLogger>());
         Wotr.SetPhaseFromSave(phase);
         // The engine's IsAtWarWith asks the diplomacy model first, and TaomDiplomacyModel.IsAtConstantWar is
         // ShouldBlockPeace: a pair the War of the Ring holds at war reads "at war" before any declaration.

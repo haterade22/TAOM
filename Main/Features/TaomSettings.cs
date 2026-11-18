@@ -43,7 +43,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     // path reaching SaveSettings also quits the game, so SaveTriggered never arrives mid-session and the
     // watcher never runs. Player-reported 2026-09-06.
     [SettingPropertyBool("{=taom_mcm_EnableTroopWeight}Enable Troop Weight", Order = 0, RequireRestart = false,
-        HintText = "{=taom_mcm_EnableTroopWeight_hint}Weighted party size: elite units consume more party capacity. Elites 2x, level 41+ elites 3x, warg riders 2x, cave trolls 4x, mumakil 10x.")]
+        HintText = "{=taom_mcm_EnableTroopWeight_hint}Weighted party size: elite units consume more party capacity. Elites 2x, level 41+ elites 3x, warg riders 2x, cave trolls 4x, mumakil 10x. This is the default for new campaigns: each campaign keeps its own choice from the start screen, and older saves follow this setting.")]
     public bool EnableTroopWeight { get; set; } = true;
 
     // --- AI Party Size ---
@@ -56,7 +56,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     // below, which MCM sorts ASCENDING.
     [SettingPropertyGroup("{=taom_mcm_group_ai_party_size}AI Party Size", GroupOrder = 44)]
     [SettingPropertyBool("{=taom_mcm_EnableAiPartyScaling}Enable AI Party Scaling", Order = 0, RequireRestart = false,
-        HintText = "{=taom_mcm_EnableAiPartyScaling_hint}Lets AI lord parties HOLD the roster their party template spawns them with. Without this they spawn at 500-3000 and are trimmed back to the vanilla 50-150 cap within a day. Also relieves AI food and wage pressure, because those drive a second, morale-based desertion path that ignores the cap entirely. Off restores the pre-feature behaviour. Note that is not the same as raw vanilla: the Troop Weight elite tax has its own toggle and still deflates a heavy party's limit when it is on.")]
+        HintText = "{=taom_mcm_EnableAiPartyScaling_hint}Lets AI lord parties HOLD the roster their party template spawns them with. Without this they spawn at 500-3000 and are trimmed back to the vanilla 50-150 cap within a day. Also relieves AI food and wage pressure, because those drive a second, morale-based desertion path that ignores the cap entirely. Off restores the pre-feature behaviour. Note that is not the same as raw vanilla: the Troop Weight elite tax has its own toggle and still deflates a heavy party's limit when it is on. This is the default for new campaigns: each campaign keeps its own choice from the start screen, and older saves follow this setting.")]
     public bool EnableAiPartyScaling { get; set; } = true;
 
     // Renamed from AiLordPartySizeFactor (#1017): its default went 5 to 1 in cd5a6f5e8 (v2.0.26) under the same name,
@@ -263,21 +263,21 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_war_of_the_ring}War of the Ring")]
     [SettingPropertyBool("{=taom_mcm_WarOfTheRingEnabled}Enable War of the Ring", Order = 0, RequireRestart = false,
-        HintText = "{=taom_mcm_WarOfTheRingEnabled_hint}When enabled, a scripted war will escalate between Free Peoples and Dark Powers.")]
+        HintText = "{=taom_mcm_WarOfTheRingEnabled_hint}When enabled, a scripted war will escalate between Free Peoples and Dark Powers. This is the default for new campaigns: each campaign keeps its own choice from the start screen, and older saves follow this setting.")]
     public bool WarOfTheRingEnabled { get; set; } = true;
 
     // Renamed from Phase1TriggerDay (#1017): its default went 2 to 30 in v2.0.15 (e273cd23f) under the same name,
     // and MCM loads the saved value by name, so every player who saved before then kept 2.
     [SettingPropertyGroup("{=taom_mcm_group_war_of_the_ring}War of the Ring")]
     [SettingPropertyInteger("{=taom_mcm_WarPhase1TriggerDay}Phase 1 Start Day", 1, 365, Order = 1, RequireRestart = false,
-        HintText = "{=taom_mcm_WarPhase1TriggerDay_hint}Days after campaign start when Isengard and Dunland attack Rohan. Default 30. Saved values from before November 2026 were reset to this default; if you had chosen your own, set it again.")]
+        HintText = "{=taom_mcm_WarPhase1TriggerDay_hint}Days after campaign start when Isengard and Dunland attack Rohan. Default 30. Saved values from before November 2026 were reset to this default; if you had chosen your own, set it again. This is the default for new campaigns: each campaign keeps its own choice from the start screen, and older saves follow this setting.")]
     public int WarPhase1TriggerDay { get; set; } = 30;
 
     // Renamed from Phase2TriggerDay (#1017): its default went 14 to 44 in v2.0.15 (e273cd23f) under the same name,
     // and MCM loads the saved value by name, so every player who saved before then kept 14.
     [SettingPropertyGroup("{=taom_mcm_group_war_of_the_ring}War of the Ring")]
     [SettingPropertyInteger("{=taom_mcm_WarPhase2TriggerDay}Phase 2 Start Day", 1, 365, Order = 2, RequireRestart = false,
-        HintText = "{=taom_mcm_WarPhase2TriggerDay_hint}Days after campaign start when all hostile kingdoms go to war and peace between hostile tiers is blocked. Default 44. Saved values from before November 2026 were reset to this default; if you had chosen your own, set it again.")]
+        HintText = "{=taom_mcm_WarPhase2TriggerDay_hint}Days after campaign start when all hostile kingdoms go to war and peace between hostile tiers is blocked. Default 44. Saved values from before November 2026 were reset to this default; if you had chosen your own, set it again. This is the default for new campaigns: each campaign keeps its own choice from the start screen, and older saves follow this setting.")]
     public int WarPhase2TriggerDay { get; set; } = 44;
 
     [SettingPropertyGroup("{=taom_mcm_group_war_of_the_ring}War of the Ring/{=taom_mcm_group_test_mode}Test Mode")]
@@ -299,7 +299,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_war_of_the_ring}War of the Ring/{=taom_mcm_group_momentum}Momentum")]
     [SettingPropertyBool("{=taom_mcm_MomentumVictoryEnabled}Enable Victory (End the War)", Order = 6, RequireRestart = false,
-        HintText = "{=taom_mcm_MomentumVictoryEnabled_hint}When OFF (default) the War of the Ring is endless: momentum is tracked but no side ever wins. Turn ON to let a side win at the Victory Threshold (or by eliminating the other), which ends the war and makes peace. Default: off (endless).")]
+        HintText = "{=taom_mcm_MomentumVictoryEnabled_hint}When OFF (default) the War of the Ring is endless: momentum is tracked but no side ever wins. Turn ON to let a side win at the Victory Threshold (or by eliminating the other), which ends the war and makes peace. Default: off (endless). This is the default for new campaigns: each campaign keeps its own choice from the start screen, and older saves follow this setting.")]
     public bool MomentumVictoryEnabled { get; set; } = false;
 
     [SettingPropertyGroup("{=taom_mcm_group_war_of_the_ring}War of the Ring/{=taom_mcm_group_momentum}Momentum")]
@@ -339,7 +339,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_war_of_the_ring}War of the Ring/{=taom_mcm_group_eye_of_sauron}Eye of Sauron")]
     [SettingPropertyBool("{=taom_mcm_EyeOfSauronEnabled}Enable the Hunt", Order = 0, RequireRestart = false,
-        HintText = "{=taom_mcm_EyeOfSauronEnabled_hint}When on, great deeds against the enemy draw a hunter: a Free player is hunted by one of the Nine with a host of Mordor (of Dol Guldur for its four wraiths), an Evil player by Glorfindel with a host of the Eldar. Only while your kingdom is at war with the hunter's. Single-player only. Default: on.")]
+        HintText = "{=taom_mcm_EyeOfSauronEnabled_hint}When on, great deeds against the enemy draw a hunter: a Free player is hunted by one of the Nine with a host of Mordor (of Dol Guldur for its four wraiths), an Evil player by Glorfindel with a host of the Eldar. Only while your kingdom is at war with the hunter's. Single-player only. Default: on. This is the default for new campaigns: each campaign keeps its own choice from the start screen, and older saves follow this setting.")]
     public bool EyeOfSauronEnabled { get; set; } = true;
 
     [SettingPropertyGroup("{=taom_mcm_group_war_of_the_ring}War of the Ring/{=taom_mcm_group_eye_of_sauron}Eye of Sauron")]
@@ -1219,7 +1219,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_world}World/{=taom_mcm_group_recruitment_alignment}Recruitment Alignment", GroupOrder = 36)]
     [SettingPropertyBool("{=taom_mcm_EnableAlignmentRecruitment}Enable Recruitment Alignment Block", Order = 0, RequireRestart = false,
-        HintText = "{=taom_mcm_EnableAlignmentRecruitment_hint}When enabled, a recruiter cannot recruit volunteers at a settlement controlled by an opposed-alignment kingdom (Free vs Evil). Alignment comes from execution/alignment.json, keyed by the kingdom you serve. Neutral factions (Umbar etc.) never block. When off, recruitment is vanilla.")]
+        HintText = "{=taom_mcm_EnableAlignmentRecruitment_hint}When enabled, a recruiter cannot recruit volunteers at a settlement controlled by an opposed-alignment kingdom (Free vs Evil). Alignment comes from execution/alignment.json, keyed by the kingdom you serve. Neutral factions (Umbar etc.) never block. When off, recruitment is vanilla. This is the default for new campaigns. With the Alignment rules start option on Standard, a campaign follows this switch live; Strict or Relaxed fixes all four alignment switches for that campaign. Older saves follow this setting.")]
     public bool EnableAlignmentRecruitment { get; set; } = true;
 
     [SettingPropertyGroup("{=taom_mcm_group_world}World/{=taom_mcm_group_recruitment_alignment}Recruitment Alignment")]
@@ -1241,7 +1241,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_world}World/{=taom_mcm_group_marriage_alignment}Marriage Alignment", GroupOrder = 50)]
     [SettingPropertyBool("{=taom_mcm_EnableMarriageAlignment}Enable Marriage Alignment Block", Order = 0, RequireRestart = false,
-        HintText = "{=taom_mcm_EnableMarriageAlignment_hint}When enabled, a Free-aligned hero cannot marry an Evil-aligned one (no Gondorian weds an orc). Alignment comes from execution/alignment.json, keyed by the hero's CULTURE. Neutral cultures (Khand, Umbar, Shaghana, Abanissa) marry anyone; Dunland is Evil. When off, marriage is vanilla.")]
+        HintText = "{=taom_mcm_EnableMarriageAlignment_hint}When enabled, a Free-aligned hero cannot marry an Evil-aligned one (no Gondorian weds an orc). Alignment comes from execution/alignment.json, keyed by the hero's CULTURE. Neutral cultures (Khand, Umbar, Shaghana, Abanissa) marry anyone; Dunland is Evil. When off, marriage is vanilla. This is the default for new campaigns. With the Alignment rules start option on Standard, a campaign follows this switch live; Strict or Relaxed fixes all four alignment switches for that campaign. Older saves follow this setting.")]
     public bool EnableMarriageAlignment { get; set; } = true;
 
     [SettingPropertyGroup("{=taom_mcm_group_world}World/{=taom_mcm_group_marriage_alignment}Marriage Alignment")]
@@ -1375,7 +1375,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_world}World/{=taom_mcm_group_alignment_desertion}Alignment Desertion", GroupOrder = 38)]
     [SettingPropertyBool("{=taom_mcm_EnableAlignmentDesertion}Enable Alignment Desertion", Order = 0, RequireRestart = false,
-        HintText = "{=taom_mcm_EnableAlignmentDesertion_hint}When enabled, troops whose culture is opposed in alignment to their lord (Free vs Evil) desert each day: an Evil lord sheds Good troops and a Good lord sheds Evil troops. Alignment comes from execution/alignment.json. Neutral cultures (Umbar etc.) never desert. Troops that would desert cannot be recruited from prisoners, notables' volunteers or by garrison auto-recruit (tavern mercenaries are not checked). With Recruitment Alignment on and its 'Only Good Rejects Evil' on, Evil lords and their garrisons shed no Free troops. When off, vanilla.")]
+        HintText = "{=taom_mcm_EnableAlignmentDesertion_hint}When enabled, troops whose culture is opposed in alignment to their lord (Free vs Evil) desert each day: an Evil lord sheds Good troops and a Good lord sheds Evil troops. Alignment comes from execution/alignment.json. Neutral cultures (Umbar etc.) never desert. Troops that would desert cannot be recruited from prisoners, notables' volunteers or by garrison auto-recruit (tavern mercenaries are not checked). With Recruitment Alignment on and its 'Only Good Rejects Evil' on, Evil lords and their garrisons shed no Free troops. When off, vanilla. This is the default for new campaigns. With the Alignment rules start option on Standard, a campaign follows this switch live; Strict or Relaxed fixes all four alignment switches for that campaign. Older saves follow this setting.")]
     public bool EnableAlignmentDesertion { get; set; } = true;
 
     [SettingPropertyGroup("{=taom_mcm_group_world}World/{=taom_mcm_group_alignment_desertion}Alignment Desertion")]
@@ -2908,7 +2908,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_world}World/{=taom_mcm_group_hostile_peace}Hostile Peace", GroupOrder = 101)]
     [SettingPropertyBool("{=taom_hostile_peace_mcm_alliances}Allow Player Alliances With Anyone", Order = 3, RequireRestart = false,
-        HintText = "{=taom_hostile_peace_mcm_alliances_hint}When off (default), a kingdom you rule cannot ally with a realm on the other side of the war: a Free kingdom does not ally with the Shadow, and the reverse. Realms of the Neutral side can ally with anyone. A kingdom you founded takes the side of its culture. Alliances you already have are kept. When on, your kingdom may ally with any realm, as before. AI realms keep their own rules either way. Applies at once, no restart.")]
+        HintText = "{=taom_hostile_peace_mcm_alliances_hint}When off (default), a kingdom you rule cannot ally with a realm on the other side of the war: a Free kingdom does not ally with the Shadow, and the reverse. Realms of the Neutral side can ally with anyone. A kingdom you founded takes the side of its culture. Alliances you already have are kept. When on, your kingdom may ally with any realm, as before. AI realms keep their own rules either way. Applies at once, no restart. This is the default for new campaigns. With the Alignment rules start option on Standard, a campaign follows this switch live; Strict or Relaxed fixes all four alignment switches for that campaign. Older saves follow this setting.")]
     public bool AllowPlayerAlliancesWithAnyone { get; set; } = TAOM.Features.HostilePeace.HostilePeaceSettingsProvider.DefaultAllowPlayerAlliancesWithAnyone;
 
     // --- Realms (docs/features/realms.md) ---

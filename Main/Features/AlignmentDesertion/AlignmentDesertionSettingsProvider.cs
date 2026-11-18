@@ -1,5 +1,6 @@
 using TAOM.Features;
 using TAOM.Features.AlignmentRecruitment;
+using TAOM.Features.CampaignStartOptions;
 
 namespace TAOM.Features.AlignmentDesertion;
 
@@ -22,19 +23,24 @@ public sealed class AlignmentDesertionSettingsProvider : IAlignmentDesertionSett
     private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
 
     private readonly IRecruitmentAlignmentSettingsProvider _recruitment;
+    private readonly ICampaignStartOptions _campaign;
 
     public AlignmentDesertionSettingsProvider(IAlignmentDesertionConfigProvider configProvider,
-        IRecruitmentAlignmentSettingsProvider recruitment)
+        IRecruitmentAlignmentSettingsProvider recruitment, ICampaignStartOptions campaign)
     {
         _defaults = configProvider.GetConfig();
         _recruitment = recruitment;
+        _campaign = campaign;
     }
 
     internal AlignmentDesertionSettingsProvider(IAlignmentDesertionConfigProvider configProvider,
-        IRecruitmentAlignmentSettingsProvider recruitment, TaomSettings settings)
-        : this(configProvider, recruitment) => _settings = settings;
+        IRecruitmentAlignmentSettingsProvider recruitment, ICampaignStartOptions campaign, TaomSettings settings)
+        : this(configProvider, recruitment, campaign) => _settings = settings;
 
-    public bool IsEnabled => Settings?.EnableAlignmentDesertion ?? _defaults.Enabled;
+    // The campaign's Alignment rules preset (Strict or Relaxed) first; Standard pins nothing and follows MCM.
+    public bool IsEnabled => _campaign.AlignmentRules?.Desertion ?? NewCampaignDefault;
+
+    public bool NewCampaignDefault => Settings?.EnableAlignmentDesertion ?? _defaults.Enabled;
 
     public float Rate => Settings?.AlignmentDesertionRate ?? _defaults.Rate;
 

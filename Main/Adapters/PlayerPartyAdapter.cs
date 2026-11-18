@@ -85,7 +85,7 @@ public sealed class PlayerPartyAdapter : IPlayerPartyAdapter
     // The main party pays the Troop Weight size penalty (TroopWeightPenaltyScope exempts only garrisons and
     // patrols), so one troop fills its weight in slots while the option is on.
     public float GetPartySlotsPerTroop(string troopId) =>
-        (TaomSettings.Instance?.EnableTroopWeight ?? true) ? _troopWeight.GetTroopWeight(troopId) : 1f;
+        _troopWeight.IsEnabled ? _troopWeight.GetTroopWeight(troopId) : 1f;
 
     public bool GrantTroop(string troopId, int count)
     {

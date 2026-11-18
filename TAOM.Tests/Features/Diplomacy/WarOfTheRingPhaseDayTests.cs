@@ -1,3 +1,4 @@
+using TAOM.Features.CampaignStartOptions;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -38,7 +39,7 @@ public class WarOfTheRingPhaseDayTests
 
     private WarOfTheRingService CreateSut() => new WarOfTheRingService(
         _configProvider, Substitute.For<IDiplomacyService>(), Substitute.For<IAllianceAdapter>(), _settings,
-        Substitute.For<IModLogger>());
+        Substitute.For<ICampaignStartOptions>(), Substitute.For<IModLogger>());
 
     [TestMethod]
     public void GetEffectivePhaseDay_IsengardWar_ReturnsThePhase1Day()

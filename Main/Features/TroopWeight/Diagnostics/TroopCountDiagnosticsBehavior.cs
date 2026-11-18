@@ -95,7 +95,7 @@ public class TroopCountDiagnosticsBehavior : CampaignBehaviorBase
         }
 
         var (weightedHealthy, weightedWounded) = _troopWeightService.GetWeightedHealthAndWounded(party);
-        bool enableWeight = TaomSettings.Instance?.EnableTroopWeight ?? true;
+        bool enableWeight = _troopWeightService.IsEnabled;
 
         var snapshot = new DiagnosticSnapshot(
             enableWeight,

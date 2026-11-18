@@ -3,7 +3,11 @@ namespace TAOM.Features.EyeOfSauron;
 /// <summary>The Eye of Sauron hunt's MCM knobs (#765 M8), validated.</summary>
 public interface IEyeOfSauronSettings
 {
+    /// <summary>The campaign's pinned choice, else MCM, else on.</summary>
     bool Enabled { get; }
+
+    /// <summary>What a new campaign gets when the player leaves the option alone: MCM, else on.</summary>
+    bool EnabledNewCampaignDefault { get; }
 
     /// <summary>The decayed deed score that draws a hunt.</summary>
     float Threshold { get; }

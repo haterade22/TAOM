@@ -91,6 +91,8 @@ public class TroopWeightDisplayHook :
 
     public void OnRefreshPartyInformation(PartyVM partyVm)
     {
+        if (!_troopWeight.IsEnabled) return;
+
         try
         {
             var logic = partyVm?.PartyScreenLogic;
@@ -210,6 +212,8 @@ public class TroopWeightDisplayHook :
 
     public void OnClanPartyItemUpdateProperties(ClanPartyItemVM item)
     {
+        if (!_troopWeight.IsEnabled) return;
+
         try
         {
             var frame = Frame(item?.Party);
@@ -237,6 +241,8 @@ public class TroopWeightDisplayHook :
 
     public void OnRecruitmentRefreshPartyProperties(RecruitmentVM vm)
     {
+        if (!_troopWeight.IsEnabled) return;
+
         try
         {
             var party = Campaign.Current?.MainParty?.Party;
@@ -286,6 +292,8 @@ public class TroopWeightDisplayHook :
 
     public void OnGetPartyHealthTooltip(PartyBase party, List<TooltipProperty> properties)
     {
+        if (!_troopWeight.IsEnabled) return;
+
         try
         {
             if (properties == null)
@@ -321,6 +329,8 @@ public class TroopWeightDisplayHook :
 
     public void OnPartyCharacterRefreshValues(PartyCharacterVM character)
     {
+        if (!_troopWeight.IsEnabled) return;
+
         try
         {
             var troop = character?.Character;

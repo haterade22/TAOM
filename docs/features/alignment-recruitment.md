@@ -97,6 +97,8 @@ The `TaomVolunteerModel` override is a thin boundary (GameModel) and is validate
 
 ## How-To
 
+The master switch also follows the campaign's Alignment rules preset (Strict or Relaxed pin it; Standard follows MCM), read through `IRecruitmentAlignmentSettingsProvider`; see [campaign-start-options.md](campaign-start-options.md).
+
 **MCM is authoritative in-game; JSON is the compiled default.** `RecruitmentAlignmentSettingsProvider` reads `Settings?.X ?? jsonDefault` through a lazily cached `TaomSettings` accessor (the same as `CastleRecruitmentSettingsProvider`), and `TaomSettings.Instance` is non-null whenever MCM is loaded (i.e. always, in a normal game). So the MCM toggles win at runtime; the JSON file only supplies the value used in unit tests and during the early-startup window before MCM initializes. This matches every other TAOM settings provider (e.g. `CastleRecruitmentSettingsProvider`). **To change behavior in a running game, use the MCM panel**; editing the JSON alone will not take effect because the hardcoded MCM defaults shadow it.
 
 **Restrict to "good rejects evil" only** — toggle "Only Good Rejects Evil" in MCM (the JSON `"mode": "GoodRejectsEvil"` sets the compiled default for tests / pre-MCM startup). Evil lords may then recruit anywhere.

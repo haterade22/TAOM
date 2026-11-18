@@ -7,6 +7,12 @@ namespace TAOM.Features.TroopWeight;
 
 public interface ITroopWeightService
 {
+    /// <summary>
+    /// Whether Troop Weight is on for this campaign (its pinned choice, else MCM, else on). The one gate every
+    /// consumer reads, so the service, the display hooks, the adapters and the diagnostics cannot disagree.
+    /// </summary>
+    bool IsEnabled { get; }
+
     float GetTroopWeight(string troopStringId);
     float GetTroopWeight(CharacterObject character);
     float CalculateWeightedMemberCount(PartyBase party);

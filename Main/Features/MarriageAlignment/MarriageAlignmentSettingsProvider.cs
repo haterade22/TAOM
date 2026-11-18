@@ -1,4 +1,5 @@
 using TAOM.Features;
+using TAOM.Features.CampaignStartOptions;
 
 namespace TAOM.Features.MarriageAlignment;
 
@@ -15,12 +16,18 @@ public sealed class MarriageAlignmentSettingsProvider : IMarriageAlignmentSettin
     private TaomSettings? _settings;
     private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
 
-    public MarriageAlignmentSettingsProvider(IMarriageAlignmentConfigProvider configProvider)
+    private readonly ICampaignStartOptions _campaign;
+
+    public MarriageAlignmentSettingsProvider(IMarriageAlignmentConfigProvider configProvider, ICampaignStartOptions campaign)
     {
         _defaults = configProvider.GetConfig();
+        _campaign = campaign;
     }
 
-    public bool IsEnabled => Settings?.EnableMarriageAlignment ?? _defaults.Enabled;
+    // The campaign's Alignment rules preset (Strict or Relaxed) first; Standard pins nothing and follows MCM.
+    public bool IsEnabled => _campaign.AlignmentRules?.MarriageBlock ?? NewCampaignDefault;
+
+    public bool NewCampaignDefault => Settings?.EnableMarriageAlignment ?? _defaults.Enabled;
 
     public bool ApplyToAi => Settings?.EnableMarriageAlignmentAi ?? _defaults.ApplyToAi;
 

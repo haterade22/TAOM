@@ -942,6 +942,10 @@ public class SubModule : MBSubModuleBase
 
         if (gameStarterObject is CampaignGameStarter campaignStarter)
         {
+            // Campaign start options first: on a new campaign this pins the start screen's choices into the
+            // campaign's own options before any feature reads them (docs/features/campaign-start-options.md).
+            IoC.Resolve<TAOM.Features.CampaignStartOptions.ICampaignStartSession>().Begin();
+
             // Registration order is preserved exactly from the pre-extraction inline block:
             // vanilla-behavior removals precede their TAOM replacements, and the LotrIssues suppression
             // must run inside this OnGameStart (after Sandbox registered its behaviors) — so the

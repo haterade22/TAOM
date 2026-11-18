@@ -1,4 +1,5 @@
 using TAOM.Core.Validation;
+using TAOM.Features.CampaignStartOptions;
 
 namespace TAOM.Features.EyeOfSauron;
 
@@ -39,11 +40,16 @@ public sealed class EyeOfSauronSettingsProvider : IEyeOfSauronSettings
     private TaomSettings? _settings;
     private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
 
-    public EyeOfSauronSettingsProvider() { }
+    private readonly ICampaignStartOptions _campaign;
 
-    internal EyeOfSauronSettingsProvider(TaomSettings settings) => _settings = settings;
+    public EyeOfSauronSettingsProvider(ICampaignStartOptions campaign) => _campaign = campaign;
 
-    public bool Enabled => Settings?.EyeOfSauronEnabled ?? true;
+    internal EyeOfSauronSettingsProvider(TaomSettings settings, ICampaignStartOptions campaign)
+        : this(campaign) => _settings = settings;
+
+    public bool Enabled => _campaign.EyeOfSauron ?? EnabledNewCampaignDefault;
+
+    public bool EnabledNewCampaignDefault => Settings?.EyeOfSauronEnabled ?? true;
 
     public float Threshold => SettingClamp.Clamp(Settings?.EyeThreshold, DefaultThreshold, MinThreshold, MaxThreshold);
 

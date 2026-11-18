@@ -12,6 +12,9 @@ public interface IMomentumSettingsProvider
     /// <summary>When false the War of the Ring never ends via momentum — endless-war mode (default).</summary>
     bool VictoryEnabled { get; }
 
+    /// <summary>What a new campaign gets for "War can be won" when the player leaves it alone: MCM, else JSON.</summary>
+    bool VictoryNewCampaignDefault { get; }
+
     int VictoryThreshold { get; }
     float ParticipationMultiplier { get; }
     bool RequireParticipationForVictory { get; }

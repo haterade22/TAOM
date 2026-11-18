@@ -129,6 +129,7 @@ public class EyeOfSauronWiringTests
         container.RegisterInstance(Substitute.For<IAlignmentService>());
         container.RegisterInstance(Substitute.For<ICoopSessionProvider>());
         container.RegisterInstance(Substitute.For<IDedicatedServerProvider>());
+        container.RegisterInstance(Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>());
         var module = new EyeOfSauronModule();
 
         module.RegisterServices(container);

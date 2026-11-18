@@ -14,11 +14,14 @@ public class TroopWeightServiceTests
     private TroopWeightService _sut;
     private ITroopWeightXmlLoader _xmlLoader;
     private IModLogger _logger;
+    private ITroopWeightSettingsProvider _settings;
 
     [TestInitialize]
     public void Setup()
     {
         _logger = Substitute.For<IModLogger>();
+        _settings = Substitute.For<ITroopWeightSettingsProvider>();
+        _settings.IsEnabled.Returns(true);
         _xmlLoader = Substitute.For<ITroopWeightXmlLoader>();
         _xmlLoader.GetTroopWeights().Returns(new Dictionary<string, float>(System.StringComparer.OrdinalIgnoreCase)
         {
@@ -26,7 +29,17 @@ public class TroopWeightServiceTests
             { "imladris_blademaster", 2.0f },
             { "rivendell_royal_knight", 3.0f }
         });
-        _sut = new TroopWeightService(_logger, _xmlLoader);
+        _sut = new TroopWeightService(_logger, _xmlLoader, _settings);
+    }
+
+    [DataTestMethod]
+    [DataRow(true)]
+    [DataRow(false)]
+    public void IsEnabled_ReadsTheSettingsProvider(bool enabled)
+    {
+        _settings.IsEnabled.Returns(enabled);
+
+        Assert.AreEqual(enabled, _sut.IsEnabled);
     }
 
     [TestMethod]
@@ -96,7 +109,7 @@ public class TroopWeightServiceTests
     {
         _xmlLoader.GetTroopWeights().Returns(new Dictionary<string, float>(System.StringComparer.OrdinalIgnoreCase));
 
-        var freshSut = new TroopWeightService(_logger, _xmlLoader);
+        var freshSut = new TroopWeightService(_logger, _xmlLoader, _settings);
         var result = freshSut.GetTroopWeight("cave_troll");
 
         Assert.AreEqual(1.0f, result);
@@ -213,7 +226,7 @@ public class TroopWeightServiceTests
         {
             { "light_scout", 0.5f }
         });
-        var sut = new TroopWeightService(_logger, _xmlLoader);
+        var sut = new TroopWeightService(_logger, _xmlLoader, _settings);
         var elements = new[] { ("light_scout", 3, 1) };
 
         var (healthy, wounded) = sut.ComputeWeightedHealthyAndWounded(elements);

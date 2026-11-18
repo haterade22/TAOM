@@ -30,6 +30,8 @@ public class PartyUpgraderUpgradeReadyTroopsHook : IOnPartyUpgraderUpgradeReadyT
 
     public void OnUpgradeReadyTroops(PartyBase party)
     {
+        if (!_troopWeightService.IsEnabled) return;
+
         try
         {
             // Mirror vanilla UpgradeReadyTroops' own guard: never trim the player party or inactive parties.

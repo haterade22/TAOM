@@ -22,7 +22,6 @@ public static class CampaignUIHelper_GetMainPartyHealthTooltip_Patch
     [HarmonyPostfix]
     public static void Postfix(ref List<TooltipProperty> __result)
     {
-        if (!(TaomSettings.Instance?.EnableTroopWeight ?? true)) return;
         _hook?.OnGetPartyHealthTooltip(PartyBase.MainParty, __result);
     }
 }

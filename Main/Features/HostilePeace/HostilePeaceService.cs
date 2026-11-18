@@ -20,13 +20,13 @@ public sealed class HostilePeaceService
 {
     private readonly IDiplomacyService _diplomacy;
     private readonly IAlignmentService _alignment;
-    private readonly IHostilePeaceSettingsProvider _settings;
+    private readonly IHostilePeaceSettingsProvider _settingsProvider;
 
     public HostilePeaceService(IDiplomacyService diplomacy, IAlignmentService alignment, IHostilePeaceSettingsProvider settings)
     {
         _diplomacy = diplomacy;
         _alignment = alignment;
-        _settings = settings;
+        _settingsProvider = settings;
     }
 
     /// <summary>
@@ -39,7 +39,7 @@ public sealed class HostilePeaceService
     /// </summary>
     public bool BlocksPlayerAlliance(string? playerKingdomId, string? playerCultureId, string? otherKingdomId, string? otherCultureId)
     {
-        if (_settings.AllowPlayerAlliancesWithAnyone)
+        if (_settingsProvider.AllowPlayerAlliancesWithAnyone)
             return false;
         if (string.IsNullOrEmpty(playerKingdomId) || string.IsNullOrEmpty(otherKingdomId))
             return false;
@@ -54,16 +54,16 @@ public sealed class HostilePeaceService
     /// <summary>True when a caravan of <paramref name="caravanFactionId"/> may not trade in a town of
     /// <paramref name="townFactionId"/>. A pair at war is vanilla's to refuse.</summary>
     public bool BlocksCaravanTrade(string? caravanFactionId, string? townFactionId, bool atWar) =>
-        !atWar && _settings.BlockCaravanTrade && IsHostilePair(caravanFactionId, townFactionId);
+        !atWar && _settingsProvider.BlockCaravanTrade && IsHostilePair(caravanFactionId, townFactionId);
 
     /// <summary>True when the two realms may not sign a trade agreement. Vanilla already refuses one at war.</summary>
     public bool BlocksTradeAgreement(string? kingdomAId, string? kingdomBId) =>
-        _settings.BlockTradeAgreements && IsHostilePair(kingdomAId, kingdomBId);
+        _settingsProvider.BlockTradeAgreements && IsHostilePair(kingdomAId, kingdomBId);
 
     /// <summary>True when the player's realm meets a settlement of <paramref name="settlementFactionId"/> as at war. At war
     /// the base game already does.</summary>
     public bool LimitsTownAccess(string? playerFactionId, string? settlementFactionId, bool atWar) =>
-        !atWar && _settings.LimitTownAccess && IsHostilePair(playerFactionId, settlementFactionId);
+        !atWar && _settingsProvider.LimitTownAccess && IsHostilePair(playerFactionId, settlementFactionId);
 
     /// <summary>True when the player meets this settlement as at war: a Hostile pair at peace, unless the player's clan owns
     /// it.</summary>

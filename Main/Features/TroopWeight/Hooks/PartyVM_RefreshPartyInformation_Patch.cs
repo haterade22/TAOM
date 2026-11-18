@@ -20,7 +20,6 @@ public static class PartyVM_RefreshPartyInformation_Patch
     [HarmonyPostfix]
     public static void Postfix(PartyVM __instance)
     {
-        if (!(TaomSettings.Instance?.EnableTroopWeight ?? true)) return;
         _hook?.OnRefreshPartyInformation(__instance);
     }
 }
