@@ -46,7 +46,7 @@ public class ServiceSignatureGateTests
     {
         var names = ModuleAssemblies.SelectMany(a => a.GetTypes()).Where(InScope).Select(t => t.Name).ToList();
 
-        CollectionAssert.IsSubsetOf(new[] { "SettingsHandshakeService", "MomentumRelayService", "ICoopTransport" }, names);
+        CollectionAssert.IsSubsetOf(new[] { "SettingsHandshakeService", "MomentumRelayService", "ICoopTransport", "LoadOrderCheckService", "ILoadOrderAdapter" }, names);
     }
 
     [TestMethod]
