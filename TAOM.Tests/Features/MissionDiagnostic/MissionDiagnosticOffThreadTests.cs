@@ -89,4 +89,18 @@ public class MissionDiagnosticOffThreadTests
         _service.DidNotReceiveWithAnyArgs().TryMarkActionSetKey(default, default, default);
         _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("CaptureActionSet failed")));
     }
+
+    // After a failed read nothing is pending and nothing drains until mission end, so a parked drop would only pile up.
+    [TestMethod]
+    public void AfterAReadFault_AnOffThreadDrop_IsNotParked()
+    {
+        _sut.OnAgentCreated(BareAgent());
+        _sut.OnMissionTick(0.016f); // reading a bare agent throws (MBAPI.IMBAgent is null here), so census reads stop
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("CaptureActionSet failed")));
+
+        OnWorker(() => _sut.OnAgentRemoved(BareAgent(), null!, AgentState.Killed, default));
+        OnWorker(() => _sut.OnAgentDeleted(BareAgent()));
+
+        Assert.AreEqual(0L, MissionThreadGuard.OffThreadCalls, "with census reads stopped, an off-thread drop must not be parked");
+    }
 }

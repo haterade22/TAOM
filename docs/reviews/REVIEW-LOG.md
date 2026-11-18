@@ -5757,3 +5757,18 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 
 - **In-game:** #1163 owed (`triage-needs-ingame`). #1155 only keeps a stack trace: not applicable.
 - **Metrics:** not recomputed here.
+
+## Review (number assigned at merge): plan 056, off-thread agent removals in MissionDiagnosticBehavior (#607), tier-1 deep review (Lens 2, Lens 5), Codex not run (2026-11-18)
+
+- **Scope:** `c63dbb0ce..a531bea73` on `improve/056-agent-removed-off-thread-guards`: `PendingAgentReads.RemoveOrDefer`, the behavior's main-thread mark and its two drop callbacks, two new test files and the feature doc.
+- **Codex:** not run (out of usage; a paid call needs the maintainer's word).
+- **Lenses:** Engine compatibility, 9 verified, 0 incompatible, 1 unverified doc claim (not a defect); Data flow, 10 flows, 0 gaps. The plan's census holds: none of the 16 `OnAgentRemoved` overrides writes TAOM shared state unguarded. 2 LOW confirmed and fixed, 2 false positives (the `OnAgentDeleted` thread wording and a pre-existing drain-to-snapshot window).
+- **Report:** `docs/reviews/deep-review-056-agent-removed-off-thread-guards-2026-11-18.md`; RCA `docs/reviews/rca-agent-removed-off-thread-guards-2026-11-18.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | After a failed read, off-thread drops were parked behind a drain the read latch had stopped, until mission end | Stale state / lifecycle | The plan accepted the pile-up; the latch was checked only against the older producer | Drops skip once reads stop; red-green test; lesson in `lessons/state-lifecycle-save.md` |
+| F2 | The doc's "first one per callback" warning read as once per mission; the site set is static, so it is once per game session | Other: doc against code | Written from the queue's comment, not from where the dedup set lives | Doc reworded |
+
+- **Owed:** the fix-loop re-review of the fix diff (Lens 2, and Codex at `high` when usage returns): the fix changes runtime behaviour in a tier 1 area.
+- **In-game:** not run (tier 1, no game run).

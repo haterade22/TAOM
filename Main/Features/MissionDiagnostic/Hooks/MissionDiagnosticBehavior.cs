@@ -68,11 +68,12 @@ public sealed class MissionDiagnosticBehavior : MissionLogic
         _pending.Add(agent);
     }
 
-    // Native raises these on the thread it chooses (#634, #607): an off-thread drop waits for the next tick, before any read.
+    // Native raises these on the thread it chooses (#634, #607): an off-thread drop waits for the next tick, before any read;
+    // once reads stop nothing is pending or drained, so a drop is skipped instead of parked until mission end.
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow) =>
-        _pending.RemoveOrDefer("MissionDiagnosticBehavior.OnAgentRemoved", affectedAgent);
-
-    public override void OnAgentDeleted(Agent affectedAgent) => _pending.RemoveOrDefer("MissionDiagnosticBehavior.OnAgentDeleted", affectedAgent);
+        DropPending("MissionDiagnosticBehavior.OnAgentRemoved", affectedAgent);
+    public override void OnAgentDeleted(Agent affectedAgent) => DropPending("MissionDiagnosticBehavior.OnAgentDeleted", affectedAgent);
+    private void DropPending(string site, Agent agent) { if (!_readingStopped) _pending.RemoveOrDefer(site, agent); }
 
     private void ReadPendingAgents()
     {
