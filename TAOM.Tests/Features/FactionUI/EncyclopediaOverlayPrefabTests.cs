@@ -56,11 +56,14 @@ public class EncyclopediaOverlayPrefabTests
             "OnPreviewMouseAlternateReleased", "OnPreviewMouseMove",
         };
         var type = typeof(TAOM.Features.FactionUI.Campaign.EncyclopediaOverlayWidget);
+        // The overrides read no state, so an instance without a UIContext can answer them.
+        object widget = System.Runtime.Serialization.FormatterServices.GetUninitializedObject(type);
         foreach (string name in previews)
         {
             var method = type.GetMethod(name, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             Assert.IsNotNull(method, name);
             Assert.AreEqual(type, method!.DeclaringType, name + " must be overridden to return false");
+            Assert.AreEqual(false, method.Invoke(widget, null), name + " must return false");
         }
     }
 
