@@ -208,43 +208,43 @@
 	<!-- ==================== MIRKWOOD ==================== -->
 	<EquipmentRoster id="child_template_mirkwood_noble_male" culture="Culture.mirkwood">
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Body" id="Item.mirkwood_body" />
-			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+			<Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_mirkwood_noble_female" culture="Culture.mirkwood">
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Body" id="Item.mirkwood_body" />
-			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+			<Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_mirkwood_townsman_male" culture="Culture.mirkwood">
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Body" id="Item.mirkwood_body" />
-			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+			<Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_mirkwood_townsman_female" culture="Culture.mirkwood">
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Body" id="Item.mirkwood_body" />
-			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+			<Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_mirkwood_villager_male" culture="Culture.mirkwood">
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Body" id="Item.mirkwood_body" />
-			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+			<Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
 	</EquipmentRoster>
 	<EquipmentRoster id="child_template_mirkwood_villager_female" culture="Culture.mirkwood">
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Body" id="Item.mirkwood_body" />
-			<Equipment slot="Leg" id="Item.mirkwood_boots" />
+			<Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+			<Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
 		</EquipmentSet>
 		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>

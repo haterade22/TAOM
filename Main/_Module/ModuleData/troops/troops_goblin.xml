@@ -1730,10 +1730,10 @@
               <equipment slot="Item1" id="Item.wm_gundabad_javelin_a02" />
               <equipment slot="Item2" id="Item.wm_gundabad_javelin_a02" />
               <equipment slot="Head" id="Item.sk_md_orc_arc_helmet_heavy_a" />
-              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
-              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
-              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
-              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_elite_a" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_heavy_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_heavy_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1747,16 +1747,16 @@
                     id="Item.sk_md_orc_arc_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_med_b" />
+                    id="Item.sk_md_orc_inf_chest_elite_a" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_md_orc_pauldron_med_a" />
+                    id="Item.sk_md_orc_pauldron_heavy_a" />
                 <equipment
                     slot="Gloves"
-                    id="Item.sk_md_orc_bracer_med_a" />
+                    id="Item.sk_md_orc_bracer_heavy_a" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_md_orc_boots_med_b" />
+                    id="Item.sk_md_orc_boots_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1770,16 +1770,16 @@
                     id="Item.sk_md_orc_arc_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_med_b" />
+                    id="Item.sk_md_orc_inf_chest_elite_a" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_md_orc_pauldron_med_a" />
+                    id="Item.sk_md_orc_pauldron_heavy_a" />
                 <equipment
                     slot="Gloves"
-                    id="Item.sk_md_orc_bracer_med_a" />
+                    id="Item.sk_md_orc_bracer_heavy_a" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_md_orc_boots_med_b" />
+                    id="Item.sk_md_orc_boots_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1793,16 +1793,16 @@
                     id="Item.sk_md_orc_arc_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_med_b" />
+                    id="Item.sk_md_orc_inf_chest_elite_a" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_md_orc_pauldron_med_a" />
+                    id="Item.sk_md_orc_pauldron_heavy_a" />
                 <equipment
                     slot="Gloves"
-                    id="Item.sk_md_orc_bracer_med_a" />
+                    id="Item.sk_md_orc_bracer_heavy_a" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_md_orc_boots_med_b" />
+                    id="Item.sk_md_orc_boots_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1816,16 +1816,16 @@
                     id="Item.sk_md_orc_arc_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_med_b" />
+                    id="Item.sk_md_orc_inf_chest_elite_a" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_md_orc_pauldron_med_a" />
+                    id="Item.sk_md_orc_pauldron_heavy_a" />
                 <equipment
                     slot="Gloves"
-                    id="Item.sk_md_orc_bracer_med_a" />
+                    id="Item.sk_md_orc_bracer_heavy_a" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_md_orc_boots_med_b" />
+                    id="Item.sk_md_orc_boots_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment
@@ -1839,16 +1839,16 @@
                     id="Item.sk_md_orc_arc_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_md_orc_inf_chest_med_b" />
+                    id="Item.sk_md_orc_inf_chest_elite_a" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_md_orc_pauldron_med_a" />
+                    id="Item.sk_md_orc_pauldron_heavy_a" />
                 <equipment
                     slot="Gloves"
-                    id="Item.sk_md_orc_bracer_med_a" />
+                    id="Item.sk_md_orc_bracer_heavy_a" />
                 <equipment
                     slot="Leg"
-                    id="Item.sk_md_orc_boots_med_b" />
+                    id="Item.sk_md_orc_boots_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
@@ -2060,11 +2060,11 @@
             <EquipmentRoster>
               <equipment slot="Item0" id="Item.wm_mordor_set1_mace_a02" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-              <equipment slot="Head" id="Item.sk_md_orc_inf_helmet_heavy_a" />
-              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
-              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
-              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
-              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+              <equipment slot="Head" id="Item.sk_md_mor_arc_helmet_elite_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_elite_a" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_heavy_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_heavy_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
@@ -2273,10 +2273,10 @@
             <EquipmentRoster>
               <equipment slot="Item0" id="Item.isengard_pike_b" />
               <equipment slot="Head" id="Item.sk_md_orc_arc_helmet_heavy_a" />
-              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
-              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
-              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
-              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_elite_a" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_heavy_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_heavy_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_heavy_a" />
             </EquipmentRoster>
             <EquipmentSet
                 id="aserai_troop_civilian_template_t3"
@@ -2779,11 +2779,11 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_mordor_set1_mace_a02" />
         <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-        <equipment slot="Head" id="Item.sk_md_orc_vgd_helmet_heavy_a" />
-        <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
-        <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
-        <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
-        <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+        <equipment slot="Head" id="Item.sk_md_mor_arc_helmet_elite_a" />
+        <equipment slot="Body" id="Item.sk_md_orc_inf_chest_elite_a" />
+        <equipment slot="Cape" id="Item.sk_md_orc_pauldron_heavy_a" />
+        <equipment slot="Gloves" id="Item.sk_md_orc_bracer_heavy_a" />
+        <equipment slot="Leg" id="Item.sk_md_orc_boots_heavy_a" />
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
@@ -2881,11 +2881,11 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.taom_ph_wm_dol_goldur_1h_mace_a02_t7" />
         <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-        <equipment slot="Head" id="Item.sk_md_orc_vgd_helmet_heavy_a" />
-        <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
-        <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
-        <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
-        <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+        <equipment slot="Head" id="Item.sk_md_mor_arc_helmet_elite_a" />
+        <equipment slot="Body" id="Item.sk_md_orc_inf_chest_elite_a" />
+        <equipment slot="Cape" id="Item.sk_md_orc_pauldron_heavy_a" />
+        <equipment slot="Gloves" id="Item.sk_md_orc_bracer_heavy_a" />
+        <equipment slot="Leg" id="Item.sk_md_orc_boots_heavy_a" />
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
@@ -2915,11 +2915,11 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.taom_ph_wm_dol_goldur_1h_mace_a02_t7" />
         <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-        <equipment slot="Head" id="Item.sk_md_orc_vgd_helmet_heavy_a" />
-        <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
-        <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
-        <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
-        <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+        <equipment slot="Head" id="Item.sk_md_mor_arc_helmet_elite_a" />
+        <equipment slot="Body" id="Item.sk_md_orc_inf_chest_elite_a" />
+        <equipment slot="Cape" id="Item.sk_md_orc_pauldron_heavy_a" />
+        <equipment slot="Gloves" id="Item.sk_md_orc_bracer_heavy_a" />
+        <equipment slot="Leg" id="Item.sk_md_orc_boots_heavy_a" />
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>

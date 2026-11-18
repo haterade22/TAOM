@@ -1647,7 +1647,7 @@
             <Equipment slot="Item1" id="Item.wm_elven_shield_a" />
             <Equipment slot="Head" id="Item.rivendell_helmet_gold" />
             <Equipment slot="Body" id="Item.rivendell_torso_heavy_tier1" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+            <Equipment slot="Leg" id="Item.taom_band_hv_rivendell_boots_greaves3" />
             <Equipment slot="Gloves" id="Item.rivendell_vambraces_1" />
             <Equipment slot="Cape" id="Item.rivendell_pauldron_tier1_cape" />
         </EquipmentSet>
@@ -1670,7 +1670,7 @@
             <Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
             <Equipment slot="Head" id="Item.rivendell_helmet_gold" />
             <Equipment slot="Body" id="Item.rivendell_torso_heavy_tier1" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+            <Equipment slot="Leg" id="Item.taom_band_hv_rivendell_boots_greaves3" />
             <Equipment slot="Gloves" id="Item.rivendell_vambraces_1" />
             <Equipment slot="Cape" id="Item.rivendell_pauldron_tier1_cape" />
         </EquipmentSet>
@@ -1883,8 +1883,8 @@
             <Equipment slot="Item0" id="Item.mirkwood_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
             <Equipment slot="Head" id="Item.mkwd_inf1_t1_helmet_gold_hc" />
-            <Equipment slot="Body" id="Item.mirkwood_body" />
-            <Equipment slot="Leg" id="Item.mirkwood_boots" />
+            <Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+            <Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_mirkwood_archer_recruit" culture="Culture.mirkwood">
@@ -1893,16 +1893,16 @@
             <Equipment slot="Item1" id="Item.wm_mirkwood_arrow_a01" />
             <Equipment slot="Item3" id="Item.mirkwood_sword_a01" />
             <Equipment slot="Head" id="Item.mkwd_inf1_t1_helmet_gold_hc" />
-            <Equipment slot="Body" id="Item.mirkwood_body" />
-            <Equipment slot="Leg" id="Item.mirkwood_boots" />
+            <Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+            <Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_mirkwood_support_recruit" culture="Culture.mirkwood">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.mirkwood_spear_a01" />
             <Equipment slot="Head" id="Item.mkwd_inf1_t1_helmet_gold_hc" />
-            <Equipment slot="Body" id="Item.mirkwood_body" />
-            <Equipment slot="Leg" id="Item.mirkwood_boots" />
+            <Equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+            <Equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_mirkwood_infantry_soldier" culture="Culture.mirkwood">
@@ -2250,7 +2250,7 @@
             <Equipment slot="Item1" id="Item.wm_elven_shield_a" />
             <Equipment slot="Head" id="Item.rivendell_helmet_gold" />
             <Equipment slot="Body" id="Item.rivendell_torso_heavy_tier1" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+            <Equipment slot="Leg" id="Item.taom_band_hv_rivendell_boots_greaves3" />
             <Equipment slot="Gloves" id="Item.rivendell_vambraces_1" />
             <Equipment slot="Cape" id="Item.rivendell_pauldron_tier1_cape" />
         </EquipmentSet>
@@ -2273,7 +2273,7 @@
             <Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
             <Equipment slot="Head" id="Item.rivendell_helmet_gold" />
             <Equipment slot="Body" id="Item.rivendell_torso_heavy_tier1" />
-            <Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+            <Equipment slot="Leg" id="Item.taom_band_hv_rivendell_boots_greaves3" />
             <Equipment slot="Gloves" id="Item.rivendell_vambraces_1" />
             <Equipment slot="Cape" id="Item.rivendell_pauldron_tier1_cape" />
         </EquipmentSet>
@@ -2968,7 +2968,7 @@
             <Equipment slot="Body" id="Item.sk_ar_art_chainmail_half_b" />
             <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_light_a" />
             <Equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
-            <Equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+            <Equipment slot="Cape" id="Item.taom_band_lt_sk_ar_art_cape_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_arthedain_archer_recruit" culture="Culture.arthedain">
@@ -2990,7 +2990,7 @@
             <Equipment slot="Body" id="Item.sk_ar_art_chainmail_half_b" />
             <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_light_a" />
             <Equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
-            <Equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+            <Equipment slot="Cape" id="Item.taom_band_lt_sk_ar_art_cape_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_arthedain_infantry_soldier" culture="Culture.arthedain">
@@ -3827,7 +3827,7 @@
             <Equipment slot="Body" id="Item.sk_ar_art_chainmail_half_b" />
             <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_light_a" />
             <Equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
-            <Equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+            <Equipment slot="Cape" id="Item.taom_band_lt_sk_ar_art_cape_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_rhudaur_archer_recruit" culture="Culture.rhudaur">
@@ -3849,7 +3849,7 @@
             <Equipment slot="Body" id="Item.sk_ar_art_chainmail_half_b" />
             <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_light_a" />
             <Equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
-            <Equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+            <Equipment slot="Cape" id="Item.taom_band_lt_sk_ar_art_cape_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_rhudaur_infantry_soldier" culture="Culture.rhudaur">

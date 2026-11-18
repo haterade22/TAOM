@@ -239,6 +239,39 @@ class SelectionTests(unittest.TestCase):
         self.assertIn("armour-classes", variant_file)
         self.assertIn("lord-variant-meshes", variant_file)
 
+    def test_the_band_clone_inputs_select_its_check_the_class_table_and_the_mesh_scan(self):
+        """The clones and upgrades are planned from the rosters and the Armory through the curve, the whole-file
+        troop generators carry the swap, and the class table and the mesh scan read the clone file (2026-11-17)."""
+        gate = next(g for g in dg.GATES if g.id == "armour-band-clones")
+        self.assertEqual(gate.cmd, ("python", "tools/generate_armour_band_clones.py", "--check"))
+        for path in ("Main/_Module/ModuleData/armour_band_clones/armour_band_clones.xml",
+                     "tools/armour_band_clones.json", "tools/generate_armour_band_clones.py",
+                     "tools/derive_armor_tiers.py", "tools/rebalance_armor.py", "tools/taom_schema.py",
+                     "tools/realm_troops.py", "tools/generate_lothlorien_troops.py", "tools/generate_snow_orc_troops.py",
+                     "Main/_Module/ModuleData/troops/troops_mirkwood.xml",
+                     "Main/_Module/ModuleData/fords_of_war/fords_troops.xml", "Main/_Module/SubModule.xml",
+                     "tools/data/armor_roster_tiers.json", LIVE_ARMORY):
+            self.assertIn("armour-band-clones", _ids(dg.select(dg.GATES, [path])), path)
+        clone_file = _ids(dg.select(dg.GATES, ["Main/_Module/ModuleData/armour_band_clones/armour_band_clones.xml"]))
+        self.assertIn("armour-classes", clone_file)
+        self.assertIn("armour-band-clone-meshes", clone_file)
+
+    def test_the_band_clone_check_runs_on_the_mallorn_pricing(self):
+        # generate_lothlorien_armor.ML_BAND_UP prices a Mallorn clone a band up (band_values), review 2026-11-17.
+        self.assertIn("armour-band-clones", _ids(dg.select(dg.GATES, ["tools/generate_lothlorien_armor.py"])))
+
+    def test_the_band_clone_check_runs_on_the_list_of_generated_troop_files(self):
+        # generate_new_faction_kingdoms.REGENERATABLE names the realm files split_generated leaves to their generators.
+        self.assertIn("armour-band-clones", _ids(dg.select(dg.GATES, ["tools/generate_new_faction_kingdoms.py"])))
+
+    def test_the_band_clone_check_runs_on_every_set_it_swaps_and_its_inputs(self):
+        # Every set below the elite band takes the clone (review 2026-11-17, F1): NPCs, kits, companions.
+        for path in ("Main/_Module/ModuleData/characters/npcs_mirkwood.xml",
+                     "Main/_Module/ModuleData/equipmentsets/taom_enlistment_equipment.xml",
+                     "Main/_Module/ModuleData/named_companions/named_companions.xml",
+                     "tools/generate_enlistment_rosters.py", "tools/loc_inline_backlog.json"):
+            self.assertIn("armour-band-clones", _ids(dg.select(dg.GATES, [path])), path)
+
     def test_an_unrelated_tool_does_not_select_the_placeholder_verify_gate(self):
         self.assertNotIn("placeholder-weapons", _ids(dg.select(dg.GATES, ["tools/data_gates.py"])))
 

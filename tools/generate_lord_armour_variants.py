@@ -37,7 +37,8 @@ or a piece no troop wears that has no lord-line token (the restat only lowers su
 wears). An unworn lord-line piece is restated at the lord band, and a piece at lord values is worn
 as it is. The refusal tests the lord-line token only, while the restat raises such a piece only when
 it is also not hero-named (rebalance_armor.is_excluded): an unworn hero-named lord-line piece is
-refused too, on the safe side. The class table classes every variant `named`
+refused too, on the safe side. A row whose variant is already in the variant file is not refused when
+its source reaches the lord band (a save can hold the variant): it stays at the values below. The class table classes every variant `named`
 (generate_armour_classes.classify), so no shop, armoury upgrade, Lord's Ladder rung, harness or strip
 of a captive lord hands one out. A variant is an id the spec lists (derive_armor_tiers.lord_variant_source),
 not any id with the prefix.
@@ -230,18 +231,22 @@ def check_cap(source_id, slot, cap, reference):
                            f"{reference[part][0]} of {reference[part][1]} plus {lk.CEILING_MARGIN})")
 
 
-def check_needed(source_id, slot, folder, declared, record, cap=None):
+def check_needed(source_id, slot, folder, declared, record, cap=None, shipped=False):
     """Raise unless the curve leaves the source short of the lord band (or of the spec's cap) for
     good: a troop wears it (it is priced at its lowest wearer's band), or no troop does and it is no
     lord-line piece (the restat only lowers such a piece a lord wears, rebalance_armor._roster_first_plan).
-    An unworn lord-line piece a lord wears is restated at the lord band, so it needs no variant."""
+    An unworn lord-line piece a lord wears is restated at the lord band, so it needs no variant.
+
+    A `shipped` row (its variant is in the variant file) is not refused when its source reaches the lord
+    band: a save can hold the variant, and the restat can raise a source later (the Mirkwood band clone
+    sources, 2026-11-17). Only a new row is refused as pointless."""
     if (not record or record.get("anchorLevel") is None) and ra.is_lord_kit(source_id):
         raise VariantError(f"{source_id}: no troop wears it and it is lord-line kit, so the restat prices it "
                            "at the lord band once a lord wears it; no variant is needed")
     primary_stat = ra.GOVERNED_STATS[slot][0]
     have = declared.get(primary_stat, 0)
     want = lord_values(slot, folder, source_id, declared, cap=cap)[primary_stat]
-    if not lk.is_short(have, want):
+    if not shipped and not lk.is_short(have, want):
         raise VariantError(f"{source_id}: {primary_stat} {have} is within the tolerance of the lord band "
                            f"{want}; wear it as it is")
 
@@ -467,8 +472,16 @@ def _source_display(xml):
     return m.group(1) if m else ""
 
 
-def plan(spec, armory_items, troops, items):
-    """[(culture, source id, reason, Source, values, modifier group, wearer level, name)] in spec order."""
+def shipped_ids(text):
+    """{variant id} of the <Item> elements in the variant file's text (commented copies skipped)."""
+    return {m.group(1) for m in re.finditer(r'<Item\b[^>]*?\bid="(%s[^"]+)"' % re.escape(dat.LORD_VARIANT_PREFIX),
+                                            text or "")
+            if not _inside_comment(text, m.start())}
+
+
+def plan(spec, armory_items, troops, items, shipped=frozenset()):
+    """[(culture, source id, reason, Source, values, modifier group, wearer level, name)] in spec order.
+    `shipped`: the variant ids already in the variant file (shipped_ids), which check_needed keeps."""
     wearers = dat.parse_rosters()
     rows = []
     for culture, entries in spec["cultures"].items():
@@ -480,7 +493,7 @@ def plan(spec, armory_items, troops, items):
             check_cap(src, found.slot, cap_of(row), reference)
             levels = sorted({w["level"] for w in wearers.get(src, ())})
             check_needed(src, found.slot, found.folder, found.declared, {"anchorLevel": levels[0] if levels else None},
-                         cap=cap_of(row))
+                         cap=cap_of(row), shipped=variant_id(src) in shipped)
             values = lord_values(found.slot, found.folder, src, found.declared, shares.get(found.slot), cap_of(row))
             rows.append([culture, src, row["reason"], found, values, ra.modifier_group_for(found.slot, "lord"),
                          levels[0] if levels else None, lord_name(_source_display(found.xml))])
@@ -507,9 +520,9 @@ def main(argv=None):
         return 2
     spec = validate_spec(load_spec())
     troops, items = reference_inputs(args.game_modules)
-    rows = plan(spec, armory_items, troops, items)
     out_path = Path(dat.LORD_VARIANTS_XML)
     old_text = _read_strict(out_path) if out_path.exists() else None
+    rows = plan(spec, armory_items, troops, items, shipped_ids(old_text))
     newline = majority_newline(old_text) if old_text else "\r\n"
     blocks = []
     print(f"Lord armour variants: {len(rows)} (head/body/arm/leg, the source -> the variant)")

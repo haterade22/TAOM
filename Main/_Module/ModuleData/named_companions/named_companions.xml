@@ -891,14 +891,14 @@
 				<equipment slot="Item2" id="Item.bodkin_arrows_a" />
 				<equipment slot="Item3" id="Item.numenorean_bastard_heavy_b" />
 				<equipment slot="Body" id="Item.sk_ar_art_chainmail_full_a" />
-				<equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+				<equipment slot="Cape" id="Item.taom_band_lt_sk_ar_art_cape_a" />
 				<equipment slot="Gloves" id="Item.sk_ar_art_bracer_noble_med_a" />
 				<equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_med_a" />
 				</EquipmentRoster>
 				<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.numenorean_bastard_heavy_b" />
 				<equipment slot="Body" id="Item.sk_ar_art_chainmail_half_a" />
-				<equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+				<equipment slot="Cape" id="Item.taom_band_lt_sk_ar_art_cape_a" />
 				<equipment slot="Leg" id="Item.sk_ar_art_boots_a" />
 				</EquipmentRoster>
 			</Equipments>

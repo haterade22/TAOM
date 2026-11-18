@@ -85,8 +85,8 @@ class Piece:
 
 def classify(item_id: str, name: str, derived_tier: Optional[str], stat_band_tier: Optional[str]) -> str:
     """The acquisition class of one piece; the precedence is the module docstring's."""
-    if ra.is_excluded(item_id, name) or dat.lord_variant_source(item_id):
-        return 'named'
+    if ra.is_excluded(item_id, name) or dat.lord_variant_source(item_id) or ra.band_clone_parts(item_id):
+        return 'named'   # an armour band clone is a low troop's copy: never sold, looted or upgraded to
     token = ra.mesh_tier_of(item_id)
     if token == 'lord':
         return 'lord'

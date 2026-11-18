@@ -39,6 +39,7 @@ from xml.sax.saxutils import escape
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _gamedir import game_dir  # noqa: E402
+import generate_armour_band_clones as gbc  # noqa: E402
 from _marker_region import replace_region  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -1017,6 +1018,16 @@ def apply_id_map(text, mapping):
     return text
 
 
+def band_block(block, map_key, rel, cfg):
+    """A cloned block's armour: the target's item map when `map_key` (the file's SHARED_FILES or
+    STANDALONE_FILES entry) is in its item_map_files, then the band rule at `rel`, the path the block lands in
+    (generate_armour_band_clones.band_text): a recruit or a townsman wears a piece's band clone, never its
+    elite-priced source (2026-11-17)."""
+    if map_key in cfg.get("item_map_files", ()):
+        block = apply_id_map(block, cfg["item_map"])
+    return gbc.band_text(block, rel)
+
+
 def transform(text, target, cfg, id_map=None):
     """Rename the source culture's id-space to the target's, then fix player-facing wording."""
     src = cfg["src"]
@@ -1366,8 +1377,7 @@ def main():
             text, nl, bom = load(path)
             bcfg = block_cfg(cfg, rel)
             block = finish(transform(source_blocks(kind, text, bcfg["src"], bcfg), target, bcfg, id_map))
-            if rel in cfg.get("item_map_files", ()):
-                block = apply_id_map(block, cfg["item_map"])
+            block = band_block(block, rel, rel, cfg)
 
             if kind == "culture":
                 feats = ("        <cultural_feats>\n"
@@ -1423,8 +1433,7 @@ def main():
         for (rel_tmpl, _), text in zip(standalone, standalone_src):
             _, nl, bom = read(MD / rel_tmpl.format(c=src))
             body = finish(transform(text, target, cfg, id_map))
-            if rel_tmpl in cfg.get("item_map_files", ()):
-                body = apply_id_map(body, cfg["item_map"])
+            body = band_block(body, rel_tmpl, rel_tmpl.format(c=target), cfg)
             if cfg.get("rosters_kept") and rel_tmpl.startswith("equipmentsets/"):
                 body, dropped = keep_rosters(body, cfg["rosters_kept"])
                 print(f"  {target}: kept the rosters matching {cfg['rosters_kept']}, dropped {len(dropped)}")

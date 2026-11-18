@@ -64,6 +64,27 @@ class PlainItemTests(unittest.TestCase):
         self.addCleanup(setattr, mc, "TAOM_SUBMODULE", old)
         self.assertEqual(page.load_plain_items(modules)["round_shield"].type, "Shield")
 
+    def test_a_class_table_row_does_not_replace_the_item(self):
+        """#1443: armour_classes.xml holds one <Item id> row per piece under <ArmourClasses>. Its folder
+        sorts before armour_band_clones/ and lord_armour/, so the row won and a TAOM-only piece showed
+        no stats."""
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, tmp, ignore_errors=True)
+        modules = tmp / "Modules"
+        data = modules / "TAOM" / "ModuleData"
+        write(data / "armour_acquisition" / "armour_classes.xml",
+              '<ArmourClasses><Item id="taom_band_lt_x" class="named"/></ArmourClasses>\n')
+        write(data / "armour_band_clones" / "armour_band_clones.xml",
+              '<Items><Item id="taom_band_lt_x" Type="BodyArmor"><ItemComponent>'
+              '<Armor body_armor="8"/></ItemComponent></Item></Items>\n')
+        own = tmp / "own" / "SubModule.xml"
+        write(own, '<Module><Id value="TAOM"/></Module>\n')
+        old = mc.TAOM_SUBMODULE
+        mc.TAOM_SUBMODULE = own
+        self.addCleanup(setattr, mc, "TAOM_SUBMODULE", old)
+        info = page.load_plain_items(modules)["taom_band_lt_x"]
+        self.assertEqual((info.type, info.armour.get("body_armor")), ("BodyArmor", 8))
+
 
 @unittest.skipIf(mc.LET is None, "needs lxml")
 class WeaponIndexTests(unittest.TestCase):

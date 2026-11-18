@@ -74,7 +74,7 @@
             UseTeamColor="true" />
     </Item>
 
-    <!-- taom_lord_mkwd_inf3_pauldrons_bronze: mirkwood shoulder mkwd_inf3_pauldrons_bronze -/5/0/- at the lord band -/14/12/- (head/body/arm/leg); mirkwood: the bronze look's Cape for mirkwood _b; troops wear it from level 16 -->
+    <!-- taom_lord_mkwd_inf3_pauldrons_bronze: mirkwood shoulder mkwd_inf3_pauldrons_bronze -/13/12/- at the lord band -/14/13/- (head/body/arm/leg); mirkwood: the bronze look's Cape for mirkwood _b; troops wear it from level 16 -->
     <Item
         id="taom_lord_mkwd_inf3_pauldrons_bronze"
         name="{=taom_lord_mkwd_inf3_pauldrons_bronze_name}[Mirkwood] Lord's Pauldrons III"
@@ -87,14 +87,14 @@
         <ItemComponent>
             <Armor
                 body_armor="14"
-                arm_armor="12"
+                arm_armor="13"
                 modifier_group="leather"
                 material_type="Chainmail" />
         </ItemComponent>
         <Flags />
     </Item>
 
-    <!-- taom_lord_mkwd_inf3_greaves_bronze: mirkwood leg mkwd_inf3_greaves_bronze -/-/-/8 at the lord band -/-/-/23 (head/body/arm/leg); mirkwood: the bronze look's Leg for mirkwood _b; troops wear it from level 16 -->
+    <!-- taom_lord_mkwd_inf3_greaves_bronze: mirkwood leg mkwd_inf3_greaves_bronze -/-/-/22 at the lord band -/-/-/23 (head/body/arm/leg); mirkwood: the bronze look's Leg for mirkwood _b; troops wear it from level 16 -->
     <Item
         id="taom_lord_mkwd_inf3_greaves_bronze"
         name="{=taom_lord_mkwd_inf3_greaves_bronze_name}[Mirkwood] Lord's Greaves III"
@@ -115,7 +115,7 @@
         <Flags />
     </Item>
 
-    <!-- taom_lord_mirkwood_body: mirkwood body mirkwood_body -/8/0/- at the lord band -/51/9/20 (head/body/arm/leg); mirkwood: the palace guard look's Body for mirkwood _c and _d (worn by _d at 12b21d5e3); troops wear it from level 11 -->
+    <!-- taom_lord_mirkwood_body: mirkwood body mirkwood_body -/48/8/19 at the lord band -/51/9/20 (head/body/arm/leg); mirkwood: the palace guard look's Body for mirkwood _c and _d (worn by _d at 12b21d5e3); troops wear it from level 11 -->
     <Item
         id="taom_lord_mirkwood_body"
         name="{=taom_lord_mirkwood_body_name}[Mirkwood] Lord's Palace Guard Body Armor"
@@ -141,7 +141,7 @@
             UseTeamColor="true" />
     </Item>
 
-    <!-- taom_lord_mirkwood_boots: mirkwood leg mirkwood_boots -/-/-/3 at the lord band -/-/-/23 (head/body/arm/leg); mirkwood: the palace guard look's Leg for mirkwood _c and _d; troops wear it from level 11 -->
+    <!-- taom_lord_mirkwood_boots: mirkwood leg mirkwood_boots -/-/-/22 at the lord band -/-/-/23 (head/body/arm/leg); mirkwood: the palace guard look's Leg for mirkwood _c and _d; troops wear it from level 11 -->
     <Item
         id="taom_lord_mirkwood_boots"
         name="{=taom_lord_mirkwood_boots_name}[Mirkwood] Lord's Palace Guard Boots"

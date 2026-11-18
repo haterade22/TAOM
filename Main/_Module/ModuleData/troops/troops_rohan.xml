@@ -553,16 +553,16 @@
                     id="Item.roh_nbl_hlm_cf" />
                 <equipment
                     slot="Body"
-                    id="Item.roh_nbl_arm_g" />
+                    id="Item.roh_nbl_arm_y" />
                 <equipment
                     slot="Cape"
                     id="Item.roh_nbl_shldr_cgs_2" />
                 <equipment
                     slot="Gloves"
-                    id="Item.roh_nbl_glv" />
+                    id="Item.cts_rohan_royal_guard_gloves" />
                 <equipment
                     slot="Leg"
-                    id="Item.cts_rohan_royal_guard_boots" />
+                    id="Item.whiterun_boots" />
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t3"
@@ -1122,7 +1122,7 @@
                     id="Item.cts_rohan_royal_guard_gloves" />
                 <equipment
                     slot="Leg"
-                    id="Item.cts_rohan_royal_guard_boots" />
+                    id="Item.whiterun_boots" />
                 <equipment
                     slot="Horse"
                     id="Item.t3_vlandia_horse" />
@@ -1679,7 +1679,7 @@
                     id="Item.cts_rohan_royal_guard_gloves" />
                 <equipment
                     slot="Leg"
-                    id="Item.cts_rohan_royal_guard_boots" />
+                    id="Item.whiterun_boots" />
             </EquipmentRoster>
             <EquipmentSet
                 id="vlandia_troop_civilian_template_t3"
@@ -3707,7 +3707,7 @@
                     id="Item.taom_ph_wm_rohan_ws_sword_a01_t5" />
                 <equipment
                     slot="Head"
-                    id="Item.roh_nbl_hlm_cf" />
+                    id="Item.taom_band_hv_roh_nbl_hlm_cf" />
                 <equipment
                     slot="Cape"
                     id="Item.cts_rohan_cape4" />
@@ -4082,10 +4082,10 @@
                     id="Item.cts_rohan_armor_captain" />
                 <equipment
                     slot="Gloves"
-                    id="Item.cts_rohan_captain_bracer" />
+                    id="Item.cts_rohan_royal_guard_gloves" />
                 <equipment
                     slot="Leg"
-                    id="Item.cts_rohan_royal_guard_boots" />
+                    id="Item.whiterun_boots" />
                 <equipment
                     slot="Horse"
                     id="Item.t3_aserai_horse" />
@@ -4117,7 +4117,7 @@
                     id="Item.cts_rohan_armor_captain1" />
                 <equipment
                     slot="Gloves"
-                    id="Item.cts_rohan_captain_bracers1" />
+                    id="Item.cts_rohan_royal_guard_gloves" />
                 <equipment
                     slot="Leg"
                     id="Item.cts_rohan_captain_boots1" />
@@ -4152,10 +4152,10 @@
                     id="Item.cts_rohan_armor_captain" />
                 <equipment
                     slot="Gloves"
-                    id="Item.cts_rohan_captain_bracer" />
+                    id="Item.cts_rohan_royal_guard_gloves" />
                 <equipment
                     slot="Leg"
-                    id="Item.cts_rohan_captain_boots" />
+                    id="Item.cts_rohan_captain_boots1" />
                 <equipment
                     slot="Horse"
                     id="Item.t3_aserai_horse" />
@@ -4187,10 +4187,10 @@
                     id="Item.cts_rohan_armor_captain1" />
                 <equipment
                     slot="Gloves"
-                    id="Item.cts_rohan_captain_bracers1" />
+                    id="Item.cts_rohan_royal_guard_gloves" />
                 <equipment
                     slot="Leg"
-                    id="Item.cts_rohan_boots1" />
+                    id="Item.whiterun_boots" />
                 <equipment
                     slot="Horse"
                     id="Item.t3_aserai_horse" />
@@ -4300,7 +4300,7 @@
                     id="Item.cts_rohan_armor_captain" />
                 <equipment
                     slot="Gloves"
-                    id="Item.cts_rohan_captain_bracer" />
+                    id="Item.cts_rohan_royal_guard_gloves" />
                 <equipment
                     slot="Leg"
                     id="Item.cts_rohan_captain_boots1" />
@@ -4405,7 +4405,7 @@
                     id="Item.cts_rohan_armor_captain1" />
                 <equipment
                     slot="Gloves"
-                    id="Item.cts_rohan_captain_bracers1" />
+                    id="Item.cts_rohan_royal_guard_gloves" />
                 <equipment
                     slot="Leg"
                     id="Item.erkenbrand_boots" />
