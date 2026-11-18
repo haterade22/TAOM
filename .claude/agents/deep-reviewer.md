@@ -2,7 +2,6 @@
 name: deep-reviewer
 description: Use when /deep-review hands you a lens. Read-only principal reviewer that reads whole functions, XML and engine consumers, runs validators, and reports defects and better designs with evidence.
 model: claude-opus-5-5
-effort: max
 tools:
   - Read
   - Grep
