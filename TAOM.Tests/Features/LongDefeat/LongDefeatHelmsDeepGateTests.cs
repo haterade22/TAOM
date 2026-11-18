@@ -30,7 +30,7 @@ public class LongDefeatHelmsDeepGateTests
             Assert.Inconclusive("the TAOM_Map Helm's Deep scene is not installed here; the gates cannot be read.");
 
         var prefabs = GatePrefabs(modules);
-        var gates = new List<(List<string> Tags, bool Visible)>();
+        var gates = new List<(List<string> Tags, bool Visible, string? NavId)>();
         foreach (var entity in XDocument.Load(scene).Root!.Element("entities")!.Elements("game_entity"))
         {
             prefabs.TryGetValue((string?)entity.Attribute("prefab") ?? "", out var prefab);
@@ -38,13 +38,16 @@ public class LongDefeatHelmsDeepGateTests
             if (!ownScript && !prefab.CastleGate)
                 continue;
             var tags = entity.Element("tags") != null ? Tags(entity).ToList() : prefab.Tags ?? new List<string>();
-            gates.Add((tags, (string?)entity.Attribute("visible") != "false"));
+            var navId = entity.Elements("scripts").Elements("script").Elements("variables").Elements("variable")
+                .FirstOrDefault(v => (string?)v.Attribute("name") == "NavigationMeshId")?.Attribute("value")?.Value;
+            gates.Add((tags, (string?)entity.Attribute("visible") != "false", navId));
         }
 
         Assert.AreEqual(1, gates.Count(g => g.Tags.Contains("outer_gate")), "Helm's Deep has one outer gate; the Long Defeat orders its gates by this tag");
         Assert.IsTrue(gates.Single(g => g.Tags.Contains("outer_gate")).Visible, "the outer gate is hidden: the Long Defeat keeps only visible gates and would break it as a hidden gate");
         Assert.AreEqual(1, gates.Count(g => g.Tags.Contains("inner_gate")), "Helm's Deep needs exactly one inner_gate CastleGate: the siege AI takes the first registered one as InnerGate with no visibility check (TeamAISiegeComponent.cs:57), and every gate joins the Middle lane, which stays shut while any of them is closed (SiegeLane.cs:352-364)");
         Assert.IsTrue(gates.Single(g => g.Tags.Contains("inner_gate")).Visible, "the inner gate is hidden: the Long Defeat breaks a hidden gate at boot, so the attackers never meet the inner gate (empire_castle_gate_inner_l3 at 167.9, 220.1, 20.7 is the intended one)");
+        Assert.AreEqual("521", gates.Single(g => g.Tags.Contains("inner_gate")).NavId, "the inner gate must name navmesh id 521, the id of its four door faces in navmesh.bin (2026-11-18); the prefab's 462 names no face, so a shut door would not block a path, and an id ending in 1 keeps the faces inside the castle (SiegeQuerySystem.cs:184)");
     }
 
     private static IEnumerable<string> Tags(XElement entity) =>
