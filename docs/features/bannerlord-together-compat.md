@@ -212,6 +212,10 @@ widget goes missing.
 registered under co-op, because FactionUI's themed map bar binds its two fast-forward commands. Under BannerlordTogether
 every peer defers (`ShouldDeferToHost`), so the commands write no multiplier and only call vanilla's
 `ExecuteTimeControlChange`, the same call vanilla's own button makes.
+The themed map bar itself stays off under BannerlordTogether: `GauntletLayerLoadMoviePatch` keeps the native bar
+while a co-op mod defers with no session TAOM can see (`ThemedMapBarCoopPolicy`), so any extension
+BannerlordTogether makes to vanilla's MapBar prefab keeps working. Whether it makes one is unknown (no decompile,
+see Overview).
 
 **Is the co-op flag reliable that early? Yes — verified, not assumed.** This is the only
 `CoopPresence` consumer that cannot self-correct later, so it mattered. Decompiled v1.4.7 (two
