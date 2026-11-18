@@ -39,23 +39,28 @@ internal static class GateRules
 }
 
 /// <summary>
-/// A repaired gate under watch until the next clear or the run's end (<c>gate-attacked</c>): the wave the repair precedes, the hit points the gates held when the watch last began (the repair, or a gate level
-/// bought after it), how many of the 5-second samples found an attacker behind a standing gate's plane, and how many samples were taken. Main thread.
+/// A repaired gate under watch until the next clear or the run's end (<c>gate-attacked</c>): the wave the repair precedes, the indices of the gates the repair touched (only those are read and sampled), the
+/// hit points those gates held when the watch last began (the repair, or a gate level bought after it), how many of the 5-second samples found an attacker behind a standing gate's plane, and how many samples
+/// were taken. Main thread.
 /// </summary>
 internal sealed class GateWatch
 {
-    public GateWatch(int wave, float baseline, string path)
+    public GateWatch(int wave, float baseline, string path, IReadOnlyList<int> gates)
     {
         Wave = wave;
         Baseline = baseline;
         Path = path;
+        Gates = gates;
     }
+
+    /// <summary>The indices, in the field's gate order, of the gates the repair touched.</summary>
+    public IReadOnlyList<int> Gates { get; }
 
     public int Wave { get; }
 
     public string Path { get; }
 
-    /// <summary>The summed hit points of the visible gates right after the repair, or after a later level write (which keeps their share).</summary>
+    /// <summary>The summed hit points of the watched gates right after the repair, or after a later level write (which keeps their share).</summary>
     public float Baseline { get; private set; }
 
     public int Samples { get; private set; }

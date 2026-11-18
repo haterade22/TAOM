@@ -173,7 +173,7 @@ public class LongDefeatGateChecksTests
 
     private static GateWatch Watch(float baseline = 15000f, int samples = 12, int through = 0)
     {
-        var watch = new GateWatch(2, baseline, "broken");
+        var watch = new GateWatch(2, baseline, "broken", new[] { 0 });
         for (var i = 0; i < samples; i++)
             watch.Sample(i == 0 ? through : 0);
         return watch;
@@ -217,7 +217,7 @@ public class LongDefeatGateChecksTests
     [TestMethod]
     public void AWatch_CountsOnlyTheSamplesThatMeasuredAPlane_ForTheFieldAnswersMinusOneWhenItCouldNot()
     {
-        var watch = new GateWatch(2, 15000f, "broken");
+        var watch = new GateWatch(2, 15000f, "broken", new[] { 0 });
 
         watch.Sample(-1);
         watch.Sample(0);
@@ -225,7 +225,7 @@ public class LongDefeatGateChecksTests
 
         Assert.AreEqual(2, watch.Samples, "a sample with no keep or no plane measured nothing");
         Assert.AreEqual(2, watch.Through);
-        var neverMeasured = new GateWatch(2, 15000f, "broken");
+        var neverMeasured = new GateWatch(2, 15000f, "broken", new[] { 0 });
         neverMeasured.Sample(-1);
         StringAssert.Contains(LongDefeatGateChecks.GateAttacked(neverMeasured, 12000f, false, false).Detail, "through=0 samples=0");
     }
@@ -246,7 +246,7 @@ public class LongDefeatGateChecksTests
     [TestMethod]
     public void GateWatch_Rebase_MovesTheBaseline_AndANegativeSampleIsNotCounted()
     {
-        var watch = new GateWatch(2, 15000f, "damaged");
+        var watch = new GateWatch(2, 15000f, "damaged", new[] { 0 });
         watch.Rebase(22499f);
         watch.Sample(-1);
         watch.Sample(2);

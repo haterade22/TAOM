@@ -149,7 +149,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatFortAdap
 
     // The forward axis is the plane's normal and the keep only turns it round (GateGeometry); the box is also limited to the gate's height, so the wall walk above the door does not count. -1 when no standing gate had a
     // plane, so a sample that measured nothing is not a clean 0. The normal is logged once per run, because the keep at Helm's Deep is the defenders' reinforcement frame, about 69 m from the gate (A17).
-    public int AttackersBehindGates(LdPoint? inside)
+    public int AttackersBehindGates(LdPoint? inside, IReadOnlyCollection<int> gates)
     {
         if (inside is not { } keep)
             return -1;
@@ -157,9 +157,10 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatFortAdap
         var measured = false;
         var total = 0;
         List<LdPoint>? attackers = null;
-        foreach (var slot in _gateSlots)
+        for (var i = 0; i < _gateSlots.Count; i++)
         {
-            if (slot.Component.IsDestroyed)
+            var slot = _gateSlots[i];
+            if (!gates.Contains(i) || slot.Component.IsDestroyed)
                 continue;
 
             var frame = slot.Gate.GameEntity.GetGlobalFrame();
