@@ -95,6 +95,225 @@
         <Flags />
     </Item>
 
+    <!-- taom_band_lt_mkwd_inf3_chest: mirkwood body mkwd_inf3_chest at the light band, -/8/0/0 (head/body/arm/leg); the source at the elite band 0/48/8/19 -->
+    <Item
+        id="taom_band_lt_mkwd_inf3_chest"
+        name="{=aom_mkwd_inf3_chest_name}[Mirkwood] Infantry Chestplate I"
+        subtype="body_armor"
+        mesh="mkwd_inf3_chest"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="5.2"
+        difficulty="0"
+        appearance="1.5"
+        Type="BodyArmor">
+        <ItemComponent>
+            <Armor
+                body_armor="8"
+                arm_armor="0"
+                leg_armor="0"
+                has_gender_variations="false"
+                covers_body="true"
+                modifier_group="leather"
+                material_type="Chainmail" />
+        </ItemComponent>
+        <Flags
+            UseTeamColor="true" />
+    </Item>
+
+    <!-- taom_band_md_mkwd_inf3_chest: mirkwood body mkwd_inf3_chest at the medium band, -/17/0/0 (head/body/arm/leg); the source at the elite band 0/48/8/19 -->
+    <Item
+        id="taom_band_md_mkwd_inf3_chest"
+        name="{=aom_mkwd_inf3_chest_name}[Mirkwood] Infantry Chestplate I"
+        subtype="body_armor"
+        mesh="mkwd_inf3_chest"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="5.2"
+        difficulty="0"
+        appearance="1.5"
+        Type="BodyArmor">
+        <ItemComponent>
+            <Armor
+                body_armor="17"
+                arm_armor="0"
+                leg_armor="0"
+                has_gender_variations="false"
+                covers_body="true"
+                modifier_group="chain"
+                material_type="Chainmail" />
+        </ItemComponent>
+        <Flags
+            UseTeamColor="true" />
+    </Item>
+
+    <!-- taom_band_hv_mkwd_inf3_chest: mirkwood body mkwd_inf3_chest at the heavy band, -/33/6/13 (head/body/arm/leg); the source at the elite band 0/48/8/19 -->
+    <Item
+        id="taom_band_hv_mkwd_inf3_chest"
+        name="{=aom_mkwd_inf3_chest_name}[Mirkwood] Infantry Chestplate I"
+        subtype="body_armor"
+        mesh="mkwd_inf3_chest"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="5.2"
+        difficulty="0"
+        appearance="1.5"
+        Type="BodyArmor">
+        <ItemComponent>
+            <Armor
+                body_armor="33"
+                arm_armor="6"
+                leg_armor="13"
+                has_gender_variations="false"
+                covers_body="true"
+                modifier_group="plate"
+                material_type="Chainmail" />
+        </ItemComponent>
+        <Flags
+            UseTeamColor="true" />
+    </Item>
+
+    <!-- taom_band_lt_mkwd_inf3_chest_bronze: mirkwood body mkwd_inf3_chest_bronze at the light band, -/8/0/0 (head/body/arm/leg); the source at the elite band 0/48/8/19 -->
+    <Item
+        id="taom_band_lt_mkwd_inf3_chest_bronze"
+        name="{=aom_mkwd_inf3_chest_bronze_name}[Mirkwood] Infantry Chestplate III"
+        subtype="body_armor"
+        mesh="mkwd_inf3_chest_bronze"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="8.5"
+        difficulty="0"
+        appearance="1.5"
+        Type="BodyArmor">
+        <ItemComponent>
+            <Armor
+                body_armor="8"
+                arm_armor="0"
+                leg_armor="0"
+                has_gender_variations="false"
+                covers_body="true"
+                modifier_group="leather"
+                material_type="Plate" />
+        </ItemComponent>
+        <Flags
+            UseTeamColor="true" />
+    </Item>
+
+    <!-- taom_band_md_mkwd_inf3_chest_bronze: mirkwood body mkwd_inf3_chest_bronze at the medium band, -/17/0/0 (head/body/arm/leg); the source at the elite band 0/48/8/19 -->
+    <Item
+        id="taom_band_md_mkwd_inf3_chest_bronze"
+        name="{=aom_mkwd_inf3_chest_bronze_name}[Mirkwood] Infantry Chestplate III"
+        subtype="body_armor"
+        mesh="mkwd_inf3_chest_bronze"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="8.5"
+        difficulty="0"
+        appearance="1.5"
+        Type="BodyArmor">
+        <ItemComponent>
+            <Armor
+                body_armor="17"
+                arm_armor="0"
+                leg_armor="0"
+                has_gender_variations="false"
+                covers_body="true"
+                modifier_group="chain"
+                material_type="Plate" />
+        </ItemComponent>
+        <Flags
+            UseTeamColor="true" />
+    </Item>
+
+    <!-- taom_band_hv_mkwd_inf3_chest_bronze: mirkwood body mkwd_inf3_chest_bronze at the heavy band, -/33/6/13 (head/body/arm/leg); the source at the elite band 0/48/8/19 -->
+    <Item
+        id="taom_band_hv_mkwd_inf3_chest_bronze"
+        name="{=aom_mkwd_inf3_chest_bronze_name}[Mirkwood] Infantry Chestplate III"
+        subtype="body_armor"
+        mesh="mkwd_inf3_chest_bronze"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="8.5"
+        difficulty="0"
+        appearance="1.5"
+        Type="BodyArmor">
+        <ItemComponent>
+            <Armor
+                body_armor="33"
+                arm_armor="6"
+                leg_armor="13"
+                has_gender_variations="false"
+                covers_body="true"
+                modifier_group="plate"
+                material_type="Plate" />
+        </ItemComponent>
+        <Flags
+            UseTeamColor="true" />
+    </Item>
+
+    <!-- taom_band_lt_mkwd_inf3_greaves: mirkwood leg mkwd_inf3_greaves at the light band, -/-/-/3 (head/body/arm/leg); the source at the elite band 0/0/0/22 -->
+    <Item
+        id="taom_band_lt_mkwd_inf3_greaves"
+        name="{=aom_mkwd_inf3_greaves_name}[Mirkwood] Greaves I"
+        mesh="mkwd_inf3_greave"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="1.0"
+        difficulty="0"
+        appearance="3"
+        Type="LegArmor">
+        <ItemComponent>
+            <Armor
+                leg_armor="3"
+                covers_legs="true"
+                modifier_group="cloth_unarmoured"
+                material_type="Chainmail" />
+        </ItemComponent>
+        <Flags />
+    </Item>
+
+    <!-- taom_band_md_mkwd_inf3_greaves: mirkwood leg mkwd_inf3_greaves at the medium band, -/-/-/8 (head/body/arm/leg); the source at the elite band 0/0/0/22 -->
+    <Item
+        id="taom_band_md_mkwd_inf3_greaves"
+        name="{=aom_mkwd_inf3_greaves_name}[Mirkwood] Greaves I"
+        mesh="mkwd_inf3_greave"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="1.0"
+        difficulty="0"
+        appearance="3"
+        Type="LegArmor">
+        <ItemComponent>
+            <Armor
+                leg_armor="8"
+                covers_legs="true"
+                modifier_group="cloth_unarmoured"
+                material_type="Chainmail" />
+        </ItemComponent>
+        <Flags />
+    </Item>
+
+    <!-- taom_band_hv_mkwd_inf3_greaves: mirkwood leg mkwd_inf3_greaves at the heavy band, -/-/-/15 (head/body/arm/leg); the source at the elite band 0/0/0/22 -->
+    <Item
+        id="taom_band_hv_mkwd_inf3_greaves"
+        name="{=aom_mkwd_inf3_greaves_name}[Mirkwood] Greaves I"
+        mesh="mkwd_inf3_greave"
+        culture="Culture.mirkwood"
+        is_merchandise="false"
+        weight="1.0"
+        difficulty="0"
+        appearance="3"
+        Type="LegArmor">
+        <ItemComponent>
+            <Armor
+                leg_armor="15"
+                covers_legs="true"
+                modifier_group="leather"
+                material_type="Chainmail" />
+        </ItemComponent>
+        <Flags />
+    </Item>
+
     <!-- taom_band_lt_mkwd_inf3_greaves_bronze: mirkwood leg mkwd_inf3_greaves_bronze at the light band, -/-/-/3 (head/body/arm/leg); the source at the elite band 0/0/0/22 -->
     <Item
         id="taom_band_lt_mkwd_inf3_greaves_bronze"

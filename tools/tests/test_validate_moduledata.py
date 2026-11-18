@@ -3051,6 +3051,67 @@ class TopTierArmourWornLowTests(unittest.TestCase):
         self.assertEqual(folders["taom_band_lt_x_body"], "mirkwood")
 
 
+class ArmourColourClashTests(unittest.TestCase):
+    """ARMOUR_COLOUR_CLASH (2026-11-18): a battle set that puts a silver piece beside a gold or bronze one. The families
+    come from tools/data/armour_colour_families.json through scan_armour_colours.family_of, the lookup the band clone
+    tool's upgrade pick uses; a missing or empty table is one (table) warning, never a silent pass."""
+
+    NPC = """  <NPCCharacter id="{id}" level="30" default_group="Infantry">
+    <Equipments>
+      <EquipmentRoster><equipment slot="Body" id="Item.{body}" /><equipment slot="Cape" id="Item.{cape}" /></EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+"""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        (self.md / "troops").mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _run(self, troops, table):
+        import scan_armour_colours as sac
+        body = "".join(self.NPC.format(id=t, body=b, cape=c) for t, b, c in troops)
+        _write(self.md / "troops" / "troops_x.xml",
+               '<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n' + body + "</NPCCharacters>\n")
+        regs = ts.Registries(items=set(), item_def_files={}, npccharacters=set(), cultures=set(),
+                             party_templates=set(), item_folder={})
+        with mock.patch.object(sac, "load_table", return_value=table):
+            return [i for i in ts.Validator(self.md, self.schemas, regs).run() if i.code == "ARMOUR_COLOUR_CLASH"]
+
+    def test_silver_beside_bronze_warns_in_both_directions(self):
+        table = {"chest_silver": "silver", "cape_bronze": "bronze", "chest_bronze": "bronze", "cape_silver": "silver"}
+        for body, cape in (("chest_silver", "cape_bronze"), ("chest_bronze", "cape_silver")):
+            issues = self._run([("x_guard", body, cape)], table)
+            self.assertEqual(len(issues), 1, (body, cape))
+            self.assertEqual(issues[0].severity, ts.Severity.WARNING)
+            self.assertEqual(issues[0].entry_id, "x_guard")
+            self.assertIn(body, issues[0].message)
+            self.assertIn(cape, issues[0].message)
+
+    def test_a_pair_that_does_not_clash_is_clean(self):
+        table = {"a": "gold", "b": "bronze", "c": "silver", "d": "neutral", "e": "silvergold"}
+        for body, cape in (("a", "b"), ("c", "d"), ("a", "e"), ("c", "c"), ("vanilla_chest", "a"), ("vanilla_chest", "c")):
+            self.assertEqual(self._run([("x_guard", body, cape)], table), [], (body, cape))
+
+    def test_a_band_clone_reads_its_own_row_else_its_sources(self):
+        table = {"chest": "silver", "cape_bronze": "bronze"}
+        self.assertEqual(len(self._run([("x_guard", "taom_band_lt_chest", "cape_bronze")], table)), 1)
+        own = dict(table, taom_band_lt_chest="neutral")   # a row of its own wins over the source's
+        self.assertEqual(self._run([("x_guard", "taom_band_lt_chest", "cape_bronze")], own), [])
+
+    def test_a_missing_or_empty_table_is_one_warning_that_nothing_was_checked(self):
+        issues = self._run([("x_guard", "a", "b")], {})
+        self.assertEqual(len(issues), 1)
+        self.assertEqual(issues[0].severity, ts.Severity.WARNING)
+        self.assertEqual(issues[0].entry_id, "(table)")
+        self.assertIn("checked nothing", issues[0].message)
+        self.assertIn("scan_armour_colours.py", issues[0].message)
+
+
 class BandCloneSourceWornLowTests(unittest.TestCase):
     """BAND_CLONE_SOURCE_WORN_LOW (review 2026-11-17): a set below the elite band that names the source of an armour
     band clone. The restat prices the source at the elite band, so an NPC, a kit or a low troop's civilian set

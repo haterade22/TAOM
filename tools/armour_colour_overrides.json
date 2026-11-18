@@ -1,0 +1,67 @@
+{
+ "description": [
+  "Hand colour families for armour pieces the measure in tools/scan_armour_colours.py reads wrong: overrides by item id, prefixes by the longest id prefix.",
+  "item id -> {family, why}. Families: gold, bronze, silver, silvergold, black, green, red, blue, white, neutral, unknown.",
+  "Each row says what it was checked against (the Modding Kit thumbnail, the game)."
+ ],
+ "overrides": {
+  "sk_ll_mw_chest_heavy_a": {
+   "family": "silver",
+   "why": "Kit thumbnail 2026-11-18: silver plate; the shared Galadhrim trim texture reads gold"
+  },
+  "sk_ll_mw_chest_heavy_b": {
+   "family": "silver",
+   "why": "Kit thumbnail 2026-11-18: silver plate; the shared Galadhrim trim texture reads gold"
+  },
+  "sk_ll_mw_chest_med_a": {
+   "family": "silver",
+   "why": "Kit thumbnail 2026-11-18: silver plate; the shared Galadhrim trim texture reads gold"
+  },
+  "sk_ll_mw_chest_med_b": {
+   "family": "silver",
+   "why": "Kit thumbnail 2026-11-18: silver plate; the shared Galadhrim trim texture reads gold"
+  },
+  "rivendell_torso_light_light_tier1": {
+   "family": "neutral",
+   "why": "Kit thumbnail 2026-11-18: pale cloth with red, no plate; the measure reads its trim bronze"
+  },
+  "rivendell_torso_light_light_tier2": {
+   "family": "neutral",
+   "why": "Kit thumbnail 2026-11-18: pale cloth with red, no plate; the measure reads its trim bronze"
+  },
+  "rivendell_torso_light_light_tier3": {
+   "family": "neutral",
+   "why": "Kit thumbnail 2026-11-18: pale cloth with red, no plate; the measure reads its trim bronze"
+  },
+  "rivendell_torso_light_light_tier4": {
+   "family": "neutral",
+   "why": "Kit thumbnail 2026-11-18: pale cloth with red, no plate; the measure reads its trim bronze"
+  }
+ },
+ "prefixes": {
+  "sk_ll_mw_bracer_": {
+   "family": "silver",
+   "why": "Kit thumbnail 2026-11-18: silver and black bracers; the shared Galadhrim trim atlas reads gold"
+  },
+  "sk_ll_mw_pauld_": {
+   "family": "silver",
+   "why": "Kit thumbnail 2026-11-18: silver pauldrons; the shared trim atlas reads gold"
+  },
+  "sk_ll_mw_grvs_": {
+   "family": "neutral",
+   "why": "Kit thumbnail 2026-11-18: dark leather boots with red; the shared trim atlas reads gold"
+  },
+  "sk_ll_rg_bracer_": {
+   "family": "neutral",
+   "why": "Kit thumbnail 2026-11-18: brown leather bracers"
+  },
+  "sk_ll_rg_grvs_": {
+   "family": "neutral",
+   "why": "Kit thumbnail 2026-11-18: brown leather boots"
+  },
+  "sk_ll_rg_chest_": {
+   "family": "neutral",
+   "why": "Ranger chest: its own texture t_ll_rg_chest_a_d is 94% brown leather; the gold read comes from the shared Galadhrim atlas t_ll_gl_chest_a_d (review 2026-11-18), as the sk_ll_rg_bracer_ and sk_ll_rg_grvs_ rows"
+  }
+ }
+}
