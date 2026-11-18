@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-18 12:40:34",
+  "generatedAt": "2026-11-18 13:12:35",
   "armoryDir": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\LOTRLOME_Armory\\ModuleData\\LOTRLOME_items",
   "items": {
     "sk_ar_art_helmet_inf_light_a": {
@@ -66086,12 +66086,12 @@
       "culture": "mirkwood",
       "slot": "body",
       "name": "[Mirkwood] Infantry Chestplate I",
-      "current": 8,
+      "current": 48,
       "armour": [
         0,
+        48,
         8,
-        0,
-        0
+        19
       ],
       "weight": 5.2,
       "anchorLevel": 36,
@@ -66103,8 +66103,8 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 48,
-      "delta": -40,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
@@ -66178,12 +66178,12 @@
       "culture": "mirkwood",
       "slot": "body",
       "name": "[Mirkwood] Infantry Chestplate III",
-      "current": 17,
+      "current": 48,
       "armour": [
         0,
-        17,
-        0,
-        0
+        48,
+        8,
+        19
       ],
       "weight": 8.5,
       "anchorLevel": 41,
@@ -66195,8 +66195,8 @@
       "tier": "elite",
       "tierSource": "roster(L41)",
       "target": 48,
-      "delta": -31,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
@@ -66546,12 +66546,12 @@
       "culture": "mirkwood",
       "slot": "leg",
       "name": "[Mirkwood] Greaves I",
-      "current": 3,
+      "current": 22,
       "armour": [
         0,
         0,
         0,
-        3
+        22
       ],
       "weight": 1.0,
       "anchorLevel": 36,
@@ -66563,8 +66563,8 @@
       "tier": "elite",
       "tierSource": "roster(L36)",
       "target": 22,
-      "delta": -19,
-      "status": "under",
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
