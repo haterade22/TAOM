@@ -355,28 +355,21 @@ class UpgradeTests(unittest.TestCase):
     def test_a_plan_after_apply_reads_an_upgrade_back_as_its_source(self):
         troops = {"top": {"level": 41, "sets": [{"Body": "r", "Head": "h"}], "file": "f"},
                   "other": {"level": 41, "sets": [{"Body": "r"}], "file": "f"}}
-        got = gbc.as_planned_from(troops, {("top", "p"): "r"})
+        got = gbc.as_planned_from(troops, {("top", 0, "Body"): ("p", "r")})
         self.assertEqual(got["top"]["sets"], [{"Body": "p", "Head": "h"}])
-        self.assertEqual(got["other"]["sets"], [{"Body": "r"}])
+        self.assertEqual(got["other"]["sets"], [{"Body": "r"}])   # the same item, no record: it was native
 
-    def test_two_sources_upgraded_to_one_piece_both_read_back(self):
+    def test_two_sources_upgraded_to_one_piece_each_read_back_at_its_own_position(self):
         troops = {"top": {"level": 41, "sets": [{"Leg": "r", "Head": "h"}, {"Leg": "r"}], "file": "f"}}
-        got = gbc.as_planned_from(troops, {("top", "p"): "r", ("top", "q"): "r"})
-        worn = {st.get("Leg") for st in gbc.all_sets(got["top"])}
-        self.assertEqual(worn, {"p", "q"})
-        self.assertNotIn("r", worn)
+        got = gbc.as_planned_from(troops, {("top", 0, "Leg"): ("p", "r"), ("top", 1, "Leg"): ("q", "r")})
+        self.assertEqual(got["top"]["sets"], [{"Leg": "p", "Head": "h"}, {"Leg": "q"}])
+        self.assertNotIn("extra_sets", got["top"])
 
-    def test_a_read_back_extra_set_stays_out_of_the_slot_means(self):
-        # The extra set holds one slot only: counted as a battle set it would halve every other slot's mean
-        # on the upgrade edge (review 2026-11-17, F5).
-        troops = {"top": {"level": 41, "sets": [{"Leg": "r", "Head": "h"}, {"Leg": "r", "Head": "h"}], "file": "f"}}
-        got = gbc.as_planned_from(troops, {("top", "p"): "r", ("top", "q"): "r"})
-        self.assertEqual(got["top"]["sets"], [{"Leg": "p", "Head": "h"}, {"Leg": "p", "Head": "h"}])
-        self.assertEqual(got["top"]["extra_sets"], [{"Leg": "q"}])
-        live = {"h": {"stats": {"head_armor": 40}}, "p": {"stats": {"leg_armor": 10}}}
-        with mock.patch("fix_upgrade_armour_regressions.compared_slots", return_value=("Head", "Leg")):
-            totals = gbc._planned_total("top", got["top"]["sets"], {"kid": [{"Head": "h", "Leg": "p"}]}, {}, live)
-        self.assertEqual(totals["kid"], (50.0, 50.0))
+    def test_a_record_that_no_longer_matches_the_roster_reads_the_item_as_native(self):
+        # the slot was edited by hand after the upgrade wrote it: it is no longer the replacement
+        troops = {"top": {"level": 41, "sets": [{"Body": "edited"}], "file": "f"}}
+        got = gbc.as_planned_from(troops, {("top", 0, "Body"): ("p", "r")})
+        self.assertEqual(got["top"]["sets"], [{"Body": "edited"}])
 
     def test_the_candidates_keep_the_culture_attribute(self):
         # darkhun_ironbound (Culture.khuzait) took a Dol Guldur bracer through the shared sk_dg_ prefix (F3).
@@ -388,6 +381,91 @@ class UpgradeTests(unittest.TestCase):
                                                      attr_culture="Culture.khuzait")}
         got = gbc.candidates("sk_dg_khml_bracer_heavy_a", sources, {}, [(41, False)])
         self.assertEqual(got, ["sk_dg_khml_bracer_elite_a"])
+
+
+class UpgradeColourPickTests(unittest.TestCase):
+    """pick_upgrade's colour branch (the maintainer 2026-11-18): a silver chest never goes beside bronze pauldrons."""
+
+    SOURCES = UpgradeTests.SOURCES
+    SCOPE = {"top": ["top"], "low": {"medium": ["low"]}}
+
+    def campaign(self, extra):
+        return {"top": {"level": 41, "sets": [dict({"Body": "tst_chest_med_a"}, **extra)], "file": "f.xml"},
+                "low": {"level": 16, "sets": [{"Body": "tst_chest_med_a"}], "file": "f.xml"}}
+
+    def pick(self, colours, extra, swapped=None):
+        return gbc.pick_upgrade("tst_chest_med_a", self.SCOPE, self.SOURCES, {"tst_worn_chest_elite_a": 11},
+                                self.campaign(extra), {}, swapped or {}, frozenset(), colours=colours)
+
+    def test_a_clashing_candidate_is_skipped_and_the_next_is_taken(self):
+        colours = {"tst_chest_med_a": "bronze", "cape_bronze": "bronze", "tst_chest_elite_a": "silver",
+                   "tst_chest_heavy_a": "bronze"}
+        to, _theirs, _mine = self.pick(colours, {"Cape": "cape_bronze"})
+        self.assertEqual(to, "tst_chest_heavy_a")   # the first candidate, tst_chest_elite_a, is silver
+        self.assertEqual(self.pick(None, {"Cape": "cape_bronze"})[0], "tst_chest_elite_a")   # no table: no judging
+
+    def test_every_candidate_clashing_is_no_pick_and_says_which_piece_clashed(self):
+        colours = {"tst_chest_med_a": "bronze", "cape_bronze": "bronze", "tst_chest_elite_a": "silver",
+                   "tst_chest_heavy_a": "silver", "zzz_chest_elite_a": "silver"}
+        to, why, _mine = self.pick(colours, {"Cape": "cape_bronze"})
+        self.assertIsNone(to)   # build() then clones the piece instead (treatment A)
+        self.assertIn("clashes with top Cape cape_bronze", why)
+
+    def test_a_pick_is_judged_against_the_swap_an_earlier_source_already_took(self):
+        colours = {"tst_chest_med_a": "silver", "cape_src": "silver", "cape_gold": "gold", "tst_chest_elite_a": "silver",
+                   "tst_chest_heavy_a": "gold", "zzz_chest_elite_a": "gold"}
+        extra = {"Cape": "cape_src"}
+        self.assertEqual(self.pick(colours, extra)[0], "tst_chest_elite_a")   # silver beside a silver cape
+        # the cape is swapped to a gold one by another pick: the silver chest now clashes with it
+        self.assertEqual(self.pick(colours, extra, swapped={"top": {"cape_src": "cape_gold"}})[0], "tst_chest_heavy_a")
+
+    def test_a_clone_in_the_set_is_read_as_its_source(self):
+        colours = {"tst_chest_med_a": "bronze", "pauld_bronze": "bronze", "tst_chest_elite_a": "silver"}
+        sets = [{"Body": "tst_chest_med_a", "Cape": "taom_band_lt_pauld_bronze"}]
+        self.assertEqual(gbc.colour_clash("tst_chest_elite_a", "tst_chest_med_a", sets, colours),
+                         "Cape taom_band_lt_pauld_bronze bronze")
+
+
+class ColourTableTests(unittest.TestCase):
+    """colour_table: build() never plans on a table that is empty or lacks a piece of the Armory it reads."""
+
+    def table(self, rows):
+        import scan_armour_colours as sac
+        return mock.patch.object(sac, "load_table", return_value=rows)
+
+    def test_an_empty_table_is_an_error_that_names_the_repair(self):
+        with self.table({}), self.assertRaises(gbc.CloneError) as ctx:
+            gbc.colour_table({"a": {}})
+        self.assertIn("scan_armour_colours.py --apply", str(ctx.exception))
+
+    def test_a_piece_without_a_row_is_an_error_naming_the_first_ids_and_the_repair(self):
+        sources = {f"p{i:02d}": {} for i in range(13)}
+        with self.table({"p00": "gold", "p01": "silver"}), self.assertRaises(gbc.CloneError) as ctx:
+            gbc.colour_table(sources)
+        text = str(ctx.exception)
+        self.assertIn("11 piece(s)", text)
+        self.assertIn("p02, p03", text)
+        self.assertNotIn("p12", text)
+        self.assertIn("scan_armour_colours.py --apply", text)
+
+    def test_a_complete_table_is_returned(self):
+        rows = {"a": "gold", "b": "silver", "extra": "red"}
+        with self.table(rows):
+            self.assertEqual(gbc.colour_table({"a": {}, "b": {}}), rows)
+
+    def test_build_stops_on_an_empty_table_before_planning(self):
+        import derive_armor_tiers as dat
+        import scan_armour_colours as sac
+        with mock.patch.object(gbc, "load_spec", return_value={"clones": {}, "upgrades": {}, "fallback": []}), \
+                mock.patch.object(gbc, "load_troops", return_value=({}, {})), \
+                mock.patch.object(dat, "build_armory_index", return_value=({}, None)), \
+                mock.patch.object(gbc, "plan_scope", return_value={}), \
+                mock.patch.object(gbc, "read_sources", return_value={"a": {}}), \
+                mock.patch.object(gbc, "check_shipped_pieces"), \
+                mock.patch.object(sac, "load_table", return_value={}):
+            with self.assertRaises(gbc.CloneError) as ctx:
+                gbc.build(Path("armory"), Path("game"))
+        self.assertIn("colour table", str(ctx.exception))
 
 
 class SwapRuleTests(unittest.TestCase):
@@ -427,7 +505,7 @@ class SwapRuleTests(unittest.TestCase):
         with mock.patch.object(gbc, "_rule_sets", return_value=(frozenset(), frozenset(), frozenset())):
             swaps = gbc.plan_swaps(troops, self.TABLE, {})
         self.assertEqual(swaps, [{"file": "f.xml", "troop": "low", "slot": "Body", "old": "p",
-                                  "new": "taom_band_lt_p"}])
+                                  "new": "taom_band_lt_p", "set_indexes": [0, 1]}])
 
     def test_a_generated_troop_file_is_owed_to_its_generator(self):
         swaps = [{"file": "x/troops_arthedain.xml"}, {"file": "x/troops_lothlorien.xml"}, {"file": "x/troops_dale.xml"},
@@ -450,35 +528,73 @@ class SwapRuleTests(unittest.TestCase):
 
 
 class AppliedReadBackTests(unittest.TestCase):
-    """plan_swaps reads rosters where an applied upgrade already names its replacement. It maps the replacement
-    back to its source by the shipped spec first, or a changed or dropped pick would never reach the rosters and
-    --check would fail right after --apply (review 2026-11-17, tooling F2)."""
+    """plan_swaps reads rosters where an applied upgrade already names its replacement. It maps the replacement back
+    to its source at the positions the shipped spec says the upgrade wrote (review 2026-11-18), so a changed or
+    dropped pick reaches the rosters and a slot that held the replacement natively is never touched."""
 
     def troops(self, *items):
         return {"top": {"level": 41, "file": "f.xml", "sets": [{"Body": i} for i in items]}}
 
-    def run_swaps(self, troops, upgrades, applied):
+    def run_swaps(self, troops, upgrades, written):
         with mock.patch.object(gbc, "_rule_sets", return_value=(frozenset(), frozenset(), frozenset())):
-            return gbc.plan_swaps(troops, {}, upgrades, applied)
+            return gbc.plan_swaps(troops, {}, upgrades, written)
 
     def test_a_changed_pick_reaches_the_rosters(self):
-        swaps = self.run_swaps(self.troops("r"), {("top", "p"): "r2"}, {("top", "p"): "r"})
-        self.assertEqual([(s["old"], s["new"]) for s in swaps], [("r", "r2")])
+        swaps = self.run_swaps(self.troops("r"), {("top", "p"): "r2"}, {("top", 0, "Body"): ("p", "r")})
+        self.assertEqual([(s["old"], s["new"], s["set_indexes"]) for s in swaps], [("r", "r2", [0])])
 
     def test_a_dropped_pick_puts_the_source_back(self):
-        swaps = self.run_swaps(self.troops("r"), {}, {("top", "p"): "r"})
+        swaps = self.run_swaps(self.troops("r"), {}, {("top", 0, "Body"): ("p", "r")})
         self.assertEqual([(s["old"], s["new"]) for s in swaps], [("r", "p")])
 
     def test_an_unchanged_pick_is_no_swap(self):
-        self.assertEqual(self.run_swaps(self.troops("r"), {("top", "p"): "r"}, {("top", "p"): "r"}), [])
+        self.assertEqual(self.run_swaps(self.troops("r"), {("top", "p"): "r"}, {("top", 0, "Body"): ("p", "r")}), [])
 
-    def test_two_sources_on_one_replacement_that_now_part_are_refused(self):
-        applied = {("top", "p"): "r", ("top", "q"): "r"}
-        with self.assertRaises(gbc.CloneError):
-            self.run_swaps(self.troops("r"), {("top", "p"): "r2"}, applied)
-        # both still on one replacement: the slot moves as one
-        swaps = self.run_swaps(self.troops("r"), {("top", "p"): "r2", ("top", "q"): "r2"}, applied)
-        self.assertEqual([(s["old"], s["new"]) for s in swaps], [("r", "r2")])
+    def test_a_wearer_that_natively_wears_the_target_keeps_that_set_when_the_target_changes(self):
+        # imladris_marksman: sets 5 and 7 held rivendell_torso_infantry_tier2_silver natively, set 11 held the
+        # source until the upgrade wrote the same piece there. A new pick moved all of them (review 2026-11-18).
+        troops = self.troops("r", "r", "r", "r")
+        written = {("top", 1, "Body"): ("p", "r"), ("top", 3, "Body"): ("p", "r")}
+        swaps = self.run_swaps(troops, {("top", "p"): "r2"}, written)
+        self.assertEqual([(s["old"], s["new"], s["set_indexes"]) for s in swaps], [("r", "r2", [1, 3])])
+        # the same where the native piece is the target itself
+        swaps = self.run_swaps(self.troops("r", "r"), {("top", "p"): "r2"}, {("top", 1, "Body"): ("p", "r")})
+        self.assertEqual([(s["old"], s["new"], s["set_indexes"]) for s in swaps], [("r", "r2", [1])])
+        # a dropped pick restores the written sets only
+        swaps = self.run_swaps(self.troops("r", "r"), {}, {("top", 1, "Body"): ("p", "r")})
+        self.assertEqual([(s["old"], s["new"], s["set_indexes"]) for s in swaps], [("r", "p", [1])])
+
+    def test_two_sources_on_one_replacement_move_apart_when_the_new_plan_parts(self):
+        written = {("top", 0, "Body"): ("p", "r"), ("top", 1, "Body"): ("q", "r")}
+        swaps = self.run_swaps(self.troops("r", "r"), {("top", "p"): "r2", ("top", "q"): "r3"}, written)
+        self.assertEqual(sorted((s["new"], s["set_indexes"]) for s in swaps), [("r2", [0]), ("r3", [1])])
+
+    def test_a_fords_copy_is_read_back_by_its_own_id_and_its_campaign_troops_rule(self):
+        troops = {"fow_top": {"level": 41, "file": "f.xml", "sets": [{"Body": "r"}]}}
+        swaps = self.run_swaps(troops, {("top", "p"): "r2"}, {("fow_top", 0, "Body"): ("p", "r")})
+        self.assertEqual([(s["troop"], s["new"]) for s in swaps], [("fow_top", "r2")])
+
+    def test_the_written_positions_are_the_slots_that_wear_a_source_of_a_listed_upgrade(self):
+        troops = {"top": {"level": 41, "file": "f", "sets": [{"Body": "p", "Head": "h"}, {"Body": "r"}, {"Body": "p"}]},
+                  "fow_top": {"level": 41, "file": "f", "sets": [{"Body": "p"}]},
+                  "low": {"level": 11, "file": "f", "sets": [{"Body": "p"}]}}
+        got = gbc.written_positions(troops, {("top", "p"): "r"})
+        self.assertEqual(got, {"p": {"top": {"Body": [0, 2]}, "fow_top": {"Body": [0]}}})
+
+    def test_a_spec_records_where_each_upgrade_wrote(self):
+        spec = {"clones": {}, "upgrades": {"p": {"to": "r", "troops": ["top"], "wrote": {"top": {"Body": [0, 2]}}}},
+                "fallback": []}
+        self.assertEqual(gbc.written_table(gbc.check_spec(spec)), {("top", 0, "Body"): ("p", "r"),
+                                                                    ("top", 2, "Body"): ("p", "r")})
+        for bad in ({"top": ["Body"]}, {"top": {"Body": "0"}}, {"top": {"Body": [-1]}}, []):
+            with self.assertRaises(gbc.CloneError, msg=bad):
+                gbc.check_spec(dict(spec, upgrades={"p": {"to": "r", "troops": ["top"], "wrote": bad}}))
+
+    def test_the_spec_text_keeps_the_record(self):
+        import json
+        spec = {"description": ["d"], "clones": {}, "fallback": [], "retired": [],
+                "upgrades": {"p": {"to": "r", "troops": ["top"], "wrote": {"top": {"Body": [0, 2]}}}}}
+        self.assertEqual(json.loads(gbc.spec_text(spec)), spec)
 
 
 class GeneratorAppliesTheSwapTests(unittest.TestCase):

@@ -2,7 +2,6 @@
 name: deep-review
 description: "Use before every commit touching C# or XML/XSLT, repo or live install; skip only config and docs. Risk-tiered senior reviewers report defects; a second wave follows a CRITICAL or HIGH."
 argument-hint: "[feature-name]"
-effort: max
 ---
 
 # Deep Review
@@ -13,7 +12,7 @@ Run this AFTER completing a feature or fix, BEFORE closing out.
 
 **While lenses run, act only on findings that change runtime behaviour:** editing a file an agent is reading invalidates its report. The one exception is a violation your own change introduced. The tell that you are about to break this is writing "this is polish, not a fix" and continuing anyway.
 
-**Every reviewer is the most senior role available** (Mike, 2026-09-18). Every lens runs as `subagent_type: deep-reviewer` (`.claude/agents/deep-reviewer.md`: Opus 5.5, `claude-opus-5-5`, at `effort: max`, read-only). **Never pass `model` on these Agent calls:** a per-invocation `model` overrides the definition's (`.claude/rules/harness-skills-agents.md`), which would quietly downgrade the reviewer. **Effort follows the tier (Mike, 2026-11-03, #1078):** a tier 1 first-wave lens and an adversarial escalation take the definition's `max`, so pass nothing; a tier 2 first-wave lens and every second-wave lens pass `effort: "high"`. On one diff, `high` cost 30% of `max` and found the shared MED and the same LOW items, but missed one MED that only `max` found.
+**Every reviewer is the most senior role available** (Mike, 2026-09-18). Every lens runs as `subagent_type: deep-reviewer` (`.claude/agents/deep-reviewer.md`: Opus 5.5, `claude-opus-5-5`, read-only). **Never pass `model` on these Agent calls:** a per-invocation `model` overrides the definition's (`.claude/rules/harness-skills-agents.md`), which would quietly downgrade the reviewer. **Never pass `effort` either:** every lens runs at the session's effort level (Mike, 2026-11-18).
 
 **The review does not stop at a report.** Two lenses (Agent 3 Efficiency, Agent 6 Design & Elegance) propose better ways to do what the change does; Step 4 applies them. The reviewers stay read-only; the orchestrator applies, after every lens has reported. When neither lens ran, Step 4 is N/A and the report says so.
 
@@ -72,10 +71,10 @@ Pick the highest tier any file in scope reaches, and say the tier and why in one
 | Tier | The change touches | Codex (Step 0) | Claude lenses, one wave |
 |---|---|---|---|
 | 1 | A Harmony patch, a GameModel, save data or a save definer, co-op authority or sync, DI timing or composition, native or engine calls, a mission or campaign tick, live `TAOM_Map` or Armory data | `ultra` | 5 Data flow, 2 Engine compatibility, plus 7 XML for XML and Tooling for scripts |
-| 2 | Moves between assemblies, build and deploy targets, release tooling, gates and tests, UI that reads game state, plain C# and repo XML or XSLT that no tier 1 row names | `xhigh` | 5 Data flow, plus 7 XML for XML and Tooling for scripts, at `effort: "high"` |
+| 2 | Moves between assemblies, build and deploy targets, release tooling, gates and tests, UI that reads game state, plain C# and repo XML or XSLT that no tier 1 row names | `xhigh` | 5 Data flow, plus 7 XML for XML and Tooling for scripts |
 | 3 | Docs, comments, harness text only | none | none: `python tools/lint_docs.py --fail-on-drift` and a read |
 
-**Second wave:** only when the first wave or Codex reports a CRITICAL or HIGH. It runs the remaining lenses in scope from the table below on the files involved, at `effort: "high"`, with those findings in SCOPE NOTES. A finding at MEDIUM or below is fixed and verified with tests, not re-reviewed. Lens 1 Standards, 3 Efficiency, 4 Completeness and 6 Design run only in a second wave or when Mike asks for a full review: on 2026-10-22 they found mostly naming, citation and comment items that the fix pass and `/verify` catch. Step 3e says which confirmed findings need an RCA file.
+**Second wave:** only when the first wave or Codex reports a CRITICAL or HIGH. It runs the remaining lenses in scope from the table below on the files involved, with those findings in SCOPE NOTES. A finding at MEDIUM or below is fixed and verified with tests, not re-reviewed. Lens 1 Standards, 3 Efficiency, 4 Completeness and 6 Design run only in a second wave or when Mike asks for a full review: on 2026-10-22 they found mostly naming, citation and comment items that the fix pass and `/verify` catch. Step 3e says which confirmed findings need an RCA file.
 
 ### Which lenses run (their domains)
 
@@ -116,7 +115,7 @@ Add only what the lens cannot know. The agent definition already carries the ope
 
 ## Step 2c: Adaptive Expansion (always evaluate)
 
-After the core agents complete, assess whether the findings warrant additional focused agents. There is NO upper limit on the total. Every additional agent is a `deep-reviewer` too, launched in waves of four like the core set. Before spawning one, ask whether an existing gate script answers its question: a deterministic check run once beats an agent re-deriving it ([agent-teams.md](../../../docs/ai-includes/agent-teams.md) "Budget").
+After the core agents complete, assess whether the findings warrant additional focused agents. Every additional agent is a `deep-reviewer` too, launched in waves of four like the core set. Before spawning one, ask whether an existing gate script answers its question: a deterministic check run once beats an agent re-deriving it ([agent-teams.md](../../../docs/ai-includes/agent-teams.md) "Budget").
 
 **Launch additional agents when:**
 - Agent 5 (Data Flow) finds gaps → launch per-gap investigation agents to trace the full chain and propose fixes

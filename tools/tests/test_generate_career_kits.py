@@ -511,5 +511,29 @@ class TestCommittedCareerFile(unittest.TestCase):
                                     "python tools/wire_starter_kit_rosters.py --apply")
 
 
+class TestBandClones(unittest.TestCase):
+    """A career kit is a light-band set: the clone tool swaps a band clone source there for its light clone
+    (generate_armour_band_clones._wearer_band), so the rule must read and give the same id."""
+
+    def test_a_worn_clone_counts_as_its_source(self):
+        import rebalance_armor as ra
+        clone = ra.band_clone_id("mkwd_chest", "light")
+        root = ET.fromstring(
+            '<NPCCharacters><NPCCharacter id="t" level="6" culture="Culture.mirkwood"><Equipments>'
+            f'<EquipmentRoster><equipment slot="Body" id="Item.{clone}"/></EquipmentRoster>'
+            '</Equipments></NPCCharacter></NPCCharacters>')
+        self.assertEqual(ck.index_troop_gear([root], donor_of={})["mirkwood"], {"mkwd_chest": (6, 1)})
+
+    def test_a_clone_source_gives_its_light_clone(self):
+        table = {("mkwd_chest", "light"): "taom_band_lt_mkwd_chest"}
+        self.assertEqual(ck.career_armour("mkwd_chest", table), "taom_band_lt_mkwd_chest")
+
+    def test_an_item_with_no_light_clone_stays(self):
+        self.assertEqual(ck.career_armour("plain_chest", {}), "plain_chest")
+
+    def test_no_item_stays_none(self):
+        self.assertIsNone(ck.career_armour(None, {}))
+
+
 if __name__ == "__main__":
     unittest.main()

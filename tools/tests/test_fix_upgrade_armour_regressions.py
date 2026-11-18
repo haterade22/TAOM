@@ -245,6 +245,38 @@ class ClampTests(unittest.TestCase):
         self.assertEqual(fx.find_regressions(troops, self.items, set()), [])
         self.assertEqual(fx.plan_fixes(troops, self.items, set()), [])
 
+    def test_a_change_with_set_indexes_rewrites_only_those_battle_sets(self):
+        # The band clone tool names the positions an upgrade wrote: a slot that held the new item natively stays
+        # (review 2026-11-18). The index counts the troop's battle sets with an armour slot, civilian sets skipped.
+        self._write_troops(_npc("t", 41, [], [{"Body": "x_old"}, {"_civilian": True, "Body": "x_old"},
+                                               {"Body": "x_old"}, {"Head": "h"}, {"Body": "x_old"}]),
+                           _npc("u", 41, [], [{"Body": "x_old"}]))
+        path = self.md / "troops" / "troops_cx.xml"
+        change = {"file": str(path), "troop": "t", "slot": "Body", "old": "x_old", "new": "x_new", "set_indexes": [0, 3]}
+        self.assertEqual(fx.write_changes([change]), 1)
+        text = path.read_text(encoding="utf-8")
+        troops = fx.load_troops(str(self.md))
+        self.assertEqual([st.get("Body") for st in troops["t"]["sets"]], ["x_new", "x_old", None, "x_new"])
+        self.assertEqual(troops["u"]["sets"][0]["Body"], "x_old")   # another troop is not touched
+        self.assertEqual(text.count('id="Item.x_old"'), 3)   # the civilian copy, set 1 and the other troop
+        # a change with no `set_indexes` still rewrites every battle set of the troop (every other caller)
+        blanket = {"file": str(path), "troop": "t", "slot": "Body", "old": "x_old", "new": "x_all"}
+        fx.write_changes([blanket])
+        troops = fx.load_troops(str(self.md))
+        self.assertEqual([st.get("Body") for st in troops["t"]["sets"]], ["x_new", "x_all", None, "x_new"])
+
+    def test_a_weapons_only_battle_set_is_not_counted_in_the_set_indexes(self):
+        # hill_troll has a battle set with no armour slot: the index is that of the clone tool's load_troops,
+        # which skips it, so a writer that counted every non-civilian set would rewrite the wrong set.
+        self._write_troops(_npc("t", 41, [], [{"Item0": "w_axe"}, {"Body": "x_old"}, {"Body": "x_old"}]))
+        path = self.md / "troops" / "troops_cx.xml"
+        fx.write_changes([{"file": str(path), "troop": "t", "slot": "Body", "old": "x_old", "new": "x_new",
+                           "set_indexes": [1]}])
+        import xml.etree.ElementTree as ET
+        rosters = ET.parse(path).getroot().iter("EquipmentRoster")
+        bodies = [[e.get("id") for e in r.findall("equipment") if e.get("slot") == "Body"] for r in rosters]
+        self.assertEqual(bodies, [[], ["Item.x_old"], ["Item.x_new"]])
+
     def test_a_file_that_would_not_parse_leaves_every_file_unwritten(self):
         # Review 2026-09-18 (#617): the parse check ran per file inside the write loop, so a bad
         # file late in the batch left the earlier ones written and the roster half-applied.

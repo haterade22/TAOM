@@ -522,6 +522,7 @@ class Validator:
         issues += self._armour_mesh_tier_ladder()
         issues += self._top_tier_armour_worn_low()
         issues += self._band_clone_source_worn_low()
+        issues += self._armour_colour_clashes()
         issues += self._lord_armour_range()
         issues += self._upgrade_tier_collapse()
         issues += self._ranged_ladder_inversions()
@@ -2723,6 +2724,48 @@ class Validator:
                     f'({rec["top"][0]}) and by troops of level 30 or lower: {low}. The restat prices it at '
                     f'its lowest wearer\'s band, so the top-tier troop wears low armour: run '
                     f'tools/generate_armour_band_clones.py (dry run, then --apply), then re-derive and restat'
+                ),
+            ))
+        return issues
+
+    # -- ARMOUR_COLOUR_CLASH ------------------------------------------------- #
+    # A battle set that puts a silver piece beside a gold or bronze one looks wrong. Families come from
+    # tools/data/armour_colour_families.json (tools/scan_armour_colours.py); the clash rule is its clashes().
+    # One warning per troop of troops_*.xml, at its first clashing set. A warning: the table is a measure of
+    # the art.
+    def _armour_colour_clashes(self) -> list:
+        try:
+            import scan_armour_colours as sac
+            colours = sac.load_table()
+        except Exception as exc:  # a broken import is stated, not hidden
+            return [Issue(severity=Severity.WARNING, code="ARMOUR_COLOUR_CLASH", file="tools/scan_armour_colours.py",
+                          line=0, entry_id="(table)", message=f"the colour rule did not load: {type(exc).__name__}: {exc}")]
+        if not colours:
+            return [Issue(severity=Severity.WARNING, code="ARMOUR_COLOUR_CLASH", file="tools/data/armour_colour_families.json",
+                          line=0, entry_id="(table)",
+                          message="the colour table is missing or empty, so this pass checked nothing: run "
+                                  "python tools/scan_armour_colours.py --apply")]
+        troops, _ = self._upgrade_troop_index()
+        issues = []
+        for tid, rec in sorted(troops.items()):
+            if not re.split(r"[\\/]", rec["file"])[-1].startswith("troops_"):
+                continue
+            hits = [(i, sac.set_clashes({sl: sac.family_of(iid, colours) for sl, iid in st.items()}))
+                    for i, st in enumerate(rec["sets"])]
+            hits = [(i, pairs) for i, pairs in hits if pairs]
+            if not hits:
+                continue
+            i, pairs = hits[0]
+            st = rec["sets"][i]
+            a, b = pairs[0]
+            issues.append(Issue(
+                severity=Severity.WARNING, code="ARMOUR_COLOUR_CLASH",
+                file=rec["file"], line=rec["line"], entry_id=tid,
+                message=(
+                    f'{len(hits)} battle set(s) mix silver with gold or bronze armour; set {i}: '
+                    f'{a} {st[a]} ({sac.family_of(st[a], colours)}) beside {b} {st[b]} ({sac.family_of(st[b], colours)}). Swap a piece '
+                    f"for one in the set's colour; a piece the measure reads wrong goes in "
+                    f'tools/armour_colour_overrides.json, then python tools/scan_armour_colours.py --apply'
                 ),
             ))
         return issues

@@ -968,8 +968,10 @@ that was 101 pieces. Every other piece keeps its lowest-wearer price: the restat
 **The upgrade pick.** A candidate is a live Armory piece of the same slot file, Type and kingdom line
 (`kingdom_key`). It is not civilian, troll, hero-named, Mallorn (a band up by its generator) or a clone, and
 not lord armour (a lord-line token with no tier or the lord tier, as `fix_lord_kits.lord_pool` marks it)
-unless the source is of a lord line itself. A colour variant of the source (the same name without its
-colour) is never an upgrade. Its mesh tier is above the source's own and allowed by the ladder for each
+unless the source is of a lord line itself. A colour variant of the source is never an upgrade: the rule
+(`rebalance_armor.COLOR_VARIANT_RE`) drops a trailing colour suffix, a hyphen or en dash and a colour word
+at the end of the name (" - Gold"), and compares what is left. A leading colour word ("Gold Vambrace") is
+not caught. Its mesh tier is above the source's own and allowed by the ladder for each
 wearer, or it has none; no troop of level 30 or lower wears it, so it prices at the elite band and is never
 in scope itself. On the values the restat will write (the replacement at the elite band, the source at the
 band of its lowest wearer) it is at least the source on every region and above it on the primary. With each
@@ -993,7 +995,7 @@ culture, weight, material, flags and the name key and text are the source's. The
 files translate those keys, so `tools/loc_inline_backlog.json` lists the clone file with that reason.
 
 **Files.** `tools/generate_armour_band_clones.py` writes the plan `tools/armour_band_clones.json`
-(`clones`: source to bands; `upgrades`: source to the replacement and its troops; `fallback`), the clones
+(`clones`: source to bands; `upgrades`: source to the replacement, its troops and `wrote`; `fallback`), the clones
 in `Main/_Module/ModuleData/armour_band_clones/armour_band_clones.xml` (CRLF) with one `Items` node in
 `Main/_Module/SubModule.xml`, and the battle sets of `troops/troops_*.xml` and
 `fords_of_war/fords_troops.xml` (a `fow_` copy follows its campaign troop). A low troop's civilian sets take
@@ -1001,9 +1003,22 @@ the clone of its band too, never an upgrade. A troop file a generator writes who
 (`fix_melee_ladder.GENERATED_TROOP_FILES`) is not written: the realm generators (`realm_troops.py`),
 `generate_lothlorien_troops.py` and `generate_snow_orc_troops.py` call `armour_for_troop` as they render,
 and the dry run lists the swaps each still owes under `NEXT`. A plan made after an apply is the plan made
-before it: an upgrade is read back as its source (`applied`, the shipped spec's upgrades, and
-`as_planned_from`; two sources on one replacement for one troop stop the run), and a clone as its source
-(`band_clone_source`).
+before it: an upgrade is read back as its source, and a clone as its source (`band_clone_source`). The
+upgrade read-back is exact (review 2026-11-18). Each upgrade row records in `wrote` the slots the upgrade put
+its replacement in, as `{roster troop id: {slot: [battle set index]}}` (a `fow_` copy by its own id, the
+index counting the troop's battle sets that name an armour slot, as `load_troops` lists them). The next plan
+reads back those slots only (`written_table`, `as_planned_from`), so a set that wears the replacement
+natively keeps it when the pick changes, and two sources on one replacement need no special case.
+`fix_upgrade_armour_regressions.write_changes` rewrites only the listed sets of a swap that carries
+`set_indexes`. Before 2026-11-18 the read-back turned every copy of a replacement in a top wearer's sets back
+into the source; it rewrote six slots of the marksmen of Rivendell and Lindon (`imladris_marksman`,
+`lindon_imladris_marksman`, `fow_imladris_marksman`, battle sets 5 and 7, which held
+`rivendell_torso_infantry_tier2_silver` and `_tier3_silver` natively). The shipped record was rebuilt from the
+rosters before the upgrades existed (commit 7506a4c49's parent), and the first plan reproduced it. Adding or
+removing a battle set of a top wearer moves the indexes after it: shift that troop's `wrote` indexes in
+`tools/armour_band_clones.json` in the same edit, then `--check` must say OK. A `wrote` drift in `--check`
+after such an edit means the indexes are wrong: never `--apply` over it (`--apply` writes the misread record,
+and the written piece then counts as native).
 
 **Every other wearer** (review 2026-11-17). A set outside the troop battle sets that names a source takes
 the clone of its wearer's band (`scan_wearers`, `planned_for`, written by `write_worn_swaps`): an NPC by
@@ -1031,8 +1046,8 @@ variants, in the source's folder and slot; the class table classes a clone `name
 folder; `fix_lord_kits.lord_pool` and `fix_lord_kits._rule_b_pieces` never take one;
 `fix_upgrade_armour_regressions.plan_fixes` leaves every slot the plan owns (a source, an upgrade of its
 troop, a clone) and never picks one as a replacement. `generate_career_kits.index_troop_gear` counts a clone
-as its own item at the level of the low troops that wear it, so a low career kit hands out the clone; an
-enlistment kit takes the clone of its rank. The validator warns `TOP_TIER_ARMOUR_WORN_LOW` for
+as its source, and `career_armour` gives a Body or Leg pick that is a clone source its light clone, so a
+career kit hands out the light clone; an enlistment kit takes the clone of its rank. The validator warns `TOP_TIER_ARMOUR_WORN_LOW` for
 every piece still in scope (0 after the apply). Gates: `armour-band-clones` (`--check`) and
 `armour-band-clone-meshes`.
 
@@ -1074,6 +1089,7 @@ and the restat apply together (the apply sequence below, step 4 and the loop of 
 ```
 python tools/generate_armour_band_clones.py                 # dry run: the plan and the table of pieces (--report PATH writes it)
 python tools/generate_armour_band_clones.py --apply         # write the rosters and other sets, the clones, SubModule.xml, the spec
+python tools/scan_armour_colours.py --apply                  # a new clone needs its colour row (gate armour-colours)
 python tools/generate_<realm>_troops.py --apply             # each generator NEXT names, then
 python tools/generate_lothlorien_troops.py --apply          #   (and generate_snow_orc_troops.py when named)
 #   NEXT also names the clone file's name key count: set "keys" of
@@ -1133,6 +1149,106 @@ come from the rule itself, a level 36 troop wearing the elite band:
 
 Until the restat apply, `rohan_bat_template_medium_e` wears `roh_nbl_arm_y` at its live 0/25/8/0 in place
 of 0/37/11/0.
+
+### Colour families (2026-11-18, #1450)
+
+The maintainer found a Mirkwood troop in game in a silver chest with bronze pauldrons. The band clone
+upgrade pick (#1440) chose a stronger piece of the same line and slot by its values only, so it put silver
+pieces into bronze sets. Every armour piece now has a colour family, the upgrade pick refuses a piece that
+clashes with the rest of a top wearer's set, and the validator reports troops whose sets clash.
+
+**The rule.** gold and bronze are warm, silver is cold. silvergold, black, neutral, unknown and the cloth
+colours (green, red, blue, white) clash with nothing. Two pieces of one set clash when one is warm and the
+other cold (`scan_armour_colours.clashes`); gold beside bronze does not clash. A set clashes when any two
+of its Head, Body, Cape, Gloves and Leg pieces do.
+
+**Where a family comes from**, first match wins (`scan_armour_colours.build`):
+
+1. a row of `tools/armour_colour_overrides.json`: the exact id, else the longest prefix. Every row says why.
+   An override reaches the pieces derived from its row: a band clone, then a lord variant, reads the row of
+   its source when it has none of its own (`override_chain`).
+2. a colour word as a whole token (`_silver_`, `gold2`, never `goldenrod`) in the item id, then its mesh,
+   then a diffuse texture name. `iron` is no colour word: it names the Iron Hills line of the Dwarves.
+3. the measured texture. The chain is item, metamesh, materials, textures. The engine shows a male wearer
+   `<mesh>_male`/`_female`, then `_slim`/`_converted`, then the plain mesh (`MissionScreen`
+   `OnEquipItemsFromSpawnEquipment`, `GetMultiMeshCopyWithGenderData`); the scanner reads the male non-slim
+   pick, `<mesh>_male` else `<mesh>`. The review of 2026-11-18 measured that 243 body pieces have a slim
+   mesh, 3 of them with other textures (all silver), and that no female mesh differs. The diffuse texture
+   is the one a material holds in slot 0, the engine's `Material.MBTextureType.DiffuseMap`
+   (`audit_battle_equipment_memory.material_texture_slots`); a mesh whose materials do not decode falls back
+   to the name rule (names ending `_d`, `_diffuse`, `_albedo`, `_basecolor`, `_col` or `_color`). Each image
+   is found by its name in the Armory's or Native's asset folders. Each pixel is put in a class (gold,
+   bronze, silver, black and others) by hue, saturation and value. A texture with gold and bronze at 35% or
+   more makes the piece warm (gold or bronze, whichever the warm textures hold more of). Else a texture with
+   50% or more silver whose name is not cloth, leather, mail or hair makes it silver. Else the piece is
+   neutral.
+
+The result is `tools/data/armour_colour_families.json`, generated from the live install for every Armor
+item of the Armory and the TAOM module, band clones included. Never edit it by hand: fix a wrong piece in
+the override file, then run `--apply`. A piece the lookup cannot find (`scan_armour_colours.family_of`, used
+by the upgrade pick and the validator) reads its own row, else its band clone source's, else `unknown`. A
+vanilla item has no row: on 2026-11-18, 29 vanilla ids are worn in the battle sets of `troops_dunland.xml`,
+`troops_harad.xml` and `troops_umbar.xml`, and they read `unknown`, so they clash with nothing.
+
+On 2026-11-18 `python tools/scan_armour_colours.py` read 3304 pieces and 2533 images: 1362 silver, 1111
+neutral, 641 bronze, 121 gold, 44 silvergold, 11 black, 7 green, 5 red and 2 unknown (no image:
+`starter_eastern_leather_boots`, `taom_chariot_armour_imperial`). 21 rows came from the override file, 168
+from a colour word and 3113 from the measure.
+
+**Known limits of the measure.** Lothlorien lines share texture atlases (`t_ll_gl_props_a_d` holds gold
+trim for every line), so the measure cannot tell the Marchwarden silver pieces from the Galadhrim gold;
+prefix rows (`sk_ll_mw_bracer_`, `sk_ll_mw_pauld_`, `sk_ll_rg_chest_`) fix them, read from the Kit
+thumbnails on 2026-11-18. The Ranger chest reads gold from the shared Galadhrim atlas
+`t_ll_gl_chest_a_d`; its own texture `t_ll_rg_chest_a_d` is 94% brown leather, so it is neutral. A measured
+error is still in the table: the `sk_ll_ml_` line, which goes to step 2 (#1452), with the maintainer's eye on it.
+The review of 2026-11-18 also found that a cloth or leather texture can make a piece read warm (34 rows):
+those need a Kit check per piece (step 2, #1452).
+
+**The upgrade rule** (`generate_armour_band_clones.colour_clash`, called by `pick_upgrade`). A candidate
+upgrade is refused when its family clashes with a piece in any battle set of a top wearer, with the swaps
+the plan already made applied. When every candidate clashes, the piece falls back to treatment A (a band
+clone), and the report names the clash: `mkwd_inf3_chest_silver (silver) clashes with mirkwood_glaivesman
+Cape mkwd_inf3_pauldrons bronze`. The scanner exits 2 and writes nothing when
+the install has no texture image (a packaged install ships no `AssetSources`) or no numpy or Pillow. The
+clone tool stops with a `CloneError` when the table is empty, or when a piece of the Armory it reads has no
+row (`colour_table`; repair `python tools/scan_armour_colours.py --apply`); on 2026-11-18 no piece lacked a
+row. The validator gives one `(table)` warning that it checked nothing when the table is missing or empty.
+On 2026-11-18 the plan was A 20, B 74, fallback 7, 49 clones; `mkwd_inf3_chest`, `mkwd_inf3_chest_bronze` and
+`mkwd_inf3_greaves` fell back to clones, and five upgrades took a piece that clashes with nothing in the set
+(`mkwd_inf1_t2_helmet_silver_hc`, the two Rivendell marksman torsos and `rivendell_vambraces_1` and `_2`).
+
+**Career kits.** A career kit is a light-band set, so the clone tool gives it the light clone of a clone
+source. `generate_career_kits.py` reads a worn clone as its source and gives a Body or Leg pick that is a
+clone source its light clone (`career_armour`), so `--verify` agrees with the clone tool.
+
+**The count.** A one-off count on 2026-11-18 read every battle set of every `NPCCharacter` under
+`ModuleData` (6398 sets of 5244 characters) against the committed table. No tool prints it;
+`ARMOUR_COLOUR_CLASH` counts troops. 206 sets clashed before #1440 (commit 7ed5bc562's parent,
+d8e7f86b3), 313 on trunk 686947589 and 200 on branch fix/armour-colour-families. A count that resolves
+character templates and skips them gives 209, 306 and 203 on the same trees. No
+set clashes here that did not clash before #1440, and 6 that did no longer do. `python
+tools/validate_moduledata.py` reports `ARMOUR_COLOUR_CLASH` 41 (one warning per troop of `troops_*.xml`, at
+its first clashing set). The 200 sets belong to 51 characters; the other 10 are `fow_` copies in
+`fords_troops.xml`, which the validator does not read.
+
+**Step 2** (#1452) is the clashes that predate #1440: culture by culture, with the maintainer's eye on each
+measured piece, by swaps in the troop files or rows in the override file.
+
+**Commands:**
+
+```
+python tools/scan_armour_colours.py            # dry run: counts and the rows that would change
+python tools/scan_armour_colours.py --apply    # write the table
+python tools/scan_armour_colours.py --check    # exit 1 when the table is stale (gate armour-colours)
+```
+
+Exit codes: 0 clean or written; 1 stale (`--check`) or a bad override row; 2 nothing could be measured (no
+Armory under the install, no texture image, no numpy or Pillow: the gate reads it as NOT RUN); 3 a crash.
+The install is `$BANNERLORD_GAME_MODULES`, else the Modules folder of `$BANNERLORD_GAME_DIR`.
+
+After an Armory art drop or a new band clone, run `--apply`, then `generate_armour_band_clones.py --check`.
+After `generate_armour_band_clones.py --apply`, run `scan_armour_colours.py --apply` (a new clone needs its
+row), then `--check` of the clone tool.
 
 ### Open decisions for the maintainer (2026-11-14, #1271)
 
@@ -2011,9 +2127,18 @@ loads at launch), each step pairs a check a tool can make with what only a perso
       Mirkwood's low troops (they wear the light clone).
    4. On a save made before the change, a companion hired before it still wears what he wore: a hero's
       equipment is saved, so the new wanderer kits reach only companions created after the change.
+12. Colour families (#1450). Tool: `python tools/scan_armour_colours.py --check` and
+    `python tools/generate_armour_band_clones.py --check` exit 0. Person only: in the encyclopedia the Mirkwood
+    glaivesman, woodsman, guards and swordsman each wear one metal family per battle set (no silver chest
+    under bronze pauldrons), and the Lorien warden keeps the silver elite helmet (`sk_ll_mw_helmet_elite_a`).
 
 ## Changelog
 
+- 2026-11-18: Colour families (#1450). Every armour piece has a colour family (gold, bronze, silver and
+  others), read from its names or its texture. A band clone upgrade never puts a silver piece into a gold
+  or bronze set, or the other way round: such a piece falls back to a band clone. The Mirkwood infantry
+  chest, the bronze chest and the greaves now give their top wearers the elite source, not a silver
+  upgrade. The validator warns about troops whose sets still mix colours (41, all older than #1440).
 - 2026-11-17: Review rounds of the armour band clones. Every set outside the troop battle sets now names
   a clone too: the enlistment kits by rank (a recruit's kit issues the light clone), wanderer and
   companion kits, character creation, NPCs by level and the child templates; a lord keeps the source
@@ -2049,6 +2174,10 @@ loads at launch), each step pairs a check a tool can make with what only a perso
 - **Issue:** #1271: [Weapons and armour sit far above the vanilla range](https://github.com/haterade22/TAOM/issues/1271)
 - **Status:** Open
 - **Issue:** #1333: [Lord armour variants: Mirkwood and Harad lords get distinct looks at lord armour values](https://github.com/haterade22/TAOM/issues/1333)
+- **Status:** Open
+- **Issue:** #1450: armour band clone upgrades mixed silver with bronze (colour families)
+- **Status:** Open
+- **Issue:** #1452: [Armour colour clashes older than the band clones, culture by culture](https://github.com/haterade22/TAOM/issues/1452)
 - **Status:** Open
 
 ---

@@ -50,7 +50,12 @@ source at the band of its lowest wearer) it must be at least the source on every
 the primary, and no wearer may pass rebalance_armor.WORN_ARMOUR_CEILING with each slot drawn from any
 battle set. The pick is the candidate of the longest id prefix shared with the source (its look family),
 then a tier the ladder allows over one it does not, then the tier nearest the ladder (inside it the
-lowest, the smallest step up; outside it the highest), then the id. A colour variant of the source (the same name without its colour) is never an upgrade.
+lowest, the smallest step up; outside it the highest), then the id. A colour variant of the source is never an
+upgrade: the rule drops a trailing colour suffix (" - Gold", rebalance_armor.COLOR_VARIANT_RE) and compares the
+rest; a leading colour word ("Gold Vambrace") is not caught.
+No candidate may clash in colour with another piece of a wearer's battle set that holds the source (a
+silver chest beside bronze pauldrons; colour_clash, the families of tools/scan_armour_colours.py, the
+maintainer 2026-11-18). A piece whose every candidate clashes falls back to A.
 
 EVERY OTHER WEARER (review 2026-11-17)
 -------------------------------------
@@ -78,18 +83,31 @@ WHAT IT WRITES (the unversioned Armory is only read)
       named_companions, equipmentsets/*.xml (the enlistment file too: generate_enlistment_rosters.py
       applies the same rule as it renders, kit_at_rank). Only the id in the slot changes.
 A clone is never dropped: one the plan no longer needs stays in the file as `retired` (a save or a mod
-that names it keeps the item), and its wearers go back to the source. The kit tools keep a clone as the
-troop wears it; the class table classes every clone `named`.
+that names it keeps the item), and its wearers go back to the source. The career tool reads a clone as its
+source and gives a source its light clone (generate_career_kits.career_armour); the class table classes every
+clone `named`.
+
+THE UPGRADE RECORD (review 2026-11-18)
+--------------------------------------
+Each upgrade row of the spec has `wrote`: {roster troop id: {slot: [battle set index]}}, the slots the upgrade put
+its replacement in (a Fords of War copy by its own id; the index counts the troop's battle sets that name an
+armour slot, as load_troops lists them). The next plan reads back those slots only (written_table,
+as_planned_from): a set that wears the replacement natively keeps it when the pick changes. A swap carries the
+`set_indexes` it changes, and write_changes rewrites those sets only. Adding or removing a battle set of a top
+wearer moves the indexes after it: shift that troop's `wrote` indexes in tools/armour_band_clones.json in the
+same edit, then --check must say OK. A `wrote` drift in --check after such an edit means the indexes are wrong:
+never --apply over it (--apply writes the misread record, and the written piece then counts as native).
 
 USAGE
     python tools/generate_armour_band_clones.py            # dry run: the plan and the table of pieces
     python tools/generate_armour_band_clones.py --apply    # write
     python tools/generate_armour_band_clones.py --check    # exit 1 on drift
 
-Exit codes: 0 clean or written; 1 drift (--check), a bad spec, or a piece of the shipped plan that is not live
-armour of the Armory read (--apply writes nothing then); 2 no Armory install or no slot file in it (nothing
-checked); 3 a crash. After --apply: the steps it prints under NEXT, then the sequence in
-docs/features/armor-balance.md, "Armour band clones and upgrades".
+Exit codes: 0 clean or written; 1 drift (--check), a bad spec, a colour table that is empty or lacks a piece of
+the Armory read (colour_table), or a piece of the shipped plan that is not live armour of the Armory read (--apply
+writes nothing then); 2 no Armory install or no slot file in it (nothing checked); 3 a crash. After --apply: the
+steps it prints under NEXT, then python tools/scan_armour_colours.py --apply (a new clone needs its colour row),
+then the sequence in docs/features/armor-balance.md, "Armour band clones and upgrades".
 """
 from __future__ import annotations
 
@@ -179,7 +197,9 @@ def treatment(item_id, name):
 
 def check_spec(spec):
     """Raise CloneError unless the spec is {"clones": {source: [band, ...]}, "upgrades": {source: {"to": id,
-    "troops": [ids]}}, "fallback": [sources]} with known, distinct bands and no source in both tables."""
+    "troops": [ids], "wrote": {troop id: {slot: [battle set index, ...]}}}}, "fallback": [sources]} with known,
+    distinct bands and no source in both tables. `wrote` is the record of the slots the upgrade wrote (the
+    roster troop ids, a Fords of War copy by its own id); a row without one has written nothing."""
     clones = spec.get("clones") if isinstance(spec, dict) else None
     upgrades = spec.get("upgrades", {}) if isinstance(spec, dict) else None
     if not isinstance(clones, dict) or not isinstance(upgrades, dict):
@@ -197,6 +217,12 @@ def check_spec(spec):
             raise CloneError(f"{source} is both cloned and upgraded")
         if not isinstance(row, dict) or not row.get("to") or not row.get("troops") or row["to"] == source:
             raise CloneError(f"{source}: an upgrade is {{\"to\": another piece, \"troops\": [ids]}}")
+        wrote = row.get("wrote", {})
+        if not isinstance(wrote, dict) or not all(
+                isinstance(slots, dict) and all(
+                    isinstance(ix, list) and ix and all(isinstance(n, int) and n >= 0 for n in ix)
+                    for ix in slots.values()) for slots in wrote.values()):
+            raise CloneError(f"{source}: 'wrote' is {{troop id: {{slot: [battle set index, ...]}}}}")
     for source in spec.get("fallback", []):
         if source not in clones:
             raise CloneError(f"{source}: a fallback must be cloned")
@@ -215,6 +241,13 @@ def clone_table(spec):
 def upgrade_table(spec):
     """{(troop id, source): replacement} of a checked spec."""
     return {(tid, src): row["to"] for src, row in spec.get("upgrades", {}).items() for tid in row["troops"]}
+
+
+def written_table(spec):
+    """{(roster troop id, battle set index, slot): (source, replacement)} of a checked spec: each slot an upgrade
+    wrote. The index counts the troop's battle sets that name an armour slot, as load_troops lists them."""
+    return {(tid, n, slot): (src, row["to"]) for src, row in spec.get("upgrades", {}).items()
+            for tid, slots in row.get("wrote", {}).items() for slot, ixs in slots.items() for n in ixs}
 
 
 @functools.lru_cache(maxsize=1)
@@ -302,38 +335,37 @@ def armour_for_troop(item_id, troop_id, level, table=None, upgrades=None, civili
     return armour_for_band(source, band, table)
 
 
-def _read_back(troop_id, old, upgrades, applied):
-    """The source a roster item stands for: an applied upgrade's replacement is read as its source (the shipped
-    spec, `applied`). Two sources on one replacement that the new plan parts cannot be told apart in the roster:
-    a CloneError (restore the rosters from git and plan again)."""
-    rid = rule_id(troop_id)
-    srcs = sorted(src for (t, src), to in applied.items() if t == rid and to == old)
-    if len(srcs) > 1 and len({upgrades.get((rid, s), s) for s in srcs}) > 1:
-        raise CloneError(f"{troop_id} wears {old} for {', '.join(srcs)}, which the new plan parts; "
-                         f"restore its roster (git checkout) and plan again")
-    return srcs[0] if srcs else old
+def _source_at(troop_id, n, slot, item, written):
+    """The source a roster item stands for at one position: the source of the upgrade that wrote it there (`written`,
+    written_table of the shipped spec), else the item itself. A slot that held the replacement natively is not in
+    the record, so a changed or dropped pick never moves it (review 2026-11-18)."""
+    hit = written.get((troop_id, n, slot))
+    return hit[0] if hit and hit[1] == item else item
 
 
-def plan_swaps(troops, table=None, upgrades=None, applied=None):
-    """[{file, troop, slot, old, new}] for each battle slot whose item differs from armour_for_troop, once per
-    (troop, slot, old item), in troop order. An item an applied upgrade put there (`applied`, the shipped spec's
-    upgrade table) is judged as its source, so a changed or dropped pick reaches the roster."""
+def plan_swaps(troops, table=None, upgrades=None, written=None):
+    """[{file, troop, slot, old, new, set_indexes}] for each troop, slot, item and replacement whose battle sets differ
+    from armour_for_troop, `set_indexes` the battle sets that change (write_changes rewrites those and no other), in
+    troop order. An item an applied upgrade put at a position (`written`) is judged as its source, so a changed or
+    dropped pick reaches the roster."""
     upgrades = spec_upgrades() if upgrades is None else upgrades
-    applied = applied or {}
-    out, seen = [], set()
+    written = written or {}
+    out = []
     for tid in sorted(troops):
         rec = troops[tid]
         if rec.get("level") is None:
             continue
-        for st in rec.get("sets") or ():
+        groups = {}
+        for n, st in enumerate(rec.get("sets") or ()):
             for slot in ra.MESH_LADDER_SLOTS:
                 old = st.get(slot)
-                if not old or (tid, slot, old) in seen:
+                if not old:
                     continue
-                seen.add((tid, slot, old))
-                new = armour_for_troop(_read_back(tid, old, upgrades, applied), tid, rec["level"], table, upgrades)
+                new = armour_for_troop(_source_at(tid, n, slot, old, written), tid, rec["level"], table, upgrades)
                 if new != old:
-                    out.append({"file": rec["file"], "troop": tid, "slot": slot, "old": old, "new": new})
+                    groups.setdefault((slot, old, new), []).append(n)
+        out += [{"file": rec["file"], "troop": tid, "slot": slot, "old": old, "new": new, "set_indexes": ns}
+                for (slot, old, new), ns in groups.items()]
     return out
 
 
@@ -666,6 +698,21 @@ def check_shipped_pieces(spec, sources):
                          f"Nothing was written")
 
 
+def colour_table(sources):
+    """The committed colour table (tools/scan_armour_colours.py), for the upgrade pick. A CloneError when it is
+    empty or has no row for a piece of `sources` (the Armory pieces read_sources returns): a piece with no row
+    reads unknown and clashes with nothing, so the pick would judge on a gap."""
+    import scan_armour_colours as sac
+    colours = sac.load_table()
+    if not colours:
+        raise CloneError(f"no colour table: run python tools/scan_armour_colours.py --apply ({sac.TABLE.name})")
+    missing = sorted(set(sources) - set(colours))
+    if missing:
+        raise CloneError(f"{len(missing)} piece(s) of the Armory have no row in {sac.TABLE.name}: "
+                         f"{', '.join(missing[:10])}. Run python tools/scan_armour_colours.py --apply, then plan again")
+    return colours
+
+
 def _battle_sets(npc):
     sets = []
     for es in list(npc.iter("EquipmentRoster")) + list(npc.iter("EquipmentSet")):
@@ -699,32 +746,27 @@ def load_troops():
     return campaign, fords
 
 
-def as_planned_from(troops, upgrades):
-    """The troops with each upgrade the spec names read back as its source, so a plan made after an --apply
-    is the plan made before it. When two sources of one troop went to the same piece, the first takes its
-    place and each other source is read in an extra set of that slot alone, kept apart in `extra_sets`: the
-    scope and the worn ceiling read it (all_sets), the slot means of an upgrade edge do not."""
+def as_planned_from(troops, written):
+    """The troops with each slot an upgrade wrote read back as its source (`written`, written_table of the shipped
+    spec), so a plan made after an --apply is the plan made before it. A slot that held the replacement natively
+    is not in the record and stays as it is."""
+    return {tid: dict(rec, sets=[{slot: _source_at(tid, n, slot, item, written) for slot, item in st.items()}
+                                 for n, st in enumerate(rec["sets"])])
+            for tid, rec in troops.items()}
+
+
+def written_positions(troops, upgrades):
+    """{source: {troop id: {slot: [battle set index]}}}: the slots of `troops` (read back as their sources, as_planned_from)
+    that an upgrade of `upgrades` {(campaign troop, source): replacement} writes, a Fords of War copy by its own
+    id under its campaign troop's rule. The record a spec row carries as `wrote`."""
     out = {}
-    for tid, rec in troops.items():
-        back = collections.defaultdict(list)
-        for (t, src), to in sorted(upgrades.items()):
-            if t == tid:
-                back[to].append(src)
-        if not back:
-            out[tid] = rec
-            continue
-        sets, seen = [], set()
-        for st in rec["sets"]:
-            sets.append({k: back[v][0] if v in back else v for k, v in st.items()})
-            seen.update((k, v) for k, v in st.items() if v in back)
-        extra = [{slot: src} for slot, to in sorted(seen) for src in back[to][1:]]
-        out[tid] = dict(rec, sets=sets, extra_sets=extra)
+    for tid in sorted(troops):
+        for n, st in enumerate(troops[tid].get("sets") or ()):
+            for slot in ra.MESH_LADDER_SLOTS:
+                item = st.get(slot)
+                if item and (rule_id(tid), item) in upgrades:
+                    out.setdefault(item, {}).setdefault(tid, {}).setdefault(slot, []).append(n)
     return out
-
-
-def all_sets(rec):
-    """A troop's battle sets with the read-back extra sets (as_planned_from)."""
-    return list(rec.get("sets") or ()) + list(rec.get("extra_sets") or ())
 
 
 def eligible_piece(iid, index):
@@ -739,8 +781,7 @@ def plan_scope(campaign, index):
     """rebalance_armor.shared_down_pieces over the campaign troops, read as the restat reads them, a clone
     counted as its source."""
     exempt, noble, pairs = _rule_sets()
-    troops = {tid: dict(rec, sets=all_sets(rec)) for tid, rec in campaign.items()}
-    return ra.shared_down_pieces(troops, exempt=exempt, noble=noble, exempt_items=pairs,
+    return ra.shared_down_pieces(campaign, exempt=exempt, noble=noble, exempt_items=pairs,
                                  eligible=lambda i: eligible_piece(i, index), source_of=ra.band_clone_source)
 
 
@@ -751,7 +792,7 @@ def lowest_anchor(campaign):
     for tid, rec in campaign.items():
         if tid in exempt or rec.get("level") is None:
             continue
-        for st in all_sets(rec):
+        for st in rec["sets"]:
             for iid in st.values():
                 iid = ra.band_clone_source(iid)
                 if (tid, iid) in pairs:
@@ -841,12 +882,30 @@ def _planned_total(troop_id, sets, children_sets, sources, live):
     return out
 
 
-def pick_upgrade(src, scope_rec, sources, low_anchor, campaign, live, swapped, noble, militia=frozenset()):
+def colour_clash(r, src, sets, colours):
+    """The first slot of `sets` (the wearer's battle sets after the plan's other swaps) whose piece clashes in
+    colour with `r` put in place of `src` (scan_armour_colours.clashes), or None. A set that does not hold
+    `src` is not judged."""
+    import scan_armour_colours as sac
+    mine = sac.family_of(r, colours)
+    for st in sets:
+        if src not in st.values():
+            continue
+        for slot, iid in sorted(st.items()):
+            if iid != src and sac.clashes(mine, sac.family_of(iid, colours)):
+                return f"{slot} {iid} {sac.family_of(iid, colours)}"
+    return None
+
+
+def pick_upgrade(src, scope_rec, sources, low_anchor, campaign, live, swapped, noble, militia=frozenset(),
+                 colours=None):
     """(replacement, its elite values, the source's planned values) for the level 36+ wearers of a B piece,
     or (None, reason, source values). `swapped` {troop: {source: replacement}} holds the upgrades already picked, so
     the ceiling and the upgrade edges are judged on the whole plan. A pick may not leave a wearer above a troop
     it upgrades into (its `upgrades`, an edge between two `militia` troops aside) by more than the fallback, the
-    source at the elite band, would: B is never worse than A on the upgrade gate."""
+    source at the elite band, would: B is never worse than A on the upgrade gate. A pick may not clash in colour
+    with another piece of a wearer's set (`colours`, tools/data/armour_colour_families.json; colour_clash)."""
+    import scan_armour_colours as sac
     me = sources[src]
     low_band = next(iter(scope_rec["low"]))
     mine = _stats(band_values(src, me["slot"], me["culture"], low_band, me["declared"])[0])
@@ -861,10 +920,17 @@ def pick_upgrade(src, scope_rec, sources, low_anchor, campaign, live, swapped, n
         if any(theirs[s] < mine[s] for s in ARMOUR_STATS) or theirs[primary] <= mine[primary]:
             reasons.append(f"{r} lower on a region")
             continue
+        if colours:
+            hit = next(((t, c) for t in tops for c in [colour_clash(
+                r, src, [{k: swapped.get(t, {}).get(v, v) for k, v in st.items()} for st in campaign[t]["sets"]],
+                colours)] if c), None)
+            if hit:
+                reasons.append(f"{r} ({sac.family_of(r, colours)}) clashes with {hit[0]} {hit[1]}")
+                continue
         over = []
         for t in tops:
             done = dict(swapped.get(t, {}), **{src: r})
-            sets = [{k: done.get(v, v) for k, v in st.items()} for st in all_sets(campaign[t])]
+            sets = [{k: done.get(v, v) for k, v in st.items()} for st in campaign[t]["sets"]]
             items = {i: {"stats": planned_item_values(i, sources, live)} for st in sets for i in st.values()}
             _worst, best = ra.worn_armour_extremes_per_slot({"sets": sets}, items)
             over += [f"{t} {reg} {best[reg]}" for reg, lim in ra.WORN_ARMOUR_CEILING.items() if best[reg] > lim]
@@ -1022,9 +1088,10 @@ def build(armory_items, game_modules):
     import derive_armor_tiers as dat
     import fix_upgrade_armour_regressions as fu
     shipped = load_spec()
-    applied = upgrade_table(shipped)
+    written = written_table(shipped)
     campaign_raw, fords = load_troops()
-    campaign = as_planned_from(campaign_raw, applied)
+    read_back = as_planned_from({**campaign_raw, **fords}, written)
+    campaign = {tid: read_back[tid] for tid in campaign_raw}
     index, _ = dat.build_armory_index()
     scope = plan_scope(campaign, index)
     sources = read_sources(armory_items)
@@ -1037,6 +1104,7 @@ def build(armory_items, game_modules):
     _exempt, noble, _pairs = _rule_sets()
     import rebalance_troops as rb
     militia = frozenset(rb.militia_troop_ids())
+    colours = colour_table(sources)
     # Every set that names a piece in scope or a clone, troop files included: a clone covers the band of each.
     worn = scan_wearers(set(scope) | set(shipped["clones"]))
     bands = wearer_bands(worn)
@@ -1046,7 +1114,8 @@ def build(armory_items, game_modules):
     pending = [src for src in sorted(scope) if treatment(src, sources[src]["name"]) == "B"]
     while pending:
         for src in pending:
-            picks[src] = pick_upgrade(src, scope[src], sources, low_anchor, campaign, live, swapped, noble, militia)
+            picks[src] = pick_upgrade(src, scope[src], sources, low_anchor, campaign, live, swapped, noble, militia,
+                                      colours)
             for t in (scope[src]["top"] if picks[src][0] else ()):
                 swapped.setdefault(t, {})[src] = picks[src][0]
         still = [src for src in pending if not picks[src][0]]
@@ -1072,6 +1141,9 @@ def build(armory_items, game_modules):
         for band in clones[src]:
             row["clones"][band] = clone_values(src, me["slot"], me["culture"], band, me["declared"])
         pieces.append(row)
+    wrote = written_positions(read_back, upgrade_table({"upgrades": upgrades}))
+    for src, row in upgrades.items():
+        row["wrote"] = wrote.get(src, {})
     spec = {"description": DESCRIPTION, "clones": clones, "upgrades": upgrades, "fallback": fallback}
     planned = set(clone_table(spec).values())
     old_text = OUT_FILE.read_bytes().decode("utf-8-sig") if OUT_FILE.exists() else ""
@@ -1088,7 +1160,7 @@ def build(armory_items, game_modules):
     ET.fromstring(text.encode("utf-8"))
     table, ups = clone_table(spec), upgrade_table(spec)
     return {"spec": spec, "pieces": pieces, "text": text, "keys": name_keys(text),
-            "swaps": plan_swaps({**campaign_raw, **fords}, table, ups, applied),
+            "swaps": plan_swaps({**campaign_raw, **fords}, table, ups, written),
             "worn_swaps": worn_swaps(worn, table, ups)}
 
 

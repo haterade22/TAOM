@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-18 07:10:51",
+  "generatedAt": "2026-11-18 13:12:35",
   "armoryDir": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\LOTRLOME_Armory\\ModuleData\\LOTRLOME_items",
   "items": {
     "sk_ar_art_helmet_inf_light_a": {
@@ -65526,7 +65526,7 @@
       "anchorLevel": 36,
       "maxLevel": 41,
       "levelSpan": 5,
-      "wearerCount": 4,
+      "wearerCount": 3,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
@@ -65548,10 +65548,6 @@
         {
           "troop": "mirkwood_woodsman",
           "level": 41
-        },
-        {
-          "troop": "mirkwood_sentinels",
-          "level": 41
         }
       ]
     },
@@ -65567,20 +65563,24 @@
         0
       ],
       "weight": 2.9,
-      "anchorLevel": 46,
+      "anchorLevel": 41,
       "maxLevel": 46,
-      "levelSpan": 0,
-      "wearerCount": 1,
+      "levelSpan": 5,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
-      "tierSource": "roster(L46)",
+      "tierSource": "roster(L41)",
       "target": 50,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "mirkwood_sentinels",
+          "level": 41
+        },
         {
           "troop": "mirkwood_borderwardens",
           "level": 46
@@ -66086,47 +66086,43 @@
       "culture": "mirkwood",
       "slot": "body",
       "name": "[Mirkwood] Infantry Chestplate I",
-      "current": 8,
+      "current": 48,
       "armour": [
         0,
+        48,
         8,
-        0,
-        0
+        19
       ],
       "weight": 5.2,
-      "anchorLevel": 11,
-      "maxLevel": 16,
-      "levelSpan": 5,
-      "wearerCount": 5,
-      "heroWorn": true,
+      "anchorLevel": 36,
+      "maxLevel": 46,
+      "levelSpan": 10,
+      "wearerCount": 4,
+      "heroWorn": false,
       "lordWorn": false,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 8,
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 48,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
         {
-          "troop": "mirkwood_militia_spearman",
-          "level": 11
+          "troop": "mirkwood_recruit",
+          "level": 36
         },
         {
-          "troop": "mirkwood_militia_archer",
-          "level": 11
+          "troop": "mirkwood_recruit_merc",
+          "level": 36
         },
         {
-          "troop": "mirkwood_militia_veteran_spearman",
-          "level": 16
+          "troop": "mirkwood_woodsman",
+          "level": 41
         },
         {
-          "troop": "mirkwood_stalkers_boss",
-          "level": 16
-        },
-        {
-          "troop": "mirkwood_militia_veteran_archer",
-          "level": 16
+          "troop": "mirkwood_glaivesman",
+          "level": 46
         }
       ]
     },
@@ -66142,36 +66138,20 @@
         19
       ],
       "weight": 14.3,
-      "anchorLevel": 36,
+      "anchorLevel": 41,
       "maxLevel": 51,
-      "levelSpan": 15,
-      "wearerCount": 11,
+      "levelSpan": 10,
+      "wearerCount": 5,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
-      "tierSource": "roster(L36)",
+      "tierSource": "roster(L41)",
       "target": 48,
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "mirkwood_recruit",
-          "level": 36
-        },
-        {
-          "troop": "mirkwood_recruit_merc",
-          "level": 36
-        },
-        {
-          "troop": "mirkwood_woodsman",
-          "level": 41
-        },
-        {
-          "troop": "mirkwood_guards",
-          "level": 41
-        },
         {
           "troop": "mirkwood_sentinels",
           "level": 41
@@ -66189,14 +66169,6 @@
           "level": 46
         },
         {
-          "troop": "mirkwood_glaivesman",
-          "level": 46
-        },
-        {
-          "troop": "mirkwood_swordsman",
-          "level": 46
-        },
-        {
           "troop": "mirkwood_thingolheir",
           "level": 51
         }
@@ -66206,35 +66178,35 @@
       "culture": "mirkwood",
       "slot": "body",
       "name": "[Mirkwood] Infantry Chestplate III",
-      "current": 17,
+      "current": 48,
       "armour": [
         0,
-        17,
-        0,
-        0
+        48,
+        8,
+        19
       ],
       "weight": 8.5,
-      "anchorLevel": 16,
-      "maxLevel": 16,
-      "levelSpan": 0,
+      "anchorLevel": 41,
+      "maxLevel": 46,
+      "levelSpan": 5,
       "wearerCount": 2,
-      "heroWorn": true,
+      "heroWorn": false,
       "lordWorn": false,
-      "tier": "medium",
-      "tierSource": "roster(L16)",
-      "target": 17,
+      "tier": "elite",
+      "tierSource": "roster(L41)",
+      "target": 48,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
         {
-          "troop": "mirkwood_militia_veteran_spearman",
-          "level": 16
+          "troop": "mirkwood_guards",
+          "level": 41
         },
         {
-          "troop": "mirkwood_militia_veteran_archer",
-          "level": 16
+          "troop": "mirkwood_swordsman",
+          "level": 46
         }
       ]
     },
@@ -66574,47 +66546,43 @@
       "culture": "mirkwood",
       "slot": "leg",
       "name": "[Mirkwood] Greaves I",
-      "current": 3,
+      "current": 22,
       "armour": [
         0,
         0,
         0,
-        3
+        22
       ],
       "weight": 1.0,
-      "anchorLevel": 11,
-      "maxLevel": 16,
-      "levelSpan": 5,
-      "wearerCount": 5,
-      "heroWorn": true,
+      "anchorLevel": 36,
+      "maxLevel": 46,
+      "levelSpan": 10,
+      "wearerCount": 4,
+      "heroWorn": false,
       "lordWorn": false,
-      "tier": "light",
-      "tierSource": "roster(L11)",
-      "target": 3,
+      "tier": "elite",
+      "tierSource": "roster(L36)",
+      "target": 22,
       "delta": 0,
       "status": "match",
       "line": null,
       "shared": false,
       "wearers": [
         {
-          "troop": "mirkwood_militia_spearman",
-          "level": 11
+          "troop": "mirkwood_recruit",
+          "level": 36
         },
         {
-          "troop": "mirkwood_militia_archer",
-          "level": 11
+          "troop": "mirkwood_recruit_merc",
+          "level": 36
         },
         {
-          "troop": "mirkwood_militia_veteran_spearman",
-          "level": 16
+          "troop": "mirkwood_woodsman",
+          "level": 41
         },
         {
-          "troop": "mirkwood_stalkers_boss",
-          "level": 16
-        },
-        {
-          "troop": "mirkwood_militia_veteran_archer",
-          "level": 16
+          "troop": "mirkwood_glaivesman",
+          "level": 46
         }
       ]
     },
@@ -66630,32 +66598,20 @@
         22
       ],
       "weight": 2.6,
-      "anchorLevel": 36,
+      "anchorLevel": 41,
       "maxLevel": 51,
-      "levelSpan": 15,
-      "wearerCount": 9,
+      "levelSpan": 10,
+      "wearerCount": 5,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
-      "tierSource": "roster(L36)",
+      "tierSource": "roster(L41)",
       "target": 22,
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": true,
+      "shared": false,
       "wearers": [
-        {
-          "troop": "mirkwood_recruit",
-          "level": 36
-        },
-        {
-          "troop": "mirkwood_recruit_merc",
-          "level": 36
-        },
-        {
-          "troop": "mirkwood_woodsman",
-          "level": 41
-        },
         {
           "troop": "mirkwood_sentinels",
           "level": 41
@@ -66670,10 +66626,6 @@
         },
         {
           "troop": "mirkwood_borderwardens",
-          "level": 46
-        },
-        {
-          "troop": "mirkwood_glaivesman",
           "level": 46
         },
         {
@@ -105566,61 +105518,20 @@
         0
       ],
       "weight": 1.4,
-      "anchorLevel": 36,
-      "maxLevel": 41,
-      "levelSpan": 5,
-      "wearerCount": 10,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "elite",
-      "tierSource": "roster(L36)",
-      "target": 26,
-      "delta": 0,
-      "status": "match",
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "lindon_imladris_nobleman",
-          "level": 36
-        },
-        {
-          "troop": "lindon_imladris_marksman",
-          "level": 36
-        },
-        {
-          "troop": "lindon_imladris_guardsman",
-          "level": 36
-        },
-        {
-          "troop": "imladris_nobleman",
-          "level": 36
-        },
-        {
-          "troop": "imladris_marksman",
-          "level": 36
-        },
-        {
-          "troop": "imladris_guardsman",
-          "level": 36
-        },
-        {
-          "troop": "lindon_imladris_blademaster",
-          "level": 41
-        },
-        {
-          "troop": "lindon_battlemaster_of_the_first_age",
-          "level": 41
-        },
-        {
-          "troop": "imladris_blademaster",
-          "level": 41
-        },
-        {
-          "troop": "battlemaster_of_the_first_age",
-          "level": 41
-        }
-      ]
+      "wearers": []
     },
     "rivendell_vambraces_2_silver": {
       "culture": "rivendell",
@@ -105634,53 +105545,20 @@
         0
       ],
       "weight": 1.4,
-      "anchorLevel": 36,
-      "maxLevel": 41,
-      "levelSpan": 5,
-      "wearerCount": 8,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "elite",
-      "tierSource": "roster(L36)",
-      "target": 26,
-      "delta": 0,
-      "status": "match",
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
       "line": null,
       "shared": false,
-      "wearers": [
-        {
-          "troop": "lindon_imladris_nobleman",
-          "level": 36
-        },
-        {
-          "troop": "imladris_nobleman",
-          "level": 36
-        },
-        {
-          "troop": "lindon_imladris_blademaster",
-          "level": 41
-        },
-        {
-          "troop": "lindon_battlemaster_of_the_first_age",
-          "level": 41
-        },
-        {
-          "troop": "lindon_imladris_marchwarden",
-          "level": 41
-        },
-        {
-          "troop": "imladris_blademaster",
-          "level": 41
-        },
-        {
-          "troop": "battlemaster_of_the_first_age",
-          "level": 41
-        },
-        {
-          "troop": "imladris_marchwarden",
-          "level": 41
-        }
-      ]
+      "wearers": []
     },
     "rivendell_vambraces_3_silver": {
       "culture": "rivendell",
@@ -105741,7 +105619,7 @@
       "anchorLevel": 36,
       "maxLevel": 51,
       "levelSpan": 15,
-      "wearerCount": 12,
+      "wearerCount": 22,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
@@ -105753,11 +105631,35 @@
       "shared": true,
       "wearers": [
         {
+          "troop": "lindon_imladris_nobleman",
+          "level": 36
+        },
+        {
+          "troop": "lindon_imladris_marksman",
+          "level": 36
+        },
+        {
+          "troop": "lindon_imladris_guardsman",
+          "level": 36
+        },
+        {
           "troop": "lindon_noble",
           "level": 36
         },
         {
           "troop": "lindon_noble_merc",
+          "level": 36
+        },
+        {
+          "troop": "imladris_nobleman",
+          "level": 36
+        },
+        {
+          "troop": "imladris_marksman",
+          "level": 36
+        },
+        {
+          "troop": "imladris_guardsman",
           "level": 36
         },
         {
@@ -105769,11 +105671,27 @@
           "level": 36
         },
         {
+          "troop": "lindon_imladris_blademaster",
+          "level": 41
+        },
+        {
+          "troop": "lindon_battlemaster_of_the_first_age",
+          "level": 41
+        },
+        {
           "troop": "lindon_imladris_warden",
           "level": 41
         },
         {
           "troop": "lindon_royal_guard",
+          "level": 41
+        },
+        {
+          "troop": "imladris_blademaster",
+          "level": 41
+        },
+        {
+          "troop": "battlemaster_of_the_first_age",
           "level": 41
         },
         {
@@ -105817,7 +105735,7 @@
       "anchorLevel": 36,
       "maxLevel": 51,
       "levelSpan": 15,
-      "wearerCount": 10,
+      "wearerCount": 18,
       "heroWorn": true,
       "lordWorn": true,
       "tier": "elite",
@@ -105829,11 +105747,19 @@
       "shared": true,
       "wearers": [
         {
+          "troop": "lindon_imladris_nobleman",
+          "level": 36
+        },
+        {
           "troop": "lindon_noble",
           "level": 36
         },
         {
           "troop": "lindon_noble_merc",
+          "level": 36
+        },
+        {
+          "troop": "imladris_nobleman",
           "level": 36
         },
         {
@@ -105845,7 +105771,31 @@
           "level": 36
         },
         {
+          "troop": "lindon_imladris_blademaster",
+          "level": 41
+        },
+        {
+          "troop": "lindon_battlemaster_of_the_first_age",
+          "level": 41
+        },
+        {
+          "troop": "lindon_imladris_marchwarden",
+          "level": 41
+        },
+        {
           "troop": "lindon_royal_guard",
+          "level": 41
+        },
+        {
+          "troop": "imladris_blademaster",
+          "level": 41
+        },
+        {
+          "troop": "battlemaster_of_the_first_age",
+          "level": 41
+        },
+        {
+          "troop": "imladris_marchwarden",
           "level": 41
         },
         {
@@ -114577,6 +114527,302 @@
         0,
         0,
         8
+      ],
+      "weight": 1.0,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_lt_mkwd_inf3_chest": {
+      "culture": "mirkwood",
+      "slot": "body",
+      "name": "[Mirkwood] Infantry Chestplate I",
+      "current": 8,
+      "armour": [
+        0,
+        8,
+        0,
+        0
+      ],
+      "weight": 5.2,
+      "anchorLevel": 11,
+      "maxLevel": 11,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "heroWorn": true,
+      "lordWorn": false,
+      "tier": "light",
+      "tierSource": "roster(L11)",
+      "target": 8,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_spearman",
+          "level": 11
+        },
+        {
+          "troop": "mirkwood_militia_archer",
+          "level": 11
+        }
+      ]
+    },
+    "taom_band_md_mkwd_inf3_chest": {
+      "culture": "mirkwood",
+      "slot": "body",
+      "name": "[Mirkwood] Infantry Chestplate I",
+      "current": 17,
+      "armour": [
+        0,
+        17,
+        0,
+        0
+      ],
+      "weight": 5.2,
+      "anchorLevel": 16,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 3,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 17,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_veteran_spearman",
+          "level": 16
+        },
+        {
+          "troop": "mirkwood_stalkers_boss",
+          "level": 16
+        },
+        {
+          "troop": "mirkwood_militia_veteran_archer",
+          "level": 16
+        }
+      ]
+    },
+    "taom_band_hv_mkwd_inf3_chest": {
+      "culture": "mirkwood",
+      "slot": "body",
+      "name": "[Mirkwood] Infantry Chestplate I",
+      "current": 33,
+      "armour": [
+        0,
+        33,
+        6,
+        13
+      ],
+      "weight": 5.2,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_lt_mkwd_inf3_chest_bronze": {
+      "culture": "mirkwood",
+      "slot": "body",
+      "name": "[Mirkwood] Infantry Chestplate III",
+      "current": 8,
+      "armour": [
+        0,
+        8,
+        0,
+        0
+      ],
+      "weight": 8.5,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": true,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_md_mkwd_inf3_chest_bronze": {
+      "culture": "mirkwood",
+      "slot": "body",
+      "name": "[Mirkwood] Infantry Chestplate III",
+      "current": 17,
+      "armour": [
+        0,
+        17,
+        0,
+        0
+      ],
+      "weight": 8.5,
+      "anchorLevel": 16,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 17,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_veteran_spearman",
+          "level": 16
+        },
+        {
+          "troop": "mirkwood_militia_veteran_archer",
+          "level": 16
+        }
+      ]
+    },
+    "taom_band_hv_mkwd_inf3_chest_bronze": {
+      "culture": "mirkwood",
+      "slot": "body",
+      "name": "[Mirkwood] Infantry Chestplate III",
+      "current": 33,
+      "armour": [
+        0,
+        33,
+        6,
+        13
+      ],
+      "weight": 8.5,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "unworn",
+      "line": null,
+      "shared": false,
+      "wearers": []
+    },
+    "taom_band_lt_mkwd_inf3_greaves": {
+      "culture": "mirkwood",
+      "slot": "leg",
+      "name": "[Mirkwood] Greaves I",
+      "current": 3,
+      "armour": [
+        0,
+        0,
+        0,
+        3
+      ],
+      "weight": 1.0,
+      "anchorLevel": 11,
+      "maxLevel": 11,
+      "levelSpan": 0,
+      "wearerCount": 2,
+      "heroWorn": true,
+      "lordWorn": false,
+      "tier": "light",
+      "tierSource": "roster(L11)",
+      "target": 3,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_spearman",
+          "level": 11
+        },
+        {
+          "troop": "mirkwood_militia_archer",
+          "level": 11
+        }
+      ]
+    },
+    "taom_band_md_mkwd_inf3_greaves": {
+      "culture": "mirkwood",
+      "slot": "leg",
+      "name": "[Mirkwood] Greaves I",
+      "current": 8,
+      "armour": [
+        0,
+        0,
+        0,
+        8
+      ],
+      "weight": 1.0,
+      "anchorLevel": 16,
+      "maxLevel": 16,
+      "levelSpan": 0,
+      "wearerCount": 3,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": "medium",
+      "tierSource": "roster(L16)",
+      "target": 8,
+      "delta": 0,
+      "status": "match",
+      "line": null,
+      "shared": false,
+      "wearers": [
+        {
+          "troop": "mirkwood_militia_veteran_spearman",
+          "level": 16
+        },
+        {
+          "troop": "mirkwood_stalkers_boss",
+          "level": 16
+        },
+        {
+          "troop": "mirkwood_militia_veteran_archer",
+          "level": 16
+        }
+      ]
+    },
+    "taom_band_hv_mkwd_inf3_greaves": {
+      "culture": "mirkwood",
+      "slot": "leg",
+      "name": "[Mirkwood] Greaves I",
+      "current": 15,
+      "armour": [
+        0,
+        0,
+        0,
+        15
       ],
       "weight": 1.0,
       "anchorLevel": null,

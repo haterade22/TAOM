@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
@@ -122,7 +123,7 @@ public class StarterKitCoverageTests
                 if (!PlayerSlots.Contains(slot)) continue;
                 var id = CultureDataFixture.StripPrefix((string?)eq.Attribute("id") ?? "");
                 checkedSlots++;
-                if (own == null || !own.Contains(id))
+                if (own == null || !own.Contains(BandCloneSource(id)))
                     violations.Add($"{file}: {roster.Attribute("id")?.Value} {slot} {id} (no {source} troop carries it)");
             }
         }
@@ -176,6 +177,24 @@ public class StarterKitCoverageTests
         }
     }
 
+    [TestMethod]
+    public void BandCloneSource_ReadsAClonesSource_AndLeavesAnyOtherIdAlone()
+    {
+        Assert.AreEqual("mkwd_inf3_chest", BandCloneSource("taom_band_lt_mkwd_inf3_chest"));
+        Assert.AreEqual("sk_x_chest_a", BandCloneSource("taom_band_hv_sk_x_chest_a"));
+        Assert.AreEqual("taom_band_xx_p", BandCloneSource("taom_band_xx_p"));
+        Assert.AreEqual("mkwd_inf3_chest", BandCloneSource("mkwd_inf3_chest"));
+    }
+
+    private static readonly Regex BandCloneId = new Regex("^taom_band_(lt|md|hv)_(.+)$");
+
+    /// <summary>The source of an armour band clone id, else the id: generate_career_kits.index_troop_gear reads a clone this way (rebalance_armor.band_clone_parts).</summary>
+    private static string BandCloneSource(string id)
+    {
+        var m = BandCloneId.Match(id);
+        return m.Success ? m.Groups[2].Value : id;
+    }
+
     private static Dictionary<string, string> PlaceholderDonors()
     {
         var spec = Path.GetFullPath(Path.Combine(ModuleDataPath, "..", "..", "..", "tools", "placeholder_weapons.json"));
@@ -207,7 +226,7 @@ public class StarterKitCoverageTests
             foreach (var eq in entries)
             {
                 var id = CultureDataFixture.StripPrefix((string?)eq.Attribute("id") ?? "");
-                items.Add(donorOf.TryGetValue(id, out var donor) ? donor : id);
+                items.Add(BandCloneSource(donorOf.TryGetValue(id, out var donor) ? donor : id));
             }
         }
         return byCulture;
