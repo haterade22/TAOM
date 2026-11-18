@@ -146,6 +146,100 @@ public class GameVersionCheckTests
         StringAssert.StartsWith(GameVersionCheck.Text(Pin, null, 1, 4, 8, taomSkipped: true), "This TAOM is made for Bannerlord v1.5.7, but your game is v1.4.8.");
     }
 
+    [TestMethod]
+    public void LoadErrorHint_WrongVersion_NamesTheCause_BothVersions_AndTheSteamStep()
+    {
+        var hint = GameVersionCheck.LoadErrorHint(Pin, "v2.0.40", 1, 5, 6);
+
+        StringAssert.StartsWith(hint, "This error is usually caused by the wrong Bannerlord version.");
+        StringAssert.Contains(hint, "This TAOM (v2.0.40) is made for Bannerlord v1.5.7, but your game is v1.5.6.");
+        StringAssert.Contains(hint, "Properties, then Betas, and pick v1.5.7");
+        AssertHintStyle(hint);
+    }
+
+    [TestMethod]
+    public void LoadErrorHint_RightVersion_PointsAtAMismatchedTaomInstall_NotTheGame()
+    {
+        // The engine box can still show on the right game version: a stale TAOM.Dependencies (#371) or a mixed install.
+        var hint = GameVersionCheck.LoadErrorHint(Pin, "v2.0.40", 1, 5, 7);
+
+        StringAssert.StartsWith(hint, "This error is usually caused by the wrong Bannerlord version.");
+        StringAssert.Contains(hint, "Your game is v1.5.7, the version this TAOM (v2.0.40) is made for");
+        StringAssert.Contains(hint, "TAOM launcher");
+        Assert.IsFalse(hint.Contains("Betas"), "the game version is right: do not send the player to change it");
+        AssertHintStyle(hint);
+    }
+
+    [TestMethod]
+    public void LoadErrorHint_PinOrGameVersionUnknown_StillNamesTheCause_WithoutInventedVersions()
+    {
+        foreach (var hint in new[]
+                 {
+                     GameVersionCheck.LoadErrorHint(null, null, 1, 5, 6),
+                     GameVersionCheck.LoadErrorHint(Pin, null, 0, 0, 0),
+                 })
+        {
+            StringAssert.StartsWith(hint, "This error is usually caused by the wrong Bannerlord version.");
+            Assert.IsFalse(hint.Contains("your game is v"), hint);
+            Assert.IsFalse(hint.Contains("v0."), hint);
+            AssertHintStyle(hint);
+        }
+        StringAssert.Contains(GameVersionCheck.LoadErrorHint(Pin, null, 0, 0, 0), "This TAOM is made for Bannerlord v1.5.7.");
+    }
+
+    private static void AssertHintStyle(string hint)
+    {
+        Assert.IsFalse(hint.Contains("{="), "no language key: the engine box shows before TAOM's strings matter");
+        Assert.IsFalse(hint.Contains("—") || hint.Contains("–"), "no em or en dash");
+        Assert.IsFalse(hint.Contains("\n"), "one paragraph: the postfix adds the line breaks");
+    }
+
+    [TestMethod]
+    public void Notice_InstallsTheLoadErrorHint_AfterTheSkips_BeforeTheMismatchReturn()
+    {
+        var run = Body(RepoPaths.ReadSource("Dependencies/GameVersionNotice.cs", stripComments: true), "private static void Run()");
+        int kit = run.IndexOf("IncompatibleModDetector.IsEditorBin(", StringComparison.Ordinal);
+        int hint = run.IndexOf("LoadErrorHint.TryInstall(", StringComparison.Ordinal);
+        int mismatch = run.IndexOf("if (match != GameVersionMatch.Mismatch) return;", StringComparison.Ordinal);
+        Assert.IsTrue(kit >= 0 && hint > kit && mismatch > hint,
+            "the hint is for every client start (Match and Unknown too), never the server or the Kit");
+    }
+
+    [TestMethod]
+    public void LoadErrorHint_Postfix_AppendsOnlyForTaomAndItsDependents_AndNeverThrows()
+    {
+        var source = RepoPaths.ReadSource("Dependencies/LoadErrorHint.cs", stripComments: true);
+        var install = Body(source, "internal static void TryInstall(");
+        // The same owners as the guard's skip list, so a module the guard turns off never gets a box of its own.
+        StringAssert.Contains(install, "GameVersionNotice.OwnerModules(modules)");
+        StringAssert.Contains(install, "\"GetAssemblyLoadResultsMessage\"");
+        StringAssert.Contains(install, "catch (Exception");
+
+        var postfix = Body(source, "private static void AppendHint(");
+        StringAssert.Contains(postfix, "!_owners.Contains(module.Id)) return;");
+        // The engine joins one message per failed submodule into one box (Module.cs:1144); TAOM.Client fails with
+        // TAOM.dll, so without this the paragraph shows twice.
+        StringAssert.Contains(postfix, "_appended) return;");
+        StringAssert.Contains(postfix, "_appended = true;");
+        StringAssert.Contains(postfix, "catch (Exception");
+    }
+
+    [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void LoadErrorHint_Target_BindsOnTheReferencedEngine_WithThePostfixShape()
+    {
+        var target = typeof(TaleWorlds.MountAndBlade.Module).GetMethod("GetAssemblyLoadResultsMessage",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+        Assert.IsNotNull(target, "Module.GetAssemblyLoadResultsMessage is gone: the engine box shows without the hint");
+        Assert.AreEqual(typeof(string), target!.ReturnType);
+        var p = target.GetParameters();
+        Assert.AreEqual(typeof(TaleWorlds.ModuleManager.ModuleInfo), p[0].ParameterType);
+        Assert.AreEqual("module", p[0].Name, "the postfix binds the argument by this name");
+        // A method with a try region is never inlined into HandleSubmoduleLoadError, so the detour is reached.
+        Assert.IsTrue(target.GetMethodBody()!.ExceptionHandlingClauses.Count > 0, "foreach over the result list keeps a try/finally");
+    }
+
     private static void AssertFixesAndStyle(string text)
     {
         StringAssert.Contains(text, "Properties, then Betas, and pick v1.5.7");
@@ -194,7 +288,9 @@ public class GameVersionCheckTests
     {
         var source = RepoPaths.ReadSource("Dependencies/GameVersionNotice.cs", stripComments: true);
         var install = Body(source, "private static bool TrySkipTaomCode(");
-        StringAssert.Contains(install, "IsTaom(m.Id) || m.DependedModules.Any(d => IsTaom(d.ModuleId))");
+        StringAssert.Contains(install, "OwnerModules(modules)");
+        // OwnerModules is expression-bodied, so Body() (brace matching) can't cut it.
+        StringAssert.Contains(source, "internal static List<ModuleInfo> OwnerModules(List<ModuleInfo> modules) =>\n        modules.Where(m => IsTaom(m.Id) || m.DependedModules.Any(d => IsTaom(d.ModuleId))).ToList();");
         StringAssert.Contains(install, "nameof(Module.CheckIfSubmoduleCanBeLoadable)");
 
         var prefix = Body(source, "private static bool SkipTaomSubModule(");

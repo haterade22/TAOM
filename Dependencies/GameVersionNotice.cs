@@ -87,6 +87,7 @@ internal static class GameVersionNotice
         int major = VersionProbe.Major, minor = VersionProbe.Minor, revision = VersionProbe.Revision;
         var match = GameVersionCheck.Evaluate(pin, major, minor, revision);
         DiagLog.Log(Tag, $"game v{major}.{minor}.{revision}, TAOM {taomVersion ?? "?"} pins Native {pin ?? "?"}: {match}");
+        LoadErrorHint.TryInstall(modules, pin, taomVersion, major, minor, revision, HarmonyId);
         if (match != GameVersionMatch.Mismatch) return;
 
         EarlyLog.Error($"[TAOM.Dependencies] Wrong Bannerlord version: game v{major}.{minor}.{revision}, TAOM is made for {pin}");
@@ -104,11 +105,15 @@ internal static class GameVersionNotice
     private static bool IsTaom(string id) =>
         string.Equals(id, MissingTaomCheck.TaomModuleId, StringComparison.OrdinalIgnoreCase);
 
+    /// <summary>TAOM and every module that depends on it: the guard's skip list and <see cref="LoadErrorHint"/>'s owners.</summary>
+    internal static List<ModuleInfo> OwnerModules(List<ModuleInfo> modules) =>
+        modules.Where(m => IsTaom(m.Id) || m.DependedModules.Any(d => IsTaom(d.ModuleId))).ToList();
+
     private static bool TrySkipTaomCode(List<ModuleInfo> modules)
     {
         try
         {
-            var owners = modules.Where(m => IsTaom(m.Id) || m.DependedModules.Any(d => IsTaom(d.ModuleId))).ToList();
+            var owners = OwnerModules(modules);
             _skipped = new HashSet<SubModuleInfo>(owners.SelectMany(m => m.SubModules));
             var target = AccessTools.Method(typeof(Module), nameof(Module.CheckIfSubmoduleCanBeLoadable));
             if (target == null || _skipped.Count == 0)
