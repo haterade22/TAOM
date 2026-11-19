@@ -177,7 +177,8 @@ public class SpecialResourcePrisonerRecruitGateTests
     [TestMethod]
     public void GetRecruitCost_RowsWithAndWithoutARecruitCost_ReturnTheCostOrZero()
     {
-        var hook = new PartyUpgradeResourceCheckHook(_service, _config);
+        var hook = new PartyUpgradeResourceCheckHook(_service, _config,
+            Substitute.For<TAOM.Features.CoopInterop.ICoopSessionProvider>());
 
         Assert.AreEqual(50, hook.GetRecruitCost(Troll));
         Assert.AreEqual(0, hook.GetRecruitCost(Captain));

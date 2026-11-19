@@ -230,7 +230,8 @@ public class SpecialResourceGoldOnlyTests
     [TestMethod]
     public void GetUpgradeCost_GoldOn_ReturnsZero()
     {
-        var hook = new PartyUpgradeResourceCheckHook(_service, _provider);
+        var hook = new PartyUpgradeResourceCheckHook(_service, _provider,
+            Substitute.For<TAOM.Features.CoopInterop.ICoopSessionProvider>());
         Assert.AreEqual(5, hook.GetUpgradeCost(Elite));
 
         GoldOn();
