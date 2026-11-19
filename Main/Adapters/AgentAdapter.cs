@@ -69,13 +69,19 @@ public class AgentAdapter : IAgentAdapter
     public int Health => (int)(_agent?.Health ?? 0f);
     public AgentState State => _agent?.State ?? AgentState.Killed;
 
+    // Each agent's side is its own team or, for a mount, which the engine never gives a team, its last
+    // rider's (MountRiderSides, #594). A side either agent lacks is never "the same".
     public bool IsSameTeam(IAgentAdapter other)
     {
         if (other is not AgentAdapter otherImpl) return false;
         var otherAgent = otherImpl.GetUnderlyingAgent();
         if (_agent == null || otherAgent == null) return false;
-        return _agent.Team != null && otherAgent.Team != null && _agent.Team == otherAgent.Team;
+        Team? mine = MountRiderSides.SideOf(_agent);
+        Team? theirs = MountRiderSides.SideOf(otherAgent);
+        return mine != null && theirs != null && mine == theirs;
     }
+
+    public bool HasKnownSide => MountRiderSides.SideOf(_agent) != null;
 
     public int GetBaseArmorEffectivenessForBodyPart(BoneBodyPartType bodyPart) =>
         (int)(_agent?.GetBaseArmorEffectivenessForBodyPart(bodyPart) ?? 0f);

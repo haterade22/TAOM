@@ -188,8 +188,8 @@ internal static class CreatureBanditDiag
 
     /// <summary>
     /// Main thread (the attack task). One line per attack while the budget lasts; every attack counted. A whiff is an
-    /// evaluated strike with an enemy in the arc and nothing struck; allies in the arc are counted apart, since the
-    /// team check skips them by design.
+    /// evaluated strike with an enemy in the arc and nothing struck; the agents the side rule spares (allies, and a
+    /// loose mount of unknown side) are counted apart, since the strike skips them by design.
     /// </summary>
     internal static void NoteAttack(Agent creature, string kind, string clip, int inArc, int alliesInArc, int struck,
         int maxTargets, float velocityY, float bearing, float time)

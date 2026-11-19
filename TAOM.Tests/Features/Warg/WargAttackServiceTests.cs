@@ -193,6 +193,76 @@ public class WargAttackServiceTests
         victimMount.DidNotReceive().GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>());
     }
 
+    private static IAgentAdapter LooseMount()
+    {
+        var mount = Substitute.For<IAgentAdapter>();
+        mount.IsActive().Returns(true);
+        mount.IsFadingOut().Returns(false);
+        mount.State.Returns(AgentState.Active);
+        mount.IsMount.Returns(true);
+        mount.HasMount.Returns(false);
+        mount.RiderAgent.Returns((IAgentAdapter)null);
+        return mount;
+    }
+
+    [TestMethod]
+    public void HandleWargTargetHit_LooseMountOfUnknownSide_DoesNotDamage()
+    {
+        // #594: a riderless mount nobody ever rode has no side; the ridden warg spares it.
+        var attacker = Substitute.For<IAgentAdapter>();
+        var attackerRider = Substitute.For<IAgentAdapter>();
+        attacker.RiderAgent.Returns(attackerRider);
+        var target = LooseMount();
+        attackerRider.IsSameTeam(target).Returns(false);   // what AgentAdapter answers for a teamless mount
+
+        _sut.HandleWargTargetHit(attacker, target, 0);
+
+        target.DidNotReceive().GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>());
+    }
+
+    [TestMethod]
+    public void HandleWargTargetHit_RiderlessWargAndLooseMountOfUnknownSide_DoesNotDamage()
+    {
+        // A riderless warg compares no team with soldiers, but a mount of unknown side is still spared (#594).
+        var attacker = RiderlessAttacker();
+        attacker.Health.Returns(100);
+        var target = LooseMount();
+
+        _sut.HandleWargTargetHit(attacker, target, 0);
+
+        target.DidNotReceive().GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>());
+    }
+
+    [TestMethod]
+    public void HandleWargTargetHit_LooseMountOnTheRidersSide_DoesNotDamage()
+    {
+        var attacker = Substitute.For<IAgentAdapter>();
+        var attackerRider = Substitute.For<IAgentAdapter>();
+        attacker.RiderAgent.Returns(attackerRider);
+        var target = LooseMount();
+        target.HasKnownSide.Returns(true);
+        attackerRider.IsSameTeam(target).Returns(true);
+
+        _sut.HandleWargTargetHit(attacker, target, 0);
+
+        target.DidNotReceive().GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>());
+    }
+
+    [TestMethod]
+    public void HandleWargTargetHit_LooseMountOfTheOtherSide_Damages()
+    {
+        var attacker = Substitute.For<IAgentAdapter>();
+        var attackerRider = Substitute.For<IAgentAdapter>();
+        attacker.RiderAgent.Returns(attackerRider);
+        var target = LooseMount();
+        target.HasKnownSide.Returns(true);
+        attackerRider.IsSameTeam(target).Returns(false);
+
+        _sut.HandleWargTargetHit(attacker, target, 0);
+
+        target.Received(1).GetBaseArmorEffectivenessForBodyPart(BoneBodyPartType.Chest);
+    }
+
     [TestMethod]
     public void HandleWargTargetHit_KilledTargetState_DoesNotDamage()
     {
