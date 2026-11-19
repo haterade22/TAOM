@@ -5758,6 +5758,19 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 - **In-game:** #1163 owed (`triage-needs-ingame`). #1155 only keeps a stack trace: not applicable.
 - **Metrics:** not recomputed here.
 
+## Review (number assigned at merge): plan 055, enlistment redirect in the grace window inside a settlement (#511), deep review with two lenses, Codex not run (2026-11-18)
+
+- **Scope:** `c63dbb0ce..169b8bc72` on `improve/055-enlistment-redirect-outside-attached` (#511): `TryRedirectMenu` now also redirects in `CommanderUnavailable` while the player is inside a settlement with no `PlayerEncounter`, so the `town_outside` and `castle_outside` pushes that throw at init are masked in the grace window. 24 new test results; three comment edits; three docs.
+- **Codex:** not run (out of usage since 2026-11-15); the two lens reports stand in for it.
+- **Lenses:** Engine compatibility and Data flow (tier 1, campaign menus; Standards, Efficiency, Completeness and Design skipped by tier). 0 CRITICAL, 0 HIGH, 0 MEDIUM in the changed code; 1 LOW doc wording and 1 citation nit, applied as doc text. 4 FOLLOW-UP notes: the siege menus that flow in both states (UNVERIFIED), the settlement's own battle masked in grace (verified by the lead as crash removal: both `encounter` and `join_encounter` inits dereference `PlayerEncounter.Current`), stale "#510 every settlement placement opens an encounter" comments, and the "while attached" log wording. 0 false positives.
+- **Report:** `docs/reviews/deep-review-055-enlistment-redirect-outside-attached-2026-11-18.md`. No RCA: no confirmed defect.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| - | None in the changed code | - | - | - |
+
+- **In-game:** owed on #511 (no game run in this review).
+
 ## Review (number assigned at merge): plan 056, off-thread agent removals in MissionDiagnosticBehavior (#607), tier-1 deep review (Lens 2, Lens 5), Codex not run (2026-11-18)
 
 - **Scope:** `c63dbb0ce..a531bea73` on `improve/056-agent-removed-off-thread-guards`: `PendingAgentReads.RemoveOrDefer`, the behavior's main-thread mark and its two drop callbacks, two new test files and the feature doc.

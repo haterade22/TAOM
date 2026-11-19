@@ -17,6 +17,7 @@ public class EnlistmentMenuServiceTests
     private IEncounterAdapter _encounter = null!;
     private IEnlistmentContentConfigProvider _contentConfig = null!;
     private SitOutLedger _ledger = null!;
+    private IMobilePartyAttachmentAdapter _attachment = null!;
 
     [TestInitialize]
     public void Setup()
@@ -27,7 +28,8 @@ public class EnlistmentMenuServiceTests
         _contentConfig = Substitute.For<IEnlistmentContentConfigProvider>();
         _contentConfig.GetConfig().Returns(EnlistmentContentConfigProvider.BuildDefaults());
         _ledger = new SitOutLedger();
-        _service = new EnlistmentMenuService(_store, new EnlistmentConfigProvider(), Substitute.For<IMobilePartyAttachmentAdapter>(), _encounter, _contentConfig, _ledger, _logger);
+        _attachment = Substitute.For<IMobilePartyAttachmentAdapter>();
+        _service = new EnlistmentMenuService(_store, new EnlistmentConfigProvider(), _attachment, _encounter, _contentConfig, _ledger, _logger);
     }
 
     [TestMethod]
@@ -281,7 +283,8 @@ public class EnlistmentMenuServiceTests
     public void TryRedirect_NonAttachedServiceStates_NeverRedirect(EnlistmentState state)
     {
         // EnlistedBattle: the battle service transitions BEFORE pushing encounter menus,
-        // so battle menus flow through. Duty/captive/grace: the player roams free.
+        // so battle menus flow through. Duty, captivity, and grace outside a settlement: the
+        // player's menus flow. Grace inside a settlement with no encounter is #511, pinned below.
         MakeEnlisted(state);
 
         Assert.IsFalse(_service.TryRedirectMenu("encounter", out _));
@@ -420,5 +423,136 @@ public class EnlistmentMenuServiceTests
 
         Assert.IsTrue(_service.TryRedirectMenu(menuId, out var redirected));
         Assert.AreEqual(EnlistmentMenuService.ServiceWaitMenuId, redirected);
+    }
+
+    // ---- the commander-lost grace window inside a settlement (#511) ----
+
+    private void PlaceInsideSettlement(bool inMapEvent = false, bool hasPlayerEncounter = false) =>
+        _attachment.GetPresenceFlags().Returns(new PlayerPresenceFlags(
+            mainPartyExists: true, isActive: true, isVisible: true,
+            isInMapEvent: inMapEvent, hasPlayerEncounter: hasPlayerEncounter, settlementId: "town_A1"));
+
+    [DataTestMethod]
+    [DataRow("town_outside")]
+    [DataRow("castle_outside")]
+    [DataRow("naval_town_outside")]
+    [DataRow("town")]
+    [DataRow("castle")]
+    [DataRow("village")]
+    public void TryRedirectMenu_CommanderUnavailableInsideSettlement_RedirectsToWaitMenu(string menuId)
+    {
+        // The follow path placed the player with EnterSettlementAction alone, so there is no
+        // PlayerEncounter. Campaign.Tick pushes town_outside or castle_outside for that shape, and
+        // both read PlayerEncounter.EncounterSettlement.Name at init. Losing the commander must not
+        // lift the mask while the player still stands inside.
+        MakeEnlisted(EnlistmentState.CommanderUnavailable);
+        PlaceInsideSettlement();
+
+        Assert.IsTrue(_service.TryRedirectMenu(menuId, out var redirected),
+            $"'{menuId}' must redirect in the grace window inside a settlement");
+        Assert.AreEqual(EnlistmentMenuService.ServiceWaitMenuId, redirected);
+    }
+
+    [DataTestMethod]
+    [DataRow("town_outside")]
+    [DataRow("castle_outside")]
+    [DataRow("naval_town_outside")]
+    [DataRow("town")]
+    [DataRow("castle")]
+    [DataRow("village")]
+    public void TryRedirectMenu_CommanderUnavailableInsideSettlementWithEncounter_NeverRedirects(string menuId)
+    {
+        // A grace player is loose on the map and may walk into a town himself. Vanilla
+        // StartSettlementEncounter starts a PlayerEncounter first, and PlayerEncounter.Init enters
+        // the settlement before it activates town_outside, so that push arrives inside WITH an
+        // encounter. Its menus are safe; masking them would hold him in the wait menu.
+        MakeEnlisted(EnlistmentState.CommanderUnavailable);
+        PlaceInsideSettlement(hasPlayerEncounter: true);
+
+        Assert.IsFalse(_service.TryRedirectMenu(menuId, out var redirected),
+            $"'{menuId}' must flow for a grace player who entered with his own encounter");
+        Assert.IsNull(redirected);
+    }
+
+    [DataTestMethod]
+    [DataRow("town_outside")]
+    [DataRow("castle_outside")]
+    [DataRow("town")]
+    [DataRow("encounter")]
+    [DataRow("army_wait")]
+    public void TryRedirectMenu_CommanderUnavailableOutsideSettlement_NeverRedirects(string menuId)
+    {
+        // Outside a settlement the grace window keeps its old behaviour: every menu flows.
+        MakeEnlisted(EnlistmentState.CommanderUnavailable);
+        _attachment.GetPresenceFlags().Returns(new PlayerPresenceFlags(
+            mainPartyExists: true, isActive: true, isVisible: true));
+
+        Assert.IsFalse(_service.TryRedirectMenu(menuId, out var redirected));
+        Assert.IsNull(redirected);
+    }
+
+    [DataTestMethod]
+    [DataRow("encounter")]
+    [DataRow("join_encounter")]
+    public void TryRedirectMenu_CommanderUnavailableInsideSettlementInMapEvent_LetsBattleMenusThrough(string menuId)
+    {
+        // The battle exception outranks the grace mask: the encounter menu is the only thing that
+        // advances the player's own map event.
+        MakeEnlisted(EnlistmentState.CommanderUnavailable);
+        PlaceInsideSettlement(inMapEvent: true);
+
+        Assert.IsFalse(_service.TryRedirectMenu(menuId, out _));
+    }
+
+    [DataTestMethod]
+    [DataRow("town")]
+    [DataRow("castle")]
+    [DataRow("village")]
+    public void TryRedirectMenu_CommanderUnavailableOnShoreLeaveInsideSettlement_SettlementMenusPassThrough(string menuId)
+    {
+        // The shore-leave exception outranks the grace mask too. No encounter is set here, so the
+        // grace gate is armed and only the exception can let these menus through.
+        MakeEnlisted(EnlistmentState.CommanderUnavailable);
+        _store.Record.OnTownLeave = true;
+        PlaceInsideSettlement();
+
+        Assert.IsFalse(_service.TryRedirectMenu(menuId, out _));
+    }
+
+    [TestMethod]
+    public void TryRedirectMenu_OtherNonAttachedStatesInsideSettlement_NeverRedirect()
+    {
+        // Narrow on purpose: not widened to IsEnlisted. Battle needs its menus, captivity is
+        // vanilla's, and a discharge builds its own settlement encounter.
+        PlaceInsideSettlement();
+        foreach (EnlistmentState state in System.Enum.GetValues(typeof(EnlistmentState)))
+        {
+            if (state == EnlistmentState.EnlistedAttached || state == EnlistmentState.CommanderUnavailable)
+                continue;
+
+            MakeEnlisted(state);
+
+            Assert.IsFalse(_service.TryRedirectMenu("town_outside", out _), $"state {state} must not redirect town_outside");
+            Assert.IsFalse(_service.TryRedirectMenu("town", out _), $"state {state} must not redirect town");
+        }
+    }
+
+    [TestMethod]
+    public void TryRedirectMenu_EveryStateButCommanderUnavailable_DoesNotReadPresenceForANonBattleMenu()
+    {
+        // Hot path: the SetNextMenu prefix runs on every menu change. Only the grace window pays
+        // for a presence read on a non-battle menu.
+        foreach (EnlistmentState state in System.Enum.GetValues(typeof(EnlistmentState)))
+        {
+            if (state == EnlistmentState.CommanderUnavailable)
+                continue;
+
+            MakeEnlisted(state);
+            _attachment.ClearReceivedCalls();
+
+            _service.TryRedirectMenu("town_outside", out _);
+
+            _attachment.DidNotReceive().GetPresenceFlags();
+        }
     }
 }

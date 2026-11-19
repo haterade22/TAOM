@@ -2729,7 +2729,7 @@ class Validator:
         return issues
 
     # -- ARMOUR_COLOUR_CLASH ------------------------------------------------- #
-    # A battle set that puts a silver piece beside a gold or bronze one looks wrong. Families come from
+    # A battle set that puts two metals (gold, bronze, silver) side by side looks wrong. Families come from
     # tools/data/armour_colour_families.json (tools/scan_armour_colours.py); the clash rule is its clashes().
     # One warning per troop of troops_*.xml, at its first clashing set. A warning: the table is a measure of
     # the art.
@@ -2762,7 +2762,7 @@ class Validator:
                 severity=Severity.WARNING, code="ARMOUR_COLOUR_CLASH",
                 file=rec["file"], line=rec["line"], entry_id=tid,
                 message=(
-                    f'{len(hits)} battle set(s) mix silver with gold or bronze armour; set {i}: '
+                    f'{len(hits)} battle set(s) mix two metals (gold, bronze, silver); set {i}: '
                     f'{a} {st[a]} ({sac.family_of(st[a], colours)}) beside {b} {st[b]} ({sac.family_of(st[b], colours)}). Swap a piece '
                     f"for one in the set's colour; a piece the measure reads wrong goes in "
                     f'tools/armour_colour_overrides.json, then python tools/scan_armour_colours.py --apply'

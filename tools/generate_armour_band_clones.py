@@ -83,9 +83,10 @@ WHAT IT WRITES (the unversioned Armory is only read)
       named_companions, equipmentsets/*.xml (the enlistment file too: generate_enlistment_rosters.py
       applies the same rule as it renders, kit_at_rank). Only the id in the slot changes.
 A clone is never dropped: one the plan no longer needs stays in the file as `retired` (a save or a mod
-that names it keeps the item), and its wearers go back to the source. The career tool reads a clone as its
-source and gives a source its light clone (generate_career_kits.career_armour); the class table classes every
-clone `named`.
+that names it keeps the item), and its wearers go back to the source. A shipped source no low battle troop
+wears any more, but a kit below the elite band still does, stays cloned at that kit's band (kept_sources).
+The career tool reads a clone as its source and gives a source its light clone
+(generate_career_kits.career_armour); the class table classes every clone `named`.
 
 THE UPGRADE RECORD (review 2026-11-18)
 --------------------------------------
@@ -151,7 +152,9 @@ DESCRIPTION = [
     "wear in battle. clones: source -> the bands of its low wearers, which wear taom_band_<lt|md|hv>_<source>.",
     "upgrades: source -> the stronger piece its level 36+ wearers (troops) wear instead. fallback: B pieces",
     "(upgrade by the classifier) that found no stronger piece and are cloned instead. retired: clones no set",
-    "wears any more, kept in the clone file. Do not edit by hand: --apply rewrites it from the rosters, and",
+    "wears any more, kept in the clone file. A source no low battle troop wears any more, but a kit below the",
+    "elite band still does, keeps its clones (kept); a shipped upgrade stays unless it clashes (held). Do not edit by hand: --apply",
+    "rewrites it from the rosters, and",
     "--check fails when it is stale. docs/features/armor-balance.md.",
 ]
 
@@ -1031,6 +1034,30 @@ def shipped_clone_ids(spec, text):
     return set(clone_table(spec).values()) | set(spec.get("retired", [])) | set(item_blocks(text))
 
 
+def kept_sources(shipped_clones, scope, bands, live, low_anchor):
+    """The sources of the shipped spec (clone sources and upgrade sources: `shipped_clones` is any iterable of
+    their ids) that left the scope, that no battle troop of level 30 or lower wears (`low_anchor`,
+    lowest_anchor), but that another set below the elite band still wears (`bands`, wearer_bands), live in the
+    Armory read: each stays cloned at those bands, so that set keeps a clone of its band and never goes back to
+    the elite source (the Mirkwood militia left the bronze pieces, 2026-11-18, and the villager and wanderer
+    kits still wore them). A source a low battle troop still wears is not kept: the restat prices it at that
+    troop's band, and its clones retire."""
+    return sorted(src for src in shipped_clones
+                  if src not in scope and bands.get(src) and low_anchor.get(src, 99) > 30 and src in live)
+
+
+def held_upgrades(shipped_upgrades, scope, low_anchor, live, clash):
+    """{source: {to, troops}} for each shipped upgrade whose source left the scope because no battle troop of
+    level 30 or lower wears it any more (`low_anchor`, lowest_anchor): the upgrade stays, so its top wearers keep
+    the replacement they already wear, unless the replacement now clashes in colour with a top wearer's set
+    (`clash(source, row)` returns the clash, colour_clash) or a piece left the Armory read (2026-11-18: the
+    Mirkwood recruits and sentinels keep their T3 helmets when the militia leave the T1 and T2 helmets). A held
+    source is no clone source: a kit below the elite band wears it raw at its low price, as before."""
+    return {src: {"to": row["to"], "troops": row["troops"]} for src, row in sorted(shipped_upgrades.items())
+            if src not in scope and low_anchor.get(src, 99) > 30
+            and src in live and row["to"] in live and not clash(src, row)}
+
+
 def retired_blocks(old_text, shipped, planned):
     """[(clone id, comment, item xml)] for each shipped clone the plan no longer has, its block as the file holds
     it: a shipped id is never dropped (a save or a mod that names it would find the slot empty, review
@@ -1106,7 +1133,7 @@ def build(armory_items, game_modules):
     militia = frozenset(rb.militia_troop_ids())
     colours = colour_table(sources)
     # Every set that names a piece in scope or a clone, troop files included: a clone covers the band of each.
-    worn = scan_wearers(set(scope) | set(shipped["clones"]))
+    worn = scan_wearers(set(scope) | set(shipped["clones"]) | set(shipped["upgrades"]))
     bands = wearer_bands(worn)
     clones, upgrades, fallback, pieces, swapped, picks = {}, {}, [], [], {}, {}
     # The B picks, in id order; then each piece that found none is judged again against the whole plan until a
@@ -1120,11 +1147,24 @@ def build(armory_items, game_modules):
                 swapped.setdefault(t, {})[src] = picks[src][0]
         still = [src for src in pending if not picks[src][0]]
         pending = still if len(still) < len(pending) else []
-    for src in sorted(scope):
-        me, rec = sources[src], scope[src]
-        kind = treatment(src, me["name"])
+    held = held_upgrades(shipped["upgrades"], scope, low_anchor, sources, lambda src, row: next(
+        (c for t in row["troops"] if t in campaign
+         for c in [colour_clash(row["to"], src, campaign[t]["sets"], colours)] if c), None))
+    kept = kept_sources((set(shipped["clones"]) | set(shipped["upgrades"])) - set(held), scope, bands, sources,
+                        low_anchor)
+    for src in sorted(set(scope) | set(kept) | set(held)):
+        me, rec = sources[src], scope.get(src, {"top": [], "low": {}})
+        kind = "kept" if src in kept else "held" if src in held else treatment(src, me["name"])
         row = {"source": src, "name": me["name"], "folder": me["folder"], "slot": me["slot"], "treatment": kind,
                "live": _stats(me["declared"]), "top": rec["top"], "low": rec["low"]}
+        if kind == "held":
+            to = held[src]["to"]
+            upgrades[src] = dict(held[src])
+            row.update(how="held", top=held[src]["troops"], to=to, to_name=sources[to]["name"],
+                       to_values=planned_item_values(to, sources, live),
+                       planned=planned_item_values(src, sources, live))
+            pieces.append(row)
+            continue
         if kind == "B":
             to, theirs, mine = picks[src]
             row["planned"] = mine
@@ -1136,7 +1176,7 @@ def build(armory_items, game_modules):
             row["why"] = theirs
             fallback.append(src)
         elite, _ = clone_values(src, me["slot"], me["culture"], "elite", me["declared"])
-        row.update(how="fallback" if kind == "B" else "A", elite=_stats(elite), clones={})
+        row.update(how={"B": "fallback", "kept": "kept"}.get(kind, "A"), elite=_stats(elite), clones={})
         clones[src] = [b for b in ra.TIERS if b in rec["low"] or b in bands.get(src, ())]
         for band in clones[src]:
             row["clones"][band] = clone_values(src, me["slot"], me["culture"], band, me["declared"])
@@ -1168,13 +1208,17 @@ def report(pieces):
     """The table of every in-scope piece (markdown), for the maintainer's check."""
     lines = ["| Piece | Name | Slot | Treatment | Live h/b/a/l | Result |", "|---|---|---|---|---|---|"]
     for p in pieces:
-        if p["how"] == "B":
+        if p["how"] in ("B", "held"):
             result = (f"top-tier wearers ({len(p['top'])}) to `{p['to']}` ({p['to_name']}) at {_fmt(p['to_values'])}; "
-                      f"the piece stays at {_fmt(p['planned'])} for its low wearers")
+                      f"the piece stays at {_fmt(p['planned'])} for its low wearers"
+                      + (" (held: no battle troop of level 30 or lower wears it; the upgrade stays)"
+                         if p["how"] == "held" else ""))
         else:
             clones = "; ".join(f"{b} {_fmt(v)}" for b, (v, _g) in p["clones"].items())
             result = (f"original at elite {_fmt(p['elite'])}; clones {clones}"
-                      + (f" (no upgrade: {p['why']})" if p["how"] == "fallback" else ""))
+                      + (f" (no upgrade: {p['why']})" if p["how"] == "fallback" else "")
+                      + (" (kept: no battle troop of level 30 or lower wears it, another set does)"
+                         if p["how"] == "kept" else ""))
         lines.append(f"| `{p['source']}` | {p['name']} | {p['slot']} | {p['how']} | {_fmt(p['live'])} | {result} |")
     return "\n".join(lines)
 
@@ -1199,8 +1243,10 @@ def main(argv=None):
 
     hows = collections.Counter(p["how"] for p in pieces)
     n_clones = sum(len(b) for b in spec["clones"].values())
-    print(f"Armour shared down (a level 36+ and a level 30- battle wearer): {len(pieces)} piece(s); "
-          f"A {hows['A']}, B {hows['B']}, fallback {hows['fallback']}; {n_clones} clone(s), "
+    print(f"Armour shared down (a level 36+ and a level 30- battle wearer): "
+          f"{len(pieces) - hows['kept'] - hows['held']} piece(s); A {hows['A']}, B {hows['B']}, "
+          f"fallback {hows['fallback']}; kept {hows['kept']} (a kit below the elite band still wears the "
+          f"source), held {hows['held']} (a shipped upgrade stays); {n_clones} clone(s), "
           f"{len(spec.get('retired', []))} retired; slot swaps {len(plan['swaps'])} in troop battle sets, "
           f"{len(plan['worn_swaps'])} in other sets")
     print(report(pieces))
