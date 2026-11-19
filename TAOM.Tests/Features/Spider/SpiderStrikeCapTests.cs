@@ -79,7 +79,7 @@ public class SpiderStrikeCapTests
         Assert.IsFalse(Struck(ally), "an ally is never struck and never uses a slot");
     }
 
-    // A cavalryman's horse: its side is its rider's (IsSameSide), and the arc may report the horse, the man, or both.
+    // A cavalryman's horse: its side is its rider's (IsSpared), and the arc may report the horse, the man, or both.
     private static IAgentAdapter HorseOf(IAgentAdapter rider, float distance)
     {
         var horse = Substitute.For<IAgentAdapter>();
@@ -149,6 +149,24 @@ public class SpiderStrikeCapTests
 
         Assert.IsTrue(Struck(soldier), "the enemy soldier is still struck");
         Assert.IsFalse(Struck(looseHorse), "a riderless mount of unknown side is never bitten");
+    }
+
+    [TestMethod]
+    public void CappedStrike_ALooseMountOfUnknownSide_IsCountedAmongTheSpared_NotAsAMiss()
+    {
+        // #594: the creature diagnostics count apart every agent the side rule spares, so a loose mount of unknown
+        // side joins the allies and the arc's enemy count (inArc - allies) holds only what the strike may hit.
+        var spider = Spider();
+        var looseHorse = HorseOf(rider: null!, 1.0f);
+        var soldier = InArc(spider, 1.4f);
+
+        var (inArc, spared, _) = _sut.StrikeArc(spider, new SpiderStrikeProfile(1, 1f, knockdownOnCritOnly: true),
+            countAllies: true, Reports(spider, looseHorse, soldier));
+
+        Assert.AreEqual(2, inArc);
+        Assert.AreEqual(1, spared, "the loose mount of unknown side is counted among the spared");
+        Assert.IsTrue(Struck(soldier), "the soldier takes the one slot");
+        Assert.IsFalse(Struck(looseHorse), "and the loose mount is never bitten");
     }
 
     [TestMethod]
