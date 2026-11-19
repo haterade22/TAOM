@@ -1528,3 +1528,9 @@ The Transfer All transpiler replaced vanilla's headcount budget `num` with a wei
 - **Why missed:** the builder checked that 0 matches vanilla's full-party press and wrote a test that fixed 0 as intended, but did not list every input that produces 0. The ported original had the same case.
 - **Prevent:** when a transpiler or prefix substitutes a value that vanilla's code then branches on, list vanilla's special values for it (0, -1, null, empty) and, for each, every input that makes your code produce it. Test each input.
 - **Source:** RCA `docs/reviews/rca-troop-weight-transfer-2026-11-17.md` finding 1 (Lens 5 and Lens 2 independently).
+
+### A new catch beside an existing guard copies that guard's exclusions (#785, 2026-11-19)
+Plan 058 put a `catch (Exception)` around each TAOM mission behaviour build, inside the call the mission-start guard already wraps. The guard never swallows an `OutOfMemoryException` (`MissionStartGuardService.ShouldSurvive`), so before the change an OOM while building a behaviour reached the engine; after it, the new catch contained it. The fix added `when (!(ex is OutOfMemoryException))`.
+- **Why missed:** the plan read the guard for the method the new code calls (`Report`) and not for the policy the guard applies before it catches (`ShouldSurvive`), where its exclusions live.
+- **Prevent:** when a new catch sits inside, or beside, a call an existing guard already wraps, read that guard's catch filter and copy its exclusions (exception types, toggles it honours on purpose or not), and test each one. A difference that remains is a design decision written in the plan.
+- **Source:** RCA `docs/reviews/rca-isolate-mission-behaviour-registrations-2026-11-19.md` finding F1 (Lens 5 trace 8).

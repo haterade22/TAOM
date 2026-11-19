@@ -8,14 +8,16 @@ namespace TAOM.Composition;
 /// fails to load) is logged with the behavior's type name and reported to the mission-start guard, and that behavior
 /// is left out, so the registrations after it still run. The caller adds the result to the mission outside this call:
 /// Mission.AddMissionBehavior lists the behavior before it calls OnCreated, so a throw there must still reach the
-/// mission-start guard. Engine-free and unit-tested (MissionBehaviorBuildTests).
+/// mission-start guard. The isolation does not read the "Survive Mission Start Failures" setting: a failed build is
+/// always contained and reported. An OutOfMemoryException is never contained, as the guard never swallows one.
+/// Engine-free and unit-tested (MissionBehaviorBuildTests).
 /// </summary>
 internal static class MissionBehaviorBuild
 {
     /// <summary>
-    /// What <paramref name="create"/> returns, or null when it throws. A throw is logged through
-    /// <paramref name="logError"/> and handed to <paramref name="reportFailure"/> as (owner type, owner assembly,
-    /// exception), the arguments IMissionStartGuardService.Report takes after the start call.
+    /// What <paramref name="create"/> returns, or null when it throws (an OutOfMemoryException propagates). A throw
+    /// is logged through <paramref name="logError"/> and handed to <paramref name="reportFailure"/> as (owner type,
+    /// owner assembly, exception), the arguments IMissionStartGuardService.Report takes after the start call.
     /// </summary>
     internal static T? Isolated<T>(Func<T?> create, Action<string> logError, Action<string, string, Exception> reportFailure)
         where T : class
@@ -24,7 +26,7 @@ internal static class MissionBehaviorBuild
         {
             return create();
         }
-        catch (Exception ex)
+        catch (Exception ex) when (!(ex is OutOfMemoryException))
         {
             var type = typeof(T);
             try

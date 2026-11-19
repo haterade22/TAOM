@@ -63,6 +63,21 @@ public class MissionBehaviorBuildTests
     }
 
     [TestMethod]
+    public void Isolated_FactoryThrowsOutOfMemory_RethrowsWithoutLoggingOrReporting()
+    {
+        // The mission-start guard never swallows an OutOfMemoryException (MissionStartGuardService.ShouldSurvive);
+        // the isolation keeps that rule, so the throw still reaches the guard as it did before #785.
+        var thrown = new OutOfMemoryException("build");
+
+        var caught = Assert.ThrowsException<OutOfMemoryException>(
+            () => MissionBehaviorBuild.Isolated<Probe>(() => throw thrown, _log.Add, Report));
+
+        Assert.AreSame(thrown, caught);
+        Assert.AreEqual(0, _log.Count);
+        Assert.AreEqual(0, _reports.Count);
+    }
+
+    [TestMethod]
     public void Isolated_LogThrows_StillReportsToTheGuard()
     {
         var built = MissionBehaviorBuild.Isolated<Probe>(
