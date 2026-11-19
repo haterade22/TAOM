@@ -141,6 +141,18 @@ public class CareerSyncHostTests
     }
 
     [TestMethod]
+    public void Handle_ARefusedChange_WithAnEmptyEntryStored_TellsTheSender_ItHoldsNoCareer()
+    {
+        // A player who joined with no career, or whose career a death cleared, has an entry with no career.
+        _data.GetOrCreateData(Hero);
+
+        var outcome = _host.Handle(Hero, Unknown(), 2, joinReport: false);
+
+        Assert.IsTrue(outcome.ToSender!.Refused);
+        Assert.IsFalse(outcome.ToSender.Known, "no career is saved, so the sender is not told the server keeps one");
+    }
+
+    [TestMethod]
     public void Handle_AJoinReport_WhenTheServerHoldsTheSameCareer_SendsNothing()
     {
         StoreOnServer("ranger");

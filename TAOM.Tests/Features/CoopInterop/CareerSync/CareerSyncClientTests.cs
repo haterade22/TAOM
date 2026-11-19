@@ -208,7 +208,7 @@ public class CareerSyncClientTests
     }
 
     [TestMethod]
-    public void ARefusal_WithoutAServerCopy_KeepsTheOwnCareer_AndShowsNoLine()
+    public void ARefusal_WithoutAServerCopy_KeepsTheOwnCareer_AndSaysTheServerDoesNotSaveIt()
     {
         _data.SetCareer(Own, "warden");
         _client.OnJoined();
@@ -216,9 +216,22 @@ public class CareerSyncClientTests
 
         _client.Receive(new CareerSyncSnapshot(Own, null, Array.Empty<string>(), Array.Empty<int>(), Array.Empty<string>()), last, refused: true, known: false);
 
-        // The line says the server keeps the career it has saved, which is untrue when it holds none.
+        // The server holds no career for this hero, so the refused one is lost at the next join: the player is told.
+        _notice.Received(1).ShowRefusedUnsaved();
         _notice.DidNotReceive().ShowRefused();
-        Assert.AreEqual("warden", _data.GetCareerStringId(Own));
+        Assert.AreEqual("warden", _data.GetCareerStringId(Own), "kept on this PC: a career picked before career sync must not be wiped");
+    }
+
+    [TestMethod]
+    public void AStaleRefusal_WithoutAServerCopy_ShowsNoLine()
+    {
+        _data.SetCareer(Own, "warden");
+        _client.OnJoined();
+        var last = _sent[_sent.Count - 1].Sequence;
+
+        _client.Receive(new CareerSyncSnapshot(Own, null, Array.Empty<string>(), Array.Empty<int>(), Array.Empty<string>()), last - 1, refused: true, known: false);
+
+        _notice.DidNotReceive().ShowRefusedUnsaved();
     }
 
     [TestMethod]

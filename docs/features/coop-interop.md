@@ -635,7 +635,12 @@ level on the server, so a foreign, duplicate or locked choice, a full fork, a ke
 choice too many are refused; tiers are 1 to 3; a flag must be the career's `career_tree_vN` stamp or a
 `GrantAttributeFlag` reward of a career quest. A cleared career is accepted. Ids are capped at 128
 characters, lists at 64 entries. A refused report is logged and the sender gets the server's copy back
-with `{=taom_career_sync_refused}`; when the server holds nothing, the sender keeps its own and sees no line.
+with `{=taom_career_sync_refused}`. When the server holds no career for the hero (no entry, or an entry with
+no career after a join without one or a death clear), the answer is `Known` false: the sender keeps its own
+career and sees
+`{=taom_career_sync_refused_unsaved}`: the career is not in the server's save, so it is gone at the next join.
+The client does not clear it, because a career a player picked before career sync existed reaches the server
+first as a join report, and a refusal there must not wipe it.
 
 **Known limits.**
 - Tier unlocks and quest flags are client-asserted: career quests run on the player's own machine
@@ -655,6 +660,15 @@ with `{=taom_career_sync_refused}`; when the server holds nothing, the sender ke
   own client refuses the paid switch and the retrain (`{=taom_career_coop_gold_off}`, the
   `CareerSwitchDialogueBehavior` row above); a modified client could still report the result.
 - A client without TAOM.CoopCompat keeps the old behaviour: its career stays on its own PC.
+- A server-side change to a player's career (today only the death clear above) is stamped with the last
+  report's sequence. If the player's client has a newer report in flight, the client drops the broadcast
+  and the server then stores that report whole, so the server's change is overwritten. No server-side
+  writer for a living player's career exists yet; one added later needs a merge or a version check.
+- A change made in the last frame before the session ends is not sent (`CareerSyncClient.Flush` clears the
+  mark before `Send` finds no session), so the server's older copy wins at the next join.
+- Trust model, by decision (2026-11-18): the client-asserted tiers and transitions above stay. Co-op
+  players share a session by invitation, and a modified client can already cheat in other ways; a server
+  check of quest-earned tiers would need the career quests to run on the server.
 
 **Configuration.** TAOM's settings, Co-op, "Sync careers for co-op players" (`CoopCareerSync`, default
 on), read through `CoopSettingsProvider` in the co-op server process for each report. A dedicated server

@@ -110,6 +110,12 @@ it has saved for you."
     The host checked your career change against the career rules and did
     not take it. You keep the career the host has saved for you.
 
+"The co-op server did not accept your career and has none saved for you.
+You keep it for now, but it is gone when you join again."
+    The host checked your career against the career rules and did not take
+    it, and it has no career saved for you. Your career still works until
+    you leave. When you join again, pick a career the rules allow.
+
 "Your lord's gear has changed since you looked. Visit the armoury again."
     (Lords' Ladder.) Your ladder changed on the host while the armoury was
     open. Leave the armoury and open it again.

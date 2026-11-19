@@ -78,7 +78,10 @@ public sealed class CareerSyncHost
         {
             _logger.LogWarning($"[CareerSync] refused the career '{sent.CareerId}' for '{senderHeroId}': {refusal}.");
             var copy = stored ?? new CareerSyncSnapshot(senderHeroId, null, Array.Empty<string>(), Array.Empty<int>(), Array.Empty<string>());
-            return new CareerSyncOutcome(refusal, new CareerSyncAnswer(copy, sequence, true, stored != null), null);
+            // Known only when a career is saved: an entry with no career (a join with none, a death clear) is not one
+            // the server "keeps for you", so the sender keeps its own copy and is told it is not saved.
+            var known = !string.IsNullOrEmpty(stored?.CareerId);
+            return new CareerSyncOutcome(refusal, new CareerSyncAnswer(copy, sequence, true, known), null);
         }
 
         if (!string.IsNullOrEmpty(sent.CareerId) && !_registry.IsEligible(sent.CareerId!, hero!))
