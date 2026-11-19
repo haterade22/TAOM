@@ -5862,3 +5862,21 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 - **Not applied, existed before or hypothetical:** (1) L2 F2: `UsableMissionObject.OnTick` can drop an inactive `MovingAgent` before the seat's own release check when the parallel tick is registered. Nothing registers it for these seats today. Moving the release check before `base.OnTick` changes the tick order that the battles measured, so it is the maintainer's decision. (2) L5 F-4: the mumakil seat samples reload progress with diagnostics off; the howdah seat does not. (3) L5 F-6: two diagnostics reads of a seat's `MovingAgent.Position` in `TaomMumakilPlatform.LogStatus` have no slot-identity guard.
 - **Unverified, with what is missing:** what the native movement of a dead archer does with the attachment, the lock and the gravity mode between its death and the seat's next tick (the movement-tick consumer was not decompiled); how the zero speed limit on the mumakil seat interacts with the lock (both battles had it on).
 - **In-game:** the hold was measured on a mumakil with the experiment build (`taom_debug_2026-11-19_09-40-59.log`: attached seats within 0.11 m at up to 5 m/s, 0 rescues). The howdah and the final build are owed.
+
+## Review (number assigned at merge): plan 060, UPGRADE_SKILL_REGRESSION judges templated upgrade edges on the SkillSet (#626), tier-2 deep review (Lens 5, Tooling), Codex not run (2026-11-19)
+
+- **Scope:** `af0f5f330..8dc68388b` on `improve/060-upgrade-skill-regression-templated-edges`: the gate resolves a `skill_template` side through `sync_lord_inline_skills.effective_skills` instead of skipping the edge, and `ranged_ladder.planned_skill_edits` and `rebalance_troops.py` resolve it the same way and refuse to write a templated character.
+- **Codex:** not run (no paid dispatch authorised for this item).
+- **Lenses:** Data flow, 12 flows, 0 gaps, 3 inconsistencies; Tooling correctness, 4 findings. Standards, Compatibility, Efficiency, Completeness and Design skipped by tier; XML not in scope. 3 confirmed and fixed (F1 MEDIUM, F2 and F4 LOW), 1 false positive (F3: the report summary already left the read-only villager records out of its counts), 1 for Mike (trace 5).
+- **Gate sweep:** old gate against new over 1,008 synthetic cases: 0 cases the old gate reported and the new one passes; shipped data 0 issues in both.
+- **Report:** `docs/reviews/deep-review-060-upgrade-skill-regression-templated-edges-2026-11-19.md`; RCA `docs/reviews/rca-upgrade-skill-regression-templated-edges-2026-11-19.md` (F1 repeats a recorded cause).
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | The "no SkillSet found" refusal in the gate and both writers tested the merged dict, which the repo's own SkillSet files always fill, so an install with no vanilla SkillSet read every vanilla template as empty | Dead / no-op code | The guard tested the loader's result, not the source that can be missing; its test had no repo SkillSet file | `load_skill_sets(..., require_vanilla=True)`; red-green tests with a repo SkillSet present; lesson in `lessons/build-tooling-workflow.md` |
+| F2 | Neither writer's refusal was tested | Test gap | The fixture change covered only the passing side | Two main-level refusal tests |
+| F4 | An unreadable SkillSet file made `rebalance_ranged_ladders.py` exit 1 ("edits pending") | Missing error handling | The new read sat outside the refusal `try` blocks | Caught as `ValueError`, exit 2; test |
+
+- **Suite:** Python `Ran 10572 tests`, `OK (skipped=13)`; C# `Failed!  - Failed:     3, Passed: 43028, Skipped:     9, Total: 43040` (the three known language-file failures, as at the base).
+- **For Mike:** the ladder writer and `RANGED_LADDER_INVERSION` read a templated ladder troop differently (the writer through its SkillSet, the gate from its inline rows). No troop carries a template today.
+- **In-game:** not applicable (tools only).
