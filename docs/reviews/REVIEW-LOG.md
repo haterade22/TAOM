@@ -5845,3 +5845,18 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 - **Follow-up (pre-existing):** a Recruit or Upgrade pop-up Cancel raises `AfterReset`, and `OnPartyScreenReset` drops all pending upgrade spend, including upgrades the restore keeps (MEDIUM; no issue filed by the lead).
 - **Suite:** `Failed!  - Failed:     3, Passed: 43046, Skipped:     9, Total: 43058` (the three known language-file failures).
 - **In-game:** not run (tier 1, no game run); the #563 prisoner recruit check is owed.
+
+## Review (number assigned at merge): plan 061 decision, the prisoner recruit gate stands aside in a co-op session (#563 decision A), tier-1 deep review (Lens 2, Lens 5), Codex not run (2026-11-19)
+
+- **Scope:** commit `96ea28e4a` on `improve/061-prisoner-recruit-resource-gate` (from `85c75c374`): `PartyUpgradeResourceCheckHook` takes `ICoopSessionProvider` and `ClampRecruitCount` returns the requested count while `IsSessionActive`; the new `PartyUpgradeResourceCheckHookCoopTests`; the feature doc, a behaviour comment and the `CoopVeto` text.
+- **Codex:** not run (no paid dispatch authorised for this item).
+- **Lenses:** Engine compatibility, 6 verified, 0 incompatible, 1 unverified (the Coop-side "prisoner path charges nothing" claim, which predates the commit); Data flow, 8 flows, 0 gaps, 1 LOW inconsistency. Standards, Efficiency, Completeness and Design skipped by tier. 1 confirmed (LOW), 0 false positives, 0 NEEDS MIKE.
+- **Report:** `docs/reviews/deep-review-061-prisoner-recruit-resource-gate-decision-2026-11-19.md`; RCA `docs/reviews/rca-prisoner-recruit-resource-gate-decision-2026-11-19.md` (a repeat of plan 019's registry miss).
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| D1 | The Patch26 registry entry and the comment above `GateRecruit` described the prisoner clamp without its co-op stand-aside | Other: stale prose after a decision (repeat) | The text sweep followed the hook's name; the registry and the comment name the patch | Both updated; lesson in `lessons/misc.md`: search a patch's name and category when its hook changes what it lets through |
+
+- **Applied improvement:** `SpecialResourcesWiringTests.RegisterSpecialResources_PartyUpgradeHook_ResolvesWithItsSessionProvider` pins the hook's new container dependency (failed with the provider registration removed, passes with it).
+- **Suite:** `Failed!  - Failed:     3, Passed: 43050, Skipped:     9, Total: 43062` (the three known language-file failures, as on the base).
+- **In-game:** not run (tier 1, no game run); a co-op prisoner recruit at zero balance, on host and guest, is owed.

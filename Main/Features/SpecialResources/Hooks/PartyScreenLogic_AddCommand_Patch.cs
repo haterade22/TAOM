@@ -68,9 +68,9 @@ public static class PartyScreenLogic_AddCommand_Patch
         return true;
     }
 
-    // #563: a prisoner recruited here is charged its recruit_cost at Done (OnUnitRecruited, once per unit),
-    // so the command is clamped to what the balance covers after the queued upgrades and the prisoners
-    // already recruited in this screen. Returning false skips only RecruitPrisoner, which then changes nothing.
+    // #563: outside co-op a prisoner recruited here is charged its recruit_cost at Done (OnUnitRecruited, once per
+    // unit), so the command is clamped to the balance after queued upgrades and this screen's earlier recruits; in a
+    // live co-op session the hook returns the full count. Returning false skips only RecruitPrisoner (no change).
     private static bool GateRecruit(PartyScreenLogic logic, ref PartyScreenLogic.PartyCommand command)
     {
         var hero = Hero.MainHero;
