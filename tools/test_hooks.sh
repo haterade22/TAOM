@@ -4037,16 +4037,22 @@ VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
 [[ "$VM_OUT" != *permissionDecision* ]] && grep -q 'UNCHECKED' <<< "$VM_OUT" && grep -q 'additionalContext' <<< "$VM_OUT" \
     && ok "a validator exit 1 with no findings allows the commit and says UNCHECKED" \
     || bad "a validator exit 1 with no findings: $(printf '%s' "$VM_OUT" | head -c 200)"
-# Exit 0 (clean) and exit 2 (no install: a degraded sweep) answer {}: only a findings exit 1 blocks.
-# A plain exit 3 with no traceback still says CRASHED (#623 asked for every exit code to be pinned).
+# Exit 0 (clean) answers {}: only a findings exit 1 blocks. Exit 2 (no install, no ModuleData, a usage
+# error) allows the commit but says UNCHECKED with the stderr tail, so a renamed flag cannot turn the
+# gate off without a word (#623, the maintainer's decision A). A plain exit 3 with no traceback still
+# says CRASHED (#623 asked for every exit code to be pinned).
 printf 'import sys\nsys.exit(0)\n' > "$VM_REPO/tools/generate_career_kits.py"
-for vm_rc in 0 2; do
-    printf 'import sys\nsys.exit(%s)\n' "$vm_rc" > "$VM_REPO/tools/validate_moduledata.py"
-    VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
-    [[ "$VM_OUT" == '{}' ]] \
-        && ok "a validator exit $vm_rc allows the commit with {}" \
-        || bad "a validator exit $vm_rc: $(printf '%s' "$VM_OUT" | head -c 200)"
-done
+printf 'import sys\nsys.exit(0)\n' > "$VM_REPO/tools/validate_moduledata.py"
+VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
+[[ "$VM_OUT" == '{}' ]] \
+    && ok "a validator exit 0 allows the commit with {}" \
+    || bad "a validator exit 0: $(printf '%s' "$VM_OUT" | head -c 200)"
+printf 'import sys\nsys.stderr.write("usage: unrecognized arguments: --code\\n")\nsys.exit(2)\n' > "$VM_REPO/tools/validate_moduledata.py"
+VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
+[[ "$VM_OUT" != *permissionDecision* ]] && grep -q 'exited 2' <<< "$VM_OUT" && grep -q 'UNCHECKED' <<< "$VM_OUT" \
+    && grep -q 'unrecognized arguments' <<< "$VM_OUT" && grep -q 'additionalContext' <<< "$VM_OUT" \
+    && ok "a validator exit 2 allows the commit and says UNCHECKED with its stderr" \
+    || bad "a validator exit 2: $(printf '%s' "$VM_OUT" | head -c 200)"
 printf 'import sys\nsys.stderr.write("plain crash\\n")\nsys.exit(3)\n' > "$VM_REPO/tools/validate_moduledata.py"
 VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
 [[ "$VM_OUT" != *permissionDecision* ]] && grep -q 'CRASHED' <<< "$VM_OUT" && grep -q 'additionalContext' <<< "$VM_OUT" \

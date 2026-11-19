@@ -994,6 +994,9 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
   lines keep their text; the no-install and missing-root warnings now print after the `Registry:` line.
   `MISSING_COLLISION_BODY` and `MISSING_VISUAL_MESH` now resolve against TAOM and `TAOM_Map` packs too
   (the repo module for TAOM); on the live install the report was unchanged (0 added, 0 removed).
+  The commit hook `check-moduledata-validation.sh` now answers a validator exit 2 (no install, no
+  ModuleData, a usage error) with an UNCHECKED note and the stderr tail beside the tool result; it
+  was a silent `{}`, so a renamed `--code` flag could turn the gate off unseen. Still an allow.
 - 2026-11-14 (#1271): `WORN_ARMOUR_CEILING` and `WORN_ARMOUR_FLOOR` documented above. The two melee codes
   (`MELEE_LADDER_INVERSION`, `MELEE_BLOW_CEILING`) now price the `taom_ph_` placeholders from the validated
   tree's `placeholder_weapons/` files (`taom_schema.price_placeholders`) and judge each against its real

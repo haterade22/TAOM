@@ -20,7 +20,9 @@
 # (rc=2), nothing staged -- ALLOWS the commit. Only a genuine validator ERROR
 # exit (rc=1) blocks. A validator crash exits 3 (validate_moduledata.py entry(); an
 # uncaught exception would exit 1 and read as findings): allowed, but never silently,
-# the traceback goes out as PreToolUse additionalContext beside the tool result.
+# the traceback goes out as PreToolUse additionalContext beside the tool result. An
+# rc=2 (no install, no ModuleData, a usage error) is allowed the same way: UNCHECKED
+# with the stderr tail as additionalContext (#623).
 #
 # Returns: {} to allow, {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"..."}} to block.
 
@@ -98,7 +100,7 @@ PY="$PYBIN"
 [[ -z "$PY" ]] && { echo '{}'; exit 0; }
 
 # Run only the ERROR-severity checks. Validator exits 1 on ERROR, 0 clean,
-# 2 bad-input. Only rc=1 blocks; everything else fails open.
+# 2 bad-input. Only rc=1 blocks; everything else fails open, rc=2 and rc=3 with a word.
 # Keep this list in step with every ERROR-severity code in tools/taom_schema.py. It is an
 # allowlist, so a new ERROR check is silently non-blocking until it is named here: on 2026-08-31
 # UPGRADE_SKILL_REGRESSION, LANDLESS_CULTURE, MOUNTED_DWARF, SETTLEMENT_ECONOMY_FLOOR and
@@ -178,6 +180,23 @@ print(json.dumps(
     [[ "$ERR_FILE" != /dev/null ]] && rm -f "$ERR_FILE"
     [[ -z "$CRASH" ]] && { echo '{}'; exit 0; }
     printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":%s}}\n' "$CRASH"
+    exit 0
+fi
+# 2 = the validator could not run its sweep: no game install, no ModuleData, a missing baseline tag,
+# or a usage error (a renamed --code flag). Allow, never silently: a {} here would read as "checked,
+# clean" (#623, the maintainer's decision A). The kit check above still ran and still blocks on drift.
+if [[ $RC -eq 2 ]]; then
+    NOTRUN=$(tail -n 10 "$ERR_FILE" 2>/dev/null | "$PYBIN" -c '
+import sys, json
+print(json.dumps(
+    "[check-moduledata-validation] tools/validate_moduledata.py exited 2 (no game install, no ModuleData, "
+    "or a usage error), so this commit is UNCHECKED for broken Item/NPCCharacter/Faction refs, unknown or "
+    "landless cultures and duplicate ids. This is NOT a pass. Run: python tools/validate_moduledata.py\n\n"
+    + sys.stdin.read()))
+' 2>/dev/null)
+    [[ "$ERR_FILE" != /dev/null ]] && rm -f "$ERR_FILE"
+    [[ -z "$NOTRUN" ]] && { echo '{}'; exit 0; }
+    printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":%s}}\n' "$NOTRUN"
     exit 0
 fi
 [[ "$ERR_FILE" != /dev/null ]] && rm -f "$ERR_FILE"
