@@ -13,9 +13,8 @@ namespace TAOM.Features.MapEventGuard;
 /// drops the finalized event, and those parties stay in a battle nobody runs. After a load the event's component
 /// also has no back-reference. Each pass runs Patch170's steps on every such event outside the player's encounter:
 /// the rule is <see cref="HalfFinishedEncounterService.Decide"/>, then restore the back-reference and run the
-/// side-end step of vanilla's finish for defenders, then attackers. Unlike Patch170 it then runs the rest of
-/// vanilla's finish (map visual end, <c>FinalizeComponent</c>), which a same-session or blockade orphan still
-/// needs. Stands down in any co-op session, as the
+/// side-end step of vanilla's finish for defenders, then attackers, then the rest of vanilla's finish (map visual
+/// end, <c>FinalizeComponent</c>), as Patch170 does. Stands down in any co-op session, as the
 /// stuck-battle guard does. Details: docs/features/map-event-guard.md.
 /// </summary>
 public sealed class OrphanedBattleService

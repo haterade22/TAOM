@@ -9,8 +9,9 @@ using TaleWorlds.CampaignSystem.MapEvents;
 namespace TAOM.Adapters;
 
 /// <summary>
-/// Engine side of Patch170. Public members are called directly. <c>MapEventComponent.AfterLoad(MapEvent)</c> is
-/// internal, so it is reached by name through <c>AccessTools</c> (gated by ReflectionSiteBindingTests).
+/// Engine side of Patch170 and the orphaned battle sweep. Public members are called directly.
+/// <c>MapEventComponent.AfterLoad(MapEvent)</c> and <c>FinalizeComponent()</c> are internal, so they are reached by
+/// name through <c>AccessTools</c> (gated by ReflectionSiteBindingTests).
 /// </summary>
 internal sealed class HalfFinishedEncounterAdapter : IHalfFinishedEncounterAdapter
 {
@@ -26,6 +27,13 @@ internal sealed class HalfFinishedEncounterAdapter : IHalfFinishedEncounterAdapt
     public void RestoreBackReference() => RestoreBackReference(PlayerEncounter.Battle);
 
     public int EndSide(int sideIndex) => EndSide(PlayerEncounter.Battle, sideIndex);
+
+    public void FinishEvent()
+    {
+        var battle = PlayerEncounter.Battle;
+        if (battle != null)
+            FinishEvent(battle);
+    }
 
     /// <summary>The state Patch170 and the orphaned-battle sweep both judge.</summary>
     internal static HalfFinishedEncounterSnapshot Read(MapEvent battle)
@@ -60,7 +68,7 @@ internal sealed class HalfFinishedEncounterAdapter : IHalfFinishedEncounterAdapt
     }
 
     /// <summary>
-    /// The steps <c>MapEvent.FinalizeEventAux</c> runs after the sides end. Used by <see cref="OrphanedBattleEventAdapter"/>.
+    /// The steps <c>MapEvent.FinalizeEventAux</c> runs after the sides end. Used by Patch170 and <see cref="OrphanedBattleEventAdapter"/>.
     /// After a load the visual is null and the siege and raid components' flags are unsaved, so most of this does
     /// nothing; in the same session it fires what the crash skipped, and a blockade's <c>OnFinalize</c> always runs.
     /// </summary>
