@@ -334,6 +334,18 @@ Every rung steps by exactly 5. That is worth stating because it was not true in 
 herder shipped at 11 and jumped +10 into the rider. Seventeen such edges exist in the repo and none
 is an error, but 656 edges are +5, so the ladder now follows the dominant pattern.
 
+**How many rams the AI fields (#1485, 2026-11-19).** Players reported Erebor lord armies near half
+rams. The herder pools at weight 1 of 16 in `EreborMix` and the Erebor culture pool (it was 3 of 18,
+one new notable slot in six), and each of the seven `kingdom_hero_party_erebor_erebor_N_template`
+blocks carries its two ram stacks at `0-6` (was `0-15`). The 18 freed places went to the other
+stacks, so each template keeps the 220 max sum that `tools/rebalance_party_template_maxes.py` holds,
+and rams are about 5.1% of a fresh party at the template midpoint. Two readers still push the share
+up as a party ages: the `ironpass_warrior -> ironpass_ram_rider` edge, down which the vanilla upgrade
+model sends all of one lord's warriors about one time in three (by the leader's hash, or always for a
+lord whose `PreferredUpgradeFormation` is Cavalry), and AI battle spawns, which put the highest
+levels on the field first (`UnitSpawnPrioritizations.HighLevel`), so a capped battle shows more rams
+than the roster holds.
+
 Each troop carries four equipment rosters alternating both pelts and, above the herder, both barding
 variants of its grade, so all ten items are reachable in play. The barding ladder spreads eight items
 over five armoured rungs, so `med_b` and `heavy_a` each serve two rungs. Average armour still climbs
@@ -537,7 +549,7 @@ a horse would have masked it.
 
 `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` pins the recruitment
 side: `EreborRamCavalry_IsNotOfferedByAnyVolunteerPool` (the five armoured ids stay upgrade-only),
-`EreborRamCavalry_IsReachableFromAPooledRoot`, the two `RollsAgainstTotalWeightEighteen` guards, and
+`EreborRamCavalry_IsReachableFromAPooledRoot`, the two `RollsAgainstTotalWeightSixteen` guards, and
 two `HighestRoll_ReturnsRamHerder` cases for the herder band. `TroopUpgradeSkillMonotonicityTests`
 is what pins the dwarf cavalry curve, including the forced TwoHanded and Throwing floors.
 
