@@ -36,8 +36,9 @@ Find the two pinned issues with `gh issue list --search "Manager in:title" --sta
 
 ## Setup, once
 
-None of this exists on 2026-11-18. A tick stops at its first step until all of it does. The
-manager creates it after the maintainer has ordered `docs/goals.md` and answered the backlog sort:
+All five were done on 2026-11-18 (inbox #1456, digest #1457). A tick stops at its first step
+while any is missing. The manager makes them after the maintainer has ordered `docs/goals.md` and
+answered the backlog sort:
 
 1. The `manager` label: `gh label create manager --description "Opened by the manager session"`.
 2. One milestone per row of `docs/goals.md`, named as the row's "Milestone" cell.
@@ -86,19 +87,65 @@ gh pr list --state merged --search "Revert in:title" --limit 50 --json number,ti
 A merged pull request counts as unchanged when its `headRefOid` equals the `Ready at:` commit in
 its body. The days of a stage count from the first manager pull request merged in it.
 
+## Unattended ticks
+
+`tools/manager_tick.py` starts one `/manage tick` in a headless session when every check passes:
+no `STOP` file, no usage-limit pause, ten minutes with no keyboard or mouse input, no Bannerlord
+process, no live `manager-tick` claim, and the tick worktree present and clean. An unreadable input age,
+process list or claim store refuses. Without `--run` it prints its decision and starts nothing.
+
+The session runs `claude -p "/manage tick" --permission-mode default --output-format json`. A
+probe on 2026-11-18 (CLI 2.1.322) showed that a headless session loads the skills and hooks and
+has the Workflow tool, that it starts in plan mode unless `--permission-mode` is given, and that
+a hook ask becomes a denial in its result, not a wait.
+
+The launcher writes three files beside `STOP`: `launcher.log` (one line per decision),
+`last-tick.json` (the session's result) and `PAUSE` (an epoch second; after a usage limit, ticks
+wait one hour).
+
+To turn it on, after the policy amendment, the maintainer runs these two commands once:
+
+```powershell
+git -C E:\repos\TAOM worktree add --detach E:\repos\taom-manager bannerlord-1.5.x
+schtasks /Create /TN "TAOM manager tick" /SC MINUTE /MO 30 /TR "python E:\repos\taom-manager\tools\manager_tick.py --worktree E:\repos\taom-manager --run"
+```
+
+Then the maintainer writes `E:\repos\taom-manager\.claude\settings.local.json` (gitignored, so
+it binds only the tick worktree, never a normal session):
+
+```json
+{
+  "permissions": {
+    "deny": [
+      "Bash(git push --force:*)", "Bash(git push -f:*)", "Bash(git push --delete:*)",
+      "Bash(git tag:*)", "Bash(gh pr merge:*)", "Bash(gh release:*)", "Bash(gh repo:*)",
+      "Bash(gh secret:*)", "Bash(gh api:*rulesets*)"
+    ]
+  }
+}
+```
+
+The deny rules are one layer, not a boundary: a script run by path or the PowerShell tool can
+pass them. The ruleset and the stage rules in the skill are the other layers.
+
+Before each tick the launcher fetches the trunk and detaches the tick worktree at it, so
+`/manage` reads the trunk's skill. It refuses a worktree with uncommitted changes and moves
+nothing when the fetch fails. To stop every tick, create the `STOP` file; to remove the task, run
+`schtasks /Delete /TN "TAOM manager tick"`.
+
 ## Limits
 
 - **Stage 0 only.** The manager never merges, tags, releases or pushes to a trunk.
 - **One login.** The manager posts as the maintainer, so its comments start with
   `<!-- manager -->` and it never comments on the inbox. A separate identity comes with the
   self-merge amendment.
-- **Started by hand.** Nothing starts a tick yet, and the maintainer's start is the word
-  `.ai/policy.md` requires for issues, pushes and game runs. An unattended start at idle is the
-  next phase (ADR-015 "Migration Strategy"); it needs that policy text amended first.
+- **Started by hand.** The maintainer's start is the word `.ai/policy.md` requires for issues,
+  pushes and game runs. `tools/manager_tick.py` can start a tick at idle (see "Unattended
+  ticks"), but the scheduled task stays off until the maintainer amends that policy text
+  (ADR-015 "Migration Strategy").
 - **Game-bound.** The build, most tests and every in-game check need the desktop. A check with no
   manifest or no driver stays a person's.
-- **The checkpoint hook is inert until registered** in `.claude/settings.json`, which is the
-  maintainer's file. It sees C# edited through Edit and Write only.
+- **The checkpoint hook** sees C# edited through Edit and Write only.
 - **Cost.** A dispatched issue runs a plan writer, an executor and its reviewers. The limits are
   four agents in flight, six open manager pull requests and eight worker runs a day.
 
@@ -111,6 +158,7 @@ its body. The days of a stage count from the first manager pull request merged i
 | `.claude/skills/manage/SKILL.md` | The tick and the digest |
 | `.claude/hooks/check-subagent-verification.sh` | The SubagentStop checkpoint |
 | `.claude/skills/improve/SKILL.md` | The execution engine the tick dispatches to |
+| `tools/manager_tick.py` | The idle gate and the headless start of one tick |
 
 ## GitHub Issue
 
@@ -120,6 +168,8 @@ its body. The days of a stage count from the first manager pull request merged i
 
 - `bash tools/test_hooks.sh` (the checkpoint hook's cases; section 3b parses the skill's frontmatter)
 - `python tools/lint_docs.py --fail-on-drift`
+- `python -m unittest tools.tests.test_manager_tick` (the launcher's gate, with the machine patched out)
+- `python tools/manager_tick.py --worktree <checkout>`: prints the live gate decision and starts nothing
 - `/manage tick --dry`: the printed selection follows the order of `docs/goals.md` and skips every
   claimed, blocked and assigned issue.
 
