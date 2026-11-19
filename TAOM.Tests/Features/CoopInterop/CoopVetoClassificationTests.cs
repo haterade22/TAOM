@@ -131,7 +131,7 @@ public class CoopVetoClassificationTests
             "Crash guard (#1099). It replaces only a meeting whose partner has no speaker, which would throw on every peer. " +
             "It reads the encounter and rosters and no TAOM SyncData or MCM value, and its Leave option is vanilla's own exit."),
         ["Patch170_HalfFinishedEncounterRepair"] = new(CoopVeto.ReviewedSafe,
-            "Save repair. The prefix always returns true, so it skips nothing: it runs the side-end step of vanilla's finish first, " +
+            "Save repair. The prefix always returns true, so it skips nothing: it runs the side-end step and the component finish of vanilla's finish first (AfterSiegeCompleted, and on a blockade FinalizeSiegeEvent, which vanilla fires itself at the same point), " +
             "and only on a finalized map event that still holds parties or lost its component back-reference, a state a healthy " +
             "game never reaches. It reads no TAOM SyncData or MCM value, and its service stands down when ICoopSessionProvider.ShouldDeferToHost holds."),
         ["Patch160_LoadRetryStop"] = new(CoopVeto.ReviewedSafe,

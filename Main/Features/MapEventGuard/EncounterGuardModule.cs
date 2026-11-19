@@ -24,6 +24,9 @@ internal sealed class EncounterGuardModule : TaomFeatureModule
     private static readonly CampaignBehaviorDecl[] Behaviors =
     {
         CampaignBehaviorDecl.Of(r => new EmptyMeetingMenuBehavior(r.Resolve<EmptyMeetingGuardService>())),
+        CampaignBehaviorDecl.Of(r => new OrphanedBattleCampaignBehavior(
+            r.Resolve<OrphanedBattleService>(),
+            r.Resolve<IModLogger>())),
     };
 
     public override string Id => "EncounterGuard";
@@ -35,6 +38,8 @@ internal sealed class EncounterGuardModule : TaomFeatureModule
         registrator.Register<EmptyMeetingGuardService>(Reuse.Singleton);
         registrator.Register<IHalfFinishedEncounterAdapter, HalfFinishedEncounterAdapter>(Reuse.Singleton);
         registrator.Register<HalfFinishedEncounterService>(Reuse.Singleton);
+        registrator.Register<IOrphanedBattleAdapter, OrphanedBattleAdapter>(Reuse.Singleton);
+        registrator.Register<OrphanedBattleService>(Reuse.Singleton);
     }
 
     public override void InitializeStatics(IResolver resolver) =>

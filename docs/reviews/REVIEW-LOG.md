@@ -5786,6 +5786,20 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 - **Owed:** the fix-loop re-review of the fix diff (Lens 2, and Codex at `high` when usage returns): the fix changes runtime behaviour in a tier 1 area.
 - **In-game:** not run (tier 1, no game run).
 
+## Review (number assigned at merge): plan 057, first-byte prefilter in the engine signature scan (#784), tier-1 deep review (Lens 2, Lens 5), Codex not run (2026-11-19)
+
+- **Scope:** `8e836fd40..66fcd4204` on `improve/057-signature-find-first-byte-prefilter`: `ClipBudgetSignature.Find` jumps to the next occurrence of the pattern's first fixed byte with `Array.IndexOf` and checks the full pattern only there; 11 new tests, among them a 20,000-case differential test against the old loop and a test over all seven shipped patterns.
+- **Codex:** not run (out of usage; a paid call needs the maintainer's word).
+- **Lenses:** Engine compatibility, 2 verified, 0 incompatible, 1 unverified commit-body claim (the lead verified its cache half at SignatureScanSession.cs:62-69 and SkeletonBufferSignature.cs:83-85, :107-109; the timings from #784 stay UNVERIFIED); Data flow, 5 flows, 0 gaps, 0 inconsistencies. Both lenses proved the same hits, order and `maxHits` stop as the old loop for every input. 0 findings, 0 false positives.
+- **Report:** `docs/reviews/deep-review-057-signature-find-first-byte-prefilter-2026-11-19.md`. No RCA: no confirmed defect.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| - | None in the changed code | - | - | - |
+
+- **Suite:** `Failed!  - Failed:     3, Passed: 42954, Skipped:     9, Total: 42966` (the three known language-file failures; the plan's base plus the 11 new tests).
+- **In-game:** not run (tier 1, no game run); a launch with no address cache is owed on #784.
+
 ## Review (number assigned at merge): plan 058, isolate each hand-wired mission behaviour registration (#785), tier-1 deep review (Lens 2, Lens 5), Codex not run (2026-11-19)
 
 - **Scope:** `8e836fd40..3e1b1dc9b` on `improve/058-isolate-mission-behaviour-registrations`: `MissionBehaviorBuild.Isolated` builds each hand-wired TAOM mission behaviour in a factory, so a throw while building one drops only that behaviour and reports it to the mission-start guard; the engine add stays outside the isolation in `AddBuiltTaomBehavior`.

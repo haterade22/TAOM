@@ -8,13 +8,15 @@ namespace TAOM.Features.MapEventGuard;
 /// Patch170: a save made after "Continue (risky)" on a failed battle end holds a player encounter whose finalized
 /// siege map event never finished (parties still attached) and, after a load, has no component back-reference, so
 /// every map tick throws a NullReferenceException in <c>OnPlayerEncounterFinalizeBattle</c>. This service runs the
-/// side-end step of vanilla's finish (it skips <c>MapEventVisual.OnMapEventEnd</c> and <c>FinalizeComponent</c>; after a load both
-/// are no-ops, and <c>AfterSiegeCompleted</c>'s only vanilla listener does nothing on a defender win), so vanilla's
-/// <c>FinalizeBattle</c> can complete. A healthy encounter never matches. Heroes in the attached parties marked
+/// rest of vanilla's finish: the side-end step, then <c>MapEventVisual.OnMapEventEnd</c> and <c>FinalizeComponent</c>
+/// (vanilla's <c>FinalizeBattle</c> reaches only <c>FinalizeEvent</c>, a no-op on a finalized event, so they run once).
+/// After a load most of the last two do nothing, but a blockade's <c>OnFinalize</c> still ends its siege when the
+/// defenders lost. Vanilla's <c>FinalizeBattle</c> then completes. A healthy encounter never matches. Heroes in the attached parties marked
 /// <c>DiedInBattle</c> die as vanilla would (the side-end step runs vanilla's kill loop). Marked heroes still alive afterwards
 /// (for example the party that threw, already detached) are counted in the log, over all living marked heroes, and die at the
 /// end of their next battle as vanilla would. If restoring the back-reference works but ending a side throws, vanilla still
-/// finishes the encounter and the repair retries on the next <c>FinalizeBattle</c>. Under a shared world (host defers) it stands down. Details: docs/features/map-event-guard.md.
+/// finishes the encounter and clears its battle, so this repair never sees that event again; <see cref="OrphanedBattleService"/>
+/// finishes it hourly unless the player's party is still attached to it. Under a shared world (host defers) it stands down. Details: docs/features/map-event-guard.md.
 /// </summary>
 public sealed class HalfFinishedEncounterService
 {
@@ -66,6 +68,7 @@ public sealed class HalfFinishedEncounterService
         {
             defenders = _encounter.EndSide(0);
             attackers = _encounter.EndSide(1);
+            _encounter.FinishEvent();
         }
 
         int marked = _encounter.CountMarkedAliveHeroes();
