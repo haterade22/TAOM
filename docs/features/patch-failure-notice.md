@@ -94,6 +94,7 @@ a patch class (#1223) has no category, so its id is `<feature folder>[.<part>]` 
 | Mission start guard transpiler | `Patch103_MissionStartGuard` | the guard around the mission start calls |
 | Party icon scale transpilers | `Patch53_PartyIconScale` | the Map Figure Scale slider for one or more figures |
 | Seat of Seeing order panel transpiler | `Patch140_SeatOfSeeing` | a hero who fights on can open the order panel |
+| Battle-death roster snapshot transpiler | `Patch169_BattleDeathRosterSnapshot` | the copy of the end-of-battle hero list; vanilla's lazy loop runs, and a hero death in battle can throw again (#1475) |
 | Banner layer limit transpiler | `Patch15_BannerLayerLimit` | nothing today: the setting is off by default and v1.5.7 has no layer cap |
 | Custom attack blow binding (`CustomAttacksUtils.Unbound`) | `AdvancedCombat.SyntheticBlow` | damage, knockdowns and kills from every TAOM synthetic blow (creature and dwarf attacks, Signature Strikes, instant kills), until the game restarts |
 | Action index repair, third failed pass (`ActionIndexCacheRepair.ReportIfSpent`) | `HeroRace.ActionIndexRepair` | characters in UI tableaus stand in their idle pose; they lie flat in bind pose for the session (other named actions that read the same cache are not checked) |

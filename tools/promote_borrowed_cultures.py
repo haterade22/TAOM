@@ -1407,6 +1407,16 @@ def main():
                                            lambda m: m.group(1) + rows + m.group(2), block, flags=re.DOTALL)
                         if n != 1:
                             raise SystemExit(f"{target}: expected one <{tag}> block, found {n}")
+                # The donor's tournament lists name vanilla's Calradian templates; the realm's own are generated
+                # by generate_tournament_templates.py (#422), three sets per team size, named by culture id.
+                for size in ("one", "two", "four"):
+                    tag = f"tournament_team_templates_{size}_participant"
+                    rows = "".join(f'      <template name="NPCCharacter.taom_tournament_{target}_{size}_participant_set_v{i}" />\n'
+                                   for i in (1, 2, 3))
+                    block, n = re.subn(rf"(<{tag}>\n).*?([ \t]*</{tag}>)",
+                                       lambda m: m.group(1) + rows + m.group(2), block, flags=re.DOTALL)
+                    if n != 1:
+                        raise SystemExit(f"{target}: expected one <{tag}> block, found {n}")
                 wanderers_text, _, _ = load(MD / "taom_wanderers.xml")
                 block = list_unlisted_wanderers(
                     block, target, cloned_wanderer_ids(target, cfg, id_map, wanderers_text))
@@ -1540,6 +1550,7 @@ def main():
     print("  2. character-creation wiring (cultures.json, cc_body_properties, narrative menus, CC gear)")
     print("  3. voice row: add the culture to voice_accents/voice_accents.json and VoiceAccentMap.Default()")
     print("  4. Hall of Fire row: add the culture to hall_of_fire/hall_of_fire.json and HallOfFireMap.Default()")
+    print("  NEXT: python tools/generate_tournament_templates.py --apply   (the new culture's taom_tournament_* templates)")
     print("  Until (1), each new culture owns no settlement -> LANDLESS_CULTURE / daily-tick CTD (#374).")
     return 0
 
