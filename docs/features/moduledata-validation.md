@@ -988,7 +988,9 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
   install path. `CommitGateCoverageTests` checks that every `*_issues` pass is reached from
   `run_all_passes` and that `main()` and `ModuleDataQuery.validate` both call it;
   `RunAllPassesParityTests` pins that the CLI and the MCP tool report the same codes. New code
-  `PARTIAL_RUN`: what a run could not check, returned as a warning by the MCP tool. The CLI's stderr
+  `PARTIAL_RUN`: no install, a live module's missing ModuleData or a registry that looks too small,
+  returned as a warning by the MCP tool whatever its `codes` filter (the two stderr-only skips are
+  named in the MCP server section). The CLI's stderr
   lines keep their text; the no-install and missing-root warnings now print after the `Registry:` line.
   `MISSING_COLLISION_BODY` and `MISSING_VISUAL_MESH` now resolve against TAOM and `TAOM_Map` packs too
   (the repo module for TAOM); on the live install the report was unchanged (0 added, 0 removed).
