@@ -184,6 +184,17 @@ public class SpecialResourceGoldOnlyTests
         Assert.AreEqual(100f, Balance);
     }
 
+    [TestMethod]
+    public void ClampRecruitCount_GoldOff_ZeroBalance_ClampsToZero() =>
+        Assert.AreEqual(0, _service.ClampRecruitCount(Hero, Kingdom, Culture, Elite, 4, new RecruitCartEntry[0]));
+
+    [TestMethod]
+    public void ClampRecruitCount_GoldOn_ZeroBalance_ReturnsTheRequest()
+    {
+        GoldOn();
+        Assert.AreEqual(4, _service.ClampRecruitCount(Hero, Kingdom, Culture, Elite, 4, new RecruitCartEntry[0]));
+    }
+
     // ── Upgrade ──
 
     [TestMethod]

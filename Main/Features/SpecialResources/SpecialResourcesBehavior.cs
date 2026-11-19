@@ -200,8 +200,8 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     private void OnHideoutCompleted(BattleSideEnum winnerSide, HideoutEventComponent component, HideoutEventComponent.HideoutBattleEndState battleEndState)
         => Pay(_events.SnapshotHideout(winnerSide, component), _earning.OnHideout);
 
-    // Charges the one-time recruit_cost (no-op unless the troop carries one in troop_resource_costs.xml;
-    // Patch51 gates it, and a guest's gate reads a stale balance until Batch C, #967). The service picks
+    // Charges the one-time recruit_cost (no-op unless the troop carries one in troop_resource_costs.xml; Patch51
+    // gates volunteers and Patch26 party-screen prisoners, #563; a guest's gate reads a stale balance, #967). The service picks
     // the payer: Hero.MainHero in single-player, the leader of the party Patch113 names under co-op.
     private void OnUnitRecruited(CharacterObject character, int count)
     {

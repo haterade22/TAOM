@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace TAOM.Features.SpecialResources.Hooks;
 
 public class PartyUpgradeResourceCheckHook : IOnPartyUpgradeResourceCheck
@@ -25,6 +27,11 @@ public class PartyUpgradeResourceCheckHook : IOnPartyUpgradeResourceCheck
         var cost = _config.GetTroopCost(troopId);
         return cost?.UpgradeCost ?? 0;
     }
+
+    public int ClampRecruitCount(string heroId, string kingdomId, string cultureId, string troopId, int requestedCount, IReadOnlyList<RecruitCartEntry> recruitedThisSession)
+        => _service.ClampRecruitCount(heroId, kingdomId, cultureId, troopId, requestedCount, recruitedThisSession);
+
+    public int GetRecruitCost(string troopId) => _config.GetTroopCost(troopId)?.RecruitCost ?? 0;
 
     public float GetAvailableAmount(string heroId, string kingdomId, string cultureId)
         => _service.GetAvailableAfterPending(heroId, kingdomId, cultureId);
