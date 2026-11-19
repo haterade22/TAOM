@@ -55,7 +55,7 @@ hand edits, so land a repo-side validator gate with any fix.
 - Whether the four cultures that ship notables but no service NPCs (abanissa, lothlorien, shaghana, umbar) are borrowing another culture's townsfolk deliberately. Umbar points all 35 townsfolk and shop roles at vanilla Calradian ids in SandBoxCore/ModuleData/spnpccharacters.xml and no doc records the decision.
 - Why six cultures now ship a third RuralNotable template. docs/features/cultural-feats.md names four (isengard, mordor, dolguldur, gundabad); measured today it is seven, adding bluecraig, goblin and mistymountainorcs, with no record of why.
 - Whether the six unreachable gear_practice_dummy entries (dale, dunland, harad, khand, rhun, rohan) are a known defect or dead data. The id the engine composes uses the culture StringId, which for those six is the vanilla one.
-- Whether pointing all 112 tournament team-template rows at vanilla's tournament_template_empire_* / _aserai_* characters is deliberate. No TAOM culture fields its own tournament fighters.
+- Answered by #422 part 1: each culture now lists its own generated tournament team templates (docs/features/tournament-templates.md). Parts 2 and 3 of the issue are still open.
 
 ## wanderers-and-named-companions.md
 

@@ -323,17 +323,19 @@
       <template name="NPCCharacter.spc_erebor_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_erebor_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_erebor_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_erebor_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_erebor_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_erebor_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_erebor_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_erebor_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_erebor_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_erebor_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.erebor_oathsworn_merc" />
@@ -664,17 +666,19 @@
       <template name="NPCCharacter.spc_rivendell_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_rivendell_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_rivendell_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_rivendell_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_rivendell_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_rivendell_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_rivendell_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_rivendell_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_rivendell_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_rivendell_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.rivendell_noble_merc" />
@@ -996,17 +1000,19 @@
       <template name="NPCCharacter.spc_mirkwood_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_mirkwood_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_mirkwood_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_mirkwood_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_mirkwood_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_mirkwood_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_mirkwood_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_mirkwood_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_mirkwood_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_mirkwood_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.mirkwood_recruit_merc" />
@@ -1329,17 +1335,19 @@
       <template name="NPCCharacter.spc_lothlorien_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_lothlorien_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_lothlorien_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_lothlorien_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_lothlorien_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_lothlorien_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_lothlorien_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_lothlorien_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_lothlorien_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_lothlorien_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.lorien_mw_sentry_merc" />
@@ -1677,17 +1685,19 @@
       <template name="NPCCharacter.spc_isengard_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_isengard_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_isengard_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_isengard_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_isengard_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_isengard_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_isengard_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_isengard_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_isengard_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_isengard_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.urukhai_warrior_merc" />
@@ -2016,17 +2026,19 @@
       <template name="NPCCharacter.spc_gundabad_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_gundabad_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_gundabad_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_gundabad_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_gundabad_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_gundabad_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_gundabad_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_gundabad_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_gundabad_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_gundabad_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.gundabad_fighter_merc" />
@@ -2350,17 +2362,19 @@
       <template name="NPCCharacter.spc_umbar_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_umbar_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_umbar_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_umbar_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_umbar_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_umbar_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_umbar_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_umbar_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_umbar_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_umbar_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.umbar_elite_merc" />
@@ -2696,17 +2710,19 @@
       <template name="NPCCharacter.spc_dolguldur_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_dolguldur_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_dolguldur_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_dolguldur_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_dolguldur_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_dolguldur_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_dolguldur_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_dolguldur_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_dolguldur_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_dolguldur_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.dg_orc_scout_merc" />
@@ -3036,17 +3052,19 @@
       <template name="NPCCharacter.spc_gondor_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_gondor_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_gondor_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_gondor_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_gondor_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_gondor_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_gondor_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_gondor_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_gondor_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_gondor_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.gondor_bel_recruit_merc" />
@@ -3387,17 +3405,19 @@
       <template name="NPCCharacter.spc_mordor_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_mordor_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_mordor_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_mordor_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_mordor_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_mordor_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_mordor_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_mordor_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_mordor_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_mordor_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.mordor_uruk_grunt_merc" />
@@ -3659,17 +3679,19 @@
       <template name="NPCCharacter.spc_shaghana_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_aserai_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_shaghana_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_shaghana_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_shaghana_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_aserai_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_aserai_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_aserai_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_shaghana_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_shaghana_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_shaghana_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_aserai_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_aserai_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_aserai_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_shaghana_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_shaghana_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_shaghana_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.harad_redserp_noble_merc" />
@@ -3925,17 +3947,19 @@
       <template name="NPCCharacter.spc_abanissa_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_aserai_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_abanissa_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_abanissa_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_abanissa_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_aserai_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_aserai_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_aserai_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_abanissa_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_abanissa_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_abanissa_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_aserai_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_aserai_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_aserai_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_abanissa_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_abanissa_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_abanissa_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.harad_pz_levy_merc" />
@@ -4691,17 +4715,19 @@
       <template name="NPCCharacter.spc_goblin_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_goblin_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_goblin_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_goblin_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_goblin_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_goblin_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_goblin_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_goblin_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_goblin_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_goblin_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.goblin_fighter_merc" />
@@ -5024,17 +5050,19 @@
       <template name="NPCCharacter.spc_mistymountainorcs_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_mistymountainorcs_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_mistymountainorcs_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_mistymountainorcs_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_mistymountainorcs_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_mistymountainorcs_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_mistymountainorcs_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_mistymountainorcs_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_mistymountainorcs_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_mistymountainorcs_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.goblin_fighter_merc" />
@@ -5364,17 +5392,19 @@
       <template name="NPCCharacter.spc_lindon_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_lindon_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_lindon_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_lindon_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_lindon_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_lindon_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_lindon_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_lindon_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_lindon_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_lindon_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.lindon_noble_merc" />
@@ -5698,17 +5728,19 @@
       <template name="NPCCharacter.spc_bluecraig_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_bluecraig_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_bluecraig_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_bluecraig_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_bluecraig_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_bluecraig_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_bluecraig_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_bluecraig_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_bluecraig_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_bluecraig_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.goblin_fighter_merc" />
@@ -5996,17 +6028,19 @@
       <template name="NPCCharacter.spc_arthedain_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_arthedain_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_arthedain_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_arthedain_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_arthedain_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_arthedain_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_arthedain_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_arthedain_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_arthedain_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_arthedain_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.arthedain_dunadan_youth_merc" />
@@ -6294,17 +6328,19 @@
       <template name="NPCCharacter.spc_cardolan_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_cardolan_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_cardolan_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_cardolan_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_cardolan_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_cardolan_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_cardolan_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_cardolan_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_cardolan_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_cardolan_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.cardolan_dunadan_merc" />
@@ -6592,17 +6628,19 @@
       <template name="NPCCharacter.spc_rhudaur_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_rhudaur_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_rhudaur_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_rhudaur_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_rhudaur_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_rhudaur_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_rhudaur_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_rhudaur_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_rhudaur_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_rhudaur_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.rhudaur_dunadan_merc" />
@@ -6886,17 +6924,19 @@
       <template name="NPCCharacter.spc_eredluin_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_eredluin_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_eredluin_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_eredluin_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_eredluin_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_eredluin_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_eredluin_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_eredluin_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_eredluin_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_eredluin_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.eredluin_noble_merc" />
@@ -7163,18 +7203,19 @@
       <template name="NPCCharacter.spc_anduinvale_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_sturgia_one_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_sturgia_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_anduinvale_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_anduinvale_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_anduinvale_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_sturgia_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_sturgia_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_sturgia_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_anduinvale_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_anduinvale_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_anduinvale_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_sturgia_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_sturgia_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_sturgia_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_anduinvale_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_anduinvale_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_anduinvale_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.anduinvale_beorning_youth_merc" />
@@ -7441,18 +7482,19 @@
       <template name="NPCCharacter.spc_angaladh_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_sturgia_one_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_sturgia_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_angaladh_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_angaladh_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_angaladh_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_sturgia_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_sturgia_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_sturgia_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_angaladh_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_angaladh_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_angaladh_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_sturgia_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_sturgia_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_sturgia_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_angaladh_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_angaladh_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_angaladh_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.angaladh_ironwood_youth_merc" />
@@ -7719,18 +7761,19 @@
       <template name="NPCCharacter.spc_dorwinion_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_sturgia_one_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_sturgia_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_dorwinion_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_dorwinion_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_dorwinion_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_sturgia_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_sturgia_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_sturgia_two_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_dorwinion_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_dorwinion_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_dorwinion_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_sturgia_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_sturgia_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_sturgia_four_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_dorwinion_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_dorwinion_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_dorwinion_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.dorwinion_noble_merc" />
@@ -7999,21 +8042,19 @@
       <template name="NPCCharacter.spc_southrhovanion_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
-      <template name="NPCCharacter.tournament_template_vlandia_one_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_vlandia_one_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_vlandia_one_participant_set_v3" />
+      <template name="NPCCharacter.taom_tournament_southrhovanion_one_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_southrhovanion_one_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_southrhovanion_one_participant_set_v3" />
     </tournament_team_templates_one_participant>
     <tournament_team_templates_two_participant>
-      <template name="NPCCharacter.tournament_template_vlandia_two_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_vlandia_two_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_vlandia_two_participant_set_v3" />
-      <template name="NPCCharacter.tournament_template_vlandia_two_participant_set_v4" />
+      <template name="NPCCharacter.taom_tournament_southrhovanion_two_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_southrhovanion_two_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_southrhovanion_two_participant_set_v3" />
     </tournament_team_templates_two_participant>
     <tournament_team_templates_four_participant>
-      <template name="NPCCharacter.tournament_template_vlandia_four_participant_set_v1" />
-      <template name="NPCCharacter.tournament_template_vlandia_four_participant_set_v2" />
-      <template name="NPCCharacter.tournament_template_vlandia_four_participant_set_v3" />
-      <template name="NPCCharacter.tournament_template_vlandia_four_participant_set_v4" />
+      <template name="NPCCharacter.taom_tournament_southrhovanion_four_participant_set_v1" />
+      <template name="NPCCharacter.taom_tournament_southrhovanion_four_participant_set_v2" />
+      <template name="NPCCharacter.taom_tournament_southrhovanion_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
       <template name="NPCCharacter.southrhovanion_northman_youth_merc" />
