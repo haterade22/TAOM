@@ -19,6 +19,8 @@ so a javelin troop tagged Ranged is placed and commanded as a backline archer wh
 frontline kit (the Harondor skirmisher fix, CHANGELOG-2026-H2-handwritten). A mount or launcher in
 only SOME sets cannot be expressed by one group: those troops are reported as MIXED for a human
 decision. faction_ui_picker_characters.xml holds portrait dummies that never fight and is skipped.
+taom_tournament_templates.xml is skipped too: each entry is a list of weapon rosters handed to arena
+fighters one per team member (#422), never a troop, so its default_group places nobody.
 
 Read-only. Item types come from the repo's own ModuleData plus the installed item modules.
 
@@ -45,7 +47,7 @@ LAUNCHER_TYPES = {"Bow", "Crossbow", "Sling", "Musket", "Pistol"}
 THROWN_TYPES = {"Thrown"}
 THROWN_TEMPLATE_RE = re.compile(r"javelin|throwing", re.I)
 WEAPON_SLOTS = {"Item0", "Item1", "Item2", "Item3"}
-SKIP_FILES = {"faction_ui_picker_characters.xml"}
+SKIP_FILES = {"faction_ui_picker_characters.xml", "taom_tournament_templates.xml"}
 
 
 def _strip_ns(tag: str) -> str:
