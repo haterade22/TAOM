@@ -209,11 +209,19 @@ CrashReport catches the throw and offers Continue, which leaves the map event ha
 
 A player who chose "Continue (risky)" on the Patch169 crash and then saved holds a player encounter whose siege map event is finalized but not finished: the parties are still attached and, after a load, the event component has no `MapEvent` back-reference, so every map tick throws a NullReferenceException in `OnPlayerEncounterFinalizeBattle`.
 
-`Patch170_HalfFinishedEncounterRepair` is a prefix on `PlayerEncounter.FinalizeBattle()` that always returns true. `HalfFinishedEncounterService.Decide` acts only on a finalized event with a null back-reference or parties still attached; a healthy encounter never matches, and a second call finds nothing to do. The repair is the side-end step of vanilla's finish (it skips `MapEventVisual.OnMapEventEnd` and `FinalizeComponent`; after a load both are no-ops, and `AfterSiegeCompleted`'s only vanilla listener does nothing on a defender win): `MapEventComponent.AfterLoad(mapEvent)` (internal, reached by `AccessTools`) when the back-reference is missing, then `MapEventSide.HandleMapEventEnd()` on the defender side and the attacker side. Heroes in the attached parties marked `DiedInBattle` die as vanilla would, because `HandleMapEventEnd` runs vanilla's kill loop. Marked heroes still alive afterwards (for example the party that threw, already detached) are counted in the log line, over all living marked heroes and not only this battle's, and die at the end of their next battle as vanilla would. If restoring the back-reference works but ending a side throws, vanilla still finishes the encounter and the repair retries on the next `FinalizeBattle`. When `ICoopSessionProvider.ShouldDeferToHost` holds, the service stands down. Registry: [Patch170_HalfFinishedEncounterRepair](../reference/harmony-patch-registry.md#patch170_halffinishedencounterrepair).
+`Patch170_HalfFinishedEncounterRepair` is a prefix on `PlayerEncounter.FinalizeBattle()` that always returns true. `HalfFinishedEncounterService.Decide` acts only on a finalized event with a null back-reference or parties still attached; a healthy encounter never matches, and a second call finds nothing to do. The repair is the rest of vanilla's finish: `MapEventComponent.AfterLoad(mapEvent)` (internal, reached by `AccessTools`) when the back-reference is missing, then `MapEventSide.HandleMapEventEnd()` on the defender side and the attacker side, then `MapEventVisual.OnMapEventEnd()` and the internal `MapEventComponent.FinalizeComponent()`. Vanilla's `FinalizeBattle` reaches only `FinalizeEvent`, a no-op on a finalized event, so the last two run once. After a load most of them do nothing (the visual is null and the siege flags are unsaved), but a blockade's `OnFinalize` still ends its siege when the defenders lost. Heroes in the attached parties marked `DiedInBattle` die as vanilla would, because `HandleMapEventEnd` runs vanilla's kill loop. Marked heroes still alive afterwards (for example the party that threw, already detached) are counted in the log line, over all living marked heroes and not only this battle's, and die at the end of their next battle as vanilla would. If restoring the back-reference works but ending a side throws, vanilla still finishes the encounter and clears its battle, so Patch170 does not see that event again; the orphaned battle sweep finishes it within an in-game hour unless the player's party is still attached to it. When `ICoopSessionProvider.ShouldDeferToHost` holds, the service stands down. Registry: [Patch170_HalfFinishedEncounterRepair](../reference/harmony-patch-registry.md#patch170_halffinishedencounterrepair).
 
 **Needs Patch169:** re-running `HandleMapEventEnd` for the attacker side can otherwise throw the original ArgumentOutOfRangeException again.
 
 **In game (owed):** load the player's save with Patch169 and Patch170. Expect no NullReferenceException, the encounter closes, the log shows the `[MapEventGuard] finished a half-finished encounter` line, and the attacking lords move again.
+
+## Orphaned AI battles
+
+A player's report (2026-11-19, TAOM 2.0.40) found 6 AI map events in one save that were finalized, absent from `MapEventManager.MapEvents`, and still referenced by 232 parties. Those armies sat in battles nobody ran. The cause is the Patch169 crash in an AI battle: `MapEvent.FinalizeEventAux` sets `WaitingRemoval` before `HandleMapEventEnd` detaches the parties, the roster read throws inside that loop, and "Continue" on the crash dialog leaves the rest attached. `MapEventManager.Tick` then drops the event because it is finalized. The stuck-battle sweep cannot see it, because it reads only the manager's list. After a load the event's component also has no back-reference, so the normal `MapEventSide = null` path throws a NullReferenceException in `FieldBattleEventComponent`.
+
+`OrphanedBattleCampaignBehavior` runs `OrphanedBattleService.RepairAll` once per in-game hour, so the first hour after a load repairs a broken save. `OrphanedBattleAdapter` finds each distinct finalized event that a mobile party still references, except the player's encounter (Patch170 owns that). The service applies Patch170's rule (`HalfFinishedEncounterService.Decide`) and its steps, shared through `HalfFinishedEncounterAdapter`: `MapEventComponent.AfterLoad(mapEvent)` when the back-reference is missing, then `HandleMapEventEnd()` on the defender side and the attacker side, then the rest of vanilla's finish: `MapEventVisual.OnMapEventEnd()` and the internal `MapEventComponent.FinalizeComponent()`. Heroes marked `DiedInBattle` die and empty or beaten parties are destroyed, as vanilla does. Patch170 runs the same finish step. After a load it does almost nothing (the visual is null and the siege and raid flags are unsaved), but in the same session it fires `AfterSiegeCompleted`, the raid's re-raid order and the visual teardown that the crash skipped, and a blockade's `OnFinalize` ends its siege when the defenders lost, load or not. The player's own repair cleared `PartyBase._mapEventSide` by reflection; that skips those steps, so TAOM does not use it. One event that throws does not stop the others, keeps any partial progress, is retried each hour and is warned about once. The sweep stands down in any co-op session.
+
+**Needs Patch169**, as Patch170 does. **In game (owed):** load a save that holds orphaned battles. Within one in-game hour expect one `finished an orphaned battle` line per event and the armies moving again.
 
 ## Stuck AI battles
 
@@ -335,6 +343,8 @@ print, let an in-game hour pass, and print again.
 | `Main/Features/MapEventGuard/EncounterGuardModule.cs` | IoC registration for Patch142, Patch143 and the menu; declares the Patch169 category |
 | `Main/Features/MapEventGuard/Hooks/Patch169_BattleDeathRosterSnapshot.cs` | The transpiler class on `MapEventSide.HandleMapEventEndForPartyInternal` |
 | `Main/Features/MapEventGuard/Hooks/BattleDeathRosterTranspiler.cs` | `Materialize` and the one-call insert |
+| `Main/Features/MapEventGuard/OrphanedBattleService.cs`, `Hooks/OrphanedBattleCampaignBehavior.cs` | The orphaned AI battle sweep and its hourly tick |
+| `Main/Adapters/IOrphanedBattleAdapter.cs`, `OrphanedBattleAdapter.cs`, `IOrphanedBattleEventAdapter.cs`, `OrphanedBattleEventAdapter.cs` | Finds finalized events through attached parties; runs the steps shared with `HalfFinishedEncounterAdapter` |
 | `Main/Features/Enlistment/Hooks/EnlistmentBattleBehavior.cs` | `LogSiegeAftermathContext`, the siege-only diagnostic that will close #557's open question |
 | `Main/SubModule.cs` | `Initialize(...)` plus `PatchCategory(...)` for all four categories in the `OnGameInitializationFinished` batch, and `ResetForUnload` |
 
@@ -391,6 +401,10 @@ battles it judges and has a second reader in the console command, so it has the 
   Coop-shaped transpiler still applies in either order, and the JIT accepts the result; no match leaves the method alone with one warning and one self-disable report; the module
   applies the category at game init.
 
+- `TAOM.Tests/Features/MapEventGuard/OrphanedBattleServiceTests.cs`: the co-op stand-down (session and
+  defer), live and cleanly finalized events left alone, restore then defenders then attackers after a load,
+  no restore in the same session, one throwing event not stopping the rest, and one warning per failing event.
+
 The per-event adapter itself is not unit-testable (`MapEvent`'s constructor is internal); it is verified
 in game with `taom.print_stuck_battles`.
 
@@ -431,6 +445,10 @@ Search the TAOM debug log for `[MapEventGuard]`:
   a partial write: an award sets the winner before the engine commits the results, and a detach can
   throw after earlier parties have left. Read the battle with `taom.print_stuck_battles`.
 - `[StuckBattle] hourly sweep failed` means the whole pass threw.
+- `[MapEventGuard] finished an orphaned battle: ...` (WARNING) means the sweep released the parties of a
+  battle a crash left half finalized. Look for the earlier crash in the same save's history.
+- `[MapEventGuard] could not finish orphaned battle ...` (WARNING, once per battle) means a repair step threw;
+  the sweep retries each hour.
 
 ## Performance
 
@@ -460,6 +478,7 @@ would act on.
 - 2026-11-17: added `Patch159_HelpDefendersArmyLeader`, from Silas He's v1.5.6 fix package (#1429).
 - 2026-11-18: added `Patch169_BattleDeathRosterSnapshot`, from a player's crash bundles (#1475). Not yet verified in game.
 - 2026-11-19: added `Patch170_HalfFinishedEncounterRepair`, a save repair for a half-finished siege encounter after a failed battle end.
+- 2026-11-19: added the orphaned AI battle sweep, from a player's report and repair module. Not yet verified in game.
 
 ## GitHub Issue
 
