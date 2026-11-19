@@ -1562,3 +1562,37 @@ to 0.19 degrees over 92 clips.
 - **Source:** [yotthani, game 1.4.6 to 1.5.3, one PC, not re-checked by TAOM on v1.5.7] `yotthani/bannerlord`
   `HoN/DualWield/tools/README.md@c45d8374` ("Things that are true and cost a day each", "Segment layout, settled"); the layout
   is in [bannerlord-animation-clip-flags.md](../../reference/bannerlord-animation-clip-flags.md).
+
+### A gait clip's travel per loop is a measurement of its master, never a number to type (#1474, 2026-11-18)
+The elephant and the mumak skated above a walk. Their four gait clips carried round travel values (walk 2.0 m, trot
+3.0, canter 3.6, gallop 3.0), and all four masters were one walk cycle at three lengths whose feet covered 1.56 to
+1.69 m. The engine plays a gait at speed over `LoopDisplacement`, so at a canter the body moved 3.6 m while the feet
+stepped 1.56 m. The June refinement had measured stance slip, lift and footfall order in Blender and never compared
+the stride with the clip record, which lives in another file that only the Kit showed.
+- **Why missed:** the motion and its metadata were judged apart. A time-compressed walk looks like a faster gait in
+  Blender, where nothing moves the ground; the canter and the gallop also shared one master while claiming 3.6 m
+  and 3.0 m, which no single master can satisfy.
+- **Prevent:** `python tools/check_gait_stride.py` reads both files and fails a clip whose feet cover more or less
+  than 5% off its claim. Run it after a master rewrite, a Kit reimport or a `LoopDisplacement` edit. Judge a gait
+  over a ground that moves at the claimed speed (`tools/blender/elephant_apply_clip.py --sequences`).
+- **Source:** issue #1474; `docs/features/elephant.md` "Locomotion rebuilt from a real elephant walk" (the table
+  of claims against measured strides, before and after).
+
+### A rewritten master changes nothing in the game until the Kit cooks its clips again (#1474, 2026-11-19)
+`tools/elephant_write_masters.py` replaced the keyframe segment of seven Kit-compiled elephant masters in place
+on 2026-11-18. The stride gate passed on the files, both beasts ran two Fords matches with no fault, and the
+work was reported as live. It was not: the client plays a clip from its RuntimeDataCache entry, and that entry
+holds the keys the Kit cooked from the master (15 KB for a 61-frame clip, 11 KB for 38 frames, 41 KB for 270).
+The seven entries still carried their June dates.
+- **Why missed:** "masters never get a cache entry and play anyway" was read as "the client reads the master".
+  The entry that matters is the CLIP's. The matches proved only that nothing crashed, and the camera never showed
+  a beast. `tools/repoint_anim_clip.py` already said the entry holds cooked keys; it was not read first.
+- **Prevent:** `python tools/check_gait_stride.py` fails a bound clip whose cache entry is older than its master
+  or missing. A new or changed master needs one Kit start with the module loaded before any claim about the
+  game. Proof that a motion change is live is a cache entry dated after the master, then a look at the creature.
+- **Still true:** a master's data segment is plain float keys (a sized name, the bone count, per bone a rotation
+  track then a position track, then the root position and root scale tracks; a track is two uint32 (0, 16), a
+  key count, the key times and 16 bytes a key), and a tool can write it. The Kit's own items in these packages
+  do not satisfy the metadata checksum formula, so verify only what a tool wrote.
+- **Source:** issue #1474; `docs/features/elephant.md` "What the first attempt got wrong";
+  `tools/tests/test_elephant_gait_tools.py` (`CacheStateTests`).

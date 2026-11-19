@@ -1,5 +1,13 @@
 # War Elephant (Harad rideable mount)
 
+> **Locomotion (#1474): new gait and idle clips are built and wait for one Modding Kit start (2026-11-19).**
+> The slide at speed has one main cause: each gait clip claimed 2.0 to 3.6 m a loop and its feet covered about
+> 1.6 m. The war elephant and the mumak each get their own clips (`war_elephant_*`, `mumakil_*`), retargeted from
+> a licensed African elephant walk, with feet that cover the claimed travel. **The game does not show them yet:**
+> it plays the keys the Kit cooked into each clip's cache entry, so a rewritten master changes nothing until the
+> Kit starts once. Gate: `python tools/check_gait_stride.py`. Detail: "Locomotion rebuilt from a real elephant
+> walk" below.
+
 > **Current state (2026-09-29): KEYforce's art, confirmed in game.** The elephant's body is KEYforce's
 > `sk_elephant_basemesh_a` (`Assets/creature/elephant/mesh/SK_Elephant_Basemesh_A_geo.tpac`), replacing ADOD_Beasts's
 > `elephant_mesh`. Its harnesses are KEYforce's six (`SK_Elephant_Armor_Variations_geo.tpac`), all `family_type="10"`:
@@ -466,8 +474,10 @@ elephant biomechanics, measured with a foot-trajectory analyzer (`_refine_tools/
 `elephant_skeleton_notused`, 60 bones, no mesh, Bannerlord axes, baked, take-named; round-trip
 verified on Blender **5.1.2** — slotted-action API, `Action.fcurves` replaced by
 layers/slots/channelbags). Work scene `elephant_refine_WORK_20260612.blend`; tooling + before/after
-renders (`CMP_walk_src_vs_refined.png`) in sibling dirs; pristine backups in `_backups\`. **NOT
-Kit-compiled / in-game-tested** (Blender→tpac is GUI-only). Compile steps + the **mandatory
+renders (`CMP_walk_src_vs_refined.png`) in sibling dirs; pristine backups in `_backups\`. This paragraph
+said the set was never Kit-compiled. That was wrong by 2026-06-13 16:24: the live masters of that date are this
+set, frame for frame (walk 61, trot 48, and the 38-frame run as both canter and gallop), read back on 2026-11-18.
+Compile steps + the **mandatory
 `quad_movement` clip-usage tagging per clip** (else AV at `Skeleton.TickAnimations`):
 `clips_refine_20260612\README_HANDOFF.md`. Faithful ADOD_Beasts baselines kept (`*_SRC` actions) to A/B
 in-game. Memory: `project-elephant-animation-refine-inflight`.
@@ -501,6 +511,140 @@ the gaits; rider clip authoring (in progress separately).
 > Kit-ready **FBX in `clips_refine_20260613\` are the canonical deliverables** (instance-
 > independent). The `.blend` got Save-As'd to `troll_anim_WORK_20260613.blend` (16.6 MB, full
 > elephant scene + an in-progress rider composite) — naming is muddled but no data was lost.
+
+### Locomotion rebuilt from a real elephant walk (2026-11-18, #1474)
+
+**What was wrong.** The June set was one walk cycle at three lengths, and its clips carried hand-typed travel
+per loop. The engine plays a gait at (speed / scale) / LoopDisplacement loops a second, so a clip that claims
+more ground than its feet cover slides. Read from the installed files with `tools/check_gait_stride.py`:
+
+| Clip | Claims | Feet covered before | Worst slip a stance before | After |
+|---|---|---|---|---|
+| `elephant_walk` | 2.0 m | 1.58 m | 0.44 m | 1.99 m, 0.05 m |
+| `elephant_trot` | 3.0 m | 1.69 m | 0.69 m | 2.99 m, 0.03 m |
+| `elephant_canter` | 3.6 m | 1.56 m | 0.95 m | 3.58 m, 0.03 m |
+| `elephant_gallop` | 3.0 m | 1.56 m | 0.72 m | 2.99 m, 0.07 m |
+| `elephant_walk_backwards` | 2.0 m | 1.62 m | 0.44 m | 1.99 m, 0.06 m |
+| `elephant_turn_left`, `_right` | 1.5 m | 1.75 m | 0.28 m | 1.49 m, 0.04 m |
+
+The old front feet were planted for 18% to 20% of the loop and sat 5 to 6 cm under the ground plane.
+
+**The source.** A licensed film-quality African elephant pack (four Blender 2.91 scenes: walk, walk and look,
+stop, play; a 552-bone rig). Mike confirmed on 2026-11-18 that bone keys retargeted onto our own rig may ship; no
+mesh, rig or texture of the pack is used or stored in the repo. Its walk: 1.19 m/s, one cycle in 78 frames,
+3.09 m a cycle at a 2.70 m hip, footfall order rear-left, front-left, rear-right, front-right, planted feet
+within 2 cm.
+
+**The method** (`tools/elephant_gait_retarget.py`, pure Python; its header has the full account):
+
+- The sole is the driven point. It follows the pack's foot pad, which stands still through the stance; the wrist
+  or ankle is placed from it and a 2-bone solve places elbow and knee. Driving the wrist let the foot's roll move
+  the sole.
+- The pelvis follows the pack's hip joints; the chest follows the midpoint of its shoulder joints. A real
+  elephant's shoulder slides about 0.4 m along the ribcage in a stride and our clavicle is 0.53 m of fixed bone,
+  so the pack's full stride (2.87 m on our rig) needs bent legs. Each clip takes a shorter step instead.
+- A faster gait keeps the footfall order and shortens the stance share of the cycle (an elephant has no aerial
+  phase). The stance stays linear in time; the swing eases in and out of the stance rate. A shortened stance
+  needs a lower body or the rear legs cannot reach: trot and gallop ride 3 cm lower than the walk, the canter 5.
+- Neck and head keep our own carriage and take the pack's motion about its mean; trunk, ears and tail swing
+  about our rest shape; the ears at 55% (the pack fans its ears to the vertical in every stride).
+
+**What the first attempt got wrong (2026-11-18, corrected 2026-11-19).** `tools/elephant_write_masters.py`
+replaced the keyframe segment of the seven Kit-compiled gait masters in place, the stride gate passed on those
+files, and two Fords matches ran with no fault. None of that showed the new motion in the game. The client plays
+a clip from its RuntimeDataCache entry, which holds the keys the Kit cooked from the master (15 KB for the
+61-frame walk, 11 KB for the 38-frame canter, 41 KB for the 270-frame `elephant_stand_1`), and the seven entries
+still carry their June dates. The "After" column above is true of the master files only. The gate now reads
+the entry's date too and fails a bound clip whose entry is older than its master. The seven rewritten
+`elephant_*` masters stay (each has a `.bak-pre1474` twin); if a Kit start cooks their clips again, the result
+passes the gate's stride check.
+
+**Set 2 (2026-11-19): own clips for each beast.** Mike asked for separate clips because the mumak is three
+times the elephant's size. The engine divides speed by agent scale, so one clip fits both for the slide. The
+mumak's own set is for the look: a longer stride gives it a slower step at its speed.
+
+| Clip | War elephant (`war_elephant_*`) | Mumak (`mumakil_*`) |
+|---|---|---|
+| walk | 2.4 m, 61 keys | 3.0 m, 76 keys, stance 1.22 times shorter |
+| trot | 3.2 m, 48 keys | 3.4 m, 61 keys |
+| canter | 3.8 m, 38 keys | 3.8 m, 48 keys |
+| gallop | 4.2 m, 38 keys | 4.2 m, 48 keys |
+| backward walk | 2.0 m, 61 keys | 2.4 m, 76 keys |
+| turns | 1.5 m, 61 keys | 1.8 m, 76 keys |
+| idle 1 | the pack's play scene, frames 0 to 200, forward then back, 13.3 s | the same take, 18.7 s |
+| idle 2 | frames 190 to 345 (a front foot lifts, the trunk curls), 10.3 s | the same take, 14.5 s |
+
+Worst slip in a stance is 1.5 cm in every gait and no leg is more than 3.2 cm short of its target (each set's
+`report.json`). The mumak's body swings 20% more from side to side and its trunk, ears and tail 20% less. At
+2.2 m/s in model units its walk plays at 0.72 loops a second (1.1 with the shared clip). An idle stands on
+our own rest footprint: a foot pad is measured from where it stands in the take's first frame, or the feet
+would glide to the pack animal's staggered stance each time the engine blends into the clip.
+
+How the set is built, with no Kit import:
+
+1. `tools/elephant_gait_retarget.py` writes the clip JSONs (`--gait` for a gait, `--take` for an idle).
+2. `tools/elephant_write_masters.py --new` writes each as a NEW master package, cloned from a Kit-compiled
+   one: new names, GUIDs that depend only on the name, the import record and the animation repointed at each
+   other. TpacTool reads all 18 back with the right name, key count and skeleton. No Kit has loaded one yet.
+3. `tools/gen_elephant_anim_clips.ps1` writes one AnimationClip record per master. Each clones the elephant
+   clip that plays the role today, so flags, blends and pace switch limits do not change; only the master, the
+   range, the travel and the four step points do. The trot clones the WALK record, because `as_elephant` has
+   always bound the trot action to the walk clip.
+4. **One Kit start with the Armory loaded**, then save and close: the Kit cooks the 18 cache entries.
+   `python tools/check_rdc_entries.py --under creature/elephant` and `python tools/check_gait_stride.py`
+   confirm it.
+5. Only then bind them. In the live `ModuleData/action_sets.xml`, `as_elephant` takes the `war_elephant_*`
+   clips for its gait, turn and stand actions, and a new `as_mumakil` (`base_set="as_elephant"`) takes the
+   `mumakil_*` clips; `lotr_monster_mumakil.xml` then names `action_set="as_mumakil"`. A clip bound with no
+   cache entry crashed `Agent.SetActionSet` in another modder's test
+   ([animation system map](../reference/bannerlord-animation-system-map.md), RuntimeDataCache).
+
+**Never reimport the old `AssetSources/creature/elephant/animations/*.fbx` in the Kit: that puts the June clips
+back.** The clips as FBX, for a Kit import if the Kit refuses a cloned master:
+`E:\LOTRAOMAssets\Elephant\clips_retarget_20261119\`. Check sheets, build inputs and the staged packages:
+`E:\LOTRAOMAssets\Elephant\_measure_20261118\set2\`. Rebuild (`<walk>` and `<play>` are the two scenes'
+`sample.json`; the mumak runs add `--secondary 0.8`, and its gaits `--sway 1.2`):
+
+```
+python tools/elephant_gait_retarget.py --pack <walk> --rig <rig.json> --out <set>/war_elephant \
+  --gait war_elephant_walk:61:2.4:1.0:forward:0:-0.03 --gait war_elephant_trot:48:3.2:1.3:forward:0:-0.02 \
+  --gait war_elephant_canter:38:3.8:1.55:forward:0:0.0 --gait war_elephant_gallop:38:4.2:1.7:forward:0:0.0 \
+  --gait war_elephant_walk_backwards:61:2.0:1.0:reverse:0 \
+  --gait war_elephant_turn_left:61:1.5:1.0:forward:0 --gait war_elephant_turn_right:61:1.5:1.0:forward:0
+python tools/elephant_gait_retarget.py --pack <walk> --rig <rig.json> --out <set>/mumakil --secondary 0.8 --sway 1.2 \
+  --gait mumakil_walk:76:3.0:1.22:forward:0:0.01 --gait mumakil_trot:61:3.4:1.38:forward:0:0.03 \
+  --gait mumakil_canter:48:3.8:1.55:forward:0:0.04 --gait mumakil_gallop:48:4.2:1.7:forward:0:0.04 \
+  --gait mumakil_walk_backwards:76:2.4:1.0:reverse:0:-0.03 \
+  --gait mumakil_turn_left:76:1.8:1.0:forward:0:-0.03 --gait mumakil_turn_right:76:1.8:1.0:forward:0:-0.03
+python tools/elephant_gait_retarget.py --pack <play> --rig <rig.json> --out <set>/war_elephant_idle \
+  --take war_elephant_idle_1:0:200:101:pingpong:first:0.02 --take war_elephant_idle_2:190:345:78:pingpong:first:0.02
+python tools/elephant_write_masters.py --clip <set>/<group>/<clip>.json --master <live>/elephant_walk_geo.tpac \
+  --new --out <live animations folder>
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "& tools\gen_elephant_anim_clips.ps1 -Reports @(...) -Apply"
+python tools/check_gait_stride.py
+```
+
+**Measured in a match** (Fords, Harad, run `E:/Temp/fords-runs/20261118-181137`): the war elephant moves at
+9.5 m/s, which is 7.3 m/s at model size; the mumak moves at 6.5 m/s, 2.2 at model size, inside the walk
+clip's limits (0.2 to 2.5).
+
+**Still open:**
+
+- State on 2026-11-19: the 18 masters and 18 clip records are built and verified in
+  `E:\LOTRAOMAssets\Elephant\_measure_20261118\set2\stage\`, and are NOT yet in the Armory (the Kit launcher was
+  open, and the tools do not write while it runs). Owed in order: copy the masters in and run the clip generator
+  with `-Apply`, the Kit start (step 4), the binding (step 5), a Fords match, and a look at both beasts.
+- Pace switch limits are not examined. The trot action shares the walk's limits (0.2 to 2.5) and the
+  canter's start at 4.8, so what the engine plays between 2.5 and 4.8 m/s is not known.
+- No stop clip. The pack's stop scene walks on a curve, and `Take` takes neither a path nor a turn out, so
+  a front leg ends 16 cm short. `act_elephant_quick_stop` still binds a two-frame pose. The turn clips are a
+  short-step walk with no turn character.
+- The fast gaits ride low: the rear knee bends to 125 degrees in the gallop's stance (118 on the mumak). A
+  look in a battle decides if that reads as a charge.
+- `tools/verify_mount_assets.py elephant` fails on `act_elephant_forward_walk_stand` and
+  `act_elephant_backward_walk_stand` (bound to `elephant_stand_2`, no `quad_movement`). No file of this work is
+  involved; whether the row is a gate false positive (the warg's stand twins are exempt for that reason) is
+  not checked.
 
 ### The real ADOD_Beasts animation source — found, but unsliced (2026-06-06)
 

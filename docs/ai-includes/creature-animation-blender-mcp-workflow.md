@@ -10,6 +10,13 @@ rider-animation system, and fixed the chariot's untagged gait clips. Companion t
 > library via **Auto-Rig Pro retargeting** (instead of hand-authored quadruped gaits), see
 > [`troll-race-arp-retargeting-workflow.md`](troll-race-arp-retargeting-workflow.md).
 
+> **Retargeting a real animal's motion instead of refining by hand (2026-11-18, #1474):** the elephant's gaits now
+> come from a sampled real walk through `tools/elephant_gait_retarget.py`. `tools/elephant_write_masters.py`
+> writes the masters and `tools/gen_elephant_anim_clips.ps1` the clip records with no Kit import, but **the game
+> plays a clip from the cache entry the Kit cooks, so every new or changed master still needs one Kit start**
+> before the game shows it. Procedure and numbers: [`elephant.md`](../features/elephant.md) "Locomotion rebuilt
+> from a real elephant walk". Gate: `python tools/check_gait_stride.py`.
+
 > **Hard boundary:** Blender → `.tpac` compile is **Modding-Kit-GUI-only**. This workflow produces
 > refined clips + **Kit-ready FBX**; it cannot compile or in-game-test them. Movement clips then MUST
 > be tagged `quad_movement` at Kit compile (see [`spider.md`](../features/spider.md) "How-to") or the

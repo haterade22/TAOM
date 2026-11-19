@@ -4,6 +4,12 @@
 > [War Elephant](elephant.md): a ridden Harad mount that auto-attacks (trample + tusk) and **charges** into melee.
 > Phase 2 (#627) put a crew on the war tower: eight archers across its three decks, standing on an attached
 > navmesh. **All eight confirmed drawing and loosing in game, 2026-09-22.**
+>
+> **Locomotion (#1474, 2026-11-19):** the mumak gets its own gait and idle clips (`mumakil_*`, a 3.0 m walk
+> where the shared clip had 2.0 m) and its own action set `as_mumakil`, once the Modding Kit has cooked their
+> cache entries; until then it plays the elephant's June clips ([elephant.md](elephant.md), "Locomotion rebuilt
+> from a real elephant walk"). At its 3.0 scale it moves at 2.2 m/s in model units, inside the walk clip's
+> limits, so the walk is the clip that matters for it. Gate: `python tools/check_gait_stride.py`.
 
 ## Overview
 
