@@ -155,7 +155,8 @@ public class SpiderStrikeCapTests
     public void CappedStrike_ALooseMountOfUnknownSide_IsCountedAmongTheSpared_NotAsAMiss()
     {
         // #594: the creature diagnostics count apart every agent the side rule spares, so a loose mount of unknown
-        // side joins the allies and the arc's enemy count (inArc - allies) holds only what the strike may hit.
+        // side joins the allies and leaves the arc's enemy count (inArc - allies). A loose mount of known enemy side
+        // still counts there, though a capped strike never bites a loose mount.
         var spider = Spider();
         var looseHorse = HorseOf(rider: null!, 1.0f);
         var soldier = InArc(spider, 1.4f);

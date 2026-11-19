@@ -57,8 +57,10 @@ UNVERIFIED (2), as the orchestrator allowed:
 - Whether native updates `_cachedMountAgent` (`UpdateMountAgentCache`) synchronously inside
   `SetMountAgent`, and before `OnMount` on a remount. `native_decompile.py --string UpdateMountAgentCache`
   found no string. Vanilla `AgentHumanAILogic.OnAgentMount` reads `agent.MountAgent` in the same callback
-  (AgentHumanAILogic.cs:32-35), which points to yes. If it were late, a mount would be unrecorded and so
-  spared: a missed bite, never a wrong one.
+  (AgentHumanAILogic.cs:32-35), which points to yes. If it were late, the two cases fail apart. At spawn, the
+  mount is unrecorded and so spared: a missed bite. On a remount, it keeps the earlier record, so a horse
+  taken from the other side can be wrongly bitten by its new side, or wrongly spared by its old side once
+  loose. The in-game remount check stays owed.
 - Which thread native uses for `OnMount`. The engine does not declare it multi-thread callable; the
   handler is safe either way (`ConditionalWeakTable` is thread-safe, `Side.Team` is volatile, the body
   is in try/catch, and the log-once bool matters only on the error path).

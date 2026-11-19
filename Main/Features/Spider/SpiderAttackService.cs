@@ -173,7 +173,7 @@ public class SpiderAttackService : ISpiderAttackService
     }
 
     /// <summary>
-    /// Whether a strike may damage this target: present, active, not fading, not on the spider's side, and standing or
+    /// Whether a strike may damage this target: present, active, not fading, not spared by the side rule, and standing or
     /// routed. One predicate for both the uncapped hit and the capped strike's candidates, so the two cannot drift.
     /// </summary>
     private bool IsStrikeable(IAgentAdapter attacker, IAgentAdapter target)

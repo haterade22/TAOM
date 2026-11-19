@@ -16,7 +16,7 @@ comments and pinned the count with a test. Codex did not run.
 
 | # | Sev | Bug | Category | Why Missed | Preventive Action |
 |---|---|---|---|---|---|
-| F1 | LOW | `SpiderAttackService.IsSameSide` (SpiderAttackService.cs:197 at `d0abf3f49`) delegated to `CreatureBiteSides.Spares`, which also returns true for a loose mount of unknown side. `StrikeArc` counts its hits as `allies` when `countAllies` is set (:131), and `CreatureBanditDiag.NoteAttack` logs them as `alliesInArc` and takes `inArc - alliesInArc` as the enemies in the arc (CreatureBanditDiag.cs:201-204). So such a mount moved from the enemy count to the ally count, and the comments at :110-111 and :119 still said "allies". Diagnostics only: the capped strike skips every loose mount at :139 either way, and no damage changed. | Convention inconsistency: a widened predicate kept its old name | The plan changed the predicate's body and listed its two strike callers; the diagnostics caller sat behind `countAllies` and was read as unchanged. The name still read as a team test. | Renamed to `IsSpared`; the `StrikeArc` comments name what is counted; test `CappedStrike_ALooseMountOfUnknownSide_IsCountedAmongTheSpared_NotAsAMiss` (red on a mutant with the spare rule disabled: "Expected:<1>. Actual:<0>", green on the branch). Lesson added to `lessons/gamemodels-services.md`. |
+| F1 | LOW | `SpiderAttackService.IsSameSide` (SpiderAttackService.cs:197 at `d0abf3f49`) delegated to `CreatureBiteSides.Spares`, which also returns true for a loose mount of unknown side. `StrikeArc` counts its hits as `allies` when `countAllies` is set (:131), and `CreatureBanditDiag.NoteAttack` logs them as `alliesInArc` and takes `inArc - alliesInArc` as the enemies in the arc (CreatureBanditDiag.cs:201-204). So such a mount moved from the enemy count to the ally count, and the comments at :110-111 and :119 still said "allies". Diagnostics only: the capped strike skips every loose mount at :139 either way, and no damage changed. | Convention inconsistency: a widened predicate kept its old name | The plan named the diagnostics caller and recorded the widened count in a maintenance note, but kept the old name and the "allies" comments, and nothing turned a recorded change of meaning into a rename. | Renamed to `IsSpared`; the `StrikeArc` comments name what is counted; test `CappedStrike_ALooseMountOfUnknownSide_IsCountedAmongTheSpared_NotAsAMiss` (red on a mutant with the spare rule disabled: "Expected:<1>. Actual:<0>", green on the branch). Lesson added to `lessons/gamemodels-services.md`. |
 
 ## Why each agent missed these
 
@@ -27,8 +27,9 @@ comments and pinned the count with a test. Codex did not run.
   scope.
 - **Agents 1, 3, 4 and 6:** skipped by tier. Agent 1 (Standards) or Agent 6 (Design) would have been
   the natural lens for a name that no longer matches its body.
-- **The plan and the executor:** the plan replaced `IsSameSide`'s body in place and kept the name, so
-  the third caller, the ally count, read the same as before.
+- **The plan and the executor:** the plan replaced `IsSameSide`'s body in place and kept the name. It
+  named the diagnostics caller and recorded the widened count in a maintenance note, but nothing turned
+  that recorded change of meaning into a rename.
 
 ## Root-cause pattern
 
@@ -44,7 +45,9 @@ not a miss. What drifted was the name and the comments, so the fix is a rename, 
   never bites a loose mount (:139), so such an arc can still log `attack-whiff`. This predates plan 062.
 - FOLLOW-UP, no issue: the in-game check that `rider.MountAgent` is set when `OnAgentBuild` fires for
   spawned cavalry, and that native updates the mount cache before `OnMount`. Both are UNVERIFIED in
-  native code; the failure is safe (an unrecorded mount is spared, never wrongly bitten).
+  native code. A late cache fails two ways: at spawn the mount is unrecorded, so it is spared (a missed
+  bite); on a remount it keeps the earlier record, so a horse taken from the other side can be wrongly
+  bitten by its new side, or wrongly spared by its old side once loose. The remount check stays owed.
 
 ## Feedback memories to codify
 
