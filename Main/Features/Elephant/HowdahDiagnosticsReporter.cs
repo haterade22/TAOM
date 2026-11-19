@@ -228,6 +228,9 @@ internal sealed class HowdahDiagnosticsReporter
                         $" probe={seat?.Probe.FormatAndEndPeriod() ?? "n/a"}" +
                         $" step={SteppedName(rider)}" +
                         $" parentRoot={(rider.IsAgentParentEntitySameAs(_platformStrong) ? 1 : 0)}" +
+                        // The engine's movement mode. NoPhysics is what SetTargetZ and
+                        // SetExcludedFromGravity(true) write; the archers measured in it loosed no arrow (#1482).
+                        $" mode={rider.MovementMode.ToString().Replace(", ", "+")}" +
                         // Arrows actually loosed. Read against restarts: many restarts and few shots is the re-nock
                         // loop; restarts rising with shots is an archer shooting normally, since every shot restarts.
                         $" shots={(rider.Origin as HowdahCrewAgentOrigin)?.ShotsFired ?? -1}" +

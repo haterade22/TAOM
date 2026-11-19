@@ -1110,12 +1110,14 @@ whole battle, and the crew shoot, including from a moving elephant.
 **Gate 5 superseded 2026-11-19 (#1482).** At 1x game speed the deadband did not hold. The archer walked to the
 0.15 m band and the seat teleported it back about 16 times a second, every reload restart had a teleport inside
 it, and it loosed nothing. The seat now holds the archer with the engine's position lock (`Agent.SetTargetPosition`
-and `SetTargetZ` every tick) and attaches it to the platform (`Agent.SetForceAttachedEntity`). It teleports only an
-archer more than 3 m from its seat (`HowdahSeatMotion.SeatRescueMetres`), and on release it clears the attachment,
-the target frame and the gravity exclusion. The deadband constant is deleted. The hold was measured on the mumakil
-([mumakil.md](mumakil.md), "How the crew are held"): within 0.11 m of the seat at up to 5 m/s, with no teleport.
-The howdah has no navmesh under it, and its own measurement is owed: `tools/ingame_checks/1482.toml`, check
-`taom.crew-seats.howdah-held`, and the `[Howdah#n] status` fields `probe=rs/re(rs)/max/lag/off` and `parentRoot`.
+every tick) and attaches it to the platform (`Agent.SetForceAttachedEntity`). It never calls `SetTargetZ`: that puts
+the archer in the NoPhysics movement mode, and the mumakil archers measured in that mode loosed no arrow. It teleports only an archer more than 3 m
+from its seat (`HowdahSeatMotion.SeatRescueMetres`), and on release it clears the attachment and the target frame.
+The deadband constant is deleted. The hold was measured on the mumakil ([mumakil.md](mumakil.md), "How the crew are
+held"): within 0.12 m of the seat at up to 5 m/s, with no teleport, and 43 to 47 arrows loosed by each archer in
+three minutes. The howdah has no navmesh under it, so its floor body alone must hold the height, and its own
+measurement is owed: `tools/ingame_checks/1482.toml`, checks `taom.crew-seats.howdah-held` and `howdah-shot`, and
+the `[Howdah#n] status` fields `shots`, `mode` (it must read `Land`), `probe=rs/re(rs)/max/lag/off` and `parentRoot`.
 
 **How many archers a platform can carry is decided by CAPSULE SPACING, not deck area.** Two 0.37 m body capsules
 closer than 0.74 m overlap, and the engine shoves them apart every frame, against the seat's hold. The howdah interior is 1.26 by 1.48 m, so abreast is impossible (two capsules need 1.48 m of width)
@@ -1150,10 +1152,10 @@ terrain reads 0 as well, and face id 0 is walkable.
 
 ## Changelog
 
-- 2026-11-19 (#1482): the howdah seat holds its archer with the engine's position lock and attachment, in place of
-  the scripted position and the deadband teleport. One rescue teleport remains, past 3 m, and each seat writes a
-  `[Check] id=taom.crew-seats.howdah-held` line when its archer leaves. Measured on the mumakil; the howdah's own
-  battle is owed.
+- 2026-11-19 (#1482): the howdah seat holds its archer with the engine's position lock (no height target) and
+  attachment, in place of the scripted position and the deadband teleport. One rescue teleport remains, past 3 m,
+  and each seat writes `[Check]` lines for held and shot (`taom.crew-seats.howdah-held`, `howdah-shot`) when its
+  archer leaves. Measured on the mumakil; the howdah's own battle is owed.
 - 2026-11-06: the trample and tusk (shared `ElephantLikeAttackTasks`, also the war ram, mûmakil, elk and moose): a raised shield now cuts the blow to a quarter and stops the knockdown only when its bearer faces the attacker (`CustomAttacksUtils.ShieldBlocks`, the rule in `TAOM.Core.Combat.ShieldCover`); one held toward another enemy no longer covers a blow from behind ([RCA](../reviews/rca-dwarf-attacks-2026-11-06.md) follow-up).
 - 2026-09-29: KEYforce's art. The body is `sk_elephant_basemesh_a`; the harnesses are his six (three plain armours,
   three howdahs on one deck placement), `sk_elephant_armor_a` kept as the medium plain armour. All three howdahs get

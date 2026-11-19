@@ -277,8 +277,8 @@ public class TaomMumakilPlatform : UsableMachine
             }
         // Per seat: the upper-body action, then the probe (HowdahSeatProbe: rescues, restarts and how many of
         // those had a rescue inside them, the highest progress, the lag range over the period), the height error,
-        // what the archer stands on, and whether its native parent entity is this platform's root (1 while the
-        // seat's attachment holds).
+        // what the archer stands on, whether its native parent entity is this platform's root (1 while the seat's
+        // attachment holds), the arrows it has loosed, its movement mode and whether it has a target.
         // Named by its prefab entity (main_1, nest_0), never by a running count, which shifts when an archer dies.
         string draws = "";
         foreach (StandingPoint sp in StandingPoints)
@@ -288,9 +288,14 @@ public class TaomMumakilPlatform : UsableMachine
             if (!AgentSlotIdentity.IsCurrentOccupant(archer)) continue;
             float dz = archer.Position.z - s4.GameEntity.GlobalPosition.z;
             WeakGameEntity stepped = archer.GetSteppedEntity();
+            // shots is the proof that an archer shoots (restarts count aborted draws too); mode is the engine's
+            // movement mode, where NoPhysics is what SetTargetZ and SetExcludedFromGravity(true) set (#1482).
             draws += $" {s4.GameEntity.Name.Replace("mumakil_crew_", "")}:{s4.UpperBodyAction}/{s4.Probe.FormatAndEndPeriod()}" +
                      $"/dz{HowdahDiagnostics.Format(dz, 2)}/step={(stepped.IsValid ? stepped.Name : "-")}" +
-                     $"/parentRoot={(archer.IsAgentParentEntitySameAs(_rootEntity) ? 1 : 0)}";
+                     $"/parentRoot={(archer.IsAgentParentEntitySameAs(_rootEntity) ? 1 : 0)}" +
+                     $"/shots={(archer.Origin as MumakilCrewAgentOrigin)?.ShotsFired ?? -1}" +
+                     $"/mode={archer.MovementMode.ToString().Replace(", ", "+")}" +
+                     $"/tgt={(archer.GetTargetAgent() != null ? 1 : 0)}";
         }
         float meanSpeed = _periodSeconds > 0f ? _periodDistance / _periodSeconds : float.NaN;
         _logger?.LogInfo(

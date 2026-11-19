@@ -22,7 +22,8 @@ namespace TAOM.Features.Mumakil;
 ///    DefaultMove, whose Ranged row is about a hundredth of Melee (HumanAIComponent.cs:751-758).
 /// 3. Hold the archer with the engine's position lock and attach it to the platform (#1482). Its ranged behaviour
 ///    walks it off the seat toward a firing position it can never reach, beast standing or moving, and a scripted
-///    position at the seat did not stop that. Never NoAttack, which is the flag that silences the bow.
+///    position at the seat did not stop that. Position only: SetTargetZ puts the archer in the NoPhysics movement
+///    mode, and the archers measured in that mode loosed no arrow. Never NoAttack, which is the flag that silences the bow.
 /// 4. Never hold it by teleport. A teleport is a full native movement reset: every reload restart measured on
 ///    2026-11-19 had one inside it, and correcting the settle every frame reads to the engine as tens of m/s
 ///    (#627). One teleport remains, for an archer more than <see cref="HowdahSeatMotion.SeatRescueMetres"/> off.
@@ -80,7 +81,7 @@ public class TaomMumakilStandingPoint : StandingPoint
         userAgent.SetDetachableFromFormation(false);
         ApplyCrewCombatStance(userAgent);
         // Speed limit 0, once per occupancy. The first battle with a navmesh under the crew they wandered up to
-        // 7.06 m for better firing positions. The lock in OnTick now holds the position; both battles that
+        // 7.06 m for better firing positions. The lock in OnTick now holds the position; every battle that
         // measured the lock (2026-11-19) had this limit on, so whether the lock needs it is not known. Locomotion
         // only, turning and shooting untouched.
         userAgent.SetMaximumSpeedLimit(0f, isMultiplier: false);
@@ -89,8 +90,8 @@ public class TaomMumakilStandingPoint : StandingPoint
         Probe.Reset();
         // The attachment is what carries the archer WITH the platform (#1482, 2026-11-19, one mumakil at up to
         // 5 m/s): three attached seats stayed within 0.11 m of their seats with no rescue, while five seats with the
-        // lock alone lagged up to 3 m and were rescued. It is the vanilla attach, ClimbingMachine.OnUseAction on a
-        // moving ship's net. The root, never this seat's own entity: the root is the one TaomMumakilPlatform
+        // lock alone lagged up to 3 m and were rescued. It is the vanilla attach of ClimbingMachine.OnUseAction.
+        // The root, never this seat's own entity: the root is the one TaomMumakilPlatform
         // re-frames. Native keeps a raw entity pointer on the agent, so ReleaseAgent clears it.
         userAgent.SetForceAttachedEntity(GameEntity.Root);
     }
@@ -162,17 +163,20 @@ public class TaomMumakilStandingPoint : StandingPoint
 
         float seenSquared = (seatPosition - MovingAgent.Position).LengthSquared;
 
-        // A position LOCK holds the archer, never a correction (#1482, measured 2026-11-19 on three mumakil). The
-        // archers WALK off their seats by themselves, beast standing or moving: with the old 0.74 m correction a
-        // main-deck archer crept to the band and was teleported back 12 times per 5 s, every reload restart had
-        // a teleport inside it, and it stopped shooting. With no correction it walked 3 m off its deck. The one
-        // locked seat stayed within 0.03 m with no teleport and shot at the nest archer's rate. The lock is the
-        // engine's own hold for a standing point's user, and what ClimbingMachine sets each tick on a ship's net:
-        // a target the native movement goes to. Position only, so the archer still turns to aim. SetTargetZ
-        // sets the height target and puts the native movement in the gravity-excluded mode. The lock alone lags
-        // behind a beast at speed; the attachment set in OnUse is what removes that lag.
+        // A position LOCK holds the archer, never a correction (#1482, measured 2026-11-19). The archers WALK off
+        // their seats by themselves, beast standing or moving: with the old 0.74 m correction a main-deck archer
+        // crept to the band and was teleported back 12 times per 5 s, and it loosed nothing. With no correction it
+        // walked 3 m off its deck. The lock is the engine's own hold for a standing point's user: a target the
+        // native movement goes to. Position only, so the archer still turns to aim. The lock alone lags behind a
+        // beast at speed; the attachment set in OnUse is what removes that lag.
+        //
+        // NEVER SetTargetZ here. It puts the agent in AgentMovementMode.NoPhysics, the mode of a man on a climbing
+        // net, and the archers measured in it loosed nothing. Over three minutes on one mumakil, two seats with it read
+        // NoPhysics and loosed 0 arrows; three seats without it read Land and loosed 43 to 47 each, held as well
+        // (within 0.12 m at up to 5 m/s, no rescue). The deck's floor holds the height.
+        // The engine code that stops the shot is not read: the rule rests on that measurement.
+        // HowdahSeatReleaseTests.NoSeat_PutsItsArcherInTheNoPhysicsMovementMode gates it.
         MovingAgent.SetTargetPosition(seatPosition.AsVec2);
-        MovingAgent.SetTargetZ(seatPosition.z);
 
         // The safety net: an archer truly off its deck is placed back once, and counted.
         if (HowdahSeatMotion.ShouldCorrect(seenSquared, HowdahSeatMotion.SeatRescueMetres))
@@ -226,14 +230,11 @@ public class TaomMumakilStandingPoint : StandingPoint
         // is a raw entity pointer on the agent, and vanilla clears the same state at death (Agent.OnRemove stops
         // the object use, which reaches ResetGravityExclusionAndEntityAttachmentOnStopUsageComponent.OnUseStopped
         // and StandingPoint.OnUseStopped). This seat is not the agent's used object, so nothing else would. A
-        // recycled handle is never touched: it would clear a stranger's.
+        // recycled handle is never touched: it would clear a stranger's. ClearTargetFrame drops the position lock.
         if (ownsSlot)
         {
             agent.SetForceAttachedEntity(WeakGameEntity.Invalid);
-            // ClearTargetFrame drops the position lock; excluded-from-gravity false is the native inverse of
-            // SetTargetZ (set_target_z puts the movement in the gravity-excluded mode).
             agent.ClearTargetFrame();
-            agent.SetExcludedFromGravity(exclude: false, applyAverageGlobalVelocity: false);
         }
         if (ownsSlot && agent.IsActive())
         {
@@ -246,7 +247,8 @@ public class TaomMumakilStandingPoint : StandingPoint
             agent.TryAttachToFormation();
         }
         _logger?.LogInfo($"{LogTag} released {agent.Name} after {Probe.Rescues} rescues");
-        CrewSeatChecks.Report(CrewSeatChecks.MumakilHeldId, LogTag, Probe.Rescues);
+        CrewSeatChecks.Report(CrewSeatChecks.MumakilHeldId, CrewSeatChecks.MumakilShotId, LogTag, Probe.Rescues,
+            (agent.Origin as MumakilCrewAgentOrigin)?.ShotsFired ?? -1);
         RemoveMovingAgent(agent);
     }
 }
