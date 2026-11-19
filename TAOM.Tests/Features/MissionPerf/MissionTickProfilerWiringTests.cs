@@ -15,7 +15,7 @@ namespace TAOM.Tests.Features.MissionPerf;
 public class MissionTickProfilerWiringTests
 {
     private const string InstallCall = "Features.MissionPerf.Hooks.MissionTickProfilerInstaller.InstallIfEnabled(";
-    private const string BehaviorAdd = "AddTaomBehavior(new Features.MissionPerf.Hooks.MissionTickProfilerBehavior(";
+    private const string BehaviorAdd = "AddTaomBehavior(() => new Features.MissionPerf.Hooks.MissionTickProfilerBehavior(";
 
     private static string Source() => RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
@@ -98,8 +98,8 @@ public class MissionTickProfilerWiringTests
         var src = Source();
         Assert.AreEqual(1, Count(src, BehaviorAdd), "The profiler behaviour is added exactly once.");
         var add = src.IndexOf(BehaviorAdd);
-        var heartbeat = src.IndexOf("AddTaomBehavior(new Features.MissionPerf.Hooks.MissionPerfHeartbeatBehavior(");
-        var modules = src.IndexOf("FeatureModuleHooks.AddMissionBehaviors(mission, AddTaomBehavior);");
+        var heartbeat = src.IndexOf("AddTaomBehavior(() => new Features.MissionPerf.Hooks.MissionPerfHeartbeatBehavior(");
+        var modules = src.IndexOf("FeatureModuleHooks.AddMissionBehaviors(mission, AddBuiltTaomBehavior);");
 
         Assert.IsTrue(heartbeat >= 0 && modules >= 0, "An anchor moved.");
         Assert.IsTrue(add > heartbeat && add < modules, "The profiler behaviour goes right after the heartbeat.");

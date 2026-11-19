@@ -290,7 +290,7 @@ public class FeatureModulesTests
             AssertOnceBetween(code, "TryPatchCategory(\"" + category + "\");",
                 "FeatureModuleHooks.RunPhase(ApplyPhase.FirstMission, TryPatchCategory);", "ReportPatchFailures(new TextObject(\"{=taom_patch_apply_phase_mission_start}mission start\"));");
         AssertOnceBetween(code, "new Features.MissionPerf.Hooks.MissionTickProfilerBehavior(",
-            "FeatureModuleHooks.AddMissionBehaviors(mission, AddTaomBehavior);", "new Features.MissionDiagnostic.Hooks.MissionDiagnosticBehavior(");
+            "FeatureModuleHooks.AddMissionBehaviors(mission, AddBuiltTaomBehavior);", "new Features.MissionDiagnostic.Hooks.MissionDiagnosticBehavior(");
     }
 
     // Nothing receives a chat line before the initial screen, and the initial screen clears the chat

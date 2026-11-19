@@ -10,7 +10,7 @@ namespace TAOM.Tests.Features.SiegeDismount;
 // Wiring-regression test for SiegeDismount. The Phase 4 audit issue #193 originally claimed this
 // feature uses manual _harmony.Patch(...) like SettlementGuards (#192), but Phase 9a verification
 // (and Codex confirmation) corrected the mechanism: SiegeDismount wires via
-//     AddTaomBehavior(new SiegeDismountMissionBehavior());
+//     AddTaomBehavior(() => new SiegeDismountMissionBehavior());
 // inside Main/SubModule.cs::OnMissionBehaviorInitialize. The MissionBehavior subclass resolves
 // ISiegeDismountService from IoC in its ctor and forwards Mission lifecycle calls.
 //
@@ -48,7 +48,7 @@ public class SiegeDismountWiringTests
 
         // Two-part assertion: the call literal AND the lifecycle method that contains it.
         // The call literal alone could appear inside a comment or unreachable branch.
-        StringAssert.Contains(subModuleSource, "AddTaomBehavior(new SiegeDismountMissionBehavior());",
+        StringAssert.Contains(subModuleSource, "AddTaomBehavior(() => new SiegeDismountMissionBehavior());",
             "Main/SubModule.cs must register SiegeDismountMissionBehavior via AddTaomBehavior(...) " +
             "from inside OnMissionBehaviorInitialize. Audit-motivating regression class: drop the line and " +
             "siege dismount stops applying with zero diagnostic.");

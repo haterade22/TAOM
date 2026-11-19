@@ -5799,3 +5799,17 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 
 - **Suite:** `Failed!  - Failed:     3, Passed: 42954, Skipped:     9, Total: 42966` (the three known language-file failures; the plan's base plus the 11 new tests).
 - **In-game:** not run (tier 1, no game run); a launch with no address cache is owed on #784.
+
+## Review (number assigned at merge): plan 058, isolate each hand-wired mission behaviour registration (#785), tier-1 deep review (Lens 2, Lens 5), Codex not run (2026-11-19)
+
+- **Scope:** `8e836fd40..3e1b1dc9b` on `improve/058-isolate-mission-behaviour-registrations`: `MissionBehaviorBuild.Isolated` builds each hand-wired TAOM mission behaviour in a factory, so a throw while building one drops only that behaviour and reports it to the mission-start guard; the engine add stays outside the isolation in `AddBuiltTaomBehavior`.
+- **Codex:** not run (no paid dispatch authorised for this item).
+- **Lenses:** Engine compatibility, 5 verified, 0 incompatible, 0 unverified; Data flow, 9 flows, 0 gaps, 2 LOW inconsistencies. Standards, Efficiency, Completeness and Design skipped by tier. 1 LOW confirmed and fixed (OOM contained), 2 false positives as defects (the setting no longer governing a build failure, by plan Design item 6; the failure logged twice, kept as the fallback record).
+- **Report:** `docs/reviews/deep-review-058-isolate-mission-behaviour-registrations-2026-11-19.md`; RCA `docs/reviews/rca-isolate-mission-behaviour-registrations-2026-11-19.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | An `OutOfMemoryException` while building a TAOM mission behaviour was contained, though the mission-start guard never swallows one | Other: catch scope against a sibling guard | The plan quoted the guard's `Report`, not its `ShouldSurvive` filter | Catch filter excludes OOM; red-green test; lesson in `lessons/harmony-il.md` |
+
+- **Owed:** the fix-loop re-review of the fix diff (Lens 5, and Codex at `high` when usage returns): the fix changes runtime behaviour in a tier 1 area.
+- **In-game:** not run (tier 1, no game run).
