@@ -192,6 +192,7 @@ step 3 above never happens.
 
 ## Changelog
 
+- 2026-11-19: a bite spares a riderless mount on the warg's side (#594), through `CreatureBiteSides.Spares`, shared with the spider: a mount carries its last rider's team (`MountRiderSides`), and a riderless mount whose side is unknown is spared, by a riderless warg too. A riderless warg still compares no team with soldiers.
 - 2026-11-04: `SwitchMainAgentController(false)` no longer calls vanilla's `Enable()` while `SeatPresence.IsSeated` (the Seat's leave
   does), so a calm warg's death, a rage that ends between two screen ticks or a lost warg cannot turn vanilla's controller on under the
   Seat. Outside the Seat it does what it did. The two events with no reader (`OnLockedAgentChanged`, `OnPotentialLockedAgentChanged`)

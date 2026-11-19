@@ -5831,6 +5831,20 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 
 - **In-game:** owed. The measuring battle is the check, and no arm is judged before it.
 
+## Review (number assigned at merge): plan 062, spider and warg bites spare a riderless mount on the biter's side (#594), tier-1 deep review (Lens 2, Lens 5), Codex not run (2026-11-19)
+
+- **Scope:** `af0f5f330..d0abf3f49` on `improve/062-riderless-mount-bite-side`: `MountRiderSides` records a rider's team against his mount at `OnAgentBuild` and in a new `OnAgentMount` override, and `CreatureBiteSides.Spares` gives the spider and warg bites one side rule, so a riderless mount on the biter's side, or of unknown side, is spared.
+- **Codex:** not run (no paid dispatch authorised for this item).
+- **Lenses:** Engine compatibility, 8 verified, 0 incompatible, 2 unverified (native timing of the mount cache, and the thread native raises `OnMount` on; a late cache leaves a spawned mount unrecorded and spared, but on a remount it can wrongly bite or wrongly spare a horse taken from the other side, so the remount check is owed); Data flow, 6 flows, 0 gaps, 1 LOW inconsistency. Standards, Efficiency, Completeness and Design skipped by tier. 1 LOW confirmed and fixed, 0 false positives.
+- **Report:** `docs/reviews/deep-review-062-riderless-mount-bite-side-2026-11-19.md`; RCA `docs/reviews/rca-riderless-mount-bite-side-2026-11-19.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | The spider's `IsSameSide` began to answer "does the bite spare this agent", so the creature diagnostics counted a loose mount of unknown side as an ally while the comments still said "allies" (diagnostics only) | Convention inconsistency: a widened predicate kept its old name | The plan named the diagnostics caller and recorded the widened count in a maintenance note, but kept the old name and the "allies" comments, and nothing turned a recorded change of meaning into a rename | Renamed `IsSpared`, comments corrected, pinning test (red on a mutant); lesson in `lessons/gamemodels-services.md` |
+
+- **Suite:** `Failed!  - Failed:     3, Passed: 43065, Skipped:     9, Total: 43077` (the three known language-file failures; the branch's base plus the one new test).
+- **In-game:** not run (tier 1, no game run); spawned cavalry recording their mount's side, and a remount, are owed.
+
 ## Review (number assigned at merge): crew hold by position lock and attachment (#1482), tier-1 deep review (Lens 2, Lens 5), Codex not run (2026-11-19)
 
 - **Scope:** the uncommitted diff on `fix/crew-carry` from `b99d468a4`: both crew seats (`TaomMumakilStandingPoint`, `TaomHowdahStandingPoint`), their platform and machine, `HowdahSeatProbe`, `HowdahSeatMotion`, the new `CrewSeatChecks`, the deleted `CrewCarryExperiment`, `tools/ingame_checks/1482.toml`, and the text in `docs/features/mumakil.md`, the lesson and the mission trap sheet that states engine behaviour.
