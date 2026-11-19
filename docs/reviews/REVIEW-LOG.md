@@ -5830,3 +5830,18 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 | R1 | UNVERIFIED: on the DrivenTarget arm the gravity reset reaches a dead archer one frame after removal, where vanilla does it during removal | Native effect not read | Native death path not decompiled | Watch a dead DrivenTarget archer's corpse in the measuring battle; the arm is deleted after it |
 
 - **In-game:** owed. The measuring battle is the check, and no arm is judged before it.
+
+## Review (number assigned at merge): plan 061, clamp party-screen prisoner recruitment to the recruit cost (#563), tier-1 deep review (Lens 2, Lens 5, Lens 7), Codex not run (2026-11-19)
+
+- **Scope:** `af0f5f330..c88502947` on `improve/061-prisoner-recruit-resource-gate`: the `PartyScreenLogic.AddCommand` prefix (Patch26) now clamps `RecruitTroop` to the `recruit_cost` the balance covers, net of queued upgrades and the prisoners already recruited in the screen (`RecruitedPrisonersHistory`); `ISpecialResourceService.ClampRecruitCount`; the `taom_res_recruit_clamped` line.
+- **Codex:** not run (no paid dispatch authorised for this item).
+- **Lenses:** Engine compatibility, 14 verified, 0 incompatible, 1 unverified (co-op); Data flow, 11 flows, 0 gaps, 1 LOW inconsistency (co-op, documented); XML, 5 gates pass, 0 findings. Standards, Efficiency, Completeness and Design skipped by tier. 0 confirmed, 2 false positives as defects (the clamp line naming more than the engine moves; repeated "Requires" lines in Recruit All), 1 NEEDS MIKE (the co-op restriction).
+- **Report:** `docs/reviews/deep-review-061-prisoner-recruit-resource-gate-2026-11-19.md`. No RCA: no confirmed defect.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| - | None in the changed code | - | - | - |
+
+- **Follow-up (pre-existing):** a Recruit or Upgrade pop-up Cancel raises `AfterReset`, and `OnPartyScreenReset` drops all pending upgrade spend, including upgrades the restore keeps (MEDIUM; no issue filed by the lead).
+- **Suite:** `Failed!  - Failed:     3, Passed: 43046, Skipped:     9, Total: 43058` (the three known language-file failures).
+- **In-game:** not run (tier 1, no game run); the #563 prisoner recruit check is owed.
