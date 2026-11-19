@@ -47,21 +47,14 @@ public class TaomMumakilPlatform : UsableMachine
         new HowdahSampleClock(MumakilConfig.PlatformStatusPeriodSeconds, fireOnFirstTick: true);
     private bool _seatsInitialised;
 
-    /// <summary>The engine frame this platform last re-framed itself in. A seat compares it with the frame of its
-    /// own tick: equal means the platform went first and the seat sees this frame's position (#1482).</summary>
-    internal int LastTickFrameNo { get; private set; } = -1;
-
-    // #1482 measuring build. The strong handle is what Agent.IsAgentParentEntitySameAs takes.
+    // The strong handle is what Agent.IsAgentParentEntitySameAs takes, for the status line's parentRoot field.
     private GameEntity _rootEntity;
+    // The diagnostics setting as of the last period edge.
     private bool _measure;
-
-    /// <summary>The diagnostics setting as of the last period edge. The seats count their ticks only while true.</summary>
-    internal bool Measuring => _measure;
 
     // -1 until the status line of the first tick, which prints period 0. Lines 1 to 4 are then four whole periods
     // of the first block, the same numbering as HowdahDiagnosticsReporter.Periods.
     private int _statusPeriods = -1;
-    private bool _nonTeleportBlock;
     private int _periodTicks;
     private int _movingTicks;
     private float _periodDistance;
@@ -111,16 +104,14 @@ public class TaomMumakilPlatform : UsableMachine
         }
 
         MatrixFrame before = GameEntity.GetGlobalFrame();
-        LastTickFrameNo = Utilities.EngineFrameNo;
         RepositionToMount();
         MatrixFrame root = GameEntity.GetGlobalFrame();
 
         float step = (root.origin - before.origin).Length;
-        // A NaN compares false, so a frame the engine cannot describe counts as not moved and nothing is placed.
-        bool moved = step > MovedEpsilonMetres || (root.rotation.f - before.rotation.f).Length > MovedEpsilonMetres;
-        foreach (StandingPoint sp in StandingPoints)
-            if (sp is TaomMumakilStandingPoint seat)
-                seat.AfterPlatformMoved(in root, moved, _measure);
+        if (_measure)
+            foreach (StandingPoint sp in StandingPoints)
+                if (sp is TaomMumakilStandingPoint seat)
+                    seat.AfterPlatformMoved(in root);
 
         _periodTicks++;
         if (dt > 0f && !float.IsInfinity(dt) && !float.IsNaN(step) && !float.IsInfinity(step))
@@ -135,18 +126,11 @@ public class TaomMumakilPlatform : UsableMachine
         _measure = _diagnostics?.IsEnabled == true;
         _statusPeriods++;
         if (_measure) LogStatus();
-        // AFTER the line, so the line names the block its numbers were measured in. The diagnostics setting is the
-        // experiment's off switch: with it off the platform moves as it always did.
-        _nonTeleportBlock = _measure && CrewCarryExperiment.NonTeleportBlock(_statusPeriods);
         _periodTicks = 0;
         _movingTicks = 0;
         _periodDistance = 0f;
         _periodSeconds = 0f;
     }
-
-    /// <summary>Below this per tick, in metres of travel or of change in the unit forward axis, the platform counts
-    /// as not having moved.</summary>
-    private const float MovedEpsilonMetres = 0.0005f;
 
     /// <summary>A tick counts as moving above this speed. The status line prints how many of a period's ticks did.</summary>
     private const float MovingSpeedMetresPerSecond = 1f;
@@ -172,10 +156,9 @@ public class TaomMumakilPlatform : UsableMachine
         // gate: check every float-to-decision path in the method, not only the lines you added
         // (.claude/rules/csharp-architecture.md, "Engine-Float Decision Gates").
         if (!HowdahSeatMotion.IsPlaceable(next.origin.x, next.origin.y, next.origin.z)) return;
-        // #1482: the default is isTeleportation true, which takes the native teleport branch for each physics body
-        // (what that branch does to a moveable body is not read). False is what vanilla
-        // SiegeWeaponMovementComponent moves its tower with. The measuring build alternates the two in blocks.
-        GameEntity.SetFrame(ref next, isTeleportation: !_nonTeleportBlock);
+        // The default isTeleportation true. Vanilla SiegeWeaponMovementComponent passes false (to SetGlobalFrame); alternating the two
+        // in 20 s blocks on 2026-11-19 showed no difference on any seat (#1482), so the default stays.
+        GameEntity.SetFrame(ref next);
     }
 
     /// <summary>
@@ -215,7 +198,6 @@ public class TaomMumakilPlatform : UsableMachine
             if (sp is TaomMumakilStandingPoint seat)
             {
                 seat.mumakilAgent = mumakilAgent;
-                seat.Platform = this;
                 seat.LogTag = $"{LogTag} seat{i}";
             }
             i++;
@@ -293,12 +275,11 @@ public class TaomMumakilPlatform : UsableMachine
                 float z = s.GameEntity.GlobalPosition.z - feet;
                 if (float.IsNaN(topSeatZ) || z > topSeatZ) topSeatZ = z;
             }
-        // Per seat: its carry arm, the upper-body action, then the probe (HowdahSeatProbe: teleports, rescues,
-        // restarts and how many of those had a teleport inside them, the highest progress, the lag range over the
-        // period, the seat's own view of its distance, the tick order), the height error, what the archer stands
-        // on, and whether its native parent entity is this platform's root.
-        // Named by its prefab entity (main_1, nest_0), never by a running count: two seats share most arms, and a
-        // count shifts when an archer dies.
+        // Per seat: the upper-body action, then the probe (HowdahSeatProbe: rescues, restarts and how many of
+        // those had a rescue inside them, the highest progress, the lag range over the period), the height error,
+        // what the archer stands on, and whether its native parent entity is this platform's root (1 while the
+        // seat's attachment holds).
+        // Named by its prefab entity (main_1, nest_0), never by a running count, which shifts when an archer dies.
         string draws = "";
         foreach (StandingPoint sp in StandingPoints)
         {
@@ -307,13 +288,13 @@ public class TaomMumakilPlatform : UsableMachine
             if (!AgentSlotIdentity.IsCurrentOccupant(archer)) continue;
             float dz = archer.Position.z - s4.GameEntity.GlobalPosition.z;
             WeakGameEntity stepped = archer.GetSteppedEntity();
-            draws += $" {s4.GameEntity.Name.Replace("mumakil_crew_", "")}[{s4.Arm}]:{s4.UpperBodyAction}/{s4.Probe.FormatAndEndPeriod()}" +
+            draws += $" {s4.GameEntity.Name.Replace("mumakil_crew_", "")}:{s4.UpperBodyAction}/{s4.Probe.FormatAndEndPeriod()}" +
                      $"/dz{HowdahDiagnostics.Format(dz, 2)}/step={(stepped.IsValid ? stepped.Name : "-")}" +
                      $"/parentRoot={(archer.IsAgentParentEntitySameAs(_rootEntity) ? 1 : 0)}";
         }
         float meanSpeed = _periodSeconds > 0f ? _periodDistance / _periodSeconds : float.NaN;
         _logger?.LogInfo(
-            $"{LogTag} status period={_statusPeriods} nonTeleportFrame={(_nonTeleportBlock ? 1 : 0)} " +
+            $"{LogTag} status period={_statusPeriods} " +
             $"moving={_movingTicks}/{_periodTicks} meanV={HowdahDiagnostics.Format(meanSpeed, 2)} " +
             $"beastScale={HowdahDiagnostics.Format(mumakilAgent.AgentScale, 2)} " +
             $"navmeshId={DynamicNavmeshIdStart} " +

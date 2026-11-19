@@ -5845,6 +5845,24 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 - **Suite:** `Failed!  - Failed:     3, Passed: 43065, Skipped:     9, Total: 43077` (the three known language-file failures; the branch's base plus the one new test).
 - **In-game:** not run (tier 1, no game run); spawned cavalry recording their mount's side, and a remount, are owed.
 
+## Review (number assigned at merge): crew hold by position lock and attachment (#1482), tier-1 deep review (Lens 2, Lens 5), Codex not run (2026-11-19)
+
+- **Scope:** the uncommitted diff on `fix/crew-carry` from `b99d468a4`: both crew seats (`TaomMumakilStandingPoint`, `TaomHowdahStandingPoint`), their platform and machine, `HowdahSeatProbe`, `HowdahSeatMotion`, the new `CrewSeatChecks`, the deleted `CrewCarryExperiment`, `tools/ingame_checks/1482.toml`, and the text in `docs/features/mumakil.md`, the lesson and the mission trap sheet that states engine behaviour.
+- **Codex:** not run (out of usage since 2026-11-15). Owed at `ultra`.
+- **Lenses:** Engine compatibility, 33 verified, 0 incompatible, 5 unverified; Data flow, 8 flows, 1 gap, 2 inconsistencies. 0 CRITICAL, 0 HIGH, 2 MEDIUM, the rest LOW, so no second wave. Standards, Efficiency, Completeness and Design skipped by tier. Blast radius: 4 types checked with `graphify affected`; the callers outside the diff are the two crew spawners.
+- **No RCA file:** nothing CRITICAL or HIGH, and the cause of the player-visible bug is recorded in `docs/features/mumakil.md` "How the crew are held" and in `lessons/adapters-taleworlds-api.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| L5 F-1 | One check id served both beasts, so a battle with a mumakil and no elephant would have passed the howdah, which has no navmesh and was not measured | Evidence scope | The emitter was written as one shared helper and the manifest followed it | One id for each beast (`CrewSeatChecks.MumakilHeldId`, `HowdahHeldId`), two checks in the manifest, a test that the ids differ |
+| L2 F1 | Comments and the doc said `SetTargetZ` holds the height. The native sets the gravity-excluded mode without condition and stores the height behind a flag whose meaning was not read | Unverified effect stated as fact | The effect was inferred from the seat that stayed up, on a deck that also has floors and a navmesh | The text now states only what the native shows, and that the howdah is the unmeasured case |
+| L5 F-2 | `DisableScriptedMovement` stayed in both releases after the seats stopped setting a scripted position; its comment described the removed mechanism | Dead code | The release was edited for what it adds, not for what the change made dead | Both calls and the test assertion deleted |
+| L5 F-3, L2 F3 to F5 | Stale or wrong text: two spawner comments and one class summary still described the teleport hold; the lesson said `ClimbingMachine` holds an agent in one place (it moves the target along the net); the trap row named two states to clear where there are three; vanilla's frame call is `SetGlobalFrame` | Documentation | Written from memory of the earlier reading | Each corrected against the v1.5.7 source read in the review |
+
+- **Not applied, existed before or hypothetical:** (1) L2 F2: `UsableMissionObject.OnTick` can drop an inactive `MovingAgent` before the seat's own release check when the parallel tick is registered. Nothing registers it for these seats today. Moving the release check before `base.OnTick` changes the tick order that the battles measured, so it is the maintainer's decision. (2) L5 F-4: the mumakil seat samples reload progress with diagnostics off; the howdah seat does not. (3) L5 F-6: two diagnostics reads of a seat's `MovingAgent.Position` in `TaomMumakilPlatform.LogStatus` have no slot-identity guard.
+- **Unverified, with what is missing:** what the native movement of a dead archer does with the attachment, the lock and the gravity mode between its death and the seat's next tick (the movement-tick consumer was not decompiled); how the zero speed limit on the mumakil seat interacts with the lock (both battles had it on).
+- **In-game:** the hold was measured on a mumakil with the experiment build (`taom_debug_2026-11-19_09-40-59.log`: attached seats within 0.11 m at up to 5 m/s, 0 rescues). The howdah and the final build are owed.
+
 ## Review (number assigned at merge): plan 060, UPGRADE_SKILL_REGRESSION judges templated upgrade edges on the SkillSet (#626), tier-2 deep review (Lens 5, Tooling), Codex not run (2026-11-19)
 
 - **Scope:** `af0f5f330..8dc68388b` on `improve/060-upgrade-skill-regression-templated-edges`: the gate resolves a `skill_template` side through `sync_lord_inline_skills.effective_skills` instead of skipping the edge, and `ranged_ladder.planned_skill_edits` and `rebalance_troops.py` resolve it the same way and refuse to write a templated character.
