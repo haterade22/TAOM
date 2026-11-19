@@ -3165,9 +3165,6 @@ class BandCloneSourceWornLowTests(unittest.TestCase):
                 '</NPCCharacters>\n')
         self.assertEqual(self._run({"characters/npcs_x.xml": npcs}, sources=()), [])
 
-if __name__ == "__main__":
-    unittest.main(verbosity=2)
-
 
 class ExtraRefRootTests(unittest.TestCase):
     """Which foreign modules the CLI sweeps for dangling refs.
@@ -5344,3 +5341,7 @@ class ArmourAcquisitionRefTests(unittest.TestCase):
             self.assertTrue(config.findall(path), f"the shipped armour config has no {path}")
         quests = vm.ET.parse(vm.MODULEDATA / self.QUESTS).getroot()
         self.assertTrue(quests.findall("CareerQuest"), "the shipped career quests have no root-level <CareerQuest>")
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
