@@ -13,7 +13,7 @@ paths:
 
 ## Before writing any patch: check the lessons
 
-List the headings of [`docs/reviews/lessons/harmony-il.md`](../../docs/reviews/lessons/harmony-il.md) (`grep -n "^#"`) and read the entries matching your target type and patch shape (finalizer, prefix returning false, transpiler, latch). Do not read the file whole. Append after a review.
+List the headings of [`docs/reviews/lessons/harmony-il.md`](../../docs/reviews/lessons/harmony-il.md) (`grep -n "^#"`) and read the entries matching your target type and patch shape (finalizer, prefix returning false, transpiler, latch). Do not read the file whole. Append after a review. Grep the Coop source for the target too: a transpiler inserts beside what Coop matches, never replaces it (#1475).
 
 ## Before editing an EXISTING patch: also read its registry entry
 
@@ -70,7 +70,7 @@ plus a `NoRegistryHeading` row in `PatchCategoryNumberTests`; otherwise that tes
 - Event timing — verify when events fire vs when state changes
 - Static state: avoid it; off the main thread it takes a lock or a concurrent collection ("Which thread runs your target").
 - Writing a TaleWorlds-owned ViewModel property from a patch or hook: read `.claude/rules/gui-vm-properties.md` first. A guarded setter makes a same-value write a no-op, and a reflected field write skips the change notification.
-- **No `ResetForUnload()` needed for a new patch.** Nothing reloads TAOM inside one process: the engine's only caller of `OnSubModuleUnloaded` is `Module.FinalizeModule` at shutdown (v1.5.3 `Module.cs:242-248,1296-1314`), and a rebuild means stopping the game and pressing Play again (Mike, 2026-09-24). A static service cache in a patch class therefore lives exactly as long as the process. The existing `ResetForUnload()` methods stay until their class is next touched, and `ResetForUnloadSweepTests` still requires every one that exists to be called from `OnSubModuleUnloaded`. A reload tool appearing later would change this; then the three once-per-process flags in `SubModule.cs` need resetting too (sprint finding COMP-05).
+- **No `ResetForUnload()` needed for a new patch.** Nothing reloads TAOM inside one process: the engine's only caller of `OnSubModuleUnloaded` is `Module.FinalizeModule` at shutdown (v1.5.3 `Module.cs:242-248,1296-1314`), and a rebuild means stopping the game and pressing Play again (Mike, 2026-09-24). A static service cache in a patch class therefore lives exactly as long as the process. The existing `ResetForUnload()` methods stay until their class is next touched, and `ResetForUnloadSweepTests` still requires every one that exists to be called from `OnSubModuleUnloaded`.
 - **Reflection in hot paths** — `AccessTools.Method` / `AccessTools.Field` lookups MUST be cached in a static field during `Initialize()`, never resolved inside `Prefix()`/`Postfix()`. Guard spawning calls the patch ~20x per settlement visit; uncached reflection means ~20 redundant lookups per entry.
 
 ## Static State Machines: Sentinel-Collision Check

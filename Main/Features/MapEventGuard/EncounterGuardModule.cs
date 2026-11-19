@@ -2,16 +2,25 @@ using System.Collections.Generic;
 using DryIoc;
 using TAOM.Adapters;
 using TAOM.Composition;
+using TAOM.Core.Logging;
 using TAOM.Features.MapEventGuard.Hooks;
 
 namespace TAOM.Features.MapEventGuard;
 
 /// <summary>
-/// The sally-out and empty-meeting guards (#1099, docs/features/map-event-guard.md). Patch142 and Patch143 are applied
-/// from SubModule. No saved data.
+/// The sally-out, empty-meeting and battle-death roster guards (#1099, #1475, docs/features/map-event-guard.md).
+/// Patch142 and Patch143 are applied from SubModule; Patch169 is this module's own category. No saved data.
 /// </summary>
 internal sealed class EncounterGuardModule : TaomFeatureModule
 {
+    internal const string BattleDeathSnapshotCategory = "Patch169_BattleDeathRosterSnapshot";
+
+    private static readonly PatchCategoryDecl[] Categories =
+    {
+        // Map events end under Campaign.Tick, so nothing reaches the target before the first game init.
+        new(BattleDeathSnapshotCategory, ApplyPhase.GameInit),
+    };
+
     private static readonly CampaignBehaviorDecl[] Behaviors =
     {
         CampaignBehaviorDecl.Of(r => new EmptyMeetingMenuBehavior(r.Resolve<EmptyMeetingGuardService>())),
@@ -24,7 +33,14 @@ internal sealed class EncounterGuardModule : TaomFeatureModule
         registrator.Register<SallyOutGuardService>(Reuse.Singleton);
         registrator.Register<IEmptyMeetingAdapter, EmptyMeetingAdapter>(Reuse.Singleton);
         registrator.Register<EmptyMeetingGuardService>(Reuse.Singleton);
+        registrator.Register<IHalfFinishedEncounterAdapter, HalfFinishedEncounterAdapter>(Reuse.Singleton);
+        registrator.Register<HalfFinishedEncounterService>(Reuse.Singleton);
     }
+
+    public override void InitializeStatics(IResolver resolver) =>
+        Patch169_BattleDeathRosterSnapshot.Initialize(resolver.Resolve<IModLogger>());
+
+    public override IReadOnlyList<PatchCategoryDecl> PatchCategories => Categories;
 
     public override IReadOnlyList<CampaignBehaviorDecl> CampaignBehaviors => Behaviors;
 }

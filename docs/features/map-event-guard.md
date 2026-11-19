@@ -190,6 +190,31 @@ either, so reproducing it would invent a decision the game did not make.
 
 **In game (owed, #1429):** join a siege as a defender's ally where the besieging camp is led by a lord attached to another lord's army, choose Help defenders, and check that the battle opens and the log line above appears.
 
+## Patch169: the battle-death loop reads a copy of the roster
+
+At the end of a map event, `MapEventSide.HandleMapEventEndForPartyInternal` kills every hero of a party who carries the `DiedInBattle` mark (v1.5.7 `MapEventSide.cs:431-438`). It finds them with a lazy `LinQuick.WhereQ` over `party.MemberRoster.GetTroopRoster()` and kills each one inside the loop. `WhereQ` keeps the count it read first and indexes the list. The list is the roster's cache, which the next `GetTroopRoster()` call after a change clears and refills in place. Each kill removes the hero from the roster, so if anything calls `GetTroopRoster()` on that roster before the loop ends, the list comes back one element shorter and the loop throws `ArgumentOutOfRangeException`.
+
+Known routes to that call (`KillCharacterAction.ApplyInternal` also raises `OnBeforeHeroKilled` and can disband an army before `MakeDead`; that path is not traced):
+
+- `KillCharacterAction.MakeDead` itself (:242), when a second marked hero of the same party dies after the first kill made him leader.
+- Any `OnPartyDisbandStarted` listener: a leader killed with no other hero aboard starts the disband (:265). LordRetinue's disband handler did this until #1475 and now reads the roster by index.
+
+CrashReport catches the throw and offers Continue, which leaves the map event half finalized. When it is the player's siege, a save made after that throws a `NullReferenceException` in `SiegeAssaultEventComponent.OnPlayerEncounterFinalizeBattle` on every load, so the player has to go back to a save from before the battle (player bundles `9b5b55b3`, `1a02aa72`, `9469e856`).
+
+`Patch169_BattleDeathRosterSnapshot` is a transpiler that inserts one call to `BattleDeathRosterTranspiler.Materialize` right after that `WhereQ`, so the filter runs to the end before the loop starts (and before the method clears `party.MapEventSide`; nothing in between writes the roster or the marks, read for v1.5.7 and not fully traced). The marks are therefore read before the first kill instead of between kills; no engine path reached from a kill resets another hero's mark. The `WhereQ` stays in place because Coop's own transpiler on this method finds it by name, inserts `ToArray` after it, and throws when it is gone; both transpilers apply in either order. If the engine method no longer holds exactly one such call, the transpiler leaves it alone, writes `[MapEventGuard] expected exactly one WhereQ<TroopRosterElement> call ...` to the TAOM log and reports a self-disable. `EncounterGuardModule` applies the category at game init. Registry: [Patch169_BattleDeathRosterSnapshot](../reference/harmony-patch-registry.md#patch169_battledeathrostersnapshot).
+
+**In game (owed, #1475):** play a campaign at speed until an AI lord dies in battle (an rgl `[TAOM.Realms] HolderChanged/ClanSuccession` line, or a death notice) and check that no `[CrashReport]` entry follows.
+
+## Patch170: half-finished siege encounter in a save
+
+A player who chose "Continue (risky)" on the Patch169 crash and then saved holds a player encounter whose siege map event is finalized but not finished: the parties are still attached and, after a load, the event component has no `MapEvent` back-reference, so every map tick throws a NullReferenceException in `OnPlayerEncounterFinalizeBattle`.
+
+`Patch170_HalfFinishedEncounterRepair` is a prefix on `PlayerEncounter.FinalizeBattle()` that always returns true. `HalfFinishedEncounterService.Decide` acts only on a finalized event with a null back-reference or parties still attached; a healthy encounter never matches, and a second call finds nothing to do. The repair is the side-end step of vanilla's finish (it skips `MapEventVisual.OnMapEventEnd` and `FinalizeComponent`; after a load both are no-ops, and `AfterSiegeCompleted`'s only vanilla listener does nothing on a defender win): `MapEventComponent.AfterLoad(mapEvent)` (internal, reached by `AccessTools`) when the back-reference is missing, then `MapEventSide.HandleMapEventEnd()` on the defender side and the attacker side. Heroes in the attached parties marked `DiedInBattle` die as vanilla would, because `HandleMapEventEnd` runs vanilla's kill loop. Marked heroes still alive afterwards (for example the party that threw, already detached) are counted in the log line, over all living marked heroes and not only this battle's, and die at the end of their next battle as vanilla would. If restoring the back-reference works but ending a side throws, vanilla still finishes the encounter and the repair retries on the next `FinalizeBattle`. When `ICoopSessionProvider.ShouldDeferToHost` holds, the service stands down. Registry: [Patch170_HalfFinishedEncounterRepair](../reference/harmony-patch-registry.md#patch170_halffinishedencounterrepair).
+
+**Needs Patch169:** re-running `HandleMapEventEnd` for the attacker side can otherwise throw the original ArgumentOutOfRangeException again.
+
+**In game (owed):** load the player's save with Patch169 and Patch170. Expect no NullReferenceException, the encounter closes, the log shows the `[MapEventGuard] finished a half-finished encounter` line, and the attacking lords move again.
+
 ## Stuck AI battles
 
 ### The report
@@ -307,7 +332,9 @@ print, let an in-game hour pass, and print again.
 | `Main/Features/MapEventGuard/EmptyMeetingGuardService.cs` | The Patch143 rule, its `[Check]` line and its warning |
 | `Main/Features/MapEventGuard/Hooks/EmptyMeetingMenuBehavior.cs` | Registers the one-option Leave menu |
 | `Main/Adapters/EmptyMeetingAdapter.cs`, `IEmptyMeetingAdapter.cs` | The meeting partner read and the exit |
-| `Main/Features/MapEventGuard/EncounterGuardModule.cs` | IoC registration for Patch142, Patch143 and the menu |
+| `Main/Features/MapEventGuard/EncounterGuardModule.cs` | IoC registration for Patch142, Patch143 and the menu; declares the Patch169 category |
+| `Main/Features/MapEventGuard/Hooks/Patch169_BattleDeathRosterSnapshot.cs` | The transpiler class on `MapEventSide.HandleMapEventEndForPartyInternal` |
+| `Main/Features/MapEventGuard/Hooks/BattleDeathRosterTranspiler.cs` | `Materialize` and the one-call insert |
 | `Main/Features/Enlistment/Hooks/EnlistmentBattleBehavior.cs` | `LogSiegeAftermathContext`, the siege-only diagnostic that will close #557's open question |
 | `Main/SubModule.cs` | `Initialize(...)` plus `PatchCategory(...)` for all four categories in the `OnGameInitializationFinished` batch, and `ResetForUnload` |
 
@@ -358,6 +385,11 @@ battles it judges and has a second reader in the console command, so it has the 
   rest, and the co-op stand-down for a live session and for an unprobeable co-op mod.
 - `TAOM.Tests/Features/MapEventGuard/StuckBattleWiringTests.cs` pins the module: listed once, one
   behavior, no patch or saved data, and a container that builds the service.
+- `TAOM.Tests/Features/MapEventGuard/Patch169BattleDeathRosterSnapshotTests.cs`: LinQuick `WhereQ` throws
+  when the list shrinks mid-loop and `Materialize` over it finishes with every match; the stack types agree; the
+  installed engine holds exactly one roster `WhereQ`, the transpiler inserts `Materialize` after it, a
+  Coop-shaped transpiler still applies in either order, and the JIT accepts the result; no match leaves the method alone with one warning and one self-disable report; the module
+  applies the category at game init.
 
 The per-event adapter itself is not unit-testable (`MapEvent`'s constructor is internal); it is verified
 in game with `taom.print_stuck_battles`.
@@ -426,6 +458,8 @@ would act on.
 - 2026-11-13: Patch143 is applied under its own Harmony id, `TAOM.CrashGuards`, so PatchShield keeps it when
   a Refuge or Supply Lines patch on the same method breaks after a game update.
 - 2026-11-17: added `Patch159_HelpDefendersArmyLeader`, from Silas He's v1.5.6 fix package (#1429).
+- 2026-11-18: added `Patch169_BattleDeathRosterSnapshot`, from a player's crash bundles (#1475). Not yet verified in game.
+- 2026-11-19: added `Patch170_HalfFinishedEncounterRepair`, a save repair for a half-finished siege encounter after a failed battle end.
 
 ## GitHub Issue
 
@@ -433,6 +467,7 @@ would act on.
 - **Issue:** #557, crash: siege aftermath menu NREs on a null `_besiegerParty` when the player is not in the capturing army
 - **Issue:** #748, AI map battles that can never end (a side at 0 healthy troops, or a destroyed party left attached)
 - **Issue:** #1099, CTD: a sally-out opens a meeting with an empty party
+- **Issue:** #1475, crash: AI lord battle death breaks the MapEventSide end loop
 - **Status:** Open
 
 ---
