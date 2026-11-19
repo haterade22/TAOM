@@ -235,8 +235,8 @@ public class SpiderAttackServiceTests
 
     // ---------------------------------------------------------------------
     // HandleSpiderTargetHit — RIDDEN-mount attribution (warg pattern):
-    //   victimTeamSource = target.IsMount && target.RiderAgent != null ? target.RiderAgent : target
-    //   friendly skip    = (attacker.RiderAgent ?? attacker).IsSameTeam(victimTeamSource)
+    //   friendly skip    = CreatureBiteSides.Spares(attacker.RiderAgent ?? attacker, target): a ridden mount is
+    //                      its rider's side; a riderless mount of unknown side is spared (#594)
     //   damager          = attacker.RiderAgent ?? attacker; dead/null damager -> self-fallback 20 dmg
     // Observable: ProjectAgent(damager.Position, anim) + armor-read suppression on skips.
     // ---------------------------------------------------------------------
@@ -287,6 +287,58 @@ public class SpiderAttackServiceTests
         _sut.HandleSpiderTargetHit(attacker, target, 0, strike: SpiderStrikeProfile.Ridden);
 
         target.DidNotReceive().GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>());
+    }
+
+    [TestMethod]
+    public void HandleSpiderTargetHit_LooseMountOfUnknownSide_DoesNotDamage()
+    {
+        // #594: the engine gives a mount no team, so a riderless mount nobody ever rode has no side; it is spared.
+        var attacker = Substitute.For<IAgentAdapter>();
+        var rider = Substitute.For<IAgentAdapter>();
+        var target = EnemyTarget();
+        target.IsMount.Returns(true);
+        target.RiderAgent.Returns((IAgentAdapter)null);
+        attacker.RiderAgent.Returns(rider);
+        rider.IsSameTeam(target).Returns(false);   // what AgentAdapter answers for a teamless mount
+
+        _sut.HandleSpiderTargetHit(attacker, target, 0, strike: SpiderStrikeProfile.Ridden);
+
+        target.DidNotReceive().GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>());
+        target.DidNotReceive().ProjectAgent(Arg.Any<Vec3>(), Arg.Any<DamageAnimation>());
+    }
+
+    [TestMethod]
+    public void HandleSpiderTargetHit_LooseMountOnTheRidersSide_DoesNotDamage()
+    {
+        var attacker = Substitute.For<IAgentAdapter>();
+        var rider = Substitute.For<IAgentAdapter>();
+        var target = EnemyTarget();
+        target.IsMount.Returns(true);
+        target.RiderAgent.Returns((IAgentAdapter)null);
+        target.HasKnownSide.Returns(true);
+        attacker.RiderAgent.Returns(rider);
+        rider.IsSameTeam(target).Returns(true);
+
+        _sut.HandleSpiderTargetHit(attacker, target, 0, strike: SpiderStrikeProfile.Ridden);
+
+        target.DidNotReceive().GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>());
+    }
+
+    [TestMethod]
+    public void HandleSpiderTargetHit_LooseMountOfTheOtherSide_Damages()
+    {
+        var attacker = Substitute.For<IAgentAdapter>();
+        var rider = Substitute.For<IAgentAdapter>();
+        var target = EnemyTarget();
+        target.IsMount.Returns(true);
+        target.RiderAgent.Returns((IAgentAdapter)null);
+        target.HasKnownSide.Returns(true);
+        attacker.RiderAgent.Returns(rider);
+        rider.IsSameTeam(target).Returns(false);
+
+        _sut.HandleSpiderTargetHit(attacker, target, 0, strike: SpiderStrikeProfile.Ridden);
+
+        target.Received(1).GetBaseArmorEffectivenessForBodyPart(BoneBodyPartType.Chest);
     }
 
     [TestMethod]

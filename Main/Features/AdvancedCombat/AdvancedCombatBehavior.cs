@@ -16,6 +16,7 @@ public class AdvancedCombatBehavior : MissionLogic
     private const float GridUpdateInterval = 2f;
     private float _timeSinceLastUpdate = 0f;
     private bool _buildFailureLogged;
+    private bool _mountFailureLogged;
 
     public AdvancedCombatBehavior()
     {
@@ -58,6 +59,8 @@ public class AdvancedCombatBehavior : MissionLogic
         try
         {
             _adapterFactory.OnAgentBuilt(agent);
+            // A rider built on his mount: the engine gives the mount no team, so his side is recorded against it (#594).
+            MountRiderSides.RecordRider(agent);
         }
         catch (Exception ex)
         {
@@ -65,6 +68,26 @@ public class AdvancedCombatBehavior : MissionLogic
             {
                 _buildFailureLogged = true;
                 _logger.LogError($"[AdvancedCombat] OnAgentBuild threw {ex.GetType().Name}: {ex.Message}");
+            }
+        }
+    }
+
+    // The engine raises this for the rider who just mounted. Recording his side against the mount keeps it once
+    // he is gone (#594). Native may raise it off the main thread (#634): RecordRider reads two managed fields and
+    // writes a ConditionalWeakTable, which any thread may do. Mounting is a native callback: no exception leaves.
+    public override void OnAgentMount(Agent agent)
+    {
+        base.OnAgentMount(agent);
+        try
+        {
+            MountRiderSides.RecordRider(agent);
+        }
+        catch (Exception ex)
+        {
+            if (!_mountFailureLogged)
+            {
+                _mountFailureLogged = true;
+                _logger.LogError($"[AdvancedCombat] OnAgentMount threw {ex.GetType().Name}: {ex.Message}");
             }
         }
     }
