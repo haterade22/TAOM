@@ -73,9 +73,10 @@ FOLLOW-UP from this lens (pre-existing code):
    `AfterReset`; `SpecialResourcesBehavior.OnPartyScreenReset` (SpecialResourcesBehavior.cs:265-269)
    then calls `CancelSession()` and drops all pending upgrade spend, including upgrades queued before
    the pop-up opened, which the restore keeps. The lead confirmed both halves (the decompile lines
-   above and SpecialResourceService.cs:439-445). Effect: the upgrade commit undercharges, and the new
-   recruit clamp reads a balance too high by that amount. The recruit charge at Done then floors at
-   zero, which is the pre-#563 behaviour, so this change makes nothing worse. No issue filed: an
+   above and SpecialResourceService.cs:439-445). Effect: the upgrades the restore keeps are never
+   charged, because CommitSession debits only the spend queued after the reset, and the recruit clamp
+   no longer reserves their cost. The recruits are charged in DoneLogic before the commit and stay
+   within the balance, so nothing floors through this path and this change makes nothing worse. No issue filed: an
    /improve lead files none; the orchestrator decides at wrap-up.
 2. LOW, toast repetition in "Recruit All": each refused troop type adds its own yellow "Requires N"
    line. Lead verdict: FALSE POSITIVE as a defect. Each line is the price of a different type, the
