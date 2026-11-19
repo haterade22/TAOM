@@ -488,6 +488,18 @@ class TpacModuleFallbackTests(unittest.TestCase):
         self.assertEqual(sorted(vm.DEFAULT_TPAC_MODULES),
                          sorted(["LOTRLOME_Armory", "TAOM", "TAOM_Map", "Native", "SandBoxCore", "SandBox"]))
 
+    def test_every_module_taom_depends_on_is_scanned_for_art(self):
+        """The list is kept by hand, so a module TAOM comes to depend on must join it or be named here
+        as one that ships no .tpac (both had no AssetPackages/ and no Assets/ on the desktop install,
+        2026-11-19). Ids compare without case: SubModule.xml spells it Sandbox, the folder is SandBox."""
+        import xml.etree.ElementTree as ET
+        ships_no_packs = {"taom.dependencies", "custombattle"}
+        submodule = ET.parse(vm.REPO_ROOT / "Main" / "_Module" / "SubModule.xml").getroot()
+        depended = {e.get("Id").lower() for e in submodule.iter("DependedModule")}
+        self.assertTrue(depended, "no DependedModule read from SubModule.xml")
+        scanned = {m.lower() for m in vm.DEFAULT_TPAC_MODULES}
+        self.assertEqual(depended - scanned - ships_no_packs, set())
+
 
 # --------------------------------------------------------------------------- #
 # Tier C: collision-body raw-byte scan                                         #

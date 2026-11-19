@@ -5220,3 +5220,15 @@ PR #1478 added 270 tournament templates as `NPCCharacters`. The merge review ran
 - **Why missed:** the review chose the gates by the PR's description; the PR body listed the gates that failed on trunk too, and nobody compared the full `tools/tests` run with trunk.
 - **Prevent:** before merging a PR that adds ModuleData, run `python -m unittest discover -s tools/tests -t .` on the PR merged with trunk and on trunk, and compare the failure lists.
 - **Source:** PR #1478 merge review; fix PR #1483.
+
+### A list whose comment names its source file gets a test that reads that file (#623, 2026-11-19)
+`validate_mesh_refs.DEFAULT_TPAC_MODULES` names `Main/_Module/SubModule.xml` as the source of its modules, and the only test pinned today's six names, so a new dependency would never be scanned for art. A repeat of "A gate's realm list comes from the generators, never from a hand-kept list".
+- **Why missed:** the plan measured the list on one install and pinned the result, so the test could not fail when the source changed.
+- **Prevent:** when a constant's comment cites a file, test the constant against that file (here every `DependedModule`), and name the known exceptions in one set with the reason.
+- **Source:** [RCA](../rca-validate-moduledata-mcp-parity-2026-11-19.md) F1.
+
+### An MCP tool's docstring states only what its passes do: grep them for stderr first (#623, 2026-11-19)
+The `validate_moduledata` MCP tool said every pass that could not run comes back as a `PARTIAL_RUN` warning, but two passes still announce their skips on stderr only, which an MCP client never reads.
+- **Why missed:** the plan wrote the docstring before the code, and the executor copied it.
+- **Prevent:** before a docstring or doc line says "every pass" or "any skip", grep each composed pass for `file=sys.stderr` and `print(`, and narrow the claim to what the code returns.
+- **Source:** [RCA](../rca-validate-moduledata-mcp-parity-2026-11-19.md) F2.

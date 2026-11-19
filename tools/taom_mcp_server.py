@@ -75,8 +75,10 @@ def validate_moduledata(codes: list[str] | None = None) -> dict:
     """Validate all TAOM ModuleData XML against the schemas. Returns
     {error_count, warning_count, issues:[{severity, code, file, line, entry_id,
     message}]}. Optional `codes` filters to specific issue codes (e.g.
-    ["BROKEN_ITEM_REF","UNKNOWN_CULTURE"]). It runs every pass the CLI runs, and a
-    pass that could not run comes back as a PARTIAL_RUN WARNING."""
+    ["BROKEN_ITEM_REF","UNKNOWN_CULTURE"]). It runs every pass the CLI runs. No game
+    install, a live module's missing ModuleData or a registry that looks too small
+    comes back as a PARTIAL_RUN WARNING; a narrower skip (no LOTRLOME_Armory for the
+    armour class table, a module that ships no .tpac) goes to the server's stderr only."""
     return _query.validate(codes)
 
 

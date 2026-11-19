@@ -120,8 +120,10 @@ class ModuleDataQuery:
 
     # -- validation ------------------------------------------------------- #
     def validate(self, codes=None) -> dict:
-        """Every pass the CLI runs (validate_moduledata.run_all_passes, #623). What the run could not
-        check comes back as PARTIAL_RUN warnings whatever `codes` says: the MCP has no stderr."""
+        """Every pass the CLI runs (validate_moduledata.run_all_passes, #623). The run's notices (no
+        install, a missing live module, a suspect registry) come back as PARTIAL_RUN warnings whatever
+        `codes` says, because an MCP client reads no stderr. A pass's own stderr skip line (no Armory
+        for the armour class table, a module with no .tpac) is not among them."""
         run = vm.run_all_passes(self.moduledata, self.game_modules, self.schemas, self.reg, codes=codes)
         issues = run.issues + run.notices
         return {

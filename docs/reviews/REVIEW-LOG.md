@@ -5830,3 +5830,17 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 | R1 | UNVERIFIED: on the DrivenTarget arm the gravity reset reaches a dead archer one frame after removal, where vanilla does it during removal | Native effect not read | Native death path not decompiled | Watch a dead DrivenTarget archer's corpse in the measuring battle; the arm is deleted after it |
 
 - **In-game:** owed. The measuring battle is the check, and no arm is judged before it.
+
+## Review (number assigned at merge): plan 059, one pass composition for the validator CLI and the MCP tool (#623), tier-2 deep review (Lens 5, Tooling), Codex not run (2026-11-19)
+
+- **Scope:** `af0f5f330..9d147c068` on `improve/059-validate-moduledata-mcp-parity`: `run_all_passes` composes every validator pass for `main()` and the MCP tool, which returns what it could not check as `PARTIAL_RUN` warnings; `DEFAULT_TPAC_MODULES` is the one list of modules loaded for art; the mesh-ref scan byte-scans only unparsed packs and counts lines once; extraction skips `Languages/`.
+- **Codex:** not run (no paid dispatch authorised for this item).
+- **Lenses:** Data flow, 11 flows, 0 gaps, 1 LOW inconsistency (FOLLOW-UP); Tooling, 4 LOW findings. Standards, Compatibility, Efficiency, Completeness and Design skipped by tier. 2 LOW confirmed and fixed, 1 NEEDS MIKE, 3 false positives as defects. Lead sweep: old and new CLI output byte-identical on the live install (1823 issues).
+- **Report:** `docs/reviews/deep-review-059-validate-moduledata-mcp-parity-2026-11-19.md`; RCA `docs/reviews/rca-validate-moduledata-mcp-parity-2026-11-19.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | `DEFAULT_TPAC_MODULES` kept by hand while its comment names `SubModule.xml` | Convention inconsistency: hand-kept list (repeat) | The plan pinned the measured list, not its source | Test reads every `DependedModule`; lesson in `lessons/build-tooling-workflow.md` |
+| F2 | The MCP tool docstring said every skipped pass comes back as `PARTIAL_RUN`; two skips go to stderr only | Other: contract text wider than the code | Plan-supplied docstring copied unchecked | Docstrings narrowed; lesson in `lessons/build-tooling-workflow.md` |
+
+- **In-game:** not applicable (tools only).

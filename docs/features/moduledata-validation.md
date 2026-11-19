@@ -834,7 +834,7 @@ python tools/validate_moduledata.py --game-modules /nonexistent
 | `registry_sizes()` | `{items, npccharacters, cultures, party_templates}` — confirms the game install was found |
 | `list_schemas()` | the schemas + what each checks |
 
-`validate_moduledata` runs `validate_moduledata.run_all_passes`, the same composition as the CLI (#623), so it takes about as long as a CLI run and returns the same findings; what the run could not check comes back as `PARTIAL_RUN` warnings.
+`validate_moduledata` runs `validate_moduledata.run_all_passes`, the same composition as the CLI (#623), so it takes about as long as a CLI run and returns the same findings. No install, a live module's missing ModuleData or a registry that looks too small comes back as a `PARTIAL_RUN` warning. Two narrower skips still go to the server's stderr only: `ARMOUR_CLASS_TABLE_DRIFT` with no `LOTRLOME_Armory` (the missing Armory root also raises a `PARTIAL_RUN`), and a module that ships no `.tpac`.
 
 **Activation** (one-time; the server can't be loaded mid-session — Claude reads MCP config at startup):
 1. Ensure the `mcp` Python SDK is installed (`python -c "import mcp.server.fastmcp"` — present in this environment).
