@@ -107,7 +107,7 @@ internal static class FeatureModuleHooks
         ReportFaults(runner, FaultNotice.ChatLine);
     }
 
-    /// <summary>OnMissionBehaviorInitialize: hands each behavior to SubModule's AddTaomBehavior, which stamps [BattleLoad].</summary>
+    /// <summary>OnMissionBehaviorInitialize: hands each behavior to SubModule's AddBuiltTaomBehavior, which stamps [BattleLoad].</summary>
     internal static void AddMissionBehaviors(Mission mission, Action<MissionBehavior> addTaomBehavior) =>
         AddMissionBehaviors(IoC.Modules, IoC.Resolver, mission, addTaomBehavior);
 

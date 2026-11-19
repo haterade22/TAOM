@@ -2263,7 +2263,7 @@ public class SubModule : MBSubModuleBase
         // Stamps the name BEFORE handing the behavior to the engine: the ctors here are trivial,
         // but AddMissionBehavior does real engine registration, so a fault there leaves the
         // culprit's name as the last line rather than forcing source archaeology on the order.
-        void AddTaomBehavior(MissionBehavior behavior)
+        void AddBuiltTaomBehavior(MissionBehavior behavior)
         {
             // Co-op (#967, C7): an Unsafe behavior is not added in a session. Agent ownership is unknown here (co-op
             // registers agents after they are built), so an AgentOwner behavior checks it live or relies on the
@@ -2279,6 +2279,22 @@ public class SubModule : MBSubModuleBase
             taomBehaviorCount++;
         }
 
+        // #785: every hand-wired registration builds its behavior in a factory, so a throw while building one
+        // (a service that is not registered, a config that fails to load) drops only that behavior and the rest
+        // are still added. The throw is logged and reported to the mission-start guard, which writes its error
+        // line and shows the player its short notice. A factory that returns null adds nothing. The engine add
+        // stays outside the isolation: Mission.AddMissionBehavior lists the behavior before it calls OnCreated,
+        // so a throw there must still reach the mission-start guard.
+        void AddTaomBehavior<T>(System.Func<T?> create) where T : MissionBehavior
+        {
+            var behavior = MissionBehaviorBuild.Isolated(create,
+                message => IoC.Resolve<IModLogger>()?.LogError(message),
+                (ownerType, ownerAssembly, ex) => IoC.Resolve<Features.MissionStartGuard.IMissionStartGuardService>()?.Report(
+                    Features.MissionStartGuard.Models.StartCall.OnMissionBehaviorInitialize, ownerType, ownerAssembly, ex));
+            if (behavior != null)
+                AddBuiltTaomBehavior(behavior);
+        }
+
         // Deployment fallback guard for the shader-precompile walk: added ONLY to the walk's own battle.
         // TryClaimMission is true for the first mission initialized while an item is Starting/Running and
         // false for any other mission (a battle the player starts mid-walk makes the walk stand down
@@ -2286,38 +2302,38 @@ public class SubModule : MBSubModuleBase
         // directly): an AddMissionBehavior from the game manager's OnLoadFinished no-ops because
         // Mission.Current is not yet the battle mission at that point.
         if (Features.ShaderPrecompilation.ShaderPrecompileRunner.TryClaimMission(mission))
-            AddTaomBehavior(new Features.ShaderPrecompilation.ShaderPrecompilePlayerAgentGuard(IoC.Resolve<IModLogger>()));
+            AddTaomBehavior(() => new Features.ShaderPrecompilation.ShaderPrecompilePlayerAgentGuard(IoC.Resolve<IModLogger>()));
 
         // Behaviors tick in REVERSE registration order (Mission.OnTick walks MissionBehaviors from the
         // end), so AdvancedCombatBehavior registered AFTER the tree logic ticks its bone checks before
         // the trees each frame: a bite a tree starts is first checked next frame, the order that shipped
         // while the trees ticked on the async thread. The two share no store, so their deletion and
         // removal callbacks may run in either order (#595, Codex review 109).
-        AddTaomBehavior(new BehaviorTreeMissionLogic());
-        AddTaomBehavior(new AdvancedCombatBehavior());
-        AddTaomBehavior(new WargMissionBehavior());
-        AddTaomBehavior(new SpiderMissionBehavior());
-        AddTaomBehavior(new Features.Elephant.ElephantMissionBehavior());
-        AddTaomBehavior(new Features.Mumakil.MumakilMissionBehavior());
-        AddTaomBehavior(new Features.WarRam.WarRamMissionBehavior());
-        AddTaomBehavior(new Features.Elk.ElkMissionBehavior());
-        AddTaomBehavior(new Features.Animalia.AnimaliaMissionBehavior());
-        AddTaomBehavior(new Features.TrollBruteForce.TrollBruteForceMissionBehavior());
-        AddTaomBehavior(new Features.DwarfAttacks.DwarfAttacksMissionBehavior());
-        AddTaomBehavior(new SiegeDismountMissionBehavior());
+        AddTaomBehavior(() => new BehaviorTreeMissionLogic());
+        AddTaomBehavior(() => new AdvancedCombatBehavior());
+        AddTaomBehavior(() => new WargMissionBehavior());
+        AddTaomBehavior(() => new SpiderMissionBehavior());
+        AddTaomBehavior(() => new Features.Elephant.ElephantMissionBehavior());
+        AddTaomBehavior(() => new Features.Mumakil.MumakilMissionBehavior());
+        AddTaomBehavior(() => new Features.WarRam.WarRamMissionBehavior());
+        AddTaomBehavior(() => new Features.Elk.ElkMissionBehavior());
+        AddTaomBehavior(() => new Features.Animalia.AnimaliaMissionBehavior());
+        AddTaomBehavior(() => new Features.TrollBruteForce.TrollBruteForceMissionBehavior());
+        AddTaomBehavior(() => new Features.DwarfAttacks.DwarfAttacksMissionBehavior());
+        AddTaomBehavior(() => new SiegeDismountMissionBehavior());
         // Registered unconditionally; gates internally on its MCM toggle (off by default).
-        AddTaomBehavior(new Features.SiegePropDiagnostics.Hooks.SiegePropDiagnosticsMissionBehavior());
-        AddTaomBehavior(new MixedFormationsMissionBehavior());
-        AddTaomBehavior(new SmartCavalryAIMissionBehavior());
+        AddTaomBehavior(() => new Features.SiegePropDiagnostics.Hooks.SiegePropDiagnosticsMissionBehavior());
+        AddTaomBehavior(() => new MixedFormationsMissionBehavior());
+        AddTaomBehavior(() => new SmartCavalryAIMissionBehavior());
         // Registered unconditionally per TAOM convention; gates internally on its MCM toggle and on
         // MountDespawnMissionGate, both re-read live so a mid-battle toggle takes effect at once.
-        AddTaomBehavior(new Features.MountDespawn.Hooks.MountDespawnMissionBehavior(
+        AddTaomBehavior(() => new Features.MountDespawn.Hooks.MountDespawnMissionBehavior(
             IoC.Resolve<Features.MountDespawn.IDeadMountDespawnService>(),
             IoC.Resolve<IModLogger>()));
         // Registered unconditionally per TAOM convention; self-filters in AfterStart on
         // Campaign.Current + enlisted battle state (the donor's mission.Mode gate at init
         // time never fired — Mode is still StartUp there).
-        AddTaomBehavior(new Features.Enlistment.Hooks.EnlistmentMeritMissionBehavior(
+        AddTaomBehavior(() => new Features.Enlistment.Hooks.EnlistmentMeritMissionBehavior(
             IoC.Resolve<Features.Enlistment.IEnlistmentStateQuery>(),
             IoC.Resolve<Features.Enlistment.Content.IBattleMeritAccumulator>(),
             IoC.Resolve<Features.Enlistment.Content.IEnlistmentContentStore>(),
@@ -2326,76 +2342,86 @@ public class SubModule : MBSubModuleBase
         // enlisted-battle state. Strips every battlefield role (#424) at every rank. The Order of
         // Battle screen that the #443 army join made reachable is closed by
         // TaomBattleInitializationModel (#576) through the same BattleCommandPolicy gate.
-        AddTaomBehavior(new Features.Enlistment.Hooks.EnlistmentBattleRoleMissionBehavior(
+        AddTaomBehavior(() => new Features.Enlistment.Hooks.EnlistmentBattleRoleMissionBehavior(
             IoC.Resolve<Features.Enlistment.IEnlistmentStateQuery>(),
             IoC.Resolve<IModLogger>()));
         // The second half of the same engine branch (#441): the role strip above delivers
         // neither-role; this puts the soldier IN a formation so IsPlayerTroopInFormation
         // completes BehaviorComponent's soldier path. Same gate, all filtering inside.
-        AddTaomBehavior(new Features.Enlistment.Hooks.EnlistmentBattleFormationMissionBehavior(
+        AddTaomBehavior(() => new Features.Enlistment.Hooks.EnlistmentBattleFormationMissionBehavior(
             IoC.Resolve<Features.Enlistment.IEnlistmentStateQuery>(),
             IoC.Resolve<Features.Enlistment.Content.IEnlistmentContentStore>(),
             IoC.Resolve<IModLogger>()));
         // Registered unconditionally; self-filters internally on Campaign.Current and co-op authority.
-        AddTaomBehavior(new Features.FieldCommission.Hooks.FieldCommissionMissionLogic());
+        AddTaomBehavior(() => new Features.FieldCommission.Hooks.FieldCommissionMissionLogic());
         // Added unconditionally per TAOM convention; gates internally on
         // Mission.Mode == Deployment (the bearer-freeze guard) and on a live BannerBearerLogic.
-        AddTaomBehavior(new Features.BannerBearers.Hooks.BannerBearerAssignmentMissionLogic());
+        AddTaomBehavior(() => new Features.BannerBearers.Hooks.BannerBearerAssignmentMissionLogic());
         // Added unconditionally; DreadMissionGate self-filters to campaign field battles, sieges,
         // sally-outs and Fords of War matches (no campaign), re-read every tick because
         // MissionTeamAIType is assigned after every OnBehaviorInitialize. No AddModel counterpart:
         // the aura drives CommonAIComponent morale directly and CALLS the registered
         // BattleMoraleModel rather than overriding it.
-        AddTaomBehavior(new Features.DreadAura.Hooks.DreadAuraMissionLogic());
+        AddTaomBehavior(() => new Features.DreadAura.Hooks.DreadAuraMissionLogic());
         // SignatureStrikes (#605): a configured hero's melee hit rings the enemies around the
         // impact. Registered unconditionally; SignatureMissionGate self-gates per mission.
-        AddTaomBehavior(new Features.SignatureStrikes.Hooks.SignatureStrikesMissionLogic());
+        AddTaomBehavior(() => new Features.SignatureStrikes.Hooks.SignatureStrikesMissionLogic());
         // CultureDoctrine (#608): at EarlyStart, each AI team's vanilla tactic list becomes its
         // culture's. Registered unconditionally; the MCM toggle and Mission.IsFieldBattle are read
         // there, after MissionCombatantsLogic.EarlyStart has registered vanilla's set.
-        AddTaomBehavior(new Features.CultureDoctrine.Hooks.CultureDoctrineMissionLogic());
+        AddTaomBehavior(() => new Features.CultureDoctrine.Hooks.CultureDoctrineMissionLogic());
         // [MissionPerf] frame-time heartbeat every 5 s; the measurement the doctrine A/B and any
         // later battle-AI change is judged against. Self-gates on its BattleLoadDiagnostics toggle.
-        AddTaomBehavior(new Features.MissionPerf.Hooks.MissionPerfHeartbeatBehavior(IoC.Resolve<IModLogger>()));
+        AddTaomBehavior(() => new Features.MissionPerf.Hooks.MissionPerfHeartbeatBehavior(IoC.Resolve<IModLogger>()));
         // [PerfContext] once per mission; while the probe or the profiler measures, a [TickProfile]
         // window (with script, spawn and clip-loading lines) on the same 5 s clock as [MissionPerf].
-        AddTaomBehavior(new Features.MissionPerf.Hooks.MissionTickProfilerBehavior(
+        AddTaomBehavior(() => new Features.MissionPerf.Hooks.MissionTickProfilerBehavior(
             IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsSettingsProvider>(),
             IoC.Resolve<IGraphicsOptionsAdapter>(),
             IoC.Resolve<IModLogger>()));
 
         // Feature modules' mission behaviors: after the feature behaviors above, before the kernel tail
-        // below (MissionDiagnostic, the CrashReport dev trigger, CareerPerk).
-        FeatureModuleHooks.AddMissionBehaviors(mission, AddTaomBehavior);
+        // below (MissionDiagnostic, the CrashReport dev trigger, CareerPerk). ModuleRunner isolates each
+        // module, so these arrive already built.
+        FeatureModuleHooks.AddMissionBehaviors(mission, AddBuiltTaomBehavior);
 
         // MissionDiagnostic: added LAST so it sees all behaviors added by TAOM AND
         // every other mod in the load chain. Dumps MissionBehaviors + MissionLogics
         // on first OnMissionTick to taom_debug_*.log so user-uploaded crash logs
         // contain enough data to identify mod-conflict bugs (BehaviorType=Logic +
         // !MissionLogic null-cast offenders) and action-set anomalies.
-        var diagSvc = IoC.Resolve<Features.MissionDiagnostic.IMissionDiagnosticService>();
-        var raceMgr = IoC.Resolve<Core.Domain.IRaceManager>();
-        var diagLogger = IoC.Resolve<IModLogger>();
-        if (diagSvc != null && raceMgr != null && diagLogger != null)
-            AddTaomBehavior(new Features.MissionDiagnostic.Hooks.MissionDiagnosticBehavior(diagSvc, raceMgr, diagLogger));
+        AddTaomBehavior(() =>
+        {
+            var diagSvc = IoC.Resolve<Features.MissionDiagnostic.IMissionDiagnosticService>();
+            var raceMgr = IoC.Resolve<Core.Domain.IRaceManager>();
+            var diagLogger = IoC.Resolve<IModLogger>();
+            return diagSvc != null && raceMgr != null && diagLogger != null
+                ? new Features.MissionDiagnostic.Hooks.MissionDiagnosticBehavior(diagSvc, raceMgr, diagLogger)
+                : null;
+        });
 
         // Dev-trigger behavior watches the CrashReport MCM toggle and throws a tagged
         // TaomDevTriggerException on the next OnMissionTick when the player flips
         // "Throw On Next Mission Tick". QA only — no-op in normal play.
-        AddTaomBehavior(new Features.CrashReport.DevTriggers.CrashReportDevTriggerMissionBehavior());
+        AddTaomBehavior(() => new Features.CrashReport.DevTriggers.CrashReportDevTriggerMissionBehavior());
 
-        var careerAbilityService = IoC.Resolve<Features.CareerSystem.Abilities.ICareerAbilityService>();
-        if (careerAbilityService != null && Campaign.Current != null)
+        AddTaomBehavior(() =>
         {
-            AddTaomBehavior(new Features.CareerSystem.CareerPerkMissionBehavior(
-                IoC.Resolve<ICareerDataService>(),
-                careerAbilityService,
-                IoC.Resolve<Features.CareerSystem.Abilities.IAbilityActivationController>(),
-                IoC.Resolve<Features.CareerSystem.Abilities.IAbilityEffectExecutor>(),
-                IoC.Resolve<Features.CareerSystem.Abilities.ICareerAgentStatService>(),
-                IoC.Resolve<Features.CareerSystem.ICareerConfigProvider>(),
-                IoC.Resolve<IModLogger>()));
-        }
+            var careerAbilityService = IoC.Resolve<Features.CareerSystem.Abilities.ICareerAbilityService>();
+            if (careerAbilityService != null && Campaign.Current != null)
+            {
+                return new Features.CareerSystem.CareerPerkMissionBehavior(
+                    IoC.Resolve<ICareerDataService>(),
+                    careerAbilityService,
+                    IoC.Resolve<Features.CareerSystem.Abilities.IAbilityActivationController>(),
+                    IoC.Resolve<Features.CareerSystem.Abilities.IAbilityEffectExecutor>(),
+                    IoC.Resolve<Features.CareerSystem.Abilities.ICareerAgentStatService>(),
+                    IoC.Resolve<Features.CareerSystem.ICareerConfigProvider>(),
+                    IoC.Resolve<IModLogger>());
+            }
+
+            return null;
+        });
 
         try { battleLoadDiagSvc?.LogTaomBehaviorsDone(taomBehaviorCount); } catch { /* diagnostic only */ }
     }

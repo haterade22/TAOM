@@ -16,8 +16,8 @@ public class CoopMissionAddFilterPinTests
     public void AddTaomBehavior_FiltersByRoleBeforeAddingAnything_WithTheSessionReadOnce()
     {
         var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
-        var start = src.IndexOf("void AddTaomBehavior(MissionBehavior behavior)", StringComparison.Ordinal);
-        Assert.IsTrue(start >= 0, "AddTaomBehavior is gone; update this pin.");
+        var start = src.IndexOf("void AddBuiltTaomBehavior(MissionBehavior behavior)", StringComparison.Ordinal);
+        Assert.IsTrue(start >= 0, "AddBuiltTaomBehavior is gone; update this pin.");
         var body = src.Substring(start, 900);
 
         var filter = body.IndexOf("CoopMissionRolePolicy.ShouldAdd(behavior.GetType(), coopSessionActive)", StringComparison.Ordinal);
