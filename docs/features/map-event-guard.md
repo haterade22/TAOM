@@ -205,6 +205,16 @@ CrashReport catches the throw and offers Continue, which leaves the map event ha
 
 **In game (owed, #1475):** play a campaign at speed until an AI lord dies in battle (an rgl `[TAOM.Realms] HolderChanged/ClanSuccession` line, or a death notice) and check that no `[CrashReport]` entry follows.
 
+## Patch170: half-finished siege encounter in a save
+
+A player who chose "Continue (risky)" on the Patch169 crash and then saved holds a player encounter whose siege map event is finalized but not finished: the parties are still attached and, after a load, the event component has no `MapEvent` back-reference, so every map tick throws a NullReferenceException in `OnPlayerEncounterFinalizeBattle`.
+
+`Patch170_HalfFinishedEncounterRepair` is a prefix on `PlayerEncounter.FinalizeBattle()` that always returns true. `HalfFinishedEncounterService.Decide` acts only on a finalized event with a null back-reference or parties still attached; a healthy encounter never matches, and a second call finds nothing to do. The repair is the side-end step of vanilla's finish (it skips `MapEventVisual.OnMapEventEnd` and `FinalizeComponent`; after a load both are no-ops, and `AfterSiegeCompleted`'s only vanilla listener does nothing on a defender win): `MapEventComponent.AfterLoad(mapEvent)` (internal, reached by `AccessTools`) when the back-reference is missing, then `MapEventSide.HandleMapEventEnd()` on the defender side and the attacker side. Heroes in the attached parties marked `DiedInBattle` die as vanilla would, because `HandleMapEventEnd` runs vanilla's kill loop. Marked heroes still alive afterwards (for example the party that threw, already detached) are counted in the log line, over all living marked heroes and not only this battle's, and die at the end of their next battle as vanilla would. If restoring the back-reference works but ending a side throws, vanilla still finishes the encounter and the repair retries on the next `FinalizeBattle`. When `ICoopSessionProvider.ShouldDeferToHost` holds, the service stands down. Registry: [Patch170_HalfFinishedEncounterRepair](../reference/harmony-patch-registry.md#patch170_halffinishedencounterrepair).
+
+**Needs Patch169:** re-running `HandleMapEventEnd` for the attacker side can otherwise throw the original ArgumentOutOfRangeException again.
+
+**In game (owed):** load the player's save with Patch169 and Patch170. Expect no NullReferenceException, the encounter closes, the log shows the `[MapEventGuard] finished a half-finished encounter` line, and the attacking lords move again.
+
 ## Stuck AI battles
 
 ### The report
@@ -449,6 +459,7 @@ would act on.
   a Refuge or Supply Lines patch on the same method breaks after a game update.
 - 2026-11-17: added `Patch159_HelpDefendersArmyLeader`, from Silas He's v1.5.6 fix package (#1429).
 - 2026-11-18: added `Patch169_BattleDeathRosterSnapshot`, from a player's crash bundles (#1475). Not yet verified in game.
+- 2026-11-19: added `Patch170_HalfFinishedEncounterRepair`, a save repair for a half-finished siege encounter after a failed battle end.
 
 ## GitHub Issue
 
