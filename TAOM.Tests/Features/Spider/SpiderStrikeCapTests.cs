@@ -124,8 +124,8 @@ public class SpiderStrikeCapTests
     [TestMethod]
     public void CappedStrike_ALooseHorseNearer_NeverTakesTheSoldiersSlot()
     {
-        // Codex 2026-09-28 F2: the arc reports every live agent, and a teamless loose horse is on nobody's side, so a
-        // nearer one used to take a one-target bite from the soldier who opened the engage gate.
+        // Codex 2026-09-28 F2: the arc reports every live agent, and a capped strike holds soldiers only, so a
+        // nearer loose horse used to take a one-target bite from the soldier who opened the engage gate.
         var spider = Spider();
         var looseHorse = HorseOf(rider: null!, 1.0f);
         var soldier = InArc(spider, 1.4f);
@@ -135,6 +135,33 @@ public class SpiderStrikeCapTests
 
         Assert.IsTrue(Struck(soldier), "the soldier takes the bite");
         Assert.IsFalse(Struck(looseHorse), "a riderless mount is never a creature's target");
+    }
+
+    [TestMethod]
+    public void RiddenStrike_ALooseMountOfUnknownSide_IsNotStruck()
+    {
+        // #594: the uncapped strike has no loose-mount skip of its own; the side rule spares a mount of unknown side.
+        var spider = Spider();
+        var looseHorse = HorseOf(rider: null!, 1.0f);
+        var soldier = InArc(spider, 1.4f);
+
+        _sut.StrikeArc(spider, SpiderStrikeProfile.Ridden, countAllies: false, Reports(spider, looseHorse, soldier));
+
+        Assert.IsTrue(Struck(soldier), "the enemy soldier is still struck");
+        Assert.IsFalse(Struck(looseHorse), "a riderless mount of unknown side is never bitten");
+    }
+
+    [TestMethod]
+    public void RiddenStrike_ALooseMountOfTheOtherSide_IsStruck()
+    {
+        var spider = Spider();
+        var looseHorse = HorseOf(rider: null!, 1.0f);
+        looseHorse.HasKnownSide.Returns(true);
+        spider.IsSameTeam(looseHorse).Returns(false);
+
+        _sut.StrikeArc(spider, SpiderStrikeProfile.Ridden, countAllies: false, Reports(spider, looseHorse));
+
+        Assert.IsTrue(Struck(looseHorse), "an enemy's loose mount is still bitten");
     }
 
     [TestMethod]

@@ -382,6 +382,7 @@ the module is outside this repo, so that ledger is the only durable record of it
 
 ## Changelog
 
+- 2026-11-19: a bite spares a riderless mount on the spider's side (#594). The engine gives a mount no team, so `MountRiderSides` records a rider's team against his mount when he spawns on it or mounts it, and `CreatureBiteSides.Spares`, shared with the warg, compares that side; a riderless mount whose side is unknown is spared. The creature bandits' capped strike still skips every loose mount.
 - 2026-11-09: Arachnophobia Mode (#1110) swaps every non-hero spider rider to a warg when it is on; see [arachnophobia-mode.md](arachnophobia-mode.md).
 - 2026-09-29: KEYforce's whole spider meshes (`sk_spiders_a_geo.tpac`) replace the split halves: the Giant, Great (was Brown, now forest_a1 at 1.10x) and Pale Spiders on forest_a1/_a2, and two new mountain mounts on mountain_a1/_a2 for a goblin-tree rider line (`goblin_spider_rider` L21, `goblin_spider_lord` L31, off `goblin_lurker`). Confirmed in game; the split was never needed for these meshes.
 - 2026-09-28: strike rules added for the creature bandits (#692), via `SpiderStrikeProfile` and `SpiderStrikeSet`; the ridden spider keeps `SpiderStrikeSet.Ridden` and is unchanged.

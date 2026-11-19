@@ -134,8 +134,8 @@ public class SpiderAttackService : ISpiderAttackService
             {
                 if (HandleSpiderTargetHit(attackerAdapter, targetAdapter, boneId, strike)) struck++;
             }
-            // A capped strike (a creature bandit's) holds soldiers only: a riderless mount in the arc is on nobody's side and
-            // would take the slot of the soldier who opened the engage gate, which skips mounts (Codex 2026-09-28 F2).
+            // A capped strike (a creature bandit's) holds soldiers only: a riderless mount in the arc is not the
+            // soldier who opened the engage gate, which skips mounts, and would take his slot (Codex 2026-09-28 F2).
             else if (!IsLooseMount(targetAdapter) && IsStrikeable(attackerAdapter, targetAdapter))
                 held.Add((attackerAdapter, targetAdapter, boneId));
         });
@@ -192,14 +192,10 @@ public class SpiderAttackService : ISpiderAttackService
 
     private static bool IsLooseMount(IAgentAdapter target) => target != null && target.IsMount && target.RiderAgent == null;
 
-    // RIDDEN-mount team rule (warg pattern): if the victim is a mount, attribute its team to its rider; the
-    // spider's own side is decided by ITS rider when present (the spider is the mount).
-    private static bool IsSameSide(IAgentAdapter attacker, IAgentAdapter target)
-    {
-        var victimTeamSource = target.IsMount && target.RiderAgent != null ? target.RiderAgent : target;
-        var attackerTeamSource = attacker.RiderAgent ?? attacker;
-        return attackerTeamSource.IsSameTeam(victimTeamSource);
-    }
+    // The side rule the spider shares with the warg (CreatureBiteSides, #594). The spider's own side is its
+    // rider's when it has one (the spider is the mount).
+    private static bool IsSameSide(IAgentAdapter attacker, IAgentAdapter target) =>
+        CreatureBiteSides.Spares(attacker.RiderAgent ?? attacker, target);
 
     // --- Pure decision helpers (no TaleWorlds types — unit-tested; elephant-parity) ---
 
