@@ -108,6 +108,30 @@ def load_skill_sets_from(files: list[str]) -> dict[str, dict[str, int]]:
     return sets
 
 
+def effective_skills(template: str | None, inline: dict[str, int],
+                     sets: dict[str, dict[str, int]] | None) -> dict[str, int]:
+    """The skills a character plays with since v1.5.2, the one place the tools resolve a
+    skill_template (#626). BasicCharacterObject.Deserialize copies the SkillSet the template names
+    into a fresh MBCharacterSkills and lays the inline <skills> rows over it, so a listed row
+    overrides its one skill and the SkillSet supplies the rest. UPGRADE_SKILL_REGRESSION
+    (taom_schema), ranged_ladder.planned_skill_edits and rebalance_troops read a templated
+    character through this.
+
+    No template: a copy of the inline rows. A template `sets` does not hold: the inline rows alone,
+    because the engine registers a presumed, empty SkillSet for an id nothing defines
+    (MBObjectManager.GetPresumedObject). `sets` comes from load_skill_sets over the install and the
+    repo; without it a dangling id cannot be told from an unread one, so a templated character
+    raises ValueError rather than being read as its inline rows."""
+    if not template:
+        return dict(inline)
+    if sets is None:
+        raise ValueError(f"skill_template {template} cannot be resolved without the SkillSets "
+                         f"(load_skill_sets reads them from the install and the repo)")
+    resolved = dict(sets.get(template.split(".", 1)[-1], {}))
+    resolved.update(inline)
+    return resolved
+
+
 class Drift(NamedTuple):
     """One inline value that differs from its SkillSet."""
     char_id: str

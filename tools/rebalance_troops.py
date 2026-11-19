@@ -40,6 +40,7 @@ import taom_schema as ts  # noqa: E402  build_item_class_registry
 from _gamedir import game_modules as _resolve_game_modules  # noqa: E402
 import ranged_ladder as rl  # noqa: E402  the Bow/Crossbow cell of a ladder troop (#617)
 import troop_purpose as tp  # noqa: E402  the kit decides which skills are highest (#343)
+import sync_lord_inline_skills as sl  # noqa: E402  effective_skills, load_skill_sets (#626)
 
 TROOPS_DIR = os.path.join(os.path.dirname(__file__), '..', 'Main', '_Module', 'ModuleData', 'troops')
 MODULEDATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'Main', '_Module', 'ModuleData')
@@ -818,6 +819,18 @@ def clamp_upgrade_monotonicity(all_changes, base_on_curve=True, restat_ids=()):
             "The clamp would raise a ranged ladder troop off its cell (an upgrade source carries "
             "more Bow/Crossbow than the troop's tier cell): " + "; ".join(lifted[:8]) +
             ". Rank or tier the lines in tools/ranged_ladders.json so the cell is at least the source's.")
+    # A templated character plays with its SkillSet, the inline rows laid over it (#626). A raised
+    # inline row would differ from the SkillSet, which SKILL_TEMPLATE_MISMATCH refuses, so the clamp
+    # refuses first. ranged_ladder.planned_skill_edits refuses the same.
+    from_template = [f"{c['id']} {s} {pre_clamp[c['id']][s]} -> {base[c['id']][s]} ({c['template']})"
+                     for c in all_changes if c.get('template') for s in SKILL_NAMES
+                     if base[c['id']][s] > pre_clamp[c['id']][s]]
+    if from_template:
+        raise RuntimeError(
+            "The clamp would raise a character whose skills come from a skill_template: "
+            + "; ".join(from_template[:8]) + ". An inline row that differs from the SkillSet is "
+            "SKILL_TEMPLATE_MISMATCH, so raise the SkillSet itself or drop the template. "
+            "Nothing was written.")
 
     # Report against the FINAL values, not the raw curve. A clamped troop sits above the curve on
     # purpose and forever, so scoring it against the curve would print it as CHANGED on every run
@@ -1072,8 +1085,20 @@ def copy_source(troop_id, culture_attr, sources):
     return detect_culture(bare, token), bare, token
 
 
+def templated_old(troop_id, template, inline, skill_sets):
+    """A templated character's on-disk skills as the engine reads them: all eight, its SkillSet
+    with the inline rows laid over it (sync_lord_inline_skills.effective_skills, #626). Such a
+    character is read-only here: the clamp refuses to raise it (clamp_upgrade_monotonicity)."""
+    if skill_sets is None:
+        raise RuntimeError(
+            f"{troop_id} names skill_template {template}, and its skills cannot be read without the "
+            f"SkillSets; main() loads them from the install. Nothing was written.")
+    eff = sl.effective_skills(template, inline, skill_sets)
+    return {s: eff.get(s, 0) for s in SKILL_NAMES}
+
+
 def process_file(filepath, item_classes=None, purpose=False, mounts=None, couch_ids=None,
-                 slots_only=False, sources=None):
+                 slots_only=False, sources=None, skill_sets=None):
     """Process a single troop XML file. Returns list of change records.
 
     item_classes: item id -> skill class map from taom_schema.build_item_class_registry. The
@@ -1133,6 +1158,16 @@ def process_file(filepath, item_classes=None, purpose=False, mounts=None, couch_
             'upgrades': upgrades,
             'culture_attr': npc.get('culture', ''),
         }
+
+        # A templated character is read as its SkillSet with the inline rows laid over it and is
+        # never written (templated_old, #626), so it gets no curve and no kit plan.
+        template = npc.get('skill_template')
+        if template:
+            record.update(old=templated_old(troop_id, template, old_skills, skill_sets),
+                          template=template, new=None,
+                          status=f'SKILLSET (read-only: skill_template {template})')
+            changes.append(record)
+            continue
 
         # A copy follows its campaign source's rule, so a copy of an excluded troop is excluded too.
         if (bare_id(troop_id) if sources is not None else troop_id) in SKIP_TROOP_IDS:
@@ -1213,7 +1248,7 @@ def promoted_npcs_sources():
             if 'standalone' not in cfg or npcs in cfg['standalone']}
 
 
-def load_external_sources(item_classes=None, mounts=None, cultures=None):
+def load_external_sources(item_classes=None, mounts=None, cultures=None, skill_sets=None):
     """Upgrade sources that live OUTSIDE troops/ and feed into it.
 
     The `villager_<culture>` entries in characters/npcs_*.xml each upgrade into their culture's
@@ -1247,6 +1282,9 @@ def load_external_sources(item_classes=None, mounts=None, cultures=None):
                 continue
             skills = {s.get('id'): int(s.get('value', '0'))
                       for s in npc.findall('./skills/skill')}
+            template = npc.get('skill_template')
+            if template:
+                skills = templated_old(npc.get('id', ''), template, skills, skill_sets)
             record = {
                 'file': os.path.basename(filepath),
                 'path': filepath,
@@ -1261,7 +1299,10 @@ def load_external_sources(item_classes=None, mounts=None, cultures=None):
                 'new': None,
                 'external': True,
             }
-            villager = record['id'].startswith('villager_') and npc.find('skills') is not None
+            if template:
+                record['template'] = template
+            villager = (record['id'].startswith('villager_') and npc.find('skills') is not None
+                        and not template)
             if villager and item_classes:
                 own = promoted.get(npcs_culture, npcs_culture)
                 culture = own if own in CULTURE_PCT else (cultures or {}).get(upgrades[0])
@@ -1276,7 +1317,8 @@ def load_external_sources(item_classes=None, mounts=None, cultures=None):
     return records
 
 
-def load_roster(troop_files, item_classes, mounts, purpose=False, couch_ids=None, extra_paths=None):
+def load_roster(troop_files, item_classes, mounts, purpose=False, couch_ids=None, extra_paths=None,
+                skill_sets=None):
     """Every troop record, the second root and every upgrade source outside troops/, as main()
     plans them.
 
@@ -1291,18 +1333,20 @@ def load_roster(troop_files, item_classes, mounts, purpose=False, couch_ids=None
     for filepath in troop_files:
         if os.path.basename(filepath) not in SKIP_FILES:
             records += process_file(filepath, item_classes=item_classes, purpose=purpose, mounts=mounts,
-                                    couch_ids=couch_ids)
+                                    couch_ids=couch_ids, skill_sets=skill_sets)
     sources = copy_sources(records)
     for filepath in (extra_troop_paths() if extra_paths is None else extra_paths):
         extra = process_file(filepath, item_classes=item_classes, purpose=purpose and couch_ids is not None,
-                             mounts=mounts, couch_ids=couch_ids, slots_only=purpose, sources=sources)
+                             mounts=mounts, couch_ids=couch_ids, slots_only=purpose, sources=sources,
+                             skill_sets=skill_sets)
         second = {c['id'] for c in extra}
         for c in extra:
             c['upgrades'] = [u for u in c['upgrades'] if u in second]
         for c in records:
             c['upgrades'] = [u for u in c['upgrades'] if u not in second]
         records += extra
-    records += load_external_sources(item_classes, mounts, {c['id']: c['culture'] for c in records})
+    records += load_external_sources(item_classes, mounts, {c['id']: c['culture'] for c in records},
+                                     skill_sets=skill_sets)
     return records
 
 
@@ -1463,6 +1507,12 @@ def main():
     item_classes = ts.build_item_class_registry(MODULEDATA_DIR, game_modules)
     mounts = ts.build_mount_difficulty_registry(MODULEDATA_DIR, game_modules)
     print(f"Item-class registry: {len(item_classes):,} weapon-classed items, {len(mounts):,} horses")
+    skill_sets = sl.load_skill_sets(str(Path(game_modules).parent), MODULEDATA_DIR)
+    if not skill_sets:
+        print(f"ERROR: no SkillSet found under {Path(game_modules).parent} and the repo.\n"
+              f"       A templated character cannot be read without them. Nothing was written.")
+        sys.exit(1)
+    print(f"SkillSets: {len(skill_sets):,}")
     couch_ids = load_couchable_ids(game_modules) if slots_mode else None
     if slots_mode:
         print(f"Couchable items (a weapon description with the couch feature): {len(couch_ids):,}")
@@ -1490,7 +1540,7 @@ def main():
         rel = os.path.relpath(path, EXTRA_ROOT_DIR).replace(os.sep, '/')
         print(f"  Processing {rel} (second root{', slot rule only' if purpose else ''})...")
     all_changes = load_roster(troop_files, item_classes, mounts, purpose=purpose, couch_ids=couch_ids,
-                              extra_paths=extra_paths)
+                              extra_paths=extra_paths, skill_sets=skill_sets)
     troop_files = troop_files + extra_paths
     external = [c for c in all_changes if c.get('external') or c.get('villager')]
     villagers = [c for c in external if c.get('villager')]

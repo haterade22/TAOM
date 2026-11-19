@@ -268,5 +268,38 @@ class LoadSkillSetsMergeTests(unittest.TestCase):
         self.assertTrue(all(sync.MODULE_DATA in f for f in files), files)
 
 
+class EffectiveSkillsTests(unittest.TestCase):
+    """effective_skills is the one place the tools resolve a skill_template (#626): the SkillSet
+    copied, then each inline row laid over its one skill (BasicCharacterObject.Deserialize)."""
+
+    def setUp(self):
+        self.sets = {"t": {"Polearm": 70, "Bow": 30}}
+
+    def test_no_template_is_a_copy_of_the_inline_rows(self):
+        inline = {"Bow": 5}
+        result = sync.effective_skills(None, inline, None)
+        self.assertEqual(result, {"Bow": 5})
+        result["Bow"] = 99
+        self.assertEqual(inline, {"Bow": 5})
+
+    def test_inline_rows_are_laid_over_the_template(self):
+        self.assertEqual(sync.effective_skills("SkillSet.t", {"Bow": 90}, self.sets),
+                         {"Polearm": 70, "Bow": 90})
+
+    def test_a_template_without_inline_rows_is_the_skillset(self):
+        result = sync.effective_skills("SkillSet.t", {}, self.sets)
+        self.assertEqual(result, {"Polearm": 70, "Bow": 30})
+        result["Polearm"] = 1
+        self.assertEqual(self.sets["t"], {"Polearm": 70, "Bow": 30})
+
+    def test_a_template_that_names_no_skillset_reads_as_an_empty_one(self):
+        self.assertEqual(sync.effective_skills("SkillSet.missing", {"Bow": 40}, self.sets), {"Bow": 40})
+
+    def test_a_template_without_skillsets_is_refused(self):
+        with self.assertRaises(ValueError) as ctx:
+            sync.effective_skills("SkillSet.t", {}, None)
+        self.assertIn("SkillSet.t", str(ctx.exception))
+
+
 if __name__ == "__main__":
     unittest.main()

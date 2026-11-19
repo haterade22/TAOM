@@ -260,9 +260,10 @@ template's. `SKILL_TEMPLATE_MISMATCH` in `validate_moduledata.py` (the commit ho
 `python tools/sync_lord_inline_skills.py --apply` repairs a drift, the SkillSet being the source of
 truth. It replaced `SKILL_TEMPLATE_SHADOWS_SKILLS` and `SkillTemplate_NeverShadowsAnInlineSkillsBlock`,
 which refused any character declaring both. **A troop with an empty `<skills>` block and a template is
-the legitimate shape** and is left alone; both upgrade gates skip templated characters when judging an
-edge, because their base skills live in a SkillSet these files cannot see (no troop or villager edge
-has a templated side today).
+the legitimate shape** and is left alone. The Python gate (`UPGRADE_SKILL_REGRESSION`) and both
+skill writers resolve the template to the SkillSet with the inline rows laid over it
+(`sync_lord_inline_skills.effective_skills`, #626); the C# gate, which runs without the install,
+still skips such an edge. On 2026-11-19, 0 of 913 indexed upgrade edges had a templated side.
 
 ### The graph spans two directories
 
@@ -329,7 +330,7 @@ every L21 Dunlending read as a downgrade, restatted to 22.
 | `tools/analyze_troop_balance.py` | Read-only overview generator. Imports the curve from `rebalance_troops.py`; emits HTML/MD/JSON. `--outlier-threshold N` / `--stdout`. Never writes troop XML. |
 | `tools/taom_schema.py` | `UPGRADE_SKILL_REGRESSION` (ERROR), the `validate_moduledata.py` half of the gate. `TROOP_ITEM_ZERO_NOT_MAIN` (ERROR) and `TROOP_SKILL_KIT_MISMATCH` (WARNING), fed by `Registries.item_classes`. Template parity is `SKILL_TEMPLATE_MISMATCH` in `validate_moduledata.py` (#626). |
 | `TAOM.Tests/Features/TroopProgression/TroopUpgradeSkillMonotonicityTests.cs` | 3 tests: no skill drops, all 8 skills declared, militia exemption pinned by identity (template parity is `TAOM.Tests/Core/LordInlineSkillParityTests.cs` since #626). Fails rather than going inconclusive when it cannot find ModuleData, since a data gate that cannot read its data has checked nothing. |
-| `tools/tests/test_upgrade_skill_monotonicity.py` | 25 synthetic-data tests: the gate, the clamp, entry insertion, the fail-closed militia loader, and that the upgrade index leaves templates to `SKILL_TEMPLATE_MISMATCH` (`tools/tests/test_skill_template_mismatch.py`). |
+| `tools/tests/test_upgrade_skill_monotonicity.py` | 34 synthetic-data tests: the gate, the clamp, entry insertion, the fail-closed militia loader, the template resolution (a templated side judged on its SkillSet, read from the install root, one ERROR when no SkillSet is found), the clamp refusing to raise a templated character, and that the upgrade index leaves template parity to `SKILL_TEMPLATE_MISMATCH` (`tools/tests/test_skill_template_mismatch.py`). |
 | `tools/fix_upgrade_armour_regressions.py` | The armour clamp (#541): family step-up, parent fallback, slot append, hero-kit demotion. `tools/tests/test_fix_upgrade_armour_regressions.py` covers it on synthetic data. |
 | `UPGRADE_ARMOUR_REGRESSION` in `tools/taom_schema.py` | The armour gate (WARNING), fed by `Registries.item_armour`; tests in `tools/tests/test_validate_moduledata.py`. |
 | `Main/_Module/ModuleData/troops/troops_*.xml` (×25) | The troop definitions (the data under management). |

@@ -71,8 +71,11 @@ class ValidatorGateTests(unittest.TestCase):
         with open(os.path.join(self.root, "taom_spcultures.xml"), "w", encoding="utf-8") as f:
             f.write(cultures_xml)
 
-    def _run(self):
-        validator = ts.Validator(self.root, [], ts.Registries({}, {}, {}, {}, {}))
+    def _run(self, skill_sets=None, game_modules=None):
+        reg = ts.Registries({}, {}, {}, {}, {})
+        if skill_sets is not None:
+            reg.skill_sets = skill_sets
+        validator = ts.Validator(self.root, [], reg, game_modules=game_modules)
         return validator._upgrade_skill_regressions()
 
     def test_clean_ladder_reports_nothing(self):
@@ -151,12 +154,32 @@ class ValidatorGateTests(unittest.TestCase):
 class SkillTemplateEdgeTests(ValidatorGateTests):
     """A templated character's base skills live in a SkillSet these files do not hold.
 
-    Whether its inline rows agree with that SkillSet is SKILL_TEMPLATE_MISMATCH's question
-    (validate_moduledata.skill_template_mismatch_issues, #626), not the upgrade index's: on
-    v1.4.8 the loader discarded the inline block whenever a template was named (44 militia shipped
-    wearing vanilla values that way, #523); since v1.5.2 it lays the rows over a copy of the
-    template, so only a DIFFERENT row changes anything.
+    The gate judges an edge with a templated side on the character's effective skills: the
+    SkillSet with the inline rows laid over it, resolved through
+    sync_lord_inline_skills.effective_skills (#626). Whether those inline rows agree with the
+    SkillSet stays SKILL_TEMPLATE_MISMATCH's question (validate_moduledata.
+    skill_template_mismatch_issues), not the upgrade index's: on v1.4.8 the loader discarded the
+    inline block whenever a template was named (44 militia shipped wearing vanilla values that way,
+    #523); since v1.5.2 it lays the rows over a copy of the template, so only a DIFFERENT row
+    changes anything.
     """
+
+    @staticmethod
+    def _templated(troop_id, template, upgrades=(), inline=None):
+        rows = "".join(f'\n      <skill id="{k}" value="{v}" />' for k, v in (inline or {}).items())
+        targets = "".join(f'\n      <upgrade_target id="NPCCharacter.{u}" />' for u in upgrades)
+        return (
+            f'  <NPCCharacter id="{troop_id}" level="1" default_group="Infantry" culture="Culture.x"\n'
+            f'      skill_template="SkillSet.{template}">\n'
+            f'    <skills>{rows}</skills>\n'
+            f'    <upgrade_targets>{targets}\n'
+            f'    </upgrade_targets>\n  </NPCCharacter>\n')
+
+    def _install(self):
+        inst = tempfile.mkdtemp(prefix="taom_upgrade_inst_")
+        self.addCleanup(shutil.rmtree, inst, True)
+        os.makedirs(os.path.join(inst, "Modules"))
+        return inst
 
     def test_the_upgrade_index_leaves_template_parity_to_its_own_pass(self):
         troop = (
@@ -175,10 +198,9 @@ class SkillTemplateEdgeTests(ValidatorGateTests):
         self._write(troop)
         self.assertEqual([], self._run())
 
-    def test_a_templated_edge_is_not_judged_for_regression(self):
-        """Its base skills live in a SkillSet outside these files, so the inline block alone
-        is not the character. No troop or villager edge has a templated side (2026-09-19), so the
-        edge is skipped rather than resolved (#626)."""
+    def test_without_skill_sets_a_templated_edge_is_skipped(self):
+        """With no install and no skill_sets the SkillSets cannot be read, so the edge is skipped,
+        as every install-bound check is; validate_moduledata.py prints the skip (#626)."""
         self._write(
             '  <NPCCharacter id="p" level="1" default_group="Infantry" culture="Culture.x"\n'
             '      skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">\n'
@@ -187,6 +209,57 @@ class SkillTemplateEdgeTests(ValidatorGateTests):
             '    </upgrade_targets>\n  </NPCCharacter>\n'
             + _troop("c", 11, "Infantry", {k: 0 for k in rb.SKILL_NAMES}))
         self.assertEqual([], self._run())
+
+    def test_a_templated_source_is_judged_on_its_skillset(self):
+        self._write(self._templated("p", "src", ["c"])
+                    + _troop("c", 11, "Infantry", {k: 50 for k in rb.SKILL_NAMES}))
+        issues = self._run(skill_sets={"src": {k: 50 for k in rb.SKILL_NAMES} | {"Polearm": 70}})
+        self.assertEqual(1, len(issues))
+        self.assertEqual("UPGRADE_SKILL_REGRESSION", issues[0].code)
+        self.assertEqual("c", issues[0].entry_id)
+        self.assertIn("Polearm 70->50", issues[0].message)
+
+    def test_a_templated_target_reads_its_skillset_for_an_undeclared_skill(self):
+        self._write(_troop("p", 1, "Infantry", {k: 40 for k in rb.SKILL_NAMES}, ["c"])
+                    + self._templated("c", "tgt"))
+        issues = self._run(skill_sets={"tgt": {k: 60 for k in rb.SKILL_NAMES} | {"Bow": 30}})
+        self.assertEqual(1, len(issues))
+        self.assertEqual("c", issues[0].entry_id)
+        self.assertIn("Bow 40->30", issues[0].message)
+        self.assertNotIn("undeclared", issues[0].message, "the SkillSet declares Bow")
+        self.assertNotIn("Polearm", issues[0].message)
+
+    def test_an_inline_row_overrides_the_template(self):
+        self._write(_troop("p", 1, "Infantry", {k: 40 for k in rb.SKILL_NAMES}, ["c"])
+                    + self._templated("c", "tgt", inline={"OneHanded": 20}))
+        issues = self._run(skill_sets={"tgt": {k: 60 for k in rb.SKILL_NAMES}})
+        self.assertEqual(1, len(issues))
+        self.assertIn("OneHanded 40->20", issues[0].message)
+
+    def test_skill_sets_are_read_from_the_install_root(self):
+        """validate_moduledata.py passes the Modules folder; the SkillSets are read from its parent."""
+        inst = self._install()
+        native = os.path.join(inst, "Modules", "Native", "ModuleData")
+        os.makedirs(native)
+        rows = "".join(f'<skill id="{k}" value="{70 if k == "Polearm" else 50}" />' for k in rb.SKILL_NAMES)
+        with open(os.path.join(native, "x_skill_sets.xml"), "w", encoding="utf-8") as f:
+            f.write(f'<SkillSets><SkillSet id="src">{rows}</SkillSet></SkillSets>\n')
+        self._write(self._templated("p", "src", ["c"])
+                    + _troop("c", 11, "Infantry", {k: 50 for k in rb.SKILL_NAMES}))
+        issues = self._run(game_modules=os.path.join(inst, "Modules"))
+        self.assertEqual(1, len(issues), [i.message for i in issues])
+        self.assertEqual("c", issues[0].entry_id)
+        self.assertIn("Polearm 70->50", issues[0].message)
+
+    def test_an_install_with_no_skill_sets_gives_one_error(self):
+        inst = self._install()
+        self._write(self._templated("p1", "a", ["c"]) + self._templated("p2", "b", ["c"])
+                    + _troop("c", 11, "Infantry", {k: 50 for k in rb.SKILL_NAMES}))
+        issues = self._run(game_modules=os.path.join(inst, "Modules"))
+        self.assertEqual(1, len(issues), [i.message for i in issues])
+        self.assertEqual("(skill sets)", issues[0].entry_id)
+        self.assertEqual("UPGRADE_SKILL_REGRESSION", issues[0].code)
+        self.assertEqual(ts.Severity.ERROR, issues[0].severity)
 
 
 class MilitiaLoaderFailsClosedTests(unittest.TestCase):
@@ -292,6 +365,84 @@ class ClampTests(unittest.TestCase):
         ]
         with self.assertRaises(RuntimeError):
             rb.clamp_upgrade_monotonicity(records)
+
+
+class TemplatedRecordTests(unittest.TestCase):
+    """rebalance_troops reads a templated character as its SkillSet with the inline rows laid over
+    it (sync_lord_inline_skills.effective_skills, #626) and never writes one: an inline row that
+    differs from the SkillSet is SKILL_TEMPLATE_MISMATCH."""
+
+    def setUp(self):
+        self.dir = tempfile.mkdtemp(prefix="taom_templated_rec_")
+        self._characters_dir = rb.CHARACTERS_DIR
+
+    def tearDown(self):
+        rb.CHARACTERS_DIR = self._characters_dir
+        shutil.rmtree(self.dir, ignore_errors=True)
+
+    def _troops_file(self):
+        path = os.path.join(self.dir, "troops_test.xml")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write('<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n'
+                    '  <NPCCharacter id="p" level="1" default_group="Infantry" culture="Culture.gondor"\n'
+                    '      name="{=x_p}p" occupation="Soldier" skill_template="SkillSet.t">\n'
+                    '    <skills>\n      <skill id="Bow" value="90" />\n    </skills>\n'
+                    '    <upgrade_targets>\n      <upgrade_target id="NPCCharacter.c" />\n'
+                    '    </upgrade_targets>\n  </NPCCharacter>\n'
+                    + _troop("c", 6, "Infantry", {k: 10 for k in rb.SKILL_NAMES})
+                    + '</NPCCharacters>\n')
+        return path
+
+    def test_the_clamp_refuses_to_raise_a_templated_character(self):
+        parent = ClampTests._record("parent", {s: 50 for s in rb.SKILL_NAMES}, ["child"])
+        child = ClampTests._record("child", {s: 10 for s in rb.SKILL_NAMES})
+        child["template"] = "SkillSet.t"
+        child["new"] = None
+        child["status"] = "SKILLSET"
+        with self.assertRaises(RuntimeError) as ctx:
+            rb.clamp_upgrade_monotonicity([parent, child])
+        self.assertIn("SKILL_TEMPLATE_MISMATCH", str(ctx.exception))
+        self.assertIn("SkillSet.t", str(ctx.exception))
+
+    def test_a_templated_troop_reads_as_its_skillset(self):
+        recs = rb.process_file(self._troops_file(), skill_sets={"t": {"Bow": 120, "Polearm": 70}})
+        p = next(r for r in recs if r["id"] == "p")
+        self.assertEqual("SkillSet.t", p["template"])
+        self.assertIsNone(p["new"])
+        self.assertTrue(p["status"].startswith("SKILLSET"), p["status"])
+        self.assertEqual({s: 0 for s in rb.SKILL_NAMES} | {"Bow": 90, "Polearm": 70}, p["old"])
+
+    def test_a_templated_troop_without_skillsets_is_refused(self):
+        with self.assertRaises(RuntimeError) as ctx:
+            rb.process_file(self._troops_file())
+        self.assertIn("SkillSet.t", str(ctx.exception))
+
+    def test_a_templated_villager_stays_off_the_curve_and_reads_as_its_skillset(self):
+        characters = os.path.join(self.dir, "characters")
+        os.makedirs(characters)
+
+        def villager(vid, extra):
+            return (f'  <NPCCharacter id="{vid}" level="6" default_group="Infantry" culture="Culture.gondor"\n'
+                    f'      name="{{=x_{vid}}}{vid}" occupation="Villager"{extra}>\n'
+                    f'    <skills>\n      <skill id="Polearm" value="10" />\n    </skills>\n'
+                    f'    <Equipments>\n      <EquipmentRoster>\n'
+                    f'        <equipment slot="Item0" id="Item.test_fork" />\n'
+                    f'      </EquipmentRoster>\n    </Equipments>\n'
+                    f'    <upgrade_targets>\n      <upgrade_target id="NPCCharacter.gondor_recruit" />\n'
+                    f'    </upgrade_targets>\n  </NPCCharacter>\n')
+        with open(os.path.join(characters, "npcs_gondor.xml"), "w", encoding="utf-8") as f:
+            f.write('<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n'
+                    + villager("villager_a", "") + villager("villager_b", ' skill_template="SkillSet.v"')
+                    + '</NPCCharacters>\n')
+        rb.CHARACTERS_DIR = characters
+        recs = {r["id"]: r for r in rb.load_external_sources(
+            item_classes={"test_fork": "Polearm"}, mounts={}, skill_sets={"v": {"Bow": 40}})}
+        self.assertTrue(recs["villager_a"].get("villager"), "control: the fixture must reach the curve")
+        b = recs["villager_b"]
+        self.assertNotIn("villager", b)
+        self.assertTrue(b["external"])
+        self.assertEqual("SkillSet.v", b["template"])
+        self.assertEqual({s: 0 for s in rb.SKILL_NAMES} | {"Polearm": 10, "Bow": 40}, b["old"])
 
 
 class SkillEntryInsertionTests(unittest.TestCase):

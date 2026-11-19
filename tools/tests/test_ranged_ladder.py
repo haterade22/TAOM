@@ -714,21 +714,55 @@ class PlanTests(unittest.TestCase):
             rl.planned_skill_edits(troops, _launchers(), _spec(), sources={"villager_man": villager})
         self.assertIn("UPGRADE_SKILL_REGRESSION", str(ctx.exception))
 
-    def test_skill_clamp_skips_a_templated_side_and_a_templated_ladder_troop_takes_its_cell(self):
-        # A templated character's real skills are its template's values with the inline rows laid
-        # over them (installed 1.5.3 BasicCharacterObject.Deserialize; 1.4.8 ignored the inline
-        # block). The tools do not resolve templates, so an edge with a templated side is not judged,
-        # as UPGRADE_SKILL_REGRESSION does not judge it.
-        villager = _troop("villager_man", "", 6, [], upgrades=["man_b"], skills={"Bow": 120})
-        villager.templated = True
+    # A templated character's skills are its SkillSet with the inline rows laid over it (installed
+    # v1.5.x BasicCharacterObject.Deserialize), resolved through
+    # sync_lord_inline_skills.effective_skills (#626). A templated troop is never written: an inline
+    # row that differs from its SkillSet is SKILL_TEMPLATE_MISMATCH.
+    @staticmethod
+    def _templated_villager():
+        villager = _troop("villager_man", "", 6, [], upgrades=["man_b"], skills={})
+        villager.template = "SkillSet.v"
+        return villager
+
+    def test_skill_clamp_judges_a_templated_source_on_its_skillset(self):
         troops = {"man_b": _troop("man_b", "man", 26, [{"Item0": "man_bow"}], skills={"Bow": 60})}
-        edits = rl.planned_skill_edits(troops, _launchers(), _spec(), sources={"villager_man": villager})
-        self.assertEqual([(e.troop, e.new, e.reason) for e in edits], [("man_b", 90, "cell")])  # no clamp, no LadderError
-        # Second review (#617): on 1.5.3 the inline row wins over the template, so a templated
-        # ladder troop takes its cell like any other; the first review refused it on the 1.4.8 rule.
-        troops["man_b"].templated = True
-        edits = rl.planned_skill_edits(troops, _launchers(), _spec())
-        self.assertEqual([(e.troop, e.skill, e.new, e.reason) for e in edits], [("man_b", "Bow", 90, "cell")])
+        with self.assertRaises(rl.LadderError) as ctx:
+            rl.planned_skill_edits(troops, _launchers(), _spec(), sources={"villager_man": self._templated_villager()},
+                                   skill_sets={"v": {"Bow": 120}})
+        self.assertIn("UPGRADE_SKILL_REGRESSION", str(ctx.exception))   # the cell 90 sits under the source's 120
+
+    def test_skill_clamp_raises_a_non_ladder_child_to_a_templated_source(self):
+        villager = _troop("villager_man", "", 6, [], upgrades=["man_f"], skills={})
+        villager.template = "SkillSet.v"
+        troops = {"man_f": _troop("man_f", "man", 26, [{"Item0": "sword"}], skills={"Bow": 50})}
+        edits = rl.planned_skill_edits(troops, _launchers(), _spec(), sources={"villager_man": villager},
+                                       skill_sets={"v": {"Bow": 120}})
+        self.assertIn(("man_f", "Bow", 50, 120, "clamp"), [(e.troop, e.skill, e.old, e.new, e.reason) for e in edits])
+
+    def test_a_templated_child_is_never_written_inline(self):
+        troops = {
+            "man_a": _troop("man_a", "man", 21, [{"Item0": "man_bow"}], upgrades=["man_f"], skills={"Bow": 100}),
+            "man_f": _troop("man_f", "man", 26, [{"Item0": "sword"}], skills={}),
+        }
+        troops["man_f"].template = "SkillSet.f"
+        with self.assertRaises(rl.LadderError) as ctx:
+            rl.planned_skill_edits(troops, _launchers(), _spec(), skill_sets={"f": {"Bow": 50}})
+        self.assertIn("SKILL_TEMPLATE_MISMATCH", str(ctx.exception))
+        self.assertIn("SkillSet.f", str(ctx.exception))
+
+    def test_a_templated_ladder_troop_on_its_cell_needs_no_edit_and_off_it_is_refused(self):
+        troops = {"man_b": _troop("man_b", "man", 26, [{"Item0": "man_bow"}], skills={})}
+        troops["man_b"].template = "SkillSet.b"
+        self.assertEqual(rl.planned_skill_edits(troops, _launchers(), _spec(), skill_sets={"b": {"Bow": 90}}), [])
+        with self.assertRaises(rl.LadderError) as ctx:
+            rl.planned_skill_edits(troops, _launchers(), _spec(), skill_sets={"b": {"Bow": 60}})
+        self.assertIn("SkillSet.b", str(ctx.exception))
+
+    def test_a_templated_edge_without_skillsets_is_refused(self):
+        troops = {"man_b": _troop("man_b", "man", 26, [{"Item0": "man_bow"}], skills={"Bow": 60})}
+        with self.assertRaises(rl.LadderError) as ctx:
+            rl.planned_skill_edits(troops, _launchers(), _spec(), sources={"villager_man": self._templated_villager()})
+        self.assertIn("SkillSet.v", str(ctx.exception))
 
     def test_loader_marks_a_skill_template(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -741,8 +775,8 @@ class PlanTests(unittest.TestCase):
                 ("<NPCCharacters>" + _npc_xml("villager_man", 6, [], upgrades=("man_archer",)).replace(
                     '<NPCCharacter id="villager_man"', '<NPCCharacter id="villager_man" skill_template="SkillSet.x"')
                  + "</NPCCharacters>").encode())
-            self.assertFalse(rl.load_ranged_troops(md)["man_archer"].templated)
-            self.assertTrue(rl.load_upgrade_sources(md)["villager_man"].templated)
+            self.assertEqual(rl.load_ranged_troops(md)["man_archer"].template, "")
+            self.assertEqual(rl.load_upgrade_sources(md)["villager_man"].template, "SkillSet.x")
 
     def test_skill_clamp_skips_militia_pairs_and_exempt_edges(self):
         troops = {
@@ -988,6 +1022,11 @@ class RebalanceToolTests(unittest.TestCase):
         (vanilla / "weapons.xml").write_bytes(b"""<Items>
   <Item id="hunting_bow" name="Hunting Bow" Type="Bow"><ItemComponent><Weapon weapon_class="Bow" missile_speed="64" accuracy="85" thrust_damage="40"/></ItemComponent></Item>
 </Items>""")
+        # A real install always ships SkillSets; main refuses a load that finds none (#626).
+        native = self.modules / "Native" / "ModuleData"
+        native.mkdir(parents=True)
+        (native / "skill_sets.xml").write_bytes(
+            b'<SkillSets><SkillSet id="any"><skill id="Bow" value="10" /></SkillSet></SkillSets>')
         self.md = root / "ModuleData"
         (self.md / "troops").mkdir(parents=True)
         (self.md / "taom_spcultures.xml").write_bytes(
