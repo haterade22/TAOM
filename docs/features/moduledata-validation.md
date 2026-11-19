@@ -834,6 +834,8 @@ python tools/validate_moduledata.py --game-modules /nonexistent
 | `registry_sizes()` | `{items, npccharacters, cultures, party_templates}` — confirms the game install was found |
 | `list_schemas()` | the schemas + what each checks |
 
+`validate_moduledata` runs `validate_moduledata.run_all_passes`, the same composition as the CLI (#623), so it takes about as long as a CLI run and returns the same findings; what the run could not check comes back as `PARTIAL_RUN` warnings.
+
 **Activation** (one-time; the server can't be loaded mid-session — Claude reads MCP config at startup):
 1. Ensure the `mcp` Python SDK is installed (`python -c "import mcp.server.fastmcp"` — present in this environment).
 2. It is registered in [`.mcp.json`](../../.mcp.json) as the `taom-moduledata` stdio server; each developer enables it in their own untracked `.claude/settings.local.json` → `enabledMcpjsonServers`.
@@ -981,6 +983,13 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-11-19 (#623): the MCP tool `validate_moduledata` now runs every pass through
+  `run_all_passes`, which `main()` also calls; until now it ran the schema engine alone and passed no
+  install path. `CommitGateCoverageTests` checks that every `*_issues` pass is reached from
+  `run_all_passes` and that `main()` and `ModuleDataQuery.validate` both call it;
+  `RunAllPassesParityTests` pins that the CLI and the MCP tool report the same codes. New code
+  `PARTIAL_RUN`: what a run could not check, returned as a warning by the MCP tool. The CLI's stderr
+  lines keep their text; the no-install and missing-root warnings now print after the `Registry:` line.
 - 2026-11-14 (#1271): `WORN_ARMOUR_CEILING` and `WORN_ARMOUR_FLOOR` documented above. The two melee codes
   (`MELEE_LADDER_INVERSION`, `MELEE_BLOW_CEILING`) now price the `taom_ph_` placeholders from the validated
   tree's `placeholder_weapons/` files (`taom_schema.price_placeholders`) and judge each against its real

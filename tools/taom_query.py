@@ -16,6 +16,7 @@ import re
 from pathlib import Path
 
 import taom_schema as ts
+import validate_moduledata as vm
 
 # Prefix that identifies each reference kind in Bannerlord XML.
 _PREFIXES = {
@@ -33,19 +34,15 @@ _PREFIXES = {
 # doesn't silently fall back to an all-prefix search (deep-review 2026-05-31).
 _KIND_ALIASES = {"npccharacter": "troop"}
 
-# The shipped-troop-id baseline describes the repo's own troops (validate_moduledata.py applies it
-# only to the repo's ModuleData), so validate() passes it for that tree alone.
-_REPO_MODULEDATA = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData"
-_SHIPPED_TROOP_IDS = Path(__file__).resolve().parent / "shipped_troop_ids.txt"
-
 
 class ModuleDataQuery:
     """Granular queries over the injected registries + the ModuleData tree."""
 
-    def __init__(self, moduledata, registries: ts.Registries, schemas=None):
+    def __init__(self, moduledata, registries: ts.Registries, schemas=None, game_modules=None):
         self.moduledata = Path(moduledata)
         self.reg = registries
         self.schemas = list(schemas or [])
+        self.game_modules = Path(game_modules) if game_modules is not None else None
 
     # -- existence -------------------------------------------------------- #
     @staticmethod
@@ -123,11 +120,10 @@ class ModuleDataQuery:
 
     # -- validation ------------------------------------------------------- #
     def validate(self, codes=None) -> dict:
-        baseline = _SHIPPED_TROOP_IDS if self.moduledata.resolve() == _REPO_MODULEDATA.resolve() else None
-        issues = ts.Validator(self.moduledata, self.schemas, self.reg, shipped_troop_ids_file=baseline).run()
-        if codes:
-            wanted = set(codes)
-            issues = [i for i in issues if i.code in wanted]
+        """Every pass the CLI runs (validate_moduledata.run_all_passes, #623). What the run could not
+        check comes back as PARTIAL_RUN warnings whatever `codes` says: the MCP has no stderr."""
+        run = vm.run_all_passes(self.moduledata, self.game_modules, self.schemas, self.reg, codes=codes)
+        issues = run.issues + run.notices
         return {
             "error_count": sum(1 for i in issues if i.severity is ts.Severity.ERROR),
             "warning_count": sum(1 for i in issues if i.severity is ts.Severity.WARNING),

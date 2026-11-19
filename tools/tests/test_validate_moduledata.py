@@ -16,6 +16,7 @@ Each test maps to one recurring TAOM bug class the validator must catch:
   - DUPLICATE_NPC_ID       -> same NPCCharacter id defined twice in TAOM
   - MISSING_CIVILIAN_TYPE  -> civilian roster missing equipmentType="Civilian"
 """
+import contextlib
 import io
 import json
 import os
@@ -4046,7 +4047,7 @@ class MissingCollisionBodyTests(unittest.TestCase):
     no loaded tpac ships. `validate_mesh_refs.py` Tier C is the engine; this
     pass only turns its MISSING_BODY findings into ERROR issues (and its
     MISSING_MESH into WARNINGs) so the commit hook sees them without anyone
-    remembering a second command (the MCP tool and /verify do not yet, #623)."""
+    remembering a second command (the MCP tool too since #623)."""
 
     def test_loaded_tpacs_keeps_the_modules_path_it_was_given(self):
         # rebuilding "<parent>/Modules" from another spelling of the folder ("mods", a lowercase "modules") would
@@ -4560,6 +4561,14 @@ class SchemaInvalidPassTests(unittest.TestCase):
         return vm.schema_invalid_issues(self.module, schemas or self.schemas)
 
     @unittest.skipUnless(vx.HAVE_LXML, "lxml not installed")
+    def test_no_install_given_is_a_not_verified_warning(self):
+        """The MCP may run with no install path at all; the layer must say it was not checked."""
+        issues = vm.schema_invalid_issues(self.module, None)
+        self.assertEqual([(i.code, i.severity) for i in issues], [(vm.SCHEMA_CODE, ts.Severity.WARNING)])
+        self.assertIn("no game install", issues[0].message)
+        self.assertIn("NOT verified", issues[0].message)
+
+    @unittest.skipUnless(vx.HAVE_LXML, "lxml not installed")
     def test_schema_invalid_file_is_an_error_at_its_line(self):
         _write(self.clans, _GOOD_CLANS.replace(' initial_home_settlement="Settlement.town_A1"', ""))
         issues = self._issues()
@@ -5049,18 +5058,30 @@ class CommitGateCoverageTests(unittest.TestCase):
 
     @staticmethod
     def _unreached_passes(src):
-        """Every module-level `def <x>_issues(` whose call does not appear in main()'s body."""
+        """Every module-level `def <x>_issues(` whose call does not appear in run_all_passes()'s body,
+        the one composition main() and the MCP tool share (#623)."""
         passes = re.findall(r"^def (\w+_issues)\(", src, flags=re.M)
-        main_body = re.search(r"^def main\(\).*?(?=^\S)", src, flags=re.M | re.S).group(0)
-        return passes, [p for p in passes if f"{p}(" not in main_body]
+        body = re.search(r"^def run_all_passes\(.*?(?=^\S)", src, flags=re.M | re.S).group(0)
+        return passes, [p for p in passes if f"{p}(" not in body]
 
-    def test_every_issue_pass_is_reached_from_main(self):
+    def test_every_issue_pass_is_reached_from_run_all_passes(self):
         """#622: missing_collision_body_issues was defined, documented, in the hook's --code
         list and unit-tested, and main() never called it for three days. The code-string
         checks in this class prove presence in source, not reachability; this checks the call."""
         passes, unreached = self._unreached_passes(self.VALIDATOR.read_text(encoding="utf-8"))
         self.assertGreaterEqual(len(passes), 3, "the pass scan found nothing")
-        self.assertEqual(unreached, [], f"main() never calls: {unreached}")
+        self.assertEqual(unreached, [], f"run_all_passes() never calls: {unreached}")
+
+    def test_main_and_the_mcp_tool_both_call_run_all_passes(self):
+        """#623: the MCP's validate ran the schema engine alone while main() ran every pass. Both
+        compose through one function, so a pass added there reaches both."""
+        src = self.VALIDATOR.read_text(encoding="utf-8")
+        main_body = re.search(r"^def main\(\).*?(?=^\S)", src, flags=re.M | re.S).group(0)
+        self.assertIn("run_all_passes(", main_body)
+        query = (Path(__file__).resolve().parents[1] / "taom_query.py").read_text(encoding="utf-8")
+        body = re.search(r"^    def validate\(.*?(?=^    \S|^\S|\Z)", query, flags=re.M | re.S)
+        self.assertIsNotNone(body, "taom_query.py has no ModuleDataQuery.validate")
+        self.assertIn("run_all_passes(", body.group(0))
 
     @staticmethod
     def _error_codes_in(src):
@@ -5341,6 +5362,54 @@ class ArmourAcquisitionRefTests(unittest.TestCase):
             self.assertTrue(config.findall(path), f"the shipped armour config has no {path}")
         quests = vm.ET.parse(vm.MODULEDATA / self.QUESTS).getroot()
         self.assertTrue(quests.findall("CareerQuest"), "the shipped career quests have no root-level <CareerQuest>")
+
+
+class RunAllPassesParityTests(unittest.TestCase):
+    """#623: the MCP tool's validate_moduledata ran ts.Validator alone, so an agent trusting it got no
+    collision-body, engine-XSD, generator or skill-template verdict. main() and
+    taom_query.ModuleDataQuery.validate now both call run_all_passes; these pin that they agree."""
+
+    PASSES = re.findall(r"^def (\w+_issues)\(", Path(vm.__file__).read_text(encoding="utf-8"), flags=re.M)
+
+    def test_the_cli_and_the_mcp_tool_report_the_same_codes(self):
+        import taom_query as tq
+        self.assertGreaterEqual(len(self.PASSES), 9, "the pass scan found almost nothing")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            md = root / "ModuleData"
+            _write(md / "empty.xml", "<NPCCharacters />")
+            mods = root / "Game" / "Modules"
+            for name in ("LOTRLOME_Armory", "TAOM_Map"):
+                (mods / name / "ModuleData").mkdir(parents=True)
+            cli_json = root / "cli.json"
+            with contextlib.ExitStack() as stack:
+                for name in self.PASSES:
+                    stack.enter_context(mock.patch.object(vm, name, return_value=[ts.Issue(
+                        severity=ts.Severity.WARNING, code=f"STUB_{name.upper()}", file="", line=0,
+                        entry_id="", message=name)]))
+                _run_main("--moduledata", str(md), "--game-modules", str(mods), "--json", str(cli_json))
+                registries = ts.build_registries(md, mods)
+                mcp = tq.ModuleDataQuery(md, registries, ts.load_schemas(SCHEMA_DIR),
+                                         game_modules=mods).validate()
+            cli_codes = {i["code"] for i in json.loads(cli_json.read_text(encoding="utf-8"))}
+        mcp_codes = {i["code"] for i in mcp["issues"]} - {vm.PARTIAL_RUN_CODE}
+        self.assertEqual(mcp_codes, cli_codes)
+        self.assertLessEqual({f"STUB_{n.upper()}" for n in self.PASSES}, cli_codes,
+                             "a pass was not run with the install present")
+
+    def test_the_mcp_tool_returns_what_it_did_not_check_as_warnings(self):
+        """The MCP has no stderr: a pass skipped for want of an install must come back as a WARNING."""
+        import taom_query as tq
+        with tempfile.TemporaryDirectory() as tmp:
+            md = Path(tmp) / "ModuleData"
+            _write(md / "empty.xml", "<NPCCharacters />")
+            registries = ts.Registries(items=set(), item_def_files={}, npccharacters=set(),
+                                       cultures={"vlandia"}, party_templates=set())
+            out = tq.ModuleDataQuery(md, registries, [], game_modules=Path(tmp) / "nowhere").validate(
+                codes=[vm.BODY_CODE])
+        notices = [i for i in out["issues"] if i["code"] == vm.PARTIAL_RUN_CODE]
+        self.assertTrue(any(f"{vm.BODY_CODE} SKIPPED" in i["message"] for i in notices), out)
+        self.assertTrue(all(i["severity"] == "WARNING" for i in notices))
 
 
 if __name__ == "__main__":
