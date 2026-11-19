@@ -1843,6 +1843,11 @@ public class SubModule : MBSubModuleBase
         // is attached to that army. A game menu consequence, so the standard batch is early enough.
         TAOM.Features.MapEventGuard.Hooks.Patch159_HelpDefendersArmyLeader.Initialize(IoC.Resolve<IModLogger>());
         TryPatchCategory("Patch159_HelpDefendersArmyLeader");
+        // Patch170: a save made after a crash in the battle-end hero loop holds a finalized map event the player
+        // encounter still points at; the prefix finishes that event once so FinalizeBattle stops throwing every tick.
+        TAOM.Features.MapEventGuard.Hooks.Patch170_HalfFinishedEncounterRepair.Initialize(
+            IoC.Resolve<TAOM.Features.MapEventGuard.HalfFinishedEncounterService>(), IoC.Resolve<IModLogger>());
+        TryPatchCategory("Patch170_HalfFinishedEncounterRepair");
         // Patch87 (#566): "Return to Army" leaves the town or castle when the player is an army
         // member who is NOT attached to the army. Vanilla only ever leaves a village, hides "Leave"
         // for every non-leader member, and the wait menu it opens instead has no exit. The target is

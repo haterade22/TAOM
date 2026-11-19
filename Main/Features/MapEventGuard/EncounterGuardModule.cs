@@ -33,6 +33,8 @@ internal sealed class EncounterGuardModule : TaomFeatureModule
         registrator.Register<SallyOutGuardService>(Reuse.Singleton);
         registrator.Register<IEmptyMeetingAdapter, EmptyMeetingAdapter>(Reuse.Singleton);
         registrator.Register<EmptyMeetingGuardService>(Reuse.Singleton);
+        registrator.Register<IHalfFinishedEncounterAdapter, HalfFinishedEncounterAdapter>(Reuse.Singleton);
+        registrator.Register<HalfFinishedEncounterService>(Reuse.Singleton);
     }
 
     public override void InitializeStatics(IResolver resolver) =>

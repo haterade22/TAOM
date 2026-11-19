@@ -2155,6 +2155,18 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **The rule** (`ShouldUseArmyLeader`, tested on every input): the player is the attacker; the defender is not the main party, is in no map event, does not lead its army and is attached to the army leader; the army leader shares its besieger camp, is not the main party and is in no map event. Then the defender becomes the army leader's party, the engine's own path when the camp leader leads its army. The v1.5.7 callers that pass the main party as the attacker are listed in the patch's doc comment; only help defenders meets the rule. The prefix catches its own throw and leaves the call unchanged.
 
+## Patch170_HalfFinishedEncounterRepair
+
+**Target:** `PlayerEncounter.FinalizeBattle()` (public instance, no arguments, Prefix that always returns true)
+
+**Feature:** MapEventGuard, `Main/Features/MapEventGuard/Hooks/Patch170_HalfFinishedEncounterRepair.cs`, the rule in `HalfFinishedEncounterService`, the engine reads and calls in `HalfFinishedEncounterAdapter`. **Status:** ACTIVE (2026-11-19). Not yet checked in game; needs Patch169 loaded too.
+
+**The state.** A save made after "Continue (risky)" on the Patch169 crash holds a player encounter whose siege map event is finalized (`WaitingRemoval`) but never finished: parties are still attached, and after a load the component's `MapEvent` back-reference is null (`MapEvent.OnAfterLoad` runs only for events still in `MapEventManager._mapEvents`). Every map tick, `FinalizeBattle` then throws a NullReferenceException in `SiegeAssaultEventComponent.OnPlayerEncounterFinalizeBattle`.
+
+**The fix.** The prefix acts only when `PlayerEncounter.Battle.IsFinalized` and either the back-reference is null or a side still has parties. It calls the internal `MapEventComponent.AfterLoad(MapEvent)` (through `AccessTools`, row in `reflection-sites.md`) when the back-reference is null, then the public `MapEventSide.HandleMapEventEnd()` on side 0 and side 1 (the side-end step of vanilla's finish; it skips `MapEventVisual.OnMapEventEnd` and `FinalizeComponent`, both no-ops after a load, and `AfterSiegeCompleted`'s only vanilla listener does nothing on a defender win), then returns true so vanilla finishes. Heroes in the attached parties marked `DiedInBattle` die as vanilla would (the kill loop is in `HandleMapEventEnd`); marked heroes still alive afterwards (for example the party that threw, already detached) are counted in the one `[MapEventGuard]` log line, over all living marked heroes, and die at the end of their next battle. If the back-reference is restored but ending a side throws, vanilla still finishes the encounter and the repair retries on the next `FinalizeBattle`. A throw is logged once per session and vanilla runs unchanged.
+
+**Co-op.** Not a veto: the prefix skips nothing. Classified ReviewedSafe in `CoopVetoClassificationTests`; the service also stands down when `ICoopSessionProvider.ShouldDeferToHost` holds. **Tests:** `HalfFinishedEncounterServiceTests`.
+
 ## Patch160_LoadRetryStop
 
 **Target:** `SandBox.SandBoxGameManager.DoLoadingForGameManager(GameManagerLoadingSteps, out GameManagerLoadingSteps)` (protected override, Prefix plus a void Finalizer)

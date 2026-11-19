@@ -276,6 +276,8 @@ public class ReflectionSiteBindingTests
     // answers false, so the caravan and villager greetings stay vanilla.
     [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.CaravansCampaignBehavior", "CaravansCampaignBehavior", "_interactedCaravans", "Field", "EncounterLinesAdapter.cs:34")]
     [DataRow("Helpers.PartyScreenHelper", "PartyScreenHelper", "GetRosterWithAllGameTroops", "Method", "CheatWorldAdapter.cs:149")]
+    // --- Half-finished encounter repair (HalfFinishedEncounterAdapter.cs, Patch170): the load step the event missed ---
+    [DataRow("TaleWorlds.CampaignSystem.MapEvents.MapEventComponent", "MapEventComponent", "AfterLoad", "Method", "HalfFinishedEncounterAdapter.cs:17")]
     [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.VillagerCampaignBehavior", "VillagerCampaignBehavior", "_interactedVillagers", "Field", "EncounterLinesAdapter.cs:35")]
     // The text seam's three ConversationManager fields, bound once in Initialize. A miss logs one warning and the surrender and
     // hideout boss lines stay vanilla.
