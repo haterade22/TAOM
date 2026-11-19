@@ -119,15 +119,20 @@ public sealed class LordRetinueWorld
     /// party sits in, else as a fugitive, as vanilla's own disband check does away from a settlement. The
     /// garrison merge copies the whole roster and then clears it, which leaves a hero listed in the garrison
     /// with no party. This runs at the start, not at the merge, so it does not depend on listener order.
+    /// The roster is read by index, never through <c>GetTroopRoster()</c>: this event also fires inside the
+    /// engine's battle-death loop (<c>MapEventSide.HandleMapEventEndForPartyInternal</c> kills a lone leader,
+    /// whose <c>MakeDead</c> starts the disband), and that loop is still indexing the list
+    /// <c>GetTroopRoster()</c> would refill one element shorter (#1475).
     /// </summary>
     public void ReleaseAtDisband(MobileParty party)
     {
         var leader = party.LeaderHero;
         var settlement = party.CurrentSettlement;
         var heroes = new List<Hero>();
-        foreach (var element in party.MemberRoster.GetTroopRoster())
+        var roster = party.MemberRoster;
+        for (var i = 0; i < roster.Count; i++)
         {
-            var hero = element.Character?.HeroObject;
+            var hero = roster.GetElementCopyAtIndex(i).Character?.HeroObject;
             if (hero != null && hero != leader && hero.IsAlive && _playerControl.OfHero(hero) == PlayerControl.NotPlayer)
                 heroes.Add(hero);
         }

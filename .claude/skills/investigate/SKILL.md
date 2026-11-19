@@ -58,7 +58,7 @@ A crash reported only by logs: read every line of both logs, collapsing repeats 
    ```bash
    git log --oneline -20 -- <affected-files>
    ```
-   Was this working before? What's in the diff?
+   Was this working before? What's in the diff? Also search open PRs and every branch for the throwing method (`gh pr list --state open --search <Method>`, `git log --all --oneline -S <Method>`): another session may already fix it (#1475 found two open PRs too late).
 
 4. **Reproduce.** Can you trigger the bug deterministically? Bannerlord-specific:
    - Save-load loop (load → action → save → load — does state corrupt?)
