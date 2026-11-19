@@ -903,6 +903,8 @@ def main() -> int:
               f"         only the live install has.", file=sys.stderr)
         print(f"WARNING: {TEMPLATE_CODE} SKIPPED: the vanilla SkillSets a template can name live\n"
               f"         in the install.", file=sys.stderr)
+        print(f"WARNING: UPGRADE_SKILL_REGRESSION SKIPPED for upgrade edges with a skill_template\n"
+              f"         side: their SkillSets live in the install.", file=sys.stderr)
         print(f"WARNING: {PRISON_CODE} SKIPPED: the prison scenes and the TAOM_Map settlements\n"
               f"         live in the install.", file=sys.stderr)
         print(f"WARNING: {ARMOUR_CLASS_CODE} SKIPPED: the armour class table can only be checked\n"

@@ -73,8 +73,9 @@ public static class SpiderStrikes
 }
 
 /// <summary>
-/// What one attack did: the clip it played, the agents its arc reported, the allies among them (counted for a capped
-/// strike only), the enemies it struck and its cap. The creature bandit's attack task logs it (#692).
+/// What one attack did: the clip it played, the agents its arc reported, the agents the side rule spares among
+/// them (allies, and a loose mount of unknown side; counted for a capped strike only), the enemies it struck and its
+/// cap. The creature bandit's attack task logs it (#692).
 /// </summary>
 public readonly struct SpiderStrikeOutcome
 {

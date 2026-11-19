@@ -257,9 +257,11 @@ that value replaced). Ammo slots are never touched and a class never changes. Tw
 - **Templated characters.** On 1.5.3 a `skill_template` supplies a character's base skills and an
   inline `<skills>` row overrides that skill (installed `BasicCharacterObject.Deserialize` copies the
   template into a fresh `MBCharacterSkills`, then applies the inline rows; on 1.4.8 the inline block
-  was ignored whenever the template resolved). The tools do not resolve templates, so an upgrade edge
-  with a templated side is skipped, as `UPGRADE_SKILL_REGRESSION` skips it; a templated ladder troop
-  still takes its cell, because the inline row wins. No troop file carries one today. The 22
+  was ignored whenever the template resolved). An upgrade edge with a templated side is judged on
+  the SkillSet with the inline rows laid over it (`sync_lord_inline_skills.effective_skills`, #626),
+  as `UPGRADE_SKILL_REGRESSION` judges it. A templated troop is never written: a cell or a clamp it
+  needs raises `LadderError` naming its SkillSet, because an inline row that differs from the
+  SkillSet is `SKILL_TEMPLATE_MISMATCH`. No troop file carries one today. The 22
   `characters/npcs_*.xml` files do, with no inline rows; all 1,164 templated lords in
   `characters/lords.xml` carry 18 inline rows each, which 1.4.8 ignored and 1.5.3 applies over the
   template. They equal their templates (`sync_lord_inline_skills.py`, gated by
@@ -434,8 +436,10 @@ guideline R4 on every cell);
 the rules per stat (tier, same-tier rank, different tiers never compared, the worst set judged, ties,
 classes); unassigned and unlisted troops; planned items, slot edits (retired ids repointed, unlisted
 tier refused, mounted refusal, class refusal) and skill edits (cells, the clamp raising a non-ladder
-child, refusing a ladder one, militia and exempt edges skipped, templated edges skipped and a
-templated ladder troop taking its cell); `rebalance_troops` agreeing with the cell (the Iron Hills
+child, refusing a ladder one, militia and exempt edges skipped, a templated source judged on its
+SkillSet, a templated child or ladder troop never written, and a templated edge without SkillSets
+refused; the tool refusing an install whose vanilla modules define no SkillSet, or an unreadable one);
+`rebalance_troops` agreeing with the cell (the Iron Hills
 nobles included), ignoring a civilian-roster bow in both readings, its clamp refusing to lift a cell,
 refusing an undefined ladder id, and single-quoted militia bindings; hero launchers from inline kit,
 rosters, `lords.xslt` and the player start, career and enlistment rosters, and the ceiling; the roster

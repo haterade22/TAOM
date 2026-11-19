@@ -267,6 +267,75 @@ class LoadSkillSetsMergeTests(unittest.TestCase):
         # Without an install only the repo files remain, and they are the tail of the list by construction.
         self.assertTrue(all(sync.MODULE_DATA in f for f in files), files)
 
+    def test_require_vanilla_refuses_an_install_root_with_no_vanilla_skillset(self):
+        # TAOM's own SkillSet files always load, so a non-empty result cannot prove the install
+        # was read; the gate and the two writers refuse a root with no vanilla file (#626 review).
+        repo = os.path.join(self.dir, "md")
+        os.makedirs(repo)
+        self.write(os.path.join("md", "taom_x_skill_sets.xml"),
+                   '<SkillSets><SkillSet id="taom"><skill id="Bow" value="10" /></SkillSet></SkillSets>')
+        inst = os.path.join(self.dir, "inst")
+        os.makedirs(os.path.join(inst, "Modules"))
+        self.assertEqual(sync.load_skill_sets(inst, repo), {"taom": {"Bow": 10}})   # the default keeps its old reading
+        with self.assertRaises(ValueError) as ctx:
+            sync.load_skill_sets(inst, repo, require_vanilla=True)
+        self.assertIn(inst, str(ctx.exception))
+        native = os.path.join(inst, "Modules", "Native", "ModuleData")
+        os.makedirs(native)
+        with open(os.path.join(native, "skill_sets.xml"), "w", encoding="utf-8") as f:
+            f.write('<SkillSets><SkillSet id="v"><skill id="Bow" value="20" /></SkillSet></SkillSets>')
+        self.assertEqual(sync.load_skill_sets(inst, repo, require_vanilla=True),
+                         {"v": {"Bow": 20}, "taom": {"Bow": 10}})
+
+    def test_require_vanilla_refuses_a_root_whose_vanilla_files_define_no_skillset(self):
+        # The installed Native ships native_skill_sets.xml as an empty stub; a root with only that
+        # file has a vanilla file but no vanilla SkillSet, so every vanilla template would read as
+        # empty (#626 review, round 1).
+        repo = os.path.join(self.dir, "md")
+        os.makedirs(repo)
+        self.write(os.path.join("md", "taom_x_skill_sets.xml"),
+                   '<SkillSets><SkillSet id="taom"><skill id="Bow" value="10" /></SkillSet></SkillSets>')
+        native = os.path.join(self.dir, "inst", "Modules", "Native", "ModuleData")
+        os.makedirs(native)
+        with open(os.path.join(native, "native_skill_sets.xml"), "wb") as f:
+            f.write(b'\xef\xbb\xbf<?xml version="1.0" encoding="utf-8"?>\r\n<SkillSets></SkillSets>')
+        with self.assertRaises(ValueError) as ctx:
+            sync.load_skill_sets(os.path.join(self.dir, "inst"), repo, require_vanilla=True)
+        self.assertIn("define no SkillSet", str(ctx.exception))
+
+
+class EffectiveSkillsTests(unittest.TestCase):
+    """effective_skills is the one place the tools resolve a skill_template (#626): the SkillSet
+    copied, then each inline row laid over its one skill (BasicCharacterObject.Deserialize)."""
+
+    def setUp(self):
+        self.sets = {"t": {"Polearm": 70, "Bow": 30}}
+
+    def test_no_template_is_a_copy_of_the_inline_rows(self):
+        inline = {"Bow": 5}
+        result = sync.effective_skills(None, inline, None)
+        self.assertEqual(result, {"Bow": 5})
+        result["Bow"] = 99
+        self.assertEqual(inline, {"Bow": 5})
+
+    def test_inline_rows_are_laid_over_the_template(self):
+        self.assertEqual(sync.effective_skills("SkillSet.t", {"Bow": 90}, self.sets),
+                         {"Polearm": 70, "Bow": 90})
+
+    def test_a_template_without_inline_rows_is_the_skillset(self):
+        result = sync.effective_skills("SkillSet.t", {}, self.sets)
+        self.assertEqual(result, {"Polearm": 70, "Bow": 30})
+        result["Polearm"] = 1
+        self.assertEqual(self.sets["t"], {"Polearm": 70, "Bow": 30})
+
+    def test_a_template_that_names_no_skillset_reads_as_an_empty_one(self):
+        self.assertEqual(sync.effective_skills("SkillSet.missing", {"Bow": 40}, self.sets), {"Bow": 40})
+
+    def test_a_template_without_skillsets_is_refused(self):
+        with self.assertRaises(ValueError) as ctx:
+            sync.effective_skills("SkillSet.t", {}, None)
+        self.assertIn("SkillSet.t", str(ctx.exception))
+
 
 if __name__ == "__main__":
     unittest.main()

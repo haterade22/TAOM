@@ -134,7 +134,7 @@ internal sealed class HowdahCrewSpawner
 
             // Spawn on the seat's own crew frame: it stands on the floor top (3.15 m, 0.8 m behind the elephant's
             // origin) and faces outward. A 5 cm lift keeps the feet off the floor body on the first frame; the seat's
-            // TeleportToPosition holds the agent on the frame every tick after.
+            // position lock holds the agent on the frame every tick after.
             MatrixFrame frame = seat.GameEntity.GetGlobalFrame();
             var spawnPos = frame.origin + new Vec3(0f, 0f, 0.05f);
             _logger.LogInfo($"{machine.LogTag}   Spawning crew #{spawned} at pos=({spawnPos.x:F2},{spawnPos.y:F2},{spawnPos.z:F2})");
@@ -169,7 +169,7 @@ internal sealed class HowdahCrewSpawner
             // Managed-only seating: OnUse registers the agent in our seat (AddMovingAgent + lock flags)
             // WITHOUT triggering native AIUseGameObjectEnable. UseGameObject would cause the native
             // pathfinder to continuously route agents toward the elevated seat (unreachable via navmesh),
-            // producing a climbing loop. TeleportToPosition in OnTick handles visual elevation instead.
+            // producing a climbing loop. The seat's position lock in OnTick keeps the agent on the seat instead.
             seat.OnUse(crewAgent, 0);
             // Vanilla wields every battle troop's initial weapons at spawn (Mission.SpawnTroop); without it the
             // archer may stand with nothing in hand.
