@@ -101,8 +101,26 @@ public class TaomHowdahMachine : UsableMachine
             return;
         }
         _reporter?.BeforeReposition(dt, GameEntity, _lastAnchor, _hasAnchor);
+        Vec3 anchorBefore = _lastAnchor;
+        bool hadAnchor = _hasAnchor;
+        LastTickFrameNo = Utilities.EngineFrameNo;
         RepositionToElephant();
-        _reporter?.AfterReposition(LogTag, GameEntity, elephantAgent, StandingPoints, _placement, DeckNavMeshName, DeckNavMeshIdStart);
+        if (_reporter != null)
+        {
+            if (hadAnchor) _reporter.NoteMotion((_lastAnchor - anchorBefore).Length, dt);
+            if (_reporter.Measuring)
+            {
+                MatrixFrame root = GameEntity.GetGlobalFrame();
+                foreach (StandingPoint sp in StandingPoints)
+                    if (sp is TaomHowdahStandingPoint seat)
+                        seat.AfterPlatformMoved(in root);
+            }
+            _reporter.AfterReposition(LogTag, GameEntity, elephantAgent, StandingPoints, _placement, _nonTeleportBlock,
+                DeckNavMeshName, DeckNavMeshIdStart);
+            // AFTER the line, so the line names the block its numbers were measured in (#1482 measuring build). The
+            // diagnostics setting is the experiment's off switch: with it off the platform moves as it always did.
+            _nonTeleportBlock = _reporter.Measuring && CrewCarryExperiment.NonTeleportBlock(_reporter.Periods);
+        }
 
         if (elephantRider?.MountAgent == null)
         {
@@ -206,6 +224,7 @@ public class TaomHowdahMachine : UsableMachine
             {
                 seat.elephantAgent = elephantAgent;
                 seat.elephantRider = elephantRider;
+                seat.Machine = this;
                 seat.LogTag = $"{LogTag} seat{i}";
                 propagated++;
             }
@@ -233,6 +252,16 @@ public class TaomHowdahMachine : UsableMachine
     private Vec3 _lastAnchor;
     private bool _hasAnchor;
     private string _placement = "none";
+
+    /// <summary>The engine frame this machine last re-framed itself in. A seat compares it with the frame of its
+    /// own tick: equal means the machine went first and the seat sees this frame's position (#1482).</summary>
+    internal int LastTickFrameNo { get; private set; } = -1;
+
+    // #1482 measuring build: true while the platform is moved with isTeleportation false.
+    private bool _nonTeleportBlock;
+
+    /// <summary>The diagnostics setting as of the last period edge. The seats count their ticks only while true.</summary>
+    internal bool Measuring => _reporter != null && _reporter.Measuring;
 
     // DEFERRED (2026-06-10): spine bone-tracking is a CONFIRMED slide source — the howdah's bo_ floor tracked to the
     // spine bone sits inside the elephant's collision capsule and the physics solver shoves the elephant. Disabled
@@ -369,7 +398,10 @@ public class TaomHowdahMachine : UsableMachine
         if (!HowdahSeatMotion.IsPlaceable(anchor.x, anchor.y, anchor.z)) return;
         MatrixFrame next = elephantAgent.Frame;
         next.origin = anchor;
-        GameEntity.SetFrame(ref next);
+        // #1482: the default is isTeleportation true, which takes the native teleport branch for each physics body
+        // (what that branch does to a moveable body is not read). False is what vanilla
+        // SiegeWeaponMovementComponent moves its tower with. The measuring build alternates the two in blocks.
+        GameEntity.SetFrame(ref next, isTeleportation: !_nonTeleportBlock);
         _lastAnchor = anchor;
         _hasAnchor = true;
     }

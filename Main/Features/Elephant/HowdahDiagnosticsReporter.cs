@@ -44,12 +44,54 @@ internal sealed class HowdahDiagnosticsReporter
 
     private bool Enabled => _logger != null && _settings?.IsEnabled == true;
 
+    /// <summary>The number the next status line prints. -1 until the line of the first tick, which is period 0;
+    /// lines 1 to 4 are then four whole periods.</summary>
+    public int Periods { get; private set; } = -1;
+
+    /// <summary>The diagnostics toggle as of the last period edge. The machine measures crew lag only while true.</summary>
+    public bool Measuring { get; private set; }
+
+    // How much of the period the platform spent moving (#1482): a status line's velocities are one sample, and a
+    // seat's numbers cover the whole period.
+    private const float MovingSpeedMetresPerSecond = 1f;
+    private int _periodTicks;
+    private int _movingTicks;
+    private float _periodDistance;
+    private float _periodSeconds;
+    private GameEntity _platformStrong;
+
+    /// <summary>Every live tick, after the re-frame: how far the platform's root moved this tick.</summary>
+    public void NoteMotion(float step, float dt)
+    {
+        _periodTicks++;
+        if (!(dt > 0f) || float.IsInfinity(dt) || float.IsNaN(step) || float.IsInfinity(step)) return;
+        _periodSeconds += dt;
+        _periodDistance += step;
+        if (step > MovingSpeedMetresPerSecond * dt) _movingTicks++;
+    }
+
+    private void ResetMotion()
+    {
+        _periodTicks = 0;
+        _movingTicks = 0;
+        _periodDistance = 0f;
+        _periodSeconds = 0f;
+    }
+
     /// <summary>Every live tick, BEFORE the re-frame: advances the clock and, on a sample frame, notes where the platform
     /// is now and where the machine put it last frame (drift = the engine or something else moved our entity).</summary>
     public void BeforeReposition(float dt, WeakGameEntity platform, Vec3 lastAnchor, bool hasAnchor)
     {
         _stats.CountTick();
-        _sampleDue = _clock.Tick(dt) && Enabled;
+        bool periodEnded = _clock.Tick(dt);
+        if (periodEnded)
+        {
+            Periods++;
+            // Read once a period, never per tick: the seats' lag measure follows the same switch.
+            Measuring = Enabled;
+        }
+        _sampleDue = periodEnded && Measuring;
+        if (periodEnded && !_sampleDue) ResetMotion();
         if (!_sampleDue) return;
         _platformBefore = platform.GlobalPosition;
         _anchorBefore = lastAnchor;
@@ -58,10 +100,11 @@ internal sealed class HowdahDiagnosticsReporter
 
     /// <summary>Every live tick, AFTER the re-frame: on a sample frame writes the layout (first time only) and a status line.</summary>
     public void AfterReposition(string tag, WeakGameEntity platform, Agent elephant, IReadOnlyList<StandingPoint> seats, string placement,
-        string deckNavMeshName = "", int deckNavMeshIdStart = 0)
+        bool nonTeleportBlock, string deckNavMeshName = "", int deckNavMeshIdStart = 0)
     {
         if (!_sampleDue) return;
         _sampleDue = false;
+        if (_platformStrong == null) _platformStrong = GameEntity.CreateFromWeakEntity(platform);
         if (!_layoutLogged)
         {
             LogLayout(tag, platform, elephant, seats);
@@ -71,7 +114,8 @@ internal sealed class HowdahDiagnosticsReporter
                     ? "(none: the crew stand on no navigation face, which is what nav=0 in the status line means)"
                     : "(imported by MissionObject.OnInit and attached to this entity)"));
         }
-        LogStatus(tag, elephant, seats, placement);
+        LogStatus(tag, elephant, seats, placement, nonTeleportBlock);
+        ResetMotion();
     }
 
     /// <summary>Once, when the mission ends. ticks=0 means the machine never ticked with a live elephant.</summary>
@@ -125,7 +169,7 @@ internal sealed class HowdahDiagnosticsReporter
                 "inside the capsule (a slide risk) or the clearance could not be computed");
     }
 
-    private void LogStatus(string tag, Agent elephant, IReadOnlyList<StandingPoint> seats, string placement)
+    private void LogStatus(string tag, Agent elephant, IReadOnlyList<StandingPoint> seats, string placement, bool nonTeleportBlock)
     {
         Vec3 real = elephant.GetAverageRealGlobalVelocity();
         Vec3 legs = elephant.AverageVelocity;
@@ -173,14 +217,18 @@ internal sealed class HowdahDiagnosticsReporter
                         $"@{HowdahDiagnostics.Format(gap, 2)}m" +
                         $" mr={HowdahDiagnostics.Format(rider.MissileRangeAdjusted, 1)}" +
                         $" fire={rider.GetFiringOrder()}" +
-                        // prog is the highest upper-body action progress seen since the mission started and restarts
-                        // counts how often it went backwards: a draw that is being reset every frame never gets far
-                        // and restarts climbs with the frame rate, while a draw that completes reaches 1 and restarts
-                        // stays near the number of shots. ammo answers "ranged weapon WITH ammunition", tgt whether
-                        // the engine has given this archer someone to shoot, nav the navmesh face under its feet
-                        // (0 or -1 means the deck has none, which is the one thing vanilla's moving platforms do have).
-                        $" prog={HowdahDiagnostics.Format(seat?.MaxActionProgress ?? float.NaN, 2)}" +
-                        $" restarts={seat?.ActionRestarts ?? -1}" +
+                        // The seat's probe (HowdahSeatProbe): teleports, rescues, restarts and how many of those had
+                        // a teleport inside them, the highest upper-body progress, the lag range over the period, the
+                        // seat's own view of its distance and the tick order. A reload reset by teleports stalls
+                        // near 0.85 and its restarts carry a teleport; one that completes reaches 1 and restarts
+                        // stay near the number of shots. Then what the archer stands on and whether its native
+                        // parent entity is this platform's root. ammo answers "ranged weapon WITH ammunition", tgt
+                        // whether the engine has given this archer someone to shoot, nav the navmesh face under its
+                        // feet (0 or -1 means the deck has none, the one thing vanilla's moving platforms do have).
+                        $" arm={seat?.Arm.ToString() ?? "n/a"}" +
+                        $" probe={seat?.Probe.FormatAndEndPeriod() ?? "n/a"}" +
+                        $" step={SteppedName(rider)}" +
+                        $" parentRoot={(rider.IsAgentParentEntitySameAs(_platformStrong) ? 1 : 0)}" +
                         // Arrows actually loosed. Read against restarts: many restarts and few shots is the re-nock
                         // loop; restarts rising with shots is an archer shooting normally, since every shot restarts.
                         $" shots={(rider.Origin as HowdahCrewAgentOrigin)?.ShotsFired ?? -1}" +
@@ -196,8 +244,11 @@ internal sealed class HowdahDiagnosticsReporter
                         $" enav={elephant.GetCurrentNavigationFaceId()}");
         }
 
+        float meanSpeed = _periodSeconds > 0f ? _periodDistance / _periodSeconds : float.NaN;
         _logger.LogInfo(
-            $"{tag} status t={HowdahDiagnostics.Format(Mission.Current?.CurrentTime ?? float.NaN, 1)} elephant={Format(elephant.Position)} " +
+            $"{tag} status t={HowdahDiagnostics.Format(Mission.Current?.CurrentTime ?? float.NaN, 1)} " +
+            $"period={Periods} nonTeleportFrame={(nonTeleportBlock ? 1 : 0)} moving={_movingTicks}/{_periodTicks} " +
+            $"meanV={HowdahDiagnostics.Format(meanSpeed, 2)} elephant={Format(elephant.Position)} " +
             $"realV={HowdahDiagnostics.Format(real.Length, 2)} legsV={HowdahDiagnostics.Format(legs.Length, 2)} carriedV={HowdahDiagnostics.Format(carried, 2)} " +
             $"moveV={HowdahDiagnostics.Format(elephant.MovementVelocity.Length, 2)} drift={HowdahDiagnostics.Format(drift, 3)} " +
             $"floorClearance={HowdahDiagnostics.Format(clearance, 3)} path={placement} seated={seated}/{seats.Count} " +
@@ -240,6 +291,12 @@ internal sealed class HowdahDiagnosticsReporter
         {
             return "spine=error:" + ex.GetType().Name;
         }
+    }
+
+    private static string SteppedName(Agent agent)
+    {
+        WeakGameEntity stepped = agent.GetSteppedEntity();
+        return stepped.IsValid ? stepped.Name : "-";
     }
 
     private static float CapsuleTop(Agent elephant)

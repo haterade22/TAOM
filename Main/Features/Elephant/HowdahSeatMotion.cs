@@ -102,4 +102,31 @@ internal static class HowdahSeatMotion
 
     public static bool FramesAreClear(float separationMetres) =>
         !float.IsNaN(separationMetres) && separationMetres >= MinimumFrameSeparation;
+
+    /// <summary>The gap a managed carry ignores, in metres. Below it the archer counts as where its offset is.</summary>
+    public const float CarryToleranceMetres = 0.02f;
+
+    /// <summary>
+    /// What a managed carry does with the gap between an archer and the world position of its platform-local offset
+    /// (#1482). The offset is absolute, so an archer the engine already moved with the platform shows no gap and is
+    /// left alone; nothing is ever added twice. A gap on a platform that did not move is the archer's own settle
+    /// (0.10 m, #627), and the offset follows the archer: placing it back every frame is what read as 30 m/s.
+    /// A non-finite input answers Leave, the engine-float gate.
+    /// </summary>
+    public static CarryAction DecideCarry(float gapSquared, bool platformMoved, float toleranceMetres)
+    {
+        if (!ShouldCorrect(gapSquared, toleranceMetres)) return CarryAction.Leave;
+        return platformMoved ? CarryAction.Place : CarryAction.AdoptOffset;
+    }
+}
+
+/// <summary>The three answers of <see cref="HowdahSeatMotion.DecideCarry"/>.</summary>
+internal enum CarryAction
+{
+    /// <summary>The archer is where its offset is, or the numbers cannot be trusted.</summary>
+    Leave,
+    /// <summary>The platform moved from under the archer: put it at its offset.</summary>
+    Place,
+    /// <summary>The archer moved on a still platform: keep where it now stands as its offset.</summary>
+    AdoptOffset,
 }
