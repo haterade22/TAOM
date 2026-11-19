@@ -5214,3 +5214,9 @@ A crash bundle was investigated, fixed and reviewed on a new branch while PR #14
 - **Why missed:** the work claim was keyed by the crash signature, which another author had no reason to use. `/investigate` read `git log` on the affected files of the current branch only.
 - **Prevent:** in `/investigate` Phase 1, run `gh pr list --state open --search <Method>` and `git log --all --oneline -S <Method>` for the method that throws, before any fix. Claim a crash by its throwing method as well as its signature.
 - **Source:** [rca-retinue-disband-roster-2026-11-18.md](../rca-retinue-disband-roster-2026-11-18.md) F2.
+
+### Before merging a data PR, run every tools/tests module, not only its own (#1478, 2026-11-19)
+PR #1478 added 270 tournament templates as `NPCCharacters`. The merge review ran the generator's own tests, `validate_moduledata.py` and the polearm-shield audit, all green. `test_audit_troop_formation` then failed on trunk: it read the 170 multi-roster templates as troops with a wrong `default_group`. Fixed in #1483 by skipping the template file.
+- **Why missed:** the review chose the gates by the PR's description; the PR body listed the gates that failed on trunk too, and nobody compared the full `tools/tests` run with trunk.
+- **Prevent:** before merging a PR that adds ModuleData, run `python -m unittest discover -s tools/tests -t .` on the PR merged with trunk and on trunk, and compare the failure lists.
+- **Source:** PR #1478 merge review; fix PR #1483.
