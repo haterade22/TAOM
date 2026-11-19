@@ -126,9 +126,11 @@ None. No finding from either lens, and no Codex run.
 APPLIED:     none. Agents 3 and 6 were skipped by tier, so no APPLY-scoped fix or KEEP proposal exists.
 NOT APPLIED: none.
 FOLLOW-UP:   none. Neither lens named pre-existing code to follow up. One lead note, not a
-             defect: no test pins a first token above 0xFF (the only input where the `(byte)`
-             cast matters); `Parse` produces one only from a pattern with a three-digit hex
-             token, which no shipped pattern has, and both lenses proved the result unchanged.
+             defect: no test pins a first token outside 0..255 other than -1 (the inputs where
+             the `(byte)` cast changes the value: above 0xFF, or a negative such as the -2 that
+             `Parse` returns for `FFFFFFFE`); `Parse` produces one only from a token of three or
+             more hex digits, which no shipped pattern has, and both loops return nothing for
+             it (convergence round 1: 21,516,800 exhaustive cases, 0 mismatches).
 
 VERDICT: READY FOR COMMIT
 
