@@ -75,13 +75,18 @@ def write_text(path: str, text: str, bom: bool) -> None:
     open(path, "wb").write((b"\xef\xbb\xbf" if bom else b"") + text.encode("utf-8"))
 
 
-def skill_set_files(game: str, module_data: str = MODULE_DATA) -> list[str]:
-    """In engine load order: the vanilla modules first, TAOM's own files last."""
+def vanilla_skill_set_files(game: str) -> list[str]:
+    """The installed vanilla modules' SkillSet files, in engine load order."""
     files: list[str] = []
     for module in VANILLA_MODULES:
         files += sorted(glob.glob(os.path.join(game, "Modules", module, "ModuleData", "**", "*skill_sets*.xml"), recursive=True))
-    files += sorted(glob.glob(os.path.join(module_data, "**", "*skill_sets*.xml"), recursive=True))
     return files
+
+
+def skill_set_files(game: str, module_data: str = MODULE_DATA) -> list[str]:
+    """In engine load order: the vanilla modules first, TAOM's own files last."""
+    return vanilla_skill_set_files(game) + sorted(
+        glob.glob(os.path.join(module_data, "**", "*skill_sets*.xml"), recursive=True))
 
 
 def load_skill_sets_from(files: list[str]) -> dict[str, dict[str, int]]:
@@ -106,6 +111,30 @@ def load_skill_sets_from(files: list[str]) -> dict[str, dict[str, int]]:
             else:
                 sets[set_id] = values
     return sets
+
+
+def effective_skills(template: str | None, inline: dict[str, int],
+                     sets: dict[str, dict[str, int]] | None) -> dict[str, int]:
+    """The skills a character plays with since v1.5.2, the one place the tools resolve a
+    skill_template (#626). BasicCharacterObject.Deserialize copies the SkillSet the template names
+    into a fresh MBCharacterSkills and lays the inline <skills> rows over it, so a listed row
+    overrides its one skill and the SkillSet supplies the rest. UPGRADE_SKILL_REGRESSION
+    (taom_schema), ranged_ladder.planned_skill_edits and rebalance_troops read a templated
+    character through this.
+
+    No template: a copy of the inline rows. A template `sets` does not hold: the inline rows alone,
+    because the engine registers a presumed, empty SkillSet for an id nothing defines
+    (MBObjectManager.GetPresumedObject). `sets` comes from load_skill_sets over the install and the
+    repo; without it a dangling id cannot be told from an unread one, so a templated character
+    raises ValueError rather than being read as its inline rows."""
+    if not template:
+        return dict(inline)
+    if sets is None:
+        raise ValueError(f"skill_template {template} cannot be resolved without the SkillSets "
+                         f"(load_skill_sets reads them from the install and the repo)")
+    resolved = dict(sets.get(template.split(".", 1)[-1], {}))
+    resolved.update(inline)
+    return resolved
 
 
 class Drift(NamedTuple):
@@ -241,7 +270,17 @@ def main(argv: list[str] | None = None) -> int:
     return 0
 
 
-def load_skill_sets(game: str, module_data: str = MODULE_DATA) -> dict[str, dict[str, int]]:
+def load_skill_sets(game: str, module_data: str = MODULE_DATA,
+                    require_vanilla: bool = False) -> dict[str, dict[str, int]]:
+    """require_vanilla: raise ValueError when the vanilla modules under `game` define no SkillSet.
+    TAOM's own files always load, so a non-empty result does not prove the install was read, and
+    every vanilla template would then read as empty. A file is not enough: the installed Native
+    ships an empty native_skill_sets.xml. UPGRADE_SKILL_REGRESSION and the two skill writers pass
+    True (#626)."""
+    vanilla = vanilla_skill_set_files(game)
+    if require_vanilla and not load_skill_sets_from(vanilla):
+        raise ValueError(f"the {', '.join(VANILLA_MODULES)} modules under {game} define no SkillSet "
+                         f"({len(vanilla)} vanilla SkillSet file(s) found)")
     return load_skill_sets_from(skill_set_files(game, module_data))
 
 

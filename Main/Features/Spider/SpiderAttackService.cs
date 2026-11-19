@@ -107,8 +107,8 @@ public class SpiderAttackService : ISpiderAttackService
         // attribution, fall/flinch). The front-leg clip still plays for the visual. An uncapped strike (the ridden
         // spider) hits each enemy as the strike reports it; a capped one (a creature bandit, #692) holds the
         // strikeable enemies and hits the nearest few once the strike returns (it is synchronous), so the arc's outcome
-        // is known here. Allies in the arc are counted apart for a capped strike: the team rule skips them by design,
-        // so they are not a miss.
+        // is known here. For a capped strike the agents the side rule spares (allies, and a loose mount whose side is
+        // unknown, #594) are counted apart: they are skipped by design, so they are not a miss.
         var (inArc, alliesInArc, struck) = StrikeArc(spider, strike, countAllies: strike.IsCapped,
             hit => spider.RadialStrike(action, SpiderConfig.StrikeRadius, arcHalfAngleDeg, arcCenterDeg, hit));
         return new SpiderStrikeOutcome(clipName, inArc, alliesInArc, struck, strike.MaxTargets);
@@ -116,7 +116,8 @@ public class SpiderAttackService : ISpiderAttackService
 
     /// <summary>
     /// Handles one strike's arc: <paramref name="radialStrike"/> plays the clip and reports each agent in the arc. Returns
-    /// the agents reported, the allies among them (counted only for the creature diagnostics) and the enemies struck. A
+    /// the agents reported, those the side rule spares (allies, and a loose mount of unknown side; counted only for the
+    /// creature diagnostics) and the enemies struck. A
     /// seam apart from <see cref="SpiderAttack"/>, whose clip
     /// lookup needs the engine, so the cap is testable with fakes.
     /// </summary>
@@ -128,14 +129,14 @@ public class SpiderAttackService : ISpiderAttackService
         radialStrike((attackerAdapter, targetAdapter, boneId) =>
         {
             inArc++;
-            if (countAllies && attackerAdapter != null && targetAdapter != null && IsSameSide(attackerAdapter, targetAdapter))
+            if (countAllies && attackerAdapter != null && targetAdapter != null && IsSpared(attackerAdapter, targetAdapter))
                 allies++;
             if (held == null)
             {
                 if (HandleSpiderTargetHit(attackerAdapter, targetAdapter, boneId, strike)) struck++;
             }
-            // A capped strike (a creature bandit's) holds soldiers only: a riderless mount in the arc is on nobody's side and
-            // would take the slot of the soldier who opened the engage gate, which skips mounts (Codex 2026-09-28 F2).
+            // A capped strike (a creature bandit's) holds soldiers only: a riderless mount in the arc is not the
+            // soldier who opened the engage gate, which skips mounts, and would take his slot (Codex 2026-09-28 F2).
             else if (!IsLooseMount(targetAdapter) && IsStrikeable(attackerAdapter, targetAdapter))
                 held.Add((attackerAdapter, targetAdapter, boneId));
         });
@@ -172,13 +173,13 @@ public class SpiderAttackService : ISpiderAttackService
     }
 
     /// <summary>
-    /// Whether a strike may damage this target: present, active, not fading, not on the spider's side, and standing or
+    /// Whether a strike may damage this target: present, active, not fading, not spared by the side rule, and standing or
     /// routed. One predicate for both the uncapped hit and the capped strike's candidates, so the two cannot drift.
     /// </summary>
     private bool IsStrikeable(IAgentAdapter attacker, IAgentAdapter target)
     {
         if (target == null || !target.IsActive() || target.IsFadingOut()) return false;
-        if (attacker == null || IsSameSide(attacker, target)) return false;
+        if (attacker == null || IsSpared(attacker, target)) return false;
         try
         {
             return target.State == AgentState.Active || target.State == AgentState.Routed;
@@ -192,14 +193,10 @@ public class SpiderAttackService : ISpiderAttackService
 
     private static bool IsLooseMount(IAgentAdapter target) => target != null && target.IsMount && target.RiderAgent == null;
 
-    // RIDDEN-mount team rule (warg pattern): if the victim is a mount, attribute its team to its rider; the
-    // spider's own side is decided by ITS rider when present (the spider is the mount).
-    private static bool IsSameSide(IAgentAdapter attacker, IAgentAdapter target)
-    {
-        var victimTeamSource = target.IsMount && target.RiderAgent != null ? target.RiderAgent : target;
-        var attackerTeamSource = attacker.RiderAgent ?? attacker;
-        return attackerTeamSource.IsSameTeam(victimTeamSource);
-    }
+    // The side rule the spider shares with the warg (CreatureBiteSides, #594): true for the spider's own side and for
+    // a loose mount whose side is unknown. The spider's own side is its rider's when it has one (the spider is the mount).
+    private static bool IsSpared(IAgentAdapter attacker, IAgentAdapter target) =>
+        CreatureBiteSides.Spares(attacker.RiderAgent ?? attacker, target);
 
     // --- Pure decision helpers (no TaleWorlds types — unit-tested; elephant-parity) ---
 

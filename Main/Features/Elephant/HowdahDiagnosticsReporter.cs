@@ -100,7 +100,7 @@ internal sealed class HowdahDiagnosticsReporter
 
     /// <summary>Every live tick, AFTER the re-frame: on a sample frame writes the layout (first time only) and a status line.</summary>
     public void AfterReposition(string tag, WeakGameEntity platform, Agent elephant, IReadOnlyList<StandingPoint> seats, string placement,
-        bool nonTeleportBlock, string deckNavMeshName = "", int deckNavMeshIdStart = 0)
+        string deckNavMeshName = "", int deckNavMeshIdStart = 0)
     {
         if (!_sampleDue) return;
         _sampleDue = false;
@@ -114,7 +114,7 @@ internal sealed class HowdahDiagnosticsReporter
                     ? "(none: the crew stand on no navigation face, which is what nav=0 in the status line means)"
                     : "(imported by MissionObject.OnInit and attached to this entity)"));
         }
-        LogStatus(tag, elephant, seats, placement, nonTeleportBlock);
+        LogStatus(tag, elephant, seats, placement);
         ResetMotion();
     }
 
@@ -169,7 +169,7 @@ internal sealed class HowdahDiagnosticsReporter
                 "inside the capsule (a slide risk) or the clearance could not be computed");
     }
 
-    private void LogStatus(string tag, Agent elephant, IReadOnlyList<StandingPoint> seats, string placement, bool nonTeleportBlock)
+    private void LogStatus(string tag, Agent elephant, IReadOnlyList<StandingPoint> seats, string placement)
     {
         Vec3 real = elephant.GetAverageRealGlobalVelocity();
         Vec3 legs = elephant.AverageVelocity;
@@ -217,15 +217,14 @@ internal sealed class HowdahDiagnosticsReporter
                         $"@{HowdahDiagnostics.Format(gap, 2)}m" +
                         $" mr={HowdahDiagnostics.Format(rider.MissileRangeAdjusted, 1)}" +
                         $" fire={rider.GetFiringOrder()}" +
-                        // The seat's probe (HowdahSeatProbe): teleports, rescues, restarts and how many of those had
-                        // a teleport inside them, the highest upper-body progress, the lag range over the period, the
-                        // seat's own view of its distance and the tick order. A reload reset by teleports stalls
-                        // near 0.85 and its restarts carry a teleport; one that completes reaches 1 and restarts
-                        // stay near the number of shots. Then what the archer stands on and whether its native
-                        // parent entity is this platform's root. ammo answers "ranged weapon WITH ammunition", tgt
+                        // The seat's probe (HowdahSeatProbe): rescues, restarts and how many of those had a rescue
+                        // inside them, the highest upper-body progress and the lag range over the period. A reload
+                        // reset by teleports stalls near 0.85 and its restarts carry a rescue; one that completes
+                        // reaches 1 and restarts stay near the number of shots. Then what the archer stands on and
+                        // whether its native parent entity is this platform's root (1 while the seat's attachment
+                        // holds). ammo answers "ranged weapon WITH ammunition", tgt
                         // whether the engine has given this archer someone to shoot, nav the navmesh face under its
                         // feet (0 or -1 means the deck has none, the one thing vanilla's moving platforms do have).
-                        $" arm={seat?.Arm.ToString() ?? "n/a"}" +
                         $" probe={seat?.Probe.FormatAndEndPeriod() ?? "n/a"}" +
                         $" step={SteppedName(rider)}" +
                         $" parentRoot={(rider.IsAgentParentEntitySameAs(_platformStrong) ? 1 : 0)}" +
@@ -247,7 +246,7 @@ internal sealed class HowdahDiagnosticsReporter
         float meanSpeed = _periodSeconds > 0f ? _periodDistance / _periodSeconds : float.NaN;
         _logger.LogInfo(
             $"{tag} status t={HowdahDiagnostics.Format(Mission.Current?.CurrentTime ?? float.NaN, 1)} " +
-            $"period={Periods} nonTeleportFrame={(nonTeleportBlock ? 1 : 0)} moving={_movingTicks}/{_periodTicks} " +
+            $"period={Periods} moving={_movingTicks}/{_periodTicks} " +
             $"meanV={HowdahDiagnostics.Format(meanSpeed, 2)} elephant={Format(elephant.Position)} " +
             $"realV={HowdahDiagnostics.Format(real.Length, 2)} legsV={HowdahDiagnostics.Format(legs.Length, 2)} carriedV={HowdahDiagnostics.Format(carried, 2)} " +
             $"moveV={HowdahDiagnostics.Format(elephant.MovementVelocity.Length, 2)} drift={HowdahDiagnostics.Format(drift, 3)} " +

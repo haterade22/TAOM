@@ -894,6 +894,8 @@ def run_all_passes(moduledata, game_modules, schemas, registries, codes=None) ->
                 f"         only the live install has.",
                 f"{TEMPLATE_CODE} SKIPPED: the vanilla SkillSets a template can name live\n"
                 f"         in the install.",
+                f"UPGRADE_SKILL_REGRESSION SKIPPED for upgrade edges with a skill_template\n"
+                f"         side: their SkillSets live in the install.",
                 f"{PRISON_CODE} SKIPPED: the prison scenes and the TAOM_Map settlements\n"
                 f"         live in the install.",
                 f"{ARMOUR_CLASS_CODE} SKIPPED: the armour class table can only be checked\n"

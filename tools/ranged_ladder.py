@@ -61,6 +61,7 @@ from __future__ import annotations
 import json
 import math
 import re
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -145,7 +146,7 @@ class RangedTroop:
     skills: dict = field(default_factory=dict)
     name: str = ""     # display name, localisation tag stripped
     mounted: bool = False  # HorseArcher/Cavalry group, or a Horse slot in any battle set
-    templated: bool = False  # skill_template=: on 1.5.3 the template's skills, inline rows laid over them
+    template: str = ""  # skill_template= as written; sync_lord_inline_skills.effective_skills resolves it (#626)
 
 
 @dataclass(frozen=True)
@@ -708,7 +709,7 @@ def load_ranged_troops(moduledata=MODULEDATA_DIR, failures: list | None = None) 
                 group=npc.get("default_group", "") or "", sets=sets,
                 upgrades=_upgrades(npc), skills=_skills(npc), name=display_name(npc.get("name")),
                 mounted=horse or (npc.get("default_group", "") in ("HorseArcher", "Cavalry")),
-                templated=bool(npc.get("skill_template")))
+                template=npc.get("skill_template") or "")
     return troops
 
 
@@ -729,7 +730,7 @@ def load_upgrade_sources(moduledata=MODULEDATA_DIR) -> dict[str, RangedTroop]:
                 out[npc.get("id")] = RangedTroop(
                     id=npc.get("id"), file=str(path), culture="", level=level, tier=engine_tier(level),
                     group=npc.get("default_group", "") or "", sets=[], upgrades=ups, skills=_skills(npc),
-                    templated=bool(npc.get("skill_template")))
+                    template=npc.get("skill_template") or "")
     return out
 
 
@@ -962,18 +963,28 @@ def planned_edits(troops: dict, launchers: dict, spec: dict, barred: set | None 
     return edits
 
 
+def _sync():
+    """sync_lord_inline_skills, imported on first use: this module imports nothing else from tools/."""
+    tools_dir = str(Path(__file__).resolve().parent)
+    if tools_dir not in sys.path:
+        sys.path.insert(0, tools_dir)
+    import sync_lord_inline_skills
+    return sync_lord_inline_skills
+
+
 def planned_skill_edits(troops: dict, launchers: dict, spec: dict, militia=frozenset(),
-                        exempt_edges=None, sources=None) -> list[SkillEdit]:
+                        exempt_edges=None, sources=None, skill_sets=None) -> list[SkillEdit]:
     """The troop's Bow or Crossbow for every class it carries, set to its cell; then the clamp
     that keeps the UPGRADE_SKILL_REGRESSION rule: a child below its upgrade source on that skill
     is raised to it (clamp only ever raises), except that a LADDER troop is never raised off its
     cell, which is an error. Militia-to-militia edges are flat by design and skipped, as are the
     `exempt_edges` {(source, target): {skills}} (rebalance_troops.RESPECIALIZATION_EXEMPT_EDGES).
-    `sources` are read-only upgrade sources outside the troop files (the villagers). An edge with
-    a skill_template on either side is skipped, as UPGRADE_SKILL_REGRESSION skips it: that side's
-    real skills are the template's values with its inline rows laid over them, and the template is
-    not resolved here. A templated ladder troop still takes its cell: on 1.5.3 the inline row wins
-    over the template (BasicCharacterObject.Deserialize; 1.4.8 ignored the inline block)."""
+    `sources` are read-only upgrade sources outside the troop files (the villagers). A side with a
+    skill_template is judged on its SkillSet with its inline rows laid over it
+    (sync_lord_inline_skills.effective_skills, #626); `skill_sets` is required when a templated
+    troop takes part. A templated troop is never written: a change it needs, a cell or a clamp,
+    raises LadderError naming its SkillSet, since an inline row that differs from the SkillSet is
+    SKILL_TEMPLATE_MISMATCH."""
     exempt_edges = exempt_edges or {}
     new: dict[tuple[str, str], int] = {}
     cells: set[tuple[str, str]] = set()
@@ -989,8 +1000,19 @@ def planned_skill_edits(troops: dict, launchers: dict, spec: dict, militia=froze
     everyone = dict(sources or {})
     everyone.update(troops)
 
+    def resolved(tid):
+        t = everyone[tid]
+        if not t.template:
+            return t.skills
+        if skill_sets is None:
+            raise LadderError(
+                f"{tid} names skill_template {t.template}, so its skills are that SkillSet with its "
+                f"inline rows laid over it, and the SkillSets were not given; pass skill_sets "
+                f"(sync_lord_inline_skills.load_skill_sets)")
+        return _sync().effective_skills(t.template, t.skills, skill_sets)
+
     def value(tid, cls):
-        return new.get((tid, cls), int(everyone[tid].skills.get(cls, 0)))
+        return new.get((tid, cls), int(resolved(tid).get(cls, 0)))
 
     changed = True
     passes = 0
@@ -1003,8 +1025,6 @@ def planned_skill_edits(troops: dict, launchers: dict, spec: dict, militia=froze
             src = everyone[src_id]
             for tgt_id in src.upgrades:
                 if tgt_id not in troops or (src_id in militia and tgt_id in militia):
-                    continue
-                if src.templated or troops[tgt_id].templated:
                     continue
                 for cls in CLASSES:
                     if cls in exempt_edges.get((src_id, tgt_id), ()):
@@ -1021,6 +1041,15 @@ def planned_skill_edits(troops: dict, launchers: dict, spec: dict, militia=froze
                     changed = True
     edits = []
     for (tid, cls), v in sorted(new.items()):
+        if troops[tid].template:
+            have = int(resolved(tid).get(cls, 0))
+            if v != have:
+                raise LadderError(
+                    f"{tid} would take {cls} {v} ({'cell' if (tid, cls) in cells else 'clamp'}), but its "
+                    f"skills come from skill_template {troops[tid].template} with its inline rows laid "
+                    f"over it, and an inline row that differs from the SkillSet is "
+                    f"SKILL_TEMPLATE_MISMATCH. Set {cls} {v} in that SkillSet, or drop the template")
+            continue
         old = int(troops[tid].skills.get(cls, 0))
         if v != old or cls not in troops[tid].skills:
             edits.append(SkillEdit(troops[tid].file, tid, cls, old, v,

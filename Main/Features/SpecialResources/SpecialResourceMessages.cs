@@ -42,6 +42,17 @@ internal static class SpecialResourceMessages
             .SetTextVariable("COUNT", count)
             .SetTextVariable("TROOP", troopName);
 
+    /// <summary>The yellow line when a party-screen prisoner recruit is cut to what the balance covers (#563).</summary>
+    public static TextObject RecruitClamped(int count) =>
+        new TextObject("{=taom_res_recruit_clamped}Only enough resources for {COUNT} recruit(s).")
+            .SetTextVariable("COUNT", count);
+
+    /// <summary>The "Requires" line of the volunteer gate (Patch51), also shown when a prisoner recruit is refused (#563).</summary>
+    public static TextObject RecruitNeedsResource(int amount, string resourceName) =>
+        new TextObject("{=taom_recruit_needs_resource}Requires {AMOUNT} {RESOURCE}")
+            .SetTextVariable("AMOUNT", amount)
+            .SetTextVariable("RESOURCE", resourceName);
+
     /// <summary>The green toast for an earning; the source id (victory, raid...) shows as its own keyed word.</summary>
     public static TextObject Earned(string resourceName, float amount, string source) =>
         new TextObject("{=taom_res_earned}+{AMOUNT} {RESOURCE} from {SOURCE}")

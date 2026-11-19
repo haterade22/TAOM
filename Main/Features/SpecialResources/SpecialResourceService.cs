@@ -245,9 +245,10 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         if (cost == null || cost.RecruitCost <= 0) return 0f;
 
         var totalCost = cost.RecruitCost * count;
-        // Return what LEFT the wallet, not the nominal cost: the volunteer screen is gated, the party
-        // screen's prisoner recruit is not (#563), so the charge can land on a smaller balance and the
-        // storage floors at zero. A toast built from the nominal cost would announce currency that was
+        // Return what LEFT the wallet, not the nominal cost. Both recruit gates check the balance first
+        // (Patch51 for volunteers, Patch26 for party-screen prisoners since #563), but the storage floors
+        // at zero and a co-op guest's gate reads a stale client balance (#967), so the charge can still land
+        // on a smaller balance. A toast built from the nominal cost would announce currency that was
         // never there (Codex, review 95, F1).
         var before = _storage.Get(heroId, resource.Id);
         _storage.Add(heroId, resource.Id, -totalCost);
@@ -264,14 +265,7 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         var resource = ResolveResource(kingdomId, cultureId);
         if (resource == null) return RecruitGateResult.Allowed;
 
-        var required = 0;
-        foreach (var entry in cart)
-        {
-            if (entry == null || entry.Count <= 0) continue;
-            var cost = _config.GetTroopCost(entry.TroopId);
-            if (cost == null || cost.RecruitCost <= 0) continue;
-            required += cost.RecruitCost * entry.Count;
-        }
+        var required = RecruitCostOf(cart);
 
         if (required <= 0) return RecruitGateResult.Allowed;
 
@@ -281,6 +275,49 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
             _logger.LogDebug($"[SpecRes] RECRUIT GATE: blocked (need {required} {resource.DisplayName}, have {available:F0})");
 
         return new RecruitGateResult(blocked, required, resource.DisplayName);
+    }
+
+    public int ClampRecruitCount(string heroId, string? kingdomId, string? cultureId, string troopId, int requestedCount, IReadOnlyList<RecruitCartEntry> recruitedThisSession)
+    {
+        if (requestedCount <= 0) return requestedCount;
+
+        var resource = ResolveResource(kingdomId, cultureId);
+        if (resource == null) return requestedCount;
+
+        var cost = _config.GetTroopCost(troopId);
+        if (cost == null || cost.RecruitCost <= 0) return requestedCount;
+
+        // The prisoners recruited earlier in this screen are charged at Done (OnUnitRecruited, once per
+        // unit) and so still sit in the balance; GetAvailableAfterPending takes off the queued upgrades.
+        var available = GetAvailableAfterPending(heroId, kingdomId, cultureId) - RecruitCostOf(recruitedThisSession);
+        if (!FiniteFloatValidator.IsFinite(available) || !(available >= cost.RecruitCost))
+        {
+            _logger.LogDebug($"[SpecRes] RECRUIT CLAMP: {troopId} requested={requestedCount} clamped=0 (available={available:F0}, cost/unit={cost.RecruitCost})");
+            return 0;
+        }
+
+        // Cast only below requestedCount, so the float never overflows the int.
+        var affordable = available / cost.RecruitCost;
+        if (affordable >= requestedCount) return requestedCount;
+
+        var clamped = (int)affordable;
+        _logger.LogDebug($"[SpecRes] RECRUIT CLAMP: {troopId} requested={requestedCount} clamped={clamped} (available={available:F0}, cost/unit={cost.RecruitCost})");
+        return clamped;
+    }
+
+    // The recruit_cost owed for these entries: troops without one, and empty or null entries, add nothing.
+    private int RecruitCostOf(IReadOnlyList<RecruitCartEntry>? entries)
+    {
+        var total = 0;
+        if (entries == null) return total;
+        foreach (var entry in entries)
+        {
+            if (entry == null || entry.Count <= 0) continue;
+            var cost = _config.GetTroopCost(entry.TroopId);
+            if (cost == null || cost.RecruitCost <= 0) continue;
+            total += cost.RecruitCost * entry.Count;
+        }
+        return total;
     }
 
     public bool CanAffordMerchantPurchase(string heroId, string? kingdomId, string? cultureId, string troopId, int count)

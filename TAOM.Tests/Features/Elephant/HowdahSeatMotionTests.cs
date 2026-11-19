@@ -4,9 +4,9 @@ using TAOM.Features.Elephant;
 namespace TAOM.Tests.Features.Elephant;
 
 /// <summary>
-/// The two rules that decide whether a howdah archer can shoot at all (#627, 2026-09-20). Both were learned the
-/// expensive way, over eight in-game rounds: correcting a resting archer's position every frame, or letting two
-/// archers crowd each other, makes the engine read tens of m/s of movement and no bow draw ever completes.
+/// The rules that decide whether a crew archer can shoot at all (#627, #1482). They were learned the expensive way:
+/// placing an archer by teleport, every frame or several times a second, resets its movement and no bow draw or
+/// reload completes, and two archers that crowd each other are shoved apart every frame.
 /// </summary>
 [TestClass]
 public class HowdahSeatMotionTests
@@ -54,38 +54,28 @@ public class HowdahSeatMotionTests
         Assert.IsTrue(float.IsNaN(HowdahSeatMotion.RootAboveFeetFromSpine(2.199f * scale + 5f, scale)));
     }
 
-    private const float Deadband = ElephantConfig.HowdahSeatDeadbandMetres;
+    private const float Band = HowdahSeatMotion.SeatRescueMetres;
 
     [TestMethod]
-    public void TheDeadband_IsWiderThanTheMeasuredSettle()
+    public void AnArcherInsideTheBand_IsLeftAlone()
     {
-        // A seated archer settles about 0.10 m from its frame. A deadband at or below that teleports every frame,
-        // which is the state that stopped the crew shooting.
-        Assert.IsTrue(Deadband > 0.11f, $"deadband {Deadband} is inside the measured 0.10 m settle");
-        Assert.IsTrue(Deadband < 0.4f, $"deadband {Deadband} is wide enough to let an archer visibly lag its seat");
+        Assert.IsFalse(HowdahSeatMotion.ShouldCorrect(0.10f * 0.10f, Band), "0.10 m is the normal settle");
+        Assert.IsFalse(HowdahSeatMotion.ShouldCorrect(0f, Band), "an archer exactly on its frame");
+        Assert.IsFalse(HowdahSeatMotion.ShouldCorrect(Band * Band, Band), "exactly at the band");
     }
 
     [TestMethod]
-    public void ARestingArcher_IsLeftAlone()
+    public void AnArcherOutsideTheBand_IsPlacedBack()
     {
-        Assert.IsFalse(HowdahSeatMotion.ShouldCorrect(0.10f * 0.10f, Deadband), "0.10 m is the normal settle");
-        Assert.IsFalse(HowdahSeatMotion.ShouldCorrect(0f, Deadband), "an archer exactly on its frame");
-        Assert.IsFalse(HowdahSeatMotion.ShouldCorrect(Deadband * Deadband, Deadband), "exactly at the deadband");
-    }
-
-    [TestMethod]
-    public void AnArcherThatHasActuallyDrifted_IsPlacedBack()
-    {
-        Assert.IsTrue(HowdahSeatMotion.ShouldCorrect(0.3f * 0.3f, Deadband));
-        Assert.IsTrue(HowdahSeatMotion.ShouldCorrect(4f * 4f, Deadband), "an elephant that moved a lot in one frame");
+        Assert.IsTrue(HowdahSeatMotion.ShouldCorrect(4f * 4f, Band), "an archer off its deck");
     }
 
     [TestMethod]
     public void ANonFiniteDistance_NeverTeleports()
     {
         // A native position can come back NaN; `>` is false for NaN either way, so this is explicit rather than lucky.
-        Assert.IsFalse(HowdahSeatMotion.ShouldCorrect(float.NaN, Deadband));
-        Assert.IsFalse(HowdahSeatMotion.ShouldCorrect(float.PositiveInfinity, Deadband));
+        Assert.IsFalse(HowdahSeatMotion.ShouldCorrect(float.NaN, Band));
+        Assert.IsFalse(HowdahSeatMotion.ShouldCorrect(float.PositiveInfinity, Band));
         Assert.IsFalse(HowdahSeatMotion.ShouldCorrect(1f, float.NaN));
         Assert.IsFalse(HowdahSeatMotion.ShouldCorrect(1f, -1f));
     }
@@ -93,8 +83,8 @@ public class HowdahSeatMotionTests
     [TestMethod]
     public void ANonFiniteSeatPosition_IsNeverHandedToTheEngine()
     {
-        // Both the teleport and the scripted position write this straight to native, and the seat frame comes from
-        // the elephant's own position with nothing validating it on the way.
+        // Both the position lock and the rescue teleport write this straight to native, and the seat frame comes
+        // from the elephant's own position with nothing validating it on the way.
         Assert.IsTrue(HowdahSeatMotion.IsPlaceable(1f, -2f, 3.2f));
         Assert.IsFalse(HowdahSeatMotion.IsPlaceable(float.NaN, 0f, 0f));
         Assert.IsFalse(HowdahSeatMotion.IsPlaceable(0f, float.NaN, 0f));
@@ -103,43 +93,15 @@ public class HowdahSeatMotionTests
         Assert.IsFalse(HowdahSeatMotion.IsPlaceable(0f, float.NegativeInfinity, 0f));
     }
 
-    // --- Managed carry (#1482) ---
-    // The archer keeps one platform-local offset. Each tick the platform says where that offset now is in the
-    // world, and this decides what to do about the gap between that and where the archer really stands.
-
-    private const float Tolerance = HowdahSeatMotion.CarryToleranceMetres;
+    // --- The rescue band (#1482) ---
 
     [TestMethod]
-    public void AnArcherAlreadyWhereItsOffsetIs_IsLeftAlone_WhetherOrNotThePlatformMoved()
+    public void TheRescueBand_IsFarOutsideAnythingAHeldArcherDoes()
     {
-        // The engine carried it, or nothing moved. Either way a placement here would be a teleport for nothing.
-        Assert.AreEqual(CarryAction.Leave, HowdahSeatMotion.DecideCarry(0f, platformMoved: true, Tolerance));
-        Assert.AreEqual(CarryAction.Leave, HowdahSeatMotion.DecideCarry(0.01f * 0.01f, platformMoved: true, Tolerance));
-        Assert.AreEqual(CarryAction.Leave, HowdahSeatMotion.DecideCarry(Tolerance * Tolerance, platformMoved: false, Tolerance));
-    }
-
-    [TestMethod]
-    public void AnArcherLeftBehindByAMovingPlatform_IsPlacedAtItsOffset()
-    {
-        // One frame of a 6.5 m/s walk at 60 fps is 0.11 m.
-        Assert.AreEqual(CarryAction.Place, HowdahSeatMotion.DecideCarry(0.11f * 0.11f, platformMoved: true, Tolerance));
-    }
-
-    [TestMethod]
-    public void AnArcherThatSettledOnAStillPlatform_KeepsItsNewOffset()
-    {
-        // The 0.10 m settle of #627: placing it back every frame was the 30 m/s that stopped every draw. On a still
-        // platform the gap is the archer's own, so the offset follows the archer, never the other way.
-        Assert.AreEqual(CarryAction.AdoptOffset, HowdahSeatMotion.DecideCarry(0.10f * 0.10f, platformMoved: false, Tolerance));
-    }
-
-    [TestMethod]
-    public void ANonFiniteGapOrTolerance_NeverMovesAnArcher()
-    {
-        Assert.AreEqual(CarryAction.Leave, HowdahSeatMotion.DecideCarry(float.NaN, platformMoved: true, Tolerance));
-        Assert.AreEqual(CarryAction.Leave, HowdahSeatMotion.DecideCarry(float.PositiveInfinity, platformMoved: true, Tolerance));
-        Assert.AreEqual(CarryAction.Leave, HowdahSeatMotion.DecideCarry(1f, platformMoved: true, float.NaN));
-        Assert.AreEqual(CarryAction.Leave, HowdahSeatMotion.DecideCarry(1f, platformMoved: false, -1f));
+        // A locked and attached archer stayed within 0.11 m of its seat on a mumakil at up to 5 m/s (2026-11-19).
+        // A band near that would teleport a healthy archer, and a teleport can abort a reload.
+        Assert.IsTrue(HowdahSeatMotion.SeatRescueMetres >= 10f * 0.11f, "too near the measured hold");
+        Assert.IsFalse(HowdahSeatMotion.ShouldCorrect(0.11f * 0.11f, HowdahSeatMotion.SeatRescueMetres));
     }
 
     [TestMethod]

@@ -6928,5 +6928,8 @@
 	<string id="taom_mcm_group_text_input" text="{=taom_mcm_group_text_input}Text Input" />
 	<string id="taom_mcm_ImeGuardEnabled" text="{=taom_mcm_ImeGuardEnabled}Pause the input method outside text fields" />
 	<string id="taom_mcm_ImeGuardEnabled_hint" text="{=taom_mcm_ImeGuardEnabled_hint}For Chinese, Japanese and Korean input methods. While the game is in front and no text field has focus, the input method is paused, so hotkeys on the map and in battle reach the game instead of opening its candidate window. A search, rename or other text field gets it back at once, and other programs are not affected. Applies immediately. Default: on." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- SpecialResources -->
+	<string id="taom_res_recruit_clamped" text="{=taom_res_recruit_clamped}Only enough resources for {COUNT} recruit(s)." />
 
 </strings>

@@ -997,6 +997,17 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
   The commit hook `check-moduledata-validation.sh` now answers a validator exit 2 (no install, no
   ModuleData, a usage error) with an UNCHECKED note and the stderr tail beside the tool result; it
   was a silent `{}`, so a renamed `--code` flag could turn the gate off unseen. Still an allow.
+- 2026-11-19 (#626): `UPGRADE_SKILL_REGRESSION` now judges an upgrade edge with a `skill_template`
+  side instead of skipping it. The character's skills are its SkillSet with the inline rows laid over
+  it, resolved through `sync_lord_inline_skills.effective_skills`; without the install such an edge
+  is skipped and the CLI prints the skip, and a SkillSet read that fails, or finds that the install's
+  vanilla modules define no SkillSet (the installed Native file is an empty stub), is one ERROR (TAOM's own SkillSet files always load, so an empty result could
+  not show an unread install).
+  The two skill writers (`ranged_ladder.planned_skill_edits` and `rebalance_troops.py`) resolve a
+  template through the same function and refuse to write a templated character. On the shipped data
+  the result is unchanged (2026-11-19: 0 errors and 1,823 warnings before and after, 0 of 913
+  indexed upgrade edges with a templated side). The C# `TroopUpgradeSkillMonotonicityTests` still
+  skips templated edges, because CI has no install to read the SkillSets from.
 - 2026-11-14 (#1271): `WORN_ARMOUR_CEILING` and `WORN_ARMOUR_FLOOR` documented above. The two melee codes
   (`MELEE_LADDER_INVERSION`, `MELEE_BLOW_CEILING`) now price the `taom_ph_` placeholders from the validated
   tree's `placeholder_weapons/` files (`taom_schema.price_placeholders`) and judge each against its real
