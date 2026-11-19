@@ -90,7 +90,7 @@ MixedFormations Patch30 falls through for `unit.Banner != null`
 | [Main/IoC.cs](../../Main/IoC.cs) | `BannerBearersIoC.RegisterBannerBearersFeature(container)` — both services `Reuse.Singleton` |
 | [Main/SubModule.cs](../../Main/SubModule.cs) `RegisterSpecialResourcesAndCareers` (called from `OnGameStart`) | `campaignStarter.AddModel<BattleBannerBearersModel>(new TaomBattleBannerBearersModel(...))` |
 | [Main/SubModule.cs](../../Main/SubModule.cs) `RegisterCustomBattleModels` (called from `OnGameStart`, `BasicGameStarter` only) | `basicStarter.AddModel<BattleBannerBearersModel>(new TaomCustomBattleBannerBearersModel(...))`: Custom Battle and the editor's test battle |
-| [Main/SubModule.cs](../../Main/SubModule.cs) `AddTaomMissionBehaviors` (called from `OnMissionBehaviorInitialize`) | `AddTaomBehavior(new BannerBearerAssignmentMissionLogic())`: unconditional, gates internally |
+| [Main/SubModule.cs](../../Main/SubModule.cs) `AddTaomMissionBehaviors` (called from `OnMissionBehaviorInitialize`) | `AddTaomBehavior(() => new BannerBearerAssignmentMissionLogic())`: unconditional, gates internally |
 
 `MissionGameModels` resolves the slot in its constructor via `GameModelsManager.GetGameModel<T>()`, which iterates **backwards** — last registered wins. TAOM's `OnGameStart` runs after SandBox's `InitializeGameStarter`, so TAOM's model wins. This is the same seam `TaomCombatMechanicsModel` (`AgentApplyDamageModel`) already uses.
 

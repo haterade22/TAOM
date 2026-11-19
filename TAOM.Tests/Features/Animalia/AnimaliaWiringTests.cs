@@ -25,7 +25,7 @@ public class AnimaliaWiringTests
     [TestMethod]
     public void SubModule_AddsTheAnimaliaMissionBehavior()
     {
-        StringAssert.Contains(Source("Main", "SubModule.cs"), "AddTaomBehavior(new Features.Animalia.AnimaliaMissionBehavior());");
+        StringAssert.Contains(Source("Main", "SubModule.cs"), "AddTaomBehavior(() => new Features.Animalia.AnimaliaMissionBehavior());");
     }
 
     [TestMethod]

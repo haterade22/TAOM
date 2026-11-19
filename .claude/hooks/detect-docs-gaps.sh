@@ -44,11 +44,12 @@ for i in "${!FEATURES[@]}"; do
   kebab=${KEBAB_LIST[i]}
 
   # Match if any existing doc basename contains the kebab root or vice-versa
-  # (handles variants: RaceAge → race-age-system, Warg → warg-combat, TroopWeight → troop-weight-system)
+  # (handles variants: RaceAge → race-age-system, Warg → warg-combat, TroopWeight → troop-weight-system,
+  # Autorun → scenario-autorun)
   found=false
   for doc in "${DOC_LIST[@]}"; do
     [[ -z "$doc" ]] && continue
-    if [[ "$doc" == "$kebab" || "$doc" == "${kebab}-system" || "$doc" == "${kebab}"* || "$kebab" == *"$doc"* ]]; then
+    if [[ "$doc" == "$kebab" || "$doc" == "${kebab}-system" || "$doc" == "${kebab}"* || "$doc" == *"-${kebab}" || "$kebab" == *"$doc"* ]]; then
       found=true
       break
     fi

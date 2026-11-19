@@ -1258,7 +1258,8 @@ class PhaseTwoJudgeTests(unittest.TestCase):
 
     def test_a_cavalry_run_with_no_sally_point_recorded_passes_on_skips_that_say_so(self):
         report, _ = self.cavalry_run()
-        code, why = ld.judge(FINAL, report, self.no_point_log())
+        with self.no_sally_recorded():
+            code, why = ld.judge(FINAL, report, self.no_point_log())
         self.assertEqual(code, 0, why)
         self.assertIn("no sally point recorded", why)
         self.assertIn("sally and sally-return skipped", why)
@@ -1310,6 +1311,13 @@ class PhaseTwoJudgeTests(unittest.TestCase):
         path.write_text(json.dumps({"fortresses": [row]}), encoding="utf-8")
         return path
 
+    @contextlib.contextmanager
+    def no_sally_recorded(self):
+        """A fortresses.json whose helms row holds no `sally` key: the state the no-sally-point waiver needs."""
+        with tempfile.TemporaryDirectory() as folder:
+            with mock.patch.object(ld, "FORTRESS_FILE", self.fortresses_with(folder, None)):
+                yield
+
     def test_the_waiver_holds_only_while_the_fortress_row_records_no_sally_block(self):
         report, _ = self.cavalry_run()
         log = self.no_point_log()
@@ -1322,9 +1330,14 @@ class PhaseTwoJudgeTests(unittest.TestCase):
                     self.assertEqual(code, 1, str(block))
                     self.assertIn("taom.long-defeat.sally", why, str(block))
 
-    def test_the_shipped_fortresses_record_no_sally_block_so_the_waiver_stands_today(self):
-        self.assertFalse(ld.sally_recorded("helms"))
-        self.assertFalse(ld.sally_recorded(None))
+    def test_the_shipped_helms_row_records_its_sally_so_a_cavalry_run_owes_both_checks(self):
+        # The sally point was recorded in game on 2026-11-16 (5c91dd639). Before that this asserted the opposite.
+        self.assertTrue(ld.sally_recorded("helms"))
+        self.assertTrue(ld.sally_recorded(None))  # no fortress id means the default fortress, helms
+        report, _ = self.cavalry_run()
+        code, why = ld.judge(FINAL, report, self.no_point_log())
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.sally", why)
 
     def test_a_lose_run_owes_the_sally_but_never_the_return(self):
         # A run built to lose clears no wave on purpose (LOSE_CHECKS), so a sally-return pass is not owed; the sally is written at wave 1's start whatever follows.
@@ -1335,7 +1348,8 @@ class PhaseTwoJudgeTests(unittest.TestCase):
         self.assertEqual(code, 0, why)
         self.assertEqual(ld.judge(lost, report, log_of(ld.LOSE_CHECKS, 0))[0], 1)
         no_point = log_of(ld.LOSE_CHECKS, 0) + "\n" + skip_line("sally", 1, "no-sally-point")
-        self.assertEqual(ld.judge(lost, report, no_point)[0], 0)
+        with self.no_sally_recorded():
+            self.assertEqual(ld.judge(lost, report, no_point)[0], 0)
 
     def test_a_deep_run_lost_before_its_first_clear_owes_no_return(self):
         lost = {"reason": "lost_defenders", "expect": "deep"}

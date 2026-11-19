@@ -96,7 +96,7 @@ public class HalfFinishedEncounterServiceTests
     }
 
     [TestMethod]
-    public void RepairIfNeeded_NullBackReferenceAndParties_RestoresThenEndsDefenderThenAttacker()
+    public void RepairIfNeeded_NullBackReferenceAndParties_RestoresThenEndsDefenderThenAttackerThenFinishes()
     {
         _encounter.Read().Returns(Snap(missing: true, defenders: 1, attackers: 3));
         _encounter.EndSide(0).Returns(1);
@@ -110,6 +110,7 @@ public class HalfFinishedEncounterServiceTests
             _encounter.RestoreBackReference();
             _encounter.EndSide(0);
             _encounter.EndSide(1);
+            _encounter.FinishEvent();
         });
         _logger.Received(1).LogWarning(Arg.Is<string>(m =>
             m.Contains("[MapEventGuard]") && m.Contains("attackerParties=3") && m.Contains("heroesAliveMarkedDiedInBattle=2")));
@@ -136,6 +137,7 @@ public class HalfFinishedEncounterServiceTests
 
         _encounter.Received(1).RestoreBackReference();
         _encounter.DidNotReceive().EndSide(Arg.Any<int>());
+        _encounter.DidNotReceive().FinishEvent();
     }
 
     [TestMethod]
@@ -211,6 +213,10 @@ public class HalfFinishedEncounterServiceTests
 
         var end = typeof(MapEventSide).GetMethod("HandleMapEventEnd", BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null);
         Assert.IsNotNull(end, "MapEventSide.HandleMapEventEnd() stopped being public.");
+
+        var finalizeComponent = AccessTools.Method(typeof(MapEventComponent), "FinalizeComponent", Type.EmptyTypes);
+        Assert.IsNotNull(finalizeComponent, "MapEventComponent.FinalizeComponent() is gone: re-derive the finish from MapEvent.FinalizeEventAux.");
+        Assert.IsTrue(finalizeComponent.IsAssembly && !finalizeComponent.IsStatic, "FinalizeComponent changed visibility (was internal instance).");
     }
 
     [TestMethod]
