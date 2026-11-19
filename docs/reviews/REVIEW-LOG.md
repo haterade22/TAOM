@@ -5844,3 +5844,20 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 | F2 | The MCP tool docstring said every skipped pass comes back as `PARTIAL_RUN`; two skips go to stderr only | Other: contract text wider than the code | Plan-supplied docstring copied unchecked | Docstrings narrowed; lesson in `lessons/build-tooling-workflow.md` |
 
 - **In-game:** not applicable (tools only).
+
+## Review (number assigned at merge): plan 059 follow-up, the ModuleData commit hook's UNCHECKED note on a validator exit 2 (#623 decision A), tier-2 deep review (Lens 5, Tooling), Codex not run (2026-11-19)
+
+- **Scope:** `520c4de5e..09f03e8c7` on `improve/059-validate-moduledata-mcp-parity`: `check-moduledata-validation.sh` answers a validator exit 2 (no install, no ModuleData, a usage error) with an UNCHECKED `additionalContext` and the stderr tail, still an allow, where it answered a silent `{}`.
+- **Codex:** not run (no paid dispatch authorised for this item).
+- **Lenses:** Data flow, 10 flows, 1 gap, 4 inconsistencies, 1 untested path, all LOW; Tooling, 1 MEDIUM and 3 LOW. Standards, Efficiency, Completeness and Design skipped by tier; Compatibility and XML not in scope. 6 confirmed (1 MEDIUM, 4 LOW defects, F4 found by the lead, and 1 test gap: the exit 2 row never parsed its JSON, and exit 2 with kit drift was unpinned), all fixed; 0 false positives, 0 NEEDS MIKE. Lead sweep: 88 cases (validator exits 0 to 3 by kit states, Bash and PowerShell), none refused by the base or the reviewed hook and allowed by the fixed one; only exit 2 rows changed.
+- **Report:** `docs/reviews/deep-review-059-validate-moduledata-mcp-parity-decision-2026-11-19.md`; RCA `docs/reviews/rca-validate-moduledata-mcp-parity-decision-2026-11-19.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | The exit 2 branch exits before the kit "could not judge" note, so a crashed kit tool went unnamed | Other: a new early exit skips a shared output | Copied from the rc=3 branch; test ran with the kit clean | Kit sentence in the branch; 7m row; lesson in `lessons/build-tooling-workflow.md` |
+| F2 | Stderr that is not UTF-8 made the note builder fail and the hook answer `{}` | Missing null guard | `{}` fallback copied as the generic fail-open shape | `errors="replace"` and a fixed fallback note; 7m row; lesson |
+| F3 | The no-install cause line sat above the 10-line tail | Other: evidence without its cause | Stub stderr was one line | Cause lines go ahead of the tail; 7m row |
+| F4 | Comment named "a missing baseline tag", which the hook cannot reach | Other: comment wider than the code | Every `return 2` listed unread | Comment corrected |
+| F5 | `hooks-catalog.md` row named only the crash note | Other: doc drift | Feature doc updated, catalog not | Row corrected |
+
+- **In-game:** not applicable (tools only).

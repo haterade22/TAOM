@@ -182,20 +182,30 @@ print(json.dumps(
     printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":%s}}\n' "$CRASH"
     exit 0
 fi
-# 2 = the validator could not run its sweep: no game install, no ModuleData, a missing baseline tag,
-# or a usage error (a renamed --code flag). Allow, never silently: a {} here would read as "checked,
-# clean" (#623, the maintainer's decision A). The kit check above still ran and still blocks on drift.
+# 2 = the validator could not run its sweep: no game install, no ModuleData, or a usage error (a
+# renamed --code flag). Allow, never silently: a {} here would read as "checked, clean" (#623, the
+# maintainer's decision A). The kit check above still ran and still blocks on drift; this branch exits
+# before the kit note below, so it names a kit tool that could not judge itself. The no-install cause
+# opens a 38-line stderr, so cause lines from above the tail go first. Bytes are decoded with
+# replacement, and the fallback is a fixed note: neither failure may turn this answer into {}.
 if [[ $RC -eq 2 ]]; then
-    NOTRUN=$(tail -n 10 "$ERR_FILE" 2>/dev/null | "$PYBIN" -c '
-import sys, json
+    NOTRUN=$(cat "$ERR_FILE" 2>/dev/null | KIT_UNCHECKED=$KIT_UNCHECKED "$PYBIN" -c '
+import json, os, re, sys
+lines = sys.stdin.buffer.read().decode("utf-8", "replace").splitlines()
+cause = [l for l in lines[:-10] if re.match(r"ERROR:|.*( not found|: error:)", l)][:3]
+kit = ("\n\ntools/generate_career_kits.py --verify could not judge either, so career kit drift is UNCHECKED "
+       "too. Run: python tools/generate_career_kits.py --verify") if os.environ.get("KIT_UNCHECKED") == "1" else ""
 print(json.dumps(
     "[check-moduledata-validation] tools/validate_moduledata.py exited 2 (no game install, no ModuleData, "
     "or a usage error), so this commit is UNCHECKED for broken Item/NPCCharacter/Faction refs, unknown or "
-    "landless cultures and duplicate ids. This is NOT a pass. Run: python tools/validate_moduledata.py\n\n"
-    + sys.stdin.read()))
+    "landless cultures and duplicate ids. This is NOT a pass. Run: python tools/validate_moduledata.py"
+    + kit + "\n\n" + "\n".join(cause + lines[-10:])))
 ' 2>/dev/null)
     [[ "$ERR_FILE" != /dev/null ]] && rm -f "$ERR_FILE"
-    [[ -z "$NOTRUN" ]] && { echo '{}'; exit 0; }
+    if [[ -z "$NOTRUN" ]]; then
+        printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"[check-moduledata-validation] tools/validate_moduledata.py exited 2, so this commit is UNCHECKED for broken Item/NPCCharacter/Faction refs, unknown or landless cultures and duplicate ids. This is NOT a pass. Run: python tools/validate_moduledata.py"}}'
+        exit 0
+    fi
     printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":%s}}\n' "$NOTRUN"
     exit 0
 fi

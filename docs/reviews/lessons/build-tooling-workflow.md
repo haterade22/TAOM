@@ -5232,3 +5232,15 @@ The `validate_moduledata` MCP tool said every pass that could not run comes back
 - **Why missed:** the plan wrote the docstring before the code, and the executor copied it.
 - **Prevent:** before a docstring or doc line says "every pass" or "any skip", grep each composed pass for `file=sys.stderr` and `print(`, and narrow the claim to what the code returns.
 - **Source:** [RCA](../rca-validate-moduledata-mcp-parity-2026-11-19.md) F2.
+
+### A new early exit in a hook carries every note the shared tail after it would have printed (#623, 2026-11-19)
+The `RC -eq 2` branch added to `check-moduledata-validation.sh` for decision A exits before the `RC -ne 1` tail, which printed the career kit "could not judge" note. A validator exit 2 with a crashed kit tool named the kit on the base hook and only the validator on the new one. The rc=3 branch the new one was copied from has had the same gap since it landed.
+- **Why missed:** the branch was copied from its sibling, and its test ran with the kit stub at exit 0, so the bypassed tail was never on the test's path.
+- **Prevent:** before adding a branch that exits ahead of a shared tail, list every output the tail can produce and carry each one into the branch. Cross the new exit code with every state of the checks that ran before it (here the kit stub: clean, drift, crash).
+- **Source:** [RCA](../rca-validate-moduledata-mcp-parity-decision-2026-11-19.md) F1.
+
+### A fail-open note's own fallback still says UNCHECKED, never `{}` (#623, 2026-11-19)
+The exit 2 note was built by a Python snippet that read stderr as strict UTF-8. One byte that was not UTF-8 raised, the snippet printed nothing, and the hook answered `{}`, the "checked, clean" answer the branch exists to replace.
+- **Why missed:** the `{}` fallback was copied from the rc=3 branch as the generic fail-open shape, and nobody asked whether it undid this branch's purpose.
+- **Prevent:** decode text from another process with `errors="replace"`, make the fallback of a branch whose job is to speak a fixed text note, and test it with bytes that are not UTF-8.
+- **Source:** [RCA](../rca-validate-moduledata-mcp-parity-decision-2026-11-19.md) F2.
