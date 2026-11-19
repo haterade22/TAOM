@@ -82,6 +82,8 @@ BLOCKED (one-line reason), REJECTED (one-line rationale).
 | [054](_audit/2026-11-12-fable/REPORT.md) | Docs: correct wrong author guidance, add the Realms row to the feature map, add a search hint to the three navigation maps (no plan file; made by the orchestrator) | P3 | S | docs | none | MERGED into `bannerlord-1.5.x` (`db1c87d7c`, 2026-11-13; #1132); commit `4a9e001be` |
 | [055](055-enlistment-redirect-outside-attached.md) | Enlistment: keep the settlement-menu redirect armed for a player inside a settlement with no encounter in CommanderUnavailable | P1 | M | bug | none | MERGED into `bannerlord-1.5.x` (`ee7c76842`, 2026-11-19; PR #1472, #511); tier 1 review READY FOR COMMIT; in-game check owed |
 | [056](056-agent-removed-off-thread-guards.md) | Missions: defer MissionDiagnosticBehavior's off-thread OnAgentRemoved and OnAgentDeleted writes; correct the thread table | P1 | S | bug | none | MERGED into `bannerlord-1.5.x` (`90fffac02`, 2026-11-19; PR #1473, #607); tier 1 review READY FOR COMMIT; in-game check owed |
+| [057](057-signature-find-first-byte-prefilter.md) | Signature scan: skip to the next first-byte candidate in ClipBudgetSignature.Find, same hits in the same order | P3 | S | perf | none | PLANNED (#784); cold review 1 round, clean |
+| [058](058-isolate-mission-behaviour-registrations.md) | SubModule: isolate each hand-wired mission behaviour registration; a failed build reports to the mission-start guard | P2 | M | bug | none | PLANNED (#785); cold review 1 round, revised |
 
 Plans 006 and 007 were written as P1 on the assumption that every player pays their boot and load
 seconds. A follow-up measured players at about 1 to 3 s (this desktop runs about 30 times slower), so
