@@ -16,7 +16,7 @@
 # shots, mode (the archers measured in NoPhysics loosed nothing), rs (rescues), lag and parentRoot (1 while attached).
 issue = 1482
 title = "Mumakil and elephant crews trail their seats while the beast moves"
-fixed_in = "9d62beffb"   # trunk before the shot fix: the manifest ships with the emitter
+fixed_in = "d5d674663"   # the shot fix: the build before it passes the held checks with SetTargetZ and proves nothing
 logs = ["taom"]
 
 [[check]]
