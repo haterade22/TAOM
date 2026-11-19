@@ -5208,3 +5208,9 @@ A port ran in one worktree all day while trunk moved 7 commits ahead. Batch D fi
 - **Why missed:** the batch compared the external fix with the worktree, and the plan compared it with trunk only at the start of the day. The trunk commit was in the git log shown at session start. Lens 7 found it by comparing the branch with trunk.
 - **Prevent:** before each batch or sub-task in a worktree, run `git log HEAD..bannerlord-1.5.x -- <files the batch will touch>` and read each hit. Brief review lenses with that output, so a reviewer does not inherit the stale premise.
 - **Source:** docs/reviews/rca-silas-port-data-2026-11-17.md F1.
+
+### Before a crash fix, search open PRs and every branch for the throwing method (#1475, 2026-11-18)
+A crash bundle was investigated, fixed and reviewed on a new branch while PR #1463 already carried a `Patch169` for the same throw, and PR #1477 a save repair built on it. Lens 1 found it in the second review wave with `git log --all -S"Patch169"`.
+- **Why missed:** the work claim was keyed by the crash signature, which another author had no reason to use. `/investigate` read `git log` on the affected files of the current branch only.
+- **Prevent:** in `/investigate` Phase 1, run `gh pr list --state open --search <Method>` and `git log --all --oneline -S <Method>` for the method that throws, before any fix. Claim a crash by its throwing method as well as its signature.
+- **Source:** [rca-retinue-disband-roster-2026-11-18.md](../rca-retinue-disband-roster-2026-11-18.md) F2.

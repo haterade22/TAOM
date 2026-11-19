@@ -39,6 +39,7 @@ history and the gate. A new trap for this area is a new row here, never a row in
 | Daily tick after load | A save in an elapsed day's first half reruns that day: gate daily work on a saved day | [ticks](../../../docs/reference/engine/campaign-tick-time-and-party-ai.md) |
 | Event listener order | Newest first: a listener added after the engine's runs before it on the same event | [ticks](../../../docs/reference/engine/campaign-tick-time-and-party-ai.md) |
 | "Frozen" game | Can be a stuck kingdom vote waiting on an `IsKingsDecisionOver` edge: `Patch80` | [diplomacy](../../../docs/features/diplomacy.md) |
+| Kill-path listeners | `OnPartyDisbandStarted` and other events a battle death fires run inside the engine's roster loop, which Patch169 snapshots; never `GetTroopRoster()` on that party, read by index | [guard](../../../docs/features/map-event-guard.md) |
 | Hero capture | Patch `Hero.CanBecomePrisoner`; denying capture grants escape; both seams share one `DeathMark` guard | [capture](../../../docs/features/uncapturable-heroes.md) |
 | Hero states | `Fugitive`, `Released` and `Traveling` end by themselves (one daily line settles the first two, and skips a Special hero): never give one a final verdict, never write "the engine never" from one method | [messengers](../../../docs/features/messengers.md) |
 | `Town.LastCapturedBy` | A leader-clan stamp, not participation; score sieges from `IFiefSiegeParticipationService` | [fiefs](../../../docs/features/fief-granting.md) |

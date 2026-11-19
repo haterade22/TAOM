@@ -1006,7 +1006,9 @@ Still unconfirmed — worth walking if you have two machines:
    and `[PatchShield] co-op module(s) active … install skipped` alongside it.
 2. A `[HarmonyCensus]` block naming `Bannerlord.Coop`; check its `TRANSPILER CONFLICT` rows against
    TAOM's own transpilers (`grep -rl 'IEnumerable<CodeInstruction> Transpiler(' Main`; 20 methods in 18 files
-   on 2026-11-03).
+   on 2026-11-03). One conflict is expected: TAOM's Patch169 and Coop both transpile
+   `MapEventSide.HandleMapEventEndForPartyInternal`, and both apply in either order
+   ([registry](../reference/harmony-patch-registry.md#patch169_battledeathrostersnapshot)).
 3. TAOM behaves identically **solo** with the Coop module merely enabled — what the `IsAuthority`
    fail-open direction protects, and now also where the PatchShield cost above lands.
 4. The spawned `/server` process starts TAOM cleanly (no blocking UI).
