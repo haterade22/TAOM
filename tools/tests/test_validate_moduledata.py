@@ -4060,6 +4060,28 @@ class MissingCollisionBodyTests(unittest.TestCase):
             got = vm._loaded_tpacs(mods)
             self.assertEqual(got, [mods / "LOTRLOME_Armory" / "Assets" / "a.tpac"])
 
+    def test_loaded_tpacs_reads_taom_map_packs(self):
+        with tempfile.TemporaryDirectory() as d:
+            mods = Path(d) / "Modules"
+            for name in ("LOTRLOME_Armory", "TAOM_Map", "Native"):
+                (mods / name / "Assets").mkdir(parents=True)
+                (mods / name / "Assets" / f"{name}.tpac").write_bytes(b"x")
+            got = {p.name for p in vm._loaded_tpacs(mods)}
+        self.assertEqual(got, {"LOTRLOME_Armory.tpac", "TAOM_Map.tpac", "Native.tpac"})
+
+    def test_loaded_tpacs_takes_taom_from_the_repo_module(self):
+        # The commit gate judges the repo's tree, as slot_rejection_issues does, not the last deploy.
+        with tempfile.TemporaryDirectory() as d:
+            mods = Path(d) / "Modules"
+            (mods / "TAOM" / "Assets").mkdir(parents=True)
+            (mods / "TAOM" / "Assets" / "installed.tpac").write_bytes(b"x")
+            repo = Path(d) / "repo" / "_Module"
+            (repo / "Assets").mkdir(parents=True)
+            (repo / "Assets" / "repo.tpac").write_bytes(b"x")
+            (repo / "ModuleData").mkdir()
+            got = {p.name for p in vm._loaded_tpacs(mods, repo / "ModuleData")}
+        self.assertEqual(got, {"repo.tpac"})
+
     def _fake_tier_c(self, codes):
         import validate_mesh_refs as vmr
         issues = []

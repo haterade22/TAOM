@@ -95,10 +95,12 @@ DEFAULT_GAME = Path(
 # LOTRLOME_items/ missed both v2.0.8 hang typos (#352) — this tool was
 # body-aware the whole time, just pointed one directory too narrow.
 DEFAULT_ITEMS = DEFAULT_GAME / "Modules" / "LOTRLOME_Armory" / "ModuleData"
-# Shared meshes live outside the Armory (Native/SandBoxCore), so the present-set
-# is the UNION across these modules' packages (each module's loose Assets/ tree,
-# else its AssetPackages/: tpac_paths_for_modules).
-DEFAULT_TPAC_MODULES = ["LOTRLOME_Armory", "Native", "SandBoxCore"]
+# Every module the client loads that ships packs an item's art can resolve from: TAOM's dependency chain
+# (Main/_Module/SubModule.xml: Native, SandBoxCore, Sandbox; TAOM.Dependencies and CustomBattle ship no
+# packs), TAOM itself, and the two live modules TAOM authors into. The present-set is their UNION
+# (each module's loose Assets/ tree, else its AssetPackages/: tpac_paths_for_modules).
+# validate_moduledata reads this same list (#623).
+DEFAULT_TPAC_MODULES = ["LOTRLOME_Armory", "TAOM", "TAOM_Map", "Native", "SandBoxCore", "SandBox"]
 DEFAULT_RGL_LOG_DIR = Path(r"C:\ProgramData\Mount and Blade II Bannerlord\logs")
 
 # Meshes accepted as dead on purpose: the art is gone, no surviving asset can
@@ -1148,7 +1150,7 @@ def main() -> int:
     ap.add_argument("--tpac-modules", nargs="+", default=DEFAULT_TPAC_MODULES,
                     help="Module names whose packages form the present-set: each "
                          "module's loose Assets/**/*.tpac, else its AssetPackages/*.tpac "
-                         "(default: LOTRLOME_Armory Native SandBoxCore)")
+                         f"(default: {' '.join(DEFAULT_TPAC_MODULES)})")
     ap.add_argument("--rgl-log", default=None,
                     help="Path to an rgl_log[_errors].txt for Tier A (default: "
                          "auto-discover the newest under the ProgramData logs dir)")

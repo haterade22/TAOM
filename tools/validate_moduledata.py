@@ -308,14 +308,18 @@ def armour_acquisition_ref_issues(registries, moduledata: Path) -> list:
 
 BODY_CODE = "MISSING_COLLISION_BODY"
 MESH_CODE = "MISSING_VISUAL_MESH"
-# Every module whose packs the client loads for item art; which tree of each the
-# engine reads is validate_mesh_refs.tpac_paths_for_modules's to decide.
-_ART_MODULES = ("LOTRLOME_Armory", "Native", "SandBoxCore", "SandBox")
 
 
-def _loaded_tpacs(game_modules: Path) -> list:
+def _loaded_tpacs(game_modules: Path, moduledata: Path = None) -> list:
+    """The packs of every module the client loads for item art (validate_mesh_refs.DEFAULT_TPAC_MODULES),
+    each tree as validate_mesh_refs.module_tpacs chooses it. TAOM is read from the repo module this run
+    validates (`moduledata.parent`) when `moduledata` is given, as slot_rejection_issues does."""
     import validate_mesh_refs as vmr
-    return [p for m in _ART_MODULES for p in vmr.module_tpacs(Path(game_modules) / m, m)]
+    out = []
+    for name in vmr.DEFAULT_TPAC_MODULES:
+        folder = Path(moduledata).parent if name == "TAOM" and moduledata is not None else Path(game_modules) / name
+        out.extend(vmr.module_tpacs(folder, name))
+    return out
 
 
 def _item_refs(game_modules: Path, moduledata: Path) -> list:
@@ -352,11 +356,11 @@ def missing_collision_body_issues(game_modules: Path, moduledata: Path, item_ref
     scan is reported as a finding, because "every body missing" filtered to
     nothing would read exactly like a clean run."""
     import validate_mesh_refs as vmr
-    tpacs = _loaded_tpacs(game_modules)
+    tpacs = _loaded_tpacs(game_modules, moduledata)
     if not tpacs:
         return [ts.Issue(
             severity=ts.Severity.ERROR, code=BODY_CODE, file="", line=0, entry_id="",
-            message=f"no *.tpac found under {' / '.join(_ART_MODULES)} in {game_modules}; "
+            message=f"no *.tpac found under {' / '.join(vmr.DEFAULT_TPAC_MODULES)} in {game_modules}; "
                     f"collision bodies were NOT verified this run")]
     try:
         refs = item_refs(game_modules, moduledata)

@@ -482,6 +482,12 @@ class TpacModuleFallbackTests(unittest.TestCase):
     def test_missing_module_is_not_an_error(self):
         self.assertEqual(vm.tpac_paths_for_modules(self.game, ["Absent"]), [])
 
+    def test_the_default_modules_are_every_module_loaded_for_art(self):
+        """#623: the engine resolves a mesh or a body from every loaded module; TAOM and TAOM_Map were
+        not scanned, so art only they ship would read as missing."""
+        self.assertEqual(sorted(vm.DEFAULT_TPAC_MODULES),
+                         sorted(["LOTRLOME_Armory", "TAOM", "TAOM_Map", "Native", "SandBoxCore", "SandBox"]))
+
 
 # --------------------------------------------------------------------------- #
 # Tier C: collision-body raw-byte scan                                         #
