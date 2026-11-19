@@ -261,6 +261,19 @@ class SkillTemplateEdgeTests(ValidatorGateTests):
         self.assertEqual("UPGRADE_SKILL_REGRESSION", issues[0].code)
         self.assertEqual(ts.Severity.ERROR, issues[0].severity)
 
+    def test_an_install_with_no_vanilla_skill_sets_gives_one_error_beside_the_repo_ones(self):
+        """TAOM's own SkillSet files always load, so a root that holds no vanilla SkillSet must
+        still be one ERROR: else every vanilla template reads as empty and a real drop passes."""
+        inst = self._install()
+        with open(os.path.join(self.root, "taom_x_skill_sets.xml"), "w", encoding="utf-8") as f:
+            f.write('<SkillSets><SkillSet id="taom_only"><skill id="Bow" value="10" /></SkillSet></SkillSets>\n')
+        self._write(self._templated("p", "infantry_heavyinfantry_level16_template_skills", ["c"])
+                    + _troop("c", 11, "Infantry", {k: 20 for k in rb.SKILL_NAMES}))
+        issues = self._run(game_modules=os.path.join(inst, "Modules"))
+        self.assertEqual(1, len(issues), [i.message for i in issues])
+        self.assertEqual("(skill sets)", issues[0].entry_id)
+        self.assertEqual(ts.Severity.ERROR, issues[0].severity)
+
 
 class MilitiaLoaderFailsClosedTests(unittest.TestCase):
     """The militia decision moved from a name heuristic that could not fail to a read of two

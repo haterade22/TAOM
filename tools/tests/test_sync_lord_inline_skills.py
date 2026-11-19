@@ -267,6 +267,26 @@ class LoadSkillSetsMergeTests(unittest.TestCase):
         # Without an install only the repo files remain, and they are the tail of the list by construction.
         self.assertTrue(all(sync.MODULE_DATA in f for f in files), files)
 
+    def test_require_vanilla_refuses_an_install_root_with_no_vanilla_skillset(self):
+        # TAOM's own SkillSet files always load, so a non-empty result cannot prove the install
+        # was read; the gate and the two writers refuse a root with no vanilla file (#626 review).
+        repo = os.path.join(self.dir, "md")
+        os.makedirs(repo)
+        self.write(os.path.join("md", "taom_x_skill_sets.xml"),
+                   '<SkillSets><SkillSet id="taom"><skill id="Bow" value="10" /></SkillSet></SkillSets>')
+        inst = os.path.join(self.dir, "inst")
+        os.makedirs(os.path.join(inst, "Modules"))
+        self.assertEqual(sync.load_skill_sets(inst, repo), {"taom": {"Bow": 10}})   # the default keeps its old reading
+        with self.assertRaises(ValueError) as ctx:
+            sync.load_skill_sets(inst, repo, require_vanilla=True)
+        self.assertIn(inst, str(ctx.exception))
+        native = os.path.join(inst, "Modules", "Native", "ModuleData")
+        os.makedirs(native)
+        with open(os.path.join(native, "skill_sets.xml"), "w", encoding="utf-8") as f:
+            f.write('<SkillSets><SkillSet id="v"><skill id="Bow" value="20" /></SkillSet></SkillSets>')
+        self.assertEqual(sync.load_skill_sets(inst, repo, require_vanilla=True),
+                         {"v": {"Bow": 20}, "taom": {"Bow": 10}})
+
 
 class EffectiveSkillsTests(unittest.TestCase):
     """effective_skills is the one place the tools resolve a skill_template (#626): the SkillSet

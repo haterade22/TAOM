@@ -2151,8 +2151,9 @@ class Validator:
         """Every SkillSet the engine would see (sync_lord_inline_skills.load_skill_sets over the
         install ROOT, the parent of the Modules folder, and the repo), or None when the install is
         not available and a templated edge is skipped, never faked. A registry that names the sets
-        (a test) wins. A read that fails or finds none is one ERROR, so an unjudged edge is never
-        read as clean. Called only for an edge with a templated side."""
+        (a test) wins. A read that fails, or finds no vanilla SkillSet file (TAOM's own always
+        load, so an empty result cannot show an unread install), is one ERROR, so an unjudged edge
+        is never read as clean. Called only for an edge with a templated side."""
         given = getattr(self.reg, "skill_sets", None)
         if given is not None:
             return given
@@ -2163,10 +2164,10 @@ class Validator:
                 import sys as _sys
                 _sys.path.insert(0, str(Path(__file__).resolve().parent))
                 import sync_lord_inline_skills as sl
-                self._skill_sets_memo = sl.load_skill_sets(str(self.game_modules.parent), str(self.moduledata))
-                problem = None if self._skill_sets_memo else (
-                    f"no SkillSet was found under {self.game_modules.parent} and the repo")
-            except Exception as exc:   # an install the loader cannot read: say so once
+                self._skill_sets_memo = sl.load_skill_sets(str(self.game_modules.parent), str(self.moduledata),
+                                                           require_vanilla=True)
+                problem = None
+            except Exception as exc:   # an install the loader cannot read, or no vanilla SkillSet: say so once
                 problem = f"the SkillSets could not be read ({exc})"
             if problem:
                 issues.append(Issue(

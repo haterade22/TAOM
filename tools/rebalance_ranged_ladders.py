@@ -689,9 +689,10 @@ def main(argv=None):
         print(f"ERROR: {exc} Nothing was written.")
         return 2
     sources = rl.load_upgrade_sources(args.moduledata)
-    skill_sets = sl.load_skill_sets(str(game_modules.parent), str(args.moduledata))
-    if not skill_sets:
-        print(f"ERROR: no SkillSet found under {game_modules.parent} and the repo. Nothing was written.")
+    try:
+        skill_sets = sl.load_skill_sets(str(game_modules.parent), str(args.moduledata), require_vanilla=True)
+    except ValueError as exc:   # no vanilla SkillSet file, or one that is not UTF-8
+        print(f"ERROR: the SkillSets could not be read ({exc}). Nothing was written.")
         return 2
     try:
         ctx = build_context(spec, launchers, troops, game_modules, args.moduledata, ammo, barred,

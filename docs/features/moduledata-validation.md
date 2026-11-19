@@ -984,7 +984,9 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 - 2026-11-19 (#626): `UPGRADE_SKILL_REGRESSION` now judges an upgrade edge with a `skill_template`
   side instead of skipping it. The character's skills are its SkillSet with the inline rows laid over
   it, resolved through `sync_lord_inline_skills.effective_skills`; without the install such an edge
-  is skipped and the CLI prints the skip, and a SkillSet read that fails or finds none is one ERROR.
+  is skipped and the CLI prints the skip, and a SkillSet read that fails, or finds no vanilla SkillSet
+  file in the install, is one ERROR (TAOM's own SkillSet files always load, so an empty result could
+  not show an unread install).
   The two skill writers (`ranged_ladder.planned_skill_edits` and `rebalance_troops.py`) resolve a
   template through the same function and refuse to write a templated character. On the shipped data
   the result is unchanged (2026-11-19: 0 errors and 1,823 warnings before and after, 0 of 913

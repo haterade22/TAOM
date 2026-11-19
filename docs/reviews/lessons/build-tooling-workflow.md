@@ -5220,3 +5220,9 @@ PR #1478 added 270 tournament templates as `NPCCharacters`. The merge review ran
 - **Why missed:** the review chose the gates by the PR's description; the PR body listed the gates that failed on trunk too, and nobody compared the full `tools/tests` run with trunk.
 - **Prevent:** before merging a PR that adds ModuleData, run `python -m unittest discover -s tools/tests -t .` on the PR merged with trunk and on trunk, and compare the failure lists.
 - **Source:** PR #1478 merge review; fix PR #1483.
+
+### A guard on a merged load tests the source that can be missing, not the merged result (#626, 2026-11-19)
+Plan 060 made `UPGRADE_SKILL_REGRESSION` resolve a `skill_template` through `load_skill_sets`, which merges the install's vanilla SkillSet files with the repo's own. The gate and both skill writers refused an empty result, but the repo's two SkillSet files always load, so the refusal could not fire: with an install root that held no vanilla SkillSet, every vanilla template read as empty and a real drop on a templated edge passed clean. 16 `rebalance_troops.main` fixture tests passed only because they read the real repo's ModuleData beside their fake install.
+- **Why missed:** the guard and its tests looked at the merged dict. The test that pinned "one ERROR when none is found" used a scratch ModuleData with no repo SkillSet file, the only case where the dict can be empty.
+- **Prevent:** when a loader merges an always-present source (repo files, defaults, a built-in table) with one that can be missing (an install, a mod, a network read), put the guard on the missing source (`load_skill_sets(..., require_vanilla=True)`), and test it with the always-present source in place. A fixture that fakes the install also fakes or isolates the repo-side inputs its code reads.
+- **Source:** [RCA](../rca-upgrade-skill-regression-templated-edges-2026-11-19.md) F1; related: "Installed is not effective" above.

@@ -1507,9 +1507,10 @@ def main():
     item_classes = ts.build_item_class_registry(MODULEDATA_DIR, game_modules)
     mounts = ts.build_mount_difficulty_registry(MODULEDATA_DIR, game_modules)
     print(f"Item-class registry: {len(item_classes):,} weapon-classed items, {len(mounts):,} horses")
-    skill_sets = sl.load_skill_sets(str(Path(game_modules).parent), MODULEDATA_DIR)
-    if not skill_sets:
-        print(f"ERROR: no SkillSet found under {Path(game_modules).parent} and the repo.\n"
+    try:
+        skill_sets = sl.load_skill_sets(str(Path(game_modules).parent), MODULEDATA_DIR, require_vanilla=True)
+    except ValueError as exc:   # no vanilla SkillSet file, or one that is not UTF-8
+        print(f"ERROR: the SkillSets could not be read ({exc}).\n"
               f"       A templated character cannot be read without them. Nothing was written.")
         sys.exit(1)
     print(f"SkillSets: {len(skill_sets):,}")

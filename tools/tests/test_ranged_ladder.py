@@ -1057,6 +1057,21 @@ class RebalanceToolTests(unittest.TestCase):
     def _json(self):
         return json.loads((self.report_dir / "ranged-ladders.json").read_text(encoding="utf-8"))
 
+    def test_an_install_with_no_vanilla_skillset_is_refused_though_the_repo_has_one(self):
+        # TAOM's own SkillSet files always load, so only the vanilla half proves the install was
+        # read; without it every vanilla template would read as empty (#626 review).
+        (self.modules / "Native" / "ModuleData" / "skill_sets.xml").unlink()
+        (self.md / "taom_x_skill_sets.xml").write_bytes(
+            b'<SkillSets><SkillSet id="taom"><skill id="Bow" value="10" /></SkillSet></SkillSets>')
+        self.assertEqual(self._run(), 2)    # a dry run returns 0 when the SkillSets load
+        self.assertFalse(self.report_dir.exists(), "refused before any report was written")
+
+    def test_an_unreadable_skillset_file_is_a_refusal_not_pending_edits(self):
+        # Exit 1 means "edits still pending"; a SkillSet file that is not UTF-8 is a refusal (2).
+        (self.modules / "Native" / "ModuleData" / "skill_sets.xml").write_bytes(b'<SkillSets>\xff\xfe</SkillSets>')
+        self.assertEqual(self._run(), 2)
+        self.assertFalse(self.report_dir.exists(), "refused before any report was written")
+
     def test_dry_run_writes_the_report_and_touches_nothing(self):
         before = self.troop_file.read_bytes()
         self.assertEqual(self._run(), 0)
