@@ -5785,3 +5785,20 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 
 - **Owed:** the fix-loop re-review of the fix diff (Lens 2, and Codex at `high` when usage returns): the fix changes runtime behaviour in a tier 1 area.
 - **In-game:** not run (tier 1, no game run).
+
+## Review (number assigned at merge): crew carry measuring build (#1482), tier-1 deep review (Lens 2, Lens 5), fix-diff re-review, Codex not run (2026-11-19)
+
+- **Scope:** the uncommitted diff on `fix/crew-carry` from `7c45d9603`: the temporary carry arms (`CrewCarryExperiment`), `HowdahSeatProbe`, `HowdahSeatMotion.DecideCarry`, and the howdah and mumakil seats, platforms and reporter. Live Armory animation files changed the same day belong to #1474 and were out of scope.
+- **Codex:** not run (out of usage since 2026-11-15). Owed at `ultra` before the Step 3 fix merges.
+- **Lenses:** Engine compatibility, 17 verified, 0 incompatible, 6 unverified native effects; Data flow, 12 flows, 2 gaps, 5 inconsistencies. 0 CRITICAL, 0 HIGH, 1 MEDIUM, the rest LOW. Standards, Efficiency, Completeness and Design skipped by tier. Blast radius: 6 types checked with `graphify affected`, callers outside the diff are the two crew spawners and `ElephantMissionBehavior.TryInstantiateHowdah`.
+- **Re-review:** Lens 2 on the fix diff, verdict safe to commit, one LOW unverified residual (R1 below).
+- **No RCA file:** nothing CRITICAL or HIGH, nothing reached a player. The lesson is in `lessons/adapters-taleworlds-api.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| D1 | A killed archer kept its force-attached entity pointer and its position lock: the seat is not the agent's used object, so vanilla's death cleanup never ran, and the release touched only an active agent | Stale state / lifecycle | The release was written for the recycled-handle rule; a dead agent that still owns its slot is a third case | Arm resets run under `IsCurrentOccupant` alone; lesson added |
+| D2 | The arms and the frame-mode blocks ran for every beast with diagnostics off | Scope of an experiment | Written for one run, then asked onto trunk | Diagnostics off now means Baseline seats and teleport frames |
+| D3 | Status labels differed by one period between the two creatures; probe period fields were not ended while diagnostics were off | Diagnostics | Two parallel implementations | Same numbering; seat ticks counted only while measuring |
+| R1 | UNVERIFIED: on the DrivenTarget arm the gravity reset reaches a dead archer one frame after removal, where vanilla does it during removal | Native effect not read | Native death path not decompiled | Watch a dead DrivenTarget archer's corpse in the measuring battle; the arm is deleted after it |
+
+- **In-game:** owed. The measuring battle is the check, and no arm is judged before it.
