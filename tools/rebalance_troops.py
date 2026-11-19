@@ -1509,7 +1509,7 @@ def main():
     print(f"Item-class registry: {len(item_classes):,} weapon-classed items, {len(mounts):,} horses")
     try:
         skill_sets = sl.load_skill_sets(str(Path(game_modules).parent), MODULEDATA_DIR, require_vanilla=True)
-    except ValueError as exc:   # no vanilla SkillSet file, or one that is not UTF-8
+    except ValueError as exc:   # the vanilla modules define no SkillSet, or a file is not UTF-8
         print(f"ERROR: the SkillSets could not be read ({exc}).\n"
               f"       A templated character cannot be read without them. Nothing was written.")
         sys.exit(1)

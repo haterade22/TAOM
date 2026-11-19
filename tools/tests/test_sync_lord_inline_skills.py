@@ -287,6 +287,22 @@ class LoadSkillSetsMergeTests(unittest.TestCase):
         self.assertEqual(sync.load_skill_sets(inst, repo, require_vanilla=True),
                          {"v": {"Bow": 20}, "taom": {"Bow": 10}})
 
+    def test_require_vanilla_refuses_a_root_whose_vanilla_files_define_no_skillset(self):
+        # The installed Native ships native_skill_sets.xml as an empty stub; a root with only that
+        # file has a vanilla file but no vanilla SkillSet, so every vanilla template would read as
+        # empty (#626 review, round 1).
+        repo = os.path.join(self.dir, "md")
+        os.makedirs(repo)
+        self.write(os.path.join("md", "taom_x_skill_sets.xml"),
+                   '<SkillSets><SkillSet id="taom"><skill id="Bow" value="10" /></SkillSet></SkillSets>')
+        native = os.path.join(self.dir, "inst", "Modules", "Native", "ModuleData")
+        os.makedirs(native)
+        with open(os.path.join(native, "native_skill_sets.xml"), "wb") as f:
+            f.write(b'\xef\xbb\xbf<?xml version="1.0" encoding="utf-8"?>\r\n<SkillSets></SkillSets>')
+        with self.assertRaises(ValueError) as ctx:
+            sync.load_skill_sets(os.path.join(self.dir, "inst"), repo, require_vanilla=True)
+        self.assertIn("define no SkillSet", str(ctx.exception))
+
 
 class EffectiveSkillsTests(unittest.TestCase):
     """effective_skills is the one place the tools resolve a skill_template (#626): the SkillSet

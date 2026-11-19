@@ -272,13 +272,15 @@ def main(argv: list[str] | None = None) -> int:
 
 def load_skill_sets(game: str, module_data: str = MODULE_DATA,
                     require_vanilla: bool = False) -> dict[str, dict[str, int]]:
-    """require_vanilla: raise ValueError when no vanilla module under `game` has a SkillSet file.
+    """require_vanilla: raise ValueError when the vanilla modules under `game` define no SkillSet.
     TAOM's own files always load, so a non-empty result does not prove the install was read, and
-    every vanilla template would then read as empty. UPGRADE_SKILL_REGRESSION and the two skill
-    writers pass True (#626)."""
+    every vanilla template would then read as empty. A file is not enough: the installed Native
+    ships an empty native_skill_sets.xml. UPGRADE_SKILL_REGRESSION and the two skill writers pass
+    True (#626)."""
     vanilla = vanilla_skill_set_files(game)
-    if require_vanilla and not vanilla:
-        raise ValueError(f"no vanilla SkillSet file in the {', '.join(VANILLA_MODULES)} modules under {game}")
+    if require_vanilla and not load_skill_sets_from(vanilla):
+        raise ValueError(f"the {', '.join(VANILLA_MODULES)} modules under {game} define no SkillSet "
+                         f"({len(vanilla)} vanilla SkillSet file(s) found)")
     return load_skill_sets_from(skill_set_files(game, module_data))
 
 

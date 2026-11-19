@@ -438,7 +438,7 @@ classes); unassigned and unlisted troops; planned items, slot edits (retired ids
 tier refused, mounted refusal, class refusal) and skill edits (cells, the clamp raising a non-ladder
 child, refusing a ladder one, militia and exempt edges skipped, a templated source judged on its
 SkillSet, a templated child or ladder troop never written, and a templated edge without SkillSets
-refused; the tool refusing an install with no vanilla SkillSet file or an unreadable one);
+refused; the tool refusing an install whose vanilla modules define no SkillSet, or an unreadable one);
 `rebalance_troops` agreeing with the cell (the Iron Hills
 nobles included), ignoring a civilian-roster bow in both readings, its clamp refusing to lift a cell,
 refusing an undefined ladder id, and single-quoted militia bindings; hero launchers from inline kit,

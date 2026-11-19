@@ -2151,7 +2151,7 @@ class Validator:
         """Every SkillSet the engine would see (sync_lord_inline_skills.load_skill_sets over the
         install ROOT, the parent of the Modules folder, and the repo), or None when the install is
         not available and a templated edge is skipped, never faked. A registry that names the sets
-        (a test) wins. A read that fails, or finds no vanilla SkillSet file (TAOM's own always
+        (a test) wins. A read that fails, or finds no vanilla SkillSet defined (TAOM's own always
         load, so an empty result cannot show an unread install), is one ERROR, so an unjudged edge
         is never read as clean. Called only for an edge with a templated side."""
         given = getattr(self.reg, "skill_sets", None)

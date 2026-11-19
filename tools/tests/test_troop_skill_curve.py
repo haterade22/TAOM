@@ -371,7 +371,7 @@ class _FixtureRun(unittest.TestCase):
         self.tmp = Path(tempfile.mkdtemp())
         (self.tmp / "troops").mkdir()
         (self.tmp / "characters").mkdir()
-        # main() refuses an install with no vanilla SkillSet file (#626), so the fixture install
+        # main() refuses an install whose vanilla modules define no SkillSet (#626), so the fixture install
         # ships one; the SkillSets are read from the parent of the Modules folder.
         self.install = Path(tempfile.mkdtemp())
         native = self.install / "Modules" / "Native" / "ModuleData"
@@ -443,7 +443,7 @@ class ClampOnlyRunTests(_FixtureRun):
         before = (self.tmp / "troops" / "troops_atlantis.xml").read_bytes()
         code, out = self.run_main("--fix-monotonicity")
         self.assertEqual(code, 1, out)
-        self.assertIn("no vanilla SkillSet file", out)
+        self.assertIn("define no SkillSet", out)
         self.assertEqual((self.tmp / "troops" / "troops_atlantis.xml").read_bytes(), before)
 
 
