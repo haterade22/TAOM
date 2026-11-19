@@ -11,17 +11,18 @@ namespace TAOM.Features.Elephant;
 /// <summary>
 /// Seats one archer on the elephant's back and keeps it there.
 ///
-/// TWO mechanisms, and the second is the one that makes the archer usable. Position: the seat teleports the archer to
-/// its frame, but ONLY once it has drifted past <see cref="ElephantConfig.HowdahSeatDeadbandMetres"/>. Correcting the
-/// 0.10 m settle every frame reads to the engine as 30 m/s of real movement and no bow draw ever completes
-/// (<see cref="HowdahSeatMotion"/> carries the measurements). Intent: the seat gives the archer a scripted position at
-/// the seat itself, which is what stops its ranged behaviour walking it toward a firing position it can never reach.
-/// The archer keeps its formation throughout, because a null formation pins MissileRangeAdjusted at 0, and its AI
-/// behaviour curves are rewritten because detaching or moving in formation crushes the ranged ones
-/// (<see cref="HowdahCrewBehaviourCurves"/>).
+/// TWO mechanisms, and the second is the one that makes the archer usable. Position: the seat holds the archer with
+/// the engine's position lock (Agent.SetTargetPosition and SetTargetZ every tick) and attaches it to the platform
+/// (Agent.SetForceAttachedEntity), which is what vanilla ClimbingMachine sets on a man on a moving ship's net (#1482).
+/// The archer's ranged behaviour walks it off the seat toward a firing position it can never reach, and neither a
+/// scripted position at the seat nor a correction by teleport stopped that: a teleport is a full native movement
+/// reset, and every reload restart measured on 2026-11-19 had one inside it. One teleport remains, for an archer more
+/// than <see cref="HowdahSeatMotion.SeatRescueMetres"/> from its seat. Intent: the archer keeps its formation
+/// throughout, because a null formation pins MissileRangeAdjusted at 0, and its AI behaviour curves are rewritten
+/// because detaching or moving in formation crushes the ranged ones (<see cref="HowdahCrewBehaviourCurves"/>).
 ///
-/// On release, the archer is dropped to the elephant's ground position, its curves and detachability restored, and its
-/// scripted movement cleared. The seat MUST be empty before anything deactivates it: see
+/// On release, the lock and the attachment are cleared, the archer is dropped to the elephant's ground position, and
+/// its curves and detachability are restored. The seat MUST be empty before anything deactivates it: see
 /// <see cref="OnMissionEnded"/> and <see cref="TaomHowdahMachine.OnMissionEnded"/>.
 /// </summary>
 // PUBLIC, not internal: the Modding Kit resolves script components by type and cannot see an internal
@@ -35,17 +36,10 @@ public class TaomHowdahStandingPoint : StandingPoint
     /// <summary>Set by TaomHowdahMachine.PropagateRefsToSeats, e.g. "[Howdah#2] seat0" (#627).</summary>
     public string LogTag = "[Howdah]";
 
-    /// <summary>The machine this seat is on, set with <see cref="elephantAgent"/>. The seat reads the frame the
-    /// machine last ticked in, which tells whether it saw this frame's seat position or last frame's (#1482).</summary>
-    internal TaomHowdahMachine Machine;
-
-    /// <summary>TEMPORARY (#1482): how this seat carries its archer in the measuring build.</summary>
-    internal CrewCarryArm Arm { get; private set; } = CrewCarryArm.Baseline;
-
     /// <summary>
     /// The seat's numbers for the status line (#627, #1482). A healthy archer reaches progress 1.00 with restarts
     /// near its shot count; the failure is a reload pinned at 0.85 with restarts climbing about once a second. The
-    /// probe counts a restart against a teleport only when one fell inside it. Progress is sampled only while the
+    /// probe counts a restart against a rescue only when one fell inside it. Progress is sampled only while the
     /// diagnostics toggle is on.
     /// </summary>
     internal HowdahSeatProbe Probe { get; } = new HowdahSeatProbe();
@@ -107,9 +101,7 @@ public class TaomHowdahStandingPoint : StandingPoint
         LockUserPositions = false;
         _logger = IoC.Resolve<IModLogger>();
         _diagnostics = IoC.Resolve<IHowdahDiagnosticsSettingsProvider>();
-        // The diagnostics setting is the experiment's off switch: off at mission start, every seat is Baseline.
-        Arm = _diagnostics?.IsEnabled == true ? CrewCarryExperiment.ForHowdahSeat(GameEntity.Name) : CrewCarryArm.Baseline;
-        _logger?.LogInfo($"{LogTag} Seat OnInit — entity={GameEntity.Name} arm={Arm}");
+        _logger?.LogInfo($"{LogTag} Seat OnInit — entity={GameEntity.Name}");
     }
 
     public override TickRequirement GetTickRequirement()
@@ -136,15 +128,18 @@ public class TaomHowdahStandingPoint : StandingPoint
         // through GetMissileRangeWithHeightDifference (Agent.cs:5444-5450), which returns 0f whenever Formation is
         // null, so a formation-less archer reads as able to reach nothing. Measured 2026-09-19: 14 crewed elephants,
         // 112 status samples, act_none on every seat, not one arrow in a whole battle. The archer stays an ordinary
-        // member of its formation and the scripted position in OnTick is what holds it on the seat.
+        // member of its formation and the position lock in OnTick is what holds it on the seat.
         ApplyCrewCombatStance(userAgent);
         userAgent.SetWatchState(Agent.WatchState.Alarmed);
         // Per-occupancy, not per-seat: the status line prints these as this rider's.
         Probe.Reset();
         _behaviourClock = new HowdahSampleClock(HowdahCrewBehaviourCurves.ReassertSeconds);
-        // The vanilla attach, ClimbingMachine.OnUseAction on a moving ship's net. The root, never this seat's own
-        // entity: the root is the one TaomHowdahMachine re-frames.
-        if (Arm == CrewCarryArm.ForceAttach) userAgent.SetForceAttachedEntity(GameEntity.Root);
+        // The attachment is what carries the archer WITH the platform. Measured on the mumakil (#1482, 2026-11-19,
+        // up to 5 m/s): attached seats stayed within 0.11 m with no rescue, while seats with the lock alone lagged
+        // up to 3 m and were rescued. It is the vanilla attach, ClimbingMachine.OnUseAction on a moving ship's net.
+        // The root, never this seat's own entity: the root is the one TaomHowdahMachine re-frames. Native keeps a
+        // raw entity pointer on the agent, so ReleaseAgent clears it.
+        userAgent.SetForceAttachedEntity(GameEntity.Root);
     }
 
     public override void OnUseStopped(Agent userAgent, bool isSuccessful, int preferenceIndex)
@@ -152,7 +147,7 @@ public class TaomHowdahStandingPoint : StandingPoint
         // Fires if the engine removes the agent from this seat outside our ReleaseAgent path.
         _logger?.LogWarning(
             $"{LogTag} OnUseStopped (UNEXPECTED): agent={userAgent?.Name} isSuccessful={isSuccessful} " +
-            $"prefIndex={preferenceIndex} teleports={Probe.Teleports}");
+            $"prefIndex={preferenceIndex} rescues={Probe.Rescues}");
         base.OnUseStopped(userAgent, isSuccessful, preferenceIndex);
     }
 
@@ -170,7 +165,7 @@ public class TaomHowdahStandingPoint : StandingPoint
         {
             _logger?.LogInfo(
                 $"{LogTag} Releasing {MovingAgent.Name}: isActive={MovingAgent.IsActive()} " +
-                $"missionEnded={missionEnded} after {Probe.Teleports} teleports");
+                $"missionEnded={missionEnded} after {Probe.Rescues} rescues");
             ReleaseAgent();
             return;
         }
@@ -181,58 +176,32 @@ public class TaomHowdahStandingPoint : StandingPoint
         // elephantAgent is propagated from TaomHowdahMachine.PropagateRefsToSeats on its first tick.
         if (elephantAgent == null) return;
 
-        // Directly place agent at the seat entity's current world position every frame.
-        // TeleportToPosition calls MBAPI.IMBAgent.SetPosition with the Vec3 as-is (no navmesh
-        // Z-snap), so the elevated seat Z (~3.2m above elephant) is preserved.
-        // This counteracts the navmesh gravity that snapped agents to terrain Z on spawn.
-        // ADOD_Beasts uses the equivalent pattern via a NativeHook SetPosition each tick.
-        // Only when it has actually drifted: see ElephantConfig.HowdahSeatDeadbandMetres. A resting archer sits about
-        // 0.10 m off its frame, and correcting that every frame is indistinguishable from being thrown around.
         Vec3 seatPosition3 = GameEntity.GlobalPosition;
-        // Both consumers below hand this straight to native (TeleportToPosition, SetScriptedPosition). It comes from
-        // the elephant's own position through GameEntity.SetFrame, so nothing on the path validates it.
+        // Every consumer below hands this straight to native. It comes from the elephant's own position through
+        // GameEntity.SetFrame, so nothing on the path validates it.
         if (!HowdahSeatMotion.IsPlaceable(seatPosition3.x, seatPosition3.y, seatPosition3.z)) return;
         Vec3 riderPosition = MovingAgent.Position;
         float seenSquared = (seatPosition3 - riderPosition).LengthSquared;
-        // Whether the machine was re-framed before this seat ticked. If not, seatPosition3 is last frame's, and the
-        // band below is tested against a seat one frame of travel behind the elephant (#1482).
-        // Counted only while the status line is on, so a period's numbers cover that period and nothing older.
-        if (Machine != null && Machine.Measuring)
-            Probe.NoteSeatTick((float)Math.Sqrt(seenSquared), Machine.LastTickFrameNo == Utilities.EngineFrameNo);
-        // Baseline is the shipped rule. The attach arm takes no correction, only a rescue from far off its deck, so
-        // a failed arm keeps producing numbers for the rest of the battle (#1482 measuring build).
-        if (Arm == CrewCarryArm.Baseline)
-        {
-            if (HowdahSeatMotion.ShouldCorrect(seenSquared, ElephantConfig.HowdahSeatDeadbandMetres))
-            {
-                MovingAgent.TeleportToPosition(seatPosition3);
-                Probe.NoteTeleport();
-            }
-        }
-        else if (HowdahSeatMotion.ShouldCorrect(seenSquared, CrewCarryExperiment.RescueBandMetres))
+
+        // A position LOCK holds the archer, never a correction (#1482, measured 2026-11-19). The archers WALK off
+        // their seats by themselves, elephant standing or moving: this seat's archer read 0.95 m/s on its own legs
+        // with the elephant still, the 0.15 m correction teleported it back about 16 times a second, every reload
+        // restart had a teleport inside it, and it loosed nothing. The scripted position this replaces was meant to
+        // stop that walk (#627) and did not. On the mumakil the one locked seat stayed within 0.03 m with no
+        // teleport and shot at the rate of the one archer that never walked. The lock is the engine's own hold for
+        // a standing point's user, and what ClimbingMachine sets each tick on a ship's net: a target the native
+        // movement goes to. Position only, so the archer still turns to aim, and never through Agent.UseGameObject,
+        // which would set NoAttack and silence the bow (Agent.cs:4210). SetTargetZ sets the height target and puts
+        // the native movement in the gravity-excluded mode; the howdah has no navmesh under it.
+        MovingAgent.SetTargetPosition(seatPosition3.AsVec2);
+        MovingAgent.SetTargetZ(seatPosition3.z);
+
+        // The safety net: an archer truly off its deck is placed back once, and counted.
+        if (HowdahSeatMotion.ShouldCorrect(seenSquared, HowdahSeatMotion.SeatRescueMetres))
         {
             MovingAgent.TeleportToPosition(seatPosition3);
             Probe.NoteRescue();
         }
-
-        // Tell the archer it has ARRIVED (#627, 2026-09-20). Measured with the elephant standing still: each archer's
-        // own locomotion read 3.18 m/s and its real movement 31 m/s, because its ranged behaviour walks toward a
-        // firing position it can never reach while the teleport above yanks it back about 10 cm every frame. Nothing
-        // finishes a bow draw at that speed: the draw stuck at 85 percent and re-nocked about once a second at every
-        // range, moving or stopped. Zeroing MovementInputVector did nothing, because the agent's own AI tick runs on
-        // the asynchronous thread and writes it again after ours. A scripted position is the engine's own lever, the
-        // same one Agent.UseGameObject sets for a standing point: the destination is where the archer already is, so
-        // it stops walking. DoNotRun and no NoAttack, because NoAttack is exactly what would silence the bow
-        // (Agent.cs:4210 sets it when a standing point locks its user's frame, which is why this seat does not use
-        // that path). It follows the seat every tick because the elephant moves.
-        // hasValidZ MATTERS (#627, engine review E1). The two-argument WorldPosition constructor passes
-        // hasValidZ: false, and SetScriptedPosition ends with: if (Mission.IsTeleportingAgents && the XY differs)
-        // TeleportToPosition(position.GetGroundVec3()). GetGroundVec3 on an invalid-Z position resolves Z natively to
-        // the GROUND, which would drop the archer off the howdah and into the elephant's own capsule for the whole
-        // deployment phase, the one window where the engine sets that flag. Declaring the Z valid keeps our 3.2 m and
-        // skips a native Z resolution every frame (WorldPosition.ValidateZ only calls out when State < requested).
-        var seatPosition = new WorldPosition(Mission.Current?.Scene, UIntPtr.Zero, seatPosition3, hasValidZ: true);
-        MovingAgent.SetScriptedPosition(ref seatPosition, addHumanLikeDelay: false, Agent.AIScriptedFrameFlags.DoNotRun);
 
         // Watch the upper-body action across frames: a draw that never finishes looks the same in a 5 s snapshot
         // whether it is restarting or stalling, and these two counters tell those apart. Behind the same toggle as
@@ -250,7 +219,7 @@ public class TaomHowdahStandingPoint : StandingPoint
         // upper body in a permanent draw stance — the engine's combat AI could never take channel 0 to run the
         // actual aim→release→reload cycle, so the archer "drew constantly" and never fired. The elephant.md
         // bug-4 history already proved this: let the combat AI drive the bow animation, don't override it. The
-        // archer is held in place by TeleportToPosition above; animation is the combat AI's job.
+        // archer is held in place by the position lock above; animation is the combat AI's job.
 
         if (!_firstTickLogged)
         {
@@ -297,7 +266,7 @@ public class TaomHowdahStandingPoint : StandingPoint
 
     public override void OnEndMission()
     {
-        _logger?.LogInfo($"{LogTag} OnEndMission fired — agent={MovingAgent?.Name ?? "null"} teleports={Probe.Teleports}");
+        _logger?.LogInfo($"{LogTag} OnEndMission fired — agent={MovingAgent?.Name ?? "null"} rescues={Probe.Rescues}");
         ReleaseAgent();
         base.OnEndMission();
     }
@@ -314,7 +283,14 @@ public class TaomHowdahStandingPoint : StandingPoint
         // reaches ResetGravityExclusionAndEntityAttachmentOnStopUsageComponent.OnUseStopped). This seat is not the
         // agent's used object, so nothing else would. A recycled handle is never touched: it would clear a
         // stranger's.
-        if (ownsSlot && Arm == CrewCarryArm.ForceAttach) agent.SetForceAttachedEntity(WeakGameEntity.Invalid);
+        if (ownsSlot)
+        {
+            agent.SetForceAttachedEntity(WeakGameEntity.Invalid);
+            // ClearTargetFrame drops the position lock; excluded-from-gravity false is the native inverse of
+            // SetTargetZ (set_target_z puts the movement in the gravity-excluded mode).
+            agent.ClearTargetFrame();
+            agent.SetExcludedFromGravity(exclude: false, applyAverageGlobalVelocity: false);
+        }
         if (ownsSlot && agent.IsActive())
         {
             // Drop to elephant feet level (terrain Z) so the exit sequencer can pathfind normally.
@@ -328,9 +304,6 @@ public class TaomHowdahStandingPoint : StandingPoint
                 : agent.Position;
             agent.TeleportToPosition(groundPos);
 
-            // Drop the scripted position with the seat, or the archer keeps walking at where the howdah used to be.
-            agent.DisableScriptedMovement();
-
             RestoreOrdinaryCombatStance(agent);
 
             // Vanilla's own re-attach, which clears the agent out of its detachment as well as out of the
@@ -338,7 +311,8 @@ public class TaomHowdahStandingPoint : StandingPoint
             // the archer was never detached; it exists so the release stays correct if that ever changes.
             agent.TryAttachToFormation();
         }
-        _logger?.LogInfo($"{LogTag} Released agent {agent.Name} from seat after {Probe.Teleports} teleports");
+        _logger?.LogInfo($"{LogTag} Released agent {agent.Name} from seat after {Probe.Rescues} rescues");
+        CrewSeatChecks.Report(CrewSeatChecks.HowdahHeldId, LogTag, Probe.Rescues);
         RemoveMovingAgent(agent);
     }
 }

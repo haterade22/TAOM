@@ -1,70 +1,46 @@
 namespace TAOM.Features.Elephant;
 
 /// <summary>
-/// When a howdah seat may move its archer, and how far apart two crew frames must stand (#627, 2026-09-20).
+/// When a crew seat may place its archer by teleport, and how far apart two crew frames must stand (#627, #1482).
 /// Pure: no engine types, so both rules are tested rather than trusted.
 ///
-/// Both come from the same measured fact. A seated archer settles about 0.10 m from its frame, and the seat used to
-/// teleport it back EVERY frame. The engine reads position deltas as real movement, so each archer reported 30 m/s
-/// while its elephant stood still and its own legs were stopped, and no agent in this engine finishes a bow draw at
-/// that speed: the draw stalled at 85 percent of its action and re-nocked about once a second, all battle, at every
-/// range. Leaving a resting archer alone dropped that to 0.00 m/s standing and the elephant's own 5 m/s walking, the
-/// draw completed (progress 1.00, one restart in a whole battle) and the crew finally shot.
+/// A teleport is the last resort. A seated archer settles about 0.10 m from its frame, and the first seat teleported
+/// it back EVERY frame: the engine reads position deltas as real movement, so each archer reported 30 m/s while its
+/// elephant stood still, and no bow draw finished (#627). A deadband around the settle helped a standing crew, but
+/// the archers walk off their seats by themselves, so the teleports came back several times a second and every one
+/// reset the reload (#1482). The seats now hold the archer with the engine's position lock and attachment, and
+/// <see cref="SeatRescueMetres"/> is the only distance at which one still teleports.
 ///
-/// The spacing rule is the same failure by another route: two 0.37 m body capsules closer than 0.74 m overlap, the
-/// engine shoves them apart every frame, and the seat teleports them back, which recreates exactly the velocity that
-/// stops them shooting. It is a PHYSICAL limit, not a visual one: the howdah's walls carry no collision, so a capsule
-/// may overlap the rim, but two archers may not crowd. It is what decides how many archers a platform can hold,
-/// here and on the mumakil's decks.
+/// The spacing rule: two 0.37 m body capsules closer than 0.74 m overlap, and the engine shoves them apart every
+/// frame. It is a PHYSICAL limit, not a visual one: the howdah's walls carry no collision, so a capsule may overlap
+/// the rim, but two archers may not crowd. It is what decides how many archers a platform can hold, here and on the
+/// mumakil's decks.
 /// </summary>
 internal static class HowdahSeatMotion
 {
     /// <summary>Human body capsule radius, Native/ModuleData/monsters.xml.</summary>
     public const float HumanCapsuleRadius = 0.37f;
 
-    /// <summary>
-    /// How far a seated agent may drift before its seat places it back, on a mount of scale 1.0, in metres.
-    /// Measured on the elephant: an archer settles about 0.10 m from its frame, and correcting that every frame is
-    /// what read to the engine as 30 m/s and stopped every bow draw.
-    ///
-    /// A LARGER mount needs a larger deadband, because its deck travels further between frames, so a caller on a
-    /// scaled mount multiplies this by the mount's AgentScale (see SeatDeadbandFor). Note what does NOT scale: the
-    /// 0.10 m settle itself belongs to the archer, and archers are the same size on every beast. So the scaled number
-    /// is generous for a standing mount and right for a moving one, which is the trade the elephant's smoke could
-    /// not distinguish and the mumakil's still has to.
-    ///
-    /// What DOES scale is the lever arm. The mumakil's decks sit up to 8 m behind and 14 m above its origin against
-    /// roughly 1 m and 3 m on the howdah, so for the same yaw rate a seat's world position moves several times
-    /// further per frame, and an unscaled band would fire a correction on every frame of a turn: the failure this
-    /// number exists to prevent.
-    /// </summary>
-    public const float BaseSeatDeadbandMetres = 0.15f;
-
-    /// <summary>The deadband for a mount of this scale. A non-finite or non-positive scale falls back to 1.0x.</summary>
-    public static float SeatDeadbandFor(float agentScale) =>
-        float.IsNaN(agentScale) || float.IsInfinity(agentScale) || agentScale <= 0f
-            ? BaseSeatDeadbandMetres
-            : BaseSeatDeadbandMetres * agentScale;
-
     /// <summary>The closest two crew frames may stand without their occupants shoving each other.</summary>
     public const float MinimumFrameSeparation = 2f * HumanCapsuleRadius;
 
     /// <summary>
-    /// True when the archer has drifted far enough that the seat should place it back on its frame. A non-finite
-    /// distance (a native position that came back NaN) answers FALSE: never teleport an agent to a position we
-    /// cannot reason about, and never let a NaN slip through a bare greater-than (`.claude/rules/csharp-architecture.md`).
+    /// True when the archer is further than the band from its seat, so the seat should place it back on its frame. A
+    /// non-finite distance (a native position that came back NaN) answers FALSE: never teleport an agent to a
+    /// position we cannot reason about, and never let a NaN slip through a bare greater-than
+    /// (`.claude/rules/csharp-architecture.md`).
     /// </summary>
-    public static bool ShouldCorrect(float distanceSquared, float deadbandMetres)
+    public static bool ShouldCorrect(float distanceSquared, float bandMetres)
     {
         if (float.IsNaN(distanceSquared) || float.IsInfinity(distanceSquared)) return false;
-        if (float.IsNaN(deadbandMetres) || float.IsInfinity(deadbandMetres) || deadbandMetres < 0f) return false;
-        return distanceSquared > deadbandMetres * deadbandMetres;
+        if (float.IsNaN(bandMetres) || float.IsInfinity(bandMetres) || bandMetres < 0f) return false;
+        return distanceSquared > bandMetres * bandMetres;
     }
 
     /// <summary>
     /// True when a seat position is a number the engine can be handed. The seat frame comes from the elephant's own
-    /// position through GameEntity.SetFrame, so it is engine-sourced and validated by nobody: both consumers (the
-    /// teleport and the scripted position) pass it straight to native. NaN in either would be a native write we
+    /// position through GameEntity.SetFrame, so it is engine-sourced and validated by nobody: its consumers (the
+    /// position lock and the rescue teleport) pass it straight to native. NaN there would be a native write we
     /// cannot reason about (`.claude/rules/csharp-architecture.md`, the engine-float gate).
     /// </summary>
     public static bool IsPlaceable(float x, float y, float z) =>
@@ -103,30 +79,11 @@ internal static class HowdahSeatMotion
     public static bool FramesAreClear(float separationMetres) =>
         !float.IsNaN(separationMetres) && separationMetres >= MinimumFrameSeparation;
 
-    /// <summary>The gap a managed carry ignores, in metres. Below it the archer counts as where its offset is.</summary>
-    public const float CarryToleranceMetres = 0.02f;
-
     /// <summary>
-    /// What a managed carry does with the gap between an archer and the world position of its platform-local offset
-    /// (#1482). The offset is absolute, so an archer the engine already moved with the platform shows no gap and is
-    /// left alone; nothing is ever added twice. A gap on a platform that did not move is the archer's own settle
-    /// (0.10 m, #627), and the offset follows the archer: placing it back every frame is what read as 30 m/s.
-    /// A non-finite input answers Leave, the engine-float gate.
+    /// How far from its seat an archer may be before the seat places it back by teleport, in metres (#1482). On
+    /// 2026-11-19 a locked and attached archer stayed within 0.11 m of its seat on a mumakil at up to 5 m/s, so this
+    /// fires only for an archer that is truly off its deck. Every placement is a full native movement reset that
+    /// can abort a reload, which is why it is a last resort and is counted (the status line's rs field).
     /// </summary>
-    public static CarryAction DecideCarry(float gapSquared, bool platformMoved, float toleranceMetres)
-    {
-        if (!ShouldCorrect(gapSquared, toleranceMetres)) return CarryAction.Leave;
-        return platformMoved ? CarryAction.Place : CarryAction.AdoptOffset;
-    }
-}
-
-/// <summary>The three answers of <see cref="HowdahSeatMotion.DecideCarry"/>.</summary>
-internal enum CarryAction
-{
-    /// <summary>The archer is where its offset is, or the numbers cannot be trusted.</summary>
-    Leave,
-    /// <summary>The platform moved from under the archer: put it at its offset.</summary>
-    Place,
-    /// <summary>The archer moved on a still platform: keep where it now stands as its offset.</summary>
-    AdoptOffset,
+    public const float SeatRescueMetres = 3f;
 }
