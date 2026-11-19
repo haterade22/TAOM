@@ -84,6 +84,26 @@ public class SpecialResourceMessagesTests
     }
 
     [TestMethod]
+    public void RecruitClamped_AnyCount_BindsTheCountAsASlot()
+    {
+        var message = SpecialResourceMessages.RecruitClamped(2);
+
+        Assert.AreEqual("{=taom_res_recruit_clamped}Only enough resources for {COUNT} recruit(s).", message.Value);
+        AssertNoBakedNumber(message);
+        Assert.AreEqual(2, message.Attributes["COUNT"]);
+    }
+
+    [TestMethod]
+    public void RecruitNeedsResource_AmountAndName_ReusesTheVolunteerGateKey()
+    {
+        var message = SpecialResourceMessages.RecruitNeedsResource(50, "War Spoils");
+
+        Assert.AreEqual("{=taom_recruit_needs_resource}Requires {AMOUNT} {RESOURCE}", message.Value);
+        Assert.AreEqual(50, message.Attributes["AMOUNT"]);
+        Assert.AreEqual("War Spoils", message.Attributes["RESOURCE"]);
+    }
+
+    [TestMethod]
     public void FormatAmount_TrimsTrailingZerosAndKeepsTwoDecimals()
     {
         Assert.AreEqual("3", SpecialResourceMessages.FormatAmount(3f));

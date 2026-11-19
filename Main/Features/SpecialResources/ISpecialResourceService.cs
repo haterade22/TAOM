@@ -28,8 +28,8 @@ public interface ISpecialResourceService
     /// Deducts the one-time recruit cost (<c>recruit_cost</c>) for <paramref name="troopId"/> ×
     /// <paramref name="count"/> from the player's resolved resource and returns the amount charged
     /// (0 when the troop has no recruit cost or the hero's kingdom/culture maps to no resource), so
-    /// the caller can tell the player. Charged from <c>OnUnitRecruitedEvent</c> (player-only) for the
-    /// elephant/spider volunteers; the RecruitmentVM gate guarantees affordability before this fires.
+    /// the caller can tell the player. Charged from <c>OnUnitRecruitedEvent</c> (player-only) for volunteers
+    /// and party-screen prisoners; the RecruitmentVM gate and the Patch26 prisoner clamp (#563) check affordability first.
     /// </summary>
     float ChargeRecruitCost(string heroId, string? kingdomId, string? cultureId, string troopId, int count);
 
@@ -40,6 +40,16 @@ public interface ISpecialResourceService
     /// or the hero maps to no resource. Used by the RecruitmentVM Done-button gate.
     /// </summary>
     RecruitGateResult CanAffordRecruit(string heroId, string? kingdomId, string? cultureId, IReadOnlyList<RecruitCartEntry> cart);
+
+    /// <summary>
+    /// How many of <paramref name="requestedCount"/> prisoners of <paramref name="troopId"/> the hero can
+    /// recruit in the open party screen (#563): the balance less the upgrade spend queued in this screen
+    /// and the <c>recruit_cost</c> of <paramref name="recruitedThisSession"/>, the prisoners already
+    /// recruited here, which the engine charges at Done. Returns <paramref name="requestedCount"/> when the
+    /// troop has no recruit cost or the hero maps to no resource, and 0 when not even one is affordable.
+    /// Never writes the balance.
+    /// </summary>
+    int ClampRecruitCount(string heroId, string? kingdomId, string? cultureId, string troopId, int requestedCount, IReadOnlyList<RecruitCartEntry> recruitedThisSession);
 
     /// <summary>
     /// True if the hero can afford the troop's <c>EmissaryPrice × count</c> of <paramref name="troopId"/> from the

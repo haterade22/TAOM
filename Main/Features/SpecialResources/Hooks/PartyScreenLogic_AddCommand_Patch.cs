@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
@@ -28,6 +29,7 @@ public static class PartyScreenLogic_AddCommand_Patch
     public static bool Prefix(PartyScreenLogic __instance, ref PartyScreenLogic.PartyCommand command)
     {
         if (_hook == null) return true;
+        if (command.Code == PartyScreenLogic.PartyCommandCode.RecruitTroop) return GateRecruit(__instance, ref command);
         if (command.Code != PartyScreenLogic.PartyCommandCode.UpgradeTroop) return true;
 
         _behavior?.AttachToPartyScreen(__instance);
@@ -64,6 +66,49 @@ public static class PartyScreenLogic_AddCommand_Patch
         }
 
         return true;
+    }
+
+    // #563: outside co-op a prisoner recruited here is charged its recruit_cost at Done (OnUnitRecruited, once per
+    // unit), so the command is clamped to the balance after queued upgrades and this screen's earlier recruits; in a
+    // live co-op session the hook returns the full count. Returning false skips only RecruitPrisoner (no change).
+    private static bool GateRecruit(PartyScreenLogic logic, ref PartyScreenLogic.PartyCommand command)
+    {
+        var hero = Hero.MainHero;
+        var troopId = command.Character?.StringId;
+        if (hero?.StringId == null || troopId == null || command.TotalNumber <= 0) return true;
+
+        var kingdomId = hero.Clan?.Kingdom?.StringId;
+        var cultureId = hero.Culture?.StringId;
+        var clamped = _hook.ClampRecruitCount(hero.StringId, kingdomId, cultureId, troopId, command.TotalNumber, RecruitedThisScreen(logic));
+        if (clamped >= command.TotalNumber) return true;
+
+        if (clamped <= 0)
+        {
+            _logger?.LogDebug($"[SpecRes] Patch26-AddCmd: BLOCKED recruit {troopId} x{command.TotalNumber} (insufficient resources)");
+            InformationManager.DisplayMessage(new InformationMessage(
+                SpecialResourceMessages.RecruitNeedsResource(_hook.GetRecruitCost(troopId), _hook.GetResourceDisplayName(kingdomId, cultureId)).ToString(),
+                Colors.Yellow));
+            return false;
+        }
+
+        _logger?.LogDebug($"[SpecRes] Patch26-AddCmd: CLAMPED recruit {troopId} {command.TotalNumber}→{clamped}");
+        SetTotalNumber(ref command, clamped);
+        InformationManager.DisplayMessage(new InformationMessage(
+            SpecialResourceMessages.RecruitClamped(clamped).ToString(), Colors.Yellow));
+        return true;
+    }
+
+    // The prisoners recruited earlier in this screen; the engine empties the list at Done and on Reset.
+    private static List<RecruitCartEntry> RecruitedThisScreen(PartyScreenLogic logic)
+    {
+        var history = logic?.CurrentData?.RecruitedPrisonersHistory;
+        var entries = new List<RecruitCartEntry>(history?.Count ?? 0);
+        if (history == null) return entries;
+        foreach (var item in history)
+        {
+            if (item?.Item1 != null) entries.Add(new RecruitCartEntry(item.Item1.StringId, item.Item2));
+        }
+        return entries;
     }
 
     private static void SetTotalNumber(ref PartyScreenLogic.PartyCommand command, int value)
