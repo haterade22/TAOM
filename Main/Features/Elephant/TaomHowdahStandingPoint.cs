@@ -12,8 +12,9 @@ namespace TAOM.Features.Elephant;
 /// Seats one archer on the elephant's back and keeps it there.
 ///
 /// TWO mechanisms, and the second is the one that makes the archer usable. Position: the seat holds the archer with
-/// the engine's position lock (Agent.SetTargetPosition and SetTargetZ every tick) and attaches it to the platform
-/// (Agent.SetForceAttachedEntity), which is what vanilla ClimbingMachine sets on a man on a moving ship's net (#1482).
+/// the engine's position lock (Agent.SetTargetPosition every tick) and attaches it to the platform
+/// (Agent.SetForceAttachedEntity) (#1482). Never Agent.SetTargetZ: it puts the archer in the NoPhysics movement mode,
+/// and the archers measured in that mode loosed no arrow.
 /// The archer's ranged behaviour walks it off the seat toward a firing position it can never reach, and neither a
 /// scripted position at the seat nor a correction by teleport stopped that: a teleport is a full native movement
 /// reset, and every reload restart measured on 2026-11-19 had one inside it. One teleport remains, for an archer more
@@ -136,7 +137,7 @@ public class TaomHowdahStandingPoint : StandingPoint
         _behaviourClock = new HowdahSampleClock(HowdahCrewBehaviourCurves.ReassertSeconds);
         // The attachment is what carries the archer WITH the platform. Measured on the mumakil (#1482, 2026-11-19,
         // up to 5 m/s): attached seats stayed within 0.11 m with no rescue, while seats with the lock alone lagged
-        // up to 3 m and were rescued. It is the vanilla attach, ClimbingMachine.OnUseAction on a moving ship's net.
+        // up to 3 m and were rescued. It is the vanilla attach of ClimbingMachine.OnUseAction.
         // The root, never this seat's own entity: the root is the one TaomHowdahMachine re-frames. Native keeps a
         // raw entity pointer on the agent, so ReleaseAgent clears it.
         userAgent.SetForceAttachedEntity(GameEntity.Root);
@@ -187,14 +188,14 @@ public class TaomHowdahStandingPoint : StandingPoint
         // their seats by themselves, elephant standing or moving: this seat's archer read 0.95 m/s on its own legs
         // with the elephant still, the 0.15 m correction teleported it back about 16 times a second, every reload
         // restart had a teleport inside it, and it loosed nothing. The scripted position this replaces was meant to
-        // stop that walk (#627) and did not. On the mumakil the one locked seat stayed within 0.03 m with no
-        // teleport and shot at the rate of the one archer that never walked. The lock is the engine's own hold for
-        // a standing point's user, and what ClimbingMachine sets each tick on a ship's net: a target the native
-        // movement goes to. Position only, so the archer still turns to aim, and never through Agent.UseGameObject,
-        // which would set NoAttack and silence the bow (Agent.cs:4210). SetTargetZ sets the height target and puts
-        // the native movement in the gravity-excluded mode; the howdah has no navmesh under it.
+        // stop that walk (#627) and did not. The lock is the engine's own hold for a standing point's user: a
+        // target the native movement goes to. Position only, so the archer still turns to aim, and never through
+        // Agent.UseGameObject, which would set NoAttack and silence the bow (Agent.cs:4210).
+        //
+        // NEVER SetTargetZ here. It puts the agent in AgentMovementMode.NoPhysics, and the archers measured in that
+        // mode loosed nothing: on the mumakil, 0 arrows with it against 43 to 47 without it at the same hold (see
+        // TaomMumakilStandingPoint.OnTick). The howdah's floor body has to hold the height.
         MovingAgent.SetTargetPosition(seatPosition3.AsVec2);
-        MovingAgent.SetTargetZ(seatPosition3.z);
 
         // The safety net: an archer truly off its deck is placed back once, and counted.
         if (HowdahSeatMotion.ShouldCorrect(seenSquared, HowdahSeatMotion.SeatRescueMetres))
@@ -282,14 +283,11 @@ public class TaomHowdahStandingPoint : StandingPoint
         // entity pointer on the agent, and vanilla clears it at death (Agent.OnRemove stops the object use, which
         // reaches ResetGravityExclusionAndEntityAttachmentOnStopUsageComponent.OnUseStopped). This seat is not the
         // agent's used object, so nothing else would. A recycled handle is never touched: it would clear a
-        // stranger's.
+        // stranger's. ClearTargetFrame drops the position lock.
         if (ownsSlot)
         {
             agent.SetForceAttachedEntity(WeakGameEntity.Invalid);
-            // ClearTargetFrame drops the position lock; excluded-from-gravity false is the native inverse of
-            // SetTargetZ (set_target_z puts the movement in the gravity-excluded mode).
             agent.ClearTargetFrame();
-            agent.SetExcludedFromGravity(exclude: false, applyAverageGlobalVelocity: false);
         }
         if (ownsSlot && agent.IsActive())
         {
@@ -312,7 +310,8 @@ public class TaomHowdahStandingPoint : StandingPoint
             agent.TryAttachToFormation();
         }
         _logger?.LogInfo($"{LogTag} Released agent {agent.Name} from seat after {Probe.Rescues} rescues");
-        CrewSeatChecks.Report(CrewSeatChecks.HowdahHeldId, LogTag, Probe.Rescues);
+        CrewSeatChecks.Report(CrewSeatChecks.HowdahHeldId, CrewSeatChecks.HowdahShotId, LogTag, Probe.Rescues,
+            (agent.Origin as HowdahCrewAgentOrigin)?.ShotsFired ?? -1);
         RemoveMovingAgent(agent);
     }
 }

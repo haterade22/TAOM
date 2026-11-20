@@ -112,10 +112,9 @@ public class HowdahSeatReleaseTests
     public void WhatASeatSetsOnItsArcher_ItsReleaseClears()
     {
         // The seats hold an archer with native state that no vanilla path clears for them (#1482). The attachment is
-        // a raw entity pointer on the agent, the position lock keeps pulling a released archer back to where the
-        // seat was, and SetTargetZ leaves it excluded from gravity. Vanilla clears all three when an agent stops
-        // USING an object, and a crew archer never uses its seat (it is a MovingAgent only), so each seat's
-        // ReleaseAgent is the only place that can.
+        // a raw entity pointer on the agent, and the position lock keeps pulling a released archer back to where
+        // the seat was. Vanilla clears both when an agent stops USING an object, and a crew archer never uses its
+        // seat (it is a MovingAgent only), so each seat's ReleaseAgent is the only place that can.
         if (!_gameLoaded)
             Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
 
@@ -135,10 +134,43 @@ public class HowdahSeatReleaseTests
             CollectionAssert.Contains(sets, "SetForceAttachedEntity", $"{seat.Name} no longer attaches its archer: " +
                 "the lock alone lagged up to 3 m behind a mumakil at speed (2026-11-19)");
             CollectionAssert.Contains(sets, "SetTargetPosition", $"{seat.Name} no longer locks its archer's position");
-            CollectionAssert.Contains(sets, "SetTargetZ", $"{seat.Name} no longer holds its archer's height");
             CollectionAssert.Contains(clears, "SetForceAttachedEntity", $"{seat.Name} must detach on release");
             CollectionAssert.Contains(clears, "ClearTargetFrame", $"{seat.Name} must drop the position lock on release");
-            CollectionAssert.Contains(clears, "SetExcludedFromGravity", $"{seat.Name} must undo SetTargetZ on release");
+        }
+    }
+
+    [TestMethod]
+    public void NoSeat_PutsItsArcherInTheNoPhysicsMovementMode()
+    {
+        // Agent.SetTargetZ and SetExcludedFromGravity(true) put the agent in AgentMovementMode.NoPhysics, the mode
+        // of a man on a climbing net, and the archers measured in that mode loosed no arrow. Measured 2026-11-19 on one
+        // mumakil over three minutes: two seats that called SetTargetZ read NoPhysics and loosed 0 arrows, while
+        // three seats with the same attachment and position lock, and no SetTargetZ, read Land and loosed 43 to 47
+        // each (#1482). The floor under the seat holds the height. The engine code that stops the shot is not read,
+        // and SetExcludedFromGravity(true) alone was not measured: it writes the same mode, so it is banned too. The
+        // platform classes and nested types are scanned as well, since they hold the same archers.
+        if (!_gameLoaded)
+            Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
+
+        Type[] holders =
+        {
+            typeof(TaomHowdahStandingPoint), typeof(TaomHowdahMachine),
+            typeof(TAOM.Features.Mumakil.TaomMumakilStandingPoint), typeof(TAOM.Features.Mumakil.TaomMumakilPlatform),
+        };
+        const BindingFlags Declared = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance
+            | BindingFlags.Static | BindingFlags.DeclaredOnly;
+        foreach (Type seat in holders.Concat(holders.SelectMany(t => t.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic))))
+        {
+            foreach (MethodInfo method in seat.GetMethods(Declared))
+            {
+                if (method.GetMethodBody() == null) continue;
+                List<string> calls = CalleeNames(method);
+                CollectionAssert.DoesNotContain(calls, "SetTargetZ",
+                    $"{seat.Name}.{method.Name} calls SetTargetZ: the archer stops shooting (NoPhysics mode)");
+                CollectionAssert.DoesNotContain(calls, "SetExcludedFromGravity",
+                    $"{seat.Name}.{method.Name} calls SetExcludedFromGravity: with true it writes the NoPhysics mode, and " +
+                    "with false it is the reset of a mode this seat must never set");
+            }
         }
     }
 

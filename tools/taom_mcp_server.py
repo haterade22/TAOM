@@ -56,7 +56,7 @@ def _build_query() -> tq.ModuleDataQuery:
         # The build's read cache holds every ModuleData file (about 200 MB) and nothing reads it again.
         # Clearing it also means a rebuild in this process reads the files as they are now.
         ts._read_stripped.cache_clear()
-        return tq.ModuleDataQuery(MODULEDATA, registries, schemas)
+        return tq.ModuleDataQuery(MODULEDATA, registries, schemas, game_modules=GAME_MODULES)
     except Exception as exc:  # noqa: BLE001 - startup diagnostic then re-raise
         print(f"[taom-moduledata] failed to initialize: {exc!r}\n"
               f"  SCHEMA_DIR={SCHEMA_DIR}\n  MODULEDATA={MODULEDATA}\n"
@@ -75,7 +75,10 @@ def validate_moduledata(codes: list[str] | None = None) -> dict:
     """Validate all TAOM ModuleData XML against the schemas. Returns
     {error_count, warning_count, issues:[{severity, code, file, line, entry_id,
     message}]}. Optional `codes` filters to specific issue codes (e.g.
-    ["BROKEN_ITEM_REF","UNKNOWN_CULTURE"])."""
+    ["BROKEN_ITEM_REF","UNKNOWN_CULTURE"]). It runs every pass the CLI runs. No game
+    install, a live module's missing ModuleData or a registry that looks too small
+    comes back as a PARTIAL_RUN WARNING; a narrower skip (no LOTRLOME_Armory for the
+    armour class table, a module that ships no .tpac) goes to the server's stderr only."""
     return _query.validate(codes)
 
 

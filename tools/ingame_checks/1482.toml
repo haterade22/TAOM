@@ -1,16 +1,22 @@
 # In-game checks for #1482 (mumakil and elephant crews stay on their seats and shoot), read by tools/ingame_verdict.py.
 # Written by TaomMumakilStandingPoint and TaomHowdahStandingPoint (CrewSeatChecks.Report) when an archer leaves its
-# seat: the battle ends, the beast dies or the archer dies. A seat holds its archer with the engine's position lock and
-# attachment. It passes when it needed no rescue teleport, and fails when it needed one or more: a rescue fires only
-# for an archer more than 3 m from its seat (HowdahSeatMotion.SeatRescueMetres), which is an archer off its deck.
+# seat: the battle ends, the beast dies or the archer dies. Two facts for each beast, because the first fix proved the
+# first and broke the second:
+#   held: the seat holds its archer with the engine's position lock and attachment. It passes when it needed no rescue
+#         teleport, and fails when it needed one or more (a rescue fires only for an archer more than 3 m from its
+#         seat, HowdahSeatMotion.SeatRescueMetres).
+#   shot: the archer loosed one arrow or more (counted from the engine's missile callback). A seat with no shot writes
+#         a skip, never a fail: an archer with no enemy in range has none either. So "shot" passes when one seat or more
+#         shot, and it stays NOT REACHED when none did: read the status line then. One seat that shoots passes the
+#         check for its beast, so a beast with some silent seats still passes: the status line shows each seat.
 # One check for each beast, because the howdah has no navmesh under it and a mumakil battle proves nothing about it.
 # The outcome log writes one line per seat tag and result in a game process, so a second battle in the same process
 # adds a line only for a seat that changes its result.
 # With Log Crew Platform Diagnostics on, the [Mumakil#n] status and [Howdah#n] status lines give the detail per seat:
-# rs (rescues), re (reload restarts), lag (metres ahead of or behind the seat) and parentRoot (1 while attached).
+# shots, mode (the archers measured in NoPhysics loosed nothing), rs (rescues), lag and parentRoot (1 while attached).
 issue = 1482
 title = "Mumakil and elephant crews trail their seats while the beast moves"
-fixed_in = "b99d468a4"   # trunk before the fix: the manifest ships with the emitter
+fixed_in = "d5d674663"   # the shot fix: the build before it passes the held checks with SetTargetZ and proves nothing
 logs = ["taom"]
 
 [[check]]
@@ -22,6 +28,13 @@ fail = ['\[Check\] id=taom\.crew-seats\.mumakil-held result=fail ']
 absence = "not-reached"
 
 [[check]]
+id = "taom.crew-seats.mumakil-shot"
+needs = "a battle in which a crewed mumakil has enemies in bow range for a minute, played until its crew leave their seats"
+reached = ['\[Check\] id=taom\.crew-seats\.mumakil-shot result=(pass|skip) ']
+pass = ['\[Check\] id=taom\.crew-seats\.mumakil-shot result=pass seat=\S+ shots=[1-9][0-9]*$']
+absence = "not-reached"
+
+[[check]]
 id = "taom.crew-seats.howdah-held"
 needs = "a battle with a howdah elephant, played until its crew leave their seats (the battle ends or the beast dies)"
 reached = ['\[Check\] id=taom\.crew-seats\.howdah-held result=(pass|fail) ']
@@ -29,11 +42,18 @@ pass = ['\[Check\] id=taom\.crew-seats\.howdah-held result=pass seat=\S+ rescues
 fail = ['\[Check\] id=taom\.crew-seats\.howdah-held result=fail ']
 absence = "not-reached"
 
+[[check]]
+id = "taom.crew-seats.howdah-shot"
+needs = "a battle in which a howdah elephant has enemies in bow range for a minute, played until its crew leave their seats"
+reached = ['\[Check\] id=taom\.crew-seats\.howdah-shot result=(pass|skip) ']
+pass = ['\[Check\] id=taom\.crew-seats\.howdah-shot result=pass seat=\S+ shots=[1-9][0-9]*$']
+absence = "not-reached"
+
 [[human]]
 claim = "On a mumakil that walks, turns hard and charges, the eight archers stay on their decks and loose arrows"
 
 [[human]]
-claim = "On a howdah elephant that walks, turns hard and charges, the two archers stay in the howdah and loose arrows"
+claim = "On a howdah elephant that walks, turns hard and charges, the two archers stay in the howdah, do not sink through its floor, and loose arrows"
 
 [[human]]
 claim = "When the beast dies or the battle ends, the archers come down to the ground and move as ordinary troops"

@@ -237,9 +237,9 @@ centimetre in x and y, and fell straight to the ground, 25,000 teleports a battl
 the engine for how vanilla does it turns up exactly two classes, `SiegeTower` and `MissionShip`, and **neither
 moves an agent at all**. Both import a navmesh prefab and attach its faces to their own entity so the walkable
 surface travels with them. That is the mechanism; ours was a hack that happened to survive at low altitude.
-Since 2026-11-19 the seat also sets a height target (`SetTargetZ`, which puts the native movement in the
-gravity-excluded mode). The navmesh and the floors stay: no battle has measured the lock without them at this
-height, so which of them holds the height here is not separated.
+The seat sets no height target: `SetTargetZ` would put the archer in the NoPhysics movement mode, where it never
+looses (see "How the crew are held"). The floors and the navmesh hold the height: every seat read `dz` 0.00 at up
+to 5 m/s on 2026-11-19.
 
 **2. Physics as well as navmesh.** Stripping the floor slabs while keeping the navmesh dropped every archer to
 the ground again. Navmesh makes a position VALID to stand at; a physics body is what an agent stands ON. A
@@ -285,37 +285,70 @@ Not proven to the level of a decompiled clear-shot check, but three for three wi
 
 ### How the crew are held (#1482, 2026-11-19)
 
-Each seat holds its archer with two engine mechanisms, the pair vanilla `ClimbingMachine` uses for a man on a
-moving ship's net:
+Each seat holds its archer with two engine mechanisms:
 
-- `Agent.SetTargetPosition` and `Agent.SetTargetZ` every tick: a position lock that the native movement goes to.
-  Position only, so the archer still turns to aim. Vanilla uses the frame lock there
-  (`SetTargetPositionAndDirection`), which also fixes the facing.
-- `Agent.SetForceAttachedEntity(platform root)` once at `OnUse`: the platform becomes the agent's parent entity.
+- `Agent.SetForceAttachedEntity(platform root)` once at `OnUse`: the platform becomes the agent's parent entity,
+  and the engine carries the archer with the beast.
+- `Agent.SetTargetPosition` every tick: a position lock that the native movement goes to. Position only, so the
+  archer still turns to aim.
+
+**Never `Agent.SetTargetZ`, and never `SetExcludedFromGravity(true)`.** Either writes
+`AgentMovementMode.NoPhysics`, the mode of a man on a climbing net. With `SetTargetZ` two archers read `NoPhysics`
+and loosed 0 arrows in three minutes with enemies in range, while their neighbours without it loosed 43 to 47
+each. The engine code that stops the shot is not read, and `SetExcludedFromGravity(true)` alone was not measured.
+The first version of this fix (`f8265b6dc`, on trunk on 2026-11-19) copied the whole hold of vanilla
+`ClimbingMachine`, `SetTargetZ` included: every archer stayed on its seat and none shot. The deck's floor holds
+the height. `HowdahSeatReleaseTests.NoSeat_PutsItsArcherInTheNoPhysicsMovementMode` gates it.
 
 The seat sets no scripted position and does not correct by teleport. One teleport remains, the rescue, for an
-archer more than 3 m from its seat (`HowdahSeatMotion.SeatRescueMetres`); the status line counts it as `rs`, and
-each seat writes a `[Check]` line when its archer leaves (`taom.crew-seats.mumakil-held` here,
-`taom.crew-seats.howdah-held` on the elephant; pass with no rescue, `tools/ingame_checks/1482.toml`). On release the seat clears all three native states
-(`SetForceAttachedEntity(Invalid)`, `ClearTargetFrame`, `SetExcludedFromGravity(false)`), for a dead archer too:
-the attachment is a raw entity pointer on the agent, and vanilla clears it only for an agent that USED the
-object, which a crew archer never does. `HowdahSeatReleaseTests.WhatASeatSetsOnItsArcher_ItsReleaseClears` gates
-it for both seat classes.
+archer more than 3 m from its seat (`HowdahSeatMotion.SeatRescueMetres`); the status line counts it as `rs`. On
+release the seat clears both native states (`SetForceAttachedEntity(Invalid)`, `ClearTargetFrame`), for a dead
+archer too: the attachment is a raw entity pointer on the agent, and vanilla clears it only for an agent that
+USED the object, which a crew archer never does. `HowdahSeatReleaseTests.WhatASeatSetsOnItsArcher_ItsReleaseClears`
+gates it for both seat classes.
 
-What two battles at 1x speed measured on 2026-11-19, with a different hold on each seat of the same beast:
+Each seat writes two `[Check]` lines when its archer leaves (`tools/ingame_checks/1482.toml`): held, a pass with
+no rescue (`taom.crew-seats.mumakil-held`, `howdah-held` on the elephant), and shot, a pass with one arrow or more
+loosed (`taom.crew-seats.mumakil-shot`, `howdah-shot`).
 
-| Hold | Result |
-|---|---|
-| Teleport past 0.74 m, with a scripted position at the seat (the design until then) | The archers WALK off their seats by themselves, beast standing or moving. About 12 teleports per seat per 5 s, a teleport inside every reload restart, no shots |
-| No correction | The archer walked 3 m off its deck |
-| Attachment alone | The parent entity was set (`parentRoot=1`) and the archer still walked |
-| The archer placed from managed code every tick | 200 to 360 teleports per 5 s, no shots |
-| Lock alone | Within 0.03 m on a standing beast. At 3 to 5 m/s the archer lagged up to 3 m behind its seat and was rescued |
-| Lock and attachment | Within 0.11 m at up to 5 m/s, no rescue, reloads all battle (three seats, beside five lock-only seats on one beast) |
+What four battles at 1x speed measured on 2026-11-19, with a different hold on each seat of the same beast. A
+shot is one call of the engine's missile callback for that archer, counted over three minutes with enemies in
+range. The first three battles had no shot count, so their rows say "not counted".
+
+| Hold | Position | Shots |
+|---|---|---|
+| Teleport past 0.74 m with a scripted position (the design until then), main deck | The archer WALKS off its seat by itself, beast standing or moving: about 12 teleports per 5 s | With the attachment added: 448 teleports, 0 shots |
+| The same design in the crow's nest | Never teleported, within 0.13 m | 48 |
+| No correction | Walked 3 m off its deck | not counted |
+| Attachment alone | The parent entity was set (`parentRoot=1`) and the archer still walked | not counted |
+| The archer placed from managed code every tick | 200 to 360 teleports per 5 s | not counted |
+| Lock alone | Within 0.03 m on a standing beast; up to 3 m behind its seat at 3 to 5 m/s, rescued | not counted |
+| Lock, attachment and `SetTargetZ` (the first fix) | Within 0.12 m at up to 5 m/s, no rescue | 0 on both seats, `mode=NoPhysics` |
+| Lock and attachment (the shipped hold) | Within 0.12 m at up to 5 m/s, no rescue | 43, 44 and 47, `mode=Land` |
+| Lock, attachment and a scripted position | The same | 48: the scripted position adds nothing |
 
 The measurement also ruled out two suspects: the beast's motion (the walk happens on a standing beast) and the
 tick order of platform and seat (the platform ticked first on every sampled frame). Moving the platform with
 `isTeleportation: false`, as the vanilla siege tower does (through `SetGlobalFrame`), changed nothing.
+
+**The shipped hold on all eight seats (2026-11-19, trunk `66b6e4f17`).** Three unattended Fords of War matches,
+Gondor against Harad with an AI on each side, had one mumakil each. Every archer read `mode=Land` in every
+sample, and no seat made a rescue teleport.
+
+| Run folder under `E:/Temp/fords-runs` | Speed | Time on the beast | Shots, `main_0` to `main_4`, `upper_0`, `upper_1`, `nest_0` | Largest distance from the seat |
+|---|---|---|---|---|
+| `20261119-202858` | 1x | 65 s, until the mumakil died | 4, 6, 5, 8, 6, 5, 6, 6 | 0.11 m at up to 6.5 m/s |
+| `20261119-204402` | 4x | about 120 mission seconds, until it died | 20, 15, 21, 23, 18, 15, 21, 21 | 1.23 m in one period |
+| `20261119-211549` (build `ad1146d55`: the same code, docs added) | 10x | about 120 mission seconds, until it died | 25, 25, 26, 28, 25, 24, 29, 26 | 0.72 m in one period |
+
+`python tools/ingame_verdict.py --issue 1482` reads these sessions as PASS on the held and the shot check. A fourth
+match with a temporary camera on the crew (`20261119-204912`, a `.dirty` build, so the verdict tool does not
+count it) gave pictures of two mumakil: the archers stand on the three decks with their bows in hand, and after
+the first mumakil died its archers fought on the ground. All sixteen seats of that match passed both checks too.
+
+The first fix was chosen from the restart counter (`re`), which rose on the locked seats and was read as archers
+that reload and shoot. It counts an aborted draw as well. Only `shots` proves shooting
+([RCA](../reviews/rca-crew-hold-no-shots-2026-11-19.md)).
 
 ### Why locomotion is pinned
 
@@ -332,13 +365,16 @@ misled. Whether the position lock still needs the speed limit is not measured: b
 ### What the log tells you
 
 `[Mumakil#n] status` (with Log Crew Platform Diagnostics on) carries the beast's `moving=` ticks and `meanV=`
-for the period and, per seat, `name:action/rs/re(rs)/max/lag/off/dz/step/parentRoot`:
+for the period and, per seat, `name:action/rs/re(rs)/max/lag/off/dz/step/parentRoot/shots/mode/tgt`:
 
 | Field | Healthy | What a bad value means |
 |---|---|---|
 | `rs` | 0 | rescues: the seat teleported an archer that was more than 3 m away. The hold failed |
-| `re(rs)` | rising, `(rs0)` | reload and draw restarts, and how many had a rescue inside them. Every shot restarts, so a rising count with `max` 1.00 is a busy archer |
-| `max` | 1.00 | 0.85 is the draw dying at the release handoff, i.e. the re-nock loop |
+| `shots` | rising while `tgt` is 1 | arrows loosed, from the engine's missile callback. The ONLY proof that an archer shoots. 0 with `tgt=1` for a minute is a silent bow |
+| `mode` | `Land` | the engine's movement mode. `NoPhysics` is what `SetTargetZ` and `SetExcludedFromGravity(true)` write; the archers measured in it loosed no arrow |
+| `tgt` | 1 in a fight | whether the engine has given the archer a target |
+| `re(rs)` | `(rs0)` | upper-body restarts, and how many had a rescue inside them. It rises for a shot AND for an aborted draw, so it never proves shooting: on 2026-11-19 it rose once a second on archers that loosed nothing |
+| `max` | 1.00 | the highest upper-body progress since the archer was seated (a lifetime maximum, so it says nothing about the last minute). 0.85 is the draw dying at the release handoff, i.e. the re-nock loop |
 | `lag a..b` | within about 0.1 | metres ahead of (+) or behind (-) the seat along the beast, the range over the period. A large negative value at speed is an archer that is not carried |
 | `off` | under about 0.1 | the largest distance from the seat in the period |
 | `dz` | 0.00 | non-zero and CONSTANT is the killer: the archer is standing on something that is not its seat |

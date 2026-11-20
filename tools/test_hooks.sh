@@ -4037,6 +4037,90 @@ VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
 [[ "$VM_OUT" != *permissionDecision* ]] && grep -q 'UNCHECKED' <<< "$VM_OUT" && grep -q 'additionalContext' <<< "$VM_OUT" \
     && ok "a validator exit 1 with no findings allows the commit and says UNCHECKED" \
     || bad "a validator exit 1 with no findings: $(printf '%s' "$VM_OUT" | head -c 200)"
+# Exit 0 (clean) answers {}: only a findings exit 1 blocks. Exit 2 (no install, no ModuleData, a usage
+# error) allows the commit but says UNCHECKED with the stderr tail, so a renamed flag cannot turn the
+# gate off without a word (#623, the maintainer's decision A). A plain exit 3 with no traceback still
+# says CRASHED (#623 asked for every exit code to be pinned).
+printf 'import sys\nsys.exit(0)\n' > "$VM_REPO/tools/generate_career_kits.py"
+printf 'import sys\nsys.exit(0)\n' > "$VM_REPO/tools/validate_moduledata.py"
+VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
+[[ "$VM_OUT" == '{}' ]] \
+    && ok "a validator exit 0 allows the commit with {}" \
+    || bad "a validator exit 0: $(printf '%s' "$VM_OUT" | head -c 200)"
+vm_says() {  # $1 the hook's answer, then ASCII needles: ok when it parses, decides nothing and its note holds each
+    "$HPY" -c '
+import json, sys
+try:
+    d = json.loads(sys.argv[1] or "{}")
+except Exception:
+    print("invalid JSON"); sys.exit()
+h = d.get("hookSpecificOutput", {}) if isinstance(d, dict) else {}
+miss = [n for n in sys.argv[2:] if n not in h.get("additionalContext", "")]
+print(h["permissionDecision"] if "permissionDecision" in h else ("missing %r" % miss if miss else "ok"))' "$@"
+}
+printf 'import sys\nsys.stderr.write("usage: unrecognized arguments: --code\\n")\nsys.exit(2)\n' > "$VM_REPO/tools/validate_moduledata.py"
+VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
+VM_SAYS=$(vm_says "$VM_OUT" 'exited 2' 'UNCHECKED' 'unrecognized arguments')
+[[ "$VM_SAYS" == ok ]] && ok "a validator exit 2 allows the commit and says UNCHECKED with its stderr" \
+    || bad "a validator exit 2: $VM_SAYS: $(printf '%s' "$VM_OUT" | head -c 200)"
+# The tail goes out as JSON: a quote, a backslash and non-ASCII must round-trip, and a byte that is not
+# UTF-8 must not turn the note into a silent {} (#623 decision A review, F2).
+cat > "$VM_REPO/tools/validate_moduledata.py" <<'STUB'
+import sys
+sys.stderr.buffer.write('C:\\a\\"q" \u00e9 \u2014 end\n'.encode("utf-8"))
+sys.exit(2)
+STUB
+VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
+VM_RT=$(printf '%s' "$VM_OUT" | "$HPY" -c '
+import json, sys
+try:
+    h = json.loads(sys.stdin.read() or "{}").get("hookSpecificOutput", {})
+except Exception:
+    print("invalid JSON"); sys.exit()
+print("ok" if "C:\\a\\\"q\" \u00e9 \u2014 end" in h.get("additionalContext", "") and "permissionDecision" not in h else "no")')
+[[ "$VM_RT" == ok ]] && ok "a validator exit 2 note carries quotes, backslashes and non-ASCII from stderr as valid JSON" \
+    || bad "a validator exit 2 with quotes in stderr: $VM_RT: $(printf '%s' "$VM_OUT" | head -c 200)"
+cat > "$VM_REPO/tools/validate_moduledata.py" <<'STUB'
+import sys
+sys.stderr.buffer.write(b"bad \x81\x8d bytes\n")
+sys.exit(2)
+STUB
+VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
+VM_SAYS=$(vm_says "$VM_OUT" 'exited 2' 'UNCHECKED')
+[[ "$VM_SAYS" == ok ]] && ok "a validator exit 2 with stderr that is not UTF-8 still says UNCHECKED" \
+    || bad "a validator exit 2 with stderr that is not UTF-8: $VM_SAYS: $(printf '%s' "$VM_OUT" | head -c 200)"
+# The no-install exit 2 opens a long stderr with its cause and ends in SKIPPED notices: the cause must
+# reach the note, not only the tail (F3).
+cat > "$VM_REPO/tools/validate_moduledata.py" <<'STUB'
+import sys
+sys.stderr.write("Loaded 3 schemas:\nWARNING: Bannerlord Modules folder not found: X:\\none\n")
+for i in range(12):
+    sys.stderr.write("WARNING: CODE_%d SKIPPED: needs the install.\n" % i)
+sys.exit(2)
+STUB
+VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
+VM_SAYS=$(vm_says "$VM_OUT" 'exited 2' 'Bannerlord Modules folder not found' 'CODE_11 SKIPPED')
+[[ "$VM_SAYS" == ok ]] && ok "a validator exit 2 from a missing install names the cause above the tail" \
+    || bad "a validator exit 2 from a missing install: $VM_SAYS: $(printf '%s' "$VM_OUT" | head -c 200)"
+# The exit 2 branch ends the hook before the kit note below it: a kit tool that cannot judge is named
+# here too (F1), and kit drift still denies, since it sets RC to 1 first.
+printf 'import sys\nsys.exit(2)\n' > "$VM_REPO/tools/validate_moduledata.py"
+printf 'raise RuntimeError("kit broke")\n' > "$VM_REPO/tools/generate_career_kits.py"
+VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
+VM_SAYS=$(vm_says "$VM_OUT" 'exited 2' 'generate_career_kits.py --verify could not judge')
+[[ "$VM_SAYS" == ok ]] && ok "a validator exit 2 with a kit tool that cannot judge names both" \
+    || bad "a validator exit 2 with a kit tool that cannot judge: $VM_SAYS: $(printf '%s' "$VM_OUT" | head -c 200)"
+printf 'import sys\nprint("kit drift")\nsys.exit(1)\n' > "$VM_REPO/tools/generate_career_kits.py"
+VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
+[[ "$(decision_of "$VM_OUT")" == deny ]] \
+    && ok "career kit drift still denies the commit when the validator exits 2" \
+    || bad "career kit drift with a validator exit 2 no longer denies: $(printf '%s' "$VM_OUT" | head -c 200)"
+printf 'import sys\nsys.exit(0)\n' > "$VM_REPO/tools/generate_career_kits.py"
+printf 'import sys\nsys.stderr.write("plain crash\\n")\nsys.exit(3)\n' > "$VM_REPO/tools/validate_moduledata.py"
+VM_OUT=$(printf '%s' "$VM_PAYLOAD" | vm_run)
+[[ "$VM_OUT" != *permissionDecision* ]] && grep -q 'CRASHED' <<< "$VM_OUT" && grep -q 'additionalContext' <<< "$VM_OUT" \
+    && ok "a validator exit 3 allows the commit and says CRASHED" \
+    || bad "a validator exit 3: $(printf '%s' "$VM_OUT" | head -c 200)"
 # The career kit tool: a crash is no drift, and it is not silent; real drift still denies.
 printf 'import sys\nsys.exit(0)\n' > "$VM_REPO/tools/validate_moduledata.py"
 for kit in 'raise RuntimeError("kit broke")' 'import sys; sys.exit(3)' 'def ('; do
