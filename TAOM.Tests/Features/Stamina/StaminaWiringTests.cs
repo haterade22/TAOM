@@ -306,4 +306,21 @@ public class StaminaWiringTests
         StringAssert.Contains(strip, "if (!runtime.Store.TryGet(agent, out var cell) || cell.AppliedPath != StaminaLockPath.PlayerInput) return;");
         Assert.IsTrue(At(strip, "cell.AppliedPath != StaminaLockPath.PlayerInput") < At(strip, "agent.MovementFlags"));
     }
+
+    [TestMethod]
+    public void AMissionWithoutStamina_KeepsNoClaimOfAnEarlierOne_AndAGateThatThrowsLeavesItOff()
+    {
+        // The engine removes behaviours in a loop with no try (Mission.cs:2219-2222): a throw in another behaviour's
+        // removal skips this one's, and with the switch off no later mission end would drop the claims. The runtime's
+        // Clear runs at every mission's first tick, so the claims go there too.
+        var ticker = Code("Main/Features/Stamina/Hooks/StaminaTicker.cs");
+        var clear = ticker.Substring(At(ticker, "public void Clear() {"));
+        StringAssert.Contains(clear.Substring(0, At(clear, "}")), "Teardown();");
+
+        var logic = Code("Main/Features/Stamina/Hooks/StaminaMissionLogic.cs");
+        var start = At(logic, "public override void OnMissionTick(");
+        var tick = logic.Substring(start, At(logic, "private bool DecideArmed()") - start);
+        Assert.IsTrue(At(tick, "try {") < At(tick, "_armed ??= DecideArmed()"), "a throw in the gate is caught, not raised on every tick");
+        Assert.IsTrue(At(tick, "catch (Exception ex) {") < At(tick, "_armed ??= false;"), "a gate that threw is not run again: that mission has no stamina");
+    }
 }

@@ -101,6 +101,9 @@ public sealed class StaminaTicker
 
     public void Clear()
     {
+        // Also at a mission's first tick: the engine removes behaviours in a loop with no try, so a throw in another
+        // behaviour's removal skips this one's Teardown, and a mission with stamina off would never drop the claims.
+        Teardown();
         _due.Clear();
         _cursor = 0;
         _owed = 0f;

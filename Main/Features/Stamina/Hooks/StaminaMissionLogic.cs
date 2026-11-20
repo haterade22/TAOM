@@ -26,14 +26,16 @@ public class StaminaMissionLogic : MissionLogic
     public override void OnMissionTick(float dt)
     {
         MissionThreadGuard.MarkMainThread();
-        if (!(_armed ??= DecideArmed()) || Mission.Mode != MissionMode.Battle)
-            return;
         try
         {
+            if (!(_armed ??= DecideArmed()) || Mission.Mode != MissionMode.Battle)
+                return;
             _runtime.Ticker.Tick(Mission.CurrentTime, dt);
         }
         catch (Exception ex)
         {
+            // A gate that throws gives this mission no stamina: left at null it would run again on every tick.
+            _armed ??= false;
             if (_errorLogged)
                 return;
             _errorLogged = true;
