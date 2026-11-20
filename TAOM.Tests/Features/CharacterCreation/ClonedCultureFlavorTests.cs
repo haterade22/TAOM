@@ -97,9 +97,8 @@ public class ClonedCultureFlavorTests
         // Dorwinion (#1062) is cloned from Dale too, and South Rhovanion from Rohan: the Northmen of
         // the plains south of Mirkwood, kin of the Eotheod, not the Rohirrim of Calenardhon. Their
         // own people and seats are forbidden. Dorwinion's wine and boats travel the River Running and
-        // the Celduin, its own river country, so those two names stay legal. Its culture blurb names
-        // the Men of Dale as old friends, so the bare word "Dale" stays legal as well.
-        ["dorwinion"] = DaleSeats().Where(w => w != "River Running" && w != "Celduin" && w != "Dale").ToArray(),
+        // the Celduin, its own river country, so those two names stay legal.
+        ["dorwinion"] = DaleSeats().Where(w => w != "River Running" && w != "Celduin").ToArray(),
         ["southrhovanion"] = RohanSeats(),
     };
 
@@ -128,9 +127,20 @@ public class ClonedCultureFlavorTests
         "Fornost", "Annúminas", "Annuminas", "Arvedui", "Evendim", "Nenuial",
     };
 
+    /// <summary>
+    /// Phrases removed from a promoted culture's text before the scan. Dorwinion's culture blurb
+    /// names the Men of Dale as old friends; any other "Dale" is still Dale's identity.
+    /// </summary>
+    private static readonly Dictionary<string, string[]> AllowedPhrases = new()
+    {
+        ["dorwinion"] = new[] { "Men of Dale" },
+    };
+
     private static void Scan(List<string> hits, string culture, string where, string value)
     {
         if (string.IsNullOrEmpty(value)) return;
+        if (AllowedPhrases.TryGetValue(culture, out var allowed))
+            foreach (var phrase in allowed) value = value.Replace(phrase, "");
         foreach (var word in ForbiddenBySource[culture].Where(value.Contains))
             hits.Add($"{where}: '{word}' in \"{Trim(value)}\"");
     }
