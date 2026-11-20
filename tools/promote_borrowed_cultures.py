@@ -704,11 +704,17 @@ TARGETS["dorwinion"] = _northman_successor(
     ],
     culture_name="Men of Dorwinion",
     culture_desc=(
-        "The Men of Dorwinion tend the vineyards on the warm slopes above the Sea of Rhûn, and their "
-        "wine goes up the Redwater and the River Running to the halls of Elves and Men far to the west. "
-        "They are vintners, boatmen and river traders, a Northman folk who would rather sell to a "
-        "stranger than fight him. Their king keeps his court at Vineholm, and every year the "
-        "Easterlings across the inland sea look harder at his rich and lightly guarded land."),
+        "Dorwinion may very well be one of the most lush and beautiful places in all of "
+        "Middle-earth. Or so the Dorwinrim say at least. 'Land of Wine' is what their realm is "
+        "officially referred to, though the mixed society of Elves and Men usually refers to it by "
+        "its Sindarin calling. Great vinyards line much of the countryside and stretch across hill "
+        "and dell alike. Bordering them in the east is the Golden Realm of the Medlókan, Easterlings "
+        "under the sway of Sauron. Great vinters and winemakers, cooks and renowned for their "
+        "cavalry, the Dorwinrim are the easternmost bulwark against the grasp of the Dark Lord. Due "
+        "to its lucrative location along the Great Rhûn Road, one of the chief trading routes in "
+        "Middle-earth, Dorwinion has grown immensely rich and powerful and has, for many centuries "
+        "now, had a close friendship with both the Avari of Neldoreth as well as the Men of Dale. "
+        "Friendships, that might be called upon sooner rather than later."),
     string_overrides=_ruler_strings("dorwinion", "Kingdom of Dorwinion", "Dorwinion", "Men of Dorwinion",
                                     "Wine-folk of Dorwinion", "Dorwinion", "Authari", "Walderada"),
     # Lombard, Burgundian, Vandal and Gepid names, the Northman tongues beside the Gothic of
@@ -1407,6 +1413,16 @@ def main():
                                            lambda m: m.group(1) + rows + m.group(2), block, flags=re.DOTALL)
                         if n != 1:
                             raise SystemExit(f"{target}: expected one <{tag}> block, found {n}")
+                # The donor's tournament lists name vanilla's Calradian templates; the realm's own are generated
+                # by generate_tournament_templates.py (#422), three sets per team size, named by culture id.
+                for size in ("one", "two", "four"):
+                    tag = f"tournament_team_templates_{size}_participant"
+                    rows = "".join(f'      <template name="NPCCharacter.taom_tournament_{target}_{size}_participant_set_v{i}" />\n'
+                                   for i in (1, 2, 3))
+                    block, n = re.subn(rf"(<{tag}>\n).*?([ \t]*</{tag}>)",
+                                       lambda m: m.group(1) + rows + m.group(2), block, flags=re.DOTALL)
+                    if n != 1:
+                        raise SystemExit(f"{target}: expected one <{tag}> block, found {n}")
                 wanderers_text, _, _ = load(MD / "taom_wanderers.xml")
                 block = list_unlisted_wanderers(
                     block, target, cloned_wanderer_ids(target, cfg, id_map, wanderers_text))
@@ -1540,6 +1556,7 @@ def main():
     print("  2. character-creation wiring (cultures.json, cc_body_properties, narrative menus, CC gear)")
     print("  3. voice row: add the culture to voice_accents/voice_accents.json and VoiceAccentMap.Default()")
     print("  4. Hall of Fire row: add the culture to hall_of_fire/hall_of_fire.json and HallOfFireMap.Default()")
+    print("  NEXT: python tools/generate_tournament_templates.py --apply   (the new culture's taom_tournament_* templates)")
     print("  Until (1), each new culture owns no settlement -> LANDLESS_CULTURE / daily-tick CTD (#374).")
     return 0
 

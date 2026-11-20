@@ -119,7 +119,7 @@ public sealed class SupplyOrderScreenVM : ViewModel
 
     // Lord sources never carry an escort (the lord's own men bring the recruits). Using the
     // effective escort for BOTH the quote and the order keeps the displayed guard fee equal to
-    // the charged one; the source module quoted CurrentEscort but charged None for lords.
+    // the charged one.
     private SupplyEscortOption EffectiveEscort =>
         _selectedSource != null && _selectedSource.IsLord ? SupplyEscortOption.None : CurrentEscort;
 
@@ -558,7 +558,7 @@ public sealed class SupplyOrderScreenVM : ViewModel
         }
 
         // The screen stays up so the player can adjust the order; the service's reason renders
-        // inline above the footer (the source module closed silently on some failure paths).
+        // inline above the footer.
         ErrorText = string.IsNullOrEmpty(failReason)
             ? new TextObject("{=taom_sl_order_failed}The order could not be placed.").ToString()
             : failReason;

@@ -411,6 +411,35 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "{=taom_war_pledge_mcm_enabled_hint}When on, a Neutral realm can join the War of the Ring for good. In Full War, the side that is far behind on the war meter (25 points or more) calls on a Neutral realm that leans its way: Khand, Rhudaur, Umbar, Shaghana and Abanissa lean to the Shadow, Cardolan and Dorwinion to the Free Peoples. The realm then goes to war with every realm of the other side, and that war cannot end in peace while the War of the Ring lasts. One realm joins at a time, 30 days apart unless war_pledge.json says otherwise, and never a realm that a player rules. Needs Momentum Tracking on. Off stops new joins by the AI; a realm that has joined stays joined. Default: on.")]
     public bool WarPledgeEnabled { get; set; } = true;
 
+    // --- Battle Balance / Stamina (#1497) ---
+    // Off by default while the feature is built on its branch. Decide the release default before the first release
+    // that carries this property: MCM keeps a saved value over a later default (config-providers.md).
+
+    [SettingPropertyGroup("{=taom_mcm_group_battle_balance}Battle Balance/{=taom_mcm_group_stamina}Stamina")]
+    [SettingPropertyBool("{=taom_stamina_mcm_enabled}Enable Combat Stamina", Order = 0, RequireRestart = false,
+        HintText = "{=taom_stamina_mcm_enabled_hint}Experimental. In field battles, sieges and the Fords of War match soldiers have stamina. A melee swing, a shot, a throw, a jump, a kick, a shield bash and a blow stopped with a weapon or shield cost stamina, and running on foot drains it down to half. Stamina comes back while a soldier does not attack, more slowly while a block is held and not at all while running. A tired soldier swings and handles a weapon more slowly, and a tired AI soldier attacks less often. A soldier whose stamina reaches zero is exhausted until it is back at about a third: an exhausted soldier cannot attack, block, kick or jump, and on foot slows to a walk. Exceptions: a soldier who works a siege engine pays nothing and is not stopped, and a rider or a swimmer can still jump. Higher tier troops and heroes have more stamina. A soldier's people changes it too: Elves, Dwarves, Uruk-hai and trolls have more than most Men of the same rank, Orcs and goblins have less, and the Nazgul do not tire. Horses and other mounts are not affected. Takes effect from the next battle. Default: off.")]
+    public bool EnableStamina { get; set; } = false;
+
+    [SettingPropertyGroup("{=taom_mcm_group_battle_balance}Battle Balance/{=taom_mcm_group_stamina}Stamina")]
+    [SettingPropertyBool("{=taom_stamina_mcm_player}Stamina Applies To You", Order = 1, RequireRestart = false,
+        HintText = "{=taom_stamina_mcm_player_hint}When on, the soldier you control has stamina while Combat Stamina is on: your actions cost it and you can become exhausted. Off exempts that soldier: your stamina never drains, you are never stopped, and the stamina bar is hidden. AI soldiers still follow the next setting. Read at each battle tick. Default: on.")]
+    public bool StaminaApplyToPlayer { get; set; } = true;
+
+    [SettingPropertyGroup("{=taom_mcm_group_battle_balance}Battle Balance/{=taom_mcm_group_stamina}Stamina")]
+    [SettingPropertyBool("{=taom_stamina_mcm_ai}Stamina Applies To AI Soldiers", Order = 2, RequireRestart = false,
+        HintText = "{=taom_stamina_mcm_ai_hint}When on, the soldiers the AI controls have stamina while Combat Stamina is on, allies and enemies alike. Off exempts them all: only the soldier you control tires, if the setting above is on. Read at each battle tick. Default: on.")]
+    public bool StaminaApplyToAi { get; set; } = true;
+
+    [SettingPropertyGroup("{=taom_mcm_group_battle_balance}Battle Balance/{=taom_mcm_group_stamina}Stamina")]
+    [SettingPropertyFloatingInteger("{=taom_stamina_mcm_cost_scale}Stamina Cost Scale", 0.5f, 2.0f, "#0.00", Order = 3, RequireRestart = false,
+        HintText = "{=taom_stamina_mcm_cost_scale_hint}Multiplies what every action costs in stamina, for every soldier: the player, allies and enemies alike. 0.50 halves the costs, 2.00 doubles them. It does not change how fast stamina comes back or how much a soldier has. Read at each battle tick. Default: 1.00.")]
+    public float StaminaCostScale { get; set; } = 1.0f;
+
+    [SettingPropertyGroup("{=taom_mcm_group_battle_balance}Battle Balance/{=taom_mcm_group_stamina}Stamina")]
+    [SettingPropertyBool("{=taom_stamina_mcm_show_bar}Show Stamina Bar", Order = 4, RequireRestart = false,
+        HintText = "{=taom_stamina_mcm_show_bar_hint}Shows your own stamina as a bar beside the battle HUD rings while Combat Stamina is on. The bar changes colour as you tire and turns grey while you are exhausted. Off hides the bar only: stamina still works. Drawn on this client only. Default: on.")]
+    public bool ShowStaminaBar { get; set; } = true;
+
     // --- Battle Balance / Troop Power ---
 
     [SettingPropertyGroup("{=taom_mcm_group_battle_balance}Battle Balance/{=taom_mcm_group_troop_power}Troop Power")]

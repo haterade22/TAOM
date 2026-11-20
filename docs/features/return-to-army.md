@@ -182,8 +182,9 @@ Search the TAOM debug log for `[ReturnToArmy]`:
 
 - **Enlistment:** an enlisted soldier never sees this option. Enlistment keeps `MainParty.Army`
   null outside a battle (#443), so vanilla's condition hides it. The redirect list in
-  `IEnlistmentConfigProvider` does carry `army_wait_at_settlement`, but the redirect is gated on
-  `EnlistedAttached` before the list is read.
+  `IEnlistmentConfigProvider` does carry `army_wait_at_settlement`, but the redirect reads the list
+  only in `EnlistedAttached`, and in `CommanderUnavailable` inside a settlement with no
+  `PlayerEncounter` (#511).
 - **Player Switcher:** a takeover inherits the lord's army membership, attached or not. Attached
   means the player starts inside the army wait menu and moves with the army, exactly as a player
   who joined normally. Unattached means the player is free and this patch is what keeps a town from

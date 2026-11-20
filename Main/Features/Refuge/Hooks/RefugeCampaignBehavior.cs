@@ -73,12 +73,8 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
 
     public override void SyncData(IDataStore dataStore)
     {
-        // Direction-split (the SupplyLinesCampaignBehavior shape). The old symmetric
-        // SaveInto -> SyncData -> LoadFrom ran the load-time transient wipe on every SAVE too
-        // (re-showing the once-per-build hold note, resetting the frame-work clock), and its
-        // pre-seeded ref meant a record whose key is missing silently kept the PREVIOUS
-        // session's book. Loading starts from nulled locals so a missing key yields an empty
-        // book, never an inherited one.
+        // Direction-split: the load-time transient wipe must not run on a save, and loading starts
+        // from nulled locals so a missing key yields an empty book, never the previous session's.
         if (dataStore.IsLoading)
         {
             Dictionary<string, RefugeData> refuges = null;
@@ -151,8 +147,6 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
 
     private void OnMapEventStarted(MapEvent mapEvent, PartyBase attacker, PartyBase defender)
     {
-        // No refuge, nothing to rally or stand down: skip the walk over every party of every world
-        // battle (RefugeService ignores ids it does not hold, so this changes no outcome).
         if (_refuges.AllRefuges.Count == 0)
             return;
         foreach (var refugeId in RefugePartyIds(mapEvent))
@@ -161,8 +155,6 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
 
     private void OnMapEventEnded(MapEvent mapEvent)
     {
-        // No refuge, nothing to rally or stand down: skip the walk over every party of every world
-        // battle (RefugeService ignores ids it does not hold, so this changes no outcome).
         if (_refuges.AllRefuges.Count == 0)
             return;
         foreach (var refugeId in RefugePartyIds(mapEvent))

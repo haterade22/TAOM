@@ -10,6 +10,7 @@ using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TAOM.Features.SeatOfSeeing;
+using TAOM.Features.Stamina.Hooks;
 
 namespace TAOM.Features.AdvancedCombat;
 
@@ -336,13 +337,13 @@ public class AutonomousMovementPlayerController : MissionView, IAutonomousMoveme
         Agent mainAgent = Mission.MainAgent;
         bool lockedAgentWasCleared = ValidateAndClearInvalidLockedAgent(mainAgent);
         if (IsInConversationMode(mainAgent)) return;
-
         if (Mission.ClearSceneTimerElapsedTime >= 0f && mainAgent.State == AgentState.Active)
         {
             ProcessMovementInput(mainAgent);
             ProcessTargetLocking(mainAgent, lockedAgentWasCleared);
             ProcessCombatControls(mainAgent);
             ProcessActionControls(mainAgent);
+            StaminaHooks.StripPlayerInput(mainAgent); // #1497, last: this controller replaces vanilla's during a creature ride, so Patch171 does not run
         }
     }
 

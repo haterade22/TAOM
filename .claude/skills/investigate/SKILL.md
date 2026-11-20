@@ -58,7 +58,7 @@ A crash reported only by logs: read every line of both logs, collapsing repeats 
    ```bash
    git log --oneline -20 -- <affected-files>
    ```
-   Was this working before? What's in the diff?
+   Was this working before? What's in the diff? Also search open PRs and every branch for the throwing method (`gh pr list --state open --search <Method>`, `git log --all --oneline -S <Method>`): another session may already fix it (#1475 found two open PRs too late).
 
 4. **Reproduce.** Can you trigger the bug deterministically? Bannerlord-specific:
    - Save-load loop (load → action → save → load — does state corrupt?)
@@ -195,7 +195,7 @@ Once root cause is confirmed:
 
 ## Phase 6: Verification & Report
 
-Reproduce the original bug scenario and confirm it's fixed. **Not optional.** With no red check from Phase 1, report Status DONE_WITH_CONCERNS and write "no red check" under Evidence. For Bannerlord, this often means a game run. A check a Fords match exercises goes to /game-run under its gate; for any other check, name what Mike must play and leave it owed.
+Reproduce the original bug scenario and confirm it's fixed. **Not optional.** With no red check from Phase 1, report Status DONE_WITH_CONCERNS and write "no red check" under Evidence. For Bannerlord, this often means a game run. A check a custom battle step or a Fords match exercises goes to /game-run under its gate; for any other check, name what Mike must play and leave it owed.
 
 Run the test suite. Paste the output.
 

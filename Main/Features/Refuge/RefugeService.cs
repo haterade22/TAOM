@@ -128,7 +128,6 @@ public class RefugeService : IRefugeService, IRefugeBook
     private readonly IEnlistmentStateQuery _enlistment;
     private readonly IRefugeVisualService _visuals;
 
-    // Fire and Tribute's live hosts, resolved at the first raid scan rather than at mod load (#1033).
     private readonly Lazy<IRaidHostOwnSideQuery> _hosts;
     private readonly ICoopSessionProvider _coop;
     private readonly IModLogger _logger;
@@ -206,15 +205,10 @@ public class RefugeService : IRefugeService, IRefugeBook
             return RefugeBlockReason.FeatureDisabled;
         if (!PlayerMayChangeRefuges)
             return RefugeBlockReason.SharedCampaign;
-        // No main party means no campaign to act in; the feature cannot operate at all.
         if (MainPartyId() == null)
             return RefugeBlockReason.FeatureDisabled;
-        // An enlisted soldier's movement belongs to his commander; a refuge would fight the
-        // enlistment attachment loop for control of the party (same reason camps block).
         if (_enlistment.IsEnlisted)
             return RefugeBlockReason.Enlisted;
-        // Any refuge within manage range, building included: two overlapping layouts on one spot
-        // is the mess the source's same check prevented.
         if (NearestRefugeId(_settings.ManageRange, readyOnly: false) != null)
             return RefugeBlockReason.RefugeAlreadyHere;
 
@@ -254,16 +248,12 @@ public class RefugeService : IRefugeService, IRefugeBook
             return null;
         }
 
-        // Read the camp type BEFORE breaking the camp: a fortified camp founds a fortified
-        // refuge, and after BreakPlayerCamp that fact is gone.
         var camp = _camps.PlayerCamp;
         bool fortified = camp != null && camp.TypeEnum == CampType.Fortified;
 
         string partyId = SpawnRefugeParty(RefugeIdPrefix + _counter++, wardenHeroId);
         if (partyId == null)
         {
-            // Engine refusal with no player-facing cause: abort before any charge or camp break
-            // so the player keeps camp and gold. Reason stays None; the menu simply does nothing.
             _logger.LogWarning("[Refuge] party spawn failed; founding aborted before any charge.");
             return null;
         }
@@ -356,7 +346,6 @@ public class RefugeService : IRefugeService, IRefugeBook
         refuge.BuildingUpgrade = true;
         refuge.BuildStartTime = NowTime();
         refuge.BuildTargetHours = SaneBuildHours();
-        // The rebuild is its own build phase: it gets its own one-time hold note.
         _holdNoteShown.Remove(refuge.PartyId);
         return true;
     }
@@ -371,10 +360,6 @@ public class RefugeService : IRefugeService, IRefugeBook
         if (IsPartyInMapEvent(refuge.PartyId))
             return;
 
-        // Warden first, roster merge second: releasing the warden moves him with a real
-        // AddHeroToPartyAction (a promoted warden is then turned back into his soldier). The
-        // merge then moves any REMAINING heroes (deposited companions, hero prisoners) with
-        // engine actions before bulk-copying regulars, so no hero row ever rides a raw copy.
         _wardens.ReleaseWarden(refuge.WardenHeroId, refuge.WardenPromoted, refuge.PromotedFromTroopId);
         MergeRefugeIntoMainParty(refuge.PartyId);
         _refuges.Remove(refuge.PartyId);
@@ -397,8 +382,6 @@ public class RefugeService : IRefugeService, IRefugeBook
         // no other driver.
         _visuals.TickWind();
 
-        // Game-time throttle: while paused nothing here can change anyway, and at speed the
-        // ~36-game-second cadence still re-holds the party long before it drifts anywhere.
         double now = NowInHours();
         if (now < _nextFrameWorkHours)
             return;
@@ -449,8 +432,6 @@ public class RefugeService : IRefugeService, IRefugeBook
         if (holdNearby)
         {
             HoldMainParty();
-            // FIX over the source, which pinned the party silently every frame: say why, once
-            // per build, so the player is not left clicking a map that ignores him.
             if (holdNotePartyId != null && _holdNoteShown.Add(holdNotePartyId))
             {
                 ShowMessage(
@@ -475,7 +456,6 @@ public class RefugeService : IRefugeService, IRefugeBook
         foreach (var partyId in _refuges.Keys)
             CancelDisband(partyId);
 
-        // Raids are experimental and OFF by default (source parity); nothing else runs hourly.
         if (!_settings.EnableRaids)
             return;
         float raidRange = _settings.RaidRange;
@@ -489,8 +469,6 @@ public class RefugeService : IRefugeService, IRefugeBook
                 continue;
             if (IsPartyInMapEvent(pair.Key))
                 continue;
-            // Positive gate so a NaN roll skips: proceed only on roll <= chance (the source's
-            // "RandomFloat > 0.05 -> skip", boundary value 0.05 itself raids).
             if (!(NextRandomFloat() <= RaidChancePerHour))
                 continue;
 
@@ -540,8 +518,6 @@ public class RefugeService : IRefugeService, IRefugeBook
         if (count <= 0)
             return;
 
-        // The baseline BEFORE the add is what stand-down protects: everything up to this count
-        // belongs to the garrison, everything above it (that survives) is militia.
         data.MilitiaPreRallyCount = GetTroopCountInRefuge(partyId, troopId);
         AddTroopsToRefuge(partyId, troopId, count);
         data.MilitiaAdded = count;
@@ -624,9 +600,6 @@ public class RefugeService : IRefugeService, IRefugeBook
         if (IsWardenWithParty(partyId, data.WardenHeroId))
             return;
 
-        // Warden gone (dead, captured, removed): the refuge keeps its garrison and stash but drops
-        // to the orphan-adopted state -- leaderless, dismantle-only, never ready again. That is
-        // the deliberate leaderless design; there is no succession picker.
         data.WardenHeroId = null;
         data.Established = false;
         data.Building = false;
@@ -659,9 +632,6 @@ public class RefugeService : IRefugeService, IRefugeBook
 
     public void ResetForNewSession()
     {
-        // A fresh campaign (or a save written before this feature existed) runs no SyncData load,
-        // so a process-lifetime singleton would otherwise carry the previous campaign's book into
-        // this one and then SAVE it. Clear the book AND every transient cache.
         _refuges.Clear();
         _counter = 0;
         _visualShown.Clear();
@@ -689,8 +659,6 @@ public class RefugeService : IRefugeService, IRefugeBook
             live.Add(partyId);
             if (!_refuges.ContainsKey(partyId))
             {
-                // Orphan party without a book row (older save, external tampering): adopt it
-                // un-established rather than leak an unmanaged party, and say so in the log.
                 _refuges[partyId] = new RefugeData
                 {
                     PartyId = partyId,
@@ -729,8 +697,6 @@ public class RefugeService : IRefugeService, IRefugeBook
         }
     }
 
-    // --- internals ---
-
     private void FinishBuild(string partyId, RefugeData data)
     {
         bool wasUpgrade = data.BuildingUpgrade;
@@ -740,7 +706,6 @@ public class RefugeService : IRefugeService, IRefugeBook
         if (wasUpgrade)
         {
             data.TierEnum = RefugeTier.Stronghold;
-            // Drop the refuge-scale layout so the next Show rebuilds at stronghold scale.
             _visuals.Remove(partyId);
             _visualShown.Remove(partyId);
             if (OwnsTheRefuges)
@@ -815,8 +780,6 @@ public class RefugeService : IRefugeService, IRefugeBook
     private float SaneBuildHours()
     {
         float hours = _settings.BuildHours;
-        // Belt over the provider's validation: a degenerate target would make BuildProgress
-        // divide by ~zero or never finish; the floor makes it finish almost immediately instead.
         if (!FiniteFloatValidator.IsFinite(hours) || hours < RefugeBookRepair.MinBuildTargetHours)
             return RefugeBookRepair.MinBuildTargetHours;
         return hours;
@@ -904,8 +867,6 @@ public class RefugeService : IRefugeService, IRefugeBook
     internal float DistanceToNearestFortificationFrom(string partyId) =>
         FortificationSearch.NearestDistance(SettlementSitesFrom(partyId));
 
-    // --- campaign-static seams (the untested boundary sliver; overridden in tests) ---
-
     protected virtual string MainPartyId() => MobileParty.MainParty?.StringId;
 
     protected virtual int PlayerGold => Hero.MainHero?.Gold ?? 0;
@@ -963,8 +924,6 @@ public class RefugeService : IRefugeService, IRefugeBook
         return party == null ? Array.Empty<SettlementSite>() : SettlementSitesAround(party.GetPosition2D);
     }
 
-    // Part of the two seams above (decision 55): one lazy read of the campaign's settlement list,
-    // no filter, and no list built per call (the keep-outs run as menu-option conditions).
     private static IEnumerable<SettlementSite> SettlementSitesAround(Vec2 position)
     {
         foreach (var settlement in Settlement.All)

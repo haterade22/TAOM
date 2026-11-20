@@ -14,6 +14,7 @@ using TAOM.Features.HeroAbilities.Hooks;
 using TAOM.Features.Mumakil;
 using TAOM.Features.RaceAbilities.Hooks;
 using TAOM.Features.Spider;
+using TAOM.Features.Stamina.Hooks;
 using TaleWorlds.Core;
 
 namespace TAOM.Features.CareerSystem.Models;
@@ -132,6 +133,8 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
         // Race Abilities: a live ability's speeds and AI temperament, after the aggression pass so it scales
         // the culture's values; inert unless the soldier's ability is running or he carries a hero aura (#1127).
         RaceAbilityHooks.ApplyStats(agent, agentDrivenProperties);
+        // Stamina (#1497): a tired soldier's slower arm and legs, on top of every value above; inert for a Fresh soldier and a mount.
+        StaminaHooks.ApplyStats(agent, agentDrivenProperties);
 
         // Mount-side career bonuses (#611) and the culture charge multiplier (#610) both ride the
         // MOUNT's properties, after base rewrote them; the rider is the identity (a mount's own

@@ -101,12 +101,12 @@ public class CoopMissionRolePolicyTests
     public void Table_CoversEveryBehaviorTheModAdds_NoMissingNoStale()
     {
         var subModule = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
-        var added = Regex.Matches(subModule, @"AddTaomBehavior\(\s*new\s+([\w.]+)\(")
+        var added = Regex.Matches(subModule, @"AddTaomBehavior\(\s*\(\)\s*=>(?:(?!AddTaomBehavior)[^}])*?\bnew\s+([\w.]+)\(")
             .Cast<Match>().Select(m => m.Groups[1].Value.Split('.').Last()).ToList();
-        Assert.AreEqual(30, added.Count, "AddTaomBehavior(new ...) call sites in SubModule.cs changed; recount and update the table");
+        Assert.AreEqual(30, added.Count, "AddTaomBehavior(() => new ...) call sites in SubModule.cs changed; recount and update the table");
 
         var declared = FeatureModules.All.SelectMany(m => m.MissionBehaviors).Select(d => d.BehaviorType.Name).ToList();
-        Assert.AreEqual(19, declared.Count, "module mission behavior declarations changed; update the table");
+        Assert.AreEqual(20, declared.Count, "module mission behavior declarations changed; update the table");
 
         // Added outside AddTaomBehavior: the load-phase closer (SubModule), the custom battle patches, the
         // host review launcher. All local by construction.
@@ -117,6 +117,9 @@ public class CoopMissionRolePolicyTests
         int variableAdds = Regex.Matches(subModule, @"AddTaomBehavior\(\s*\w+\s*\)").Count;
         Assert.AreEqual(0, variableAdds,
             "an AddTaomBehavior(variable) site appeared: a MissionView added there never ticks; make it a [DefaultView]");
+        int builtAdds = Regex.Matches(subModule, @"AddBuiltTaomBehavior\(\s*\w+\s*\)").Count;
+        Assert.AreEqual(1, builtAdds,
+            "AddBuiltTaomBehavior(variable) belongs only inside AddTaomBehavior: a behavior handed to it anywhere else escapes this table's count");
 
         var expected = new HashSet<string>(added.Concat(declared).Concat(outside).Concat(defaultViews));
         var actual = new HashSet<string>(CoopMissionRoles.All.Keys);

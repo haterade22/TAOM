@@ -719,11 +719,11 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_EreborSettlement_HighRoll_ReturnsNoble()
     {
-        // town_E1 uses the Erebor+Iron Hills mix (total 18): miner(5)[0..4] + noble(3)[5..7]
+        // town_E1 uses the Erebor+Iron Hills mix (total 16): miner(5)[0..4] + noble(3)[5..7]
         // + iron_hills_reg_recruit(2)[8..9] + iron_hills_noble(2)[10..11] + ironpass_recruit(2)[12..13]
-        // + erebor_oathsworn(1)[14] + ironpass_ram_herder(3)[15..17]. Roll 5 still lands in the
+        // + erebor_oathsworn(1)[14] + ironpass_ram_herder(1)[15]. Roll 5 still lands in the
         // erebor_noble range: the herder was APPENDED, so nothing below it moved.
-        _random.Next(18).Returns(5);
+        _random.Next(16).Returns(5);
         var context = new VolunteerContext(
             settlementId: "town_E1",
             boundSettlementId: null,
@@ -780,9 +780,9 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_EreborCulture_HighRoll_ReturnsIronHills()
     {
-        // Culture pool (total 18): miner(5) + noble(3) + iron_hills_reg_recruit(2)[8..9] + iron_hills_noble(2)
+        // Culture pool (total 16): miner(5) + noble(3) + iron_hills_reg_recruit(2)[8..9] + iron_hills_noble(2)
         // + ironpass_recruit(2) + erebor_oathsworn(1). Roll 8 lands in iron_hills_reg_recruit range.
-        _random.Next(18).Returns(8);
+        _random.Next(16).Returns(8);
         var context = new VolunteerContext(
             settlementId: null,
             boundSettlementId: null,
@@ -818,8 +818,8 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_EreborTown_Roll8_ReturnsIronHillsRecruit()
     {
-        // town_E1 settlement pool (total 18) includes Iron Hills. Roll 8 → iron_hills_reg_recruit [8..9].
-        _random.Next(18).Returns(8);
+        // town_E1 settlement pool (total 16) includes Iron Hills. Roll 8 → iron_hills_reg_recruit [8..9].
+        _random.Next(16).Returns(8);
         var context = new VolunteerContext(
             settlementId: "town_E1",
             boundSettlementId: null,
@@ -834,8 +834,8 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_EreborClan_Roll11_ReturnsIronHillsNoble()
     {
-        // clan_erebor_1 pool (total 18) includes Iron Hills. Roll 11 → iron_hills_noble [10..11].
-        _random.Next(18).Returns(11);
+        // clan_erebor_1 pool (total 16) includes Iron Hills. Roll 11 → iron_hills_noble [10..11].
+        _random.Next(16).Returns(11);
         var context = new VolunteerContext(
             settlementId: null,
             boundSettlementId: null,
@@ -3644,17 +3644,17 @@ public class VolunteerRecruitmentServiceTests
                 id + " is an armoured mid-branch mounted troop and must stay upgrade-only. The "
                    + "branch is entered through the pooled ironpass_ram_herder (16). If you "
                    + "deliberately want this one recruitable too, add it to BOTH EreborMix and "
-                   + "CultureMap[\"erebor\"] and retune every Next(18) stub in this file, then "
+                   + "CultureMap[\"erebor\"] and retune every Next(16) stub in this file, then "
                    + "delete this assertion.");
     }
 
     [TestMethod]
     public void GetVolunteerTroopId_EreborCulture_HighestRoll_ReturnsRamHerder()
     {
-        // ironpass_ram_herder(3) occupies the top of the Erebor culture pool at [15..17]. This is
+        // ironpass_ram_herder(1) occupies the top of the Erebor culture pool at [15]. This is
         // the entry point that makes the whole war-ram branch reachable from a notable; without it
         // rams appear at no notable anywhere, which is the state players reported.
-        _random.Next(18).Returns(15);
+        _random.Next(16).Returns(15);
         var context = new VolunteerContext(null, null, null, "erebor");
 
         Assert.AreEqual("ironpass_ram_herder", _sut.GetVolunteerTroopId(context));
@@ -3663,38 +3663,38 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_EreborSettlement_HighestRoll_ReturnsRamHerder()
     {
-        // Same band in EreborMix, which every Erebor town, castle and clan uses. Roll 17 is the
+        // Same band in EreborMix, which every Erebor town, castle and clan uses. Roll 15 is the
         // last index of the herder's range, so this also pins the pool's upper bound.
-        _random.Next(18).Returns(17);
+        _random.Next(16).Returns(15);
         var context = new VolunteerContext("town_E1", null, null, "erebor");
 
         Assert.AreEqual("ironpass_ram_herder", _sut.GetVolunteerTroopId(context));
     }
 
     [TestMethod]
-    public void GetVolunteerTroopId_EreborCulture_RollsAgainstTotalWeightEighteen()
+    public void GetVolunteerTroopId_EreborCulture_RollsAgainstTotalWeightSixteen()
     {
-        // Pins the Erebor culture pool's total weight at 18. PickWeighted rolls
-        // _random.Next(totalWeight) and every Erebor test in this file stubs a literal Next(18).
+        // Pins the Erebor culture pool's total weight at 16. PickWeighted rolls
+        // _random.Next(totalWeight) and every Erebor test in this file stubs a literal Next(16).
         // Move the pool and those stubs stop matching: NSubstitute hands back the default 0 and
         // each of them silently starts asserting the FIRST pool entry instead of the one it names.
         // rca-mumakil-2026-06-29 records that failure mode. This test fails loudly instead.
-        _random.Next(18).Returns(14);
+        _random.Next(16).Returns(14);
         var context = new VolunteerContext(null, null, null, "erebor");
 
         Assert.AreEqual("erebor_oathsworn", _sut.GetVolunteerTroopId(context));
-        _random.Received().Next(18);
+        _random.Received().Next(16);
     }
 
     [TestMethod]
-    public void GetVolunteerTroopId_EreborSettlement_RollsAgainstTotalWeightEighteen()
+    public void GetVolunteerTroopId_EreborSettlement_RollsAgainstTotalWeightSixteen()
     {
         // Same guard for the settlement/clan mix (EreborMix), which the culture pool mirrors.
-        _random.Next(18).Returns(14);
+        _random.Next(16).Returns(14);
         var context = new VolunteerContext("town_E1", null, null, "erebor");
 
         Assert.AreEqual("erebor_oathsworn", _sut.GetVolunteerTroopId(context));
-        _random.Received().Next(18);
+        _random.Received().Next(16);
     }
 
     [TestMethod]

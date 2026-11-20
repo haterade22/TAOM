@@ -101,8 +101,22 @@ public class TaomHowdahMachine : UsableMachine
             return;
         }
         _reporter?.BeforeReposition(dt, GameEntity, _lastAnchor, _hasAnchor);
+        Vec3 anchorBefore = _lastAnchor;
+        bool hadAnchor = _hasAnchor;
         RepositionToElephant();
-        _reporter?.AfterReposition(LogTag, GameEntity, elephantAgent, StandingPoints, _placement, DeckNavMeshName, DeckNavMeshIdStart);
+        if (_reporter != null)
+        {
+            if (hadAnchor) _reporter.NoteMotion((_lastAnchor - anchorBefore).Length, dt);
+            if (_reporter.Measuring)
+            {
+                MatrixFrame root = GameEntity.GetGlobalFrame();
+                foreach (StandingPoint sp in StandingPoints)
+                    if (sp is TaomHowdahStandingPoint seat)
+                        seat.AfterPlatformMoved(in root);
+            }
+            _reporter.AfterReposition(LogTag, GameEntity, elephantAgent, StandingPoints, _placement,
+                DeckNavMeshName, DeckNavMeshIdStart);
+        }
 
         if (elephantRider?.MountAgent == null)
         {
@@ -369,6 +383,8 @@ public class TaomHowdahMachine : UsableMachine
         if (!HowdahSeatMotion.IsPlaceable(anchor.x, anchor.y, anchor.z)) return;
         MatrixFrame next = elephantAgent.Frame;
         next.origin = anchor;
+        // The default isTeleportation true. Vanilla SiegeWeaponMovementComponent passes false (to SetGlobalFrame); alternating the two
+        // in 20 s blocks on 2026-11-19 showed no difference on any seat (#1482), so the default stays.
         GameEntity.SetFrame(ref next);
         _lastAnchor = anchor;
         _hasAnchor = true;

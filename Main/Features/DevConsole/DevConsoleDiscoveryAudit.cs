@@ -97,7 +97,7 @@ internal static class DevConsoleDiscoveryAudit
             // Never block startup over a diagnostic. Do not set _settled — a transient failure
             // should not permanently silence the audit.
             try { logger?.LogWarning($"[DevConsole] Discovery audit failed: {ex.GetType().Name}: {ex.Message}"); }
-            catch { /* intentionally swallowed */ }
+            catch { }
         }
     }
 

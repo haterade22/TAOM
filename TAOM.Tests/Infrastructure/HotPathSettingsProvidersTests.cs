@@ -34,6 +34,7 @@ using TAOM.Features.SettlementNameplateRelation;
 using TAOM.Features.SignatureStrikes;
 using TAOM.Features.SignatureStrikes.Domain;
 using TAOM.Features.SmartCavalryAI;
+using TAOM.Features.Stamina;
 using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Infrastructure;
@@ -76,6 +77,7 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(CultureDoctrineSettingsProvider))]
     [DataRow(typeof(SiegePropDiagnosticsSettingsProvider))]
     [DataRow(typeof(RaceAbilitySettingsProvider))]
+    [DataRow(typeof(StaminaSettingsProvider))]
     [DataRow(typeof(DwarfAttacksSettingsProvider))]
     [DataRow(typeof(RefugeSettingsProvider))]
     [DataRow(typeof(SignatureStrikesSettingsProvider))]
@@ -133,6 +135,7 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(ICultureDoctrineSettingsProvider), typeof(CultureDoctrineSettingsProvider))]
     [DataRow(typeof(ISiegePropDiagnosticsSettingsProvider), typeof(SiegePropDiagnosticsSettingsProvider))]
     [DataRow(typeof(RaceAbilitySettingsProvider), typeof(RaceAbilitySettingsProvider))]
+    [DataRow(typeof(StaminaSettingsProvider), typeof(StaminaSettingsProvider))]
     [DataRow(typeof(DwarfAttacksSettingsProvider), typeof(DwarfAttacksSettingsProvider))]
     [DataRow(typeof(IRefugeSettingsProvider), typeof(RefugeSettingsProvider))]
     [DataRow(typeof(ISignatureStrikesSettingsProvider), typeof(SignatureStrikesSettingsProvider))]
@@ -198,6 +201,9 @@ public class HotPathSettingsProvidersTests
             nameof(ISiegePropDiagnosticsSettingsProvider.IsEnabled), nameof(TaomSettings.EnableSiegePropDiagnostics), () => new TaomSettings()),
         [typeof(RaceAbilitySettingsProvider)] = (() => new RaceAbilitySettingsProvider(),
             nameof(RaceAbilitySettingsProvider.Enabled), nameof(TaomSettings.EnableRaceAbilities), () => new TaomSettings()),
+        // #1497: the cost scale is read once per mission tick while a battle runs.
+        [typeof(StaminaSettingsProvider)] = (() => new StaminaSettingsProvider(),
+            nameof(StaminaSettingsProvider.Enabled), nameof(TaomSettings.EnableStamina), () => new TaomSettings()),
         // #1087: read on every dwarf's tree decision and every impact.
         [typeof(DwarfAttacksSettingsProvider)] = (() => new DwarfAttacksSettingsProvider(),
             nameof(DwarfAttacksSettingsProvider.Enabled), nameof(TaomSettings.DwarfAttacksEnabled), () => new TaomSettings()),
@@ -253,6 +259,7 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(CultureDoctrineSettingsProvider))]
     [DataRow(typeof(SiegePropDiagnosticsSettingsProvider))]
     [DataRow(typeof(RaceAbilitySettingsProvider))]
+    [DataRow(typeof(StaminaSettingsProvider))]
     [DataRow(typeof(DwarfAttacksSettingsProvider))]
     [DataRow(typeof(RefugeSettingsProvider))]
     [DataRow(typeof(SignatureStrikesSettingsProvider))]

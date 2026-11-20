@@ -159,10 +159,71 @@ From his own test harnesses, unverified in TAOM.
   the launcher UI (his note `scenes/project_calembel_siege_crash.md`, 2026-10-17). The recipe above already starts
   `Bannerlord.exe` directly.
 
+## A custom battle check for your own work
+
+The command trial (`tools/run_command_trial.py`, arm variable `TAOM_COMMAND_TRIAL`) opens one real custom battle with nobody at
+the keyboard and runs named steps in it. A session that changes mission code adds a step for its own feature and runs it, so the
+proof does not wait for a person or for a Fords match to show the case (Mike, 2026-11-20). `/game-run` drives it. The crew steps
+of the mumakil and the war elephant (#1503) are the worked example: each file below has a `Crew` twin to copy.
+
+**When it fits.** The check is a thing an ordinary field battle shows: a troop, a mount, a creature and its crew, a formation or an
+order, a camera or a panel of the battle screen. It does not fit a campaign screen, a town or tavern scene, a siege or co-op.
+
+**What a step is.** One row with a name, the steps it needs first and a budget in real seconds, and one handler that waits, acts
+and ends with a PASS or a FAIL and its facts as `key=value` words on a `[SeatTrial] step=<name> result=<PASS|FAIL> <facts>` line.
+
+**The files, in the order to write them** (tests first for each):
+
+1. **The rule, in core.** `Main/Features/<Feature>/<Name>TrialRules.cs`: the pass rule and the facts text as pure functions with no
+   engine type, plus the times the step uses. Write a positive requirement for every number, so a value that is no number fails
+   (`CrewTrialRules`).
+2. **The rows.** `Main/Features/<Feature>/<Name>TrialRows.cs`: one `SeatTrialStep(name, requires, budgetSeconds)` for each step
+   (`CrewTrialRows`). Join them in `SeatTrialSteps`: into `All` when the step can run in the trial's usual battle, or only into
+   `Known` when it needs armies of its own. A step in `Known` only runs when `--steps` names it.
+3. **The armies, only if the usual ones do not show the case.** `SeatTrialRoster.PlayerFor(steps)` and `EnemyFor(steps)` choose
+   by the step list. Take troop ids from `Main/_Module/ModuleData/fords_of_war/fords_troops.xml`; `SeatTrialRoster.Missing`
+   refuses the start when the game does not have one. A step with armies of its own runs with `enter` only: add its rule beside
+   `CrewTrialRows.StepThatCannotShareACrewBattle` and in the wrapper's `normalised_steps`.
+4. **The host.** `Client/Features/<Feature>/Trial/ICommandTrialHost.<Name>.cs` and `CommandTrialHost.<Name>.cs` (partial types):
+   every read of the engine and every write to it. A write to an agent or a formation calls `NoteWrite("CommandTrialHost.<Method>")`.
+   A held `Agent` passes `AgentSlotIdentity.IsCurrentOccupant` before each use.
+5. **The handler.** `Client/Features/<Feature>/Trial/CommandTrialScript.<Name>.cs` (a partial class), registered in the static
+   constructor of `CommandTrialScript`. It is an iterator: `yield return Verdict.Waiting("what")` waits one screen tick,
+   `yield return Verdict.InMissionTick` moves the code after it into the mission tick, and `Verdict.Passed(facts)` or
+   `Verdict.Failed(facts)` ends the step. Read agents and write orders only after the in-mission-tick marker. Press a key of the
+   player and take a picture from the screen tick.
+6. **The stand-in.** `TAOM.Tests/Features/<Feature>/CommandTrialWorld.<Name>.cs` (a partial of the test world) with one switch for
+   each fact, and step tests that pass on a world that works and fail on each fact broken alone (`CommandTrialCrewStepsTests`).
+   Make the stand-in refuse what the real host refuses.
+7. **The wrapper.** A tuple of the step names in `tools/run_command_trial.py`, tied to the rows file by a test in
+   `tools/tests/test_run_command_trial.py`. If the feature writes `[Check]` lines, add its failed-line pattern to the judge.
+8. **The doc.** How to run the step and what its line means, in the feature's own doc, and each real run with its folder.
+
+**The view and the pictures.** `_host.Screenshot("hud_<name>.bmp")` saves a picture, and the runner turns `hud_*.bmp` into a PNG.
+The Seat of Seeing is the camera: the `enter` step raises it, and a keep makes it follow one soldier. A step hands a soldier that
+the pointer cannot pick to the next keep through `SeatScreenAdapter.TrialKeepTarget` (`ChooseCrewArcher`). Take the first picture
+some seconds after the keep: the armies start among trees on `battle_terrain_a`.
+
+**Run it.** From the checkout that holds the change, with no game running: `pwsh ./build.ps1`, then
+`python tools/run_command_trial.py --steps enter,<your steps>`. The gate and the judging are in `/game-run`. The wrapper fails a
+run whose build is not this checkout, a step with no PASS line, a FAIL line, a failed check line and a log with no clean unload.
+
+**What three runs taught** (2026-11-20, #1503):
+
+- The usual enemy has 30 archers. They killed a mumakil 38 s after the charge, and the battle was decided after 61 s. Choose an
+  enemy that lets the thing under test live for the whole watch.
+- Count a fact from the engine's own event (a missile count, a rescue count), and keep the highest value of each seat or soldier
+  over the watch: a soldier who did the thing and then fell must still count.
+- A real key press reaches the game. One run failed at `enter` because the Seat left with `reason=key` 2 s after it entered; the
+  cause is not proved. Do not use the PC while a run plays, and read the line of the first failed step before the others.
+- Orders given with `Formation.SetMovementOrder` hold while the trial's hero commands the army. If he falls, the engine gives the
+  companies to its AI.
+
 ## Scope today and what is planned
 
-The Fords driver plays a Fords of War match, so `/game-run` serves Fords checks and any change a Fords match exercises
-(mission start, agents, formations, destructibles). The scenario autorun (#1075 slice 1, [doc](../features/scenario-autorun.md)) has its
+The Fords driver plays a Fords of War match, so it serves Fords checks and any change a Fords match exercises
+(mission start, agents, formations, destructibles). The command trial plays a custom battle with armies the code chooses, and it is
+the first driver to try for a session's own mission work. The scenario autorun (#1075 slice 1, [doc](../features/scenario-autorun.md)) has its
 own wrapper, `tools/run_scenario.py`, under this same permission and gate: it arms `TAOM_AUTORUN`, starts a new campaign, runs the wanted
 days on fast forward and quits. `kind=campaign-new` runs the days. `kind=story-mission` (#1368, built and unit tested, never run in the
 game) starts the new campaign, opens one story mission through the dev menu's click path, waits for the end and the map, and quits
@@ -172,5 +233,5 @@ The Long Defeat (#1079) has its own wrapper, `tools/run_long_defeat.py`, under t
 preflight, idle gate, launch, dialog handling and crash scan, arms the game with `TAOM_LONGDEFEAT_AUTORUN`, and presses Cancel on the
 Helm's Deep terrain shader dialog. `/game-run` names it for changes under `LongDefeat`. Exit 0 needs the `[Check]` lines of the plan, so
 read the run folder before rerunning.
-The Seat of Seeing's field trial has its own wrapper too, `tools/run_command_trial.py` (arm variable `TAOM_COMMAND_TRIAL`, runs in `E:\Temp\command-trial-runs`), under the same permission and gate; `/game-run` does not drive it yet. [Its steps and how to read a run](../features/seat-of-seeing.md#field-trial). It refuses a log with no `[Shutdown] clean module unload` line.
+The Seat of Seeing's field trial has its own wrapper too, `tools/run_command_trial.py` (arm variable `TAOM_COMMAND_TRIAL`, runs in `E:\Temp\command-trial-runs`), under the same permission and gate, and `/game-run` drives it for any check a custom battle shows ([add a step for your own work](#a-custom-battle-check-for-your-own-work)). [Its steps and how to read a run](../features/seat-of-seeing.md#field-trial). It refuses a log with no `[Shutdown] clean module unload` line. The same wrapper checks the mumakil and war elephant crews in a custom battle (#1503): `--steps enter,crew_mumakil,crew_howdah` ([what the steps do](../features/mumakil.md#the-crew-steps-of-the-command-trial)).
 All three wrappers share one build check, `tools/autorun_build.py`. Each reads the checkout once, before the game starts, and starts nothing when git cannot answer. A run fails when its `[BuildStamp]` is not that checkout: another sha than HEAD, a `MISMATCH` stamp, a `.dirty` mark the tree does not match, or an uncommitted file under the build's own pathspec newer than the build. A commit made while the game runs does not fail it. Each PASS names the build with its build time.

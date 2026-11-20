@@ -58,6 +58,18 @@ public sealed class MumakilCrewAgentOrigin : IAgentOriginBase
 
     public void SetBanner(Banner banner) => _banner = banner;
 
+    // Arrows this archer has actually loosed, for the status line (#1482). The draw-progress fields cannot tell a
+    // shot from an aborted draw: on 2026-11-19 they read as busy archers for seats that loosed nothing. Written from
+    // the engine's missile callback, which v1.5.7 raises on the main thread; Interlocked and Volatile mirror the
+    // howdah's origin and cost nothing.
+    private int _shotsFired;
+
+    /// <summary>Arrows this archer has loosed since it was spawned onto the tower.</summary>
+    public int ShotsFired => System.Threading.Volatile.Read(ref _shotsFired);
+
+    /// <summary>Called once per missile this archer fires.</summary>
+    public void RecordShot() => System.Threading.Interlocked.Increment(ref _shotsFired);
+
     // GetDefaultTraitsMask reads Troop.IsMounted; the troop is null only in unit tests, so a null troop reports no
     // traits instead of throwing.
     public TroopTraitsMask GetTraitsMask() =>

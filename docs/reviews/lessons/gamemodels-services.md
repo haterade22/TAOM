@@ -1459,3 +1459,25 @@ The recruit cap holds the player's `MaximumIndexHeroCanRecruitFromHero` at `firs
 - **Why missed:** the fix started from the symptom's slots, not from every reader of the capped value and the comparison each reader uses.
 - **Prevent:** before a display fix for a model override, list every caller of the overridden method (game DLLs and TAOM), write each one's comparison, and test the boundary value for each (`DesertionRecruitCapTests.RequiredRelation_FindsTheSlotBeforeTheDeserter_AndNullWhenNoRelationOpensIt`).
 - **Source:** the #1189 item 3 tier 1 review, Data flow flow 2 and Engine compatibility F1.
+
+### Widening a shared predicate renames it, and each caller's counter or doc is re-read (plan 062, #594, 2026-11-19)
+The spider's `IsSameSide` began to answer "does the bite spare this agent", which adds a loose mount of unknown side to "same side". It kept its name, so the creature diagnostics, which count `IsSameSide` hits as `alliesInArc`, began to count such mounts as allies while the comments on `StrikeArc` and its call site still said "allies". No strike changed; the count's meaning did.
+- **Why missed:** the plan named the diagnostics caller and recorded the widened count in a maintenance note, but kept the old name and the "allies" comments, and nothing turned a recorded change of meaning into a rename.
+- **Prevent:** when a predicate's body answers a wider question, rename it to that question (`IsSpared`) and grep every caller, counters and diagnostics included; write what each counts in its comment, and pin the new case with a test (`SpiderStrikeCapTests.CappedStrike_ALooseMountOfUnknownSide_IsCountedAmongTheSpared_NotAsAMiss`). The question test from `build-tooling-workflow.md` ("A rule reused by a second consumer answers the second consumer's question") still decides whether the caller needs its own predicate.
+- **Source:** [rca-riderless-mount-bite-side-2026-11-19.md](../rca-riderless-mount-bite-side-2026-11-19.md) finding 1 (Data flow trace 6).
+
+### A sum that only one call drains needs a drain on every path that skips the call (#1497, 2026-11-19)
+
+**Why missed:** stamina's hit callbacks add the cost of a stopped blow to a per-soldier sum, and `StaminaService.Step` takes the sum. `Step` took it without condition, and its comment said the costs "cannot pile up". The caller then got conditions around `Step` (a forced band, an exempt people, an MCM opt-out, another peer's soldier), each added for its own reason, and each silently switched the drain off. The sum grew for as long as the soldier was not stepped and landed in one look when he was stepped again: a player who turned his opt-out off after two minutes was exhausted at once. The unit tests called `Step` directly, so none could see that the tick did not.
+
+**Prevent:** when a producer and a consumer of an accumulator run on different schedules, write down every state in which the consumer does not run, and give each one a drain or a gate at the producer. Here both: the producer refuses a soldier that is not tracked, and the tick drops the sum on every look that does not step him (`StaminaService.Skip`). A comment that says "always" about a call is checked against the call's callers, not against its body. Pin the skip branch with a source-text test, since the tick needs the engine.
+
+**Source:** [rca-stamina-phases-1-2-2026-11-19.md](../rca-stamina-phases-1-2-2026-11-19.md) row 1 (lenses 5 and 2).
+
+### A lock on an agent's input does not stop an attack that TAOM code starts itself (#1497, 2026-11-19)
+
+**Why missed:** stamina's Exhausted lock clears the attack, block, kick and jump bits of a soldier's input, for the player at the end of the controller's input build and for the AI in `OnAIInputSet`. Two TAOM features never touch that input: Dwarf Attacks and Troll Brute Force start their action from a behaviour tree with `Agent.SetActionChannel(..., ignorePriority: true)`. An Exhausted dwarf kept head-butting. The design was checked against the engine's paths and not against TAOM's own. A game log showed it: 512 kicks in a match where the AI does not kick.
+
+**Prevent:** before a feature forbids an agent action by its input (a stun, a lock, a "cannot attack" state), grep `SetActionChannel(` and the `BehaviorTreeElements` folders in `Main` and `Client` for every starter of that action on a human agent, and give each starter's ready check a question to the locking feature's hook (`StaminaHooks.RefusesSpecialAttack`). A new feature that starts an attack from a tree asks the same hooks. Read the per-kind action counts of a first game run against what the AI can do: a count the AI cannot produce names a path the design did not know.
+
+**Source:** [rca-stamina-phases-1-2-2026-11-19.md](../rca-stamina-phases-1-2-2026-11-19.md), addendum 2.

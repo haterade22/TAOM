@@ -44,6 +44,7 @@ using TAOM.Features.SkeletonBuffer.Hooks;
 using TAOM.Features.SmartCavalryAI.Hooks;
 using TAOM.Features.Spider;
 using TAOM.Features.StagedSiege.Hooks;
+using TAOM.Features.Stamina.Hooks;
 using TAOM.Features.TrollBruteForce;
 using TAOM.Features.Warg;
 using TAOM.Features.WarRam;
@@ -97,6 +98,7 @@ public static class CoopMissionRoles
         [nameof(HeroAurasMissionLogic)] = CoopMissionRole.AgentOwner,
         [nameof(HeroAbilitiesMissionLogic)] = CoopMissionRole.AgentOwner,
         [nameof(HeroRangedMissionLogic)] = CoopMissionRole.AgentOwner,
+        [nameof(StaminaMissionLogic)] = CoopMissionRole.AgentOwner,
         [nameof(DeadTargetResetMissionBehavior)] = CoopMissionRole.AgentOwner,
 
         // Local: this peer's own view, log or files.

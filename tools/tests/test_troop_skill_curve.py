@@ -371,10 +371,18 @@ class _FixtureRun(unittest.TestCase):
         self.tmp = Path(tempfile.mkdtemp())
         (self.tmp / "troops").mkdir()
         (self.tmp / "characters").mkdir()
+        # main() refuses an install whose vanilla modules define no SkillSet (#626), so the fixture install
+        # ships one; the SkillSets are read from the parent of the Modules folder.
+        self.install = Path(tempfile.mkdtemp())
+        native = self.install / "Modules" / "Native" / "ModuleData"
+        native.mkdir(parents=True)
+        (native / "skill_sets.xml").write_bytes(
+            b'<SkillSets><SkillSet id="any"><skill id="Bow" value="10" /></SkillSet></SkillSets>')
 
     def tearDown(self):
         import shutil
         shutil.rmtree(self.tmp, ignore_errors=True)
+        shutil.rmtree(self.install, ignore_errors=True)
 
     def write(self, rel, body, bom=False, crlf=False):
         text = "<NPCCharacters>\n" + body + "</NPCCharacters>\n"
@@ -391,7 +399,7 @@ class _FixtureRun(unittest.TestCase):
                 mock.patch.object(rb, "EXTRA_ROOT_DIR", str(self.tmp)), \
                 mock.patch("taom_schema.build_item_class_registry", lambda *a: dict(self.CLASSES)), \
                 mock.patch("taom_schema.build_mount_difficulty_registry", lambda *a: {}), \
-                mock.patch.object(sys, "argv", ["rebalance_troops.py", *argv, "--game-modules", str(self.tmp)]), \
+                mock.patch.object(sys, "argv", ["rebalance_troops.py", *argv, "--game-modules", str(self.install / "Modules")]), \
                 redirect_stdout(out):
             try:
                 rb.main()
@@ -427,6 +435,16 @@ class ClampOnlyRunTests(_FixtureRun):
         code, out = self.run_main("--apply", "--dry-run")
         self.assertEqual(code, 1, out)
         self.assertIn("atlantis", out)
+
+    def test_an_install_with_no_vanilla_skillset_stops_before_anything_is_written(self):
+        # The repo's own SkillSet files still load, so only the vanilla half proves the install
+        # was read (#626 review).
+        (self.install / "Modules" / "Native" / "ModuleData" / "skill_sets.xml").unlink()
+        before = (self.tmp / "troops" / "troops_atlantis.xml").read_bytes()
+        code, out = self.run_main("--fix-monotonicity")
+        self.assertEqual(code, 1, out)
+        self.assertIn("define no SkillSet", out)
+        self.assertEqual((self.tmp / "troops" / "troops_atlantis.xml").read_bytes(), before)
 
 
 class VillagerWriteTests(_FixtureRun):

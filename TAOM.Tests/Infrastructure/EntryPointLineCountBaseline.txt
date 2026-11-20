@@ -15,7 +15,7 @@ TAOM.Features.Enlistment.Hooks.EnlistmentBattleBehavior 289
 TAOM.Features.Messengers.MessengerCampaignBehavior 656
 TAOM.Features.MountDespawn.Hooks.MountDespawnMissionBehavior 173
 TAOM.Features.NavalTravel.Models.TaomPartyNavigationModel 197
-TAOM.Features.Refuge.Hooks.RefugeCampaignBehavior 209
+TAOM.Features.Refuge.Hooks.RefugeCampaignBehavior 201
 TAOM.Features.SpecialResources.SpecialResourcesBehavior 262
 TAOM.Features.SupplyLines.Hooks.SupplyLinesCampaignBehavior 155
 TAOM.Features.TroopProgression.Models.TaomPartyWageModel 191

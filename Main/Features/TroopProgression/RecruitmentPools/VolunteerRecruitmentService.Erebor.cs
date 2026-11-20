@@ -15,7 +15,7 @@ public partial class VolunteerRecruitmentService
     // Erebor-leaning 8:4 weight (miner 5 / noble 3 / Iron Hills recruit 2 / Iron Hills noble 2).
     // Applied to BOTH settlements and clans — settlement pools are checked first, so the mix must
     // live there too or it would never surface in the mapped Erebor towns/castles.
-    // Total 18. Every entry after the first four is appended, never inserted, so the cumulative
+    // Total 16. Every entry after the first four is appended, never inserted, so the cumulative
     // ranges of the ones above it never move and the Next(N) stubs in the test file keep their
     // expected values when N changes.
     // Entries 5 and 6 are reachability fixes: the Iron Pass line (ironpass_recruit -> warrior ->
@@ -23,7 +23,9 @@ public partial class VolunteerRecruitmentService
     // elite line (erebor_oathsworn -> legionary -> royal_legionary) were fielded by AI lords but
     // orphaned from every pool. Iron Pass recruit at modest weight (2); the L36 Oathsworn elite as
     // a rare line-entry (1).
-    // Entry 7 is the ram-cavalry branch root — see the block below.
+    // Entry 7 is the ram-cavalry branch root — see the block below. Its weight is 1, not 3
+    // (#1485): every herder stays in the ram line, so at 3 one new notable slot in six became a
+    // war ram, and players saw ram-heavy lord armies.
     private static readonly (string, int)[] EreborMix =
     {
         ("erebor_reg_miner",       5),
@@ -32,7 +34,7 @@ public partial class VolunteerRecruitmentService
         ("iron_hills_noble",       2),
         ("ironpass_recruit",       2),  // Iron Pass line entry
         ("erebor_oathsworn",       1),  // Oathsworn elite line entry
-        ("ironpass_ram_herder",    3),  // war-ram branch entry
+        ("ironpass_ram_herder",    1),  // war-ram branch entry
     };
 
     // #515 (Ironpass ram cavalry): the four ARMOURED ram troops are still deliberately NOT pooled.
@@ -106,7 +108,7 @@ public partial class VolunteerRecruitmentService
             new VolunteerChance("erebor_oathsworn", 1),  // Oathsworn elite line entry
             // War-ram branch root (mirror EreborMix). Appended last: keeps every cumulative range
             // above it unchanged.
-            new VolunteerChance("ironpass_ram_herder", 3)
+            new VolunteerChance("ironpass_ram_herder", 1)
         };
     }
 }

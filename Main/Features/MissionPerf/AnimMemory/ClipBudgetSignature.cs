@@ -28,12 +28,24 @@ internal static class ClipBudgetSignature
         return result;
     }
 
-    /// <summary>Start offsets of <paramref name="pattern"/> in <paramref name="haystack"/>, at most <paramref name="maxHits"/>.</summary>
+    /// <summary>
+    /// Start offsets of <paramref name="pattern"/> in <paramref name="haystack"/>, ascending, at most <paramref name="maxHits"/>.
+    /// When the first token is a fixed byte, the scan jumps to that byte's next occurrence with <c>Array.IndexOf</c> and
+    /// checks the whole pattern only there; a leading wildcard or an empty pattern tests every offset.
+    /// </summary>
     internal static List<int> Find(byte[] haystack, int[] pattern, int maxHits)
     {
         var hits = new List<int>();
-        for (var i = 0; i <= haystack.Length - pattern.Length; i++)
+        var last = haystack.Length - pattern.Length; // the last offset where the whole pattern fits
+        var jump = pattern.Length > 0 && pattern[0] != -1;
+        for (var i = 0; i <= last; i++)
         {
+            if (jump)
+            {
+                i = Array.IndexOf<byte>(haystack, (byte)pattern[0], i, last - i + 1);
+                if (i < 0)
+                    break;
+            }
             var j = 0;
             while (j < pattern.Length && (pattern[j] == -1 || haystack[i + j] == pattern[j]))
                 j++;

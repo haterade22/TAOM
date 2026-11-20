@@ -77,6 +77,10 @@ class McpServerTests(unittest.TestCase):
         self.srv._build_query()
         self.assertEqual(ts._read_stripped.cache_info().currsize, 0)
 
+    def test_the_server_query_knows_the_install(self):
+        # Without it the MCP ran none of the install-backed passes the CLI runs (#623).
+        self.assertEqual(self.srv._query.game_modules, self.srv.GAME_MODULES)
+
     def test_validate_tool_returns_shape(self):
         out = self._call("validate_moduledata", {"codes": ["UNKNOWN_CULTURE"]})
         self.assertEqual(set(out), {"error_count", "warning_count", "issues"})

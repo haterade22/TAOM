@@ -29,10 +29,11 @@ inside `Mission.AfterStart` instead of attaching a finalizer to each behaviour t
   add their behaviours a second time.
 - **TAOM requirement:** TAOM's own behaviours guard themselves (#699), but any vanilla or other-mod behaviour, submodule
   or mission object can still loop the game, and TAOM cannot guard what it does not own. TAOM's own
-  `SubModule.OnMissionBehaviorInitialize` is one of the wrapped calls too, so a throw in TAOM's mission wiring is
-  survived and cuts the rest of that wiring short: every TAOM behaviour registered after the throw is missing from that
-  mission (the skeleton watch, the behaviour dump and the career perks among them; isolating each registration is issue
-  draft 11). The BattleLoad loading window's closer is registered in a `finally` around all of that wiring (the first
+  `SubModule.OnMissionBehaviorInitialize` is one of the wrapped calls too. Since #785, a failed build of one TAOM
+  behaviour is contained by `MissionBehaviorBuild` and reported to the guard (the same error line and notice, with the
+  behaviour's type as the owner), and the other TAOM behaviours are still added. This containment does not read the
+  "Survive Mission Start Failures" setting, and an `OutOfMemoryException` is never contained. A throw from the
+  method's preamble or from `mission.AddMissionBehavior` itself still reaches the guard as before. The BattleLoad loading window's closer is registered in a `finally` around all of that wiring (the first
   mission's patch application included), so it exists whatever the wiring did and ticks first, and the window
   still closes on the first tick (2026-10-08 review).
 - **Without this feature:** the loading screen never ends, and the player can only kill the game. In TAOM the first

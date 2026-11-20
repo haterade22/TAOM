@@ -1688,3 +1688,19 @@ The troop weight header only cleared vanilla's red over-capacity tint, never rai
 - **Why missed:** the "downgrade only" rule depended on a precondition the change removed, and the rule's comment was not re-read.
 - **Prevent:** when a change makes a display show its frame in more states, read every flag, tint and prompt the old code set or left alone, and check each still agrees in the new states.
 - **Source:** RCA `docs/reviews/rca-troop-weight-transfer-2026-11-17.md` finding 2 (Lens 5).
+
+### A hint that ranks or says "every" is read again when a later phase adds a modifier or an exemption (#1497, 2026-11-19)
+
+**Why missed:** the `Enable Combat Stamina` hint was written with the pool rule of Phase 1 (tier, then heroes), where "lords, companions and the player have the most" and "every soldier has stamina" were true. Phase 2 added a peoples table that multiplies every pool and exempts three races. A tier 5 troll then had as much as a level 25 lord, the Nazgul had none, and nobody read the hint again. This is the third time in this feature that a hint said more than the code does (the Phase 0 RCA, row 2), and the second hint of the same commit ("every soldier the AI controls has stamina") had the same fault.
+
+**Prevent:** when a change adds a multiplier, an exemption or an exception to a value, grep the feature's hints and its doc for the absolute words that the change can falsify (`every`, `all`, `always`, `never`, `the most`, `only`) and read each hit against the new code. Do it at each phase boundary, not only when the hint is first written. Name the hints in the review brief and ask the lens to test them against the code: that is how this one was found.
+
+**Source:** [rca-stamina-phases-1-2-2026-11-19.md](../rca-stamina-phases-1-2-2026-11-19.md) row 3 (lens 7), and [rca-stamina-phase0-2026-11-19.md](../rca-stamina-phase0-2026-11-19.md) row 2.
+
+### A view model property bound to a widget's layout float is a float: the widget writes every change back (#1497, 2026-11-19)
+
+**Why missed:** the stamina bar bound `SuggestedHeight` to an `int` property. From the view model to the widget that works (reflection widens an int to a float), and a repo precedent with an `int` (`TcbMuster.xml`, `SuggestedWidth="@Width"`) seemed to prove it. But `Widget`'s setters for `SuggestedWidth`, `SuggestedHeight`, `PositionXOffset`, `PositionYOffset`, the four margins and the four size limits raise a float change, and `GauntletView.OnViewPropertyChanged` writes it back with `ViewModel.SetPropertyValue`, which invokes the public setter by reflection. A `Single` does not go into an `Int32`: `ArgumentException`, in the screen tick, once per change, with a crash dialog for the player. The precedent never throws because its value never changes: the first push at bind time happens before the view listens to the widget. Two review lenses read the binding in the author's direction and judged it safe. `Widget.Color` raises nothing, so a colour string is one way.
+
+**Prevent:** `GauntletFloatWriteBackGateTests` fails a non-float property that is bound to one of those attributes, has a public setter and can notify a change. For any new binding, read the widget property's setter in the decompile and ask what comes back; a precedent proves a binding only if its value changes while the screen is open. A HUD or prefab change owes a game run that shows the widget with a changing value before review ends: for the battle HUD that is `/game-run` with `--control-check` and `--screenshots`.
+
+**Source:** [rca-stamina-phases-1-2-2026-11-19.md](../rca-stamina-phases-1-2-2026-11-19.md), the addendum (run `20261119-200716`).

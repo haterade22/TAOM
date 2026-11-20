@@ -299,10 +299,24 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
         return focused != null && focused != _screen.SceneLayer;
     }
 
+    /// <summary>
+    /// The command trial's keep target (#1503): the next keep takes this soldier in place of the one at the pointer, and the keep
+    /// clears it. A crew step sets it, so its keep does not need the pointer ray to reach an archer on a tower. Null in every player session.
+    /// </summary>
+    internal Agent? TrialKeepTarget { get; set; }
+
     public SeatKeepKind TryKeep()
     {
         _keptAgent = null;
         _keptFormation = null;
+        var trialTarget = TrialKeepTarget;
+        TrialKeepTarget = null;
+        if (trialTarget != null)
+        {
+            _keptAgent = AgentSlotIdentity.IsCurrentOccupant(trialTarget) && trialTarget.IsActive() ? trialTarget : null;
+            return _keptAgent != null ? SeatKeepKind.Soldier : SeatKeepKind.None;
+        }
+
         var selected = _mission.PlayerTeam?.PlayerOrderController?.SelectedFormations;
         var count = selected?.Count ?? 0;
         var first = count > 0 ? selected![0] : null;

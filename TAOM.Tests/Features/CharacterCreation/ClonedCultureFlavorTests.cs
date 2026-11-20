@@ -127,9 +127,20 @@ public class ClonedCultureFlavorTests
         "Fornost", "Annúminas", "Annuminas", "Arvedui", "Evendim", "Nenuial",
     };
 
+    /// <summary>
+    /// Phrases removed from a promoted culture's text before the scan. Dorwinion's culture blurb
+    /// names the Men of Dale as old friends; any other "Dale" is still Dale's identity.
+    /// </summary>
+    private static readonly Dictionary<string, string[]> AllowedPhrases = new()
+    {
+        ["dorwinion"] = new[] { "Men of Dale" },
+    };
+
     private static void Scan(List<string> hits, string culture, string where, string value)
     {
         if (string.IsNullOrEmpty(value)) return;
+        if (AllowedPhrases.TryGetValue(culture, out var allowed))
+            foreach (var phrase in allowed) value = value.Replace(phrase, "");
         foreach (var word in ForbiddenBySource[culture].Where(value.Contains))
             hits.Add($"{where}: '{word}' in \"{Trim(value)}\"");
     }

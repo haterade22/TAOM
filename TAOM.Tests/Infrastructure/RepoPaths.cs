@@ -22,6 +22,9 @@ public static class RepoPaths
     private static readonly Regex CommentPattern =
         new(@"/\*.*?\*/|//[^\n]*", RegexOptions.Compiled | RegexOptions.Singleline);
 
+    // C# also ends a line at a lone CR, NEL, U+2028 and U+2029; tools/comment_ratchet.py maps them the same way.
+    private static readonly Regex LineBreak = new("[\r\u0085\u2028\u2029]", RegexOptions.Compiled);
+
     /// <summary>The compiled code roots a source-scanning gate reads: core and the client submodule (ADR-013).</summary>
     public static readonly string[] CodeRoots = { "Main", "Client" };
 
@@ -114,6 +117,41 @@ public static class RepoPaths
     /// </summary>
     public static string StripComments(string source) =>
         CommentPattern.Replace(source, m => Regex.Replace(m.Value, "[^\n]", " "));
+
+    /// <summary>
+    /// The number of lines that hold a // or /* */ comment, with the same match as <see cref="StripComments"/>,
+    /// so it is not string-literal aware either. A /// XML doc comment is not counted; //// is.
+    /// tools/comment_ratchet.py counts with the same rule for CommentRatchetGateTests.
+    /// </summary>
+    public static int CommentLineCount(string source)
+    {
+        var text = LineBreak.Replace(source.Replace("\r\n", "\n"), "\n");
+        var lines = new HashSet<int>();
+        var position = 0;
+        var line = 0;
+        foreach (Match match in CommentPattern.Matches(text))
+        {
+            line += CountNewlines(text, position, match.Index - position);
+            position = match.Index;
+            if (match.Value.StartsWith("///", StringComparison.Ordinal) && !match.Value.StartsWith("////", StringComparison.Ordinal))
+                continue;
+
+            var last = line + CountNewlines(text, match.Index, match.Length);
+            for (var covered = line; covered <= last; covered++)
+                lines.Add(covered);
+        }
+
+        return lines.Count;
+    }
+
+    private static int CountNewlines(string text, int start, int length)
+    {
+        var count = 0;
+        for (var i = start; i < start + length; i++)
+            if (text[i] == '\n')
+                count++;
+        return count;
+    }
 
     /// <summary>
     /// True when <paramref name="needle"/> appears in the file outside comments (as a whole word when

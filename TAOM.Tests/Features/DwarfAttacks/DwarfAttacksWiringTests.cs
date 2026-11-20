@@ -59,7 +59,7 @@ public class DwarfAttacksWiringTests
         StringAssert.Contains(File.ReadAllText(Path.Combine(root, "Main", "IoC.cs")),
             "Features.DwarfAttacks.DwarfAttacksIoC.RegisterDwarfAttacksFeature(container);");
         StringAssert.Contains(File.ReadAllText(Path.Combine(root, "Main", "SubModule.cs")),
-            "AddTaomBehavior(new Features.DwarfAttacks.DwarfAttacksMissionBehavior());");
+            "AddTaomBehavior(() => new Features.DwarfAttacks.DwarfAttacksMissionBehavior());");
     }
 
     // BehaviorTreeMissionLogic keeps ONE tree per agent, and every dwarf soldier carries the race-ability tree (Stand

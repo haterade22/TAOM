@@ -39,6 +39,7 @@ internal sealed partial class CommandTrialScript
     {
         SeatSteps(Handlers);
         MarshalSteps(Handlers);
+        CrewSteps(Handlers);
     }
 
     internal CommandTrialScript(ICommandTrialHost host, IReadOnlyList<SeatTrialStep> steps, IModLogger logger, Action<string> finished,

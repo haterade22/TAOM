@@ -38,15 +38,6 @@ public static class ElephantConfig
     /// <summary>Tag on the platform's crew frames: where crew stand (research doc step 3 spawns at them).</summary>
     public const string HowdahCrewTag = "taom_howdah_crew";
 
-    /// <summary>
-    /// How far a seated archer may drift from its frame before the seat teleports it back, in metres (#627).
-    /// Teleporting EVERY frame is what kept the crew from shooting: the archer settles about 0.10 m from the frame,
-    /// the seat yanks it back, and the engine reads that as 30 m/s of real movement with the elephant standing still
-    /// and the archer's own legs stopped. Nothing completes a bow draw at that speed. A deadband wider than the
-    /// settle leaves a resting archer alone, so its measured velocity falls to what the elephant is actually doing.
-    /// </summary>
-    public const float HowdahSeatDeadbandMetres = 0.15f;
-
     /// <summary>Seconds between howdah status lines in the diagnostics log, per howdah.</summary>
     public const float HowdahStatusPeriodSeconds = 5f;
 

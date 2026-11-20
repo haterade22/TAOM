@@ -65,6 +65,15 @@ public class CampsContainerWiringTests
     }
 
     [TestMethod]
+    public void RefugeFeature_BookIsTheServiceInstance()
+    {
+        var container = BuildContainer();
+
+        Assert.AreSame<object>(container.Resolve<IRefugeService>(), container.Resolve<IRefugeBook>(),
+            "the defense hot path reads IRefugeBook; a second RefugeService would give it an empty book");
+    }
+
+    [TestMethod]
     public void FieldCampFeature_RegistersTheNullOverlayAdapter()
     {
         var container = BuildContainer();

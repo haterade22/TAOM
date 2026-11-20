@@ -1,6 +1,7 @@
 using BehaviorTrees;
 using BehaviorTreeWrapper.BlackBoardClasses;
 using TAOM.Features.AdvancedCombat;
+using TAOM.Features.Stamina.Hooks;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
@@ -48,12 +49,16 @@ public class DwarfAttackReadyDecorator : BTReturnFalseDecorator, IBTBannerlordBa
         // IsPlayerTroop survives MainAgent = null.
         if (!_service.MayAttack(dwarf.IsMainAgent || dwarf.IsPlayerTroop, dwarf.HasMount, dwarf.IsUsingGameObject))
             return false;
+        // Combat stamina (#1497): an Exhausted soldier attacks nobody. This attack does not go through the AI's input,
+        // so stamina's input strip cannot stop it and the tree asks here.
+        if (StaminaHooks.RefusesSpecialAttack(dwarf)) return false;
 
         float now = mission.CurrentTime;
+        float? lastFired = _service.LatestFired(HeadButtLastFired.GetValue(), DropKickLastFired.GetValue());
         bool headButtReady = _service.IsReady(DwarfAttack.HeadButt, DwarfAttacksCombat.IsResolved(DwarfAttack.HeadButt),
-            HeadButtLastFired.GetValue(), now);
+            lastFired, now);
         bool dropKickReady = _service.IsReady(DwarfAttack.DropKick, DwarfAttacksCombat.IsResolved(DwarfAttack.DropKick),
-            DropKickLastFired.GetValue(), now);
+            lastFired, now);
         if (!headButtReady && !dropKickReady) return false;
 
         if (DwarfAttacksCombat.IsOurs(dwarf.GetCurrentAction(0))

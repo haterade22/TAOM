@@ -186,7 +186,8 @@ rein-attribute invariant"; sibling entry in [elephant.md](elephant.md) "v1.4.8 e
 the elephant a different way: the platform's floor underside sits clear of the mount's body capsule, and the seat
 only corrects an archer's position once it has drifted past a deadband. Measured on the elephant, 2026-09-20:
 `drift=0.000` on every sample, `carriedV` tracking the mount's own speed, and the crew shooting standing and moving.
-Nothing about the mumakil reintroduces the old failure.
+Nothing about the mumakil reintroduces the old failure. The deadband correction itself was replaced on 2026-11-19
+(#1482): see "How the crew are held" below.
 
 ### What the asset actually is (Blender, read-only, 2026-09-20)
 
@@ -214,7 +215,7 @@ one in the crow's nest.**
 - **The code is CLONED into `Main/Features/Mumakil/`**, matching the one-feature-per-creature convention the spider
   and chariot set (Mike, 2026-09-20). The risk that buys is drift: the howdah's four engine rules took nine in-game
   rounds to find, and a clone can regress them independently. Mitigation, and it is not optional: the clone
-  references the PURE helpers rather than copying their numbers (`HowdahSeatMotion` for the deadband and the 0.74 m
+  references the PURE helpers rather than copying their numbers (`HowdahSeatMotion` for the rescue band and the 0.74 m
   spacing, `HowdahCrewBehaviourCurves` for the AI curve rows, `HowdahDiagnostics`/`HowdahSampleClock`/
   `HowdahRunStats` for the log maths). Those carry measured constants, not creature behaviour.
 - **The crew trigger is the mount item, not a harness.** The elephant gates on `sk_elephant_armor_howdah_elite`;
@@ -229,10 +230,10 @@ one in the crow's nest.**
 | `taom_mumakil_platform` prefab: three 3 cm floor slabs, eight crew frames, nothing rendered | `LOTRLOME_Armory/Prefabs/`, byte-snapshotted to `docs/reference/lotrlome-armory-snapshot/Prefabs/` |
 | `taom_mumakil_platform_navmesh.bin`: eight 1.6 m walkable squares, face group 1 | `Main/_Module/NavMeshPrefabs/` (git-tracked; deploys to `Modules/TAOM/`) |
 | `TaomMumakilPlatform` | places the entity on the beast each tick, attaches the navmesh, releases seats before vanilla deactivates them |
-| `TaomMumakilStandingPoint` | one seat: keeps the formation, rewrites the AI curves, pins locomotion, corrects drift past a deadband |
+| `TaomMumakilStandingPoint` | one seat: keeps the formation, rewrites the AI curves, pins locomotion, holds the archer with the engine's position lock and attachment |
 | `MumakilCrewSpawner` | owns the platform's lifecycle; builds on the rider's `OnAgentBuild`, spawns crew from the next `OnMissionTick` |
 | `MumakilCrewAgentOrigin` | a no-op casualty surface per archer; forwards `BattleCombatant` to the rider's origin, so the crew shares its party's refuge damage reduction (#741) |
-| `MumakilPlatformTests` | 15 gates: prefab name, decks, spacing, headroom, containment, deadband margin, tag-vs-script parity, navmesh declaration, `body_length`, live-copy match, IL release |
+| `MumakilPlatformTests` | gates: prefab name, decks, spacing, headroom, containment, tag-vs-script parity, navmesh declaration, `body_length`, live-copy match, IL release |
 
 ### The four things that had to be true at once
 
@@ -246,6 +247,9 @@ centimetre in x and y, and fell straight to the ground, 25,000 teleports a battl
 the engine for how vanilla does it turns up exactly two classes, `SiegeTower` and `MissionShip`, and **neither
 moves an agent at all**. Both import a navmesh prefab and attach its faces to their own entity so the walkable
 surface travels with them. That is the mechanism; ours was a hack that happened to survive at low altitude.
+The seat sets no height target: `SetTargetZ` would put the archer in the NoPhysics movement mode, where it never
+looses (see "How the crew are held"). The floors and the navmesh hold the height: every seat read `dz` 0.00 at up
+to 5 m/s on 2026-11-19.
 
 **2. Physics as well as navmesh.** Stripping the floor slabs while keeping the navmesh dropped every archer to
 the ground again. Navmesh makes a position VALID to stand at; a physics body is what an agent stands ON. A
@@ -289,6 +293,130 @@ which on this tower means behind the shoulders.
 
 Not proven to the level of a decompiled clear-shot check, but three for three with a clean control each time.
 
+### How the crew are held (#1482, 2026-11-19)
+
+Each seat holds its archer with two engine mechanisms:
+
+- `Agent.SetForceAttachedEntity(platform root)` once at `OnUse`: the platform becomes the agent's parent entity,
+  and the engine carries the archer with the beast.
+- `Agent.SetTargetPosition` every tick: a position lock that the native movement goes to. Position only, so the
+  archer still turns to aim.
+
+**Never `Agent.SetTargetZ`, and never `SetExcludedFromGravity(true)`.** Either writes
+`AgentMovementMode.NoPhysics`, the mode of a man on a climbing net. With `SetTargetZ` two archers read `NoPhysics`
+and loosed 0 arrows in three minutes with enemies in range, while their neighbours without it loosed 43 to 47
+each. The engine code that stops the shot is not read, and `SetExcludedFromGravity(true)` alone was not measured.
+The first version of this fix (`f8265b6dc`, on trunk on 2026-11-19) copied the whole hold of vanilla
+`ClimbingMachine`, `SetTargetZ` included: every archer stayed on its seat and none shot. The deck's floor holds
+the height. `HowdahSeatReleaseTests.NoSeat_PutsItsArcherInTheNoPhysicsMovementMode` gates it.
+
+The seat sets no scripted position and does not correct by teleport. One teleport remains, the rescue, for an
+archer more than 3 m from its seat (`HowdahSeatMotion.SeatRescueMetres`); the status line counts it as `rs`. On
+release the seat clears both native states (`SetForceAttachedEntity(Invalid)`, `ClearTargetFrame`), for a dead
+archer too: the attachment is a raw entity pointer on the agent, and vanilla clears it only for an agent that
+USED the object, which a crew archer never does. `HowdahSeatReleaseTests.WhatASeatSetsOnItsArcher_ItsReleaseClears`
+gates it for both seat classes.
+
+Each seat writes two `[Check]` lines when its archer leaves (`tools/ingame_checks/1482.toml`): held, a pass with
+no rescue (`taom.crew-seats.mumakil-held`, `howdah-held` on the elephant), and shot, a pass with one arrow or more
+loosed (`taom.crew-seats.mumakil-shot`, `howdah-shot`).
+
+What four battles at 1x speed measured on 2026-11-19, with a different hold on each seat of the same beast. A
+shot is one call of the engine's missile callback for that archer, counted over three minutes with enemies in
+range. The first three battles had no shot count, so their rows say "not counted".
+
+| Hold | Position | Shots |
+|---|---|---|
+| Teleport past 0.74 m with a scripted position (the design until then), main deck | The archer WALKS off its seat by itself, beast standing or moving: about 12 teleports per 5 s | With the attachment added: 448 teleports, 0 shots |
+| The same design in the crow's nest | Never teleported, within 0.13 m | 48 |
+| No correction | Walked 3 m off its deck | not counted |
+| Attachment alone | The parent entity was set (`parentRoot=1`) and the archer still walked | not counted |
+| The archer placed from managed code every tick | 200 to 360 teleports per 5 s | not counted |
+| Lock alone | Within 0.03 m on a standing beast; up to 3 m behind its seat at 3 to 5 m/s, rescued | not counted |
+| Lock, attachment and `SetTargetZ` (the first fix) | Within 0.12 m at up to 5 m/s, no rescue | 0 on both seats, `mode=NoPhysics` |
+| Lock and attachment (the shipped hold) | Within 0.12 m at up to 5 m/s, no rescue | 43, 44 and 47, `mode=Land` |
+| Lock, attachment and a scripted position | The same | 48: the scripted position adds nothing |
+
+The measurement also ruled out two suspects: the beast's motion (the walk happens on a standing beast) and the
+tick order of platform and seat (the platform ticked first on every sampled frame). Moving the platform with
+`isTeleportation: false`, as the vanilla siege tower does (through `SetGlobalFrame`), changed nothing.
+
+**The shipped hold on all eight seats (2026-11-19, trunk `66b6e4f17`).** Three unattended Fords of War matches,
+Gondor against Harad with an AI on each side, had one mumakil each. Every archer read `mode=Land` in every
+sample, and no seat made a rescue teleport.
+
+| Run folder under `E:/Temp/fords-runs` | Speed | Time on the beast | Shots, `main_0` to `main_4`, `upper_0`, `upper_1`, `nest_0` | Largest distance from the seat |
+|---|---|---|---|---|
+| `20261119-202858` | 1x | 65 s, until the mumakil died | 4, 6, 5, 8, 6, 5, 6, 6 | 0.11 m at up to 6.5 m/s |
+| `20261119-204402` | 4x | about 120 mission seconds, until it died | 20, 15, 21, 23, 18, 15, 21, 21 | 1.23 m in one period |
+| `20261119-211549` (build `ad1146d55`: the same code, docs added) | 10x | about 120 mission seconds, until it died | 25, 25, 26, 28, 25, 24, 29, 26 | 0.72 m in one period |
+
+`python tools/ingame_verdict.py --issue 1482` reads these sessions as PASS on the held and the shot check. A fourth
+match with a temporary camera on the crew (`20261119-204912`, a `.dirty` build, so the verdict tool does not
+count it) gave pictures of two mumakil: the archers stand on the three decks with their bows in hand, and after
+the first mumakil died its archers fought on the ground. All sixteen seats of that match passed both checks too.
+
+The first fix was chosen from the restart counter (`re`), which rose on the locked seats and was read as archers
+that reload and shoot. It counts an aborted draw as well. Only `shots` proves shooting
+([RCA](../reviews/rca-crew-hold-no-shots-2026-11-19.md)).
+
+### The crew steps of the command trial
+
+The crews can be checked in a custom battle with nobody at the keyboard (#1503). The command trial
+([seat-of-seeing.md](seat-of-seeing.md#field-trial)) has two steps for it, `crew_mumakil` and `crew_howdah`:
+
+```
+python tools/run_command_trial.py --steps enter,crew_mumakil,crew_howdah
+```
+
+A step list that names a crew step adds one Mumakil Rider and two Elephant Riders (`fow_harad_mumakil_rider`,
+`fow_harad_elephant_rider`) to the player's army of the trial. A list that names none fields no beast, and a run with no
+`--steps` does not arm the crew steps, so the Seat's and Marshal's Word's steps keep the battle they were proved in.
+
+Each step does this, in order:
+
+1. It waits up to 20 s for a living beast of its kind whose every seat holds an archer.
+2. It gives every company of the player's team the Charge order, so the beast walks to the enemy. The order holds while
+   the trial's hero commands the army: if he falls, the engine gives the companies to its AI, which gives its own orders.
+3. It keeps the Seat's view to one archer of the beast. The step hands the archer to the keep directly
+   (`SeatScreenAdapter.TrialKeepTarget`), so the pointer is not used.
+4. It saves three pictures into the run folder, `hud_<step>_1.png` to `_3.png`, at 8 s, 16 s and 25 s after the keep: the
+   first from 16 m, the others after the view moved back to about 28 m.
+5. It watches the crew for 30 s to 150 s, until every archer loosed an arrow or the beast is gone.
+6. It lets the keep go and writes its line.
+
+The step passes when no seat made a rescue teleport, every archer loosed at least one arrow and the beast went 10 m or
+more from where the trial first saw it (`CrewTrialRules.Passes`). The numbers on its line are the highest of each seat
+over the watch, so an archer who shot and then fell still counts. The distance is counted from the first crew step of
+the battle, as the rescue count is counted from the moment the archer took the seat.
+
+A crew step runs with `enter` only. The game and the wrapper refuse a list that names another step beside it: a crew
+battle has the three beast riders in the cavalry company and another enemy, and `let_go_on_death` would kill that company.
+
+The `[Check] taom.crew-seats.*` lines are still written when a seat lets its archer go, and a failed one fails the run.
+A person still looks at the pictures: the run does not judge what they show.
+
+The enemy of a crew battle is 300 melee orcs and no archer (`CrewTrialRows.Enemy`). The trial's usual enemy has 30 orc
+archers, and in the first run they killed the mumakil 38 s after the charge.
+
+Three runs on 2026-11-20, each on an uncommitted build over `f9bf64092` (run folders under `E:\Temp\command-trial-runs`):
+
+| Run | Enemy | Result | Mumakil, shots for each seat in the watch | Howdah, shots | Rescue teleports |
+|---|---|---|---|---|---|
+| `20261120-132358` | 120 orc fighters, 30 orc archers | PASS, 3 steps | 5, 1, 4, 4, 1, 3, 5, 6 in 37.0 s; the beast went 180.7 m | 10, 8; the beast went 203.1 m | 0 |
+| `20261120-132954` | 300 orc fighters | FAIL at `enter`, before a crew step | not reached | not reached | not reached |
+| `20261120-133122` | 300 orc fighters | PASS, 3 steps | 3, 1, 4, 4, 1, 1, 4, 5 in 35.6 s; the beast went 164.7 m | 14, 10; the beast went 231.7 m | 0 |
+
+In the first run the battle was decided 61 s after the charge, so the howdahs were empty in the third howdah picture. In
+the third run the mumakil was alive at the end, and its last status line reads 9 to 13 shots for each of the eight archers,
+`mode=Land` and `maxDrift=0.03`. The pictures of the first and third run show the eight archers on the three decks while the
+mumakil walks, and two archers with bows in each howdah. The first picture of the first run shows only a tree: it was taken
+3 s after the keep, and the first picture is at 8 s now.
+
+The second run is not explained. The Seat's view left 2 s after it entered, with `reason=key` on its leave line, which is the
+Seat's own key. The trial presses that key once. The PC was in use that afternoon, so a press on the keyboard is possible,
+and nothing in the log proves it.
+
 ### Why locomotion is pinned
 
 `SetMaximumSpeedLimit(0f, isMultiplier: false)` at `OnUse`, cleared with `-1f` on release. Until the platform
@@ -296,20 +424,29 @@ carried a navmesh the crew physically could not walk, so nothing ever had to sto
 a navmesh under them they wandered up to 7.06 m, because a ranged agent that CAN reach a better firing
 position will go and take it. Turning and shooting are unaffected.
 
-It is applied ONCE at `OnUse` and deliberately NOT on the half-second stance clock. Re-applying it every 0.5 s
-on eight seats in lockstep matched the draw dying at 0.85 on all eight in lockstep, while the teleport count
-did not (340 teleports against 27 restarts in the same window).
+It is applied ONCE at `OnUse`. An earlier note here blamed a re-apply on the half-second stance clock for the
+draw dying at 0.85, from a total of 340 teleports against 27 restarts in one window. The 2026-11-19 measurement
+counted each restart against the teleports inside it and found a teleport inside every one, so the total had
+misled. Whether the position lock still needs the speed limit is not measured: both battles had it on.
 
 ### What the log tells you
 
-`[Mumakil#n] status` carries, per seat, `action/max/re/tp/dz`:
+`[Mumakil#n] status` (with Log Crew Platform Diagnostics on) carries the beast's `moving=` ticks and `meanV=`
+for the period and, per seat, `name:action/rs/re(rs)/max/lag/off/dz/step/parentRoot/shots/mode/tgt`:
 
 | Field | Healthy | What a bad value means |
 |---|---|---|
-| `dz` | 0.00 | non-zero and CONSTANT is the killer: the archer is standing on something that is not its seat, and no number of teleports will move it |
-| `max` | 1.00 | 0.85 is the draw dying at the release handoff, i.e. the re-nock loop |
-| `re` | any | restarts only mean "stuck" when `max` is 0.85. With `max` 1.00 a high count is a busy archer; the crow's nest ran 88 |
-| `tp` | tens | thousands means the seat is fighting something. 7,619 in one battle was an archer pinned a metre up |
+| `rs` | 0 | rescues: the seat teleported an archer that was more than 3 m away. The hold failed |
+| `shots` | rising while `tgt` is 1 | arrows loosed, from the engine's missile callback. The ONLY proof that an archer shoots. 0 with `tgt=1` for a minute is a silent bow |
+| `mode` | `Land` | the engine's movement mode. `NoPhysics` is what `SetTargetZ` and `SetExcludedFromGravity(true)` write; the archers measured in it loosed no arrow |
+| `tgt` | 1 in a fight | whether the engine has given the archer a target |
+| `re(rs)` | `(rs0)` | upper-body restarts, and how many had a rescue inside them. It rises for a shot AND for an aborted draw, so it never proves shooting: on 2026-11-19 it rose once a second on archers that loosed nothing |
+| `max` | 1.00 | the highest upper-body progress since the archer was seated (a lifetime maximum, so it says nothing about the last minute). 0.85 is the draw dying at the release handoff, i.e. the re-nock loop |
+| `lag a..b` | within about 0.1 | metres ahead of (+) or behind (-) the seat along the beast, the range over the period. A large negative value at speed is an archer that is not carried |
+| `off` | under about 0.1 | the largest distance from the seat in the period |
+| `dz` | 0.00 | non-zero and CONSTANT is the killer: the archer is standing on something that is not its seat |
+| `step` | its own deck's floor | `-` is an archer in the air |
+| `parentRoot` | 1 | 0 means the attachment is not set |
 
 ### The reference-frame mismatch, and why it is the first thing to watch
 ### The reference-frame mismatch, and why it is the first thing to watch
@@ -322,8 +459,8 @@ the elephant and is the stated reason `TaomHowdahMachine` carries a deferred `Sp
 3.0x, with decks 9 to 13.8 m up and frames up to 8 m behind the origin, a given spine rotation moves the visible
 deck several times further than it moves on the elephant.
 
-This is not a code defect and no deadband can fix it: chasing the bob recreates the velocity failure the deadband
-exists to prevent. It is a measurement. Stand a mumakil still, walk it, then turn it hard, and watch whether the
+This is not a code defect and no correction can fix it: chasing the bob by teleport recreates the velocity
+failure that stops a bow draw. It is a measurement. Stand a mumakil still, walk it, then turn it hard, and watch whether the
 archers sink into or float above the tower floor. If they do, bone tracking becomes phase 2b.
 
 **Verified clear, separately:** the main deck's floor underside sits 0.59 m above the beast's body capsule

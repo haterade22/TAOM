@@ -75,7 +75,7 @@ public class GauntletSupplyOrderScreen : ScreenBase, IGameStateListener
 
             _movie = _gauntletLayer.LoadMovie("TaomSupplyOrderScreen", _viewModel);
             // The goods pane keeps wheel momentum across a repopulate; only its own reset clears
-            // it. A missing widget degrades to the VM's value reset (Codex review #587 P2).
+            // it. A missing widget degrades to the VM's value reset.
             if (_gauntletLayer.UIContext?.Root?.FindChild("GoodsScrollPanel", includeAllChildren: true) is ScrollablePanel goodsPanel)
                 _viewModel.ResetGoodsScroll = goodsPanel.ResetTweenSpeed;
             AddLayer(_gauntletLayer);

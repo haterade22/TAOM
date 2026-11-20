@@ -130,6 +130,10 @@ public class CoopVetoClassificationTests
         ["Patch143_EmptyMeetingGuard"] = new(CoopVeto.ReviewedSafe,
             "Crash guard (#1099). It replaces only a meeting whose partner has no speaker, which would throw on every peer. " +
             "It reads the encounter and rosters and no TAOM SyncData or MCM value, and its Leave option is vanilla's own exit."),
+        ["Patch170_HalfFinishedEncounterRepair"] = new(CoopVeto.ReviewedSafe,
+            "Save repair. The prefix always returns true, so it skips nothing: it runs the side-end step and the component finish of vanilla's finish first (AfterSiegeCompleted, and on a blockade FinalizeSiegeEvent, which vanilla fires itself at the same point), " +
+            "and only on a finalized map event that still holds parties or lost its component back-reference, a state a healthy " +
+            "game never reaches. It reads no TAOM SyncData or MCM value, and its service stands down when ICoopSessionProvider.ShouldDeferToHost holds."),
         ["Patch160_LoadRetryStop"] = new(CoopVeto.ReviewedSafe,
             "Hang guard (#1429). It skips only step 3 of this process's own saved-game load after that step already threw " +
             "and consumed its LoadResult, a retry that cannot succeed. The campaign has not finished loading and no session " +
@@ -280,9 +284,9 @@ public class CoopVetoClassificationTests
             "per-peer — each player has their own clan — but the divergence is confined to banner " +
             "tint and is inherent to co-op having two player clans."),
         ["PartyScreenLogic_AddCommand_Patch"] = new(CoopVeto.ReviewedSafe,
-            "Blocks an upgrade the local player cannot afford. Reads _taom_specialResources, which " +
-            "is TAOM campaign state — but it gates the acting player's OWN party screen, and each " +
-            "peer owns its own resources."),
+            "Blocks or clamps an upgrade, or outside a co-op session a party-screen prisoner recruit " +
+            "(#563), the local player cannot afford. Reads _taom_specialResources, which is TAOM campaign state, but it gates " +
+            "the acting player's OWN party screen, and each peer owns its own resources."),
         ["RecruitmentVM_ExecuteDone_Patch"] = new(CoopVeto.ReviewedSafe,
             "The commit-boundary twin of PartyScreenLogic_AddCommand_Patch: skips the local player's " +
             "OWN recruit-screen commit when the cart is unaffordable in their special resource, the " +

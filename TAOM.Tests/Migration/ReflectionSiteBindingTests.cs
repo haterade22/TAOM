@@ -103,7 +103,7 @@ public class ReflectionSiteBindingTests
     // --- Layered banner editor: the view's refresh callback it calls after each edit (TaomBannerEditorVM.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.BannerEditorVM", "BannerEditorVM", "_refresh", "Field", "TaomBannerEditorVM.cs:39")]
     // --- SpecialResources transactional spend (PartyScreenLogic_AddCommand_Patch.cs) ---
-    [DataRow("TaleWorlds.CampaignSystem.Party.PartyScreenLogic+PartyCommand", "PartyCommand", "TotalNumber", "Member", "PartyScreenLogic_AddCommand_Patch.cs:72")]
+    [DataRow("TaleWorlds.CampaignSystem.Party.PartyScreenLogic+PartyCommand", "PartyCommand", "TotalNumber", "Member", "PartyScreenLogic_AddCommand_Patch.cs:117")]
     // --- SpecialResources encyclopedia troop badge (EncyclopediaUnitBadgeMixin.cs, #590) ---
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Items.EncyclopediaUnitVM", "EncyclopediaUnitVM", "_character", "Field", "EncyclopediaUnitBadgeMixin.cs:32")]
     // --- EditorCacheRebuild distance-cache reflection web (NavigationCacheAdapter.cs) ---
@@ -276,6 +276,10 @@ public class ReflectionSiteBindingTests
     // answers false, so the caravan and villager greetings stay vanilla.
     [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.CaravansCampaignBehavior", "CaravansCampaignBehavior", "_interactedCaravans", "Field", "EncounterLinesAdapter.cs:34")]
     [DataRow("Helpers.PartyScreenHelper", "PartyScreenHelper", "GetRosterWithAllGameTroops", "Method", "CheatWorldAdapter.cs:149")]
+    // --- Half-finished encounter repair (HalfFinishedEncounterAdapter.cs, Patch170): the load step the event missed ---
+    [DataRow("TaleWorlds.CampaignSystem.MapEvents.MapEventComponent", "MapEventComponent", "AfterLoad", "Method", "HalfFinishedEncounterAdapter.cs:18")]
+    // --- Orphaned AI battle sweep (HalfFinishedEncounterAdapter.FinishEvent): the component step the crash skipped ---
+    [DataRow("TaleWorlds.CampaignSystem.MapEvents.MapEventComponent", "MapEventComponent", "FinalizeComponent", "Method", "HalfFinishedEncounterAdapter.cs:19")]
     [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.VillagerCampaignBehavior", "VillagerCampaignBehavior", "_interactedVillagers", "Field", "EncounterLinesAdapter.cs:35")]
     // The text seam's three ConversationManager fields, bound once in Initialize. A miss logs one warning and the surrender and
     // hideout boss lines stay vanilla.

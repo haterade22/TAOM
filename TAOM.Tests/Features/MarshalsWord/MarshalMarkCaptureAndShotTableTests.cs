@@ -413,7 +413,7 @@ public class MarshalMarkCaptureAndShotTableTests
         var code = Code("Main/Features/MarshalsWord/MarshalWordComponent.cs");
         var body = code.Substring(code.IndexOf("public override void OnAIInputSet(", StringComparison.Ordinal));
 
-        StringAssert.Contains(body, "if (_faulted) return; try {");
+        StringAssert.Contains(body, "if (_faulted || !_on) return; try {");
         StringAssert.Contains(body, "catch (Exception ex) { _faulted = true; Outcomes.Swallowed(\"MarshalsWord\", \"MarshalWordComponent.OnAIInputSet\", ex); SelfDisables.Report(SelfDisableId, ex.GetType().Name); }");
         StringAssert.Contains(code, "private const string SelfDisableId = MarshalsWordModule.PatchCategory + \".SoldierCallback\";");
     }
@@ -484,14 +484,33 @@ public class MarshalMarkCaptureAndShotTableTests
     public void TheFireAdapter_TurnsTheCallbackOnOnceForATouchedSoldier_AndOffOnlyForTheSlotsCurrentOccupant()
     {
         // Agent.cs:4409-4420: AddComponent does not call Initialize. Native calls only a flagged agent. A deleted agent's handle answers for the
-        // slot's next tenant (#592), so a release is gated on the occupant.
+        // slot's next tenant (#592), so a release is gated on the occupant, and a soldier who lost his slot gives his claim up with no engine call.
+        // The flag is one switch per agent that stamina needs too (#1497), so the adapter claims and releases it and never writes it.
         var code = Code("Main/Adapters/MarshalFireAdapter.cs");
 
-        StringAssert.Contains(code, "if (_touched.Add(agent)) agent.SetHasOnAiInputSetCallback(true);");
-        StringAssert.Contains(code, "if (!AgentSlotIdentity.IsCurrentOccupant(agent) || agent.State == AgentState.Deleted) return;");
-        StringAssert.Contains(code, "try { if (component is { OwesAttackFlag: true } or { OwesFiringOrder: true }) component.ReleaseHold(); } finally { agent.SetHasOnAiInputSetCallback(false); component?.Reset(); }");
+        StringAssert.Contains(code, "if (_touched.Add(agent)) { AiInputCallbackClaims.Claim(agent, AiInputCallbackClaims.MarshalsWord); component.SwitchOn(); }");
+        StringAssert.Contains(code, "if (!AgentSlotIdentity.IsCurrentOccupant(agent) || agent.State == AgentState.Deleted) { AiInputCallbackClaims.Forget(agent, AiInputCallbackClaims.MarshalsWord); return; }");
+        StringAssert.Contains(code, "try { if (component is { OwesAttackFlag: true } or { OwesFiringOrder: true }) component.ReleaseHold(); } finally { component?.Reset(); AiInputCallbackClaims.Release(agent, AiInputCallbackClaims.MarshalsWord); }");
         StringAssert.Contains(code, "MissionThreadGuard.NoteCall(\"MarshalFireAdapter.Sweep\", _logger.LogError);");
+        Assert.IsFalse(code.Contains("SetHasOnAiInputSetCallback"), "only AiInputCallbackClaims writes the shared flag");
         Assert.IsFalse(Regex.IsMatch(code, @"\b(?:agent|unit|Agent)\.Index\b"), "the touched set is keyed by the agent object, never its index; a company is the formation's Index");
+    }
+
+    [TestMethod]
+    public void TheSoldierCallback_AnswersOnlyWhileMarshalsWordHoldsTheSoldier()
+    {
+        // With a shared flag native keeps calling this component while stamina alone holds a claim (AiInputCallbackClaims,
+        // Agent.cs:1660-1664 calls every component). A released component must do nothing then: its hold adds an attack input.
+        var component = Code("Main/Features/MarshalsWord/MarshalWordComponent.cs");
+        var claims = Code("Main/Adapters/AiInputCallbackClaims.cs");
+
+        StringAssert.Contains(component, "if (_faulted || !_on) return;");
+        StringAssert.Contains(component, "internal void SwitchOn() => _on = true;");
+        StringAssert.Contains(component, "internal void Reset() { _on = false;");
+        StringAssert.Contains(component, "private volatile bool _on;");
+        StringAssert.Contains(claims, "if (Ledger.Claim(agent, owner)) agent.SetHasOnAiInputSetCallback(true);");
+        StringAssert.Contains(claims, "if (Ledger.Release(agent, owner)) agent.SetHasOnAiInputSetCallback(false);");
+        StringAssert.Contains(claims, "internal static void Forget(Agent agent, int owner) => Ledger.Release(agent, owner);");
     }
 
     [TestMethod]
@@ -520,6 +539,9 @@ public class MarshalMarkCaptureAndShotTableTests
         var drop = code.Substring(code.IndexOf("public void Drop()", StringComparison.Ordinal), 220);
 
         Assert.IsFalse(drop.Contains("SetHasOnAiInputSetCallback"), drop);
+        // Its claims go too, or the ledger would keep every touched agent of the mission alive; DropOwner makes no engine call.
+        StringAssert.Contains(drop, "AiInputCallbackClaims.DropOwner(AiInputCallbackClaims.MarshalsWord);");
+        StringAssert.Contains(Code("Main/Adapters/AiInputCallbackClaims.cs"), "internal static void DropOwner(int owner) => Ledger.DropOwner(owner);");
     }
 
     [TestMethod]

@@ -31,6 +31,9 @@ public interface IAgentAdapter
     int Health { get; }
     AgentState State { get; }
     bool IsSameTeam(IAgentAdapter other);
+    /// <summary>True when this agent has a side <see cref="IsSameTeam"/> can compare: its own team, or, for a
+    /// mount the engine gave none, its last rider's (#594).</summary>
+    bool HasKnownSide { get; }
     int GetBaseArmorEffectivenessForBodyPart(BoneBodyPartType bodyPart);
     void ProjectAgent(Vec3 position, DamageAnimation animation);
     bool IsAttackLikelyToHit(IAgentAdapter attacker, float coneAngle, float attackDistance);

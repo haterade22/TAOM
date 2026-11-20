@@ -6,6 +6,7 @@ Running scorecard. Numbers are not unique keys; rows since 2026-09-24 carry "(at
 
 | # | Date | Feature | Codex Verdict | Claude Verdict | Real Bugs | False Positives | Missed Bugs | Prompt Version |
 |---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
+| (at merge) | 2026-11-20 | Combat stamina (#1497), `feat/stamina` from `24db60d7d`: Phase 0 (bands, the Exhausted lock, the shared AI input flag), Phases 1 and 2 (pool, costs, regeneration, peoples, HUD bar, five MCM settings), the fixes from 40 unattended Fords matches, and the pre-merge review of the off switch on the tree with trunk merged in | not run (out of usage since 2026-11-15; owed at `ultra`) | agree (every confirmed item fixed but one LOW, the crew archer on a moving beast, left open as unverified) | 1 HIGH, 6 MEDIUM, 12 LOW | 2 (a lens said no `elf` race exists; a lens said an Exhausted dwarf's attack drains him further) | 1 HIGH (the bar's int binding, found by the first game run) and 1 MEDIUM (attacks a behaviour tree starts past the lock, found from the run logs) | tier-1 deep reviews (Lens 2, 5, 7) per phase, five Lens 5 reviewers before the merge; RCA `rca-stamina-phase0-2026-11-19.md`, `rca-stamina-phases-1-2-2026-11-19.md` |
 | (at merge) | 2026-11-13 | Plan 051 (#1132): tools dead scripts, the README game-dir section, the translator's sibling-parse hoist and the shared docs-graph build, `664f19c5b..ee81570a3` | not run | agree (all five lens items confirmed and fixed) | 5 LOW | 0 | none known | two-lens deep review (Data flow, Tooling); RCA `rca-tools-dead-scripts-and-test-speed-2026-11-13.md` |
 | (at merge) | 2026-11-10 | War Pledge Slice 1 (#1113): adversarial pass on the landed commit `65189fc49`, then a pass on its fixes | issues-found (`ultra`: 0 P1, 1 P2, 1 P3, 11 coverage gaps, 6 of 8 suspects disputed with evidence; `high` on the fixes: 0 P1, 0 P2, 2 P3) | agree (all confirmed and fixed; the P2 rated LOW: console only, victory off by default; one design item is a follow-up for Slice 2) | 4 LOW (one is a regression of the first fix), plus 2 coverage rows | 0 | 0 | gpt-6-astra, ultra then high; RCA `rca-war-pledge-2026-11-10.md`, rows 14 to 19 |
 | (at merge) | 2026-11-09 | Supply Lines caravan meeting menu and failed-join stay branch (#1104, #1099), commit `218f4ee31` | issues-found (0 CRITICAL, 0 HIGH, 0 MEDIUM, 2 LOW, 5 LOW observations; the defect suspects disputed on the ordinary paths) | agree (5 confirmed and fixed, 2 left open with no known producer) | 5 | 0 | 0 | gpt-6-astra, ultra, read-only sandbox; RCA `rca-supply-caravan-meeting-2026-11-09.md` |
@@ -5757,3 +5758,221 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 
 - **In-game:** #1163 owed (`triage-needs-ingame`). #1155 only keeps a stack trace: not applicable.
 - **Metrics:** not recomputed here.
+
+## Review (number assigned at merge): plan 055, enlistment redirect in the grace window inside a settlement (#511), deep review with two lenses, Codex not run (2026-11-18)
+
+- **Scope:** `c63dbb0ce..169b8bc72` on `improve/055-enlistment-redirect-outside-attached` (#511): `TryRedirectMenu` now also redirects in `CommanderUnavailable` while the player is inside a settlement with no `PlayerEncounter`, so the `town_outside` and `castle_outside` pushes that throw at init are masked in the grace window. 24 new test results; three comment edits; three docs.
+- **Codex:** not run (out of usage since 2026-11-15); the two lens reports stand in for it.
+- **Lenses:** Engine compatibility and Data flow (tier 1, campaign menus; Standards, Efficiency, Completeness and Design skipped by tier). 0 CRITICAL, 0 HIGH, 0 MEDIUM in the changed code; 1 LOW doc wording and 1 citation nit, applied as doc text. 4 FOLLOW-UP notes: the siege menus that flow in both states (UNVERIFIED), the settlement's own battle masked in grace (verified by the lead as crash removal: both `encounter` and `join_encounter` inits dereference `PlayerEncounter.Current`), stale "#510 every settlement placement opens an encounter" comments, and the "while attached" log wording. 0 false positives.
+- **Report:** `docs/reviews/deep-review-055-enlistment-redirect-outside-attached-2026-11-18.md`. No RCA: no confirmed defect.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| - | None in the changed code | - | - | - |
+
+- **In-game:** owed on #511 (no game run in this review).
+
+## Review (number assigned at merge): plan 056, off-thread agent removals in MissionDiagnosticBehavior (#607), tier-1 deep review (Lens 2, Lens 5), Codex not run (2026-11-18)
+
+- **Scope:** `c63dbb0ce..a531bea73` on `improve/056-agent-removed-off-thread-guards`: `PendingAgentReads.RemoveOrDefer`, the behavior's main-thread mark and its two drop callbacks, two new test files and the feature doc.
+- **Codex:** not run (out of usage; a paid call needs the maintainer's word).
+- **Lenses:** Engine compatibility, 9 verified, 0 incompatible, 1 unverified doc claim (not a defect); Data flow, 10 flows, 0 gaps. The plan's census holds for collections and match state: none of the 16 `OnAgentRemoved` overrides writes them unguarded; two harmless fault counters (`FordsOfWarMissionLogic.cs:146`, `LongDefeatRunHost.cs:204`) are plain increments. 2 LOW confirmed and fixed, 2 false positives (the `OnAgentDeleted` thread wording and a pre-existing drain-to-snapshot window).
+- **Report:** `docs/reviews/deep-review-056-agent-removed-off-thread-guards-2026-11-18.md`; RCA `docs/reviews/rca-agent-removed-off-thread-guards-2026-11-18.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | After a failed read, off-thread drops were parked behind a drain the read latch had stopped, until mission end | Stale state / lifecycle | The plan accepted the pile-up; the latch was checked only against the older producer | Drops skip once reads stop; red-green test; lesson in `lessons/state-lifecycle-save.md` |
+| F2 | The doc's "first one per callback" warning read as once per mission; the site set is static, so it is once per game session | Other: doc against code | Written from the queue's comment, not from where the dedup set lives | Doc reworded |
+
+- **Owed:** the fix-loop re-review of the fix diff (Lens 2, and Codex at `high` when usage returns): the fix changes runtime behaviour in a tier 1 area.
+- **In-game:** not run (tier 1, no game run).
+
+## Review (number assigned at merge): plan 057, first-byte prefilter in the engine signature scan (#784), tier-1 deep review (Lens 2, Lens 5), Codex not run (2026-11-19)
+
+- **Scope:** `8e836fd40..66fcd4204` on `improve/057-signature-find-first-byte-prefilter`: `ClipBudgetSignature.Find` jumps to the next occurrence of the pattern's first fixed byte with `Array.IndexOf` and checks the full pattern only there; 11 new tests, among them a 20,000-case differential test against the old loop and a test over all seven shipped patterns.
+- **Codex:** not run (out of usage; a paid call needs the maintainer's word).
+- **Lenses:** Engine compatibility, 2 verified, 0 incompatible, 1 unverified commit-body claim (the lead verified its cache half at SignatureScanSession.cs:62-69 and SkeletonBufferSignature.cs:83-85, :107-109; the timings from #784 stay UNVERIFIED); Data flow, 5 flows, 0 gaps, 0 inconsistencies. Both lenses proved the same hits, order and `maxHits` stop as the old loop for every input. 0 findings, 0 false positives.
+- **Report:** `docs/reviews/deep-review-057-signature-find-first-byte-prefilter-2026-11-19.md`. No RCA: no confirmed defect.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| - | None in the changed code | - | - | - |
+
+- **Suite:** `Failed!  - Failed:     3, Passed: 42954, Skipped:     9, Total: 42966` (the three known language-file failures; the plan's base plus the 11 new tests).
+- **In-game:** not run (tier 1, no game run); a launch with no address cache is owed on #784.
+
+## Review (number assigned at merge): plan 058, isolate each hand-wired mission behaviour registration (#785), tier-1 deep review (Lens 2, Lens 5), Codex not run (2026-11-19)
+
+- **Scope:** `8e836fd40..3e1b1dc9b` on `improve/058-isolate-mission-behaviour-registrations`: `MissionBehaviorBuild.Isolated` builds each hand-wired TAOM mission behaviour in a factory, so a throw while building one drops only that behaviour and reports it to the mission-start guard; the engine add stays outside the isolation in `AddBuiltTaomBehavior`.
+- **Codex:** not run (no paid dispatch authorised for this item).
+- **Lenses:** Engine compatibility, 5 verified, 0 incompatible, 0 unverified; Data flow, 9 flows, 0 gaps, 2 LOW inconsistencies. Standards, Efficiency, Completeness and Design skipped by tier. 1 LOW confirmed and fixed (OOM contained), 2 false positives as defects (the setting no longer governing a build failure, by plan Design item 6; the failure logged twice, kept as the fallback record).
+- **Report:** `docs/reviews/deep-review-058-isolate-mission-behaviour-registrations-2026-11-19.md`; RCA `docs/reviews/rca-isolate-mission-behaviour-registrations-2026-11-19.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | An `OutOfMemoryException` while building a TAOM mission behaviour was contained, though the mission-start guard never swallows one | Other: catch scope against a sibling guard | The plan quoted the guard's `Report`, not its `ShouldSurvive` filter | Catch filter excludes OOM; red-green test; lesson in `lessons/harmony-il.md` |
+
+- **Owed:** the fix-loop re-review of the fix diff (Lens 5, and Codex at `high` when usage returns): the fix changes runtime behaviour in a tier 1 area.
+- **In-game:** not run (tier 1, no game run).
+
+## Review (number assigned at merge): crew carry measuring build (#1482), tier-1 deep review (Lens 2, Lens 5), fix-diff re-review, Codex not run (2026-11-19)
+
+- **Scope:** the uncommitted diff on `fix/crew-carry` from `7c45d9603`: the temporary carry arms (`CrewCarryExperiment`), `HowdahSeatProbe`, `HowdahSeatMotion.DecideCarry`, and the howdah and mumakil seats, platforms and reporter. Live Armory animation files changed the same day belong to #1474 and were out of scope.
+- **Codex:** not run (out of usage since 2026-11-15). Owed at `ultra` before the Step 3 fix merges.
+- **Lenses:** Engine compatibility, 17 verified, 0 incompatible, 6 unverified native effects; Data flow, 12 flows, 2 gaps, 5 inconsistencies. 0 CRITICAL, 0 HIGH, 1 MEDIUM, the rest LOW. Standards, Efficiency, Completeness and Design skipped by tier. Blast radius: 6 types checked with `graphify affected`, callers outside the diff are the two crew spawners and `ElephantMissionBehavior.TryInstantiateHowdah`.
+- **Re-review:** Lens 2 on the fix diff, verdict safe to commit, one LOW unverified residual (R1 below).
+- **No RCA file:** nothing CRITICAL or HIGH, nothing reached a player. The lesson is in `lessons/adapters-taleworlds-api.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| D1 | A killed archer kept its force-attached entity pointer and its position lock: the seat is not the agent's used object, so vanilla's death cleanup never ran, and the release touched only an active agent | Stale state / lifecycle | The release was written for the recycled-handle rule; a dead agent that still owns its slot is a third case | Arm resets run under `IsCurrentOccupant` alone; lesson added |
+| D2 | The arms and the frame-mode blocks ran for every beast with diagnostics off | Scope of an experiment | Written for one run, then asked onto trunk | Diagnostics off now means Baseline seats and teleport frames |
+| D3 | Status labels differed by one period between the two creatures; probe period fields were not ended while diagnostics were off | Diagnostics | Two parallel implementations | Same numbering; seat ticks counted only while measuring |
+| R1 | UNVERIFIED: on the DrivenTarget arm the gravity reset reaches a dead archer one frame after removal, where vanilla does it during removal | Native effect not read | Native death path not decompiled | Watch a dead DrivenTarget archer's corpse in the measuring battle; the arm is deleted after it |
+
+- **In-game:** owed. The measuring battle is the check, and no arm is judged before it.
+
+## Review (number assigned at merge): plan 062, spider and warg bites spare a riderless mount on the biter's side (#594), tier-1 deep review (Lens 2, Lens 5), Codex not run (2026-11-19)
+
+- **Scope:** `af0f5f330..d0abf3f49` on `improve/062-riderless-mount-bite-side`: `MountRiderSides` records a rider's team against his mount at `OnAgentBuild` and in a new `OnAgentMount` override, and `CreatureBiteSides.Spares` gives the spider and warg bites one side rule, so a riderless mount on the biter's side, or of unknown side, is spared.
+- **Codex:** not run (no paid dispatch authorised for this item).
+- **Lenses:** Engine compatibility, 8 verified, 0 incompatible, 2 unverified (native timing of the mount cache, and the thread native raises `OnMount` on; a late cache leaves a spawned mount unrecorded and spared, but on a remount it can wrongly bite or wrongly spare a horse taken from the other side, so the remount check is owed); Data flow, 6 flows, 0 gaps, 1 LOW inconsistency. Standards, Efficiency, Completeness and Design skipped by tier. 1 LOW confirmed and fixed, 0 false positives.
+- **Report:** `docs/reviews/deep-review-062-riderless-mount-bite-side-2026-11-19.md`; RCA `docs/reviews/rca-riderless-mount-bite-side-2026-11-19.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | The spider's `IsSameSide` began to answer "does the bite spare this agent", so the creature diagnostics counted a loose mount of unknown side as an ally while the comments still said "allies" (diagnostics only) | Convention inconsistency: a widened predicate kept its old name | The plan named the diagnostics caller and recorded the widened count in a maintenance note, but kept the old name and the "allies" comments, and nothing turned a recorded change of meaning into a rename | Renamed `IsSpared`, comments corrected, pinning test (red on a mutant); lesson in `lessons/gamemodels-services.md` |
+
+- **Suite:** `Failed!  - Failed:     3, Passed: 43065, Skipped:     9, Total: 43077` (the three known language-file failures; the branch's base plus the one new test).
+- **In-game:** not run (tier 1, no game run); spawned cavalry recording their mount's side, and a remount, are owed.
+
+## Review (number assigned at merge): crew hold by position lock and attachment (#1482), tier-1 deep review (Lens 2, Lens 5), Codex not run (2026-11-19)
+
+- **Scope:** the uncommitted diff on `fix/crew-carry` from `b99d468a4`: both crew seats (`TaomMumakilStandingPoint`, `TaomHowdahStandingPoint`), their platform and machine, `HowdahSeatProbe`, `HowdahSeatMotion`, the new `CrewSeatChecks`, the deleted `CrewCarryExperiment`, `tools/ingame_checks/1482.toml`, and the text in `docs/features/mumakil.md`, the lesson and the mission trap sheet that states engine behaviour.
+- **Codex:** not run (out of usage since 2026-11-15). Owed at `ultra`.
+- **Lenses:** Engine compatibility, 33 verified, 0 incompatible, 5 unverified; Data flow, 8 flows, 1 gap, 2 inconsistencies. 0 CRITICAL, 0 HIGH, 2 MEDIUM, the rest LOW, so no second wave. Standards, Efficiency, Completeness and Design skipped by tier. Blast radius: 4 types checked with `graphify affected`; the callers outside the diff are the two crew spawners.
+- **No RCA file:** nothing CRITICAL or HIGH, and the cause of the player-visible bug is recorded in `docs/features/mumakil.md` "How the crew are held" and in `lessons/adapters-taleworlds-api.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| L5 F-1 | One check id served both beasts, so a battle with a mumakil and no elephant would have passed the howdah, which has no navmesh and was not measured | Evidence scope | The emitter was written as one shared helper and the manifest followed it | One id for each beast (`CrewSeatChecks.MumakilHeldId`, `HowdahHeldId`), two checks in the manifest, a test that the ids differ |
+| L2 F1 | Comments and the doc said `SetTargetZ` holds the height. The native sets the gravity-excluded mode without condition and stores the height behind a flag whose meaning was not read | Unverified effect stated as fact | The effect was inferred from the seat that stayed up, on a deck that also has floors and a navmesh | The text now states only what the native shows, and that the howdah is the unmeasured case |
+| L5 F-2 | `DisableScriptedMovement` stayed in both releases after the seats stopped setting a scripted position; its comment described the removed mechanism | Dead code | The release was edited for what it adds, not for what the change made dead | Both calls and the test assertion deleted |
+| L5 F-3, L2 F3 to F5 | Stale or wrong text: two spawner comments and one class summary still described the teleport hold; the lesson said `ClimbingMachine` holds an agent in one place (it moves the target along the net); the trap row named two states to clear where there are three; vanilla's frame call is `SetGlobalFrame` | Documentation | Written from memory of the earlier reading | Each corrected against the v1.5.7 source read in the review |
+
+- **Not applied, existed before or hypothetical:** (1) L2 F2: `UsableMissionObject.OnTick` can drop an inactive `MovingAgent` before the seat's own release check when the parallel tick is registered. Nothing registers it for these seats today. Moving the release check before `base.OnTick` changes the tick order that the battles measured, so it is the maintainer's decision. (2) L5 F-4: the mumakil seat samples reload progress with diagnostics off; the howdah seat does not. (3) L5 F-6: two diagnostics reads of a seat's `MovingAgent.Position` in `TaomMumakilPlatform.LogStatus` have no slot-identity guard.
+- **Unverified, with what is missing:** what the native movement of a dead archer does with the attachment, the lock and the gravity mode between its death and the seat's next tick (the movement-tick consumer was not decompiled); how the zero speed limit on the mumakil seat interacts with the lock (both battles had it on).
+- **In-game:** the hold was measured on a mumakil with the experiment build (`taom_debug_2026-11-19_09-40-59.log`: attached seats within 0.11 m at up to 5 m/s, 0 rescues). The howdah and the final build are owed.
+
+## Review (number assigned at merge): plan 060, UPGRADE_SKILL_REGRESSION judges templated upgrade edges on the SkillSet (#626), tier-2 deep review (Lens 5, Tooling), Codex not run (2026-11-19)
+
+- **Scope:** `af0f5f330..8dc68388b` on `improve/060-upgrade-skill-regression-templated-edges`: the gate resolves a `skill_template` side through `sync_lord_inline_skills.effective_skills` instead of skipping the edge, and `ranged_ladder.planned_skill_edits` and `rebalance_troops.py` resolve it the same way and refuse to write a templated character.
+- **Codex:** not run (no paid dispatch authorised for this item).
+- **Lenses:** Data flow, 12 flows, 0 gaps, 3 inconsistencies; Tooling correctness, 4 findings. Standards, Compatibility, Efficiency, Completeness and Design skipped by tier; XML not in scope. 3 confirmed and fixed (F1 MEDIUM, F2 and F4 LOW), 1 false positive (F3: the report summary already left the read-only villager records out of its counts), 1 for Mike (trace 5).
+- **Gate sweep:** old gate against new over 1,008 synthetic cases: 0 cases the old gate reported and the new one passes; shipped data 0 issues in both.
+- **Report:** `docs/reviews/deep-review-060-upgrade-skill-regression-templated-edges-2026-11-19.md`; RCA `docs/reviews/rca-upgrade-skill-regression-templated-edges-2026-11-19.md` (F1 repeats a recorded cause).
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | The "no SkillSet found" refusal in the gate and both writers tested the merged dict, which the repo's own SkillSet files always fill, so an install with no vanilla SkillSet read every vanilla template as empty | Dead / no-op code | The guard tested the loader's result, not the source that can be missing; its test had no repo SkillSet file | `load_skill_sets(..., require_vanilla=True)`; red-green tests with a repo SkillSet present; lesson in `lessons/build-tooling-workflow.md` |
+| F2 | Neither writer's refusal was tested | Test gap | The fixture change covered only the passing side | Two main-level refusal tests |
+| F4 | An unreadable SkillSet file made `rebalance_ranged_ladders.py` exit 1 ("edits pending") | Missing error handling | The new read sat outside the refusal `try` blocks | Caught as `ValueError`, exit 2; test |
+
+- **Suite:** Python `Ran 10572 tests`, `OK (skipped=13)`; C# `Failed!  - Failed:     3, Passed: 43028, Skipped:     9, Total: 43040` (the three known language-file failures, as at the base).
+- **For Mike:** the ladder writer and `RANGED_LADDER_INVERSION` read a templated ladder troop differently (the writer through its SkillSet, the gate from its inline rows). No troop carries a template today.
+- **In-game:** not applicable (tools only).
+
+## Review (number assigned at merge): plan 061, clamp party-screen prisoner recruitment to the recruit cost (#563), tier-1 deep review (Lens 2, Lens 5, Lens 7), Codex not run (2026-11-19)
+
+- **Scope:** `af0f5f330..c88502947` on `improve/061-prisoner-recruit-resource-gate`: the `PartyScreenLogic.AddCommand` prefix (Patch26) now clamps `RecruitTroop` to the `recruit_cost` the balance covers, net of queued upgrades and the prisoners already recruited in the screen (`RecruitedPrisonersHistory`); `ISpecialResourceService.ClampRecruitCount`; the `taom_res_recruit_clamped` line.
+- **Codex:** not run (no paid dispatch authorised for this item).
+- **Lenses:** Engine compatibility, 14 verified, 0 incompatible, 1 unverified (co-op); Data flow, 11 flows, 0 gaps, 1 LOW inconsistency (co-op, documented); XML, 5 gates pass, 0 findings. Standards, Efficiency, Completeness and Design skipped by tier. 0 confirmed, 2 false positives as defects (the clamp line naming more than the engine moves; repeated "Requires" lines in Recruit All), 1 NEEDS MIKE (the co-op restriction).
+- **Report:** `docs/reviews/deep-review-061-prisoner-recruit-resource-gate-2026-11-19.md`. No RCA: no confirmed defect.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| - | None in the changed code | - | - | - |
+
+- **Follow-up (pre-existing):** a Recruit or Upgrade pop-up Cancel raises `AfterReset`, and `OnPartyScreenReset` drops all pending upgrade spend, including upgrades the restore keeps (MEDIUM; no issue filed by the lead).
+- **Suite:** `Failed!  - Failed:     3, Passed: 43046, Skipped:     9, Total: 43058` (the three known language-file failures).
+- **In-game:** not run (tier 1, no game run); the #563 prisoner recruit check is owed.
+
+## Review (number assigned at merge): plan 061 decision, the prisoner recruit gate stands aside in a co-op session (#563 decision A), tier-1 deep review (Lens 2, Lens 5), Codex not run (2026-11-19)
+
+- **Scope:** commit `96ea28e4a` on `improve/061-prisoner-recruit-resource-gate` (from `85c75c374`): `PartyUpgradeResourceCheckHook` takes `ICoopSessionProvider` and `ClampRecruitCount` returns the requested count while `IsSessionActive`; the new `PartyUpgradeResourceCheckHookCoopTests`; the feature doc, a behaviour comment and the `CoopVeto` text.
+- **Codex:** not run (no paid dispatch authorised for this item).
+- **Lenses:** Engine compatibility, 6 verified, 0 incompatible, 1 unverified (the Coop-side "prisoner path charges nothing" claim, which predates the commit); Data flow, 8 flows, 0 gaps, 1 LOW inconsistency. Standards, Efficiency, Completeness and Design skipped by tier. 1 confirmed (LOW), 0 false positives, 0 NEEDS MIKE.
+- **Report:** `docs/reviews/deep-review-061-prisoner-recruit-resource-gate-decision-2026-11-19.md`; RCA `docs/reviews/rca-prisoner-recruit-resource-gate-decision-2026-11-19.md` (a repeat of plan 019's registry miss).
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| D1 | The Patch26 registry entry and the comment above `GateRecruit` described the prisoner clamp without its co-op stand-aside | Other: stale prose after a decision (repeat) | The text sweep followed the hook's name; the registry and the comment name the patch | Both updated; lesson in `lessons/misc.md`: search a patch's name and category when its hook changes what it lets through |
+
+- **Applied improvement:** `SpecialResourcesWiringTests.RegisterSpecialResources_PartyUpgradeHook_ResolvesWithItsSessionProvider` pins the hook's new container dependency (failed with the provider registration removed, passes with it).
+- **Suite:** `Failed!  - Failed:     3, Passed: 43050, Skipped:     9, Total: 43062` (the three known language-file failures, as on the base).
+- **In-game:** not run (tier 1, no game run); a co-op prisoner recruit at zero balance, on host and guest, is owed.
+
+## Review (number assigned at merge): plan 059, one pass composition for the validator CLI and the MCP tool (#623), tier-2 deep review (Lens 5, Tooling), Codex not run (2026-11-19)
+
+- **Scope:** `af0f5f330..9d147c068` on `improve/059-validate-moduledata-mcp-parity`: `run_all_passes` composes every validator pass for `main()` and the MCP tool, which returns what it could not check as `PARTIAL_RUN` warnings; `DEFAULT_TPAC_MODULES` is the one list of modules loaded for art; the mesh-ref scan byte-scans only unparsed packs and counts lines once; extraction skips `Languages/`.
+- **Codex:** not run (no paid dispatch authorised for this item).
+- **Lenses:** Data flow, 11 flows, 0 gaps, 1 LOW inconsistency (FOLLOW-UP); Tooling, 4 LOW findings. Standards, Compatibility, Efficiency, Completeness and Design skipped by tier. 2 LOW confirmed and fixed, 1 NEEDS MIKE, 3 false positives as defects. Lead sweep: old and new CLI output byte-identical on the live install (1823 issues).
+- **Report:** `docs/reviews/deep-review-059-validate-moduledata-mcp-parity-2026-11-19.md`; RCA `docs/reviews/rca-validate-moduledata-mcp-parity-2026-11-19.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | `DEFAULT_TPAC_MODULES` kept by hand while its comment names `SubModule.xml` | Convention inconsistency: hand-kept list (repeat) | The plan pinned the measured list, not its source | Test reads every `DependedModule`; lesson in `lessons/build-tooling-workflow.md` |
+| F2 | The MCP tool docstring said every skipped pass comes back as `PARTIAL_RUN`; two skips go to stderr only | Other: contract text wider than the code | Plan-supplied docstring copied unchecked | Docstrings narrowed; lesson in `lessons/build-tooling-workflow.md` |
+
+- **In-game:** not applicable (tools only).
+
+## Review (number assigned at merge): plan 059 follow-up, the ModuleData commit hook's UNCHECKED note on a validator exit 2 (#623 decision A), tier-2 deep review (Lens 5, Tooling), Codex not run (2026-11-19)
+
+- **Scope:** `520c4de5e..09f03e8c7` on `improve/059-validate-moduledata-mcp-parity`: `check-moduledata-validation.sh` answers a validator exit 2 (no install, no ModuleData, a usage error) with an UNCHECKED `additionalContext` and the stderr tail, still an allow, where it answered a silent `{}`.
+- **Codex:** not run (no paid dispatch authorised for this item).
+- **Lenses:** Data flow, 10 flows, 1 gap, 4 inconsistencies, 1 untested path, all LOW; Tooling, 1 MEDIUM and 3 LOW. Standards, Efficiency, Completeness and Design skipped by tier; Compatibility and XML not in scope. 6 confirmed (1 MEDIUM, 4 LOW defects, F4 found by the lead, and 1 test gap: the exit 2 row never parsed its JSON, and exit 2 with kit drift was unpinned), all fixed; 0 false positives, 0 NEEDS MIKE. Lead sweep: 88 cases (validator exits 0 to 3 by kit states, Bash and PowerShell), none refused by the base or the reviewed hook and allowed by the fixed one; only exit 2 rows changed.
+- **Report:** `docs/reviews/deep-review-059-validate-moduledata-mcp-parity-decision-2026-11-19.md`; RCA `docs/reviews/rca-validate-moduledata-mcp-parity-decision-2026-11-19.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | The exit 2 branch exits before the kit "could not judge" note, so a crashed kit tool went unnamed | Other: a new early exit skips a shared output | Copied from the rc=3 branch; test ran with the kit clean | Kit sentence in the branch; 7m row; lesson in `lessons/build-tooling-workflow.md` |
+| F2 | Stderr that is not UTF-8 made the note builder fail and the hook answer `{}` | Missing null guard | `{}` fallback copied as the generic fail-open shape | `errors="replace"` and a fixed fallback note; 7m row; lesson |
+| F3 | The no-install cause line sat above the 10-line tail | Other: evidence without its cause | Stub stderr was one line | Cause lines go ahead of the tail; 7m row |
+| F4 | Comment named "a missing baseline tag", which the hook cannot reach | Other: comment wider than the code | Every `return 2` listed unread | Comment corrected |
+| F5 | `hooks-catalog.md` row named only the crash note | Other: doc drift | Feature doc updated, catalog not | Row corrected |
+
+- **In-game:** not applicable (tools only).
+
+## Review (number assigned at merge): crew hold without SetTargetZ, the shot fix (#1482), tier-1 deep review (Lens 2, Lens 5), Codex not run (2026-11-19)
+
+- **Scope:** the uncommitted diff on `fix/crew-carry` from `9d62beffb`: `SetTargetZ` and the gravity reset removed from both crew seats, the mumakil crew's shot counter (`MumakilCrewAgentOrigin`, `MumakilMissionBehavior.OnAgentShootMissile`), the `shots`, `mode` and `tgt` status fields, `CrewSeatChecks` (held and shot lines), `tools/ingame_checks/1482.toml`, the IL gate, and the corrected text in the two feature docs, the lessons, the trap sheet and the RCA.
+- **Why this review exists:** the fix reviewed in the entry above held every archer and stopped every bow. RCA: [rca-crew-hold-no-shots-2026-11-19.md](rca-crew-hold-no-shots-2026-11-19.md).
+- **Codex:** not run (out of usage since 2026-11-15). Owed at `ultra`.
+- **Lenses:** Engine compatibility, 8 verified, 0 incompatible, 2 unverified; Data flow, 9 flows, 0 gaps, 3 inconsistencies. 0 CRITICAL, 0 HIGH, 2 MEDIUM, the rest LOW, so no second wave. Standards, Efficiency, Completeness and Design skipped by tier.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| L2 F1 | "An archer in NoPhysics never looses" was written as an engine fact in 11 places. It is one measurement (2 seats against 3, three minutes); no managed code on the ranged attack path reads the movement mode, and the native gate was not found | Measurement stated as mechanism | The same error as the one this change corrects, made again while correcting it | Every place now says what was measured and that the engine code is not read; the RCA lists it under "Still open" |
+| L5 Q4a | The manifest's `fixed_in` named the commit with the bug, so a session on that build passed the held checks. A howdah session there would have passed on a height that `SetTargetZ` held | Evidence bound to the wrong build | "The manifest ships with the emitter" was true for the new shot lines only | `fixed_in` is the fix commit `d5d674663`, set in the commit after it |
+| L5 Q4b | One seat that shoots passes the shot check for its whole beast | Check granularity | No stable seat count exists, because archers die | Stated in the manifest; the status line shows each seat |
+| L5 IL gate, L2 F2, F3, F5 | The gate read the seat classes only; the ban on `SetExcludedFromGravity(true)` was given a measured reason it does not have; the lesson said vanilla locks "in the same way"; a comment said the missile callback needs interlocked writes | Reach and wording | Written from the earlier reading | The gate also reads the platform classes and nested types; each text corrected against the v1.5.7 source |
+
+- **Verified by the lenses:** `SetTargetZ` and `SetExcludedFromGravity(true)` write 8 (NoPhysics) to the byte that `Agent.MovementMode` reads, and `SetExcludedFromGravity(false)` writes 4; no other TAOM code and no vanilla code but `ClimbingMachine` calls either; every release path clears the attachment and the lock; `Agent.Origin` is a managed field of the handle; `OnAgentShootMissile` runs on the main thread.
+- **Unverified, with what is missing:** the native code that stops the shot; whether a position-locked, attached archer in the Land mode stays at height on a floor body with no navmesh under it (the howdah). The engine has no vanilla case of it, and the repo history points both ways.
+- **In-game:** the hold without `SetTargetZ` was measured on three seats of one mumakil (`taom_debug_2026-11-19_17-21-29.log`: 43 to 47 shots each, within 0.12 m, 0 rescues). The final build on all seats and the howdah are owed.
+
+## Review (number assigned at merge): combat stamina (#1497), tier-1 deep reviews per phase and the pre-merge review of the off switch, Codex not run (2026-11-20)
+
+- **Scope:** `feat/stamina` from `24db60d7d`, landed on trunk on 2026-11-20: `Main/Features/Stamina/**`, `Main/Adapters/AiInputCallbackClaims.cs`, `Main/Core/Collections/OwnerClaimLedger.cs`, Patch171, the stamina bar of the battle HUD, the edits to Marshal's Word, the two stat models, the dwarf and troll ready checks, five MCM settings, `stamina.json`, the check manifest and the docs.
+- **Codex:** not run (out of usage since 2026-11-15). Owed at `ultra`. The maintainer gave the merge word on 2026-11-20 with the pass named as owed.
+- **Lenses:** Phase 0 (`7c4fd10ad`): Data flow, Engine compatibility and XML in one wave, then a convergence pass: 2 MEDIUM, 5 LOW ([rca-stamina-phase0-2026-11-19.md](rca-stamina-phase0-2026-11-19.md)). Phases 1 and 2 (`8440408ac`): the same wave and pass: 3 MEDIUM, 4 LOW ([rca-stamina-phases-1-2-2026-11-19.md](rca-stamina-phases-1-2-2026-11-19.md), rows 1 to 7). Each later code commit had one lens on its diff. Before the merge, on the tree with trunk's 28 commits merged in (`241613eca`): five Data flow reviewers, four on the question "does `EnableStamina` off turn the whole system off" (the mission lifecycle, the hooks other features call, the client side, the changes that run whatever the switch says) and one on the interaction with trunk's new code. 0 CRITICAL, 0 HIGH, 0 MEDIUM, 3 LOW, so no second wave. Standards, Efficiency, Completeness and Design skipped by tier.
+- **Found by the game, not by a lens:** the bar's `int` height against Gauntlet's float write-back (HIGH, RCA row 8) and the attacks a behaviour tree starts past the Exhausted lock (MEDIUM, RCA row 9).
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| S1 | `OnMissionTick` decided the gate outside its `try`. A throw in the gate left `_armed` at null, so the gate ran again and threw on every tick | Missing fail-closed path | The `try` was written around the tick; the gate joined the same `if` later | The gate is inside the `try`, and a throw sets that mission to no stamina (`8b6048581`); source pin in `StaminaWiringTests` |
+| S2 | Only `OnRemoveBehavior` of an armed mission dropped stamina's AI input claims. The engine removes behaviours in a loop with no `try` (`Mission.cs:2219-2222`), so a throw in another behaviour skips it, and with the switch off no later mission dropped them: that battle's agents stayed in the static ledger | Cleanup tied to one exit | The first-tick `Clear` reset every other field; the claims had their own method so that the mission end could order the two | `StaminaTicker.Clear` calls `Teardown` (`8b6048581`); source pin |
+| S3 | A seated crew archer is not "using a game object": both crew spawners call `seat.OnUse`, never `Agent.UseGameObject`, so the siege-engine exemption does not cover him. He pays for each shot, and the run test can apply. UNVERIFIED whether `MovementVelocity` counts the carry of a moving beast: `get_movement_velocity` reads a stored field (`TaleWorlds.Native.dll+0x6E31E0`) and its writer was not read | Exemption assumed from a name | "Crew archers are human agents" was read beside the siege-engine rule as if it covered them; trunk's crews did not shoot when the rule was written | Open, stamina on only: step 12 of the feature doc's "How to verify in game" |
+
+- **Verified by the reviewers, switch off:** the setting is read once per mission at the first tick (`StaminaMissionLogic.DecideArmed`), after the runtime is cleared; every hook (`ApplyStats`, `TryRead`, `RefusesSpecialAttack`, `StripPlayerInput`) returns on `Armed` false before an engine read; Patch171 is applied whatever the setting says and its postfix returns at the same test; the bar's mapper returns not visible; each hit callback returns after one volatile read; with no stamina claim, `OwnerClaimLedger` makes Marshal's Word set and clear the AI input flag at the same moments as the direct writes it replaced.
+- **In-game:** 40 unattended Fords of War matches (`docs/features/stamina.md`, "Unattended runs"); the three check lines pass in every match with the switch on that ended normally. No step that needs a person has been run: the label `triage-needs-ingame` is on #1497.

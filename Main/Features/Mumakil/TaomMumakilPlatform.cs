@@ -47,6 +47,19 @@ public class TaomMumakilPlatform : UsableMachine
         new HowdahSampleClock(MumakilConfig.PlatformStatusPeriodSeconds, fireOnFirstTick: true);
     private bool _seatsInitialised;
 
+    // The strong handle is what Agent.IsAgentParentEntitySameAs takes, for the status line's parentRoot field.
+    private GameEntity _rootEntity;
+    // The diagnostics setting as of the last period edge.
+    private bool _measure;
+
+    // -1 until the status line of the first tick, which prints period 0. Lines 1 to 4 are then four whole periods
+    // of the first block, the same numbering as HowdahDiagnosticsReporter.Periods.
+    private int _statusPeriods = -1;
+    private int _periodTicks;
+    private int _movingTicks;
+    private float _periodDistance;
+    private float _periodSeconds;
+
     public override TextObject GetActionTextForStandingPoint(UsableMissionObject usableGameObject)
         => new TextObject("{=taom_mumakil_climb}Climb");
 
@@ -61,6 +74,7 @@ public class TaomMumakilPlatform : UsableMachine
         base.OnInit();
         _logger = IoC.Resolve<IModLogger>();
         _diagnostics = IoC.Resolve<IHowdahDiagnosticsSettingsProvider>();
+        _rootEntity = TaleWorlds.Engine.GameEntity.CreateFromWeakEntity(GameEntity);
         PropagateRefsToSeats();
     }
 
@@ -89,9 +103,37 @@ public class TaomMumakilPlatform : UsableMachine
             return;
         }
 
+        MatrixFrame before = GameEntity.GetGlobalFrame();
         RepositionToMount();
-        if (_statusClock.Tick(dt) && _diagnostics?.IsEnabled == true) LogStatus();
+        MatrixFrame root = GameEntity.GetGlobalFrame();
+
+        float step = (root.origin - before.origin).Length;
+        if (_measure)
+            foreach (StandingPoint sp in StandingPoints)
+                if (sp is TaomMumakilStandingPoint seat)
+                    seat.AfterPlatformMoved(in root);
+
+        _periodTicks++;
+        if (dt > 0f && !float.IsInfinity(dt) && !float.IsNaN(step) && !float.IsInfinity(step))
+        {
+            _periodSeconds += dt;
+            _periodDistance += step;
+            if (step > MovingSpeedMetresPerSecond * dt) _movingTicks++;
+        }
+
+        if (!_statusClock.Tick(dt)) return;
+        // Read once a period, never per tick: the seats' lag measure follows the same switch.
+        _measure = _diagnostics?.IsEnabled == true;
+        _statusPeriods++;
+        if (_measure) LogStatus();
+        _periodTicks = 0;
+        _movingTicks = 0;
+        _periodDistance = 0f;
+        _periodSeconds = 0f;
     }
+
+    /// <summary>A tick counts as moving above this speed. The status line prints how many of a period's ticks did.</summary>
+    private const float MovingSpeedMetresPerSecond = 1f;
 
     /// <summary>Places AND scales the platform onto the beast. Public so the behaviour can call it once before the
     /// crew spawn, while the seats' world positions still need to be real.</summary>
@@ -114,6 +156,8 @@ public class TaomMumakilPlatform : UsableMachine
         // gate: check every float-to-decision path in the method, not only the lines you added
         // (.claude/rules/csharp-architecture.md, "Engine-Float Decision Gates").
         if (!HowdahSeatMotion.IsPlaceable(next.origin.x, next.origin.y, next.origin.z)) return;
+        // The default isTeleportation true. Vanilla SiegeWeaponMovementComponent passes false (to SetGlobalFrame); alternating the two
+        // in 20 s blocks on 2026-11-19 showed no difference on any seat (#1482), so the default stays.
         GameEntity.SetFrame(ref next);
     }
 
@@ -231,21 +275,33 @@ public class TaomMumakilPlatform : UsableMachine
                 float z = s.GameEntity.GlobalPosition.z - feet;
                 if (float.IsNaN(topSeatZ) || z > topSeatZ) topSeatZ = z;
             }
-        // Per-seat draw cycle: which upper-body action, how far the draw ever got, how many times it fell back,
-        // and how many times the seat teleported the archer. Every re-nock diagnosis on the elephant came down
-        // to reading restarts against teleports; without both side by side there is nothing to reason from.
+        // Per seat: the upper-body action, then the probe (HowdahSeatProbe: rescues, restarts and how many of
+        // those had a rescue inside them, the highest progress, the lag range over the period), the height error,
+        // what the archer stands on, whether its native parent entity is this platform's root (1 while the seat's
+        // attachment holds), the arrows it has loosed, its movement mode and whether it has a target.
+        // Named by its prefab entity (main_1, nest_0), never by a running count, which shifts when an archer dies.
         string draws = "";
-        int n2 = 0;
         foreach (StandingPoint sp in StandingPoints)
         {
-            if (!(sp is TaomMumakilStandingPoint s4) || s4.MovingAgent == null) continue;
-            float dz = s4.GameEntity.IsValid ? s4.MovingAgent.Position.z - s4.GameEntity.GlobalPosition.z : float.NaN;
-            draws += $" s{n2}:{s4.UpperBodyAction}/max{HowdahDiagnostics.Format(s4.MaxActionProgress, 2)}" +
-                     $"/re{s4.ActionRestarts}/tp{s4.TeleportCount}/dz{HowdahDiagnostics.Format(dz, 2)}";
-            n2++;
+            if (!(sp is TaomMumakilStandingPoint s4) || s4.MovingAgent == null || !s4.GameEntity.IsValid) continue;
+            Agent archer = s4.MovingAgent;
+            if (!AgentSlotIdentity.IsCurrentOccupant(archer)) continue;
+            float dz = archer.Position.z - s4.GameEntity.GlobalPosition.z;
+            WeakGameEntity stepped = archer.GetSteppedEntity();
+            // shots is the proof that an archer shoots (restarts count aborted draws too); mode is the engine's
+            // movement mode, where NoPhysics is what SetTargetZ and SetExcludedFromGravity(true) set (#1482).
+            draws += $" {s4.GameEntity.Name.Replace("mumakil_crew_", "")}:{s4.UpperBodyAction}/{s4.Probe.FormatAndEndPeriod()}" +
+                     $"/dz{HowdahDiagnostics.Format(dz, 2)}/step={(stepped.IsValid ? stepped.Name : "-")}" +
+                     $"/parentRoot={(archer.IsAgentParentEntitySameAs(_rootEntity) ? 1 : 0)}" +
+                     $"/shots={(archer.Origin as MumakilCrewAgentOrigin)?.ShotsFired ?? -1}" +
+                     $"/mode={archer.MovementMode.ToString().Replace(", ", "+")}" +
+                     $"/tgt={(archer.GetTargetAgent() != null ? 1 : 0)}";
         }
+        float meanSpeed = _periodSeconds > 0f ? _periodDistance / _periodSeconds : float.NaN;
         _logger?.LogInfo(
-            $"{LogTag} status beastScale={HowdahDiagnostics.Format(mumakilAgent.AgentScale, 2)} " +
+            $"{LogTag} status period={_statusPeriods} " +
+            $"moving={_movingTicks}/{_periodTicks} meanV={HowdahDiagnostics.Format(meanSpeed, 2)} " +
+            $"beastScale={HowdahDiagnostics.Format(mumakilAgent.AgentScale, 2)} " +
             $"navmeshId={DynamicNavmeshIdStart} " +
             // frameScale settles a question managed code cannot: whether the native GetRotationFrame behind
             // Agent.Frame already carries AgentScale. 1.00 means it does not, 3.00 means it does and the

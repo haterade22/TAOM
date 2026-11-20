@@ -46,7 +46,7 @@ internal sealed class CommandTrialLauncher
             Fill(player, SeatTrialRoster.PlayerFor(_options.Steps), objects);
 
             var enemy = Combatant("{=!}Seat trial, attackers", objects.GetObject<BasicCultureObject>(SeatTrialRoster.EnemyCulture), BattleSideEnum.Attacker);
-            Fill(enemy, SeatTrialRoster.Enemy, objects);
+            Fill(enemy, SeatTrialRoster.EnemyFor(_options.Steps), objects);
 
             _logger.LogInfo($"[SeatTrial] launching scene {_options.Scene}: {player.CountOfCharacters} defenders with {SeatTrialRoster.Hero}, {enemy.CountOfCharacters} attackers");
             BannerlordMissions.OpenCustomBattleMission(_options.Scene, hero, player, enemy, true, null, "", "", Noon);

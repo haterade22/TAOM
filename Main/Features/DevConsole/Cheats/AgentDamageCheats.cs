@@ -50,8 +50,7 @@ public static class AgentDamageCheats
             // Upper bound, not just a sign check. TryParseAmount rejects NaN/Infinity but not a large
             // finite float, and `(int)amount` on an out-of-int-range float is unchecked — it yields a
             // degenerate value, so BaseMagnitude would stay huge while InflictedDamage went negative
-            // and read downstream as healing. That float→int cast class has shipped five times in
-            // TAOM (csharp-architecture.md, "Engine-Float Decision Gates"); this is the sixth site.
+            // and read downstream as healing (csharp-architecture.md, "Engine-Float Decision Gates").
             if (!(amount > 0f) || amount > MaxDamage)
                 return $"Amount must be above 0 and at most {MaxDamage:N0}.\n" + Usage;
 

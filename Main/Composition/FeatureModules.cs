@@ -112,6 +112,7 @@ internal static class FeatureModules
         new Features.WarPledge.WarPledgeModule(),
         new Features.Realms.RealmsModule(),
         new Features.HeroAuras.HeroAurasModule(),
+        new Features.Stamina.StaminaModule(),
         new Features.HallSeats.HallSeatsModule(),
         new Features.CheatMenu.CheatMenuModule(),
         new Features.Autorun.AutorunModule(),

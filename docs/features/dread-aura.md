@@ -344,7 +344,7 @@ save-load will not pick up an edit. The MCM knobs are the ones that take effect 
 | `Main/Features/DreadAura/Domain/` | `DreadAuraConfig`, `DreadDrainContext` |
 | `Main/_Module/ModuleData/dread_aura/dread_aura_config.json` | Shipped config |
 | `Main/IoC.cs` | `DreadAuraIoC.RegisterDreadAuraFeature` |
-| `Main/SubModule.cs` | `AddTaomBehavior(new DreadAuraMissionLogic())`, no `AddModel` counterpart |
+| `Main/SubModule.cs` | `AddTaomBehavior(() => new DreadAuraMissionLogic())`, no `AddModel` counterpart |
 
 ## Tests
 

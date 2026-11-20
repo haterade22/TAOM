@@ -7,6 +7,7 @@ using TAOM.Features.AdvancedCombat;
 using TAOM.Features.Elephant;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.Mumakil;
@@ -102,6 +103,14 @@ public class MumakilMissionBehavior : MissionLogic
         // Phase 2: the crew spawner owns the platform's whole lifecycle; this stays a delegation (ADR-002).
         if (agent?.MountAgent != null && _service.IsCreatureMonster(agent.MountAgent.Monster?.StringId))
             _crew.TryBuildPlatform(agent);
+    }
+
+    // Counts the tower crew's shots for the status line, as ElephantMissionBehavior does for the howdah: the
+    // engine raises this for every missile fired, and the archer's own origin holds its count (#1482).
+    public override void OnAgentShootMissile(Agent shooterAgent, EquipmentIndex weaponIndex, Vec3 position, Vec3 velocity,
+        Mat3 orientation, bool hasRigidBody, int forcedMissileIndex)
+    {
+        if (shooterAgent?.Origin is MumakilCrewAgentOrigin crew) crew.RecordShot();
     }
 
     public override void OnRemoveBehavior()

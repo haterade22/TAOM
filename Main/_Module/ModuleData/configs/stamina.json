@@ -1,0 +1,48 @@
+{
+  "pool": { "base": 100, "perTier": 10, "heroBonus": 30, "heroPerLevel": 1, "heroLevelCap": 40 },
+  "costs": {
+    "swingBase": 4, "swingPerKg": 2, "swingMin": 5, "swingMax": 14,
+    "bowShot": 4, "crossbowShot": 2, "throw": 5, "jump": 8, "kick": 6, "bash": 6,
+    "bowHoldPerSecond": 2, "bowHoldGraceSeconds": 1.5,
+    "parry": 6, "shieldBase": 3, "shieldPerDamage": 0.05, "shieldMax": 10, "missileBlock": 1
+  },
+  "run": { "drainPerSecond": 0.02, "floor": 0.5, "speedThreshold": 3.0 },
+  "regen": { "perSecond": 0.05, "pauseSeconds": 1.5, "blocking": 0.5, "exhausted": 1.5 },
+  "bands": { "windedBelow": 0.6, "tiredBelow": 0.3, "hysteresis": 0.05, "recoverAt": 0.3 },
+  "armour": { "freeKg": 10, "kgPerStep": 60, "factorMax": 1.35 },
+  "peoples": {
+    "multiplierMin": 0.7,
+    "multiplierMax": 1.6,
+    "races": {
+      "elf": { "pool": 1.3, "regen": 1.4 },
+      "dwarf": { "pool": 1.35, "regen": 0.9 },
+      "uruk_hai": { "pool": 1.2 },
+      "uruk": { "pool": 1.2 },
+      "pale_uruk": { "pool": 1.2 },
+      "dg_uruk": { "pool": 1.2 },
+      "berserker": { "pool": 1.3, "regen": 0.8 },
+      "orc": { "pool": 0.9 },
+      "goblin": { "pool": 0.8, "regen": 1.1 },
+      "cave_troll": { "pool": 1.5, "regen": 0.7 },
+      "hill_troll": { "pool": 1.5, "regen": 0.7 },
+      "nazghul": { "exempt": true },
+      "sauron": { "exempt": true },
+      "saruman": { "exempt": true }
+    },
+    "cultures": {
+      "gondor": { "pool": 1.1 },
+      "arthedain": { "pool": 1.1 },
+      "cardolan": { "pool": 1.1 }
+    }
+  },
+  "effects": {
+    "winded": { "swing": 0.95, "handling": 1.0, "move": 1.0, "aiAttack": 0.8 },
+    "tired": { "swing": 0.9, "handling": 0.9, "move": 0.95, "aiAttack": 0.5 },
+    "exhausted": { "swing": 0.9, "handling": 0.9, "move": 0.45, "aiAttack": 0.5 }
+  },
+  "tick": {
+    "sweepSeconds": 0.25,
+    "maxRefreshesPerFrame": 8,
+    "minRefreshAgeSeconds": 1.0
+  }
+}

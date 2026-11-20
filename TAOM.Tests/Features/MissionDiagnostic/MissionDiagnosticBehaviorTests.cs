@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Domain;
 using TAOM.Core.Logging;
+using TAOM.Features.AdvancedCombat;
 using TAOM.Features.MissionDiagnostic;
 using TAOM.Features.MissionDiagnostic.Hooks;
 
@@ -25,6 +26,9 @@ public class MissionDiagnosticBehaviorTests
         _service = Substitute.For<IMissionDiagnosticService>();
         _sut = new MissionDiagnosticBehavior(_service, Substitute.For<IRaceManager>(), Substitute.For<IModLogger>());
     }
+
+    [TestCleanup]
+    public void Cleanup() => MissionThreadGuard.ResetForTests();
 
     [TestMethod]
     public void OnMissionTick_WindowRunsOut_ClosesTheCensusOnce()

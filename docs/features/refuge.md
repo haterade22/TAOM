@@ -140,6 +140,11 @@ clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition
   resets `Name` and the wage state, so a one-shot decoration lost the "(being raised)" suffix and
   the hidden slider. The row constructor's own refresh decorates new rows, and
   `IRefugeBook.GetByPartyId` picks the refuge and its `Building` flag.
+- **Founding gates.** `CanFound` refuses an enlisted player, because the commander moves the
+  party and a refuge's hold-nearby pin would fight the enlistment attachment for control (the
+  same reason camps block). It also refuses when any refuge stands within manage range, whatever
+  its state, so two layouts never overlap on one spot. A refuge that is building or being
+  rebuilt into a stronghold grants no defense bonus: `IsReady` is false for that window.
 
 ## Configuration
 
@@ -154,10 +159,9 @@ finishes (the behavior pumps `FrameTick` unconditionally, the CampService split:
 work, gameplay effects gate inside the service), and refuges stay enterable, manageable and
 dismantlable. A toggle mid-build therefore never strands a deposited garrison.
 
-The source's two remaining knobs, `RefugeBuildingMesh` ("empire_street_tent_02") and
-`RefugeBuildingScale` (0.4), exist on `IRefugeSettingsProvider` but are pinned to the source
-defaults in the provider: `TaomSettings.cs` is single-owner and carries no MCM rows for them yet.
-Wiring MCM later needs no change on the consuming side (`RefugeVisualService`).
+The source's two remaining knobs, `RefugeBuildingMesh` and `RefugeBuildingScale`, are not
+settings in TAOM. Their source defaults ("empire_street_tent_02" at 0.4) are constants in
+`RefugeVisualService`, the one class that reads them (#1502).
 
 ## Food
 

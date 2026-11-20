@@ -16,6 +16,9 @@ Three generations live here (plans 020 to 045 belong to the runs their rows name
   findings, verdicts and decisions are in
   [`_audit/2026-11-12-fable/REPORT.md`](_audit/2026-11-12-fable/REPORT.md). Every change of that run
   is on the branch `improve/2026-11-12-run` until the maintainer merges it.
+- **055 to 056**: the first `/manage` tick (ADR-015 stage 0), `2026-11-18-manage`, written against
+  `3164713da`. Its progress record is
+  [`_audit/2026-11-18-manage/PROGRESS.md`](_audit/2026-11-18-manage/PROGRESS.md).
 
 ## Execution order and status
 
@@ -77,6 +80,14 @@ BLOCKED (one-line reason), REJECTED (one-line rationale).
 | [052](_audit/2026-11-12-fable/REPORT.md) | Harness text: remove two duplicated passages from CLAUDE.md, raise the `/verify` discovery floors, run filtered tests per fix in `/review-codex` (no plan file; made by the orchestrator) | P3 | S | dx | none | MERGED into `bannerlord-1.5.x` (`db1c87d7c`, 2026-11-13; #1132); commit `e88fa0050` |
 | [053](_audit/2026-11-12-fable/REPORT.md) | Hooks: parse the edited path in bash in the polearm hook; cut session-start lines that repeat the harness's own context (no plan file; made by the orchestrator) | P3 | S | dx | none | MERGED into `bannerlord-1.5.x` (`db1c87d7c`, 2026-11-13; #1132); commit `2a913ecdf`; hook suite 1271 passed |
 | [054](_audit/2026-11-12-fable/REPORT.md) | Docs: correct wrong author guidance, add the Realms row to the feature map, add a search hint to the three navigation maps (no plan file; made by the orchestrator) | P3 | S | docs | none | MERGED into `bannerlord-1.5.x` (`db1c87d7c`, 2026-11-13; #1132); commit `4a9e001be` |
+| [055](055-enlistment-redirect-outside-attached.md) | Enlistment: keep the settlement-menu redirect armed for a player inside a settlement with no encounter in CommanderUnavailable | P1 | M | bug | none | MERGED into `bannerlord-1.5.x` (`ee7c76842`, 2026-11-19; PR #1472, #511); tier 1 review READY FOR COMMIT; in-game check owed |
+| [056](056-agent-removed-off-thread-guards.md) | Missions: defer MissionDiagnosticBehavior's off-thread OnAgentRemoved and OnAgentDeleted writes; correct the thread table | P1 | S | bug | none | MERGED into `bannerlord-1.5.x` (`90fffac02`, 2026-11-19; PR #1473, #607); tier 1 review READY FOR COMMIT; in-game check owed |
+| [057](057-signature-find-first-byte-prefilter.md) | Signature scan: skip to the next first-byte candidate in ClipBudgetSignature.Find, same hits in the same order | P3 | S | perf | none | MERGED into `bannerlord-1.5.x` (`d055b77bc`, 2026-11-19; PR #1486, #784); tier 1 review READY FOR COMMIT |
+| [058](058-isolate-mission-behaviour-registrations.md) | SubModule: isolate each hand-wired mission behaviour registration; a failed build reports to the mission-start guard | P2 | M | bug | none | MERGED into `bannerlord-1.5.x` (`a9c413ab2`, 2026-11-19; PR #1487, #785); tier 1 review READY FOR COMMIT; in-game check owed |
+| [059](059-validate-moduledata-mcp-parity.md) | validate_moduledata: one pass composition for the CLI and the MCP tool, and the #623 follow-ups | P2 | L | bug | none | merged, PR #1493 (2026-11-19) |
+| [060](060-upgrade-skill-regression-templated-edges.md) | UPGRADE_SKILL_REGRESSION: resolve skill templates and judge templated upgrade edges | P3 | M | bug | none | merged, PR #1494 (2026-11-19) |
+| [061](061-prisoner-recruit-resource-gate.md) | Special resources: gate prisoner recruitment in the party screen on the recruit cost | P2 | M | bug | none | merged, PR #1495 (2026-11-19) |
+| [062](062-riderless-mount-bite-side.md) | Spider and warg bites: resolve a riderless mount's side before the friendly check | P2 | M | bug | none | merged, PR #1496 (2026-11-19) |
 
 Plans 006 and 007 were written as P1 on the assumption that every player pays their boot and load
 seconds. A follow-up measured players at about 1 to 3 s (this desktop runs about 30 times slower), so

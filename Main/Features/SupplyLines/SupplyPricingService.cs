@@ -21,7 +21,7 @@ public sealed class SupplyPricingService : ISupplyPricingService
     private const float TierPremiumPerTier = 0.15f;
     private const float WartimeSurcharge = 1.5f;
 
-    // The source clamped travel time to 2 hours so a zero-distance order still animates a trip.
+    // Travel time is at least 2 hours so a zero-distance order still animates a trip.
     private const float MinimumPlannedHours = 2f;
 
     private readonly ISupplyLinesSettingsProvider _settings;
@@ -60,7 +60,7 @@ public sealed class SupplyPricingService : ISupplyPricingService
 
         float price = vanillaRecruitCost;
 
-        // Source guard kept as-is: the premium starts above tier 1, so a tier-0 or negative
+        // The premium starts above tier 1, so a tier-0 or negative
         // tier (corrupt data) never turns the premium into a discount.
         if (tier > 1)
             price *= 1f + TierPremiumPerTier * (tier - 1);

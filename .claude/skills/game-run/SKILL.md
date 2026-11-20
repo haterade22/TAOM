@@ -1,15 +1,25 @@
 ---
 name: game-run
-description: Use when in-game evidence is owed. Gates on no running game and 10 idle minutes, deploys the tree under test, runs the unattended Fords match, judges the run folder, reports.
-argument-hint: "[--live-seconds N] [--scene S] [--west W] [--east E] [--ai A] [--west-ai] [--speed 1|2|4|10] [--control-check N] [--runs N]"
+description: Use when in-game evidence is owed. Gates on no game and 10 idle minutes, deploys the tree, runs an unattended custom battle or Fords match, judges the run folder, reports.
+argument-hint: "[--steps enter,<step>,...] | [--live-seconds N] [--scene S] [--west W] [--east E] [--ai A] [--west-ai] [--speed 1|2|4|10] [--control-check N] [--runs N]"
 ---
 
 # Unattended game run
 
-Starts Bannerlord with nobody at the keyboard, lets TAOM's env-armed driver play one Fords of War match, and judges the result from
+Starts Bannerlord with nobody at the keyboard, lets one of TAOM's env-armed drivers play, and judges the result from
 the logs. The permission, the launch recipe, every game-side file touched and the risks are in
-[unattended-game-runs.md](../../../docs/reference/unattended-game-runs.md); read it once if you have not this session. Today the
-driver plays Fords of War, and The Long Defeat (#1079) has its own wrapper, `python tools/run_long_defeat.py --waves 5` (add `--lose` for the loss case), under the same gate. A new campaign run for N days (#1075) has its own wrapper too, `python tools/run_scenario.py --days N`, under the same gate; it does not build, so Phase 3 comes first.
+[unattended-game-runs.md](../../../docs/reference/unattended-game-runs.md); read it once if you have not this session.
+
+**Test your own work in a custom battle** (Mike, 2026-11-20). A session that changes mission code proves it in the game
+by itself, and the custom battle of the command trial is the first driver to try: its armies are chosen by the code, it
+has a camera that can follow one soldier, and it saves pictures. The four drivers, all under the same gate:
+
+| Your change | Driver | Runs in |
+|---|---|---|
+| A thing you can watch in an ordinary battle: troops, mounts, creatures and their crews, formations, orders, the Seat of Seeing, Marshal's Word | the custom battle: `python tools/run_command_trial.py --steps enter,<step>,...` | `E:/Temp/command-trial-runs` |
+| Fords of War code, or a whole match with towers, heroes and upgrades | `python tools/run_fords_autorun.py` | `E:/Temp/fords-runs` |
+| Code under `LongDefeat` (#1079) | `python tools/run_long_defeat.py --waves 5` (add `--lose` for the loss case) | its own folder |
+| A new campaign for N days (#1075) | `python tools/run_scenario.py --days N` (it does not build, so Phase 3 comes first) | its own folder |
 
 Run these phases in order. `$ARGUMENTS` are passed to the launcher in Phase 4.
 
@@ -21,8 +31,13 @@ A run is owed when in-game evidence is missing for the change, not for its own s
 - the change touches mission or engine-facing code that a Fords match exercises (mission start, agents, formations, destructibles,
   the Fords driver or report; for soldier control (`FordsControlView`, `FordsAgentControl`) add `--control-check 240 --live-seconds 540`), or code under `LongDefeat` (run `tools/run_long_defeat.py` instead of the Fords runner).
 
-If neither holds, or the check is outside Fords and Long Defeat (no driver exists for it), stop and say what a person must play instead. Do not run
-the game to feel safe.
+- the change touches mission code that a custom battle shows and no step of the command trial proves it yet. Add the step
+  first, then run it: the recipe is "A custom battle check for your own work" in
+  [unattended-game-runs.md](../../../docs/reference/unattended-game-runs.md#a-custom-battle-check-for-your-own-work). The
+  steps that exist are the tuples in `tools/run_command_trial.py` (`SEAT_STEPS`, `MARSHAL_STEPS`, `CREW_STEPS`).
+
+If none holds, or no driver can reach the check (campaign screens, a town or tavern scene, a siege, co-op), stop and say what a
+person must play instead. Do not run the game to feel safe.
 
 **Run now, or wait and run once** (Mike, 2026-11-18). The game takes the whole PC, so ask one question before each run: does the
 next step of your task depend on this result?
@@ -45,7 +60,8 @@ test needs the game, do not start or queue a run ahead of it.
 python tools/run_fords_autorun.py --dry-run
 ```
 
-The dry run prints the idle state and the preflight. If it says `ok`, go to Phase 3. If a game is running or the input age is under
+For the custom battle the dry run is `python tools/run_command_trial.py --steps <list> --dry-run`; it also refuses a step list
+the game would refuse. The dry run prints the idle state and the preflight. If it says `ok`, go to Phase 3. If a game is running or the input age is under
 600 s, ask once with `AskUserQuestion` (run now, run later, or skip) unless the maintainer already said yes to a run this session.
 Only after that yes, pass `--require-idle-minutes 0` in Phase 4. Never kill or wait out someone's running game.
 A `/manage` tick never asks: when the dry run does not say `ok`, it skips the run and lists the check as still owed.
@@ -70,6 +86,17 @@ python tools/run_fords_autorun.py --live-seconds 120 $ARGUMENTS
 
 120 mission seconds is a smoke; the game default is 600, and an argument of the same name overrides it. If the change alters something drawn on the screen, add `--screenshots 30,90` (live seconds, UI included).
 
+The custom battle, in place of the Fords line:
+
+```bash
+python tools/run_command_trial.py --steps enter,crew_mumakil,crew_howdah
+```
+
+Name every step your check needs, and `enter` first when a step needs the Seat's view. A run with no `--steps` plays the Seat's
+and Marshal's Word's steps, not yours. Its run folder is under `E:/Temp/command-trial-runs/`, and a battle of about 75 s took
+2 to 4 minutes of wall time (runs `20261120-132358` and `20261120-133122`). Tell the maintainer to keep off the keyboard: a
+real key press reaches the game, and the Seat's own key ends a step.
+
 Start it in the background (`run_in_background`) and wait for its exit notice rather than polling. Its limit is the wall limit
 (2400 s by default, or `--wall-limit`) plus 15 minutes; set the Bash timeout above that, never below. The game owns the screen while it
 runs. Exit 0 is a pass; any other exit still leaves a run folder
@@ -88,6 +115,12 @@ is the run's.
 With `--control-check`, also read the `[FordsOfWar][Control]` lines in the copied TAOM log: `took`, `returned`, `fell`, and a `rejoin` line 10 seconds after each return. The launcher does not judge them, so quote each one in the report. The run proves the take, the hand-back and the fall; the feel of the fight and the pointer pick stay a player's to check, and the match runs at 1x while a soldier is held, so it is not a balance sample.
 
 With `--screenshots`, the Fords runner leaves PNG files in the run folder: Read each one and quote what it shows against the claim. A `[[human]]` row stays a person's to check.
+
+For a custom battle, read `runner_log.txt` (its last line is the verdict: PASS, or FAIL with the steps), `command_trial_done.txt`
+(`reason=final`), then in the copied TAOM log every `[SeatTrial] step=<name> result=<PASS|FAIL> <facts>` line, your feature's own
+`[Check]` and status lines, and the same crash, unload and `[BuildStamp]` lines as above. Read every `hud_*.png` and quote what it
+shows: the wrapper does not judge pictures. A step that failed before yours (`enter` above all) means your step did not run, so
+read its line first.
 
 A failed row is a finding to investigate, not to explain away. A crash goes to `/native-crash-triage` or `/investigate`.
 
@@ -114,5 +147,5 @@ Confirm the file matches the backup. If the maintainer's own deploy mattered, sa
 ## Phase 7: Report
 
 Tell the maintainer, in prose: the run folder, the verdicts (pass, fail and not-seen counts, each FAIL with its reason), the build
-deployed (checkout, commit, `[BuildStamp]`), anything restored, and what the run did not cover (no look at the screen unless you read its PNG files, no feel of a soldier fight or the pointer pick, Fords only).
+deployed (checkout, commit, `[BuildStamp]`), anything restored, and what the run did not cover (no look at the screen unless you read its PNG files, no feel of a soldier fight or the pointer pick, and only what the chosen driver plays).
 Every run is reported, including one the launcher refused.

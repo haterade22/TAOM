@@ -63,14 +63,10 @@ public sealed class RefugeMenuController
             args =>
             {
                 args.optionLeaveType = GameMenuOption.LeaveType.Submenu;
-                // Dismantlable is the superset: ready refuges plus orphan-adopted rows (whose
-                // only exit is the dismantle option inside), never one fighting a map event.
                 return _refuges.NearestDismantlable() != null;
             },
             args => _menus.SwitchTo(RefugeCampaignBehavior.MenuId),
             isLeave: false, index: 4);
-
-        // ---- The refuge menu itself. ----
 
         starter.AddGameMenu(
             RefugeCampaignBehavior.MenuId,
@@ -110,8 +106,6 @@ public sealed class RefugeMenuController
             "{=taom_rf_opt_break}Dismantle refuge",
             args =>
             {
-                // Dismantle alone accepts orphan-adopted rows (NearestDismantlable), so an
-                // orphan is not an absorbing state eating a cap slot forever.
                 args.optionLeaveType = GameMenuOption.LeaveType.Leave;
                 if (_refuges.NearestDismantlable() != null)
                     return true;
@@ -182,8 +176,6 @@ public sealed class RefugeMenuController
         }
         MBTextManager.SetTextVariable("TAOM_RF_STATUS", status, false);
     }
-
-    // ---- Found (from the camp manage sub-menu) ----
 
     private bool FoundCondition(MenuCallbackArgs args)
     {
@@ -318,8 +310,6 @@ public sealed class RefugeMenuController
             PartyScreenHelper.OpenScreenAsManageTroopsAndPrisoners(party);
     }
 
-    // ---- Upgrade ----
-
     private bool UpgradeCondition(MenuCallbackArgs args)
     {
         args.optionLeaveType = GameMenuOption.LeaveType.Manage;
@@ -345,7 +335,6 @@ public sealed class RefugeMenuController
 
         if (!_refuges.Upgrade(refuge))
         {
-            // The condition showed the option enabled, so the only runtime failure left is gold.
             Warn(new TextObject("{=taom_rf_upgrade_no_gold}Not enough gold to rebuild the refuge into a stronghold."));
             return;
         }
@@ -355,8 +344,6 @@ public sealed class RefugeMenuController
         // source, which finished the encounter here for the same reason.
         CloseMenu();
     }
-
-    // ---- Shared plumbing ----
 
     private bool InReachCondition(MenuCallbackArgs args, GameMenuOption.LeaveType leaveType)
     {
