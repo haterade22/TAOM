@@ -20,6 +20,8 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOTS = ("Main", "Client", "CoopCompat", "Dependencies")
 BASELINE = os.path.join(REPO, "tools", "comment-ratchet-baseline.txt")
 COMMENT = re.compile(r"/\*.*?\*/|//[^\n]*", re.S)
+# C# also ends a line at a lone CR, NEL, U+2028 and U+2029; RepoPaths.CommentLineCount maps them the same way.
+LINE_BREAK = re.compile("[\r\u0085\u2028\u2029]")
 HEADER = (
     "# ADR-009 comment-line ratchet: <path><TAB><count>, counts may only fall.\n"
     "# Written by python tools/comment_ratchet.py --regen; read by CommentRatchetGateTests.\n"
@@ -27,7 +29,7 @@ HEADER = (
 
 
 def comment_line_count(source):
-    text = source.replace("\r\n", "\n")
+    text = LINE_BREAK.sub("\n", source.replace("\r\n", "\n"))
     lines = set()
     position = 0
     line = 0
@@ -45,6 +47,8 @@ def comment_line_count(source):
 def read_text(path):
     with open(path, "rb") as handle:
         data = handle.read()
+    if data.startswith(codecs.BOM_UTF32_LE) or data.startswith(codecs.BOM_UTF32_BE):
+        return data.decode("utf-32", errors="replace")
     if data.startswith(codecs.BOM_UTF8):
         return data[3:].decode("utf-8", errors="replace")
     if data.startswith(codecs.BOM_UTF16_LE) or data.startswith(codecs.BOM_UTF16_BE):
@@ -55,6 +59,8 @@ def read_text(path):
 def scan(repo=REPO):
     counts = {}
     for root in ROOTS:
+        if not os.path.isdir(os.path.join(repo, root)):
+            raise FileNotFoundError(f"scanned root {root} is missing under {repo}")
         for folder, dirs, files in os.walk(os.path.join(repo, root)):
             dirs[:] = [d for d in dirs if d not in ("obj", "bin")]
             for name in files:
@@ -99,7 +105,11 @@ def main(argv=None, repo=REPO):
     if not (args.regen or args.report):
         parser.error("give --regen or --report")
 
-    counts = scan(repo)
+    try:
+        counts = scan(repo)
+    except FileNotFoundError as error:
+        print(error, file=sys.stderr)
+        return 2
     if len(counts) < 1000:
         print(f"only {len(counts)} .cs files found under {', '.join(ROOTS)}: wrong repo root?", file=sys.stderr)
         return 2

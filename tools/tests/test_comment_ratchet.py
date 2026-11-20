@@ -20,6 +20,8 @@ class CommentLineCountTests(unittest.TestCase):
         ("int x; /* a */ // b\n", 1),
         ("// a\r\n// b\r\n", 2),
         ("", 0),
+        ("/// doc\rclass C { }\r// added\r", 1),
+        ("/// doc\u0085// added\u2028// b\u2029", 2),
     ]
 
     def test_cases_match_the_csharp_gate(self):
@@ -37,9 +39,23 @@ class CommentLineCountTests(unittest.TestCase):
                 handle.write("// b\n".encode("utf-16"))
             self.assertEqual(1, comment_line_count(comment_ratchet.read_text(utf8)))
             self.assertEqual(1, comment_line_count(comment_ratchet.read_text(utf16)))
+            for name, encoding in (("c.cs", "utf-32-le"), ("d.cs", "utf-32-be")):
+                path = os.path.join(folder, name)
+                with open(path, "wb") as handle:
+                    handle.write("\ufeff// e\n// f\n".encode(encoding))
+                self.assertEqual(2, comment_line_count(comment_ratchet.read_text(path)), encoding)
+
+    def test_scan_missing_root_raises(self):
+        with tempfile.TemporaryDirectory() as repo:
+            for root in comment_ratchet.ROOTS[:-1]:
+                os.makedirs(os.path.join(repo, root))
+            with self.assertRaises(FileNotFoundError):
+                comment_ratchet.scan(repo)
 
     def test_scan_skips_obj_bin_and_non_cs_files(self):
         with tempfile.TemporaryDirectory() as repo:
+            for root in comment_ratchet.ROOTS:
+                os.makedirs(os.path.join(repo, root))
             for relative in ("Main/A.CS", "Main/obj/X.cs", "Client/bin/Y.cs", "Main/notes.txt"):
                 path = os.path.join(repo, *relative.split("/"))
                 os.makedirs(os.path.dirname(path), exist_ok=True)

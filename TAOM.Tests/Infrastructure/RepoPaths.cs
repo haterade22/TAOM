@@ -22,6 +22,9 @@ public static class RepoPaths
     private static readonly Regex CommentPattern =
         new(@"/\*.*?\*/|//[^\n]*", RegexOptions.Compiled | RegexOptions.Singleline);
 
+    // C# also ends a line at a lone CR, NEL, U+2028 and U+2029; tools/comment_ratchet.py maps them the same way.
+    private static readonly Regex LineBreak = new("[\r\u0085\u2028\u2029]", RegexOptions.Compiled);
+
     /// <summary>The compiled code roots a source-scanning gate reads: core and the client submodule (ADR-013).</summary>
     public static readonly string[] CodeRoots = { "Main", "Client" };
 
@@ -122,7 +125,7 @@ public static class RepoPaths
     /// </summary>
     public static int CommentLineCount(string source)
     {
-        var text = source.Replace("\r\n", "\n");
+        var text = LineBreak.Replace(source.Replace("\r\n", "\n"), "\n");
         var lines = new HashSet<int>();
         var position = 0;
         var line = 0;

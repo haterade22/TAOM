@@ -71,6 +71,8 @@ public class CommentRatchetGateTests
     [DataRow("int x; /* a */ // b\n", 1, "two comments on one line")]
     [DataRow("// a\r\n// b\r\n", 2, "CRLF counts as LF")]
     [DataRow("", 0, "empty file")]
+    [DataRow("/// doc\rclass C { }\r// added\r", 1, "lone CR ends a line")]
+    [DataRow("/// doc\u0085// added\u2028// b\u2029", 2, "NEL, U+2028 and U+2029 end a line")]
     public void CommentLineCount_CountsEachLineThatHoldsAComment(string source, int expected, string reason)
     {
         Assert.AreEqual(expected, CommentLineCount(source), reason);
