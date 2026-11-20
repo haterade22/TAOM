@@ -5221,6 +5221,29 @@ PR #1478 added 270 tournament templates as `NPCCharacters`. The merge review ran
 - **Prevent:** before merging a PR that adds ModuleData, run `python -m unittest discover -s tools/tests -t .` on the PR merged with trunk and on trunk, and compare the failure lists.
 - **Source:** PR #1478 merge review; fix PR #1483.
 
+### A list whose comment names its source file gets a test that reads that file (#623, 2026-11-19)
+`validate_mesh_refs.DEFAULT_TPAC_MODULES` names `Main/_Module/SubModule.xml` as the source of its modules, and the only test pinned today's six names, so a new dependency would never be scanned for art. A repeat of "A gate's realm list comes from the generators, never from a hand-kept list".
+- **Why missed:** the plan measured the list on one install and pinned the result, so the test could not fail when the source changed.
+- **Prevent:** when a constant's comment cites a file, test the constant against that file (here every `DependedModule`), and name the known exceptions in one set with the reason.
+- **Source:** [RCA](../rca-validate-moduledata-mcp-parity-2026-11-19.md) F1.
+
+### An MCP tool's docstring states only what its passes do: grep them for stderr first (#623, 2026-11-19)
+The `validate_moduledata` MCP tool said every pass that could not run comes back as a `PARTIAL_RUN` warning, but two passes still announce their skips on stderr only, which an MCP client never reads.
+- **Why missed:** the plan wrote the docstring before the code, and the executor copied it.
+- **Prevent:** before a docstring or doc line says "every pass" or "any skip", grep each composed pass for `file=sys.stderr` and `print(`, and narrow the claim to what the code returns.
+- **Source:** [RCA](../rca-validate-moduledata-mcp-parity-2026-11-19.md) F2.
+
+### A new early exit in a hook carries every note the shared tail after it would have printed (#623, 2026-11-19)
+The `RC -eq 2` branch added to `check-moduledata-validation.sh` for decision A exits before the `RC -ne 1` tail, which printed the career kit "could not judge" note. A validator exit 2 with a crashed kit tool named the kit on the base hook and only the validator on the new one. The rc=3 branch the new one was copied from has had the same gap since it landed.
+- **Why missed:** the branch was copied from its sibling, and its test ran with the kit stub at exit 0, so the bypassed tail was never on the test's path.
+- **Prevent:** before adding a branch that exits ahead of a shared tail, list every output the tail can produce and carry each one into the branch. Cross the new exit code with every state of the checks that ran before it (here the kit stub: clean, drift, crash).
+- **Source:** [RCA](../rca-validate-moduledata-mcp-parity-decision-2026-11-19.md) F1.
+
+### A fail-open note's own fallback still says UNCHECKED, never `{}` (#623, 2026-11-19)
+The exit 2 note was built by a Python snippet that read stderr as strict UTF-8. One byte that was not UTF-8 raised, the snippet printed nothing, and the hook answered `{}`, the "checked, clean" answer the branch exists to replace.
+- **Why missed:** the `{}` fallback was copied from the rc=3 branch as the generic fail-open shape, and nobody asked whether it undid this branch's purpose.
+- **Prevent:** decode text from another process with `errors="replace"`, make the fallback of a branch whose job is to speak a fixed text note, and test it with bytes that are not UTF-8.
+- **Source:** [RCA](../rca-validate-moduledata-mcp-parity-decision-2026-11-19.md) F2.
 ### A guard on a merged load tests the source that can be missing, not the merged result (#626, 2026-11-19)
 Plan 060 made `UPGRADE_SKILL_REGRESSION` resolve a `skill_template` through `load_skill_sets`, which merges the install's vanilla SkillSet files with the repo's own. The gate and both skill writers refused an empty result, but the repo's two SkillSet files always load, so the refusal could not fire: with an install root that held no vanilla SkillSet, every vanilla template read as empty and a real drop on a templated edge passed clean. 16 `rebalance_troops.main` fixture tests passed only because they read the real repo's ModuleData beside their fake install.
 - **Why missed:** the guard and its tests looked at the merged dict. The test that pinned "one ERROR when none is found" used a scratch ModuleData with no repo SkillSet file, the only case where the dict can be empty.

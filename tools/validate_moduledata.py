@@ -28,6 +28,7 @@ import re
 import sys
 import traceback
 import xml.etree.ElementTree as ET
+from dataclasses import dataclass
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -307,14 +308,18 @@ def armour_acquisition_ref_issues(registries, moduledata: Path) -> list:
 
 BODY_CODE = "MISSING_COLLISION_BODY"
 MESH_CODE = "MISSING_VISUAL_MESH"
-# Every module whose packs the client loads for item art; which tree of each the
-# engine reads is validate_mesh_refs.tpac_paths_for_modules's to decide.
-_ART_MODULES = ("LOTRLOME_Armory", "Native", "SandBoxCore", "SandBox")
 
 
-def _loaded_tpacs(game_modules: Path) -> list:
+def _loaded_tpacs(game_modules: Path, moduledata: Path = None) -> list:
+    """The packs of every module the client loads for item art (validate_mesh_refs.DEFAULT_TPAC_MODULES),
+    each tree as validate_mesh_refs.module_tpacs chooses it. TAOM is read from the repo module this run
+    validates (`moduledata.parent`) when `moduledata` is given, as slot_rejection_issues does."""
     import validate_mesh_refs as vmr
-    return [p for m in _ART_MODULES for p in vmr.module_tpacs(Path(game_modules) / m, m)]
+    out = []
+    for name in vmr.DEFAULT_TPAC_MODULES:
+        folder = Path(moduledata).parent if name == "TAOM" and moduledata is not None else Path(game_modules) / name
+        out.extend(vmr.module_tpacs(folder, name))
+    return out
 
 
 def _item_refs(game_modules: Path, moduledata: Path) -> list:
@@ -338,8 +343,8 @@ def missing_collision_body_issues(game_modules: Path, moduledata: Path, item_ref
     drop that renamed the elven bows did it again in #599, and the elf start
     hung for two days because the only gate for it was a separate command
     nobody ran after the sync. This pass makes it part of the validator the
-    commit hook runs (wired into main() by #622; the MCP tool and /verify do not
-    run it yet, #623).
+    commit hook runs (wired into main() by #622; the MCP tool runs it too since
+    #623, through run_all_passes).
 
     validate_mesh_refs.py owns the ref extraction and the tpac TOC scan (Tier B
     visual meshes, Tier C PhysicsShapes); this only turns its findings into
@@ -351,11 +356,11 @@ def missing_collision_body_issues(game_modules: Path, moduledata: Path, item_ref
     scan is reported as a finding, because "every body missing" filtered to
     nothing would read exactly like a clean run."""
     import validate_mesh_refs as vmr
-    tpacs = _loaded_tpacs(game_modules)
+    tpacs = _loaded_tpacs(game_modules, moduledata)
     if not tpacs:
         return [ts.Issue(
             severity=ts.Severity.ERROR, code=BODY_CODE, file="", line=0, entry_id="",
-            message=f"no *.tpac found under {' / '.join(_ART_MODULES)} in {game_modules}; "
+            message=f"no *.tpac found under {' / '.join(vmr.DEFAULT_TPAC_MODULES)} in {game_modules}; "
                     f"collision bodies were NOT verified this run")]
     try:
         refs = item_refs(game_modules, moduledata)
@@ -526,8 +531,7 @@ def skill_template_mismatch_issues(game_dir: Path, moduledata: Path) -> list:
     first, then TAOM's, merged the way MBObjectManager merges a duplicate id; comments blanked),
     over every XML and XSLT file in the repo module's ModuleData, so the fixer and the gate cannot
     disagree. Finding no templated character at all is an error, as LordInlineSkillParityTests
-    asserts. Callers skip it without the install: the spc_* rookie templates live in SandBox. The
-    MCP's validate_moduledata runs the Validator only and never reaches this pass (#623)."""
+    asserts. Callers skip it without the install: the spc_* rookie templates live in SandBox."""
     import sync_lord_inline_skills as sl
 
     def issue(file, line, entry_id, message):
@@ -603,6 +607,8 @@ def schema_invalid_issues(module_dir: Path, game_schemas: Path) -> list:
     submodule = module_dir / "SubModule.xml"
     if not vx.HAVE_LXML:
         unverified = "lxml is not installed"
+    elif game_schemas is None:
+        unverified = "no game install was given"
     elif not Path(game_schemas).is_dir():
         unverified = f"the engine schema folder {game_schemas} was not found"
     elif not submodule.is_file():
@@ -799,6 +805,118 @@ def regenerate_shipped_troop_ids(tag: str = "") -> int:
     return 0
 
 
+PARTIAL_RUN_CODE = "PARTIAL_RUN"
+
+
+@dataclass
+class PassRun:
+    """One validator run. `issues`: the findings, sorted, filtered by `codes`. `notices`: what this
+    run did NOT check (no install, a live module missing, a registry that looks too small), one
+    WARNING each under PARTIAL_RUN_CODE; the CLI prints them to stderr and the MCP tool, which has
+    no stderr, returns them as issues. `swept_roots`: the live ModuleData roots the ref sweep read."""
+    issues: list
+    notices: list
+    swept_roots: list
+
+
+def run_all_passes(moduledata, game_modules, schemas, registries, codes=None) -> PassRun:
+    """Every validator pass, composed once (#623). main() and taom_query.ModuleDataQuery.validate (the
+    MCP tool) both call this, so the two cannot drift apart again: until #623 the MCP ran the schema
+    engine alone. `game_modules` None, or a folder that does not exist, means no install: each
+    install-backed pass is skipped with a notice, never silently."""
+    moduledata = Path(moduledata)
+    game_modules = Path(game_modules) if game_modules is not None else None
+    have_install = game_modules is not None and game_modules.exists()
+    notices = []
+
+    def notice(text):
+        notices.append(ts.Issue(severity=ts.Severity.WARNING, code=PARTIAL_RUN_CODE, file="", line=0,
+                                entry_id="", message=text))
+
+    if not have_install:
+        # Per environment-failures.md: report, don't guess. The item/culture
+        # registry will be TAOM-only, so external refs will look broken.
+        notice(f"Bannerlord Modules folder not found: {game_modules}\n"
+               f"         item / troop / party-template / body-property / faction / settlement / roster ref checks\n"
+               f"         (BROKEN_ITEM_REF, BROKEN_TROOP_REF, BROKEN_PARTY_TEMPLATE_REF,\n"
+               f"         BROKEN_BODY_PROPERTY_REF, BROKEN_FACTION_REF, BROKEN_SETTLEMENT_REF,\n"
+               f"         BROKEN_ROSTER_REF) and the troop weapon purpose checks (TROOP_SKILL_KIT_MISMATCH,\n"
+               f"         TROOP_ITEM_ZERO_NOT_MAIN, TROOP_MAIN_WEAPON_NOT_ITEM0, which read weapon classes\n"
+               f"         and couchable weapons from the install) will be\n"
+               f"         SKIPPED (need the game install for a complete registry). Culture-validity, duplicate-id,\n"
+               f"         civilian-type and enum checks still run. Set $BANNERLORD_GAME_DIR or\n"
+               f"         pass --game-modules <path> to enable the skipped checks.\n"
+               f"         This run will exit 2 (bad input), not 0 — a degraded sweep must not\n"
+               f"         report PASS as though it had checked everything.")
+    extra_roots = build_extra_ref_roots(game_modules) if game_modules is not None else []
+    # The baseline describes the repo's own troops; a --moduledata elsewhere has no shipped ids to lose.
+    shipped_ids = SHIPPED_TROOP_IDS if moduledata.resolve() == MODULEDATA.resolve() else None
+    validator = ts.Validator(moduledata, schemas, registries, extra_ref_roots=extra_roots,
+                             game_modules=game_modules, shipped_troop_ids_file=shipped_ids)
+    # Never let a vanished root pass as a clean run. Silence here would revert the
+    # sweep to TAOM-only and still print PASS -- the exact state that hid 28 of the
+    # 33 dangling refs the engine reported on 2026-08-02.
+    for root in validator.missing_ref_roots:
+        notice(f"extra ref root NOT FOUND, sweep SKIPPED for {root.parent.name}: {root}\n"
+               f"         Cross-references in that module were NOT checked this run.")
+    for warning in registries.suspect_registries:
+        notice(warning)
+
+    issues = validator.run()
+    # The engine's XmlSchemas folder sits beside Modules in the install root.
+    issues += schema_invalid_issues(
+        moduledata.parent, game_modules.parent / "XmlSchemas" if game_modules is not None else None)
+    if have_install:
+        issues += generator_item_ref_issues(registries.items)
+        # A filtered run discards these issues right below (codes), so a run that filters
+        # them out must not pay to generate them: about 0.86s of every commit hook invocation.
+        if not codes or ARMOUR_CLASS_CODE in codes:
+            issues += armour_class_table_issues(game_modules, moduledata)
+        issues += armour_acquisition_ref_issues(registries, moduledata)
+        # Until #622 nothing called this pass, so MISSING_COLLISION_BODY never fired and the
+        # commit hook's --code line for it blocked nothing.
+        # Both read the same refs, and the walk takes about 5 s. Only this run shares it: neither pass
+        # changes the list, and a failed walk is not kept, so each pass still reports its own failure.
+        item_refs = functools.lru_cache(maxsize=None)(_item_refs)
+        issues += missing_collision_body_issues(game_modules, moduledata, item_refs)
+        issues += borrowed_body_issues(game_modules, moduledata, item_refs)
+        issues += slot_rejection_issues(game_modules, moduledata)
+        # The install root: the vanilla SkillSets the spc_* templates name live in SandBox.
+        issues += skill_template_mismatch_issues(game_modules.parent, moduledata)
+        issues += prison_scene_issues(game_modules)
+    else:
+        for text in (
+                f"{GENERATOR_CODE} SKIPPED: the tools/ generators' item ids can only be\n"
+                f"         checked against the live install.",
+                f"{BODY_CODE} SKIPPED: collision bodies can only be checked against the\n"
+                f"         live install's tpacs.",
+                f"{SLOT_CODE} SKIPPED: slot fit needs the vanilla and Armory items, which\n"
+                f"         only the live install has.",
+                f"{TEMPLATE_CODE} SKIPPED: the vanilla SkillSets a template can name live\n"
+                f"         in the install.",
+                f"UPGRADE_SKILL_REGRESSION SKIPPED for upgrade edges with a skill_template\n"
+                f"         side: their SkillSets live in the install.",
+                f"{PRISON_CODE} SKIPPED: the prison scenes and the TAOM_Map settlements\n"
+                f"         live in the install.",
+                f"{ARMOUR_CLASS_CODE} SKIPPED: the armour class table can only be checked\n"
+                f"         against the live Armory.",
+                f"{ARMOUR_REF_CODE} SKIPPED: the armour acquisition ids and cultures can only\n"
+                f"         be checked against the live install's registry.",
+                f"MELEE_LADDER_INVERSION SKIPPED: weapon damage is simulated from the\n"
+                f"         Armory's crafting pieces, which only the live install has.",
+                f"WORN_ARMOUR_CEILING SKIPPED (and WORN_ARMOUR_FLOOR, LORD_ARMOUR_RANGE): the\n"
+                f"         armour stats of a troop's or a lord's kit come from the Armory and vanilla\n"
+                f"         items, which only the live install has.",
+                f"{ts.ENLISTMENT_KIT_RANK_CODE} SKIPPED: the enlistment kits are judged on the\n"
+                f"         Armory's armour and weapon values, which only the live install has."):
+            notice(text)
+    issues.sort(key=lambda i: i.sort_key())
+    if codes:
+        wanted = set(codes)
+        issues = [i for i in issues if i.code in wanted]
+    return PassRun(issues=issues, notices=notices, swept_roots=list(validator.extra_ref_roots))
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -826,21 +944,6 @@ def main() -> int:
     if not moduledata.exists():
         print(f"ERROR: ModuleData not found: {moduledata}", file=sys.stderr)
         return 2
-    if not game_modules.exists():
-        # Per environment-failures.md: report, don't guess. The item/culture
-        # registry will be TAOM-only, so external refs will look broken.
-        print(f"WARNING: Bannerlord Modules folder not found: {game_modules}\n"
-              f"         item / troop / party-template / body-property / faction / settlement / roster ref checks\n"
-              f"         (BROKEN_ITEM_REF, BROKEN_TROOP_REF, BROKEN_PARTY_TEMPLATE_REF,\n"
-              f"         BROKEN_BODY_PROPERTY_REF, BROKEN_FACTION_REF, BROKEN_SETTLEMENT_REF,\n"
-              f"         BROKEN_ROSTER_REF) and the troop weapon purpose checks (TROOP_SKILL_KIT_MISMATCH,\n"
-              f"         TROOP_ITEM_ZERO_NOT_MAIN, TROOP_MAIN_WEAPON_NOT_ITEM0, which read weapon classes\n"
-              f"         and couchable weapons from the install) will be\n"
-              f"         SKIPPED (need the game install for a complete registry). Culture-validity, duplicate-id,\n"
-              f"         civilian-type and enum checks still run. Set $BANNERLORD_GAME_DIR or\n"
-              f"         pass --game-modules <path> to enable the skipped checks.\n"
-              f"         This run will exit 2 (bad input), not 0 — a degraded sweep must not\n"
-              f"         report PASS as though it had checked everything.", file=sys.stderr)
 
     schemas = ts.load_schemas(SCHEMA_DIR)
     print(f"Loaded {len(schemas)} schemas:", file=sys.stderr)
@@ -855,74 +958,12 @@ def main() -> int:
           f"{len(registries.body_properties)} body properties, "
           f"{len(registries.factions)} clans", file=sys.stderr)
 
-    extra_roots = build_extra_ref_roots(game_modules)
-
-    # The baseline describes the repo's own troops; a --moduledata elsewhere has no shipped ids to lose.
-    shipped_ids = SHIPPED_TROOP_IDS if moduledata.resolve() == MODULEDATA.resolve() else None
-    validator = ts.Validator(moduledata, schemas, registries, extra_ref_roots=extra_roots,
-                            game_modules=game_modules, shipped_troop_ids_file=shipped_ids)
-    for root in validator.extra_ref_roots:
+    run = run_all_passes(moduledata, game_modules, schemas, registries, codes=args.code)
+    for root in run.swept_roots:
         print(f"Also sweeping refs in: {root}", file=sys.stderr)
-    # Never let a vanished root pass as a clean run. Silence here would revert the
-    # sweep to TAOM-only and still print PASS -- the exact state that hid 28 of the
-    # 33 dangling refs the engine reported on 2026-08-02.
-    for root in validator.missing_ref_roots:
-        print(f"WARNING: extra ref root NOT FOUND, sweep SKIPPED for {root.parent.name}: {root}\n"
-              f"         Cross-references in that module were NOT checked this run.",
-              file=sys.stderr)
-    for warning in registries.suspect_registries:
-        print(f"WARNING: {warning}", file=sys.stderr)
-
-    issues = validator.run()
-    # The engine's XmlSchemas folder sits beside Modules in the install root.
-    issues += schema_invalid_issues(moduledata.parent, game_modules.parent / "XmlSchemas")
-    if game_modules.exists():
-        issues += generator_item_ref_issues(registries.items)
-        # A filtered run discards these issues right below (args.code), so a run that filters
-        # them out must not pay to generate them: about 0.86s of every commit hook invocation.
-        if not args.code or ARMOUR_CLASS_CODE in args.code:
-            issues += armour_class_table_issues(game_modules, moduledata)
-        issues += armour_acquisition_ref_issues(registries, moduledata)
-        # Until #622 nothing called this pass, so MISSING_COLLISION_BODY never fired and the
-        # commit hook's --code line for it blocked nothing.
-        # Both read the same refs, and the walk takes about 5 s. Only this run shares it: neither pass
-        # changes the list, and a failed walk is not kept, so each pass still reports its own failure.
-        item_refs = functools.lru_cache(maxsize=None)(_item_refs)
-        issues += missing_collision_body_issues(game_modules, moduledata, item_refs)
-        issues += borrowed_body_issues(game_modules, moduledata, item_refs)
-        issues += slot_rejection_issues(game_modules, moduledata)
-        # The install root: the vanilla SkillSets the spc_* templates name live in SandBox.
-        issues += skill_template_mismatch_issues(game_modules.parent, moduledata)
-        issues += prison_scene_issues(game_modules)
-    else:
-        print(f"WARNING: {GENERATOR_CODE} SKIPPED: the tools/ generators' item ids can only be\n"
-              f"         checked against the live install.", file=sys.stderr)
-        print(f"WARNING: {BODY_CODE} SKIPPED: collision bodies can only be checked against the\n"
-              f"         live install's tpacs.", file=sys.stderr)
-        print(f"WARNING: {SLOT_CODE} SKIPPED: slot fit needs the vanilla and Armory items, which\n"
-              f"         only the live install has.", file=sys.stderr)
-        print(f"WARNING: {TEMPLATE_CODE} SKIPPED: the vanilla SkillSets a template can name live\n"
-              f"         in the install.", file=sys.stderr)
-        print(f"WARNING: UPGRADE_SKILL_REGRESSION SKIPPED for upgrade edges with a skill_template\n"
-              f"         side: their SkillSets live in the install.", file=sys.stderr)
-        print(f"WARNING: {PRISON_CODE} SKIPPED: the prison scenes and the TAOM_Map settlements\n"
-              f"         live in the install.", file=sys.stderr)
-        print(f"WARNING: {ARMOUR_CLASS_CODE} SKIPPED: the armour class table can only be checked\n"
-              f"         against the live Armory.", file=sys.stderr)
-        print(f"WARNING: {ARMOUR_REF_CODE} SKIPPED: the armour acquisition ids and cultures can only\n"
-              f"         be checked against the live install's registry.", file=sys.stderr)
-        print(f"WARNING: MELEE_LADDER_INVERSION SKIPPED: weapon damage is simulated from the\n"
-              f"         Armory's crafting pieces, which only the live install has.", file=sys.stderr)
-        print(f"WARNING: WORN_ARMOUR_CEILING SKIPPED (and WORN_ARMOUR_FLOOR, LORD_ARMOUR_RANGE): the\n"
-              f"         armour stats of a troop's or a lord's kit come from the Armory and vanilla\n"
-              f"         items, which only the live install has.", file=sys.stderr)
-        print(f"WARNING: {ts.ENLISTMENT_KIT_RANK_CODE} SKIPPED: the enlistment kits are judged on the\n"
-              f"         Armory's armour and weapon values, which only the live install has.", file=sys.stderr)
-    issues.sort(key=lambda i: i.sort_key())
-
-    if args.code:
-        wanted = set(args.code)
-        issues = [i for i in issues if i.code in wanted]
+    for n in run.notices:
+        print(f"WARNING: {n.message}", file=sys.stderr)
+    issues = run.issues
 
     print(ts.format_report(issues))
 
