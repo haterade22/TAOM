@@ -74,6 +74,44 @@ public class DwarfAttackServiceTests
         Assert.IsFalse(_service.IsOffCooldown(DwarfAttack.HeadButt, last, now));
     }
 
+    // --- shared lockout: either attack starts the cooldown of both ---
+
+    [TestMethod]
+    public void LatestFired_NeitherFired_IsNull()
+    {
+        Assert.IsNull(_service.LatestFired(null, null));
+    }
+
+    [DataTestMethod]
+    [DataRow(40f, null, 40f)]
+    [DataRow(null, 40f, 40f)]
+    [DataRow(40f, 90f, 90f)]
+    [DataRow(90f, 40f, 90f)]
+    public void LatestFired_OneOrBothFired_IsTheLaterStamp(float? headButt, float? dropKick, float expected)
+    {
+        Assert.AreEqual(expected, _service.LatestFired(headButt, dropKick));
+    }
+
+    [DataTestMethod]
+    [DataRow(float.NaN, 40f)]
+    [DataRow(40f, float.NaN)]
+    [DataRow(float.PositiveInfinity, 40f)]
+    [DataRow(40f, float.NegativeInfinity)]
+    public void LatestFired_NonFiniteStamp_KeepsBothAttacksOnCooldown(float headButt, float dropKick)
+    {
+        float? latest = _service.LatestFired(headButt, dropKick);
+        Assert.IsFalse(_service.IsOffCooldown(DwarfAttack.HeadButt, latest, 10_000f));
+        Assert.IsFalse(_service.IsOffCooldown(DwarfAttack.DropKick, latest, 10_000f));
+    }
+
+    [TestMethod]
+    public void LatestFired_DropKickJustFired_HeadButtWaitsItsOwnCooldownFromTheKick()
+    {
+        float? latest = _service.LatestFired(null, 100f);
+        Assert.IsFalse(_service.IsOffCooldown(DwarfAttack.HeadButt, latest, 100f + HeadButtCooldownSeconds - 0.01f));
+        Assert.IsTrue(_service.IsOffCooldown(DwarfAttack.HeadButt, latest, 100f + HeadButtCooldownSeconds));
+    }
+
     // --- choice ---
 
     [TestMethod]
@@ -248,7 +286,7 @@ public class DwarfAttackServiceTests
     [DataTestMethod]
     [DataRow(null, 100f, true)]
     [DataRow(99f, 100f, false)]
-    [DataRow(0f, 100f, true)]
+    [DataRow(0f, 1000f, true)]
     public void IsReady_ActionResolved_FollowsTheCooldown(float? lastFired, float now, bool expected)
     {
         Assert.AreEqual(expected, _service.IsReady(DwarfAttack.HeadButt, actionResolved: true, lastFired, now));

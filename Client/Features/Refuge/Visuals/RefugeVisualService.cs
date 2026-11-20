@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using SandBox.View.Map;
 using TAOM.Core.Logging;
-using TAOM.Core.Validation;
 using TAOM.Features.FieldCamp.Visuals;
 using TAOM.Features.Refuge.Domain;
 using TaleWorlds.CampaignSystem;
@@ -60,17 +59,18 @@ public sealed class RefugeVisualService : IRefugeVisualService
     // Same cadence as CampVisualService: cloth wind does not need frame rate.
     private const int WindTickIntervalMs = 500;
 
+    private const string BuildingMesh = "empire_street_tent_02";
+    private const float BuildingScale = 0.4f;
+
     private readonly IModLogger _logger;
-    private readonly IRefugeSettingsProvider _settings;
     private readonly Dictionary<string, RefugeVisual> _visuals =
         new Dictionary<string, RefugeVisual>(StringComparer.Ordinal);
 
     private int _lastWindTickMs;
     private bool _sceneWaitLogged;
 
-    public RefugeVisualService(IRefugeSettingsProvider settings, IModLogger logger)
+    public RefugeVisualService(IModLogger logger)
     {
-        _settings = settings;
         _logger = logger;
     }
 
@@ -114,8 +114,7 @@ public sealed class RefugeVisualService : IRefugeVisualService
 
         int troops = ResolveParty(refugeId)?.MemberRoster?.TotalManCount ?? 0;
         var center = new Vec3(position.x, position.y, 0f, -1f);
-        Place(scene, in center, tier, fortified, troops, visual.Entities,
-            _settings.BuildingMesh, _settings.BuildingScale);
+        Place(scene, in center, tier, fortified, troops, visual.Entities);
 
         visual.Shown = true;
         visual.Tier = tier;
@@ -143,14 +142,14 @@ public sealed class RefugeVisualService : IRefugeVisualService
 
     private static void Place(
         Scene scene, in Vec3 center, RefugeTier tier, bool fortified, int troops,
-        List<GameEntity> outEntities, string buildingMesh, float buildingScale)
+        List<GameEntity> outEntities)
     {
         bool stronghold = tier == RefugeTier.Stronghold;
         float campScale = stronghold ? RefugeCampScaleStronghold : RefugeCampScale;
 
         if (!CampLayoutBuilder.PlaceCenteredPrefab(scene, in center, RefugeCampMesh, campScale, outEntities))
         {
-            PlaceMilitaryLayout(scene, in center, stronghold, troops, outEntities, buildingMesh, buildingScale);
+            PlaceMilitaryLayout(scene, in center, stronghold, troops, outEntities);
             return;
         }
 
@@ -171,8 +170,7 @@ public sealed class RefugeVisualService : IRefugeVisualService
     /// a stronghold so the two tiers read differently at a glance.
     /// </summary>
     private static void PlaceMilitaryLayout(
-        Scene scene, in Vec3 center, bool stronghold, int troops, List<GameEntity> outEntities,
-        string buildingMesh, float buildingScale)
+        Scene scene, in Vec3 center, bool stronghold, int troops, List<GameEntity> outEntities)
     {
         Banner? banner = null;
         try
@@ -200,14 +198,7 @@ public sealed class RefugeVisualService : IRefugeVisualService
         CampLayoutBuilder.PlaceCommandTent(
             scene, in center, stronghold ? 3.2f : 2.6f, banner, outEntities);
 
-        // Source parity: an optional named building mesh beside the command tent (the source's
-        // RefugeBuildingMesh/RefugeBuildingScale MCM knobs, offsets +1/-0.2 verbatim). Positive
-        // finite gate on the scale: a degenerate value drops the prop, never a NaN frame.
-        if (!string.IsNullOrEmpty(buildingMesh)
-            && FiniteFloatValidator.IsFiniteInRange(buildingScale, 0.01f, 10f))
-        {
-            PlaceBuildingMesh(scene, center.x + 1f, center.y - 0.2f, center.z, buildingScale, buildingMesh, outEntities);
-        }
+        PlaceBuildingMesh(scene, center.x + 1f, center.y - 0.2f, center.z, BuildingScale, BuildingMesh, outEntities);
 
         float tentScale = stronghold ? 1.5f : 1.3f;
         PlaceScaledTentRing(

@@ -38,17 +38,12 @@ public class RefugeDefenseService : IRefugeDefenseService
         if (partyStringId == null)
             return 0f;
         var refuge = _book.GetByPartyId(partyStringId);
-        // A refuge still being raised (or rebuilt into a stronghold) grants nothing: IsReady is
-        // Established AND not Building, so the bonus drops for the rebuild window by design.
         if (refuge == null || !refuge.IsReady)
             return 0f;
 
         float factor = refuge.TierEnum == RefugeTier.Stronghold
             ? _settings.StrongholdDefenseBonus
             : _settings.RefugeDefenseBonus;
-        // Positive finite gate: NaN/Infinity/negative/out-of-range settings degrade to "no bonus"
-        // rather than poisoning every damage number in the battle (csharp-architecture.md,
-        // engine-float decision gates).
         return FiniteFloatValidator.IsFiniteInRange(factor, 0f, 1f) ? factor : 0f;
     }
 }

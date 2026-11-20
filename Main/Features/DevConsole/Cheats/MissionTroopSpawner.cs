@@ -45,10 +45,8 @@ internal static class MissionTroopSpawner
         if (isPlayerSide != requestedPlayerSide)
             outcome.Note = $"{troopId} is a creature bandit and fights only as an enemy, so the player's side is ignored.";
 
-        // Pre-resolve the team and bail if it is null. SpawnTroop does
-        // `.ClothingColor1(agentTeam.Color)` with NO null check, so a null team hard-crashes the game
-        // instead of printing a sentence. This is the single biggest crash risk in the suite.
-        //
+        // SpawnTroop does `.ClothingColor1(agentTeam.Color)` with NO null check, so a null team
+        // hard-crashes the game instead of printing a sentence.
         // Only the ENEMY path can actually return null: GetAgentTeam returns Current.PlayerEnemyTeam
         // unguarded, and that is null in town/village missions. The ally path never returns null: it
         // falls back to Current.PlayerTeam when PlayerAllyTeam is missing, so `ally` in a town spawns

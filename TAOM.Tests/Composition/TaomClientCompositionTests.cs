@@ -77,7 +77,6 @@ public class TaomClientCompositionTests
         // The map visual services' constructor dependencies come from the camps features' registrations.
         container.RegisterInstance(Substitute.For<ISupplyOrderService>());
         container.RegisterInstance(Substitute.For<ISupplyLinesSettingsProvider>());
-        container.RegisterInstance(Substitute.For<IRefugeSettingsProvider>());
         ClientComposition.Current = new TaomClientComposition();
 
         ClientComposition.Apply(container);

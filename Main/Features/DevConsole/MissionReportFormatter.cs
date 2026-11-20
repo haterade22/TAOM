@@ -120,7 +120,6 @@ internal static class MissionReportFormatter
 
     private static string Or(string value) => string.IsNullOrEmpty(value) ? Unknown : value;
 
-    // Never renders a failed read as 0 — see AgentSnapshot.Health.
     private static string Hp(float? value) => value.HasValue ? value.Value.ToString("0.#") : Unknown;
 
     private static string DescribeKind(AgentSnapshot a)

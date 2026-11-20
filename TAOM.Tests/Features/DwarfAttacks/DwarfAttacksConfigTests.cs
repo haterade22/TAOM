@@ -55,6 +55,14 @@ public class DwarfAttacksConfigTests
     }
 
     [TestMethod]
+    public void Cooldowns_AreThreeAndFiveMinutes()
+    {
+        // Mike, 2026-11-20: the attacks fired too often and pulled dwarves out of formation.
+        Assert.AreEqual(180f, HeadButtCooldownSeconds);
+        Assert.AreEqual(300f, DropKickCooldownSeconds);
+    }
+
+    [TestMethod]
     public void FacingGates_AreCosinesInsideTheFrontHalf()
     {
         Assert.IsTrue(FacingDot > 0f && FacingDot < 1f);
