@@ -599,41 +599,44 @@ How the walk and the fight count:
 - The saved `ApplyTo*` and cost-scale values: the switch pins them for the run.
 - The Marshal's Word hold beside stamina, and "keep their formation".
 
-**Game runs, 2026-11-20.** Two runs of the three steps, in `E:/Temp/command-trial-runs/20261120-152853` and
-`20261120-154018`. Every step passed in both. The battle was 101 against 300 on `battle_terrain_a` and ran 54 and 57 live
-seconds. Both builds were uncommitted (`9d5909619.dirty`), so `tools/ingame_verdict.py` does not count them: a run on a
-committed build is owed. The second run has the fixes of the review (the control half held Fresh, the slower-than-control
-term, the tracked hero, the switch held until the done file).
+**Game runs, 2026-11-20.** Three runs of the three steps, in `E:/Temp/command-trial-runs/20261120-152853`,
+`20261120-154018` and `20261120-161103`. Every step passed in all three. The battle was 101 against 300 on
+`battle_terrain_a` and ran 54, 57 and 62 live seconds. The first two builds were uncommitted (`9d5909619.dirty`), so
+`tools/ingame_verdict.py` does not count them. The third run is on the committed build `e82108e52`, and the tool reads PASS
+for its three `taom.stamina.trial-*` rows. The second and third runs have the fixes of the review (the control half held
+Fresh, the slower-than-control term, the tracked hero, the switch held until the done file).
 
-| Fact | Run 1 | Run 2 |
-|---|---|---|
-| Gate: tracked of soldiers on the field | 400 of 400 | 400 of 400 |
-| Walk: runner share before and after the force | 0.88, 0.00 | 0.79, 0.01 |
-| Walk: speed of the Exhausted half, m/s | 1.99 | 1.99 |
-| Walk: speed of the control half, m/s | not printed (`control_ratio` 0.78 of 3.25) | 2.58 |
-| Fight: releases of the Exhausted, the Tired and the control third | 0, 59, 80 | 0, 45, 80 |
-| Fight: defends of the Exhausted third | 0 | 0 |
-| Fight: `ratio` (Tired over control) | 0.72 | 0.55 |
-| Fight: `t_chance`, `c_chance`, `c_defensiveness` | 0.09, 0.18, 0.55 | 0.09, 0.17, 0.67 |
-| Fight: `contact_at`, seconds after the groups were chosen | 25.3 | 24.9 |
-| `taom.stamina.refresh`: slowest batch, ms | 0.650 | 0.509 |
+| Fact | Run 1 | Run 2 | Run 3 |
+|---|---|---|---|
+| Gate: tracked of soldiers on the field | 400 of 400 | 400 of 400 | 400 of 400 |
+| Walk: runner share before and after the force | 0.88, 0.00 | 0.79, 0.01 | 0.75, 0.01 |
+| Walk: speed of the Exhausted half, m/s | 1.99 | 1.99 | 1.82 |
+| Walk: speed of the control half, m/s | not printed (`control_ratio` 0.78 of 3.25) | 2.58 | 2.35 |
+| Fight: releases of the Exhausted, the Tired and the control third | 0, 59, 80 | 0, 45, 80 | 0, 82, 80 |
+| Fight: defends of the Exhausted third | 0 | 0 | 0 |
+| Fight: `ratio` (Tired over control) | 0.72 | 0.55 | 1.05 |
+| Fight: `t_chance`, `c_chance`, `c_defensiveness` | 0.09, 0.18, 0.55 | 0.09, 0.17, 0.67 | 0.10, 0.19, 0.42 |
+| Fight: `contact_at`, seconds after the groups were chosen | 25.3 | 24.9 | 25.1 |
+| `taom.stamina.refresh`: slowest batch, ms | 0.650 | 0.509 | 0.443 |
 
 What the runs settled:
 
-- An Exhausted Gondor spearman moves at 1.99 m/s, under the 3 m/s run threshold, and he does not stand still.
-- The control half slowed to about 0.8 of its speed while the other half was Exhausted. So the formation as a whole slows
-  (step 5's question), and the Exhausted half is still the slower one, at about 0.77 of the control's speed.
-- No locked soldier attacked or raised a defence in either window, and the Exhausted third attacked again after the release.
-- The AI strip counter rose by 161,681 and by 196,145 in the windows, for 92 locked soldiers, with `0 off the main thread` in
-  both summaries.
-- The Tired ratio was 0.72 and 0.55. Two battles do not settle step 9's 30%.
-- `taom.stamina.lock` read `skip` in both: `none-exhausted`, then `none-recovered` with one soldier Exhausted by the rules when
-  the battle ended. A battle of under a minute is too short for that check.
-- In `hud_stamina_gate.png` of both runs the thin stamina bar shows at the left of the ring HUD. Its colours and its movement
-  are still a person's to judge.
+- An Exhausted Gondor spearman moves at 1.82 to 1.99 m/s, under the 3 m/s run threshold, and he does not stand still.
+- The control half slowed to between 0.74 and 0.80 of its speed while the other half was Exhausted. So the formation as a
+  whole slows (step 5's question), and the Exhausted half is still the slower one, at about 0.77 of the control's speed.
+- No locked soldier attacked or raised a defence in any window, and the Exhausted third attacked again after the release.
+- The AI strip counter rose by 161,681, by 196,145 and by 242,454 in the windows, for 85 to 92 locked soldiers, with
+  `0 off the main thread` in every summary.
+- The Tired ratio was 0.72, 0.55 and 1.05, while the attack chance of the Tired third read about half of the control's
+  each time. Step 9's 30% is not shown: in the third run the Tired third attacked as often as the fresh third. A lower
+  attack chance alone may not make a tired AI soldier hold back, and the decision is on #1497.
+- `taom.stamina.lock` read `skip` in all three: `none-exhausted` two times, and `none-recovered` one time, with one soldier
+  Exhausted by the rules when the battle ended. A battle of about a minute is too short for that check.
+- In `hud_stamina_gate.png` of the first two runs the thin stamina bar shows at the left of the ring HUD. Its colours and
+  its movement are still a person's to judge.
 
 Not settled: the refresh wait of a step reads the queue of the whole battle, and a low frame rate could fail a step as
-`not-applied` although stamina works. Both runs applied in time.
+`not-applied` although stamina works. All three runs applied in time.
 
 ## How to tune
 
