@@ -44,7 +44,7 @@ Battle 1 said the same, once its hits were mapped to seats. Crew agents take con
 
 ## Still open
 
-- The howdah. Without `SetTargetZ` its floor body alone must hold the archers at 3.2 m, with no navmesh under them. No battle on 2026-11-19 had a howdah elephant after the first one, so this hold is not measured there. The checks `taom.crew-seats.howdah-held` and `howdah-shot` read it. FOLLOW-UP #1482: the issue stays open with `triage-needs-ingame`.
+- Closed the same evening: the howdah and all eight mumakil seats on the final build. Three unattended Fords of War matches on trunk `66b6e4f17` (run folders `20261119-195753`, `20261119-202858` and `20261119-204402` under `E:/Temp/fords-runs`; two at 1x, one at 4x) had five crewed elephants and two mumakil. Every archer read `mode=Land`, no seat made a rescue teleport, and every seat that met an enemy loosed arrows. The howdah's floor body holds its archers with no navmesh under them. `python tools/ingame_verdict.py --issue 1482` reads the four checks as PASS. The numbers are in `docs/features/mumakil.md` ("How the crew are held") and `docs/features/elephant.md` (gate 5). FOLLOW-UP #1482: the maintainer's own look at both beasts is still owed, so the issue stays open with `triage-needs-ingame`.
 - The engine code that stops the shot is not read. `SetTargetZ` writes two things, the NoPhysics mode byte and a height target, and the measurement cannot say which one stops the bow. No managed code on the ranged attack path reads the movement mode, so the gate is native. The hold needs neither write, so the fix does not depend on the answer.
 - Why the nest archer never walks under the old design while the main-deck archers do is not known. It no longer matters for the hold.
 
@@ -61,5 +61,6 @@ Evidence:            the table above; the gate test failed before the fix and pa
 Regression test:     HowdahSeatReleaseTests.NoSeat_PutsItsArcherInTheNoPhysicsMovementMode (IL gate, both seats)
 Siblings:            clean: no other TAOM caller of SetTargetZ or SetExcludedFromGravity (Main searched)
 Related:             REVIEW-LOG entries of 2026-11-19 for #1482; lessons/adapters-taleworlds-api.md
-Status:              DONE_WITH_CONCERNS: the final build on the mumakil and the howdah are not yet played
+Status:              DONE: both beasts measured on trunk 66b6e4f17 in three unattended matches, verdict PASS;
+                     the maintainer's own look is still owed
 ```

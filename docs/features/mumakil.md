@@ -331,6 +331,20 @@ The measurement also ruled out two suspects: the beast's motion (the walk happen
 tick order of platform and seat (the platform ticked first on every sampled frame). Moving the platform with
 `isTeleportation: false`, as the vanilla siege tower does (through `SetGlobalFrame`), changed nothing.
 
+**The shipped hold on all eight seats (2026-11-19, trunk `66b6e4f17`).** Two unattended Fords of War matches,
+Gondor against Harad with an AI on each side, had one mumakil each. Every archer read `mode=Land` in every
+sample, and no seat made a rescue teleport.
+
+| Run folder under `E:/Temp/fords-runs` | Speed | Time on the beast | Shots, `main_0` to `main_4`, `upper_0`, `upper_1`, `nest_0` | Largest distance from the seat |
+|---|---|---|---|---|
+| `20261119-202858` | 1x | 65 s, until the mumakil died | 4, 6, 5, 8, 6, 5, 6, 6 | 0.11 m at up to 6.5 m/s |
+| `20261119-204402` | 4x | about 120 mission seconds, until it died | 20, 15, 21, 23, 18, 15, 21, 21 | 1.23 m in one period |
+
+`python tools/ingame_verdict.py --issue 1482` reads both sessions as PASS on the held and the shot check. A third
+match with a temporary camera on the crew (`20261119-204912`, a `.dirty` build, so the verdict tool does not
+count it) gave pictures of two mumakil: the archers stand on the three decks with their bows in hand, and after
+the first mumakil died its archers fought on the ground. All sixteen seats of that match passed both checks too.
+
 The first fix was chosen from the restart counter (`re`), which rose on the locked seats and was read as archers
 that reload and shoot. It counts an aborted draw as well. Only `shots` proves shooting
 ([RCA](../reviews/rca-crew-hold-no-shots-2026-11-19.md)).
