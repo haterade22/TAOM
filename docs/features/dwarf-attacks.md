@@ -3,7 +3,9 @@
 ## Overview
 
 AI dwarves on foot have two attacks of their own besides their weapons: a head butt on an enemy right in front of
-them and a drop kick on an enemy a few steps away. Each runs on its own cooldown. The head butt staggers the victim;
+them and a drop kick on an enemy a few steps away. Either attack starts the cooldown of both: 3 minutes of battle time
+before the next head butt, 5 before the next drop kick (the clock stops while the game is paused). The head butt
+staggers the victim;
 the drop kick knocks the victim down unless a shield blocks it. Both hit exactly one enemy.
 
 ## Why This Exists
@@ -38,6 +40,7 @@ tournament or a conversation scene gets no tree, the rule the race abilities and
 
 1. `DwarfAttackReadyDecorator` reads the engine: the dwarf is AI controlled and not the player's own, on foot, not on
    a machine, not already attacking, struck or falling, and at least one attack has its action and is off cooldown.
+   Both cooldowns count from `DwarfAttackService.LatestFired`, the later of the two attack stamps.
    It finds the nearest enemy on foot within 2.6 m and within 1 m of the dwarf's height, and asks
    `DwarfAttackService.ChooseAttack` with that enemy's distance and facing. Up to 1.3 m picks the
    head butt; 1.8 to 2.6 m picks the drop kick; nothing fires between the bands, so a drop kick never starts without
@@ -97,7 +100,7 @@ Battle smoke. Two MCM settings under **Battle Tactics/Dwarf Attacks**, both read
 | Constant | Head butt | Drop kick | Note |
 |---|---|---|---|
 | Trigger distance to the nearest enemy | 0 to 1.3 m | 1.8 to 2.6 m | In front: cosine above 0.7 |
-| Cooldown (mission seconds) | 50 | 60 | Separate, so a dwarf may do one of each |
+| Cooldown (mission seconds) | 180 | 300 | Counted from the last attack of either kind |
 | Impact (clip progress) | 12/35, frame 13 | 20/53, frame 21 | From the authored clips |
 | Reach at impact | 1.5 m | 1.6 m | In front of the start facing: cosine above 0.5 |
 | Damage | 18 | 25 | Half against a shield |
@@ -146,9 +149,9 @@ row, two more for this feature. Whether a client sees the attacks of dwarves the
 ## Tests
 
 - `TAOM.Tests/Features/DwarfAttacks/DwarfAttackServiceTests.cs`: Monster match, cooldowns, attack choice by band,
-  facing and cooldown, impact, reach, the blow, NaN and infinity for every float gate.
+  facing and cooldown, the shared stamp (`LatestFired`), impact, reach, the blow, NaN and infinity for every float gate.
 - `DwarfAttacksConfigTests.cs`: impact fractions match the authored frames, bands ordered, reach covers each band,
-  cooldowns outlast the clips.
+  cooldowns outlast the clips, cooldowns are 3 and 5 minutes.
 - `DwarfAttacksSettingsProviderTests.cs`: defaults, the switch, the damage clamp, the MCM group order.
 - `DwarfAttackChecksTests.cs`: one `[Check]` line per kind, every hit counted.
 - `DwarfAttacksWiringTests.cs`: both actions declared once as `actt_kick` and bound once in `as_dwarf_warrior`, in the
@@ -201,6 +204,7 @@ counter increment; the `[Check]` line is written once per attack kind per proces
   the shield counts only toward the dwarf; an attack with a missing action never starts; combat missions only.
 - 2026-11-06: the shield rule moved to `TAOM.Core.Combat.ShieldCover`, shared with the troll ring, the elephant-like attacks and the signature strike rings; the dwarves' behaviour is unchanged.
 - 2026-11-13: the cooldowns went from 12 s (head butt) and 20 s (drop kick) to 50 s and 60 s, Mike's call. Only the two constants changed. An interrupted attack still spends its whole cooldown, so a cut-short attack now costs a dwarf 50 or 60 s.
+- 2026-11-20: the cooldowns went to 180 s (head butt) and 300 s (drop kick), and either attack now starts both, Mike's call. Dwarves attacked too often, and each drop kick carried a dwarf 2 m out of his formation line. A dwarf can still attack once at first contact, because a dwarf that never attacked is off cooldown. An attack cut short by a hit reaction still starts both cooldowns. The MCM hint still says "each on its own cooldown": changing the English text would make all 12 translations stale, so it waits for the next translation pass.
 
 ## GitHub Issue
 

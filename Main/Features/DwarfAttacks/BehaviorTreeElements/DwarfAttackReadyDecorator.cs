@@ -54,10 +54,11 @@ public class DwarfAttackReadyDecorator : BTReturnFalseDecorator, IBTBannerlordBa
         if (StaminaHooks.RefusesSpecialAttack(dwarf)) return false;
 
         float now = mission.CurrentTime;
+        float? lastFired = _service.LatestFired(HeadButtLastFired.GetValue(), DropKickLastFired.GetValue());
         bool headButtReady = _service.IsReady(DwarfAttack.HeadButt, DwarfAttacksCombat.IsResolved(DwarfAttack.HeadButt),
-            HeadButtLastFired.GetValue(), now);
+            lastFired, now);
         bool dropKickReady = _service.IsReady(DwarfAttack.DropKick, DwarfAttacksCombat.IsResolved(DwarfAttack.DropKick),
-            DropKickLastFired.GetValue(), now);
+            lastFired, now);
         if (!headButtReady && !dropKickReady) return false;
 
         if (DwarfAttacksCombat.IsOurs(dwarf.GetCurrentAction(0))

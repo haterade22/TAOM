@@ -33,11 +33,15 @@ public static class DwarfAttacksConfig
 
     public const float DropKickMaxRange = 2.6f;
 
-    /// <summary>Mission seconds between head butts. Separate from the drop kick's, so a dwarf may do one of each.</summary>
-    public const float HeadButtCooldownSeconds = 50f;
+    /// <summary>
+    /// Mission seconds from the dwarf's last special attack, of either kind, before he may head butt (3 minutes).
+    /// Either attack starts both cooldowns (<see cref="DwarfAttackService.LatestFired"/>), so frequent attacks do not
+    /// pull dwarves out of their formation.
+    /// </summary>
+    public const float HeadButtCooldownSeconds = 180f;
 
-    /// <summary>Mission seconds between drop kicks: longer, because it floors the victim.</summary>
-    public const float DropKickCooldownSeconds = 60f;
+    /// <summary>Mission seconds from the last special attack before a drop kick (5 minutes): longer, because it floors the victim and carries the dwarf forward.</summary>
+    public const float DropKickCooldownSeconds = 300f;
 
     // --- When and where the attack lands ---
 
