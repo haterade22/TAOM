@@ -48,7 +48,7 @@ FILES = {
         "spider":   LOTR + r"\Monsters\LOTR\lotr_monster_spider.xml",
         "warg":     LOTR + r"\Monsters\LOTR\lotr_monster_warg.xml",
         "elephant": LOTR + r"\Monsters\LOTR\lotr_monster_elephant.xml",
-        # Mûmakil = scaled-up elephant; should diff ZERO vs elephant except the id (taom_mumakil).
+        # Mûmakil = scaled-up elephant; should diff ZERO vs elephant except the id (taom_mumakil) and action_set.
         "mumakil":  LOTR + r"\Monsters\LOTR\lotr_monster_mumakil.xml",
         "dire_wolf": LOTR + r"\Monsters\LOTR\lotr_monster_dire_wolf.xml",
         "horse":    NATIVE + r"\monsters.xml",
@@ -71,8 +71,8 @@ FILES = {
         "spider":   (LOTR + r"\action_sets.xml", "as_spider"),
         "warg":     (LOTR + r"\action_sets.xml", "as_warg"),
         "elephant": (LOTR + r"\action_sets.xml", "as_elephant"),
-        # Mûmakil reuses the elephant action set verbatim (same skeleton/clips) — parity by construction.
-        "mumakil":  (LOTR + r"\action_sets.xml", "as_elephant"),
+        # The mumak's own set since #1474: as_elephant's rows on the mumakil_* gait, turn and idle clips.
+        "mumakil":  (LOTR + r"\action_sets.xml", "as_mumakil"),
         "dire_wolf": (LOTR + r"\action_sets.xml", "as_dire_wolf"),
     },
     "rider_partials": {

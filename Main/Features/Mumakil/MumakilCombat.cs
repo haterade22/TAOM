@@ -5,7 +5,7 @@ namespace TAOM.Features.Mumakil;
 /// <summary>
 /// The Mûmakil's boundary tuning for the shared elephant-like BT nodes: scan ranges + blow magnitude from
 /// <see cref="MumakilConfig"/> (3×-scaled trigger range/radius), the four attack-clip caches (the ELEPHANT's
-/// clips — the Mûmakil shares the as_elephant action set; resolved eagerly at first touch), and the lazy
+/// clips: as_mumakil carries as_elephant's attack rows; resolved eagerly at first touch), and the lazy
 /// resolver for the Mûmakil's registered <see cref="IMumakilAttackService"/>.
 /// </summary>
 internal static class MumakilCombat

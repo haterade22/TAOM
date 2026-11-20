@@ -531,7 +531,12 @@ the pack). TAOM's clips carry warg flags on those masters, and no ADOD wolf code
 
 Since 2026-09-29 the elephant's visible body (`sk_elephant_basemesh_a`) and its six harnesses
 (`SK_Elephant_Armor_Variations`) are meshes KEYforce delivered, replacing ADOD_Beasts's `elephant_mesh` and armour;
-the `elephant_skeleton`, its hit capsules and the animation clips still come from the purchased ADOD_Beasts asset.
+the `elephant_skeleton`, its hit capsules and the attack, hit, rear, dash, death and standing clips still come from
+the purchased ADOD_Beasts asset. Since 2026-11-19 (#1474) the gait, turn, strafe and two idle clips of the elephant
+and the mumak are bone keys retargeted onto `elephant_skeleton` from a second purchase, an African elephant
+animation pack. The maintainer confirmed on 2026-11-18 that the retargeted keys may ship; no mesh, rig or texture
+of the pack ships or is stored. By the maintainer's decision of 2026-11-20 the pack has no row in the table above
+([elephant.md](../features/elephant.md), "License / provenance").
 Where KEYforce's elephant meshes come from (his own work, or re-exported from the same purchase) is not recorded;
 ask him and write the answer here.
 

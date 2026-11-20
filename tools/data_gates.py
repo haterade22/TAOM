@@ -113,6 +113,10 @@ BAND_CLONE_GLOBS = ("*/armour_band_clones/*", "*tools/armour_band_clones.json", 
                     ) + ARMOUR_CURVE_GLOBS + TROOP_GLOBS + ARMORY_GLOBS
 CREATURE_GLOBS = ("*/action_sets.xml", "*/action_types.xml", "*/monster_usage_sets.xml", "*/monsters/*.xml",
                   "*/lotr_monster_*.xml")
+# What the two elephant gates read beside the creature XML (masters, clip records), and the tools that write it.
+ELEPHANT_GLOBS = CREATURE_GLOBS + (
+    "*/creature/elephant/*.tpac", "*tools/check_gait_stride.py", "*tools/bind_elephant_clips.py",
+    "*tools/elephant_write_masters.py", "*tools/gen_elephant_anim_clips.ps1", "*tools/elephant_gait_retarget.py")
 FBX_GLOBS = ("*/assetsources/*.fbx",)
 LANG_GLOBS = ("*/languages/*.xml", "*/taom_module_strings.xml", "*/taom_xslt_strings.xml")
 # Every source and output of generate_name_localization_strings.py CATEGORIES not already in TROOP_GLOBS,
@@ -282,6 +286,15 @@ GATES = (
     Gate("orc-locomotion", "orc and goblin action sets", CREATURE_GLOBS,
          ("python", "tools/bind_orc_goblin_locomotion.py", "--check"), ("docs/features/troll-race.md",),
          note="a reinstall drops their rows and parity still passes"),
+    Gate("elephant-clips", "elephant and mumak action sets, clip packages and their tools", ELEPHANT_GLOBS,
+         ("python", "tools/bind_elephant_clips.py", "--check"), ("docs/features/elephant.md",),
+         note="a reinstall drops as_mumakil and the rebound rows, and parity still passes; exit 1 also when a bound "
+              "clip has no current cache entry (start the Modding Kit once)"),
+    Gate("elephant-gaits", "elephant and mumak action sets, clip packages and their tools", ELEPHANT_GLOBS,
+         ("python", "tools/check_gait_stride.py"), ("docs/features/elephant.md",),
+         note="each gait clip's feet cover the ground its record claims; the pace rows of as_elephant and as_mumakil "
+              "carry limits and Durations the engine plays well; the standing pose is on the ground; a bound clip "
+              "has a cache entry no older than its record and master (start the Modding Kit once)"),
     Gate("dwarf-attacks", "dwarf attack actions and their as_dwarf_warrior rows", CREATURE_GLOBS,
          ("python", "tools/bind_dwarf_attack_actions.py", "--check"), ("docs/features/dwarf-attacks.md",),
          note="a reinstall drops the two declarations and rows, and parity still passes"),

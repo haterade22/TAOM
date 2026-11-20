@@ -37,7 +37,7 @@ DEFAULT_LIVE = (
 )
 
 HUMANOID_ROOTS = {"as_human_warrior", "as_dwarf_warrior", "as_hill_troll_warrior"}
-CREATURE_ROOTS = {"as_spider", "as_elephant", "as_chariot"}
+CREATURE_ROOTS = {"as_spider", "as_elephant", "as_mumakil", "as_chariot"}
 
 
 def load(path: str) -> dict:
