@@ -228,8 +228,8 @@ first start: `guard ON pool 1` and `guard ON pool 2` mean both patterns still ma
 the freeze protection for that pool with this build. Re-derive with `python tools/native_decompile.py --rva 0x69D1C` and
 `--rva 0x6AF58` (the reservations' addresses in v1.5.4) and check section 10 of the engine doc still holds (layout,
 entries per skeleton, 32 blocks, both pools), then add the build's file length and RVAs to `KnownBuilds`. Do not use
-`tools/native_sig_author.py xref` to count references: its single capstone sweep stops at the first byte it cannot
-decode (2.8 % of `.text` on v1.5.4).
+`tools/native_sig_author.py xref` alone to count references: until #780 its single capstone sweep stopped at the first
+byte it could not decode (2.8 % of `.text` on v1.5.4), and its total is not yet re-checked against a raw displacement scan.
 
 **The 1.5.6 hotfix and v1.5.7.** yotthani's commit `8d56b59e` (2026-11-05, `yotthani/bannerlord`@c45d8374,
 `HoN/VanillaTuning/Integration/FrameBufferGuardPatch.cs` lines 34 and 84-97) adapted VanillaTuning's guard to the 1.5.6 hotfix
