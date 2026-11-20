@@ -473,6 +473,41 @@ two rows, so those rows show no effect of the switch. Isengard against Erebor, t
 both matches with the switch on had fewer deaths than both with it off (589 and 611 against 720 and 674), most
 of the difference on the Isengard side. That is a lead for tuning, not a result.
 
+**The build with the gate and the per-people counters** (77d051805), 23 more matches at 4x, 540 live seconds each
+(`E:/Temp/fords-runs-stamina2/` to `-stamina5/`): 12 with the switch on (Isengard against Erebor, Rivendell against
+Mordor, ten of Erebor against Gundabad) and 11 of Erebor against Gundabad with it off.
+
+- **The gate.** In each of the nine passing matches that had dwarves, an Exhausted soldier failed between 193 and 678
+  ready checks of a special attack (`special attack checks refused`), with no swallowed exception. Rivendell
+  against Mordor counted 0: its four hill trolls were never Exhausted.
+- **Per people**, summed over the ten passing matches with the switch on (the `peoples:` line):
+
+| People (pool, regeneration in `stamina.json`) | Fighters | Ever Exhausted | Exhaustions |
+|---|---|---|---|
+| `pale_uruk` (1.2, 1) | 4,752 | 1,146 (24%) | 3,794 |
+| `uruk_hai` (1.2, 1) | 463 | 103 (22%) | 274 |
+| `orc` (0.9, 1) | 585 | 102 (17%) | 259 |
+| `dwarf` (1.35, 0.9) | 3,291 | 437 (13%) | 829 |
+| `elf` (1.3, 1.4) | 98 | 10 (10%) | 15 |
+| `berserker` (1.3, 0.8) | 10 | 7 | 9 |
+| `uruk` (1.2, 1) | 12 | 1 | 1 |
+| `hill_troll` (1.5, 0.7) | 31 | 0 | 0 |
+
+  These are Fords matches of one faction against one other, so a people's share also shows how hard its side
+  fought. A lead for tuning, not a result: the pool multiplier alone does not order the peoples (the Orcs with
+  the smallest pool are in the middle), a troll never tires (its smash costs nothing), and the two large Uruk
+  peoples with the same row (`pale_uruk`, `uruk_hai`) differ little.
+
+- **Two native failures, in Erebor against Gundabad with the switch on.** One match hung at mission second 201
+  and one crashed at 542. With the switch on that matchup failed 2 times in 10, with it off 0 times in 11. That
+  split can be chance (about one in five by Fisher's exact test), so the runs neither clear stamina nor accuse
+  it. The hang has a confirmed cause that is not stamina code: the dwarves' two attack actions are typed
+  `actt_kick` and their clips have no combat parameter, so the engine's kick code reads the record before its
+  table (#1499). The crash is a strike by a dwarf with empty hands: the engine reads a null weapon record at
+  `TaleWorlds.Native.dll+0x5B5F5D`. By the decompiled engine code it is a passive-usage strike (a braced
+  weapon), and what emptied the hands is not known. Until #1499 is settled, a battle with dwarves can end in the
+  hang, with the switch on or off by its mechanism; the crash cannot be placed until its trigger is known.
+
 Still owed, all by a person: the lock on your own soldier (S1), the walk and the run threshold (S3), riders
 (S5), how much less a tired AI attacks (S7), fresh against tired (step 10), Marshal's Word beside stamina, and
 the bar as you fight: that it falls, changes colour and rises again.
