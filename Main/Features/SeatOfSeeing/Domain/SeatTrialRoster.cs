@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TAOM.Features.Elephant;
 
 namespace TAOM.Features.SeatOfSeeing.Domain;
 
@@ -38,14 +39,21 @@ internal static class SeatTrialRoster
 
     internal static readonly IReadOnlyList<string> ThrowerSteps = new[] { "advance_throwers", "advance_throwers_vanilla" };
 
-    /// <summary>The player's army for a step list: an explicit list that names a thrower step fields javelineers where the spearmen stand, so the infantry company is a pure thrower company.</summary>
+    /// <summary>
+    /// The player's army for a step list: an explicit list that names a thrower step fields javelineers where the spearmen stand, so the infantry company is a pure thrower company,
+    /// and a list that names a crew step adds the beasts of <see cref="CrewTrialRows.Beasts"/> after the army.
+    /// </summary>
     internal static IReadOnlyList<SeatTrialGroup> PlayerFor(string? steps)
     {
         var chosen = (steps ?? "").Split(',').Select(SeatTrialSteps.NameOf);
-        if (!chosen.Any(s => ThrowerSteps.Contains(s)))
-            return Player;
-        return Player.Select(g => g.Id == SpearmenTroop ? g with { Id = ThrowerTroop } : g).ToList();
+        var army = chosen.Any(s => ThrowerSteps.Contains(s))
+            ? Player.Select(g => g.Id == SpearmenTroop ? g with { Id = ThrowerTroop } : g).ToList()
+            : Player;
+        return CrewTrialRows.NamedIn(steps) ? army.Concat(CrewTrialRows.Beasts).ToList() : army;
     }
+
+    /// <summary>The enemy's army for a step list: <see cref="Enemy"/>, or the melee army of <see cref="CrewTrialRows.Enemy"/> when the list names a crew step.</summary>
+    internal static IReadOnlyList<SeatTrialGroup> EnemyFor(string? steps) => CrewTrialRows.NamedIn(steps) ? CrewTrialRows.Enemy : Enemy;
 
     /// <summary>The ids the game does not have, each once and tagged <c>culture:</c> or <c>character:</c>, empty when the mission can open.</summary>
     internal static IReadOnlyList<string> Missing(Func<string, bool> cultureExists, Func<string, bool> characterExists, string? steps = null)
@@ -57,7 +65,7 @@ internal static class SeatTrialRoster
                 missing.Add("culture:" + culture);
         }
 
-        foreach (var character in new[] { Hero }.Concat(PlayerFor(steps).Concat(Enemy).Select(g => g.Id)).Distinct())
+        foreach (var character in new[] { Hero }.Concat(PlayerFor(steps).Concat(EnemyFor(steps)).Select(g => g.Id)).Distinct())
         {
             if (!characterExists(character))
                 missing.Add("character:" + character);

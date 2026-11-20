@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TAOM.Features.Elephant;
 using TAOM.Features.MarshalsWord.Domain;
 
 namespace TAOM.Features.SeatOfSeeing.Domain;
@@ -11,12 +12,16 @@ internal sealed record SeatTrialStep(string Name, IReadOnlyList<string> Requires
 /// <summary>The field trial's steps in the order they run, joined from each feature's row list, and the choice of a subset.</summary>
 internal static class SeatTrialSteps
 {
+    /// <summary>The steps a run with no step list arms.</summary>
     internal static readonly IReadOnlyList<SeatTrialStep> All = SeatTrialRows.Rows.Concat(MarshalTrialRows.Rows).ToList();
+
+    /// <summary>Every step a list may name: <see cref="All"/>, then the crew rows, which run only when they are named (<see cref="CrewTrialRows"/>).</summary>
+    internal static readonly IReadOnlyList<SeatTrialStep> Known = All.Concat(CrewTrialRows.Rows).ToList();
 
     /// <summary>The form a step name is compared in, shared by the step chooser and the roster that depends on which steps were chosen.</summary>
     internal static string NameOf(string name) => name.Trim().ToLowerInvariant();
 
-    /// <summary>The steps to run in the table's order (null or blank is every step), or false with <paramref name="error"/> naming an unknown step or a missing requirement and <paramref name="steps"/> empty.</summary>
+    /// <summary>The steps to run in the table's order (null or blank is every step of <see cref="All"/>), or false with <paramref name="error"/> naming an unknown step or a missing requirement and <paramref name="steps"/> empty.</summary>
     internal static bool TryChoose(string? list, out IReadOnlyList<SeatTrialStep> steps, out string error)
     {
         steps = Array.Empty<SeatTrialStep>();
@@ -28,14 +33,14 @@ internal static class SeatTrialSteps
         }
 
         var names = list!.Split(',').Select(NameOf).Where(n => n.Length > 0).ToList();
-        var unknown = names.Where(n => All.All(s => s.Name != n)).Distinct().ToList();
+        var unknown = names.Where(n => Known.All(s => s.Name != n)).Distinct().ToList();
         if (unknown.Count > 0)
         {
-            error = "unknown step '" + string.Join("', '", unknown) + "'; known: " + string.Join(", ", All.Select(s => s.Name));
+            error = "unknown step '" + string.Join("', '", unknown) + "'; known: " + string.Join(", ", Known.Select(s => s.Name));
             return false;
         }
 
-        var chosen = All.Where(s => names.Contains(s.Name)).ToList();
+        var chosen = Known.Where(s => names.Contains(s.Name)).ToList();
         if (chosen.Count == 0)
         {
             error = "the list names no step";
@@ -50,6 +55,13 @@ internal static class SeatTrialSteps
                 error = "step '" + step.Name + "' needs step '" + missing + "' in the list";
                 return false;
             }
+        }
+
+        var beside = CrewTrialRows.StepThatCannotShareACrewBattle(chosen.Select(s => s.Name).ToList());
+        if (beside != null)
+        {
+            error = "a crew step runs with 'enter' only, in a battle of its own: step '" + beside + "' cannot share it";
+            return false;
         }
 
         steps = chosen;

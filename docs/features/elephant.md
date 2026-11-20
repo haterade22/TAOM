@@ -1129,7 +1129,8 @@ against Harad with an AI on each side, seven crewed elephants in all. Every arch
 | `20261119-211549` (build `ad1146d55`: the same code, docs added) | 10x | 18 and 35, then 14 and 25 on a second elephant | 1.01 m in one period; 0.78 m at the samples |
 
 `python tools/ingame_verdict.py --issue 1482` reads the checks `taom.crew-seats.howdah-held` and `howdah-shot`
-as PASS on these sessions. A fifth match with a temporary camera on the crew (`20261119-204912`) gave a
+as PASS on these sessions. A custom battle check with pictures exists too (#1503): the `crew_howdah` step of the
+command trial ([mumakil.md](mumakil.md#the-crew-steps-of-the-command-trial)). A fifth match with a temporary camera on the crew (`20261119-204912`) gave a
 picture of the two archers in the howdah with their bows drawn. One thing is not explained: on the first
 elephant of the second run the rear archer loosed 1 arrow in a minute, with a target in every sample, while
 the front archer loosed 8. The front archer stands 0.78 m ahead in its line of fire, which may be the

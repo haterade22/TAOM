@@ -11,7 +11,7 @@ controls in order, and writes one line per step:
     [SeatTrial] step=<name> result=<PASS|FAIL> <facts>
 
 Exit 0 means every step in --steps has a PASS line and no FAIL line, the done file says reason=final, the log has no CrashReport block,
-no failed Seat or Marshal's Word check line, no [ERROR] line of the Seat or its trial (a Seat patch that failed to apply and the thread guard's
+no failed Seat, Marshal's Word or crew seat check line, no [ERROR] line of the Seat or its trial (a Seat patch that failed to apply and the thread guard's
 line for a trial or Seat site count), no [ERROR] line of Marshal's Word (a hotkey registration that failed, a session that could not start, a patch
 class of its category that failed or was skipped, the Patch_MissionTime_MarshalsWord category that failed to apply (the two thrower patches), the thrower stand that failed, the order panel's registration failure, the spacing repair's degraded method, and the thread guard's line for one of its adapters' sites), and a clean module unload line, the game left by itself, and the log's [BuildStamp] is this checkout, read once at launch before the game starts
 (tools/autorun_build.py, shared with run_scenario.py and run_long_defeat.py): the stamp's sha is HEAD, no tier of the stamp says MISMATCH, its .dirty mark agrees with the tree (dirty with uncommitted files,
@@ -24,6 +24,10 @@ saves.
 A run with no --steps arms every step, the Seat's and Marshal's Word's together, in ONE battle. Prove each stage by its subset; the Seat's rows ran in one battle once.
 Marshal's Word's do not all fit it, because the battle runs out of time and soldiers before the volley and mark steps (docs/features/marshals-word.md, "How to verify in game",
 lists the subsets). Run each Marshal's Word subset with its own --steps list, one battle each.
+
+The crew steps (#1503) are not in that list: --steps enter,crew_mumakil,crew_howdah fields one mumakil and two war elephants in the player's army,
+keeps the Seat's view to an archer of each beast in turn and saves hud_crew_*.png pictures (docs/features/mumakil.md, "The crew steps of the command trial").
+A failed taom.crew-seats check line fails the run.
 
 This reuses the Fords runner (tools/run_fords_autorun.py): its preflight, idle gate, launch recipe, dialog handling, crash scan and
 log collection. It only changes the arm variable, the done and status files, the arm text and the judge. The standing permission
@@ -98,12 +102,19 @@ MARSHAL_STEPS = (
     "advance_throwers_vanilla",
 )
 STEPS = SEAT_STEPS + MARSHAL_STEPS
+# The crew steps (#1503), the step names of Main/Features/Elephant/CrewTrialRows.cs: a custom battle with one mumakil and two war elephants in the
+# player's army. They run only when --steps names them, because the other steps were proved in a battle with no beast on the field.
+CREW_STEPS = ("crew_mumakil", "crew_howdah")
+KNOWN_STEPS = STEPS + CREW_STEPS
 # The two thrower steps each run in a battle of their own: the roster swaps javelineers in for the spearmen for the whole battle (SeatTrialRoster.PlayerFor).
 THROWER_STEPS = ("advance_throwers", "advance_throwers_vanilla")
 
 STEP_LINE = re.compile(r"\[SeatTrial\] step=(\w+) result=(PASS|FAIL)\b")
 SEAT_CHECK_FAIL = re.compile(r"\bid=(taom\.seat-of-seeing\.[a-z0-9.-]+) result=fail\b")
 MARSHAL_CHECK_FAIL = re.compile(r"\bid=(taom\.marshals-word\.[a-z0-9.-]+) result=fail\b")
+# A crew seat that needed a rescue teleport writes a failed held line when it lets its archer go (Main/Features/Elephant/CrewSeatChecks.cs, #1482).
+# The line is written at the mission's end too, so it can come after the crew step's own PASS line.
+CREW_CHECK_FAIL = re.compile(r"\bid=(taom\.crew-seats\.[a-z0-9.-]+) result=fail\b")
 # An [ERROR] line of the Seat or its trial (stage S2 onward): a fault, a failed start or a script failure; a Seat patch that failed to apply
 # or was skipped (Harmony stops a category at its first failing class, so one line can leave every later patch of it off: Main/PatchCategoryApplier.cs); the
 # thread guard's line for a trial or Seat site (MissionThreadGuard.NoteCall, written at LogError by CommandTrialHost, SeatHeroAdapter and SeatScreenAdapter). The
@@ -167,7 +178,7 @@ def judge(done, report_json, log_text=None, steps=STEPS, checkout=None):
             results.setdefault(match.group(1), []).append(match.group(2))
     failed = sorted({step for step, seen in results.items() if "FAIL" in seen})
     other_fails = [line.strip() for line in lines if "result=FAIL" in line and not STEP_LINE.search(line)]
-    faults = sorted({match.group(1) for pattern in (SEAT_CHECK_FAIL, MARSHAL_CHECK_FAIL) for match in map(pattern.search, lines) if match})
+    faults = sorted({match.group(1) for pattern in (SEAT_CHECK_FAIL, MARSHAL_CHECK_FAIL, CREW_CHECK_FAIL) for match in map(pattern.search, lines) if match})
     if failed or other_fails:
         named = ", ".join(failed + [line[:120] for line in other_fails])
         return 1, f"FAIL lines: {named}" + (f"; failed checks: {', '.join(faults)}" if faults else "")
@@ -178,30 +189,33 @@ def judge(done, report_json, log_text=None, steps=STEPS, checkout=None):
     if block is not None:
         return 1, "the TAOM log holds a CrashReport block: " + block[:200]
     if faults:
-        return 1, "a Seat or Marshal's Word check line failed: " + ", ".join(faults)
+        return 1, "a Seat, Marshal's Word or crew seat check line failed: " + ", ".join(faults)
     errors = [line.strip() for line in lines if SEAT_ERROR.search(line) or MARSHAL_ERROR.search(line)]
     if errors:
         return 1, f"{len(errors)} [ERROR] line(s) of the Seat, Marshal's Word or the trial in the log, the first: " + errors[0][:200]
     if UNLOAD_LINE not in log_text:
         return 1, "reason=final but the TAOM log has no clean module unload line"
     build = autorun_build.build_label(log_text)
-    return 0, f"reason=final, {len(steps)} steps with a PASS line, no FAIL line, no CrashReport block, no failed Seat or Marshal's Word check, no Seat or Marshal's Word [ERROR] line, clean unload, {session_swallowed(log_text)}, build {build}"
+    return 0, f"reason=final, {len(steps)} steps with a PASS line, no FAIL line, no CrashReport block, no failed Seat, Marshal's Word or crew seat check, no Seat or Marshal's Word [ERROR] line, clean unload, {session_swallowed(log_text)}, build {build}"
 
 
 def normalised_steps(text):
-    """The steps in the table's order, names lower-cased and trimmed, duplicates dropped. None means every step. A name not in the table raises
-    ValueError, and so does a list that names a thrower step beside any other step. Prerequisites are the game's to check: it refuses to start on a list that skips one, and the done file says start_refused."""
+    """The steps in the table's order, names lower-cased and trimmed, duplicates dropped. None means every step of STEPS, which holds no crew step.
+    A name not in the table raises ValueError, and so does a list that names a thrower step beside any other step, or a crew step beside any step but enter (the game refuses that list too: SeatTrialSteps.TryChoose). Prerequisites are the game's to check: it refuses to start on a list that skips one, and the done file says start_refused."""
     if text is None:
         return STEPS
     names = {name.strip().lower() for name in text.split(",") if name.strip()}
     if not names:
         raise ValueError("--steps names no step")
-    unknown = sorted(names - set(STEPS))
+    unknown = sorted(names - set(KNOWN_STEPS))
     if unknown:
-        raise ValueError("unknown step: " + ", ".join(unknown) + "; known: " + ", ".join(STEPS))
+        raise ValueError("unknown step: " + ", ".join(unknown) + "; known: " + ", ".join(KNOWN_STEPS))
     if len(names) > 1 and names & set(THROWER_STEPS):
         raise ValueError("advance_throwers and advance_throwers_vanilla each run alone, in their own battle")
-    return tuple(step for step in STEPS if step in names)
+    beside = sorted(names - set(CREW_STEPS) - {"enter"})
+    if names & set(CREW_STEPS) and beside:
+        raise ValueError("a crew step runs with enter only, in a battle of its own; it cannot share it with: " + ", ".join(beside))
+    return tuple(step for step in KNOWN_STEPS if step in names)
 
 
 EPILOG = (
@@ -216,7 +230,8 @@ def build_parser():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0], epilog=EPILOG)
     parser.add_argument("--scene", default=DEFAULT_SCENE)
     parser.add_argument("--live-limit", type=runner.positive_seconds, default=DEFAULT_LIVE_LIMIT, help="real seconds with a mission open before the game ends the run (default %(default)s)")
-    parser.add_argument("--steps", help="a comma list of steps (default: all of " + ", ".join(STEPS) + ")")
+    parser.add_argument("--steps", help="a comma list of steps (default: all of " + ", ".join(STEPS) + "). The crew steps run only when named, each with enter: "
+                        + ", ".join(CREW_STEPS))
     return parser
 
 

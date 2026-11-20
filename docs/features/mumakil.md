@@ -350,6 +350,63 @@ The first fix was chosen from the restart counter (`re`), which rose on the lock
 that reload and shoot. It counts an aborted draw as well. Only `shots` proves shooting
 ([RCA](../reviews/rca-crew-hold-no-shots-2026-11-19.md)).
 
+### The crew steps of the command trial
+
+The crews can be checked in a custom battle with nobody at the keyboard (#1503). The command trial
+([seat-of-seeing.md](seat-of-seeing.md#field-trial)) has two steps for it, `crew_mumakil` and `crew_howdah`:
+
+```
+python tools/run_command_trial.py --steps enter,crew_mumakil,crew_howdah
+```
+
+A step list that names a crew step adds one Mumakil Rider and two Elephant Riders (`fow_harad_mumakil_rider`,
+`fow_harad_elephant_rider`) to the player's army of the trial. A list that names none fields no beast, and a run with no
+`--steps` does not arm the crew steps, so the Seat's and Marshal's Word's steps keep the battle they were proved in.
+
+Each step does this, in order:
+
+1. It waits up to 20 s for a living beast of its kind whose every seat holds an archer.
+2. It gives every company of the player's team the Charge order, so the beast walks to the enemy. The order holds while
+   the trial's hero commands the army: if he falls, the engine gives the companies to its AI, which gives its own orders.
+3. It keeps the Seat's view to one archer of the beast. The step hands the archer to the keep directly
+   (`SeatScreenAdapter.TrialKeepTarget`), so the pointer is not used.
+4. It saves three pictures into the run folder, `hud_<step>_1.png` to `_3.png`, at 8 s, 16 s and 25 s after the keep: the
+   first from 16 m, the others after the view moved back to about 28 m.
+5. It watches the crew for 30 s to 150 s, until every archer loosed an arrow or the beast is gone.
+6. It lets the keep go and writes its line.
+
+The step passes when no seat made a rescue teleport, every archer loosed at least one arrow and the beast went 10 m or
+more from where the trial first saw it (`CrewTrialRules.Passes`). The numbers on its line are the highest of each seat
+over the watch, so an archer who shot and then fell still counts. The distance is counted from the first crew step of
+the battle, as the rescue count is counted from the moment the archer took the seat.
+
+A crew step runs with `enter` only. The game and the wrapper refuse a list that names another step beside it: a crew
+battle has the three beast riders in the cavalry company and another enemy, and `let_go_on_death` would kill that company.
+
+The `[Check] taom.crew-seats.*` lines are still written when a seat lets its archer go, and a failed one fails the run.
+A person still looks at the pictures: the run does not judge what they show.
+
+The enemy of a crew battle is 300 melee orcs and no archer (`CrewTrialRows.Enemy`). The trial's usual enemy has 30 orc
+archers, and in the first run they killed the mumakil 38 s after the charge.
+
+Three runs on 2026-11-20, each on an uncommitted build over `f9bf64092` (run folders under `E:\Temp\command-trial-runs`):
+
+| Run | Enemy | Result | Mumakil, shots for each seat in the watch | Howdah, shots | Rescue teleports |
+|---|---|---|---|---|---|
+| `20261120-132358` | 120 orc fighters, 30 orc archers | PASS, 3 steps | 5, 1, 4, 4, 1, 3, 5, 6 in 37.0 s; the beast went 180.7 m | 10, 8; the beast went 203.1 m | 0 |
+| `20261120-132954` | 300 orc fighters | FAIL at `enter`, before a crew step | not reached | not reached | not reached |
+| `20261120-133122` | 300 orc fighters | PASS, 3 steps | 3, 1, 4, 4, 1, 1, 4, 5 in 35.6 s; the beast went 164.7 m | 14, 10; the beast went 231.7 m | 0 |
+
+In the first run the battle was decided 61 s after the charge, so the howdahs were empty in the third howdah picture. In
+the third run the mumakil was alive at the end, and its last status line reads 9 to 13 shots for each of the eight archers,
+`mode=Land` and `maxDrift=0.03`. The pictures of the first and third run show the eight archers on the three decks while the
+mumakil walks, and two archers with bows in each howdah. The first picture of the first run shows only a tree: it was taken
+3 s after the keep, and the first picture is at 8 s now.
+
+The second run is not explained. The Seat's view left 2 s after it entered, with `reason=key` on its leave line, which is the
+Seat's own key. The trial presses that key once. The PC was in use that afternoon, so a press on the keyboard is possible,
+and nothing in the log proves it.
+
 ### Why locomotion is pinned
 
 `SetMaximumSpeedLimit(0f, isMultiplier: false)` at `OnUse`, cleared with `-1f` on release. Until the platform

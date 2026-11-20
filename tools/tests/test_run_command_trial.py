@@ -958,5 +958,88 @@ class ArgumentTests(unittest.TestCase):
         self.assertEqual(trial.normalised_steps(None), trial.STEPS)
 
 
+class CrewStepTests(unittest.TestCase):
+    """The crew steps (#1503): known by name, left out of a run with no step list, and judged with the crew seat check lines of #1482."""
+
+    CREW_RUN = ("enter", "crew_mumakil", "crew_howdah")
+
+    def crew_log(self, extra=()):
+        rows = [CLEAN_STAMP_LINE] + [pass_line(step) for step in self.CREW_RUN] + list(extra) + [UNLOAD_LINE]
+        return "\n".join(rows)
+
+    def test_the_crew_steps_are_the_crew_row_lists_names_in_order(self):
+        source = (REPO / "Main" / "Features" / "Elephant" / "CrewTrialRows.cs").read_text(encoding="utf-8")
+        names = dict(re.findall(r'const string (\w+) = "(\w+)"', source))
+        rows = tuple(names[key] for key in re.findall(r"new SeatTrialStep\((\w+),", source))
+        self.assertEqual(rows, trial.CREW_STEPS)
+
+    def test_the_known_steps_are_joined_the_way_the_game_joins_them(self):
+        source = (DOMAIN_SOURCE / "SeatTrialSteps.cs").read_text(encoding="utf-8")
+        self.assertIn("All = SeatTrialRows.Rows.Concat(MarshalTrialRows.Rows)", source)
+        self.assertIn("Known = All.Concat(CrewTrialRows.Rows)", source)
+        self.assertEqual(trial.KNOWN_STEPS, trial.SEAT_STEPS + trial.MARSHAL_STEPS + trial.CREW_STEPS)
+        self.assertEqual(len(set(trial.KNOWN_STEPS)), len(trial.KNOWN_STEPS), "no step name is shared by two features")
+
+    def test_a_crew_step_beside_a_step_other_than_enter_is_refused_as_the_game_refuses_it(self):
+        for text, other in (("enter,let_go_on_death,crew_mumakil", "let_go_on_death"), ("crew_howdah,fly,enter", "fly"), ("hero_falls,enter,crew_mumakil,crew_howdah", "hero_falls")):
+            with self.subTest(steps=text):
+                with self.assertRaisesRegex(ValueError, "crew step runs with enter only.*" + other):
+                    trial.normalised_steps(text)
+        self.assertIn("a crew step runs with 'enter' only", (DOMAIN_SOURCE / "SeatTrialSteps.cs").read_text(encoding="utf-8"))
+
+    def test_a_run_with_no_step_list_arms_no_crew_step(self):
+        self.assertFalse(set(trial.normalised_steps(None)) & set(trial.CREW_STEPS))
+
+    def test_a_named_crew_step_is_accepted_and_put_in_the_tables_order(self):
+        self.assertEqual(trial.normalised_steps(" Crew_Howdah , ENTER ,crew_mumakil"), self.CREW_RUN)
+
+    def test_an_unknown_step_is_refused_and_the_text_names_the_crew_steps(self):
+        with self.assertRaisesRegex(ValueError, "unknown step: crew_oliphaunt; known: .*crew_mumakil, crew_howdah"):
+            trial.normalised_steps("enter,crew_oliphaunt")
+
+    def test_the_help_of_steps_names_the_crew_steps(self):
+        action = next(a for a in trial.build_parser()._actions if a.dest == "steps")
+        for step in trial.CREW_STEPS:
+            self.assertIn(step, action.help)
+
+    def test_a_crew_run_with_no_line_for_a_crew_step_fails_and_names_it(self):
+        log = self.crew_log().replace(pass_line("crew_howdah") + "\n", "")
+        code, why = judge(FINAL, None, log, steps=self.CREW_RUN)
+        self.assertEqual(code, 1)
+        self.assertIn("crew_howdah", why)
+
+    def test_a_failed_held_line_fails_the_run_also_after_the_steps_pass_line(self):
+        # The shape of a real line (OutcomeLog.Record writes every result at INFO): run 20261120-132358 wrote this one with result=pass and rescues=0.
+        check = "[2026-11-20 13:27:10] [INFO] [Check] id=taom.crew-seats.mumakil-held result=fail seat=[Mumakil#1]_seat0 rescues=2"
+        code, why = judge(FINAL, None, self.crew_log(extra=(check,)), steps=self.CREW_RUN)
+        self.assertEqual(code, 1)
+        self.assertIn("taom.crew-seats.mumakil-held", why)
+
+    def test_a_shot_line_that_was_skipped_does_not_fail_the_run(self):
+        check = "[2026-11-20 13:27:33] [INFO] [Check] id=taom.crew-seats.howdah-shot result=skip seat=[Howdah#2]_seat0 shots=0"
+        code, why = judge(FINAL, None, self.crew_log(extra=(check,)), steps=self.CREW_RUN)
+        self.assertEqual(code, 0, why)
+        self.assertIn("3 steps with a PASS line", why)
+
+    def test_the_crew_fault_scan_matches_every_check_id_the_seats_write(self):
+        source = (REPO / "Main" / "Features" / "Elephant" / "CrewSeatChecks.cs").read_text(encoding="utf-8")
+        ids = re.findall(r'"(taom\.crew-seats\.[a-z0-9.-]+)"', source)
+        self.assertEqual(len(ids), 4, ids)
+        for check in ids:
+            self.assertTrue(trial.CREW_CHECK_FAIL.search(f"[Check] id={check} result=fail mission=1"), check)
+            self.assertFalse(trial.CREW_CHECK_FAIL.search(f"[Check] id={check} result=pass mission=1"), check)
+        self.assertFalse(trial.CREW_CHECK_FAIL.search("[Check] id=taom.seat-of-seeing.fault result=fail mission=1"))
+
+    def test_the_picture_name_is_one_the_runner_turns_into_a_png(self):
+        source = (REPO / "Main" / "Features" / "Elephant" / "CrewTrialRules.cs").read_text(encoding="utf-8")
+        self.assertIn('"hud_" + step', source)
+        self.assertIn('.bmp"', source)
+        self.assertIn('glob("hud_*.bmp")', (REPO / "tools" / "run_fords_autorun.py").read_text(encoding="utf-8"))
+
+    def test_the_docstring_points_at_the_heading_of_the_feature_doc_for_the_crew_steps(self):
+        heading = "The crew steps of the command trial"
+        self.assertIn('"' + heading + '"', " ".join(trial.__doc__.split()))
+        self.assertIn("### " + heading, (REPO / "docs" / "features" / "mumakil.md").read_text(encoding="utf-8"))
+
 if __name__ == "__main__":
     unittest.main()

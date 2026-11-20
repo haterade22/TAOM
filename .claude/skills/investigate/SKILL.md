@@ -195,7 +195,7 @@ Once root cause is confirmed:
 
 ## Phase 6: Verification & Report
 
-Reproduce the original bug scenario and confirm it's fixed. **Not optional.** With no red check from Phase 1, report Status DONE_WITH_CONCERNS and write "no red check" under Evidence. For Bannerlord, this often means a game run. A check a Fords match exercises goes to /game-run under its gate; for any other check, name what Mike must play and leave it owed.
+Reproduce the original bug scenario and confirm it's fixed. **Not optional.** With no red check from Phase 1, report Status DONE_WITH_CONCERNS and write "no red check" under Evidence. For Bannerlord, this often means a game run. A check a custom battle step or a Fords match exercises goes to /game-run under its gate; for any other check, name what Mike must play and leave it owed.
 
 Run the test suite. Paste the output.
 
