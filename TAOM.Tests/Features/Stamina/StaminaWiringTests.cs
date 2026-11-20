@@ -75,6 +75,35 @@ public class StaminaWiringTests
         StringAssert.Contains(describe.Substring(0, At(describe, "private string Counts()")), "_runtime.Telemetry.PeoplesReport()");
     }
 
+    [DataTestMethod]
+    [DataRow("Main/Features/DwarfAttacks/BehaviorTreeElements/DwarfAttackReadyDecorator.cs", "if (StaminaHooks.RefusesSpecialAttack(dwarf)) return false;", "mission.GetNearbyEnemyAgents(")]
+    [DataRow("Main/Features/TrollBruteForce/BehaviorTreeElements/BruteForceReadyDecorator.cs", "if (StaminaHooks.RefusesSpecialAttack(troll)) return false;", "mission.GetNearbyAgents(")]
+    public void AnAttackThatABehaviourTreeStarts_AsksStaminaFirst(string decorator, string gate, string search)
+    {
+        // The Exhausted lock strips the AI's input. A head-butt, a drop-kick and a brute-force smash are started by a
+        // behaviour tree with SetActionChannel, past that input, so each ready decorator must refuse an Exhausted
+        // soldier itself. Before the search for a target: the refusal costs one dictionary read.
+        var code = Code(decorator);
+        var evaluate = code.Substring(At(code, "public override bool Evaluate()"));
+
+        Assert.IsTrue(At(evaluate, gate) < At(evaluate, search), decorator);
+        Assert.IsTrue(At(evaluate, "IsActive()") < At(evaluate, gate), "a dead handle is refused before the stamina read");
+    }
+
+    [TestMethod]
+    public void TheSpecialAttackHook_ReadsOnePublishedValue_AndRefusesOnlyAnExhaustedSoldier()
+    {
+        var hooks = Code("Main/Features/Stamina/Hooks/StaminaHooks.cs");
+        var hook = hooks.Substring(At(hooks, "public static bool RefusesSpecialAttack(Agent? agent)"));
+        hook = hook.Substring(0, At(hook, "public static void StripPlayerInput("));
+
+        // Off, not armed, or no cell (a mount, a soldier with no stamina reads Fresh): never refused.
+        StringAssert.Contains(hook, "runtime == null || !runtime.Armed || agent == null || !runtime.Store.TryGet(agent, out var cell) || cell.Band != StaminaBand.Exhausted) return false;");
+        StringAssert.Contains(hook, "runtime.Telemetry.CountSpecialRefusal(); return true;");
+        // No engine read: the tree may run it for a handle the engine is about to recycle.
+        Assert.IsFalse(hook.Contains("agent."), hook);
+    }
+
     [TestMethod]
     public void TheHudRead_AndTheConsoleForce_LeaveOutASoldierWithNoStamina()
     {

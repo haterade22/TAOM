@@ -139,6 +139,19 @@ public class StaminaChecksAndSettingsTests
     }
 
     [TestMethod]
+    public void Report_CountsTheSpecialAttackChecksThatWereRefused()
+    {
+        var sut = new StaminaTelemetry();
+        sut.CountSpecialRefusal();
+        sut.CountSpecialRefusal();
+
+        StringAssert.Contains(sut.Report(), "special attack checks refused 2;");
+
+        sut.Reset();
+        StringAssert.Contains(sut.Report(), "special attack checks refused 0;");
+    }
+
+    [TestMethod]
     public void PeoplesReport_CountsFightersAndExhaustionsPerPeople_InNameOrder()
     {
         // The peoples table of stamina.json is tuned from this line: without it the logs say how many soldiers were

@@ -1,6 +1,7 @@
 using BehaviorTrees;
 using BehaviorTreeWrapper.BlackBoardClasses;
 using TAOM.Features.AdvancedCombat;
+using TAOM.Features.Stamina.Hooks;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
@@ -29,6 +30,9 @@ public class BruteForceReadyDecorator : BTReturnFalseDecorator, IBTBannerlordBas
         // The tree holds this handle across frames; a recycled slot answers for its new tenant (#592).
         if (troll == null || mission == null || !troll.IsActive() || !AgentSlotIdentity.IsCurrentOccupant(troll))
             return false;
+        // Combat stamina (#1497): an Exhausted soldier attacks nobody. This attack does not go through the AI's input,
+        // so stamina's input strip cannot stop it and the tree asks here.
+        if (StaminaHooks.RefusesSpecialAttack(troll)) return false;
 
         _service ??= IoC.Resolve<ITrollBruteForceService>();
         if (!_service.IsReady(TrollBruteForceCombat.Action != ActionIndexCache.act_none, LastFired.GetValue(), mission.CurrentTime))

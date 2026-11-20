@@ -29,6 +29,7 @@ public sealed class StaminaTelemetry
     private long _exhaustedSoldiers;
     private long _recoveries;
     private long _stuck;
+    private long _specialRefusals;
 
     // Per people (the race name): fighters, soldiers ever Exhausted, exhaustions. The peoples table is tuned from it.
     private readonly ConcurrentDictionary<string, long[]> _peoples = new(StringComparer.OrdinalIgnoreCase);
@@ -107,6 +108,12 @@ public sealed class StaminaTelemetry
 
     public void CountStuck() => Interlocked.Increment(ref _stuck);
 
+    /// <summary>
+    /// A ready check of a tree-started attack (a dwarf's, a troll's) that an Exhausted soldier failed. It counts
+    /// checks, not attacks: the tree asks again on each scan while he stays Exhausted, with or without an enemy near.
+    /// </summary>
+    public void CountSpecialRefusal() => Interlocked.Increment(ref _specialRefusals);
+
     /// <summary>Main thread: one frame's batch of stat recomputes and the stopwatch ticks it took.</summary>
     public void NoteRefreshBatch(int refreshed, long stopwatchTicks)
     {
@@ -126,6 +133,7 @@ public sealed class StaminaTelemetry
                + $"crossbow {Kind(StaminaAction.CrossbowShot)}, throw {Kind(StaminaAction.Throw)}, jump {Kind(StaminaAction.Jump)}, "
                + $"kick {Kind(StaminaAction.Kick)}, bash {Kind(StaminaAction.Bash)}) blocks={Interlocked.Read(ref _blocks)} fighters={Fighters} "
                + $"enteredExh={Exhaustions} exhaustedSoldiers={ExhaustedSoldiers} recovered={Recoveries} stuck={Stuck}; "
+               + $"special attack checks refused {Interlocked.Read(ref _specialRefusals)}; "
                + $"input strips: AI {AiStrips} ({Interlocked.Read(ref _aiStripsOffMain)} off the main thread), player {PlayerStrips}; "
                + $"stat refreshes: {refreshes} in {Interlocked.Read(ref _refreshBatches)} batch(es), {perCallUs:0.0} us each on average, "
                + $"slowest batch {SlowestRefreshBatchMs:0.000} ms";
@@ -149,6 +157,7 @@ public sealed class StaminaTelemetry
         Interlocked.Exchange(ref _exhaustedSoldiers, 0);
         Interlocked.Exchange(ref _recoveries, 0);
         Interlocked.Exchange(ref _stuck, 0);
+        Interlocked.Exchange(ref _specialRefusals, 0);
         _peoples.Clear();
     }
 }

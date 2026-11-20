@@ -1473,3 +1473,11 @@ The spider's `IsSameSide` began to answer "does the bite spare this agent", whic
 **Prevent:** when a producer and a consumer of an accumulator run on different schedules, write down every state in which the consumer does not run, and give each one a drain or a gate at the producer. Here both: the producer refuses a soldier that is not tracked, and the tick drops the sum on every look that does not step him (`StaminaService.Skip`). A comment that says "always" about a call is checked against the call's callers, not against its body. Pin the skip branch with a source-text test, since the tick needs the engine.
 
 **Source:** [rca-stamina-phases-1-2-2026-11-19.md](../rca-stamina-phases-1-2-2026-11-19.md) row 1 (lenses 5 and 2).
+
+### A lock on an agent's input does not stop an attack that TAOM code starts itself (#1497, 2026-11-19)
+
+**Why missed:** stamina's Exhausted lock clears the attack, block, kick and jump bits of a soldier's input, for the player at the end of the controller's input build and for the AI in `OnAIInputSet`. Two TAOM features never touch that input: Dwarf Attacks and Troll Brute Force start their action from a behaviour tree with `Agent.SetActionChannel(..., ignorePriority: true)`. An Exhausted dwarf kept head-butting. The design was checked against the engine's paths and not against TAOM's own. A game log showed it: 512 kicks in a match where the AI does not kick.
+
+**Prevent:** before a feature forbids an agent action by its input (a stun, a lock, a "cannot attack" state), grep `SetActionChannel(` and the `BehaviorTreeElements` folders in `Main` and `Client` for every starter of that action on a human agent, and give each starter's ready check a question to the locking feature's hook (`StaminaHooks.RefusesSpecialAttack`). A new feature that starts an attack from a tree asks the same hooks. Read the per-kind action counts of a first game run against what the AI can do: a count the AI cannot produce names a path the design did not know.
+
+**Source:** [rca-stamina-phases-1-2-2026-11-19.md](../rca-stamina-phases-1-2-2026-11-19.md), addendum 2.

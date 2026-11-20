@@ -132,6 +132,8 @@ checks that the travel plus the reach covers the far edge of the trigger band.
 - `CoopMissionOwnership` (CoopInterop): the owner gate `DwarfTreeHost` applies
 - `SingleVictimPick` (ElephantLike): the war ram's single-target rule
 - `IOutcomeLog` (Core/Logging)
+- `StaminaHooks.RefusesSpecialAttack` (Stamina): with [Combat Stamina](stamina.md) on, an Exhausted dwarf starts
+  neither attack, and each attack costs him the kick's stamina, because the engine reads both actions as kicks
 
 ## Co-op
 

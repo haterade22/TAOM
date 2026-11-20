@@ -49,6 +49,21 @@ public static class StaminaHooks
     }
 
     /// <summary>
+    /// For a feature that starts an attack itself, from a behaviour tree and not through input (the dwarves' head-butt
+    /// and drop-kick, the trolls' brute force): the Exhausted input strip cannot stop such an attack, so the feature
+    /// asks here first and does not start it. Any thread: one published value and no engine read. False while stamina
+    /// is off, and for a soldier with no stamina (his band reads Fresh).
+    /// </summary>
+    public static bool RefusesSpecialAttack(Agent? agent)
+    {
+        var runtime = Runtime;
+        if (runtime == null || !runtime.Armed || agent == null || !runtime.Store.TryGet(agent, out var cell) || cell.Band != StaminaBand.Exhausted)
+            return false;
+        runtime.Telemetry.CountSpecialRefusal();
+        return true;
+    }
+
+    /// <summary>
     /// Main thread, from the pre-mission tick, right after a controller wrote the player's input for this frame and
     /// before the engine reads it. Strips only a soldier the mission tick put on the player lock path: Exhausted,
     /// controlled by a player, owned by this peer and not using a game object.

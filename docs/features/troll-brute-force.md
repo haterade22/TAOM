@@ -37,7 +37,8 @@ cap's worth nearest the impact centre, nearest first, never one at a non-finite 
 reports hits over the cap and how many the cap spared. Every decision (cooldown, engagement, impact centre, falloff,
 shield handling, body size, who the cap picks) is in the pure `TrollBruteForceService` (floats in, no TaleWorlds
 types, ADR-007; a NaN or infinity fails closed); only the roll is taken outside it.
-Each held agent handle is checked with `AgentSlotIdentity.IsCurrentOccupant` before it touches native state.
+Each held agent handle is checked with `AgentSlotIdentity.IsCurrentOccupant` before it touches native state. With [Combat Stamina](stamina.md) on, the ready check also asks `StaminaHooks.RefusesSpecialAttack`: an Exhausted
+troll starts no smash. The smash itself costs no stamina (its action has no type the stamina poll reads).
 
 **Body size.** Every distance is multiplied by the troll's body size, `AgentScale` times its Monster's standing eye
 height over the human's 1.70 (`BodySize`, Mike 2026-09-25), capped at 3. The cave troll keeps the human eye

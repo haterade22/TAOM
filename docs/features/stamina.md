@@ -175,6 +175,16 @@ and stamina each claim and release it under an owner bit, and the flag is on whi
 A released `MarshalWordComponent` answers nothing (`_on`), because native keeps calling every component on
 the agent while stamina alone holds a claim.
 
+**An attack that a behaviour tree starts.** A dwarf's head-butt and drop-kick (Dwarf Attacks) and a troll's
+brute-force smash (Troll Brute Force) start with `SetActionChannel` from a tree, past the AI's input, so the
+strip cannot stop them. Each ready decorator asks `StaminaHooks.RefusesSpecialAttack` first and starts nothing
+for an Exhausted soldier. The engine reads the two dwarf attacks as kicks (`actt_kick` in the Armory's
+`action_types.xml`), so each costs the kick's 6 points. The troll's smash has no action type and costs nothing.
+A new feature that starts an attack this way must ask the same hook. An attack that is already under way
+when the soldier becomes Exhausted is not cancelled. Not covered: a couched lance or a braced spear that is
+already held (the engine reads the stance, not an input), and a mount's own attack, which stamina leaves
+alone with the mount.
+
 **The stamina bar.** `BattleHudStaminaMapper` turns the share and the band into a height and a colour. The
 battle HUD mixin reads the player's current soldier through `StaminaHooks.TryRead` each refresh (a soldier
 with no stamina, of an exempt people or under the MCM opt-out, gets no bar) and the
@@ -433,10 +443,10 @@ What the runs settle:
   no loss at speed. No AI soldier jumped, and kicks and bashes together were 0 to 14 in a match, so whether such
   an action is counted twice is still a person's check. The exception is Isengard against Erebor with 512 and
   651 kicks: they are the dwarves' head-butts and drop-kicks (`taom.dwarf-attacks.*` counted 511 attempts in
-  the first of the two matches). So a dwarf pays the kick cost, 6 points, for each of them. The Exhausted
-  lock does not reach them (read from the code, not seen in a log): Dwarf Attacks starts the action itself, not
-  through AI input. Whether the
-  attacks should cost stamina is Mike's decision.
+  the first of the two matches). So a dwarf pays the kick cost, 6 points, for each of them. In these runs the
+  Exhausted lock did not reach them, because Dwarf Attacks starts the action itself (read from the code, not
+  seen in a log); the gate described under "An attack that a behaviour tree starts" came after them. Whether these attacks should
+  cost stamina, and what a troll's smash should cost, is Mike's decision.
 - **The logs.** On the fixed build, the three runs with the switch on hold the same one `[ERROR]` line as the
   run with it off, and no `[WARNING]` that names stamina. The warnings differ only in two Fords lines that
   depend on the match: a tower warning of the Mordor map, and a "move target is off the navmesh" line that the
