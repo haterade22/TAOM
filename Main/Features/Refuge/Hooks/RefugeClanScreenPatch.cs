@@ -91,7 +91,7 @@ public static class RefugeClanScreenPatch
             if (added)
             {
                 // Vanilla set the "Garrisons (N)" header before this postfix ran; re-render it so
-                // the count matches the rows (the source module left it desynced).
+                // the count matches the rows.
                 GameTexts.SetVariable("CURRENT", __instance.Garrisons.Count);
                 __instance.GarrisonsText = GameTexts.FindText("str_clan_garrisons").ToString();
             }

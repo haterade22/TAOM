@@ -88,7 +88,6 @@ public sealed class RefugeCampContributor : ICampOverlayContributor
                 if (party == null || mainPosition.Distance(party.GetPosition2D) > range)
                     continue;
 
-                // ANY refuge in range blocks pitching a fresh camp on top of it, ready or not.
                 _blockedReason ??= new TextObject(
                     "{=taom_rf_blocks_camp}A refuge stands here - dismantle it to pitch a normal camp.").ToString();
 

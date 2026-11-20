@@ -142,7 +142,6 @@ public class WardenService : IWardenService
         if (heroId == null)
             return null;
 
-        // Exactly one soldier leaves the ranks; he is the person the new hero used to be.
         RemoveOneTroopFromMainParty(candidate.Id);
         promoted = true;
         promotedFromTroopId = candidate.Id;
@@ -153,8 +152,6 @@ public class WardenService : IWardenService
     {
         if (string.IsNullOrEmpty(wardenHeroId))
             return;
-        // A warden who is not with the refuge (captured, dead) is left where fate put him; the
-        // dismantle proceeds without touching him, and no soldier comes back for him.
         if (!IsHeroWithRefugeParty(wardenHeroId))
             return;
         // Every warden leaves the refuge by action first: a raw roster copy+clear nulls a hero's
@@ -214,9 +211,6 @@ public class WardenService : IWardenService
     {
         if (string.IsNullOrEmpty(wardenHeroId) || string.IsNullOrEmpty(promotedFromTroopId))
             return;
-        // The never-attached window: the hero was minted seconds ago, sits in the main party, and
-        // never led anything. Removing him here is the transactional rollback of ResolveWarden,
-        // and the soldier is refunded.
         if (!RemoveMintedCompanion(wardenHeroId))
             return;
         AddOneTroopToMainParty(promotedFromTroopId);
@@ -261,7 +255,6 @@ public class WardenService : IWardenService
         if (source == null || source.TroopIsHero)
             return null;
 
-        // Culture-matched template first; any companion template when the culture has none.
         string cultureId = source.TroopCultureId ?? source.PlayerCultureId;
         string templateId = RandomCompanionTemplateId(cultureId) ?? RandomCompanionTemplateId(null);
         if (templateId == null)
@@ -287,8 +280,6 @@ public class WardenService : IWardenService
         EnrolPromotedHero(minted);
         return minted.HeroId;
     }
-
-    // --- campaign-static seams (the untested boundary sliver; overridden in tests) ---
 
     /// <summary>Every hero in the main party's member roster, in roster order, with the two facts
     /// the companion filter reads. Empty when there is no main party roster.</summary>

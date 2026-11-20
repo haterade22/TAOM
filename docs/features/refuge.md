@@ -140,6 +140,11 @@ clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition
   resets `Name` and the wage state, so a one-shot decoration lost the "(being raised)" suffix and
   the hidden slider. The row constructor's own refresh decorates new rows, and
   `IRefugeBook.GetByPartyId` picks the refuge and its `Building` flag.
+- **Founding gates.** `CanFound` refuses an enlisted player, because the commander moves the
+  party and a refuge's hold-nearby pin would fight the enlistment attachment for control (the
+  same reason camps block). It also refuses when any refuge stands within manage range, whatever
+  its state, so two layouts never overlap on one spot. A refuge that is building or being
+  rebuilt into a stronghold grants no defense bonus: `IsReady` is false for that window.
 
 ## Configuration
 
