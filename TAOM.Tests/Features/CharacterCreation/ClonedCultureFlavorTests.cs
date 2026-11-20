@@ -97,8 +97,9 @@ public class ClonedCultureFlavorTests
         // Dorwinion (#1062) is cloned from Dale too, and South Rhovanion from Rohan: the Northmen of
         // the plains south of Mirkwood, kin of the Eotheod, not the Rohirrim of Calenardhon. Their
         // own people and seats are forbidden. Dorwinion's wine and boats travel the River Running and
-        // the Celduin, its own river country, so those two names stay legal.
-        ["dorwinion"] = DaleSeats().Where(w => w != "River Running" && w != "Celduin").ToArray(),
+        // the Celduin, its own river country, so those two names stay legal. Its culture blurb names
+        // the Men of Dale as old friends, so the bare word "Dale" stays legal as well.
+        ["dorwinion"] = DaleSeats().Where(w => w != "River Running" && w != "Celduin" && w != "Dale").ToArray(),
         ["southrhovanion"] = RohanSeats(),
     };
 
