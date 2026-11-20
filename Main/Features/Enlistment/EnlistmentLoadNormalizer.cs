@@ -54,10 +54,7 @@ public class EnlistmentLoadNormalizer : IEnlistmentLoadNormalizer
         }
 
         // Identity guard (co-op join / heir succession): the oath belongs to a hero that
-        // is no longer the player. Quiet, penalty-free discharge. A save made mid-battle waits
-        // (#1030): the discharge's RestorePresence clears AttachedTo, which pulls a merged soldier
-        // out of his live battle. The rest of the load runs as usual, and the hourly tick
-        // discharges once the battle is over.
+        // is no longer the player. Quiet, penalty-free discharge; mid-battle it waits (#1030).
         if (IsHeirMismatch(record, currentMainHeroId))
         {
             if (!presence.IsInMapEvent)
@@ -122,8 +119,6 @@ public class EnlistmentLoadNormalizer : IEnlistmentLoadNormalizer
             return false;
         }
 
-        // Captivity after a lost battle waits too: vanilla keeps a captive's party inactive, and the
-        // discharge's RestorePresence would make it active (the crown-war release waits the same way).
         var presence = _partyAdapter.GetPresence();
         if (presence.IsInMapEvent || presence.IsCaptive)
             return false;

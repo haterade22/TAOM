@@ -9625,6 +9625,167 @@
     <string id="taom_mcm_ShowAllEncyclopediaCharacters_hint" text="在百科全書中顯示所有角色，包括尚未遇見的人物。效果等同於作弊指令 'campaign.toggle_information_restrictions'。" />
     <string id="taom_mcm_bld_LogScreenOpenTimes_hint" text="每次打開界面時，向taom_debug.log寫入一條[ScreenOpen]記錄，註明界面名稱、階段及耗時毫秒數。可用於對比快速打開功能開關前後的表現。默認：關閉。" />
     <string id="taom_mcm_RealmColourDale" text="河谷邦" />
+    <string id="taom_cso_keeps_choices" text="This campaign keeps the start choices it was created with, so later changes to them in the TAOM mod options do not apply to it. With cheat mode on, the console command taom.campaign_option lists and changes them." />
+    <string id="taom_aso_item_wotr" text="War of the Ring" />
+    <string id="taom_aso_item_sandbox" text="Sandbox (no scripted war)" />
+    <string id="taom_ency_search" text="Search..." />
+    <string id="taom_tcb_hero" text="HERO" />
+    <string id="TAOM_LD_Hud_UpgradeDeal" text="Upgrades {AFFORDABLE} of {STANDING} for {TOTAL} gold" />
+    <string id="TAOM_LD_Notice_UpgradeBought" text="{STEP}: {COUNT} upgraded, {LEFT} left." />
+    <string id="TAOM_LD_Notice_UpgradeRefund" text="{STEP}: {COUNT} could not be upgraded, {GOLD} gold paid back." />
+    <string id="taom_tcb_your_army" text="Your army" />
+    <string id="taom_tcb_enemy_army" text="Enemy army" />
+    <string id="taom_tcb_title" text="CUSTOM BATTLE" />
+    <string id="taom_tcb_armies" text="ARMIES" />
+    <string id="taom_tcb_battlefield" text="BATTLEFIELD" />
+    <string id="taom_tcb_start_battle" text="START BATTLE" />
+    <string id="taom_tcb_back" text="BACK" />
+    <string id="taom_tcb_randomise" text="RANDOMISE" />
+    <string id="taom_tcb_total_troops" text="{SUM} / {MAX} TROOPS" />
+    <string id="taom_tcb_summary" text="{PLAYER} ({PLAYER_TOTAL})   vs   {ENEMY} ({ENEMY_TOTAL})      |      {FIELD}" />
+    <string id="taom_tcb_too_many" text="Too many men: the engine takes at most {MAX}" />
+    <string id="taom_tcb_choose_both_factions" text="Choose both factions" />
+    <string id="taom_tcb_muster_player" text="Muster at least one unit for your army" />
+    <string id="taom_tcb_muster_enemy" text="Muster at least one unit for the enemy" />
+    <string id="taom_tcb_choose_battlefield" text="Choose a battlefield" />
+    <string id="taom_tcb_no_commander" text="No commander found for a faction" />
+    <string id="taom_tcb_captain_needs_lord" text="A captain needs another lord of the faction to lead the army" />
+    <string id="taom_tcb_start_failed" text="Could not start: {ERROR}" />
+    <string id="taom_tcb_tier" text="Tier {TIER}" />
+    <string id="taom_tcb_group" text="Group {ID}" />
+    <string id="taom_tcb_troops_line" text="{TOTAL} TROOPS" />
+    <string id="taom_tcb_troops" text="TROOPS" />
+    <string id="taom_tcb_change_faction" text="CHANGE FACTION" />
+    <string id="taom_tcb_banner_hint" text="Click the pennant to change the banner" />
+    <string id="taom_tcb_commander_header" text="COMMANDER" />
+    <string id="taom_tcb_banner_header" text="BANNER" />
+    <string id="taom_tcb_choose_faction_header" text="CHOOSE FACTION" />
+    <string id="taom_tcb_choose_commander_header" text="CHOOSE COMMANDER" />
+    <string id="taom_tcb_available_header" text="AVAILABLE TROOPS" />
+    <string id="taom_tcb_mustered_header" text="MUSTERED ARMY" />
+    <string id="taom_tcb_search_placeholder" text="Search troops..." />
+    <string id="taom_tcb_empty_army" text="Add troops from the Available Troops list" />
+    <string id="taom_tcb_hint_text" text="Shift + click: 10    Ctrl + click: 100" />
+    <string id="taom_tcb_background" text="BACKGROUND" />
+    <string id="taom_tcb_emblem_colour" text="EMBLEM COLOUR" />
+    <string id="taom_tcb_emblem" text="EMBLEM" />
+    <string id="taom_tcb_background_colour" text="BACKGROUND COLOUR" />
+    <string id="taom_tcb_done" text="DONE" />
+    <string id="taom_tcb_famous_hero" text="Famous hero" />
+    <string id="taom_tcb_lord" text="Lord" />
+    <string id="taom_tcb_famous_commander" text="Famous commander" />
+    <string id="taom_tcb_tier_class" text="{TIER}  ·  {CLASS}" />
+    <string id="taom_tcb_kind_infantry" text="Infantry" />
+    <string id="taom_tcb_kind_archers" text="Archers" />
+    <string id="taom_tcb_kind_cavalry" text="Cavalry" />
+    <string id="taom_tcb_kind_horse_archers" text="Horse archers" />
+    <string id="taom_tcb_kind_heroes" text="Heroes" />
+    <string id="taom_tcb_kind_all" text="All" />
+    <string id="taom_tcb_hero_one_man" text="Hero  ·  one man" />
+    <string id="taom_tcb_formation_options" text="FORMATION OPTIONS" />
+    <string id="taom_tcb_captain_caps" text="CAPTAIN" />
+    <string id="taom_tcb_horn_caps" text="HORN" />
+    <string id="taom_tcb_soldiers" text="{COUNT} soldiers" />
+    <string id="taom_tcb_soldiers_plus_roles" text="{COUNT} soldiers + {ROLES} from the unit's number" />
+    <string id="taom_tcb_banner_bearer" text="Banner Bearer" />
+    <string id="taom_tcb_captain" text="Captain" />
+    <string id="taom_tcb_horn_blower" text="Horn Blower" />
+    <string id="taom_module_fault_summary" text="TAOM: feature modules failed and are off this session: {MODULES}. The TAOM log names the cause." />
+    <string id="taom_career_path" text="Path {LETTER}" />
+    <string id="taom_spc_incomplete" text="Shader pre-compilation INCOMPLETE: no troop shaders were compiled because the first batch never loaded ({ABORTED}, {TIME}). Check the log and run it again." />
+    <string id="taom_spc_stopped" text="Shader pre-compilation stopped: {REASON}. Quit to the main menu and run it again." />
+    <string id="taom_spc_gpu_crash" text="{COUNT} scene(s) crashed your GPU on a previous shader pre-compile. To help fix it, send the latest Bannerlord 'Application Error' from Windows Event Viewer (eventvwr.msc -&gt; Windows Logs -&gt; Application) to the TAOM author. Details are in the Logs folder." />
+    <string id="taom_res_upgrade_cost_hint" text="{RESOURCE} cost: {COST} per troop (have {HAVE})" />
+    <string id="taom_tcb_game_type" text="Game Type" />
+    <string id="taom_tcb_player_type" text="Player Type" />
+    <string id="taom_tcb_type_commander" text="Commander" />
+    <string id="taom_tcb_type_captain" text="Captain" />
+    <string id="taom_tcb_player_side" text="Player Side" />
+    <string id="taom_tcb_map" text="Map" />
+    <string id="taom_tcb_maps_shown" text="Maps Shown" />
+    <string id="taom_tcb_maps_taom" text="TAOM maps" />
+    <string id="taom_tcb_maps_all" text="All maps" />
+    <string id="taom_tcb_season" text="Season" />
+    <string id="taom_tcb_time_of_day" text="Time of Day" />
+    <string id="taom_tcb_walls" text="Walls" />
+    <string id="taom_tcb_town_level" text="Town Level" />
+    <string id="taom_tcb_level" text="Level {LEVEL}" />
+    <string id="taom_tcb_attacker_engines" text="Attacker Engines" />
+    <string id="taom_tcb_eng_ram_towers" text="Ram and two towers" />
+    <string id="taom_tcb_eng_ram" text="Ram only" />
+    <string id="taom_tcb_eng_towers" text="Two towers" />
+    <string id="taom_tcb_eng_ladders" text="Ladders only" />
+    <string id="taom_tcb_attacker_artillery" text="Attacker Artillery" />
+    <string id="taom_tcb_eng_none" text="None" />
+    <string id="taom_tcb_eng_catapults" text="Two catapults" />
+    <string id="taom_tcb_eng_trebuchet" text="Trebuchet and catapults" />
+    <string id="taom_tcb_defender_engines" text="Defender Engines" />
+    <string id="taom_tcb_eng_ballistas" text="Ballistas" />
+    <string id="taom_tcb_eng_catapults_ballistas" text="Catapults and ballistas" />
+    <string id="taom_tcb_preview_header" text="BATTLEFIELD PREVIEW" />
+    <string id="taom_tcb_settings_header" text="BATTLE SETTINGS" />
+    <string id="taom_tcb_field_tagline" text="Choose the field upon which your armies shall meet." />
+    <string id="taom_tcb_no_map_for_type" text="No map for this battle type" />
+    <string id="taom_tcb_no_preview" text="No preview of this map yet" />
+    <string id="taom_tcb_no_map" text="no map" />
+    <string id="taom_tcb_banner_caps" text="BANNER" />
+    <string id="taom_career_ability_ready_unbound" text="Career ability is ready! Bind its key under Options, Keybindings to activate it." />
+    <string id="taom_mcm_group_bug_report" text="Bug Report" />
+    <string id="taom_mcm_crash_MakeBugReportAction" text="Make Bug Report" />
+    <string id="taom_mcm_crash_MakeBugReportAction_button" text="Make" />
+    <string id="taom_mcm_crash_MakeBugReportAction_hint" text="Writes one zip in the Logs folder with what a bug report needs: this game's and the previous game's TAOM logs, the game's own logs, the game's crash folder from the previous game (files up to 64 MB each, 128 MB in all), the module list, the TAOM settings and, in a campaign, the campaign details. Then shows where the zip is. It carries your PC's name, your hero's name and folder paths of your install." />
+    <string id="taom_mcm_crash_OfferBugReportAfterUnexpectedEnd" text="Offer A Bug Report After An Unexpected End" />
+    <string id="taom_mcm_crash_OfferBugReportAfterUnexpectedEnd_hint" text="On the first main menu after a game that closed without TAOM's normal shutdown (a crash, a freeze you had to close, or a stopped game), ask whether to make a bug report from that game's logs. Default ON." />
+    <string id="taom_mcm_MomentumEnabled_hint" text="Tracks Evil vs Good war progress from battles, sieges, raids, armies and relative strength. The war ends at the victory threshold only when Enable Victory (End the War) is on; that setting is off by default, so the war is endless. Default: on." />
+    <string id="taom_mcm_MomentumVictoryEnabled_hint" text="When OFF (default) the War of the Ring is endless: momentum is tracked but no side ever wins. Turn ON to let a side win at the Victory Threshold (or by eliminating the other), which ends the war and makes peace. Default: off (endless). This is the default for new campaigns: each campaign keeps its own choice from the start screen, and older saves follow this setting." />
+    <string id="taom_mcm_EnableCulturalSurvivalBonuses_hint" text="Applies the per-culture survival modifiers from battle_balance_config.json. A positive value means more of that culture's wounded survive." />
+    <string id="taom_mcm_HoldCapturedForts_hint" text="When an AI army of a Free realm takes a town or castle by siege, it stays inside for about 22 hours (12 to 30: longer for a Calculating lord, shorter for a Valorous one) instead of the 10 the game gives. It leaves early if the fortress is besieged, its cohesion drops below 40 or it has less than a day of food, but holds are not saved: after loading a save a running hold cannot end early and runs to its end. Mordor's armies hold too; other Evil realms and (by default) Neutral ones keep rolling on. Single-player only. Needs AI Strategic Intelligence on. Default: on." />
+    <string id="taom_mcm_EnableEnlistmentTrace_hint" text="Off by default: turn it on to record the routine enlistment trace ([EnlistDiag] TICK, SYNC ok, PARK ok, RESTORE ok) in the TAOM debug log when you are reproducing an enlistment problem for a bug report. It is roughly ten times the volume of the ordinary enlistment log, so turn it off again afterwards. Real faults are always logged regardless of this setting, so [EnlistDiag] lines still appear for them when it is off. Takes effect immediately; no restart." />
+    <string id="taom_mcm_group_hall_seats" text="Hall Seats" />
+    <string id="taom_mcm_EnableHallSeats" text="Hall Seats" />
+    <string id="taom_mcm_EnableHallSeats_hint" text="A lord's hall shows only as many lords as it has places for, instead of packing every lord in the town or castle onto one spot. The settlement's owner, the ruler, the governor, your own clan, quest givers and the lord you open a conversation with from the town menu always appear; the other places go to the owner's clan first, then clan leaders, then the strongest clans. The lords left out are still in the settlement. Takes effect from the next visit. Default: on." />
+    <string id="taom_mcm_AlignmentRecruitmentGoodRejectsEvilOnly_hint" text="When ON, only a Free-aligned recruiter is blocked from Evil-controlled settlements; Evil recruiters may recruit anywhere, and Alignment Desertion then removes no Free troops from Evil lords or their garrisons at all, not only the ones they recruit. When OFF (default), the block is symmetric: Free and Evil each refuse the other, and opposed troops desert either way." />
+    <string id="taom_mcm_EnableBanditGreetings_hint" text="When enabled, if you attack on land a bandit party you have not dealt with before and it belongs to one of the eight talking clans (Dunlending, Rhun, Haradrim, Gundabad, Umbar, Gondor deserters, Blacklocks, Mirkwood Stalkers), there is a one in four chance that it greets you in its own words, and your ultimatum is vanilla's reply to that kind of greeting. With Encounter Lines also on, these clans greet you in a line chosen by your people and your side on half of these meetings, and keep vanilla's greeting on the other quarter. Feral Orcs and looters, which have no greetings of their own, greet you that way on three meetings in four. Spiders and wild trolls are unchanged. Applies to the next bandit conversation. Text only: nothing else about the encounter changes. When off, every greeting is vanilla's. The lines bandits use when they rob you are separate data; with Encounter Lines on, half of these robberies use its lines instead. Default: on." />
+    <string id="taom_mcm_group_encounter_lines" text="Encounter Lines" />
+    <string id="taom_mcm_EnableEncounterLines" text="Enable Encounter Lines" />
+    <string id="taom_mcm_EnableEncounterLines_hint" text="When enabled, lords you meet on the map speak in the voice of their people and by who you are to them: their liege, an ally, a rival, a foe, or one of their own. Caravans and villagers greet you this way half of the time on a first meeting on land, and speak their own words when they surrender to a robbery. Bandit clans rob you with their own threats, and a hideout boss challenges you in the clan's own words. Bandit greetings when you attack a bandit party also need Enable Bandit Clan Greetings (World/Bandit Voices) on. Lords in your clan, companions, wanderers and notables keep vanilla's lines, and so do lords you speak to inside a settlement; the hideout boss still speaks the clan's own words. Applies to the next conversation. Text only: nothing else about the encounter changes, but TAOM's lines are not voiced, so a line that replaces a voiced vanilla line is silent. When off, every line is vanilla's. Default: on." />
+    <string id="taom_mcm_EnableAlignmentDesertion_hint" text="When enabled, troops whose culture is opposed in alignment to their lord (Free vs Evil) desert each day: an Evil lord sheds Good troops and a Good lord sheds Evil troops. Alignment comes from execution/alignment.json. Neutral cultures (Umbar etc.) never desert. Troops that would desert cannot be recruited from prisoners, notables' volunteers or by garrison auto-recruit (tavern mercenaries are not checked). With Recruitment Alignment on and its 'Only Good Rejects Evil' on, Evil lords and their garrisons shed no Free troops. When off, vanilla. This is the default for new campaigns. With the Alignment rules start option on Standard, a campaign follows this switch live; Strict or Relaxed fixes all four alignment switches for that campaign. Older saves follow this setting." />
+    <string id="taom_mcm_group_lord_retinue" text="Lord Retinue" />
+    <string id="taom_mcm_EnableLordRetinue" text="Enable Lord Retinue" />
+    <string id="taom_mcm_EnableLordRetinue_hint" text="When enabled, an AI lord party whose clan is at its party limit takes one idle adult clan member along and gives that member a party role (scout, surgeon, engineer or quartermaster) the member is better at than the lord. The heroes go back to a settlement when the clan drops below its party limit or when this is turned off. When off, no new heroes join. A party whose disband starts always frees every hero aboard but its leader, with this on or off." />
+    <string id="taom_mcm_LordRetinueMaxExtraHeroes" text="Extra Heroes Per Party" />
+    <string id="taom_mcm_LordRetinueMaxExtraHeroes_hint" text="How many extra clan heroes one AI lord party may carry. Default 1. Heroes already riding along stay when you lower this. A hero who rides along costs the clan a daily wage and a party slot, and can be wounded, captured or killed in battle with the lord." />
+    <string id="taom_mcm_group_hero_auras" text="Hero Auras" />
+    <string id="taom_mcm_EnableKingsMusterDiscount_hint" text="When enabled (default), an AI kingdom ruler, Good or Evil, pays half the influence (0.5 by default, RulerCallCostFactor in army_targeting.json) for each party called into an army, after culture feats. Cheaper calls also make the influence an army spends on keeping itself together cheaper for the ruler, so those hosts hold longer and the ruler's clan keeps more influence for votes. Your own calls, as a ruler or a vassal, cost what they always did. Singleplayer only: in a co-op session this does nothing. When off, the ruler pays the usual cost; culture feats and the Realms liege army discount still apply. The two discounts do not stack: when both apply to a call, the larger one is used. Applies at once, no restart." />
+    <string id="taom_mcm_group_hostile_peace" text="Hostile Peace" />
+    <string id="taom_mercenary_menu_would_desert" text="These mercenaries would desert your party: their people will not serve your side." />
+    <string id="taom_mercenary_refuses_your_side" text="Fight for your side? No coin buys that. Find your swords elsewhere." />
+    <string id="taom_cleave_mcm_enable" text="Cleaving Blows" />
+    <string id="taom_cleave_mcm_enable_hint" text="Your swings with a two-handed axe, mace, sword or polearm can cut through one enemy and strike the next. Each enemy after the first takes less damage. Armour slows the blade, and a kill or a clear skill lead over the victim carries it further. Cleaving Blows never applies to a shield block, a thrust or a swing from horseback. Only the character you control, unless the AI option below is on. Trolls and other big creatures keep their own cleave. The numbers live in combat_mechanics_config.json. Default: on." />
+    <string id="taom_cleave_mcm_ai" text="Cleaving Blows for AI Two-Handers" />
+    <string id="taom_cleave_mcm_ai_hint" text="AI soldiers who swing a two-handed axe, mace or sword cut through enemies by the same rules. Every two-handed troop in both armies then hits a packed line harder. Needs Cleaving Blows on. Default: off." />
+    <string id="taom_cleave_mcm_max_targets" text="Cleaving Blows Max Targets" />
+    <string id="taom_cleave_mcm_max_targets_hint" text="The most enemies one swing can strike, the first one included. Default 3. A swing often stops sooner: each enemy takes some of its force, and armour takes more." />
+    <string id="taom_load_failed_title" text="The saved game failed to load" />
+    <string id="taom_load_failed_body" text="An error occurred while this save loaded, and the game cannot continue the load. The error is in the TAOM log. Quit the game, then send that log with a bug report." />
+    <string id="taom_load_failed_quit" text="Quit Game" />
+    <string id="taom_mcm_group_text_input" text="Text Input" />
+    <string id="taom_mcm_ImeGuardEnabled" text="Pause the input method outside text fields" />
+    <string id="taom_mcm_ImeGuardEnabled_hint" text="For Chinese, Japanese and Korean input methods. While the game is in front and no text field has focus, the input method is paused, so hotkeys on the map and in battle reach the game instead of opening its candidate window. A search, rename or other text field gets it back at once, and other programs are not affected. Applies immediately. Default: on." />
+    <string id="taom_mcm_group_stamina" text="Stamina" />
+    <string id="taom_stamina_mcm_enabled" text="Enable Combat Stamina" />
+    <string id="taom_stamina_mcm_enabled_hint" text="Experimental. In field battles, sieges and the Fords of War match soldiers have stamina. A melee swing, a shot, a throw, a jump, a kick, a shield bash and a blow stopped with a weapon or shield cost stamina, and running on foot drains it down to half. Stamina comes back while a soldier does not attack, more slowly while a block is held and not at all while running. A tired soldier swings and handles a weapon more slowly, and a tired AI soldier attacks less often. A soldier whose stamina reaches zero is exhausted until it is back at about a third: an exhausted soldier cannot attack, block, kick or jump, and on foot slows to a walk. Exceptions: a soldier who works a siege engine pays nothing and is not stopped, and a rider or a swimmer can still jump. Higher tier troops and heroes have more stamina. A soldier's people changes it too: Elves, Dwarves, Uruk-hai and trolls have more than most Men of the same rank, Orcs and goblins have less, and the Nazgul do not tire. Horses and other mounts are not affected. Takes effect from the next battle. Default: off." />
+    <string id="taom_stamina_tired" text="You are tiring. Ease off before your strength fails." />
+    <string id="taom_stamina_exhausted" text="Your strength fails you. Fall back and catch your breath." />
+    <string id="taom_stamina_mcm_cost_scale" text="Stamina Cost Scale" />
+    <string id="taom_stamina_mcm_cost_scale_hint" text="Multiplies what every action costs in stamina, for every soldier: the player, allies and enemies alike. 0.50 halves the costs, 2.00 doubles them. It does not change how fast stamina comes back or how much a soldier has. Read at each battle tick. Default: 1.00." />
+    <string id="taom_stamina_mcm_show_bar" text="Show Stamina Bar" />
+    <string id="taom_stamina_mcm_show_bar_hint" text="Shows your own stamina as a bar beside the battle HUD rings while Combat Stamina is on. The bar changes colour as you tire and turns grey while you are exhausted. Off hides the bar only: stamina still works. Drawn on this client only. Default: on." />
+    <string id="taom_stamina_mcm_player" text="Stamina Applies To You" />
+    <string id="taom_stamina_mcm_player_hint" text="When on, the soldier you control has stamina while Combat Stamina is on: your actions cost it and you can become exhausted. Off exempts that soldier: your stamina never drains, you are never stopped, and the stamina bar is hidden. AI soldiers still follow the next setting. Read at each battle tick. Default: on." />
+    <string id="taom_stamina_mcm_ai" text="Stamina Applies To AI Soldiers" />
+    <string id="taom_stamina_mcm_ai_hint" text="When on, the soldiers the AI controls have stamina while Combat Stamina is on, allies and enemies alike. Off exempts them all: only the soldier you control tires, if the setting above is on. Read at each battle tick. Default: on." />
+    <string id="taom_res_recruit_clamped" text="Only enough resources for {COUNT} recruit(s)." />
   </strings>
 
 </base>
