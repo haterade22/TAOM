@@ -26,6 +26,55 @@ public class StaminaWiringTests
         return index;
     }
 
+    [TestMethod]
+    public void StoppedBlows_AreChargedOnlyToASoldierTheRulesStep()
+    {
+        // The hit callbacks add to a cell from any thread and only a step takes the sum. A cell that is never stepped
+        // (an exempt people, an MCM opt-out, another peer's soldier, a forced band) would keep every blow he stopped and
+        // pay for all of them at the look that steps him again.
+        var logic = Code("Main/Features/Stamina/Hooks/StaminaMissionLogic.cs");
+        StringAssert.Contains(logic, "private void Charge(StaminaCell cell, StaminaBlock block, float shieldDamage) { if (!cell.Tracked) return;");
+
+        var ticker = Code("Main/Features/Stamina/Hooks/StaminaTicker.cs");
+        var visit = ticker.Substring(At(ticker, "private void Visit(Agent agent, StaminaCell cell, float now, StaminaTuning tuning)"));
+        visit = visit.Substring(0, At(visit, "private void Enrol("));
+        // A soldier at a siege engine pays nothing, a stopped blow included: dropped before the step.
+        Assert.IsTrue(At(visit, "if (agent.IsUsingGameObject) StaminaService.Skip(cell);") < At(visit, "StaminaService.Step("));
+        StringAssert.Contains(visit, "else { StaminaService.Skip(cell); }");
+    }
+
+    [TestMethod]
+    public void TheLockCounters_ComeFromTheTallyRule_AndTheStuckClockNeedsABandTheRulesDecided()
+    {
+        var ticker = Code("Main/Features/Stamina/Hooks/StaminaTicker.cs");
+        var settle = ticker.Substring(At(ticker, "private void Settle("));
+        settle = settle.Substring(0, At(settle, "private static void OnBandChanged("));
+
+        StringAssert.Contains(settle, "var byRules = owned && cell.Forced == null;");
+        StringAssert.Contains(settle, "var tally = StaminaLockRules.Tally(before, band, byRules, cell.BandByRules, cell.EntryCounted);");
+        StringAssert.Contains(settle, "if (tally.Entered)");
+        StringAssert.Contains(settle, "if (tally.Recovered)");
+        StringAssert.Contains(settle, "byRules && !tally.StartClock && !cell.StuckReported && now - cell.ExhaustedSince > StuckSeconds");
+        // The counters have one writer: the band-change handler only talks to the player.
+        var changed = ticker.Substring(At(ticker, "private static void OnBandChanged("));
+        changed = changed.Substring(0, At(changed, "private void HoldAiStrip("));
+        Assert.IsFalse(changed.Contains("Telemetry"), changed);
+    }
+
+    [TestMethod]
+    public void TheHudRead_AndTheConsoleForce_LeaveOutASoldierWithNoStamina()
+    {
+        // An exempt people or an MCM opt-out: no bar that stays full for ever, and no "N soldiers set" for soldiers
+        // whose band the console cannot change.
+        var hooks = Code("Main/Features/Stamina/Hooks/StaminaHooks.cs");
+        var read = hooks.Substring(At(hooks, "public static bool TryRead("));
+        StringAssert.Contains(read.Substring(0, At(read, "return true;")), "|| !cell.Tracked) return false;");
+
+        var ticker = Code("Main/Features/Stamina/Hooks/StaminaTicker.cs");
+        var force = ticker.Substring(At(ticker, "public string Force("));
+        Assert.IsTrue(At(force, "if (band != null && !entry.Value.Tracked) continue;") < At(force, "entry.Value.Forced = band;"));
+    }
+
     [DataTestMethod]
     [DataRow("Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs")]
     [DataRow("Main/Features/CultureDoctrine/Models/TaomCustomBattleAgentStatCalculateModel.cs")]
@@ -55,13 +104,24 @@ public class StaminaWiringTests
         Assert.AreEqual(CoopMissionRole.AgentOwner, CoopMissionRoles.All[nameof(StaminaMissionLogic)]);
 
         var ticker = Code("Main/Features/Stamina/Hooks/StaminaTicker.cs");
-        var visit = ticker.Substring(At(ticker, "private void Visit(Agent agent, StaminaCell cell)"));
+        var visit = ticker.Substring(At(ticker, "private void Visit(Agent agent, StaminaCell cell, float now, StaminaTuning tuning)"));
         var owned = At(visit, "var owned = CoopMissionOwnership.IsOwnedHere(agent);");
         // A soldier another peer owns reads Fresh, so every write after this line gives him back what stamina took.
-        StringAssert.Contains(visit, "var band = owned ? cell.Forced ?? StaminaBand.Fresh : StaminaBand.Fresh;");
+        StringAssert.Contains(visit, "if (!owned) { band = StaminaBand.Fresh; fraction = 1f; }");
+        Assert.IsTrue(owned < At(visit, "StaminaService.Step("), "ownership before anything drains or comes back");
         Assert.IsTrue(owned < At(visit, "cell.Publish("), "ownership before the band is published");
         Assert.IsTrue(owned < At(visit, "HoldAiStrip(agent);"), "ownership before the AI input component and its callback claim");
-        Assert.IsTrue(At(visit, "if (cell.Removed || !IsLive(agent)) return;") < owned, "a dead agent's handle is refused before any other read");
+        Assert.IsTrue(At(visit, "if (cell.Removed || !IsLive(agent)) { cell.Tracked = false; return; }") < owned, "a dead agent's handle is refused before any other read");
+        // The per-frame action poll runs only for a soldier the last look found alive and owned by this peer.
+        // "The player's soldier" is the main agent or one a player controls. Not "not AI controlled": an agent with no
+        // controller (the Fords tower gunners) is nobody's.
+        StringAssert.Contains(visit, "var subject = owned && !cell.Exempt && StaminaService.Applies(agent.IsMainAgent || agent.IsMine, _applyToPlayer, _applyToAi); cell.Tracked = subject;");
+        // The two MCM opt-outs are read once per tick, as the cost scale is.
+        Assert.AreEqual(1, Regex.Matches(ticker, @"_runtime\.Settings\.ApplyToPlayer").Count);
+        Assert.AreEqual(1, Regex.Matches(ticker, @"_runtime\.Settings\.ApplyToAi").Count);
+        // The profile (race, culture, armour) is read once, and only for a soldier this peer owns.
+        StringAssert.Contains(visit, "if (owned && !cell.Enrolled) Enrol(agent, cell, tuning);");
+        StringAssert.Contains(ticker, "if (entry.Value.Tracked && !entry.Value.Removed) Poll(entry.Key, entry.Value, now, tuning);");
 
         var force = ticker.Substring(At(ticker, "public string Force("));
         StringAssert.Contains(force, "!CoopMissionOwnership.IsOwnedHere(agent)");
@@ -90,7 +150,7 @@ public class StaminaWiringTests
         // Marshal's Word can take an already exhausted soldier and add its component then.
         StringAssert.Contains(hold, "if (component == null || components[components.Count - 1] != component)");
         Assert.IsTrue(At(hold, "agent.RemoveComponent(component);") < At(hold, "agent.AddComponent(component);"));
-        var visit = ticker.Substring(At(ticker, "private void Visit(Agent agent, StaminaCell cell)"));
+        var visit = ticker.Substring(At(ticker, "private void Visit(Agent agent, StaminaCell cell, float now, StaminaTuning tuning)"));
         StringAssert.Contains(visit, "if (path == StaminaLockPath.AiInput) HoldAiStrip(agent); if (step.StartAiStrip) AiInputCallbackClaims.Claim(agent, AiInputCallbackClaims.Stamina);");
         StringAssert.Contains(ticker, "AiInputCallbackClaims.Release(agent, AiInputCallbackClaims.Stamina);");
         // A soldier who left the mission: his claim goes with no engine call on a handle that may answer for another agent (#592).
@@ -131,6 +191,53 @@ public class StaminaWiringTests
         var ticker = Code("Main/Features/Stamina/Hooks/StaminaTicker.cs");
         Assert.AreEqual(1, Regex.Matches(ticker, @"\.UpdateAgentProperties\(\)").Count);
         StringAssert.Contains(ticker, "_runtime.Refreshes.Take(now, tuning.MaxRefreshesPerFrame, tuning.MinRefreshAgeSeconds, _due);");
+    }
+
+    [TestMethod]
+    public void ThePoll_ReadsTwoPointers_AndAsksTheEngineOnlyWhenAnActionChanged()
+    {
+        var ticker = Code("Main/Features/Stamina/Hooks/StaminaTicker.cs");
+        var pollStart = At(ticker, "private void Poll(Agent agent, StaminaCell cell, float now, StaminaTuning tuning)");
+        var poll = ticker.Substring(pollStart, At(ticker, "private static StaminaAction OnFootOnly(") - pollStart);
+
+        // Agent.GetCurrentAction is a pointer read (Agent.cs:2782-2785); GetCurrentActionType is an engine call.
+        var unchanged = At(poll, "if (action0 == cell.LastAction0 && action1 == cell.LastAction1) return;");
+        Assert.IsTrue(unchanged < At(poll, "agent.GetCurrentActionType(0)"), "no engine call while the action is the same");
+        Assert.IsTrue(At(poll, "if (!IsLive(agent)) return;") < At(poll, "agent.GetCurrentActionType(0)"), "a dead handle is refused before the engine call");
+        // A forced soldier and a siege engine's crew pay nothing; the horse's jump and a rider's kick are free.
+        Assert.IsTrue(At(poll, "if (cell.Forced != null || agent.IsUsingGameObject) return;") < At(poll, "Charge(cell, kind1"));
+        StringAssert.Contains(poll, "if (agent.HasMount) { kind0 = OnFootOnly(kind0); kind1 = OnFootOnly(kind1); }");
+        // One action that shows on both channels in a frame is charged once.
+        StringAssert.Contains(poll, "if (kind0 != StaminaAction.None && kind0 != kind1) Charge(cell, kind0, weaponKg, now, economy);");
+        // The weight of one item: MissionWeapon.GetWeight() is the whole stack plus loaded ammunition.
+        StringAssert.Contains(poll, "agent.WieldedWeapon.Item?.Weight ?? 0f");
+        Assert.IsFalse(poll.Contains("GetWeight("), poll);
+    }
+
+    [TestMethod]
+    public void TheTick_ReadsTheCostScaleOncePerTick_AndRunsOnlyInBattleMode()
+    {
+        var ticker = Code("Main/Features/Stamina/Hooks/StaminaTicker.cs");
+        Assert.AreEqual(1, Regex.Matches(ticker, @"_runtime\.Settings\.CostScale").Count, "the MCM value is read once per tick, never per soldier");
+
+        var logic = Code("Main/Features/Stamina/Hooks/StaminaMissionLogic.cs");
+        // Nothing drains during deployment: the mode is asked every tick, so the gate is not latched shut by it.
+        StringAssert.Contains(logic, "if (!(_armed ??= DecideArmed()) || Mission.Mode != MissionMode.Battle) return;");
+    }
+
+    [TestMethod]
+    public void TheHitCallbacks_LookTheDefenderUpBeforeTheyReadTheBlow_AndOnlyAddToHisCell()
+    {
+        var logic = Code("Main/Features/Stamina/Hooks/StaminaMissionLogic.cs");
+        var melee = logic.Substring(At(logic, "public override void OnMeleeHit("));
+
+        Assert.IsTrue(At(melee, "!_runtime.Store.TryGet(victim, out var cell)") < At(melee, "collisionData.CollisionResult"));
+        StringAssert.Contains(melee, "if (result != CombatCollisionResult.Blocked && result != CombatCollisionResult.Parried) return;");
+        StringAssert.Contains(logic, "if (!_runtime.Armed || victim == null || !collisionData.AttackBlockedWithShield || !_runtime.Store.TryGet(victim, out var cell)) return;");
+        // The callbacks may run off the main thread: one atomic add, and the tick applies it.
+        StringAssert.Contains(logic, "cell.AddPending(StaminaService.BlockCost(_runtime.Tuning.Economy, block, shieldDamage));");
+        // A stopped blow is charged in OnMeleeHit or OnMissileHit only, never also in OnAgentHit or OnScoreHit.
+        Assert.IsFalse(Regex.IsMatch(logic, @"override void On(AgentHit|ScoreHit)\("), "a second hit callback would charge a blow twice");
     }
 
     [TestMethod]

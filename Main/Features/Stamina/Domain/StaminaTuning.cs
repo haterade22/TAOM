@@ -20,13 +20,22 @@ public sealed class StaminaTuning
     private readonly StaminaBandEffects[] _effects;
 
     public StaminaTuning(StaminaBandEffects winded, StaminaBandEffects tired, StaminaBandEffects exhausted,
-        float sweepSeconds, int maxRefreshesPerFrame, float minRefreshAgeSeconds)
+        float sweepSeconds, int maxRefreshesPerFrame, float minRefreshAgeSeconds, StaminaEconomy? economy = null,
+        StaminaPeoples? peoples = null)
     {
+        Economy = economy ?? StaminaEconomy.Default;
+        Peoples = peoples ?? StaminaPeoples.None;
         _effects = new[] { StaminaBandEffects.None, winded, tired, exhausted };
         SweepSeconds = sweepSeconds;
         MaxRefreshesPerFrame = maxRefreshesPerFrame;
         MinRefreshAgeSeconds = minRefreshAgeSeconds;
     }
+
+    /// <summary>The pool, the costs, the run drain, regeneration and the band edges.</summary>
+    public StaminaEconomy Economy { get; }
+
+    /// <summary>The race and culture multipliers and the armour rule.</summary>
+    public StaminaPeoples Peoples { get; }
 
     /// <summary>Seconds between two looks at the same soldier.</summary>
     public float SweepSeconds { get; }

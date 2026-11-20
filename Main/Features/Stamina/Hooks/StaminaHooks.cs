@@ -32,6 +32,23 @@ public static class StaminaHooks
     }
 
     /// <summary>
+    /// For the battle HUD: the soldier's stamina as a share of his pool and his band. False when stamina is not running
+    /// in this mission, the soldier has no cell (a mount, an arena) or he has no stamina (an exempt people, an MCM
+    /// opt-out, another peer's soldier): a bar that never moves is not drawn. Any thread: published values.
+    /// </summary>
+    public static bool TryRead(Agent? agent, out float fraction, out StaminaBand band)
+    {
+        fraction = 1f;
+        band = StaminaBand.Fresh;
+        var runtime = Runtime;
+        if (runtime == null || !runtime.Armed || agent == null || !runtime.Store.TryGet(agent, out var cell) || !cell.Tracked)
+            return false;
+        fraction = cell.Fraction;
+        band = cell.Band;
+        return true;
+    }
+
+    /// <summary>
     /// Main thread, from the pre-mission tick, right after a controller wrote the player's input for this frame and
     /// before the engine reads it. Strips only a soldier the mission tick put on the player lock path: Exhausted,
     /// controlled by a player, owned by this peer and not using a game object.

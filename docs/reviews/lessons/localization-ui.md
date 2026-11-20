@@ -1688,3 +1688,11 @@ The troop weight header only cleared vanilla's red over-capacity tint, never rai
 - **Why missed:** the "downgrade only" rule depended on a precondition the change removed, and the rule's comment was not re-read.
 - **Prevent:** when a change makes a display show its frame in more states, read every flag, tint and prompt the old code set or left alone, and check each still agrees in the new states.
 - **Source:** RCA `docs/reviews/rca-troop-weight-transfer-2026-11-17.md` finding 2 (Lens 5).
+
+### A hint that ranks or says "every" is read again when a later phase adds a modifier or an exemption (#1497, 2026-11-19)
+
+**Why missed:** the `Enable Combat Stamina` hint was written with the pool rule of Phase 1 (tier, then heroes), where "lords, companions and the player have the most" and "every soldier has stamina" were true. Phase 2 added a peoples table that multiplies every pool and exempts three races. A tier 5 troll then had as much as a level 25 lord, the Nazgul had none, and nobody read the hint again. This is the third time in this feature that a hint said more than the code does (the Phase 0 RCA, row 2), and the second hint of the same commit ("every soldier the AI controls has stamina") had the same fault.
+
+**Prevent:** when a change adds a multiplier, an exemption or an exception to a value, grep the feature's hints and its doc for the absolute words that the change can falsify (`every`, `all`, `always`, `never`, `the most`, `only`) and read each hit against the new code. Do it at each phase boundary, not only when the hint is first written. Name the hints in the review brief and ask the lens to test them against the code: that is how this one was found.
+
+**Source:** [rca-stamina-phases-1-2-2026-11-19.md](../rca-stamina-phases-1-2-2026-11-19.md) row 3 (lens 7), and [rca-stamina-phase0-2026-11-19.md](../rca-stamina-phase0-2026-11-19.md) row 2.

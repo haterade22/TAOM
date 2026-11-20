@@ -223,6 +223,183 @@ public class StaminaConfigProviderTests
         AssertDefaults(tuning);
     }
 
+    private static void AssertEconomyEquals(StaminaEconomy expected, StaminaEconomy actual)
+    {
+        foreach (var property in typeof(StaminaEconomy).GetProperties())
+            Assert.AreEqual((float)property.GetValue(expected), (float)property.GetValue(actual), Delta, property.Name);
+    }
+
+    [TestMethod]
+    public void GetTuning_EmptyObject_GivesTheDefaultEconomy()
+    {
+        WriteConfig("{}");
+
+        AssertEconomyEquals(StaminaEconomy.Default, _sut.GetTuning().Economy);
+    }
+
+    [TestMethod]
+    public void GetTuning_ValidEconomyValues_AreUsed()
+    {
+        WriteConfig("{ \"pool\": { \"base\": 80, \"perTier\": 12, \"heroBonus\": 50 },"
+                    + " \"costs\": { \"swingBase\": 3, \"swingPerKg\": 1.5, \"swingMin\": 4, \"swingMax\": 12, \"parry\": 5, \"jump\": 9 },"
+                    + " \"run\": { \"drainPerSecond\": 0.03, \"floor\": 0.4, \"speedThreshold\": 2.5 },"
+                    + " \"regen\": { \"perSecond\": 0.08, \"pauseSeconds\": 1.0, \"blocking\": 0.25, \"exhausted\": 2.0 },"
+                    + " \"bands\": { \"windedBelow\": 0.5, \"tiredBelow\": 0.25, \"hysteresis\": 0.04, \"recoverAt\": 0.25 } }");
+
+        var e = _sut.GetTuning().Economy;
+
+        Assert.AreEqual(80f, e.PoolBase, Delta);
+        Assert.AreEqual(12f, e.PoolPerTier, Delta);
+        Assert.AreEqual(50f, e.HeroBonus, Delta);
+        Assert.AreEqual(3f, e.SwingBase, Delta);
+        Assert.AreEqual(1.5f, e.SwingPerKg, Delta);
+        Assert.AreEqual(4f, e.SwingMin, Delta);
+        Assert.AreEqual(12f, e.SwingMax, Delta);
+        Assert.AreEqual(5f, e.Parry, Delta);
+        Assert.AreEqual(9f, e.Jump, Delta);
+        Assert.AreEqual(StaminaEconomy.Default.Kick, e.Kick, Delta, "a value the file leaves out keeps its default");
+        Assert.AreEqual(0.03f, e.RunDrainPerSecond, Delta);
+        Assert.AreEqual(0.4f, e.RunFloor, Delta);
+        Assert.AreEqual(2.5f, e.RunSpeedThreshold, Delta);
+        Assert.AreEqual(0.08f, e.RegenPerSecond, Delta);
+        Assert.AreEqual(1f, e.RegenPauseSeconds, Delta);
+        Assert.AreEqual(0.25f, e.BlockingRegen, Delta);
+        Assert.AreEqual(2f, e.ExhaustedRegen, Delta);
+        Assert.AreEqual(0.5f, e.WindedBelow, Delta);
+        Assert.AreEqual(0.25f, e.TiredBelow, Delta);
+        Assert.AreEqual(0.04f, e.Hysteresis, Delta);
+        Assert.AreEqual(0.25f, e.RecoverAt, Delta);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [DataTestMethod]
+    [DataRow("pool", "base", "0", DisplayName = "a pool of 0 would exhaust every soldier at once")]
+    [DataRow("pool", "base", "NaN")]
+    [DataRow("pool", "perTier", "-5")]
+    [DataRow("costs", "swingBase", "-1", DisplayName = "a negative cost would give stamina back")]
+    [DataRow("costs", "parry", "Infinity")]
+    [DataRow("costs", "shieldPerDamage", "3")]
+    [DataRow("run", "drainPerSecond", "-0.1")]
+    [DataRow("run", "floor", "1.5")]
+    [DataRow("run", "speedThreshold", "0")]
+    [DataRow("regen", "perSecond", "0", DisplayName = "no regeneration would lock an exhausted soldier for good")]
+    [DataRow("regen", "perSecond", "NaN")]
+    [DataRow("regen", "exhausted", "0")]
+    [DataRow("regen", "pauseSeconds", "-2")]
+    [DataRow("bands", "windedBelow", "1.2")]
+    [DataRow("bands", "recoverAt", "0")]
+    [DataRow("bands", "hysteresis", "0.9")]
+    public void GetTuning_EconomyValueOutOfRange_GivesItsDefaultAndWarns(string section, string key, string value)
+    {
+        WriteConfig("{ \"" + section + "\": { \"" + key + "\": " + value + " } }");
+
+        var tuning = _sut.GetTuning();
+
+        AssertEconomyEquals(StaminaEconomy.Default, tuning.Economy);
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains(section + "." + key)));
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("one or more")));
+    }
+
+    [TestMethod]
+    public void GetTuning_MisspelledEconomyName_Warns_AndTheRealValueKeepsItsDefault()
+    {
+        // Without the warning a typo loads the default and the log says the file loaded.
+        WriteConfig("{ \"costs\": { \"swingbase\": 9 } }");
+
+        var tuning = _sut.GetTuning();
+
+        Assert.AreEqual(StaminaEconomy.Default.SwingBase, tuning.Economy.SwingBase, Delta);
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("costs.swingbase") && m.Contains("not a known setting")));
+    }
+
+    [TestMethod]
+    public void GetTuning_SwingMinimumAboveItsMaximum_PutsBothBack()
+    {
+        WriteConfig("{ \"costs\": { \"swingMin\": 20, \"swingMax\": 10 } }");
+
+        var e = _sut.GetTuning().Economy;
+
+        Assert.AreEqual(StaminaEconomy.Default.SwingMin, e.SwingMin, Delta);
+        Assert.AreEqual(StaminaEconomy.Default.SwingMax, e.SwingMax, Delta);
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("costs.swingMin") && m.Contains("above")));
+    }
+
+    [TestMethod]
+    public void GetTuning_ShieldBaseAboveItsMaximum_PutsBothBack()
+    {
+        WriteConfig("{ \"costs\": { \"shieldBase\": 30, \"shieldMax\": 10 } }");
+
+        var e = _sut.GetTuning().Economy;
+
+        Assert.AreEqual(StaminaEconomy.Default.ShieldBase, e.ShieldBase, Delta);
+        Assert.AreEqual(StaminaEconomy.Default.ShieldMax, e.ShieldMax, Delta);
+    }
+
+    [DataTestMethod]
+    [DataRow("\"windedBelow\": 0.3, \"tiredBelow\": 0.5", DisplayName = "Tired above Winded")]
+    [DataRow("\"tiredBelow\": 0.3, \"hysteresis\": 0.05, \"recoverAt\": 0.5", DisplayName = "a recovered soldier would land above Tired and flap")]
+    public void GetTuning_BandEdgesOutOfOrder_PutsAllFourBack(string bands)
+    {
+        WriteConfig("{ \"bands\": { " + bands + " } }");
+
+        var e = _sut.GetTuning().Economy;
+
+        Assert.AreEqual(StaminaEconomy.Default.WindedBelow, e.WindedBelow, Delta);
+        Assert.AreEqual(StaminaEconomy.Default.TiredBelow, e.TiredBelow, Delta);
+        Assert.AreEqual(StaminaEconomy.Default.Hysteresis, e.Hysteresis, Delta);
+        Assert.AreEqual(StaminaEconomy.Default.RecoverAt, e.RecoverAt, Delta);
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("bands must keep")));
+    }
+
+    [TestMethod]
+    public void ShippedConfig_EconomyMatchesTheCompiledDefaults()
+    {
+        // The simulated fight (StaminaEconomySimulationTests) runs on the compiled defaults: the shipped file must
+        // be the same numbers, or the game would run an economy no test has seen.
+        var repoRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\.."));
+        var pathService = Substitute.For<IPathService>();
+        pathService.ModuleDataPath.Returns(Path.Combine(repoRoot, @"Main\_Module\ModuleData"));
+        var logger = Substitute.For<IModLogger>();
+
+        var tuning = new StaminaConfigProvider(pathService, logger).GetTuning();
+
+        logger.DidNotReceive().LogWarning(Arg.Any<string>());
+        AssertEconomyEquals(StaminaEconomy.Default, tuning.Economy);
+    }
+
+    [TestMethod]
+    public void ShippedConfig_TypedSections_HoldOnlyNamesTheCodeReads()
+    {
+        // The file itself is read here (lessons/testing-qa.md, the parity test must read the FILE): the typed sections
+        // drop a name they do not know without a word, so a mistyped shipped key would load as its default and the
+        // parity tests above would still pass.
+        var repoRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\.."));
+        var root = Newtonsoft.Json.Linq.JObject.Parse(File.ReadAllText(Path.Combine(repoRoot, @"Main\_Module\ModuleData\configs\stamina.json")));
+
+        AssertNamesKnown(root, typeof(StaminaConfig), "stamina.json");
+        var effects = (Newtonsoft.Json.Linq.JObject)root["effects"]!;
+        AssertNamesKnown(effects, typeof(StaminaEffectsConfig), "effects");
+        foreach (var band in effects.Properties())
+            AssertNamesKnown((Newtonsoft.Json.Linq.JObject)band.Value, typeof(StaminaBandConfig), "effects." + band.Name);
+        AssertNamesKnown((Newtonsoft.Json.Linq.JObject)root["tick"]!, typeof(StaminaTickConfig), "tick");
+        var peoples = (Newtonsoft.Json.Linq.JObject)root["peoples"]!;
+        AssertNamesKnown(peoples, typeof(StaminaPeoplesConfig), "peoples");
+        foreach (var table in new[] { "races", "cultures" })
+            foreach (var row in ((Newtonsoft.Json.Linq.JObject)peoples[table]!).Properties())
+                AssertNamesKnown((Newtonsoft.Json.Linq.JObject)row.Value, typeof(StaminaPeopleConfig), "peoples." + table + "." + row.Name);
+    }
+
+    // A name that starts with "_" is a comment key.
+    private static void AssertNamesKnown(Newtonsoft.Json.Linq.JObject section, Type shape, string where)
+    {
+        var known = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var property in shape.GetProperties())
+            known.Add(property.Name);
+        foreach (var property in section.Properties())
+            Assert.IsTrue(property.Name.StartsWith("_", StringComparison.Ordinal) || known.Contains(property.Name),
+                where + " holds '" + property.Name + "', which " + shape.Name + " does not read");
+    }
+
     [TestMethod]
     public void Enabled_NoMcm_IsOffAsTheCompiledDefault()
     {

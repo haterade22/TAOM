@@ -48,4 +48,36 @@ public class StaminaLockRulesTests
         Assert.AreEqual(start, step.StartAiStrip, "start");
         Assert.AreEqual(stop, step.StopAiStrip, "stop");
     }
+
+    // The counters behind the taom.stamina.lock check: only a band the rules decided may count, or a console force
+    // or an MCM switch would pass or fail the check by itself.
+    [DataTestMethod]
+    [DataRow(StaminaBand.Tired, StaminaBand.Exhausted, true, true, false, true, false, true, DisplayName = "the rules exhaust a soldier")]
+    [DataRow(StaminaBand.Tired, StaminaBand.Exhausted, false, true, false, false, false, true, DisplayName = "the console forces a soldier Exhausted: not an exhaustion")]
+    [DataRow(StaminaBand.Exhausted, StaminaBand.Tired, true, true, true, false, true, false, DisplayName = "a soldier the rules exhausted recovers")]
+    [DataRow(StaminaBand.Exhausted, StaminaBand.Tired, true, false, false, false, false, false, DisplayName = "a soldier the console exhausted comes back: no entry counted, so no recovery")]
+    [DataRow(StaminaBand.Exhausted, StaminaBand.Fresh, false, true, true, false, false, false, DisplayName = "an MCM switch or the console frees an Exhausted soldier: not a recovery")]
+    [DataRow(StaminaBand.Exhausted, StaminaBand.Exhausted, true, false, false, false, false, true, DisplayName = "auto leaves him Exhausted: his 15 s start now, not at the force")]
+    [DataRow(StaminaBand.Exhausted, StaminaBand.Exhausted, true, true, true, false, false, false, DisplayName = "still Exhausted under the rules: the clock runs on")]
+    [DataRow(StaminaBand.Exhausted, StaminaBand.Exhausted, false, true, true, false, false, false, DisplayName = "forced while Exhausted")]
+    [DataRow(StaminaBand.Fresh, StaminaBand.Winded, true, true, false, false, false, false, DisplayName = "a band change away from Exhausted")]
+    public void Tally_OnlyABandTheRulesDecidedCounts(StaminaBand before, StaminaBand after, bool byRules, bool wasByRules, bool entryCounted,
+        bool entered, bool recovered, bool startClock)
+    {
+        var tally = StaminaLockRules.Tally(before, after, byRules, wasByRules, entryCounted);
+
+        Assert.AreEqual(entered, tally.Entered, "entered");
+        Assert.AreEqual(recovered, tally.Recovered, "recovered");
+        Assert.AreEqual(startClock, tally.StartClock, "start clock");
+    }
+
+    [TestMethod]
+    public void Tally_AnEntryStaysCountedWhileTheSoldierIsExhausted_AndIsForgottenWhenHeLeaves()
+    {
+        Assert.IsTrue(StaminaLockRules.Tally(StaminaBand.Tired, StaminaBand.Exhausted, true, true, false).EntryCounted);
+        Assert.IsTrue(StaminaLockRules.Tally(StaminaBand.Exhausted, StaminaBand.Exhausted, false, true, true).EntryCounted,
+            "a force on top of a real exhaustion keeps the entry, so his later recovery under the rules counts");
+        Assert.IsFalse(StaminaLockRules.Tally(StaminaBand.Tired, StaminaBand.Exhausted, false, true, false).EntryCounted);
+        Assert.IsFalse(StaminaLockRules.Tally(StaminaBand.Exhausted, StaminaBand.Tired, true, true, true).EntryCounted);
+    }
 }

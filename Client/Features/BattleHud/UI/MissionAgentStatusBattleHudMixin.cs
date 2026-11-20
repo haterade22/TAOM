@@ -4,6 +4,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.ViewModelCollection;
+using TAOM.Features.Stamina.Hooks;
 
 namespace TAOM.Features.BattleHud.UI;
 
@@ -14,6 +15,7 @@ namespace TAOM.Features.BattleHud.UI;
 // comes from MissionAgentStatusCareerMixin. The ammo capsule's count and alert are the VM's own
 // AmmoCount and IsAmmoCountAlertEnabled; this adds only its icon and place (BattleHudAmmoMapper).
 // HudColourMode carries the Accessibility colour option to the ring widget (BattleHudColourPalette).
+// The stamina bar (#1497) reads the player's current soldier through StaminaHooks.TryRead each refresh.
 [ViewModelMixin("Tick")]
 internal class MissionAgentStatusBattleHudMixin : BaseViewModelMixin<MissionAgentStatusVM>
 {
@@ -28,6 +30,10 @@ internal class MissionAgentStatusBattleHudMixin : BaseViewModelMixin<MissionAgen
     private float _hudAmmoTop = BattleHudGeometry.AmmoCapsuleTop(1);
     private float _hudAmmoNumberOffsetX;
     private int _hudColourMode;
+    private bool _hudStaminaVisible;
+    private int _hudStaminaHeight;
+    private string _hudStaminaColour = BattleHudStaminaMapper.FreshColour;
+    private bool _showStaminaBar = true;
 
     // The colour option is read again every this many refreshes (one a frame, so about half a second),
     // starting with the first. MCM's Instance walks its settings containers on each call, too much for
@@ -49,6 +55,7 @@ internal class MissionAgentStatusBattleHudMixin : BaseViewModelMixin<MissionAgen
         {
             _refreshesUntilSettingsRead = RefreshesPerSettingsRead;
             HudColourMode = ColourModeIndex(TaomSettings.Instance);
+            _showStaminaBar = TaomSettings.Instance?.ShowStaminaBar ?? true;
         }
 
         var state = BattleHudStateMapper.Map(new BattleHudInput(
@@ -73,6 +80,12 @@ internal class MissionAgentStatusBattleHudMixin : BaseViewModelMixin<MissionAgen
         HudAmmoIsJavelin = ammo.Icon == BattleHudAmmoIcon.Javelin;
         HudAmmoTop = ammo.Top;
         HudAmmoNumberOffsetX = ammo.NumberOffsetX;
+
+        var hasStamina = StaminaHooks.TryRead(Mission.Current?.MainAgent, out var staminaShare, out var staminaBand);
+        var stamina = BattleHudStaminaMapper.Map(_showStaminaBar, hasStamina, staminaShare, staminaBand);
+        HudStaminaVisible = stamina.IsVisible;
+        HudStaminaHeight = stamina.Height;
+        HudStaminaColour = stamina.Colour;
     }
 
     /// <summary>The battle HUD colour option as the widget's mode index: no settings, no dropdown or an
@@ -165,6 +178,28 @@ internal class MissionAgentStatusBattleHudMixin : BaseViewModelMixin<MissionAgen
     {
         get => _hudColourMode;
         set { if (_hudColourMode != value) { _hudColourMode = value; OnPropertyChanged(nameof(HudColourMode)); } }
+    }
+
+    [DataSourceProperty]
+    public bool HudStaminaVisible
+    {
+        get => _hudStaminaVisible;
+        set { if (_hudStaminaVisible != value) { _hudStaminaVisible = value; OnPropertyChanged(nameof(HudStaminaVisible)); } }
+    }
+
+    /// <summary>Pixels of the stamina fill, 0 to BattleHudStaminaMapper.TrackHeight.</summary>
+    [DataSourceProperty]
+    public int HudStaminaHeight
+    {
+        get => _hudStaminaHeight;
+        set { if (_hudStaminaHeight != value) { _hudStaminaHeight = value; OnPropertyChanged(nameof(HudStaminaHeight)); } }
+    }
+
+    [DataSourceProperty]
+    public string HudStaminaColour
+    {
+        get => _hudStaminaColour;
+        set { if (_hudStaminaColour != value) { _hudStaminaColour = value; OnPropertyChanged(nameof(HudStaminaColour)); } }
     }
 
     [DataSourceProperty]

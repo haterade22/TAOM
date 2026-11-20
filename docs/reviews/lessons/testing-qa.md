@@ -2937,3 +2937,11 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 The #1223 tests called a pure helper on `CustomAttacksUtils`. Any static call runs its explicit static constructor, which binds the engine and prints through `Debug`, so the tests needed `RequiresGame`. The same change moved lines in that file, and three `file:line` pins in a comment, a test message and a feature doc went stale; only the reflection pin has a gate.
 - **Prevent:** before you tag a test of a pure helper as engine-free, check whether its class has a static constructor. After you insert lines in a file, `grep -rn '<File>.cs:'` for its pins.
 - **Source:** the #1223 tier 1 review, Data flow T9 and T10.
+
+### A check line counts only what the rules did, never what the console or a switch did (#1497, 2026-11-19)
+
+**Why missed:** the `taom.stamina.lock` check reads three counters: soldiers exhausted, recovered and stuck. The console command that forces a band goes through the same band-change code as the rules, so a forced Exhausted counted as an exhaustion, `auto` counted as a recovery, and a soldier the force left below the recovery edge was "stuck" the moment he went back to the rules, because his clock had started at the force. The feature doc's own spikes force bands in a battle whose check lines are then judged, so the proof run would have failed, or passed, on the tester's commands alone.
+
+**Prevent:** a counter that feeds a `[Check]` line has one writer, and that writer knows who decided the state: the rules, a console command, a setting. Count only the rules' transitions; start a time limit when the rules take over, not when the state was first seen. Put the decision in a pure function with a row per transition (`StaminaLockRules.Tally`), and when a feature has both a cheat and a check, walk the cheat's sequences through the check before the manifest is written.
+
+**Source:** [rca-stamina-phases-1-2-2026-11-19.md](../rca-stamina-phases-1-2-2026-11-19.md) row 2 (lens 5).

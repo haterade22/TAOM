@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace TAOM.Features.Stamina.Domain;
@@ -8,11 +9,62 @@ namespace TAOM.Features.Stamina.Domain;
 /// </summary>
 public sealed class StaminaConfig
 {
+    // The economy sections are name to value maps, so the provider can warn about a name it does not know.
+    [JsonProperty("pool")]
+    public Dictionary<string, float?>? Pool { get; set; }
+
+    [JsonProperty("costs")]
+    public Dictionary<string, float?>? Costs { get; set; }
+
+    [JsonProperty("run")]
+    public Dictionary<string, float?>? Run { get; set; }
+
+    [JsonProperty("regen")]
+    public Dictionary<string, float?>? Regen { get; set; }
+
+    [JsonProperty("bands")]
+    public Dictionary<string, float?>? Bands { get; set; }
+
+    [JsonProperty("armour")]
+    public Dictionary<string, float?>? Armour { get; set; }
+
+    [JsonProperty("peoples")]
+    public StaminaPeoplesConfig? Peoples { get; set; }
+
     [JsonProperty("effects")]
     public StaminaEffectsConfig? Effects { get; set; }
 
     [JsonProperty("tick")]
     public StaminaTickConfig? Tick { get; set; }
+}
+
+public sealed class StaminaPeoplesConfig
+{
+    /// <summary>Keyed by race name, as the game registers it (human, elf, dwarf, orc, ...).</summary>
+    [JsonProperty("races")]
+    public Dictionary<string, StaminaPeopleConfig?>? Races { get; set; }
+
+    /// <summary>Keyed by culture id (gondor, arthedain, ...).</summary>
+    [JsonProperty("cultures")]
+    public Dictionary<string, StaminaPeopleConfig?>? Cultures { get; set; }
+
+    [JsonProperty("multiplierMin")]
+    public float? MultiplierMin { get; set; }
+
+    [JsonProperty("multiplierMax")]
+    public float? MultiplierMax { get; set; }
+}
+
+public sealed class StaminaPeopleConfig
+{
+    [JsonProperty("pool")]
+    public float? Pool { get; set; }
+
+    [JsonProperty("regen")]
+    public float? Regen { get; set; }
+
+    [JsonProperty("exempt")]
+    public bool? Exempt { get; set; }
 }
 
 public sealed class StaminaEffectsConfig

@@ -19,6 +19,8 @@ namespace TAOM.Features.CareerSystem.UI;
 // rim draw over its top and it tucks under the circle at 6 o'clock (BattleHudGeometry.AmmoCapsuleTop).
 // Its number is native's own AgentAmmoTextWidget bound to AmmoCount and IsAmmoCountAlertEnabled, so the
 // low-ammo alert is unchanged; the native counter is hidden (BattleHudHideNativeAmmoCounter).
+// The stamina bar (#1497, TaomBattleHudStamina) is a thin upright track left of the circle: a dark track and a
+// fill whose height and colour come from BattleHudStaminaMapper through the HUD mixin.
 // TaomBattleHudRingWidget draws the rings, rims, centre disk and leaf; the career glyph and the
 // configured activation key sit on top. Every widget ignores events, so clicks pass to the scene.
 [PrefabExtension("AgentStatus",
@@ -55,6 +57,16 @@ internal class CareerEnergyBarPrefab : PrefabExtensionInsertPatch
                 PositionXOffset=""@HudAmmoNumberOffsetX"" IntText=""@AmmoCount"" IsAlertEnabled=""@IsAmmoCountAlertEnabled""
                 Brush=""AgentAmmoCount.Text"" Brush.FontSize=""22""
                 Brush.TextHorizontalAlignment=""Center"" Brush.TextVerticalAlignment=""Center"" />
+      </Children>
+    </Widget>
+
+    <Widget Id=""TaomBattleHudStamina"" DoNotAcceptEvents=""true"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed""
+            SuggestedWidth=""10"" SuggestedHeight=""124"" HorizontalAlignment=""Left"" VerticalAlignment=""Center""
+            PositionXOffset=""-18"" Sprite=""BlankWhiteSquare_9"" Color=""#000000A0"" IsVisible=""@HudStaminaVisible"">
+      <Children>
+        <Widget DoNotAcceptEvents=""true"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed""
+                SuggestedWidth=""6"" SuggestedHeight=""@HudStaminaHeight"" HorizontalAlignment=""Center"" VerticalAlignment=""Bottom""
+                MarginBottom=""2"" Sprite=""BlankWhiteSquare_9"" Color=""@HudStaminaColour"" />
       </Children>
     </Widget>
 

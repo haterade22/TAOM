@@ -1,0 +1,62 @@
+# In-game checks for #1497 (combat stamina), read by tools/ingame_verdict.py.
+# The lines come from Main/Features/Stamina/StaminaChecks.cs: "armed" at a mission's first tick
+# (StaminaMissionLogic.DecideArmed), "lock" and "refresh" at its end (OnRemoveBehavior). The key is the mission's
+# serial (m1, m2, ...), so each battle writes its own lines.
+# armed: pass when the mission runs the stamina rules; skip reason=toggle-off with the MCM switch off, or
+#   reason=gate-closed in a mission that is not a field battle, siege, sally-out or Fords of War match.
+# lock: entered= the times a soldier became Exhausted, recovered= the times one came back, stuck= the soldiers still
+#   Exhausted after 15 s (a recovery takes about 4 to 6 s). It passes with a recovery and nobody stuck, fails with
+#   anyone stuck, and skips when nobody was Exhausted or nobody lived to recover. A band the console forced
+#   (taom.set_stamina) and a soldier an MCM switch exempted are outside these counts.
+# refresh: refreshes= the stat recomputes, slowest_batch_ms= the slowest batch of them in one frame, on the main
+#   thread. It fails over 1 ms and skips when no band ever changed.
+# The unattended proof: /game-run (the Fords of War match) with Enable Combat Stamina on. It covers AI soldiers only.
+issue = 1497
+title = "Combat stamina: every action costs stamina, and an exhausted agent must recover"
+# fixed_in is the branch base, the newest commit of this work's history that is on origin: the feature commits are
+# local until the branch is pushed. A build that holds the base but not the feature writes no [Check] line, and every
+# check below is absence = "not-reached", so such a build is never judged.
+fixed_in = "24db60d7d"
+logs = ["taom"]
+
+[[check]]
+id = "taom.stamina.armed"
+needs = "a field battle, siege, sally-out or Fords of War match with Enable Combat Stamina on"
+reached = ['\[Check\] id=taom\.stamina\.armed result=(pass|fail)']
+pass = ['\[Check\] id=taom\.stamina\.armed result=pass armed=true$']
+fail = ['\[Check\] id=taom\.stamina\.armed result=fail', '\[Stamina\] OnMissionTick error']
+absence = "not-reached"
+
+[[check]]
+id = "taom.stamina.lock"
+needs = "a battle with Enable Combat Stamina on in which at least one soldier becomes Exhausted and lives to recover"
+reached = ['\[Check\] id=taom\.stamina\.lock result=(pass|fail)']
+pass = ['\[Check\] id=taom\.stamina\.lock result=pass entered=[1-9][0-9]* recovered=[1-9][0-9]* stuck=0$']
+fail = ['\[Check\] id=taom\.stamina\.lock result=fail', '\[Stamina\] the mission end failed']
+absence = "not-reached"
+
+[[check]]
+id = "taom.stamina.refresh"
+needs = "a battle with Enable Combat Stamina on in which at least one soldier changes band"
+reached = ['\[Check\] id=taom\.stamina\.refresh result=(pass|fail)']
+pass = ['\[Check\] id=taom\.stamina\.refresh result=pass refreshes=[1-9][0-9]* slowest_batch_ms=[0-9]+\.[0-9]+$']
+fail = ['\[Check\] id=taom\.stamina\.refresh result=fail']
+absence = "not-reached"
+
+[[human]]
+claim = "On foot, the stamina bar falls with each swing and each blow you stop, changes colour as you tire, and rises when you stop attacking"
+
+[[human]]
+claim = "After swinging without pause for about half a minute you are exhausted: you cannot attack, block, jump or kick, you walk slowly, and you are back in about 5 seconds"
+
+[[human]]
+claim = "An exhausted enemy soldier stops attacking and blocking, walks, and fights again a few seconds later; nobody is left standing helpless for long"
+
+[[human]]
+claim = "On a horse, exhaustion stops your attacks and blocks but the horse keeps its speed and its jump"
+
+[[human]]
+claim = "Fresh troops sent in against troops that have fought for two minutes win by a clearly larger margin than with the switch off"
+
+[[human]]
+claim = "A Marshal's Word hold still works for archers, before and after some of them were exhausted"

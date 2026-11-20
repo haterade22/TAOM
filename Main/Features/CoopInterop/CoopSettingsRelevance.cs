@@ -239,6 +239,8 @@ public static class CoopSettingsRelevance
         "WarChronicleStoryMissions",
         // The battle HUD colour option: the colours of this client's own health, mount and shield rings, nothing else.
         "BattleHudColourMode",
+        // #1497: draws or hides the player's own stamina bar; stamina itself is EnableStamina.
+        "ShowStaminaBar",
         // The faction picker shapes the local player's own character creation, which each peer runs
         // for themselves; the co-op layer replicates the hero that results, not the screen.
         "FrontEndFactionScreen",
