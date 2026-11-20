@@ -103,7 +103,7 @@ public class ReflectionSiteBindingTests
     // --- Layered banner editor: the view's refresh callback it calls after each edit (TaomBannerEditorVM.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.BannerEditorVM", "BannerEditorVM", "_refresh", "Field", "TaomBannerEditorVM.cs:39")]
     // --- SpecialResources transactional spend (PartyScreenLogic_AddCommand_Patch.cs) ---
-    [DataRow("TaleWorlds.CampaignSystem.Party.PartyScreenLogic+PartyCommand", "PartyCommand", "TotalNumber", "Member", "PartyScreenLogic_AddCommand_Patch.cs:72")]
+    [DataRow("TaleWorlds.CampaignSystem.Party.PartyScreenLogic+PartyCommand", "PartyCommand", "TotalNumber", "Member", "PartyScreenLogic_AddCommand_Patch.cs:117")]
     // --- SpecialResources encyclopedia troop badge (EncyclopediaUnitBadgeMixin.cs, #590) ---
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Items.EncyclopediaUnitVM", "EncyclopediaUnitVM", "_character", "Field", "EncyclopediaUnitBadgeMixin.cs:32")]
     // --- EditorCacheRebuild distance-cache reflection web (NavigationCacheAdapter.cs) ---

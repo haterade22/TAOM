@@ -17,6 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import taom_schema as ts  # noqa: E402
 import taom_query as tq    # noqa: E402
+import validate_moduledata as vm  # noqa: E402
 
 SCHEMA_DIR = Path(__file__).resolve().parent.parent / "schemas"
 
@@ -158,12 +159,13 @@ class ModuleDataQueryTests(unittest.TestCase):
         self.assertTrue(any(i["code"] == "BROKEN_ITEM_REF" for i in out["issues"]))
         # code filter narrows
         only = self.q.validate(codes=["UNKNOWN_CULTURE"])
-        self.assertTrue(all(i["code"] == "UNKNOWN_CULTURE" for i in only["issues"]))
+        self.assertTrue(all(i["code"] in ("UNKNOWN_CULTURE", vm.PARTIAL_RUN_CODE) for i in only["issues"]))
+        self.assertTrue(any(i["code"] == vm.PARTIAL_RUN_CODE for i in out["issues"]), "no install was given, and the result must say so")
 
     def test_validate_checks_the_shipped_troop_baseline_for_the_repo_tree_only(self):
         """TROOP_ID_REMOVED needs the baseline file, which describes the repo's own troops."""
-        repo_q = tq.ModuleDataQuery(tq._REPO_MODULEDATA, self.reg, [])
-        for query, want in ((repo_q, tq._SHIPPED_TROOP_IDS), (self.q, None)):
+        repo_q = tq.ModuleDataQuery(vm.MODULEDATA, self.reg, [])
+        for query, want in ((repo_q, vm.SHIPPED_TROOP_IDS), (self.q, None)):
             with mock.patch.object(tq.ts, "Validator") as validator:
                 validator.return_value.run.return_value = []
                 query.validate()

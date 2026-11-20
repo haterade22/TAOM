@@ -29,6 +29,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -45,6 +46,29 @@ def _codes(issues):
 # Reference extraction                                                         #
 # --------------------------------------------------------------------------- #
 class ExtractRefsTests(unittest.TestCase):
+    def test_extract_refs_skips_the_languages_folder(self):
+        """A language file holds <string> rows, never an item's art (#623)."""
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "Languages" / "DE").mkdir(parents=True)
+            (root / "Languages" / "DE" / "strings.xml").write_text('<a mesh="from_languages" />\n', encoding="utf-8")
+            (root / "items.xml").write_text('<Item id="i" mesh="from_items" />\n', encoding="utf-8")
+            names = sorted(r.name for r in vm.extract_refs(root))
+        self.assertEqual(names, ["from_items"])
+
+    def test_mesh_element_and_prefab_refs_carry_their_source_line(self):
+        # Pins the <Mesh name> and prefab= loops' line numbers, which no test read before the #623
+        # line-count change; a comment over three lines sits in front of them.
+        xml = ('<Items>\n'                                    # 1
+               '  <!-- a\n   b\n   c -->\n'                    # 2-4
+               '  <Item id="a" prefab="pf_a">\n'               # 5
+               '    <meshes><Mesh name="m_a" /></meshes>\n'    # 6
+               '  </Item>\n'                                   # 7
+               '  <Item id="b" mesh="sk_b" />\n'               # 8
+               '</Items>\n')
+        lines = {(r.kind, r.name): r.line for r in vm.extract_refs_from_text(xml, "x.xml")}
+        self.assertEqual(lines, {("prefab", "pf_a"): 5, ("visual_mesh", "m_a"): 6, ("visual_mesh", "sk_b"): 8})
+
     def test_extracts_all_six_attrs_with_kind_and_line(self):
         xml = (
             '<?xml version="1.0" encoding="utf-8"?>\n'          # 1
@@ -458,6 +482,24 @@ class TpacModuleFallbackTests(unittest.TestCase):
     def test_missing_module_is_not_an_error(self):
         self.assertEqual(vm.tpac_paths_for_modules(self.game, ["Absent"]), [])
 
+    def test_the_default_modules_are_every_module_loaded_for_art(self):
+        """#623: the engine resolves a mesh or a body from every loaded module; TAOM and TAOM_Map were
+        not scanned, so art only they ship would read as missing."""
+        self.assertEqual(sorted(vm.DEFAULT_TPAC_MODULES),
+                         sorted(["LOTRLOME_Armory", "TAOM", "TAOM_Map", "Native", "SandBoxCore", "SandBox"]))
+
+    def test_every_module_taom_depends_on_is_scanned_for_art(self):
+        """The list is kept by hand, so a module TAOM comes to depend on must join it or be named here
+        as one that ships no .tpac (both had no AssetPackages/ and no Assets/ on the desktop install,
+        2026-11-19). Ids compare without case: SubModule.xml spells it Sandbox, the folder is SandBox."""
+        import xml.etree.ElementTree as ET
+        ships_no_packs = {"taom.dependencies", "custombattle"}
+        submodule = ET.parse(vm.REPO_ROOT / "Main" / "_Module" / "SubModule.xml").getroot()
+        depended = {e.get("Id").lower() for e in submodule.iter("DependedModule")}
+        self.assertTrue(depended, "no DependedModule read from SubModule.xml")
+        scanned = {m.lower() for m in vm.DEFAULT_TPAC_MODULES}
+        self.assertEqual(depended - scanned - ships_no_packs, set())
+
 
 # --------------------------------------------------------------------------- #
 # Tier C: collision-body raw-byte scan                                         #
@@ -526,6 +568,21 @@ class TierCBodyScanTests(unittest.TestCase):
         issues = vm.classify(refs, present=None, rgl=None, scan_bodies=True,
                              body_tpac_paths=[p])
         self.assertNotIn("MISSING_BODY", _codes(issues))
+
+    def test_fallback_byte_scans_only_the_packs_that_failed_to_parse(self):
+        """#623: a parsed pack's TOC already lists its bodies (#352), so only a pack that failed to
+        parse can hide one. The CLI passed every pack, and byte-scanning 4,611 of them took 110-119 s."""
+        good = self._tpac_with_token(b"bo_elsewhere")
+        bad = self._tpac_with_token(b"bo_hidden")
+        refs = vm.extract_refs_from_text('<Item id="sw" body_name="bo_hidden" />\n', "x.xml")
+        present = vm.PresentSet(physicsshapes={"bo_other"}, tpac_paths=[str(good), str(bad)],
+                                unparsed=[(str(bad), "suspicious udep_count")])
+        for paths in (None, [good, bad]):
+            with self.subTest(body_tpac_paths=paths), \
+                 mock.patch.object(vm, "bodies_present_in_tpacs", wraps=vm.bodies_present_in_tpacs) as scan:
+                issues = vm.classify(refs, present, None, scan_bodies=True, body_tpac_paths=paths)
+                self.assertEqual([Path(p) for p in scan.call_args.args[1]], [bad])
+                self.assertNotIn("MISSING_BODY", _codes(issues))
 
 
 # --------------------------------------------------------------------------- #

@@ -73,6 +73,7 @@ Exit code (mirrors validate_moduledata.py): 1 if any ERROR (or any WARNING with
 from __future__ import annotations
 
 import argparse
+import bisect
 import json
 import os
 import re
@@ -94,10 +95,12 @@ DEFAULT_GAME = Path(
 # LOTRLOME_items/ missed both v2.0.8 hang typos (#352) — this tool was
 # body-aware the whole time, just pointed one directory too narrow.
 DEFAULT_ITEMS = DEFAULT_GAME / "Modules" / "LOTRLOME_Armory" / "ModuleData"
-# Shared meshes live outside the Armory (Native/SandBoxCore), so the present-set
-# is the UNION across these modules' packages (each module's loose Assets/ tree,
-# else its AssetPackages/: tpac_paths_for_modules).
-DEFAULT_TPAC_MODULES = ["LOTRLOME_Armory", "Native", "SandBoxCore"]
+# Every module the client loads that ships packs an item's art can resolve from: TAOM's dependency chain
+# (Main/_Module/SubModule.xml: Native, SandBoxCore, Sandbox; TAOM.Dependencies and CustomBattle ship no
+# packs), TAOM itself, and the two live modules TAOM authors into. The present-set is their UNION
+# (each module's loose Assets/ tree, else its AssetPackages/: tpac_paths_for_modules).
+# validate_moduledata reads this same list (#623).
+DEFAULT_TPAC_MODULES = ["LOTRLOME_Armory", "TAOM", "TAOM_Map", "Native", "SandBoxCore", "SandBox"]
 DEFAULT_RGL_LOG_DIR = Path(r"C:\ProgramData\Mount and Blade II Bannerlord\logs")
 
 # Meshes accepted as dead on purpose: the art is gone, no surviving asset can
@@ -211,8 +214,11 @@ class MeshRef:
     culture: str       # folder under LOTRLOME_items/, or "" if not derivable
 
 
-def _lineno(text: str, pos: int) -> int:
-    return text.count("\n", 0, pos) + 1
+def _line_index(text: str):
+    """Position -> 1-based line for `text`. The newline offsets are found once, so each lookup is a
+    binary search, not a rescan of the prefix (that rescan was quadratic over a file's refs, #623)."""
+    newlines = [m.start() for m in re.finditer("\n", text)]
+    return lambda pos: bisect.bisect_left(newlines, pos) + 1
 
 
 # A <CraftingPiece> owns its <BladeData body_name> the way an <Item> owns its body_name. Without
@@ -272,27 +278,28 @@ def extract_refs_from_text(text: str, rel: str) -> list:
     stripped = _COMMENT_RE.sub(lambda m: re.sub(r"[^\n]", " ", m.group(0)), text)
     line_id = _entry_id_by_line(text)
     culture = _culture_from_path(rel)
+    line_of = _line_index(stripped)
     refs = []
 
     for m in _ATTR_RE.finditer(stripped):
         attr, val = m.group(1), m.group(2)
         if not val:
             continue
-        line = _lineno(stripped, m.start())
+        line = line_of(m.start())
         refs.append(MeshRef(
             name=val, attr=attr, kind=_ATTR_KIND[attr], file=rel, line=line,
             item_id=line_id.get(line, ""), culture=culture,
         ))
 
     for m in _MESH_ELEMENT_RE.finditer(stripped):
-        line = _lineno(stripped, m.start())
+        line = line_of(m.start())
         refs.append(MeshRef(
             name=m.group(1), attr="Mesh", kind="visual_mesh", file=rel, line=line,
             item_id=line_id.get(line, ""), culture=culture,
         ))
 
     for m in _PREFAB_RE.finditer(stripped):
-        line = _lineno(stripped, m.start())
+        line = line_of(m.start())
         refs.append(MeshRef(
             name=m.group(1), attr="prefab", kind="prefab", file=rel, line=line,
             item_id=line_id.get(line, ""), culture=culture,
@@ -307,13 +314,16 @@ def extract_refs(items_root: Path) -> list:
     refs = []
     for xml in sorted(items_root.rglob("*.xml")):
         try:
-            text = xml.read_text(encoding="utf-8", errors="ignore")
-        except OSError:
-            continue
-        try:
             rel = xml.relative_to(items_root).as_posix()
         except ValueError:
             rel = xml.as_posix()
+        # A language file holds <string> rows, never an item's mesh or body (#623).
+        if rel.split("/", 1)[0] == "Languages":
+            continue
+        try:
+            text = xml.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
         refs.extend(extract_refs_from_text(text, rel))
     return refs
 
@@ -769,8 +779,9 @@ def classify(refs: list,
     present           -- Tier B present-set, or None if Tier B did not run
     rgl               -- Tier A findings, or None if no rgl_log
     scan_bodies       -- run Tier C raw-byte body scan
-    body_tpac_paths   -- .tpac files to byte-scan for Tier C (defaults to
-                         present.tpac_paths)
+    body_tpac_paths   -- .tpac files to byte-scan for Tier C when no TOC is
+                         available (defaults to present.tpac_paths); with a TOC,
+                         only the packs that failed to parse are byte-scanned
     check_allowlist   -- audit KNOWN_DEAD_MESHES for stale entries. Only valid
                          on a FULL scan: "no item references it any more" is
                          true of any subset of refs, so leaving this on by
@@ -842,10 +853,12 @@ def classify(refs: list,
             # Exact: bodies are first-class PhysicsShape TOC items (#352).
             present_bodies = referenced_bodies & present.physicsshapes
             unresolved = referenced_bodies - present_bodies
-            # Only if a pack we needed soft-failed do we fall back to the coarse
-            # byte scan — never assert MISSING on evidence we couldn't read.
+            # Only if a pack we needed soft-failed do we fall back to the coarse byte scan, and then
+            # only of the packs that failed: a parsed pack's TOC already lists its bodies (#352), and
+            # byte-scanning every pack took 110-119 s over 4,611 packs (#623).
             if unresolved and not present.fully_parsed:
-                present_bodies |= bodies_present_in_tpacs(unresolved, scan_paths)
+                present_bodies |= bodies_present_in_tpacs(
+                    unresolved, [Path(p) for p, _ in present.unparsed])
         else:
             # No TOC available (Tier B skipped) — coarse byte scan is all we have.
             present_bodies = bodies_present_in_tpacs(referenced_bodies, scan_paths)
@@ -1137,7 +1150,7 @@ def main() -> int:
     ap.add_argument("--tpac-modules", nargs="+", default=DEFAULT_TPAC_MODULES,
                     help="Module names whose packages form the present-set: each "
                          "module's loose Assets/**/*.tpac, else its AssetPackages/*.tpac "
-                         "(default: LOTRLOME_Armory Native SandBoxCore)")
+                         f"(default: {' '.join(DEFAULT_TPAC_MODULES)})")
     ap.add_argument("--rgl-log", default=None,
                     help="Path to an rgl_log[_errors].txt for Tier A (default: "
                          "auto-discover the newest under the ProgramData logs dir)")

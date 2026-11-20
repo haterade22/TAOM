@@ -105,7 +105,7 @@ z 1.52 against the warg's y -0.108, z 1.51.
 | `troops_gundabad.xml` | `gundabad_lurker` (L16) | `gundabad_wolf_runner` L21, `gundabad_dire_wolf_rider` L26, `gundabad_wolf_lord` L31 | L26 and L31 |
 
 - **Cost:** `upgrade_cost="1" recruit_cost="1" daily_upkeep="0.05"`. The upgrade and upkeep match
-  `mordor_warg_beastmaster`. `recruit_cost` gates a notable purchase. A prisoner recruit is charged afterward with no gate, so it succeeds at a zero balance (#563, open, the same for every elite creature).
+  `mordor_warg_beastmaster`. `recruit_cost` gates a notable purchase. A prisoner recruit in the party screen is clamped to what the balance covers and charged at Done (#563, the same for every troop with a `recruit_cost`).
 - **Skins:** Gundabad rides grey and white. The goblin tree rides black and brown. Horse and HorseHarness draw per
   slot, so a soldier gets either skin.
 - **War Spoils:** `goblin`, `mistymountainorcs` and `bluecraig` joined the resource as Culture and Kingdom, so these

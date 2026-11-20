@@ -1253,3 +1253,15 @@ run (15.8 s on the live install in a probe of the planned code, 2026-11-19).
   its registry build): no pass calls `ts.build_registries`, and a probe of the planned code on the live
   install read `currsize=0` after `validate()` (2026-11-19). A pass that starts building registries
   must clear that cache in `ModuleDataQuery.validate`.
+- Step 10 lets the commit gate accept a collision body that only `TAOM_Map` ships. That holds only while
+  `TAOM_Map` is always loaded with TAOM: `Main/_Module/SubModule.xml` does not declare it as a
+  dependency (and the live `TAOM_Map` SubModule.xml names TAOM only in a load-order
+  `DependedModuleMetadata`, not a `DependedModule`). If TAOM ever runs without
+  `TAOM_Map`, such a body hangs preload and the gate passes it; re-weigh the module list then.
+- Executor's measurement, 2026-11-19, contradicting the `_read_stripped` note above: after
+  `validate()` on the live install the cache held 4398 entries, and the base MCP's
+  `ts.Validator(...).run()` alone (no install, no extra roots) leaves the same 4398, so the cache refill
+  predates this plan; it is `Validator.run`, not a pass. Clearing it after `validate()` is a follow-up.
+- The `Languages/` skip in `validate_mesh_refs.extract_refs` (Step 9) assumes no SubModule.xml
+  `XmlNode` loads items from a `ModuleData/Languages/` path. A module that did would have its refs there
+  go unchecked.

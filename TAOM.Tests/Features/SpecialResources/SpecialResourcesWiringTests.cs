@@ -63,6 +63,17 @@ public class SpecialResourcesWiringTests
     }
 
     [TestMethod]
+    public void RegisterSpecialResources_PartyUpgradeHook_ResolvesWithItsSessionProvider()
+    {
+        // SubModule resolves this hook for Patch26, and since #563 decision A it needs ICoopSessionProvider.
+        var container = BuildContainer();
+
+        var errors = container.Validate(typeof(TAOM.Features.SpecialResources.Hooks.IOnPartyUpgradeResourceCheck));
+
+        Assert.AreEqual(0, errors.Length, string.Join("; ", errors.Select(e => e.Value.Message)));
+    }
+
+    [TestMethod]
     [TestCategory("RequiresGame")]
     public void ResolveEarningService_Twice_ReturnsFreshInstances()
     {

@@ -834,6 +834,8 @@ python tools/validate_moduledata.py --game-modules /nonexistent
 | `registry_sizes()` | `{items, npccharacters, cultures, party_templates}` — confirms the game install was found |
 | `list_schemas()` | the schemas + what each checks |
 
+`validate_moduledata` runs `validate_moduledata.run_all_passes`, the same composition as the CLI (#623), so it takes about as long as a CLI run and returns the same findings. No install, a live module's missing ModuleData or a registry that looks too small comes back as a `PARTIAL_RUN` warning. Two narrower skips still go to the server's stderr only: `ARMOUR_CLASS_TABLE_DRIFT` with no `LOTRLOME_Armory` (the missing Armory root also raises a `PARTIAL_RUN`), and a module that ships no `.tpac`.
+
 **Activation** (one-time; the server can't be loaded mid-session — Claude reads MCP config at startup):
 1. Ensure the `mcp` Python SDK is installed (`python -c "import mcp.server.fastmcp"` — present in this environment).
 2. It is registered in [`.mcp.json`](../../.mcp.json) as the `taom-moduledata` stdio server; each developer enables it in their own untracked `.claude/settings.local.json` → `enabledMcpjsonServers`.
@@ -981,6 +983,31 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-11-19 (#623): the MCP tool `validate_moduledata` now runs every pass through
+  `run_all_passes`, which `main()` also calls; until now it ran the schema engine alone and passed no
+  install path. `CommitGateCoverageTests` checks that every `*_issues` pass is reached from
+  `run_all_passes` and that `main()` and `ModuleDataQuery.validate` both call it;
+  `RunAllPassesParityTests` pins that the CLI and the MCP tool report the same codes. New code
+  `PARTIAL_RUN`: no install, a live module's missing ModuleData or a registry that looks too small,
+  returned as a warning by the MCP tool whatever its `codes` filter (the two stderr-only skips are
+  named in the MCP server section). The CLI's stderr
+  lines keep their text; the no-install and missing-root warnings now print after the `Registry:` line.
+  `MISSING_COLLISION_BODY` and `MISSING_VISUAL_MESH` now resolve against TAOM and `TAOM_Map` packs too
+  (the repo module for TAOM); on the live install the report was unchanged (0 added, 0 removed).
+  The commit hook `check-moduledata-validation.sh` now answers a validator exit 2 (no install, no
+  ModuleData, a usage error) with an UNCHECKED note and the stderr tail beside the tool result; it
+  was a silent `{}`, so a renamed `--code` flag could turn the gate off unseen. Still an allow.
+- 2026-11-19 (#626): `UPGRADE_SKILL_REGRESSION` now judges an upgrade edge with a `skill_template`
+  side instead of skipping it. The character's skills are its SkillSet with the inline rows laid over
+  it, resolved through `sync_lord_inline_skills.effective_skills`; without the install such an edge
+  is skipped and the CLI prints the skip, and a SkillSet read that fails, or finds that the install's
+  vanilla modules define no SkillSet (the installed Native file is an empty stub), is one ERROR (TAOM's own SkillSet files always load, so an empty result could
+  not show an unread install).
+  The two skill writers (`ranged_ladder.planned_skill_edits` and `rebalance_troops.py`) resolve a
+  template through the same function and refuse to write a templated character. On the shipped data
+  the result is unchanged (2026-11-19: 0 errors and 1,823 warnings before and after, 0 of 913
+  indexed upgrade edges with a templated side). The C# `TroopUpgradeSkillMonotonicityTests` still
+  skips templated edges, because CI has no install to read the SkillSets from.
 - 2026-11-14 (#1271): `WORN_ARMOUR_CEILING` and `WORN_ARMOUR_FLOOR` documented above. The two melee codes
   (`MELEE_LADDER_INVERSION`, `MELEE_BLOW_CEILING`) now price the `taom_ph_` placeholders from the validated
   tree's `placeholder_weapons/` files (`taom_schema.price_placeholders`) and judge each against its real
