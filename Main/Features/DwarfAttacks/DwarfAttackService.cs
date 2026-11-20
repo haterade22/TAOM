@@ -31,6 +31,19 @@ public sealed class DwarfAttackService
     }
 
     /// <summary>
+    /// The stamp both cooldowns count from: the later of the two attacks, so either attack starts the cooldown of both
+    /// and a dwarf does one special attack, not one of each. Null when neither fired. A non-finite stamp comes back as
+    /// NaN, which <see cref="IsOffCooldown"/> reads as on cooldown.
+    /// </summary>
+    public float? LatestFired(float? headButtLastFired, float? dropKickLastFired)
+    {
+        if (headButtLastFired is not float headButt) return dropKickLastFired;
+        if (dropKickLastFired is not float dropKick) return headButt;
+        if (!FiniteFloatValidator.IsFinite(headButt) || !FiniteFloatValidator.IsFinite(dropKick)) return float.NaN;
+        return Math.Max(headButt, dropKick);
+    }
+
+    /// <summary>
     /// True when the attack may start: its action resolved (a missing Armory action resolves to act_none, which plays
     /// no attack, and the ready test would read an idle dwarf's empty channel as attacking) and it is off cooldown.
     /// </summary>
