@@ -84,10 +84,10 @@ BLOCKED (one-line reason), REJECTED (one-line rationale).
 | [056](056-agent-removed-off-thread-guards.md) | Missions: defer MissionDiagnosticBehavior's off-thread OnAgentRemoved and OnAgentDeleted writes; correct the thread table | P1 | S | bug | none | MERGED into `bannerlord-1.5.x` (`90fffac02`, 2026-11-19; PR #1473, #607); tier 1 review READY FOR COMMIT; in-game check owed |
 | [057](057-signature-find-first-byte-prefilter.md) | Signature scan: skip to the next first-byte candidate in ClipBudgetSignature.Find, same hits in the same order | P3 | S | perf | none | MERGED into `bannerlord-1.5.x` (`d055b77bc`, 2026-11-19; PR #1486, #784); tier 1 review READY FOR COMMIT |
 | [058](058-isolate-mission-behaviour-registrations.md) | SubModule: isolate each hand-wired mission behaviour registration; a failed build reports to the mission-start guard | P2 | M | bug | none | MERGED into `bannerlord-1.5.x` (`a9c413ab2`, 2026-11-19; PR #1487, #785); tier 1 review READY FOR COMMIT; in-game check owed |
-| [059](059-validate-moduledata-mcp-parity.md) | validate_moduledata: one pass composition for the CLI and the MCP tool, and the #623 follow-ups | P2 | L | bug | none | PLANNED (#623); cold review 2 rounds, clean |
-| [060](060-upgrade-skill-regression-templated-edges.md) | UPGRADE_SKILL_REGRESSION: resolve skill templates and judge templated upgrade edges | P3 | M | bug | none | PLANNED (#626); cold review 2 rounds, revised |
-| [061](061-prisoner-recruit-resource-gate.md) | Special resources: gate prisoner recruitment in the party screen on the recruit cost | P2 | M | bug | none | PLANNED (#563); cold review 1 round, revised |
-| [062](062-riderless-mount-bite-side.md) | Spider and warg bites: resolve a riderless mount's side before the friendly check | P2 | M | bug | none | PLANNED (#594); cold review 1 round, revised |
+| [059](059-validate-moduledata-mcp-parity.md) | validate_moduledata: one pass composition for the CLI and the MCP tool, and the #623 follow-ups | P2 | L | bug | none | merged, PR #1493 (2026-11-19) |
+| [060](060-upgrade-skill-regression-templated-edges.md) | UPGRADE_SKILL_REGRESSION: resolve skill templates and judge templated upgrade edges | P3 | M | bug | none | merged, PR #1494 (2026-11-19) |
+| [061](061-prisoner-recruit-resource-gate.md) | Special resources: gate prisoner recruitment in the party screen on the recruit cost | P2 | M | bug | none | merged, PR #1495 (2026-11-19) |
+| [062](062-riderless-mount-bite-side.md) | Spider and warg bites: resolve a riderless mount's side before the friendly check | P2 | M | bug | none | merged, PR #1496 (2026-11-19) |
 
 Plans 006 and 007 were written as P1 on the assumption that every player pays their boot and load
 seconds. A follow-up measured players at about 1 to 3 s (this desktop runs about 30 times slower), so
