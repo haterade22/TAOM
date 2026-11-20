@@ -10,6 +10,7051 @@
 > [`docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md`](docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md);
 > older ones are in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md).
 
+## v2.0.41 (2026-11-20)
+
+Commits since v2.0.40: 274 (274 with the version label, 0 without).
+
+### Features
+
+#### feat(stamina): v2.0.40 - prove stamina in a custom battle (#1506)
+
+`9e088cef`
+
+The command trial can now play a battle that checks combat stamina by
+itself. Three steps run in a custom battle of 101 defenders against
+300 orc fighters:
+
+- stamina_gate: stamina is armed, and it tracks at least 95% of the
+  soldiers on the field and the hero.
+- stamina_walk: half of the charging infantry is forced Exhausted.
+  That half must stop running, keep moving, and be slower than the
+  other half, which is held Fresh.
+- stamina_fight: a third of the enemy is forced Exhausted and a third
+  Tired. The Exhausted third must make no attack and raise no block
+  while the rest fights, and must attack again when it is given back.
+  The attack rate of the Tired third against the fresh third is
+  reported with no pass rule.
+
+Run them with:
+
+  python tools/run_command_trial.py \
+      --steps stamina_gate,stamina_walk,stamina_fight
+
+The trial turns stamina on in memory for its own battle and writes no
+settings file. Combat stamina stays off by default for players.
+
+Two runs passed every step (E:/Temp/command-trial-runs/20261120-152853
+and 20261120-154018, both on an uncommitted build, so a run on this
+commit is still owed). They show that an Exhausted Gondor spearman
+walks at 1.99 m/s, that the whole formation slows while half of it is
+Exhausted, and that the Tired third attacked 0.72 and 0.55 times as
+often as the fresh third.
+
+Every run of the command trial now fails on a failed stamina check
+line or a stamina [ERROR] line: the Seat's, Marshal's Word's and the
+crews' runs too. The trial's file gate now reads the crew trial folder
+as well, which it did not before.
+
+Not covered: the player's own lock, the look of the bar, riders, and
+crew archers on a moving beast. The review found no defect above LOW;
+the Codex pass did not run and is owed.
+
+#### feat(elephant): v2.0.40 - own gait clips for elephant and mumak
+
+`5637807c`
+
+The war elephant and the mumak no longer share one set of gait clips.
+Each plays its own walk, trot, canter, gallop, backward walk, turns,
+strafe and two idles, retargeted from a real elephant walk, with feet
+that cover the ground the clip claims. The mumak has its own action
+set, as_mumakil, so its stride no longer comes from clips made for a
+beast less than half its size. (#1474)
+
+Fixed with it, each seen in a battle or found in review:
+- After one step back a beast played the backward walk while it moved
+  forward. The backward clip's pace limits were positive.
+- The walk ran very fast for a moment at the start of a move. The
+  strafe rows played a record that said 1.0 s for 76 keys.
+- The mumak stood 0.4 m in the air after each stop. The old master
+  rode 0.13 m above its own rest frame.
+- A beast that had charged once kept the trot at walking speed. The
+  trot records carried the walk's pace limits.
+
+The clips and the corrected records are in the LOTRLOME_Armory
+install, not in this repository. This commit holds the tools that
+build, write and bind them, the repo copy of action_sets.xml, and two
+gates. python tools/check_gait_stride.py fails a clip whose feet do
+not cover its claim, a pace row whose limits or Duration the engine
+misplays, a standing pose off the ground, and a clip whose cooked
+cache entry is older than its record or its master.
+python tools/bind_elephant_clips.py --check fails when a reinstall
+of the Armory dropped the binding.
+
+docs/features/elephant.md now states what the mount movement node
+does with a clip record, from a native decompile: the cadence comes
+from the records' Duration and the pace from their limits, not from
+speed over travel per loop, as an older lesson said.
+
+Known limitation: trot, canter and gallop keep one cadence at every
+speed (#1504). The attacks, hit, rear, dash, death and standing pose
+still play the purchased ADOD clips (#1505). The two trot records
+wait for one Modding Kit start with the Armory loaded, and the gate
+is red on them until then.
+
+Reviewed with /deep-review (seven lenses and a pass on the fixes):
+docs/reviews/rca-elephant-gait-gate-2026-11-20.md. No Codex pass ran.
+
+Not-tested: the war elephant in game; the mumak's stand after a stop
+Not-tested: a beast that slows from a charge; a turn in place
+Research: rglAnim_node_horse_movement, TaleWorlds.Native.dll v1.5.7
+
+#### feat(crew-trial): v2.0.40 - check beast crews in a custom battle
+
+`32cc9983`
+
+The crews of the mumakil war tower and the war elephant howdah can now
+be checked in a custom battle with nobody at the keyboard. The command
+trial has two new steps, crew_mumakil and crew_howdah:
+
+  python tools/run_command_trial.py --steps enter,crew_mumakil,crew_howdah
+
+A step list that names one of them adds one Mumakil Rider and two
+Elephant Riders to the player's army and fields 300 melee orcs against
+them. Each step sends the army forward, keeps the Seat of Seeing's view
+on one archer of the beast, saves three pictures and watches the crew
+for 30 to 150 seconds. It passes when no seat made a rescue teleport,
+every archer loosed an arrow and the beast went 10 m or more. A crew
+step runs with enter only: the game and the wrapper refuse a list that
+mixes it with another step, and a run with no step list does not arm
+it.
+
+Three battles ran on 2026-11-20 (E:\Temp\command-trial-runs). Two
+passed: 20261120-132358 and 20261120-133122, with 1 to 6 arrows from
+each of the eight mumakil archers in the watch, 8 to 14 from each
+howdah archer and no rescue teleport. The pictures show the archers on
+the three decks while the mumakil walks, and two archers with bows in
+each howdah. Run 20261120-132954 failed at the Seat's own enter step,
+before a crew step: the view left 2 s after it entered with the Seat's
+key as the reason. The cause is not proved; a press on the keyboard is
+possible.
+
+The first run used the trial's usual enemy. Its 30 orc archers killed
+the mumakil 38 s after the charge, which is why a crew battle meets
+melee orcs only.
+
+The game run workflow changes with it. The /game-run skill names the
+custom battle as the first driver for a session's own mission work, and
+docs/reference/unattended-game-runs.md has the recipe to add a step for
+another feature.
+
+Not covered: the refusal of mixed step lists and one removed term of
+the pass rule were added after the last battle and have not run in the
+game. A Codex review is still owed (no usage since 2026-11-15).
+
+Refs #1503
+
+#### feat(cultures): v2.0.40 - new culture selection texts for 19 cultures
+
+`ba9e452a`
+
+The culture selection screen shows new lore text for Gondor, Rohan,
+Dale, Dorwinion, Erebor, Shaghana, Abanissa, Harad, Dunland, Rivendell,
+Lothlorien, Mirkwood, Isengard, Mordor, Gundabad, Umbar, Khand, Rhun and
+the Goblins of the High Pass. The text comes from the maintainer's
+culture text file and is kept word for word, spelling included.
+
+Three of the supplied texts are not used. The Noldorin text for Lindon,
+the Goblins text for Blue Craig and the Dunedain text for Arthedain name
+the culture each one was cloned from (Imladris, the Misty Mountains,
+Gondor), which ClonedCultureFlavorTests forbids. Those three cultures
+keep their old text. Six texts (Ironfists, Bellakarani, Enedwaithrim,
+Avari, Arauwanai, Eastern Orcs) have no culture in the game yet.
+
+Dorwinion's text names the Men of Dale as friends, so that test no
+longer forbids the bare word "Dale" for Dorwinion. The Dorwinion blurb
+also lives in promote_borrowed_cultures.py and in the aom_dorwinion_desc
+row; both now carry the new text so the generator check stays green.
+
+The twelve language files still hold the old translations for these
+keys until the project lead redoes them.
+
+Verified: build 0 errors; TAOM.Tests 43447 passed, 3 failed (language
+file rows and a writing-system check, none touched here); the generator
+sync test passes; data_gates 11 PASS, 0 FAIL. Not checked in game.
+No issue filed; /deep-review not run.
+
+#### feat(stamina): v2.0.40 - stamina summary counts each people
+
+`f46b1642`
+
+The stamina summary line at the end of a battle, and the console
+command taom.print_stamina, now end with one clause per race name:
+how many of its soldiers paid stamina, how many were exhausted at
+least once, and how many exhaustions they had (#1497). Without it a
+log said how many soldiers were exhausted and not whether they were
+the Orcs with the small pool or the Dwarves with the large one, so
+the race rows of configs/stamina.json could not be tuned from a game.
+
+The race name was already read once per soldier for the pool; nothing
+new is read from the engine. A culture row is not separated.
+
+Review: tier 1, two lenses, no finding above LOW. The Codex pass did
+not run (no usage) and is owed before merge.
+
+Not-tested: the new line in a game log (the next run)
+Save-compat: no save data
+
+#### feat(stamina): v2.0.40 - stamina pool, costs, peoples and HUD bar
+
+`8440408a`
+
+Phases 1 and 2 of combat stamina (#1497). With the MCM switch on, each
+soldier in a field battle, siege, sally-out or Fords of War match has a
+stamina pool. A melee swing, a shot, a throw, a jump, a kick, a shield
+bash and a blow stopped with a weapon or a shield cost points, and
+running on foot drains the pool down to half. Stamina comes back while
+a soldier does not attack, more slowly behind a held block and not at
+all while running. At zero the soldier is exhausted until the pool is
+back at about a third.
+
+Higher tier troops and heroes have a larger pool, and a hero's pool
+grows with level. A peoples table in configs/stamina.json changes pool
+and recovery by race and culture: Elves, Dwarves, Uruk-hai and trolls
+have more than most Men, Orcs and goblins have less, and the Nazgul,
+Sauron and Saruman do not tire. Heavy armour raises every cost in
+points, by up to 35 percent.
+
+The player sees their own stamina as a thin bar left of the battle HUD
+rings. It changes colour as the pool falls and turns grey while the
+player is exhausted, with a message the first time they tire in a
+battle and each time they are exhausted.
+
+MCM, Battle Balance / Stamina: Enable Combat Stamina (off by default),
+Stamina Applies To You and Stamina Applies To AI Soldiers (both on),
+Stamina Cost Scale (0.5 to 2) and Show Stamina Bar. Every number of
+the rules is in configs/stamina.json.
+
+The numbers are starting values. They pass a simulated fight in the
+tests that runs on assumed fight tempos; no battle has been played
+with them.
+
+Each battle writes three check lines (taom.stamina.armed, lock and
+refresh), judged by tools/ingame_checks/1497.toml. A band the console
+forced and a soldier a switch exempted stay out of their counts.
+
+Review: tier 1, three lenses and a convergence pass, no CRITICAL or
+HIGH finding; docs/reviews/rca-stamina-phases-1-2-2026-11-19.md. The
+Codex pre-review did not run (no usage) and is owed before merge.
+
+Known limitation: nothing has run in the game. The seven spikes in
+docs/features/stamina.md, "How to verify in game", are owed. The new
+English text has no translation yet: it waits for the language pass.
+
+Not-tested: drain, recovery, lock, HUD bar, check lines (need the game)
+Research: Agent.GetCurrentActionType, Mission.OnMeleeHit, RaceManager
+Save-compat: no save data
+
+#### feat(stamina): v2.0.40 - stamina bands and the exhausted lock
+
+`7c4fd10a`
+
+Phase 0 of combat stamina (#1497). Every soldier in a field battle,
+siege, sally-out or Fords of War match now has a stamina band: Fresh,
+Winded, Tired or Exhausted. A tired soldier swings and handles a weapon
+more slowly, and a tired AI soldier decides to attack less often. An
+exhausted soldier cannot attack, block, kick or jump, and on foot slows
+to a walk. Horses and other mounts are not affected.
+
+Nothing drains stamina yet. In this build a band comes only from the
+developer console (taom.set_stamina, taom.print_stamina), so the engine
+side can be measured before the drain rules are written. The MCM switch
+Battle Balance / Stamina / Enable Combat Stamina is off by default.
+
+How it works: the band scales driven properties through one line in
+each of the two existing stat models. The lock strips input: Patch171,
+a postfix on MissionMainAgentController.ControlTick, for a player's
+soldier, and an agent component in OnAIInputSet for an AI soldier.
+
+Marshal's Word changes with it. The engine keeps one AI input callback
+flag per agent and both features need it, so a new owner type,
+AiInputCallbackClaims, is now its only writer, and each feature claims
+and releases it. A soldier Marshal's Word has let go answers no
+callback while stamina holds the flag.
+
+Review: tier 1, three lenses and a convergence pass, no CRITICAL or
+HIGH finding; docs/reviews/rca-stamina-phase0-2026-11-19.md. The Codex
+pre-review did not run (no usage) and is owed before merge.
+
+Known limitation: nothing has run in the game. The seven spikes in
+docs/features/stamina.md, "How to verify in game", are owed.
+
+Not-tested: input strip, stat effect, Marshal's Word (need the game)
+Research: MissionMainAgentController.ControlTick, Agent.OnAIInputSet
+Save-compat: no save data
+
+#### feat(tools): v2.0.40 - diff the live install against a release channel
+
+`9985b18d`
+
+A release channel (E:\LOTRAOM_Releases\<channel>\Modules) falls behind
+the live install between releases, and nothing listed which files
+changed. tools/diff_release_channel.py now compares the two file by
+file and groups each difference by module and folder, so the
+maintainer approves what ships and leaves work in progress behind.
+The /channel-sync skill wraps it with the DLL build stamp gate and the
+existing channel checks (#1480).
+
+What never ships comes from package_release.classify(), imported, so
+the packager and the diff agree: RuntimeDataCache, AssetSources,
+module-level shader sacks, backup sidecars, scene Backups folders,
+Prefabs_Unused, IDE state and runtime logs. Scene sacks ship.
+
+The tool is read-only by default. --apply --groups copies only the
+named groups and moves each channel file it replaces or removes to
+E:\LOTRAOM_Releases\_set-aside\ with a moves.json log; a bin/ group
+also needs --allow-bin. --delete-junk deletes a channel's backup
+files and Prefabs_Unused outright, as the maintainer asked.
+
+First runs on 2026-11-19 deleted 234 files from public (176 .bak
+sidecars, 58 Prefabs_Unused), 58 from testing and 70 from patreon.
+The public diff found 50 groups; the live DLLs were a clean build of
+trunk 362 commits after the v2.0.40 tag, so their groups wait for the
+next release.
+
+Tests: tools/tests/test_diff_release_channel.py, 25 tests.
+
+#### feat(elephant): v2.0.40 - tools for new elephant and mumak gaits
+
+`90773284`
+
+The war elephant and the mumak slide over the ground when they move.
+Each gait clip tells the game how far one loop of the legs carries
+the beast, and those values were typed by hand: 2.0 m for the walk,
+3.6 m for the canter. The feet in the animation cover about 1.6 m in
+every gait, so the body outruns the legs by up to 0.95 m in a step.
+
+This commit adds the tools that build and check replacement clips.
+It changes no game file in this repository, and the game does not
+show the new clips yet.
+
+- tools/elephant_gait_retarget.py retargets a licensed motion study
+  of a real African elephant onto our skeleton. The faster gaits
+  keep the real footfall order (rear left, front left, rear right,
+  front right) and shorten the time each foot stays down. A second
+  mode retargets a standing idle.
+- tools/elephant_write_masters.py writes the result as animation
+  packages for the LOTRLOME_Armory module with no Modding Kit
+  import.
+- tools/gen_elephant_anim_clips.ps1 writes the clip records.
+- tools/check_gait_stride.py is the gate. It fails a gait whose feet
+  do not cover its clip's travel, whose planted foot slips more than
+  8 cm, or whose cache entry is older than its animation.
+
+The two beasts get separate clips, because the mumak is three times
+the elephant's size and must step slower: a 2.4 m walk and a 4.2 m
+gallop for the war elephant, a 3.0 m walk for the mumak, and two
+idles each. In the built clips a planted foot moves at most 1.5 cm.
+
+Only bone keys on our skeleton come from the motion study. Mike
+confirmed on 2026-11-18 that they may ship; no mesh, rig or texture
+of the pack is used or stored.
+
+Not in the game yet. A first set, written into the Armory's
+existing packages on 2026-11-18, was reported as live and was not:
+the game plays each clip from a cache entry that only the Modding
+Kit writes, and those entries still hold the old motion. The new
+clips need one Kit start and a change to the Armory's action sets,
+and nobody has yet watched either beast in a battle.
+
+Refs #1474
+
+#### feat(arena): v2.0.40 - Tournaments use each culture's own weapons
+
+`2bda8089`
+
+Tournament fighters fought with Calradian weapons everywhere: almost
+every TAOM culture pointed at vanilla's empire tournament sets, and
+the six renamed vanilla cultures kept vanilla's own (#422 part 1, a
+player request on Discord).
+
+Each of the 30 cultures that hold towns now has its own one-, two-
+and four-fighter tournament sets (9 per culture, vanilla's shape),
+built from the weapon kits its own troops carry: Gondor fighters get
+Gondor swords, shields, bows and horses, Erebor dwarves fight on foot
+with dwarf axes. tools/generate_tournament_templates.py writes them to
+characters/taom_tournament_templates.xml from the troop files and is
+re-runnable (--check); spcultures.xslt points the six renamed cultures
+at their own sets. Abanissa uses the Harad troop tree, Khand Rhun's.
+A shield is never paired with a two-handed weapon (the polearm-shield
+audit passes). Arrows and bolts stay vanilla's blunt tournament ones.
+
+The arena uses the town's current culture, so a town that changed
+culture after a conquest shows its new culture's weapons. Melee
+weapons are now the troops' own sharp ones; every tournament mission
+already turns any lethal hit into a knock-out (vanilla
+ArenaAgentStateDeciderLogic), so no one can die. The tournament
+characters carry occupation NotAssigned so the Custom Battle pickers
+skip them.
+
+Tested: full suite, no new failures against trunk c7f93a1a63;
+generator tests, polearm-shield audit, moduledata validation and doc
+lint pass. Reviewed: data flow, engine compatibility, XML and tooling,
+then a second wave. Not checked in game.
+
+Refs #422 (part 1; parts 2 and 3 still open).
+
+#### feat(harness): v2.0.40 - start a manager tick when the PC is idle
+
+`108f88b2`
+
+tools/manager_tick.py starts one /manage tick in a headless Claude
+session when the desktop is idle, for a Windows scheduled task to run
+every 30 minutes. It refuses while a STOP file or a usage-limit pause
+exists, while the PC had input in the last 10 minutes, while Bannerlord
+runs, while another session holds the manager-tick claim, or while the
+tick worktree is missing or has uncommitted changes. An unreadable
+state refuses too. Before a tick it fetches the trunk and detaches the
+worktree at it, so the tick reads the trunk's skills. Without --run it
+only prints its decision.
+
+A probe on 2026-11-18 showed that a headless session loads the skills,
+hooks and Workflow tool, starts in plan mode unless a permission mode
+is given, and turns a hook ask into a denial, not a wait. The launcher
+passes --permission-mode default. The harness facts record the probe
+and the SubagentStop block seen live.
+
+The scheduled task stays off until the maintainer amends .ai/policy.md
+(ADR-015 migration). The feature doc gives the two setup commands and
+deny rules for the tick worktree's local settings.
+
+Not-tested: a real scheduled run; the task does not exist yet.
+
+#### feat(harness): v2.0.40 - a manager session runs the backlog (#1449)
+
+`80a98c9b`
+
+The repo had AI workers and no manager: the maintainer chose every
+task, started every session and gave every word to push or merge.
+ADR-015 adds one manager session that selects work, dispatches it to
+the /improve executors, checks what returns, opens pull requests and
+writes one digest. The maintainer still merges everything: this is
+stage 0 of an earned ladder.
+
+What is new:
+
+- /manage (tick, digest). A tick reads docs/goals.md, takes in notes
+  from the pinned inbox issue (#1456), checks its open pull requests,
+  runs owed in-game checks when the PC is idle, selects the next
+  issues by milestone order and reports in the pinned digest (#1457).
+  It never starts itself: it is in CLAUDE.md's never auto-invoke row.
+- docs/goals.md holds the goals in the maintainer's order, one row
+  per GitHub milestone. The 277 open issues are assigned to 14
+  milestones.
+- A SubagentStop checkpoint, check-subagent-verification.sh. A
+  subagent that edited C# and ran no build or test since is stopped
+  once and told to build and show the output. Subagent edits and
+  builds are now also recorded per agent beside the session ledger.
+- /game-run: before a run, ask whether the next step needs the result.
+  If not, collect the owed checks and do one run at the end. A run
+  judges every owed check it reaches. A defect outside the task is
+  deconflicted first, then filed as an issue.
+
+Self-merge is not part of this change. Three designs were reviewed and
+each failed the same way: a merge gate on the one desktop that can
+build against the game can be passed without real evidence while AI
+sessions hold the maintainer's login. ADR-015 lists the six conditions
+an amendment must meet before stage 1.
+
+Known limitation: the checkpoint sees C# only, and only edits made
+through Edit and Write. No verification marker exists for XML. A live
+block of a real subagent is owed after this merges, because sessions
+run the hooks of the main checkout.
+
+Review: /deep-review tier 2 (Data flow, Tooling), no CRITICAL or HIGH;
+every confirmed finding is fixed except one that both lenses rated
+rare (a subagent can be stopped for another agent's later edit of the
+same file). The Codex pass is owed: Codex has had no usage since
+2026-11-15.
+
+#### feat(input): v2.0.40 - CJK input method stays out of hotkeys (#1447)
+
+`cd702751`
+
+For players who type with a Chinese, Japanese or Korean input method,
+hotkeys on the campaign map and in battle no longer open its candidate
+window. While the game is in front and no text field has focus, the
+game window's input method is paused; a search, rename or name popup
+gets it back at once, and other programs are not affected. A new MCM
+switch, Map UI / Text Input, turns it off; it is on by default.
+
+Ported from Silas He's v1.5.6 fix package (ImeGuard.cs), rebuilt in
+the TAOM structure: a tested service in core, the Windows calls in a
+client adapter that runs them on the engine's window thread. The
+review added a clean removal of that thread's hook at exit and limited
+the guard to the game's own window.
+
+Not-tested: in game with a CJK input method (needs a CJK tester).
+
+#### feat(tools): v2.0.40 - audit Claude memory for finished cards (#1448)
+
+`20a1b978`
+
+New developer tool, tools/memory_audit.py. It reads the Claude Code
+memory folder for this checkout and reports what should be cleaned up:
+whether MEMORY.md is over ADR-011's 40 lines and 4 KB, index links to
+files that are gone, memory files nothing links to, and for each
+In-Flight resume card whether its work is finished.
+
+A card reads PRUNE when every commit it names is on
+origin/bannerlord-1.5.x and every issue it names is closed. Otherwise
+it reads KEEP with the reasons: a commit that is local, on a remote
+branch only or not in this repository, an open issue, or the words
+uncommitted, unpushed or not pushed in the card.
+
+The tool only reads. It never edits or deletes a memory file, so the
+decision to remove a card stays with whoever has read it. It exits 1
+when the index is over the cap or holds a broken link. The SessionStart
+note about an oversized MEMORY.md now names the tool.
+
+Limits: a commit from another repository reads as missing and a
+BannerlordCoop issue number reads as unknown, so those cards stay KEEP.
+
+Players see no change.
+
+Tests: tools/tests/test_memory_audit.py, 13 tests. The full tool suite
+ran 10357 tests with 3 failures in test_run_long_defeat, and
+TAOM.Tests ran 42771 with 3 failures in the language row tests; both
+sets fail without this change, which touches no file they read.
+
+#### feat(campaign): v2.0.40 - campaign rules chosen on the new-game screen (#1441)
+
+`b1464dcc`
+
+A new campaign now picks its main rules on the Advanced Start Options
+screen, and the save keeps them. The screen offers War of the Ring or
+Sandbox (no scripted war), the War of the Ring start date (Early, day
+10 and 20; Standard, the mod options' days; Late, day 60 and 90; or
+Custom with two sliders), and a Middle-earth rules group: Troop Weight,
+War can be won, Eye of Sauron hunters, Large AI armies and an Alignment
+rules preset (Standard, Strict or Relaxed).
+
+The TAOM mod options now set the defaults for new campaigns only. A
+later change there does not touch a campaign already under way, and a
+loaded campaign whose rules differ from the mod options says so once.
+Saves from before this change follow the mod options as before. With
+cheat mode on, the console command taom.campaign_option lists the
+rules and changes one for the current campaign, in single player.
+
+The vanilla war scenarios and United Empire are no longer offered:
+they assume Calradia's factions and gave broken starts in Middle-earth.
+Naval Travel is not on the screen, because the feature is parked.
+
+Thanks to REDACTEDSTUFF for the feature, the tests and the in-game
+check plan. The maintainer review corrected the Strict preset text,
+refused the console change during a co-op session, logged a loaded
+campaign's rules and added menu-row tests (RCA rows R1 to R11).
+
+Not checked in game yet; the checks are in
+docs/features/campaign-start-options.md. The new start screen texts
+and eleven reworded mod option hints have English rows only; the
+language pass is backlog #1129. Codex skipped: out of usage. No issue:
+owner waived new GitHub issues for this work.
+
+#### feat(hero-abilities): v2.0.40 - Heroes get 800 health and a high post
+
+`33ac24f0`
+
+Aragorn, Legolas and Gimli now have 800 health (eight times a
+soldier's), in the Long Defeat shop and in the Helm's Deep story
+missions. None of the three carries a shield, so each also takes 30%
+less damage from arrows, bolts and thrown weapons. A new effect,
+missileDamageReductionPercent, adds to the normal damage reduction on
+a missile hit only; the two together stop at 90%.
+
+At Helm's Deep, Aragorn and Gimli still hold the wall lane where the
+ladders land. Legolas now holds the high archer place nearest the
+outer gate, so he shoots at the gate and at the attackers on the
+wall. He stays in the heroes' group: an order you give with key 8
+releases him and he moves with the other two. While he holds his
+post he does not step back from melee.
+
+The heroes cost more to balance this: Aragorn 350 gold (was 300),
+Legolas and Gimli 300 (was 250).
+
+Measured before the change by the balance tally (#1435): with 300
+health Aragorn and Gimli fell after 85 to 1,070 seconds, often to
+missiles, while Legolas dealt three to four times their damage.
+
+Review: deep-review tier 1 (data flow, engine compatibility). Fixed:
+the tool tests and two in-game manifests pinned the old prices and
+health factor; a player's order to group 8 did not move Legolas.
+Rejected: no arrows on the high wall (AmmoSupplyLogic refills the
+defenders). Codex pass skipped: out of usage on Mike's word.
+Not tested in game yet: the 800 health, the high post and the
+missile reduction (run owed). Three sally tests in
+tools/tests/test_run_long_defeat.py fail on trunk too.
+
+Refs #1438
+
+#### feat(hero-abilities): v2.0.40 - A balance tally for the three heroes
+
+`65e1210d`
+
+The Long Defeat and the Helm's Deep story mission now log how each
+of Aragorn, Legolas and Gimli fights, so their balance can be judged
+from a run instead of by eye. Each body gets one line when he leaves
+the battle or the mission ends: kills, health dealt and taken, hits,
+seconds alive, his health limit, and the troop and blow that felled
+him. One summary line per hero adds the rates per minute. Nothing in
+the fight changes.
+
+Damage is the health a blow removed, read from OnScoreHit, so overkill
+and blocked hits do not count. A hero who flees is not a fall, and a
+body the player took over is marked played=1.
+
+Review: tier 1 deep review, data-flow and engine lenses; the damage,
+flee, played, after-fall and result-time findings are fixed with
+tests. Codex skipped (no usage).
+
+Tests: hero ability, co-op role and gate filters 447 passed.
+
+Refs #1435
+
+#### feat(combat): v2.0.40 - Cleaving Blows: two-handed swings cut through
+
+`2bf49d7f`
+
+A swing with a two-handed axe, mace, sword or polearm can now cut through
+one enemy and strike the next, for the character a human controls (in
+co-op, each player in his own game). Each enemy after the first takes
+less damage: armour slows the blade, and a kill or a clear weapon-skill
+lead carries it further. A shield block, a thrust, a bash, a couched or
+braced attack, a horse charge or a swing from horseback never uses the
+rule. Trolls and other big creatures keep their own cleave, which runs
+first.
+
+One swing strikes at most 3 enemies by default (3 to 5 in the mod
+options), and it stops sooner once too little force is left. A player's
+two-handed axe or mace never carries less than vanilla, and two-handed
+swords and polearms now carry on where vanilla stopped at the first man.
+AI soldiers keep the vanilla rule unless the new AI option is turned on
+(default off).
+
+Mod options, Combat Mechanics group: Cleaving Blows (on), Cleaving
+Blows for AI Two-Handers (off) and Cleaving Blows Max Targets (3). The
+numbers are in the cleavingBlows block of combat_mechanics_config.json.
+
+Thanks to REDACTEDSTUFF for the feature, the tests and the in-game
+check plan. The maintainer review added a weapon-slot guard for a hit
+into a horse, corrected the horseback line of the option hint, and
+documented the co-op kill case (RCA rows R1 to R7).
+
+Not checked in game yet; the checks are in docs/features/combat-mechanics.md.
+The six new option texts have English rows only; the language pass is
+backlog #1129. Codex skipped: out of usage. No issue: owner waived new
+GitHub issues for this work.
+
+#### feat(desertion): v2.0.40 - tavern mercenaries follow desertion
+
+`826ff698`
+
+Alignment desertion now guards tavern mercenaries the way it guards
+volunteers and prisoners. Before, a lord or the player could buy
+mercenaries whose people will not serve their side, and desertion
+took them away the next day.
+
+- AI lords skip such a hire: no gold is paid and the town keeps its
+  mercenaries. Caravans are not affected.
+- The player's "Recruit mercenaries" option in the town backstreet is
+  disabled, and its tooltip says why.
+- The tavern mercenary refuses instead of making an offer.
+
+Every desertion switch turns the guard off where it turns desertion
+off. In co-op the AI hire runs vanilla on a peer that defers to the
+host. Two new strings, English only (translation backlog #1129).
+
+Patch158, three patches on RecruitmentCampaignBehavior. The AI prefix
+sits on ApplyInternal, not the 15-byte ApplyRecruitMercenary, so a
+caller Coop compiles first cannot inline it.
+
+Refs #1189 (item 1). Tier 1 review: data flow and engine lenses; their
+findings are fixed here. Codex pass owed (no usage). Not tested in
+game. LanguageFileCoverage and LongDefeatHudStrings stay red until the
+language pass (trunk was already red there).
+
+#### feat(loc): v2.0.40 - Chinese AI drafts follow the team's terms
+
+`c8542bfe`
+
+The Simplified and Traditional Chinese rows the Chinese team has not
+translated are AI drafts, and the translator sent the model only general
+rules, so the drafts used the model's own names, terms and phrasing. The
+team's text is the norm for Chinese players (#1385), so a draft that
+differs from it reads like a second translation of the same game.
+
+tools/build_translation_reference.py writes
+tools/translation_reference/cns.json and cnt.json: an English and team
+text pair for every row of ours, in TAOM, TAOM_Map and the Armory, whose
+current text is the team's (21,120 pairs for CNs, 21,078 for CNt, from
+the v2.0.38 drop). For each CNs or CNt batch, translate_with_claude.py
+now adds the team's terms whose English occurs in the batch and up to six
+of the team's sentences that share the most words with one entry, and
+tells the model that the team's text wins over its own choices. The
+other ten languages send the same request as before.
+
+A wrong drop no longer empties a tracked reference: a language with no
+pairs writes nothing and the run exits 2. Words inside placeholders and
+lowercase or all-caps single words are never terms (the team's "horse"
+is a cavalry unit label). Review: tooling lens at tier 2, six findings,
+all fixed (docs/reviews/rca-cn-style-2026-11-16.md). Codex skipped (no
+usage). The paid re-draft of the existing Chinese drafts is not part of
+this change; it runs on the maintainer's word.
+
+Refs #1421
+
+#### feat(loc): v2.0.40 - Translatable mod options
+
+`fbf269dc`
+
+The TAOM pages of the Mod Options menu were English in every language:
+1,833 setting names, hints, button labels and group names had no
+localization key, and the Chinese team's module patched them at runtime
+(#1385, Phase 4). Each now carries a taom_mcm_ key with an English row
+in taom_module_strings.xml (1,130 new rows). A group path such as
+World/Realms gets one key per part, because the menu translates each
+part on its own.
+
+- Chinese, both scripts: the team's text for 1,102 of the keys. 28 have
+  no team text yet and show English, among them Hall Seats, Lord
+  Retinue, Encounter Lines and the Bug Report buttons.
+- Saved option values, the co-op settings check and the dedicated
+  server settings file are unchanged: they use the property name or
+  the English group path without keys (McmText.Plain).
+- Dropdown values and the four page titles stay English. The menu
+  shows a page title as written, and TAOM reads a dropdown by its
+  position.
+
+Gates: McmSettingsTextIsKeyedTests fails on an unkeyed option text, a
+key whose row differs from the code, a settings class missing from
+the list it walks, and a translated subgroup name that holds its
+parent's name (the menu would cut it, or hide the whole page when the
+parent is empty). The text integrity check now accepts console
+commands, sound paths and .log files that the English row also holds.
+The harvester registers one row per group part, and only TAOM keys.
+
+The other ten languages have no rows for the new keys yet (backlog
+#1129), so LanguageFileCoverageTests fails for them on purpose.
+
+Review: tier 1, the data flow, engine, XML and tooling lenses; 14
+findings, all fixed or listed in docs/reviews/rca-cn-phase4-2026-11-16.md.
+Codex skipped: no usage since 2026-11-15, by the maintainer's word.
+
+#### feat(chronicle): v2.0.40 - War ledger logs each realm's garrisons
+
+`ebc1dd13`
+
+The daily war ledger now writes one garrison line per kingdom:
+
+  [WarLedger] v=1 t=garrison cid day k forts men fit
+
+forts is the realm's towns plus castles, men the men in their
+garrisons with the wounded, fit the healthy ones. The line comes after
+the day's share line and keeps format version 1, as a new line kind
+does.
+
+The first 300-day run with free Blue Craig garrisons lost its capital
+on day 55 and the realm by day 88, sooner than the run before the
+change. The ledger had no garrison numbers, so that run could not show
+whether the garrisons grew. The next runs can.
+
+analyze_war_ledger.py parses the line, keeps the last one per day and
+realm, drops it on a load rewind like the other records, and adds a
+Garrisons section to its report: for each realm the first day, the day
+with the fewest men, and the last day. taom.print_war_ledger prints the
+garrison lines with the rest of the day's ledger.
+
+Reviewed: Data flow, Engine compatibility and Tooling lenses; all
+findings fixed. Owed: the Codex pass (usage limit until 2026-11-20).
+
+Refs #1283
+
+#### feat(long-defeat): v2.0.40 - Cavalry rides out from the Deeping slope
+
+`5c91dd63`
+
+The Cavalry class at Helm's Deep now has its sally point: the slope
+outside the Deeping Wall, facing down toward the wall. Mike recorded
+it in game (taom.ld_record sally). At each wave's start the mounted
+lord rides out from there, and each cleared wave brings him home.
+Before this, no point was recorded, so Cavalry rode from the wall
+with no sally and no remount.
+
+Not proven in game yet: the sally checks need a cavalry run.
+
+Tests: the Long Defeat suite 2952 passed, 1 failed; the failure is
+EveryKey_IsSeededInAllTwelveLanguageFiles, the three #1388 keys on
+trunk that wait for the language pass, not this change. ModuleData
+validation and doc lint exit 0. Data only, no review gate.
+
+Refs #1079
+
+#### feat(loc): v2.0.40 - Keys for battle, toast and muster screen text
+
+`d0202e2d`
+
+Chinese players saw English in many TAOM messages and screens even with
+the Chinese team's module installed: that module rewrote the English
+string literals inside TAOM.dll, and every TAOM build broke it. This
+change sends that text through the game's localization instead (#1385,
+Phase 3). 163 new English rows in taom_module_strings.xml.
+
+- Battle: the action bar labels, the companion role prefixes on the
+  party screen, the mixed formation layout toast, the howdah, mumak and
+  warg rage prompts, and the career ability toasts. The ready toast now
+  names the key the player bound, not a fixed V.
+- Campaign and menus: the special resource earning and running-out
+  toasts (amounts such as 0.2 now read as written), the party screen
+  upgrade cost hint, the Quick Actions menu, the formation preset load
+  warning, the equipment presets button, the faction screen's side
+  names and the module fault popup. The campaign map's nav bar uses
+  vanilla's own keys, so it shows vanilla's translation.
+- The shader pre-compile status lines on the main menu and the loading
+  screen.
+- The custom battle muster screen, both tabs. Over the troop limit,
+  START now shows the same localized line as the counter.
+- Chinese, both scripts: the team's text for 66 of the new keys,
+  including the sentence templates, so a toast is not half Chinese and
+  half English. The muster screen has no team text yet.
+
+These stay English on purpose: console and cheat output, log lines, the
+crash notifier, the cache rebuild tool, the shader item names and stop
+reasons (they are also log lines), and the spec-file errors of the
+muster screen, which name ids. Dropdown values are unchanged.
+
+The harvester now refuses a new key whose English is split over C#
+literals joined with +, since it read only the first part: three rows
+were first registered half-written this way.
+
+The other ten languages have no rows for the new keys yet (backlog
+#1129), so LanguageFileCoverageTests fails for them on purpose.
+
+Review: tier 1, the data flow, engine, XML and tooling lenses; 16
+findings, all fixed or listed in docs/reviews/rca-cn-phase3-2026-11-16.md.
+Codex did not run (no usage). Owed: an in-game check in Chinese, both
+scripts, of the nav bar, action bar, role prefixes, toasts, shader
+status line and the muster screen, and in English of the muster screen.
+
+#### feat(heroes): v2.0.40 - Legolas steps back from melee, sword at hand
+
+`8dafcadf`
+
+Legolas now tries to keep out of melee range (#1415). When an enemy
+soldier on his level comes within 5 m, he takes an 8 m step away from
+the threats, at most once every 3 s, through the engine's own timed
+scripted move (2.5 s, then the engine hands him back to his
+formation's order). A point is used only on the navmesh, inside the
+mission boundary, within 1.5 m of his height and with a walking path
+under twice the step, so he does not walk off a wall or down a stair.
+He tries straight away first, then 45 and 90 degrees to each side.
+With no usable point he fights where he stands with his one-handed
+Mirkwood sword, which was already in his kit.
+
+- New values in hero_abilities.json: keepDistanceMeters (at most 10)
+  and stepBackMeters (at most 12); Legolas has 5 and 8. Either at 0
+  turns the step off.
+- Only an AI-driven hero the engine allows a scripted move is moved
+  (Agent.CanBeAssignedForScriptedMovement), so a player at his
+  controls, a ladder queue or an arrow pickup is left alone.
+- The check taom.hero-abilities.keep-distance counts the steps, the
+  steps his body actually walked, the cornered looks and the seconds
+  with a melee weapon in hand; tools/ingame_checks/1415.toml judges
+  it on Long Defeat runs.
+
+Not proven in game yet: the unattended Long Defeat run is owed, and
+how the step looks is a person's check.
+
+Tests: full C# suite 42334 passed, 0 failed; tool tests 10087 OK;
+ModuleData validation and doc lint exit 0; API snapshot reproduces.
+Review: /deep-review tier 1 (lenses 5 and 2), no CRITICAL or HIGH;
+findings in docs/reviews/rca-legolas-keep-distance-2026-11-16.md. The
+Codex pass was skipped on the maintainer's word (no usage).
+
+Refs #1415, #1325
+
+#### feat(story): v2.0.40 - Helm's Deep attack row, not offered to players
+
+`c7fc79ef`
+
+The first part of the Helm's Deep attack battle (#1409, Phase 7 of
+#1325). A developer can open the new story row helms_deep_attack:
+the player leads one Isengard wave of 250 against the Rohan garrison,
+and Aragorn, Legolas and Gimli defend as enemy heroes. No campaign
+offers it yet: the attackMission key in war_chronicle.json is the
+maintainer's decision and is not set.
+
+- The story launcher no longer refuses an attacking row; the player
+  is the attacker combatant.
+- The hosted Long Defeat run treats the player's team as his side:
+  his spawn, his fall, the general check and the wave count no
+  longer count him as a defender or as a wave soldier.
+- Enemy heroes stand in the garrison's own formations under the AI,
+  so the heroes' formation 7 is never taken off the AI in an attack.
+- The unattended story driver reads the row's side once, at launch,
+  and judges the end line for that side.
+- tools/ingame_checks/1409.toml judges the attack, with fail patterns
+  for a run that puts the player on the wrong side.
+
+Not proven in game yet: the first unattended attack run is owed.
+Balance (the wave size, the keep rule) is a first guess.
+
+Tests: full C# suite 42274 passed, 0 failed; tool tests 10007 OK;
+ModuleData validation and doc lint exit 0; API snapshot reproduces.
+Review: /deep-review tier 1 (lenses 5, 2, 7, Tooling), no CRITICAL
+or HIGH; findings and what was not applied in
+docs/reviews/rca-hero-attack-slices-2026-11-16.md. The Codex pass was
+skipped on the maintainer's word (the account has no usage).
+
+Refs #1409, #1325
+
+#### feat(loc): v2.0.40 - Keys for siege, resource and screen labels
+
+`744c5567`
+
+Chinese players saw English on several TAOM screens even with the
+Chinese team's module installed, because that text never went through
+the game's localization. This closes the data and screen gaps the team
+had to work around (#1385, Phase 2).
+
+- The pause menu title, the hero page's History tab, seven culture
+  stage labels, the custom battle HERO header and the encyclopedia
+  search hint now use language keys. A new FrontEndEditableTextWidget
+  gives the search box a keyed hint. A test fails on any literal
+  English word in a prefab Text or DefaultSearchText.
+- Siege defense popups read each text under
+  taom_siege_defense_<kingdom>_<field> and fill {settlement},
+  {attacker}, {days}, {influence} and {relation} as text variables
+  (96 English rows).
+- Special resource names and tier texts read taom_res_name_<id> and
+  taom_res_tier_<id>_<level>_name or _desc (17 rows). They resolve
+  once per game start, so after a language change in a running game
+  they follow at the next restart. In co-op the emissary result names
+  the resource in the guest's own language.
+- The 85 rows of taom_wotr_strings.xml now open with their key. Before,
+  their Chinese rows showed only after a language change in game. A
+  test requires a key on every GameText row.
+- Chinese, both scripts: the team's text for the new keys (7 screen
+  labels, 96 siege and 17 resource rows), and its rewording of 103 (CNs)
+  and 106 (CNt) vanilla keys whose meaning TAOM changed in English. 63
+  of the team's rewordings stay vanilla's because they drop a gender
+  choice. HERO and the search hint stay English in Chinese: the team
+  has no text for them. A test fails on a kept row that repeats
+  vanilla's own row.
+
+The other ten languages have no rows for the new keys yet (backlog
+#1129), so LanguageFileCoverageTests fails for them on purpose.
+
+Review: tier 1, the data flow, engine and XML lenses; 6 findings, all
+fixed or listed in docs/reviews/rca-cn-phase2-2026-11-16.md. Codex did
+not run (no usage). Owed: an in-game check in Chinese, both scripts,
+of the screen labels, the siege popup, the resource names and the
+search hint.
+
+#### feat(loc): v2.0.40 - Chinese text from the CN team, imported again
+
+`4e4a03d1`
+
+Simplified and Traditional Chinese now use the Chinese team's text
+(their TAOM_CN module) wherever it translates our current English:
+16,797 rows in Simplified and 17,395 in Traditional Chinese in TAOM,
+and 4,441 and 4,549 rows in the live TAOM_Map and Armory installs. A
+Chinese player sees the team's names and wording, such as 奥克 for Orc
+and 萨茹曼 for Saruman, without the TAOM_CN module.
+
+The import keeps our row, and lists it for the team, where:
+- our English changed after the build the team translated (379 rows
+  per language, Auredhir among them);
+- the team's text names another house or name list than our English
+  (130 rows: the Rohan, Shaghana and Âbanissa clans, the Mordor name
+  pools and three single names);
+- two lords, troops or items with different English would share one
+  Chinese name (34 and 43 rows in TAOM, 260 in the Armory);
+- an override holds a hand fix (TAOM_LD_End_Report keeps its space).
+An Armory name whose Chinese drops the English tier gets it back, as
+the team writes it on its other rows (993 rows, such as
+[诺多]精灵轻甲 III). These are departures from "their text is the
+reference", taken to keep names correct and distinct.
+
+tools/import_team_translations.py now also:
+- reads every English text a row had in the commits since the team's
+  base, so a row added after that build and reworded later keeps ours
+  (the team's army-call discount hint described the old rule);
+- treats lord names as names a player must tell apart (the first run
+  gave Amandir the name of Vorondir);
+- refuses a tab or line break even when our English holds one, puts a
+  written file back when it no longer parses, and reads each English
+  source once.
+
+The live files are unversioned: a reinstall of TAOM_Map or the Armory
+reverts them, so run the import again afterwards (TRANSLATOR_GUIDE.md).
+Review: docs/reviews/rca-cn-import-2026-11-16.md. Codex did not run
+(no usage). Owed: an in-game check in Chinese without TAOM_CN.
+
+#### feat(diagnostics): v2.0.40 - three feature latches tell the player
+
+`c0f4087c`
+
+Three features could turn themselves off with only a log line, and
+looked to the player as if they still worked. Each now shows the
+#1185 red chat line once, naming the feature:
+
+- AdvancedCombat.SyntheticBlow: the engine's blow call did not bind,
+  so creature and dwarf attacks, Signature Strikes and instant kills
+  do nothing until the game restarts.
+- HeroRace.ActionIndexRepair: the third repair pass failed, so
+  characters in UI screens lie flat in bind pose for the session.
+- PlayerSwitcher: the character creation handler did not register,
+  so a lord picked in character creation cannot be taken over. Only
+  while the feature is on.
+
+The map view release is left out: when it switches off, the map
+keeps its view as vanilla does. The other Player Switcher latches
+already tell the player.
+
+Not-tested: no in-game run; the shared notice owes its #1185 check.
+
+Closes #1223.
+
+#### feat(loc): v2.0.40 - Chinese text from the CN team, with an importer
+
+`24d636cc`
+
+The Chinese team (RuiNova, BLCC) ships its translation as a module of
+its own, TAOM_CN, and has re-translated TAOM after every release. Their
+text is now TAOM's Chinese text (#1385).
+
+tools/import_team_translations.py reads their module from the zip or a
+folder. For each row of ours whose id they translated, it writes their
+text into the language file and into tools/translation_cache, so a
+rebuild keeps it and the AI translator never drafts that row again. It
+takes a row only when the placeholders match our English and the text
+is not the English itself, and it never adds a row. The default is a
+dry run; the JSON report lists the rejected rows, the ids only the
+team has, and our untranslated rows that the team lacks.
+
+This commit imports their TAOM_CN v2.0.38 drop:
+- TAOM: 16,772 Simplified (CNs) and 17,419 Traditional (CNt) rows.
+- Live TAOM_Map: 621 CNs and 684 CNt rows. Live LOTRLOME_Armory: 4,080
+  CNs and 4,125 CNt rows. Each live file was first backed up beside
+  itself as <file>.bak_syncids_20261116T1546*Z.
+- Translation caches: 21,429 CNs and 22,185 CNt values changed, and 7
+  keys added to each.
+- The Saruman name override now uses the team's spelling, so the
+  override does not undo their text at the next rebuild.
+
+Known defect in this commit: the team translated the v2.0.38 English.
+238 CNs and 277 CNt imported rows translate English that changed
+after v2.0.38. Where English renamed a lord or clan after v2.0.38 and
+our row already had the new name, the import put the old name back
+(Auredhir shows as Aeglir again). The other stale rows were stale
+before the import too. A later commit on this branch makes the
+importer skip and report such rows; the branch does not merge before
+that.
+
+#### feat(heroes): v2.0.40 - Gimli carries an Erebor two-handed axe
+
+`b5699582`
+
+Gimli now fights with the Erebor two-handed axe ("[Erebor] Two-Handed
+Axe V") in the Long Defeat, in the Helm's Deep story mission and as a
+campaign companion. His swing is harder (140 against 88) and slower
+than with Dain's axe. A campaign in progress keeps his old axe,
+because a hero's equipment is saved; a new campaign gives the new
+one. The three community dwarves keep Dain's axe.
+
+Aragorn keeps the Strider sword, and Legolas keeps the best Mirkwood
+longbow with Mirkwood arrows, so their kits do not change.
+
+What the axe costs: the Erebor blade has no crush-through,
+knock-down, dismount, hook or shield-penetration flag. In the Long
+Defeat Gimli loses the overhead crush-through that Dain's axe had; a
+campaign battle never read that flag. The blade is above the melee
+ladder's class limit, as it already is for the Erebor troops that
+carry it.
+
+For testers: the hunters check line of the Long Defeat now names the
+weapon class each hero holds (weapons=), so a run shows whether
+Aragorn holds the sword in its two-handed mode. The manifest
+tools/ingame_checks/1373.toml judges it. tools/ingame_checks/1370.toml
+is the check that is red on the open bug #1370: in the story mission
+the garrison is moved into the heroes' group before the first wave.
+
+Review: /deep-review tier 1 in two waves. The findings, and a fix for
+#1370 that the review refuted and that is not in this commit, are in
+docs/reviews/rca-hero-weapons-2026-11-16.md. The Codex pass was
+skipped on the maintainer's word (the account has no usage). The
+in-game proof follows with the docs commit.
+
+Refs #1373, #1370
+
+#### feat(cheats): v2.0.40 - Unlimited party switch keeps enemy troops
+
+`67560752`
+
+The cheat menu gains an "Unlimited party: off/on" switch, saved with
+the campaign and off in a new one. While on, the player's own party
+has no troop limit (+10,000, with its own tooltip line), and troops of
+enemy or opposite-alignment cultures in it neither desert nor get
+blocked when recruited. Other parties, garrisons and the AI keep every
+rule. Turning it off removes no troop; the limit, morale and
+desertion rules apply again. Co-op refuses it, and a save with it on
+loaded into a shared session has it turned off.
+
+Contributed by REDACTEDSTUFF. Review fixes: the bonus runs before the
+TroopWeight penalty so the party-screen header matches the tooltip, a
+player character change refreshes the cached limits, the hint and doc
+name the morale drop and the AI's view of the party, and the 7 new
+keys have English rows in 12 languages (RCA
+docs/reviews/rca-cheat-unlimited-party-2026-11-16.md). Codex skipped:
+out of usage. No issue linked. In-game check owed: flip the switch on
+a full party, recruit past the old limit, then turn it off and watch
+the next day's desertion.
+
+#### feat(voices): v2.0.40 - Orc soldiers use the Uruk battle voice
+
+`9fc6d595`
+
+Male adult orc AI agents now use the Uruk battle voice (uruk_01) in
+every mission instead of the human voices their skin assigns. The
+voice index is found once per mission from the voice catalog, and
+each orc keeps a pitch from its body seed. The player's own agent,
+women, children and other races keep their voices.
+
+The engine picks the skin voice again whenever an agent's equipment
+is rebuilt, so the voice is set again from the mission listener event
+every rebuild raises: inventory screen, hideout ambush, body
+generator, banner bearer and the Coop handlers.
+
+Contributed by REDACTEDSTUFF. Review fixes: the listener hook replaces
+the banner-bearer event, visuals count only when valid, each failure
+reason reaches the check log, and the docs say co-op client orcs share
+the lowest pitch (RCA docs/reviews/rca-orc-battle-voice-2026-11-16.md).
+Codex skipped: out of usage. No issue linked. In-game check owed: an
+orc battle sounds Uruk, and an orc companion keeps the voice after
+the inventory screen closes.
+
+#### feat(realm-borders): v2.0.40 - realm name size setting, larger CJK names
+
+`bc50d2b3`
+
+Realm names on the campaign map now have a size setting, and names in
+Chinese, Japanese and Korean start larger. Chinese players reported the
+names were too small to read: two to five CJK characters drawn at the
+size of the aniron lettering cover far less of the map than a name in
+spaced capitals.
+
+- MCM, Realm Borders, Realm Name Size: 50% to 250%, default 100%. It
+  scales every realm name and applies on the next map frame, with no
+  restart. A value that is not a number, or is outside the range,
+  falls back to 100% with one warning in the log.
+- A name that the aniron font cannot draw uses the game's own font, now
+  at size 42 instead of 30. That covers Chinese, Japanese and Korean,
+  and also a Polish or Turkish name with a letter aniron lacks (such as
+  "ł"). Aniron names stay at 34.
+
+Each label binds Brush.FontSize to the size RealmNamesVM computes. The
+brushes keep the same base sizes, and RealmNamesPrefabTests keeps them
+equal. Co-op treats the setting as presentation only.
+
+Review: tier 2 deep review, lenses 5 (data flow) and 7 (XML). Codex did
+not run: it is out of usage, and Mike said to skip it. Findings and
+fixes: docs/reviews/rca-realm-name-size-2026-11-16.md.
+
+Not tested in game: the Chinese look, a Polish game and the live resize
+are owed (realm-borders.md "Not yet run in game").
+
+Refs #1380
+
+#### feat(startup): v2.0.40 - Warn and stop TAOM on a wrong game version
+
+`b1695374`
+
+When the installed Bannerlord differs from the version TAOM is built
+for, TAOM now says so instead of failing with the engine's error box.
+TAOM.Dependencies compares the game's major.minor.revision with the
+Native pin in TAOM's SubModule.xml before any TAOM DLL loads. On a
+difference it keeps the code of TAOM and of modules that depend on it
+from loading, so the game reaches the main menu. A popup there names
+both versions and the two fixes: pick the pinned version under Steam
+Betas, or install a TAOM made for that game version once one is out.
+
+The popup's only button is the game's own Exit Game, and it closes
+the game. TAOM's XML is already loaded in that session and its code
+is not, and the game's save check would let a TAOM save load, so
+playing on could damage a save. If the guard
+cannot be installed, a native message box says the same before the
+engine's box. Nothing runs on a dedicated server, in the Modding Kit,
+or when the version or the pin cannot be read.
+
+Contributed by REDACTEDSTUFF, including the Exit Game button. Review
+fixes: the launcher remedy no longer promises a build, a test-mode
+check that could never fire is gone, and the 17 hero companion keys
+got their English rows in the 12 language files (RCA
+docs/reviews/rca-pr1340-game-version-warning-2026-11-16.md). Codex
+skipped: out of usage. No issue linked. In-game check owed:
+startup-alerts.md check 5, a mismatched pin shows the popup and Exit
+Game closes the game.
+
+#### feat(autorun): v2.0.40 - Open a story mission with nobody at the keys
+
+`4baa2f53`
+
+A story mission could be opened only by a person: a console command
+arms the dev menu, and the mission starts from a click on "Open the
+mission". The unattended runs reached a Fords match, a Long Defeat
+or a new campaign, and never a story mission.
+
+tools/run_scenario.py has a new kind for that:
+
+  python tools/run_scenario.py --kind story-mission
+      --mission helms_deep_defend
+
+It starts a new campaign, opens the dev story menu for the named
+mission, chooses "Open the mission" the way a click does, lets the
+hosted battle play itself, goes back to the map and quits. The run
+passes only when the mission launched once with autoplay, ended with
+a verdict of its own (a body that walks out of the battle does not
+count), and the map came back. An event window that would stop the
+battle's tick is closed as it opens.
+
+Nothing changes for players. The driver exists only when the
+TAOM_AUTORUN arm file names this kind, so a game started by a person
+never does this. The dev menu and the console command behave as
+before; the menu's entry point takes an optional callback for the
+verdict, which the console never passes. The armed path does not ask
+for cheat mode, which is safe because only the arm file starts it.
+
+For testers: tools/ingame_checks/1368.toml reads the run (the done
+line, the mission's boot line and its end line, from one session).
+The same run is the unattended way to the mission rows of #1105 and
+#1366.
+
+Verification: the full suite passes (42137 tests) except the
+two language coverage tests, red since the hero phases; this change
+adds no text. Tool tests, the ModuleData validator and the doc lint
+pass. The campaign-new kind writes the same arm file as before.
+
+Review: /deep-review tier 1 after a refutation pass on the plan.
+Three lenses, no critical or high finding; two medium findings fixed
+(a failed run that the manifest read as not reached, and a "build did
+not arm the run" message the runner could never print), recorded in
+docs/reviews/rca-story-mission-driver-2026-11-16.md. The Codex pass
+was skipped on the maintainer's word while the account has no usage.
+
+Not-tested: no run yet. The first run on this commit is the next
+step. It will show what no test can: that the click opens the scene,
+that the battle ends with no input in a campaign, and that the map
+comes back.
+
+Refs #1368, #1366, #1325
+
+#### feat(story-missions): v2.0.40 - The three heroes defend Helm's Deep
+
+`8ee4ef2f`
+
+When the player defends Helm's Deep in the campaign's story mission,
+Aragorn, Legolas and Gimli now stand with the garrison. They cost
+nothing, they fight with the kits they have in the Long Defeat (the
+timed abilities, the killing blows, Legolas's bow), and they hold the
+wall as one group the player can order. A hero who falls is gone for
+that battle. Nothing about them is written to the campaign.
+
+If the player himself falls, he can take control of one of the three.
+That hero keeps his own health and casts no ability while the player
+controls him.
+
+To make this work the three mission heroes and Legolas's extra arrow
+now load in a campaign as well as in a custom game. They are not
+companions: no hero entry stands behind them, no encyclopedia page,
+party screen or companion pool lists them, and the arrow is in no
+shop, loot or prize. Each of the three is now level 36, so that their
+race abilities are as strong in a campaign as in the Long Defeat. In
+the Long Defeat that level also raises the weight the battle AI gives
+them.
+
+Aragorn's aura now also reaches his men in the story mission.
+
+For modders: a story mission row takes an optional "heroes" list (id,
+troop, healthFactor; at most three) in
+story_missions/story_missions.json.
+
+For testers: at the start of every campaign session one check line,
+taom.story-missions.roster, names any story mission troop or hero
+arrow that did not load. tools/ingame_verdict.py has a new optional
+key, scope_end, which ends a check's log segment at the next mission
+launch; the manifests of #1359, #1361 and #1366 use it, so a Long
+Defeat run and a story mission in one session no longer answer for
+each other.
+
+Verification: the full suite passes (42085 tests) except the
+two language coverage tests, which were red before this change for
+the keys of the earlier hero phases; this change adds no text. Tool
+tests, the ModuleData validator and the doc lint pass. A new campaign
+with the characters and the arrow loaded ran two days and unloaded
+clean (run 20261116-035100, before the feature was built on it).
+
+Review: /deep-review tier 1 after a refutation pass on the plan. The
+first wave of four lenses found one high finding (a check that could
+pass on a later battle in the same session) and five medium; a second
+wave of four lenses read the fixed tree. All are fixed and recorded
+in docs/reviews/rca-story-free-heroes-2026-11-16.md. The Codex pass
+was skipped on the maintainer's word while the account has no usage.
+
+Not-tested: the story mission with the heroes has not been opened in
+a game. No tool opens it without a person, so the hero lines of
+tools/ingame_checks/1366.toml wait for a played run, with the saves,
+the faces and the take-over. The unattended runs on this commit are a
+new campaign (the roster line) and a Long Defeat (the changed hero
+spawn).
+
+Refs #1366, #1325
+
+#### feat(hero-abilities): v2.0.40 - Legolas gets his ranged kit
+
+`d3364229`
+
+In the Long Defeat, Legolas now shoots like the Legolas of the films.
+
+His aim has no error. While he holds his bow, the game's aim-error
+and weapon-inaccuracy values are zero for him. An arrow can still
+miss a soldier who moves after the shot, and a wall still stops it.
+
+His arrows go through shields. A shield that blocks one of his arrows
+takes enough damage to let it pass, and often breaks.
+
+His arrows kill. An arrow to the head kills the soldier outright, and
+any other arrow that lands has a 10 percent chance to. The rule of
+Gimli's killing blow decides who is safe: a hero, the player, a
+team's general, a troll, a Nazgul, or a soldier who is shrugging off
+blows.
+
+Three timed abilities, each cast with enemies within 40 m:
+"Rapid Fire" (every 75 seconds, for 15): he draws 60 percent faster
+and reloads 50 percent faster. "Many Arrows" (every 90 seconds, for
+12): each shot adds two arrows at other enemies within 10 m of his
+target. The extra arrows cost no ammunition and never roll a kill.
+"Archer's Eye" (every 2 minutes, for 20): allied archers within 15 m
+draw 20 percent faster, aim with half the error and hit 15 percent
+harder.
+
+Also in the Long Defeat: the Elven Volley no longer chooses a bought
+hero as the owner of its arrows.
+
+Known limits: the kit runs only in the Long Defeat, like Aragorn's
+and Gimli's. On a co-op server the extra arrows are not added. The
+sound of an arrow kill plays between Legolas and his victim.
+
+For modders: the kit is the "ranged" block of his row in
+hero_abilities/hero_abilities.json (zeroAimError, pierceShields,
+headshotKillChance, bodyKillChance, extraArrowItem and its spread and
+range), with extraArrows and alliesRangedOnly on an ability. The
+extra arrow is the new item taom_legolas_arrow, loaded for custom
+games only. All numbers are first guesses.
+
+Verification: the full suite passes (42029 tests) except the two
+language coverage tests, which stay red until the language pass for
+three new English keys (taom_hero_ability_legolas_rapid_fire,
+_many_arrows, _archers_eye). Tool tests, the ModuleData validator and
+the doc lint pass. The engine API snapshot is regenerated for the new
+damage model override.
+
+Review: /deep-review tier 1. The first wave of four lenses found one
+high finding (the volley owner) and four medium; a second wave of
+four lenses read the fixed tree and found one more medium. All are
+fixed and recorded in docs/reviews/rca-hero-ranged-kit-2026-11-16.md.
+The Codex pass was skipped on the maintainer's word while the account
+has no usage.
+
+Not-tested: nothing of the kit has run in a game yet. The unattended
+Long Defeat run on this commit is the next step, judged by
+tools/ingame_checks/1361.toml. Whether the engine lets an arrow hit
+the body after it passes a shield is measured by that run.
+
+Refs #1361, #1325
+
+#### feat(hero-abilities): v2.0.40 - Aragorn and Gimli fight like heroes
+
+`5ee56971`
+
+In the Long Defeat, Aragorn and Gimli now use timed abilities and
+heavier blows. Once a second each hero checks his abilities and fires
+the first one that is ready and whose moment has come.
+
+Aragorn: "For Frodo!" (every 90 seconds, with three enemies close):
+allies within 15 m hit harder and faster, take less damage, resist
+knockdown and hold their nerve for 15 seconds. "Heir of Isildur"
+(every 2 minutes, below 40 percent health): he shrugs off blows and
+takes far less damage, and the men near him block and parry better.
+His companion aura reaches the mission hero too.
+
+Gimli: "Baruk Khazâd!" (every 75 seconds, with three enemies close):
+he hits harder and faster and shrugs off blows for 12 seconds, and
+allies near him hit a little harder. "Still Standing" (every 2
+minutes, below 35 percent health). He cannot be knocked down.
+
+Blows: both heroes have an overhead slam and side sweeps on their own
+cooldowns. Aragorn's knock enemies back; Gimli's knock them down. A
+clean overhead hit can kill the struck soldier outright: 15 percent
+for Aragorn, 35 percent for Gimli. It never kills a hero, the player,
+a team's general, a troll, a Nazgul, or a soldier who is shrugging
+off blows.
+
+A hero's ability shows one line on screen, a war cry, sparks and an
+outline on the hero while it runs. The abilities run only in the Long
+Defeat. Hired companions in the campaign are unchanged, and the
+Helm's Deep story mission gets the kits when a later phase puts the
+heroes there. Legolas's kit is the next phase.
+
+Known limit: the abilities and Gimli's blows also drain the morale of
+enemies near him, but the Long Defeat keeps every attacker on the
+field, so no enemy runs from him there. What his fear should do in
+that mode is an open decision (#1325).
+
+For modders: the kits are in hero_abilities/hero_abilities.json and
+the blows in signature_strikes/signature_strikes_config.json
+(killChance per strike, killImmuneRaces at the root). All numbers are
+first guesses.
+
+Verification: the full suite passes except the two language coverage
+tests, which stay red for six new English keys until the language
+pass (taom_hero_ability_aragorn_for_frodo, _aragorn_isildurs_heir,
+_gimli_baruk_khazad, _gimli_still_standing, _cast_ally, _cast_enemy).
+
+Review: /deep-review tier 1, three lenses; no critical or high
+finding, five medium findings fixed and recorded in
+docs/reviews/rca-hero-abilities-2026-11-15.md. The Codex pass was
+skipped on the maintainer's word while the account has no usage.
+
+Not-tested: no ability has fired in a game run yet. The unattended
+Long Defeat run on this commit is the next step, judged by
+tools/ingame_checks/1359.toml.
+
+Refs #1359, #1325
+
+#### feat(long-defeat): v2.0.40 - Buy Aragorn, Legolas and Gimli at the shop
+
+`a5f607f4`
+
+The Long Defeat shop now sells three heroes: Aragorn for 300 gold,
+Legolas and Gimli for 250 each. A hero is bought between waves, takes
+one place under the garrison cap and has three times a soldier's
+health. He lasts until he falls, and the shop sells him again in the
+next calm. The shop panel lists the three with their state: for sale,
+on his way, or on the field.
+
+The three are the mode's own characters, copies of the named
+companions that load for custom games only, so no campaign hero is
+ever tied to a battle body. Aragorn carries his sword, Legolas his bow
+and Gimli his two-handed axe; none has a horse.
+
+On the field they form their own group, order key 8. The game sends
+the group to a wall lane and keeps it there in a line that fires at
+will. An order you give to group 8 replaces that. When the lord falls
+the group goes back to the wall order, and in a stalemate charge it
+charges with the rest and then returns to the wall. The siege AI can
+no longer merge the three into the foot soldiers or add soldiers to
+their group.
+
+Their abilities are not in this change. They come with the later
+phases of #1325.
+
+For modders: a shop in long_defeat/shop.json takes a "heroes" list
+(id, troop, price, healthFactor, name, text). The "marshal" block of
+a fortress's locations, which nothing ever spawned, is no longer read;
+a fourth hero is one more row in the list.
+
+Verification: the full suite passes except the two language coverage
+tests, which stay red for the eight new English keys until the
+language pass (TAOM_LD_Hero_Aragorn_Text, _Legolas_Text, _Gimli_Text,
+TAOM_LD_Hud_HeroesTitle, _HeroPending, _HeroStanding,
+TAOM_LD_Notice_UnknownHero, _HeroAlive). Three unattended runs were
+judged from their logs. The second showed the heroes merged into the
+foot formation and the third showed two of them idle under a charge
+order that the engine turns into Stop between waves; both are fixed
+here and recorded in docs/reviews/rca-ld-shop-heroes-2026-11-15.md.
+The third run proved that the group holds. The wall order is new
+since that run and is owed a fourth.
+
+Review: /deep-review tier 1, eight lenses in two waves and two
+re-reviews of the fixes. The Codex pass was skipped on the
+maintainer's word while the account has no usage.
+
+Not-tested: a person has not yet ordered group 8 in the game, and no
+hero has fallen in a run, so the buy-back rests on its unit tests.
+
+Refs #1337, #1335, #1325
+
+#### feat(diplomacy): v2.0.40 - Free and Shadow realms at peace stay apart
+
+`2dbcf1a3`
+
+Free and Shadow realms that are at peace before the War of the Ring
+no longer act as friends. Each block has its own switch under
+"World/Hostile Peace" in Mod Options, or in hostile_peace.json:
+
+- Caravans of a Free realm do not trade in a Shadow realm's towns, and
+  the reverse, while the two are at peace.
+- The two sides sign no trade agreements.
+- Enemy realms close their gates: you enter their towns only in
+  disguise, their castles not at all (Request entry is refused too),
+  and their villages refuse trade, recruits and rest. Your own fiefs
+  are not affected. A failed sneak still adds crime, but with a realm
+  you rule the crime stops one point short of the war threshold, so
+  it never starts a war.
+- A kingdom you rule cannot ally across the Free/Shadow line unless
+  "Allow Player Alliances With Anyone" is on. A kingdom you founded
+  takes its culture's side; Neutral realms ally with anyone. Existing
+  alliances are kept.
+
+The review fixed the gate block, which never acted at towns and
+castles: the game puts the party inside before the gate menu asks, so
+the exemption for the settlement you are in was always true. It also
+closed castle Request entry, stopped the Provender-master buying in an
+enemy village, and added the crime cap on Mike's word (2026-11-15).
+
+Contributed by REDACTEDSTUFF (PR #1332). Review: lenses 5 and 2 at
+tier 1, RCA docs/reviews/rca-pr1332-hostile-peace-2026-11-15.md.
+Codex was skipped (out of usage). English seed rows were added in the
+12 language files; translation is on #1129. No issue is linked. Not
+checked in game: hostile-peace.md "How to verify in game".
+
+#### feat(cheats): v2.0.40 - Faction troop list and every-troop screen
+
+`e0e56205`
+
+The cheat menu's Troops page gains two entries. "+10 of any troop of
+your faction..." opens a searchable list of every regular troop of
+the player's kingdom (or clan) culture, from recruits to the top
+tier, built from the culture's own lists, the TAOM recruitment pools,
+the Elite Emissary offers and the clan party templates along every
+upgrade. "Every troop (party screen)..." opens the game's own cheat
+party screen, also when the engine's cheat mode is off.
+
+The review fixed the hand-built party screen: on Done it now releases
+the prisoners moved to the left, as the game's handler does. Before,
+a lord released there stayed a prisoner with no captor for good. The
+private list method the screen reads is in the reflection binding
+gate, and the pick list passes its option id as trunk's #1297 change
+requires.
+
+Contributed by REDACTEDSTUFF (PR #1321). Review: lenses 5 and 2 at
+tier 1, RCA docs/reviews/rca-pr1321-cheat-troop-list-2026-11-15.md.
+Codex was skipped (out of usage). English seed rows were added in the
+12 language files; translation is on #1129. No issue is linked. Not
+checked in game: the steps in cheat-menu.md "How to verify in game",
+including releasing a lord on the party screen with cheat mode off.
+
+#### feat(lords): v2.0.40 - Lord armour variants for Mirkwood and Harad
+
+`1a7235b8`
+
+After the lord kit pass (#1327) all five Mirkwood lord templates wore
+one chest, and Harad lords stayed under their own troops. The looks
+existed, but the pieces are troop pieces: the armour restat prices a
+piece at the band of the lowest troop that wears it, and Mirkwood's
+other three chests are militia pieces with body armour 8, 8 and 17
+against 48 for the elite chest (#1333).
+
+A lord variant is a new item in the TAOM module that reuses the mesh
+and look of an Armory piece, cannot be bought, and has the armour of
+the culture's lord band. No new art and no Armory change. There are 20:
+7 for Mirkwood (three chests, a pair of pauldrons, three leg pieces)
+and 13 for Harad (five chests, a pauldron, two greaves, five helmets).
+
+- Mirkwood lords have four chest looks again (plain, bronze, silver
+  and the older palace set); it was one. Two of the five templates
+  share a look and differ by helmet and gloves.
+- Each of the five Harad templates has its own chest and its own
+  helmet. Head, body, arm, leg went from 34 to 38, 35 to 39, 21 to 29
+  and 12 to 44, 54 or 55, 26 to 29 and 36; the culture's best troop
+  has 39, 51, 25, 39.
+- No template is lower on any part than before, and none is over the
+  limit of its culture's best troop plus 5.
+- Lords more than a tenth under their culture's best troop on head,
+  body, arm, leg: 292, 248, 189, 275 before; 119, 18, 86, 45 now. The
+  Harad, Shaghana and Abanissa lords are no longer short on any part.
+
+A variant's chest takes the arm and leg share of the chest its
+culture's best troop wears, so a lord does not lose arm armour because
+his look came back. The Harad lord band for a helmet is one point over
+the limit, so those five are capped at 44 in the spec, and the
+generator refuses a cap above the limit.
+
+tools/generate_lord_armour_variants.py builds the item file from
+tools/lord_armour_variants.json and the live Armory (dry run, --apply,
+--check). Two data gates hold it: the file equals its sources, and
+every mesh exists. No shop, loot roll, tournament prize, armoury
+upgrade or strip hands a variant out. Two routes put a lord's gear on
+the player, as for the lord pieces already in the game: the faction
+screen preset or takeover, and a clan member who comes of age as a
+lord of that culture.
+
+The new item names are English in every language until the
+translation backlog reaches them (#1129). tools/data/armor_roster_tiers
+.json also takes the current values of the 37 lord pieces written to
+the Armory with #1327; that update was owed.
+
+Lords in a running campaign keep their kit. Reviewed by two Claude
+review lenses, with fixes; the Codex pass was skipped on the
+maintainer's word. Not tested in game.
+
+#### feat(field-camp): v2.0.40 - Make Camp tooltip says why it is blocked
+
+`4212aec3`
+
+The Make Camp button on the campaign map now says why it is blocked
+when it cannot be used: in a settlement, in an encounter, while a menu
+is open, while the party moves, or while it is disorganized. The
+button is enabled in exactly the same states as before; only the
+tooltip gained the reason line.
+
+Contributed by REDACTEDSTUFF (PR #1318). Review: lens 5 at tier 2,
+no gaps; two LOW notes left as they are (a read order that no caller
+reaches, and one extra check per refresh). Codex was skipped (out of
+usage). English seed rows were added in the 12 language files for the
+new keys and for 25 keys other branches had left without rows;
+translation is on #1129. No issue is linked. Not checked in game:
+hover the greyed button in a town, while moving and with a menu open.
+
+#### feat(coop): v2.0.40 - Guests buy from the emissary and armoury
+
+`d40da18b`
+
+In co-op, a guest can now buy elite troops from the Elite Emissary and
+have a carried piece improved at a town armoury. The guest's screen asks
+the host, and the host runs TAOM's own purchase or upgrade for the
+guest's hero, with that hero's party, purse and inventory. The troops,
+gold and items change on the host, and Coop syncs them to the guest.
+Before this, a guest was turned away at both. Without TAOM.CoopCompat
+the old refusal stays.
+
+The host checks each request first: the hero must lead its own party,
+be in that settlement, and be in no battle and no besieged settlement.
+The emissary must be on, and its settlement a key one not at war with
+the hero. The town must have an armoury. The hero comes from the
+sender's current Coop connection, never from the message, and every
+field is bounded before any hero is read. A guest sees its balance and
+the town's armoury level as the host has them. If the host does not
+answer within 15 seconds, the guest's next click says so.
+
+Credit: the design is a port of minimalcash63's TAOM.CoopEmissaryArmory,
+with permission. The request checks come from Sternab's emissary relay
+in TAOM-Coop.
+
+Review: /deep-review tier 1, two waves. The first wave found that the
+host looked the guest's hero up by Coop's object key ("Hero_" +
+StringId), so every real guest was refused; the transport now resolves
+the hero through Coop and passes its StringId. RCA:
+docs/reviews/rca-coop-guest-trade-2026-11-15.md.
+
+Not tested: the two-client in-game check (coop-compat.md, step 4). The
+presenters' guest branches have no unit test (thin Gauntlet code).
+The Codex tier 1 pass was skipped on the maintainer's word and is owed.
+The language rows for the eight new keys wait for the lead's language
+pass, so LanguageFileCoverageTests is red for them.
+
+Refs #1329
+
+#### feat(story-missions): v2.0.40 - Offer Helm's Deep by the player's side
+
+`aa67e8ed`
+
+The Helm's Deep story offer now follows your side of the war. Before,
+every player whose kingdom was not one of the attackers was asked to
+defend the Hornburg, so a Mordor or Harad player could hold Rohan's
+walls.
+
+A free player, and a neutral player, may defend. A player never fights
+for a side of the opposite alignment, and never against his own realm:
+a player of the defending kingdom may only defend, and a player of an
+attacking kingdom may only attack. Your side is the one the rest of the
+mod uses: your kingdom, or your clan outside one, then its culture. A
+war pledge counts for a realm that has joined a side.
+
+The attacking side is prepared but not playable yet. A story window can
+now name an attack mission, the menu has a "Storm the walls" option and
+the result of an attack is applied (a won attack takes the fortress, a
+lost one leaves it held). No shipped window names an attack mission
+until the attack battle itself is built (#1325), so for now an evil
+player, and a player of Isengard or Dunland, gets no Helm's Deep offer.
+Such a player is not shown a lone "Let fate decide": that choice is
+saved, and it would close the window for him before the attack exists.
+
+Seven new English lines belong to the attack side and cannot be seen
+until then. They need no translation before the attack ships; the
+language test stays red for these seven keys until the language pass
+(#1129).
+
+Review: three lenses (data flow, engine, XML), no high finding; eight
+lower ones fixed or pinned, in
+docs/reviews/rca-story-side-gate-2026-11-15.md. The Codex pass did not
+run (usage limit until 2026-11-20) and is owed before the merge to
+trunk. Not tested in game: one campaign per side at an open Hornburg
+window (tools/ingame_checks/1105.toml).
+
+Refs #1326, #1325.
+
+#### feat(startup): v2.0.40 - alert for War Sails and separate BUTR copies
+
+`bda1efa8`
+
+At the main menu TAOM now shows one notice when something in the
+install will cause trouble:
+
+- War Sails is loaded alongside TAOM, which TAOM does not support.
+- A separate copy of Harmony, ButterLib, UIExtenderEx or MCM sits in
+  the Modules folder or the Steam Workshop. TAOM.Dependencies already
+  provides all four. The notice lists each copy, asks the player to
+  unsubscribe from a Workshop copy, and for a copy in the Modules
+  folder to reinstall TAOM rather than delete the folder.
+
+When War Sails is ticked, the launcher drops TAOM entirely. TAOM's
+companion module then says so at the main menu, if TAOM_Map loaded,
+so players know why the game started without TAOM.
+
+The 12 language files get English rows for the new texts; translation
+stays on #763.
+
+Contributed by REDACTEDSTUFF. Review fixes: safe advice for a copy in
+the Modules folder, the missing-TAOM notice limited to TAOM players and
+without dead language rows, and corrected doc claims
+(docs/reviews/rca-pr1309-startup-alerts-2026-11-15.md). No issue is
+linked. Not yet checked in game (startup-alerts.md, "How to verify in
+game").
+
+#### feat(battle-load): v2.0.40 - Shader counter during battle loads
+
+`1e0124e6`
+
+After a game update or a change to the mod list, the first loads
+compile their shaders on a still loading screen, and the game can look
+frozen for up to two minutes. When a mission load has 50 or more
+shaders queued, the small shader window from startup now appears and
+counts them ("Preparing this scene: 412 shaders compiled"), and the
+loading screen's bottom line says the game is compiling shaders and is
+not frozen. Both go away when the scene is ready. A warm load shows
+neither.
+
+The 12 language files get English rows for the three new texts;
+translation stays on #763.
+
+Contributed by REDACTEDSTUFF. Review fixes: the texts say "scene"
+because every mission load is checked, a dedicated server makes no
+native shader read, a failed window start no longer blocks later
+loads, and the patch category is Patch155
+(docs/reviews/rca-pr1308-battle-shader-notice-2026-11-15.md). No issue
+is linked. Not yet checked in game (battle-shader-notice.md, "How to
+verify in game").
+
+#### feat(cheat-menu): v2.0.40 - god mode toggle in the battle cheat list
+
+`4cf87243`
+
+The battle cheat list (Esc menu, with the cheat menu switch on) gets a
+God mode entry, and the console gets taom.cheat_battle_god [on|off].
+While it is on, you and any mount you ride take no damage, including a
+new mount after you remount. It turns off when the game declares the
+battle won or lost, when the mission ends, and in co-op, where every
+battle cheat refuses. It never takes over a mortality flag the game
+itself set.
+
+The 12 language files also get English rows for the god mode keys and
+for the 8 realms MCM keys that #1302 added without rows. Translation
+stays on #763.
+
+Contributed by REDACTEDSTUFF. Review fixes: wording for any mount, a doc
+correction on when god mode turns off, a co-op tick test and fuller
+error logging (docs/reviews/rca-pr1304-god-mode-2026-11-15.md). No issue
+is linked. Not yet checked in game (cheat-menu.md step 12).
+
+#### feat(autorun): v2.0.40 - unattended new-campaign scenario runs
+
+`02bd1e3d`
+
+A new campaign can now run with nobody at the keyboard. Set
+TAOM_AUTORUN to an arm file, or run python tools/run_scenario.py
+--days N. The game starts a new campaign as Gondor (empire_w), skips
+character creation after the culture stage, keeps the player's party
+ignored and on hold, and holds fast forward at 15x until day N. Then
+it writes autorun_done.txt and one [Check] line
+(taom.autorun.campaign-new.done), ends the campaign and quits.
+Autosave is off for the run and the focus-loss pause is off in memory
+only; MCM is never written. A player's session without the variable
+is unchanged, and a dedicated server keeps the null host.
+
+run_scenario.py wraps run_fords_autorun.py the way run_long_defeat.py
+does, judges the done file and the log, and saves the war ledger as
+ledger.txt for the #1283 balance run. The design is built from the
+TaleWorlds source and this repo only.
+
+Known limitation: the tier 1 review is not finished. The Tooling lens
+reported three MEDIUM gaps in the judge (it skips the load window in
+the crash scan, never checks the armed plan came back, and accepts a
+stale deploy) plus LOW items; they are fixed on a follow-up branch.
+The Engine and Data flow lenses and a Codex pass (blocked by its usage
+limit until 2026-11-20) are still owed. No game run yet: the first
+unattended run needs the maintainer's word.
+
+Refs #1075, #1283
+
+#### feat(realms): v2.0.40 - MCM options for realm names and banners
+
+`a4834c46`
+
+A player asked to keep their banner when crowned. Four Realms options:
+Your Realm Takes Your Title's Name, AI Realms Take Their Titles' Names,
+Your Realm's Banner (title banner, realm's own banner or your house
+banner) and AI Realms Fly Title Banners. Unless the player's realm flies
+the title banner, a coronation no longer overwrites the player's clan
+banner. A realm counts as the player's when any player's clan rules it.
+
+#### feat(banners): v2.0.40 - Five RiE emblem icons on sheet 15
+
+`8412a69b`
+
+Five single emblems traced from the RiE coat-of-arms textures, for
+banners the library had no icon for: a stag head (31031) and a
+triquetra (31032) in the Northmen group, a dwarf mask (31033) and a
+meander ring (31034) in the Dwarven group, and the Dol Tinereb flower
+(31035) in the Elven group. They fill the free cells 11 to 15 of
+taom_banners_15, which keeps its opaque alpha and compiles to DXT5.
+
+#### feat(long-defeat): v2.0.40 - Host and join a run in a Coop session
+
+`4869af4a`
+
+The Long Defeat can now be played in co-op through a BannerlordCoop
+session, with no campaign (#1280). The main menu shows "The Long
+Defeat (co-op)" when the installed Coop has the session API
+(BannerlordCoop #4694). One player picks "Host a run", a fortress and
+a class; the others pick "Join a run" and enter the host's address
+and port.
+
+Coop elects one member as the host. That member runs the waves, the
+HUD and the shop as in a solo run, at 1x speed. Each other member
+spawns only its own lord, on foot, and fights beside the host's
+garrison. When the run ends, the host sends the wave, the waves
+cleared and the kills, and every follower shows them before it
+returns to the main menu. If the host leaves, the run ends for all
+with "The host left".
+
+With a Coop that has no session API, TAOM.CoopCompat builds a stub,
+logs "sessions off" and keeps the option hidden. Solo runs do not
+change.
+
+Review (deep-review tier 1) found that in a session every defender
+spawned on Coop's ally team, so the host's run ended at wave 1; the
+spawn now sets its team. It also found exits that did not close the
+session, a default build that failed against the installed Coop, and
+a payload decoder that could throw on bad bytes. All are fixed, test
+first. RCA: docs/reviews/rca-ld-coop-session-2026-11-15.md.
+
+Not in this slice: host handoff, wave and shop messages, a mounted
+follower, a won or lost line (#1292).
+
+Not tested: no two-client run yet; the Codex review is owed before
+merge.
+
+### Fixes
+
+#### fix(enlistment): v2.0.40 - heir discharge comments back to the ratchet
+
+`4303a252`
+
+PR #1507 took EnlistmentLoadNormalizer.cs to 36 comment lines and
+EnlistmentBattlePayoutService.cs to 33, against a ratchet of 31 each,
+which failed the comment gate on trunk. Both files are back to 31 with
+no code change. The facts those comments held (why a held discharge
+waits out battle and captivity, and why the battle pays nothing in
+between) are now in docs/features/enlistment.md.
+
+Closes #1508
+
+#### fix(loc): v2.0.40 - English rows for keys the language files lacked
+
+`07a952d0`
+
+The campaign start options (#1441) and the Long Defeat upgrade notices
+added English keys with no rows in the language files, so three
+localization tests failed on trunk. Every language file now carries
+those keys in English: 1,482 rows in each of ten languages and 194 in
+Simplified and Traditional Chinese, seeded with translate_with_claude.py
+--sync-ids --seed-only. Players see the same English text as before;
+the translation pass is still owed (#1129).
+
+The alliance hint for player kingdoms gained two sentences about the
+Alignment rules start option. Ten languages held the old English, which
+now reads as the current English. The Chinese rows keep the Chinese
+team's translation of the older text until the language pass.
+
+#### fix(enlistment): v2.0.40 - heir discharge at load waits out the battle
+
+`18aeaba1`
+
+A save made while an enlisted soldier was in his commander's battle,
+loaded with a different main hero (an heir, or a co-op join), ran the
+quiet discharge at once. Its first step clears the party's army
+attachment, which pulled the soldier out of the live battle.
+
+The load now holds that discharge while the main party is in a map
+event, and the rest of the load runs as usual. The hourly tick runs the
+held discharge once the battle is over and the party is not captive
+(vanilla keeps a captive's party inactive, and the discharge would make
+it active). The battle in between pays no service rewards, because
+they would go to the old hero. The hold is not saved: a reload checks
+the identity again. A mid-session heir change keeps its old handling
+and waits for the next load.
+
+Tests: new rows in EnlistmentLoadNormalizerTests, EnlistmentHourlyTick
+Tests and EnlistmentBattlePayoutServiceTests. Full suite: no new
+failing tests against trunk. Not checked in game.
+
+Closes #1030
+
+#### fix(comments): v2.0.40 - counters agree on every line end (#1501)
+
+`0a40abc0`
+
+A Codex review of the comment ratchet found three gaps, none of which
+the current tree hits:
+
+- A lone CR, NEL, U+2028 or U+2029 ends a line in C#, but both
+  counters split on LF only. A /// line followed by such a break hid
+  the next // comment, so a new comment could pass the gate. Both
+  counters now map those breaks to LF first.
+- comment_ratchet.py decoded a UTF-32 file as UTF-16 or UTF-8, where
+  File.ReadAllText reads UTF-32. A UTF-32 file then failed the gate
+  after --regen. The UTF-32 BOMs are now checked first.
+- --regen skipped a missing root without a word and wrote a baseline
+  without it. It now exits 2 and names the root.
+
+The baseline is unchanged: no file in the tree uses these line ends or
+UTF-32.
+
+#### fix(dwarf-attacks): v2.0.40 - 3 and 5 minute shared cooldowns
+
+`138114a4`
+
+AI dwarves head butted and drop kicked so often that they left their
+formation to do it: each drop kick carries the dwarf 2 m forward. A
+dwarf now waits 3 minutes of battle time before his next head butt and
+5 before his next drop kick (were 50 s and 60 s). Either attack starts
+both cooldowns, so a dwarf no longer does one of each back to back.
+
+The battle clock stops while the game is paused. A dwarf that has not
+attacked yet can still attack once when the lines meet, and an attack
+cut short by a hit reaction still starts both cooldowns.
+
+Known limitation: the MCM hint still says "each on its own cooldown".
+Changing the English text would make all 12 translations stale, so it
+waits for the next translation pass.
+
+Codex review owed before merge (no Codex usage since 2026-11-15). The
+in-game check is owed: a Custom Battle with dwarves.
+
+#### fix(stamina): v2.0.40 - a failed gate leaves stamina off
+
+`8b604858`
+
+Two fixes for battles in which Combat Stamina is off, both found by
+the review before the merge. Neither was seen in play.
+
+If the check that decides whether a battle uses stamina fails, that
+battle now runs without stamina. Before, the check ran again on every
+frame, and its error left the mission tick each time.
+
+A battle now starts with none of stamina's AI input claims from an
+earlier battle. They were dropped only at the end of a battle with
+stamina on, and the engine skips that step when another mission
+behaviour fails while it is removed. A session that then turned
+stamina off kept that battle's soldiers in memory until the game
+closed.
+
+Not-tested: both paths need an engine fault to reach; source pins
+in StaminaWiringTests cover them (#1497).
+
+#### fix(stamina): v2.0.40 - exhausted dwarves and trolls hold attacks
+
+`77d05180`
+
+With combat stamina on (#1497), a soldier at zero stamina must not
+attack. The lock that enforces it strips the AI's input, and two
+attacks never pass through that input: a dwarf's head-butt and
+drop-kick and a troll's brute-force smash are started by a behaviour
+tree. An exhausted dwarf or troll could still make them. Each of the
+two ready checks now asks stamina first and starts nothing for an
+exhausted soldier. With the switch off nothing changes.
+
+An attack that is already under way when the soldier becomes
+exhausted is not cancelled. A couched lance or a braced spear that is
+already held is not covered, and neither is a mount's own attack.
+
+Found from the first game logs: a match counted 512 kicks where no AI
+soldier kicks. They were the dwarves' attacks, which the engine reads
+as kicks, so each also costs the kick's 6 stamina points. A troll's
+smash costs nothing. Both costs are open decisions.
+
+taom.print_stamina and the summary line count the ready checks that
+an exhausted soldier failed.
+
+Review: tier 1, two lenses, no finding above LOW;
+docs/reviews/rca-stamina-phases-1-2-2026-11-19.md, addendum 2. The
+Codex pass did not run (no usage) and is owed before merge.
+
+Not-tested: the gate in a game (the next run)
+Research: Agent.SetActionChannel, BTReturnFalseDecorator
+Save-compat: no save data
+
+#### fix(stamina): v2.0.40 - stamina bar no longer throws when it moves
+
+`2e4e407c`
+
+With combat stamina on (#1497), the first change of the player's
+stamina bar raised an exception on every HUD refresh and put the
+"TAOM caught a crash" dialog over the battle. The bar's height was
+bound to an int. Gauntlet writes a widget's height back to the bound
+property as a float, and an int setter refuses that write. The height
+is now a float, like the other layout values of the battle HUD.
+
+Found by the first unattended Fords of War run with the switch on
+(E:/Temp/fords-runs/20261119-200716): 178 swallowed exceptions from
+the moment the scripted control gave the player a soldier. The same
+match with the switch off had none, and the three stamina checks of
+the first run passed (529 exhaustions, 502 recoveries, nobody stuck).
+
+A new gate, GauntletFloatWriteBackGateTests, reads every TAOM prefab
+binding of a widget property that writes a float back (the suggested
+sizes, the offsets, the margins, the size limits) and fails when the
+bound property is not a float, has a public setter and can change
+after binding. It named this one property in the whole code base.
+
+Review: tier 2, one lens;
+docs/reviews/rca-stamina-phases-1-2-2026-11-19.md, the addendum. The
+Codex pass did not run (no usage) and is owed before merge.
+
+Not-tested: the fixed bar in the game (the next run)
+Research: Widget.SuggestedHeight, GauntletView.OnViewPropertyChanged
+Save-compat: no save data
+
+#### fix(hooks): v2.0.40 - review follow-ups for plan 059
+
+`ea65759a`
+
+The ModuleData commit hook's note for a validator exit 2 (no game
+install, no ModuleData, a usage error) now names what the commit was
+not checked for, and can no longer fall silent:
+
+- When the career kit check crashed, timed out or printed a
+  traceback, the note says so too. The new exit 2 branch ended the
+  hook before that note, which the hook printed before this branch
+  existed. A kit tool exit 2 (it could not load its sources, as on a
+  machine with no install) is still not named, as before this change.
+- Stderr is decoded with replacement, and if the note cannot be built
+  the hook still answers with a fixed UNCHECKED note, never a bare {}.
+- The cause line (on a missing install, "Bannerlord Modules folder not
+  found") goes ahead of the stderr tail, which held only SKIPPED lines.
+
+Still an allow in every case; kit drift and validator findings still
+block. The hooks catalog row and a comment that named an exit 2 the
+hook cannot reach are corrected. Section 7m of tools/test_hooks.sh
+parses the note as JSON and covers bytes that are not UTF-8, the
+missing-install cause, a kit tool that cannot judge, and kit drift.
+
+Review: docs/reviews/deep-review-059-validate-moduledata-mcp-parity-decision-2026-11-19.md
+RCA: docs/reviews/rca-validate-moduledata-mcp-parity-decision-2026-11-19.md
+
+#### fix(creature-crews): v2.0.40 - beast crews shoot from their seats
+
+`d5d67466`
+
+The fix in f8265b6dc held every archer of the mumakil's war tower and
+the war elephant's howdah on its seat, and no archer shot. Its body
+says the archers "completed their reloads for the whole battle". That
+was wrong: it was read from a counter that also rises when the engine
+stops a draw before the release.
+
+The cause was one of the three engine calls of that hold. SetTargetZ
+puts the archer in the engine's NoPhysics movement mode, the mode of a
+man on a climbing net. In a battle with a different hold on each seat
+of one mumakil, the two archers with that call loosed 0 arrows in
+three minutes, and three archers with the same attachment and position
+lock and without it loosed 43, 44 and 47, held just as well (within
+0.12 m of their seats at up to 5 m/s, no teleport).
+
+Each seat now attaches its archer to the platform and locks its
+position, and nothing else. The deck floor holds the height. The
+engine code that stops the shot was not read, so the rule rests on
+that measurement; a gate test fails if a crew seat or platform calls
+SetTargetZ or SetExcludedFromGravity again.
+
+The mumakil crew now have what the howdah crew had since September: a
+count of arrows really loosed, from the engine's missile callback. The
+status line prints it with the archer's movement mode and whether it
+has a target. Each seat writes two [Check] lines when its archer
+leaves, one for the hold and one for a shot, for each beast
+(tools/ingame_checks/1482.toml).
+
+Not yet played: the final build on all seats, and the howdah, whose
+floor has no navmesh under it and must now hold the archers alone. A
+Codex review is owed (no usage). Deep review: the Engine compatibility
+and Data flow lenses, no critical or high finding.
+
+Refs #1482
+
+#### fix(hooks): v2.0.40 - ModuleData hook says UNCHECKED on exit 2
+
+`09f03e8c`
+
+The ModuleData commit hook answered a silent allow when the validator
+exited 2 (no game install, no ModuleData, or a usage error), so a
+renamed --code flag could turn the gate off without a word. It now
+allows the commit with an UNCHECKED note and the validator's stderr
+tail beside the tool result, as it does for a crash. The maintainer
+chose this on the manager digest (#623 decision A).
+
+#### fix(special-resources): v2.0.40 - no prisoner recruit gate in co-op
+
+`96ea28e4`
+
+In a co-op session Coop's prisoner path charges no recruit_cost, and a
+guest's balance can be stale (#967), so the party-screen prisoner gate
+could refuse a recruit that was never going to be charged. While a
+co-op session is live the gate now lets every prisoner recruit
+through; single-player keeps the clamp. The maintainer chose this on
+the manager digest (#563 decision A).
+
+#### fix(tools): v2.0.40 - refuse an install with no vanilla SkillSet
+
+`eb4c687d`
+
+The SkillSet guard checked that a vanilla SkillSet file exists. The
+installed Native ships native_skill_sets.xml as an empty stub, so a
+root with only Native passed the guard and every vanilla template read
+as empty. load_skill_sets now refuses a root whose vanilla modules
+define no SkillSet, so UPGRADE_SKILL_REGRESSION reports one
+(skill sets) ERROR and both skill writers stop before they write.
+
+#### fix(tools): v2.0.40 - review follow-ups for plan 060
+
+`f7309949`
+
+The deep review of plan 060 (#626) found that the guard meant to stop
+an unread install from passing UPGRADE_SKILL_REGRESSION as clean could
+not fire. It refused only an empty SkillSet load, and TAOM's own two
+SkillSet files always load, so an install root with no vanilla
+SkillSet read every vanilla template as empty and a real drop on a
+templated upgrade edge passed.
+
+load_skill_sets now takes require_vanilla. The validator gate reports
+a root with no vanilla SkillSet file as its one "(skill sets)" ERROR,
+and rebalance_troops.py and rebalance_ranged_ladders.py refuse it
+before writing anything. An unreadable SkillSet file now makes
+rebalance_ranged_ladders.py exit 2 (refused) instead of 1 (edits
+pending). Other callers keep the old reading.
+
+The rebalance_troops test fixture now builds its own install with a
+vanilla SkillSet file; it used to pass only because it read the real
+repo's SkillSets. The UPGRADE_SKILL_REGRESSION row in the validator
+codes now names the respecialisation exemption.
+
+Shipped data is unchanged: 0 UPGRADE_SKILL_REGRESSION, validator
+exit 0. A sweep of the old gate against the new over 1,008 synthetic
+cases found no case the old gate reported and the new one passes.
+
+Report: docs/reviews/deep-review-060-upgrade-skill-regression-templated-edges-2026-11-19.md
+RCA: docs/reviews/rca-upgrade-skill-regression-templated-edges-2026-11-19.md
+
+Not-tested: rebalance_troops.py and rebalance_ranged_ladders.py were
+not run against the real tree (both write by default).
+
+#### fix(creature-crews): v2.0.40 - hold beast crews on their seats
+
+`f8265b6d`
+
+Archers on the mumakil's war tower and in the war elephant's howdah
+were pushed around and hardly shot. Two battles at normal speed showed
+the cause: the archers walk off their seats by themselves, also on a
+standing beast, and the seat teleported each one back several times a
+second. Every teleport restarted the reload, so most of the crew never
+loosed an arrow.
+
+Each seat now holds its archer the way the engine holds a man on a
+moving ship's climbing net: it attaches the archer to the platform and
+locks its position every tick. On a mumakil at up to 5 m/s the archers
+stayed within 0.11 m of their seats, with no teleport, and completed
+their reloads for the whole battle. One teleport remains as a safety
+net, for an archer more than 3 m from its seat. When an archer leaves
+its seat the attachment, the lock and the gravity exclusion are
+cleared, also for an archer that died there.
+
+The measuring build from 5a14ac59f is gone: the experiment arms for
+each seat, the tick-order diagnostics, the scripted position and the
+deadband constants that the teleport correction used. Their tests went
+with them (the experiment map, the tick-order counter, the deadband
+width and its spacing margin). New gates: each seat must clear what it
+sets on its archer, and each beast has its own check id.
+
+Each seat writes a [Check] line when its archer leaves, pass when it
+needed no rescue teleport (tools/ingame_checks/1482.toml).
+
+Measured on the mumakil only. The howdah has no navmesh under it and
+its battle is still owed, as is a Codex review (no usage). Deep
+review: the Engine compatibility and Data flow lenses, no critical or
+high finding.
+
+Refs #1482
+
+#### fix(validator): v2.0.40 - check art against every loaded module
+
+`5e6547d4`
+
+The collision-body commit gate (MISSING_COLLISION_BODY) looked for art
+in the Armory, Native, SandBoxCore and SandBox packs, and the mesh tool
+omitted SandBox as well. The engine resolves a mesh or a body from
+every loaded module, TAOM and TAOM_Map included, so a body that only
+TAOM_Map ships would have read as a commit-blocking MISSING.
+
+One list, validate_mesh_refs.DEFAULT_TPAC_MODULES, now names every
+module loaded for art (LOTRLOME_Armory, TAOM, TAOM_Map, Native,
+SandBoxCore, SandBox). The validator reads TAOM from the repo module it
+validates, as the slot fit pass does, not from the last deploy. The
+same list also feeds audit_deleted_mesh_impact.py and
+audit_gender_variation_flags.py, which read it.
+
+Measured on the live install: the hook's validator run took 19.9 s
+(warm) against 23.7 s before this plan's changes, both while other
+test suites ran on the machine. The validator's report is unchanged
+(0 added, 0 removed), and the mesh CLI now scans 7993 packs instead of
+5827 with 0 unparsed and the same findings (0 added, 0 removed).
+
+Improve plan 059, #623 item 5.
+
+Constraint: the gate now passes a body only TAOM_Map ships; that is
+right only while TAOM_Map always loads with TAOM, which TAOM's
+SubModule.xml does not declare as a dependency
+
+#### fix(validator): v2.0.40 - MCP validate_moduledata runs every pass
+
+`d6d6ebb1`
+
+The taom-moduledata MCP tool validate_moduledata ran the schema engine
+alone and passed it no install path. An agent that trusted it never saw
+a missing collision body, an engine-XSD failure, a generator's retired
+item id, a skill template mismatch, a slot fit or a prison scene
+finding, and it never learned that it had not been told.
+
+One function, run_all_passes in tools/validate_moduledata.py, now
+composes every pass. The CLI's main() and the MCP tool's
+ModuleDataQuery.validate both call it, and the MCP server hands it the
+install path. A part of the run that checked nothing (no install, a
+missing live module, a registry that looks too small) is a new
+PARTIAL_RUN warning: the CLI prints it on stderr as before, and the MCP
+tool, which has no stderr, returns it with the issues.
+
+The CLI's report and exit codes are unchanged: on the live install its
+JSON report differs from the base run by 0 added and 0 removed
+findings, its stdout is byte-identical, and its stderr holds the same
+lines (the no-install and missing-root warnings now print after the
+Registry: line). An MCP run on the same install returns the same 1823
+findings as the CLI and writes nothing to stdout.
+
+CommitGateCoverageTests now checks that every *_issues pass is reached
+from run_all_passes and that main() and ModuleDataQuery.validate both
+call it; RunAllPassesParityTests pins that the CLI and the MCP tool
+report the same codes. The /verify half of #623 item 1 needed no
+change: /verify Step 2e has run the full CLI through
+tools/data_gates.py since v2.0.36.
+
+Improve plan 059, #623 item 1.
+
+Not-tested: the taom-moduledata server in a live Claude session (in-process call_tool test only)
+
+#### fix(resources): v2.0.40 - clamp prisoner recruits to the balance
+
+`207b9398`
+
+A captured troop with a recruit cost (spider, trolls, Harad and
+Mumakil riders, the upper Ironpass rams, dire wolf riders) could be
+recruited from the party screen's prisoner list at any special
+resource balance, even zero. The charge came later, at Done, and the
+balance floored at zero, so the player kept the troop and paid what
+was left, possibly nothing.
+
+The party screen now checks the balance when you recruit a prisoner.
+It counts the upgrades already queued in the same screen and the
+prisoners already recruited there. If the balance covers only some of
+the request, you get that many and a yellow line, "Only enough
+resources for N recruit(s)." If it covers none, the recruit is refused
+with the volunteer screen's yellow "Requires N <Resource>" line.
+Troops without a recruit cost, heroes whose faction has no special
+resource, and the Elite Troops Cost Gold Only option are unaffected.
+
+In co-op, where a prisoner recruit charges nothing, the same check now
+reads the recruiting player's own balance, so a recruit that was free
+in a session can be cut or refused. A guest's balance may be stale
+until balances become server-owned (#967).
+
+Known gap, left for a follow-up: an upgrade queued after a prisoner
+recruit in the same screen still ignores that recruit, so its commit
+can floor at zero.
+
+The new string taom_res_recruit_clamped is not registered yet; it is
+registered by /localize after this branch. Plan 061, issue #563.
+
+Not-tested: the Harmony prefix in game (PartyScreenLogic.AddCommand with RecruitTroop), the toasts, and co-op; owed in game per #563
+
+#### fix(tools): v2.0.40 - judge templated upgrade edges on the SkillSet
+
+`8dc68388`
+
+UPGRADE_SKILL_REGRESSION, the error gate that stops a troop promotion
+from lowering a combat skill, skipped every upgrade edge whose source
+or target names a skill_template, because it read only the inline
+<skills> rows. On the installed v1.5.x engine such a character's skills
+are computable: BasicCharacterObject.Deserialize copies the SkillSet
+the template names and lays each inline row over its one skill, and a
+template that names no SkillSet reads as an empty one. The skip was an
+unjudged hole, and the two tools that write skills had the same hole.
+Plan 060, issue #626.
+
+- sync_lord_inline_skills.effective_skills is now the one place the
+  tools resolve a template (copy the SkillSet, lay the inline rows
+  over it).
+- The gate (taom_schema) judges a templated edge on those effective
+  skills. It reads the SkillSets from the install root once, only when
+  an edge has a templated side; a read that fails or finds none is one
+  ERROR. Without the install the edge is skipped and
+  validate_moduledata.py prints the skip. For a templated target the
+  message says to raise the SkillSet.
+- ranged_ladder.planned_skill_edits and rebalance_troops.py read a
+  templated character through the same function and never write one:
+  a cell or clamp value it would need raises an error naming its
+  SkillSet, since an inline row that differs from the SkillSet is
+  SKILL_TEMPLATE_MISMATCH. This reverses the #617 second review's rule
+  that a templated ladder troop takes its cell inline; that rule
+  predates SKILL_TEMPLATE_MISMATCH, which the commit hook now blocks.
+- A templated troop in troops/ (or the Fords of War root) is read-only
+  in rebalance_troops.py, so it also gets no --fix-purpose or
+  --main-weapon-slots planning, as an excluded troop gets none. None
+  exists today.
+- rebalance_troops.py and rebalance_ranged_ladders.py load the
+  SkillSets from the install and stop if none are found.
+
+Shipped data: validate_moduledata.py gave 0 errors and 1,823 warnings
+with exit 0 before and after, with identical finding lines; 0 of 913
+indexed upgrade edges has a templated side. The C# mirror,
+TroopUpgradeSkillMonotonicityTests, still skips templated edges: CI has
+no install to read the SkillSets from.
+
+Not-tested: no shipped edge has a templated side, so the resolution ran on synthetic fixtures only
+Not-tested: live runs of rebalance_troops.main and rebalance_ranged_ladders.main (they write tracked files)
+
+#### fix(creatures): v2.0.40 - spare a riderless mount on the biter's side
+
+`d0abf3f4`
+
+A spider or warg bite treated every riderless mount as an enemy,
+because the engine never gives a mount a team: a Giant Spider bit a
+Fell Warg on its own side (#594). A mount now carries the side of its
+last rider, recorded when he spawns on it or mounts it, and both bites
+share one rule: a riderless mount on the biter's side is spared, an
+enemy one is still bitten, and one whose side is unknown (never
+ridden) is spared. A riderless warg still compares no team with
+soldiers, and the creature bandits' capped strike still skips every
+loose mount.
+
+Improve plan 062.
+
+Not-tested: in game, the side recorded at spawn and on a remount
+(AdvancedCombatBehavior.OnAgentBuild and OnAgentMount read the
+rider's MountAgent); a Custom Battle check is owed on #594.
+
+#### fix(creature-crews): v2.0.40 - measure crews on a moving beast
+
+`5a14ac59`
+
+The mumakil's tower archers and the war elephant's howdah archers are
+pushed around while their beast moves and hardly shoot. Two logged
+matches show most of them teleported back to their seats several times
+a second, and only the one archer that was never teleported shooting.
+Why they leave their seats is not yet known, so this build measures
+before it fixes.
+
+While Log Crew Platform Diagnostics is on (the default), each crew seat
+on a beast keeps its archer in place a different way: today's
+correction, no correction, an engine attachment to the platform, an
+engine position target, or a placement that follows the platform. The
+platform also alternates, every 20 seconds, between moving as a
+teleport and moving the way the engine's siege tower does. The status
+lines now give, per seat, how far the archer fell behind over the whole
+period, how many reload restarts had a teleport inside them, and
+whether the seat read its position before or after the platform moved.
+With the setting off, crews behave exactly as before.
+
+A killed archer now loses its attachment and position lock while its
+handle still owns its slot, as the engine does for its own machines.
+
+Known limitation: this is a test build. With the setting on, some crew
+archers will stand worse than before, and one may fall from its deck
+and be put back. The losing methods and the switch are removed once one
+battle at normal speed has picked the method that works. Do not cut a
+release from this commit. What a dead archer's body does after the
+position-target method is not checked.
+
+Not-tested: every seat and platform change needs a live battle
+Research: Agent.SetForceAttachedEntity, ClimbingMachine,
+SiegeWeaponMovementComponent, native set_position and frame setters
+Refs #1482. Review record: docs/reviews/REVIEW-LOG.md, 2026-11-19;
+Codex pass owed.
+
+#### fix(troops): v2.0.40 - Erebor lords field fewer war rams
+
+`062f9f9e`
+
+Players reported Erebor lord armies made up of up to half war-ram
+riders. Erebor lords now start with about 5% rams instead of about
+13%, and villages offer the ram herder about one recruit in 16
+instead of one in 6.
+
+- The seven Erebor clan templates carry their two ram stacks at 0-6
+  instead of 0-15. The freed places went to the other stacks, so each
+  template keeps its 220 max sum and lord armies keep their size.
+- ironpass_ram_herder has volunteer weight 1 instead of 3 in the
+  Erebor settlement, clan and culture pools (pool total 16).
+- clan_heraldry/erebor.json is synced to the new rosters, so the
+  heraldry generator does not restore the old stacks.
+
+The ironpass_warrior to ironpass_ram_rider upgrade stays. About one
+lord in three still sends all Iron Pass warriors to rams, and AI
+battles spawn the highest levels first, so an aged army can still
+look ram-heavy in a capped battle.
+
+Not checked in game: start a new campaign and look at three Erebor
+lords' armies after 30 to 60 days. Codex review owed (no usage).
+
+Closes #1485
+
+#### fix(saves): v2.0.40 - The siege save repair runs the whole battle end
+
+`3d578d79`
+
+The save repair for a player's siege stuck after a battle-end crash
+(Patch170, #1477) released the parties but skipped the last two steps
+of the game's own battle end: the map marker cleanup and the battle's
+final step. The game never runs them later for a battle already
+marked as over. On a naval blockade the defenders lost, that final
+step ends the siege, so the siege could stay open. In the same
+session it also fires the "siege completed" event that other systems
+listen for.
+
+Patch170 now runs both steps once, after both sides are released, the
+same way the orphaned AI battle repair does. They run before the
+game's normal encounter finish, which reads only whether the battle
+has a winner, so that finish is unchanged.
+
+The docs said a failed repair would retry on the next battle finish.
+The game clears the encounter's battle in that call, so it cannot.
+They now say the hourly orphaned battle repair finishes it instead,
+unless the player's own party is still in that battle.
+
+Tested: the repair's order test, a test that the back-reference-only
+path does not run the final step, and the engine shape and reflection
+binding gates for FinalizeComponent. Full suite 42950 passed; 3
+language file checks fail on keys from other features that this
+change does not touch.
+Reviewed: data flow (7 flows, no gap; stale comments and the retry
+claim fixed). Codex owed before merge. Not checked in game.
+
+Refs #1475
+
+#### fix(mission): v2.0.40 - review follow-ups for plan 058
+
+`079081c8`
+
+An out of memory error while building a TAOM mission behavior is no
+longer caught by the new per-behavior isolation. It reaches the
+mission-start guard, which never swallows one, as it did before #785.
+Every other build failure is still contained, logged and reported, and
+the remaining TAOM behaviors are still added.
+
+The isolation's summary comment now also says that it does not read the
+"Survive Mission Start Failures" setting.
+
+Review records: the tier 1 deep review in
+docs/reviews/deep-review-058-isolate-mission-behaviour-registrations-2026-11-19.md,
+the RCA in
+docs/reviews/rca-isolate-mission-behaviour-registrations-2026-11-19.md,
+a lesson in docs/reviews/lessons/harmony-il.md and the REVIEW-LOG entry.
+
+Not-tested: no game run; the out of memory path has no in-game producer.
+
+#### fix(mission): v2.0.40 - one failed behavior no longer drops the rest
+
+`3e1b1dc9`
+
+A TAOM mission behavior that failed to build at mission start (a
+service that is not registered, a config that fails to load) used to
+stop SubModule's hand-wired registrations at that point. The
+mission-start guard caught the throw, logged it and showed a short
+message, and the battle then started without every behavior after
+the failed one: the feature modules' behaviors, the behavior dump and
+the career perks among them.
+
+Each hand-wired registration now builds its behavior in its own
+factory. A failed build writes one [MissionWiring] line to the TAOM
+log naming the behavior, is reported to the mission-start guard as
+before (the same error line and short message, now naming the failed
+behavior in the log), and the remaining behaviors are still added.
+With the guard's setting off, such a failure no longer makes the
+game load the mission again. The conditions, order and engine add
+are unchanged; a throw from the engine add itself still reaches the
+mission-start guard.
+
+Improve plan 058.
+
+Constraint: the isolation does not read the Survive Mission Start Failures setting
+Refs: #785
+Not-tested: in game, no mission started with a failing build
+
+#### fix(saves): v2.0.40 - Armies stuck in a finished battle march again
+
+`1999c329`
+
+A player found armies frozen on the campaign map near Cair Andros and
+Nan Morhed. Their save held 6 AI battles that the game had already
+marked as over and stopped running, while 232 parties still belonged
+to them. Those parties could not move, fight or be joined. The player
+traced it with ILSpy and sent a repair module and a clear report.
+
+The trigger is the battle-end hero death crash fixed in #1475. The
+game marks a battle as over before it releases its parties. When the
+crash hit inside that release and the player chose "Continue", the
+rest of the parties stayed attached. On the next tick the game dropped
+the finished battle from its list, so nothing would ever release them.
+After a reload the battle had also lost an internal link that the
+game restores only for battles it still runs, so even the normal
+release path threw.
+
+Once per in-game hour, TAOM now finds such battles through the parties
+still attached to them, and finishes them with the game's own steps:
+restore the lost link, end the defender side, end the attacker side,
+then run the battle's last finish steps. Lords marked as killed in
+that battle die, and beaten or empty parties are removed, as they
+would have been. A battle the player is in is left to the siege save
+repair. The first hour after loading an affected save repairs it. The
+sweep does nothing during a co-op session.
+
+The player's module cleared each party's battle link directly. That
+frees the parties but skips the deaths and removals above, so TAOM
+does not use it.
+
+Tested: 10 new service tests and the reflection binding gate for the
+new FinalizeComponent site. Full suite 42950 passed; 3 language file
+checks fail on keys from other features that this change does not
+touch.
+Reviewed: data flow (10 flows, the skipped finish steps fixed) and
+engine compatibility (13 verified, 0 incompatible). Codex owed before
+merge. Not checked in game or on the player's save.
+
+Refs #1475
+
+#### fix(tools): v2.0.40 - tournament templates pass the formation audit
+
+`0453ece6`
+
+The troop formation audit failed after #1478 merged: it read the 170
+multi-roster tournament templates as troops whose default_group did
+not match their mixed kits. A tournament template is a list of weapon
+rosters that the arena hands out one per team member; nobody is ever
+placed by its group. The audit now skips taom_tournament_templates.xml,
+as it already skips the portrait dummies.
+
+The session-start docs gap check also stops flagging Autorun. Its doc
+is docs/features/scenario-autorun.md, and the hook now accepts a doc
+whose name ends with the feature's name. New tests cover the hook.
+
+No issue: the maintainer handed this follow-up to the session.
+
+#### fix(saves): v2.0.40 - A save stuck after a battle-end crash loads again
+
+`ce2aa877`
+
+A player hit the battle-end hero death crash on Done after a siege,
+chose "Continue (risky)" and saved. Every load of that save then threw
+a NullReferenceException in SiegeAssaultEventComponent.On
+PlayerEncounterFinalizeBattle on every map tick (report 18 Nov).
+
+The crash stopped the battle's end halfway: the player encounter still
+points at a finished siege event whose parties are still attached, and
+the event's component lost its link back to the event (that link is
+not saved; the engine restores it on load only for events it still
+runs, and this one was already dropped).
+
+Patch170, a prefix on PlayerEncounter.FinalizeBattle, acts only on
+exactly that state: a finished battle whose link is missing or that
+still holds parties. It restores the link with the engine's own load
+step, runs the side-end step of the engine's finish for both sides
+(heroes marked to die there die as they would have), then lets the
+engine finish the encounter as usual. A healthy game never matches.
+It stands down on a co-op client and logs once if it fails.
+
+Built on the battle-end crash fix (Patch169, PR #1463): without it,
+ending the attacker side would hit the same crash again.
+
+Tested: full suite, no new failures against trunk 348d5ab349.
+Reviewed: data flow and engine compatibility (13 members verified,
+0 incompatible); co-op gate, log-once and doc wording fixed. Not
+checked against the player's save or in game.
+
+No issue: owner waived new GitHub issues for this work.
+
+#### fix(lord-retinue): v2.0.40 - stop battle deaths breaking the map event
+
+`c7ecd3ba`
+
+When an AI lord died in battle as the only hero in his party, the game
+could throw ArgumentOutOfRangeException at the end of the battle. The
+TAOM crash dialog let play continue, but the map event stayed half
+finished, and a save made after it failed on every load with a
+NullReferenceException in the siege encounter.
+
+The engine kills each hero marked dead in battle while it still reads
+the party roster's cached list. Killing a lone leader disbands the
+party, and Lord Retinue's disband handler read the roster through
+GetTroopRoster(), which rebuilt that cached list one entry shorter.
+Lord Retinue now reads the roster by index and leaves the cache alone.
+
+Patch169 (MapEventGuard) also makes the engine's end-of-battle loop
+copy the filtered roster before the first kill. That covers the
+vanilla case where two heroes in one party both die (the second kill
+searches the roster for a new leader), and any later listener on the
+kill path. It adds one call after the engine's filter and leaves the
+filter in place, because Coop transpiles the same method, looks for
+that filter by name and stops a co-op join when it is missing. A test
+runs a Coop-shaped transpiler in both orders. If a game update changes
+the method, Patch169 logs a warning and stays off.
+
+A save already made after the crash dialog is not repaired here: load
+an earlier save. PR #1477 carries a repair for such saves and will be
+rebased onto this patch; this commit supersedes PR #1463, whose
+Patch169 replaced the filter.
+
+Review: docs/reviews/rca-retinue-disband-roster-2026-11-18.md. Codex
+pass owed before merge (no Codex usage). Not yet checked in game.
+
+Refs #1475. Crash signatures 9b5b55b3, 1a02aa72, 9469e856.
+
+#### fix(diagnostics): v2.0.40 - review follow-ups for plan 056
+
+`42b362f0`
+
+The mission diagnostic stops reading agents for the rest of a mission
+after one failed read. Its agent-removed and agent-deleted callbacks
+kept parking every drop the engine raised off the main thread, and
+nothing drained them until the mission ended. Those drops are now
+skipped once reads have stopped, since nothing is pending then. A
+test trips the read fault and checks that no drop is parked.
+
+The feature doc now says the off-thread warning line is written once
+per callback per game session, not once per mission.
+
+Records, in docs/reviews/: the report
+deep-review-056-agent-removed-off-thread-guards-2026-11-18.md,
+the RCA
+rca-agent-removed-off-thread-guards-2026-11-18.md,
+a lesson in lessons/state-lifecycle-save.md and a REVIEW-LOG.md entry.
+
+Refs #607
+
+Not-tested: no game run; the fix-loop re-review of this diff (Lens 2,
+Codex at high) is owed.
+
+#### fix(armour): v2.0.40 - green Mirkwood militia, gold and bronze apart
+
+`9c0046fa`
+
+The Mirkwood Militia Spearman, Archer and their veterans now wear
+only the green Palace Guard set in every battle set: the green palace
+helmet, chest, shoulders, gloves and boots, at light and medium
+values. Before, they mixed a gold helmet with the green chest, or
+silver helmets with gold and bronze plate. The Fords of War copies,
+the Mirkwood career kits and the Mirkwood enlistment recruit kits
+follow them.
+
+Gold and bronze are now separate colour families: a set is all
+gold, all silver or all bronze. The colour check and the armour
+upgrade pick both use the new rule. The plain Mirkwood infantry line
+counts as gold and the Palace Guard set as green, by hand. With the
+split, the validator reports 52 troops with mixed sets (41 before).
+The 15 new ones mix gold and bronze and go to step 2 with a Kit
+check.
+
+The band clone tool no longer sends low kits back to elite armour
+when the troops that shared a piece leave it. Villager, wanderer,
+character creation and Fords kits keep a light copy of the bronze
+infantry pieces, and starter kits now get light copies of the green
+gloves and shoulders. The Mirkwood recruits and sentinels keep their
+T3 helmets. Four Mirkwood troops go back from the bronze to the gold
+vambraces, which match their gold sets; the live Armory gives those
+vambraces 24 arm armour.
+
+Refs #1452
+
+#### fix(enlistment): v2.0.40 - keep the redirect inside a town in grace
+
+`169b8bc7`
+
+When a soldier's commander was captured or lost his party while the
+soldier stood inside the commander's town or castle, the service
+menu redirect switched off for the whole grace window. The soldier
+is placed there without a settlement encounter, so the approach menu
+the game pushes for that shape (town_outside, castle_outside) would
+crash at menu init. The redirect now stays on in the grace window
+while the soldier is inside a settlement with no encounter (#511).
+A soldier in grace who walks into a town himself brings his own
+encounter and keeps the normal town menus. Outside a settlement
+nothing changes, and the battle and shore-leave exceptions still
+come first.
+
+Improve plan 055.
+
+Rejected: walking the soldier out of the settlement when the
+  commander is lost. It changes where he waits out the grace window,
+  does not repair saves already in that shape, and fires the
+  settlement-left events.
+Not-tested: the SetNextMenu and EnterMenuMode hooks in a live game;
+  the in-game check is owed on #511.
+
+#### fix(diagnostics): v2.0.40 - park off-thread agent removals
+
+`a531bea7`
+
+The mission diagnostics queue each new agent and read its action set
+on the next tick. Native raises OnAgentRemoved and OnAgentDeleted on
+the thread it chooses, and player logs have caught OnAgentRemoved off
+the main mission thread (#634, #607). Both callbacks removed the agent
+from the queue's list and set on that thread while the main thread
+could add to or read them.
+
+An off-thread removal is now parked and applied by the next mission
+tick, before any agent is read, so only the main thread touches the
+queue. The first off-thread removal per callback writes one WARNING
+line to the debug log. Mission end and a failed read drop any parked
+removal with the queue. On the main thread nothing changes. The
+census in plan 056 of the other OnAgentRemoved overrides in TAOM
+found none that writes shared state from that callback without a
+deferral, a lock or a concurrent collection.
+
+Plan 056, issue #607.
+
+Not-tested: native raising these callbacks off the main thread in a
+live battle; an in-game field battle is owed.
+
+#### fix(harness): v2.0.40 - the manager skips issues that await a check
+
+`b0e90e25`
+
+The first dry tick of /manage showed that its selection step would
+pick #415 first. That issue carries triage-needs-ingame: its fix is
+shipped and only the in-game check is owed, so a worker run on it
+would build the same fix again. Step 5 now skips that label. Step 4,
+which runs owed in-game checks, already owns those issues.
+
+Follow-up to #1449. Harness text only: no review lenses run for it.
+
+#### fix(startup): v2.0.40 - TAOM load-error box names the wrong game version
+
+`250fbdc7`
+
+When TAOM's DLLs fail to load, the game shows "Error while loading
+TAOM: submodule could not be loaded due to a missing or conflicting
+dependency" and names no cause. Most players who see it run the wrong
+Bannerlord version. The box now adds one paragraph: "This error is
+usually caused by the wrong Bannerlord version." On a different game
+version it names both versions and the Steam Betas step to switch. On
+the right game version it says the TAOM files may be mixed or out of
+date and to install TAOM again with the TAOM launcher.
+
+The engine builds that text in the private
+Module.GetAssemblyLoadResultsMessage, in plain English with no language
+key. TAOM.Dependencies now puts a postfix on it from its constructor on
+every client start (not on a dedicated server or in the Modding Kit),
+for TAOM and the modules that depend on it. The existing wrong-version
+guard still turns TAOM off on a clear mismatch; the hint covers the
+cases the guard lets through, such as a stale TAOM.Dependencies or a
+mixed install. The paragraph is added once per box, because TAOM.Client
+fails together with TAOM.dll and the engine joins both messages.
+
+Known limitation: no hint appears if TAOM.Dependencies is missing or
+cannot run on the player's game version, and BLSE's own boxes are
+unchanged.
+
+Review: /deep-review tier 1 (lenses 5 and 2), no CRITICAL or HIGH;
+the repeated paragraph and the duplicated owner rule were fixed. Codex
+pass owed before merge (no Codex usage). In-game check owed: step 6 in
+docs/features/startup-alerts.md.
+
+Refs #1461
+
+#### fix(long-defeat): v2.0.40 - the small inner gate costs less to repair
+
+`23ac06bf`
+
+At Helm's Deep a broken inner gate now costs 14 gold to repair instead
+of 200. Each gate's repair price is scaled by its size against the
+largest gate in the fortress, read from the gates' hit points before
+any level: the 1,000 HP inner gate pays a fifteenth of what the
+15,000 HP outer gate pays. A fortress with one gate pays as before.
+
+The run report keeps each gate's priced share, so the judge replays
+the price unchanged. A gate the game cannot mend (no hit point
+maximum to restore) is no longer charged.
+
+Review: deep-review tier 2, data flow lens. Fixed: the comments and
+plan docs still called the report's share the missing share, and a
+gate the field never mends could be charged. Codex skipped (out of
+usage).
+Tests: C# 42,905 passed, 3 failed; tools 10,453 ran, 3 failed. All
+six fail on trunk too (language rows, sally judge tests).
+
+Refs #1455
+
+#### fix(long-defeat): v2.0.40 - Helm's Deep gates shut their own path
+
+`453dbfea`
+
+The Helm's Deep inner gate now blocks the path through its door while
+it is shut. The prefab's navmesh ids named no face in the scene, so a
+closed inner gate was only a picture: soldiers could path straight
+into it. Its four door faces now carry id 521, as in the base game's
+castles, and the gate names that id; the id ends in 1, so the faces
+still count as inside the castle. The outer gate's open-door id
+pointed at no face either, and now names the side strips where its
+leaves swing, and its second navmesh layer now shuts with it.
+
+The edits are in the live TAOM_Map scene (navmesh.bin and
+scene.xscene, backups in E:/TAOM-backups/helms-deep-scene). The scene
+test now also requires the inner gate's id 521, so a reinstall that
+loses it fails.
+
+Tested in game: run 20261118-133313, build 2ea2401bc, 3 waves of the
+Long Defeat cleared, the scene loaded with the new navmesh, and the
+attackers broke the outer gate and then the inner gate; gate-level,
+gate-repair and gate-attacked passed with both gates.
+
+Refs #1455
+
+#### fix(long-defeat): v2.0.40 - Helm's Deep has one inner gate you can see
+
+`413ed3d2`
+
+Helm's Deep now has a real inner gate just behind the outer one, which
+Mike added in the Kit. The old hidden inner gate also carried the
+inner_gate tag and came first, so the siege AI kept planning against
+it; it is removed from the live TAOM_Map scene, and the scene test now
+requires exactly one inner gate and that it is visible, so a reinstall
+that brings the old gate back fails the test.
+
+With two gates, the Long Defeat's gate-attacked check after a repair
+now reads and samples only the gates the repair touched. Before, an
+inner gate left open by a charge, or one that fell, counted toward
+the repaired outer gate and could give a false FAIL.
+
+Still open: the new gate's navmesh ids name no face in the scene, so
+the shut inner door does not block a path (a Kit fix), and the repair
+price per gate now charges the small inner gate as much as the outer
+one (Mike to decide).
+
+Review: deep-review tier 1, data flow and engine lenses. Fixed: the
+watch over untouched gates, and four claims in the test message and
+the doc. Codex skipped (out of usage).
+Tests: Long Defeat 2,980 passed; the scene test fails on the old
+scene and passes on the live one.
+
+Refs #1455
+
+#### fix(armour): v2.0.40 - armour sets keep one metal colour
+
+`9333bc34`
+
+Troops no longer wear a silver chest under bronze pauldrons, or a
+gold helmet over a silver chest, because of the armour band clones
+(#1440). Each armour piece now has a colour family (gold, bronze,
+silver, silvergold and others), read from its name or measured from
+its texture, kept in tools/data/armour_colour_families.json by the
+new tools/scan_armour_colours.py. A hand override file corrects
+pieces the measure reads wrong.
+
+When the band clone tool gives a top-tier troop a stronger piece, it
+now refuses a piece whose colour clashes with the rest of that
+troop's sets (gold or bronze beside silver). If no piece of the
+right colour exists, the piece falls back to a band clone. On
+Mirkwood the infantry chest, the bronze chest and the greaves now
+fall back: the glaivesmen, woodsmen, guards and swordsmen keep their
+bronze sets, and the shared pieces rise to the elite band (after the
+Armory restat). One helmet and four Noldor picks move to a piece of
+the set's own colour; the Lorien warden keeps the silver elite helm.
+
+Lower wearers of those Mirkwood pieces wear the clone of their band:
+militia veterans and the guard of level 16 read body 17 and leg 8,
+caravan guards and masters 33/6/13 with leg 15, enlistment soldier
+kits 17 and 8. Notables, wanderers and the character creation parents
+on the bronze chest read 8 in a new campaign.
+
+New validator warning ARMOUR_COLOUR_CLASH: one per troop whose sets
+still mix colours (41, all older than #1440; issue #1452 owns them).
+New data gate armour-colours keeps the table current with the art.
+
+The clone tool now records which battle set and slot each upgrade
+wrote, and reads back only those. Before, a change of an upgrade
+target also rewrote sets that wore the target from the start (six
+Imladris marksman slots). Three tests of the old read-back are
+replaced by tests of the recorded one.
+
+Career kits read a band clone as its source and carry its light
+clone, as the clone tool writes them; the C# starter kit coverage
+test reads clones the same way.
+
+The scanner and its first tests were written before the review, not
+test first; the review rounds added the missing tests.
+
+Refs #1450, #1452, #1423
+
+#### fix(naval-travel): v2.0.40 - move parties stranded at sea to land
+
+`e4b9b3f8`
+
+A save can hold parties flagged as at sea, and one player's save did.
+TAOM registers no naval navigation model, so those parties could never
+path off the water. Patch168 stopped the crash they caused but left
+them where they were.
+
+When a campaign loads, each stranded party now goes to the gate of
+the nearest town, castle or village, or to its own settlement's gate,
+and picks a new goal at the next hourly AI think. An army's members
+move with their leader. A party in a battle or a siege stays at sea
+for that session, and a party in the middle of a land or sea
+transition is left for the game to finish. In co-op only the host
+repairs, and clients receive the result in the join save. Each move
+is logged with an "[NavalTravel] at-sea repair:" line.
+
+Limit: the gate is the nearest by straight line, so one of the
+unreachable entrances in #1434 can still strand a party on land until
+that map fix lands.
+
+Review: /deep-review tier 1 (data flow and engine compatibility), no
+CRITICAL or HIGH; fixes and rows in
+docs/reviews/rca-at-sea-repair-2026-11-18.md. Codex skipped: out of
+usage. Not checked in game; the reporting player's save is the test.
+No issue: owner waived new issues for the #1437 work this follows.
+
+#### fix(engine-guards): v2.0.40 - tier and food patches wait for the game
+
+`f8041ecc`
+
+The tier 8 to 10 badge fix (Patch163) and the army food tooltip fix
+(Patch165) were applied while the game was still loading. Patching
+CampaignUIHelper there runs its static initializer, which reads the
+game texts before they exist; it threw, and .NET then keeps that type
+broken for the whole session, so campaign tooltips could fail. Both
+now apply when the first game has initialized, like the other patches
+on that type.
+
+A new gate, EarlyPatchStaticInitializerGateTests, fails when the load
+step applies a patch on CampaignUIHelper again.
+
+#### fix(custom-battle): v2.0.40 - muster screen shows tiers up to X (#1446)
+
+`dcbdf7dc`
+
+The custom battle muster screen now reads a troop's tier up to X, the
+same formula the tier badges use since #1444. It stopped at VII, so
+every tier 8 to 10 troop read "Tier VII".
+
+The encounter food tooltip named in #1446 needs no fix: every party's
+daily food change is at most -0.01 (native's LimitMax in the food
+model, kept by TAOM's model), so the average never meets the
+no-change or food-gain cases the issue feared. A patch for it was
+written, then dropped in review because it changed no shown number.
+
+#### fix(naval): v2.0.40 - no more map crash when a party is stuck at sea (#1437)
+
+`a61c544a`
+
+A campaign no longer crashes to desktop when a party is stuck at sea.
+The game's search for the nearest land reads naval map data that only
+the War Sails expansion builds, and TAOM runs without it, so the search
+crashed every time a party at sea asked for land. TAOM now answers that
+question itself with the gate of the nearest town, castle or village.
+
+The crash stops, but a party already at sea may stay there: the game
+treats water as ground it cannot walk on, so the party only moves while
+it stays on its own patch of the map. A one-time move to land at load
+is a possible follow-up.
+
+Thanks to REDACTEDSTUFF for the crash analysis, the fix and the
+tests. The maintainer review renumbered the patch to Patch168, let the
+engine answer for an invalid map face, and corrected the docs on what
+a stranded party does next (RCA rows R1 to R8).
+
+Not checked in game yet. Codex skipped: out of usage. No issue: owner
+waived new GitHub issues for this work.
+
+#### fix(faction-ui): v2.0.40 - clicks stay on the open encyclopedia (#1436)
+
+`d633c23a`
+
+With the encyclopedia open over another screen, such as the Clan
+screen, a click on the dimmed area no longer reaches the screen under
+it. Before, a click on the Clan screen's Done button there closed the
+Clan screen while the encyclopedia still showed, and the game then
+crashed. The encyclopedia's header buttons, links, search results and
+page scrolling still take their clicks, and a click on the dimmed area
+over the map no longer moves the party.
+
+Thanks to REDACTEDSTUFF for the fix, the tests and the in-game check
+plan. The maintainer review made the overlay test check that each
+mouse override returns false (RCA row R1).
+
+Not checked in game yet; the checks are in
+docs/features/encyclopedia-overlay-stacking.md. Codex skipped: out of
+usage. No issue: owner waived new GitHub issues for this work.
+
+#### fix(engine-guards): v2.0.40 - tier 9 badges, ruler names, food days
+
+`4a1236f9`
+
+Display and text fixes from Silas He's fix package (TAOM 2.0.34 on
+v1.5.6), rebuilt for v1.5.7 (#1444).
+
+- Troops of tier 8 to 10 show a tier badge again, in the campaign
+  screens and in custom battle. Native draws badges up to tier 7 only;
+  these troops now get the tier 7 badge, and its tooltip gives the
+  real tier.
+- Alliance and call-to-war votes name your own kingdom's ruler, not a
+  ruler from some other text. The call-to-war description also names
+  the called kingdom, which native left blank.
+- The army food tooltip shows the army's days of food from its total
+  stores and total daily use, or "never". It used to show huge numbers
+  when one party lost no food.
+- A kingdom you found carries the name you chose as its formal name,
+  not "Kingdom of" your clan. A kingdom founded before this update
+  keeps its old name until you rename it in the kingdom screen.
+- A lord who dies keeps his own gear on his encyclopedia page instead
+  of imperial clothes. Lords who died before this update keep the old
+  look, and the fix is off in co-op games, where Coop handles a dead
+  hero's gear itself.
+- The "clan member executed a lord" notice can be closed and
+  right-clicked away like any other notice (Mike's choice).
+- A village next to a stronger town of another realm keeps its own
+  realm colour on the map. Watchful Holds reads the same provinces, so
+  that town's garrison no longer harries a march on the few cells the
+  village takes back. SeedGuardRadius 0 turns this off.
+
+Not ported, after triage against trunk and v1.5.7: fixes trunk or the
+engine already has, realm colour in the mountains and garrison
+starvation (Mike kept both as they are), and stranded AI parties (no
+repro yet). Related bugs found in review: #1446.
+
+Review: tier 1, the data-flow and engine-compatibility lenses. The
+seed-order bug and the Coop clash they found are fixed. Codex pass
+owed (out of usage).
+
+Not-tested: every item in game (checks in engine-bug-guards.md).
+
+Credit: Silas He.
+
+Refs #1444
+
+#### fix(hero-abilities): v2.0.40 - Legolas holds the wall with the others
+
+`487c46e3`
+
+At Helm's Deep, Legolas now stands with Aragorn and Gimli at the wall
+lane where the ladders land, as before #1438. The high post did not
+work: the scene has one high archer place, at (155.5, 206.2, 29.7),
+and the engine gave him no target there. He shot 0 arrows in five
+waves (run 20261117-190319) and in two 2-wave debug runs
+(20261117-195226, 20261117-201252); the same hold at the wall lane
+shot 88 arrows and killed 62 in two waves (20261117-202809). A run
+that listed every archer place (20261118-071341) showed the other two
+are on the ground, so no other high place was left to try.
+
+The 800 health, the 30% missile damage reduction and the new prices
+from the previous commit stay.
+
+The adapter, its pin test and manifest 1337 are back to their state
+before the high post; the docs and the human claim in manifest 1366
+no longer describe it.
+
+Review: deep-review, one data flow lens. Fixed: manifest 1366 still
+told the tester Legolas holds the high wall. Codex pass skipped: out
+of usage on Mike's word.
+Tests: C# 42,628 passed, 2 failed (language rows owed by the lead's
+pass); tools 10,343 ran, 3 failed (the sally tests, failing on trunk
+too).
+
+Refs #1438
+
+#### fix(tools): v2.0.40 - roster page shows TAOM armour stats again
+
+`ad465a53`
+
+The troop roster page read every <Item id> node in ModuleData and kept
+the first one it saw. armour_classes.xml lists one <Item id> row per
+armour piece under an <ArmourClasses> root, and its folder sorts before
+armour_band_clones/ and lord_armour/. So the 20 lord armour variants
+and the 40 armour band clones showed on the page with no type and no
+armour values.
+
+The loader now reads only files whose root is <Items>. That also drops
+the nameless stubs that config files gave 25 hero weapons (the weapon
+index still adds them, now under their real names) and Native's 150
+multiplayer cosmetics.
+
+Fixes #1443
+
+#### fix(data): v2.0.40 - Celebrian's parents, dwarf child kits, no Calradia
+
+`307c31ae`
+
+Three lore errors from Silas He's fix package (TAOM 2.0.34, v1.5.6),
+ported to v1.5.7.
+
+Celebrian now has Celeborn and Galadriel as her parents, so her
+encyclopedia page shows them and she inherits a claim on Lothlorien.
+Galadriel is now 35 and Celeborn 34: the engine needs 14 years between
+a parent and a child.
+
+The child education kits of Erebor and Ered Luin used human Sturgian
+clothes, which deform on the dwarf skeleton. The 196 kits now use only
+the dwarf tunics and light boots that TAOM's own dwarf child templates
+use; human caps, scarves and gloves are gone. Silas's fix covered
+Erebor; Ered Luin had the same fault.
+
+Lords that reuse a vanilla id no longer offer a "political philosophy"
+speech about the Empire and Calradia. module_strings.xslt drops the 50
+vanilla str_political_philosophy_* strings, so these lords act like
+every other TAOM lord.
+
+Not ported: the 17 Erebor civilian sets (trunk fixed them in #1431)
+and the wanderer backstory rewrite (vanilla wanderers leave the spawn
+pool through lords.xslt, #758).
+
+New gates: DwarfEducationKitTests, PoliticalPhilosophyStringsTests and
+LordFamilyTransformTests.ACanonChild_HasBothCanonParents. Tier 2
+review; RCA docs/reviews/rca-silas-port-data-2026-11-17.md. Codex pass
+owed (out of usage). Not tested in game: Celebrian's page, the missing
+dialog option, a dwarf child's education preview.
+
+Credit: Silas He.
+
+Refs #1439
+
+#### fix(map-pathing): v2.0.40 - unreachable settlement entrances
+
+`e3cd5b5e`
+
+Armies could not reach 14 settlements on TAOM_Map. Their entrances
+sat on terrain land parties may not use, or were cut off by it, so
+vanilla's distance cache held them unreachable. Silas He's package
+named seven; five of them were real, and the audit found nine more.
+
+taom.audit_settlement_entrances now runs the checks vanilla's cache
+applies: the navmesh island, the excluded terrain, and a path from
+the main map with the cache's own cost limit. Paths join entrances
+into groups, and only the largest group counts as the main map, so
+two cut-off gates side by side cannot vouch for each other. It also
+prints the terrain height at each suggested point.
+
+Unattended runs can run console commands: run_scenario.py --command
+writes command= lines, and the output lands in commands.txt in the
+run folder.
+
+The 14 entrances were moved in the live TAOM_Map scene and
+settlements.xml together. The new data gate map-entrances, from
+tools/check_settlement_entrances.py, fails if any old value comes
+back, for example after a reinstall of an older map package.
+
+Owed: Rebuild Now for the distance cache, and an in-game army march
+to Barnavon.
+
+Credit: Silas He.
+Refs #1434
+
+#### fix(troop-weight): v2.0.40 - party screen header and Transfer All
+
+`c23b3ff1`
+
+Two party screen fixes from Silas He's fix package for the Chinese
+community, ported to v1.5.7 and the TAOM structure.
+
+The party screen header no longer falls back to headcounts after the
+first heavy troop moves. The screen copies each side's size limit once
+when it opens, but the party's own limit moves with every heavy troop
+moved, so the old check failed. The screen now records at open whether
+each side shows its party's own limit. Because the header stays in the
+weighted frame, the main side's red over-capacity tint and the Over
+Limit prompt at Done now follow the weighted count too.
+
+Transfer All now fills the weighted cap instead of the headcount one.
+Moving a stack of heavy troops could overfill the party by several
+times its weight budget. Troops move in vanilla's order: whole rows
+while they fit, then part of the first row that does not, then stop.
+A near-full party moves at least one troop, as vanilla does, instead
+of its whole roster. If a game update moves the code this relies on,
+Transfer All keeps vanilla's behaviour and the log gets one warning.
+
+Not-tested: in game. Owed: the header after moving a heavy troop, and
+Transfer All into a near-full party with heavy troops first.
+Review: tier 1 deep review (data flow, engine compatibility), two MED
+and five LOW findings fixed, RCA rca-troop-weight-transfer-2026-11-17.
+Codex pass owed (out of usage).
+Thanks to Silas He for the diagnosis and the original fixes.
+
+Refs #1430
+
+#### fix(engine-guards): v2.0.40 - crash and hang fixes from Silas's package
+
+`240343f4`
+
+Four crash and hang fixes from Silas He's fix package for the Chinese
+community, rebuilt for game v1.5.7 (#1429).
+
+- Help defenders at a siege no longer crashes when the camp's leader
+  is attached to another lord's army: the battle starts against that
+  army's leader instead (Patch159). The old crash also broke saves.
+- A saved game that fails to load no longer spins on the loading
+  screen for ever. TAOM logs the error, stops the retry and offers a
+  Quit Game button (Patch160). Patch160's target is kept off
+  PatchShield, which would otherwise have opened a half-loaded
+  campaign after a missing-API error.
+- A 3D scene widget sized before its scene arrives no longer throws
+  (Patch161), as Silas saw when the wedding notification opened.
+- A messenger whose target rides in the army the player is attached
+  to now ends with the "Messenger Error" notice instead of a crash.
+
+Review: docs/reviews/rca-engine-bug-guards-2026-11-17.md.
+
+Not-tested: help defenders with an attached camp leader, the load
+failure prompt and its Quit button, and the wedding scene notice in
+game; a Codex pass is owed. The three new texts are English until
+the next language pass (#1129).
+
+Refs #1429
+
+#### fix(dwarves): v2.0.40 - promoted dwarves wear tunics, not tartan
+
+`fb5a0c56`
+
+A soldier promoted to a companion by Field Commission copies its
+troop's civilian kit onto the new hero. Dwarf troops ended with a
+reference to a vanilla Battanian civilian template, which the engine
+turns into a civilian set for the troop. The copy therefore carried the
+Highland Tartan, and the battle-kit fallback in CreateCompanionFromTroop
+never ran.
+
+Each of the 47 references (17 Erebor, 27 Ered Luin, 3 Fords of War) is
+now two inline dwarf civilian rosters: tunic A and tunic B with light
+boots, and the noble tunic for Erebor noble troops. The Ered Luin file
+is generated, so Realm.civilian_kits in tools/realm_troops.py writes its
+rosters, and the realm self-check now refuses a realm with a race and no
+kits. DwarfCivilianKitTests fails when a dwarf character names a roster
+that no TAOM file defines for a dwarf culture.
+
+A companion promoted before this change keeps the clothes stored on the
+hero. Dwarf tunics carry no Civilian item flag, so civilian mode refuses
+to put a removed tunic back (#1432). Elf, goblin, orc and uruk troops
+and the human realms still carry the human template reference (#1433).
+
+Verified: the new gate and self-check tests failed first, then passed.
+Data gates 10 PASS, validate_moduledata unchanged apart from line
+numbers. Five tests fail on unchanged trunk too (two localization, three
+test_run_long_defeat). The Codex pass is owed: no usage.
+
+Not-tested: promote an Erebor noble, an Erebor oathsworn and an Ered
+Luin soldier and read the civilian tab in game.
+
+Refs #1431
+
+#### fix(long-defeat): v2.0.40 - Foot defenders muster beside the archers
+
+`2fd151fc`
+
+At Helm's Deep the infantry line grew back about 14 m from its
+recorded muster point, and one soldier of the third and fourth
+batches spawned on a ledge 3 m above the navmesh (#1142). He walked
+down within 5 s, but the spawn check failed every unattended run on
+him and hid any other failure.
+
+Mike recorded the foot point again in game, beside the archers'
+point, where no batch has spawned a soldier off the navmesh. The
+Long Defeat and both Helm's Deep story rows use it.
+
+Not proven in game yet: the unattended run on this build is owed.
+
+Tests: Long Defeat and story mission suites 3248 passed, 1 failed;
+the failure is EveryKey_IsSeededInAllTwelveLanguageFiles, the #1388
+keys that wait for the language pass. ModuleData validation exit 0.
+Data only, no review gate.
+
+Refs #1142
+
+#### fix(loc): v2.0.40 - Chinese drafts redone in the Chinese team's terms
+
+`8a61b32b`
+
+Our AI Chinese drafts now read like the Chinese team's own text. The
+translator got the team's terms and sample sentences for each batch
+(#1421), and every CNs and CNt row that was still our draft was drafted
+again: 2,584 CNs and 2,627 CNt rows across TAOM, TAOM_Map and the
+Armory. In those rows the team's word for a name or game term went from
+59% of uses to 99% (CNs 58.7 to 99.4, CNt 57.9 to 99.3). The same run
+also translated 1,190 rows per language that were still English: map
+encounter lines, XSLT strings and module strings added after the team's
+drop.
+
+The review of the re-draft found that two scripts had their own copy of
+the importer's rule for "this row is the team's text", and fixed what
+that broke:
+- 618 CNs and 652 CNt Armory names that held the team's text with a tier
+  appended had been redrafted; the importer put the team's text back.
+- 142 CNs and 105 CNt rows held the team's text for English we changed
+  since their build (clan "Mueller" read as House of Bard); they were
+  drafted again from the current English.
+- The style reference held 132 CNs and 94 CNt such stale pairs, and 37
+  CNs, 33 CNt drafts plus three name-pool rows per language took a stale
+  name from it (Hawin as Ostric). The reference was rebuilt and the rows
+  drafted again.
+- One CNs lord the team had translated (Lindis) became importable and
+  now uses the team's name.
+- 42 CNs and 61 CNt rows spelled a lord another way than his name row
+  (Forlong four ways across one armour set); each now uses the name row.
+
+Tools:
+- build_translation_reference.py takes a row as the team's only as the
+  importer would write it, reads our English at the team's base through
+  the importer's history_at and our_targets, and stops before writing
+  when that base is unknown. A rebuild runs in half the time.
+- The translator and the team importer now reject a row whose count of
+  [ ] { } differs from the English: a stray [ hides the rest of the line
+  in game. The engine's {#...} and {@...} grammar functions are not
+  counted, so a language may add them.
+- A possessive now matches its term ("Forlong's Gloves" gets Forlong).
+
+Hand fixes: a CNt line kept the model's own correction and another kept
+the English word "north"; the village Bûrznar shared its Chinese name
+with the castle village Bûrznâr; the Lossarnach chainmail kept
+"[Gondor]".
+
+TAOM_Map and Armory rows are live install edits, backed up beside each
+file. Paid AI spend: about $8.90. Codex review skipped: no usage since
+2026-11-15. Review: tier 1, Lens 5, 7 and 2, then Tooling, Efficiency,
+Completeness and Design; RCA docs/reviews/rca-cn-style-2026-11-16.md.
+
+Not-tested: in game, in Chinese (castle_EW3 name, Armory tier spacing,
+lord greetings, a hideout nameplate, the Harad high-king title).
+
+#### fix(loc): v2.0.40 - team terms the team's own text confirms
+
+`9536c96b`
+
+A paid pilot (40 rows per language) drafted held-out team rows with and
+without the team reference. Names moved to the team's forms (贡达巴德,
+黑蛮地人), but "Findariel, wife of Ciryandur" came back as 吕西卡, another
+lord's name. The reference's term came from the team's own name row,
+while the team's sentence about her says 芬达瑞尔. 548 of 10,727 CNs
+terms are rows of that kind, from lord names to screen labels such as
+Close and Load.
+
+A term now stays only when most of the team's longer rows that hold its
+English also hold its text. A three-letter word is a term when two team
+sentences confirm it, so Orc => 奥克 (421 of 426 team rows) reaches the
+model. The prompt tells the model never to copy a name from a style
+example into an entry that does not hold it.
+
+Refs #1421
+
+#### fix(story): v2.0.40 - Free heroes wait for the first wall lane pick
+
+`de891ce4`
+
+In the Helm's Deep story mission the garrison's foot was moved into
+the heroes' formation and out again about once a second before the
+first wave (#1370, moved_out=1517 on the hunters line). The castle
+tactic merges its foot formations into one off AI control while no
+siege lane holds a defender formation, and the free heroes stood in
+their formation 7 before the tactic's first lane pick. A Long Defeat
+hero is bought, so he spawns after that pick, which is why the Long
+Defeat never showed it.
+
+The director now holds every hero the run asks for until a lane holds
+a defender formation, or for at most 5 s, and then spawns him with a
+warning line. A probe run with the same hold read 0 repairs and
+moved_out=0 (E:/Temp/scenario-runs/20261116-125931).
+
+It guards the first pick only: a lane that becomes active later can
+still take formation 7 (it did 21 s into the probe run, still with
+moved_out=0). How often that moves soldiers is not known; the 1370
+check measures it.
+
+Not proven in game yet: the story mission run on this build is owed.
+
+Tests: full C# suite 42315 passed, 1 failed; the failure is
+EveryLanguage_DeclaresARowForEveryEnglishKey, the #1385 keys on trunk
+that wait for the language pass, not this change. Tool tests 10087
+OK; ModuleData validation and doc lint exit 0; API snapshot
+reproduces. Review: /deep-review tier 1 (lenses 5 and 2); lens 2's
+HIGH was a wrong engine claim in the comments, corrected; findings in
+docs/reviews/rca-1370-lane-hold-2026-11-16.md. The Codex pass was
+skipped on the maintainer's word (no usage).
+
+Fixes #1370
+Refs #1325
+
+#### fix(long-defeat): v2.0.40 - An upgrade says what it bought
+
+`cc2e2f8f`
+
+In the Long Defeat's shop, a troop upgrade did replace your soldiers
+on the field, but nothing told you so. Four things change.
+
+After you buy an upgrade, a line says what happened, for example
+"Militia to Westfold Axemen: 40 upgraded, 60 left." When an order
+cannot replace every soldier it paid for, a line says how many and
+how much gold came back.
+
+Each upgrade row now states the deal before you click: "Upgrades 40
+of 100 for 600 gold". One click has always taken every soldier of
+that troop the gold pays for; the row used to read "100 standing,
+gold for 40" and left the total out. A row your gold pays nothing
+for is disabled and keeps the old line.
+
+The shop offers no upgrade while the garrison is still arriving.
+The foot come in groups of 20, four seconds apart, and a click in
+those first seconds upgraded only the groups that already stood.
+The upgrade rows appear when the last group stands (about 16
+seconds into the preparation at the default garrison size).
+
+After an order, the count of soldiers left to upgrade comes from
+what the field found, so soldiers an order could not reach are not
+offered again for half a second.
+
+With the cavalry class, 21 of the 65 archers could never be upgraded
+(#1401). The engine puts them into the formation that TAOM uses for
+tower post archers, and the upgrade skipped everyone in it. It now
+skips only the posted archers themselves. No soldier changes place.
+
+Prices and what one click buys do not change.
+
+New English text, with no language rows yet (translation backlog
+#1129): TAOM_LD_Hud_UpgradeDeal, TAOM_LD_Notice_UpgradeBought,
+TAOM_LD_Notice_UpgradeRefund. Until the language pass two tests stay
+red for these three keys: EveryKey_IsSeededInAllTwelveLanguageFiles
+and EveryLanguage_DeclaresARowForEveryEnglishKey.
+
+Review: /deep-review tier 1 in two waves; the findings are in
+docs/reviews/rca-long-defeat-upgrade-feedback-2026-11-16.md. The
+Codex pass was skipped on the maintainer's word (the account has no
+usage). Not played yet: the in-game proof runs are owed
+(tools/ingame_checks/1388.toml and 1401.toml).
+
+Refs #1388, #1401, #1402
+
+#### fix(desertion): v2.0.40 - recruit hint names the alignment block
+
+`d9f489d5`
+
+When the alignment recruitment rule refuses a notable's volunteers to
+the player, every slot of that notable said "You need 0" relation,
+because no relation opens them. Each slot now says "Your side may not
+take volunteers from this realm." The sentence holds in both rule
+modes (Symmetric, and Only Good Rejects Evil).
+
+Display only. Patch157, the recruit slot hint from #1189, asks the
+alignment rule first, with the same ids the volunteer model uses; the
+volunteer model's note now names Patch157 as a third reader of those
+ids. A new wiring test checks that the module hands the rule to the
+patch. One new string, seeded in all 12 languages.
+
+Closes #1408. Tier 1 review: data flow and engine lenses; their LOW
+findings are fixed here. Codex pass owed (no usage). Not tested in
+game.
+
+#### fix(desertion): v2.0.40 - recruit slot hint names the desertion lock
+
+`f0bd2c71`
+
+A volunteer slot that alignment desertion locks for the player said
+"You need 0" relation, because no relation opens it. The hint now
+names the cause: this volunteer would desert your party, or an
+earlier volunteer here would, and volunteers are recruited in order.
+Empty slots behind a deserter say the same.
+
+The slot just before the first deserter does open with relation, but
+vanilla's hint search could not see past the cap and also showed 0.
+It now shows the relation that opens it.
+
+Display only: the recruit cap is unchanged. Patch157 is a prefix on
+RecruitVolunteerTroopVM.ExecuteBeginHint, client only, reviewed safe
+for co-op. Two new strings, seeded in all 12 languages.
+
+Refs #1189 (item 3). Tier 1 review: data flow and engine lenses; their
+MED and LOW findings are fixed here. Codex pass owed (no usage).
+Not tested in game.
+
+#### fix(tools): v2.0.40 - Leave multiplayer data out of the melee tools
+
+`de88303c`
+
+The shield gate (tools/audit_polearm_shield_parity.py), the melee
+catalogue and the troop roster page read every data file under a
+module's ModuleData. Native's multiplayer files (mp_crafting_pieces.xml,
+mpitems.xml) counted, although neither a campaign nor a custom battle
+loads them. Three more rules differed from the engine: it reads one
+<XmlName> per row, it reads the game type from any element under
+<IncludedGameTypes>, and it compares module ids without case.
+
+The tools now follow all four. A row or data file counts when its game
+types are empty or name Campaign or CustomGame, the two game types TAOM
+plays (Fords of War items sit in CustomGame rows). A data file that only
+multiplayer or editor rows name is skipped by every loader. A row's
+folder is read only when <path>.xml is absent, as in the engine.
+
+Native's campaign weapon_descriptions.xml lists 429 pieces that only
+its multiplayer file defines. The gate no longer reports those as
+dangling, because the list is vanilla's. A module that registers such a
+piece under another description is still a finding. The held entry
+vlandian_blade_10 is gone for the same reason.
+
+Checked on the live install against trunk, run side by side: the gate,
+the ladder report, the generators, the validator and the troop roster
+page give the same verdicts and output. Only counts change: the ladder
+loads 1577 pieces (was 2012), the gate 696 crafted items and 350
+shields (was 876 and 403).
+
+The rules still open (files no row names, malformed rows, the
+validator's own item scan) are #1404.
+
+Closes #1398.
+
+#### fix(tools): v2.0.40 - The team import keeps current and distinct names
+
+`dbdaf3e8`
+
+The first Chinese import (24d636cc5) put back names that our English
+changed after v2.0.38, the TAOM version the team translated: Auredhir
+showed as Aeglir again. In Simplified Chinese it also gave 1,180
+Armory items and 12 pairs of troops a name that an item or troop with
+different English already used. This commit takes that import back
+out and fixes the importer; the next commits on this branch import
+again on the current English.
+
+tools/import_team_translations.py now:
+- reads the TAOM version from the drop's SubModule.xml (or --base) and
+  keeps our row, listed as stale, wherever our English changed since;
+- writes the override where tools/translation_overrides/<lang>.json
+  has one, so a hand correction survives each import;
+- keeps our row for the ids in KEEP_OURS, where the team's text names
+  another house or name list than our English: the Rohan, Shaghana
+  and Âbanissa clans, the Mordor name pools and three single names;
+- keeps our row where the team's text would give two troops or two
+  Armory items with different English one name, and appends the
+  English tier (IV, II-T1) to an Armory name whose Chinese drops it,
+  as the team itself writes it on its other rows;
+- refuses a text with a {...} expression that holds a Chinese
+  character or full-width punctuation, for which the game would show
+  the whole string empty;
+- reads only the team's language files, refuses a tab or a line
+  break, reports an id the drop gives two texts, reads a zip with a
+  __MACOSX folder or lowercase folders, stops on a file of ours that
+  does not parse, saves the cache before the files, always writes its
+  report, and exits 2 when the drop has problems.
+
+The overrides now also keep the space before bin/ in
+TAOM_LD_End_Report, which the team's text leaves out.
+TRANSLATOR_GUIDE.md has a new section on the Chinese import.
+
+#### fix(tools): v2.0.40 - Load only the modules TAOM loads with
+
+`b7fd822e`
+
+The shield gate (tools/audit_polearm_shield_parity.py) and the shared
+melee catalogue read every installed module, so AWOIAF_Armoury's 280
+crafting pieces and its items counted in a TAOM campaign where it never
+loads. They also differed from the engine's XML merge in three ways:
+they read <path>.xslt where the engine reads <path>.xsl first, they
+applied rows meant only for multiplayer, and they keyed modules by
+folder name (SandBox's Id is Sandbox).
+
+Both now read TAOM's playset: TAOM, Native, and every module TAOM
+depends on or names as LoadBeforeThis metadata (the Armory), followed
+through each module's own SubModule.xml. Rows follow
+MBObjectManager.GetMergedXmlForManaged: .xsl before .xslt, a row whose
+<IncludedGameTypes> leaves out Campaign is skipped, modules are keyed by
+<Id> and the first one found wins. A row that merges an .xml file or a
+folder for these ids is reported as bad input (exit 2), because the
+gate does not model the engine's XSD merge. The gate prints the
+playset it read.
+
+Checked on the live install against trunk, run side by side: the gate,
+the ladder report, the generators, the validator and the troop roster
+page give the same verdicts and output. Only counts change: the ladder
+loads 2012 pieces (was 2292), the gate 876 crafted items and 403
+shields (was 915 and 473).
+
+data_gates now runs the melee and placeholder gates when TAOM's
+SubModule.xml or the shield gate changes. The rules still not modelled
+(the game type of data files, case of module ids) are #1398.
+
+Closes #1375.
+
+#### fix(realms): v2.0.40 - map-made titles follow a language change
+
+`2f73ecec`
+
+Titles made from the map (kingdoms, counties, baronies, lordships and
+the automatic duchies) saved their place name as text in the language
+the campaign first had. After a language change the rank word changed
+but the name did not: a German start kept "Burg Westoft" in English.
+
+The world snapshot now keeps each name's {=key}, so the title
+translates like a title named in realms_titles.xml. A settlement name
+always keeps its key: the engine sets four IS_* variables on every
+settlement name, and its text never uses them. A kingdom name keeps
+its resolved text only when it really has a variable, such as a name
+given in the kingdom screen. The title tree still sorts vassals by
+their English name, not by the key.
+
+A save made before this keeps its title names for the rest of that
+campaign; nothing repairs them on load, because a repair from the
+settlement's current name would also carry a Namegiving rename into
+the title.
+
+Not-tested: the in-game language switch, and whether BR and IT rank
+words agree with a keyed name's grammar marker.
+
+Closes #1391.
+
+#### fix(tools): v2.0.40 - Give the melee ladder report one answer per run
+
+`a69d4393`
+
+tools/analyze_melee_ladder.py looped over each troop's items, a
+frozenset, and kept the first of two equally strong weapons. Python
+salts string hashes per process, so the same data gave a different
+report from run to run: the erebor TwoHandedAxe row named
+sm_dwarf_iron_axe_c or sm_dwarf_iron_axe_d by hash order. The two
+loops (place and tier_inversions) now go over the items in sorted
+order, so a tie goes to the first item id.
+
+The validator's melee gate (taom_schema.melee_pass_rows) broke the
+same kind of tie the other way, on the largest id. It now names the
+smallest, so a MELEE_LADDER warning names the same weapon as the
+report. No verdict changes: the tied weapons share their class, flags
+and blade kind.
+
+Checked on the live install: the report is identical under six
+PYTHONHASHSEED values, and the restat_melee_blades.py dry run is
+byte-identical before and after. tools/tests/test_analyze_melee_ladder_order.py
+runs a tied fixture under six seeds.
+
+Closes #1379.
+
+#### fix(diplomacy): v2.0.40 - each sponsor row shows its own price
+
+`f345adfa`
+
+In the lord dialogue's list "I can offer your realm {GOLD} to declare
+war on the {KINGDOM}", every row showed the price of the last kingdom
+in the list. The game still checked and charged each row's own price,
+so the player could see one number and pay another. When the last row
+was a pair the War of the Ring forbids, every row looked like it cost
+millions.
+
+Vanilla sets the price as one global text variable for each row, and
+the rows are drawn only after all of them are built. A postfix now
+also sets the price on each row's own text, which the text engine
+reads before the global value. It changes only what the row shows. A
+refused row still shows its own inflated price, greyed out with the
+refusal as its hint (#1350).
+
+The target is private and bound by name; a binding test pins it.
+Not tested in game: the prices on a list with two or more kingdoms.
+A Codex review is owed (usage limit until 2026-11-20).
+
+Fixes #1381
+
+#### fix(tools): v2.0.40 - Price placeholder weapons on the roster page
+
+`6982bf76`
+
+The troop roster page (docs/reference/troop-rosters.html) showed the
+20 taom_ph_ placeholder weapons as "not found" in 305 equipment slots,
+so a carrier's best blow and DPS left out its main weapon. The page
+read only <Item> rows, and the placeholders are <CraftedItem> rows in
+placeholder_weapons/ph_items.xml.
+
+tools/generate_troop_roster_page.py now prices them from that folder
+through taom_schema.price_placeholders, the same path the validator's
+melee gate uses, so the page and the gate give the same numbers. A
+placeholder that does not price keeps its name, and the reason goes to
+stderr. An unreadable ph_items.xml is reported, not a crash.
+
+The page also leaves out civilian="true" rosters with no
+equipmentType, as the melee ladder and the engine do. Before, 130
+town sets counted as battle sets in the set count, the armour
+average and the best blow.
+
+The regenerated page was last generated on 2026-10-20, so it also
+takes in a month of roster changes, and the #1372 fix: the four Umbar
+rows with northern_round_shield now show 300 hp in place of a dash.
+
+Closes #1384.
+
+#### fix(loc): v2.0.40 - Register Realms title and rank names for translation
+
+`eae38213`
+
+Realms rank templates, title, office and house names live inline in
+realms_titles.xml as {=KEY}default text. The Realms screens turn each
+into translatable text, but no English source registered the 186 keys,
+so every language showed them in English.
+
+The name generator gains a realms_title category that writes
+taom_realms_title_strings.xml. Each of the 12 languages gets its own
+std_taom_realms_title_strings file and manifest line, seeded with
+English rows; real translation is in the backlog (#1129). Editing
+realms_titles.xml or any other generator source now runs the
+generator's --check gate.
+
+Follow-ups: #1390 (a test for inline data text with no English row),
+#1391 (map-made title names stay in the starting language).
+
+Closes #1374
+
+#### fix(build): v2.0.40 - Dependencies deploy stops before losing its DLLs
+
+`813927a2`
+
+A deploy of TAOM.Dependencies now stops with a clear error when a DLL
+that its SubModule.xml loads is neither built nor staged in
+Dependencies/_Module/bin. Before, Bannerlord.BuildResources deleted
+the bundled DLLs in the game's module folder and copied back only the
+build output, so a checkout without the vendored DLLs (a sparse
+checkout) deployed a module the engine could not load ("Cannot load:
+Microsoft.Bcl.HashCode.dll"). The guard runs before that clean on
+every build that has a ModuleId and a game folder.
+
+Contributed by REDACTEDSTUFF. Review fix: the package pin test now
+reads the NuGet folder the build uses (NUGET_PACKAGES) and checks
+both targets still hang on PostBuildEvent (RCA
+docs/reviews/rca-dependencies-deploy-dlls-2026-11-16.md). The target
+was also run on its own against a scratch game folder: it passes with
+every DLL present and names the one staged DLL that was removed.
+Codex skipped: out of usage. No issue linked.
+
+#### fix(loc): v2.0.40 - Orphan text gate covers TAOM_ and realms_ rows
+
+`0b912d73`
+
+The gate that finds registered text nothing reads only looked at
+taom_ rows, so an unused TAOM_ or realms_ row was never reported and
+would still be translated 12 times. It now checks the same three
+prefixes as the other text gates (#1130).
+
+It also failed on trunk. Four rows had no reader, and they are removed
+from the English file, the 12 language files and the translation
+caches:
+
+- taom_char_next_perk_tier, taom_char_next_perk_tier_one and
+  taom_char_all_perk_tiers, added with the character page redesign
+  (eafb9af54) but never shown: the page draws skill progress as a
+  marker and a bar.
+- TAOM_LD_Prompt_ChoiceClass, which The Long Defeat setup prompt
+  stopped reading when it moved the kit text to a hover hint.
+
+The language rows go too, against the localize skill's hands-off rule
+for language files: Mike's word of 2026-11-15 lets sessions seed those
+files, and a row with no reader would only be translated for nothing.
+No live TAOM_Map or LOTRLOME_Armory file names the four ids.
+
+Closes #1244
+Closes #1377
+
+#### fix(tools): v2.0.40 - melee ladder fixer keeps the weapon category
+
+`59c38b7e`
+
+fix_melee_ladder.py picked a swap by crafting template and DPS band.
+Every polearm shares the template TwoHandedPolearm, so its 2026-11-14
+plan replaced poleaxes with short spears (numenorean_poleaxe_heavy at
+92 DPS to dunland_caerdh_short_spear_e at 33). That breaks the rule
+that every troop keeps the weapon category it was made for, and the
+plan was never applied.
+
+A candidate must now be of the same weapon category as the weapon it
+replaces: the same template and, for a polearm, the same main attack
+(swing or thrust, by the higher DPS), the same couch usage and the
+same shield use. Same category means the same band, so an under-armed
+weapon is only ever swapped for a stronger one.
+
+Today's dry run plans 125 swaps across 118 troops, none across a
+category and none lower for an under-armed weapon. The roster pass is
+not applied; it is a balance change of its own. Four new tests pin
+the poleaxe, lance and spear cases; they fail on the old tool. Tool
+suite: 9,943 tests OK.
+
+#### fix(tools): v2.0.40 - Load melee weapon data by the engine's rule
+
+`2f6fac82`
+
+tools/melee_catalogue.py, which the melee ladder, the placeholder and
+starter kit generators, the roster page and the validator read, kept
+its own copy of the shield gate's stylesheet chain after #1354 fixed
+the gate. It still applied each module's top-level <name>.xslt and
+read every installed module, NavalDLC included.
+
+The catalogue now uses the gate's rule:
+
+- Stylesheets come from each module's SubModule.xml <XmlName> rows,
+  through the gate's merged().
+- The modules TAOM lists under <IncompatibleModules> (NavalDLC) are
+  left out of every loader: pieces, items, shields and the chain.
+- TAOM's own placeholder sheets stay out of the chain. The callers
+  that price placeholders add them from the tree they check, so a
+  deployed copy can no longer hide a registration the tree lost.
+- A SubModule.xml it cannot read, or a missing one for TAOM, is an
+  error, not a silent change in the data.
+
+tools/generate_troop_roster_page.py read items in its own loop, where
+NavalDLC's bare stub of northern_round_shield replaced SandBoxCore's;
+it now uses the catalogue's module list. The tracked page is not
+regenerated here: a fresh run also shows the placeholder weapons as
+not found, which #1384 fixes before the page is regenerated.
+
+Checked against the live install: the ladder, the generators, the
+validator and the shield gate give the same results on TAOM's weapons;
+the ladder now loads 2,292 crafting pieces in place of 2,441 (the 149
+are NavalDLC's).
+
+Follow-ups: #1379 (a ladder row picks between equal weapons by hash
+order), #1384 (roster page placeholders), #1375 (the rest of the
+engine's loading rules).
+
+Closes #1372.
+
+#### fix(coop): v2.0.40 - Guests get the player rules for marriage, prisoners
+
+`d1c794a9`
+
+In co-op, a guest's marriage and a guest's prisoner recruits are
+checked on the server. TAOM's marriage alignment rule and prisoner
+morale waiver asked "is this the player" with the server's own clan
+and hero, so a guest got the AI setting. With the player and AI
+switches set differently, a guest's client could offer a marriage the
+server then refused, or show a morale cost other than the one applied.
+
+Both now ask Coop's player list. This covers player-to-player marriage,
+courting an NPC lord and the marriage barter, whose two server steps
+used to disagree. If the list cannot be read, every clan and hero is
+treated as AI on every machine, as in the pregnancy rule. Single player
+is unchanged.
+
+Not tested in game: a two-client session with the player and AI
+switches set differently (marriage, courtship, barter, recruit).
+
+Closes #1371
+
+#### fix(diplomacy): v2.0.40 - sponsor option greys out a refused call
+
+`dfc8fa7e`
+
+The lord dialogue option "I can offer your realm {GOLD} to declare war
+on the {KINGDOM}" now shows a refused call to war greyed out, with the
+reason as its hint. Before, a pair refused by a callToWarRefusals row
+(Dunland against Gondor, #1283) kept a live option that did nothing,
+and a pair the War of the Ring forbids showed only "You don't have
+enough money". The hint is the war veto's text, or "Dunland will not
+go to war against Gondor." for a refusal row (new key
+taom_call_to_war_refused). The displayed cost is still vanilla's,
+which the war-score penalty inflates for a vetoed pair.
+
+The review found a vanilla bug behind the same option: its consequence
+called the war against the first kingdom on the dialogue page, not
+the one the player clicked, because it read the repeat index the
+dialogue manager had already reset to 0. A second prefix makes the
+same two vanilla calls for the clicked kingdom. Both calls still go
+through StartCallToWarAgreement, so TAOM's refusal and Coop's prefix
+there run as before. Under co-op the refusal query defers to the host
+and the option stays live.
+
+Both targets are private and bound by name; binding tests pin them.
+Not tested in game: the greyed option, its hint, and a click on a row
+that is not first on the page. The 12 language files have no row for
+the new key yet (the project lead's language pass). A Codex review is
+owed (usage limit until 2026-11-20).
+
+Fixes #1350
+
+#### fix(loc): v2.0.40 - Register Realms and crash dialog loc keys
+
+`23205c06`
+
+The Realms screens, popups and messages wrote 186 text keys with a
+realms_ prefix, and the crash dialog three with TAOM_. The localization
+gates looked for taom_ keys only, so none of these had an English row
+and every language showed the English text.
+
+The harvest tool, the unregistered-key gate and the C# default drift
+gate now cover taom_, TAOM_ and realms_. The 189 missing English rows
+are registered in taom_module_strings.xml and seeded as English rows in
+the 12 language files; real translation is in the backlog (#1129).
+Because the override loader serves TAOM_ and realms_ rows in English,
+the drift gate now also fails when a C# default and its row disagree.
+
+Follow-ups: #1374 (rank and title names in realms_titles.xml have no
+language rows), #1377 (the orphan row gate still checks taom_ only).
+
+Closes #1130
+
+#### fix(tools): v2.0.40 - Check placeholder weapons in the shield gate
+
+`90d418ab`
+
+The shield gate (tools/audit_polearm_shield_parity.py) never judged
+the 20 placeholder weapons. It applied each module's top-level
+<name>.xslt, but the engine applies the stylesheets that SubModule.xml
+<XmlName> rows name, and TAOM's placeholder registrations sit in
+ModuleData/placeholder_weapons/. Every taom_ph_ weapon resolved to no
+usage, and their 270 places beside a shield passed without a check.
+
+The gate now loads modules the way the engine does:
+
+- Stylesheets come from each module's SubModule.xml rows.
+- Modules that TAOM lists under <IncompatibleModules> (NavalDLC) are
+  left out, and the run prints a "Skipped:" line naming them.
+- TAOM is read from the checked tree in place of its installed copy,
+  so an edit counts before it is deployed.
+- A roster weapon that resolves to no usage now fails the run.
+- A SubModule.xml the gate cannot parse exits 2 and names the file.
+
+On today's data all 20 placeholders resolve: 17 to the one-handed
+polearm description and 3 to the one-handed sword description. None
+breaks a shield pair, and the gate passes.
+
+tools/data_gates.py now runs this gate when a placeholder sheet,
+TAOM's SubModule.xml or the gate itself changes.
+
+Follow-ups: #1375 (the rest of the engine's loading rules), #1372
+(melee_catalogue.py has the same file-name rule).
+
+Closes #1354.
+
+#### fix(troops): v2.0.40 - Two-handers beside a shield fail the weapon gate
+
+`680d1e6b`
+
+The AI never draws a two-handed weapon while it holds a shield, and 114
+rosters paired the two (#1312). The weapon gate only warned about them,
+so the count had grown from 33 to 114 since it was first measured.
+
+Troops that now fight with their two-handed weapon:
+- Ironpass Axeman, Veteran Axeman and Mountain Guard drop the tower
+  shield and open with the axe, spear second. Their TwoHanded skill now
+  sits above Polearm.
+- The Dunland lizard horseman, outrider and noble cavalry drop the
+  shield; the two-handed axe was their only melee weapon.
+- Forlong, Angbor and Golasgil drop the shield and keep the Lossarnach
+  axe. Lords keep their kit in a save, so this shows in a new campaign.
+- The Great and Pale Spider Riders keep their axe roster with a sword
+  in hand, and the axe takes the shield's slot, so a rider never gets
+  both. They gain TwoHanded skill (130 and 170).
+
+Every other shield troop keeps its spare two-handed weapon as a backup
+for when the shield breaks. Those pairs, and the two Dol Guldur career
+kits, are held in the gate with that reason.
+
+The gate now fails on any new shield pair of any melee type, and on an
+unknown weapon piece id. Six such ids live only in the Armory and in
+vanilla, no item uses them, and the engine skips them, so they are held
+by name rather than edited in the Armory, where a reinstall would undo
+the edit. The edit hook now reports every failure the gate prints, not
+only the first.
+
+Not tested in game: the riders drawing the axe, the Ironpass troops
+opening with it, and the Gondor lords in a new campaign.
+
+#### fix(coop): v2.0.40 - TAOM fief elections reach co-op players
+
+`de945f80`
+
+In a co-op game, the host now runs TAOM's fief election and every
+player votes on it. Before, BannerlordCoop and TAOM both patched
+Kingdom.AddDecision, and which one won depended on which game the
+process ran first: either the election fell back to vanilla, or Coop
+could not send TAOM's election type and the host's AI decided it alone.
+
+Patch70 now runs before Coop's AddDecision prefix, and TAOM.CoopCompat
+registers TaomSettlementClaimantDecision with Coop's decision type
+registry. The registration runs once per process, at the main menu and
+at the first campaign start, because a dedicated server under the Coop
+host never reaches the main-menu hook. Coop refuses a player whose
+registered types differ from the server's, so every peer needs the
+same TAOM.CoopCompat build. The payload carries the settlement, the
+excluded clan and the proposer; Coop's round status and vote keys keep
+the ballot and the result the same on every peer.
+
+An election that a client player starts (Give Settlement) still stays
+vanilla: it reaches the host through Coop's own path and never passes
+Patch70. That is #1353.
+
+Not tested in game: a two-client session and a dedicated server boot
+with TAOM.CoopCompat are owed (tools/ingame_checks/1346.toml).
+
+Refs #1346
+
+#### fix(refuge): v2.0.40 - Promoted warden returns to the ranks
+
+`2a48c3d9`
+
+Dismantling a refuge now turns a promoted warden back into one soldier
+of the troop he was promoted from, so found, promote, dismantle no
+longer hands out a free companion each time. If that troop no longer
+exists, his culture's basic troop comes back instead. A warden who was
+already a companion rejoins as a companion. A promoted warden who
+married, has children, leads a clan or left the player's companions
+stays a companion. A captured or dead warden is left where he is, and
+no soldier comes back for him.
+
+The review corrected the claim that the removal is silent: the game
+still writes "<name> was lost." to the chat, followed by "Your
+promoted warden returns to the ranks as <troop>." It also dropped a
+governor check that could never fire.
+
+Contributed by REDACTEDSTUFF (PR #1323). Review: lenses 5 and 2 at
+tier 1, RCA docs/reviews/rca-pr1323-refuge-warden-ranks-2026-11-15.md.
+Codex was skipped (out of usage). English seed rows were added in the
+12 language files; translation is on #1129. No issue is linked. Not
+checked in game: refuge.md "Owed", the PR #1323 dismantle steps.
+
+#### fix(diplomacy): v2.0.40 - Call-to-war veto runs before Coop's prefix
+
+`e722addf`
+
+On a co-op host, TAOM's veto on a call to war could be skipped. Coop's
+own prefix on AllianceCampaignBehavior.StartCallToWarAgreement does the
+agreement on the server (gold, agreement, war) and returns false, and
+Harmony 2.4.2 then skips every later bool prefix. Both prefixes had the
+default priority, and Coop usually adds its patches first. So a call to
+war that the War of the Ring forbids could move its gold and record its
+agreement before the war was refused.
+
+TAOM's prefix now has Priority.High, like the DeclareWarAction and
+MakePeaceAction prefixes. On the host it runs first, and a refused war
+skips Coop's prefix, so no gold moves. On a client TAOM defers to the
+host, so Coop still forwards the request. Solo play does not change.
+
+A new test pins Priority.High on the three war prefixes. Review
+(deep-review tier 1, data flow and engine compatibility) found no
+defect in the fix and three overstated comments, now corrected. The
+lesson is in lessons/harmony-il.md. Three older siblings on other
+methods are #1346.
+
+Not tested: no live co-op session. Codex skipped (usage limit), owed.
+
+Closes #1343
+
+#### fix(realms): v2.0.40 - A kingdom name you choose stays
+
+`18b7a479`
+
+Realms names a kingdom after its ruler's highest title and gives its
+own name back when the title is lost. Four rough edges in that are now
+fixed (#1316):
+
+- A name you give your kingdom in the kingdom screen now beats every
+  title name, in the same session and after a load, also under a later
+  AI ruler. Realms recognises the kingdom screen's own text, which the
+  save keeps, so no new save data is needed. A name typed when you
+  found a kingdom is still plain text, so a title can still rename it.
+- A kingdom's kept own name could lose the name you typed and come back
+  as an error text. A name with a text variable is now kept as the text
+  it shows. Saves from v2.0.38 to v2.0.40 that already hold the broken
+  text no longer bring it back; the kingdom keeps the name it has.
+- The realm names on the map now update after a rename in the kingdom
+  screen, as soon as that screen closes.
+- House banners count as on only once their banner patch is actually
+  in, so a failed patch no longer half-enables the banner split.
+
+A new test reads the installed Native strings and fails if a game update
+changes the kingdom screen's text that this relies on.
+
+The Your Realm Takes Your Title's Name hint does not yet say that a
+kingdom screen name always stays; the feature doc does. Not tested in
+game: a rename, a save and load, and the map labels.
+
+#### fix(cheats): v2.0.40 - Relation and teleport results read properly
+
+`5dd299c9`
+
+The relation and teleport cheats still used the shared "Done" text
+(#1317). Teleport said "Done: Minas Tirith 0", and relation named the
+kingdom by its internal id ("Done: empire_w 12"), because the realm
+data keeps vanilla's ids.
+
+They now have their own text:
+
+- Relation: "Lords of Gondor whose relation changed: 12."
+- Teleport: "You are at the gate of Minas Tirith."
+
+The relation result takes the kingdom's display name from the picker
+list. A kingdom the picker leaves out (an eliminated one, reachable only
+from the console) still shows its id. The log line keeps the id beside
+the name.
+
+The two texts are English only and are in the translation backlog. Not
+tested in game: both result messages.
+
+#### fix(enlistment): v2.0.40 - A rider's lance and dropped categories
+
+`d5bcc09d`
+
+After the rank repair of #1290 the validator still listed 82
+enlistment kits as weaker than an earlier kit. None of them takes
+anything from the player, so the rule now says so.
+
+- 87 of the reasons were a dropped category: an earlier kit holds a
+  weapon category the kit lacks, for example an archer rank without
+  the recruit's sword. The player keeps every kit he drew while he
+  serves, so he still holds that sword. A dropped category is now
+  information: the dry run of --repair-ranks lists it, and the
+  validator raises no warning for it.
+- The last two were the Rohan cavalry sergeant and its South Rhovanion
+  copy: a couchable lance (28.9) after three kits with a plain spear
+  (38.0). When a cavalry kit is judged, a couchable spear is now a
+  lance, a category of its own: its worth is the couch, so it is held
+  against earlier lances and not against a spear's thrust. On foot
+  nobody can couch, so in every other kit the same item stays a spear.
+  A stronger Rohan lance in the Armory does not work: 11 troops carry
+  that lance from level 11, and a weapon is priced at its lowest
+  wearer.
+
+The repair follows the same categories: in a cavalry kit a lance is
+replaced only by a lance and a plain spear only by a plain spear. The
+validator, the repair and the hint for a promoted culture read one
+shared list of what counts as a regression (a lower armour total or a
+weaker weapon of one category).
+
+No kit changes. On the shipped kits the repair plans nothing, the dry
+run lists 94 dropped categories for information, and
+`python tools/validate_moduledata.py --code
+ENLISTMENT_KIT_RANK_REGRESSION` prints no finding.
+
+Refs #1290. Reviewed by one Claude review lens, with fixes; not tested
+in game.
+
+#### fix(tools): v2.0.40 - One build check for the three game launchers
+
+`e1f85957`
+
+run_scenario.py, run_long_defeat.py and run_command_trial.py now share
+one build check, tools/autorun_build.py. Each reads the checkout once,
+before the game starts, and starts nothing when git cannot answer. A
+commit made while the game runs no longer fails a good run.
+
+Scenario and Long Defeat used to check only the sha and accepted any
+.dirty stamp. They now also fail a MISMATCH stamp, a .dirty mark that
+disagrees with the tree, and a watched edit newer than the build, as
+the Seat of Seeing trial already did. Every PASS names the build with
+its build time, so two dirty builds in one batch read apart.
+
+The scenario fix for story event windows passed in the game: run
+20261115-154350 on a3fc6dc88 closed the War Chronicle window in the
+second it opened and ran 3 days in 37 seconds.
+
+Players: the banner icon sheet grew to 4096x1024 in this version. An
+install copied over an older Modules/TAOM can keep the old texture
+cache and crash at boot, so delete Modules/TAOM before you install.
+
+Refs #1075
+
+#### fix(loc): v2.0.40 - language rows for the cheat result texts
+
+`e4f78371`
+
+The 12 language files get English rows for the four cheat result texts
+that #1297's fixes added (taom_cheat_done_gold, _influence, _renown and
+_heal), so the language coverage test passes again. Translation stays
+in the backlog (#1129).
+
+#### fix(battle-load): v2.0.40 - shader line only during the render wait
+
+`a64499de`
+
+The "Compiling shaders" line on the loading screen is now written only
+while the game itself still waits to draw the mission: the current
+mission state's first-tick flag with its mission running, the same
+test the shader notice uses to start. Before, only TAOM's own flag
+decided, so a mission that ended during its wait without that frame
+could have left the line on later loading screens. No such path was
+found in the engine; the check keys the line on the engine's state,
+as the stall-probe lesson in harmony-il.md asks.
+
+Follow-up to #1308. Review: lenses 5 and 2, LOW findings only, all
+applied (docs/reviews/rca-pr1308-battle-shader-notice-2026-11-15.md,
+row 7). Not checked in game.
+
+#### fix(fords): v2.0.40 - Fords copies follow the rule of their source
+
+`38a8d479`
+
+A review of the skill curve found that the Fords of War copies were
+restated by their own ids, so the rules that name a campaign troop did
+not reach its copy (#343).
+
+- The copies of the two trolls, the spider rider, the elephant rider
+  and the mumakil rider keep their own values again. The tool leaves
+  these creatures alone in the campaign and now leaves their copies
+  alone too; the first restat had put them on the curve for humanoid
+  troops (cave troll One Handed 350 had become 260).
+- The 25 militia copies take the militia row as their campaign twins
+  do, and the ten elite ones its bonus. The Gondor militia spearman
+  copy has Polearm 105, as its twin; the first restat gave it 40.
+
+A copy takes its own level and kit, and its source's culture row,
+militia row and thrower status.
+
+Crush-through: the race bonuses are in the same skill points as the
+limits that the curve commit scaled, so they are scaled with them:
+Elves and Sauron 20 to 13 on the attack, Dwarves 15 to 10 on the
+defence. Without that an Elf crushed through a block at a one point
+lead. The curve's exponent is unchanged, so between the two limits a
+tier gap gives up to about six hundredths less of the full chance.
+
+Not changed: the shield bash chance reads the Athletics lead between
+two fighters. Troop leads are smaller on the new curve, so bashes
+between troops knock down less often; the maintainer decides whether
+to scale that window.
+
+Tool: --fix-purpose changes no equipment line in the Fords file, a
+missing second troop file is reported, and a copy without a skill
+block keeps its slot plan. Tests for each.
+
+#### fix(tools): v2.0.40 - Scenario PASS names its build, docs say no deploy
+
+`b22cd820`
+
+run_scenario.py now refuses before it starts the game when git cannot
+read this tree's HEAD, so no run is wasted on a check that cannot pass.
+A PASS line starts with "build <sha>", which binds the verdict to the
+build the run proved.
+
+The scenario and faction balance docs, tools/README.md and the game-run
+skill said the launcher deploys the checkout. It does not: deploy with
+pwsh ./build.ps1 first. The skill also said no scenario driver exists.
+
+Adds the RCA of the review and two lessons: list TAOM's own pause
+calls when you list what stops campaign time, and copy a sibling
+launcher's timing and report text along with its check.
+
+Refs #1075
+
+#### fix(autorun): v2.0.40 - Scenario driver closes story event windows
+
+`0a66a2cf`
+
+The first unattended scenario run stood still for 9 minutes on day 2.
+The War Chronicle's "breaking" window pauses the campaign while it
+shows, and the driver could neither see nor close it: the status line
+read screen=Map time_locked=0 the whole time. A 150 day run would have
+ended "stalled" at its first chronicle event.
+
+The driver now closes an open Realms popup in its Running phase,
+through the same RealmsPopupLayer.Close the Continue button runs, so
+the teardown lifts the pause. In Running the window opens and closes
+in one application tick. The done file gains event_windows_closed,
+kept apart from notices_hidden, which counts scene notifications only.
+
+Run folder of the finding: E:\Temp\scenario-runs\20261115-142426
+(build cb470ab4e). A run with this fix is still owed.
+
+Refs #1075
+
+#### fix(gates): v2.0.40 - Entry point gate sees hand-applied patches
+
+`60e3a29b`
+
+The entry point line gate (ADR-002, at most 150 lines) missed two
+Realms patch classes, because they apply their Harmony patches by hand
+and name their methods BannerPrefix, PagePrefix and CreatePagesPostfix
+rather than Prefix or Postfix (#1298). At base, HouseBanners was 150
+lines and TitleEncyclopediaPage was 216.
+
+The gate now also counts a class that hands Harmony its own methods
+with new HarmonyMethod(typeof(Self), ...). To bring both classes under
+the limit:
+
+- The kingdom banner Decouple and the clan visual redraw moved from
+  HouseBanners to KingdomBanners.
+- The two encyclopedia patches moved from TitleEncyclopediaPage to a
+  new TitleEncyclopediaPagePatch class, so the page itself is no longer
+  a patch class.
+
+No behaviour changes. The binding gate gains rows for the two private
+fields the Titles page patch reads (EncyclopediaPage._identifierTypes,
+EncyclopediaManager._pages). The patch registry now lists
+ConversationNames and the Titles page frames and log lines.
+
+Not tested in game: the encyclopedia Titles page and house banners.
+Follow-up: #1320 (HouseBanners name-string targets with no binding row).
+
+#### fix: v2.0.40 - Small defects from the outside PR review
+
+`52a13028`
+
+The review of the merged outside pull requests found several small
+defects (#1297). This change fixes them:
+
+- Cheat menu: gold, influence, renown and heal now say what they gave
+  ("Gained 50 renown.") instead of a bare number.
+- Bug report: the crash folder's share of the zip is capped at 128 MB,
+  smallest files first, so the text logs always fit and the main menu
+  does not pause on a huge dump. The setting's hint gives both limits.
+- Main menu: a stall marker that throws no longer skips the bug report
+  offer; each check has its own guard.
+- Realms: a kingdom the player renamed keeps that name when it loses
+  its naming title. The banner sync check runs only while house
+  banners are on, so XML kingdoms sync their colours again.
+- Custom battles: a unit with a captain needs one soldier of its own
+  besides the captain, in the muster screen and in the validator.
+- Captains: when two modules list upgrades for one troop, the lists
+  are joined, as the engine does, instead of the later one winning.
+- Binding gate: rows for the two Kingdom banner colour fields that the
+  banner colour sync writes.
+
+Not changed: the charge knockdown check still does not test the
+inflicted damage for NaN. The engine's AttackCollisionData.InflictedDamage
+is an int, so it cannot be NaN or infinite.
+
+The four new cheat texts are English only and are in the translation
+backlog, with eight Realms option keys. Not tested in game: the cheat
+texts and the renamed kingdom. Follow-ups: #1316, #1317.
+
+#### fix(weapons): v2.0.40 - Gundabad and Lorien spears rise by tier
+
+`fc529369`
+
+The melee ladder check found Gundabad and Lothlorien troops whose spear
+got weaker or stayed flat as they upgraded (#1296). Four new placeholder
+spears fix the worst of them:
+
+- [Gundabad] War Spear for tiers 4 and 5 (86 DPS)
+- [Gundabad] Blackshield Spear for tiers 5 and 6 (91 DPS)
+- [Gundabad] Blackshield Spear, Tempered for tiers 7 and 8 (103 DPS)
+- [Lothlorien] Galadhrim Spear for the tier 6 and 7 riders (114 DPS)
+
+Each keeps the look of its Armory spear. The ladder inversions fall
+from 319 to 304.
+
+The placeholder generator used to scale both attacks of a blade by one
+factor, so a spear whose thrust was already at its tier limit could not
+rise at all. Swing and thrust now get their own factor, each capped at
+its own limit. The swords' secondary thrust rose by one or two points
+(Isengard 19 to 20, Mirkwood 43 to 45 and 46 to 48); their swing and
+DPS did not change.
+
+The Lothlorien and Snow Orc troop generators now name the placeholder
+ids in their own specs, so a rerun of either keeps the new spears.
+
+The four names are English only and are listed in the translation
+backlog. Not tested in game: the new spears' stats on the troop screen.
+
+#### fix(autorun): v2.0.40 - scenario judge keeps the build seen at launch
+
+`b82a5792`
+
+run_scenario.py read the checkout's HEAD when it judged the run, not
+when it started it. A commit made while the game ran then failed a
+good run as a stale deploy. The launcher now reads HEAD once, at
+launch, and the judge compares the log's build stamp with that.
+
+Refs #1075
+
+#### fix(banners): v2.0.40 - Old saves show icons the repack removed
+
+`99145f93`
+
+The v2.0.40 banner sheet repack removed 159 icon ids for good, and a
+banner in an older save that names one drew that layer as nothing:
+a player's own clan banner could lose its emblem.
+
+On a save load the session authority now replaces each removed id,
+in every kingdom and clan banner, with the nearest-id icon that the
+same banner icon group still holds. Only the icon changes; colours,
+size, position and rotation stay. The player's own and edited banners
+are included. A co-op client does nothing; the server's banners reach
+it as before.
+
+A new gate fails if a culture's list of icons for new rebel and
+companion clans names an icon that does not exist.
+
+Known limit: Realms keeps its own copies of kingdom banners from
+before a title banner replaced them. A removed id in such a copy
+comes back when Realms restores it, and the next load replaces it.
+
+Not-tested: no in-game load of an old save yet (#1285 keeps the
+triage-needs-ingame label).
+
+#### fix(tools): v2.0.40 - realm generator and emblems keep the new banners
+
+`cb470ab4`
+
+The generator and emblem checks failed on trunk after the banner and
+house name commits from PRs #1311 and #1315. Those commits gave
+Arthedain's five houses, Anduin Vale's realm and three houses, and the
+Ered Luin and Angaladh realms hand-made banners in the shipped XML,
+but the generator still held the old keys. Its --apply would have put
+the old banners back. The generator now carries the shipped keys, so
+its check passes for all eight realms and the data is unchanged.
+
+Two emblems also read as stale. Icons 31026 (Arthedain's star field)
+and 31034 (Ered Luin's ring frame) now have picker sprites, so the
+emblem tool took them as the sigil and drew a row of stars and a bare
+ring. A pin table now keeps the shipped crown and mountain emblems;
+no PNG changed. Ered Luin's new sigil (31033) could replace the
+mountain later; that is an art choice.
+
+#### fix(mounts): v2.0.40 - Own saddle family per creature, no stray reins
+
+`6b58d21d`
+
+Wargs, fell wargs, dire wolves and spiders no longer accept horse
+saddles. The Armory gives them the horse harness family, so any horse
+saddle fitted them, and a horse saddle with reins on a dire wolf
+crashed a player's battle at every mounted spawn. TAOM now gives each
+creature its own family when the game loads: wargs and fell wargs take
+the warg saddle, dire wolves the dire wolf saddle, and spiders ride
+bare. A hero in an old save who rides a creature with a horse saddle
+gets the saddle moved to the party inventory at load.
+
+The reins guard skips the cloth reins of any harness on a mount whose
+body has no rein skeleton, so a mismatched harness from any other path
+can no longer crash the spawn.
+
+Contributed by REDACTEDSTUFF. Review fixes: the roster test now reads
+both spellings of the equipment element, the creature authoring guide
+agrees with the new families, and several engine claims in the docs
+are corrected (docs/reviews/rca-pr1306-creature-saddles-2026-11-15.md).
+No issue is linked. Checked in a battle lab only; the campaign battle,
+the inventory refusal, the old-save repair and the rider death and
+dismount on a creature mount are owed in game.
+
+#### fix(troops): v2.0.40 - Lance riders start with the lance in hand
+
+`7f103c2d`
+
+A troop starts a battle holding the weapon in its first weapon
+slot. Nineteen troops that carry a lance or a spear in every battle
+set held a sword there, so the earlier skill fix gave their best
+skill to the sword (#343). They now hold the lance or spear first,
+and Polearm is their best melee skill again. No troop gains or loses
+an item, and no skill total changes.
+
+Changed: lance cavalry (mounted cavalry with a spear that can be
+couched): the Dale outrider, the two Anfalas cavalry troops, three
+Nurn warg riders, the four Black Numenorean riders, and the four Dol
+Guldur warg riders; the two Linhir spearmen, whose name says what
+they are; and three Fords of War copies of these troops. Swordsmen
+who carry a spare spear stay as they are (Erebor and Iron Hills
+guards, Rhun infantry, the Edoras recruit and militia).
+
+The Dol Guldur warg riders' spears could not be couched: the Armory
+listed the two Khamul spear blades for the plain one and two handed
+modes only. They can now be couched on a mount and braced on foot
+with no shield. Both spears also get dearer, by about half, because
+the game prices a weapon from its two best modes. The riders
+themselves carry a shield, so they couch and never brace.
+
+That change lives in the LOTRLOME_Armory, which is written. A new
+tool, tools/register_couch_brace_polearms.py, holds it in a repo
+spec with a dry run, a write with backup, a revert and a check; the
+check is a data gate (couch-brace), so a reinstalled Armory shows as
+a failure. The release must ship this Armory, and the game needs a
+full restart to load it.
+
+New: python tools/rebalance_troops.py --main-weapon-slots, and a
+validator warning TROOP_MAIN_WEAPON_NOT_ITEM0 for a lance rider or a
+named spearman that opens with another weapon. The tool, the
+validator and the couch test read one source for which polearms can
+be couched.
+
+Tested: C# 40,825 passed, 0 failed, and tool suite 9,442 ran, all
+passed, before the six Dol Guldur and Fords riders were applied;
+after that the validator shows no errors, data gates 9 pass, and a
+second run of each mode plans nothing. The Armory tool was run end
+to end on copies of the live file, revert included. Reviewed by
+three Claude lenses; Codex skipped on the maintainer's word. Not
+tested in game: a warg rider couches the spear, a rider draws the
+sword in melee, the spear tooltip shows four modes.
+
+#### fix(autorun): v2.0.40 - scenario run starts as gondor, safe notices
+
+`2f4fe905`
+
+The default culture of an unattended campaign run was empire_w, which
+is the Gondor kingdom, not a character creation culture. Every run
+with the default would have ended creation_failed. The default is now
+gondor (02bd1e3d2 said "Gondor (empire_w)"; the intent was Gondor). A
+C# and a Python test now hold the default to a culture_id in
+cultures.json, and the Python test also holds both defaults equal.
+
+A scene notification is now hidden only on its second sighting in a
+row. The engine marks one active a layer tick before its scene exists,
+and closing it in that tick throws on the null scene, which would have
+ended the run as driver_error. The driver makes this decision, so a
+test covers it; the host only reports and hides.
+
+The host now sets the main hero's culture before it picks the culture,
+as the culture screen does, so the clan name comes from that culture.
+The feature doc and the code comments now give the right reason for
+the start path, the right reading of the not-attackable cheat, the
+menus that stop time, and the creation checks the review settled.
+
+From the Engine compatibility lens of the #1075 review.
+
+Refs #1075
+
+#### fix(autorun): v2.0.40 - scenario run keeps the player's focus setting
+
+`da14a25a`
+
+The scenario autorun turned "pause on focus loss" off in memory once
+the map settled and put it back only when the run finished. The
+engine saves that config on every normal shutdown (Module.cs
+FinalizeModule), so a person who closed the game mid-run left the
+setting off in their config file. Now the host turns it off when it
+starts the campaign, and ClientSubModule.OnGameEnd puts it back at
+every game end, which the engine runs before that save. Turning it
+off at the start also stops a focus loss before the map settles from
+opening the escape menu and stalling the run.
+
+Also:
+- TAOM_COMMAND_TRIAL now leaves the scenario plan unarmed, like the
+  Fords and Long Defeat variables, so two drivers never both start a
+  game from the main menu.
+- After the done file the driver waits 60 s for the main menu, not
+  120 s, so it quits before the launcher's 120 s kill, and a wait that
+  runs out logs exit_stalled.
+- The done text is built inside its guard, so a throw there still
+  reports the outcome and ends the campaign.
+- The unused ScenarioPlan.ArmedInThisProcess is gone.
+- New tests: the exit throw, where the wall limit counts from, the
+  last known day on a NaN clock, inquiries while the map loads, and
+  ok winning over stalled and wall_limit on one tick.
+
+From the Data flow lens of the #1075 review.
+
+Refs #1075
+
+#### fix(autorun): v2.0.40 - scenario judge checks plan, build, whole log
+
+`8aa7239b`
+
+The run_scenario.py judge could pass a run it should fail. It now
+fails a run when:
+
+- a CrashReport error line is anywhere in the log; the scan used to
+  start when the driver started, after TAOM's own load;
+- the done file does not echo the armed kind, scenario, culture and
+  days, or the log holds an "[Autorun][Scenario] arm file:" warning
+  (the game ran a default instead of the value asked for);
+- the log's [BuildStamp] is not this tree's HEAD (.dirty allowed), so
+  a stale deploy no longer passes on the old build's data.
+
+ledger.txt is now written only when analyze_war_ledger.py exits 0, and
+the ledger child runs in UTF-8 mode. --help shows this tool's own
+arguments and names the runner options it passes on. Arm file numbers
+keep every digit. The runner's heartbeat stall is no longer raised
+with --stall-seconds, so a hung or unarmed game fails in 10 minutes,
+and a pass-through dialog handler is gone.
+
+From the Tooling lens of the #1075 review.
+
+Refs #1075
+
+#### fix(enlistment): v2.0.40 - A kit's own horse decides the archer
+
+`bb7982d2`
+
+An archer kit in a lord's service is a horse archer's kit when it
+holds a horse, and a foot archer's kit when it does not; only a
+horse archer needs a bow that can be shot from the saddle. The
+repair guessed this from what the culture's riders carry, and so it
+kept the Rohan archer veteran and sergeant on a weaker steppe bow
+after the soldier rank's longbow. It now reads the kit's own Horse
+slot (#1290).
+
+No enlistment kit holds a horse, so every archer kit is a foot
+archer's. The Rohan archer veteran and sergeant, and their South
+Rhovanion copies, keep the soldier's longbow. The one weapon case
+left is the Rohan cavalry sergeant, whose lance is weaker than the
+spear of the earlier ranks; the options are in
+docs/features/enlistment.md.
+
+Tested: C# 40,821 passed, 0 failed. Tool suite 9,365 ran, all
+passed. Validator exit 0, no errors. Not tested in game.
+
+#### fix(troops): v2.0.40 - A troop's best skill is on its weapon
+
+`c27c8e34`
+
+One troop in five had its best melee skill on a weapon it does not
+carry. Players saw it on Lothlorien: the Galadhrim two handed line
+had more One Handed than Two Handed, and the Marchwarden line
+carries a bow and a two handed sword with Bow and One Handed on top.
+The skill curve was keyed by formation group and not by kit, so a
+swordsman was a slightly better spearman, and an archer with a two
+handed sword fought with a weak skill (#343).
+
+A troop's kit now decides its skills. The weapon in Item0 is the one
+the engine puts in the hand at spawn, so its class takes the troop's
+highest weapon skill; the other weapons it carries come next, and
+the classes it does not carry come last. The fix reorders each
+troop's own numbers among One Handed, Two Handed and Polearm, and
+among Bow and Crossbow. No troop changes a weapon or a slot, and no
+troop is weaker in its Item0 weapon.
+
+369 troops in 22 files changed. Examples: Galadhrim blademaster One
+Handed 355 and Two Handed 325 become 325 and 355; the Arthedain
+steel bowman's Two Handed goes from 80 to 220.
+
+Where a troop's battle sets tie between two weapons for one role,
+both skills take the higher value, because neither is the spare:
+the Marchwarden line now has Two Handed equal to One Handed (the
+archer 195 and 195). This raised 21 values on 21 troops, among them
+six Dale troops and the Gondor noble line of Lossarnach. In all, 72
+troops change their skill total, by 1,518 points: 712 from ties,
+601 where an upgraded troop may not sit below its source, and 205
+in the regenerated Arnor and Ered Luin files.
+
+A thrown weapon in Item0 stays: skirmishers and javelineers start
+the battle with it by design.
+
+New validator codes: TROOP_SKILL_KIT_MISMATCH (warning) and
+TROOP_ITEM_ZERO_NOT_MAIN (error, in the commit hooks: a shield or
+ammunition in Item0). New mode: python tools/rebalance_troops.py
+--fix-purpose. The skill formula and the realm generators follow
+the same rule.
+
+Left as warnings: 89 archers whose bow skill, set by the ranged
+ladder, sits under their melee skill, and 8 throwers. Left for a
+decision: 54 troops that carry a spear or lance in every set and
+hold a sword in Item0, so their best skill moved to the sword (the
+Linhir spearmen, the Numenorean knights, warg riders); the table is
+in docs/reviews/rca-troop-skill-purpose-2026-11-15.md. The level of
+the skill curve against vanilla is not changed here; the analysis is
+in docs/reviews/troop-roster-analysis-2026-11-15.md.
+
+Tested: C# 40,825 passed, 0 failed. Tool suite 9,360 ran, all
+passed. Validator exit 0, no errors. Data gates 8 pass. Reviewed by
+four Claude lenses and a checker; the Codex pass is owed (usage
+limit). Not tested in game: the Lothlorien lines in the encyclopedia
+and in battle.
+
+#### fix(enlistment): v2.0.40 - A rank never gives a weaker kit
+
+`02acdabb`
+
+After the armour and weapon rebalance some ranks in a lord's service
+handed out a weaker kit than an earlier rank: an Erebor soldier's
+armour totalled 67 where the recruit's totalled 81, and a Gundabad
+cavalry sergeant got a spear half as strong as the soldier's. No
+rank gives less armour than an earlier one now, and weapons follow
+the same rule in all but six kits (#1290).
+
+The rule, in one function that the validator and the repair share:
+a kit is held against every earlier kit the player drew in the same
+service, in the order the game hands kits out. Its armour total must
+not fall, and for each weapon category both kits hold, its best
+weapon must not be more than 3% weaker. A category an earlier kit
+had and this one lacks is reported and never repaired by a tool. A
+longbow counts as a bow and is never put into a rider's kit, a lance
+is only replaced by a weapon that can be couched, a thrown spear is
+not a melee weapon, and a hand-and-a-half sword counts as one
+handed.
+
+The repair (python tools/generate_enlistment_rosters.py
+--repair-ranks) prefers the culture's own troop gear: the same kind
+of weapon first, another kind of the same category next, the earlier
+kit's own piece last. It changed 109 slots. Rhun and Khand kits keep
+Rhun swords, the goblin sergeant keeps a mace, and the Isengard
+cavalry veteran and sergeant wear Uruk-hai plate in place of a
+Mordor orc chest.
+
+New warning ENLISTMENT_KIT_RANK_REGRESSION in the validator. A full
+regeneration now refuses to run over the promoted cultures' kits,
+which is how the first repair attempt was lost.
+
+Left for a decision, as warnings: six kits with a weaker weapon (the
+Rohan archer veteran and sergeant, whose rider kits cannot take the
+soldier's longbow, and the Rohan cavalry sergeant, whose lance is
+weaker than the earlier spear; each with its South Rhovanion copy),
+and 87 dropped categories in 80 kits. The options are in
+docs/features/enlistment.md.
+
+Tested: C# 40,821 passed, 0 failed. Tool suite 9,365 ran, all
+passed. Validator exit 0, no errors. Data gates 8 pass. All eight
+promoted cultures in sync. Reviewed by three Claude lenses, a
+checker and a second review of the fixes; the Codex pass is owed
+(usage limit). Not tested in game: a promotion through the ranks.
+
+#### fix(banners): v2.0.40 - Restore the four banner icons the repack cut
+
+`3712e9e6`
+
+The v2.0.40 repack deleted icons 17006, 17007, 17008 and 10505 while
+Nos Galengrim (clan_mirkwood_4) and clan_shaghana_3 still flew them.
+The unused-icon scan read banner keys as digits only and skipped keys
+with a negative rotation, which both clans have.
+
+The four icons are back with their own ids, cut from the pre-repack
+sheets onto the new taom_banners_16 (RGBA, opaque alpha, DXT5). Both
+clan banner keys point at them again, in place of the stand-in icons
+#1284 chose. The generator comment and the feature docs say so.
+
+Refs #1284
+
+#### fix(custom-battle): v2.0.40 - Remove the never-bound muster commands
+
+`4675bc2b`
+
+The Custom Battle muster offered an OLD SCREEN command, and close
+commands for the palette and icon panels, that no prefab ever bound.
+The feature doc promised a way back to the vanilla screen that the
+player could not reach. The commands, their label and the close
+callback they used are gone; the popups still close with DONE or the
+backdrop, as before (#1293).
+
+MusterCommandBindingTests now fails when a muster command has no
+prefab binding, or when a prefab names a command no muster view model
+declares. The feature doc says the vanilla screen shows only when the
+muster cannot open.
+
+The language work from the outside PR review is in the translation
+backlog (#1294): stale bandit foe lines and given names from #1281,
+the unregistered placeholder weapon names from #1253, the unkeyed
+Momentum hints from #1166 and the hard-coded muster text from #1118.
+No language file was edited.
+
+#### fix(review): v2.0.40 - Fix findings from the outside PR review
+
+`ef180753`
+
+A post-merge review of 44 merged pull requests from other authors
+(2026-11-04 on, none reviewed by us) checked each stated problem,
+then each fix. The defects that had a clear fix are fixed here; the
+rest are filed as #1293 to #1298.
+
+Player-facing fixes:
+- The bug report offer (#1270) now runs at most once per launch. A
+  launch that showed the battle-load stall notice no longer offers a
+  late report at the next return to the main menu.
+- Cheat menu pick lists run inside the error guard, so a failing
+  teleport or relation pick cannot escape the click. The battle cheat
+  key stays off H only while the Fords of War command view or the
+  Long Defeat HUD is up, the two views that read H; story missions
+  keep the key.
+- The Custom Battle muster's captain (#1118) now comes only from
+  troops the roster offers: no obsolete troop, and no caravan guard,
+  mercenary, bandit or villager.
+
+Tools and gates:
+- check_stale_loc_rows lists a language row left on the old English,
+  which the translator never picks up again (147 such rows from #1281
+  are filed in #1294 for the project lead), and a row reset to the
+  new English while its cache entry still holds the old wording.
+- audit_troop_formation reads the capitalised <Equipment> children of
+  standalone rosters, which it read as empty before (#1256).
+- test_banner_icon_ids now checks the title banners in
+  realms_titles.xml (#1265).
+- test_harad_war_paint compares paint bits with the colour and tattoo
+  bits masked.
+
+Removed:
+- The NaN and infinity checks, and their two tests, on the charge
+  knockdown's inflicted damage: the engine value is an int.
+- TitleTreeLayout and its tests: nothing calls it since #1266.
+
+Docs: about 30 feature and reference docs now match the merged code
+and data (banner counts and keys after #1265, the Realms hooks and
+save keys, the muster screen, the cheat menu, the encyclopedia layout,
+the Harmony registry). The API snapshot is regenerated for the cheat
+menu patches. #1255 now carries triage-needs-ingame.
+
+Verified: build, 40,834 C# tests (one feature-map row fixed and its
+test rerun green), 9,287 tool tests, canary, API snapshot, data gates.
+Not tested in game.
+
+#### fix(balance): v2.0.40 - Revert bad survival values to their own row
+
+`5101f151`
+
+A survival value in battle_balance_config.json outside [-1, 1], or
+not a number, used to revert to 0. For a culture with a penalty row
+that silently deleted the penalty: a typo in Gundabad's -0.1 gave
+Gundabad the engine's own death chance. The value now reverts to that
+culture's compiled row. A bad row with no compiled row is removed, so
+the lookup's own fallback decides: 0 for survival, and the tier
+formula for troop power (a bad T11 used to become 1.0, not 5.46).
+
+A null section or table ("CasualtyRatios": null and the like) now
+reverts to the compiled one with a warning. Before, it reached
+SurvivalChanceLine.Apply, which reads the section with no null check.
+Any reversion ends with one summary warning that counts the values,
+so a player who edits the file can find the problem in the log. The
+config is validated before it is cached.
+
+A new test fails when a diplomacy.json row names an id that is no
+kingdom. The table is keyed on the two id strings, so a lore name
+such as "rohan" for "vlandia" loaded without a warning and its pair
+read Neutral. The shipped rows all resolve. The kingdom list reader
+moved into CultureDataFixture, shared with the army targeting tests.
+
+Both gaps were found in the #1283 review and predate it. The review
+of this fix added tests that load a real file through GetConfig.
+Codex has not reviewed this change.
+
+Closes #1291
+
+### Balance
+
+#### balance(armour): v2.0.40 - repair two upgrade armour drops
+
+`e9103a8d`
+
+After the Armory restat for the armour band clones (#1440), the
+upgrade repair loop (fix_upgrade_armour_regressions.py) found five
+troops that upgrade into a troop with less armour. This commit takes
+two of its repairs:
+
+- gundabad_dread_rider_of_the_tower now wears the Gundabad Pauldron
+  Medium II in place of two elite capes (24 against 18 on the fixer's
+  armour measure for that slot), so it is no longer weaker than the
+  gundabad_tracker it upgrades from. The look changes from a cape to a
+  pauldron.
+- ironpass_ram_marshal wears the Iron Hills heavy cape C in place of two
+  Erebor capes (30 against 27 and 29 on the same measure), so it matches
+  the ironpass_ram_vanguard below it.
+
+The Umbar repair is left out on purpose: it would give
+umbar_elite_root0000 vanilla Aserai leg armour. That edge was on trunk
+before this work. The two other edges left are rivendell_noble and
+lindon_noble at 214.04 against their royal guards at 214.00, accepted
+by Claude under the maintainer's standing word.
+
+The roster tier map is re-derived. The restat plans no change after
+it, and every armour gate passes against the restated Armory.
+
+Refs #1423
+
+#### balance(armour): v2.0.40 - elite troops stop wearing recruit armour
+
+`7506a4c4`
+
+The Armory restat priced each armour piece at the band of its lowest
+battle wearer. A piece that a tier 7 to 10 troop shared with militia
+therefore carried militia values: the Mirkwood Palace Guard (level 51)
+wore "Palace Guard Body Armor" at body 8, and Bolg's Ironfang wore
+"Mordor Orc Chain+Scale I" at body 13.
+
+Each piece worn in battle by a level 36+ troop and by a level 30 or
+lower troop (101 pieces) now gets one of two treatments:
+
+- Upgrade (77 pieces): the level 36+ wearers move to a stronger piece
+  of the same culture and slot. The original keeps its price for the
+  low wearers.
+- Duplicate (24 pieces, 4 of them where no stronger piece exists): the
+  low wearers move to a TAOM copy of the piece at their own band (same
+  mesh and name, not sold in shops, never dropped as loot). The
+  original is priced at its highest wearer's band.
+
+40 band copies ship in armour_band_clones.xml. Every other set that
+names a duplicated piece and is not a level 36+ troop battle set also
+takes the copy for its band: NPCs, enlistment kits, companion kits,
+character creation, child templates and low troops' civilian sets.
+Lords keep the original.
+
+Results on the planned values: the Palace Guard, Guardians and Wardens
+wear 50/61/43/41 (head/body/arm/leg; was 50/21/35/3 for the Palace
+Guard). Bolg's Ironfang wears 37/46/38/16 (was 31/20/10/6). A chest
+raised into the heavy or elite band now also takes its line's leg
+share, so the Palace Guard chest reads 0/48/8/19.
+
+Side effects players will notice:
+
+- The 24 duplicated originals are now elite in the armour class table.
+  With the armour gate on, the former light and medium ones no longer
+  drop as loot, and towns sell all 24 only at armoury level 2.
+- A soldier promoted by Field Commission keeps his copy and can sell
+  it; with the armour gate on, the daily sweep takes it off the market.
+- Lord kits were re-run on the planned values (48 template slots and
+  64 fallback and ruler slots). The Goblin and Misty Mountain templates
+  each lose one distinct body piece.
+- Existing saves keep the gear their companions and lords wear.
+
+This needs the matching LOTRLOME_Armory release: until the Armory
+restat is applied, live values show 10 upgrade armour regressions and
+the armour-restat and lord-armour-variants gates fail. After the
+restat and the upgrade repair loop, two edges remain: rivendell_noble
+and lindon_noble at 214.04 against their royal guards at 214.00. Claude
+accepted that 0.04 gap under the maintainer's standing word.
+
+New tool tools/generate_armour_band_clones.py (dry run, --apply,
+--check), validator warnings TOP_TIER_ARMOUR_WORN_LOW and
+BAND_CLONE_SOURCE_WORN_LOW, gates armour-band-clones and
+armour-band-clone-meshes. In-game checks are owed (#1423).
+
+Refs #1423
+
+#### balance(melee): v2.0.40 - Tier clones for under-armed troops
+
+`a63c3759`
+
+58 new placeholder weapons arm troops whose culture owns no weapon
+of their category in their tier's band (#631). Each one is a copy of
+the weapon the troop already carries, with a raised blade, so the
+troop keeps its weapon category, look, usage, couch and shield
+behaviour. A clone takes the next Roman numerals of its donor's line,
+in order of damage: [Rohan] Sword IV to VI, [Mirkwood] Spear III to
+VI, [Dol Guldur] Dol Guldur Halberd VI to IX, and so on.
+
+Only a clone that reaches its troop's band is made. One clone serves
+every culture and tier it fits, so 58 weapons from 50 donors take 172
+troop slots in 21 troop files, generated realm files included. Each
+is capped by the tier limit of every troop that carries it.
+
+The realm troop generators, the Lothlorien and the Snow Orc
+generators now apply the same swap when they write their files, so a
+rerun keeps the clones. A numbered line that would repeat a numeral
+or lose damage at a clone's step is refused, and the spec rules that
+need no install run whenever the spec loads. Career and enlistment
+kits keep the original Armory weapon: a new character never starts
+with a clone.
+
+Not changed: 77 slots where the per-blow limit holds even a clone
+under the band (17 Numenorean bastard sword lines and 27 slow heavy
+weapons), and one Ered Luin tier 4 spearman. The 116 new names are in
+the translation backlog. Not verified in game.
+
+#### balance(battle): v2.0.40 - Blue Craig garrisons need no gold or food
+
+`e97ca0f9`
+
+Blue Craig is a realm of swarm and kings: its garrisons now cost no
+wages and eat no food, take no starvation wounds, and grow by two free
+troops a day. It fell in every 150-day run; the goal is that it may
+fall, but not before about day 300.
+
+An AI garrison's size follows its wages. Each day the engine sets
+every fief's garrison wage limit, and a garrison grows only within that
+budget. With a wage of 0, Blue Craig's owner clans pay no garrison
+wages, and the budget no longer shrinks as the garrison grows. Its
+towns get back the food their garrisons ate, and a starving town no
+longer wounds the garrison. A new garrison model adds two of the
+realm's basic troops (goblin snaga) a day to each Blue Craig
+fortification, outside battles and sieges and never past the garrison
+size limit. Lords who visit still take part of a large garrison into
+their field parties.
+
+Three gold costs remain: the recruit price of auto-recruited troops,
+the upgrade price of garrison troops (which now upgrade with no wage
+brake), and the wages of troops that lords take. The rules key on the
+fortification's realm, so a player vassal of Blue Craig gets them too.
+They live in battle_balance_config.json (SiegeDefence.UpkeepFreeGarrisons
+and DailyGarrisonGrowth), so a test run can retune them without a
+rebuild.
+
+This also corrects two engine docs: a starving town wounds 10% of its
+garrison a day, it does not kill them.
+
+Reviewed: Data flow and Engine compatibility lenses, all findings
+fixed or documented. Owed: the Codex pass (usage limit until
+2026-11-20) and a 300-day run.
+
+Refs #1283
+
+#### balance(items): v2.0.40 - Gundabad placeholders follow the blade restat
+
+`0366a523`
+
+The 2026-11-16 blade restat (#631) lowered the Gundabad spear blade the
+two Blackshield placeholder spears are cloned from. Each placeholder's
+factor is relative to that blade, so both were regenerated: the tier 5
+spear stays at 91 DPS, the tier 8 spear at 27 DPS in the one handed
+thrust its shield carriers use. No other placeholder moved.
+
+#### balance(melee): v2.0.40 - Tier tolerance and shield-held weapon modes
+
+`529b8779`
+
+Two changes to how the melee ladder judges a troop's weapon (#631).
+
+Tier tolerance. A weapon a little under its carrier's band is no longer
+flagged when it sits in the band of a tier up to two below. Weapon skill
+adds damage and attack speed every tier, so a tier 6 troop fights harder
+than a tier 5 troop with the same weapon. Over the band is never excused.
+The warning now names the lowest DPS it accepts.
+
+Shield modes. A troop that carries a shield is judged on the modes a
+shield allows. An Armory spear behind a shield only thrusts one handed,
+so it is no longer judged by its two handed swing against the halberd
+band. That one handed thrust has its own class limit from vanilla
+(45 per blow, 37 DPS). A weapon whose primary mode refuses a shield is
+still judged whole. The validator, the roster fixer, the blade restat
+and the placeholder generator all use the same rule.
+
+Measured on the live Armory: MELEE_LADDER_INVERSION 270 to 125 warnings.
+The blade restat now plans 10 small changes (nine shield spear blades
+down 2 to 7 percent, one Numenorean sword blade up 6 percent); they are
+not yet written to the Armory. The Lothlorien placeholder spear is
+retired: the Lorien rider and lancer carry he_spear again, whose one
+handed thrust already sits at their tier limit. Other placeholders for
+shield carriers move by a few percent.
+
+Not verified in game: the engine picks the mode in native code. Owed:
+a Gondor spearman with a shield must thrust one handed and never swing.
+
+#### balance(battle): v2.0.40 - Blue Craig holds its walls harder
+
+`60014038`
+
+Blue Craig stands alone in the far west against its Eriador
+neighbours, and it lost its capital in three 150-day runs, even with
+only four wars. Its defenders now fight better in an auto-resolved
+siege of a Blue Craig fortification.
+
+A new SiegeDefence.DefenderAdvantageBonuses table in
+battle_balance_config.json adds a factor to the defenders' battle
+advantage in an auto-resolved siege assault of a fortification whose
+realm has that culture. Blue Craig gets 0.1, so its defenders' strikes
+do 10% more damage with no Tactics bonus (9% under a lord with Tactics
+100). The engine already gives every besieger -0.1. A sally-out gets
+no bonus, and neither does an assault after a relief party joins from
+outside, which the engine turns into a battle outside the walls. Live
+battles are unchanged. The values are validated to [0, 1].
+
+Blue Craig also gets the survival bonus 0.3 of Arthedain and Ered
+Luin, so fewer of its wounded troops die. Garrisons get it too.
+
+The settlement advantage was considered and not used: it changes the
+defenders' strike count only above 100 town or 30 castle defenders,
+and it delays the AI's assault, which can starve a garrison.
+
+Reviewed: Data flow and Engine compatibility lenses, all findings
+fixed. Owed: the Codex pass (usage limit until 2026-11-20), and a
+sixth 150-day run to see whether Blue Craig's capital holds.
+
+Refs #1283
+
+#### balance(lothlorien): v2.0.40 - Stronger sidearms for Lorien elites
+
+`d6b9dc70`
+
+Fifteen Lothlorien troops and one mercenary copy carried a sidearm
+sword or a spear below their tier, for example the Galadhrim
+Highblade's silver Rivendell sword at 59 DPS against a target of 78.
+Each now carries the stronger weapon of the same kind that the melee
+ladder fixer picks: black Rivendell swords (63 and 70 DPS) for the
+silver swords and the Mirkwood sword, and the black Rivendell spear
+(40 DPS) for the Galadhrim Sentinel and Mallorn Defender's silver
+spear (28 DPS). The silver swords and spear change to black ones in
+those kits.
+
+The change is made in generate_lothlorien_troops.py, which writes
+troops_lothlorien.xml whole, so the fixer leaves that file alone. No
+pick crosses a weapon category, none is weaker, and none is stronger
+than what the troop's upgrade carries.
+
+The other 144 out-of-band slots in generated troop files stay: 132
+have no in-band weapon of their kind (they need a restat or new
+weapons), and 12 in realm files would need a pick per tier, which a
+realm item map cannot express.
+
+Refs #631
+
+#### balance(diplomacy): v2.0.40 - Blue Craig fights only its neighbours
+
+`8c292813`
+
+Blue Craig no longer starts the War of the Ring at war with half the
+free world. It was Hostile to nine free realms, so Full War declared
+ten wars on it on day 2: Gondor, Rohan, Erebor, Lothlorien, Mirkwood,
+Dale, Rivendell, Arthedain and Ered Luin, with Lindon called in by
+Rivendell. It lost its capital in both 150-day runs with Dunland's
+refusal (day 75 and day 53) and lived in the one run without it.
+
+The Hostile rows with the six distant realms (Gondor, Rohan, Erebor,
+Lothlorien, Mirkwood and Dale) are removed from diplomacy.json. Blue
+Craig keeps its rows with its Eriador neighbours: Arthedain, Ered Luin
+and Rivendell. The six pairs now read Neutral, so either side can
+still declare that war by its own choice, and peace between them is
+no longer blocked. In a save that already has these wars, they go on
+until a peace, which the rule no longer blocks.
+
+Not yet run: a 150-day campaign to see whether Blue Craig's capital
+now holds past day 120.
+
+Refs #1283
+
+#### balance(troops): v2.0.40 - Melee ladder roster pass
+
+`085f7d2a`
+
+Under-armed troops now carry a stronger weapon of the same kind. The
+melee ladder fixer swapped 82 weapons on 75 troops in 13 troop files,
+for example the Easterling veteran halberdier and the Wainrider
+Darkhan now carry a Khamul spear (99 DPS) in place of a Harad spear
+(70 DPS) that was below their tier. Every swap
+keeps the troop's weapon category (sword, axe, swinging or thrusting
+polearm, lance, shield use) and comes from the troop's own culture.
+No swap gives a troop a weaker weapon, or a stronger one than the
+troop it upgrades to carries.
+
+Career kits and player start kits follow their troops: 8 career kit
+weapons and 6 Rohan start rosters changed. Some Gondor and Umbar
+career spears change from wm_gondor_spear_b to wm_gondor_spear_a,
+which looks different.
+
+Two rules were added to the fixer after the first apply:
+
+- It never swaps a weapon in a troop file that a generator writes (the
+  eight new realms, Lothlorien, the Snow Orcs). The generator would undo
+  the swap; 160 such slots are listed for a change in the generators.
+- Troops are planned from the highest level down, and a pick may not
+  beat the best weapon that an upgrade target carries on the same
+  template and main attack.
+
+The Black Uruk Shield Guard is exempt: its only candidate was a
+halberd, and its main weapon is an open decision.
+
+MELEE_LADDER_INVERSION warnings: 304 before, 270 after.
+
+Refs #631
+
+#### balance(troops): v2.0.40 - Weigh skipped elite troops by the level rule
+
+`434d60cd`
+
+Elite troops that the weight table skipped now cost party slots like
+their equals. The level 26 Imladris and Mithlond Infantry pay 2.0, as
+their Bowman does. Every Hired copy weighs the same as its original.
+Nine Dual Wield troops follow the level rule (2.0 at level 31, 3.0 at
+level 46), so an upgrade never lowers the weight. Two Gundabad rows
+close the same kind of gap, and Azog's Defiler pays 3.0.
+
+Every level 31 to 36 troop of the evil and dwarf cultures now pays
+2.0: Erebor, Iron Hills, Ironpass, Ered Luin, Dol Guldur, Isengard,
+Mordor, Gundabad and the goblin cultures. Before, a level 36 troop
+could pay 2.0 above a level 31 troop of the same line at 1.0. Elite
+stacks of those factions take more room, for the AI and the player.
+Human cultures stay unweighted.
+
+The table holds 224 rows, 137 at 2.0. TroopWeightCoverageTests pins
+the Hired copies, the Dual Wield rows, the sweep over nine cultures,
+and fails on any upgrade that lowers the weight.
+
+Contributed by REDACTEDSTUFF. Review fix: the sweep missed Ered
+Luin and two goblin twins (RCA
+docs/reviews/rca-pr1339-troop-weight-gaps-2026-11-15.md). Codex
+skipped: out of usage. No issue linked. In-game check owed: the x2
+tag on Imladris Infantry, the Hired Bowman and an Ered Luin King's
+Guard, and no drop in party size after a Dual Wield upgrade.
+
+#### balance(diplomacy): v2.0.40 - Dunland refuses calls to war on Gondor
+
+`28576b4d`
+
+Dunland no longer joins a war against Gondor when an ally calls it in.
+In the second 150-day run the Misty Mountain Orcs called Dunland in on
+day 2, and the two realms fought for the rest of the campaign.
+
+The rule lives in diplomacy.json as a new list, callToWarRefusals,
+with one row: Dunland (empire) refuses any call against Gondor
+(empire_w). A row works one way, so Gondor can still be called in
+against Dunland. All four call-to-war gates (the calling kingdom's
+ballot, the called kingdom's ballot, the player kingdom's offer and
+the agreement itself) now check it, and a refusal writes
+"[Diplomacy] Call to war refused: empire will not join a war against
+empire_w". A refused call is cancelled before any vote, so Dunland
+loses no relation or influence. The rule covers calls only: Dunland
+can still declare that war itself, and it binds a player who rules
+Dunland too. Under co-op the client defers to the host.
+
+The third 150-day run (E:\Temp\scenario-runs\20261115-193557, 150 of
+150 days, clean unload) logged three refusals and no war between
+Dunland and Gondor. Blue Craig lost its capital on day 75 and fell on
+day 99, which the second run did not show; one run cannot say whether
+the refusal caused it.
+
+Known gap: the lord dialogue's "sponsor a call to war" option still
+lists Gondor to a player allied with Dunland, and choosing it does
+nothing (#1350). A Codex review is owed (usage limit until
+2026-11-20).
+
+Refs #1283
+
+#### balance(factions): v2.0.40 - Harad clans at tier 5, log how wars begin
+
+`064afcc3`
+
+Harad's clans 2 to 9 now start at tier 5, the same as its ruling
+clan. That raises Harad's party slots from 19 to 27, and also gives
+those clans more renown, more influence and larger parties. It takes
+effect in new campaigns only. In the first 150-day run, Harad lost a
+fief on 11 of the 13 days Gondor gained one, and Gondor's strength
+lead over Mordor grew from 8,014 to 15,231.
+
+The log now records how each kingdom war starts. A war TAOM lets
+through writes "[Diplomacy] War declaration allowed: <a> -> <b>" with
+the engine's reason (an AI vote, a call to war, or Default for a War
+of the Ring declaration). A call to war writes "[Diplomacy] Call to
+war started: <caller> calls <called> against <target>" just before
+its declaration, so the realm that made the call is named.
+
+The second 150-day run (E:\Temp\scenario-runs\20261115-172417, 150 of
+150 days, clean unload) met all three targets: Harad held 16 castles
+on day 150, the Gondor to Mordor gap ended at 6,108, and the log
+showed that Dunland goes to war with Gondor on day 2 because the
+Misty Mountain Orcs call it in. Whether Dunland should refuse that
+call is still open, as is a Codex review (usage limit until
+2026-11-20).
+
+Refs #1283
+
+#### balance(combat): v2.0.40 - Crush-through curve keeps its shape
+
+`86a94c35`
+
+The troop skill curve of #343 scaled the two crush-through limits: a
+blow starts to crush through a block at 20 points of skill over the
+defender and reaches its full chance at 135. The exponent that bends
+the curve between them stayed, so in the middle of that window an
+attacker got a smaller share of the full chance than before (0.614
+where it was 0.666).
+
+The window shrank from 170 points to 115, so the exponent grows by
+170/115, from 0.008097 to 0.01197. The curve now has the same shape
+over the new window: a quarter, a half and three quarters of the way
+through it give the same share of the full chance as the old tuning.
+A test holds that, and the compiled default equals the shipped value.
+
+Shield bash is unchanged, and the docs are corrected. They said that
+bashes between troops knock down less often on the new curve. That was
+an estimate nobody had measured, and it was wrong. The chance reads
+the Athletics lead, and Athletics now follows the tier curve. Measured
+over every pair of foot troops, one tier apart the median lead went
+from 15 to 30 and the mean chance from 22 to 30 percent; two tiers
+apart from 30 to 60 and from 33 to 53 percent. Between foot troops of
+one tier nothing changed. An elite on foot knocks a lower tier down
+more often, which fits the curve.
+
+docs/modding/configs-balance.md gains the row for the exponent.
+
+Refs #343. Not tested in game.
+
+#### balance(lords): v2.0.40 - Lords wear varied armour near their troops
+
+`88579ffa`
+
+After the armour rebalance (#1271) many lords wore less armour than
+the best troops of their own culture: the lord templates named troop
+pieces that the rebalance priced at the band of a low troop. Of 1,559
+lords, about a third were more than a tenth under their culture's
+best elite troop on each of head, body, arm and leg.
+
+A lord copies one whole battle set, so the new tool judges each set as
+a whole, on all four body parts, against the culture's best elite
+troop. tools/fix_lord_kits.py then repairs a short part in this order:
+an unused piece of the culture's lord armour, then a distinct piece
+the culture's elite troops wear, and a piece another lord template
+already wears only when the template's own piece leaves the part more
+than a quarter under. It never lowers another part. Looks come first:
+where a culture has several lord sets, each template keeps or gets its
+own (maintainer's rule: armour points may be given up for variety).
+
+Result on today's Armory values, lords more than a tenth under on
+head, body, arm, leg: 595, 533, 670, 616 before; 322, 248, 189, 275
+after. Rohan, Dunland, Khand and Rhun lords are no longer short, and
+Rohan and South Rhovanion lords no longer share one look.
+
+Known limits:
+- Mirkwood has one elite chest, so its five templates share it and
+  differ by helmet and gloves. Its other chests are militia pieces.
+- Harad lords use only Harad pieces and stay under their troops on
+  body and leg until Harad gets lord armour of its own.
+- The Khamul pieces on Rhun lords stay.
+- Lords in a running campaign keep their kit; new campaigns and lords
+  made later get the new one.
+
+The fallback and ruler rosters (new AI rulers, spawned lords) now
+mirror each culture's first template, with a test. Lord armour that
+only heroes wear is priced at the lord band; a piece only a companion
+wears is left alone, because a companion's price follows its kit.
+New validator warning LORD_ARMOUR_RANGE, one row per template.
+
+The Armory restat for the lord pieces is not written yet; it follows
+the merge. Reviewed by Claude review lenses; the Codex pass was
+skipped on the maintainer's word. Not tested in game.
+
+#### balance(fords): v2.0.40 - Fords of War copies on the troop skill curve
+
+`7bf7b47b`
+
+The Fords of War and Long Defeat modes use their own copies of the
+campaign troops. Those copies kept the old skill values, so a Long
+Defeat shop upgrade from a copy into a campaign troop lowered the
+troop's skill: the Eorlingas rider copy had Polearm 325 and the King's
+Own rider it upgrades into has 190 on the new curve (#343).
+
+The 214 copies now follow the same rule as the campaign troops: each
+by its own level, its own kit and its culture's row. Skill values
+only; no copy gains or loses an item. A new test reads the Long Defeat
+shop and fails when an upgrade lowers a troop's main weapon skill; all
+nine upgrades pass. An upgrade out of a copy never raises a campaign
+troop's skills.
+
+A villager of a realm whose files are copied from another culture
+(Arthedain, Cardolan, Rhudaur, Ered Luin) keeps the skill values of
+the villager it is copied from. One value changes: the Rhudaur
+villager's Throwing is 15 again, as Gondor's.
+
+Reviewed by Claude review lenses; the Codex pass was skipped on the
+maintainer's word. Not tested in game.
+
+#### balance(troops): v2.0.40 - Troop skills on a ten tier vanilla curve
+
+`f7a85030`
+
+Troop skills ran far above vanilla: a tier 10 troop had 390 in its
+main weapon where vanilla's best noble troop has 260, so the skill
+bonus on damage outgrew the weapon and armour limits of #1271 and the
+AI level stopped rising at tier 8 (#343).
+
+Each tier now has one number: 20, 40, 70, 100, 130 for tiers 1 to 5
+(vanilla's own values) and 156, 182, 208, 234, 260 for tiers 6 to 10
+(vanilla's noble range spread over five tiers). A troop's skills are
+shares of that number, decided by what it carries:
+
+- main weapon (the one in Item0): the tier number plus the culture's
+  percentage;
+- another carried weapon: nine tenths of that;
+- a melee weapon it does not carry: half; a launcher or thrown
+  weapon it does not carry: four tenths;
+- an archer's melee weapons: nine tenths of its bow or crossbow value;
+- Athletics at the tier number on foot and half of it mounted; Riding
+  at the tier number mounted, never under its mount's difficulty.
+
+Cultures keep their character as percentages on that number. Elves
+stand highest, then Dwarves, then Men; Uruk-hai sit at Gondor's level,
+plain orcs under the mannish average. Rohan has the best riders,
+Mirkwood the best archers, Dale the best mannish polearms. The Black
+Numenoreans get a row of their own. Villagers take a tier 0 row.
+
+Every troop and villager is restated from the rule, skill values only:
+no troop gains or loses an item. A second run of the tool plans no
+change, and a test holds the shipped roster on the rule. The skill
+mismatch warning falls from 97 troops to 1 (dg_uruk_skirmisher).
+
+The crush-through limits were tuned for the old top value and are
+scaled with it: a blow starts to crush through a block at 20 points of
+skill over the defender (was 30) and reaches its full chance at 135
+(was 200).
+
+The ranged ladder's skill cells follow the same tier numbers, so bow
+damage at the top falls with the bow skill. No weapon or armour value
+in the Armory moves.
+
+Not in this commit: the Fords of War copies, and one villager value in
+the Rhudaur file that its generator still writes from Gondor's row.
+Not tested in game.
+
+#### balance(factions): v2.0.40 - Mordor forts, Isengard tiers, auto-resolve
+
+`e9e576e9`
+
+Three more changes for #1283, the player report that Isengard is weak
+and that Mordor takes the Osgiliath forts and then marches off them.
+
+Mordor's armies now hold a fortress they take by siege, as the Free
+realms' armies already did. Hold the Walls gains a Factions list beside
+Sides in army_targeting.json; it ships with empire_s (Mordor). Other
+Evil realms, and Neutral ones by default, still move on at once.
+
+Isengard's seven tier 3 clans (clan_isengard_4 to 9 and 11) are now
+tier 5. The engine gives a tier 5 clan three parties instead of two, so
+Isengard can field 31 parties instead of 24 (Rohan has 31). The tier
+also adds party size (+30 per lord, +50 per clan leader) and raises the
+clans' starting renown and influence. The tier is read when a campaign
+starts, so this reaches new campaigns only.
+
+Auto-resolve now weighs troop numbers above troop quality. Vanilla
+raises the striker to struck power ratio to 0.7 in every simulated
+strike; TAOM now uses 0.5 (AutoResolve.PowerRatioExponent in
+battle_balance_config.json, legal 0 to 1, 0.7 restores vanilla). In a
+field battle 136 Mordor troops now beat 100 Gondor troops (154 before),
+and 200 elite troops still lose to 1000 weak ones. A large siege
+assault keeps the engine's fixed strike count for the attackers, so
+there only the weight of each strike changes. This applies to every
+simulated battle, the player's Send troops included. The AI's own
+strength estimates do not change.
+
+The two TaomCombatSimulationModel constructors that nothing called are
+removed.
+
+Reviewed by the Data flow, Engine compatibility and XML lenses. Fixed:
+the wiring test pinned bare method names (the composition moved into
+AutoResolveQualityMath.Apply, with tests that fail on a swapped
+striker and struck power), the docs stated the field strength law for
+every battle, and several doc citations and counts were stale. RCA:
+docs/reviews/rca-faction-balance-data-2026-11-14.md, "#1283 batch 2
+review".
+
+Owed: a Codex review of 5101f151b and of this commit; the account's
+usage limit blocks Codex until 2026-11-20. Owed: an AI only campaign to
+day 150 on a new campaign (#1283, triage-needs-ingame), with the steps
+in docs/features/faction-balance.md.
+
+Refs #1283
+
+#### balance(armour): v2.0.40 - Small down-rolls on heavy arm and leg kit
+
+`59b93ad1`
+
+Heavy, elite and lord bracers, greaves and pauldrons hold armour
+values of 7 to 28, and they rolled on the vanilla chain modifier
+group, whose Loose and Rusty rolls take 6 and 8. A heavy pauldron of
+9 could drop to 1. They now roll on the vanilla leather group: Worn
+takes 2, Battered takes 3, and the best roll adds 7. The loot odds
+are the same as before (#1271).
+
+This is more than a loot change. In a campaign battle every ordinary
+troop rolls a modifier on each armour piece at spawn, from the same
+group (heroes and custom battle do not). About one heavy or elite
+troop in four lost 8 points on such a piece; the worst roll is now
+3, and the mean roll moves from -2.08 to -0.35 a piece. Saves keep
+the modifiers they already rolled.
+
+Lord-only kit and unworn merchandise are clamped, not restated, and
+the clamp left them on chain or plate. It now moves their arm, leg
+and shoulder pieces to the same group, so a defeated lord's bracer
+rolls like a soldier's. Head and body pieces keep their groups.
+
+New: python tools/rebalance_armor.py --check compares the live
+Armory with the armour curve and is a data gate (armour-restat). It
+reports an Armory that was reinstalled or restated from an old
+checkout, and it does not pass when it read nothing.
+
+The live Armory is not written yet. The write comes after this is
+on trunk, because every checkout shares the one Armory: the restat
+with a backup tag (814 items, modifier group only), then the
+Lothlorien and Snow Orc armour generators (31 lines). Until then the
+gates armour-restat, lorien-armor and snow-orc-armor fail by design.
+
+Tested: tool suite 9,295 ran, all passed. Validator exit 0, no
+errors. The write was run on a copy of the live Armory by a
+reviewer: 845 modifier group tokens changed and no other byte, a
+second run changed nothing, all three checks then passed. Reviewed
+by three Claude lenses; the Codex pass is owed (usage limit). Not
+tested in game: the check is a campaign battle and its loot screen.
+
+### Data
+
+#### data(banners): v2.0.40 - Icons 31039 and 31040, Arthedain banners
+
+`3ba27d7c`
+
+Two new icons on taom_banners_16 with their picker sprites, and new
+banner keys for the Arthedain kingdom and its five clans.
+
+#### data(realms): v2.0.40 - Haradwaith, Harad ranks, Ered Luin, Durin's Folk
+
+`c0fee2f3`
+
+Harad and Shaghana take the RiE Apysaic ranks; Harad reads Taskralan of
+Harwan. Haradwaith is a high title over both, with its own banner.
+
+Blue Craig joins Ered Luin: the Mansion of Ered Luin is a high title over
+the old realm (now Mansion of Gabilgathol) and Blue Craig. Durin's Folk
+becomes a union of Erebor and the Mansion of Ered Luin, and Khazad-dum's
+titular realm stands under it. Unions are built before titular realms so
+a union can be a liege.
+
+Arthedain and the Reunited Kingdom get title banners.
+
+#### data(clans): v2.0.40 - RiE names for the houses of eight realms
+
+`fa6f17d6`
+
+Clans and lords of Angaladh, Arthedain, Cardolan, Rhudaur, Anduin Vale,
+Dale, Dorwinion and South Rhovanion take Realms in Exile house and
+personal names. Ids and keys are unchanged; generator name lists, tool
+tests, lords_inventory.csv and the feature docs follow. Translations of
+the renamed keys are stale until the next translation pass.
+
+#### data(banners): v2.0.40 - Three icons and Anduin Vale house banners
+
+`0cff1443`
+
+Icons 31036 to 31038 on taom_banners_16 with their picker sprites, and
+new banner keys for the Melburgi, Sairthiuda and Herimundi houses.
+
+#### data(clans): v2.0.40 - New banner for Nos Peredhel
+
+`5d8b11b7`
+
+Elrond's house (clan_rivendell_1) flies a banner built from the Elven
+icons 31017 and 31018 on a layered field.
+
+#### data(realms): v2.0.40 - Banners for Greenwood and its neighbours
+
+`ea9c6a4f`
+
+Ered Luin, Lothlorien, Lasgalen (mirkwood), the Anduin Vale and
+Angaladh get their title banners, matched by the starting banner_key in
+taom_spkingdoms.xml. Khazad-dum gets its own title banner, and the new
+Greenwood high title gathers mirkwood, angaladh and dolguldur under a
+banner of its own.
+
+#### data(banners): v2.0.40 - Picker sprites for the nine new icons
+
+`d5a11570`
+
+The Banner Studio's resource build repacked the banner picker atlas
+with the four restored icons and the five RiE emblems: 245 sprites,
+one per icon row plus 22004 (#1274), and the second picker sheet
+grows to 4096 x 1024. The manifest is saved with LF and no blank
+lines, as on trunk; only sheet positions and the nine new sprites
+change.
+
+The banner icon reference now lists 16 sheets and 244 icons, with
+taom_banners_16 holding the restored icons.
+
+### Performance
+
+#### perf(mesh-refs): v2.0.40 - scan only unparsed packs; count lines once
+
+`fbaa0dd6`
+
+Two costs in tools/validate_mesh_refs.py, the engine behind the
+collision-body commit gate and the mesh audit:
+
+- When one pack failed to parse, the Tier C fallback byte-scanned
+  every pack the CLI was given for each unresolved body. A parsed
+  pack's table of contents already lists its bodies, so only the packs
+  that failed can hide one; the fallback now scans only those. The
+  validator pass already did this for itself; the mesh CLI and
+  audit_armory_refs.py now get it too.
+- Ref extraction found each match's line by counting newlines from the
+  start of the file, once per match, and it walked the ModuleData
+  Languages/ folders, which hold translated strings and never an
+  item's mesh or body. Line numbers now come from one newline index
+  per file, and Languages/ is skipped.
+
+Measured on the live install (second, warm run of extract_refs): the
+Armory ModuleData went from 2.12 s to 0.51 s and the repo ModuleData
+from 2.61 s to 0.65 s. The refs extracted are identical (7104 rows,
+none under Languages/ before the change), and the mesh CLI with
+--scan-bodies reports the same findings (0 added, 0 removed).
+
+Improve plan 059, #623 items 3 and 4.
+
+#### perf(skeleton-buffer): v2.0.40 - Speed up the engine signature scan
+
+`66fcd420`
+
+The signature scan that finds the skeleton buffer guard's sites and
+the animation clip budget in TaleWorlds.Native.dll tested every byte
+of the DLL's code section. It now jumps straight to the next byte
+that could start a match, using the framework's fast byte search,
+and checks the full pattern only there. The hits and their order
+are unchanged; a test compares the new search with the old loop on
+20,000 random small inputs and on every shipped pattern, and the
+installed-DLL tests still find the same verified addresses.
+
+The scan runs only when the address cache misses: the first launch
+after a game update, or when the cache file is missing or out of
+date. Issue #784 measured that scan at 152 to 173 ms per launch
+before this change and 48 to 58 ms after it, in a Debug build.
+
+Plan 057, issue #784.
+
+Not-tested: in game (a launch with no address cache); a scan of the
+in-memory code section, which can differ from the file on disk
+
+### Refactoring
+
+#### refactor(refuge): v2.0.40 - fallback building mesh is a constant (#1502)
+
+`8f5f8d38`
+
+The refuge settings provider carried two members that no setting
+backed: the fallback layout's building mesh ("empire_street_tent_02")
+and its scale (0.4). They now are private constants in
+RefugeVisualService, the one class that reads them, and the provider
+interface loses both members. RefugeVisualService no longer takes the
+settings provider, and the guard that checked those values for an
+empty name or a bad scale goes too: it could never fail on constants.
+
+No change in game: the same mesh, scale and offsets are placed. Found
+by the comment sweep of Main/Features/Refuge (#1501).
+
+#### refactor(creatures): v2.0.40 - review follow-ups for plan 062
+
+`4e80b049`
+
+The spider's side predicate is now named IsSpared, for what it answers
+since #594: whether a bite spares an agent, which includes a loose mount
+whose side is unknown. The creature-bandit diagnostics count those hits
+as allies in the arc, so such a mount is no longer reported as an enemy
+the strike missed. The comments on StrikeArc now say what is counted. No
+strike or damage changes; a new test pins the count.
+
+Review record:
+docs/reviews/deep-review-062-riderless-mount-bite-side-2026-11-19.md
+RCA: docs/reviews/rca-riderless-mount-bite-side-2026-11-19.md
+Lesson appended to docs/reviews/lessons/gamemodels-services.md and an
+entry to docs/reviews/REVIEW-LOG.md. Codex not run.
+
+Not-tested: no game run; spawned cavalry recording their mount's side
+at OnAgentBuild, and a remount recording the new mount, are owed in game.
+
+### Tests
+
+#### test(comments): v2.0.40 - ratchet production comment lines (#1501)
+
+`7d6c226a`
+
+ADR-009 keeps a comment only when it is on the keep-list, but nothing
+enforced it. CommentRatchetGateTests now counts the lines that hold a
+// or /* */ comment in each .cs file under Main, Client, CoopCompat
+and Dependencies (/// is not counted). A higher count, a lower count
+and a stale entry each fail, so a sweep lowers the baseline in the
+same change and the gain cannot be spent later. A new keep-list
+comment raises its file's baseline, which review sees.
+
+tools/comment_ratchet.py --regen writes tools/comment-ratchet-baseline.txt
+with the counting rule of RepoPaths.CommentLineCount; both sides run
+the same nine cases. --report lists comment lines per folder. Today:
+21,524 comment lines in 2,156 of 5,049 files.
+
+The /delete-comment skill sweeps one folder at a time against the
+rubric in docs/reference/comment-rubric.md: tautology and stale go,
+an excuse goes and is listed in one issue per folder, a decision moves
+to the feature doc (a "must stay" becomes a test), and an engine fact,
+a gate marker, a licence or an interface contract stays. Lens 9a now
+asks for a keep-list reason on a raised baseline.
+
+Known limitation: the count is not string-literal aware, so "//" in a
+string counts as a comment line.
+
+#### test(cultures): v2.0.40 - allow only "Men of Dale" in Dorwinion text
+
+`f9bf6409`
+
+The first commit dropped the bare word "Dale" from Dorwinion's forbidden
+list so its new culture blurb could name the Men of Dale as friends.
+That also hid "Dale" inside any other Dorwinion string, such as a
+"Dalecroft" place name or a "Dale-lord" title, from the contamination
+test.
+
+The test now removes the exact phrase "Men of Dale" from Dorwinion text
+before it scans, and "Dale" stays forbidden everywhere else. Proved
+red and green: with "Dalecroft" planted in the Dorwinion blurb the test
+fails, and without it the test passes.
+
+Found by the deep-review Tooling and Data flow lenses (tier 2).
+
+Known limitation: the 12 language files and tools/translation_cache
+still hold translations of the old text for the 19 changed keys and for
+aom_dorwinion_desc. A translator run restores the old text from the
+cache until those entries are cleared. The language files are the
+project lead's. Codex pre-review not run (no Codex usage). Eighteen
+culture text attributes in taom_spcultures.xml keep older copies that
+no code reads today.
+
+#### test(stamina): v2.0.40 - manifest names the commit with the rules
+
+`303cccfd`
+
+The in-game check manifest for combat stamina (#1497) named the branch
+base as fixed_in, because the feature commits were local when it was
+written. The branch is pushed now, so fixed_in is the commit that holds
+the rules and the three check lines. No game code changes.
+
+Not-tested: a judged game run (owed, the next step)
+Save-compat: no save data
+
+#### test(special-resources): v2.0.40 - review follow-ups for plan 061
+
+`e4400429`
+
+Review follow-ups for the co-op stand-aside of the party-screen
+prisoner recruit gate (#563 decision A). No change in game behaviour.
+
+- The Patch26 entry in the Harmony patch registry and the comment
+  above GateRecruit now say that, while a co-op session is live, the
+  prisoner gate lets every recruit through, on host and guest alike;
+  the upgrade clamp still runs.
+- A container test pins the hook's new ICoopSessionProvider
+  dependency against the feature's own registrations, so a test graph
+  that drops the provider, or a new hook dependency nothing
+  registers, fails at test time. It does not cover the production
+  registration in CoopInteropIoC.
+
+Review record:
+docs/reviews/deep-review-061-prisoner-recruit-resource-gate-decision-2026-11-19.md
+RCA:
+docs/reviews/rca-prisoner-recruit-resource-gate-decision-2026-11-19.md
+Lesson appended to docs/reviews/lessons/misc.md; entry added to
+docs/reviews/REVIEW-LOG.md.
+
+Not-tested: no co-op session run; a session prisoner recruit at zero
+balance on host and guest is owed in game.
+
+#### test(validator): v2.0.40 - review follow-ups for plan 059
+
+`84a6e564`
+
+The deep review of the shared validator pass composition (#623) found
+two low findings and fixed both.
+
+The module list the art checks read is kept by hand, and its comment
+names Main/_Module/SubModule.xml as its source. A new test reads every
+DependedModule from that file and fails unless the module is scanned
+for art or named as one that ships no packs, so a new dependency can
+no longer be skipped without notice.
+
+The MCP tool validate_moduledata said every pass that could not run
+comes back as a PARTIAL_RUN warning. Two skips still go to the
+server's stderr only (no Armory for the armour class table, a module
+with no packs), so the tool's docstring, the query's docstring and the
+feature doc now say which skips come back and which do not.
+
+The review found the CLI's output byte-identical to the previous
+version on the live install (1823 issues), and the MCP tool's result
+the same size, with nothing written to its stdout.
+
+Report: docs/reviews/deep-review-059-validate-moduledata-mcp-parity-2026-11-19.md
+RCA: docs/reviews/rca-validate-moduledata-mcp-parity-2026-11-19.md
+
+Not-tested: an MCP client's tool-call timeout against a full run.
+
+#### test(hooks): v2.0.40 - pin the ModuleData hook answer to exits 0, 2, 3
+
+`58931367`
+
+#623 asked for a hook test case per validator exit code. The hook
+suite covered a findings exit 1, an exit 1 with nothing to quote and a
+raise through entry(); a clean exit 0, a no-install exit 2 and a plain
+exit 3 with no traceback had no case. Section 7m now checks that exits
+0 and 2 answer {} and that a plain exit 3 allows the commit and says
+CRASHED in additionalContext. Each new case was shown to fail against a
+mutated scratch copy of the hook. The hook itself is unchanged and
+keeps allowing a crash with the traceback as context.
+
+Improve plan 059, #623 item 2.
+
+Rejected: answering exit 3 with ask; the hook's documented design allows with context, which removes the silent allow #623 named
+
+#### test(validator): v2.0.40 - run every validator test from the script
+
+`acaeb384`
+
+Running tools/tests/test_validate_moduledata.py directly stopped at a
+unittest.main() call in the middle of the file, so the 22 test classes
+after it never ran from the script form, among them ExtraRefRootTests,
+MissingCollisionBodyTests and CommitGateCoverageTests. The script form
+ran 247 tests; unittest discover, which was unaffected, ran 446. The
+entry point now sits at the end of the file, and the script form runs
+all 446 (#623 item 6, improve plan 059).
+
+#### test(long-defeat): v2.0.40 - Tool tests know Helm's Deep has its sally
+
+`cfa91050`
+
+Since the sally point at Helm's Deep was recorded in game (5c91dd639,
+16 Nov), three tool tests failed. They read the shipped
+fortresses.json and still assumed no sally block, which the judge
+needs before it waives the sally checks for a run with no sally
+point. The judge is right; the tests were stale.
+
+The two waiver tests now use a fortresses.json row with no sally
+block, as the test beside them already did. The test that pinned
+"no sally block today" now pins the opposite: the shipped row records
+the sally, so a cavalry run that skips it for no-sally-point fails.
+
+Tested: tools.tests.test_run_long_defeat, 533 tests OK; ruff clean.
+
+Refs #1079
+
+#### test(loc): v2.0.40 - catch inline data text with no English row
+
+`ffa571f4`
+
+A ModuleData file could carry inline {=KEY}default text that no
+English source registers, and every test stayed green: the C# gates
+count any inline key as registered. realms_titles.xml shipped 186
+untranslatable Realms names that way until #1374.
+
+InlineDataKeyTests now scans every ModuleData .xml and .xslt file
+outside Languages/ and the loc source table, in attributes, element
+text and XSLT {{=KEY}} templates, with comments removed. A key counts
+as registered when an English row is translated under it, the rule
+LanguageFileCoverageTests uses. Vanilla-shaped keys are skipped.
+
+A file with unregistered keys fails unless tools/loc_inline_backlog.json
+lists it with its key count and a reason. It lists the lord armour
+variants and the two placeholder weapon files (20 keys each), which
+translation-backlog.md already owes. A changed count, an entry with
+nothing left and a scan under 10,000 keys also fail. The test replaces
+the narrower #1374 Realms check.
+
+Closes #1390.
+
+#### test(coop): v2.0.40 - Gate model overrides that hide Coop patches
+
+`2067c40c`
+
+BannerlordCoop fixes several vanilla rules with Harmony patches on the
+Default*Model method body. The engine calls through TAOM's override, so
+an override that never calls base hides the patch; the pregnancy model
+did that until #1141.
+
+The audit for #1151 found no other case. Of the TAOM overrides of
+Coop-patched methods, only the pregnancy one skips base, and it carries
+Coop's player rule itself. The bandit density, party attack and marriage
+overrides skip base only where Coop's patch would give the same answer.
+
+A new test in TAOM.CoopCompat.Tests now reads the patches the installed
+Coop build declares by attribute (on the patch method, on the class, or
+from TargetMethod and TargetMethods) and fails when a TAOM override of a
+patched method has no base call and no reviewed entry. It also fails
+when a type does not load or a target does not resolve, and keeps one
+known target per way of declaring a patch as a canary. The test project
+now stamps the game folder so the test can load module assemblies that
+Coop's view patches name.
+
+Patches registered at run time are outside the gate's reach. A caravan
+rule that still tests Hero.MainHero is tracked separately.
+
+#### test(bindings): v2.0.40 - House banner patch targets are gated
+
+`6bf6f0b3`
+
+Realms house banners apply some of their patches by hand and find six
+targets by name: two map party visual methods, the settlement party
+marker, the encyclopedia clan page and faction card, and the banner
+editor (#1320). No binding test checked them, so a game update that
+renamed or moved one would turn that surface back to the realm banner
+with no failing test.
+
+The binding gate now has a row for each, with a new Constructor kind
+for the three constructor targets. It also checks that a type resolves
+under the exact name the code asks for: before, a type that moved to
+another namespace still passed by its short name, while the game's own
+lookup by full name would find nothing. Every existing row still
+passes.
+
+The banner editor patch now names its exact constructor
+(BannerEditorState) instead of taking the first one-argument
+constructor, so the gate checks what the code does.
+
+No behaviour change in game.
+
+#### test(tools): v2.0.40 - one-colour banner test reads Rhudaur
+
+`dca70f1d`
+
+The test that a realm with no sigil slot keeps its one emblem colour
+used Arthedain, which flies a hand-made layered banner since
+c0fee2f30 (PR #1315), so it failed on trunk. It now reads Rhudaur,
+which still uses the one-colour template, and asserts that Rhudaur
+has no hand-made key.
+
+#### test(autorun): v2.0.40 - command trial gate allows the scenario plan
+
+`9d4200de`
+
+The gate that pins TAOM_COMMAND_TRIAL to one reader now also allows
+ScenarioPlan.cs, which names the variable only to stay unarmed when
+the command trial is armed. The full suite found this after the
+review fix that added the variable to the plan's exclusion list.
+
+Refs #1075
+
+#### test(gates): v2.0.40 - Close the regression gaps from PR review
+
+`1a72c7c8`
+
+Five gates the post-merge review of outside PRs found too weak (#1295)
+now fail on the regressions they were written for.
+
+- PatchShield: a test pins that a foreign owner holding only a
+  finalizer is neither logged as unpatched nor counted (#726).
+- Campaign settings providers: each of the eight providers gets a row
+  proving it asks MCM until it has the settings, then reads through
+  the cached object.
+- audit_troop_formation.py: a troop file that does not parse now fails
+  the run and is named, a run that loads no troops exits 2, Sling items
+  count as launchers, and Ranged requires the launcher in the same slot
+  of every battle set, because each slot is drawn from its own set.
+- analyze_melee_ladder.py also reads equipment written directly under
+  <Equipments>, as the engine does.
+- The banner icon id test now derives its file list from every
+  ModuleData file that declares a key.
+
+Not-tested: no in-game check; these are tool and test changes only.
+
+#### test(composition): v2.0.40 - expect the scenario autorun host
+
+`7a0cd931`
+
+02bd1e3d2 registers ICampaignAutorunHost in the client composition,
+but the exact-services test did not list it, so trunk was red
+(expected 27, actual 28). The test now lists it.
+
+Refs #1075
+
+### Documentation
+
+#### docs(stamina): v2.0.40 - the trial's run on the committed build
+
+`f059de4e`
+
+The stamina doc said that a run of the trial's three steps on a
+committed build was still owed. That run is done: every step passed on
+e82108e52 (E:/Temp/command-trial-runs/20261120-161103), and the verdict
+tool counts it.
+
+The run table has a third column. One result changed what the doc can
+say: the Tired third of the enemy attacked 0.72, 0.55 and 1.05 times
+as often as the fresh third in the three runs. The 30% that the design
+wants for a tired AI soldier is not shown, and the decision is on
+#1497.
+
+Docs only (#1506).
+
+#### docs(elephant): v2.0.40 - trot records cooked, backups moved
+
+`553fe3b5`
+
+The elephant feature doc now states that the Modding Kit cooked the
+two rewritten trot records on 2026-11-20, and that the backups this
+work made beside live Armory files are out of the Armory, in the
+backup folder on the asset drive. (#1474)
+
+#### docs(elephant): v2.0.40 - record what a Kit start cooks again
+
+`da7fba34`
+
+The review of the elephant gait gate left one question open: does
+the Modding Kit cook a clip's cache entry again when the file was
+only saved again? The Kit start of 2026-11-20 answered it. The Kit
+cooked the two trot entries whose records a tool had rewritten and
+left two entries alone whose files had only been saved again. The
+review record now says so. (#1474)
+
+#### docs(elephant): v2.0.40 - no register row for the elephant pack
+
+`34f6115e`
+
+The provenance register does not get a row for the purchased elephant
+animation pack whose bone keys the new gait clips are retargeted from
+(maintainer's decision, 2026-11-20). The register's prose and the
+elephant feature doc still state the source and that the retargeted
+keys may ship. (#1474)
+
+#### docs(adr): v2.0.40 - ADR-009: a ratchet gate holds the keep-list
+
+`673bf8df`
+
+ADR-009 said nothing gates its comment rules. Since #1501,
+CommentRatchetGateTests holds amendment rule 1: a production file's
+comment-line count may only fall, and a new keep-list comment raises
+its baseline where review sees it. Rule 2 (summary length) stays
+review-only.
+
+The keep-list names the engine fact as its own category: it stays
+beside the line it guards, while a TAOM decision moves to its feature
+doc or an ADR. The rubric is in docs/reference/comment-rubric.md.
+
+Written by script on Mike's word: config-protection.sh blocks every
+Edit or Write of an ADR.
+
+#### docs(stamina): v2.0.40 - what the off switch leaves running
+
+`e3174633`
+
+The stamina doc now says what Enable Combat Stamina turns off: the
+whole system. A battle reads the switch once, at its first tick, so a
+change needs no restart and takes effect from the next battle. The doc
+lists the few lines that still run with the switch off.
+
+Two new steps for a person to play: a beast's crew must keep shooting
+while the beast moves, and a battle with the switch off must show no
+bar and refuse the stamina console command.
+
+One open point, with stamina on only: a seated crew archer pays for
+each shot, and the engine may read a moving beast as the archer
+running. It is not verified.
+
+The review log has the entry for the whole feature. The Codex pass
+did not run and is owed (#1497).
+
+#### docs(stamina): v2.0.40 - gate and per-people results, native failures
+
+`815f8b68`
+
+Results of 23 more unattended Fords of War matches on the build with
+the special-attack gate and the per-people counters (#1497).
+
+The gate works in the game: in each of the nine passing matches with
+dwarves, an exhausted soldier failed between 193 and 678 ready checks
+of a special attack, with no swallowed exception. The per-people
+counts over ten matches are in the feature doc: about a quarter of
+the Pale Uruks and Uruk-hai were exhausted at least once, a sixth of
+the Orcs, an eighth of the Dwarves, a tenth of the Elves, and no troll.
+
+Two matches of Erebor against Gundabad with the switch on failed in
+native code: one hang, one crash. That matchup failed 2 times in 10
+with the switch on and 0 times in 11 with it off, a split that can be
+chance. The hang has a confirmed cause outside stamina: the dwarves'
+attack actions are kick-typed and their clips carry no combat
+parameter, so the engine's kick code reads the record before its
+table (#1499). The crash is a strike by a dwarf with empty hands; its
+trigger is not known.
+
+Every number in the new text was checked against the logs and the
+debugger records by three independent readers.
+
+Not-tested: everything that needs a player at the keyboard
+Save-compat: no save data
+
+#### docs(stamina): v2.0.40 - results of the first unattended runs
+
+`59cc7ac8`
+
+Combat stamina (#1497) has run in the game for the first time: 17
+unattended Fords of War matches, 10 of them with the switch on. On the
+fixed build the three stamina check lines pass in every match with the
+switch on, with no swallowed exception. Between 8 and 29 percent of
+the soldiers who paid stamina were exhausted at least once, nobody
+stayed exhausted past 15 seconds, and a stat recompute cost 19 to 28
+microseconds.
+
+The feature doc now holds the run folders, what the runs settle (the
+AI strip runs on the main thread, the cost, no poll loss at 4x) and
+what a person must still play: the lock on the player's own soldier,
+the bar as the player fights, riders, fresh against tired troops.
+
+One thing the runs showed that the design did not state: a dwarf's
+head-butt and drop-kick are kicks to the engine, so each costs the
+kick's 6 points. The exhausted lock does not reach them, because they
+start outside the AI's input (read from the code).
+
+Every number in the new section was checked against the copied logs
+by five independent readers; four statements were corrected.
+
+Not-tested: everything that needs a player at the keyboard
+Save-compat: no save data
+
+#### docs(creature-crews): v2.0.40 - the crew hold at ten times speed
+
+`f7caf036`
+
+A Fords of War match can run at ten times speed, so the crew hold of
+#1482 got one match there too. All eight mumakil archers and the four
+howdah archers stayed on their seats with no rescue teleport and
+loosed arrows (24 to 29 for each mumakil archer). An archer was up to
+1 m from its seat for a moment at that speed, against 0.11 m on the
+mumakil at normal speed.
+
+The feature docs and the root cause record have the row.
+
+Refs #1482
+
+#### docs(creature-crews): v2.0.40 - both beasts measured on trunk
+
+`ad1146d5`
+
+The crew hold of #1482 is now measured on the build that trunk
+carries (66b6e4f17), on every seat of both beasts. Three unattended
+Fords of War matches, two at normal speed and one at four times
+speed, had two mumakil and five crewed elephants. No seat made a
+rescue teleport, every archer stayed in the Land movement mode, and
+every seat loosed arrows: 4 to 8 for each mumakil archer in the 65
+seconds the beast lived at normal speed, and 48 and 45 for the two
+howdah archers in under four minutes. The howdah was the open
+question, because its floor has no navmesh under it; the floor holds
+the archers.
+
+The feature docs for the mumakil and the elephant have the tables and
+the run folders, and the root cause record closes its open item.
+
+A fourth match with a temporary camera on the crew gave pictures of
+the archers on their decks. That camera is not in this commit.
+
+Still owed: the maintainer's own look at both beasts, and a Codex
+review (no usage).
+
+Refs #1482
+
+#### docs(plans): v2.0.40 - records of manager tick 3
+
+`6d182a01`
+
+The run folder of the third manager tick (plans 059 to 062, all four
+merged as #1493 to #1496), the plan index rows set to merged, and the
+maintenance notes of plan 059.
+
+#### docs(reviews): v2.0.40 - root cause record for the silent crews
+
+`f2a6b67b`
+
+The record of how the first crew hold of #1482 stopped every bow and
+why the build, the measuring battle and the deep review all missed it:
+a restart counter was read as shots, and a hold was copied whole from
+a vanilla machine whose user never fights. Two lessons follow it, and
+the review log has the review of the fix.
+
+The in-game check manifest now names the fix commit. With the commit
+before it, a battle on the build with the bug passed the held checks.
+
+Refs #1482
+
+#### docs(creatures): v2.0.40 - review follow-ups for plan 062
+
+`7d3e97a7`
+
+The spider and creature diagnostics comments now name the side rule
+(allies, and a loose mount of unknown side) instead of "allies" or the
+team test. The review, RCA, lesson and log records state the two
+failure modes of a late native mount cache apart (spawn: spared;
+remount: a wrong bite or a wrong spare) and keep the remount check
+owed. They also say the plan named the diagnostics caller but never
+renamed the predicate.
+
+#### docs(reviews): v2.0.40 - correct the pop-up Cancel effect in review 061
+
+`85c75c37`
+
+The review record said a recruit charge floors at zero after a pop-up
+Cancel drops the pending upgrade spend. The recruits are charged in
+DoneLogic within the balance; the upgrades the restore keeps are the
+part never charged.
+
+#### docs(validator): v2.0.40 - name what PARTIAL_RUN covers
+
+`520c4de5`
+
+The #623 changelog entry said PARTIAL_RUN returns everything a run
+could not check. It covers no install, a missing live ModuleData and a
+registry that looks too small; two narrower skips still go to stderr
+only, as the MCP server section says.
+
+#### docs(reviews): v2.0.40 - lessons from the crew hold review
+
+`f6fc9110`
+
+The lesson from the second measuring battle of #1482: an agent that
+stands on a moving entity needs the position lock and the attachment
+together, and each alone fails. The earlier lesson now names the
+probe's renamed counter. The review log records the deep review of the
+final fix, the findings that were fixed, the three that were not
+applied and the two native effects that nobody read.
+
+Refs #1482
+
+#### docs(reviews): v2.0.40 - deep review for plan 061
+
+`32236193`
+
+Record the tier-1 deep review of the party-screen prisoner recruit
+clamp (#563, plan 061). The engine compatibility, data flow and XML
+lenses found no defect in the changed code. Two findings were false
+positives as defects, and the co-op restriction (the clamp reads the
+acting peer's own balance while Coop's prisoner path charges nothing)
+waits on the maintainer's decision.
+
+Report: docs/reviews/deep-review-061-prisoner-recruit-resource-gate-2026-11-19.md
+No RCA file: no confirmed defect. One entry appended to
+docs/reviews/REVIEW-LOG.md. Codex was not run.
+
+Not-tested: no game run and no co-op session; the in-game check of
+#563 is owed.
+
+#### docs(skills): v2.0.40 - armory-audit names who runs the body check
+
+`9d147c06`
+
+The armory-audit skill said the MCP tool and /verify did not run the
+collision body pass. Since #623 the MCP tool runs every pass, and
+/verify runs the CLI through tools/data_gates.py when ModuleData
+changes.
+
+#### docs(plans): v2.0.40 - plans 059 to 062 from the third manager tick
+
+`af0f5f33`
+
+Plan 059 (#623) gives validate_moduledata one pass composition for
+the CLI and the MCP tool. Plan 060 (#626) lets UPGRADE_SKILL_REGRESSION
+judge templated upgrade edges. Plan 061 (#563) gates prisoner
+recruitment on the recruit cost. Plan 062 (#594) resolves a riderless
+mount's side before a spider or warg bite.
+
+#### docs(reviews): v2.0.40 - lessons from the crew carry review
+
+`9e09ccef`
+
+Two lessons from the work on #1482. A seat that holds its archer
+without making it the agent's used object gets none of the engine's
+cleanup when that archer dies, so the seat must undo its own native
+state. And a total or a single sample cannot tie an event to an
+outcome: two conclusions about the mumakil's crew were drawn that way
+in September and stood until the logs were read again.
+
+The review log records the two-lens review of the measuring build, its
+one medium finding and the re-review of the fix.
+
+Refs #1482.
+
+#### docs(plans): v2.0.40 - record the second manager tick's results
+
+`4c170720`
+
+Plans 057 and 058 are merged (#1486, #1487). Their index rows now say
+so, and the run's progress file records every phase through the merge,
+with the test totals of the re-run after the REVIEW-LOG conflict.
+The in-game check of #785 is still owed.
+
+#### docs(mission): v2.0.40 - describe the isolated behaviour wiring
+
+`13409ddc`
+
+The mission-start guard and battle-load docs now say that a failed
+build of one TAOM mission behaviour is contained and reported, and
+that the stamp lives in AddBuiltTaomBehavior. Three docs quote the
+new factory shape. The plan 058 RCA cites the right pre-fix line.
+
+#### docs(review): v2.0.40 - correct the cast note in the plan 057 record
+
+`a200bffa`
+
+The convergence round found the record's follow-up note too narrow:
+the byte cast also changes a negative first token below -1, not only
+one above 0xFF. Both loops still return nothing for such a token.
+
+#### docs(reviews): v2.0.40 - deep review for plan 057
+
+`b1fe2262`
+
+Record the tier 1 deep review of the first-byte prefilter in the
+engine signature scan. The engine compatibility and data flow lenses
+both found that the new search returns the same hits, in the same
+order and with the same hit limit, as the old loop for every input.
+There were no findings, so no code changed and no RCA was written.
+Codex was not run.
+
+The report is in docs/reviews/, as
+deep-review-057-signature-find-first-byte-prefilter-2026-11-19.md,
+with a REVIEW-LOG.md entry.
+
+Refs #784
+
+Not-tested: no game run; a launch with no address cache is owed.
+
+#### docs(reviews): v2.0.40 - run all tool tests before a data PR merge
+
+`df617316`
+
+The #1478 merge review missed a troop formation audit failure that the full tools/tests run would have shown. The lesson names the run to compare against trunk before such a merge.
+
+#### docs(plans): v2.0.40 - plans 057 and 058 from the second manager tick
+
+`8e836fd4`
+
+Plan 057 (#784) adds a first-byte prefilter to the native signature
+scan. Plan 058 (#785) isolates each hand-wired mission behaviour
+registration, so one failed build drops only its own behaviour and
+still reaches the mission-start guard's report.
+
+#### docs(plans): v2.0.40 - record the first manager tick's results
+
+`0b58d126`
+
+Plans 055 and 056 are merged (#1472, #1473). Their index rows now say
+so, and the run's progress file records every phase through the merge,
+with the test totals of the re-run after the REVIEW-LOG conflict.
+The in-game checks of #511 and #607 are still owed.
+
+#### docs(reviews): v2.0.40 - correct the plan 056 census records
+
+`267c8ce0`
+
+The review records said no OnAgentRemoved override writes shared state
+unguarded. Two harmless fault counters are plain increments, and the
+OnAgentDeleted follow-up listed sites the plan had already checked.
+Review convergence round 1, two LOW. Plan 056, issue #607.
+
+#### docs(enlistment): v2.0.40 - scope the grace battle note to towns
+
+`a0f9b4b8`
+
+The note on a settlement's own battle in the grace window held only for
+a town or castle; inside a village the generic state menu is null.
+Review convergence round 1, LOW. Plan 055, issue #511.
+
+#### docs(reviews): v2.0.40 - deep review for plan 055
+
+`b3f86613`
+
+Deep review of the #511 fix (the service menu redirect stays on in
+the commander-lost grace window while the soldier is inside a
+settlement with no encounter). Engine compatibility and data flow
+found no defect in the changed code. No change in game.
+
+The enlistment feature doc now records that the mask also holds the
+soldier in the wait menu when his settlement's own battle starts in
+that window, because the encounter and join_encounter menus would
+crash at init with no encounter, and that the siege menus still flow
+in both states. The patch registry's SetNextMenu citation names
+v1.5.7.
+
+Report: docs/reviews/deep-review-055-enlistment-redirect-outside-attached-2026-11-18.md
+No RCA: no confirmed defect.
+
+Not-tested: no in-game check; the in-game check owed on #511 stays
+  owed.
+
+#### docs(plans): v2.0.40 - plans 055 and 056 from the first manager tick
+
+`c63dbb0c`
+
+Plan 055 (#511) keeps the enlistment redirect armed for a player
+inside a settlement with no encounter while the commander is
+unavailable. Plan 056 (#607) defers the one off-thread OnAgentRemoved
+writer left, MissionDiagnosticBehavior. Each had one cold review and a
+revision.
+
+#### docs(coopcompat): v2.0.40 - player README for TAOM.CoopCompat
+
+`f032aba6`
+
+The TAOM.CoopCompat module now ships a README.txt for players. It says
+what the module does, what to install (the full TAOM download and Coop
+v0.1.8.1, from Coop's own release), the load order, how to recover
+when a third-party "Install or repair TAOM" puts back the old 0.3.25
+build, what each join and trade message means, and which logs to send
+with a report.
+
+The CoopCompat build copies the README next to SubModule.xml, and the
+release packager now accepts README.txt at a module root instead of
+listing it as unknown. release-process.md now names the CoopCompat root
+of the stale-file check.
+
+Tier 2 review: data flow and tooling lenses. Their LOW findings are
+fixed here (the late-reply warning, the dedicated server log folder,
+the busy message). Codex pass owed (no usage).
+
+#### docs(reviews): v2.0.40 - Follow-ups move to #1422 and #1423
+
+`ac6e3ad9`
+
+The open FOLLOW-UP lines of three review records named #631, #1271
+and #609, which close now that their changes shipped. The melee items
+move to #1422 and the lord armour items to #1423.
+
+#### docs(balance): v2.0.40 - Codex review of #1283 work waived
+
+`91e31abc`
+
+The maintainer waived the Codex review owed for the #1283 balance
+changes (5101f151b and later), so it leaves the Still owed list.
+
+Refs #1283
+
+#### docs(balance): v2.0.40 - Blue Craig tuning ends at the shipped values
+
+`ac9b3428`
+
+The maintainer keeps Blue Craig's garrison growth at 2 and its siege
+defence bonus at 0.1, and accepts that it may fall before day 300.
+Five 300-day runs ended it on day 88 to 251.
+
+Refs #1283
+
+#### docs(balance): v2.0.40 - Five 300-day runs of Blue Craig's garrisons
+
+`33506dcd`
+
+Five unattended 300-day runs tested Blue Craig's free garrisons. The
+garrisons grew from about 200 to 400 to 650 men per fortification,
+and Blue Craig still fell on day 88 to 251. Garrison growth 3 and a
+siege defence bonus of 0.4, tried in the deployed config only, did no
+better than the shipped 2 and 0.1.
+
+In every run Blue Craig fought the same four realms. It lasted to day
+251 only in the run where Lindon joined by its own decision and no
+Lindon lord besieged it; in the other four, a call to war brought
+Lindon in. The next lever is diplomacy, which is the maintainer's
+call.
+
+Refs #1283
+
+#### docs(loc): v2.0.40 - Team translations in the localization doc
+
+`40b370bc`
+
+The localization feature doc gains the McmSettingsTextIsKeyedTests gate
+and a #1385 changelog line; the feature map gains a row for the team
+importer and McmText (#1385).
+
+#### docs(heroes): v2.0.40 - Proof runs for the heroes' weapons
+
+`fb8793de`
+
+Two unattended runs on the build of b56995820 show the weapons the
+maintainer asked for.
+
+Long Defeat (E:/Temp/long-defeat-runs/20261116-120242): Gimli spawns
+with the Erebor two-handed axe, and at all three wave clears the
+heroes hold aragorn:TwoHandedSword, gimli:TwoHandedAxe and
+legolas:Bow. The engine holds Aragorn's Strider sword in its
+two-handed mode by itself, so no forced mode was needed.
+
+Story mission (E:/Temp/scenario-runs/20261116-122052): the same for
+Gimli and Legolas. Aragorn fell 65 seconds into the wave, so his row
+for the story mission is not reached yet.
+
+Gimli's kills did not move with the axe: 5 in three waves, against 6
+with Dain's axe.
+
+One sentence of the feature commit was wrong and is corrected: the
+melee ladder's repair does not lower Gimli's blade. The blade backs
+a one-handed and a two-handed axe, and the repair tool does not
+price such shared blades, so his swing stays 140.
+
+The check file for #1373 now names the feature commit, so only a
+build that holds the change is judged.
+
+Refs #1373
+
+#### docs(balance): v2.0.40 - sixth 150-day run, Blue Craig lasts longer
+
+`447bc6b3`
+
+The sixth unattended 150-day campaign (run 20261116-114451, trunk
+3d2c1fb27) passed 150 of 150 days with a clean unload. It is the first
+run with Blue Craig's siege defence bonus and survival bonus.
+
+Blue Craig had the same four enemies as before. It lost three castles
+by day 30 and its capital on day 54, but its last town held until day
+140, against day 113 in the fifth run. The capital fell 19 days
+earlier than in the fifth run, so the bonus did not save it; with one
+run per change, part of both differences is chance.
+
+The free share stayed within 0.4 to 0.6 on every day, and Dunland
+stayed at peace with Gondor. No other capital fell. Rohan ended with
+7 towns and 6 castles and Arthedain with 2 and 6, both better than in
+the fifth run. Gondor ended 14,362 strength ahead of Mordor, against
+8,027 in the fifth run; the balance page lists it as a watch item.
+
+Refs #1283
+
+#### docs(balance): v2.0.40 - fifth 150-day run, Blue Craig still falls
+
+`20db78c2`
+
+The fifth unattended 150-day campaign (run 20261116-104744, trunk
+ab43768ce) passed 150 of 150 days with a clean unload. With Hostile
+rows only to its neighbours, Blue Craig started with four wars instead
+of ten (Rivendell, Arthedain, Ered Luin, and Lindon called in by
+Arthedain). It still fell: its capital on day 73 and the realm on day
+113, against day 53 and day 122 in the fourth run. Its neighbours
+alone took it, so the distant wars did not decide its fate.
+
+The free share stayed within 0.4 to 0.6 on every day, and Dunland
+stayed at peace with Gondor. Arthedain lost its capital on day 78 and
+ended with no town; Rohan fell to 3 towns and 1 castle. The balance
+page records the run and the decision now owed on Blue Craig.
+
+Refs #1283
+
+#### docs(balance): v2.0.40 - fourth 150-day run, Blue Craig falls again
+
+`547972cb`
+
+The fourth unattended 150-day campaign (run 20261116-100801, trunk
+9dc562c62) passed 150 of 150 days with a clean unload. Dunland again
+refused three calls to war against Gondor, and the two realms stayed
+at peace. The free share stayed within 0.4 to 0.6 on every day, and
+the Gondor to Mordor strength gap ended level with day 1 (8,592
+against 8,646).
+
+The capital target failed again, and earlier: Blue Craig lost its
+capital on day 53 and was destroyed on day 122. The same ten free
+realms fought Blue Craig from day 2 in all three recent runs; it fell
+in both runs with Dunland's refusal and lived in the one without. The
+balance page records the run and asks the maintainer whether Blue
+Craig needs help, which would change gameplay.
+
+Refs #1283
+
+#### docs(melee): v2.0.40 - correct three engine claims for v1.5.7
+
+`6976eb8c`
+
+Three docs stated engine behaviour that v1.5.7 does not have. Each is
+now checked against the installed DLLs.
+
+- A couch is a passive usage: a thrust with zero thrust speed and
+  0.83 times the closing speed, not closing speed added to thrust
+  speed and squared. The rule stands: never raise a couchable weapon.
+- A hidden crafting piece is also skipped by the two default-piece
+  picks, which throw when every piece of a slot is hidden, so a hidden
+  piece must never be the only one for its slot.
+- Workshops do read ItemObject.Culture: their output prefers the
+  town's culture.
+
+The starter kit tool's docstring now says crafted clones carry
+value="150". The claim that item XML loads only at game launch
+(item 1 of #1243) waits for an in-game check.
+
+Refs #1243.
+
+#### docs(rca): v2.0.40 - Mordor orc polearm I thrusts again
+
+`f5864e46`
+
+"[Mordor] Orc Polearm I" had a thrust attack that did no damage: its
+blade declared a Pierce thrust with a factor of 0.00, and the engine
+keeps a declared thrust usable whatever its factor. Ten troops carry
+it (Mordor, goblin and one Fords of War copy).
+
+The live Armory blade now has a thrust factor of 1.73, the value of
+blade a02 from the same set, so the weapon thrusts for 27 like
+polearms II and III; its swing stays at 82. The restat tool plans no
+change on the new value, and the starter kit tool regenerated the
+starter twin. The Armory change is in the lotraom-assets mirror
+(dbbe3d343).
+
+The RCA records the fix, and a new follow-up line notes that no check
+reports a declared attack with a factor of 0.
+
+#### docs(autorun): v2.0.40 - Record the first unattended story run
+
+`7049d777`
+
+The first run of the new kind passed (run 20261116-075342, commit
+4baa2f53a). From a new campaign the driver opened the Helm's Deep
+defence 32 seconds after the game started, the battle played itself
+and was won after 390 seconds, the map came back, and the game quit
+clean.
+
+That run is also the first time anyone has seen Aragorn, Legolas and
+Gimli stand in the story mission. All seven checks of #1366 pass:
+the three spawned with their own gear and three times the health of a
+soldier, held their place, cast their abilities, Legolas's extra
+arrows flew with the item a campaign now loads, and Aragorn's aura
+reached 102 soldiers.
+
+One number of the run is wrong and has its own issue. In the story
+mission about 20 garrison soldiers a second were put into the heroes'
+group and moved out again, 1517 moves in all; in the Long Defeat
+that count is always zero.
+
+The docs, the two review records and the manifests carry the run, and
+the driver's manifest counts only builds that hold its commit. The
+test that pins the manifest's commit follows it.
+
+No code change. Review: documentation, a manifest value and a test
+pin only, no /deep-review.
+
+Refs #1368, #1366
+
+#### docs(story-missions): v2.0.40 - Record the runs of the free heroes
+
+`59fa6ebf`
+
+Two unattended runs on commit 8ee4ef2fe. A new campaign of two days
+(run 20261116-055126) wrote the new roster line with nothing missing:
+all 34 troops of the seven story missions, the three heroes among
+them, and Legolas's extra arrow load at the start of a campaign. A
+Long Defeat of three waves (run 20261116-055255) shows the changed
+hero spawn and the heroes' new level did no harm there: the shop
+heroes' checks of #1337 and all seven checks of Legolas's kit pass.
+
+The story mission itself, with the three heroes in it, has still not
+been opened in a game. No tool opens it without a person, so that
+check is owed, with the saves, the faces and the take-over.
+
+Also corrects a misreading in the record of Legolas's kit: the kill
+count on the heroes' line is a hero's count for his whole life, not
+per wave. He had 26 kills at the end of wave 2 in the run with the
+kit, 34 in the run before it, and 41 in today's run at level 36.
+These are single runs with no control.
+
+The feature docs and the review records carry the runs, and the check
+manifest counts only builds that hold the feature commit.
+
+No code change. Review: documentation and a manifest value only, no
+/deep-review.
+
+Refs #1366, #1361
+
+#### docs(hero-abilities): v2.0.40 - Record the proof run of Legolas's kit
+
+`342e5d95`
+
+The unattended Long Defeat run 20261116-024002, four waves on commit
+d33642297, passes all seven checks of Legolas's ranged kit. His ten
+aim-error values read zero. 45 of his 55 shots met an enemy. Ten of
+the thirteen arrows a shield blocked went on to hit the soldier
+behind it, which the engine's source did not show beforehand. Many
+Arrows added eight arrows in four windows and they landed. A headshot
+killed an Uruk-hai skirmisher outright. He cast 13 times, fell in
+wave 3, and the body bought after that cast 8 more.
+
+The run shows no gain in kills for him yet. He shot only 61 arrows in
+four waves: the three heroes hold one post at the top of a wall lane,
+and there he fights with his sword much of the time. Where he should
+stand is a decision for the maintainer, noted on #1325.
+
+The feature doc and the review record now carry that run, and the
+check manifest counts only builds that hold the feature commit.
+
+No code change. Review: documentation and a manifest value only, no
+/deep-review.
+
+Refs #1361
+
+#### docs(hero-abilities): v2.0.40 - Record the abilities' proof run
+
+`c4ab6d08`
+
+The unattended Long Defeat run 20261115-232309, four waves on commit
+5ee569711, passes all five checks of the hero abilities. Aragorn cast
+11 times and Gimli 8, a buffed soldier's swing speed moved by exactly
+what the buff asks for, Gimli killed an Uruk-hai warrior outright
+with an overhead blow, and Aragorn's aura reached 283 soldiers. Both
+heroes stood through all four waves.
+
+The feature doc and the review record now carry that run, and the
+check manifest counts only builds that hold the feature commit.
+
+No code change. Review: documentation and a manifest value only, no
+/deep-review.
+
+Refs #1359
+
+#### docs(long-defeat): v2.0.40 - Record the shop heroes' proof run
+
+`2a80fe9e`
+
+The unattended run 20261115-210056, on commit a5f607f41, is the first
+after the heroes' wall order. Its three checks pass: at every wave
+clear the standing heroes were in their group and near the wall lane,
+Legolas had 24 kills and Gimli 20, Aragorn fell twice and was bought
+again once, and the group was retaken after the lord's fall.
+
+The feature doc, the feature map and the review record now say what
+that run proved and what it did not reach: a stalemate charge with
+heroes on the field, and a repair of the group's membership.
+
+No code change. Review: documentation only, no /deep-review.
+
+Refs #1337
+
+#### docs(rebalance): v2.0.40 - catalogue the rebalance tools and docs
+
+`c5bd32e5`
+
+The weapon, armour and troop rebalance of 2026-11-14 and 11-15 added
+tools, gates and documents that the three catalogues did not list.
+
+feature-map.md: the armour row names the lord kit tool
+(fix_lord_kits.py, warning LORD_ARMOUR_RANGE, the lord armour pool)
+and the cover flag tool (apply_armour_cover_flags.py). The melee row
+names register_couch_brace_polearms.py and its gate. The enlistment
+row names --repair-ranks and ENLISTMENT_KIT_RANK_REGRESSION.
+
+INDEX.md: armor-balance, lord-armour-pool and troop-skill-balance
+under equipment, and the three rebalance RCAs with the troop roster
+analysis in the review archive.
+
+doc-lookup.md: two task rows, one for armour, lord kit and lord
+variant changes, one for enlistment kit ranks.
+
+Documentation only.
+
+#### docs(armory): v2.0.40 - Backup sweep and mirror sync of 2026-11-15
+
+`fd40b41b`
+
+The armour doc said the asset mirror keeps the artist's Gondor stats and that 102 backup files wait beside the live Armory XML. Both changed today on the maintainer's word: the sweep moved 164 backup files into a dated quarantine, and mirror commit 2088acbc2 took the live Armory data (181 ModuleData files and SubModule.xml, now v2.0.40 there). The doc records what was mirrored, what was left out, and that a sync from the mirror's head no longer reverts the restat.
+
+#### docs(diplomacy): v2.0.40 - #1283 RCA marks the #1343 follow-up fixed
+
+`d830da25`
+
+#### docs(troops): v2.0.40 - In-game checks for the troop skill curve
+
+`345f6f37`
+
+The feature doc had no list of what a person must check in game after the ten tier skill curve (#343). It now names seven checks with the troops and the values to look for: the Lothlorien lines from the player report, lance cavalry, an archer of Men, a same-tier campaign battle, a Fords of War match, crush-through and the shield bash.
+
+#### docs(autorun): v2.0.40 - RCA and lessons for the scenario review
+
+`4bd484c6`
+
+The RCA of the #1075 slice 1 review: one HIGH (the default culture
+was a kingdom id), four MEDIUM (the judge gaps, the focus setting
+saved at shutdown, the scene notification crash, a trunk test outside
+the pre-push filter) and the LOW items, all fixed on this branch.
+Four lessons go to the category files. The feature doc names one more
+point the first game run settles.
+
+Codex review still owed (usage limit until 2026-11-20); no game run
+yet.
+
+Refs #1075
+
+### Chores
+
+#### chore(crew-trial): v2.0.40 - keep only engine facts as comments
+
+`338fc783`
+
+The comment ratchet of ADR-009 reached trunk while the crew steps were
+in work, and a new production file starts there with no counted
+comment line. The two new trial files held ten comments. Six of them
+explained the step's own design, which the feature doc and the step
+tests already state, and they are gone. The four that stay each name
+an engine fact the line under them depends on: where the engine lists
+a mission object made at run time, why a held agent needs the slot
+check, why the map is keyed by the agent object, and which seat member
+holds the archer.
+
+The baseline gains one line for CommandTrialHost.Crew.cs with those
+four comment lines.
+
+Refs #1503
+
+#### chore(comments): v2.0.40 - sweep Main/Features/SupplyLines (#1501)
+
+`2f02a8bc`
+
+The third /delete-comment sweep. SupplyLines goes from 323 to 312
+comment lines. No code changed.
+
+The folder was a port of an older module, and its comments carried
+the history of that port and its reviews: 33 tags such as "(round-A
+HIGH)", "(Codex round 2 #6)", "(review round B)", "(defect fix 1)" and
+"(source module value)". Those tags are gone; the reason each comment
+gives stays. Removed: a four-line note on the bearing setter that
+repeated the comment on its field, and sentences that described the
+source module's old behaviour (the food-only goods filter, the top-14
+cut, goods that were never deducted, the retired IsRaid input).
+
+Kept: engine facts (the Hero lookup through CampaignObjectManager, the
+food model, the grain default item, the native path query) and the
+reasons for each ordering and guard in the order state machine.
+
+No workaround found, so no issue was filed.
+
+#### chore(comments): v2.0.40 - sweep Main/Features/DevConsole (#1501)
+
+`678f55c0`
+
+The second /delete-comment sweep. DevConsole goes from 196 to 187
+comment lines. No code changed.
+
+The folder was already close to the ADR-009 keep-list: nearly every
+comment names an engine constraint with its citation (the race lookup
+that coerces unknown ids to human, SpawnTroop's unguarded team colour,
+the InsideSettlement short-circuit for a parked enlisted player) or the
+reason for a guard. Removed: two "intentionally swallowed" notes in
+empty catches and one line that repeated the code. Trimmed: history
+and emphasis inside five engine facts ("shipped five times", "the
+earlier bug here", "reference module finding").
+
+No workaround found, so no issue was filed.
+
+#### chore(comments): v2.0.40 - sweep Main/Features/Refuge (#1501)
+
+`3600ec65`
+
+The pilot of the /delete-comment sweep. Refuge goes from 310 to 230
+comment lines (26 percent fewer). No code changed: every removed or
+edited line is a comment or a blank line.
+
+Removed: tautologies and section dividers, references to the source
+module and old review rounds, and decisions that docs/features/refuge.md
+already records. Two decisions moved to refuge.md under "Founding
+gates": an enlisted player cannot found a refuge, no refuge may stand
+within manage range of another, and a refuge grants no defense bonus
+while it is being raised or rebuilt.
+
+The "one RefugeService serves both faces" comment in RefugeIoC is now
+a test, RefugeFeature_BookIsTheServiceInstance: a second RefugeService
+behind IRefugeBook would give the defense hot path an empty book.
+
+Kept: every comment that names an engine constraint (MbEvent listener
+order, MapEventParty capturing its member count, disband queues, map
+scene handles after a load) and every catch's reason.
+
+One workaround found, filed as #1502: the settings provider returns
+two constants for the fallback refuge layout.
+
+RefugeCampaignBehavior is now 201 lines, so its entry-point baseline
+drops from 209.
+
+#### chore(localization): v2.0.40 - register the prisoner recruit clamp line
+
+`c8850294`
+
+Registers the English row for taom_res_recruit_clamped, the yellow
+line the party screen shows when it cuts a prisoner recruit to what
+the special-resource balance covers (#563). The 12 language files
+pick it up at the next language pass; until then
+EveryLanguage_DeclaresARowForEveryEnglishKey lists this key.
+
+#### chore(tools): v2.0.40 - check TAOM_Map prefabs for missing meshes
+
+`8c5b9bcc`
+
+Add tools/check_prefab_meshes.py. It reads every meta_mesh_component in
+the live TAOM_Map Prefabs folder and exits 1 when a name is in no .tpac
+of the chosen modules (default Native, SandBoxCore, SandBox,
+LOTRLOME_Armory, TAOM_Map). Exit 2 means it could not check.
+
+Why: on 2026-11-17 the Modding Kit editor crashed while the Prefabs list
+scrolled, at TaleWorlds.Native.dll+0x3EE84B (read of address 0). The
+engine copies a prefab entity for the list preview, and a prefab that
+names a missing metamesh leaves a null component in that entity. The
+engine logs only a content warning at load. Two Gondor prefabs
+(gondor_wall_deco_2, gondor_wall_deco_4) and 45 goblin map icons named
+meshes that no pack holds. After the fixes below, the editor scrolled
+the whole list with no crash.
+
+The fixes are in the live, unversioned TAOM_Map and revert on a
+reinstall, so this check is the lasting guard:
+- gondor_environment.xml: the two shield names now point at
+  wm_gondor_shield_bb and wm_gondor_shield_cc. The pairing is a guess
+  from the four shields the Armory pack holds.
+- taom_map_icons.xml: the 45 goblin icons moved to
+  Prefabs_Unused/taom_map_icons_missing_mesh.xml. No scene names them,
+  and no source art for them exists in LOTRAOMAssets.
+- lotraom_kysaro_prefabs.xml: P_Gondor_Kys_Soldier_Dead_01 deleted, as
+  the maintainer asked; no scene used it.
+
+A pack that the editor does not load still crashes it: load the same
+modules in the editor as in --modules. Six unit tests cover the
+parser and the missing-name logic. The tools README has a row.
+
+No GitHub issue was created for this crash yet; it is still owed.
+
+#### chore(data): v2.0.40 - armour tier table after the vambraces restat
+
+`bd35af83`
+
+The live Armory now gives the Mirkwood infantry vambraces 24 arm
+armour, so the roster tier table records 24 and marks the piece as a
+match for its elite band. No game data changes.
+
+Refs #1452
+
+#### chore(armour): v2.0.40 - record the Mirkwood restat in the tier map
+
+`c472d097`
+
+The live Armory restat for the armour colour fix (#1450) raised the
+three Mirkwood pieces that now give their low wearers band clones:
+the infantry chest (body 8 to 48, arm 8, leg 19), the bronze chest
+(body 17 to 48, arm 8, leg 19) and the greaves (leg 3 to 22). The
+roster tier map records the new values, and three comments of the
+lord armour variants file name them; no variant value changes.
+
+Refs #1450, #1423
+
+#### chore(harness): v2.0.40 - deep review runs at the session's effort
+
+`74590c1d`
+
+/deep-review no longer sets its own effort level. The skill and the
+deep-reviewer agent dropped "effort: max" from their frontmatter, and
+the skill no longer passes "high" for tier 2 and second-wave lenses.
+Every lens now runs at the effort level of the session that starts the
+review. The reviewer model stays pinned to Opus 5.5.
+
+The skill also loses the line "There is NO upper limit on the total."
+The waves-of-four rule beside it already says how extra agents run.
+
+The two Claude rules that described the old effort tiers now say the
+same thing. The /improve workflow still passes max for its own
+convergence rounds; that is a separate setting.
+
+#### chore(harness): v2.0.40 - prompt audit fixes for Opus 5.5
+
+`dbddae06`
+
+A prompt audit of the Claude Code configuration against Opus 5.5 found
+two stale facts and some text written for older models. This commit
+fixes them. No C#, XML or tool behaviour changes.
+
+Stale facts:
+- external-skill-ports.md sent readers to harness-facts.md "Skill load
+  semantics". That section moved to harness-skills-agents.md on
+  2026-11-13.
+- harness-skills-agents.md justified the unset subagent cap with
+  "seven to nine parallel lenses". /deep-review runs at most four
+  agents at a time.
+
+Older-model text:
+- 20 rule and skill headings lose their "(MANDATORY)" tag. Nearly
+  every section carried it, so it marked nothing. The rules under the
+  headings are unchanged.
+- deep-review/SKILL.md and the deep-reviewer agent lose incident
+  stories that repeated rules already stated beside them.
+- taleworlds-researcher replaces its three-cycle retrieval script with
+  one sentence: decompile what the question needs, then stop.
+- output-style.md drops its list of banned opening phrases; the
+  positive rule in the same paragraph stays.
+
+Two docs that quoted the old heading titles are updated. The dated RCA
+for banner bearers keeps its original quote.
+
+#### chore(harness): v2.0.40 - harness retro 2026-11-17, three approved fixes
+
+`8a35108b`
+
+Developer tooling only; players see nothing.
+
+The Stop reminder for C# that no ledger holds (branch 1b of
+check-verification-evidence.sh) now runs only in a linked worktree or a
+main checkout on a feature branch. In the shared main checkout on trunk
+it stays silent: 15 of 15 such blocks in the week to 2026-11-17 were
+answered "not my files". Branch 1a, the session's own edits, still
+reminds everywhere.
+
+The UPSTREAM AHEAD banner at session start now prints at most once in
+seven days, by the stamp .claude/logs/.upstream-ahead-printed. 49
+sessions printed it in the week and one acted on it. RELEASE and NOTE
+lines still print at every start.
+
+/deep-review and /ship now require an RCA file only for a CRITICAL or
+HIGH finding, a player-reached one or a repeat cause. A MEDIUM or LOW
+finding gets a lessons entry when it is systemic. Tier 2 also covers
+plain C# and repo XML or XSLT that no tier 1 row names.
+
+The deep-review Tooling lens narrowed the first fix to trunk, and
+asserted that the weekly stamp is renewed. tools/test_hooks.sh 7l and
+7o gain rows for both. The full hook suite passes (1398).
+
+The record is docs/reviews/harness-retro-2026-11-17.md. Owed to the
+maintainer: the improve workflow RCA line, MEMORY.md over its cap, and
+the 2026-11-03 decisions.
+
+#### chore(story): v2.0.40 - Pin the 1409 check to its feature commit
+
+`1dc5ea23`
+
+Only a build that holds c7fc79ef7 now counts as evidence for
+tools/ingame_checks/1409.toml.
+
+Refs #1409
+
+#### chore(story): v2.0.40 - Pin the 1370 check to its fix commit
+
+`075f5c62`
+
+Only a build that holds de891ce4e now counts as evidence for
+tools/ingame_checks/1370.toml.
+
+Refs #1370
+
+#### chore(heroes): v2.0.40 - Pin the 1415 check to its feature commit
+
+`5679b19c`
+
+Only a build that holds 8dafcadf7 now counts as evidence for
+tools/ingame_checks/1415.toml.
+
+Refs #1415
+
+#### chore(long-defeat): v2.0.40 - Pin the upgrade checks to their fix
+
+`b22c7398`
+
+The in-game check files for #1388 and #1401 named the commit the
+branch started from. Trunk builds without the fix contain that
+commit, so a session of such a build would have been judged, and
+three rows would have read FAIL on it. Both files now name the fix
+commit cc2e2f8fc, so only a build that holds the fix counts.
+
+No code change.
+
+Refs #1388, #1401
+
+#### chore(hooks): v2.0.40 - refuse edits in a checkout on trunk
+
+`17e5dd35`
+
+Many people and sessions merge into bannerlord-1.5.x. A session that
+edits files in the trunk checkout leaves a dirty tree, and that tree
+blocks fetch, pull and push for everyone who shares the checkout.
+
+AGENTS.md now has a "Branch first" row: never edit a file in a checkout
+on bannerlord-1.5.x; make a branch or a sibling worktree first. The new
+PreToolUse hook block-trunk-edit.sh enforces it for the Edit and Write
+tools. It reads the repository from the edited file's own folder, so a
+worktree on a branch passes while the main checkout is on trunk. Files
+outside git and gitignored files pass. The flag file
+/tmp/claude-trunk-override-<session id> unlocks one session when the
+maintainer asks for an edit on trunk.
+
+The hook does not see a shell redirect or sed -i, and it judges Claude
+sessions only; the AGENTS.md row covers those cases.
+
+tools/test_hooks.sh section 7p covers deny, allow, the override, a
+sibling worktree and fail-open. The full suite passes (1390 passed).
+Not-tested: the live refusal by the harness, which needs this commit on
+trunk first.
+
+#### chore(loc): v2.0.40 - seed English rows for the call-to-war refusal
+
+`f5134356`
+
+The sponsor call-to-war fix (#1350) added the key
+taom_call_to_war_refused with its English row only, which left
+EveryLanguage_DeclaresARowForEveryEnglishKey red on trunk in all 12
+languages. Each language file now holds the English text as a seed
+row (translate_with_claude.py --seed-only, no translation run), so
+the coverage test passes. The real translation is in the backlog
+(#1129).
+
+Refs #1350
+
 ## v2.0.39 (2026-11-13)
 
 Commits since v2.0.38: 261 (260 with the version label, 1 without); 3 landed twice and are listed once.
