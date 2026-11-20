@@ -4,12 +4,20 @@
 > [War Elephant](elephant.md): a ridden Harad mount that auto-attacks (trample + tusk) and **charges** into melee.
 > Phase 2 (#627) put a crew on the war tower: eight archers across its three decks, standing on an attached
 > navmesh. **All eight confirmed drawing and loosing in game, 2026-09-22.**
+>
+> **Locomotion (#1474, 2026-11-19):** the mumak gets its own gait and idle clips (`mumakil_*`, a 3.0 m walk
+> where the shared clip had 2.0 m) and its own action set `as_mumakil`, bound in the live Armory on 2026-11-19
+> by `tools/bind_elephant_clips.py` ([elephant.md](elephant.md), "Locomotion rebuilt from a real elephant
+> walk"). Every other row of `as_mumakil` is `as_elephant`'s, the attack clips too. At its 3.0 scale it moves at 2.2 m/s in model units, inside the walk clip's
+> limits, so the walk is the clip that matters for it. Mike judged its walk, attack and death in game (2026-11-19,
+> 2026-11-20); the stand after a stop is not yet watched. Gates: `python tools/check_gait_stride.py`,
+> `python tools/bind_elephant_clips.py --check`.
 
 ## Overview
 
 The Mûmakil (the Oliphaunt) is a giant ridden Harad mount. Mechanically it is the War Elephant at **3× scale** with
-a distinct mesh + war-platform: it reuses the elephant rig (`elephant_skeleton`), the `as_elephant` action set, and
-**every** elephant animation clip — including the `act_elephant_attack_*` trample/tusk clips its behavior tree plays.
+a distinct mesh + war-platform: it reuses the elephant rig (`elephant_skeleton`), the rows of the `as_elephant` action set (in its own copy, `as_mumakil`, since #1474), and
+every elephant animation clip but the gaits, turns and two idles, including the `act_elephant_attack_*` trample/tusk clips its behavior tree plays.
 It is not a volunteer: players buy it from the Elite Emissary at Korb Taskral (`town_A1`) for War Drums (2800 each). Since 2026-10-15 it is in no recruitment pool and no party template, so no AI party fields it either (Mike, 2026-10-15: nobody recruits it).
 
 ## Why this exists — and why it was cheap to build
@@ -65,8 +73,9 @@ with no work on its mahout.
   **`elephant_skeleton`** (60 bones). The source FBX's armature was renamed `elephant_skeleton_unused →
   elephant_skeleton` and re-exported **mesh-only** (no bundled skeleton — it references the shared skeleton that lives
   in the elephant's `adod_elephant_geo.tpac`, mirroring `sk_elephant_armor_geo.tpac`).
-- The Monster reuses `action_set="as_elephant"` + `monster_usage="elephant"` verbatim — multiple monsters can share
-  an action set/usage/skeleton (vanilla does this for horses).
+- The Monster reuses `monster_usage="elephant"` verbatim (multiple monsters can share a usage set and a skeleton;
+  vanilla does this for horses). Its `action_set` was `as_elephant` until 2026-11-19 and is `as_mumakil` since
+  (#1474), which needs `as_mumakil_map` beside it.
 
 ### Collision capsule (scaled-mount gotcha)
 
@@ -99,7 +108,7 @@ unification (#305) the formerly-cloned internals are SHARED:** `MumakilAttackSer
 `ElephantLike` BT nodes bound to [`MumakilCombat.Profile`](../../Main/Features/Mumakil/MumakilCombat.cs), attached by
 `MumakilMissionBehavior` keyed on `Monster.StringId == "taom_mumakil"`. The mount-lock lives in the shared
 `TaomAgentStatCalculateModel` (a 4th injected `IMumakilAttackService` → `CanAgentRideMount=false` +
-`MountDifficulty=999`). Attack clips reuse the elephant's `act_elephant_attack_1..4` (shared `as_elephant` set);
+`MountDifficulty=999`). Attack clips reuse the elephant's `act_elephant_attack_1..4` (the same rows in `as_mumakil`);
 `MumakilCombat.Profile.AnyUnresolved()` logs at mission start if a future Armory rename breaks them.
 
 ## Configuration / data
@@ -107,7 +116,7 @@ unification (#305) the formerly-cloned internals are SHARED:** `MumakilAttackSer
 | Where | What |
 |-------|------|
 | `MumakilConfig.cs` | `MumakilMonsterId="taom_mumakil"`, `MountDifficulty=999`, attack gates/cooldowns/damage, clip names (= elephant's). Trample reach scaled ~3× for the 3.0× body (`TrampleTriggerRange=9`, `TrampleRadius=12`). |
-| `lotr_monster_mumakil.xml` (LOTRLOME_Armory) | Monster `id="taom_mumakil"`, `action_set="as_elephant"`, `monster_usage="elephant"`, enlarged `<body_capsule>`. Registered in `LOTRLOME_Armory/SubModule.xml`. |
+| `lotr_monster_mumakil.xml` (LOTRLOME_Armory) | Monster `id="taom_mumakil"`, `action_set="as_mumakil"`, `monster_usage="elephant"`, enlarged `<body_capsule>`. Registered in `LOTRLOME_Armory/SubModule.xml`. |
 | `LOTRAOM_horses.xml` (LOTRLOME_Armory) | Horse item `taom_mumakil`: mesh `sk_mumakil_basemesh_a1`, platform via `<AdditionalMeshes>`, **`body_length="300"`** (= 3.0×), no HorseHarness. |
 | `troops_harad.xml` | `harad_mumakil_rider` — `Cavalry`, spear + sword, Horse=`Item.taom_mumakil`, no HorseHarness. |
 | `special_resources/troop_resource_costs.xml` and `elite_emissary/elite_emissary_config.xml` | `harad_mumakil_rider` costs War Drums: `merchant_cost="2800"` at the Elite Emissary (its `recruit_cost` 2000 times the elephant's 70/50 ratio), `recruit_cost="2000"` only for a captured rider recruited from prisoners, `daily_upkeep="500"`. The rider is in no pool ([`RecruitmentPools/VolunteerRecruitmentService.Harad.cs`](../../Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.Harad.cs)); it was `clan_aserai_1`'s weight 1 of 12 until 2026-10-15. |
@@ -136,6 +145,7 @@ The mûmakil stays mount-locked, so a player only rides one they spawned on.
 | `Main/IoC.cs`, `Main/SubModule.cs` | Wiring (IoC reg, service resolve + ctor arg, `AddMissionBehavior`). |
 | `TAOM.Tests/Features/Mumakil/MumakilAttackServiceTests.cs` | 24 service tests. |
 | `tools/audit_mount_parity.py`, `tools/verify_mount_assets.py` | Extended for `mumakil` (the latter searches the shared elephant asset dir via `extra_asset_dirs`). |
+| `tools/bind_elephant_clips.py`, `tools/check_gait_stride.py` | The live Armory's `as_mumakil` set on the `mumakil_*` clips: the binding, and the gate on its clip records, standing pose and cache entries (#1474, [elephant.md](elephant.md)). |
 
 ## Tests
 

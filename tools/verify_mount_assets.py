@@ -54,7 +54,8 @@ CREATURES = {
         "rider_prefix": "act_elephant_",
     },
     # Mûmakil = a SCALED-UP elephant that SHARES the elephant rig (skeleton="elephant_skeleton") + the
-    # as_elephant action set + every elephant clip. Its own mesh tpac (creature/mumakil) carries NO skeleton or
+    # elephant's clip folder. Its action set is its own since #1474 (as_mumakil: as_elephant's rows, with the
+    # gait, turn and idle rows on the mumakil_* clips). Its own mesh tpac (creature/mumakil) carries NO skeleton or
     # animation resources — those live in the elephant tree — so the skeleton/clip/binding checks search BOTH
     # dirs via extra_asset_dirs. The mumakil mesh MUST reference skeleton="elephant_skeleton" (rename from the
     # imported "elephant_skeleton_unused" on re-export, like the elephant's own mesh did) — verify the mesh tpac
@@ -64,7 +65,7 @@ CREATURES = {
         "extra_asset_dirs": [r"Modules\LOTRLOME_Armory\Assets\creature\elephant"],
         "action_sets_xml": r"Modules\LOTRLOME_Armory\ModuleData\action_sets.xml",
         "usage_xml": r"Modules\LOTRLOME_Armory\ModuleData\monster_usage_sets.xml",
-        "action_set_ids": ["as_elephant", "as_elephant_town_and_village", "as_elephant_map"],
+        "action_set_ids": ["as_mumakil", "as_mumakil_town_and_village", "as_mumakil_map"],
         "usage_id": "elephant",
         "rider_prefix": "act_elephant_",
     },
