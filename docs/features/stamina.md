@@ -237,7 +237,11 @@ already adds its component from the tick.
   conversations get no stamina. The rules run only while the mission is in Battle mode, so nothing drains
   during deployment.
 - **Who:** human agents. Horses and creature mounts get no stamina. A rider's arm slows and locks as on foot;
-  his speed values are not touched. Crew archers on mumakil and howdahs are human agents.
+  his speed values are not touched. Crew archers on mumakil and howdahs are human agents. A crew seat is not
+  a used game object (the spawners call `seat.OnUse`, never `Agent.UseGameObject`), so a seated archer pays for
+  each shot and the run test applies to him. Not verified: whether the engine's `MovementVelocity` counts the
+  carry of a beast that moves faster than the 3 m/s run threshold. If it does, a crew on a moving beast stops
+  regenerating and can reach Exhausted (step 12 of "How to verify in game").
 - **Co-op:** `StaminaMissionLogic` is `AgentOwner`. The ticker asks `CoopMissionOwnership.IsOwnedHere` for each
   soldier before it acts on him. A soldier another peer owns stays Fresh here. Nothing is synced, so both
   peers need the same `EnableStamina`, `StaminaCostScale`, `StaminaApplyToPlayer` and `StaminaApplyToAi`; the
@@ -292,6 +296,17 @@ and unlocked at the next sweep, and keeps the stamina he had if the switch comes
 stopped while exempt are dropped, not charged later. "Your soldier" is the main agent or a soldier a player
 controls. Seat of Seeing hands the hero to the AI and he stays the main agent, so he stays yours. The Fords
 control clears the main agent when it gives a soldier back, so that soldier follows the AI switch again.
+
+**What off means.** `Enable Combat Stamina` is the switch for the whole system. A battle reads it once, at its
+first tick, so a change takes effect from the next battle and needs no restart. With it off the gate closes
+before any soldier gets a pool: no cost, no band, no lock, no bar, no message, and the dwarf and troll attack
+checks never refuse. What still runs is one thread mark and one test per mission tick, an early return in each
+hit callback and in the player input patch, one log line and one `[Check]` line with `reason=toggle-off` per
+mission. Every battle clears the runtime at its first tick, the AI input claims included, so nothing of an
+earlier battle with the switch on reaches a battle with it off. A gate that throws leaves that battle without
+stamina. Marshal's Word reaches the AI input flag through the shared claim ledger whatever the switch says; with
+stamina off it sets and clears the flag at the same moments as before. The pre-merge review of 2026-11-20 read
+each of these paths (`docs/reviews/REVIEW-LOG.md`).
 
 Decide the release default of `EnableStamina` before the first release that carries the property: MCM keeps a
 saved value over a later default (`python tools/check_mcm_default_flips.py`).
@@ -408,6 +423,13 @@ made count, and a soldier that `auto` gives back while he is Exhausted gets his 
     `[ERROR]`, and in `[Stamina][Summary]` fewer than half of `fighters=` in `exhaustedSoldiers=`. This run
     covers AI soldiers only: the Fords control hands the hero to the AI. Add `--control-check 240` and
     `--screenshots` so the battle HUD and the bar show.
+12. **Crew archers on a moving beast.** In a battle with a mumakil or a howdah elephant, order the beast to
+    move and watch its crew for two minutes. The crew must keep shooting while the beast walks and runs. If the
+    crew stops, run `taom.print_stamina`: a rising `lockedAI=` while only the crew is in a fight means the run
+    test reads the beast's motion as the archer's own (see "Scope").
+13. **The switch off.** Turn `Enable Combat Stamina` off and start a new battle. `taom.print_stamina` must read
+    `mission gate: closed (MCM=False, ...`, no bar may show, and `taom.set_stamina exhausted player` must
+    change nothing.
 
 ### Unattended runs, 2026-11-19
 
@@ -534,6 +556,9 @@ recomputes. The tick allocates nothing per frame.
 
 ## Changelog
 
+- 2026-11-20: merged to trunk. The review before the merge found no path that changes a battle while the
+  switch is off, and led to two fixes: a gate that throws leaves the battle without stamina, and every battle
+  drops the AI input claims of an earlier one at its first tick. Open: the crew archer on a moving beast.
 - 2026-11-19: the first unattended game runs. The bar's height became a float (the widget's write-back threw on
   an int); the measured results are under "Unattended runs".
 - 2026-11-19: Phases 1 and 2. The drain and regeneration rules, the lock wired to them, the player's stamina
@@ -544,4 +569,4 @@ recomputes. The tick allocates nothing per frame.
 ## GitHub Issue
 
 - **Issue:** #1497: [Combat stamina: every action costs stamina, and an exhausted agent must recover](https://github.com/haterade22/TAOM/issues/1497)
-- **Status:** Open
+- **Status:** Closed on 2026-11-20 with the label `triage-needs-ingame`: steps 2 to 10, 12 and 13 above need a person. The Codex pass is owed too.
