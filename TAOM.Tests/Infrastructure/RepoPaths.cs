@@ -116,6 +116,41 @@ public static class RepoPaths
         CommentPattern.Replace(source, m => Regex.Replace(m.Value, "[^\n]", " "));
 
     /// <summary>
+    /// The number of lines that hold a // or /* */ comment, with the same match as <see cref="StripComments"/>,
+    /// so it is not string-literal aware either. A /// XML doc comment is not counted; //// is.
+    /// tools/comment_ratchet.py counts with the same rule for CommentRatchetGateTests.
+    /// </summary>
+    public static int CommentLineCount(string source)
+    {
+        var text = source.Replace("\r\n", "\n");
+        var lines = new HashSet<int>();
+        var position = 0;
+        var line = 0;
+        foreach (Match match in CommentPattern.Matches(text))
+        {
+            line += CountNewlines(text, position, match.Index - position);
+            position = match.Index;
+            if (match.Value.StartsWith("///", StringComparison.Ordinal) && !match.Value.StartsWith("////", StringComparison.Ordinal))
+                continue;
+
+            var last = line + CountNewlines(text, match.Index, match.Length);
+            for (var covered = line; covered <= last; covered++)
+                lines.Add(covered);
+        }
+
+        return lines.Count;
+    }
+
+    private static int CountNewlines(string text, int start, int length)
+    {
+        var count = 0;
+        for (var i = start; i < start + length; i++)
+            if (text[i] == '\n')
+                count++;
+        return count;
+    }
+
+    /// <summary>
     /// True when <paramref name="needle"/> appears in the file outside comments (as a whole word when
     /// <paramref name="wholeWord"/>). The file is read raw first and only stripped when the raw text
     /// holds the needle, which is a necessary condition, so a scan over every Main file strips only
