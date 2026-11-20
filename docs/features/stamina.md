@@ -8,9 +8,11 @@ comes back while a soldier does not attack. A tired soldier swings and handles h
 tired AI soldier attacks less often. A soldier whose stamina reaches zero is Exhausted: he cannot attack,
 block, kick or jump, and on foot slows to a walk, until his stamina is back at about a third.
 
-**Status (2026-11-19): built, not yet played.** The rules, the lock, the player's stamina bar and the peoples
-table are in. Nothing has run in the game: the spikes under "How to verify in game" are owed, and the numbers
-are starting values. The MCM switch is off by default.
+**Status (2026-11-19): built, proven in unattended matches, not yet played by a person.** The rules, the lock,
+the player's stamina bar and the peoples table are in. Unattended Fords of War matches pass the three check
+lines ("Unattended runs" under "How to verify in game"). What a person must play is still owed (the lock on
+your own soldier, the bar's colours, riders), and the numbers are starting values. The MCM switch is off by
+default.
 
 ## Why This Exists
 
@@ -347,8 +349,8 @@ the claim rules. The Marshal's Word pins for the shared flag are in `MarshalMark
 ## How to verify in game
 
 **Preconditions:** MCM `Battle Balance / Stamina / Enable Combat Stamina` on, cheat mode on. A Custom Battle
-(field battle) reaches every step; no campaign is needed. **None of these steps has been run.** Each result
-goes on #1497.
+(field battle) reaches every step; no campaign is needed. **No step that needs a person has been run**; step
+11 has, see "Unattended runs" below. Each result goes on #1497.
 
 The log proves three things by itself (`python tools/ingame_verdict.py`, manifest `tools/ingame_checks/1497.toml`):
 `[Check] id=taom.stamina.armed`, `taom.stamina.lock` (an Exhausted soldier recovered and none stayed locked
@@ -392,7 +394,74 @@ made count, and a soldier that `auto` gives back while he is Exhausted gets his 
     with it on.
 11. **The unattended run.** `/game-run` (the Fords match) with the switch on: the three check lines, no
     `[ERROR]`, and in `[Stamina][Summary]` fewer than half of `fighters=` in `exhaustedSoldiers=`. This run
-    covers AI soldiers only: the Fords control hands the hero to the AI.
+    covers AI soldiers only: the Fords control hands the hero to the AI. Add `--control-check 240` and
+    `--screenshots` so the battle HUD and the bar show.
+
+### Unattended runs, 2026-11-19
+
+Fords of War matches with nobody at the keyboard (`/game-run`), 540 live seconds each, both sides under AI
+commanders. The switch was turned on for a run by one added key in the MCM settings file, restored after it.
+Each value below was read from the run's copied TAOM log.
+
+| Run folder (`E:/Temp/fords-runs/`) | Build | Setup | Stamina checks | Swallowed exceptions | Fighters, of them ever Exhausted | Exhaustions, recoveries, stuck |
+|---|---|---|---|---|---|---|
+| `20261119-200716` | 303cccfdb | on, 1x, soldier control | 3 pass | 178 (the bar, fixed in 2e4e407c4) | 811, 144 | 529, 502, 0 |
+| `20261119-201805` | 303cccfdb | off, 1x, soldier control | armed: skip, `toggle-off` | 0 | no stamina | no stamina |
+| `20261119-210511` | 2e4e407c4 | on, 1x, soldier control | 3 pass | 0 | 863, 70 | 181, 153, 0 |
+| `20261119-211835` | 2e4e407c4 | on, 4x | 3 pass | 0 | 796, 86 | 219, 186, 0 |
+| `20261119-212159` | 2e4e407c4 | on, 1x, Rivendell against Mordor, soldier control | 3 pass | 0 | 649, 139 | 454, 397, 0 |
+
+`python tools/ingame_verdict.py --issue 1497` reads all three checks PASS on the session of `20261119-210511`.
+The fighters and exhausted counts are from the last 30 s pulse line, the other three numbers from the lock
+check line, which is written a few seconds later.
+
+What the runs settle:
+
+- **The unattended criterion (step 11).** Between 8% and 21% of the soldiers who paid stamina were ever
+  Exhausted in the four runs above, and at most 29% in the batch below: in every run fewer than half. Nobody
+  stayed Exhausted past 15 s in any run.
+- **S2, the thread.** Every AI input strip ran on the main thread, in all ten runs with the switch on (262,602
+  in the first run, 0 off it). This is
+  the Fords mission, which has no team AI; a field battle with team AI is not measured.
+- **S6, the cost.** A stat recompute took 19 to 28 microseconds on average and the slowest batch of one frame
+  0.43 to 0.55 ms, against the 1 ms limit of `taom.stamina.refresh`. The frame time was the same with the switch
+  on and off (8.58 ms against 8.56 ms on average in the two 1x runs of one build); every run sat at the frame
+  cap, so this bounds the cost only from above.
+- **S4, in part.** At 4x the poll counted 12.1 actions per fighter and at 1x 12.2, so the per-frame poll shows
+  no loss at speed. No AI soldier jumped, and kicks and bashes together were 0 to 14 in a match, so whether such
+  an action is counted twice is still a person's check. The exception is Isengard against Erebor with 512 and
+  651 kicks: they are the dwarves' head-butts and drop-kicks (`taom.dwarf-attacks.*` counted 511 attempts in
+  the first of the two matches). So a dwarf pays the kick cost, 6 points, for each of them, and an Exhausted
+  dwarf cannot use them. Whether that is wanted is Mike's decision.
+- **The logs.** On the fixed build, the three runs with the switch on hold the same one `[ERROR]` line as the
+  run with it off, and no `[WARNING]` that names stamina. The warnings differ only in two Fords lines that
+  depend on the match: a tower warning of the Mordor map, and a "move target is off the navmesh" line that the
+  run with the switch off has and two of the others do not.
+- **The bar.** A screenshot inside a soldier hold (`hud_250_0.png` of `20261119-210511`) shows the bar left of
+  the rings, pale gold and full. No run showed it change colour: the held soldier does not fight.
+
+A HUD change needs `--control-check 240` in the run, or the match never shows the battle HUD. The first run
+found the one defect of the night that way: the bar's height was bound to an int, and Gauntlet writes the
+widget's float back (`GauntletFloatWriteBackGateTests`, the RCA addendum).
+
+**A balance batch**, 12 matches at 4x on build 2e4e407c4 (`E:/Temp/fords-runs-stamina/`), every one a launcher
+PASS with no swallowed exception. Deaths West and East after 530 live seconds:
+
+| Matchup (West against East) | Switch off, two matches | Switch on, two matches | Ever Exhausted, of fighters (on) |
+|---|---|---|---|
+| Gondor against Rohan | 363 and 378; 344 and 306 | 384 and 355; 348 and 403 | 74 of 852; 89 of 887 |
+| Rivendell against Mordor | 78 and 406; 42 and 488 | 66 and 246; 76 and 646 | 73 of 391; 156 of 822 |
+| Isengard against Erebor | 425 and 295; 405 and 269 | 327 and 262; 340 and 271 | 203 of 709; 199 of 738 |
+
+Two matches a cell is a small sample, and two matches of one cell differ by more than the cells do in the first
+two rows, so those rows show no effect of the switch. Isengard against Erebor, the matchup with the most melee
+(13,647 and 13,816 swings), has the highest share of exhausted soldiers (27% and 29%) and is the one row where
+both matches with the switch on had fewer deaths than both with it off (589 and 611 against 720 and 674), most
+of the difference on the Isengard side. That is a lead for tuning, not a result.
+
+Still owed, all by a person: the lock on your own soldier (S1), the walk and the run threshold (S3), riders
+(S5), how much less a tired AI attacks (S7), fresh against tired (step 10), Marshal's Word beside stamina, and
+the bar as you fight: that it falls, changes colour and rises again.
 
 ## How to tune
 
@@ -407,13 +476,17 @@ made count, and a soldier that `auto` gives back while he is Exhausted gets his 
 
 ## Performance
 
-Estimated, not yet measured (spike S6): at 1,000 soldiers and 60 frames per second the poll is 2,000 pointer
-reads per frame, the sweep looks at about 67 soldiers per frame, and a band change costs one stat recompute,
-at most 8 per frame. `taom.print_stamina` and `taom.stamina.refresh` report the measured cost of the
+Measured on 2026-11-19 in Fords matches with 399 to 502 agents at their peak: 19 to 28 microseconds for a stat recompute, at
+most 0.55 ms for one frame's batch, and no change in the frame time with the switch on ("Unattended runs").
+Estimated for a larger battle, not measured: at 1,000 soldiers and 60 frames per second the poll is 2,000
+pointer reads per frame, the sweep looks at about 67 soldiers per frame, and a band change costs one stat
+recompute, at most 8 per frame. `taom.print_stamina` and `taom.stamina.refresh` report the measured cost of the
 recomputes. The tick allocates nothing per frame.
 
 ## Changelog
 
+- 2026-11-19: the first unattended game runs. The bar's height became a float (the widget's write-back threw on
+  an int); the measured results are under "Unattended runs".
 - 2026-11-19: Phases 1 and 2. The drain and regeneration rules, the lock wired to them, the player's stamina
   bar and messages, the cost scale, the check lines, the peoples table, the armour factor, hero pools by level.
 - 2026-11-19: Phase 0. The effect side, the Exhausted lock on both input paths, the shared AI input flag,
