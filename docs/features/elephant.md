@@ -1,12 +1,14 @@
 # War Elephant (Harad rideable mount)
 
-> **Locomotion (#1474): new gait and idle clips are built and wait for one Modding Kit start (2026-11-19).**
-> The slide at speed has one main cause: each gait clip claimed 2.0 to 3.6 m a loop and its feet covered about
-> 1.6 m. The war elephant and the mumak each get their own clips (`war_elephant_*`, `mumakil_*`), retargeted from
-> a licensed African elephant walk, with feet that cover the claimed travel. **The game does not show them yet:**
-> it plays the keys the Kit cooked into each clip's cache entry, so a rewritten master changes nothing until the
-> Kit starts once. Gate: `python tools/check_gait_stride.py`. Detail: "Locomotion rebuilt from a real elephant
-> walk" below.
+> **Locomotion (#1474): each beast plays its own gait and idle clips in the live Armory since 2026-11-19.**
+> The slide at speed had one main cause: each gait clip claimed 2.0 to 3.6 m a loop and its feet covered about
+> 1.6 m. The war elephant and the mumak each have their own clips (`war_elephant_*`, `mumakil_*`), retargeted from
+> a licensed African elephant walk, with feet that cover the claimed travel, and the mumak has its own action
+> set, `as_mumakil`. Mike judged the mumak's walk, attack and death in game (2026-11-19, 2026-11-20); the stand
+> after a stop, the pace after a charge and the whole war elephant are not yet watched. The game plays what the
+> Kit cooked into each clip's cache entry, so a rewritten master or clip record changes nothing until the Kit
+> starts once. Gates: `python tools/check_gait_stride.py`, `python tools/bind_elephant_clips.py --check`. Detail:
+> "Locomotion rebuilt from a real elephant walk" below.
 
 > **Current state (2026-09-29): KEYforce's art, confirmed in game.** The elephant's body is KEYforce's
 > `sk_elephant_basemesh_a` (`Assets/creature/elephant/mesh/SK_Elephant_Basemesh_A_geo.tpac`), replacing ADOD_Beasts's
@@ -515,8 +517,9 @@ the gaits; rider clip authoring (in progress separately).
 ### Locomotion rebuilt from a real elephant walk (2026-11-18, #1474)
 
 **What was wrong.** The June set was one walk cycle at three lengths, and its clips carried hand-typed travel
-per loop. The engine plays a gait at (speed / scale) / LoopDisplacement loops a second, so a clip that claims
-more ground than its feet cover slides. Read from the installed files with `tools/check_gait_stride.py`:
+per loop. At full weight the engine moves the body LoopDisplacement metres in one loop of the clip ("What the
+engine does with a clip record" below), so a clip that claims more ground than its feet cover slides. Read from
+the installed files with `tools/check_gait_stride.py`:
 
 | Clip | Claims | Feet covered before | Worst slip a stance before | After |
 |---|---|---|---|---|
@@ -560,8 +563,9 @@ the entry's date too and fails a bound clip whose entry is older than its master
 passes the gate's stride check.
 
 **Set 2 (2026-11-19): own clips for each beast.** Mike asked for separate clips because the mumak is three
-times the elephant's size. The engine divides speed by agent scale, so one clip fits both for the slide. The
-mumak's own set is for the look: a longer stride gives it a slower step at its speed.
+times the elephant's size. The mumak's own set is for the look: a longer stride and more keys per cycle. How
+fast the engine plays a cycle is a matter of the clip records, not of the stride (see "What the engine does
+with a clip record" below; the text here said otherwise until 2026-11-19).
 
 | Clip | War elephant (`war_elephant_*`) | Mumak (`mumakil_*`) |
 |---|---|---|
@@ -575,8 +579,8 @@ mumak's own set is for the look: a longer stride gives it a slower step at its s
 | idle 2 | frames 190 to 345 (a front foot lifts, the trunk curls), 10.3 s | the same take, 14.5 s |
 
 Worst slip in a stance is 1.5 cm in every gait and no leg is more than 3.2 cm short of its target (each set's
-`report.json`). The mumak's body swings 20% more from side to side and its trunk, ears and tail 20% less. At
-2.2 m/s in model units its walk plays at 0.72 loops a second (1.1 with the shared clip). An idle stands on
+`report.json`). The mumak's body swings 20% more from side to side and its trunk, ears and tail 20% less. An
+idle stands on
 our own rest footprint: a foot pad is measured from where it stands in the take's first frame, or the feet
 would glide to the pack animal's staggered stance each time the engine blends into the clip.
 
@@ -585,17 +589,24 @@ How the set is built, with no Kit import:
 1. `tools/elephant_gait_retarget.py` writes the clip JSONs (`--gait` for a gait, `--take` for an idle).
 2. `tools/elephant_write_masters.py --new` writes each as a NEW master package, cloned from a Kit-compiled
    one: new names, GUIDs that depend only on the name, the import record and the animation repointed at each
-   other. TpacTool reads all 18 back with the right name, key count and skeleton. No Kit has loaded one yet.
+   other. TpacTool reads all 18 back with the right name, key count and skeleton, and a Kit start on 2026-11-19
+   loaded all 18 and cooked their clips.
 3. `tools/gen_elephant_anim_clips.ps1` writes one AnimationClip record per master. Each clones the elephant
    clip that plays the role today, so flags, blends and pace switch limits do not change; only the master, the
    range, the travel and the four step points do. The trot clones the WALK record, because `as_elephant` has
-   always bound the trot action to the walk clip.
-4. **One Kit start with the Armory loaded**, then save and close: the Kit cooks the 18 cache entries.
+   always bound the trot action to the walk clip, and takes its pace limits from ADOD's own trot record (2.3 to
+   4.5; see the 2026-11-20 correction below). The strafe clip is the walk's clip JSON with its `clip` name
+   changed to `<prefix>strafe` (`set2/make_strafe.py` in the work folder does only that), written with `--new`
+   like the others; the tool plans its record from the walk's report row.
+4. **One Kit start with the Armory loaded**, then save and close: the Kit cooks one cache entry per clip (20
+   with the two strafe clips), and cooks an entry again after its record or its master changed.
    `python tools/check_rdc_entries.py --under creature/elephant` and `python tools/check_gait_stride.py`
    confirm it.
-5. Only then bind them. In the live `ModuleData/action_sets.xml`, `as_elephant` takes the `war_elephant_*`
-   clips for its gait, turn and stand actions, and a new `as_mumakil` (`base_set="as_elephant"`) takes the
-   `mumakil_*` clips; `lotr_monster_mumakil.xml` then names `action_set="as_mumakil"`. A clip bound with no
+5. Only then bind them: `python tools/bind_elephant_clips.py --apply`, which refuses while any clip lacks a
+   current cache entry. In the live `ModuleData/action_sets.xml` (and the repo snapshot), `as_elephant` takes the
+   `war_elephant_*` clips on its 34 gait, turn and idle rows, and a new root set `as_mumakil` carries the same
+   rows on the `mumakil_*` clips, with its own town and map child sets; `lotr_monster_mumakil.xml` then names
+   `action_set="as_mumakil"`. A clip bound with no
    cache entry crashed `Agent.SetActionSet` in another modder's test
    ([animation system map](../reference/bannerlord-animation-system-map.md), RuntimeDataCache).
 
@@ -614,7 +625,7 @@ python tools/elephant_gait_retarget.py --pack <walk> --rig <rig.json> --out <set
 python tools/elephant_gait_retarget.py --pack <walk> --rig <rig.json> --out <set>/mumakil --secondary 0.8 --sway 1.2 \
   --gait mumakil_walk:76:3.0:1.22:forward:0:0.01 --gait mumakil_trot:61:3.4:1.38:forward:0:0.03 \
   --gait mumakil_canter:48:3.8:1.55:forward:0:0.04 --gait mumakil_gallop:48:4.2:1.7:forward:0:0.04 \
-  --gait mumakil_walk_backwards:76:2.4:1.0:reverse:0:-0.03 \
+  --gait mumakil_walk_backwards:76:2.4:1.0:reverse:0:0.01 \
   --gait mumakil_turn_left:76:1.8:1.0:forward:0:-0.03 --gait mumakil_turn_right:76:1.8:1.0:forward:0:-0.03
 python tools/elephant_gait_retarget.py --pack <play> --rig <rig.json> --out <set>/war_elephant_idle \
   --take war_elephant_idle_1:0:200:101:pingpong:first:0.02 --take war_elephant_idle_2:190:345:78:pingpong:first:0.02
@@ -628,23 +639,144 @@ python tools/check_gait_stride.py
 9.5 m/s, which is 7.3 m/s at model size; the mumak moves at 6.5 m/s, 2.2 at model size, inside the walk
 clip's limits (0.2 to 2.5).
 
-**Still open:**
+**What the engine does with a clip record** (native decompile of `rglAnim_node_horse_movement` on v1.5.7,
+2026-11-19: tick 0x74E9C0, loop time 0x749B10, pace choice 0x74E890, standing-pace strafe 0x749C20, clip
+weights 0x749920 and 0x74F0F0; constants read from the DLL). A pace's table entry holds six clips: front,
+`direction="none"`, strafe right and left, turn right and left.
 
-- State on 2026-11-19: the 18 masters and 18 clip records are built and verified in
-  `E:\LOTRAOMAssets\Elephant\_measure_20261118\set2\stage\`, and are NOT yet in the Armory (the Kit launcher was
-  open, and the tools do not write while it runs). Owed in order: copy the masters in and run the clip generator
-  with `-Apply`, the Kit start (step 4), the binding (step 5), a Fords match, and a look at both beasts.
-- Pace switch limits are not examined. The trot action shares the walk's limits (0.2 to 2.5) and the
-  canter's start at 4.8, so what the engine plays between 2.5 and 4.8 m/s is not known.
-- No stop clip. The pack's stop scene walks on a curve, and `Take` takes neither a path nor a turn out, so
-  a front leg ends 16 cm short. `act_elephant_quick_stop` still binds a two-frame pose. The turn clips are a
-  short-step walk with no turn character.
+- **Pace choice.** From the current pace the node steps up while the forward speed is above the front clip's
+  `PaceSwitchLimitMax`, then down while it is below `PaceSwitchLimitMin`. The speed is signed, so the backward
+  pace needs negative limits: the vanilla horse has -1.25 to -0.1.
+- **Loop time.** At `PaceSwitchLimitMin` it is the `Duration` of the pace's "none" clip, at
+  `PaceSwitchLimitMax` the `Duration` of its front clip, and a straight line between. Above the maximum it
+  stays within 0.7 times the front clip's and 1.3 times the "none" clip's `Duration`.
+- **Stride.** The front clip's weight is speed / (k x LoopDisplacement / loop time), at most 1; k is 0.9 times
+  an input the horse animation system passes plus 0.1, so 1 when that input is 1 (its writer is not read). During a pace change
+  the loop time is a mix of the old and the new pace's. In the backward pace the weight uses the "none" clip's
+  `Duration` (the speed is negative there), while the phase uses the speed's size. The rest of the
+  weight goes to the "none" clip, sampled at the same phase. The vanilla horse binds each "none" row to an
+  in-place gait with the gait's own `Duration` (`gait_walkfast` 0.8 s beside `horse_walkfast` 0.8 s), so its
+  cadence is constant in a pace and its stride follows the speed.
+- **Standing pace.** A sideways speed above 0.2 m/s brings in the strafe clip, and it stays in while the speed
+  is above 0.05. One loop takes LoopDisplacement / (`Duration` x sideways speed) seconds, held between 0.7 and
+  1.3 times the `Duration`. In the walk or the backward pace, a sideways speed above twice the forward speed
+  forces the standing pace. A turn in place advances the turn clip by turn speed / (`Duration` x
+  LoopDisplacement) of the turn-RIGHT record, for both directions: 1.8 for the mumak (1.0 x 1.8) and 1.5 for
+  the war elephant (1.0 x 1.5). The turn-left record's values are not read for the rate.
+- **The "none" row.** The loader of `monster_usage_sets.xml` (0x621E40) files a `direction="none"` row under
+  every direction that has no row of its own, so it fills a pace's back slot, and
+  `act_elephant_stand_for_movement_data` fills the standing pace's front slot. When LoopDisplacement is 0 the
+  loop time is the front clip's `Duration`.
+- **Speed at model size.** The node's speed is the agent's velocity divided by agent scale: read from the
+  v1.5.6 native code for #1081 (`FUN_1805f7580`,
+  [RCA](../reviews/rca-dire-wolf-resize-2026-11-06.md)), not read again on v1.5.7, where the writer of the
+  node's speed inputs was not found. The mumak's walk looks right at 2.6 to 5.1 m/s, which is the walk pace
+  only with that division.
+
+Every elephant record still carries ADOD's `Duration` of 1.0 s (0.6 on the gallop) and ADOD's limits, and
+`gen_elephant_anim_clips.ps1` copied them into the 18 new records. Two defects follow, both reported by Mike on
+2026-11-19, and `check_gait_stride.py` now fails on each (six findings on the live records):
+
+1. **"The mumak walks backwards."** The backward walk record has limits 0.2 to 2.5. A beast that steps back
+   below the standing pace's lower limit (-0.4 on `elephant_stand_for_movement_data`, which fills the standing
+   pace's front slot) enters the backward pace and leaves it only above 2.5, so
+   it plays the reversed walk while it walks forward. ADOD's records did the same; its backward clip was too
+   rough to read as one.
+2. **"It speeds up very fast, then resets and walks slower."** `act_elephant_strafe_right` and `_left` bind the
+   walk clip, whose record says 1.0 s for 76 keys (2.53 s), so the standing pace plays the walk cycle in 0.7
+   to 1.3 s. The probable path, which nobody has watched in a debugger: a start from a stand passes through the
+   standing pace with some sideways speed, and then the walk pace takes over at 3 to 4 s a loop.
+
+The walk pace itself runs between the 4.0 s of `elephant_stand_2` (its "none" row) and the walk record's 1.0 s,
+which gives the mumak 2.0 to 3.1 s a loop at the speeds of that battle if the speed is at model size. That is
+close to the 2.53 s of its keys by accident, and Mike judged that walk good. Trot, canter and gallop bind
+their "none" row to the gait clip itself, so those paces play at the record's `Duration` (1.0 s; 0.6 s for the
+gallop) with a full stride at every speed, and a beast in them outruns or underruns its feet. Rebuilding the
+whole pace table on the vanilla pattern is not done (#1504).
+
+**The trot kept the beast out of the walk (review, 2026-11-20).** The two trot records were clones of the walk
+record, limits included (0.2 to 2.5). The node steps down only while the speed is below the CURRENT pace's
+lower limit, so a beast that once passed 2.5 m/s stayed in the trot down to 0.2 m/s and played the trot clip at
+walking speed. In ADOD's set that pace played the walk clip, so nobody could see it. The war elephant passes
+2.5 in every charge (7.3 m/s at model size in the match above); the mumak that Mike judged did not. Both
+records now carry ADOD's own trot limits, 2.3 to 4.5 (`gen_elephant_anim_clips.ps1`, `$LIMITS_FROM`), written
+in place on 2026-11-20 at 14:03, and the gate fails a faster pace whose lower limit is not above the walk's.
+Nobody has yet watched a beast slow down from a charge. ADOD's gallop starts at 4.3 and its canter at 4.8, so
+the canter is skipped on the way down; that belongs to the pace table rebuild.
+
+Both are fixed in the live Armory since 2026-11-19. The backward walk records carry -2.5 to -0.2, written in
+place with both GUIDs kept. Each beast has a strafe clip, the walk's keys under a record with their real length
+(`war_elephant_strafe` 2.033 s, `mumakil_strafe` 2.533 s; `set2/make_strafe.py`, then the two tools below), bound
+on its two strafe rows. Mike confirmed in game that the fast start is gone (2026-11-19) and that the mumak
+walks forward normally after a step back (2026-11-20, one custom battle). Nobody has yet watched the war
+elephant do the same.
+
+**The ADOD master rides above the ground** (found 2026-11-19 from Mike's video: the mumak walked on the ground
+and stood in the air after it stopped). `elephant_anims_all`, in `mesh/adod_elephant_geo.tpac`, holds every ADOD
+clip that is still bound: the standing pose, the third idle, the attacks, hit, rear, dash, the head turns and
+the death. Its first key is the rest pose with the soles on the ground, and on the other 1,339 keys the root
+stands 0.13 m higher: the lowest sole is 0.10 to 0.14 m up in 1,180 of them. At the mumak's size that is 0.4 m.
+The old walk rode about as high, so nobody saw a step up; the new walk does not.
+`python tools/elephant_write_masters.py --root-z 10:0.006 --master <adod_elephant_geo.tpac> --apply` lowers the
+root by one amount on every key from the second, so that the
+standing pose (key 10) has its lowest sole on the ground; 1,301 of the 1,339 keys then have their lowest sole
+within 5 cm of it, and a second run changes nothing. The attacks dip a sole up to 5 cm under the ground and the
+death ends 0.13 m lower than before. The clips need one Kit start
+afterwards, and `check_gait_stride.py` fails while the standing pose is off the ground. Applied to the live
+Armory on 2026-11-19 at 17:26; the Kit cooked the 17 clips that play this master at 18:37, and the gate
+passes. Mike watched an attack and a death of the mumak in a custom battle on 2026-11-20 and judged both
+acceptable. Nobody has yet watched the stand after a stop on the lowered root, and nobody has watched the
+war elephant on it. The way back is the file from before the write:
+`E:\LOTRAOMAssets\_tpac_backup_20261118\adod_elephant_geo.tpac.before_root_z_20261119` (the `.bak-pre1474`
+twin beside the live file holds the same bytes), then one Kit start.
+
+Mike's direction (2026-11-19): TAOM can make its own clips and does not need ADOD's any more. The root change
+is the repair for the clips that are still bound; the attacks, hit, rear, dash, death, the standing pose and
+the third idle are the list to replace.
+
+**Still open** (#1474 carries the in-game steps):
+
+- Not yet watched in game: the mumak's stand after a stop on the lowered root; a beast that slows from a
+  charge to a walk (the trot limits); the war elephant in every gait, in its attack, death and stand; a turn in
+  place, where the head rows `act_elephant_turn_right_head` and `_left_head` play the backward walk clip as an
+  upper-body overlay (ADOD's choice, carried onto the new clips); the rider on a strafing beast, whose row binds
+  `elephant_rider_walk` (`Duration` 1.0 for 60 keys, the defect class repaired on the mount).
+- First load, 2026-11-19, 09:00: the 18 masters and 18 clip records are in the live Armory (`install_set2.ps1` in
+  the set folder), the Kit cooked their 18 cache entries, and `bind_elephant_clips.py --apply` bound them at
+  08:52 (`--check` prints "bound and every clip cooked"; the gate passes all 21 gait clips, 14 of them bound). The
+  seven `elephant_*` gait clips of the first set are no longer bound; a Kit session at 06:15 had cooked them
+  again (walk 15,092 to 16,406 bytes), which showed that the Kit accepts keys a tool wrote. First game session on
+  the binding: a custom battle with three war elephants and three mumakil, started 08:55, spawned all six with
+  their crews; its log to 08:58 (`taom_debug_2026-11-19_08-53-01.log`) holds one `[ERROR]` line, the
+  `ActionIndexCacheRepair` line that the four sessions before it also hold. That proves the sets load and the
+  agents spawn.
+- Comments in the live Armory that still say the mumak uses `as_elephant`: `SubModule.xml` (mumakil node),
+  `LOTRAOM_horses.xml` (`taom_mumakil`) and `Monsters/LOTR/lotr_monster_elk.xml`. The attack actions they
+  describe are unchanged: `as_mumakil` carries the same rows.
+- Backups this work left in the live Armory, to move to `E:\LOTRAOMAssets\_tpac_backup_20261118\` (release step
+  3 sweeps what is left): eight `*.bak-pre1474` files in `Assets/creature/elephant` (seven first-set masters and
+  `mesh/adod_elephant_geo.tpac`), three `*.bak-elephant-bind-*` files in `ModuleData`, and two
+  `*_trot_anm.tpac.bak-limits-*` files.
+- The Kit shows an RGL WARNING for each clip it cooks: "resources' pos ipo[1.00, 76.00] does not fit with
+  anim_clip's sources 0.00 and 76.00". Every master's key times run from 1 to its key count, the Kit-made ADOD
+  masters too (`elephant_walk`: 1 to 61), and every record's range starts at 0, as ADOD's records do. The Kit
+  cooks the clip all the same: the seven `elephant_*` clips raised it at 06:22 on 2026-11-19, the 18 new ones at
+  07:14 and the two strafe and two backward clips at 13:27 (`rgl_log_errors_<pid>.txt`). A range that starts at
+  1 would silence it and shorten each loop by one frame; not done.
+- The fast paces (#1504): the trot covers 2.5 to 4.8 m/s on the way up and holds down to 2.3, at one
+  loop a second whatever the speed; the canter is skipped on the way down; the walk's and the backward walk's
+  "none" rows bind an idle (`elephant_stand_2`, 4.0 s) where the vanilla horse binds an in-place gait.
+- No stop clip (#1505). The pack's stop scene walks on a curve, and `Take` takes neither a path nor a turn
+  out, so a front leg ends 16 cm short. `act_elephant_quick_stop` still binds a two-frame pose. The turn clips
+  are a short-step walk with no turn character. The ADOD clips still bound (attacks, hit, rear, dash, death,
+  the standing pose, the third idle) are in the same issue.
 - The fast gaits ride low: the rear knee bends to 125 degrees in the gallop's stance (118 on the mumak). A
   look in a battle decides if that reads as a charge.
-- `tools/verify_mount_assets.py elephant` fails on `act_elephant_forward_walk_stand` and
-  `act_elephant_backward_walk_stand` (bound to `elephant_stand_2`, no `quad_movement`). No file of this work is
-  involved; whether the row is a gate false positive (the warg's stand twins are exempt for that reason) is
-  not checked.
+- `tools/verify_mount_assets.py elephant` and `mumakil` fail on `act_elephant_forward_walk_stand` and
+  `act_elephant_backward_walk_stand` (bound to `elephant_stand_2`, no `quad_movement`). The rows are ADOD's and
+  no file of this work changed them. They are the "none" rows of the walk and the backward pace: the node reads
+  only their `Duration`, and the game sessions of 2026-11-19 and 2026-11-20 ran on them with no fault, so the check is probably too strict
+  for a "none" row (the warg's stand twins are exempt for that reason). The pace table rebuild decides (#1504).
 
 ### The real ADOD_Beasts animation source — found, but unsliced (2026-06-06)
 
@@ -899,8 +1031,8 @@ files are data/assets:
 | Body + harness meshes | `…/mesh/SK_Elephant_Basemesh_A_geo.tpac` (`sk_elephant_basemesh_a`) and `…/mesh/SK_Elephant_Armor_Variations_geo.tpac` (the six `sk_hd_elep_armor_*` meshes), KEYforce, LOD0 to LOD5, both with `RuntimeDataCache` entries | **live** (2026-09-29) |
 | Monster XML | `…/LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_elephant.xml` (id `taom_war_elephant`) | **deployed** (2026-06-06) |
 | Item XML | `…/LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml`: Horse item `taom_war_elephant` (mesh `sk_elephant_basemesh_a` since 2026-09-29, `elephant_mesh` before) and the six HorseHarness items in the table at the top | **deployed** (2026-06-06; art swapped 2026-09-29) |
-| Action set | `…/LOTRLOME_Armory/ModuleData/action_sets.xml` (`as_elephant` block appended; uses ADOD_Beasts ids + clip names — pending rename to `as_war_elephant`) | **deployed** (2026-06-08); confirmed in-game |
-| Animation clips | `LOTRLOME_Armory/Assets/creature/elephant/animations/` (35 ADOD_Beasts tpacs — working; TAOM-authored clips pending) | **copied** (2026-06-06); animates in-game |
+| Action set | `…/LOTRLOME_Armory/ModuleData/action_sets.xml` (`as_elephant`: ADOD_Beasts action ids; since #1474 its gait, turn, idle and strafe rows bind the `war_elephant_*` clips, and `as_mumakil` beside it binds the `mumakil_*` clips) | **deployed** (2026-06-08); confirmed in-game |
+| Animation clips | `LOTRLOME_Armory/Assets/creature/elephant/animations/` (the ADOD_Beasts clip packages, and since #1474 TAOM's own 20 `war_elephant_*` and `mumakil_*` masters and records) | **copied** (2026-06-06); animates in-game |
 | Recruitment | The Elite Emissary at Korb Taskral (`elite_emissary_config.xml`; `merchant_cost` 70 War Drums in `troop_resource_costs.xml`). `recruit_cost` 50 now charges only a captured rider recruited from prisoners. Not in any volunteer pool (`VolunteerRecruitmentService.Harad.cs`) | **done** (Emissary-only since 2026-10-15; Ayerikkä's clan pool 2026-06-10 to 2026-10-15) |
 
 ## Reference: ADOD_Beasts
@@ -918,6 +1050,12 @@ warg; data is re-authored from ADOD_Beasts; meshes/textures are our own FBX (pur
 
 The elephant asset was **purchased from Artem (ADOD_Beasts author) for use in TAOM** — no clean-room re-derivation or
 attribution gating required. (Confirmed by the project owner, 2026-06-05.)
+
+Since #1474 the gait, turn, strafe and two idle clips of both beasts are bone keys retargeted onto
+`elephant_skeleton` from a second purchase, the `VFX Grace` "African Elephant Animated" pack. Mike confirmed on
+2026-11-18 that the retargeted keys may ship. No mesh, rig or texture of the pack ships or is stored in the
+repo. Nobody has read the pack's licence text for a notice duty; the
+[register](../reference/provenance-register.md) row stays `pending-license` until someone does.
 
 ## v1.4.6 exposure (2026-06-12) — jump table hardened; battle-test owed
 
@@ -1282,6 +1420,10 @@ terrain reads 0 as well, and face id 0 is walkable.
 
 ## Changelog
 
+- 2026-11-20 (#1474): each beast plays its own gait, turn, strafe and idle clips, the mumak on its own action set
+  `as_mumakil`. Corrected with them: the backward walk's pace limits, the strafe rows' `Duration`, the trot's pace
+  limits and the root height of the ADOD master. Gates: `tools/check_gait_stride.py`,
+  `tools/bind_elephant_clips.py --check` ("Locomotion rebuilt from a real elephant walk").
 - 2026-11-06: the trample and tusk (shared `ElephantLikeAttackTasks`, also the war ram, mûmakil, elk and moose): a raised shield now cuts the blow to a quarter and stops the knockdown only when its bearer faces the attacker (`CustomAttacksUtils.ShieldBlocks`, the rule in `TAOM.Core.Combat.ShieldCover`); one held toward another enemy no longer covers a blow from behind ([RCA](../reviews/rca-dwarf-attacks-2026-11-06.md) follow-up).
 - 2026-09-29: KEYforce's art. The body is `sk_elephant_basemesh_a`; the harnesses are his six (three plain armours,
   three howdahs on one deck placement), `sk_elephant_armor_a` kept as the medium plain armour. All three howdahs get

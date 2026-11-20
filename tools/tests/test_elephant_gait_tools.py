@@ -218,6 +218,54 @@ class MasterWriterTests(unittest.TestCase):
         self.assertEqual(item.segments[0].actual, len(tcm.segment_payload(item, item.segments[0])))
 
 
+class RootHeightTests(unittest.TestCase):
+    """set_root_z: the ADOD master rides 0.13 m above its own rest frame from its second key on (2026-11-19)."""
+
+    def setUp(self):
+        q = (0.5, 0.5, 0.5, 0.5)
+        self.payload = _anim_payload("all", [[q] * 4, [q] * 4], [(0, 0, 0), (0.1, 0.2, 0.135), (0.1, 0.2, 0.140), (0, 0, -1.2)])
+        self.raw = _master_tpac("all", self.payload, 2, 4)
+
+    def _root(self, raw):
+        item = tcm.parse(raw).items[0]
+        return w.parse_anim(tcm.segment_payload(item, item.segments[0]))
+
+    def test_every_key_from_the_first_one_named_moves_by_the_same_amount(self):
+        out, info = w.set_root_z(self.raw, ref_time=2.0, z=0.006, from_time=2.0)
+        self.assertAlmostEqual(info["dz"], -0.129, places=6)
+        self.assertEqual(info["keys"], 3)
+        a = self._root(out)
+        np.testing.assert_allclose(a["root_pos"]["v"][:, 2], [0.0, 0.006, 0.011, -1.329], atol=1e-6)
+        np.testing.assert_allclose(a["root_pos"]["v"][:, :2], [[0, 0], [0.1, 0.2], [0.1, 0.2], [0, 0]], atol=1e-6)
+
+    def test_rotations_times_and_metadata_stay(self):
+        out, _ = w.set_root_z(self.raw, ref_time=2.0, z=0.006, from_time=2.0)
+        a, was = self._root(out), self._root(self.raw)
+        self.assertEqual(a["root_pos"]["t"], was["root_pos"]["t"])
+        for new, old in zip(a["rot"], was["rot"]):
+            np.testing.assert_array_equal(new["v"], old["v"])
+        item, old_item = tcm.parse(out).items[0], tcm.parse(self.raw).items[0]
+        _, end = tcm._metadata_span(item)
+        self.assertEqual(bytes(item.toc[:end + 8]), bytes(old_item.toc[:end + 8]))
+        seg = item.segments[0]
+        self.assertEqual(tcm.segment_hash(item, seg), xxhash.xxh64_intdigest(tcm.segment_payload(item, seg)))
+
+    def test_a_second_run_changes_nothing(self):
+        once, _ = w.set_root_z(self.raw, ref_time=2.0, z=0.006, from_time=2.0)
+        twice, info = w.set_root_z(once, ref_time=2.0, z=0.006, from_time=2.0)
+        self.assertEqual(once, twice)
+        self.assertAlmostEqual(info["dz"], 0.0, places=6)
+
+    def test_refuses_a_reference_time_with_no_key(self):
+        with self.assertRaisesRegex(ValueError, "no key at time"):
+            w.set_root_z(self.raw, ref_time=9.0, z=0.0, from_time=2.0)
+
+    def test_refuses_a_reference_key_that_the_write_would_not_move(self):
+        # a key before from_time stays where it is, so every further run would lower the others again
+        with self.assertRaisesRegex(ValueError, "before the first key that moves"):
+            w.set_root_z(self.raw, ref_time=1.0, z=0.05, from_time=2.0)
+
+
 def _treadmill(frames, stride, feet_stride=None, duty=0.6):
     """Four soles on a ground that runs at `feet_stride` metres a loop (default: the claim), planted for `duty`
     of the loop and carried forward 0.3 m above it for the rest."""
@@ -262,16 +310,163 @@ class StrideGateTests(unittest.TestCase):
         self.assertTrue(any(w.startswith("FL is planted") for w in why), why)
 
     def test_a_clip_with_no_travel_fails(self):
-        self.assertEqual(c.loop_displacement(b"no usage here"), None)
         self.assertTrue(c.judge(c.measure(_treadmill(60, 2.0), 0.0), None, 0.05, 0.08))
-
-    def test_loop_displacement_is_the_float_after_the_usage_name_and_four_zero_bytes(self):
-        blob = b"xx" + struct.pack("<i", 13) + b"quad_movement" + bytes(4) + struct.pack("<3f", 3.6, 4.8, 7.2)
-        self.assertAlmostEqual(c.loop_displacement(blob), 3.6, places=6)
 
     def test_bound_clips_are_the_animation_names_in_the_action_sets(self):
         xml = '<action_set id="a"><action type="act_x" animation="elephant_walk" />\n<action type="act_y"\n animation="mumakil_walk"/></action_set>'
         self.assertEqual(c.bound_clips(xml), {"elephant_walk", "mumakil_walk"})
+
+
+def _record_bytes(name, duration, keys, usage=None):
+    """A single-clip package as far as clip_record reads it: the name at 0x48, then Duration and the key range."""
+    raw = bytes(0x48) + struct.pack("<i", len(name)) + name.encode() + bytes(12) + struct.pack("<3f", duration, 0.0, keys)
+    if usage:
+        raw += bytes(40) + struct.pack("<i", 13) + b"quad_movement" + bytes(4) + struct.pack("<3f", *usage)
+    return raw
+
+
+class PaceTableTests(unittest.TestCase):
+    """What the engine's mount movement node does with a clip record (the 2026-11-19 defects)."""
+    CONFIG = {"sets": ("as_a",), "stand_action": "act_stand",
+              "pace_actions": {"backward": "act_b", "strafe": ("act_sr", "act_sl"), "walk": "act_w", "faster": ("act_t", "act_c")}}
+
+    def _rec(self, duration, keys, limit_min=0.2, limit_max=2.5):
+        return {"duration": duration, "keys": keys, "loop": 3.0, "limit_min": limit_min, "limit_max": limit_max}
+
+    def _sound(self):
+        """One named set with every pace row, on records the engine plays well."""
+        rows = {"as_a": {"act_b": "back", "act_sr": "side", "act_sl": "side", "act_w": "walk", "act_t": "trot",
+                         "act_c": "canter", "act_stand": "pose"}}
+        records = {"back": self._rec(1.0, 30.0, -2.5, -0.2), "side": self._rec(2.533, 76.0), "walk": self._rec(1.0, 76.0),
+                   "trot": self._rec(1.0, 61.0, 2.3, 4.5), "canter": self._rec(1.0, 48.0, 4.8, 7.2),
+                   "pose": self._rec(4.0, 1.0, None, None)}
+        return rows, records
+
+    def _findings(self, rows, records):
+        return c.record_findings(rows, records, self.CONFIG)[0]
+
+    def test_clip_record_reads_duration_key_range_and_the_pace_limits(self):
+        r = c.clip_record(_record_bytes("mumakil_walk", 1.0, 76.0, (3.0, 0.2, 2.5)))
+        self.assertAlmostEqual(r["duration"], 1.0, places=6)
+        self.assertAlmostEqual(r["keys"], 76.0, places=6)
+        self.assertAlmostEqual(r["loop"], 3.0, places=6)
+        self.assertAlmostEqual(r["limit_min"], 0.2, places=6)
+        self.assertAlmostEqual(r["limit_max"], 2.5, places=6)
+
+    def test_a_record_with_no_usage_has_no_limits(self):
+        r = c.clip_record(_record_bytes("mumakil_idle_1", 18.666, 200.0))
+        self.assertAlmostEqual(r["duration"], 18.666, places=3)
+        self.assertEqual((r["loop"], r["limit_min"], r["limit_max"]), (None, None, None))
+
+    def test_set_rows_maps_each_set_to_its_actions(self):
+        xml = ('<action_set id="as_a" skeleton="s"><action type="act_b" animation="back" />\n'
+               '<action animation="side"\n type="act_sr"/></action_set><action_set id="as_b"><action type="act_b" animation="b2"/></action_set>')
+        self.assertEqual(c.set_rows(xml), {"as_a": {"act_b": "back", "act_sr": "side"}, "as_b": {"act_b": "b2"}})
+
+    def test_set_rows_keeps_a_self_closing_set_out_of_the_next_sets_rows(self):
+        # the live file has 593 sets with no body; the rows after one belong to the next set that opens
+        xml = '<action_set id="as_x" base_set="y" />\n<action_set id="as_a"><action type="act_b" animation="back"/></action_set>'
+        self.assertEqual(c.set_rows(xml), {"as_a": {"act_b": "back"}})
+
+    def test_a_set_whose_records_the_engine_plays_well_passes_and_counts_its_rows(self):
+        self.assertEqual(c.record_findings(*self._sound(), self.CONFIG), ([], 7))
+
+    def test_a_backward_clip_with_a_positive_upper_limit_is_a_finding(self):
+        # ADOD's record: 0.2 to 2.5. Once in the backward pace, the beast stays in it up to 2.5 m/s forward.
+        rows, records = self._sound()
+        records["back"] = self._rec(1.0, 30.0)
+        why = self._findings(rows, records)
+        self.assertEqual(len(why), 1, why)
+        self.assertIn("as_a", why[0])
+        self.assertIn("back", why[0])
+        self.assertIn("2.50", why[0])
+
+    def test_a_pace_clip_with_no_limits_is_a_finding(self):
+        rows, records = self._sound()
+        records["back"] = self._rec(1.0, 30.0, None, None)
+        why = self._findings(rows, records)
+        self.assertEqual(len(why), 1, why)
+        self.assertIn("no quad_movement", why[0])
+
+    def test_a_strafe_clip_whose_duration_is_far_under_its_keys_is_a_finding(self):
+        # the mumak walk on the strafe rows: 76 keys (2.53 s) with Duration 1.0, so one loop plays in 0.7 to 1.3 s
+        rows, records = self._sound()
+        records["side"] = self._rec(1.0, 76.0)
+        why = self._findings(rows, records)
+        self.assertEqual(len(why), 2, why)
+        self.assertTrue(all("2.53" in w and "1.00" in w for w in why), why)
+
+    def test_a_strafe_clip_whose_duration_is_far_over_its_keys_is_a_finding(self):
+        rows, records = self._sound()
+        records["side"] = self._rec(30.0, 76.0)
+        why = self._findings(rows, records)
+        self.assertEqual(len(why), 2, why)
+        self.assertTrue(all("30.00" in w for w in why), why)
+
+    def test_a_strafe_clip_near_its_real_duration_passes(self):
+        # the vanilla horse: 19 keys with Duration 0.75, and 30 keys with 0.8
+        for duration, keys in ((2.533, 76.0), (0.8, 30.0), (0.75, 19.0)):
+            rows, records = self._sound()
+            records["side"] = self._rec(duration, keys)
+            self.assertEqual(self._findings(rows, records), [], (duration, keys))
+
+    def test_a_faster_pace_whose_minimum_is_not_above_the_walks_is_a_finding(self):
+        # the trot records cloned the walk's 0.2 to 2.5: the engine steps down only below the current pace's
+        # minimum, so after one charge the beast stayed in the trot down to 0.2 m/s
+        rows, records = self._sound()
+        records["trot"] = self._rec(1.0, 61.0, 0.2, 2.5)
+        why = self._findings(rows, records)
+        self.assertEqual(len(why), 1, why)
+        self.assertIn("act_t", why[0])
+        self.assertIn("trot", why[0])
+        self.assertIn("0.20", why[0])
+
+    def test_only_the_walk_is_judged_against_the_faster_paces(self):
+        # ADOD's gallop minimum (4.3) is under its canter's (4.8): the fast-pace rebuild owns that
+        rows, records = self._sound()
+        records["trot"] = self._rec(1.0, 61.0, 4.9, 6.0)
+        self.assertEqual(self._findings(rows, records), [])
+
+    def test_a_named_set_a_row_or_a_record_that_is_not_there_is_a_finding(self):
+        rows, records = self._sound()
+        self.assertEqual(self._findings({}, records), ["no action set as_a with rows"])
+        del rows["as_a"]["act_stand"]
+        del records["walk"]
+        why, checked = c.record_findings(rows, records, self.CONFIG)
+        self.assertEqual(len(why), 2, why)
+        self.assertTrue(any("no act_stand row" in w for w in why), why)
+        self.assertTrue(any("walk" in w and "no clip record" in w for w in why), why)
+        self.assertEqual(checked, 5)
+
+    def test_any_row_of_a_named_set_whose_clip_has_no_record_is_a_finding(self):
+        # not a pace row: an attack whose loose record is gone would never have its cache entry compared
+        rows, records = self._sound()
+        rows["as_a"]["act_attack"] = "attack"
+        why, checked = c.record_findings(rows, records, self.CONFIG)
+        self.assertEqual(why, ["as_a binds act_attack to attack, which has no clip record in the clip folder"])
+        self.assertEqual(checked, 7)
+
+    def test_clip_record_names_its_master_and_its_first_key(self):
+        master = uuid.UUID("118971c3-b2d6-487f-91f4-a5f5a3b6fc22")
+        name = "elephant_stand_for_movement_data"
+        raw = (bytes(0x48) + struct.pack("<i", len(name)) + name.encode() + bytes(12) + struct.pack("<3f", 4.0, 10.0, 11.0)
+               + bytes(16) + master.bytes_le + bytes(40))
+        r = c.clip_record(raw)
+        self.assertEqual(r["animation"], master.bytes_le)
+        self.assertAlmostEqual(r["first"], 10.0, places=6)
+        self.assertAlmostEqual(r["keys"], 1.0, places=6)
+
+    def test_a_standing_pose_that_rides_above_the_ground_is_a_finding(self):
+        # ADOD's master: every sole 0.13 m up on the pose's keys, so the mumak (3 times the size) stood 0.4 m high
+        soles = {t: np.array([[0.0, 0.0, 0.13 + 0.01 * k]] * 2) for k, t in enumerate(("FL", "FR", "BL", "BR"))}
+        why = c.stand_finding(soles)
+        self.assertIn("0.130", why)
+        down = {t: p - [0, 0, 0.2] for t, p in soles.items()}
+        self.assertIn("-0.070", c.stand_finding(down))
+
+    def test_a_standing_pose_on_the_ground_passes(self):
+        soles = {t: np.array([[0.0, 0.0, 0.001 * k]] * 2) for k, t in enumerate(("FL", "FR", "BL", "BR"))}
+        self.assertIsNone(c.stand_finding(soles))
 
 
 class CacheStateTests(unittest.TestCase):
@@ -303,7 +498,69 @@ class CacheStateTests(unittest.TestCase):
 
     def test_an_entry_cooked_after_the_master_is_current(self):
         self._cook(2_000_000, 1_000_000)
+        os.utime(self.anm, (1_500_000, 1_500_000))
         self.assertIsNone(c.cache_state(self.dir.name, self.anm, self.geo))
+
+    def test_an_entry_cooked_before_the_record_was_written_is_stale(self):
+        # the Kit cooked the backward walk again after a limits-only rewrite of its record (2026-11-19)
+        self._cook(2_000_000, 1_000_000)
+        os.utime(self.anm, (3_000_000, 3_000_000))
+        self.assertIn("older than its clip record", c.cache_state(self.dir.name, self.anm, self.geo))
+
+
+class StandFindingsTests(unittest.TestCase):
+    """stand_findings on a module folder: one bone that is its own four feet, a two-key pose in the skeleton's package."""
+    CONFIG = {"sets": ("as_a",), "stand_action": "act_stand", "clips": "clips", "skeleton": ("skel_geo.tpac", "s"),
+              "feet": {t: "root" for t in ("FL", "FR", "BL", "BR")}}
+    BONES = [{"name": "root", "parent_idx": -1, "rest_frame": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]}]
+    ROWS = {"as_a": {"act_stand": "pose", "act_attack": "pose"}}
+
+    def _module(self, sole_z):
+        d = tempfile.TemporaryDirectory()
+        self.addCleanup(d.cleanup)
+        os.makedirs(os.path.join(d.name, "clips"))
+        os.makedirs(os.path.join(d.name, "RuntimeDataCache"))
+        ident = (1.0, 0.0, 0.0, 0.0)
+        self.skel = os.path.join(d.name, "skel_geo.tpac")
+        with open(self.skel, "wb") as fh:
+            fh.write(_master_tpac("all", _anim_payload("all", [[ident] * 2], [(0, 0, sole_z)] * 2), 1, 2))
+        record = (bytes(0x48) + struct.pack("<i", 4) + b"pose" + bytes(12) + struct.pack("<3f", 4.0, 1.0, 2.0)
+                  + bytes(16) + bytes([7] * 16) + bytes(40))
+        self.anm = os.path.join(d.name, "clips", "pose_anm.tpac")
+        with open(self.anm, "wb") as fh:
+            fh.write(record)
+        self.entry = os.path.join(d.name, "RuntimeDataCache", str(uuid.UUID(bytes_le=record[8:24])) + ".rdc")
+        with open(self.entry, "wb") as fh:
+            fh.write(b"RDC0")
+        for path, when in ((self.skel, 1_000_000), (self.anm, 1_000_000), (self.entry, 2_000_000)):
+            os.utime(path, (when, when))
+        return d.name, {"pose": c.clip_record(record)}
+
+    def test_a_grounded_pose_with_a_current_entry_passes_and_is_counted(self):
+        root, records = self._module(0.001)
+        self.assertEqual(c.stand_findings(self.ROWS, records, self.CONFIG, root, self.BONES), ([], 1, 1))
+
+    def test_a_pose_that_rides_above_the_ground_is_a_finding(self):
+        root, records = self._module(0.13)
+        why = c.stand_findings(self.ROWS, records, self.CONFIG, root, self.BONES)[0]
+        self.assertEqual(len(why), 1, why)
+        self.assertIn("+0.130", why[0])
+
+    def test_a_master_written_after_its_clips_were_cooked_is_a_finding(self):
+        # the HIGH review finding: --root-z grounds the master, and until a Kit start the game plays the old keys
+        root, records = self._module(0.001)
+        os.utime(self.skel, (3_000_000, 3_000_000))
+        why = c.stand_findings(self.ROWS, records, self.CONFIG, root, self.BONES)[0]
+        self.assertEqual(len(why), 1, why)
+        self.assertIn("pose", why[0])
+        self.assertIn("older than its master", why[0])
+
+    def test_a_clip_whose_master_is_in_another_package_is_not_judged_against_the_skeleton_package(self):
+        root, records = self._module(0.001)
+        records["other"] = dict(records["pose"], animation=bytes([8] * 16))
+        os.utime(self.skel, (3_000_000, 3_000_000))
+        rows = {"as_a": {"act_walk": "other"}}
+        self.assertEqual(c.stand_findings(rows, records, self.CONFIG, root, self.BONES), ([], 0, 0))
 
 
 def _kit_master(name, payload, bones, frames):

@@ -26,6 +26,8 @@ FBX's first frame; this tool writes it relative to REST, so a clip that rides lo
 
     python tools/elephant_write_masters.py --clip <clip.json> --master <x_geo.tpac> [--out <file>] [--apply]
     python tools/elephant_write_masters.py --clip <clip.json> --master <template_geo.tpac> --new --out <folder>
+    python tools/elephant_write_masters.py --root-z 10:0.006 --master <adod_elephant_geo.tpac> [--out <file>] [--apply]
+        (set_root_z: one height change on every key but the first, the rest pose)
 Dry run by default: it builds and verifies the new package in memory. --out writes it to a new file.
 --apply replaces --master, after a one-time backup beside it (<name>.bak-pre1474, never overwritten), and
 refuses while the game or the Kit runs. The clip must have the master's key count unless --resize is given;
@@ -144,16 +146,10 @@ def new_payload(old, clip, resize=False, name=None):
     return build_anim(a), n, have
 
 
-def rewrite(raw, clip, resize=False):
+def _store(item, seg, data):
+    """Put `data` in the item's one data segment: the blob, its two sizes and its hash. Returns the stored blob."""
     import lz4.block
     import xxhash
-    pkg = tcm.parse(raw)
-    items = [it for it in pkg.items if it.type_guid == SKELETAL_ANIMATION_TYPE]
-    if len(items) != 1 or len(items[0].segments) != 1:
-        raise ValueError("expected one SkeletalAnimation item with one data segment")
-    item = items[0]
-    seg = item.segments[0]
-    data, n, have = new_payload(tcm.segment_payload(item, seg), clip, resize)
     blob = lz4.block.compress(data, mode="high_compression", store_size=False) if seg.is_compressed else data
     if seg.is_compressed and len(blob) == len(data):
         raise ValueError("the recompressed segment is exactly its raw size; the parser would read it back as raw")
@@ -161,6 +157,18 @@ def rewrite(raw, clip, resize=False):
     seg.storage, seg.actual = len(blob), len(data)
     struct.pack_into("<QQ", item.toc, seg.entry_pos + 8, len(data), len(blob))
     struct.pack_into("<Q", item.toc, seg.entry_pos + 56, xxhash.xxh64_intdigest(data))
+    return blob
+
+
+def rewrite(raw, clip, resize=False):
+    pkg = tcm.parse(raw)
+    items = [it for it in pkg.items if it.type_guid == SKELETAL_ANIMATION_TYPE]
+    if len(items) != 1 or len(items[0].segments) != 1:
+        raise ValueError("expected one SkeletalAnimation item with one data segment")
+    item = items[0]
+    seg = item.segments[0]
+    data, n, have = new_payload(tcm.segment_payload(item, seg), clip, resize)
+    blob = _store(item, seg, data)
     if n != have:
         start, end = tcm._metadata_span(item)
         bone_num, duration, tail = struct.unpack_from("<iii", item.toc, end - 12)
@@ -171,6 +179,46 @@ def rewrite(raw, clip, resize=False):
     out = tcm.serialize(pkg.package_guid, pkg.items, pkg.version)
     verify(out, data, raw)
     return out, {"item": item.name, "frames": n, "was": have, "payload": len(data), "stored": len(blob)}
+
+
+def set_root_z(raw, ref_time, z, from_time=1.0):
+    """Move the root's height by one amount on every key from `from_time` on, so that the key at `ref_time` is `z`.
+
+    For a master that rides at one wrong height through all its clips: ADOD's elephant_anims_all holds the rest
+    pose on its first key and stands 0.13 m above it from the second key to the last (stand, attacks, hit, rear,
+    death), so a beast rose off the ground each time it stopped. Naming the height the reference key must have,
+    not the amount to move, makes a second run a no-op: so the reference key must be one that moves. Rotations,
+    times and every other item stay as they are (verify)."""
+    pkg = tcm.parse(raw)
+    items = [it for it in pkg.items if it.type_guid == SKELETAL_ANIMATION_TYPE]
+    if len(items) != 1 or len(items[0].segments) != 1:
+        raise ValueError("expected one SkeletalAnimation item with one data segment (found %d)" % len(items))
+    if ref_time < from_time - 1e-6:
+        raise ValueError("the reference key at time %g is before the first key that moves (%g): it would stay "
+                         "where it is, and each further run would move the other keys again" % (ref_time, from_time))
+    item = items[0]
+    seg = item.segments[0]
+    old = tcm.segment_payload(item, seg)
+    a = parse_anim(old)
+    times = np.asarray(a["root_pos"]["t"], dtype=float)
+    at = np.flatnonzero(np.abs(times - ref_time) < 1e-6)
+    if len(at) != 1:
+        raise ValueError("the root track has no key at time %g" % ref_time)
+    vals = np.array(a["root_pos"]["v"], dtype="<f4").reshape(len(times), 4)
+    dz = np.float32(z) - vals[at[0], 2]
+    moved = times >= from_time - 1e-6
+    info = {"item": item.name, "dz": float(dz), "keys": int(moved.sum()), "of": len(times)}
+    if abs(float(dz)) < 1e-6:
+        return raw, dict(info, dz=0.0)
+    vals[moved, 2] += dz
+    a["root_pos"] = dict(a["root_pos"], v=vals)
+    data = build_anim(a)
+    if len(data) != len(old):
+        raise ValueError("the animation data changed size (%d to %d)" % (len(old), len(data)))
+    _store(item, seg, data)
+    out = tcm.serialize(pkg.package_guid, pkg.items, pkg.version)
+    verify(out, data, raw)
+    return out, info
 
 
 def _guid(kind, name):
@@ -297,7 +345,10 @@ def game_or_kit_running():
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--clip", required=True)
+    ap.add_argument("--clip")
+    ap.add_argument("--root-z", metavar="KEY:Z",
+                    help="instead of --clip: move the root's height on every key but the first (the rest pose), by "
+                         "the one amount that puts the key at time KEY at height Z (set_root_z)")
     ap.add_argument("--master", required=True)
     ap.add_argument("--out")
     ap.add_argument("--apply", action="store_true")
@@ -306,8 +357,19 @@ def main(argv=None):
                     help="write a NEW master named after the clip into the folder --out, with --master as the "
                          "template; an existing file is replaced only by a rebuild of the same master")
     a = ap.parse_args(argv)
-    clip = json.load(open(a.clip))
+    if bool(a.clip) == bool(a.root_z):
+        ap.error("pass --clip or --root-z, one of them")
     raw = open(a.master, "rb").read()
+    if a.root_z:
+        if a.new or a.resize:
+            ap.error("--root-z takes neither --new nor --resize")
+        key, z = a.root_z.split(":")
+        out, info = set_root_z(raw, float(key), float(z))
+        print("%s: root height %+.4f m on %d of %d keys; %s" % (
+            info["item"], info["dz"], info["keys"], info["of"], "unchanged" if out == raw else "changed"))
+        clip = None
+    else:
+        clip = json.load(open(a.clip))
     if a.new:
         if not a.out or a.apply:
             ap.error("--new needs --out <folder> and takes no --apply")
@@ -328,10 +390,11 @@ def main(argv=None):
         print("%s: %d keys, data %d bytes, stored %d; animation GUID %s; %s" % (
             info["item"], info["frames"], info["payload"], info["stored"], info["guid"], state))
         return 0
-    out, info = rewrite(raw, clip, a.resize)
-    print("%s: %d frames (was %d), data %d bytes, stored %d; stride %.3f m; %s" % (
-        info["item"], info["frames"], info["was"], info["payload"], info["stored"], clip["stride_m"],
-        "unchanged" if out == raw else "changed"))
+    if clip is not None:
+        out, info = rewrite(raw, clip, a.resize)
+        print("%s: %d frames (was %d), data %d bytes, stored %d; stride %.3f m; %s" % (
+            info["item"], info["frames"], info["was"], info["payload"], info["stored"], clip["stride_m"],
+            "unchanged" if out == raw else "changed"))
     if a.out:
         os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
         open(a.out, "wb").write(out)

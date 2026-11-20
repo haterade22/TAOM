@@ -126,6 +126,25 @@ class SelectionTests(unittest.TestCase):
             self.assertIn("mbproj", _ids(dg.select(dg.GATES, [path])), path)
         self.assertNotIn("mbproj", _ids(dg.select(dg.GATES, [TROOPS])))
 
+    def test_the_action_sets_the_mumak_monster_and_the_bind_tool_select_the_elephant_gates(self):
+        armory = "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/ModuleData/"
+        for path in (armory + "action_sets.xml", armory + "Monsters/LOTR/lotr_monster_mumakil.xml",
+                     "tools/bind_elephant_clips.py"):
+            self.assertIn("elephant-clips", _ids(dg.select(dg.GATES, [path])), path)
+        self.assertIn("elephant-gaits", _ids(dg.select(dg.GATES, [armory + "action_sets.xml"])))
+        self.assertIn("elephant-gaits", _ids(dg.select(dg.GATES, ["tools/check_gait_stride.py"])))
+        # the files both gates read, and the tools that write them: a master, a clip record, the three writers
+        clips = "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/Assets/creature/elephant/"
+        for path in (clips + "mesh/adod_elephant_geo.tpac", clips + "animations/mumakil_trot_anm.tpac",
+                     "tools/elephant_write_masters.py", "tools/gen_elephant_anim_clips.ps1",
+                     "tools/elephant_gait_retarget.py", "tools/check_gait_stride.py", "tools/bind_elephant_clips.py"):
+            got = _ids(dg.select(dg.GATES, [path]))
+            self.assertIn("elephant-clips", got, path)
+            self.assertIn("elephant-gaits", got, path)
+        self.assertNotIn("elephant-clips", _ids(dg.select(dg.GATES, [TROOPS])))
+        gate = next(g for g in dg.GATES if g.id == "elephant-clips")
+        self.assertEqual(gate.cmd, ("python", "tools/bind_elephant_clips.py", "--check"))
+
     def test_the_banner_sprite_folder_selects_banner_sheets(self):
         sprite = "Main/_Module/GUI/SpriteParts/ui_taom_bannericons/10000.png"
         self.assertIn("banner-sheets", [g.id for g in dg.select(dg.GATES, [sprite])])

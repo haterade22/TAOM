@@ -66767,35 +66767,35 @@
 	     MergeElements pass (which causes KNFE on the accumulated action_sets element1). -->
 	<action_set id="as_elephant" skeleton="elephant_skeleton" movement_system="quadrupedal">
 				<action type="act_elephant_stand_for_movement_data" animation="elephant_stand_for_movement_data" />
-				<action type="act_elephant_stand_1" animation="elephant_stand_2" alternative_group="elephant_stand_alternative_group" />
-				<action type="act_elephant_stand_2" animation="elephant_stand_2" alternative_group="elephant_stand_alternative_group" />
+				<action type="act_elephant_stand_1" animation="war_elephant_idle_1" alternative_group="elephant_stand_alternative_group" />
+				<action type="act_elephant_stand_2" animation="war_elephant_idle_2" alternative_group="elephant_stand_alternative_group" />
 				<action type="act_elephant_stand_3" animation="elephant_stand_3" alternative_group="elephant_stand_alternative_group" />
 
 				<action type="act_elephant_forward_walk_stand" animation="elephant_stand_2" />
-				<action type="act_elephant_forward_walk" animation="elephant_walk" />
-				<action type="act_elephant_forward_walk_strafe_left" animation="elephant_walk" />
-				<action type="act_elephant_forward_walk_strafe_right" animation="elephant_walk" />
-				<action type="act_elephant_forward_trot_stand" animation="elephant_walk" />
-				<action type="act_elephant_forward_trot" animation="elephant_walk" />
-				<action type="act_elephant_forward_trot_strafe_right" animation="elephant_walk" />
-				<action type="act_elephant_forward_trot_strafe_left" animation="elephant_walk" />
-				<action type="act_elephant_forward_canter_stand" animation="elephant_canter" />
-				<action type="act_elephant_forward_canter" animation="elephant_canter" />
-				<action type="act_elephant_forward_canter_strafe_right" animation="elephant_canter" />
-				<action type="act_elephant_forward_canter_strafe_left" animation="elephant_canter" />
-				<action type="act_elephant_forward_gallop_right_foot_stand" animation="elephant_gallop" />
-				<action type="act_elephant_forward_gallop_right_foot" animation="elephant_gallop" />
-				<action type="act_elephant_forward_gallop_right_foot_strafe_right" animation="elephant_gallop" />
-				<action type="act_elephant_forward_gallop_right_foot_strafe_left" animation="elephant_gallop" />
-				<action type="act_elephant_forward_gallop_left_foot_stand" animation="elephant_gallop" />
-				<action type="act_elephant_forward_gallop_left_foot" animation="elephant_gallop" />
-				<action type="act_elephant_forward_gallop_left_foot_strafe_right" animation="elephant_gallop" />
-				<action type="act_elephant_forward_gallop_left_foot_strafe_left" animation="elephant_gallop" />
+				<action type="act_elephant_forward_walk" animation="war_elephant_walk" />
+				<action type="act_elephant_forward_walk_strafe_left" animation="war_elephant_walk" />
+				<action type="act_elephant_forward_walk_strafe_right" animation="war_elephant_walk" />
+				<action type="act_elephant_forward_trot_stand" animation="war_elephant_trot" />
+				<action type="act_elephant_forward_trot" animation="war_elephant_trot" />
+				<action type="act_elephant_forward_trot_strafe_right" animation="war_elephant_trot" />
+				<action type="act_elephant_forward_trot_strafe_left" animation="war_elephant_trot" />
+				<action type="act_elephant_forward_canter_stand" animation="war_elephant_canter" />
+				<action type="act_elephant_forward_canter" animation="war_elephant_canter" />
+				<action type="act_elephant_forward_canter_strafe_right" animation="war_elephant_canter" />
+				<action type="act_elephant_forward_canter_strafe_left" animation="war_elephant_canter" />
+				<action type="act_elephant_forward_gallop_right_foot_stand" animation="war_elephant_gallop" />
+				<action type="act_elephant_forward_gallop_right_foot" animation="war_elephant_gallop" />
+				<action type="act_elephant_forward_gallop_right_foot_strafe_right" animation="war_elephant_gallop" />
+				<action type="act_elephant_forward_gallop_right_foot_strafe_left" animation="war_elephant_gallop" />
+				<action type="act_elephant_forward_gallop_left_foot_stand" animation="war_elephant_gallop" />
+				<action type="act_elephant_forward_gallop_left_foot" animation="war_elephant_gallop" />
+				<action type="act_elephant_forward_gallop_left_foot_strafe_right" animation="war_elephant_gallop" />
+				<action type="act_elephant_forward_gallop_left_foot_strafe_left" animation="war_elephant_gallop" />
 
 				<action type="act_elephant_backward_walk_stand" animation="elephant_stand_2" />
-				<action type="act_elephant_backward_walk" animation="elephant_walk_backwards" />
-				<action type="act_elephant_backward_walk_strafe_right" animation="elephant_walk_backwards" />
-				<action type="act_elephant_backward_walk_strafe_left" animation="elephant_walk_backwards" />
+				<action type="act_elephant_backward_walk" animation="war_elephant_walk_backwards" />
+				<action type="act_elephant_backward_walk_strafe_right" animation="war_elephant_walk_backwards" />
+				<action type="act_elephant_backward_walk_strafe_left" animation="war_elephant_walk_backwards" />
 
 				<action type="act_elephant_rear" animation="elephant_rear" />
 				<action type="act_elephant_rear_damaged" animation="elephant_rear" />
@@ -66814,17 +66814,17 @@
 				<action type="act_horse_jump_forward_loop" animation="elephant_stand_for_movement_data" />
 				<action type="act_horse_jump_forward_end" animation="elephant_stand_for_movement_data" />
 				<action type="act_horse_jump_forward_end_hard" animation="elephant_stand_for_movement_data" />
-				<action type="act_elephant_turn_right" animation="elephant_turn_right" />
-				<action type="act_elephant_turn_left" animation="elephant_turn_left" />
-				<action type="act_elephant_strafe_right" animation="elephant_walk" />
-				<action type="act_elephant_strafe_left" animation="elephant_walk" />
+				<action type="act_elephant_turn_right" animation="war_elephant_turn_right" />
+				<action type="act_elephant_turn_left" animation="war_elephant_turn_left" />
+				<action type="act_elephant_strafe_right" animation="war_elephant_strafe" />
+				<action type="act_elephant_strafe_left" animation="war_elephant_strafe" />
 
-				<action type="act_elephant_turn_right_head" animation="elephant_walk_backwards" />
-				<action type="act_elephant_turn_left_head" animation="elephant_walk_backwards" />
-				<action type="act_elephant_walk_turn_right_head" animation="elephant_walk" />
-				<action type="act_elephant_walk_turn_left_head" animation="elephant_walk" />
-				<action type="act_elephant_trot_turn_right_head" animation="elephant_walk" />
-				<action type="act_elephant_trot_turn_left_head" animation="elephant_walk" />
+				<action type="act_elephant_turn_right_head" animation="war_elephant_walk_backwards" />
+				<action type="act_elephant_turn_left_head" animation="war_elephant_walk_backwards" />
+				<action type="act_elephant_walk_turn_right_head" animation="war_elephant_walk" />
+				<action type="act_elephant_walk_turn_left_head" animation="war_elephant_walk" />
+				<action type="act_elephant_trot_turn_right_head" animation="war_elephant_trot" />
+				<action type="act_elephant_trot_turn_left_head" animation="war_elephant_trot" />
 				<action type="act_elephant_canter_turn_right_head" animation="elephant_canter_right" />
 				<action type="act_elephant_canter_turn_left_head" animation="elephant_canter_left" />
 				<action type="act_elephant_gallop_turn_right_head" animation="elephant_gallop_right" />
@@ -66858,6 +66858,105 @@
 		<action type="act_elephant_stand_1" animation="elephant_stand_3"/>
 	</action_set>
 	<action_set id="as_elephant_map" skeleton="elephant_skeleton" base_set="as_elephant">
+		<action type="act_map_mount_attack_1h" animation="elephant_stand_3"/>
+		<action type="act_map_mount_attack_spear" animation="elephant_stand_3"/>
+		<action type="act_map_mount_attack_swing" animation="elephant_stand_3"/>
+		<action type="act_map_mount_attack_unarmed" animation="elephant_stand_3"/>
+	</action_set>
+	<!-- MUMAKIL (#1474): as_elephant's rows on the mumak's own clips. Written by tools/bind_elephant_clips.py -->
+	<action_set id="as_mumakil" skeleton="elephant_skeleton" movement_system="quadrupedal">
+				<action type="act_elephant_stand_for_movement_data" animation="elephant_stand_for_movement_data" />
+				<action type="act_elephant_stand_1" animation="mumakil_idle_1" alternative_group="elephant_stand_alternative_group" />
+				<action type="act_elephant_stand_2" animation="mumakil_idle_2" alternative_group="elephant_stand_alternative_group" />
+				<action type="act_elephant_stand_3" animation="elephant_stand_3" alternative_group="elephant_stand_alternative_group" />
+
+				<action type="act_elephant_forward_walk_stand" animation="elephant_stand_2" />
+				<action type="act_elephant_forward_walk" animation="mumakil_walk" />
+				<action type="act_elephant_forward_walk_strafe_left" animation="mumakil_walk" />
+				<action type="act_elephant_forward_walk_strafe_right" animation="mumakil_walk" />
+				<action type="act_elephant_forward_trot_stand" animation="mumakil_trot" />
+				<action type="act_elephant_forward_trot" animation="mumakil_trot" />
+				<action type="act_elephant_forward_trot_strafe_right" animation="mumakil_trot" />
+				<action type="act_elephant_forward_trot_strafe_left" animation="mumakil_trot" />
+				<action type="act_elephant_forward_canter_stand" animation="mumakil_canter" />
+				<action type="act_elephant_forward_canter" animation="mumakil_canter" />
+				<action type="act_elephant_forward_canter_strafe_right" animation="mumakil_canter" />
+				<action type="act_elephant_forward_canter_strafe_left" animation="mumakil_canter" />
+				<action type="act_elephant_forward_gallop_right_foot_stand" animation="mumakil_gallop" />
+				<action type="act_elephant_forward_gallop_right_foot" animation="mumakil_gallop" />
+				<action type="act_elephant_forward_gallop_right_foot_strafe_right" animation="mumakil_gallop" />
+				<action type="act_elephant_forward_gallop_right_foot_strafe_left" animation="mumakil_gallop" />
+				<action type="act_elephant_forward_gallop_left_foot_stand" animation="mumakil_gallop" />
+				<action type="act_elephant_forward_gallop_left_foot" animation="mumakil_gallop" />
+				<action type="act_elephant_forward_gallop_left_foot_strafe_right" animation="mumakil_gallop" />
+				<action type="act_elephant_forward_gallop_left_foot_strafe_left" animation="mumakil_gallop" />
+
+				<action type="act_elephant_backward_walk_stand" animation="elephant_stand_2" />
+				<action type="act_elephant_backward_walk" animation="mumakil_walk_backwards" />
+				<action type="act_elephant_backward_walk_strafe_right" animation="mumakil_walk_backwards" />
+				<action type="act_elephant_backward_walk_strafe_left" animation="mumakil_walk_backwards" />
+
+				<action type="act_elephant_rear" animation="elephant_rear" />
+				<action type="act_elephant_rear_damaged" animation="elephant_rear" />
+				<action type="act_elephant_kick" animation="elephant_stand_for_movement_data" />
+				<action type="act_elephant_dash" animation="elephant_dash" />
+				<action type="act_elephant_jump_start" animation="elephant_dash" />
+				<action type="act_elephant_quick_stop" animation="elephant_stand_for_movement_data" />
+				<action type="act_elephant_quick_stop_when_fast" animation="elephant_stand_for_movement_data" />
+				<action type="act_elephant_hit_object" animation="elephant_hit_object" />
+				<action type="act_elephant_hit_object_while_falling" animation="elephant_hit_object" />
+				<action type="act_horse_jump_high" animation="elephant_stand_for_movement_data" />
+				<action type="act_horse_jump_high_loop" animation="elephant_stand_for_movement_data" />
+				<action type="act_horse_jump_high_end" animation="elephant_stand_for_movement_data" />
+				<action type="act_horse_jump_high_end_hard" animation="elephant_stand_for_movement_data" />
+				<action type="act_horse_jump_forward" animation="elephant_stand_for_movement_data" />
+				<action type="act_horse_jump_forward_loop" animation="elephant_stand_for_movement_data" />
+				<action type="act_horse_jump_forward_end" animation="elephant_stand_for_movement_data" />
+				<action type="act_horse_jump_forward_end_hard" animation="elephant_stand_for_movement_data" />
+				<action type="act_elephant_turn_right" animation="mumakil_turn_right" />
+				<action type="act_elephant_turn_left" animation="mumakil_turn_left" />
+				<action type="act_elephant_strafe_right" animation="mumakil_strafe" />
+				<action type="act_elephant_strafe_left" animation="mumakil_strafe" />
+
+				<action type="act_elephant_turn_right_head" animation="mumakil_walk_backwards" />
+				<action type="act_elephant_turn_left_head" animation="mumakil_walk_backwards" />
+				<action type="act_elephant_walk_turn_right_head" animation="mumakil_walk" />
+				<action type="act_elephant_walk_turn_left_head" animation="mumakil_walk" />
+				<action type="act_elephant_trot_turn_right_head" animation="mumakil_trot" />
+				<action type="act_elephant_trot_turn_left_head" animation="mumakil_trot" />
+				<action type="act_elephant_canter_turn_right_head" animation="elephant_canter_right" />
+				<action type="act_elephant_canter_turn_left_head" animation="elephant_canter_left" />
+				<action type="act_elephant_gallop_turn_right_head" animation="elephant_gallop_right" />
+				<action type="act_elephant_gallop_turn_left_head" animation="elephant_gallop_left" />
+
+				<action type="act_elephant_gallop_acceleration_head" animation="elephant_gallop_acceleration_head" />
+				<action type="act_elephant_strike_back" animation="elephant_hit" />
+				<action type="act_elephant_strike_front" animation="elephant_hit" />
+				<action type="act_elephant_strike_back_while_moving" animation="elephant_hit" />
+				<action type="act_elephant_strike_front_while_moving" animation="elephant_hit" />
+				<action type="act_elephant_fall_right" animation="elephant_death" />
+				<action type="act_elephant_fall_left" animation="elephant_death" />
+				<action type="act_elephant_fall_right_continue" animation="elephant_death" />
+				<action type="act_elephant_fall_left_continue" animation="elephant_death" />
+				<action type="act_elephant_fall_roll" animation="elephant_death" />
+				<action type="act_elephant_fall_roll_continue" animation="elephant_death" />
+				<action type="act_elephant_fall_backwards" animation="elephant_death" />
+				<action type="act_elephant_fall_slow_right" animation="elephant_death" />
+				<action type="act_elephant_fall_slow_right_continue" animation="elephant_death" />
+				<action type="act_elephant_fall_slow_left" animation="elephant_death" />
+				<action type="act_elephant_fall_slow_left_continue" animation="elephant_death" />
+				<action type="act_horse_conversation_start" animation="elephant_stand_3" />
+				<action type="act_inventory_idle_start" animation="elephant_stand_3" />
+				<action type="act_inventory_idle" animation="elephant_stand_3" />
+				<action type="act_elephant_attack_1" animation="elephant_attack_1" />
+				<action type="act_elephant_attack_2" animation="elephant_attack_2" />
+				<action type="act_elephant_attack_3" animation="elephant_attack_3" />
+				<action type="act_elephant_attack_4" animation="elephant_attack_4" />
+	</action_set>
+	<action_set id="as_mumakil_town_and_village" skeleton="elephant_skeleton" base_set="as_mumakil">
+		<action type="act_elephant_stand_1" animation="elephant_stand_3"/>
+	</action_set>
+	<action_set id="as_mumakil_map" skeleton="elephant_skeleton" base_set="as_mumakil">
 		<action type="act_map_mount_attack_1h" animation="elephant_stand_3"/>
 		<action type="act_map_mount_attack_spear" animation="elephant_stand_3"/>
 		<action type="act_map_mount_attack_swing" animation="elephant_stand_3"/>

@@ -2,8 +2,8 @@ namespace TAOM.Features.Mumakil;
 
 /// <summary>
 /// Tuning for the Mûmakil — a giant ridden Harad war beast (the Oliphaunt). It is a SCALED-UP variant of the
-/// <see cref="TAOM.Features.Elephant"/>: it shares the elephant rig (<c>elephant_skeleton</c>), the
-/// <c>as_elephant</c> action set, and every elephant animation clip — including the four
+/// <see cref="TAOM.Features.Elephant"/>: it shares the elephant rig (<c>elephant_skeleton</c>) and, in its own
+/// action set <c>as_mumakil</c>, every <c>as_elephant</c> row but the gait and idle clips, including the four
 /// <c>act_elephant_attack_*</c> clips this BT plays. Size comes entirely from the Horse item's
 /// <c>BodyLength</c> (the engine scales a mount via <c>SetInitialAgentScale(0.01f * BodyLength)</c>), NOT from
 /// any Monster-XML field. Behaviorally identical to the elephant (auto trample + tusk on deterministic
@@ -73,10 +73,10 @@ public static class MumakilConfig
     /// <summary>Blow magnitude passed to the damage primitive — knockback impulse, independent of inflicted HP.</summary>
     public const float TrampleBlowMagnitude = 50f;
 
-    // --- Attack clip mapping — REUSED from the elephant. Because the Mûmakil shares the as_elephant action set
+    // --- Attack clip mapping: REUSED from the elephant. Because as_mumakil carries as_elephant's attack rows
     // (same skeleton), the attack actions ARE the elephant's: attack_3/4 = double-sweep trample, attack_1 = left
     // tusk swing, attack_2 = right tusk swing (roles verified by Blender trajectory analysis for the elephant,
-    // 2026-06-10). All four are registered in LOTRLOME action_types.xml + bound in the as_elephant action set. ---
+    // 2026-06-10). All four are registered in LOTRLOME action_types.xml + bound in the as_mumakil action set. ---
     /// <summary>The trample (double-sweep thrash) animation (shared elephant clip).</summary>
     public const string TrampleActionName = "act_elephant_attack_3";
     /// <summary>Trample variant (near-identical double sweep) — alternated randomly with the primary for variety.</summary>

@@ -1566,8 +1566,9 @@ to 0.19 degrees over 92 clips.
 ### A gait clip's travel per loop is a measurement of its master, never a number to type (#1474, 2026-11-18)
 The elephant and the mumak skated above a walk. Their four gait clips carried round travel values (walk 2.0 m, trot
 3.0, canter 3.6, gallop 3.0), and all four masters were one walk cycle at three lengths whose feet covered 1.56 to
-1.69 m. The engine plays a gait at speed over `LoopDisplacement`, so at a canter the body moved 3.6 m while the feet
-stepped 1.56 m. The June refinement had measured stance slip, lift and footfall order in Blender and never compared
+1.69 m. At full weight the engine moves the body `LoopDisplacement` metres in one loop of the clip, so at a canter
+the body moved 3.6 m while the feet stepped 1.56 m (the cadence comes from the records' `Duration`, not from this
+value: the 2026-11-20 lesson below). The June refinement had measured stance slip, lift and footfall order in Blender and never compared
 the stride with the clip record, which lives in another file that only the Kit showed.
 - **Why missed:** the motion and its metadata were judged apart. A time-compressed walk looks like a faster gait in
   Blender, where nothing moves the ground; the canter and the gallop also shared one master while claiming 3.6 m
@@ -1596,3 +1597,40 @@ The seven entries still carried their June dates.
   do not satisfy the metadata checksum formula, so verify only what a tool wrote.
 - **Source:** issue #1474; `docs/features/elephant.md` "What the first attempt got wrong";
   `tools/tests/test_elephant_gait_tools.py` (`CacheStateTests`).
+
+### The mount movement node takes cadence and pace from the clip records, so a cloned record carries its template's defects (#1474, 2026-11-20)
+The 18 new elephant and mumak records were clones of ADOD's records with only the master, the range, the travel and
+the step points changed. Three defects came from values nobody had looked at. The backward walk's positive pace
+limits kept a beast in the backward pace up to 2.5 m/s forward. The strafe rows bound a record whose `Duration`
+said 1.0 s for 76 keys, so the standing pace played the walk cycle up to 3.6 times too fast. The trot records
+carried the walk's limits, so a beast that once passed 2.5 m/s never stepped down to the walk; a review found that
+one, not a player. The rule in the lesson above, as first written ("the engine plays a gait at speed over
+`LoopDisplacement`"), was the belief behind all three: under it `Duration` and the limits looked harmless.
+- **Why missed:** the node was never read in full; #1081 had settled only that its speed is at model size. The
+  stride gate checked travel against feet and nothing else in the record. "It has always been bound this way" was
+  taken as proof that a value was safe, when in ADOD's set the trot pace played the walk clip and so hid its limits.
+- **Prevent:** `python tools/check_gait_stride.py` reads `Duration`, the key range and both limits of every pace
+  row of the named sets. It fails a backward clip with an upper limit of 0 or more, a strafe `Duration` outside
+  0.75 to 1.33 times its keys' length, and a faster pace whose lower limit is not above the walk's. Read the node
+  before authoring a quadruped's records: `docs/features/elephant.md`, "What the engine does with a clip record".
+  In a generator that clones a record, each field is either set from a measurement or named as deliberately kept.
+- **Source:** issue #1474; [RCA](../rca-elephant-gait-gate-2026-11-20.md);
+  `tools/tests/test_elephant_gait_tools.py` (`PaceTableTests`).
+
+### A gate fails on what it could not read, and reads the cooked entry of every clip it judges (#1474, 2026-11-20)
+The standing-pose check added on 2026-11-19 measured the master file and never looked at the clip's cache entry,
+although the same tool's header says the game plays the cooked entry. Between the root-height write at 17:26 and
+the Kit start at 18:37 the gate was green while the game still held the floating stand. The pace checks skipped a
+row whose record was missing and a set that had lost its stand action, and printed nothing about either.
+`cache_state` compared an entry only with its master, while the Kit had cooked two entries again after a change to
+their records alone.
+- **Why missed:** each check was written for the defect in front of it, with a `continue` for every case that
+  defect did not need. A test (`test_a_row_with_no_record_is_left_to_the_other_checks`) pinned the silent pass as
+  correct, and no other check owned those cases.
+- **Prevent:** a gate names what it expects (the sets, the actions), reports a missing one as a finding, and prints
+  how many rows it read; its tests include the missing-input cases. `stand_findings` compares the cache entry of
+  every bound clip on the skeleton's package with that package, and `cache_state` compares with the newer of the
+  record and the master. The review's proof is the method to reuse: put each defect back on a copy of the install
+  and expect exit 1.
+- **Source:** [RCA](../rca-elephant-gait-gate-2026-11-20.md); `tools/tests/test_elephant_gait_tools.py`
+  (`StandFindingsTests`, `PaceTableTests`, `CacheStateTests`).
