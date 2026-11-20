@@ -89,6 +89,7 @@ class Registries:
     settlements: set = field(default_factory=set)             # <Settlement> ids of the world the game builds (empty = unavailable)
     item_classes: dict = field(default_factory=dict)          # weapon item id -> skill class, build_item_class_registry (empty = unavailable)
     couchable_ids: frozenset = None                           # weapon item ids with a couch usage (None = read the install when a pass needs it)
+    skill_sets: dict = None   # SkillSet id -> {skill: value} (sync_lord_inline_skills.load_skill_sets; None = read the install when an edge has a templated side)
 
 
 # --------------------------------------------------------------------------- #
@@ -1981,9 +1982,9 @@ class Validator:
                 upgrades = [t.split(".")[-1] for t in self._UPGRADE_TARGET_RE.findall(body)]
                 line = _lineno(text, m.start())
 
-                # Whether a templated character's inline rows agree with its SkillSet is
-                # SKILL_TEMPLATE_MISMATCH's question (validate_moduledata.py, #626), which resolves
-                # the template; here the flag only keeps the edge checks off numbers they cannot see.
+                # The skill_template as written; _upgrade_skill_regressions resolves it (#626).
+                # Whether a templated character's inline rows agree with its SkillSet stays
+                # SKILL_TEMPLATE_MISMATCH's question (validate_moduledata.py).
                 tmpl = self._SKILL_TEMPLATE_RE.search(attrs)
 
                 lvlm = self._LEVEL_ATTR_RE.search(attrs)
@@ -2007,7 +2008,7 @@ class Validator:
                 racem = self._RACE_ATTR_RE.search(attrs)
                 troops[idm.group(1)] = {
                     "file": rel, "line": line, "skills": skills, "upgrades": upgrades,
-                    "templated": bool(tmpl),
+                    "template": tmpl.group(1) if tmpl else None,
                     "level": int(lvlm.group(1)) if lvlm else None,
                     "sets": sets,
                     "culture": culm.group(1) if culm else None,
@@ -2146,6 +2147,36 @@ class Validator:
         ("sagarun_crossbowman", "sagarun_naffatun"): {"Bow", "Crossbow"},
     }
 
+    def _skill_sets(self, issues: list):
+        """Every SkillSet the engine would see (sync_lord_inline_skills.load_skill_sets over the
+        install ROOT, the parent of the Modules folder, and the repo), or None when the install is
+        not available and a templated edge is skipped, never faked. A registry that names the sets
+        (a test) wins. A read that fails, or finds no vanilla SkillSet defined (TAOM's own always
+        load, so an empty result cannot show an unread install), is one ERROR, so an unjudged edge
+        is never read as clean. Called only for an edge with a templated side."""
+        given = getattr(self.reg, "skill_sets", None)
+        if given is not None:
+            return given
+        if not self.game_modules or not self.game_modules.is_dir():
+            return None
+        if not hasattr(self, "_skill_sets_memo"):
+            try:
+                import sys as _sys
+                _sys.path.insert(0, str(Path(__file__).resolve().parent))
+                import sync_lord_inline_skills as sl
+                self._skill_sets_memo = sl.load_skill_sets(str(self.game_modules.parent), str(self.moduledata),
+                                                           require_vanilla=True)
+                problem = None
+            except Exception as exc:   # an install the loader cannot read, or no vanilla SkillSet: say so once
+                problem = f"the SkillSets could not be read ({exc})"
+            if problem:
+                issues.append(Issue(
+                    severity=Severity.ERROR, code="UPGRADE_SKILL_REGRESSION",
+                    file="troops/", line=0, entry_id="(skill sets)",
+                    message=f"{problem}, so no upgrade edge with a skill_template side was judged"))
+                self._skill_sets_memo = None
+        return self._skill_sets_memo
+
     def _upgrade_skill_regressions(self) -> list:
         troops, issues = self._upgrade_troop_index()
         issues = list(issues)
@@ -2158,22 +2189,37 @@ class Validator:
                     continue  # BROKEN_TROOP_REF already owns an unresolvable target.
                 if source_id in militia and target_id in militia:
                     continue
-                # A templated character's base skills live in a SkillSet outside these files, so
-                # its inline block alone is not the character. No troop or villager edge has a
-                # templated side (2026-09-19, #626), so the edge is skipped rather than resolved.
-                if source["templated"] or target["templated"]:
-                    continue
+                if source["template"] or target["template"]:
+                    # Since v1.5.2 a templated character is its SkillSet with the inline rows laid
+                    # over it (sync_lord_inline_skills.effective_skills, #626). Without the install
+                    # the SkillSets cannot be read and the edge is skipped, never faked; the CLI
+                    # says so, and a failed read is one ERROR from _skill_sets.
+                    sets = self._skill_sets(issues)
+                    if sets is None:
+                        continue
+                    import sys as _sys
+                    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+                    import sync_lord_inline_skills as sl
+                    src_skills = sl.effective_skills(source["template"], source["skills"], sets)
+                    tgt_skills = sl.effective_skills(target["template"], target["skills"], sets)
+                else:
+                    src_skills, tgt_skills = source["skills"], target["skills"]
                 exempt = self._RESPECIALIZATION_EXEMPT_EDGES.get(
                     (source_id, target_id), ())
                 drops = [
-                    f"{s} {source['skills'].get(s, 0)}->{target['skills'].get(s, 0)}"
-                    f"{' (undeclared, reads as 0)' if s not in target['skills'] else ''}"
+                    f"{s} {src_skills.get(s, 0)}->{tgt_skills.get(s, 0)}"
+                    f"{' (undeclared, reads as 0)' if s not in tgt_skills else ''}"
                     for s in self._COMBAT_SKILLS
                     if s not in exempt
-                    and target["skills"].get(s, 0) < source["skills"].get(s, 0)
+                    and tgt_skills.get(s, 0) < src_skills.get(s, 0)
                 ]
                 if not drops:
                     continue
+                repair = (
+                    f". This troop's skills come from {target['template']} with its inline rows "
+                    f"laid over it, so raise that SkillSet (an inline row that differs is "
+                    f"SKILL_TEMPLATE_MISMATCH) rather than re-running the clamp, which refuses a "
+                    f"templated character" if target["template"] else "")
                 issues.append(Issue(
                     severity=Severity.ERROR, code="UPGRADE_SKILL_REGRESSION",
                     file=target["file"], line=target["line"], entry_id=target_id,
@@ -2181,7 +2227,7 @@ class Validator:
                         f'upgrading "{source_id}" into this troop LOWERS {", ".join(drops)}. '
                         f"An upgrade must never cost the player a stat. Re-run "
                         f"tools/rebalance_troops.py, whose clamp pass raises a target to its "
-                        f"source rather than leaving the tree reading backwards"
+                        f"source rather than leaving the tree reading backwards{repair}"
                     ),
                 ))
         return issues

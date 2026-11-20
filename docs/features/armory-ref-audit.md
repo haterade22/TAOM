@@ -81,9 +81,10 @@ Unlike a generator, a companion that fails, exits 2 or prints SKIPPED keeps the 
   tpacs to scan is itself a finding. The commit hook's `--code` allowlist carries the ERROR;
   `CommitGateCoverageTests` now scans both emitting files so the next code cannot be added without
   its hook line. **Correction, 2026-09-18 (#622):** `main()` never called the pass, so the hook line
-  blocked nothing from 2026-09-15 to 2026-09-18. It is wired now, `CommitGateCoverageTests` checks
-  that every `*_issues` pass is reached from `main()`, and the MCP tool and `/verify` still do not
-  run it (#623).
+  blocked nothing from 2026-09-15 to 2026-09-18. It is wired now. Since #623 (2026-11-19) every
+  `*_issues` pass is composed in `run_all_passes()`, which `main()` and the MCP tool both call, and
+  `CommitGateCoverageTests` checks that each pass is reached from there; `/verify` runs the full CLI
+  through `tools/data_gates.py`.
 - **A startup line that fires after a sync.** `session-start.sh` runs one bounded `find` for a
   `*_geo.tpac` newer than the committed catalogue (every catalogue row lives in a `_geo` pack;
   `_tex`, `_mtl` and `_anm` packs are re-saved constantly and never carry a mesh or body) and
@@ -101,7 +102,7 @@ session-start.sh  --"ARMORY ART DRIFT"-->  /armory-audit  -->  tools/audit_armor
                                                                     '-- generate_ranged_ladder_items / generate_starter_kit --verify, build_ds_skeleton_pack --check
                                                                     v
                                                     docs/audits/armory-ref-audit.md  (committed)
-validate_moduledata.py  --MISSING_COLLISION_BODY-->  check-moduledata-validation.sh  (MCP, /verify: #623)
+validate_moduledata.py  --MISSING_COLLISION_BODY-->  check-moduledata-validation.sh  (and the MCP tool, #623)
 ```
 
 ## Configuration

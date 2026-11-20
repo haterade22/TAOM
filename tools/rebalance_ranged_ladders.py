@@ -65,6 +65,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import fix_upgrade_armour_regressions as fx  # noqa: E402  write_changes
 import ranged_ladder as rl  # noqa: E402
 import rebalance_troops as rb  # noqa: E402  DEFAULT_GAME_MODULES, apply_skills_via_regex, militia
+import sync_lord_inline_skills as sl  # noqa: E402  load_skill_sets (#626)
 
 REPORT_DIR = rl.REPO_ROOT / "tools" / "reports" / "ranged-ladders"
 REPORT_MD = "REPORT.md"
@@ -107,10 +108,11 @@ def apply_in_memory(troops: dict, edits: list, skill_edits: list = ()) -> dict:
 
 
 def build_context(spec: dict, launchers: dict, troops: dict, game_modules, moduledata, ammo: dict | None = None,
-                  barred: set | None = None, militia=frozenset(), exempt=None, sources=None) -> dict:
+                  barred: set | None = None, militia=frozenset(), exempt=None, sources=None,
+                  skill_sets=None) -> dict:
     edits = rl.planned_edits(troops, launchers, spec, barred)
     skill_edits = rl.planned_skill_edits(troops, launchers, spec, militia=militia,
-                                         exempt_edges=exempt, sources=sources)
+                                         exempt_edges=exempt, sources=sources, skill_sets=skill_sets)
     before = rl.inversions(troops, launchers, spec)
     after_idx = simulated_launchers(spec, launchers)
     after_troops = apply_in_memory(troops, edits, skill_edits)
@@ -688,8 +690,14 @@ def main(argv=None):
         return 2
     sources = rl.load_upgrade_sources(args.moduledata)
     try:
+        skill_sets = sl.load_skill_sets(str(game_modules.parent), str(args.moduledata), require_vanilla=True)
+    except ValueError as exc:   # the vanilla modules define no SkillSet, or a file is not UTF-8
+        print(f"ERROR: the SkillSets could not be read ({exc}). Nothing was written.")
+        return 2
+    try:
         ctx = build_context(spec, launchers, troops, game_modules, args.moduledata, ammo, barred,
-                            militia=militia, exempt=rb.RESPECIALIZATION_EXEMPT_EDGES, sources=sources)
+                            militia=militia, exempt=rb.RESPECIALIZATION_EXEMPT_EDGES, sources=sources,
+                            skill_sets=skill_sets)
     except rl.LadderError as exc:
         print(f"ERROR: {exc}")
         return 2
@@ -735,7 +743,8 @@ def main(argv=None):
     after = rl.load_ranged_troops(args.moduledata)
     remaining = rl.planned_edits(after, launchers, spec, barred)
     remaining_skills = rl.planned_skill_edits(after, launchers, spec, militia=militia,
-                                              exempt_edges=rb.RESPECIALIZATION_EXEMPT_EDGES, sources=sources)
+                                              exempt_edges=rb.RESPECIALIZATION_EXEMPT_EDGES, sources=sources,
+                                              skill_sets=skill_sets)
     print(f"Applied {len(edits)} slot edits in {written} file(s) and {len(skill_edits)} skill values in "
           f"{skill_files} file(s); {len(remaining)} slot and {len(remaining_skills)} skill edit(s) still pending.")
     return 0 if not remaining and not remaining_skills else 1

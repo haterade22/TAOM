@@ -284,9 +284,9 @@ public class CoopVetoClassificationTests
             "per-peer — each player has their own clan — but the divergence is confined to banner " +
             "tint and is inherent to co-op having two player clans."),
         ["PartyScreenLogic_AddCommand_Patch"] = new(CoopVeto.ReviewedSafe,
-            "Blocks an upgrade the local player cannot afford. Reads _taom_specialResources, which " +
-            "is TAOM campaign state — but it gates the acting player's OWN party screen, and each " +
-            "peer owns its own resources."),
+            "Blocks or clamps an upgrade, or outside a co-op session a party-screen prisoner recruit " +
+            "(#563), the local player cannot afford. Reads _taom_specialResources, which is TAOM campaign state, but it gates " +
+            "the acting player's OWN party screen, and each peer owns its own resources."),
         ["RecruitmentVM_ExecuteDone_Patch"] = new(CoopVeto.ReviewedSafe,
             "The commit-boundary twin of PartyScreenLogic_AddCommand_Patch: skips the local player's " +
             "OWN recruit-screen commit when the cart is unaffordable in their special resource, the " +

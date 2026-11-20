@@ -1,0 +1,39 @@
+# In-game checks for #1482 (mumakil and elephant crews stay on their seats and shoot), read by tools/ingame_verdict.py.
+# Written by TaomMumakilStandingPoint and TaomHowdahStandingPoint (CrewSeatChecks.Report) when an archer leaves its
+# seat: the battle ends, the beast dies or the archer dies. A seat holds its archer with the engine's position lock and
+# attachment. It passes when it needed no rescue teleport, and fails when it needed one or more: a rescue fires only
+# for an archer more than 3 m from its seat (HowdahSeatMotion.SeatRescueMetres), which is an archer off its deck.
+# One check for each beast, because the howdah has no navmesh under it and a mumakil battle proves nothing about it.
+# The outcome log writes one line per seat tag and result in a game process, so a second battle in the same process
+# adds a line only for a seat that changes its result.
+# With Log Crew Platform Diagnostics on, the [Mumakil#n] status and [Howdah#n] status lines give the detail per seat:
+# rs (rescues), re (reload restarts), lag (metres ahead of or behind the seat) and parentRoot (1 while attached).
+issue = 1482
+title = "Mumakil and elephant crews trail their seats while the beast moves"
+fixed_in = "b99d468a4"   # trunk before the fix: the manifest ships with the emitter
+logs = ["taom"]
+
+[[check]]
+id = "taom.crew-seats.mumakil-held"
+needs = "a battle with a crewed mumakil, played until its crew leave their seats (the battle ends or the beast dies)"
+reached = ['\[Check\] id=taom\.crew-seats\.mumakil-held result=(pass|fail) ']
+pass = ['\[Check\] id=taom\.crew-seats\.mumakil-held result=pass seat=\S+ rescues=0$']
+fail = ['\[Check\] id=taom\.crew-seats\.mumakil-held result=fail ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.crew-seats.howdah-held"
+needs = "a battle with a howdah elephant, played until its crew leave their seats (the battle ends or the beast dies)"
+reached = ['\[Check\] id=taom\.crew-seats\.howdah-held result=(pass|fail) ']
+pass = ['\[Check\] id=taom\.crew-seats\.howdah-held result=pass seat=\S+ rescues=0$']
+fail = ['\[Check\] id=taom\.crew-seats\.howdah-held result=fail ']
+absence = "not-reached"
+
+[[human]]
+claim = "On a mumakil that walks, turns hard and charges, the eight archers stay on their decks and loose arrows"
+
+[[human]]
+claim = "On a howdah elephant that walks, turns hard and charges, the two archers stay in the howdah and loose arrows"
+
+[[human]]
+claim = "When the beast dies or the battle ends, the archers come down to the ground and move as ordinary troops"

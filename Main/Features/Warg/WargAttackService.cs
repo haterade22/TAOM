@@ -39,9 +39,9 @@ public class WargAttackService : IWargAttackService
         if (attacker == null)
             return;
 
-        // Warg-specific victim-team rule: if the victim is a mount, attribute the team to its rider.
-        var victimTeamSource = target.IsMount && target.RiderAgent != null ? target.RiderAgent : target;
-        if (attacker.RiderAgent != null && attacker.RiderAgent.IsSameTeam(victimTeamSource))
+        // The side rule the warg shares with the spider (CreatureBiteSides, #594). A riderless warg compares no
+        // team with soldiers (null biter side), but still spares a riderless mount of unknown side.
+        if (CreatureBiteSides.Spares(attacker.RiderAgent, target))
             return;
 
         string mountBeforeBlow = "unread";

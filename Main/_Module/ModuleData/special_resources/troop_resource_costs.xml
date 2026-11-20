@@ -12,7 +12,7 @@
   <Troop id="mordor_uruk_heavy_archer" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="0.1" />
   <!-- Cavalry (Nurn Warg Riders top-tier) -->
   <Troop id="mordor_warg_beastmaster" resource_id="war_spoils" upgrade_cost="1" daily_upkeep="0.05" />
-  <!-- Dire wolf riders (#1081): level 26 and up, the lowest band. recruit_cost charges the notable route, gated, and a prisoner recruit, ungated (#563). -->
+  <!-- Dire wolf riders (#1081): level 26 and up, the lowest band. recruit_cost charges the notable route and a prisoner recruit, both gated (Patch51, and the Patch26 party-screen clamp since #563). -->
   <Troop id="goblin_wolf_lord" resource_id="war_spoils" upgrade_cost="1" recruit_cost="1" daily_upkeep="0.05" />
   <Troop id="gundabad_dire_wolf_rider" resource_id="war_spoils" upgrade_cost="1" recruit_cost="1" daily_upkeep="0.05" />
   <Troop id="gundabad_wolf_lord" resource_id="war_spoils" upgrade_cost="1" recruit_cost="1" daily_upkeep="0.05" />
@@ -32,7 +32,7 @@
   <Troop id="taom_spider_creature" resource_id="war_spoils" recruit_cost="5" daily_upkeep="1" merchant_cost="18" />
   <!-- Trolls (Mike, 2026-09-25): a high cost, a lowish upkeep, both in the PLAYER's own resource. Neither is a
        volunteer or a mercenary, so in practice the recruit cost is charged when the player recruits a captured
-       troll, a path Patch51 does not gate (the balance floors at 0, #563); the upkeep charges every troll in the
+       troll, a path the party screen clamps to the balance since #563 (Patch26); the upkeep charges every troll in the
        player's party. -->
   <Troop id="cave_troll" resource_id="war_spoils" recruit_cost="50" daily_upkeep="5" />
   <Troop id="hill_troll" resource_id="war_spoils" recruit_cost="50" daily_upkeep="4" />
@@ -78,7 +78,7 @@
        UPGRADE COST (6 / 5): a notable pick is a door into the rung, not the emissary's on-demand
        convenience (45 / 28), and the Ranger has no incoming upgrade edge at all, so recruit_cost
        is the only price it ever pays. The same attribute is charged per unit on prisoner recruits
-       (the engine raises OnUnitRecruited there too, ungated, #563), so a price at the emissary band
+       (the engine raises OnUnitRecruited there too; the party screen clamps it to the balance, #563), so a price at the emissary band
        would drain a balance to zero in one screen and start desertion the next morning. Patch51
        gates the volunteer path (button and Confirm hotkey) and OnUnitRecruited charges it.
        EveryVolunteerPooledUpkeepTroop_CarriesRecruitCost pins the pairing.

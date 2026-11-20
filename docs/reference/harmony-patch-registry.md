@@ -222,6 +222,8 @@ English string overrides for vanilla `{=ID}` tokens, applied only while the acti
 
 Per-kingdom resource gating + transactional spending
 
+Since #563 (2026-11-19) the `AddCommand` prefix also clamps `PartyCommandCode.RecruitTroop`, a party-screen prisoner recruit, to the `recruit_cost` the balance covers, through `IOnPartyUpgradeResourceCheck.ClampRecruitCount`. A count of zero returns false, which skips `ProcessCommand` and so `RecruitPrisoner` and nothing else (`AddCommand` only calls `ProcessCommand`). Outside a co-op session only: while `ICoopSessionProvider.IsSessionActive`, on host and guest alike, `PartyUpgradeResourceCheckHook.ClampRecruitCount` returns the requested count, so the prefix lets every prisoner recruit through with no message, because Coop's prisoner path charges no `recruit_cost` (#563 decision A, #967). The upgrade clamp still runs in a session. See `docs/features/special-resources.md`.
+
 ## Patch27_CareerSystem
 
 **Target:** `ViewModel.ExecuteCommand`

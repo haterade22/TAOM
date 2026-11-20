@@ -11,7 +11,7 @@ namespace TAOM.Features.Mumakil;
 /// <summary>
 /// One crew archer's place on the Mûmakil's war tower. A clone of the howdah's seat
 /// (<see cref="TaomHowdahStandingPoint"/>) per the one-feature-per-creature convention, carrying the four engine
-/// rules #627 cost nine in-game rounds to find. It does NOT copy their numbers: the deadband, the capsule spacing
+/// rules #627 cost nine in-game rounds to find. It does NOT copy their numbers: the rescue band, the capsule spacing
 /// and the AI curve rows come from the pure <see cref="HowdahSeatMotion"/> and <see cref="HowdahCrewBehaviourCurves"/>,
 /// which are measurements rather than creature behaviour.
 ///
@@ -20,10 +20,12 @@ namespace TAOM.Features.Mumakil;
 ///    GetMissileRangeWithHeightDifference, Agent.cs:5444-5450) and the archer reads as able to reach nothing.
 /// 2. Rewrite the AI behaviour curves and keep rewriting them. A formation applying a Move order stamps
 ///    DefaultMove, whose Ranged row is about a hundredth of Melee (HumanAIComponent.cs:751-758).
-/// 3. Give the archer a scripted position at its own seat, or its ranged behaviour walks it toward a firing
-///    position it can never reach. DoNotRun, and never NoAttack, which is the flag that silences the bow.
-/// 4. Only correct its position once it has actually drifted. Correcting the settle every frame reads to the
-///    engine as tens of m/s and no bow draw ever completes.
+/// 3. Hold the archer with the engine's position lock and attach it to the platform (#1482). Its ranged behaviour
+///    walks it off the seat toward a firing position it can never reach, beast standing or moving, and a scripted
+///    position at the seat did not stop that. Never NoAttack, which is the flag that silences the bow.
+/// 4. Never hold it by teleport. A teleport is a full native movement reset: every reload restart measured on
+///    2026-11-19 had one inside it, and correcting the settle every frame reads to the engine as tens of m/s
+///    (#627). One teleport remains, for an archer more than <see cref="HowdahSeatMotion.SeatRescueMetres"/> off.
 ///
 /// The seat must also be EMPTY before anything deactivates it: UsableMissionObject.IsDeactivated's setter spins
 /// while (HasAIMovingTo) on a MovingAgent that was never registered through AIMoveToGameObjectEnable, which hung
@@ -41,26 +43,15 @@ public class TaomMumakilStandingPoint : StandingPoint
     /// <summary>Set by the platform, e.g. "[Mumakil#2] seat3" (#627 phase 2).</summary>
     public string LogTag = "[Mumakil]";
 
-    /// <summary>The platform this seat is on, set with <see cref="mumakilAgent"/>. The seat reads the frame the
-    /// platform last ticked in, which tells whether it saw this frame's seat position or last frame's (#1482).</summary>
-    internal TaomMumakilPlatform Platform;
-
-    /// <summary>TEMPORARY (#1482): how this seat carries its archer in the measuring build.</summary>
-    internal CrewCarryArm Arm { get; private set; } = CrewCarryArm.Baseline;
-
     private IModLogger _logger;
     private HowdahSampleClock _behaviourClock;
 
     // The seat's numbers for the platform's status line. The bow lives on upper-body channel 1: a reload or draw
     // that completes runs its progress to 1.0; one the engine aborts falls back toward 0 and starts again, which is
-    // the re-nock loop. The probe counts a restart against a teleport only when one fell inside it (#1482).
+    // the re-nock loop. The probe counts a restart against a rescue only when one fell inside it (#1482).
     internal HowdahSeatProbe Probe { get; } = new HowdahSeatProbe();
     internal string UpperBodyAction =>
         MovingAgent != null && MovingAgent.IsActive() ? MovingAgent.GetCurrentAction(1).GetName() : "-";
-
-    // ManagedCarry only: where the archer stands in the platform's own frame.
-    private Vec3 _carryOffset;
-    private bool _hasCarryOffset;
 
     protected override void OnInit()
     {
@@ -70,10 +61,6 @@ public class TaomMumakilStandingPoint : StandingPoint
         LockUserFrames = false;
         LockUserPositions = false;
         _logger = IoC.Resolve<IModLogger>();
-        // The diagnostics setting is the experiment's off switch: off at mission start, every seat is Baseline.
-        Arm = IoC.Resolve<IHowdahDiagnosticsSettingsProvider>()?.IsEnabled == true
-            ? CrewCarryExperiment.ForMumakilSeat(GameEntity.Name)
-            : CrewCarryArm.Baseline;
     }
 
     public override TickRequirement GetTickRequirement()
@@ -92,27 +79,27 @@ public class TaomMumakilStandingPoint : StandingPoint
         // detachment its formation holds, and an archer the seat teleports must not be handed to a machine.
         userAgent.SetDetachableFromFormation(false);
         ApplyCrewCombatStance(userAgent);
-        // Pinned in place, ONCE. Until the platform carried a navmesh the crew physically could not walk, so
-        // nothing ever had to stop them; the first battle with a navmesh under them they wandered up to 7.06 m
-        // for better firing positions. Locomotion only, turning and shooting untouched. This is applied here and
-        // NOT on the half-second stance clock: re-applying it every 0.5 s on eight seats in lockstep matched the
-        // draw dying at 0.85 once a second on all eight in lockstep, while the teleport count did not (340
-        // teleports against 27 restarts). A movement-limit reset mid-draw is the prime suspect for the abort.
+        // Speed limit 0, once per occupancy. The first battle with a navmesh under the crew they wandered up to
+        // 7.06 m for better firing positions. The lock in OnTick now holds the position; both battles that
+        // measured the lock (2026-11-19) had this limit on, so whether the lock needs it is not known. Locomotion
+        // only, turning and shooting untouched.
         userAgent.SetMaximumSpeedLimit(0f, isMultiplier: false);
         userAgent.SetWatchState(Agent.WatchState.Alarmed);
         _behaviourClock = new HowdahSampleClock(HowdahCrewBehaviourCurves.ReassertSeconds);
         Probe.Reset();
-        _hasCarryOffset = false;
-        // The vanilla attach, ClimbingMachine.OnUseAction on a moving ship's net. The root, never this seat's own
-        // entity: the root is the one TaomMumakilPlatform re-frames.
-        if (Arm == CrewCarryArm.ForceAttach) userAgent.SetForceAttachedEntity(GameEntity.Root);
+        // The attachment is what carries the archer WITH the platform (#1482, 2026-11-19, one mumakil at up to
+        // 5 m/s): three attached seats stayed within 0.11 m of their seats with no rescue, while five seats with the
+        // lock alone lagged up to 3 m and were rescued. It is the vanilla attach, ClimbingMachine.OnUseAction on a
+        // moving ship's net. The root, never this seat's own entity: the root is the one TaomMumakilPlatform
+        // re-frames. Native keeps a raw entity pointer on the agent, so ReleaseAgent clears it.
+        userAgent.SetForceAttachedEntity(GameEntity.Root);
     }
 
     public override void OnUseStopped(Agent userAgent, bool isSuccessful, int preferenceIndex)
     {
         _logger?.LogWarning(
             $"{LogTag} OnUseStopped (UNEXPECTED): agent={userAgent?.Name} isSuccessful={isSuccessful} " +
-            $"prefIndex={preferenceIndex} teleports={Probe.Teleports}");
+            $"prefIndex={preferenceIndex} rescues={Probe.Rescues}");
         base.OnUseStopped(userAgent, isSuccessful, preferenceIndex);
     }
 
@@ -161,7 +148,7 @@ public class TaomMumakilStandingPoint : StandingPoint
         {
             _logger?.LogInfo(
                 $"{LogTag} releasing {MovingAgent.Name}: isActive={MovingAgent.IsActive()} " +
-                $"missionEnded={missionEnded} after {Probe.Teleports} teleports");
+                $"missionEnded={missionEnded} after {Probe.Rescues} rescues");
             ReleaseAgent();
             return;
         }
@@ -174,46 +161,24 @@ public class TaomMumakilStandingPoint : StandingPoint
         if (!HowdahSeatMotion.IsPlaceable(seatPosition.x, seatPosition.y, seatPosition.z)) return;
 
         float seenSquared = (seatPosition - MovingAgent.Position).LengthSquared;
-        // Whether the platform was re-framed before this seat ticked. If not, seatPosition is last frame's, and the
-        // band below is tested against a seat one frame of travel behind the beast (#1482).
-        // Counted only while the status line is on, so a period's numbers cover that period and nothing older.
-        if (Platform != null && Platform.Measuring)
-            Probe.NoteSeatTick((float)Math.Sqrt(seenSquared), Platform.LastTickFrameNo == Utilities.EngineFrameNo);
 
-        // Baseline is the shipped rule: a body-width band (0.74 m), unscaled since the 2026-09-21 navmesh. Whether
-        // the engine carries an archer on the attached navmesh, and whether these teleports are what stall the
-        // reload, is what the #1482 measuring build exists to settle; both were asserted here before and neither
-        // was measured. Every other arm takes no correction, only a rescue from far off its deck, so one failed
-        // arm keeps producing numbers for the rest of the battle.
-        if (Arm == CrewCarryArm.Baseline)
-        {
-            if (HowdahSeatMotion.ShouldCorrect(seenSquared, HowdahSeatMotion.MinimumFrameSeparation))
-            {
-                MovingAgent.TeleportToPosition(seatPosition);
-                Probe.NoteTeleport();
-            }
-        }
-        else if (HowdahSeatMotion.ShouldCorrect(seenSquared, CrewCarryExperiment.RescueBandMetres))
+        // A position LOCK holds the archer, never a correction (#1482, measured 2026-11-19 on three mumakil). The
+        // archers WALK off their seats by themselves, beast standing or moving: with the old 0.74 m correction a
+        // main-deck archer crept to the band and was teleported back 12 times per 5 s, every reload restart had
+        // a teleport inside it, and it stopped shooting. With no correction it walked 3 m off its deck. The one
+        // locked seat stayed within 0.03 m with no teleport and shot at the nest archer's rate. The lock is the
+        // engine's own hold for a standing point's user, and what ClimbingMachine sets each tick on a ship's net:
+        // a target the native movement goes to. Position only, so the archer still turns to aim. SetTargetZ
+        // sets the height target and puts the native movement in the gravity-excluded mode. The lock alone lags
+        // behind a beast at speed; the attachment set in OnUse is what removes that lag.
+        MovingAgent.SetTargetPosition(seatPosition.AsVec2);
+        MovingAgent.SetTargetZ(seatPosition.z);
+
+        // The safety net: an archer truly off its deck is placed back once, and counted.
+        if (HowdahSeatMotion.ShouldCorrect(seenSquared, HowdahSeatMotion.SeatRescueMetres))
         {
             MovingAgent.TeleportToPosition(seatPosition);
             Probe.NoteRescue();
-            _hasCarryOffset = false;
-        }
-
-        if (Arm == CrewCarryArm.DrivenTarget)
-        {
-            // ClimbingMachine's hold: a target the native movement goes to, never a teleport. Position only, so
-            // the archer still turns to aim.
-            MovingAgent.SetTargetPosition(seatPosition.AsVec2);
-            MovingAgent.SetTargetZ(seatPosition.z);
-        }
-        else
-        {
-            // hasValidZ matters: the two-argument WorldPosition constructor leaves Z invalid, and
-            // SetScriptedPosition resolves an invalid Z to the GROUND whenever Mission.IsTeleportingAgents is set,
-            // which the deployment phase does. From 9 m up that would drop the whole crew off the tower.
-            var scripted = new WorldPosition(Mission.Current?.Scene, UIntPtr.Zero, seatPosition, hasValidZ: true);
-            MovingAgent.SetScriptedPosition(ref scripted, addHumanLikeDelay: false, Agent.AIScriptedFrameFlags.DoNotRun);
         }
 
         if (_behaviourClock != null && _behaviourClock.Tick(dt))
@@ -224,47 +189,16 @@ public class TaomMumakilStandingPoint : StandingPoint
 
     /// <summary>
     /// From the platform, right after it re-framed itself: how far this archer is from its seat in the platform's
-    /// own frame, and for ManagedCarry the placement at its platform-local offset. Measured here and not in the
-    /// seat's tick, so the number does not depend on which of the two ticked first.
+    /// own frame. Measured here and not in the seat's tick, so the number does not depend on which of the two
+    /// ticked first.
     /// </summary>
-    internal void AfterPlatformMoved(in MatrixFrame root, bool platformMoved, bool measure)
+    internal void AfterPlatformMoved(in MatrixFrame root)
     {
-        if (!measure && Arm != CrewCarryArm.ManagedCarry) return;
         Agent archer = MovingAgent;
         if (archer == null || !archer.IsActive() || !AgentSlotIdentity.IsCurrentOccupant(archer)) return;
         Vec3 position = archer.Position;
-        if (!HowdahSeatMotion.IsPlaceable(position.x, position.y, position.z)) return;
-
-        if (measure)
-        {
-            Vec3 lag = root.TransformToLocal(in position) - root.TransformToLocal(GameEntity.GlobalPosition);
-            Probe.NoteLag(lag.y, lag.Length);
-        }
-
-        if (Arm != CrewCarryArm.ManagedCarry) return;
-        if (!_hasCarryOffset)
-        {
-            Vec3 first = root.TransformToLocal(in position);
-            // A NaN offset would answer Leave on every later tick and could never be adopted away.
-            if (!HowdahSeatMotion.IsPlaceable(first.x, first.y, first.z)) return;
-            _carryOffset = first;
-            _hasCarryOffset = true;
-            return;
-        }
-        Vec3 wanted = root.TransformToParent(in _carryOffset);
-        switch (HowdahSeatMotion.DecideCarry((wanted - position).LengthSquared, platformMoved,
-                    HowdahSeatMotion.CarryToleranceMetres))
-        {
-            case CarryAction.Place:
-                if (!HowdahSeatMotion.IsPlaceable(wanted.x, wanted.y, wanted.z)) break;
-                archer.TeleportToPosition(wanted);
-                Probe.NoteTeleport();
-                break;
-            case CarryAction.AdoptOffset:
-                Vec3 adopted = root.TransformToLocal(in position);
-                if (HowdahSeatMotion.IsPlaceable(adopted.x, adopted.y, adopted.z)) _carryOffset = adopted;
-                break;
-        }
+        Vec3 lag = root.TransformToLocal(in position) - root.TransformToLocal(GameEntity.GlobalPosition);
+        Probe.NoteLag(lag.y, lag.Length);
     }
 
     /// <summary>Backstop half of the anti-hang release; <see cref="TaomMumakilPlatform.OnMissionEnded"/> is the
@@ -288,21 +222,18 @@ public class TaomMumakilStandingPoint : StandingPoint
         if (MovingAgent == null) return;
         Agent agent = MovingAgent;
         bool ownsSlot = AgentSlotIdentity.IsCurrentOccupant(agent);
-        // The arm's native state is undone for a DEAD archer too, while its handle still owns its slot: the attach
+        // The seat's native state is undone for a DEAD archer too, while its handle still owns its slot: the attach
         // is a raw entity pointer on the agent, and vanilla clears the same state at death (Agent.OnRemove stops
         // the object use, which reaches ResetGravityExclusionAndEntityAttachmentOnStopUsageComponent.OnUseStopped
         // and StandingPoint.OnUseStopped). This seat is not the agent's used object, so nothing else would. A
         // recycled handle is never touched: it would clear a stranger's.
         if (ownsSlot)
         {
-            if (Arm == CrewCarryArm.ForceAttach) agent.SetForceAttachedEntity(WeakGameEntity.Invalid);
-            if (Arm == CrewCarryArm.DrivenTarget)
-            {
-                // ClearTargetFrame drops the position lock; excluded-from-gravity false is the native inverse of
-                // SetTargetZ (set_target_z puts the movement in the gravity-excluded mode).
-                agent.ClearTargetFrame();
-                agent.SetExcludedFromGravity(exclude: false, applyAverageGlobalVelocity: false);
-            }
+            agent.SetForceAttachedEntity(WeakGameEntity.Invalid);
+            // ClearTargetFrame drops the position lock; excluded-from-gravity false is the native inverse of
+            // SetTargetZ (set_target_z puts the movement in the gravity-excluded mode).
+            agent.ClearTargetFrame();
+            agent.SetExcludedFromGravity(exclude: false, applyAverageGlobalVelocity: false);
         }
         if (ownsSlot && agent.IsActive())
         {
@@ -311,11 +242,11 @@ public class TaomMumakilStandingPoint : StandingPoint
             Agent mount = mumakilAgent;
             Vec3 ground = mount != null && AgentSlotIdentity.IsCurrentOccupant(mount) ? mount.Position : agent.Position;
             agent.TeleportToPosition(ground);
-            agent.DisableScriptedMovement();
             RestoreOrdinaryCombatStance(agent);
             agent.TryAttachToFormation();
         }
-        _logger?.LogInfo($"{LogTag} released {agent.Name} after {Probe.Teleports} teleports");
+        _logger?.LogInfo($"{LogTag} released {agent.Name} after {Probe.Rescues} rescues");
+        CrewSeatChecks.Report(CrewSeatChecks.MumakilHeldId, LogTag, Probe.Rescues);
         RemoveMovingAgent(agent);
     }
 }

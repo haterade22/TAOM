@@ -289,31 +289,6 @@ public class MumakilPlatformTests
     }
 
     [TestMethod]
-    public void TheDeadband_CannotEatTheSpacingMargin()
-    {
-        // The two tuning numbers are set independently and would meet only in game. The seat lets an archer drift
-        // SeatDeadbandFor(scale) before correcting, so the conservative bound is two archers at full drift heading
-        // straight at each other. That is not what a shared deck actually does to them (it carries them the same
-        // way), so this is a design margin rather than a prediction: it exists so that widening the deadband or
-        // tightening the frames can never quietly reintroduce the overlap the spacing rule was written for.
-        // Unscaled since the navmesh carries the archers with the deck (2026-09-21); see the seat for the measurement.
-        float deadband = HowdahSeatMotion.BaseSeatDeadbandMetres;
-        float closest = float.MaxValue;
-        float[][] frames = CrewFrames().Select(Position).ToArray();
-        for (int i = 0; i < frames.Length; i++)
-            for (int j = i + 1; j < frames.Length; j++)
-            {
-                if (Math.Abs(frames[i][2] - frames[j][2]) > 0.01f) continue;
-                float dx = frames[i][0] - frames[j][0];
-                float dy = frames[i][1] - frames[j][1];
-                closest = Math.Min(closest, (float)Math.Sqrt(dx * dx + dy * dy));
-            }
-        Assert.IsTrue(closest - 2f * deadband >= HowdahSeatMotion.MinimumFrameSeparation,
-            $"closest frames are {closest:F2} m apart and each archer may drift {deadband:F2} m, leaving " +
-            $"{closest - 2f * deadband:F2} m against the {HowdahSeatMotion.MinimumFrameSeparation:F2} m capsule rule");
-    }
-
-    [TestMethod]
     public void TheTaggedFrames_AndTheScriptedFrames_AreTheSameEntities()
     {
         // The tag is what every test here selects on; the SCRIPT is what the game selects on, because

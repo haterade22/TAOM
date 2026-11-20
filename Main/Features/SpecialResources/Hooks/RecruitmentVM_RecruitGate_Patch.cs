@@ -67,12 +67,7 @@ public static class RecruitmentVM_RecruitGate_Patch
     }
 
     internal static TextObject RequiresText(RecruitGateResult result)
-    {
-        var text = new TextObject("{=taom_recruit_needs_resource}Requires {AMOUNT} {RESOURCE}");
-        text.SetTextVariable("AMOUNT", result.Required);
-        text.SetTextVariable("RESOURCE", result.ResourceDisplayName);
-        return text;
-    }
+        => SpecialResourceMessages.RecruitNeedsResource(result.Required, result.ResourceDisplayName);
 
     internal static void LogBlockedCommit(RecruitGateResult result)
         => _logger?.LogInfo($"[SpecRes] RecruitGate: blocked ExecuteDone (need {result.Required} {result.ResourceDisplayName})");
