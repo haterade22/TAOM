@@ -559,7 +559,8 @@ a clip from its RuntimeDataCache entry, which holds the keys the Kit cooked from
 61-frame walk, 11 KB for the 38-frame canter, 41 KB for the 270-frame `elephant_stand_1`), and the seven entries
 still carry their June dates. The "After" column above is true of the master files only. The gate now reads
 the entry's date too and fails a bound clip whose entry is older than its master. The seven rewritten
-`elephant_*` masters stay (each has a `.bak-pre1474` twin); if a Kit start cooks their clips again, the result
+`elephant_*` masters stay (their `.bak-pre1474` twins are in the backup folder named under "Still open"); if a
+Kit start cooks their clips again, the result
 passes the gate's stride check.
 
 **Set 2 (2026-11-19): own clips for each beast.** Mike asked for separate clips because the mumak is three
@@ -700,7 +701,8 @@ lower limit, so a beast that once passed 2.5 m/s stayed in the trot down to 0.2 
 walking speed. In ADOD's set that pace played the walk clip, so nobody could see it. The war elephant passes
 2.5 in every charge (7.3 m/s at model size in the match above); the mumak that Mike judged did not. Both
 records now carry ADOD's own trot limits, 2.3 to 4.5 (`gen_elephant_anim_clips.ps1`, `$LIMITS_FROM`), written
-in place on 2026-11-20 at 14:03, and the gate fails a faster pace whose lower limit is not above the walk's.
+in place on 2026-11-20 at 14:03 and cooked by the Kit at 15:33, and the gate fails a faster pace whose lower
+limit is not above the walk's.
 Nobody has yet watched a beast slow down from a charge. ADOD's gallop starts at 4.3 and its canter at 4.8, so
 the canter is skipped on the way down; that belongs to the pace table rebuild.
 
@@ -727,8 +729,7 @@ Armory on 2026-11-19 at 17:26; the Kit cooked the 17 clips that play this master
 passes. Mike watched an attack and a death of the mumak in a custom battle on 2026-11-20 and judged both
 acceptable. Nobody has yet watched the stand after a stop on the lowered root, and nobody has watched the
 war elephant on it. The way back is the file from before the write:
-`E:\LOTRAOMAssets\_tpac_backup_20261118\adod_elephant_geo.tpac.before_root_z_20261119` (the `.bak-pre1474`
-twin beside the live file holds the same bytes), then one Kit start.
+`E:\LOTRAOMAssets\_tpac_backup_20261118\adod_elephant_geo.tpac.before_root_z_20261119`, then one Kit start.
 
 Mike's direction (2026-11-19): TAOM can make its own clips and does not need ADOD's any more. The root change
 is the repair for the clips that are still bound; the attacks, hit, rear, dash, death, the standing pose and
@@ -753,10 +754,9 @@ the third idle are the list to replace.
 - Comments in the live Armory that still say the mumak uses `as_elephant`: `SubModule.xml` (mumakil node),
   `LOTRAOM_horses.xml` (`taom_mumakil`) and `Monsters/LOTR/lotr_monster_elk.xml`. The attack actions they
   describe are unchanged: `as_mumakil` carries the same rows.
-- Backups this work left in the live Armory, to move to `E:\LOTRAOMAssets\_tpac_backup_20261118\` (release step
-  3 sweeps what is left): eight `*.bak-pre1474` files in `Assets/creature/elephant` (seven first-set masters and
-  `mesh/adod_elephant_geo.tpac`), three `*.bak-elephant-bind-*` files in `ModuleData`, and two
-  `*_trot_anm.tpac.bak-limits-*` files.
+- The backups this work made beside live files (eight `*.bak-pre1474`, three `*.bak-elephant-bind-*`, two
+  `*_trot_anm.tpac.bak-limits-*`) are out of the Armory since 2026-11-20, under
+  `E:\LOTRAOMAssets\_tpac_backup_20261118\from_live_armory_20261120\` with their module paths.
 - The Kit shows an RGL WARNING for each clip it cooks: "resources' pos ipo[1.00, 76.00] does not fit with
   anim_clip's sources 0.00 and 76.00". Every master's key times run from 1 to its key count, the Kit-made ADOD
   masters too (`elephant_walk`: 1 to 61), and every record's range starts at 0, as ADOD's records do. The Kit
