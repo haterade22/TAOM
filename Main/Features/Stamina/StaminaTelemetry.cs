@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using TAOM.Features.Stamina.Domain;
 
@@ -26,6 +29,9 @@ public sealed class StaminaTelemetry
     private long _exhaustedSoldiers;
     private long _recoveries;
     private long _stuck;
+
+    // Per people (the race name): fighters, soldiers ever Exhausted, exhaustions. The peoples table is tuned from it.
+    private readonly ConcurrentDictionary<string, long[]> _peoples = new(StringComparer.OrdinalIgnoreCase);
 
     public long AiStrips => Interlocked.Read(ref _aiStrips);
 
@@ -69,13 +75,32 @@ public sealed class StaminaTelemetry
 
     public void CountBlock() => Interlocked.Increment(ref _blocks);
 
-    public void CountFighter() => Interlocked.Increment(ref _fighters);
+    private long[] TallyOf(string? people) => _peoples.GetOrAdd(string.IsNullOrEmpty(people) ? "unknown" : people!, _ => new long[3]);
 
-    public void CountExhausted(bool first)
+    public void CountFighter(string? people)
     {
+        Interlocked.Increment(ref _fighters);
+        Interlocked.Increment(ref TallyOf(people)[0]);
+    }
+
+    public void CountExhausted(bool first, string? people)
+    {
+        var tally = TallyOf(people);
         Interlocked.Increment(ref _exhaustions);
-        if (first)
-            Interlocked.Increment(ref _exhaustedSoldiers);
+        Interlocked.Increment(ref tally[2]);
+        if (!first)
+            return;
+        Interlocked.Increment(ref _exhaustedSoldiers);
+        Interlocked.Increment(ref tally[1]);
+    }
+
+    /// <summary>One clause per people in name order: who fought, who was ever Exhausted, how often.</summary>
+    public string PeoplesReport()
+    {
+        var rows = _peoples.OrderBy(p => p.Key, StringComparer.Ordinal).Select(p =>
+            $"{p.Key} fighters={Interlocked.Read(ref p.Value[0])} exhaustedSoldiers={Interlocked.Read(ref p.Value[1])} enteredExh={Interlocked.Read(ref p.Value[2])}");
+        var text = string.Join("; ", rows);
+        return "peoples: " + (text.Length == 0 ? "none" : text);
     }
 
     public void CountRecovered() => Interlocked.Increment(ref _recoveries);
@@ -124,5 +149,6 @@ public sealed class StaminaTelemetry
         Interlocked.Exchange(ref _exhaustedSoldiers, 0);
         Interlocked.Exchange(ref _recoveries, 0);
         Interlocked.Exchange(ref _stuck, 0);
+        _peoples.Clear();
     }
 }

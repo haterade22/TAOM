@@ -62,6 +62,20 @@ public class StaminaWiringTests
     }
 
     [TestMethod]
+    public void TheCounters_KnowEachSoldiersPeople_AndTheSummaryLineNamesThem()
+    {
+        var ticker = Code("Main/Features/Stamina/Hooks/StaminaTicker.cs");
+        var enrol = ticker.Substring(At(ticker, "private void Enrol("));
+        // Read once, with the profile: no engine read is added for the counters.
+        StringAssert.Contains(enrol, "var race = _runtime.RaceNameOf(character?.Race);");
+        StringAssert.Contains(enrol, "cell.People = race ?? \"unknown\";");
+        Assert.AreEqual(2, Regex.Matches(ticker, @"Telemetry\.CountFighter\(cell\.People\)").Count);
+        StringAssert.Contains(ticker, "_runtime.Telemetry.CountExhausted(first: !cell.EverExhausted, cell.People);");
+        var describe = ticker.Substring(At(ticker, "public string Describe()"));
+        StringAssert.Contains(describe.Substring(0, At(describe, "private string Counts()")), "_runtime.Telemetry.PeoplesReport()");
+    }
+
+    [TestMethod]
     public void TheHudRead_AndTheConsoleForce_LeaveOutASoldierWithNoStamina()
     {
         // An exempt people or an MCM opt-out: no bar that stays full for ever, and no "N soldiers set" for soldiers

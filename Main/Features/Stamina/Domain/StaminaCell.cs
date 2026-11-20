@@ -77,6 +77,9 @@ public sealed class StaminaCell
         set => _tracked = value;
     }
 
+    /// <summary>The soldier's race name, for the per-people counters. Set once when he is enrolled. Main thread.</summary>
+    public string People { get; set; } = "unknown";
+
     /// <summary>The published band was decided by the rules, not by the console or an exemption. Main thread.</summary>
     public bool BandByRules { get; set; }
 

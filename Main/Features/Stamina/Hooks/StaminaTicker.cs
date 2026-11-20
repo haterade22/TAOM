@@ -149,7 +149,8 @@ public sealed class StaminaTicker
     public string Describe() =>
         $"Stamina: {(_runtime.Settings.Enabled ? "enabled" : "DISABLED in MCM")}; mission gate: {_runtime.MissionGate}; cost scale {_costScale:0.##}\n"
         + Counts() + $"; stat refreshes waiting: {_runtime.Refreshes.Count}\n"
-        + _runtime.Telemetry.Report();
+        + _runtime.Telemetry.Report() + "\n"
+        + _runtime.Telemetry.PeoplesReport();
 
     // The roster as counts: no agent is read, so this is safe at mission end.
     private string Counts()
@@ -259,7 +260,7 @@ public sealed class StaminaTicker
         StaminaService.Charge(cell, StaminaService.ActionCost(economy, kind, weaponKg), now, economy);
         _runtime.Telemetry.CountAction(kind);
         if (cell.EverFought && !fought)
-            _runtime.Telemetry.CountFighter();
+            _runtime.Telemetry.CountFighter(cell.People);
     }
 
     private void Visit(Agent agent, StaminaCell cell, float now, StaminaTuning tuning)
@@ -292,7 +293,7 @@ public sealed class StaminaTicker
                 StaminaService.Skip(cell);
             StaminaService.Step(cell, Sample(agent, cell, now, dt, economy), economy);
             if (cell.EverFought && !fought)
-                _runtime.Telemetry.CountFighter();
+                _runtime.Telemetry.CountFighter(cell.People);
         }
         else
         {
@@ -308,10 +309,12 @@ public sealed class StaminaTicker
     {
         var character = agent.Character;
         var hero = agent.IsHero;
+        var race = _runtime.RaceNameOf(character?.Race);
         var profile = StaminaService.Profile(tuning.Economy, tuning.Peoples, character?.GetBattleTier() ?? 0, hero,
-            hero ? character?.Level ?? 0 : 0, _runtime.RaceNameOf(character?.Race), CharacterCulture.IdOf(character),
+            hero ? character?.Level ?? 0 : 0, race, CharacterCulture.IdOf(character),
             agent.SpawnEquipment?.GetTotalWeightOfArmor(true) ?? 0f);
         cell.Enrolled = true;
+        cell.People = race ?? "unknown";
         cell.Exempt = profile.Exempt;
         cell.Max = profile.Pool;
         cell.Current = profile.Pool;
@@ -371,7 +374,7 @@ public sealed class StaminaTicker
 
         if (tally.Entered)
         {
-            _runtime.Telemetry.CountExhausted(first: !cell.EverExhausted);
+            _runtime.Telemetry.CountExhausted(first: !cell.EverExhausted, cell.People);
             cell.EverExhausted = true;
         }
 

@@ -139,6 +139,38 @@ public class StaminaChecksAndSettingsTests
     }
 
     [TestMethod]
+    public void PeoplesReport_CountsFightersAndExhaustionsPerPeople_InNameOrder()
+    {
+        // The peoples table of stamina.json is tuned from this line: without it the logs say how many soldiers were
+        // exhausted, and not whether they were the orcs with the small pool or the dwarves with the large one.
+        var sut = new StaminaTelemetry();
+        sut.CountFighter("orc");
+        sut.CountFighter("orc");
+        sut.CountFighter("elf");
+        sut.CountExhausted(first: true, "orc");
+        sut.CountExhausted(first: false, "orc");
+
+        Assert.AreEqual("peoples: elf fighters=1 exhaustedSoldiers=0 enteredExh=0; orc fighters=2 exhaustedSoldiers=1 enteredExh=2", sut.PeoplesReport());
+        Assert.AreEqual(3, sut.Fighters, "the totals still count everybody");
+        Assert.AreEqual(2, sut.Exhaustions);
+        Assert.AreEqual(1, sut.ExhaustedSoldiers);
+
+        sut.Reset();
+        Assert.AreEqual("peoples: none", sut.PeoplesReport());
+    }
+
+    [DataTestMethod]
+    [DataRow(null)]
+    [DataRow("")]
+    public void PeoplesReport_ASoldierWithNoRaceName_IsCountedAsUnknown(string? people)
+    {
+        var sut = new StaminaTelemetry();
+        sut.CountFighter(people);
+
+        Assert.AreEqual("peoples: unknown fighters=1 exhaustedSoldiers=0 enteredExh=0", sut.PeoplesReport());
+    }
+
+    [TestMethod]
     public void OptOuts_AreIndependent_AndReadLive()
     {
         var mcm = new TaomSettings();

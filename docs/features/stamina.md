@@ -355,7 +355,9 @@ the claim rules. The Marshal's Word pins for the shared flag are in `MarshalMark
 The log proves three things by itself (`python tools/ingame_verdict.py`, manifest `tools/ingame_checks/1497.toml`):
 `[Check] id=taom.stamina.armed`, `taom.stamina.lock` (an Exhausted soldier recovered and none stayed locked
 past 15 s) and `taom.stamina.refresh` (no batch of stat recomputes over 1 ms). Every 30 s the log has a
-`[Stamina][Pulse]` line and at the end one `[Stamina][Summary]`. A band that `taom.set_stamina` forced and a
+`[Stamina][Pulse]` line and at the end one `[Stamina][Summary]`, whose last line starts `peoples:` and gives
+per race name the fighters, the soldiers ever Exhausted and the exhaustions: the race rows of the peoples table
+are tuned from it (a culture row is not separated). A band that `taom.set_stamina` forced and a
 soldier an MCM switch exempted are outside the lock counters: only an exhaustion and a recovery that the rules
 made count, and a soldier that `auto` gives back while he is Exhausted gets his 15 s from that moment.
 
@@ -431,8 +433,10 @@ What the runs settle:
   no loss at speed. No AI soldier jumped, and kicks and bashes together were 0 to 14 in a match, so whether such
   an action is counted twice is still a person's check. The exception is Isengard against Erebor with 512 and
   651 kicks: they are the dwarves' head-butts and drop-kicks (`taom.dwarf-attacks.*` counted 511 attempts in
-  the first of the two matches). So a dwarf pays the kick cost, 6 points, for each of them, and an Exhausted
-  dwarf cannot use them. Whether that is wanted is Mike's decision.
+  the first of the two matches). So a dwarf pays the kick cost, 6 points, for each of them. The Exhausted
+  lock does not reach them (read from the code, not seen in a log): Dwarf Attacks starts the action itself, not
+  through AI input. Whether the
+  attacks should cost stamina is Mike's decision.
 - **The logs.** On the fixed build, the three runs with the switch on hold the same one `[ERROR]` line as the
   run with it off, and no `[WARNING]` that names stamina. The warnings differ only in two Fords lines that
   depend on the match: a tower warning of the Mordor map, and a "move target is off the navmesh" line that the
