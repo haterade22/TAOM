@@ -339,6 +339,20 @@ Rules 1 and 2 stated absolutes that the codebase does not follow and that other 
 
 Rule 3 and the Decision are unchanged. Nothing gates either rule; review applies them (lens 9a in `.claude/skills/deep-review/lenses/1-standards.md`).
 
+### Amendment (2026-11-20): a ratchet gate holds rule 1 (#1501)
+
+The sentence "Nothing gates either rule" above no longer holds for amendment rule 1.
+`CommentRatchetGateTests` counts the lines that hold a `//` or `/* */` comment in each production `.cs`
+file, against `tools/comment-ratchet-baseline.txt`. A count may only fall, and a new keep-list comment
+raises its file's baseline in the same change, where review sees it. Rule 2 (summary length) stays
+review-only.
+
+The keep-list gains one category, the engine fact: behaviour forced by TaleWorlds or a vendor, naming
+the constraint and its citation. It stays beside the line it guards; a copy in a doc would separate
+the fact from the code it explains. A TAOM decision moves to its feature doc, or to an ADR when it is
+architectural. The full rubric and the gate's details are in
+[comment-rubric.md](../reference/comment-rubric.md); `/delete-comment` applies it one folder at a time.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
