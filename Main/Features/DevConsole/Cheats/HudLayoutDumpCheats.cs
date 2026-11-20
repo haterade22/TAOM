@@ -101,8 +101,7 @@ public static class HudLayoutDumpCheats
                 }
 
                 sb.AppendLine($"-- layer '{layer.Name}' ({layer.GetType().Name}) active={layer.IsActive} --");
-                // Collapsed-tree guard (reference module finding): a not-yet-measured tree
-                // dumps all-zero rectangles that read as truth. Warn instead of lying.
+                // A not-yet-measured tree dumps all-zero rectangles that read as truth: warn instead.
                 if (root.Size.X < 1f && root.Size.Y < 1f)
                 {
                     collapsedRoots++;

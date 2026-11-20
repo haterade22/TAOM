@@ -136,8 +136,7 @@ internal static class InputStateDiagnosis
 
         // The map's Alt read is issued against the SceneLayer specifically
         // (GauntletMapPartyNameplateView.OnMapScreenUpdate), and the engine answers a key query only
-        // for the focused layer. Focus sitting on any other layer is the failure this command exists
-        // to catch, and scoring it OK merely because SOMETHING holds focus was the earlier bug here.
+        // for the focused layer, so focus on any other layer is a failure even though SOMETHING holds focus.
         if (onMap && !Contains(focused.TypeName, SceneLayerMarker) && !Contains(focused.Name, SceneLayerMarker))
         {
             return $"ALT PATH BROKEN: on the campaign map, focus is held by '{focusedLayerName}' "

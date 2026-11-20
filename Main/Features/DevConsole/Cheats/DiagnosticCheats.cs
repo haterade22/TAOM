@@ -57,8 +57,7 @@ public static class DiagnosticCheats
         });
 
     // Validate-before-lookup: GetRaceNameFromId coerces an unknown id to "human" with only a warning,
-    // so a diagnostic that called it blind would confidently report the wrong race — the worst
-    // possible failure mode for a command whose only job is to tell you the truth.
+    // so a diagnostic that called it blind would confidently report the wrong race.
     private static string DescribeHeroRace(IRaceManager races)
     {
         var hero = Hero.MainHero;

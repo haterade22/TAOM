@@ -84,7 +84,6 @@ internal static class TaomConsole
         }
         catch
         {
-            // Intentionally swallowed — see above.
         }
 
         return $"Command failed: {exception.GetType().Name}: {exception.Message}\n"
