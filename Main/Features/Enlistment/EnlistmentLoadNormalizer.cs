@@ -33,6 +33,7 @@ public class EnlistmentLoadNormalizer : IEnlistmentLoadNormalizer
     {
         var record = _store.Record;
         var presence = _partyAdapter.GetPresence();
+        _store.HeirDischargeHeld = false;
 
         if (!record.IsEnlisted)
         {
@@ -53,14 +54,20 @@ public class EnlistmentLoadNormalizer : IEnlistmentLoadNormalizer
         }
 
         // Identity guard (co-op join / heir succession): the oath belongs to a hero that
-        // is no longer the player. Quiet, penalty-free discharge.
-        if (!string.IsNullOrEmpty(record.EnlistedHeroId)
-            && !string.IsNullOrEmpty(currentMainHeroId)
-            && record.EnlistedHeroId != currentMainHeroId)
+        // is no longer the player. Quiet, penalty-free discharge. A save made mid-battle waits
+        // (#1030): the discharge's RestorePresence clears AttachedTo, which pulls a merged soldier
+        // out of his live battle. The rest of the load runs as usual, and the hourly tick
+        // discharges once the battle is over.
+        if (IsHeirMismatch(record, currentMainHeroId))
         {
-            _logger?.LogInfo($"[Enlistment] enlisted hero '{record.EnlistedHeroId}' is no longer the player ('{currentMainHeroId}') — quiet discharge");
-            _discharge.Execute(DischargeReason.HeirSuccessionOrPossessionMismatch);
-            return;
+            if (!presence.IsInMapEvent)
+            {
+                DischargeHeirMismatch(record, currentMainHeroId);
+                return;
+            }
+
+            _store.HeirDischargeHeld = true;
+            _logger?.LogInfo($"[Enlistment] enlisted hero '{record.EnlistedHeroId}' is no longer the player ('{currentMainHeroId}'), but the party is in its battle: the quiet discharge waits for the battle to end (#1030)");
         }
 
         // Captivity sync: while captive, move the machine to the captive state (legal
@@ -102,5 +109,38 @@ public class EnlistmentLoadNormalizer : IEnlistmentLoadNormalizer
 
         // Everything else IS the hourly reconciliation problem — one authority, run now.
         _reconciler.ReconcileHourly(nowDays);
+    }
+
+    public bool DischargeHeirMismatchOutsideBattle(string currentMainHeroId)
+    {
+        if (!_store.HeirDischargeHeld)
+            return false;
+        var record = _store.Record;
+        if (!record.IsEnlisted || !IsHeirMismatch(record, currentMainHeroId))
+        {
+            _store.HeirDischargeHeld = false;
+            return false;
+        }
+
+        // Captivity after a lost battle waits too: vanilla keeps a captive's party inactive, and the
+        // discharge's RestorePresence would make it active (the crown-war release waits the same way).
+        var presence = _partyAdapter.GetPresence();
+        if (presence.IsInMapEvent || presence.IsCaptive)
+            return false;
+
+        _store.HeirDischargeHeld = false;
+        DischargeHeirMismatch(record, currentMainHeroId);
+        return true;
+    }
+
+    private static bool IsHeirMismatch(EnlistmentRecord record, string currentMainHeroId) =>
+        !string.IsNullOrEmpty(record.EnlistedHeroId)
+        && !string.IsNullOrEmpty(currentMainHeroId)
+        && record.EnlistedHeroId != currentMainHeroId;
+
+    private void DischargeHeirMismatch(EnlistmentRecord record, string currentMainHeroId)
+    {
+        _logger?.LogInfo($"[Enlistment] enlisted hero '{record.EnlistedHeroId}' is no longer the player ('{currentMainHeroId}') — quiet discharge");
+        _discharge.Execute(DischargeReason.HeirSuccessionOrPossessionMismatch);
     }
 }

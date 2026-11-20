@@ -9,4 +9,12 @@ namespace TAOM.Features.Enlistment;
 public interface IEnlistmentLoadNormalizer
 {
     void Normalize(string currentMainHeroId, double nowDays);
+
+    /// <summary>
+    /// The heir-mismatch discharge that a load held back because the soldier was still in his
+    /// battle (#1030). The hourly tick calls it; it discharges once the party is out of the map
+    /// event and out of captivity, and returns true when it did. Without a held discharge it does
+    /// nothing: a mid-session heir change keeps its old handling (the next load).
+    /// </summary>
+    bool DischargeHeirMismatchOutsideBattle(string currentMainHeroId);
 }
