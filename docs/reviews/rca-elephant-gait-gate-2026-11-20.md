@@ -65,9 +65,12 @@ the rule is a reason to re-check every record and every sentence the old rule ha
   variants are in the session scratchpad and are not a repo test.
 - FOLLOW-UP no issue: the cache comparison is a comparison of file dates, and the Kit sometimes saves a package
   again without cooking it (`elephant_stand_2_geo.tpac` on 2026-11-19, 16 header bytes). If it does that to
-  `adod_elephant_geo.tpac`, the gate goes red on 14 clips and a Kit start may not clear it. To settle at the next
-  Kit start: whether the entries of `elephant_canter_right` and `elephant_stand_2`, both older than their
-  re-saved files, get new dates.
+  `adod_elephant_geo.tpac`, the gate goes red on 14 clips and a Kit start does not clear it. Settled at the Kit
+  start of 2026-11-20, 15:33: the Kit cooked the two trot entries, whose records a tool had rewritten, and left
+  the entries of `elephant_canter_right` (2026-06-06) and `elephant_stand_2` (2026-06-14) as they were, although
+  their files had been saved again on 2026-11-19 with the same keys and record fields (by all signs the Kit's
+  own save). So such a save brings no new entry, and a red that comes from one is a false red: compare the
+  file's bytes with its backup before acting on it.
 - FOLLOW-UP no issue: a malformed clip record or an unreadable skeleton package ends the gate in a traceback. The
   exit code is 1, so the state is red, but the message is not a finding.
 
