@@ -101,11 +101,11 @@ public class EnlistmentBehavior : CampaignBehaviorBase
     }
 
     // CO-OP: host-only. The reconciler parks/restores the shared MainParty and executes
-    // discharges — client-side reconciliation would fight the host over both.
+    // discharges (first the heir-mismatch discharge a load held for a battle, #1030); a client would fight the host.
     // internal for TAOM.Tests (InternalsVisibleTo) — lets the co-op authority gate be asserted directly.
     internal void OnHourlyTick()
     {
-        if (!_coopSession.IsAuthority) return;
+        if (!_coopSession.IsAuthority || _normalizer.DischargeHeirMismatchOutsideBattle(_playerParty.GetMainHeroId())) return;
         _reconciler.OnHourlyTick(CampaignTime.Now.ToDays);
     }
 

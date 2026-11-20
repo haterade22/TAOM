@@ -187,6 +187,108 @@ public class EnlistmentLoadNormalizerTests
     }
 
     [TestMethod]
+    public void Normalize_HeroIdentityMismatchInABattle_WaitsForTheBattleToEnd()
+    {
+        // #1030: the discharge's RestorePresence clears AttachedTo, which pulls a merged soldier
+        // out of his live battle. A save made mid-battle must keep him in it.
+        MakeEnlisted();
+        CommanderHealthy();
+        Presence(parked: false, inMapEvent: true);
+
+        _normalizer.Normalize("different_hero", Now);
+
+        Assert.IsTrue(_store.Record.IsEnlisted);
+        _partyAdapter.DidNotReceive().RestorePresence();
+    }
+
+    [TestMethod]
+    public void DischargeHeirMismatchOutsideBattle_AfterTheBattle_Discharges()
+    {
+        MakeEnlisted();
+        CommanderHealthy();
+        Presence(parked: false, inMapEvent: true);
+        _normalizer.Normalize("different_hero", Now);
+        Presence(parked: true, inMapEvent: false);
+
+        var discharged = _normalizer.DischargeHeirMismatchOutsideBattle("different_hero");
+
+        Assert.IsTrue(discharged);
+        Assert.AreEqual(EnlistmentState.NotEnlisted, _store.Record.State);
+        _partyAdapter.Received().RestorePresence();
+    }
+
+    [TestMethod]
+    public void DischargeHeirMismatchOutsideBattle_CapturedAfterTheBattle_Waits()
+    {
+        MakeEnlisted();
+        CommanderHealthy();
+        Presence(parked: false, inMapEvent: true);
+        _normalizer.Normalize("different_hero", Now);
+        Presence(parked: true, captive: true, inMapEvent: false);
+
+        var discharged = _normalizer.DischargeHeirMismatchOutsideBattle("different_hero");
+
+        Assert.IsFalse(discharged);
+        Assert.IsTrue(_store.Record.IsEnlisted);
+        Assert.IsTrue(_store.HeirDischargeHeld);
+        _partyAdapter.DidNotReceive().RestorePresence();
+    }
+
+    [TestMethod]
+    public void DischargeHeirMismatchOutsideBattle_NothingHeldByALoad_KeepsTheOldHandling()
+    {
+        // A mid-session heir change is not this issue's path: it still waits for the next load.
+        MakeEnlisted();
+        CommanderHealthy();
+        Presence(parked: true);
+
+        var discharged = _normalizer.DischargeHeirMismatchOutsideBattle("different_hero");
+
+        Assert.IsFalse(discharged);
+        Assert.IsTrue(_store.Record.IsEnlisted);
+    }
+
+    [TestMethod]
+    public void Normalize_HeroIdentityMismatchInABattle_HoldsThePayout()
+    {
+        MakeEnlisted();
+        CommanderHealthy();
+        Presence(parked: false, inMapEvent: true);
+
+        _normalizer.Normalize("different_hero", Now);
+
+        Assert.IsTrue(_store.HeirDischargeHeld);
+    }
+
+    [TestMethod]
+    public void DischargeHeirMismatchOutsideBattle_StillInTheBattle_Waits()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        CommanderHealthy();
+        Presence(parked: false, inMapEvent: true);
+        _store.HeirDischargeHeld = true;
+
+        var discharged = _normalizer.DischargeHeirMismatchOutsideBattle("different_hero");
+
+        Assert.IsFalse(discharged);
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+        _partyAdapter.DidNotReceive().RestorePresence();
+    }
+
+    [TestMethod]
+    public void DischargeHeirMismatchOutsideBattle_SameHero_DoesNothing()
+    {
+        MakeEnlisted();
+        CommanderHealthy();
+        Presence(parked: true);
+
+        var discharged = _normalizer.DischargeHeirMismatchOutsideBattle("main_hero");
+
+        Assert.IsFalse(discharged);
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+    }
+
+    [TestMethod]
     public void Normalize_EnlistedHealthyCommander_ReassertsPark()
     {
         MakeEnlisted();

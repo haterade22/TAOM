@@ -22,4 +22,10 @@ public interface IEnlistmentStore
     void Deserialize(IReadOnlyDictionary<string, string> data);
 
     void Clear();
+
+    /// <summary>
+    /// True while a load holds the heir-mismatch discharge until the soldier's battle ends (#1030).
+    /// Not saved: a reload checks the identity again. Clear and Deserialize reset it.
+    /// </summary>
+    bool HeirDischargeHeld { get; set; }
 }

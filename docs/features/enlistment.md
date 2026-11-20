@@ -65,7 +65,10 @@ Key policies:
 - **Never touches `MobileParty.Army`** — parking is position-sync + hidden/inactive;
   battle join works through the encounter layer without army membership.
 - **Identity guard:** `EnlistedHeroId != MainHero.StringId` at load → quiet discharge
-  (co-op join, heir succession — PlayerPossession three-guard pattern).
+  (co-op join, heir succession — PlayerPossession three-guard pattern). A save made while the
+  party is in a map event holds the discharge: it would pull a merged soldier out of his battle.
+  The hourly tick runs it once the battle and any captivity after it are over, and the battle
+  pays no service rewards in between (#1030). A mid-session heir change still waits for the next load.
 - **Co-op:** every world-mutating handler is host-only (`ICoopSessionProvider.IsAuthority`).
 
 ## Save format
@@ -1572,11 +1575,10 @@ Two defects, both fixed 2026-09-12:
   (`EnlistmentLoadNormalizerTests`, three rows).
 
 Two paths still detach with an open encounter, both pre-existing, both recorded on #577 rather
-than fixed here: a discharge that runs mid-battle (the heir-mismatch discharge at load, tracked in
-#1030) runs RestorePresence, LeaveArmy and ClearArmyAttachment before the ownership policy closes the
-encounter, by the documented "discharge outranks ownership" rule (the MCM master switch no longer takes
-this path: with the feature off, the release waits until the player's battle ends and discharges on the
-next hourly tick, #1021); and a failed join's rollback can leave the encounter open
+than fixed here: a discharge that runs mid-battle runs RestorePresence, LeaveArmy and ClearArmyAttachment
+before the ownership policy closes the encounter, by the documented "discharge outranks ownership" rule
+(neither the MCM master switch nor the heir-mismatch discharge at load takes this path any more: both
+wait until the player's battle ends and discharge on the next hourly tick, #1021 and #1030); and a failed join's rollback can leave the encounter open
 when the encounter's party is the opposing leader (R4 skips it) while `ReassertServiceMenu` re-inits the wait
 menu, whose init parks unconditionally on `EnlistedAttached`.
 

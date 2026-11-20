@@ -85,18 +85,18 @@ public class DischargeService : IDischargeService
         // 5 — presence FIRST. SetAttachedToInternal only tears down the inherited MapEventSide
         // while the party is active, so step 6 has to follow this rather than precede it.
         //
-        // RESIDUAL (#1021): this step pulls a merged soldier out of a live battle (RestorePresence's first
-        // call, ClearArmyAttachment, sets AttachedTo = null). The reconciler holds a feature-off discharge
-        // until the battle ends, but the heir-mismatch discharge at load still runs mid-battle (tracked in
-        // #1030). A guard on step 6 alone cannot hold him.
+        // This step pulls a merged soldier out of a live battle (RestorePresence's first call,
+        // ClearArmyAttachment, sets AttachedTo = null), and a guard on step 6 alone cannot hold him. So
+        // the callers wait for the battle to end: the reconciler holds a feature-off discharge (#1021),
+        // and the load normalizer holds the heir-mismatch discharge for the hourly tick (#1030).
         if (!_attachment.RestorePresence())
             _logger?.LogError($"DischargeService: RestorePresence failed during discharge ({reason}) — continuing pipeline");
 
         // 6 — detach BEFORE the encounter work: PlayerEncounter.Finish branches on Army/AttachedTo.
         //
         // LeaveArmy FIRST, and it is not interchangeable with ClearArmyAttachment. Discharge can
-        // fire mid-battle (the heir-mismatch discharge at load, #1030, or CommanderDead raised from the
-        // reconciler while the state is EnlistedBattle), and at that moment the adapter may be
+        // fire mid-battle (CommanderDead raised from the reconciler while the state is
+        // EnlistedBattle), and at that moment the adapter may be
         // holding an army IT raised for this fight. ClearArmyAttachment only detaches the player;
         // it has no idea the army exists, so the army would be left standing with the null
         // AiBehaviorObject that crashes Army.GetLongTermBehaviorTextForAILeadedParty from the map

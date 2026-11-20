@@ -37,8 +37,11 @@ public class EnlistmentStore : IEnlistmentStore
         };
     }
 
+    public bool HeirDischargeHeld { get; set; }
+
     public void Deserialize(IReadOnlyDictionary<string, string> data)
     {
+        HeirDischargeHeld = false;
         if (data == null || data.Count == 0)
         {
             // Fresh campaign / feature never saved — silent reset.
@@ -65,5 +68,9 @@ public class EnlistmentStore : IEnlistmentStore
         _record.CopyFrom(parsed);
     }
 
-    public void Clear() => _record.Reset();
+    public void Clear()
+    {
+        HeirDischargeHeld = false;
+        _record.Reset();
+    }
 }
