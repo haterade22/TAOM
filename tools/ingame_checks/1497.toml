@@ -13,10 +13,9 @@
 # The unattended proof: /game-run (the Fords of War match) with Enable Combat Stamina on. It covers AI soldiers only.
 issue = 1497
 title = "Combat stamina: every action costs stamina, and an exhausted agent must recover"
-# fixed_in is the branch base, the newest commit of this work's history that is on origin: the feature commits are
-# local until the branch is pushed. A build that holds the base but not the feature writes no [Check] line, and every
-# check below is absence = "not-reached", so such a build is never judged.
-fixed_in = "24db60d7d"
+# fixed_in is the commit that holds the rules and the three check lines (Phases 1 and 2). A build without it writes
+# no stamina [Check] line, and every check below is absence = "not-reached".
+fixed_in = "8440408ac"
 logs = ["taom"]
 
 [[check]]
