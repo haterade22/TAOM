@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TAOM.Features.Elephant;
 using TAOM.Features.MarshalsWord.Domain;
+using TAOM.Features.Stamina.Domain;
 
 namespace TAOM.Features.SeatOfSeeing.Domain;
 
@@ -15,8 +16,8 @@ internal static class SeatTrialSteps
     /// <summary>The steps a run with no step list arms.</summary>
     internal static readonly IReadOnlyList<SeatTrialStep> All = SeatTrialRows.Rows.Concat(MarshalTrialRows.Rows).ToList();
 
-    /// <summary>Every step a list may name: <see cref="All"/>, then the crew rows, which run only when they are named (<see cref="CrewTrialRows"/>).</summary>
-    internal static readonly IReadOnlyList<SeatTrialStep> Known = All.Concat(CrewTrialRows.Rows).ToList();
+    /// <summary>Every step a list may name: <see cref="All"/>, then the crew rows and the stamina rows, which run only when they are named (<see cref="CrewTrialRows"/>, <see cref="StaminaTrialRows"/>).</summary>
+    internal static readonly IReadOnlyList<SeatTrialStep> Known = All.Concat(CrewTrialRows.Rows).Concat(StaminaTrialRows.Rows).ToList();
 
     /// <summary>The form a step name is compared in, shared by the step chooser and the roster that depends on which steps were chosen.</summary>
     internal static string NameOf(string name) => name.Trim().ToLowerInvariant();
@@ -61,6 +62,13 @@ internal static class SeatTrialSteps
         if (beside != null)
         {
             error = "a crew step runs with 'enter' only, in a battle of its own: step '" + beside + "' cannot share it";
+            return false;
+        }
+
+        var staminaBeside = StaminaTrialRows.StepThatCannotShareAStaminaBattle(chosen.Select(s => s.Name).ToList());
+        if (staminaBeside != null)
+        {
+            error = "a stamina step runs only beside other stamina steps, in a battle of its own: step '" + staminaBeside + "' cannot share it";
             return false;
         }
 

@@ -114,6 +114,36 @@ public class SeatTrialStepsTests
         Assert.AreEqual(1, steps.Count);
     }
 
+    [TestMethod]
+    public void TryChoose_TheStaminaSteps_AreKnownByName_AndNeedTheGate()
+    {
+        Assert.IsTrue(SeatTrialSteps.TryChoose("stamina_gate,stamina_walk,stamina_fight", out var steps, out var error), error);
+
+        CollectionAssert.AreEqual(new[] { "stamina_gate", "stamina_walk", "stamina_fight" }, steps.Select(s => s.Name).ToArray());
+        Assert.IsFalse(SeatTrialSteps.TryChoose("stamina_walk", out _, out error));
+        StringAssert.Contains(error, "needs step 'stamina_gate'");
+    }
+
+    [DataTestMethod]
+    [DataRow("stamina_gate,enter", "enter")]
+    [DataRow("enter,fly,stamina_gate", "enter")]
+    [DataRow("stamina_gate,stamina_walk,refuse_in_deployment", "refuse_in_deployment")]
+    public void TryChoose_AStaminaStepBesideAnotherFeaturesStep_IsRefused_NamingThatStep(string list, string other)
+    {
+        Assert.IsFalse(SeatTrialSteps.TryChoose(list, out var steps, out var error));
+
+        Assert.AreEqual(0, steps.Count);
+        StringAssert.Contains(error, "a stamina step runs only beside other stamina steps, in a battle of its own: step '" + other + "' cannot share it");
+    }
+
+    [TestMethod]
+    public void TryChoose_AStaminaStepBesideACrewStep_IsRefused()
+    {
+        Assert.IsFalse(SeatTrialSteps.TryChoose("enter,crew_mumakil,stamina_gate", out var steps, out _));
+
+        Assert.AreEqual(0, steps.Count);
+    }
+
     // ---- The numbers ----
 
     [TestMethod]

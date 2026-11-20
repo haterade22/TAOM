@@ -169,6 +169,7 @@ internal sealed class CommandTrialAutostart
     private void Finish(string reason)
     {
         Enter(Phase.Done);
+        CommandTrialRun.Close();
         var written = Write(DoneFile, DoneText(reason, _logger.LogFilePath is { Length: > 0 } path ? Path.GetFullPath(path) : null, _liveSeconds,
             _host.WallSeconds, _startedAt, DateTime.Now.ToString("o", CultureInfo.InvariantCulture)));
         var line = DoneLine(written, reason, _options.Quit);

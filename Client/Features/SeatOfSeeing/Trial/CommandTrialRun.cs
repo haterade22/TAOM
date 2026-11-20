@@ -3,6 +3,8 @@ using System.Linq;
 using TAOM.Core.Logging;
 using TAOM.Features.SeatOfSeeing;
 using TAOM.Features.SeatOfSeeing.Domain;
+using TAOM.Features.Stamina;
+using TAOM.Features.Stamina.Domain;
 
 namespace TAOM.Client.Features.SeatOfSeeing.Trial;
 
@@ -20,7 +22,11 @@ internal static class CommandTrialRun
     /// <summary>The step the script is on, for the status file.</summary>
     internal static string Step { get; private set; } = "none";
 
-    internal static void Arm(CommandTrialOptions options) => Options = options;
+    internal static void Arm(CommandTrialOptions options)
+    {
+        Options = options;
+        StaminaSettingsProvider.TrialOn = StaminaTrialRows.NamedIn(options.Steps);
+    }
 
     /// <summary>The trial's own settings of the latest mission, which a step changes through the host; null until a mission asks for them.</summary>
     internal static CommandTrialSettings? TrialSettings { get; private set; }
@@ -29,6 +35,9 @@ internal static class CommandTrialRun
     internal static ISeatSettingsProvider Settings(ISeatSettingsProvider plain) => IsArmed ? TrialSettings = new CommandTrialSettings() : plain;
 
     internal static void Finish(string reason) => Outcome ??= reason;
+
+    /// <summary>Gives back what the run held for the whole process, when the autostart writes the done file. The stamina switch stays on until then: the mission is still open after the last step, and its last ticks and end-of-mission lines must read the settings its steps ran on.</summary>
+    internal static void Close() => StaminaSettingsProvider.TrialOn = false;
 
     internal static void OnStep(string step) => Step = step;
 
@@ -49,7 +58,7 @@ internal static class CommandTrialRun
             }
 
             var host = makeHost();
-            logger.LogInfo("[SeatTrial] script armed: steps=" + string.Join(",", steps.Select(s => s.Name)));
+            logger.LogInfo("[SeatTrial] script armed: steps=" + string.Join(",", steps.Select(s => s.Name)) + (StaminaSettingsProvider.TrialOn ? " stamina_switch=on" : ""));
             return new CommandTrialScript(host, steps, logger, Finish, OnStep);
         }
         catch (Exception ex)
@@ -67,5 +76,6 @@ internal static class CommandTrialRun
         Outcome = null;
         Step = "none";
         TrialSettings = null;
+        StaminaSettingsProvider.TrialOn = false;
     }
 }

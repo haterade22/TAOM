@@ -239,4 +239,44 @@ public class StaminaChecksAndSettingsTests
 
         Assert.AreEqual(0.75f, sut.CostScale);
     }
+
+    [TestMethod]
+    public void TrialOn_WinsOverSavedOff_AndPinsApplyAndScale()
+    {
+        var mcm = new TaomSettings { EnableStamina = false, StaminaApplyToPlayer = false, StaminaApplyToAi = false, StaminaCostScale = 1.5f };
+        var sut = new StaminaSettingsProvider(mcm);
+        try
+        {
+            StaminaSettingsProvider.TrialOn = true;
+
+            Assert.IsTrue(sut.Enabled);
+            Assert.IsTrue(sut.ApplyToPlayer);
+            Assert.IsTrue(sut.ApplyToAi);
+            Assert.AreEqual(1f, sut.CostScale);
+        }
+        finally
+        {
+            StaminaSettingsProvider.TrialOn = false;
+        }
+    }
+
+    [TestMethod]
+    public void TrialOff_ReadsSavedValues()
+    {
+        var mcm = new TaomSettings { EnableStamina = false, StaminaApplyToPlayer = false, StaminaApplyToAi = false, StaminaCostScale = 1.5f };
+        var sut = new StaminaSettingsProvider(mcm);
+        try
+        {
+            StaminaSettingsProvider.TrialOn = false;
+
+            Assert.IsFalse(sut.Enabled);
+            Assert.IsFalse(sut.ApplyToPlayer);
+            Assert.IsFalse(sut.ApplyToAi);
+            Assert.AreEqual(1.5f, sut.CostScale);
+        }
+        finally
+        {
+            StaminaSettingsProvider.TrialOn = false;
+        }
+    }
 }

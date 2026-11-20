@@ -10,6 +10,8 @@
 #   (taom.set_stamina) and a soldier an MCM switch exempted are outside these counts.
 # refresh: refreshes= the stat recomputes, slowest_batch_ms= the slowest batch of them in one frame, on the main
 #   thread. It fails over 1 ms and skips when no band ever changed.
+# trial-gate, trial-walk, trial-fight: the step lines of the command trial's stamina steps (#1506, tools/run_command_trial.py), one battle with the
+#   stamina rules forced on. They read [SeatTrial] lines, not [Check] lines, and need no MCM switch.
 # The unattended proof: /game-run (the Fords of War match) with Enable Combat Stamina on. It covers AI soldiers only.
 issue = 1497
 title = "Combat stamina: every action costs stamina, and an exhausted agent must recover"
@@ -40,6 +42,30 @@ needs = "a battle with Enable Combat Stamina on in which at least one soldier ch
 reached = ['\[Check\] id=taom\.stamina\.refresh result=(pass|fail)']
 pass = ['\[Check\] id=taom\.stamina\.refresh result=pass refreshes=[1-9][0-9]* slowest_batch_ms=[0-9]+\.[0-9]+$']
 fail = ['\[Check\] id=taom\.stamina\.refresh result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.stamina.trial-gate"
+needs = "a run of tools/run_command_trial.py with --steps naming stamina_gate (docs/features/stamina.md, The stamina steps of the command trial)"
+reached = ['\[SeatTrial\] step=stamina_gate result=(PASS|FAIL)']
+pass = ['\[SeatTrial\] step=stamina_gate result=PASS']
+fail = ['\[SeatTrial\] step=stamina_gate result=FAIL']
+absence = "not-reached"
+
+[[check]]
+id = "taom.stamina.trial-walk"
+needs = "a run of tools/run_command_trial.py with --steps naming stamina_walk (docs/features/stamina.md, The stamina steps of the command trial)"
+reached = ['\[SeatTrial\] step=stamina_walk result=(PASS|FAIL)']
+pass = ['\[SeatTrial\] step=stamina_walk result=PASS']
+fail = ['\[SeatTrial\] step=stamina_walk result=FAIL']
+absence = "not-reached"
+
+[[check]]
+id = "taom.stamina.trial-fight"
+needs = "a run of tools/run_command_trial.py with --steps naming stamina_fight (docs/features/stamina.md, The stamina steps of the command trial)"
+reached = ['\[SeatTrial\] step=stamina_fight result=(PASS|FAIL)']
+pass = ['\[SeatTrial\] step=stamina_fight result=PASS']
+fail = ['\[SeatTrial\] step=stamina_fight result=FAIL']
 absence = "not-reached"
 
 [[human]]

@@ -40,6 +40,7 @@ internal sealed partial class CommandTrialScript
         SeatSteps(Handlers);
         MarshalSteps(Handlers);
         CrewSteps(Handlers);
+        StaminaSteps(Handlers);
     }
 
     internal CommandTrialScript(ICommandTrialHost host, IReadOnlyList<SeatTrialStep> steps, IModLogger logger, Action<string> finished,
@@ -151,6 +152,7 @@ internal sealed partial class CommandTrialScript
     {
         _host.SetInput(NoInput);
         _host.ReleaseTime();
+        _host.StaminaReleaseForced();
         if (_host.PanelOpen)
             _host.ClosePanel(asPlayer: true);
     }
@@ -183,6 +185,7 @@ internal sealed partial class CommandTrialScript
     {
         IsDone = true;
         _host.SetInput(null);
+        _host.StaminaReleaseForced();
         var name = _index < _steps.Count ? _steps[_index].Name : "none";
         _logger.LogError($"[SeatTrial] the script failed in step {name}: {ex}");
         _finished("script_failed");
