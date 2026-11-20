@@ -64,7 +64,7 @@ Three classes read attributes off one `<NPCCharacter>` element, in this order: `
 
 | Attribute | Type | Required | Default when absent | What it does | Read at (file:line) |
 |---|---|---|---|---|---|
-| `occupation` | enum `Occupation` | no | `NotAssigned` | The campaign role. `Soldier` is a fieldable line troop, `Mercenary` a tavern hire, `Bandit` a hideout body. Parsed with `Enum.Parse`, so a typo throws and truncates the load at that entry. `Mercenary`, `Gangster` and `CaravanGuard` are priced as mercenaries. | `CharacterObject.cs:539-542` |
+| `occupation` | enum `Occupation` | no | `NotAssigned` | The campaign role. `Soldier` is a fieldable line troop, `Mercenary` a tavern hire, `Bandit` a hideout body. Parsed with `Enum.Parse`, so a typo throws and truncates the load at that entry. `Mercenary`, `Gangster` and `CaravanGuard` pay the mercenary recruitment cost; only `Mercenary` and `Gangster` pay the mercenary wage. | `CharacterObject.cs:539-542` |
 | `is_template` | bool | no | false | Marks a blueprint the game copies to generate real characters (wanderers, education templates) rather than a spawnable troop. | `CharacterObject.cs:544` |
 | `is_hidden_encyclopedia` | bool | no | false | Hides the entry from the in-game encyclopedia. | `CharacterObject.cs:546` |
 | `voice` | ref by BARE id, no prefix | no | no persona; `GetPersona()` falls back to softspoken | The speaking personality. This one bypasses the dotted reference reader, so it takes `voice="earnest"`, never `Trait.earnest`. | `CharacterObject.cs:572-575` |

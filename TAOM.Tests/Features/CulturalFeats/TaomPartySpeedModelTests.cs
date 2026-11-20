@@ -55,4 +55,27 @@ public class TaomPartySpeedModelTests
         Assert.IsTrue(count >= 0, "CountMountedAndTotal is called");
         Assert.IsTrue(ask < count, $"NeedsMountedCount (call #{ask}) comes before CountMountedAndTotal (call #{count})");
     }
+
+    [TestMethod]
+    public void PlayerCaravanSpeedFactor_IsFifteenPercent()
+    {
+        var field = typeof(TaomPartySpeedModel).GetField("PlayerCaravanSpeedFactor", BindingFlags.NonPublic | BindingFlags.Static);
+        Assert.IsNotNull(field, "TaomPartySpeedModel.PlayerCaravanSpeedFactor");
+        Assert.AreEqual(0.15f, (float)field.GetRawConstantValue()!);
+    }
+
+    [TestMethod]
+    public void CalculateFinalSpeed_PlayerCaravanFactor_RunsBeforeTheEyeOfSauronFloor_InIlOrder()
+    {
+        var method = typeof(TaomPartySpeedModel).GetMethod(nameof(TaomPartySpeedModel.CalculateFinalSpeed));
+        Assert.IsNotNull(method, "TaomPartySpeedModel.CalculateFinalSpeed");
+
+        var calls = IlCallScanner.ExtractCalledMethods(method, method.GetMethodBody().GetILAsByteArray()).ToList();
+        int caravan = calls.FindIndex(m => m.Name == "ApplyPlayerCaravanSpeed");
+        int floor = calls.FindIndex(m => m.Name == "ApplyHunterSpeedFloor");
+
+        Assert.IsTrue(caravan >= 0, "ApplyPlayerCaravanSpeed is called");
+        Assert.IsTrue(floor >= 0, "ApplyHunterSpeedFloor is called");
+        Assert.IsTrue(caravan < floor, "the caravan factor comes before the Eye of Sauron floor, which stays last");
+    }
 }

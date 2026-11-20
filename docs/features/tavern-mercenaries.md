@@ -60,7 +60,7 @@ Three consumers read the same `TownMercenaryData`:
 **Copies, not repurposed line troops.** The picks are duplicates (`<source>_merc`) rather than the
 originals flipped to `Mercenary`. Occupation is not cosmetic: `TaomPartyWageModel` routes it through
 [`TroopCostService`](../../Main/Features/TroopProgression/TroopCostService.cs) for a **×2 recruitment
-cost and ×1.5 wage** (`MercenaryRecruitMultiplier` / `MercenaryWageMultiplier`, lines 6-7). Flipping a
+cost and ×1.5 wage** (`MercenaryRecruitMultiplier` / `MercenaryWageMultiplier`, lines 6-7; `Gangster` shares both, while `CaravanGuard` gets the ×2 recruitment cost but the regular wage, as in vanilla). Flipping a
 shared line troop would have repriced it in notable recruitment and in every AI party and garrison
 fielding it (the pre-2026-10-10 `harad_noble` alone appeared in 14 party templates). The copies keep the originals at
 `Soldier` and confine the mercenary economics to the tavern. The tavern prices a troop with the player as buyer, so the career `RecruitCost` passive (#769 E11) discounts it like any recruit, under the same 1-gold floor.
