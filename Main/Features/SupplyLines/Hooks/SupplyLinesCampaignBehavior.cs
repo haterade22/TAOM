@@ -29,7 +29,7 @@ public sealed class SupplyLinesCampaignBehavior : CampaignBehaviorBase
     // True only after SyncData ran on a LOADING data store, i.e. this session installed a saved
     // order book. OnSessionLaunched reads it: a session that never loaded a record (fresh
     // campaign, or a save written before the feature existed) must reset the process-singleton
-    // service or the previous campaign's orders ride along (round-A CRITICAL / Codex P1).
+    // service or the previous campaign's orders ride along.
     private bool _syncedThisSession;
 
     public SupplyLinesCampaignBehavior(
@@ -54,7 +54,7 @@ public sealed class SupplyLinesCampaignBehavior : CampaignBehaviorBase
         CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
         // A caravan destroyed by an AI battle must record its loss IMMEDIATELY, not at the next
         // hourly verdict: an autosave in that window serializes a stale InTransit row, and the
-        // load-side RespawnMissing would resurrect the whole convoy with its cargo (Codex #7).
+        // load-side RespawnMissing would resurrect the whole convoy with its cargo.
         CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyed);
     }
 

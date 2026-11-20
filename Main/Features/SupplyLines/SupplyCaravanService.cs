@@ -57,7 +57,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
     // (DefaultMobilePartyFoodConsumptionModel.NumberOfMenOnMapToEatOneFood, verified on the
     // installed 1.4.8). The caravan is NOT IsCaravan (custom component), so DoesPartyConsumeFood
     // returns true for it and an escorted goods-less order would starve silently for the whole
-    // transit (review round B); Spawn stocks provisions to cover the worst-case trip.
+    // transit; Spawn stocks provisions to cover the worst-case trip.
     private const int MenPerDailyFood = 20;
 
     // Longest possible transit is the force-deliver failsafe at 1.5x planned hours
@@ -70,7 +70,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
     private const string ProvisionItemId = "grain";
 
     // The path from source to player is recomputed only when the player has drifted this far from
-    // the endpoint it was computed against (source module value).
+    // the endpoint it was computed against.
     private const float RepathWhenPlayerMoved = 2.5f;
 
     // Exponential smoothing factor for the teleport position, so the icon glides instead of popping.
@@ -80,7 +80,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
     private const float MinPositionDelta = 0.01f;
 
     // Past this travel fraction the caravan is closing on the player and the bearing is left alone
-    // so the final approach does not visibly oscillate (source module value).
+    // so the final approach does not visibly oscillate.
     private const float BearingSuppressedPastFraction = 0.88f;
 
     // Compiled open delegate over the non-public MobileParty.Bearing setter: this runs per
@@ -240,7 +240,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
     public bool CaravanInMapEvent(SupplyOrder order)
     {
         // ANY map event, deliberately not IsRaid: a caravan attacked in the field sits in a
-        // FieldBattle event, which the old IsRaid check could never see (round-A HIGH). While
+        // FieldBattle event, which IsRaid never sees. While
         // this is true the order Continues; a defeat destroys the party and resolves as a loss
         // through CaravanExists.
         var party = TrackedParty(order);
@@ -296,7 +296,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
             goods = liveGoods;
             // Guards and template troops are not cargo even when they share a character id with
             // a purchased recruit: subtract the spawn-time manifest so a guard survivor is never
-            // delivered as a recruit (Codex round 2 #6). Casualties bill against cargo first.
+            // delivered as a recruit. Casualties bill against cargo first.
             troops = SubtractNonCargo(liveTroops, order.NonCargoTroops);
             return true;
         }
@@ -379,8 +379,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
             // Captured BEFORE the position write (which advances LastAppliedPos): one delta
             // gate shared by the position AND bearing setters. A frame whose smoothed position
             // barely moved cannot have meaningfully changed direction either, so the bearing
-            // write is skipped with the position write instead of running per caravan per frame
-            // (review round B).
+            // write is skipped with the position write instead of running per caravan per frame.
             bool moved = !tracker.HasAppliedPos
                 || tracker.SmoothPos.Distance(tracker.LastAppliedPos) >= MinPositionDelta;
 
@@ -434,7 +433,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
         var party = TrackedParty(order);
 
         // Escort FIRST: destroying the party clears the hero's PartyBelongedTo, after which the
-        // release check can never match and the companion is stranded (the source module's bug).
+        // release check can never match and the companion is stranded.
         ReleaseCompanion(order, party);
 
         if (party != null && party.IsActive)
@@ -477,7 +476,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
             // every order re-binds against the CURRENT campaign's party objects here. There is
             // deliberately no shortcut through a pre-existing tracker: a cached Party from the
             // previous session still reads IsActive == true and would freeze the real caravan
-            // while a ghost travels (round-A HIGH).
+            // while a ghost travels.
             // One pass over MobileParty.All for the whole load, never per order.
             if (partiesById == null)
             {
@@ -497,7 +496,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
                 // party is pinned, teleported and eventually destroyed on delivery: a damaged
                 // or hostile row pointing at main_party, a refuge, or another order's caravan
                 // would otherwise hand that party to the movement pass and to
-                // DestroyPartyAction (Codex round 2 #3).
+                // DestroyPartyAction.
                 if (survivor.PartyComponent is SupplyCaravanComponent component
                     && component.OrderId == order.OrderId)
                 {
@@ -709,8 +708,8 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
         }
         // Entity-state enumeration before mutating a hero on a load path: a captured, settled
         // or otherwise-employed escort stays where fate put him and the order continues
-        // unescorted. Without these, a respawn after load yanked an imprisoned companion out of
-        // his captor's prison roster (round-A MEDIUM, Entity State Matrix rule).
+        // unescorted. Without these, a respawn after load would pull an imprisoned companion out of
+        // the captor's prison roster.
         if (hero.IsPrisoner)
         {
             _logger.LogWarning($"[SupplyLines] Spawn: escort hero '{order.EscortHeroId}' is a prisoner, caravan goes unescorted");
@@ -737,7 +736,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
 
     // Heroes register with CampaignObjectManager only (Hero.cs:1467-1480, verified 1.4.8);
     // MBObjectManager.GetObject<Hero> reads XML type records and misses runtime/loaded heroes,
-    // which is why every lord source silently resolved null (Codex round 2 #5). Item and
+    // so every lord source would resolve null. Item and
     // character lookups stay on MBObjectManager, which is correct for XML-defined objects.
     private static Hero FindHero(string heroId) =>
         string.IsNullOrEmpty(heroId) ? null : Campaign.Current?.CampaignObjectManager?.Find<Hero>(heroId);
@@ -791,7 +790,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
     {
         // The persisted dispatch origin always wins: it is immutable, free to read (no object
         // lookups), and it keeps the route anchored where the caravan actually set out from
-        // even after the source lord marched away (round-A / Codex P2). The lookups below are
+        // even after the source lord marched away. The lookups below are
         // the legacy fallback for orders recorded before the origin fields existed.
         if (order.HasDispatchOrigin)
         {
@@ -828,7 +827,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
     private void ApplyBearing(MobileParty party, CaravanTracker tracker, Vec2 previousSmoothPos, Vec2 origin)
     {
         // Face along the frame's actual movement; fall back to the overall route direction when the
-        // frame barely moved, and never face backwards along the route (source module logic).
+        // frame barely moved, and never face backwards along the route.
         var moveDir = new Vec2(
             tracker.SmoothPos.x - previousSmoothPos.x,
             tracker.SmoothPos.y - previousSmoothPos.y);
@@ -848,10 +847,6 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
         if (!_bearingResolveAttempted)
         {
             _bearingResolveAttempted = true;
-            // Internal setter on MobileParty.Bearing; pinned by SupplyCaravanBearingBindingTests
-            // so engine drift fails in CI instead of silently sliding caravans sideways here.
-            // Compiled to an open delegate once: this runs per caravan per frame, and a
-            // MethodInfo.Invoke would box the Vec2 into a fresh object[] every call.
             try
             {
                 MethodInfo setter = AccessTools.PropertySetter(typeof(MobileParty), "Bearing");
@@ -899,7 +894,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
             if (mapScene != null)
             {
                 // Route by vanilla's land rules: the exclusions and region costs MobileParty.ComputePath
-                // passes. The old null exclusions and 100/100 costs took another native search; PR #1064
+                // passes. Null exclusions and 100/100 costs take another native search; PR #1064
                 // reported a 1.4.8 crash in this query that was not isolated to one argument.
                 var models = campaign.Models;
                 AddLandPath(mapScene,

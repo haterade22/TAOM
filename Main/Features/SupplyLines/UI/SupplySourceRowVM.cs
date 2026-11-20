@@ -25,7 +25,7 @@ public sealed class SupplySourceRowVM : ViewModel
 
         // Engine-derived float: a non-finite or sentinel distance must not reach pricing. But a
         // sentinel is not "distance 0": quoting near-zero transport for a source the order
-        // service will reject with no-route lied to the player (review round B), so an
+        // service will reject with no-route would mislead the player, so an
         // unreachable row is DISABLED with the same no-route reason the confirm path uses, and
         // its distance renders as "?" instead of a fake 0.
         var distance = info?.Distance ?? 0f;
