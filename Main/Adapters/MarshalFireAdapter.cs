@@ -131,6 +131,7 @@ internal sealed class MarshalFireAdapter : IMarshalFireAdapter
 
     public void Drop()
     {
+        AiInputCallbackClaims.DropOwner(AiInputCallbackClaims.MarshalsWord);
         _touched.Clear();
         _seen.Clear();
         _census.Clear();
@@ -181,8 +182,13 @@ internal sealed class MarshalFireAdapter : IMarshalFireAdapter
             agent.AddComponent(component);
         }
 
+        // The flag is shared with stamina (#1497), so it is claimed, never written; the component answers only while switched on.
         if (_touched.Add(agent))
-            agent.SetHasOnAiInputSetCallback(true);
+        {
+            AiInputCallbackClaims.Claim(agent, AiInputCallbackClaims.MarshalsWord);
+            component.SwitchOn();
+        }
+
         _seen.Add(agent);
         if (_holdThisCompany || component.OwesAttackFlag || component.OwesFiringOrder)
             component.RefreshHold(_holdThisCompany, _now);
@@ -287,7 +293,8 @@ internal sealed class MarshalFireAdapter : IMarshalFireAdapter
         }
     }
 
-    // Native never calls a component whose flag is off, so its state would freeze at Holding: it is reset here, on the main thread.
+    // A released component answers no callback (native stops calling it when the last claim on the flag goes, and it is switched off
+    // for when stamina still holds one), so its state would freeze at Holding: it is reset here, on the main thread.
     private void Release()
     {
         _leaving.Clear();
@@ -307,7 +314,11 @@ internal sealed class MarshalFireAdapter : IMarshalFireAdapter
     private static void TurnOff(Agent agent)
     {
         if (!AgentSlotIdentity.IsCurrentOccupant(agent) || agent.State == AgentState.Deleted)
+        {
+            AiInputCallbackClaims.Forget(agent, AiInputCallbackClaims.MarshalsWord);
             return;
+        }
+
         var component = agent.GetComponent<MarshalWordComponent>();
         try
         {
@@ -316,8 +327,9 @@ internal sealed class MarshalFireAdapter : IMarshalFireAdapter
         }
         finally
         {
-            agent.SetHasOnAiInputSetCallback(false);
+            // Switched off first: the callback may still run until the flag goes, and stays on while stamina holds a claim.
             component?.Reset();
+            AiInputCallbackClaims.Release(agent, AiInputCallbackClaims.MarshalsWord);
         }
     }
 }

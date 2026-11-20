@@ -29,6 +29,8 @@ internal sealed class MarshalWordComponent : AgentComponent
     private int _stateCode;
     private bool _attackCleared;
     private bool _firingOwed;
+    // Written on the main thread, read in the callback on the AI thread.
+    private volatile bool _on;
     private double _nextHoldRead = double.NegativeInfinity;
     private double _woundedAt = double.NegativeInfinity;
     private bool _qualifies;
@@ -109,9 +111,17 @@ internal sealed class MarshalWordComponent : AgentComponent
         _nextHoldRead = double.NegativeInfinity;
     }
 
-    /// <summary>Main thread only: the soldier is back in the idle state, because native stops calling a component whose flag is off.</summary>
+    /// <summary>Main thread: Marshal's Word took the soldier, and the callback answers from now on.</summary>
+    internal void SwitchOn() => _on = true;
+
+    /// <summary>
+    /// Main thread only: Marshal's Word let the soldier go, and he is back in the idle state. The callback answers nothing from
+    /// now on: the AI input flag is shared (AiInputCallbackClaims), so native keeps calling this component while stamina holds
+    /// a claim on the soldier (#1497).
+    /// </summary>
     internal void Reset()
     {
+        _on = false;
         Publish(DrawState.Idle);
         _since = 0.0;
         _nextAsideRead = double.NegativeInfinity;
@@ -140,7 +150,7 @@ internal sealed class MarshalWordComponent : AgentComponent
 
     public override void OnAIInputSet(ref Agent.EventControlFlag eventFlag, ref Agent.MovementControlFlag movementFlag, ref Vec2 inputVector)
     {
-        if (_faulted)
+        if (_faulted || !_on)
             return;
         try
         {

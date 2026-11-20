@@ -411,6 +411,15 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "{=taom_war_pledge_mcm_enabled_hint}When on, a Neutral realm can join the War of the Ring for good. In Full War, the side that is far behind on the war meter (25 points or more) calls on a Neutral realm that leans its way: Khand, Rhudaur, Umbar, Shaghana and Abanissa lean to the Shadow, Cardolan and Dorwinion to the Free Peoples. The realm then goes to war with every realm of the other side, and that war cannot end in peace while the War of the Ring lasts. One realm joins at a time, 30 days apart unless war_pledge.json says otherwise, and never a realm that a player rules. Needs Momentum Tracking on. Off stops new joins by the AI; a realm that has joined stays joined. Default: on.")]
     public bool WarPledgeEnabled { get; set; } = true;
 
+    // --- Battle Balance / Stamina (#1497) ---
+    // Off by default while the feature is built on its branch. Decide the release default before the first release
+    // that carries this property: MCM keeps a saved value over a later default (config-providers.md).
+
+    [SettingPropertyGroup("{=taom_mcm_group_battle_balance}Battle Balance/{=taom_mcm_group_stamina}Stamina")]
+    [SettingPropertyBool("{=taom_stamina_mcm_enabled}Enable Combat Stamina", Order = 0, RequireRestart = false,
+        HintText = "{=taom_stamina_mcm_enabled_hint}Experimental, still being built. In field battles, sieges and the Fords of War match, a tired soldier swings and handles a weapon more slowly, and an exhausted soldier cannot attack, block, kick or jump, and on foot slows to a walk. Exceptions: a soldier who works a siege engine is not stopped, and a rider or a swimmer can still jump. In this build stamina does not drain in a fight yet: only the developer console command taom.set_stamina changes it. Horses and other mounts are not affected. Takes effect from the next battle. Default: off.")]
+    public bool EnableStamina { get; set; } = false;
+
     // --- Battle Balance / Troop Power ---
 
     [SettingPropertyGroup("{=taom_mcm_group_battle_balance}Battle Balance/{=taom_mcm_group_troop_power}Troop Power")]

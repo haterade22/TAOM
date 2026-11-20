@@ -2124,3 +2124,19 @@ player and on the co-op peer that owns the victim; on another peer Coop forwards
 **Prevent:** to count health dealt or lost, override `OnScoreHit` and skip `isBlocked` and `!(damagedHp > 0)`, as `LongDefeatMissionLogic` does. Use `OnAgentHit` only when the raw blow is the thing measured, and say so in the comment.
 
 **Source:** the tier 1 deep review of #1435 (data-flow T1, engine F1).
+
+### At OnRemoveBehavior every agent handle is already cleared: a mission-end teardown reads no agent (#1497, 2026-11-19)
+
+**Why missed:** stamina's teardown gave back its AI input callback claims soldier by soldier and guarded each with the liveness test it uses in the mission tick (`IsCurrentOccupant` and `IsActive`). `Mission.EndMissionInternal` (`Mission.cs:4652-4659`) calls `Agent.Clear` on every agent before any behavior is removed, and `Clear` zeroes the native pointers (`Agent.cs:5228-5242`), so `IsActive` reads through a null pointer. It raises no `OnAgentRemoved` or `OnAgentDeleted`, so a store's own removed mark is not set either. The catch logged an error and the line that dropped the claims never ran, so a static ledger kept the dead mission's agents.
+
+**Prevent:** code reached from `OnRemoveBehavior` reads no `Agent` member and makes no engine call on an agent: it clears its own managed state and drops its references, as Marshal's Word's `MarshalFireAdapter.Drop` does. A liveness guard that is right in the mission tick is not a guard at mission end. Put the drop first in the method, so nothing after it can keep it from running. A source-text test forbids `agent`, `IsActive` and the store in the teardown body.
+
+**Source:** [rca-stamina-phase0-2026-11-19.md](../rca-stamina-phase0-2026-11-19.md) row 1 (lenses 5 and 2).
+
+### An engine switch that holds one value per agent gets one owner when a second feature needs it (#1497, 2026-11-19)
+
+**Why missed:** nothing was missed in review; the plan's critics found it before the code. `Agent.SetHasOnAiInputSetCallback` is one flag per agent, and the engine then calls every component on that agent (`Agent.cs:1654-1666`). Marshal's Word wrote the flag directly and switched it off when it let a soldier go. Stamina needs the same flag on an exhausted soldier, so either feature's write would have switched the callback off under the other, and a released Marshal's Word component would have kept running on reset state while stamina held the flag on.
+
+**Prevent:** when a second feature needs a per-agent engine switch (a callback flag, an agent flag bit, a speed limit), move the write into one owner type with a claim per feature (`AiInputCallbackClaims` over `OwnerClaimLedger`), switch on with the first claim and off with the last, and make each feature's callback answer only while that feature holds its own claim. Pin the single writer with a source scan over `Main` and `Client`. List every writer of the switch, vanilla first, before the design, as the architecture rule "Writers before gates" asks.
+
+**Source:** [rca-stamina-phase0-2026-11-19.md](../rca-stamina-phase0-2026-11-19.md) and [stamina.md](../../features/stamina.md), "The shared AI input flag".

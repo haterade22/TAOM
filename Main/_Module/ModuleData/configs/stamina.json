@@ -1,0 +1,12 @@
+{
+  "effects": {
+    "winded": { "swing": 0.95, "handling": 1.0, "move": 1.0, "aiAttack": 0.8 },
+    "tired": { "swing": 0.9, "handling": 0.9, "move": 0.95, "aiAttack": 0.5 },
+    "exhausted": { "swing": 0.9, "handling": 0.9, "move": 0.45, "aiAttack": 0.5 }
+  },
+  "tick": {
+    "sweepSeconds": 0.25,
+    "maxRefreshesPerFrame": 8,
+    "minRefreshAgeSeconds": 1.0
+  }
+}

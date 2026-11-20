@@ -2167,6 +2167,20 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Co-op.** Not a veto: the prefix skips nothing. Classified ReviewedSafe in `CoopVetoClassificationTests`; the service also stands down when `ICoopSessionProvider.ShouldDeferToHost` holds. **Tests:** `HalfFinishedEncounterServiceTests`.
 
+## Patch171_Stamina
+
+**Target:** `private void TaleWorlds.MountAndBlade.View.MissionViews.MissionMainAgentController.ControlTick()` (v1.5.7 `MissionMainAgentController.cs:395`, no overloads), one Postfix class `Patch171_StaminaPlayerInput` in `Client/Features/Stamina/Hooks/` (the target is client-only, ADR-013), category `Patch171_Stamina`, declared by `StaminaModule` at `ApplyPhase.FirstMission`. #1497, 2026-11-19.
+
+**Why.** `ControlTick` writes the player's input for the frame: it sets the main agent's `EventControlFlags` and `MovementFlags` to None (:463-464) and adds the keys held. An Exhausted soldier ([stamina.md](../features/stamina.md)) must lose the attack, defend, kick and jump input, and the write must land before the engine reads the flags. A write from the mission tick is too late: `MissionState.TickMissionAux` calls the native `Mission.Tick`, which runs the pre-mission tick and then the agent jobs, before the managed `Mission.OnTick`. The postfix is the last writer in the call that builds the input. Other behaviors' `OnPreMissionTick` still run after it, in reverse order (`Mission.cs:3543-3546`); in the v1.5.7 dump the only one that writes these flags is StoryMode's `TrainingFieldMissionController`, in a mission the stamina gate excludes. Vanilla's own uncrouch test (:761) runs before the postfix, so a stripped jump or kick still makes a crouched Exhausted player stand up. Vanilla gates the attack keys on `AgentFlag.CanAttack` (:659, :672) but has no managed gate for the block, jump and kick keys, so a flag could not do this.
+
+**What it does.** One call, `StaminaHooks.StripPlayerInput(__instance.Mission?.MainAgent)`. It does nothing unless stamina is armed for the mission and the mission tick put this soldier on the player lock path (Exhausted, controlled by a player, owned by this peer, not using a game object). Then it clears `MovementControlFlag.AttackMask`, `DefendMask` and `DefendBlock` (a bit outside the engine's mask), and `EventControlFlag.Kick`, and `Jump` unless the soldier is mounted or in water (`StaminaInputRules`). The engine calls `ControlTick` only for a main agent a player controls (:226), so the postfix never sees an AI soldier.
+
+**The second controller.** TAOM's `AutonomousMovementPlayerController` disables the vanilla controller during a creature ride and runs its own `ControlTick`, so it makes the same `StripPlayerInput` call at the end of its input build. `StaminaWiringTests.BothPlayerControllers_StripAtTheEndOfTheirInputBuild` pins both sites.
+
+**Apply phase.** FirstMission, as Marshal's Word's patches: preparing a patched mission method earlier can run a type initializer that needs `Mission.Current`.
+
+**Co-op.** Not a veto: a void postfix that skips nothing, so `CoopVetoClassificationTests` needs no entry. It writes only this peer's own main agent. Coop's `RockThrowControllerPatch` is a postfix on `MissionMainAgentController.OnPreMissionTick` that adds an attack bit after `ControlTick`; its category is registered only in a Coop debug build, where a rock throw gets past the lock. **Tests:** `StaminaInputRulesTests`, `StaminaWiringTests`. **ACTIVE** behind the MCM switch `EnableStamina` (off by default); not yet checked in game (spike S1 of #1497).
+
 ## Patch160_LoadRetryStop
 
 **Target:** `SandBox.SandBoxGameManager.DoLoadingForGameManager(GameManagerLoadingSteps, out GameManagerLoadingSteps)` (protected override, Prefix plus a void Finalizer)

@@ -6928,5 +6928,10 @@
 	<string id="taom_mcm_group_text_input" text="{=taom_mcm_group_text_input}Text Input" />
 	<string id="taom_mcm_ImeGuardEnabled" text="{=taom_mcm_ImeGuardEnabled}Pause the input method outside text fields" />
 	<string id="taom_mcm_ImeGuardEnabled_hint" text="{=taom_mcm_ImeGuardEnabled_hint}For Chinese, Japanese and Korean input methods. While the game is in front and no text field has focus, the input method is paused, so hotkeys on the map and in battle reach the game instead of opening its candidate window. A search, rename or other text field gets it back at once, and other programs are not affected. Applies immediately. Default: on." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_mcm_group_stamina" text="{=taom_mcm_group_stamina}Stamina" />
+	<string id="taom_stamina_mcm_enabled" text="{=taom_stamina_mcm_enabled}Enable Combat Stamina" />
+	<string id="taom_stamina_mcm_enabled_hint" text="{=taom_stamina_mcm_enabled_hint}Experimental, still being built. In field battles, sieges and the Fords of War match, a tired soldier swings and handles a weapon more slowly, and an exhausted soldier cannot attack, block, kick or jump, and on foot slows to a walk. Exceptions: a soldier who works a siege engine is not stopped, and a rider or a swimmer can still jump. In this build stamina does not drain in a fight yet: only the developer console command taom.set_stamina changes it. Horses and other mounts are not affected. Takes effect from the next battle. Default: off." />
 
 </strings>
