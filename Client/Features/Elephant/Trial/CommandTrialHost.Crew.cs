@@ -8,12 +8,10 @@ using TAOM.Features.Mumakil;
 
 namespace TAOM.Client.Features.SeatOfSeeing.Trial;
 
-// The crew steps' window onto the engine (#1503). A crew machine is a mission object made at run time, and the engine lists
-// those in Mission.ActiveMissionObjects (MissionObject.OnPreInit calls Mission.AddActiveMissionObject). A seat holds its
-// archer as MovingAgent, the way the platform's own status line reads it (TaomMumakilPlatform.LogStatus).
+/// <summary>The crew steps' window onto the engine (#1503): the crew machines, their seats and the Charge order.</summary>
 internal sealed partial class CommandTrialHost
 {
-    // Keyed by the agent object, never by its index: a deleted agent's index goes to the next agent the engine builds.
+    // Keyed by the agent object, never by its index: the engine gives a deleted agent's index to the next agent it builds.
     private readonly Dictionary<Agent, Vec3> _beastFirstSeenAt = new();
     private UsableMachine? _crewMachine;
     private Agent? _crewBeast;
@@ -22,6 +20,7 @@ internal sealed partial class CommandTrialHost
     {
         _crewMachine = null;
         _crewBeast = null;
+        // The engine lists a mission object made at run time here too: MissionObject.OnPreInit calls Mission.AddActiveMissionObject.
         foreach (var missionObject in _mission.ActiveMissionObjects)
         {
             if (missionObject is not UsableMachine machine)
@@ -30,7 +29,6 @@ internal sealed partial class CommandTrialHost
             if (agent == null || !IsLive(agent))
                 continue;
 
-            // Every crewed beast is noted at the first crew step, so a later step still knows how far its beast went.
             if (!_beastFirstSeenAt.ContainsKey(agent))
                 _beastFirstSeenAt[agent] = agent.Position;
             if (_crewMachine == null && KindOf(machine) == beast && HasFullCrew(machine))
@@ -132,9 +130,10 @@ internal sealed partial class CommandTrialHost
         _ => 0,
     };
 
-    // A held handle answers for its slot's next tenant after the agent is deleted, so each read passes the slot check first.
+    // A held Agent answers for its slot's next tenant after the engine deletes it, so the slot check comes before every native read.
     private static bool IsLive(Agent agent) => AgentSlotIdentity.IsCurrentOccupant(agent) && agent.IsActive();
 
+    // Vanilla UsableMissionObject.OnUse moves the agent from MovingAgent to UserAgent; TAOM's crew seats override OnUse and keep it as MovingAgent.
     private static Agent? ArcherOf(StandingPoint seat)
     {
         var archer = seat.MovingAgent;

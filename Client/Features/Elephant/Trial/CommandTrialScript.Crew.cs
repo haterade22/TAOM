@@ -6,8 +6,7 @@ using TAOM.Features.SeatOfSeeing.Domain;
 
 namespace TAOM.Client.Features.SeatOfSeeing.Trial;
 
-// The crew steps (#1503): a custom battle with one mumakil and two war elephants in the player's army. Each step keeps the Seat's
-// view to an archer of one beast, sends the army forward, saves pictures and judges the crew by the rule of #1482.
+/// <summary>The crew steps of the command trial (#1503): <see cref="CrewTrialRows"/> names them and <see cref="CrewTrialRules"/> judges them.</summary>
 internal sealed partial class CommandTrialScript
 {
     private static readonly SeatInput ZoomOutOneNotch = new(Right: 0f, Forward: 0f, Lift: 0f, ZoomNotches: -1f, LookYaw: 0f, LookPitch: 0f, Fast: false);
@@ -43,7 +42,6 @@ internal sealed partial class CommandTrialScript
         var moved = 0f;
         Fold(first, shots, rescues, ref moved);
 
-        // The key is pressed from the screen tick, as the player's key is.
         yield return Verdict.Waiting("keep");
         _host.SetInput(NoInput);
         _host.PressKeep();
@@ -60,7 +58,6 @@ internal sealed partial class CommandTrialScript
         var keepAgain = false;
         while (true)
         {
-            // One press for each wait: the session takes a press at its next mission tick, and a second press before that would let go again.
             if (keepAgain && _host.Keeping == SeatKeepKind.None && _now - pressedAt >= SeatTrialRules.ShortWaitSeconds)
             {
                 _host.PressKeep();
@@ -86,7 +83,6 @@ internal sealed partial class CommandTrialScript
             Fold(reading, shots, rescues, ref moved);
             if (CrewTrialRules.WatchIsOver(_now - keptAt, CrewTrialRules.EveryoneShot(shots), alive))
                 break;
-            // The kept archer fell: the Seat let go by itself, so the view goes to another archer of the same beast.
             keepAgain = _host.Keeping == SeatKeepKind.None && _host.ChooseCrewArcher();
             yield return Verdict.Waiting("watch");
         }
@@ -109,7 +105,6 @@ internal sealed partial class CommandTrialScript
         yield return pass ? Verdict.Passed(facts) : Verdict.Failed(facts);
     }
 
-    // One wheel notch for each frame until the view is wide, so the distance never passes the limit by more than one notch.
     private IEnumerable<Verdict> ZoomOut()
     {
         var zoomAt = _now;
@@ -122,7 +117,6 @@ internal sealed partial class CommandTrialScript
         _host.SetInput(NoInput);
     }
 
-    // The highest value of each seat stays, so an archer who shot and then fell still counts as one who shot.
     private static void Fold(CrewReading reading, int[] shots, int[] rescues, ref float moved)
     {
         var count = Math.Min(shots.Length, reading.Seats.Count);

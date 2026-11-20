@@ -29,6 +29,7 @@ Client/Features/CustomBattles/Muster/Hooks/CustomBattleScreen_OnInitialize_Patch
 Client/Features/CustomBattles/Muster/MusterArmyBuilder.cs	4
 Client/Features/CustomBattles/Muster/TcbFieldVM.cs	2
 Client/Features/CustomBattles/Muster/TcbVM.cs	22
+Client/Features/Elephant/Trial/CommandTrialHost.Crew.cs	4
 Client/Features/Encyclopedia/UI/EncyclopediaHeroLevelHeaderMixin.cs	1
 Client/Features/EventWindow/EventArt.cs	2
 Client/Features/EventWindow/EventWindowVM.cs	1
