@@ -1117,8 +1117,8 @@ The deadband constant is deleted. The hold was measured on the mumakil ([mumakil
 held"): within 0.12 m of the seat at up to 5 m/s, with no teleport, and 43 to 47 arrows loosed by each archer in
 three minutes. The howdah has no navmesh under it, so its floor body alone holds the height.
 
-The howdah's own measurement (2026-11-19, trunk `66b6e4f17`): three unattended Fords of War matches, Gondor
-against Harad with an AI on each side, five crewed elephants in all. Every archer read `mode=Land` and
+The howdah's own measurement (2026-11-19, trunk `66b6e4f17`): four unattended Fords of War matches, Gondor
+against Harad with an AI on each side, seven crewed elephants in all. Every archer read `mode=Land` and
 `step=howdah_floor` in every sample, and no seat made a rescue teleport.
 
 | Run folder under `E:/Temp/fords-runs` | Speed | Shots, front and rear archer | Largest distance from the seat |
@@ -1126,9 +1126,10 @@ against Harad with an AI on each side, five crewed elephants in all. Every arche
 | `20261119-195753` | 1x | 48 and 45 in 3 minutes 40 seconds, the elephant at up to 9.5 m/s | 0.54 m in one period; 0.12 m at the 5 s samples |
 | `20261119-202858` | 1x | 8 and 1 (one minute), then 16 and 8 on a second elephant | 0.56 m in one period; 0.09 m at the samples |
 | `20261119-204402` | 4x | 19 and 23, then 2 and 2 on a second elephant | 0.65 m in one period; 0.42 m at the samples |
+| `20261119-211549` (build `ad1146d55`: the same code, docs added) | 10x | 18 and 35, then 14 and 25 on a second elephant | 1.01 m in one period; 0.78 m at the samples |
 
 `python tools/ingame_verdict.py --issue 1482` reads the checks `taom.crew-seats.howdah-held` and `howdah-shot`
-as PASS on these sessions. A fourth match with a temporary camera on the crew (`20261119-204912`) gave a
+as PASS on these sessions. A fifth match with a temporary camera on the crew (`20261119-204912`) gave a
 picture of the two archers in the howdah with their bows drawn. One thing is not explained: on the first
 elephant of the second run the rear archer loosed 1 arrow in a minute, with a target in every sample, while
 the front archer loosed 8. The front archer stands 0.78 m ahead in its line of fire, which may be the

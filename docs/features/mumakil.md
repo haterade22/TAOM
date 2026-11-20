@@ -331,7 +331,7 @@ The measurement also ruled out two suspects: the beast's motion (the walk happen
 tick order of platform and seat (the platform ticked first on every sampled frame). Moving the platform with
 `isTeleportation: false`, as the vanilla siege tower does (through `SetGlobalFrame`), changed nothing.
 
-**The shipped hold on all eight seats (2026-11-19, trunk `66b6e4f17`).** Two unattended Fords of War matches,
+**The shipped hold on all eight seats (2026-11-19, trunk `66b6e4f17`).** Three unattended Fords of War matches,
 Gondor against Harad with an AI on each side, had one mumakil each. Every archer read `mode=Land` in every
 sample, and no seat made a rescue teleport.
 
@@ -339,8 +339,9 @@ sample, and no seat made a rescue teleport.
 |---|---|---|---|---|
 | `20261119-202858` | 1x | 65 s, until the mumakil died | 4, 6, 5, 8, 6, 5, 6, 6 | 0.11 m at up to 6.5 m/s |
 | `20261119-204402` | 4x | about 120 mission seconds, until it died | 20, 15, 21, 23, 18, 15, 21, 21 | 1.23 m in one period |
+| `20261119-211549` (build `ad1146d55`: the same code, docs added) | 10x | about 120 mission seconds, until it died | 25, 25, 26, 28, 25, 24, 29, 26 | 0.72 m in one period |
 
-`python tools/ingame_verdict.py --issue 1482` reads both sessions as PASS on the held and the shot check. A third
+`python tools/ingame_verdict.py --issue 1482` reads these sessions as PASS on the held and the shot check. A fourth
 match with a temporary camera on the crew (`20261119-204912`, a `.dirty` build, so the verdict tool does not
 count it) gave pictures of two mumakil: the archers stand on the three decks with their bows in hand, and after
 the first mumakil died its archers fought on the ground. All sixteen seats of that match passed both checks too.
