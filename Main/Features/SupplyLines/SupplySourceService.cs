@@ -26,7 +26,7 @@ public sealed class SupplySourceService : ISupplySourceService
     // this map distance, so the player can see why the market next door is closed to them.
     private const float NearbyEnemyRadius = 40f;
 
-    // Friendly lords further away than this are not worth a messenger; matches the source module.
+    // Friendly lords further away than this are not worth a messenger.
     private const float LordMessengerRadius = 80f;
 
     private readonly ISupplyPricingService _pricing;
@@ -48,7 +48,7 @@ public sealed class SupplySourceService : ISupplySourceService
         var settlements = new List<SupplySourceInfo>();
         foreach (var settlement in Settlement.All)
         {
-            // Towns, castles AND villages, matching the source module's eligibility. A village
+            // Towns, castles AND villages. A village
             // prices goods at item base value (no Town component; GetItemMarketValue falls
             // back) and its volunteers flow through the same notable-slot walk as a town's.
             if (settlement == null
@@ -102,8 +102,7 @@ public sealed class SupplySourceService : ISupplySourceService
             var element = roster.GetElementCopyAtIndex(i);
             var item = element.EquipmentElement.Item;
             int amount = element.Amount;
-            // Every trade good (ItemType Goods: food, raw materials, finished goods), not only
-            // food, since #587; the port's food-only filter came from the source module. Only
+            // Every trade good (ItemType Goods: food, raw materials, finished goods; #587). Only
             // the UNMODIFIED stack is listed: the consume counts and deducts on that element,
             // and no ordinary path stocks a modified good (TradeItemComponent has no modifier
             // group), but the console can (campaign.add_item_to_player_party with a modifier,
@@ -120,7 +119,7 @@ public sealed class SupplySourceService : ISupplySourceService
         }
 
         // Most valuable first, uncapped: the goods panel scrolls, and the cross-market search
-        // must be able to land on a cheap good the old top-14 cut would have hidden.
+        // must be able to land on a cheap good.
         result.Sort((a, b) => b.UnitPrice.CompareTo(a.UnitPrice));
         return result;
     }
@@ -259,8 +258,7 @@ public sealed class SupplySourceService : ISupplySourceService
             if (take <= 0)
                 continue;
 
-            // Deduct from the settlement and price at the moment of deduction. The source module
-            // never removed the goods (an economy dupe) and priced from a stale screen snapshot.
+            // Deduct from the settlement and price at the moment of deduction.
             int unitPrice = GetItemMarketValue(settlement, item);
             if (roster.AddToCounts(element, -take) < 0)
             {
@@ -400,8 +398,7 @@ public sealed class SupplySourceService : ISupplySourceService
     }
 
     // Heroes register with CampaignObjectManager only (Hero.cs:1467-1480, verified 1.4.8);
-    // MBObjectManager.GetObject<Hero> reads XML type records and misses runtime heroes, which
-    // made every lord source return no troops and an unreachable distance (Codex round 2 #5).
+    // MBObjectManager.GetObject<Hero> reads XML type records and misses runtime heroes.
     private static Hero FindHero(string heroId) =>
         string.IsNullOrEmpty(heroId) ? null : Campaign.Current?.CampaignObjectManager?.Find<Hero>(heroId);
 

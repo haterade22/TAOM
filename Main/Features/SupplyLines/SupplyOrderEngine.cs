@@ -17,13 +17,11 @@ namespace TAOM.Features.SupplyLines;
 /// </summary>
 public sealed class SupplyOrderEngine : ISupplyOrderEngine
 {
-    // Source: route tick delivered at Distance < 1.2f. Kept as the meeting range.
     public float DeliveryRange => 1.2f;
 
-    // Source: the per-frame route tick force-delivered a ROUTED caravan at elapsed/planned >= 1.5
-    // (UpdateCaravanPositions, SupplyLines.clean.cs:1878); the hourly Tick's 2.0 was only the
-    // backstop for orders with no route. Every caravan this port spawns is routed, so 1.5 is the
-    // fraction that governs (review round B corrected an inverted claim here that ported 2.0).
+    // The source module force-delivered a ROUTED caravan per frame at elapsed/planned >= 1.5
+    // (SupplyLines.clean.cs:1878); its hourly 2.0 was a backstop for unrouted orders.
+    // Every caravan here is routed, so 1.5 governs.
     public float ForceDeliverFraction => 1.5f;
 
     public SupplyOrderVerdict Advance(
@@ -33,7 +31,7 @@ public sealed class SupplyOrderEngine : ISupplyOrderEngine
         float distanceToPlayer,
         bool playerInEncounter)
     {
-        // Loss outranks everything, matching the source: a missing caravan is gone regardless
+        // Loss outranks everything: a missing caravan is gone regardless
         // of what the player is doing.
         if (!caravanExists)
             return SupplyOrderVerdict.Lose;
@@ -42,19 +40,18 @@ public sealed class SupplyOrderEngine : ISupplyOrderEngine
         // delivery branch may fire (destroying a party still attached to a MapEvent side breaks
         // the engine's detach-before-destroy contract), and losing early is wrong too: if the
         // caravan loses, the engine destroys the party and the caravanExists gate above resolves
-        // the loss on the next tick. The original IsRaid input could never fire for a field
-        // battle (IsRaid is the settlement-raid battle type only), so it was retired.
+        // the loss on the next tick.
         if (caravanInMapEvent)
             return SupplyOrderVerdict.Continue;
 
-        // Deliveries never land mid-encounter or in captivity (defect fix 1). The order keeps
+        // Deliveries never land mid-encounter or in captivity. The order keeps
         // waiting; the caravan still exists, so nothing is lost by holding it.
         if (playerInEncounter)
             return SupplyOrderVerdict.Continue;
 
         // Positive-form comparisons only: NaN fails both and falls through to Continue.
         // The explicit finiteness gates also reject the infinities, since -Infinity would pass
-        // the range comparison and +Infinity would pass the fraction comparison (defect fix 2).
+        // the range comparison and +Infinity would pass the fraction comparison.
         // float.MaxValue is the documented "distance unknown" sentinel and correctly Continues.
         if (FiniteFloatValidator.IsFinite(distanceToPlayer) && distanceToPlayer <= DeliveryRange)
             return SupplyOrderVerdict.Deliver;

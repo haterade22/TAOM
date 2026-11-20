@@ -137,14 +137,14 @@ public class SupplyOrderService : ISupplyOrderService
 
         float distance = _sources.DistanceToPlayer(source);
         // Positive requirement: a NaN or unreachable distance must fail here, never become a free
-        // instant delivery (the source module zeroed it).
+        // instant delivery.
         if (!FiniteFloatValidator.IsFinite(distance) || distance >= float.MaxValue)
         {
             failReason = Localize(new TextObject("{=taom_sl_fail_no_route}There is no route from that source to you right now."));
             return null;
         }
 
-        // Lord sources ship no goods and never take an escort (source module behaviour).
+        // Lord sources ship no goods and never take an escort.
         var effectiveEscort = string.IsNullOrEmpty(source.HeroId) ? escort : SupplyEscortOption.None;
         string escortHeroId = null;
         if (effectiveEscort == SupplyEscortOption.Companion)
@@ -310,7 +310,7 @@ public class SupplyOrderService : ISupplyOrderService
         // The persisted counter is only a FLOOR: a recovered save can carry the order book
         // without the counter key (the behavior then hands 0 in), and trusting it would mint
         // 'taom_so_0' again over a live order, silently replacing its row and tracker while the
-        // old caravan still walks the map (Codex round 2 #2). The loaded ids are authoritative.
+        // old caravan still walks the map. The loaded ids are authoritative.
         int derived = 0;
         foreach (var order in book.Values)
         {
@@ -325,7 +325,7 @@ public class SupplyOrderService : ISupplyOrderService
 
         // Transient caches never survive into a loaded book: a caravan tracker's cached party
         // belongs to the session that created it, and the loaded campaign has new objects under
-        // the same ids (round-A HIGH). OnGameLoaded rebinds from the live campaign.
+        // the same ids. OnGameLoaded rebinds from the live campaign.
         _caravans.ClearTrackers();
         InvalidateActiveOrders();
     }
@@ -334,8 +334,8 @@ public class SupplyOrderService : ISupplyOrderService
     {
         // A session with no saved record (fresh campaign, or a save predating the feature) must
         // start with an empty book: the service is a process singleton and SyncData only fires
-        // when a record exists, so without this the previous campaign's orders ride along
-        // (round-A CRITICAL). The counter resets too; its value is meaningful only per campaign.
+        // when a record exists, so without this the previous campaign's orders ride along.
+        // The counter resets too; its value is meaningful only per campaign.
         _orders = new Dictionary<string, SupplyOrder>();
         _counter = 0;
         _caravans.ClearTrackers();
@@ -453,7 +453,7 @@ public class SupplyOrderService : ISupplyOrderService
         // destroying the party, so our own teardown arrives with a finished status and falls
         // through. This path is for the ENGINE's destroys (a lost battle), and it runs
         // synchronously at destroy time, so no save written afterwards can carry a stale
-        // InTransit row that a load would resurrect with its full cargo (Codex round 2 #7).
+        // InTransit row that a load would resurrect with its full cargo.
         if (order.StatusEnum != SupplyOrderStatus.Ordered
             && order.StatusEnum != SupplyOrderStatus.InTransit)
             return;

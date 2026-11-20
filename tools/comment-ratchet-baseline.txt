@@ -1962,14 +1962,14 @@ Main/Features/SupplyLines/Domain/SupplyLinesSaveDefiner.cs	2
 Main/Features/SupplyLines/Hooks/SupplyCaravanEncounterPatch.cs	1
 Main/Features/SupplyLines/Hooks/SupplyCaravanMeetingMenu.cs	1
 Main/Features/SupplyLines/Hooks/SupplyLinesCampaignBehavior.cs	14
-Main/Features/SupplyLines/SupplyCaravanService.cs	116
+Main/Features/SupplyLines/SupplyCaravanService.cs	111
 Main/Features/SupplyLines/SupplyGoodsSearch.cs	1
 Main/Features/SupplyLines/SupplyLinesIoC.cs	3
 Main/Features/SupplyLines/SupplyLinesSettingsProvider.cs	2
-Main/Features/SupplyLines/SupplyOrderEngine.cs	19
+Main/Features/SupplyLines/SupplyOrderEngine.cs	16
 Main/Features/SupplyLines/SupplyOrderService.cs	58
 Main/Features/SupplyLines/SupplyPricingService.cs	11
-Main/Features/SupplyLines/SupplySourceService.cs	38
+Main/Features/SupplyLines/SupplySourceService.cs	35
 Main/Features/SupplyLines/UI/GauntletSupplyOrderScreen.cs	15
 Main/Features/SupplyLines/UI/SupplyOrderScreenVM.cs	28
 Main/Features/SupplyLines/UI/SupplyOrderScreens.cs	1
