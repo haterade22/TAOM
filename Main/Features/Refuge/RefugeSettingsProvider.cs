@@ -47,10 +47,6 @@ public class RefugeSettingsProvider : IRefugeSettingsProvider
 
     public float RaidRange => Sane(Settings?.RefugeRaidRange, 1f, 20f, 6f);
 
-    public string BuildingMesh => "empire_street_tent_02";
-
-    public float BuildingScale => 0.4f;
-
     private static float Sane(float? raw, float min, float max, float fallback)
     {
         if (!raw.HasValue)

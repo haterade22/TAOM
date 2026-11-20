@@ -122,7 +122,7 @@ Client/Features/Realms/Popups/TitleTreeCanvasLayout.cs	1
 Client/Features/Realms/Popups/TitleTreeVMs.cs	2
 Client/Features/ReevesLedger/UI/ReserveStepMixin.cs	4
 Client/Features/ReevesLedger/UI/TownManagementLedgerMixin.cs	5
-Client/Features/Refuge/Visuals/RefugeVisualService.cs	27
+Client/Features/Refuge/Visuals/RefugeVisualService.cs	24
 Client/Features/SeatOfSeeing/Hooks/Patch140_EquipmentViewDropTick.cs	1
 Client/Features/SeatOfSeeing/Hooks/Patch140_EquipmentViewEquipTick.cs	1
 Client/Features/SeatOfSeeing/Hooks/Patch140_FormationFocusPoint.cs	2

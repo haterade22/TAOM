@@ -159,10 +159,9 @@ finishes (the behavior pumps `FrameTick` unconditionally, the CampService split:
 work, gameplay effects gate inside the service), and refuges stay enterable, manageable and
 dismantlable. A toggle mid-build therefore never strands a deposited garrison.
 
-The source's two remaining knobs, `RefugeBuildingMesh` ("empire_street_tent_02") and
-`RefugeBuildingScale` (0.4), exist on `IRefugeSettingsProvider` but are pinned to the source
-defaults in the provider: `TaomSettings.cs` is single-owner and carries no MCM rows for them yet.
-Wiring MCM later needs no change on the consuming side (`RefugeVisualService`).
+The source's two remaining knobs, `RefugeBuildingMesh` and `RefugeBuildingScale`, are not
+settings in TAOM. Their source defaults ("empire_street_tent_02" at 0.4) are constants in
+`RefugeVisualService`, the one class that reads them (#1502).
 
 ## Food
 
