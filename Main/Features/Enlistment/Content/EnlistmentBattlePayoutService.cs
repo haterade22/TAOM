@@ -75,8 +75,6 @@ public class EnlistmentBattlePayoutService
         LastSatOutReason = null;
         // The ledger belongs to the battle being paid, so it is consumed on every path.
         var recorded = _ledger.Consume();
-        // A held heir-mismatch discharge (#1030) pays nothing: the term belongs to the old hero, the
-        // rewards would go to him, and the discharge ends it within the hour.
         if (!_store.Record.IsEnlisted || _store.HeirDischargeHeld)
         {
             _accumulator.Consume(); // drop any stale sample
