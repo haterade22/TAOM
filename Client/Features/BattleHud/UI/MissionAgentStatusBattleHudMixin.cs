@@ -31,7 +31,7 @@ internal class MissionAgentStatusBattleHudMixin : BaseViewModelMixin<MissionAgen
     private float _hudAmmoNumberOffsetX;
     private int _hudColourMode;
     private bool _hudStaminaVisible;
-    private int _hudStaminaHeight;
+    private float _hudStaminaHeight;
     private string _hudStaminaColour = BattleHudStaminaMapper.FreshColour;
     private bool _showStaminaBar = true;
 
@@ -187,9 +187,12 @@ internal class MissionAgentStatusBattleHudMixin : BaseViewModelMixin<MissionAgen
         set { if (_hudStaminaVisible != value) { _hudStaminaVisible = value; OnPropertyChanged(nameof(HudStaminaVisible)); } }
     }
 
-    /// <summary>Pixels of the stamina fill, 0 to BattleHudStaminaMapper.TrackHeight.</summary>
+    /// <summary>
+    /// Pixels of the stamina fill, 0 to BattleHudStaminaMapper.TrackHeight. A float, because the widget writes its
+    /// SuggestedHeight back here on every change and an int setter throws on that write (GauntletFloatWriteBackGateTests).
+    /// </summary>
     [DataSourceProperty]
-    public int HudStaminaHeight
+    public float HudStaminaHeight
     {
         get => _hudStaminaHeight;
         set { if (_hudStaminaHeight != value) { _hudStaminaHeight = value; OnPropertyChanged(nameof(HudStaminaHeight)); } }
