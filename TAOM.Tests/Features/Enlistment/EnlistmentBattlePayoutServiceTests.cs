@@ -256,6 +256,20 @@ public class EnlistmentBattlePayoutServiceTests
     }
 
     [TestMethod]
+    public void PayOut_HeirDischargeHeld_PaysNothing()
+    {
+        // #1030: the term belongs to the old hero, and its discharge waits for this battle to end.
+        MakeEnlisted();
+        _store.HeirDischargeHeld = true;
+        _accumulator.Submit(new MeritSample { Kills = 5 });
+
+        Assert.IsFalse(_service.PayOutBattle(won: true, playerSimulated: false));
+        Assert.AreEqual(0, _contentStore.Record.ServiceXp);
+        Assert.IsNull(_accumulator.Consume());
+        _rewards.DidNotReceiveWithAnyArgs().Grant(default!, default!);
+    }
+
+    [TestMethod]
     public void PayOut_WonNoSample_AwardsBaseXp()
     {
         MakeEnlisted();
