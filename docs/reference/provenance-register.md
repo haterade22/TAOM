@@ -62,7 +62,6 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Yotthani modules (FieldCamp, Refuge, SupplyLines) | none published | maintainer-commissioned | behavioural-port | `Main/Features/SupplyLines/**` `Main/Features/FieldCamp/**` `Main/Features/Refuge/**` `Main/_Module/AssetPackages/*.tpac` | cleared |
 | LOTRAOM | `LOTRAOM` | maintainer-owned | data-port | `Main/_Module/ModuleData/characters/lords.xml` `Main/_Module/ModuleData/**/taom_wanderer*.xml` `Main/_Module/ModuleData/lords.xslt` `Main/_Module/ModuleData/spcultures.xslt` `Main/Features/WarOfTheRingMomentum/**` `Main/Features/Messengers/**` `Main/Features/HeroRace/**` | cleared |
 | ADOD_Beasts | `ADOD_Beasts` `ADOD` `ADODHowdahObject` `ADODBeastsMissionLogic` | purchased-asset, code terms informal | behavioural-port | `Main/Features/Elephant/**` `Main/Features/ElephantLike/**` `Main/Features/Mumakil/**` `Main/Features/WarRam/**` `Main/Features/Elk/**` `Main/Features/Animalia/**` `docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml` (live: `LOTRLOME_Armory/Prefabs`) | cleared |
-| African elephant animation pack | `VFX Grace` | purchased asset, licence text not read by TAOM | data-port | `<game>/Modules/LOTRLOME_Armory/Assets/creature/elephant/animations/{war_elephant,mumakil}_*` (bone keys retargeted by `tools/elephant_gait_retarget.py`; no mesh, rig or texture of the pack) | pending-license |
 | BehaviorTrees | `BehaviorTrees.dll` | maintainer-owned | verbatim-port | `Main/BehaviorTrees/**` | cleared |
 | BannerlordTogether | `BannerlordTogether` `BattleLinkMPClient` | no-decompile policy, see detail | interop-only | (none) | cleared |
 | BannerlordCoop | `BannerlordCoop` `Bannerlord-Coop-Team` `Bannerlord.Coop` | BannerlordCoop Source Available License since 2026-06-17 (no copying, distribution or use in another project without the maintainers' written permission; earlier MIT releases keep MIT) | interop-only | `Main/Features/CoopInterop/Missions/CoopMissionAuthority.cs` (binds Coop's agent registry and `CoopMissionController` by reflection; no Coop code copied); `CoopCompat/` (`TAOM.CoopCompat` compiles against Coop's `Common`, `GameInterface` and `Coop.Core` and implements its message interfaces; no Coop code copied, no Coop binary ships) | uncleared |
@@ -534,10 +533,10 @@ Since 2026-09-29 the elephant's visible body (`sk_elephant_basemesh_a`) and its 
 (`SK_Elephant_Armor_Variations`) are meshes KEYforce delivered, replacing ADOD_Beasts's `elephant_mesh` and armour;
 the `elephant_skeleton`, its hit capsules and the attack, hit, rear, dash, death and standing clips still come from
 the purchased ADOD_Beasts asset. Since 2026-11-19 (#1474) the gait, turn, strafe and two idle clips of the elephant
-and the mumak are bone keys retargeted onto `elephant_skeleton` from a second purchase, the `VFX Grace` "African
-Elephant Animated" pack. The maintainer confirmed on 2026-11-18 that the retargeted keys may ship; no mesh, rig or
-texture of the pack ships or is stored. The row is `pending-license` because nobody has read the pack's licence
-text for a notice duty ([elephant.md](../features/elephant.md), "License / provenance").
+and the mumak are bone keys retargeted onto `elephant_skeleton` from a second purchase, an African elephant
+animation pack. The maintainer confirmed on 2026-11-18 that the retargeted keys may ship; no mesh, rig or texture
+of the pack ships or is stored. By the maintainer's decision of 2026-11-20 the pack has no row in the table above
+([elephant.md](../features/elephant.md), "License / provenance").
 Where KEYforce's elephant meshes come from (his own work, or re-exported from the same purchase) is not recorded;
 ask him and write the answer here.
 

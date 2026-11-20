@@ -1052,10 +1052,9 @@ The elephant asset was **purchased from Artem (ADOD_Beasts author) for use in TA
 attribution gating required. (Confirmed by the project owner, 2026-06-05.)
 
 Since #1474 the gait, turn, strafe and two idle clips of both beasts are bone keys retargeted onto
-`elephant_skeleton` from a second purchase, the `VFX Grace` "African Elephant Animated" pack. Mike confirmed on
-2026-11-18 that the retargeted keys may ship. No mesh, rig or texture of the pack ships or is stored in the
-repo. Nobody has read the pack's licence text for a notice duty; the
-[register](../reference/provenance-register.md) row stays `pending-license` until someone does.
+`elephant_skeleton` from a second purchase, an African elephant animation pack. Mike confirmed on 2026-11-18
+that the retargeted keys may ship. No mesh, rig or texture of the pack ships or is stored in the repo. The
+[register](../reference/provenance-register.md) carries no row for the pack (Mike, 2026-11-20).
 
 ## v1.4.6 exposure (2026-06-12) — jump table hardened; battle-test owed
 
