@@ -94,6 +94,16 @@ public class SpecialResourceMessagesTests
     }
 
     [TestMethod]
+    public void UpgradeClamped_AnyCount_BindsTheCountAsASlot()
+    {
+        var message = SpecialResourceMessages.UpgradeClamped(3);
+
+        Assert.AreEqual("{=taom_res_upgrade_clamped}Only enough resources for {COUNT} upgrade(s).", message.Value);
+        AssertNoBakedNumber(message);
+        Assert.AreEqual(3, message.Attributes["COUNT"]);
+    }
+
+    [TestMethod]
     public void RecruitNeedsResource_AmountAndName_ReusesTheVolunteerGateKey()
     {
         var message = SpecialResourceMessages.RecruitNeedsResource(50, "War Spoils");

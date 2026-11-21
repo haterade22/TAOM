@@ -264,8 +264,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
     private void OnPartyScreenReset(PartyScreenLogic logic, bool fromCancel)
     {
-        _service.CancelSession();
-        _service.BeginPartyScreenSession();
+        _service.RestartPartyScreenSession(Hero.MainHero?.StringId, Hooks.PartyScreenHeldUpgrades.Read(logic));
     }
 
     private static void GetHeroIds(Hero hero, out string kingdomId, out string cultureId)
