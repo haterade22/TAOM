@@ -128,12 +128,14 @@ def resolved_runs_root(args):
     return Path(args.runs_root).resolve()
 
 
+SAFELY_EXITED_RE = re.compile(rb"^(safely_exited[ \t]*=[ \t]*)0(?=[ \t]*\r?$)", re.MULTILINE)
+SAFELY_EXITED_ONE_RE = re.compile(rb"^safely_exited[ \t]*=[ \t]*1[ \t]*\r?$", re.MULTILINE)
+
+
 def rewrite_safely_exited(data):
-    """(new bytes, changed): 'safely_exited = 0' becomes 'safely_exited = 1', every other byte (CRLF included) untouched."""
-    old, new = b"safely_exited = 0", b"safely_exited = 1"
-    if old not in data:
-        return data, False
-    return data.replace(old, new), True
+    """(new bytes, changed): 'safely_exited = 0' becomes 1 with its spacing, every other byte (CRLF included) untouched."""
+    new, count = SAFELY_EXITED_RE.subn(rb"\g<1>1", data)
+    return new, count > 0
 
 
 def rgl_crashed(text):
@@ -549,8 +551,8 @@ def reset_safely_exited(config_path, say):
             say(f"engine_config.txt not written ({error}); safely_exited still 0")
             return
         say("safely_exited reset: was 0, now 1")
-    elif b"safely_exited = 1" in data:
-        say("safely_exited reset: already 1")
+    elif SAFELY_EXITED_ONE_RE.search(data):
+        say("safely_exited already 1; nothing reset")
     else:
         say("safely_exited key not found in engine_config.txt; nothing reset")
 
