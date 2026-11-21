@@ -35,7 +35,7 @@ the whole tree can be regenerated and checked:
 |---|---|---|
 | Lorien troops (33: regular T4 to T7, Marchwardens T5 to T8, Galadhrim and Mallorn T6 to T9, 4 militia at levels 11 and 16, 1 tavern mercenary copy) | `tools/generate_lothlorien_troops.py`, then `tools/rebalance_troops.py --fix-monotonicity --restat <ids>` and `tools/rebalance_ranged_ladders.py --apply` for the skills | `Main/_Module/ModuleData/troops/troops_lothlorien.xml` |
 | Snow Orc troops (13, levels 6 to 26) | `tools/generate_snow_orc_troops.py` | `troops/troops_gundabad_snow.xml` |
-| Armour items (77 `sk_ll_*`, 20 `sk_gb_orc*`) | `tools/generate_lothlorien_armor.py`, `tools/generate_snow_orc_armor.py` (`--check` reports drift, `--apply` backs up what it changes) | the live, unversioned `LOTRLOME_Armory/ModuleData/LOTRLOME_items/lothlorien` and `gundabad_snow` |
+| Armour items (78 `sk_ll_*`, 20 `sk_gb_orc*`) | `tools/generate_lothlorien_armor.py`, `tools/generate_snow_orc_armor.py` (`--check` reports drift, `--apply` backs up what it changes) | the live, unversioned `LOTRLOME_Armory/ModuleData/LOTRLOME_items/lothlorien` and `gundabad_snow` |
 | Bow ladder | `tools/ranged_ladders.json` line `lothlorien` (tiers 2 to 9), `tools/generate_ranged_ladder_items.py` | live `lothlorien/ranged_ladder.xml` |
 | Volunteer pools | `VolunteerRecruitmentService.Lothlorien.cs`, `VolunteerRecruitmentService.OrcKingdoms.cs` | in code |
 | Culture bindings and 7 military party templates (default army, 3 patrols, militia, rebels, vassal reward) | `taom_spcultures.xml`, `taom_partyTemplates.xml` | by hand, sized with `tools/rebalance_party_template_maxes.py` |

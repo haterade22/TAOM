@@ -10021,6 +10021,11 @@
    "how": "measured",
    "texture": "t_ll_gl_props_a_d"
   },
+  "sk_ll_gl_crown_b": {
+   "family": "gold",
+   "how": "measured",
+   "texture": "t_ll_gl_props_a_d"
+  },
   "sk_ll_gl_galad_bracer_a": {
    "family": "gold",
    "how": "measured",

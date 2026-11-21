@@ -27,6 +27,13 @@ EXPECTED_LEGS = {
 }
 
 
+class HeroPiecesAreNamedKitTests(unittest.TestCase):
+    def test_every_hero_piece_is_excluded_so_the_class_table_calls_it_named(self):
+        for item_id, _slot, name in gen.GALADRIEL:
+            with self.subTest(item=item_id):
+                self.assertTrue(ra.is_excluded(item_id, f"{gen.TAG} {name}"))
+
+
 class LegPiecesCoverLegsTests(unittest.TestCase):
     def test_the_rendered_leg_file_covers_legs_on_exactly_the_eight_leg_pieces(self):
         by_file, _ = gen.build()
