@@ -10,6 +10,112 @@
 > [`docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md`](docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md);
 > older ones are in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md).
 
+## v2.0.42 (2026-11-20)
+
+Commits since v2.0.41: 5 (5 with the version label, 0 without).
+
+### Fixes
+
+#### fix(mapevent): v2.0.41 - release parties a throwing side write stranded
+
+`4e51ef48`
+
+A player's save held eliminated clans that never went away: "X has
+been eliminated" showed, then DestroyClanAction crashed in
+MapEventSide.RemovePartyInternal (crash 78ba4d70), and the clans'
+leftover parties stood still and could not be attacked.
+
+Those parties still pointed at a battle side that no longer listed
+them. The side setter removes the party from the old side before it
+writes the field, so a crash in between leaves the field set and the
+entry gone, and every later write throws. The orphaned battle sweep
+never saw them, because their side lists nobody.
+
+The sweep now also releases such parties after it finishes the stuck
+battles: it clears the party's side reference, so the clan can be
+destroyed as vanilla does. It also runs when a load finishes, because
+a clan's daily tick can come before the first hourly sweep. The main
+party and the player's own battle are left alone, and it stands down
+in co-op.
+
+Not checked in game: load the reporter's repaired save and pass a day;
+expect "released a stranded party" lines, no 78ba4d70, and no
+repeating "has been eliminated".
+
+Contributed by REDACTEDSTUFF (PR #1512).
+
+#### fix(enlistment): v2.0.41 - the commander keeps his siege after a battle
+
+`69b18706`
+
+An enlisted soldier was pulled out of a siege after a battle. When the
+commander had no army, TAOM raised one around him for the battle and
+disbanded it afterwards. The disband set him to hold, and the next
+siege tick dropped any besieger that was not besieging, so he left his
+own siege after a sally-out or relief battle and took the soldier with
+him (player report on Discord).
+
+The adapter now puts the commander back on his siege right after the
+disband, when he is still in that siege's camp. A siege the battle
+ended is left alone. Lords who joined the battle army still leave the
+siege when it disperses, as they do in vanilla.
+
+Not checked in game: serve under a lord with no army who besieges a
+town, win a sally-out, and he should stay at the siege.
+
+Contributed by REDACTEDSTUFF (PR #1511).
+
+#### fix(tools): v2.0.41 - native xref sweep steps over undecodable bytes
+
+`733795b8`
+
+native_sig_author.py xref swept .text with one capstone pass that
+stopped at the first byte it could not decode, so on v1.5.4 it read
+only 2.8 % of .text. The disassembler now runs with skipdata on and
+steps over such bytes. The dead operand loop in cmd_xref is gone.
+
+Checked on the v1.5.4 client DLL: xref to 0x715AB0 now finds 3807
+references, the same as the fxref byte scan; before, it found 125.
+
+Contributed by REDACTEDSTUFF (PR #1509). Closes #780.
+
+### Balance
+
+#### balance(caravans): v2.0.41 - caravan guards earn a regular wage
+
+`a5652308`
+
+Player caravans almost never turned a profit. A Gondor regular escort
+of 70 men cost 732 gold a day, against 207 for a vanilla escort, and
+TAOM's towns sit farther apart.
+
+Caravan guards no longer pay the 1.5x mercenary wage. Vanilla gives
+that factor to mercenaries only; caravan guards still count as
+mercenaries for the recruitment cost and recruitment perks, as in
+vanilla. The Gondor escort now costs about 488 a day. This applies to
+every party that fields caravan guards, AI caravans included.
+
+Caravans owned by the player's clan also move 15% faster ("Caravan
+pack train" in the speed tooltip), on top of vanilla's own caravan
+bonus. In co-op no player's caravan gets this yet, because the check
+reads the server's own clan. The label shows in English in every
+language until the translation pass (#1129).
+
+Not checked in game: caravan profit over a few days
+(taom.print_caravans).
+
+Contributed by REDACTEDSTUFF (PR #1510).
+
+### Chores
+
+#### chore(release): v2.0.41 - troop id baseline from the v2.0.41 tag
+
+`a84cfa16`
+
+The TROOP_ID_REMOVED gate now reads its shipped troop ids from the
+v2.0.41 tag. The 1,120 ids are the same as at v2.0.39; only the tag
+line changed.
+
 ## v2.0.41 (2026-11-20)
 
 Commits since v2.0.40: 274 (274 with the version label, 0 without).

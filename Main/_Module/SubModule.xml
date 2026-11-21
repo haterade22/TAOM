@@ -3,7 +3,7 @@
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd">
   <Id value="TAOM" />
   <Name value="TAOM" />
-  <Version value="v2.0.41" />
+  <Version value="v2.0.42" />
   <DefaultModule value="false" />
   <ModuleCategory value="Singleplayer"/>
   <ModuleType value="Community" />
@@ -28,7 +28,7 @@
     <!-- Version-pinned mirror of the DependedModule above, for BUTR/BLSE launchers (which DO read
          this block). Bump this alongside Dependencies/_Module/SubModule.xml's <Version> whenever
          the Dependencies assembly changes — a stale pairing is the #371 failure mode. -->
-    <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" version="v2.0.41" />
+    <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" version="v2.0.42" />
     <!-- TAOM.Dependencies also reads this Native version at startup (GameVersionNotice); when the game is another
          version it turns TAOM's code off for the session and tells the player, so keep it on the game version this build targets. -->
     <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.5.7.*" />
