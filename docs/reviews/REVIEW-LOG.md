@@ -5977,3 +5977,15 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 
 - **Verified by the reviewers, switch off:** the setting is read once per mission at the first tick (`StaminaMissionLogic.DecideArmed`), after the runtime is cleared; every hook (`ApplyStats`, `TryRead`, `RefusesSpecialAttack`, `StripPlayerInput`) returns on `Armed` false before an engine read; Patch171 is applied whatever the setting says and its postfix returns at the same test; the bar's mapper returns not visible; each hit callback returns after one volatile read; with no stamina claim, `OwnerClaimLedger` makes Marshal's Word set and clear the AI input flag at the same moments as the direct writes it replaced.
 - **In-game:** 40 unattended Fords of War matches (`docs/features/stamina.md`, "Unattended runs"); the three check lines pass in every match with the switch on that ended normally. No step that needs a person has been run: the label `triage-needs-ingame` is on #1497.
+
+## Review (number assigned at merge): special-resource charge on a successful DoneLogic (#1516), tier-1 deep review (Lens 2, Lens 5), Codex xhigh plus a high re-review of the fix (2026-11-21)
+
+- **Scope:** `fix/party-screen-done-charge`: `PartyScreenLogic_DoneLogic_ChargePatch` (Patch26 postfix), `ISpecialResourceService.CommitAppliedUpgrades`, `IOnPartyUpgradeResourceCheck.ChargeAppliedUpgrades` (0 in a co-op session), `SpecialResourcesBehavior.AttachToPartyScreen` moving its subscriptions, tests, the feature doc, the registry and the patch snapshot.
+- **Lenses:** Engine compatibility, 9 verified, 0 incompatible, 3 LOW wording items (fixed); Data flow, 12 flows, 0 correctness gaps, 3 LOW (snapshot row, two stale doc lines; fixed). Data flow on the F1 fix: 8 flows, 0 gaps, 2 LOW (a missing close-detach test, added; a pre-existing stale pending display, #1517).
+- **Codex:** `codex-adversarial-party-done-charge-2026-11-21.md` at `xhigh`, one P2 (F1). Re-review at `high` on the fix: 0 findings, its replay ends at the expected balance.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| Codex F1 (P2) | The map bar applies a party screen (`IChangeableScreen.ApplyChanges`) and pops it with no `PartyScreenClosedEvent`. The behavior stayed attached to the popped logic and refused the next one, so the next screen's Reset never reached the session and the new Done postfix charged upgrades the player reset | Stale state / lifecycle | The lenses listed the callers of `DoneLogic`, not every way a party screen ends; `MapNavigationHelper` closes a screen through `PopState` alone | `AttachToPartyScreen` moves both subscriptions to a new logic; `SpecialResourcesBehaviorPartyScreenAttachTests` pins the move, the single subscribe and the close detach |
+
+- **In-game owed:** Talk confirm then Escape charges once; map bar apply, new screen, upgrade, Reset, Done charges nothing for the reset upgrade.
