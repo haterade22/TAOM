@@ -9,9 +9,12 @@ namespace TAOM.Features.SpecialResources.Hooks;
 /// </summary>
 public static class PartyScreenHeldUpgrades
 {
-    public static IReadOnlyList<RecruitCartEntry> Read(PartyScreenLogic logic)
+    public static IReadOnlyList<RecruitCartEntry> Read(PartyScreenLogic logic) => Read(logic?.CurrentData);
+
+    /// <summary>The engine's history tuple is (source troop, upgrade target, count): PartyScreenLogic.AddUpgradeToHistory, v1.5.7.</summary>
+    public static IReadOnlyList<RecruitCartEntry> Read(PartyScreenData? data)
     {
-        var history = logic?.CurrentData?.UpgradedTroopsHistory;
+        var history = data?.UpgradedTroopsHistory;
         var entries = new List<RecruitCartEntry>(history?.Count ?? 0);
         if (history == null) return entries;
         foreach (var upgrade in history)
