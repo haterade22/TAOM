@@ -101,14 +101,15 @@ public class BattleGearLootServiceTests
     public void Applies_SinglePlayer_True() => Assert.IsTrue(new Rig().Build().Applies());
 
     [TestMethod]
-    public void LootCasualty_VanillaGivesNothing_GrantsNothing_ReturnsFalse()
+    public void LootCasualty_VanillaGivesNothing_GrantsNothing_LogsNothing()
     {
         var rig = new Rig();
         var c = new FakeCasualty { VanillaGivesNothing = true, Pieces = new[] { P(0) } };
 
-        Assert.IsFalse(rig.Build().LootCasualty(c, "b1"));
+        rig.Build().LootCasualty(c, "b1");
         Assert.AreEqual(0, c.Grants.Count);
         Assert.AreEqual(0, rig.Random.Calls);
+        rig.Outcomes.DidNotReceiveWithAnyArgs().Pass(default!, default!, default!);
     }
 
     [TestMethod]
@@ -190,7 +191,7 @@ public class BattleGearLootServiceTests
         var rig = new Rig();
         var c = new FakeCasualty();
 
-        Assert.IsTrue(rig.Build().LootCasualty(c, "b1"));
+        rig.Build().LootCasualty(c, "b1");
         Assert.AreEqual(0, c.Grants.Count);
     }
 
@@ -200,7 +201,7 @@ public class BattleGearLootServiceTests
         var rig = new Rig { Settings = new(true, 100) };
         var c = new FakeCasualty { Pieces = new[] { P(0), P(2) } };
 
-        Assert.IsTrue(rig.Build().LootCasualty(c, "b1"));
+        rig.Build().LootCasualty(c, "b1");
         Assert.AreEqual(1, c.Grants.Count);
         CollectionAssert.AreEqual(new[] { 0, 2 }, c.Grants[0].ToArray());
     }

@@ -43,11 +43,11 @@ public sealed class BattleGearLootService
     public bool Applies() =>
         _settings.Get().Enabled && CoopSessionPolicy.IsSinglePlayerAuthority(_coop, _dedicated);
 
-    /// <summary>False: vanilla gives this body nothing. True: the body is handled and vanilla's loot is skipped.</summary>
-    public bool LootCasualty(ICasualtyGearAdapter casualty, string battleKey)
+    /// <summary>Rolls and grants this body's gear, or nothing when vanilla would give this body nothing.</summary>
+    public void LootCasualty(ICasualtyGearAdapter casualty, string battleKey)
     {
         if (casualty.VanillaGivesNothing)
-            return false;
+            return;
 
         int chance = _settings.Get().ChancePercent;
         var picked = PickSlots(casualty.Pieces, chance);
@@ -55,7 +55,6 @@ public sealed class BattleGearLootService
             casualty.Grant(picked);
 
         _outcomes.Pass(CheckId, battleKey, $"chance={chance}");
-        return true;
     }
 
     internal IReadOnlyList<int> PickSlots(IReadOnlyList<GearPiece> pieces, int chancePercent)

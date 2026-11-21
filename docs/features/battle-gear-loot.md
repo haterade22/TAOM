@@ -10,7 +10,7 @@ No GitHub issue (the maintainer waived it for this feature).
 
 - **Vanilla behavior:** `MapEvent.LootCasualtyCharacter` gives the player at most `RoundRandomized(share)` tries per body,
   each one item from `GetLootedItemFromTroop` (one random battle set, at most one merchandise item, often none), and drops a
-  second item of the same type (`MapEvent.cs:1626-1664`, `DefaultBattleRewardModel.cs:100-162`).
+  second item of the same type (`MapEvent.cs:1627-1665`, `DefaultBattleRewardModel.cs:92-168`).
 - **TAOM requirement:** a player who wants the fallen enemy's real kit as loot, tuned by a chance he sets.
 - **Why not a GameModel:** the model hooks give one `EquipmentElement` per call, and the engine calls them a handful of times
   per body and drops repeated types, so "every item rolls on its own" cannot be built there.
@@ -30,7 +30,8 @@ Rebuilding what an enemy wore: at loot time the rosters hold character counts on
   modifier distribution match, and it works in simulated battles. A hero's own `BattleEquipment` is read slot by slot; the
   shared dead-hero placeholder gives no pieces.
 - **Rolls:** `BattleGearLootService.PickSlots` rolls once per eligible piece in slot order through `IRandomProvider`
-  (`System.Random`, so the engine's `MBRandom` sequence is not shifted). Chance 0 and 100 draw no roll.
+  (`System.Random`); the kit rebuild and Metallurgy still draw from `MBRandom`, as vanilla's loot does. Chance 0 and 100
+  draw no roll.
 - **Never drops:** empty slots, `NotMerchandise` items (this includes the heavy, elite, lord and named classes while Armour
   Acquisition gates them), named weapons always, banners, quest items, and mounts of the mount-locked creatures (giant spider,
   war elephant, Mumakil). With Armour Acquisition off, heavy, elite and lord pieces drop like any merchandise.

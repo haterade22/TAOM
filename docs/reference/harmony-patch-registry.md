@@ -2171,7 +2171,7 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 ## Patch172_BattleGearLoot
 
-**Target:** `private void TaleWorlds.CampaignSystem.MapEvents.MapEvent.LootCasualtyCharacter(CharacterObject casualtyCharacter, MapEventParty winnerParty, MapEventParty defeatedParty, float aiTradePenalty, int maxLootedItemsPerBodyForMainParty, ItemRoster mainPartyLootFromCasualties)` (v1.5.7, `MapEvent.cs:1626-1664`).
+**Target:** `private void TaleWorlds.CampaignSystem.MapEvents.MapEvent.LootCasualtyCharacter(CharacterObject casualtyCharacter, MapEventParty winnerParty, MapEventParty defeatedParty, float aiTradePenalty, int maxLootedItemsPerBodyForMainParty, ItemRoster mainPartyLootFromCasualties)` (v1.5.7, `MapEvent.cs:1627-1665`).
 
 **Why not a model.** `BattleRewardModel.GetLootedItemFromTroop` returns one item per call and the engine drops a repeated item type, so a per-item roll over a whole kit cannot be built there.
 
