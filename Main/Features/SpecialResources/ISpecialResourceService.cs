@@ -79,6 +79,7 @@ public interface ISpecialResourceService
     /// (0 when no session is open, nothing was queued, or the hero maps to no resource).
     /// </summary>
     float CommitSession(string heroId, string? kingdomId, string? cultureId);
+    float CommitAppliedUpgrades(string heroId, string? kingdomId, string? cultureId);
     void CancelSession();
     void InitializeHero(string heroId, string? kingdomId, string? cultureId);
 

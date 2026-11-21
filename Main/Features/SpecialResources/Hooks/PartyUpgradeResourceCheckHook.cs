@@ -55,4 +55,7 @@ public class PartyUpgradeResourceCheckHook : IOnPartyUpgradeResourceCheck
     public void BeginSession() => _service.BeginPartyScreenSession();
     public void CommitSession(string heroId, string kingdomId, string cultureId) => _service.CommitSession(heroId, kingdomId, cultureId);
     public void CancelSession() => _service.CancelSession();
+
+    public float ChargeAppliedUpgrades(string heroId, string kingdomId, string cultureId)
+        => _coop.IsSessionActive ? 0f : _service.CommitAppliedUpgrades(heroId, kingdomId, cultureId);
 }

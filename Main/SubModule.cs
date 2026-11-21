@@ -1934,6 +1934,7 @@ public class SubModule : MBSubModuleBase
         PartyCharacterVM_InitializeUpgrades_Patch.Initialize(resourceHook, specResLogger);
         PartyScreenLogic_UpgradeTroop_Patch.Initialize(resourceHook, specResLogger);
         PartyScreenLogic_AddCommand_Patch.Initialize(resourceHook, specResLogger);
+        PartyScreenLogic_DoneLogic_ChargePatch.Initialize(resourceHook, specResLogger);
         RecruitmentVM_RecruitGate_Patch.Initialize(IoC.Resolve<IOnRecruitmentResourceGate>(), specResLogger);
         TryPatchCategory("Patch26_SpecialResources");
         TryPatchCategory("Patch51_RecruitmentResourceGate");

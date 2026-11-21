@@ -15,4 +15,5 @@ public interface IOnPartyUpgradeResourceCheck
     void BeginSession();
     void CommitSession(string heroId, string kingdomId, string cultureId);
     void CancelSession();
+    float ChargeAppliedUpgrades(string heroId, string kingdomId, string cultureId);
 }
