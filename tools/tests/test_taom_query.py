@@ -44,6 +44,23 @@ class ModuleDataQueryTests(unittest.TestCase):
     def tearDown(self):
         self._tmp.cleanup()
 
+    def test_validate_clears_the_read_cache_it_filled(self):
+        # The MCP server keeps this object for its whole life; the run reads every ModuleData file.
+        _write(self.md / "a.xml", "<NPCCharacters />")
+        self.q.validate(codes=["UNKNOWN_CULTURE"])
+        self.assertEqual(ts._read_stripped.cache_info().currsize, 0)
+
+    def test_validate_returns_the_two_narrow_skips_as_partial_run_notices(self):
+        # No LOTRLOME_Armory (armour class table) and a module with no .tpac (SandBoxCore on a desktop run).
+        with tempfile.TemporaryDirectory() as tmp:
+            mods = Path(tmp) / "Modules"
+            (mods / "SandBoxCore").mkdir(parents=True)
+            q = tq.ModuleDataQuery(self.md, self.reg, [], game_modules=mods)
+            out = q.validate(codes=[vm.BODY_CODE, vm.ARMOUR_CLASS_CODE])
+        msgs = [i["message"] for i in out["issues"] if i["code"] == vm.PARTIAL_RUN_CODE]
+        self.assertTrue(any("no LOTRLOME_Armory" in m for m in msgs), msgs)
+        self.assertTrue(any("'SandBoxCore' contributes no .tpac" in m for m in msgs), msgs)
+
     def test_item_exists_true_false_and_prefix(self):
         self.assertTrue(self.q.item_exists("good_sword")["exists"])
         self.assertTrue(self.q.item_exists("Item.good_sword")["exists"])  # prefix tolerated

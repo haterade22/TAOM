@@ -443,20 +443,26 @@ class PresentSet:
 _WARNED_EMPTY_MODULES: set = set()
 
 
-def module_tpacs(mod_dir: Path, name: str) -> list:
+def module_tpacs(mod_dir: Path, name: str, skips: list = None) -> list:
     """The *.tpac of one module folder, as tpac_paths_for_modules chooses them, under the path the caller gave
     (never rebuilt from another spelling of Modules/; validate_moduledata's borrowed-body pass lists the Armory
-    this way)."""
+    this way). A module with no .tpac at all is announced on stderr once per process, or, when the caller
+    passes `skips`, appended there on every call instead (validate_moduledata turns each into a PARTIAL_RUN
+    notice, because an MCP client reads no stderr)."""
     mod_dir = Path(mod_dir)
     loose = sorted((mod_dir / "Assets").rglob("*.tpac"))
     if loose:
         return loose
     cooked = sorted((mod_dir / "AssetPackages").glob("*.tpac"))
-    if not cooked and mod_dir.exists() and name not in _WARNED_EMPTY_MODULES:
-        _WARNED_EMPTY_MODULES.add(name)
-        print(f"WARNING: module {name!r} contributes no .tpac at all (neither "
-              f"AssetPackages/ nor Assets/), so every mesh it owns reads "
-              f"as MISSING.", file=sys.stderr)
+    if not cooked and mod_dir.exists():
+        text = (f"module {name!r} contributes no .tpac at all (neither "
+                f"AssetPackages/ nor Assets/), so every mesh it owns reads "
+                f"as MISSING.")
+        if skips is not None:
+            skips.append(text)
+        elif name not in _WARNED_EMPTY_MODULES:
+            _WARNED_EMPTY_MODULES.add(name)
+            print(f"WARNING: {text}", file=sys.stderr)
     return cooked
 
 
