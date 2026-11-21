@@ -76,4 +76,23 @@ public class PartyUpgradeResourceCheckHookCoopTests
         Assert.AreEqual(3, _hook.ClampRecruitCount("h", "k", "c", "cave_troll", 3, _none));
         Assert.AreEqual(1, _hook.ClampRecruitCount("h", "k", "c", "cave_troll", 3, _none));
     }
+
+    // #1516: Patch144 charges a co-op upgrade on the server, so the client's applied-upgrade charge stands down.
+    [TestMethod]
+    public void ChargeAppliedUpgrades_CoopSessionActive_ChargesNothing()
+    {
+        _coop.IsSessionActive.Returns(true);
+
+        Assert.AreEqual(0f, _hook.ChargeAppliedUpgrades("h", "k", "c"));
+        _service.DidNotReceiveWithAnyArgs().CommitAppliedUpgrades(default!, default, default);
+    }
+
+    [TestMethod]
+    public void ChargeAppliedUpgrades_NoCoopSession_ChargesThroughTheService()
+    {
+        _coop.IsSessionActive.Returns(false);
+        _service.CommitAppliedUpgrades("h", "k", "c").Returns(12f);
+
+        Assert.AreEqual(12f, _hook.ChargeAppliedUpgrades("h", "k", "c"));
+    }
 }

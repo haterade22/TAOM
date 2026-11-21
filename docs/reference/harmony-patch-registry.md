@@ -218,11 +218,13 @@ English string overrides for vanilla `{=ID}` tokens, applied only while the acti
 
 ## Patch26_SpecialResources
 
-**Target:** `PartyCharacterVM.InitializeUpgrades`, `PartyScreenLogic.UpgradeTroop`, `PartyScreenLogic.AddCommand`
+**Target:** `PartyCharacterVM.InitializeUpgrades`, `PartyScreenLogic.UpgradeTroop`, `PartyScreenLogic.AddCommand`, `PartyScreenLogic.DoneLogic` (postfix, #1516)
 
 Per-kingdom resource gating + transactional spending
 
 Since #563 (2026-11-19) the `AddCommand` prefix also clamps `PartyCommandCode.RecruitTroop`, a party-screen prisoner recruit, to the `recruit_cost` the balance covers, through `IOnPartyUpgradeResourceCheck.ClampRecruitCount`. A count of zero returns false, which skips `ProcessCommand` and so `RecruitPrisoner` and nothing else (`AddCommand` only calls `ProcessCommand`). Outside a co-op session only: while `ICoopSessionProvider.IsSessionActive`, on host and guest alike, `PartyUpgradeResourceCheckHook.ClampRecruitCount` returns the requested count, so the prefix lets every prisoner recruit through with no message, because Coop's prisoner path charges no `recruit_cost` (#563 decision A, #967). The upgrade clamp still runs in a session. See `docs/features/special-resources.md`.
+
+Since #1516 (2026-11-21) `PartyScreenLogic_DoneLogic_ChargePatch`, a void postfix on `public bool DoneLogic(bool isForced)` (v1.5.7), charges the queued upgrade spend when the call returns true, through `IOnPartyUpgradeResourceCheck.ChargeAppliedUpgrades`. A Done can succeed while the screen stays open (`PartyVM.ExecuteTalk`, `PartyScreenCommit.CommitIfMainParty`, and `GauntletPartyScreen.OnCompanionRemoved` through `IChangeableScreen.ApplyChanges`), and on success vanilla empties `UpgradedTroopsHistory` (`PartyScreenLogic.cs:1269`), so a later Cancel used to drop the cost. The normal Done reaches `DoneLogic` before `OnPartyScreenClosed` (`PartyScreenHelper.ClosePartyPresentation`), so the close commits nothing more. In a live co-op session the hook returns 0: Coop's `DoneLogicPrefix` (host and guest) resets the screen and Patch144 charges on the server. It shares the target with Patch106; neither skips the original (Patch106 adds a void prefix), and neither reads what the other writes.
 
 ## Patch27_CareerSystem
 
@@ -1352,7 +1354,7 @@ Troop hand-over (2026-10-18, [bonds-of-battle.md](../features/bonds-of-battle.md
 
 **Install timing.** GameInit, through `BondsOfBattleModule`. The target is a campaign party screen, nothing renders it before a campaign starts, and the patch's parameter types have no Mission or Campaign dependent static initializer. Not on `PatchShieldPolicy.ExcludedTargetMethods`; the method runs once per party screen confirm, on the main thread.
 
-**Overlap and co-op (2026-10-18).** No other TAOM code patches `PartyScreenLogic.DoneLogic`. The installed co-op module replaces `DoneLogic` with its own bool prefix, so in a co-op session the capture may read 0 and nothing is granted. `TroopHandoverService.OnHandover` also returns false when `ICoopSessionProvider.ShouldDeferToHost`. The patch has no bool prefix, so `CoopVetoClassificationTests` (which scans bool prefixes) has no entry to take. The dedicated-server rule lives in `RelationGrantService`.
+**Overlap and co-op (2026-10-18).** No other TAOM code patched `PartyScreenLogic.DoneLogic` until #1516 (2026-11-21) added the Patch26 charge postfix (see Patch26_SpecialResources); the two postfixes are independent. The installed co-op module replaces `DoneLogic` with its own bool prefix, so in a co-op session the capture may read 0 and nothing is granted. `TroopHandoverService.OnHandover` also returns false when `ICoopSessionProvider.ShouldDeferToHost`. The patch has no bool prefix, so `CoopVetoClassificationTests` (which scans bool prefixes) has no entry to take. The dedicated-server rule lives in `RelationGrantService`.
 
 Tests: `TroopHandoverServiceTests` covers the gain and every gate (feature, switch, enlisted, co-op, player clan, player hero); `BondsOfBattleWiringTests` pins the category, the target, the parameter names and the fault handling of both halves; `BondsOfBattleBehaviorTests` covers the sibling battle handler; `HarmonyPatchBindingTests` resolves the target. Feature: [bonds-of-battle.md](../features/bonds-of-battle.md). **ACTIVE**, not yet smoked in game.
 

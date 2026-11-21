@@ -16,9 +16,9 @@ namespace TAOM.Features.BondsOfBattle;
 /// group and the shared seam for new relation code (<see cref="IRelationGrantService"/>): a campaign behavior at the end
 /// of each player battle, Patch106 on the Donate Troops screen's Done, and a barter model for the overpay cap. Nothing is
 /// saved. Patch106 targets a campaign party screen, so it applies at GameInit like the other campaign-menu patches.
-/// Overlap check, 2026-10-18: no other TAOM code patches <c>PartyScreenLogic.DoneLogic</c> or fills the
-/// <c>BarterModel</c> slot. The seam's registration belongs to <c>RelationsModule</c>; never register it a
-/// second time here (a second unkeyed default makes every resolve throw, Main/IoC.cs).
+/// Overlap check, 2026-10-18: no other TAOM code fills the <c>BarterModel</c> slot. Since #1516 Patch26 also postfixes
+/// <c>PartyScreenLogic.DoneLogic</c>; neither postfix reads what the other writes. The seam's registration belongs to
+/// <c>RelationsModule</c>; never register it a second time here (a second unkeyed default makes every resolve throw, Main/IoC.cs).
 /// </summary>
 internal sealed class BondsOfBattleModule : TaomFeatureModule
 {

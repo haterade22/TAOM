@@ -446,6 +446,15 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         return debited;
     }
 
+    public float CommitAppliedUpgrades(string heroId, string? kingdomId, string? cultureId)
+    {
+        if (!_inSession) return 0f;
+
+        var debited = CommitSession(heroId, kingdomId, cultureId);
+        _inSession = true;
+        return debited;
+    }
+
     public void CancelSession()
     {
         var wasPending = _pendingSpend;
