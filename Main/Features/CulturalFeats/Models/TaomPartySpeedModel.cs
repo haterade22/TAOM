@@ -13,7 +13,7 @@ namespace TAOM.Features.CulturalFeats.Models;
 public class TaomPartySpeedModel : DefaultPartySpeedCalculatingModel
 {
     private const float PlayerCaravanSpeedFactor = 0.15f;
-    private static TextObject? _packTrainText;
+    private static readonly TextObject PackTrainText = new("{=taom_caravan_pack_train_speed}Caravan pack train");
 
     private readonly ICulturalFeatsService _feats;
     private readonly ICareerPassiveService _careerPassives;
@@ -57,7 +57,7 @@ public class TaomPartySpeedModel : DefaultPartySpeedCalculatingModel
     private static void ApplyPlayerCaravanSpeed(MobileParty mobileParty, ref ExplainedNumber result)
     {
         if (mobileParty.IsCaravan && mobileParty.Owner?.Clan == Clan.PlayerClan)
-            result.AddFactor(PlayerCaravanSpeedFactor, _packTrainText ??= new TextObject("{=taom_caravan_pack_train_speed}Caravan pack train"));
+            result.AddFactor(PlayerCaravanSpeedFactor, PackTrainText);
     }
 
     /// <summary>
