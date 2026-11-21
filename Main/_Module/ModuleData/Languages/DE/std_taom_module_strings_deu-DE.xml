@@ -9771,6 +9771,11 @@
     <string id="taom_res_recruit_clamped" text="Only enough resources for {COUNT} recruit(s)." />
     <string id="taom_caravan_pack_train_speed" text="Caravan pack train" />
     <string id="taom_res_upgrade_clamped" text="Only enough resources for {COUNT} upgrade(s)." />
+    <string id="taom_mcm_group_battle_gear_loot" text="Battle Gear Loot" />
+    <string id="taom_mcm_EnableBattleGearLoot" text="Enable Battle Gear Loot" />
+    <string id="taom_mcm_EnableBattleGearLoot_hint" text="When on, the loot from enemies your party beats in a battle your side wins is the gear they fought in: each weapon, armour piece, horse and harness drops on its own roll, at the chance below. It replaces the usual random loot from fallen enemies; captured baggage, gold, prisoners and renown are unchanged. Heavy, elite and lord armour held back by Armour Acquisition, named weapons and banners never drop. Singleplayer only: in a co-op session the usual loot applies. Default: off." />
+    <string id="taom_mcm_BattleGearLootChancePercent" text="Gear Drop Chance (%)" />
+    <string id="taom_mcm_BattleGearLootChancePercent_hint" text="The chance, from 0 to 100%, that each item of each beaten enemy drops. In a battle fought beside allies you loot your share of the enemies, as usual. Default: 10." />
   </strings>
 
 </base>

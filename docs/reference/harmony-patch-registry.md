@@ -2169,6 +2169,20 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Co-op.** Not a veto: the prefix skips nothing. Classified ReviewedSafe in `CoopVetoClassificationTests`; the service also stands down when `ICoopSessionProvider.ShouldDeferToHost` holds. **Tests:** `HalfFinishedEncounterServiceTests`.
 
+## Patch172_BattleGearLoot
+
+**Target:** `private void TaleWorlds.CampaignSystem.MapEvents.MapEvent.LootCasualtyCharacter(CharacterObject casualtyCharacter, MapEventParty winnerParty, MapEventParty defeatedParty, float aiTradePenalty, int maxLootedItemsPerBodyForMainParty, ItemRoster mainPartyLootFromCasualties)` (v1.5.7, `MapEvent.cs:1627-1665`).
+
+**Why not a model.** `BattleRewardModel.GetLootedItemFromTroop` returns one item per call and the engine drops a repeated item type, so a per-item roll over a whole kit cannot be built there.
+
+**What the prefix does.** Returns true (vanilla runs) unless the player's side won (`mainPartyLootFromCasualties` set), vanilla's per-body draw gave the player a try (`maxLootedItemsPerBodyForMainParty` > 0), `BattleGearLootService.Applies` holds and the winner's leader is `Hero.MainHero`. Otherwise it builds the casualty's battle kit, rolls each eligible piece and adds the picked items to `mainPartyLootFromCasualties`, then returns false for that body.
+
+**Callers and thread.** Campaign main thread, from `LootDefeatedPartyCasualties`, reached by `CalculateAndCommitMapEventResults` and by Patch146's reflection call.
+
+**Co-op.** Stands down: `Applies` needs the single-player predicate, so in a session vanilla's loot runs. Classified `GatedForCoop` in `CoopVetoClassificationTests`.
+
+**Binding.** `Patch172BattleGearLootBindingTests`. **Tests:** `BattleGearLootServiceTests`, `Patch172BattleGearLootTests`, `BattleGearLootWiringTests`. **Check:** the in-game list in `docs/features/battle-gear-loot.md`.
+
 ## Patch171_Stamina
 
 **Target:** `private void TaleWorlds.MountAndBlade.View.MissionViews.MissionMainAgentController.ControlTick()` (v1.5.7 `MissionMainAgentController.cs:395`, no overloads), one Postfix class `Patch171_StaminaPlayerInput` in `Client/Features/Stamina/Hooks/` (the target is client-only, ADR-013), category `Patch171_Stamina`, declared by `StaminaModule` at `ApplyPhase.FirstMission`. #1497, 2026-11-19.

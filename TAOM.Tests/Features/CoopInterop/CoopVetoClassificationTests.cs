@@ -62,6 +62,10 @@ public class CoopVetoClassificationTests
         ["DeclareWarAction_ApplyInternal_Patch"] = new(CoopVeto.GatedForCoop,
             "Skips a war declaration. Condition is static config (_permanentRelationships, alignment), " +
             "so identical installs agree — but mismatched TAOM versions or edited configs do not."),
+        ["Patch172_BattleGearLoot"] = new(CoopVeto.GatedForCoop,
+            "Replaces the player's body loot for one fallen enemy. It skips vanilla only behind BattleGearLootService.Applies, which " +
+            "needs the switch on and the single-player predicate (no session, no defer, no dedicated server, authority), so in a " +
+            "co-op session vanilla's loot runs on every peer."),
         ["MakePeaceAction_ApplyInternal_Patch"] = new(CoopVeto.GatedForCoop,
             "Skips a peace. Condition reads IsWarOfTheRingActive -> WarOfTheRingService.CurrentPhase, " +
             "persisted as the WarOfTheRing_CurrentPhase SyncData key, which BT never replicates. " +
@@ -721,6 +725,7 @@ public class CoopVetoClassificationTests
                 "Patch118_ProjectStewardXp",
                 "Patch150_ConformityTick_Prefix",
                 "Patch158_AiMercenaryHire_Prefix",
+                "Patch172_BattleGearLoot",
                 "ProposeCallToWarAgreementDecision_IsAllowed_Patch",
             },
             gated.ToArray());

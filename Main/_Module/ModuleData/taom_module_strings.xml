@@ -6957,5 +6957,12 @@
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- SpecialResources -->
 	<string id="taom_res_upgrade_clamped" text="{=taom_res_upgrade_clamped}Only enough resources for {COUNT} upgrade(s)." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_mcm_group_battle_gear_loot" text="{=taom_mcm_group_battle_gear_loot}Battle Gear Loot" />
+	<string id="taom_mcm_EnableBattleGearLoot" text="{=taom_mcm_EnableBattleGearLoot}Enable Battle Gear Loot" />
+	<string id="taom_mcm_EnableBattleGearLoot_hint" text="{=taom_mcm_EnableBattleGearLoot_hint}When on, the loot from enemies your party beats in a battle your side wins is the gear they fought in: each weapon, armour piece, horse and harness drops on its own roll, at the chance below. It replaces the usual random loot from fallen enemies; captured baggage, gold, prisoners and renown are unchanged. Heavy, elite and lord armour held back by Armour Acquisition, named weapons and banners never drop. Singleplayer only: in a co-op session the usual loot applies. Default: off." />
+	<string id="taom_mcm_BattleGearLootChancePercent" text="{=taom_mcm_BattleGearLootChancePercent}Gear Drop Chance (%)" />
+	<string id="taom_mcm_BattleGearLootChancePercent_hint" text="{=taom_mcm_BattleGearLootChancePercent_hint}The chance, from 0 to 100%, that each item of each beaten enemy drops. In a battle fought beside allies you loot your share of the enemies, as usual. Default: 10." />
 
 </strings>

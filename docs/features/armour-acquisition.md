@@ -80,6 +80,10 @@ seams. And a quarter of the Armory's armour (747 of 2,860 pieces: all of Dale, H
 nearly all of Rohan and Rivendell) carries no light/medium/heavy/elite/lord token in its id, while the
 engine's own ItemCategory is an absolute tier that ignores TAOM's per-kingdom caps (#583).
 
+The loot channel has a second form: with Battle Gear Loot on, the player's body loot is the beaten enemy's own kit
+([battle-gear-loot.md](battle-gear-loot.md)). It honours `NotMerchandise`, so gated pieces stay out, and named weapons stay out
+whether or not gating is enabled.
+
 ### Solution Approach
 
 1. **One class per piece, generated.** `tools/generate_armour_classes.py` classes every character armour
