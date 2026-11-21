@@ -264,4 +264,14 @@ public class OrphanedBattleServiceTests
 
         _adapter.DidNotReceive().StrandedParties();
     }
+
+    [TestMethod]
+    public void ReleaseStrandedParties_DeferToHost_StandsDown()
+    {
+        _coop.ShouldDeferToHost.Returns(true);
+
+        _service.ReleaseStrandedParties();
+
+        _adapter.DidNotReceive().StrandedParties();
+    }
 }
