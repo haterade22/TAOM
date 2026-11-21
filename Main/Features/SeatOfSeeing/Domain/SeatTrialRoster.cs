@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TAOM.Features.Elephant;
+using TAOM.Features.Stamina.Domain;
 
 namespace TAOM.Features.SeatOfSeeing.Domain;
 
@@ -52,8 +53,8 @@ internal static class SeatTrialRoster
         return CrewTrialRows.NamedIn(steps) ? army.Concat(CrewTrialRows.Beasts).ToList() : army;
     }
 
-    /// <summary>The enemy's army for a step list: <see cref="Enemy"/>, or the melee army of <see cref="CrewTrialRows.Enemy"/> when the list names a crew step.</summary>
-    internal static IReadOnlyList<SeatTrialGroup> EnemyFor(string? steps) => CrewTrialRows.NamedIn(steps) ? CrewTrialRows.Enemy : Enemy;
+    /// <summary>The enemy's army for a step list: <see cref="Enemy"/>, or the melee army of <see cref="CrewTrialRows.Enemy"/> when the list names a crew or a stamina step.</summary>
+    internal static IReadOnlyList<SeatTrialGroup> EnemyFor(string? steps) => CrewTrialRows.NamedIn(steps) || StaminaTrialRows.NamedIn(steps) ? CrewTrialRows.Enemy : Enemy;
 
     /// <summary>The ids the game does not have, each once and tagged <c>culture:</c> or <c>character:</c>, empty when the mission can open.</summary>
     internal static IReadOnlyList<string> Missing(Func<string, bool> cultureExists, Func<string, bool> characterExists, string? steps = null)

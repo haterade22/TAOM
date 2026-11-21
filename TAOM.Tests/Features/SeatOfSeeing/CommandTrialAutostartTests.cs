@@ -267,6 +267,37 @@ public class CommandTrialAutostartTests
     }
 
     [TestMethod]
+    public void WaitForMenu_ARefusedStaminaList_GivesTheStaminaSwitchBackWithTheDoneFile()
+    {
+        var sut = Autostart(steps: "stamina_gate,enter");
+        Assert.IsTrue(TAOM.Features.Stamina.StaminaSettingsProvider.TrialOn, "arming a list with a stamina step turns the switch on");
+
+        Tick(sut, 4);
+
+        Assert.AreEqual("start_refused", DoneReason());
+        Assert.IsFalse(TAOM.Features.Stamina.StaminaSettingsProvider.TrialOn);
+    }
+
+    [TestMethod]
+    public void Live_TheStaminaSwitch_StaysOnUntilTheDoneFile_SoTheBattlesEndReadsTheTrialsSettings()
+    {
+        var sut = Live(steps: "stamina_gate");
+        _game.MissionOpen = true;
+        Tick(sut, 2);
+        CommandTrialRun.Finish("final");
+
+        Tick(sut);
+        Assert.AreEqual(1, _game.Returns);
+        Assert.IsTrue(TAOM.Features.Stamina.StaminaSettingsProvider.TrialOn, "the mission is still closing: its summary and check lines come now");
+
+        _game.AtMainMenu = true;
+        Tick(sut);
+
+        Assert.AreEqual("final", DoneReason());
+        Assert.IsFalse(TAOM.Features.Stamina.StaminaSettingsProvider.TrialOn);
+    }
+
+    [TestMethod]
     public void Live_WhenTheScriptReportsFinal_GoesBackToTheMenu_AndWritesTheDoneFileOnceTheMenuIsThere()
     {
         var sut = Live();

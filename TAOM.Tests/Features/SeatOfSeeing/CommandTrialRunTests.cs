@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Client.Features.SeatOfSeeing.Trial;
 using TAOM.Features.SeatOfSeeing.Domain;
+using TAOM.Features.Stamina;
 
 namespace TAOM.Tests.Features.SeatOfSeeing;
 
@@ -168,5 +169,73 @@ public class CommandTrialRunTests
         Assert.IsFalse(CommandTrialRun.IsArmed);
         Assert.IsNull(CommandTrialRun.Options);
         Assert.AreEqual("none", CommandTrialRun.Step);
+    }
+
+    [TestMethod]
+    public void Arm_WithAStaminaStep_TurnsTheSwitchOn()
+    {
+        Arm("out=E:/trial-out", "steps=stamina_gate,stamina_walk");
+
+        Assert.IsTrue(StaminaSettingsProvider.TrialOn);
+    }
+
+    [TestMethod]
+    public void Arm_WithoutOne_LeavesItOff()
+    {
+        Arm("out=E:/trial-out", "steps=enter,fly");
+        Assert.IsFalse(StaminaSettingsProvider.TrialOn);
+
+        Arm("out=E:/trial-out");
+        Assert.IsFalse(StaminaSettingsProvider.TrialOn);
+    }
+
+    [TestMethod]
+    public void Finish_KeepsTheSwitch_BecauseTheBattleStillRuns_AndCloseGivesItBack()
+    {
+        Arm("out=E:/trial-out", "steps=stamina_gate");
+
+        CommandTrialRun.Finish("final");
+
+        Assert.IsTrue(StaminaSettingsProvider.TrialOn, "the battle's last ticks and its end-of-mission lines read the trial's settings");
+        Assert.AreEqual("final", CommandTrialRun.Outcome);
+
+        CommandTrialRun.Close();
+
+        Assert.IsFalse(StaminaSettingsProvider.TrialOn);
+        Assert.AreEqual("final", CommandTrialRun.Outcome, "closing changes nothing else");
+    }
+
+    [TestMethod]
+    public void Reset_ClearsTheSwitch()
+    {
+        Arm("out=E:/trial-out", "steps=stamina_gate");
+
+        CommandTrialRun.Reset();
+
+        Assert.IsFalse(StaminaSettingsProvider.TrialOn);
+    }
+
+    [TestMethod]
+    public void Script_LogsTheSwitch_OnlyForAStaminaRun()
+    {
+        Arm("out=E:/trial-out", "steps=stamina_gate");
+        Assert.IsNotNull(Script());
+        StringAssert.EndsWith(_log.Lines.Single(), "steps=stamina_gate stamina_switch=on");
+
+        CommandTrialRun.Reset();
+        _log.Lines.Clear();
+        Arm("out=E:/trial-out", "steps=enter,fly");
+        Assert.IsNotNull(Script());
+        Assert.IsFalse(_log.Lines.Single().Contains("stamina_switch"));
+    }
+
+    [TestMethod]
+    public void Script_ForAStaminaStepBesideAnother_IsRefused()
+    {
+        Arm("out=E:/trial-out", "steps=stamina_gate,enter");
+
+        Assert.IsNull(Script());
+
+        Assert.AreEqual("start_refused", CommandTrialRun.Outcome);
     }
 }

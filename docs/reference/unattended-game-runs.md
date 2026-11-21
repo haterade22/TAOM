@@ -182,8 +182,9 @@ and ends with a PASS or a FAIL and its facts as `key=value` words on a `[SeatTri
    `Known` when it needs armies of its own. A step in `Known` only runs when `--steps` names it.
 3. **The armies, only if the usual ones do not show the case.** `SeatTrialRoster.PlayerFor(steps)` and `EnemyFor(steps)` choose
    by the step list. Take troop ids from `Main/_Module/ModuleData/fords_of_war/fords_troops.xml`; `SeatTrialRoster.Missing`
-   refuses the start when the game does not have one. A step with armies of its own runs with `enter` only: add its rule beside
-   `CrewTrialRows.StepThatCannotShareACrewBattle` and in the wrapper's `normalised_steps`.
+   refuses the start when the game does not have one. A step with armies of its own runs with `enter` only, or alone with its own feature's steps (the stamina steps, #1506): add its
+   rule beside `CrewTrialRows.StepThatCannotShareACrewBattle` (or `StaminaTrialRows.StepThatCannotShareAStaminaBattle`) and in the
+   wrapper's `normalised_steps`.
 4. **The host.** `Client/Features/<Feature>/Trial/ICommandTrialHost.<Name>.cs` and `CommandTrialHost.<Name>.cs` (partial types):
    every read of the engine and every write to it. A write to an agent or a formation calls `NoteWrite("CommandTrialHost.<Method>")`.
    A held `Agent` passes `AgentSlotIdentity.IsCurrentOccupant` before each use.
@@ -216,6 +217,10 @@ run whose build is not this checkout, a step with no PASS line, a FAIL line, a f
   over the watch: a soldier who did the thing and then fell must still count.
 - A real key press reaches the game. One run failed at `enter` because the Seat left with `reason=key` 2 s after it entered; the
   cause is not proved. Do not use the PC while a run plays, and read the line of the first failed step before the others.
+- An MCM value a step needs is an in-memory trial switch, set at `Arm` and cleared when the run writes its done file
+  (`CommandTrialRun.Close`), never a write to the settings file (`StaminaSettingsProvider.TrialOn`, #1506). It stays on while
+  the mission closes, so the battle's last lines read the settings its steps ran on. A switch that outlives the run, or a file that a crash leaves edited,
+  changes the next battle for a reason nobody sees.
 - Orders given with `Formation.SetMovementOrder` hold while the trial's hero commands the army. If he falls, the engine gives the
   companies to its AI.
 

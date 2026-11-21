@@ -54,7 +54,7 @@ public class EnlistmentLoadNormalizer : IEnlistmentLoadNormalizer
         }
 
         // Identity guard (co-op join / heir succession): the oath belongs to a hero that
-        // is no longer the player. Quiet, penalty-free discharge, held during a battle (#1030).
+        // is no longer the player. Quiet, penalty-free discharge; mid-battle it waits (#1030).
         if (IsHeirMismatch(record, currentMainHeroId))
         {
             if (!presence.IsInMapEvent)

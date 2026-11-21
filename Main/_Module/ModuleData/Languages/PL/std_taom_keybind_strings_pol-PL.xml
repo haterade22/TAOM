@@ -51,5 +51,38 @@
     <string id="taom_key_cheat_menu_desc" text="Opens the TAOM cheat menu on the campaign map, like the Cheats button. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
     <string id="taom_key_battle_cheat_menu" text="Open Battle Cheat Menu (TAOM)" />
     <string id="taom_key_battle_cheat_menu_desc" text="Opens the TAOM battle cheat list in a mission, like the Cheats item in the Esc menu. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
+    <string id="taom_aso_cat_rules" text="Middle-earth rules" />
+    <string id="taom_aso_item_desc_wotr" text="The great war comes in phases: peace first, then the war of Isengard, then the full war. Choose when it begins under War of the Ring start." />
+    <string id="taom_aso_item_desc_sandbox" text="No War of the Ring. The world starts in its standard sandbox state and wars are left to the kingdoms." />
+    <string id="taom_aso_name_wotr_start" text="War of the Ring start" />
+    <string id="taom_aso_desc_wotr_start" text="When the war begins. Pick a preset, or Custom to set both days yourself." />
+    <string id="taom_aso_item_start_early" text="Early (day 10 and day 20)" />
+    <string id="taom_aso_item_desc_start_early" text="The war of Isengard begins on day 10 and the full war on day 20." />
+    <string id="taom_aso_item_start_standard" text="Standard" />
+    <string id="taom_aso_item_desc_start_standard" text="Uses the two days set in the TAOM mod options (day 30 and day 44 unless you changed them)." />
+    <string id="taom_aso_item_start_late" text="Late (day 60 and day 90)" />
+    <string id="taom_aso_item_desc_start_late" text="The war of Isengard begins on day 60 and the full war on day 90." />
+    <string id="taom_aso_item_start_custom" text="Custom" />
+    <string id="taom_aso_item_desc_start_custom" text="Set both days yourself with the two sliders below." />
+    <string id="taom_aso_name_custom_day1" text="War of Isengard starts on day" />
+    <string id="taom_aso_desc_custom_day1" text="The campaign day on which the first scripted wars begin." />
+    <string id="taom_aso_name_custom_day2" text="Full war starts on day" />
+    <string id="taom_aso_desc_custom_day2" text="The campaign day on which the full war begins. It always comes after the first day." />
+    <string id="taom_aso_name_troop_weight" text="Troop Weight" />
+    <string id="taom_aso_desc_troop_weight" text="Elite troops take more room in your party: elites 2x, level 41 and higher elites 3x, warg riders 2x, cave trolls 4x, mumakil 10x. This campaign keeps your choice." />
+    <string id="taom_aso_name_war_can_be_won" text="War can be won" />
+    <string id="taom_aso_desc_war_can_be_won" text="On: one side can win the War of the Ring, which ends the war and makes peace. Off: the war is endless. This campaign keeps your choice." />
+    <string id="taom_aso_name_eye_hunters" text="Eye of Sauron hunters" />
+    <string id="taom_aso_desc_eye_hunters" text="Great deeds against the enemy draw a hunter: one of the Nine for a Free player, Glorfindel for an Evil one. Single player only. This campaign keeps your choice." />
+    <string id="taom_aso_name_large_ai_armies" text="Large AI armies" />
+    <string id="taom_aso_desc_large_ai_armies" text="AI lord parties keep the large rosters they spawn with instead of being trimmed to the vanilla cap. This campaign keeps your choice." />
+    <string id="taom_aso_name_alignment_preset" text="Alignment rules" />
+    <string id="taom_aso_desc_alignment_preset" text="How strictly the Free and Evil sides stay apart: recruitment, marriage, desertion and alliances. This campaign keeps your choice." />
+    <string id="taom_aso_item_align_standard" text="Standard" />
+    <string id="taom_aso_item_desc_align_standard" text="Follows the four alignment switches in the TAOM mod options." />
+    <string id="taom_aso_item_align_strict" text="Strict" />
+    <string id="taom_aso_item_desc_align_strict" text="Recruitment and marriage are blocked across the Free and Evil line, troops of the other side desert, and your kingdom cannot ally across it." />
+    <string id="taom_aso_item_align_relaxed" text="Relaxed" />
+    <string id="taom_aso_item_desc_align_relaxed" text="No alignment blocks and no alignment desertion, and your kingdom may ally with anyone." />
   </strings>
 </base>

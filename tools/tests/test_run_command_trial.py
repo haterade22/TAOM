@@ -976,8 +976,8 @@ class CrewStepTests(unittest.TestCase):
     def test_the_known_steps_are_joined_the_way_the_game_joins_them(self):
         source = (DOMAIN_SOURCE / "SeatTrialSteps.cs").read_text(encoding="utf-8")
         self.assertIn("All = SeatTrialRows.Rows.Concat(MarshalTrialRows.Rows)", source)
-        self.assertIn("Known = All.Concat(CrewTrialRows.Rows)", source)
-        self.assertEqual(trial.KNOWN_STEPS, trial.SEAT_STEPS + trial.MARSHAL_STEPS + trial.CREW_STEPS)
+        self.assertIn("Known = All.Concat(CrewTrialRows.Rows).Concat(StaminaTrialRows.Rows)", source)
+        self.assertEqual(trial.KNOWN_STEPS, trial.SEAT_STEPS + trial.MARSHAL_STEPS + trial.CREW_STEPS + trial.STAMINA_STEPS)
         self.assertEqual(len(set(trial.KNOWN_STEPS)), len(trial.KNOWN_STEPS), "no step name is shared by two features")
 
     def test_a_crew_step_beside_a_step_other_than_enter_is_refused_as_the_game_refuses_it(self):
@@ -1040,6 +1040,148 @@ class CrewStepTests(unittest.TestCase):
         heading = "The crew steps of the command trial"
         self.assertIn('"' + heading + '"', " ".join(trial.__doc__.split()))
         self.assertIn("### " + heading, (REPO / "docs" / "features" / "mumakil.md").read_text(encoding="utf-8"))
+
+
+class StaminaStepTests(unittest.TestCase):
+    """The stamina steps (#1506): known by name, left out of a run with no step list, run in a battle of their own, and judged with the stamina check lines."""
+
+    STAMINA_RUN = ("stamina_gate", "stamina_walk", "stamina_fight")
+    ROWS_SOURCE = REPO / "Main" / "Features" / "Stamina" / "Domain" / "StaminaTrialRows.cs"
+    RULES_SOURCE = REPO / "Main" / "Features" / "Stamina" / "Domain" / "StaminaTrialRules.cs"
+    CHECK_LINE = "[2026-11-20 14:01:10] [INFO] [Check] id=taom.stamina.{id} result={result} {facts}"
+
+    def stamina_log(self, extra=()):
+        rows = [CLEAN_STAMP_LINE] + [pass_line(step) for step in self.STAMINA_RUN] + list(extra) + [UNLOAD_LINE]
+        return "\n".join(rows)
+
+    def judged(self, extra):
+        return judge(FINAL, None, self.stamina_log(extra=extra), steps=self.STAMINA_RUN)
+
+    def test_the_stamina_steps_are_the_stamina_row_lists_names_in_order(self):
+        source = self.ROWS_SOURCE.read_text(encoding="utf-8")
+        names = dict(re.findall(r'const string (\w+) = "(\w+)"', source))
+        rows = tuple(names[key] for key in re.findall(r"new SeatTrialStep\((\w+),", source))
+        self.assertEqual(rows, trial.STAMINA_STEPS)
+
+    def test_every_stamina_row_has_a_handler_in_the_clients_script(self):
+        source = (REPO / "Client" / "Features" / "Stamina" / "Trial" / "CommandTrialScript.Stamina.cs").read_text(encoding="utf-8")
+        names = dict(re.findall(r'const string (\w+) = "(\w+)"', self.ROWS_SOURCE.read_text(encoding="utf-8")))
+        handled = tuple(names[key] for key in re.findall(r"into\[StaminaTrialRows\.(\w+)\]", source))
+        self.assertEqual(handled, trial.STAMINA_STEPS)
+
+    def test_the_stamina_rows_are_joined_into_known_and_not_into_all(self):
+        source = (DOMAIN_SOURCE / "SeatTrialSteps.cs").read_text(encoding="utf-8")
+        self.assertNotIn("StaminaTrialRows", re.search(r"All = ([^;]*);", source).group(1))
+        self.assertFalse(set(trial.STAMINA_STEPS) & set(trial.STEPS))
+        self.assertFalse(set(trial.normalised_steps(None)) & set(trial.STAMINA_STEPS))
+
+    def test_a_stamina_step_beside_a_step_of_another_feature_is_refused_as_the_game_refuses_it(self):
+        for text, other in (("enter,stamina_gate", "enter"), ("stamina_gate,stamina_walk,fly", "fly"), ("stamina_fight,crew_mumakil", "stamina_fight"),
+                            ("advance_throwers_vanilla,stamina_gate", "advance_throwers_vanilla")):
+            with self.subTest(steps=text):
+                with self.assertRaises(ValueError) as caught:
+                    trial.normalised_steps(text)
+                self.assertIn(other, str(caught.exception))
+        with self.assertRaisesRegex(ValueError, "stamina step runs beside other stamina steps only.*enter"):
+            trial.normalised_steps("enter,stamina_gate")
+        self.assertIn("a stamina step runs only beside other stamina steps", (DOMAIN_SOURCE / "SeatTrialSteps.cs").read_text(encoding="utf-8"))
+
+    def test_the_stamina_steps_alone_or_together_are_accepted_in_the_tables_order(self):
+        self.assertEqual(trial.normalised_steps(" Stamina_Fight , STAMINA_GATE ,stamina_walk"), self.STAMINA_RUN)
+        self.assertEqual(trial.normalised_steps("stamina_gate"), ("stamina_gate",))
+        self.assertEqual(trial.normalised_steps("stamina_gate,stamina_fight"), ("stamina_gate", "stamina_fight"))
+
+    def test_an_unknown_step_is_refused_and_the_text_names_the_stamina_steps(self):
+        with self.assertRaisesRegex(ValueError, "unknown step: stamina_run; known: .*stamina_gate, stamina_walk, stamina_fight"):
+            trial.normalised_steps("stamina_run")
+
+    def test_the_help_of_steps_names_the_stamina_steps(self):
+        action = next(a for a in trial.build_parser()._actions if a.dest == "steps")
+        for step in trial.STAMINA_STEPS:
+            self.assertIn(step, action.help)
+
+    def test_a_stamina_run_that_passes_every_step_exits_zero_and_names_the_stamina_checks(self):
+        extra = (self.CHECK_LINE.format(id="armed", result="pass", facts="armed=true"),
+                 self.CHECK_LINE.format(id="lock", result="skip", facts="reason=nobody-exhausted"))
+        code, why = self.judged(extra)
+        self.assertEqual(code, 0, why)
+        self.assertIn("3 steps with a PASS line", why)
+        self.assertIn("stamina", why)
+
+    def test_a_stamina_run_with_no_line_for_a_step_fails_and_names_it(self):
+        log = self.stamina_log().replace(pass_line("stamina_fight") + "\n", "")
+        code, why = judge(FINAL, None, log, steps=self.STAMINA_RUN)
+        self.assertEqual(code, 1)
+        self.assertIn("stamina_fight", why)
+
+    def test_a_failed_stamina_check_line_fails_the_run_also_after_the_steps_pass_line(self):
+        for check_id, facts in (("lock", "entered=4 recovered=3 stuck=1"), ("refresh", "refreshes=900 slowest_batch_ms=2.40"), ("armed", "armed=false")):
+            with self.subTest(check=check_id):
+                code, why = self.judged((self.CHECK_LINE.format(id=check_id, result="fail", facts=facts),))
+                self.assertEqual(code, 1)
+                self.assertIn("taom.stamina." + check_id, why)
+
+    def test_a_lock_check_that_was_skipped_does_not_fail_the_run(self):
+        check = self.CHECK_LINE.format(id="lock", result="skip", facts="reason=nobody-recovered")
+        code, why = self.judged((check,))
+        self.assertEqual(code, 0, why)
+
+    def test_the_stamina_fault_scan_matches_every_check_id_the_stamina_feature_writes(self):
+        source = (REPO / "Main" / "Features" / "Stamina" / "StaminaChecks.cs").read_text(encoding="utf-8")
+        ids = re.findall(r'"(taom\.stamina\.[a-z0-9.-]+)"', source)
+        self.assertEqual(len(ids), 3, ids)
+        for check in ids:
+            self.assertTrue(trial.STAMINA_CHECK_FAIL.search(f"[Check] id={check} result=fail mission=1"), check)
+            self.assertFalse(trial.STAMINA_CHECK_FAIL.search(f"[Check] id={check} result=pass mission=1"), check)
+            self.assertFalse(trial.STAMINA_CHECK_FAIL.search(f"[Check] id={check} result=skip mission=1"), check)
+        self.assertFalse(trial.STAMINA_CHECK_FAIL.search("[Check] id=taom.crew-seats.mumakil-held result=fail mission=1"))
+
+    def test_each_error_form_of_the_stamina_feature_fails_the_run(self):
+        forms = (
+            "[2026-11-20 14:01:11] [ERROR] [Stamina] OnMissionTick error: NullReferenceException: x",
+            "[2026-11-20 14:01:11] [ERROR] StaminaConfigProvider: failed to parse stamina.json, using the compiled defaults: x",
+            "[2026-11-20 14:01:11] [ERROR] [PatchApply] Patch171_Stamina FAILED: x",
+            "[2026-11-20 14:01:11] [ERROR] [PatchApply] TAOM.Features.Stamina.Patches.Patch171_Foo SKIPPED: x",
+        )
+        for line in forms:
+            with self.subTest(line=line):
+                code, why = self.judged((line,))
+                self.assertEqual(code, 1)
+                self.assertIn("[ERROR]", why)
+                self.assertIn("stamina", why)
+
+    def test_a_stamina_error_line_also_fails_a_run_of_another_features_steps(self):
+        line = "[2026-11-20 14:01:11] [ERROR] [Stamina] OnMissionTick error: NullReferenceException: x"
+        code, why = judge(FINAL, None, full_log(extra=(line,)))
+        self.assertEqual(code, 1)
+        self.assertIn("stamina", why)
+
+    def test_the_stamina_error_scan_leaves_the_lines_of_other_features_alone(self):
+        others = (
+            "[2026-11-20 14:01:11] [ERROR] [PatchApply] Patch141_MarshalsWord FAILED: x",
+            "[2026-11-20 14:01:11] [ERROR] [MarshalsWord] the session could not start: x",
+            "[2026-11-20 14:01:11] [ERROR] [SeatOfSeeing] the hot key was not registered",
+            "[2026-11-20 14:01:11] [ERROR] [PatchApply] TAOM.Features.StaminaFoo.Patch SKIPPED: x",
+        )
+        for line in others:
+            with self.subTest(line=line):
+                self.assertIsNone(trial.STAMINA_ERROR.search(line))
+
+    def test_a_stamina_line_below_error_level_does_not_fail_the_run(self):
+        lines = ("[2026-11-20 14:01:12] [WARNING] [Stamina] one soldier had no cell", "[2026-11-20 14:01:13] [INFO] [Stamina][Pulse] tracked=290")
+        code, why = self.judged(lines)
+        self.assertEqual(code, 0, why)
+
+    def test_the_picture_name_is_one_the_runner_turns_into_a_png(self):
+        source = self.RULES_SOURCE.read_text(encoding="utf-8")
+        self.assertIn('GatePicture = "hud_stamina_gate.bmp"', source)
+        self.assertIn('glob("hud_*.bmp")', (REPO / "tools" / "run_fords_autorun.py").read_text(encoding="utf-8"))
+
+    def test_the_docstring_points_at_the_heading_of_the_feature_doc_for_the_stamina_steps(self):
+        heading = "The stamina steps of the command trial"
+        self.assertIn('"' + heading + '"', " ".join(trial.__doc__.split()))
+        self.assertIn("### " + heading, (REPO / "docs" / "features" / "stamina.md").read_text(encoding="utf-8"))
+
 
 if __name__ == "__main__":
     unittest.main()

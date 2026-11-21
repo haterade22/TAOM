@@ -3,6 +3,7 @@ using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Elephant;
 using TAOM.Features.SeatOfSeeing.Domain;
+using TAOM.Features.Stamina.Domain;
 using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.Elephant;
@@ -63,11 +64,11 @@ public class CrewTrialRulesTests
     }
 
     [TestMethod]
-    public void KnownSteps_AreTheDefaultOnesThenTheCrewOnes_EachNameOnce()
+    public void KnownSteps_AreTheDefaultOnesThenTheCrewOnesThenTheStaminaOnes_EachNameOnce()
     {
         var known = SeatTrialSteps.Known.Select(s => s.Name).ToArray();
 
-        CollectionAssert.AreEqual(SeatTrialSteps.All.Concat(CrewTrialRows.Rows).Select(s => s.Name).ToArray(), known);
+        CollectionAssert.AreEqual(SeatTrialSteps.All.Concat(CrewTrialRows.Rows).Concat(StaminaTrialRows.Rows).Select(s => s.Name).ToArray(), known);
         Assert.AreEqual(known.Length, known.Distinct().Count());
     }
 
@@ -137,6 +138,32 @@ public class CrewTrialRulesTests
 
         Assert.AreEqual(0, SeatTrialRoster.Missing(_ => true, Exists, "enter,crew_mumakil").Count);
         CollectionAssert.Contains(SeatTrialRoster.Missing(_ => true, Exists, "enter,fly").ToList(), "character:fow_mordor_orc_hunter");
+    }
+
+    [TestMethod]
+    public void AListThatNamesAStaminaStep_MeetsTheCrewEnemy_AndFieldsNoBeast()
+    {
+        var enemy = SeatTrialRoster.EnemyFor("stamina_gate,stamina_walk");
+
+        CollectionAssert.AreEqual(CrewTrialRows.Enemy.ToArray(), enemy.ToArray());
+        CollectionAssert.AreEqual(SeatTrialRoster.Player.ToArray(), SeatTrialRoster.PlayerFor("stamina_gate,stamina_walk").ToArray());
+    }
+
+    [TestMethod]
+    public void AMissingOrcHunter_DoesNotRefuseAStaminaBattle()
+    {
+        bool Exists(string id) => id != "fow_mordor_orc_hunter";
+
+        Assert.AreEqual(0, SeatTrialRoster.Missing(_ => true, Exists, "stamina_fight").Count);
+        CollectionAssert.Contains(SeatTrialRoster.Missing(_ => true, Exists, "enter,fly").ToList(), "character:fow_mordor_orc_hunter");
+    }
+
+    [TestMethod]
+    public void AMissingOrcFighter_RefusesAStaminaBattle()
+    {
+        bool Exists(string id) => id != "fow_mordor_orc_fighter";
+
+        CollectionAssert.Contains(SeatTrialRoster.Missing(_ => true, Exists, "stamina_gate").ToList(), "character:fow_mordor_orc_fighter");
     }
 
     [TestMethod]

@@ -17,7 +17,12 @@ namespace TAOM.Tests.Features.SeatOfSeeing;
 public class CommandTrialWiringTests
 {
     private const string TrialFolder = "Client/Features/SeatOfSeeing/Trial/";
-    private const string MarshalTrialFolder = "Client/Features/MarshalsWord/Trial/";
+
+    // One partial class, four folders: the Seat's own files, then Marshal's Word's, the crew steps' and the stamina steps'.
+    private static readonly string[] TrialFolders =
+    {
+        TrialFolder, "Client/Features/MarshalsWord/Trial/", "Client/Features/Elephant/Trial/", "Client/Features/Stamina/Trial/",
+    };
 
     private static string View() => RepoPaths.ReadSource("Client/Features/SeatOfSeeing/SeatView.cs", stripComments: true);
 
@@ -30,12 +35,18 @@ public class CommandTrialWiringTests
         return Regex.Replace(next < 0 ? code.Substring(start) : code.Substring(start, next - start), @"\s+", " ");
     }
 
-    // Each feature keeps its rows, handlers and host members in its own files of one partial class (build-spec section 12), so a gate reads both folders.
+    // Each feature keeps its rows, handlers and host members in its own files of one partial class (build-spec section 12), so a gate reads every folder.
     private static string[] TrialFiles() =>
-        Directory.GetFiles(RepoPaths.RepoPath("Client", "Features", "SeatOfSeeing", "Trial"), "*.cs")
-            .Concat(Directory.GetFiles(RepoPaths.RepoPath("Client", "Features", "MarshalsWord", "Trial"), "*.cs")).ToArray();
+        TrialFolders.SelectMany(folder => Directory.GetFiles(RepoPaths.RepoPath(folder.TrimEnd('/').Split('/')), "*.cs")).ToArray();
 
-    private static string FolderOf(string file) => file.Replace('\\', '/').Contains("/MarshalsWord/") ? MarshalTrialFolder : TrialFolder;
+    // The folder of a file, relative to the repo, so a source read by name finds the file in whichever folder holds it.
+    private static string FolderOf(string file)
+    {
+        var root = RepoPaths.RepoPath().Replace('\\', '/').TrimEnd('/') + "/";
+        var path = file.Replace('\\', '/');
+        Assert.IsTrue(path.StartsWith(root, StringComparison.OrdinalIgnoreCase), file + " is not under " + root);
+        return path.Substring(root.Length, path.LastIndexOf('/') + 1 - root.Length);
+    }
 
     private static string TrialSource(string pattern) =>
         string.Join("\n", TrialFiles()
@@ -204,7 +215,8 @@ public class CommandTrialWiringTests
         var writers = HostWriters(TrialSource("^CommandTrialHost"));
 
         foreach (var known in new[] { "KillChosenSoldier", "KillChosenCompany", "SelectChosenCompany", "OpenPanel", "ClosePanel", "ChargeHeroFormation", "StopHeroFormation", "WriteHeroMorale", "KillHero", "SetOtherFastForward",
-            "MarshalSelect", "MarshalMoveTo", "MarshalDrag", "MarshalStandGround", "MarshalChargeEnemy", "MarshalSplitInfantry", "MarshalMoveOneRider", "MarshalOrderSquare", "MarshalKillOne" })
+            "ChargeAll", "MarshalSelect", "MarshalMoveTo", "MarshalDrag", "MarshalStandGround", "MarshalChargeEnemy", "MarshalSplitInfantry", "MarshalMoveOneRider", "MarshalOrderSquare", "MarshalKillOne",
+            "ForceStaminaGroup", "StaminaReleaseForced" })
             CollectionAssert.Contains(writers, known);
         CollectionAssert.DoesNotContain(writers, "PressSeatKey", "a key press is not an agent write");
         foreach (var held in new[] { "MarshalHoldQueue", "MarshalHoldMark", "MarshalHoldWidths", "MarshalPressFire", "MarshalPressWord" })
@@ -249,6 +261,13 @@ public class CommandTrialWiringTests
         // Stages S6 and S7: a time key goes through the session method the real key calls from the screen tick (as vanilla's scoreboard key and the
         // order panel's time request do), the reads change nothing, and ReleaseTime is the same session call run after a failed step.
         "PressTime", "TimeLevel", "ReadTimeState", "OtherTimeRequest", "ReleaseTime", "ThirdPerson", "LiftHeight", "CameraTargetOffset",
+        // The crew steps' reads (CommandTrialHost.Crew.cs): the machines, their seats and the archers on them. ChooseCrewArcher only stores the keep target in the Seat's adapter, a TAOM field the session reads; ChargeAll is a writer found by its verb.
+        "ChooseCrew", "ChooseCrewArcher", "ReadCrew", "BeastOf", "KindOf", "ProbeOf", "ShotsOf", "IsLive", "ArcherOf", "SeatCount", "HasFullCrew",
+        // The arms of the crew host's switch expressions (platform, howdah, mumakilSeat, howdahSeat, origin): the member pattern reads each arm as a member, and each arm only names a field of the machine, the seat or the origin.
+        "platform", "howdah", "mumakilSeat", "howdahSeat", "origin",
+        // The stamina steps (CommandTrialHost.Stamina.cs): reads of the cells and the soldiers' action types, and a stored choice of groups. ForceStaminaGroup and StaminaReleaseForced are
+        // not here: the write pattern finds them by the forced band they set, so a step must call them after the marker.
+        "ReadStamina", "ChooseStaminaGroups", "SampleStaminaGroup", "CountStaminaSoldiers", "InStaminaGroups",
     };
 
     private static string[] Unclassified(string host, IEnumerable<string> writeNothing) =>
@@ -394,7 +413,7 @@ public class CommandTrialWiringTests
     {
         var members = HostMembers(host);
 
-        const string Write = @"\.KillAgentCheat\(|\.TransferUnits\(|ClearSelectedFormations|\.SelectFormation\(|_adapter\.OpenPanel\(|_adapter\.ClosePanel\(|IsOrderMenuOpen\s*=|\.SetOrder\w*\(|\.SetTargetFormation\(|\.SetMovementOrder\(|\.SetMorale\(|\.SetFastForwardingFromUI\(";
+        const string Write = @"\.KillAgentCheat\(|\.TransferUnits\(|ClearSelectedFormations|\.SelectFormation\(|_adapter\.OpenPanel\(|_adapter\.ClosePanel\(|IsOrderMenuOpen\s*=|\.SetOrder\w*\(|\.SetTargetFormation\(|\.SetMovementOrder\(|\.SetMorale\(|\.SetFastForwardingFromUI\(|\.Forced\s*=(?!=)";
         var writers = members.Where(kv => Regex.IsMatch(kv.Value, Write)).Select(kv => kv.Key).ToList();
         for (var changed = true; changed;)
         {
@@ -430,6 +449,43 @@ public class CommandTrialWiringTests
                 }
             }
         }
+    }
+
+    [TestMethod]
+    public void TheStaminaHost_ForcesWithTheGuardsOfTheCheat_AndGivesBackWithoutReadingAnAgent()
+    {
+        var host = Regex.Replace(TrialSource(@"^CommandTrialHost\.Stamina"), @"\s+", " ");
+
+        Assert.IsTrue(host.Length > 2000 && host.Contains("ChooseStaminaGroups"), "the stamina host file was read");
+        var force = BodyOf(host, "public int ForceStaminaGroup");
+        StringAssert.Contains(force, "cell.Removed || !IsLive(agent) || !CoopMissionOwnership.IsOwnedHere(agent) || !cell.Tracked", "the order of StaminaTicker.Force");
+        StringAssert.Contains(force, "NoteWrite(\"CommandTrialHost.ForceStaminaGroup\")");
+        var give = BodyOf(host, "public int StaminaReleaseForced");
+        Assert.IsFalse(Regex.IsMatch(give, @"\bAgent\b|IsLive|GetCurrentActionType|MovementVelocity|Mission\b|\.Key\b"), "the failure path runs it from the screen tick");
+        StringAssert.Contains(give, "Forced = null");
+    }
+
+    [TestMethod]
+    public void TheStaminaHost_CountsTheGatesSoldiersOnTheField_NotTheCellsItJudges()
+    {
+        var host = Regex.Replace(TrialSource(@"^CommandTrialHost\.Stamina"), @"\s+", " ");
+
+        var census = BodyOf(host, "public StaminaCensus ReadStamina");
+        StringAssert.Contains(census, "foreach (var agent in _mission.AllAgents)", "a soldier with no cell must lower the tracked share");
+        StringAssert.Contains(census, "IsLive(agent) && agent.IsHuman && !agent.IsMount");
+        StringAssert.Contains(census, "cell.Tracked && IsLive(pair.Key)", "a tracked cell counts only for a soldier who is on the field");
+        StringAssert.Contains(census, "store.TryGet(main, out var hero) && hero.Tracked && !hero.Removed", "a cell alone is not stamina: every human gets one, an exempt one too");
+    }
+
+    [TestMethod]
+    public void TheStaminaHost_CountsAReleaseOrADefendOncePerSoldierAndSample_FromTheStaminaRules()
+    {
+        var host = Regex.Replace(TrialSource(@"^CommandTrialHost\.Stamina"), @"\s+", " ");
+
+        StringAssert.Contains(host, "StaminaTrialRules.IsRelease(");
+        StringAssert.Contains(host, "StaminaTrialRules.IsDefendEntry(");
+        StringAssert.Contains(host, "IsRunningAway");
+        StringAssert.Contains(host, "FormationClass.Infantry");
     }
 
     [TestMethod]

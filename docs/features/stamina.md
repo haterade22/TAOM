@@ -534,6 +534,110 @@ Still owed, all by a person: the lock on your own soldier (S1), the walk and the
 (S5), how much less a tired AI attacks (S7), fresh against tired (step 10), Marshal's Word beside stamina, and
 the bar as you fight: that it falls, changes colour and rises again.
 
+### The stamina steps of the command trial
+
+Steps 1, 4 (the AI half) and 5 above can run in a custom battle with nobody at the keyboard (#1506). The command trial
+([seat-of-seeing.md](seat-of-seeing.md#field-trial)) has three steps for them:
+
+```
+python tools/run_command_trial.py --steps stamina_gate,stamina_walk,stamina_fight
+```
+
+A list that names a stamina step turns the stamina rules on for that run: `StaminaSettingsProvider.TrialOn` is set when the
+trial arms and cleared when the run writes its done file, after the mission has closed, so a saved MCM value cannot fail the
+run for a reason that has nothing to do with stamina. It is an in-memory switch, and it writes no settings file. While it is on,
+the `MCM=` word of the gate line and the first words of the summary show the switch, not the saved MCM value; the
+`[SeatTrial] script armed` line of such a run ends with `stamina_switch=on`. The list may hold stamina steps only, and a step of another
+feature beside one is refused, by the wrapper and by the game (`SeatTrialSteps.TryChoose`). The enemy is 300 orc fighters with
+sword and shield, so melee starts and lasts. A run with no `--steps` arms no stamina step. Each step line ends with `allies=`
+and `enemies=`, and the step is judged from what the soldiers do, never from a value the stamina layer wrote.
+
+| Step | What it proves | Facts |
+|---|---|---|
+| `stamina_gate` | Step 1: the battle is `armed`, the gate reads `open`, stamina tracks at least 95% of the soldiers on the field (counted from the mission's agents, not from the cells), and it tracks the hero. It saves `hud_stamina_gate.png` | `armed= gate= tracked= soldiers= share= hero_cell= pictures=` |
+| `stamina_walk` | Step 5: the player's infantry run before the force. Half of them are then forced Exhausted, and once every one of them is locked they must stay under 10% runners, move at 0.5 m/s or more, and move at no more than 0.9 times the speed of the other half. The other half is the control, held Fresh | `forced= control= run= base_share= share= speed= base_speed= control_speed= control_base_speed= ratio= control_ratio= control_releases=` |
+| `stamina_fight` | Step 4, AI half, and step 9. The enemy is dealt into three thirds: Exhausted, Tired and a control forced Fresh. The Exhausted third must neither attack nor raise a defence while locked, the Tired third must attack at least once and never be locked, and the Exhausted third must attack again after the force is released | `exhausted= tired= control= e_releases= e_defends= t_releases= c_releases= t_rate= c_rate= ratio= t_seconds= c_seconds= t_chance= c_chance= c_defensiveness= strips= restored= contact_at=` |
+
+How the walk and the fight count:
+
+- A release is a change of a soldier's action type, on either channel, into a release type (`ReleaseRanged` 16,
+  `ReleaseThrowing` 17, `ReleaseMelee` 20; a ready swing is not counted), read from `Agent.GetCurrentActionType`. A defend entry is a change into a defence type from outside the defence types.
+- `control_ratio` in the walk answers step 5's question whether the formation as a whole slows down. A charging soldier is
+  scaled to the formation's average top speed while the closest enemy formation is far (`HumanAIComponent.GetDesiredSpeedInFormation`),
+  so the control half follows the forced half; the value is reported and has no pass term of its own. The pass rule needs
+  the Exhausted half to be slower than the control half, so a formation that slowed as a whole for another reason does not pass.
+- A walk whose control half attacks three or more times fails as `contact`: the armies met, and the timing is the trial's, not
+  stamina's.
+- In the fight the lock window opens only when every live Exhausted soldier reads locked, then 1.5 s later, because a lock
+  releases a ready swing (see "Known behaviour, not yet measured" under the rules). It runs at least 10 s and ends when the control has 80 releases or at 30 s. A control with
+  fewer than 10 releases fails as `contact-lost`.
+- `ratio` is Tired releases per soldier-second over the control's. It has no pass term. In a custom battle the attack chance
+  is `Clamp(0.1 * 0.48 * (3 - D), 0.05, 1)` (`AgentStatCalculateModel`), where D is `Agent.Defensiveness`, which the
+  formation's order sets. At D = 2 (a held or default formation) the chance is at its floor of 0.05, and the Tired band changes
+  nothing there. A charging formation has D = 0 and a chance of 0.144, and there the band lowers it. Read `c_defensiveness`,
+  `t_chance` and `c_chance` before the ratio. A person judges the ratio across runs; step 9's 30% is therefore measured, not
+  judged by the run.
+- A defend entry from a soldier who is locked and holds no input (`e_defends` above 0) is a finding to report on #1497. The rule
+  stays as it is.
+- The `taom.stamina.lock` check line of a battle where the trial forced the bands is not proof. The forced soldiers are outside
+  its counters, and a skip from this battle says nothing about step 11's criterion.
+- A failed `taom.stamina.*` check line or an `[ERROR]` line of the stamina feature (a mission fault, a `Patch171_Stamina`
+  failure, a `stamina.json` parse failure) fails every command trial run, a Seat, Marshal's Word or crew run too. An `[ERROR]`
+  line can come with stamina off, because the stamina mission logic and its patch load in every mission; a failed check line
+  comes only from a battle where stamina is on.
+
+**Not covered by these steps.** Each needs a person or a later step:
+
+- S1, the player strip (step 3): it needs input injection, which means a new patch.
+- Step 2: the bar, its colours and the messages.
+- S4, the tempo (step 6), and S5, the rider (step 7).
+- S6 at 500 against 500 (step 8).
+- Step 9's verdict, and archers in step 9.
+- Step 10, fresh against tired.
+- Step 12, the crew on a moving beast: a later step on the crew battle.
+- Step 13 and the MCM toggle. A run with no stamina step reads the saved toggle; run `20261119-201805` is the proof.
+- The saved `ApplyTo*` and cost-scale values: the switch pins them for the run.
+- The Marshal's Word hold beside stamina, and "keep their formation".
+
+**Game runs, 2026-11-20.** Three runs of the three steps, in `E:/Temp/command-trial-runs/20261120-152853`,
+`20261120-154018` and `20261120-161103`. Every step passed in all three. The battle was 101 against 300 on
+`battle_terrain_a` and ran 54, 57 and 62 live seconds. The first two builds were uncommitted (`9d5909619.dirty`), so
+`tools/ingame_verdict.py` does not count them. The third run is on the committed build `e82108e52`, and the tool reads PASS
+for its three `taom.stamina.trial-*` rows. The second and third runs have the fixes of the review (the control half held
+Fresh, the slower-than-control term, the tracked hero, the switch held until the done file).
+
+| Fact | Run 1 | Run 2 | Run 3 |
+|---|---|---|---|
+| Gate: tracked of soldiers on the field | 400 of 400 | 400 of 400 | 400 of 400 |
+| Walk: runner share before and after the force | 0.88, 0.00 | 0.79, 0.01 | 0.75, 0.01 |
+| Walk: speed of the Exhausted half, m/s | 1.99 | 1.99 | 1.82 |
+| Walk: speed of the control half, m/s | not printed (`control_ratio` 0.78 of 3.25) | 2.58 | 2.35 |
+| Fight: releases of the Exhausted, the Tired and the control third | 0, 59, 80 | 0, 45, 80 | 0, 82, 80 |
+| Fight: defends of the Exhausted third | 0 | 0 | 0 |
+| Fight: `ratio` (Tired over control) | 0.72 | 0.55 | 1.05 |
+| Fight: `t_chance`, `c_chance`, `c_defensiveness` | 0.09, 0.18, 0.55 | 0.09, 0.17, 0.67 | 0.10, 0.19, 0.42 |
+| Fight: `contact_at`, seconds after the groups were chosen | 25.3 | 24.9 | 25.1 |
+| `taom.stamina.refresh`: slowest batch, ms | 0.650 | 0.509 | 0.443 |
+
+What the runs settled:
+
+- An Exhausted Gondor spearman moves at 1.82 to 1.99 m/s, under the 3 m/s run threshold, and he does not stand still.
+- The control half slowed to between 0.74 and 0.80 of its speed while the other half was Exhausted. So the formation as a
+  whole slows (step 5's question), and the Exhausted half is still the slower one, at about 0.77 of the control's speed.
+- No locked soldier attacked or raised a defence in any window, and the Exhausted third attacked again after the release.
+- The AI strip counter rose by 161,681, by 196,145 and by 242,454 in the windows, for 85 to 92 locked soldiers, with
+  `0 off the main thread` in every summary.
+- The Tired ratio was 0.72, 0.55 and 1.05, while the attack chance of the Tired third read about half of the control's
+  each time. Step 9's 30% is not shown: in the third run the Tired third attacked as often as the fresh third. A lower
+  attack chance alone may not make a tired AI soldier hold back, and the decision is on #1497.
+- `taom.stamina.lock` read `skip` in all three: `none-exhausted` two times, and `none-recovered` one time, with one soldier
+  Exhausted by the rules when the battle ended. A battle of about a minute is too short for that check.
+- In `hud_stamina_gate.png` of the first two runs the thin stamina bar shows at the left of the ring HUD. Its colours and
+  its movement are still a person's to judge.
+
+Not settled: the refresh wait of a step reads the queue of the whole battle, and a low frame rate could fail a step as
+`not-applied` although stamina works. All three runs applied in time.
+
 ## How to tune
 
 1. Edit `Main/_Module/ModuleData/configs/stamina.json`.
@@ -556,6 +660,9 @@ recomputes. The tick allocates nothing per frame.
 
 ## Changelog
 
+- 2026-11-20: the stamina steps of the command trial (#1506): `stamina_gate`, `stamina_walk` and `stamina_fight` run steps 1,
+  4 (AI half) and 5 of "How to verify in game" in a custom battle with nobody at the keyboard. Step 9 is measured there and
+  judged by a person.
 - 2026-11-20: merged to trunk. The review before the merge found no path that changes a battle while the
   switch is off, and led to two fixes: a gate that throws leaves the battle without stamina, and every battle
   drops the AI input claims of an earlier one at its first tick. Open: the crew archer on a moving beast.

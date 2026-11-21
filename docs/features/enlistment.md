@@ -67,8 +67,11 @@ Key policies:
 - **Identity guard:** `EnlistedHeroId != MainHero.StringId` at load → quiet discharge
   (co-op join, heir succession — PlayerPossession three-guard pattern). A save made while the
   party is in a map event holds the discharge: it would pull a merged soldier out of his battle.
-  The hourly tick runs it once the battle and any captivity after it are over, and the battle
-  pays no service rewards in between (#1030). A mid-session heir change still waits for the next load.
+  The hourly tick runs it once the battle and any captivity after it are over (vanilla keeps a
+  captive's party inactive, and the discharge's RestorePresence would make it active), and the
+  battle pays no service rewards in between, because they would go to the old hero (#1030).
+  The rest of the load runs as usual while the discharge is held. A mid-session heir change
+  still waits for the next load.
 - **Co-op:** every world-mutating handler is host-only (`ICoopSessionProvider.IsAuthority`).
 
 ## Save format
