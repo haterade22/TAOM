@@ -1972,6 +1972,7 @@
   <Item id="sk_ll_gl_chest_heavy_b" class="elite" />
   <Item id="sk_ll_gl_chest_med_a" class="elite" />
   <Item id="sk_ll_gl_chest_med_b" class="elite" />
+  <Item id="sk_ll_gl_crown_b" class="named" />
   <Item id="sk_ll_gl_galad_bracer_a" class="named" />
   <Item id="sk_ll_gl_galad_chest_a" class="named" />
   <Item id="sk_ll_gl_galad_crown_a" class="named" />

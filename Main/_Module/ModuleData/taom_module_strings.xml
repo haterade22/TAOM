@@ -6955,6 +6955,9 @@
 	<!-- CulturalFeats -->
 	<string id="taom_caravan_pack_train_speed" text="{=taom_caravan_pack_train_speed}Caravan pack train" />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- SpecialResources -->
+	<string id="taom_res_upgrade_clamped" text="{=taom_res_upgrade_clamped}Only enough resources for {COUNT} upgrade(s)." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- TaomSettings.cs -->
 	<string id="taom_mcm_group_battle_gear_loot" text="{=taom_mcm_group_battle_gear_loot}Battle Gear Loot" />
 	<string id="taom_mcm_EnableBattleGearLoot" text="{=taom_mcm_EnableBattleGearLoot}Enable Battle Gear Loot" />

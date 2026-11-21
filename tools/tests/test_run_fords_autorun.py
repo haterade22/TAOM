@@ -573,6 +573,19 @@ class ResetSafelyExitedTests(unittest.TestCase):
         self.assertIn("key not found", self.said[0])
         self.assertNotIn("already 1", self.said[0])
 
+    def test_two_space_zero_is_reset_keeping_spacing_and_crlf(self):
+        self.path.write_bytes(b"a = 1\r\nsafely_exited  = 0\r\nb = 2\r\n")
+        r.reset_safely_exited(self.path, self.said.append)
+        self.assertEqual(self.path.read_bytes(), b"a = 1\r\nsafely_exited  = 1\r\nb = 2\r\n")
+        self.assertIn("was 0", self.said[0])
+
+    def test_two_space_one_is_not_rewritten(self):
+        self.path.write_bytes(b"safely_exited  = 1\r\n")
+        with mock.patch.object(Path, "write_bytes") as write:
+            r.reset_safely_exited(self.path, self.said.append)
+        write.assert_not_called()
+        self.assertEqual(self.said, ["safely_exited already 1; nothing reset"])
+
     def test_an_unreadable_file_is_reported(self):
         r.reset_safely_exited(self.path, self.said.append)
         self.assertIn("not readable", self.said[0])

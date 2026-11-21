@@ -725,9 +725,11 @@ HERO_NAMES = {
 # (mordor_numenorean, 57), so the exclusion is lifted (#583).
 # 'sk_ar_art_crown_king': the Arnor King's Crown, Arthedain's lord's-ladder head reward, never sold or looted
 # (Mike, 2026-10-08); generate_armour_classes.py classes an excluded piece `named`.
+# 'sk_ll_gl_crown_b': the Lord's Crown A, Lorien hero kit whose display name carries no hero name, so the
+# name rule misses it; classed `named` like the Galadriel pieces (Mike, 2026-11-21).
 # Creature kit: a troll wears its own plate (95 by design), so no restat reaches it, worn or not.
 MONSTER_ID_SUBSTRINGS = ('lotr_troll', 'cave_troll')
-EXCLUDE_ID_SUBSTRINGS = MONSTER_ID_SUBSTRINGS + ('glorfindel', 'gf_', 'dain_crown', 'sk_ar_art_crown_king')
+EXCLUDE_ID_SUBSTRINGS = MONSTER_ID_SUBSTRINGS + ('glorfindel', 'gf_', 'dain_crown', 'sk_ar_art_crown_king', 'sk_ll_gl_crown_b')
 
 
 def is_monster_kit(item_id):
@@ -745,7 +747,7 @@ HERO_NAME_FALSE_POSITIVE_PREFIXES = ('sk_dg_khml_',)
 # Items whose numbers belong to their own generator, never to a restat (Mike, 2026-11-06). tools/generate_lothlorien_armor.py
 # and tools/generate_snow_orc_armor.py price a worn piece at the band of its lowest wearer (worn_band, as a restat does) and
 # a piece nobody wears at the band its id names; the Mallorn kit sits one band above either (KEYforce's values). The
-# generator owns the numbers so the Mallorn step and the unworn rule survive a restat. `sk_ll_` is the 77 Lorien items and
+# generator owns the numbers so the Mallorn step and the unworn rule survive a restat. `sk_ll_` is the Lorien items and
 # `sk_gb_orc_` the 20 Snow Orc items: no other id starts with either.
 GENERATOR_OWNED_ID_PREFIXES = ('sk_ll_', 'sk_gb_orc_')
 

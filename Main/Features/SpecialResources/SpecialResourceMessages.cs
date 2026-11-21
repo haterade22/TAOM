@@ -47,6 +47,10 @@ internal static class SpecialResourceMessages
         new TextObject("{=taom_res_recruit_clamped}Only enough resources for {COUNT} recruit(s).")
             .SetTextVariable("COUNT", count);
 
+    public static TextObject UpgradeClamped(int count) =>
+        new TextObject("{=taom_res_upgrade_clamped}Only enough resources for {COUNT} upgrade(s).")
+            .SetTextVariable("COUNT", count);
+
     /// <summary>The "Requires" line of the volunteer gate (Patch51), also shown when a prisoner recruit is refused (#563).</summary>
     public static TextObject RecruitNeedsResource(int amount, string resourceName) =>
         new TextObject("{=taom_recruit_needs_resource}Requires {AMOUNT} {RESOURCE}")

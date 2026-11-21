@@ -11,7 +11,7 @@ namespace TAOM.Tests.Features.SpecialResources;
 [TestClass]
 public class SpecialResourcesBehaviorLineCountTests
 {
-    private const int Ceiling = 276;
+    private const int Ceiling = 275;
 
     [TestMethod]
     public void SpecialResourcesBehavior_StaysWithinTheRatchet()

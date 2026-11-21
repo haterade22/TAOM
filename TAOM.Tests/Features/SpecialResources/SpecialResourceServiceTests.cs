@@ -677,7 +677,7 @@ public class SpecialResourceServiceTests
         _storage.Get("hero1", "war_spoils").Returns(10f);
 
         _service.BeginPartyScreenSession();
-        Assert.AreEqual(2, _service.ClampUpgradeCount("hero1", "empire_s", null, "mordor_uruk_captain", 5));
+        Assert.AreEqual(2, _service.ClampUpgradeCount("hero1", "empire_s", null, "mordor_uruk_captain", 5, null));
     }
 
     [TestMethod]
@@ -937,7 +937,7 @@ public class SpecialResourceServiceTests
 
         _service.BeginPartyScreenSession();
         // At cost 4 with -50% = effective cost 2, available 10 → can afford 5
-        Assert.AreEqual(5, _service.ClampUpgradeCount("hero1", "empire_s", null, "mordor_uruk_captain", 5));
+        Assert.AreEqual(5, _service.ClampUpgradeCount("hero1", "empire_s", null, "mordor_uruk_captain", 5, null));
     }
 
     [TestMethod]

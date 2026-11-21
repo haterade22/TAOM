@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-18 17:20:42",
+  "generatedAt": "2026-11-21 10:10:45",
   "armoryDir": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\LOTRLOME_Armory\\ModuleData\\LOTRLOME_items",
   "items": {
     "sk_ar_art_helmet_inf_light_a": {
@@ -62630,6 +62630,33 @@
       "delta": null,
       "status": "generator-owned",
       "line": "a",
+      "shared": false,
+      "wearers": []
+    },
+    "sk_ll_gl_crown_b": {
+      "culture": "lothlorien",
+      "slot": "head",
+      "name": "[Lothl\u00f3rien] Lord's Crown A",
+      "current": 52,
+      "armour": [
+        52,
+        0,
+        0,
+        0
+      ],
+      "weight": 3.5,
+      "anchorLevel": null,
+      "maxLevel": null,
+      "levelSpan": 0,
+      "wearerCount": 0,
+      "heroWorn": false,
+      "lordWorn": false,
+      "tier": null,
+      "tierSource": "unworn",
+      "target": null,
+      "delta": null,
+      "status": "generator-owned",
+      "line": "b",
       "shared": false,
       "wearers": []
     },

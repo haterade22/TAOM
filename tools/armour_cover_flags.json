@@ -183,7 +183,7 @@
     }
   ],
   "snapshot": {
-    "taken": "2026-11-15",
+    "taken": "2026-11-21",
     "files": {
       "LOTRLOME_items/LOTRAOM_horses.xml": {
         "dire_wolf_saddle": {"mane_cover_type": "none"},
@@ -2088,6 +2088,7 @@
         "sk_ll_rg_chest_med_a": {"covers_body": "true"}
       },
       "LOTRLOME_items/lothlorien/head_armors.xml": {
+        "sk_ll_gl_crown_b": {},
         "sk_ll_gl_galad_crown_a": {},
         "sk_ll_gl_helmet_heavy_a": {"hair_cover_type": "type2"},
         "sk_ll_gl_helmet_heavy_b": {"hair_cover_type": "all"},

@@ -70,9 +70,10 @@ public interface ISpecialResourceService
     void ChargeMerchantPurchase(string heroId, string? kingdomId, string? cultureId, string troopId, int count);
 
     void BeginPartyScreenSession();
+    void RestartPartyScreenSession(string? heroId, IReadOnlyList<RecruitCartEntry> heldUpgrades);
     void QueueUpgradeSpend(string heroId, string troopId, int count);
     float GetAvailableAfterPending(string heroId, string? kingdomId, string? cultureId);
-    int ClampUpgradeCount(string heroId, string? kingdomId, string? cultureId, string troopId, int requestedCount);
+    int ClampUpgradeCount(string heroId, string? kingdomId, string? cultureId, string troopId, int requestedCount, IReadOnlyList<RecruitCartEntry>? recruitedThisSession);
     /// <summary>
     /// Debits the spend queued during the party-screen session and returns the amount debited
     /// (0 when no session is open, nothing was queued, or the hero maps to no resource).

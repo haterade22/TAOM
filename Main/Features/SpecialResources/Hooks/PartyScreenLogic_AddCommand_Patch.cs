@@ -45,7 +45,7 @@ public static class PartyScreenLogic_AddCommand_Patch
         var costPerUnit = _hook.GetUpgradeCost(targetId);
         if (costPerUnit <= 0) return true;
 
-        var clamped = _hook.ClampUpgradeCount(heroId, kingdomId, cultureId, targetId, command.TotalNumber);
+        var clamped = _hook.ClampUpgradeCount(heroId, kingdomId, cultureId, targetId, command.TotalNumber, RecruitedThisScreen(__instance));
 
         if (clamped <= 0)
         {
@@ -58,7 +58,7 @@ public static class PartyScreenLogic_AddCommand_Patch
             _logger?.LogDebug($"[SpecRes] Patch26-AddCmd: CLAMPED {targetId} {command.TotalNumber}→{clamped}");
             SetTotalNumber(ref command, clamped);
             InformationManager.DisplayMessage(new InformationMessage(
-                $"Only enough resources for {clamped} upgrade(s).", Colors.Yellow));
+                SpecialResourceMessages.UpgradeClamped(clamped).ToString(), Colors.Yellow));
         }
         else
         {

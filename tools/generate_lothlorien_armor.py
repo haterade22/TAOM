@@ -11,8 +11,11 @@ Four kits, one id family each (sk_ll_<kit>_<slot>_<tier>_<variant>):
 - ml  Mallorn: the Galadhrim kit one step up (KEYforce: "ML medium is roughly GL heavy"), so an
       ML piece is priced one band above the band it would otherwise get. ML `_elite_` chests and
       helmets are for lords.
-- gl_galad: Galadriel's own pieces (chest, pauldron, bracer, crown), worn by her only. The display
-  name carries her name, so rebalance_armor.is_excluded keeps them off the curve.
+- gl_galad: Galadriel's own pieces (chest, pauldron, bracer, crown) and the Lord's Crown A, worn by
+  heroes only. Like every sk_ll_ piece they are generator-owned (rebalance_armor.GENERATOR_OWNED_ID_PREFIXES),
+  so no restat touches them. rebalance_armor.is_excluded classes them `named` (never sold, looted or
+  upgraded): the display name carries her name, and the Lord's Crown A (sk_ll_gl_crown_b) is listed by id
+  in rebalance_armor.EXCLUDE_ID_SUBSTRINGS.
 
 Values come from rebalance_armor.calculate_stats on the kingdom-cap curve (KINGDOM_CAPS
 'lothlorien'). A piece a troop wears is priced at the band of its lowest wearer, from
@@ -128,12 +131,13 @@ PIECES = [
     ("sk_ll_ml_grvs_heavy_a", "leg", "Heavy Greaves"),
 ]
 
-# Galadriel's own kit: off the curve (hero armour), lord-band values, never sold.
+# Galadriel's own kit and the Lord's Crown A: hero armour, lord-band values, never sold.
 GALADRIEL = [
     ("sk_ll_gl_galad_chest_a", "body", "Galadriel's Gown"),
     ("sk_ll_gl_galad_pauld_a", "shoulder", "Galadriel's Mantle"),
     ("sk_ll_gl_galad_bracer_a", "arm", "Galadriel's Bracers"),
     ("sk_ll_gl_galad_crown_a", "head", "Galadriel's Circlet"),
+    ("sk_ll_gl_crown_b", "head", "Lord's Crown A"),
 ]
 
 FILES = {
