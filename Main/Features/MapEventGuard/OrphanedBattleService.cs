@@ -15,7 +15,9 @@ namespace TAOM.Features.MapEventGuard;
 /// the rule is <see cref="HalfFinishedEncounterService.Decide"/>, then restore the back-reference and run the
 /// side-end step of vanilla's finish for defenders, then attackers, then the rest of vanilla's finish (map visual
 /// end, <c>FinalizeComponent</c>), as Patch170 does. Stands down in any co-op session, as the
-/// stuck-battle guard does. Details: docs/features/map-event-guard.md.
+/// stuck-battle guard does. After the battles it releases stranded parties, whose side no longer lists them (a player's
+/// save, 2026-11-21: eliminated clans whose leftover parties made <c>DestroyClanAction</c> throw every day).
+/// Details: docs/features/map-event-guard.md.
 /// </summary>
 public sealed class OrphanedBattleService
 {
@@ -31,7 +33,10 @@ public sealed class OrphanedBattleService
         _logger = logger;
     }
 
-    /// <summary>Repairs every half-finalized AI battle; returns one line per battle repaired.</summary>
+    /// <summary>
+    /// Repairs every half-finalized AI battle, then releases every stranded party (<see cref="IsStranded"/>); returns
+    /// one line per battle repaired and per party released.
+    /// </summary>
     public IReadOnlyList<string> RepairAll()
     {
         var report = new List<string>();
@@ -67,6 +72,46 @@ public sealed class OrphanedBattleService
                     _logger.LogWarning($"[MapEventGuard] could not finish orphaned battle {label}: {ex.GetType().Name}: {ex.Message}");
             }
         }
+        ReleaseStranded(report);
         return report;
+    }
+
+    /// <summary>The stranded half alone, for a finished load: the first hourly sweep can come after the clan's daily tick.</summary>
+    public IReadOnlyList<string> ReleaseStrandedParties()
+    {
+        var report = new List<string>();
+        if (_coop.IsSessionActive || _coop.ShouldDeferToHost)
+            return report;
+        ReleaseStranded(report);
+        return report;
+    }
+
+    /// <summary>
+    /// Pure rule: a party is stranded when its side reference is set but that side does not list it. A
+    /// <c>PartyBase.MapEventSide</c> write that threw inside <c>MapEventSide.RemovePartyInternal</c> after its
+    /// <c>RemoveAt</c> (the battle-end crash) leaves this state, and every later write throws
+    /// <c>ArgumentOutOfRangeException</c> there, so <c>DestroyClanAction</c> fails each day on the clan's leftover parties.
+    /// The main party and parties in the player's encounter are left to vanilla and Patch170.
+    /// </summary>
+    public static bool IsStranded(bool hasSide, bool sideListsIt, bool isMainParty, bool inPlayerBattle) =>
+        hasSide && !sideListsIt && !isMainParty && !inPlayerBattle;
+
+    private void ReleaseStranded(List<string> report)
+    {
+        foreach (var party in _adapter.StrandedParties())
+        {
+            string label = party.Label();
+            try
+            {
+                party.Release();
+                _logger.LogWarning("[MapEventGuard] released a stranded party: " + label);
+                report.Add(label);
+            }
+            catch (Exception ex)
+            {
+                if (_warnedFailures.Add(label))
+                    _logger.LogWarning($"[MapEventGuard] could not release stranded party {label}: {ex.GetType().Name}: {ex.Message}");
+            }
+        }
     }
 }

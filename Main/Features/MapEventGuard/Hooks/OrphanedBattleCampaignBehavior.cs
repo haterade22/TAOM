@@ -19,10 +19,25 @@ public sealed class OrphanedBattleCampaignBehavior : CampaignBehaviorBase
         _logger = logger;
     }
 
-    public override void RegisterEvents() =>
+    public override void RegisterEvents()
+    {
         CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, OnHourlyTick);
+        CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(this, OnGameLoadFinished);
+    }
 
     public override void SyncData(IDataStore dataStore) { }
+
+    private void OnGameLoadFinished()
+    {
+        try
+        {
+            _service.ReleaseStrandedParties();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"[MapEventGuard] stranded party release at load failed: {ex.GetType().Name}: {ex.Message}");
+        }
+    }
 
     private void OnHourlyTick()
     {
