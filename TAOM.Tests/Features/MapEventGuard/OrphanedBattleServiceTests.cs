@@ -42,6 +42,16 @@ public class OrphanedBattleServiceTests
     private void Have(params IOrphanedBattleEventAdapter[] battles) =>
         _adapter.AttachedFinalizedBattles().Returns(new List<IOrphanedBattleEventAdapter>(battles));
 
+    private static IStrandedPartyAdapter Stranded(string label)
+    {
+        var party = Substitute.For<IStrandedPartyAdapter>();
+        party.Label().Returns(label);
+        return party;
+    }
+
+    private void HaveStranded(params IStrandedPartyAdapter[] parties) =>
+        _adapter.StrandedParties().Returns(new List<IStrandedPartyAdapter>(parties));
+
     [TestMethod]
     public void RepairAll_CoopSessionActive_StandsDown()
     {
@@ -50,6 +60,7 @@ public class OrphanedBattleServiceTests
 
         Assert.AreEqual(0, _service.RepairAll().Count);
         _adapter.DidNotReceive().AttachedFinalizedBattles();
+        _adapter.DidNotReceive().StrandedParties();
     }
 
     [TestMethod]
@@ -166,5 +177,67 @@ public class OrphanedBattleServiceTests
         _service.RepairAll();
 
         _logger.Received(2).LogWarning(Arg.Is<string>(s => s.StartsWith("[MapEventGuard] finished an orphaned battle")));
+    }
+
+    [TestMethod]
+    public void RepairAll_StrandedParty_IsReleasedAndLogged()
+    {
+        Have();
+        var party = Stranded("Vrakmaw's Party (Vrakmaw)");
+        HaveStranded(party);
+
+        var report = _service.RepairAll();
+
+        party.Received(1).Release();
+        Assert.AreEqual(1, report.Count);
+        StringAssert.Contains(report[0], "Vrakmaw's Party");
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.StartsWith("[MapEventGuard] released a stranded party: Vrakmaw's Party")));
+    }
+
+    [TestMethod]
+    public void RepairAll_BattlesAndStrandedParties_FinishesBattlesFirst()
+    {
+        var battle = Battle("Snagbut vs caravan", defenders: 4, attackers: 4);
+        Have(battle);
+        var party = Stranded("Hrakdush");
+        HaveStranded(party);
+
+        _service.RepairAll();
+
+        // The scan runs after the finish, so it judges the side lists the finish has just emptied.
+        Received.InOrder(() =>
+        {
+            battle.FinishEvent();
+            _adapter.StrandedParties();
+            party.Release();
+        });
+    }
+
+    [TestMethod]
+    public void RepairAll_StrandedReleaseThrows_OthersStillReleasedAndWarnsOnce()
+    {
+        Have();
+        var bad = Stranded("bad");
+        bad.When(p => p.Release()).Do(_ => throw new InvalidOperationException("no field"));
+        var good = Stranded("good");
+        HaveStranded(bad, good);
+
+        _service.RepairAll();
+        var report = _service.RepairAll();
+
+        good.Received(2).Release();
+        CollectionAssert.AreEqual(new[] { "good" }, new List<string>(report));
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("could not release stranded party bad") && s.Contains("no field")));
+    }
+
+    [DataTestMethod]
+    [DataRow(true, false, false, false, true, DisplayName = "side set, not listed: stranded")]
+    [DataRow(true, true, false, false, false, DisplayName = "side lists it: a normal battle member")]
+    [DataRow(false, false, false, false, false, DisplayName = "no side: not in a battle")]
+    [DataRow(true, false, true, false, false, DisplayName = "main party: left to vanilla")]
+    [DataRow(true, false, false, true, false, DisplayName = "in the player's encounter: Patch170 owns it")]
+    public void IsStranded_State_Expected(bool hasSide, bool sideListsIt, bool isMainParty, bool inPlayerBattle, bool expected)
+    {
+        Assert.AreEqual(expected, OrphanedBattleService.IsStranded(hasSide, sideListsIt, isMainParty, inPlayerBattle));
     }
 }

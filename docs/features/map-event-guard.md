@@ -221,7 +221,9 @@ A player's report (2026-11-19, TAOM 2.0.40) found 6 AI map events in one save th
 
 `OrphanedBattleCampaignBehavior` runs `OrphanedBattleService.RepairAll` once per in-game hour, so the first hour after a load repairs a broken save. `OrphanedBattleAdapter` finds each distinct finalized event that a mobile party still references, except the player's encounter (Patch170 owns that). The service applies Patch170's rule (`HalfFinishedEncounterService.Decide`) and its steps, shared through `HalfFinishedEncounterAdapter`: `MapEventComponent.AfterLoad(mapEvent)` when the back-reference is missing, then `HandleMapEventEnd()` on the defender side and the attacker side, then the rest of vanilla's finish: `MapEventVisual.OnMapEventEnd()` and the internal `MapEventComponent.FinalizeComponent()`. Heroes marked `DiedInBattle` die and empty or beaten parties are destroyed, as vanilla does. Patch170 runs the same finish step. After a load it does almost nothing (the visual is null and the siege and raid flags are unsaved), but in the same session it fires `AfterSiegeCompleted`, the raid's re-raid order and the visual teardown that the crash skipped, and a blockade's `OnFinalize` ends its siege when the defenders lost, load or not. The player's own repair cleared `PartyBase._mapEventSide` by reflection; that skips those steps, so TAOM does not use it. One event that throws does not stop the others, keeps any partial progress, is retried each hour and is warned about once. The sweep stands down in any co-op session.
 
-**Needs Patch169**, as Patch170 does. **In game (owed):** load a save that holds orphaned battles. Within one in-game hour expect one `finished an orphaned battle` line per event and the armies moving again.
+After the battles, the same pass releases stranded parties. A player's save (2026-11-21, TAOM 2.0.40) held eliminated clans whose leftover parties (one with no lord, standing still) pointed at a battle side that no longer listed them. `PartyBase.MapEventSide`'s setter calls `MapEventSide.RemovePartyInternal` before it writes the field; a throw after that method's `RemoveAt` leaves the field set and the entry gone. The likely first throw is the battle-end crash, reached when the removed party was the side's last and `RemovePartyInternal` called `FinalizeEvent`; the player's logs start after it, so this is not proven. Every later write then throws `ArgumentOutOfRangeException` in `RemovePartyInternal`, because `FindIndexQ` returns -1. `DestroyClanAction.ApplyInternal` writes `MapEventSide = null` on each war party of the clan, so it fails every day, after "has been eliminated" shows, and the clan survives (crash 78ba4d70). The battle sweep never saw these parties: their side is empty, so `Decide` finds nothing to finish. `OrphanedBattleService.IsStranded` is the rule (side set, side does not list the party, not the main party, not the player's encounter). `StrandedPartyAdapter.Release` clears `PartyBase._mapEventSide` by reflection. Unlike the reflection repair above, this skips nothing: the side already dropped the entry, so the field write is the one step the setter never reached. The next daily clan tick then destroys the clan and its parties as vanilla does. A release that throws is warned about once per party and retried each hour.
+
+**Needs Patch169**, as Patch170 does. **In game (owed):** load a save that holds orphaned battles. Within one in-game hour expect one `finished an orphaned battle` line per event and the armies moving again. For stranded parties, expect one `released a stranded party` line each, and after the next day no 78ba4d70 and no repeating "has been eliminated" for their clans.
 
 ## Stuck AI battles
 
@@ -345,6 +347,7 @@ print, let an in-game hour pass, and print again.
 | `Main/Features/MapEventGuard/Hooks/BattleDeathRosterTranspiler.cs` | `Materialize` and the one-call insert |
 | `Main/Features/MapEventGuard/OrphanedBattleService.cs`, `Hooks/OrphanedBattleCampaignBehavior.cs` | The orphaned AI battle sweep and its hourly tick |
 | `Main/Adapters/IOrphanedBattleAdapter.cs`, `OrphanedBattleAdapter.cs`, `IOrphanedBattleEventAdapter.cs`, `OrphanedBattleEventAdapter.cs` | Finds finalized events through attached parties; runs the steps shared with `HalfFinishedEncounterAdapter` |
+| `Main/Adapters/IStrandedPartyAdapter.cs`, `StrandedPartyAdapter.cs` | Releases a party whose side no longer lists it |
 | `Main/Features/Enlistment/Hooks/EnlistmentBattleBehavior.cs` | `LogSiegeAftermathContext`, the siege-only diagnostic that will close #557's open question |
 | `Main/SubModule.cs` | `Initialize(...)` plus `PatchCategory(...)` for all four categories in the `OnGameInitializationFinished` batch, and `ResetForUnload` |
 
@@ -403,7 +406,9 @@ battles it judges and has a second reader in the console command, so it has the 
 
 - `TAOM.Tests/Features/MapEventGuard/OrphanedBattleServiceTests.cs`: the co-op stand-down (session and
   defer), live and cleanly finalized events left alone, restore then defenders then attackers after a load,
-  no restore in the same session, one throwing event not stopping the rest, and one warning per failing event.
+  no restore in the same session, one throwing event not stopping the rest, and one warning per failing event;
+  stranded parties released after the battles finish, one failing release not stopping the rest and warned once,
+  and the `IsStranded` rule for each party state (not listed, listed, no side, main party, player's encounter).
 
 The per-event adapter itself is not unit-testable (`MapEvent`'s constructor is internal); it is verified
 in game with `taom.print_stuck_battles`.
@@ -449,6 +454,10 @@ Search the TAOM debug log for `[MapEventGuard]`:
   battle a crash left half finalized. Look for the earlier crash in the same save's history.
 - `[MapEventGuard] could not finish orphaned battle ...` (WARNING, once per battle) means a repair step threw;
   the sweep retries each hour.
+- `[MapEventGuard] released a stranded party: ...` (WARNING) names a party whose battle side no longer listed it, its
+  clan and the battle it pointed at. Expect its clan to be destroyed at the next daily tick if it was eliminated.
+- `[MapEventGuard] could not release stranded party ...` (WARNING, once per party) means the field write threw;
+  the sweep retries each hour.
 
 ## Performance
 
@@ -479,6 +488,7 @@ would act on.
 - 2026-11-18: added `Patch169_BattleDeathRosterSnapshot`, from a player's crash bundles (#1475). Not yet verified in game.
 - 2026-11-19: added `Patch170_HalfFinishedEncounterRepair`, a save repair for a half-finished siege encounter after a failed battle end.
 - 2026-11-19: added the orphaned AI battle sweep, from a player's report and repair module. Not yet verified in game.
+- 2026-11-21: the sweep also releases stranded parties, from a player's save whose eliminated clans crashed `DestroyClanAction` daily. Not yet verified in game.
 
 ## GitHub Issue
 
