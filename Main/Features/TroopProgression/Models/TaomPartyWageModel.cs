@@ -40,7 +40,7 @@ public class TaomPartyWageModel : DefaultPartyWageModel
     {
         int tier = character.Tier;
         bool isMounted = character.IsMounted;
-        bool isMercenary = IsMercenaryOccupation(character.Occupation);
+        bool isMercenary = IsMercenaryWageOccupation(character.Occupation);
 
         return _costService.GetCharacterWage(tier, isMounted, isMercenary);
     }
@@ -197,9 +197,8 @@ public class TaomPartyWageModel : DefaultPartyWageModel
         => culture?.HasFeat(feat) == true ? feat.EffectBonus : 0f;
 
     private static bool IsMercenaryOccupation(Occupation occupation)
-    {
-        return occupation == Occupation.Mercenary
-            || occupation == Occupation.Gangster
-            || occupation == Occupation.CaravanGuard;
-    }
+        => IsMercenaryWageOccupation(occupation) || occupation == Occupation.CaravanGuard;
+
+    private static bool IsMercenaryWageOccupation(Occupation occupation)
+        => occupation == Occupation.Mercenary || occupation == Occupation.Gangster;
 }

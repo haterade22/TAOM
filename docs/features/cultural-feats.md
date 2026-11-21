@@ -229,7 +229,7 @@ The six vanilla-wrapped cultures get their terrain feat appended to their `<cult
 | `Main/Features/CulturalFeats/ICulturalFeatsService.cs` / `CulturalFeatsService.cs` | Per-feat dispatch incl. `ApplyTerrainSpeedFeats` |
 | `Main/Features/CulturalFeats/Hooks/Campaign_InitializeDefaultCampaignObjects_Patch.cs` | Harmony postfix for registration timing |
 | `Main/Features/CulturalFeats/Models/TaomArmyManagementModel.cs` | Army influence award/cost feats |
-| `Main/Features/CulturalFeats/Models/TaomPartySpeedModel.cs` | Terrain movement-speed feats + night + Rohan infantry speed |
+| `Main/Features/CulturalFeats/Models/TaomPartySpeedModel.cs` | Terrain movement-speed feats + night + Rohan infantry speed + the player caravan factor (caravan-trade.md) |
 | `Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs` | Party size limit feats |
 | `Main/Features/CulturalFeats/Models/TaomFoodConsumptionModel.cs` | Food consumption feats; then the leader's career `FoodConsumption` factor (#769 E11) |
 | `Main/Features/CulturalFeats/Models/TaomSettlementProsperityModel.cs` | Hearth growth feats |
@@ -344,7 +344,7 @@ cap: a Goblin-town town goes from about 560 to 440 (200 base plus 200 town bonus
 | `TAOM.Tests/Features/CulturalFeats/TaomCulturalFeatsDefinitionTests.cs` | Feat property count (130), uniqueness, culture distribution, field structure, **Wave 1 production-metadata pin** (`Wave1Feats_ProductionMetadata_MatchesSpec`, which source-parses `Initialize(...)` so a production sign-flip can't pass; see Codex review 2026-06-07 MEDIUM), **party-size pins** (`EvilPartySizeFeats_BonusAndDescription_MatchSpec` for the seven evil feats, `PartySizeFeats_ProductionBonus_PositiveAndAtMostTenPercent` for all twelve; both read production source) |
 | `TAOM.Tests/Features/FactionMap/FactionMapDataTests.cs` | `FactionCard_PartySizePercent_MatchesProductionFeat`: every "+N% party size" on the twelve faction cards in `factions.json` equals the production feat's EffectBonus |
 | `TAOM.Tests/Features/CulturalFeats/CulturalFeatsServiceTests.cs` | Per-feat dispatch incl. terrain-speed (per-terrain match, Mordor 5% vs 10%, night, null/wrong-terrain no-ops) and one dispatch test per (culture, axis) cell for the Wave 1 feats (per `feedback_per_branch_dispatch_test_enumeration`); `NeedsMountedCount`, which the Rohan infantry penalty now shares as its own gate, so the speed model counts a party's mounts only for a culture with that feat |
-| `TAOM.Tests/Features/CulturalFeats/TaomPartySpeedModelTests.cs` | `RequiresGame`: the mount-count helper reads the roster only when asked to, and `CalculateFinalSpeed` asks the service before counting (IL order) |
+| `TAOM.Tests/Features/CulturalFeats/TaomPartySpeedModelTests.cs` | `RequiresGame`: the mount-count helper reads the roster only when asked to, and `CalculateFinalSpeed` asks the service before counting (IL order); the player caravan factor is 0.15 and runs before the Eye of Sauron floor |
 
 GameModel overrides are thin entry points (delegate to `base` + apply feat modifier via the service) and are verified via in-game testing. The `TaomPartySpeedModel.MapTerrain` boundary mapping is verified in-game (it consumes the sealed `TerrainType`).
 

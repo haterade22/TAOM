@@ -3,6 +3,7 @@ using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
+using TaleWorlds.Localization;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
 using TAOM.Features.EyeOfSauron;
@@ -11,6 +12,9 @@ namespace TAOM.Features.CulturalFeats.Models;
 
 public class TaomPartySpeedModel : DefaultPartySpeedCalculatingModel
 {
+    private const float PlayerCaravanSpeedFactor = 0.15f;
+    private static readonly TextObject PackTrainText = new("{=taom_caravan_pack_train_speed}Caravan pack train");
+
     private readonly ICulturalFeatsService _feats;
     private readonly ICareerPassiveService _careerPassives;
     private readonly IEyeOfSauronHook _eyeOfSauron;
@@ -41,12 +45,19 @@ public class TaomPartySpeedModel : DefaultPartySpeedCalculatingModel
         _feats.ApplyTerrainSpeedFeats(culture, terrain, isNight, ref result);
         _feats.ApplyRohanInfantryPenalty(culture, mountedCount, totalCount, ref result);
         _careerPassives.ApplyFactor(mobileParty.LeaderHero?.StringId, ref result, PassiveEffectType.PartyMovementSpeed);
+        ApplyPlayerCaravanSpeed(mobileParty, ref result);
         // #765 M8: the Eye of Sauron hunter outpaces the player within 1.5 of the player's seeing ranges. LAST, so
         // the floor is compared against every other line; it reads only the main-thread snapshot, because this runs
         // on the parallel party tick.
         _eyeOfSauron.ApplyHunterSpeedFloor(mobileParty.StringId, ref result);
 
         return result;
+    }
+
+    private static void ApplyPlayerCaravanSpeed(MobileParty mobileParty, ref ExplainedNumber result)
+    {
+        if (mobileParty.IsCaravan && mobileParty.Owner?.Clan == Clan.PlayerClan)
+            result.AddFactor(PlayerCaravanSpeedFactor, PackTrainText);
     }
 
     /// <summary>

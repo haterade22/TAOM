@@ -18,6 +18,6 @@ TAOM.Features.NavalTravel.Models.TaomPartyNavigationModel 197
 TAOM.Features.Refuge.Hooks.RefugeCampaignBehavior 201
 TAOM.Features.SpecialResources.SpecialResourcesBehavior 262
 TAOM.Features.SupplyLines.Hooks.SupplyLinesCampaignBehavior 155
-TAOM.Features.TroopProgression.Models.TaomPartyWageModel 191
+TAOM.Features.TroopProgression.Models.TaomPartyWageModel 190
 TAOM.Features.WarOfTheRingMomentum.WarOfTheRingMomentumBehavior 307
 TAOM.Features.Warg.WargMissionBehavior 183
