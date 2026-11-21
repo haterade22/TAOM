@@ -1,0 +1,11 @@
+Focused re-review: TAOM #1516, the fix for Codex finding F1 (stale party-screen subscription).
+
+You are a REVIEWER. Do not edit any file. Return the full report as your FINAL MESSAGE; do not write any output file. Read AGENTS.md and .ai/review-reference.md first.
+
+CONTEXT: commit 608b69eb9 (HEAD) added a Harmony postfix on PartyScreenLogic.DoneLogic that charges queued special-resource upgrade spend. Your earlier review (docs/reviews/raw/codex-adversarial-party-done-charge-2026-11-21.md, F1, P2) found that the map bar (SandBox.View.Map.Navigation.MapNavigationHelper.ApplyCurrentChanges then SwitchToANewScreen -> PopState) applies a party screen and pops it with no PartyScreenClosedEvent, so SpecialResourcesBehavior stayed attached to the old PartyScreenLogic and AttachToPartyScreen refused the next one; a Reset on the next screen then did not reach the session and its Done charged reset upgrades.
+
+THE FIX (uncommitted; run `git diff` and `git status`): Main/Features/SpecialResources/SpecialResourcesBehavior.cs AttachToPartyScreen now returns only for the same logic, otherwise detaches the old logic (new DetachFromPartyScreen) and attaches the new one; OnPartyScreenClosed calls DetachFromPartyScreen. New test TAOM.Tests/Features/SpecialResources/SpecialResourcesBehaviorPartyScreenAttachTests.cs.
+
+CHECK: (1) Replay your F1 scenario and confirm the balance ends at 96. (2) AttachToPartyScreen is called from PartyScreenLogic_AddCommand_Patch only on UpgradeTroop commands: a new screen B with no upgrade yet but a Reset or Cancel: is anything wrong while still attached to A? (3) A popped screen A still attached: can A's events fire later (A is unreferenced by the game after PopState)? (4) A screen B whose first command is a prisoner recruit, then Cancel: any session leak? (5) Any re-entrancy: AttachToPartyScreen called from inside AddCommand while A's handler runs. (6) The test's use of FormatterServices.GetUninitializedObject and the event backing field names PartyScreenClosedEvent and AfterReset: confirm those names against the installed v1.5.7 TaleWorlds.CampaignSystem.dll.
+
+Give each finding a severity (P1/P2/P3), file:line, quoted evidence and a failing scenario. Mark anything unproven UNVERIFIED. Say "no finding" for a clean check.
