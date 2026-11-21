@@ -2584,6 +2584,16 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "{=taom_mcm_BondsOverpayRelationCap_hint}The most relation one barter can buy by offering more than the goods are worth. The loop buys at most 3 points in vanilla (the setting here), before the Tribute perk (x1.2, rounded up) and the Charm relation bonus the engine adds when it applies the change. Points cost more the further relation is from 0, so only a large overpay reaches the cap. Default: 15.")]
     public int BondsOverpayRelationCap { get; set; } = TAOM.Features.BondsOfBattle.BondsOfBattleSettingsProvider.DefaultOverpayRelationCap;
 
+    [SettingPropertyGroup("{=taom_mcm_group_battle_gear_loot}Battle Gear Loot", GroupOrder = 91)]
+    [SettingPropertyBool("{=taom_mcm_EnableBattleGearLoot}Enable Battle Gear Loot", Order = 0, RequireRestart = false,
+        HintText = "{=taom_mcm_EnableBattleGearLoot_hint}When on, the loot from enemies your party beats in a battle your side wins is the gear they fought in: each weapon, armour piece, horse and harness drops on its own roll, at the chance below. It replaces the usual random loot from fallen enemies; captured baggage, gold, prisoners and renown are unchanged. Heavy, elite and lord armour held back by Armour Acquisition, named weapons and banners never drop. Singleplayer only: in a co-op session the usual loot applies. Default: off.")]
+    public bool EnableBattleGearLoot { get; set; } = TAOM.Features.BattleGearLoot.BattleGearLootSettingsProvider.DefaultEnabled;
+
+    [SettingPropertyGroup("{=taom_mcm_group_battle_gear_loot}Battle Gear Loot")]
+    [SettingPropertyInteger("{=taom_mcm_BattleGearLootChancePercent}Gear Drop Chance (%)", TAOM.Features.BattleGearLoot.BattleGearLootSettingsProvider.MinChancePercent, TAOM.Features.BattleGearLoot.BattleGearLootSettingsProvider.MaxChancePercent, Order = 1, RequireRestart = false,
+        HintText = "{=taom_mcm_BattleGearLootChancePercent_hint}The chance, from 0 to 100%, that each item of each beaten enemy drops. In a battle fought beside allies you loot your share of the enemies, as usual. Default: 10.")]
+    public int BattleGearLootChancePercent { get; set; } = TAOM.Features.BattleGearLoot.BattleGearLootSettingsProvider.DefaultChancePercent;
+
     // --- Personal Relations (docs/features/personal-relations.md, #862) ---
     //
     // The master switch is read on every relation read (it gates TaomDiplomacyModel.GetHeroesForEffectiveRelation, on the

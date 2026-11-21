@@ -35,6 +35,7 @@ internal static class FeatureModules
         new Features.MapEventGuard.StuckBattleModule(),
         new Features.MapEventGuard.EncounterGuardModule(),
         new Features.SiegeRetreatLoot.SiegeRetreatLootModule(),
+        new Features.BattleGearLoot.BattleGearLootModule(),
         new Features.WarChronicle.WarChronicleModule(),
         new Features.MissionStartGuard.MissionStartGuardModule(),
         new Features.SkeletonBuffer.SkeletonBufferModule(),
