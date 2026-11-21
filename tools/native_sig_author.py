@@ -47,6 +47,16 @@ except ImportError:
     sys.exit("pip install capstone")
 
 
+def make_disassembler():
+    """x86-64 capstone with operand detail. skipdata lets a linear sweep step over a byte capstone
+    cannot decode (data inside .text) instead of stopping there; without it xref read 2.8 % of
+    .text on the v1.5.4 TaleWorlds.Native.dll (#780)."""
+    md = Cs(CS_ARCH_X86, CS_MODE_64)
+    md.detail = True
+    md.skipdata = True
+    return md
+
+
 class Image:
     def __init__(self, path):
         self.path = path
@@ -59,8 +69,7 @@ class Image:
             self.sections.append((name, s.VirtualAddress,
                                   s.Misc_VirtualSize, s.PointerToRawData, s.SizeOfRawData))
         self.text = next((x for x in self.sections if x[0] == ".text"), None)
-        self.md = Cs(CS_ARCH_X86, CS_MODE_64)
-        self.md.detail = True
+        self.md = make_disassembler()
 
     def rva_to_off(self, rva):
         for _, va, vsz, roff, rsz in self.sections:
@@ -311,9 +320,6 @@ def cmd_xref(img, args):
     # 48 8D (lea) / common rip-relative loads by disassembling around candidates.
     # Simpler: disassemble the whole .text and check operands.
     for ins in img.md.disasm(blob, img.base + va):
-        for op in ins.operands:
-            if op.type == 3 and op.mem.base == 0x29 + 0:  # X86_REG_RIP heuristic
-                pass
         # use capstone's computed rip-relative target where available
         if ins.mnemonic in ("lea", "call", "jmp", "mov"):
             m = re.search(r"\[rip \+ (0x[0-9a-f]+)\]", ins.op_str)
