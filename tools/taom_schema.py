@@ -3295,14 +3295,52 @@ _DOC_ROOT_RE = re.compile(r"<(?![?!])([A-Za-z_][\w.\-]*)")
 _ITEM_DOC_ROOTS = frozenset({"Items"})
 
 
-def _scan(roots, pattern, want_files=False, doc_roots=None):
+_GAME_TYPES = frozenset({"Campaign", "CustomGame"})
+
+
+def _row_named_files(moduledata: Path):
+    """The *.xml files under `moduledata` that a Campaign or CustomGame row of the SubModule.xml
+    beside its folder names (`<path>.xml`, or each *.xml in the folder `<path>` when that file is
+    absent), or None when there is no readable SubModule.xml (every file counts). The engine loads
+    data only through these rows (MBObjectManager.GetMergedXmlForManaged), so a config file no row
+    names (armour_acquisition/armour_classes.xml, Native's mpcosmetics.xml) defines no item and a
+    row for multiplayer only (mpitems.xml) defines none in a campaign (#1404).
+
+    Same rule as audit_polearm_shield_parity.loaded_files, without its lxml dependency: this module
+    is stdlib only. A malformed row (the engine throws; the gate exits 2 naming the file) is
+    skipped here, so the validator never stops on input the gate already judges."""
+    sub = moduledata.parent / "SubModule.xml"
+    try:
+        nodes = ET.parse(str(sub)).getroot().findall("Xmls/XmlNode")
+    except (OSError, ET.ParseError):
+        return None
+    loaded = set()
+    for node in nodes:
+        name = node.find("XmlName")
+        path = name.get("path") if name is not None else None
+        if path is None:
+            continue
+        types = node.find("IncludedGameTypes")
+        values = {c.get("value") for c in types if isinstance(c.tag, str)} if types is not None else set()
+        if values and not values & _GAME_TYPES:
+            continue
+        file, folder = moduledata / f"{path}.xml", moduledata / path
+        loaded.update({file} if file.is_file() else set(folder.glob("*.xml")) if folder.is_dir() else set())
+    return frozenset(loaded)
+
+
+def _scan(roots, pattern, want_files=False, doc_roots=None, row_named=False):
+    """`row_named` keeps, per root, only the files its module's SubModule.xml rows name."""
     found = set()
     files = defaultdict(list)
     for root in roots:
         root = Path(root)
         if not root.exists():
             continue
+        named = _row_named_files(root) if row_named else None
         for xml in root.rglob("*.xml"):
+            if named is not None and xml not in named:
+                continue
             text = _read_stripped(xml)
             if doc_roots is not None:
                 first = _DOC_ROOT_RE.search(text)
@@ -3981,7 +4019,8 @@ def build_registries(moduledata, game_modules, armory_root=None, vanilla_modules
         for xslt in sorted(moduledata.rglob("*.xslt")):
             equipment_rosters -= set(_ROSTER_STRIP_RE.findall(_read_stripped(xslt)))
 
-    items, item_def_files = _scan(item_roots, _ITEM_DEF_RE, want_files=True, doc_roots=_ITEM_DOC_ROOTS)
+    items, item_def_files = _scan(item_roots, _ITEM_DEF_RE, want_files=True, doc_roots=_ITEM_DOC_ROOTS,
+                                 row_named=True)
     npccharacters = _scan(npc_roots, _NPC_DEF_RE)
     cultures = _scan_files(culture_files, _CULTURE_DEF_RE) | VANILLA_CULTURES
     party_templates = _scan(pt_roots, _PARTYTEMPLATE_DEF_RE)

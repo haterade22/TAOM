@@ -64,6 +64,29 @@ class PlainItemTests(unittest.TestCase):
         self.addCleanup(setattr, mc, "TAOM_SUBMODULE", old)
         self.assertEqual(page.load_plain_items(modules)["round_shield"].type, "Shield")
 
+    def test_a_file_no_row_names_does_not_replace_the_item(self):
+        """#1404: with a SubModule.xml, only the files its rows name load. A row-less file under an
+        <Items> root, sorted first, must not shadow the real item (the root check alone would not
+        catch it)."""
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, tmp, ignore_errors=True)
+        modules = tmp / "Modules"
+        data = modules / "TAOM" / "ModuleData"
+        write(modules / "TAOM" / "SubModule.xml",
+              '<Module><Id value="TAOM"/><Xmls><XmlNode><XmlName id="Items" path="lord_armour"/>'
+              '</XmlNode></Xmls></Module>\n')
+        write(data / "armour_acquisition" / "stubs.xml", '<Items><Item id="taom_lord_x"/></Items>\n')
+        write(data / "lord_armour" / "lords.xml",
+              '<Items><Item id="taom_lord_x" Type="BodyArmor"><ItemComponent>'
+              '<Armor body_armor="9"/></ItemComponent></Item></Items>\n')
+        own = tmp / "own" / "SubModule.xml"
+        write(own, '<Module><Id value="TAOM"/></Module>\n')
+        old = mc.TAOM_SUBMODULE
+        mc.TAOM_SUBMODULE = own
+        self.addCleanup(setattr, mc, "TAOM_SUBMODULE", old)
+        info = page.load_plain_items(modules)["taom_lord_x"]
+        self.assertEqual((info.type, info.armour.get("body_armor")), ("BodyArmor", 9))
+
     def test_a_class_table_row_does_not_replace_the_item(self):
         """#1443: armour_classes.xml holds one <Item id> row per piece under <ArmourClasses>. Its folder
         sorts before armour_band_clones/ and lord_armour/, so the row won and a TAOM-only piece showed

@@ -318,10 +318,10 @@ def _gate():
 
 
 def campaign_files(module: Path, paths) -> list[Path]:
-    """`paths`, sorted, less the files only rows for other game types name (Native's mpitems.xml,
-    mp_crafting_pieces.xml): a campaign never loads them (#1398)."""
-    other = _gate().other_game_files(module)
-    return [p for p in sorted(paths) if p not in other]
+    """`paths`, sorted, less every file no Campaign or CustomGame row of `module` names: Native's
+    mpitems.xml and mp_crafting_pieces.xml (multiplayer rows only, #1398) and config files such as
+    armour_acquisition/armour_classes.xml, which no row names (#1404)."""
+    return _gate().row_named(module, paths)
 
 
 def module_dirs(modules: Path, without_taom: bool = False) -> list[Path]:

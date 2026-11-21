@@ -693,7 +693,13 @@ armour), and a `<Stock>` row's `from` culture or a `match` that does not compile
 (the row silently stocks nothing, #755), and a `<LadderPieces><Piece>` culture or item (the rung offers nothing). Each resolves against `Registries.items` and `Registries.cultures`, plus the items the engine
 registers in C# (`DefaultItems`: the metals among them), which no XML defines. The item registry counts
 only documents with an `<Items>` root, so a config or the generated class table quoting an id never
-defines it. A file that does not parse, or declares an unknown encoding, is reported. Without the
+defines it. It also reads only the files a Campaign or CustomGame row of the module's `SubModule.xml`
+names (`taom_schema._row_named_files`, the rule the shield gate uses), so Native's multiplayer-only
+`mpitems.xml` defines no item (#1404). Differences from the gate: a malformed row is skipped here, not
+fatal (the gate exits 2 on it), and a module folder with no `SubModule.xml` beside it (a test fixture)
+reads every file. On the live install the registry holds 5,809 ids, down from 6,661: 848 that only
+`mpitems.xml` defines and 4 `dragon_banner*` ids StoryMode defines for its own game type
+(count: `python -c` over `build_registries(...).items`, or `registry_sizes()`). A file that does not parse, or declares an unknown encoding, is reported. Without the
 install the registry is TAOM-only, so the pass is skipped and says so.
 
 ## Borrowed collision body (`COLLISION_BODY_BORROWED`)

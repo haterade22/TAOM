@@ -135,7 +135,8 @@ class CatalogueLoadingTests(unittest.TestCase):
         in the catalogue would hide a registration the tree has lost."""
         write(self.own, submodule(module_id="TAOM", depends=PLAYSET))
         taom = self.modules / "TAOM"
-        write(taom / "SubModule.xml", submodule(("WeaponDescriptions", "ph/ph_descriptions"), module_id="TAOM"))
+        write(taom / "SubModule.xml", submodule(("WeaponDescriptions", "ph/ph_descriptions"),
+                                                ("CraftingPieces", "ph/ph_crafting_pieces"), module_id="TAOM"))
         write(taom / "ModuleData" / "ph" / "ph_descriptions.xslt", registering("stale_blade"))
         self.assertNotIn("stale_blade", self.available())
         # Only its stylesheets: TAOM's pieces still load (callers overlay the tree's on them).
