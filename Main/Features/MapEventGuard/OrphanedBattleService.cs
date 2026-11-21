@@ -72,7 +72,17 @@ public sealed class OrphanedBattleService
                     _logger.LogWarning($"[MapEventGuard] could not finish orphaned battle {label}: {ex.GetType().Name}: {ex.Message}");
             }
         }
-        ReleaseStrandedParties(report);
+        ReleaseStranded(report);
+        return report;
+    }
+
+    /// <summary>The stranded half alone, for a finished load: the first hourly sweep can come after the clan's daily tick.</summary>
+    public IReadOnlyList<string> ReleaseStrandedParties()
+    {
+        var report = new List<string>();
+        if (_coop.IsSessionActive || _coop.ShouldDeferToHost)
+            return report;
+        ReleaseStranded(report);
         return report;
     }
 
@@ -86,7 +96,7 @@ public sealed class OrphanedBattleService
     public static bool IsStranded(bool hasSide, bool sideListsIt, bool isMainParty, bool inPlayerBattle) =>
         hasSide && !sideListsIt && !isMainParty && !inPlayerBattle;
 
-    private void ReleaseStrandedParties(List<string> report)
+    private void ReleaseStranded(List<string> report)
     {
         foreach (var party in _adapter.StrandedParties())
         {

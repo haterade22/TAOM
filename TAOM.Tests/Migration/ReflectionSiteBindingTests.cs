@@ -281,7 +281,7 @@ public class ReflectionSiteBindingTests
     // --- Orphaned AI battle sweep (HalfFinishedEncounterAdapter.FinishEvent): the component step the crash skipped ---
     [DataRow("TaleWorlds.CampaignSystem.MapEvents.MapEventComponent", "MapEventComponent", "FinalizeComponent", "Method", "HalfFinishedEncounterAdapter.cs:19")]
     // --- Orphaned AI battle sweep (StrandedPartyAdapter.Release): the side reference a throwing setter left behind ---
-    [DataRow("TaleWorlds.CampaignSystem.Party.PartyBase", "PartyBase", "_mapEventSide", "Field", "StrandedPartyAdapter.cs:57")]
+    [DataRow("TaleWorlds.CampaignSystem.Party.PartyBase", "PartyBase", "_mapEventSide", "Field", "StrandedPartyAdapter.cs:55")]
     [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.VillagerCampaignBehavior", "VillagerCampaignBehavior", "_interactedVillagers", "Field", "EncounterLinesAdapter.cs:35")]
     // The text seam's three ConversationManager fields, bound once in Initialize. A miss logs one warning and the surrender and
     // hideout boss lines stay vanilla.

@@ -240,4 +240,28 @@ public class OrphanedBattleServiceTests
     {
         Assert.AreEqual(expected, OrphanedBattleService.IsStranded(hasSide, sideListsIt, isMainParty, inPlayerBattle));
     }
+    [TestMethod]
+    public void ReleaseStrandedParties_AtLoad_ReleasesWithoutTouchingBattles()
+    {
+        // The daily clan tick can come before the first hourly sweep after a load (its slot is saved),
+        // so the stranded half also runs when a load finishes.
+        var party = Stranded("Vrakmaw's Party");
+        HaveStranded(party);
+
+        var report = _service.ReleaseStrandedParties();
+
+        party.Received(1).Release();
+        Assert.AreEqual(1, report.Count);
+        _adapter.DidNotReceive().AttachedFinalizedBattles();
+    }
+
+    [TestMethod]
+    public void ReleaseStrandedParties_CoopSession_StandsDown()
+    {
+        _coop.IsSessionActive.Returns(true);
+
+        _service.ReleaseStrandedParties();
+
+        _adapter.DidNotReceive().StrandedParties();
+    }
 }

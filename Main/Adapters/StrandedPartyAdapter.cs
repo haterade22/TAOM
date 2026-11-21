@@ -44,8 +44,6 @@ internal sealed class StrandedPartyAdapter : IStrandedPartyAdapter
     {
         if (SideField == null)
             throw new InvalidOperationException("PartyBase._mapEventSide is not available.");
-        // The side already dropped the party (RemovePartyInternal ran its RemoveAt before the throw that stranded it),
-        // so the field write is the step the setter never reached.
         SideField(_party.Party) = null!;
         _party.Party.SetVisualAsDirty();
     }
