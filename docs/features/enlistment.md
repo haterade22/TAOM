@@ -1657,7 +1657,12 @@ switching it to `Besieger` would defeat the short-circuit and add a per-tick NRE
 2. **Disband it unconditionally.** `LeaveArmy()` ends what it raised whether or not other lords
    joined. The first revision kept it standing when another lord had attached, reasoning it had
    become a real army; it had not. `DisbandArmyAction.ApplyByObjectiveFinished` is an ordinary
- vanilla dispersion; every party is detached, repositioned around the leader and set to hold.
+ vanilla dispersion; attached members are detached and set to hold, and the leader is set to hold
+   through `Army.FinishArmyObjective`. That has one cost: the next siege tick
+   (`BesiegerCamp.CheckBesiegerPartiesAndMakeThemLeave`) drops a besieger that is not besieging, so a
+   commander whose siege outlived the battle left it, and his soldier with him (player report,
+   2026-11-21). `KeepLeaderOnHisSiege` sets him back to besieging that settlement right after the
+   disband (`ArmyDisbandSiegeBindingTests`).
 
 Neither alone is sufficient, and the disband could not be conditional even on `left`: `DischargeService`
 calls `RestorePresence()` (which nulls `main.Army`) *before* `LeaveArmy()`, so a disband keyed on the
