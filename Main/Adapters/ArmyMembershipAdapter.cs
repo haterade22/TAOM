@@ -2,6 +2,7 @@ using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Settlements;
 using TAOM.Core.Logging;
 
 namespace TAOM.Adapters;
@@ -275,9 +276,9 @@ public sealed class ArmyMembershipAdapter : IArmyMembershipAdapter
     /// every reload. A stray army raised for one skirmish becomes a permanent crash on the kingdom
     /// screen.
     ///
-    /// The lords lose nothing. <c>DisbandArmyAction.ApplyByObjectiveFinished</c> is an ordinary
-    /// vanilla dispersion — every party is detached, repositioned around the leader and set to
-    /// hold, and each lord resumes his own business on the next AI tick.
+    /// <c>DisbandArmyAction.ApplyByObjectiveFinished</c> sets the leader (FinishArmyObjective) and members to hold;
+    /// each lord resumes his business on the next AI tick, but a besieging leader would leave his
+    /// siege on the next siege tick first, so he is put back on it (KeepLeaderOnHisSiege).
     /// </summary>
     private void DisbandCreatedArmy()
     {
@@ -301,13 +302,28 @@ public sealed class ArmyMembershipAdapter : IArmyMembershipAdapter
                 return;
             }
 
+            var leader = army.LeaderParty;
+            var besieged = leader?.BesiegedSettlement;
+            var navigation = leader?.DesiredAiNavigationType ?? MobileParty.NavigationType.None;
             DisbandArmyAction.ApplyByObjectiveFinished(army);
             _logger?.LogInfo("[Enlistment] disbanded the army raised for this battle");
+            KeepLeaderOnHisSiege(leader, besieged, navigation);
         }
         catch (Exception ex)
         {
             _logger?.LogError($"[Enlistment] could not disband the army raised for this battle: {ex.Message}");
         }
+    }
+
+    private void KeepLeaderOnHisSiege(MobileParty leader, Settlement besieged, MobileParty.NavigationType navigation)
+    {
+        if (leader == null || besieged == null || leader.BesiegedSettlement != besieged
+            || leader.DefaultBehavior == AiBehavior.BesiegeSettlement)
+            return;
+
+        leader.SetMoveBesiegeSettlement(besieged,
+            navigation == MobileParty.NavigationType.None ? MobileParty.NavigationType.Default : navigation);
+        _logger?.LogInfo($"[Enlistment] commander '{leader.StringId}' kept on his siege of '{besieged.StringId}' after the battle army disbanded");
     }
 
     private static MobileParty FindCommanderParty(string heroId)
