@@ -47,6 +47,28 @@ public class PartyUpgradeResourceCheckHookCoopTests
     }
 
     [TestMethod]
+    public void ClampUpgradeCount_CoopSessionActive_CountsNoRecruitsAgainstTheBalance()
+    {
+        _coop.IsSessionActive.Returns(true);
+        var earlier = new List<RecruitCartEntry> { new("cave_troll", 2) };
+
+        _hook.ClampUpgradeCount("h", "k", "c", "captain", 3, earlier);
+
+        _service.Received(1).ClampUpgradeCount("h", "k", "c", "captain", 3, null);
+    }
+
+    [TestMethod]
+    public void ClampUpgradeCount_NoCoopSession_PassesThisScreensRecruits()
+    {
+        _coop.IsSessionActive.Returns(false);
+        var earlier = new List<RecruitCartEntry> { new("cave_troll", 2) };
+
+        _hook.ClampUpgradeCount("h", "k", "c", "captain", 3, earlier);
+
+        _service.Received(1).ClampUpgradeCount("h", "k", "c", "captain", 3, earlier);
+    }
+
+    [TestMethod]
     public void ClampRecruitCount_ReadsTheSessionOnEveryCall()
     {
         _coop.IsSessionActive.Returns(true, false);

@@ -199,13 +199,13 @@ public class SpecialResourceGoldOnlyTests
 
     [TestMethod]
     public void ClampUpgradeCount_GoldOff_ZeroBalance_ClampsToZero() =>
-        Assert.AreEqual(0, _service.ClampUpgradeCount(Hero, Kingdom, Culture, Elite, 4));
+        Assert.AreEqual(0, _service.ClampUpgradeCount(Hero, Kingdom, Culture, Elite, 4, null));
 
     [TestMethod]
     public void ClampUpgradeCount_GoldOn_ZeroBalance_ReturnsTheRequest()
     {
         GoldOn();
-        Assert.AreEqual(4, _service.ClampUpgradeCount(Hero, Kingdom, Culture, Elite, 4));
+        Assert.AreEqual(4, _service.ClampUpgradeCount(Hero, Kingdom, Culture, Elite, 4, null));
     }
 
     [TestMethod]
