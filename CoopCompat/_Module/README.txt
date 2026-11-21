@@ -344,8 +344,22 @@ If that happens:
 DEDICATED SERVER
 ----------------
 
-If you run a Coop dedicated server, add TAOM.CoopCompat to the server's
-module list, after TAOM.
+A dedicated server is a Coop server that runs without a game window,
+for example on a rented server.
+
+We tested TAOM on the Coop v0.1.8 dedicated server on 21 November 2026.
+A player joined and played on the campaign map. But the server download
+from Coop does not yet do all the setup that TAOM needs. Without that
+setup, the server stops when it starts. It can also fill your C: drive
+with crash files of 1 to 2 GB each.
+
+Do not set up a TAOM dedicated server by hand. Use the Coodsz TAOM
+tools when their version for Bannerlord 1.5.7 is out. The tools do the
+extra setup for you.
+
+On a dedicated server, put TAOM.CoopCompat in the server's module list,
+after TAOM. Every player who joins needs the same TAOM version and the
+same TAOM.CoopCompat as the server.
 
 
 REPORT A PROBLEM
@@ -360,8 +374,8 @@ Report TAOM co-op problems to the TAOM team. Send:
 Where the Coop log is:
 - Host or guest: Coop_client.log or Coop_server.log, in the folder
   Mount & Blade II Bannerlord\bin\Win64_Shipping_Client
-- Dedicated server: Coop_server.log, in the "logs" folder of the server's
-  data folder.
+- Dedicated server: the newest coop-server-<date>-<time>.log file, in the
+  "logs" folder of the server's data folder.
 
 Copy the log BEFORE you start the game again. A new start writes over it.
 
