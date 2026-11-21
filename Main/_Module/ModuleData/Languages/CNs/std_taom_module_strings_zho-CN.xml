@@ -9784,6 +9784,7 @@
     <string id="taom_stamina_mcm_ai_hint" text="When on, the soldiers the AI controls have stamina while Combat Stamina is on, allies and enemies alike. Off exempts them all: only the soldier you control tires, if the setting above is on. Read at each battle tick. Default: on." />
     <string id="taom_res_recruit_clamped" text="Only enough resources for {COUNT} recruit(s)." />
     <string id="taom_caravan_pack_train_speed" text="Caravan pack train" />
+    <string id="taom_res_upgrade_clamped" text="Only enough resources for {COUNT} upgrade(s)." />
   </strings>
 
 </base>
