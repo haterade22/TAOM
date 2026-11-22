@@ -60,7 +60,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
             }
 
             var stood = fresh.Position;
-            spawns.Add(new UpgradeSpawn(active, stood.Distance(at), $"({at.x:F1}, {at.y:F1}, {at.z:F1}) stood at ({stood.x:F1}, {stood.y:F1}, {stood.z:F1})"));
+            spawns.Add(new UpgradeSpawn(active, stood.AsVec2.Distance(at.AsVec2), $"({at.x:F1}, {at.y:F1}, {at.z:F1}) stood at ({stood.x:F1}, {stood.y:F1}, {stood.z:F1})"));
         }
 
         return UpgradeTally.Of(old.Count, spawns, FramePointRadius);
