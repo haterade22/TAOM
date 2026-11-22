@@ -123,12 +123,13 @@ public class ClientIsolationGateTests
         CollectionAssert.AreEquivalent(
             new[]
             {
-                "TimeAccelerationMixin", "PrefabCenterPanel", "PrefabFastForwardButton", "PrefabPlayButton",
+                "PrefabCenterPanel", "PrefabFastForwardButton", "PrefabPlayButton",
                 "PrefabPauseButton", "PrefabInsertExtraFastForward",
                 "MakeToolsMixin", "MakeToolsPrefab",
             },
             CoopUiRegistrationPolicy.Suppressed(inClient).Select(t => t.Name).ToArray(),
-            "the co-op registration drops exactly the time-control extensions and the Make Tools card");
+            "the co-op registration drops exactly the vanilla map bar's time-control extensions and the Make Tools card; " +
+            "TimeAccelerationMixin stays, because the themed map bar's time buttons bind it");
     }
 
     [TestMethod]

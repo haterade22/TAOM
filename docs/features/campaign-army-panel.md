@@ -32,8 +32,8 @@ opaque map bar. The TAOM plate has transparent margins, so that does not work he
 - **Swap.** `TAOMArmyOverlay.xml` is a themed movie: `FrontEndMovieService` loads it in place of SandBox's
   `ArmyOverlay` when the data source is `ArmyMenuOverlayVM`, like the themed map bar, and holds the theme's images
   while it lives. If the themed prefab fails, vanilla's loads. The panel is cut at the themed stats plate, so it
-  stays vanilla wherever the map bar does: under co-op (`GauntletLayerLoadMoviePatch` skips both), and when
-  `TAOMMapBar` is not installed or failed to build.
+  stays vanilla wherever the map bar does: with a co-op mod TAOM cannot probe (`ThemedMapBarCoopPolicy`; a
+  BannerlordCoop session and solo play get both themed), and when `TAOMMapBar` is not installed or failed to build.
 - **Clip.** `ArmyOverlayClipWidget` wraps the panel with `ClipContents`. Its bottom margin is 90 px above the screen
   edge with the plate closed, 64 px higher with it extended. That is just inside the gold border of the plate's
   right shoulder (the step that holds the muster banner, 91.6 px up), so no notch of map shows there; along the
@@ -81,7 +81,7 @@ centre, and the TAOM stats plate's stat cells cover it now (computed, not yet se
 |------|---------|
 | `Main/_Module/GUI/PreFabs/FactionUI/TAOMArmyOverlay.xml` | The themed panel |
 | `Main/Features/FactionUI/Menus/FrontEndMovieService.cs` | Swaps it in for `ArmyOverlay` with `ArmyMenuOverlayVM` |
-| `Main/Features/FactionUI/Hooks/GauntletLayerLoadMoviePatch.cs` | Keeps vanilla's panel under co-op |
+| `Main/Features/FactionUI/Menus/ThemedMapBarCoopPolicy.cs` | Keeps vanilla's panel wherever co-op keeps vanilla's map bar |
 | `Main/Features/FactionUI/Resources/FrontEndSpriteService.cs` | Re-reads `TAOMCampaignArmy` after its sprites register |
 | `Client/Features/FactionUI/Campaign/ArmyOverlayClipWidget.cs` | Cuts the panel at the stats plate's frame and follows it |
 | `Client/Features/FactionUI/Campaign/CampaignStatsPanelWidget.cs` | Publishes the plate's shown expansion |
@@ -98,7 +98,7 @@ centre, and the TAOM stats plate's stat cells cover it now (computed, not yet se
   page fits on the plate left of the pager; a one-row page shows the pager; the cohesion track fits its nine-slice;
   every vanilla binding and command is kept.
 - `FrontEndMovieServiceTests`: the swap, its view-model guard, and vanilla when the themed map bar is missing or
-  failed. `GauntletLayerLoadMoviePatchTests`: the co-op skip.
+  failed. `ThemedMapBarCoopPolicyTests`: the panel follows the map bar's co-op rule.
 - `FrontEndSpriteServiceTests.Acquire_EveryGroup_RereadsEveryBrushFileThatNamesARuntimeSprite`: every brush file
   that names a runtime sprite is re-read when its group loads.
 - `tools/tests/test_make_army_overlay_plate.py`: size, the shipped file is the generator's output, straight borders
@@ -139,7 +139,8 @@ from this branch, game restarted.
 10. As the army's leader, let cohesion fall below the warning level (or join an army with low cohesion). Pass: the
     cohesion fill turns red, and for the leader it pulses.
 11. Check at 1920x1080 and at one other UI scale (Options, UI scale). Pass: the same as steps 1 to 3.
-12. Under co-op (the Coop module loaded), form an army. Pass: vanilla's army panel and map bar show.
+12. In a BannerlordCoop session, form an army as a client. Pass: the themed army panel stands above the themed
+    stats plate, as in steps 1 to 3, and its tooltips and army button work.
 13. With a gamepad, close the panel, then press Down from its header. Record where the focus goes (vanilla parity:
     it should not land on a hidden portrait).
 

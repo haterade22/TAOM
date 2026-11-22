@@ -88,9 +88,14 @@ public class WarChronicleEventsWiringTests
         container.RegisterInstance(Substitute.For<IWarOfTheRingService>());
         container.RegisterInstance(Substitute.For<IAlignmentService>());
         container.RegisterInstance(Substitute.For<ICoopSessionProvider>());
+        // The chronicle opens a hero story's window only in a single-player campaign (#1105 slice 3).
+        container.RegisterInstance(Substitute.For<IDedicatedServerProvider>());
         container.RegisterInstance(Substitute.For<IPlayerControlQuery>());
         container.RegisterInstance(Substitute.For<IPathService>());
         container.RegisterInstance(Substitute.For<IAllianceAdapter>());
+        // A repulsed story assault ends a permanent alliance and writes its check line (#1105 slice 5).
+        container.RegisterInstance(Substitute.For<TAOM.Features.Diplomacy.IDiplomacyService>());
+        container.RegisterInstance(Substitute.For<TAOM.Core.Logging.IOutcomeLog>());
         container.RegisterInstance(Substitute.For<IMomentumAwardService>());
         container.RegisterInstance(Substitute.For<ITextLocalizerAdapter>());
         // The presenter reads the chronicle momentum duration and names the kingdoms in the event window's effects.

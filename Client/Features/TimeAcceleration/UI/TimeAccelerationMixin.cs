@@ -1,6 +1,5 @@
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
-using TAOM.Features.CoopInterop;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Map.MapBar;
 using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
@@ -14,21 +13,27 @@ namespace TAOM.Features.TimeAcceleration.UI;
 // where vanilla recomputes its own TimeFlowState; OnRefresh below is therefore per-frame and must
 // stay allocation-free.
 [ViewModelMixin("Tick")]
-[CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")]
 internal class TimeAccelerationMixin : BaseViewModelMixin<MapTimeControlVM>
 {
     private readonly ITimeAccelerationService _service;
     private bool _isExtraFastForwardActive;
+    private bool _isExtraFastForwardAvailable;
     private BasicTooltipViewModel _extraFastForwardHint;
 
-    public TimeAccelerationMixin(MapTimeControlVM viewModel) : base(viewModel)
+    // Once per VM instance (one MapTimeControlVM per map screen), never per frame.
+    public TimeAccelerationMixin(MapTimeControlVM viewModel) : this(viewModel, IoC.Resolve<ITimeAccelerationService>())
     {
-        // Once per VM instance (one MapTimeControlVM per map screen), never per frame.
-        _service = IoC.Resolve<ITimeAccelerationService>();
+    }
+
+    internal TimeAccelerationMixin(MapTimeControlVM viewModel, ITimeAccelerationService service) : base(viewModel)
+    {
+        _service = service;
 
         // Phase 9b #168 P3 — localized tooltip. Was hardcoded English literal.
         _extraFastForwardHint = new BasicTooltipViewModel(
             () => new TextObject("{=taom_extra_fast_forward_hint}Extra Fast Forward").ToString());
+
+        _isExtraFastForwardAvailable = _service.IsExtraFastForwardAvailable;
     }
 
     [DataSourceProperty]
@@ -41,6 +46,20 @@ internal class TimeAccelerationMixin : BaseViewModelMixin<MapTimeControlVM>
             {
                 _isExtraFastForwardActive = value;
                 OnPropertyChanged(nameof(IsExtraFastForwardActive));
+            }
+        }
+    }
+
+    [DataSourceProperty]
+    public bool IsExtraFastForwardAvailable
+    {
+        get => _isExtraFastForwardAvailable;
+        set
+        {
+            if (_isExtraFastForwardAvailable != value)
+            {
+                _isExtraFastForwardAvailable = value;
+                OnPropertyChanged(nameof(IsExtraFastForwardAvailable));
             }
         }
     }
@@ -88,6 +107,7 @@ internal class TimeAccelerationMixin : BaseViewModelMixin<MapTimeControlVM>
     {
         // Engine state, not a latch: a key press, a click and a vanilla toggle all land here.
         IsExtraFastForwardActive = _service.IsExtraFastForwardActive;
+        IsExtraFastForwardAvailable = _service.IsExtraFastForwardAvailable;
     }
 
     public override void OnFinalize() { }

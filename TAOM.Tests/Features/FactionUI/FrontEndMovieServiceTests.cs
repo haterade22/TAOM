@@ -506,8 +506,8 @@ public class FrontEndMovieServiceTests
     }
 
     /// <summary>Issue #1532: the themed army panel replaces SandBox's ArmyOverlay through the swap, not by file
-    /// name, so the co-op skip in GauntletLayerLoadMoviePatch keeps vanilla's panel beside vanilla's map bar
-    /// (GauntletLayerLoadMoviePatchTests).</summary>
+    /// name, so the movie hook keeps vanilla's panel wherever it keeps vanilla's map bar
+    /// (ThemedMapBarCoopPolicyTests).</summary>
     [TestMethod]
     public void BeginLoad_ArmyOverlay_UsesTheThemedPanelAndKeepsNativeFallback()
     {

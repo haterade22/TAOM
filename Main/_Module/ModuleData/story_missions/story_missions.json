@@ -32,7 +32,7 @@
       "defenderCulture": "vlandia",
       "attackerCulture": "isengard",
       "music": "StoryMusic/isengard_vs_rohan.ogg",
-      "rules": { "preparationSeconds": 20, "keepMinAttackers": 26 },
+      "rules": { "preparationSeconds": 20, "keepMinAttackers": 36 },
       "garrison": [
         { "troop": "rohan_westfold_militiaman", "class": "Infantry", "count": 100 },
         { "troop": "rohan_eastfold_skirmisher", "class": "Ranged", "count": 50 }
@@ -41,7 +41,7 @@
       "heroes": [{"id": "aragorn", "troop": "taom_hero_aragorn", "healthFactor": 8.0}, {"id": "legolas", "troop": "taom_hero_legolas", "healthFactor": 8.0}, {"id": "gimli", "troop": "taom_hero_gimli", "healthFactor": 8.0}],
       "roster": {
         "waves": [
-          { "count": 250, "mix": [
+          { "count": 350, "mix": [
             { "troop": "urukhai_fighter", "class": "Infantry", "weight": 50 },
             { "troop": "isengard_militia_spearman", "class": "Infantry", "weight": 25 },
             { "troop": "urukhai_skirmisher", "class": "Ranged", "weight": 25 } ] }
@@ -171,6 +171,60 @@
             { "troop": "gundabad_snaga", "class": "Infantry", "weight": 45 },
             { "troop": "gundabad_militia_spearman", "class": "Infantry", "weight": 30 },
             { "troop": "gundabad_hunter", "class": "Ranged", "weight": 25 } ] }
+        ]
+      }
+    },
+    {
+      "id": "parth_galen_save",
+      "name": "{=!}Parth Galen: stand with the Fellowship",
+      "scene": "battle_terrain_001",
+      "side": "Defend",
+      "defenderCulture": "gondor",
+      "attackerCulture": "isengard",
+      "field": {},
+      "rules": { "preparationSeconds": 15, "intermissionSeconds": 20, "stragglerCount": 0, "liveCap": 10 },
+      "heroes": [
+        { "id": "boromir", "troop": "taom_hero_boromir", "healthFactor": 8.0 },
+        { "id": "aragorn", "troop": "taom_hero_aragorn", "healthFactor": 8.0 },
+        { "id": "legolas", "troop": "taom_hero_legolas", "healthFactor": 8.0 },
+        { "id": "gimli", "troop": "taom_hero_gimli", "healthFactor": 8.0 }
+      ],
+      "mustLive": "boromir",
+      "roster": {
+        "waves": [
+          { "count": 20, "mix": [
+            { "troop": "urukhai_fighter", "class": "Infantry", "weight": 70 },
+            { "troop": "urukhai_skirmisher", "class": "Ranged", "weight": 30 } ] },
+          { "count": 30, "mix": [
+            { "troop": "urukhai_fighter", "class": "Infantry", "weight": 70 },
+            { "troop": "urukhai_skirmisher", "class": "Ranged", "weight": 30 } ] },
+          { "count": 40, "mix": [
+            { "troop": "urukhai_fighter", "class": "Infantry", "weight": 70 },
+            { "troop": "urukhai_skirmisher", "class": "Ranged", "weight": 30 } ] }
+        ]
+      }
+    },
+    {
+      "id": "parth_galen_kill",
+      "name": "{=!}Parth Galen: hunt the Company",
+      "scene": "battle_terrain_001",
+      "side": "Attack",
+      "defenderCulture": "gondor",
+      "attackerCulture": "isengard",
+      "field": {},
+      "rules": { "preparationSeconds": 15, "stragglerCount": 0 },
+      "heroes": [
+        { "id": "boromir", "troop": "taom_hero_boromir", "healthFactor": 8.0 },
+        { "id": "aragorn", "troop": "taom_hero_aragorn", "healthFactor": 8.0 },
+        { "id": "legolas", "troop": "taom_hero_legolas", "healthFactor": 8.0 },
+        { "id": "gimli", "troop": "taom_hero_gimli", "healthFactor": 8.0 }
+      ],
+      "mustLive": "boromir",
+      "roster": {
+        "waves": [
+          { "count": 20, "mix": [
+            { "troop": "urukhai_fighter", "class": "Infantry", "weight": 70 },
+            { "troop": "urukhai_skirmisher", "class": "Ranged", "weight": 30 } ] }
         ]
       }
     }

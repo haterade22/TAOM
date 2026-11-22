@@ -167,7 +167,8 @@ public class LongDefeatAttackPinTests
         var spawn = Body(heroes, "public LdHeroReport SpawnHero(");
         var post = Body(heroes, "private void PostHunters(");
 
-        StringAssert.Contains(heroes, "private bool HeroesHunt => !PlayerAttacks;");
+        // On a field run (#1105) the heroes of either side take their class formations too: a group held at a post in the open does not fight.
+        StringAssert.Contains(heroes, "private bool HeroesHunt => !PlayerAttacks && !IsField;");
         StringAssert.Contains(spawn, "var hunt = HeroesHunt;");
         StringAssert.Contains(spawn, "var cls = hunt ? HeroClass : troop.DefaultFormationClass == FormationClass.Ranged ? FormationClass.Ranged : FormationClass.Infantry;");
         StringAssert.Contains(spawn, "var formation = team.GetFormation(cls);");
@@ -175,7 +176,22 @@ public class LongDefeatAttackPinTests
         StringAssert.Contains(spawn, "Spawn(troop, team, true, cls,");
         var after = spawn.Substring(At(spawn, "HoldHero("));
         Assert.IsTrue(At(after, "if (hunt)") < At(after, "PutHeroesBack(") && At(after, "if (hunt)") < At(after, "Post(formation)"), "an enemy hero is never put back into a held group or posted");
-        StringAssert.Contains(spawn, "Enemy: !hunt");
+        StringAssert.Contains(spawn, "Enemy: PlayerAttacks, Loose: !hunt && !PlayerAttacks");
         StringAssert.Matches(post, new Regex(@"^private void PostHunters\(\)\s*\{\s*if \(!HeroesHunt\)\s*return;"), "an attack takes no defender formation off AI (#1370)");
+    }
+
+    [TestMethod]
+    public void OnAField_TheStalemateCharge_NeverReplacesTheDefendersTactics()
+    {
+        // #1105 slice 2: on a field the defenders run the engine's field tactics and TAOM's doctrine. ClearTacticOptions has no getter to restore them from
+        // (TeamAIComponent.cs:139-142), so the charge and its restore leave that list alone; only the attackers are set to charge, as at every wave start.
+        var adapter = Source(Field);
+        var charge = Body(adapter, "public void OrderCharge(");
+        var restore = Body(adapter, "public void RestoreDefenderTactic(");
+
+        Assert.IsTrue(At(charge, "if (IsField)") < At(charge, "SetOnlyTactic(defenders"), "the field branch returns before the defenders' swap");
+        StringAssert.Matches(charge, new Regex(@"if \(IsField\)\s*return;"));
+        Assert.IsTrue(At(restore, "if (IsField)") < At(restore, "SetOnlyTactic("), "the field branch returns before any tactic is set");
+        StringAssert.Matches(restore, new Regex(@"if \(IsField\)\s*return;"));
     }
 }

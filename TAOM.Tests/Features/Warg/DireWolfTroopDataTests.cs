@@ -47,7 +47,8 @@ public class DireWolfTroopDataTests
     {
         foreach (var id in line)
         {
-            var rosters = troops[id].Elements("Equipments").Elements("EquipmentRoster").ToList();
+            var rosters = troops[id].Elements("Equipments").Elements("EquipmentRoster")
+                .Where(r => (string)r.Attribute("civilian") != "true").ToList();
             Assert.IsTrue(rosters.Count > 0, id + " has no battle roster");
             foreach (var roster in rosters)
             {

@@ -230,7 +230,8 @@ whole) is in [menu-link-colors.md](../../features/menu-link-colors.md) "The load
   `Main/_Module/GUI/PreFabs/FactionUI/TAOMFieldCampOverlay.xml` and `.../FieldCamp/TaomFieldCampOverlay.xml` differ
   only by letter case and are both live. `Client/Features/FieldCamp/UI/FieldCampMapView.cs:61` loads `TaomFieldCampOverlay`;
   `Main/Features/FactionUI/Menus/FrontEndMovieService.cs:129-130` swaps in the themed `TAOMFieldCampOverlay`, and
-  `Hooks/GauntletLayerLoadMoviePatch.cs:38` skips the swap under co-op, as does a failed themed build. The files
+  `Hooks/GauntletLayerLoadMoviePatch.cs` skips the swap under a co-op mod TAOM cannot probe
+  (`ThemedMapBarCoopPolicy`), as does a failed themed build. The files
   differ in content. They cannot collide today (different folders, different lowercased depot keys, two distinct
   stems). A future engine build with a case-insensitive comparer would assert and keep one of them.
 - **A second `.fnt` with the same stem under a different path throws.** `FontFactory.LoadAllFonts` (`:83-90`) calls

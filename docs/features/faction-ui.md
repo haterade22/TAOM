@@ -69,6 +69,22 @@ editor are themed only inside character creation, so the barber and the campaign
 vanilla. A themed prefab missing from the install keeps the vanilla screen with one warning, and a
 themed movie that throws while building falls back to vanilla's and is not tried again until restart.
 
+**The campaign map bar under co-op.** The themed `TAOMMapBar`, the themed Camp icon beside its clock
+(`TAOMFieldCampOverlay`) and the themed army panel cut at its stats plate (`TAOMArmyOverlay`,
+[campaign-army-panel.md](campaign-army-panel.md)) swap together, and since v2.0.42 they swap under co-op too.
+`GauntletLayerLoadMoviePatch` keeps vanilla's for all three only when `ThemedMapBarCoopPolicy.KeepsNativeMapBar`
+is true: `ICoopSessionProvider.ShouldDeferToHost` and no session TAOM can see (`!IsSessionActive`). That is the
+reading under a co-op mod whose roles TAOM cannot probe (BannerlordTogether), whose own extensions to vanilla's MapBar
+prefab would not reach the themed one, and after a failed Coop role bind (as for the camp button, [field-camp.md](field-camp.md)
+"Co-op"). A BannerlordCoop client, its server process and solo play with the Coop
+module enabled all get the themed bar. Until v2.0.42 the swap was skipped whenever a co-op module was merely
+loaded (`CoopPresence.IsActive`), because the themed clock's fast-forward buttons bind `TimeAccelerationMixin`,
+which the co-op UI registration dropped. The mixin is now registered under co-op and only forwards vanilla's time
+change on a deferring peer, and the themed Extra Fast Forward hides there
+([time-acceleration.md](time-acceleration.md), "Under co-op"). BannerlordCoop patches the map bar's view models,
+not its prefab, so nothing of Coop's is lost by the swap. Pinned by `ThemedMapBarCoopPolicyTests` and
+`CoopPresenceReadGateTests`.
+
 ### Character creation
 
 - **Faction screen.** `FactionScreenLauncher` plugs into FactionMap's culture stage through
@@ -456,6 +472,10 @@ career page and into the game. Owed:
     Switcher's panel is offered. Start a second campaign without restarting: no pick or takeover carries over.
 13. Known limitation to note, not fix: open Custom Battle from the main menu and come back; the vanilla
     theme may now play under the menu video (Kysaro's module behaved the same).
+14. Co-op (BannerlordCoop): join a session as a client. The themed map bar and the themed Camp icon show;
+    Pause, Play and Fast Forward change the speed for every player through the server; Extra Fast Forward is
+    hidden. Solo with the Coop module enabled, before any co-op session in that process, shows Extra Fast Forward
+    and it runs at the configured speed (Coop's patches stay installed after a session ends).
 
 ## Changelog
 
@@ -485,6 +505,9 @@ career page and into the game. Owed:
   `spc_wanderer_rohan_9` (#762). They spawned before, but their culture's `notable_templates` did not name
   them, and the tab reads that list. `RenamedCultureWandererListTests` now checks every culture,
   the ones `taom_spcultures.xml` defines as well.
+
+- 2026-11-22 (v2.0.42): the themed map bar and Camp icon show under BannerlordCoop too; only a co-op mod TAOM
+  cannot probe keeps the native bar (`ThemedMapBarCoopPolicy`).
 
 ## GitHub Issue
 

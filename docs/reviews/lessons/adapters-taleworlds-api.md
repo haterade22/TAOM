@@ -2146,3 +2146,27 @@ player and on the co-op peer that owns the victim; on another peer Coop forwards
 **Prevent:** when a second feature needs a per-agent engine switch (a callback flag, an agent flag bit, a speed limit), move the write into one owner type with a claim per feature (`AiInputCallbackClaims` over `OwnerClaimLedger`), switch on with the first claim and off with the last, and make each feature's callback answer only while that feature holds its own claim. Pin the single writer with a source scan over `Main` and `Client`. List every writer of the switch, vanilla first, before the design, as the architecture rule "Writers before gates" asks.
 
 **Source:** [rca-stamina-phase0-2026-11-19.md](../rca-stamina-phase0-2026-11-19.md) and [stamina.md](../../features/stamina.md), "The shared AI input flag".
+
+### A soldier who spawns into his own formation lands where the formation's order position is on that tick (#1105 slice 2, 2026-11-21)
+
+A field story mission positioned the attackers' formation at its start place once, when the wave's batch opened, and spawned the batch over several ticks with `SpawnsIntoOwnFormation`. The part of the batch that spawned on the second tick appeared more than 25 m away, beside the defenders: 4 of 12 skirmishers in run `E:/Temp/scenario-runs/20261121-183158`. The spawn check read "ok", because on a siege it measures only the height.
+
+- **Why missed:** the mechanism was copied from the defenders' recorded muster places, where every batch spawns whole on one tick and the formation holds a Move order. An attacker formation under AI moves its order position between ticks, and nothing in the copy said that the place lasts one tick only.
+- **Prevent:** when a spawn takes its frame from a formation (`SpawnsIntoOwnFormation`), set the formation's position before every call that spawns, not once per batch. Give each new spawn path a check that measures ground distance from the intended place, and read it in the first run.
+- **Source:** [story-missions.md](../../features/story-missions.md) "Field missions (slice 2)"; `LongDefeatDirector.Effects.cs` `SpawnBatch`, `LongDefeatDirectorFieldTests`.
+
+### Soldiers held at a post fight only where the enemy must come to them (#1105 slice 2, 2026-11-21)
+
+The free heroes of a story mission stand as one group, off AI control, under a Move order at a wall lane. The first field mission kept that. In the open the heroes were passive: Aragorn landed 4 hits in 6 minutes and took 820 damage, mostly from skirmishers who stood off (run `20261121-184542`). The same heroes under the team AI killed 12 attackers in 52 s (run `20261121-185311`). A whole wave that arrives together in the open also kills a hero in about five seconds, where a wall lets attackers come a few at a time.
+
+- **Why missed:** the group and its order were designed and proven on a wall, where the ladders bring the enemy to the post. The field slice changed the scene and kept the stance, and no test can show how an AI formation fights.
+- **Prevent:** when a mission mode moves to a new kind of scene, list what the old scene did for it (funnelled the enemy, protected flanks, limited how many arrive at once) and decide each again. Judge the fight in the first unattended run by hits landed and damage taken per minute, not by the end result alone.
+- **Source:** [story-missions.md](../../features/story-missions.md) "Field missions (slice 2)"; the `[HeroAbilities][Combat] summary` lines of the two runs.
+
+### An engine action that can refuse or defer is a request: the caller acts on its answer (#1105, 2026-11-22)
+
+**Why missed:** `KillHeroInBattle` already read the result back from the hero (Killed, Deferred, Refused), and the chronicle used that answer for a log line only. A test named `AKillTheEngineDefers_StillResolvesTheEvent` wrote the behaviour down as intended, because "the end of his battle finishes the mark". The builder and two review lenses read `KillCharacterAction.ApplyInternal` to the death mark and stopped. Nobody read the two completion paths to their conditions: `AgingCampaignBehavior.DailyTickHero` returns with the life and death cycle off and asks `Hero.CanDie` first, and `Hero.CanDie` lets any issue or quest veto a death. So a hero the engine left alive was announced dead, and the event paid its effects.
+
+**Prevent:** when an adapter returns what the engine did, every value needs a branch in the caller that changes state; a log line alone is not a branch, and a test named "still resolves" for a value that is not success is the warning sign. Before a comment or a doc says that the engine "finishes" something later, read each completion path to its first `return` and write its conditions beside the claim. When state must wait for the engine, prefer what is already saved (here the window's close day and the engine's own death mark) with a daily retry over a new saved field. A retry must keep the engine's own guard: a second `ApplyByBattle` on a marked hero kills him inside his battle, which the engine's daily tick never does.
+
+**Source:** Codex adversarial review of 2026-11-22, F1 (HIGH); `ChronicleService.ResolveHero`, `ChronicleWorldAdapter.KillHeroInBattle`; `docs/reviews/rca-story-missions-codex-2026-11-22.md`.

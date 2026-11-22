@@ -5188,7 +5188,7 @@ After #1354 the gate and the catalogue found stylesheets through `SubModule.xml`
 ### A tool that models one game mode must name every mode the mod plays (shield gate, #1398, 2026-11-16)
 The first #1398 change kept only rows for Campaign. On the live install that dropped TAOM's own Fords of War `fords_items.xml` (a CustomGame row) from the gate, and it made 429 pieces that Native's campaign `weapon_descriptions.xml` lists, but only its multiplayer file defines, read as dangling. The side-by-side run against trunk showed both before any commit.
 - **Why missed:** the issue text named only the multiplayer files to drop; nobody listed the game types TAOM itself uses.
-- **Prevent:** before filtering data by game type, list the files the filter drops on the live install (one line of Python over `other_game_files`) and read each name. Name the mod's game types in one constant (`GAME_TYPES`).
+- **Prevent:** before filtering data by game type, list the files the filter drops on the live install (one line of Python over `loaded_files`, which replaced `other_game_files` in #1404) and read each name. Name the mod's game types in one constant (`GAME_TYPES`).
 - **Source:** issue #1398.
 
 ### A ladder rule reaches every tool that prices against the ladder (shield view, #631, 2026-11-16)

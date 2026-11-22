@@ -51,7 +51,7 @@ internal sealed partial class LongDefeatDirector
 
         // A defending lord on foot joins the foot formation's open batch, which closes after him; a mounted one joins the cavalry formation, so the batch closes on its own.
         // When the player attacks, the lord spawns alone into the attackers' foot, so the slot reserved here is never filled; that is harmless (the formation is laid out for one more while it spawns).
-        var joinsBatch = fx.SpawnPlayer && !LordRides;
+        var joinsBatch = fx.SpawnPlayer && !LordRides && _plan.Field == null;
         var closes = joinsBatch ? new List<FormationSlot>() : null;
         foreach (var batch in fx.DefenderBatches)
             SpawnBatch(batch, false, joinsBatch, standing, closes);
@@ -165,8 +165,11 @@ internal sealed partial class LongDefeatDirector
                 _field.PlaceFormation(b.Slot, b.BatchTotal + reserve, attackers);
             else
                 _field.BeginBatch(b.Slot, b.BatchTotal + reserve, attackers);
-            if (!attackers)
-                UseMusterPlace(b.Slot);
+            UseMusterPlace(b.Slot, attackers);
+        }
+        else if (attackers && _fieldStarts != null)
+        {
+            UseMusterPlace(b.Slot, true);
         }
 
         var report = _field.SpawnBatch(b, attackers);
@@ -189,20 +192,30 @@ internal sealed partial class LongDefeatDirector
         }
     }
 
-    // Every defender batch, garrison or bought pack, goes to the recorded place of its class, since the formation's own order position moves with the AI. Attackers never do.
-    private void UseMusterPlace(FormationSlot slot)
+    // Every defender batch, garrison or bought pack, goes to the recorded place of its class, since the formation's own order position moves with the AI. Attackers do so only on a field run.
+    private void UseMusterPlace(FormationSlot slot, bool attackers)
     {
-        var frame = _plan.Muster?.For(slot);
-        if (frame == null || _musterFallback.Contains(slot))
-            return;
+        var recorded = attackers || _musterFallback.Contains(slot) ? null : _plan.Muster?.For(slot);
+        if (recorded != null)
+        {
+            if (_field.SetMusterFrame(slot, recorded))
+                return;
 
-        if (_field.SetMusterFrame(slot, frame))
-            return;
+            _musterFallback.Add(slot);
+            LongDefeatChecks.Record(_outcomes, LongDefeatChecks.MusterId, _mission + slot, LongDefeatChecks.MusterPlaceLost(slot));
+            _logger.LogWarning($"{Tag}[Muster] the recorded {slot} place ({F1(recorded.X)}, {F1(recorded.Y)}, {F1(recorded.Z)}) has no navmesh; defenders of that class spawn at the {(_fieldStarts == null ? "scene's frame" : "field's start place")}");
+        }
 
-        _musterFallback.Add(slot);
-        LongDefeatChecks.Record(_outcomes, LongDefeatChecks.MusterId, _mission + slot, LongDefeatChecks.MusterPlaceLost(slot));
-        _logger.LogWarning($"{Tag}[Muster] the recorded {slot} place ({F1(frame.X)}, {F1(frame.Y)}, {F1(frame.Z)}) has no navmesh; defenders of that class spawn at the scene's frame");
+        var start = attackers ? AttackerStart() : _fieldStarts?.Defenders;
+        if (start != null && !_field.SetMusterFrame(slot, start, attackers))
+            throw new InvalidOperationException($"the {(attackers ? "attackers'" : "defenders'")} start place ({F1(start.X)}, {F1(start.Y)}, {F1(start.Z)}) has no navmesh");
     }
+
+    /// <summary>Where the attackers' next batch starts on a field run: the player's own band at its one place, the attackers of a defence at the place farther from the defenders.</summary>
+    private MusterFrame? AttackerStart() =>
+        _fieldStarts == null || _playerAttacks || _fieldStarts.AttackersBehind == null
+            ? _fieldStarts?.Attackers
+            : _fieldStarts.AttackersFartherFrom(_field.StandingDefenderPoints());
 
     private void LogSpawnLevel(SoldierBatch b, bool attackers, LdSpawnReport report, bool last)
     {

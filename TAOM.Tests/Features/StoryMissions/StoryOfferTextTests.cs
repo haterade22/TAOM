@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.StoryMissions;
 using TAOM.Features.StoryMissions.Domain;
@@ -63,5 +64,34 @@ public class StoryOfferTextTests
     {
         StringAssert.StartsWith(StoryOfferText.Menu(null, StorySide.Defending, null), "{=taom_story_offer_none}");
         StringAssert.StartsWith(StoryOfferText.Menu(null, StorySide.Attacking, StoryResult.Held), "{=taom_story_offer_none}");
+    }
+
+    [TestMethod]
+    public void AHeroStory_HasItsOwnLines_AndNamesNoFortress()
+    {
+        // #1105 slice 3: the Breaking of the Fellowship has no walls and no {TARGET}.
+        var both = new StoryChoices(true, true);
+        var lines = new[]
+        {
+            StoryOfferText.PopupBody(both, hero: true),
+            StoryOfferText.PopupBody(new StoryChoices(true, false), hero: true),
+            StoryOfferText.PopupBody(new StoryChoices(false, true), hero: true),
+            StoryOfferText.PopupAccept(both, hero: true),
+            StoryOfferText.Menu(both, StorySide.Defending, null, hero: true),
+            StoryOfferText.Menu(both, StorySide.Defending, StoryResult.HeroLives, hero: true),
+            StoryOfferText.Menu(both, StorySide.Attacking, StoryResult.HeroLives, hero: true),
+            StoryOfferText.Menu(both, StorySide.Defending, StoryResult.HeroDies, hero: true),
+            StoryOfferText.Menu(both, StorySide.Attacking, StoryResult.HeroDies, hero: true),
+            StoryOfferText.Menu(both, StorySide.Defending, StoryResult.Undecided, hero: true),
+        };
+
+        Assert.AreEqual(lines.Length, lines.Distinct().Count(), "each state has its own line");
+        foreach (var line in lines)
+        {
+            Assert.IsFalse(line.Contains("{TARGET}"), line);
+            StringAssert.StartsWith(line, "{=taom_story_breaking_", line);
+        }
+
+        Assert.AreNotEqual(StoryOfferText.PopupBody(both), StoryOfferText.PopupBody(both, hero: true));
     }
 }

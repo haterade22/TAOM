@@ -51,6 +51,8 @@ internal sealed partial class FakeLongDefeatField
 
         if (PlayerAttacks)
             return new LdHeroReport(true, null, true, false, 0, hero.HealthFactor, "sword", Held: false, Strangers: 5, Order: "Move", Enemy: true);
+        if (Starts != null)
+            return new LdHeroReport(true, null, true, false, 0, hero.HealthFactor, "sword", Held: false, Strangers: 0, Order: "Charge", Loose: true);
 
         return new LdHeroReport(true, null, true, false, HeroGroup.FormationIndex, hero.HealthFactor, "sword", Held: true, Strangers: 0, Order: "Move");
     }

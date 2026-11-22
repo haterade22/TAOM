@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -401,5 +402,153 @@ public class DiplomacyServiceTests
     public void RefusesCallToWar_UnlistedPair_ReturnsFalse()
     {
         Assert.IsFalse(_sut.RefusesCallToWar("empire", "empire_w"));
+    }
+
+    // #1105 slice 5: a permanent alliance the Hornburg's repulsed block ends. The pair is recorded first, so the EndAlliance prefix
+    // (AllianceActionHook, which reads the tier) lets the engine call through.
+    private void Allied(bool allied) => _allianceAdapter.AreAllied(Arg.Any<string>(), Arg.Any<string>()).Returns(allied);
+
+    [TestMethod]
+    public void EndPermanentAlliance_AlliedPermanentPair_EndsItAndReadsNeutralWhileTheEngineIsAsked()
+    {
+        Allied(true);
+        AllianceTier? tierDuringCall = null;
+        _allianceAdapter.When(a => a.EndAlliance("vlandia", "empire_w")).Do(_ =>
+        {
+            tierDuringCall = _sut.GetRelationshipTier("empire_w", "vlandia");
+            Allied(false);
+        });
+
+        var result = _sut.EndPermanentAlliance("vlandia", "empire_w", "test");
+
+        Assert.AreEqual(PermanentAllianceEnd.Ended, result);
+        Assert.AreEqual(AllianceTier.Neutral, tierDuringCall, "the pair is recorded before the engine runs its EndAlliance prefix");
+        Assert.IsTrue(_sut.IsBrokenAlliance("empire_w", "vlandia"));
+        Assert.AreEqual(AllianceTier.Neutral, _sut.GetRelationshipTier("empire_w", "vlandia"));
+    }
+
+    [TestMethod]
+    public void EndPermanentAlliance_ASecondCall_IsAlreadyEndedAndAsksTheEngineNoMore()
+    {
+        Allied(true);
+        _allianceAdapter.When(a => a.EndAlliance(Arg.Any<string>(), Arg.Any<string>())).Do(_ => Allied(false));
+        _sut.EndPermanentAlliance("empire_w", "vlandia", "test");
+        _allianceAdapter.ClearReceivedCalls();
+
+        Assert.AreEqual(PermanentAllianceEnd.AlreadyEnded, _sut.EndPermanentAlliance("empire_w", "vlandia", "test"));
+        _allianceAdapter.DidNotReceive().EndAlliance(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void EndPermanentAlliance_APairWithNoPermanentRow_IsNotPermanentAndRecordsNothing()
+    {
+        var result = _sut.EndPermanentAlliance("erebor", "mirkwood", "test");
+
+        Assert.AreEqual(PermanentAllianceEnd.NotPermanent, result);
+        Assert.IsFalse(_sut.IsBrokenAlliance("erebor", "mirkwood"));
+        _allianceAdapter.DidNotReceive().EndAlliance(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void EndPermanentAlliance_NotAllied_RecordsThePairWithoutAskingTheEngine()
+    {
+        Allied(false);
+
+        Assert.AreEqual(PermanentAllianceEnd.Ended, _sut.EndPermanentAlliance("empire_w", "vlandia", "test"));
+        Assert.IsTrue(_sut.IsBrokenAlliance("empire_w", "vlandia"));
+        _allianceAdapter.DidNotReceive().EndAlliance(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void EndPermanentAlliance_TheEngineLeavesThemAllied_IsStillAllied()
+    {
+        Allied(true);
+
+        Assert.AreEqual(PermanentAllianceEnd.StillAllied, _sut.EndPermanentAlliance("empire_w", "vlandia", "test"));
+    }
+
+    [TestMethod]
+    public void BrokenPair_NeverBlocksTheRestOfTheTable()
+    {
+        Allied(false);
+        _sut.EndPermanentAlliance("empire_w", "vlandia", "test");
+
+        Assert.AreEqual(AllianceTier.Permanent, _sut.GetRelationshipTier("erebor", "sturgia"));
+        Assert.AreEqual(AllianceTier.Hostile, _sut.GetRelationshipTier("empire_w", "empire_s"));
+    }
+
+    [TestMethod]
+    public void BrokenPair_IsNotAllowedAnAllianceAndScoresNegative()
+    {
+        Allied(false);
+        _sut.EndPermanentAlliance("empire_w", "vlandia", "test");
+
+        Assert.IsFalse(_sut.IsAllianceAllowed("empire_w", "vlandia"));
+        Assert.AreEqual(-10000f, _sut.GetAllianceScoreModifier("vlandia", "empire_w"));
+    }
+
+    [TestMethod]
+    public void BrokenPair_StaysBroken_AlsoWhenAPlayerRulesOneOfTheTwo()
+    {
+        Allied(false);
+        _sut.EndPermanentAlliance("empire_w", "vlandia", "test");
+
+        Assert.AreEqual(-10000f, _sut.GetAllianceScoreModifier("vlandia", "empire_w", involvesPlayer: true), "the player's freedom does not undo a broken alliance");
+        Assert.IsFalse(_sut.IsAllianceDecisionAllowed("empire_w", "vlandia", involvesPlayer: true));
+        Assert.IsFalse(_sut.CanPlayerProposeAlliance("empire_w", "vlandia"));
+        Assert.IsFalse(_sut.FormPlayerAlliance("vlandia", "empire_w"));
+    }
+
+    [TestMethod]
+    public void BrokenPair_IsNotAllowedToGoToWar()
+    {
+        _alignmentService.AreSameAlignment("empire_w", "vlandia").Returns(false);
+        Allied(false);
+        _sut.EndPermanentAlliance("empire_w", "vlandia", "test");
+
+        Assert.IsFalse(_sut.IsWarAllowed("empire_w", "vlandia"), "a broken pair keeps its war veto whatever its alignment");
+    }
+
+    [TestMethod]
+    public void EnforcePermanentAlliances_SkipsABrokenPair()
+    {
+        Allied(false);
+        _sut.EndPermanentAlliance("empire_w", "vlandia", "test");
+        _allianceAdapter.ClearReceivedCalls();
+
+        _sut.EnforcePermanentAlliances();
+
+        _allianceAdapter.DidNotReceive().StartAlliance("empire_w", "vlandia");
+        _allianceAdapter.DidNotReceive().MakePeace("empire_w", "vlandia");
+        _allianceAdapter.Received().StartAlliance("erebor", "sturgia");
+    }
+
+    [TestMethod]
+    public void RestoreBrokenAlliances_KeepsOnlyPermanentRowsAndRoundTrips()
+    {
+        _sut.RestoreBrokenAlliances(new[] { "vlandia|empire_w", "erebor|mirkwood", "garbage", "", null! });
+
+        Assert.IsTrue(_sut.IsBrokenAlliance("empire_w", "vlandia"));
+        Assert.IsFalse(_sut.IsBrokenAlliance("erebor", "mirkwood"), "a pair with no Permanent row is dropped");
+        CollectionAssert.AreEqual(new[] { "empire_w|vlandia" }, _sut.BrokenAlliancesForSave().ToArray());
+    }
+
+    [TestMethod]
+    public void RestoreBrokenAlliances_Null_LeavesTheSetEmpty()
+    {
+        _sut.RestoreBrokenAlliances(null);
+
+        Assert.AreEqual(0, _sut.BrokenAlliancesForSave().Count);
+    }
+
+    [TestMethod]
+    public void ResetBrokenAlliances_EmptiesTheSetAndTheTierReturns()
+    {
+        _sut.RestoreBrokenAlliances(new[] { "empire_w|vlandia" });
+
+        _sut.ResetBrokenAlliances();
+
+        Assert.IsFalse(_sut.IsBrokenAlliance("empire_w", "vlandia"));
+        Assert.AreEqual(AllianceTier.Permanent, _sut.GetRelationshipTier("empire_w", "vlandia"));
     }
 }

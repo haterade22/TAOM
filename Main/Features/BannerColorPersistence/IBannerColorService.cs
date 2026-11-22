@@ -12,4 +12,7 @@ public interface IBannerColorService
     bool IsUniqueSecondaryColorEnabled();
     bool IsAgentVisualColorsEnabled();
     bool IsConversationTableauColorsEnabled();
+
+    /// <summary>True on a co-op client inside Clan.PreAfterLoad: its banners are the server's, so the vanilla load repaint is skipped.</summary>
+    bool ShouldSkipLoadRepaint(bool insideClanLoad);
 }

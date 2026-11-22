@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TAOM.Features.StoryMissions.Domain;
 
 namespace TAOM.Features.Autorun.Scenario;
@@ -28,6 +29,7 @@ internal enum AutorunScreen
 /// (<c>MenuContext.InvokeConsequence</c> after <c>GameMenu.GetMenuOptionConditionsHold</c>), from the application tick: never from the
 /// console and never inside the campaign tick. They skip the cheat-mode gate of the <c>taom.story_open</c> console command, which is
 /// safe because only the arm file starts the driver.
+/// The offer members (#1105 slices 3 to 5) drive the real offer path of <c>StoryOfferBehavior</c>, not the dev menu.
 /// </summary>
 internal interface ICampaignAutorunHost
 {
@@ -119,4 +121,28 @@ internal interface ICampaignAutorunHost
 
     /// <summary>Runs one console command line ("name arg arg") as the console does and returns what it printed (#1434).</summary>
     string RunConsoleCommand(string commandLine);
+
+    /// <summary>The event id of the offer the story offer behavior holds (its popup shown, no answer yet, or its menu open), or null.</summary>
+    string? PendingOfferEvent { get; }
+
+    /// <summary>The sides the pending offer allows, for the log; empty when none is pending.</summary>
+    string PendingOfferChoices { get; }
+
+    /// <summary>An inquiry is open: the offer's popup, when <see cref="PendingOfferEvent"/> is set.</summary>
+    bool InquiryActive { get; }
+
+    /// <summary>
+    /// Presses the open popup's affirmative button on the path a click takes: the inquiry's affirmative action, then the close. False
+    /// when no inquiry is open or its button is not shown or not enabled. <paramref name="title"/> is the popup's title, for the log.
+    /// </summary>
+    bool AcceptOfferPopup(out string title);
+
+    /// <summary>The map shows the story offer menu.</summary>
+    bool OfferMenuShown { get; }
+
+    /// <summary>
+    /// Picks the first of these options the offer menu offers, as a click does, and returns its id; null when the menu is not shown or none is
+    /// offered. <paramref name="botPlays"/> makes the bot play the lord in the mission the option opens.
+    /// </summary>
+    string? ChooseOfferOption(IReadOnlyList<string> optionIds, bool botPlays);
 }

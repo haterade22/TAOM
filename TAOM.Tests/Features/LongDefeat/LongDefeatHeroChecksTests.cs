@@ -332,4 +332,27 @@ public class LongDefeatHeroChecksTests
         Assert.AreEqual(CheckResult.Fail, verdict.Result);
         StringAssert.Contains(verdict.Detail, " held=1 strangers=2 order=Stop ");
     }
+
+    [TestMethod]
+    public void Spawned_ALooseHero_PassesInHisClassFormationUnderTheAi()
+    {
+        // #1105 slice 2: on a field run a hero of the player's side stands in his class formation under the team AI.
+        var hero = new HeroSpawn("boromir", "taom_hero_boromir", 8f);
+        var report = new LdHeroReport(true, null, false, false, 0, 8f, "sword", Held: false, Strangers: 0, Order: "Charge", CampaignCharacter: true, Loose: true);
+
+        var verdict = LongDefeatHeroChecks.Spawned(hero, report);
+
+        Assert.AreEqual(CheckResult.Pass, verdict.Result, verdict.Detail);
+        StringAssert.EndsWith(verdict.Detail, "group=class");
+        Assert.IsFalse(verdict.Detail.Contains("side=enemy"));
+    }
+
+    [TestMethod]
+    public void Spawned_ALooseHero_FailsInTheHeroesOwnFormation()
+    {
+        var hero = new HeroSpawn("boromir", "taom_hero_boromir", 8f);
+        var report = new LdHeroReport(true, null, false, false, HeroGroup.FormationIndex, 8f, "sword", Held: true, Strangers: 0, Order: "Move", CampaignCharacter: true, Loose: true);
+
+        Assert.AreEqual(CheckResult.Fail, LongDefeatHeroChecks.Spawned(hero, report).Result);
+    }
 }

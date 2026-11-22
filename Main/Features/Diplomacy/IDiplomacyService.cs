@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TAOM.Features.Diplomacy.Models;
 
 namespace TAOM.Features.Diplomacy;
@@ -42,6 +43,22 @@ public interface IDiplomacyService
 
     // A callToWarRefusals row in diplomacy.json: the called kingdom refuses any call to war against the target.
     bool RefusesCallToWar(string calledKingdomId, string targetKingdomId);
+
+    /// <summary>
+    /// Ends the permanent alliance of a pair (#1105 slice 5): records it as broken, so the pair reads Neutral and never goes to war with
+    /// each other, then ends the engine alliance. <see cref="PermanentAllianceEnd.NotPermanent"/> for a pair with no Permanent row.
+    /// </summary>
+    PermanentAllianceEnd EndPermanentAlliance(string kingdomAId, string kingdomBId, string why);
+
+    bool IsBrokenAlliance(string kingdomAId, string kingdomBId);
+
+    /// <summary>The broken pairs as sorted <c>"a|b"</c> strings, for the save.</summary>
+    IReadOnlyList<string> BrokenAlliancesForSave();
+
+    /// <summary>Replaces the broken pairs from a save; keeps only pairs that still have a Permanent row.</summary>
+    void RestoreBrokenAlliances(IEnumerable<string>? saved);
+
+    void ResetBrokenAlliances();
 
     void EstablishInitialAlliances();
     void EnforcePermanentAlliances();

@@ -90,7 +90,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         // A lord who attacks (#1409) also gets the attackers' foot frame, the place his spawn is meant to be near. inside= is the test MissionBoundaryCrossingHandler makes for the
         // main agent (MissionBoundaryCrossingHandler.cs:210): a body outside it starts the retreat countdown, and the run ends Abandoned.
         var owner = PlayerSideTeam?.PlayerOrderController?.Owner;
-        var frameText = PlayerAttacks && FrameOf(_mission.AttackerTeam, FormationClass.Infantry, true) is { } frame ? $" frame={At(frame)}" : "";
+        var frameText = !IsField && PlayerAttacks && FrameOf(_mission.AttackerTeam, FormationClass.Infantry, true) is { } frame ? $" frame={At(frame)}" : "";
         var inside = _mission.IsPositionInsideBoundaries(main.Position.AsVec2) ? "true" : "false";
         return $"main={main.Name} owner={owner?.Name?.ToString() ?? "null"} controller={main.Controller} z={Num(main.Position.z)} at={At(main.Position)}{frameText} inside={inside}";
     }

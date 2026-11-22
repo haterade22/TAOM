@@ -261,7 +261,10 @@ that value replaced). Ammo slots are never touched and a class never changes. Tw
   the SkillSet with the inline rows laid over it (`sync_lord_inline_skills.effective_skills`, #626),
   as `UPGRADE_SKILL_REGRESSION` judges it. A templated troop is never written: a cell or a clamp it
   needs raises `LadderError` naming its SkillSet, because an inline row that differs from the
-  SkillSet is `SKILL_TEMPLATE_MISMATCH`. No troop file carries one today. The 22
+  SkillSet is `SKILL_TEMPLATE_MISMATCH`. The readers do the same: `troop_values` and `inversions` take
+  `skill_sets` and read a templated troop's Bow or Crossbow through its SkillSet (the validator and
+  `rebalance_ranged_ladders.py` pass them; #1490), and `analyze_troop_balance.py` loads them for
+  `rebalance_troops.load_roster`. No troop file carries one today. The 22
   `characters/npcs_*.xml` files do, with no inline rows; all 1,164 templated lords in
   `characters/lords.xml` carry 18 inline rows each, which 1.4.8 ignored and 1.5.3 applies over the
   template. They equal their templates (`sync_lord_inline_skills.py`, gated by

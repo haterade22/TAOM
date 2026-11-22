@@ -29,11 +29,16 @@ internal sealed partial class LongDefeatDirector
     /// <summary>A rise waiting for its read-back: the wave it precedes, where it was booked, the place asked, the field's answer, and the tick it was served on.</summary>
     private sealed record RiseWatch(int Wave, string At, LdPlace? Place, LdRise Result, int Tick);
 
-    /// <summary>The place the keep rise uses (D49): the recorded keep, else the scene's frame. The boot's <c>fort-points</c> check may move it to the scene's frame.</summary>
+    /// <summary>
+    /// The place the keep rise uses (D49): the recorded keep, else the scene's frame. The boot's <c>fort-points</c> check may move it to the scene's frame.
+    /// A run on a field scene (#1105 slice 2) has none, though its mission may record a keep: the adapter spawns the lord at his side's own start place,
+    /// so the rise is booked <c>respawn</c>, as an attacker's is, and nothing is measured.
+    /// </summary>
     private void ChooseRisePlace()
     {
-        _risePlace = _keepAt is { } keep ? LdPlace.At(keep) : null;
-        _riseLabel = _plan.Keep != null ? "recorded" : "scene";
+        var field = _plan.Field != null;
+        _risePlace = !field && _keepAt is { } keep ? LdPlace.At(keep) : null;
+        _riseLabel = field ? "respawn" : _plan.Keep != null ? "recorded" : "scene";
     }
 
     /// <summary>The recorded keep has no navmesh or lies outside the boundary: the rise falls back to the scene's own frame and says so.</summary>

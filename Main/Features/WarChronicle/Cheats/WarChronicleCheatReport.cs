@@ -18,7 +18,7 @@ namespace TAOM.Features.WarChronicle.Cheats;
 internal static class WarChronicleCheatReport
 {
     internal const string AddUsage =
-        "Format is \"taom.war_effect_add <kingdomId> <VolunteerRate|PrisonerEscape> <magnitude> <days>\".\n"
+        "Format is \"taom.war_effect_add <kingdomId> <VolunteerRate|PrisonerEscape|PartyMorale> <magnitude> <days>\".\n"
         + "Adds a timed effect from source \"console\" to a kingdom: magnitude is a fraction from -1 to 1 "
         + "(0.15 is +15%), days from just above 0 to 365. Run it again to refresh or change the same effect.";
 
@@ -95,7 +95,7 @@ internal static class WarChronicleCheatReport
         foreach (var e in effects)
         {
             var left = (e.EndTimeHours - nowHours) / 24d;
-            var timing = left > 0d ? Inv($"ends in {left:0.0} days") : "ended, removed at the next daily tick";
+            var timing = e.IsPermanent ? "permanent" : left > 0d ? Inv($"ends in {left:0.0} days") : "ended, removed at the next daily tick";
             sb.AppendLine(Inv($"[WarEffects]   {e.SourceId}: {e.KingdomId} {e.Kind} {e.Magnitude:+0.000;-0.000;+0.000}, {timing}"));
         }
 

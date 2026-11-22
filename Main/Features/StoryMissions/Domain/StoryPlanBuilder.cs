@@ -19,5 +19,7 @@ internal static class StoryPlanBuilder
             Offered = FortOffer.None,
             Locations = LocationOffer.None,
             FreeHeroes = definition.Heroes,
+            Field = definition.Field,
+            MustLive = definition.MustLive,
         };
 }

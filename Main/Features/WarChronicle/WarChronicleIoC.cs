@@ -19,6 +19,7 @@ public static class WarChronicleIoC
         container.Register<IWarChronicleSettingsProvider, WarChronicleSettingsProvider>(Reuse.Singleton);
         container.Register<IKingdomWarSnapshotAdapter, KingdomWarSnapshotAdapter>(Reuse.Singleton);
         container.Register<IWarEffectService, WarEffectService>(Reuse.Singleton);
+        container.Register<WarMoraleService>(Reuse.Singleton);
         container.Register<IPrisonerEscapeAdapter, PrisonerEscapeAdapter>(Reuse.Singleton);
         container.Register<WarEscapeService>(Reuse.Singleton);
         container.Register<WarEscapeDailyPass>(Reuse.Singleton);

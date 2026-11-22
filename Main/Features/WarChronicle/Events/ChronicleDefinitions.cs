@@ -47,16 +47,16 @@ public sealed class ChronicleEventDefinition
 
     public int OffsetDays { get; set; }
 
-    /// <summary>Siege only: how many days the window stays open.</summary>
+    /// <summary>A siege, and a narrative with a hero story: how many days the window stays open.</summary>
     public int WindowDays { get; set; }
 
     /// <summary>Siege only: the target settlement's StringId.</summary>
     public string? TargetSettlementId { get; set; }
 
-    /// <summary>Siege only: the attacking kingdoms, never containing the defender.</summary>
+    /// <summary>A siege: the attacking kingdoms, never containing the defender. A narrative with a hero story: the kingdoms whose side hunts the hero.</summary>
     public IReadOnlyList<string> Attackers { get; set; } = new string[0];
 
-    /// <summary>Siege only: the kingdom that must own the target when the window opens.</summary>
+    /// <summary>A siege: the kingdom that must own the target when the window opens. A narrative with a hero story: the kingdom whose side stands with the hero.</summary>
     public string? Defender { get; set; }
 
     /// <summary>A <c>{=taom_wc_*}English</c> text.</summary>
@@ -73,6 +73,9 @@ public sealed class ChronicleEventDefinition
 
     /// <summary>Narrative only.</summary>
     public ChronicleOutcomeDefinition? Occurred { get; set; }
+
+    /// <summary>Narrative with a hero story only (#1105 slice 3): what the event announces and pays when the hero lives.</summary>
+    public ChronicleOutcomeDefinition? Averted { get; set; }
 
     /// <summary>Siege only.</summary>
     public ChronicleOutcomeDefinition? Held { get; set; }
@@ -91,6 +94,7 @@ public sealed class ChronicleEventDefinition
         switch (state)
         {
             case ChronicleEventState.Occurred: return Occurred;
+            case ChronicleEventState.Averted: return Averted;
             case ChronicleEventState.Held: return Held;
             case ChronicleEventState.Fell: return Fell;
             default: return null;
@@ -114,14 +118,40 @@ public sealed class ChronicleStoryDefinition
 
     /// <summary>A <c>{=taom_wc_*}English</c> line for a Held fate; null falls back to the Held outcome's text.</summary>
     public string? FateText { get; set; }
+
+    /// <summary>
+    /// Narrative only (#1105 slice 3): the Hero id whose life the story decides. <see cref="MissionId"/> is then fought beside him and
+    /// <see cref="AttackMissionId"/> against him, and with no answer he dies. Null for a siege's story.
+    /// </summary>
+    public string? HeroId { get; set; }
+
+    /// <summary>
+    /// Optional (#1105 slice 5): what a lost player-led attack in <see cref="AttackMissionId"/> does besides resolving the window Held.
+    /// Needs an attack mission; a siege's story only.
+    /// </summary>
+    public ChronicleRepulsedDefinition? Repulsed { get; set; }
+}
+
+/// <summary>
+/// The <c>repulsed</c> block of a story (#1105 slice 5): the announcement text of the repulsed assault and the permanent alliance it
+/// ends. <see cref="Text"/> is a <c>{=taom_wc_*}English</c> line; null falls back to the Held outcome's text.
+/// </summary>
+public sealed class ChronicleRepulsedDefinition
+{
+    public string? Text { get; set; }
+
+    public string KingdomA { get; set; } = string.Empty;
+
+    public string KingdomB { get; set; } = string.Empty;
 }
 
 /// <summary>An Active story window the player has not declined: what the offer shows and launches.</summary>
 public sealed class ChronicleStoryOffer
 {
     public ChronicleStoryOffer(string eventId, string missionId, string title, string? targetSettlementId, IReadOnlyList<string> attackers,
-        string defender, string? attackMissionId)
+        string defender, string? attackMissionId, string? heroId = null)
     {
+        HeroId = heroId;
         EventId = eventId;
         MissionId = missionId;
         Title = title;
@@ -130,6 +160,9 @@ public sealed class ChronicleStoryOffer
         Defender = defender;
         AttackMissionId = attackMissionId;
     }
+
+    /// <summary>The hero whose life the story decides (#1105 slice 3), or null for a fortress window.</summary>
+    public string? HeroId { get; }
 
     /// <summary>The kingdom that holds the target: Story Missions reads its side to decide who may defend (#1326).</summary>
     public string Defender { get; }
@@ -172,7 +205,11 @@ public sealed class ChronicleEffectDefinition
     /// <summary>A fraction: 0.15 is +15%. Finite, non-zero, at most 0.25 either way.</summary>
     public float Magnitude { get; set; }
 
+    /// <summary>Days the effect lasts, 1 to 60; 0 on a <see cref="Permanent"/> row.</summary>
     public int DurationDays { get; set; }
+
+    /// <summary>The effect never ends (<see cref="WarEffect.PermanentEndHours"/>); the row then has no duration.</summary>
+    public bool Permanent { get; set; }
 }
 
 /// <summary>An optional War of the Ring momentum award (M6) to one side, in displayed units.</summary>

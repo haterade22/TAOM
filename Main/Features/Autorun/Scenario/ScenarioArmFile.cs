@@ -18,8 +18,10 @@ internal static class ScenarioArmFile
         var days = ScenarioPlan.DefaultDays;
         var speed = ScenarioPlan.DefaultSpeed;
         double stall = ScenarioPlan.DefaultStallSeconds, wallLimit = ScenarioPlan.DefaultWallLimitSeconds, missionLimit = ScenarioPlan.DefaultMissionLimitSeconds;
-        var quit = false;
+        bool quit = false, openByDate = false;
         var commands = new List<string>();
+        var after = new List<string>();
+        string offerEvent = "-", choice = "-";
 
         foreach (var raw in text.TrimStart('﻿').Split('\n'))
         {
@@ -52,12 +54,19 @@ internal static class ScenarioArmFile
                 case "command":
                     if (value.Length > 0) commands.Add(value);
                     break;
+                case "after":
+                    if (value.Length > 0) after.Add(value);
+                    break;
+                case "event": offerEvent = value.Length == 0 ? "-" : value; break;
+                case "choice": choice = value.Length == 0 ? "-" : value.ToLowerInvariant(); break;
+                case "open_by_date": openByDate = Flag(key, value, openByDate, warnings); break;
                 default: warnings.Add("unknown key '" + key + "' ignored"); break;
             }
         }
 
-        if (kind != ScenarioPlan.KindCampaignNew && kind != ScenarioPlan.KindStoryMission)
-            return ScenarioPlan.Unarmed("the arm file " + path + " needs kind=" + ScenarioPlan.KindCampaignNew + " or kind=" + ScenarioPlan.KindStoryMission + " (got '" + (kind ?? "") + "')");
+        if (kind != ScenarioPlan.KindCampaignNew && kind != ScenarioPlan.KindStoryMission && kind != ScenarioPlan.KindStoryOffer)
+            return ScenarioPlan.Unarmed("the arm file " + path + " needs kind=" + ScenarioPlan.KindCampaignNew + ", kind=" + ScenarioPlan.KindStoryMission + " or kind="
+                + ScenarioPlan.KindStoryOffer + " (got '" + (kind ?? "") + "')");
 
         if (string.IsNullOrEmpty(outFolder) || !IsAbsolute(outFolder!))
             return ScenarioPlan.Unarmed("the arm file " + path + " needs an absolute out=<folder> for the done file");
@@ -66,11 +75,20 @@ internal static class ScenarioArmFile
         if (story && mission == "-")
             return ScenarioPlan.Unarmed("the arm file " + path + " needs mission=<story mission id> for kind=" + ScenarioPlan.KindStoryMission);
 
+        var offer = kind == ScenarioPlan.KindStoryOffer;
+        if (offer && offerEvent == "-")
+            return ScenarioPlan.Unarmed("the arm file " + path + " needs event=<id> for kind=" + ScenarioPlan.KindStoryOffer);
+        if (offer && choice != ScenarioPlan.ChoiceDefend && choice != ScenarioPlan.ChoiceAttack && choice != ScenarioPlan.ChoiceFate)
+            return ScenarioPlan.Unarmed("the arm file " + path + " needs choice=" + ScenarioPlan.ChoiceDefend + ", choice=" + ScenarioPlan.ChoiceAttack + " or choice="
+                + ScenarioPlan.ChoiceFate + " for kind=" + ScenarioPlan.KindStoryOffer + " (got '" + choice + "')");
+
         return new ScenarioPlan
         {
             Armed = true, Warnings = warnings, ArmPath = path, Kind = kind, OutFolder = outFolder!, Scenario = scenario, Culture = culture,
             Days = days, Speed = speed, StallSeconds = stall, WallLimitSeconds = wallLimit, Quit = quit,
             MissionId = story ? mission : "-", MissionLimitSeconds = missionLimit, Commands = commands,
+            EventId = offer ? offerEvent : "-", Choice = offer ? choice : "-", AfterCommands = offer ? after : new List<string>(),
+            OpenByDate = offer && openByDate,
         };
     }
 

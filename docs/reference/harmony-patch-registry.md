@@ -93,6 +93,8 @@ Weather bounds clamping
 
 Diplomacy system
 
+`AllianceCampaignBehavior.EndAlliance` (Prefix, `AllianceCampaignBehavior_EndAlliance_Patch`, 2026-11-21, #1105 slice 5): no target or body change. `IOnAllianceAction.ShouldPreventAllianceEnd` reads `GetRelationshipTier`, which now answers Neutral for a pair whose permanent alliance a story ended, so TAOM's own `IAllianceAdapter.EndAlliance` call passes through its own prefix. See [diplomacy.md](../features/diplomacy.md) "Broken permanent alliances".
+
 `AllianceCampaignBehavior.StartCallToWarAgreement` (Prefix, 2026-10-18): returns false when `IOnAllianceAction.ShouldPreventCallToWar` refuses the called and target kingdoms (the war veto, or a `callToWarRefusals` row in `diplomacy.json`, #1283). The agreement moves gold and only then declares the war through `DeclareWarAction.ApplyByCallToWarAgreement`, whose prefix would refuse a war the War of the Ring phase forbids after the gold had already moved. Under co-op the hook defers to the host, so the prefix lets the agreement run.
 
 `DeclareWarAction.ApplyInternal` (Prefix, `DeclareWarAction_ApplyInternal_Patch`): since 2026-10-18 it reads the `declareWarDetail` parameter. `CausedByPlayerHostility`, `CausedByCrimeRatingChange` and `CausedByKingdomCreation` count as player-caused and lift only the phase vetoes (`PhasePeace`, `PhaseNotScripted`); `Permanent` and same-alignment pairs still block. `GetWarVeto` checks the side before the phase, so a same-side pair reads `SameAlignment` in every phase before `WarEnded`. The callers that pass these details: `BeHostileAction` (the attacker is the main party), the lord-conversation threaten option, `LordWantsRivalCapturedIssueBehavior`, `ChangeCrimeRatingAction` (only when the player rules), TAOM's `ServiceDiplomacyAdapter` (the enlistment war mirror) and `KingdomManager.CreateKingdom` (the player founding a kingdom, which carries the clan's wars over).
@@ -206,9 +208,9 @@ UI colour persistence, 3D battle and conversation. NOT player-only: the `Mission
 
 ## Patch24_BannerDriftGuard
 
-**Target:** `Clan.UpdateBannerColorsAccordingToKingdom`, `Clan.UpdateBannerColor`
+**Target:** `Clan.UpdateBannerColorsAccordingToKingdom`, `Clan.UpdateBannerColor`, `Clan.PreAfterLoad` (prefix and void finalizer, v2.0.42)
 
-Block vanilla banner color drift during War of the Ring
+Block vanilla banner color drift during War of the Ring. Since v2.0.42 the `UpdateBannerColorsAccordingToKingdom` prefix also returns false on a co-op client inside `Clan.PreAfterLoad`, whose `Clan_PreAfterLoad_Patch` bracket opens and closes through `__state`; the client keeps the server's banners from its join save. BannerlordCoop's `ClanBannerLoadRepairPatch` prefixes `Clan.PreAfterLoad` too; order does not matter. Applied in the GameInit batch, which runs at the end of `Campaign.OnInitialize`, before `Campaign.OnGameLoaded` reaches `ObjectManager.PreAfterLoad`. See `docs/features/banner-color-persistence.md`
 
 ## Patch25_LocalizationOverride
 
@@ -2184,6 +2186,22 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 **Co-op.** Stands down: `Applies` needs the single-player predicate, so in a session vanilla's loot runs. Classified `GatedForCoop` in `CoopVetoClassificationTests`.
 
 **Binding.** `Patch172BattleGearLootBindingTests`. **Tests:** `BattleGearLootServiceTests`, `Patch172BattleGearLootTests`, `BattleGearLootWiringTests`. **Check:** the in-game list in `docs/features/battle-gear-loot.md`.
+
+## Patch173_OrphanedBattleEncounter
+
+**Target:** `EncounterManager.StartPartyEncounter(PartyBase attackerParty, PartyBase defenderParty)` (public static, Prefix that may skip vanilla), and in the same category `EncounterManager.StartSettlementEncounter(MobileParty attackerParty, Settlement settlement)` (public static, void Prefix, `Patch173_OrphanedBattleSettlementEncounter`)
+
+**Feature:** MapEventGuard, `Main/Features/MapEventGuard/Hooks/Patch173_OrphanedBattleEncounter.cs` and `Patch173_OrphanedBattleSettlementEncounter.cs`, the rule and the repair in `OrphanedBattleService` (`IsOrphanedEncounter`, `FinishBeforeEncounter`), category declared by `EncounterGuardModule` (GameInit). **Status:** ACTIVE (#1458, 2026-11-22). Not yet checked in game.
+
+**The crash.** A battle-end throw that the player continues past (the Patch169 crash) leaves an AI map event finalized with parties still attached (see Patch170 and the orphaned battle sweep). `MapEvent.FinalizeEventAux` ends the defender side first. When the throw comes after that, the attackers stay attached, the defender side lists nobody, and its `LeaderParty` is still the last defender to leave (`MapEventSide.RemovePartyInternal` replaces the leader only while parties remain), which the same loop destroys when it lost. When the player walks into one of those attackers, `PlayerEncounter.Init` opens `join_encounter` on that finalized event. "Help {ATTACKER}" then throws: its condition passes `GetLeaderParty(Defender).MapFaction`, null for a destroyed lord party, to `CheckFactionAttackableHonorably` (crash `281a5a26`), and after a load its consequence reaches `FieldBattleEventComponent.OnAddInvolvedParty`, whose `MapEvent` back-reference is null (crash `8ae79c23`). The hourly sweep finishes such events, but not before the player meets one in the same in-game hour, and menus stop time.
+
+**The fix.** When the attacker is the main party or the main party's army leader, and the defender's map event is finalized and is not the player's own (`IsPlayerMapEvent` or `PlayerEncounter.Battle`), the prefix runs the orphaned battle sweep (`OrphanedBattleService.RepairAll`). It returns false only when the defender's `MapEvent` is then null or no longer finalized, so this encounter does not start; the party is free (or destroyed, as vanilla would have done), and the next encounter is a normal one. When the sweep did not free it, vanilla runs, one warning is logged, and that event is latched so the per-frame `EncounterManager.Tick` retry does not repair it again. A healthy game never has a party attached to a finalized event outside the player's own battle, so no other encounter matches. A throw in a prefix is logged once per session and vanilla runs.
+
+**Callers.** Besides the map encounter, the sally-out menu reaches `StartPartyEncounter`: `EncounterGameMenuBehavior.sally_out_consequence` finalizes the besieger leader's event (`:476`) and then calls it with that leader (`:480`), and `game_menu_join_sally_out_on_consequence` calls it with the sally-out defender leader (`:1077`). After a successful finalize the leader has no `MapEvent`, so the prefix passes those calls through. When the besieger leader's event is itself the orphan, the finalize at `:476` does nothing (`FinalizeEventAux` runs only when the event is not yet finalized, `MapEvent.cs:1730`), so the prefix repairs it and skips that call: the first click does nothing, and the next one starts a clean encounter. The `GameMenuOverlay` callers (`:231`, `:252`, `:269`) behave the same way.
+
+**The settlement path.** Walking to a besieged town or a raided village goes `StartSettlementEncounter`, `PlayerEncounter.Init`, `DefaultEncounterGameMenuModel.GetEncounterMenu`, which returns `join_encounter` for the besieger leader's siege-outside, sally-out or blockade event or the village's raid event without checking `IsFinalized`. `Patch173_OrphanedBattleSettlementEncounter` runs the same rule on `settlement.Party.MapEvent` and the besieger leader's `MapEvent`, repairs, and always lets vanilla continue.
+
+**Co-op.** `GatedForCoop` in `CoopVetoClassificationTests`: `FinishBeforeEncounter` returns false while `ICoopSessionProvider.IsSessionActive` or `ShouldDeferToHost` holds, so vanilla's encounter runs on every peer. The settlement prefix is void, so it skips nothing. **Tests:** `OrphanedBattleServiceTests` (the rule on every input, skip only when freed, a throwing or declined repair lets vanilla run, the per-event latch, both co-op stand-downs) and `Patch173OrphanedBattleEncounterTests` (the module declares the category, the settlement prefix shares it, both targets resolve with their parameter names).
 
 ## Patch171_Stamina
 

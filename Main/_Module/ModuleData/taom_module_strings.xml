@@ -6964,5 +6964,24 @@
 	<string id="taom_mcm_EnableBattleGearLoot_hint" text="{=taom_mcm_EnableBattleGearLoot_hint}When on, the loot from enemies your party beats in a battle your side wins is the gear they fought in: each weapon, armour piece, horse and harness drops on its own roll, at the chance below. It replaces the usual random loot from fallen enemies; captured baggage, gold, prisoners and renown are unchanged. Heavy, elite and lord armour held back by Armour Acquisition, named weapons and banners never drop. Singleplayer only: in a co-op session the usual loot applies. Default: off." />
 	<string id="taom_mcm_BattleGearLootChancePercent" text="{=taom_mcm_BattleGearLootChancePercent}Gear Drop Chance (%)" />
 	<string id="taom_mcm_BattleGearLootChancePercent_hint" text="{=taom_mcm_BattleGearLootChancePercent_hint}The chance, from 0 to 100%, that each item of each beaten enemy drops. In a battle fought beside allies you loot your share of the enemies, as usual. Default: 10." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- StoryMissions -->
+	<string id="taom_story_breaking_stand" text="{=taom_story_breaking_stand}Stand with the Fellowship" />
+	<string id="taom_story_breaking_hunt" text="{=taom_story_breaking_hunt}Lead the Uruk-hai" />
+	<string id="taom_story_breaking_go" text="{=taom_story_breaking_go}Go to Parth Galen" />
+	<string id="taom_story_breaking_body_both" text="{=taom_story_breaking_body_both}The Uruk-hai of the White Hand close on the Company at Parth Galen. Will you go there and choose your side, or let fate decide?" />
+	<string id="taom_story_breaking_body_attack" text="{=taom_story_breaking_body_attack}The Company rests at Parth Galen, and the Uruk-hai of the White Hand are near. Will you lead the hunt yourself, or let fate decide?" />
+	<string id="taom_story_breaking_body" text="{=taom_story_breaking_body}The Uruk-hai of the White Hand close on the Company at Parth Galen. Will you stand with the Fellowship yourself, or let fate decide?" />
+	<string id="taom_story_breaking_escaped" text="{=taom_story_breaking_escaped}Your band is broken at Parth Galen, and Boromir lives." />
+	<string id="taom_story_breaking_saved" text="{=taom_story_breaking_saved}The Uruk-hai are thrown back at Parth Galen, and Boromir lives." />
+	<string id="taom_story_breaking_slain" text="{=taom_story_breaking_slain}Boromir is slain at Parth Galen, and the Company is scattered." />
+	<string id="taom_story_breaking_fallen" text="{=taom_story_breaking_fallen}Boromir has fallen at Parth Galen, pierced by many arrows." />
+	<string id="taom_story_breaking_menu" text="{=taom_story_breaking_menu}The horn of Gondor sounds in the woods of Parth Galen. Time stands until you choose." />
+	<string id="taom_story_breaking_undecided" text="{=taom_story_breaking_undecided}The fight at Parth Galen is not decided. The call may come again." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- WarChronicle -->
+	<string id="taom_war_morale" text="{=taom_war_morale}Tidings of the war" />
+	<string id="taom_event_effect_morale" text="{=taom_event_effect_morale}Party morale" />
+	<string id="taom_event_effect_permanent" text="{=taom_event_effect_permanent}Permanent" />
 
 </strings>

@@ -539,6 +539,9 @@ class Finding:
     high: float
     # The lowest DPS judge accepts (tolerance_floor); set on an "under" finding only.
     floor: float | None = None
+    # "weakest set" on a finding made from the troop's weakest battle set, which the under check
+    # reads (#1242); empty when it is the best weapon over all of them.
+    scope: str = ""
 
     @property
     def gap(self) -> float:
@@ -556,11 +559,12 @@ class Finding:
                 f"{self.high:.0f}; reachable by {self.troop}"
             )
         direction = "under-armed" if self.kind == "under" else "over-armed"
+        weapon = "its best melee weapon" if not self.scope else f"its best melee weapon in its {self.scope}"
         floor = (f"; accepted from {self.floor:.0f} (the tier tolerance)"
                  if self.floor is not None and self.floor < self.low else "")
         return (
-            f"{self.troop} (tier {self.tier}, {self.culture}) is {direction}: its best melee "
-            f"weapon {self.item} sustains {self.dps:.0f} DPS against a band of "
+            f"{self.troop} (tier {self.tier}, {self.culture}) is {direction}: {weapon} "
+            f"{self.item} sustains {self.dps:.0f} DPS against a band of "
             f"{self.low:.0f} to {self.high:.0f}{floor}"
         )
 
@@ -570,7 +574,9 @@ def findings(troop_kits, spec: dict, min_gap: float = 0.0) -> list[Finding]:
 
     `troop_kits` is an iterable of (troop id, culture, tier, item id, dps, blade piece), which
     may carry (crafting template, swings, thrusts) after it. With them the troop is judged by its
-    weapon class's own band; the short row keeps the shared curve. The caller supplies the rows,
+    weapon class's own band; the short row keeps the shared curve. A fourth extra, "under" or
+    "over", limits the row to that verdict (a troop's weakest battle set is read for "under", its
+    best for "over" and the ceiling, #1242); a row without it is judged for all three. The caller supplies the rows,
     so this stays a pure function over plain data and the gate, the report and the fixer can
     all feed it from whatever they already have loaded.
 
@@ -582,19 +588,21 @@ def findings(troop_kits, spec: dict, min_gap: float = 0.0) -> list[Finding]:
     for troop_id, culture, tier, item, dps, blade, *kind in troop_kits:
         if is_exempt_troop(troop_id, spec):
             continue
-        template, swings, thrusts = kind or (None, True, True)
+        template, swings, thrusts, *rest = kind or (None, True, True)
+        only = rest[0] if rest else None
         window = band(tier, culture, spec, template, swings, thrusts)
         verdict = judge(tier, culture, spec, dps, template, swings, thrusts)
-        if verdict != "ok":
+        if verdict != "ok" and only in (None, verdict):
             finding = Finding(
                 verdict, troop_id, culture, tier, item, dps,
                 window.target, window.low, window.high,
                 tolerance_floor(tier, culture, spec, template, swings, thrusts)
                 if verdict == "under" else None,
+                "weakest battle set" if only == "under" else "",
             )
             if finding.gap >= min_gap:
                 out.append(finding)
-        if dps > ceiling and not is_hero_blade(blade, spec):
+        if dps > ceiling and only != "under" and not is_hero_blade(blade, spec):
             out.append(
                 Finding("ceiling", troop_id, culture, tier, item, dps,
                         ceiling, ceiling, ceiling)

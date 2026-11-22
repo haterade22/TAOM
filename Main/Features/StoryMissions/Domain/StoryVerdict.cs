@@ -31,6 +31,7 @@ internal static class StoryVerdict
                     case RunEndReason.DefendersDead:
                     case RunEndReason.KeepLost:
                     case RunEndReason.Abandoned:
+                    case RunEndReason.HeroFell:
                         return StoryOutcome.Lost;
                 }
 
@@ -40,6 +41,7 @@ internal static class StoryVerdict
                 {
                     case RunEndReason.KeepLost:
                     case RunEndReason.DefendersDead:
+                    case RunEndReason.HeroFell:
                         return StoryOutcome.Won;
                     case RunEndReason.TargetReached:
                     case RunEndReason.Abandoned:

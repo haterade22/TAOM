@@ -21,7 +21,8 @@ internal static class WarEffectMath
 
     /// <summary>
     /// The volunteer rate stays within half to one and a half, the escape roll within one to three times
-    /// (both against TAOM's own base, not a perked one). A kind without a range of its own here is 1, no
+    /// (both against TAOM's own base, not a perked one), party morale within 0.8 to 1.2 of vanilla's
+    /// standard base (50), so at most 10 points either way. A kind without a range of its own here is 1, no
     /// effect: a new kind must name its clamp rather than inherit another kind's.
     /// </summary>
     internal static float Clamp(WarEffectKind kind, float multiplier)
@@ -36,6 +37,10 @@ internal static class WarEffectMath
             case WarEffectKind.PrisonerEscape:
                 min = 1f;
                 max = 3f;
+                break;
+            case WarEffectKind.PartyMorale:
+                min = 0.8f;
+                max = 1.2f;
                 break;
             default:
                 return 1f;
