@@ -13,8 +13,8 @@ the nine suspects with evidence. Each finding below was read against the TAOM so
 | # | Codex | Mine | Finding | Verdict |
 |---|---|---|---|---|
 | F1 | HIGH | HIGH | `ChronicleService.ResolveHero` used the answer of `KillHeroInBattle` for a log line only. After Deferred (his party in a battle or a siege) or Refused (`Hero.CanDie`: an issue or quest veto) the Breaking resolved `Occurred`, paid its effects and told the player that Boromir died, while he lived. With the life and death cycle off, a mark made in a siege has no promised end. | Confirmed against `KillCharacterAction.ApplyInternal` (:34, :51), `Hero.CanDie`, `AgingCampaignBehavior.DailyTickHero` (:104, :110). Fixed. |
-| F2 | MEDIUM | Decision | A repulsed assault resolves the Hornburg `Held`, and the existing `ents` event (`requiresOutcome: Held`, two days later) then lowers Isengard's volunteer rate by 15% for 20 days. The maintainer's word for slice 5 was "no other real penalties for Isengard". | Confirmed in `war_chronicle.json`. Not changed: the maintainer decides. |
-| F3 | MEDIUM | LOW to MEDIUM | `TaomPartyMoraleModel` runs on a BannerlordCoop client, whose effect registry is the join snapshot with no expiry and no updates. | Confirmed by reading `WarChronicleBehavior` and `WarEffectService`. Documented as a known limit; no code change. The visible effect in a live session is UNVERIFIED. |
+| F2 | MEDIUM | Decided: kept | A repulsed assault resolves the Hornburg `Held`, and the existing `ents` event (`requiresOutcome: Held`, two days later) then lowers Isengard's volunteer rate by 15% for 20 days. The maintainer's word for slice 5 was "no other real penalties for Isengard". | Confirmed in `war_chronicle.json`. Not changed: the maintainer took the builder's recommendation on 2026-11-22, and the Ents stay. |
+| F3 | MEDIUM | LOW to MEDIUM | `TaomPartyMoraleModel` runs on a BannerlordCoop client, whose effect registry is the join snapshot with no expiry and no updates. | Confirmed by reading `WarChronicleBehavior` and `WarEffectService`. Documented as a known limit; no code change, on the maintainer's word of 2026-11-22. The visible effect in a live session is UNVERIFIED. |
 | F4 | MEDIUM | MEDIUM | The scenario judge and three manifest rows took any verdict with any reason, and any `offer.result result=pass` line. A log with `verdict=Won ... reason=HeroFell` and `result=Occurred` for a won defence passed. | Confirmed. Fixed. |
 | F5 | LOW | LOW | The judge read `field` and `mustLive` from the checkout after the run, against its own rule that the launch reads the mission once. | Confirmed. Fixed. |
 | F6 | LOW | Declined | The validator accepts an `endAlliance` pair with no Permanent row, and a hero id no campaign holds. | True for a malformed file. The shipped file is gated by `ShippedStoryOffersTests` (the pair is a Permanent row; the hero id is pinned), and a wrong pair writes the `alliance-ended` fail line. A runtime guard for a file only the repo ships is a speculative guard (simplicity criterion). |
@@ -36,8 +36,8 @@ defect, and Codex marked its native side UNVERIFIED.
 
 ## Open
 
-- FOLLOW-UP (#1105): F2, the maintainer decides whether the Ents march after a repulsed player assault. My recommendation is to keep it:
-  it is the book's consequence of the defeat, it follows every other held Hornburg, and it ends after 20 days.
-- FOLLOW-UP (#1105): F3, the maintainer decides whether the co-op client limit of the morale effect is acceptable as documented.
+- F2 and F3 are decided (the maintainer, 2026-11-22: the builder's recommendations stand). The Ents march after a repulsed player
+  assault as after every other held Hornburg: it is the book's consequence of the defeat and it ends after 20 days. The co-op client
+  limit of the morale effect stays as documented in `docs/features/war-chronicle.md`.
 - The fix for F1 has had its unit tests only. One unattended run of the Breaking offer (a lost defence and "let fate decide") is owed
   on the fixed build; in such a run Boromir is free, so it proves the Killed path, not the owed one.

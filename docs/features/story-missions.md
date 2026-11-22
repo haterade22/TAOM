@@ -653,7 +653,10 @@ assault on the Hornburg (#1409): both of its results are proven by unattended ru
 - 2026-11-22: Codex review of the branch (one HIGH, three MEDIUM, three LOW; `docs/reviews/rca-story-missions-codex-2026-11-22.md`).
   Fixed: a death the engine deferred or refused no longer resolves the Breaking as `Occurred` (the window waits and asks again each
   day); the scenario judge and the manifests tie verdict, reason and result together, and the judge reads the mission's traits the
-  launch captured. Open for the maintainer: the Ents' march after a repulsed assault, and the morale effect on a co-op client.
+  launch captured. Decided by the maintainer the same day: the Ents still march after a repulsed assault (Isengard's volunteer rate
+  falls by 15% for 20 days, as after every held Hornburg), and the morale effect's limit on a co-op client stays as documented.
+- 2026-11-22: trunk `3b588519c` (Long Defeat Phase 4, #1499) merged into the branch. On a field mission the lord's rise uses his
+  side's own start place and is booked `respawn`: a keep that such a mission records is no rise place and is not tested at the boot.
 - 2026-11-21: Slice 3, the Breaking of the Fellowship end to end: a Narrative event's hero story, its window of 10 days, the
   state `Averted`, the kill by `ApplyByBattle`, and the offer's two new options. Proven by three unattended runs of the offer
   (defence lost, hunt lost, fate); no person has played it.
