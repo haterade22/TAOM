@@ -252,7 +252,7 @@ public class CareerScreenVM : ViewModel
     // stored choice, keystones included, SUMMED per effect type and troop class, so two +5% Damage
     // picks read as one "+10% damage" rather than two lines the player adds up. The passive lines
     // follow the rule CareerPassiveService.RefreshCache applies: each stored choice id the registry
-    // resolves once, plus the root when it is not stored.
+    // resolves once, plus the root when it is not stored (the co-op server's tier filter is not shown here).
     //
     // Fed by the existing group walk rather than a second pass of its own: the screen rebuilds
     // on every click, and a duplicate registry walk per rebuild is pure waste (it also broke
@@ -353,7 +353,7 @@ public class CareerScreenVM : ViewModel
             }
         }
 
-        // The passive totals follow CareerPassiveService.RefreshCache: every stored choice id once (a
+        // The passive totals follow CareerPassiveService.RefreshCache, less the co-op server's tier filter: every stored choice id once (a
         // group the career lists twice cannot double a pick), keystones included, then the root when
         // it is not stored. The root sits in no group, so it is read through the registry, and its
         // text is shown as the career's identity perk.

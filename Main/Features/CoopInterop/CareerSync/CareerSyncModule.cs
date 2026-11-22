@@ -1,13 +1,15 @@
 using DryIoc;
 using TAOM.Adapters;
 using TAOM.Composition;
+using TAOM.Features.CareerSystem;
 
 namespace TAOM.Features.CoopInterop.CareerSync;
 
 /// <summary>
 /// Career sync (docs/features/coop-interop.md, "Career sync"): a co-op player's career goes to the co-op server, which
 /// checks it, keeps it in its save and passes it on. TAOM.CoopCompat resolves the client and the host and attaches the
-/// relay; without it nothing resolves them, so single player is unchanged.
+/// relay; without it nothing resolves them, so single player is unchanged. The one exception is the career tier trust,
+/// which CareerPassiveService resolves in every game; outside a co-op server it counts every tier.
 /// </summary>
 internal sealed class CareerSyncModule : TaomFeatureModule
 {
@@ -18,6 +20,7 @@ internal sealed class CareerSyncModule : TaomFeatureModule
         registrator.Register<CareerSyncClient>(Reuse.Singleton);
         registrator.Register<CareerSyncHost>(Reuse.Singleton);
         registrator.Register<ICareerSyncHeroAdapter, CareerSyncHeroAdapter>(Reuse.Singleton);
+        registrator.Register<ICareerTierTrust, CoopCareerTierTrust>(Reuse.Singleton);
         registrator.Register<ICareerSyncNotice, CareerSyncNotice>(Reuse.Singleton);
         registrator.RegisterDelegate(_ => new CoopSettingsProvider(), Reuse.Singleton);
     }

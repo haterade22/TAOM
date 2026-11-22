@@ -619,6 +619,7 @@ game.
 | `CareerSync/CareerSyncClient` | Client: reports its own hero's career, writes what the server sends. |
 | `CareerSync/ICareerSyncLink`, `CareerSyncModule` | The way to the server, which TAOM.CoopCompat attaches ([coop-compat.md](coop-compat.md)); the registrations. |
 | `Adapters/ICareerSyncHeroAdapter`, `ICareerSyncNotice` | The server's hero lookup (by StringId, through `CampaignObjectManager.Find`); the player's refusal line. |
+| `CareerSystem/ICareerTierTrust`, `CareerSync/CoopCareerTierTrust` | Which tiers count in the passive cache: on the co-op server only the tiers the hero's level opens, elsewhere every tier. |
 
 **Flow.** When the client's campaign join is ready (Coop's `ClientCampaignReady`, which comes after
 `SwitchToPlayer`, so `PlayerPossessionBehavior` has already applied the picked career), the client sends
@@ -645,7 +646,19 @@ first as a join report, and a refusal there must not wipe it.
 
 **Known limits.**
 - Tier unlocks and quest flags are client-asserted: career quests run on the player's own machine
-  (`CareerQuestService.cs:117-125`), so the server can bound them but cannot prove them.
+  (`CareerQuestService.cs:117-125`), so the server can bound them but cannot prove them. The server stores
+  a choice from a quest-unlocked tier, but its passive cache counts a choice only when the hero's level on
+  the server opens the choice's tier (1, 10, 20; `CareerRegistry.IsTierAvailable`). `CareerPassiveService`
+  asks `ICareerTierTrust` for each choice but the root; `CoopCareerTierTrust` says yes to every tier in
+  single player and on a client, and on the server reads the hero's level through `ICareerSyncHeroAdapter`.
+  A choice with no group is tier 0, which the server never counts. Every rebuild of the cache applies the
+  filter, and `CareerCampaignBehavior.OnHeroLeveledUp` rebuilds it when a hero with a career levels up, so
+  the passive starts to count at the level. A quest-unlocked choice therefore works on the player's own
+  machine and stays in the save; only the server's share of its effect waits for the level. Coop runs XP
+  gain only on the server (its `GainRawXpPatch` refuses it on a client), so the server's
+  `HeroDeveloper.CheckLevel` raises `HeroLevelledUp` for a player's hero; not yet seen in game. Ability
+  mutations still read the stored choices (`MutationService`), but abilities run in missions, and no
+  mission runs on the co-op server process.
 - Eligibility for the hero's culture is logged, not enforced: a possessed hero can carry another culture
   than the one picked.
 - The level check is strict: a choice taken right after a level-up that has not reached the server yet is
@@ -667,9 +680,11 @@ first as a join report, and a refusal there must not wipe it.
   writer for a living player's career exists yet; one added later needs a merge or a version check.
 - A change made in the last frame before the session ends is not sent (`CareerSyncClient.Flush` clears the
   mark before `Send` finds no session), so the server's older copy wins at the next join.
-- Trust model, by decision (2026-11-18): the client-asserted tiers and transitions above stay. Co-op
-  players share a session by invitation, and a modified client can already cheat in other ways; a server
-  check of quest-earned tiers would need the career quests to run on the server.
+- Trust model, by decision (2026-11-18, tiers revised 2026-11-22): the client-asserted transitions above
+  stay. Co-op players share a session by invitation, and a modified client can already cheat in other
+  ways. For tiers the server applies no passive it cannot derive from the level (the filter above); a server
+  check of quest-earned tiers would need the career quests to run on the server, and would become a second
+  way for `CoopCareerTierTrust` to say yes.
 
 **Configuration.** TAOM's settings, Co-op, "Sync careers for co-op players" (`CoopCareerSync`, default
 on), read through `CoopSettingsProvider` in the co-op server process for each report. A dedicated server

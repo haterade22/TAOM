@@ -24,6 +24,20 @@ public class CareerSyncWiringTests
         Assert.AreEqual(1, FeatureModules.All.OfType<CareerSyncModule>().Count());
     }
 
+    // CareerPassiveService needs ICareerTierTrust in every game, and only this module registers it.
+    [TestMethod]
+    public void Module_RegistersTheCareerTierTrust_ThatThePassiveServiceNeeds()
+    {
+        using var container = new Container();
+        foreach (var service in new[] { typeof(ICareerRegistry), typeof(ICoopSessionProvider), typeof(ICareerHeroAdapterFactory) })
+            container.RegisterInstance(service, Substitute.For(new[] { service }, new object[0]));
+
+        new CareerSyncModule().RegisterServices(container);
+
+        Assert.IsInstanceOfType(container.Resolve<ICareerTierTrust>(), typeof(CoopCareerTierTrust));
+        Assert.AreSame(container.Resolve<ICareerTierTrust>(), container.Resolve<ICareerTierTrust>());
+    }
+
     [TestCategory("RequiresGame")]
     [TestMethod]
     public void Module_ResolvesTheClientAndTheHost_AsSingletons()
