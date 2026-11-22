@@ -594,11 +594,12 @@ assault on the Hornburg with its results (slice 5).
 
 ## Known limits
 
-- **The assault on Helm's Deep is not balanced yet (#1409).** With the bot as the commander it lost at 250 and at 350 attackers and did
-  not finish at 450, with 6 to 15 attackers dead for each defender lost (250/17, 350/56, 350/34, 444/37). Unattended runs on build
-  `769640596`, 2026-11-21 and 22 (run folders under `E:/Temp/scenario-runs`; the garrison is 150 and three heroes). The first run used the
-  shipped row of that build (250). For the other three the wave count, and in the last one the mix, was changed in the deployed copy of
-  `story_missions.json` only, and the file was restored after each:
+- **The assault on Helm's Deep is not balanced yet (#1409).** With the bot as the commander it lost at 250 attackers and in all three
+  runs at 350, and did not finish at 450. The defenders lost between 17 and 125 of their 153 (a garrison of 150 and three heroes), and the
+  spread between runs of one size is large: 34, 56 and 125 at 350. So no single run says how close the assault is. Unattended runs,
+  2026-11-21 and 22 (run folders under `E:/Temp/scenario-runs`). The first run used the shipped row of build `769640596` (250) and the
+  last one the shipped row of `3f2698ebc` (350). For the three between them the wave count, and in one the mix, was changed in the
+  deployed copy of `story_missions.json` only, and the file was restored after each:
 
   | Attackers | Run | Result | Defenders lost | Mission time |
   |---|---|---|---|---|
@@ -606,12 +607,13 @@ assault on the Hornburg with its results (slice 5).
   | 350 | `20261121-232240` | lost | 56 | 1019 s |
   | 450 | `20261121-234117` | not finished at the driver's 1200 s limit: 444 attackers dead, 7 alive | 37 | 1200 s |
   | 350, mix 60/30/10 (fewer archers) | `20261122-000423` | lost | 34 | 670 s |
+  | 350 | `20261122-003007` (through the offer) | lost, 28 defenders left | 125 | 1102 s |
 
-  With one run for each size, these runs suggest that the size is not the lever. In the last run Legolas made 118 of the 349 kills and
-  took 49 damage (`[HeroAbilities][Combat] summary`), and Aragorn and Gimli made none; no log line names who made the other 231. A wave's
-  queue is ranged first (`WavePlan`), so under the live cap of 150 the first assault of a 450 wave is 112 archers and 38 foot; the run
-  with fewer archers put 115 foot in the first assault and did no better, so that order does not look like the cause either. The shipped
-  host is 350: the maintainer's range was 350 to 450, and 450 does not
+  The runs cannot rank the sizes. What differs most between them is the heroes (`[HeroAbilities][Combat] summary`): in run
+  `20261122-000423` Legolas made 118 of the 349 kills and took 49 damage, and Aragorn and Gimli made none; in run `20261122-003007`
+  Legolas made 12, Aragorn 17 and Gimli 24, and Gimli fell. A wave's queue is ranged first (`WavePlan`), so under the live cap of 150 the
+  first assault of a 450 wave is 112 archers and 38 foot; the run with fewer archers put 115 foot in the first assault and did no
+  better. The shipped host is 350: the maintainer's range was 350 to 450, and 450 does not
   finish inside 20 minutes. Whether a person in command can win it is not known. The balance options (Legolas as an enemy, the size of
   the garrison, more than one wave) are on #1409.
 - In an Attack row (#1409) the player's body stands on the attacker team, and some Long Defeat code still treats it as a wave soldier or
@@ -624,8 +626,10 @@ assault on the Hornburg with its results (slice 5).
 
 - 2026-11-22: Slice 5 proven for the lost assault by an unattended run of the Hornburg offer as an Isengard player (`20261121-230907`):
   `'hornburg' Held on day 8 (the player's assault was thrown back)`, `[Diplomacy] Permanent alliance ended: isengard <-> empire_s`, and
-  `taom.war-chronicle.alliance-ended result=pass ... result=Ended allied=False`. The attack host is 350 after four tuning runs
-  ("Known limits"). A won assault (the fallen Hornburg and its permanent penalty) has no run: the bot does not win it.
+  `taom.war-chronicle.alliance-ended result=pass ... result=Ended allied=False`. The attack host is 350 after the tuning runs
+  ("Known limits"). The same path passed again with the host of 350 on build `3f2698ebc` (`20261122-003007`), and `taom.war_effects`
+  at its end lists `chronicle:hornburg:Held:2: vlandia PartyMorale +0.100, ends in 25.0 days` with `vlandia: ... PartyMorale x1.10`.
+  A won assault (the fallen Hornburg and its permanent penalty) has no run: the bot has not won it.
 - 2026-11-21: Slice 3, the Breaking of the Fellowship end to end: a Narrative event's hero story, its window of 10 days, the
   state `Averted`, the kill by `ApplyByBattle`, and the offer's two new options. Proven by three unattended runs of the offer
   (defence lost, hunt lost, fate); no person has played it.
