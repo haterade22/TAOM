@@ -545,7 +545,7 @@ public class StoryOfferServiceTests
     {
         var side = playerAttacks ? StorySide.Attacking : StorySide.Defending;
         var verdict = playerWon ? StoryOutcome.Won : StoryOutcome.Lost;
-        _chronicle.ResolveHeroStory(Arg.Any<string?>(), Arg.Any<bool>(), Arg.Any<string>()).Returns(true);
+        _chronicle.ResolveHeroStory(Arg.Any<string?>(), Arg.Any<bool>(), Arg.Any<string>()).Returns(lives ? ChronicleHeroStoryResult.Averted : ChronicleHeroStoryResult.Occurred);
 
         var result = _sut.Apply(HeroOffer(), side, verdict);
 
@@ -558,7 +558,7 @@ public class StoryOfferServiceTests
     [TestMethod]
     public void Apply_AHeroStory_NeverTouchesAFortress()
     {
-        _chronicle.ResolveHeroStory(Arg.Any<string?>(), Arg.Any<bool>(), Arg.Any<string>()).Returns(true);
+        _chronicle.ResolveHeroStory(Arg.Any<string?>(), Arg.Any<bool>(), Arg.Any<string>()).Returns(ChronicleHeroStoryResult.Occurred);
 
         _sut.Apply(HeroOffer(), StorySide.Defending, StoryOutcome.Lost);
         _sut.Apply(HeroOffer(), StorySide.Defending, StoryOutcome.Won);
@@ -571,10 +571,20 @@ public class StoryOfferServiceTests
     [TestMethod]
     public void Apply_AHeroStoryWhoseWindowHasClosed_ChangesNothing()
     {
-        _chronicle.ResolveHeroStory(Arg.Any<string?>(), Arg.Any<bool>(), Arg.Any<string>()).Returns(false);
+        _chronicle.ResolveHeroStory(Arg.Any<string?>(), Arg.Any<bool>(), Arg.Any<string>()).Returns(ChronicleHeroStoryResult.NoWindow);
 
         Assert.AreEqual(StoryResult.Unchanged, _sut.Apply(HeroOffer(), StorySide.Defending, StoryOutcome.Won));
         _outcomes.DidNotReceiveWithAnyArgs().Pass(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void Apply_AHeroStoryWhoseDeathTheEngineOwes_WritesThat_NotOccurred()
+    {
+        _chronicle.ResolveHeroStory(Arg.Any<string?>(), Arg.Any<bool>(), Arg.Any<string>()).Returns(ChronicleHeroStoryResult.DeathOwed);
+
+        Assert.AreEqual(StoryResult.HeroDies, _sut.Apply(HeroOffer(), StorySide.Defending, StoryOutcome.Lost));
+
+        _outcomes.Received(1).Pass(StoryOfferService.ResultId, Arg.Any<string>(), Arg.Is<string>(d => d.EndsWith("result=DeathOwed hero=lord_1_75")));
     }
 
     [TestMethod]

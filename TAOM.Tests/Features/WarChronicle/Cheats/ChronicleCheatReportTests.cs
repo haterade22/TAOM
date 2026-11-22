@@ -67,6 +67,16 @@ public class ChronicleCheatReportTests
     }
 
     [TestMethod]
+    public void FormatStatus_AHeroStoryAtItsCloseDay_SaysTheDeathIsOwed()
+    {
+        var rows = new[] { new ChronicleStatusRow { Id = "breaking", Kind = ChronicleEventKind.Narrative, State = ChronicleEventState.Active, OpenDay = 2, CloseDay = 5 } };
+
+        var text = ChronicleCheatReport.FormatStatus(rows, new ArmyTargetFocus[0], 5, true, true);
+
+        StringAssert.Contains(text, "breaking (Narrative) Active: opened day 2, decided day 5, the hero's death is owed");
+    }
+
+    [TestMethod]
     public void FormatStatus_ActivePastItsCloseDay_SaysTheCloseWaitsOnTheSiege()
     {
         var text = ChronicleCheatReport.FormatStatus(Rows(), new ArmyTargetFocus[0], 72, true, true);

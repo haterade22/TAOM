@@ -29,7 +29,26 @@ public interface IChronicleStoryPort
 
     /// <summary>
     /// The result of a hero story's mission (#1105 slice 3): the hero lives and the event is Averted, or he dies in battle and it Occurred.
-    /// False when no Active hero window has this id.
+    /// A death the engine did not finish leaves the window open (<see cref="ChronicleHeroStoryResult.DeathOwed"/>).
     /// </summary>
-    bool ResolveHeroStory(string? eventId, bool heroLives, string why);
+    ChronicleHeroStoryResult ResolveHeroStory(string? eventId, bool heroLives, string why);
+}
+
+/// <summary>What <see cref="IChronicleStoryPort.ResolveHeroStory"/> did.</summary>
+public enum ChronicleHeroStoryResult
+{
+    /// <summary>No Active hero window has this id: nothing changed.</summary>
+    NoWindow,
+
+    /// <summary>The hero lives, and the event resolved Averted.</summary>
+    Averted,
+
+    /// <summary>The hero is dead, or the story no longer matters and the event occurs as text: the event resolved Occurred.</summary>
+    Occurred,
+
+    /// <summary>
+    /// The hero must die, but the engine deferred or refused the death. The window stays Active with its close day reached, so it offers
+    /// no mission, and the daily step asks again until he is dead.
+    /// </summary>
+    DeathOwed,
 }

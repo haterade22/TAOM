@@ -38,7 +38,9 @@ public interface IChronicleWorldAdapter
 
     /// <summary>
     /// Kills the hero as a death in battle with no killer. Refused for a missing or dead hero, for the player's character and when the engine
-    /// refuses the death; Deferred when the engine only marked him because his party is in a battle or besieges (the end of that battle kills him).
+    /// refuses the death; Deferred when the engine only marked him because his party is in a battle or besieges. Only Killed is a death: the
+    /// caller asks again later for the other two, and a marked hero is killed by such a later call once his party is out of the battle and
+    /// besieges nothing. A hero marked for an execution is left to that execution.
     /// </summary>
     ChronicleHeroDeath KillHeroInBattle(string heroId);
 }

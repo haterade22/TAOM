@@ -33,7 +33,7 @@ internal enum StoryResult
     /// <summary>A hero story (#1105 slice 3): the hero lives, and the event resolved Averted.</summary>
     HeroLives,
 
-    /// <summary>A hero story: the hero died in battle, and the event resolved Occurred.</summary>
+    /// <summary>A hero story: the hero's side lost. He is dead and the event resolved Occurred, or the engine still owes his death.</summary>
     HeroDies,
 }
 
@@ -205,16 +205,20 @@ internal sealed class StoryOfferService
         return StoryResult.Failed;
     }
 
-    /// <summary>A hero story (#1105 slice 3). The hero lives when his side won, whichever side the player took; the chronicle resolves the event and kills him itself.</summary>
+    /// <summary>
+    /// A hero story (#1105 slice 3). The hero lives when his side won, whichever side the player took; the chronicle resolves the event and
+    /// kills him itself. The line carries the chronicle's answer, so a death the engine still owes reads result=DeathOwed, not Occurred.
+    /// </summary>
     private StoryResult ApplyHero(ChronicleStoryOffer offer, bool heroLives, string key, string detail)
     {
-        if (!_chronicle.ResolveHeroStory(offer.EventId, heroLives, heroLives ? "the hero's side won the story mission" : "the hero's side lost the story mission"))
+        var result = _chronicle.ResolveHeroStory(offer.EventId, heroLives, heroLives ? "the hero's side won the story mission" : "the hero's side lost the story mission");
+        if (result == ChronicleHeroStoryResult.NoWindow)
         {
             _logger.LogInfo($"[StoryMissions] the story of '{offer.EventId}' was fought, but its window is no longer open: nothing changed.");
             return StoryResult.Unchanged;
         }
 
-        _outcomes.Pass(ResultId, key, detail + (heroLives ? " result=Averted" : " result=Occurred") + " hero=" + offer.HeroId);
+        _outcomes.Pass(ResultId, key, detail + " result=" + result + " hero=" + offer.HeroId);
         return heroLives ? StoryResult.HeroLives : StoryResult.HeroDies;
     }
 }

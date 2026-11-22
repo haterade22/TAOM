@@ -142,7 +142,7 @@ public class ChronicleHeroStoryTests
     {
         ReachTheDay(Breaking());
 
-        Assert.IsTrue(_sut.ResolveHeroStory("breaking", heroLives: true, "the player won"));
+        Assert.AreEqual(ChronicleHeroStoryResult.Averted, _sut.ResolveHeroStory("breaking", heroLives: true, "the player won"));
 
         Assert.AreEqual(ChronicleEventState.Averted, _f.StateOf("breaking"));
         Assert.AreEqual(0, _f.World.KillsAsked.Count);
@@ -156,12 +156,12 @@ public class ChronicleHeroStoryTests
     {
         ReachTheDay(Breaking());
 
-        Assert.IsTrue(_sut.ResolveHeroStory("breaking", heroLives: false, "the player lost"));
+        Assert.AreEqual(ChronicleHeroStoryResult.Occurred, _sut.ResolveHeroStory("breaking", heroLives: false, "the player lost"));
 
         Assert.AreEqual(ChronicleEventState.Occurred, _f.StateOf("breaking"));
         CollectionAssert.AreEqual(new[] { Hero }, _f.World.KillsAsked);
         StringAssert.Contains(DrainTexts().Single(), "taom_wc_breaking_occurred");
-        Assert.IsFalse(_sut.ResolveHeroStory("breaking", heroLives: false, "again"), "a resolved window takes no second result");
+        Assert.AreEqual(ChronicleHeroStoryResult.NoWindow, _sut.ResolveHeroStory("breaking", heroLives: false, "again"), "a resolved window takes no second result");
         Assert.AreEqual(1, _f.World.KillsAsked.Count);
     }
 
@@ -218,17 +218,101 @@ public class ChronicleHeroStoryTests
         Assert.AreEqual(0, _f.World.KillsAsked.Count);
     }
 
-    [TestMethod]
-    public void AKillTheEngineDefers_StillResolvesTheEvent()
+    // Deferred: his party is in a battle or besieges, so the engine only marks him (KillCharacterAction.cs:51). Refused: a quest or an issue
+    // vetoes the death (:34, Hero.CanDie). Neither is a death, so the event must not say that he died.
+    [DataTestMethod]
+    [DataRow(ChronicleHeroDeath.Deferred)]
+    [DataRow(ChronicleHeroDeath.Refused)]
+    public void AKillTheEngineDoesNotFinish_KeepsTheEventOpen_AnnouncesNothing_AndOffersNoMission(ChronicleHeroDeath answer)
     {
-        // His party is in a battle: the engine marks him (KillCharacterAction.cs:51) and the end of that battle kills him (MapEventSide.cs:431-437).
+        _f.World.DeathAnswer = answer;
+        ReachTheDay(Breaking());
+
+        Assert.AreEqual(ChronicleHeroStoryResult.DeathOwed, _sut.ResolveHeroStory("breaking", heroLives: false, "the player lost"));
+
+        Assert.AreEqual(ChronicleEventState.Active, _f.StateOf("breaking"), "the event does not occur while he lives");
+        Assert.AreEqual(30d, _f.Store.Get("breaking")!.CloseDay, "the window closes on the day his death was decided");
+        Assert.AreEqual(0, DrainTexts().Count, "no death is announced while he lives");
+        Assert.AreEqual(0, _sut.GetStoryOffers().Count, "a decided story offers no second mission");
+        Assert.IsTrue(_f.Logged.Any(l => l.Contains("breaking") && l.Contains(answer.ToString())), "the log says the death is owed");
+    }
+
+    [TestMethod]
+    public void AnOwedDeath_IsAskedAgainEachDay_AndTheEventOccursWhenHeDies()
+    {
+        _f.World.DeathAnswer = ChronicleHeroDeath.Refused;
+        ReachTheDay(Breaking());
+        _sut.ResolveHeroStory("breaking", heroLives: false, "the player lost");
+
+        _f.World.Day = 31;
+        _sut.RunChronicleDay();
+        Assert.AreEqual(ChronicleEventState.Active, _f.StateOf("breaking"), "still refused");
+        Assert.AreEqual(2, _f.World.KillsAsked.Count);
+
+        _f.World.DeathAnswer = ChronicleHeroDeath.Killed;
+        _f.World.Day = 32;
+        _sut.RunChronicleDay();
+
+        Assert.AreEqual(ChronicleEventState.Occurred, _f.StateOf("breaking"));
+        Assert.AreEqual(3, _f.World.KillsAsked.Count);
+        StringAssert.Contains(DrainTexts().Single(), "taom_wc_breaking_occurred");
+    }
+
+    [TestMethod]
+    public void AnOwedDeathTheEngineFinishesItself_ClosesTheEventAsOccurred_WithNoSecondKill()
+    {
+        // The end of his battle completes the engine's own mark (MapEventSide.cs:431-437).
+        _f.World.DeathAnswer = ChronicleHeroDeath.Deferred;
+        ReachTheDay(Breaking());
+        _sut.ResolveHeroStory("breaking", heroLives: false, "the player lost");
+        _f.World.AliveHeroes.Remove(Hero);
+
+        _f.World.Day = 31;
+        _sut.RunChronicleDay();
+
+        Assert.AreEqual(ChronicleEventState.Occurred, _f.StateOf("breaking"));
+        Assert.AreEqual(1, _f.World.KillsAsked.Count);
+    }
+
+    [TestMethod]
+    public void LetFateDecide_WithAKillTheEngineDefers_WaitsToo()
+    {
         _f.World.DeathAnswer = ChronicleHeroDeath.Deferred;
         ReachTheDay(Breaking());
 
-        Assert.IsTrue(_sut.ResolveHeroStory("breaking", heroLives: false, "the player lost"));
+        Assert.IsTrue(_sut.DeclineStory("breaking"), "the choice was taken");
+
+        Assert.AreEqual(ChronicleEventState.Active, _f.StateOf("breaking"));
+        Assert.AreEqual(0, _sut.GetStoryOffers().Count);
+    }
+
+    [TestMethod]
+    public void TheCloseDay_WithAKillTheEngineDefers_WaitsToo_AndOffersNoMissionAfterIt()
+    {
+        _f.World.DeathAnswer = ChronicleHeroDeath.Deferred;
+        ReachTheDay(Breaking());
+
+        _f.World.Day = 40;
+        _sut.RunChronicleDay();
+
+        Assert.AreEqual(ChronicleEventState.Active, _f.StateOf("breaking"));
+        Assert.AreEqual(40d, _f.Store.Get("breaking")!.CloseDay, "a close day already reached is kept");
+        Assert.AreEqual(0, _sut.GetStoryOffers().Count);
+    }
+
+    [TestMethod]
+    public void AnOwedDeath_WhereTheStoryNoLongerMatters_EndsAsText_WithNoSecondKill()
+    {
+        _f.World.DeathAnswer = ChronicleHeroDeath.Refused;
+        ReachTheDay(Breaking());
+        _sut.ResolveHeroStory("breaking", heroLives: false, "the player lost");
+        _f.Coop.IsSessionActive.Returns(true);
+
+        _f.World.Day = 31;
+        _sut.RunChronicleDay();
 
         Assert.AreEqual(ChronicleEventState.Occurred, _f.StateOf("breaking"));
-        Assert.IsTrue(_f.Logged.Any(l => l.Contains("breaking") && l.Contains("Deferred")), "the log says the death waits");
+        Assert.AreEqual(1, _f.World.KillsAsked.Count);
     }
 
     [TestMethod]
@@ -309,7 +393,7 @@ public class ChronicleHeroStoryTests
         _f.World.Day = 49;
         _sut.RunChronicleDay();
 
-        Assert.IsFalse(_sut.ResolveHeroStory("hornburg", heroLives: true, "wrong call"));
+        Assert.AreEqual(ChronicleHeroStoryResult.NoWindow, _sut.ResolveHeroStory("hornburg", heroLives: true, "wrong call"));
         Assert.AreEqual(ChronicleEventState.Active, _f.StateOf("hornburg"));
     }
 

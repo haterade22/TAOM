@@ -638,7 +638,10 @@ public sealed class ChronicleService : IChronicleStoryPort
     private bool HeroStoryMatters(string hero) =>
         _settings.StoryOffersEnabled && CoopSessionPolicy.IsSinglePlayerAuthority(_coop, _dedicated) && !_world.IsPlayerHero(hero);
 
-    /// <summary>The daily step of an open hero window: a hero who died meanwhile closes it as text; the close day decides by fate, and he dies.</summary>
+    /// <summary>
+    /// The daily step of an open hero window: a hero who died meanwhile closes it as Occurred; from the close day on fate decides, and
+    /// each day asks for his death again until the engine grants it.
+    /// </summary>
     private void StepHeroStory(ChronicleEventDefinition definition, ChronicleEventRecord record, double now)
     {
         if (definition.Story?.HeroId is not { } hero || !_world.IsHeroAlive(hero))
@@ -652,36 +655,51 @@ public sealed class ChronicleService : IChronicleStoryPort
     }
 
     /// <summary>
-    /// Ends a hero window. The hero lives: Averted. He dies: the kill first, then Occurred. A campaign where the story no longer matters
-    /// (<see cref="HeroStoryMatters"/>: it became a co-op session, the offers were turned off, or the player now plays the hero) kills
-    /// nobody, so the event then occurs as text.
+    /// Ends a hero window. The hero lives: Averted. He dies: the kill first, and Occurred only when he is dead. A death the engine deferred
+    /// or refused is owed: the window stays Active with its close day reached, so <see cref="GetStoryOffers"/> offers nothing and
+    /// <see cref="StepHeroStory"/> asks again each day. A campaign where the story no longer matters (<see cref="HeroStoryMatters"/>: it
+    /// became a co-op session, the offers were turned off, or the player now plays the hero) kills nobody, so the event then occurs as text.
     /// </summary>
-    private void ResolveHero(ChronicleEventDefinition definition, ChronicleEventRecord record, double now, bool heroLives, string why)
+    private ChronicleHeroStoryResult ResolveHero(ChronicleEventDefinition definition, ChronicleEventRecord record, double now, bool heroLives, string why)
     {
         if (heroLives)
         {
             Resolve(definition, record, ChronicleEventState.Averted, now, true, why);
-            return;
+            return ChronicleHeroStoryResult.Averted;
         }
 
         var hero = definition.Story!.HeroId!;
-        var death = HeroStoryMatters(hero) ? _world.KillHeroInBattle(hero).ToString() : "not killed (a co-op session, the offers off, or the player's own hero)";
-        Resolve(definition, record, ChronicleEventState.Occurred, now, true, $"{why}; {hero}: {death}");
+        if (!HeroStoryMatters(hero))
+        {
+            Resolve(definition, record, ChronicleEventState.Occurred, now, true, $"{why}; {hero}: not killed (a co-op session, the offers off, or the player's own hero)");
+            return ChronicleHeroStoryResult.Occurred;
+        }
+
+        var death = _world.KillHeroInBattle(hero);
+        if (death == ChronicleHeroDeath.Killed)
+        {
+            Resolve(definition, record, ChronicleEventState.Occurred, now, true, $"{why}; {hero}: {death}");
+            return ChronicleHeroStoryResult.Occurred;
+        }
+
+        if (!(record.CloseDay <= now))
+            record.CloseDay = now;
+        _logger.LogInfo($"[WarChronicle] '{definition.Id}': {hero} must die ({why}), but the engine answered {death}. The event waits for his death.");
+        return ChronicleHeroStoryResult.DeathOwed;
     }
 
-    public bool ResolveHeroStory(string? eventId, bool heroLives, string why)
+    public ChronicleHeroStoryResult ResolveHeroStory(string? eventId, bool heroLives, string why)
     {
-        var resolved = false;
+        var result = ChronicleHeroStoryResult.NoWindow;
         Guarded("story result", now =>
         {
             var record = ActiveStoryWindow(eventId, out var definition);
             if (record == null || definition!.IsSiege || definition.Story?.HeroId == null)
                 return;
 
-            ResolveHero(definition, record, now, heroLives, why);
-            resolved = true;
+            result = ResolveHero(definition, record, now, heroLives, why);
         });
-        return resolved;
+        return result;
     }
 
     /// <summary>Every Active story window the player has not declined, in configuration order (#1105 slice 4).</summary>
@@ -698,7 +716,8 @@ public sealed class ChronicleService : IChronicleStoryPort
             var record = _store.Get(definition.Id);
             if (definition.Story != null && !definition.IsSiege)
             {
-                if (definition.Story.HeroId is { } hero && record is { State: ChronicleEventState.Active } && _world.IsHeroAlive(hero) && HeroStoryMatters(hero))
+                if (definition.Story.HeroId is { } hero && record is { State: ChronicleEventState.Active } && record.CloseDay > Today()
+                    && _world.IsHeroAlive(hero) && HeroStoryMatters(hero))
                     offers.Add(new ChronicleStoryOffer(definition.Id, definition.Story.MissionId, definition.Title, null, definition.Attackers,
                         definition.Defender ?? string.Empty, definition.Story.AttackMissionId, hero));
                 continue;
@@ -727,7 +746,7 @@ public sealed class ChronicleService : IChronicleStoryPort
             return false;
 
         if (!definition!.IsSiege)
-            return ResolveHeroStory(eventId, false, "the player let fate decide");
+            return ResolveHeroStory(eventId, false, "the player let fate decide") != ChronicleHeroStoryResult.NoWindow;
 
         record.StoryDeclined = true;
         _logger.LogInfo($"[WarChronicle] '{eventId}': the player let fate decide the story offer.");

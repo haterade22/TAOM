@@ -262,19 +262,34 @@ the life of Boromir (`lord_1_75`).
   a neutral player may do either, and nobody fights his own realm.
 - **Results** (`StoryOfferService.ApplyHero`, `IChronicleStoryPort.ResolveHeroStory`): the hero
   lives when his side won, whichever side the player took. He lives: the event resolves `Averted`
-  (a new state, saved as 7) with its own line and effects. He dies: the chronicle kills him and the
-  event resolves `Occurred`, as the book has it. "Let fate decide" and a window nobody answers in
-  10 days both end as `Occurred`, with the kill. A mission with no verdict snoozes the offer to the
-  next day.
+  (a new state, saved as 7) with its own line and effects. He dies: the chronicle asks the engine
+  for his death, and the event resolves `Occurred`, as the book has it, only when he is dead. "Let
+  fate decide" and a window nobody answers in 10 days ask for the same death. A mission with no
+  verdict snoozes the offer to the next day.
 - **The kill** (`ChronicleWorldAdapter.KillHeroInBattle`): `KillCharacterAction.ApplyByBattle` with
-  no killer. The result is read back from the hero: Killed, Deferred or Refused, and the chronicle's
-  log line names it. The engine only marks a hero whose party is in a battle or besieges. The end
-  of that battle kills him (`MapEventSide.HandleMapEventEndForPartyInternal`). A mark made while he
-  only besieges is finished by the next daily tick or, with the life and death cycle off, at the end
-  of his next battle. The engine handles his party, his clan and, if he rules, his kingdom.
+  no killer. The result is read back from the hero: Killed, Deferred or Refused. The engine only
+  marks a hero whose party is in a battle or besieges (Deferred), and it does nothing for a hero
+  whom a `CanHeroDie` listener protects (`Hero.CanDie`: an issue or a quest; Refused). Neither is a
+  death, and the engine does not promise to finish a mark: the end of his battle does
+  (`MapEventSide.HandleMapEventEndForPartyInternal`), unless a veto holds or he was taken prisoner
+  there; the daily tick only with the life and death cycle on and no veto
+  (`AgingCampaignBehavior.DailyTickHero`). When he dies, the engine handles his party, his clan
+  and, if he rules, his kingdom.
+- **A death the engine owes** (`ChronicleHeroStoryResult.DeathOwed`, `ChronicleService.ResolveHero`):
+  after Deferred or Refused the window stays `Active` and its close day becomes that day. Such a
+  window offers no mission, and `taom.chronicle_status` reads "the hero's death is owed". Each
+  daily step asks again, and the event resolves `Occurred`, with its line and effects, on the day
+  he is dead, by that ask or by the engine's own. A marked hero whose party is in a battle, or
+  besieges a settlement, is not asked again until it is out of both: a second `ApplyByBattle` would
+  kill him there, which the engine's own daily tick never does. (A defender inside a besieged town
+  is not covered: `MobileParty.SiegeEvent` is the besieger's, and the engine kills such a hero at
+  once.) A hero marked for an execution is left to it. The offer's check line reads `result=DeathOwed`, and the menu
+  still tells the player that Boromir fell. No new field is saved: the close day and the engine's
+  death mark hold the state. A veto that never lifts keeps the event open.
 - **Who Boromir is at that moment:** dead already, or dead during the window: the event occurs as
   text. The player himself: no window. A prisoner, a party leader, an army leader, a clan leader or
-  a ruler: the engine's own death path applies, as for any lord who dies in battle.
+  a ruler: the engine's own death path applies, as for any lord who dies in battle. In a battle, as
+  a besieger, or under a quest's protection: the death is owed, as above.
 - **Co-op:** no window, no offer and no kill.
 - **A change while the window is open** (`ChronicleService.HeroStoryMatters`): a campaign that
   becomes a co-op session, a player who turns "Offer Story Missions" off, and a player who becomes
@@ -635,6 +650,10 @@ assault on the Hornburg (#1409): both of its results are proven by unattended ru
   `offer.result ... verdict=Won result=Fell taker=isengard`, and `taom.war_effects` lists
   `chronicle:hornburg:Fell:2: vlandia VolunteerRate -0.100, permanent`. No alliance line was written in that run, as intended: the
   alliance ends only on a lost assault.
+- 2026-11-22: Codex review of the branch (one HIGH, three MEDIUM, three LOW; `docs/reviews/rca-story-missions-codex-2026-11-22.md`).
+  Fixed: a death the engine deferred or refused no longer resolves the Breaking as `Occurred` (the window waits and asks again each
+  day); the scenario judge and the manifests tie verdict, reason and result together, and the judge reads the mission's traits the
+  launch captured. Open for the maintainer: the Ents' march after a repulsed assault, and the morale effect on a co-op client.
 - 2026-11-21: Slice 3, the Breaking of the Fellowship end to end: a Narrative event's hero story, its window of 10 days, the
   state `Averted`, the kill by `ApplyByBattle`, and the offer's two new options. Proven by three unattended runs of the offer
   (defence lost, hunt lost, fate); no person has played it.

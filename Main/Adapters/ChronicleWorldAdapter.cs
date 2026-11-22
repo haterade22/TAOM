@@ -49,15 +49,21 @@ public sealed class ChronicleWorldAdapter : IChronicleWorldAdapter
 
     public bool IsPlayerHero(string heroId) => FindAliveHero(heroId)?.IsHumanPlayerCharacter == true;
 
-    // ApplyByBattle(Hero victim, Hero killer, bool showNotification = true) takes a null killer: the engine's own PartyAgentOrigin.SetKilled passes one
-    // (PartyAgentOrigin.cs:193). ApplyInternal returns with only a death mark while the victim's party is in a map event or besieges (KillCharacterAction.cs:51);
-    // the end of that battle completes the mark (MapEventSide.cs:431-437), else AgingCampaignBehavior.DailyTickHero does (:101-113). It returns with nothing
-    // done for a hero who cannot die (:34, an issue or quest veto) and for the human player (:56). So the result is read back from the hero.
+    // ApplyByBattle takes a null killer, as the engine's own PartyAgentOrigin.SetKilled passes one (PartyAgentOrigin.cs:193). ApplyInternal only marks a victim whose
+    // party is in a map event or besieges (KillCharacterAction.cs:51) and does nothing for one who cannot die (:34, Hero.CanDie) or is the human player (:56), so the
+    // result is read back from the hero and the caller asks again each day (docs/features/story-missions.md, "The kill"). A second ApplyByBattle on a marked hero
+    // skips the mark branch and kills him, so one marked in a battle, as a besieger or for an execution is left alone, as the engine's daily tick leaves him (AgingCampaignBehavior.cs:110).
     public ChronicleHeroDeath KillHeroInBattle(string heroId)
     {
         var hero = FindAliveHero(heroId);
         if (hero == null || hero.IsHumanPlayerCharacter)
             return ChronicleHeroDeath.Refused;
+
+        var party = hero.PartyBelongedTo;
+        var mark = hero.DeathMark;
+        if (mark == KillCharacterAction.KillCharacterActionDetail.ExecutionAfterMapEvent
+            || (mark != KillCharacterAction.KillCharacterActionDetail.None && (party?.MapEvent != null || party?.SiegeEvent != null)))
+            return ChronicleHeroDeath.Deferred;
 
         KillCharacterAction.ApplyByBattle(hero, null);
         if (!hero.IsAlive)

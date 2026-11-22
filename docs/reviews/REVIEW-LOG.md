@@ -5989,3 +5989,18 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 | Codex F1 (P2) | The map bar applies a party screen (`IChangeableScreen.ApplyChanges`) and pops it with no `PartyScreenClosedEvent`. The behavior stayed attached to the popped logic and refused the next one, so the next screen's Reset never reached the session and the new Done postfix charged upgrades the player reset | Stale state / lifecycle | The lenses listed the callers of `DoneLogic`, not every way a party screen ends; `MapNavigationHelper` closes a screen through `PopState` alone | `AttachToPartyScreen` moves both subscriptions to a new logic; `SpecialResourcesBehaviorPartyScreenAttachTests` pins the move, the single subscribe and the close detach |
 
 - **In-game owed:** Talk confirm then Escape charges once; map bar apply, new screen, upgrade, Reset, Done charges nothing for the reset upgrade.
+
+## Review (number assigned at merge): Story Missions slices 2, 3 and 5 (#1105), tier-1 deep reviews per slice, Codex ultra (2026-11-22)
+
+- **Scope:** `feat/story-missions-fellowship`, `5cf79902c..6c5ff7c5a`: the field mode of the story mission run machine and the two Parth Galen missions; the hero story of the Breaking (state `Averted = 7`, the kill of `lord_1_75`); the story-offer scenario driver; the Hornburg attack offer, the `PartyMorale` and `permanent` effects and the broken Isengard and Mordor alliance.
+- **Lenses:** a tier-1 `/deep-review` ran on each slice before its commit; their fixes are in the slice commits.
+- **Codex:** `codex-adversarial-story-missions-1105-2026-11-22.md` at `ultra`: one HIGH, three MEDIUM, three LOW; five of nine suspects disputed with engine evidence, field mode UNVERIFIED on its native side. Assessment and root causes: `rca-story-missions-codex-2026-11-22.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| Codex F1 (HIGH) | A death the engine deferred or refused still resolved the Breaking `Occurred` and paid it | Missing vanilla gate | The completion paths of a death mark were not read to their conditions | The event waits and asks again each day; lesson in `adapters-taleworlds-api.md` |
+| Codex F4 (MEDIUM) | The scenario judge and three manifest rows accepted a verdict, a reason and a result that contradict each other | Logic error | Patterns built to match good lines, never tried on bad ones | Paired patterns from the mapping code; lesson in `testing-qa.md` |
+| Codex F5 (LOW) | The judge re-read two mission traits after the run | Stale state / lifecycle | The launch snapshot was not extended with the new traits | Captured at launch |
+
+- **Not changed:** F2 (the Ents after a repulsed assault) and F3 (the morale effect on a co-op client) wait for the maintainer; F6 (runtime validation of two config references) declined as a speculative guard, the shipped file being gated by tests.
+- **In-game owed:** one unattended Breaking offer run on the fixed build; play by a person of every mission and offer.
