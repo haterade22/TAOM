@@ -729,6 +729,28 @@ class BuildRegistriesTests(unittest.TestCase):
         issues = vm.armour_acquisition_ref_issues(regs, self.md)
         self.assertEqual({"NamedWeapons", "LadderWeapons"}, {i.entry_id for i in issues}, [i.message for i in issues])
 
+    def test_item_registry_reads_only_files_a_campaign_row_names(self):
+        """#1404: with a SubModule.xml beside the folder, a row-less file holding an <Items> root
+        (Native's mpcosmetics.xml) and a multiplayer-only row's file (mpitems.xml) define no item;
+        a file a row names, or a folder it names, does."""
+        modules = Path(self._tmp.name) / "Modules"
+        native = modules / "Native"
+        _write(native / "SubModule.xml",
+               '<Module><Xmls>'
+               '<XmlNode><XmlName id="Items" path="items"/></XmlNode>'
+               '<XmlNode><XmlName id="Items" path="folder"/></XmlNode>'
+               '<XmlNode><XmlName id="Items" path="mpitems"/><IncludedGameTypes>'
+               '<GameType value="MultiplayerGame"/></IncludedGameTypes></XmlNode>'
+               '</Xmls></Module>\n')
+        data = native / "ModuleData"
+        _write(data / "items.xml", '<Items><Item id="named_item" Type="Goods"/></Items>\n')
+        _write(data / "folder" / "a.xml", '<Items><Item id="folder_item" Type="Goods"/></Items>\n')
+        _write(data / "mpitems.xml", '<Items><Item id="mp_item" Type="Goods"/></Items>\n')
+        _write(data / "aaa_config.xml", '<Items><Item id="named_item"/><Item id="stub_item"/></Items>\n')
+        _write(self.md / "taom_spcultures.xml", '<SPCultures><Culture id="gondor"/></SPCultures>\n')
+        regs = ts.build_registries(self.md, modules)
+        self.assertEqual({"named_item", "folder_item"}, set(regs.items) & {"named_item", "folder_item", "mp_item", "stub_item"})
+
     # --- harness / mount family-type registries (Riding Caparison, 2026-07-29) ---
 
     def _write_harness_fixture(self, modules: Path) -> None:
