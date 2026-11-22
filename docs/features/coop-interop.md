@@ -738,12 +738,17 @@ unchanged (`LadderPresenter`).
 **Finds.** On the server of a live session `GuestLadderFindBehavior` hands each `MapEventEnded` to
 `GuestLadderFindService`. The winners come from the special resources' `SnapshotVictory`, which lists
 the winning side's leaders only on the authority of a live session, once per hero, with the player
-control from Coop's registry. For each co-op player's hero (`PlayerControl.Player`, not the local main
-hero) the service rolls TAOM's own `LordsLadderService.RollMaterialDrop` with no kills: the kills are
-counted on the player's PC, and the server takes no count from a client, so a co-op player finds
-materials at the base chance. `RollMaterialDrop` takes the hero and the culture as arguments and reads
-no player adapter, so the registered service serves every hero. The local main hero is rolled only by
-`LordsLadderBehavior`, so no hero is rolled twice for one battle. A find is saved in
+control from Coop's registry. For each co-op player's hero (`PlayerControl.Player`) the service
+rolls TAOM's own `LordsLadderService.RollMaterialDrop` with no kills: the kills are counted on the
+player's PC, and the server takes no count from a client, so a co-op player finds materials at the
+base chance. `RollMaterialDrop` takes the hero and the culture as arguments and reads no player
+adapter, so the registered service serves every hero. A winner marked as the local main hero is
+rolled too: Coop's hideout finalize (`BattleFinalizeHandler.CreateHideoutFinalizeContext`) sets
+`Game.PlayerTroop` to the hero of the first co-op player it finds on the attacking side, so the event
+adapter marks that player as local. `LordsLadderBehavior` rolls only on `OnPlayerBattleEnd`
+(`PlayerEncounter.DoApplyMapEventResults`): a co-op client raises it and skips it
+(`ShouldDeferToHost`), and Coop's server applies a battle's results without raising it, so no hero
+is rolled twice for one battle. A find is saved in
 `ArmourAcquisitionState.PendingFinds` (`find|<heroId>`, 1 to 999 units; a v2.0.40 build skips the kind on
 load) and given on a later hourly tick, once the hero leads a free party out of battle, as the hero's
 culture's lord's material. A hero the server no longer has, a dead hero, a culture with no material and a
