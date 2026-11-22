@@ -5,21 +5,30 @@
       "name": "{=TAOM_LD_Class_SwordBoard}Sword and Board",
       "text": "{=TAOM_LD_Class_SwordBoard_Text}A sword and a shield. Stand in the line and take the blows.",
       "mounted": false,
-      "kits": { "vlandia": { "Item0": "wm_rohan_ws_sword_a02", "Item1": "wm_rohan_shield_a03_gsg", "Item2": "", "Item3": "" } }
+      "kits": {
+        "vlandia": { "Item0": "wm_rohan_ws_sword_a02", "Item1": "wm_rohan_shield_a03_gsg", "Item2": "", "Item3": "" },
+        "gondor": { "Item0": "wm_swan_knight_swordb", "Item1": "sm_gd_shield_b1", "Item2": "", "Item3": "" }
+      }
     },
     {
       "id": "two_handed",
       "name": "{=TAOM_LD_Class_TwoHanded}Two Handed Infantry",
       "text": "{=TAOM_LD_Class_TwoHanded_Text}A two-handed axe. No shield, and a heavy blow.",
       "mounted": false,
-      "kits": { "vlandia": { "Item0": "wm_rohan_ws_axe_2h_a01", "Item1": "", "Item2": "", "Item3": "" } }
+      "kits": {
+        "vlandia": { "Item0": "wm_rohan_ws_axe_2h_a01", "Item1": "", "Item2": "", "Item3": "" },
+        "gondor": { "Item0": "wm_gondor_lossarnach_2h_axe_black_ash_a", "Item1": "", "Item2": "", "Item3": "" }
+      }
     },
     {
       "id": "archer",
       "name": "{=TAOM_LD_Class_Archer}Archer",
       "text": "{=TAOM_LD_Class_Archer_Text}A bow, two kinds of arrow and a sword for when they close in.",
       "mounted": false,
-      "kits": { "vlandia": { "Item0": "ladder_rohan_bow_t3", "Item1": "bodkin_arrows_a", "Item2": "bodkin_arrows_b", "Item3": "sturgia_sword_2_t3" } }
+      "kits": {
+        "vlandia": { "Item0": "ladder_rohan_bow_t3", "Item1": "bodkin_arrows_a", "Item2": "bodkin_arrows_b", "Item3": "sturgia_sword_2_t3" },
+        "gondor": { "Item0": "ladder_blackroot_bow_t3", "Item1": "bodkin_arrows_a", "Item2": "piercing_arrows", "Item3": "wm_pelargir_sword_a02" }
+      }
     },
     {
       "id": "cavalry",
@@ -31,6 +40,11 @@
           "Item0": "wm_rohan_ws_spear_a03", "Item1": "wm_rohan_shield_a02_ggw", "Item2": "wm_rohan_ws_sword_a01", "Item3": "",
           "Head": "cts_rohan_helmet3", "Body": "cts_rohan_armor2222", "Cape": "cts_rohan_cape2", "Gloves": "cts_rohan_armguard3", "Leg": "cts_rohan_boots1",
           "Horse": "t3_empire_horse", "HorseHarness": "rohan_horse_armor_one"
+        },
+        "gondor": {
+          "Item0": "wm_swan_knight_lance_b", "Item1": "sm_gd_shield_a3", "Item2": "wm_gondor_boromir_sword", "Item3": "",
+          "Head": "sk_gd_dol_cav_helmet_elite_a", "Body": "sk_gd_dol_chest_heavy_a", "Cape": "sk_gd_dol_pauld_cape_noble_heavy_a", "Gloves": "sk_gd_dol_bracer_heavy_a", "Leg": "sk_gd_dol_grvs_heavy_a",
+          "Horse": "noble_horse_imperial", "HorseHarness": "gondor_horse_armor_1_da"
         }
       }
     }

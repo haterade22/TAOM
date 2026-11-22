@@ -65,6 +65,82 @@ public class LongDefeatShippedConfigTests
         logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
     }
 
+    private static double MeanLevel(WaveSpec wave, Dictionary<string, XElement> troops) =>
+        wave.Mix.Sum(m => m.Weight * (double)(int)troops[m.TroopId].Attribute("level")!) / wave.Mix.Sum(m => m.Weight);
+
+    // The first balance of Minas Tirith is Helm's Deep's curve with Mordor's troops: no authored wave is more than 6 troop levels above the same wave of Helm's Deep, and a level pays what it pays
+    // there. A first table that put the Barad-dur guard in wave 7 was 15 levels above Helm's Deep at wave 9 and paid less for it (review of 2026-11-22). The balance pass (Slice 10) may move this.
+    [TestMethod]
+    public void ShippedMinasTirith_FollowsTheHelmsDeepCurve_InTroopLevelPerWave_AndInBountyPerLevel()
+    {
+        var (catalog, _) = Load();
+        var troops = Troops();
+        var helms = catalog.Fortresses.Single(f => f.Id == "helms");
+        var minas = catalog.Fortresses.Single(f => f.Id == "minas_tirith");
+
+        for (var w = 0; w < 10; w++)
+        {
+            var gap = MeanLevel(minas.Waves.Authored[w], troops) - MeanLevel(helms.Waves.Authored[w], troops);
+            Assert.IsTrue(gap <= 6.0 && gap >= -6.0, $"wave {w + 1}: Minas Tirith is {gap:0.0} troop levels from Helm's Deep");
+        }
+
+        var bounties = catalog.BuildPlan(minas, RunOptions.Default).Bounties;
+        var byLevel = RunPlanTroops.AllTroopIds(catalog.BuildPlan(helms, RunOptions.Default)).Where(id => bounties.ContainsKey(id) && troops.ContainsKey(id) && Culture(troops[id]) == "isengard")
+            .GroupBy(id => (int)troops[id].Attribute("level")!).ToDictionary(g => g.Key, g => g.Min(id => bounties[id]));
+        Assert.IsTrue(byLevel.Count >= 4, "the Isengard level bands were read");
+        foreach (var id in minas.Waves.Authored.SelectMany(x => x.Mix.Select(m => m.TroopId)).Distinct())
+        {
+            var level = (int)troops[id].Attribute("level")!;
+            var floor = byLevel.Where(b => b.Key <= level).OrderByDescending(b => b.Key).Select(b => b.Value).FirstOrDefault();
+            Assert.IsTrue(bounties[id] >= floor, $"{id} (level {level}) pays {bounties[id]}, less than Isengard pays at or below that level ({floor})");
+        }
+
+        Assert.AreEqual(6, minas.Waves.Endless.Tiers.Count, "the plan's six links; the endless line stops at the Barad-dur guard");
+    }
+
+    // The fortress and rank names of Minas Tirith reuse keys other features own (a Fords region, the lords' names), which the TAOM_LD_ string tests do not read. Each must be registered with the
+    // same English, or the screen shows the other feature's text.
+    [TestMethod]
+    public void ShippedNames_ThatReuseAnotherFeaturesKey_AreRegisteredWithTheSameDefault()
+    {
+        var rows = new[] { "taom_module_strings.xml", "taom_xslt_strings.xml" }
+            .SelectMany(file => XDocument.Load(Path.Combine(ModuleData, file)).Descendants("string"))
+            .GroupBy(s => (string)s.Attribute("id")!).ToDictionary(g => g.Key, g => g.Select(s => (string)s.Attribute("text")!).Distinct().ToList());
+        var (catalog, _) = Load();
+        var names = catalog.Fortresses.Select(f => f.Name).Concat(catalog.Fortresses.SelectMany(f => f.Waves.Commanders.Ranks.Select(r => r.Name))).Distinct().ToList();
+
+        Assert.IsTrue(names.Any(n => n.StartsWith("{=aom_lord_", StringComparison.Ordinal)) && names.Any(n => n.StartsWith("{=TAOM_FOW_", StringComparison.Ordinal)), "the reused keys are in the read");
+        foreach (var name in names)
+        {
+            var key = name.Substring(2, name.IndexOf('}') - 2);
+            Assert.IsTrue(rows.TryGetValue(key, out var registered), key + " has no English row");
+            CollectionAssert.AreEqual(new[] { name }, registered, key);
+        }
+    }
+
+    // Phase 5: Minas Tirith ships with no recorded place (phase5-plan.md section 6), so its soldiers use the scene's own frames, as Helm's Deep did before its muster was recorded.
+    [TestMethod]
+    public void ShippedFiles_LoadMinasTirithWithNoWarning_GondorAgainstMordor_WithNoRecordedPlace()
+    {
+        var (catalog, logger) = Load();
+
+        Assert.IsTrue(catalog.TryGetFortress("minas_tirith", out var minas));
+        Assert.AreEqual("taom_gondor_town_minas_tirith_forceatmo", minas.Scene);
+        Assert.AreEqual(("gondor", "mordor", "lord_1_9"), (minas.DefenderCulture, minas.AttackerCulture, minas.PlayerTroop), "Gondor defends against Mordor, and the player is Imrahil (D50, D51)");
+        Assert.AreEqual(10, minas.Waves.Authored.Count);
+        CollectionAssert.AreEqual(new[] { 110, 120, 120, 125, 130, 140, 150, 170, 185, 200 }, minas.Waves.Authored.Select(w => w.Count).ToArray(), "the counts of Helm's Deep");
+        Assert.AreEqual(150, minas.Garrison.Sum(g => g.Count));
+        Assert.AreEqual(600, minas.Shop.StartingGold);
+        Assert.AreEqual(6, minas.Shop.Offers.Count);
+        CollectionAssert.AreEqual(new[] { "aragorn", "legolas", "gimli" }, minas.Shop.Heroes.Select(h => h.Id).ToArray(), "D60: the three who came with the fleet");
+        Assert.IsNotNull(minas.Shop.Fort?.Gate, "the gate can be repaired and raised (D61)");
+        Assert.IsNotNull(minas.Shop.Fort?.Care, "field care is on sale (D61)");
+        Assert.IsNull(minas.Shop.Fort?.Volley, "no elves stood on the walls of Minas Tirith (D61)");
+        Assert.IsNull(minas.Shop.Fort?.Towers, "the towers wait for recorded posts (D61)");
+        Assert.IsTrue(minas.Keep == null && minas.Muster == null && minas.Sally == null && minas.Split == null, "nothing is recorded for this scene yet");
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
     [TestMethod]
     public void ShippedShop_CarriesTheFortificationsBlock_LoadedWhole_WithNoWarning()
     {
@@ -260,21 +336,23 @@ public class LongDefeatShippedConfigTests
         Assert.IsTrue(plan.Shop.Fort.Gate.RepairPrice > 0);
     }
 
-    // D28: CreatureSiegeRules.Track latches a gate as destroyed (E25), so a creature would treat a repaired gate as open. No Helm's Deep roster fields one, and Phase 5 (trolls) owns the reset on repair.
+    // D28: CreatureSiegeRules.Track latches a gate as destroyed (E25), so a creature would treat a repaired gate as open. No shipped roster fields one, and the troll slice of Phase 5 (D58) owns the reset on repair.
     [TestMethod]
-    public void ShippedHelms_FieldsNoOversizedCreature_SoARepairedGateIsNeverReadAsOpenByTheCreatureRole()
+    public void NoShippedFortress_FieldsAnOversizedCreature_SoARepairedGateIsNeverReadAsOpenByTheCreatureRole()
     {
         var (catalog, _) = Load();
-        catalog.TryGetFortress("helms", out var helms);
-        var plan = catalog.BuildPlan(helms, RunOptions.Default);
         var troops = Troops();
         var creatures = TAOM.Features.SiegeForces.Domain.OversizedCreatureRaces.RaceNames;
 
-        var ids = RunPlanTroops.AllTroopIds(plan);
-        var found = ids.Where(id => troops.TryGetValue(id, out var npc) && creatures.Contains((string?)npc.Attribute("race") ?? "")).ToList();
+        Assert.IsTrue(creatures.Contains((string?)troops["fow_cave_troll"].Attribute("race") ?? ""), "the read finds the race of a troll, so an empty result means no troll");
+        foreach (var fortress in catalog.Fortresses)
+        {
+            var ids = RunPlanTroops.AllTroopIds(catalog.BuildPlan(fortress, RunOptions.Default));
+            var found = ids.Where(id => troops.TryGetValue(id, out var npc) && creatures.Contains((string?)npc.Attribute("race") ?? "")).ToList();
 
-        Assert.IsTrue(ids.Count > 10, "the roster read found only " + ids.Count + " troops");
-        Assert.AreEqual(0, found.Count, "a creature in a Helm's Deep roster needs Phase 5's gate reset first: " + string.Join(", ", found));
+            Assert.IsTrue(ids.Count > 10, fortress.Id + ": the roster read found only " + ids.Count + " troops");
+            Assert.AreEqual(0, found.Count, fortress.Id + ": a creature in a roster needs the gate reset first: " + string.Join(", ", found));
+        }
     }
 
     [TestMethod]
@@ -942,17 +1020,38 @@ public class LongDefeatShippedConfigTests
     [TestMethod]
     public void ShippedClasses_EveryClassHasAKitForTheFortressesDefenderCulture()
     {
-        var (_, offer, _) = ShippedClasses();
         var (catalog, _) = Load();
-        var helms = catalog.Fortresses.Single(f => f.Id == "helms");
 
-        Assert.AreEqual(4, offer.Count);
-        Assert.IsTrue(offer.All(c => c.LoadoutFor(helms.DefenderCulture) != null));
+        Assert.IsTrue(catalog.Fortresses.Count >= 2, "Helm's Deep and Minas Tirith");
+        foreach (var fortress in catalog.Fortresses)
+        {
+            var offer = catalog.ClassesFor(fortress);
+            CollectionAssert.AreEqual(new[] { "sword_and_board", "two_handed", "archer", "cavalry" }, offer.Select(c => c.Id).ToArray(), fortress.Id + " offers the four classes");
+            Assert.IsTrue(offer.All(c => c.LoadoutFor(fortress.DefenderCulture) != null), fortress.Id);
+        }
     }
 
-    // The fow_ copies and the campaign troops past them, by id: an upgrade line climbs into troops_rohan.xml, which loads in a CustomGame too (SubModule.xml).
+    // The Gondor twin of the Rohan test above: the kit is the gear of one Dol Amroth knight (D62), whose horse and harness stand beside his rosters, not inside one.
+    [TestMethod]
+    public void ShippedClasses_TheGondorCavalryKit_IsOneDolAmrothKnightsGear_WithAHorseAndItsHarness()
+    {
+        var (catalog, _) = Load();
+        var minas = catalog.Fortresses.Single(f => f.Id == "minas_tirith");
+        var cavalry = catalog.ClassesFor(minas).Single(c => c.Id == "cavalry");
+        var kit = cavalry.Kits["gondor"].Slots.Where(s => s.ItemId.Length > 0).ToDictionary(s => s.Slot, s => s.ItemId);
+        var knight = Troops()["fow_gondor_da_knight"].Element("Equipments")!;
+        var carried = knight.Elements("EquipmentRoster").First().Elements("equipment").Concat(knight.Elements("equipment"))
+            .ToDictionary(e => (string)e.Attribute("slot")!, e => ((string)e.Attribute("id")!).Replace("Item.", ""));
+
+        foreach (var slot in new[] { "Item0", "Item1", "Item2", "Head", "Body", "Cape", "Gloves", "Leg", "Horse", "HorseHarness" })
+            Assert.AreEqual(carried[slot], kit[slot], slot + " is the knight's own");
+        Assert.IsFalse(kit.ContainsKey("Item3"), "the knight carries no fourth weapon; the kit clears the lord's");
+        Assert.IsTrue(cavalry.LoadoutFor("gondor")!.Mounted);
+    }
+
+    // The fow_ copies and the campaign troops past them, by id: an upgrade line climbs into troops_rohan.xml or troops_gondor.xml, which load in a CustomGame too (SubModule.xml).
     private static Dictionary<string, XElement> LineTroops() =>
-        new[] { Path.Combine(ModuleData, "fords_of_war", "fords_troops.xml"), Path.Combine(ModuleData, "troops", "troops_rohan.xml") }
+        new[] { Path.Combine(ModuleData, "fords_of_war", "fords_troops.xml"), Path.Combine(ModuleData, "troops", "troops_rohan.xml"), Path.Combine(ModuleData, "troops", "troops_gondor.xml") }
             .SelectMany(path => XDocument.Load(path).Descendants("NPCCharacter"))
             .GroupBy(e => (string)e.Attribute("id")!)
             .ToDictionary(g => g.Key, g => g.First());
@@ -963,11 +1062,23 @@ public class LongDefeatShippedConfigTests
     public void ShippedShop_EveryUpgradeStep_IsAStepOfTheCampaignTree_UpALevel_InTheDefenderCulture_FromATroopTheRunCanHave()
     {
         var (catalog, _) = Load();
-        Assert.IsTrue(catalog.TryGetFortress("helms", out var helms));
-        var steps = helms.Shop.Upgrades;
-        Assert.AreEqual(9, steps.Count, "the Rohan lines: five Westfold steps, two Eastfold, two Edoras");
-
+        // Rohan: five Westfold steps, two Eastfold, two Edoras. Gondor (D59): four Anórien foot, three Anórien bow, two each for Lossarnach, the Blackroot Vale, Pinnath Gelin and the Citadel.
+        var expected = new Dictionary<string, int> { ["helms"] = 9, ["minas_tirith"] = 15 };
+        CollectionAssert.AreEquivalent(expected.Keys.ToArray(), catalog.Fortresses.Select(f => f.Id).ToArray(), "a new fortress states its step count here");
         var troops = LineTroops();
+        var problems = new List<string>();
+        foreach (var fortress in catalog.Fortresses)
+        {
+            Assert.AreEqual(expected[fortress.Id], fortress.Shop.Upgrades.Count, fortress.Id);
+            problems.AddRange(UpgradeProblems(fortress, troops).Select(p => fortress.Id + ": " + p));
+        }
+
+        CollectionAssert.AreEqual(Array.Empty<string>(), problems, string.Join("; ", problems));
+    }
+
+    private static List<string> UpgradeProblems(FortressEntry helms, Dictionary<string, XElement> troops)
+    {
+        var steps = helms.Shop.Upgrades;
         var reachable = new HashSet<string>(helms.Garrison.Select(g => g.TroopId).Concat(helms.Shop.Offers.Select(o => o.TroopId)), StringComparer.OrdinalIgnoreCase);
         for (var grew = true; grew;)
         {
@@ -1000,6 +1111,6 @@ public class LongDefeatShippedConfigTests
                 wrong.Add(step.Id + ": the name is not a TAOM_LD_Up_ key");
         }
 
-        CollectionAssert.AreEqual(Array.Empty<string>(), wrong, string.Join("; ", wrong));
+        return wrong;
     }
 }

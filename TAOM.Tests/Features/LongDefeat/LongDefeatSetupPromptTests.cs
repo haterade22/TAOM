@@ -121,8 +121,8 @@ public class LongDefeatSetupPromptTests
         var prompt = _menu.Prompts.Single();
         Assert.AreEqual("{=TAOM_LD_MenuOption}The Long Defeat", prompt.Title);
         StringAssert.Contains(prompt.Description, "If a shader error window appears while the fortress loads, press Cancel.");
-        Assert.AreEqual("helms", prompt.Choices.Single().Id);
-        Assert.AreEqual(Catalog().Fortresses[0].Name, prompt.Choices[0].Label, "no best run yet: the plain name");
+        CollectionAssert.AreEqual(new[] { "helms", "minas_tirith" }, prompt.Choices.Select(c => c.Id).ToArray(), "every shipped fortress, in the file's order");
+        CollectionAssert.AreEqual(Catalog().Fortresses.Select(f => f.Name).ToArray(), prompt.Choices.Select(c => c.Label).ToArray(), "no best run yet: the plain names");
     }
 
     [TestMethod]
@@ -133,11 +133,13 @@ public class LongDefeatSetupPromptTests
 
         Prompt(best: store).Begin();
 
-        var choice = _menu.Prompts.Single().Choices.Single();
+        var choices = _menu.Prompts.Single().Choices;
+        var choice = choices.Single(c => c.Id == "helms");
         StringAssert.StartsWith(choice.Label, "{=TAOM_LD_Prompt_ChoiceBest}");
         Assert.AreEqual("4", choice.Variables!["WAVES"]);
         Assert.AreEqual("321", choice.Variables["KILLS"]);
         Assert.AreEqual(Catalog().Fortresses[0].Name, choice.Variables["NAME"]);
+        Assert.AreEqual(Catalog().Fortresses[1].Name, choices.Single(c => c.Id == "minas_tirith").Label, "a fortress with no best run keeps its plain name");
     }
 
     [TestMethod]

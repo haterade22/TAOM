@@ -113,7 +113,7 @@ public class LongDefeatMenuEntryTests
         menu.Options[OptionId].IsHidden();
 
         Assert.AreEqual("pass", log.Lines[0].Split(' ')[0]);
-        StringAssert.Contains(log.Lines[0], "fortresses=1");
+        StringAssert.Contains(log.Lines[0], "fortresses=2", "Helm's Deep and Minas Tirith");
         Assert.AreEqual(1, log.Lines.FindAll(l => l.Contains(LongDefeatChecks.MenuId)).Count, "one line per poll would flood the log");
     }
 

@@ -4744,7 +4744,9 @@
 	<string id="taom_seat_mcm_keep_panel" text="{=taom_seat_mcm_keep_panel}Keep the order panel open" />
 	<string id="taom_seat_mcm_keep_panel_hint" text="{=taom_seat_mcm_keep_panel_hint}While you are in the Seat, the order panel opens again after an order. Closing it yourself (Escape, the right mouse button, or the panel key) keeps it closed. With the game option that slows time (on by default) while orders are given, the whole stay in the Seat runs at quarter speed apart from one frame per order. Default: off." />
 	<string id="TAOM_LD_Ability_Summon_Isengard" text="{=TAOM_LD_Ability_Summon_Isengard}Uruk-hai of Isengard" />
+	<string id="TAOM_LD_Ability_Summon_Mordor" text="{=TAOM_LD_Ability_Summon_Mordor}Uruks of Mordor" />
 	<string id="TAOM_LD_Ability_WarCry_Isengard" text="{=TAOM_LD_Ability_WarCry_Isengard}The White Hand Calls" />
+	<string id="TAOM_LD_Ability_WarCry_Mordor" text="{=TAOM_LD_Ability_WarCry_Mordor}The Lidless Eye Is Upon Them" />
 	<string id="TAOM_LD_Affix_Isengard_Blades" text="{=TAOM_LD_Affix_Isengard_Blades}Fouled Blades" />
 	<string id="TAOM_LD_Affix_Isengard_Discipline" text="{=TAOM_LD_Affix_Isengard_Discipline}Bred for War" />
 	<string id="TAOM_LD_Affix_Isengard_Drums" text="{=TAOM_LD_Affix_Isengard_Drums}War Drums of Orthanc" />
@@ -4958,6 +4960,12 @@
 	<string id="TAOM_LD_Offer_Knights" text="{=TAOM_LD_Offer_Knights}King's Knights, on foot" />
 	<string id="TAOM_LD_Offer_Militia" text="{=TAOM_LD_Offer_Militia}Westfold Militia" />
 	<string id="TAOM_LD_Offer_Yeomen" text="{=TAOM_LD_Offer_Yeomen}Eastfold Yeomen" />
+	<string id="TAOM_LD_Offer_Gondor_Militia" text="{=TAOM_LD_Offer_Gondor_Militia}Anórien Militia" />
+	<string id="TAOM_LD_Offer_Gondor_ArcherMilitia" text="{=TAOM_LD_Offer_Gondor_ArcherMilitia}Anórien Archer Militia" />
+	<string id="TAOM_LD_Offer_Gondor_Lossarnach" text="{=TAOM_LD_Offer_Gondor_Lossarnach}Axemen of Lossarnach" />
+	<string id="TAOM_LD_Offer_Gondor_Morthond" text="{=TAOM_LD_Offer_Gondor_Morthond}Morthond Bowmen" />
+	<string id="TAOM_LD_Offer_Gondor_PinnathGelin" text="{=TAOM_LD_Offer_Gondor_PinnathGelin}Spearmen of Pinnath Gelin" />
+	<string id="TAOM_LD_Offer_Gondor_Citadel" text="{=TAOM_LD_Offer_Gondor_Citadel}Guards of the Citadel" />
 	<string id="TAOM_LD_Up_Axemen" text="{=TAOM_LD_Up_Axemen}Militia to Westfold Axemen" />
 	<string id="TAOM_LD_Up_VeteranAxemen" text="{=TAOM_LD_Up_VeteranAxemen}Axemen to Veteran Axemen" />
 	<string id="TAOM_LD_Up_HeavyAxemen" text="{=TAOM_LD_Up_HeavyAxemen}Axemen to Heavy Axemen" />
@@ -4967,6 +4975,21 @@
 	<string id="TAOM_LD_Up_VeteranBowmen" text="{=TAOM_LD_Up_VeteranBowmen}Bowmen to Veteran Bowmen" />
 	<string id="TAOM_LD_Up_RoyalGuard" text="{=TAOM_LD_Up_RoyalGuard}King's Knights to the King's Royal Guard" />
 	<string id="TAOM_LD_Up_Riders" text="{=TAOM_LD_Up_Riders}Royal Guard to the Riders of Rohan" />
+	<string id="TAOM_LD_Up_Gondor_Footmen" text="{=TAOM_LD_Up_Gondor_Footmen}Militia to Anórien Footmen" />
+	<string id="TAOM_LD_Up_Gondor_Guardsmen" text="{=TAOM_LD_Up_Gondor_Guardsmen}Footmen to Anórien Guardsmen" />
+	<string id="TAOM_LD_Up_Gondor_Infantry" text="{=TAOM_LD_Up_Gondor_Infantry}Guardsmen to Anórien Infantry" />
+	<string id="TAOM_LD_Up_Gondor_VeteranInfantry" text="{=TAOM_LD_Up_Gondor_VeteranInfantry}Infantry to Anórien Veteran Infantry" />
+	<string id="TAOM_LD_Up_Gondor_Skirmishers" text="{=TAOM_LD_Up_Gondor_Skirmishers}Archer Militia to Anórien Skirmishers" />
+	<string id="TAOM_LD_Up_Gondor_Bowmen" text="{=TAOM_LD_Up_Gondor_Bowmen}Skirmishers to Anórien Bowmen" />
+	<string id="TAOM_LD_Up_Gondor_Archers" text="{=TAOM_LD_Up_Gondor_Archers}Bowmen to Anórien Archers" />
+	<string id="TAOM_LD_Up_Gondor_VeteranAxebearers" text="{=TAOM_LD_Up_Gondor_VeteranAxebearers}Axemen to Lossarnach Veteran Axebearers" />
+	<string id="TAOM_LD_Up_Gondor_LossarnachGuard" text="{=TAOM_LD_Up_Gondor_LossarnachGuard}Veteran Axebearers to the Lossarnach Guard" />
+	<string id="TAOM_LD_Up_Gondor_BlackrootScouts" text="{=TAOM_LD_Up_Gondor_BlackrootScouts}Morthond Bowmen to Blackroot Vale Scouts" />
+	<string id="TAOM_LD_Up_Gondor_BlackrootArchers" text="{=TAOM_LD_Up_Gondor_BlackrootArchers}Scouts to Blackroot Vale Archers" />
+	<string id="TAOM_LD_Up_Gondor_VeteranSpearmen" text="{=TAOM_LD_Up_Gondor_VeteranSpearmen}Spearmen to Pinnath Gelin Veteran Spearmen" />
+	<string id="TAOM_LD_Up_Gondor_Spearwardens" text="{=TAOM_LD_Up_Gondor_Spearwardens}Veteran Spearmen to Pinnath Gelin Spearwardens" />
+	<string id="TAOM_LD_Up_Gondor_CitadelVeterans" text="{=TAOM_LD_Up_Gondor_CitadelVeterans}Guards of the Citadel to Citadel Veterans" />
+	<string id="TAOM_LD_Up_Gondor_CitadelSergeants" text="{=TAOM_LD_Up_Gondor_CitadelSergeants}Citadel Veterans to Citadel Sergeants" />
 	<string id="TAOM_LD_Hero_Aragorn_Text" text="{=TAOM_LD_Hero_Aragorn_Text}The heir of Isildur, sword in hand. If he falls, he can be called again." />
 	<string id="TAOM_LD_Hero_Legolas_Text" text="{=TAOM_LD_Hero_Legolas_Text}The prince of Mirkwood and his bow. If he falls, he can be called again." />
 	<string id="TAOM_LD_Hero_Gimli_Text" text="{=TAOM_LD_Hero_Gimli_Text}The son of Glóin and his axe. If he falls, he can be called again." />
