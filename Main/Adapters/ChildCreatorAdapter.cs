@@ -19,6 +19,7 @@ public class ChildCreatorAdapter : IChildCreatorAdapter
             clan.HomeSettlement,
             clan,
             age);
+        hero.SetBirthDay(HeroHelper.GetRandomBirthDayForAge(age));
 
         // HeroCreator.CreateChild inherits the template's sex. When the service
         // fell back to the opposite-sex pool (zero-male clan), enforce the requested sex.
