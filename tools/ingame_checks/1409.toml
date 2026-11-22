@@ -1,6 +1,7 @@
 # In-game checks for #1409 (Phase 7 of #1325: the Helm's Deep attack, the player storms the walls as the attacker in the story mission helms_deep_attack), read by
 # tools/ingame_verdict.py. The unattended run is: python tools/run_scenario.py --kind story-mission --mission helms_deep_attack, then python tools/ingame_verdict.py --issue 1409
-# on its log. Only the dev menu and that driver can open the row: the War Chronicle offers no attack yet. The story mission hosts the Long Defeat run, whose check lines
+# on its log. The dev menu and that driver open the row. Since #1105 slice 5 the War Chronicle's Hornburg offer (--kind story-offer --event hornburg --choice attack) launches the same
+# mission: such a run reaches the scoped rows only, because the done row reads the story-mission kind's line. The story mission hosts the Long Defeat run, whose check lines
 # HostedRunOutcomeLog writes as taom.story-missions.hosted.<name>; the ability and signature lines are not renamed.
 #
 # Every row but the done row carries a scope that opens a segment at each launch of helms_deep_attack (StoryMissionLauncher's "[StoryMissions] launching <scene> for '<id>' (...)")
@@ -86,7 +87,7 @@ scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_attack\x27 '
 scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "the same run: the wave ended by a win or a loss that the mission reached by itself (a reason=Abandoned end reads FAIL here)"
 reached = ['\[Check\] id=taom\.story-missions\.ended result=']
-pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost) side=Attacking reason=(TargetReached|DefendersDead|KeepLost) waves=\d+$']
+pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won side=Attacking reason=(DefendersDead|KeepLost)|Lost side=Attacking reason=TargetReached) waves=\d+$']
 fail = ['\[Check\] id=taom\.story-missions\.ended result=fail', '\[Check\] id=taom\.story-missions\.ended result=pass verdict=Lost side=Attacking reason=Abandoned ',
         '\[Check\] id=taom\.story-missions\.ended result=\S+ verdict=\S+ side=Defending ',
         '\[Check\] id=taom\.story-missions\.ended result=pass verdict=Lost side=Attacking reason=(KeepLost|DefendersDead) ',

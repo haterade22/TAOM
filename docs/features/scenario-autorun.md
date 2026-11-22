@@ -126,7 +126,9 @@ co-op, no speed above 1x, no forced loss. The wall limit of the Running phase do
 the launcher's wall limit bound the run.
 
 The judge in `run_scenario.py` and `tools/ingame_checks/1368.toml` both require three log lines: the done line with
-`verdict=(Won|Lost)` for the armed mission, the `hosted.boot` pass line and the strict `taom.story-missions.ended` pass line. The
+`verdict=(Won|Lost)` for the armed mission, the `hosted.boot` pass line and the strict `taom.story-missions.ended` pass line. The ended
+pattern ties the verdict to the reason of its side, as `StoryVerdict.Of` maps them, and the judge also requires the ended line to carry
+the done line's verdict. The mission's field and `mustLive` traits are read once, at launch, with its side. The
 judge searches the whole log and requires exactly one launch line. The manifest scopes the boot and ended rows to the launch of the
 armed mission; its done row has no scope, because the driver writes one done line per process and a failure before the launch
 (`mission_refused`, a launcher refusal) writes no launching line. Its fail pattern names the mission, and the ended row also fails a
@@ -165,7 +167,9 @@ The done file has `reason`, `kind`, `event`, `choice`, `verdict` (`Won`, `Lost`,
 check id is `taom.autorun.story-offer.done` (`reason=`, `event=`, `choice=`, `verdict=`, `mission_seconds=`, `culture=`), and only `reason=ok`
 passes. The judge in `run_scenario.py` requires, besides the done line and the common log conditions: `taom.story-missions.offer.shown`
 with the event's story mission; for `defend` and `attack` the `hosted.boot` line (siege or field by the mission's row), the `ended` line of
-the side, `taom.story-missions.offer.result result=pass` and exactly one `[StoryMissions] launching` line (the chosen mission, autoplay True);
+the side with the done line's verdict, the `taom.story-missions.offer.result` pass line with that verdict and the result it gives
+(`offer_result_pass`: Held or Fell for a fortress, Averted, Occurred or DeathOwed for a hero) and exactly one `[StoryMissions] launching`
+line (the chosen mission, autoplay True);
 for `fate` the `[WarChronicle]` line of the decline (`'<event>' Occurred on day N (the player let fate decide` for a hero story,
 `'<event>': the player let fate decide the story offer.` for a fortress window) and no launching line.
 
@@ -173,8 +177,8 @@ What decides the sides: `--culture` (default `gondor`, a free people), read thro
 shows when its mission ships and the player's side is not opposed to the event's own defender (defend) or first attacker (attack); neutral is
 opposed to nobody. A culture the table does not list is refused at parse, and so is a choice the culture is never offered (`fate` needs one
 side). `breaking` offers defend to a free or neutral culture and attack to an evil or neutral one (`isengard` is both in `cultures.json` and
-`alignment.json`); `hornburg` ships no attack mission, so `--choice attack` is refused at parse for it, and `--choice fate --culture isengard`
-too. The runner cannot know the tie rule (a player already in the defender's or an attacker's kingdom): a new campaign has none. The default of the setting "Offer Story Missions" (`TaomSettings.WarChronicleStoryMissions`) is on; with it off the
+`alignment.json`); `hornburg` offers defend to a free or neutral culture and, since slice 5, attack (`helms_deep_attack`) to an evil or
+neutral one. The runner cannot know the tie rule (a player already in the defender's or an attacker's kingdom): a new campaign has none. The default of the setting "Offer Story Missions" (`TaomSettings.WarChronicleStoryMissions`) is on; with it off the
 event opens as text and the run ends `offer_not_shown`. A `breaking` window opens a hero story only while `lord_1_75` lives, which a new campaign
 has at the start.
 

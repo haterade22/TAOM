@@ -2961,3 +2961,11 @@ The #1223 tests called a pure helper on `CustomAttacksUtils`. Any static call ru
 **Prevent:** before a tuning text compares settings, run one setting at least twice and write its spread down beside the numbers. If the spread within a setting is as large as the difference between settings, report the range and stop: say that the runs cannot rank them, and name the next measurement (more runs for each setting, or a seeded battle). A cause read from one run's log ("this hero made a third of the kills") is a reading of that run only; check it in a second run before it carries a recommendation. A battle the bot has not won says that the bot has not won it, never that a person cannot.
 
 **Source:** the #1105 slice 5 tuning runs under `E:/Temp/scenario-runs` (`20261121-230907`, `-232240`, `-234117`, `20261122-000423`, `-003007`); the two comments of 2026-11-22 on #1409; `docs/features/story-missions.md` "Known limits".
+
+### A pass pattern with two free alternations accepts lines that no correct build writes (#1105, 2026-11-22)
+
+**Why missed:** the ended row read `verdict=(Won|Lost) ... reason=(TargetReached|DefendersDead|KeepLost|HeroFell)`, and the offer judge took any `offer.result result=pass` line. Each pattern was built to match every good line; nobody asked which bad lines it also matches. A won defence whose hero fell, with the event Occurred, passed the judge and both manifest rows, and that contradiction is the regression the judge exists to catch. Two fixture logs in the judge's own tests held such a contradiction and stayed green.
+
+**Prevent:** when a pass pattern has two alternations, write the pairs out from the code that maps one to the other (`Won ... reason=X|Lost ... reason=(Y|Z)`), and add one test row for a bad pair. When two lines of one run report the same fact (the driver's verdict, the mission's verdict, the result), the judge reads the first and narrows the others to it. After a pattern is made stricter, read the real run logs again with it: a stricter pattern that fails a good log is wrong too.
+
+**Source:** Codex adversarial review of 2026-11-22, F4; `tools/run_scenario.py` `story_ended_pass`, `offer_result_pass`; `tools/tests/test_run_scenario.py` `VerdictConsistencyTests`.

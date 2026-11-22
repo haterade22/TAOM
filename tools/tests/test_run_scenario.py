@@ -654,7 +654,8 @@ class StoryJudgeTests(unittest.TestCase):
         self.assertIn("pass line present, no CrashReport block, clean unload", why)
 
     def test_a_lost_verdict_passes_too(self):
-        log = STORY_LOG.replace("verdict=Won mission_seconds", "verdict=Lost mission_seconds").replace("verdict=Won side", "verdict=Lost side")
+        log = (STORY_LOG.replace("verdict=Won mission_seconds", "verdict=Lost mission_seconds")
+               .replace("verdict=Won side=Defending reason=TargetReached", "verdict=Lost side=Defending reason=KeepLost"))
         self.assertEqual(story_judge(good_story_done(verdict="Lost"), log)[0], 0)
 
     def test_story_needs_its_own_pass_line(self):
@@ -1420,7 +1421,8 @@ class OfferJudgeTests(unittest.TestCase):
         launch = FIELD_LAUNCH.replace("parth_galen_save", "parth_galen_kill")
         ended = STORY_ENDED.replace("verdict=Won side=Defending reason=TargetReached", "verdict=Won side=Attacking reason=KeepLost")
         done = OFFER_DONE.replace("choice=defend", "choice=attack").replace("verdict=Lost", "verdict=Won")
-        log = "\n".join([OFFER_SHOWN, launch, FIELD_BOOT, ended, OFFER_RESULT, done, UNLOAD_LINE, STAMP_LINE.format(HEAD)])
+        result = OFFER_RESULT.replace("verdict=Lost", "side=Attacking verdict=Won")
+        log = "\n".join([OFFER_SHOWN, launch, FIELD_BOOT, ended, result, done, UNLOAD_LINE, STAMP_LINE.format(HEAD)])
         armed = offer_armed(choice="attack", mission="parth_galen_kill", side="Attacking")
         code, why = offer_judge(good_offer_done(choice="attack", verdict="Won"), log, armed)
         self.assertEqual(code, 0, why)
@@ -1640,6 +1642,152 @@ class OfferWiringTests(unittest.TestCase):
         self.assertIn('"[WarChronicle] Opened: \'" + eventId + "\' is Active until day"', rules)
         service = (ROOT / "Main/Features/WarChronicle/Events/ChronicleService.cs").read_text(encoding="utf-8")
         self.assertIn("$\"'{definition.Id}' is Active until day {Day(record.CloseDay)}.\"", service)
+
+
+class VerdictConsistencyTests(unittest.TestCase):
+    """Codex review of 2026-11-22: the judge and the manifests took a verdict, a reason and a result that contradict each other. The rules
+    are StoryVerdict.Of (verdict from the reason, by side) and StoryOfferService.Apply (result from the verdict, by side)."""
+
+    def ended(self, verdict, side, reason):
+        return f"[2026-11-22 09:55:00] [INFO] [Check] id=taom.story-missions.ended result=pass verdict={verdict} side={side} reason={reason} waves=0"
+
+    def result(self, detail):
+        return "[2026-11-22 09:59:00] [INFO] [Check] id=taom.story-missions.offer.result result=pass " + detail
+
+    def test_the_ended_pattern_ties_the_verdict_to_the_reason_of_its_side(self):
+        cases = (("Defending", "Won", "TargetReached", True), ("Defending", "Lost", "DefendersDead", True), ("Defending", "Lost", "KeepLost", True),
+                 ("Defending", "Lost", "HeroFell", True), ("Defending", "Won", "HeroFell", False), ("Defending", "Won", "KeepLost", False),
+                 ("Defending", "Lost", "TargetReached", False), ("Attacking", "Won", "KeepLost", True), ("Attacking", "Won", "DefendersDead", True),
+                 ("Attacking", "Won", "HeroFell", True), ("Attacking", "Lost", "TargetReached", True), ("Attacking", "Lost", "HeroFell", False),
+                 ("Attacking", "Won", "TargetReached", False))
+        for side, verdict, reason, good in cases:
+            with self.subTest(side=side, verdict=verdict, reason=reason):
+                self.assertEqual(bool(re.search(rs.story_ended_pass(side, must_live=True), self.ended(verdict, side, reason))), good)
+
+    def test_the_ended_pattern_can_ask_for_one_verdict(self):
+        pattern = rs.story_ended_pass("Defending", must_live=True, verdict="Lost")
+        self.assertTrue(re.search(pattern, self.ended("Lost", "Defending", "HeroFell")))
+        self.assertFalse(re.search(pattern, self.ended("Won", "Defending", "TargetReached")))
+
+    def test_the_result_pattern_follows_the_side_that_won(self):
+        hero = (("Defending", "verdict=Won result=Averted hero=lord_1_75", True), ("Defending", "verdict=Lost result=Occurred hero=lord_1_75", True),
+                ("Defending", "verdict=Lost result=DeathOwed hero=lord_1_75", True), ("Defending", "verdict=Won result=Occurred hero=lord_1_75", False),
+                ("Defending", "verdict=Lost result=Averted hero=lord_1_75", False),
+                ("Attacking", "side=Attacking verdict=Won result=Occurred hero=lord_1_75", True),
+                ("Attacking", "side=Attacking verdict=Lost result=Averted hero=lord_1_75", True),
+                ("Attacking", "side=Attacking verdict=Won result=Averted hero=lord_1_75", False),
+                ("Attacking", "verdict=Won result=Occurred hero=lord_1_75", False))
+        for side, detail, good in hero:
+            with self.subTest(detail=detail):
+                self.assertEqual(bool(re.search(rs.offer_result_pass(side, True), self.result(detail))), good)
+        walls = (("Defending", "verdict=Won result=Held", True), ("Defending", "verdict=Lost result=Fell taker=isengard", True),
+                 ("Defending", "verdict=Won result=Fell taker=isengard", False), ("Attacking", "side=Attacking verdict=Lost result=Held", True),
+                 ("Attacking", "side=Attacking verdict=Won result=Fell taker=isengard", True),
+                 ("Attacking", "side=Attacking verdict=Won result=Held", False))
+        for side, detail, good in walls:
+            with self.subTest(detail=detail):
+                self.assertEqual(bool(re.search(rs.offer_result_pass(side, False), self.result(detail))), good)
+
+    def test_a_won_defence_whose_hero_fell_and_whose_event_occurred_is_refused(self):
+        code, why = offer_judge(good_offer_done(verdict="Won"), OFFER_LOG.replace("verdict=Lost", "verdict=Won"))
+        self.assertEqual(code, 1)
+        self.assertIn("taom.story-missions.ended pass line", why)
+        self.assertIn("taom.story-missions.offer.result pass line", why)
+
+    def test_the_result_line_must_carry_the_verdict_of_the_done_line(self):
+        code, why = offer_judge(good_offer_done(), OFFER_LOG.replace("verdict=Lost result=Occurred", "verdict=Won result=Averted"))
+        self.assertEqual(code, 1)
+        self.assertIn("offer.result pass line", why)
+        self.assertNotIn("ended pass line", why)
+
+    def test_the_ended_line_must_carry_the_verdict_of_the_done_line(self):
+        code, why = offer_judge(good_offer_done(), OFFER_LOG.replace(FIELD_ENDED, STORY_ENDED))
+        self.assertEqual(code, 1)
+        self.assertIn("ended pass line", why)
+        self.assertNotIn("offer.result pass line", why)
+        code, why = story_judge(good_story_done(verdict="Lost"), STORY_LOG.replace("verdict=Won mission_seconds", "verdict=Lost mission_seconds"))
+        self.assertEqual(code, 1)
+        self.assertIn("ended pass line with side=Defending and verdict=Lost", why)
+
+    def manifest_rows(self, issue):
+        import tomllib
+        return {c["id"]: c for c in tomllib.loads((ROOT / f"tools/ingame_checks/{issue}.toml").read_text(encoding="utf-8"))["check"]}
+
+    def test_a_contradiction_reads_fail_in_the_manifests_and_a_retreat_does_not(self):
+        m1105, m1368 = self.manifest_rows(1105), self.manifest_rows(1368)
+
+        def fails(row, line):
+            return any(re.search(p, line) for p in row["fail"])
+
+        defend = (m1105["taom.story-missions.ended"], m1105["taom.story-missions.ended.parth-galen-save"], m1368["taom.story-missions.ended"])
+        for row in defend:
+            self.assertTrue(fails(row, self.ended("Won", "Defending", "KeepLost")))
+            self.assertTrue(fails(row, self.ended("Lost", "Defending", "TargetReached")))
+            self.assertFalse(fails(row, self.ended("Won", "Defending", "TargetReached")))
+            self.assertFalse(fails(row, self.ended("Lost", "Defending", "KeepLost")))
+        self.assertTrue(fails(defend[1], self.ended("Won", "Defending", "HeroFell")))
+        self.assertFalse(fails(defend[1], self.ended("Lost", "Defending", "HeroFell")))
+        self.assertFalse(fails(defend[0], self.ended("Lost", "Defending", "Abandoned")), "1105 keeps a person's retreat NOT REACHED")
+        kill = m1105["taom.story-missions.ended.parth-galen-kill"]
+        self.assertTrue(fails(kill, self.ended("Lost", "Attacking", "HeroFell")))
+        self.assertTrue(fails(kill, self.ended("Won", "Attacking", "TargetReached")))
+        self.assertFalse(fails(kill, self.ended("Won", "Attacking", "HeroFell")))
+        self.assertFalse(fails(kill, self.ended("Lost", "Attacking", "Abandoned")))
+        breaking, walls = m1105["taom.story-missions.offer.result.breaking"], m1105["taom.story-missions.offer.result"]
+        self.assertTrue(fails(breaking, self.result("verdict=Won result=Occurred hero=lord_1_75")))
+        self.assertTrue(fails(breaking, self.result("side=Attacking verdict=Lost result=DeathOwed hero=lord_1_75")))
+        self.assertFalse(fails(breaking, self.result("verdict=Lost result=DeathOwed hero=lord_1_75")))
+        self.assertTrue(fails(walls, self.result("verdict=Won result=Fell taker=isengard")))
+        self.assertTrue(fails(walls, self.result("side=Attacking verdict=Won result=Held")))
+        self.assertFalse(fails(walls, self.result("verdict=Won result=Held")))
+        self.assertFalse(fails(walls, self.result("side=Attacking verdict=Won result=Fell taker=isengard")))
+
+    def test_the_1105_result_rows_and_the_judge_agree_on_every_line_the_offer_writes(self):
+        rows = self.manifest_rows(1105)
+        kinds = ((True, ("Averted", "Occurred", "DeathOwed")), (False, ("Held", "Fell taker=isengard")))
+        for side in ("Defending", "Attacking"):
+            for hero, results in kinds:
+                row = rows["taom.story-missions.offer.result.breaking" if hero else "taom.story-missions.offer.result"]
+                for verdict in ("Won", "Lost"):
+                    for result in results:
+                        detail = (("side=Attacking " if side == "Attacking" else "") + f"verdict={verdict} result={result}"
+                                  + (" hero=lord_1_75" if hero else ""))
+                        with self.subTest(detail=detail):
+                            line = self.result(detail)
+                            passed = any(re.search(p, line) for p in row["pass"])
+                            self.assertEqual(passed, bool(re.search(rs.offer_result_pass(side, hero), line)))
+                            self.assertEqual(any(re.search(p, line) for p in row["fail"]), not passed)
+
+    def test_a_death_the_engine_owes_passes(self):
+        code, why = offer_judge(good_offer_done(), OFFER_LOG.replace("result=Occurred", "result=DeathOwed"))
+        self.assertEqual(code, 0, why)
+
+    def test_the_judge_reads_the_field_and_the_must_live_traits_the_launch_captured(self):
+        with mock.patch.object(rs, "story_row", return_value={}):
+            code, why = offer_judge(good_offer_done(), OFFER_LOG, offer_armed(field=True, must_live=True))
+            self.assertEqual(code, 0, why)
+            done = good_story_done(mission="parth_galen_save", verdict="Lost")
+            code, why = story_judge(done, field_log(), story_armed(mission="parth_galen_save", field=True, must_live=True))
+            self.assertEqual(code, 0, why)
+
+    def test_the_launch_captures_the_field_and_the_must_live_traits(self):
+        known, _ = parse(["--kind", "story-mission", "--mission", "parth_galen_save"])
+        self.assertEqual((known.field, known.must_live), (True, True))
+        known, _ = parse(OFFER_ARGS)
+        self.assertEqual((known.field, known.must_live), (True, True))
+        known, _ = parse(["--kind", "story-mission", "--mission", "helms_deep_defend"])
+        self.assertEqual((known.field, known.must_live), (False, False))
+
+    def test_the_1105_rows_refuse_a_contradiction(self):
+        import tomllib
+        rows = {c["id"]: c for c in tomllib.loads((ROOT / "tools/ingame_checks/1105.toml").read_text(encoding="utf-8"))["check"]}
+        save = rows["taom.story-missions.ended.parth-galen-save"]["pass"]
+        self.assertFalse(any(re.search(p, self.ended("Won", "Defending", "HeroFell")) for p in save))
+        breaking = rows["taom.story-missions.offer.result.breaking"]["pass"]
+        self.assertFalse(any(re.search(p, self.result("verdict=Won result=Occurred hero=lord_1_75")) for p in breaking))
+        for good in ("verdict=Won result=Averted hero=lord_1_75", "verdict=Lost result=DeathOwed hero=lord_1_75",
+                     "side=Attacking verdict=Won result=Occurred hero=lord_1_75", "side=Attacking verdict=Lost result=Averted hero=lord_1_75"):
+            self.assertTrue(any(re.search(p, self.result(good)) for p in breaking), good)
 
 
 if __name__ == "__main__":

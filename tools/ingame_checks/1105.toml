@@ -30,8 +30,8 @@ scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
 scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "in a loaded campaign: taom.story_open helms_deep_defend (add auto for the bot), choose Open the mission, and let the wave end by a win or a loss"
 reached = ['\[Check\] id=taom\.story-missions\.ended result=']
-pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost) side=Defending reason=(TargetReached|DefendersDead|KeepLost) waves=\d+$']
-fail = ['\[Check\] id=taom\.story-missions\.ended result=fail']
+pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won side=Defending reason=TargetReached|Lost side=Defending reason=(DefendersDead|KeepLost)) waves=\d+$']
+fail = ['\[Check\] id=taom\.story-missions\.ended result=fail', '\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won side=Defending reason=(DefendersDead|KeepLost|HeroFell|Abandoned)|Lost side=Defending reason=TargetReached) ']
 absence = "not-reached"
 
 # The story mission's own track (Main/Features/StoryMissions/StoryMusicCue.cs). A pass means the engine accepted the start, not that anyone heard it: the
@@ -130,7 +130,7 @@ id = "taom.story-missions.offer.result"
 needs = "the same run: Ride to Helm's Deep, Defend the walls or Storm the walls, end the wave by a win or a loss; the line is written when the menu returns"
 reached = ['\[Check\] id=taom\.story-missions\.offer\.result result=(?!.* hero=)']
 pass = ['\[Check\] id=taom\.story-missions\.offer\.result result=pass (verdict=(Won result=Held|Lost result=Fell taker=(isengard|empire))|side=Attacking verdict=(Lost result=Held|Won result=Fell taker=(isengard|empire)))$']
-fail = ['\[Check\] id=taom\.story-missions\.offer\.result result=fail(?!.* hero=)']
+fail = ['\[Check\] id=taom\.story-missions\.offer\.result result=fail(?!.* hero=)', '\[Check\] id=taom\.story-missions\.offer\.result result=pass (verdict=(Won result=Fell |Lost result=Held$)|side=Attacking verdict=(Won result=Held$|Lost result=Fell ))']
 absence = "not-reached"
 
 [[human]]
@@ -217,8 +217,8 @@ scope = '\[StoryMissions\] launching \S+ for \x27parth_galen_save\x27 '
 scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "the same run: the mission ends by itself. A fall of Boromir reads reason=HeroFell: a loss for the defence, a win for the hunt"
 reached = ['\[Check\] id=taom\.story-missions\.ended result=']
-pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost) side=Defending reason=(TargetReached|DefendersDead|KeepLost|HeroFell) waves=\d+$']
-fail = ['\[Check\] id=taom\.story-missions\.ended result=fail']
+pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won side=Defending reason=TargetReached|Lost side=Defending reason=(DefendersDead|KeepLost|HeroFell)) waves=\d+$']
+fail = ['\[Check\] id=taom\.story-missions\.ended result=fail', '\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won side=Defending reason=(DefendersDead|KeepLost|HeroFell|Abandoned)|Lost side=Defending reason=TargetReached) ']
 absence = "not-reached"
 
 [[check]]
@@ -258,8 +258,8 @@ scope = '\[StoryMissions\] launching \S+ for \x27parth_galen_kill\x27 '
 scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "the same run: the mission ends by itself. A fall of Boromir reads reason=HeroFell: a loss for the defence, a win for the hunt"
 reached = ['\[Check\] id=taom\.story-missions\.ended result=']
-pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost) side=Attacking reason=(TargetReached|DefendersDead|KeepLost|HeroFell) waves=\d+$']
-fail = ['\[Check\] id=taom\.story-missions\.ended result=fail']
+pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won side=Attacking reason=(DefendersDead|KeepLost|HeroFell)|Lost side=Attacking reason=TargetReached) waves=\d+$']
+fail = ['\[Check\] id=taom\.story-missions\.ended result=fail', '\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won side=Attacking reason=(TargetReached|Abandoned)|Lost side=Attacking reason=(DefendersDead|KeepLost|HeroFell)) ']
 absence = "not-reached"
 
 [[human]]
@@ -289,8 +289,8 @@ absence = "not-reached"
 id = "taom.story-missions.offer.result.breaking"
 needs = "the same run: Go to Parth Galen, choose a side, end the mission by a win or a loss, then Continue"
 reached = ['\[Check\] id=taom\.story-missions\.offer\.result result=\S+ .*hero=lord_1_75$']
-pass = ['\[Check\] id=taom\.story-missions\.offer\.result result=pass (side=Attacking )?verdict=(Won|Lost) result=(Averted|Occurred) hero=lord_1_75$']
-fail = ['\[Check\] id=taom\.story-missions\.offer\.result result=fail .*hero=lord_1_75$']
+pass = ['\[Check\] id=taom\.story-missions\.offer\.result result=pass (verdict=(Won result=Averted|Lost result=(Occurred|DeathOwed))|side=Attacking verdict=(Won result=(Occurred|DeathOwed)|Lost result=Averted)) hero=lord_1_75$']
+fail = ['\[Check\] id=taom\.story-missions\.offer\.result result=fail .*hero=lord_1_75$', '\[Check\] id=taom\.story-missions\.offer\.result result=pass (verdict=(Won result=(Occurred|DeathOwed)|Lost result=Averted)|side=Attacking verdict=(Won result=Averted|Lost result=(Occurred|DeathOwed))) hero=lord_1_75$']
 absence = "not-reached"
 
 [[human]]

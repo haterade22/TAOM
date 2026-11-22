@@ -26,7 +26,7 @@ Own arguments (everything else goes to the Fords runner, for example --dry-run, 
   example helms_deep_defend or helms_deep_attack; an unknown id is refused)
   --by-date (story-offer only: no open command, fast forward at --speed, default 15, until the window opens by its date)
   --event ID --choice defend|attack|fate (story-offer only, both required: a War Chronicle event of war_chronicle.json that has a story block,
-  breaking or hornburg; attack needs an event with an attackMission, which is breaking only). --culture decides the sides the offer shows: the
+  breaking or hornburg; attack needs an event with an attackMission, which both have). --culture decides the sides the offer shows: the
   default gondor is a free people (defend); attack needs an evil one that character creation offers, for example isengard. The sides are read
   as StorySideGate reads them, from execution/alignment.json and the event's defender and first attacker: a culture that file does not list,
   or a choice the culture is never offered (fate needs one side), is refused.
@@ -112,12 +112,26 @@ BY_DATE_DAYS = 120  # the campaign days a --by-date run may take to reach its wi
 OFFER_EVIL_CULTURE = "isengard"  # in cultures.json and alignment.json "evil"
 
 
-def story_ended_pass(side, must_live=False):
+def story_ended_pass(side, must_live=False, verdict=None):
     """The ended line's pass pattern for a row's side (Defending or Attacking), as tools/ingame_checks/1105.toml (Defending) and 1409.toml
-    (Attacking) hold it. A row that names a hero who must live ("mustLive") can also end by his fall (reason=HeroFell), as SurvivalRun.HeroDown ends it."""
-    reasons = "TargetReached|DefendersDead|KeepLost" + ("|HeroFell" if must_live else "")
-    return (r"\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost) side=" + side
-            + r" reason=(" + reasons + r") waves=\d+$")
+    (Attacking) hold it. The verdict is tied to the reason as StoryVerdict.Of maps them: the defence wins by TargetReached and loses by a
+    fall (DefendersDead, KeepLost), the attack the reverse. A row that names a hero who must live ("mustLive") can also end by his fall
+    (reason=HeroFell), as SurvivalRun.HeroDown ends it. verdict (Won or Lost) narrows the pattern to that verdict."""
+    falls = "(DefendersDead|KeepLost" + ("|HeroFell" if must_live else "") + ")"
+    reason = {"Won": "TargetReached", "Lost": falls} if side == "Defending" else {"Won": falls, "Lost": "TargetReached"}
+    pairs = "|".join(f"{v} side={side} reason={reason[v]}" for v in ("Won", "Lost") if verdict in (None, v))
+    return r"\[Check\] id=taom\.story-missions\.ended result=pass verdict=(" + pairs + r") waves=\d+$"
+
+
+def offer_result_pass(side, hero, verdict=None):
+    """The offer.result pass pattern as StoryOfferService.Apply writes the line. What the defence guards is saved when the defending side
+    won: the walls are Held, the hero's event is Averted. Otherwise the walls Fell to a taker, or the event Occurred (DeathOwed while the
+    engine has not yet granted the hero's death). verdict (Won or Lost) narrows the pattern to that verdict."""
+    attacked = side == "Attacking"
+    saved, lost = ("Averted", "(Occurred|DeathOwed)") if hero else ("Held", r"Fell taker=\S+")
+    cells = "|".join(f"{v} result={saved if (v == 'Won') != attacked else lost}" for v in ("Won", "Lost") if verdict in (None, v))
+    return (r"\[Check\] id=taom\.story-missions\.offer\.result result=pass " + ("side=Attacking " if attacked else "") + "verdict=(" + cells + ")"
+            + (r" hero=\S+$" if hero else "$"))
 
 
 def story_rows():
@@ -303,9 +317,11 @@ def parse_own(argv):
                 parser.error(f"{flag} is only for --kind campaign-new; a story-mission run reads neither")
         # The game takes the id in any case and logs the catalog's lowercase id, which the judge and tools/ingame_checks/1368.toml match.
         known.mission = known.mission.strip().lower()
-        # The side is read once, here, at launch: the judge uses this value, so an edit of the JSON while the game runs cannot fail a good run.
+        # The side and the two traits below are read once, here, at launch: the judge uses these values, so an edit of the JSON while the
+        # game runs cannot fail a good run.
         rows = story_rows()
         known.side = rows.get(known.mission)
+        known.field, known.must_live = story_field(known.mission), story_must_live(known.mission)
         if known.side is None:
             parser.error(f"--mission '{known.mission}' is not a story mission of this checkout"
                          + (f" (known: {', '.join(sorted(rows))})" if rows else f" ({STORY_MISSIONS_FILE} could not be read or holds no row with side Defend or Attack)"))
@@ -361,6 +377,7 @@ def parse_offer(parser, known):
     known.mission = mission.lower() if mission else None
     known.shown_mission = story.get("mission")
     known.side = story_rows().get(known.mission) if known.mission else None
+    known.field, known.must_live = (story_field(known.mission), story_must_live(known.mission)) if known.mission else (False, False)
     wanted = {"defend": "Defending", "attack": "Attacking"}.get(known.choice)
     if wanted and known.side != wanted:
         parser.error(f"story mission '{known.mission}' has side {known.side}, not {wanted} ({STORY_MISSIONS_FILE})")
@@ -417,23 +434,32 @@ def parse_count(done, key):
         return None
 
 
-def story_log_problems(log_text, mission, side):
+def said_verdict(done_pass, lines):
+    """The Won or Lost verdict of the first line the done pattern matches (its first group), or None when no line matches."""
+    found = next((m for m in (re.search(done_pass, line) for line in lines) if m), None)
+    return found.group(1) if found else None
+
+
+def story_log_problems(log_text, mission, side, field=None, must_live=None):
     """The story kind's log conditions, one reason each. The driver's done line alone could pass a mission the player's own agent walked out
     of (reason=Abandoned reads as a loss), so the story's end line and its boot line are required too, and a run holds one launch only.
-    side is the row's side, Defending or Attacking: an end line of the other side is no pass."""
+    side is the row's side, Defending or Attacking: an end line of the other side is no pass, nor is one whose verdict is not the done
+    line's. field and must_live are the row's traits as the launch read them; None reads the checkout (a caller with no armed plan)."""
     lines = log_text.splitlines()
     problems = []
     done_pass = (r"\[Check\] id=" + re.escape(STORY_CHECK_ID) + r" result=pass reason=ok mission=" + re.escape(mission)
                  + r" verdict=(Won|Lost) mission_seconds=\S+ culture=\S+$")
-    if not any(re.search(done_pass, line) for line in lines):
+    said = said_verdict(done_pass, lines)
+    if said is None:
         problems.append(f"the TAOM log has no [Check] id={STORY_CHECK_ID} result=pass line for mission {mission} with a Won or Lost verdict")
-    field = story_field(mission)
+    field = story_field(mission) if field is None else field
     boot = STORY_FIELD_BOOT_PASS if field else STORY_BOOT_PASS + "$"
     if not any(re.search(boot, line) for line in lines):
         problems.append(f"the TAOM log has no taom.story-missions.hosted.boot pass line for a {'field' if field else 'siege'} mission")
-    ended = story_ended_pass(side, story_must_live(mission))
+    ended = story_ended_pass(side, story_must_live(mission) if must_live is None else must_live, said)
     if not any(re.search(ended, line) for line in lines):
-        problems.append(f"the TAOM log has no taom.story-missions.ended pass line with side={side} (a reason=Abandoned end is not one)")
+        problems.append(f"the TAOM log has no taom.story-missions.ended pass line with side={side}" + (f" and verdict={said}, as the done line says" if said else "")
+                        + " (a reason=Abandoned end is not one, nor a reason that cannot give its verdict)")
     launch = r"\[StoryMissions\] launching \S+ for '" + re.escape(mission) + r"' \(story\d+, autoplay True\)"
     wanted = [line for line in lines if re.search(launch, line)]
     others = [line for line in lines if ANY_LAUNCH.search(line)]
@@ -444,7 +470,7 @@ def story_log_problems(log_text, mission, side):
 
 
 def offer_log_problems(log_text, armed):
-    """The story-offer kind's log conditions, one reason each (armed: event, choice, hero, mission, side, shown_mission, as parse_offer set them).
+    """The story-offer kind's log conditions, one reason each (armed: event, choice, hero, mission, side, field, must_live, shown_mission, as parse_offer set them).
     The offer.shown line names the window's own mission whichever side was chosen; a fate run launches nothing."""
     lines = log_text.splitlines()
     problems = []
@@ -452,6 +478,7 @@ def offer_log_problems(log_text, armed):
     verdict = "-" if choice == "fate" else r"(Won|Lost)"
     done_pass = (r"\[Check\] id=" + re.escape(OFFER_CHECK_ID) + r" result=pass reason=ok event=" + re.escape(event) + " choice=" + choice
                  + " verdict=" + verdict + r" mission_seconds=\S+ culture=\S+$")
+    said = said_verdict(done_pass, lines) if choice != "fate" else None
     if not any(re.search(done_pass, line) for line in lines):
         problems.append(f"the TAOM log has no [Check] id={OFFER_CHECK_ID} result=pass line for event {event}, choice {choice}"
                         + ("" if choice == "fate" else " and a Won or Lost verdict"))
@@ -468,15 +495,20 @@ def offer_log_problems(log_text, armed):
             problems.append(f"the TAOM log holds {len(others)} launching lines, but a fate run opens no mission")
         return problems
     mission, side = armed.mission, armed.side
-    field = story_field(mission)
+    # The traits parse_offer read at launch; an armed plan without them (older callers) reads the checkout.
+    field, must_live = getattr(armed, "field", None), getattr(armed, "must_live", None)
+    field = story_field(mission) if field is None else field
     boot = STORY_FIELD_BOOT_PASS if field else STORY_BOOT_PASS + "$"
     if not any(re.search(boot, line) for line in lines):
         problems.append(f"the TAOM log has no taom.story-missions.hosted.boot pass line for a {'field' if field else 'siege'} mission")
-    ended = story_ended_pass(side, story_must_live(mission))
+    same = f" and verdict={said}, as the done line says" if said else ""
+    ended = story_ended_pass(side, story_must_live(mission) if must_live is None else must_live, said)
     if not any(re.search(ended, line) for line in lines):
-        problems.append(f"the TAOM log has no taom.story-missions.ended pass line with side={side} (a reason=Abandoned end is not one)")
-    if not any(re.search(r"\[Check\] id=taom\.story-missions\.offer\.result result=pass\b", line) for line in lines):
-        problems.append("the TAOM log has no taom.story-missions.offer.result pass line (the verdict did not reach the chronicle)")
+        problems.append(f"the TAOM log has no taom.story-missions.ended pass line with side={side}{same}"
+                        " (a reason=Abandoned end is not one, nor a reason that cannot give its verdict)")
+    if not any(re.search(offer_result_pass(side, armed.hero, said), line) for line in lines):
+        problems.append(f"the TAOM log has no taom.story-missions.offer.result pass line with side={side}{same} and the result that verdict gives"
+                        " (the verdict did not reach the chronicle, or the lines contradict each other)")
     launch = r"\[StoryMissions\] launching \S+ for '" + re.escape(mission) + r"' \(story\d+, autoplay True\)"
     wanted = [line for line in lines if re.search(launch, line)]
     if len(wanted) != 1 or len(others) != 1:
@@ -537,7 +569,7 @@ def judge(done, report_json, log_text=None, armed=None, checkout=None):
             if side is None:
                 problems.append(f"'{mission}' is not a story mission of this checkout, so its side is unknown")
             else:
-                problems.extend(story_log_problems(log_text, mission, side))
+                problems.extend(story_log_problems(log_text, mission, side, getattr(armed, "field", None), getattr(armed, "must_live", None)))
         elif not PASS_LINE.search(log_text):
             problems.append(f"the TAOM log has no [Check] id={CHECK_ID} result=pass line")
         # The whole log is this session's (the runner takes the newest log created after launch), and TAOM's load comes before the driver.
