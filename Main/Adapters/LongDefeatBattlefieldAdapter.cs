@@ -152,6 +152,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         _gates = all.Where(g => g.GameEntity.IsVisibleIncludeParents()).OrderByDescending(g => g.GameEntity.HasTag("outer_gate")).ToList();
         var walls = _mission.ActiveMissionObjects.FindAllWithType<WallSegment>().Where(w => w.DefenseSide != FormationAI.BehaviorSide.BehaviorSideNotSet).ToList();
         _highZ = HighLine(_gates.FirstOrDefault(), walls);
+        _logger.LogInfo($"[LongDefeat][Gates] high line z={Num(_highZ)}, gates at z=[{string.Join(", ", _gates.Select(g => Num(g.GameEntity.GlobalPosition.z)))}], doorway band {Num(GateRules.HeightBand)} m: "
+            + $"high line clears the gates={(HighLineClearsGates ? "true" : "false")}");
         CaptureGates(_gates, all.Where(g => !_gates.Contains(g)).ToList());
         var broken = 0;
         foreach (var hidden in all.Where(g => !_gates.Contains(g)))

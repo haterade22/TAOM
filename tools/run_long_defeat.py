@@ -21,7 +21,7 @@ Phase 2 test options: --seed fixes every roll, --start-wave begins the run at th
 a reroll at clear 3), and --deep is --start-wave 12 --waves 4 judged by DEEP_CHECKS (a final or lost_* run). --class all gives each of --runs
 the next class. The report must be schema 2 and must echo the seed, start wave, rerolls and start gold that were armed (a run armed with no start gold must report startGold null); any owner_missing above 0 fails.
 --start-gold sets the gold the run starts with and makes the bot buy fortifications before packs (phase3-plan.md D27, 5000 for a fortification run; field care's proof is --waves 2 --garrison-scale 1.3 --start-gold 5000, which owes the field-care pass at clear 1). The report's purchases and gold books must replay from the shop (purchase_problem: leaderboard rules 8, 19 and 20), and a purchase of a kind or level this build does not offer (FORT_OFFERED) fails.
-The gate's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 (phase3-plan.md Slice 5): wave 1 meets the vanilla gate, the bot repairs it at clear 1 when the ram broke or dented it and then buys gate level 1, and level 2 at clear 2. A report that lists a gate level owes a gate-level pass, one that lists a repair owes gate-repair, one whose repaired gate met a later wave owes gate-attacked (a skip with reason=no-blow is named and fails), and a fortress that records tower or volley points owes a fort-points pass (it names a reader that accepted fewer points than the file records).
+The gate's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 (phase3-plan.md Slice 5): wave 1 meets the vanilla gate, the bot repairs it at clear 1 when the ram broke or dented it and then buys gate level 1, and level 2 at clear 2. A report that lists a gate level owes a gate-level pass, one that lists a repair owes gate-repair, one whose repaired gate met a later wave owes gate-attacked (a skip with reason=no-blow is named and fails; a skip that ends reason=walls-reached for the repair's own wave pays the debt and the verdict says so), and a fortress that records tower or volley points owes a fort-points pass (it names a reader that accepted fewer points than the file records).
 The Elven Volley's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded volley.origins (phase3-plan.md Slice 6; Helm's Deep records none until 2026-11-06, and then the volley is not for sale): the bot buys level 1 in the preparation and level 2 at clear 1 and looses the volley in every wave. A report that bought a level before a wave the run played owes a volley pass line (an auto one, and, once level 2 was bought, one with mode=crosshair); a skip (a window cut short) does not pay it.
 The report's class must be the one armed (--class, run by run for --class all) or, with none armed, the bot's draw from the seed (class_problem), and the class check must pass. --class takes the classes of classes.json only (the three foot classes and cavalry), so a name the game does not offer is refused here instead of being replaced by the game.
 The tower volley's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded tower posts and tower_volley spots (phase3-plan.md Slice 8; Helm's Deep records none until 2026-11-06, and then tower level 3 is not for sale): the bot buys tower level 3 at clear 2, and each tower with a spot and a post archer looses its volley in wave 3. A report that bought level 3 before a wave the run played owes a tower-volley pass for each recorded tower that holds a spot and a post, and a posts pass is owed for each recorded tower that holds a post (one tower's line never pays another's).
@@ -1540,10 +1540,11 @@ def owed_hunters_lines(report_json, log_text):
 
 
 # The gates (Slice 5). The game writes gate-level (key l<N>) after each level it writes, gate-repair (key w<N>) after each repair and gate-attacked (key w<N>) at the next clear or the run's end for the
-# repaired gate; fort-points once at the boot. A report that lists the purchase owes the pass; a skip proves nothing (gate-attacked's reason=no-blow means the ram never struck the repaired gate, R4).
+# repaired gate; fort-points once at the boot. A report that lists the purchase owes the pass; a skip proves nothing (gate-attacked's reason=no-blow means the ram never struck the repaired gate, R4), with one exception: a gate-attacked skip that ends reason=walls-reached, for each repair's own wave, pays that debt (walls_reached_waves).
 GATE_LEVEL_CHECK = "gate-level"
 GATE_REPAIR_CHECK = "gate-repair"
 GATE_ATTACKED_CHECK = "gate-attacked"
+WALLS_REACHED = "walls-reached"
 FORT_POINTS_CHECK = "fort-points"
 
 
@@ -1567,6 +1568,32 @@ def _played(report_json):
     reached = report_json.get("wave")
     cleared = [w.get("wave") for w in report_json.get("waves") or [] if isinstance(w, dict)]
     return max([n for n in [reached] + cleared if _is_int(n)], default=0)
+
+
+WALLS_REACHED_ROW = re.compile(r"\bw=([0-9]+)\b.* reason=" + WALLS_REACHED + r"$")
+
+
+def walls_reached_waves(report_json, log_text):
+    """The waves whose gate-attacked line could not be judged, or [] when the gate-attacked debt stands. The game writes a skip that ends reason=walls-reached when the repaired gate was struck
+    and attackers stood above the walls before any was seen behind it: the doorway count then cannot tell who passed the gate. The debt is paid only when every repair the run played against
+    (a gateRepair before a wave it reached) has such a line for its own wave (w=N), and the log holds no other gate-attacked skip (no-blow, or a reason with text after it)."""
+    played = _played(report_json)
+    owed = sorted({p["beforeWave"] for p in _bought(report_json, "gateRepair") if _is_int(p.get("beforeWave")) and p["beforeWave"] <= played})
+    rows = _gate_attacked_skips(log_text)
+    reached = [WALLS_REACHED_ROW.search(row) for row in rows]
+    if not owed or not rows or not all(reached):
+        return []
+    waves = {int(m.group(1)) for m in reached}
+    return owed if all(wave in waves for wave in owed) else []
+
+
+def _gate_attacked_skips(log_text):
+    return [row.strip() for row in re.findall(r"\[Check\] id=" + re.escape(CHECK_PREFIX + GATE_ATTACKED_CHECK) + r" result=skip\b([^\r\n]*)", log_text)]
+
+
+def walls_reached_skips(log_text):
+    """The waves, in order, of every gate-attacked skip that ends reason=walls-reached: the waves whose gate the run could not judge, whether or not another wave's pass paid the debt."""
+    return sorted({int(m.group(1)) for m in (WALLS_REACHED_ROW.search(row) for row in _gate_attacked_skips(log_text)) if m})
 
 
 def owes_gate_attacked(report_json):
@@ -2147,6 +2174,8 @@ def judge(done, report_json, log_text=None):
         required = required + (SPLIT_CHECK,)
     if not lose and posts_variant and not owes_posts(report_json):
         return 1, f"reason={reason} but --posts-variant {posts_variant} was armed and the report bought no tower level before a wave it played, so the variant was never tried (does the fortress record tower posts?)"
+    if GATE_ATTACKED_CHECK in required and not check_pattern(GATE_ATTACKED_CHECK, "pass").search(log_text) and walls_reached_waves(report_json, log_text):
+        required = tuple(name for name in required if name != GATE_ATTACKED_CHECK)
     missing = [name for name in required if not check_pattern(name, "pass").search(log_text)]
     if UPGRADE_CHECK not in missing:
         missing.extend(owed_upgrade_passes(report_json, log_text))
@@ -2192,7 +2221,12 @@ def judge(done, report_json, log_text=None):
     felled = report_json.get("wavesFelled", 0)
     speed = f"speed {expected_speed}x (report maxSpeed matches), " if expected_speed is not None else ""
     return 0, (f"build {build}, reason={reason}, {speed}{report_json.get('wavesCleared', 0)} waves cleared, checks {', '.join(required)} passed, "
-               f"no spawn level WRONG, no CrashReport block, {felled} waves ended by felling stragglers{contact_note(report_json, log_text)}{waived_note(waived)}{fort_points_note(report_json, log_text)}")
+               f"no spawn level WRONG, no CrashReport block, {felled} waves ended by felling stragglers{contact_note(report_json, log_text)}{waived_note(waived)}{walls_note(walls_reached_skips(log_text))}{fort_points_note(report_json, log_text)}")
+
+
+def walls_note(waves):
+    """"; gate-attacked not judged in wave 3, 4 (attackers above the walls)" for the waves whose walls-reached skip stood in for the pass, and "" when the check was judged."""
+    return f"; {GATE_ATTACKED_CHECK} not judged in wave {', '.join(str(w) for w in waves)} (attackers above the walls)" if waves else ""
 
 
 def waived_note(waived):

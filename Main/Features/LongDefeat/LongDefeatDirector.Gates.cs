@@ -8,7 +8,7 @@ namespace TAOM.Features.LongDefeat;
 
 // The gates and the fort points at the director (phase3-plan.md Slice 5, D17 to D19). A gate level and a repair are bought between waves and written on the tick after the buy, the level first and the
 // repair second, both after the Hammer (which writes rams and towers only). Each write is read back at once by its check, and a repair is watched until the next clear or the run's end: the gate must take a
-// blow or fall, and no attacker may be sampled behind it while it stands.
+// blow or fall, and no attacker may be sampled behind it while it stands, unless attackers had reached wall height first at a fortress whose walls stand above its gates.
 internal sealed partial class LongDefeatDirector
 {
     private GateWatch? _gateWatch;
@@ -55,11 +55,14 @@ internal sealed partial class LongDefeatDirector
             _gateWatch = new GateWatch(wave, GateHitPoints(touched.Select(t => t.g.After)), write.Path, touched.Select(t => t.i).ToList());
     }
 
-    /// <summary>The 5-second state line's sample of the watch: attackers behind a standing repaired gate's plane. The inside is the keep.</summary>
-    private void SampleGateWatch()
+    /// <summary>
+    /// The 5-second state line's sample of the watch: attackers behind a standing repaired gate's plane, and whether an attacker stands above the walls' high line. That second fact counts only
+    /// where the high line clears the gates' doorways, or the man in the doorway would excuse himself. The inside is the keep.
+    /// </summary>
+    private void SampleGateWatch(bool attackersHigh)
     {
         if (_gateWatch is { } watch && _fort != null)
-            watch.Sample(_fort.AttackersBehindGates(_keepAt, watch.Gates));
+            watch.Sample(_fort.AttackersBehindGates(_keepAt, watch.Gates), attackersHigh && _fort.HighLineClearsGates);
     }
 
     /// <summary>Writes the open watch's <c>gate-attacked</c> line, once: at the next clear, or at the run's end (<paramref name="endedRun"/>). The gates are read now, from the gate objects.</summary>

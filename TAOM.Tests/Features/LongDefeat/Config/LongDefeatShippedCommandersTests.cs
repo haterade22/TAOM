@@ -125,15 +125,17 @@ public class LongDefeatShippedCommandersTests
         }
     }
 
-    /// <summary>The ids of the Custom Battle stubs that lords.xslt rebuilds with <c>is_hero</c> true: the stub is bare, so the template is what makes the lord a hero.</summary>
+    /// <summary>
+    /// The ids of the Custom Battle stubs that come out of lords.xslt with <c>is_hero</c> true. The stub is bare, so the transform is run and its output is read: the engine reads the flag from
+    /// the transformed node (<c>BasicCharacterObject.Deserialize</c>), and a template can hold the attribute and still not write it.
+    /// </summary>
     private static HashSet<string> StubHeroes()
     {
-        XNamespace xsl = "http://www.w3.org/1999/XSL/Transform";
-        var stubs = XDocument.Load(Path.Combine(ModuleData, "characters", "custom_battle_lords.xml")).Descendants("NPCCharacter").Select(e => (string)e.Attribute("id")!).ToHashSet();
-        return XDocument.Load(Path.Combine(ModuleData, "lords.xslt")).Descendants(xsl + "template")
-            .Where(t => t.Descendants(xsl + "attribute").Any(a => (string?)a.Attribute("name") == "is_hero" && a.Value.Trim() == "true"))
-            .Select(t => ((string?)t.Attribute("match") ?? "").Replace("NPCCharacter[@id='", "").Replace("']", ""))
-            .Where(stubs.Contains).ToHashSet();
+        var transform = TAOM.Tests.Core.CompiledXslt.Get(Path.Combine(ModuleData, "lords.xslt"), TAOM.Tests.Core.XsltLoadStyle.FrameworkDefaults);
+        var output = new XDocument();
+        using (var writer = output.CreateWriter())
+            transform.Transform(XDocument.Load(Path.Combine(ModuleData, "characters", "custom_battle_lords.xml")).CreateReader(), null, writer);
+        return output.Descendants("NPCCharacter").Where(c => (string?)c.Attribute("is_hero") == "true").Select(c => (string)c.Attribute("id")!).ToHashSet();
     }
 
     [TestMethod]

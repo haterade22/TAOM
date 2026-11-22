@@ -369,9 +369,11 @@ needs = "the same run, a wave played after the repair (--waves 3 --garrison-scal
 reached = ['\[Check\] id=taom\.long-defeat\.gate-attacked result=']
 pass = ['\[Check\] id=taom\.long-defeat\.gate-attacked result=pass w=[0-9]+ path=(broken|damaged) start=[0-9.]+ now=[0-9.]+ lost=-?[0-9.]+ fell=(true|false) through=0 samples=[1-9]']
 fail = ['\[Check\] id=taom\.long-defeat\.gate-attacked result=fail']
+# A line that ends reason=walls-reached is a skip: the gate was struck, and attackers stood above the walls' high line before any was seen behind the gate, so through= cannot tell who passed
+# the gate (Minas Tirith, run 20261122-095258). It is written only where that high line clears the gates' doorways, so never at Helm's Deep. before_walls= counts those seen before the walls were reached.
 # Written by LongDefeatDirector.Gates.cs, key w<N>, at the next clear or the run's end (ended=run): the repaired gates lost hit points since the repair (or a later level write) or fell again (A20), and through= attackers sampled on the 5 s state line within 3 m behind the gate's plane
 # while it stood stayed 0 (the plane is the gate's own forward axis, turned to face the keep; the box is 3 m deep, 5 m either side of the door's centre and 4 m up or down from the gate, a first guess, so the wall walk above the door does not count; samples= counts only the samples that measured a plane, and a pass over 0 of them is not accepted). An untouched gate is a skip (reason=no-blow): a wave whose ram died earlier brings no blow at all (E30, R4),
-# and that proves nothing, so the judge names it and fails the run. An attacker behind a gate that stood fails the line whether or not it was struck.
+# and that proves nothing, so the judge names it and fails the run. An attacker behind a gate that stood fails the line whether or not it was struck, unless he was seen there only after attackers stood above the walls (see the walls-reached lines above).
 absence = "not-reached"
 
 [[check]]

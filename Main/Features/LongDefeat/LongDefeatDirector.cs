@@ -377,7 +377,7 @@ internal sealed partial class LongDefeatDirector
         var v = _run.GetView();
         if (v.Phase == RunPhase.Wave)
         {
-            SampleGateWatch();
+            SampleGateWatch(read.AttackersHigh > 0);
             LogArcherPositionsInWave();
         }
         _logger.LogInfo($"{Tag}[State] wave {v.Wave} {v.Phase}: attackers {read.AttackersStanding} fleeing {read.AttackersFleeing} high {read.AttackersHigh}, "

@@ -192,6 +192,19 @@ public class LongDefeatShippedConfigTests
 
         Assert.IsTrue(HasRider(catalog.Fortresses.Single(f => f.Id == "helms")));
         Assert.IsFalse(HasRider(catalog.Fortresses.Single(f => f.Id == "minas_tirith")));
+
+        // The deck's own rule, over the groups the launcher reads from the troops (here from the XML's default_group): three cavalry rows at Helm's Deep, none at Minas Tirith.
+        List<string> CavalryRows(FortressEntry f)
+        {
+            var plan = catalog.BuildPlan(f, RunOptions.Default);
+            var groups = f.Garrison.Select(g => g.TroopId).Concat(f.Shop.Offers.Select(o => o.TroopId)).Distinct()
+                .ToDictionary(id => id, id => GroupOf(id) == "Cavalry" ? BoonTarget.Cavalry : GroupOf(id) == "Ranged" ? BoonTarget.Archers : BoonTarget.Infantry);
+            plan = plan with { TroopGroups = groups };
+            return new BoonDeck(plan.Boons, 1UL, 0, "", RunPlanTroops.DefenderGroups(plan)).Eligible().Where(r => r.Category == BoonCategory.Cavalry).Select(r => r.Id).ToList();
+        }
+
+        CollectionAssert.AreEquivalent(new[] { "couched_lances", "fleet_horses_of_the_mark", "hearts_of_the_eored" }, CavalryRows(catalog.Fortresses.Single(f => f.Id == "helms")));
+        Assert.AreEqual(0, CavalryRows(catalog.Fortresses.Single(f => f.Id == "minas_tirith")).Count);
     }
 
     // A culture's words take the row's own keys with the culture as a suffix, and each is registered with the same English.

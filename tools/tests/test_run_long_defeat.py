@@ -4560,6 +4560,44 @@ class GateJudgeTests(unittest.TestCase):
         self.assertIn("gate-attacked", why)
         self.assertIn("no-blow", why)
 
+    def test_a_walls_reached_skip_stands_in_for_the_pass_and_a_mixed_or_other_skip_does_not(self):
+        # Minas Tirith: attackers climb the walls in every wave, so the doorway count cannot be judged and the game writes a skip that says so.
+        crossed = self.line("gate-attacked", "skip", self.ATTACKED.replace("through=0", "through=48") + " before_walls=0 reason=walls-reached")
+        no_blow = self.line("gate-attacked", "skip", self.ATTACKED + " reason=no-blow")
+
+        code, why = ld.judge(FINAL, self.report(), self.log(self.passes()[0], self.passes()[1], crossed))
+        self.assertEqual(code, 0, why)
+        self.assertIn("gate-attacked not judged in wave 2 (attackers above the walls)", why, "a waived check is not called passed")
+        self.assertNotIn("gate-attacked passed", why)
+        self.assertNotIn("gate-repair, gate-attacked", why)
+        self.assertEqual(ld.judge(FINAL, self.report(), self.log(self.passes()[0], self.passes()[1], crossed, no_blow))[0], 1, "a no-blow skip beside it is still a debt")
+        self.assertEqual(ld.walls_reached_waves(self.report(), crossed), [2])
+        self.assertEqual(ld.walls_reached_waves(self.report(), no_blow), [])
+        self.assertEqual(ld.walls_reached_waves(self.report(), ""), [])
+        # A pass in one wave pays the debt as before, and the verdict still names a wave that was not judged.
+        code, why = ld.judge(FINAL, self.report(), self.log(*self.passes(), crossed.replace("w=2", "w=3")))
+        self.assertEqual(code, 0, why)
+        self.assertIn("gate-attacked", why.split(" passed, ")[0])
+        self.assertIn("gate-attacked not judged in wave 3 (attackers above the walls)", why)
+
+    def test_the_walls_reached_skip_must_be_the_repairs_own_wave_and_must_end_the_line(self):
+        def skip(detail):
+            return self.line("gate-attacked", "skip", detail)
+
+        crossed = self.ATTACKED.replace("through=0", "through=48") + " before_walls=0 reason=walls-reached"
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed.replace("w=2", "w=99"))), [], "a skip of another wave pays nothing")
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed + "-something")), [])
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed + " extra=1")), [], "the reason ends the line")
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed + " reason=no-blow")), [])
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed.replace(" reason=", " ended=run reason="))), [2], "a run-end watch is still that repair's watch")
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed).replace("\n", "\r\n")), [2])
+        self.assertEqual(ld.walls_reached_waves(self.report(repair=False), skip(crossed)), [], "no repair, no debt to waive")
+        two = self.report()
+        two["purchases"] = two["purchases"] + [dict(next(p for p in two["purchases"] if p.get("kind") == "gateRepair"), beforeWave=3)]
+        two["wave"] = 3
+        self.assertEqual(ld.walls_reached_waves(two, skip(crossed)), [], "the second repair's watch wrote no line")
+        self.assertEqual(ld.walls_reached_waves(two, skip(crossed) + "\n" + skip(crossed.replace("w=2", "w=3"))), [2, 3])
+
     def test_a_failed_line_fails_the_run(self):
         code, why = ld.judge(FINAL, self.report(), self.log(*self.passes(), self.line("gate-attacked", "fail", self.ATTACKED.replace("through=0", "through=2"))))
 
@@ -4624,7 +4662,7 @@ class GateJudgeTests(unittest.TestCase):
         for const, name in (("GateLevelId", "gate-level"), ("GateRepairId", "gate-repair"), ("GateAttackedId", "gate-attacked"), ("FortPointsId", "fort-points")):
             self.assertIn(f'{const} = "taom.long-defeat.{name}"', ids, name)
         for key in ("l=", "factor=", "gates=", "max=", "hp=", "share=", "index=", "w=", "path=", "disabled=", "closed=", "open=", "near=", "hidden_down=", "reset=",
-                    "start=", "now=", "lost=", "fell=", "through=", "samples=", "ended=run", "reason=no-blow", "points=", "failed=", "reason=none-recorded"):
+                    "start=", "now=", "lost=", "fell=", "through=", "samples=", "ended=run", "reason=no-blow", "reason=walls-reached", "points=", "failed=", "reason=none-recorded"):
             self.assertIn(key, checks, key)
         self.assertRegex(self.LEVEL, r"^l=[0-9]+ factor=[0-9.]+ gates=[0-9]+ max=[0-9.]+/[0-9.]+ hp=[0-9.]+->[0-9.]+ share=[0-9.]+->[0-9.]+ index=[0-9]+->[0-9]+$")
         self.assertRegex(self.REPAIR, r"^w=[0-9]+ path=(broken|damaged) gates=[0-9]+ hp=[0-9.]+/[0-9.]+ index=[0-9]+ disabled=(true|false) closed=(true|false) open=(true|false) near=[0-9]+ hidden_down=(true|false) reset=(found|missing)$")
