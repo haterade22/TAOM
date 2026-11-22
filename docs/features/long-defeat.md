@@ -697,6 +697,8 @@ An unreachable step is reported with the command tried and the unmet preconditio
 
 ## Decisions for the later phases
 
+Phase 5 (Minas Tirith: Gondor against Mordor) has a draft plan, [phase5-plan.md](long-defeat/phase5-plan.md). Nothing in it is decided or built.
+
 Mike decided these on 2026-11-03. The full text is in [the #1079 design comment](https://github.com/haterade22/TAOM/issues/1079#issuecomment-6617849770).
 
 - **No wave retreats.** A wave ends when every attacker is dead.
