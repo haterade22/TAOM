@@ -177,9 +177,14 @@
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_light_a" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -460,9 +465,14 @@
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_light_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -671,9 +681,14 @@
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_light_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -858,9 +873,14 @@
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1046,9 +1066,14 @@
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1255,9 +1280,14 @@
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1473,9 +1503,14 @@
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1767,9 +1802,14 @@
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1905,9 +1945,14 @@
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_med_a" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1987,9 +2032,14 @@
               <equipment slot="Horse" id="Item.dire_wolf_grey" />
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2069,9 +2119,14 @@
               <equipment slot="Horse" id="Item.dire_wolf_grey" />
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2147,9 +2202,14 @@
               <equipment slot="Horse" id="Item.dire_wolf_grey" />
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2225,9 +2285,14 @@
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_med_c" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2387,9 +2452,14 @@
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_heavy_c" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2445,9 +2515,14 @@
               <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_c" />
               <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2501,9 +2576,14 @@
               <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_c" />
               <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2558,9 +2638,14 @@
               <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
               <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_c" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2615,9 +2700,14 @@
               <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_c" />
               <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2786,9 +2876,14 @@
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_elite_c" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2842,9 +2937,14 @@
               <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_c" />
               <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2945,9 +3045,14 @@
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_heavy_e" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -3002,9 +3107,14 @@
               <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_a" />
               <equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -3059,9 +3169,14 @@
               <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_a" />
               <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_c" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -3161,9 +3276,14 @@
                     slot="Leg"
                     id="Item.sk_gb_uruk_boots_heavy_f" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -3215,9 +3335,14 @@
               <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_elite_a" />
               <equipment slot="Leg" id="Item.sk_gb_uruk_boots_elite_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -3779,9 +3904,14 @@
               <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_a" />
               <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -3984,9 +4114,14 @@
                     slot="HorseHarness"
                     id="Item.warg_saddle" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
