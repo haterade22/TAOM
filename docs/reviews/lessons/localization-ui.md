@@ -1704,3 +1704,13 @@ The troop weight header only cleared vanilla's red over-capacity tint, never rai
 **Prevent:** `GauntletFloatWriteBackGateTests` fails a non-float property that is bound to one of those attributes, has a public setter and can notify a change. For any new binding, read the widget property's setter in the decompile and ask what comes back; a precedent proves a binding only if its value changes while the screen is open. A HUD or prefab change owes a game run that shows the widget with a changing value before review ends: for the battle HUD that is `/game-run` with `--control-check` and `--screenshots`.
 
 **Source:** [rca-stamina-phases-1-2-2026-11-19.md](../rca-stamina-phases-1-2-2026-11-19.md), the addendum (run `20261119-200716`).
+
+### A brush file that names a runtime sprite goes in an image group's reload list (#1532, 2026-11-22)
+
+**Why missed:** the army panel's `TAOMCampaignArmy.xml` names runtime sprites (`cb_army_plate`, `cc_slider_track_9`, `fs_hero_frame_9`). The engine parses every brush file at startup, before those sprites register, and binds each brush layer's sprite once, at parse time (`BrushFactory.cs:217`). Only the files in a group's list in `FrontEndSpriteService` are parsed again after the group's sprites register. The new file was in no list, so the whole panel would have drawn blank; nothing logs a null brush sprite. The prefab, its tests and the brush gates all passed: none of them knows the reload list exists.
+
+**Prevent:** `FrontEndSpriteServiceTests.Acquire_EveryGroup_RereadsEveryBrushFileThatNamesARuntimeSprite` fails any brush file under `GUI/Brushes` that names a runtime sprite (a PNG, or `<name>_9` for a `.nine`) and that no group re-reads. When a themed screen gets a new brush file, add it to the list of the group whose sprites it draws. More generally, when a prefab overrides a vanilla one, list the code paths the vanilla movie went through (movie swaps, co-op skips, setters that subscribe handlers) before choosing how to override it.
+
+A widget that reads a value another layer's widget writes reads it in `OnLateUpdate`: `ScreenManager.Tick` ticks the sorted layers in order (a lower order first, global layers included), and runs every layer's `LateUpdate` only after all of them; `UIContext.LateUpdate` lays out again what a late update changed.
+
+**Source:** [rca-army-overlay-2026-11-22.md](../rca-army-overlay-2026-11-22.md) findings 1 to 3 and 10.

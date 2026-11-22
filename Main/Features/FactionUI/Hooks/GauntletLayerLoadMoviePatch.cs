@@ -28,14 +28,18 @@ public static class GauntletLayerLoadMoviePatch
     [ThreadStatic] private static bool _loadingVanillaFallback;
     private static bool _reported;
 
+    /// <summary>Movies that stay native under co-op: the native map bar stays, and so do the Camp icon beside its
+    /// clock and the army panel above its stats (#1532).</summary>
+    internal static bool StaysNativeUnderCoop(string movieName) =>
+        movieName == "MapBar" || movieName == "TaomFieldCampOverlay" || movieName == "ArmyOverlay";
+
     static void Prefix(GauntletLayer __instance, ref string movieName, ref ViewModel dataSource, out SwapState? __state)
     {
         __state = null;
         var movies = FactionUIPatchContext.Movies;
-        // Under co-op the native map bar stays, so the Camp icon that sits beside TAOM's clock does too. Presence, not a
-        // session predicate: the themed clock binds TimeAccelerationMixin's extra fast forward, and ClientUiExtensions leaves
-        // that mixin out on the same presence read, so the swap must follow it (CoopPresenceReadGateTests).
-        if (movies == null || _loadingVanillaFallback || ((movieName == "MapBar" || movieName == "TaomFieldCampOverlay") && CoopPresence.IsActive))
+        // Presence, not a session predicate: the themed clock binds TimeAccelerationMixin's extra fast forward, and
+        // ClientUiExtensions leaves that mixin out on the same presence read, so the swap must follow it (CoopPresenceReadGateTests).
+        if (movies == null || _loadingVanillaFallback || (StaysNativeUnderCoop(movieName) && CoopPresence.IsActive))
             return;
 
         try

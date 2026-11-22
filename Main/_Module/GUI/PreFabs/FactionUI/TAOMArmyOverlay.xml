@@ -1,0 +1,163 @@
+<Prefab>
+  <!-- TAOM's army panel (#1532), with vanilla v1.5.7 bindings and commands; design: docs/features/campaign-army-panel.md. -->
+  <VisualDefinitions>
+    <VisualDefinition Name="Overlay" EaseType="EaseOut" EaseFunction="Quint" TransitionDuration="0.4">
+      <VisualState PositionYOffset="166" State="MapExtendedOverlayNormal" />
+      <VisualState PositionYOffset="166" State="MapNormalOverlayNormal" />
+      <VisualState PositionYOffset="0" State="MapNormalOverlayExtended" />
+      <VisualState PositionYOffset="0" State="MapExtendedOverlayExtended" />
+    </VisualDefinition>
+  </VisualDefinitions>
+  <Window>
+    <ArmyOverlayWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ArmyListGridWidget="Clip\OverlayWidget\GridControlWidget\PartyList" ExtendButton="Clip\OverlayWidget\ExtendButtonWidget" IsInfoBarExtended="@IsInfoBarExtended" Overlay="Clip\OverlayWidget" PopupWidget="PopupParent\Popup">
+      <Children>
+
+        <!--Tutorial Notification Frame-->
+        <ElementNotificationWidget DataSource="{TutorialNotification}" ElementID="@ElementID" TutorialFrameWidget="TutorialFrameWidget">
+          <Children>
+            <TutorialHighlightItemBrushWidget Id="TutorialFrameWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TutorialHighlightBrush" IsDisabled="true" IsVisible="false" />
+          </Children>
+        </ElementNotificationWidget>
+
+        <ArmyOverlayClipWidget Id="Clip" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+          <Children>
+
+            <!-- Right and bottom aligned like the stats plate (MarginRight 4), so the two right edges line up. -->
+            <BrushWidget Id="OverlayWidget" VisualDefinition="Overlay" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="396" SuggestedHeight="234" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="4" PositionYOffset="166" Brush="TAOM.Army.Plate">
+              <Children>
+
+                <NavigationScopeTargeter ScopeID="ArmyOverlayTopControlsScope" ScopeParent="..\ArmyOverlayTopControls" ScopeMovements="Horizontal" DownNavigationScope="ArmyOverlayGridScope" />
+                <ListPanel Id="ArmyOverlayTopControls" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="40" MarginLeft="22" MarginTop="14">
+                  <Children>
+
+                    <!--Army Management Button-->
+                    <Widget Id="ArmyOverlayArmyManagementButtonParent" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="37" VerticalAlignment="Center">
+                      <Children>
+                        <ButtonWidget Id="ArmyOverlayArmyManagementButton" DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Muster.Frame" Command.Click="ExecuteOpenArmyManagement" IsVisible="@IsPlayerArmyLeader" IsEnabled="@CanManageArmy" UpdateChildrenStates="true" GamepadNavigationIndex="0">
+                          <Children>
+                            <Widget Id="ArmyIcon" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="17" SuggestedHeight="17" HorizontalAlignment="Center" VerticalAlignment="Center" PositionYOffset="2" Sprite="General\Icons\Army" Color="#E6C77AFF" />
+                            <HintWidget DataSource="{ManageArmyHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsDisabled="true" />
+                          </Children>
+                        </ButtonWidget>
+                        <HintWidget DataSource="{ManageArmyHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsDisabled="true" />
+                      </Children>
+                    </Widget>
+
+                    <!--Cohesion Bar-->
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="92" SuggestedHeight="20" VerticalAlignment="Center" MarginLeft="8">
+                      <Children>
+                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Army.Cohesion.Track" IsEnabled="@CanManageArmy" Command.Click="ExecuteOpenArmyManagement" GamepadNavigationIndex="1">
+                          <Children>
+                            <ArmyOverlayCohesionFillBarWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="86" SuggestedHeight="14" HorizontalAlignment="Center" VerticalAlignment="Center" FillWidget="FillWidget" InitialAmount="@Cohesion" IsArmyLeader="@IsPlayerArmyLeader" IsCohesionWarningEnabled="@IsCohesionWarningEnabled" MaxAmount="100">
+                              <Children>
+                                <BrushWidget Id="FillWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="86" SuggestedHeight="14" VerticalAlignment="Center" Brush="TAOM.Army.Cohesion.Fill" />
+                              </Children>
+                            </ArmyOverlayCohesionFillBarWidget>
+                          </Children>
+                        </ButtonWidget>
+                        <HintWidget DataSource="{CohesionHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                      </Children>
+                    </Widget>
+
+                    <!--Food-->
+                    <ListPanel DataSource="{FoodHint}" DoNotPassEventsToChildren="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginLeft="10" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" GamepadNavigationIndex="2">
+                      <Children>
+                        <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="26" SuggestedHeight="26" VerticalAlignment="Center" Sprite="cb_stats_food" />
+                        <TextWidget DataSource="{..}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MaxWidth="48" MaxHeight="40" VerticalAlignment="Center" MarginLeft="3" Brush="TAOM.Army.Value" IntText="@Food" />
+                      </Children>
+                    </ListPanel>
+
+                    <!--Men-->
+                    <ListPanel DataSource="{ManCountHint}" DoNotPassEventsToChildren="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginLeft="8" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" GamepadNavigationIndex="3">
+                      <Children>
+                        <Widget Id="ManCountIcon" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="26" SuggestedHeight="26" VerticalAlignment="Center" Sprite="cb_stats_troops" />
+                        <TextWidget DataSource="{..}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MaxWidth="76" MaxHeight="40" VerticalAlignment="Center" MarginLeft="3" Brush="TAOM.Army.Value" Text="@ManCountText" />
+                      </Children>
+                    </ListPanel>
+
+                  </Children>
+                </ListPanel>
+
+                <!-- Three rows of four parties; the page button sits in the column to the right, its number just left of
+                     it, both within one row's height so a last page of one row still shows them. -->
+                <ContainerPageControlWidget Id="GridControlWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginTop="58" Container="PartyList" ItemPerPage="12" LoopNavigation="true" NextPageButton="NextButton" PageText="PageText">
+                  <Children>
+
+                    <NavigationScopeTargeter ScopeID="ArmyOverlayGridScope" ScopeParent="..\PartyList" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="4" ExtendDiscoveryAreaTop="-5" NavigateFromScopeEdges="true" UseDiscoveryAreaAsScopeEdges="true" RightNavigationScope="None" />
+                    <NavigatableGridWidget Id="PartyList" DataSource="{PartyList}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginLeft="22" DefaultCellWidth="72" DefaultCellHeight="52" ColumnCount="4" MinIndex="0" MaxIndex="1000">
+                      <ItemTemplate>
+
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+                          <Children>
+                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="68" SuggestedHeight="49" HorizontalAlignment="Left" VerticalAlignment="Top" MarginTop="1">
+                              <Children>
+                                <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#15120EFF" />
+
+                                <GameMenuPartyItemButtonWidget Name="@NameText" DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" BackgroundImageWidget="BackgroundImageWidget" CharacterBackgroundBrush="GameMenu.Tableau.Background.Character" Command.Click="ExecuteSetAsContextMenuItem" Command.HoverBegin="ExecuteOpenTooltip" Command.HoverEnd="ExecuteCloseTooltip" CurrentCharacterImageWidget="RelationBackgroundWidget\CharacterImage" Description="@DescriptionText" IsMergedWithArmy="@IsMergedWithArmy" IsPartyItem="true" Location="@LocationText" PartyBackgroundBrush="GameMenu.Tableau.Background.Party" Relation="@Relation" UpdateChildrenStates="true">
+                                  <Children>
+
+                                    <ImageWidget Id="BackgroundImageWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="2" MarginRight="2" MarginTop="2" MarginBottom="2" />
+
+                                    <Widget Id="RelationBackgroundWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="4" MarginRight="4" MarginTop="4" MarginBottom="4">
+                                      <Children>
+                                        <ImageIdentifierWidget Id="CharacterImage" DataSource="{Visual}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" />
+                                      </Children>
+                                    </Widget>
+
+                                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" VerticalAlignment="Top" MarginRight="5" MarginTop="4" Brush="ArmyOverlay.ArmyValues.Text" Text="@PartySizeLbl" />
+                                    <ValueBasedVisibilityWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" VerticalAlignment="Top" MarginLeft="8" MarginRight="6" MarginTop="14" WatchType="BiggerThan" IndexToWatch="@ShipCount" IndexToBeVisible="0">
+                                      <Children>
+                                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                          <Children>
+                                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="15" SuggestedHeight="11.8" VerticalAlignment="Center" Sprite="SPGeneral\Ships\ship_icon_medium" />
+                                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="25" Brush="ArmyOverlay.ArmyValues.Text" Brush.TextHorizontalAlignment="Right" IntText="@ShipCount" />
+                                          </Children>
+                                        </ListPanel>
+                                      </Children>
+                                    </ValueBasedVisibilityWidget>
+
+                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="22" SuggestedHeight="20" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="3" MarginTop="3" Sprite="SPGeneral\MapOverlay\Army\icon_state_ontheway" IsHidden="@IsMergedWithArmy" />
+
+                                    <!-- Quest Markers -->
+                                    <ListPanel DataSource="{Quests}" DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginBottom="2">
+                                      <ItemTemplate>
+                                        <QuestMarkerBrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="22" QuestMarkerType="@QuestMarkerType" Brush="GameMenu.QuestMarker" />
+                                      </ItemTemplate>
+                                    </ListPanel>
+
+                                  </Children>
+                                </GameMenuPartyItemButtonWidget>
+
+                                <BrushWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Army.Portrait.Frame" />
+                                <BrushWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Army.Portrait.Leader" IsVisible="@IsLeader" />
+                              </Children>
+                            </Widget>
+                          </Children>
+                        </Widget>
+
+                      </ItemTemplate>
+                    </NavigatableGridWidget>
+
+                    <ButtonWidget Id="NextButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="29" SuggestedHeight="39" HorizontalAlignment="Right" VerticalAlignment="Top" MarginRight="26" MarginTop="12" Brush="EncounterDefenderPageButton" GamepadNavigationIndex="1001" />
+                    <TextWidget Id="PageText" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="28" SuggestedHeight="20" HorizontalAlignment="Right" VerticalAlignment="Top" MarginRight="55" MarginTop="22" Brush="TAOM.Army.Value" Brush.FontSize="15" Brush.TextHorizontalAlignment="Right" IsDisabled="true" Text="" />
+
+                  </Children>
+                </ContainerPageControlWidget>
+
+                <!--Extend Button-->
+                <NavigationScopeTargeter ScopeID="ArmyOverlayExtendButtonScope" ScopeParent="..\ExtendButtonWidget" ScopeMovements="Horizontal" DownNavigationScope="MapBarExtendButtonScope" LeftNavigationScope="ArmyOverlayTopControlsScope" FollowMobileTargets="true" />
+                <ButtonWidget Id="ExtendButtonWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="16" HorizontalAlignment="Right" MarginRight="22" MarginTop="26" Brush="TAOM.Army.Expand" GamepadNavigationIndex="0" />
+
+              </Children>
+            </BrushWidget>
+
+          </Children>
+        </ArmyOverlayClipWidget>
+
+        <!--Popup Widget-->
+        <OverlayPopup Id="PopupParent" />
+
+      </Children>
+    </ArmyOverlayWidget>
+  </Window>
+</Prefab>
