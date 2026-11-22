@@ -5261,3 +5261,19 @@ The command trial turned stamina on with an in-memory switch and cleared it when
 - **Why missed:** "clear it at Finish" was a critic's answer to a leak into a later battle, and it was taken as the whole lifetime. Nobody listed what still reads the switch after the last step, or every path that ends a run. The first game run showed the summary line; a lens found the refused start.
 - **Prevent:** set a trial switch when the run arms and clear it at the one place every run ends, the autostart's done-file write (`CommandTrialRun.Close`). Test the two ends: the switch is still on while the mission closes, and a refused start gives it back.
 - **Source:** #1506; run `E:/Temp/command-trial-runs/20261120-152853` (the summary line), `Live_TheStaminaSwitch_StaysOnUntilTheDoneFile_SoTheBattlesEndReadsTheTrialsSettings`, `WaitForMenu_ARefusedStaminaList_GivesTheStaminaSwitchBackWithTheDoneFile`.
+
+### Two builders that each add one of a counted thing merge cleanly to a count that is one short (#1528, #1529, 2026-11-22)
+
+**Why missed:** The team practice fight and the wave fight were built in two worktrees from one commit. Each added one MCM setting and raised the same numbers by one (the `TaomSettings` count, the schema total, the count in two co-op docs). A three-way merge sees the same edit on both sides and keeps it with no conflict, so the joined tree said 539 where it held 540. The same join dropped a `[SettingPropertyGroup]` line: both sides had added a property under an identical attribute line, and the merge kept one copy of that line for two properties. Only the count tests and one attribute test showed either defect. The merge of trunk a few hours later met the same class again, because trunk had added three settings of its own.
+
+**Prevent:** After joining two builder trees, or a branch with trunk, run the count and schema tests before anything else and expect them to fail: `SettingsFingerprintTests`, `ServerSettingsSchemaTests`, `CoopMissionRolePolicyTests`, `FeatureModulesTests`. When the line is a count, or sits between two additions, treat a hunk that both sides changed in the same way as a conflict to read, not as a merge that worked. In the builder briefs, name the counted files as shared and say that the lead sets the final numbers.
+
+**Source:** the join of `feat/training-grounds-teams` and `feat/training-grounds-waves`, and the merge of trunk, in PR #1535.
+
+### A fix list that says "every" must not rule one case out of scope (#1529, 2026-11-22)
+
+**Why missed:** A review found that a refund in the wave fight told the player nothing. The lead's fix list said to show the notice on every path where a stake is refunded and, lower down, listed "a wave with no room for any fighter" as out of scope. The implementer followed both and left that refund silent. The second review found it, with two more paths the list had not named: a mission that ends while a wave is due, and a notice that came after a call that could throw.
+
+**Prevent:** When a fix is "every X", write it as one function that every X goes through and name that function in the list, in place of a list of call sites. Read the out-of-scope list against each "every" before the list goes out. Ask the implementer's report for the paths it found and did not change.
+
+**Source:** the second look at the #1529 fixes (lens 5 F1 and the Codex pass, prompt [codex-rereview-training-grounds-fixes-2026-11-22.prompt.md](../codex-rereview-training-grounds-fixes-2026-11-22.prompt.md)), fixed by `WaveFightDirector.AnnounceRefund`.

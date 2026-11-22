@@ -43,4 +43,12 @@ public class ArmourAcquisitionSettingsProviderTests
         Assert.IsTrue(provider.LordEventEnabled);
         Assert.IsTrue(provider.VisitingArmourerEnabled);
     }
+
+    [TestMethod]
+    public void CoopGuestLadder_McmAbsent_IsOn()
+    {
+        Assert.IsNull(TaomSettings.Instance, "this test assumes MCM is not loaded in the test host");
+
+        Assert.IsTrue(Build(enabled: false).CoopGuestLadderEnabled);
+    }
 }

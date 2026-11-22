@@ -45,6 +45,7 @@ using TAOM.Features.SmartCavalryAI.Hooks;
 using TAOM.Features.Spider;
 using TAOM.Features.StagedSiege.Hooks;
 using TAOM.Features.Stamina.Hooks;
+using TAOM.Features.TrainingGrounds.Waves.Hooks;
 using TAOM.Features.TrollBruteForce;
 using TAOM.Features.Warg;
 using TAOM.Features.WarRam;
@@ -73,6 +74,7 @@ public static class CoopMissionRoles
         [nameof(FellFoesMissionLogic)] = CoopMissionRole.Unsafe,
         [nameof(LostFootingMissionLogic)] = CoopMissionRole.Unsafe,
         [nameof(StagedSiegeMissionBehavior)] = CoopMissionRole.Unsafe,
+        [nameof(TrainingWavesMissionLogic)] = CoopMissionRole.Unsafe,
 
         // AgentOwner: acts only on agents this peer owns, by a live check or a named invariant (see the doc row).
         [nameof(BehaviorTreeMissionLogic)] = CoopMissionRole.AgentOwner,

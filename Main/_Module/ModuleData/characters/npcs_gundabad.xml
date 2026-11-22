@@ -5,7 +5,7 @@
 	<!-- All use race="pale_uruk" for correct orc rendering -->
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_gundabad" race="pale_uruk" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.gundabad" name="{=aom_gb_arena}Arena Master">
+	<NPCCharacter id="tournament_master_gundabad" race="pale_uruk" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.gundabad" name="{=aom_gb_arena}Training Master">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>

@@ -5,7 +5,7 @@
 	<!-- All use race="uruk_hai" for correct uruk-hai rendering -->
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.isengard" name="{=aom_ig_arena}Arena Master">
+	<NPCCharacter id="tournament_master_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.isengard" name="{=aom_ig_arena}Training Master">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Equipments>

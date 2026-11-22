@@ -5,7 +5,7 @@
 	<!-- Dúnedain are humans - no race attribute -->
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_cardolan" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.cardolan" name="{=aom_card_arena}Arena Master">
+	<NPCCharacter id="tournament_master_cardolan" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.cardolan" name="{=aom_card_arena}Training Master">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Equipments>

@@ -5,7 +5,7 @@
 	<!-- Easterlings are humans - no race attribute -->
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_rhun" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.khuzait" name="{=aom_rh_arena}Arena Master">
+	<NPCCharacter id="tournament_master_rhun" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.khuzait" name="{=aom_rh_arena}Training Master">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>

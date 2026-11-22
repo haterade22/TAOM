@@ -4,7 +4,8 @@
 
 `TAOM.CoopCompat` is a separate module in the TAOM download that connects TAOM to BannerlordCoop.
 When a client joins a co-op campaign, it compares the client's TAOM build and simulation settings
-with the server's and tells the player about a difference. It also sends the server's War of the Ring
+with the server's and tells the player about a difference, and it warns a player whose data mods
+load in another order than the server's. It also sends the server's War of the Ring
 momentum to every client, so a client's War of the Ring screen shows the server's war. And it lets a
 guest buy from the Elite Emissary and use a town armoury: the guest's screen asks the host, and the
 host runs TAOM's own purchase or upgrade for the guest's hero (#1329).
@@ -70,6 +71,8 @@ current connection, never from the message, and every field is bounded before an
   of both module DLLs, and its settings fingerprint). The server compares it with its own and
   answers with a `CoopCompatHelloReply`. The client shows a notice for a build mismatch or for
   different settings groups. It warns and never disconnects.
+- `LoadOrder/LoadOrderCheckService`: the load order warning, carried by the same hello and reply.
+  See "Load order warning" below.
 - `Momentum/MomentumRelayService`: the server answers each hello with a `CoopCompatMomentumSnapshot`
   of the war state (`IMomentumStateStore.CaptureWarState`, without the per-player events). After a
   change it broadcasts again, at most once a minute of real time, plus once every 24 in-game hours.
@@ -92,6 +95,17 @@ current connection, never from the message, and every field is bounded before an
   click after that sends again. A host on another protocol version, or an older `TAOM.CoopCompat` with
   no trade handler, never answers, so the guest sees that notice; the join handshake already reports
   either one as a build mismatch.
+- The same relay carries the lord's gear ladder for co-op players
+  ([coop-interop.md](coop-interop.md#lords-ladder-for-co-op-players)). `CoopCompatTradeReply` fields 14
+  to 22 hold the server's `GuestLadderView` of the guest hero's rung: `HasLadder`, `LadderSlot` (the
+  `LadderSlot` value), `LadderReady`, `LadderCanClaim`, `LadderLordLevel`, `LadderMaterialId` (`""` for
+  no hand-in), `LadderNeeded`, `LadderCarried` and `LadderChoices`. The client reads them back with the
+  server's caps: a slot that is not a defined `LadderSlot` gives no view, a material id over 128
+  characters gives no hand-in, and the choices keep at most 64 ids of 1 to 128 characters (a null list
+  reads as empty). The hand-in and the claim are trade requests with actions 5 and 6, the slot name in
+  `Subject` and the piece in `Target`; no request field was added. `ProtocolVersion` stays 1: a v2.0.40
+  peer skips fields 14 to 22, and a reply from a v2.0.40 server reads as no ladder, so that guest's
+  armoury looks as before (`OlderPeerLayoutTests`).
 - `CoopCompatSubModule` starts the transport and builds the three services at the first campaign start
   (`OnGameStart`), when every module's `OnSubModuleLoad` has run, so the module order against Coop and
   `DedicatedServer.Windows` does not matter. It then adds `MomentumRelayCampaignBehavior` to each
@@ -126,16 +140,80 @@ Coop MessageBroker / INetwork
     CoopTransport (TAOM.CoopCompat.Coop.dll)
           |  ICoopTransport
      /          \
-SettingsHandshakeService     MomentumRelayService            GuestTradeRelayService
+SettingsHandshakeService     MomentumRelayService            GuestTradeRelayService   CareerSyncRelayService
   |  SettingsFingerprint        |  IMomentumStateStore (TAOM.dll)  |  GuestTradeClient (guest, TAOM.dll)
-  |  BuildIdentity              |                                  |  GuestTradeHost (host, TAOM.dll)
+  |  BuildIdentity              |                                  |  GuestTradeHost (host, TAOM.dll)   CareerSyncClient, CareerSyncHost (TAOM.dll)
   ISettingsNotice               MomentumRelayCampaignBehavior      |    IGuestTradeShops, IGuestTradeHeroAdapter
 ```
 
+### Load order warning
+
+Coop's join check compares the peers' module lists but not their order. The engine merges module XML
+in load order, so a later module's items or troops replace an earlier one's, and a player whose data
+mods load in another order sees other gear or troops than the host, with no hint. "Server" below is
+the co-op server process: under BannerlordCoop the hosting player is a client of it, like the others.
+
+- The client sends its active module ids in load order as `CoopCompatHello.ModuleOrder` (field 9),
+  at most 256, each at most 128 characters; a longer id is left out. `LoadOrder/ActiveModulesAdapter`
+  reads `ModuleHelper.GetActiveModules()`, which walks the loaded modules in the order
+  `InitializeModules` added them (the launcher's order), and each module's `SubModule.xml`. A
+  failed read is logged and sends no order; it is not kept, so the next read tries again.
+- The server compares (`LoadOrder/LoadOrderRules`) only TAOM's own block (`TAOM.Dependencies`,
+  `LOTRLOME_Armory`, `DualWield`, `TAOM_Map`, `TAOM`, `TAOM_AIO_Compat`) and every other
+  non-official module whose `SubModule.xml` lists object data (items, troops, cultures, factions,
+  settlements and the like; text-only entries do not count). It cuts both orders to the compared
+  modules that both sides have and reports the first pair that differs.
+- The server logs the result (`[CoopCompat] load order peer=<label> match` or `differ: ...` with both
+  orders, and once per process the compared modules with their count, even when that list is empty,
+  so a module the rules miss shows in the log) and answers in
+  `CoopCompatHelloReply` fields 5 to 7 (`LoadOrderDiffers`, `LoadOrderHostFirst`,
+  `LoadOrderHostSecond`, the server's module names with their ids). The player gets one yellow line
+  naming the two modules. Nothing is blocked.
+- The order is compared only when both sides send the same `ProtocolVersion`, like the settings
+  groups; a client ignores the load order fields of a reply from another protocol.
+- The switch is read in the server process each time a hello arrives. Off, the server logs that it
+  did not compare. Where the server takes the value from is under Configuration.
+- `ProtocolVersion` stays 1. A v2.0.40 peer skips the new fields; a server that gets no
+  `ModuleOrder` from such a client logs "not reported" and warns nobody; a client that gets a reply
+  without the fields shows nothing. `OlderPeerLayoutTests` proves both directions on the bytes.
+
+### Career sync
+
+TAOM keeps careers in its career book, and only the co-op server's book is saved. The relay carries a
+player's career to the server and the server's careers back; TAOM decides
+([coop-interop.md](coop-interop.md#career-sync-967) has the rules and the known limits). "Server" is the
+co-op server process: the hosting player is a client of it, like the others.
+
+- `CareerSync/CareerSyncRelayService` attaches itself to TAOM's `CareerSyncClient`. At Coop's
+  `ClientCampaignReady` (after `SwitchToPlayer`, so the player plays its own hero) the client sends a
+  `CoopCompatCareerReport` with `JoinReport` set. After that the submodule's `OnApplicationTick` calls
+  the relay's `Tick`, and the client sends one report per action that changed its own hero's career.
+- The transport names the hero that the sender's current connection controls, as for guest trade; the
+  report's `HeroId` is only compared with it. `CareerSyncHost.Handle` returns what to send: an accepted
+  career goes to every player but the sender (`BroadcastExcept`, Coop's `INetwork.SendAllBut`); a refused
+  one, or a join report that differs from the server's saved copy, goes back to the sender only
+  (`SendToPeer`). A change the server makes itself (a death clear, a tree migration) goes to every
+  player (`Broadcast`), on the server only.
+- `CoopCompatCareerUpdate.Sequence` is the last report the server handled for that hero, so the
+  player's own client drops an answer to an older report. `Known` is false when the server holds no
+  entry for the hero, and the client then keeps its own copy.
+- No catch-up message on join: the join save already carries the server's career book, and Coop
+  queues messages for a peer that is still loading and replays them.
+- Two new contract types, `ProtocolVersion` 1. A peer without them drops them and keeps its careers on
+  its own PC, as before.
+
 ## Configuration
 
-None. The module reads TAOM's settings (`TaomSettingsPages.All()`) for the fingerprint and has no
-settings of its own.
+The module reads TAOM's settings (`TaomSettingsPages.All()`) for the fingerprint. TAOM's settings
+page has a Co-op group with three switches. One is for this module: "Warn players whose load order
+differs from the host's" (`CoopLoadOrderWarning`, default on), read through
+`Main/Features/CoopInterop/CoopSettingsProvider.cs` in the co-op server process. A player's own
+value is never read, so it is excluded from the fingerprint. A dedicated server (the server build,
+`GameNetwork.IsDedicatedServer`) takes the value from `taom-server-settings.json`, which
+`ServerSettingsSource` reads once per process: set `"CoopLoadOrderWarning": false` there and restart
+the server ([server settings](server-settings.md)). The value in a player's own settings page does
+not reach that server. The other two, `CoopCareerSync` and `CoopGuestLadder`, are read by TAOM.dll in
+the co-op server process; see [TAOM's co-op interop](coop-interop.md).
 
 ## Key Files
 
@@ -143,7 +221,7 @@ settings of its own.
 |------|---------|
 | `CoopCompat/CoopCompatSubModule.cs` | Entry point: at the first campaign start, starts the transport, builds the services and adds the campaign behavior; at the main menu, starts the Long Defeat session link |
 | `CoopCompat/_Module/SubModule.xml` | Module manifest: depends on TAOM and Coop, untagged so it loads on a client and on a dedicated server |
-| `CoopCompat/_Module/README.txt` | Player README: what the module does, what to install, load order, the old 0.3.25 build trap, the join and trade messages. Update it when a player message changes |
+| `CoopCompat/_Module/README.txt` | Player README: what the module does, what to install, load order, the old 0.3.25 build trap, the join, trade, career and ladder messages. Update it when a player message changes |
 | `CoopCompat/TAOM.CoopCompat.csproj` | The scanned DLL; deploys both DLLs to the Client and Server bins; skips the build when no Coop is found at `CoopBinDir` |
 | `CoopCompat/Coop/TAOM.CoopCompat.Coop.csproj` | The DLL that holds every Coop-backed type; not named in `SubModule.xml` |
 | `CoopCompat/Coop/Transport/CoopTransport.cs` | The Coop binding |
@@ -154,9 +232,15 @@ settings of its own.
 | `CoopCompat/Sessions/LongDefeatSessionLink.cs` | Joins TAOM's Long Defeat co-op port to the session transport |
 | `CoopCompat/Handshake/SettingsHandshakeService.cs` | Build and settings handshake |
 | `CoopCompat/Handshake/BuildIdentity.cs` | Protocol, TAOM build text and MVIDs of this peer |
-| `CoopCompat/Handshake/InformationManagerSettingsNotice.cs` | The two player notices |
+| `CoopCompat/Handshake/InformationManagerSettingsNotice.cs` | The three player notices |
+| `CoopCompat/LoadOrder/LoadOrderRules.cs` | Which modules a load order check compares, and the first pair that differs |
+| `CoopCompat/LoadOrder/LoadOrderCheckService.cs` | The server's load order check and its log lines |
+| `CoopCompat/LoadOrder/ActiveModulesAdapter.cs` | The engine's active modules and their `SubModule.xml` |
 | `CoopCompat/Momentum/MomentumRelayService.cs` | War of the Ring momentum relay |
 | `CoopCompat/GuestTrade/GuestTradeRelayService.cs` | Guest trade relay (#1329) |
+| `CoopCompat/CareerSync/CareerSyncRelayService.cs` | Career sync relay (#967) |
+| `CoopCompat/Coop/Messages/CoopCompatCareerReport.cs`, `CoopCompatCareerUpdate.cs` | The career sync messages |
+| `Main/Features/CoopInterop/CareerSync/` | TAOM's career sync: `CareerSyncClient`, `CareerSyncHost`, `CareerSyncRules` |
 | `CoopCompat/Decisions/DecisionTypeRegistration.cs` | Registers TAOM's fief election with Coop at the main menu and at the first campaign start (#1346) |
 | `CoopCompat/Coop/Decisions/CoopDecisionTypes.cs` | The one call into Coop's `KingdomDecisionTypeRegistry` |
 | `Main/Features/FiefGranting/FiefClaimantWire.cs`, `FiefClaimantWireData.cs` | The fief election payload and its checks |
@@ -171,8 +255,9 @@ settings of its own.
 ## Dependencies
 
 - `TAOM.dll`: `IModLogger`, `IOutcomeLog`, `IMomentumStateStore`, `SettingsFingerprint`,
-  `TaomSettingsPages`, `GuestTradeClient`, `GuestTradeHost`, resolved from TAOM's container.
-- BannerlordCoop's `IPlayerManager`: the hero behind a connection, for guest trade.
+  `TaomSettingsPages`, `GuestTradeClient`, `GuestTradeHost`, `CareerSyncClient`, `CareerSyncHost`, resolved
+  from TAOM's container.
+- BannerlordCoop's `IPlayerManager`: the hero behind a connection, for guest trade and career sync.
 - BannerlordCoop (`Common`, `Coop.Core`, `GameInterface` and Autofac from the Coop module):
   `MessageBroker`, `INetwork`, `ContainerProvider`, `ModInformation`, `GameThread`. Coop's DLLs are
   references only and never ship in the TAOM download.
@@ -183,6 +268,11 @@ settings of its own.
   wire contract round trip (empty arrays come back empty, not null) and names, the transport binding to
   Coop, the manifest, the type scan gate (`TypeScanGateTests`), the reference gate over both DLLs, the
   service signature and entry point line count gates.
+- `TAOM.CoopCompat.Tests/LoadOrder/`: the load order rules and the server's check (the switch, an
+  empty or refused list, a failed module list read, the compare). `SettingsHandshakeServiceTests` covers the order in the hello
+  and the reply and the player notice; `OlderPeerLayoutTests` reads a v2.0.40 hello and reply into
+  the new types and back. `TAOM.Tests/Features/CoopInterop/CoopSettingsProviderTests.cs` covers the
+  switch.
 - `CoopModelPatchBaseCallGateTests` (#1151): Coop fixes vanilla rules with Harmony patches on
   `Default*Model` methods, and a TAOM override that never calls `base` hides them (#1141). The gate
   reads the Coop patches that the referenced Coop build declares by attribute (a target on the patch
@@ -198,6 +288,15 @@ settings of its own.
   match, request bounds) and the module wiring. `TAOM.CoopCompat.Tests/GuestTrade/` and the transport
   tests cover the relay's field mapping both ways, the protocol check, the connection check and the hero
   lookup. The presenters' guest branches have no unit test (thin Gauntlet code); step 4 below covers them.
+  The ladder fields: `GuestTradeRelayServiceTests` (both directions, the caps, an unknown slot, a null
+  list), `ContractRoundTripTests`, `WireContractNamesTests` and `OlderPeerLayoutTests` (a v2.0.40 reply
+  in both directions).
+- `TAOM.CoopCompat.Tests/CareerSync/` runs the relay with TAOM's real career sync client and server
+  over the fake transport: the join report, one report per tick, the hero from the connection, an
+  accepted career to the others only, a refusal to the sender only, the server's own change, the
+  protocol check. The transport tests cover the two new events, the role checks and `BroadcastExcept`;
+  `SubModuleShapeTests` pins the frame tick. The rules, the client and the server are tested in
+  `TAOM.Tests/Features/CoopInterop/CareerSync/`.
 - `TAOM.Tests/Features/FiefGranting/FiefClaimantWireTests.cs` covers the fief election payload;
   `TAOM.CoopCompat.Tests/Decisions/` checks that the type reaches Coop's registry, once per process,
   and `SubModuleShapeTests` that both hooks call it. Building the decision from ids is engine code
@@ -230,6 +329,13 @@ settings of its own.
    leave the town and open the emissary from a saved inquiry, or trade while the town is besieged:
    the host refuses with "not in this settlement, or it is in a battle or a siege", and nothing is
    charged.
+   Lords' Ladder: carry a culture's lord's materials and open a town's armoury. The window lists
+   "Hand over ... for your ..." with the count you carry; hand them over: the materials leave your
+   inventory on every PC and the server's taom log shows `[GuestTrade] LadderHandIn for <hero> ... None,
+   status 0`. At a level 3 armoury the window now lists "Claim your ..."; pick a piece: it is in your
+   inventory. A second player's rung is unchanged. Save on the server, load, join: the rung is still
+   claimed. Then set `"CoopGuestLadder": false` in the server's `taom-server-settings.json`, restart the
+   server and open the armoury: no ladder rows.
 5. Fief elections (#1346): `python tools/ingame_verdict.py --issue 1346` reads the checks. Every
    peer's taom log shows `taom.coopcompat.fief-election.registered` (a client and a listen host at
    the main menu, a dedicated server at its campaign start). In the campaign, take a castle for the
@@ -237,6 +343,20 @@ settings of its own.
    `fief-election.read`; the client sees the same candidates as the host and can vote, and the fief
    goes to the clan the votes chose. The server's Coop log shows no "is not synced, so the server AI
    decides it" line for `TaomSettlementClaimantDecision`.
+6. Load order: with two community mods that add items or troops on every peer, swap their order on
+   one client, then join. Do not use `LOTRLOME_Armory` or `TAOM_Map`: TAOM's `SubModule.xml` asks for
+   them before TAOM, so a BUTR or BLSE launcher may sort them back or flag the swap. The client shows
+   one yellow line naming the two modules, and the server's taom log shows
+   `[CoopCompat] load order peer=<label> differ: ...`. Then set `"CoopLoadOrderWarning": false` in the
+   server's `taom-server-settings.json`, restart the server and join again: no line, and the server
+   logs `not compared: the switch is off on this server`.
+7. Career sync: a new player joins and picks a career in character creation. The server's taom log
+   shows `[CareerSync] stored '<career>' for '<hero>'`, and a second player sees that career on the
+   new player's hero. The new player takes a career choice: the server logs it stored again. The
+   player leaves and joins again: the career and the choice are still there. Save on the server,
+   reload, join: still there. Then set `"CoopCareerSync": false` in the server's
+   `taom-server-settings.json`, restart the server and change a career on a client: the server logs
+   `career sync is switched off on this server` once and stores nothing.
 
 ## Distribution
 
@@ -263,6 +383,12 @@ module. A change on either side gets copied to the other. Coodsz merges and rele
 - 2026-11-15: guest trade (#1329): a guest buys from the Elite Emissary and uses the armoury through
   the host. Ported from minimalcash63's `TAOM.CoopEmissaryArmory`, with Sternab's request checks.
 - 2026-11-15: TAOM fief elections sync to players (#1346).
+- 2026-11-17: load order warning: the co-op server compares a joining player's data mod order with
+  its own and warns that player; the switch is in TAOM's Co-op settings group, read by the server.
+- 2026-11-17: career sync (#967): a player's career goes to the co-op server, which checks it with
+  TAOM's career rules, keeps it in its save and passes it on to the other players.
+- 2026-11-17: the guest trade reply carries a player's rung of the lord's gear ladder, and the relay
+  carries the ladder hand-in and claim, run by the co-op server.
 
 ## GitHub Issue
 

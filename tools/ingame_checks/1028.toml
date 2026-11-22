@@ -17,7 +17,7 @@ logs = ["taom"]
 
 [[check]]
 id = "taom.mission-start-guard.deferred-add"
-needs = "a Practice Fight started from the Minas Tirith town arena menu (not through the arena master's dialogue) with DualWield enabled; any other mod that adds a behaviour inside a start call writes the same line. A mission start that loops anywhere in the session reads FAIL"
+needs = "a Practice Fight started from the Minas Tirith town training grounds menu (not through the training master's dialogue) with DualWield enabled; any other mod that adds a behaviour inside a start call writes the same line. A mission start that loops anywhere in the session reads FAIL"
 reached = ['\[Check\] id=taom\.mission-start-guard\.deferred-add result=(pass|fail)']
 pass = ['\[Check\] id=taom\.mission-start-guard\.deferred-add result=pass queued=[1-9][0-9]* added=[1-9][0-9]*']
 fail = [

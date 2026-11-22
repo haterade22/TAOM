@@ -5,7 +5,7 @@
 	<!-- All use race="uruk" for correct orc rendering -->
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_mordor" race="uruk" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.mordor" name="{=aom_mr_arena}Arena Master">
+	<NPCCharacter id="tournament_master_mordor" race="uruk" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.mordor" name="{=aom_mr_arena}Training Master">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills></skills>
 		<Equipments>

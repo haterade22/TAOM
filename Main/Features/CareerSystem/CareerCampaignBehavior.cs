@@ -115,6 +115,9 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
 
     private void OnHeroLeveledUp(Hero hero, bool shouldNotify)
     {
+        if (hero != null && _dataService.HasCareer(hero.StringId))
+            _passiveService.RefreshCache(_dataService, _registry);
+
         if (hero != Hero.MainHero) return;
         if (!_dataService.HasCareer(hero.StringId))
         {

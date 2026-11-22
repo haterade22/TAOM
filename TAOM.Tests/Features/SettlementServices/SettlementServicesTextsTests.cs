@@ -34,12 +34,12 @@ public class SettlementServicesTextsTests
     public void TidingsTitleAndNone_ReadAsDecided()
     {
         Assert.AreEqual("Tidings of the Lists", SettlementServicesTexts.TidingsTitle());
-        Assert.AreEqual("The arena master knows of no tournament in a friendly town. You keep your coin.", SettlementServicesTexts.TidingsNone());
+        Assert.AreEqual("The training master knows of no tournament in a friendly town. You keep your coin.", SettlementServicesTexts.TidingsNone());
     }
 
     [TestMethod]
     public void TheTidingsRefusal_ReadsAsDecided()
-        => Assert.AreEqual("The arena master has no answer for you now.", SettlementServicesTexts.TidingsRefused());
+        => Assert.AreEqual("The training master has no answer for you now.", SettlementServicesTexts.TidingsRefused());
 
     [TestMethod]
     public void TidingsBody_ListsEachRowAsTownAndRealm_OnItsOwnLine()
@@ -47,7 +47,7 @@ public class SettlementServicesTextsTests
         var body = SettlementServicesTexts.TidingsBody(new[] { new TidingsRow("Aldburg", "Rohan"), new TidingsRow("Bree", "Arnor") });
 
         // {newline} is a text variable the running game sets; headless it renders empty, so only the header and the rows are asserted.
-        StringAssert.StartsWith(body, "The arena master names the nearest tournaments:");
+        StringAssert.StartsWith(body, "The training master names the nearest tournaments:");
         StringAssert.EndsWith(body.Replace("\r", "").Replace("\n", "|"), "Aldburg (Rohan)|Bree (Arnor)");
     }
 }

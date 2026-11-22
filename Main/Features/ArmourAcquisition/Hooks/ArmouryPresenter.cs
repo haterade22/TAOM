@@ -16,8 +16,8 @@ namespace TAOM.Features.ArmourAcquisition.Hooks;
 /// confirmation as engine inquiries, with the lord's gear ladder's rows above the upgrades
 /// (<see cref="LadderPresenter"/>). Every decision is a service's (<see cref="ArmouryUpgradeService"/>,
 /// <see cref="LordsLadderService"/>, <see cref="ArmouryLevelService"/>).
-/// A co-op guest with TAOM.CoopCompat asks the host, which runs the upgrade for the guest's hero (#1329); the
-/// gear ladder stays the host's own. Without the relay a guest is turned away before anything is charged: the
+/// A co-op guest with TAOM.CoopCompat asks the host, which runs the upgrade for the guest's hero (#1329), and lists the
+/// ladder rows from the co-op server's view of the guest's rung (<see cref="GuestLadderPresenter"/>). Without the relay a guest is turned away before anything is charged: the
 /// host's next roster resync would erase the upgraded piece (the EliteEmissary "pay-real-get-phantom" finding).
 /// </summary>
 public sealed class ArmouryPresenter
@@ -26,6 +26,7 @@ public sealed class ArmouryPresenter
     private readonly ArmouryLevelService _levels;
     private readonly ArmouryUpgradeService _upgrades;
     private readonly LadderPresenter _ladder;
+    private readonly GuestLadderPresenter _guestLadder;
     private readonly IArmouryTownAdapter _towns;
     private readonly IArmouryPlayerAdapter _player;
     private readonly ISpecialResourceSpender _spender;
@@ -34,13 +35,14 @@ public sealed class ArmouryPresenter
     private readonly IModLogger _logger;
 
     public ArmouryPresenter(IArmourGateService gate, ArmouryLevelService levels, ArmouryUpgradeService upgrades,
-        LadderPresenter ladder, IArmouryTownAdapter towns, IArmouryPlayerAdapter player, ISpecialResourceSpender spender,
+        LadderPresenter ladder, GuestLadderPresenter guestLadder, IArmouryTownAdapter towns, IArmouryPlayerAdapter player, ISpecialResourceSpender spender,
         IArmourAcquisitionConfigProvider config, GuestTradeClient guestTrade, IModLogger logger)
     {
         _gate = gate;
         _levels = levels;
         _upgrades = upgrades;
         _ladder = ladder;
+        _guestLadder = guestLadder;
         _towns = towns;
         _player = player;
         _spender = spender;
@@ -53,7 +55,7 @@ public sealed class ArmouryPresenter
     {
         if (_guestTrade.IsGuest)
         {
-            AskHost(new GuestTradeRequest(GuestTradeAction.ArmouryBalance, townId), reply => Show(townId, guest: true, reply.ArmouryLevel));
+            AskHost(new GuestTradeRequest(GuestTradeAction.ArmouryBalance, townId), reply => Show(townId, guest: true, reply.ArmouryLevel, reply.Ladder));
             return;
         }
         if (_guestTrade.IsGuestWithoutLink)
@@ -64,13 +66,13 @@ public sealed class ArmouryPresenter
         Show(townId, guest: false);
     }
 
-    private void Show(string townId, bool guest, int? hostLevel = null)
+    private void Show(string townId, bool guest, int? hostLevel = null, GuestLadderView? hostLadder = null)
     {
         var level = hostLevel ?? _levels.GetTownLevel(townId);
         var resourceName = _spender.GetBalance(_player.HeroId, _player.KingdomId, _player.CultureId)?.DisplayName;
         var config = _config.GetConfig();
 
-        var elements = guest ? new List<InquiryElement>() : new List<InquiryElement>(_ladder.Rows(level));
+        var elements = new List<InquiryElement>(guest ? _guestLadder.Rows(hostLadder) : _ladder.Rows(level));
         foreach (var offer in _upgrades.BuildOffers(level))
         {
             var price = ArmouryTexts.Price(offer, Name, resourceName);
@@ -96,7 +98,7 @@ public sealed class ArmouryPresenter
     private void OnChosen(List<InquiryElement> selected, string? resourceName, string townId, bool guest)
     {
         var picked = selected.FirstOrDefault()?.Identifier;
-        if (_ladder.TryHandle(picked) || picked is not UpgradeOffer offer)
+        if ((guest ? _guestLadder.TryHandle(picked, townId) : _ladder.TryHandle(picked)) || picked is not UpgradeOffer offer)
             return;
         var price = ArmouryTexts.Price(offer, Name, resourceName);
         InformationManager.ShowInquiry(new InquiryData(

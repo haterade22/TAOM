@@ -23,4 +23,9 @@ public sealed class ArmourAcquisitionSettingsProvider : IArmourAcquisitionSettin
     public bool LordEventEnabled => TaomSettings.Instance?.EnableArmourLordEvent ?? true;
 
     public bool VisitingArmourerEnabled => TaomSettings.Instance?.EnableVisitingArmourer ?? true;
+
+    /// <summary>The default of "Lords' Ladder for co-op players" (TaomSettings.CoopGuestLadder).</summary>
+    public const bool DefaultCoopGuestLadder = true;
+
+    public bool CoopGuestLadderEnabled => TaomSettings.Instance?.CoopGuestLadder ?? DefaultCoopGuestLadder;
 }

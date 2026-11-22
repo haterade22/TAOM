@@ -35,6 +35,8 @@ public class SpecialResourcesWiringTests
         container.RegisterInstance(Substitute.For<IDedicatedServerProvider>());
         container.RegisterInstance(Substitute.For<IPlayerControlQuery>());
         container.RegisterInstance(Substitute.For<ITroopWeightService>());
+        // Production registers this in the CareerSync feature module (CoopCareerTierTrust).
+        container.RegisterInstance(Substitute.For<ICareerTierTrust>());
         CareerSystemIoC.RegisterCareerSystemFeature(container);
         SpecialResourcesIoC.RegisterSpecialResourcesFeature(container);
         return container;

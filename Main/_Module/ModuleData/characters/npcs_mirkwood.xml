@@ -5,7 +5,7 @@
 	<!-- Elves use default human race (no race attribute) -->
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_mirkwood" race="elf" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.mirkwood" name="{=aom_mk_arena}Arena Master">
+	<NPCCharacter id="tournament_master_mirkwood" race="elf" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.mirkwood" name="{=aom_mk_arena}Training Master">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills></skills>
 		<Equipments>

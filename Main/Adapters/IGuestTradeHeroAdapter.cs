@@ -9,6 +9,7 @@ namespace TAOM.Adapters;
 /// <param name="SettlementId">The settlement the hero's party is in, or null.</param>
 /// <param name="AtWarWithSettlement">The hero's map faction is at war with the settlement's.</param>
 /// <param name="Owner">The owner of <paramref name="SettlementId"/>, or null when the hero is in none.</param>
+/// <param name="IsAlive">The hero is alive; a dead hero is never a free leader either.</param>
 public sealed record GuestTradeHero(
     string HeroId,
     bool IsFreeLeader,
@@ -17,7 +18,8 @@ public sealed record GuestTradeHero(
     bool AtWarWithSettlement,
     SettlementOwnerInfo? Owner,
     IArmouryPlayerAdapter Player,
-    IPlayerPartyAdapter Party);
+    IPlayerPartyAdapter Party,
+    bool IsAlive = true);
 
 /// <summary>Finds a hero by StringId on the host for guest trade (#1329).</summary>
 public interface IGuestTradeHeroAdapter
