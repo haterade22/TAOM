@@ -100,11 +100,21 @@ public class StoryHeroesReaderTests
     }
 
     [TestMethod]
-    public void MoreThanThree_KeepsTheFirstThree_WithOneWarning()
+    public void MoreThanFour_KeepsTheFirstFour_WithOneWarning()
     {
-        var heroes = Read("[" + Row("a", "t_a") + "," + Row("b", "t_b") + "," + Row("c", "t_c") + "," + Row("d", "t_d") + "," + Row("e", "t_e") + "]", out var logger);
+        var heroes = Read("[" + Row("a", "t_a") + "," + Row("b", "t_b") + "," + Row("c", "t_c") + "," + Row("d", "t_d") + "," + Row("e", "t_e") + "," + Row("f", "t_f") + "]", out var logger);
 
-        CollectionAssert.AreEqual(new[] { "a", "b", "c" }, heroes.Select(h => h.Id).ToArray());
+        CollectionAssert.AreEqual(new[] { "a", "b", "c", "d" }, heroes.Select(h => h.Id).ToArray());
         Assert.AreEqual(1, Warnings(logger));
+    }
+
+    [TestMethod]
+    public void FourHeroes_AreAllKept_WithNoWarning()
+    {
+        // The Fellowship at Parth Galen (#1105 slice 2): Boromir, Aragorn, Legolas and Gimli.
+        var heroes = Read("[" + Row("a", "t_a") + "," + Row("b", "t_b") + "," + Row("c", "t_c") + "," + Row("d", "t_d") + "]", out var logger);
+
+        Assert.AreEqual(4, heroes.Length);
+        Assert.AreEqual(0, Warnings(logger));
     }
 }

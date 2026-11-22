@@ -19,7 +19,7 @@ namespace TAOM.Tests.Features.LongDefeat.Config;
 [TestClass]
 public class ShippedMissionHeroesTests
 {
-    private static readonly string[] Ids = { "taom_hero_aragorn", "taom_hero_legolas", "taom_hero_gimli" };
+    private static readonly string[] Ids = { "taom_hero_aragorn", "taom_hero_legolas", "taom_hero_gimli", "taom_hero_boromir" };
 
     private static List<XElement> Heroes() =>
         XDocument.Load(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "characters", "taom_mission_heroes.xml")).Root!.Elements("NPCCharacter").ToList();
@@ -32,7 +32,7 @@ public class ShippedMissionHeroesTests
         .ToDictionary(e => (string)e.Attribute("slot")!, e => (string)e.Attribute("id")!);
 
     [TestMethod]
-    public void TheFile_HoldsExactlyTheThreeHeroes()
+    public void TheFile_HoldsExactlyTheFourHeroes()
     {
         CollectionAssert.AreEquivalent(Ids, Heroes().Select(h => (string?)h.Attribute("id")).ToArray());
     }
@@ -109,6 +109,47 @@ public class ShippedMissionHeroesTests
     }
 
     [TestMethod]
+    public void Boromir_KeepsHisLordsNameKeyCultureAndFace()
+    {
+        // #1105 slice 2: Boromir of the Parth Galen missions is a copy of the lord lord_1_75 (lords.xslt), so no campaign Hero stands behind the mission agent.
+        var hero = Hero("taom_hero_boromir");
+        XNamespace xsl = "http://www.w3.org/1999/XSL/Transform";
+        var lord = XDocument.Load(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "lords.xslt")).Descendants(xsl + "template")
+            .Single(t => (string?)t.Attribute("match") == "NPCCharacter[@id='lord_1_75']");
+        string? LordAttribute(string name) => lord.Descendants(xsl + "attribute").Single(a => (string?)a.Attribute("name") == name).Value;
+
+        Assert.AreEqual("{=aom_lord_1_75_name}Boromir", (string?)hero.Attribute("name"));
+        Assert.AreEqual(LordAttribute("name"), (string?)hero.Attribute("name"), "the same name under the same key: the existing translations apply");
+        Assert.AreEqual(LordAttribute("culture"), (string?)hero.Attribute("culture"));
+        Assert.AreEqual("human", (string?)hero.Attribute("race"));
+        Assert.AreEqual((string?)lord.Descendants("BodyProperties").Single().Attribute("key"),
+            (string?)hero.Descendants("BodyProperties").Single().Attribute("key"), "the face the player knows");
+    }
+
+    [TestMethod]
+    public void EveryHerosBody_NamesAnAdultAge()
+    {
+        // The field puts the body's own age on the build data (LongDefeatBattlefieldAdapter.Spawn, ownBody); a body with no age would build a child.
+        foreach (var hero in Heroes())
+        {
+            var age = (string?)hero.Descendants("BodyProperties").Single().Attribute("age");
+            Assert.IsTrue(float.TryParse(age, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var years) && years >= 18f,
+                (string?)hero.Attribute("id") + ": age '" + age + "'");
+        }
+    }
+
+    [TestMethod]
+    public void Boromir_CarriesHisSwordAndShield_AndNoHelmet()
+    {
+        var kit = Kit("taom_hero_boromir");
+
+        Assert.AreEqual("Item.wm_gondor_boromir_sword", kit["Item0"]);
+        Assert.AreEqual("Item.wm_boromir_shield", kit["Item1"]);
+        Assert.AreEqual(2, kit.Keys.Count(slot => slot.StartsWith("Item")), "the sword and the shield only");
+        Assert.IsFalse(kit.ContainsKey("Head"), "his face shows at Parth Galen");
+    }
+
+    [TestMethod]
     public void NoHero_HasAHorse()
     {
         // A mounted share of a tenth or more switches a formation to mounted spacing (Formation.CalculateHasSignificantNumberOfMounted), and one rider is a third of the heroes' group.
@@ -181,7 +222,9 @@ public class ShippedMissionHeroesTests
         var shop = RohanShop(out var logger);
 
         CollectionAssert.AreEqual(new[] { "aragorn", "legolas", "gimli" }, shop.Heroes.Select(h => h.Id).ToArray());
-        CollectionAssert.AreEquivalent(Ids, shop.Heroes.Select(h => h.TroopId).ToArray(), "a troop id that is not in taom_mission_heroes.xml refuses the launch");
+        // Boromir stands only in the Parth Galen story missions (#1105); no shop sells him.
+        CollectionAssert.AreEquivalent(Ids.Where(id => id != "taom_hero_boromir").ToArray(), shop.Heroes.Select(h => h.TroopId).ToArray(),
+            "a troop id that is not in taom_mission_heroes.xml refuses the launch");
         Assert.AreEqual(0, logger.ReceivedCalls().Count(call => call.GetMethodInfo().Name == nameof(IModLogger.LogWarning)
             && call.GetArguments()[0] is string m && m.Contains(".heroes")));
     }

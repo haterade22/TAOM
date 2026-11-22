@@ -783,6 +783,32 @@ class SharedBladeTests(TmpCase):
         troops = [troop("t", 26, "rivendell", ["sword"])]
         assert restat.build_plans(priced, cat, troops, s)[0] == []
 
+    def _two_cultures_on_one_blade(self):
+        cat = catalogue_with_pieces()
+        priced = {"a_sword": weapon("a_sword", dps=100.0, blade="blade_one"),
+                  "b_axe": weapon("b_axe", dps=100.0, blade="blade_one"),
+                  "a_own": weapon("a_own", dps=100.0, blade="blade_two")}
+        return cat, priced
+
+    def test_a_culture_run_leaves_a_blade_another_culture_wears(self):
+        """#1241: the file that loads first used to label a shared blade, so --culture restatted
+        the blade of a culture that was not in the run. Either file order gives the same answer."""
+        cat, priced = self._two_cultures_on_one_blade()
+        a = troop("a_t", 6, "gondor", ["a_sword", "a_own"])
+        b = troop("b_t", 6, "rohan", ["b_axe"])
+        for order in ([a, b], [b, a]):
+            plans, notes = restat.build_plans(priced, cat, order, spec(), {"gondor"})
+            assert [p.blade for p in plans] == ["blade_two"], plans
+            assert any(n.startswith(restat.SHARED_NOTE) and "blade_one" in n and "rohan" in n
+                       for n in notes), notes
+
+    def test_a_culture_run_that_names_every_wearer_restats_the_shared_blade(self):
+        cat, priced = self._two_cultures_on_one_blade()
+        troops = [troop("a_t", 6, "gondor", ["a_sword"]), troop("b_t", 6, "rohan", ["b_axe"])]
+        plans, notes = restat.build_plans(priced, cat, troops, spec(), {"gondor", "rohan"})
+        assert [p.blade for p in plans] == ["blade_one"]
+        assert not any(n.startswith(restat.SHARED_NOTE) for n in notes)
+
     def test_culture_help_says_it_names_a_craft_row_not_an_engine_culture(self):
         out = io.StringIO()
         with contextlib.redirect_stdout(out), self.assertRaises(SystemExit):

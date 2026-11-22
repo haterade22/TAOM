@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Features.BannerColorPersistence;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Tests.Features.BannerColorPersistence;
 
@@ -10,6 +11,7 @@ public class BannerColorServiceTests
 {
     private IBannerColorConfigProvider _configProvider;
     private BannerColorConfig _config;
+    private ICoopSessionProvider _coop;
 
     [TestInitialize]
     public void Setup()
@@ -17,9 +19,10 @@ public class BannerColorServiceTests
         _configProvider = Substitute.For<IBannerColorConfigProvider>();
         _config = new BannerColorConfig();
         _configProvider.GetConfig().Returns(_config);
+        _coop = Substitute.For<ICoopSessionProvider>();
     }
 
-    private BannerColorService CreateSut() => new BannerColorService(_configProvider);
+    private BannerColorService CreateSut() => new BannerColorService(_configProvider, _coop);
 
     [TestMethod]
     public void IsEnabled_ConfigTrue_ReturnsTrue()
@@ -191,5 +194,42 @@ public class BannerColorServiceTests
 
         // Act & Assert
         Assert.IsFalse(sut.IsConversationTableauColorsEnabled());
+    }
+
+    // --- The load repaint on a co-op client -------------------------------------------------
+    // Clan.PreAfterLoad repaints every kingdom clan's banner in place from Kingdom.PrimaryBannerColor. A co-op
+    // client's join save already holds the server's banners, and BannerInjection's restore runs only on the
+    // authority, so only a client inside that load skips the repaint.
+
+    [TestMethod]
+    public void ShouldSkipLoadRepaint_CoopClientInsideClanLoad_True()
+    {
+        _coop.IsCoopClient.Returns(true);
+
+        Assert.IsTrue(CreateSut().ShouldSkipLoadRepaint(insideClanLoad: true));
+    }
+
+    [TestMethod]
+    public void ShouldSkipLoadRepaint_CoopClientOutsideALoad_False()
+    {
+        _coop.IsCoopClient.Returns(true);
+
+        Assert.IsFalse(CreateSut().ShouldSkipLoadRepaint(insideClanLoad: false), "a kingdom change later still repaints");
+    }
+
+    [TestMethod]
+    public void ShouldSkipLoadRepaint_SoloOrServerInsideClanLoad_False()
+    {
+        _coop.IsCoopClient.Returns(false);
+
+        Assert.IsFalse(CreateSut().ShouldSkipLoadRepaint(insideClanLoad: true), "the authority repaints, then restores");
+    }
+
+    [TestMethod]
+    public void ShouldSkipLoadRepaint_OutsideALoad_DoesNotProbeTheSession()
+    {
+        CreateSut().ShouldSkipLoadRepaint(insideClanLoad: false);
+
+        _ = _coop.DidNotReceive().IsCoopClient;
     }
 }

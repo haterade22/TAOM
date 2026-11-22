@@ -113,10 +113,10 @@ def build_context(spec: dict, launchers: dict, troops: dict, game_modules, modul
     edits = rl.planned_edits(troops, launchers, spec, barred)
     skill_edits = rl.planned_skill_edits(troops, launchers, spec, militia=militia,
                                          exempt_edges=exempt, sources=sources, skill_sets=skill_sets)
-    before = rl.inversions(troops, launchers, spec)
+    before = rl.inversions(troops, launchers, spec, skill_sets=skill_sets)
     after_idx = simulated_launchers(spec, launchers)
     after_troops = apply_in_memory(troops, edits, skill_edits)
-    after = rl.inversions(after_troops, after_idx, spec)
+    after = rl.inversions(after_troops, after_idx, spec, skill_sets=skill_sets)
     return {
         "spec": spec, "launchers": launchers, "after_launchers": after_idx,
         "troops": troops, "after_troops": after_troops, "edits": edits, "skill_edits": skill_edits,

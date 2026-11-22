@@ -8,9 +8,13 @@ internal static class ScenarioOutcomes
 {
     internal const string DoneId = "taom.autorun.campaign-new.done";
     internal const string StoryDoneId = "taom.autorun.story-mission.done";
+    internal const string StoryOfferDoneId = "taom.autorun.story-offer.done";
 
     internal static string Detail(ScenarioPlan plan, ScenarioRunFacts facts) =>
-        plan.Kind == ScenarioPlan.KindStoryMission
+        plan.Kind == ScenarioPlan.KindStoryOffer
+            ? "reason=" + facts.Reason + " event=" + plan.EventId + " choice=" + plan.Choice + " verdict=" + facts.Verdict + " mission_seconds="
+                + ScenarioAutorunDone.F1(facts.MissionSeconds) + " culture=" + plan.Culture
+            : plan.Kind == ScenarioPlan.KindStoryMission
             ? "reason=" + facts.Reason + " mission=" + plan.MissionId + " verdict=" + facts.Verdict + " mission_seconds=" + ScenarioAutorunDone.F1(facts.MissionSeconds)
                 + " culture=" + plan.Culture
             : "reason=" + facts.Reason + " days_run=" + ScenarioRules.DaysRun(facts.DayStart, facts.DayEnd).ToString(CultureInfo.InvariantCulture)
@@ -18,7 +22,12 @@ internal static class ScenarioOutcomes
 
     internal static void Report(IOutcomeLog outcomes, ScenarioPlan plan, ScenarioRunFacts facts)
     {
-        var id = plan.Kind == ScenarioPlan.KindStoryMission ? StoryDoneId : DoneId;
+        var id = plan.Kind switch
+        {
+            ScenarioPlan.KindStoryOffer => StoryOfferDoneId,
+            ScenarioPlan.KindStoryMission => StoryDoneId,
+            _ => DoneId,
+        };
         if (facts.Reason == ScenarioAutorunDone.ReasonOk)
             outcomes.Pass(id, "", Detail(plan, facts));
         else

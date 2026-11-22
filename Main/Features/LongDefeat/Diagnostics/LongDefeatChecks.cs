@@ -76,10 +76,11 @@ internal static class LongDefeatChecks
         return Verdict(fortresses > 0, detail);
     }
 
-    internal static CheckVerdict Boot(LdBootFacts f)
+    /// <param name="field">A field run (#1105 slice 2) passes with no siege team AI, and fails with one: a field scene under the siege list is the wrong world.</param>
+    internal static CheckVerdict Boot(LdBootFacts f, bool field = false)
     {
-        var ok = f.DeploymentFinished && f.SiegeTeamAi && f.HasMainAgent && !f.IsFriendlyMission;
-        return Verdict(ok, $"deployment_finished={Flag(f.DeploymentFinished)} siege_ai={Flag(f.SiegeTeamAi)} main={Flag(f.HasMainAgent)} friendly={Flag(f.IsFriendlyMission)}");
+        var ok = f.DeploymentFinished && f.SiegeTeamAi != field && f.HasMainAgent && !f.IsFriendlyMission;
+        return Verdict(ok, $"deployment_finished={Flag(f.DeploymentFinished)} siege_ai={Flag(f.SiegeTeamAi)} main={Flag(f.HasMainAgent)} friendly={Flag(f.IsFriendlyMission)}{(field ? " field=true" : "")}");
     }
 
     /// <summary>A boot that never got as far as the facts: the check still writes its line, so the run reads FAIL, not NOT REACHED.</summary>

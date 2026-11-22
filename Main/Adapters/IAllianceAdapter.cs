@@ -21,6 +21,12 @@ public interface IAllianceAdapter
 
     bool AreAllied(string kingdomAId, string kingdomBId);
     void StartAlliance(string kingdomAId, string kingdomBId);
+
+    /// <summary>
+    /// Ends the engine alliance of two kingdoms through <c>IAllianceCampaignBehavior.EndAlliance</c>, which also ends their call-to-war
+    /// agreements and raises <c>OnAllianceEnded</c>. No-op when either kingdom is missing or they are not allied.
+    /// </summary>
+    void EndAlliance(string kingdomAId, string kingdomBId);
     /// <summary>
     /// Model-aware war check (Kingdom.IsAtWarWith): also true for a pair the DiplomacyModel calls constantly at war, as TaomDiplomacyModel does for every Hostile pair in Full War while blockPeaceBetweenHostileTiers is on, so never guard a declaration with it; use <see cref="HasDeclaredWar"/>.
     /// </summary>

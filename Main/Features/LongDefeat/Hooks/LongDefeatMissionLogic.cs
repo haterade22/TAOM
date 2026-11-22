@@ -33,7 +33,7 @@ public sealed class LongDefeatMissionLogic : MissionLogic, IBattlePowerCalculati
 
         // One registry for the mission: the field adapter records each attacker's role, the effects adapter finds the commander by it.
         var registry = new LongDefeatAgentRegistry();
-        _host = new LongDefeatRunHost(plan, session, logger, outcomes, leave, missionKey, () => new LongDefeatBattlefieldAdapter(Mission, logger, registry), records,
+        _host = new LongDefeatRunHost(plan, session, logger, outcomes, leave, missionKey, () => new LongDefeatBattlefieldAdapter(Mission, logger, registry, plan.Field), records,
             () => new LongDefeatEffectsAdapter(Mission, registry), coop);
     }
 

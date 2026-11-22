@@ -783,16 +783,28 @@ def retired_ladder_launchers(troops: dict, launchers: dict) -> dict[str, Launche
     return out
 
 
-def troop_values(troop: RangedTroop, launchers: dict, cls: str, stat: str) -> tuple[int, int] | None:
+def troop_values(troop: RangedTroop, launchers: dict, cls: str, stat: str,
+                 skill_sets=None) -> tuple[int, int] | None:
     """(worst, best) value of a stat over the launchers of the class the troop can spawn with;
-    for skill, the troop's own Bow or Crossbow (one value). None when it carries no such launcher.
+    for skill, the troop's Bow or Crossbow as the engine reads it (one value): a templated troop is
+    its SkillSet with the inline rows laid over it (sync_lord_inline_skills.effective_skills, #1490),
+    so `skill_sets` is required for one and LadderError names it when missing. None when it carries
+    no such launcher.
     The rules hold the troop that should be better to its WORST set, so an alternate set with a
     weaker bow cannot hide behind a stronger one (Codex review, 2026-09-13)."""
     ids = troop_launchers(troop, launchers).get(cls)
     if not ids:
         return None
     if stat == "skill":
-        v = int(troop.skills.get(cls, 0))
+        if troop.template:
+            if skill_sets is None:
+                raise LadderError(
+                    f"{troop.id} names skill_template {troop.template}, so its {cls} is that SkillSet "
+                    f"with its inline rows laid over it, and the SkillSets were not given; pass "
+                    f"skill_sets (sync_lord_inline_skills.load_skill_sets)")
+            v = int(_sync().effective_skills(troop.template, troop.skills, skill_sets).get(cls, 0))
+        else:
+            v = int(troop.skills.get(cls, 0))
         return v, v
     vals = [getattr(launchers[i], stat) for i in ids]
     return min(vals), max(vals)
@@ -841,8 +853,9 @@ def unlisted(troops: dict, launchers: dict, spec: dict) -> list[tuple[RangedTroo
     return out
 
 
-def inversions(troops: dict, launchers: dict, spec: dict, stats=STATS) -> list[Inversion]:
-    """Every pair that breaks a rule, per stat. Pure: the validator and the tool both call this."""
+def inversions(troops: dict, launchers: dict, spec: dict, stats=STATS, skill_sets=None) -> list[Inversion]:
+    """Every pair that breaks a rule, per stat. Pure: the validator and the tool both call this.
+    `skill_sets` resolves a templated troop's skill (troop_values, #1490)."""
     recs = []
     for tid in sorted(troops):
         troop = troops[tid]
@@ -850,7 +863,7 @@ def inversions(troops: dict, launchers: dict, spec: dict, stats=STATS) -> list[I
         if line is None:
             continue
         for cls in CLASSES:
-            vals = {s: troop_values(troop, launchers, cls, s) for s in stats}
+            vals = {s: troop_values(troop, launchers, cls, s, skill_sets) for s in stats}
             if vals[stats[0]] is not None:
                 recs.append((troop, line, cls, vals))
     found: list[Inversion] = []

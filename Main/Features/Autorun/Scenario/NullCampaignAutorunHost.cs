@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TAOM.Features.StoryMissions.Domain;
 
 namespace TAOM.Features.Autorun.Scenario;
@@ -73,4 +74,20 @@ internal sealed class NullCampaignAutorunHost : ICampaignAutorunHost
     public StoryOutcome? StoryVerdict => null;
 
     public string RunConsoleCommand(string commandLine) => "";
+
+    public string? PendingOfferEvent => null;
+
+    public string PendingOfferChoices => "";
+
+    public bool InquiryActive => false;
+
+    public bool AcceptOfferPopup(out string title)
+    {
+        title = "";
+        return false;
+    }
+
+    public bool OfferMenuShown => false;
+
+    public string? ChooseOfferOption(IReadOnlyList<string> optionIds, bool botPlays) => null;
 }

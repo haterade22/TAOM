@@ -28,8 +28,11 @@ public class LongDefeatDirectorLordTests
         public RecordingOutcomeLog Outcomes { get; } = new();
         public LongDefeatDirector Director { get; }
 
-        public Rig(bool autoplay = false, KeepPoint? keep = null, LdLoadout? loadout = null, int? lordFalls = null, bool lordAdapter = true, bool fort = false, int stopAfter = 4)
+        public Rig(bool autoplay = false, KeepPoint? keep = null, LdLoadout? loadout = null, int? lordFalls = null, bool lordAdapter = true, bool fort = false, int stopAfter = 4, bool field = false)
         {
+            if (field)
+                Field.Starts = new FieldPlaces(new MusterFrame(11f, 1f, 2f, 0f, 1f), new MusterFrame(77f, 3f, 4f, 0f, -1f));
+
             var waves = new WavePlan(
                 new[] { new WaveSpec(20, new[] { new WaveTroop("orc", FormationSlot.Infantry, 3), new WaveTroop("skirm", FormationSlot.Ranged, 1) }) },
                 new WaveScaling(10, 300));
@@ -44,6 +47,7 @@ public class LongDefeatDirectorLordTests
                 Bounties = new Dictionary<string, int> { ["orc"] = 4, ["skirm"] = 6 },
                 Keep = keep,
                 Loadout = loadout,
+                Field = field ? new FieldPlaces(null, null) : null,
             };
             Director = new LongDefeatDirector(plan, Field, new LongDefeatSession(), Log, Outcomes, "m1", null, null, fort ? Field : null, lordAdapter ? Field : null);
         }
@@ -174,6 +178,36 @@ public class LongDefeatDirectorLordTests
         var line = rig.Lines(LongDefeatChecks.FortPointsId).Single();
         Assert.IsFalse(line.Contains("rise="), "the boot knows the side before it tests the points, and the enemy's keep is no rise point of ours: " + line);
         Assert.IsFalse(line.StartsWith("fail "), line);
+    }
+
+    // A story mission on a field scene (#1105 slice 2) has no keep to rise at: the adapter's field branch spawns the lord at his side's own start place
+    // (LongDefeatBattlefieldAdapter.Player.cs, SpawnPlayer), so a keep the mission records is no rise place and nothing is measured against it.
+    [TestMethod]
+    public void OnAField_ALordWhoFell_RisesAtHisSidesStart_ThoughTheMissionRecordsAKeep()
+    {
+        var rig = new Rig(keep: RecordedKeep, field: true);
+        rig.StartAndFight();
+        rig.LordFalls();
+
+        rig.Clear();
+        rig.Tick();
+
+        Assert.IsNull(rig.Field.Rises.Single().Place, "the side's start place serves the rise on a field");
+        StringAssert.Contains(rig.Lines(LongDefeatChecks.RiseId).Single(), "at=respawn main_is_lord=1 dist=none");
+    }
+
+    [TestMethod]
+    public void AFieldBoot_TestsNoRisePoint_ThoughTheMissionRecordsAKeep()
+    {
+        var rig = new Rig(keep: RecordedKeep, fort: true, field: true);
+        rig.Field.FortPointFacts = p => new LdPointFacts(false, true);
+
+        rig.StartAndFight();
+
+        var line = rig.Lines(LongDefeatChecks.FortPointsId).Single();
+        Assert.IsFalse(line.Contains("rise="), line);
+        Assert.IsFalse(line.StartsWith("fail "), line);
+        Assert.IsFalse(rig.Log.Lines.Any(l => l.Contains("the rise point (the recorded keep) is unusable")), "no fall back to a scene frame a field does not have");
     }
 
     [TestMethod]

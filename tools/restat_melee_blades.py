@@ -75,7 +75,7 @@ the tier target and the ceiling, so older ladder drift does not ride along with 
 
 Usage:
     python tools/restat_melee_blades.py                  # report the plan
-    python tools/restat_melee_blades.py --culture gondor    # a craft row (ladder.craft_key), not an engine culture
+    python tools/restat_melee_blades.py --culture gondor    # a craft row (ladder.craft_key), not an engine culture; skips blades another row wears
     python tools/restat_melee_blades.py --limits-only    # lower what breaks a limit, nothing else
     python tools/restat_melee_blades.py --apply
 """
@@ -343,6 +343,11 @@ def clamp_factor(old: float, new: float) -> float:
     return min(max(new, min(MIN_FACTOR, old)), max(MAX_FACTOR, old))
 
 
+# A note that starts with this names a blade a --culture run left alone because another craft row
+# wears it; main() prints every one of them.
+SHARED_NOTE = "shared: "
+
+
 @dataclass(frozen=True)
 class Cap:
     """The largest multiplier of one attack's factor, and the weapon and carrier that set it."""
@@ -457,6 +462,16 @@ def build_plans(
         # The weapons a non-exempt troop carries decide the TARGET and the primary attack; every
         # weapon on the blade decides the ratio and the limits.
         owned = [i for i in items if contexts[i]]
+        if cultures:
+            # An edit moves the blade for every troop that carries any weapon built on it, so a run
+            # scoped to some craft rows touches a blade only when no other row wears it (#1241).
+            wearer_crafts = {ladder.craft_key(t.id, t.culture, spec)
+                             for i in items for t in placements[i].wearers}
+            outside = wearer_crafts - cultures
+            if outside and wearer_crafts & cultures:
+                notes.append(f"{SHARED_NOTE}{blade}: also worn by {', '.join(sorted(outside))}, "
+                             f"outside --culture, so it is not restatted")
+                continue
         # Price the blade for the weakest non-exempt carrier of any weapon on it, by its own tier
         # and craft row (M2): the first troop loaded no longer decides either.
         worst = None
@@ -667,7 +682,9 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--apply", action="store_true", help="write the Armory (default: report)")
     ap.add_argument("--culture", action="append",
-                    help="limit the tier pass to these craft rows (repeatable): a troop's "
+                    help="limit the tier pass to these craft rows (repeatable): a blade is restatted "
+                         "only when every troop that wears a weapon built on it is of these rows; "
+                         "a blade another row shares is listed and left alone. A troop's "
                          "ladder.craft_key, which is its culture except for Black Numenoreans "
                          "(mordor_numenorean). It is not the engine culture id; "
                          "fix_melee_ladder.py takes that")
@@ -713,8 +730,13 @@ def main(argv=None) -> int:
     clamped = [p for p in plans if p.clamped]
     if clamped:
         print(f"  {len(clamped)} hit the factor bounds and were clamped (listed below)")
-    for n in notes[:10]:
+    shared_notes = [n for n in notes if n.startswith(SHARED_NOTE)]
+    for n in [n for n in notes if not n.startswith(SHARED_NOTE)][:10]:
         print(f"  note: {n}")
+    if shared_notes:
+        print(f"  {len(shared_notes)} blade(s) skipped because a craft row outside --culture wears them:")
+        for n in shared_notes:
+            print(f"    {n[len(SHARED_NOTE):]}")
     mixed = mixed_blades(priced)
     if mixed:
         moved = {p.blade for p in plans}

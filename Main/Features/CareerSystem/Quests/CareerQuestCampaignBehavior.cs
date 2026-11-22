@@ -86,7 +86,7 @@ public class CareerQuestCampaignBehavior : CampaignBehaviorBase
                 title.ToString(), body.ToString(), true, true, accept, decline,
                 affirmativeAction: () => OnAccept(def, hero),
                 negativeAction: () => OnDecline(def, hero)),
-                pauseGameActiveState: false);
+                pauseGameActiveState: true);
         }
         catch (Exception ex)
         {

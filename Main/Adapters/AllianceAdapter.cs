@@ -38,6 +38,16 @@ public class AllianceAdapter : IAllianceAdapter
         allianceBehavior?.StartAlliance(kingdomA, kingdomB);
     }
 
+    public void EndAlliance(string kingdomAId, string kingdomBId)
+    {
+        var kingdomA = FindKingdom(kingdomAId);
+        var kingdomB = FindKingdom(kingdomBId);
+        if (kingdomA == null || kingdomB == null || !kingdomA.IsAllyWith(kingdomB)) return;
+
+        var allianceBehavior = Campaign.Current?.GetCampaignBehavior<IAllianceCampaignBehavior>();
+        allianceBehavior?.EndAlliance(kingdomA, kingdomB);
+    }
+
     public bool AreAtWar(string kingdomAId, string kingdomBId)
     {
         var kingdomA = FindKingdom(kingdomAId);

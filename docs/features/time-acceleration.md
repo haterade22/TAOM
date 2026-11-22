@@ -172,6 +172,28 @@ extra one; a player may set turbo below extra, and turbo still lights the extra 
 the extra multiplier at the fast-forward one (`ClampExtra`); without it "extra" could be slower than
 "fast" and the lit state unreachable.
 
+### Under co-op (v2.0.42)
+
+With a co-op module loaded, the five prefab extensions on the vanilla map bar carry `[CoopSuppressedUi]` and stay out
+of the UIExtenderEx registration (`ClientUiExtensions.Register`), so the vanilla bar keeps vanilla's buttons. The
+mixin does not carry the attribute: it adds no widget, and the themed map bar (`TAOMCampaignTime.xml`, FactionUI)
+binds its two commands. On a peer that defers to a co-op server (`ICoopSessionProvider.ShouldDeferToHost`)
+`EnterFastForwardAt` returns before any write, so a click runs only vanilla's `ExecuteTimeControlChange(2)`.
+BannerlordCoop's prefix on that method (`AllowTimeControlFromControlsPatches`, decompiled from the installed
+`GameInterface.dll`) never changes the local mode: the `TimeControlMode` setter prefix publishes
+`TimeSpeedChangedAttempted`, and the client's `TimeHandler` sends it to the server process as
+`NetworkRequestTimeSpeedChange`. The installed Coop hosts through a standalone server process that every player,
+the hosting one too, joins as a client, so in a Coop session no player's click writes the multiplier (the server
+process does not defer, but it has no map bar). Under BannerlordTogether every peer defers, because TAOM cannot probe
+its roles (`CoopSessionPolicy.ShouldDeferToHost`). Only solo play writes the multiplier.
+
+`ITimeAccelerationService.IsExtraFastForwardAvailable` is `!ShouldDeferToHost`. The mixin sets
+`IsExtraFastForwardAvailable` in its constructor and again in every `OnRefresh`, and the themed
+`FastFastForwardButton` binds `IsVisible` to it: a peer whose Extra Fast Forward could only be plain fast forward
+does not show the button. Solo with the Coop module enabled but no session shows it and runs it as in solo.
+Pinned by `TimeAccelerationServiceTests`, `TimeAccelerationMixinTests`, `CampaignTimePrefabTests`,
+`CoopUiRegistrationPolicyTests` and `ClientIsolationGateTests`.
+
 ### Turbo clicks and v1.5.6 field parley (#1040)
 
 v1.5.6 binds `MapParleyModifier` to Left Ctrl, and `MapScreen.HandleMouse` sends a Ctrl click on a party or
@@ -314,6 +336,8 @@ take effect.
 
 ## Changelog
 
+- 2026-11-22 (v2.0.42): the mixin is registered under co-op too, so the themed map bar's fast-forward buttons
+  work there and ask the co-op server; Extra Fast Forward is hidden on a deferring peer (`IsExtraFastForwardAvailable`).
 - 2026-10-27 (v2.0.36): a click while turbo is held is an ordinary click again (#1040, Patch124). v1.5.6 made
   Left Ctrl + click a parley, and turbo is Ctrl + Space. In-game check owed.
 - 2026-09-12: the map bar Extra Fast Forward button applies the extra multiplier (#574). It had

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TAOM.Features.Autorun.Scenario;
 using TAOM.Features.StoryMissions.Domain;
 
@@ -187,5 +188,44 @@ internal sealed class FakeCampaignAutorunHost : ICampaignAutorunHost
     {
         CommandsRun.Add(commandLine);
         return CommandResult(commandLine);
+    }
+
+    public string? PendingOfferEventValue;
+    public string PendingOfferChoicesValue = "Defend";
+    public bool InquiryActiveValue;
+    public bool AcceptResult = true;
+    public string AcceptedTitle = "The Hornburg is besieged";
+    public bool OfferMenuShownValue;
+    public List<string> OfferedOptions = new() { "taom_story_offer_defend", "taom_story_offer_stand", "taom_story_offer_continue" };
+    public int Accepts;
+    public bool AcceptOpensMenu = true;
+    public readonly List<(string Ids, bool Bot)> OfferChoices = new();
+
+    public string? PendingOfferEvent => PendingOfferEventValue;
+
+    public string PendingOfferChoices => PendingOfferChoicesValue;
+
+    public bool InquiryActive => InquiryActiveValue;
+
+    public bool AcceptOfferPopup(out string title)
+    {
+        Accepts++;
+        title = AcceptedTitle;
+        if (AcceptResult)
+        {
+            OfferMenuShownValue = AcceptOpensMenu;
+            InquiryActiveValue = false;
+            InquiryTitle = null;
+        }
+
+        return AcceptResult;
+    }
+
+    public bool OfferMenuShown => OfferMenuShownValue;
+
+    public string? ChooseOfferOption(IReadOnlyList<string> optionIds, bool botPlays)
+    {
+        OfferChoices.Add((string.Join("|", optionIds), botPlays));
+        return OfferedOptions.FirstOrDefault(optionIds.Contains);
     }
 }

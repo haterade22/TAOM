@@ -49,7 +49,7 @@
             <HintWidget DataSource="{FastForwardHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsDisabled="true" />
           </Children>
         </ButtonWidget>
-        <ButtonWidget Id="FastFastForwardButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="36" SuggestedHeight="24" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="71" MarginBottom="23" Brush="TAOM.Time.ExtraFastForward" IsSelected="@IsExtraFastForwardActive" Command.Click="ExecuteExtraFastForward" CommandParameter.Click="2" GamepadNavigationIndex="4">
+        <ButtonWidget Id="FastFastForwardButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="36" SuggestedHeight="24" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="71" MarginBottom="23" Brush="TAOM.Time.ExtraFastForward" IsVisible="@IsExtraFastForwardAvailable" IsSelected="@IsExtraFastForwardActive" Command.Click="ExecuteExtraFastForward" CommandParameter.Click="2" GamepadNavigationIndex="4">
           <Children>
             <HintWidget DataSource="{ExtraFastForwardHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsDisabled="true" />
           </Children>

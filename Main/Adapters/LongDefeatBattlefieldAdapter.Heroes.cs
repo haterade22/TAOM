@@ -90,13 +90,13 @@ internal sealed partial class LongDefeatBattlefieldAdapter
 
         return new LdHeroReport(true, null, agent.Character?.IsHero ?? false, agent.HasMount, agent.Formation?.Index ?? -1,
             before > 0f ? agent.HealthLimit / before : 0f, agent.WieldedWeapon.Item?.StringId ?? "", !formation.IsAIControlled,
-            Strangers(formation, held), formation.GetReadonlyMovementOrderReference().OrderEnum.ToString(), agent.Character is CharacterObject, Enemy: !hunt);
+            Strangers(formation, held), formation.GetReadonlyMovementOrderReference().OrderEnum.ToString(), agent.Character is CharacterObject, Enemy: PlayerAttacks, Loose: !hunt && !PlayerAttacks);
     }
 
     // The heroes hunt for the player only when he defends. In a story attack (#1409) they are the enemy: each stands in the garrison's formation of his class
     // (default_group sets DefaultFormationClass, BasicCharacterObject.cs:499) under the defenders' AI, never held off AI in formation 7. A formation off AI is
     // the target the siege tactic consolidates into (TacticComponent.cs:191), the #1370 churn.
-    private bool HeroesHunt => !PlayerAttacks;
+    private bool HeroesHunt => !PlayerAttacks && !IsField;
 
     // SiegeLanes is the static list TeamAISiegeComponent builds for the mission; each lane stores one formation per team index.
     public bool DefenderLanesAssigned()

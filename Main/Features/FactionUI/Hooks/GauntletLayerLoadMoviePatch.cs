@@ -32,14 +32,15 @@ public static class GauntletLayerLoadMoviePatch
     {
         __state = null;
         var movies = FactionUIPatchContext.Movies;
-        // Under co-op the native map bar stays, so the Camp icon that sits beside TAOM's clock does too. Presence, not a
-        // session predicate: the themed clock binds TimeAccelerationMixin's extra fast forward, and ClientUiExtensions leaves
-        // that mixin out on the same presence read, so the swap must follow it (CoopPresenceReadGateTests).
-        if (movies == null || _loadingVanillaFallback || ((movieName == "MapBar" || movieName == "TaomFieldCampOverlay") && CoopPresence.IsActive))
+        if (movies == null || _loadingVanillaFallback)
             return;
 
         try
         {
+            // Only a co-op mod TAOM cannot probe keeps the native map bar, and with it the vanilla Camp icon (ThemedMapBarCoopPolicy).
+            if (ThemedMapBarCoopPolicy.IsMapBarMovie(movieName) && ThemedMapBarCoopPolicy.KeepsNativeMapBar(FactionUIPatchContext.Coop))
+                return;
+
             var swap = movies.BeginLoad(movieName, dataSource?.GetType().Name);
             if (swap == null)
                 return;

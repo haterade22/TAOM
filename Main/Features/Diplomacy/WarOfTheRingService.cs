@@ -105,6 +105,8 @@ public class WarOfTheRingService : IWarOfTheRingService
         if (_diplomacyService.GetRelationshipTier(kingdomAId, kingdomBId) == AllianceTier.Permanent)
             return WarVeto.Permanent;
 
+        if (_diplomacyService.IsBrokenAlliance(kingdomAId, kingdomBId)) return WarVeto.SameAlignment;
+
         var enabled = GetEffectiveEnabled();
         if (enabled && CurrentPhase == WarPhase.WarEnded) return WarVeto.None;
 

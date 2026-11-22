@@ -123,7 +123,7 @@ internal static class ClaimActions
     internal static void Confirm(string header, string text, Action yes, Action? afterYes, Action? afterNo) =>
         InformationManager.ShowInquiry(new InquiryData(header, text, true, true,
             Text("{=realms_ui_yes}Yes"), Text("{=realms_ui_no}No"),
-            () => { yes(); UiQueue.Post(afterYes); }, () => UiQueue.Post(afterNo)), true);
+            () => { yes(); UiQueue.Post(afterYes); }, () => UiQueue.Post(afterNo)), pauseGameActiveState: true);
 
     internal static string Ask(string template, string title, string cost)
     {

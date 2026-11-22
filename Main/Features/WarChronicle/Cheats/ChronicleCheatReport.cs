@@ -101,6 +101,10 @@ internal static class ChronicleCheatReport
         {
             case ChronicleEventState.Pending:
                 return row.OpenDay.HasValue ? "opens day " + Day(row.OpenDay.Value) : "opens when its anchor is known";
+            case ChronicleEventState.Active when row.Kind == ChronicleEventKind.Narrative:
+                return row.CloseDay.HasValue && nowDay >= row.CloseDay.Value
+                    ? "opened day " + Day(row.OpenDay) + ", decided day " + Day(row.CloseDay) + ", the hero's death is owed"
+                    : "opened day " + Day(row.OpenDay) + ", closes day " + Day(row.CloseDay) + ", a hero's story window";
             case ChronicleEventState.Active:
                 // Active past its close day only while an attacker still besieges the target (ChronicleService).
                 var overtime = row.CloseDay.HasValue && nowDay >= row.CloseDay.Value;

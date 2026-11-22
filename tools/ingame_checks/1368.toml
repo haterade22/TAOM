@@ -44,8 +44,8 @@ scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
 scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "the same run: the wave ended by a win or a loss that the mission reached by itself (a reason=Abandoned end reads FAIL here)"
 reached = ['\[Check\] id=taom\.story-missions\.ended result=']
-pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost) side=Defending reason=(TargetReached|DefendersDead|KeepLost) waves=\d+$']
+pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won side=Defending reason=TargetReached|Lost side=Defending reason=(DefendersDead|KeepLost)) waves=\d+$']
 # The second fail pattern is only for this unattended run: the autoplayed agent leaving the boundary is retreated and recorded as Lost with reason=Abandoned
 # (StoryEndWatch.Detail writes the line). 1105 keeps NOT REACHED for it, because a person may retreat on purpose there.
-fail = ['\[Check\] id=taom\.story-missions\.ended result=fail', '\[Check\] id=taom\.story-missions\.ended result=pass verdict=Lost side=Defending reason=Abandoned ']
+fail = ['\[Check\] id=taom\.story-missions\.ended result=fail', '\[Check\] id=taom\.story-missions\.ended result=pass verdict=Lost side=Defending reason=Abandoned ', '\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won side=Defending reason=(DefendersDead|KeepLost|HeroFell|Abandoned)|Lost side=Defending reason=TargetReached) ']
 absence = "not-reached"

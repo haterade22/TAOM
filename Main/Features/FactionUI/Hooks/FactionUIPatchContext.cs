@@ -1,5 +1,6 @@
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.FactionUI.CharacterCreation;
 using TAOM.Features.FactionUI.Menus;
 using TAOM.Features.FactionUI.Presets;
@@ -44,6 +45,11 @@ public static class FactionUIPatchContext
     /// the first movie load rather than passed to Initialize, so SubModule's wiring is unchanged; the hook reads it inside its tries.
     /// </summary>
     internal static ICampaignPresentationAdapter Presentation => _presentation ??= IoC.Resolve<ICampaignPresentationAdapter>();
+
+    private static ICoopSessionProvider? _coop;
+
+    /// <summary>The co-op session probe the map bar swap asks (ThemedMapBarCoopPolicy), resolved like Presentation.</summary>
+    internal static ICoopSessionProvider Coop => _coop ??= IoC.Resolve<ICoopSessionProvider>();
 
     public static void Initialize(
         FrontEndMovieService movies,

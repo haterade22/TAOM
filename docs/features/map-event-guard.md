@@ -225,6 +225,22 @@ After the battles, the same pass releases stranded parties. A player's save (202
 
 **Needs Patch169**, as Patch170 does. **In game (owed):** load a save that holds orphaned battles. Within one in-game hour expect one `finished an orphaned battle` line per event and the armies moving again. For stranded parties, expect one `released a stranded party` line each, and after the next day no 78ba4d70 and no repeating "has been eliminated" for their clans.
 
+## Patch173: an encounter with a party in an orphaned battle
+
+Three players (#1458, TAOM 2.0.39 and 2.0.40, before Patch169 and the sweep) clicked "Help {ATTACKER}" on a battle that never ended and got a NullReferenceException, every click. `game_menu_join_encounter_help_attackers_on_condition` passes `GetLeaderParty(Defender).MapFaction` to `CheckFactionAttackableHonorably`, which reads it unguarded (crash `281a5a26`); after a load, the consequence reaches `FieldBattleEventComponent.OnAddInvolvedParty`, which reads its `MapEvent` back-reference (crash `8ae79c23`).
+
+The battle is an orphaned one. `MapEvent.FinalizeEventAux` ends the defender side before the attacker side. When the battle-end throw comes after the defenders are gone, the attackers stay attached, the defender side lists nobody, and its `LeaderParty` is still the last defender to leave: `MapEventSide.RemovePartyInternal` picks a new leader only while parties remain. That party is destroyed when it lost, and `MobileParty.MapFaction` of a removed lord party with no leader is null (`OnRemoveParty` clears `ActualClan`). `MapEvent.CanPartyJoinBattle` (`MapEvent.cs:1282`) checks only the parties a side lists, and the defender side lists none, so the menu offers the option. The stuck-battle sweep never logged it because it reads only `MapEventManager`, which already dropped the finalized event. No save confirmed this; it is read from the engine and matches both throw sites.
+
+`Patch173_OrphanedBattleEncounter` is a prefix on `EncounterManager.StartPartyEncounter`. When the attacker is the main party or the leader of the main party's army, and the defender's map event is finalized and is not the player's own, it runs the orphaned battle sweep at once. It skips this encounter only when the sweep freed the defender (its `MapEvent` is now null or no longer finalized), so the player never reaches `join_encounter` on that event. When the sweep could not free it (`HalfFinishedEncounterService.Decide` left the event alone, or a side end threw), vanilla runs, one `could not free an orphaned battle before the player's encounter` warning is logged, and that event is not repaired again in this session: `EncounterManager.Tick` retries the encounter every frame, and a skip there would never end. The service keeps that list in a `ConditionalWeakTable`: the service outlives a campaign, and a strong reference to a `MapEvent` would keep the old campaign's parties in memory.
+
+`Patch173_OrphanedBattleSettlementEncounter`, in the same category, is a prefix on `EncounterManager.StartSettlementEncounter`. Walking to a besieged town or a raided village does not pass through `StartPartyEncounter`: `PlayerEncounter.Init` asks `DefaultEncounterGameMenuModel.GetEncounterMenu`, which returns `join_encounter` for the besieger leader's siege-outside, sally-out or blockade event and for the village's raid event without checking `IsFinalized`. When the same attacker rule holds and `settlement.Party.MapEvent` or the besieger leader's `MapEvent` is finalized and not the player's own, the prefix runs the same repair and vanilla always continues.
+
+The rule is `OrphanedBattleService.IsOrphanedEncounter`; `FinishBeforeEncounter` runs `RepairAll`, which writes its usual `[MapEventGuard] finished an orphaned battle` line, and stands down in a co-op session. Registry: [Patch173_OrphanedBattleEncounter](../reference/harmony-patch-registry.md#patch173_orphanedbattleencounter).
+
+**Not covered:** a save made while the `join_encounter` menu of such a battle is open still loads into that menu.
+
+**In game (owed, #1458):** load a save with an orphaned battle (one of the reporters' saves), walk into one of its attackers, and expect a `finished an orphaned battle` line, no `join_encounter` menu on that battle, and no crash report. Repeat by walking to the besieged town or raided village of such a battle, and once while in an AI lord's army.
+
 ## Stuck AI battles
 
 ### The report
@@ -342,7 +358,9 @@ print, let an in-game hour pass, and print again.
 | `Main/Features/MapEventGuard/EmptyMeetingGuardService.cs` | The Patch143 rule, its `[Check]` line and its warning |
 | `Main/Features/MapEventGuard/Hooks/EmptyMeetingMenuBehavior.cs` | Registers the one-option Leave menu |
 | `Main/Adapters/EmptyMeetingAdapter.cs`, `IEmptyMeetingAdapter.cs` | The meeting partner read and the exit |
-| `Main/Features/MapEventGuard/EncounterGuardModule.cs` | IoC registration for Patch142, Patch143 and the menu; declares the Patch169 category |
+| `Main/Features/MapEventGuard/EncounterGuardModule.cs` | IoC registration for Patch142, Patch143 and the menu; declares the Patch169 and Patch173 categories |
+| `Main/Features/MapEventGuard/Hooks/Patch173_OrphanedBattleEncounter.cs` | The prefix on `EncounterManager.StartPartyEncounter` that finishes an orphaned battle before the player meets it |
+| `Main/Features/MapEventGuard/Hooks/Patch173_OrphanedBattleSettlementEncounter.cs` | The prefix on `EncounterManager.StartSettlementEncounter` that does the same before the player reaches a settlement in such a battle |
 | `Main/Features/MapEventGuard/Hooks/Patch169_BattleDeathRosterSnapshot.cs` | The transpiler class on `MapEventSide.HandleMapEventEndForPartyInternal` |
 | `Main/Features/MapEventGuard/Hooks/BattleDeathRosterTranspiler.cs` | `Materialize` and the one-call insert |
 | `Main/Features/MapEventGuard/OrphanedBattleService.cs`, `Hooks/OrphanedBattleCampaignBehavior.cs` | The orphaned AI battle sweep and its hourly tick |
@@ -409,6 +427,13 @@ battles it judges and has a second reader in the console command, so it has the 
   no restore in the same session, one throwing event not stopping the rest, and one warning per failing event;
   stranded parties released after the battles finish, one failing release not stopping the rest and warned once,
   and the `IsStranded` rule for each party state (not listed, listed, no side, main party, player's encounter).
+  The `IsOrphanedEncounter` rule on every input; `FinishBeforeEncounter` skipping only when the repair freed the
+  target, letting vanilla run when the repair throws or `Decide` leaves the event alone, warning once and never
+  repairing a still-attached event again, still repairing another event, and standing down in co-op (session and defer).
+- `TAOM.Tests/Features/MapEventGuard/Patch173OrphanedBattleEncounterTests.cs`: the module declares the
+  category and the settlement prefix shares it, `EncounterManager.StartPartyEncounter` resolves with `attackerParty`
+  and `defenderParty`, `StartSettlementEncounter` with `attackerParty` and `settlement`, and both prefixes let
+  vanilla run without a service.
 
 The per-event adapter itself is not unit-testable (`MapEvent`'s constructor is internal); it is verified
 in game with `taom.print_stuck_battles`.
@@ -489,6 +514,7 @@ would act on.
 - 2026-11-19: added `Patch170_HalfFinishedEncounterRepair`, a save repair for a half-finished siege encounter after a failed battle end.
 - 2026-11-19: added the orphaned AI battle sweep, from a player's report and repair module. Not yet verified in game.
 - 2026-11-21: the sweep also releases stranded parties, from a player's save whose eliminated clans crashed `DestroyClanAction` daily. Not yet verified in game.
+- 2026-11-22: added `Patch173_OrphanedBattleEncounter`: the player's encounter with a party in an orphaned battle finishes that battle first, from three players' "Help attackers" crashes (#1458). It also covers the settlement path and the encounters of the player's army leader. Not yet verified in game.
 
 ## GitHub Issue
 
@@ -497,6 +523,7 @@ would act on.
 - **Issue:** #748, AI map battles that can never end (a side at 0 healthy troops, or a destroyed party left attached)
 - **Issue:** #1099, CTD: a sally-out opens a meeting with an empty party
 - **Issue:** #1475, crash: AI lord battle death breaks the MapEventSide end loop
+- **Issue:** #1458, Help attackers crashes on a stuck AI battle whose defender side has no faction or no leader
 - **Status:** Open
 
 ---

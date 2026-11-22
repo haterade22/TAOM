@@ -7,7 +7,10 @@ run machine ([long-defeat.md](long-defeat.md)). Slice 1 is built: a dev console 
 defence of one of seven fortresses, and the mission writes nothing to the campaign. The mission can
 play its own music track, and vanilla music stays quiet for that mission only. Slice 4 is built: the
 War Chronicle's Battle of the Hornburg offers the Helm's Deep defence to the player, and the result
-decides the event. A win holds Helm's Deep; a loss gives it to Isengard.
+decides the event. A win holds Helm's Deep; a loss gives it to Isengard. Slice 2 is built: two missions on
+a field scene play the Breaking of the Fellowship at Parth Galen, one for each side, and each is decided
+by whether Boromir falls. Slice 3 is built: the War Chronicle's Breaking of the Fellowship offers those
+two missions, and the result decides whether Boromir lives.
 
 ## Why This Exists
 
@@ -56,8 +59,8 @@ bar and a player who can take a soldier after death.
 
 - **Source:** a War Chronicle siege with a `story` block (`war_chronicle.json`; the Hornburg names
   `helms_deep_defend`). The block may also name an `attackMission`, the same battle from the
-  attackers' side (#1326); no shipped window has one yet, because the maintainer has not decided the
-  key (#1409 step 6). `IChronicleStoryPort.GetStoryOffers` lists each Active story window that the
+  attackers' side (#1326); the Hornburg names `helms_deep_attack` (slice 5, #1409 step 6).
+  `IChronicleStoryPort.GetStoryOffers` lists each Active story window that the
   player has not declined, that no attacker has besieged, and whose target the defender still holds
   (read live), while no chronicle announcement waits to show ([war-chronicle.md](war-chronicle.md)
   "The event chain", "Story offer"). The MCM switch "Offer Story Missions" (War of the Ring/War
@@ -78,8 +81,9 @@ bar and a player who can take a soldier after death.
   is the window's defender he may only defend, and when it is one of the attackers he may only
   attack, so he never fights against his own realm. A window with no side for him is
   not offered at all: "Let fate decide" is a saved decline, and a player with nothing else to click
-  would close the window for good. So until an attack mission ships, an evil player and a player of
-  Isengard or Dunland get no Helm's Deep offer.
+  would close the window for good. The Hornburg ships both battles, so an evil player is offered the
+  attack only, a free player the defence only, a neutral player both, and a player of Isengard or
+  Dunland (an attacker's own realm) the attack only.
 - **Offer** (`StoryOfferBehavior`, `StoryOfferPopup`): every 30 campaign ticks while time runs, on
   a free map (`MapPopupGate.IsMapFree`), a two-button popup whose question follows the sides on
   offer (`StoryOfferText`). "Ride to Helm's Deep" ("March on Helm's Deep" for a player who may only
@@ -95,8 +99,10 @@ bar and a player who can take a soldier after death.
   (`MapState.OnActivate`, `MenuContext.Refresh`). That init applies the verdict through
   `StoryOfferService.Apply` once, before the player can save (the behavior saves nothing), and
   "Continue" only leaves. The verdict is read for the side the player took. Held walls (a won
-  defence, or a lost attack) resolve the window Held (`ResolveStoryHeld`: the owner check first,
-  nothing after War Ended). Fallen walls (a lost defence, or a won attack) call `ConfirmStoryWindow`
+  defence, or a lost attack) resolve the window Held (`ResolveStoryHeld` for a defence and
+  `ResolveStoryRepulsed` for an attack: the owner check first, nothing after War Ended; the attack's
+  call also ends the permanent alliance the story's `repulsed` block names, which at the Hornburg is
+  Isengard and Mordor, [war-chronicle.md](war-chronicle.md) "Repulsed assault"). Fallen walls (a lost defence, or a won attack) call `ConfirmStoryWindow`
   first, which runs the same owner check and War Ended guard, then
   `IStoryCampaignAdapter.GiveSettlement`, and the chronicle's owner check resolves Fell. A lost
   attack closes the window Held on purpose: a window left open would let the player storm the walls
@@ -186,6 +192,112 @@ not for sale; each is a row of the mission's `heroes` list.
   stand where the heroes' home place puts them, at the nearest wall lane), no `<Hero>` entry, and no
   unattended driver beyond the one defence mission of #1368 ([scenario autorun](scenario-autorun.md)).
 
+### Field missions (slice 2)
+
+A row with a `field` block runs on a field scene with no walls. The run machine is the same; four
+things differ, and each has a run behind it.
+
+- **The list and the boot.** `StoryMissionLauncher.CreateFieldBehaviors` is the siege list without
+  `SiegeMissionPreparationHandler` and `MissionSiegeEnginesLogic`, with the field team AI and
+  vanilla's hard border. `AmmoSupplyLogic` for the defenders stays, though vanilla's field lists
+  have none: Legolas's quivers refill as they do at Helm's Deep, and both missions were balanced
+  with it. The director breaks no gate, deploys no engine, reads no lane and takes no
+  keep from the scene. The boot line ends `siege_ai=false ... field=true`, and it fails when a field
+  row runs under siege team AI.
+- **Start places.** A field run builds no deployment plan. Each formation is positioned at its
+  side's start place before every batch, and each soldier spawns into his own formation: the
+  mechanism the recorded muster places use on a siege. A place is the row's recorded one, else a
+  point of the scene's spawn path, 40 m to each side of the path's pivot
+  (`LongDefeatBattlefieldAdapter.Field.cs`). A place with no navmesh, or outside the mission
+  boundary, is no place, and a mission with no place for a side does not start. The part of a wave
+  that spawns on a later tick is sent to the start place again: without that, 4 of 12 skirmishers
+  spawned more than 25 m from it, beside the defenders (run `E:/Temp/scenario-runs/20261121-183158`).
+  A soldier who spawns into his own formation takes the formation's order position at that moment;
+  that the ranged formation had moved it toward the enemy is inferred from the run, not read in the
+  engine. The spawn check of a field run measures ground distance (`far` is more than
+  25 m from the start place).
+- **Two sides and groups.** The attackers of a defence have a second start place on the far side
+  of the defenders. Each new group starts at the place farther from where the defenders stand
+  (`FieldPlaces.AttackersFartherFrom`), so no group appears inside the fight. A field row may set
+  `rules.liveCap` below the siege floor of 101, and attackers after the opening join in groups of
+  half the live room, which is the smaller of that cap and the battle size less the standing
+  defenders (`SurvivalRun.FieldGroupPart`). A whole wave that arrives together kills a hero in
+  about five seconds: Aragorn took five head hits of 70 to 79 in two seconds (run `20261121-183616`).
+- **Free heroes.** On a field the heroes of either side stand in their class formations under
+  the team AI (the spawn line ends `group=class`). Held at a post, as on a wall, they do not fight:
+  Aragorn landed 4 hits in 6 minutes (run `20261121-184542`). The player can still order
+  formations I and II.
+
+**The hero who must live.** `mustLive` names one hero of the row. His fall ends the run with
+`RunEndReason.HeroFell`: a loss for the side that defends him and a win for the side that attacks
+(`StoryVerdict`). A rout is no fall, so a hunt in which Boromir flees and the other three die is still
+won; whether that should count as his escape is an open decision. A stalemate charge on a field sets
+only the attackers to charge and hands the player's formations back to the AI; the defenders' tactic
+list is left alone, because the engine offers no way to restore it. When the field refuses his spawn the run ends as a stalemate,
+which decides nothing. A field row may have no garrison when it has heroes, and at most four heroes.
+
+**Boromir.** `taom_hero_boromir` (`characters/taom_mission_heroes.xml`) is a copy of the lord
+`lord_1_75`: the same face, skills and name key, his battle kit without the horse and the helmet. The
+campaign hero never stands behind the mission agent, so the mission writes nothing to him.
+
+**Numbers, from the unattended runs of 2026-11-21.** In `parth_galen_save` the bot as the player
+adds almost nothing, and the Fellowship then clears waves 1 and 2 and kills 86 of 90 before Boromir
+falls in wave 3 (run `20261121-190746`, 9 minutes). The mission is therefore lost narrowly without
+the player. `parth_galen_kill` was lost with a band of 12 and of 18 (run `20261121-191916`) and won in 41 s with 25, so the band is 20.
+No person has played either mission yet.
+
+### The hero story (slice 3)
+
+The Breaking of the Fellowship is a Narrative event of the War Chronicle. With a `story` block that
+names a `hero`, it opens a window of 10 days and offers the two Parth Galen missions; its result is
+the life of Boromir (`lord_1_75`).
+
+- **The window** (`ChronicleService.HeroStoryCanOpen`): it opens only where a story mission can run
+  and can matter: a single-player campaign, the setting "Offer Story Missions" on, a hero who lives
+  and is not the player (Player Switcher), and kingdoms this campaign has. Anywhere else the event
+  occurs at once as text, as before, and nobody dies. The window has no opening announcement,
+  because a queued announcement holds every offer back; the offer popup tells the player.
+- **Sides** (#1326, unchanged): the event's `defender` is Gondor (`empire_w`) and its `attackers`
+  are Isengard. A free player may stand with the Fellowship, an evil player may lead the Uruk-hai,
+  a neutral player may do either, and nobody fights his own realm.
+- **Results** (`StoryOfferService.ApplyHero`, `IChronicleStoryPort.ResolveHeroStory`): the hero
+  lives when his side won, whichever side the player took. He lives: the event resolves `Averted`
+  (a new state, saved as 7) with its own line and effects. He dies: the chronicle asks the engine
+  for his death, and the event resolves `Occurred`, as the book has it, only when he is dead. "Let
+  fate decide" and a window nobody answers in 10 days ask for the same death. A mission with no
+  verdict snoozes the offer to the next day.
+- **The kill** (`ChronicleWorldAdapter.KillHeroInBattle`): `KillCharacterAction.ApplyByBattle` with
+  no killer. The result is read back from the hero: Killed, Deferred or Refused. The engine only
+  marks a hero whose party is in a battle or besieges (Deferred), and it does nothing for a hero
+  whom a `CanHeroDie` listener protects (`Hero.CanDie`: an issue or a quest; Refused). Neither is a
+  death, and the engine does not promise to finish a mark: the end of his battle does
+  (`MapEventSide.HandleMapEventEndForPartyInternal`), unless a veto holds or he was taken prisoner
+  there; the daily tick only with the life and death cycle on and no veto
+  (`AgingCampaignBehavior.DailyTickHero`). When he dies, the engine handles his party, his clan
+  and, if he rules, his kingdom.
+- **A death the engine owes** (`ChronicleHeroStoryResult.DeathOwed`, `ChronicleService.ResolveHero`):
+  after Deferred or Refused the window stays `Active` and its close day becomes that day. Such a
+  window offers no mission, and `taom.chronicle_status` reads "the hero's death is owed". Each
+  daily step asks again, and the event resolves `Occurred`, with its line and effects, on the day
+  he is dead, by that ask or by the engine's own. A marked hero whose party is in a battle, or
+  besieges a settlement, is not asked again until it is out of both: a second `ApplyByBattle` would
+  kill him there, which the engine's own daily tick never does. (A defender inside a besieged town
+  is not covered: `MobileParty.SiegeEvent` is the besieger's, and the engine kills such a hero at
+  once.) A hero marked for an execution is left to it. The offer's check line reads `result=DeathOwed`, and the menu
+  still tells the player that Boromir fell. No new field is saved: the close day and the engine's
+  death mark hold the state. A veto that never lifts keeps the event open.
+- **Who Boromir is at that moment:** dead already, or dead during the window: the event occurs as
+  text. The player himself: no window. A prisoner, a party leader, an army leader, a clan leader or
+  a ruler: the engine's own death path applies, as for any lord who dies in battle. In a battle, as
+  a besieger, or under a quest's protection: the death is owed, as above.
+- **Co-op:** no window, no offer and no kill.
+- **A change while the window is open** (`ChronicleService.HeroStoryMatters`): a campaign that
+  becomes a co-op session, a player who turns "Offer Story Missions" off, and a player who becomes
+  Boromir get no offer, and the window ends as text on its close day, with no kill.
+- **Menu:** the offer menu shows "Stand with the Fellowship" and "Lead the Uruk-hai" for a hero
+  story, in place of the two wall options. The text is the Breaking's own (`StoryOfferText`,
+  keys `taom_story_breaking_*`); it names no `{TARGET}`.
+
 The feature declares no Harmony patch and no GameModel. Its one saved value, a declined offer, is a
 field of the War Chronicle's payload.
 
@@ -225,13 +337,15 @@ mean the same thing by the same key.
 | `rules` | object | Long Defeat rule numbers, for example `preparationSeconds` |
 | `garrison` | array | The defenders' troops (the player's in a Defend row): `troop`, `class`, `count` |
 | `muster`, `keep` | object | Optional recorded points of the scene |
-| `heroes` | array | Optional free heroes, at most three: `id`, `troop`, optional `healthFactor` (#1366) |
+| `heroes` | array | Optional free heroes, at most four: `id`, `troop`, optional `healthFactor` (#1366) |
+| `field` | object | Optional. Present: the mission runs on a field scene. May record `defenders`, `attackers` and `attackersBehind`, each `x, y, z, fx, fy`; a place it does not record comes from the scene's spawn path |
+| `mustLive` | string | Optional. The `id` of one hero of `heroes` whose fall ends the mission. A value that names no hero of the row skips the row |
 | `roster.waves` | array | Each wave: `count` and a weighted `mix` of troops |
 
 ### Current Values
 
-Seven rows are Defend missions and `helms_deep_attack` is an Attack mission; every row has one wave. Only Helm's Deep names a music track
-(`StoryMusic/isengard_vs_rohan.ogg`). Four rows use stand-in scenes after one-wave probes on
+The file has ten rows: seven siege defences, `helms_deep_attack`, and the two Parth Galen field missions. Every siege row has one wave.
+Only Helm's Deep names a music track (`StoryMusic/isengard_vs_rohan.ogg`). Four rows use stand-in scenes after one-wave probes on
 2026-11-10.
 
 | Id | Scene | Defender, attacker | Note |
@@ -243,6 +357,9 @@ Seven rows are Defend missions and `helms_deep_attack` is an Attack mission; eve
 | `dale_defend` | `sturgia_town_g` | `sturgia`, `khuzait` | Stand-in scene |
 | `lorien_defend` | `battania_town_a` | `lothlorien`, `dolguldur` | Stand-in scene |
 | `north_defend` | `empire_town_c` | `arthedain`, `gundabad` | Stand-in scene |
+| `helms_deep_attack` | `taom_rohan_castle_helms_deep_forceatmo` | `vlandia`, `isengard` | Attack: the player's host of 350 (#1409). The Hornburg window offers it (slice 5) |
+| `parth_galen_save` | `battle_terrain_001` | `gondor`, `isengard` | Field. Waves of 20, 30 and 40, at most 10 alive; Boromir must live. Stand-in scene |
+| `parth_galen_kill` | `battle_terrain_001` | `gondor`, `isengard` | Field, Attack: the player's band of 20; won when Boromir falls |
 
 `vlandia` is Rohan and `sturgia` is Dale in TAOM ([id cheatsheet](../modding/id-cheatsheet.md)).
 
@@ -256,7 +373,9 @@ Seven rows are Defend missions and `helms_deep_attack` is an Attack mission; eve
 | `Main/Features/StoryMissions/Config/StoryHeroesReader.cs` | #1366: the `heroes` list, through `HeroesReader.ReadRow` |
 | `Main/Features/StoryMissions/StoryRosterCheck.cs`, `StoryRosterService.cs`, `Hooks/StoryRosterBehavior.cs` | #1366: the `taom.story-missions.roster` line at session start |
 | `Main/Features/StoryMissions/Hooks/StoryDevMenuBehavior.cs` | The dev menu and its refusals |
-| `Main/Features/StoryMissions/Hooks/StoryMissionLauncher.cs` | Opens the mission |
+| `Main/Features/StoryMissions/Hooks/StoryMissionLauncher.cs` | Opens the mission, with the siege list or the field list |
+| `Main/Features/LongDefeat/Domain/FieldPlaces.cs` | Slice 2: the start places of a field run, and the pick of the attackers' place |
+| `Main/Adapters/LongDefeatBattlefieldAdapter.Field.cs` | Slice 2: start places from the row or the spawn path, and the lord's spawn at his side's place |
 | `Main/Features/StoryMissions/Hooks/StoryMissionLogic.cs` | The mission logic that feeds `StoryEndWatch` |
 | `Main/Features/StoryMissions/StoryEndWatch.cs` | The end cue and the `taom.story-missions.ended` check line |
 | `Main/Features/StoryMissions/HostedRunOutcomeLog.cs` | Renames the hosted run's check lines |
@@ -274,6 +393,8 @@ Seven rows are Defend missions and `helms_deep_attack` is an Attack mission; eve
 | `Main/Adapters/IStoryCampaignAdapter.cs`, `StoryCampaignAdapter.cs` | Slice 4: captivity, the player's side pair, and the transfer of a fallen fortress |
 | `Main/Features/WarChronicle/Events/IChronicleStoryPort.cs` | Slice 4: the chronicle seam (`ChronicleService` implements it) |
 | `tools/ingame_checks/1105.toml` | The in-game check manifest |
+| `Main/Features/WarChronicle/Events/ChronicleService.cs` | Slice 3: the hero story's window, its fate and its result (`HeroStoryCanOpen`, `ResolveHeroStory`) |
+| `Main/Adapters/IChronicleWorldAdapter.cs`, `ChronicleWorldAdapter.cs` | Slice 3: whether the hero lives, whether he is the player, and the kill |
 | `tools/ingame_checks/1366.toml` | The manifest of the free heroes |
 | `tools/ingame_checks/1370.toml` | The manifest of the free heroes' formation churn (#1370, open): `moved_out=0` on the hunters line |
 
@@ -305,6 +426,12 @@ Seven rows are Defend missions and `helms_deep_attack` is an Attack mission; eve
 - `StorySideGateTests`, `StoryOfferTextTests`: the side rule (alignment and kingdom ties) and the
   lines per side.
 - `StoryMusicCueTests`, and `TAOM.Tests/Infrastructure/MusicPauseGateTests.cs`: the music cue and the pause sites.
+- Slice 2, in `TAOM.Tests/Features/LongDefeat/`: `LongDefeatDirectorFieldTests` (the director on a field), `Domain/SurvivalRunFieldTests`
+  (the live cap and the groups), `Domain/FieldPlacesTests` (the pick of a start place), and the hero who must live in
+  `Domain/SurvivalRunHeroTests`. `tools/tests/test_run_scenario.py` holds the driver's field patterns.
+- Slice 3: `TAOM.Tests/Features/WarChronicle/Events/ChronicleHeroStoryTests` (the window, the fate, the kill, co-op), the hero
+  story cases of `ChronicleConfigValidatorTests`, `WarChronicleSaveCodecTests` (state 7) and `StoryOfferServiceTests`, and
+  `ShippedStoryOffersTests.TheBreaking_OffersTheTwoParthGalenMissions_AndDecidesBoromir`.
 
 ## How to verify in game
 
@@ -324,8 +451,9 @@ Slice 4, in a campaign at the Full War:
 1. As a free player, or a neutral player whose realm has not pledged (`taom.print_war_pledges`),
    run `taom.chronicle_open hornburg confirm`. The popup appears on the free map, and the line
    `[Check] id=taom.story-missions.offer.shown result=pass` follows, ending `choices=Defend` and
-   the player's side. The menu has no "Storm the walls". An evil player, and a player of Isengard
-   or Dunland, gets no popup and no line (#1326).
+   the player's side. The menu has no "Storm the walls". An evil player gets the popup with
+   "Storm the walls" and no "Defend the walls" (`choices=Attack`), and a neutral player both
+   (`choices=Defend+Attack`) (#1326, slice 5).
 2. Choose "Ride to Helm's Deep", then "Defend the walls". End the wave, then choose "Continue". The
    line `taom.story-missions.offer.result` reads `verdict=Won result=Held` or
    `verdict=Lost result=Fell taker=isengard`. `taom.chronicle_status` shows the same state.
@@ -334,6 +462,43 @@ Slice 4, in a campaign at the Full War:
 
 `python tools/ingame_verdict.py` reads these rows from `tools/ingame_checks/1105.toml`. The proof is
 owed, and Slice 2 waits on it.
+
+Slice 2, unattended: `python tools/run_scenario.py --kind story-mission --mission parth_galen_save` (or
+`parth_galen_kill`), then `python tools/ingame_verdict.py --issue 1105`. The rows scoped to each Parth Galen launch read the
+field boot line, Boromir's spawn line, every attacker spawn check and the end line. Four rows stay with a person: the look of the
+scene and of Boromir, the two sides the groups come from, a won defence, and a won hunt.
+
+The proof runs of slice 2 on the committed build `8d8c58574`: `E:/Temp/scenario-runs/20261121-201346` (the defence, lost in wave 2)
+and `20261121-202155` (the hunt, won). `python tools/ingame_verdict.py --issue 1105 --session <log>` reads PASS for the four rows of
+each mission.
+
+Slice 3, by hand: in a single-player campaign in the Isengard War or later, run
+`taom.chronicle_open breaking confirm`. The popup appears on the free map. Choose "Go to Parth Galen", then a side, play the
+mission and choose "Continue". The line `taom.story-missions.offer.result` ends `result=Averted hero=lord_1_75` or
+`result=Occurred hero=lord_1_75`, and the `[WarChronicle]` line of the event names what the kill did.
+
+Slices 3 to 5, unattended (it needs `cheat_mode = 1` and the setting "Offer Story Missions" on, its default):
+`python tools/run_scenario.py --kind story-offer --event breaking --choice defend` runs the whole offer path of the Breaking with the bot as
+the lord (`--choice attack --culture isengard` is the hunt, `--choice fate` lets fate decide and plays nothing), and
+`python tools/run_scenario.py --kind story-offer --event hornburg --choice defend --by-date` runs the Hornburg's (a siege window opens
+only in the Full War, so the run waits for its day; `--choice attack --culture isengard --by-date` is the assault). The runner judges the
+offer, the mission, the result and the `[WarChronicle]` line itself; `python tools/ingame_verdict.py --issue 1105` reads the same rows
+from the log. How it works and why it refuses: [scenario autorun](scenario-autorun.md#the-story-offer-kind).
+
+The proof runs of the offer path, 2026-11-21, with the bot as the player (run folders under `E:/Temp/scenario-runs`):
+
+| Run | Build | What happened | Chronicle line |
+|---|---|---|---|
+| `20261121-215614` | `0b440211d` | Breaking, "Stand with the Fellowship": lost in wave 3 when Boromir fell | `'breaking' Occurred on day 0 (the hero's side lost the story mission; lord_1_75: Killed)` |
+| `20261121-220814` | `0b440211d` | Breaking, "Lead the Uruk-hai" as Isengard: the band of 20 was beaten | `'breaking' Averted on day 0 (the hero's side won the story mission)` |
+| `20261121-221113` | `0b440211d` | Breaking, "Let fate decide" | `'breaking' Occurred on day 0 (the player let fate decide; lord_1_75: Killed)` |
+| `20261121-223617` | `e7511b99c` | Hornburg by date (the window opened on day 8), "Defend the walls": won | `'hornburg' Held on day 8 (the player won the story mission)` |
+
+Each run ended with the runner's PASS, a clean unload and no crash report, and `ingame_verdict.py --issue 1105` reads PASS for the offer
+rows of each (`offer.shown` and `offer.result`, with `.breaking` for the Breaking). The one exception is by design: "Let fate decide"
+writes no `offer.result` line, so that row reads NOT REACHED in `20261121-221113`, and the chronicle line is its proof. In the Hornburg run the Breaking's popup came first, on
+day 2; the driver left it unanswered and took the Hornburg's on day 8. What these runs do not show: the text and the look of the popup and
+the menu, the event window, the encyclopedia, a save and a reload, and the attack on the Hornburg (slice 5). No person has played the offer.
 
 The free heroes (#1366). A driver for the story mission exists since #1368 (step 0 below), but it has not run yet, so a person
 still runs this by hand until it has, in a loaded campaign on a build that holds the feature (a `.dirty` build is not counted).
@@ -437,12 +602,35 @@ key, the take-over, the faces, the War Chronicle offer path).
 
 ## Not built yet
 
-Slices 2, 3 and 5 of #1105 are not built: field SAVE and KILL missions, the Breaking end to end, and
-the ATTACK side. Only the Hornburg offers a mission. Slice 4 was built before slices 2 and 3, because a
-player report showed the Hornburg ending with no battle (2026-11-13).
+Every slice of #1105 is built. The Hornburg and the Breaking of the Fellowship are the two events that
+offer a mission; the other windows of the War Chronicle offer none. Slice 4 was built before slices 2 and 3, because a
+player report showed the Hornburg ending with no battle (2026-11-13). What is owed is play by a person, and the balance of the
+assault on the Hornburg (#1409): both of its results are proven by unattended runs, the won one only with a reduced garrison.
 
 ## Known limits
 
+- **The assault on Helm's Deep is not balanced yet (#1409).** With the bot as the commander it lost at 250 attackers and in all three
+  runs at 350, and did not finish at 450. The defenders lost between 17 and 125 of their 153 (a garrison of 150 and three heroes), and the
+  spread between runs of one size is large: 34, 56 and 125 at 350. So no single run says how close the assault is. Unattended runs,
+  2026-11-21 and 22 (run folders under `E:/Temp/scenario-runs`). The first run used the shipped row of build `769640596` (250) and the
+  last one the shipped row of `3f2698ebc` (350). For the three between them the wave count, and in one the mix, was changed in the
+  deployed copy of `story_missions.json` only, and the file was restored after each:
+
+  | Attackers | Run | Result | Defenders lost | Mission time |
+  |---|---|---|---|---|
+  | 250 | `20261121-230907` (through the offer) | lost | 17 | 648 s |
+  | 350 | `20261121-232240` | lost | 56 | 1019 s |
+  | 450 | `20261121-234117` | not finished at the driver's 1200 s limit: 444 attackers dead, 7 alive | 37 | 1200 s |
+  | 350, mix 60/30/10 (fewer archers) | `20261122-000423` | lost | 34 | 670 s |
+  | 350 | `20261122-003007` (through the offer) | lost, 28 defenders left | 125 | 1102 s |
+
+  The runs cannot rank the sizes. What differs most between them is the heroes (`[HeroAbilities][Combat] summary`): in run
+  `20261122-000423` Legolas made 118 of the 349 kills and took 49 damage, and Aragorn and Gimli made none; in run `20261122-003007`
+  Legolas made 12, Aragorn 17 and Gimli 24, and Gimli fell. A wave's queue is ranged first (`WavePlan`), so under the live cap of 150 the
+  first assault of a 450 wave is 112 archers and 38 foot; the run with fewer archers put 115 foot in the first assault and did no
+  better. The shipped host is 350: the maintainer's range was 350 to 450, and 450 does not
+  finish inside 20 minutes. Whether a person in command can win it is not known. The balance options (Legolas as an enemy, the size of
+  the garrison, more than one wave) are on #1409.
 - In an Attack row (#1409) the player's body stands on the attacker team, and some Long Defeat code still treats it as a wave soldier or
   the defender team as the player's. The hooks and effect sampling keyed by side (`LongDefeatStatHooks`, `LongDefeatCombatHooks`,
   `LongDefeatEffectsAdapter`, morale, the gate watch) do not skip the main agent. The sally helpers do the same: `RemountPlayer` takes
@@ -451,6 +639,49 @@ player report showed the Hornburg ending with no battle (2026-11-13).
 
 ## Changelog
 
+- 2026-11-22: Slice 5 proven for the lost assault by an unattended run of the Hornburg offer as an Isengard player (`20261121-230907`):
+  `'hornburg' Held on day 8 (the player's assault was thrown back)`, `[Diplomacy] Permanent alliance ended: isengard <-> empire_s`, and
+  `taom.war-chronicle.alliance-ended result=pass ... result=Ended allied=False`. The attack host is 350 after the tuning runs
+  ("Known limits"). The same path passed again with the host of 350 on build `3f2698ebc` (`20261122-003007`), and `taom.war_effects`
+  at its end lists `chronicle:hornburg:Held:2: vlandia PartyMorale +0.100, ends in 25.0 days` with `vlandia: ... PartyMorale x1.10`.
+  The bot has not won the assault against the shipped garrison, so the won side was proven with a garrison of 15 in the deployed copy
+  of `story_missions.json` only (restored after, hash checked), on build `f8bb1387e` (`20261122-032008`):
+  `ended ... verdict=Won side=Attacking reason=DefendersDead`, `'hornburg' Fell on day 8 (isengard took it)`,
+  `offer.result ... verdict=Won result=Fell taker=isengard`, and `taom.war_effects` lists
+  `chronicle:hornburg:Fell:2: vlandia VolunteerRate -0.100, permanent`. No alliance line was written in that run, as intended: the
+  alliance ends only on a lost assault.
+- 2026-11-22: Codex review of the branch (one HIGH, three MEDIUM, three LOW; `docs/reviews/rca-story-missions-codex-2026-11-22.md`).
+  Fixed: a death the engine deferred or refused no longer resolves the Breaking as `Occurred` (the window waits and asks again each
+  day); the scenario judge and the manifests tie verdict, reason and result together, and the judge reads the mission's traits the
+  launch captured. Decided by the maintainer the same day: the Ents still march after a repulsed assault (Isengard's volunteer rate
+  falls by 15% for 20 days, as after every held Hornburg), and the morale effect's limit on a co-op client stays as documented.
+- 2026-11-22: trunk `04bd88d16` merged in (`488330eaf`), and one unattended run of the Breaking offer on that build
+  (`E:/Temp/scenario-runs/20261122-102618`, runner PASS). The bot won the defence, for the first time in an unattended run:
+  `ended ... verdict=Won side=Defending reason=TargetReached waves=3`, `'breaking' Averted on day 0`, `offer.result ... verdict=Won
+  result=Averted`, and `taom.war_effects` lists `chronicle:breaking:Averted:0: empire_w VolunteerRate +0.100`. One check of another
+  feature failed in that run and is reported on #1415: `taom.hero-abilities.keep-distance result=fail hero=taom_hero_legolas steps=49
+  moved=0 ... melee_seconds=213`. In this long field fight Legolas was told 49 times to step away and was never read as moved.
+- 2026-11-22: six unattended runs on the merged build `b8fcea30e`, each a runner PASS with a clean unload (folders under
+  `E:/Temp/scenario-runs` unless named): the Breaking offer, a lost defence (`20261122-085433`: `ended ... verdict=Lost
+  side=Defending reason=HeroFell`, `'breaking' Occurred on day 0 (...; lord_1_75: Killed)`, `offer.result ... verdict=Lost
+  result=Occurred`, and the lord's rise on a field booked `hosted.rise result=pass at=respawn ... dist=none`); the Breaking by fate
+  (`-090216`, Killed, Occurred); the Parth Galen hunt (`-090342`, `verdict=Won side=Attacking reason=HeroFell`); the Hornburg by date,
+  a defence (`-090622`, Held, the `PartyMorale +0.100` row); a Long Defeat run of 3 waves with one forced fall of the lord
+  (`E:/Temp/long-defeat-runs/20261122-091438`, `taom.long-defeat.rise result=pass at=home`, `reason=TargetReached`); the Hornburg by
+  date, an assault lost at 350 (`-093421`, Held, `alliance-ended result=pass`, 66 of 153 defenders lost). These runs prove the Killed
+  path of the hero story; the owed path (Boromir in a battle or a siege on the day) has unit tests only. One check failed in the
+  assault run and is not a fault of the offer: `hosted.wave result=fail kills=345 felled=4 ... count=350`. The lord fell, the bot
+  took over an Uruk-hai of the attacking host (Long Defeat Phase 4's death rule), and that soldier lived to the end, so the wave's
+  books were one short. The run itself ended as it must (`TargetReached`, Lost). Reported on #1409 and to the Phase 4 session.
+- 2026-11-22: trunk `3b588519c` (Long Defeat Phase 4, #1499) merged into the branch. On a field mission the lord's rise uses his
+  side's own start place and is booked `respawn`: a keep that such a mission records is no rise place and is not tested at the boot.
+- 2026-11-21: Slice 3, the Breaking of the Fellowship end to end: a Narrative event's hero story, its window of 10 days, the
+  state `Averted`, the kill by `ApplyByBattle`, and the offer's two new options. Proven by three unattended runs of the offer
+  (defence lost, hunt lost, fate); no person has played it.
+- 2026-11-21: Slice 4's offer proven by an unattended run of the Hornburg window by date (`20261121-223617`).
+- 2026-11-21: Slice 2, the Parth Galen field missions (`parth_galen_save`, `parth_galen_kill`): the field list and start places,
+  the hero who must live, Boromir's mission character, two attacker start places, groups under a live cap, and heroes under the
+  team AI on a field. Proven by unattended runs; no person has played them.
 - 2026-11-16: #1373, Gimli's kit is now the Erebor two-handed axe `sm_dwarf_erebor_axe_2h_c`; the hunters line gains `weapons=`, and `tools/ingame_checks/1373.toml` reads both. Unplayed.
 - 2026-11-16: #1370, the churn of the garrison's foot through the heroes' formation before the first wave is measured and
   checked by `tools/ingame_checks/1370.toml` (red on the bug). Fixed: the heroes wait for the castle tactic's first lane
@@ -462,6 +693,10 @@ player report showed the Hornburg ending with no battle (2026-11-13).
   opened in a game.
 - 2026-11-15: #1326, the offer follows the player's side of the war (defend, attack or no offer),
   and a story block may name an `attackMission`. No attack mission ships yet.
+- 2026-11-21: Slice 5, the Hornburg offers `helms_deep_attack`. A lost attack the player led resolves
+  the window through `ResolveStoryRepulsed`, which ends the permanent alliance of Isengard and
+  Mordor. The mission's `{=!}` name is never shown: the offer popup and menu take their texts from
+  `StoryOfferText` and the window's title, and `StoryMissionDefinition.Name` has no other reader.
 - 2026-11-13: Slice 4, the Hornburg's offer of the Helm's Deep defence and its campaign result.
 - 2026-11-12: this doc, from the code on trunk.
 - 2026-11-10: Slice 1 (the campaign host and `taom.story_open`), the mission's own music, and seven
@@ -474,4 +709,4 @@ player report showed the Hornburg ending with no battle (2026-11-13).
 
 - **Issue:** #1105
 - **Issue:** #1366, Phase 6 of #1325: the free heroes (built, in-game proof owed)
-- **Status:** Open (Slices 1 and 4 built; in-game proof owed for both)
+- **Status:** Open (Slices 1 to 5 built; the machine rows of slices 1 to 4 pass in unattended runs; slice 5's run and a person's play are owed)

@@ -14,7 +14,11 @@ namespace TAOM.Features.StoryMissions.Hooks;
 /// dev menu's); each shows only when the player may take that side (#1326). The engine returns to this menu after the mission and runs
 /// its init again (<c>MapState.OnActivate</c>, <c>MenuContext.Refresh</c>); that init applies the verdict through
 /// <see cref="StoryOfferService"/> once, before the player can save, and "Continue" only leaves. Built new for every campaign, so its
-/// pending offer and verdict start clean, and its constructor resets the service's session state.
+/// pending offer and verdict start clean, and its constructor resets the service's session state. It saves nothing: a declined offer is the
+/// chronicle's saved state. A tick that finds an offer still pending on a free map snoozes it until tomorrow (its popup closed with no answer,
+/// or "Ride" found the map busy). The accept button rechecks the map, because the rest of the tick that raised the popup can open an encounter.
+/// The unattended scenario run (<c>ScenarioAutorunDriver</c>, kind story-offer) reads <see cref="Pending"/> and <see cref="Verdict"/> and sets
+/// <see cref="BotPlaysNextMission"/> before it clicks a side; a person's game never sets it.
 /// </summary>
 public sealed class StoryOfferBehavior : CampaignBehaviorBase
 {
@@ -39,6 +43,10 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
         _service.ResetForNewSession();
     }
 
+    internal bool BotPlaysNextMission { get; set; }
+    internal StoryOffer? Pending => _offer;
+    internal StoryOutcome? Verdict => _verdict;
+
     public override void RegisterEvents()
     {
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, AddMenu);
@@ -46,10 +54,7 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
         CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, _service.NewDay);
     }
 
-    public override void SyncData(IDataStore dataStore)
-    {
-        // Nothing: a declined offer is the chronicle's saved state.
-    }
+    public override void SyncData(IDataStore dataStore) { }
 
     private void OnTick(float dt)
     {
@@ -60,7 +65,6 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
         if (!MapPopupGate.IsMapFree())
             return;
 
-        // A free map with an offer pending: its popup closed with no answer (HideInquiry), or "Ride" found the map busy. Ask again tomorrow.
         if (_offer != null)
         {
             Later();
@@ -72,7 +76,6 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
 
         _offer = offer;
         _service.NoteShown(offer);
-        // The rest of this tick can open an encounter, so the accept button rechecks the map.
         StoryOfferPopup.Show(offer, () => { if (MapPopupGate.IsMapFreeUnderPopup()) _menus.EnsureMenuOpen(MenuId); }, Later);
     }
 
@@ -80,11 +83,15 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
     {
         starter.AddGameMenu(MenuId, "{=!}{" + BodyVariable + "}", OnInit, GameMenu.MenuOverlayType.None);
         starter.AddGameMenuOption(MenuId, "taom_story_offer_defend", "{=taom_story_offer_defend}Defend the walls",
-            a => SideCondition(a, StorySide.Defending), _ => Launch(StorySide.Defending), isLeave: false, index: 0);
+            a => SideCondition(a, StorySide.Defending, hero: false), _ => Launch(StorySide.Defending), isLeave: false, index: 0);
         starter.AddGameMenuOption(MenuId, "taom_story_offer_attack", "{=taom_story_offer_attack}Storm the walls",
-            a => SideCondition(a, StorySide.Attacking), _ => Launch(StorySide.Attacking), isLeave: false, index: 1);
-        starter.AddGameMenuOption(MenuId, "taom_story_offer_decline", "{=taom_story_offer_fate}Let fate decide", OfferCondition, _ => { Decline(); _menus.ExitToLast(); }, isLeave: false, index: 2);
-        starter.AddGameMenuOption(MenuId, "taom_story_offer_continue", "{=taom_story_offer_continue}Continue", ContinueCondition, Continue, isLeave: true, index: 3);
+            a => SideCondition(a, StorySide.Attacking, hero: false), _ => Launch(StorySide.Attacking), isLeave: false, index: 1);
+        starter.AddGameMenuOption(MenuId, "taom_story_offer_stand", "{=taom_story_breaking_stand}Stand with the Fellowship",
+            a => SideCondition(a, StorySide.Defending, hero: true), _ => Launch(StorySide.Defending), isLeave: false, index: 2);
+        starter.AddGameMenuOption(MenuId, "taom_story_offer_hunt", "{=taom_story_breaking_hunt}Lead the Uruk-hai",
+            a => SideCondition(a, StorySide.Attacking, hero: true), _ => Launch(StorySide.Attacking), isLeave: false, index: 3);
+        starter.AddGameMenuOption(MenuId, "taom_story_offer_decline", "{=taom_story_offer_fate}Let fate decide", OfferCondition, _ => { Decline(); _menus.ExitToLast(); }, isLeave: false, index: 4);
+        starter.AddGameMenuOption(MenuId, "taom_story_offer_continue", "{=taom_story_offer_continue}Continue", ContinueCondition, Continue, isLeave: true, index: 5);
     }
 
     private void OnInit(MenuCallbackArgs args)
@@ -92,7 +99,8 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
         // A behavior saves nothing, so a verdict still pending at a save would be lost: apply it on the first init after the mission.
         if (_offer != null && _verdict is { } verdict && _result == null)
             _result = _service.Apply(_offer.Window, _side, verdict);
-        MBTextManager.SetTextVariable(BodyVariable, StoryOfferPopup.Line(StoryOfferText.Menu(_offer?.Choices, _side, _result), _offer?.Window), false);
+        MBTextManager.SetTextVariable(BodyVariable,
+            StoryOfferPopup.Line(StoryOfferText.Menu(_offer?.Choices, _side, _result, _offer?.Window.HeroId != null), _offer?.Window), false);
     }
 
     private bool OfferCondition(MenuCallbackArgs args)
@@ -101,10 +109,10 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
         return _offer != null && _verdict == null;
     }
 
-    // A side shows only while the offer is open and the player may take it (StorySideGate).
-    private bool SideCondition(MenuCallbackArgs args, StorySide side)
+    // A side shows only while the offer is open and the player may take it (StorySideGate). A fortress window and a hero story each have their own two options.
+    private bool SideCondition(MenuCallbackArgs args, StorySide side, bool hero)
     {
-        var shown = OfferCondition(args) && (side == StorySide.Attacking ? _offer!.Choices.Attack : _offer!.Choices.Defend);
+        var shown = OfferCondition(args) && (_offer!.Window.HeroId != null) == hero && (side == StorySide.Attacking ? _offer.Choices.Attack : _offer.Choices.Defend);
         args.optionLeaveType = GameMenuOption.LeaveType.Mission;
         return shown;
     }
@@ -122,7 +130,7 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
 
         _side = side;
         var missionId = side == StorySide.Attacking ? _offer.Window.AttackMissionId : _offer.Window.MissionId;
-        if (missionId == null || !_launcher.Launch(missionId, false, verdict => _verdict = verdict))
+        if (missionId == null || !_launcher.Launch(missionId, BotPlaysNextMission, verdict => _verdict = verdict))
         {
             InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=taom_story_offer_failed}The story battle could not open. The taom log says why.").ToString(), Colors.Red));
             _service.Snooze(_offer.EventId);

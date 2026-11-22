@@ -57,7 +57,7 @@ internal sealed partial class LongDefeatDirector
         if (_scale != null)
             _scale.OverRoom = System.Math.Max(_scale.OverRoom, read.AttackersStanding - _lastRoom);
 
-        _lastRoom = SurvivalRun.LiveRoom(_plan.Rules, read.SiegeBattleSize, read.DefendersStanding);
+        _lastRoom = SurvivalRun.LiveRoom(_plan.Rules, read.SiegeBattleSize, read.DefendersStanding, _plan.Field != null);
     }
 
     /// <summary>Writes the wave's check once. A wave whose first batch never closed has no sample at spawn and writes nothing.</summary>

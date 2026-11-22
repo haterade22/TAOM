@@ -6,7 +6,7 @@ Client/Adapters/ThumbnailCacheAdapter.cs	3
 Client/ClientSubModule.cs	24
 Client/ClientUiExtensions.cs	25
 Client/Features/AdvancedCombat/AutonomousMovementPlayerController.cs	2
-Client/Features/Autorun/CampaignAutorunHost.cs	24
+Client/Features/Autorun/CampaignAutorunHost.cs	28
 Client/Features/BattleHud/UI/BattleHudNativeSuppressionPrefabs.cs	15
 Client/Features/BattleHud/UI/MissionAgentStatusBattleHudMixin.cs	16
 Client/Features/BattleHud/Widgets/TaomBattleHudRingWidget.cs	52
@@ -206,6 +206,7 @@ Main/Adapters/CastlePatrolAdapter.cs	1
 Main/Adapters/CavalryCommandAdapter.cs	6
 Main/Adapters/CheatWorldAdapter.cs	8
 Main/Adapters/ChildCreatorAdapter.cs	11
+Main/Adapters/ChronicleWorldAdapter.cs	4
 Main/Adapters/CommanderLordAdapter.cs	20
 Main/Adapters/CreatureSiegeAgentAdapter.cs	4
 Main/Adapters/CreatureSiegeMissionAdapter.cs	15
@@ -281,6 +282,7 @@ Main/Adapters/KingdomStrengthAdapter.cs	5
 Main/Adapters/KingdomWarSnapshotAdapter.cs	1
 Main/Adapters/LongDefeatBattlefieldAdapter.Diagnostics.cs	20
 Main/Adapters/LongDefeatBattlefieldAdapter.Engines.cs	21
+Main/Adapters/LongDefeatBattlefieldAdapter.Field.cs	2
 Main/Adapters/LongDefeatBattlefieldAdapter.Gates.cs	17
 Main/Adapters/LongDefeatBattlefieldAdapter.Heroes.cs	42
 Main/Adapters/LongDefeatBattlefieldAdapter.Player.cs	28
@@ -947,7 +949,7 @@ Main/Features/DevConsole/InputStateDiagnosis.cs	8
 Main/Features/DevConsole/MissionReportFormatter.cs	11
 Main/Features/DevConsole/PlayerStateDiagnosis.cs	6
 Main/Features/DevConsole/TaomConsole.cs	13
-Main/Features/Diplomacy/DiplomacyBehavior.cs	18
+Main/Features/Diplomacy/DiplomacyBehavior.cs	19
 Main/Features/Diplomacy/DiplomacyConfigProvider.cs	1
 Main/Features/Diplomacy/DiplomacyIoC.cs	4
 Main/Features/Diplomacy/DiplomacyService.cs	29
@@ -1139,7 +1141,7 @@ Main/Features/FactionUI/FactionScreen/FactionScreenLauncher.cs	5
 Main/Features/FactionUI/FactionUIIoC.cs	2
 Main/Features/FactionUI/Hooks/BodyGeneratorViewOnTickPatch.cs	2
 Main/Features/FactionUI/Hooks/FaceGenFirstOpenDiagnosticPatch.cs	4
-Main/Features/FactionUI/Hooks/GauntletLayerLoadMoviePatch.cs	8
+Main/Features/FactionUI/Hooks/GauntletLayerLoadMoviePatch.cs	6
 Main/Features/FactionUI/Menus/FrontEndMovieService.cs	24
 Main/Features/FactionUI/Presets/FactionPickService.cs	17
 Main/Features/FactionUI/Presets/FactionPresetRegistrationBehavior.cs	3
@@ -1954,7 +1956,7 @@ Main/Features/StoryMissions/Config/StoryMissionCatalog.cs	1
 Main/Features/StoryMissions/Domain/StorySideGate.cs	1
 Main/Features/StoryMissions/Hooks/StoryDevMenuBehavior.cs	3
 Main/Features/StoryMissions/Hooks/StoryMissionLauncher.cs	4
-Main/Features/StoryMissions/Hooks/StoryOfferBehavior.cs	6
+Main/Features/StoryMissions/Hooks/StoryOfferBehavior.cs	3
 Main/Features/StoryMissions/StoryMusicCue.cs	2
 Main/Features/StoryMissions/StoryOfferService.cs	10
 Main/Features/SupplyLines/Components/SupplyCaravanComponent.cs	5

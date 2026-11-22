@@ -39,6 +39,46 @@ public class ChronicleEffectFormatterTests
     public void Format_NullReport_ReturnsNull() => Assert.IsNull(Format(null));
 
     [TestMethod]
+    public void Format_PartyMorale_ShowsPointsNotPercent()
+    {
+        var effects = Format(Report(null, Row("defender", WarEffectKind.PartyMorale, 0.1f, 25, "vlandia")))!;
+
+        Assert.AreEqual("L:Party morale", effects.Rows[0].Label);
+        Assert.AreEqual("+5", effects.Rows[0].Value);
+        Assert.AreEqual("For 25 days", effects.Duration);
+    }
+
+    [TestMethod]
+    public void Format_PartyMoraleAtStrengthOneAndAHalf_ScalesThePoints()
+    {
+        var effects = Format(Report(null, Row("defender", WarEffectKind.PartyMorale, 0.1f, 25, "vlandia")), strength: 1.5f)!;
+
+        Assert.AreEqual("+7.5", effects.Rows[0].Value);
+    }
+
+    [TestMethod]
+    public void Format_APermanentRow_SaysPermanentAndBreaksTheSharedDuration()
+    {
+        var permanent = new ChronicleAppliedEffect("defender", new[] { "vlandia" }, WarEffectKind.VolunteerRate, -0.1f, 0, permanent: true);
+        var effects = Format(Report(null, permanent, Row("attacker", WarEffectKind.VolunteerRate, 0.15f, 25, "isengard")))!;
+
+        Assert.IsNull(effects.Duration, "a permanent row means no shared duration line");
+        Assert.AreEqual("-10%", effects.Rows[0].Value);
+        Assert.AreEqual("L:Permanent", effects.Rows[0].Duration);
+        Assert.AreEqual("For 25 days", effects.Rows[1].Duration);
+    }
+
+    [TestMethod]
+    public void Format_OnlyAPermanentRow_SaysPermanentOnTheRowAndNoSharedLine()
+    {
+        var permanent = new ChronicleAppliedEffect("defender", new[] { "vlandia" }, WarEffectKind.VolunteerRate, -0.1f, 0, permanent: true);
+        var effects = Format(Report(null, permanent))!;
+
+        Assert.IsNull(effects.Duration);
+        Assert.AreEqual("L:Permanent", effects.Rows[0].Duration);
+    }
+
+    [TestMethod]
     public void Format_EmptyReport_ReturnsNull() => Assert.IsNull(Format(ChronicleOutcomeReport.None));
 
     [TestMethod]

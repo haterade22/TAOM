@@ -213,8 +213,8 @@ public static class CoopSettingsRelevance
         // text variables; it writes no campaign state and rolls on TAOM's own random source.
         "EnableEncounterLines",
         "EnableShaderPrecompileScenePasses", "EnableShaderPrecompilation",
-        // Already suppressed under co-op — TimeAcceleration's UI carries
-        // [CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")].
+        // Inert on a co-op peer: TimeAccelerationService writes no multiplier while it defers to the co-op server
+        // (ShouldDeferToHost), and the vanilla map bar's TimeAcceleration extensions carry [CoopSuppressedUi].
         "FastForwardMultiplier", "ExtraFastForwardMultiplier", "CtrlSpaceMultiplier",
         // Realm Borders (#698): meshes, labels and notices drawn on this client only. EnableRealmBorders also decides
         // whether Watchful Holds uses the province gate, which runs in singleplayer only, so it stays presentation here.

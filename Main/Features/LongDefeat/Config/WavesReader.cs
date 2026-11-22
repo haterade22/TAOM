@@ -36,6 +36,9 @@ internal sealed class WavesConfig
 /// </summary>
 internal static class WavesReader
 {
+    /// <summary>The smallest wave of a siege roster: at 100 attackers or fewer the breach tactic stops every siege engine (<c>SurvivalRun.LiveFloor</c>).</summary>
+    internal const int SiegeWaveFloor = 101;
+
     private const int DefaultCountPerWave = 10;
     private const int DefaultMaxCount = 300;
     private const float DefaultHealthPerWave = 0.05f;
@@ -86,7 +89,8 @@ internal static class WavesReader
         return rules with { KeepMinAttackers = floor };
     }
 
-    internal static RunRules ReadRules(JObject? o, LongDefeatConfigScope s)
+    /// <param name="minLiveCap">The smallest <c>liveCap</c> the rules may author: <see cref="SiegeWaveFloor"/> for a siege, 1 for a field mission (#1105 slice 2).</param>
+    internal static RunRules ReadRules(JObject? o, LongDefeatConfigScope s, int minLiveCap = SiegeWaveFloor)
     {
         var d = RunRules.Default;
         const string p = "rules";
@@ -99,7 +103,7 @@ internal static class WavesReader
             WaveBonusBase = s.Int(o, p, "waveBonusBase", d.WaveBonusBase, 0, 1_000_000),
             WaveBonusPerWave = s.Int(o, p, "waveBonusPerWave", d.WaveBonusPerWave, 0, 1_000_000),
             SpawnsPerTick = s.Int(o, p, "spawnsPerTick", d.SpawnsPerTick, 1, 50),
-            LiveCap = s.Int(o, p, "liveCap", d.LiveCap, 101, 400),
+            LiveCap = s.Int(o, p, "liveCap", d.LiveCap, minLiveCap, 400),
             GarrisonCap = s.Int(o, p, "garrisonCap", d.GarrisonCap, 1, 400),
             MusterBatch = s.Int(o, p, "musterBatch", d.MusterBatch, 1, 50),
             MusterBatchSeconds = s.Float(o, p, "musterBatchSeconds", d.MusterBatchSeconds, 1f, 3600f),
@@ -150,7 +154,8 @@ internal static class WavesReader
         return result;
     }
 
-    internal static WavePlan? ReadRoster(string id, JObject? roster, LongDefeatConfigScope s)
+    /// <param name="minWaveCount">The smallest wave the roster may author. A siege needs <see cref="SiegeWaveFloor"/>; a field mission has no engine to keep in use (#1105 slice 2).</param>
+    internal static WavePlan? ReadRoster(string id, JObject? roster, LongDefeatConfigScope s, int minWaveCount = SiegeWaveFloor)
     {
         var label = $"rosters.{id}";
         if (roster == null)
@@ -174,7 +179,7 @@ internal static class WavesReader
         {
             for (var i = 0; i < array.Count; i++)
             {
-                var spec = ReadWave(array[i] as JObject, $"{label}.waves[{i}]", s);
+                var spec = ReadWave(array[i] as JObject, $"{label}.waves[{i}]", s, minWaveCount);
                 if (spec != null)
                     waves.Add(spec);
             }
@@ -244,7 +249,7 @@ internal static class WavesReader
         return at == from;
     }
 
-    private static WaveSpec? ReadWave(JObject? wave, string label, LongDefeatConfigScope s)
+    private static WaveSpec? ReadWave(JObject? wave, string label, LongDefeatConfigScope s, int minCount)
     {
         if (wave == null)
         {
@@ -252,7 +257,7 @@ internal static class WavesReader
             return null;
         }
 
-        if (!LongDefeatConfigScope.TryInt(wave["count"], 101, 1000, out var count, out var why))
+        if (!LongDefeatConfigScope.TryInt(wave["count"], minCount, 1000, out var count, out var why))
         {
             s.Warn($"'{label}.count' {why}; wave skipped");
             return null;

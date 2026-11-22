@@ -98,6 +98,16 @@ class CatalogueLoadingTests(unittest.TestCase):
         write(mod / "ModuleData" / "ph" / "ph_descriptions.xslt", registering("ph_blade"))
         self.assertIn("ph_blade", self.available())
 
+    def test_a_malformed_row_is_a_catalogue_error(self):
+        """#1404: the gate exits 2 on a row with no path; a catalogue caller (the validator's melee
+        pass) catches CatalogueError, so the row must not escape as the gate's own error."""
+        mod = self.modules / "TestMod"
+        write(mod / "SubModule.xml", '<Module><Xmls><XmlNode><XmlName id="Items"/></XmlNode></Xmls></Module>\n')
+        write(mod / "ModuleData" / "items.xml", "<Items/>\n")
+        with self.assertRaises(mc.CatalogueError) as caught:
+            mc.campaign_files(mod, [mod / "ModuleData" / "items.xml"])
+        self.assertIn("SubModule.xml", str(caught.exception))
+
     def test_stylesheet_without_a_row_is_ignored(self):
         mod = self.modules / "TestMod"
         write(mod / "SubModule.xml", submodule(("CraftingTemplates", "crafting_templates"), module_id="TestMod"))
@@ -135,7 +145,8 @@ class CatalogueLoadingTests(unittest.TestCase):
         in the catalogue would hide a registration the tree has lost."""
         write(self.own, submodule(module_id="TAOM", depends=PLAYSET))
         taom = self.modules / "TAOM"
-        write(taom / "SubModule.xml", submodule(("WeaponDescriptions", "ph/ph_descriptions"), module_id="TAOM"))
+        write(taom / "SubModule.xml", submodule(("WeaponDescriptions", "ph/ph_descriptions"),
+                                                ("CraftingPieces", "ph/ph_crafting_pieces"), module_id="TAOM"))
         write(taom / "ModuleData" / "ph" / "ph_descriptions.xslt", registering("stale_blade"))
         self.assertNotIn("stale_blade", self.available())
         # Only its stylesheets: TAOM's pieces still load (callers overlay the tree's on them).

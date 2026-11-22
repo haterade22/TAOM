@@ -662,6 +662,34 @@ public class TimeAccelerationServiceTests
         Assert.IsFalse(_sut.IsExtraFastForwardActive);
     }
 
+    // --- Extra Fast Forward under co-op ------------------------------------------------------
+    // A peer that defers to the co-op server writes no multiplier, so its Extra Fast Forward
+    // button could only be plain fast forward under another name. The themed map bar hides it.
+
+    [TestMethod]
+    public void IsExtraFastForwardAvailable_Solo_True()
+    {
+        Assert.IsTrue(_sut.IsExtraFastForwardAvailable);
+    }
+
+    [TestMethod]
+    public void IsExtraFastForwardAvailable_CoopDefers_False()
+    {
+        _coop.ShouldDeferToHost.Returns(true);
+
+        Assert.IsFalse(_sut.IsExtraFastForwardAvailable);
+    }
+
+    [TestMethod]
+    public void IsExtraFastForwardAvailable_ReadsTheSessionLive()
+    {
+        Assert.IsTrue(_sut.IsExtraFastForwardAvailable);
+
+        _coop.ShouldDeferToHost.Returns(true);
+
+        Assert.IsFalse(_sut.IsExtraFastForwardAvailable, "a join after the first read must hide the button");
+    }
+
     [TestMethod]
     public void EnterFastForward_CampaignInactive_DoesNothing()
     {

@@ -177,9 +177,14 @@
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_a" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -460,9 +465,14 @@
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -671,9 +681,14 @@
                     slot="Leg"
                     id="Item.sk_md_orc_boots_light_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -809,9 +824,14 @@
                     slot="Leg"
                     id="Item.sk_md_orc_boots_med_a" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -894,9 +914,14 @@
               <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
               <equipment slot="Horse" id="Item.spider_mount_mountain_a1" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -969,9 +994,14 @@
               <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
               <equipment slot="Horse" id="Item.spider_mount_mountain_a2" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1051,9 +1081,14 @@
               <equipment slot="Horse" id="Item.dire_wolf_black" />
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1133,9 +1168,14 @@
               <equipment slot="Horse" id="Item.dire_wolf_black" />
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1211,9 +1251,14 @@
               <equipment slot="Horse" id="Item.dire_wolf_black" />
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1289,9 +1334,14 @@
                     slot="Leg"
                     id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1451,9 +1501,14 @@
                     slot="Leg"
                     id="Item.sk_md_orc_boots_med_a" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1509,9 +1564,14 @@
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
               <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1565,9 +1625,14 @@
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
               <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1622,9 +1687,14 @@
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
               <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1679,9 +1749,14 @@
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
               <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1850,9 +1925,14 @@
                     slot="Leg"
                     id="Item.sk_md_orc_boots_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1906,9 +1986,14 @@
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
               <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2009,9 +2094,14 @@
                     slot="Leg"
                     id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2066,9 +2156,14 @@
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_heavy_a" />
               <equipment slot="Leg" id="Item.sk_md_orc_boots_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2122,9 +2217,14 @@
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
               <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2224,9 +2324,14 @@
                     slot="Leg"
                     id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2278,9 +2383,14 @@
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_heavy_a" />
               <equipment slot="Leg" id="Item.sk_md_orc_boots_heavy_a" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -2842,9 +2952,14 @@
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
               <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 

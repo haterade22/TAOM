@@ -2946,6 +2946,29 @@ The #1223 tests called a pure helper on `CustomAttacksUtils`. Any static call ru
 
 **Source:** [rca-stamina-phases-1-2-2026-11-19.md](../rca-stamina-phases-1-2-2026-11-19.md) row 2 (lens 5).
 
+### A second writer of a check id means every older manifest row names its own subject (#1105, 2026-11-21)
+
+**Why missed:** the Hornburg rows of `tools/ingame_checks/1105.toml` were written when one window offered one mission. Their `reached` and `fail` patterns matched the check id alone, and one fail pattern read "a shown line for an evil player". Slice 3 gave the same check ids (`taom.story-missions.offer.shown`, `.offer.result`) to the Breaking of the Fellowship, where an evil player is offered a mission by design. The new rows were pinned to their mission; nobody reread the old ones, so a correct Breaking line read as FAIL on the Hornburg check. The slice 2 review of the same file found the same fault on the boot and ended rows, and the fix then stopped at the rows it named.
+
+**Prevent:** when a change adds a second producer of an existing `[Check]` id, list every row of every manifest that matches that id (`grep -n '<id>' tools/ingame_checks/*.toml`) and give each pattern the key that names its own subject (`mission=`, `hero=`, a `scope`). Then feed one line of the new producer to each old row and one line of the old producer to each new row, in a test or in `python -c`, and read the verdicts. A fail pattern that matches by a shared field alone is the first one to check, because `judge_segment` returns FAIL before it reads a pass pattern.
+
+**Source:** the #1105 slice 3 tier 1 review, Data flow G1 and XML lens finding 1 (both found it); `tools/ingame_checks/1105.toml`.
+
+### One bot battle for each setting cannot rank the settings (#1409, 2026-11-22)
+
+**Why missed:** the assault on Helm's Deep was run once at 250, 350 and 450 attackers and once with another troop mix, and the defenders lost 17, 56, 37 and 34 of 153. From those four numbers the doc and an issue comment said that the size was not the lever and that one hero's kills were the cause. A fifth run, on the same 350 row, lost 125 defenders, and that hero made 12 kills where he had made 118. The spread between two runs of one setting was larger than the spread between the settings. A reviewer had already marked both sentences as inferences; they were softened, not withdrawn, until the fifth run forced it.
+
+**Prevent:** before a tuning text compares settings, run one setting at least twice and write its spread down beside the numbers. If the spread within a setting is as large as the difference between settings, report the range and stop: say that the runs cannot rank them, and name the next measurement (more runs for each setting, or a seeded battle). A cause read from one run's log ("this hero made a third of the kills") is a reading of that run only; check it in a second run before it carries a recommendation. A battle the bot has not won says that the bot has not won it, never that a person cannot.
+
+**Source:** the #1105 slice 5 tuning runs under `E:/Temp/scenario-runs` (`20261121-230907`, `-232240`, `-234117`, `20261122-000423`, `-003007`); the two comments of 2026-11-22 on #1409; `docs/features/story-missions.md` "Known limits".
+
+### A pass pattern with two free alternations accepts lines that no correct build writes (#1105, 2026-11-22)
+
+**Why missed:** the ended row read `verdict=(Won|Lost) ... reason=(TargetReached|DefendersDead|KeepLost|HeroFell)`, and the offer judge took any `offer.result result=pass` line. Each pattern was built to match every good line; nobody asked which bad lines it also matches. A won defence whose hero fell, with the event Occurred, passed the judge and both manifest rows, and that contradiction is the regression the judge exists to catch. Two fixture logs in the judge's own tests held such a contradiction and stayed green.
+
+**Prevent:** when a pass pattern has two alternations, write the pairs out from the code that maps one to the other (`Won ... reason=X|Lost ... reason=(Y|Z)`), and add one test row for a bad pair. When two lines of one run report the same fact (the driver's verdict, the mission's verdict, the result), the judge reads the first and narrows the others to it. After a pattern is made stricter, read the real run logs again with it: a stricter pattern that fails a good log is wrong too.
+
+**Source:** Codex adversarial review of 2026-11-22, F4; `tools/run_scenario.py` `story_ended_pass`, `offer_result_pass`; `tools/tests/test_run_scenario.py` `VerdictConsistencyTests`.
 ### An option is armed in the change that carries it out, and a gate lists what is unserved (#1079, 2026-11-21)
 
 **Why missed:** The Long Defeat's Phase 4 plan puts the `lord_falls` arm key in one slice and the blow that fells the lord two slices later. The first slice shipped the flag, the option, the report field and the judge's echo check, each with tests, and nothing read the effect. A run armed with the flag fell nobody and the judge passed it. The same cause was already in the Phase 2 and Phase 3 RCAs and in the plan's read-first list, which is a reminder, not a check.

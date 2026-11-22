@@ -38,7 +38,8 @@ internal static class ScenarioAutorunDone
         Line(text, "day_start", Int(facts.DayStart));
         Line(text, "day_end", Int(facts.DayEnd));
         var story = plan.Kind == ScenarioPlan.KindStoryMission;
-        if (!story)
+        var offer = plan.Kind == ScenarioPlan.KindStoryOffer;
+        if (!story && !offer)
         {
             Line(text, "days_run", Int(ScenarioRules.DaysRun(facts.DayStart, facts.DayEnd)));
             Line(text, "days_wanted", Int(plan.Days));
@@ -52,9 +53,16 @@ internal static class ScenarioAutorunDone
         Line(text, "wall_seconds", F1(facts.WallSeconds));
         Line(text, "started", facts.Started);
         Line(text, "ended", facts.Ended);
-        if (story)
+        if (story || offer)
         {
-            Line(text, "mission", plan.MissionId);
+            if (story)
+                Line(text, "mission", plan.MissionId);
+            else
+            {
+                Line(text, "event", plan.EventId);
+                Line(text, "choice", plan.Choice);
+            }
+
             Line(text, "verdict", facts.Verdict);
             Line(text, "mission_seconds", F1(facts.MissionSeconds));
         }
