@@ -2943,14 +2943,34 @@ class PlaceholderMeleePassTests(unittest.TestCase):
         self.cat.items["van_sword"] = item
         return {"van_sword": self.mc.price(self.cat, item)}
 
-    def _x_knight_findings(self, vanilla):
+    def _all_findings(self, vanilla, armory=None):
         regs = ts.Registries(items=set(), item_def_files={}, npccharacters=set(), cultures=set(),
                              party_templates=set())
         with mock.patch.object(self.mc, "load", return_value=self.cat), \
-             mock.patch.object(self.mc, "price_all", return_value=(self.priced, [])), \
+             mock.patch.object(self.mc, "price_all", return_value=(self.priced if armory is None else armory, [])), \
              mock.patch.object(ts, "_vanilla_priced", return_value=vanilla):
-            return [i for i in ts.Validator(self.md, [], regs, game_modules=self.root)._melee_ladder_inversions()
-                    if i.entry_id == "x_knight"]
+            return ts.Validator(self.md, [], regs, game_modules=self.root)._melee_ladder_inversions()
+
+    def _x_knight_findings(self, vanilla):
+        return [i for i in self._all_findings(vanilla) if i.entry_id == "x_knight"]
+
+    def test_a_vanilla_weapon_finding_names_a_hand_repair_not_a_fixer(self):
+        """No tool restats or swaps a vanilla weapon (fix_melee_ladder and restat_melee_blades price
+        only the Armory), so neither finding may send the reader to one."""
+        self._tree(carries="van_sword", files=False)
+        found = [i for i in self._all_findings(self._vanilla_sword("40.0"))
+                 if i.entry_id in ("x_knight", "van_sword")]
+        self.assertEqual({i.code for i in found}, {"MELEE_LADDER_INVERSION", "MELEE_BLOW_CEILING"}, found)
+        for issue in found:
+            self.assertIn("no tool restats", issue.message)
+            self.assertNotIn("fix_melee_ladder.py", issue.message)
+            self.assertNotIn("restat_melee_blades.py", issue.message)
+
+    def test_vanilla_prices_do_not_hide_an_armory_that_priced_nothing(self):
+        self._tree(carries="van_sword", files=False)
+        found = self._all_findings(self._vanilla_sword("40.0"), armory={})
+        self.assertEqual([i.entry_id for i in found], ["(install)"])
+        self.assertIn("checked nothing", found[0].message)
 
     def test_a_vanilla_weapon_above_the_band_is_judged_like_an_armory_one(self):
         """#1242: troops that carry vanilla weapons sat outside every gate."""

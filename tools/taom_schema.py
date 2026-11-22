@@ -552,8 +552,9 @@ class Validator:
     # best-DPS by tier 66, 64, 66, 67, 69, 69, 81, 82, 82, 69, a climb of 1.04x against
     # vanilla's 2.23x over five tiers), so troop tier barely changed melee output at all.
     # Weapon stats are SIMULATED from the crafting pieces rather than stored, so this needs the
-    # install and is skipped, never faked, without it. The same pure function drives the gate,
-    # tools/analyze_melee_ladder.py and tools/fix_melee_ladder.py, so they cannot disagree.
+    # install and is skipped, never faked, without it. The same pure function (melee_ladder.findings)
+    # drives the gate, tools/analyze_melee_ladder.py and tools/fix_melee_ladder.py. Only the gate
+    # prices vanilla weapons and scores each battle set (#1242), so a vanilla finding names no fixer.
     # Warns rather than errors because the Armory is unversioned: a reinstall can revert the
     # weapon half of the fix while the rosters stay correct, and that must not block a commit.
     def _melee_ladder_inversions(self) -> list:
@@ -597,13 +598,18 @@ class Validator:
             # A troop that carries a vanilla weapon is judged like any other (#1242); an Armory item
             # of the same id wins.
             vanilla = _vanilla_priced(modules) if troops else {}
-            priced = {**vanilla, **priced, **ph_priced}
+            own = {**priced, **ph_priced}
+            # No tool restats or swaps a vanilla weapon, so its findings name a hand repair.
+            vanilla_only = frozenset(vanilla.keys() - own.keys())
+            priced = {**vanilla, **own}
         except (mc.CatalogueError, mr.AnalysisError, OSError) as exc:
             return [Issue(
                 severity=Severity.WARNING, code=code, file=spec_rel, line=0, entry_id="(install)",
                 message=f"the Armory could not be priced ({exc}), so no troop's melee output was checked",
             )]
-        if not priced or not troops:
+        # Judged on the Armory and the placeholders alone: vanilla prices must not hide an Armory
+        # that priced nothing.
+        if not own or not troops:
             return [Issue(
                 severity=Severity.WARNING, code=code, file=spec_rel, line=0, entry_id="(install)",
                 message=("no melee weapon or no troop was loaded, so this pass checked nothing. "
@@ -626,6 +632,15 @@ class Validator:
                          "entry silently skips nothing and reads as a clean run; remove it."),
             ))
 
+        def repair(item: str, armory_repair: str) -> str:
+            if item in ph_priced:
+                return _PLACEHOLDER_REPAIR
+            if item in vanilla_only:
+                return ("Repair: a vanilla weapon, which no tool restats or swaps: give its carriers an "
+                        f"in-band Armory weapon by hand, or exempt the troop in {spec_rel} exempt_troops "
+                        "with a reason (#1242)")
+            return armory_repair
+
         by_id = {t.id: t for t in troops}
         kits, carried = melee_pass_rows(troops, priced, spec, _shield_ids(modules))
         for f in ml.findings(kits, spec, min_gap=1.0):
@@ -634,11 +649,11 @@ class Validator:
                 severity=Severity.WARNING, code=code,
                 file=self._rel(Path(troop.path)) if troop and troop.path else "troops",
                 line=0, entry_id=f.troop,
-                message=(f.describe() + (". " + _PLACEHOLDER_REPAIR if f.item in ph_priced else
-                         ". Repair: python tools/fix_melee_ladder.py (dry-run, then "
-                         "--apply); where the culture owns no weapon in band the fix is a restat of "
-                         "the blade piece, not a roster swap. Deliberate exceptions go in "
-                         f"{spec_rel} exempt_troops with a reason (#631)")),
+                message=f.describe() + ". " + repair(f.item,
+                    "Repair: python tools/fix_melee_ladder.py (dry-run, then "
+                    "--apply); where the culture owns no weapon in band the fix is a restat of "
+                    "the blade piece, not a roster swap. Deliberate exceptions go in "
+                    f"{spec_rel} exempt_troops with a reason (#631)"),
             ))
         # One blow and sustained damage per class and tier (class_limits scaled by tier_limit). A hero
         # blade is judged against its hero limit, the class limit plus its maker group's bonus.
@@ -646,10 +661,10 @@ class Validator:
             issues.append(Issue(
                 severity=Severity.WARNING, code="MELEE_BLOW_CEILING", file=spec_rel, line=0,
                 entry_id=b.item,
-                message=(b.describe() + (". " + _PLACEHOLDER_REPAIR if b.item in ph_priced else
-                         ". Repair: python tools/restat_melee_blades.py (dry-run, then "
-                         "--apply) lowers the blade to the limit; a hero weapon goes in "
-                         f"{spec_rel} hero_blades")),
+                message=b.describe() + ". " + repair(b.item,
+                    "Repair: python tools/restat_melee_blades.py (dry-run, then "
+                    "--apply) lowers the blade to the limit; a hero weapon goes in "
+                    f"{spec_rel} hero_blades"),
             ))
         return issues
 
