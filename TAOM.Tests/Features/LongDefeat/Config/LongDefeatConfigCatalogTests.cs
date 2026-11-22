@@ -143,6 +143,58 @@ public class LongDefeatConfigCatalogTests
     }
 
     [TestMethod]
+    public void BuildPlan_Normal_KeepsTheFortresssWavesAndSchedule()
+    {
+        var catalog = Load();
+        var fortress = catalog.Fortresses[0];
+
+        var plan = catalog.BuildPlan(fortress, RunOptions.Default);
+
+        Assert.AreSame(fortress.Waves, plan.Waves);
+        Assert.AreEqual(0, plan.Affixes.CountFor(4));
+        Assert.AreEqual(1, plan.Affixes.CountFor(5));
+    }
+
+    [TestMethod]
+    public void BuildPlan_Hard_TakesTheShippedDefaultsWhenTheFileHasNoHardBlock()
+    {
+        var catalog = Load();
+
+        var plan = catalog.BuildPlan(catalog.Fortresses[0], new RunOptions { Difficulty = RunDifficulty.Hard });
+
+        Assert.AreEqual(138, plan.Waves.ForWave(1).Count);
+        Assert.AreEqual(1, plan.Affixes.CountFor(3));
+        Assert.AreEqual(0, plan.Affixes.CountFor(2));
+        Assert.AreEqual(RunDifficulty.Hard, plan.Options.Difficulty);
+    }
+
+    [TestMethod]
+    public void BuildPlan_Hard_RaisesTheKeepMinimumAboveTheStragglerShareOfItsSmallestWave()
+    {
+        var catalog = Load();
+        var fortress = catalog.Fortresses[0];
+
+        var normal = catalog.BuildPlan(fortress, RunOptions.Default).Rules;
+        var hard = catalog.BuildPlan(fortress, new RunOptions { Difficulty = RunDifficulty.Hard }).Rules;
+
+        Assert.AreEqual(12, normal.KeepMinAttackers);
+        Assert.AreEqual(14, hard.KeepMinAttackers, "138 attackers in wave 1, a tenth is 13");
+        Assert.AreEqual(normal with { KeepMinAttackers = 14 }, hard);
+    }
+
+    [TestMethod]
+    public void BuildPlan_Hard_ReadsTheRulesHardBlock()
+    {
+        var catalog = Load(waves: Waves(rules: "'hard':{'factor':1.5,'affixWavesEarlier':4}"));
+
+        var plan = catalog.BuildPlan(catalog.Fortresses[0], new RunOptions { Difficulty = RunDifficulty.Hard });
+
+        Assert.AreEqual(165, plan.Waves.ForWave(1).Count);
+        Assert.AreEqual(1, plan.Affixes.CountFor(1));
+        Assert.AreEqual(110, catalog.Fortresses[0].Waves.ForWave(1).Count, "the fortress's own plan is not changed");
+    }
+
+    [TestMethod]
     public void TryGetFortress_IsCaseInsensitive()
     {
         Assert.IsTrue(Load().TryGetFortress("HELMS", out var fortress));

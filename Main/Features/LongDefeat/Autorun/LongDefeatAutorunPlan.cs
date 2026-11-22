@@ -67,6 +67,9 @@ internal sealed class LongDefeatAutorunPlan
     /// <summary>The class id the run asks for. Not judged here: the catalog takes it when the fortress offers it, else warns and plays the seed's draw, and the report names the class that was played.</summary>
     public string? Class { get; internal init; }
 
+    /// <summary>An unknown value is warned about when the file is read and plays normal.</summary>
+    public RunDifficulty Difficulty { get; internal init; }
+
     /// <summary>What the launcher expects ("lost" for a run built to lose); the game only echoes it into the done file.</summary>
     public string? Expect { get; internal init; }
 
@@ -115,12 +118,12 @@ internal sealed class LongDefeatAutorunPlan
 
     /// <summary>The setup the driver hands the start path. The out folder doubles as the records folder, so an unattended run never touches the player's best run.</summary>
     internal LongDefeatSetup ToSetup(string fortressId) =>
-        new(fortressId, "autorun", new RunOptions { StopAfterWaves = Waves, Autoplay = true, GarrisonScale = GarrisonScale, Seed = Seed, StartWave = StartWave, StartRerolls = StartRerolls, StartGold = StartGold, BreakEnginesAtClear = BreakEngines, LordFalls = LordFalls, ClassId = Class }, OutFolder);
+        new(fortressId, "autorun", new RunOptions { StopAfterWaves = Waves, Autoplay = true, GarrisonScale = GarrisonScale, Seed = Seed, StartWave = StartWave, StartRerolls = StartRerolls, StartGold = StartGold, BreakEnginesAtClear = BreakEngines, LordFalls = LordFalls, ClassId = Class, Difficulty = Difficulty }, OutFolder);
 
     /// <summary>One line for the log: the choices the run will use.</summary>
     internal string Describe() =>
         "fortress=" + (Fortress ?? "-") + " waves=" + (Waves?.ToString(CultureInfo.InvariantCulture) ?? "-")
-        + " garrison_scale=" + Num(GarrisonScale) + " class=" + (Class ?? "-") + " seed=" + (Seed?.ToString(CultureInfo.InvariantCulture) ?? "-")
+        + " garrison_scale=" + Num(GarrisonScale) + " class=" + (Class ?? "-") + " difficulty=" + RunDifficulties.Id(Difficulty) + " seed=" + (Seed?.ToString(CultureInfo.InvariantCulture) ?? "-")
         + " start_wave=" + StartWave + " start_rerolls=" + StartRerolls + " start_gold=" + (StartGold?.ToString(CultureInfo.InvariantCulture) ?? "-") + " break_engines=" + (BreakEngines?.ToString(CultureInfo.InvariantCulture) ?? "-") + " lord_falls=" + (LordFalls?.ToString(CultureInfo.InvariantCulture) ?? "-") + " live_limit_seconds=" + Num(LiveLimitSeconds) + " wall_limit_seconds=" + Num(WallLimitSeconds)
         + " speed=" + Speed + " out=" + OutFolder + " quit=" + (QuitWhenDone ? 1 : 0) + " expect=" + (Expect ?? "-") + " arm=" + ArmPath;
 
@@ -135,6 +138,7 @@ internal sealed class LongDefeatAutorunPlan
         int? waves = null;
         var scale = 1f;
         string? className = null;
+        var difficulty = RunDifficulty.Normal;
         ulong? seed = null;
         var startWave = 1;
         var startRerolls = 0;
@@ -173,6 +177,7 @@ internal sealed class LongDefeatAutorunPlan
                 case "garrison_scale": scale = Scale(key, value, scale, warnings); break;
                 case "speed": speed = SpeedLevel(key, value, speed, warnings); break;
                 case "class": className = value.Length == 0 ? null : value; break;
+                case "difficulty": difficulty = DifficultyValue(key, value, warnings); break;
                 case "seed": seed = SeedValue(key, value, warnings); break;
                 case "start_wave": startWave = IntInRange(key, value, 1, MaxStartWave, startWave, warnings); break;
                 case "start_rerolls": startRerolls = IntInRange(key, value, 0, MaxStartRerolls, startRerolls, warnings); break;
@@ -191,7 +196,7 @@ internal sealed class LongDefeatAutorunPlan
         {
             Armed = true, Warnings = warnings, ArmPath = path, Fortress = fortress, Waves = waves, OutFolder = outFolder!, Expect = expect,
             LiveLimitSeconds = liveLimit, WallLimitSeconds = wallLimit, QuitWhenDone = quit, GarrisonScale = scale, ScreenshotSeconds = screenshots, Speed = speed,
-            Seed = seed, StartWave = startWave, StartRerolls = startRerolls, StartGold = startGold, BreakEngines = breakEngines, LordFalls = lordFalls, Class = className,
+            Seed = seed, StartWave = startWave, StartRerolls = startRerolls, StartGold = startGold, BreakEngines = breakEngines, LordFalls = lordFalls, Class = className, Difficulty = difficulty,
         };
     }
 
@@ -206,6 +211,15 @@ internal sealed class LongDefeatAutorunPlan
         {
             return false;
         }
+    }
+
+    private static RunDifficulty DifficultyValue(string key, string value, List<string> warnings)
+    {
+        if (RunDifficulties.TryParse(value, out var difficulty))
+            return difficulty;
+
+        warnings.Add(key + "='" + value + "' is not normal or hard; playing normal");
+        return RunDifficulty.Normal;
     }
 
     private static int? WaveTarget(string key, string value, List<string> warnings)

@@ -123,7 +123,11 @@ internal sealed class LongDefeatConfigCatalog
         if (seeded.ClassId != null && !string.Equals(seeded.ClassId, chosen?.Id, StringComparison.OrdinalIgnoreCase))
             _logger.LogWarning($"LongDefeatConfigCatalog: the class '{seeded.ClassId}' is not on offer at '{fortress.Id}' (defenders of {fortress.DefenderCulture}); playing {chosen?.Id ?? "in his own gear"} instead");
 
-        return new RunPlan(fortress.Id, fortress.Garrison, fortress.Waves, fortress.Shop, Rules, seeded.ClassId == chosen?.Id ? seeded : seeded with { ClassId = chosen?.Id })
+        var hard = seeded.Difficulty == RunDifficulty.Hard ? _waves.Value.Hard : null;
+        var affixes = AffixesFor(fortress.AttackerCulture);
+        var waves = hard == null ? fortress.Waves : fortress.Waves.Harder(hard.Factor);
+        var rules = hard == null ? Rules : Rules with { KeepMinAttackers = Math.Max(Rules.KeepMinAttackers, (int)(Rules.StragglerShare * waves.SmallestAuthoredCount) + 1) };
+        return new RunPlan(fortress.Id, fortress.Garrison, waves, fortress.Shop, rules, seeded.ClassId == chosen?.Id ? seeded : seeded with { ClassId = chosen?.Id })
         {
             Provenance = RunProvenance.Unknown with { Balance = BalanceHash },
             Bounties = _waves.Value.Bounties,
@@ -132,7 +136,7 @@ internal sealed class LongDefeatConfigCatalog
             Sally = fortress.Sally,
             Towers = fortress.Towers ?? Array.Empty<LdTower>(),
             Volley = fortress.Volley,
-            Affixes = AffixesFor(fortress.AttackerCulture),
+            Affixes = hard == null ? affixes : affixes.Earlier(hard.AffixWavesEarlier),
             Boons = _boons.Value.For(fortress.DefenderCulture),
             Loadout = chosen?.LoadoutFor(fortress.DefenderCulture),
             ClassName = chosen?.Name ?? "",
