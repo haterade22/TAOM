@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SandBox;
@@ -24,11 +25,17 @@ namespace TAOM.Client.Features.Autorun;
 /// the path a person's click takes (<c>MenuContext.InvokeConsequence</c> after <c>GameMenu.GetMenuOptionConditionsHold</c>), from the application
 /// tick: never from the console and never inside the campaign tick. It skips the console command's cheat-mode gate, which is safe because only
 /// the arm file starts the driver.
+/// For the story offer (#1105 slices 3 to 5) it presses the offer popup's accept button as the popup's own view model does, and picks the offer
+/// menu's options on the same click path, with <see cref="StoryOfferBehavior"/> set to let the bot play the lord. The accept presses only the
+/// inquiry that matches the behavior's pending offer when it is shown (the behavior sets the offer before it shows the popup), because a later
+/// popup of the same campaign tick is queued by the engine but still raises OnShowInquiry.
 /// </summary>
 internal sealed class CampaignAutorunHost : ICampaignAutorunHost
 {
     private readonly string _outFolder;
     private string? _lastInquiryTitle;
+    private InquiryData? _lastInquiry;
+    private InquiryData? _offerInquiry;
     private bool? _focusSettingBefore;
     private StoryOutcome? _storyVerdict;
 
@@ -36,7 +43,13 @@ internal sealed class CampaignAutorunHost : ICampaignAutorunHost
     {
         _outFolder = plan.OutFolder;
         // The engine does not expose the open inquiry, so the title is taken when one is shown. Only an armed run builds this host.
-        InformationManager.OnShowInquiry += (data, _, _) => _lastInquiryTitle = data?.TitleText ?? "";
+        InformationManager.OnShowInquiry += (data, _, _) =>
+        {
+            _lastInquiryTitle = data?.TitleText ?? "";
+            _lastInquiry = data;
+            if (OfferBehavior?.Pending is { } offer && data?.TitleText == StoryOfferPopup.Line(offer.Window.Title, offer.Window).ToString())
+                _offerInquiry = data;
+        };
         InformationManager.OnShowTextInquiry += (data, _, _) => _lastInquiryTitle = data?.TitleText ?? "";
     }
 
@@ -59,6 +72,8 @@ internal sealed class CampaignAutorunHost : ICampaignAutorunHost
         InformationManager.HideInquiry();
         var title = _lastInquiryTitle ?? "";
         _lastInquiryTitle = null;
+        _lastInquiry = null;
+        _offerInquiry = null;
         return title;
     }
 
@@ -227,11 +242,60 @@ internal sealed class CampaignAutorunHost : ICampaignAutorunHost
 
     public string? OpenMenuId => MapMenuContext()?.GameMenu?.StringId;
 
-    public bool ChooseOpenMission() => Choose(StoryDevMenuBehavior.OpenOptionId);
+    public bool ChooseOpenMission() => Choose(StoryDevMenuBehavior.MenuId, StoryDevMenuBehavior.OpenOptionId);
 
-    public bool ChooseBackToMap() => Choose(StoryDevMenuBehavior.BackOptionId);
+    public bool ChooseBackToMap() => Choose(StoryDevMenuBehavior.MenuId, StoryDevMenuBehavior.BackOptionId);
 
-    public StoryOutcome? StoryVerdict => _storyVerdict;
+    public StoryOutcome? StoryVerdict => _storyVerdict ?? OfferBehavior?.Verdict;
+
+    public string? PendingOfferEvent => OfferBehavior?.Pending?.EventId;
+
+    public string PendingOfferChoices => OfferBehavior?.Pending?.Choices.ToString() ?? "";
+
+    public bool InquiryActive => InformationManager.IsAnyInquiryActive();
+
+    // The popup's accept button is SingleQueryPopUpVM.ExecuteAffirmativeAction: _data.AffirmativeAction?.Invoke(), then CloseQuery() (v1.5.7
+    // SingleQueryPopUpVM.cs lines 105 to 109). The view model is private to the query manager, which subscribes its own CloseQuery to
+    // InformationManager.OnHideInquiry (GauntletQueryManager.Initialize), so HideInquiry is the same close. The button is enabled when
+    // GetIsAffirmativeOptionEnabled says so (SingleQueryPopUpVM.UpdateButtonEnabledStates).
+    public bool AcceptOfferPopup(out string title)
+    {
+        var data = _offerInquiry;
+        title = data?.TitleText ?? "";
+        if (data == null || !data.IsAffirmativeOptionShown || !InformationManager.IsAnyInquiryActive()
+            || (data.GetIsAffirmativeOptionEnabled != null && !data.GetIsAffirmativeOptionEnabled().Item1))
+            return false;
+
+        _offerInquiry = null;
+        data.AffirmativeAction?.Invoke();
+        InformationManager.HideInquiry();
+        return true;
+    }
+
+    public bool OfferMenuShown => OpenMenuId == StoryOfferBehavior.MenuId;
+
+    public string? ChooseOfferOption(IReadOnlyList<string> optionIds, bool botPlays)
+    {
+        var behavior = OfferBehavior;
+        if (behavior == null)
+            return null;
+
+        behavior.BotPlaysNextMission = botPlays;
+        try
+        {
+            foreach (var id in optionIds)
+                if (Choose(StoryOfferBehavior.MenuId, id))
+                    return id;
+
+            return null;
+        }
+        finally
+        {
+            behavior.BotPlaysNextMission = false;
+        }
+    }
+
+    private static StoryOfferBehavior? OfferBehavior => Campaign.Current?.GetCampaignBehavior<StoryOfferBehavior>();
 
     // The console's own dispatch: the name, then the rest split on spaces (v1.5.7 CommandLineFunctionality.CallFunction :99).
     public string RunConsoleCommand(string commandLine)
@@ -250,11 +314,11 @@ internal sealed class CampaignAutorunHost : ICampaignAutorunHost
     // A click is GameMenuItemVM.ExecuteAction -> MenuContext.InvokeConsequence(Index) -> GameMenuManager.RunConsequenceOfVirtualMenuOption.
     // InvokeConsequence runs no condition: the menu shows only an option whose condition holds (GameMenuVM, GetVirtualMenuOptionConditionsHold)
     // and enables its button from IsEnabled, which the condition sets. With no repeat objects the virtual index is the list index.
-    private bool Choose(string optionId)
+    private bool Choose(string menuId, string optionId)
     {
         var context = MapMenuContext();
         var menu = context?.GameMenu;
-        if (context == null || menu == null || menu.StringId != StoryDevMenuBehavior.MenuId || menu.MenuRepeatObjects.Count > 0)
+        if (context == null || menu == null || menu.StringId != menuId || menu.MenuRepeatObjects.Count > 0)
             return false;
 
         var options = menu.MenuOptions.ToList();

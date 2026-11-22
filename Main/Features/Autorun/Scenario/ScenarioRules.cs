@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TAOM.Features.StoryMissions.Domain;
 
 namespace TAOM.Features.Autorun.Scenario;
@@ -17,6 +18,10 @@ internal static class ScenarioRules
     internal const double ExitWaitSeconds = 60.0;
     /// <summary>One wait for every story step: the menu free, the option chosen, the mission open, the map back.</summary>
     internal const double StoryStepWaitSeconds = 120.0;
+    /// <summary>The offer's popup shows about 30 campaign ticks after the window opens, and a new campaign can show other popups first.</summary>
+    internal const double OfferPopupWaitSeconds = 120.0;
+    internal const double OfferPopupSettleSeconds = 2.0;
+    internal const string ContinueOptionId = "taom_story_offer_continue";
     internal const double StatusSeconds = 5.0;
     internal const int TitleLogCap = 20;
     internal const int UnknownDay = -1;
@@ -41,6 +46,28 @@ internal static class ScenarioRules
         StoryOutcome.Undecided => "mission_undecided",
         _ => "mission_no_verdict",
     };
+
+    /// <summary>
+    /// The offer menu options a choice may take, in the order tried: a fortress window offers defend or attack, a hero story stand or hunt
+    /// (StoryOfferBehavior.AddMenu). Empty for a choice the plan never holds.
+    /// </summary>
+    internal static IReadOnlyList<string> OfferOptionIds(string choice) => choice switch
+    {
+        ScenarioPlan.ChoiceDefend => new[] { "taom_story_offer_defend", "taom_story_offer_stand" },
+        ScenarioPlan.ChoiceAttack => new[] { "taom_story_offer_attack", "taom_story_offer_hunt" },
+        ScenarioPlan.ChoiceFate => new[] { "taom_story_offer_decline" },
+        _ => Array.Empty<string>(),
+    };
+
+    /// <summary>
+    /// The answer of <c>taom.chronicle_open &lt;id&gt; confirm</c> when it opened this event's window: FormatOpen's "[WarChronicle] Opened: " and
+    /// OpenChronicleEventNow's "'&lt;id&gt;' is Active until day N." An event that resolved at once as text answers "'&lt;id&gt;' Occurred." and has no window.
+    /// </summary>
+    internal static bool OpenedTheWindow(string output, string eventId) =>
+        output.Contains("[WarChronicle] Opened: '" + eventId + "' is Active until day");
+
+    /// <summary>True once the offer's popup has stayed open long enough to be a settled screen; a NaN never settles.</summary>
+    internal static bool PopupSettled(double heldSeconds) => heldSeconds >= OfferPopupSettleSeconds;
 
     internal static bool OnMap(AutorunScreen screen) => screen == AutorunScreen.Map || screen == AutorunScreen.MapMenu;
 

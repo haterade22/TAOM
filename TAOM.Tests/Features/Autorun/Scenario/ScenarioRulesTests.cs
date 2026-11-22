@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Autorun.Scenario;
 using TAOM.Features.StoryMissions.Domain;
@@ -133,6 +134,49 @@ public class ScenarioRulesTests
     public void MissionReason_None_IsMissionNoVerdict()
     {
         Assert.AreEqual("mission_no_verdict", ScenarioRules.MissionReason(null));
+    }
+
+    [TestMethod]
+    public void OfferWaits_ArePinned()
+    {
+        Assert.AreEqual(120.0, ScenarioRules.OfferPopupWaitSeconds);
+        Assert.AreEqual(2.0, ScenarioRules.OfferPopupSettleSeconds);
+    }
+
+    [DataTestMethod]
+    [DataRow("defend", "taom_story_offer_defend,taom_story_offer_stand")]
+    [DataRow("attack", "taom_story_offer_attack,taom_story_offer_hunt")]
+    [DataRow("fate", "taom_story_offer_decline")]
+    [DataRow("run", "")]
+    public void OfferOptionIds_FollowTheChoice(string choice, string ids)
+    {
+        Assert.AreEqual(ids, string.Join(",", ScenarioRules.OfferOptionIds(choice)));
+    }
+
+    [TestMethod]
+    public void OfferOptionIds_ArePinnedToTheMenusOptions()
+    {
+        var menu = TAOM.Tests.Infrastructure.RepoPaths.ReadSource("Main/Features/StoryMissions/Hooks/StoryOfferBehavior.cs", stripComments: true);
+
+        foreach (var id in new[] { "defend", "attack", "fate" }.SelectMany(ScenarioRules.OfferOptionIds).Append(ScenarioRules.ContinueOptionId))
+            StringAssert.Contains(menu, "\"" + id + "\"");
+    }
+
+    [TestMethod]
+    public void OpenedTheWindow_ReadsTheCheatsOpenedLineOnly()
+    {
+        Assert.IsTrue(ScenarioRules.OpenedTheWindow("[WarChronicle] Opened: 'breaking' is Active until day 9.", "breaking"));
+        Assert.IsFalse(ScenarioRules.OpenedTheWindow("[WarChronicle] Not opened: 'breaking' is Skipped; only a Pending event can be opened.", "breaking"));
+        Assert.IsFalse(ScenarioRules.OpenedTheWindow("Cheat mode is disabled!", "breaking"));
+        Assert.IsFalse(ScenarioRules.OpenedTheWindow("", "breaking"));
+    }
+
+    [TestMethod]
+    public void OpenedTheWindow_AResolvedAtOnceEventOrAnotherEventIsNotAnOpenWindow()
+    {
+        // OpenChronicleEventNow answers "'<id>' <State>." when the event resolved at once as text (no window), "is Active until day" for a window.
+        Assert.IsFalse(ScenarioRules.OpenedTheWindow("[WarChronicle] Opened: 'breaking' Occurred.", "breaking"));
+        Assert.IsFalse(ScenarioRules.OpenedTheWindow("[WarChronicle] Opened: 'hornburg' is Active until day 9.", "breaking"));
     }
 
     [TestMethod]

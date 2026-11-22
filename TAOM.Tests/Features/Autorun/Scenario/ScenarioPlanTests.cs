@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Autorun.Scenario;
 
@@ -122,7 +123,7 @@ public class ScenarioPlanTests
 
         Assert.IsFalse(plan.Armed);
         StringAssert.Contains(plan.Problem, "campaign-load");
-        StringAssert.Contains(plan.Problem, "kind=campaign-new or kind=story-mission");
+        StringAssert.Contains(plan.Problem, "kind=campaign-new, kind=story-mission or kind=story-offer");
     }
 
     [TestMethod]
@@ -327,6 +328,58 @@ public class ScenarioPlanTests
         var bad = Resolve(Head + "quit=2\n");
         Assert.IsFalse(bad.Quit);
         Assert.AreEqual(1, bad.Warnings.Count);
+    }
+
+    private const string OfferHead = "kind=story-offer\nout=E:\\x\\out\n";
+
+    [TestMethod]
+    public void Resolve_StoryOfferKind_ReadsEventChoiceAndAfterRows()
+    {
+        var plan = Resolve(OfferHead + "event=hornburg\nchoice=Attack\ncommand=taom.chronicle_open hornburg confirm\nafter=taom.chronicle_status\nafter=taom.b 2\n");
+
+        Assert.IsTrue(plan.Armed, plan.Problem);
+        Assert.AreEqual("story-offer", plan.Kind);
+        Assert.AreEqual("hornburg", plan.EventId);
+        Assert.AreEqual("attack", plan.Choice);
+        CollectionAssert.AreEqual(new[] { "taom.chronicle_status", "taom.b 2" }, plan.AfterCommands.ToArray());
+        CollectionAssert.AreEqual(new[] { "taom.chronicle_open hornburg confirm" }, plan.Commands.ToArray());
+        Assert.AreEqual("-", plan.MissionId);
+        Assert.AreEqual(0, plan.Warnings.Count);
+    }
+
+    [DataTestMethod]
+    [DataRow("choice=defend\n", "event=<id>")]
+    [DataRow("event=\nchoice=defend\n", "event=<id>")]
+    [DataRow("event=hornburg\n", "choice=defend, choice=attack or choice=fate")]
+    [DataRow("event=hornburg\nchoice=run\n", "choice=defend, choice=attack or choice=fate")]
+    public void Resolve_StoryOfferWithoutAnEventOrAKnownChoice_IsUnarmedAndSaysWhich(string extra, string needs)
+    {
+        var plan = Resolve(OfferHead + extra);
+
+        Assert.IsFalse(plan.Armed);
+        StringAssert.Contains(plan.Problem, needs);
+    }
+
+    [TestMethod]
+    public void Resolve_OfferKeysUnderOtherKinds_AreIgnoredWithoutAWarning()
+    {
+        var plan = Resolve(Head + "event=hornburg\nchoice=defend\nafter=taom.x\n");
+
+        Assert.IsTrue(plan.Armed);
+        Assert.AreEqual("-", plan.EventId);
+        Assert.AreEqual("-", plan.Choice);
+        Assert.AreEqual(0, plan.AfterCommands.Count);
+        Assert.AreEqual(0, plan.Warnings.Count);
+    }
+
+    [TestMethod]
+    public void Describe_NamesTheOfferEventAndChoice()
+    {
+        var text = Resolve(OfferHead + "event=hornburg\nchoice=fate\nafter=taom.x\n").Describe();
+
+        StringAssert.Contains(text, "event=hornburg");
+        StringAssert.Contains(text, "choice=fate");
+        StringAssert.Contains(text, "after=1");
     }
 
     [TestMethod]

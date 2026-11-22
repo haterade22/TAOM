@@ -17,6 +17,10 @@ internal sealed class ScenarioPlan
     internal const string EnvVar = "TAOM_AUTORUN";
     internal const string KindCampaignNew = "campaign-new";
     internal const string KindStoryMission = "story-mission";
+    internal const string KindStoryOffer = "story-offer";
+    internal const string ChoiceDefend = "defend";
+    internal const string ChoiceAttack = "attack";
+    internal const string ChoiceFate = "fate";
     internal const string DefaultCulture = "gondor";
     internal const int DefaultDays = 3;
     internal const int MaxDays = 1000;
@@ -49,6 +53,12 @@ internal sealed class ScenarioPlan
     /// <summary>The story mission id the <see cref="KindStoryMission"/> kind opens; "-" for any other kind.</summary>
     public string MissionId { get; internal init; } = "-";
 
+    /// <summary>The War Chronicle event id the <see cref="KindStoryOffer"/> kind waits to be offered; "-" for any other kind.</summary>
+    public string EventId { get; internal init; } = "-";
+
+    /// <summary>What the <see cref="KindStoryOffer"/> kind picks in the offer menu: <see cref="ChoiceDefend"/>, <see cref="ChoiceAttack"/> or <see cref="ChoiceFate"/>; "-" for any other kind.</summary>
+    public string Choice { get; internal init; } = "-";
+
     /// <summary>How long the story mission may run before the driver gives up on it.</summary>
     public double MissionLimitSeconds { get; internal init; } = DefaultMissionLimitSeconds;
 
@@ -67,6 +77,9 @@ internal sealed class ScenarioPlan
 
     /// <summary>Console command lines (<c>command=</c>, repeatable) run once when the map is ready, in order (#1434).</summary>
     public IReadOnlyList<string> Commands { get; internal init; } = Array.Empty<string>();
+
+    /// <summary>Console command lines (<c>after=</c>, repeatable) run once after the story offer finished, in order; only the <see cref="KindStoryOffer"/> kind reads them.</summary>
+    public IReadOnlyList<string> AfterCommands { get; internal init; } = Array.Empty<string>();
 
     internal static ScenarioPlan Resolve() =>
         Resolve(Environment.GetEnvironmentVariable, File.Exists, path => File.ReadAllText(path, Encoding.UTF8));
@@ -102,7 +115,7 @@ internal sealed class ScenarioPlan
     internal string Describe() =>
         "kind=" + Kind + " scenario=" + Scenario + " mission=" + MissionId + " mission_limit_seconds=" + Num(MissionLimitSeconds) + " culture=" + Culture + " days=" + Days + " speed=" + Num(Speed)
         + " stall_seconds=" + Num(StallSeconds) + " wall_limit_seconds=" + Num(WallLimitSeconds) + " quit=" + (Quit ? 1 : 0) + " commands=" + Commands.Count
-        + " out=" + OutFolder + " arm=" + ArmPath;
+        + " event=" + EventId + " choice=" + Choice + " after=" + AfterCommands.Count + " out=" + OutFolder + " arm=" + ArmPath;
 
     internal static string Num(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);
 

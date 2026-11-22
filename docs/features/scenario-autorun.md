@@ -7,8 +7,12 @@ keeps the player's party out of the world, holds time on fast forward until the 
 file, ends the campaign and quits the game. `tools/run_scenario.py` launches the game, waits for the done file and judges the run.
 
 A second kind, `story-mission` (#1368), starts the same campaign, opens one story mission through the dev menu's own click path, waits
-for the mission to end and the map to come back, and quits. It runs no campaign days of its own. No run of it has happened yet: the
-sections below describe the code and its unit tests, not a proven run.
+for the mission to end and the map to come back, and quits. It runs no campaign days of its own. A first run of it is recorded below.
+
+A third kind, `story-offer` (#1105 slices 3 to 5), drives the real story offer of the War Chronicle instead of the dev menu: a console
+command opens the event's window, the driver presses the offer popup's accept button, picks one option of the menu `taom_story_offer`, plays
+the mission with the bot (or lets fate decide), clicks Continue and reads the chronicle. It is built and unit tested; no run of it has
+happened yet, so the section "The story-offer kind" describes code and tests, not a proven run.
 
 ## Why This Exists
 
@@ -35,7 +39,7 @@ time for popups, focus loss and some menus. The driver must also never arm in a 
   launcher kills the game 120 s after it sees the done file, so the game quits first.
 - `ScenarioAutorunDriver` is a pure state machine ticked with wall seconds from the client's application tick. Phases: `WaitMenu`,
   `Creation`, `WaitMap`, `Running`, `Exiting`, `Done`; the story kind adds `MissionMenu`, `MissionOpen`, `InMission` and
-  `MissionReturn` and has no `Running`. The decisions are in `ScenarioRules`; every wall and day gate fails on NaN.
+  `MissionReturn` and has no `Running`; the offer kind adds `OfferWait`, `OfferMenu` and `OfferReturn` (it shares `InMission`) and has no `Running`. The decisions are in `ScenarioRules`; every wall and day gate fails on NaN.
 - `ICampaignAutorunHost` holds every engine call. Core registers `NullCampaignAutorunHost`; TAOM.Client replaces it with
   `CampaignAutorunHost` (ADR-013), so a dedicated server never runs the driver.
 - Every exit path writes `autorun_done.txt` once and one `[Check]` line, then ends the campaign. A throw finishes the run as
@@ -64,14 +68,17 @@ UTF-8 `key=value` lines. An unknown key or a bad value is a warning and keeps th
 
 | Key | Type | Description |
 |-----|------|-------------|
-| `kind` | string | Must be `campaign-new` or `story-mission`, or the plan is unarmed |
+| `kind` | string | Must be `campaign-new`, `story-mission` or `story-offer`, or the plan is unarmed |
 | `out` | path | Absolute folder for the done and status files; required |
 | `scenario` | string | A free label, echoed in the log and the done file (default `-`) |
 | `mission` | string | `story-mission` only, required: the story mission id. A story kind with no mission, or `-`, is unarmed. Ignored under `campaign-new` |
 | `mission_limit_seconds` | number | `story-mission` only: wall seconds from the mission screen until the run stops as `mission_limit` (default 1200) |
+| `event` | string | `story-offer` only, required: the War Chronicle event id the run waits to be offered (a missing one, or `-`, is unarmed). Ignored under the other kinds |
+| `choice` | string | `story-offer` only, required: `defend`, `attack` or `fate` (any case; another value is unarmed) |
+| `after` | string, repeatable | `story-offer` only: a console command line run once when the offer ended, like `command=` and appended to `commands.txt` |
 | `culture` | string | The player's culture id (default `gondor`; a kingdom id such as `empire_w` fails); checked at the culture stage |
 | `days` | int | Campaign days to run, 1 to 1000 (default 3) |
-| `speed` | float | Fast forward multiplier, above 0, at most 30 (default 15) |
+| `speed` | float | Fast forward multiplier, above 0, at most 30 (default 15). `story-offer` holds this speed only while it waits for the popup |
 | `stall_seconds` | number | Wall seconds with no new day before the run stops as `stalled` (default 600) |
 | `wall_limit_seconds` | number | Wall seconds from the campaign start before the run stops as `wall_limit` (default 3600) |
 | `quit` | flag | Quit the game after the run |
@@ -83,6 +90,11 @@ UTF-8 `key=value` lines. An unknown key or a bad value is a warning and keeps th
 
 The story kind adds `mission_refused`, `mission_not_opened`, `mission_limit`, `mission_undecided`, `mission_no_verdict` and
 `return_failed`. `days`, `speed` and `stall_seconds` are not used by it, and its done file has no `days_run` or `days_wanted`.
+
+The offer kind uses `mission_not_opened`, `mission_limit`, `mission_undecided`, `mission_no_verdict` and `return_failed` as the story kind does,
+and adds `offer_refused` (the open command did not open the window, the popup's accept button could not be pressed, the menu never settled,
+the wanted option is not offered) and `offer_not_shown` (no popup for the armed event in 120 s). Each ends with one warning that names the
+reason, its cause and `open_menu=`.
 
 ### The story-mission kind
 
@@ -121,6 +133,48 @@ three rows must come from the same run.
 The driver writes `reason=ok` with `verdict=Lost` for an abandoned mission (the player's agent left the boundary), so the done line
 alone cannot pass it; the strict `ended` pattern names only the three ways a mission ends by itself. The judge also requires exactly one
 `[StoryMissions] launching` line, with `autoplay True` and the armed id.
+
+### The story-offer kind
+
+`python tools/run_scenario.py --kind story-offer --event <id> --choice <defend|attack|fate> [--culture <id>]` (#1105 slices 3 to 5). The
+runner arms `command=taom.chronicle_open <event> confirm` (first, then any `--command`) and `after=taom.chronicle_status`, and `speed=1`.
+The phases, from the settled map (`WaitMap` runs the command rows):
+
+1. After the commands: a command output with no `[WarChronicle] Opened:` (a cheat mode off, an event that is not Pending, a window the
+   chronicle refuses) finishes `offer_refused` at once and the warning quotes the output. An arm file with no command skips this check.
+2. `OfferWait` (120 s, `ScenarioRules.OfferPopupWaitSeconds`): keeps fast forward at the armed speed, hides scene notifications, closes event
+   windows, and hides inquiries only while `StoryOfferBehavior.Pending` is not the armed event (a hidden popup is a snooze until tomorrow). When
+   the behavior holds the armed event and the popup has stayed open 2 s, the host presses its affirmative button; the driver logs
+   `accepted the offer popup '<title>'`. No popup in 120 s is `offer_not_shown`, and the warning quotes the command output.
+3. `OfferMenu`: with the menu `taom_story_offer` shown for 5 s and no event window open or waiting, the host picks the first offered option of
+   the choice: `defend` is `taom_story_offer_defend` or `taom_story_offer_stand`, `attack` is `taom_story_offer_attack` or
+   `taom_story_offer_hunt`, `fate` is `taom_story_offer_decline`. For a side the host first sets `StoryOfferBehavior.BotPlaysNextMission`, so the
+   bot plays the lord, and clears it after the click. None offered is `offer_refused` and the warning names `choices=` (what the offer allows).
+4. `InMission` (shared with the story kind): the verdict is `StoryOfferBehavior.Verdict` when the map is back.
+5. `OfferReturn`: after a mission, the menu's init applies the verdict, and the driver clicks `taom_story_offer_continue` once the menu has
+   settled; after `fate` the menu left in the click, so no Continue follows. Then the free map must settle (5 s, no event window open or
+   waiting), the `after=` rows run, and the run finishes `ok`. A Continue that is not offered, or a map that does not settle in 120 s, is
+   `return_failed`.
+
+The done file has `reason`, `kind`, `event`, `choice`, `verdict` (`Won`, `Lost`, `Undecided`, or `-`), `mission_seconds` and the shared keys; the
+check id is `taom.autorun.story-offer.done` (`reason=`, `event=`, `choice=`, `verdict=`, `mission_seconds=`, `culture=`), and only `reason=ok`
+passes. The judge in `run_scenario.py` requires, besides the done line and the common log conditions: `taom.story-missions.offer.shown`
+with the event's story mission; for `defend` and `attack` the `hosted.boot` line (siege or field by the mission's row), the `ended` line of
+the side, `taom.story-missions.offer.result result=pass` and exactly one `[StoryMissions] launching` line (the chosen mission, autoplay True);
+for `fate` the `[WarChronicle]` line of the decline (`'<event>' Occurred on day N (the player let fate decide` for a hero story,
+`'<event>': the player let fate decide the story offer.` for a fortress window) and no launching line.
+
+What decides the sides: `--culture` (default `gondor`, a free people), read through `alignment.json` as `StorySideGate.Choose` reads it: a side
+shows when its mission ships and the player's side is not opposed to the event's own defender (defend) or first attacker (attack); neutral is
+opposed to nobody. A culture the table does not list is refused at parse, and so is a choice the culture is never offered (`fate` needs one
+side). `breaking` offers defend to a free or neutral culture and attack to an evil or neutral one (`isengard` is both in `cultures.json` and
+`alignment.json`); `hornburg` ships no attack mission, so `--choice attack` is refused at parse for it, and `--choice fate --culture isengard`
+too. The runner cannot know the tie rule (a player already in the defender's or an attacker's kingdom): a new campaign has none. The default of the setting "Offer Story Missions" (`TaomSettings.WarChronicleStoryMissions`) is on; with it off the
+event opens as text and the run ends `offer_not_shown`. A `breaking` window opens a hero story only while `lord_1_75` lives, which a new campaign
+has at the start.
+
+Not covered: the popup's look, a save between the popup and the result, co-op (the offer is single player only), the text after the Continue
+click beyond the closing of its event window, and any event with no story block.
 
 ## Engine facts
 
@@ -189,6 +243,32 @@ Read in the v1.5.7 source by the 2026-11-15 review:
   as the Continue button, and the driver counts it in `event_windows_closed`. A window that opens in Running opens and closes
   in the same application tick, so it never pauses the run. One that opens in WaitMap stays open until the first Running tick.
 
+The story-offer kind (#1105 slices 3 to 5) relies on these, read in the v1.5.7 source:
+
+- **The popup shows only while the campaign ticks with time moving:** `Campaign.Tick` calls `CampaignEventDispatcher.Instance.Tick(_dt)` only
+  under `if (_dt > 0f || CurrentTickCount < 3)` (`Campaign.cs` lines 974 to 981), whose receiver runs `Instance._tickEvent.Invoke(dt)` (`CampaignEvents.cs` line 2085), and
+  `StoryOfferBehavior.OnTick` is a `TickEvent` listener that waits 30 ticks. So the driver keeps fast forward on in `OfferWait`, unlike the story kind, which never needs a campaign tick.
+- **The accept button:** `SingleQueryPopUpVM.ExecuteAffirmativeAction` is `_data.AffirmativeAction?.Invoke(); CloseQuery();` (`SingleQueryPopUpVM.cs`
+  lines 105 to 109). The view model is a private field of `GauntletQueryManager`, which subscribes its own `CloseQuery` to
+  `InformationManager.OnHideInquiry` (`Initialize`, line 50), so the host calls the captured `InquiryData.AffirmativeAction`, then
+  `InformationManager.HideInquiry()`: the same two steps, in the same order. The button is enabled by
+  `GetIsAffirmativeOptionEnabled` (`UpdateButtonEnabledStates`), which the host honours. A second `ShowInquiry` in the same campaign tick is
+  queued by the engine (`GauntletQueryManager.CreateQuery` enqueues while one is active) but still raises `OnShowInquiry`. So the host keeps the
+  newest inquiry only for the log and the hide, and keeps a separate offer inquiry: the one shown while `StoryOfferBehavior.Pending` is set (the
+  behavior sets it before `StoryOfferPopup.Show`) and whose title is the popup's own. The accept presses that one only and clears it.
+- **The clock stops when the menu opens:** `GameMenu.ActivateGameMenu` begins with `Campaign.Current.TimeControlMode = CampaignTimeControlMode.Stop;`
+  (`GameMenu.cs` line 347), and it then creates the menu context in the same call (`SetNextMenu`, `MapState.EnterMenuMode`, lines 350 to 352), so a
+  popup accept that finds the menu not shown ended with a busy map. No offer phase after `OfferWait` calls `KeepFastForward`, so the clock stays
+  stopped: the 10 day window of `breaking` cannot close under the driver.
+- **A hidden popup is a snooze:** the behavior's next check with the map free and an offer still pending calls `Later()`, which snoozes the event
+  until tomorrow (`StoryOfferBehavior.OnTick`), so the driver hides an inquiry only when the pending offer is not the armed event.
+- **The open command:** `taom.chronicle_open <id> confirm` goes through `TaomConsole.RunInCampaign`, which runs `DevConsoleGuard.CheckCampaignCheatUsage`
+  (`CampaignCheats.CheckCheatUsage`: a campaign and cheat mode). The host's `RunConsoleCommand` calls `CommandLineFunctionality.CallFunction` and
+  passes that gate like a typed command, so cheat mode must be on. Its answer starts `[WarChronicle] Opened: ` when it acted
+  (`ChronicleCheatReport.FormatOpen`).
+- **The hero window:** `ChronicleService.HeroStoryCanOpen` needs the setting `StoryOffersEnabled` (default true: `TaomSettings.WarChronicleStoryMissions`),
+  a single-player authority, a hero that is not the player and is alive, and the event's kingdoms.
+
 The first run (`E:\Temp\scenario-runs\20261115-142426`, build cb470ab4e) settled three points. The native quit runs the managed
 shutdown (`[Shutdown] clean module unload`). The driver ticks while an inquiry pauses the game (`inquiry hidden n=2 phase=Running`).
 At speed 15 a campaign day took about 6 wall seconds, between 5 and 7 (day 1 at 14:26:16, day 2 at 14:26:22; the log has 1-second resolution). The War Chronicle's `breaking`
@@ -207,7 +287,7 @@ UNVERIFIED: that a layer tick runs between two application ticks, which the seco
 |------|---------|
 | `Main/Features/Autorun/AutorunModule.cs` | Feature module: registers the plan, the null host and the driver |
 | `Main/Features/Autorun/Scenario/ScenarioPlan.cs`, `ScenarioArmFile.cs` | Arm variable and arm file parse |
-| `Main/Features/Autorun/Scenario/ScenarioAutorunDriver.cs` | The state machine |
+| `Main/Features/Autorun/Scenario/ScenarioAutorunDriver.cs`, `ScenarioAutorunDriver.Offer.cs` | The state machine; the partial file holds the story-offer phases |
 | `Main/Features/Autorun/Scenario/ScenarioRules.cs` | Pure decisions and limits |
 | `Main/Features/Autorun/Scenario/ScenarioAutorunDone.cs`, `ScenarioOutcomes.cs` | Done and status file text, the `[Check]` line |
 | `Main/Features/Autorun/Scenario/ICampaignAutorunHost.cs`, `NullCampaignAutorunHost.cs` | Engine seam and its core null |
@@ -217,12 +297,14 @@ UNVERIFIED: that a layer tick runs between two application ticks, which the seco
 | `tools/ingame_checks/1075.toml` | Manifest for `taom.autorun.campaign-new.done` |
 | `tools/ingame_checks/1368.toml` | Manifest for the story kind: the done line, `hosted.boot` and the strict `ended` line |
 | `Main/Features/StoryMissions/Hooks/StoryDevMenuBehavior.cs` | The dev menu the story kind opens; `Open` has an optional verdict callback (the console path passes none) |
+| `Main/Features/StoryMissions/Hooks/StoryOfferBehavior.cs` | The real offer the offer kind drives; the internal `Pending`, `Verdict` and `BotPlaysNextMission` are the driver's seams |
 
 ## Tests
 
 - `TAOM.Tests/Features/Autorun/Scenario/`: the plan and arm file, the rules, the driver against `FakeCampaignAutorunHost`, the done
   text and outcomes, and the client wiring (`ScenarioClientWiringTests`, `RequiresGame`).
-- `tools/tests/test_run_scenario.py`: the launcher's arguments, arm file and judge.
+- `TAOM.Tests/Features/Autorun/Scenario/ScenarioOfferDriverTests.cs`: the story-offer phases against the fake host.
+- `tools/tests/test_run_scenario.py`: the launcher's arguments, arm file and judge, the story-offer kind included.
 - Co-op: the feature adds no campaign behavior; a dedicated server keeps the null host.
 
 ## How to verify in game
@@ -244,6 +326,10 @@ so it needs Mike's word.
    build (one without this kind) ends as the runner's 10 minute stall, and the printed results then quote its `not armed:` line. Then
    `python tools/ingame_verdict.py --issue 1368` reads the three rows (one session: its default).
 
+5. Story-offer kind (owed, never run; it needs `cheat_mode = 1`, Mike's word and the idle gate):
+   `python tools/run_scenario.py --kind story-offer --event breaking --choice defend`, then `--choice attack --culture isengard`,
+   `--choice fate`, and `--event hornburg --choice defend`. `--days`, `--speed`, `--stall-seconds` and `--mission` are refused with it.
+
 The first story run (`E:\Temp\scenario-runs\20261116-075342`, build 4baa2f53a) settled what only a game can prove. The click opened
 the scene: `phase MissionOpen -> InMission` came 32 s after the game started, with `[StoryMissions] launching ... for
 'helms_deep_defend' (story1, autoplay True)`. The autoplayed lord and the hosted run ended the mission with no input in a campaign:
@@ -256,6 +342,7 @@ run took 432 s of game time, hid three inquiries, closed no event window, and un
 
 - 2026-11-15: first slice, `campaign-new` only (#1075, for #1283).
 - 2026-11-16: the `story-mission` kind (#1368). Proved by the unattended run 20261116-075342.
+- 2026-11-21: the `story-offer` kind (#1105 slices 3 to 5), built and unit tested, not yet run in the game.
 
 ## GitHub Issue
 

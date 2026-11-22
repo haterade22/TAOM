@@ -453,10 +453,17 @@ The proof runs of slice 2 on the committed build `8d8c58574`: `E:/Temp/scenario-
 and `20261121-202155` (the hunt, won). `python tools/ingame_verdict.py --issue 1105 --session <log>` reads PASS for the four rows of
 each mission.
 
-Slice 3, by hand until the offer has a driver: in a single-player campaign in the Isengard War or later, run
+Slice 3, by hand: in a single-player campaign in the Isengard War or later, run
 `taom.chronicle_open breaking confirm`. The popup appears on the free map. Choose "Go to Parth Galen", then a side, play the
 mission and choose "Continue". The line `taom.story-missions.offer.result` ends `result=Averted hero=lord_1_75` or
 `result=Occurred hero=lord_1_75`, and the `[WarChronicle]` line of the event names what the kill did.
+
+Slices 3 to 5, unattended (built and unit tested, never run; it needs `cheat_mode = 1` and the setting "Offer Story Missions" on, its default):
+`python tools/run_scenario.py --kind story-offer --event breaking --choice defend` runs the whole offer path of the Breaking with the bot as
+the lord (`--choice attack --culture isengard` is the hunt, `--choice fate` lets fate decide and plays nothing), and
+`python tools/run_scenario.py --kind story-offer --event hornburg --choice defend` runs the Hornburg's. The runner judges the offer, the
+mission, the result and the `[WarChronicle]` line itself; `python tools/ingame_verdict.py --issue 1105` reads the same rows from the log.
+How it works and why it refuses: [scenario autorun](scenario-autorun.md#the-story-offer-kind).
 
 The free heroes (#1366). A driver for the story mission exists since #1368 (step 0 below), but it has not run yet, so a person
 still runs this by hand until it has, in a loaded campaign on a build that holds the feature (a `.dirty` build is not counted).

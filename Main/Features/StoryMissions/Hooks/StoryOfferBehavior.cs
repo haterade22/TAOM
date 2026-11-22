@@ -14,7 +14,11 @@ namespace TAOM.Features.StoryMissions.Hooks;
 /// dev menu's); each shows only when the player may take that side (#1326). The engine returns to this menu after the mission and runs
 /// its init again (<c>MapState.OnActivate</c>, <c>MenuContext.Refresh</c>); that init applies the verdict through
 /// <see cref="StoryOfferService"/> once, before the player can save, and "Continue" only leaves. Built new for every campaign, so its
-/// pending offer and verdict start clean, and its constructor resets the service's session state.
+/// pending offer and verdict start clean, and its constructor resets the service's session state. It saves nothing: a declined offer is the
+/// chronicle's saved state. A tick that finds an offer still pending on a free map snoozes it until tomorrow (its popup closed with no answer,
+/// or "Ride" found the map busy). The accept button rechecks the map, because the rest of the tick that raised the popup can open an encounter.
+/// The unattended scenario run (<c>ScenarioAutorunDriver</c>, kind story-offer) reads <see cref="Pending"/> and <see cref="Verdict"/> and sets
+/// <see cref="BotPlaysNextMission"/> before it clicks a side; a person's game never sets it.
 /// </summary>
 public sealed class StoryOfferBehavior : CampaignBehaviorBase
 {
@@ -39,6 +43,10 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
         _service.ResetForNewSession();
     }
 
+    internal bool BotPlaysNextMission { get; set; }
+    internal StoryOffer? Pending => _offer;
+    internal StoryOutcome? Verdict => _verdict;
+
     public override void RegisterEvents()
     {
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, AddMenu);
@@ -46,10 +54,7 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
         CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, _service.NewDay);
     }
 
-    public override void SyncData(IDataStore dataStore)
-    {
-        // Nothing: a declined offer is the chronicle's saved state.
-    }
+    public override void SyncData(IDataStore dataStore) { }
 
     private void OnTick(float dt)
     {
@@ -60,7 +65,6 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
         if (!MapPopupGate.IsMapFree())
             return;
 
-        // A free map with an offer pending: its popup closed with no answer (HideInquiry), or "Ride" found the map busy. Ask again tomorrow.
         if (_offer != null)
         {
             Later();
@@ -72,7 +76,6 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
 
         _offer = offer;
         _service.NoteShown(offer);
-        // The rest of this tick can open an encounter, so the accept button rechecks the map.
         StoryOfferPopup.Show(offer, () => { if (MapPopupGate.IsMapFreeUnderPopup()) _menus.EnsureMenuOpen(MenuId); }, Later);
     }
 
@@ -127,7 +130,7 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
 
         _side = side;
         var missionId = side == StorySide.Attacking ? _offer.Window.AttackMissionId : _offer.Window.MissionId;
-        if (missionId == null || !_launcher.Launch(missionId, false, verdict => _verdict = verdict))
+        if (missionId == null || !_launcher.Launch(missionId, BotPlaysNextMission, verdict => _verdict = verdict))
         {
             InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=taom_story_offer_failed}The story battle could not open. The taom log says why.").ToString(), Colors.Red));
             _service.Snooze(_offer.EventId);

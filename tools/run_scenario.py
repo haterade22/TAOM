@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""tools/run_scenario.py: one unattended run in the real game (#1075 slice 1, used by #1283; the story-mission kind is #1368), judged by its done file and log.
+"""tools/run_scenario.py: one unattended run in the real game (#1075 slice 1, used by #1283; the story-mission kind is #1368, the story-offer kind #1105), judged by its done file and log.
 
 A wrapper on run_fords_autorun.py, in the way run_long_defeat.py is: it keeps that tool's idle gate, launch recipe, dialog handling,
 crash scan and log collection, and swaps in this feature's names, arm file, judge and printer. It arms TAOM_AUTORUN with an arm file
@@ -9,14 +9,25 @@ autorun_done.txt and quits.
 The kind story-mission starts a new campaign, opens one story mission through the dev menu's own click path, waits for the mission to end and
 the map to come back, and quits. It runs no campaign days of its own, so --days, --speed and --stall-seconds are refused with it.
 
+The kind story-offer drives the real story offer of the War Chronicle (#1105 slices 3 to 5): the armed console command taom.chronicle_open
+opens the event's window on the settled map, the driver presses the offer popup's accept button, picks the wanted option of the menu
+taom_story_offer, plays the mission with the bot, clicks Continue and runs taom.chronicle_status. --choice fate picks "Let fate decide" and plays
+no mission. It refuses --mission, --days, --speed and --stall-seconds, as the story-mission kind does.
+
 Own arguments (everything else goes to the Fords runner, for example --dry-run, --runs, --wall-limit, --require-idle-minutes):
-  --kind campaign-new|story-mission   --days N (campaign-new only: 1 to 1000, default 3)   --culture ID (default gondor)
+  --kind campaign-new|story-mission|story-offer   --days N (campaign-new only: 1 to 1000, default 3)   --culture ID (default gondor)
   --speed X (campaign-new only: above 0, at most 30, default 15)   --scenario LABEL (default the kind)
   --stall-seconds N (campaign-new only, default 600)
   --command LINE (repeatable, both kinds: a console command run once the map is ready; output in the TAOM log and commands.txt.
   A taom.* command needs cheat_mode = 1 in engine_config.txt, or its output says cheat mode is disabled)
   --mission ID (story-mission only, required: a story mission id of Main/_Module/ModuleData/story_missions/story_missions.json, for
   example helms_deep_defend or helms_deep_attack; an unknown id is refused)
+  --event ID --choice defend|attack|fate (story-offer only, both required: a War Chronicle event of war_chronicle.json that has a story block,
+  breaking or hornburg; attack needs an event with an attackMission, which is breaking only). --culture decides the sides the offer shows: the
+  default gondor is a free people (defend); attack needs an evil one that character creation offers, for example isengard. The sides are read
+  as StorySideGate reads them, from execution/alignment.json and the event's defender and first attacker: a culture that file does not list,
+  or a choice the culture is never offered (fate needs one side), is refused.
+  A taom.* command needs cheat_mode = 1, so the run needs it too: without it the driver ends as offer_refused and the log quotes the refusal.
 
 This tool does not build or deploy: deploy this tree with `pwsh ./build.ps1` first. It reads the checkout (HEAD and the uncommitted files
 under the build's own pathspec) once, at launch, with tools/autorun_build.py, and refuses to start when git cannot say.
@@ -36,7 +47,16 @@ that does not know the kind stays unarmed and writes no done file, so the runner
 printers then quote the log's first "not armed:" line. The default wall limit is the campaign-new one plus the mission limit (1200 s, the
 arm file's mission_limit_seconds). The driver reads no wall limit for this kind: --wall-limit only moves the runner's give-up time.
 
+Exit 0 for story-offer needs reason=ok, the done [Check] pass line (verdict Won or Lost for defend and attack, "-" for fate) for the armed
+event and choice, the offer.shown pass line for the event's story mission, and the common log, crash, unload, arm warning and build
+conditions. For defend and attack also the hosted.boot pass line (siege or field, by the mission's row), the ended pass line of the side,
+the offer.result pass line and exactly one launching line (the chosen mission, autoplay True). For fate the line the chronicle logs when
+the decline lands (a hero story resolves Occurred at once; a fortress window logs the decline) and no launching line at all.
+
 Run:  python tools/run_scenario.py --days 30 --dry-run
+      python tools/run_scenario.py --kind story-offer --event breaking --choice defend --dry-run
+      python tools/run_scenario.py --kind story-offer --event breaking --choice attack --culture isengard --dry-run
+      python tools/run_scenario.py --kind story-offer --event hornburg --choice defend --dry-run
       python tools/run_scenario.py --kind story-mission --mission helms_deep_defend --dry-run
       python tools/run_scenario.py --kind story-mission --mission helms_deep_attack --dry-run
 Tests: python -m unittest tools.tests.test_run_scenario
@@ -63,9 +83,11 @@ COMMANDS_FILE = "commands.txt"  # ScenarioAutorunDriver.CommandsFile
 RUNS_ROOT = r"E:\Temp\scenario-runs"
 KIND_CAMPAIGN = "campaign-new"
 KIND_STORY = "story-mission"
-KINDS = (KIND_CAMPAIGN, KIND_STORY)
+KIND_OFFER = "story-offer"
+KINDS = (KIND_CAMPAIGN, KIND_STORY, KIND_OFFER)
 CHECK_ID = "taom.autorun.campaign-new.done"
 STORY_CHECK_ID = "taom.autorun.story-mission.done"
+OFFER_CHECK_ID = "taom.autorun.story-offer.done"  # ScenarioOutcomes.StoryOfferDoneId
 PASS_LINE = re.compile(r"\[Check\] id=" + re.escape(CHECK_ID) + r"\s+result=pass\b")
 # The same patterns as tools/ingame_checks/1105.toml (a test holds them equal): the boot line, and the end line that names only the three
 # ways a run ends by itself, so a reason=Abandoned retreat is not a pass. Matched line by line.
@@ -77,6 +99,13 @@ STORY_FIELD_BOOT_PASS = (r"\[Check\] id=taom\.story-missions\.hosted\.boot resul
 ROOT = Path(__file__).resolve().parent.parent
 STORY_MISSIONS_FILE = ROOT / "Main" / "_Module" / "ModuleData" / "story_missions" / "story_missions.json"
 STORY_SIDES = {"Defend": "Defending", "Attack": "Attacking"}
+CHRONICLE_FILE = ROOT / "Main" / "_Module" / "ModuleData" / "war_chronicle" / "war_chronicle.json"
+ALIGNMENT_FILE = ROOT / "Main" / "_Module" / "ModuleData" / "execution" / "alignment.json"
+OFFER_CHOICES = ("defend", "attack", "fate")
+# The popup needs campaign ticks with time moving (Campaign.Tick runs the tick event only when the campaign dt is above 0); the driver
+# holds fast forward at this multiplier while it waits, so as few days as possible pass.
+OFFER_SPEED = 1
+OFFER_EVIL_CULTURE = "isengard"  # in cultures.json and alignment.json "evil"
 
 
 def story_ended_pass(side, must_live=False):
@@ -123,6 +152,45 @@ def story_side(mission):
     return story_rows().get(str(mission).strip().lower())
 
 
+def chronicle_stories():
+    """{event id: {"story": the event's story block, "hero": True for a hero story, "defender": its defender id, "attackers": its attacker ids}}
+    for the events of this checkout's war_chronicle.json that carry a story block. An unreadable file is an empty table."""
+    try:
+        data = json.loads(CHRONICLE_FILE.read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError):
+        return {}
+    events = data.get("events", []) if isinstance(data, dict) else []
+    return {str(e.get("id", "")).lower(): {"story": e["story"], "hero": isinstance(e["story"].get("hero"), str),
+                                           "defender": str(e.get("defender") or ""), "attackers": [str(a) for a in e.get("attackers") or []]}
+            for e in events if isinstance(e, dict) and isinstance(e.get("story"), dict)}
+
+
+def culture_alignment(culture):
+    """"free", "evil" or "neutral" for a culture id of execution/alignment.json, None for an id it does not list or a file it cannot read."""
+    try:
+        data = json.loads(ALIGNMENT_FILE.read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError):
+        return None
+    value = data.get(str(culture).strip().lower()) if isinstance(data, dict) else None
+    return value if isinstance(value, str) else None
+
+
+def offer_sides(player, row):
+    """(defend shown, attack shown) for a player of this alignment ("free", "evil" or "neutral") at the event row, as StorySideGate.Choose
+    decides it: a side shows when its mission ships and the player's side is not opposed to the defender (defend) or the first attacker
+    (attack); neutral is opposed to nobody. A kingdom the table does not list is neutral (AlignmentService.GetSide). The runner cannot know
+    the tie rule (a player already in the defender's or an attacker's kingdom never takes the other side): a new campaign has none."""
+    def opposed(a, b):
+        return a != "neutral" and b != "neutral" and a != b
+
+    defender = culture_alignment(row["defender"]) or "neutral"
+    attackers = row.get("attackers") or [""]
+    lead = culture_alignment(attackers[0]) or "neutral"
+    story = row["story"]
+    return (isinstance(story.get("mission"), str) and not opposed(player, defender),
+            isinstance(story.get("attackMission"), str) and not opposed(player, lead))
+
+
 # Both launchers log "[X] launching ..." once per run; a story run holds exactly one such line.
 ANY_LAUNCH = re.compile(r"\[(LongDefeat|StoryMissions)\] launching ")
 # ScenarioAutorunStart logs this when the arm file is refused; a build that lacks the story kind refuses it.
@@ -141,7 +209,7 @@ LEDGER_TIMEOUT_SECONDS = 300
 # ScenarioAutorunDriver.cs logs every arm file warning with this text (Prefix + "arm file: "); the game then ran a default instead.
 ARM_WARNING = "[Autorun][Scenario] arm file: "
 RUNNER_OPTIONS = ("Fords runner options this tool passes on: --wall-limit SECONDS (default max(1800, 600 + days * 20), plus 1200 for "
-                  "story-mission), --runs N, "
+                  "story-mission and story-offer), --runs N, "
                   "--runs-root DIR, --require-idle-minutes N, --keep-on-crash MINUTES, --dry-run. The Fords match options (factions, maps, "
                   "AI profile) are parsed and ignored; --speed is this tool's campaign speed.")
 
@@ -186,10 +254,16 @@ def build_own_parser():
     parser = argparse.ArgumentParser(description="Run one unattended scenario in the real game: a new campaign, or a new campaign and one story mission.",
                                      epilog=RUNNER_OPTIONS)
     parser.add_argument("--kind", choices=KINDS, default=KIND_CAMPAIGN, help="the scenario kind (default campaign-new)")
+    parser.add_argument("--event", default=None,
+                        help="story-offer only, required: the War Chronicle event whose story offer the run takes, for example breaking or hornburg")
+    parser.add_argument("--choice", choices=OFFER_CHOICES, default=None,
+                        help="story-offer only, required: defend (defend or stand), attack (attack or hunt; needs --culture evil, for example "
+                             f"{OFFER_EVIL_CULTURE}) or fate (Let fate decide, no mission)")
     parser.add_argument("--days", type=days_arg, default=None,
                         help=f"campaign-new only: campaign days to run, 1 to {MAX_DAYS} (default {DEFAULT_DAYS})")
     parser.add_argument("--mission", default=None, help="story-mission only, required: the story mission id, for example helms_deep_defend")
-    parser.add_argument("--culture", default=DEFAULT_CULTURE, help=f"the player's culture id (default {DEFAULT_CULTURE})")
+    parser.add_argument("--culture", default=DEFAULT_CULTURE,
+                        help=f"the player's culture id (default {DEFAULT_CULTURE}, a free people; story-offer attack needs an evil one such as {OFFER_EVIL_CULTURE})")
     parser.add_argument("--speed", type=speed_arg, default=None,
                         help=f"campaign-new only: campaign speed, above 0 and at most {MAX_SPEED:g} (default {DEFAULT_SPEED:g})")
     parser.add_argument("--scenario", default=None, help="label written to the arm and done files (default the kind)")
@@ -205,7 +279,11 @@ def parse_own(argv):
     """(own arguments, the rest for the Fords runner). A bad value exits through argparse with a message that names it."""
     parser = build_own_parser()
     known, rest = parser.parse_known_args(argv)
-    if known.kind == KIND_STORY:
+    if known.kind != KIND_OFFER and (known.event is not None or known.choice is not None):
+        parser.error("--event and --choice are only for --kind story-offer")
+    if known.kind == KIND_OFFER:
+        parse_offer(parser, known)
+    elif known.kind == KIND_STORY:
         if known.days is not None:
             parser.error("--days is only for --kind campaign-new; a story-mission run ends when the map is back")
         if known.mission is None or not known.mission.strip():
@@ -235,6 +313,47 @@ def parse_own(argv):
     return known, rest
 
 
+def parse_offer(parser, known):
+    """Checks the story-offer arguments and adds what the arm text and the judge read: event, story, hero, mission (the one the choice launches,
+    None for fate), shown_mission (the one the offer.shown line names) and side. All of it is read once here, at launch."""
+    for flag, value in (("--days", known.days), ("--speed", known.speed), ("--stall-seconds", known.stall_seconds)):
+        if value is not None:
+            parser.error(f"{flag} is only for --kind campaign-new; a story-offer run reads none of them")
+    if known.mission is not None:
+        parser.error("--mission is only for --kind story-mission; a story-offer run takes the event's own mission")
+    stories = chronicle_stories()
+    event = (known.event or "").strip().lower()
+    if not event:
+        parser.error("--kind story-offer needs --event <chronicle event id>")
+    if known.choice is None:
+        parser.error("--kind story-offer needs --choice defend|attack|fate")
+    row = stories.get(event)
+    if row is None:
+        parser.error(f"--event '{event}' is not a story event of this checkout"
+                     + (f" (known: {', '.join(sorted(stories))})" if stories else f" ({CHRONICLE_FILE} could not be read or holds no event with a story block)"))
+    story = row["story"]
+    mission = {"defend": story.get("mission"), "attack": story.get("attackMission"), "fate": None}[known.choice]
+    if known.choice != "fate" and not isinstance(mission, str):
+        parser.error(f"--choice {known.choice} is not offered by '{event}': its story has no {'attackMission' if known.choice == 'attack' else 'mission'}")
+    alignment = culture_alignment(known.culture)
+    if alignment is None:
+        parser.error(f"--culture '{known.culture}' is not listed in {ALIGNMENT_FILE} (or the file could not be read), so the sides of the offer are unknown")
+    defend, attack = offer_sides(alignment, row)
+    if not {"defend": defend, "attack": attack, "fate": defend or attack}[known.choice]:
+        what = "sees no side of" if known.choice == "fate" else f"is not offered the {known.choice} at"
+        parser.error(f"culture {known.culture} ({alignment}) {what} '{event}' (defend={defend}, attack={attack}), so --choice {known.choice} never shows"
+                     + (f" (try --culture {OFFER_EVIL_CULTURE})" if known.choice == "attack" else ""))
+    known.event = event
+    known.story = story
+    known.hero = row["hero"]
+    known.mission = mission.lower() if mission else None
+    known.shown_mission = story.get("mission")
+    known.side = story_rows().get(known.mission) if known.mission else None
+    wanted = {"defend": "Defending", "attack": "Attacking"}.get(known.choice)
+    if wanted and known.side != wanted:
+        parser.error(f"story mission '{known.mission}' has side {known.side}, not {wanted} ({STORY_MISSIONS_FILE})")
+
+
 def default_wall_limit(days, mission_limit=0):
     return max(1800, 600 + days * 20) + mission_limit
 
@@ -245,12 +364,21 @@ def number_text(value):
 
 def arm_text_for(out, known, args):
     """(arm file text, wall limit). The wall limit is the runner's --wall-limit when given, else computed from the days (campaign-new) or the
-    boot allowance plus the mission limit (story-mission). For campaign-new the Fords runner stops the process 15 minutes after this limit, so
-    the game's own limit trips first. The story kind writes the key, but its driver reads no wall limit (only the Running phase does, and the
-    story kind never enters it): --wall-limit only moves the runner's give-up time (this limit plus 15 minutes), which must stay above the
-    boot time plus the story phases' own bounds, 2,880 s after the menu: creation 600 (ScenarioRules.CreationWaitSeconds), map 600
-    (MapWaitSeconds), four steps of 120 (StoryStepWaitSeconds: menu, open, mission seen, return) and the 1200 s mission limit
-    (ScenarioPlan.DefaultMissionLimitSeconds). The story kind writes no days, speed or stall seconds: its driver reads none of them."""
+    boot allowance plus the mission limit (story-mission and story-offer). For campaign-new the Fords runner stops the process 15 minutes after
+    this limit, so the game's own limit trips first. The two story kinds write the key, but their driver reads no wall limit (only the Running
+    phase does, and they never enter it): --wall-limit only moves the runner's give-up time (this limit plus 15 minutes), which must stay above
+    the boot time plus the story phases' own bounds, 2,880 s after the menu: creation 600 (ScenarioRules.CreationWaitSeconds), map 600
+    (MapWaitSeconds), four steps of 120 (StoryStepWaitSeconds, or OfferPopupWaitSeconds for the offer's first: menu or popup, open or
+    menu, mission seen, return) and the 1200 s mission limit (ScenarioPlan.DefaultMissionLimitSeconds). The story-mission kind writes no days,
+    speed or stall seconds: its driver reads none of them. The story-offer kind writes the speed it holds while it waits for the popup."""
+    if known.kind == KIND_OFFER:
+        # The same steps as the story kind (the popup wait, the menu, the mission seen and the return, four waits of 120 s) and the same 1200 s mission.
+        wall_limit = args.wall_limit if args.wall_limit else default_wall_limit(DEFAULT_DAYS, DEFAULT_MISSION_LIMIT_SECONDS)
+        pairs = [("kind", known.kind), ("out", out), ("scenario", known.scenario), ("event", known.event), ("choice", known.choice),
+                 ("mission_limit_seconds", DEFAULT_MISSION_LIMIT_SECONDS), ("culture", known.culture), ("speed", number_text(OFFER_SPEED)),
+                 ("wall_limit_seconds", number_text(wall_limit)), ("quit", 1), ("command", f"taom.chronicle_open {known.event} confirm")]
+        pairs += [("command", c) for c in known.command] + [("after", "taom.chronicle_status")]
+        return "".join(f"{key}={value}\n" for key, value in pairs), wall_limit
     if known.kind == KIND_STORY:
         wall_limit = args.wall_limit if args.wall_limit else default_wall_limit(DEFAULT_DAYS, DEFAULT_MISSION_LIMIT_SECONDS)
         pairs = [("kind", known.kind), ("out", out), ("scenario", known.scenario), ("mission", known.mission),
@@ -297,26 +425,76 @@ def story_log_problems(log_text, mission, side):
     return problems
 
 
+def offer_log_problems(log_text, armed):
+    """The story-offer kind's log conditions, one reason each (armed: event, choice, hero, mission, side, shown_mission, as parse_offer set them).
+    The offer.shown line names the window's own mission whichever side was chosen; a fate run launches nothing."""
+    lines = log_text.splitlines()
+    problems = []
+    event, choice = armed.event, armed.choice
+    verdict = "-" if choice == "fate" else r"(Won|Lost)"
+    done_pass = (r"\[Check\] id=" + re.escape(OFFER_CHECK_ID) + r" result=pass reason=ok event=" + re.escape(event) + " choice=" + choice
+                 + " verdict=" + verdict + r" mission_seconds=\S+ culture=\S+$")
+    if not any(re.search(done_pass, line) for line in lines):
+        problems.append(f"the TAOM log has no [Check] id={OFFER_CHECK_ID} result=pass line for event {event}, choice {choice}"
+                        + ("" if choice == "fate" else " and a Won or Lost verdict"))
+    shown = r"\[Check\] id=taom\.story-missions\.offer\.shown result=pass mission=" + re.escape(str(armed.shown_mission)) + " "
+    if not any(re.search(shown, line) for line in lines):
+        problems.append(f"the TAOM log has no taom.story-missions.offer.shown pass line for mission {armed.shown_mission}")
+    others = [line for line in lines if ANY_LAUNCH.search(line)]
+    if choice == "fate":
+        resolved = (r"\[WarChronicle\] '" + re.escape(event) + r"' Occurred on day \d+ \(the player let fate decide" if armed.hero
+                    else r"\[WarChronicle\] '" + re.escape(event) + r"': the player let fate decide the story offer\.")
+        if not any(re.search(resolved, line) for line in lines):
+            problems.append(f"the TAOM log has no [WarChronicle] line that says the decline of '{event}' landed")
+        if others:
+            problems.append(f"the TAOM log holds {len(others)} launching lines, but a fate run opens no mission")
+        return problems
+    mission, side = armed.mission, armed.side
+    field = story_field(mission)
+    boot = STORY_FIELD_BOOT_PASS if field else STORY_BOOT_PASS + "$"
+    if not any(re.search(boot, line) for line in lines):
+        problems.append(f"the TAOM log has no taom.story-missions.hosted.boot pass line for a {'field' if field else 'siege'} mission")
+    ended = story_ended_pass(side, story_must_live(mission))
+    if not any(re.search(ended, line) for line in lines):
+        problems.append(f"the TAOM log has no taom.story-missions.ended pass line with side={side} (a reason=Abandoned end is not one)")
+    if not any(re.search(r"\[Check\] id=taom\.story-missions\.offer\.result result=pass\b", line) for line in lines):
+        problems.append("the TAOM log has no taom.story-missions.offer.result pass line (the verdict did not reach the chronicle)")
+    launch = r"\[StoryMissions\] launching \S+ for '" + re.escape(mission) + r"' \(story\d+, autoplay True\)"
+    wanted = [line for line in lines if re.search(launch, line)]
+    if len(wanted) != 1 or len(others) != 1:
+        problems.append(f"the TAOM log holds {len(wanted)} launching lines for '{mission}' with autoplay True and {len(others)} launching "
+                        "lines in all (wanted one and one)")
+    return problems
+
+
 def judge(done, report_json, log_text=None, armed=None, checkout=None):
     """(exit code, why). Every failed condition adds one reason; the reasons are joined with '; '. armed is the parsed plan the done file
     must echo; checkout is (HEAD sha, {path: mtime}) as main read it with autorun_build.checkout_state() before the game started, which the
     log's [BuildStamp] must match (autorun_build.stale_build). main passes both; a judge called without a checkout fails."""
     if not done:
         return 1, "no done file"
-    story = (armed.kind if armed is not None else done.get("kind")) == KIND_STORY
+    kind = armed.kind if armed is not None else done.get("kind")
+    offer = kind == KIND_OFFER
+    story = kind == KIND_STORY
     mission = armed.mission if armed is not None and story else done.get("mission", "")
     problems = []
     if armed is not None:
         echoed = [("kind", armed.kind), ("scenario", armed.scenario), ("culture", armed.culture)]
-        echoed.append(("mission", armed.mission) if story else ("days_wanted", str(armed.days)))
+        if offer:
+            echoed += [("event", armed.event), ("choice", armed.choice)]
+        else:
+            echoed.append(("mission", armed.mission) if story else ("days_wanted", str(armed.days)))
         for key, want in echoed:
             if done.get(key) != want:
                 problems.append(f"{key}={done.get(key, '?')} in the done file, but the arm file asked for {want}")
     reason = done.get("reason", "")
     if reason != "ok":
         problems.append(f"reason={reason or '?'} (wanted ok)")
-    if story:
-        if done.get("verdict") not in ("Won", "Lost"):
+    if story or offer:
+        fate = offer and armed is not None and armed.choice == "fate"
+        if fate and done.get("verdict") != "-":
+            problems.append(f"verdict={done.get('verdict') or '?'} in the done file (a fate run plays no mission: wanted -)")
+        elif not fate and done.get("verdict") not in ("Won", "Lost"):
             problems.append(f"verdict={done.get('verdict') or '?'} in the done file (wanted Won or Lost)")
         days_run = days_wanted = None
     else:
@@ -328,7 +506,12 @@ def judge(done, report_json, log_text=None, armed=None, checkout=None):
     if log_text is None:
         problems.append("no TAOM log copy, so the result=pass line and the crash scan could not be checked")
     else:
-        if story:
+        if offer:
+            if armed is None:
+                problems.append("the story-offer kind is judged against the armed plan only")
+            else:
+                problems.extend(offer_log_problems(log_text, armed))
+        elif story:
             # The side parse_own read at launch; a judge called without it (older callers) reads the checkout.
             side = getattr(armed, "side", None) if armed is not None else None
             if side is None:
@@ -360,6 +543,9 @@ def judge(done, report_json, log_text=None, armed=None, checkout=None):
     if problems:
         return 1, "; ".join(problems)
     proved = f"build {build}, " if build else ""
+    if offer:
+        return 0, (f"{proved}reason=ok, event {armed.event} choice {armed.choice} verdict {done['verdict']}, back on the map, pass lines present, "
+                   "no CrashReport block, clean unload")
     if story:
         return 0, (f"{proved}reason=ok, mission {mission} verdict {done['verdict']}, back on the map, pass line present, "
                    "no CrashReport block, clean unload")
@@ -442,6 +628,51 @@ def show_story_results(done_text, log_copy, report_json, say):
     show_commands(Path(log_copy).parent, say)
 
 
+# ScenarioAutorunDriver logs one warning per refused run: "[Autorun][Scenario] <reason>: <why> open_menu=<id>".
+DRIVER_REFUSAL = re.compile(r"\[Autorun\]\[Scenario\] (offer_\w+|return_failed|mission_\w+|tick failed in )")
+LOG_STAMP = re.compile(r"^\[\d{4}-\d\d-\d\d ")
+
+
+def status_block(text):
+    """The driver logs each console command as one entry, its output on the lines after it; this returns the taom.chronicle_status entry
+    (the command line and the lines up to the next timestamped log line), or an empty list."""
+    lines = text.splitlines()
+    for index, line in enumerate(lines):
+        if "[Autorun][Scenario] command taom.chronicle_status" in line:
+            block = [line]
+            for follow in lines[index + 1:]:
+                if LOG_STAMP.match(follow):
+                    break
+                block.append(follow)
+            return block
+    return []
+
+
+def show_offer_results(done_text, log_copy, report_json, say):
+    """The story-offer kind's printer: the done file, the driver's and the story's [Check] lines, the launch line, the chronicle's own lines
+    for the event, the driver's refusal warning (offer_refused, offer_not_shown, return_failed or a mission_ reason, with its cause), the
+    chronicle_status output and the build stamp. It runs no war ledger: an offer run plays no campaign days."""
+    print(f"---- {DONE_FILE} ----\n" + done_text.strip())
+    if log_copy is None:
+        say("no TAOM log copy, so no [Check] lines")
+        return
+    text = Path(log_copy).read_text(encoding="utf-8", errors="replace")
+    say_if_unarmed(text, say)
+    found = re.search(r"^event=(\S+)", done_text, re.MULTILINE)
+    chronicle = f"[WarChronicle] '{found.group(1)}'" if found else "[WarChronicle] '"
+    print("---- [Check], launch and chronicle lines of the log ----")
+    for line in text.splitlines():
+        if ("[Check] id=taom.autorun." in line or "[Check] id=taom.story-missions." in line or ANY_LAUNCH.search(line)
+                or chronicle in line or DRIVER_REFUSAL.search(line)):
+            print(line)
+    block = status_block(text)
+    print("---- taom.chronicle_status ----\n" + ("\n".join(block) if block else "no taom.chronicle_status entry in the log"))
+    stamp = [line for line in text.splitlines() if "[BuildStamp]" in line]
+    print(stamp[0] if stamp else "no [BuildStamp] line")
+    say("clean module unload line: " + ("present" if UNLOAD_LINE in text else "ABSENT"))
+    show_commands(Path(log_copy).parent, say)
+
+
 def main(argv=None):
     known, rest = parse_own(argv)
 
@@ -459,10 +690,10 @@ def main(argv=None):
         print(refusal)
         return 1
     runner.judge = lambda done, report_json, log_text=None: judge(done, report_json, log_text, known, checkout)
-    if known.kind == KIND_STORY:
+    if known.kind in (KIND_STORY, KIND_OFFER):
         # Helm's Deep can stop its load at the terrain shader dialog, which the Long Defeat runner's handler presses Cancel on.
         runner.handle_dialogs = long_defeat.handle_dialogs
-        runner.show_results = show_story_results
+        runner.show_results = show_story_results if known.kind == KIND_STORY else show_offer_results
     else:
         runner.show_results = show_results
     return runner.main(rest)

@@ -126,6 +126,18 @@ public class StoryMissionWiringPinTests
     }
 
     [TestMethod]
+    public void TheStoryOffer_TheUnattendedRunsSeamIsOneFlagReadAtTheLaunch_AndTheOfferAndVerdictAreReadOnly()
+    {
+        // #1105 slices 3 to 5: the autorun host sets the flag before it clicks a side, so a person's game (flag false) is unchanged.
+        var offer = Source("Main/Features/StoryMissions/Hooks/StoryOfferBehavior.cs");
+
+        StringAssert.Contains(offer, "internal bool BotPlaysNextMission { get; set; }");
+        StringAssert.Contains(offer, "internal StoryOffer? Pending => _offer;");
+        StringAssert.Contains(offer, "internal StoryOutcome? Verdict => _verdict;");
+        StringAssert.Contains(offer, "!_launcher.Launch(missionId, BotPlaysNextMission, verdict => _verdict = verdict)");
+    }
+
+    [TestMethod]
     public void TheStoryOffer_BothSidesAreMissionOptions_AndContinueIsTheOnlyLeave()
     {
         // #1326: a menu hotkey runs the first leave option, so neither side nor the saved decline may be one.
