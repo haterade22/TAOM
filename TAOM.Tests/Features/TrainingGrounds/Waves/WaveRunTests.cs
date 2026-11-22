@@ -415,4 +415,137 @@ public class WaveRunTests
             Assert.AreEqual(before, Snapshot(run), state + " changed");
         }
     }
+
+    [TestMethod]
+    public void SmallStake_IsTheSmallestWagerOfTheFirstWave_AndDoesNotGrowWithTheWave()
+    {
+        Assert.AreEqual(120, AtWave(1).SmallStake);
+        Assert.AreEqual(120, AtWave(2).SmallStake);
+        Assert.AreEqual(120, AtWave(WaveTable.Default.Waves.Count).SmallStake);
+    }
+
+    [TestMethod]
+    public void SmallStake_ATableMinimumAboveTheFirstQuarter_KeepsTheFirstWavesSmallestLegalWagerOnEveryWave()
+    {
+        var rules = new WaveRules(121, 15_000, true, 5, 3);
+        var run = new WaveRun(Table(rules, Row(500), Row(1000), Row(2000)), 0, 1);
+
+        Assert.AreEqual(250, run.SmallStake);
+        CollectionAssert.AreEqual(new[] { 250, 500 }, StakeOptions.For(run.MaxStake, 121, run.SmallStake).ToArray());
+        Fighting(run, 250);
+        run.Clear();
+        CollectionAssert.AreEqual(new[] { 250, 500, 1000 }, StakeOptions.For(run.MaxStake, 121, run.SmallStake).ToArray());
+        Fighting(run, 250);
+        run.Clear();
+        CollectionAssert.AreEqual(new[] { 250, 1000, 2000 }, StakeOptions.For(run.MaxStake, 121, run.SmallStake).ToArray());
+    }
+
+    [TestMethod]
+    public void SmallStake_NoWagerOnTheFirstWave_IsZero()
+    {
+        Assert.AreEqual(0, NewRun(tournamentCap: 5).SmallStake);
+    }
+
+    [TestMethod]
+    public void SmallStake_FollowsTheTournamentCapAndThePerkFactor()
+    {
+        Assert.AreEqual(40, NewRun(tournamentCap: 180).SmallStake);
+        Assert.AreEqual(250, NewRun(perkFactor: 2).SmallStake);
+    }
+
+    [TestMethod]
+    public void RecordPaid_LessThanThePayout_TheAccountFollowsTheGoldThatArrived()
+    {
+        var run = AtWave(1);
+        Fighting(run, 500);
+        Assert.AreEqual(750, run.Clear());
+
+        run.RecordPaid(500);
+
+        Assert.AreEqual(500, run.LastPayout);
+        Assert.AreEqual(500, run.TotalPaid);
+        Assert.AreEqual(0, run.Net);
+    }
+
+    [DataTestMethod]
+    [DataRow(750)]
+    [DataRow(900)]
+    [DataRow(-1)]
+    public void RecordPaid_TheWholePayoutOrANonsenseAmount_ChangesNothing(int arrived)
+    {
+        var run = AtWave(1);
+        Fighting(run, 500);
+        run.Clear();
+
+        run.RecordPaid(arrived);
+
+        Assert.AreEqual(750, run.LastPayout);
+        Assert.AreEqual(750, run.TotalPaid);
+    }
+
+    [TestMethod]
+    public void SmallStake_LimitsThatGrowByLessThanDouble_TheFirstWavesSmallestWagerStaysOnOffer()
+    {
+        var rules = new WaveRules(200, 15_000, true, 5, 3);
+        var run = new WaveRun(Table(rules, Row(500), Row(600)), 0, 1);
+
+        CollectionAssert.AreEqual(new[] { 250, 500 }, StakeOptions.For(run.MaxStake, 200, run.SmallStake).ToArray());
+        Fighting(run, 250);
+        run.Clear();
+        CollectionAssert.AreEqual(new[] { 250, 300, 600 }, StakeOptions.For(run.MaxStake, 200, run.SmallStake).ToArray());
+    }
+
+    /// <summary>
+    /// The property of the stake rule, over a grid of tables the reader accepts: on every wave the smallest wager on offer is never
+    /// above the first wave's, the list is ascending and distinct, every entry is between the table's minimum and the wave's limit,
+    /// and the run accepts the smallest. A cleared wave never lowers the purse (the payout is at least 1.1 times the stake), so a
+    /// player who could enter can then always go on.
+    /// </summary>
+    [TestMethod]
+    public void StakeChoices_OverAGridOfTables_TheSmallestWagerNeverRisesAboveTheFirstWaves()
+    {
+        var capSets = new[]
+        {
+            WaveTable.Default.Waves.Select(w => w.Cap).ToArray(),
+            new[] { 20, 30 }, new[] { 500, 600 }, new[] { 500, 600, 800 }, new[] { 500, 800, 900 },
+            new[] { 1000, 1400, 2000 }, new[] { 500, 500, 500 }, new[] { 40 },
+        };
+        var checkedWaves = 0;
+        foreach (var caps in capSets)
+        foreach (var min in new[] { 1, 10, 11, 121, 130, 200, 250, 600, 1000 })
+        foreach (var tournamentCap in new[] { 0, 5, 30, 180, 600 })
+        foreach (var perk in new[] { 1, 2, 3 })
+        {
+            var rules = new WaveRules(min, 15_000, true, 5, 3);
+            var run = new WaveRun(Table(rules, caps.Select(c => Row(c)).ToArray()), tournamentCap, perk);
+            var where = $"caps=[{string.Join(",", caps)}] min={min} tournamentCap={tournamentCap} perk={perk}";
+            var first = -1;
+            for (var wave = 1; wave <= caps.Length; wave++)
+            {
+                var choices = StakeOptions.For(run.MaxStake, min, run.SmallStake).ToArray();
+                if (choices.Length == 0)
+                {
+                    Assert.AreEqual(-1, first, $"{where}: wave {wave} offers nothing after an earlier wave offered a wager");
+                    break;
+                }
+
+                if (first < 0)
+                    first = choices[0];
+                Assert.IsTrue(choices[0] <= first, $"{where}: wave {wave} asks at least {choices[0]}, the first wave asked {first}");
+                Assert.IsTrue(choices.Length <= 3, $"{where}: wave {wave} offers {choices.Length} wagers");
+                for (var i = 0; i < choices.Length; i++)
+                {
+                    Assert.IsTrue(choices[i] >= min && choices[i] <= run.MaxStake, $"{where}: wave {wave} offers {choices[i]}");
+                    Assert.IsTrue(i == 0 || choices[i] > choices[i - 1], $"{where}: wave {wave} is not ascending and distinct");
+                }
+
+                Assert.IsTrue(run.TryStake(choices[0], Rich), $"{where}: wave {wave} refuses its own smallest wager");
+                run.BeginFight();
+                run.Clear();
+                checkedWaves++;
+            }
+        }
+
+        Assert.IsTrue(checkedWaves > 1000, $"only {checkedWaves} waves checked; the grid did not run");
+    }
 }

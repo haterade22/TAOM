@@ -325,4 +325,43 @@ public class WaveDomainTests
         Assert.AreEqual(1, SpawnPicker.Pick(frames, 0f, 0f, 0));
         Assert.AreEqual(1, SpawnPicker.Pick(frames, 0f, 0f, 1));
     }
+
+    [TestMethod]
+    public void StakeOptions_ASmallStakeUnderTheQuarter_TakesItsPlace()
+    {
+        CollectionAssert.AreEqual(new[] { 120, 500, 1000 }, StakeOptions.For(1000, 10, 125).ToArray());
+        CollectionAssert.AreEqual(new[] { 120, 7500, 15000 }, StakeOptions.For(15000, 10, 125).ToArray());
+    }
+
+    [TestMethod]
+    public void StakeOptions_ASmallStakeAboveTheQuarter_LeavesTheQuarter()
+    {
+        CollectionAssert.AreEqual(new[] { 120, 250, 500 }, StakeOptions.For(500, 10, 400).ToArray());
+    }
+
+    [TestMethod]
+    public void StakeOptions_ASmallStakeUnderTheMinimum_FallsBackToTheQuarter()
+    {
+        CollectionAssert.AreEqual(new[] { 250, 500, 1000 }, StakeOptions.For(1000, 200, 125).ToArray());
+    }
+
+    [TestMethod]
+    public void StakeOptions_NoSmallStake_IsAQuarterAHalfAndTheWhole()
+    {
+        CollectionAssert.AreEqual(new[] { 250, 500, 1000 }, StakeOptions.For(1000, 10, 0).ToArray());
+    }
+
+    [TestMethod]
+    public void StakeOptions_TheQuarterUnderTheMinimum_StillOffersTheSmallStake()
+    {
+        CollectionAssert.AreEqual(new[] { 250, 300, 600 }, StakeOptions.For(600, 250, 250).ToArray());
+        CollectionAssert.AreEqual(new[] { 20, 30 }, StakeOptions.For(30, 11, 20).ToArray());
+    }
+
+    [TestMethod]
+    public void StakeOptions_ASmallStakeAboveTheLimit_IsNotOffered()
+    {
+        CollectionAssert.AreEqual(new[] { 20 }, StakeOptions.For(20, 11, 30).ToArray());
+        Assert.AreEqual(0, StakeOptions.For(25, 21, 30).Count, "a limit under the minimum offers nothing, the small stake included");
+    }
 }

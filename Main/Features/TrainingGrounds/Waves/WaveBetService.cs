@@ -158,13 +158,13 @@ internal sealed class WaveBetService
         }
     }
 
-    /// <summary>The stakes on offer for the wave in hand, smallest first (a quarter, a half and the cap, in tens), empty when none is allowed.</summary>
+    /// <summary>The stakes on offer for the wave in hand, smallest first (the small one, a half and the cap, in tens), empty when none is allowed.</summary>
     public IReadOnlyList<int> StakeChoices
     {
         get
         {
             var run = Run is { State: not WaveRunState.Ended } live ? live : NewRun();
-            return StakeOptions.For(run.MaxStake, _config.GetTable().Rules.MinStake);
+            return StakeOptions.For(run.MaxStake, _config.GetTable().Rules.MinStake, run.SmallStake);
         }
     }
 
@@ -180,7 +180,7 @@ internal sealed class WaveBetService
 
     /// <summary>
     /// The smallest stake on offer for the wave in hand: the first of <see cref="StakeChoices"/>, which holds nothing under the table's
-    /// minimum but is often higher (a quarter of the cap). The table's minimum when no stake is on offer.
+    /// minimum but is often higher (the run's small stake). The table's minimum when no stake is on offer.
     /// </summary>
     public int SmallestStake
     {
@@ -255,7 +255,10 @@ internal sealed class WaveBetService
         return true;
     }
 
-    /// <summary>The wave was cleared: pays the payout and moves the run on (the last wave ends it). Logs the <c>payout</c> check. 0 unless fighting.</summary>
+    /// <summary>
+    /// The wave was cleared: pays the payout and moves the run on (the last wave ends it). Logs the <c>payout</c> check. Returns the
+    /// payout the run records: the gold that arrived when that is less than the payout (a purse at its limit), else the payout. 0 unless fighting.
+    /// </summary>
     public int PayClearedWave()
     {
         var run = Run;
@@ -272,6 +275,8 @@ internal sealed class WaveBetService
             _outcomes.Pass(TrainingWavesChecks.Payout, "", detail);
         else
             _outcomes.Fail(TrainingWavesChecks.Payout, "", detail);
+        run.RecordPaid(rose);
+        payout = run.LastPayout;
 
         if (run.State == WaveRunState.Ended)
             LogRunEnd(run);
