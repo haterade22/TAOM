@@ -73,7 +73,7 @@ internal sealed partial class LongDefeatDirector
     private void SallyOut(int wave)
     {
         _sallyWave = wave;
-        if (_sallyPoint is not { } point || _plan.Loadout is not { } loadout)
+        if (_sallyPoint is not { } point || _run.EffectiveLoadout is not { } loadout)
         {
             SkipSally(wave, _noSally.Length > 0 ? _noSally : "point-unusable");
             return;

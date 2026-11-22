@@ -178,8 +178,8 @@ the agent while stamina alone holds a claim.
 **An attack that a behaviour tree starts.** A dwarf's head-butt and drop-kick (Dwarf Attacks) and a troll's
 brute-force smash (Troll Brute Force) start with `SetActionChannel` from a tree, past the AI's input, so the
 strip cannot stop them. Each ready decorator asks `StaminaHooks.RefusesSpecialAttack` first and starts nothing
-for an Exhausted soldier. The engine reads the two dwarf attacks as kicks (`actt_kick` in the Armory's
-`action_types.xml`), so each costs the kick's 6 points. The troll's smash has no action type and costs nothing.
+for an Exhausted soldier. Neither attack has an action type, so neither costs stamina. The two dwarf attacks were
+kicks to the engine (`actt_kick`) and cost the kick's 6 points until #1499 took the type away: it hung battles.
 A new feature that starts an attack this way must ask the same hook. An attack that is already under way
 when the soldier becomes Exhausted is not cancelled. Not covered: a couched lance or a braced spear that is
 already held (the engine reads the stance, not an input), and a mount's own attack, which stamina leaves
@@ -465,7 +465,7 @@ What the runs settle:
   no loss at speed. No AI soldier jumped, and kicks and bashes together were 0 to 14 in a match, so whether such
   an action is counted twice is still a person's check. The exception is Isengard against Erebor with 512 and
   651 kicks: they are the dwarves' head-butts and drop-kicks (`taom.dwarf-attacks.*` counted 511 attempts in
-  the first of the two matches). So a dwarf pays the kick cost, 6 points, for each of them. In these runs the
+  the first of the two matches). So a dwarf paid the kick cost, 6 points, for each of them (until #1499 took the kick type away). In these runs the
   Exhausted lock did not reach them, because Dwarf Attacks starts the action itself (read from the code, not
   seen in a log); the gate described under "An attack that a behaviour tree starts" came after them. Whether these attacks should
   cost stamina, and what a troll's smash should cost, is Mike's decision.
@@ -523,12 +523,13 @@ Mordor, ten of Erebor against Gundabad) and 11 of Erebor against Gundabad with i
 - **Two native failures, in Erebor against Gundabad with the switch on.** One match hung at mission second 201
   and one crashed at 542. With the switch on that matchup failed 2 times in 10, with it off 0 times in 11. That
   split can be chance (about one in five by Fisher's exact test), so the runs neither clear stamina nor accuse
-  it. The hang has a confirmed cause that is not stamina code: the dwarves' two attack actions are typed
-  `actt_kick` and their clips have no combat parameter, so the engine's kick code reads the record before its
+  it. The hang has a confirmed cause that is not stamina code: the dwarves' two attack actions were typed
+  `actt_kick` and their clips have no combat parameter, so the engine's kick code read the record before its
   table (#1499). The crash is a strike by a dwarf with empty hands: the engine reads a null weapon record at
   `TaleWorlds.Native.dll+0x5B5F5D`. By the decompiled engine code it is a passive-usage strike (a braced
-  weapon), and what emptied the hands is not known. Until #1499 is settled, a battle with dwarves can end in the
-  hang, with the switch on or off by its mechanism; the crash cannot be placed until its trigger is known.
+  weapon), and what emptied the hands is not known. The actions carry no type since 2026-11-22 (#1499), which
+  takes the hang's cause away in an Armory that has the new rows; the crash cannot be placed until its trigger is
+  known.
 
 Still owed, all by a person: the lock on your own soldier (S1), the walk and the run threshold (S3), riders
 (S5), how much less a tired AI attacks (S7), fresh against tired (step 10), Marshal's Word beside stamina, and

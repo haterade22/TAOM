@@ -12,7 +12,7 @@ namespace TAOM.Tests.Features.LongDefeat;
 /// slot of its index in its batch, as the engine does, so a later batch reuses an earlier one's slots. Agents are strings:
 /// "A:troop" is an attacker, "D:troop" a defender and "P" the player.
 /// </summary>
-internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapter, ILongDefeatFortAdapter
+internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapter, ILongDefeatFortAdapter, ILongDefeatLordAdapter
 {
     private readonly List<LdPoint> _defenderPoints = new();
 
@@ -165,7 +165,7 @@ internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapte
     {
         LordReads++;
         Calls.Add(detail ? "ReadLord:detail" : "ReadLord");
-        return Lord;
+        return MainBody == 0 ? LdLordFacts.None : Lord;
     }
 
     public List<LdPlace> Teleports { get; } = new();
@@ -295,6 +295,8 @@ internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapte
     public bool AdoptMain(bool aiDriven)
     {
         Calls.Add($"Adopt:{aiDriven}");
+        ControllerName = aiDriven ? "AI" : "Player";
+        NoteAdopted();
         return MainIsHeldHero;
     }
 
@@ -323,7 +325,9 @@ internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapte
         if (!loss)
             return new LdRemoval(LdRemovalKind.None, "", Key: key);
         if (text == "P")
-            return new LdRemoval(LdRemovalKind.Player, "", Key: key);
+            return new LdRemoval(LdRemovalKind.Player, "lord_4_1", Key: key);
+        if (text == "PF")
+            return new LdRemoval(LdRemovalKind.Player, "lord_4_1", Key: key, Forced: true);
         if (text.StartsWith("A:", StringComparison.Ordinal) || text.StartsWith("S:", StringComparison.Ordinal))
         {
             var marked = text.EndsWith("!", StringComparison.Ordinal);

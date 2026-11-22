@@ -68,6 +68,9 @@ internal sealed record RunView(
 
     /// <summary>Every hero of the shop (#1325) in shop.json order, in a wave too: the price to pay now and whether he is for sale, bought or standing.</summary>
     public IReadOnlyList<HeroRow> Heroes { get; init; } = Array.Empty<HeroRow>();
+
+    /// <summary>The armoury and the engineer's yard (phase4-plan.md): the place the lord stands at, the rows each sells and the bot's errand. Empty for a build or a fortress that sells neither.</summary>
+    public LocationsView Locations { get; init; } = LocationsView.None;
 }
 
 /// <summary>One upgrade row: the step, the soldiers of its troop that stand and are not yet sold, and how many of them the gold pays for now.</summary>
@@ -99,6 +102,7 @@ internal sealed record FortView(FortRow Gate, FortRow Repair, FortRow Towers, Fo
     /// <summary>The share of the missing health one field care gives back (shop.json's), 0 when the shop carries no care row: the panel's line names it.</summary>
     public float CareShare { get; init; }
 
+    /// <summary>The defenders' mean health over their limit as the last tick read it, -1 when nobody was read. The bot buys care only when a heal of <see cref="CareShare"/> will show against it (<see cref="CareProof"/>, #1143).</summary>
     public float DefenderHealthMean { get; init; } = -1f;
 
     /// <summary>The hit points the next gate level brings the gate to, as a percent over the vanilla maximum (cumulative, shop.json's); the top level's when every level is owned, 0 when the shop carries no gate row.</summary>

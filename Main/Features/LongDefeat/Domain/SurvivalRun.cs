@@ -28,7 +28,6 @@ internal sealed partial class SurvivalRun
     private int _wave;
     private int _wavesCleared;
     private int _lastDefenders;
-    private float _defenderHealthMean = -1f;
     private int _lastAttackers;
 
     private IReadOnlyList<WaveSoldier> _musterFoot = Array.Empty<WaveSoldier>();
@@ -124,14 +123,19 @@ internal sealed partial class SurvivalRun
             return fx;
 
         _lastDefenders = s.DefendersStanding;
-        _defenderHealthMean = s.DefenderHealthMean;
         _lastAttackers = s.AttackersStanding;
         ObserveGates(s.Gates);
+        _defenderHealthMean = s.DefenderHealthMean;
+        ObserveLord(s.Lord);
+        ObserveLordLife(s);
         _stats.ObserveFleeing(s.AttackersFleeing);
         fx.Events.AddRange(_pendingEvents);
         _pendingEvents.Clear();
         TakePendingBoon(fx);
-        var holdStart = TakePendingFort(fx) || _upgrades.Count > 0;
+        var holdStart = TakePendingFort(fx);
+        holdStart |= TakePendingLocations(fx);
+        holdStart |= _upgrades.Count > 0;
+        TickErrand(s.Dt, fx);
         var loss = _lossThisTick;
         _lossThisTick = false;
 
@@ -144,13 +148,17 @@ internal sealed partial class SurvivalRun
         EmitMuster(s.Dt, fx);
         EmitPacks(fx);
         EmitHeroes(fx);
+        _defenderHealthMean = CareProof.AfterJoin(_defenderHealthMean, s.DefendersStanding, fx.DefenderBatches.Sum(b => b.Count) + fx.SpawnHeroes.Count);
         EmitUpgrades(fx);
 
         if (BetweenWaves)
         {
             _left -= s.Dt;
             if (!(_left > 0f) && !holdStart)
+            {
                 BeginWave();
+                WithdrawErrandOrder(fx);
+            }
         }
 
         // A wave the horn began waits one tick when fortification effects went out on this one.
@@ -163,6 +171,7 @@ internal sealed partial class SurvivalRun
                 TickVolleys(fx);
         }
 
+        TickLordClocks(s, fx);
         return fx;
     }
 
@@ -216,12 +225,6 @@ internal sealed partial class SurvivalRun
         _lossThisTick = true;
     }
 
-    public void PlayerDown()
-    {
-        if (Result == null)
-            _stats.PlayerDied();
-    }
-
     public void Abandon()
     {
         if (Result == null)
@@ -263,6 +266,7 @@ internal sealed partial class SurvivalRun
             Upgrades = UpgradeRowsNow(),
             UpgradeNotice = _upgradeNotice,
             Heroes = HeroRowsNow(),
+            Locations = LocationsViewNow(),
         };
     }
 
@@ -324,6 +328,7 @@ internal sealed partial class SurvivalRun
         _left = 0f;
         _waveInit = true;
         ForgetStanding();
+        ForgetErrands();
         _waveAffixes = CutRoll(_plan.Affixes.Roll(Seed, _wave));
     }
 
@@ -424,10 +429,10 @@ internal sealed partial class SurvivalRun
             return;
         }
 
+        OrderRise(fx);
         RefillPosts(fx);
         fx.RestShare = _r.RestShare;
-        if (_defenderHealthMean >= 0f)
-            _defenderHealthMean += _r.RestShare * (1f - _defenderHealthMean);
+        _defenderHealthMean = -1f;
         _phase = RunPhase.Intermission;
         _left = _r.IntermissionSeconds;
     }

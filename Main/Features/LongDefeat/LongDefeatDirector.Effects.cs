@@ -25,6 +25,9 @@ internal sealed partial class LongDefeatDirector
         if (fx.PublishStats is { } stats)
             _effects?.PublishStats(stats);
 
+        if (fx.General is { } seat)
+            WriteGeneral(seat);
+
         // The engines destroyed in an earlier wave come back first, so the Hammer writes their hit points too (#1160).
         if (fx.StartWave is { } begun)
             RestoreEngines(begun.Wave);
@@ -83,6 +86,11 @@ internal sealed partial class LongDefeatDirector
         foreach (var batch in fx.AttackerBatches)
             SpawnBatch(batch, true, false, standing, closes);
 
+        if (fx.TakeOverForBot)
+            AskBotTakeover();
+        if (fx.FellLord)
+            AskForcedFall();
+
         if (fx.RefreshAttackerTactic)
         {
             _field.RefreshAttackerTactic();
@@ -112,6 +120,8 @@ internal sealed partial class LongDefeatDirector
             SallyHome();
         foreach (var e in fx.Events)
             OnEvent(e);
+        if (fx.RiseLord is { } rise)
+            RiseLord(rise);
         if (fx.RestShare > 0f)
         {
             var rest = _field.RestDefenders(fx.RestShare);
@@ -125,6 +135,11 @@ internal sealed partial class LongDefeatDirector
         // After the batches, so a pack bought beside the care is healed too; before any volley.
         if (fx.FieldCare > 0f)
             ApplyFieldCare(fx.FieldCare);
+
+        if (fx.Errand is { } errand)
+            ServeErrand(errand);
+        if (fx.SwapGear is { } gear)
+            SwapLordGear(gear);
 
         // Last: a volley reads the attackers this tick's batches spawned (D30), and every order is answered here, fired or withheld, so a ready source never orders twice.
         FireVolleys(fx.FireVolleys);
@@ -292,13 +307,6 @@ internal sealed partial class LongDefeatDirector
             _chargedWave = 0;
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + e.Wave, LongDefeatChecks.StaleCleared());
         }
-
-        if (_run.Result != null || _mainBody != 0)
-            return;
-
-        _respawned = true;
-        if (!SpawnLord(true))
-            LongDefeatChecks.Record(_outcomes, LongDefeatChecks.PlayerDeathId, "d" + _run.Stats.PlayerDeaths, LongDefeatChecks.PlayerDeath(false, "respawn-refused"));
     }
 
     /// <summary>The end of the run, from the tick that ended it or from <see cref="Shutdown"/>. Once.</summary>
@@ -314,13 +322,15 @@ internal sealed partial class LongDefeatDirector
         CloseSplit(SplitWave(), "run-ended");
         JudgeEngineUse(true);
         FinishVolleys();
+        ReleaseErrandWalk("run-ended");
+        ReleaseLordHolds();
         if (_chargedWave != 0)
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + _chargedWave, LongDefeatChecks.StaleStranded(result.Reason, _run.GetView().DefendersStanding));
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.NoRoutId, _mission, LongDefeatChecks.NoRout(_run.Stats));
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.GoldId, _mission, _plan.Bounties.Count == 0
             ? LongDefeatChecks.GoldWithoutBounties()
             : LongDefeatChecks.Gold(_run.Purse, _run.Stats, _run.WavesCleared));
-        ReportText = LongDefeatRunReport.Build(_plan.FortressId, _plan.Options, _plan.Provenance, result, _run.Stats, _run.Purse, _startedUtc, DateTime.UtcNow, _session.MaxSpeed, _run.BoonSummary(), _run.FortSummary());
+        ReportText = LongDefeatRunReport.Build(_plan.FortressId, _plan.Options, _plan.Provenance, result, _run.Stats, _run.Purse, _startedUtc, DateTime.UtcNow, _session.MaxSpeed, _run.BoonSummary(), _run.FortSummary(), _run.LordSummary());
         var written = WriteReport();
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.EndId, _mission, LongDefeatChecks.End(result, ReportText.Length > 0 && written));
         SaveBestRun(result);

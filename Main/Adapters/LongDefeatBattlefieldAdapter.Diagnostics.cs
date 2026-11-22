@@ -198,7 +198,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
 
         // The player's body on his own team, before the side: in a story attack (#1409) it stands on the attacker team, and its loss is his fall, never a wave kill.
         if (team == PlayerSideTeam && IsPlayerBody(agent))
-            return loss ? new LdRemoval(LdRemovalKind.Player, id, Key: key) : new LdRemoval(LdRemovalKind.None, "", Key: key);
+            return loss ? new LdRemoval(LdRemovalKind.Player, id, Key: key, Forced: _lordWatch.IsForced(agent)) : new LdRemoval(LdRemovalKind.None, "", Key: key);
 
         if (team.Side == BattleSideEnum.Attacker)
         {

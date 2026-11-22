@@ -122,6 +122,27 @@ internal sealed class RunEffects
     public bool OrderCharge { get; set; }
     public bool RestoreDefenderTactic { get; set; }
     public float RestShare { get; set; }
+
+    /// <summary>A gear set was bought since the last tick: the lord's whole effective kit (his class kit with every owned set laid over it), to put on his own live body. Null at every other tick.</summary>
+    public LdLoadout? SwapGear { get; set; }
+
+    /// <summary>The engines bought since the last tick, each to deploy at its site before the next wave starts. Empty at every other tick.</summary>
+    public List<EngineOrder> DeployEngines { get; } = new();
+
+    /// <summary>The bot's errand moved on: walk the lord to a place, put him there, or release his scripted walk. Null at every other tick.</summary>
+    public ErrandOrder? Errand { get; set; }
+
+    /// <summary>A wave was cleared with the lord not in a body of his own (he fell, or he fights in a taken soldier): raise him, and answer with <see cref="SurvivalRun.LordRose"/>. Null at every other tick.</summary>
+    public LordRiseOrder? RiseLord { get; set; }
+
+    /// <summary>Under autoplay, the player has had no body for a while in a wave: take the nearest soldier the engine accepts (D44a). False at every other tick.</summary>
+    public bool TakeOverForBot { get; set; }
+
+    /// <summary>The test option <c>lord_falls</c> is due: fell the lord's own body with a blow a standing attacker owns (D47). True once in a run.</summary>
+    public bool FellLord { get; set; }
+
+    /// <summary>The general's seat changed hands: the player's body, a standing hero or nobody (D41). Null at every other tick.</summary>
+    public LdGeneralSeat? General { get; set; }
     public int FellAttackers { get; set; }
     public List<RunEvent> Events { get; } = new();
 }

@@ -146,7 +146,7 @@ public class LongDefeatPlacePointsReaderTests
     }
 
     [TestMethod]
-    public void BuildPlan_WithNoPlaceBlocks_HasNoPlaces_AndOffersNothing()
+    public void BuildPlan_WithNoPlaceBlocks_HasNoPlaces_AndTheBuildsOfferIsKept()
     {
         var catalog = Catalog(Fortress());
 
@@ -157,6 +157,6 @@ public class LongDefeatPlacePointsReaderTests
         Assert.IsNull(plan.Armoury);
         Assert.IsNull(plan.Yard);
         Assert.AreEqual(0, plan.HiddenGearSets.Count);
-        Assert.AreEqual(LocationOffer.None, plan.Locations, "Slice 1 delivers no location, so the plan offers none");
+        Assert.AreEqual(LocationOffer.Offered, plan.Locations, "a plan offers what the build delivers, and with no block in the files nothing is sold");
     }
 }

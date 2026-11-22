@@ -297,7 +297,8 @@ GATES = (
               "has a cache entry no older than its record and master (start the Modding Kit once)"),
     Gate("dwarf-attacks", "dwarf attack actions and their as_dwarf_warrior rows", CREATURE_GLOBS,
          ("python", "tools/bind_dwarf_attack_actions.py", "--check"), ("docs/features/dwarf-attacks.md",),
-         note="a reinstall drops the two declarations and rows, and parity still passes"),
+         note="a reinstall drops the two declarations and rows, and parity still passes; it also fails while the "
+              "rows still carry actt_kick (#1499: run it with --apply)"),
     Gate("dwarf-attacks-tests", "dwarf attack actions and their as_dwarf_warrior rows", CREATURE_GLOBS,
          _dotnet("DwarfAttacksWiringTests"), ("docs/features/dwarf-attacks.md",), dotnet=True),
     Gate("dwarf-rider-rows", "dwarf creature rider rows in as_dwarf_warrior", CREATURE_GLOBS,

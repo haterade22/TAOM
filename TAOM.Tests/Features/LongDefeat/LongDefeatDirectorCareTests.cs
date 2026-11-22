@@ -306,28 +306,6 @@ public class LongDefeatDirectorCareTests
     }
 
     [TestMethod]
-    public void TheUnattendedBot_ReadsTheMeanAfterTheClearsRest_AndBuysNoCareThatWouldNotShow()
-    {
-        var rig = NewRig(startGold: 5000, autoplay: true);
-        rig.Field.DefenderHealthMean = 0.95f;
-        Assert.IsTrue(rig.Director.Start());
-        rig.PumpUntil(() => rig.Field.Calls.Contains("Refresh"));
-        for (var i = 0; i < 110; i++)
-        {
-            rig.Field.AttackersStanding--;
-            rig.Director.OnAgentRemoved("A:orc", true);
-        }
-
-        rig.Tick();
-        for (var i = 0; i < 20; i++)
-            rig.Tick();
-
-        Assert.IsFalse(rig.Field.Calls.Contains(Heal), "the rest took the mean to 0.975, where 0.75 of the missing share is under the check's bound");
-        Assert.IsFalse(rig.Outcomes.Has("skip", LongDefeatChecks.FieldCareId), string.Join("\n", rig.Outcomes.Lines));
-        Assert.AreEqual(0, rig.Care.Count);
-    }
-
-    [TestMethod]
     public void WithNothingOffered_TheBotBuysNoCare_AndNothingHeals()
     {
         var rig = NewRig(FortOffer.None, 5000, true);
@@ -345,5 +323,13 @@ public class LongDefeatDirectorCareTests
 
         Assert.IsFalse(rig.Field.Calls.Contains(Heal));
         Assert.AreEqual(0, rig.Care.Count);
+    }
+
+    [TestMethod]
+    public void TheDirector_HandsTheRunTheDefendersMeanHealth_SoTheBotCanJudgeACareBuy()
+    {
+        var source = TAOM.Tests.Infrastructure.RepoPaths.ReadSource("Main/Features/LongDefeat/LongDefeatDirector.cs", stripComments: true);
+
+        StringAssert.Contains(source, "read.DefenderHealthMean)", "the tick's RunSnapshot must carry the mean the field read, or the bot never buys care (#1143)");
     }
 }

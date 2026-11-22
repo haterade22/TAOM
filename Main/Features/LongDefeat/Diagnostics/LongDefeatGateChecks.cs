@@ -96,16 +96,22 @@ internal static class LongDefeatGateChecks
     /// <summary>
     /// At the boot: every recorded tower post, tower volley spot and volley origin has a navmesh and lies inside the mission boundary (the sally points' test). <paramref name="points"/> is each point's name and answer;
     /// none recorded is a skip. A volley origin whose ray out over the parapet hits something within 2 m is named with <c>clear=no</c> (phase3-plan.md section 4, R5).
+    /// <paramref name="rise"/> is the recorded keep's answer when the plan records one (phase4-plan.md D49): the lord rises there, so it must have a navmesh and lie inside the boundary too. It is kept out of
+    /// <c>points=</c>, which counts the tower and volley points the wrapper compares with the file, and named as <c>rise=recorded</c>, or <c>rise=scene-fallback</c> with what it lacks when the rise falls back to the scene's frame.
+    /// <paramref name="armoury"/> is the recorded armoury point's answer (phase4-plan.md D46): the bot's errand teleports the lord onto it, so it must have a navmesh and lie inside the boundary. Like the keep it is not counted in
+    /// <c>points=</c>; it is named <c>armoury=recorded</c>, or <c>armoury=unusable</c> with what it lacks, and an unusable one fails the check.
     /// </summary>
-    internal static CheckVerdict FortPoints(IReadOnlyList<(string Name, LdPointFacts Facts)> points)
+    internal static CheckVerdict FortPoints(IReadOnlyList<(string Name, LdPointFacts Facts)> points, LdPointFacts? rise = null, LdPointFacts? armoury = null)
     {
-        if (points.Count == 0)
+        if (points.Count == 0 && rise == null && armoury == null)
             return new CheckVerdict(CheckResult.Skip, "points=0 reason=none-recorded");
 
         var bad = points.Where(p => !p.Facts.Usable).ToList();
         var named = string.Join(",", bad.Take(NamedBad).Select(p => $"{p.Name}(navmesh={Answer(p.Facts.Navmesh)} boundary={Answer(p.Facts.Boundary)}{(p.Facts.Clear ? "" : " clear=no")})"));
-        return LongDefeatChecks.Verdict(bad.Count == 0,
-            $"points={points.Count.ToString(CultureInfo.InvariantCulture)} failed={bad.Count.ToString(CultureInfo.InvariantCulture)}{(bad.Count > 0 ? " bad=" + named : "")}");
+        var riseText = rise is not { } r ? "" : r.Usable ? " rise=recorded" : $" rise=scene-fallback rise_navmesh={Answer(r.Navmesh)} rise_boundary={Answer(r.Boundary)}";
+        var armouryText = armoury is not { } a ? "" : a.Usable ? " armoury=recorded" : $" armoury=unusable armoury_navmesh={Answer(a.Navmesh)} armoury_boundary={Answer(a.Boundary)}";
+        return LongDefeatChecks.Verdict(bad.Count == 0 && (rise is not { } r2 || r2.Usable) && (armoury is not { } a2 || a2.Usable),
+            $"points={points.Count.ToString(CultureInfo.InvariantCulture)} failed={bad.Count.ToString(CultureInfo.InvariantCulture)}{(bad.Count > 0 ? " bad=" + named : "")}{riseText}{armouryText}");
     }
 
     /// <summary>The key prefix of gate <paramref name="index"/> in a line: none for the one gate Helm's Deep has, <c>g0.</c>, <c>g1.</c> and so on when there are several.</summary>

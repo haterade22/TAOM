@@ -57,6 +57,8 @@ internal static class LongDefeatChecks
     internal const string VolleyId = "taom.long-defeat.volley";
     internal const string TowerVolleyId = "taom.long-defeat.tower-volley";
     internal const string PostsId = "taom.long-defeat.posts";
+    internal const string RiseId = "taom.long-defeat.rise";
+    internal const string GeneralDownId = "taom.long-defeat.general-down";
 
     /// <summary>A new soldier within this many metres of one from an earlier batch counts as an overlap. A first guess, below a healthy formation's spacing.</summary>
     internal const float OverlapRadius = 0.4f;
@@ -210,7 +212,8 @@ internal static class LongDefeatChecks
     // Written as the requirement, so a NaN on either side fails it.
     private static bool NearFactor(float ratio, float factor) => Math.Abs(ratio - factor) <= 0.01f * factor;
 
-    internal static CheckVerdict PlayerDeath(bool adopted, string via) => Verdict(adopted, $"via={via}");
+    /// <summary>One row per death. <paramref name="via"/> is how the next body came (<c>takeover</c>, <c>rise</c>, or <c>respawn</c> for a build with no lord adapter); <paramref name="by"/> names who took the soldier, for a take-over only.</summary>
+    internal static CheckVerdict PlayerDeath(bool adopted, string via, string? by = null) => Verdict(adopted, by == null ? $"via={via}" : $"via={via} by={by}");
 
     internal static CheckVerdict End(RunResult r, bool reportBuilt) =>
         Verdict(reportBuilt, $"reason={r.Reason} wave={Num(r.Wave)} cleared={Num(r.WavesCleared)} kills={Num(r.Kills)} report={(reportBuilt ? "built" : "missing")}");

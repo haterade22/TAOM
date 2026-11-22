@@ -10,14 +10,14 @@ namespace TAOM.Features.LongDefeat.Diagnostics;
 /// </summary>
 internal static class LongDefeatFortChecks
 {
-    /// <summary>The mean may differ from the sum by this share of the limit: <c>Agent.Health</c>'s setter ceils (E23), so a soldier gains up to one whole point, about 1% of a 100 health limit and half that on average.</summary>
-    internal const float CareTolerance = 0.01f;
+    /// <summary>The check's tolerance on a mean, kept with the bot's own rule in <see cref="CareProof"/> so the two cannot drift (#1143).</summary>
+    internal const float CareTolerance = CareProof.Tolerance;
 
     /// <summary>
-    /// A heal must raise the mean by more than this (twice <see cref="CareTolerance"/>) for a pass to mean anything: a write that did nothing misses the expected mean by exactly the heal's rise, so a smaller
+    /// A heal must raise the mean by more than this for a pass to mean anything: a write that did nothing misses the expected mean by exactly the heal's rise, so a smaller
     /// rise sits inside the tolerance and a blank write would pass.
     /// </summary>
-    internal const float ProvableRise = 2f * CareTolerance;
+    private const float ProvableRise = CareProof.ProvableRise;
 
     /// <summary>
     /// Heal <paramref name="n"/> of the run. <paramref name="rest"/> is the field's own count and read-back around the write: the mean health share of the standing defenders after must equal

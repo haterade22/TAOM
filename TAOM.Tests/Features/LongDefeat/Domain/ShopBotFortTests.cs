@@ -45,7 +45,12 @@ public class ShopBotFortTests
         public LdGateFacts[] Gates = { Whole() };
         public FortOffer Offered = new(3, 3, true, 2);
         public int Standing = 100;
-        public float HealthMean = -1f;
+
+        /// <summary>The defenders' mean health as the field read it: hurt enough by default that a heal shows (#1143).</summary>
+        public float HealthMean = 0.8f;
+
+        /// <summary>Defenders bought and not yet on the field.</summary>
+        public int Pending;
 
         public RunView View(IReadOnlyList<ShopOffer>? packs = null)
         {
@@ -59,8 +64,8 @@ public class ShopBotFortTests
                 new FortRow(CareUsed, 1, CarePrice, Offered.FieldCare && CareUsed < 1),
                 Row(Volley, 2, VolleyPrices, Offered.Volley),
                 Gates,
-                StartGold) { CareShare = 0.75f, DefenderHealthMean = HealthMean };
-            return new RunView(Phase, Cleared, Cleared, Gold, 60f, Standing, 0, 0, 0f, packs ?? Packs) { Fort = fort };
+                StartGold);
+            return new RunView(Phase, Cleared, Cleared, Gold, 60f, Standing, Pending, 0, 0f, packs ?? Packs) { Fort = fort with { CareShare = 0.75f, DefenderHealthMean = HealthMean } };
         }
 
         /// <summary>Asks the bot until it stops buying fortifications, applying each buy as the run would. Returns the kinds in order.</summary>
@@ -189,24 +194,6 @@ public class ShopBotFortTests
     }
 
     // ---- the named runs of section 8: the level each needs by the wave that proves it ----
-
-    [TestMethod]
-    public void Care_IsNotBought_WhileTheGarrisonMissesTooLittleForTheCheckToJudge()
-    {
-        var sim = new Sim { Offered = new FortOffer(0, 0, true, 0), HealthMean = 0.975f };
-        sim.Clear();
-
-        Assert.AreEqual(0, sim.Shop().Count, "75% of 2.5% missing is 1.9%, under the 2% rise that the check skips as too-little-missing (#1143)");
-    }
-
-    [TestMethod]
-    public void Care_IsBought_OnceTheGarrisonMissesEnoughForTheCheckToJudge()
-    {
-        var sim = new Sim { Offered = new FortOffer(0, 0, true, 0), HealthMean = 0.9f };
-        sim.Clear();
-
-        CollectionAssert.AreEqual(new[] { BotActionKind.FieldCare }, sim.Shop());
-    }
 
     [TestMethod]
     public void TheCareRun_WavesTwo_OwnsCareAtClearOne()
@@ -388,5 +375,57 @@ public class ShopBotFortTests
         var sim = new Sim { Phase = RunPhase.Wave };
 
         Assert.AreEqual(BotActionKind.Wait, ShopBot.Decide(sim.View(), 100f).Kind);
+    }
+
+    // ---- #1143: care is bought only when its heal can be proved ----
+
+    [DataTestMethod]
+    [DataRow(0.973f, false, DisplayName = "the garrison of run 20261113-012012: a heal of 0.02 is inside the check's tolerance")]
+    [DataRow(0.9667f, false, DisplayName = "just under the bot's margin")]
+    [DataRow(0.96f, true, DisplayName = "a heal of 0.03 shows")]
+    [DataRow(0.6f, true, DisplayName = "a hurt garrison")]
+    [DataRow(1f, false, DisplayName = "nobody is hurt")]
+    [DataRow(-1f, false, DisplayName = "the field read nobody")]
+    [DataRow(float.NaN, false, DisplayName = "a mean that is not a number")]
+    [DataRow(1.2f, false, DisplayName = "a mean above the limit is no reading")]
+    public void Decide_FieldCare_IsBoughtOnlyWhenTheHealWillShow(float mean, bool buys)
+    {
+        var sim = new Sim { Cleared = 1, Phase = RunPhase.Intermission, Gate = 3, Towers = 3, Volley = 2, HealthMean = mean };
+
+        var bought = sim.Shop();
+
+        Assert.AreEqual(buys, bought.Contains(BotActionKind.FieldCare), string.Join(",", bought));
+    }
+
+    [TestMethod]
+    public void Decide_FieldCare_TheBotsMargin_IsAboveTheChecksFloor()
+    {
+        Assert.IsTrue(CareProof.BotRise > CareProof.ProvableRise, "a buy at the check's own floor could still be skipped: a pack bought on the same tick joins at full health before the heal");
+        Assert.AreEqual(2f * CareProof.Tolerance, CareProof.ProvableRise);
+    }
+
+    [TestMethod]
+    public void Decide_FieldCare_WaitsWhileDefendersAreStillToSpawn()
+    {
+        // Thirty at 0.965 clear the bot's margin; twelve recruits at full health join before the heal and the mean is 0.975, under what the check can prove (Codex, 2026-11-21).
+        var waiting = new Sim { Cleared = 1, Phase = RunPhase.Intermission, Gate = 3, Towers = 3, Volley = 2, HealthMean = 0.9f, Pending = 12, Standing = 200 };
+        Assert.IsFalse(waiting.Shop().Contains(BotActionKind.FieldCare), "the reading is of the soldiers who stand; the pack joins before the heal");
+
+        var joined = new Sim { Cleared = 1, Phase = RunPhase.Intermission, Gate = 3, Towers = 3, Volley = 2, HealthMean = 0.9f, Standing = 200 };
+        Assert.IsTrue(joined.Shop().Contains(BotActionKind.FieldCare), "once they stand, the next reading counts them");
+    }
+
+    [TestMethod]
+    public void TheMeanAfterAJoin_IsWhatTheHealWillFind_AndCanTakeACareBuyUnderTheBotsMargin()
+    {
+        var thinned = CareProof.AfterJoin(0.965f, 30, 12);
+
+        Assert.AreEqual(0.975f, thinned, 0.0001f, "thirty at 0.965 and twelve at full health");
+        Assert.IsTrue(CareProof.WorthBuying(0.75f, 0.965f), "the reading alone clears the margin");
+        Assert.IsFalse(CareProof.WorthBuying(0.75f, thinned), "the garrison the heal finds does not: 0.75 of 0.025 is under what the check can prove");
+        Assert.AreEqual(0.6f, CareProof.AfterJoin(0.6f, 30, 0), "nobody joined");
+        Assert.AreEqual(-1f, CareProof.AfterJoin(-1f, 30, 12), "no reading stays no reading");
+        Assert.IsTrue(float.IsNaN(CareProof.AfterJoin(float.NaN, 30, 12)), "and so does a reading that is not a number");
+        Assert.AreEqual(0.6f, CareProof.AfterJoin(0.6f, 0, 12), "a mean read over nobody is not thinned");
     }
 }

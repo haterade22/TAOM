@@ -1634,3 +1634,19 @@ their records alone.
   and expect exit 1.
 - **Source:** [RCA](../rca-elephant-gait-gate-2026-11-20.md); `tools/tests/test_elephant_gait_tools.py`
   (`StandFindingsTests`, `PaceTableTests`, `CacheStateTests`).
+
+### An action's type is read by native code and by other mods, so it is chosen from their readers (#1499, 2026-11-22)
+The two dwarf attacks were typed `actt_kick` for one managed reader (`StandingPoint` lets a kicking agent go of a
+machine), with the note "what native code does with the type beyond that is unverified". The native kick code reads
+the combat parameter of a kick-typed action's clip with no test for "none", the clips had none on purpose, and a
+battle hung on the lock that read led to. The fix took the type away. The review then found a third reader:
+BannerlordCoop publishes an action change to other peers only for a typed action.
+- **Why missed:** the type was picked by searching the managed source, where it has one reader. The doc recorded the
+  native side as unverified and the work went on; the war ram's "kick type, no combat parameter" recipe was copied
+  from a mount, which has no `CanKick` flag and so never starts the engine's kick state.
+- **Prevent:** an action that TAOM plays itself gets no type unless a reader that needs the type is named, and then
+  its clip carries what that type's native code reads (`python tools/native_decompile.py --rva 0x670270` for the
+  kick family). `tools/tests/test_armory_kick_typed_actions.py` holds the list of kick-family actions fixed. A
+  recipe proved on a mount is not proved for a humanoid. Before a type changes, grep BannerlordCoop's
+  `AgentActionHandler` for what it publishes.
+- **Source:** #1499; `docs/features/dwarf-attacks.md`; `docs/reference/lotrlome-dwarf-attack-changes.md`.

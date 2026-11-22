@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """Declare and bind the two dwarf attack actions (#1087) in the Armory and in the repo's snapshot of it.
 
-action_types.xml: act_dwarf_head_butt and act_dwarf_drop_kick, typed actt_kick (the vanilla kick's type), after
-act_troll_brute_force. The type's one managed consumer is StandingPoint.DoesActionTypeStopUsingGameObject: a kick, a
-jump or a weapon bash makes the agent stop using a machine, so a dwarf that starts an attack lets go of it. What
-the native engine does with the type beyond that is UNVERIFIED (the in-game check in docs/features/dwarf-attacks.md).
+action_types.xml: act_dwarf_head_butt and act_dwarf_drop_kick, declared with no type, after act_troll_brute_force
+(which is untyped too). From #1087 until #1499 both rows were typed actt_kick, the vanilla kick's type. While an
+agent's own kick is in progress, the engine's kick code reads the combat parameter of the clip of a kick-typed action with no test for "none"
+(the function at RVA 0x670270 of the v1.5.7 TaleWorlds.Native.dll), and these clips carry none on purpose, because
+the DwarfAttacks task deals the blow: the read took the record before the table and a battle hung on a lock that
+nothing frees (#1499). A file that still carries the kick-typed rows this tool wrote is retyped; any other type is
+REFUSED. The one managed reader of the type, StandingPoint.DoesActionTypeStopUsingGameObject, made a kicking agent
+let go of a machine; the feature's ready decorator already refuses a dwarf on a machine.
 
 action_sets.xml: both rows at the end of as_dwarf_warrior (skeleton dwarf_skeleton_a), on the clips
 tools/gen_dwarf_attack_clips.ps1 writes. The female, hideout and villager dwarf sets inherit it through base_set,
@@ -18,8 +22,8 @@ ElementTree before it is written, a backup <file>.bak-dwarf-attacks-<stamp> (nev
 Every planned output is parsed and checked as a tree (one declaration per action, one binding per action inside
 as_dwarf_warrior, no root-level <action>) before anything is written, in the dry run and --check too. --apply
 refuses (exit 2) while the game or the Modding Kit runs.
-Idempotent: a file that already carries the rows is left alone; a file with only one of them, a wrong type or clip,
-or a row outside as_dwarf_warrior is REFUSED, never repaired.
+Idempotent: a file that already carries the rows is left alone; a file with only one of them, a type other than the
+old actt_kick, a wrong clip, or a row outside as_dwarf_warrior is REFUSED, never repaired.
 
     python tools/bind_dwarf_attack_actions.py           # plan, writes nothing
     python tools/bind_dwarf_attack_actions.py --apply
@@ -42,7 +46,10 @@ SNAPSHOT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__
                         "docs", "reference", "lotrlome-armory-snapshot")
 FILES = ("action_types.xml", "action_sets.xml")
 SET_ID = "as_dwarf_warrior"
-ACTION_TYPE = "actt_kick"
+OLD_TYPE = "actt_kick"   # what this tool wrote before #1499; such a row is retyped, never kept
+OLD_NOTE = "actt_kick, the vanilla kick's type (StandingPoint lets go of a machine on it). Clips from"
+NOTE = "No type on purpose (#1499): the engine's kick code reads the clip's combat parameter of a kick-typed action, and these clips have none. Clips from"
+BLOCK = re.compile(r"<!-- #1087 dwarf head butt and drop kick.*?-->", re.S)   # the comment this tool writes above its rows
 ANCHOR = '<action name="act_troll_brute_force" />'
 # action -> clip (the clips are named after their masters, gen_dwarf_attack_clips.ps1)
 ACTIONS = (("act_dwarf_head_butt", "dwarf_head_butt"), ("act_dwarf_drop_kick", "dwarf_drop_kick"))
@@ -57,8 +64,21 @@ def _nl(text):
     return "\r\n" if crlf > text.count("\n") - crlf else "\n"   # majority, tools/README.md XML I/O convention
 
 
+def _old_rows(text):
+    """Whether text holds a row in the form this tool wrote before #1499."""
+    return any(re.search(r'<action\s+name="%s"\s+type="%s"\s*/>' % (name, OLD_TYPE), text) for name, _ in ACTIONS)
+
+
+def _retyped(text):
+    """text with the kick type taken off the rows this tool wrote before #1499, and off the note in its own comment."""
+    for name, _ in ACTIONS:
+        text = re.sub(r'<action\s+name="%s"\s+type="%s"\s*/>' % (name, OLD_TYPE), '<action name="%s" />' % name, text)
+    return BLOCK.sub(lambda m: m.group(0).replace(OLD_NOTE, NOTE), text, count=1)
+
+
 def plan_types(text):
-    """text with both action declarations, or text itself when they are already there exactly."""
+    """text with both action declarations and no type on either, or text itself when they are already there exactly."""
+    text = _retyped(text)
     found = {}
     for m in re.finditer(r'<action\s+name="(act_dwarf_[a-z_]+)"([^>]*)/>', text):
         found.setdefault(m.group(1), []).append(m.group(2))
@@ -66,24 +86,25 @@ def plan_types(text):
     for name, attrs in found.items():
         if name not in want:
             continue
-        if len(attrs) != 1 or re.search(r'\btype="%s"' % ACTION_TYPE, attrs[0]) is None:
-            raise Refuse("action_types: %s is declared %d time(s) as %r, want once with type %s"
-                         % (name, len(attrs), attrs, ACTION_TYPE))
+        if len(attrs) != 1 or attrs[0].strip():
+            raise Refuse("action_types: %s is declared %d time(s) as %r, want once with no attribute but its name"
+                         % (name, len(attrs), attrs))
     have = [a for a in want if a in found]
     if len(have) == len(want):
         return text
     if have:
-        raise Refuse("action_types: only %s is declared; a hand edit? fix it by hand, then re-run" % have)
+        raise Refuse("action_types: only %s is declared in a form this tool reads (name alone, or name then the old type);"
+                     " a hand edit? fix it by hand, then re-run" % have)
     i = text.find(ANCHOR)
     if i < 0:
         raise Refuse("action_types: anchor %s not found" % ANCHOR)
     nl = _nl(text)
     eol = text.index(nl, i) + len(nl)
     block = ("\t<!-- #1087 dwarf head butt and drop kick, played by TAOM Main/Features/DwarfAttacks from its behaviour tree."
-             "%s\t     actt_kick, the vanilla kick's type (StandingPoint lets go of a machine on it). Clips from"
+             "%s\t     %s"
              "%s\t     tools/gen_dwarf_attack_clips.ps1; bound in as_dwarf_warrior by tools/bind_dwarf_attack_actions.py. -->%s"
-             % (nl, nl, nl))
-    block += "".join('\t<action name="%s" type="%s" />%s' % (a, ACTION_TYPE, nl) for a, _ in ACTIONS)
+             % (nl, NOTE, nl, nl))
+    block += "".join('\t<action name="%s" />%s' % (a, nl) for a, _ in ACTIONS)
     return text[:eol] + block + text[eol:]
 
 
@@ -123,9 +144,9 @@ def plan_sets(text):
 def validate_types(root):
     for name, _ in ACTIONS:
         hits = [a for a in root.iter("action") if a.get("name") == name]
-        if len(hits) != 1 or hits[0].get("type") != ACTION_TYPE:
-            raise Refuse("action_types: %s is declared %d time(s) (types %r), want once with type %s"
-                         % (name, len(hits), [h.get("type") for h in hits], ACTION_TYPE))
+        if len(hits) != 1 or hits[0].get("type") is not None:
+            raise Refuse("action_types: %s is declared %d time(s) (types %r), want once with no type"
+                         % (name, len(hits), [h.get("type") for h in hits]))
 
 
 def validate_sets(root):
@@ -177,12 +198,16 @@ def main(argv=None):
                 bad += 1
                 continue
             results[path] = (raw, text, new)
-            print("%-8s %s" % ("ok" if new == text else "PLAN", path))
+            print("%-8s %s" % ("ok" if new == text else "RETYPE" if _old_rows(text) else "PLAN", path))
 
     if args.check:
-        missing = sum(1 for _, t, n in results.values() if n != t)
-        print("check: %d file(s) carry the rows, %d lack them, %d refused or missing" % (len(results) - missing, missing, bad))
-        return 1 if bad or missing else 0
+        retype = sum(1 for _, t, n in results.values() if n != t and _old_rows(t))
+        missing = sum(1 for _, t, n in results.values() if n != t) - retype
+        print("check: %d file(s) carry the rows, %d lack them, %d refused or missing"
+              % (len(results) - missing - retype, missing, bad))
+        if retype:
+            print("check: %d file(s) still type the rows %s; --apply takes the type off (#1499)" % (retype, OLD_TYPE))
+        return 1 if bad or missing or retype else 0
     if bad:
         return 1
     if not args.apply:

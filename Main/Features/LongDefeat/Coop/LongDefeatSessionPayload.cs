@@ -34,6 +34,7 @@ internal static class LongDefeatSessionPayload
             writer.Write(options.ClassId != null);
             if (options.ClassId != null)
                 writer.Write(options.ClassId);
+            WriteNullable(writer, options.LordFalls);
         }
 
         return stream.ToArray();
@@ -62,6 +63,7 @@ internal static class LongDefeatSessionPayload
                 StartGold = ReadNullable(reader),
                 BreakEnginesAtClear = ReadNullable(reader),
                 ClassId = reader.ReadBoolean() ? reader.ReadString() : null,
+                LordFalls = ReadNullable(reader),
             };
             if (reader.BaseStream.Position != payload.Length)
                 return false;

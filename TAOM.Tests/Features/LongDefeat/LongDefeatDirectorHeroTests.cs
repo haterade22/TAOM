@@ -594,4 +594,28 @@ public class LongDefeatDirectorHeroTests
         Assert.AreEqual(after, HoldCalls(rig));
         Assert.AreEqual(1, after, "only the spawn's tick held the group: the fall is drained before that tick's hold");
     }
+
+    [TestMethod]
+    public void OnAgentRemoved_AHeroBodyThePlayerHadTaken_IsBookedByItsTroop_AsTheTakeoverNamesIt()
+    {
+        var rig = NewRig(free: new[] { new HeroSpawn("aragorn", "taom_hero_aragorn", 3f) });
+        Assert.IsTrue(rig.Director.Start());
+        rig.Director.Tick(0.1f);
+        rig.Director.OnAgentRemoved("P", true);
+        rig.Field.MainBody = 0;
+        rig.Director.Tick(0.1f);
+        rig.Field.MainIsHeldHero = true;
+        rig.Field.MainBody = 2;
+        rig.Field.Lord = rig.Field.Lord with { Own = false, Id = "taom_hero_aragorn" };
+        rig.Director.Tick(0.1f);
+
+        rig.Director.OnAgentRemoved("HP:aragorn", true);
+        rig.Director.Shutdown();
+
+        var lord = Newtonsoft.Json.Linq.JObject.Parse(rig.Director.ReportText)["lord"]!;
+        var deaths = lord["deaths"]!.ToList();
+        Assert.AreEqual(2, deaths.Count);
+        Assert.AreEqual("taom_hero_aragorn", (string)lord["takeovers"]!.Single()["troop"]!);
+        Assert.AreEqual(("soldier", "taom_hero_aragorn"), ((string)deaths[1]["body"]!, (string)deaths[1]["troop"]!), "the troop, not the hero's shop id");
+    }
 }

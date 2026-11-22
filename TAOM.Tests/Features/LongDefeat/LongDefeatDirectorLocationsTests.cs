@@ -117,9 +117,10 @@ public class LongDefeatDirectorLocationsTests
     }
 
     [TestMethod]
-    public void TheBuildOffersNoLocation_SoTheShippedPlanCannotSellOne()
+    public void TheBuildOffersTheArmouryAndNoEngine_AndAPlansDefaultLocationsAreWhatTheBuildOffers()
     {
-        Assert.AreEqual(LocationOffer.None, LocationOffer.Offered);
-        Assert.AreEqual(LocationOffer.None, new RunPlan("helms", new GarrisonRow[0], new WavePlan(new[] { new WaveSpec(1, new[] { new WaveTroop("orc", FormationSlot.Infantry, 1) }) }, new WaveScaling(1, 1)), new ShopPlan(0, new ShopOffer[0]), RunRules.Default, RunOptions.Default).Locations);
+        Assert.IsTrue(LocationOffer.Offered.Armoury);
+        Assert.IsFalse(LocationOffer.Offered.Mangonel || LocationOffer.Offered.Trebuchet, "the yard's engines are Slice 7's");
+        Assert.AreEqual(LocationOffer.Offered, new RunPlan("helms", new GarrisonRow[0], new WavePlan(new[] { new WaveSpec(1, new[] { new WaveTroop("orc", FormationSlot.Infantry, 1) }) }, new WaveScaling(1, 1)), new ShopPlan(0, new ShopOffer[0]), RunRules.Default, RunOptions.Default).Locations);
     }
 }
