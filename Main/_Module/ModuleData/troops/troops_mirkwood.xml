@@ -78,12 +78,8 @@
                     id="Item.mkwd_inf3_greaves" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+                <equipment slot="Body" id="Item.mirkwood_body" />
+                <equipment slot="Leg" id="Item.mirkwood_boots" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -152,12 +148,8 @@
                     id="Item.mkwd_inf3_greaves" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+                <equipment slot="Body" id="Item.mirkwood_body" />
+                <equipment slot="Leg" id="Item.mirkwood_boots" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -229,12 +221,8 @@
                     id="Item.mkwd_inf3_greaves_bronze" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+                <equipment slot="Body" id="Item.mirkwood_body" />
+                <equipment slot="Leg" id="Item.mirkwood_boots" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -306,12 +294,8 @@
                     id="Item.mirkwood_boots" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+                <equipment slot="Body" id="Item.mirkwood_body" />
+                <equipment slot="Leg" id="Item.mirkwood_boots" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -389,12 +373,8 @@
                     id="Item.mkwd_inf3_greaves_silver" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+                <equipment slot="Body" id="Item.mirkwood_body" />
+                <equipment slot="Leg" id="Item.mirkwood_boots" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -469,12 +449,8 @@
                     id="Item.mkwd_inf3_greaves_silver" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+                <equipment slot="Body" id="Item.mirkwood_body" />
+                <equipment slot="Leg" id="Item.mirkwood_boots" />
             </EquipmentRoster>
             <equipment
                 slot="Horse"
@@ -552,12 +528,8 @@
                     id="Item.mkwd_inf3_greaves_silver" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+                <equipment slot="Body" id="Item.mirkwood_body" />
+                <equipment slot="Leg" id="Item.mirkwood_boots" />
             </EquipmentRoster>
             <equipment
                 slot="Horse"
@@ -641,12 +613,8 @@
                     id="Item.mkwd_inf3_greaves_silver" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+                <equipment slot="Body" id="Item.mirkwood_body" />
+                <equipment slot="Leg" id="Item.mirkwood_boots" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -718,12 +686,8 @@
                     id="Item.mirkwood_boots" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+                <equipment slot="Body" id="Item.mirkwood_body" />
+                <equipment slot="Leg" id="Item.mirkwood_boots" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -789,12 +753,8 @@
                     id="Item.mkwd_inf3_greaves" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+                <equipment slot="Body" id="Item.mirkwood_body" />
+                <equipment slot="Leg" id="Item.mirkwood_boots" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -863,12 +823,8 @@
                     id="Item.mkwd_inf3_greaves_bronze" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+                <equipment slot="Body" id="Item.mirkwood_body" />
+                <equipment slot="Leg" id="Item.mirkwood_boots" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -937,12 +893,8 @@
                     id="Item.mirkwood_boots" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+                <equipment slot="Body" id="Item.mirkwood_body" />
+                <equipment slot="Leg" id="Item.mirkwood_boots" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1017,12 +969,8 @@
                     id="Item.mkwd_inf3_greaves_silver" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+                <equipment slot="Body" id="Item.mirkwood_body" />
+                <equipment slot="Leg" id="Item.mirkwood_boots" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1621,12 +1569,8 @@
                     id="Item.mkwd_inf3_greaves" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
-            </EquipmentRoster>
-            <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
-                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+                <equipment slot="Body" id="Item.mirkwood_body" />
+                <equipment slot="Leg" id="Item.mirkwood_boots" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>

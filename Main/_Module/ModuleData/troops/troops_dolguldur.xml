@@ -59,12 +59,12 @@
                     id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
-                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
-                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -157,12 +157,12 @@
                     id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
-                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
-                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -303,12 +303,12 @@
                     id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
-                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
-                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -471,12 +471,12 @@
                     id="Item.sk_dg_uruk_boots_med_b" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
-                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
-                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -699,12 +699,12 @@
                     id="Item.sk_dg_uruk_boots_med_b" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
-                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
-                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -797,12 +797,12 @@
                     id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
-                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
-                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -940,12 +940,12 @@
                     id="Item.sk_dg_uruk_boots_med_c" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
-                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
-                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1078,12 +1078,12 @@
                     id="Item.sk_dg_uruk_boots_med_c" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
-                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
-                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
-                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
