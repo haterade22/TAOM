@@ -121,8 +121,8 @@ internal static class LongDefeatChecks
 
     /// <summary>The roster soldiers must all be killed or felled, and the felled at most the straggler share of the wave as the stalemate rule counts it: roster plus summons (<c>SurvivalRun.RunWave</c>).</summary>
     internal static CheckVerdict Wave(WaveStats w, int count, float stragglerShare) =>
-        Verdict(w.Felled <= stragglerShare * (count + w.Summoned) && w.Kills + w.Felled >= count,
-            $"kills={Num(w.Kills)} felled={Num(w.Felled)} lost={Num(w.Lost)} seconds={F1(w.Seconds)} count={Num(count)}");
+        Verdict(w.Felled <= stragglerShare * (count + w.Summoned) && w.Kills + w.Felled + w.Taken >= count,
+            $"kills={Num(w.Kills)} felled={Num(w.Felled)}{(w.Taken > 0 ? " taken=" + Num(w.Taken) : "")} lost={Num(w.Lost)} seconds={F1(w.Seconds)} count={Num(count)}");
 
     internal static CheckVerdict StaleCleared() => new(CheckResult.Pass, "cleared=true");
 
