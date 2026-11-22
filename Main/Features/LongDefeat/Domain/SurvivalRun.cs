@@ -426,6 +426,8 @@ internal sealed partial class SurvivalRun
 
         RefillPosts(fx);
         fx.RestShare = _r.RestShare;
+        if (_defenderHealthMean >= 0f)
+            _defenderHealthMean += _r.RestShare * (1f - _defenderHealthMean);
         _phase = RunPhase.Intermission;
         _left = _r.IntermissionSeconds;
     }
