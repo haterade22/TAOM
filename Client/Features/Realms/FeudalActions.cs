@@ -207,6 +207,6 @@ internal static class FeudalActions
             },
             _ => UiQueue.Post(afterNo),
             string.Empty, items.Count > 12);
-        MBInformationManager.ShowMultiSelectionInquiry(data, true);
+        MBInformationManager.ShowMultiSelectionInquiry(data, pauseGameActiveState: true);
     }
 }

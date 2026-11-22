@@ -55,8 +55,8 @@ public sealed class ChroniclePresenter : IChroniclePresenter
         // SingleQueryPopUpVM null-checks the affirmative action: the button only closes the popup.
         InformationManager.ShowInquiry(
             new InquiryData(title, body, true, false, button, null, null, null),
-            true,
-            false);
+            pauseGameActiveState: true,
+            prioritize: false);
     }
 
     private static TextObject Text(string text, ChronicleAnnouncement announcement)
