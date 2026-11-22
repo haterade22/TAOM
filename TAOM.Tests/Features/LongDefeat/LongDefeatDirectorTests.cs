@@ -1294,6 +1294,27 @@ public class LongDefeatDirectorTests
     }
 
     [TestMethod]
+    public void Finish_AHardRun_SavesUnderTheHardKey_AndLeavesTheNormalRowAlone()
+    {
+        var (records, dir) = Records();
+        try
+        {
+            records.Best.TrySave("helms", new BestRun(9, 999), out _);
+            var rig = NewRig(new RunOptions { StopAfterWaves = 1, Difficulty = RunDifficulty.Hard }, records: records);
+
+            ClearOneWave(rig);
+
+            Assert.AreEqual(new BestRun(1, 110), records.Best.Load("helms:hard"));
+            Assert.AreEqual(new BestRun(9, 999), records.Best.Load("helms"), "the normal best is its own row");
+            Assert.AreEqual(new BestRun(1, 110), rig.Session.Best, "the end panel shows the hard best, not the normal one");
+        }
+        finally
+        {
+            System.IO.Directory.Delete(dir, true);
+        }
+    }
+
+    [TestMethod]
     public void Finish_ABetterRunThatCannotBeSaved_StillShowsTheStoredBest()
     {
         var (records, dir) = Records();

@@ -65,6 +65,37 @@ public class LongDefeatShippedConfigTests
         logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
     }
 
+    // Both fortresses share the wave counts, so one table pins both (phase5-plan.md, Slice 6).
+    [DataTestMethod]
+    [DataRow("helms")]
+    [DataRow("minas_tirith")]
+    public void BuildPlan_Hard_ScalesTheShippedWavesAndSchedule(string fortressId)
+    {
+        var (catalog, logger) = Load();
+        Assert.IsTrue(catalog.TryGetFortress(fortressId, out var fortress));
+        var hard = catalog.BuildPlan(fortress, new RunOptions { Difficulty = RunDifficulty.Hard });
+        var normal = catalog.BuildPlan(fortress, RunOptions.Default);
+
+        CollectionAssert.AreEqual(new[] { 138, 150, 150, 156, 163 }, Enumerable.Range(1, 5).Select(w => hard.Waves.ForWave(w).Count).ToArray());
+        CollectionAssert.AreEqual(new[] { 110, 120, 120, 125, 130 }, Enumerable.Range(1, 5).Select(w => normal.Waves.ForWave(w).Count).ToArray());
+        Assert.AreEqual(250, hard.Waves.ForWave(10).Count);
+        Assert.AreEqual(288, hard.Waves.ForWave(13).Count);
+        Assert.AreEqual(1.1875f, hard.Waves.ForWave(13).HealthFactor, 1e-5f);
+        Assert.AreEqual(1.1125f, hard.Waves.ForWave(13).DamageFactor, 1e-5f);
+        Assert.AreEqual(375, hard.Waves.ForWave(20).Count);
+        Assert.AreEqual(1.625f, hard.Waves.ForWave(20).HealthFactor, 1e-5f);
+        Assert.AreEqual(1.375f, hard.Waves.ForWave(20).DamageFactor, 1e-5f);
+        Assert.AreEqual(230, normal.Waves.ForWave(13).Count);
+        Assert.AreEqual(300, normal.Waves.ForWave(20).Count);
+        Assert.AreEqual(1.15f, normal.Waves.ForWave(13).HealthFactor, 1e-5f);
+        Assert.AreEqual(1.09f, normal.Waves.ForWave(13).DamageFactor, 1e-5f);
+        Assert.AreEqual(1.5f, normal.Waves.ForWave(20).HealthFactor, 1e-5f);
+        Assert.AreEqual(1.3f, normal.Waves.ForWave(20).DamageFactor, 1e-5f);
+        CollectionAssert.AreEqual(new[] { 0, 0, 1, 1, 2, 2, 3 }, new[] { 1, 2, 3, 7, 8, 12, 13 }.Select(w => hard.Affixes.CountFor(w)).ToArray());
+        CollectionAssert.AreEqual(new[] { 0, 0, 1, 1, 2, 2, 3 }, new[] { 1, 4, 5, 9, 10, 14, 15 }.Select(w => normal.Affixes.CountFor(w)).ToArray());
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
     private static double MeanLevel(WaveSpec wave, Dictionary<string, XElement> troops) =>
         wave.Mix.Sum(m => m.Weight * (double)(int)troops[m.TroopId].Attribute("level")!) / wave.Mix.Sum(m => m.Weight);
 
@@ -513,10 +544,13 @@ public class LongDefeatShippedConfigTests
 
         foreach (var f in catalog.Fortresses)
         {
-            var rules = catalog.BuildPlan(f, RunOptions.Default).Rules;
-            var smallest = f.Waves.Authored.Min(w => w.Count);
-            Assert.IsTrue(rules.KeepMinAttackers > rules.StragglerShare * smallest,
-                $"{f.Id}: keepMinAttackers {rules.KeepMinAttackers} must exceed {rules.StragglerShare} of {smallest}");
+            foreach (var difficulty in new[] { RunDifficulty.Normal, RunDifficulty.Hard })
+            {
+                var plan = catalog.BuildPlan(f, new RunOptions { Difficulty = difficulty });
+                var smallest = plan.Waves.SmallestAuthoredCount;
+                Assert.IsTrue(plan.Rules.KeepMinAttackers > plan.Rules.StragglerShare * smallest,
+                    $"{f.Id} {difficulty}: keepMinAttackers {plan.Rules.KeepMinAttackers} must exceed {plan.Rules.StragglerShare} of {smallest}");
+            }
         }
     }
 

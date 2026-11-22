@@ -143,6 +143,21 @@ public class LongDefeatRunReportTests
         Assert.AreEqual("archer", (string?)report["class"]);
     }
 
+    [DataTestMethod]
+    [DataRow(false, "normal")]
+    [DataRow(true, "hard")]
+    public void Build_TheDifficultyFollowsTheClass_AndSchemaStaysAsItWas(bool hard, string expected)
+    {
+        var options = new RunOptions { Seed = 1UL, Difficulty = hard ? RunDifficulty.Hard : RunDifficulty.Normal };
+
+        var text = Text(new RunResult(RunEndReason.TargetReached, 2, 2, 9), new RunStats(), new Purse(600), options);
+        var report = JObject.Parse(text);
+
+        Assert.AreEqual(expected, (string?)report["difficulty"]);
+        var names = report.Properties().Select(p => p.Name).ToList();
+        Assert.AreEqual(names.IndexOf("class") + 1, names.IndexOf("difficulty"), "the difficulty comes right after the class");
+    }
+
     [TestMethod]
     public void Build_AnUnseededOptionsRecordWritesNullNotAMadeUpSeed()
     {

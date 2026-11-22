@@ -13,10 +13,10 @@ namespace TAOM.Features.LongDefeat;
 internal static class LongDefeatCommands
 {
     internal const string StartUsageHead =
-        "Format is \"taom.ld_start <fortress> [waves] [class]\".\n"
+        "Format is \"taom.ld_start <fortress> [waves] [class] [normal|hard]\".\n"
         + "Starts The Long Defeat from the main menu with no prompt. With a wave count the run ends as won once that many waves are cleared; "
         + "without one it plays until the garrison or the keep falls. With a class the lord carries that class's kit; without one he takes the first class on offer. "
-        + "A class id may stand in the second place when there is no wave count.";
+        + "A class id may stand in the second place when there is no wave count. A last word of normal or hard sets the difficulty; without one the run is normal.";
 
     private const int MaxWaves = 1000;
 
@@ -38,7 +38,11 @@ internal static class LongDefeatCommands
         if (!catalog.TryGetFortress(args[0], out var fortress))
             return $"No fortress \"{args[0]}\".\n" + Usage(catalog);
 
-        var options = RunOptions.Default;
+        var difficulty = RunDifficulty.Normal;
+        if (args.Count > 1 && RunDifficulties.TryParse(args[args.Count - 1], out difficulty))
+            args = args.Take(args.Count - 1).ToList();
+
+        var options = RunOptions.Default with { Difficulty = difficulty };
         var offer = catalog.ClassesFor(fortress);
         var classWord = args.Count > 2 ? args[2] : null;
         if (args.Count > 1)
@@ -64,9 +68,10 @@ internal static class LongDefeatCommands
         if (!prompt.Start(setup))
             return "The Long Defeat could not start (no TAOM.Client, or the load failed); the log and the main menu notice say why.";
 
+        var where = difficulty == RunDifficulty.Hard ? fortress.Id + " (hard)" : fortress.Id;
         return options.StopAfterWaves is { } target
-            ? $"Starting The Long Defeat at {fortress.Id}, {target} waves."
-            : $"Starting The Long Defeat at {fortress.Id}, until it is lost.";
+            ? $"Starting The Long Defeat at {where}, {target} waves."
+            : $"Starting The Long Defeat at {where}, until it is lost.";
     }
 
     private const string ClearWord = "clear";

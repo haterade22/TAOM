@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.LongDefeat.Autorun;
+using TAOM.Features.LongDefeat.Domain;
 
 namespace TAOM.Tests.Features.LongDefeat.Autorun;
 
@@ -220,6 +221,32 @@ public class LongDefeatAutorunPlanTests
         StringAssert.Contains(text, "waves=2");
         StringAssert.Contains(text, "quit=1");
         StringAssert.Contains(text, "out=E:\\x");
+    }
+
+    [TestMethod]
+    public void Resolve_DifficultyDefaultsToNormal_AndReadsHardWithoutCase()
+    {
+        var plain = Resolve(Out);
+        var hard = Resolve(Out + "difficulty=Hard\n");
+
+        Assert.AreEqual(RunDifficulty.Normal, plain.Difficulty);
+        Assert.AreEqual(RunDifficulty.Hard, hard.Difficulty);
+        Assert.AreEqual(0, hard.Warnings.Count);
+        Assert.AreEqual(RunDifficulty.Normal, plain.ToSetup("helms").Options.Difficulty);
+        Assert.AreEqual(RunDifficulty.Hard, hard.ToSetup("helms").Options.Difficulty);
+        StringAssert.Contains(plain.Describe(), " difficulty=normal ");
+        StringAssert.Contains(hard.Describe(), " difficulty=hard ");
+    }
+
+    [TestMethod]
+    public void Resolve_AnUnknownDifficulty_WarnsOnceNamingTheValue_AndPlaysNormal()
+    {
+        var plan = Resolve(Out + "difficulty=nightmare\n");
+
+        Assert.AreEqual(RunDifficulty.Normal, plan.Difficulty);
+        Assert.AreEqual(RunDifficulty.Normal, plan.ToSetup("helms").Options.Difficulty);
+        Assert.AreEqual(1, plan.Warnings.Count);
+        StringAssert.Contains(plan.Warnings[0], "difficulty='nightmare'");
     }
 
     [TestMethod]
