@@ -18,7 +18,7 @@ internal static class ScenarioArmFile
         var days = ScenarioPlan.DefaultDays;
         var speed = ScenarioPlan.DefaultSpeed;
         double stall = ScenarioPlan.DefaultStallSeconds, wallLimit = ScenarioPlan.DefaultWallLimitSeconds, missionLimit = ScenarioPlan.DefaultMissionLimitSeconds;
-        var quit = false;
+        bool quit = false, openByDate = false;
         var commands = new List<string>();
         var after = new List<string>();
         string offerEvent = "-", choice = "-";
@@ -59,6 +59,7 @@ internal static class ScenarioArmFile
                     break;
                 case "event": offerEvent = value.Length == 0 ? "-" : value; break;
                 case "choice": choice = value.Length == 0 ? "-" : value.ToLowerInvariant(); break;
+                case "open_by_date": openByDate = Flag(key, value, openByDate, warnings); break;
                 default: warnings.Add("unknown key '" + key + "' ignored"); break;
             }
         }
@@ -87,6 +88,7 @@ internal static class ScenarioArmFile
             Days = days, Speed = speed, StallSeconds = stall, WallLimitSeconds = wallLimit, Quit = quit,
             MissionId = story ? mission : "-", MissionLimitSeconds = missionLimit, Commands = commands,
             EventId = offer ? offerEvent : "-", Choice = offer ? choice : "-", AfterCommands = offer ? after : new List<string>(),
+            OpenByDate = offer && openByDate,
         };
     }
 

@@ -75,12 +75,13 @@ UTF-8 `key=value` lines. An unknown key or a bad value is a warning and keeps th
 | `mission_limit_seconds` | number | `story-mission` only: wall seconds from the mission screen until the run stops as `mission_limit` (default 1200) |
 | `event` | string | `story-offer` only, required: the War Chronicle event id the run waits to be offered (a missing one, or `-`, is unarmed). Ignored under the other kinds |
 | `choice` | string | `story-offer` only, required: `defend`, `attack` or `fate` (any case; another value is unarmed) |
+| `open_by_date` | 0 or 1 | `story-offer` only (default 0): the run arms no open command and waits, on fast forward at `speed`, for the event's window to open on its own day; the wait for the popup is then the whole `wall_limit_seconds`, not 120 s |
 | `after` | string, repeatable | `story-offer` only: a console command line run once when the offer ended, like `command=` and appended to `commands.txt` |
 | `culture` | string | The player's culture id (default `gondor`; a kingdom id such as `empire_w` fails); checked at the culture stage |
 | `days` | int | Campaign days to run, 1 to 1000 (default 3) |
 | `speed` | float | Fast forward multiplier, above 0, at most 30 (default 15). `story-offer` holds this speed only while it waits for the popup |
 | `stall_seconds` | number | Wall seconds with no new day before the run stops as `stalled` (default 600) |
-| `wall_limit_seconds` | number | Wall seconds from the campaign start before the run stops as `wall_limit` (default 3600) |
+| `wall_limit_seconds` | number | Wall seconds from the campaign start before the run stops as `wall_limit` (default 3600). A by-date `story-offer` run also takes its popup wait from it: this limit less `mission_limit_seconds`, never under 120 s, counted from the start of `OfferWait`, and that wait ends as `offer_not_shown` |
 | `quit` | flag | Quit the game after the run |
 | `command` | string, repeatable | A console command line run once when the map is ready, in order (#1434). Each output goes to the TAOM log and to `commands.txt` in `out`; a command that throws is reported there and the run goes on. The frame that runs them is not counted against the stall or wall clock. A `taom.*` command needs `cheat_mode = 1` |
 
@@ -93,7 +94,7 @@ The story kind adds `mission_refused`, `mission_not_opened`, `mission_limit`, `m
 
 The offer kind uses `mission_not_opened`, `mission_limit`, `mission_undecided`, `mission_no_verdict` and `return_failed` as the story kind does,
 and adds `offer_refused` (the open command did not open the window, the popup's accept button could not be pressed, the menu never settled,
-the wanted option is not offered) and `offer_not_shown` (no popup for the armed event in 120 s). Each ends with one warning that names the
+the wanted option is not offered) and `offer_not_shown` (no popup for the armed event in 120 s, or in the by-date wait). Each ends with one warning that names the
 reason, its cause and `open_menu=`.
 
 ### The story-mission kind
@@ -138,14 +139,17 @@ alone cannot pass it; the strict `ended` pattern names only the three ways a mis
 
 `python tools/run_scenario.py --kind story-offer --event <id> --choice <defend|attack|fate> [--culture <id>]` (#1105 slices 3 to 5). The
 runner arms `command=taom.chronicle_open <event> confirm` (first, then any `--command`) and `after=taom.chronicle_status`, and `speed=1`.
+With `--by-date` it arms `open_by_date=1` in place of the open command, and `speed=15` (or `--speed`). The by-date wait has no stall check:
+a locked clock, or a window the map resolves with no offer (an attacker already besieges the target, or its owner changed), costs the whole
+wait before `offer_not_shown`.
 The phases, from the settled map (`WaitMap` runs the command rows):
 
 1. After the commands: a command output with no `[WarChronicle] Opened:` (a cheat mode off, an event that is not Pending, a window the
-   chronicle refuses) finishes `offer_refused` at once and the warning quotes the output. An arm file with no command skips this check.
-2. `OfferWait` (120 s, `ScenarioRules.OfferPopupWaitSeconds`): keeps fast forward at the armed speed, hides scene notifications, closes event
+   chronicle refuses) finishes `offer_refused` at once and the warning quotes the output. A by-date run (`open_by_date=1`) skips this check.
+2. `OfferWait` (120 s, `ScenarioRules.OfferPopupWaitSeconds`; by date, `ScenarioRules.OfferPopupLimit`): keeps fast forward at the armed speed, hides scene notifications, closes event
    windows, and hides inquiries only while `StoryOfferBehavior.Pending` is not the armed event (a hidden popup is a snooze until tomorrow). When
    the behavior holds the armed event and the popup has stayed open 2 s, the host presses its affirmative button; the driver logs
-   `accepted the offer popup '<title>'`. No popup in 120 s is `offer_not_shown`, and the warning quotes the command output.
+   `accepted the offer popup '<title>'`. No popup in that time is `offer_not_shown`, and the warning quotes the campaign day and the command output.
 3. `OfferMenu`: with the menu `taom_story_offer` shown for 5 s and no event window open or waiting, the host picks the first offered option of
    the choice: `defend` is `taom_story_offer_defend` or `taom_story_offer_stand`, `attack` is `taom_story_offer_attack` or
    `taom_story_offer_hunt`, `fate` is `taom_story_offer_decline`. For a side the host first sets `StoryOfferBehavior.BotPlaysNextMission`, so the
@@ -328,7 +332,10 @@ so it needs Mike's word.
 
 5. Story-offer kind (owed, never run; it needs `cheat_mode = 1`, Mike's word and the idle gate):
    `python tools/run_scenario.py --kind story-offer --event breaking --choice defend`, then `--choice attack --culture isengard`,
-   `--choice fate`, and `--event hornburg --choice defend`. `--days`, `--speed`, `--stall-seconds` and `--mission` are refused with it.
+   `--choice fate`, and `--event hornburg --choice defend --by-date`. `--days`, `--stall-seconds` and `--mission` are refused with it,
+   and `--speed` unless `--by-date` is given. A siege window opens only in the Full War (`taom.chronicle_open` answers "a siege opens only
+   in the Full War"), so `hornburg` needs `--by-date`: the run then arms no open command, holds fast forward (speed 15 by default) and
+   waits for the popup as long as the wall limit (4200 s by default).
 
 The first story run (`E:\Temp\scenario-runs\20261116-075342`, build 4baa2f53a) settled what only a game can prove. The click opened
 the scene: `phase MissionOpen -> InMission` came 32 s after the game started, with `[StoryMissions] launching ... for

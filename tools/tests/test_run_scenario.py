@@ -138,6 +138,32 @@ class ArmTextTests(unittest.TestCase):
         self.assertEqual((keys["days"], keys["culture"], keys["speed"], keys["scenario"], keys["stall_seconds"]), ("30", "sturgia", "7.5", "war-30", "900"))
         self.assertEqual(wall, 1800)
 
+    def test_by_date_arms_no_open_command_and_runs_fast(self):
+        known, _ = parse(["--kind", "story-offer", "--event", "hornburg", "--choice", "defend", "--by-date"])
+        text, wall = rs.arm_text_for(Path(r"E:\x"), known, SimpleNamespace(wall_limit=None))
+        keys = arm_dict(text)
+        self.assertEqual((keys["open_by_date"], keys["speed"], keys["after"]), ("1", "15", "taom.chronicle_status"))
+        self.assertNotIn("chronicle_open", text)
+        self.assertEqual(wall, rs.default_wall_limit(rs.BY_DATE_DAYS, rs.DEFAULT_MISSION_LIMIT_SECONDS))
+        self.assertGreaterEqual(wall, 3600)
+
+    def test_by_date_takes_a_speed_and_the_plain_offer_does_not(self):
+        known, _ = parse(["--kind", "story-offer", "--event", "hornburg", "--choice", "defend", "--by-date", "--speed", "30"])
+        text, _ = rs.arm_text_for(Path(r"E:\x"), known, SimpleNamespace(wall_limit=None))
+        self.assertEqual(arm_dict(text)["speed"], "30")
+        self.assertIn("needs --by-date", parse_fails(["--kind", "story-offer", "--event", "breaking", "--choice", "defend", "--speed", "30"]))
+
+    def test_the_plain_offer_still_arms_the_open_command_first(self):
+        known, _ = parse(["--kind", "story-offer", "--event", "breaking", "--choice", "defend"])
+        text, _ = rs.arm_text_for(Path(r"E:\x"), known, SimpleNamespace(wall_limit=None))
+        self.assertIn("command=taom.chronicle_open breaking confirm\n", text)
+        self.assertNotIn("open_by_date", text)
+        self.assertEqual(arm_dict(text)["speed"], "1")
+
+    def test_by_date_is_only_for_the_offer_kind(self):
+        self.assertIn("--by-date is only for --kind story-offer", parse_fails(["--by-date"]))
+        self.assertIn("--by-date is only for --kind story-offer", parse_fails(["--kind", "story-mission", "--mission", "helms_deep_defend", "--by-date"]))
+
     def test_computed_wall_limit_grows_with_days(self):
         self.assertEqual(rs.default_wall_limit(3), 1800)
         self.assertEqual(rs.default_wall_limit(60), 1800)

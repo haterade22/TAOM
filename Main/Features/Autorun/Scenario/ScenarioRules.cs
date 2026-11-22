@@ -66,6 +66,13 @@ internal static class ScenarioRules
     internal static bool OpenedTheWindow(string output, string eventId) =>
         output.Contains("[WarChronicle] Opened: '" + eventId + "' is Active until day");
 
+    /// <summary>
+    /// How long the offer kind waits for the popup: 120 s after an open command. When the window opens by its date, the wall limit less the
+    /// mission's share of it, so that a late popup still leaves the mission its whole limit before the runner gives up.
+    /// </summary>
+    internal static double OfferPopupLimit(bool openByDate, double wallLimitSeconds, double missionLimitSeconds) =>
+        openByDate ? System.Math.Max(OfferPopupWaitSeconds, wallLimitSeconds - missionLimitSeconds) : OfferPopupWaitSeconds;
+
     /// <summary>True once the offer's popup has stayed open long enough to be a settled screen; a NaN never settles.</summary>
     internal static bool PopupSettled(double heldSeconds) => heldSeconds >= OfferPopupSettleSeconds;
 

@@ -78,6 +78,12 @@ internal sealed class ScenarioPlan
     /// <summary>Console command lines (<c>command=</c>, repeatable) run once when the map is ready, in order (#1434).</summary>
     public IReadOnlyList<string> Commands { get; internal init; } = Array.Empty<string>();
 
+    /// <summary>
+    /// The <see cref="KindStoryOffer"/> kind arms no open command and waits, on fast forward, for the event's window to open on its own day
+    /// (<c>open_by_date=1</c>). A siege window opens only in the Full War, which no console command can bring.
+    /// </summary>
+    public bool OpenByDate { get; internal init; }
+
     /// <summary>Console command lines (<c>after=</c>, repeatable) run once after the story offer finished, in order; only the <see cref="KindStoryOffer"/> kind reads them.</summary>
     public IReadOnlyList<string> AfterCommands { get; internal init; } = Array.Empty<string>();
 
@@ -115,7 +121,7 @@ internal sealed class ScenarioPlan
     internal string Describe() =>
         "kind=" + Kind + " scenario=" + Scenario + " mission=" + MissionId + " mission_limit_seconds=" + Num(MissionLimitSeconds) + " culture=" + Culture + " days=" + Days + " speed=" + Num(Speed)
         + " stall_seconds=" + Num(StallSeconds) + " wall_limit_seconds=" + Num(WallLimitSeconds) + " quit=" + (Quit ? 1 : 0) + " commands=" + Commands.Count
-        + " event=" + EventId + " choice=" + Choice + " after=" + AfterCommands.Count + " out=" + OutFolder + " arm=" + ArmPath;
+        + " event=" + EventId + " choice=" + Choice + " open_by_date=" + (OpenByDate ? 1 : 0) + " after=" + AfterCommands.Count + " out=" + OutFolder + " arm=" + ArmPath;
 
     internal static string Num(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);
 

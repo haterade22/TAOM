@@ -184,4 +184,11 @@ public class ScenarioRulesTests
     {
         Assert.AreEqual(120.0, ScenarioRules.StoryStepWaitSeconds);
     }
+
+    [DataTestMethod]
+    [DataRow(false, 4200.0, 1200.0, 120.0, DisplayName = "after an open command: the fixed wait")]
+    [DataRow(true, 4200.0, 1200.0, 3000.0, DisplayName = "by date: the wall limit less the mission's share")]
+    [DataRow(true, 1000.0, 1200.0, 120.0, DisplayName = "by date with a small wall limit: never under the fixed wait")]
+    public void OfferPopupLimit_LeavesTheMissionItsShareOfTheWallLimit(bool byDate, double wall, double mission, double expected) =>
+        Assert.AreEqual(expected, ScenarioRules.OfferPopupLimit(byDate, wall, mission));
 }

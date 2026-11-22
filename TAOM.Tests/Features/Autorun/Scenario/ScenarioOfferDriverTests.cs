@@ -163,17 +163,55 @@ public class ScenarioOfferDriverTests
         Assert.AreEqual(0, _host.OfferChoices.Count);
     }
 
-    [TestMethod]
-    public void Tick_NoCommandArmed_SkipsTheRefusalCheck()
+    private const string ByDate = "kind=story-offer\nout=E:\\x\\out\nevent=hornburg\nchoice=fate\nopen_by_date=1\nspeed=15\nwall_limit_seconds=400\nmission_limit_seconds=100\n";
+
+    private ScenarioAutorunDriver ToTheMap(string text)
     {
-        var driver = Driver(text: "kind=story-offer\nout=E:\\x\\out\nevent=hornburg\nchoice=fate\n");
+        var driver = Driver(text: text);
         _host.OnStart = () => _host.ScreenValue = AutorunScreen.CharacterCreation;
         Run(driver, 5);
         _host.ScreenValue = AutorunScreen.Map;
         _host.Days = 10.4;
         Run(driver, 5);
+        return driver;
+    }
+
+    [TestMethod]
+    public void Tick_OpenByDate_RunsNoOpenCommandAndWaitsForThePopup()
+    {
+        var driver = ToTheMap(ByDate);
 
         Assert.AreEqual("OfferWait", driver.PhaseName);
+        Assert.AreEqual(0, _host.CommandsRun.Count);
+    }
+
+    [TestMethod]
+    public void Tick_OpenByDate_AnOtherCommandsAnswerIsNoRefusal()
+    {
+        var driver = ToTheMap(ByDate + "command=taom.print_war_pledges\n");
+
+        Assert.AreEqual("OfferWait", driver.PhaseName);
+    }
+
+    [TestMethod]
+    public void Tick_OpenByDate_WaitsForThePopupUntilTheWallLimitLessTheMissionsShare_NotThe120Seconds()
+    {
+        var driver = ToTheMap(ByDate);
+
+        Run(driver, 280);
+        Assert.AreEqual("OfferWait", driver.PhaseName, "the window opens on its own day, which is many minutes away");
+        Run(driver, 30);
+
+        Assert.AreEqual("offer_not_shown", Value(Done(), "reason"));
+        Assert.AreEqual(1, WarnLogs("offer_not_shown: the offer popup never showed in 300 s"));
+    }
+
+    [TestMethod]
+    public void Tick_NoOpenCommandAndNotByDate_FinishesOfferRefusedAtOnce()
+    {
+        ToTheMap("kind=story-offer\nout=E:\\x\\out\nevent=hornburg\nchoice=fate\n");
+
+        Assert.AreEqual("offer_refused", Value(Done(), "reason"));
     }
 
     [TestMethod]

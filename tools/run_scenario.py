@@ -12,16 +12,19 @@ the map to come back, and quits. It runs no campaign days of its own, so --days,
 The kind story-offer drives the real story offer of the War Chronicle (#1105 slices 3 to 5): the armed console command taom.chronicle_open
 opens the event's window on the settled map, the driver presses the offer popup's accept button, picks the wanted option of the menu
 taom_story_offer, plays the mission with the bot, clicks Continue and runs taom.chronicle_status. --choice fate picks "Let fate decide" and plays
-no mission. It refuses --mission, --days, --speed and --stall-seconds, as the story-mission kind does.
+no mission. It refuses --mission, --days and --stall-seconds, as the story-mission kind does, and --speed unless --by-date is given.
+With --by-date it arms no open command: the campaign runs on fast forward until the event's window opens on its own day, and the driver
+waits for the popup as long as the wall limit. A siege window (hornburg) opens only in the Full War, day 44 by default, so it needs this.
 
 Own arguments (everything else goes to the Fords runner, for example --dry-run, --runs, --wall-limit, --require-idle-minutes):
   --kind campaign-new|story-mission|story-offer   --days N (campaign-new only: 1 to 1000, default 3)   --culture ID (default gondor)
-  --speed X (campaign-new only: above 0, at most 30, default 15)   --scenario LABEL (default the kind)
+  --speed X (campaign-new, and story-offer with --by-date: above 0, at most 30, default 15)   --scenario LABEL (default the kind)
   --stall-seconds N (campaign-new only, default 600)
   --command LINE (repeatable, both kinds: a console command run once the map is ready; output in the TAOM log and commands.txt.
   A taom.* command needs cheat_mode = 1 in engine_config.txt, or its output says cheat mode is disabled)
   --mission ID (story-mission only, required: a story mission id of Main/_Module/ModuleData/story_missions/story_missions.json, for
   example helms_deep_defend or helms_deep_attack; an unknown id is refused)
+  --by-date (story-offer only: no open command, fast forward at --speed, default 15, until the window opens by its date)
   --event ID --choice defend|attack|fate (story-offer only, both required: a War Chronicle event of war_chronicle.json that has a story block,
   breaking or hornburg; attack needs an event with an attackMission, which is breaking only). --culture decides the sides the offer shows: the
   default gondor is a free people (defend); attack needs an evil one that character creation offers, for example isengard. The sides are read
@@ -56,7 +59,7 @@ the decline lands (a hero story resolves Occurred at once; a fortress window log
 Run:  python tools/run_scenario.py --days 30 --dry-run
       python tools/run_scenario.py --kind story-offer --event breaking --choice defend --dry-run
       python tools/run_scenario.py --kind story-offer --event breaking --choice attack --culture isengard --dry-run
-      python tools/run_scenario.py --kind story-offer --event hornburg --choice defend --dry-run
+      python tools/run_scenario.py --kind story-offer --event hornburg --choice defend --by-date --dry-run
       python tools/run_scenario.py --kind story-mission --mission helms_deep_defend --dry-run
       python tools/run_scenario.py --kind story-mission --mission helms_deep_attack --dry-run
 Tests: python -m unittest tools.tests.test_run_scenario
@@ -105,6 +108,7 @@ OFFER_CHOICES = ("defend", "attack", "fate")
 # The popup needs campaign ticks with time moving (Campaign.Tick runs the tick event only when the campaign dt is above 0); the driver
 # holds fast forward at this multiplier while it waits, so as few days as possible pass.
 OFFER_SPEED = 1
+BY_DATE_DAYS = 120  # the campaign days a --by-date run may take to reach its window: the Full War starts on day 44 by default
 OFFER_EVIL_CULTURE = "isengard"  # in cultures.json and alignment.json "evil"
 
 
@@ -259,13 +263,17 @@ def build_own_parser():
     parser.add_argument("--choice", choices=OFFER_CHOICES, default=None,
                         help="story-offer only, required: defend (defend or stand), attack (attack or hunt; needs --culture evil, for example "
                              f"{OFFER_EVIL_CULTURE}) or fate (Let fate decide, no mission)")
+    parser.add_argument("--by-date", action="store_true",
+                        help="story-offer only: arm no open command; run the campaign on fast forward (--speed, default "
+                             f"{DEFAULT_SPEED:g}) until the event's window opens on its own day. A siege window such as hornburg opens only in the "
+                             "Full War, so it needs this")
     parser.add_argument("--days", type=days_arg, default=None,
                         help=f"campaign-new only: campaign days to run, 1 to {MAX_DAYS} (default {DEFAULT_DAYS})")
     parser.add_argument("--mission", default=None, help="story-mission only, required: the story mission id, for example helms_deep_defend")
     parser.add_argument("--culture", default=DEFAULT_CULTURE,
                         help=f"the player's culture id (default {DEFAULT_CULTURE}, a free people; story-offer attack needs an evil one such as {OFFER_EVIL_CULTURE})")
     parser.add_argument("--speed", type=speed_arg, default=None,
-                        help=f"campaign-new only: campaign speed, above 0 and at most {MAX_SPEED:g} (default {DEFAULT_SPEED:g})")
+                        help=f"campaign-new, and story-offer with --by-date: campaign speed, above 0 and at most {MAX_SPEED:g} (default {DEFAULT_SPEED:g})")
     parser.add_argument("--scenario", default=None, help="label written to the arm and done files (default the kind)")
     parser.add_argument("--command", action="append", default=[], type=command_arg,
                         help="a console command line to run once the map is ready, repeatable; the output goes to the TAOM log and "
@@ -281,6 +289,8 @@ def parse_own(argv):
     known, rest = parser.parse_known_args(argv)
     if known.kind != KIND_OFFER and (known.event is not None or known.choice is not None):
         parser.error("--event and --choice are only for --kind story-offer")
+    if known.kind != KIND_OFFER and known.by_date:
+        parser.error("--by-date is only for --kind story-offer")
     if known.kind == KIND_OFFER:
         parse_offer(parser, known)
     elif known.kind == KIND_STORY:
@@ -316,9 +326,11 @@ def parse_own(argv):
 def parse_offer(parser, known):
     """Checks the story-offer arguments and adds what the arm text and the judge read: event, story, hero, mission (the one the choice launches,
     None for fate), shown_mission (the one the offer.shown line names) and side. All of it is read once here, at launch."""
-    for flag, value in (("--days", known.days), ("--speed", known.speed), ("--stall-seconds", known.stall_seconds)):
+    for flag, value in (("--days", known.days), ("--stall-seconds", known.stall_seconds)):
         if value is not None:
-            parser.error(f"{flag} is only for --kind campaign-new; a story-offer run reads none of them")
+            parser.error(f"{flag} is only for --kind campaign-new; a story-offer run reads neither")
+    if known.speed is not None and not known.by_date:
+        parser.error("--speed with --kind story-offer needs --by-date; without it the run holds speed 1 while it waits for the popup")
     if known.mission is not None:
         parser.error("--mission is only for --kind story-mission; a story-offer run takes the event's own mission")
     stories = chronicle_stories()
@@ -365,18 +377,23 @@ def number_text(value):
 def arm_text_for(out, known, args):
     """(arm file text, wall limit). The wall limit is the runner's --wall-limit when given, else computed from the days (campaign-new) or the
     boot allowance plus the mission limit (story-mission and story-offer). For campaign-new the Fords runner stops the process 15 minutes after
-    this limit, so the game's own limit trips first. The two story kinds write the key, but their driver reads no wall limit (only the Running
-    phase does, and they never enter it): --wall-limit only moves the runner's give-up time (this limit plus 15 minutes), which must stay above
+    this limit, so the game's own limit trips first. The two story kinds write the key. Their driver reads it only in a --by-date offer run,
+    where the wait for the popup is this limit less the mission limit (ScenarioRules.OfferPopupLimit) and the default covers BY_DATE_DAYS of
+    campaign. Otherwise --wall-limit only moves the runner's give-up time (this limit plus 15 minutes), which must stay above
     the boot time plus the story phases' own bounds, 2,880 s after the menu: creation 600 (ScenarioRules.CreationWaitSeconds), map 600
     (MapWaitSeconds), four steps of 120 (StoryStepWaitSeconds, or OfferPopupWaitSeconds for the offer's first: menu or popup, open or
     menu, mission seen, return) and the 1200 s mission limit (ScenarioPlan.DefaultMissionLimitSeconds). The story-mission kind writes no days,
     speed or stall seconds: its driver reads none of them. The story-offer kind writes the speed it holds while it waits for the popup."""
     if known.kind == KIND_OFFER:
         # The same steps as the story kind (the popup wait, the menu, the mission seen and the return, four waits of 120 s) and the same 1200 s mission.
-        wall_limit = args.wall_limit if args.wall_limit else default_wall_limit(DEFAULT_DAYS, DEFAULT_MISSION_LIMIT_SECONDS)
+        # By date, the popup wait is the days until the window opens: the wall limit covers BY_DATE_DAYS of campaign and the driver waits that long.
+        by_date = getattr(known, "by_date", False)
+        wall_limit = args.wall_limit if args.wall_limit else default_wall_limit(BY_DATE_DAYS if by_date else DEFAULT_DAYS, DEFAULT_MISSION_LIMIT_SECONDS)
+        speed = (known.speed if known.speed is not None else DEFAULT_SPEED) if by_date else OFFER_SPEED
         pairs = [("kind", known.kind), ("out", out), ("scenario", known.scenario), ("event", known.event), ("choice", known.choice),
-                 ("mission_limit_seconds", DEFAULT_MISSION_LIMIT_SECONDS), ("culture", known.culture), ("speed", number_text(OFFER_SPEED)),
-                 ("wall_limit_seconds", number_text(wall_limit)), ("quit", 1), ("command", f"taom.chronicle_open {known.event} confirm")]
+                 ("mission_limit_seconds", DEFAULT_MISSION_LIMIT_SECONDS), ("culture", known.culture), ("speed", number_text(speed)),
+                 ("wall_limit_seconds", number_text(wall_limit)), ("quit", 1)]
+        pairs += [("open_by_date", 1)] if by_date else [("command", f"taom.chronicle_open {known.event} confirm")]
         pairs += [("command", c) for c in known.command] + [("after", "taom.chronicle_status")]
         return "".join(f"{key}={value}\n" for key, value in pairs), wall_limit
     if known.kind == KIND_STORY:

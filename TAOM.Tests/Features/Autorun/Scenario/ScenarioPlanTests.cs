@@ -390,4 +390,16 @@ public class ScenarioPlanTests
         foreach (var part in new[] { "kind=campaign-new", "scenario=smoke", "mission=-", "mission_limit_seconds=1200", "culture=gondor", "days=3", "speed=15", "stall_seconds=600", "wall_limit_seconds=3600", "quit=1", "commands=2", "out=E:\\x\\out", "arm=" + ArmPath })
             StringAssert.Contains(text, part);
     }
+
+    [TestMethod]
+    public void Resolve_StoryOffer_OpenByDateIsAFlag_OffByDefault()
+    {
+        const string head = "kind=story-offer\nout=E:\\x\\out\nevent=hornburg\nchoice=defend\n";
+        ScenarioPlan Plan(string text) => ScenarioPlan.Resolve(n => n == ScenarioPlan.EnvVar ? @"E:\arm.txt" : null, _ => true, _ => text);
+
+        Assert.IsFalse(Plan(head).OpenByDate);
+        Assert.IsTrue(Plan(head + "open_by_date=1\n").OpenByDate);
+        StringAssert.Contains(Plan(head + "open_by_date=1\n").Describe(), " open_by_date=1 ");
+        Assert.IsFalse(Plan("kind=campaign-new\nout=E:\\x\\out\nopen_by_date=1\n").OpenByDate, "only the story-offer kind reads it");
+    }
 }

@@ -12,12 +12,12 @@ internal sealed partial class ScenarioAutorunDriver
     private bool _continueClicked;
 
     /// <summary>
-    /// The open command's answer starts with "[WarChronicle] Opened:" or says why not (a cheat mode off, an event that is not Pending). An arm
-    /// file with no command waits for the window to open by date.
+    /// The open command's answer starts with "[WarChronicle] Opened:" or says why not (a cheat mode off, an event that is not Pending). A
+    /// by-date plan arms no open command: the window opens on its own day.
     /// </summary>
     private bool OfferWindowOpened()
     {
-        if (_plan.Commands.Count == 0 || _commandOutputs.Any(output => ScenarioRules.OpenedTheWindow(output, _plan.EventId)))
+        if (_plan.OpenByDate || _commandOutputs.Any(output => ScenarioRules.OpenedTheWindow(output, _plan.EventId)))
             return true;
 
         Refused("offer_refused", "the open command did not open the window: " + OneLine(string.Join(" | ", _commandOutputs)));
@@ -37,10 +37,11 @@ internal sealed partial class ScenarioAutorunDriver
         if (_host.KeepFastForward(_plan.Speed))
             _resets++;
 
-        if (!ScenarioRules.Waiting(_wall - _phaseStart, ScenarioRules.OfferPopupWaitSeconds))
+        var limit = ScenarioRules.OfferPopupLimit(_plan.OpenByDate, _plan.WallLimitSeconds, _plan.MissionLimitSeconds);
+        if (!ScenarioRules.Waiting(_wall - _phaseStart, limit))
         {
-            Refused("offer_not_shown", "the offer popup never showed in " + ScenarioRules.OfferPopupWaitSeconds + " s pending=" + (_host.PendingOfferEvent ?? "none")
-                + " command output: " + OneLine(string.Join(" | ", _commandOutputs)));
+            Refused("offer_not_shown", "the offer popup never showed in " + ScenarioPlan.Num(limit) + " s pending=" + (_host.PendingOfferEvent ?? "none")
+                + " day=" + ScenarioRules.WholeDay(_host.ElapsedDays) + " command output: " + OneLine(string.Join(" | ", _commandOutputs)));
             return;
         }
 
