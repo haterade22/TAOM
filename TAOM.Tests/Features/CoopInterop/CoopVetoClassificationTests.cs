@@ -66,6 +66,10 @@ public class CoopVetoClassificationTests
             "Replaces the player's body loot for one fallen enemy. It skips vanilla only behind BattleGearLootService.Applies, which " +
             "needs the switch on and the single-player predicate (no session, no defer, no dedicated server, authority), so in a " +
             "co-op session vanilla's loot runs on every peer."),
+        ["Patch173_OrphanedBattleEncounter"] = new(CoopVeto.GatedForCoop,
+            "Crash guard (#1458). It skips the player's encounter with a party still attached to a finalized map event, after it " +
+            "finishes that event with the orphaned battle sweep. OrphanedBattleService.FinishBeforeEncounter returns false while " +
+            "ICoopSessionProvider.IsSessionActive or ShouldDeferToHost holds, so in a co-op session vanilla's encounter runs on every peer."),
         ["MakePeaceAction_ApplyInternal_Patch"] = new(CoopVeto.GatedForCoop,
             "Skips a peace. Condition reads IsWarOfTheRingActive -> WarOfTheRingService.CurrentPhase, " +
             "persisted as the WarOfTheRing_CurrentPhase SyncData key, which BT never replicates. " +
@@ -728,6 +732,7 @@ public class CoopVetoClassificationTests
                 "Patch150_ConformityTick_Prefix",
                 "Patch158_AiMercenaryHire_Prefix",
                 "Patch172_BattleGearLoot",
+                "Patch173_OrphanedBattleEncounter",
                 "ProposeCallToWarAgreementDecision_IsAllowed_Patch",
             },
             gated.ToArray());
