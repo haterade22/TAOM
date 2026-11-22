@@ -479,6 +479,20 @@ class TpacModuleFallbackTests(unittest.TestCase):
             vm.tpac_paths_for_modules(self.game, ["Silent"])
         self.assertEqual(err.getvalue().count("'Silent' contributes no .tpac"), 1)
 
+    def test_a_caller_passing_skips_gets_the_notice_every_call_and_stderr_stays_quiet(self):
+        import contextlib
+        import io
+        self._module("Quiet")
+        vm._WARNED_EMPTY_MODULES.discard("Quiet")
+        skips = []
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            vm.module_tpacs(self.game / "Modules" / "Quiet", "Quiet", skips)
+            vm.module_tpacs(self.game / "Modules" / "Quiet", "Quiet", skips)
+        self.assertEqual(err.getvalue(), "")
+        self.assertEqual(len(skips), 2)
+        self.assertIn("'Quiet' contributes no .tpac", skips[0])
+
     def test_missing_module_is_not_an_error(self):
         self.assertEqual(vm.tpac_paths_for_modules(self.game, ["Absent"]), [])
 

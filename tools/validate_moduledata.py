@@ -134,7 +134,7 @@ def generator_item_ref_issues(items: set) -> list:
 ARMOUR_CLASS_CODE = "ARMOUR_CLASS_TABLE_DRIFT"
 
 
-def armour_class_table_issues(game_modules: Path, moduledata: Path = None) -> list:
+def armour_class_table_issues(game_modules: Path, moduledata: Path = None, skips: list = None) -> list:
     """WARNING when the armour acquisition class table no longer matches the live Armory, or
     could not be verified against it this run.
 
@@ -143,8 +143,9 @@ def armour_class_table_issues(game_modules: Path, moduledata: Path = None) -> li
     (docs/features/armour-acquisition.md). The table is generated from the unversioned Armory, so
     an art drop that adds, renames or retires pieces leaves it stale with nothing else noticing: a
     new piece falls back to its engine tier, and an upgrade link can name a retired id. Skipped,
-    and announced on stderr (never silently passed), when `game_modules` has no LOTRLOME_Armory at
-    all. Reported as UNVERIFIED, never passed, when the generator raises, finds no armour, or
+    and announced (never silently passed), when `game_modules` has no LOTRLOME_Armory at
+    all: on stderr, or appended to `skips` when the caller passes one (run_all_passes does, so the
+    MCP client gets a PARTIAL_RUN notice). Reported as UNVERIFIED, never passed, when the generator raises, finds no armour, or
     reads a DIFFERENT Armory than the one under `game_modules`: generate_armour_classes.generate()
     reads rebalance_armor.ARMORY_DIR, which honours only $BANNERLORD_GAME_DIR and ignores
     --game-modules / $BANNERLORD_GAME_MODULES (tools/_gamedir.py), so a caller checking one
@@ -153,8 +154,11 @@ def armour_class_table_issues(game_modules: Path, moduledata: Path = None) -> li
     armory_root = game_modules / "LOTRLOME_Armory"
     table = "Main/_Module/ModuleData/armour_acquisition/armour_classes.xml"
     if not armory_root.exists():
-        print(f"WARNING: {ARMOUR_CLASS_CODE} SKIPPED: no LOTRLOME_Armory under {game_modules}",
-              file=sys.stderr)
+        text = f"{ARMOUR_CLASS_CODE} SKIPPED: no LOTRLOME_Armory under {game_modules}"
+        if skips is not None:
+            skips.append(text)
+        else:
+            print(f"WARNING: {text}", file=sys.stderr)
         return []
 
     def unverified(why: str) -> list:
@@ -310,7 +314,7 @@ BODY_CODE = "MISSING_COLLISION_BODY"
 MESH_CODE = "MISSING_VISUAL_MESH"
 
 
-def _loaded_tpacs(game_modules: Path, moduledata: Path = None) -> list:
+def _loaded_tpacs(game_modules: Path, moduledata: Path = None, skips: list = None) -> list:
     """The packs of every module the client loads for item art (validate_mesh_refs.DEFAULT_TPAC_MODULES),
     each tree as validate_mesh_refs.module_tpacs chooses it. TAOM is read from the repo module this run
     validates (`moduledata.parent`) when `moduledata` is given, as slot_rejection_issues does."""
@@ -318,7 +322,7 @@ def _loaded_tpacs(game_modules: Path, moduledata: Path = None) -> list:
     out = []
     for name in vmr.DEFAULT_TPAC_MODULES:
         folder = Path(moduledata).parent if name == "TAOM" and moduledata is not None else Path(game_modules) / name
-        out.extend(vmr.module_tpacs(folder, name))
+        out.extend(vmr.module_tpacs(folder, name, skips))
     return out
 
 
@@ -331,7 +335,8 @@ def _item_refs(game_modules: Path, moduledata: Path) -> list:
     return refs
 
 
-def missing_collision_body_issues(game_modules: Path, moduledata: Path, item_refs=_item_refs) -> list:
+def missing_collision_body_issues(game_modules: Path, moduledata: Path, item_refs=_item_refs,
+                                  skips: list = None) -> list:
     """ERROR per collision-body ref no loaded tpac ships, WARNING per visual mesh.
 
     A body the engine cannot resolve is not a warning class: `PreloadHelper.
@@ -356,7 +361,7 @@ def missing_collision_body_issues(game_modules: Path, moduledata: Path, item_ref
     scan is reported as a finding, because "every body missing" filtered to
     nothing would read exactly like a clean run."""
     import validate_mesh_refs as vmr
-    tpacs = _loaded_tpacs(game_modules, moduledata)
+    tpacs = _loaded_tpacs(game_modules, moduledata, skips)
     if not tpacs:
         return [ts.Issue(
             severity=ts.Severity.ERROR, code=BODY_CODE, file="", line=0, entry_id="",
@@ -828,6 +833,7 @@ def run_all_passes(moduledata, game_modules, schemas, registries, codes=None) ->
     game_modules = Path(game_modules) if game_modules is not None else None
     have_install = game_modules is not None and game_modules.exists()
     notices = []
+    skips = []   # a pass's own "skipped" lines; each becomes a notice below
 
     def notice(text):
         notices.append(ts.Issue(severity=ts.Severity.WARNING, code=PARTIAL_RUN_CODE, file="", line=0,
@@ -871,14 +877,14 @@ def run_all_passes(moduledata, game_modules, schemas, registries, codes=None) ->
         # A filtered run discards these issues right below (codes), so a run that filters
         # them out must not pay to generate them: about 0.86s of every commit hook invocation.
         if not codes or ARMOUR_CLASS_CODE in codes:
-            issues += armour_class_table_issues(game_modules, moduledata)
+            issues += armour_class_table_issues(game_modules, moduledata, skips)
         issues += armour_acquisition_ref_issues(registries, moduledata)
         # Until #622 nothing called this pass, so MISSING_COLLISION_BODY never fired and the
         # commit hook's --code line for it blocked nothing.
         # Both read the same refs, and the walk takes about 5 s. Only this run shares it: neither pass
         # changes the list, and a failed walk is not kept, so each pass still reports its own failure.
         item_refs = functools.lru_cache(maxsize=None)(_item_refs)
-        issues += missing_collision_body_issues(game_modules, moduledata, item_refs)
+        issues += missing_collision_body_issues(game_modules, moduledata, item_refs, skips)
         issues += borrowed_body_issues(game_modules, moduledata, item_refs)
         issues += slot_rejection_issues(game_modules, moduledata)
         # The install root: the vanilla SkillSets the spc_* templates name live in SandBox.
@@ -910,6 +916,8 @@ def run_all_passes(moduledata, game_modules, schemas, registries, codes=None) ->
                 f"{ts.ENLISTMENT_KIT_RANK_CODE} SKIPPED: the enlistment kits are judged on the\n"
                 f"         Armory's armour and weapon values, which only the live install has."):
             notice(text)
+    for text in dict.fromkeys(skips):
+        notice(text)
     issues.sort(key=lambda i: i.sort_key())
     if codes:
         wanted = set(codes)

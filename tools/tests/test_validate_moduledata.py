@@ -4392,6 +4392,17 @@ class ArmourClassTableDriftTests(unittest.TestCase):
         self.assertIn("ARMOUR_CLASS_TABLE_DRIFT SKIPPED", err.getvalue())
         self.assertIn("no LOTRLOME_Armory", err.getvalue())
 
+    def test_skip_goes_to_the_callers_list_instead_of_stderr(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            err = io.StringIO()
+            skips = []
+            with redirect_stderr(err):
+                issues = vm.armour_class_table_issues(Path(tmp), None, skips)
+        self.assertEqual(issues, [])
+        self.assertEqual(err.getvalue(), "")
+        self.assertEqual(len(skips), 1)
+        self.assertIn("ARMOUR_CLASS_TABLE_DRIFT SKIPPED: no LOTRLOME_Armory", skips[0])
+
     def test_current_table_raises_nothing(self):
         import generate_armour_classes as gac
         import rebalance_armor as ra
