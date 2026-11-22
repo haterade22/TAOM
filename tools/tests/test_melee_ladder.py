@@ -210,6 +210,19 @@ class FindingsTests(TmpCase):
         assert [f.troop for f in found] == ["b", "a"]
         assert [f.troop for f in ladder.findings(kits, s, min_gap=10)] == ["b"]
 
+    def test_a_row_limited_to_the_under_verdict_is_judged_for_nothing_else(self):
+        """#1242: a troop's weakest battle set is read for "under"; its best set for "over" and the ceiling."""
+        s = spec()
+        weak = ("a", "nowhere", 5, "weak", 5.0, "b", None, True, True, "under")
+        strong = ("a", "nowhere", 5, "strong", 200.0, "b", None, True, True, "over")
+        found = ladder.findings([weak, strong], s)
+        assert sorted((f.kind, f.item) for f in found) == [("ceiling", "strong"), ("over", "strong"), ("under", "weak")]
+        under = [f for f in found if f.kind == "under"][0]
+        assert "weakest battle set" in under.describe()
+        # The weak row alone never reports an over or ceiling verdict, and the strong row never an under one.
+        assert [f.kind for f in ladder.findings([("a", "nowhere", 5, "x", 200.0, "b", None, True, True, "under")], s)] == []
+        assert [f.kind for f in ladder.findings([("a", "nowhere", 5, "x", 5.0, "b", None, True, True, "over")], s)] == []
+
     def test_stale_exemptions_names_troops_that_no_longer_exist(self):
         s = spec(exempt_troops={"gone": "why", "here": "why"})
         assert ladder.stale_exemptions({"here"}, s) == ["gone"]

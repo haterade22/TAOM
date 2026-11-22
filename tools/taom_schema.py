@@ -421,16 +421,27 @@ def melee_pass_rows(troops, priced, spec, shields=frozenset()):
     kits, carried = [], []
     for t in troops:
         craft = ml.craft_key(t.id, t.culture, spec)
+        # One best weapon per battle set. The engine draws each slot from its own set, so a spawn
+        # carries the weak set's weapon about as often as the strong one's: the under check reads the
+        # WEAKEST set, the over check and the ceiling the best (#1242). A shield is judged per set.
+        per_set = []
+        for items in getattr(t, "battle_sets", (t.items,)):
+            shielded = any(i in shields for i in items)
+            held = {i: (priced[i].with_shield() if shielded else priced[i]) for i in items if i in priced}
+            if held:
+                # A tie names the smallest id, as analyze_melee_ladder.py does (#1379).
+                dps, iid = min(((p.best_dps, i) for i, p in held.items()), key=lambda b: (-b[0], b[1]))
+                per_set.append((dps, iid, held[iid]))
+        if per_set:
+            best = min(per_set, key=lambda r: (-r[0], r[1]))
+            worst = min(per_set, key=lambda r: (r[0], r[1]))
+            rows = [(best, ())] if worst[0] == best[0] else [(worst, ("under",)), (best, ("over",))]
+            for (dps, iid, p), only in rows:
+                kits.append((t.id, craft, t.tier, iid, dps, p.blade_piece, p.class_template,
+                             *ml.dominant_flags(p.class_template, p.swing_damage, p.thrust_damage,
+                                                p.swing_dps, p.thrust_dps, spec), *only))
         shielded = any(i in shields for i in t.items)
         held = {i: (priced[i].with_shield() if shielded else priced[i]) for i in t.items if i in priced}
-        best = [(p.best_dps, i) for i, p in held.items()]
-        if best:
-            # A tie names the smallest id, as analyze_melee_ladder.py does (#1379).
-            dps, iid = min(best, key=lambda b: (-b[0], b[1]))
-            p = held[iid]
-            kits.append((t.id, craft, t.tier, iid, dps, p.blade_piece, p.class_template,
-                         *ml.dominant_flags(p.class_template, p.swing_damage, p.thrust_damage,
-                                            p.swing_dps, p.thrust_dps, spec)))
         for i in sorted(held):
             p = held[i]
             carried.append((t.id, i, p.class_template, p.blade_piece, p.swing_damage,
@@ -583,7 +594,10 @@ class Validator:
             # weapon and a registration the tree lost is not hidden by a deployed copy.
             ph_priced, ph_problems = (price_placeholders(cat, self.moduledata / PLACEHOLDER_DIR)
                                       if troops else ({}, []))
-            priced = {**priced, **ph_priced}
+            # A troop that carries a vanilla weapon is judged like any other (#1242); an Armory item
+            # of the same id wins.
+            vanilla = _vanilla_priced(modules) if troops else {}
+            priced = {**vanilla, **priced, **ph_priced}
         except (mc.CatalogueError, mr.AnalysisError, OSError) as exc:
             return [Issue(
                 severity=Severity.WARNING, code=code, file=spec_rel, line=0, entry_id="(install)",
