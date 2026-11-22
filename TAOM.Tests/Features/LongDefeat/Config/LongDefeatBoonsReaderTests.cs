@@ -183,4 +183,75 @@ public class LongDefeatBoonsReaderTests
         CollectionAssert.AreEqual(new[] { "c" }, plan.Rows.Select(r => r.Id).ToArray());
         _logger.Received(2).LogWarning(Arg.Is<string>(m => m.Contains("needs")));
     }
+
+    // Phase 5 (D63): a boon may carry a name and a text for one defender culture, so "Oath of Eorl" at Helm's Deep is "Oath of Cirion" at Minas Tirith. The fixture's fortress is vlandia.
+    [TestMethod]
+    public void ARowWithWordsForTheFortressesCulture_ShowsThem_AndKeepsItsIdAndEffects_WithNoWarning()
+    {
+        var plan = Plan(File(Row("a", extra: ",'cultures':{'Vlandia':{'name':'{=N_a_V}Mark name','text':'{=T_a_V}Mark text'},'gondor':{'name':'{=N_a_G}City name'}}")));
+
+        var row = plan.Rows.Single();
+        Assert.AreEqual(("a", "{=N_a_V}Mark name", "{=T_a_V}Mark text"), (row.Id, row.Name, row.Text), "the culture is matched without case");
+        Assert.AreEqual(new BoonEffect("bountyPercent", 25f), row.Effects.Single());
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(m => m.Contains("boons.json")));
+    }
+
+    [TestMethod]
+    public void WordsWithNoText_KeepTheRowsOwnText_AndWordsForAnotherCulture_ChangeNothing()
+    {
+        var plan = Plan(File(
+            Row("a", extra: ",'cultures':{'vlandia':{'name':'{=N_a_V}Mark name'}}"),
+            Row("b", extra: ",'cultures':{'gondor':{'name':'{=N_b_G}City name','text':'{=T_b_G}City text'}}")));
+
+        Assert.AreEqual(("{=N_a_V}Mark name", "{=T_a}Text"), (plan.Rows[0].Name, plan.Rows[0].Text));
+        Assert.AreEqual(("{=N_b}Name", "{=T_b}Text"), (plan.Rows[1].Name, plan.Rows[1].Text));
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(m => m.Contains("boons.json")));
+    }
+
+    [TestMethod]
+    public void WordsWithNoName_AreSkippedWithOneWarning_AndTheBoonKeepsItsOwnWords()
+    {
+        var plan = Plan(File(Row("a", extra: ",'cultures':{'vlandia':{'text':'{=T_a_V}Mark text'}}")));
+
+        Assert.AreEqual(("{=N_a}Name", "{=T_a}Text"), (plan.Rows.Single().Name, plan.Rows.Single().Text));
+        AssertOneWarningNaming("boons[0].cultures.vlandia");
+    }
+
+    [TestMethod]
+    public void WordsWhoseTextIsNoText_KeepTheirName_AndTheRowsOwnText_WithOneWarning()
+    {
+        var plan = Plan(File(Row("a", extra: ",'cultures':{'vlandia':{'name':'{=N_a_V}Mark name','text':7}}")));
+
+        Assert.AreEqual(("{=N_a_V}Mark name", "{=T_a}Text"), (plan.Rows.Single().Name, plan.Rows.Single().Text));
+        AssertOneWarningNaming("boons[0].cultures.vlandia.text");
+    }
+
+    [TestMethod]
+    public void ACulturesBlockThatIsNoObject_IsOneWarning_AndTheBoonStays()
+    {
+        var plan = Plan(File(Row("a", extra: ",'cultures':7")));
+
+        Assert.AreEqual("{=N_a}Name", plan.Rows.Single().Name);
+        AssertOneWarningNaming("boons[0].cultures");
+    }
+
+    // The deck draws by id, file order and weight. Words change none of them, so a seed gives the same cards at every fortress.
+    [TestMethod]
+    public void For_ChangesWordsOnly_SoIdsOrderWeightsAndDrawbacksAreTheSameForEveryCulture()
+    {
+        var words = new System.Collections.Generic.Dictionary<string, BoonWords>(System.StringComparer.OrdinalIgnoreCase) { ["gondor"] = new BoonWords("{=G}City", "{=GT}City text") };
+        var cut = new BoonRow("cut", BoonCategory.Legend, "{=N}Name", "{=T}Text", new[] { new BoonEffect("affixCount", -1f) }) { Cultures = words };
+        var cost = new BoonRow("cost", BoonCategory.WarChest, "{=N2}Name", "{=T2}Text", new[] { new BoonEffect("pricePercent", -20f) })
+            { Drawback = new[] { new BoonEffect("earlyGoldPercent", -50f) }, DrawbackText = "{=D}Half the horn" };
+        var plan = new BoonPlan(new[] { cut, cost }, 3);
+
+        var gondor = plan.For("GONDOR");
+
+        CollectionAssert.AreEqual(new[] { "cut", "cost" }, gondor.Rows.Select(r => r.Id).ToArray());
+        Assert.AreEqual(("{=G}City", "{=GT}City text"), (gondor.Rows[0].Name, gondor.Rows[0].Text));
+        Assert.AreEqual(plan.WeightOf(cut), gondor.WeightOf(gondor.Rows[0]));
+        Assert.AreEqual(cut.Effects.Single(), gondor.Rows[0].Effects.Single());
+        Assert.AreEqual(cost, gondor.Rows[1], "a row with no words for the culture is the same row");
+        Assert.AreEqual("{=N}Name", plan.For("vlandia").Rows[0].Name);
+    }
 }

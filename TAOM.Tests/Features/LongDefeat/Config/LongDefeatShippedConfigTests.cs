@@ -98,6 +98,100 @@ public class LongDefeatShippedConfigTests
         Assert.AreEqual(6, minas.Waves.Endless.Tiers.Count, "the plan's six links; the endless line stops at the Barad-dur guard");
     }
 
+    private static readonly System.Text.RegularExpressions.Regex RohanWords =
+        new(@"\bMark\b|Rohan|Rohirrim|Eorl|Edoras|Westfold|Eastfold|Riddermark|Eored|Helm|Hornburg|Deeping", System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    private static string English(string raw) => raw.Substring(raw.IndexOf('}') + 1);
+
+    // D62 and D63, by culture words and not by rewording: Helm's Deep keeps its Rohan names, and nothing a player reads at Minas Tirith names the Mark.
+    [TestMethod]
+    public void ShippedMinasTirith_ShowsNoBoonOrClassTextThatNamesRohan_AndHelmsDeepKeepsItsOwn()
+    {
+        var (catalog, logger) = Load();
+        var helms = catalog.Fortresses.Single(f => f.Id == "helms");
+        var minas = catalog.Fortresses.Single(f => f.Id == "minas_tirith");
+        var gondor = catalog.BuildPlan(minas, RunOptions.Default).Boons.Rows;
+        var rohan = catalog.BuildPlan(helms, RunOptions.Default).Boons.Rows;
+
+        Assert.IsTrue(RohanWords.IsMatch("Oath of Eorl") && RohanWords.IsMatch("Edge of the Mark") && !RohanWords.IsMatch("The Marksman's Call"), "the word list finds Rohan and leaves a marksman alone");
+        var shown = gondor.SelectMany(r => new[] { (r.Id, r.Name), (r.Id, r.Text), (r.Id, r.DrawbackText) })
+            .Concat(catalog.ClassesFor(minas).SelectMany(c => new[] { (c.Id, c.Name), (c.Id, c.Text) })).Where(x => x.Item2.Length > 0).ToList();
+        var strays = shown.Where(x => RohanWords.IsMatch(English(x.Item2))).Select(x => x.Item1 + ": " + English(x.Item2)).ToList();
+        CollectionAssert.AreEqual(Array.Empty<string>(), strays, string.Join("; ", strays));
+
+        Assert.AreEqual(13, rohan.Count(r => RohanWords.IsMatch(English(r.Name))), "Helm's Deep keeps its thirteen Rohan names");
+        Assert.AreEqual("{=TAOM_LD_Boon_OathOfEorl}Oath of Eorl", rohan.Single(r => r.Id == "oath_of_eorl").Name);
+        Assert.AreEqual("{=TAOM_LD_Boon_OathOfEorl_Gondor}Oath of Cirion", gondor.Single(r => r.Id == "oath_of_eorl").Name);
+        StringAssert.Contains(catalog.ClassesFor(helms).Single(c => c.Id == "cavalry").Text, "rider of the Mark");
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    // Words change nothing the deck or the run reads: every fortress has the same rows in id, order, weight, category, class, effects and drawback. What a seed draws can still differ,
+    // because a fortress makes a troop category eligible only when its garrison or shop holds a troop of it (BoonDeck.IsEligible).
+    [TestMethod]
+    public void ShippedBoons_AreTheSameRowsAtEveryFortress_InEverythingButTheirWords()
+    {
+        var (catalog, _) = Load();
+        var plans = catalog.Fortresses.Select(f => catalog.BuildPlan(f, RunOptions.Default).Boons).ToList();
+
+        foreach (var plan in plans.Skip(1))
+        {
+            CollectionAssert.AreEqual(plans[0].Rows.Select(r => r.Id).ToArray(), plan.Rows.Select(r => r.Id).ToArray());
+            CollectionAssert.AreEqual(plans[0].Rows.Select(r => plans[0].WeightOf(r)).ToArray(), plan.Rows.Select(r => plan.WeightOf(r)).ToArray());
+            for (var i = 0; i < plan.Rows.Count; i++)
+            {
+                var (a, b) = (plans[0].Rows[i], plan.Rows[i]);
+                Assert.AreEqual((a.Category, a.ClassId, a.DrawbackText), (b.Category, b.ClassId, b.DrawbackText), b.Id);
+                CollectionAssert.AreEqual(a.Effects.ToArray(), b.Effects.ToArray(), b.Id);
+                CollectionAssert.AreEqual(a.Drawback.ToArray(), b.Drawback.ToArray(), b.Id);
+            }
+        }
+
+        Assert.AreEqual(34, plans[0].Rows.Count, "the shipped boons");
+    }
+
+    // Minas Tirith sells no rider, so the three cavalry rows are not in its pool; Helm's Deep sells the King's Knights. A Dol Amroth pack would open them (open after the first run).
+    [TestMethod]
+    public void ShippedMinasTirith_HoldsNoCavalryTroop_SoItsPoolLeavesOutTheCavalryRows_WhileHelmsDeepHasThem()
+    {
+        var (catalog, _) = Load();
+        var troops = Troops();
+        string GroupOf(string id) => (string)troops[id].Attribute("default_group")!;
+        bool HasRider(FortressEntry f) => f.Garrison.Select(g => g.TroopId).Concat(f.Shop.Offers.Select(o => o.TroopId)).Any(id => GroupOf(id) == "Cavalry");
+
+        Assert.IsTrue(HasRider(catalog.Fortresses.Single(f => f.Id == "helms")));
+        Assert.IsFalse(HasRider(catalog.Fortresses.Single(f => f.Id == "minas_tirith")));
+    }
+
+    // A culture's words take the row's own keys with the culture as a suffix, and each is registered with the same English.
+    [TestMethod]
+    public void ShippedCultureWords_UseTheRowsKeyWithTheCultureSuffix_AndAreRegisteredWithTheSameDefault()
+    {
+        var strings = XDocument.Load(Path.Combine(ModuleData, "taom_module_strings.xml")).Descendants("string")
+            .ToDictionary(e => (string)e.Attribute("id")!, e => (string)e.Attribute("text")!);
+        var (catalog, _) = Load();
+        var minas = catalog.Fortresses.Single(f => f.Id == "minas_tirith");
+        var helms = catalog.BuildPlan(catalog.Fortresses.Single(f => f.Id == "helms"), RunOptions.Default).Boons.Rows.ToDictionary(r => r.Id);
+        var raws = new List<(string Key, string Raw)>();
+        foreach (var row in catalog.BuildPlan(minas, RunOptions.Default).Boons.Rows)
+        {
+            var key = "TAOM_LD_Boon_" + Pascal(row.Id);
+            if (row.Name != helms[row.Id].Name)
+                raws.Add((key + "_Gondor", row.Name));
+            if (row.Text != helms[row.Id].Text)
+                raws.Add((key + "_Text_Gondor", row.Text));
+        }
+
+        raws.Add(("TAOM_LD_Class_Cavalry_Text_Gondor", catalog.ClassesFor(minas).Single(c => c.Id == "cavalry").Text));
+        Assert.AreEqual(15, raws.Count, "thirteen names, the levy's text and the Cavalry text");
+        foreach (var (key, raw) in raws)
+        {
+            Assert.IsTrue(raw.StartsWith("{=" + key + "}", StringComparison.Ordinal), raw + " should use the key " + key);
+            Assert.IsTrue(strings.TryGetValue(key, out var registered), key + " is not in taom_module_strings.xml");
+            Assert.AreEqual(raw, registered, key);
+        }
+    }
+
     // The fortress and rank names of Minas Tirith reuse keys other features own (a Fords region, the lords' names), which the TAOM_LD_ string tests do not read. Each must be registered with the
     // same English, or the screen shows the other feature's text.
     [TestMethod]
@@ -738,12 +832,11 @@ public class LongDefeatShippedConfigTests
     [TestMethod]
     public void ShippedClasses_WhileNoSallyBlockIsRecorded_CavalryTextPromisesNoHorseForTheWholeRun()
     {
-        var (_, offer, _) = ShippedClasses();
         var (catalog, _) = Load();
-        var helms = catalog.Fortresses.Single(f => f.Id == "helms");
 
-        if (helms.Sally == null)
-            StringAssert.DoesNotMatch(offer.Single(c => c.Id == "cavalry").Text, new System.Text.RegularExpressions.Regex("all run|stays under you"));
+        foreach (var fortress in catalog.Fortresses.Where(f => f.Sally == null))
+            StringAssert.DoesNotMatch(catalog.ClassesFor(fortress).Single(c => c.Id == "cavalry").Text, new System.Text.RegularExpressions.Regex("all run|stays under you"), fortress.Id);
+        Assert.IsTrue(catalog.Fortresses.Any(f => f.Sally == null), "Minas Tirith has no sally point, so the promise is tested");
     }
 
     // The Cavalry sally point: Mike recorded it in game on 2026-11-16 (taom.ld_record sally) on the slope outside the Deeping Wall,

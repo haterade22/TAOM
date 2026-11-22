@@ -35,6 +35,7 @@
       "name": "{=TAOM_LD_Class_Cavalry}Cavalry",
       "text": "{=TAOM_LD_Class_Cavalry_Text}A rider of the Mark in a rider's armour, with spear, shield and sword, and a horse to carry you into the fight.",
       "mounted": true,
+      "texts": { "gondor": "{=TAOM_LD_Class_Cavalry_Text_Gondor}A knight of Dol Amroth in full harness, with lance, shield and sword, and a horse to carry you into the fight." },
       "kits": {
         "vlandia": {
           "Item0": "wm_rohan_ws_spear_a03", "Item1": "wm_rohan_shield_a02_ggw", "Item2": "wm_rohan_ws_sword_a01", "Item3": "",
