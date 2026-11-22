@@ -119,7 +119,7 @@ public class StoryMissionWiringPinTests
         var offer = Source("Main/Features/StoryMissions/Hooks/StoryOfferBehavior.cs");
 
         StringAssert.Contains(offer, "StoryOfferPopup.Show(offer, () => { if (MapPopupGate.IsMapFreeUnderPopup()) _menus.EnsureMenuOpen(MenuId); }, Later);");
-        StringAssert.Contains(Source("Main/Features/StoryMissions/Hooks/StoryOfferPopup.cs"), "ride, later), true, false);");
+        StringAssert.Contains(Source("Main/Features/StoryMissions/Hooks/StoryOfferPopup.cs"), "ride, later), pauseGameActiveState: true, prioritize: false);");
         StringAssert.Contains(offer, "OfferCondition, _ => { Decline(); _menus.ExitToLast(); }, isLeave: false, index: 2);");
         StringAssert.Contains(offer, "private void OnInit(MenuCallbackArgs args) { if (_offer != null && _verdict is { } verdict && _result == null) _result = _service.Apply(_offer.Window, _side, verdict);");
         StringAssert.Contains(offer, "private void Continue(MenuCallbackArgs args) { Clear(); _menus.ExitToLast(); }");

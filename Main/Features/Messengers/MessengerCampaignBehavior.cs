@@ -677,7 +677,7 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
             negativeText: string.Empty,
             affirmativeAction: null,
             negativeAction: null),
-            pauseGameActiveState: false,
+            pauseGameActiveState: true,
             prioritize: false);
     }
 }

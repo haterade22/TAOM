@@ -51,7 +51,7 @@ internal sealed class NamegivingPrompts
                 if (chosen != null && chosen.Count > 0 && chosen[0].Identifier is RenameTarget target)
                     AskName(fiefId, target);
             }),
-            negativeAction: _ => { }));
+            negativeAction: _ => { }), pauseGameActiveState: true);
     }
 
     private void AskName(string fiefId, RenameTarget target)
@@ -70,7 +70,7 @@ internal sealed class NamegivingPrompts
             shouldInputBeObfuscated: false,
             textCondition: typed => Condition(typed, target.Name, others),
             soundEventPath: string.Empty,
-            defaultInputText: target.Name));
+            defaultInputText: target.Name), pauseGameActiveState: true);
     }
 
     // Runs on every keystroke and when the box opens, so the prefilled current name starts with OK greyed ("already its name").
@@ -98,7 +98,7 @@ internal sealed class NamegivingPrompts
             GameTexts.FindText("str_yes").ToString(),
             GameTexts.FindText("str_no").ToString(),
             () => _faults.Run("apply", () => Apply(fiefId, target, typed)),
-            () => { }));
+            () => { }), pauseGameActiveState: true);
     }
 
     private void Apply(string fiefId, RenameTarget target, string typed)

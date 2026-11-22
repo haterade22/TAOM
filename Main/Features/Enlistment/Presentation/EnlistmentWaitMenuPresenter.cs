@@ -228,7 +228,7 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
             body.ToString(),
             true, false,
             new TextObject("{=taom_enlist_ok}Understood").ToString(), null,
-            null, null));
+            null, null), pauseGameActiveState: true);
     }
 
     public void RequestRelease(double nowDays)

@@ -29,7 +29,7 @@ public static class CrashNotifier
                 negativeText: new TextObject("{=TAOM_CrashReport_OpenBundle}Open bundle folder").ToString(),
                 affirmativeAction: () => { /* dismiss */ },
                 negativeAction: () => TryOpenInExplorer(bundlePath));
-            InformationManager.ShowInquiry(inquiry, pauseGameActiveState: false);
+            InformationManager.ShowInquiry(inquiry, pauseGameActiveState: true);
         }
         catch
         {
