@@ -124,8 +124,8 @@ public class LongDefeatAdapterRulesTests
         var body = Body("Main/Adapters/LongDefeatBattlefieldAdapter.Upgrades.cs", "public LdUpgradeReport ReplaceDefenders(");
 
         StringAssert.Contains(body, "var active = fresh.IsActive();");
-        StringAssert.Contains(body, "spawns.Add(new UpgradeSpawn(active, stood.Distance(at), ",
-            "the tally decides replaced and read back; the troop id cannot fail, because the engine copies it from the same object, and the place can");
+        StringAssert.Contains(body, "spawns.Add(new UpgradeSpawn(active, UpgradeTally.Moved(stood.AsVec2.Distance(at.AsVec2), stood.z - at.z), ",
+            "the tally decides replaced and read back; the troop id cannot fail, because the engine copies it from the same object, and the place can; the ground distance within a height band, because a replacement may settle a little lower but not onto another floor (#1402)");
         StringAssert.Contains(body, "return UpgradeTally.Of(old.Count, spawns, FramePointRadius);");
     }
 
