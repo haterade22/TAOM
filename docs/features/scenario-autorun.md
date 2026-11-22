@@ -139,7 +139,7 @@ alone cannot pass it; the strict `ended` pattern names only the three ways a mis
 ### The story-offer kind
 
 `python tools/run_scenario.py --kind story-offer --event <id> --choice <defend|attack|fate> [--culture <id>]` (#1105 slices 3 to 5). The
-runner arms `command=taom.chronicle_open <event> confirm` (first, then any `--command`) and `after=taom.chronicle_status`, and `speed=1`.
+runner arms `command=taom.chronicle_open <event> confirm` (first, then any `--command`), `after=taom.war_effects` and `after=taom.chronicle_status`, and `speed=1`.
 With `--by-date` it arms `open_by_date=1` in place of the open command, and `speed=15` (or `--speed`). The by-date wait has no stall check:
 a locked clock, or a window the map resolves with no offer (an attacker already besieges the target, or its owner changed), costs the whole
 wait before `offer_not_shown`.

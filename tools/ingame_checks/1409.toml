@@ -93,7 +93,7 @@ fail = ['\[Check\] id=taom\.story-missions\.ended result=fail', '\[Check\] id=ta
         '\[Check\] id=taom\.story-missions\.ended result=pass verdict=Won side=Attacking reason=TargetReached ']
 absence = "not-reached"
 
-# A balance result for the maintainer, not a fault. The keep rule is KeepHoldRule.cs:19 (attackers at the keep at or above keepMinAttackers, 26 on this row, and twice the defenders
+# A balance result for the maintainer, not a fault. The keep rule is KeepHoldRule.cs:19 (attackers at the keep at or above keepMinAttackers, 36 on this row, and twice the defenders
 # there) for the hold time of RunRules.cs:27-30; the other win is every defender down. NOT REACHED here means the attack was not won at the shipped numbers.
 [[check]]
 id = "taom.story-missions.attack-won"

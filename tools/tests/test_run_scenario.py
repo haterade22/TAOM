@@ -1282,10 +1282,11 @@ class OfferArmTextTests(unittest.TestCase):
         text, wall = rs.arm_text_for(Path(r"E:\x\run"), known, SimpleNamespace(wall_limit=None))
         self.assertEqual([line.split("=", 1)[0] for line in text.splitlines()],
                          ["kind", "out", "scenario", "event", "choice", "mission_limit_seconds", "culture", "speed", "wall_limit_seconds", "quit",
-                          "command", "command", "after"])
+                          "command", "command", "after", "after"])
         lines = text.splitlines()
         self.assertEqual(lines[:2], ["kind=story-offer", r"out=E:\x\run"])
-        self.assertEqual(lines[-3:], ["command=taom.chronicle_open breaking confirm", "command=taom.other 1", "after=taom.chronicle_status"])
+        self.assertEqual(lines[-4:], ["command=taom.chronicle_open breaking confirm", "command=taom.other 1", "after=taom.war_effects",
+                                      "after=taom.chronicle_status"])
         self.assertIn("event=breaking\nchoice=defend\n", text)
         self.assertIn("speed=1\n", text)
         self.assertEqual((wall, arm_dict_first(text)["wall_limit_seconds"]), (3000, "3000"))

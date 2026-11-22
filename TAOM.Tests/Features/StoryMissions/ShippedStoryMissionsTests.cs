@@ -138,8 +138,8 @@ public class ShippedStoryMissionsTests
         Assert.AreEqual(defence.Muster?.Foot, attack.Muster?.Foot);
         Assert.AreEqual(defence.Muster?.Archers, attack.Muster?.Archers);
         Assert.AreEqual(1, attack.Waves.Authored.Count);
-        Assert.IsTrue(attack.Waves.Authored[0].Count >= 250, "the player leads a host of 250");
-        Assert.AreEqual(26, attack.Rules.KeepMinAttackers, "the reader's own floor for a wave of 250: authored, so it logs no warning");
+        Assert.AreEqual(350, attack.Waves.Authored[0].Count, "the player leads a host of 350 (the maintainer's range, 2026-11-21)");
+        Assert.AreEqual(36, attack.Rules.KeepMinAttackers, "the reader's own floor for a wave of 350: authored, so it logs no warning");
     }
 
     [TestMethod]

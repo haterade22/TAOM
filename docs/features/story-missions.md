@@ -342,7 +342,7 @@ Only Helm's Deep names a music track (`StoryMusic/isengard_vs_rohan.ogg`). Four 
 | `dale_defend` | `sturgia_town_g` | `sturgia`, `khuzait` | Stand-in scene |
 | `lorien_defend` | `battania_town_a` | `lothlorien`, `dolguldur` | Stand-in scene |
 | `north_defend` | `empire_town_c` | `arthedain`, `gundabad` | Stand-in scene |
-| `helms_deep_attack` | `taom_rohan_castle_helms_deep_forceatmo` | `vlandia`, `isengard` | Attack: the player's host of 250 (#1409). The Hornburg window offers it (slice 5) |
+| `helms_deep_attack` | `taom_rohan_castle_helms_deep_forceatmo` | `vlandia`, `isengard` | Attack: the player's host of 350 (#1409). The Hornburg window offers it (slice 5) |
 | `parth_galen_save` | `battle_terrain_001` | `gondor`, `isengard` | Field. Waves of 20, 30 and 40, at most 10 alive; Boromir must live. Stand-in scene |
 | `parth_galen_kill` | `battle_terrain_001` | `gondor`, `isengard` | Field, Attack: the player's band of 20; won when Boromir falls |
 
@@ -594,6 +594,26 @@ assault on the Hornburg with its results (slice 5).
 
 ## Known limits
 
+- **The assault on Helm's Deep is not balanced yet (#1409).** With the bot as the commander it lost at 250 and at 350 attackers and did
+  not finish at 450, with 6 to 15 attackers dead for each defender lost (250/17, 350/56, 350/34, 444/37). Unattended runs on build
+  `769640596`, 2026-11-21 and 22 (run folders under `E:/Temp/scenario-runs`; the garrison is 150 and three heroes). The first run used the
+  shipped row of that build (250). For the other three the wave count, and in the last one the mix, was changed in the deployed copy of
+  `story_missions.json` only, and the file was restored after each:
+
+  | Attackers | Run | Result | Defenders lost | Mission time |
+  |---|---|---|---|---|
+  | 250 | `20261121-230907` (through the offer) | lost | 17 | 648 s |
+  | 350 | `20261121-232240` | lost | 56 | 1019 s |
+  | 450 | `20261121-234117` | not finished at the driver's 1200 s limit: 444 attackers dead, 7 alive | 37 | 1200 s |
+  | 350, mix 60/30/10 (fewer archers) | `20261122-000423` | lost | 34 | 670 s |
+
+  With one run for each size, these runs suggest that the size is not the lever. In the last run Legolas made 118 of the 349 kills and
+  took 49 damage (`[HeroAbilities][Combat] summary`), and Aragorn and Gimli made none; no log line names who made the other 231. A wave's
+  queue is ranged first (`WavePlan`), so under the live cap of 150 the first assault of a 450 wave is 112 archers and 38 foot; the run
+  with fewer archers put 115 foot in the first assault and did no better, so that order does not look like the cause either. The shipped
+  host is 350: the maintainer's range was 350 to 450, and 450 does not
+  finish inside 20 minutes. Whether a person in command can win it is not known. The balance options (Legolas as an enemy, the size of
+  the garrison, more than one wave) are on #1409.
 - In an Attack row (#1409) the player's body stands on the attacker team, and some Long Defeat code still treats it as a wave soldier or
   the defender team as the player's. The hooks and effect sampling keyed by side (`LongDefeatStatHooks`, `LongDefeatCombatHooks`,
   `LongDefeatEffectsAdapter`, morale, the gate watch) do not skip the main agent. The sally helpers do the same: `RemountPlayer` takes
@@ -602,6 +622,10 @@ assault on the Hornburg with its results (slice 5).
 
 ## Changelog
 
+- 2026-11-22: Slice 5 proven for the lost assault by an unattended run of the Hornburg offer as an Isengard player (`20261121-230907`):
+  `'hornburg' Held on day 8 (the player's assault was thrown back)`, `[Diplomacy] Permanent alliance ended: isengard <-> empire_s`, and
+  `taom.war-chronicle.alliance-ended result=pass ... result=Ended allied=False`. The attack host is 350 after four tuning runs
+  ("Known limits"). A won assault (the fallen Hornburg and its permanent penalty) has no run: the bot does not win it.
 - 2026-11-21: Slice 3, the Breaking of the Fellowship end to end: a Narrative event's hero story, its window of 10 days, the
   state `Averted`, the kill by `ApplyByBattle`, and the offer's two new options. Proven by three unattended runs of the offer
   (defence lost, hunt lost, fate); no person has played it.

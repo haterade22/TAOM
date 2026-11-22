@@ -11,7 +11,7 @@ the map to come back, and quits. It runs no campaign days of its own, so --days,
 
 The kind story-offer drives the real story offer of the War Chronicle (#1105 slices 3 to 5): the armed console command taom.chronicle_open
 opens the event's window on the settled map, the driver presses the offer popup's accept button, picks the wanted option of the menu
-taom_story_offer, plays the mission with the bot, clicks Continue and runs taom.chronicle_status. --choice fate picks "Let fate decide" and plays
+taom_story_offer, plays the mission with the bot, clicks Continue and runs taom.war_effects and taom.chronicle_status. --choice fate picks "Let fate decide" and plays
 no mission. It refuses --mission, --days and --stall-seconds, as the story-mission kind does, and --speed unless --by-date is given.
 With --by-date it arms no open command: the campaign runs on fast forward until the event's window opens on its own day, and the driver
 waits for the popup as long as the wall limit. A siege window (hornburg) opens only in the Full War, day 44 by default, so it needs this.
@@ -394,7 +394,8 @@ def arm_text_for(out, known, args):
                  ("mission_limit_seconds", DEFAULT_MISSION_LIMIT_SECONDS), ("culture", known.culture), ("speed", number_text(speed)),
                  ("wall_limit_seconds", number_text(wall_limit)), ("quit", 1)]
         pairs += [("open_by_date", 1)] if by_date else [("command", f"taom.chronicle_open {known.event} confirm")]
-        pairs += [("command", c) for c in known.command] + [("after", "taom.chronicle_status")]
+        # The effects first, the status last: the status entry is the one the printer shows in its own block; commands.txt holds both.
+        pairs += [("command", c) for c in known.command] + [("after", "taom.war_effects"), ("after", "taom.chronicle_status")]
         return "".join(f"{key}={value}\n" for key, value in pairs), wall_limit
     if known.kind == KIND_STORY:
         wall_limit = args.wall_limit if args.wall_limit else default_wall_limit(DEFAULT_DAYS, DEFAULT_MISSION_LIMIT_SECONDS)
