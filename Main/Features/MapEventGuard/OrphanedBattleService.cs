@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
@@ -25,7 +26,8 @@ public sealed class OrphanedBattleService
     private readonly ICoopSessionProvider _coop;
     private readonly IModLogger _logger;
     private readonly HashSet<string> _warnedFailures = new();
-    private readonly HashSet<object> _unfreedBattles = new();
+    // Weak keys: this singleton outlives a campaign, and a held MapEvent would keep the old campaign's parties alive.
+    private readonly ConditionalWeakTable<object, object> _unfreedBattles = new();
 
     public OrphanedBattleService(IOrphanedBattleAdapter adapter, ICoopSessionProvider coop, IModLogger logger)
     {
@@ -93,12 +95,12 @@ public sealed class OrphanedBattleService
 
     public bool FinishBeforeEncounter(object battle, Func<bool> targetStillInIt)
     {
-        if (_coop.IsSessionActive || _coop.ShouldDeferToHost || _unfreedBattles.Contains(battle))
+        if (_coop.IsSessionActive || _coop.ShouldDeferToHost || _unfreedBattles.TryGetValue(battle, out _))
             return false;
         RepairAll();
         if (!targetStillInIt())
             return true;
-        _unfreedBattles.Add(battle);
+        _unfreedBattles.Add(battle, string.Empty);
         _logger.LogWarning("[MapEventGuard] could not free an orphaned battle before the player's encounter; vanilla runs it");
         return false;
     }
