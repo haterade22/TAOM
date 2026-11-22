@@ -786,9 +786,11 @@ higher damage; nobody measured it. The same run lowered `wm_gundabad_sword_a01_b
 2.88 / 1.03 to 2.37 / 0.85.
 
 The run also lowered four Dale blades (`wm_dale_ws_1h_axe_a01` to `a03`, `wm_dale_ws_sword_a02`),
-and those were put back. `--culture` labels an item with its first wearer's culture, and
-`troops_anduinvale.xml` loads before the Dale file, so Dale's own weapons were labelled `anduinvale`
-(#1241). Until that is fixed, read a `--culture` dry run's blade list before `--apply`.
+and those were put back. An edit moves a blade for every troop that wears any weapon built on it,
+and the Dale weapons were worn by Anduin Vale troops too, so a run scoped to `anduinvale` moved them
+(#1241). Since #1241 a `--culture` run restats a blade only when every wearer of every weapon on it
+belongs to the named craft rows; a blade another row shares is listed (`shared:` notes, all printed)
+and left alone. Name every wearing row to restat it.
 
 Measured on 2026-11-13 with the live Armory pieces on both sides, `HEAD` rosters against the working
 tree:
