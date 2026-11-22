@@ -70,6 +70,10 @@ public class LongDefeatHudTextTests
         var titles = new System.Collections.Generic.HashSet<string>();
         foreach (RunEndReason reason in System.Enum.GetValues(typeof(RunEndReason)))
         {
+            // Only a story mission names a hero who must live (#1105), and a story mission has no HUD: this panel never shows that end.
+            if (reason == RunEndReason.HeroFell)
+                continue;
+
             var title = LongDefeatHudText.EndTitle(reason);
             Assert.IsTrue(title.Length > 0 && !title.Contains("{"));
             Assert.IsTrue(titles.Add(title), "two reasons share the title " + title);

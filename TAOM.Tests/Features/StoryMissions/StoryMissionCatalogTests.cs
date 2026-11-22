@@ -469,4 +469,145 @@ public class StoryMissionCatalogTests
         Assert.IsFalse(catalog.TryGet("", out _));
         Assert.IsFalse(catalog.TryGet(null!, out _));
     }
+
+    // #1105 slice 2: a mission on a field scene, and the hero who must live.
+    private const string Place = "{\"x\":1,\"y\":2,\"z\":3,\"fx\":0.6,\"fy\":0.8}";
+    private const string OneHero = "[{\"id\":\"boromir\",\"troop\":\"t_b\"}]";
+
+    [TestMethod]
+    public void Load_NoFieldBlock_IsASiegeMission()
+    {
+        var (catalog, _) = Load(File(Row()));
+
+        Assert.IsNull(catalog.Missions.Single().Field);
+    }
+
+    [TestMethod]
+    public void Load_AFieldBlock_ReadsBothPlaces()
+    {
+        var (catalog, logger) = Load(File(Row(("field", "{\"defenders\":" + Place + ",\"attackers\":" + Place + "}"))));
+
+        var field = catalog.Missions.Single().Field;
+        Assert.IsNotNull(field?.Defenders);
+        Assert.IsNotNull(field?.Attackers);
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void Load_AFieldBlock_ReadsTheSecondAttackerPlace()
+    {
+        var (catalog, logger) = Load(File(Row(("field", "{\"attackersBehind\":" + Place + "}"))));
+
+        Assert.IsNotNull(catalog.Missions.Single().Field?.AttackersBehind);
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void Load_AnEmptyFieldBlock_IsAFieldMissionOnTheScenesOwnPlaces()
+    {
+        var (catalog, logger) = Load(File(Row(("field", "{}"))));
+
+        var field = catalog.Missions.Single().Field;
+        Assert.IsNotNull(field);
+        Assert.IsNull(field!.Defenders);
+        Assert.IsNull(field.Attackers);
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void Load_AFieldBlockThatIsNotAnObject_SkipsTheRow_NotASiegeLaunchOnAFieldScene()
+    {
+        AssertSkipped(File(Row(("field", "true"))), "'field'");
+    }
+
+    [TestMethod]
+    public void Load_ABadFieldPlace_IsDropped_AndTheMissionStaysAFieldMission()
+    {
+        var (catalog, logger) = Load(File(Row(("field", "{\"defenders\":{\"x\":NaN,\"y\":2,\"z\":3,\"fx\":0.6,\"fy\":0.8},\"attackers\":" + Place + "}"))));
+
+        var field = catalog.Missions.Single().Field;
+        Assert.IsNotNull(field);
+        Assert.IsNull(field!.Defenders);
+        Assert.IsNotNull(field.Attackers);
+        AssertWarned(logger, "field.defenders.x");
+    }
+
+    [TestMethod]
+    public void Load_AFieldRow_KeepsAWaveBelowTheSiegeFloor()
+    {
+        var (catalog, logger) = Load(File(Row(("field", "{}"), ("roster", "{\"waves\":[" + Wave(40) + "]}"))));
+
+        Assert.AreEqual(40, catalog.Missions.Single().Waves.Authored.Single().Count);
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void Load_AFieldRow_MayCapTheLiveAttackersBelowTheSiegeFloor()
+    {
+        var (catalog, logger) = Load(File(Row(("field", "{}"), ("rules", "{\"liveCap\": 10}"))));
+
+        Assert.AreEqual(10, catalog.Missions.Single().Rules.LiveCap);
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void Load_ASiegeRow_KeepsTheSiegeFloorOnTheLiveCap()
+    {
+        var (catalog, logger) = Load(File(Row(("rules", "{\"liveCap\": 10}"))));
+
+        Assert.AreEqual(RunRules.Default.LiveCap, catalog.Missions.Single().Rules.LiveCap);
+        AssertWarned(logger, "liveCap");
+    }
+
+    [TestMethod]
+    public void Load_AFieldRowWithHeroes_NeedsNoGarrison()
+    {
+        var (catalog, logger) = Load(File(Row(("field", "{}"), ("garrison", null), ("heroes", OneHero))));
+
+        Assert.AreEqual(0, catalog.Missions.Single().Garrison.Count);
+        Assert.AreEqual(1, catalog.Missions.Single().Heroes.Count);
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void Load_AFieldRowWithNoGarrisonAndNoHero_IsSkipped()
+    {
+        AssertSkipped(File(Row(("field", "{}"), ("garrison", null))), "no valid garrison row");
+    }
+
+    [TestMethod]
+    public void Load_ASiegeRowWithHeroes_StillNeedsAGarrison()
+    {
+        AssertSkipped(File(Row(("garrison", null), ("heroes", OneHero))), "no valid garrison row");
+    }
+
+    [TestMethod]
+    public void Load_MustLive_NamingAHeroOfTheRow_IsRead()
+    {
+        var (catalog, logger) = Load(File(Row(("heroes", OneHero), ("mustLive", "\"boromir\""))));
+
+        Assert.AreEqual("boromir", catalog.Missions.Single().MustLive);
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void Load_NoMustLive_IsNull()
+    {
+        var (catalog, _) = Load(File(Row(("heroes", OneHero))));
+
+        Assert.IsNull(catalog.Missions.Single().MustLive);
+    }
+
+    [TestMethod]
+    public void Load_MustLive_NamingNoHeroOfTheRow_SkipsTheRow()
+    {
+        // A wrong id would leave a mission nobody can lose through its hero, so the row does not load.
+        AssertSkipped(File(Row(("heroes", OneHero), ("mustLive", "\"faramir\""))), "'mustLive'");
+    }
+
+    [TestMethod]
+    public void Load_MustLive_ThatIsNotText_SkipsTheRow()
+    {
+        AssertSkipped(File(Row(("heroes", OneHero), ("mustLive", "1"))), "'mustLive'");
+    }
 }

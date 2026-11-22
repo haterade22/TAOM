@@ -70,16 +70,21 @@ PASS_LINE = re.compile(r"\[Check\] id=" + re.escape(CHECK_ID) + r"\s+result=pass
 # The same patterns as tools/ingame_checks/1105.toml (a test holds them equal): the boot line, and the end line that names only the three
 # ways a run ends by itself, so a reason=Abandoned retreat is not a pass. Matched line by line.
 STORY_BOOT_PASS = r"\[Check\] id=taom\.story-missions\.hosted\.boot result=pass deployment_finished=true siege_ai=true main=true friendly=false"
+# A mission on a field scene (#1105 slice 2: its row has a "field" block) boots with no siege team AI and says so. The judge anchors both patterns at the line's end, so a
+# siege line never passes for a field mission, nor a field line for a siege mission.
+STORY_FIELD_BOOT_PASS = (r"\[Check\] id=taom\.story-missions\.hosted\.boot result=pass deployment_finished=true siege_ai=false main=true friendly=false"
+                         r" field=true$")
 ROOT = Path(__file__).resolve().parent.parent
 STORY_MISSIONS_FILE = ROOT / "Main" / "_Module" / "ModuleData" / "story_missions" / "story_missions.json"
 STORY_SIDES = {"Defend": "Defending", "Attack": "Attacking"}
 
 
-def story_ended_pass(side):
+def story_ended_pass(side, must_live=False):
     """The ended line's pass pattern for a row's side (Defending or Attacking), as tools/ingame_checks/1105.toml (Defending) and 1409.toml
-    (Attacking) hold it."""
+    (Attacking) hold it. A row that names a hero who must live ("mustLive") can also end by his fall (reason=HeroFell), as SurvivalRun.HeroDown ends it."""
+    reasons = "TargetReached|DefendersDead|KeepLost" + ("|HeroFell" if must_live else "")
     return (r"\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost) side=" + side
-            + r" reason=(TargetReached|DefendersDead|KeepLost) waves=\d+$")
+            + r" reason=(" + reasons + r") waves=\d+$")
 
 
 def story_rows():
@@ -90,6 +95,27 @@ def story_rows():
         return {}
     rows = data.get("missions", []) if isinstance(data, dict) else []
     return {str(row.get("id", "")).lower(): STORY_SIDES[row["side"]] for row in rows if isinstance(row, dict) and row.get("side") in STORY_SIDES}
+
+
+def story_row(mission):
+    """The checkout's row for the story mission id, or an empty dict for an id it does not hold or a file it cannot read."""
+    try:
+        data = json.loads(STORY_MISSIONS_FILE.read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError):
+        return {}
+    rows = data.get("missions", []) if isinstance(data, dict) else []
+    wanted = str(mission).strip().lower()
+    return next((row for row in rows if isinstance(row, dict) and str(row.get("id", "")).lower() == wanted), {})
+
+
+def story_field(mission):
+    """True when the mission's row has a "field" block (a mission on a field scene), as StoryMissionCatalog.TryField reads it."""
+    return isinstance(story_row(mission).get("field"), dict)
+
+
+def story_must_live(mission):
+    """True when the mission's row names a hero who must live, whose fall ends the run with reason=HeroFell."""
+    return isinstance(story_row(mission).get("mustLive"), str)
 
 
 def story_side(mission):
@@ -255,9 +281,11 @@ def story_log_problems(log_text, mission, side):
                  + r" verdict=(Won|Lost) mission_seconds=\S+ culture=\S+$")
     if not any(re.search(done_pass, line) for line in lines):
         problems.append(f"the TAOM log has no [Check] id={STORY_CHECK_ID} result=pass line for mission {mission} with a Won or Lost verdict")
-    if not any(re.search(STORY_BOOT_PASS, line) for line in lines):
-        problems.append("the TAOM log has no taom.story-missions.hosted.boot pass line")
-    ended = story_ended_pass(side)
+    field = story_field(mission)
+    boot = STORY_FIELD_BOOT_PASS if field else STORY_BOOT_PASS + "$"
+    if not any(re.search(boot, line) for line in lines):
+        problems.append(f"the TAOM log has no taom.story-missions.hosted.boot pass line for a {'field' if field else 'siege'} mission")
+    ended = story_ended_pass(side, story_must_live(mission))
     if not any(re.search(ended, line) for line in lines):
         problems.append(f"the TAOM log has no taom.story-missions.ended pass line with side={side} (a reason=Abandoned end is not one)")
     launch = r"\[StoryMissions\] launching \S+ for '" + re.escape(mission) + r"' \(story\d+, autoplay True\)"

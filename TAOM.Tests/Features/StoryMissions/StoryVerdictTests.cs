@@ -20,8 +20,10 @@ public class StoryVerdictTests
         [RunEndReason.KeepLost] = StoryOutcome.Lost,
         [RunEndReason.Abandoned] = StoryOutcome.Lost,
         [RunEndReason.Stalemate] = StoryOutcome.Undecided,
+        [RunEndReason.HeroFell] = StoryOutcome.Lost,
     };
 
+    // HeroFell (#1105 slice 2): the hero who must live stands with the defenders, so his fall is the attackers' win.
     private static readonly Dictionary<RunEndReason, StoryOutcome> Attacking = new()
     {
         [RunEndReason.KeepLost] = StoryOutcome.Won,
@@ -29,6 +31,7 @@ public class StoryVerdictTests
         [RunEndReason.TargetReached] = StoryOutcome.Lost,
         [RunEndReason.Abandoned] = StoryOutcome.Lost,
         [RunEndReason.Stalemate] = StoryOutcome.Undecided,
+        [RunEndReason.HeroFell] = StoryOutcome.Won,
     };
 
     [TestMethod]

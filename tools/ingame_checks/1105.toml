@@ -10,8 +10,11 @@ title = "Story Missions: campaign-hosted one-shot battles (slice 1, the Helm's D
 fixed_in = "c4a5d80a8"
 logs = ["taom"]
 
+# Scoped to the launch of helms_deep_defend, as tools/ingame_checks/1368.toml scopes its rows: every other story mission writes the same check ids.
 [[check]]
 id = "taom.story-missions.hosted.boot"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "the same run: the hosted Long Defeat run booted in the campaign (deployment finished, siege team AI, a main agent, IsFriendlyMission false)"
 reached = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=']
 pass = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=pass deployment_finished=true siege_ai=true main=true friendly=false']
@@ -23,6 +26,8 @@ absence = "not-reached"
 # and after a fault a fail.
 [[check]]
 id = "taom.story-missions.ended"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "in a loaded campaign: taom.story_open helms_deep_defend (add auto for the bot), choose Open the mission, and let the wave end by a win or a loss"
 reached = ['\[Check\] id=taom\.story-missions\.ended result=']
 pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost) side=Defending reason=(TargetReached|DefendersDead|KeepLost) waves=\d+$']
@@ -149,3 +154,101 @@ claim = "a save and a reload after Let fate decide: the offer does not come back
 
 [[human]]
 claim = "War Chronicle MCM 'Offer Story Missions' off: no popup, and the window still ends Held by fate. Enlisted, a prisoner, or in co-op: no popup"
+
+# Slice 2: the Breaking of the Fellowship on a field scene, for each side (story_missions.json rows parth_galen_save and parth_galen_kill, each with a "field" block).
+# A row id is unique in a manifest, so each of these names its mission; its patterns read the same check lines as the rows above, inside the scope of its own mission's launch. The run is unattended:
+# python tools/run_scenario.py --kind story-mission --mission parth_galen_save (or parth_galen_kill). Read one session per mission.
+
+[[check]]
+id = "taom.story-missions.hosted.boot.parth-galen-save"
+scope = '\[StoryMissions\] launching \S+ for \x27parth_galen_save\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "python tools/run_scenario.py --kind story-mission --mission parth_galen_save: the hosted run booted on the field scene (deployment finished, no siege team AI, a main agent, IsFriendlyMission false)"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=pass deployment_finished=true siege_ai=false main=true friendly=false field=true$']
+fail = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=fail', '\[Check\] id=taom\.story-missions\.hosted\.boot result=pass .*siege_ai=true']
+absence = "not-reached"
+
+[[check]]
+id = "taom.story-missions.hosted.hero.parth-galen-save"
+scope = '\[StoryMissions\] launching \S+ for \x27parth_galen_save\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: Boromir stands in his class formation under the team AI (a group held at a post does not fight in the open), with the health factor his row gives"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=\S+ hero=boromir ']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=boromir troop=taom_hero_boromir is_hero=0 campaign=1 mounted=0 formation=[0-6] held=0 .* wielded=wm_gondor_boromir_sword group=class$']
+fail = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=fail hero=boromir ', '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=boromir (?!.* group=class$)']
+absence = "not-reached"
+
+# Every batch of the attacking side, each tick it spawns on: WRONG names soldiers more than 25 m from their start place (run 20261121-183158: 4 of 12, beside the defenders).
+[[check]]
+id = "taom.story-missions.field-spawn.parth-galen-save"
+scope = '\[StoryMissions\] launching \S+ for \x27parth_galen_save\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: every attacker batch spawns at its start place"
+reached = ['\[LongDefeat\] spawn level (ok|WRONG): attackers ']
+pass = ['\[LongDefeat\] spawn level ok: attackers ']
+fail = ['\[LongDefeat\] spawn level WRONG: attackers ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.story-missions.ended.parth-galen-save"
+scope = '\[StoryMissions\] launching \S+ for \x27parth_galen_save\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: the mission ends by itself. A fall of Boromir reads reason=HeroFell: a loss for the defence, a win for the hunt"
+reached = ['\[Check\] id=taom\.story-missions\.ended result=']
+pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost) side=Defending reason=(TargetReached|DefendersDead|KeepLost|HeroFell) waves=\d+$']
+fail = ['\[Check\] id=taom\.story-missions\.ended result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.story-missions.hosted.boot.parth-galen-kill"
+scope = '\[StoryMissions\] launching \S+ for \x27parth_galen_kill\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "python tools/run_scenario.py --kind story-mission --mission parth_galen_kill: the hosted run booted on the field scene (deployment finished, no siege team AI, a main agent, IsFriendlyMission false)"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=pass deployment_finished=true siege_ai=false main=true friendly=false field=true$']
+fail = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=fail', '\[Check\] id=taom\.story-missions\.hosted\.boot result=pass .*siege_ai=true']
+absence = "not-reached"
+
+[[check]]
+id = "taom.story-missions.hosted.hero.parth-galen-kill"
+scope = '\[StoryMissions\] launching \S+ for \x27parth_galen_kill\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: Boromir stands in his class formation under the team AI (a group held at a post does not fight in the open), with the health factor his row gives"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=\S+ hero=boromir ']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=boromir troop=taom_hero_boromir is_hero=0 campaign=1 mounted=0 formation=[0-6] held=0 .* wielded=wm_gondor_boromir_sword side=enemy$']
+fail = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=fail hero=boromir ', '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=boromir (?!.* side=enemy$)']
+absence = "not-reached"
+
+# Every batch of the attacking side, each tick it spawns on: WRONG names soldiers more than 25 m from their start place (run 20261121-183158: 4 of 12, beside the defenders).
+[[check]]
+id = "taom.story-missions.field-spawn.parth-galen-kill"
+scope = '\[StoryMissions\] launching \S+ for \x27parth_galen_kill\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: every attacker batch spawns at its start place"
+reached = ['\[LongDefeat\] spawn level (ok|WRONG): attackers ']
+pass = ['\[LongDefeat\] spawn level ok: attackers ']
+fail = ['\[LongDefeat\] spawn level WRONG: attackers ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.story-missions.ended.parth-galen-kill"
+scope = '\[StoryMissions\] launching \S+ for \x27parth_galen_kill\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: the mission ends by itself. A fall of Boromir reads reason=HeroFell: a loss for the defence, a win for the hunt"
+reached = ['\[Check\] id=taom\.story-missions\.ended result=']
+pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost) side=Attacking reason=(TargetReached|DefendersDead|KeepLost|HeroFell) waves=\d+$']
+fail = ['\[Check\] id=taom\.story-missions\.ended result=fail']
+absence = "not-reached"
+
+[[human]]
+claim = "parth_galen_save, played by a person: the Uruk-hai come in groups from two sides, and no group appears inside the fight; Aragorn, Legolas, Gimli and Boromir fight by themselves and obey orders to formations I and II; a player who fights wins all three waves with Boromir alive"
+
+[[human]]
+claim = "parth_galen_save: Boromir has his own face, his sword and shield and no helmet; the scene (battle_terrain_001) reads as a wooded place by water"
+
+[[human]]
+claim = "parth_galen_kill, played by a person: the player commands the Uruk-hai band (order bar, all formations), and the mission is won at the moment Boromir falls"
+
+[[human]]
+claim = "after each Parth Galen mission the player stands on the campaign map again with no encounter, no menu stuck open and no party change: win and loss both"

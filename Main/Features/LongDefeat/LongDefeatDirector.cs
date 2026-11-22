@@ -41,6 +41,8 @@ internal sealed partial class LongDefeatDirector
 
     private LdPoint? _keepAt;
     private float _keepRadius;
+
+    private FieldPlaces? _fieldStarts;
     private int _chargedWave;
     private bool _started;
     private DateTime _startedUtc;
@@ -104,15 +106,34 @@ internal sealed partial class LongDefeatDirector
             return false;
         }
 
-        var broken = _field.BreakHiddenGates();
-        _field.DeployEngines();
-        _logger.LogInfo($"{Tag}[Boot] hidden gates broken {broken}");
-        _logger.LogInfo($"{Tag}{_field.DescribeEngines()}");
+        var field = _plan.Field != null;
+        if (field)
+        {
+            var starts = _field.FieldStarts();
+            if (starts?.Defenders == null || starts.Attackers == null)
+            {
+                var missing = $"the field gave no start place for the {(starts?.Defenders == null ? "defenders" : "attackers")}";
+                _logger.LogError($"{Tag}[Boot] the field cannot host a run: {missing}");
+                LongDefeatChecks.Record(_outcomes, LongDefeatChecks.BootId, _mission, LongDefeatChecks.BootFailed(missing));
+                return false;
+            }
+
+            _fieldStarts = starts;
+            _logger.LogInfo($"{Tag}[Boot] field run: defenders start ({F1(starts.Defenders.X)}, {F1(starts.Defenders.Y)}, {F1(starts.Defenders.Z)}), attackers start ({F1(starts.Attackers.X)}, {F1(starts.Attackers.Y)}, {F1(starts.Attackers.Z)})");
+        }
+        else
+        {
+            var broken = _field.BreakHiddenGates();
+            _field.DeployEngines();
+            _logger.LogInfo($"{Tag}[Boot] hidden gates broken {broken}");
+            _logger.LogInfo($"{Tag}{_field.DescribeEngines()}");
+        }
 
         var recorded = _plan.Keep;
-        _keepAt = recorded is { } r ? new LdPoint(r.X, r.Y, r.Z) : _field.KeepFromScene();
-        LongDefeatChecks.Record(_outcomes, LongDefeatChecks.KeepId, _mission,
-            LongDefeatChecks.Keep(_keepAt, recorded != null ? "recorded" : "scene", _keepRadius));
+        _keepAt = recorded is { } r ? new LdPoint(r.X, r.Y, r.Z) : field ? null : _field.KeepFromScene();
+        if (!field || _keepAt != null)
+            LongDefeatChecks.Record(_outcomes, LongDefeatChecks.KeepId, _mission,
+                LongDefeatChecks.Keep(_keepAt, recorded != null ? "recorded" : "scene", _keepRadius));
         var refusal = PrepareSally();
         if (refusal.Length > 0)
         {
@@ -132,7 +153,7 @@ internal sealed partial class LongDefeatDirector
         var facts = _field.BootFacts();
         _playerAttacks = facts.PlayerAttacks;
         _logger.LogInfo($"{Tag}[Player] start {_field.DescribePlayer()}");
-        LongDefeatChecks.Record(_outcomes, LongDefeatChecks.BootId, _mission, LongDefeatChecks.Boot(facts));
+        LongDefeatChecks.Record(_outcomes, LongDefeatChecks.BootId, _mission, LongDefeatChecks.Boot(facts, field));
         LogArcherPositions();
         _logger.LogInfo($"{Tag}[Boot] run started: fortress {_plan.FortressId}, keep {KeepText()} ({(recorded != null ? "recorded" : "scene")}), autoplay {_plan.Options.Autoplay}");
         return true;
@@ -352,7 +373,8 @@ internal sealed partial class LongDefeatDirector
         _frames = 0;
         SampleLateScale();
         LogCommander();
-        _logger.LogInfo($"{Tag}{_field.DescribeEngines()}");
+        if (_plan.Field == null)
+            _logger.LogInfo($"{Tag}{_field.DescribeEngines()}");
         _logger.LogInfo($"{Tag}[Keep] attackers={_atKeep} defenders={_defendersAtKeep} progress={F2(v.KeepProgress)} at={KeepText()} positions={SampleText()}");
     }
 

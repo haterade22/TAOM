@@ -7,7 +7,9 @@ run machine ([long-defeat.md](long-defeat.md)). Slice 1 is built: a dev console 
 defence of one of seven fortresses, and the mission writes nothing to the campaign. The mission can
 play its own music track, and vanilla music stays quiet for that mission only. Slice 4 is built: the
 War Chronicle's Battle of the Hornburg offers the Helm's Deep defence to the player, and the result
-decides the event. A win holds Helm's Deep; a loss gives it to Isengard.
+decides the event. A win holds Helm's Deep; a loss gives it to Isengard. Slice 2 is built: two missions on
+a field scene play the Breaking of the Fellowship at Parth Galen, one for each side, and each is decided
+by whether Boromir falls. Only the dev console opens them until slice 3.
 
 ## Why This Exists
 
@@ -186,6 +188,60 @@ not for sale; each is a row of the mission's `heroes` list.
   stand where the heroes' home place puts them, at the nearest wall lane), no `<Hero>` entry, and no
   unattended driver beyond the one defence mission of #1368 ([scenario autorun](scenario-autorun.md)).
 
+### Field missions (slice 2)
+
+A row with a `field` block runs on a field scene with no walls. The run machine is the same; four
+things differ, and each has a run behind it.
+
+- **The list and the boot.** `StoryMissionLauncher.CreateFieldBehaviors` is the siege list without
+  `SiegeMissionPreparationHandler` and `MissionSiegeEnginesLogic`, with the field team AI and
+  vanilla's hard border. `AmmoSupplyLogic` for the defenders stays, though vanilla's field lists
+  have none: Legolas's quivers refill as they do at Helm's Deep, and both missions were balanced
+  with it. The director breaks no gate, deploys no engine, reads no lane and takes no
+  keep from the scene. The boot line ends `siege_ai=false ... field=true`, and it fails when a field
+  row runs under siege team AI.
+- **Start places.** A field run builds no deployment plan. Each formation is positioned at its
+  side's start place before every batch, and each soldier spawns into his own formation: the
+  mechanism the recorded muster places use on a siege. A place is the row's recorded one, else a
+  point of the scene's spawn path, 40 m to each side of the path's pivot
+  (`LongDefeatBattlefieldAdapter.Field.cs`). A place with no navmesh, or outside the mission
+  boundary, is no place, and a mission with no place for a side does not start. The part of a wave
+  that spawns on a later tick is sent to the start place again: without that, 4 of 12 skirmishers
+  spawned more than 25 m from it, beside the defenders (run `E:/Temp/scenario-runs/20261121-183158`).
+  A soldier who spawns into his own formation takes the formation's order position at that moment;
+  that the ranged formation had moved it toward the enemy is inferred from the run, not read in the
+  engine. The spawn check of a field run measures ground distance (`far` is more than
+  25 m from the start place).
+- **Two sides and groups.** The attackers of a defence have a second start place on the far side
+  of the defenders. Each new group starts at the place farther from where the defenders stand
+  (`FieldPlaces.AttackersFartherFrom`), so no group appears inside the fight. A field row may set
+  `rules.liveCap` below the siege floor of 101, and attackers after the opening join in groups of
+  half the live room, which is the smaller of that cap and the battle size less the standing
+  defenders (`SurvivalRun.FieldGroupPart`). A whole wave that arrives together kills a hero in
+  about five seconds: Aragorn took five head hits of 70 to 79 in two seconds (run `20261121-183616`).
+- **Free heroes.** On a field the heroes of either side stand in their class formations under
+  the team AI (the spawn line ends `group=class`). Held at a post, as on a wall, they do not fight:
+  Aragorn landed 4 hits in 6 minutes (run `20261121-184542`). The player can still order
+  formations I and II.
+
+**The hero who must live.** `mustLive` names one hero of the row. His fall ends the run with
+`RunEndReason.HeroFell`: a loss for the side that defends him and a win for the side that attacks
+(`StoryVerdict`). A rout is no fall, so a hunt in which Boromir flees and the other three die is still
+won; whether that should count as his escape is an open decision. A stalemate charge on a field sets
+only the attackers to charge and hands the player's formations back to the AI; the defenders' tactic
+list is left alone, because the engine offers no way to restore it. When the field refuses his spawn the run ends as a stalemate,
+which decides nothing. A field row may have no garrison when it has heroes, and at most four heroes.
+
+**Boromir.** `taom_hero_boromir` (`characters/taom_mission_heroes.xml`) is a copy of the lord
+`lord_1_75`: the same face, skills and name key, his battle kit without the horse and the helmet. The
+campaign hero never stands behind the mission agent, so the mission writes nothing to him.
+
+**Numbers, from the unattended runs of 2026-11-21.** In `parth_galen_save` the bot as the player
+adds almost nothing, and the Fellowship then clears waves 1 and 2 and kills 86 of 90 before Boromir
+falls in wave 3 (run `20261121-190746`, 9 minutes). The mission is therefore lost narrowly without
+the player. `parth_galen_kill` was lost with a band of 12 and of 18 (run `20261121-191916`) and won in 41 s with 25, so the band is 20.
+No person has played either mission yet.
+
 The feature declares no Harmony patch and no GameModel. Its one saved value, a declined offer, is a
 field of the War Chronicle's payload.
 
@@ -225,13 +281,15 @@ mean the same thing by the same key.
 | `rules` | object | Long Defeat rule numbers, for example `preparationSeconds` |
 | `garrison` | array | The defenders' troops (the player's in a Defend row): `troop`, `class`, `count` |
 | `muster`, `keep` | object | Optional recorded points of the scene |
-| `heroes` | array | Optional free heroes, at most three: `id`, `troop`, optional `healthFactor` (#1366) |
+| `heroes` | array | Optional free heroes, at most four: `id`, `troop`, optional `healthFactor` (#1366) |
+| `field` | object | Optional. Present: the mission runs on a field scene. May record `defenders`, `attackers` and `attackersBehind`, each `x, y, z, fx, fy`; a place it does not record comes from the scene's spawn path |
+| `mustLive` | string | Optional. The `id` of one hero of `heroes` whose fall ends the mission. A value that names no hero of the row skips the row |
 | `roster.waves` | array | Each wave: `count` and a weighted `mix` of troops |
 
 ### Current Values
 
-Seven rows are Defend missions and `helms_deep_attack` is an Attack mission; every row has one wave. Only Helm's Deep names a music track
-(`StoryMusic/isengard_vs_rohan.ogg`). Four rows use stand-in scenes after one-wave probes on
+The file has ten rows: seven siege defences, `helms_deep_attack`, and the two Parth Galen field missions. Every siege row has one wave.
+Only Helm's Deep names a music track (`StoryMusic/isengard_vs_rohan.ogg`). Four rows use stand-in scenes after one-wave probes on
 2026-11-10.
 
 | Id | Scene | Defender, attacker | Note |
@@ -243,6 +301,9 @@ Seven rows are Defend missions and `helms_deep_attack` is an Attack mission; eve
 | `dale_defend` | `sturgia_town_g` | `sturgia`, `khuzait` | Stand-in scene |
 | `lorien_defend` | `battania_town_a` | `lothlorien`, `dolguldur` | Stand-in scene |
 | `north_defend` | `empire_town_c` | `arthedain`, `gundabad` | Stand-in scene |
+| `helms_deep_attack` | `taom_rohan_castle_helms_deep_forceatmo` | `vlandia`, `isengard` | Attack: the player's host of 250 (#1409). No window offers it |
+| `parth_galen_save` | `battle_terrain_001` | `gondor`, `isengard` | Field. Waves of 20, 30 and 40, at most 10 alive; Boromir must live. Stand-in scene |
+| `parth_galen_kill` | `battle_terrain_001` | `gondor`, `isengard` | Field, Attack: the player's band of 20; won when Boromir falls |
 
 `vlandia` is Rohan and `sturgia` is Dale in TAOM ([id cheatsheet](../modding/id-cheatsheet.md)).
 
@@ -256,7 +317,9 @@ Seven rows are Defend missions and `helms_deep_attack` is an Attack mission; eve
 | `Main/Features/StoryMissions/Config/StoryHeroesReader.cs` | #1366: the `heroes` list, through `HeroesReader.ReadRow` |
 | `Main/Features/StoryMissions/StoryRosterCheck.cs`, `StoryRosterService.cs`, `Hooks/StoryRosterBehavior.cs` | #1366: the `taom.story-missions.roster` line at session start |
 | `Main/Features/StoryMissions/Hooks/StoryDevMenuBehavior.cs` | The dev menu and its refusals |
-| `Main/Features/StoryMissions/Hooks/StoryMissionLauncher.cs` | Opens the mission |
+| `Main/Features/StoryMissions/Hooks/StoryMissionLauncher.cs` | Opens the mission, with the siege list or the field list |
+| `Main/Features/LongDefeat/Domain/FieldPlaces.cs` | Slice 2: the start places of a field run, and the pick of the attackers' place |
+| `Main/Adapters/LongDefeatBattlefieldAdapter.Field.cs` | Slice 2: start places from the row or the spawn path, and the lord's spawn at his side's place |
 | `Main/Features/StoryMissions/Hooks/StoryMissionLogic.cs` | The mission logic that feeds `StoryEndWatch` |
 | `Main/Features/StoryMissions/StoryEndWatch.cs` | The end cue and the `taom.story-missions.ended` check line |
 | `Main/Features/StoryMissions/HostedRunOutcomeLog.cs` | Renames the hosted run's check lines |
@@ -305,6 +368,9 @@ Seven rows are Defend missions and `helms_deep_attack` is an Attack mission; eve
 - `StorySideGateTests`, `StoryOfferTextTests`: the side rule (alignment and kingdom ties) and the
   lines per side.
 - `StoryMusicCueTests`, and `TAOM.Tests/Infrastructure/MusicPauseGateTests.cs`: the music cue and the pause sites.
+- Slice 2, in `TAOM.Tests/Features/LongDefeat/`: `LongDefeatDirectorFieldTests` (the director on a field), `Domain/SurvivalRunFieldTests`
+  (the live cap and the groups), `Domain/FieldPlacesTests` (the pick of a start place), and the hero who must live in
+  `Domain/SurvivalRunHeroTests`. `tools/tests/test_run_scenario.py` holds the driver's field patterns.
 
 ## How to verify in game
 
@@ -334,6 +400,11 @@ Slice 4, in a campaign at the Full War:
 
 `python tools/ingame_verdict.py` reads these rows from `tools/ingame_checks/1105.toml`. The proof is
 owed, and Slice 2 waits on it.
+
+Slice 2, unattended: `python tools/run_scenario.py --kind story-mission --mission parth_galen_save` (or
+`parth_galen_kill`), then `python tools/ingame_verdict.py --issue 1105`. The rows scoped to each Parth Galen launch read the
+field boot line, Boromir's spawn line, every attacker spawn check and the end line. Four rows stay with a person: the look of the
+scene and of Boromir, the two sides the groups come from, a won defence, and a won hunt.
 
 The free heroes (#1366). A driver for the story mission exists since #1368 (step 0 below), but it has not run yet, so a person
 still runs this by hand until it has, in a loaded campaign on a build that holds the feature (a `.dirty` build is not counted).
@@ -437,8 +508,9 @@ key, the take-over, the faces, the War Chronicle offer path).
 
 ## Not built yet
 
-Slices 2, 3 and 5 of #1105 are not built: field SAVE and KILL missions, the Breaking end to end, and
-the ATTACK side. Only the Hornburg offers a mission. Slice 4 was built before slices 2 and 3, because a
+Slice 3 of #1105 is not built: the War Chronicle does not offer the Parth Galen missions yet, and their
+result changes nothing in the campaign. Slice 5 is built as a mission (#1409) and no window offers it.
+Only the Hornburg offers a mission. Slice 4 was built before slices 2 and 3, because a
 player report showed the Hornburg ending with no battle (2026-11-13).
 
 ## Known limits
@@ -451,6 +523,9 @@ player report showed the Hornburg ending with no battle (2026-11-13).
 
 ## Changelog
 
+- 2026-11-21: Slice 2, the Parth Galen field missions (`parth_galen_save`, `parth_galen_kill`): the field list and start places,
+  the hero who must live, Boromir's mission character, two attacker start places, groups under a live cap, and heroes under the
+  team AI on a field. Proven by unattended runs; no person has played them.
 - 2026-11-16: #1373, Gimli's kit is now the Erebor two-handed axe `sm_dwarf_erebor_axe_2h_c`; the hunters line gains `weapons=`, and `tools/ingame_checks/1373.toml` reads both. Unplayed.
 - 2026-11-16: #1370, the churn of the garrison's foot through the heroes' formation before the first wave is measured and
   checked by `tools/ingame_checks/1370.toml` (red on the bug). Fixed: the heroes wait for the castle tactic's first lane
@@ -474,4 +549,4 @@ player report showed the Hornburg ending with no battle (2026-11-13).
 
 - **Issue:** #1105
 - **Issue:** #1366, Phase 6 of #1325: the free heroes (built, in-game proof owed)
-- **Status:** Open (Slices 1 and 4 built; in-game proof owed for both)
+- **Status:** Open (Slices 1, 2 and 4 built; slice 5 built as a mission under #1409; a person's play owed for all)

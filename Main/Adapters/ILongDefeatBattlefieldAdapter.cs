@@ -53,8 +53,15 @@ internal interface ILongDefeatBattlefieldAdapter
     /// Moves the defender formation of <paramref name="slot"/> to the recorded muster place and sends the open batch's soldiers there, into
     /// the formation's next free slots. Call it right after <see cref="PlaceFormation"/> or <see cref="BeginBatch"/>. False, with nothing
     /// changed, when the place has no navmesh: the batch then spawns at the scene's own frame. <see cref="EndBatch"/> ends the soldiers' routing; a formation under Advance with no enemy alive keeps the place and walks there.
+    /// With <paramref name="attackers"/> it is the attackers' formation: only a field run (#1105) gives the attackers a place.
     /// </summary>
-    bool SetMusterFrame(FormationSlot slot, MusterFrame frame);
+    bool SetMusterFrame(FormationSlot slot, MusterFrame frame, bool attackers = false);
+
+    /// <summary>
+    /// On a field run (#1105 slice 2): where each side starts, both resolved by <see cref="Boot"/> (a recorded place, else the scene's own spawn path for that side). A side with no
+    /// usable place is null. Null on a siege run.
+    /// </summary>
+    FieldPlaces? FieldStarts();
 
     /// <summary>
     /// Spawns the batch's soldiers into the open batch of their formation with no position, so the engine's own layout slots apply,

@@ -19,6 +19,7 @@ namespace TAOM.Adapters;
 internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefieldAdapter
 {
     private const float SpawnLevelTolerance = 10f;
+    private const float FieldSpawnRadius = 25f;
     private const float FramePointRadius = 1f;
     private const float WallMargin = 3f;
     private const float GateToWallFallback = 4f;
@@ -33,8 +34,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
 
     private readonly Dictionary<(bool Attackers, FormationSlot Slot), int> _open = new();
 
-    // The recorded muster place each defender class spawns at while its batch is open (SetMusterFrame to EndBatch). A class with no entry spawns at the scene's frame.
-    private readonly Dictionary<FormationSlot, Vec3> _muster = new();
+    // The recorded muster place each class spawns at while its batch is open (SetMusterFrame to EndBatch). A class with no entry spawns at the scene's frame.
+    private readonly Dictionary<(bool Attackers, FormationSlot Slot), Vec3> _muster = new();
 
     // A destroyed gate, tower or ram leaves ActiveMissionObjects (Mission.OnObjectDisabled), so these lists are taken once, at deployment.
     private List<CastleGate> _gates = new();
@@ -47,11 +48,13 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     private float _highZ = float.MaxValue;
 
     /// <param name="registry">Where each spawned attacker's role is kept; the effects adapter reads the same one. A fresh one when none is given.</param>
-    public LongDefeatBattlefieldAdapter(Mission mission, IModLogger logger, LongDefeatAgentRegistry? registry = null)
+    /// <param name="field">The plan's field places (#1105 slice 2): the run is on a field scene. Null for a siege scene.</param>
+    public LongDefeatBattlefieldAdapter(Mission mission, IModLogger logger, LongDefeatAgentRegistry? registry = null, FieldPlaces? field = null)
     {
         _mission = mission;
         _logger = logger;
         _registry = registry ?? new LongDefeatAgentRegistry();
+        _fieldPlan = field;
     }
 
     private Team Side(bool attackers) => attackers ? _mission.AttackerTeam : _mission.DefenderTeam;
@@ -74,6 +77,13 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         {
             problem = "the mission has no attacker or defender team";
             return false;
+        }
+
+        if (IsField)
+        {
+            ResolveFieldStarts();
+            problem = "";
+            return true;
         }
 
         // Vanilla gives the plan its troop counts first, because they set each formation's planned width and depth (DefaultBattleMissionAgentSpawnLogic.cs:675, :690-694).
@@ -229,7 +239,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     {
         var formation = Side(attackers).GetFormation(Class(slot));
         formation.BeginSpawn(count, false);
-        _mission.SetFormationPositioningFromDeploymentPlan(formation, attackers);
+        if (!IsField)
+            _mission.SetFormationPositioningFromDeploymentPlan(formation, attackers);
         _open[(attackers, slot)] = count;
     }
 
@@ -242,14 +253,14 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     // Moves the formation to the recorded place and makes SpawnBatch ask for SpawnsIntoOwnFormation. Mission.cs:3950-3953 then takes the spawn frame from the formation's own order
     // position, and :4243-4247 takes the slot from CountOfUnits, so the next free native slot around the place applies, as it does around the scene's frame. A Move order takes the
     // order position back on the next Formation.Tick (Formation.cs:2484-2490), so standing soldiers stay at their posts and each batch sets it again.
-    public bool SetMusterFrame(FormationSlot slot, MusterFrame frame)
+    public bool SetMusterFrame(FormationSlot slot, MusterFrame frame, bool attackers = false)
     {
         var at = new Vec3(frame.X, frame.Y, frame.Z);
         if (_mission.Scene.GetNavigationMeshForPosition(in at) == UIntPtr.Zero)
             return false;
 
-        Side(false).GetFormation(Class(slot)).SetPositioning(new WorldPosition(_mission.Scene, at), new Vec2(frame.Fx, frame.Fy));
-        _muster[slot] = at;
+        Side(attackers).GetFormation(Class(slot)).SetPositioning(new WorldPosition(_mission.Scene, at), new Vec2(frame.Fx, frame.Fy));
+        _muster[(attackers, slot)] = at;
         return true;
     }
 
@@ -268,8 +279,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
 
         var reinforcement = attackers || batch.Reinforcement;
         var open = _open.TryGetValue((attackers, batch.Slot), out var started) ? started : batch.BatchTotal;
-        Vec3 musterAt = default;
-        var mustered = !attackers && _muster.TryGetValue(batch.Slot, out musterAt);
+        var mustered = _muster.TryGetValue((attackers, batch.Slot), out var musterAt);
         var frame = mustered ? musterAt : FrameOf(team, Class(batch.Slot), reinforcement);
         int far = 0, offMesh = 0, onPoint = 0;
         for (var i = 0; i < batch.Count; i++)
@@ -282,7 +292,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
             points.Add(Point(at));
             if (frame is not { } f)
                 continue;
-            if (!(Math.Abs(at.z - f.z) <= SpawnLevelTolerance))
+            if (IsField ? !(at.AsVec2.Distance(f.AsVec2) <= FieldSpawnRadius) : !(Math.Abs(at.z - f.z) <= SpawnLevelTolerance))
                 far++;
             if (_mission.Scene.GetNavigationMeshForPosition(in at) == UIntPtr.Zero)
                 offMesh++;
@@ -379,8 +389,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     {
         Side(attackers).GetFormation(Class(slot)).EndSpawn();
         _open.Remove((attackers, slot));
-        if (!attackers)
-            _muster.Remove(slot);
+        _muster.Remove((attackers, slot));
     }
 
     public void FinishInitialSpawn() => _mission.OnInitialSpawnCompleted();
@@ -389,9 +398,15 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     // ForcedUse on every engine, and nothing sets it back for towers and rams. This comes before the reset, so a wave of 100 or fewer still gets vanilla's stop from the new tactic.
     public void RefreshAttackerTactic()
     {
+        var team = _mission.AttackerTeam;
+        if (IsField)
+        {
+            SetOnlyTactic(team, new TacticCharge(team));
+            return;
+        }
+
         foreach (var engine in _towers.Cast<SiegeWeapon>().Concat(_rams).Where(w => !w.IsDisabled))
             engine.SetForcedUse(true);
-        var team = _mission.AttackerTeam;
         SetOnlyTactic(team, new TacticBreachWalls(team));
     }
 
@@ -403,6 +418,9 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         var attackers = _mission.AttackerTeam;
         var defenders = _mission.DefenderTeam;
         SetOnlyTactic(attackers, new TacticCharge(attackers));
+        if (IsField)
+            return;
+
         SetOnlyTactic(defenders, new TacticCharge(defenders));
     }
 
@@ -419,6 +437,9 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         var team = _mission.DefenderTeam;
         _defendersCharge = false;
         PostHunters();
+        if (IsField)
+            return;
+
         SetOnlyTactic(team, new TacticDefendCastle(team));
     }
 
@@ -563,5 +584,6 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         _kitFacts = NoLord;
         _kitSkipped = new List<string>();
         _lordWatch.Clear();
+        _fieldStarts = null;
     }
 }

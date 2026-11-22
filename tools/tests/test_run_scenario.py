@@ -517,6 +517,16 @@ def attack_log():
                       STAMP_LINE.format(HEAD)])
 
 
+FIELD_LAUNCH = STORY_LAUNCH.replace("helms_deep_defend", "parth_galen_save")
+FIELD_BOOT = STORY_BOOT.replace("siege_ai=true main=true friendly=false", "siege_ai=false main=true friendly=false field=true")
+FIELD_ENDED = STORY_ENDED.replace("verdict=Won side=Defending reason=TargetReached", "verdict=Lost side=Defending reason=HeroFell")
+FIELD_PASS = STORY_PASS.replace("helms_deep_defend", "parth_galen_save").replace("verdict=Won", "verdict=Lost")
+
+
+def field_log(boot=FIELD_BOOT, ended=FIELD_ENDED):
+    return "\n".join([FIELD_LAUNCH, boot, ended, FIELD_PASS, UNLOAD_LINE, STAMP_LINE.format(HEAD)])
+
+
 def story_armed(**overrides):
     values = {"kind": "story-mission", "scenario": "story-mission", "culture": "gondor", "days": None, "mission": "helms_deep_defend",
               "side": "Defending"}
@@ -647,6 +657,44 @@ class StoryJudgeTests(unittest.TestCase):
         code, why = story_judge(good_story_done(), log)
         self.assertEqual(code, 1)
         self.assertIn("story-missions.ended", why)
+
+    def test_story_field_reads_the_checkout_row(self):
+        self.assertTrue(rs.story_field("parth_galen_save"))
+        self.assertTrue(rs.story_field("Parth_Galen_Kill"))
+        self.assertFalse(rs.story_field("helms_deep_defend"))
+        self.assertFalse(rs.story_field("nowhere"))
+
+    def test_story_must_live_reads_the_checkout_row(self):
+        self.assertTrue(rs.story_must_live("parth_galen_save"))
+        self.assertTrue(rs.story_must_live("parth_galen_kill"))
+        self.assertFalse(rs.story_must_live("helms_deep_defend"))
+        self.assertFalse(rs.story_must_live("nowhere"))
+
+    def test_a_hero_fall_end_is_allowed_by_must_live_not_by_the_scene(self):
+        self.assertIn("HeroFell", rs.story_ended_pass("Defending", must_live=True))
+        self.assertNotIn("HeroFell", rs.story_ended_pass("Defending"))
+
+    def test_a_field_run_passes_with_the_field_boot_line_and_a_hero_fell_end(self):
+        self.assertEqual(rs.story_log_problems(field_log(), "parth_galen_save", "Defending"), [])
+        code, why = story_judge(good_story_done(mission="parth_galen_save", verdict="Lost"), field_log(),
+                                armed=story_armed(mission="parth_galen_save"))
+        self.assertEqual(code, 0, why)
+
+    def test_a_field_run_under_the_siege_list_is_no_pass(self):
+        problems = rs.story_log_problems(field_log(boot=STORY_BOOT), "parth_galen_save", "Defending")
+        self.assertEqual(len(problems), 1)
+        self.assertIn("hosted.boot", problems[0])
+
+    def test_a_siege_run_cannot_end_by_a_heros_fall(self):
+        log = STORY_LOG.replace("verdict=Won side=Defending reason=TargetReached", "verdict=Lost side=Defending reason=HeroFell")
+        problems = rs.story_log_problems(log, "helms_deep_defend", "Defending")
+        self.assertEqual(len(problems), 1)
+        self.assertIn("story-missions.ended", problems[0])
+
+    def test_a_siege_run_with_the_field_boot_line_is_no_pass(self):
+        problems = rs.story_log_problems(STORY_LOG.replace(STORY_BOOT, FIELD_BOOT), "helms_deep_defend", "Defending")
+        self.assertEqual(len(problems), 1)
+        self.assertIn("hosted.boot", problems[0])
 
     def test_story_side_reads_the_checkout_row(self):
         self.assertEqual(rs.story_side("helms_deep_attack"), "Attacking")
@@ -1073,6 +1121,36 @@ class StoryManifestTests(unittest.TestCase):
 
     def check(self, manifest, check_id):
         return next(entry for entry in manifest["check"] if entry["id"] == check_id)
+
+    def test_the_parth_galen_rows_match_the_driver_and_carry_their_own_scope(self):
+        m = self.manifest(1105)
+        for label, mission, side in (("parth-galen-save", "parth_galen_save", "Defending"), ("parth-galen-kill", "parth_galen_kill", "Attacking")):
+            boot = self.check(m, f"taom.story-missions.hosted.boot.{label}")
+            ended = self.check(m, f"taom.story-missions.ended.{label}")
+            self.assertEqual([rs.STORY_FIELD_BOOT_PASS], boot["pass"])
+            self.assertEqual([rs.story_ended_pass(side, must_live=True)], ended["pass"])
+            for suffix in ("hosted.boot", "hosted.hero", "field-spawn", "ended"):
+                row = self.check(m, f"taom.story-missions.{suffix}.{label}")
+                self.assertEqual(row["scope"], r"\[StoryMissions\] launching \S+ for \x27" + mission + r"\x27 ")
+                self.assertEqual(row["scope_end"], r"\[(LongDefeat|StoryMissions)\] launching ")
+
+    def test_a_boromir_who_is_placed_wrongly_fails_his_row_and_a_right_one_does_not(self):
+        import re
+        m = self.manifest(1105)
+        head = "[Check] id=taom.story-missions.hosted.hero result=pass hero=boromir troop=taom_hero_boromir is_hero=0 campaign=1 mounted=0 "
+        tail = "strangers=0 order=Move health_factor=8.00 wanted_factor=8.00 wielded=wm_gondor_boromir_sword"
+        held = head + "formation=7 held=1 " + tail
+        cases = (("parth-galen-save", head + "formation=0 held=0 " + tail + " group=class"), ("parth-galen-kill", head + "formation=0 held=0 " + tail + " side=enemy"))
+        for label, good in cases:
+            row = self.check(m, f"taom.story-missions.hosted.hero.{label}")
+            self.assertTrue(any(re.search(p, held) for p in row["fail"]), label + ": a hero held in the heroes' own group is a failure, not a row nobody reached")
+            self.assertFalse(any(re.search(p, good) for p in row["fail"]), label)
+            self.assertTrue(any(re.search(p, good) for p in row["pass"]), label)
+
+    def test_the_helms_deep_rows_read_only_their_own_mission(self):
+        m = self.manifest(1105)
+        for check_id in ("taom.story-missions.hosted.boot", "taom.story-missions.ended"):
+            self.assertEqual(self.check(m, check_id)["scope"], r"\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 ")
 
     def test_story_patterns_match_the_1105_manifest(self):
         old = self.manifest(1105)

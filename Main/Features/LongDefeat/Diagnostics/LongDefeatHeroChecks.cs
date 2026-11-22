@@ -39,11 +39,13 @@ internal static class LongDefeatHeroChecks
             + $" health_factor={report.HealthFactor.ToString("0.00", CultureInfo.InvariantCulture)} wanted_factor={hero.HealthFactor.ToString("0.00", CultureInfo.InvariantCulture)}"
             + $" wielded={(report.Wielded.Length > 0 ? Words(report.Wielded) : "none")}";
         var scaled = Math.Abs(report.HealthFactor - hero.HealthFactor) <= 0.01f;
-        var placed = report.Enemy
+        var placed = report.Enemy || report.Loose
             ? report.FormationIndex >= 0 && report.FormationIndex != HeroGroup.FormationIndex && !report.Held
             : report.FormationIndex == HeroGroup.FormationIndex && report.Held && report.Strangers == 0;
         if (report.Enemy)
             detail += " side=enemy";
+        else if (report.Loose)
+            detail += " group=class";
 
         return LongDefeatChecks.Verdict(report.IsHero != report.CampaignCharacter && !report.Mounted && placed && scaled, detail);
     }

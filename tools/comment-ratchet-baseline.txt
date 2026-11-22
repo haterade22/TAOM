@@ -281,6 +281,7 @@ Main/Adapters/KingdomStrengthAdapter.cs	5
 Main/Adapters/KingdomWarSnapshotAdapter.cs	1
 Main/Adapters/LongDefeatBattlefieldAdapter.Diagnostics.cs	20
 Main/Adapters/LongDefeatBattlefieldAdapter.Engines.cs	21
+Main/Adapters/LongDefeatBattlefieldAdapter.Field.cs	2
 Main/Adapters/LongDefeatBattlefieldAdapter.Gates.cs	17
 Main/Adapters/LongDefeatBattlefieldAdapter.Heroes.cs	42
 Main/Adapters/LongDefeatBattlefieldAdapter.Player.cs	28

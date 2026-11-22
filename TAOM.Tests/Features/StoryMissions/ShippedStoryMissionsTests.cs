@@ -28,7 +28,18 @@ public class ShippedStoryMissionsTests
     private static readonly string[] ShippedIds =
     {
         MissionId, AttackId, "minas_tirith_defend", "osgiliath_defend", "pelargir_defend", "dale_defend", "lorien_defend", "north_defend",
+        SaveId, KillId,
     };
+
+    // #1105 slice 2: the Breaking of the Fellowship on a field scene, for each side.
+    private const string SaveId = "parth_galen_save";
+    private const string KillId = "parth_galen_kill";
+
+    private static StoryMissionDefinition Mission(string id)
+    {
+        Assert.IsTrue(Load().Catalog.TryGet(id, out var mission), id + " is not in story_missions.json");
+        return mission;
+    }
 
     private static string ModuleData => RepoPaths.RepoPath("Main", "_Module", "ModuleData");
 
@@ -88,7 +99,7 @@ public class ShippedStoryMissionsTests
 
         CollectionAssert.AreEqual(ShippedIds, catalog.Missions.Select(m => m.Id).ToArray());
         foreach (var m in catalog.Missions)
-            Assert.AreEqual(m.Id == AttackId ? StorySide.Attacking : StorySide.Defending, m.Side, m.Id + ": only the Helm's Deep attack row is an attack");
+            Assert.AreEqual(m.Id == AttackId || m.Id == KillId ? StorySide.Attacking : StorySide.Defending, m.Side, m.Id + ": only the Helm's Deep attack and the Parth Galen hunt are attacks");
         logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
     }
 
@@ -165,9 +176,45 @@ public class ShippedStoryMissionsTests
 
         foreach (var m in All())
         {
-            foreach (var h in m.Heroes)
+            // A hero no shop sells (Boromir) has the mission's own factor.
+            foreach (var h in m.Heroes.Where(h => shopFactors.ContainsKey(h.TroopId)))
                 Assert.AreEqual(shopFactors[h.TroopId], h.HealthFactor, m.Id + ": " + h.Id);
         }
+    }
+
+    [TestMethod]
+    public void ParthGalen_BothRowsAreFieldMissionsOfTheFourHeroes_AndBoromirMustLive()
+    {
+        foreach (var id in new[] { SaveId, KillId })
+        {
+            var m = Mission(id);
+
+            Assert.IsNotNull(m.Field, id + ": a field mission");
+            Assert.AreEqual(0, m.Garrison.Count, id + ": the Fellowship stands alone");
+            CollectionAssert.AreEqual(new[] { "boromir", "aragorn", "legolas", "gimli" }, m.Heroes.Select(h => h.Id).ToArray(), id);
+            Assert.AreEqual("taom_hero_boromir", m.Heroes[0].TroopId, id);
+            Assert.AreEqual("boromir", m.MustLive, id);
+            Assert.IsTrue(m.Heroes[0].HealthFactor <= m.Heroes[1].HealthFactor, id + ": Boromir is no harder to kill than the three who escape");
+            Assert.AreEqual("gondor", m.DefenderCulture, id);
+            Assert.AreEqual("isengard", m.AttackerCulture, id);
+            Assert.IsNull(m.Keep, id + ": a field has no keep to lose");
+            Assert.AreEqual(0, m.Rules.StragglerCount, id + ": five defenders are no stragglers, so a stalled fight decides nothing");
+        }
+    }
+
+    [TestMethod]
+    public void ParthGalen_TheDefenceHasThreeWaves_AndTheHuntOneBand()
+    {
+        var save = Mission(SaveId);
+        var kill = Mission(KillId);
+
+        Assert.AreEqual(save.Scene, kill.Scene);
+        Assert.AreEqual(3, save.Waves.Authored.Count);
+        Assert.IsTrue(save.Waves.Authored.Zip(save.Waves.Authored.Skip(1), (a, b) => a.Count < b.Count).All(rising => rising), "each wave is larger than the one before");
+        Assert.AreEqual(1, kill.Waves.Authored.Count, "the player's own band");
+        Assert.IsTrue(save.Rules.LiveCap <= 20, "the Uruk-hai come as a stream of small groups: a whole wave at once kills a hero in seconds (run 20261121-183616)");
+        Assert.IsTrue(kill.Rules.LiveCap >= kill.Waves.Authored[0].Count, "the player's band attacks as one");
+        Assert.IsTrue(save.Waves.Authored.Concat(kill.Waves.Authored).All(w => w.Mix.Any(t => t.Slot == FormationSlot.Ranged)), "Boromir fell to arrows: every wave has archers");
     }
 
     [TestMethod]
@@ -250,7 +297,8 @@ public class ShippedStoryMissionsTests
     [TestMethod]
     public void EveryShippedGarrison_IsAsLargeAsTheLongDefeatsAndEveryWaveAboveTheLiveFloor()
     {
-        foreach (var m in All())
+        // A field mission (#1105 slice 2) has no wall, no engine and no archer muster point.
+        foreach (var m in All().Where(m => m.Field == null))
         {
             Assert.AreEqual(150, m.Garrison.Sum(g => g.Count), m.Id);
             Assert.IsTrue(m.Garrison.Any(g => g.Slot == FormationSlot.Ranged), m.Id + ": the archer muster point needs archers");

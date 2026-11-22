@@ -124,23 +124,69 @@ internal sealed class StoryMissionCatalog
         if (attackerCulture == null)
             return Skip(s, $"mission '{id}'", "'attackerCulture' is missing");
 
+        if (!TryField(o["field"], id, s, out var field))
+            return Skip(s, $"mission '{id}'", "'field' is not an object");
+
+        var heroes = StoryHeroesReader.Read(o["heroes"], id, s);
         var garrison = FortressesReader.ReadGarrison(o["garrison"] as JArray, id, s);
-        if (garrison.Count == 0)
+        if (garrison.Count == 0 && (field == null || heroes.Count == 0))
             return Skip(s, $"mission '{id}'", "it has no valid garrison row");
+        if (!TryMustLive(o["mustLive"], heroes, out var mustLive, out why))
+            return Skip(s, $"mission '{id}'", "'mustLive' " + why);
         if (!(o["roster"] is JObject rosterObject))
             return Skip(s, $"mission '{id}'", "'roster' is missing or not an object");
 
-        var roster = WavesReader.ReadRoster(id, rosterObject, s);
+        var floor = field != null ? 1 : WavesReader.SiegeWaveFloor;
+        var roster = WavesReader.ReadRoster(id, rosterObject, s, floor);
         if (roster == null)
             return Skip(s, $"mission '{id}'", "its roster has no valid wave");
 
-        var rules = WavesReader.KeepAboveStragglers(WavesReader.ReadRules(s.Group(o, "rules", ""), s), new[] { roster }, s);
+        var rules = WavesReader.KeepAboveStragglers(WavesReader.ReadRules(s.Group(o, "rules", ""), s, floor), new[] { roster }, s);
         seen.Add(id);
         return new StoryMissionDefinition(id, LongDefeatConfigScope.Text(o["name"]) ?? id, scene, side, defenderCulture, attackerCulture, garrison, roster, rules,
             FortressesReader.ReadKeep(o["keep"], id, rules.KeepRadius, s), FortressesReader.ReadMuster(o["muster"], id, s), ReadMusic(o["music"], id, s))
         {
-            Heroes = StoryHeroesReader.Read(o["heroes"], id, s),
+            Heroes = heroes,
+            Field = field,
+            MustLive = mustLive,
         };
+    }
+
+    private const string FieldFallback = "that side starts on the scene's own spawn path";
+
+    private static bool TryField(JToken? token, string id, LongDefeatConfigScope s, out FieldPlaces? field)
+    {
+        field = null;
+        if (token == null || token.Type == JTokenType.Null)
+            return true;
+        if (!(token is JObject o))
+            return false;
+
+        field = new FieldPlaces(FortressesReader.ReadPlace(o["defenders"], id, "field.defenders", FieldFallback, s),
+            FortressesReader.ReadPlace(o["attackers"], id, "field.attackers", FieldFallback, s),
+            FortressesReader.ReadPlace(o["attackersBehind"], id, "field.attackersBehind", FieldFallback, s));
+        return true;
+    }
+
+    private static bool TryMustLive(JToken? token, IReadOnlyList<HeroSpawn> heroes, out string? mustLive, out string why)
+    {
+        mustLive = null;
+        why = "";
+        if (token == null || token.Type == JTokenType.Null)
+            return true;
+
+        var id = LongDefeatConfigScope.Text(token);
+        foreach (var hero in heroes)
+        {
+            if (id != null && string.Equals(hero.Id, id, StringComparison.Ordinal))
+            {
+                mustLive = hero.Id;
+                return true;
+            }
+        }
+
+        why = $"is '{id ?? token.ToString()}', which is no hero id of this mission's 'heroes' list";
+        return false;
     }
 
     private static string? ReadMusic(JToken? token, string id, LongDefeatConfigScope s)
