@@ -31,6 +31,7 @@ public class PopupPauseGateTests
         ["Main/Features/CrashReport/UI/CrashNotifier.cs"] = (1, "pauses over the campaign map only: a paused MissionState stops a mission load (MissionState.OnIdleTick)"),
         ["Main/Features/EngineBugGuards/Hooks/Patch160_LoadRetryStop.cs"] = (1, "shows while a save load is failing, before any map exists"),
         ["Main/Features/EquipPresets/UI/PresetsOverlayVM.cs"] = (4, "inside the inventory screen, which already holds the campaign clock"),
+        ["Main/Features/Messengers/MessengerCampaignBehavior.cs"] = (1, "a notice pauses only when no popup is open: queued behind the arrival popup, whose Speak opens a mission, it would pause that mission's load (MissionState.OnIdleTick)"),
         ["Main/Features/ShaderSourceInstall/ShaderSourceInstallEntry.cs"] = (1, "main menu option"),
         ["Main/Features/StartupAlerts/StartupAlertsEntry.cs"] = (1, "startup notice before a campaign exists"),
         ["Main/SubModule.cs"] = (1, "patch failure notice for the startup phase, shown at the main menu"),
