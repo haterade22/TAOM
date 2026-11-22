@@ -65,7 +65,7 @@ public sealed class GuestTradeRelayService : IGuestTradeLink
             message.HasBalance ? message.Balance : null, message.HasArmouryLevel ? message.ArmouryLevel : null, LadderOf(message)));
     }
 
-    // The same caps the server applies; anything it would never send gives no view.
+    /// <summary>The same caps the server applies; anything it would never send gives no view.</summary>
     private static GuestLadderView? LadderOf(CoopCompatTradeReply message)
     {
         if (!message.HasLadder || !Enum.IsDefined(typeof(LadderSlot), message.LadderSlot))

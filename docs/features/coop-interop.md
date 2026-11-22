@@ -632,7 +632,8 @@ change waits. The server takes the hero from the sender's connection, never from
 **The check** (`CareerSyncRules`): the career exists; the root choice comes first; every other choice is
 replayed in order through `CareerChoiceRules.CanTake` against `GetMaxChoicesForHero` for the hero's
 level on the server, so a foreign, duplicate or locked choice, a full fork, a keystone lock and one
-choice too many are refused; tiers are 1 to 3; a flag must be the career's `career_tree_vN` stamp or a
+choice too many are refused; tiers are 1 to 3 and no tier or flag comes twice (the book's `UnlockTier` and
+`HeroCareerData.AddFlag` skip a repeat); a flag must be the career's `career_tree_vN` stamp or a
 `GrantAttributeFlag` reward of a career quest. A cleared career is accepted. Ids are capped at 128
 characters, lists at 64 entries. A refused report is logged and the sender gets the server's copy back
 with `{=taom_career_sync_refused}`. When the server holds no career for the hero (no entry, or an entry with

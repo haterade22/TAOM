@@ -117,7 +117,7 @@ public sealed class GuestTradeHost
         return WithBalance(WithLadder(reply, hero, level), hero.HeroId, hero.Player.KingdomId, hero.Player.CultureId);
     }
 
-    // The switch is read first: with it off no ladder is built for the guest at all.
+    /// <summary>The switch is read first: with it off no ladder is built for the guest at all.</summary>
     private GuestLadderOutcome Ladder(GuestTradeHero hero, GuestTradeRequest request, int level)
     {
         if (!_shops.LadderOpen)
@@ -129,7 +129,7 @@ public sealed class GuestTradeHost
             : GuestLadderDesk.Claim(ladder, hero.HeroId, hero.Player.CultureId, slot, request.Target!, level);
     }
 
-    // The rung as the server holds it after the request. Reading it must never change the answer to the request itself.
+    /// <summary>The rung as the server holds it after the request. Reading it must never change the answer to the request itself.</summary>
     private GuestTradeReply WithLadder(GuestTradeReply reply, GuestTradeHero hero, int level)
     {
         if (!_shops.LadderOpen)

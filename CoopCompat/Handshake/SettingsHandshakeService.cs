@@ -98,7 +98,6 @@ public sealed class SettingsHandshakeService
         }
 
         LogServerSide(peer.Label, verdict, divergent, buildMismatch);
-        // Like the groups, the order is compared only when both sides speak the same protocol.
         var loadOrder = protocolMatches ? _loadOrder.Check(peer.Label, hello.ModuleOrder) : LoadOrderVerdict.None;
         _transport.SendToPeer(peer, new CoopCompatHelloReply
         {

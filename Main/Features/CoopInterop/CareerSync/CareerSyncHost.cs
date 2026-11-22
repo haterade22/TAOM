@@ -64,7 +64,6 @@ public sealed class CareerSyncHost
 
         if (joinReport && _data.HasCareer(senderHeroId))
         {
-            // The server's copy is the saved one: a player who joins again gets it back, never the other way round.
             return stored!.SameAs(sent)
                 ? new CareerSyncOutcome(CareerSyncRefusal.None, null, null)
                 : new CareerSyncOutcome(CareerSyncRefusal.None, new CareerSyncAnswer(stored, sequence, false, true), null);
@@ -78,8 +77,6 @@ public sealed class CareerSyncHost
         {
             _logger.LogWarning($"[CareerSync] refused the career '{sent.CareerId}' for '{senderHeroId}': {refusal}.");
             var copy = stored ?? new CareerSyncSnapshot(senderHeroId, null, Array.Empty<string>(), Array.Empty<int>(), Array.Empty<string>());
-            // Known only when a career is saved: an entry with no career (a join with none, a death clear) is not one
-            // the server "keeps for you", so the sender keeps its own copy and is told it is not saved.
             var known = !string.IsNullOrEmpty(stored?.CareerId);
             return new CareerSyncOutcome(refusal, new CareerSyncAnswer(copy, sequence, true, known), null);
         }

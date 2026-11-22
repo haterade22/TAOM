@@ -164,7 +164,8 @@ the co-op server process: under BannerlordCoop the hosting player is a client of
   settlements and the like; text-only entries do not count). It cuts both orders to the compared
   modules that both sides have and reports the first pair that differs.
 - The server logs the result (`[CoopCompat] load order peer=<label> match` or `differ: ...` with both
-  orders, and once per process the compared modules with their count) and answers in
+  orders, and once per process the compared modules with their count, even when that list is empty,
+  so a module the rules miss shows in the log) and answers in
   `CoopCompatHelloReply` fields 5 to 7 (`LoadOrderDiffers`, `LoadOrderHostFirst`,
   `LoadOrderHostSecond`, the server's module names with their ids). The player gets one yellow line
   naming the two modules. Nothing is blocked.

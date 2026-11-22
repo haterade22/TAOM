@@ -173,7 +173,6 @@ public sealed class CoopTransport : ICoopTransport
         var report = payload.What;
         _runOnGameThread(() =>
         {
-            // As for trade requests: the hero comes from the connection when the report is handled, never from the report.
             var heroId = _heroOfPeer(netPeer) ?? "";
             CareerReportReceived?.Invoke(new CoopPeer(netPeer, netPeer.Id.ToString()), heroId, report);
         });

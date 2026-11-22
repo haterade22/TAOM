@@ -87,7 +87,7 @@ public sealed class CareerSyncRelayService : ICareerSyncLink
             message.Tiers ?? Array.Empty<int>(), message.Flags ?? Array.Empty<string>()), message.Sequence, message.Refused, message.Known);
     }
 
-    // Raised inside the career book's mutator (a death clear runs in a campaign event), so a failure stays here.
+    /// <summary>Raised inside the career book's mutator (a death clear runs in a campaign event), so a failure stays here.</summary>
     private void OnStoredCareerChanged(CareerSyncAnswer answer)
     {
         try

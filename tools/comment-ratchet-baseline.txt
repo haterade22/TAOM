@@ -160,6 +160,7 @@ CoopCompat/CoopCompatSubModule.cs	8
 CoopCompat/Decisions/DecisionTypeRegistration.cs	2
 CoopCompat/Handshake/BuildIdentity.cs	1
 CoopCompat/Handshake/SettingsHandshakeService.cs	2
+CoopCompat/LoadOrder/ActiveModulesAdapter.cs	1
 CoopCompat/Momentum/MomentumRelayService.cs	4
 Dependencies/AliasStubSubModule.cs	17
 Dependencies/EarlyLog.cs	4
@@ -202,6 +203,7 @@ Main/Adapters/BorderRenderAdapter.cs	5
 Main/Adapters/CampaignListenerAdapter.cs	14
 Main/Adapters/CampaignSessionAdapter.cs	5
 Main/Adapters/CareerPurseAdapter.cs	1
+Main/Adapters/CareerSyncHeroAdapter.cs	1
 Main/Adapters/CastlePatrolAdapter.cs	1
 Main/Adapters/CavalryCommandAdapter.cs	6
 Main/Adapters/CheatWorldAdapter.cs	8
@@ -763,7 +765,7 @@ Main/Features/CompanionTactics/Roles/RoleTooltipDecorator.cs	2
 Main/Features/CoopInterop/CoopInteropIoC.cs	7
 Main/Features/CoopInterop/CoopPlayerControlQuery.cs	18
 Main/Features/CoopInterop/CoopSessionProvider.cs	32
-Main/Features/CoopInterop/CoopSettingsRelevance.cs	117
+Main/Features/CoopInterop/CoopSettingsRelevance.cs	119
 Main/Features/CoopInterop/DedicatedServerProvider.cs	3
 Main/Features/CoopInterop/Diagnostics/HarmonyCensusReportBuilder.cs	3
 Main/Features/CoopInterop/Diagnostics/HarmonyCensusWriter.cs	6
@@ -1983,7 +1985,7 @@ Main/Features/SwornAnew/SwornAnewService.cs	4
 Main/Features/TaomBuildings/Hooks/Patch108_TaomBuildings.cs	3
 Main/Features/TaomBuildings/Hooks/TaomBuildingUiHooks.cs	2
 Main/Features/TaomBuildings/TaomBuildingsModule.cs	1
-Main/Features/TaomSettings.cs	472
+Main/Features/TaomSettings.cs	481
 Main/Features/TelcharsMark/ItemUpgradeScorer.cs	5
 Main/Features/TelcharsMark/TelcharsMarkLog.cs	1
 Main/Features/TelcharsMark/TelcharsMarkSettingsProvider.cs	1

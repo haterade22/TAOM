@@ -71,8 +71,6 @@ public sealed class CareerSyncClient
         if (career.HeroId == _player.GetMainHeroId())
         {
             if (sequence < _lastSent || _dirty) return;
-            // With no saved copy the career stays on this PC (a career picked before career sync is not wiped), but the
-            // server's save has none, so it is gone at the next join: the player is told which case it is.
             if (refused && known) _notice.ShowRefused();
             else if (refused) _notice.ShowRefusedUnsaved();
         }

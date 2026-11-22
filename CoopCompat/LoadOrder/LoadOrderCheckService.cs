@@ -98,7 +98,6 @@ public sealed class LoadOrderCheckService
         var compared = LoadOrderRules.Compared(local);
         var hostCompared = string.Join(", ", hostOrder.Where(compared.Contains));
 
-        // Once per process, even when empty: a module the rules miss, or a host with an odd list, shows in the log.
         if (!_loggedCompared)
         {
             _loggedCompared = true;

@@ -39,7 +39,6 @@ public sealed class GuestLadderFindBehavior : CampaignBehaviorBase
 
     private void OnMapEventEnded(MapEvent mapEvent)
     {
-        // Read first, so the snapshot (which also weighs the enemy side) is taken only where finds are rolled.
         if (mapEvent == null || !_finds.RollsFinds)
             return;
         try

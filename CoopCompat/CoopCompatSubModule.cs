@@ -41,7 +41,7 @@ public sealed class CoopCompatSubModule : MBSubModuleBase
 
     protected override void OnSubModuleLoad() => Log("[CoopCompat] module loaded");
 
-    // Career sync sends a client's waiting career report once per frame, so one career action goes out as one report.
+    /// <summary>Career sync sends a client's waiting career report once per frame, so one career action goes out as one report.</summary>
     protected override void OnApplicationTick(float dt) => _careerSync?.Tick();
 
     // Long Defeat co-op (#1280) starts from the main menu, before any campaign, so the session launcher starts here,

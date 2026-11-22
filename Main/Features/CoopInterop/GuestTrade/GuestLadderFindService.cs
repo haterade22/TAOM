@@ -24,7 +24,7 @@ public sealed class GuestLadderFindService
     private readonly IGuestTradeShops _shops;
     private readonly ICoopSessionProvider _coop;
     private readonly IModLogger _logger;
-    // Heroes whose hand-over threw, warned about once per process; their find stays for a later hour.
+    /// <summary>Heroes whose hand-over threw, warned about once per process; their find stays for a later hour.</summary>
     private readonly HashSet<string> _failureWarned = new(StringComparer.Ordinal);
 
     public GuestLadderFindService(LordsLadderService ladder, ArmourAcquisitionState state, IGuestTradeHeroAdapter heroes,

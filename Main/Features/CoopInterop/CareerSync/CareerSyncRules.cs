@@ -57,7 +57,6 @@ public static class CareerSyncRules
         var career = registry.GetCareer(sent.CareerId!);
         if (career == null) return CareerSyncRefusal.UnknownCareer;
 
-        // The book never holds a tier or a flag twice (UnlockTier and HeroCareerData.AddFlag skip a repeat).
         if (sent.Tiers.Any(tier => tier < 1 || tier > 3) || sent.Tiers.Distinct().Count() != sent.Tiers.Count) return CareerSyncRefusal.BadTier;
         if (sent.Flags.Distinct(StringComparer.Ordinal).Count() != sent.Flags.Count) return CareerSyncRefusal.UnknownFlag;
 

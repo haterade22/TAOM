@@ -106,7 +106,6 @@ public static class LoadOrderRules
         {
             if (string.Equals(host[i], player[i], StringComparison.Ordinal)) continue;
 
-            // The player loads player[i] earlier than the host does, so on the host host[i] comes first.
             hostFirst = host[i];
             hostSecond = player[i];
             return true;
