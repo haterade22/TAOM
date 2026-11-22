@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace TAOM.Features.LongDefeat.Domain;
 
-/// <summary>What the engine reads each tick and hands to the run. <c>Gates</c> are the visible gates; null (nothing reads them yet) is no gate, and the gate rows stay empty.</summary>
+/// <summary>What the engine reads each tick and hands to the run. <c>Gates</c> are the visible gates; null (nothing reads them yet) is no gate, and the gate rows stay empty. <c>Lord</c> is the lord as the field reads him (present, in his own body, where), which the near rule of the armoury and the yard reads; null is no lord, so nothing is near.</summary>
 internal readonly record struct RunSnapshot(
     float Dt,
     int AttackersStanding,
@@ -11,4 +11,5 @@ internal readonly record struct RunSnapshot(
     int AttackersAtKeep,
     int DefendersAtKeep,
     int SiegeBattleSize,
-    IReadOnlyList<LdGateFacts>? Gates = null);
+    IReadOnlyList<LdGateFacts>? Gates = null,
+    LdLordFacts? Lord = null);

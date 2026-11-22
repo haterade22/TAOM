@@ -167,7 +167,7 @@ internal sealed partial class LongDefeatDirector
         ReadPostsTick();
         WatchRoom(read);
         var fx = _run.Tick(new RunSnapshot(dt, read.AttackersStanding, read.AttackersFleeing, read.DefendersStanding, _atKeep,
-            _defendersAtKeep, read.SiegeBattleSize, read.Gates));
+            _defendersAtKeep, read.SiegeBattleSize, read.Gates, _field.ReadLord(false)));
         Apply(fx);
         if (_run.Result != null)
             return;
@@ -211,21 +211,25 @@ internal sealed partial class LongDefeatDirector
                     _run.DefenderDown();
                     break;
                 case LdRemovalKind.Player:
-                    LordFell();
+                    LordFell(removal.TroopId);
                     break;
                 case LdRemovalKind.Hero:
                     HeroLeft(removal.TroopId, removal.Loss);
                     if (removal.PlayerBody && removal.Loss)
-                        LordFell();
+                        LordFell(HeroTroop(removal.TroopId));
                     break;
             }
         });
     }
 
-    /// <summary>The lord's body fell. Main thread only, called from the deferred removal.</summary>
-    private void LordFell()
+    /// <summary>The troop of a hero the field names by his id (a hero's removal carries the id his row and his spawn use), so a death row names the body as a takeover's reading does. An id no hero of the plan has is returned as it is.</summary>
+    private string HeroTroop(string heroId) =>
+        _plan.Shop.Heroes.FirstOrDefault(h => h.Id == heroId)?.TroopId ?? _plan.FreeHeroes.FirstOrDefault(h => h.Id == heroId)?.TroopId ?? heroId;
+
+    /// <summary>A body the player controlled fell: the lord's, a soldier's or a hero's, named by its troop. Main thread only, called from the deferred removal.</summary>
+    private void LordFell(string troopId)
     {
-        _run.PlayerDown();
+        _run.PlayerDown(troopId);
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.LordFellId, _mission + "-f" + _run.Stats.PlayerDeaths, LongDefeatChecks.LordFell(_run.Stats.PlayerDeaths, _playerAttacks));
         _deathPending = true;
         NoteEngineTookSplit("the lord fell");

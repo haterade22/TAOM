@@ -68,6 +68,9 @@ internal sealed record RunView(
 
     /// <summary>Every hero of the shop (#1325) in shop.json order, in a wave too: the price to pay now and whether he is for sale, bought or standing.</summary>
     public IReadOnlyList<HeroRow> Heroes { get; init; } = Array.Empty<HeroRow>();
+
+    /// <summary>The armoury and the engineer's yard (phase4-plan.md): the place the lord stands at, the rows each sells and the bot's errand. Empty for a build or a fortress that sells neither.</summary>
+    public LocationsView Locations { get; init; } = LocationsView.None;
 }
 
 /// <summary>One upgrade row: the step, the soldiers of its troop that stand and are not yet sold, and how many of them the gold pays for now.</summary>

@@ -26,4 +26,21 @@ internal sealed partial class LongDefeatDirector
         _logger.LogInfo($"{Tag}[Class] {(respawn ? "respawn" : "start")} {verdict.Result.ToString().ToLowerInvariant()} {verdict.Detail}");
         return true;
     }
+
+    /// <summary>
+    /// Serves the rise the run orders at a clear (phase4-plan.md D40). Until the engine half of the death rule lands (Slice 4) this is the respawn it always was: only a lord with no body at all is
+    /// raised, where every respawn stands, so a lord who took a soldier keeps that body and the order comes again at the next clear. The place is booked as <c>respawn</c> for a foot lord (he joins
+    /// his formation, not the keep the plan's rise will use) and <c>home</c> for a mounted one.
+    /// </summary>
+    private void RiseLord(LordRiseOrder order)
+    {
+        if (_run.Result != null || _mainBody != 0)
+            return;
+
+        _respawned = true;
+        if (SpawnLord(true))
+            _run.LordRose(order.AtHome ? "home" : "respawn", false);
+        else
+            LongDefeatChecks.Record(_outcomes, LongDefeatChecks.PlayerDeathId, "d" + _run.Stats.PlayerDeaths, LongDefeatChecks.PlayerDeath(false, "respawn-refused"));
+    }
 }

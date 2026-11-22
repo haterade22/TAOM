@@ -413,6 +413,44 @@ public class LongDefeatAutorunPlanTests
     }
 
     [TestMethod]
+    public void Resolve_LordFalls_DefaultsToNone_SoNoLordIsFelled()
+    {
+        var plan = Resolve(Out);
+
+        Assert.IsNull(plan.LordFalls);
+        Assert.IsNull(plan.ToSetup("helms").Options.LordFalls);
+        StringAssert.Contains(plan.Describe(), "lord_falls=-");
+    }
+
+    [DataTestMethod]
+    [DataRow("1", 1)]
+    [DataRow("13", 13)]
+    [DataRow("1000", 1000)]
+    public void Resolve_LordFalls_TakesAWaveFromOneToOneThousand(string value, int expected)
+    {
+        var plan = Resolve(Out + "lord_falls=" + value + "\n");
+
+        Assert.AreEqual(expected, plan.LordFalls);
+        Assert.AreEqual(expected, plan.ToSetup("helms").Options.LordFalls);
+        Assert.AreEqual(0, plan.Warnings.Count);
+        StringAssert.Contains(plan.Describe(), "lord_falls=" + expected);
+    }
+
+    [DataTestMethod]
+    [DataRow("0")]
+    [DataRow("1001")]
+    [DataRow("-1")]
+    [DataRow("twice")]
+    [DataRow("")]
+    public void Resolve_LordFalls_OutOfRangeIsNoneWithAWarning(string value)
+    {
+        var plan = Resolve(Out + "lord_falls=" + value + "\n");
+
+        Assert.IsNull(plan.LordFalls);
+        Assert.AreEqual(1, plan.Warnings.Count(w => w.Contains("lord_falls")));
+    }
+
+    [TestMethod]
     public void Describe_NamesTheSeedStartWaveAndRerolls()
     {
         var text = Resolve(Out + "seed=7\nstart_wave=3\nstart_rerolls=1\nclass=archer\n").Describe();

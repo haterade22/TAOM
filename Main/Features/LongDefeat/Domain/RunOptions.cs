@@ -36,6 +36,12 @@ internal sealed record RunOptions
     public int? BreakEnginesAtClear { get; init; }
 
     /// <summary>
+    /// A test option (phase4-plan.md D47): in this wave, 20 s after its first batch is out, the run asks the field to fell the lord's own body (<see cref="RunEffects.FellLord"/>), so an unattended run
+    /// can prove the death rule. The field carries the fall out from Slice 4 on; until then nobody is felled. Null (a board run) asks for nothing.
+    /// </summary>
+    public int? LordFalls { get; init; }
+
+    /// <summary>
     /// The class the lord plays, by its id in classes.json. Null asks for none: the catalog then takes the first class on offer for a person, or the seed's draw for the bot. After
     /// <c>BuildPlan</c> this holds the class that was actually chosen (null when the fortress offers none), which is what the report writes.
     /// </summary>

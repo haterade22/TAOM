@@ -20,6 +20,7 @@ public class LongDefeatSessionPayloadTests
         StartGold = 1234,
         BreakEnginesAtClear = 4,
         ClassId = "cavalry",
+        LordFalls = 2,
     };
 
     [TestMethod]
@@ -40,7 +41,7 @@ public class LongDefeatSessionPayloadTests
 
         CollectionAssert.AreEqual(new[]
         {
-            "Autoplay", "BreakEnginesAtClear", "ClassId", "GarrisonScale", "Seed", "StartGold", "StartRerolls", "StartWave", "StopAfterWaves",
+            "Autoplay", "BreakEnginesAtClear", "ClassId", "GarrisonScale", "LordFalls", "Seed", "StartGold", "StartRerolls", "StartWave", "StopAfterWaves",
         }, names, "add the new field to LongDefeatSessionPayload, then to this list");
     }
 

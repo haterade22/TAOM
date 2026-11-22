@@ -2945,3 +2945,11 @@ The #1223 tests called a pure helper on `CustomAttacksUtils`. Any static call ru
 **Prevent:** a counter that feeds a `[Check]` line has one writer, and that writer knows who decided the state: the rules, a console command, a setting. Count only the rules' transitions; start a time limit when the rules take over, not when the state was first seen. Put the decision in a pure function with a row per transition (`StaminaLockRules.Tally`), and when a feature has both a cheat and a check, walk the cheat's sequences through the check before the manifest is written.
 
 **Source:** [rca-stamina-phases-1-2-2026-11-19.md](../rca-stamina-phases-1-2-2026-11-19.md) row 2 (lens 5).
+
+### An option is armed in the change that carries it out, and a gate lists what is unserved (#1079, 2026-11-21)
+
+**Why missed:** The Long Defeat's Phase 4 plan puts the `lord_falls` arm key in one slice and the blow that fells the lord two slices later. The first slice shipped the flag, the option, the report field and the judge's echo check, each with tests, and nothing read the effect. A run armed with the flag fell nobody and the judge passed it. The same cause was already in the Phase 2 and Phase 3 RCAs and in the plan's read-first list, which is a reminder, not a check.
+
+**Prevent:** when a pure slice hands out an effect ahead of its consumer, a test lists every unserved effect by name with the slice that will serve it, and fails both when an unlisted effect has no reader and when a listed one gains one. What an unserved effect would deliver stays off sale behind the same list, and a tool that arms a test option refuses it while the option's effect is on the list. A judge that checks an armed option also checks that the option did something, not only that the report echoes it.
+
+**Source:** [rca-long-defeat-phase4-2026-11-06.md](../rca-long-defeat-phase4-2026-11-06.md) row 15 (Tooling lens and Data flow lens); the gate is `LongDefeatEffectsServedTests`.

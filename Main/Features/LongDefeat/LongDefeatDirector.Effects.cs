@@ -112,6 +112,8 @@ internal sealed partial class LongDefeatDirector
             SallyHome();
         foreach (var e in fx.Events)
             OnEvent(e);
+        if (fx.RiseLord is { } rise)
+            RiseLord(rise);
         if (fx.RestShare > 0f)
         {
             var rest = _field.RestDefenders(fx.RestShare);
@@ -292,13 +294,6 @@ internal sealed partial class LongDefeatDirector
             _chargedWave = 0;
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + e.Wave, LongDefeatChecks.StaleCleared());
         }
-
-        if (_run.Result != null || _mainBody != 0)
-            return;
-
-        _respawned = true;
-        if (!SpawnLord(true))
-            LongDefeatChecks.Record(_outcomes, LongDefeatChecks.PlayerDeathId, "d" + _run.Stats.PlayerDeaths, LongDefeatChecks.PlayerDeath(false, "respawn-refused"));
     }
 
     /// <summary>The end of the run, from the tick that ended it or from <see cref="Shutdown"/>. Once.</summary>
@@ -320,7 +315,7 @@ internal sealed partial class LongDefeatDirector
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.GoldId, _mission, _plan.Bounties.Count == 0
             ? LongDefeatChecks.GoldWithoutBounties()
             : LongDefeatChecks.Gold(_run.Purse, _run.Stats, _run.WavesCleared));
-        ReportText = LongDefeatRunReport.Build(_plan.FortressId, _plan.Options, _plan.Provenance, result, _run.Stats, _run.Purse, _startedUtc, DateTime.UtcNow, _session.MaxSpeed, _run.BoonSummary(), _run.FortSummary());
+        ReportText = LongDefeatRunReport.Build(_plan.FortressId, _plan.Options, _plan.Provenance, result, _run.Stats, _run.Purse, _startedUtc, DateTime.UtcNow, _session.MaxSpeed, _run.BoonSummary(), _run.FortSummary(), _run.LordSummary());
         var written = WriteReport();
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.EndId, _mission, LongDefeatChecks.End(result, ReportText.Length > 0 && written));
         SaveBestRun(result);

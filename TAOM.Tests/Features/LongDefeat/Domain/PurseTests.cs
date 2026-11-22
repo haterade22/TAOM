@@ -111,4 +111,17 @@ public class PurseTests
 
         Assert.AreEqual(p.Start + p.TotalEarned - p.Spent, p.Balance);
     }
+
+    [TestMethod]
+    public void TrySpend_OnGearAndEngines_BooksEachToItsOwnSink_AndTheSinksStillSumToSpent()
+    {
+        var p = new Purse(1000);
+
+        Assert.IsTrue(p.TrySpend(250, PurseSink.Gear));
+        Assert.IsTrue(p.TrySpend(450, PurseSink.Engines));
+
+        Assert.AreEqual((250L, 450L), (p.SpentOn(PurseSink.Gear), p.SpentOn(PurseSink.Engines)));
+        Assert.AreEqual(p.Spent, System.Enum.GetValues(typeof(PurseSink)).Cast<PurseSink>().Sum(p.SpentOn));
+        Assert.AreEqual(300, p.Balance);
+    }
 }

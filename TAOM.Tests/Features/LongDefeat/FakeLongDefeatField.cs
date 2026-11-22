@@ -165,7 +165,7 @@ internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapte
     {
         LordReads++;
         Calls.Add(detail ? "ReadLord:detail" : "ReadLord");
-        return Lord;
+        return MainBody == 0 ? LdLordFacts.None : Lord;
     }
 
     public List<LdPlace> Teleports { get; } = new();
@@ -323,7 +323,7 @@ internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapte
         if (!loss)
             return new LdRemoval(LdRemovalKind.None, "", Key: key);
         if (text == "P")
-            return new LdRemoval(LdRemovalKind.Player, "", Key: key);
+            return new LdRemoval(LdRemovalKind.Player, "lord_4_1", Key: key);
         if (text.StartsWith("A:", StringComparison.Ordinal) || text.StartsWith("S:", StringComparison.Ordinal))
         {
             var marked = text.EndsWith("!", StringComparison.Ordinal);

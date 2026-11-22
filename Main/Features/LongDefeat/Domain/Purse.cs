@@ -11,7 +11,7 @@ internal enum PurseSource
     Commander,
 }
 
-/// <summary>What gold was spent on, for the report's <c>gold.spentOn</c>: packs, the gate (levels and repairs), the high towers, field care, the Elven Volley and soldier upgrades (#1161).</summary>
+/// <summary>What gold was spent on, for the report's <c>gold.spentOn</c>: packs, the gate (levels and repairs), the high towers, field care, the Elven Volley, soldier upgrades (#1161), heroes (#1337), the armoury's gear sets and the yard's engines (phase4-plan.md).</summary>
 internal enum PurseSink
 {
     Packs,
@@ -21,6 +21,8 @@ internal enum PurseSink
     Volley,
     Upgrades,
     Heroes,
+    Gear,
+    Engines,
 }
 
 /// <summary>The player's gold. The balance is always start plus earned minus spent, which the report checks.</summary>
