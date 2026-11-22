@@ -25,6 +25,7 @@ public sealed class OrphanedBattleService
     private readonly ICoopSessionProvider _coop;
     private readonly IModLogger _logger;
     private readonly HashSet<string> _warnedFailures = new();
+    private readonly HashSet<object> _unfreedBattles = new();
 
     public OrphanedBattleService(IOrphanedBattleAdapter adapter, ICoopSessionProvider coop, IModLogger logger)
     {
@@ -84,6 +85,22 @@ public sealed class OrphanedBattleService
             return report;
         ReleaseStranded(report);
         return report;
+    }
+
+    public static bool IsOrphanedEncounter(bool attackerIsMain, bool attackerIsArmyLeader, bool targetBattleFinalized,
+        bool targetInPlayerBattle) =>
+        (attackerIsMain || attackerIsArmyLeader) && targetBattleFinalized && !targetInPlayerBattle;
+
+    public bool FinishBeforeEncounter(object battle, Func<bool> targetStillInIt)
+    {
+        if (_coop.IsSessionActive || _coop.ShouldDeferToHost || _unfreedBattles.Contains(battle))
+            return false;
+        RepairAll();
+        if (!targetStillInIt())
+            return true;
+        _unfreedBattles.Add(battle);
+        _logger.LogWarning("[MapEventGuard] could not free an orphaned battle before the player's encounter; vanilla runs it");
+        return false;
     }
 
     /// <summary>

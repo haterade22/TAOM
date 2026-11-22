@@ -9,7 +9,7 @@ namespace TAOM.Features.MapEventGuard;
 
 /// <summary>
 /// The sally-out, empty-meeting and battle-death roster guards (#1099, #1475, docs/features/map-event-guard.md).
-/// Patch142 and Patch143 are applied from SubModule; Patch169 is this module's own category. No saved data.
+/// Patch142 and Patch143 are applied from SubModule; Patch169 and Patch173 are this module's own categories. No saved data.
 /// </summary>
 internal sealed class EncounterGuardModule : TaomFeatureModule
 {
@@ -19,6 +19,7 @@ internal sealed class EncounterGuardModule : TaomFeatureModule
     {
         // Map events end under Campaign.Tick, so nothing reaches the target before the first game init.
         new(BattleDeathSnapshotCategory, ApplyPhase.GameInit),
+        new(Patch173_OrphanedBattleEncounter.Category, ApplyPhase.GameInit),
     };
 
     private static readonly CampaignBehaviorDecl[] Behaviors =
@@ -42,8 +43,13 @@ internal sealed class EncounterGuardModule : TaomFeatureModule
         registrator.Register<OrphanedBattleService>(Reuse.Singleton);
     }
 
-    public override void InitializeStatics(IResolver resolver) =>
+    public override void InitializeStatics(IResolver resolver)
+    {
         Patch169_BattleDeathRosterSnapshot.Initialize(resolver.Resolve<IModLogger>());
+        var orphaned = resolver.Resolve<OrphanedBattleService>();
+        Patch173_OrphanedBattleEncounter.Initialize(orphaned, resolver.Resolve<IModLogger>());
+        Patch173_OrphanedBattleSettlementEncounter.Initialize(orphaned, resolver.Resolve<IModLogger>());
+    }
 
     public override IReadOnlyList<PatchCategoryDecl> PatchCategories => Categories;
 
