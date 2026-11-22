@@ -66,10 +66,18 @@ The drop kick's force knocks down any victim, a troll and a dwarf under Stand Fa
 `BlowFlags.KnockDown` itself, and the engine decides knockdown resistance only for blows it builds from a collision.
 The troll ring and the war ram work the same way.
 
-The actions are typed `actt_kick`, the vanilla kick's type. Its one managed consumer,
-`StandingPoint.DoesActionTypeStopUsingGameObject`, makes an agent that starts a kick let go of a machine; the ready
-decorator already skips a dwarf on a machine, so this is a second guard. What native code does with the type beyond
-that is unverified.
+The actions carry no type, as the troll's smash carries none. Until 2026-11-22 they were typed `actt_kick`, the vanilla
+kick's type, and that hung battles (#1499): while an agent's own kick is in progress, the engine's kick code (the
+function at RVA 0x670270 of the v1.5.7 `TaleWorlds.Native.dll`) reads the combat parameter id of the clip of a
+kick-typed action and indexes the combat parameter table with it, with no test for "none". A dwarf still has the
+vanilla kick, so both can meet. The dwarf clips have no combat parameter, because this feature
+deals the blow, so the read took the record before the table, a hit bone index came from foreign bytes, and a worker
+thread waited on a lock that nothing frees. The type's one managed reader,
+`StandingPoint.DoesActionTypeStopUsingGameObject`, made a kicking agent let go of a machine. The ready decorator
+refuses a dwarf who is on a machine when the attack starts; a dwarf who is given a machine during the one to two
+seconds of the clip now keeps it (not seen in play). `tools/tests/test_armory_kick_typed_actions.py` fails when an Armory
+action joins the kick family. Five mount attacks keep the type (spider, elephant, war ram, elk, moose): a mount has no
+`CanKick` flag, and the engine starts an agent's kick only with it, so a mount's own channel does not reach that read.
 
 ### Component Diagram
 
@@ -136,7 +144,7 @@ checks that the travel plus the reach covers the far edge of the trigger band.
 - `SingleVictimPick` (ElephantLike): the war ram's single-target rule
 - `IOutcomeLog` (Core/Logging)
 - `StaminaHooks.RefusesSpecialAttack` (Stamina): with [Combat Stamina](stamina.md) on, an Exhausted dwarf starts
-  neither attack, and each attack costs him the kick's stamina, because the engine reads both actions as kicks
+  neither attack. An attack costs no stamina since the actions lost their kick type (#1499), like the troll's smash
 
 ## Co-op
 
@@ -144,7 +152,11 @@ checks that the travel plus the reach covers the far edge of the trigger band.
 own, the same `CoopMissionOwnership.IsOwnedHere` check `BehaviorTreeAgentComponent.TickOnMissionThread` makes
 ([coop-interop.md](coop-interop.md)). A dedicated server adds no TAOM mission behavior, and it stages no Armory clips
 ([coop-dedicated-server.md](coop-dedicated-server.md)): its boot logs one `Could not find animation` warning per new
-row, two more for this feature. Whether a client sees the attacks of dwarves the server controls is unverified.
+row, two more for this feature. A peer that does not own a dwarf probably does not see his two attacks since the
+actions lost their type (#1499): BannerlordCoop publishes an action change only for a typed action or a ballista or
+mangonel action (`IsDiscreteAction` in `source/Missions/Agents/Handlers/AgentActionHandler.cs`, read at Coop commit
+e9906952a), and these two are neither. The blow is the owner's and is not affected. The troll's smash has the same
+gap. Not checked in a co-op session, and not checked against the installed Coop DLL.
 
 ## Tests
 
@@ -154,7 +166,7 @@ row, two more for this feature. Whether a client sees the attacks of dwarves the
   cooldowns outlast the clips, cooldowns are 3 and 5 minutes.
 - `DwarfAttacksSettingsProviderTests.cs`: defaults, the switch, the damage clamp, the MCM group order.
 - `DwarfAttackChecksTests.cs`: one `[Check]` line per kind, every hit counted.
-- `DwarfAttacksWiringTests.cs`: both actions declared once as `actt_kick` and bound once in `as_dwarf_warrior`, in the
+- `DwarfAttacksWiringTests.cs`: both actions declared once with no type and bound once in `as_dwarf_warrior`, in the
   snapshot and (LiveInstall) the live Armory; the feature registered and added to missions; no file of the feature
   takes the agent's tree slot; the ready decorator refuses the player's own dwarf.
 - `tools/tests/test_gen_dwarf_attack_clips.py`, `tools/tests/test_bind_dwarf_attack_actions.py`: the two tools.
@@ -205,6 +217,15 @@ counter increment; the `[Check]` line is written once per attack kind per proces
 - 2026-11-06: the shield rule moved to `TAOM.Core.Combat.ShieldCover`, shared with the troll ring, the elephant-like attacks and the signature strike rings; the dwarves' behaviour is unchanged.
 - 2026-11-13: the cooldowns went from 12 s (head butt) and 20 s (drop kick) to 50 s and 60 s, Mike's call. Only the two constants changed. An interrupted attack still spends its whole cooldown, so a cut-short attack now costs a dwarf 50 or 60 s.
 - 2026-11-20: the cooldowns went to 180 s (head butt) and 300 s (drop kick), and either attack now starts both, Mike's call. Dwarves attacked too often, and each drop kick carried a dwarf 2 m out of his formation line. A dwarf can still attack once at first contact, because a dwarf that never attacked is off cooldown. An attack cut short by a hit reaction still starts both cooldowns. The MCM hint still says "each on its own cooldown": changing the English text would make all 12 translations stale, so it waits for the next translation pass.
+- 2026-11-22: the two actions lost their `actt_kick` type (#1499). The engine's kick code read the combat parameter of
+  a kick-typed action's clip with no test for "none", these clips have none, and a battle hung. The Armory rows are
+  rewritten by `tools/bind_dwarf_attack_actions.py --apply`. A dwarf attack costs no stamina now, and a co-op peer
+  that does not own the dwarf probably does not see the attack. Proof, 2026-11-22: 13 unattended Fords of War
+  matches of Erebor against Gundabad with the new rows and Combat Stamina on (540 live seconds at 4x, runs
+  `E:/Temp/fords-runs/20261122-012800` to `20261122-020917`, build 4892be754), none with a stall or a crash; the same
+  matchup had failed 2 times in 10 with the switch on. Each match passed both attack checks with 141 to 205 hits, and
+  stamina counted 8 to 23 kicks in a match, where the two dwarf matches of 2026-11-19 had 512 and 651: the engine no
+  longer reads the attacks as kicks. 13 clean matches leave about a 1 in 18 chance that a 2 in 10 fault stayed hidden.
 
 ## GitHub Issue
 

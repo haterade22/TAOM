@@ -8,7 +8,7 @@ Armory drops all of it; the tools below rebuild each file, and their checks fail
 | `AssetSources/Race Test/dwarf/animations/dwarf_head_butt.fbx`, `dwarf_drop_kick.fbx` | New folder. The exports of `tools/blender/author_dwarf_attack_clips.py`; the source copies stay in `E:\LOTRAOMAssets\dwarf_clips_to_import\` | the authoring tool |
 | `Assets/Race Test/dwarf/animations/dwarf_head_butt_geo.tpac`, `dwarf_drop_kick_geo.tpac` | The Kit's import of the FBX: masters `dwarf_head_butt` (37 frames) and `dwarf_drop_kick` (55 frames) on `dwarf_skeleton_a` (`0099bfb2-09c4-4291-b225-3d24bdb14715`) | a Kit import of the FBX |
 | `Assets/Race Test/dwarf/animations/dwarf_head_butt_anm.tpac`, `dwarf_drop_kick_anm.tpac` | The clips, cloned from vanilla `kick_right_leg` by `tools/gen_dwarf_attack_clips.ps1`, then saved in the Kit so each has its `RuntimeDataCache` entry | `gen_dwarf_attack_clips.ps1 -Verify`; `python tools/check_rdc_entries.py --under "Race Test/dwarf"` |
-| `ModuleData/action_types.xml` | `act_dwarf_head_butt` and `act_dwarf_drop_kick`, both `type="actt_kick"`, after `act_troll_brute_force` | `python tools/bind_dwarf_attack_actions.py --check` |
+| `ModuleData/action_types.xml` | `act_dwarf_head_butt` and `act_dwarf_drop_kick`, with no type (typed `actt_kick` until #1499), after `act_troll_brute_force` | `python tools/bind_dwarf_attack_actions.py --check` |
 | `ModuleData/action_sets.xml` | The two rows in `as_dwarf_warrior` (the 223 dwarf rider rows of #1226 follow them), on the clips above | the same `--check` |
 
 The two XML edits are mirrored byte for byte in `docs/reference/lotrlome-armory-snapshot/`; `--check` reads all four
@@ -30,11 +30,15 @@ The drop kick also carries `displace_position` and a `DisplacementUsage` of (0, 
 frame 32 of 1 to 54, the travel the authoring tool keyed the feet against. The flag without the usage is a native
 null read; `gen_dwarf_attack_clips.ps1` refuses a clip with one and not the other.
 
-## Why `actt_kick`
+## Why the actions have no type
 
-It is the vanilla kick's type. Its one managed consumer, `StandingPoint.DoesActionTypeStopUsingGameObject`, makes an
-agent that starts a kick, jump or weapon bash let go of the machine it is using. An untyped action would keep a
-dwarf on a machine through a 2 m drop kick. What native code does with the type beyond that is unverified.
+Until 2026-11-22 both were `actt_kick`, the vanilla kick's type, chosen for its one managed reader:
+`StandingPoint.DoesActionTypeStopUsingGameObject` makes an agent that starts a kick, jump or weapon bash let go of
+the machine it is using. The native engine reads more from the type. Its kick code takes the clip of a kick-typed
+channel, reads the clip's combat parameter id and indexes the combat parameter table with no test for "none"; these
+clips have none (above), and battles hung on the lock the bad read led to (#1499, with the dumps and the decompiled
+function). `bind_dwarf_attack_actions.py` now writes the rows with no type and retypes a file that still has the old
+rows. A dwarf on a machine starts no attack (`DwarfAttackService.MayAttack`), so the machine case needs no type.
 
 ## Rollback
 
