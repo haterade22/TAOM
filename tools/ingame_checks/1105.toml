@@ -6,7 +6,7 @@
 #
 # fixed_in is the trunk commit the slice was built on: the manifest ships with the emitter.
 issue = 1105
-title = "Story Missions: campaign-hosted one-shot battles (slice 1, the Helm's Deep defence)"
+title = "Story Missions: one-shot battles offered by War Chronicle events"
 fixed_in = "c4a5d80a8"
 logs = ["taom"]
 
@@ -275,7 +275,8 @@ claim = "parth_galen_kill, played by a person: the player commands the Uruk-hai 
 claim = "after each Parth Galen mission the player stands on the campaign map again with no encounter, no menu stuck open and no party change: win and loss both"
 
 # Slice 3: the Breaking of the Fellowship offers the two Parth Galen missions, and the result decides Boromir (lord_1_75). The shown line is written
-# when the popup opens; the result line when the menu returns from the mission (StoryOfferService.ApplyHero). No unattended driver reaches the offer yet.
+# when the popup opens; the result line when the menu returns from the mission (StoryOfferService.ApplyHero). "Let fate decide" writes no result line.
+# Unattended: python tools/run_scenario.py --kind story-offer --event breaking --choice defend (or attack --culture isengard, or fate).
 [[check]]
 id = "taom.story-missions.offer.shown.breaking"
 needs = "a single-player campaign in the Isengard War or later: taom.chronicle_open breaking confirm, then the popup appears on the free map"

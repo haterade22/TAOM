@@ -11,8 +11,9 @@ for the mission to end and the map to come back, and quits. It runs no campaign 
 
 A third kind, `story-offer` (#1105 slices 3 to 5), drives the real story offer of the War Chronicle instead of the dev menu: a console
 command opens the event's window, the driver presses the offer popup's accept button, picks one option of the menu `taom_story_offer`, plays
-the mission with the bot (or lets fate decide), clicks Continue and reads the chronicle. It is built and unit tested; no run of it has
-happened yet, so the section "The story-offer kind" describes code and tests, not a proven run.
+the mission with the bot (or lets fate decide), clicks Continue and reads the chronicle. Four runs of it passed on 2026-11-21 (the
+Breaking as defence, hunt and fate, and the Hornburg by date); they are listed in
+[story-missions.md](story-missions.md#how-to-verify-in-game).
 
 ## Why This Exists
 
@@ -330,7 +331,8 @@ so it needs Mike's word.
    build (one without this kind) ends as the runner's 10 minute stall, and the printed results then quote its `not armed:` line. Then
    `python tools/ingame_verdict.py --issue 1368` reads the three rows (one session: its default).
 
-5. Story-offer kind (owed, never run; it needs `cheat_mode = 1`, Mike's word and the idle gate):
+5. Story-offer kind (it needs `cheat_mode = 1`, Mike's word and the idle gate; first runs 2026-11-21, run folders `20261121-215614`,
+   `-220814`, `-221113` and `-223617`):
    `python tools/run_scenario.py --kind story-offer --event breaking --choice defend`, then `--choice attack --culture isengard`,
    `--choice fate`, and `--event hornburg --choice defend --by-date`. `--days`, `--stall-seconds` and `--mission` are refused with it,
    and `--speed` unless `--by-date` is given. A siege window opens only in the Full War (`taom.chronicle_open` answers "a siege opens only
@@ -349,7 +351,8 @@ run took 432 s of game time, hid three inquiries, closed no event window, and un
 
 - 2026-11-15: first slice, `campaign-new` only (#1075, for #1283).
 - 2026-11-16: the `story-mission` kind (#1368). Proved by the unattended run 20261116-075342.
-- 2026-11-21: the `story-offer` kind (#1105 slices 3 to 5), built and unit tested, not yet run in the game.
+- 2026-11-21: the `story-offer` kind (#1105 slices 3 to 5) and its `--by-date` mode. Proved by four unattended runs the same day. The
+  first Hornburg run without `--by-date` ended `offer_refused` in 22 s with the chronicle's own reason, as designed (`20261121-221235`).
 
 ## GitHub Issue
 

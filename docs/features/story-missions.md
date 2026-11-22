@@ -462,12 +462,28 @@ Slice 3, by hand: in a single-player campaign in the Isengard War or later, run
 mission and choose "Continue". The line `taom.story-missions.offer.result` ends `result=Averted hero=lord_1_75` or
 `result=Occurred hero=lord_1_75`, and the `[WarChronicle]` line of the event names what the kill did.
 
-Slices 3 to 5, unattended (built and unit tested, never run; it needs `cheat_mode = 1` and the setting "Offer Story Missions" on, its default):
+Slices 3 to 5, unattended (it needs `cheat_mode = 1` and the setting "Offer Story Missions" on, its default):
 `python tools/run_scenario.py --kind story-offer --event breaking --choice defend` runs the whole offer path of the Breaking with the bot as
 the lord (`--choice attack --culture isengard` is the hunt, `--choice fate` lets fate decide and plays nothing), and
-`python tools/run_scenario.py --kind story-offer --event hornburg --choice defend` runs the Hornburg's. The runner judges the offer, the
-mission, the result and the `[WarChronicle]` line itself; `python tools/ingame_verdict.py --issue 1105` reads the same rows from the log.
-How it works and why it refuses: [scenario autorun](scenario-autorun.md#the-story-offer-kind).
+`python tools/run_scenario.py --kind story-offer --event hornburg --choice defend --by-date` runs the Hornburg's (a siege window opens
+only in the Full War, so the run waits for its day; `--choice attack --culture isengard --by-date` is the assault). The runner judges the
+offer, the mission, the result and the `[WarChronicle]` line itself; `python tools/ingame_verdict.py --issue 1105` reads the same rows
+from the log. How it works and why it refuses: [scenario autorun](scenario-autorun.md#the-story-offer-kind).
+
+The proof runs of the offer path, 2026-11-21, with the bot as the player (run folders under `E:/Temp/scenario-runs`):
+
+| Run | Build | What happened | Chronicle line |
+|---|---|---|---|
+| `20261121-215614` | `0b440211d` | Breaking, "Stand with the Fellowship": lost in wave 3 when Boromir fell | `'breaking' Occurred on day 0 (the hero's side lost the story mission; lord_1_75: Killed)` |
+| `20261121-220814` | `0b440211d` | Breaking, "Lead the Uruk-hai" as Isengard: the band of 20 was beaten | `'breaking' Averted on day 0 (the hero's side won the story mission)` |
+| `20261121-221113` | `0b440211d` | Breaking, "Let fate decide" | `'breaking' Occurred on day 0 (the player let fate decide; lord_1_75: Killed)` |
+| `20261121-223617` | `e7511b99c` | Hornburg by date (the window opened on day 8), "Defend the walls": won | `'hornburg' Held on day 8 (the player won the story mission)` |
+
+Each run ended with the runner's PASS, a clean unload and no crash report, and `ingame_verdict.py --issue 1105` reads PASS for the offer
+rows of each (`offer.shown` and `offer.result`, with `.breaking` for the Breaking). The one exception is by design: "Let fate decide"
+writes no `offer.result` line, so that row reads NOT REACHED in `20261121-221113`, and the chronicle line is its proof. In the Hornburg run the Breaking's popup came first, on
+day 2; the driver left it unanswered and took the Hornburg's on day 8. What these runs do not show: the text and the look of the popup and
+the menu, the event window, the encyclopedia, a save and a reload, and the attack on the Hornburg (slice 5). No person has played the offer.
 
 The free heroes (#1366). A driver for the story mission exists since #1368 (step 0 below), but it has not run yet, so a person
 still runs this by hand until it has, in a loaded campaign on a build that holds the feature (a `.dirty` build is not counted).
@@ -571,10 +587,10 @@ key, the take-over, the faces, the War Chronicle offer path).
 
 ## Not built yet
 
-Slice 5 is built as a mission (#1409) and no window offers it. The Hornburg and the Breaking of the
-Fellowship are the two events that offer a mission. No unattended driver reaches the offer path yet
-(the popup, the menu and the result), so slices 3 and 4 have no machine proof of it. Slice 4 was built before slices 2 and 3, because a
-player report showed the Hornburg ending with no battle (2026-11-13).
+Every slice of #1105 is built. The Hornburg and the Breaking of the Fellowship are the two events that
+offer a mission; the other windows of the War Chronicle offer none. Slice 4 was built before slices 2 and 3, because a
+player report showed the Hornburg ending with no battle (2026-11-13). What is owed is play by a person, and the unattended run of the
+assault on the Hornburg with its results (slice 5).
 
 ## Known limits
 
@@ -587,7 +603,9 @@ player report showed the Hornburg ending with no battle (2026-11-13).
 ## Changelog
 
 - 2026-11-21: Slice 3, the Breaking of the Fellowship end to end: a Narrative event's hero story, its window of 10 days, the
-  state `Averted`, the kill by `ApplyByBattle`, and the offer's two new options. Unit tested; no game run yet.
+  state `Averted`, the kill by `ApplyByBattle`, and the offer's two new options. Proven by three unattended runs of the offer
+  (defence lost, hunt lost, fate); no person has played it.
+- 2026-11-21: Slice 4's offer proven by an unattended run of the Hornburg window by date (`20261121-223617`).
 - 2026-11-21: Slice 2, the Parth Galen field missions (`parth_galen_save`, `parth_galen_kill`): the field list and start places,
   the hero who must live, Boromir's mission character, two attacker start places, groups under a live cap, and heroes under the
   team AI on a field. Proven by unattended runs; no person has played them.
@@ -618,4 +636,4 @@ player report showed the Hornburg ending with no battle (2026-11-13).
 
 - **Issue:** #1105
 - **Issue:** #1366, Phase 6 of #1325: the free heroes (built, in-game proof owed)
-- **Status:** Open (Slices 1 to 4 built; slice 5 built as a mission under #1409; a person's play owed for all)
+- **Status:** Open (Slices 1 to 5 built; the machine rows of slices 1 to 4 pass in unattended runs; slice 5's run and a person's play are owed)

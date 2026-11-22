@@ -56,6 +56,17 @@ public class ChronicleCheatReportTests
     }
 
     [TestMethod]
+    public void FormatStatus_AnOpenHeroStory_NamesItsWindowAndNoAssault()
+    {
+        var rows = new[] { new ChronicleStatusRow { Id = "breaking", Kind = ChronicleEventKind.Narrative, State = ChronicleEventState.Active, OpenDay = 2, CloseDay = 12 } };
+
+        var text = ChronicleCheatReport.FormatStatus(rows, new ArmyTargetFocus[0], 3, true, true);
+
+        StringAssert.Contains(text, "breaking (Narrative) Active: opened day 2, closes day 12, a hero's story window");
+        Assert.IsFalse(text.Contains("assaulted"), text);
+    }
+
+    [TestMethod]
     public void FormatStatus_ActivePastItsCloseDay_SaysTheCloseWaitsOnTheSiege()
     {
         var text = ChronicleCheatReport.FormatStatus(Rows(), new ArmyTargetFocus[0], 72, true, true);

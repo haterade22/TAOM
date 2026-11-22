@@ -232,8 +232,8 @@ the first driver to try for a session's own mission work. The scenario autorun (
 own wrapper, `tools/run_scenario.py`, under this same permission and gate: it arms `TAOM_AUTORUN`, starts a new campaign, runs the wanted
 days on fast forward and quits. `kind=campaign-new` runs the days. `kind=story-mission` (#1368, built and unit tested, never run in the
 game) starts the new campaign, opens one story mission through the dev menu's click path, waits for the end and the map, and quits
-(`--mission ID` is required, `--days` is refused). `kind=story-offer` (#1105, built and unit tested, never run in the game) drives the War
-Chronicle's real offer: `--event` and `--choice defend|attack|fate` are required, the run opens the window with `taom.chronicle_open`, so it
+(`--mission ID` is required, `--days` is refused). `kind=story-offer` (#1105, first runs 2026-11-21) drives the War
+Chronicle's real offer: `--event` and `--choice defend|attack|fate` are required, the run opens the window with `taom.chronicle_open` (or, with `--by-date`, waits on fast forward for the window's own day, which `hornburg` needs), so it
 needs `cheat_mode = 1`, presses the popup's accept button, picks the menu option, plays the mission with the bot and clicks Continue. A check
 that needs a save, another battle or a menu outside these still needs a person to play it.
 The Long Defeat (#1079) has its own wrapper, `tools/run_long_defeat.py`, under this same permission and gate. It reuses this runner's
