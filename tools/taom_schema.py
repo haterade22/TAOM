@@ -3170,7 +3170,16 @@ class Validator:
                          f"tier {troop.tier} (tiers {rl.tiers_for(line, cls, spec)}), so no ladder item exists "
                          f"for it. Add the tier to the line's \"tiers\" in {spec_rel}, then regenerate and re-roster"),
             ))
-        for g in rl.summarize(rl.inversions(troops, launchers, spec)):
+        # A templated troop's Bow or Crossbow is its SkillSet with the inline rows over it (#1490).
+        sets = self._skill_sets(issues) if any(t.template for t in troops.values()) else None
+        try:
+            found = rl.inversions(troops, launchers, spec, skill_sets=sets)
+        except rl.LadderError as exc:
+            issues.append(Issue(
+                severity=Severity.WARNING, code=code, file=spec_rel, line=0, entry_id="(skill sets)",
+                message=f"{exc}; no ladder pair was checked (not checked is not clean)"))
+            found = []
+        for g in rl.summarize(found):
             w = g.worst
             low = troops[w.low]
             if g.kind == "tier":

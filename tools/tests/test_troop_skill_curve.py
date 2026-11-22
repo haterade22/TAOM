@@ -340,6 +340,21 @@ class ShippedRosterTests(unittest.TestCase):
         # A villager with no <skills> block stays a read-only source: the writer adds no block.
         self.assertTrue(recs["villager_rohan"].get("external"))
 
+    def test_the_analyzer_hands_the_skillsets_to_the_roster_reader(self):
+        import analyze_troop_balance as atb
+        seen = {}
+        real = rb.load_roster
+
+        def spy(*args, **kw):
+            seen["skill_sets"] = kw.get("skill_sets")
+            return real(*args, **kw)
+        rb.load_roster = spy
+        try:
+            atb.settled_reference(self.classes, self.mounts, {"v": {"Bow": 1}})
+        finally:
+            rb.load_roster = real
+        self.assertEqual(seen["skill_sets"], {"v": {"Bow": 1}})
+
     def test_the_analyzer_measures_against_the_settled_values(self):
         import analyze_troop_balance as atb
         troops = []
