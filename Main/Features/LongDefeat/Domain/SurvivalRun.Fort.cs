@@ -17,6 +17,8 @@ internal sealed partial class SurvivalRun
     private int _towerLevel;
     private int _volleyLevel;
     private int _careUsed;
+    /// <summary>The defenders' mean health as the last tick read it, -1 for none. A clear forgets it: the reading is from before the clear's rest, and the bot must not judge a care buy by it (#1143). A tick that sends defenders or a hero to the field thins it by their number (<see cref="CareProof.AfterJoin"/>): they join at full health after the reading.</summary>
+    private float _defenderHealthMean = -1f;
     private int _pendingPosts;
     private bool _pendingFill;
     private float? _pendingGate;
@@ -370,6 +372,7 @@ internal sealed partial class SurvivalRun
             _plan.Options.StartGold != null)
         {
             CareShare = fort.Care?.Share ?? 0f,
+            DefenderHealthMean = _defenderHealthMean,
             TowerPostsShown = towerShown?.Posts ?? 0,
             TowerVolleyShown = towerShown is { Volley: true } ? fort.Towers!.Volley : null,
             GatePercent = fort.Gate is { } gate ? gate.Levels[Math.Min(_gateLevel, gate.Levels.Count - 1)].HitPointsPercent : 0f,

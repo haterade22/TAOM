@@ -167,7 +167,7 @@ internal sealed partial class LongDefeatDirector
         ReadPostsTick();
         WatchRoom(read);
         var fx = _run.Tick(new RunSnapshot(dt, read.AttackersStanding, read.AttackersFleeing, read.DefendersStanding, _atKeep,
-            _defendersAtKeep, read.SiegeBattleSize, read.Gates, _field.ReadLord(false)));
+            _defendersAtKeep, read.SiegeBattleSize, read.Gates, _field.ReadLord(false), read.DefenderHealthMean));
         Apply(fx);
         if (_run.Result != null)
             return;

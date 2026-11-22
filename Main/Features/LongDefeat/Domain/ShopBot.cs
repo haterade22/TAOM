@@ -34,7 +34,7 @@ internal readonly record struct BotAction(BotActionKind Kind, string? OfferId = 
 /// A test run also spends a banked reroll on any offer while it has used none (the plan's note that a 5-wave run proves a reroll at clear 3 needs it), which only
 /// an unattended run ever does.
 /// The fortifications follow phase3-plan.md D27, one level of each kind a stretch between waves: a repair first when a gate is broken or has lost a tenth of its maximum, then gate level N at
-/// clear N (to 3), the Elven Volley at 1 in the preparation and 2 from clear 1, the towers at clear + 1 (to 3), and field care at clears 1 to 3. A run with a <c>start_gold</c> buys these before its packs;
+/// clear N (to 3), the Elven Volley at 1 in the preparation and 2 from clear 1, the towers at clear + 1 (to 3), and field care at clears 1 to 3, bought only when the defenders are hurt enough for the heal to show (<see cref="CareProof"/>, #1143) and nobody is still to spawn (a pack or a hero joins at full health before the heal and thins what is missing). A run with a <c>start_gold</c> buys these before its packs;
 /// any other run buys them from what its packs left. A row the view shows unavailable (not offered, not carried, at its top, used, or posts that bust the cap) is never asked for, so a build that offers
 /// nothing decides exactly as one with no fortifications. In a wave it arms the Elven Volley whenever the view shows it ready (<see cref="BotActionKind.Volley"/>).
 /// Gold that no pack and no fortification wants buys an upgrade (#1161): the first row in shop.json order that the gold reaches (<see cref="BotActionKind.Upgrade"/>, the step id in
@@ -172,7 +172,7 @@ internal static class ShopBot
             return new BotAction(BotActionKind.VolleyLevel);
         if (Wants(fort.Towers, Math.Min(cleared + 1, TopLevel)))
             return new BotAction(BotActionKind.TowerLevel);
-        if (cleared >= 1 && cleared <= TopLevel && fort.Care.Available && fort.Care.Price <= view.Gold)
+        if (cleared >= 1 && cleared <= TopLevel && fort.Care.Available && fort.Care.Price <= view.Gold && view.DefendersPending == 0 && CareProof.WorthBuying(fort.CareShare, fort.DefenderHealthMean))
             return new BotAction(BotActionKind.FieldCare);
 
         return null;

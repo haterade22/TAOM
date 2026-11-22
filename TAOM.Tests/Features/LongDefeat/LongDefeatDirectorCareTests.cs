@@ -324,4 +324,12 @@ public class LongDefeatDirectorCareTests
         Assert.IsFalse(rig.Field.Calls.Contains(Heal));
         Assert.AreEqual(0, rig.Care.Count);
     }
+
+    [TestMethod]
+    public void TheDirector_HandsTheRunTheDefendersMeanHealth_SoTheBotCanJudgeACareBuy()
+    {
+        var source = TAOM.Tests.Infrastructure.RepoPaths.ReadSource("Main/Features/LongDefeat/LongDefeatDirector.cs", stripComments: true);
+
+        StringAssert.Contains(source, "read.DefenderHealthMean)", "the tick's RunSnapshot must carry the mean the field read, or the bot never buys care (#1143)");
+    }
 }

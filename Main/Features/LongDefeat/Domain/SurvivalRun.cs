@@ -125,6 +125,7 @@ internal sealed partial class SurvivalRun
         _lastDefenders = s.DefendersStanding;
         _lastAttackers = s.AttackersStanding;
         ObserveGates(s.Gates);
+        _defenderHealthMean = s.DefenderHealthMean;
         ObserveLord(s.Lord);
         ObserveLordLife(s);
         _stats.ObserveFleeing(s.AttackersFleeing);
@@ -147,6 +148,7 @@ internal sealed partial class SurvivalRun
         EmitMuster(s.Dt, fx);
         EmitPacks(fx);
         EmitHeroes(fx);
+        _defenderHealthMean = CareProof.AfterJoin(_defenderHealthMean, s.DefendersStanding, fx.DefenderBatches.Sum(b => b.Count) + fx.SpawnHeroes.Count);
         EmitUpgrades(fx);
 
         if (BetweenWaves)
@@ -427,6 +429,7 @@ internal sealed partial class SurvivalRun
         OrderRise(fx);
         RefillPosts(fx);
         fx.RestShare = _r.RestShare;
+        _defenderHealthMean = -1f;
         _phase = RunPhase.Intermission;
         _left = _r.IntermissionSeconds;
     }
