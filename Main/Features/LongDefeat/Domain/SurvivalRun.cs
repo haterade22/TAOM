@@ -28,6 +28,7 @@ internal sealed partial class SurvivalRun
     private int _wave;
     private int _wavesCleared;
     private int _lastDefenders;
+    private float _defenderHealthMean = -1f;
     private int _lastAttackers;
 
     private IReadOnlyList<WaveSoldier> _musterFoot = Array.Empty<WaveSoldier>();
@@ -123,6 +124,7 @@ internal sealed partial class SurvivalRun
             return fx;
 
         _lastDefenders = s.DefendersStanding;
+        _defenderHealthMean = s.DefenderHealthMean;
         _lastAttackers = s.AttackersStanding;
         ObserveGates(s.Gates);
         _stats.ObserveFleeing(s.AttackersFleeing);

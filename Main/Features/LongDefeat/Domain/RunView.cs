@@ -99,6 +99,8 @@ internal sealed record FortView(FortRow Gate, FortRow Repair, FortRow Towers, Fo
     /// <summary>The share of the missing health one field care gives back (shop.json's), 0 when the shop carries no care row: the panel's line names it.</summary>
     public float CareShare { get; init; }
 
+    public float DefenderHealthMean { get; init; } = -1f;
+
     /// <summary>The hit points the next gate level brings the gate to, as a percent over the vanilla maximum (cumulative, shop.json's); the top level's when every level is owned, 0 when the shop carries no gate row.</summary>
     public float GatePercent { get; init; }
 

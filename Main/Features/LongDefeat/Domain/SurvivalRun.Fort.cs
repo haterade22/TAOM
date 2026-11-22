@@ -370,6 +370,7 @@ internal sealed partial class SurvivalRun
             _plan.Options.StartGold != null)
         {
             CareShare = fort.Care?.Share ?? 0f,
+            DefenderHealthMean = _defenderHealthMean,
             TowerPostsShown = towerShown?.Posts ?? 0,
             TowerVolleyShown = towerShown is { Volley: true } ? fort.Towers!.Volley : null,
             GatePercent = fort.Gate is { } gate ? gate.Levels[Math.Min(_gateLevel, gate.Levels.Count - 1)].HitPointsPercent : 0f,

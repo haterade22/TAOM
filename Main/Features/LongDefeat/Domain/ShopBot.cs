@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using TAOM.Features.LongDefeat.Diagnostics;
 
 namespace TAOM.Features.LongDefeat.Domain;
 
@@ -90,6 +91,9 @@ internal static class ShopBot
         return secondsInPhase >= HornAfterSeconds ? new BotAction(BotActionKind.Horn) : new BotAction(BotActionKind.Wait);
     }
 
+    private static bool CareWouldShow(FortView fort) =>
+        fort.DefenderHealthMean < 0f || fort.CareShare * (1f - fort.DefenderHealthMean) > LongDefeatFortChecks.ProvableRise;
+
     /// <summary>The first fortification the schedule wants that the view shows available and the gold reaches, or null.</summary>
     private static BotAction? Fortification(RunView view)
     {
@@ -105,7 +109,7 @@ internal static class ShopBot
             return new BotAction(BotActionKind.VolleyLevel);
         if (Wants(fort.Towers, Math.Min(cleared + 1, TopLevel)))
             return new BotAction(BotActionKind.TowerLevel);
-        if (cleared >= 1 && cleared <= TopLevel && fort.Care.Available && fort.Care.Price <= view.Gold)
+        if (cleared >= 1 && cleared <= TopLevel && fort.Care.Available && fort.Care.Price <= view.Gold && CareWouldShow(fort))
             return new BotAction(BotActionKind.FieldCare);
 
         return null;

@@ -45,6 +45,7 @@ public class ShopBotFortTests
         public LdGateFacts[] Gates = { Whole() };
         public FortOffer Offered = new(3, 3, true, 2);
         public int Standing = 100;
+        public float HealthMean = -1f;
 
         public RunView View(IReadOnlyList<ShopOffer>? packs = null)
         {
@@ -58,7 +59,7 @@ public class ShopBotFortTests
                 new FortRow(CareUsed, 1, CarePrice, Offered.FieldCare && CareUsed < 1),
                 Row(Volley, 2, VolleyPrices, Offered.Volley),
                 Gates,
-                StartGold);
+                StartGold) { CareShare = 0.75f, DefenderHealthMean = HealthMean };
             return new RunView(Phase, Cleared, Cleared, Gold, 60f, Standing, 0, 0, 0f, packs ?? Packs) { Fort = fort };
         }
 
@@ -188,6 +189,24 @@ public class ShopBotFortTests
     }
 
     // ---- the named runs of section 8: the level each needs by the wave that proves it ----
+
+    [TestMethod]
+    public void Care_IsNotBought_WhileTheGarrisonMissesTooLittleForTheCheckToJudge()
+    {
+        var sim = new Sim { Offered = new FortOffer(0, 0, true, 0), HealthMean = 0.975f };
+        sim.Clear();
+
+        Assert.AreEqual(0, sim.Shop().Count, "75% of 2.5% missing is 1.9%, under the 2% rise that the check skips as too-little-missing (#1143)");
+    }
+
+    [TestMethod]
+    public void Care_IsBought_OnceTheGarrisonMissesEnoughForTheCheckToJudge()
+    {
+        var sim = new Sim { Offered = new FortOffer(0, 0, true, 0), HealthMean = 0.9f };
+        sim.Clear();
+
+        CollectionAssert.AreEqual(new[] { BotActionKind.FieldCare }, sim.Shop());
+    }
 
     [TestMethod]
     public void TheCareRun_WavesTwo_OwnsCareAtClearOne()

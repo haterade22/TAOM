@@ -11,4 +11,5 @@ internal readonly record struct RunSnapshot(
     int AttackersAtKeep,
     int DefendersAtKeep,
     int SiegeBattleSize,
-    IReadOnlyList<LdGateFacts>? Gates = null);
+    IReadOnlyList<LdGateFacts>? Gates = null,
+    float DefenderHealthMean = -1f);
