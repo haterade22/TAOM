@@ -467,10 +467,10 @@
         "text": "You detected a Nazgul's approach before it reached the wood's borders.",
         "description": "The unnatural cold and the stillness of the birds were the first signs. You reported what you felt to the Galadhrim command before anyone else had noticed. The Lady's power moved to reinforce the borders. Afterward, Celeborn said your instincts were unusually sharp.",
         "skills": [
-            "Bow",
-            "Scouting"
+            "Scouting",
+            "Tactics"
         ],
-        "attribute": "Control",
+        "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
