@@ -162,7 +162,7 @@ public class SiegeDefenseService : ISiegeDefenseService
                     InformationManager.DisplayMessage(new InformationMessage(acceptMsg));
                     _logger.LogInfo($"[SiegeDefense] Player accepted defense of {evt.SettlementId}");
                 },
-                negativeAction: () => { }));
+                negativeAction: () => { }), pauseGameActiveState: true);
         }
         catch (Exception ex)
         {

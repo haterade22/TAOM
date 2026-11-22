@@ -1141,7 +1141,7 @@ Main/Features/FactionUI/FactionScreen/FactionScreenLauncher.cs	5
 Main/Features/FactionUI/FactionUIIoC.cs	2
 Main/Features/FactionUI/Hooks/BodyGeneratorViewOnTickPatch.cs	2
 Main/Features/FactionUI/Hooks/FaceGenFirstOpenDiagnosticPatch.cs	4
-Main/Features/FactionUI/Hooks/GauntletLayerLoadMoviePatch.cs	8
+Main/Features/FactionUI/Hooks/GauntletLayerLoadMoviePatch.cs	6
 Main/Features/FactionUI/Menus/FrontEndMovieService.cs	24
 Main/Features/FactionUI/Presets/FactionPickService.cs	17
 Main/Features/FactionUI/Presets/FactionPresetRegistrationBehavior.cs	3

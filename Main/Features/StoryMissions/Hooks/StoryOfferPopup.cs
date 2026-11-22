@@ -28,5 +28,5 @@ internal static class StoryOfferPopup
         true, true,
         Line(StoryOfferText.PopupAccept(offer.Choices, offer.Window.HeroId != null), offer.Window).ToString(),
         new TextObject("{=taom_story_offer_later}Not now").ToString(),
-        ride, later), true, false);
+        ride, later), pauseGameActiveState: true, prioritize: false);
 }

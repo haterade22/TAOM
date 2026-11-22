@@ -25,6 +25,7 @@ import json
 import statistics
 import os
 import sys
+from pathlib import Path
 import xml.etree.ElementTree as ET
 from collections import defaultdict
 
@@ -215,12 +216,12 @@ def parse_troop_file(filepath, item_classes=None, mounts=None):
 # Analysis
 # =============================================================================
 
-def settled_reference(item_classes, mounts):
+def settled_reference(item_classes, mounts, skill_sets=None):
     """troop id -> the values rebalance_troops.py --apply writes: the formula after the upgrade
     clamp and the purpose raise over the whole roster. Measured against the bare formula, every
     value the clamp lifted read as an outlier. Troops the formula skips are left out."""
     files = sorted(glob.glob(os.path.join(rb.TROOPS_DIR, 'troops_*.xml')))
-    records = rb.load_roster(files, item_classes, mounts)
+    records = rb.load_roster(files, item_classes, mounts, skill_sets=skill_sets)
     rb.settle_purpose(records)
     return {c['id']: c['final'] for c in records if c.get('new') is not None and not c.get('external')}
 
@@ -1119,6 +1120,17 @@ def main():
               f'         The role table needs each troop\'s weapons, so no troop has a formula.',
               file=sys.stderr)
 
+    # A templated troop is read as its SkillSet with the inline rows over it (#626, #1490), as
+    # rebalance_troops.main() does; load_roster raises on one without the SkillSets.
+    skill_sets = None
+    if item_classes is not None:
+        import sync_lord_inline_skills as sl
+        try:
+            skill_sets = sl.load_skill_sets(str(Path(game_modules).parent), rb.MODULEDATA_DIR, require_vanilla=True)
+        except ValueError as exc:
+            print(f'WARNING: the SkillSets could not be read ({exc}); a templated troop stops the report.',
+                  file=sys.stderr)
+
     by_culture = defaultdict(list)
     all_troops = []
     file_cultures = []
@@ -1131,7 +1143,7 @@ def main():
 
     # The reference is what the writer would put on disk, the clamp included.
     analyze(all_troops, weights, args.outlier_threshold,
-            settled=settled_reference(item_classes, mounts) if item_classes else None)
+            settled=settled_reference(item_classes, mounts, skill_sets) if item_classes else None)
     all_ids = {t['id'] for t in all_troops}
     dq = data_quality(all_troops, file_cultures)
     dq['monotonicity'] = check_monotonicity(all_troops)

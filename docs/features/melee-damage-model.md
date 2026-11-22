@@ -786,9 +786,28 @@ higher damage; nobody measured it. The same run lowered `wm_gundabad_sword_a01_b
 2.88 / 1.03 to 2.37 / 0.85.
 
 The run also lowered four Dale blades (`wm_dale_ws_1h_axe_a01` to `a03`, `wm_dale_ws_sword_a02`),
-and those were put back. `--culture` labels an item with its first wearer's culture, and
-`troops_anduinvale.xml` loads before the Dale file, so Dale's own weapons were labelled `anduinvale`
-(#1241). Until that is fixed, read a `--culture` dry run's blade list before `--apply`.
+and those were put back. An edit moves a blade for every troop that wears any weapon built on it,
+and the Dale weapons were worn by Anduin Vale troops too, so a run scoped to `anduinvale` moved them
+(#1241). Since #1241 a `--culture` run restats a blade only when every wearer of every weapon on it
+belongs to the named craft rows; a blade another row shares is listed (`shared:` notes, all printed)
+and left alone. Name every wearing row to restat it.
+
+### The gate scores each battle set and prices vanilla weapons (#1242)
+
+The gate used to score a troop by its best weapon over all battle sets, and priced only Armory items. The
+engine draws a spawn's weapon slots from its battle sets (`Equipment.GetRandomEquipmentElements`, v1.5.7:
+slots 0 and 1 from one drawn set, 2 and 3 from another, the rest from a third), so a strong weapon in one set
+does not stand for a weak one in another. `analyze_melee_ladder.Troop` now keeps each battle roster
+(`sets`, with a troop-level override laid over each), and `taom_schema.melee_pass_rows` emits two rows for a
+troop whose sets differ: its weakest set, judged for "under", and its best set, judged for "over" and the
+ceiling (`melee_ladder.findings`, fourth row extra). Vanilla SandBoxCore and SandBox weapons are priced next to the
+Armory's. A `civilian="true"` roster with no `equipmentType` was already skipped by `load_troops`
+(`_is_civilian_roster`); the tests now pin it.
+
+Live run, 2026-11-22, `MELEE_LADDER_INVERSION` 384 on trunk, 436 after: 63 new troop verdicts (39 over-armed, 24
+under-armed in their weakest set) and 11 that no longer hold (a vanilla weapon in the best set puts the troop
+in band). `rohan_westfold_recruit`, `rohan_westfold_militiaman` and `rohan_westfold_2h_axeman` are now seen
+over-armed; `gondor_har_conscript` is not flagged. No troop file was changed.
 
 Measured on 2026-11-13 with the live Armory pieces on both sides, `HEAD` rosters against the working
 tree:

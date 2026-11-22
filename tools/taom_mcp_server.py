@@ -77,8 +77,8 @@ def validate_moduledata(codes: list[str] | None = None) -> dict:
     message}]}. Optional `codes` filters to specific issue codes (e.g.
     ["BROKEN_ITEM_REF","UNKNOWN_CULTURE"]). It runs every pass the CLI runs. No game
     install, a live module's missing ModuleData or a registry that looks too small
-    comes back as a PARTIAL_RUN WARNING; a narrower skip (no LOTRLOME_Armory for the
-    armour class table, a module that ships no .tpac) goes to the server's stderr only."""
+    comes back as a PARTIAL_RUN WARNING, and so does a narrower skip (no LOTRLOME_Armory
+    for the armour class table, a module that ships no .tpac)."""
     return _query.validate(codes)
 
 

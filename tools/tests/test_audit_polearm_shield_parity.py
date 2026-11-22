@@ -184,7 +184,7 @@ def xslt_registering(*piece_ids: str) -> str:
 
 def submodule_xml(*rows: tuple[str, str]) -> str:
     """A SubModule.xml whose <XmlName> rows the engine reads to find a module's stylesheets."""
-    nodes = "".join(f'<XmlNode><XmlName id="{i}" path="{p}"/></XmlNode>' for i, p in rows)
+    nodes = '<XmlNode><XmlName id="Items" path="items"/></XmlNode>' + "".join(f'<XmlNode><XmlName id="{i}" path="{p}"/></XmlNode>' for i, p in rows)
     return f'<Module><Xmls>{nodes}</Xmls></Module>\n'
 
 
@@ -295,7 +295,7 @@ class GateContractTests(unittest.TestCase):
         own = self.rosters.parent
         write(own / "SubModule.xml",
               '<Module><Id value="TestOwn"/><DependedModules><DependedModule Id="TestArmory"/>'
-              '</DependedModules><Xmls><XmlNode><XmlName id="WeaponDescriptions" '
+              '</DependedModules><Xmls><XmlNode><XmlName id="Items" path="items"/></XmlNode><XmlNode><XmlName id="WeaponDescriptions" '
               'path="ph/ph_descriptions"/></XmlNode></Xmls></Module>\n')
         write(own / "ModuleData" / "ph" / "ph_descriptions.xslt", xslt_registering("spear_blade", "spear_handle"))
         write(self.modules / "TestOwn" / "SubModule.xml", '<Module><Id value="TestOwn"/></Module>\n')
@@ -318,7 +318,7 @@ class GateContractTests(unittest.TestCase):
         """#1375: a row whose <IncludedGameTypes> does not name Campaign never loads in a campaign."""
         write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
         write(self.modules / "TestArmory" / "SubModule.xml",
-              '<Module><Xmls><XmlNode><XmlName id="WeaponDescriptions" path="weapon_descriptions"/>'
+              '<Module><Xmls><XmlNode><XmlName id="Items" path="items"/></XmlNode><XmlNode><XmlName id="WeaponDescriptions" path="weapon_descriptions"/>'
               '<IncludedGameTypes><GameType value="MultiplayerGame"/></IncludedGameTypes>'
               '</XmlNode></Xmls></Module>\n')
         write(self.overlay, xslt_registering("spear_blade", "spear_handle"))
@@ -329,7 +329,7 @@ class GateContractTests(unittest.TestCase):
     def test_row_naming_campaign_applies(self):
         write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
         write(self.modules / "TestArmory" / "SubModule.xml",
-              '<Module><Xmls><XmlNode><XmlName id="WeaponDescriptions" path="weapon_descriptions"/>'
+              '<Module><Xmls><XmlNode><XmlName id="Items" path="items"/></XmlNode><XmlNode><XmlName id="WeaponDescriptions" path="weapon_descriptions"/>'
               '<IncludedGameTypes><GameType value="MultiplayerGame"/><GameType value="Campaign"/>'
               '</IncludedGameTypes></XmlNode></Xmls></Module>\n')
         write(self.overlay, xslt_registering("spear_blade", "spear_handle"))
@@ -376,7 +376,7 @@ class GateContractTests(unittest.TestCase):
     def armory_rows(self, *nodes: str):
         """TestArmory's SubModule.xml with its WeaponDescriptions row and the given <XmlNode>s."""
         write(self.modules / "TestArmory" / "SubModule.xml",
-              '<Module><Id value="TestArmory"/><Xmls><XmlNode><XmlName id="WeaponDescriptions" '
+              '<Module><Id value="TestArmory"/><Xmls><XmlNode><XmlName id="Items" path="items"/></XmlNode><XmlNode><XmlName id="WeaponDescriptions" '
               'path="weapon_descriptions"/></XmlNode>' + "".join(nodes) + '</Xmls></Module>\n')
 
     def test_piece_file_for_another_game_type_does_not_count(self):
@@ -422,22 +422,60 @@ class GateContractTests(unittest.TestCase):
         code, out = self.run_gate()
         self.assertEqual(code, 0, out)
 
-    def test_folder_beside_a_file_of_the_same_path_still_counts(self):
-        """With `<path>.xml` present the engine never reads the folder, so the folder is not skipped."""
+    def test_folder_beside_a_file_of_the_same_path_is_not_read(self):
+        """With `<path>.xml` present the engine never reads the folder, so a file in the folder
+        no other row names defines nothing (#1404)."""
         write(self.rosters / "troops.xml", roster_xml("test_spear", "mp_shield"))
-        self.armory_rows(MP_ROW.format(id="Items", path="mp"))
+        self.armory_rows('<XmlNode><XmlName id="Items" path="mp"/></XmlNode>')
         write(self.modules / "TestArmory" / "ModuleData" / "mp.xml", '<Items/>\n')
         write(self.modules / "TestArmory" / "ModuleData" / "mp" / "shields.xml",
               '<Items><Item id="mp_shield" Type="Shield"/></Items>\n')
         code, out = self.run_gate()
+        self.assertEqual(code, 0, out)
+
+    def test_file_no_row_names_does_not_define_items(self):
+        """#1404: a config file no SubModule.xml row names (armour_classes.xml holds thousands of
+        `<Item id class>` stubs) is never loaded, so its stub does not shadow the real item."""
+        write(self.modules / "TestArmory" / "ModuleData" / "aaa_config" / "classes.xml",
+              '<Items><Item id="test_shield" Type="Armor" class="Heavy"/></Items>\n')
+        write(self.modules / "TestArmory" / "ModuleData" / "zzz_stub.xml",
+              '<Items><Item id="test_spear" Type="Shield"/></Items>\n')
+        shields = audit.items([self.modules / "TestArmory"])[2]
+        self.assertEqual(shields, {"test_shield"})
+        self.assertNotIn("test_spear", shields)
+
+    def test_folder_row_names_each_xml_in_the_folder(self):
+        """A row whose `<path>.xml` is absent loads every *.xml in the folder `<path>`."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear", "mp_shield"))
+        self.armory_rows('<XmlNode><XmlName id="Items" path="shields"/></XmlNode>')
+        write(self.modules / "TestArmory" / "ModuleData" / "shields" / "a.xml",
+              '<Items><Item id="mp_shield" Type="Shield"/></Items>\n')
+        code, out = self.run_gate()
         self.assertEqual(code, 1, out)
-        self.assertIn("test_spear", out)
+
+    def test_malformed_rows_are_bad_input_naming_the_file(self):
+        """#1404: the engine throws on each of these (XmlResource.cs:279-305), so the gate exits 2
+        and names the SubModule.xml instead of skipping the row."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
+        for label, row in (
+            ("no XmlName", "<XmlNode><IncludedGameTypes/></XmlNode>"),
+            ("no id", '<XmlNode><XmlName path="items"/></XmlNode>'),
+            ("no path", '<XmlNode><XmlName id="Items"/></XmlNode>'),
+            ("no value", '<XmlNode><XmlName id="Items" path="items"/>'
+                         '<IncludedGameTypes><GameType/></IncludedGameTypes></XmlNode>'),
+        ):
+            with self.subTest(label):
+                self.armory_rows(row)
+                code, out = self.run_gate()
+                self.assertEqual(code, 2, out)
+                self.assertIn("TestArmory", out)
+                self.assertIn("SubModule.xml", out)
 
     def test_comment_under_included_game_types_names_no_type(self):
         """The engine reads only element children; a comment-only list is empty, so the row loads."""
         write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
         write(self.modules / "TestArmory" / "SubModule.xml",
-              '<Module><Xmls><XmlNode><XmlName id="WeaponDescriptions" path="weapon_descriptions"/>'
+              '<Module><Xmls><XmlNode><XmlName id="Items" path="items"/></XmlNode><XmlNode><XmlName id="WeaponDescriptions" path="weapon_descriptions"/>'
               '<IncludedGameTypes><!-- note --></IncludedGameTypes></XmlNode></Xmls></Module>\n')
         write(self.overlay, xslt_registering("spear_blade", "spear_handle"))
         code, out = self.run_gate()
@@ -479,7 +517,8 @@ class GateContractTests(unittest.TestCase):
         """#1398: the engine reads one XmlName per XmlNode (SelectSingleNode)."""
         write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
         write(self.modules / "TestArmory" / "SubModule.xml",
-              '<Module><Xmls><XmlNode><XmlName id="CraftingTemplates" path="none"/>'
+              '<Module><Xmls><XmlNode><XmlName id="Items" path="items"/></XmlNode>'
+              '<XmlNode><XmlName id="CraftingTemplates" path="none"/>'
               '<XmlName id="WeaponDescriptions" path="weapon_descriptions"/></XmlNode></Xmls></Module>\n')
         write(self.overlay, xslt_registering("spear_blade", "spear_handle"))
         code, out = self.run_gate()
@@ -490,7 +529,7 @@ class GateContractTests(unittest.TestCase):
         """#1398: the engine reads `value` from every child element, whatever its tag."""
         write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
         write(self.modules / "TestArmory" / "SubModule.xml",
-              '<Module><Xmls><XmlNode><XmlName id="WeaponDescriptions" path="weapon_descriptions"/>'
+              '<Module><Xmls><XmlNode><XmlName id="Items" path="items"/></XmlNode><XmlNode><XmlName id="WeaponDescriptions" path="weapon_descriptions"/>'
               '<IncludedGameTypes><Type value="MultiplayerGame"/></IncludedGameTypes>'
               '</XmlNode></Xmls></Module>\n')
         write(self.overlay, xslt_registering("spear_blade", "spear_handle"))

@@ -57,4 +57,19 @@ public class UpgradeTallyTests
     {
         Assert.AreEqual(new LdUpgradeReport(0, 0, 0, null), UpgradeTally.Of(0, new UpgradeSpawn[0], Radius));
     }
+
+    [TestMethod]
+    public void Moved_KeepsTheGroundDistance_WhenTheDropIsWithinTheBand()
+    {
+        Assert.AreEqual(0f, UpgradeTally.Moved(0f, -1.2f), "the drop #1402 saw, same x and y");
+        Assert.AreEqual(0.4f, UpgradeTally.Moved(0.4f, 1.2f), 1e-6f);
+    }
+
+    [TestMethod]
+    public void Moved_IsInfinite_WhenTheReplacementStandsOnAnotherFloor()
+    {
+        Assert.IsTrue(float.IsPositiveInfinity(UpgradeTally.Moved(0f, -UpgradeTally.LevelBand - 0.1f)), "a wall walk to the courtyard, same x and y");
+        Assert.IsTrue(float.IsPositiveInfinity(UpgradeTally.Moved(0f, 6f)));
+        Assert.IsTrue(float.IsPositiveInfinity(UpgradeTally.Moved(0f, float.NaN)), "no height is no proof");
+    }
 }

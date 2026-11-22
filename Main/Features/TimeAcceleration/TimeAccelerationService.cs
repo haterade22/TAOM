@@ -123,6 +123,8 @@ public class TimeAccelerationService : ITimeAccelerationService
         && IsFastForwardMode(_timeControl.TimeControlMode)
         && _timeControl.SpeedUpMultiplier > _settings.FastForwardMultiplier;
 
+    public bool IsExtraFastForwardAvailable => !_coop.ShouldDeferToHost;
+
     private void EnterFastForwardAt(int multiplier)
     {
         if (_coop.ShouldDeferToHost) return;

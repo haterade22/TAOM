@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Tests.Core;
 
 namespace TAOM.Tests.Features.TroopProgression;
 
@@ -84,6 +85,7 @@ public class TroopUpgradeSkillMonotonicityTests
         public int Level;
         public string Group;
         public bool Templated;
+        public string Template;
         public Dictionary<string, int> Skills = new Dictionary<string, int>();
         public List<string> Upgrades = new List<string>();
     }
@@ -129,6 +131,7 @@ public class TroopUpgradeSkillMonotonicityTests
                     Id = id,
                     File = Path.GetFileName(file),
                     Group = (string)npc.Attribute("default_group") ?? "Infantry",
+                    Template = (string)npc.Attribute("skill_template"),
                     Templated = !string.IsNullOrEmpty((string)npc.Attribute("skill_template")),
                 };
                 int level;
@@ -204,30 +207,37 @@ public class TroopUpgradeSkillMonotonicityTests
         return troop.Skills.TryGetValue(skill, out value) ? value : 0;
     }
 
-    [TestMethod]
-    public void EveryUpgradeTarget_HasNoSkillLowerThanTheTroopItUpgradesFrom()
+    private static Dictionary<string, int> Effective(Troop troop, Dictionary<string, Dictionary<string, int>> sets)
     {
-        var moduleData = ResolveModuleData();
-        var troops = ParseTroops(moduleData);
-        var militia = LoadMilitiaBoundIds(moduleData);
+        var resolved = new Dictionary<string, int>(StringComparer.Ordinal);
+        if (troop.Templated)
+        {
+            var key = troop.Template.Substring(troop.Template.IndexOf('.') + 1);
+            Dictionary<string, int> baseSet;
+            if (sets.TryGetValue(key, out baseSet))
+                foreach (var kv in baseSet) resolved[kv.Key] = kv.Value;
+        }
+        foreach (var kv in troop.Skills) resolved[kv.Key] = kv.Value;
+        return resolved;
+    }
+
+    private static List<string> FindDrops(Dictionary<string, Troop> troops, HashSet<string> militia,
+        Dictionary<string, Dictionary<string, int>> sets)
+    {
         var failures = new List<string>();
 
         foreach (var source in troops.Values.OrderBy(t => t.Id, StringComparer.Ordinal))
         {
+            var from = Effective(source, sets);
             foreach (var targetId in source.Upgrades)
             {
                 Troop target;
                 if (!troops.TryGetValue(targetId, out target)) continue;
 
-                // Militia are pinned to the level-21 baseline by design, so a militia promoting
-                // into another militia is flat rather than an increase. Only militia-to-militia is
-                // exempt; a militia that feeds a real line is checked like anything else.
                 if (militia.Contains(source.Id) && militia.Contains(target.Id)) continue;
 
-                // A templated character's base skills live in a SkillSet outside these files, so its
-                // inline block alone is not the character. Template parity is
-                // LordInlineSkillParityTests' question (#626); no edge has a templated side today.
-                if (source.Templated || target.Templated) continue;
+                var to = Effective(target, sets);
+                Func<Dictionary<string, int>, string, int> read = (d, s) => d.TryGetValue(s, out var v) ? v : 0;
 
                 HashSet<string> exempt;
                 if (!RespecializationExemptEdges.TryGetValue((source.Id, target.Id), out exempt))
@@ -235,8 +245,8 @@ public class TroopUpgradeSkillMonotonicityTests
 
                 var drops = CombatSkills
                     .Where(s => (exempt == null || !exempt.Contains(s))
-                                && SkillOf(target, s) < SkillOf(source, s))
-                    .Select(s => s + " " + SkillOf(source, s) + " to " + SkillOf(target, s))
+                                && read(to, s) < read(from, s))
+                    .Select(s => s + " " + read(from, s) + " to " + read(to, s))
                     .ToList();
 
                 if (drops.Count > 0)
@@ -247,11 +257,45 @@ public class TroopUpgradeSkillMonotonicityTests
                 }
             }
         }
+        return failures;
+    }
+
+    [TestMethod]
+    public void EveryUpgradeTarget_HasNoSkillLowerThanTheTroopItUpgradesFrom()
+    {
+        var moduleData = ResolveModuleData();
+        var failures = FindDrops(ParseTroops(moduleData), LoadMilitiaBoundIds(moduleData),
+            LordInlineSkillParityTests.LoadSkillSets());
 
         Assert.AreEqual(0, failures.Count,
             "Upgrading these troops lowers a skill. A skill absent from the target skills block " +
             "counts as 0, which is what the engine reads." + Environment.NewLine +
             string.Join(Environment.NewLine, failures));
+    }
+
+    [TestMethod]
+    public void TemplatedTroops_AreReadAsTheirSkillSetWithInlineRowsOverIt()
+    {
+        var sets = new Dictionary<string, Dictionary<string, int>>
+        {
+            ["fixture_set"] = new Dictionary<string, int> { ["Bow"] = 100, ["OneHanded"] = 60 },
+        };
+        var parent = new Troop { Id = "fixture_parent", File = "f.xml", Template = "fixture_set", Templated = true };
+        parent.Skills["OneHanded"] = 40;
+        parent.Upgrades.Add("fixture_child");
+        var child = new Troop { Id = "fixture_child", File = "f.xml" };
+        child.Skills["Bow"] = 50;
+        child.Skills["OneHanded"] = 60;
+        var troops = new Dictionary<string, Troop> { [parent.Id] = parent, [child.Id] = child };
+
+        var failures = FindDrops(troops, new HashSet<string>(), sets);
+
+        Assert.AreEqual(1, failures.Count, string.Join(Environment.NewLine, failures));
+        StringAssert.Contains(failures[0], "Bow 100 to 50");
+        Assert.IsFalse(failures[0].Contains("OneHanded"), "The inline OneHanded 40 overrides the SkillSet 60.");
+
+        child.Skills["Bow"] = 100;
+        Assert.AreEqual(0, FindDrops(troops, new HashSet<string>(), sets).Count);
     }
 
     [TestMethod]

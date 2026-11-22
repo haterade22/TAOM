@@ -46,6 +46,24 @@ public class Clan_UpdateBannerColorsAccordingToKingdom_PatchTests
         Assert.IsTrue(result);
     }
 
+    [TestMethod]
+    public void Prefix_ServiceSkipsTheLoadRepaint_SkipsVanilla()
+    {
+        _service.ShouldSkipLoadRepaint(Arg.Any<bool>()).Returns(true);
+        _service.IsDriftGuardEnabled().Returns(false);
+
+        Assert.IsFalse(Clan_UpdateBannerColorsAccordingToKingdom_Patch.Prefix(null), "a co-op client keeps the server's banners");
+    }
+
+    [TestMethod]
+    public void Prefix_OutsideAClanLoad_AsksWithInsideFalse()
+    {
+        _service.IsDriftGuardEnabled().Returns(false);
+
+        Assert.IsTrue(Clan_UpdateBannerColorsAccordingToKingdom_Patch.Prefix(null));
+        _service.Received(1).ShouldSkipLoadRepaint(false);
+    }
+
     // Phase 9b #172 F2 — the "DriftGuard enabled + player clan vs non-player clan" branches
     // are not reachable from unit tests because Clan.PlayerClan requires Campaign.Current.
     // These paths are covered by manual in-game testing post-merge.

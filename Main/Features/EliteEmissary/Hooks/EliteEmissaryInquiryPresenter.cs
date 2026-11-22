@@ -137,7 +137,7 @@ public sealed class EliteEmissaryInquiryPresenter
                 },
                 negativeAction: _ => { });
 
-            MBInformationManager.ShowMultiSelectionInquiry(data);
+            MBInformationManager.ShowMultiSelectionInquiry(data, pauseGameActiveState: true);
         }
         catch (Exception ex)
         {
@@ -198,7 +198,7 @@ public sealed class EliteEmissaryInquiryPresenter
                 },
                 negativeAction: _ => { });
 
-            MBInformationManager.ShowMultiSelectionInquiry(data);
+            MBInformationManager.ShowMultiSelectionInquiry(data, pauseGameActiveState: true);
         }
         catch (Exception ex)
         {
