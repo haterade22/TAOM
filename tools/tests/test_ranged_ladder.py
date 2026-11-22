@@ -505,6 +505,32 @@ class IndexTests(unittest.TestCase):
         self.assertEqual(rl.troop_values(t, idx, "Crossbow", "speed"), (75, 75))
         self.assertIsNone(rl.troop_values(_troop("u", "man", 21, [{"Item0": "sword"}]), idx, "Bow", "speed"))
 
+    # #1490: a templated troop's Bow is its SkillSet with the inline rows laid over it.
+    def test_troop_values_read_a_templated_troop_through_its_skillset(self):
+        idx = _launchers()
+        t = _troop("t", "man", 21, [{"Item0": "man_bow"}], skills={})
+        t.template = "SkillSet.v"
+        sets = {"v": {"Bow": 90, "Crossbow": 10}}
+        self.assertEqual(rl.troop_values(t, idx, "Bow", "skill", sets), (90, 90))
+        t.skills["Bow"] = 95   # an inline row lies over the SkillSet
+        self.assertEqual(rl.troop_values(t, idx, "Bow", "skill", sets), (95, 95))
+        self.assertEqual(rl.troop_values(t, idx, "Bow", "speed", sets), (80, 80))   # non-skill stats need no sets
+
+    def test_troop_values_of_a_templated_troop_without_skillsets_raise(self):
+        t = _troop("t", "man", 21, [{"Item0": "man_bow"}], skills={})
+        t.template = "SkillSet.v"
+        with self.assertRaises(rl.LadderError):
+            rl.troop_values(t, _launchers(), "Bow", "skill")
+
+    def test_inversions_judge_a_templated_troop_on_its_skillset(self):
+        lo = _troop("man_a", "man", 11, [{"Item0": "man_bow"}], skills={})   # T2, skill from its SkillSet
+        lo.template = "SkillSet.hi"
+        hi = _troop("man_b", "man", 26, [{"Item0": "man_bow"}], skills={"Bow": 50})   # T5, inline 50
+        found = rl.inversions({"man_a": lo, "man_b": hi}, _launchers(), _spec(), skill_sets={"hi": {"Bow": 90}})
+        self.assertIn(("tier", "skill", "man_a", "man_b"), [(f.kind, f.stat, f.low, f.high) for f in found])
+        self.assertEqual([f for f in rl.inversions({"man_a": lo, "man_b": hi}, _launchers(), _spec(),
+                                                   skill_sets={"hi": {"Bow": 40}}) if f.stat == "skill"], [])
+
 
 # --------------------------------------------------------------------------- #
 # The two rules                                                                 #
@@ -1536,6 +1562,23 @@ class ValidatorGateTests(unittest.TestCase):
         launchers["fast"] = rl.Launcher("fast", "Bow", 80, 90, 80, "Fast", "w.xml", "bow")
         launchers["slow"] = rl.Launcher("slow", "Bow", 64, 90, 80, "Slow", "w.xml", "bow")
         return launchers
+
+    def test_a_templated_troop_is_judged_on_its_skillset_in_the_gate(self):
+        launchers = self._fast_slow()
+        self._troops("dunland", ("dunland_a", 11, "slow"), ("dunland_b", 26, "slow"))
+        path = self.md / "troops" / "troops_dunland.xml"
+        text = path.read_bytes().decode()
+        # dunland_a (T2) drops its inline Bow and takes it from a SkillSet; dunland_b (T5) keeps 100.
+        text = text.replace('id="dunland_a" level="11"', 'id="dunland_a" level="11" skill_template="SkillSet.hi"')
+        text = text.replace('<skill id="Bow" value="100" />', '', 1)
+        path.write_bytes(text.encode())
+        regs = self._regs(launchers)
+        regs.skill_sets = {"hi": {"Bow": 150}}
+        issues = self.ts.Validator(self.md, self.schemas, regs)._ranged_ladder_inversions()
+        self.assertEqual([i.entry_id for i in issues], ["dunland_a"])
+        self.assertIn("skill", issues[0].message)
+        regs.skill_sets = {"hi": {"Bow": 20}}
+        self.assertEqual(self.ts.Validator(self.md, self.schemas, regs)._ranged_ladder_inversions(), [])
 
     def test_skipped_without_launchers(self):
         self._troops("dunland", ("dunland_a", 11, "fast"), ("dunland_b", 26, "slow"))

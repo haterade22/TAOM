@@ -421,16 +421,27 @@ def melee_pass_rows(troops, priced, spec, shields=frozenset()):
     kits, carried = [], []
     for t in troops:
         craft = ml.craft_key(t.id, t.culture, spec)
+        # One best weapon per battle set. The engine draws each slot from its own set, so a spawn
+        # carries the weak set's weapon about as often as the strong one's: the under check reads the
+        # WEAKEST set, the over check and the ceiling the best (#1242). A shield is judged per set.
+        per_set = []
+        for items in getattr(t, "battle_sets", (t.items,)):
+            shielded = any(i in shields for i in items)
+            held = {i: (priced[i].with_shield() if shielded else priced[i]) for i in items if i in priced}
+            if held:
+                # A tie names the smallest id, as analyze_melee_ladder.py does (#1379).
+                dps, iid = min(((p.best_dps, i) for i, p in held.items()), key=lambda b: (-b[0], b[1]))
+                per_set.append((dps, iid, held[iid]))
+        if per_set:
+            best = min(per_set, key=lambda r: (-r[0], r[1]))
+            worst = min(per_set, key=lambda r: (r[0], r[1]))
+            rows = [(best, ())] if worst[0] == best[0] else [(worst, ("under",)), (best, ("over",))]
+            for (dps, iid, p), only in rows:
+                kits.append((t.id, craft, t.tier, iid, dps, p.blade_piece, p.class_template,
+                             *ml.dominant_flags(p.class_template, p.swing_damage, p.thrust_damage,
+                                                p.swing_dps, p.thrust_dps, spec), *only))
         shielded = any(i in shields for i in t.items)
         held = {i: (priced[i].with_shield() if shielded else priced[i]) for i in t.items if i in priced}
-        best = [(p.best_dps, i) for i, p in held.items()]
-        if best:
-            # A tie names the smallest id, as analyze_melee_ladder.py does (#1379).
-            dps, iid = min(best, key=lambda b: (-b[0], b[1]))
-            p = held[iid]
-            kits.append((t.id, craft, t.tier, iid, dps, p.blade_piece, p.class_template,
-                         *ml.dominant_flags(p.class_template, p.swing_damage, p.thrust_damage,
-                                            p.swing_dps, p.thrust_dps, spec)))
         for i in sorted(held):
             p = held[i]
             carried.append((t.id, i, p.class_template, p.blade_piece, p.swing_damage,
@@ -541,8 +552,9 @@ class Validator:
     # best-DPS by tier 66, 64, 66, 67, 69, 69, 81, 82, 82, 69, a climb of 1.04x against
     # vanilla's 2.23x over five tiers), so troop tier barely changed melee output at all.
     # Weapon stats are SIMULATED from the crafting pieces rather than stored, so this needs the
-    # install and is skipped, never faked, without it. The same pure function drives the gate,
-    # tools/analyze_melee_ladder.py and tools/fix_melee_ladder.py, so they cannot disagree.
+    # install and is skipped, never faked, without it. The same pure function (melee_ladder.findings)
+    # drives the gate, tools/analyze_melee_ladder.py and tools/fix_melee_ladder.py. Only the gate
+    # prices vanilla weapons and scores each battle set (#1242), so a vanilla finding names no fixer.
     # Warns rather than errors because the Armory is unversioned: a reinstall can revert the
     # weapon half of the fix while the rosters stay correct, and that must not block a commit.
     def _melee_ladder_inversions(self) -> list:
@@ -583,13 +595,21 @@ class Validator:
             # weapon and a registration the tree lost is not hidden by a deployed copy.
             ph_priced, ph_problems = (price_placeholders(cat, self.moduledata / PLACEHOLDER_DIR)
                                       if troops else ({}, []))
-            priced = {**priced, **ph_priced}
+            # A troop that carries a vanilla weapon is judged like any other (#1242); an Armory item
+            # of the same id wins.
+            vanilla = _vanilla_priced(modules) if troops else {}
+            own = {**priced, **ph_priced}
+            # No tool restats or swaps a vanilla weapon, so its findings name a hand repair.
+            vanilla_only = frozenset(vanilla.keys() - own.keys())
+            priced = {**vanilla, **own}
         except (mc.CatalogueError, mr.AnalysisError, OSError) as exc:
             return [Issue(
                 severity=Severity.WARNING, code=code, file=spec_rel, line=0, entry_id="(install)",
                 message=f"the Armory could not be priced ({exc}), so no troop's melee output was checked",
             )]
-        if not priced or not troops:
+        # Judged on the Armory and the placeholders alone: vanilla prices must not hide an Armory
+        # that priced nothing.
+        if not own or not troops:
             return [Issue(
                 severity=Severity.WARNING, code=code, file=spec_rel, line=0, entry_id="(install)",
                 message=("no melee weapon or no troop was loaded, so this pass checked nothing. "
@@ -612,6 +632,15 @@ class Validator:
                          "entry silently skips nothing and reads as a clean run; remove it."),
             ))
 
+        def repair(item: str, armory_repair: str) -> str:
+            if item in ph_priced:
+                return _PLACEHOLDER_REPAIR
+            if item in vanilla_only:
+                return ("Repair: a vanilla weapon, which no tool restats or swaps: give its carriers an "
+                        f"in-band Armory weapon by hand, or exempt the troop in {spec_rel} exempt_troops "
+                        "with a reason (#1242)")
+            return armory_repair
+
         by_id = {t.id: t for t in troops}
         kits, carried = melee_pass_rows(troops, priced, spec, _shield_ids(modules))
         for f in ml.findings(kits, spec, min_gap=1.0):
@@ -620,11 +649,11 @@ class Validator:
                 severity=Severity.WARNING, code=code,
                 file=self._rel(Path(troop.path)) if troop and troop.path else "troops",
                 line=0, entry_id=f.troop,
-                message=(f.describe() + (". " + _PLACEHOLDER_REPAIR if f.item in ph_priced else
-                         ". Repair: python tools/fix_melee_ladder.py (dry-run, then "
-                         "--apply); where the culture owns no weapon in band the fix is a restat of "
-                         "the blade piece, not a roster swap. Deliberate exceptions go in "
-                         f"{spec_rel} exempt_troops with a reason (#631)")),
+                message=f.describe() + ". " + repair(f.item,
+                    "Repair: python tools/fix_melee_ladder.py (dry-run, then "
+                    "--apply); where the culture owns no weapon in band the fix is a restat of "
+                    "the blade piece, not a roster swap. Deliberate exceptions go in "
+                    f"{spec_rel} exempt_troops with a reason (#631)"),
             ))
         # One blow and sustained damage per class and tier (class_limits scaled by tier_limit). A hero
         # blade is judged against its hero limit, the class limit plus its maker group's bonus.
@@ -632,10 +661,10 @@ class Validator:
             issues.append(Issue(
                 severity=Severity.WARNING, code="MELEE_BLOW_CEILING", file=spec_rel, line=0,
                 entry_id=b.item,
-                message=(b.describe() + (". " + _PLACEHOLDER_REPAIR if b.item in ph_priced else
-                         ". Repair: python tools/restat_melee_blades.py (dry-run, then "
-                         "--apply) lowers the blade to the limit; a hero weapon goes in "
-                         f"{spec_rel} hero_blades")),
+                message=b.describe() + ". " + repair(b.item,
+                    "Repair: python tools/restat_melee_blades.py (dry-run, then "
+                    "--apply) lowers the blade to the limit; a hero weapon goes in "
+                    f"{spec_rel} hero_blades"),
             ))
         return issues
 
@@ -3170,7 +3199,16 @@ class Validator:
                          f"tier {troop.tier} (tiers {rl.tiers_for(line, cls, spec)}), so no ladder item exists "
                          f"for it. Add the tier to the line's \"tiers\" in {spec_rel}, then regenerate and re-roster"),
             ))
-        for g in rl.summarize(rl.inversions(troops, launchers, spec)):
+        # A templated troop's Bow or Crossbow is its SkillSet with the inline rows over it (#1490).
+        sets = self._skill_sets(issues) if any(t.template for t in troops.values()) else None
+        try:
+            found = rl.inversions(troops, launchers, spec, skill_sets=sets)
+        except rl.LadderError as exc:
+            issues.append(Issue(
+                severity=Severity.WARNING, code=code, file=spec_rel, line=0, entry_id="(skill sets)",
+                message=f"{exc}; no ladder pair was checked (not checked is not clean)"))
+            found = []
+        for g in rl.summarize(found):
             w = g.worst
             low = troops[w.low]
             if g.kind == "tier":
