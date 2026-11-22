@@ -77,9 +77,14 @@
                     slot="Leg"
                     id="Item.mkwd_inf3_greaves" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -146,9 +151,14 @@
                     slot="Leg"
                     id="Item.mkwd_inf3_greaves" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -218,9 +228,14 @@
                     slot="Leg"
                     id="Item.mkwd_inf3_greaves_bronze" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -290,9 +305,14 @@
                     slot="Leg"
                     id="Item.mirkwood_boots" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -368,9 +388,14 @@
                     slot="Leg"
                     id="Item.mkwd_inf3_greaves_silver" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -443,9 +468,14 @@
                     slot="Leg"
                     id="Item.mkwd_inf3_greaves_silver" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
             <equipment
                 slot="Horse"
                 id="Item.taom_animalia_elk_a" />
@@ -521,9 +551,14 @@
                     slot="Leg"
                     id="Item.mkwd_inf3_greaves_silver" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
             <equipment
                 slot="Horse"
                 id="Item.taom_elk_a" />
@@ -605,9 +640,14 @@
                     slot="Leg"
                     id="Item.mkwd_inf3_greaves_silver" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -677,9 +717,14 @@
                     slot="Leg"
                     id="Item.mirkwood_boots" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -743,9 +788,14 @@
                     slot="Leg"
                     id="Item.mkwd_inf3_greaves" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -812,9 +862,14 @@
                     slot="Leg"
                     id="Item.mkwd_inf3_greaves_bronze" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -881,9 +936,14 @@
                     slot="Leg"
                     id="Item.mirkwood_boots" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -956,9 +1016,14 @@
                     slot="Leg"
                     id="Item.mkwd_inf3_greaves_silver" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1555,9 +1620,14 @@
                     slot="Leg"
                     id="Item.mkwd_inf3_greaves" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="aserai_troop_civilian_template_t3"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.taom_band_lt_mirkwood_body" />
+                <equipment slot="Leg" id="Item.taom_band_lt_mirkwood_boots" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
