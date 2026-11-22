@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using TaleWorlds.CampaignSystem.GameState;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
@@ -29,7 +30,7 @@ public static class CrashNotifier
                 negativeText: new TextObject("{=TAOM_CrashReport_OpenBundle}Open bundle folder").ToString(),
                 affirmativeAction: () => { /* dismiss */ },
                 negativeAction: () => TryOpenInExplorer(bundlePath));
-            InformationManager.ShowInquiry(inquiry, pauseGameActiveState: true);
+            InformationManager.ShowInquiry(inquiry, pauseGameActiveState: GameStateManager.Current?.ActiveState is MapState);
         }
         catch
         {
