@@ -8,6 +8,66 @@ Written 2026-11-06 against `E:/repos/taom-ld-rec` (detached at `36f67e8e3` "reco
 
 ---
 
+## Re-baseline, 2026-11-21
+
+The sections below are the plan as written on 2026-11-06. This section says where they no longer hold, and it wins where the two disagree. It was written against trunk `5cf79902c` with Slices 2 and 3 on `feat/ld-phase4` (`0e68b32d1`).
+
+**Engine.** The game is v1.5.7. `TaleWorlds.MountAndBlade`, `Core`, `Engine` and `ObjectSystem` did not change from v1.5.6 ([v1.5.7-impact.md](../../migration/v1.5.7-impact.md)), and the Slice 2 and 3 review re-read `Mission.cs:6393-6414`, `:3021`, `:3041`, `Agent.cs:2555-2567` and `Team.cs:128` in the v1.5.7 source: the engine citations below still hold. Read any other engine line again before a slice relies on it (`pwsh tools/taom-src.ps1 path <Type>`).
+
+**The Marshal is gone.** The shop's heroes (#1337) replaced him on 2026-11-15. Void: D42, the Marshal half of D41, D43 and D46, A31, the `marshal` block of section 5, the `marshal` check and its `general-down` `seat=marshal` leg, the `marshal` report fields, leaderboard rule 24, Slice 9, risks R26 and R32, OQ10 and OQ19, `MarshalPlan`, `TryBuyMarshal`, `PurseSink.Marshal`, `SpawnMarshal`, `LongDefeatDirector.Marshal.cs` and `LongDefeatMarshalVM`. D41 now reads: the seat is the player's body, his own or a taken one; while he has none it goes to the first standing hero in the shop's order (then the plan's free heroes), else to nobody. `general-down` therefore reads `seat=hero:<id>` or `seat=none`.
+
+**Co-op.** Phase 4 is for a run with one director: a solo run and a co-op host. A follower builds no director, and the launcher arms the take-over only when `co.Run == null`, so a follower's death rule is #1292's.
+
+**State of the slices**
+
+| Slice | State | What it owes now, beyond its row |
+|---|---|---|
+| 1 | On trunk | Nothing |
+| 2 | Built (`0e68b32d1`) | The row's `engines[]` and `waves[].engines` moved to Slice 8, the `LongDefeatSession` forwarders to Slice 6, and the archer, cavalry and shipped-shop bot replays to Slice 6 |
+| 3 | Built (`0e68b32d1`) | Went beyond its row: the director already hands the run `ReadLord(false)` each tick (a lord who routs was otherwise never raised), so `RunSnapshot.Lord` is live for Slices 4 and 5 |
+| 4 | Built on `feat/ld-phase4`; proved unattended on 2026-11-21 (runs `20261121-202634`, `20261121-205801`, `20261121-212719`), a person's rise still owed | Left for later work: the `armoury` and `yard` points of the extended `fort-points` (Slices 5 and 7, with the code that reads them; the rise point is in); the rise builds the class kit, so Slice 5 passes `SurvivalRun.EffectiveLoadout`; #1402's navmesh diagnostic did not ride this slice and is its own change; fallback B of OQ20 (fade a handed-back soldier who does not return to his formation's order) is not built and waits for what the game run shows of A30 |
+| 5 | Built on `feat/ld-phase4` (2026-11-22), not played | Variant A only: variants B and C of D36 and the variant constant are not built (B's writes are the Custom Battle model's own lines; C needs a new spawn-in-place path), so build one only if A's game run shows stale armour or a broken rider. The members are on `ILongDefeatLordAdapter`, not on the `ILongDefeatLocationsAdapter` the text below names. The release of the walk is at the errand's `End`, not at the teleport as D44 says. Moved to Slice 6: the remount's class read-back, the `armoury` check and its judge debt. The game proof needs a recorded `armoury` point and two sets in `shop.json` |
+| 6 | Not built | The session forwarders, and the replays named in the Slice 2 row |
+| 7 | Not built | Serve `DeployEngines`, call `SurvivalRun.SetSites` and `EngineLost`, dispatch the bot's `Engine` action, and add a refund path for a deploy the field refuses, as a hero's spawn has |
+| 8 | Not built | The report's `engines[]` and `waves[].engines` |
+| 9 | Dropped | The Marshal |
+| 10, 11 | Not built | As written, less the Marshal runs (`--waves 4 ... --lord-falls 3` proved the Marshal's seat; a hero bought before the fall proves the seat now) |
+
+**What Slices 2 and 3 settled that the text below does not say.** A purchase records how the buyer came (`person`, `walk`, `teleport`). The errand lives in the run: one at a time, a teleport asked for once at 20 s, given up 5 s later, closed when the lord falls or the wave begins. The bot walks only while the player has a body. `LordLife` holds the body (own, taken, none); each body that falls is one death, booked with its troop; a body can also leave with no death (a lord the AI drives can rout), so leaderboard rule 25 ties neither a take-over nor a rise to a death. The two clocks of a wave run as the last step of a tick. `LongDefeatEffectsServedTests` fails when the run hands out an effect no director file reads and that is not named there as owed.
+
+**What Slice 4 settled that the text below does not say.** The rise hands the taken soldier to the AI first, then spawns the lord, and gives the soldier back to the player when the spawn is refused. D40 and the Slice 4 row below put the spawn first; that order leaves `Formation.HasPlayerControlledTroop` false when both stand in one formation (`Formation.cs:1928-1930` after `:2288-2290`), and the order used is vanilla's own (`Mission.cs:4736-4738`). The forced fall is a fact and not an inference: the adapter marks the body before its blow, the removal reports itself forced, and the run books that. `general-down` carries `want=` and fails a hero the run did not choose; it does not read `IsPlayerGeneral` or the formations' AI control, which its row below lists. The `rise` check also bounds the height (3 m). A lord who attacks in a story mission rises at the engine's attacker frame (`at=respawn`), never inside the enemy's keep. The bot never takes a posted tower archer. `player-death` reads `via=rise`, or `via=takeover by=person|bot`; the E31 read-back its row below lists (human, not hero, health share) is not written, because the bot's take passes through the engine's own `CanTakeControlOfAgent`.
+
+**Citations that moved.** The check of 2026-11-21 read 63 TAOM citations: 27 still point at their lines, 36 moved, none is gone. A builder reads the current line, never the one written below.
+
+| Written below | Shows | Now |
+|---|---|---|
+| `LongDefeatMissionLauncher.cs:90` | The take-over is armed | `Hooks/LongDefeatMissionLauncher.cs:95` |
+| `LongDefeatMissionLauncher.cs:63` | The launcher checks only troops | `:64-66` |
+| `LongDefeatMissionLauncher.cs:118` | The defender engine list | `:123-124` |
+| `LongDefeatDirector.cs:251-270`, `:257`, `:261-268`, `:265-268` | `AdoptIfNew`, the `_deathPending` gate, `via` | `LongDefeatDirector.cs`, `AdoptIfNew` (the gate is set in `LordFell`) |
+| `LongDefeatDirector.Effects.cs:270-275` | The respawn at a clear | `LongDefeatDirector.Player.cs`, `RiseLord` |
+| `LongDefeatDirector.cs:77`, `:109-112`, `:151-156` | The keep point, its radius and the zone read | `LongDefeatDirector.cs:80`, `:112-113`, `:152-157` |
+| `LongDefeatDirector.cs:162-163` | The tick's `RunSnapshot` | `LongDefeatDirector.cs`, in `Tick` (it now carries the lord and the health mean) |
+| `LongDefeatDirector.Gates.cs:113` | `_fort.PointsUsable` | `:119` |
+| `LongDefeatDirector.Sally.cs:76` | The remount's loadout | `:101` |
+| `LongDefeatBattlefieldAdapter.cs:492-508`, `:504-505` | `AdoptMain`, the controller set to AI | `:525-541`, `:540` |
+| `LongDefeatBattlefieldAdapter.cs:271`, `:342-343`, `:345-347` | The pack path's spawn, `NoHorses`, the forced reinforcement frame | `:277`, `:360`, `:367-369` |
+| `LongDefeatBattlefieldAdapter.cs:215` | `Points()` reads `ActiveMissionObjects` | `:221` |
+| `LongDefeatBattlefieldAdapter.Player.cs:60`, `:77-78`, `:208-209` | Mounted spacing, `FacingOf`, the remount with no read-back | `:65`, `:83`, `RemountPlayer` at `:215-232` |
+| `LongDefeatBattlefieldAdapter.Diagnostics.cs:192-194` | `Classify`'s defender branch | `Classify` from `:169`, the defender branch from `:211` |
+| `ILongDefeatBattlefieldAdapter.cs:83` | `ReadLord` | `:95` |
+| `LongDefeatRunHost.cs:121` | The host passes the fort adapter | `:180` |
+| `SurvivalRun.cs:128`, `:132-136` | The hold of the wave start, the defenders-dead end | `SurvivalRun.cs`, in `Tick` |
+| `ShopBot.cs:37` | The horn at 30 s | `HornAfterSeconds` in `ShopBot.cs` |
+| `ShopReader.cs:95` | The price range | `:101` |
+| `FortressesReader.cs:224`, `FortressEntry.cs:29-31` | `TryReadMusterFrame`, the optional fields | `:253`, `:32-34` |
+| `TaomCustomBattleAgentStatCalculateModel.cs:41-48` | The mount charge and the `hide` hook | `Main/Features/CultureDoctrine/Models/TaomCustomBattleAgentStatCalculateModel.cs:43-50` |
+| `test_run_long_defeat.py:2535` | `FORT_OFFERED` pinned to literals | Search the file for `FORT_OFFERED` |
+| `long-defeat.md:442` | Fast forward after a take-over | The speed notes under "Notes for Phase 1" |
+| `long-defeat.md:436` | The terrace where soldiers stood stuck (R25) | Not found at that line; the muster note under "Notes for Phase 1" names the terrace |
+
+---
+
 ## 1. Scope and decisions
 
 **Scope (maintainer, binding):**

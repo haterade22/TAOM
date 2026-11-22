@@ -49,10 +49,12 @@ internal enum PurchaseKind
     VolleyLevel,
     Upgrade,
     Hero,
+    GearSet,
+    Engine,
 }
 
 /// <summary>
-/// One thing bought, in order. <c>BeforeWave</c> is the wave that starts next; <c>Id</c> is the offer of a pack, the step of an upgrade (#1161), the id of a hero (#1337) and empty for the rest; <c>Level</c> is the level a
+/// One thing bought, in order. <c>BeforeWave</c> is the wave that starts next; <c>Id</c> is the offer of a pack, the step of an upgrade (#1161), the id of a hero (#1337), the id of a gear set, the kind of an engine and empty for the rest; <c>Level</c> is the level a
 /// level kind reached and 0 for the rest; <c>BasePrice</c> is shop.json's price and <c>Price</c> what was paid after the boons' price factor (D29), which an upgrade does not take: its price is
 /// <c>BasePrice</c> times <see cref="Count"/>, the soldiers the field replaced (0 for every other kind); <c>Share</c> is a repair's priced share (each gate's missing share times its size against the largest gate, summed)
 /// and the share of the missing health care returned, 0 for the rest.
@@ -60,6 +62,12 @@ internal enum PurchaseKind
 internal sealed record FortPurchase(int BeforeWave, PurchaseKind Kind, string Id, int Level, int BasePrice, int Price, float Share, IReadOnlyList<float>? Shares = null)
 {
     public int Count { get; init; }
+
+    /// <summary>The yard site an engine was bought for; -1 for every other kind.</summary>
+    public int Site { get; init; } = -1;
+
+    /// <summary>How the buyer came to the armoury or the yard (a gear set and an engine only): a person's own walk, the bot's walk, or the bot's teleport.</summary>
+    public ErrandReach Reach { get; init; }
 }
 
 /// <summary>What the report lists of the fortifications: every purchase in order, and the levels owned at the end.</summary>

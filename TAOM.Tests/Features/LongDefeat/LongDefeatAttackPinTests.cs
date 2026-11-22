@@ -146,7 +146,7 @@ public class LongDefeatAttackPinTests
 
         Assert.IsTrue(At(classify, "team == null") < At(classify, "team == PlayerSideTeam && IsPlayerBody(agent)"));
         Assert.IsTrue(At(classify, "team == PlayerSideTeam && IsPlayerBody(agent)") < At(classify, "team.Side == BattleSideEnum.Attacker"), "his body on the attacker team is no wave kill");
-        StringAssert.Matches(classify, new Regex(@"return loss \? new LdRemoval\(LdRemovalKind\.Player, id, Key: key\) : new LdRemoval\(LdRemovalKind\.None, """", Key: key\);"));
+        StringAssert.Matches(classify, new Regex(@"return loss \? new LdRemoval\(LdRemovalKind\.Player, id, Key: key, Forced: _lordWatch\.IsForced\(agent\)\) : new LdRemoval\(LdRemovalKind\.None, """", Key: key\);"));
         StringAssert.Contains(classify, "return new LdRemoval(LdRemovalKind.Defender, id, Key: key);");
         Assert.IsFalse(classify.Contains("? LdRemovalKind.Player : LdRemovalKind.Defender"), "the player test is made once, on his own team");
     }

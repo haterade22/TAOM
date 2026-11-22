@@ -2969,3 +2969,10 @@ The #1223 tests called a pure helper on `CustomAttacksUtils`. Any static call ru
 **Prevent:** when a pass pattern has two alternations, write the pairs out from the code that maps one to the other (`Won ... reason=X|Lost ... reason=(Y|Z)`), and add one test row for a bad pair. When two lines of one run report the same fact (the driver's verdict, the mission's verdict, the result), the judge reads the first and narrows the others to it. After a pattern is made stricter, read the real run logs again with it: a stricter pattern that fails a good log is wrong too.
 
 **Source:** Codex adversarial review of 2026-11-22, F4; `tools/run_scenario.py` `story_ended_pass`, `offer_result_pass`; `tools/tests/test_run_scenario.py` `VerdictConsistencyTests`.
+### An option is armed in the change that carries it out, and a gate lists what is unserved (#1079, 2026-11-21)
+
+**Why missed:** The Long Defeat's Phase 4 plan puts the `lord_falls` arm key in one slice and the blow that fells the lord two slices later. The first slice shipped the flag, the option, the report field and the judge's echo check, each with tests, and nothing read the effect. A run armed with the flag fell nobody and the judge passed it. The same cause was already in the Phase 2 and Phase 3 RCAs and in the plan's read-first list, which is a reminder, not a check.
+
+**Prevent:** when a pure slice hands out an effect ahead of its consumer, a test lists every unserved effect by name with the slice that will serve it, and fails both when an unlisted effect has no reader and when a listed one gains one. What an unserved effect would deliver stays off sale behind the same list, and a tool that arms a test option refuses it while the option's effect is on the list. A judge that checks an armed option also checks that the option did something, not only that the report echoes it.
+
+**Source:** [rca-long-defeat-phase4-2026-11-06.md](../rca-long-defeat-phase4-2026-11-06.md) row 15 (Tooling lens and Data flow lens); the gate is `LongDefeatEffectsServedTests`.

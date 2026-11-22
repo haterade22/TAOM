@@ -192,4 +192,40 @@ public class LongDefeatLordWatchTests
         Assert.IsFalse(watch.TryContact(_orc, null, null, 40f, IsAttacker, out _));
         Assert.IsFalse(watch.TryContact(null, _orc, null, 40f, IsAttacker, out _));
     }
+
+    [TestMethod]
+    public void AForcedBody_IsMatchedByIdentity_NeverByAnEqualLookingOne()
+    {
+        var watch = NewWatch();
+        var struck = new string('a', 3);
+        var lookalike = new string('a', 3);
+
+        watch.MarkForced(struck);
+
+        Assert.IsTrue(watch.IsForced(struck));
+        Assert.IsFalse(watch.IsForced(lookalike), "an agent that recycled the slot is a different object");
+        Assert.IsFalse(watch.IsForced(null));
+    }
+
+    [TestMethod]
+    public void WithNothingMarked_NoRemovalIsForced()
+    {
+        var watch = NewWatch();
+
+        Assert.IsFalse(watch.IsForced(_lord), "the lord's body is forced only once the blow marked it");
+        Assert.IsFalse(watch.IsForced(_ally));
+    }
+
+    [TestMethod]
+    public void AForcedMark_CanBeWithdrawn_WhenTheBlowLeftTheBodyStanding_AndClearDropsIt()
+    {
+        var watch = NewWatch();
+        watch.MarkForced(_lord);
+        watch.ClearForced();
+        Assert.IsFalse(watch.IsForced(_lord), "a mark left on a living body would book his natural death as forced");
+
+        watch.MarkForced(_lord);
+        watch.Clear();
+        Assert.IsFalse(watch.IsForced(_lord));
+    }
 }

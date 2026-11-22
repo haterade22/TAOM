@@ -37,8 +37,10 @@ public class LongDefeatRunReportFortTests
         var levels = (JObject)report["fortifications"]!;
         Assert.AreEqual((0, 0, 0), ((int)levels["gateLevel"]!, (int)levels["towerLevel"]!, (int)levels["volleyLevel"]!));
         var spentOn = (JObject)((JObject)report["gold"]!)["spentOn"]!;
-        CollectionAssert.AreEquivalent(new[] { "packs", "gate", "towers", "fieldCare", "volley", "upgrades", "heroes" }, spentOn.Properties().Select(p => p.Name).ToArray());
+        CollectionAssert.AreEquivalent(new[] { "packs", "gate", "towers", "fieldCare", "volley", "upgrades", "heroes", "gear", "engines" }, spentOn.Properties().Select(p => p.Name).ToArray());
         Assert.IsTrue(spentOn.Properties().All(p => (int)p.Value == 0));
+        Assert.AreEqual(JTokenType.Null, report["lordFalls"]!.Type);
+        Assert.AreEqual(0, ((JArray)report["armoury"]!).Count);
         var wave = (JObject)report["waves"]!.Single();
         var gate = (JObject)wave["gate"]!;
         Assert.AreEqual((0, 0, 0, false), ((int)gate["level"]!, (int)gate["startHitPoints"]!, (int)gate["maxHitPoints"]!, (bool)gate["fell"]!));
@@ -155,6 +157,57 @@ public class LongDefeatRunReportFortTests
         var row = (JObject)((JArray)Report(OneWave(), new Purse(5000), fort: fort)["purchases"]!).Single();
 
         CollectionAssert.AreEqual(new[] { 1.0 }, row["shares"]!.Select(t => (double)t).ToArray());
+    }
+
+    [TestMethod]
+    public void Build_AGearSetAndAnEngine_NameHowTheBuyerCame_AndTheEngineItsSite()
+    {
+        var purse = new Purse(5000);
+        purse.TrySpend(250, PurseSink.Gear);
+        purse.TrySpend(450, PurseSink.Engines);
+        var fort = new RunFort(new[]
+        {
+            new FortPurchase(1, PurchaseKind.GearSet, "armour_1", 0, 250, 250, 0f) { Reach = ErrandReach.Walk },
+            new FortPurchase(2, PurchaseKind.Engine, "mangonel", 0, 450, 450, 0f) { Site = 3, Reach = ErrandReach.Teleport },
+            new FortPurchase(2, PurchaseKind.Pack, "militia", 0, 180, 180, 0f),
+        }, 0, 0, 0);
+
+        var report = Report(OneWave(), purse, new RunOptions { LordFalls = 2 }, fort);
+
+        var rows = (JArray)report["purchases"]!;
+        Assert.AreEqual(("gearSet", "armour_1", "walk"), ((string)rows[0]["kind"]!, (string)rows[0]["id"]!, (string)rows[0]["reach"]!));
+        Assert.IsNull(rows[0]["site"], "only an engine has a site");
+        Assert.AreEqual(("engine", "mangonel", 3, "teleport"), ((string)rows[1]["kind"]!, (string)rows[1]["id"]!, (int)rows[1]["site"]!, (string)rows[1]["reach"]!));
+        Assert.IsNull(rows[2]["reach"], "a pack is bought from the panel anywhere");
+        Assert.IsNull(rows[2]["site"]);
+        CollectionAssert.AreEqual(new[] { "armour_1" }, ((JArray)report["armoury"]!).Select(x => (string)x!).ToArray(), "the gear set purchases, in order");
+        var spentOn = (JObject)((JObject)report["gold"]!)["spentOn"]!;
+        Assert.AreEqual((250, 450), ((int)spentOn["gear"]!, (int)spentOn["engines"]!));
+        Assert.AreEqual(2, (int)report["lordFalls"]!);
+    }
+
+    [TestMethod]
+    public void Build_TheLordBlock_ListsEveryFallTakeoverAndRise_AndIsEmptyForARunWithNone()
+    {
+        var none = (JObject)Report(OneWave(), new Purse(600))["lord"]!;
+        Assert.AreEqual((0, 0, 0), (((JArray)none["deaths"]!).Count, ((JArray)none["takeovers"]!).Count, ((JArray)none["rises"]!).Count));
+
+        var lord = new RunLord(
+            new[] { new LordDeath(2, LordBody.Own, "lord_4_1", true), new LordDeath(2, LordBody.Taken, "fow_militia", false) },
+            new[] { new LordTakeover(2, true, "fow_militia"), new LordTakeover(2, false, "fow_bowman") },
+            new[] { new LordRise(3, "recorded", true) });
+        var report = JObject.Parse(LongDefeatRunReport.Build("helms", RunOptions.Default, RunProvenance.Unknown, new RunResult(RunEndReason.TargetReached, 1, 1, 3), OneWave(), new Purse(600),
+            Started, Started.AddMinutes(40), 1, null, null, lord));
+
+        var block = (JObject)report["lord"]!;
+        var deaths = (JArray)block["deaths"]!;
+        Assert.AreEqual((2, "own", "lord_4_1", true), ((int)deaths[0]["wave"]!, (string)deaths[0]["body"]!, (string)deaths[0]["troop"]!, (bool)deaths[0]["forced"]!));
+        Assert.AreEqual(("soldier", "fow_militia", false), ((string)deaths[1]["body"]!, (string)deaths[1]["troop"]!, (bool)deaths[1]["forced"]!));
+        var takeovers = (JArray)block["takeovers"]!;
+        Assert.AreEqual((2, "bot", "fow_militia"), ((int)takeovers[0]["wave"]!, (string)takeovers[0]["by"]!, (string)takeovers[0]["troop"]!));
+        Assert.AreEqual("person", (string)takeovers[1]["by"]!);
+        var rise = (JObject)((JArray)block["rises"]!).Single();
+        Assert.AreEqual((3, "recorded", true), ((int)rise["beforeWave"]!, (string)rise["at"]!, (bool)rise["handedBack"]!));
     }
 
     [TestMethod]

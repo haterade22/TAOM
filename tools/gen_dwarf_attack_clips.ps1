@@ -14,7 +14,7 @@ The masters are the Kit imports of tools/blender/author_dwarf_attack_clips.py's 
 Assets/Race Test/dwarf/animations/ (dwarf_head_butt_geo.tpac, 37 frames; dwarf_drop_kick_geo.tpac, 55 frames; both on
 dwarf_skeleton_a). Each clip goes beside its master as <name>_anm.tpac, named after its master as the spider's are.
 
-Both clips are clones of vanilla kick_right_leg (the action type is actt_kick, as the kick's), changed to the war ram
+Both clips are clones of vanilla kick_right_leg (the actions carry no type since #1499), changed to the war ram
 head butt's recipe (docs/features/war-ram.md, "The head-butt clip"), which plays on its rig in battle:
   - Source1 = 1, Source2 = master Duration - 1 (frame 0 of a master is its REST frame), Duration = frames / 30 s.
   - Flags: the kick's five plus enforce_all. The ram showed nothing in battle on priority alone; enforce_all made it
