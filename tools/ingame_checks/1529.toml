@@ -18,9 +18,9 @@
 # No unattended run covers this feature yet. What a run must show is in docs/features/training-waves.md, "In-game checks".
 issue = 1529
 title = "A wave fight with bets at the training master"
-# fixed_in is the base of the feature branch; repoint it to the feature commit once it exists (a build between the two writes no
-# [Check] line, so every check below is NOT REACHED there, never a false FAIL).
-fixed_in = "af5ddb617"
+# fixed_in is the commit that adds the feature (12f4d098b). A build from before it writes no [Check] line, so every check
+# below is NOT REACHED there, never a false FAIL.
+fixed_in = "12f4d098b"
 logs = ["taom"]
 
 [[check]]

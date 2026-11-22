@@ -10,12 +10,11 @@
 # second win in the same session writes nothing new.
 # A failed patch writes "[Swallowed] feature=TeamPractice site=<site>" (Outcomes.Swallowed), the only fail signal.
 #
-# fixed_in is the commit this feature branch started from (af5ddb617), because the feature commit does not exist yet:
-# replace it with the feature's own commit when it lands. A build from before the feature writes no [Check] line, so it
-# is NOT REACHED here, never FAIL.
+# fixed_in is the commit that adds the feature (2faebdbda). A build from before it writes no [Check] line, so it is
+# NOT REACHED here, never FAIL.
 issue = 1528
 title = "Team practice fights in the towns of the Free Peoples"
-fixed_in = "af5ddb617"
+fixed_in = "2faebdbda"
 logs = ["taom"]
 
 [[check]]
