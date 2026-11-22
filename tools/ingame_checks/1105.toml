@@ -117,18 +117,19 @@ claim = "taom.story_open opens each of minas_tirith_defend, osgiliath_defend, pe
 [[check]]
 id = "taom.story-missions.offer.shown"
 needs = "a campaign at the Full War, as a free player or a neutral player whose realm has not pledged (taom.print_war_pledges): taom.chronicle_open hornburg confirm, then the popup appears on the free map"
-reached = ['\[Check\] id=taom\.story-missions\.offer\.shown result=']
+reached = ['\[Check\] id=taom\.story-missions\.offer\.shown result=\S+ (?!mission=parth_galen_)']
 pass = ['\[Check\] id=taom\.story-missions\.offer\.shown result=pass mission=helms_deep_defend target=town_V2 choices=Defend side=(Free|Neutral)$']
-# No attack mission ships (#1326), so an evil player has no side to take: a shown line for one is the fault this check exists to catch.
-fail = ['\[Check\] id=taom\.story-missions\.offer\.shown result=fail', '\[Check\] id=taom\.story-missions\.offer\.shown result=pass .* side=Evil$']
+# No attack mission ships for the Hornburg (#1326), so an evil player has no side to take there: a shown line for one is the fault this check exists
+# to catch. The Breaking's lines (mission=parth_galen_save) belong to the rows of slice 3 below, where an evil player is offered the hunt.
+fail = ['\[Check\] id=taom\.story-missions\.offer\.shown result=fail (?!mission=parth_galen_)', '\[Check\] id=taom\.story-missions\.offer\.shown result=pass mission=helms_deep_defend .* side=Evil$']
 absence = "not-reached"
 
 [[check]]
 id = "taom.story-missions.offer.result"
 needs = "the same run: Ride to Helm's Deep, Defend the walls, end the wave by a win or a loss; the line is written when the menu returns"
-reached = ['\[Check\] id=taom\.story-missions\.offer\.result result=']
+reached = ['\[Check\] id=taom\.story-missions\.offer\.result result=(?!.* hero=)']
 pass = ['\[Check\] id=taom\.story-missions\.offer\.result result=pass verdict=(Won result=Held|Lost result=Fell taker=(isengard|empire))$']
-fail = ['\[Check\] id=taom\.story-missions\.offer\.result result=fail']
+fail = ['\[Check\] id=taom\.story-missions\.offer\.result result=fail(?!.* hero=)']
 absence = "not-reached"
 
 [[human]]
@@ -252,3 +253,36 @@ claim = "parth_galen_kill, played by a person: the player commands the Uruk-hai 
 
 [[human]]
 claim = "after each Parth Galen mission the player stands on the campaign map again with no encounter, no menu stuck open and no party change: win and loss both"
+
+# Slice 3: the Breaking of the Fellowship offers the two Parth Galen missions, and the result decides Boromir (lord_1_75). The shown line is written
+# when the popup opens; the result line when the menu returns from the mission (StoryOfferService.ApplyHero). No unattended driver reaches the offer yet.
+[[check]]
+id = "taom.story-missions.offer.shown.breaking"
+needs = "a single-player campaign in the Isengard War or later: taom.chronicle_open breaking confirm, then the popup appears on the free map"
+reached = ['\[Check\] id=taom\.story-missions\.offer\.shown result=\S+ mission=parth_galen_save ']
+pass = ['\[Check\] id=taom\.story-missions\.offer\.shown result=pass mission=parth_galen_save target= choices=(Defend|Attack|Defend\+Attack) side=(Free|Evil|Neutral)$']
+fail = ['\[Check\] id=taom\.story-missions\.offer\.shown result=fail mission=parth_galen_save ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.story-missions.offer.result.breaking"
+needs = "the same run: Go to Parth Galen, choose a side, end the mission by a win or a loss, then Continue"
+reached = ['\[Check\] id=taom\.story-missions\.offer\.result result=\S+ .*hero=lord_1_75$']
+pass = ['\[Check\] id=taom\.story-missions\.offer\.result result=pass (side=Attacking )?verdict=(Won|Lost) result=(Averted|Occurred) hero=lord_1_75$']
+fail = ['\[Check\] id=taom\.story-missions\.offer\.result result=fail .*hero=lord_1_75$']
+absence = "not-reached"
+
+[[human]]
+claim = "the Breaking, as a free player: the popup names Parth Galen and the Company; the menu shows Stand with the Fellowship and Let fate decide, and no wall option; an evil player sees Lead the Uruk-hai; a neutral player sees both"
+
+[[human]]
+claim = "a won defence at Parth Galen: the event window reads that Boromir lives, taom.chronicle_status shows breaking Averted, and Boromir is alive in the encyclopedia with his party on the map"
+
+[[human]]
+claim = "a lost defence, a won hunt, or Let fate decide: the event window reads that Boromir dies, the game announces his death, the encyclopedia shows him dead, and Gondor's clan and kingdom carry on (a new clan leader or ruler if he was one)"
+
+[[human]]
+claim = "no answer for 10 days: the window closes by itself and Boromir dies. A save and a reload while the window is open: the offer comes back"
+
+[[human]]
+claim = "playing as Boromir (Player Switcher), in co-op, or with Offer Story Missions off: no popup, the event shows as text on its day, and Boromir is alive after it"

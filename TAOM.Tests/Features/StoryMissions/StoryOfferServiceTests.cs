@@ -507,4 +507,72 @@ public class StoryOfferServiceTests
         _sut.NewDay();
         Assert.IsNotNull(_sut.NextOffer());
     }
+
+    // #1105 slice 3: a story whose result is a hero's life (the Breaking of the Fellowship and Boromir).
+    private static ChronicleStoryOffer HeroOffer() =>
+        new("breaking", "helms_deep_defend", "{=taom_wc_breaking_title}The Breaking of the Fellowship", null, new[] { "isengard" }, "vlandia", "isengard_attack", "lord_1_75");
+
+    [TestMethod]
+    public void NextOffer_AHeroStory_OffersBothSidesToANeutralPlayer()
+    {
+        _offers.Clear();
+        _offers.Add(HeroOffer());
+
+        var offer = _sut.NextOffer();
+
+        Assert.AreEqual("breaking", offer?.EventId);
+        Assert.IsTrue(offer!.Choices.Defend && offer.Choices.Attack);
+    }
+
+    [DataTestMethod]
+    [DataRow(false, true, true)]
+    [DataRow(false, false, false)]
+    [DataRow(true, true, false)]
+    [DataRow(true, false, true)]
+    public void Apply_AHeroStory_TheHeroLivesWhenHisSideWins(bool playerAttacks, bool playerWon, bool lives)
+    {
+        var side = playerAttacks ? StorySide.Attacking : StorySide.Defending;
+        var verdict = playerWon ? StoryOutcome.Won : StoryOutcome.Lost;
+        _chronicle.ResolveHeroStory(Arg.Any<string?>(), Arg.Any<bool>(), Arg.Any<string>()).Returns(true);
+
+        var result = _sut.Apply(HeroOffer(), side, verdict);
+
+        Assert.AreEqual(lives ? StoryResult.HeroLives : StoryResult.HeroDies, result);
+        _chronicle.Received(1).ResolveHeroStory("breaking", lives, Arg.Any<string>());
+        _outcomes.Received(1).Pass(StoryOfferService.ResultId, Arg.Any<string>(),
+            Arg.Is<string>(d => d.Contains("verdict=" + verdict) && d.EndsWith(lives ? "result=Averted hero=lord_1_75" : "result=Occurred hero=lord_1_75")));
+    }
+
+    [TestMethod]
+    public void Apply_AHeroStory_NeverTouchesAFortress()
+    {
+        _chronicle.ResolveHeroStory(Arg.Any<string?>(), Arg.Any<bool>(), Arg.Any<string>()).Returns(true);
+
+        _sut.Apply(HeroOffer(), StorySide.Defending, StoryOutcome.Lost);
+        _sut.Apply(HeroOffer(), StorySide.Defending, StoryOutcome.Won);
+
+        _chronicle.DidNotReceiveWithAnyArgs().ResolveStoryHeld(default, default!);
+        _chronicle.DidNotReceiveWithAnyArgs().ConfirmStoryWindow(default);
+        _campaign.DidNotReceiveWithAnyArgs().GiveSettlement(default!, default!, out _);
+    }
+
+    [TestMethod]
+    public void Apply_AHeroStoryWhoseWindowHasClosed_ChangesNothing()
+    {
+        _chronicle.ResolveHeroStory(Arg.Any<string?>(), Arg.Any<bool>(), Arg.Any<string>()).Returns(false);
+
+        Assert.AreEqual(StoryResult.Unchanged, _sut.Apply(HeroOffer(), StorySide.Defending, StoryOutcome.Won));
+        _outcomes.DidNotReceiveWithAnyArgs().Pass(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void Apply_AHeroStoryWithNoVerdict_AsksNothingOfTheChronicle_AndSnoozes()
+    {
+        Assert.AreEqual(StoryResult.Undecided, _sut.Apply(HeroOffer(), StorySide.Defending, StoryOutcome.Undecided));
+
+        _chronicle.DidNotReceiveWithAnyArgs().ResolveHeroStory(default, default, default!);
+        _offers.Clear();
+        _offers.Add(HeroOffer());
+        Assert.IsNull(_sut.NextOffer(), "snoozed for the day");
+    }
 }

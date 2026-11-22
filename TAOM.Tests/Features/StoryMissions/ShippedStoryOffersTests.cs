@@ -33,7 +33,7 @@ public class ShippedStoryOffersTests
     }
 
     [TestMethod]
-    public void EveryStoryBlock_ItsMissionIsADefence_AndNoneNamesAnAttackYet()
+    public void EveryStoryBlock_ItsMissionIsADefence_AndOnlyTheBreakingNamesAnAttack()
     {
         var paths = Substitute.For<IPathService>();
         paths.ModuleDataPath.Returns(ModuleData);
@@ -43,10 +43,35 @@ public class ShippedStoryOffersTests
         {
             Assert.IsTrue(catalog.TryGet(definition.Story!.MissionId, out var mission), $"'{definition.Id}' offers unknown story mission '{definition.Story.MissionId}'");
             Assert.AreEqual(StorySide.Defending, mission.Side, $"'{definition.Id}': story.mission is the defence");
-            // The launcher opens helms_deep_attack, but the maintainer has not decided whether the Hornburg window offers it (#1409 step 6),
-            // so no shipped window names an attackMission yet. Adding the key replaces this line with the row's check.
-            Assert.IsNull(definition.Story.AttackMissionId, $"'{definition.Id}' names an attackMission before the maintainer has decided the key");
+            if (definition.Story.HeroId != null)
+            {
+                // A hero story (#1105 slice 3) is fought beside the hero or against him, so it names both missions.
+                Assert.IsTrue(catalog.TryGet(definition.Story.AttackMissionId ?? string.Empty, out var hunt), $"'{definition.Id}' offers unknown attack mission '{definition.Story.AttackMissionId}'");
+                Assert.AreEqual(StorySide.Attacking, hunt.Side, $"'{definition.Id}': story.attackMission is the attack");
+                Assert.IsNotNull(mission.MustLive, $"'{definition.Id}': the defence is decided by its hero");
+                Assert.AreEqual(mission.MustLive, hunt.MustLive, $"'{definition.Id}': both missions are decided by the same hero");
+                continue;
+            }
+
+            // The launcher opens helms_deep_attack, but the Hornburg window does not offer it yet (#1409 step 6, slice 5 of #1105).
+            // Adding the key replaces this line with the row's check.
+            Assert.IsNull(definition.Story.AttackMissionId, $"'{definition.Id}' names an attackMission before slice 5");
         }
+    }
+
+    [TestMethod]
+    public void TheBreaking_OffersTheTwoParthGalenMissions_AndDecidesBoromir()
+    {
+        var breaking = Events().Single(d => d.Id == "breaking");
+
+        Assert.AreEqual("lord_1_75", breaking.Story?.HeroId);
+        Assert.AreEqual("parth_galen_save", breaking.Story!.MissionId);
+        Assert.AreEqual("parth_galen_kill", breaking.Story.AttackMissionId);
+        Assert.AreEqual(10, breaking.WindowDays);
+        Assert.AreEqual("empire_w", breaking.Defender, "Gondor's side stands with Boromir");
+        CollectionAssert.AreEqual(new[] { "isengard" }, breaking.Attackers.ToArray());
+        Assert.IsNotNull(breaking.Averted?.Text);
+        Assert.IsNotNull(breaking.Occurred?.Text);
     }
 
     [TestMethod]

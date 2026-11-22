@@ -1,4 +1,5 @@
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Settlements;
 
 namespace TAOM.Adapters;
@@ -43,4 +44,39 @@ public sealed class ChronicleWorldAdapter : IChronicleWorldAdapter
 
     private static Settlement? Find(string settlementId) =>
         Campaign.Current == null || string.IsNullOrEmpty(settlementId) ? null : Settlement.Find(settlementId);
+
+    public bool IsHeroAlive(string heroId) => FindAliveHero(heroId) != null;
+
+    public bool IsPlayerHero(string heroId) => FindAliveHero(heroId)?.IsHumanPlayerCharacter == true;
+
+    // ApplyByBattle(Hero victim, Hero killer, bool showNotification = true) takes a null killer: the engine's own PartyAgentOrigin.SetKilled passes one
+    // (PartyAgentOrigin.cs:193). ApplyInternal returns with only a death mark while the victim's party is in a map event or besieges (KillCharacterAction.cs:51);
+    // the end of that battle completes the mark (MapEventSide.cs:431-437), else AgingCampaignBehavior.DailyTickHero does (:101-113). It returns with nothing
+    // done for a hero who cannot die (:34, an issue or quest veto) and for the human player (:56). So the result is read back from the hero.
+    public ChronicleHeroDeath KillHeroInBattle(string heroId)
+    {
+        var hero = FindAliveHero(heroId);
+        if (hero == null || hero.IsHumanPlayerCharacter)
+            return ChronicleHeroDeath.Refused;
+
+        KillCharacterAction.ApplyByBattle(hero, null);
+        if (!hero.IsAlive)
+            return ChronicleHeroDeath.Killed;
+
+        return hero.DeathMark != KillCharacterAction.KillCharacterActionDetail.None ? ChronicleHeroDeath.Deferred : ChronicleHeroDeath.Refused;
+    }
+
+    private static Hero? FindAliveHero(string heroId)
+    {
+        if (Campaign.Current == null || string.IsNullOrEmpty(heroId))
+            return null;
+
+        foreach (var hero in Hero.AllAliveHeroes)
+        {
+            if (hero != null && hero.StringId == heroId)
+                return hero;
+        }
+
+        return null;
+    }
 }

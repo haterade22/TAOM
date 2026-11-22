@@ -475,4 +475,30 @@ public class WarChronicleSaveCodecTests
         Assert.AreEqual(40, back.DailyRunDays[WarChronicleDailyGate.ChronicleLane]);
         Assert.AreEqual(1, back.Warnings.Count, string.Join(" | ", back.Warnings));
     }
+
+    [TestMethod]
+    public void RoundTrip_AnAvertedEvent_KeepsItsState()
+    {
+        // #1105 slice 3: Averted is state 7, appended, so a save from before it loads unchanged and this row loads in a build that knows it.
+        var payload = new WarChroniclePayload();
+        payload.Chronicle.Add(new ChronicleEventRecord("breaking", ChronicleEventState.Averted) { OpenDay = 30, CloseDay = 40, ResolvedDay = 33 });
+
+        var json = WarChronicleSaveCodec.Serialize(payload);
+        var back = WarChronicleSaveCodec.Parse(json);
+
+        Assert.AreEqual(7, (int)JObject.Parse(json)["chronicle"]![0]!["s"]!);
+        Assert.AreEqual(ChronicleEventState.Averted, back.Chronicle.Single().State);
+    }
+
+    [TestMethod]
+    public void RoundTrip_AnOpenHeroWindow_KeepsItsCloseDay()
+    {
+        var payload = new WarChroniclePayload();
+        payload.Chronicle.Add(new ChronicleEventRecord("breaking", ChronicleEventState.Active) { OpenDay = 30, CloseDay = 40 });
+
+        var back = WarChronicleSaveCodec.Parse(WarChronicleSaveCodec.Serialize(payload));
+
+        Assert.AreEqual(ChronicleEventState.Active, back.Chronicle.Single().State);
+        Assert.AreEqual(40d, back.Chronicle.Single().CloseDay);
+    }
 }

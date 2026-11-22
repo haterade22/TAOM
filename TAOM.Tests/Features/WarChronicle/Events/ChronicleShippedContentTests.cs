@@ -125,7 +125,7 @@ public class ChronicleShippedContentTests
             .Concat(JToken.Parse(Json).SelectTokens("$..fateText"))
             .Select(t => (string)t!).ToList();
 
-        Assert.AreEqual(48, texts.Count);
+        Assert.AreEqual(49, texts.Count);
         foreach (var text in texts)
         {
             var match = keyed.Match(text);

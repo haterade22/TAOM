@@ -20,4 +20,10 @@ public interface IChronicleStoryPort
     /// window is still Active and the war has not ended.
     /// </summary>
     bool ConfirmStoryWindow(string? eventId);
+
+    /// <summary>
+    /// The result of a hero story's mission (#1105 slice 3): the hero lives and the event is Averted, or he dies in battle and it Occurred.
+    /// False when no Active hero window has this id.
+    /// </summary>
+    bool ResolveHeroStory(string? eventId, bool heroLives, string why);
 }

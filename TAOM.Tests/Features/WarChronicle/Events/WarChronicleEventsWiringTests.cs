@@ -88,6 +88,8 @@ public class WarChronicleEventsWiringTests
         container.RegisterInstance(Substitute.For<IWarOfTheRingService>());
         container.RegisterInstance(Substitute.For<IAlignmentService>());
         container.RegisterInstance(Substitute.For<ICoopSessionProvider>());
+        // The chronicle opens a hero story's window only in a single-player campaign (#1105 slice 3).
+        container.RegisterInstance(Substitute.For<IDedicatedServerProvider>());
         container.RegisterInstance(Substitute.For<IPlayerControlQuery>());
         container.RegisterInstance(Substitute.For<IPathService>());
         container.RegisterInstance(Substitute.For<IAllianceAdapter>());

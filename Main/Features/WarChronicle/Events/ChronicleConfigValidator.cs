@@ -59,14 +59,18 @@ public static class ChronicleConfigValidator
     internal const string TargetFree = "free";
     internal const string TargetEvil = "evil";
 
-    private static readonly string[] NarrativeKeys = { "id", "kind", "anchor", "anchorEvent", "requiresOutcome", "offsetDays", "title", "image", "outcomes" };
+    private static readonly string[] NarrativeKeys =
+    {
+        "id", "kind", "anchor", "anchorEvent", "requiresOutcome", "offsetDays", "title", "image", "outcomes",
+        "windowDays", "attackers", "defender", "story",
+    };
     private static readonly string[] SiegeKeys =
     {
         "id", "kind", "anchor", "anchorEvent", "requiresOutcome", "offsetDays", "title", "image", "outcomes",
         "windowDays", "target", "attackers", "defender", "openText", "lapsedText", "story",
     };
 
-    private static readonly string[] StoryKeys = { "mission", "attackMission", "fate", "fateText" };
+    private static readonly string[] StoryKeys = { "mission", "attackMission", "fate", "fateText", "hero" };
 
     private static readonly string[] OutcomeKeys = { "text", "effects", "momentum" };
     private static readonly string[] EffectKeys = { "target", "kind", "magnitude", "durationDays" };
@@ -184,7 +188,7 @@ public static class ChronicleConfigValidator
         {
             if (anchor != ChronicleAnchor.Event)
                 return Skip("requiresOutcome needs an Event anchor");
-            if (!EnumNames.TryParse<ChronicleEventState>(requires, out var required) || !Reachable(anchorDefinition!.Kind, required))
+            if (!EnumNames.TryParse<ChronicleEventState>(requires, out var required) || !Reachable(anchorDefinition!, required))
                 return Skip($"requiresOutcome '{requires}' is not an outcome the anchor event can reach");
             definition.RequiresOutcome = required;
         }
@@ -216,7 +220,10 @@ public static class ChronicleConfigValidator
             if (occurred == null)
                 return Skip("a narrative event needs an occurred outcome");
             definition.Occurred = ReadOutcome(occurred, definition, "occurred", warnings);
-            WarnUnreached(outcomes!, definition, warnings, "occurred");
+            if (ReadHeroStory(e, definition, outcomes!, warnings))
+                WarnUnreached(outcomes!, definition, warnings, "occurred", "averted");
+            else
+                WarnUnreached(outcomes!, definition, warnings, "occurred");
         }
 
         // A siege that loaded had fullWar true (ReadSiege refuses one without it).
@@ -284,6 +291,12 @@ public static class ChronicleConfigValidator
         definition.LapsedText = OptionalText(e, "lapsedText", $"event '{definition.Id}'", warnings);
         if (e["story"] != null && e["story"]!.Type != JTokenType.Null)
             definition.Story = ReadStory(e["story"]!, definition.Id, warnings);
+        if (definition.Story?.HeroId != null)
+        {
+            warnings.Add($"event '{definition.Id}': story names a hero, which only a narrative event's story has, so the hero is ignored");
+            definition.Story.HeroId = null;
+        }
+
         if (outcomes != null)
         {
             if (outcomes["held"] != null)
@@ -319,11 +332,13 @@ public static class ChronicleConfigValidator
         }
 
         var attack = OptionalText(o, "attackMission", where, warnings);
+        var hero = OptionalText(o, "hero", where, warnings);
         var story = new ChronicleStoryDefinition
         {
             MissionId = mission!,
             AttackMissionId = string.IsNullOrWhiteSpace(attack) ? null : attack,
             FateText = OptionalText(o, "fateText", where, warnings),
+            HeroId = string.IsNullOrWhiteSpace(hero) ? null : hero,
         };
         if (o["fate"] != null && o["fate"]!.Type != JTokenType.Null)
         {
@@ -335,6 +350,59 @@ public static class ChronicleConfigValidator
         }
 
         return story;
+    }
+
+    /// <summary>
+    /// A narrative event's hero story (#1105 slice 3): a story block that names a hero, with the event's own <c>windowDays</c>, <c>defender</c>,
+    /// <c>attackers</c> and an <c>averted</c> outcome. True when the story is kept. Anything missing drops the story with one warning and keeps
+    /// the event, which then occurs as text, as a narrative event with no story does.
+    /// </summary>
+    private static bool ReadHeroStory(JObject e, ChronicleEventDefinition definition, JObject outcomes, IList<string> warnings)
+    {
+        if (e["story"] == null || e["story"]!.Type == JTokenType.Null)
+            return false;
+
+        var story = ReadStory(e["story"]!, definition.Id, warnings);
+        if (story == null)
+            return false;
+
+        var defender = Text(e["defender"]);
+        var attackers = new List<string>();
+        if (e["attackers"] is JArray list)
+        {
+            foreach (var item in list)
+            {
+                var attacker = Text(item);
+                if (!string.IsNullOrWhiteSpace(attacker) && !attackers.Contains(attacker!))
+                    attackers.Add(attacker!);
+            }
+        }
+
+        string? problem = null;
+        if (story.HeroId == null)
+            problem = "it names no hero";
+        else if (!TryInt(e["windowDays"], MinWindowDays, MaxWindowDays, out _))
+            problem = $"windowDays must be a whole number from {MinWindowDays} to {MaxWindowDays}";
+        else if (string.IsNullOrWhiteSpace(defender))
+            problem = "it needs a defender kingdom, whose side stands with the hero";
+        else if (attackers.Count == 0 || attackers.Contains(defender!))
+            problem = "it needs at least one kingdom in attackers, and never the defender";
+        else if (outcomes["averted"] == null)
+            problem = "it needs an averted outcome for a hero who lives";
+
+        if (problem != null)
+        {
+            warnings.Add($"event '{definition.Id}': story dropped ({problem}), so the event occurs as text");
+            return false;
+        }
+
+        TryInt(e["windowDays"], MinWindowDays, MaxWindowDays, out var window);
+        definition.WindowDays = window;
+        definition.Defender = defender;
+        definition.Attackers = attackers;
+        definition.Story = story;
+        definition.Averted = ReadOutcome(outcomes["averted"]!, definition, "averted", warnings);
+        return true;
     }
 
     private static void WarnUnreached(JObject outcomes, ChronicleEventDefinition definition, IList<string> warnings, params string[] known)
@@ -457,10 +525,10 @@ public static class ChronicleConfigValidator
         return new ChronicleMomentumAward { Side = parsed, Units = units };
     }
 
-    /// <summary>A narrative resolves only as Occurred; a siege as Held, Fell or Lapsed.</summary>
-    private static bool Reachable(ChronicleEventKind anchorKind, ChronicleEventState state) =>
-        anchorKind == ChronicleEventKind.Narrative
-            ? state == ChronicleEventState.Occurred
+    /// <summary>A narrative resolves as Occurred, and as Averted when it has a hero story; a siege as Held, Fell or Lapsed.</summary>
+    private static bool Reachable(ChronicleEventDefinition anchor, ChronicleEventState state) =>
+        anchor.Kind == ChronicleEventKind.Narrative
+            ? state == ChronicleEventState.Occurred || (state == ChronicleEventState.Averted && anchor.Story?.HeroId != null)
             : state == ChronicleEventState.Held || state == ChronicleEventState.Fell || state == ChronicleEventState.Lapsed;
 
     private static string? Text(JToken? token) =>

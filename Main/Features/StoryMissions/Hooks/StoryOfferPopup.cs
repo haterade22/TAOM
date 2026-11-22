@@ -24,9 +24,9 @@ internal static class StoryOfferPopup
 
     public static void Show(StoryOffer offer, Action ride, Action later) => InformationManager.ShowInquiry(new InquiryData(
         Line(offer.Window.Title, offer.Window).ToString(),
-        Line(StoryOfferText.PopupBody(offer.Choices), offer.Window).ToString(),
+        Line(StoryOfferText.PopupBody(offer.Choices, offer.Window.HeroId != null), offer.Window).ToString(),
         true, true,
-        Line(StoryOfferText.PopupAccept(offer.Choices), offer.Window).ToString(),
+        Line(StoryOfferText.PopupAccept(offer.Choices, offer.Window.HeroId != null), offer.Window).ToString(),
         new TextObject("{=taom_story_offer_later}Not now").ToString(),
         ride, later), true, false);
 }

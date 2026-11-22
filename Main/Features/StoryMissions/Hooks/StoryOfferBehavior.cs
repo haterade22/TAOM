@@ -80,11 +80,15 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
     {
         starter.AddGameMenu(MenuId, "{=!}{" + BodyVariable + "}", OnInit, GameMenu.MenuOverlayType.None);
         starter.AddGameMenuOption(MenuId, "taom_story_offer_defend", "{=taom_story_offer_defend}Defend the walls",
-            a => SideCondition(a, StorySide.Defending), _ => Launch(StorySide.Defending), isLeave: false, index: 0);
+            a => SideCondition(a, StorySide.Defending, hero: false), _ => Launch(StorySide.Defending), isLeave: false, index: 0);
         starter.AddGameMenuOption(MenuId, "taom_story_offer_attack", "{=taom_story_offer_attack}Storm the walls",
-            a => SideCondition(a, StorySide.Attacking), _ => Launch(StorySide.Attacking), isLeave: false, index: 1);
-        starter.AddGameMenuOption(MenuId, "taom_story_offer_decline", "{=taom_story_offer_fate}Let fate decide", OfferCondition, _ => { Decline(); _menus.ExitToLast(); }, isLeave: false, index: 2);
-        starter.AddGameMenuOption(MenuId, "taom_story_offer_continue", "{=taom_story_offer_continue}Continue", ContinueCondition, Continue, isLeave: true, index: 3);
+            a => SideCondition(a, StorySide.Attacking, hero: false), _ => Launch(StorySide.Attacking), isLeave: false, index: 1);
+        starter.AddGameMenuOption(MenuId, "taom_story_offer_stand", "{=taom_story_breaking_stand}Stand with the Fellowship",
+            a => SideCondition(a, StorySide.Defending, hero: true), _ => Launch(StorySide.Defending), isLeave: false, index: 2);
+        starter.AddGameMenuOption(MenuId, "taom_story_offer_hunt", "{=taom_story_breaking_hunt}Lead the Uruk-hai",
+            a => SideCondition(a, StorySide.Attacking, hero: true), _ => Launch(StorySide.Attacking), isLeave: false, index: 3);
+        starter.AddGameMenuOption(MenuId, "taom_story_offer_decline", "{=taom_story_offer_fate}Let fate decide", OfferCondition, _ => { Decline(); _menus.ExitToLast(); }, isLeave: false, index: 4);
+        starter.AddGameMenuOption(MenuId, "taom_story_offer_continue", "{=taom_story_offer_continue}Continue", ContinueCondition, Continue, isLeave: true, index: 5);
     }
 
     private void OnInit(MenuCallbackArgs args)
@@ -92,7 +96,8 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
         // A behavior saves nothing, so a verdict still pending at a save would be lost: apply it on the first init after the mission.
         if (_offer != null && _verdict is { } verdict && _result == null)
             _result = _service.Apply(_offer.Window, _side, verdict);
-        MBTextManager.SetTextVariable(BodyVariable, StoryOfferPopup.Line(StoryOfferText.Menu(_offer?.Choices, _side, _result), _offer?.Window), false);
+        MBTextManager.SetTextVariable(BodyVariable,
+            StoryOfferPopup.Line(StoryOfferText.Menu(_offer?.Choices, _side, _result, _offer?.Window.HeroId != null), _offer?.Window), false);
     }
 
     private bool OfferCondition(MenuCallbackArgs args)
@@ -101,10 +106,10 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
         return _offer != null && _verdict == null;
     }
 
-    // A side shows only while the offer is open and the player may take it (StorySideGate).
-    private bool SideCondition(MenuCallbackArgs args, StorySide side)
+    // A side shows only while the offer is open and the player may take it (StorySideGate). A fortress window and a hero story each have their own two options.
+    private bool SideCondition(MenuCallbackArgs args, StorySide side, bool hero)
     {
-        var shown = OfferCondition(args) && (side == StorySide.Attacking ? _offer!.Choices.Attack : _offer!.Choices.Defend);
+        var shown = OfferCondition(args) && (_offer!.Window.HeroId != null) == hero && (side == StorySide.Attacking ? _offer.Choices.Attack : _offer.Choices.Defend);
         args.optionLeaveType = GameMenuOption.LeaveType.Mission;
         return shown;
     }

@@ -29,4 +29,24 @@ public interface IChronicleWorldAdapter
 
     /// <summary>The StringId of the kingdom whose army besieges the settlement; null when it is not under siege by a kingdom.</summary>
     string? GetBesiegerKingdomId(string settlementId);
+
+    /// <summary>True for a hero of this campaign who is alive (#1105 slice 3).</summary>
+    bool IsHeroAlive(string heroId);
+
+    /// <summary>True when the hero is the human player's own character.</summary>
+    bool IsPlayerHero(string heroId);
+
+    /// <summary>
+    /// Kills the hero as a death in battle with no killer. Refused for a missing or dead hero, for the player's character and when the engine
+    /// refuses the death; Deferred when the engine only marked him because his party is in a battle or besieges (the end of that battle kills him).
+    /// </summary>
+    ChronicleHeroDeath KillHeroInBattle(string heroId);
+}
+
+/// <summary>What <see cref="IChronicleWorldAdapter.KillHeroInBattle"/> did.</summary>
+public enum ChronicleHeroDeath
+{
+    Killed,
+    Deferred,
+    Refused,
 }

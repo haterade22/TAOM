@@ -43,6 +43,29 @@ internal sealed class FakeChronicleWorld : IChronicleWorldAdapter
 
     public string? GetBesiegerKingdomId(string settlementId) =>
         settlementId != null && Besiegers.TryGetValue(settlementId, out var besieger) ? besieger : null;
+
+    /// <summary>The heroes that live (#1105 slice 3). A kill the fake grants takes the hero out.</summary>
+    public HashSet<string> AliveHeroes { get; } = new HashSet<string>();
+
+    public string? PlayerHero { get; set; }
+
+    /// <summary>Every hero the chronicle asked to kill, in order.</summary>
+    public List<string> KillsAsked { get; } = new List<string>();
+
+    /// <summary>What a kill answers; Killed also removes the hero from <see cref="AliveHeroes"/>.</summary>
+    public ChronicleHeroDeath DeathAnswer { get; set; } = ChronicleHeroDeath.Killed;
+
+    public bool IsHeroAlive(string heroId) => heroId != null && AliveHeroes.Contains(heroId);
+
+    public bool IsPlayerHero(string heroId) => heroId != null && heroId == PlayerHero;
+
+    public ChronicleHeroDeath KillHeroInBattle(string heroId)
+    {
+        KillsAsked.Add(heroId);
+        if (DeathAnswer == ChronicleHeroDeath.Killed)
+            AliveHeroes.Remove(heroId);
+        return DeathAnswer;
+    }
 }
 
 /// <summary>
@@ -93,6 +116,7 @@ internal sealed class ChronicleFixture
 
         Coop = Substitute.For<ICoopSessionProvider>();
         Coop.IsAuthority.Returns(true);
+        Dedicated = Substitute.For<IDedicatedServerProvider>();
 
         Presenter = Substitute.For<IChroniclePresenter>();
         Presenter.IsMapFree().Returns(true);
@@ -164,7 +188,9 @@ internal sealed class ChronicleFixture
     public ChronicleService CreateService() => new ChronicleService(
         Config, Store, World, Alliance, Wotr,
         new ChronicleOutcomeService(Effects, Alliance, Alignment, Momentum, Ledger, Text, Logger),
-        Queue, Focus, Settings, Logger, Daily);
+        Queue, Focus, Settings, Logger, Daily, Coop, Dedicated);
+
+    public IDedicatedServerProvider Dedicated { get; }
 
     public IEnumerable<string> LedgerLines => Logged.Where(l => l.Contains("ev=chronicle"));
 

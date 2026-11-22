@@ -206,6 +206,7 @@ Main/Adapters/CastlePatrolAdapter.cs	1
 Main/Adapters/CavalryCommandAdapter.cs	6
 Main/Adapters/CheatWorldAdapter.cs	8
 Main/Adapters/ChildCreatorAdapter.cs	11
+Main/Adapters/ChronicleWorldAdapter.cs	4
 Main/Adapters/CommanderLordAdapter.cs	20
 Main/Adapters/CreatureSiegeAgentAdapter.cs	4
 Main/Adapters/CreatureSiegeMissionAdapter.cs	15

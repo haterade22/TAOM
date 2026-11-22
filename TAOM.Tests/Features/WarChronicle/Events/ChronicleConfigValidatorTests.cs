@@ -858,7 +858,7 @@ public class ChronicleConfigValidatorTests
     }
 
     [TestMethod]
-    public void Parse_AStoryOnANarrative_IsIgnoredWithAWarning()
+    public void Parse_AStoryOnANarrative_ThatNamesNoHero_IsDroppedWithAWarning_AndTheEventStays()
     {
         var narrative = Narrative();
         narrative["story"] = new JObject { ["mission"] = "helms_deep_defend" };
@@ -866,6 +866,87 @@ public class ChronicleConfigValidatorTests
         var events = Parse(narrative);
 
         Assert.IsNull(events.Single().Story);
-        AssertWarned("'story' is not a known key");
+        AssertWarned("story dropped (it names no hero)");
+    }
+
+    // #1105 slice 3: a narrative event's story decides a hero's life.
+    private static JObject HeroNarrative()
+    {
+        var narrative = Narrative();
+        narrative["windowDays"] = 10;
+        narrative["defender"] = "empire_w";
+        narrative["attackers"] = new JArray("isengard");
+        narrative["story"] = new JObject { ["mission"] = "parth_galen_save", ["attackMission"] = "parth_galen_kill", ["hero"] = "lord_1_75" };
+        ((JObject)narrative["outcomes"]!)["averted"] = new JObject { ["text"] = "{=taom_wc_x_averted}he lives" };
+        return narrative;
+    }
+
+    [TestMethod]
+    public void Parse_AHeroStoryOnANarrative_IsReadWithItsWindowItsSidesAndItsAvertedOutcome()
+    {
+        var definition = Parse(HeroNarrative()).Single();
+
+        Assert.AreEqual("lord_1_75", definition.Story?.HeroId);
+        Assert.AreEqual("parth_galen_save", definition.Story!.MissionId);
+        Assert.AreEqual("parth_galen_kill", definition.Story.AttackMissionId);
+        Assert.AreEqual(10, definition.WindowDays);
+        Assert.AreEqual("empire_w", definition.Defender);
+        CollectionAssert.AreEqual(new[] { "isengard" }, definition.Attackers.ToArray());
+        Assert.AreEqual("{=taom_wc_x_averted}he lives", definition.Averted?.Text);
+        Assert.AreSame(definition.Averted, definition.OutcomeFor(ChronicleEventState.Averted));
+        Assert.AreEqual(0, _warnings.Count, string.Join(" | ", _warnings));
+    }
+
+    [DataTestMethod]
+    [DataRow("windowDays", "windowDays must be a whole number")]
+    [DataRow("defender", "it needs a defender kingdom")]
+    [DataRow("attackers", "it needs at least one kingdom in attackers")]
+    public void Parse_AHeroStoryThatLacksAPart_IsDropped_AndTheEventOccursAsText(string missing, string warning)
+    {
+        var narrative = HeroNarrative();
+        narrative.Remove(missing);
+
+        var definition = Parse(narrative).Single();
+
+        Assert.IsNull(definition.Story);
+        Assert.IsNotNull(definition.Occurred);
+        AssertWarned("story dropped (" + warning);
+    }
+
+    [TestMethod]
+    public void Parse_AChildMayRequireAverted_OnlyOfAnAnchorWithAHeroStory()
+    {
+        var child = Narrative("child", anchor: "Event");
+        child["anchorEvent"] = "fellowship";
+        child["requiresOutcome"] = "Averted";
+
+        var events = Parse(HeroNarrative(), child);
+
+        Assert.AreEqual(2, events.Count, string.Join(" | ", _warnings));
+        Assert.AreEqual(ChronicleEventState.Averted, events[1].RequiresOutcome);
+
+        _warnings.Clear();
+        Assert.AreEqual(1, Parse(Narrative(), child).Count, "a narrative with no hero story never resolves Averted");
+        AssertWarned("requiresOutcome");
+    }
+
+    [TestMethod]
+    public void Parse_AHeroStoryWithNoAvertedOutcome_IsDropped()
+    {
+        var narrative = HeroNarrative();
+        ((JObject)narrative["outcomes"]!).Remove("averted");
+
+        Assert.IsNull(Parse(narrative).Single().Story);
+        AssertWarned("it needs an averted outcome");
+    }
+
+    [TestMethod]
+    public void Parse_AHeroStoryWhoseDefenderIsAlsoAnAttacker_IsDropped()
+    {
+        var narrative = HeroNarrative();
+        narrative["attackers"] = new JArray("empire_w");
+
+        Assert.IsNull(Parse(narrative).Single().Story);
+        AssertWarned("never the defender");
     }
 }

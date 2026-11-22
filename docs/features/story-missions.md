@@ -9,7 +9,8 @@ play its own music track, and vanilla music stays quiet for that mission only. S
 War Chronicle's Battle of the Hornburg offers the Helm's Deep defence to the player, and the result
 decides the event. A win holds Helm's Deep; a loss gives it to Isengard. Slice 2 is built: two missions on
 a field scene play the Breaking of the Fellowship at Parth Galen, one for each side, and each is decided
-by whether Boromir falls. Only the dev console opens them until slice 3.
+by whether Boromir falls. Slice 3 is built: the War Chronicle's Breaking of the Fellowship offers those
+two missions, and the result decides whether Boromir lives.
 
 ## Why This Exists
 
@@ -242,6 +243,43 @@ falls in wave 3 (run `20261121-190746`, 9 minutes). The mission is therefore los
 the player. `parth_galen_kill` was lost with a band of 12 and of 18 (run `20261121-191916`) and won in 41 s with 25, so the band is 20.
 No person has played either mission yet.
 
+### The hero story (slice 3)
+
+The Breaking of the Fellowship is a Narrative event of the War Chronicle. With a `story` block that
+names a `hero`, it opens a window of 10 days and offers the two Parth Galen missions; its result is
+the life of Boromir (`lord_1_75`).
+
+- **The window** (`ChronicleService.HeroStoryCanOpen`): it opens only where a story mission can run
+  and can matter: a single-player campaign, the setting "Offer Story Missions" on, a hero who lives
+  and is not the player (Player Switcher), and kingdoms this campaign has. Anywhere else the event
+  occurs at once as text, as before, and nobody dies. The window has no opening announcement,
+  because a queued announcement holds every offer back; the offer popup tells the player.
+- **Sides** (#1326, unchanged): the event's `defender` is Gondor (`empire_w`) and its `attackers`
+  are Isengard. A free player may stand with the Fellowship, an evil player may lead the Uruk-hai,
+  a neutral player may do either, and nobody fights his own realm.
+- **Results** (`StoryOfferService.ApplyHero`, `IChronicleStoryPort.ResolveHeroStory`): the hero
+  lives when his side won, whichever side the player took. He lives: the event resolves `Averted`
+  (a new state, saved as 7) with its own line and effects. He dies: the chronicle kills him and the
+  event resolves `Occurred`, as the book has it. "Let fate decide" and a window nobody answers in
+  10 days both end as `Occurred`, with the kill. A mission with no verdict snoozes the offer to the
+  next day.
+- **The kill** (`ChronicleWorldAdapter.KillHeroInBattle`): `KillCharacterAction.ApplyByBattle` with
+  no killer. The result is read back from the hero: Killed, Deferred or Refused, and the chronicle's
+  log line names it. The engine only marks a hero whose party is in a battle or besieges. The end
+  of that battle kills him (`MapEventSide.HandleMapEventEndForPartyInternal`). A mark made while he
+  only besieges is finished by the next daily tick or, with the life and death cycle off, at the end
+  of his next battle. The engine handles his party, his clan and, if he rules, his kingdom.
+- **Who Boromir is at that moment:** dead already, or dead during the window: the event occurs as
+  text. The player himself: no window. A prisoner, a party leader, an army leader, a clan leader or
+  a ruler: the engine's own death path applies, as for any lord who dies in battle.
+- **Co-op:** no window, no offer and no kill.
+- **A change while the window is open** (`ChronicleService.HeroStoryMatters`): a campaign that
+  becomes a co-op session, a player who turns "Offer Story Missions" off, and a player who becomes
+  Boromir get no offer, and the window ends as text on its close day, with no kill.
+- **Menu:** the offer menu shows "Stand with the Fellowship" and "Lead the Uruk-hai" for a hero
+  story, in place of the two wall options. The text is the Breaking's own (`StoryOfferText`,
+  keys `taom_story_breaking_*`); it names no `{TARGET}`.
+
 The feature declares no Harmony patch and no GameModel. Its one saved value, a declined offer, is a
 field of the War Chronicle's payload.
 
@@ -337,6 +375,8 @@ Only Helm's Deep names a music track (`StoryMusic/isengard_vs_rohan.ogg`). Four 
 | `Main/Adapters/IStoryCampaignAdapter.cs`, `StoryCampaignAdapter.cs` | Slice 4: captivity, the player's side pair, and the transfer of a fallen fortress |
 | `Main/Features/WarChronicle/Events/IChronicleStoryPort.cs` | Slice 4: the chronicle seam (`ChronicleService` implements it) |
 | `tools/ingame_checks/1105.toml` | The in-game check manifest |
+| `Main/Features/WarChronicle/Events/ChronicleService.cs` | Slice 3: the hero story's window, its fate and its result (`HeroStoryCanOpen`, `ResolveHeroStory`) |
+| `Main/Adapters/IChronicleWorldAdapter.cs`, `ChronicleWorldAdapter.cs` | Slice 3: whether the hero lives, whether he is the player, and the kill |
 | `tools/ingame_checks/1366.toml` | The manifest of the free heroes |
 | `tools/ingame_checks/1370.toml` | The manifest of the free heroes' formation churn (#1370, open): `moved_out=0` on the hunters line |
 
@@ -371,6 +411,9 @@ Only Helm's Deep names a music track (`StoryMusic/isengard_vs_rohan.ogg`). Four 
 - Slice 2, in `TAOM.Tests/Features/LongDefeat/`: `LongDefeatDirectorFieldTests` (the director on a field), `Domain/SurvivalRunFieldTests`
   (the live cap and the groups), `Domain/FieldPlacesTests` (the pick of a start place), and the hero who must live in
   `Domain/SurvivalRunHeroTests`. `tools/tests/test_run_scenario.py` holds the driver's field patterns.
+- Slice 3: `TAOM.Tests/Features/WarChronicle/Events/ChronicleHeroStoryTests` (the window, the fate, the kill, co-op), the hero
+  story cases of `ChronicleConfigValidatorTests`, `WarChronicleSaveCodecTests` (state 7) and `StoryOfferServiceTests`, and
+  `ShippedStoryOffersTests.TheBreaking_OffersTheTwoParthGalenMissions_AndDecidesBoromir`.
 
 ## How to verify in game
 
@@ -405,6 +448,15 @@ Slice 2, unattended: `python tools/run_scenario.py --kind story-mission --missio
 `parth_galen_kill`), then `python tools/ingame_verdict.py --issue 1105`. The rows scoped to each Parth Galen launch read the
 field boot line, Boromir's spawn line, every attacker spawn check and the end line. Four rows stay with a person: the look of the
 scene and of Boromir, the two sides the groups come from, a won defence, and a won hunt.
+
+The proof runs of slice 2 on the committed build `8d8c58574`: `E:/Temp/scenario-runs/20261121-201346` (the defence, lost in wave 2)
+and `20261121-202155` (the hunt, won). `python tools/ingame_verdict.py --issue 1105 --session <log>` reads PASS for the four rows of
+each mission.
+
+Slice 3, by hand until the offer has a driver: in a single-player campaign in the Isengard War or later, run
+`taom.chronicle_open breaking confirm`. The popup appears on the free map. Choose "Go to Parth Galen", then a side, play the
+mission and choose "Continue". The line `taom.story-missions.offer.result` ends `result=Averted hero=lord_1_75` or
+`result=Occurred hero=lord_1_75`, and the `[WarChronicle]` line of the event names what the kill did.
 
 The free heroes (#1366). A driver for the story mission exists since #1368 (step 0 below), but it has not run yet, so a person
 still runs this by hand until it has, in a loaded campaign on a build that holds the feature (a `.dirty` build is not counted).
@@ -508,9 +560,9 @@ key, the take-over, the faces, the War Chronicle offer path).
 
 ## Not built yet
 
-Slice 3 of #1105 is not built: the War Chronicle does not offer the Parth Galen missions yet, and their
-result changes nothing in the campaign. Slice 5 is built as a mission (#1409) and no window offers it.
-Only the Hornburg offers a mission. Slice 4 was built before slices 2 and 3, because a
+Slice 5 is built as a mission (#1409) and no window offers it. The Hornburg and the Breaking of the
+Fellowship are the two events that offer a mission. No unattended driver reaches the offer path yet
+(the popup, the menu and the result), so slices 3 and 4 have no machine proof of it. Slice 4 was built before slices 2 and 3, because a
 player report showed the Hornburg ending with no battle (2026-11-13).
 
 ## Known limits
@@ -523,6 +575,8 @@ player report showed the Hornburg ending with no battle (2026-11-13).
 
 ## Changelog
 
+- 2026-11-21: Slice 3, the Breaking of the Fellowship end to end: a Narrative event's hero story, its window of 10 days, the
+  state `Averted`, the kill by `ApplyByBattle`, and the offer's two new options. Unit tested; no game run yet.
 - 2026-11-21: Slice 2, the Parth Galen field missions (`parth_galen_save`, `parth_galen_kill`): the field list and start places,
   the hero who must live, Boromir's mission character, two attacker start places, groups under a live cap, and heroes under the
   team AI on a field. Proven by unattended runs; no person has played them.
@@ -549,4 +603,4 @@ player report showed the Hornburg ending with no battle (2026-11-13).
 
 - **Issue:** #1105
 - **Issue:** #1366, Phase 6 of #1325: the free heroes (built, in-game proof owed)
-- **Status:** Open (Slices 1, 2 and 4 built; slice 5 built as a mission under #1409; a person's play owed for all)
+- **Status:** Open (Slices 1 to 4 built; slice 5 built as a mission under #1409; a person's play owed for all)

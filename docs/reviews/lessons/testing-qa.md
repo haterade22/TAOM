@@ -2945,3 +2945,11 @@ The #1223 tests called a pure helper on `CustomAttacksUtils`. Any static call ru
 **Prevent:** a counter that feeds a `[Check]` line has one writer, and that writer knows who decided the state: the rules, a console command, a setting. Count only the rules' transitions; start a time limit when the rules take over, not when the state was first seen. Put the decision in a pure function with a row per transition (`StaminaLockRules.Tally`), and when a feature has both a cheat and a check, walk the cheat's sequences through the check before the manifest is written.
 
 **Source:** [rca-stamina-phases-1-2-2026-11-19.md](../rca-stamina-phases-1-2-2026-11-19.md) row 2 (lens 5).
+
+### A second writer of a check id means every older manifest row names its own subject (#1105, 2026-11-21)
+
+**Why missed:** the Hornburg rows of `tools/ingame_checks/1105.toml` were written when one window offered one mission. Their `reached` and `fail` patterns matched the check id alone, and one fail pattern read "a shown line for an evil player". Slice 3 gave the same check ids (`taom.story-missions.offer.shown`, `.offer.result`) to the Breaking of the Fellowship, where an evil player is offered a mission by design. The new rows were pinned to their mission; nobody reread the old ones, so a correct Breaking line read as FAIL on the Hornburg check. The slice 2 review of the same file found the same fault on the boot and ended rows, and the fix then stopped at the rows it named.
+
+**Prevent:** when a change adds a second producer of an existing `[Check]` id, list every row of every manifest that matches that id (`grep -n '<id>' tools/ingame_checks/*.toml`) and give each pattern the key that names its own subject (`mission=`, `hero=`, a `scope`). Then feed one line of the new producer to each old row and one line of the old producer to each new row, in a test or in `python -c`, and read the verdicts. A fail pattern that matches by a shared field alone is the first one to check, because `judge_segment` returns FAIL before it reads a pass pattern.
+
+**Source:** the #1105 slice 3 tier 1 review, Data flow G1 and XML lens finding 1 (both found it); `tools/ingame_checks/1105.toml`.
