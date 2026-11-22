@@ -30,9 +30,9 @@ Mike's word that day: build Minas Tirith now, as Helm's Deep was built. The deci
 | Slice | State | Differs from the text below |
 |---|---|---|
 | 1 | Built | The wrapper's class list was left on Helm's Deep: both fortresses offer the same four class ids, so a per-fortress read changes nothing yet |
-| 2 | Built, not played | The fortress name reuses `TAOM_FOW_Region_MinasTirith` ("Minas Tirith", translated already). The offer ids are `militia`, `archer_militia`, `lossarnach_axes`, `morthond_bowmen`, `pinnath_gelin`, `citadel_guard`. The Cavalry text change moved to Slice 5 |
+| 2 | Built; played in run `20261122-095258` (A36 and A37 hold: the gates are found and the scene's frames work; A40 holds: the Lossarnach axe fits the two-handed slot) | The fortress name reuses `TAOM_FOW_Region_MinasTirith` ("Minas Tirith", translated already). The offer ids are `militia`, `archer_militia`, `lossarnach_axes`, `morthond_bowmen`, `pinnath_gelin`, `citadel_guard`. The Cavalry text change moved to Slice 5 |
 | 3 | Built, not played | The rank names are the lords' own name keys (`aom_lord_1_63_name` and the others), not new `TAOM_LD_Rank_Mordor_*` keys. The general carries both abilities, as the Helm's Deep general does. The summon brings the Barad-dur guard, not the uruk warrior, so it is stronger than the wave it joins. Waves 5 to 10 and the bounties differ from section 4.2: the table there was up to 15 troop levels above Helm's Deep at wave 9 and paid less per level, so the built table follows the Helm's Deep curve |
-| 4 | Built, not played | Fifteen upgrade steps; every one is an edge of `troops_gondor.xml` |
+| 4 | Built; upgrades, heroes, gate repair and levels and field care passed in run `20261122-095258` | Fifteen upgrade steps; every one is an edge of `troops_gondor.xml` |
 | 5 | Built | Not the rewording of section 4.5. A boon row carries `cultures` and a class carries `texts`: words for one defender culture. Helm's Deep keeps its Rohan names, Minas Tirith shows Gondor names, and no English text changed, so D63 no longer changes Helm's Deep and no translated row went stale. Ids, order and weights are the same at both fortresses, so the pinned rolls hold. Open: Minas Tirith sells no rider, so the three cavalry rows are never in its pool; a Dol Amroth pack would open them |
 | 6 to 10 | Not built | |
 
