@@ -589,8 +589,8 @@ key, the take-over, the faces, the War Chronicle offer path).
 
 Every slice of #1105 is built. The Hornburg and the Breaking of the Fellowship are the two events that
 offer a mission; the other windows of the War Chronicle offer none. Slice 4 was built before slices 2 and 3, because a
-player report showed the Hornburg ending with no battle (2026-11-13). What is owed is play by a person, and the unattended run of the
-assault on the Hornburg with its results (slice 5).
+player report showed the Hornburg ending with no battle (2026-11-13). What is owed is play by a person, and the balance of the
+assault on the Hornburg (#1409): both of its results are proven by unattended runs, the won one only with a reduced garrison.
 
 ## Known limits
 
@@ -629,7 +629,12 @@ assault on the Hornburg with its results (slice 5).
   `taom.war-chronicle.alliance-ended result=pass ... result=Ended allied=False`. The attack host is 350 after the tuning runs
   ("Known limits"). The same path passed again with the host of 350 on build `3f2698ebc` (`20261122-003007`), and `taom.war_effects`
   at its end lists `chronicle:hornburg:Held:2: vlandia PartyMorale +0.100, ends in 25.0 days` with `vlandia: ... PartyMorale x1.10`.
-  A won assault (the fallen Hornburg and its permanent penalty) has no run: the bot has not won it.
+  The bot has not won the assault against the shipped garrison, so the won side was proven with a garrison of 15 in the deployed copy
+  of `story_missions.json` only (restored after, hash checked), on build `f8bb1387e` (`20261122-032008`):
+  `ended ... verdict=Won side=Attacking reason=DefendersDead`, `'hornburg' Fell on day 8 (isengard took it)`,
+  `offer.result ... verdict=Won result=Fell taker=isengard`, and `taom.war_effects` lists
+  `chronicle:hornburg:Fell:2: vlandia VolunteerRate -0.100, permanent`. No alliance line was written in that run, as intended: the
+  alliance ends only on a lost assault.
 - 2026-11-21: Slice 3, the Breaking of the Fellowship end to end: a Narrative event's hero story, its window of 10 days, the
   state `Averted`, the kill by `ApplyByBattle`, and the offer's two new options. Proven by three unattended runs of the offer
   (defence lost, hunt lost, fate); no person has played it.
