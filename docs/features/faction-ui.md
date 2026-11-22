@@ -70,13 +70,13 @@ vanilla. A themed prefab missing from the install keeps the vanilla screen with 
 themed movie that throws while building falls back to vanilla's and is not tried again until restart.
 
 **The campaign map bar under co-op.** The themed `TAOMMapBar` and the themed Camp icon beside its clock
-(`TAOMFieldCampOverlay`) swap together, and since v2.0.40 they swap under co-op too.
+(`TAOMFieldCampOverlay`) swap together, and since v2.0.42 they swap under co-op too.
 `GauntletLayerLoadMoviePatch` keeps vanilla's bar for both only when `ThemedMapBarCoopPolicy.KeepsNativeMapBar`
 is true: `ICoopSessionProvider.ShouldDeferToHost` and no session TAOM can see (`!IsSessionActive`). That is the
 reading under a co-op mod whose roles TAOM cannot probe (BannerlordTogether), whose own extensions to vanilla's MapBar
 prefab would not reach the themed one, and after a failed Coop role bind (as for the camp button, [field-camp.md](field-camp.md)
 "Co-op"). A BannerlordCoop client, its server process and solo play with the Coop
-module enabled all get the themed bar. Until v2.0.40 the swap was skipped whenever a co-op module was merely
+module enabled all get the themed bar. Until v2.0.42 the swap was skipped whenever a co-op module was merely
 loaded (`CoopPresence.IsActive`), because the themed clock's fast-forward buttons bind `TimeAccelerationMixin`,
 which the co-op UI registration dropped. The mixin is now registered under co-op and only forwards vanilla's time
 change on a deferring peer, and the themed Extra Fast Forward hides there
@@ -505,7 +505,7 @@ career page and into the game. Owed:
   them, and the tab reads that list. `RenamedCultureWandererListTests` now checks every culture,
   the ones `taom_spcultures.xml` defines as well.
 
-- 2026-11-17 (v2.0.40): the themed map bar and Camp icon show under BannerlordCoop too; only a co-op mod TAOM
+- 2026-11-22 (v2.0.42): the themed map bar and Camp icon show under BannerlordCoop too; only a co-op mod TAOM
   cannot probe keeps the native bar (`ThemedMapBarCoopPolicy`).
 
 ## GitHub Issue

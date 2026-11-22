@@ -172,7 +172,7 @@ extra one; a player may set turbo below extra, and turbo still lights the extra 
 the extra multiplier at the fast-forward one (`ClampExtra`); without it "extra" could be slower than
 "fast" and the lit state unreachable.
 
-### Under co-op (v2.0.40)
+### Under co-op (v2.0.42)
 
 With a co-op module loaded, the five prefab extensions on the vanilla map bar carry `[CoopSuppressedUi]` and stay out
 of the UIExtenderEx registration (`ClientUiExtensions.Register`), so the vanilla bar keeps vanilla's buttons. The
@@ -336,7 +336,7 @@ take effect.
 
 ## Changelog
 
-- 2026-11-17 (v2.0.40): the mixin is registered under co-op too, so the themed map bar's fast-forward buttons
+- 2026-11-22 (v2.0.42): the mixin is registered under co-op too, so the themed map bar's fast-forward buttons
   work there and ask the co-op server; Extra Fast Forward is hidden on a deferring peer (`IsExtraFastForwardAvailable`).
 - 2026-10-27 (v2.0.36): a click while turbo is held is an ordinary click again (#1040, Patch124). v1.5.6 made
   Left Ctrl + click a parley, and turbo is Ctrl + Space. In-game check owed.

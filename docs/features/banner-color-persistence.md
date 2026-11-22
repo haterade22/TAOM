@@ -41,7 +41,7 @@ Patch15_BannerLayerLimit (Transpiler)
 
 Patch24_BannerDriftGuard
   └── Clan.UpdateBannerColorsAccordingToKingdom — Prefix, skip when enabled
-      (and on a co-op client inside Clan.PreAfterLoad, v2.0.40)
+      (and on a co-op client inside Clan.PreAfterLoad, v2.0.42)
   └── Clan.PreAfterLoad: Prefix and Finalizer, bracket for the load repaint
   └── Clan.UpdateBannerColor — Postfix, sync kingdom colors from ruling clan
 
@@ -76,7 +76,7 @@ SubModule.OnGameInitializationFinished()
 
 ### Key Design Decisions
 
-- **A co-op client skips the load repaint (v2.0.40)**: installed v1.5.7 `Clan.PreAfterLoad` ends with
+- **A co-op client skips the load repaint (v2.0.42)**: installed v1.5.7 `Clan.PreAfterLoad` ends with
   `UpdateBannerColorsAccordingToKingdom()`, which repaints the clan's banner in place (for a ruling clan, its kingdom's
   banner) from `Kingdom.PrimaryBannerColor` and `SecondaryBannerColor`. Where those differ from the banner's own
   colours the load recolours it: co-op testers saw Gondor's banner lose its black field after joining. On the authority
@@ -191,7 +191,7 @@ Open the Banner Editor in-game, copy another clan's banner code from the encyclo
 
 ## Changelog
 
-- 2026-11-17 (v2.0.40): a joining co-op client keeps the server's kingdom and clan banners; it skips the repaint
+- 2026-11-22 (v2.0.42): a joining co-op client keeps the server's kingdom and clan banners; it skips the repaint
   `Clan.PreAfterLoad` runs from the kingdom colours (`Clan_PreAfterLoad_Patch`, `ShouldSkipLoadRepaint`).
 - 2026-10-24: portrait colours now render on the five `GetCharacterCode` screens (party, clan parties, `CampaignUIHelper`, `SandBoxUIHelper`, order of battle) (#993). The patches used to assign `CharacterCode.Color1/Color2` after `CreateFrom` had built the `Code` string, which is the only field the portrait renderer reads, so the colours never showed. `ClanColoredCharacterCode.Recolor` rebuilds the code through the 8-argument `CreateFrom`; null, empty and already-coloured codes pass through unchanged. Every hero's portrait (AI lords too) now shows his clan colours, matching battlefield armour. The order-of-battle patch now also hooks the `OrderOfBattleHeroItemVM(Agent)` constructor, which `OrderOfBattleVM` uses for every hero and which never calls `RefreshInformation`. The party-screen patch reads the target's own `type` and `side` arguments: `PartyCharacterVM` sets `IsPrisoner` (:1103) only after the `Troop` assignment (:1099) has run `GetCharacterCode`, so the old prisoner check always read false. A gate test now fails when a hook assigns `Color1` or `Color2` on a built code.
 - 2026-10-23: the inventory doll keeps the clan colours on every refresh, not only a character switch, and keeps vanilla's stealth colour in stealth mode (#973). The postfix moved from `UpdateCurrentCharacterIfPossible` to `UpdateCharacterArmorColor`.

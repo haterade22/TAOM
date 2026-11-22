@@ -69,7 +69,7 @@ named `TAOM`, then calling `TAOM.IoC.Resolve<T>()` on the interface; the type an
 | `ModuleData/special_resources/special_resources_config.xml` | read as a file under the `TAOM` module path | `Map/MapBarSeal.cs`:59-60 | `Main/_Module/ModuleData/special_resources/special_resources_config.xml` |
 | `ExecuteFastForward`, `ExecuteExtraFastForward` on the time-speed view model | bound by `Command.Click` in RealmUI's prefab | `GUI/Prefabs/RealmMapBar.xml`:219, 229 | `Client/Features/TimeAcceleration/UI/TimeAccelerationMixin.cs`:109, 99 |
 
-Since v2.0.40 the mixin is registered under co-op too, so RealmUI's two buttons resolve there as well. On a peer that
+Since v2.0.42 the mixin is registered under co-op too, so RealmUI's two buttons resolve there as well. On a peer that
 defers to a co-op server they write no multiplier and send vanilla's time change to the server as a request. RealmUI's
 Extra Fast Forward button has no `IsVisible` binding, so it stays visible there and acts as plain fast forward.
 
