@@ -677,9 +677,7 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
             negativeText: string.Empty,
             affirmativeAction: null,
             negativeAction: null),
-            // A queued popup registers its pause on whatever state is active when it opens; behind the
-            // arrival popup that can be the mission its Speak button opened, whose load a pause stops.
-            pauseGameActiveState: !InformationManager.IsAnyInquiryActive(),
-            prioritize: false);
+            pauseGameActiveState: true,
+            prioritize: true);
     }
 }
