@@ -131,6 +131,11 @@ on earlier picks, a min-max build can still pour all 5 narrative stages into one
 or one attribute (`+5`). Vanilla spreads via gating; diversifying TAOM's themes to do the same
 is the documented next lever but was out of scope for the 2026-05-30 budget cut.
 
+No page offers two options of one culture with the same skills and attribute: such a pair is one
+choice shown twice (a tester found three in Lothlorien and one in each dwarf youth page, 2026-11-22).
+`NarrativeCultureCoverageTests.NoCultureOffersTwoOptionsWithTheSameSkillsAndAttribute` checks the
+four culture menus.
+
 **The Player Switcher can walk these five stages automatically.** When the player has picked an
 existing lord at the face generator, `Patch78_PlayerSwitcher_CareerFastPath` advances the narrative
 chain to the career menu on the player's behalf, taking the first suitable option at each hop. The
