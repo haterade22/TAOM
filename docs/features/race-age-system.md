@@ -198,6 +198,14 @@ The daily tick iterates all alive heroes to check age-based death. Several optim
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
+## Life and Death Cycle Option
+
+TAOM offers the engine's "life and death cycle" switch (option id `IsLifeDeathCycleEnabled`) on its own campaign options screen, so a player does not need the official optional module `BirthAndDeath`. `TaomLifeDeathOptionProvider` (`Client/Features/LifeDeathOption/`) is an `ICampaignOptionProvider` that `CampaignOptionsManager.Initialize` instantiates by reflection. It yields the box on the new-campaign screen (editable, `DisabledLater`) and on the in-game screen (read-only, `Disabled`). `LifeDeathOptionService.ShouldOffer()` returns false when `BirthAndDeath` is among the loaded modules, because the manager does not dedupe and the box would show twice. The option text comes from SandBox's `str_campaign_options_type.IsLifeDeathCycleEnabled` rows, so TAOM adds no string.
+
+With the switch off the engine freezes `Hero.Age` at `Hero._defaultAge` (`Hero.Age`, `BirthDay`, `DeathDay`) and `Hero.CanDie` refuses `DiedOfOldAge`. `_defaultAge` is the template's age, not the age a creator asks for (`Hero.SetInitialValuesFromCharacter`, Hero.cs:2313); only `SetBirthDay` recomputes it. So `ChildCreatorAdapter` calls `SetBirthDay` with the requested age, or every start-of-campaign child would freeze at its adult template's age. Other created heroes (Refuge wardens, field commissions) keep the template's age while the switch is off, which is cosmetic.
+
+Takeover and adoption starts skip the character-creation Options stage (`FactionPickService`), and the in-game copy of the box is read-only, so those starts always keep the cycle on. The engine also stops showing the battle-death hint that asks for the `BirthAndDeath` module, because the option id now exists (`DefaultCampaignOptionsProvider.GetBattleDeathDisabledStatusWithReason`). `RaceAgeBehavior` needs no change: `KillCharacterAction.ApplyByOldAge` goes through `CanDie`, and `PregnancyCampaignBehavior.DailyTickHero` already skips every hero while the switch is off, so `TaomPregnancyModel` is never asked.
+
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
@@ -208,6 +216,7 @@ The daily tick iterates all alive heroes to check age-based death. Several optim
 <!-- backlinks-end -->
 ## Changelog
 
+- 2026-11-22: TAOM offers the life and death cycle switch on its own options screen (see Life and Death Cycle Option); no change to the race-age rules.
 - 2026-09-19: Orcs and goblins overbred (#628). The race bonus now applies only while a clan is at or under its population cap and never to a player marriage; orc-kin modifiers cut from 2.0 to 3.0 down to 1.3 to 1.5; orc and berserker fertile to 45 (was 50); humans fertile to 60 (was 195); `goblin`, `mistymountainorcs` and `bluecraig` excluded from start-of-campaign children like the other orc cultures. The values table above was also stale against the file and is refreshed.
 - 2026-07-27 — Two fixes found while cutting debug-log volume. **Deaths are announced only once they happen:** `IHeroAgeAdapter.KillByOldAge` now returns `bool` (re-reading `IsAlive` after the action) and `RaceAgeBehavior` kills before it logs. `KillCharacterAction.ApplyInternal` marks-and-defers when the victim is in a `MapEvent`/`SiegeEvent`, refuses the player character, and no-ops when the life/death cycle is disabled — all without changing `HeroState` — so the previous log-then-kill order announced deaths that had not occurred, and re-announced them on the next daily tick (16 duplicates in one session). **Immortals keep their authored fertility window:** `RaceAgeConfigProvider` no longer reads `"fertilityEnd": 0` on an immortal race as an inverted range and overwrites it with 18/45. That value is the deliberate "cannot reproduce" sentinel for `nazghul` / `saruman` / `sauron`; the overwrite was masked by `TaomPregnancyModel`'s `IsImmortal` short-circuit but visible through the public `IRaceAgeService.GetFertilityEndAge`, and it warned three times on every session start.
 - 2026-06-23 — Restored the `DeliverOffSpring_RaceAssert_Patch` transpiler (`Patch13_RaceAge`) to suppress the harmless `mother.Race == father.Race` SilentAssert on cross-race births (#283).

@@ -124,7 +124,7 @@ internal sealed partial class LongDefeatDirector
             heights.Add(null);
         }
 
-        var riseAt = !_playerAttacks && _plan.Keep is { } recorded ? LdPlace.At(new LdPoint(recorded.X, recorded.Y, recorded.Z)) : null;
+        var riseAt = !_playerAttacks && _plan.Field == null && _plan.Keep is { } recorded ? LdPlace.At(new LdPoint(recorded.X, recorded.Y, recorded.Z)) : null;
         if (riseAt != null)
         {
             places.Add(riseAt);

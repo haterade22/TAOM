@@ -5,6 +5,7 @@ using TAOM.Adapters;
 using TAOM.Features.ArmyTargeting;
 using TAOM.Core.Logging;
 using TAOM.Core.Validation;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.Diplomacy;
 using TAOM.Features.Diplomacy.Models;
 
@@ -46,6 +47,8 @@ public sealed class ChronicleService : IChronicleStoryPort
     /// </summary>
     public const string LostText = "{=taom_wc_siege_lost}{TARGET} changes hands before the battle can be decided.";
 
+    private const string AllianceEndedCheck = "taom.war-chronicle.alliance-ended";
+
     private readonly IChronicleConfigProvider _config;
     private readonly ChronicleStateStore _store;
     private readonly IChronicleWorldAdapter _world;
@@ -57,13 +60,22 @@ public sealed class ChronicleService : IChronicleStoryPort
     private readonly IWarChronicleSettingsProvider _settings;
     private readonly IModLogger _logger;
     private readonly WarChronicleDailyGate _daily;
+    private readonly ICoopSessionProvider _coop;
+    private readonly IDedicatedServerProvider _dedicated;
+    private readonly IDiplomacyService _diplomacy;
+    private readonly IOutcomeLog _outcomeLog;
 
     public ChronicleService(
         IChronicleConfigProvider config, ChronicleStateStore store, IChronicleWorldAdapter world,
         IAllianceAdapter alliance, IWarOfTheRingService wotr, ChronicleOutcomeService outcomes,
         ChronicleAnnouncementQueue announcements, ArmyTargetFocusRegistry focus, IWarChronicleSettingsProvider settings,
-        IModLogger logger, WarChronicleDailyGate daily)
+        IModLogger logger, WarChronicleDailyGate daily, ICoopSessionProvider coop, IDedicatedServerProvider dedicated,
+        IDiplomacyService diplomacy, IOutcomeLog outcomeLog)
     {
+        _coop = coop;
+        _dedicated = dedicated;
+        _diplomacy = diplomacy;
+        _outcomeLog = outcomeLog;
         _config = config;
         _store = store;
         _world = world;
@@ -234,7 +246,9 @@ public sealed class ChronicleService : IChronicleStoryPort
             return false;
         }
 
-        if (!definition.IsSiege)
+        if (HeroStoryCanOpen(definition))
+            reason = $"'{definition.Id}' would open its window until day {Day(now + definition.WindowDays)}: the story of {definition.Story!.HeroId}.";
+        else if (!definition.IsSiege)
             reason = $"'{definition.Id}' would occur now and apply its effects.";
         else if (takenBy != null)
             reason = $"'{definition.Id}' would resolve Fell at once ({takenBy} already holds "
@@ -371,6 +385,12 @@ public sealed class ChronicleService : IChronicleStoryPort
         if (record.State != ChronicleEventState.Active)
             return;
 
+        if (!definition.IsSiege)
+        {
+            StepHeroStory(definition, record, now);
+            return;
+        }
+
         // An owner change can raise no event (a clan that defects or leaves with rebellion keeps its fiefs,
         // and a change while the chronicle is off is unseen): the daily step catches it.
         if (CheckOwner(definition, record, now))
@@ -462,6 +482,15 @@ public sealed class ChronicleService : IChronicleStoryPort
         record.OpenDay = now;
         if (!definition.IsSiege)
         {
+            if (HeroStoryCanOpen(definition))
+            {
+                record.State = ChronicleEventState.Active;
+                record.CloseDay = now + definition.WindowDays;
+                record.Assaulted = false;
+                _logger.LogInfo($"[WarChronicle] '{definition.Id}' opened on day {Day(now)}: the story of {definition.Story!.HeroId}, closes day {Day(record.CloseDay)}.");
+                return true;
+            }
+
             Resolve(definition, record, ChronicleEventState.Occurred, now, true, "its day came");
             return true;
         }
@@ -593,6 +622,86 @@ public sealed class ChronicleService : IChronicleStoryPort
         Resolve(definition, record, ChronicleEventState.Lapsed, now, true, "never assaulted");
     }
 
+    /// <summary>
+    /// A Narrative event's hero story (#1105 slice 3) opens a window only where a story mission can run and can matter: a single-player
+    /// campaign with the offers on, a hero who lives and is not the player, and kingdoms this campaign has. Anywhere else the event occurs
+    /// as text, as a Narrative event with no story does.
+    /// </summary>
+    private bool HeroStoryCanOpen(ChronicleEventDefinition definition) =>
+        !definition.IsSiege && definition.Story?.HeroId is { } hero && definition.WindowDays > 0 && HeroStoryMatters(hero) && _world.IsHeroAlive(hero)
+        && definition.Defender != null && _world.KingdomExists(definition.Defender) && definition.Attackers.All(_world.KingdomExists);
+
+    /// <summary>
+    /// The three things a player can change while a hero window is open: the offers, the session and who he plays. Read at the open, at
+    /// every offer and at the kill, so a campaign that leaves them keeps the event as text and kills nobody.
+    /// </summary>
+    private bool HeroStoryMatters(string hero) =>
+        _settings.StoryOffersEnabled && CoopSessionPolicy.IsSinglePlayerAuthority(_coop, _dedicated) && !_world.IsPlayerHero(hero);
+
+    /// <summary>
+    /// The daily step of an open hero window: a hero who died meanwhile closes it as Occurred; from the close day on fate decides, and
+    /// each day asks for his death again until the engine grants it.
+    /// </summary>
+    private void StepHeroStory(ChronicleEventDefinition definition, ChronicleEventRecord record, double now)
+    {
+        if (definition.Story?.HeroId is not { } hero || !_world.IsHeroAlive(hero))
+        {
+            Resolve(definition, record, ChronicleEventState.Occurred, now, true, "the hero of its story is no longer alive");
+            return;
+        }
+
+        if (record.CloseDay.HasValue && now >= record.CloseDay.Value)
+            ResolveHero(definition, record, now, false, "nobody answered the call");
+    }
+
+    /// <summary>
+    /// Ends a hero window. The hero lives: Averted. He dies: the kill first, and Occurred only when he is dead. A death the engine deferred
+    /// or refused is owed: the window stays Active with its close day reached, so <see cref="GetStoryOffers"/> offers nothing and
+    /// <see cref="StepHeroStory"/> asks again each day. A campaign where the story no longer matters (<see cref="HeroStoryMatters"/>: it
+    /// became a co-op session, the offers were turned off, or the player now plays the hero) kills nobody, so the event then occurs as text.
+    /// </summary>
+    private ChronicleHeroStoryResult ResolveHero(ChronicleEventDefinition definition, ChronicleEventRecord record, double now, bool heroLives, string why)
+    {
+        if (heroLives)
+        {
+            Resolve(definition, record, ChronicleEventState.Averted, now, true, why);
+            return ChronicleHeroStoryResult.Averted;
+        }
+
+        var hero = definition.Story!.HeroId!;
+        if (!HeroStoryMatters(hero))
+        {
+            Resolve(definition, record, ChronicleEventState.Occurred, now, true, $"{why}; {hero}: not killed (a co-op session, the offers off, or the player's own hero)");
+            return ChronicleHeroStoryResult.Occurred;
+        }
+
+        var death = _world.KillHeroInBattle(hero);
+        if (death == ChronicleHeroDeath.Killed)
+        {
+            Resolve(definition, record, ChronicleEventState.Occurred, now, true, $"{why}; {hero}: {death}");
+            return ChronicleHeroStoryResult.Occurred;
+        }
+
+        if (!(record.CloseDay <= now))
+            record.CloseDay = now;
+        _logger.LogInfo($"[WarChronicle] '{definition.Id}': {hero} must die ({why}), but the engine answered {death}. The event waits for his death.");
+        return ChronicleHeroStoryResult.DeathOwed;
+    }
+
+    public ChronicleHeroStoryResult ResolveHeroStory(string? eventId, bool heroLives, string why)
+    {
+        var result = ChronicleHeroStoryResult.NoWindow;
+        Guarded("story result", now =>
+        {
+            var record = ActiveStoryWindow(eventId, out var definition);
+            if (record == null || definition!.IsSiege || definition.Story?.HeroId == null)
+                return;
+
+            result = ResolveHero(definition, record, now, heroLives, why);
+        });
+        return result;
+    }
+
     /// <summary>Every Active story window the player has not declined, in configuration order (#1105 slice 4).</summary>
     public IReadOnlyList<ChronicleStoryOffer> GetStoryOffers()
     {
@@ -605,6 +714,15 @@ public sealed class ChronicleService : IChronicleStoryPort
         foreach (var definition in _config.GetEvents())
         {
             var record = _store.Get(definition.Id);
+            if (definition.Story != null && !definition.IsSiege)
+            {
+                if (definition.Story.HeroId is { } hero && record is { State: ChronicleEventState.Active } && record.CloseDay > Today()
+                    && _world.IsHeroAlive(hero) && HeroStoryMatters(hero))
+                    offers.Add(new ChronicleStoryOffer(definition.Id, definition.Story.MissionId, definition.Title, null, definition.Attackers,
+                        definition.Defender ?? string.Empty, definition.Story.AttackMissionId, hero));
+                continue;
+            }
+
             // The map decides first: no offer once an attacker has besieged the target or the defender no longer holds it (an owner
             // change can raise no event, so the owner is read live, as the daily step's CheckOwner reads it).
             if (definition.Story != null && record is { State: ChronicleEventState.Active, StoryDeclined: false, Assaulted: false }
@@ -617,12 +735,18 @@ public sealed class ChronicleService : IChronicleStoryPort
         return offers;
     }
 
-    /// <summary>"Let fate decide": the window stays open and the map or its fate decides it. False when no Active story window has this id.</summary>
+    /// <summary>
+    /// "Let fate decide". A fortress window stays open and the map or its fate decides it. A hero story resolves at once, and the hero
+    /// dies. False when no Active story window has this id.
+    /// </summary>
     public bool DeclineStory(string? eventId)
     {
-        var record = ActiveStoryWindow(eventId, out _);
+        var record = ActiveStoryWindow(eventId, out var definition);
         if (record == null)
             return false;
+
+        if (!definition!.IsSiege)
+            return ResolveHeroStory(eventId, false, "the player let fate decide") != ChronicleHeroStoryResult.NoWindow;
 
         record.StoryDeclined = true;
         _logger.LogInfo($"[WarChronicle] '{eventId}': the player let fate decide the story offer.");
@@ -635,19 +759,41 @@ public sealed class ChronicleService : IChronicleStoryPort
     /// (switched off, War Ended, a bad clock). A fallen fortress needs no call: the transfer to the attacker resolves the window Fell
     /// through <see cref="OnTargetOwnerChanged"/>.
     /// </summary>
-    public bool ResolveStoryHeld(string? eventId, string why)
+    public bool ResolveStoryHeld(string? eventId, string why) => ResolveStoryWindowHeld(eventId, why, repulsed: false);
+
+    /// <summary>
+    /// A player-led assault thrown back (#1105 slice 5): the same Held resolution, announced with the story's repulsed text, and the
+    /// permanent alliance its <c>repulsed</c> block names ends, in a single-player campaign only (the offers exist only there).
+    /// </summary>
+    public bool ResolveStoryRepulsed(string? eventId, string why) => ResolveStoryWindowHeld(eventId, why, repulsed: true);
+
+    private bool ResolveStoryWindowHeld(string? eventId, string why, bool repulsed)
     {
         var resolved = false;
         Guarded("story result", now =>
         {
             var record = ActiveStoryWindow(eventId, out var definition);
-            if (record == null || CheckOwner(definition!, record, now))
+            if (record == null || !definition!.IsSiege || CheckOwner(definition, record, now))
                 return;
 
-            Resolve(definition!, record, ChronicleEventState.Held, now, true, why);
+            var block = repulsed ? definition.Story?.Repulsed : null;
+            Resolve(definition, record, ChronicleEventState.Held, now, true, why, block?.Text);
             resolved = true;
+            if (block != null && CoopSessionPolicy.IsSinglePlayerAuthority(_coop, _dedicated))
+                EndRepulsedAlliance(definition.Id, block);
         });
         return resolved;
+    }
+
+    private void EndRepulsedAlliance(string eventId, ChronicleRepulsedDefinition block)
+    {
+        var result = _diplomacy.EndPermanentAlliance(block.KingdomA, block.KingdomB, "chronicle:" + eventId);
+        var allied = _alliance.AreAllied(block.KingdomA, block.KingdomB);
+        var detail = $"event={eventId} pair={block.KingdomA}+{block.KingdomB} result={result} allied={allied}";
+        if (result is PermanentAllianceEnd.Ended or PermanentAllianceEnd.AlreadyEnded)
+            _outcomeLog.Pass(AllianceEndedCheck, eventId, detail);
+        else
+            _outcomeLog.Fail(AllianceEndedCheck, eventId, detail);
     }
 
     public bool ConfirmStoryWindow(string? eventId)
@@ -656,7 +802,7 @@ public sealed class ChronicleService : IChronicleStoryPort
         Guarded("story transfer", now =>
         {
             var record = ActiveStoryWindow(eventId, out var definition);
-            open = record != null && !CheckOwner(definition!, record, now);
+            open = record != null && definition!.IsSiege && !CheckOwner(definition, record, now);
         });
         return open;
     }
@@ -758,7 +904,7 @@ public sealed class ChronicleService : IChronicleStoryPort
             }
         }
 
-        foreach (var outcome in new[] { definition.Occurred, definition.Held, definition.Fell })
+        foreach (var outcome in new[] { definition.Occurred, definition.Averted, definition.Held, definition.Fell })
         {
             if (outcome == null)
                 continue;

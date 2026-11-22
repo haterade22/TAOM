@@ -122,9 +122,13 @@ class ModuleDataQuery:
     def validate(self, codes=None) -> dict:
         """Every pass the CLI runs (validate_moduledata.run_all_passes, #623). The run's notices (no
         install, a missing live module, a suspect registry) come back as PARTIAL_RUN warnings whatever
-        `codes` says, because an MCP client reads no stderr. A pass's own stderr skip line (no Armory
-        for the armour class table, a module with no .tpac) is not among them."""
-        run = vm.run_all_passes(self.moduledata, self.game_modules, self.schemas, self.reg, codes=codes)
+        `codes` says, because an MCP client reads no stderr. So do a pass's own skips: no Armory for
+        the armour class table, a module with no .tpac. The read cache the run filled is cleared at the
+        end: this object lives as long as the MCP server."""
+        try:
+            run = vm.run_all_passes(self.moduledata, self.game_modules, self.schemas, self.reg, codes=codes)
+        finally:
+            ts._read_stripped.cache_clear()
         issues = run.issues + run.notices
         return {
             "error_count": sum(1 for i in issues if i.severity is ts.Severity.ERROR),

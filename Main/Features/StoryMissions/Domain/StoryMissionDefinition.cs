@@ -31,6 +31,12 @@ internal sealed record StoryMissionDefinition(
     MusterPoints? Muster,
     string? Music = null)
 {
-    /// <summary>The heroes who stand free with the garrison from the first tick (#1366), at most three; none when the file lists none.</summary>
+    /// <summary>The heroes who stand free with the garrison from the first tick (#1366), at most four; none when the file lists none.</summary>
     public IReadOnlyList<HeroSpawn> Heroes { get; init; } = Array.Empty<HeroSpawn>();
+
+    /// <summary>The start places of a mission on a field scene (#1105 slice 2), or null for a siege scene.</summary>
+    public FieldPlaces? Field { get; init; }
+
+    /// <summary>The id of the hero of <see cref="Heroes"/> who must live (<see cref="RunPlan.MustLive"/>), or null.</summary>
+    public string? MustLive { get; init; }
 }

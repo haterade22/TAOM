@@ -53,6 +53,7 @@ internal sealed partial class SurvivalRun
     private StalemateState _stale;
     private float _keep;
     private bool _lossThisTick;
+    private int _fieldGroupLeft;
 
     public SurvivalRun(RunPlan plan)
     {
@@ -350,6 +351,7 @@ internal sealed partial class SurvivalRun
         _stage = _firstBatch > 0 ? WaveStage.Spawning : WaveStage.Fighting;
         _waveSeconds = 0f;
         _waveFelled = 0;
+        _fieldGroupLeft = 0;
         _stale = default;
         InitCommander(_plan.Waves.Commanders.ForWave(_wave));
         if (_stage == WaveStage.Fighting)
@@ -368,11 +370,14 @@ internal sealed partial class SurvivalRun
     }
 
     /// <summary>The attackers the field may hold. The floor keeps siege engines in use: at 100 or fewer the breach tactic stops every machine.</summary>
-    private int LiveCap(RunSnapshot s) => LiveRoom(_r, s.SiegeBattleSize, s.DefendersStanding);
+    private int LiveCap(RunSnapshot s) => LiveRoom(_r, s.SiegeBattleSize, s.DefendersStanding, _plan.Field != null);
 
-    /// <summary>The attackers the field may hold at once for a battle size and a defender count; the director's scale check reads the same rule.</summary>
-    internal static int LiveRoom(RunRules rules, int siegeBattleSize, int defendersStanding) =>
-        Math.Max(LiveFloor, Math.Min(rules.LiveCap, siegeBattleSize - defendersStanding));
+    /// <summary>
+    /// The attackers the field may hold at once for a battle size and a defender count; the director's scale check reads the same rule. A run on a
+    /// <paramref name="field"/> scene has no siege engine to keep in use, so its floor is one attacker and the rules' cap can make a wave a stream of small groups (#1105).
+    /// </summary>
+    internal static int LiveRoom(RunRules rules, int siegeBattleSize, int defendersStanding, bool field = false) =>
+        Math.Max(field ? 1 : LiveFloor, Math.Min(rules.LiveCap, siegeBattleSize - defendersStanding));
 
     private int SpawnAttackers(RunSnapshot s, RunEffects fx)
     {
@@ -380,6 +385,8 @@ internal sealed partial class SurvivalRun
         var opening = _stage == WaveStage.Spawning;
         if (opening)
             n = Math.Min(n, _firstBatch - _firstSpawned);
+        else if (_plan.Field != null)
+            n = FieldGroupPart(s, n);
         if (n <= 0)
             return 0;
 
@@ -401,6 +408,27 @@ internal sealed partial class SurvivalRun
             QueueCommander();
         }
 
+        return n;
+    }
+
+    /// <summary>
+    /// On a field run (#1105) the attackers after the opening join in groups of half the live room, never one at a time: a group starts only when the field has
+    /// room for all of it, and then comes in over as many ticks as it needs. The size and the gate read the same room, so a battle size below the rules' cap cannot stall a wave. Returns how many of <paramref name="n"/> may spawn on this tick.
+    /// </summary>
+    private int FieldGroupPart(RunSnapshot s, int n)
+    {
+        if (_fieldGroupLeft == 0)
+        {
+            var room = LiveCap(s);
+            var group = Math.Min(QueueLeft, Math.Max(1, room / 2));
+            if (room - s.AttackersStanding < group)
+                return 0;
+
+            _fieldGroupLeft = group;
+        }
+
+        n = Math.Max(0, Math.Min(n, _fieldGroupLeft));
+        _fieldGroupLeft -= n;
         return n;
     }
 

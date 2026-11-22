@@ -366,5 +366,70 @@ public class SurvivalRunHeroTests
         Assert.AreEqual(HeroResult.UnknownHero, run.TryBuyHero("aragorn"), "the shop lists no hero, so nothing brings him back");
         Assert.AreEqual(0, run.Tick(Snap()).SpawnHeroes.Count);
         Assert.AreEqual(0, run.GetView().Heroes.Count);
+        Assert.IsNull(run.Result, "with no hero who must live, a hero's fall ends nothing");
+    }
+
+    // #1105 slice 2: a story mission can name one hero who must live (Boromir at Parth Galen).
+    private static SurvivalRun BothStanding(string? mustLive)
+    {
+        var run = Begun(FreePlan(FreeAragorn, FreeLegolas) with { MustLive = mustLive });
+        run.Tick(Snap());
+        run.HeroSpawned("aragorn", true);
+        run.HeroSpawned("legolas", true);
+        return run;
+    }
+
+    [TestMethod]
+    public void TheHeroWhoMustLive_Falls_TheRunEndsHeroFell()
+    {
+        var run = BothStanding("aragorn");
+
+        run.HeroDown("aragorn", loss: true);
+
+        Assert.AreEqual(RunEndReason.HeroFell, run.Result?.Reason);
+        Assert.AreEqual(RunPhase.Ended, run.Phase);
+    }
+
+    [TestMethod]
+    public void AnotherHeroFalls_TheRunGoesOn()
+    {
+        var run = BothStanding("aragorn");
+
+        run.HeroDown("legolas", loss: true);
+
+        Assert.IsNull(run.Result);
+    }
+
+    [TestMethod]
+    public void TheHeroWhoMustLive_Routs_TheRunGoesOn()
+    {
+        var run = BothStanding("aragorn");
+
+        run.HeroDown("aragorn", loss: false);
+
+        Assert.IsNull(run.Result, "a rout is no fall");
+    }
+
+    [TestMethod]
+    public void TheHeroWhoMustLive_TheFieldRefusesHim_TheRunEndsUndecided()
+    {
+        // Without him the mission cannot be judged: a defence would be won with nobody to save. A stalemate decides nothing (StoryVerdict), so the offer comes back.
+        var run = Begun(FreePlan(FreeAragorn, FreeLegolas) with { MustLive = "aragorn" });
+        run.Tick(Snap());
+
+        run.HeroSpawned("aragorn", false);
+
+        Assert.AreEqual(RunEndReason.Stalemate, run.Result?.Reason);
+    }
+
+    [TestMethod]
+    public void AHeroWhoNeedNotLive_TheFieldRefusesHim_TheRunGoesOn()
+    {
+        var run = Begun(FreePlan(FreeAragorn, FreeLegolas) with { MustLive = "aragorn" });
+        run.Tick(Snap());
+
+        run.HeroSpawned("legolas", false);
+
+        Assert.IsNull(run.Result);
     }
 }

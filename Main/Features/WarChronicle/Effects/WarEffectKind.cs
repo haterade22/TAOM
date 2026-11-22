@@ -12,4 +12,7 @@ public enum WarEffectKind
 
     /// <summary>The extra daily escape roll of the kingdom's captured lords.</summary>
     PrisonerEscape = 1,
+
+    /// <summary>The party morale of the kingdom's parties, read by <c>TaomPartyMoraleModel</c> through <see cref="WarMoraleService"/>.</summary>
+    PartyMorale = 2,
 }

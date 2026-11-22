@@ -27,4 +27,7 @@ public enum ChronicleEventState
 
     /// <summary>Never opened: a precondition failed, its anchor was skipped, its time passed before the save knew it, or the war ended.</summary>
     Skipped = 6,
+
+    /// <summary>A Narrative event with a hero story (#1105 slice 3) that the player turned: the hero lives. Its own outcome block pays.</summary>
+    Averted = 7,
 }

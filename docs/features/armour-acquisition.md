@@ -165,10 +165,13 @@ whether or not gating is enabled.
    character creation).
 8. **Co-op.** World changes (the sweep, visiting armourers) run on the campaign's authority. With
    `TAOM.CoopCompat`, a guest's armoury asks the host, which runs `ArmouryUpgradeService.Execute` for the
-   guest's hero and inventory (#1329, [coop-compat.md](coop-compat.md)); the guest sees no ladder rows.
-   Without it, the bench turns a co-op guest away before anything is charged (the EliteEmissary
+   guest's hero and inventory (#1329, [coop-compat.md](coop-compat.md)). The guest's ladder rows come from
+   the co-op server's view of its rung (`GuestLadderRows`, `GuestLadderPresenter`): a hand-in or a claim,
+   which the server runs for the guest's hero; no rung quest is offered to a guest
+   ([Lords' Ladder for co-op players](coop-interop.md#lords-ladder-for-co-op-players)). Without it,
+   the bench turns a co-op guest away before anything is charged (the EliteEmissary
    "pay-real-get-phantom" finding). The ladder's battle hand-off and the event skip a guest and a
-   dedicated server.
+   dedicated server; on the co-op server `GuestLadderFindBehavior` rolls a co-op player's finds instead.
 
 ### Engine facts the ladder rests on (v1.5.3, verified 2026-09-28)
 
@@ -527,7 +530,9 @@ Arthedain carry what their `<Stock>` rows name). An item
   running quest's progress. No kills count in an arena, a tournament, a plain town scene or a custom
   battle; a battle left early credits its kills within the hour and yields no find. A Player Switcher change
   mid-rung: the new hero can take up their own rung while the old hero's quest still runs. With the master switch
-  off, the town menu offers no armoury and battles count nothing. A co-op guest gets no finds, and is
+  off, the town menu offers no armoury and battles count nothing. A co-op player's finds are rolled by
+  the co-op server at the base chance and given once the party is free
+  ([Lords' Ladder for co-op players](coop-interop.md#lords-ladder-for-co-op-players)); a co-op player is
   turned away at the armoury unless `TAOM.CoopCompat` is loaded.
 
 ## GitHub Issue

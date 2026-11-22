@@ -98,6 +98,9 @@ public static class CoopSettingsRelevance
         "LogScreenOpenTimes",
         // The bug report offer after an unexpected end (docs/features/crash-report.md): a main-menu notice, never a computation.
         "OfferBugReportAfterUnexpectedEnd",
+        // The co-op load order warning (docs/features/coop-compat.md): it gates log lines and one notice to the joining
+        // player, never a computation, and only the co-op server's value is read, so a client holding another value changes nothing.
+        "CoopLoadOrderWarning",
     };
 
     /// <summary>
@@ -214,8 +217,8 @@ public static class CoopSettingsRelevance
         // text variables; it writes no campaign state and rolls on TAOM's own random source.
         "EnableEncounterLines",
         "EnableShaderPrecompileScenePasses", "EnableShaderPrecompilation",
-        // Already suppressed under co-op — TimeAcceleration's UI carries
-        // [CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")].
+        // Inert on a co-op peer: TimeAccelerationService writes no multiplier while it defers to the co-op server
+        // (ShouldDeferToHost), and the vanilla map bar's TimeAcceleration extensions carry [CoopSuppressedUi].
         "FastForwardMultiplier", "ExtraFastForwardMultiplier", "CtrlSpaceMultiplier",
         // Realm Borders (#698): meshes, labels and notices drawn on this client only. EnableRealmBorders also decides
         // whether Watchful Holds uses the province gate, which runs in singleplayer only, so it stays presentation here.

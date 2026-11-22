@@ -25,6 +25,14 @@ public sealed class WarEffect
     /// <summary>A fraction on top of 1: +0.15 raises the rate 15%, -0.05 lowers it 5%.</summary>
     public float Magnitude { get; }
 
+    /// <summary>
+    /// The end time of an effect that never ends (a chronicle row with <c>"permanent": true</c>). Finite on
+    /// purpose: it passes the registry's finite check and the save codec, and no campaign reaches it.
+    /// </summary>
+    public const double PermanentEndHours = 1e12;
+
     /// <summary>Campaign hours (<c>CampaignTime.ToHours</c>) at which the effect ends; ended once now reaches it.</summary>
     public double EndTimeHours { get; }
+
+    public bool IsPermanent => EndTimeHours >= PermanentEndHours;
 }

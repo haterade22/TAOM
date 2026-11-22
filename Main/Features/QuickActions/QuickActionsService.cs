@@ -75,7 +75,7 @@ public sealed class QuickActionsService : IQuickActionsService
                 },
                 negativeAction: _ => { });
 
-            MBInformationManager.ShowMultiSelectionInquiry(data);
+            MBInformationManager.ShowMultiSelectionInquiry(data, pauseGameActiveState: true);
         }
         catch (Exception ex)
         {
@@ -108,7 +108,7 @@ public sealed class QuickActionsService : IQuickActionsService
                     affirmativeText: new TextObject("{=taom_qa_yes}Yes").ToString(),
                     negativeText: new TextObject("{=taom_qa_no}No").ToString(),
                     affirmativeAction: () => runner(),
-                    negativeAction: () => { }));
+                    negativeAction: () => { }), pauseGameActiveState: true);
             }
             catch (Exception ex)
             {

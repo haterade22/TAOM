@@ -26,6 +26,12 @@ public interface ITimeAccelerationService
     bool IsExtraFastForwardActive { get; }
 
     /// <summary>
+    /// False while this peer defers campaign time to a co-op server: the extra multiplier is never written there, so
+    /// the themed map bar hides its Extra Fast Forward button. Read live, every frame, by the MapBar mixin.
+    /// </summary>
+    bool IsExtraFastForwardAvailable { get; }
+
+    /// <summary>
     /// True while the turbo latch is open (Ctrl held and the turbo key pressed, until either is released or a
     /// menu, the map or co-op closes it). Read by Patch124 on the frame a Ctrl click is released (#1040).
     /// </summary>

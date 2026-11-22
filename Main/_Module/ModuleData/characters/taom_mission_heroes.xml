@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- The mission heroes (#1335, Phase 2 of #1325): the Long Defeat's own Aragorn, Legolas and Gimli, and the free heroes of the Helm's Deep
-     story mission in a campaign (#1366). SubModule.xml loads this file for Campaign, CampaignStoryMode and CustomGame. They are copies of the
+     story mission in a campaign (#1366). Boromir, the last entry, is a copy of a lord and stands only in the Parth Galen missions (#1105). SubModule.xml loads this file for Campaign, CampaignStoryMode and CustomGame. The first three are copies of the
      named companions (named_companions/named_companions.xml: the same face, skills and name key, so the existing translations apply), kept
      apart so that no campaign Hero ever stands behind a mission agent and a balance edit here never reaches the named companions (the
      campaign Heroes). It does reach the second user of these characters, the Helm's Deep story mission of a campaign. There is no <Hero>
@@ -120,6 +120,45 @@
                 <equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b" />
                 <equipment slot="Gloves" id="Item.sk_dwarf_erebor_bracers_med_a" />
                 <equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_med_d" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- Boromir of the Parth Galen missions (#1105 slice 2): a copy of the lord lord_1_75 (lords.xslt: the same face, skills and name key), so the campaign
+         Hero never stands behind the mission agent and only the mission's result reaches him. The kit is his battle set (boromir_bat_equipment) without the
+         horse and without the helmet. The body names its age, because the spawn puts the body's own age on the build data. -->
+    <NPCCharacter id="taom_hero_boromir" name="{=aom_lord_1_75_name}Boromir" age="41" voice="earnest" culture="Culture.gondor" race="human" default_group="Infantry" level="36" is_hero="true" is_obsolete="true" occupation="Wanderer" face_mesh_cache="true">
+        <face>
+            <BodyProperties version="4" age="41" weight="0.4236" build="0.7407" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+        </face>
+        <skills>
+            <skill id="OneHanded" value="325" />
+            <skill id="TwoHanded" value="210" />
+            <skill id="Polearm" value="290" />
+            <skill id="Bow" value="210" />
+            <skill id="Crossbow" value="210" />
+            <skill id="Throwing" value="210" />
+            <skill id="Riding" value="210" />
+            <skill id="Athletics" value="315" />
+            <skill id="Crafting" value="210" />
+            <skill id="Scouting" value="210" />
+            <skill id="Tactics" value="320" />
+            <skill id="Charm" value="210" />
+            <skill id="Roguery" value="210" />
+            <skill id="Leadership" value="336" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="218" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="210" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_gondor_boromir_sword" />
+                <equipment slot="Item1" id="Item.wm_boromir_shield" />
+                <equipment slot="Body" id="Item.sk_gd_osg_inf_chest_elite_a" />
+                <equipment slot="Cape" id="Item.sk_gd_osg_pauld_cape_inf_elite_a" />
+                <equipment slot="Gloves" id="Item.sk_gd_osg_bracer_noble_elite_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_heavy_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>

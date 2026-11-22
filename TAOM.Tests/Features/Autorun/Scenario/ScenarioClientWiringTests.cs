@@ -82,10 +82,40 @@ public class ScenarioClientWiringTests
         StringAssert.Contains(src, "MenuRepeatObjects.Count > 0");
         StringAssert.Contains(src, ".GetMenuOptionConditionsHold(");
         StringAssert.Contains(src, ".InvokeConsequence(index)");
-        StringAssert.Contains(src, "Choose(StoryDevMenuBehavior.OpenOptionId)");
-        StringAssert.Contains(src, "Choose(StoryDevMenuBehavior.BackOptionId)");
+        StringAssert.Contains(src, "Choose(StoryDevMenuBehavior.MenuId, StoryDevMenuBehavior.OpenOptionId)");
+        StringAssert.Contains(src, "Choose(StoryDevMenuBehavior.MenuId, StoryDevMenuBehavior.BackOptionId)");
         Assert.IsFalse(src.Contains("StoryMissionLauncher"), "the mission opens from the menu option, never from the launcher directly");
         Assert.IsFalse(src.Contains("RunConsequence"), "the click's path, never the option's consequence run directly");
+    }
+
+    // #1105 slices 3 to 5: the offer popup's accept button is the two steps SingleQueryPopUpVM.ExecuteAffirmativeAction runs, in its order: the
+    // inquiry's affirmative action, then the close (InformationManager.HideInquiry runs the query manager's own CloseQuery).
+    [TestMethod]
+    public void HostSource_AcceptsTheOfferPopupAsItsAffirmativeButtonDoes()
+    {
+        var src = RepoPaths.ReadSource("Client/Features/Autorun/CampaignAutorunHost.cs", stripComments: true);
+
+        var action = src.IndexOf("data.AffirmativeAction?.Invoke();", System.StringComparison.Ordinal);
+        var close = src.IndexOf("InformationManager.HideInquiry();", action, System.StringComparison.Ordinal);
+        Assert.IsTrue(action > 0 && close > action, "the affirmative action runs first, then the close");
+        StringAssert.Contains(src, "GetCampaignBehavior<StoryOfferBehavior>()");
+        StringAssert.Contains(src, "BotPlaysNextMission = botPlays");
+        StringAssert.Contains(src, "InformationManager.OnShowInquiry += (data, _, _) =>");
+        StringAssert.Contains(src, "Choose(StoryOfferBehavior.MenuId, id)");
+    }
+
+    // A second ShowInquiry in the same campaign tick is queued by the engine but still fires OnShowInquiry, so the accept never reads the newest one.
+    [TestMethod]
+    public void HostSource_AcceptsOnlyTheInquiryTheOffersPendingOfferRaised()
+    {
+        var src = RepoPaths.ReadSource("Client/Features/Autorun/CampaignAutorunHost.cs", stripComments: true);
+
+        StringAssert.Contains(src, "StoryOfferPopup.Line(offer.Window.Title, offer.Window).ToString()");
+        StringAssert.Contains(src, "_offerInquiry = data;");
+        var from = src.IndexOf("public bool AcceptOfferPopup", System.StringComparison.Ordinal);
+        var accept = src.Substring(from, src.IndexOf("public bool OfferMenuShown", from, System.StringComparison.Ordinal) - from);
+        Assert.IsFalse(accept.Contains("_lastInquiry"), "the accept presses the offer's own inquiry, never the newest one shown");
+        StringAssert.Contains(accept, "_offerInquiry");
     }
 
     [TestMethod]

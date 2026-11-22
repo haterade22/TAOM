@@ -147,10 +147,11 @@ public class LordInlineSkillParityTests
     /// <c>infantry_heavyinfantry_level1_template_skills</c> in both SandBoxCore and SandBox with different
     /// values, so the merge path is live even before any TAOM id collides.
     /// </summary>
-    private static Dictionary<string, Dictionary<string, int>> LoadSkillSets()
+    internal static Dictionary<string, Dictionary<string, int>> LoadSkillSets()
     {
         var files = new List<string>();
-        foreach (var module in VanillaModules)
+        GameAssemblies.EnsureLoaded();
+        foreach (var module in GameAssemblies.GameDir == null ? new string[0] : VanillaModules)
         {
             var data = Path.Combine(GameAssemblies.GameDir, "Modules", module, "ModuleData");
             if (Directory.Exists(data)) files.AddRange(Directory.GetFiles(data, "*skill_sets*.xml", SearchOption.AllDirectories).OrderBy(f => f, StringComparer.Ordinal));

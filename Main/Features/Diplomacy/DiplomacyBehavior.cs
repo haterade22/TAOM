@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TaleWorlds.CampaignSystem;
@@ -15,6 +16,7 @@ public class DiplomacyBehavior : CampaignBehaviorBase
         _service = service;
         _logger = logger;
         _coop = coop;
+        _service.ResetBrokenAlliances();
     }
 
     public override void RegisterEvents()
@@ -61,8 +63,13 @@ public class DiplomacyBehavior : CampaignBehaviorBase
         _service.EnforcePermanentAlliances();
     }
 
+    // Campaign.cs:1448 LoadBehaviorData runs before Campaign.cs:1686 OnSessionStart, which raises OnSessionLaunchedEvent (CampaignEvents.cs:2090).
     public override void SyncData(IDataStore dataStore)
     {
+        List<string>? pairs = dataStore.IsSaving ? new List<string>(_service.BrokenAlliancesForSave()) : null;
+        dataStore.SyncData("_taom_brokenAlliances", ref pairs);
+        if (dataStore.IsLoading)
+            _service.RestoreBrokenAlliances(pairs);
     }
 
     // CO-OP: a first-time joiner builds a local campaign for character creation, and Coop's

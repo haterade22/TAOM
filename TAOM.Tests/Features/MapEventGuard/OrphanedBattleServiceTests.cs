@@ -274,4 +274,110 @@ public class OrphanedBattleServiceTests
 
         _adapter.DidNotReceive().StrandedParties();
     }
+
+    [TestMethod]
+    public void IsOrphanedEncounter_OnlyThePlayersSideMeetingAFinalizedBattleNotHisOwn()
+    {
+        var bools = new[] { false, true };
+        foreach (var attackerIsMain in bools)
+        foreach (var attackerIsArmyLeader in bools)
+        foreach (var finalized in bools)
+        foreach (var playersBattle in bools)
+        {
+            bool expected = (attackerIsMain || attackerIsArmyLeader) && finalized && !playersBattle;
+            Assert.AreEqual(expected,
+                OrphanedBattleService.IsOrphanedEncounter(attackerIsMain, attackerIsArmyLeader, finalized, playersBattle),
+                $"main={attackerIsMain} armyLeader={attackerIsArmyLeader} finalized={finalized} playersBattle={playersBattle}");
+        }
+    }
+
+    [TestMethod]
+    public void FinishBeforeEncounter_RepairFreesTheBattle_SkipsTheEncounter()
+    {
+        var battle = Battle("Eorl's Party vs nobody", attackers: 3);
+        Have(battle);
+        HaveStranded();
+        bool attached = true;
+        battle.When(b => b.FinishEvent()).Do(_ => attached = false);
+
+        Assert.IsTrue(_service.FinishBeforeEncounter(new object(), () => attached));
+
+        battle.Received(1).EndSide(0);
+        battle.Received(1).EndSide(1);
+        battle.Received(1).FinishEvent();
+        _logger.Received(1).LogWarning(Arg.Is<string>(s =>
+            s.StartsWith("[MapEventGuard] finished an orphaned battle: Eorl's Party vs nobody")));
+    }
+
+    [TestMethod]
+    public void FinishBeforeEncounter_RepairThrows_LetsVanillaRunAndWarnsOnce()
+    {
+        var bad = Battle("bad", attackers: 3);
+        bad.EndSide(1).Throws(new InvalidOperationException("x"));
+        Have(bad);
+        HaveStranded();
+
+        Assert.IsFalse(_service.FinishBeforeEncounter(new object(), () => true));
+        _logger.Received(1).LogWarning(Arg.Is<string>(s =>
+            s.StartsWith("[MapEventGuard] could not free an orphaned battle before the player's encounter")));
+    }
+
+    [TestMethod]
+    public void FinishBeforeEncounter_DecideLeavesItAlone_LetsVanillaRun()
+    {
+        var live = Battle("not finalized", finalized: false, attackers: 3);
+        Have(live);
+        HaveStranded();
+
+        Assert.IsFalse(_service.FinishBeforeEncounter(new object(), () => true));
+        live.DidNotReceive().FinishEvent();
+    }
+
+    [TestMethod]
+    public void FinishBeforeEncounter_BattleStillAttached_IsNotRepairedAgain()
+    {
+        var bad = Battle("bad", attackers: 3);
+        bad.EndSide(1).Throws(new InvalidOperationException("x"));
+        Have(bad);
+        HaveStranded();
+        var key = new object();
+
+        Assert.IsFalse(_service.FinishBeforeEncounter(key, () => true));
+        Assert.IsFalse(_service.FinishBeforeEncounter(key, () => true));
+        Assert.IsFalse(_service.FinishBeforeEncounter(key, () => true));
+
+        _adapter.Received(1).AttachedFinalizedBattles();
+        _logger.Received(1).LogWarning(Arg.Is<string>(s =>
+            s.StartsWith("[MapEventGuard] could not free an orphaned battle before the player's encounter")));
+    }
+
+    [TestMethod]
+    public void FinishBeforeEncounter_AnotherBattle_IsStillRepaired()
+    {
+        Have(Battle("bad", attackers: 3));
+        HaveStranded();
+        _service.FinishBeforeEncounter(new object(), () => true);
+
+        Assert.IsTrue(_service.FinishBeforeEncounter(new object(), () => false));
+        _adapter.Received(2).AttachedFinalizedBattles();
+    }
+
+    [TestMethod]
+    public void FinishBeforeEncounter_CoopSession_LeavesTheEncounterToVanilla()
+    {
+        _coop.IsSessionActive.Returns(true);
+        Have(Battle("a", attackers: 3));
+
+        Assert.IsFalse(_service.FinishBeforeEncounter(new object(), () => false));
+        _adapter.DidNotReceive().AttachedFinalizedBattles();
+    }
+
+    [TestMethod]
+    public void FinishBeforeEncounter_DeferToHost_LeavesTheEncounterToVanilla()
+    {
+        _coop.ShouldDeferToHost.Returns(true);
+
+        Assert.IsFalse(_service.FinishBeforeEncounter(new object(), () => false));
+        _adapter.DidNotReceive().AttachedFinalizedBattles();
+    }
 }

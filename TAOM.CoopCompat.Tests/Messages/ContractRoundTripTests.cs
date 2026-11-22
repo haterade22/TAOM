@@ -31,6 +31,7 @@ public class ContractRoundTripTests
         CollectionAssert.AreEqual(new[] { "Battle Tactics", "Momentum" }, back.GroupNames);
         CollectionAssert.AreEqual(new[] { "h1", "h2" }, back.GroupHashes);
         Assert.IsTrue(back.Conclusive);
+        CollectionAssert.AreEqual(new[] { "TAOM_Map", "TAOM" }, back.ModuleOrder);
     }
 
     [TestMethod]
@@ -42,6 +43,9 @@ public class ContractRoundTripTests
         Assert.AreEqual(2, back.Verdict);
         CollectionAssert.AreEqual(new[] { "Battle Tactics" }, back.DivergentGroups);
         Assert.IsTrue(back.BuildMismatch);
+        Assert.IsTrue(back.LoadOrderDiffers);
+        Assert.AreEqual("TAOM Map (TAOM_Map)", back.LoadOrderHostFirst);
+        Assert.AreEqual("TAOM", back.LoadOrderHostSecond);
     }
 
     [TestMethod]
@@ -101,6 +105,77 @@ public class ContractRoundTripTests
         Assert.AreEqual(12.5f, back.Balance);
         Assert.IsTrue(back.HasArmouryLevel);
         Assert.AreEqual(2, back.ArmouryLevel);
+        Assert.IsTrue(back.HasLadder);
+        Assert.AreEqual(3, back.LadderSlot);
+        Assert.IsTrue(back.LadderReady);
+        Assert.IsTrue(back.LadderCanClaim);
+        Assert.AreEqual(3, back.LadderLordLevel);
+        Assert.AreEqual("m_gondor", back.LadderMaterialId);
+        Assert.AreEqual(30, back.LadderNeeded);
+        Assert.AreEqual(12, back.LadderCarried);
+        CollectionAssert.AreEqual(new[] { "gd_lord_helm", "gd_lord_helm_b" }, back.LadderChoices);
+    }
+
+    [TestMethod]
+    public void TradeReply_WithNoLadderChoices_RoundTripsAsAnEmptyList()
+    {
+        var sample = ContractSamples.TradeReply();
+        sample.LadderChoices = Array.Empty<string>();
+
+        var back = (CoopCompatTradeReply)RoundTrip(sample);
+
+        Assert.IsNotNull(back.LadderChoices);
+        Assert.AreEqual(0, back.LadderChoices.Length);
+        Assert.IsNotNull(new CoopCompatTradeReply().LadderChoices, "a fresh reply holds an empty list, never null");
+    }
+
+    [TestMethod]
+    public void CareerReport_RoundTrips()
+    {
+        var back = (CoopCompatCareerReport)RoundTrip(ContractSamples.CareerReport());
+
+        Assert.AreEqual(1, back.ProtocolVersion);
+        Assert.AreEqual(9_000_000_001L, back.Sequence);
+        Assert.IsTrue(back.JoinReport);
+        Assert.AreEqual("Player1", back.HeroId);
+        Assert.AreEqual("ranger_of_ithilien", back.CareerId);
+        CollectionAssert.AreEqual(new[] { "root", "fork_a" }, back.Choices, "the order is the order the choices were taken");
+        CollectionAssert.AreEqual(new[] { 2, 3 }, back.Tiers);
+        CollectionAssert.AreEqual(new[] { "career_tree_v2" }, back.Flags);
+    }
+
+    [TestMethod]
+    public void CareerUpdate_RoundTrips()
+    {
+        var back = (CoopCompatCareerUpdate)RoundTrip(ContractSamples.CareerUpdate());
+
+        Assert.AreEqual(1, back.ProtocolVersion);
+        Assert.AreEqual(42, back.Sequence);
+        Assert.AreEqual("Player2", back.HeroId);
+        Assert.AreEqual("warden_of_fornost", back.CareerId);
+        CollectionAssert.AreEqual(new[] { "root" }, back.Choices);
+        CollectionAssert.AreEqual(new[] { 2 }, back.Tiers);
+        CollectionAssert.AreEqual(new[] { "proven" }, back.Flags);
+        Assert.IsTrue(back.Refused);
+        Assert.IsTrue(back.Known);
+    }
+
+    [TestMethod]
+    public void CareerContracts_EmptyFields_RoundTripAsEmpty_NeverNull()
+    {
+        var report = (CoopCompatCareerReport)RoundTrip(new CoopCompatCareerReport { ProtocolVersion = 1 });
+        var update = (CoopCompatCareerUpdate)RoundTrip(new CoopCompatCareerUpdate { ProtocolVersion = 1 });
+
+        Assert.AreEqual("", report.HeroId);
+        Assert.AreEqual("", report.CareerId);
+        Assert.AreEqual(0, report.Choices.Length);
+        Assert.AreEqual(0, report.Tiers.Length);
+        Assert.AreEqual(0, report.Flags.Length);
+        Assert.AreEqual("", update.HeroId);
+        Assert.AreEqual("", update.CareerId);
+        Assert.AreEqual(0, update.Choices.Length);
+        Assert.AreEqual(0, update.Tiers.Length);
+        Assert.AreEqual(0, update.Flags.Length);
     }
 
     [TestMethod]
@@ -116,6 +191,10 @@ public class ContractRoundTripTests
         Assert.AreEqual(0, reply.DivergentGroups.Length);
         Assert.IsNotNull(hello.GroupNames);
         Assert.IsNotNull(hello.GroupHashes);
+        Assert.IsNotNull(hello.ModuleOrder);
+        Assert.AreEqual(0, hello.ModuleOrder.Length);
+        Assert.AreEqual("", reply.LoadOrderHostFirst);
+        Assert.AreEqual("", reply.LoadOrderHostSecond);
         Assert.IsNotNull(snapshot.Keys);
         Assert.IsNotNull(snapshot.Values);
     }
@@ -147,7 +226,7 @@ public class ContractRoundTripTests
             ids.Add(id, type);
         }
 
-        Assert.AreEqual(6, ids.Count);
+        Assert.AreEqual(8, ids.Count);
     }
 
     [TestMethod]

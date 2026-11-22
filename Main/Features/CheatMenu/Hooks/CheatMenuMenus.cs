@@ -193,6 +193,6 @@ internal static class CheatMenuMenus
                     onPicked(id);
             }),
             negativeAction: _ => { },
-            isSeachAvailable: true));
+            isSeachAvailable: true), pauseGameActiveState: true);
     }
 }

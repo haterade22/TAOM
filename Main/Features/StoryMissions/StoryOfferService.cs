@@ -29,6 +29,12 @@ internal enum StoryResult
 
     /// <summary>A fallen fortress no attacker could take: nothing changed, and the window is offered again on the next day.</summary>
     Failed,
+
+    /// <summary>A hero story (#1105 slice 3): the hero lives, and the event resolved Averted.</summary>
+    HeroLives,
+
+    /// <summary>A hero story: the hero's side lost. He is dead and the event resolved Occurred, or the engine still owes his death.</summary>
+    HeroDies,
 }
 
 /// <summary>
@@ -159,11 +165,16 @@ internal sealed class StoryOfferService
         var attacked = side == StorySide.Attacking;
         var key = Key(offer.EventId) + "/" + (attacked ? "Attack" : string.Empty) + verdict;
         var detail = (attacked ? "side=Attacking " : string.Empty) + $"verdict={verdict}";
+        if (offer.HeroId != null)
+            return ApplyHero(offer, (verdict == StoryOutcome.Won) != attacked, key, detail);
 
         // The walls held: the defender won, or the attacker lost.
         if ((verdict == StoryOutcome.Won) != attacked)
         {
-            if (!_chronicle.ResolveStoryHeld(offer.EventId, attacked ? "the player's assault was thrown back" : "the player won the story mission"))
+            var settled = attacked
+                ? _chronicle.ResolveStoryRepulsed(offer.EventId, "the player's assault was thrown back")
+                : _chronicle.ResolveStoryHeld(offer.EventId, "the player won the story mission");
+            if (!settled)
             {
                 _logger.LogInfo($"[StoryMissions] the walls of '{offer.EventId}' held, but its window is no longer open: nothing changed.");
                 return StoryResult.Unchanged;
@@ -192,5 +203,22 @@ internal sealed class StoryOfferService
         _outcomes.Fail(ResultId, key, detail + " result=Failed");
         Snooze(offer.EventId);
         return StoryResult.Failed;
+    }
+
+    /// <summary>
+    /// A hero story (#1105 slice 3). The hero lives when his side won, whichever side the player took; the chronicle resolves the event and
+    /// kills him itself. The line carries the chronicle's answer, so a death the engine still owes reads result=DeathOwed, not Occurred.
+    /// </summary>
+    private StoryResult ApplyHero(ChronicleStoryOffer offer, bool heroLives, string key, string detail)
+    {
+        var result = _chronicle.ResolveHeroStory(offer.EventId, heroLives, heroLives ? "the hero's side won the story mission" : "the hero's side lost the story mission");
+        if (result == ChronicleHeroStoryResult.NoWindow)
+        {
+            _logger.LogInfo($"[StoryMissions] the story of '{offer.EventId}' was fought, but its window is no longer open: nothing changed.");
+            return StoryResult.Unchanged;
+        }
+
+        _outcomes.Pass(ResultId, key, detail + " result=" + result + " hero=" + offer.HeroId);
+        return heroLives ? StoryResult.HeroLives : StoryResult.HeroDies;
     }
 }

@@ -729,6 +729,28 @@ class BuildRegistriesTests(unittest.TestCase):
         issues = vm.armour_acquisition_ref_issues(regs, self.md)
         self.assertEqual({"NamedWeapons", "LadderWeapons"}, {i.entry_id for i in issues}, [i.message for i in issues])
 
+    def test_item_registry_reads_only_files_a_campaign_row_names(self):
+        """#1404: with a SubModule.xml beside the folder, a row-less file holding an <Items> root
+        (Native's mpcosmetics.xml) and a multiplayer-only row's file (mpitems.xml) define no item;
+        a file a row names, or a folder it names, does."""
+        modules = Path(self._tmp.name) / "Modules"
+        native = modules / "Native"
+        _write(native / "SubModule.xml",
+               '<Module><Xmls>'
+               '<XmlNode><XmlName id="Items" path="items"/></XmlNode>'
+               '<XmlNode><XmlName id="Items" path="folder"/></XmlNode>'
+               '<XmlNode><XmlName id="Items" path="mpitems"/><IncludedGameTypes>'
+               '<GameType value="MultiplayerGame"/></IncludedGameTypes></XmlNode>'
+               '</Xmls></Module>\n')
+        data = native / "ModuleData"
+        _write(data / "items.xml", '<Items><Item id="named_item" Type="Goods"/></Items>\n')
+        _write(data / "folder" / "a.xml", '<Items><Item id="folder_item" Type="Goods"/></Items>\n')
+        _write(data / "mpitems.xml", '<Items><Item id="mp_item" Type="Goods"/></Items>\n')
+        _write(data / "aaa_config.xml", '<Items><Item id="named_item"/><Item id="stub_item"/></Items>\n')
+        _write(self.md / "taom_spcultures.xml", '<SPCultures><Culture id="gondor"/></SPCultures>\n')
+        regs = ts.build_registries(self.md, modules)
+        self.assertEqual({"named_item", "folder_item"}, set(regs.items) & {"named_item", "folder_item", "mp_item", "stub_item"})
+
     # --- harness / mount family-type registries (Riding Caparison, 2026-07-29) ---
 
     def _write_harness_fixture(self, modules: Path) -> None:
@@ -2763,6 +2785,30 @@ class MeleePassRowsTests(unittest.TestCase):
         self.assertEqual([(c[0], c[2], c[4], c[6]) for c in carried],
                          [("t_shield", "Pike", 0, 0), ("t_bare", "OneHandedPolearm", 90, 80)])
 
+    def test_each_battle_set_is_scored_and_the_weakest_set_decides_the_under_check(self):
+        """#1242: the engine draws a spawn's weapons from its sets, so a strong weapon in one set does
+        not hide a weak one in the other. Under reads the weakest set, over reads the best."""
+        from types import SimpleNamespace as NS
+        priced = {"strong": self._weapon("OneHandedSword", 90, 40, 80, 30),
+                  "weak": self._weapon("OneHandedSword", 40, 20, 30, 10)}
+        t = NS(id="t_two", culture="gondor", tier=5, items={"strong", "weak"},
+               battle_sets=(frozenset({"strong"}), frozenset({"weak"})))
+        kits, carried = self._rows([t], priced)
+        self.assertEqual([(k[3], k[-1]) for k in kits], [("weak", "under"), ("strong", "over")])
+        self.assertEqual(sorted(c[1] for c in carried), ["strong", "weak"])
+        one = NS(id="t_one", culture="gondor", tier=5, items={"strong", "weak"})   # no sets: one set, as before
+        self.assertEqual([k[3] for k in self._rows([one], priced)[0]], ["strong"])
+        same = NS(id="t_same", culture="gondor", tier=5, items={"strong"},
+                  battle_sets=(frozenset({"strong"}), frozenset({"strong"})))
+        self.assertEqual(len(self._rows([same], priced)[0]), 1)
+
+    def test_a_set_with_no_priced_weapon_is_skipped_not_scored_as_zero(self):
+        from types import SimpleNamespace as NS
+        priced = {"sw": self._weapon("OneHandedSword", 80, 40, 60, 30)}
+        t = NS(id="t_a", culture="gondor", tier=5, items={"sw", "stick"},
+               battle_sets=(frozenset({"sw"}), frozenset({"stick"})))
+        self.assertEqual([k[3] for k in self._rows([t], priced)[0]], ["sw"])
+
     def test_a_troop_with_no_priced_weapon_has_no_kit_row_and_no_carried_row(self):
         kits, carried = self._rows([self._troop("t_bare", "gondor", 5, ["unknown"])],
                                    {"sw": self._weapon("OneHandedSword", 80, 40, 60, 30)})
@@ -2786,6 +2832,41 @@ class MeleePassRowsTests(unittest.TestCase):
         found = ml.blow_findings([row + (tier, "gondor")], spec)
         self.assertEqual([f.item for f in found], ["sw"])
         self.assertTrue(found[0].tiered)
+
+
+class MeleeBattleSetsLoadTests(unittest.TestCase):
+    """analyze_melee_ladder.load_troops keeps each battle roster apart (#1242) and reads a roster
+    as Civilian the way MBEquipmentRoster.InitEquipment does."""
+
+    XML = ('<NPCCharacters><NPCCharacter id="t" level="21" culture="Culture.gondor"><Equipments>'
+           '<EquipmentRoster><equipment slot="Item0" id="Item.sw_strong" /><equipment slot="Item1" id="Item.shield" /></EquipmentRoster>'
+           '<EquipmentRoster><equipment slot="Item0" id="Item.sw_weak" /></EquipmentRoster>'
+           '<EquipmentRoster civilian="true"><equipment slot="Item0" id="Item.civ_sword" /></EquipmentRoster>'
+           '<EquipmentRoster equipmentType="Battle" civilian="true"><equipment slot="Item0" id="Item.sw_third" /></EquipmentRoster>'
+           '{extra}</Equipments></NPCCharacter></NPCCharacters>')
+
+    def _load(self, extra=""):
+        import analyze_melee_ladder as mr
+        if mr.LET is None:
+            self.skipTest("needs lxml")
+        with tempfile.TemporaryDirectory() as tmp:
+            _write(Path(tmp) / "troops_x.xml", self.XML.format(extra=extra))
+            return mr.load_troops(Path(tmp))[0]
+
+    def test_each_battle_roster_is_its_own_set_and_a_civilian_true_roster_is_not_one(self):
+        t = self._load()
+        self.assertEqual(set(t.battle_sets), {frozenset({"sw_strong", "shield"}), frozenset({"sw_weak"}),
+                                              frozenset({"sw_third"})})
+        self.assertNotIn("civ_sword", t.items)
+
+    def test_a_troop_level_override_replaces_its_slot_in_every_set(self):
+        t = self._load('<equipment slot="Item0" id="Item.sw_over" />')
+        self.assertEqual(set(t.battle_sets), {frozenset({"sw_over", "shield"}), frozenset({"sw_over"})})
+
+    def test_a_troop_without_rosters_has_one_set_of_its_items(self):
+        from analyze_melee_ladder import Troop
+        t = Troop("x", "x", 1, "c", "f", frozenset({"a"}))
+        self.assertEqual(t.battle_sets, (frozenset({"a"}),))
 
 
 class PlaceholderMeleePassTests(unittest.TestCase):
@@ -2866,6 +2947,60 @@ class PlaceholderMeleePassTests(unittest.TestCase):
     def test_the_same_placeholder_inside_its_limits_is_not_a_blow_finding(self):
         self._tree(swing="3.0", thrust="1.5")
         self.assertEqual(self._blow(self._issues()), [])
+
+    def _vanilla_sword(self, swing):
+        """A vanilla-style sword priced on the hand-built catalogue, as _vanilla_priced would return it."""
+        import xml.etree.ElementTree as ET
+        import melee_damage as md
+        node = ET.fromstring('<CraftingPiece id="van_blade" piece_type="Blade" length="80" weight="1.0">'
+                             '<BladeData><Thrust damage_type="Pierce" damage_factor="2.0"/>'
+                             f'<Swing damage_type="Cut" damage_factor="{swing}"/></BladeData></CraftingPiece>')
+        piece = md.parse_piece(node)
+        self.cat.pieces[piece.id] = piece
+        self.cat.descriptions["Desc"] = self.mc.Description(
+            "Desc", "OneHandedSword", frozenset({"MeleeWeapon"}),
+            frozenset({"base_blade", "base_handle", "van_blade"}), ("s",))
+        item = self.mc.Item("van_sword", "Van", "", "OneHandedSword",
+                            (("van_blade", "Blade", 100), ("base_handle", "Handle", 100)), "SandBoxCore")
+        self.cat.items["van_sword"] = item
+        return {"van_sword": self.mc.price(self.cat, item)}
+
+    def _all_findings(self, vanilla, armory=None):
+        regs = ts.Registries(items=set(), item_def_files={}, npccharacters=set(), cultures=set(),
+                             party_templates=set())
+        with mock.patch.object(self.mc, "load", return_value=self.cat), \
+             mock.patch.object(self.mc, "price_all", return_value=(self.priced if armory is None else armory, [])), \
+             mock.patch.object(ts, "_vanilla_priced", return_value=vanilla):
+            return ts.Validator(self.md, [], regs, game_modules=self.root)._melee_ladder_inversions()
+
+    def _x_knight_findings(self, vanilla):
+        return [i for i in self._all_findings(vanilla) if i.entry_id == "x_knight"]
+
+    def test_a_vanilla_weapon_finding_names_a_hand_repair_not_a_fixer(self):
+        """No tool restats or swaps a vanilla weapon (fix_melee_ladder and restat_melee_blades price
+        only the Armory), so neither finding may send the reader to one."""
+        self._tree(carries="van_sword", files=False)
+        found = [i for i in self._all_findings(self._vanilla_sword("40.0"))
+                 if i.entry_id in ("x_knight", "van_sword")]
+        self.assertEqual({i.code for i in found}, {"MELEE_LADDER_INVERSION", "MELEE_BLOW_CEILING"}, found)
+        for issue in found:
+            self.assertIn("no tool restats", issue.message)
+            self.assertNotIn("fix_melee_ladder.py", issue.message)
+            self.assertNotIn("restat_melee_blades.py", issue.message)
+
+    def test_vanilla_prices_do_not_hide_an_armory_that_priced_nothing(self):
+        self._tree(carries="van_sword", files=False)
+        found = self._all_findings(self._vanilla_sword("40.0"), armory={})
+        self.assertEqual([i.entry_id for i in found], ["(install)"])
+        self.assertIn("checked nothing", found[0].message)
+
+    def test_a_vanilla_weapon_above_the_band_is_judged_like_an_armory_one(self):
+        """#1242: troops that carry vanilla weapons sat outside every gate."""
+        self._tree(carries="van_sword", files=False)
+        found = self._x_knight_findings(self._vanilla_sword("40.0"))
+        self.assertEqual({i.code for i in found}, {"MELEE_LADDER_INVERSION"})
+        self.assertTrue(any("over-armed" in i.message and "van_sword" in i.message for i in found), found)
+        self.assertEqual(self._x_knight_findings({}), [])
 
     def test_a_placeholder_nobody_carries_is_not_judged(self):
         self._tree(swing="12.0", carries="donor")
@@ -4391,6 +4526,17 @@ class ArmourClassTableDriftTests(unittest.TestCase):
         self.assertEqual(issues, [])
         self.assertIn("ARMOUR_CLASS_TABLE_DRIFT SKIPPED", err.getvalue())
         self.assertIn("no LOTRLOME_Armory", err.getvalue())
+
+    def test_skip_goes_to_the_callers_list_instead_of_stderr(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            err = io.StringIO()
+            skips = []
+            with redirect_stderr(err):
+                issues = vm.armour_class_table_issues(Path(tmp), None, skips)
+        self.assertEqual(issues, [])
+        self.assertEqual(err.getvalue(), "")
+        self.assertEqual(len(skips), 1)
+        self.assertIn("ARMOUR_CLASS_TABLE_DRIFT SKIPPED: no LOTRLOME_Armory", skips[0])
 
     def test_current_table_raises_nothing(self):
         import generate_armour_classes as gac

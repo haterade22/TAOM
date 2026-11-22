@@ -62,12 +62,13 @@ public sealed class ChronicleOutcomeService
                 var reached = new List<string>();
                 foreach (var kingdom in Expand(definition, effect.Target, live))
                 {
-                    _effects.Apply(new WarEffect(source, kingdom, effect.Kind, effect.Magnitude, nowHours + effect.DurationDays * 24d));
+                    _effects.Apply(new WarEffect(source, kingdom, effect.Kind, effect.Magnitude,
+                        effect.Permanent ? WarEffect.PermanentEndHours : nowHours + effect.DurationDays * 24d));
                     reached.Add(kingdom);
                 }
 
                 if (reached.Count > 0)
-                    applied.Add(new ChronicleAppliedEffect(effect.Target, reached, effect.Kind, effect.Magnitude, effect.DurationDays));
+                    applied.Add(new ChronicleAppliedEffect(effect.Target, reached, effect.Kind, effect.Magnitude, effect.DurationDays, effect.Permanent));
             }
 
             if (block.Momentum != null)

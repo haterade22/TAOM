@@ -3316,6 +3316,31 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public Dropdown<string> BattleHudColourMode { get; set; } = new Dropdown<string>(
         TAOM.Features.BattleHud.UI.BattleHudColourPalette.Choices, 0);
 
+    // --- Co-op (docs/features/coop-compat.md) ---
+
+    // Read by TAOM.CoopCompat in the co-op server process only, through CoopSettingsProvider; a player's own value is never
+    // read. On a dedicated server TaomSettings.Instance comes from taom-server-settings.json, loaded once per process
+    // (ServerSettingsSource). Instrumentation in CoopSettingsRelevance: it gates log lines and one notice to the joining player.
+    [SettingPropertyGroup("{=taom_mcm_group_coop}Co-op", GroupOrder = 8)]
+    [SettingPropertyBool("{=taom_mcm_CoopLoadOrderWarning}Warn players whose load order differs from the host's", Order = 0, RequireRestart = false,
+        HintText = "{=taom_mcm_CoopLoadOrderWarning_hint}When a player joins a co-op campaign, the co-op server compares the order of TAOM and of every mod that adds items, troops or factions with its own, and tells a player whose order differs which two mods are the other way round. Nothing is blocked. The co-op server process reads this switch each time a player joins; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopLoadOrderWarning), which it reads once at start, so change it there and restart the server. Default: on.")]
+    public bool CoopLoadOrderWarning { get; set; } = TAOM.Features.CoopInterop.CoopSettingsProvider.DefaultLoadOrderWarning;
+
+    // Read by CareerSyncHost (Main/Features/CoopInterop/CareerSync) in the co-op server process, through
+    // CoopSettingsProvider, for each report and each career change the server makes. In the fingerprint: it changes what
+    // the server stores and sends.
+    [SettingPropertyGroup("{=taom_mcm_group_coop}Co-op", GroupOrder = 8)]
+    [SettingPropertyBool("{=taom_mcm_CoopCareerSync}Sync careers for co-op players", Order = 1, RequireRestart = false,
+        HintText = "{=taom_mcm_CoopCareerSync_hint}When on, a career a co-op player picks or changes goes to the co-op server, which checks it with the career rules, keeps it in its save and shows it to the other players, so the career is still there after the player joins again. The co-op server process reads this switch each time a player reports a career; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopCareerSync), which it reads once at start, so change it there and restart the server. Off: each player's career stays only on that player's PC and is lost when the player joins again. Default: on.")]
+    public bool CoopCareerSync { get; set; } = TAOM.Features.CoopInterop.CoopSettingsProvider.DefaultCareerSync;
+
+    // Read by the co-op server process through IArmourAcquisitionSettingsProvider (the guest armoury in
+    // Main/Features/CoopInterop/GuestTrade). In the fingerprint: it changes what the server does to a player's party.
+    [SettingPropertyGroup("{=taom_mcm_group_coop}Co-op", GroupOrder = 8)]
+    [SettingPropertyBool("{=taom_mcm_CoopGuestLadder}Lords' Ladder for co-op players", Order = 2, RequireRestart = false,
+        HintText = "{=taom_mcm_CoopGuestLadder_hint}When on, the co-op server runs the lord's gear ladder for each co-op player's hero: a player's armoury lists the rung the server keeps for that hero, takes the lord's materials for it and fits the claimed piece, and a battle a co-op player wins can yield lord's materials, given to the party once it is free and out of battle. The rung quests are not offered to co-op players. The co-op server process reads this switch each time a player uses an armoury or a battle ends; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopGuestLadder), which it reads once at start, so change it there and restart the server. Off: co-op players see no ladder at the armoury and find no new lord's materials after battles; materials already found are still given. Default: on.")]
+    public bool CoopGuestLadder { get; set; } = TAOM.Features.ArmourAcquisition.ArmourAcquisitionSettingsProvider.DefaultCoopGuestLadder;
+
     // --- Cheat Menu (docs/features/cheat-menu.md) ---
 
     [SettingPropertyGroup("{=taom_cheat_mcm_group}Cheat Menu", GroupOrder = 90)]

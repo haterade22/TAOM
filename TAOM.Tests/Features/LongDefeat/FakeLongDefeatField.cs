@@ -96,10 +96,22 @@ internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapte
     /// <summary>Whether a recorded muster place has a navmesh; false makes <see cref="SetMusterFrame"/> refuse.</summary>
     public bool MusterOk { get; set; } = true;
 
-    public bool SetMusterFrame(FormationSlot slot, MusterFrame frame)
+    public bool SetMusterFrame(FormationSlot slot, MusterFrame frame, bool attackers = false)
     {
-        Calls.Add($"Muster:{slot}:{frame.X.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
-        return MusterOk;
+        Calls.Add($"{(attackers ? "AttackerMuster" : "Muster")}:{slot}:{frame.X.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
+        return MusterOk && frame.X != MusterRefusedX;
+    }
+
+    /// <summary>The X of the one place <see cref="SetMusterFrame"/> refuses while every other place is taken; null refuses none.</summary>
+    public float? MusterRefusedX { get; set; }
+
+    /// <summary>What <see cref="FieldStarts"/> answers: the start places of a field run (#1105), or null on a siege scene.</summary>
+    public FieldPlaces? Starts { get; set; }
+
+    public FieldPlaces? FieldStarts()
+    {
+        Calls.Add("FieldStarts");
+        return Starts;
     }
 
     /// <summary>Every batch the field was asked to spawn, with the side, so a test can read what the run put on it (a health factor).</summary>
@@ -302,7 +314,14 @@ internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapte
 
     public LdBootFacts BootFacts() => Facts;
 
-    public string DescribeEngines() => "[Engines] none";
+    /// <summary>How often the director asked for the siege engines' line; a field run never does.</summary>
+    public int EngineDescriptions { get; private set; }
+
+    public string DescribeEngines()
+    {
+        EngineDescriptions++;
+        return "[Engines] none";
+    }
 
     public string DescribePlayer() => "main=fake";
 

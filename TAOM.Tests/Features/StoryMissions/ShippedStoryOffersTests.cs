@@ -15,7 +15,7 @@ namespace TAOM.Tests.Features.StoryMissions;
 
 /// <summary>
 /// The shipped story offers (#1105 slice 4): every <c>story.mission</c> in the REAL <c>war_chronicle.json</c> names a defence the REAL
-/// <c>story_missions.json</c> loads, and none names a <c>story.attackMission</c> until the maintainer decides the key (#1409 step 6). The
+/// <c>story_missions.json</c> loads, and each also names the attack of the same battle in <c>story.attackMission</c> (#1409 step 6, slice 5). The
 /// chronicle's loader cannot see the catalog, and an unknown id is silent until the window opens. The side gate reads each kingdom of a story window from the alignment
 /// table, where an unlisted id is silently Neutral, so every one must be listed.
 /// </summary>
@@ -33,7 +33,7 @@ public class ShippedStoryOffersTests
     }
 
     [TestMethod]
-    public void EveryStoryBlock_ItsMissionIsADefence_AndNoneNamesAnAttackYet()
+    public void EveryStoryBlock_ItsMissionIsADefence_AndItsAttackMissionIsAnAttack()
     {
         var paths = Substitute.For<IPathService>();
         paths.ModuleDataPath.Returns(ModuleData);
@@ -43,10 +43,52 @@ public class ShippedStoryOffersTests
         {
             Assert.IsTrue(catalog.TryGet(definition.Story!.MissionId, out var mission), $"'{definition.Id}' offers unknown story mission '{definition.Story.MissionId}'");
             Assert.AreEqual(StorySide.Defending, mission.Side, $"'{definition.Id}': story.mission is the defence");
-            // The launcher opens helms_deep_attack, but the maintainer has not decided whether the Hornburg window offers it (#1409 step 6),
-            // so no shipped window names an attackMission yet. Adding the key replaces this line with the row's check.
-            Assert.IsNull(definition.Story.AttackMissionId, $"'{definition.Id}' names an attackMission before the maintainer has decided the key");
+            if (definition.Story.HeroId != null)
+            {
+                // A hero story (#1105 slice 3) is fought beside the hero or against him, so it names both missions.
+                Assert.IsTrue(catalog.TryGet(definition.Story.AttackMissionId ?? string.Empty, out var hunt), $"'{definition.Id}' offers unknown attack mission '{definition.Story.AttackMissionId}'");
+                Assert.AreEqual(StorySide.Attacking, hunt.Side, $"'{definition.Id}': story.attackMission is the attack");
+                Assert.IsNotNull(mission.MustLive, $"'{definition.Id}': the defence is decided by its hero");
+                Assert.AreEqual(mission.MustLive, hunt.MustLive, $"'{definition.Id}': both missions are decided by the same hero");
+                continue;
+            }
+
+            // A siege's story offers its attack too (#1409 step 6, slice 5 of #1105): the same battle from the attackers' side.
+            Assert.IsTrue(catalog.TryGet(definition.Story.AttackMissionId ?? string.Empty, out var attack), $"'{definition.Id}' offers unknown attack mission '{definition.Story.AttackMissionId}'");
+            Assert.AreEqual(StorySide.Attacking, attack.Side, $"'{definition.Id}': story.attackMission is the attack");
         }
+    }
+
+    // The Hornburg's repulsed block ends the permanent alliance of Isengard and Mordor: the pair must be a Permanent row, or
+    // DiplomacyService.EndPermanentAlliance answers NotPermanent and the end never happens.
+    [TestMethod]
+    public void TheHornburgRepulsedBlock_EndsAPermanentRowOfDiplomacyJson()
+    {
+        var repulsed = Events().Single(d => d.Id == "hornburg").Story?.Repulsed;
+        Assert.IsNotNull(repulsed, "the Hornburg ends the alliance when the assault is thrown back");
+        Assert.AreEqual("{=taom_wc_hornburg_repulsed}", repulsed!.Text!.Substring(0, "{=taom_wc_hornburg_repulsed}".Length));
+
+        var rows = Newtonsoft.Json.Linq.JObject.Parse(File.ReadAllText(Path.Combine(ModuleData, "diplomacy", "diplomacy.json")))["relationships"]!
+            .Where(r => (string?)r["tier"] == "Permanent")
+            .Select(r => ((string)r["kingdomA"]!, (string)r["kingdomB"]!))
+            .ToList();
+        Assert.IsTrue(rows.Contains((repulsed.KingdomA, repulsed.KingdomB)) || rows.Contains((repulsed.KingdomB, repulsed.KingdomA)),
+            $"{repulsed.KingdomA} and {repulsed.KingdomB} have no Permanent row in diplomacy.json");
+    }
+
+    [TestMethod]
+    public void TheBreaking_OffersTheTwoParthGalenMissions_AndDecidesBoromir()
+    {
+        var breaking = Events().Single(d => d.Id == "breaking");
+
+        Assert.AreEqual("lord_1_75", breaking.Story?.HeroId);
+        Assert.AreEqual("parth_galen_save", breaking.Story!.MissionId);
+        Assert.AreEqual("parth_galen_kill", breaking.Story.AttackMissionId);
+        Assert.AreEqual(10, breaking.WindowDays);
+        Assert.AreEqual("empire_w", breaking.Defender, "Gondor's side stands with Boromir");
+        CollectionAssert.AreEqual(new[] { "isengard" }, breaking.Attackers.ToArray());
+        Assert.IsNotNull(breaking.Averted?.Text);
+        Assert.IsNotNull(breaking.Occurred?.Text);
     }
 
     [TestMethod]

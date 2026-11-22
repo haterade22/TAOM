@@ -5193,6 +5193,7 @@
 	<!-- InformationManagerSettingsNotice -->
 	<string id="taom_coopcompat_settings_differ" text="{=taom_coopcompat_settings_differ}Your TAOM settings differ from the host's in: {GROUPS}. Co-op may behave differently for you." />
 	<string id="taom_coopcompat_build_mismatch" text="{=taom_coopcompat_build_mismatch}Your TAOM build is not the host's build. Co-op can desync or misbehave. Install the same TAOM download as the host." />
+	<string id="taom_coopcompat_load_order_differs" text="{=taom_coopcompat_load_order_differs}Your mod load order differs from the host's: on the host {FIRST} loads before {SECOND}, for you after it. A mod that loads later replaces items and troops from earlier ones, so you may see other gear or troops than the host. Load your mods in the host's order and restart the game." />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- TaomSettings.cs -->
 	<string id="taom_hero_auras_mcm_enabled" text="{=taom_hero_auras_mcm_enabled}Enable Hero Auras" />
@@ -7026,5 +7027,37 @@
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- TrainingGrounds -->
 	<string id="taom_tgw_an_refunded" text="{=taom_tgw_an_refunded}The wave was called off. Your wager of {TAOM_TGW_AN_REFUNDED_STAKE} denars is returned." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- StoryMissions -->
+	<string id="taom_story_breaking_stand" text="{=taom_story_breaking_stand}Stand with the Fellowship" />
+	<string id="taom_story_breaking_hunt" text="{=taom_story_breaking_hunt}Lead the Uruk-hai" />
+	<string id="taom_story_breaking_go" text="{=taom_story_breaking_go}Go to Parth Galen" />
+	<string id="taom_story_breaking_body_both" text="{=taom_story_breaking_body_both}The Uruk-hai of the White Hand close on the Company at Parth Galen. Will you go there and choose your side, or let fate decide?" />
+	<string id="taom_story_breaking_body_attack" text="{=taom_story_breaking_body_attack}The Company rests at Parth Galen, and the Uruk-hai of the White Hand are near. Will you lead the hunt yourself, or let fate decide?" />
+	<string id="taom_story_breaking_body" text="{=taom_story_breaking_body}The Uruk-hai of the White Hand close on the Company at Parth Galen. Will you stand with the Fellowship yourself, or let fate decide?" />
+	<string id="taom_story_breaking_escaped" text="{=taom_story_breaking_escaped}Your band is broken at Parth Galen, and Boromir lives." />
+	<string id="taom_story_breaking_saved" text="{=taom_story_breaking_saved}The Uruk-hai are thrown back at Parth Galen, and Boromir lives." />
+	<string id="taom_story_breaking_slain" text="{=taom_story_breaking_slain}Boromir is slain at Parth Galen, and the Company is scattered." />
+	<string id="taom_story_breaking_fallen" text="{=taom_story_breaking_fallen}Boromir has fallen at Parth Galen, pierced by many arrows." />
+	<string id="taom_story_breaking_menu" text="{=taom_story_breaking_menu}The horn of Gondor sounds in the woods of Parth Galen. Time stands until you choose." />
+	<string id="taom_story_breaking_undecided" text="{=taom_story_breaking_undecided}The fight at Parth Galen is not decided. The call may come again." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- WarChronicle -->
+	<string id="taom_war_morale" text="{=taom_war_morale}Tidings of the war" />
+	<string id="taom_event_effect_morale" text="{=taom_event_effect_morale}Party morale" />
+	<string id="taom_event_effect_permanent" text="{=taom_event_effect_permanent}Permanent" />
+	<!-- TaomSettings.cs: Co-op -->
+	<string id="taom_mcm_group_coop" text="{=taom_mcm_group_coop}Co-op" />
+	<string id="taom_mcm_CoopLoadOrderWarning" text="{=taom_mcm_CoopLoadOrderWarning}Warn players whose load order differs from the host's" />
+	<string id="taom_mcm_CoopLoadOrderWarning_hint" text="{=taom_mcm_CoopLoadOrderWarning_hint}When a player joins a co-op campaign, the co-op server compares the order of TAOM and of every mod that adds items, troops or factions with its own, and tells a player whose order differs which two mods are the other way round. Nothing is blocked. The co-op server process reads this switch each time a player joins; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopLoadOrderWarning), which it reads once at start, so change it there and restart the server. Default: on." />
+	<string id="taom_mcm_CoopCareerSync" text="{=taom_mcm_CoopCareerSync}Sync careers for co-op players" />
+	<string id="taom_mcm_CoopCareerSync_hint" text="{=taom_mcm_CoopCareerSync_hint}When on, a career a co-op player picks or changes goes to the co-op server, which checks it with the career rules, keeps it in its save and shows it to the other players, so the career is still there after the player joins again. The co-op server process reads this switch each time a player reports a career; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopCareerSync), which it reads once at start, so change it there and restart the server. Off: each player's career stays only on that player's PC and is lost when the player joins again. Default: on." />
+	<string id="taom_career_sync_refused" text="{=taom_career_sync_refused}The co-op server did not accept that career change and keeps the career it has saved for you." />
+	<string id="taom_career_sync_refused_unsaved" text="{=taom_career_sync_refused_unsaved}The co-op server did not accept your career and has none saved for you. You keep it for now, but it is gone when you join again." />
+	<string id="taom_mcm_CoopGuestLadder" text="{=taom_mcm_CoopGuestLadder}Lords' Ladder for co-op players" />
+	<string id="taom_mcm_CoopGuestLadder_hint" text="{=taom_mcm_CoopGuestLadder_hint}When on, the co-op server runs the lord's gear ladder for each co-op player's hero: a player's armoury lists the rung the server keeps for that hero, takes the lord's materials for it and fits the claimed piece, and a battle a co-op player wins can yield lord's materials, given to the party once it is free and out of battle. The rung quests are not offered to co-op players. The co-op server process reads this switch each time a player uses an armoury or a battle ends; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopGuestLadder), which it reads once at start, so change it there and restart the server. Off: co-op players see no ladder at the armoury and find no new lord's materials after battles; materials already found are still given. Default: on." />
+	<string id="taom_lg_coop_changed" text="{=taom_lg_coop_changed}Your lord's gear has changed since you looked. Visit the armoury again." />
+	<string id="taom_lg_coop_not_choice" text="{=taom_lg_coop_not_choice}The armourer cannot fit that piece." />
+	<string id="taom_lg_coop_off" text="{=taom_lg_coop_off}The co-op server has turned off the Lords' Ladder for co-op players." />
 
 </strings>

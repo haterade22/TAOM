@@ -93,6 +93,24 @@ public class ChronicleShippedContentTests
     }
 
     [TestMethod]
+    public void Hornburg_HeldLiftsTheDefendersMoraleAndFellCostsItsVolunteersForGood()
+    {
+        var hornburg = Load(out _).Single(e => e.Id == "hornburg");
+
+        var morale = hornburg.Held!.Effects.Single(r => r.Kind == WarEffectKind.PartyMorale);
+        Assert.AreEqual("defender", morale.Target);
+        Assert.AreEqual(0.10f, morale.Magnitude, 0.0001f);
+        Assert.AreEqual(25, morale.DurationDays);
+        Assert.IsFalse(morale.Permanent);
+
+        var loss = hornburg.Fell!.Effects.Single(r => r.Permanent);
+        Assert.AreEqual("defender", loss.Target);
+        Assert.AreEqual(WarEffectKind.VolunteerRate, loss.Kind);
+        Assert.AreEqual(-0.10f, loss.Magnitude, 0.0001f);
+        Assert.AreEqual(0, loss.DurationDays);
+    }
+
+    [TestMethod]
     public void TheBattleOfDale_ALossAlsoSpeedsEreborsEscapes()
     {
         var dale = Load(out _).Single(e => e.Id == "dale");
@@ -125,7 +143,7 @@ public class ChronicleShippedContentTests
             .Concat(JToken.Parse(Json).SelectTokens("$..fateText"))
             .Select(t => (string)t!).ToList();
 
-        Assert.AreEqual(48, texts.Count);
+        Assert.AreEqual(50, texts.Count);
         foreach (var text in texts)
         {
             var match = keyed.Match(text);

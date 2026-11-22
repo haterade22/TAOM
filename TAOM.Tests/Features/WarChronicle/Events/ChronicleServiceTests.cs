@@ -1098,7 +1098,7 @@ public class ChronicleServiceTests
         world.GetElapsedDays().Returns(_ => throw new System.NullReferenceException("engine"));
         var sut = new ChronicleService(_f.Config, _f.Store, world, _f.Alliance, _f.Wotr,
             new ChronicleOutcomeService(_f.Effects, _f.Alliance, _f.Alignment, _f.Momentum, _f.Ledger, _f.Text, _f.Logger),
-            _f.Queue, _f.Focus, _f.Settings, _f.Logger, _f.Daily);
+            _f.Queue, _f.Focus, _f.Settings, _f.Logger, _f.Daily, _f.Coop, _f.Dedicated, _f.Diplomacy, _f.Outcomes);
 
         sut.RunChronicleDay();
 

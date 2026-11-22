@@ -259,6 +259,142 @@ public class ChronicleStoryTests
         Assert.AreEqual(0, _f.Focus.Snapshot().Count, "a resolved window drops its army focus");
     }
 
+    // #1105 slice 5: a repulsed assault ends a permanent alliance, with the window resolved Held as a defence would.
+    private static ChronicleEventDefinition RepulsedSiege(string? text = "{=taom_wc_hornburg_repulsed}breaks {TARGET}")
+    {
+        var definition = StorySiege();
+        definition.Story!.AttackMissionId = "helms_deep_attack";
+        definition.Story.Repulsed = new ChronicleRepulsedDefinition { Text = text, KingdomA = "isengard", KingdomB = "empire_s" };
+        return definition;
+    }
+
+    [TestMethod]
+    public void ResolveStoryRepulsed_AnActiveWindow_ResolvesHeldPaysHeldAndEndsTheAllianceOnce()
+    {
+        OpenWindow(RepulsedSiege());
+        _f.Diplomacy.EndPermanentAlliance("isengard", "empire_s", Arg.Any<string>()).Returns(PermanentAllianceEnd.Ended);
+
+        Assert.IsTrue(_sut.ResolveStoryRepulsed("hornburg", "the player's assault was thrown back"));
+
+        Assert.AreEqual(ChronicleEventState.Held, _f.StateOf("hornburg"));
+        Assert.IsTrue(_f.Volunteers("vlandia") > 1f, "the Held outcome pays the defender");
+        _f.Diplomacy.Received(1).EndPermanentAlliance("isengard", "empire_s", Arg.Is<string>(why => why.Contains("hornburg")));
+        _f.Outcomes.Received(1).Pass("taom.war-chronicle.alliance-ended", "hornburg", "event=hornburg pair=isengard+empire_s result=Ended allied=False");
+    }
+
+    [TestMethod]
+    public void ResolveStoryRepulsed_AnnouncesTheRepulsedTextInsteadOfTheHeldText()
+    {
+        OpenWindow(RepulsedSiege());
+        _f.Diplomacy.EndPermanentAlliance(default!, default!, default!).ReturnsForAnyArgs(PermanentAllianceEnd.Ended);
+
+        _sut.ResolveStoryRepulsed("hornburg", "test");
+
+        CollectionAssert.Contains(DrainTexts(), "{=taom_wc_hornburg_repulsed}breaks {TARGET}");
+    }
+
+    [TestMethod]
+    public void ResolveStoryRepulsed_NoRepulsedText_AnnouncesTheHeldText()
+    {
+        OpenWindow(RepulsedSiege(text: null));
+        _f.Diplomacy.EndPermanentAlliance(default!, default!, default!).ReturnsForAnyArgs(PermanentAllianceEnd.Ended);
+
+        _sut.ResolveStoryRepulsed("hornburg", "test");
+
+        CollectionAssert.Contains(DrainTexts(), "{=taom_wc_hornburg_held}held");
+    }
+
+    [DataTestMethod]
+    [DataRow(PermanentAllianceEnd.AlreadyEnded, true)]
+    [DataRow(PermanentAllianceEnd.NotPermanent, false)]
+    [DataRow(PermanentAllianceEnd.StillAllied, false)]
+    public void ResolveStoryRepulsed_LogsEveryResultOfTheEnd(PermanentAllianceEnd result, bool pass)
+    {
+        OpenWindow(RepulsedSiege());
+        _f.Diplomacy.EndPermanentAlliance(default!, default!, default!).ReturnsForAnyArgs(result);
+        var stillAllied = result == PermanentAllianceEnd.StillAllied;
+        _f.Alliance.AreAllied(Arg.Any<string>(), Arg.Any<string>()).Returns(stillAllied);
+        var detail = $"event=hornburg pair=isengard+empire_s result={result} allied={(stillAllied ? "True" : "False")}";
+
+        _sut.ResolveStoryRepulsed("hornburg", "test");
+
+        if (pass)
+            _f.Outcomes.Received(1).Pass("taom.war-chronicle.alliance-ended", "hornburg", detail);
+        else
+            _f.Outcomes.Received(1).Fail("taom.war-chronicle.alliance-ended", "hornburg", detail);
+        Assert.AreEqual(ChronicleEventState.Held, _f.StateOf("hornburg"), "the window resolves whatever the diplomacy answered");
+    }
+
+    [TestMethod]
+    public void ResolveStoryRepulsed_ARepulsedBlockWithNoStoryRepulsed_ResolvesHeldAndCallsNoDiplomacy()
+    {
+        var definition = StorySiege();
+        definition.Story!.AttackMissionId = "helms_deep_attack";
+        OpenWindow(definition);
+
+        Assert.IsTrue(_sut.ResolveStoryRepulsed("hornburg", "test"));
+
+        Assert.AreEqual(ChronicleEventState.Held, _f.StateOf("hornburg"));
+        _f.Diplomacy.DidNotReceiveWithAnyArgs().EndPermanentAlliance(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void ResolveStoryRepulsed_AnAttackerTookTheTargetWithNoEvent_ResolvesFellAndCallsNoDiplomacy()
+    {
+        OpenWindow(RepulsedSiege());
+        _f.World.Owners["town_V2"] = "isengard";
+
+        Assert.IsFalse(_sut.ResolveStoryRepulsed("hornburg", "test"));
+
+        Assert.AreEqual(ChronicleEventState.Fell, _f.StateOf("hornburg"));
+        _f.Diplomacy.DidNotReceiveWithAnyArgs().EndPermanentAlliance(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void ResolveStoryRepulsed_AResolvedWindow_ChangesNothing()
+    {
+        OpenWindow(RepulsedSiege());
+        _f.World.Owners["town_V2"] = "isengard";
+        _sut.OnTargetOwnerChanged("town_V2");
+
+        Assert.IsFalse(_sut.ResolveStoryRepulsed("hornburg", "test"));
+        _f.Diplomacy.DidNotReceiveWithAnyArgs().EndPermanentAlliance(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void ResolveStoryRepulsed_ACoopSession_ResolvesHeldButEndsNoAlliance()
+    {
+        OpenWindow(RepulsedSiege());
+        _f.Coop.IsSessionActive.Returns(true);
+
+        Assert.IsTrue(_sut.ResolveStoryRepulsed("hornburg", "test"));
+
+        Assert.AreEqual(ChronicleEventState.Held, _f.StateOf("hornburg"));
+        _f.Diplomacy.DidNotReceiveWithAnyArgs().EndPermanentAlliance(default!, default!, default!);
+        _f.Outcomes.DidNotReceiveWithAnyArgs().Pass(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void ResolveStoryHeld_NeverEndsAnAlliance_EvenWithARepulsedBlock()
+    {
+        OpenWindow(RepulsedSiege());
+
+        Assert.IsTrue(_sut.ResolveStoryHeld("hornburg", "the player won the story mission"));
+
+        _f.Diplomacy.DidNotReceiveWithAnyArgs().EndPermanentAlliance(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void Close_NoAssaultAndFateHeld_NeverEndsAnAlliance()
+    {
+        OpenWindow(RepulsedSiege());
+
+        CloseDay();
+
+        Assert.AreEqual(ChronicleEventState.Held, _f.StateOf("hornburg"));
+        _f.Diplomacy.DidNotReceiveWithAnyArgs().EndPermanentAlliance(default!, default!, default!);
+    }
+
     [TestMethod]
     public void ResolveStoryHeld_AResolvedWindow_ChangesNothing()
     {

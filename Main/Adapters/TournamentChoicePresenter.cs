@@ -75,5 +75,5 @@ public sealed class TournamentChoicePresenter : ITournamentChoicePresenter
                 }
                 onPicked(id);
             },
-            negativeAction: _ => onCancel()));
+            negativeAction: _ => onCancel()), pauseGameActiveState: true);
 }

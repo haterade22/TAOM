@@ -478,6 +478,86 @@ public class ChronicleConfigValidatorTests
     }
 
     [TestMethod]
+    public void Parse_APartyMoraleEffect_Parses()
+    {
+        var ok = Narrative();
+        ok["outcomes"]!["occurred"]!["effects"] = new JArray(Effect("rivendell", kind: "PartyMorale", duration: 25));
+
+        var effect = Parse(ok)[0].Occurred!.Effects.Single();
+
+        Assert.AreEqual(0, _warnings.Count, string.Join("\n", _warnings));
+        Assert.AreEqual(WarEffectKind.PartyMorale, effect.Kind);
+        Assert.IsFalse(effect.Permanent);
+    }
+
+    private static JObject PermanentRow(JToken? permanent, int? duration)
+    {
+        var row = new JObject { ["target"] = "rivendell", ["kind"] = "VolunteerRate", ["magnitude"] = -0.1 };
+        if (permanent != null)
+            row["permanent"] = permanent;
+        if (duration.HasValue)
+            row["durationDays"] = duration.Value;
+        return row;
+    }
+
+    private IReadOnlyList<ChronicleEffectDefinition> ParseRow(JObject row)
+    {
+        var e = Narrative();
+        e["outcomes"]!["occurred"]!["effects"] = new JArray(row);
+        return Parse(e)[0].Occurred!.Effects;
+    }
+
+    [TestMethod]
+    public void Parse_PermanentTrueAlone_IsKeptWithNoDuration()
+    {
+        var effect = ParseRow(PermanentRow(true, null)).Single();
+
+        Assert.AreEqual(0, _warnings.Count, string.Join("\n", _warnings));
+        Assert.IsTrue(effect.Permanent);
+        Assert.AreEqual(0, effect.DurationDays);
+    }
+
+    [TestMethod]
+    public void Parse_PermanentTrueWithADuration_SkipsTheRow()
+    {
+        Assert.AreEqual(0, ParseRow(PermanentRow(true, 25)).Count);
+        AssertWarned("durationDays or permanent");
+    }
+
+    [DataTestMethod]
+    [DataRow("\"true\"")]
+    [DataRow("1")]
+    [DataRow("null")]
+    public void Parse_PermanentThatIsNotABoolean_SkipsTheRow(string json)
+    {
+        Assert.AreEqual(0, ParseRow(PermanentRow(JToken.Parse(json), 25)).Count);
+        AssertWarned("permanent must be true or false");
+    }
+
+    [TestMethod]
+    public void Parse_PermanentFalseWithADuration_IsAnOrdinaryTimedRow()
+    {
+        var effect = ParseRow(PermanentRow(false, 25)).Single();
+
+        Assert.IsFalse(effect.Permanent);
+        Assert.AreEqual(25, effect.DurationDays);
+    }
+
+    [TestMethod]
+    public void Parse_PermanentFalseWithNoDuration_SkipsTheRow()
+    {
+        Assert.AreEqual(0, ParseRow(PermanentRow(false, null)).Count);
+        AssertWarned("durationDays");
+    }
+
+    [TestMethod]
+    public void Parse_NoPermanentAndNoDuration_StillSkipsTheRow()
+    {
+        Assert.AreEqual(0, ParseRow(PermanentRow(null, null)).Count);
+        AssertWarned("durationDays");
+    }
+
+    [TestMethod]
     public void Parse_EffectOfAnUnknownKind_SkipsTheRow()
     {
         var bad = Narrative();
@@ -848,6 +928,99 @@ public class ChronicleConfigValidatorTests
         Assert.IsNull(Parse(StorySiege(block)).Single().Story!.AttackMissionId);
     }
 
+    // #1105 slice 5: a lost player-led attack ends a permanent alliance. The block rides the story and needs an attack mission.
+    private static JObject RepulsedStory(JToken? repulsed, string? attack = "helms_deep_attack")
+    {
+        var block = new JObject { ["mission"] = "helms_deep_defend" };
+        if (attack != null)
+            block["attackMission"] = attack;
+        block["repulsed"] = repulsed;
+        return block;
+    }
+
+    [TestMethod]
+    public void Parse_ARepulsedBlock_ReadsItsTextAndThePair()
+    {
+        var story = Parse(StorySiege(RepulsedStory(new JObject
+        {
+            ["text"] = "{=taom_wc_x_repulsed}breaks {TARGET}",
+            ["endAlliance"] = new JArray("isengard", "empire_s"),
+        }))).Single().Story!;
+
+        Assert.AreEqual(0, _warnings.Count, string.Join("\n", _warnings));
+        Assert.AreEqual("{=taom_wc_x_repulsed}breaks {TARGET}", story.Repulsed?.Text);
+        Assert.AreEqual("isengard", story.Repulsed?.KingdomA);
+        Assert.AreEqual("empire_s", story.Repulsed?.KingdomB);
+    }
+
+    [TestMethod]
+    public void Parse_ARepulsedBlockWithNoText_ReadsWithANullText()
+    {
+        var story = Parse(StorySiege(RepulsedStory(new JObject { ["endAlliance"] = new JArray("isengard", "empire_s") }))).Single().Story!;
+
+        Assert.IsNotNull(story.Repulsed);
+        Assert.IsNull(story.Repulsed!.Text);
+    }
+
+    [TestMethod]
+    public void Parse_ARepulsedBlockThatIsNotAnObject_IsDroppedAndWarns()
+    {
+        var story = Parse(StorySiege(RepulsedStory(new JValue("isengard")))).Single().Story!;
+
+        Assert.IsNull(story.Repulsed);
+        Assert.AreEqual("helms_deep_attack", story.AttackMissionId, "the rest of the story stays");
+        AssertWarned("repulsed");
+    }
+
+    [DataTestMethod]
+    [DataRow("one")]
+    [DataRow("same")]
+    [DataRow("three")]
+    [DataRow("blank")]
+    [DataRow("number")]
+    [DataRow("missing")]
+    [DataRow("notarray")]
+    public void Parse_ARepulsedBlockWithABadPair_IsDroppedAndWarns(string shape)
+    {
+        var block = new JObject();
+        switch (shape)
+        {
+            case "one": block["endAlliance"] = new JArray("isengard"); break;
+            case "same": block["endAlliance"] = new JArray("isengard", "isengard"); break;
+            case "three": block["endAlliance"] = new JArray("isengard", "empire_s", "empire"); break;
+            case "blank": block["endAlliance"] = new JArray("isengard", " "); break;
+            case "number": block["endAlliance"] = new JArray("isengard", 3); break;
+            case "notarray": block["endAlliance"] = "isengard"; break;
+        }
+
+        var story = Parse(StorySiege(RepulsedStory(block))).Single().Story!;
+
+        Assert.IsNull(story.Repulsed);
+        AssertWarned("endAlliance");
+    }
+
+    [TestMethod]
+    public void Parse_ARepulsedBlockWithNoAttackMission_IsDroppedAndWarns()
+    {
+        var story = Parse(StorySiege(RepulsedStory(new JObject { ["endAlliance"] = new JArray("isengard", "empire_s") }, attack: null))).Single().Story!;
+
+        Assert.IsNull(story.Repulsed);
+        AssertWarned("attackMission");
+    }
+
+    [TestMethod]
+    public void Parse_ARepulsedBlockOnAHeroStory_IsDroppedAndWarns()
+    {
+        var narrative = HeroNarrative();
+        ((JObject)narrative["story"]!)["repulsed"] = new JObject { ["endAlliance"] = new JArray("isengard", "empire_s") };
+
+        var story = Parse(narrative).Single().Story!;
+
+        Assert.IsNull(story.Repulsed);
+        Assert.AreEqual("lord_1_75", story.HeroId, "the hero story stays");
+        AssertWarned("repulsed");
+    }
+
     [TestMethod]
     public void Parse_AnUnknownStoryKey_WarnsAndKeepsTheStory()
     {
@@ -858,7 +1031,7 @@ public class ChronicleConfigValidatorTests
     }
 
     [TestMethod]
-    public void Parse_AStoryOnANarrative_IsIgnoredWithAWarning()
+    public void Parse_AStoryOnANarrative_ThatNamesNoHero_IsDroppedWithAWarning_AndTheEventStays()
     {
         var narrative = Narrative();
         narrative["story"] = new JObject { ["mission"] = "helms_deep_defend" };
@@ -866,6 +1039,87 @@ public class ChronicleConfigValidatorTests
         var events = Parse(narrative);
 
         Assert.IsNull(events.Single().Story);
-        AssertWarned("'story' is not a known key");
+        AssertWarned("story dropped (it names no hero)");
+    }
+
+    // #1105 slice 3: a narrative event's story decides a hero's life.
+    private static JObject HeroNarrative()
+    {
+        var narrative = Narrative();
+        narrative["windowDays"] = 10;
+        narrative["defender"] = "empire_w";
+        narrative["attackers"] = new JArray("isengard");
+        narrative["story"] = new JObject { ["mission"] = "parth_galen_save", ["attackMission"] = "parth_galen_kill", ["hero"] = "lord_1_75" };
+        ((JObject)narrative["outcomes"]!)["averted"] = new JObject { ["text"] = "{=taom_wc_x_averted}he lives" };
+        return narrative;
+    }
+
+    [TestMethod]
+    public void Parse_AHeroStoryOnANarrative_IsReadWithItsWindowItsSidesAndItsAvertedOutcome()
+    {
+        var definition = Parse(HeroNarrative()).Single();
+
+        Assert.AreEqual("lord_1_75", definition.Story?.HeroId);
+        Assert.AreEqual("parth_galen_save", definition.Story!.MissionId);
+        Assert.AreEqual("parth_galen_kill", definition.Story.AttackMissionId);
+        Assert.AreEqual(10, definition.WindowDays);
+        Assert.AreEqual("empire_w", definition.Defender);
+        CollectionAssert.AreEqual(new[] { "isengard" }, definition.Attackers.ToArray());
+        Assert.AreEqual("{=taom_wc_x_averted}he lives", definition.Averted?.Text);
+        Assert.AreSame(definition.Averted, definition.OutcomeFor(ChronicleEventState.Averted));
+        Assert.AreEqual(0, _warnings.Count, string.Join(" | ", _warnings));
+    }
+
+    [DataTestMethod]
+    [DataRow("windowDays", "windowDays must be a whole number")]
+    [DataRow("defender", "it needs a defender kingdom")]
+    [DataRow("attackers", "it needs at least one kingdom in attackers")]
+    public void Parse_AHeroStoryThatLacksAPart_IsDropped_AndTheEventOccursAsText(string missing, string warning)
+    {
+        var narrative = HeroNarrative();
+        narrative.Remove(missing);
+
+        var definition = Parse(narrative).Single();
+
+        Assert.IsNull(definition.Story);
+        Assert.IsNotNull(definition.Occurred);
+        AssertWarned("story dropped (" + warning);
+    }
+
+    [TestMethod]
+    public void Parse_AChildMayRequireAverted_OnlyOfAnAnchorWithAHeroStory()
+    {
+        var child = Narrative("child", anchor: "Event");
+        child["anchorEvent"] = "fellowship";
+        child["requiresOutcome"] = "Averted";
+
+        var events = Parse(HeroNarrative(), child);
+
+        Assert.AreEqual(2, events.Count, string.Join(" | ", _warnings));
+        Assert.AreEqual(ChronicleEventState.Averted, events[1].RequiresOutcome);
+
+        _warnings.Clear();
+        Assert.AreEqual(1, Parse(Narrative(), child).Count, "a narrative with no hero story never resolves Averted");
+        AssertWarned("requiresOutcome");
+    }
+
+    [TestMethod]
+    public void Parse_AHeroStoryWithNoAvertedOutcome_IsDropped()
+    {
+        var narrative = HeroNarrative();
+        ((JObject)narrative["outcomes"]!).Remove("averted");
+
+        Assert.IsNull(Parse(narrative).Single().Story);
+        AssertWarned("it needs an averted outcome");
+    }
+
+    [TestMethod]
+    public void Parse_AHeroStoryWhoseDefenderIsAlsoAnAttacker_IsDropped()
+    {
+        var narrative = HeroNarrative();
+        narrative["attackers"] = new JArray("empire_w");
+
+        Assert.IsNull(Parse(narrative).Single().Story);
+        AssertWarned("never the defender");
     }
 }

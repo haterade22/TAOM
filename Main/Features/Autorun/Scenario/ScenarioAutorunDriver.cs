@@ -11,13 +11,13 @@ namespace TAOM.Features.Autorun.Scenario;
 /// and quits when asked. A pure state machine ticked with wall seconds; the decisions are in <see cref="ScenarioRules"/>. An unarmed
 /// driver does nothing.
 /// </summary>
-internal sealed class ScenarioAutorunDriver
+internal sealed partial class ScenarioAutorunDriver
 {
     private const string Prefix = "[Autorun][Scenario] ";
     internal const string CommandsFile = "commands.txt";
 
     // The story phases stay before Exiting: Tick and Finish test _phase < Phase.Exiting.
-    private enum Phase { Off, WaitMenu, Creation, WaitMap, MissionMenu, MissionOpen, InMission, MissionReturn, Running, Exiting, Done }
+    private enum Phase { Off, WaitMenu, Creation, WaitMap, MissionMenu, MissionOpen, OfferWait, OfferMenu, InMission, MissionReturn, OfferReturn, Running, Exiting, Done }
 
     private readonly ScenarioPlan _plan;
     private readonly ICampaignAutorunHost _host;
@@ -36,6 +36,8 @@ internal sealed class ScenarioAutorunDriver
     private bool _noticeSeen, _missionSeen, _backClicked;
     private double _missionStart, _missionEnd = -1.0, _freeMapHeld;
     private StoryOutcome? _verdict;
+    private readonly System.Text.StringBuilder _commandsText = new();
+    private readonly System.Collections.Generic.List<string> _commandOutputs = new();
 
     public ScenarioAutorunDriver(ScenarioPlan plan, ICampaignAutorunHost host, IModLogger logger, IOutcomeLog outcomes)
     {
@@ -103,8 +105,11 @@ internal sealed class ScenarioAutorunDriver
             case Phase.WaitMap: WaitMap(); break;
             case Phase.MissionMenu: MissionMenu(); break;
             case Phase.MissionOpen: MissionOpen(); break;
+            case Phase.OfferWait: OfferWait(); break;
+            case Phase.OfferMenu: OfferMenu(); break;
             case Phase.InMission: InMission(); break;
             case Phase.MissionReturn: MissionReturn(); break;
+            case Phase.OfferReturn: OfferReturn(); break;
             case Phase.Running: Running(); break;
             case Phase.Exiting: Exiting(); break;
         }
@@ -178,9 +183,17 @@ internal sealed class ScenarioAutorunDriver
             return;
         }
 
-        RunCommands();
+        RunCommands(_plan.Commands);
         _dayChanged = _wall;
-        Enter(_plan.Kind == ScenarioPlan.KindStoryMission ? Phase.MissionMenu : Phase.Running);
+        if (_plan.Kind == ScenarioPlan.KindStoryOffer && !OfferWindowOpened())
+            return;
+
+        Enter(_plan.Kind switch
+        {
+            ScenarioPlan.KindStoryMission => Phase.MissionMenu,
+            ScenarioPlan.KindStoryOffer => Phase.OfferWait,
+            _ => Phase.Running,
+        });
     }
 
     // The story kind opens the dev story menu from the free map, picks "Open the mission" once that menu has settled, waits out the
@@ -246,7 +259,7 @@ internal sealed class ScenarioAutorunDriver
             _logger.LogInfo(Prefix + "mission ended verdict=" + (_verdict?.ToString() ?? "-") + " seconds=" + ScenarioAutorunDone.F1(_missionEnd - _missionStart));
             var reason = ScenarioRules.MissionReason(_verdict);
             if (reason == null)
-                Enter(Phase.MissionReturn);
+                Enter(_plan.Kind == ScenarioPlan.KindStoryOffer ? Phase.OfferReturn : Phase.MissionReturn);
             else
                 Finish(reason);
         }
@@ -371,10 +384,7 @@ internal sealed class ScenarioAutorunDriver
         Guarded("restore the focus setting", _host.RestoreFocusSetting);
         // The text is built inside the guard, so a throw while building it still lets the outcome and the campaign end run.
         Guarded("write " + ScenarioAutorunDone.DoneFile, () => _host.WriteFile(ScenarioAutorunDone.DoneFile, ScenarioAutorunDone.Text(_plan, facts)));
-        Guarded("log the result", () => _logger.LogInfo(Prefix + "done reason=" + reason + " scenario=" + _plan.Scenario
-            + (_plan.Kind == ScenarioPlan.KindStoryMission
-                ? " mission=" + _plan.MissionId + " verdict=" + facts.Verdict
-                : " days_run=" + ScenarioRules.DaysRun(_dayStart, _lastDay) + " days_wanted=" + _plan.Days)
+        Guarded("log the result", () => _logger.LogInfo(Prefix + "done reason=" + reason + " scenario=" + _plan.Scenario + DoneDetail(facts)
             + " quit=" + (_plan.Quit ? 1 : 0)));
         Guarded("report the outcome", () => ScenarioOutcomes.Report(_outcomes, _plan, facts));
         Guarded("end the campaign", _host.EndCampaign);
@@ -410,15 +420,14 @@ internal sealed class ScenarioAutorunDriver
         _held = 0.0;
     }
 
-    // The armed console commands, once, on the settled map (#1434). A command that throws is reported in its place and the
-    // run goes on; the output goes to the log and to commands.txt in the run folder.
-    private void RunCommands()
+    // Armed console commands, once, on the settled map (#1434; the story offer kind runs a second list after it ends). A command that
+    // throws is reported in its place and the run goes on; the output goes to the log and to commands.txt in the run folder.
+    private void RunCommands(System.Collections.Generic.IReadOnlyList<string> commands)
     {
-        if (_plan.Commands.Count == 0)
+        if (commands.Count == 0)
             return;
 
-        var file = new System.Text.StringBuilder();
-        foreach (var command in _plan.Commands)
+        foreach (var command in commands)
         {
             string output;
             try
@@ -431,10 +440,11 @@ internal sealed class ScenarioAutorunDriver
             }
 
             _logger.LogInfo(Prefix + "command " + command + "\n" + output);
-            file.Append("> ").Append(command).Append('\n').Append(output).Append("\n\n");
+            _commandOutputs.Add(output);
+            _commandsText.Append("> ").Append(command).Append('\n').Append(output).Append("\n\n");
         }
 
-        Write(CommandsFile, file.ToString());
+        Write(CommandsFile, _commandsText.ToString());
         _skipNextDt = true;
     }
 

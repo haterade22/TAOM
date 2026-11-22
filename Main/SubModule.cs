@@ -1250,7 +1250,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomSettlementFoodModel(IoC.Resolve<ISettlementFoodService>(), IoC.Resolve<ISettlementFoodConfigProvider>(), IoC.Resolve<IBattleBalanceConfigProvider>()));
         campaignStarter.AddModel(new TaomSettlementEconomyModel(IoC.Resolve<ISettlementEconomyService>(), IoC.Resolve<ISettlementEconomyConfigProvider>()));
         campaignStarter.AddModel(new TaomBanditDensityModel(IoC.Resolve<IBanditScalingService>(), IoC.Resolve<IHideoutBossFightService>()));
-        campaignStarter.AddModel(new TaomPartyMoraleModel(culturalFeats, careerPassives));
+        campaignStarter.AddModel(new TaomPartyMoraleModel(culturalFeats, careerPassives, IoC.Resolve<TAOM.Features.WarChronicle.Effects.WarMoraleService>(), IoC.Resolve<Features.CoopInterop.IPlayerControlQuery>()));
         campaignStarter.AddModel(new TaomSmithingModel(culturalFeats, careerPassives));
         campaignStarter.AddModel(new TaomClanFinanceModel(
             culturalFeats,

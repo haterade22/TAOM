@@ -193,6 +193,18 @@ A BUTR/BLSE launcher sorts this from the manifests. The explicit list matters fo
 launcher and for anyone hand-ordering. Same order applies on **every** peer — Coop's join handshake
 compares module lists and disconnects on a mismatch.
 
+It does not compare their order. The Co-op group of TAOM's settings holds `CoopLoadOrderWarning`
+(Warn players whose load order differs from the host's, default on), read through
+`CoopSettingsProvider`. The co-op server process reads this switch each time a player joins; a
+player's own value is not read. TAOM.CoopCompat then warns a player whose data mods load in another
+order ([TAOM.CoopCompat](coop-compat.md)). A dedicated server takes the value from
+`taom-server-settings.json`, which `ServerSettingsSource` reads once per process, so a change there
+needs a server restart ([server settings](server-settings.md)). Only the server's value counts, so the
+switch is excluded from the settings fingerprint. The same group holds
+`CoopCareerSync` (Sync careers for co-op players), which stays in the fingerprint: see
+[Career sync](#career-sync-967), and `CoopGuestLadder` (Lords' Ladder for co-op players), also in the
+fingerprint: see [Lords' Ladder for co-op players](#lords-ladder-for-co-op-players).
+
 ## Layer 3 — host authority (session-varying)
 
 **BannerlordCoop does not stop a client ticking the campaign.** Its `PartyTickPatch` blocks only the
@@ -408,14 +420,17 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `BannerInjectionBehavior` | `OnGameLoaded` (`IsAuthority`, #1086) | Rewrites `Clan.Banner` and `Kingdom.Banner` from this peer's config and exclusion list. It writes nothing when the host's banners already match, but it did write when the peers' data or exclusions differed. The new-game injection runs only while a campaign is built, and `SyncData` keeps the exclusion list. Pinned by `ClientWorldWriteGateTests`. |
 | `PlayerAllianceProposalBehavior` | the proposal line's condition (`ShouldDeferToHost`, #1086) | The consequence calls `DiplomacyService.FormPlayerAlliance`, which starts an alliance. A guest never sees the line. Pinned by `ClientWorldWriteGateTests`. |
 | `TournamentRewardsBehavior` | the skill award, in `TournamentSkillAwardService.Award` (`IsDedicatedServer`, `ShouldDeferToHost`, #1086) | The award adds skill XP to this peer's hero, which the host owns, so a guest gets none. The Join flow (`TournamentJoinService.BeginJoin`) stands down for a guest too: no prize swap, which writes the town's shared tournament, and no skill pick. Noting the hero count for the renown model stays ungated: it is transient and read on the same peer. Pinned by `TournamentSkillAwardServiceTests` and `TournamentJoinServiceTests`. |
-| `CareerSwitchDialogueBehavior` | the paid switch and the retrain, in `GauntletCareerScreen` (`ShouldDeferToHost`, #1086) | Both charge hero gold, which the host owns. A guest gets `{=taom_career_coop_gold_off}` and nothing changes. A free switch changes only this peer's career book, like every other career choice, until the career relay (#967). The dialog line itself only opens the screen. No unit test: the screen is a thin UI entry point. |
+| `CareerSwitchDialogueBehavior` | the paid switch and the retrain, in `GauntletCareerScreen` (`ShouldDeferToHost`, #1086) | Both charge hero gold, which the host owns. A guest gets `{=taom_career_coop_gold_off}` and nothing changes. A free switch changes this peer's career book, like every other career choice, and career sync then reports it to the server ([Career sync](#career-sync-967)). The dialog line itself only opens the screen. No unit test: the screen is a thin UI entry point. |
 | `ArmourAcquisitionCampaignBehavior` | `OnDailyTick`, `OnDailyTickSettlement` (`ShouldDeferToHost`) | The market sweep removes armour from town markets and the visiting armourer roll writes saved state. `OnSessionLaunched` resets state when no save record loaded this session (`_loadedThisSession` false): a new campaign, or a save made before the feature. |
-| `ArmouryMenuBehavior` | the armoury purchase, in `ArmouryPresenter` (`GuestTradeClient`, over `ShouldDeferToHost`) | Player action: with `TAOM.CoopCompat` a guest's upgrade runs on the host (#1329, [coop-compat.md](coop-compat.md)); without it the presenter refuses a guest before anything is bought. The menu option itself only opens it. |
+| `ArmouryMenuBehavior` | the armoury purchase, in `ArmouryPresenter` (`GuestTradeClient`, over `ShouldDeferToHost`) | Player action: with `TAOM.CoopCompat` a guest's upgrade, ladder hand-in and ladder claim run on the server (#1329, [coop-compat.md](coop-compat.md), [Lords' Ladder for co-op players](#lords-ladder-for-co-op-players)); without it the presenter refuses a guest before anything is bought. The menu option itself only opens it. |
 | `LordHarnessEventBehavior` | `OnPlayerBattleEnd` (`ShouldDeferToHost`, `IsDedicatedServer`) | The item grant and the relation change in the inquiry callbacks. |
-| `LordsLadderBehavior` | `OnPlayerBattleEnd`, `OnHourlyTick` (`!ShouldDeferToHost && !IsDedicatedServer`) | The item grant and the quest progress. `OnQuestCompleted` stays ungated: it writes this peer's TAOM save data keyed to the quest owner, and its only consumer, the armoury, shows a guest no ladder rows (it refuses a guest without `TAOM.CoopCompat`). |
+| `LordsLadderBehavior` | `OnPlayerBattleEnd`, `OnHourlyTick` (`!ShouldDeferToHost && !IsDedicatedServer`) | The item grant and the quest progress. `OnQuestCompleted` stays ungated: it writes this peer's TAOM save data keyed to the quest owner, and its only consumer, the armoury, shows a guest the server's ladder state instead, and no rung quest (it refuses a guest without `TAOM.CoopCompat`). |
+| `GuestLadderFindBehavior` | `OnMapEventEnded`, `OnHourlyTick`, in `GuestLadderFindService` (`IsSessionActive && IsAuthority`; the roll also needs the ladder switch) | Rolls lord's materials for co-op players' heroes on a winning side and gives them to the party later ([Lords' Ladder for co-op players](#lords-ladder-for-co-op-players)). Server work: the find is saved state and the hand-over writes a party's inventory. It does nothing in single player, where `LordsLadderBehavior` rolls the main hero. Pinned by `GuestLadderFindServiceTests`. |
 | `HostReviewCampaignBehavior` | the camp menu option, in `HostReviewService` (`IsSessionActive`) | Player action: the review mission does not start in a co-op session. |
 | `StoryDevMenuBehavior` | the dev menu behind `taom.story_open`, in `StoryDevMenuBehavior.Open` (`CoopSessionPolicy.IsSinglePlayerAuthority`) | Dev console entry (#1105, slice 1): refused in a co-op session. The mission it opens writes nothing to the campaign, so a single-player run changes no shared state. |
 | `StoryOfferBehavior` | the story offer, in `StoryOfferService.NextOffer` (`CoopSessionPolicy.IsSinglePlayerAuthority`) | War Chronicle story offer (#1105, slice 4): no offer in a co-op session or on a dedicated server, so no peer opens the mission or applies its result; the Hornburg window then ends by the map or its fate on the host. |
+| `WarChronicleEventsBehavior` | the repulsed assault's end of an alliance, in `ChronicleService.ResolveStoryRepulsed` (`CoopSessionPolicy.IsSinglePlayerAuthority`) | War Chronicle repulsed assault (#1105, slice 5): the story offer exists only for a single-player authority, so the lost attack that ends the Isengard and Mordor alliance never runs in a co-op session; the window still resolves Held if something calls it. |
+| `WarChronicleEventsBehavior` | the hero story of a Narrative event, in `ChronicleService.HeroStoryMatters`, read at the open, at each offer and at the kill (`CoopSessionPolicy.IsSinglePlayerAuthority`) | War Chronicle hero story (#1105, slice 3): in a co-op session the Breaking of the Fellowship opens no window and kills nobody; it occurs as text on the host, as before the slice. A window that is open when a session starts ends as text. |
 | `TaomBuildingSeedingBehavior` | `OnGameLoaded` (`IsAuthority`, checked in `TaomBuildingSeedingService`) | Adds town buildings, a shared write. |
 | `LordCourtesiesDialogBehavior` | the dialog lines, in `LordCourtesiesService` (`!ShouldDeferToHost && !IsDedicatedServer`) | Player action: the relation charge, the clan reveal and the troop gift. |
 | `DiplomacyBehavior` | `OnSessionLaunched` (`ShouldDeferToHost`), `OnNewGameCreatedPartialFollowUp` (`IsCoopClient`) | Enforces the permanent alliances, and sets up the initial alliances in a new campaign. A first-time joiner builds a local campaign for character creation, and Coop's `StartAlliance` prefix on a client asks the server instead of forming the alliance, so a Coop client skips both; the host's save carries them. The new-game step reads `IsCoopClient`: with a co-op mod TAOM cannot probe, `ShouldDeferToHost` is true in solo too, and a new campaign there has no host save to carry the alliances. |
@@ -483,7 +498,7 @@ entry can never pay out. The authority half is pinned by two tests in `CoopAutho
 
 `HiddenHostsPlainSightBehavior` (the remembered sightings) is deliberately ungated: it stamps this peer's memory rows, per-player presentation like the `HiddenHostsMemoryBehavior` rows below.
 
-`CareerCampaignBehavior` (the career book repair, migration and death clear) is deliberately ungated: it writes only the TAOM career book, this peer's save data, deterministically from the data and the save, and touches no engine object. Per-hero career state on the server is the career relay (#967).
+`CareerCampaignBehavior` (the career book repair, migration and death clear) is deliberately ungated: it writes only the TAOM career book, this peer's save data, deterministically from the data and the save, and touches no engine object. Per-hero career state on the server comes from [career sync](#career-sync-967).
 
 `CareerPersistenceBehavior` (the career book save and reset) is deliberately ungated: it resets or restores this peer's career book and nothing else.
 
@@ -523,7 +538,7 @@ entry can never pay out. The authority half is pinned by two tests in `CoopAutho
 
 `RacePersistenceBehavior` (the hero race map) is deliberately ungated: at session launch it restores hero races from the save's own map, which the engine save does not carry, then recaptures them into this peer's `SyncData`. It is deterministic from the same save, and every peer needs the races.
 
-`PlayerPossessionBehavior` (the hero takeover, [player-possession.md](player-possession.md)) is deliberately ungated: **a known limit, by decision (#1086)**. At the player switch (the hourly tick is the fallback) it sets the possessed hero's race, grants the start gold, applies the career and seeds special resources on the client, because only the client holds the player's choices. An `IsAuthority` gate would turn the feature off. The gold grant and the race write are shared state the server does not see, so they can be lost or diverge until a relay carries the choices to the server (#967). On a BannerlordCoop client the gold grant does nothing, because Coop's `GiveGoldAction.ApplyInternal` prefix lets only the server give gold.
+`PlayerPossessionBehavior` (the hero takeover, [player-possession.md](player-possession.md)) is deliberately ungated: **a known limit, by decision (#1086)**. At the player switch (the hourly tick is the fallback) it sets the possessed hero's race, grants the start gold, applies the career and seeds special resources on the client, because only the client holds the player's choices. An `IsAuthority` gate would turn the feature off. The gold grant and the race write are shared state the server does not see, so they can be lost or diverge until a relay carries the choices to the server (#967); the career itself reaches the server through [career sync](#career-sync-967). On a BannerlordCoop client the gold grant does nothing, because Coop's `GiveGoldAction.ApplyInternal` prefix lets only the server give gold.
 
 `CreatureBroodCampaignDiagBehavior` (the temporary brood and troll band battle and destruction lines, [creature-bandits.md](creature-bandits.md)) is deliberately ungated: it only writes log lines from campaign events each peer already receives, and changes no state.
 
@@ -584,6 +599,169 @@ Many Hammers (#911, [many-hammers.md](many-hammers.md)) is three client-side pat
 Bandit Voices (#900, [bandit-voices.md](bandit-voices.md)) is deliberately ungated: its postfix on the bandit greeting condition writes two local conversation text variables, skips no vanilla call and declares no campaign behavior, so `CoopGateDocCoverageTests` asks for no row. It stands down on a dedicated server and during a messenger conversation, and its roll uses TAOM's own random source, never the engine's shared stream, so a peer's conversation text cannot change what another peer simulates. `EnableBanditGreetings` is classified as presentation in `CoopSettingsRelevance`. No co-op session has run this build.
 
 `StagedSiegeCampaignLog` (the settlement lines after a staged battle, [staged-siege.md](staged-siege.md) "Run report", #1054) is deliberately ungated: it only writes two log lines, one when a map event ends and one when a settlement changes owner, and only for the settlement a staged battle recorded in `StagedSiegeSlot`. It mutates nothing and saves nothing (`SyncData` is empty). The staged siege itself is absent in co-op (it stands down on a client or replay, and the walls and hall services record the settlement only when armed), so the record is never set there and the handlers return at their first check.
+
+## Career sync (#967)
+
+A TAOM career lives in the career book (`CareerDataService`) of every process, and only the co-op
+server's book is saved: `CareerPersistenceBehavior.SyncData` writes every entry of
+`GetAllData()`, with no filter by hero (`CareerPersistenceBehavior.cs:47-65`). Before career sync, a
+career a player picked or changed stayed in that player's own book: it was gone after a rejoin and the
+other players never saw it. Career sync carries it to the server, which checks it, stores it and
+passes it on. Coop builds the join save with `Game.Current.Save` (Coop `SaveInterface.cs:112`) and the
+client loads it with `SaveManager.Load` (`GameStateInterface.cs:79`), so a stored career reaches every
+later join through the save. That the client's load restores the career book is Likely, not yet seen in
+game.
+
+| Piece | Role |
+|---|---|
+| `CareerDataService.HeroCareerChanged`, `ApplyHeroCareer` | The seam: the event fires after a mutator changed a hero's entry (never on load or reset); the apply writes one hero's entry and fires nothing. |
+| `CareerSync/CareerSyncSnapshot` | One hero's career in the form the book saves, choices in the order taken. |
+| `CareerSync/CareerSyncRules` | The server's check, pure. |
+| `CareerSync/CareerSyncHost` | Server: decides, stores, says what goes to the sender and to the others; raises `StoredCareerChanged` for changes the server makes itself. |
+| `CareerSync/CareerSyncClient` | Client: reports its own hero's career, writes what the server sends. |
+| `CareerSync/ICareerSyncLink`, `CareerSyncModule` | The way to the server, which TAOM.CoopCompat attaches ([coop-compat.md](coop-compat.md)); the registrations. |
+| `Adapters/ICareerSyncHeroAdapter`, `ICareerSyncNotice` | The server's hero lookup (by StringId, through `CampaignObjectManager.Find`); the player's refusal line. |
+| `CareerSystem/ICareerTierTrust`, `CareerSync/CoopCareerTierTrust` | Which tiers count in the passive cache: on the co-op server only the tiers the hero's level opens, elsewhere every tier. |
+
+**Flow.** When the client's campaign join is ready (Coop's `ClientCampaignReady`, which comes after
+`SwitchToPlayer`, so `PlayerPossessionBehavior` has already applied the picked career), the client sends
+a join report of its own hero. If the server already holds a career for that hero it keeps its own copy
+and sends it back only when the two differ; otherwise it checks and stores the report. After that a
+change only marks the hero, and the relay's frame tick sends one report, so a free career switch
+(clear, set, tree stamp, root) goes out once. Each report carries a sequence number that the server's
+answer echoes; the client drops an answer older than its last report, or one that arrives while a newer
+change waits. The server takes the hero from the sender's connection, never from the report.
+
+**The check** (`CareerSyncRules`): the career exists; the root choice comes first; every other choice is
+replayed in order through `CareerChoiceRules.CanTake` against `GetMaxChoicesForHero` for the hero's
+level on the server, so a foreign, duplicate or locked choice, a full fork, a keystone lock and one
+choice too many are refused; tiers are 1 to 3 and no tier or flag comes twice (the book's `UnlockTier` and
+`HeroCareerData.AddFlag` skip a repeat); a flag must be the career's `career_tree_vN` stamp or a
+`GrantAttributeFlag` reward of a career quest. A cleared career is accepted. Ids are capped at 128
+characters, lists at 64 entries. A refused report is logged and the sender gets the server's copy back
+with `{=taom_career_sync_refused}`. When the server holds no career for the hero (no entry, or an entry with
+no career after a join without one or a death clear), the answer is `Known` false: the sender keeps its own
+career and sees
+`{=taom_career_sync_refused_unsaved}`: the career is not in the server's save, so it is gone at the next join.
+The client does not clear it, because a career a player picked before career sync existed reaches the server
+first as a join report, and a refusal there must not wipe it.
+
+**Known limits.**
+- Tier unlocks and quest flags are client-asserted: career quests run on the player's own machine
+  (`CareerQuestService.cs:117-125`), so the server can bound them but cannot prove them. The server stores
+  a choice from a quest-unlocked tier, but its passive cache counts a choice only when the hero's level on
+  the server opens the choice's tier (1, 10, 20; `CareerRegistry.IsTierAvailable`). `CareerPassiveService`
+  asks `ICareerTierTrust` for each choice but the root; `CoopCareerTierTrust` says yes to every tier in
+  single player and on a client, and on the server reads the hero's level through `ICareerSyncHeroAdapter`.
+  A choice with no group is tier 0, which the server never counts. Every rebuild of the cache applies the
+  filter, and `CareerCampaignBehavior.OnHeroLeveledUp` rebuilds it when a hero with a career levels up, so
+  the passive starts to count at the level. A quest-unlocked choice therefore works on the player's own
+  machine and stays in the save; only the server's share of its effect waits for the level. Coop runs XP
+  gain only on the server (its `GainRawXpPatch` refuses it on a client), so the server's
+  `HeroDeveloper.CheckLevel` raises `HeroLevelledUp` for a player's hero; not yet seen in game. Ability
+  mutations still read the stored choices (`MutationService`), but abilities run in missions, and no
+  mission runs on the co-op server process.
+- Eligibility for the hero's culture is logged, not enforced: a possessed hero can carry another culture
+  than the one picked.
+- The level check is strict: a choice taken right after a level-up that has not reached the server yet is
+  refused and set back (logged).
+- A guest hero's death clears its career on the server: `CareerCampaignBehavior.OnHeroKilled` skips only
+  `Hero.MainHero`, which on the server is nobody's, and the clear is passed on to every player.
+- The server's passive cache now holds every player's career, so server-side models that read career
+  passives (party healing, troop survival) apply them to players' parties. Intended; owed an in-game check.
+- Transitions are client-asserted: the server checks the career a report shows, never the step from
+  the copy it holds. So it does not see a fork pick refunded after the visit it was taken in
+  (`CareerChoiceRules.CanRefund`, lock on leave), nor whether the gold for a retrain or for leaving a
+  career that holds a fork pick was paid (`CareerSwitchService.GetSwitchCost`, `SwitchCareer`). The guest's
+  own client refuses the paid switch and the retrain (`{=taom_career_coop_gold_off}`, the
+  `CareerSwitchDialogueBehavior` row above); a modified client could still report the result.
+- A client without TAOM.CoopCompat keeps the old behaviour: its career stays on its own PC.
+- A server-side change to a player's career (today only the death clear above) is stamped with the last
+  report's sequence. If the player's client has a newer report in flight, the client drops the broadcast
+  and the server then stores that report whole, so the server's change is overwritten. No server-side
+  writer for a living player's career exists yet; one added later needs a merge or a version check.
+- A change made in the last frame before the session ends is not sent (`CareerSyncClient.Flush` clears the
+  mark before `Send` finds no session), so the server's older copy wins at the next join.
+- Trust model, by decision (2026-11-18, tiers revised 2026-11-22): the client-asserted transitions above
+  stay. Co-op players share a session by invitation, and a modified client can already cheat in other
+  ways. For tiers the server applies no passive it cannot derive from the level (the filter above); a server
+  check of quest-earned tiers would need the career quests to run on the server, and would become a second
+  way for `CoopCareerTierTrust` to say yes.
+
+**Configuration.** TAOM's settings, Co-op, "Sync careers for co-op players" (`CoopCareerSync`, default
+on), read through `CoopSettingsProvider` in the co-op server process for each report. A dedicated server
+takes it from `taom-server-settings.json`, which `ServerSettingsSource` reads once per process, so a
+change there needs a server restart ([server settings](server-settings.md)). It is in the settings
+fingerprint: it changes what the server stores and sends.
+
+**Tests.** `CareerDataServiceTests` (event and apply), `CareerSyncRulesTests` (each refusal, a real
+shipped career taken to its limit), `CareerSyncHostTests`, `CareerSyncClientTests` (one report per
+action, stale answers dropped), `CareerSyncWiringTests`, `CoopSettingsProviderTests`.
+
+## Lords' Ladder for co-op players
+
+The lord's gear ladder ([armour-acquisition.md](armour-acquisition.md), #693) keeps each hero's rungs
+in `ArmourAcquisitionState` (`LadderClaimed` and `LadderReady`, one bit per `LadderSlot`, keyed by hero
+StringId), saved by the co-op server under `_taom_armourAcquisition`. A player's own copy is the one
+from the join save and goes stale, and in a session every human is a client, the hosting player too,
+so the server runs the ladder for its players through guest trade (#1329).
+
+**State.** A guest's armoury request (`ArmouryBalance`, and the two ladder actions) gets a
+`GuestLadderView` in `GuestTradeReply.Ladder`: the current rung's slot, whether it is done, whether
+this armoury's level on the server reaches the lord level, the lord's material with how many the rung
+needs and the party carries, and, for a done rung, at most 64 pieces it awards. `GuestTradeShops.Ladder`
+builds TAOM's own `LordsLadderService` with the guest hero's `ArmouryPlayerAdapter.ForHero`, the
+`GuestTradeShops.Armoury` shape. With the switch off the server builds no ladder at all, and a failure
+while it reads the rung logs and sends none, so the answer to the request itself never changes.
+
+**Actions.** `GuestTradeAction.LadderHandIn` (5) and `LadderClaim` (6) name the slot the guest saw
+(`Subject`, read with `LadderSlotRules.TryParse`, never a number) and, for a claim, the piece (`Target`).
+They take the armoury path of `GuestTradeHost`: the hero comes from the sender's connection, and the
+free-leader, same-town, out-of-battle and armoury checks apply as for an upgrade. `GuestLadderDesk` then
+checks what the armoury window checks for a local player, because `LordsLadderService.HandIn` does not
+check the town and `Claim` not the armoury level. The answer is a `GuestLadderOutcome` in `Status`:
+`RungChanged` for another slot, a hand-in on a done rung or a claim on one not done; `NotEnough`;
+`ArmouryLevel`; `NotAChoice`; `Off`; `NotDone` when every check passed but the materials could not be
+taken or the piece not given (an item not loaded on the server). A v2.0.40 server answers both actions
+`BadRequest` (`GuestTradeHost.IsWellFormed`); a guest sends them only after a reply carried a ladder,
+which a v2.0.40 server never sends. The rung quests ("Take up the commission") are not offered to
+guests: a career quest would run on the guest's PC only. A hand-in therefore completes no running rung
+quest on the server, as the local window does; a guest has none there.
+
+**Window.** `ArmouryPresenter.Show` lists a guest's ladder rows from the reply's view
+(`GuestLadderRows.Plan`, `GuestLadderPresenter`): the claim of a done rung, enabled at a lord-level
+armoury, or the hand-in of a rung that waits for materials, enabled when the party carries enough. The
+claim list is the view's choices, named from the guest's own item data. The outcome comes back as one
+message line; the server's sync of the party inventory shows the change. A local player's window is
+unchanged (`LadderPresenter`).
+
+**Finds.** On the server of a live session `GuestLadderFindBehavior` hands each `MapEventEnded` to
+`GuestLadderFindService`. The winners come from the special resources' `SnapshotVictory`, which lists
+the winning side's leaders only on the authority of a live session, once per hero, with the player
+control from Coop's registry. For each co-op player's hero (`PlayerControl.Player`, not the local main
+hero) the service rolls TAOM's own `LordsLadderService.RollMaterialDrop` with no kills: the kills are
+counted on the player's PC, and the server takes no count from a client, so a co-op player finds
+materials at the base chance. `RollMaterialDrop` takes the hero and the culture as arguments and reads
+no player adapter, so the registered service serves every hero. The local main hero is rolled only by
+`LordsLadderBehavior`, so no hero is rolled twice for one battle. A find is saved in
+`ArmourAcquisitionState.PendingFinds` (`find|<heroId>`, 1 to 999 units; a v2.0.40 build skips the kind on
+load) and given on a later hourly tick, once the hero leads a free party out of battle, as the hero's
+culture's lord's material. A hero the server no longer has, a dead hero, a culture with no material and a
+material that cannot be added drop the find with a warning; a hand-over that throws keeps the find
+for a later hour and warns once. With the switch off nothing is rolled, and what was
+already found is still given. Known limit: a party that retreated from a won battle may still roll,
+since the winning side's list keeps it.
+
+**Configuration.** TAOM's settings, Co-op, "Lords' Ladder for co-op players" (`CoopGuestLadder`,
+default on), read through `IArmourAcquisitionSettingsProvider.CoopGuestLadderEnabled` in the co-op
+server process for each armoury request and each battle's end, together with Armour Acquisition's own gate
+(`GuestTradeShops.LadderOpen`). A dedicated server takes it from `taom-server-settings.json`, which
+`ServerSettingsSource` reads once per process, so a change there needs a server restart
+([server settings](server-settings.md)). It is in the settings fingerprint: it changes what the server
+does to a player's party.
+
+**Tests.** `GuestLadderHostTests` (view, each outcome, the switch, bad requests, the caps), `GuestLadderRowsTests`, `GuestLadderFindServiceTests`, `ArmourAcquisitionStateTests`,
+`ArmourAcquisitionSettingsProviderTests`, `CoopSettingsProviderTests` (the group and the hint).
 
 ## Mission behaviors (#967 C7)
 
@@ -813,15 +991,15 @@ to characterise. The existing try/catch around acceptance is containment, not co
 
 ## What is NOT done
 
-- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **574** settings across
+- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **577** settings across
   four MCM classes (the 284 here counted `[SettingPropertyGroup]` lines alongside the properties;
-  the split is 540 in `TaomSettings`, 21 in `BattleLoadDiagnosticsSettings`, 12 in
+  the split is 543 in `TaomSettings`, 21 in `BattleLoadDiagnosticsSettings`, 12 in
   `CrashReportSettings` and 1 in `BlowDiagnosticsSettings`).
-  **370 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
-  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 370 are in
-  `TaomSettings`. The 204 excluded (67 counted 2026-09-22, less the three Stall Watchdog settings removed 2026-11-12 with the load watchdog, less the Native Skin Fixes toggle removed with the feature 2026-10-05, the 38 Realm Borders settings added from 2026-09-30 to 2026-10-08, the Crash Report AfterStart dev trigger added 2026-10-01, the Battle Corpses advice toggle and button added 2026-10-01, and the thirteen Menus & Loading Screens settings added 2026-10-01, #704, and the three tick profiler settings added 2026-10-02, and the hitch probe toggle added 2026-10-02, and the Animation Clip Memory probe toggle added 2026-10-02, and the map profiler toggle added 2026-10-03, and the Load-Time Stamps toggle added 2026-10-03, and the Race Abilities war cry, message and debug-log toggles added 2026-10-04, and the Race Abilities glow toggle added 2026-10-04, and the Crash Report mission-start survival toggle added 2026-10-08, and the Crash Report skeleton buffer guard and watch toggles added 2026-10-08, and the Map Performance nameplate cull and map view release settings added 2026-10-08, and the War Chronicle announcements toggle added 2026-10-08, and the three Animation Variety settings and the swing alternative probe toggle added 2026-10-17, and the Hidden Hosts toggle added 2026-10-18, and the Fell Foes debug log toggle added 2026-10-19, the two Telchar's Mark settings added 2026-10-19, #875, the two Reeve's Ledger switches added 2026-10-19, #857, and the Lost Footing census toggle added 2026-10-20, #894, the Watch-Silver and Tidings of the Lists switches added 2026-10-21, #859, less the two Quick Actions "include equipped" toggles removed 2026-10-23, #925, and the Cardolan and Rhudaur realm colours added 2026-10-23, #978, and the Loremaster's Line switch added 2026-10-23, #877, and the Hearth Roll tint toggle added 2026-10-23, #906, and the six camp work, rest healing and start-in-camp settings added 2026-10-24, #860, and the Notable Services switch added 2026-10-24, #899, and the Harvest Road notices toggle added 2026-10-26, #912, and the Make Tools switch added 2026-10-26, #910, and the two Many Hammers switches added 2026-10-26, #911, and the Bandit Voices greetings toggle added 2026-10-26, #900, less the two Auto-Resolve Diagnostics toggles removed with the feature 2026-10-26, and the Inn Rounds switch and its two scales added 2026-10-26, #901, and the Prisoner Banners toggle added 2026-10-27, #902, and the Ered Luin realm colour added 2026-10-27, and the Warden's Tally switch added 2026-10-27, #903, and the Anduin Vale and Angáladh realm colours added 2026-10-28, and the Dorwinion and South Rhovanion realm colours added 2026-10-29, and the two Seat of Seeing settings added 2026-11-03, and the two Seat of Seeing pointer settings added 2026-11-04, and the three Marshal's Word settings added 2026-11-04 and the Outlines switch added with its stage M4, and the Hollow Square and Spacing Repair switches added with its stage M5 (the repair is read once at patch time and stays off whenever co-op is present, so no value of it reaches a co-op simulation), and the Throwers Throw First switch added 2026-11-05 (read only by a live session, which is off online), and the two Seat of Seeing settings for the hero's hand-off and the take of a soldier added 2026-11-04, and the Seat of Seeing rise setting added with its stage S7, and the Realms title styles toggle added 2026-11-11 (it renames parties and the conversation header only), and the Battle HUD Colours dropdown added 2026-11-12 (it recolours three rings of each player's own battle HUD), and the Hall Seats switch added 2026-11-13 (it decides which lords get an agent in the player's own lord's hall mission and writes no campaign state), and the Encounter Lines switch added 2026-11-13 (Patch149, conversation text only), the Offer Story Missions switch added 2026-11-13 (#1105; no story offer opens in a co-op session, so no value of it reaches a co-op simulation), the Crash Report bug report button and its next-start offer toggle added 2026-11-14 (a zip of logs and a main-menu notice), the Enable Cheat Menu switch added 2026-11-14 (every cheat refuses outside single player), and the five Screen Performance settings in `BattleLoadDiagnosticsSettings` added 2026-10-19, #851 to #854, and the Realm Name Size slider added 2026-11-16, #1380, and the IME guard switch added 2026-11-18, #1447, a local window setting, and the Show Stamina Bar switch added 2026-11-19, #1497, which draws or hides the player's own stamina bar, and the two Battle Gear Loot settings added 2026-11-21, read only behind the single-player predicate, and the Team Practice Fights switch added 2026-11-22, #1528, which no co-op session reads, and the Wave Fights at the Training Grounds switch added 2026-11-22, #1529, which only gates a player's click, every write being behind the single-player predicate) are instrumentation, player-local convenience,
-  presentation, two action buttons, and the three time-acceleration knobs whose UI co-op already
-  suppresses; the list with its reasons is
+  **372 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
+  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 372 are in
+  `TaomSettings`. The 205 excluded (67 counted 2026-09-22, less the three Stall Watchdog settings removed 2026-11-12 with the load watchdog, less the Native Skin Fixes toggle removed with the feature 2026-10-05, the 38 Realm Borders settings added from 2026-09-30 to 2026-10-08, the Crash Report AfterStart dev trigger added 2026-10-01, the Battle Corpses advice toggle and button added 2026-10-01, and the thirteen Menus & Loading Screens settings added 2026-10-01, #704, and the three tick profiler settings added 2026-10-02, and the hitch probe toggle added 2026-10-02, and the Animation Clip Memory probe toggle added 2026-10-02, and the map profiler toggle added 2026-10-03, and the Load-Time Stamps toggle added 2026-10-03, and the Race Abilities war cry, message and debug-log toggles added 2026-10-04, and the Race Abilities glow toggle added 2026-10-04, and the Crash Report mission-start survival toggle added 2026-10-08, and the Crash Report skeleton buffer guard and watch toggles added 2026-10-08, and the Map Performance nameplate cull and map view release settings added 2026-10-08, and the War Chronicle announcements toggle added 2026-10-08, and the three Animation Variety settings and the swing alternative probe toggle added 2026-10-17, and the Hidden Hosts toggle added 2026-10-18, and the Fell Foes debug log toggle added 2026-10-19, the two Telchar's Mark settings added 2026-10-19, #875, the two Reeve's Ledger switches added 2026-10-19, #857, and the Lost Footing census toggle added 2026-10-20, #894, the Watch-Silver and Tidings of the Lists switches added 2026-10-21, #859, less the two Quick Actions "include equipped" toggles removed 2026-10-23, #925, and the Cardolan and Rhudaur realm colours added 2026-10-23, #978, and the Loremaster's Line switch added 2026-10-23, #877, and the Hearth Roll tint toggle added 2026-10-23, #906, and the six camp work, rest healing and start-in-camp settings added 2026-10-24, #860, and the Notable Services switch added 2026-10-24, #899, and the Harvest Road notices toggle added 2026-10-26, #912, and the Make Tools switch added 2026-10-26, #910, and the two Many Hammers switches added 2026-10-26, #911, and the Bandit Voices greetings toggle added 2026-10-26, #900, less the two Auto-Resolve Diagnostics toggles removed with the feature 2026-10-26, and the Inn Rounds switch and its two scales added 2026-10-26, #901, and the Prisoner Banners toggle added 2026-10-27, #902, and the Ered Luin realm colour added 2026-10-27, and the Warden's Tally switch added 2026-10-27, #903, and the Anduin Vale and Angáladh realm colours added 2026-10-28, and the Dorwinion and South Rhovanion realm colours added 2026-10-29, and the two Seat of Seeing settings added 2026-11-03, and the two Seat of Seeing pointer settings added 2026-11-04, and the three Marshal's Word settings added 2026-11-04 and the Outlines switch added with its stage M4, and the Hollow Square and Spacing Repair switches added with its stage M5 (the repair is read once at patch time and stays off whenever co-op is present, so no value of it reaches a co-op simulation), and the Throwers Throw First switch added 2026-11-05 (read only by a live session, which is off online), and the two Seat of Seeing settings for the hero's hand-off and the take of a soldier added 2026-11-04, and the Seat of Seeing rise setting added with its stage S7, and the Realms title styles toggle added 2026-11-11 (it renames parties and the conversation header only), and the Battle HUD Colours dropdown added 2026-11-12 (it recolours three rings of each player's own battle HUD), and the Hall Seats switch added 2026-11-13 (it decides which lords get an agent in the player's own lord's hall mission and writes no campaign state), and the Encounter Lines switch added 2026-11-13 (Patch149, conversation text only), the Offer Story Missions switch added 2026-11-13 (#1105; no story offer opens in a co-op session, so no value of it reaches a co-op simulation), the Crash Report bug report button and its next-start offer toggle added 2026-11-14 (a zip of logs and a main-menu notice), the Enable Cheat Menu switch added 2026-11-14 (every cheat refuses outside single player), and the five Screen Performance settings in `BattleLoadDiagnosticsSettings` added 2026-10-19, #851 to #854, and the Realm Name Size slider added 2026-11-16, #1380, and the IME guard switch added 2026-11-18, #1447, a local window setting, and the Show Stamina Bar switch added 2026-11-19, #1497, which draws or hides the player's own stamina bar, the two Battle Gear Loot settings added 2026-11-21, read only behind the single-player predicate, and the Co-op load order warning switch added 2026-11-17, which gates log lines and one notice to the joining player and is read by the co-op server only, and the Team Practice Fights switch added 2026-11-22, #1528, which no co-op session reads, and the Wave Fights at the Training Grounds switch added 2026-11-22, #1529, which only gates a player's click, every write being behind the single-player predicate) are instrumentation, player-local convenience,
+  presentation, two action buttons, and the three time-acceleration knobs, which do nothing on a co-op
+  peer because `TimeAccelerationService` writes no multiplier while it defers; the list with its reasons is
   `Main/Features/CoopInterop/CoopSettingsRelevance.cs`.
 
   Those numbers are pinned per class in `SettingsFingerprintTests`, which is the guard that a new
@@ -831,7 +1009,7 @@ to characterise. The existing try/catch around acceptance is containment, not co
   excluded name may stop matching a real property, and no two settings classes may share a
   property name.
 
-  `SettingsFingerprint` hashes those 370: one code per MCM group plus a global, culture-invariant
+  `SettingsFingerprint` hashes those 372: one code per MCM group plus a global, culture-invariant
   so a comma decimal separator cannot fake a mismatch — and `SettingsFingerprintLog` writes them
   to each peer's log under the co-op gate. Floats and doubles hash as their IEEE bit patterns
   (-0 folded to 0), not as runtime-formatted text, so a .NET 6 server and a net472 client agree on
@@ -840,7 +1018,7 @@ to characterise. The existing try/catch around acceptance is containment, not co
   every diagnostics property is excluded so this moves no hash today (a test asserts exactly
   that), and it means a simulation-affecting setting added to a diagnostics page later is covered
   the day it lands. That makes the "compare settings manually" workaround a comparison of a few
-  short strings instead of 370 values read off two screens.
+  short strings instead of 372 values read off two screens.
 
   **All four classes are `AttributeGlobalSettings<T>`, and the reasoning above depends on it.**
   MCM has three scopes, and only one of them travels with a save. Verified against MCM 5.12.1:
@@ -859,12 +1037,12 @@ to characterise. The existing try/catch around acceptance is containment, not co
   PerSave class would be equal by construction and need not be hashed; a PerCampaign one would
   need hashing more urgently than a global, not less.
 
-  **A matching fingerprint means the MCM settings agree, and nothing wider.** It covers the 370
+  **A matching fingerprint means the MCM settings agree, and nothing wider.** It covers the 372
   values on the four settings pages. It does not cover the `ModuleData` JSON/XML that several
   features fall back to when a setting is unset (on a client only; a server never reads them for an
   MCM-backed field), the `TAOM.Dependencies` flag files
   (`patchshield-disabled.flag`, `saveshield-swallow-disabled.flag`, `coop-force-active.flag`),
-  or any difference outside TAOM. None of those three flags gates a setting in the 370 (each
+  or any difference outside TAOM. None of those three flags gates a setting in the 372 (each
   governs a Dependencies-side shield with no MCM property), but the general point holds: read the
   log line as "our settings pages match", not as "our installs are equivalent".
 

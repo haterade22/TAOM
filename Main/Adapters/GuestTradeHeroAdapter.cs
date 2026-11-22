@@ -47,6 +47,7 @@ public sealed class GuestTradeHeroAdapter : IGuestTradeHeroAdapter
             atWar,
             settlement == null ? null : _owners.GetOwnerInfo(settlement),
             ArmouryPlayerAdapter.ForHero(hero),
-            PlayerPartyAdapter.ForHero(hero, _logger, _troopWeight));
+            PlayerPartyAdapter.ForHero(hero, _logger, _troopWeight),
+            hero.IsAlive);
     }
 }

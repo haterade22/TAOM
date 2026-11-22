@@ -278,6 +278,7 @@ The boundary classes (`MessengerCampaignBehavior`, the UI mixin, `MessengerTarge
 
 ## Changelog
 
+- 2026-11-22: every messenger popup pauses the campaign map. The OK notices open in front of any open popup (`prioritize: true`), which the engine puts back in the queue with its own pause. A notice never waits behind the "Messenger Arrived" inquiry, so it cannot open after Speak and pause the conversation mission's load (`MissionState.OnIdleTick` runs only while the state is unpaused).
 - 2026-11-17: a messenger whose target rides in the army party the player is attached to, outside a settlement, is removed with the "Messenger Error" notice instead of reaching `PlayerEncounter.SetupFields`, which threw (#1429, from Silas He's fix package).
 - 2026-11-13: a messenger that waits for its target writes one line to the message log; a fugitive or released hero of the Special occupation, whom the engine's daily settle skips, is lost on arrival and refused at the send, so that wait cannot be endless (#1133).
 - 2026-11-13: a messenger to a hero the engine will make Active again (a fugitive, a released hero, a hero travelling on orders) now waits and is delivered once the hero is Active; a messenger that arrives while the player is a captive waits for the release (it was dropped as "in your own party"); a prisoner target stays lost; the send check shares the arrival's state rule, so a disabled wanderer is refused and a released or travelling hero can be sent to (#1133).

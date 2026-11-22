@@ -58,6 +58,46 @@ public class ScenarioSupportTests
         Assert.IsFalse(text.Contains("mission_opened") || text.Contains("returned"));
     }
 
+    private static ScenarioPlan OfferPlan() =>
+        ScenarioPlan.Resolve(n => n == ScenarioPlan.EnvVar ? @"E:\arm.txt" : null, _ => true,
+            _ => "kind=story-offer\nout=E:\\o\nevent=hornburg\nchoice=defend\n");
+
+    [TestMethod]
+    public void Text_StoryOfferKind_AppendsEventChoiceVerdictAndSecondsAndDropsTheDays()
+    {
+        var text = ScenarioAutorunDone.Text(OfferPlan(), StoryFacts());
+        var keys = text.TrimEnd('\n').Split('\n').Select(l => l.Split('=')[0]).ToArray();
+
+        CollectionAssert.AreEqual(new[]
+        {
+            "reason", "kind", "scenario", "culture", "creation", "day_start", "day_end", "inquiries_hidden",
+            "notices_hidden", "event_windows_closed", "time_resets", "prepared", "wall_seconds", "started", "ended",
+            "event", "choice", "verdict", "mission_seconds",
+        }, keys);
+        StringAssert.Contains(text, "kind=story-offer\n");
+        StringAssert.Contains(text, "event=hornburg\nchoice=defend\nverdict=Won\n");
+    }
+
+    [TestMethod]
+    public void Detail_StoryOfferKind_NamesEventChoiceVerdictSecondsAndCulture()
+    {
+        Assert.AreEqual("reason=offer_refused event=hornburg choice=defend verdict=- mission_seconds=0.0 culture=gondor",
+            ScenarioOutcomes.Detail(OfferPlan(), Facts("offer_refused") with { MissionSeconds = 0.0 }));
+    }
+
+    [TestMethod]
+    public void Report_StoryOfferKind_UsesTheOfferDoneId()
+    {
+        var log = Substitute.For<IOutcomeLog>();
+
+        ScenarioOutcomes.Report(log, OfferPlan(), StoryFacts("ok"));
+        ScenarioOutcomes.Report(log, OfferPlan(), StoryFacts("offer_not_shown", "-"));
+
+        Assert.AreEqual("taom.autorun.story-offer.done", ScenarioOutcomes.StoryOfferDoneId);
+        log.Received(1).Pass(ScenarioOutcomes.StoryOfferDoneId, "", NSubstitute.Arg.Any<string>());
+        log.Received(1).Fail(ScenarioOutcomes.StoryOfferDoneId, "", NSubstitute.Arg.Is<string>(s => s.StartsWith("reason=offer_not_shown")));
+    }
+
     [TestMethod]
     public void Text_CampaignNew_HasNoMissionKeys()
     {
@@ -226,6 +266,20 @@ public class ScenarioSupportTests
         Assert.IsFalse(host.ChooseBackToMap());
         Assert.IsNull(host.StoryVerdict);
         Assert.IsFalse(host.EventWindowOpenOrWaiting);
+    }
+
+    [TestMethod]
+    public void NullHost_OfferMembers_RefuseAndReportNothing()
+    {
+        var host = new NullCampaignAutorunHost();
+
+        Assert.IsNull(host.PendingOfferEvent);
+        Assert.AreEqual("", host.PendingOfferChoices);
+        Assert.IsFalse(host.InquiryActive);
+        Assert.IsFalse(host.AcceptOfferPopup(out var title));
+        Assert.AreEqual("", title);
+        Assert.IsFalse(host.OfferMenuShown);
+        Assert.IsNull(host.ChooseOfferOption(new[] { "taom_story_offer_defend" }, true));
     }
 
     [TestMethod]
