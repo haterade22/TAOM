@@ -655,6 +655,12 @@ assault on the Hornburg (#1409): both of its results are proven by unattended ru
   day); the scenario judge and the manifests tie verdict, reason and result together, and the judge reads the mission's traits the
   launch captured. Decided by the maintainer the same day: the Ents still march after a repulsed assault (Isengard's volunteer rate
   falls by 15% for 20 days, as after every held Hornburg), and the morale effect's limit on a co-op client stays as documented.
+- 2026-11-22: trunk `04bd88d16` merged in (`488330eaf`), and one unattended run of the Breaking offer on that build
+  (`E:/Temp/scenario-runs/20261122-102618`, runner PASS). The bot won the defence, for the first time in an unattended run:
+  `ended ... verdict=Won side=Defending reason=TargetReached waves=3`, `'breaking' Averted on day 0`, `offer.result ... verdict=Won
+  result=Averted`, and `taom.war_effects` lists `chronicle:breaking:Averted:0: empire_w VolunteerRate +0.100`. One check of another
+  feature failed in that run and is reported on #1415: `taom.hero-abilities.keep-distance result=fail hero=taom_hero_legolas steps=49
+  moved=0 ... melee_seconds=213`. In this long field fight Legolas was told 49 times to step away and was never read as moved.
 - 2026-11-22: six unattended runs on the merged build `b8fcea30e`, each a runner PASS with a clean unload (folders under
   `E:/Temp/scenario-runs` unless named): the Breaking offer, a lost defence (`20261122-085433`: `ended ... verdict=Lost
   side=Defending reason=HeroFell`, `'breaking' Occurred on day 0 (...; lord_1_75: Killed)`, `offer.result ... verdict=Lost
