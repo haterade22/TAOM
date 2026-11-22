@@ -24,9 +24,6 @@ public class LongDefeatEffectsServedTests
         ["SwapGear"] = "Slice 5",
         ["Errand"] = "Slice 5",
         ["DeployEngines"] = "Slice 7",
-        ["TakeOverForBot"] = "Slice 4",
-        ["FellLord"] = "Slice 4",
-        ["General"] = "Slice 4",
     };
 
     private static string Director()

@@ -179,8 +179,19 @@ public class SurvivalRunLordTests
 
         Assert.AreEqual(1, asks.Count(a => a), "once");
         Assert.IsTrue(asks.IndexOf(true) >= 17, "about 20 s after the first batch is out");
+        run.PlayerDown("lord_4_1", forced: true);
+        Assert.IsTrue(run.LordSummary().Deaths.Single().Forced, "the field reported the removal its blow produced");
+    }
+
+    [TestMethod]
+    public void WithLordFalls_ADeathNothingMarked_IsNotForced_EvenAfterTheAskInThatWave()
+    {
+        var run = Fighting(Plan(lordFalls: 1));
+        Assert.IsTrue(Enumerable.Range(0, 30).Any(_ => run.Tick(Snap(Own())).FellLord));
+
         run.PlayerDown("lord_4_1");
-        Assert.IsTrue(run.LordSummary().Deaths.Single().Forced);
+
+        Assert.IsFalse(run.LordSummary().Deaths.Single().Forced, "the ask alone books nothing: the blow's own removal does");
     }
 
     [TestMethod]

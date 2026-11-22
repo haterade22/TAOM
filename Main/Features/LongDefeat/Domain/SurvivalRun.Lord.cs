@@ -16,14 +16,14 @@ internal sealed partial class SurvivalRun
     /// <summary>Every fall, take-over and rise so far, for the report.</summary>
     public RunLord LordSummary() => _life.Summary();
 
-    /// <summary>A body the player controlled fell: the lord's own, or a soldier he had taken. Each one counts one death (D40).</summary>
-    public void PlayerDown(string troopId = "")
+    /// <summary>A body the player controlled fell: the lord's own, or a soldier he had taken. Each one counts one death (D40). <paramref name="forced"/> is the field's own report that the removal is the one the <c>lord_falls</c> blow produced.</summary>
+    public void PlayerDown(string troopId = "", bool forced = false)
     {
         if (Result != null)
             return;
 
         _stats.PlayerDied();
-        _life.Fell(Math.Max(1, _wave), troopId);
+        _life.Fell(Math.Max(1, _wave), troopId, forced);
     }
 
     /// <summary>The field's answer to <see cref="RunEffects.RiseLord"/>: the lord stands in a body of his own again, at the place named, with a taken soldier handed back or not.</summary>
@@ -47,7 +47,7 @@ internal sealed partial class SurvivalRun
         {
             if (_plan.Options.Autoplay && _life.BotTakeoverDue(s.Dt))
                 fx.TakeOverForBot = true;
-            if (_plan.Options.LordFalls == _wave && _life.ForcedFallDue(s.Dt, _stage == WaveStage.Fighting, _wave))
+            if (_plan.Options.LordFalls == _wave && _life.ForcedFallDue(s.Dt, _stage == WaveStage.Fighting))
                 fx.FellLord = true;
         }
 

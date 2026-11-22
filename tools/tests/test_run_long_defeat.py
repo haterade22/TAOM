@@ -76,6 +76,13 @@ STANDARD = BOONED + ("affix", "affix-effect", "commander")
 FULL_LOG = log_of(STANDARD, 5)
 LOSE_LOG = log_of(ld.LOSE_CHECKS, 0)
 FINAL = {"reason": "final", "started": "2026-11-04T10:00:00"}
+
+# The three lines the death rule's engine half writes for one fall, rise and adoption (LongDefeatLordChecks and LongDefeatChecks.PlayerDeath, pinned by LongDefeatLordChecksTests against the manifest rows).
+DEATH_RULE_LINES = "\n".join((
+    "[2026-11-04 10:05:00] [INFO] [Check] id=taom.long-defeat.general-down result=pass seat=none want=none",
+    "[2026-11-04 10:05:01] [INFO] [Check] id=taom.long-defeat.player-death result=pass via=rise",
+    "[2026-11-04 10:05:02] [INFO] [Check] id=taom.long-defeat.rise result=pass at=recorded main_is_lord=1 dist=0.0 dz=0.0 controller=AI want=AI others=0 handed_back=noop was_using=0 general_is_lord=1 owner_is_lord=1",
+))
 def wave_row(wave, seed=7, **more):
     """A wave row of a schema 2 report with the affixes the game would roll for it (the scheduled count of the shipped schedule, drawn from the seed) and the commander the
     roster configures for the wave, killed with no ability used (the summon counts are 0)."""
@@ -97,6 +104,11 @@ NO_FORT = {"purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate":
 NO_LORD = {"wave": 5, "playerDeaths": 0, "lord": {"deaths": [], "takeovers": [], "rises": []}}
 REPORT = {"schema": 2, "seed": 7, "class": ld.bot_class(7), "startWave": 1, "poison": {"ownerMissing": 0}, "final": True, "wavesCleared": 5, "wavesFelled": 1,
           "waves": [wave_row(n) for n in range(1, 6)], **NO_FORT, **NO_LORD}
+def owes_seat(report, lost=False):
+    """Whether a log with no general-down line leaves the judge a debt for this report."""
+    return bool(ld.owed_general_down_passes(report, lost, ""))
+
+
 def cleared(n, seed=7, **more):
     """REPORT with n cleared waves and the one row the game writes for each (RunStats.CloseWave); a wave a run ends in has no row."""
     return {**REPORT, "seed": seed, "class": ld.bot_class(seed), "wavesCleared": n, "waves": [wave_row(w, seed) for w in range(1, n + 1)], **more}
@@ -644,7 +656,7 @@ class ManifestTests(unittest.TestCase):
         lines = self.fixture_lines()
         for row in manifest.checks:
             result = iv.judge_segment(row, lines, []).verdict
-            if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death", "taom.long-defeat.scale", "taom.long-defeat.affix", "taom.long-defeat.affix-effect",
+            if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death", "taom.long-defeat.rise", "taom.long-defeat.general-down", "taom.long-defeat.scale", "taom.long-defeat.affix", "taom.long-defeat.affix-effect",
                           "taom.long-defeat.boon", "taom.long-defeat.reroll", "taom.long-defeat.commander", "taom.long-defeat.summon",
                           "taom.long-defeat.sally", "taom.long-defeat.sally-return", "taom.long-defeat.sally-contact", "taom.long-defeat.field-care",
                           "taom.long-defeat.fort-points", "taom.long-defeat.gate-level", "taom.long-defeat.gate-repair", "taom.long-defeat.gate-attacked", "taom.long-defeat.volley", "taom.long-defeat.posts", "taom.long-defeat.tower-volley",
@@ -2826,7 +2838,7 @@ class LordJudgeTests(unittest.TestCase):
         for bad in ({"beforeWave": "3"}, {"beforeWave": True}, {"at": "moon"}, {"handedBack": "yes"}):
             self.assertIn("lord.rises[0]", ld.lord_problem(self.report([self.death()], rises=[{**self.rise(), **bad}])), repr(bad))
         for at in ("respawn", "home", "recorded", "scene"):
-            self.assertIsNone(ld.lord_problem(self.report([self.death()], rises=[self.rise(at=at)])), at)
+            self.assertIsNone(ld.lord_problem(self.report([self.death()], rises=[self.rise(at=at)], **{"class": "cavalry" if at == "home" else "archer"})), at)
 
     def test_the_judge_refuses_a_report_whose_lord_block_does_not_replay(self):
         ld.target_waves = 5
@@ -2845,10 +2857,84 @@ class LordJudgeTests(unittest.TestCase):
         report = source("Diagnostics", "LongDefeatRunReport.cs")
         for name in ('"own"', '"soldier"', '"bot"', '"person"', '["deaths"]', '["takeovers"]', '["rises"]', '["handedBack"]', '["forced"]'):
             self.assertIn(name, report)
-        player = source("LongDefeatDirector.Player.cs")
-        for at in ('"home"', '"respawn"'):
-            self.assertIn(at, player)
+        lord = source("LongDefeatDirector.Lord.cs")
+        for at in ('"home"', '"respawn"', '"recorded"', '"scene"'):
+            self.assertIn(at, lord)
             self.assertIn(at.strip('"'), ld.RISE_AT)
+
+    def test_a_rise_owes_its_pass_a_death_owes_the_seat_and_a_body_after_a_fall_owes_the_adoption(self):
+        rise = self.report([self.death()], rises=[self.rise(at="recorded")])
+        self.assertTrue(ld.owes_rise(rise))
+        self.assertTrue(owes_seat(rise))
+        self.assertTrue(ld.owes_player_death(rise), "the risen body was adopted, armed or not")
+        quiet = self.report([])
+        self.assertFalse(any(owes(quiet) for owes in (ld.owes_rise, owes_seat, ld.owes_player_death)), "a run with no fall owes none of them")
+        self.assertFalse(ld.owes_rise({"lord": "x"}), "a block that is no dict owes nothing: lord_problem refuses it")
+        self.assertFalse(owes_seat({}))
+
+    def test_the_rise_is_owed_by_the_rise_row_or_by_a_fall_in_a_wave_the_run_went_on_from(self):
+        rout = self.report(rises=[self.rise()])
+        self.assertTrue(ld.owes_rise(rout), "a lord who routed leaves a rise and no death")
+        self.assertFalse(owes_seat(rout), "and no death owes no seat")
+        self.assertFalse(ld.owes_player_death(rout))
+
+        lost_rise = self.report([self.death(wave=2)], wave=4)
+        self.assertTrue(ld.owes_rise(lost_rise), "wave 2 was cleared and the run went on: a build that lost the rise cannot pass by leaving the row out")
+        last = self.report([self.death(wave=4)], wave=4)
+        self.assertFalse(ld.owes_rise(last), "the run ended inside wave 4: no clear, no rise")
+        final = self.report([self.death(wave=5)], wave=5, cleared=5, final=True)
+        self.assertFalse(ld.owes_rise(final), "the clear that reached the target raises nobody")
+        self.assertTrue(ld.owes_rise(self.report([self.death(wave=4)], wave=5, cleared=5, final=True)))
+
+    def test_the_adoption_is_owed_only_when_a_body_followed_the_fall(self):
+        alone = self.report([self.death(wave=5)], wave=5, cleared=5, final=True, lordFalls=5)
+        self.assertFalse(ld.owes_player_death(alone), "a forced fall in the last wave, cleared before the bot's five seconds: no take-over, and the final clear raises nobody")
+        self.assertTrue(ld.owes_player_death(self.report([self.death(wave=2)], [self.take(wave=2, by="bot")])))
+        self.assertTrue(ld.owes_player_death(self.report([self.death(wave=2)], [self.take(wave=3, by="bot")])), "a take-over in the wave after an unanswered rise")
+        self.assertFalse(ld.owes_player_death(self.report([self.death(wave=3)], [self.take(wave=2)])), "a take-over before the first death followed a rout, not a fall")
+        self.assertFalse(ld.owes_player_death(self.report([self.death(wave=3)], rises=[self.rise(before=3)])), "a rise before the wave of the fall")
+
+    def test_a_lost_run_owes_no_seat_for_a_fall_in_the_wave_it_ended_in(self):
+        ended = self.report([self.death(wave=4)], wave=4)
+        self.assertFalse(owes_seat(ended, lost=True), "the lord fell as the last defender: the run ended on that tick and the seat was never read")
+        self.assertTrue(owes_seat(ended), "a run that was not lost reads it")
+        self.assertTrue(owes_seat(self.report([self.death(wave=2), self.death(wave=4)], wave=4), lost=True), "an earlier fall still owes its read")
+
+    def test_the_judge_names_the_death_rule_checks_it_does_not_find(self):
+        ld.target_waves = 5
+        ld.checkout = (HEAD, {})
+        ld.expected_report = {}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "checkout", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+        report = {**REPORT, "playerDeaths": 1, "lord": {"deaths": [self.death(wave=1)], "takeovers": [], "rises": [self.rise(before=2, at="recorded")]}}
+
+        code, why = ld.judge(FINAL, report, FULL_LOG)
+
+        self.assertEqual(code, 1, why)
+        for name in ("rise", "general-down"):
+            self.assertIn("taom.long-defeat." + name, why)
+
+    def test_the_manifest_reads_the_death_rule_lines_the_game_writes(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        rows = {c.id: c for c in manifest.checks}
+        lines = [(None, n, text) for n, text in enumerate(DEATH_RULE_LINES.splitlines(), 1)]
+        for name in ("rise", "general-down", "player-death"):
+            self.assertEqual(iv.judge_segment(rows["taom.long-defeat." + name], lines, []).verdict, iv.PASS, name)
+        rise = DEATH_RULE_LINES.splitlines()[2]
+        skip = [(None, 1, "[2026-11-04 10:05:00] [INFO] [Check] id=taom.long-defeat.general-down result=skip seat=main want=lord reason=has-main")]
+        self.assertEqual(iv.judge_segment(rows["taom.long-defeat.general-down"], skip, []).verdict, iv.NOT_REACHED, "a skip proves nothing and is not a fail")
+        refused = [(None, 1, "[2026-11-04 10:05:00] [INFO] [Check] id=taom.long-defeat.rise result=fail at=recorded reason=spawn-refused handed_back=none")]
+        self.assertEqual(iv.judge_segment(rows["taom.long-defeat.rise"], refused, []).verdict, iv.FAIL)
+        for via in ("respawn", "takeover by=bot", "takeover by=person"):
+            line = [(None, 1, "[2026-11-04 10:05:01] [INFO] [Check] id=taom.long-defeat.player-death result=pass via=" + via)]
+            self.assertEqual(iv.judge_segment(rows["taom.long-defeat.player-death"], line, []).verdict, iv.PASS, via)
+        self.assertIn("handed_back=noop", rise)
+
+    def test_the_names_of_the_new_checks_are_the_games(self):
+        checks = source("Diagnostics", "LongDefeatChecks.cs")
+        for const, name in (("RiseId", ld.RISE_CHECK), ("GeneralDownId", ld.GENERAL_DOWN_CHECK), ("PlayerDeathId", ld.PLAYER_DEATH_CHECK)):
+            self.assertIn(f'{const} = "{ld.CHECK_PREFIX}{name}"', checks)
 
     def test_the_reach_names_are_the_games_enum_in_lower_case(self):
         enum = re.search(r"enum ErrandReach\s*\{([^}]*)\}", source("Domain", "LdLocations.cs")).group(1)
@@ -3466,6 +3552,91 @@ class LordFallsTests(unittest.TestCase):
         self.assertIsNone(ld.lord_falls_problem(self.parse("--lord-falls", "13", "--start-wave", "12", "--waves", "2")), "wave numbers count from the start wave")
         self.assertIn("waves 12 to 13", ld.lord_falls_problem(self.parse("--lord-falls", "2", "--start-wave", "12", "--waves", "2")))
 
+    def test_the_proof_needs_the_forced_death_itself(self):
+        ld.expected_report = {"lordFalls": 2}
+        natural = {"playerDeaths": 1, "lord": {"deaths": [{"wave": 2, "body": "own", "troop": "lord_4_1", "forced": False}], "takeovers": [], "rises": [{"beforeWave": 3, "at": "recorded", "handedBack": False}]}}
+
+        code, why = ld.judge(FINAL, {**REPORT, "lordFalls": 2, **natural}, FULL_LOG + "\n" + DEATH_RULE_LINES)
+
+        self.assertEqual(code, 1, why)
+        self.assertIn("no forced death in wave 2", why)
+
+    def test_a_forced_fall_with_no_rise_is_refused_though_its_report_replays(self):
+        ld.expected_report = {"lordFalls": 1}
+        fell = {"playerDeaths": 1, "lord": {"deaths": [{"wave": 1, "body": "own", "troop": "lord_4_1", "forced": True}], "takeovers": [{"wave": 1, "by": "bot", "troop": "fow_militia"}], "rises": []}}
+        lines = "\n".join(line for line in DEATH_RULE_LINES.splitlines() if "long-defeat.rise" not in line)
+
+        code, why = ld.judge(FINAL, {**REPORT, "lordFalls": 1, **fell}, FULL_LOG + "\n" + lines)
+
+        self.assertEqual(code, 1, "wave 1 was cleared and the run went on, so the lord must rise: a build that lost the rise lost the row too")
+        self.assertIn("no rise before wave 2", why)
+
+    def test_a_rise_one_wave_late_is_refused(self):
+        ld.expected_report = {"lordFalls": 1}
+        late = {"playerDeaths": 1, "lord": {"deaths": [{"wave": 1, "body": "own", "troop": "lord_4_1", "forced": True}], "takeovers": [{"wave": 1, "by": "bot", "troop": "fow_militia"}],
+                                            "rises": [{"beforeWave": 3, "at": "recorded", "handedBack": True}]}}
+
+        code, why = ld.judge(FINAL, {**REPORT, "lordFalls": 1, **late}, FULL_LOG + "\n" + DEATH_RULE_LINES)
+
+        self.assertEqual(code, 1, "the lord spent wave 2 in the soldier: the clear of wave 1 raised nobody (Codex re-review)")
+        self.assertIn("no rise before wave 2", why)
+
+    def test_each_rise_and_each_fall_owes_a_line_of_its_own(self):
+        ld.expected_report = {}
+        twice = {"playerDeaths": 2, "lord": {"deaths": [{"wave": 1, "body": "own", "troop": "lord_4_1", "forced": False}, {"wave": 2, "body": "own", "troop": "lord_4_1", "forced": False}], "takeovers": [],
+                                             "rises": [{"beforeWave": 2, "at": "recorded", "handedBack": False}, {"beforeWave": 3, "at": "recorded", "handedBack": False}]}}
+
+        code, why = ld.judge(FINAL, {**REPORT, **twice}, FULL_LOG + "\n" + DEATH_RULE_LINES)
+        self.assertEqual(code, 1, "one rise line and one seat line cannot pay for two falls and two rises")
+        self.assertIn("taom.long-defeat.rise (1 line(s) for 2 rise(s)", why)
+        self.assertIn("taom.long-defeat.general-down (1 line(s) for 2 death(s)", why)
+
+        self.assertEqual(ld.judge(FINAL, {**REPORT, **twice}, FULL_LOG + "\n" + DEATH_RULE_LINES + "\n" + DEATH_RULE_LINES)[0], 0)
+
+    def test_a_fall_on_the_tick_of_the_final_clear_is_paid_by_its_run_ended_skip(self):
+        ld.expected_report = {}
+        last = {"playerDeaths": 1, "lord": {"deaths": [{"wave": 5, "body": "own", "troop": "lord_4_1", "forced": False}], "takeovers": [], "rises": []}}
+        ended = "[2026-11-04 10:05:00] [INFO] [Check] id=taom.long-defeat.general-down result=skip seat=unread reason=run-ended"
+
+        self.assertEqual(ld.judge(FINAL, {**REPORT, **last}, FULL_LOG + "\n" + ended)[0], 0, "the run ended on the tick the fall was drained: the game writes this skip and no pass (Codex re-review)")
+        code, why = ld.judge(FINAL, {**REPORT, **last}, FULL_LOG)
+        self.assertEqual(code, 1, "no line at all pays nothing")
+        self.assertIn("taom.long-defeat.general-down", why)
+
+    def test_a_mounted_class_rises_at_home_and_no_other_class_does(self):
+        self.assertEqual(ld.mounted_classes(), {"cavalry"}, "the shipped classes.json")
+        fell = {"wave": 5, "playerDeaths": 1, "waves": REPORT["waves"],
+                "lord": {"deaths": [{"wave": 1, "body": "own", "troop": "lord_4_1", "forced": False}], "takeovers": [], "rises": [{"beforeWave": 2, "at": "scene", "handedBack": False}]}}
+        home = {**fell, "lord": {**fell["lord"], "rises": [{"beforeWave": 2, "at": "home", "handedBack": False}]}}
+
+        self.assertIn("a mounted class rises at its home point", ld.lord_problem({**fell, "class": "cavalry"}))
+        self.assertIsNone(ld.lord_problem({**home, "class": "cavalry"}))
+        self.assertIn("a mounted class rises at its home point", ld.lord_problem({**home, "class": "archer"}))
+        self.assertIsNone(ld.lord_problem({**fell, "class": "archer"}))
+        self.assertIsNone(ld.lord_problem({**fell, "class": None}), "a run with no class kit rises on foot")
+
+    def test_a_seat_read_after_a_body_stood_is_a_skip_that_pays(self):
+        ld.expected_report = {}
+        fell = {"playerDeaths": 1, "lord": {"deaths": [{"wave": 2, "body": "own", "troop": "lord_4_1", "forced": False}], "takeovers": [{"wave": 2, "by": "bot", "troop": "fow_militia"}], "rises": [{"beforeWave": 3, "at": "recorded", "handedBack": True}]}}
+        skip = "[2026-11-04 10:05:00] [INFO] [Check] id=taom.long-defeat.general-down result=skip seat=main want=lord reason=has-main"
+        rest = "\n".join(line for line in DEATH_RULE_LINES.splitlines() if "general-down" not in line)
+
+        self.assertEqual(ld.judge(FINAL, {**REPORT, **fell}, FULL_LOG + "\n" + rest + "\n" + skip)[0], 0, "a take-over beat the read: the general is the player's body again, and there is no seat to judge")
+        code, why = ld.judge(FINAL, {**REPORT, **fell}, FULL_LOG + "\n" + rest)
+        self.assertEqual(code, 1, "no line at all pays nothing")
+        self.assertIn("taom.long-defeat.general-down", why)
+        ended = skip.replace("seat=main want=lord reason=has-main", "seat=unread reason=run-ended")
+        self.assertEqual(ld.judge(FINAL, {**REPORT, **fell}, FULL_LOG + "\n" + rest + "\n" + ended)[0], 1, "a run-ended skip pays nothing")
+
+    def test_a_lose_run_with_a_death_and_none_of_the_new_lines_still_passes(self):
+        ld.expected_report = {}
+        fell = {"playerDeaths": 1, "wave": 2, "lord": {"deaths": [{"wave": 2, "body": "own", "troop": "lord_4_1", "forced": False}], "takeovers": [], "rises": []}}
+        lost = {"reason": "lost_defenders", "expect": "lost", "started": "2026-11-04T10:00:00"}
+
+        code, why = ld.judge(lost, {**cleared(1, final=False), **fell}, LOSE_LOG)
+
+        self.assertEqual(code, 0, why)
+
     def test_a_lose_run_cannot_prove_a_fall(self):
         self.delivered()
 
@@ -3491,9 +3662,14 @@ class LordFallsTests(unittest.TestCase):
         ld.checkout = (HEAD, {})
         self.assertEqual(ld.expected_report["lordFalls"], 2)
 
-        fell = {"playerDeaths": 1, "lord": {"deaths": [{"wave": 2, "body": "own", "troop": "lord_4_1", "forced": True}], "takeovers": [], "rises": [{"beforeWave": 3, "at": "respawn", "handedBack": False}]}}
+        fell = {"playerDeaths": 1, "lord": {"deaths": [{"wave": 2, "body": "own", "troop": "lord_4_1", "forced": True}], "takeovers": [], "rises": [{"beforeWave": 3, "at": "recorded", "handedBack": False}]}}
         armed = {**REPORT, "startRerolls": 0, "wave": 5, **fell}
-        self.assertEqual(ld.judge(FINAL, {**armed, "lordFalls": 2}, FULL_LOG)[0], 0, ld.judge(FINAL, {**armed, "lordFalls": 2}, FULL_LOG)[1])
+        played = FULL_LOG + "\n" + DEATH_RULE_LINES
+        self.assertEqual(ld.judge(FINAL, {**armed, "lordFalls": 2}, played)[0], 0, ld.judge(FINAL, {**armed, "lordFalls": 2}, played)[1])
+        code, why = ld.judge(FINAL, {**armed, "lordFalls": 2}, FULL_LOG)
+        self.assertEqual(code, 1, "a death in the report owes the rise, the seat and the adoption")
+        for name in ("rise", "general-down", "player-death"):
+            self.assertIn("taom.long-defeat." + name, why)
         code, why = ld.judge(FINAL, {**REPORT, "startRerolls": 0, "lordFalls": 2}, FULL_LOG)
         self.assertEqual(code, 1, "armed, wave 2 cleared and nobody fell: the option did nothing")
         self.assertIn("never felled the lord", why)

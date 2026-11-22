@@ -515,6 +515,31 @@ public class LongDefeatBindingTests
         Assert.AreEqual(4, (int)FormationClass.Skirmisher, "the posts formation index the A23 boot line was read for");
     }
 
+    // The death rule's engine half (phase4-plan.md Slice 4): the engine's own take-over test and call, the controller and general writes of the rise, the hand-back and the seat, the use test of a soldier handed back,
+    // and the formation and order the take-over and hand-back lines read.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheDeathRuleMembers_StillResolve()
+    {
+        Method(typeof(Mission), "CanTakeControlOfAgent", typeof(bool), typeof(Agent));
+        Method(typeof(Mission), "TakeControlOfAgent", typeof(void), typeof(Agent));
+        Method(typeof(Mission), "SetPlayerCanTakeControlOfAnotherAgentWhenDead", typeof(void));
+        var general = Property(typeof(Team), "GeneralAgent", typeof(Agent));
+        Assert.IsNotNull(general.GetSetMethod(), "Team.GeneralAgent lost its public setter: SetGeneral writes it");
+        var controller = Property(typeof(Agent), "Controller", typeof(AgentControllerType));
+        Assert.IsNotNull(controller.GetSetMethod(), "Agent.Controller lost its public setter: the rise hands a soldier back with it");
+        Property(typeof(Agent), "IsUsingGameObject", typeof(bool));
+        Property(typeof(Agent), "IsHuman", typeof(bool));
+        Property(typeof(Agent), "IsRunningAway", typeof(bool));
+        Property(typeof(Agent), "Formation", typeof(Formation));
+        Field(typeof(Formation), "FormationIndex", typeof(FormationClass));
+        Method(typeof(Formation), "GetReadonlyMovementOrderReference", typeof(MovementOrder).MakeByRefType());
+        Field(typeof(MovementOrder), "OrderEnum", typeof(MovementOrder.MovementOrderEnum));
+        Method(typeof(Agent), "RegisterBlow", typeof(void), typeof(Blow), typeof(AttackCollisionData).MakeByRefType());
+        Assert.IsNotNull(typeof(Agent).GetProperty("Controller", AnyMember)!.GetSetMethod(), "the setter the rise and the adoption call is public");
+        Assert.IsFalse(typeof(Mission).GetMethod("TakeControlOfAgent", AnyMember)!.IsStatic, "TakeControlOfAgent is an instance call on the mission");
+    }
+
     private static PropertyInfo Property(Type type, string name, Type expected)
     {
         var property = type.GetProperty(name, AnyMember);

@@ -72,7 +72,6 @@ internal sealed class LordLife
     private float _downSeconds;
     private float _fightSeconds;
     private bool _forcedAsked;
-    private int _forcedWave;
 
     public LordBody Body { get; private set; } = LordBody.Own;
 
@@ -85,14 +84,13 @@ internal sealed class LordLife
     public RunLord Summary() => new(_deaths.ToList(), _takeovers.ToList(), _rises.ToList());
 
     /// <summary>
-    /// A body of the player's fell. It was the lord's own when he stood in it; any body that falls after that, until he rises, is a soldier's. The fall is forced only when the run asked for it
-    /// in this same wave and the body is his own: an ask nobody carried out marks no later death.
+    /// A body of the player's fell. It was the lord's own when he stood in it; any body that falls after that, until he rises, is a soldier's. <paramref name="forced"/> is a fact the field
+    /// reports: the removal is the one the <c>lord_falls</c> blow produced, because the adapter marked the body it struck. The run infers nothing from the ask, so an ask nobody carried out marks no death.
     /// </summary>
-    public void Fell(int wave, string troop)
+    public void Fell(int wave, string troop, bool forced)
     {
         var own = Body == LordBody.Own;
-        _deaths.Add(new LordDeath(wave, own ? LordBody.Own : LordBody.Taken, troop, own && _forcedWave == wave));
-        _forcedWave = 0;
+        _deaths.Add(new LordDeath(wave, own ? LordBody.Own : LordBody.Taken, troop, forced));
         Body = LordBody.None;
         _downSeconds = 0f;
     }
@@ -148,9 +146,10 @@ internal sealed class LordLife
     }
 
     /// <summary>
-    /// Counts the seconds of the fight in the <c>lord_falls</c> wave; true once, at <see cref="ForcedFallSeconds"/>, when the lord stands in his own body. His fall in that wave is then booked as forced.
+    /// Counts the seconds of the fight in the <c>lord_falls</c> wave; true once, at <see cref="ForcedFallSeconds"/>, when the lord stands in his own body. It is the ask only: the death is booked forced when
+    /// the field reports the removal of the body its blow struck (<see cref="Fell"/>).
     /// </summary>
-    public bool ForcedFallDue(float dt, bool fighting, int wave)
+    public bool ForcedFallDue(float dt, bool fighting)
     {
         if (_forcedAsked || !fighting || Body != LordBody.Own || !(dt > 0f) || float.IsInfinity(dt))
             return false;
@@ -160,7 +159,6 @@ internal sealed class LordLife
             return false;
 
         _forcedAsked = true;
-        _forcedWave = wave;
         return true;
     }
 }

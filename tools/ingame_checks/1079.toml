@@ -125,9 +125,33 @@ absence = "not-reached"
 id = "taom.long-defeat.player-death"
 needs = "a run in which the player's agent dies and is replaced"
 reached = ['\[Check\] id=taom\.long-defeat\.player-death result=']
-pass = ['\[Check\] id=taom\.long-defeat\.player-death result=pass via=(respawn|takeover)']
+pass = ['\[Check\] id=taom\.long-defeat\.player-death result=pass via=(respawn|takeover|rise)']
 fail = ['\[Check\] id=taom\.long-defeat\.player-death result=fail']
-# The unattended run's main agent may never die, so a session with no death is NOT REACHED.
+# The unattended run's main agent may never die, so a session with no death is NOT REACHED. One row per death, key d<N>: via=takeover (a soldier was taken before the clear; by=person|bot names who took him),
+# via=rise (the next body is the risen lord, written by LongDefeatDirector.Lord.cs) or via=respawn (the build with no lord adapter, which a session from before the death rule still holds).
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.rise"
+needs = "a Long Defeat run in which the lord falls and the wave is cleared: python tools/run_long_defeat.py --waves 3 --lord-falls 1 (the keep as recorded, else the scene frame; once more with --class cavalry for at=home); a person's rise with a soldier taken is a [[human]] row"
+reached = ['\[Check\] id=taom\.long-defeat\.rise result=']
+pass = ['\[Check\] id=taom\.long-defeat\.rise result=pass at=(recorded|scene|home|respawn) main_is_lord=1 dist=([0-9.]+|none) dz=([0-9.]+|none) controller=(Player|AI) want=(Player|AI) others=0 handed_back=(1|noop|dead|none) was_using=[01] general_is_lord=1 owner_is_lord=1']
+fail = ['\[Check\] id=taom\.long-defeat\.rise result=fail']
+# Written by LongDefeatDirector.Lord.cs, key w<N> (the wave the rise precedes), on the tick after the rise once adoption ran (phase4-plan.md D40, R24): the main agent is the lord's own new body (main_is_lord=1), within 2 m on the ground of
+# and 3 m in height (dz=) of the rise place (at=recorded for the keep as recorded, scene for the scene's frame, home for the mounted class, respawn when the player attacks in a story mission and the engine's own frame placed him: dist=none dz=none), its controller is Player for a person and AI under autoplay (controller= against want=),
+# no other body of the player's side is Player-controlled (others=0), and the general and the order owner are the lord. handed_back names what became of a taken soldier (1 handed back, noop already AI-driven as every body is under autoplay, none no soldier was
+# taken or he fell before the clear, dead only for one who stopped standing between the order and the hand-back) and was_using=1 says he was using a machine or a ladder (R23: his use is not stopped first). A refused spawn fails with reason=spawn-refused, the soldier stays the player's, and the next clear orders the rise again.
+# A rise on the run's last tick is a skip (reason=run-ended). A session with no fall never reaches it. run_long_defeat.py owes one pass for each rise the report lists, and refuses a report in which a body fell in a wave the run cleared and went on from with no rise before the next wave.
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.general-down"
+needs = "a Long Defeat run in which the lord's body falls: python tools/run_long_defeat.py --waves 3 --lord-falls 1 (seat=none), and with a bought hero standing seat=hero:<id>"
+reached = ['\[Check\] id=taom\.long-defeat\.general-down result=']
+pass = ['\[Check\] id=taom\.long-defeat\.general-down result=pass seat=(none|hero:[A-Za-z0-9_]+) want=(none|lord|hero:[A-Za-z0-9_]+)']
+fail = ['\[Check\] id=taom\.long-defeat\.general-down result=fail']
+# Written by LongDefeatDirector.Lord.cs, key d<N> (the death's number), on the tick after the lord's body fell with no main agent, once the run's seat was written: Team.GeneralAgent is null or the standing hero the run chose (want=), never the dead body (seat=stale fails) and never another hero. An empty seat fails when the chosen hero still stands by the director's own books (stands=1).
+# With a main agent standing already (a take-over or a rise beat the read) the line is a skip (reason=has-main), and a fall on the run's last tick is a skip too (reason=run-ended); a skip proves nothing and reads NOT REACHED. The seat changes only how much its holder's fall moves the defenders' morale: the team AI commands while the player is down either way.
 absence = "not-reached"
 
 [[check]]
@@ -311,6 +335,8 @@ fail = ['\[Check\] id=taom\.long-defeat\.fort-points result=fail']
 # Written once at the boot by LongDefeatDirector.Gates.cs (key: the mission): every recorded tower post, tower volley spot and volley origin has a navmesh and lies inside the mission boundary, the sally points' own test. A point that fails is named
 # (bad=hornburg.post[1](navmesh=no boundary=yes)) and warned about at the boot; it does not refuse the run, because the slice that reads the point decides what to do without it. With nothing recorded the line is a skip (points=0 reason=none-recorded), which proves nothing
 # and reads NOT REACHED. The 2 m clear-ray test of a volley origin (phase3-plan.md section 4) is built with the Elven Volley that reads the origins.
+# When the player defends and the fortress records a keep, the same line judges it as the lord's rise point too (phase4-plan.md D49): rise=recorded, or a fail with rise=scene-fallback rise_navmesh= rise_boundary=, and the rise then uses the
+# scene's keep frame. The keep is not counted in points=.
 absence = "not-reached"
 
 [[check]]

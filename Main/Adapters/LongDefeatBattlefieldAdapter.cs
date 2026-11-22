@@ -364,7 +364,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
             data.BodyProperties(body).Age((int)Math.Round(body.Age));
         }
 
-        // GetAgentBuildDataToSpawnTroop skips the reinforcement flag for the player troop (Mission.cs:4477-4480), and without it a respawned lord appears at the foot frame.
+        // GetAgentBuildDataToSpawnTroop skips the reinforcement flag for the player troop (Mission.cs:4477-4480), and without it a respawned lord with no place appears at the foot frame. With a place the flag is not read: SpawnAgent takes the initial position (Mission.cs:4227, :4271).
         if (forceReinforcement)
             data.IsReinforcement(true);
         if (intoOwnFormation)
@@ -490,26 +490,35 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
                 continue;
             }
 
-            var blow = new Blow(owner.Index)
-            {
-                DamageType = DamageTypes.Blunt,
-                BoneIndex = agent.Monster.HeadLookDirectionBoneIndex,
-                GlobalPosition = agent.Position,
-                BaseMagnitude = FellBlowDamage,
-                InflictedDamage = (int)FellBlowDamage,
-                SwingDirection = agent.LookDirection,
-                DamageCalculated = true,
-            };
-            blow.GlobalPosition.z += agent.GetEyeGlobalHeight();
-            blow.WeaponRecord.FillAsMeleeBlow(null, null, -1, -1);
-            blow.Direction = blow.SwingDirection;
-            var collision = AttackCollisionData.GetAttackCollisionDataForDebugPurpose(false, false, false, true, false, false, false, false, false, false, false, false, CombatCollisionResult.StrikeAgent,
-                -1, 0, 2, blow.BoneIndex, BoneBodyPartType.Head, owner.Monster.MainHandItemBoneIndex, Agent.UsageDirection.AttackLeft, -1, CombatHitResultFlags.NormalHit, 0.5f, 1f, 0f, 0f, 0f, 0f, 0f, 0f,
-                Vec3.Up, blow.Direction, blow.GlobalPosition, Vec3.Zero, Vec3.Zero, agent.Velocity, Vec3.Up);
-            agent.RegisterBlow(blow, in collision);
+            StrikeFelled(agent, owner);
         }
 
         return left.Count;
+    }
+
+    /// <summary>
+    /// The blow <c>KillAgentCheat</c> builds (a blunt 2000 with its debug collision data, <c>RegisterBlow</c>, Mission.cs:6216-6254), owned by <paramref name="owner"/>, who is never the victim. <see cref="Fell"/> and the forced fall of
+    /// the lord (<see cref="FellLord"/>) both build it here. <c>RegisterBlow</c> handles the blow at once (Agent.cs:4702-4705), so a lethal one has called <c>Die</c> when this returns.
+    /// </summary>
+    private static void StrikeFelled(Agent victim, Agent owner)
+    {
+        var blow = new Blow(owner.Index)
+        {
+            DamageType = DamageTypes.Blunt,
+            BoneIndex = victim.Monster.HeadLookDirectionBoneIndex,
+            GlobalPosition = victim.Position,
+            BaseMagnitude = FellBlowDamage,
+            InflictedDamage = (int)FellBlowDamage,
+            SwingDirection = victim.LookDirection,
+            DamageCalculated = true,
+        };
+        blow.GlobalPosition.z += victim.GetEyeGlobalHeight();
+        blow.WeaponRecord.FillAsMeleeBlow(null, null, -1, -1);
+        blow.Direction = blow.SwingDirection;
+        var collision = AttackCollisionData.GetAttackCollisionDataForDebugPurpose(false, false, false, true, false, false, false, false, false, false, false, false, CombatCollisionResult.StrikeAgent,
+            -1, 0, 2, blow.BoneIndex, BoneBodyPartType.Head, owner.Monster.MainHandItemBoneIndex, Agent.UsageDirection.AttackLeft, -1, CombatHitResultFlags.NormalHit, 0.5f, 1f, 0f, 0f, 0f, 0f, 0f, 0f,
+            Vec3.Up, blow.Direction, blow.GlobalPosition, Vec3.Zero, Vec3.Zero, victim.Velocity, Vec3.Up);
+        victim.RegisterBlow(blow, in collision);
     }
 
     // The player's body while it stands on the defender team, else a standing defender with a formation, else any standing defender; null when no defender stands.
@@ -563,5 +572,6 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         _kitFacts = NoLord;
         _kitSkipped = new List<string>();
         _lordWatch.Clear();
+        ReleaseLord();
     }
 }

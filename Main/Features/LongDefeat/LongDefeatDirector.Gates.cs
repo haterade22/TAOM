@@ -116,6 +116,13 @@ internal sealed partial class LongDefeatDirector
             heights.Add(volleyHeight);
         }
 
+        var riseAt = !_playerAttacks && _plan.Keep is { } recorded ? LdPlace.At(new LdPoint(recorded.X, recorded.Y, recorded.Z)) : null;
+        if (riseAt != null)
+        {
+            places.Add(riseAt);
+            heights.Add(null);
+        }
+
         var asked = places.Count == 0 ? new List<LdPointFacts>() : _fort.PointsUsable(places);
         var facts = new List<LdPointFacts>();
         for (var i = 0; i < places.Count; i++)
@@ -126,8 +133,11 @@ internal sealed partial class LongDefeatDirector
         }
 
         var points = names.Select((name, i) => (name, facts[i])).ToList();
-        var verdict = LongDefeatGateChecks.FortPoints(points);
+        LdPointFacts? rise = riseAt != null ? facts[places.Count - 1] : null;
+        var verdict = LongDefeatGateChecks.FortPoints(points, rise);
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.FortPointsId, _mission, verdict);
+        if (rise is { Usable: false })
+            UseSceneRise();
         foreach (var (name, fact) in points.Where(p => !p.Item2.Usable))
             _logger.LogWarning($"{Tag}[Boot] fort point {name} is unusable and is dropped: navmesh {(fact.Navmesh ? "yes" : "no")}, boundary {(fact.Boundary ? "yes" : "no")}, clear {(fact.Clear ? "yes" : "no")}");
         _logger.LogInfo($"{Tag}[Boot] fort points: {verdict.Detail}");

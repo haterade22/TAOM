@@ -36,11 +36,11 @@ public class LordLifeTests
     {
         var life = new LordLife();
 
-        life.Fell(3, "lord_4_1");
+        life.Fell(3, "lord_4_1", forced: false);
         life.Observe(Gone(), 3, byBot: false);
         life.Observe(Soldier("fow_militia"), 3, byBot: false);
         life.Observe(Soldier("fow_militia"), 3, byBot: false);
-        life.Fell(3, "fow_militia");
+        life.Fell(3, "fow_militia", forced: false);
         life.Observe(Soldier("fow_bowman"), 3, byBot: false);
 
         Assert.AreEqual(LordBody.Taken, life.Body);
@@ -63,7 +63,7 @@ public class LordLifeTests
     {
         var life = new LordLife();
 
-        life.Fell(1, "lord_4_1");
+        life.Fell(1, "lord_4_1", forced: false);
         life.Observe(Gone(), 1, byBot: false);
 
         Assert.AreEqual(LordBody.None, life.Body);
@@ -78,8 +78,8 @@ public class LordLifeTests
         // A fall can come before the tick that would have read the take-over; the second body to fall before a rise still cannot be the lord's own.
         var life = new LordLife();
 
-        life.Fell(2, "lord_4_1");
-        life.Fell(2, "fow_militia");
+        life.Fell(2, "lord_4_1", forced: false);
+        life.Fell(2, "fow_militia", forced: false);
 
         CollectionAssert.AreEqual(new[] { LordBody.Own, LordBody.Taken }, life.Summary().Deaths.Select(d => d.Body).ToArray());
     }
@@ -88,7 +88,7 @@ public class LordLifeTests
     public void Observe_WithNoReading_ChangesNothing()
     {
         var life = new LordLife();
-        life.Fell(1, "lord_4_1");
+        life.Fell(1, "lord_4_1", forced: false);
 
         life.Observe(null, 1, byBot: false);
 
@@ -99,7 +99,7 @@ public class LordLifeTests
     public void ATakeUnderAutoplay_IsBookedToTheBot()
     {
         var life = new LordLife();
-        life.Fell(1, "lord_4_1");
+        life.Fell(1, "lord_4_1", forced: false);
 
         life.Observe(Soldier(), 1, byBot: true);
 
@@ -111,7 +111,7 @@ public class LordLifeTests
     {
         var life = new LordLife();
         Assert.IsFalse(life.BotTakeoverDue(10f), "a standing lord needs no body");
-        life.Fell(1, "lord_4_1");
+        life.Fell(1, "lord_4_1", forced: false);
 
         var asks = Enumerable.Range(0, 12).Select(_ => life.BotTakeoverDue(1f)).ToList();
 
@@ -144,7 +144,7 @@ public class LordLifeTests
     public void TheBotsTakeover_IgnoresATickThatIsNoTime(float dt)
     {
         var life = new LordLife();
-        life.Fell(1, "lord_4_1");
+        life.Fell(1, "lord_4_1", forced: false);
 
         Assert.IsFalse(life.BotTakeoverDue(dt));
         Assert.IsFalse(life.BotTakeoverDue(4.9f), "the bad tick added nothing, and neither did it poison the clock");
@@ -152,55 +152,67 @@ public class LordLifeTests
     }
 
     [TestMethod]
-    public void TheForcedFall_ComesOnce_TwentySecondsIntoTheFight_AndMarksThatDeath()
+    public void TheForcedFall_ComesOnce_TwentySecondsIntoTheFight_AndTheDeathTheFieldReportsForcedIsMarked()
     {
         var life = new LordLife();
 
-        Assert.IsFalse(life.ForcedFallDue(30f, fighting: false, wave: 2), "the first batch is not out yet");
-        var asks = Enumerable.Range(0, 25).Select(_ => life.ForcedFallDue(1f, fighting: true, wave: 2)).ToList();
+        Assert.IsFalse(life.ForcedFallDue(30f, fighting: false), "the first batch is not out yet");
+        var asks = Enumerable.Range(0, 25).Select(_ => life.ForcedFallDue(1f, fighting: true)).ToList();
 
         CollectionAssert.AreEqual(new[] { 19 }, asks.Select((due, i) => due ? i : -1).Where(i => i >= 0).ToArray());
-        life.Fell(2, "lord_4_1");
-        life.Fell(2, "fow_militia");
-        CollectionAssert.AreEqual(new[] { true, false }, life.Summary().Deaths.Select(d => d.Forced).ToArray(), "only the death the run asked for is forced");
+        life.Fell(2, "lord_4_1", forced: true);
+        life.Fell(2, "fow_militia", forced: false);
+        CollectionAssert.AreEqual(new[] { true, false }, life.Summary().Deaths.Select(d => d.Forced).ToArray(), "only the removal the forced blow produced is forced");
+    }
+
+    [TestMethod]
+    public void AFall_TheFieldSaysTheForcedBlowProduced_IsBookedForced_InAnyWave()
+    {
+        // The ask and the removal are separate facts: the wave of the ask no longer decides.
+        var life = new LordLife();
+        Assert.IsTrue(life.ForcedFallDue(20f, fighting: true));
+
+        life.Fell(4, "lord_4_1", forced: true);
+
+        Assert.IsTrue(life.Summary().Deaths.Single().Forced);
     }
 
     [TestMethod]
     public void AForcedFall_NobodyCarriedOut_MarksNoLaterDeath()
     {
         var life = new LordLife();
-        Assert.IsTrue(life.ForcedFallDue(20f, fighting: true, wave: 1));
+        Assert.IsTrue(life.ForcedFallDue(20f, fighting: true));
 
-        life.Fell(2, "lord_4_1");
+        life.Fell(2, "lord_4_1", forced: false);
 
-        Assert.IsFalse(life.Summary().Deaths.Single().Forced, "the ask was for wave 1; a natural death in wave 2 is not the test option's");
+        Assert.IsFalse(life.Summary().Deaths.Single().Forced, "nothing struck that body, so the field reported no forced removal");
     }
 
     [TestMethod]
     public void AForcedFall_MarksOnlyTheLordsOwnBody()
     {
         var life = new LordLife();
-        life.Fell(1, "lord_4_1");
+        life.Fell(1, "lord_4_1", forced: false);
         life.Observe(Own(), 1, byBot: false);
-        Assert.IsTrue(life.ForcedFallDue(20f, fighting: true, wave: 1));
+        Assert.IsTrue(life.ForcedFallDue(20f, fighting: true));
         life.Observe(Soldier(), 1, byBot: false);
 
-        life.Fell(1, "fow_militia");
+        life.Fell(1, "fow_militia", forced: false);
 
-        Assert.IsFalse(life.Summary().Deaths.Last().Forced, "a soldier's fall in the armed wave is not the lord's forced fall");
+        Assert.IsFalse(life.Summary().Deaths.Last().Forced, "nothing struck the soldier's body, so his fall is not the lord's forced fall");
     }
 
     [TestMethod]
     public void TheForcedFall_IsNotAskedOfATakenSoldier_OrOfNobody()
     {
         var taken = new LordLife();
-        taken.Fell(1, "lord_4_1");
+        taken.Fell(1, "lord_4_1", forced: false);
         taken.Observe(Soldier(), 1, byBot: true);
-        Assert.IsFalse(taken.ForcedFallDue(60f, fighting: true, wave: 1), "the test option fells the lord's own body only");
+        Assert.IsFalse(taken.ForcedFallDue(60f, fighting: true), "the test option fells the lord's own body only");
 
         var down = new LordLife();
-        down.Fell(1, "lord_4_1");
-        Assert.IsFalse(down.ForcedFallDue(60f, fighting: true, wave: 1));
+        down.Fell(1, "lord_4_1", forced: false);
+        Assert.IsFalse(down.ForcedFallDue(60f, fighting: true));
     }
 
     // ---- the general's seat (D41) ----

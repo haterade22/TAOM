@@ -60,7 +60,8 @@ public class LongDefeatClassPinTests
 
         StringAssert.Contains(body, "Game.Current?.PlayerTroop");
         Assert.AreEqual(2, body.Split(new[] { "Spawn(player, team, true," }, StringSplitOptions.None).Length - 1, "both spawns pass isPlayerSide true");
-        Assert.AreEqual(2, body.Split(new[] { "kit: kit)" }, StringSplitOptions.None).Length - 1, "both spawns carry the kit");
+        Assert.AreEqual(2, body.Split(new[] { "kit: kit" }, StringSplitOptions.None).Length - 1, "both spawns carry the kit");
+        StringAssert.Contains(body, "Spawn(player, team, true, FormationClass.Infantry, true, 1, 0, true, kit: kit, place: place)", "the foot respawn honours the place it is given (the rise at the keep, phase4-plan.md D40)");
     }
 
     [TestMethod]

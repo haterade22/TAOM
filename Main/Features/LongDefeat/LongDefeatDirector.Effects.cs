@@ -25,6 +25,9 @@ internal sealed partial class LongDefeatDirector
         if (fx.PublishStats is { } stats)
             _effects?.PublishStats(stats);
 
+        if (fx.General is { } seat)
+            WriteGeneral(seat);
+
         // The engines destroyed in an earlier wave come back first, so the Hammer writes their hit points too (#1160).
         if (fx.StartWave is { } begun)
             RestoreEngines(begun.Wave);
@@ -82,6 +85,11 @@ internal sealed partial class LongDefeatDirector
 
         foreach (var batch in fx.AttackerBatches)
             SpawnBatch(batch, true, false, standing, closes);
+
+        if (fx.TakeOverForBot)
+            AskBotTakeover();
+        if (fx.FellLord)
+            AskForcedFall();
 
         if (fx.RefreshAttackerTactic)
         {
@@ -309,6 +317,7 @@ internal sealed partial class LongDefeatDirector
         CloseSplit(SplitWave(), "run-ended");
         JudgeEngineUse(true);
         FinishVolleys();
+        ReleaseLordHolds();
         if (_chargedWave != 0)
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + _chargedWave, LongDefeatChecks.StaleStranded(result.Reason, _run.GetView().DefendersStanding));
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.NoRoutId, _mission, LongDefeatChecks.NoRout(_run.Stats));

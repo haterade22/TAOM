@@ -211,6 +211,16 @@ def shipped_classes(path=None):
     return found
 
 
+def mounted_classes(path=None):
+    """The ids of the classes of this tree's classes.json whose mounted is true (the game's ClassesReader takes a JSON true only; anything else is a foot class). A mounted lord rises at his home point."""
+    try:
+        root = json.loads(Path(path or CLASS_FILE).read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError):
+        return set()
+    rows = root.get("classes") if isinstance(root, dict) else None
+    return {row["id"] for row in rows if isinstance(row, dict) and isinstance(row.get("id"), str) and row.get("mounted") is True} if isinstance(rows, list) else set()
+
+
 def fortress_culture(fortress_id):
     """The defenderCulture of a fortress row of fortresses.json, lower case, or None."""
     try:
@@ -1673,16 +1683,92 @@ def sally_waived(name, log_text, recorded=False):
 
 
 # The lord (phase4-plan.md section 7, leaderboard rule 25). Each body of the player's that falls is one death: the lord's own, or a soldier he took over. A takeover follows a death in its wave,
-# and a rise comes at a clear that the run goes on from. A rise's place is `respawn` (today's respawn into the lord's formation) or `home` (a mounted lord), and `recorded` or `scene` (the keep) once Slice 4 raises him there.
+# and a rise comes at a clear that the run goes on from. A rise's place is `recorded` (the keep as recorded), `scene` (the scene's keep frame, also the fallback for an unusable recorded keep) or `home` (a mounted lord);
+# `respawn` is the place of a build with no lord adapter, which an older report still holds.
 LORD_BODIES = ("own", "soldier")
 TAKEOVER_BY = ("person", "bot")
 RISE_AT = ("respawn", "home", "recorded", "scene")
+
+# The checks the death rule's engine half writes (Slice 4). A report that lists a rise owes the rise pass, one that lists a death owes a general-down pass (the seat after a fall) and, when it armed lordFalls, a
+# player-death pass (the next body adopted, via=takeover|rise). A skip proves nothing: general-down writes one when a take-over beat its read.
+RISE_CHECK = "rise"
+GENERAL_DOWN_CHECK = "general-down"
+PLAYER_DEATH_CHECK = "player-death"
+
+
+def _lord_rows(report_json, key):
+    lord = report_json.get("lord")
+    rows = lord.get(key) if isinstance(lord, dict) else None
+    return rows if isinstance(rows, list) else []
+
+
+def _cleared_and_final(report_json):
+    """(the wave numbers the report has a row for, the wave whose clear ended a run that reached its target or None). The clear that reaches the target raises nobody (SurvivalRun.ClearWave)."""
+    rows = report_json.get("waves")
+    cleared = {row.get("wave") for row in rows if isinstance(row, dict) and _is_int(row.get("wave"))} if isinstance(rows, list) else set()
+    reached = report_json.get("reason") == "TargetReached" or report_json.get("final") is True
+    return cleared, (max(cleared) if cleared and reached else None)
+
+
+def owes_rise(report_json):
+    """The rise pass is owed once the report lists a rise, and also when a body of the player's fell in a wave the run cleared and went on from: that clear raises the lord, so a build that
+    lost the rise owes it too and cannot pass by leaving the row out."""
+    if _lord_rows(report_json, "rises"):
+        return True
+    cleared, final = _cleared_and_final(report_json)
+    return any(isinstance(d, dict) and d.get("wave") in cleared and d.get("wave") != final for d in _lord_rows(report_json, "deaths"))
+
+
+def missing_rise(report_json):
+    """None, or what is wrong: a body of the player's fell in a wave the run cleared and went on from, and no rise precedes the next wave. That clear raises the lord, so a build that raised him a
+    wave late, or not at all, cannot pass on its other rows. A judge's debt and no leaderboard rule: a body that falls between the waves is booked to the wave just cleared and rises a clear later."""
+    cleared, final = _cleared_and_final(report_json)
+    before = {r.get("beforeWave") for r in _lord_rows(report_json, "rises") if isinstance(r, dict)}
+    for d in _lord_rows(report_json, "deaths"):
+        wave = d.get("wave") if isinstance(d, dict) else None
+        if _is_int(wave) and wave in cleared and wave != final and wave + 1 not in before:
+            return (f"a body of the player's fell in wave {wave}, which the run cleared and went on from, but lord.rises holds no rise before wave {wave + 1}: the lord rises at that clear "
+                    "(a body that fell between the waves is booked to the same wave: read the log's [Lord] lines)")
+    return None
+
+
+def owed_rise_passes(report_json, log_text):
+    """One entry when the log holds fewer rise lines than the report lists rises (at least one when owes_rise says so). Each rise writes its own pass on the tick after; a rise on the run's last
+    tick writes a run-ended skip, which pays for that one."""
+    owed = len(_lord_rows(report_json, "rises")) or (1 if owes_rise(report_json) else 0)
+    paid = len(check_pattern(RISE_CHECK, "pass").findall(log_text)) + min(1, skip_reasons(RISE_CHECK, log_text).count("run-ended"))
+    return [] if paid >= owed else [f"{RISE_CHECK} ({paid} line(s) for {owed} rise(s): each rise writes its own pass)"]
+
+
+def owed_general_down_passes(report_json, lost, log_text):
+    """One entry when fewer general-down lines pay than the report's deaths owe. Each death owes a line: a pass (the engine's general is the chosen standing hero or nobody), or a skip with
+    reason=has-main (a body already stood at the read: a take-over, or the rise of a fall on a clear's own tick, so the general is the player's body again). A fall the run ended on is never read
+    back: a lost run owes nothing for a death in the wave it ended in, and in any other run one run-ended skip pays for a death in the last wave (a fall drained on the tick of the final clear)."""
+    deaths = [d for d in _lord_rows(report_json, "deaths") if isinstance(d, dict)]
+    in_last = sum(1 for d in deaths if d.get("wave") == report_json.get("wave"))
+    owed = len(deaths) - (in_last if lost else 0)
+    reasons = skip_reasons(GENERAL_DOWN_CHECK, log_text)
+    paid = len(check_pattern(GENERAL_DOWN_CHECK, "pass").findall(log_text)) + reasons.count("has-main")
+    if not lost and in_last:
+        paid += min(1, reasons.count("run-ended"))
+    return [] if paid >= owed else [f"{GENERAL_DOWN_CHECK} ({paid} line(s) for {owed} death(s): each fall owes a pass, or a skip with reason=has-main)"]
+
+
+def owes_player_death(report_json):
+    """The player-death pass is owed when a body followed a fall: a soldier taken in or after the wave of the first death, or a rise after it. The game writes the line when it adopts that
+    body. A fall with no body after it (in the last wave, before the bot's five seconds, and the final clear raises nobody) owes none."""
+    waves = [d["wave"] for d in _lord_rows(report_json, "deaths") if isinstance(d, dict) and _is_int(d.get("wave"))]
+    if not waves:
+        return False
+    first = min(waves)
+    return (any(isinstance(t, dict) and _is_int(t.get("wave")) and t["wave"] >= first for t in _lord_rows(report_json, "takeovers"))
+            or any(isinstance(r, dict) and _is_int(r.get("beforeWave")) and r["beforeWave"] > first for r in _lord_rows(report_json, "rises")))
 
 
 def lord_problem(report_json):
     """None when the report's lord block replays, else what is wrong (rule 25). The report must carry playerDeaths, the lord block and its wave, and playerDeaths is the number of deaths listed.
     Every death and takeover lies inside the waves the run played. A rise precedes the wave after one the run cleared and went on from (the clear that reached the target raises nobody), and
-    no two rises precede one wave. A forced death needs lordFalls for that wave and the lord's own body, and there is at most one. A run armed with lordFalls that cleared that wave must list
+    no two rises precede one wave, and a rise is at home exactly when the report's class is mounted. A forced death needs lordFalls for that wave and the lord's own body, and there is at most one. A run armed with lordFalls that cleared that wave must list
     a death in it, or the test option never took effect. The rules do not tie a takeover or a rise to a death: a lord the AI drives can rout, which removes his body with no death, and he is
     still raised at the clear."""
     if "lord" not in report_json or "playerDeaths" not in report_json:
@@ -1720,10 +1806,9 @@ def lord_problem(report_json):
         if not (isinstance(t, dict) and played(t.get("wave")) and t.get("by") in TAKEOVER_BY and isinstance(t.get("troop"), str)):
             return f"lord.takeovers[{i}] is {t!r}, wanted a wave the run played ({first} to {last}), a by of {' or '.join(TAKEOVER_BY)} and a troop"
 
-    rows = report_json.get("waves")
-    cleared = {row.get("wave") for row in rows if isinstance(row, dict) and _is_int(row.get("wave"))} if isinstance(rows, list) else set()
     # The clear that reaches the target ends the run before any rise is ordered (SurvivalRun.ClearWave), so that one clear raises nobody.
-    final_clear = max(cleared) if cleared and report_json.get("reason") == "TargetReached" else None
+    cleared, final_clear = _cleared_and_final(report_json)
+    mounted = report_json.get("class") in mounted_classes()
     before = set()
     for i, r in enumerate(rises):
         if not (isinstance(r, dict) and _is_int(r.get("beforeWave")) and r.get("at") in RISE_AT and isinstance(r.get("handedBack"), bool)):
@@ -1733,15 +1818,17 @@ def lord_problem(report_json):
         if r["beforeWave"] in before:
             return f"lord.rises[{i}] is a second rise before wave {r['beforeWave']}; the lord rises once at a clear"
         before.add(r["beforeWave"])
+        if (r["at"] == "home") != mounted:
+            return f"lord.rises[{i}] is at {r['at']} for class {report_json.get('class')!r}: a mounted class rises at its home point (home), and no other class does"
 
     if _is_int(falls) and falls in cleared and not any(d["wave"] == falls for d in deaths):
         return f"lordFalls is {falls} and wave {falls} was cleared, but lord.deaths lists no death in it: the game never felled the lord"
     return None
 
 
-# --lord-falls is refused until the game carries the fall out: the run asks for it (RunEffects.FellLord) and the director serves it from phase4-plan.md Slice 4 on. A test reads the director's
-# source for that reader and compares, so the slice that serves it must turn this on, and nobody starts a game run for an option that does nothing.
-LORD_FALLS_DELIVERED = False
+# --lord-falls is refused while the game does not carry the fall out: the run asks for it (RunEffects.FellLord) and the director serves it since phase4-plan.md Slice 4 (the adapter fells the lord's own body with a
+# blow owned by a standing attacker). A test reads the director's source for that reader and compares, so a build that stops serving it must turn this off, and nobody starts a game run for an option that does nothing.
+LORD_FALLS_DELIVERED = True
 
 
 def lord_falls_problem(known):
@@ -1833,6 +1920,12 @@ def judge(done, report_json, log_text=None):
     armed_fall = expected_report.get("lordFalls")
     if armed_fall is not None and not any(isinstance(row, dict) and row.get("wave") == armed_fall for row in report_json["waves"]):
         return 1, f"armed with lordFalls={armed_fall} but the run cleared no wave {armed_fall}: a run that ends before or inside that wave proves no fall"
+    # The proof is the forced blow itself. A lord who fell by himself before the 20 s keeps the report consistent (rule 25 accepts it), and proves nothing about the test option: run it again.
+    if armed_fall is not None and not any(isinstance(d, dict) and d.get("forced") is True and d.get("wave") == armed_fall for d in _lord_rows(report_json, "deaths")):
+        return 1, f"armed with lordFalls={armed_fall} but the report lists no forced death in wave {armed_fall}: the lord fell by himself first, or the blow never landed"
+    mismatch = None if lose else missing_rise(report_json)
+    if mismatch:
+        return 1, f"the report's lord block lacks a rise: {mismatch}"
     poison = report_json.get("poison")
     reported_missing = poison.get("ownerMissing") if isinstance(poison, dict) else None
     if isinstance(reported_missing, bool) or not isinstance(reported_missing, int):
@@ -1884,6 +1977,8 @@ def judge(done, report_json, log_text=None):
         required = required + (REROLL_CHECK,)
     if not lose and owes_field_care(report_json) and FIELD_CARE_CHECK not in required:
         required = required + (FIELD_CARE_CHECK,)
+    if not lose and owes_player_death(report_json) and PLAYER_DEATH_CHECK not in required:
+        required = required + (PLAYER_DEATH_CHECK,)
     for owed, name in ((owes_gate_level, GATE_LEVEL_CHECK), (owes_gate_repair, GATE_REPAIR_CHECK), (owes_gate_attacked, GATE_ATTACKED_CHECK), (owes_fort_points, FORT_POINTS_CHECK),
                        (owes_volley, VOLLEY_CHECK), (owes_posts, POSTS_CHECK), (owes_tower_volley, TOWER_VOLLEY_CHECK)):
         if not lose and owed(report_json) and name not in required:
@@ -1913,6 +2008,9 @@ def judge(done, report_json, log_text=None):
     missing.extend(owed_engine_passes(report_json, log_text))
     if not lose and reached_effect_affixes(report_json) and not check_pattern(AFFIX_EFFECT_CHECK, "(?:pass|skip)").search(log_text):
         missing.append(AFFIX_EFFECT_CHECK)
+    if not lose:
+        missing.extend(owed_rise_passes(report_json, log_text))
+        missing.extend(owed_general_down_passes(report_json, lost, log_text))
     if missing:
         hint = ""
         if GATE_ATTACKED_CHECK in missing and "no-blow" in skip_reasons(GATE_ATTACKED_CHECK, log_text):
@@ -2021,7 +2119,7 @@ def build_parser():
     parser.add_argument("--break-engines", type=whole_in_range(1, 100),
                         help="at this clear the game destroys every ram and siege tower, so the next wave proves they come back (#1160; a test option, below --waves; the proof run adds --start-gold 5000 so the bot repairs the gate)")
     parser.add_argument("--lord-falls", type=whole_in_range(1, 1000),
-                        help="in this wave the game fells the lord's own body 20 s after the first batch is out, so the run proves the death rule (phase4-plan.md D47; a test option, a wave the run plays; refused until Slice 4 delivers the fall)")
+                        help="in this wave the game fells the lord's own body 20 s after the first batch is out, so the run proves the death rule (phase4-plan.md D47; a test option, a wave the run clears, never with --lose; the run must then list a forced death in that wave, a rise, and the rise, general-down and player-death pass lines)")
     parser.add_argument("--posts-variant", type=str.upper, choices=POSTS_VARIANTS,
                         help="how the high towers' archers are held (spike S6): A a scripted position, B with a speed limit of 0, C with the posts formation not splittable by AI; sets TAOM_LD_POSTS_VARIANT for the game (default: the game's own, A)")
     parser.add_argument("--start-rerolls", type=whole_in_range(0, 3), default=DEFAULT_START_REROLLS,
