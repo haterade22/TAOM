@@ -1847,11 +1847,17 @@ def lord_falls_problem(known):
 
 
 def owes_return(report_json, lose):
-    """The sally-return pass is owed only when a wave was cleared (the return happens at a clear), never to a run built to lose. A deep run lost in its first wave has cleared none.
-    Plan item 17 wanted "a wave cleared after a sally"; this is looser and accepted: the point is per fortress, so every wave sallies or none does, and a false FAIL would need a
-    cleared wave that did not sally beside one that did, which a recorded point never gives (a taken-over wave writes its own return skip with its reason, a real miss)."""
+    """The sally-return pass is owed only when a wave was cleared (the return happens at a clear) in which the rider did not fall in his own body, never to a run built to lose. A deep run
+    lost in its first wave has cleared none. A rider who fell in every cleared wave returned in none: each of those clears writes a skip with reason=taken-over and the lord rises at home
+    instead (run 20261121-205801). Plan item 17 wanted "a wave cleared after a sally"; this is looser and accepted: the point is per fortress, so every wave sallies or none does. A report
+    with no wave rows keeps the rule of any cleared wave."""
     cleared = report_json.get("wavesCleared")
-    return not lose and _is_int(cleared) and cleared >= 1
+    if lose or not _is_int(cleared) or cleared < 1:
+        return False
+    rows = report_json.get("waves")
+    waves = {row.get("wave") for row in rows if isinstance(row, dict)} if isinstance(rows, list) else set()
+    fell = {d.get("wave") for d in _lord_rows(report_json, "deaths") if isinstance(d, dict) and d.get("body") == "own"}
+    return not waves or bool(waves - fell)
 
 
 def waves_count_problem(report_json):

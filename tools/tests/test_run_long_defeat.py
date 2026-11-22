@@ -1304,6 +1304,19 @@ class PhaseTwoJudgeTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("taom.long-defeat.sally-return", why)
 
+    def test_a_rider_who_fell_in_every_cleared_wave_owes_no_return(self):
+        # Run 20261121-205801 (--class cavalry --lord-falls 1): the rider fell in each of the three waves, every clear wrote a sally-return skip with reason=taken-over, and he rose at home.
+        def fell(*waves, body="own"):
+            return {"wavesCleared": 3, "waves": [wave_row(n) for n in range(1, 4)], "lord": {"deaths": [{"wave": w, "body": body, "troop": "lord_4_1", "forced": False} for w in waves], "takeovers": [], "rises": []}}
+
+        self.assertFalse(ld.owes_return(fell(1, 2, 3), False), "he returned in no wave: his own body was down at every clear")
+        self.assertTrue(ld.owes_return(fell(1, 2), False), "wave 3 was cleared with the rider alive, so its return is owed")
+        self.assertTrue(ld.owes_return(fell(), False))
+        self.assertTrue(ld.owes_return(fell(1, 2, 3, body="soldier"), False), "a soldier's death is not the rider's")
+        self.assertFalse(ld.owes_return(fell(1, 2), True), "never to a run built to lose")
+        self.assertTrue(ld.owes_return({"wavesCleared": 2}, False), "a report with no rows keeps the old rule")
+        self.assertFalse(ld.owes_return({"wavesCleared": 0, "waves": []}, False))
+
     def test_once_a_point_exists_both_checks_are_required_again(self):
         report, _ = self.cavalry_run()
         # A sally that went out passes, so the point is recorded: a return skip that claims no point does not stand in for the return.
