@@ -76,7 +76,7 @@ Every service NPC in a settlement scene is fetched by name from one attribute on
 
 | Attribute | What stands where | Read at |
 |---|---|---|
-| `tournament_master` | the arena master who offers tournaments and practice fights | `CultureObject.cs:292` |
+| `tournament_master` | the training master (vanilla's arena master) who offers tournaments and practice fights | `CultureObject.cs:292` |
 | `villager`, `caravan_master`, `caravan_guard` | village crowd filler, caravan leader, hireable caravan guard | `CultureObject.cs:293-295` |
 | `prison_guard`, `guard` | dungeon NPC, town and keep guard | `CultureObject.cs:296-297` |
 | `blacksmith`, `weaponsmith`, `armorer`, `merchant`, `horseMerchant` | the five shop NPCs. `horseMerchant` is camelCase; get the case wrong and it silently reads null | `CultureObject.cs:298-299`, `:324-327` |

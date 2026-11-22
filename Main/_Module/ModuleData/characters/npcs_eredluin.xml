@@ -5,7 +5,7 @@
 	<!-- All dwarves use race="dwarf" -->
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_eredluin" race="dwarf" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.eredluin" name="{=aom_elu_arena}Arena Master">
+	<NPCCharacter id="tournament_master_eredluin" race="dwarf" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.eredluin" name="{=aom_elu_arena}Training Master">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Equipments>

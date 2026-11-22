@@ -490,7 +490,7 @@
 	</NPCCharacter>
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_khand" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.battania" name="{=aom_kh_arena}Arena Master">
+	<NPCCharacter id="tournament_master_khand" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.battania" name="{=aom_kh_arena}Training Master">
 		<face><face_key_template value="BodyProperty.default_character_creation_body_property_battania" /></face>
 		<skills></skills>
 		<Equipments>

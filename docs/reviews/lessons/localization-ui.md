@@ -1704,3 +1704,11 @@ The troop weight header only cleared vanilla's red over-capacity tint, never rai
 **Prevent:** `GauntletFloatWriteBackGateTests` fails a non-float property that is bound to one of those attributes, has a public setter and can notify a change. For any new binding, read the widget property's setter in the decompile and ask what comes back; a precedent proves a binding only if its value changes while the screen is open. A HUD or prefab change owes a game run that shows the widget with a changing value before review ends: for the battle HUD that is `/game-run` with `--control-check` and `--screenshots`.
 
 **Source:** [rca-stamina-phases-1-2-2026-11-19.md](../rca-stamina-phases-1-2-2026-11-19.md), the addendum (run `20261119-200716`).
+
+### A rename searches every name the thing carries, not only the word being replaced (#1527, 2026-11-22)
+
+**Why missed:** The rename of the town arena to the Training Grounds searched vanilla's and TAOM's English for "arena". The keeper of the place also goes by "Tournament Master": two TAOM NPC names under another key, vanilla's `IHKXNP9H` (the character Umbar's culture points at) and two sentences. None of them contains the word, so the search, the bulk replace and the new gate all passed while three town cultures still showed the old name. Both review lenses and Codex found it by searching the keeper's other name.
+
+**Prevent:** Before renaming a player-facing term, list the things renamed (the place, its keeper, its menu), then every wording each one has in vanilla's English rows and in TAOM's sources. Start from the data that points at the thing (`CultureObject.TournamentMaster`, the `ArenaMaster` occupation), not from the word. Give the gate the same list: `TrainingGroundsTextTests` rejects both wordings and asserts the name of every `ArenaMaster` character.
+
+**Source:** the deep review of #1527: lens 5 F9, lens 7 finding 1 and the P2 of the Codex pre-review (prompt: [codex-prereview-training-grounds-rename-2026-11-22.prompt.md](../codex-prereview-training-grounds-rename-2026-11-22.prompt.md); its output is in the untracked `docs/reviews/raw/`).

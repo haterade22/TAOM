@@ -202,7 +202,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_tournaments}Tournaments")]
     [SettingPropertyBool("{=taom_mcm_EnableTidingsOfTheLists}Tidings of the Lists", Order = 4, RequireRestart = false,
-        HintText = "{=taom_mcm_EnableTidingsOfTheLists_hint}Adds an option to a town's arena menu: for a small fee the arena master names the nearest towns holding a tournament now that are not at war with your realm. It marks nothing on the map. When off, the option is hidden. Single-player only. Default: on.")]
+        HintText = "{=taom_mcm_EnableTidingsOfTheLists_hint}Adds an option to a town's training grounds menu: for a small fee the training master names the nearest towns holding a tournament now that are not at war with your realm. It marks nothing on the map. When off, the option is hidden. Single-player only. Default: on.")]
     public bool EnableTidingsOfTheLists { get; set; } = true;
 
     // --- Armour Acquisition ---
@@ -1081,7 +1081,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_performance}Performance/{=taom_mcm_group_dead_mount_cleanup}Dead Mount Cleanup", GroupOrder = 49)]
     [SettingPropertyBool("{=taom_mcm_EnableDeadMountDespawn}Despawn Dead Mounts", Order = 0, RequireRestart = false,
-        HintText = "{=taom_mcm_EnableDeadMountDespawn_hint}Remove killed horses, wargs and other mounts a few seconds after they die instead of leaving them on the field. A mount is a full agent with a skeleton and a live ragdoll, so a cavalry battle piles up corpses that cost frame time and do nothing. Field battles, sieges and sally-outs only; towns, arenas and tournaments keep their bodies. Side effect: freeing agent slots lets reinforcements arrive slightly sooner than vanilla.")]
+        HintText = "{=taom_mcm_EnableDeadMountDespawn_hint}Remove killed horses, wargs and other mounts a few seconds after they die instead of leaving them on the field. A mount is a full agent with a skeleton and a live ragdoll, so a cavalry battle piles up corpses that cost frame time and do nothing. Field battles, sieges and sally-outs only; towns, training grounds and tournaments keep their bodies. Side effect: freeing agent slots lets reinforcements arrive slightly sooner than vanilla.")]
     public bool EnableDeadMountDespawn { get; set; } = true;
 
     [SettingPropertyGroup("{=taom_mcm_group_performance}Performance/{=taom_mcm_group_dead_mount_cleanup}Dead Mount Cleanup")]
@@ -1094,7 +1094,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_performance}Performance/{=taom_mcm_group_battle_corpses}Battle Corpses", GroupOrder = 55)]
     [SettingPropertyBool("{=taom_mcm_EnableBattleCorpseCleanup}Clean Up Battle Corpses", Order = 0, RequireRestart = false,
-        HintText = "{=taom_mcm_EnableBattleCorpseCleanup_hint}Fade fallen soldiers after a set time and cap how many bodies a battle keeps, whatever your Number of Corpses option says. The engine walks its whole corpse list every frame, and players reported mid-battle freezes at high corpse settings. Field battles, sieges and sally-outs only; towns, arenas and hideouts keep their bodies. Never raises your own Number of Corpses option.")]
+        HintText = "{=taom_mcm_EnableBattleCorpseCleanup_hint}Fade fallen soldiers after a set time and cap how many bodies a battle keeps, whatever your Number of Corpses option says. The engine walks its whole corpse list every frame, and players reported mid-battle freezes at high corpse settings. Field battles, sieges and sally-outs only; towns, training grounds and hideouts keep their bodies. Never raises your own Number of Corpses option.")]
     public bool EnableBattleCorpseCleanup { get; set; } = true;
 
     [SettingPropertyGroup("{=taom_mcm_group_performance}Performance/{=taom_mcm_group_battle_corpses}Battle Corpses")]

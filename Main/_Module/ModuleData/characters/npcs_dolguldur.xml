@@ -5,7 +5,7 @@
 	<!-- All use race="dg_uruk" for correct orc rendering -->
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.dolguldur" name="{=aom_dg_arena}Arena Master">
+	<NPCCharacter id="tournament_master_dolguldur" race="dg_uruk" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.dolguldur" name="{=aom_dg_arena}Training Master">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills></skills>
 		<Equipments>

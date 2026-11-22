@@ -194,7 +194,7 @@ Hero biographies and NPC names used to sit in this table; since 2026-10-01 they 
 `taom_hero_text_strings.xml` and `taom_character_name_strings.xml` (with culture text, career data and
 Custom Battle scene names) and translated like the rest.
 
-**Patch25 and English (fixed, #706):** `MBTextManager_GetLocalizedText_Patch` applies TAOM's English override for the 489 `taom_module_strings.xml` keys not prefixed `taom_` only while the game language is English, so every other language shows its translated row. Among them are the Abanissa and Shaghana culture names and descriptions, their clan names and their notables. Before the fix those keys showed English in every language. See [localization-override.md](localization-override.md).
+**Patch25 and English (fixed, #706):** `MBTextManager_GetLocalizedText_Patch` applies TAOM's English override for the `taom_module_strings.xml` keys not prefixed `taom_` only while the game language is English, so every other language shows its translated row. Among them are the Abanissa and Shaghana culture names and descriptions, their clan names and their notables. Before the fix those keys showed English in every language. See [localization-override.md](localization-override.md).
 
 ## Performance
 

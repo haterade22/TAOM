@@ -508,7 +508,7 @@
 	</NPCCharacter>
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_dunland" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.empire" name="{=aom_dn_arena}Arena Master">
+	<NPCCharacter id="tournament_master_dunland" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.empire" name="{=aom_dn_arena}Training Master">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Equipments>

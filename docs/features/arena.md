@@ -319,8 +319,21 @@ render correctly wherever that path is.
 
 If another custom-skeleton race is ever a tournament participant and clips inside mounts, extend the check in [TournamentService.ShouldDismountInTournament](../../Main/Features/Arena/TournamentService.cs) (e.g. compare against a small set of race names instead of the single `DwarfRaceName` constant). Add a unit test mirroring `ShouldDismountInTournament_DwarfRace_ReturnsTrue`. Non-humanoid creatures (spider, etc.) are **troops**, not tournament heroes, so they never hit this path — see memory `nonhumanoid-creature-troop-not-mount`.
 
+## The Training Grounds name (#1527)
+
+In English the town arena is the Training Grounds and its keeper the Training Master. Only text changed: the menu id `town_arena`, the location id `arena`, the occupation `ArenaMaster` and every scene keep their names, because code and other mods reach them by id.
+
+- **Vanilla text:** each vanilla key that names the arena (the `RewordedKeys` list in `TrainingGroundsTextTests`) has one English row in `taom_module_strings.xml`, id `taom_training_grounds_<key>`, which the [Localization Override](localization-override.md) applies. The location name and the menu title share one key, `mMU3H6HZ`.
+- **The keeper:** TAOM's own tournament masters are named "Training Master" in `characters/npcs_*.xml`. A culture that uses one of vanilla's (Umbar uses `tournament_master_aserai`) gets the name through the vanilla key `IHKXNP9H`.
+- **TAOM text:** the Tidings of the Lists strings and the MCM hints that named arenas say training grounds.
+- **Kept:** the `KeptKeys` list of the same test: a gladiator's life story (`3Yax10rQ`), a vanilla hero's biography (`ZwavTRcF`) and a multiplayer duel message (`v5EqMSlD`).
+- **Other languages:** the Localization Override applies in English only (#706), so the other twelve languages keep vanilla's word for the arena. TAOM's translated rows that say "arena master" in those languages still match it.
+- **Gate:** `TrainingGroundsTextTests` fails when a reworded key loses its row, when a TAOM English literal names the arena, or when the installed game declares an English row with the word under a key in neither list (that last check needs the install).
+- **Not checked in game yet:** that the location name on the town screen reads the override. The occupation text `str_occupation.ArenaMaster` (`Duoo5R2P`) is reworded too, but no reader of it was found in the v1.5.7 decompile, so the game may never show it.
+
 ## Changelog
 
+- 2026-11-22: the arena is the Training Grounds in English and its keeper the Training Master (#1527): one English row for each vanilla key that names it, the tournament masters renamed in `characters/npcs_*.xml`, and TAOM's Tidings strings and MCM hints reworded. Ids and scenes are unchanged. The other twelve languages keep their translated rows; the rows of four MCM hints that were never translated (ten language files) hold the new English. Gate: `TrainingGroundsTextTests`.
 - 2026-11-14: the regular band no longer applies the Tierf 2 junk floor to an armour piece the class table lists; it asks for a value of 750 instead (`RegularMinTableArmourValue`), because the armour rebalance (#1271) leaves almost all light and medium armour below Tierf 2. `Fits` takes the table class itself and computes the effective class inside, and `IArmourGateService.GetTableClass` reports real table membership, so an unlisted piece the gate classes by engine tier keeps the Tierf floor. Weapons, shields, harness and unlisted pieces are unchanged.
 - 2026-10-05: checked against Bannerlord v1.5.4: the seven `DefaultTournamentModel` overrides and the Patch46, 60, 62 and 69 targets are unchanged from v1.5.3 (decompile diff of both builds; strict binding gate on v1.5.4). No code change.
 - 2026-10-05: tournament fighters wear their own armour again (Mike). `GetParticipantArmor` now gives the culture practice kit only in arena practice fights; in a tournament mission, played or skipped match, it returns the fighter's own `RandomBattleEquipment` directly, because a skipped match never sets `MissionMode.Tournament` and base would give its simulation the host's kit. `TournamentService.ArmourDummyId` decides, with four tests.
@@ -335,6 +348,7 @@ If another custom-skeleton race is ever a tournament participant and clips insid
 
 ## GitHub Issue
 
+- **Training Grounds name:** [#1527](https://github.com/haterade22/TAOM/issues/1527) (2026-11-22).
 - **Patch46 dwarf dismount:** [#277 — fix(arena): dwarves spawn inside the horse as tournament cavalry](https://github.com/haterade22/TAOM/issues/277) (2026-06-09). RCA: [docs/reviews/rca-tournament-dwarf-dismount-2026-06-09.md](../reviews/rca-tournament-dwarf-dismount-2026-06-09.md).
 - **Original culture-armor model:** [#52](https://github.com/haterade22/TAOM/issues/52) (2026-03-31).
 

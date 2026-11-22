@@ -702,7 +702,7 @@
 
     <NPCCharacter
         id="tournament_master_southrhovanion"
-        name="{=aom_srh_tournament_master}Tournament Master"
+        name="{=aom_srh_tournament_master}Training Master"
         occupation="ArenaMaster"
         culture="Culture.southrhovanion"
         default_group="Infantry">
