@@ -10,7 +10,9 @@ namespace TAOM.Features.LongDefeat;
 /// skips the later row, and a row with no known category, no name or text, or no valid effect is skipped. An effect key outside the closed vocabulary of
 /// <see cref="BoonKeys"/>, or a value outside its range (a whole key needs a JSON integer), skips that effect. A drawback uses the same keys, never
 /// <c>gold</c> or <c>affixCount</c>, and needs its own <c>drawbackText</c>, so a cost is never hidden from the player. A stat, damage or health key also needs a
-/// <c>target</c> (infantry, archers, cavalry or player); without a valid one that effect is skipped.
+/// <c>target</c> (infantry, archers, cavalry or player); without a valid one that effect is skipped. A row may carry <c>cultures</c>: for a defender culture, the <c>name</c> (and
+/// optionally the <c>text</c>) the boon shows at that culture's fortresses. Words with no name are skipped with a warning, and the boon then shows its own; a text that is not a text
+/// costs one warning and falls back to the boon's own text.
 /// </summary>
 internal static class BoonsReader
 {
@@ -105,7 +107,41 @@ internal static class BoonsReader
         }
 
         seen.Add(id);
-        return new BoonRow(id, category, name, text, effects) { ClassId = classId, Drawback = drawback, DrawbackText = drawback.Count > 0 ? drawbackText : "" };
+        return new BoonRow(id, category, name, text, effects)
+        {
+            ClassId = classId, Drawback = drawback, DrawbackText = drawback.Count > 0 ? drawbackText : "", Cultures = ReadCultures(o["cultures"], label, text, s),
+        };
+    }
+
+    private static IReadOnlyDictionary<string, BoonWords> ReadCultures(JToken? token, string label, string text, LongDefeatConfigScope s)
+    {
+        var read = new Dictionary<string, BoonWords>(StringComparer.OrdinalIgnoreCase);
+        if (token == null)
+            return read;
+
+        if (!(token is JObject cultures))
+        {
+            s.Warn($"'{label}.cultures' is not an object; the boon shows its own name at every fortress");
+            return read;
+        }
+
+        foreach (var culture in cultures.Properties())
+        {
+            var words = culture.Value as JObject;
+            var name = LongDefeatConfigScope.Text(words?["name"]);
+            if (name == null)
+            {
+                s.Warn($"'{label}.cultures.{culture.Name}' needs a 'name'; that culture sees the boon's own name");
+                continue;
+            }
+
+            var own = LongDefeatConfigScope.Text(words!["text"]);
+            if (own == null && words["text"] != null)
+                s.Warn($"'{label}.cultures.{culture.Name}.text' is not a text; that culture sees the boon's own text under its own name");
+            read[culture.Name] = new BoonWords(name, own ?? text);
+        }
+
+        return read;
     }
 
     private static IReadOnlyList<BoonEffect> ReadEffects(JToken? token, string label, bool drawback, LongDefeatConfigScope s)

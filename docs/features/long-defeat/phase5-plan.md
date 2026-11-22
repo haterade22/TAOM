@@ -23,6 +23,22 @@ D50, A36, E59, R34, OQ21, S13.
 | P4 | Helm's Deep recording session (Mike) | Owed. The Minas Tirith session (section 6) uses the same commands and should follow it, so one session proves the tool first. |
 | P5 | Phase 5 data that needs a Phase 4 place (armoury, yard, towers) | Waits for the Phase 4 slice that builds that place. Phase 5 Slices 1 to 4 do not. |
 
+## State on 2026-11-22
+
+Mike's word that day: build Minas Tirith now, as Helm's Deep was built. The decisions marked Maintainer below were taken at their recommendations for Slices 1 to 4 (D51 Imrahil, D53 Mordor only, D54 the Witch-king as general, D60 the three existing heroes). Each is one data row to undo.
+
+| Slice | State | Differs from the text below |
+|---|---|---|
+| 1 | Built | The wrapper's class list was left on Helm's Deep: both fortresses offer the same four class ids, so a per-fortress read changes nothing yet |
+| 2 | Built; played in run `20261122-095258` (A36 and A37 hold: the gates are found and the scene's frames work; A40 holds: the Lossarnach axe fits the two-handed slot) | The fortress name reuses `TAOM_FOW_Region_MinasTirith` ("Minas Tirith", translated already). The offer ids are `militia`, `archer_militia`, `lossarnach_axes`, `morthond_bowmen`, `pinnath_gelin`, `citadel_guard`. The Cavalry text change moved to Slice 5 |
+| 3 | Built; Gorbag played in run `20261122-111133` (killed in wave 4 after four war cries); Gothmog and the Witch-king (A38) not yet | The rank names are the lords' own name keys (`aom_lord_1_63_name` and the others), not new `TAOM_LD_Rank_Mordor_*` keys. The general carries both abilities, as the Helm's Deep general does. The summon brings the Barad-dur guard, not the uruk warrior, so it is stronger than the wave it joins. Waves 5 to 10 and the bounties differ from section 4.2: the table there was up to 15 troop levels above Helm's Deep at wave 9 and paid less per level, so the built table follows the Helm's Deep curve |
+| 4 | Built; upgrades, heroes, gate repair and levels and field care passed in run `20261122-095258` | Fifteen upgrade steps; every one is an edge of `troops_gondor.xml` |
+| 5 | Built | Not the rewording of section 4.5. A boon row carries `cultures` and a class carries `texts`: words for one defender culture. Helm's Deep keeps its Rohan names, Minas Tirith shows Gondor names, and no English text changed, so D63 no longer changes Helm's Deep and no translated row went stale. Ids, order and weights are the same at both fortresses, so the pinned rolls hold. Open: Minas Tirith sells no rider, so the three cavalry rows are never in its pool; a Dol Amroth pack would open them |
+| 6 | Built; Hard played at both fortresses (runs `20261122-111133` and `20261122-115207`: counts 138, 150, 150, 156, 163 and powers from wave 3); an endless wave on Hard not yet | Difficulty as D64: `normal` and `hard`, the factor 1.25 and the affixes 2 waves earlier, both in `waves.json` `rules.hard`. The wave count cap scales with the factor: hard's cap is 375 (`min(1000, round(normal * factor))`, one rounding after normal's own cap of 300), where the table in section 5 said the count stays inside `maxCount`. With that cap kept, hard would equal normal from wave 20. Each difficulty keeps its own best run (`<fortress>:hard`), and the co-op payload is version 2 |
+| 7 to 10 | Not built | |
+
+Answered since the draft: the tier test accepts the 16 to 26 and 21 to 36 links (it wants a rising level only); the JSON keys of the war cry are `swingSpeedPercent` and `moveSpeedPercent`; the knight's horse and harness are rows beside his equipment rosters, not inside one.
+
 ## 1. Scope and non-scope
 
 **In scope**

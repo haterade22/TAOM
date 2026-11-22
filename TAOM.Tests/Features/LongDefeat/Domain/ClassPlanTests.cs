@@ -149,4 +149,17 @@ public class ClassPlanTests
         Assert.IsFalse(KitSlots.IsKnown("item0"), "case matters: the engine parses the name");
         Assert.IsTrue(KitSlots.IsMount("Horse") && KitSlots.IsMount("HorseHarness") && !KitSlots.IsMount("Cape"));
     }
+
+    [TestMethod]
+    public void OnOffer_GivesAClassItsCulturesText_AndLeavesTheKitAndTheOtherCulturesAlone()
+    {
+        var both = new Dictionary<string, ClassKit>(StringComparer.OrdinalIgnoreCase) { ["vlandia"] = new ClassKit(Array.Empty<LdKitSlot>()), ["gondor"] = new ClassKit(Array.Empty<LdKitSlot>()) };
+        var rider = new RunClass("rider", "{=N}Rider", "{=T}A rider of the Mark", false, both)
+            { Texts = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { ["gondor"] = "{=TG}A knight of the City" } };
+        var plan = new ClassPlan(new[] { rider, Class("sword") });
+
+        Assert.AreEqual("{=TG}A knight of the City", plan.OnOffer("Gondor").Single().Text);
+        Assert.AreEqual("{=T}A rider of the Mark", plan.OnOffer("vlandia")[0].Text);
+        Assert.IsNotNull(plan.OnOffer("gondor").Single().LoadoutFor("gondor"));
+    }
 }

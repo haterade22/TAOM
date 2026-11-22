@@ -592,4 +592,33 @@ public class LongDefeatDirectorGateTests
         Assert.IsTrue(rig.Log.Lines.Any(l => l.StartsWith("WARN ") && l.Contains("hornburg.post[1]")), "the boot line names the point");
         Assert.IsTrue(rig.Log.Lines.Any(l => l.Contains("hornburg.post[1]") && l.Contains("is unusable and is dropped")), "Slice 7 drops a bad post, and the warning says so (the tower keeps only its usable points)");
     }
+
+    // The 5-second sample reads the attackers above the walls' high line with the doorway count: a count above zero fails unless an attacker stood above that line first, at a fortress where the line clears the gates.
+    [TestMethod]
+    public void AttackersBehindARepairedGate_FailTheCheck_UnlessAttackersStoodOnTheWalls()
+    {
+        // No attacker high: fail. Attackers high where the high line clears the gates (Minas Tirith): skip. Attackers high where the gate stands above that line (Helm's Deep): still a fail.
+        foreach (var (onWalls, clears, result, reason) in new[] { (0, true, "fail", ""), (4, true, "skip", " reason=walls-reached"), (4, false, "fail", "") })
+        {
+            var rig = NewRig();
+            rig.ClearWaveOne();
+            rig.Field.HitGates(100000f);
+            rig.Tick();
+            rig.Session.TryRepairGates();
+            rig.Tick();
+            rig.StartNextWave();
+            rig.Field.HitGates(3000f);
+            rig.Field.HighLineClearsGates = clears;
+            rig.Field.BehindGate = 2;
+            rig.Field.AttackersHigh = onWalls;
+            for (var i = 0; i < 6; i++)
+                rig.Tick();
+            rig.ClearWave();
+
+            var line = rig.Of(LongDefeatChecks.GateAttackedId).Single();
+            Assert.IsTrue(rig.Outcomes.Has(result, LongDefeatChecks.GateAttackedId), onWalls + " high, clears=" + clears + ": " + string.Join("\n", rig.Outcomes.Lines));
+            Assert.IsFalse(line.Contains("through=0 "), line);
+            Assert.AreEqual(reason.Length > 0, line.EndsWith(" reason=walls-reached"), line);
+        }
+    }
 }

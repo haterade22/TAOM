@@ -1451,12 +1451,15 @@ class PhaseTwoJudgeTests(unittest.TestCase):
         self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD + ("scale",), 5))[0], 0)
 
     def test_a_damage_factor_alone_also_owes_the_scale_check(self):
-        # The game's own rule (a wave is scaled when health, damage or the tier steps moved) also holds for a roster whose health line is flat.
-        rows = [wave_row(n) for n in range(7, 11)] + [wave_row(11, healthFactor=1.0, damageFactor=1.03)]
+        # The game's own rule (a wave is scaled when health, damage or the tier steps moved). The row carries the shipped roster's factors for wave 11, which wave_problem now holds every row to.
+        rows = [wave_row(n) for n in range(7, 11)] + [wave_row(11, healthFactor=1.05, damageFactor=1.03)]
         report = {**REPORT, "wavesCleared": len(rows), "waves": rows}
         code, why = ld.judge(FINAL, report, FULL_LOG)
         self.assertEqual(code, 1)
         self.assertIn("taom.long-defeat.scale", why)
+        # The judge's row must carry the roster's own health factor, so damage alone is pinned on the rule itself: a roster with a flat health line.
+        self.assertTrue(ld.reached_endless({"waves": [{"healthFactor": 1.0, "damageFactor": 1.03}]}))
+        self.assertFalse(ld.reached_endless({"waves": [{"healthFactor": 1.0, "damageFactor": 1.0}]}))
 
     def test_a_run_inside_the_authored_list_asks_no_scale_check(self):
         for waves in ([], [wave_row(1, healthFactor=1.0)], [wave_row(1)], [wave_row(1, healthFactor=True)],
@@ -1940,10 +1943,11 @@ class ClassManifestTests(unittest.TestCase):
         for cid in list(ld.CLASSES) + ["two-handed", "archer2", "Cavalry_1"]:
             self.assertTrue(pattern.search(CLASS_LINE.replace("class=archer", "class=" + cid)), cid)
 
-    def test_the_human_rows_for_the_kit_and_the_second_question_are_here(self):
+    def test_the_human_rows_for_the_kit_the_difficulty_question_and_the_class_question_are_here(self):
         claims = [h["claim"] for h in self.manifest()["human"]]
         self.assertTrue(any("class kit" in c for c in claims), claims)
-        self.assertTrue(any("second question" in c for c in claims), claims)
+        self.assertTrue(any("difficulty question" in c for c in claims), claims)
+        self.assertTrue(any("class question" in c and "after the fortress and the difficulty" in c for c in claims), claims)
 
 
 # The pinned boon draws over the shipped boons.json (thirteen free rows since Slice 7 added the third Legend row): seed 1, pick 1 draws 0, 1 and 2 (each reroll leaves out the three just shown), and
@@ -4556,6 +4560,44 @@ class GateJudgeTests(unittest.TestCase):
         self.assertIn("gate-attacked", why)
         self.assertIn("no-blow", why)
 
+    def test_a_walls_reached_skip_stands_in_for_the_pass_and_a_mixed_or_other_skip_does_not(self):
+        # Minas Tirith: attackers climb the walls in every wave, so the doorway count cannot be judged and the game writes a skip that says so.
+        crossed = self.line("gate-attacked", "skip", self.ATTACKED.replace("through=0", "through=48") + " before_walls=0 reason=walls-reached")
+        no_blow = self.line("gate-attacked", "skip", self.ATTACKED + " reason=no-blow")
+
+        code, why = ld.judge(FINAL, self.report(), self.log(self.passes()[0], self.passes()[1], crossed))
+        self.assertEqual(code, 0, why)
+        self.assertIn("gate-attacked not judged in wave 2 (attackers above the walls)", why, "a waived check is not called passed")
+        self.assertNotIn("gate-attacked passed", why)
+        self.assertNotIn("gate-repair, gate-attacked", why)
+        self.assertEqual(ld.judge(FINAL, self.report(), self.log(self.passes()[0], self.passes()[1], crossed, no_blow))[0], 1, "a no-blow skip beside it is still a debt")
+        self.assertEqual(ld.walls_reached_waves(self.report(), crossed), [2])
+        self.assertEqual(ld.walls_reached_waves(self.report(), no_blow), [])
+        self.assertEqual(ld.walls_reached_waves(self.report(), ""), [])
+        # A pass in one wave pays the debt as before, and the verdict still names a wave that was not judged.
+        code, why = ld.judge(FINAL, self.report(), self.log(*self.passes(), crossed.replace("w=2", "w=3")))
+        self.assertEqual(code, 0, why)
+        self.assertIn("gate-attacked", why.split(" passed, ")[0])
+        self.assertIn("gate-attacked not judged in wave 3 (attackers above the walls)", why)
+
+    def test_the_walls_reached_skip_must_be_the_repairs_own_wave_and_must_end_the_line(self):
+        def skip(detail):
+            return self.line("gate-attacked", "skip", detail)
+
+        crossed = self.ATTACKED.replace("through=0", "through=48") + " before_walls=0 reason=walls-reached"
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed.replace("w=2", "w=99"))), [], "a skip of another wave pays nothing")
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed + "-something")), [])
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed + " extra=1")), [], "the reason ends the line")
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed + " reason=no-blow")), [])
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed.replace(" reason=", " ended=run reason="))), [2], "a run-end watch is still that repair's watch")
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed).replace("\n", "\r\n")), [2])
+        self.assertEqual(ld.walls_reached_waves(self.report(repair=False), skip(crossed)), [], "no repair, no debt to waive")
+        two = self.report()
+        two["purchases"] = two["purchases"] + [dict(next(p for p in two["purchases"] if p.get("kind") == "gateRepair"), beforeWave=3)]
+        two["wave"] = 3
+        self.assertEqual(ld.walls_reached_waves(two, skip(crossed)), [], "the second repair's watch wrote no line")
+        self.assertEqual(ld.walls_reached_waves(two, skip(crossed) + "\n" + skip(crossed.replace("w=2", "w=3"))), [2, 3])
+
     def test_a_failed_line_fails_the_run(self):
         code, why = ld.judge(FINAL, self.report(), self.log(*self.passes(), self.line("gate-attacked", "fail", self.ATTACKED.replace("through=0", "through=2"))))
 
@@ -4620,7 +4662,7 @@ class GateJudgeTests(unittest.TestCase):
         for const, name in (("GateLevelId", "gate-level"), ("GateRepairId", "gate-repair"), ("GateAttackedId", "gate-attacked"), ("FortPointsId", "fort-points")):
             self.assertIn(f'{const} = "taom.long-defeat.{name}"', ids, name)
         for key in ("l=", "factor=", "gates=", "max=", "hp=", "share=", "index=", "w=", "path=", "disabled=", "closed=", "open=", "near=", "hidden_down=", "reset=",
-                    "start=", "now=", "lost=", "fell=", "through=", "samples=", "ended=run", "reason=no-blow", "points=", "failed=", "reason=none-recorded"):
+                    "start=", "now=", "lost=", "fell=", "through=", "samples=", "ended=run", "reason=no-blow", "reason=walls-reached", "points=", "failed=", "reason=none-recorded"):
             self.assertIn(key, checks, key)
         self.assertRegex(self.LEVEL, r"^l=[0-9]+ factor=[0-9.]+ gates=[0-9]+ max=[0-9.]+/[0-9.]+ hp=[0-9.]+->[0-9.]+ share=[0-9.]+->[0-9.]+ index=[0-9]+->[0-9]+$")
         self.assertRegex(self.REPAIR, r"^w=[0-9]+ path=(broken|damaged) gates=[0-9]+ hp=[0-9.]+/[0-9.]+ index=[0-9]+ disabled=(true|false) closed=(true|false) open=(true|false) near=[0-9]+ hidden_down=(true|false) reset=(found|missing)$")
@@ -5380,6 +5422,314 @@ class LaunchCheckoutTests(unittest.TestCase):
         self.assertEqual(done[0], 0, done[1])
         self.assertIn(f"build {HEAD[:9]} built 20261104-100000 UTC,", done[1])
         self.assertEqual(git.call_count, 1)
+
+
+
+class DifficultyTests(unittest.TestCase):
+    """Slice 6 (phase5-plan.md): hard scales the wave count, the health and damage growth and the affix schedule. The absolute values are the ones WavePlanTests.cs and
+    LongDefeatShippedConfigTests.cs pin, taken by hand from waves.json, so neither side can drift alone."""
+
+    # (wave, count, health, damage) of the shipped rosters at normal and at hard. Both fortresses share them.
+    NORMAL = [(1, 110, 1.0, 1.0), (2, 120, 1.0, 1.0), (3, 120, 1.0, 1.0), (4, 125, 1.0, 1.0), (5, 130, 1.0, 1.0), (10, 200, 1.0, 1.0), (13, 230, 1.15, 1.09), (20, 300, 1.5, 1.3)]
+    HARD = [(1, 138, 1.0, 1.0), (2, 150, 1.0, 1.0), (3, 150, 1.0, 1.0), (4, 156, 1.0, 1.0), (5, 163, 1.0, 1.0), (10, 250, 1.0, 1.0), (13, 288, 1.1875, 1.1125), (20, 375, 1.625, 1.375)]
+
+    def setUp(self):
+        ld.target_waves = 5
+        ld.checkout = (HEAD, {})
+        ld.expected_report = {}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "checkout", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def waves_file(self, content, name="waves.json"):
+        folder = tempfile.TemporaryDirectory()
+        self.addCleanup(folder.cleanup)
+        path = Path(folder.name) / name
+        path.write_text(json.dumps(content), encoding="utf-8")
+        return path
+
+    def test_the_shipped_hard_block_is_a_quarter_more_and_two_waves_earlier(self):
+        self.assertEqual((1.25, 2), ld.shipped_hard())
+
+    def test_the_csharp_defaults_are_the_shipped_numbers(self):
+        self.assertIn("new(1.25f, 2)", source("Domain", "RunDifficulty.cs"))
+
+    def test_a_bad_hard_block_keeps_the_defaults_value_by_value(self):
+        for block, want in (({}, (1.25, 2)), ({"factor": 1.5}, (1.5, 2)), ({"affixWavesEarlier": 4}, (1.25, 4)), ({"factor": 1.0, "affixWavesEarlier": 0}, (1.0, 0)),
+                            ({"factor": 2.0, "affixWavesEarlier": 10}, (2.0, 10)), ({"factor": 0.9}, (1.25, 2)), ({"factor": 2.1}, (1.25, 2)), ({"factor": "1.5"}, (1.25, 2)),
+                            ({"factor": True}, (1.25, 2)), ({"affixWavesEarlier": -1}, (1.25, 2)), ({"affixWavesEarlier": 11}, (1.25, 2)), ({"affixWavesEarlier": 2.0}, (1.25, 2)),
+                            ({"affixWavesEarlier": 2.5}, (1.25, 2)), ({"affixWavesEarlier": "2"}, (1.25, 2)), (5, (1.25, 2)), ([], (1.25, 2))):
+            with self.subTest(block=block):
+                self.assertEqual(want, ld.shipped_hard(self.waves_file({"rules": {"hard": block}})))
+        self.assertEqual((1.25, 2), ld.shipped_hard(self.waves_file({"rules": 5})))
+        self.assertEqual((1.25, 2), ld.shipped_hard(self.waves_file({})))
+
+    def test_a_factor_too_large_for_a_float_is_the_default_as_in_the_game(self):
+        self.assertEqual((1.25, 2), ld.shipped_hard(self.waves_file({"rules": {"hard": {"factor": 10 ** 400}}})))
+
+    def test_the_factor_105_is_the_32_bit_float_so_110_attackers_become_115_not_116(self):
+        # 110 * 1.05f is 115.4999948 in the game's float, where the decimal 1.05 gives 115.5, which rounds to 116.
+        roster = {"waves": [{"count": 110, "mix": [{}]}]}
+        file = self.waves_file({"rules": {"hard": {"factor": 1.05}}, "rosters": {"r": roster}})
+        fortresses = self.waves_file({"fortresses": [{"id": "x", "waves": "r"}]}, "fortresses.json")
+        with mock.patch.object(ld, "FORTRESS_FILE", fortresses):
+            self.assertEqual(115, ld.wave_spec("x", 1, "hard", file)[0])
+
+    def test_the_factor_is_held_as_the_games_32_bit_float(self):
+        self.assertEqual(ld._f32(1.1), ld.shipped_hard(self.waves_file({"rules": {"hard": {"factor": 1.1}}}))[0])
+
+    def test_the_schedule_moves_earlier_but_never_before_wave_one(self):
+        shipped = ld.shipped_affix_schedule()
+        self.assertEqual(((3, 1), (8, 2), (13, 3)), ld.hard_schedule(shipped, 2))
+        self.assertEqual(shipped, ld.hard_schedule(shipped, 0))
+        self.assertEqual(((1, 1), (5, 2), (10, 3)), ld.hard_schedule(shipped, 5))
+        self.assertEqual(((1, 1), (1, 2)), ld.hard_schedule(((2, 1), (6, 2)), 5))
+        self.assertEqual([0, 0, 1, 1, 2, 2, 3], [ld.affix_count(ld.hard_schedule(shipped, 2), w) for w in (1, 2, 3, 7, 8, 12, 13)])
+        self.assertEqual([0, 0, 1, 1, 2, 2, 3], [ld.affix_count(shipped, w) for w in (1, 4, 5, 9, 10, 14, 15)])
+
+    def test_each_shipped_fortress_follows_the_table_at_normal_and_at_hard(self):
+        for fortress in ("helms", "minas_tirith"):
+            for difficulty, table in (("normal", self.NORMAL), ("hard", self.HARD)):
+                for wave, count, health, damage in table:
+                    with self.subTest(fortress=fortress, difficulty=difficulty, wave=wave):
+                        got = ld.wave_spec(fortress, wave, difficulty)
+                        self.assertEqual(count, got[0])
+                        self.assertAlmostEqual(health, got[1], delta=1e-5)
+                        self.assertAlmostEqual(damage, got[2], delta=1e-5)
+
+    def test_a_wave_below_one_is_wave_one_and_an_unknown_fortress_has_no_spec(self):
+        self.assertEqual(138, ld.wave_spec("helms", 0, "hard")[0])
+        self.assertIsNone(ld.wave_spec("rivendell", 1, "hard"))
+        self.assertIsNone(ld.wave_spec("helms", True, "hard"))
+
+    def test_hard_rounds_once_half_away_from_zero_and_stops_at_one_thousand(self):
+        # 103 * 1.5 = 154.5: half away from zero is 155, where Python's round() gives 154.
+        roster = {"scaling": {"countPerWave": 10, "maxCount": 1000}, "waves": [{"count": 103, "mix": [{}]}]}
+        file = self.waves_file({"rules": {"hard": {"factor": 1.5}}, "rosters": {"r": roster}})
+        fortresses = self.waves_file({"fortresses": [{"id": "x", "waves": "r"}]}, "fortresses.json")
+        with mock.patch.object(ld, "FORTRESS_FILE", fortresses):
+            self.assertEqual(155, ld.wave_spec("x", 1, "hard", file)[0])
+            self.assertEqual(103, ld.wave_spec("x", 1, "normal", file)[0])
+            self.assertEqual(1000, ld.wave_spec("x", 200, "hard", file)[0])
+
+    def test_half_away_from_zero_is_not_the_builtin_round(self):
+        # 2.5 and 4.5 are the halves Python's round() sends to 2 and 4.
+        self.assertEqual([3, 5, 138], [ld._round_half_away(x) for x in (2.5, 4.5, 137.5)])
+
+    def hard_rows(self, count, difficulty="hard", seed=7, **more):
+        """Report rows of cleared waves 1 to count that carry what the game writes for the wave: kills, felled, the two factors and the affixes of the difficulty's schedule."""
+        schedule = ld.shipped_affix_schedule()
+        if difficulty == "hard":
+            schedule = ld.hard_schedule(schedule, ld.shipped_hard()[1])
+        rows = []
+        for wave in range(1, count + 1):
+            spec = ld.wave_spec("helms", wave, difficulty)
+            rows.append(wave_row(wave, seed, kills=spec[0], felled=0, healthFactor=spec[1], damageFactor=spec[2],
+                                 affixes=ld.affix_roll(seed, wave, ld.affix_count(schedule, wave)), **more))
+        return rows
+
+    def hard_report(self, count=5, difficulty="hard", **more):
+        return {**cleared(count), "fortress": "helms", "difficulty": difficulty, "waves": self.hard_rows(count, difficulty), **more}
+
+    def test_the_hard_counts_of_waves_one_to_five_are_the_proof_runs(self):
+        self.assertEqual([138, 150, 150, 156, 163], [row["kills"] for row in self.hard_rows(5)])
+
+    def test_wave_problem_accepts_a_hard_report_at_hard_and_a_normal_one_at_normal(self):
+        self.assertIsNone(ld.wave_problem(self.hard_report(10)))
+        self.assertIsNone(ld.wave_problem(self.hard_report(10, "normal")))
+
+    def test_wave_problem_refuses_normal_counts_in_a_hard_report_and_the_other_way_round(self):
+        self.assertIn("wave 1", ld.wave_problem(self.hard_report(5, "hard", waves=self.hard_rows(5, "normal"))))
+        self.assertIn("138", ld.wave_problem(self.hard_report(5, "hard", waves=self.hard_rows(5, "normal"))))
+        self.assertIn("110", ld.wave_problem(self.hard_report(5, "normal", waves=self.hard_rows(5, "hard"))))
+
+    def test_wave_problem_reads_a_report_with_no_difficulty_as_normal(self):
+        report = self.hard_report(5, "normal")
+        del report["difficulty"]
+        self.assertIsNone(ld.wave_problem(report))
+        self.assertIsNotNone(ld.wave_problem({**report, "waves": self.hard_rows(5, "hard")}))
+
+    def test_wave_problem_refuses_a_wrong_growth_factor(self):
+        rows = self.hard_rows(13)
+        rows[12] = {**rows[12], "healthFactor": 1.15}
+        self.assertIn("healthFactor", ld.wave_problem({**self.hard_report(13), "waves": rows}))
+        rows[12] = {**rows[12], "healthFactor": 1.1875, "damageFactor": 1.09}
+        self.assertIn("damageFactor", ld.wave_problem({**self.hard_report(13), "waves": rows}))
+
+    def test_wave_problem_adds_felled_to_kills(self):
+        rows = self.hard_rows(2)
+        rows[0] = {**rows[0], "kills": 130, "felled": 8}
+        self.assertIsNone(ld.wave_problem({**self.hard_report(2), "waves": rows}))
+        rows[0] = {**rows[0], "felled": 7}
+        self.assertIn("wave 1", ld.wave_problem({**self.hard_report(2), "waves": rows}))
+
+    def test_wave_problem_on_hard_refuses_a_row_that_lacks_a_field_or_is_not_an_object(self):
+        for key in ("wave", "kills", "felled", "healthFactor", "damageFactor"):
+            for bad in (None, "5", True):
+                rows = self.hard_rows(2)
+                rows[0] = {**rows[0], key: bad}
+                self.assertIn(key, ld.wave_problem({**self.hard_report(2), "waves": rows}), (key, bad))
+            rows = self.hard_rows(2)
+            del rows[0][key]
+            self.assertIn(key, ld.wave_problem({**self.hard_report(2), "waves": rows}), key)
+        for junk in ("x", None, 5):
+            self.assertIsNotNone(ld.wave_problem({**self.hard_report(2), "waves": [junk]}), junk)
+
+    def test_wave_problem_on_hard_refuses_normal_counts_with_each_field_removed(self):
+        for key in ("kills", "felled", "healthFactor", "damageFactor", "wave"):
+            rows = self.hard_rows(2, "normal")
+            del rows[0][key]
+            self.assertIsNotNone(ld.wave_problem({**self.hard_report(2), "waves": rows}), key)
+
+    def test_wave_problem_on_hard_refuses_normal_counts_whatever_fled(self):
+        rows = self.hard_rows(2, "normal")
+        for extra in ({}, {"fled": 1}, {"fleeingPeak": 1}, {"fled": "1"}):
+            self.assertIn("wave 1", ld.wave_problem({**self.hard_report(2), "waves": rows, **extra}), extra)
+
+    def test_wave_problem_on_hard_refuses_an_unknown_fortress_naming_it(self):
+        report = {**self.hard_report(2), "fortress": "rivendell"}
+        self.assertIn("rivendell", ld.wave_problem(report))
+
+    def test_wave_problem_on_normal_or_no_difficulty_skips_rows_without_the_fields_and_an_unknown_fortress(self):
+        for difficulty in ("normal", None):
+            report = {**cleared(5), "waves": [wave_row(1), "x", None, {"wave": 2}], "fortress": "rivendell"}
+            if difficulty:
+                report["difficulty"] = difficulty
+            self.assertIsNone(ld.wave_problem(report))
+        self.assertIsNone(ld.wave_problem({**cleared(5), "waves": [wave_row(n) for n in range(1, 6)]}))
+        self.assertIsNone(ld.wave_problem({**self.hard_report(2), "waves": "none"}))
+        self.assertIsNone(ld.wave_problem({"schema": 2}))
+
+    def test_wave_problem_checks_the_factors_of_every_row_even_when_attackers_fled(self):
+        rows = self.hard_rows(13)
+        rows[12] = {**rows[12], "healthFactor": 1.15}
+        why = ld.wave_problem({**self.hard_report(13), "waves": rows, "fled": 3})
+        self.assertIn("healthFactor", why)
+        self.assertIn("wave 13", why)
+        normal = self.hard_rows(13, "normal")
+        normal[12] = {**normal[12], "damageFactor": 1.3}
+        self.assertIn("damageFactor", ld.wave_problem({**self.hard_report(13, "normal"), "waves": normal, "fled": 5}))
+
+    def test_wave_problem_bounds_the_total_shortfall_by_the_fled_attackers(self):
+        def report(short, fled=None, peak=None):
+            rows = self.hard_rows(5, "normal")
+            for index, lost in enumerate(short):
+                rows[index] = {**rows[index], "kills": rows[index]["kills"] - lost}
+            more = {} if fled is None else {"fled": fled}
+            more.update({} if peak is None else {"fleeingPeak": peak})
+            return {**self.hard_report(5, "normal"), "waves": rows, **more}
+
+        self.assertIsNone(ld.wave_problem(report([])))
+        self.assertIsNone(ld.wave_problem(report([1, 1], fled=2)))
+        self.assertIn("fled", ld.wave_problem(report([1, 1, 1], fled=2)))
+        self.assertIsNotNone(ld.wave_problem(report([1])), "no fled attacker: the counts must be equal")
+        self.assertIsNotNone(ld.wave_problem(report([1], fled="1")), "a fled that is not a whole number counts as 0")
+        self.assertIsNotNone(ld.wave_problem(report([1], peak=9)), "fleeingPeak bounds nothing")
+        self.assertIsNone(ld.wave_problem(report([3], fled=3)))
+
+    def test_wave_problem_refuses_more_than_the_count_and_a_negative_kills_or_felled(self):
+        rows = self.hard_rows(2, "normal")
+        self.assertIn("wave 1", ld.wave_problem({**self.hard_report(2, "normal"), "waves": [{**rows[0], "kills": 111}, rows[1]], "fled": 5}))
+        negative = {**self.hard_report(2, "normal"), "waves": [{**rows[0], "kills": -1, "felled": 111}, rows[1]]}
+        self.assertIn("kills", ld.wave_problem(negative))
+        self.assertIn("felled", ld.wave_problem({**negative, "waves": [{**rows[0], "kills": 111, "felled": -1}, rows[1]]}))
+        old = {**cleared(2), "waves": [wave_row(1, kills=-1, felled=111), wave_row(2)]}
+        self.assertIn("kills", ld.wave_problem(old))
+
+    def test_affix_problem_replays_the_shifted_schedule_for_a_hard_report(self):
+        self.assertIsNone(ld.affix_problem(self.hard_report(8)))
+        shifted_as_normal = {**self.hard_report(8), "difficulty": "normal"}
+        self.assertIn("wave 3", ld.affix_problem(shifted_as_normal))
+        normal_as_hard = {**self.hard_report(8, "normal"), "difficulty": "hard"}
+        self.assertIn("wave 3", ld.affix_problem(normal_as_hard))
+        self.assertIsNone(ld.affix_problem(self.hard_report(8, "normal")))
+
+    def judged(self, report, log=FULL_LOG, expected=None):
+        ld.expected_report = {} if expected is None else expected
+        return ld.judge(FINAL, report, log)
+
+    def test_a_report_of_an_older_build_with_no_difficulty_still_judges_as_normal(self):
+        self.assertEqual(0, self.judged(REPORT)[0])
+        self.assertEqual(0, self.judged(REPORT, expected={"difficulty": "normal"})[0])
+        # Complete rows of a real normal run (110, 120, 120, 125 and 130 attackers, factors 1), so wave_spec is called and the counts count.
+        counts = (110, 120, 120, 125, 130)
+        rows = [wave_row(n, kills=counts[n - 1], felled=0, healthFactor=1.0, damageFactor=1.0) for n in range(1, 6)]
+        self.assertNotIn("difficulty", REPORT)
+        self.assertEqual(0, self.judged({**REPORT, "waves": rows})[0])
+        wrong = [{**rows[0], "kills": 111}] + rows[1:]
+        code, why = self.judged({**REPORT, "waves": wrong})
+        self.assertEqual(1, code)
+        self.assertIn("waves do not replay", why)
+        short = [{**rows[0], "kills": 109}] + rows[1:]
+        self.assertEqual(1, self.judged({**REPORT, "waves": short})[0])
+
+    def test_the_judge_refuses_normal_counts_labelled_hard_even_when_attackers_fled(self):
+        rows = self.hard_rows(5, "normal")
+        schedule = ld.hard_schedule(ld.shipped_affix_schedule(), 2)
+        rows = [{**row, "affixes": ld.affix_roll(7, row["wave"], ld.affix_count(schedule, row["wave"]))} for row in rows]
+        for extra in ({"fled": 1}, {"fleeingPeak": 1}):
+            code, why = self.judged({**self.hard_report(5, "hard", waves=rows), **extra}, expected={"difficulty": "hard"})
+            self.assertEqual(1, code, extra)
+            self.assertIn("waves do not replay", why)
+
+    def test_armed_hard_needs_a_hard_report(self):
+        self.assertEqual(0, self.judged(self.hard_report(5), expected={"difficulty": "hard"})[0])
+        code, why = self.judged(REPORT, expected={"difficulty": "hard"})
+        self.assertEqual(1, code)
+        self.assertIn("difficulty", why)
+        self.assertIn("hard", why)
+
+    def test_a_hard_report_from_a_run_armed_with_no_difficulty_fails_naming_both(self):
+        code, why = self.judged(self.hard_report(5))
+        self.assertEqual(1, code)
+        self.assertIn("difficulty", why)
+        self.assertIn("'normal'", why)
+
+    def test_a_run_armed_normal_fails_on_a_hard_report(self):
+        self.assertEqual(1, self.judged(self.hard_report(5), expected={"difficulty": "normal"})[0])
+
+    def test_the_judge_refuses_normal_counts_in_a_report_that_says_hard(self):
+        report = self.hard_report(5, "hard", waves=self.hard_rows(5, "normal"))
+        report["waves"] = [{**row, "affixes": ld.affix_roll(7, row["wave"], ld.affix_count(ld.hard_schedule(ld.shipped_affix_schedule(), 2), row["wave"]))} for row in report["waves"]]
+        code, why = self.judged(report, expected={"difficulty": "hard"})
+        self.assertEqual(1, code)
+        self.assertIn("waves", why)
+
+    def test_the_flag_arms_the_key_and_the_report_field_only_when_given(self):
+        known = ld.build_parser().parse_known_args(["--difficulty", "hard"])[0]
+        self.assertEqual("hard", known.difficulty)
+        self.assertEqual("hard", ld.armed_report_fields(known)["difficulty"])
+        self.assertIn(("difficulty", "hard"), ld.arm_pairs(known, "E:/out", 3900))
+        bare = ld.build_parser().parse_known_args([])[0]
+        self.assertIsNone(bare.difficulty)
+        self.assertNotIn("difficulty", ld.armed_report_fields(bare))
+        self.assertIn(("difficulty", None), ld.arm_pairs(bare, "E:/out", 3900))
+
+    def test_the_flag_refuses_a_word_that_is_neither_normal_nor_hard(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit):
+                ld.build_parser().parse_known_args(["--difficulty", "nightmare"])
+
+    def test_the_arm_text_names_the_difficulty_only_when_given(self):
+        keep = {name: getattr(runner, name) for name in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs", "show_results")}
+        captured = {}
+        for argv in (["--difficulty", "hard"], []):
+            with mock.patch.multiple(runner, main=lambda rest: captured.setdefault("arm", runner.arm_text_for), **keep), \
+                    mock.patch.object(autorun_build, "checkout_state", return_value=(HEAD, {})):
+                ld.main(argv)
+            self.addCleanup(setattr, ld, "checkout", None)
+            self.addCleanup(setattr, ld, "target_waves", None)
+            self.addCleanup(setattr, ld, "expected_report", {})
+            text, _ = captured.pop("arm")("E:/out", SimpleNamespace(wall_limit=None))
+            self.assertEqual(bool(argv), "difficulty=hard\n" in text)
+            self.assertEqual(bool(argv), "difficulty=" in text)
+
+    def test_the_games_ids_are_the_wrappers(self):
+        game = source("Domain", "RunDifficulty.cs")
+        self.assertIn('"hard"', game)
+        self.assertIn('"normal"', game)
+        self.assertIn('["difficulty"] = RunDifficulties.Id(options.Difficulty)', source("Diagnostics", "LongDefeatRunReport.cs"))
+        self.assertIn('case "difficulty":', source("Autorun", "LongDefeatAutorunPlan.cs"))
 
 
 if __name__ == "__main__":

@@ -31,8 +31,39 @@ internal sealed class WavePlan
 
     public CommanderPlan Commanders { get; }
 
+    /// <summary>The smallest count of any authored wave as this plan sends it, so a hard plan carries its factor.</summary>
+    public int SmallestAuthoredCount => Enumerable.Range(1, _waves.Count).Min(w => ForWave(w).Count);
+
+    /// <summary>The hardest count a hard run asks for, the top of waves.json "maxCount".</summary>
+    private const int HardMaxCount = 1000;
+
+    private float _countFactor = 1f;
+
+    /// <summary>
+    /// The same waves on hard (waves.json <c>rules.hard</c>): every count is the normal count (after its own cap) times <paramref name="factor"/>, rounded once, half away
+    /// from zero, and the health and damage growth per wave is multiplied by it. The cap on those factors and the tier steps stay. A factor of 1 returns this plan.
+    /// </summary>
+    public WavePlan Harder(float factor)
+    {
+        if (factor == 1f)
+            return this;
+
+        var growth = Endless with { HealthPerWave = (float)(Endless.HealthPerWave * factor), DamagePerWave = (float)(Endless.DamagePerWave * factor) };
+        return new WavePlan(_waves, _scaling, growth, Commanders) { _countFactor = _countFactor * factor };
+    }
+
     /// <summary>The wave's spec; a number below 1 is wave 1.</summary>
     public WaveSpec ForWave(int wave)
+    {
+        var spec = NormalWave(wave);
+        if (_countFactor == 1f)
+            return spec;
+
+        var scaled = (int)Math.Min(HardMaxCount, Math.Round(spec.Count * (double)_countFactor, MidpointRounding.AwayFromZero));
+        return spec with { Count = scaled };
+    }
+
+    private WaveSpec NormalWave(int wave)
     {
         wave = Math.Max(1, wave);
         if (wave <= _waves.Count)

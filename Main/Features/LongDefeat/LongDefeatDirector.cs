@@ -236,6 +236,8 @@ internal sealed partial class LongDefeatDirector
                     _run.DefenderDown();
                     break;
                 case LdRemovalKind.Player:
+                    if (_deathPending && _playerAttacks && _riseVia.Length == 0)
+                        _run.AttackerTaken();
                     LordFell(removal.TroopId, removal.Forced);
                     break;
                 case LdRemovalKind.Hero:
@@ -254,6 +256,8 @@ internal sealed partial class LongDefeatDirector
     /// <summary>
     /// A body the player controlled fell: the lord's, a soldier's or a hero's, named by its troop. <paramref name="forced"/> is the field's fact that it is the removal the <c>lord_falls</c> blow produced. Main thread only,
     /// called from the deferred removal, so it only notes the death: the seat and its check come on the next tick.
+    /// A fall while the last one still waits for its adoption, with no rise on the way, is a soldier who was taken and fell before the next tick could adopt him: the removal above
+    /// books him as taken in an attack, because <see cref="AdoptIfNew"/> never sees him.
     /// </summary>
     private void LordFell(string troopId, bool forced)
     {
@@ -318,6 +322,8 @@ internal sealed partial class LongDefeatDirector
         _deathPending = false;
         if (via.Length > 0)
             _logger.LogInfo($"{Tag}[Player] respawned {_field.DescribePlayer()}");
+        else if (_playerAttacks && !heldHero)
+            _run.AttackerTaken();
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.PlayerDeathId, "d" + _run.Stats.PlayerDeaths,
             via.Length > 0 ? LongDefeatChecks.PlayerDeath(true, via) : LongDefeatChecks.PlayerDeath(true, "takeover", _plan.Options.Autoplay ? "bot" : "person"));
     }
@@ -377,7 +383,7 @@ internal sealed partial class LongDefeatDirector
         var v = _run.GetView();
         if (v.Phase == RunPhase.Wave)
         {
-            SampleGateWatch();
+            SampleGateWatch(read.AttackersHigh > 0);
             LogArcherPositionsInWave();
         }
         _logger.LogInfo($"{Tag}[State] wave {v.Wave} {v.Phase}: attackers {read.AttackersStanding} fleeing {read.AttackersFleeing} high {read.AttackersHigh}, "

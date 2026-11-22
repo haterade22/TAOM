@@ -28,6 +28,7 @@ internal static class LongDefeatRunReport
             ["maxSpeed"] = maxSpeed,
             ["seed"] = options.Seed is ulong seed ? new JValue(seed) : JValue.CreateNull(),
             ["class"] = options.ClassId ?? "",
+            ["difficulty"] = RunDifficulties.Id(options.Difficulty),
             ["startWave"] = options.StartWave,
             ["startRerolls"] = options.StartRerolls,
             ["startGold"] = options.StartGold is int startGold ? new JValue(startGold) : JValue.CreateNull(),

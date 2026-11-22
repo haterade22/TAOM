@@ -78,19 +78,21 @@ internal static class LongDefeatGateChecks
     /// <summary>
     /// At the next clear or the run's end, for the watch begun by a repair: the gates lost hit points since (<paramref name="hitPointsNow"/> against the watch's baseline) or fell (pass), and no attacker was sampled
     /// behind a standing gate's plane (<c>through=0</c>); an untouched gate is a skip (<c>reason=no-blow</c>), because a wave whose ram died brings no blow at all (E30, R4). An attacker behind a gate that stood fails
-    /// whether or not it was struck.
+    /// whether or not it was struck, when he was seen there before any attacker stood above the walls' high line (<see cref="GateWatch.ThroughBeforeWalls"/>). Attackers seen there only after
+    /// the walls were reached may have climbed, so a struck gate then reads a skip with <c>reason=walls-reached</c> and an unstruck one the usual <c>reason=no-blow</c>.
     /// </summary>
     internal static CheckVerdict GateAttacked(GateWatch watch, float hitPointsNow, bool fell, bool endedRun)
     {
         var lost = watch.Baseline - hitPointsNow;
         var detail = $"w={watch.Wave.ToString(CultureInfo.InvariantCulture)} path={watch.Path} start={F1(watch.Baseline)} now={F1(hitPointsNow)} lost={F1(lost)} fell={Flag(fell)} "
-            + $"through={watch.Through.ToString(CultureInfo.InvariantCulture)} samples={watch.Samples.ToString(CultureInfo.InvariantCulture)}{(endedRun ? " ended=run" : "")}";
-        if (float.IsNaN(lost) || float.IsNaN(hitPointsNow) || watch.Through > 0)
+            + $"through={watch.Through.ToString(CultureInfo.InvariantCulture)} samples={watch.Samples.ToString(CultureInfo.InvariantCulture)}"
+            + $"{(watch.WallsReached ? " before_walls=" + watch.ThroughBeforeWalls.ToString(CultureInfo.InvariantCulture) : "")}{(endedRun ? " ended=run" : "")}";
+        if (float.IsNaN(lost) || float.IsNaN(hitPointsNow) || watch.ThroughBeforeWalls > 0)
             return new CheckVerdict(CheckResult.Fail, detail);
-        if (fell || lost >= BlowFloor)
-            return new CheckVerdict(CheckResult.Pass, detail);
+        if (!fell && lost < BlowFloor)
+            return new CheckVerdict(CheckResult.Skip, detail + " reason=no-blow");
 
-        return new CheckVerdict(CheckResult.Skip, detail + " reason=no-blow");
+        return watch.Through > 0 ? new CheckVerdict(CheckResult.Skip, detail + " reason=walls-reached") : new CheckVerdict(CheckResult.Pass, detail);
     }
 
     /// <summary>

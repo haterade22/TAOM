@@ -9,6 +9,7 @@ using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.DevConsole.Cheats;
 using TAOM.Features.LongDefeat;
+using TAOM.Features.LongDefeat.Domain;
 using TAOM.Tests.Infrastructure;
 using TAOM.Tests.Migration;
 
@@ -100,6 +101,92 @@ public class LongDefeatCommandsTests
 
         Assert.IsFalse(string.IsNullOrWhiteSpace(reply));
         Assert.AreEqual(0, _factory.ReceivedCalls().Count(), "a refused count starts no game");
+    }
+
+    [TestMethod]
+    public void Start_NoDifficultyWord_IsNormal_AndTheReplyIsAsItWas()
+    {
+        _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
+
+        var reply = Start("helms");
+
+        Assert.AreEqual(RunDifficulty.Normal, Started().Options.Difficulty);
+        Assert.AreEqual("Starting The Long Defeat at helms, until it is lost.", reply);
+    }
+
+    [TestMethod]
+    public void Start_ALastWordOfNormal_IsNormalAndIsNotTakenForAClassOrACount()
+    {
+        _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
+
+        var reply = Start("helms", "normal");
+
+        Assert.AreEqual(RunDifficulty.Normal, Started().Options.Difficulty);
+        Assert.IsNull(Started().Options.StopAfterWaves);
+        Assert.AreEqual("Starting The Long Defeat at helms, until it is lost.", reply);
+    }
+
+    [TestMethod]
+    public void Start_ALastWordOfHard_StartsOnHard_AndTheReplyNamesIt()
+    {
+        _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
+
+        var reply = Start("helms", "hard");
+
+        Assert.AreEqual(RunDifficulty.Hard, Started().Options.Difficulty);
+        Assert.IsNull(Started().Options.StopAfterWaves);
+        Assert.AreEqual("Starting The Long Defeat at helms (hard), until it is lost.", reply);
+    }
+
+    [TestMethod]
+    public void Start_HardAfterAWaveCount_KeepsTheCount_WithoutCase()
+    {
+        _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
+
+        var reply = Start("helms", "5", "HARD");
+
+        Assert.AreEqual(RunDifficulty.Hard, Started().Options.Difficulty);
+        Assert.AreEqual(5, Started().Options.StopAfterWaves);
+        Assert.AreEqual("Starting The Long Defeat at helms (hard), 5 waves.", reply);
+    }
+
+    [TestMethod]
+    public void Start_HardAfterTheClass_KeepsTheCountAndTheClass()
+    {
+        _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
+
+        StartWithClasses("helms", "3", "bow", "hard");
+
+        Assert.AreEqual(RunDifficulty.Hard, Started().Options.Difficulty);
+        Assert.AreEqual(3, Started().Options.StopAfterWaves);
+        Assert.AreEqual("bow", Started().Options.ClassId);
+    }
+
+    [TestMethod]
+    public void Start_HardAfterAClassAlone_KeepsTheClass_WithNoWaveTarget()
+    {
+        _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
+
+        StartWithClasses("helms", "sword", "hard");
+
+        Assert.AreEqual(RunDifficulty.Hard, Started().Options.Difficulty);
+        Assert.AreEqual("sword", Started().Options.ClassId);
+        Assert.IsNull(Started().Options.StopAfterWaves);
+    }
+
+    [TestMethod]
+    public void Start_ABadCountBeforeHard_IsStillRefused()
+    {
+        var reply = Start("helms", "0", "hard");
+
+        Assert.IsFalse(string.IsNullOrWhiteSpace(reply));
+        Assert.AreEqual(0, _factory.ReceivedCalls().Count());
+    }
+
+    [TestMethod]
+    public void Usage_NamesTheDifficultyWord()
+    {
+        StringAssert.Contains(LongDefeatCommands.Usage(_catalog), "[normal|hard]");
     }
 
     [TestMethod]

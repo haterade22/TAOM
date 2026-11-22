@@ -47,6 +47,9 @@ internal sealed record RunOptions
     /// </summary>
     public string? ClassId { get; init; }
 
+    /// <summary>Normal plays the shipped waves; Hard scales them by the waves.json <c>rules.hard</c> block (see <see cref="HardRules"/>).</summary>
+    public RunDifficulty Difficulty { get; init; }
+
     /// <summary>These options with a seed: the one given, else the start time's ticks (0 is a valid seed, so only null takes the clock).</summary>
     public RunOptions Seeded(long startTicks) => Seed != null ? this : this with { Seed = (ulong)startTicks & MaxSeed };
 
