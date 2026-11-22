@@ -210,6 +210,11 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "{=taom_mcm_EnableTeamPracticeFights_hint}In a town of the Free Peoples the practice fight at the training grounds is a team fight: you and the fighters outlined in blue against the other side, and no one can hurt his own side. A town's side is its owner's, so a captured town follows its conqueror. Towns of the Shadow and neutral towns keep the fight where every fighter is alone. Takes effect the next time you enter the training grounds. Single-player only. Default: on.")]
     public bool EnableTeamPracticeFights { get; set; } = true;
 
+    [SettingPropertyGroup("{=taom_mcm_group_tournaments}Tournaments")]
+    [SettingPropertyBool("{=taom_mcm_EnableTrainingWaves}Wave Fights at the Training Grounds", Order = 6, RequireRestart = false,
+        HintText = "{=taom_mcm_EnableTrainingWaves_hint}When on, the training master of a town also runs a wave fight. You wager on yourself before each wave and fight the town's own fighters with practice weapons. Clear a wave and the master pays your wager back with odds; go down, or leave the yard mid-fight, and the wager stays with the town. Between waves you may stop and keep your winnings. A town runs one wave fight a day, and none while it holds a tournament. The tournament bet cap also limits a wave wager, and a very low cap hides the offer. Single-player only. Default: on.")]
+    public bool EnableTrainingWaves { get; set; } = TAOM.Features.TrainingGrounds.Waves.TrainingWavesSettingsProvider.DefaultEnabled;
+
     // --- Armour Acquisition ---
 
     [SettingPropertyGroup("{=taom_mcm_group_armour_acquisition}Armour Acquisition")]

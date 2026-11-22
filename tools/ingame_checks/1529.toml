@@ -1,0 +1,117 @@
+# In-game checks for #1529 (a wave fight with bets at the training master), read by tools/ingame_verdict.py.
+# The ids are the constants of Main/Features/TrainingGrounds/Waves/TrainingWavesChecks.cs. WaveBetService writes offer, stake, payout,
+# debrief, run-end and forfeit; WaveFightDirector writes stand-down, wave and return. Every line is written once for each result
+# and key in a process; the offer's skip lines carry the refusal as the key.
+# offer: pass when the master's offer line shows and is open (town=<id>); skip reason=<Refusal> when it shows greyed or is hidden by
+#   a refusal (RanToday, Tournament, Wounded, Disguised, Poor, or NotArena in a scene without two spawn frames).
+# stake: gold_before and gold_after differ by exactly the stake.
+# stand-down: faded= the practice fighters vanilla had in the yard; vanilla_spawned=30 is vanilla's own spawn count after the write
+#   that stops its spawning. It is read back from the field that was written, so it proves the write, not that vanilla stayed quiet:
+#   the human claims below carry that.
+# wave: spawned equals count for a cleared wave and peak never exceeds at_once (cleared=false: only the peak is judged).
+# payout: the player's gold rose by exactly the payout.
+# return: the master's conversation is open and the player has an active body.
+# debrief: vanilla's AfterPractice was not left set when our debrief ran. Vanilla's own prize condition clears the flag as it pays
+#   (ArenaMasterCampaignBehavior.cs :312-314), so a pass shows only that the flag was not left set, not that its prize line stayed silent.
+# run-end: the gold change since the first stake equals the run's net.
+# forfeit: the stake of a fight left unfinished went to the town.
+# No unattended run covers this feature yet. What a run must show is in docs/features/training-waves.md, "In-game checks".
+issue = 1529
+title = "A wave fight with bets at the training master"
+# fixed_in is the base of the feature branch; repoint it to the feature commit once it exists (a build between the two writes no
+# [Check] line, so every check below is NOT REACHED there, never a false FAIL).
+fixed_in = "af5ddb617"
+logs = ["taom"]
+
+[[check]]
+id = "taom.training-waves.offer"
+needs = "talk to the Training Master of a town with no tournament, healthy and undisguised, with at least the smallest wager on offer (120 denars for the first wave): the wave offer shows in his options"
+reached = ['\[Check\] id=taom\.training-waves\.offer result=(pass|skip|fail)']
+pass = ['\[Check\] id=taom\.training-waves\.offer result=pass town=\S+$']
+fail = ['\[Check\] id=taom\.training-waves\.offer result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.training-waves.stake"
+needs = "take the offer and pay a stake at the master"
+reached = ['\[Check\] id=taom\.training-waves\.stake result=(pass|fail)']
+pass = ['\[Check\] id=taom\.training-waves\.stake result=pass stake=[0-9]+ gold_before=[0-9]+ gold_after=[0-9]+$']
+fail = ['\[Check\] id=taom\.training-waves\.stake result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.training-waves.stand-down"
+needs = "pay a stake and leave the conversation: the wave starts and vanilla's practice fighters leave the yard"
+reached = ['\[Check\] id=taom\.training-waves\.stand-down result=(pass|fail)']
+pass = ['\[Check\] id=taom\.training-waves\.stand-down result=pass faded=[0-9]+ vanilla_spawned=30$']
+fail = ['\[Check\] id=taom\.training-waves\.stand-down result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.training-waves.wave"
+needs = "fight a wave to its end, by clearing it or by going down"
+reached = ['\[Check\] id=taom\.training-waves\.wave result=(pass|fail)']
+pass = ['\[Check\] id=taom\.training-waves\.wave result=pass wave=[0-9]+ spawned=[0-9]+ count=[0-9]+ peak=[0-9]+ at_once=[0-9]+ cleared=(true|false)$']
+fail = ['\[Check\] id=taom\.training-waves\.wave result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.training-waves.payout"
+needs = "clear a wave"
+reached = ['\[Check\] id=taom\.training-waves\.payout result=(pass|fail)']
+pass = ['\[Check\] id=taom\.training-waves\.payout result=pass payout=[1-9][0-9]* rose=[1-9][0-9]*$']
+fail = ['\[Check\] id=taom\.training-waves\.payout result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.training-waves.return"
+needs = "end a wave and wait: the player stands at the master again and the master speaks"
+reached = ['\[Check\] id=taom\.training-waves\.return result=(pass|fail)']
+pass = ['\[Check\] id=taom\.training-waves\.return result=pass opened=true in_conversation=true player_down=false$']
+fail = ['\[Check\] id=taom\.training-waves\.return result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.training-waves.debrief"
+needs = "end a wave and wait for the master's debrief line (cleared, lost or last wave), then answer it"
+reached = ['\[Check\] id=taom\.training-waves\.debrief result=(pass|fail)']
+pass = ['\[Check\] id=taom\.training-waves\.debrief result=pass after_practice=false$']
+fail = ['\[Check\] id=taom\.training-waves\.debrief result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.training-waves.run-end"
+needs = "end a run after at least one stake: withdraw between waves, lose a wave or clear the last one"
+reached = ['\[Check\] id=taom\.training-waves\.run-end result=(pass|fail)']
+pass = ['\[Check\] id=taom\.training-waves\.run-end result=pass reason=(Withdrew|Lost|Completed|Forfeited|Refunded) net=-?[0-9]+ delta=-?[0-9]+$']
+fail = ['\[Check\] id=taom\.training-waves\.run-end result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.training-waves.forfeit"
+needs = "leave the Training Grounds in the middle of a wave, through the leave prompt"
+reached = ['\[Check\] id=taom\.training-waves\.forfeit result=(pass|fail)']
+pass = ['\[Check\] id=taom\.training-waves\.forfeit result=pass stake=[1-9][0-9]*$']
+fail = ['\[Check\] id=taom\.training-waves\.forfeit result=fail']
+absence = "not-reached"
+
+[[human]]
+claim = "After the stake and the end of the conversation the practice fighters that stood in the yard disappear, a wave of the town's own fighters in practice kit spawns one by one, and nobody from the old practice comes back during the fight"
+
+[[human]]
+claim = "The fighters never stand more than the wave's at-once number at once, and after the first of them no two enter within the refill seconds of each other (a place that falls empty later than that is filled at once)"
+
+[[human]]
+claim = "Going down in a wave never wounds or kills the hero; after a few seconds the master stands in front of the player and says the wager stays with the house"
+
+[[human]]
+claim = "After a cleared wave the master pays, offers the next wager with a higher limit and better odds, and withdrawing there keeps the winnings"
+
+[[human]]
+claim = "Vanilla's own practice fight still works from the town menu and from the master's old option, and still pays its own prize"
+
+[[human]]
+claim = "The offer is greyed with its reason in a tournament town, when wounded, in disguise, after a run today and with fewer denars than the smallest wager on offer (120 on the first wave), and is hidden in a co-op session"
+
+[[human]]
+claim = "Leaving the yard in the middle of a wave asks first, and the wager is lost when the player confirms"

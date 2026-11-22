@@ -125,5 +125,6 @@ internal static class FeatureModules
         new Features.CampaignStartOptions.CampaignStartOptionsModule(),
         new Features.NavalTravel.NavalTravelModule(),
         new Features.TrainingGrounds.Teams.TeamPracticeModule(),
+        new Features.TrainingGrounds.Waves.TrainingWavesModule(),
     };
 }

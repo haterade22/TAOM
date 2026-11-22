@@ -143,7 +143,7 @@ public static class CoopSettingsRelevance
         // Inn Rounds (#901): the switch and the two scales only shape a player's click at the tavern keeper. Every write (the player's
         // gold, the town's coffers, the party's morale, the clan's renown, Charm experience, tracker marks) is behind the
         // single-player predicate in InnRoundsService, so a peer holding a different value never changes a running simulation.
-        "EnableInnRounds", "InnRoundsMoraleScale", "InnRoundsRenownScale",
+        "EnableInnRounds", "InnRoundsMoraleScale", "InnRoundsRenownScale", "EnableTrainingWaves",
         "EnableQuickActions", "EnableInventorySearch", "QuickActionsShowConfirmation",
         "QuickActionsPlaySounds", "DamagedQualityDropdown", "DamagedThreshold",
         "UseCustomThreshold", "ExcludeDamagedHorses",

@@ -292,6 +292,11 @@ public class ReflectionSiteBindingTests
     [DataRow("SandBox.Missions.MissionLogics.Arena.ArenaPracticeFightMissionController", "ArenaPracticeFightMissionController", "_AIParticipantTeams", "Field", "TeamPracticeAccess.cs:29")]
     [DataRow("SandBox.Missions.MissionLogics.Arena.ArenaPracticeFightMissionController", "ArenaPracticeFightMissionController", "_aliveOpponentCount", "Field", "TeamPracticeAccess.cs:31")]
     [DataRow("SandBox.CampaignBehaviors.ArenaMasterCampaignBehavior", "ArenaMasterCampaignBehavior", "conversation_arena_practice_fight_explain_reward_on_condition", "Method", "TeamPracticeDialogBehavior.cs:28")]
+    // --- Training Waves (ArenaPracticeControllerAccess.cs, #1529): the four private members of the practice controller that the wave fight reaches. Missing: a binding returns false and the wave refunds the stake.
+    [DataRow("SandBox.Missions.MissionLogics.Arena.ArenaPracticeFightMissionController", "ArenaPracticeFightMissionController", "_participantAgents", "Field", "ArenaPracticeControllerAccess.cs:19")]
+    [DataRow("SandBox.Missions.MissionLogics.Arena.ArenaPracticeFightMissionController", "ArenaPracticeFightMissionController", "_spawnedOpponentAgentCount", "Field", "ArenaPracticeControllerAccess.cs:22")]
+    [DataRow("SandBox.Missions.MissionLogics.Arena.ArenaPracticeFightMissionController", "ArenaPracticeFightMissionController", "StartPractice", "Method", "ArenaPracticeControllerAccess.cs:25")]
+    [DataRow("SandBox.Missions.MissionLogics.Arena.ArenaPracticeFightMissionController", "ArenaPracticeFightMissionController", "SpawnPlayerNearTournamentMaster", "Method", "ArenaPracticeControllerAccess.cs:28")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

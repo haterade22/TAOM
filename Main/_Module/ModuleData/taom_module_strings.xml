@@ -6996,5 +6996,35 @@
 	<string id="taom_tg_team_rules" text="{=taom_tg_team_rules}Here we train the way soldiers fight: in teams. You join one side, and the fighters outlined in blue fight beside you. Your blows can't hurt them, and theirs can't hurt you. Thirty fighters take their turn in the yard, and your side wins when the last fighter of the other side goes down. Sounds like fun, eh?[ib:confident2]" />
 	<string id="taom_tg_team_reward" text="{=taom_tg_team_reward}If you can beat {OPPONENT_COUNT_1} opponents yourself before going down, you'll earn {PRIZE_1}{GOLD_ICON}. You'll get {PRIZE_2}{GOLD_ICON} for striking down at least {OPPONENT_COUNT_2}, {PRIZE_3}{GOLD_ICON} for {OPPONENT_COUNT_3} and {PRIZE_4}{GOLD_ICON} for {OPPONENT_COUNT_4}. Only the ones you put down yourself count. If your side wins while you're still on your feet, you earn the great prize of the fights, {PRIZE_5}{GOLD_ICON}. Sounds good, eh?[if:convo_nonchalant]" />
 	<string id="taom_tg_team_win" text="{=taom_tg_team_win}Well fought, {PLAYER.LINK}! Your side held the yard, and you were still standing at the end. You took down {OPPONENT_COUNT} of them yourself, and that earns you the top prize: {PRIZE}{GOLD_ICON}." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_mcm_EnableTrainingWaves" text="{=taom_mcm_EnableTrainingWaves}Wave Fights at the Training Grounds" />
+	<string id="taom_mcm_EnableTrainingWaves_hint" text="{=taom_mcm_EnableTrainingWaves_hint}When on, the training master of a town also runs a wave fight. You wager on yourself before each wave and fight the town's own fighters with practice weapons. Clear a wave and the master pays your wager back with odds; go down, or leave the yard mid-fight, and the wager stays with the town. Between waves you may stop and keep your winnings. A town runs one wave fight a day, and none while it holds a tournament. The tournament bet cap also limits a wave wager, and a very low cap hides the offer. Single-player only. Default: on." />
+	<!-- TrainingGrounds -->
+	<string id="taom_tgw_offer" text="{=taom_tgw_offer}I want to fight your waves, with a wager on each one." />
+	<string id="taom_tgw_rules" text="{=taom_tgw_rules}Waves of fighters, one after another, all against you, with practice weapons. Before each wave you wager on yourself. Clear it and I pay back {TAOM_TGW_RU_ODDS} times your wager, more on later waves. Go down, or leave the yard mid-fight, and the wager stays with the house. Between waves you may stop and keep what you won. The first wager is at most {TAOM_TGW_RU_CAP} denars, and the limit rises with each wave you clear." />
+	<string id="taom_tgw_stake_low" text="{=taom_tgw_stake_low}I wager {TAOM_TGW_ST_LOW_AMOUNT} denars." />
+	<string id="taom_tgw_stake_mid" text="{=taom_tgw_stake_mid}I wager {TAOM_TGW_ST_MID_AMOUNT} denars." />
+	<string id="taom_tgw_stake_high" text="{=taom_tgw_stake_high}I wager {TAOM_TGW_ST_HIGH_AMOUNT} denars." />
+	<string id="taom_tgw_not_today" text="{=taom_tgw_not_today}On second thought, not today." />
+	<string id="taom_tgw_withdraw" text="{=taom_tgw_withdraw}I will stop here and keep my winnings." />
+	<string id="taom_tgw_go" text="{=taom_tgw_go}Wave {TAOM_TGW_GO_WAVE}: {TAOM_TGW_GO_COUNT} fighters, no more than {TAOM_TGW_GO_ATONCE} at once. Take a practice weapon and go to it!" />
+	<string id="taom_tgw_go_failed" text="{=taom_tgw_go_failed}Your purse does not hold that much. Come back when it does." />
+	<string id="taom_tgw_withdrawn" text="{=taom_tgw_withdrawn}A wise choice. You leave the yard {TAOM_TGW_WD_NET} denars richer." />
+	<string id="taom_tgw_cleared" text="{=taom_tgw_cleared}Well fought! Wave {TAOM_TGW_CL_WAVE} is yours, and so are {TAOM_TGW_CL_PAYOUT} denars: {TAOM_TGW_CL_NET} won so far. The next wave is harder. You may wager up to {TAOM_TGW_CL_CAP} denars on it, and I pay back {TAOM_TGW_CL_ODDS} times the wager. Will you go on?" />
+	<string id="taom_tgw_lost" text="{=taom_tgw_lost}You went down in wave {TAOM_TGW_LO_WAVE}, and your wager of {TAOM_TGW_LO_STAKE} denars stays with the house. Before that you had won {TAOM_TGW_LO_EARLIER} denars." />
+	<string id="taom_tgw_done" text="{=taom_tgw_done}That was the last wave. Few have stood through them all. You leave the yard {TAOM_TGW_DO_NET} denars richer." />
+	<string id="taom_tgw_ref_today" text="{=taom_tgw_ref_today}You have already fought the waves here today." />
+	<string id="taom_tgw_ref_tournament" text="{=taom_tgw_ref_tournament}The yard is kept for the tournament." />
+	<string id="taom_tgw_ref_poor" text="{=taom_tgw_ref_poor}You need at least {TAOM_TGW_RF_MIN} denars to wager." />
+	<string id="taom_tgw_ref_short" text="{=taom_tgw_ref_short}Your purse does not hold that much." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TrainingGrounds -->
+	<string id="taom_tgw_an_start" text="{=taom_tgw_an_start}Wave {TAOM_TGW_AN_START_WAVE}: {TAOM_TGW_AN_START_COUNT} fighters!" />
+	<string id="taom_tgw_an_cleared" text="{=taom_tgw_an_cleared}Wave {TAOM_TGW_AN_CLEARED_WAVE} cleared! You win {TAOM_TGW_AN_CLEARED_PAYOUT} denars." />
+	<string id="taom_tgw_an_lost" text="{=taom_tgw_an_lost}You went down in wave {TAOM_TGW_AN_LOST_WAVE}. The house keeps your wager of {TAOM_TGW_AN_LOST_STAKE} denars." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TrainingGrounds -->
+	<string id="taom_tgw_an_refunded" text="{=taom_tgw_an_refunded}The wave was called off. Your wager of {TAOM_TGW_AN_REFUNDED_STAKE} denars is returned." />
 
 </strings>
