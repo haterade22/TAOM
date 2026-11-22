@@ -26,7 +26,6 @@ public sealed class OrphanedBattleService
     private readonly ICoopSessionProvider _coop;
     private readonly IModLogger _logger;
     private readonly HashSet<string> _warnedFailures = new();
-    // Weak keys: this singleton outlives a campaign, and a held MapEvent would keep the old campaign's parties alive.
     private readonly ConditionalWeakTable<object, object> _unfreedBattles = new();
 
     public OrphanedBattleService(IOrphanedBattleAdapter adapter, ICoopSessionProvider coop, IModLogger logger)
