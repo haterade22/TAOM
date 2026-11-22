@@ -2171,6 +2171,33 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Co-op.** Not a veto: the prefix skips nothing. Classified ReviewedSafe in `CoopVetoClassificationTests`; the service also stands down when `ICoopSessionProvider.ShouldDeferToHost` holds. **Tests:** `HalfFinishedEncounterServiceTests`.
 
+## Patch174_TeamPractice
+
+**Targets (v1.5.7).** Four patches in two classes, one category, declared by `TeamPracticeModule` at `ApplyPhase.GameInit`. #1528, 2026-11-22. All on `SandBox.Missions.MissionLogics.Arena.ArenaPracticeFightMissionController` (`ArenaPracticeFightMissionController.cs`) except the last:
+
+| Patch | Target | Kind | Does |
+|---|---|---|---|
+| `ArrangeEnmityPostfix` | `private void ArrangePlayerTeamEnmity()` (:470-476) | postfix, never skips | Decides the mode once for the controller, splits the six AI teams into the player's side and the other side, makes the player's side friends of the player's team while he practises, and sets `Mission.ForceNoFriendlyFire`. |
+| `SpawnPostfix` | `private Agent SpawnArenaAgent(Team team, MatrixFrame frame)` (:125-158) | postfix, never skips | Outlines each allied fighter in blue with `MBAgentVisuals.SetContourColor` while the player practises. |
+| `TickPrefix` | `public override void OnMissionTick(float dt)` (:194-228) | void prefix, never skips | When every fighter has entered and no team of the other side has a fighter left, writes 0 into `_aliveOpponentCount`, so vanilla's own end check (:208-217) runs the victory path. |
+| `ArenaMasterCampaignBehavior_PostFightDebrief_Patch.Postfix` | `private bool conversation_arena_master_post_fight_on_condition()` (`ArenaMasterCampaignBehavior.cs:309-366`) | postfix | After vanilla set `PRIZE` and `OPPONENT_COUNT` and paid the gold, replaces `FIGHT_DEBRIEF` with the team win text. |
+
+**Why these targets.** `CheckPracticeEndedForPlayer` (:316-323) and `get_RemainingOpponentCount` (:69) are small enough for the JIT to inline into a caller another mod compiled first, so a patch on either may never run (`lessons/harmony-il.md`, #1189). The tick prefix writes the one field both read, so vanilla's code decides. `ArrangePlayerTeamEnmity` has a `foreach` with a `finally`, which the JIT does not inline; `Patch174TeamPracticeBindingTests.ArrangePlayerTeamEnmity_CannotBeInlined` pins that.
+
+**What vanilla assumes.** `InitializeTeams` (:356-374) makes each of the six AI teams the enemy of the other five; `ArrangePlayerTeamEnmity` makes all six the player's enemies while he practises; `OnAgentRemoved` (:248-265) counts every non-player human that falls as an opponent beaten when the player is the killer (:256-258). `SelectRandomAiTeam` (:230-246) picks the first team with no bots, else a random team from index 1 on. The prize rule (`conversation_arena_master_post_fight_on_condition`) pays 250 when `RemainingOpponentCountFromLastPractice` is 0 and 5, 10, 25 or 60 by `OpponentCountBeatenByPlayer`. The team fight keeps all of that; only the sides and the win text change.
+
+**The mode.** `TeamPracticeState` holds it in a `ConditionalWeakTable` keyed by the controller, decided on the first `ArrangePlayerTeamEnmity` of a visit (it runs in `AfterStart` through `StartPractice`, :104, :298), so an MCM change never leaves a fight half team and half free-for-all. The town's owner is `FactionSides.Of(PlayerEncounter.LocationEncounter.Settlement.MapFaction)`, the same encounter vanilla reads at :77, resolved by `IAlignmentService.ResolveSide`. A Free owner, the switch on and the single-player predicate make a team fight; any other case writes nothing.
+
+**Callers and thread.** `ArrangePlayerTeamEnmity`: `StartPractice` only (:298); `StartPractice` runs from `AfterStart` (:104), `OnMissionTick` (:223) and `StartPlayerPractice` (:286, a conversation-end callback). `SpawnArenaAgent`: `OnMissionTick` (:200) and `StartPractice` (:301, :310). All on the main mission thread. `MissionThreadGuard.NoteCall` sits beside the two native writes (`Team.SetIsEnemyOf`, `SetContourColor`). The prefix reads `_service` and the weak table first and returns, so a town that is not a team town costs one table lookup a tick.
+
+**Friendly fire.** Without `Mission.ForceNoFriendlyFire` a player's missile that meets a friendly agent in single-player is not cancelled: the `ForceNoFriendlyFire` branch is skipped and the `flag` branch (`!GameNetwork.IsSessionActive`) cancels only an AI attacker's (`Mission.cs:5868-5880`). With it, the missile is cancelled (`:5870-5873`). Melee on a friend is already cancelled in single-player (`CancelsDamageAndBlocksAttackBecauseOfNonEnemyCase`, `:6358-6370`, read at `:5351`).
+
+**Crash guard.** Every patch catches and writes `Outcomes.Swallowed("TeamPractice", ...)`: the first runs inside `AfterStart`. Outcome lines: `taom.team-practice.mode` (the sides were set) and `taom.team-practice.win` (the side won), manifest `tools/ingame_checks/1528.toml`.
+
+**Co-op.** Not a veto: no patch skips vanilla, so none is in `CoopVetoClassificationTests`. The service answers false in a co-op session, for a client, when the host decides and on a dedicated server (`CoopSessionPolicy.IsSinglePlayerAuthority`), so vanilla's fight runs unchanged.
+
+**Binding.** `Patch174TeamPracticeBindingTests`; the two fields and the reward condition are rows of `reflection-sites.md` Category B. **Tests:** `TeamPracticeRulesTests`, `TeamPracticeServiceTests`, `TeamPracticeStateTests`, `TeamPracticeSettingsProviderTests`, `TeamPracticeWiringTests`. **Doc:** `docs/features/team-practice.md`.
+
 ## Patch172_BattleGearLoot
 
 **Target:** `private void TaleWorlds.CampaignSystem.MapEvents.MapEvent.LootCasualtyCharacter(CharacterObject casualtyCharacter, MapEventParty winnerParty, MapEventParty defeatedParty, float aiTradePenalty, int maxLootedItemsPerBodyForMainParty, ItemRoster mainPartyLootFromCasualties)` (v1.5.7, `MapEvent.cs:1627-1665`).

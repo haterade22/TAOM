@@ -6988,5 +6988,13 @@
 	<string id="taom_training_grounds_waUxgr5b" text="{=waUxgr5b}Let me tell you something else - war is not a game. It's not a game. Play by the rules and you die. The streets aren't the training grounds. If you think someone's your enemy, you take them down - don't wait for a polite challenge." />
 	<string id="taom_training_grounds_IHKXNP9H" text="{=IHKXNP9H}Training Master" />
 	<string id="taom_training_grounds_CQZJLWfw" text="{=CQZJLWfw}You can reset your perks at the training master...for the right price. " />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_mcm_EnableTeamPracticeFights" text="{=taom_mcm_EnableTeamPracticeFights}Team Practice Fights" />
+	<string id="taom_mcm_EnableTeamPracticeFights_hint" text="{=taom_mcm_EnableTeamPracticeFights_hint}In a town of the Free Peoples the practice fight at the training grounds is a team fight: you and the fighters outlined in blue against the other side, and no one can hurt his own side. A town's side is its owner's, so a captured town follows its conqueror. Towns of the Shadow and neutral towns keep the fight where every fighter is alone. Takes effect the next time you enter the training grounds. Single-player only. Default: on." />
+	<!-- TrainingGrounds -->
+	<string id="taom_tg_team_rules" text="{=taom_tg_team_rules}Here we train the way soldiers fight: in teams. You join one side, and the fighters outlined in blue fight beside you. Your blows can't hurt them, and theirs can't hurt you. Thirty fighters take their turn in the yard, and your side wins when the last fighter of the other side goes down. Sounds like fun, eh?[ib:confident2]" />
+	<string id="taom_tg_team_reward" text="{=taom_tg_team_reward}If you can beat {OPPONENT_COUNT_1} opponents yourself before going down, you'll earn {PRIZE_1}{GOLD_ICON}. You'll get {PRIZE_2}{GOLD_ICON} for striking down at least {OPPONENT_COUNT_2}, {PRIZE_3}{GOLD_ICON} for {OPPONENT_COUNT_3} and {PRIZE_4}{GOLD_ICON} for {OPPONENT_COUNT_4}. Only the ones you put down yourself count. If your side wins while you're still on your feet, you earn the great prize of the fights, {PRIZE_5}{GOLD_ICON}. Sounds good, eh?[if:convo_nonchalant]" />
+	<string id="taom_tg_team_win" text="{=taom_tg_team_win}Well fought, {PLAYER.LINK}! Your side held the yard, and you were still standing at the end. You took down {OPPONENT_COUNT} of them yourself, and that earns you the top prize: {PRIZE}{GOLD_ICON}." />
 
 </strings>

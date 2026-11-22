@@ -331,6 +331,10 @@ In English the town arena is the Training Grounds and its keeper the Training Ma
 - **Gate:** `TrainingGroundsTextTests` fails when a reworded key loses its row, when a TAOM English literal names the arena, or when the installed game declares an English row with the word under a key in neither list (that last check needs the install).
 - **Not checked in game yet:** that the location name on the town screen reads the override. The occupation text `str_occupation.ArenaMaster` (`Duoo5R2P`) is reworded too, but no reader of it was found in the v1.5.7 decompile, so the game may never show it.
 
+## Team practice fights (#1528)
+
+In a town of the Free Peoples the practice fight is a team fight; every other town keeps vanilla's free-for-all. See [team-practice.md](team-practice.md).
+
 ## Changelog
 
 - 2026-11-22: the arena is the Training Grounds in English and its keeper the Training Master (#1527): one English row for each vanilla key that names it, the tournament masters renamed in `characters/npcs_*.xml`, and TAOM's Tidings strings and MCM hints reworded. Ids and scenes are unchanged. The other twelve languages keep their translated rows; the rows of four MCM hints that were never translated (ten language files) hold the new English. Gate: `TrainingGroundsTextTests`.
