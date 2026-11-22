@@ -440,6 +440,19 @@ public class SurvivalRunLocationTests
     }
 
     [TestMethod]
+    public void AWaveTheTimerBeginsOnTheTickOfAnErrandsOrder_WithdrawsThatOrder_AndReleasesOnTheNextTick()
+    {
+        var run = Begun(Plan(), FarAway());
+        Assert.AreEqual(ErrandResult.Ok, run.TryStartErrand(LdPlaceKind.Armoury));
+
+        var fx = run.Tick(Snap(FarAway(), 1000f));
+
+        Assert.AreEqual(RunPhase.Wave, run.GetView().Phase, "the stretch ran out on this tick");
+        Assert.IsNull(fx.Errand, "the director moves a rider to his sally before it serves an errand: a teleport after that would carry him back to the armoury (Data flow lens, 2026-11-22)");
+        Assert.AreEqual(ErrandStep.End, run.Tick(Snap(FarAway())).Errand!.Step, "the walk is released on the next tick, and for a walk that never started that release finds nothing");
+    }
+
+    [TestMethod]
     public void AnErrand_StillOpenWhenTheWaveBegins_IsClosed()
     {
         var run = Begun(Plan(), FarAway());
@@ -507,5 +520,20 @@ public class SurvivalRunLocationTests
         run.TryBuyEngine("mangonel", 0);
 
         Assert.AreEqual(ErrandReach.Person, run.FortSummary().Purchases.Single().Reach);
+    }
+
+    [TestMethod]
+    public void DropPlace_HidesTheArmouryForTheRun_AsAMissingPointDoes()
+    {
+        var run = Begun(Plan(), AtArmoury());
+        Assert.IsTrue(run.GetView().Locations.Gear.Count > 0, "the armoury shows before it is dropped");
+
+        run.DropPlace(LdPlaceKind.Armoury);
+
+        Assert.AreEqual(LocationResult.Hidden, run.TryBuyGear("armour_1"));
+        Assert.AreEqual(ErrandResult.NoPlace, run.TryStartErrand(LdPlaceKind.Armoury));
+        var view = run.GetView().Locations;
+        Assert.AreEqual((0, LdPlaceKind.None), (view.Gear.Count, view.Near));
+        Assert.AreEqual(5000, run.Gold);
     }
 }

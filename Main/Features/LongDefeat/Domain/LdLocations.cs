@@ -80,6 +80,27 @@ internal enum SiteState
 /// <summary>One yard row: the site, its state, the kind that stands or stood there (empty while free) and the kinds it can be sold, each with the price the buy takes now.</summary>
 internal sealed record SiteRow(LdSite Site, SiteState State, string Standing, IReadOnlyList<EngineOffer> Kinds);
 
+/// <summary>The lord's driven armour as the engine holds it: the four armour sums and the armour's weight. A value of -1 is a read with no live main agent.</summary>
+internal sealed record LdArmour(float Head, float Torso, float Legs, float Arms, float Encumbrance)
+{
+    public static LdArmour Unread { get; } = new(-1f, -1f, -1f, -1f, -1f);
+}
+
+/// <summary>
+/// What the live gear swap (variant A) read and did: the driven armour before and after, the sums the kit gives, health and limit around it, whether he rode, the item in hand after and how many kit slots <c>BuildKit</c> could not fill (the spawn equipment read back is the kit just set, so this is no proof of what the engine applied:
+/// that proof is the next risen body's armour). <c>Problem</c> is empty when it was done; a refused swap names why and carries no reads.
+/// </summary>
+internal sealed record LdSwap(bool Done, string Problem, string Variant, LdArmour Before, LdArmour After, LdArmour Sums, float Health, float HealthLimit, float HealthAfter, float HealthLimitAfter, bool Mounted, bool MountAfter, string Wielded, int KitWrong)
+{
+    public static LdSwap Refused(string problem) => new(false, problem, "A", LdArmour.Unread, LdArmour.Unread, LdArmour.Unread, -1f, -1f, -1f, -1f, false, false, "none", 0);
+}
+
+/// <summary>What one errand member of the lord adapter found: whether it was done, why not, and the reads A34 needs (the lord rode, the engine let him be assigned, he used a game object, his scripted walk is set, how far he stands from the place).</summary>
+internal sealed record LdErrandMove(bool Done, string Problem, bool Mounted, bool Assignable, bool Using, bool Scripted, float Distance)
+{
+    public static LdErrandMove Refused(string problem) => new(false, problem, false, false, false, false, float.NaN);
+}
+
 /// <summary>
 /// The two places as the HUD and the bot read them. <c>Near</c> is the place the lord stands at now (the armoury first), <c>None</c> elsewhere and for a place the run does not sell, so the prompt and the
 /// panel group show only there (D37). The rows are listed wherever the lord stands, because the bot reads them to decide a walk. <c>Errand</c> is the place the bot's open errand goes to, <c>None</c> with

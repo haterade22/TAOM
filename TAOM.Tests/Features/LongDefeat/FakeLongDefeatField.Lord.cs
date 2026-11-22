@@ -46,6 +46,9 @@ internal sealed partial class FakeLongDefeatField
         if (!RiseSpawnOk)
             return LdRise.Refused;
 
+        if (loadout != null)
+            Loadouts.Add(loadout);
+
         MainBody = _nextBody++;
         ControllerName = "Player";
         Lord = Lord with { Own = true, Id = "lord_4_1", At = place?.Point ?? Lord.At };

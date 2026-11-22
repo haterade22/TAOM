@@ -111,8 +111,9 @@ public class LongDefeatLordPinTests
         var rose = At(rise, "_run.LordRose(");
         Assert.IsTrue(refused < rose, "a refused spawn answers the run with nothing");
         StringAssert.Contains(rise.Substring(refused, rose - refused), "return;");
-        StringAssert.Contains(rise, "_lord.RiseLord(place, _plan.Loadout)");
-        Assert.IsTrue(At(rise, "JudgeClass(true)") < rose, "the class is read back from the new body before the run is told");
+        StringAssert.Contains(rise, "_lord.RiseLord(place, loadout)");
+        StringAssert.Contains(rise, "var loadout = _run.EffectiveLoadout;");
+        Assert.IsTrue(At(rise, "JudgeClass(true, loadout)") < rose, "the class is read back from the new body before the run is told");
         var tick = Body(Source(Director), "public void Tick(float dt)");
         Assert.IsTrue(At(tick, "AdoptIfNew();") < At(tick, "JudgeRise();") && At(tick, "JudgeRise();") < At(tick, "var fx = _run.Tick("), "the rise is read back after adoption ran, before the run's tick");
         Assert.IsTrue(At(tick, "Apply(fx);") < At(tick, "JudgeGeneralDown();"), "the seat is read back after the tick wrote it");

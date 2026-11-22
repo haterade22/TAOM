@@ -37,6 +37,7 @@ internal sealed partial class SurvivalRun
     private readonly Dictionary<int, EngineHeld> _engines = new();
     private readonly List<EngineOrder> _pendingEngines = new();
     private readonly List<LdPlaceKind> _unreached = new();
+    private readonly HashSet<LdPlaceKind> _dropped = new();
     private IReadOnlyList<LdSite> _sites = Array.Empty<LdSite>();
     private LdLordFacts _lord = LdLordFacts.None;
     private bool _pendingSwap;
@@ -44,15 +45,15 @@ internal sealed partial class SurvivalRun
     private bool _errandEnd;
 
     /// <summary>
-    /// The lord's class kit with the sets he owns laid over it (D35), null when he plays no class. The run hands it out once, as <see cref="RunEffects.SwapGear"/>. Every spawn of the lord must
-    /// build it too, which is Slice 5's to wire: until then a respawn builds the class kit alone.
+    /// The lord's class kit with the sets he owns laid over it (D35), null when he plays no class. The run hands it out once, as <see cref="RunEffects.SwapGear"/>, and the director builds it at every
+    /// spawn of the lord too (the start, the rise and the sally's remount), so a bought set outlives his body.
     /// </summary>
     public LdLoadout? EffectiveLoadout => LoadoutMerge.Merge(_plan.Loadout, _ownedSets);
 
     /// <summary>The yard's sites as the field read them at boot. Until this is called the yard has no site, and no engine is sold.</summary>
     public void SetSites(IReadOnlyList<LdSite> sites) => _sites = sites ?? Array.Empty<LdSite>();
 
-    /// <summary>Buys a gear set at the armoury. The next tick hands the lord's merged kit to the director, which will put it on his body from Slice 5 on.</summary>
+    /// <summary>Buys a gear set at the armoury. The next tick hands the lord's merged kit to the director, which puts it on his live body.</summary>
     public LocationResult TryBuyGear(string setId)
     {
         if (ClosedForPlaces() is { } closed)
@@ -139,6 +140,11 @@ internal sealed partial class SurvivalRun
         return ErrandResult.Ok;
     }
 
+    /// <summary>
+    /// A place whose recorded point the boot found unusable (no navmesh, or outside the boundary) is sold no more for the run (D46): the bot would teleport onto it and a person could never stand there.
+    /// </summary>
+    public void DropPlace(LdPlaceKind place) => _dropped.Add(place);
+
     /// <summary>The bot gives up an open errand (nothing it wanted there is for sale any more): the lord's scripted walk is released on the next tick.</summary>
     public void EndErrand()
     {
@@ -156,7 +162,7 @@ internal sealed partial class SurvivalRun
     };
 
     /// <summary>The armoury can sell: the build delivers it, the shop carries it, the fortress records its place and the lord plays a class (a lord in his own gear buys nothing, D35).</summary>
-    private bool ArmourySold => _plan.Locations.Armoury && _plan.Armoury != null && _plan.ArmouryPoint != null && _plan.Loadout != null;
+    private bool ArmourySold => _plan.Locations.Armoury && _plan.Armoury != null && _plan.ArmouryPoint != null && _plan.Loadout != null && !_dropped.Contains(LdPlaceKind.Armoury);
 
     private bool YardSold => _plan.Yard != null && _plan.YardPoint != null;
 
@@ -231,6 +237,16 @@ internal sealed partial class SurvivalRun
         _errandEnd = true;
     }
 
+    /// <summary>
+    /// The timer began a wave on a tick whose errand order (the walk's start, or its teleport) was already written. The order is withdrawn: the director serves the wave's own moves first (a rider's sally), and a
+    /// teleport after them would carry the lord back to the place. The errand is closed by the wave's start, so its release goes out on the next tick.
+    /// </summary>
+    private static void WithdrawErrandOrder(RunEffects fx)
+    {
+        if (fx.Errand is { Step: not ErrandStep.End })
+            fx.Errand = null;
+    }
+
     /// <summary>A wave begins: an errand still open is over, and every place may be walked to again after it.</summary>
     private void ForgetErrands()
     {
@@ -241,7 +257,7 @@ internal sealed partial class SurvivalRun
     /// <summary>
     /// The errand's clock, counted from the snapshots' <c>dt</c> so a replay sees the same walk: the start goes out once, the clock stops while the lord stands at the place, the teleport goes out once when
     /// the budget is spent, and an errand whose teleport did not arrive is given up. A lord who fell on the way walks nowhere, so his errand is closed and no teleport is asked for a body that is
-    /// gone. A closed errand's release goes out alone on the next tick. A run that ends hands out nothing more, so the director must release an open walk itself when it finishes: Slice 5 owes that with the walk.
+    /// gone. A closed errand's release goes out alone on the next tick. A run that ends hands out nothing more, so the director releases an open walk itself when it finishes.
     /// </summary>
     private void TickErrand(float dt, RunEffects fx)
     {

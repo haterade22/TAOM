@@ -3,7 +3,7 @@ using TAOM.Features.LongDefeat.Domain;
 namespace TAOM.Adapters;
 
 /// <summary>
-/// The engine half of the Long Defeat death rule (phase4-plan.md Slice 4, D40 to D47), kept apart from <see cref="ILongDefeatBattlefieldAdapter"/> so the director's fake stays small. The battlefield adapter
+/// The lord's body: the death rule (phase4-plan.md Slice 4, D40 to D47), the gear swap and the bot's errand (Slice 5), kept apart from <see cref="ILongDefeatBattlefieldAdapter"/> so the director's fake stays small. The battlefield adapter
 /// implements both, and the run host hands the director the same instance as each (<c>LongDefeatLordPinTests</c>). Takes and returns domain types only (ADR-007). Every member runs on the main thread, from the
 /// director's tick; none is called from a removal or hit callback. With no such adapter the director keeps the old respawn.
 /// </summary>
@@ -38,4 +38,22 @@ internal interface ILongDefeatLordAdapter
 
     /// <summary>Drops what the field keeps for the death rule: the last position the lord stood at and the body marked forced. Called when the run ends.</summary>
     void ReleaseLord();
+
+    /// <summary>
+    /// The live gear swap, variant A (spike S11): puts <paramref name="loadout"/> on the lord's own live body, the main agent, through the engine's own equipment update, then runs the mission's stat model over it.
+    /// Reads the driven armour, health and mount before and after. Refuses, with the reason, when the main agent is not the lord's own live body; nothing is written then.
+    /// </summary>
+    LdSwap SwapGear(LdLoadout loadout);
+
+    /// <summary>The bot's errand (D44): sets the scripted walk of the live, AI-driven main agent to <paramref name="place"/> and holds that body until <see cref="EndErrand"/>.</summary>
+    LdErrandMove StartErrand(LdPlace place);
+
+    /// <summary>The errand's teleport (D44): reads the held body's distance and scripted flag, puts him at <paramref name="place"/>, then sets the scripted position again so the AI does not walk him back.</summary>
+    LdErrandMove TeleportErrand(LdPlace place);
+
+    /// <summary>Releases the held body's scripted walk if he still stands and drops him. Safe with no errand open.</summary>
+    LdErrandMove EndErrand();
+
+    /// <summary>The driven armour of the live main agent, or <see cref="LdArmour.Unread"/> with none: the read at the rise that does not depend on the swap's own writes.</summary>
+    LdArmour ReadLordArmour();
 }

@@ -1317,6 +1317,21 @@ class PhaseTwoJudgeTests(unittest.TestCase):
         self.assertTrue(ld.owes_return({"wavesCleared": 2}, False), "a report with no rows keeps the old rule")
         self.assertFalse(ld.owes_return({"wavesCleared": 0, "waves": []}, False))
 
+    def test_the_judge_owes_no_return_to_a_rider_who_fell_in_every_wave_and_one_to_a_rider_who_survived_a_wave(self):
+        ld.expected_report = {"class": "cavalry"}
+
+        def run(fell_in):
+            lord = {"deaths": [{"wave": w, "body": "own", "troop": "lord_4_1", "forced": False} for w in fell_in], "takeovers": [],
+                    "rises": [{"beforeWave": w + 1, "at": "home", "handedBack": False} for w in fell_in if w < 5]}
+            report = {**REPORT, "class": "cavalry", "playerDeaths": len(fell_in), "lord": lord}
+            log = log_of(STANDARD + ("sally",), 5) + "".join("\n" + DEATH_RULE_LINES for _ in fell_in) + "".join("\n" + skip_line("sally-return", w, "taken-over") for w in fell_in)
+            return ld.judge(FINAL, report, log)
+
+        self.assertEqual(run((1, 2, 3, 4, 5))[0], 0, "every clear found the rider's own body down: there is no return to prove")
+        code, why = run((1, 2, 3, 4))
+        self.assertEqual(code, 1, "he was alive at the clear of wave 5, so that return is owed")
+        self.assertIn("taom.long-defeat.sally-return", why)
+
     def test_once_a_point_exists_both_checks_are_required_again(self):
         report, _ = self.cavalry_run()
         # A sally that went out passes, so the point is recorded: a return skip that claims no point does not stand in for the return.
@@ -3004,9 +3019,9 @@ class PurchaseJudgeTests(unittest.TestCase):
         "yard": {"reach": 6, "engines": [["mangonel", 450], ["trebuchet", 700]]},
     }
 
-    def problem(self, report, locations=None):
+    def problem(self, report, locations=None, armoury_point=True):
         return ld.purchase_problem(report, "helms", fort=self.PLAN, offers=self.OFFERS, percents=self.PERCENTS, upgrades=self.UPGRADES, heroes=self.HEROES,
-                                   locations=self.LOCATIONS if locations is None else locations)
+                                   locations=self.LOCATIONS if locations is None else locations, armoury_point=armoury_point)
 
     def gear(self, wave, base, price, id="armour_1", reach="walk"):
         return {**self.buy(wave, "gearSet", base, price, id=id), "reach": reach}
@@ -3048,6 +3063,21 @@ class PurchaseJudgeTests(unittest.TestCase):
         self.assertIn("armoury", self.problem(self.report([], armoury=["armour_1"])), "a set nobody paid for")
         self.assertIsNone(self.problem(self.report([])), "a report that bought no set may carry no armoury key")
 
+    def test_rule_22_a_gear_set_needs_a_fortress_that_records_the_armoury_point(self):
+        self.places_on_sale()
+        bought = self.report([self.gear(1, 250, 250)], armoury=["armour_1"], **{"class": "sword"})
+
+        self.assertIsNone(self.problem(bought))
+        self.assertIn("armoury point", self.problem(bought, armoury_point=False), "the game sells only at a recorded place (SurvivalRun.ArmourySold): a build that ignored the point must not pass")
+        self.assertFalse(ld.records_armoury_point("helms"), "the shipped Helm's Deep records none yet")
+        self.assertTrue(ld.records_armoury_point("x", {"fortresses": [{"id": "x", "armoury": {"x": 1, "y": 2, "z": 3, "fx": 0, "fy": 1}}]}))
+        self.assertFalse(ld.records_armoury_point("x", {"fortresses": [{"id": "x", "armoury": {}}]}))
+
+    def test_no_gear_set_replays_while_the_build_offers_no_armoury(self):
+        self.places_on_sale(armoury=False)
+
+        self.assertIn("not offered", self.problem(self.report([self.gear(1, 250, 250)], armoury=["armour_1"], **{"class": "sword"})))
+
     def test_a_gear_set_names_how_the_buyer_came(self):
         self.places_on_sale()
 
@@ -3068,10 +3098,9 @@ class PurchaseJudgeTests(unittest.TestCase):
             self.assertIn("site", self.problem(self.report([self.engine(2, 450, 450, site)])), repr(site))
         self.assertIn("reach", self.problem(self.report([self.engine(2, 450, 450, 0, reach="flew")])))
 
-    def test_nothing_of_the_places_replays_while_the_build_delivers_none(self):
-        self.assertEqual(ld.LOCATION_OFFERED, {"armoury": False, "mangonel": False, "trebuchet": False}, "raise this with LocationOffer.Offered")
+    def test_no_engine_replays_while_the_build_delivers_none(self):
+        self.assertEqual(ld.LOCATION_OFFERED, {"armoury": True, "mangonel": False, "trebuchet": False}, "raise this with LocationOffer.Offered")
 
-        self.assertIn("not offered", self.problem(self.report([self.gear(1, 250, 250)], armoury=["armour_1"], **{"class": "sword"})))
         self.assertIn("not offered", self.problem(self.report([self.engine(2, 450, 450, 0)])))
 
     def test_a_shop_with_no_places_sells_none(self):
@@ -4619,6 +4648,13 @@ class FortPointsJudgeTests(unittest.TestCase):
         self.assertTrue(ld.recorded_fort_points("helms", self.fortresses({"towers": [{"id": "hornburg", "volley": [{"x": 1}]}]})))
         self.assertTrue(ld.recorded_fort_points("helms", self.fortresses({"volley": {"origins": [{"x": 1, "y": 2, "z": 3}]}})))
 
+    def test_a_fortress_that_records_only_the_armoury_point_owes_the_pass(self):
+        self.assertTrue(ld.recorded_fort_points("helms", self.fortresses({"armoury": {"x": 1, "y": 2, "z": 3, "fx": 0, "fy": 1}})))
+        self.assertTrue(ld.recorded_fort_points("helms", self.fortresses({"keep": {"x": 1, "y": 2, "z": 3, "radius": 12}})), "the keep is the lord's rise point, and the game judges it on the same line")
+        self.assertFalse(ld.recorded_fort_points("helms", self.fortresses({"keep": None})))
+        for armoury in (None, {}, "x", []):
+            self.assertFalse(ld.recorded_fort_points("helms", self.fortresses({"armoury": armoury})), repr(armoury))
+
     def test_the_shipped_helms_records_none_yet(self):
         self.assertFalse(ld.recorded_fort_points("helms"), "Mike records the points on 2026-11-06")
 
@@ -5293,20 +5329,20 @@ class LocationOfferedTests(unittest.TestCase):
 
     def test_a_kind_raised_on_one_side_only_is_caught(self):
         text = source("Domain", "LocationsPlan.cs")
-        raised = text.replace("Offered { get; } = new(false, false, false);", "Offered { get; } = new(true, false, false);")
+        raised = text.replace("Offered { get; } = new(true, false, false);", "Offered { get; } = new(true, true, false);")
         self.assertNotEqual(raised, text, "the planted edit found its line")
         self.assertNotEqual(self.parse(raised, "Offered"), ld.LOCATION_OFFERED)
 
     def test_an_argument_that_is_not_a_bare_literal_is_refused_not_read_as_false(self):
         text = source("Domain", "LocationsPlan.cs")
-        named = text.replace("Offered { get; } = new(false, false, false);", "Offered { get; } = new(Armoury: true, false, false);")
+        named = text.replace("Offered { get; } = new(true, false, false);", "Offered { get; } = new(Armoury: true, false, false);")
         self.assertNotEqual(named, text, "the planted edit found its line")
         with self.assertRaises(AssertionError):
             self.parse(named, "Offered")
 
-    def test_this_slice_delivers_nothing_so_every_row_stays_hidden(self):
-        self.assertEqual(ld.LOCATION_OFFERED, {"armoury": False, "mangonel": False, "trebuchet": False})
-        self.assertEqual(self.parse(source("Domain", "LocationsPlan.cs"), "None"), ld.LOCATION_OFFERED)
+    def test_this_slice_delivers_the_armoury_and_no_engine(self):
+        self.assertEqual(ld.LOCATION_OFFERED, {"armoury": True, "mangonel": False, "trebuchet": False})
+        self.assertEqual(self.parse(source("Domain", "LocationsPlan.cs"), "None"), {"armoury": False, "mangonel": False, "trebuchet": False})
 
 
 class LaunchCheckoutTests(unittest.TestCase):

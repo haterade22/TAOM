@@ -9,23 +9,24 @@ internal sealed partial class LongDefeatDirector
     private bool LordRides => _plan.Loadout?.Mounted == true;
 
     /// <summary>
-    /// Spawns the player's lord in the plan's class kit (the start of the run and every respawn) and judges the spawn: the field reads back what the engine built, and the
+    /// Spawns the player's lord in the run's effective kit, the class kit with the sets he owns laid over it (the start of the run and every respawn) and judges the spawn: the field reads back what the engine built, and the
     /// <c>class</c> check is written from that. A mounted lord spawns at the home point, which the boot required to be usable. His stats are derived again when <c>AdoptIfNew</c> takes the new body
     /// (<c>DressNewBody</c>, which also refreshes his horse), because the horse was built before him and took no record. False when the field could not build him. A run with no class spawns him as before and writes no class line.
     /// </summary>
     private bool SpawnLord(bool respawn)
     {
-        if (!_field.SpawnPlayer(respawn, _plan.Loadout, LordRides ? _homePoint : null))
+        var loadout = _run.EffectiveLoadout;
+        if (!_field.SpawnPlayer(respawn, loadout, LordRides ? _homePoint : null))
             return false;
 
-        JudgeClass(respawn);
+        JudgeClass(respawn, loadout);
         return true;
     }
 
-    /// <summary>The class check of a lord the field just spawned, written from what the engine built (the read-back), not from the kit asked for. A run with no class writes none.</summary>
-    private void JudgeClass(bool respawn)
+    /// <summary>The class check of a lord the field just spawned in <paramref name="asked"/>, written from what the engine built (the read-back), not from the kit asked for. A run with no class writes none.</summary>
+    private void JudgeClass(bool respawn, LdLoadout? asked)
     {
-        if (_plan.Loadout is not { } loadout)
+        if (asked is not { } loadout)
             return;
 
         var verdict = LongDefeatChecks.Class(loadout, _field.ReadKit());

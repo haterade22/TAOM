@@ -136,6 +136,11 @@ internal sealed partial class LongDefeatDirector
         if (fx.FieldCare > 0f)
             ApplyFieldCare(fx.FieldCare);
 
+        if (fx.Errand is { } errand)
+            ServeErrand(errand);
+        if (fx.SwapGear is { } gear)
+            SwapLordGear(gear);
+
         // Last: a volley reads the attackers this tick's batches spawned (D30), and every order is answered here, fired or withheld, so a ready source never orders twice.
         FireVolleys(fx.FireVolleys);
 
@@ -317,6 +322,7 @@ internal sealed partial class LongDefeatDirector
         CloseSplit(SplitWave(), "run-ended");
         JudgeEngineUse(true);
         FinishVolleys();
+        ReleaseErrandWalk("run-ended");
         ReleaseLordHolds();
         if (_chargedWave != 0)
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + _chargedWave, LongDefeatChecks.StaleStranded(result.Reason, _run.GetView().DefendersStanding));

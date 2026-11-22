@@ -116,6 +116,14 @@ internal sealed partial class LongDefeatDirector
             heights.Add(volleyHeight);
         }
 
+        var armouryIndex = -1;
+        if (_plan.ArmouryPoint is { } armouryPoint)
+        {
+            armouryIndex = places.Count;
+            places.Add(LdPlace.From(armouryPoint));
+            heights.Add(null);
+        }
+
         var riseAt = !_playerAttacks && _plan.Keep is { } recorded ? LdPlace.At(new LdPoint(recorded.X, recorded.Y, recorded.Z)) : null;
         if (riseAt != null)
         {
@@ -134,10 +142,17 @@ internal sealed partial class LongDefeatDirector
 
         var points = names.Select((name, i) => (name, facts[i])).ToList();
         LdPointFacts? rise = riseAt != null ? facts[places.Count - 1] : null;
-        var verdict = LongDefeatGateChecks.FortPoints(points, rise);
+        LdPointFacts? armoury = armouryIndex >= 0 ? facts[armouryIndex] : null;
+        var verdict = LongDefeatGateChecks.FortPoints(points, rise, armoury);
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.FortPointsId, _mission, verdict);
         if (rise is { Usable: false })
             UseSceneRise();
+        if (armoury is { Usable: false })
+        {
+            _run.DropPlace(LdPlaceKind.Armoury);
+            _logger.LogWarning($"{Tag}[Boot] the armoury point is unusable and the armoury is not sold this run: navmesh {(armoury.Value.Navmesh ? "yes" : "no")}, boundary {(armoury.Value.Boundary ? "yes" : "no")}");
+        }
+
         foreach (var (name, fact) in points.Where(p => !p.Item2.Usable))
             _logger.LogWarning($"{Tag}[Boot] fort point {name} is unusable and is dropped: navmesh {(fact.Navmesh ? "yes" : "no")}, boundary {(fact.Boundary ? "yes" : "no")}, clear {(fact.Clear ? "yes" : "no")}");
         _logger.LogInfo($"{Tag}[Boot] fort points: {verdict.Detail}");

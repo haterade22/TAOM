@@ -870,8 +870,8 @@ def shipped_fortifications(fortress_id=None, path=None):
 
 # The Phase 4 places (phase4-plan.md section 5). shop.json carries an `armoury` and a `yard` block per shop. Any other key, a retired `marshal` block included, is ignored (the shop's heroes list replaced it, #1337). read_locations mirrors LocationsReader rule for rule (both suites read
 # tools/tests/long_defeat_location_cases.json), and LOCATION_OFFERED mirrors LocationOffer.Offered (D46): a test reads the C# source and compares the two, since FORT_OFFERED is pinned only to literals.
-# Nothing is delivered yet, so a shop's rows stay hidden; each later slice raises its kind here and in LocationOffer.Offered.
-LOCATION_OFFERED = {"armoury": False, "mangonel": False, "trebuchet": False}
+# Slice 5 delivers the armoury (the live gear swap and the bot's errand); a shop's armoury rows still stay hidden until the fortress records the point. Each later slice raises its kind here and in LocationOffer.Offered.
+LOCATION_OFFERED = {"armoury": True, "mangonel": False, "trebuchet": False}
 
 
 def shipped_locations(fortress_id=None, path=None):
@@ -1117,10 +1117,10 @@ def spent_on_keys_note(spent_on):
     return note
 
 
-def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, percents=None, upgrades=None, heroes=None, locations=None):
+def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, percents=None, upgrades=None, heroes=None, locations=None, armoury_point=None):
     """None when the report's gold books and purchases replay from the shop, else what is wrong (leaderboard-plan.md rules 8, 19, 20, 22 and 23, phase3-plan.md and phase4-plan.md section 7).
 
-    Rule 22: a gearSet is a set of the shop's armoury, bought at most once and sold to the report's class, and the report's armoury list is the gearSet ids in purchase order. Rule 23: an engine is a
+    Rule 22: a gearSet is a set of the shop's armoury at a fortress that records the armoury's point (the game sells nowhere else: SurvivalRun.ArmourySold), bought at most once and sold to the report's class, and the report's armoury list is the gearSet ids in purchase order. Rule 23: an engine is a
     kind the shop's yard lists and this build delivers (LOCATION_OFFERED), and each site is bought at most once. Both take the price factor as a pack does, and both name how the buyer came (REACHES).
 
     Rule 8: gold.spent equals the sum of gold.spentOn, and each spentOn part equals the prices of its purchases. Rule 19: each purchase's basePrice is shop.json's for its kind and level
@@ -1186,6 +1186,8 @@ def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, perc
                 chosen = gear_sets.get(p["id"]) if isinstance(p.get("id"), str) else None
                 if not LOCATION_OFFERED["armoury"]:
                     return f"{where}: the armoury is not offered by this build"
+                if not (records_armoury_point(fortress_id) if armoury_point is None else armoury_point):
+                    return f"{where}: the fortress records no armoury point, so the armoury sells nothing"
                 if chosen is None:
                     return f"{where}: gear set {p.get('id')!r} is not a set of the shop's armoury"
                 if p["id"] in gear_bought:
@@ -1547,8 +1549,16 @@ def posts_variant_pattern(variant):
     return re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + POSTS_CHECK) + r" result=pass\b[^\n]*\bvariant=" + re.escape(variant) + r"\b")
 
 
+def records_armoury_point(fortress_id, root=None):
+    """Whether the fortress row of fortresses.json holds an armoury point: the place the game needs before it sells a gear set."""
+    root = _json_object(FORTRESS_FILE) if root is None else root
+    fortress = next((f for f in root.get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None) if isinstance(root, dict) else None
+    return fortress is not None and isinstance(fortress.get("armoury"), dict) and bool(fortress["armoury"])
+
+
 def recorded_fort_points(fortress_id, root=None):
-    """Whether the fortress row of fortresses.json records a tower post, a tower volley spot or a volley origin (the points the game's fort-points check reads); Mike records them in play."""
+    """Whether the fortress row of fortresses.json records a tower post, a tower volley spot, a volley origin, the armoury's point or a keep (the points the game's fort-points check reads; the keep is
+    the lord's rise point, judged when the player defends, as every run of this wrapper does); Mike records them in play."""
     root = _json_object(FORTRESS_FILE) if root is None else root
     fortress = next((f for f in root.get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None) if isinstance(root, dict) else None
     if fortress is None:
@@ -1557,7 +1567,9 @@ def recorded_fort_points(fortress_id, root=None):
     volley = fortress.get("volley")
     tower_points = isinstance(towers, list) and any(isinstance(t, dict) and (t.get("posts") or t.get("volley")) for t in towers)
     origins = isinstance(volley, dict) and bool(volley.get("origins"))
-    return bool(tower_points or origins)
+    armoury = isinstance(fortress.get("armoury"), dict) and bool(fortress.get("armoury"))
+    keep = isinstance(fortress.get("keep"), dict) and bool(fortress.get("keep"))
+    return bool(tower_points or origins or armoury or keep)
 
 
 def recorded_fort_point_count(fortress_id, root=None):

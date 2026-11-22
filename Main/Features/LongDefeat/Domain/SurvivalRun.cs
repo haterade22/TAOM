@@ -155,7 +155,10 @@ internal sealed partial class SurvivalRun
         {
             _left -= s.Dt;
             if (!(_left > 0f) && !holdStart)
+            {
                 BeginWave();
+                WithdrawErrandOrder(fx);
+            }
         }
 
         // A wave the horn began waits one tick when fortification effects went out on this one.

@@ -271,6 +271,7 @@ internal sealed partial class LongDefeatDirector
         _sallyHits = false;
         _sally = null;
         ReleaseLordHolds();
+        ReleaseErrandWalk("run-ended");
 
         _session.Clear();
         _field.Clear();
@@ -323,7 +324,7 @@ internal sealed partial class LongDefeatDirector
             _run.TryReroll();
         else if (action.Kind == BotActionKind.Horn)
             _run.TryStartWave();
-        else
+        else if (!PlayPlace(action))
             BuyFortification(action.Kind);
     }
 

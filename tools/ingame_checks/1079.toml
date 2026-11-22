@@ -328,7 +328,7 @@ absence = "not-reached"
 
 [[check]]
 id = "taom.long-defeat.fort-points"
-needs = "a Long Defeat run at a fortress whose fortresses.json records tower posts, tower volley spots or volley origins (Mike records them with taom.ld_record; none is recorded for Helm's Deep until 2026-11-06, and the line is then a skip)"
+needs = "a Long Defeat run at a fortress whose fortresses.json records tower posts, tower volley spots, volley origins or the armoury's point (Mike records them with taom.ld_record; none is recorded for Helm's Deep until 2026-11-06, and the line is then a skip)"
 reached = ['\[Check\] id=taom\.long-defeat\.fort-points result=']
 pass = ['\[Check\] id=taom\.long-defeat\.fort-points result=pass points=[0-9]+ failed=0']
 fail = ['\[Check\] id=taom\.long-defeat\.fort-points result=fail']
@@ -337,6 +337,8 @@ fail = ['\[Check\] id=taom\.long-defeat\.fort-points result=fail']
 # and reads NOT REACHED. The 2 m clear-ray test of a volley origin (phase3-plan.md section 4) is built with the Elven Volley that reads the origins.
 # When the player defends and the fortress records a keep, the same line judges it as the lord's rise point too (phase4-plan.md D49): rise=recorded, or a fail with rise=scene-fallback rise_navmesh= rise_boundary=, and the rise then uses the
 # scene's keep frame. The keep is not counted in points=.
+# The armoury leg (phase4-plan.md D46, Slice 5): when the fortress records the armoury's point the same line judges it too, since the bot's errand teleports the lord onto it: armoury=recorded, or a fail with armoury=unusable armoury_navmesh= armoury_boundary=, and the
+# armoury is then not sold for the run. Like the keep it is not counted in points=; a fortress that records only the armoury still owes a pass (points=0 failed=0 armoury=recorded).
 absence = "not-reached"
 
 [[check]]

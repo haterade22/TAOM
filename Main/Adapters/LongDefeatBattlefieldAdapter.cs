@@ -571,6 +571,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         _knownMain = null;
         _kitFacts = NoLord;
         _kitSkipped = new List<string>();
+        _errandBody = null;
         _lordWatch.Clear();
         ReleaseLord();
     }

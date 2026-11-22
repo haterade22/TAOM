@@ -21,8 +21,6 @@ public class LongDefeatEffectsServedTests
     /// <summary>The effects the pure slices hand out before their engine half exists, each with the slice of phase4-plan.md that serves it. Remove a name in the change that serves it.</summary>
     private static readonly Dictionary<string, string> Unserved = new()
     {
-        ["SwapGear"] = "Slice 5",
-        ["Errand"] = "Slice 5",
         ["DeployEngines"] = "Slice 7",
     };
 

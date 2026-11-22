@@ -64,7 +64,8 @@ internal sealed partial class LongDefeatDirector
         var label = order.AtHome ? "home" : attacks ? "respawn" : _riseLabel;
         var place = order.AtHome ? _homePoint : attacks ? null : _risePlace;
         var wave = _run.Wave + 1;
-        var answer = _lord.RiseLord(place, _plan.Loadout);
+        var loadout = _run.EffectiveLoadout;
+        var answer = _lord.RiseLord(place, loadout);
         if (!answer.Spawned)
         {
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.RiseId, "w" + wave, LongDefeatLordChecks.RiseRefused(label));
@@ -75,7 +76,7 @@ internal sealed partial class LongDefeatDirector
         if (order.HandBack && answer.HandBack == LdHandBack.None)
             answer = answer with { HandBack = LdHandBack.Dead };
         _riseVia = "rise";
-        JudgeClass(true);
+        JudgeClass(true, loadout);
         _run.LordRose(label, answer.HandedBack);
         _riseWatch = new RiseWatch(wave, label, place, answer, _tickNo);
         _logger.LogInfo($"{Tag}[Lord] rise before wave {wave}: at={label} place={PlaceText(place)} handed_back={LongDefeatLordChecks.HandBackText(answer.HandBack)} was_using={(answer.WasUsing ? 1 : 0)}");
@@ -117,7 +118,7 @@ internal sealed partial class LongDefeatDirector
         var facts = _field.BootFacts();
         var verdict = LongDefeatLordChecks.Rise(watch.At, _plan.Options.Autoplay, watch.Result, lord, watch.Place, control, facts.GeneralIsMain, facts.OrderOwnerIsMain);
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.RiseId, "w" + watch.Wave, verdict);
-        _logger.LogInfo($"{Tag}[Lord] rise before wave {watch.Wave} read back {verdict.Result.ToString().ToLowerInvariant()}: {verdict.Detail}");
+        _logger.LogInfo($"{Tag}[Lord] rise before wave {watch.Wave} read back {verdict.Result.ToString().ToLowerInvariant()}: {verdict.Detail} armour={ArmourReadText(_lord.ReadLordArmour())}");
     }
 
     /// <summary>

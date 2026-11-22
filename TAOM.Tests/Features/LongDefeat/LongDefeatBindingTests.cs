@@ -540,6 +540,34 @@ public class LongDefeatBindingTests
         Assert.IsFalse(typeof(Mission).GetMethod("TakeControlOfAgent", AnyMember)!.IsStatic, "TakeControlOfAgent is an instance call on the mission");
     }
 
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheArmouryAndErrandMembers_StillResolve()
+    {
+        Method(typeof(Agent), "UpdateSpawnEquipmentAndRefreshVisuals", typeof(void), typeof(Equipment));
+        Method(typeof(Agent), "UpdateAgentProperties", typeof(void));
+        Method(typeof(Agent), "SetScriptedPosition", typeof(void), typeof(WorldPosition).MakeByRefType(), typeof(bool), typeof(Agent.AIScriptedFrameFlags));
+        Method(typeof(Agent), "DisableScriptedMovement", typeof(void));
+        Method(typeof(Agent), "GetScriptedFlags", typeof(Agent.AIScriptedFrameFlags));
+        Method(typeof(Agent), "CanBeAssignedForScriptedMovement", typeof(bool));
+        Method(typeof(Agent), "GetPrimaryWieldedItemIndex", typeof(EquipmentIndex));
+        Property(typeof(Agent), "AgentDrivenProperties", typeof(AgentDrivenProperties));
+        Property(typeof(Agent), "SpawnEquipment", typeof(Equipment));
+        Property(typeof(Agent), "IsAIControlled", typeof(bool));
+        Property(typeof(Agent), "HasMount", typeof(bool));
+        Assert.IsTrue(Enum.IsDefined(typeof(Agent.AIScriptedFrameFlags), "GoToPosition"), "the scripted flag the errand reads");
+        Method(typeof(AgentStatCalculateModel), "InitializeAgentStats", typeof(void), typeof(Agent), typeof(Equipment), typeof(AgentDrivenProperties), typeof(AgentBuildData));
+        Property(typeof(MissionGameModels), "AgentStatCalculateModel", typeof(AgentStatCalculateModel));
+        Property(typeof(MissionGameModels), "Current", typeof(MissionGameModels));
+        foreach (var armour in new[] { "ArmorHead", "ArmorTorso", "ArmorLegs", "ArmorArms", "ArmorEncumbrance" })
+            Property(typeof(AgentDrivenProperties), armour, typeof(float));
+        Method(typeof(Equipment), "GetHeadArmorSum", typeof(float));
+        Method(typeof(Equipment), "GetHumanBodyArmorSum", typeof(float));
+        Method(typeof(Equipment), "GetLegArmorSum", typeof(float));
+        Method(typeof(Equipment), "GetArmArmorSum", typeof(float));
+        Method(typeof(Equipment), "GetTotalWeightOfArmor", typeof(float), typeof(bool));
+    }
+
     private static PropertyInfo Property(Type type, string name, Type expected)
     {
         var property = type.GetProperty(name, AnyMember);
