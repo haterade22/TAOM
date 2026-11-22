@@ -320,8 +320,13 @@ def _gate():
 def campaign_files(module: Path, paths) -> list[Path]:
     """`paths`, sorted, less every file no Campaign or CustomGame row of `module` names: Native's
     mpitems.xml and mp_crafting_pieces.xml (multiplayer rows only, #1398) and config files such as
-    armour_acquisition/armour_classes.xml, which no row names (#1404)."""
-    return _gate().row_named(module, paths)
+    armour_acquisition/armour_classes.xml, which no row names (#1404). A malformed row is a
+    CatalogueError, so a caller that reports a failed catalogue reports it instead of crashing."""
+    gate = _gate()
+    try:
+        return gate.row_named(module, paths)
+    except gate.GateInputError as exc:
+        raise CatalogueError(str(exc)) from exc
 
 
 def module_dirs(modules: Path, without_taom: bool = False) -> list[Path]:
