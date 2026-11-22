@@ -14,7 +14,7 @@ namespace TAOM.Adapters;
 /// Routed and reports his removal before it returns: <c>python tools/native_decompile.py --engine-method IMBAgent.FadeOut</c>; LongDefeatMissionLogic.IsLoss and the morale logic,
 /// AgentMoraleInteractionLogic.cs:42, both read Routed as no loss), and the new troop spawns at his place and facing in his formation: a given position skips the formation layout (the Spawn
 /// recipe's note, Mission.cs:4227), and GetAgentBuildDataToSpawnTroop puts him in the formation of the class it is given (Mission.cs:4461-4500). The native spawn moves a point to the walkable
-/// area and to the floor its height query hits, so a soldier reads back only when he stands within a metre of the old place: the troop id cannot fail, because the engine copies it from the
+/// area and to the floor its height query hits, so a soldier reads back only when he stands within a metre of the old place on the ground and within the height band of its floor (UpgradeTally.LevelBand): the troop id cannot fail, because the engine copies it from the
 /// same troop object (Mission.cs:4079). A spawn that throws ends the run on a fault, as a batch's does.
 /// </summary>
 internal sealed partial class LongDefeatBattlefieldAdapter
@@ -60,7 +60,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
             }
 
             var stood = fresh.Position;
-            spawns.Add(new UpgradeSpawn(active, stood.AsVec2.Distance(at.AsVec2), $"({at.x:F1}, {at.y:F1}, {at.z:F1}) stood at ({stood.x:F1}, {stood.y:F1}, {stood.z:F1})"));
+            spawns.Add(new UpgradeSpawn(active, UpgradeTally.Moved(stood.AsVec2.Distance(at.AsVec2), stood.z - at.z), $"({at.x:F1}, {at.y:F1}, {at.z:F1}) stood at ({stood.x:F1}, {stood.y:F1}, {stood.z:F1})"));
         }
 
         return UpgradeTally.Of(old.Count, spawns, FramePointRadius);
