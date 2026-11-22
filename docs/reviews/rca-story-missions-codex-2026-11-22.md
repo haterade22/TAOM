@@ -39,5 +39,6 @@ defect, and Codex marked its native side UNVERIFIED.
 - F2 and F3 are decided (the maintainer, 2026-11-22: the builder's recommendations stand). The Ents march after a repulsed player
   assault as after every other held Hornburg: it is the book's consequence of the defeat and it ends after 20 days. The co-op client
   limit of the morale effect stays as documented in `docs/features/war-chronicle.md`.
-- The fix for F1 has had its unit tests only. One unattended run of the Breaking offer (a lost defence and "let fate decide") is owed
-  on the fixed build; in such a run Boromir is free, so it proves the Killed path, not the owed one.
+- The fix for F1 ran in the game on the merged build `b8fcea30e` (2026-11-22): the Breaking offer with a lost defence
+  (`E:/Temp/scenario-runs/20261122-085433`) and by fate (`-090216`), both `lord_1_75: Killed` and `Occurred`. In such a run Boromir
+  is free, so the runs prove the Killed path. The owed path has unit tests only: it needs Boromir in a battle or a siege on the day.

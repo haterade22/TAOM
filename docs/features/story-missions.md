@@ -655,6 +655,18 @@ assault on the Hornburg (#1409): both of its results are proven by unattended ru
   day); the scenario judge and the manifests tie verdict, reason and result together, and the judge reads the mission's traits the
   launch captured. Decided by the maintainer the same day: the Ents still march after a repulsed assault (Isengard's volunteer rate
   falls by 15% for 20 days, as after every held Hornburg), and the morale effect's limit on a co-op client stays as documented.
+- 2026-11-22: six unattended runs on the merged build `b8fcea30e`, each a runner PASS with a clean unload (folders under
+  `E:/Temp/scenario-runs` unless named): the Breaking offer, a lost defence (`20261122-085433`: `ended ... verdict=Lost
+  side=Defending reason=HeroFell`, `'breaking' Occurred on day 0 (...; lord_1_75: Killed)`, `offer.result ... verdict=Lost
+  result=Occurred`, and the lord's rise on a field booked `hosted.rise result=pass at=respawn ... dist=none`); the Breaking by fate
+  (`-090216`, Killed, Occurred); the Parth Galen hunt (`-090342`, `verdict=Won side=Attacking reason=HeroFell`); the Hornburg by date,
+  a defence (`-090622`, Held, the `PartyMorale +0.100` row); a Long Defeat run of 3 waves with one forced fall of the lord
+  (`E:/Temp/long-defeat-runs/20261122-091438`, `taom.long-defeat.rise result=pass at=home`, `reason=TargetReached`); the Hornburg by
+  date, an assault lost at 350 (`-093421`, Held, `alliance-ended result=pass`, 66 of 153 defenders lost). These runs prove the Killed
+  path of the hero story; the owed path (Boromir in a battle or a siege on the day) has unit tests only. One check failed in the
+  assault run and is not a fault of the offer: `hosted.wave result=fail kills=345 felled=4 ... count=350`. The lord fell, the bot
+  took over an Uruk-hai of the attacking host (Long Defeat Phase 4's death rule), and that soldier lived to the end, so the wave's
+  books were one short. The run itself ended as it must (`TargetReached`, Lost). Reported on #1409 and to the Phase 4 session.
 - 2026-11-22: trunk `3b588519c` (Long Defeat Phase 4, #1499) merged into the branch. On a field mission the lord's rise uses his
   side's own start place and is booked `respawn`: a keep that such a mission records is no rise place and is not tested at the boot.
 - 2026-11-21: Slice 3, the Breaking of the Fellowship end to end: a Narrative event's hero story, its window of 10 days, the
