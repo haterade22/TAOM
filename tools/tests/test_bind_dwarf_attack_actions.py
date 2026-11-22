@@ -1,5 +1,8 @@
 """bind_dwarf_attack_actions.py: the two dwarf attack actions in the Armory's action_types.xml and as_dwarf_warrior
-(#1087, 2026-11-06). Runs on small CRLF + BOM files shaped like the Armory's, never on the install."""
+(#1087, 2026-11-06), declared with no type since #1499. Runs on small CRLF + BOM files shaped like the Armory's, never
+on the install."""
+import contextlib
+import io
 import os
 import sys
 import tempfile
@@ -20,6 +23,14 @@ SETS = ('<?xml version="1.0" encoding="utf-8"?>\r\n<action_sets>\r\n'
         '\t</action_set>\r\n'
         '\t<action_set\r\n\t\tid="as_dwarf_warrior_in_tavern"\r\n\t\tskeleton="dwarf_skeleton_a">\r\n'
         '\t\t<action type="act_sit_1" animation="sit_1" />\r\n\t</action_set>\r\n</action_sets>\r\n')
+# The block this tool wrote from #1087 until #1499, byte for byte: both rows typed as the vanilla kick.
+KICK_BLOCK = ('\t<!-- #1087 dwarf head butt and drop kick, played by TAOM Main/Features/DwarfAttacks from its behaviour tree.\r\n'
+              "\t     actt_kick, the vanilla kick's type (StandingPoint lets go of a machine on it). Clips from\r\n"
+              '\t     tools/gen_dwarf_attack_clips.ps1; bound in as_dwarf_warrior by tools/bind_dwarf_attack_actions.py. -->\r\n'
+              '\t<action name="act_dwarf_head_butt" type="actt_kick" />\r\n'
+              '\t<action name="act_dwarf_drop_kick" type="actt_kick" />\r\n')
+BRUTE = '\t<action name="act_troll_brute_force" />\r\n'
+KICK_TYPED = TYPES.replace(BRUTE, BRUTE + KICK_BLOCK)
 
 
 class Fixture(unittest.TestCase):
@@ -66,8 +77,7 @@ class PlanTests(Fixture):
         lines = new.split("\r\n")
         i = next(n for n, ln in enumerate(lines) if "act_troll_brute_force" in ln)
         rows = [ln.strip() for ln in lines[i + 1:] if ln.strip().startswith('<action name="act_dwarf_')]
-        self.assertEqual(rows, ['<action name="act_dwarf_head_butt" type="actt_kick" />',
-                                '<action name="act_dwarf_drop_kick" type="actt_kick" />'])
+        self.assertEqual(rows, ['<action name="act_dwarf_head_butt" />', '<action name="act_dwarf_drop_kick" />'])
         self.assertNotIn("\n", new.replace("\r\n", ""), "CRLF kept on every inserted line")
 
     def test_plan_types_already_bound_returns_same_text(self):
@@ -75,13 +85,14 @@ class PlanTests(Fixture):
         self.assertEqual(b.plan_types(once), once)
 
     def test_plan_types_wrong_type_refuses(self):
-        bad = b.plan_types(TYPES).replace('act_dwarf_drop_kick" type="actt_kick"', 'act_dwarf_drop_kick" type="actt_fall"')
+        bad = b.plan_types(TYPES).replace('act_dwarf_drop_kick" />', 'act_dwarf_drop_kick" type="actt_fall" />')
+        self.assertIn('type="actt_fall"', bad)
         with self.assertRaises(b.Refuse):
             b.plan_types(bad)
 
     def test_plan_types_one_of_two_present_refuses(self):
         half = TYPES.replace('\t<action name="act_troll_brute_force" />',
-                             '\t<action name="act_troll_brute_force" />\r\n\t<action name="act_dwarf_head_butt" type="actt_kick" />')
+                             '\t<action name="act_troll_brute_force" />\r\n\t<action name="act_dwarf_head_butt" />')
         with self.assertRaises(b.Refuse):
             b.plan_types(half)
 
@@ -132,7 +143,8 @@ class PlanTests(Fixture):
 
     def test_plan_types_a_type_declared_twice_refuses(self):
         once = b.plan_types(TYPES)
-        row = '\t<action name="act_dwarf_head_butt" type="actt_kick" />\r\n'
+        row = '\t<action name="act_dwarf_head_butt" />\r\n'
+        self.assertIn(row, once)
         with self.assertRaises(b.Refuse):
             b.plan_types(once.replace(row, row + row))
 
@@ -152,6 +164,70 @@ class PlanTests(Fixture):
     def test_one_stray_crlf_in_an_lf_file_does_not_switch_the_inserted_lines(self):
         lf = SETS.replace("\r\n", "\n").replace("<action_sets>\n", "<action_sets>\r\n", 1)
         self.assertNotIn('\r\n\t\t<action type="act_dwarf', b.plan_sets(lf))
+
+
+class RetypeTests(Fixture):
+    """#1499: the engine's kick code reads the combat parameter of a kick-typed action's clip with no test for "none",
+    and the dwarf clips carry none. The rows lose the type; the war ram's row is another feature's and stays."""
+
+    UNTYPED = '\t<action name="act_dwarf_head_butt" />\r\n\t<action name="act_dwarf_drop_kick" />\r\n'
+
+    def test_rows_this_tool_typed_as_a_kick_become_the_rows_a_fresh_file_gets(self):
+        new = b.plan_types(KICK_TYPED)
+        self.assertIn(self.UNTYPED, new)
+        self.assertIn(b.NOTE, new)
+        self.assertNotIn(b.OLD_NOTE, new)
+        self.assertEqual(new, b.plan_types(TYPES))
+        self.assertIn('<action name="act_war_ram_butt" type="actt_kick" />', new)
+
+    def test_the_retyped_text_is_left_alone(self):
+        once = b.plan_types(KICK_TYPED)
+        self.assertIn(self.UNTYPED, once)
+        self.assertEqual(b.plan_types(once), once)
+
+    def test_the_old_note_in_another_comment_is_left_alone(self):
+        other = "\t<!-- a note of another feature: %s -->\r\n" % b.OLD_NOTE
+        new = b.plan_types(KICK_TYPED.replace("</action_types>", other + "</action_types>"))
+        self.assertIn(other, new)
+        self.assertEqual(new.count(b.OLD_NOTE), 1)
+        self.assertEqual(new.count(b.NOTE), 1)
+
+    def test_check_says_that_the_rows_are_kick_typed_and_what_to_run(self):
+        for d in (self.armory, self.snap):
+            self.put(d, "action_types.xml", KICK_TYPED)
+            self.put(d, "action_sets.xml", b.plan_sets(SETS))
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.assertEqual(self.run_main("--check"), 1)
+        said = out.getvalue()
+        self.assertEqual(said.count("RETYPE "), 2)
+        self.assertIn("2 file(s) carry the rows, 0 lack them", said)
+        self.assertIn("2 file(s) still type the rows actt_kick; --apply takes the type off (#1499)", said)
+
+    def test_one_kick_typed_row_beside_one_untyped_row_is_retyped_too(self):
+        mixed = KICK_TYPED.replace('act_dwarf_drop_kick" type="actt_kick" />', 'act_dwarf_drop_kick" />')
+        self.assertEqual(b.plan_types(mixed), b.plan_types(TYPES))
+
+    def test_a_kick_typed_row_with_its_attributes_reordered_is_refused_not_passed(self):
+        odd = KICK_TYPED.replace('<action name="act_dwarf_drop_kick" type="actt_kick" />',
+                                 '<action type="actt_kick" name="act_dwarf_drop_kick" />')
+        with self.assertRaises(b.Refuse):
+            b.plan_checked("action_types.xml", odd)
+
+    def test_check_fails_on_kick_typed_rows_and_apply_retypes_them_with_a_backup(self):
+        for d in (self.armory, self.snap):
+            self.put(d, "action_types.xml", KICK_TYPED)
+            self.put(d, "action_sets.xml", b.plan_sets(SETS))
+        self.assertEqual(self.run_main("--check"), 1)
+        self.assertEqual(self.run_main("--apply"), 0)
+        self.assertEqual(self.run_main("--check"), 0)
+        for d in (self.armory, self.snap):
+            text = self.raw(d, "action_types.xml").decode("utf-8")
+            self.assertNotIn('act_dwarf_head_butt" type=', text)
+            self.assertNotIn('act_dwarf_drop_kick" type=', text)
+            self.assertNotIn("the vanilla kick's type", text, "the comment no longer says the rows are kicks")
+            self.assertTrue(self.raw(d, "action_types.xml").startswith(BOM))
+        self.assertEqual(sorted(f.split(".bak-")[0] for f in self.baks()), ["action_types.xml", "action_types.xml"])
 
 
 class ParsedValidationTests(Fixture):
@@ -174,7 +250,7 @@ class ParsedValidationTests(Fixture):
 
         def comment(t):
             for a, _ in b.ACTIONS:
-                t = t.replace('<action name="%s" type="actt_kick" />' % a, '<!-- <action name="%s" type="actt_kick" /> -->' % a)
+                t = t.replace('<action name="%s" />' % a, '<!-- <action name="%s" /> -->' % a)
             return t
         self.corrupt_snapshot("action_types.xml", comment)
         self.assertEqual(self.run_main("--check"), 1)

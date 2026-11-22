@@ -8,8 +8,8 @@ using TAOM.Features.DwarfAttacks;
 // The dwarf attacks' actions live in LOTRLOME_Armory, which is UNVERSIONED: a reinstall drops them (#1087). These
 // tests pin the data the C# relies on, in the repo's snapshot of the Armory (always) and in the live install
 // (LiveInstall, inconclusive where it is not installed): the dwarf Monster names the set, each action is declared
-// once as actt_kick, and as_dwarf_warrior binds each once to its own clip. tools/bind_dwarf_attack_actions.py
-// writes both, and its --check reads the same four files.
+// once with no type (a kick type hangs the engine's kick code on these clips, #1499), and as_dwarf_warrior binds each
+// once to its own clip. tools/bind_dwarf_attack_actions.py writes both, and its --check reads the same four files.
 
 namespace TAOM.Tests.Features.DwarfAttacks;
 
@@ -116,7 +116,8 @@ public class DwarfAttacksWiringTests
         {
             var declared = actions.Where(a => (string?)a.Attribute("name") == action).ToList();
             Assert.AreEqual(1, declared.Count, $"{action} must be declared exactly once in {path}");
-            Assert.AreEqual("actt_kick", (string?)declared[0].Attribute("type"), $"{action} must stay actt_kick");
+            Assert.IsNull(declared[0].Attribute("type"),
+                $"{action} must carry no type in {path}: its clip has no combat parameter, and the engine's kick code reads one from the clip of a kick-typed action without a test (#1499)");
         }
     }
 
