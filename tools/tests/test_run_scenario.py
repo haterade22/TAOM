@@ -1316,9 +1316,11 @@ class OfferArmTextTests(unittest.TestCase):
         self.assertIn("breaking", message)
         self.assertIn("invalid choice", parse_fails(["--kind", "story-offer", "--event", "breaking", "--choice", "run"]))
 
-    def test_hornburg_ships_no_attack_so_attack_is_refused_for_it(self):
-        message = parse_fails(["--kind", "story-offer", "--event", "hornburg", "--choice", "attack", "--culture", "isengard"])
-        self.assertIn("attackMission", message)
+    def test_hornburg_ships_its_attack_so_attack_is_accepted_for_an_evil_culture_and_refused_for_a_free_one(self):
+        known, _ = parse(["--kind", "story-offer", "--event", "hornburg", "--choice", "attack", "--culture", "isengard"])
+        self.assertEqual((known.mission, known.shown_mission, known.side), ("helms_deep_attack", "helms_deep_defend", "Attacking"))
+        message = parse_fails(["--kind", "story-offer", "--event", "hornburg", "--choice", "attack", "--culture", "vlandia"])
+        self.assertIn("is not offered the attack at 'hornburg'", message)
 
     def test_the_culture_must_be_able_to_see_the_chosen_side(self):
         self.assertIn("isengard", parse_fails(["--kind", "story-offer", "--event", "breaking", "--choice", "attack"]))
@@ -1328,9 +1330,11 @@ class OfferArmTextTests(unittest.TestCase):
 
     def test_fate_needs_a_culture_that_sees_a_side_of_the_event(self):
         # StorySideGate.Choose: the player's side must not be opposed to the defender (defend) or the first attacker (attack, if one ships).
-        message = parse_fails(["--kind", "story-offer", "--event", "hornburg", "--choice", "fate", "--culture", "isengard"])
-        self.assertIn("no side", message)
-        self.assertIn("hornburg", message)
+        # The Hornburg ships both battles, so every alignment sees a side of it; a story with no attack leaves an evil player none.
+        known, _ = parse(["--kind", "story-offer", "--event", "hornburg", "--choice", "fate", "--culture", "isengard"])
+        self.assertEqual(known.culture, "isengard")
+        no_attack = {"defender": "vlandia", "attackers": ["isengard"], "story": {"mission": "m"}}
+        self.assertEqual(rs.offer_sides("evil", no_attack), (False, False))
         known, _ = parse(["--kind", "story-offer", "--event", "breaking", "--choice", "fate", "--culture", "isengard"])
         self.assertEqual(known.culture, "isengard")
         known, _ = parse(["--kind", "story-offer", "--event", "hornburg", "--choice", "fate"])

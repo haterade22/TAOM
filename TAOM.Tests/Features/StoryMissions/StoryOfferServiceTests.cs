@@ -476,14 +476,26 @@ public class StoryOfferServiceTests
     [TestMethod]
     public void Apply_AttackLost_ResolvesTheWindowHeld()
     {
-        // The canon ending. A window left open would let the player storm the walls again every day.
-        _chronicle.ResolveStoryHeld("hornburg", Arg.Any<string>()).Returns(true);
+        // The canon ending. A window left open would let the player storm the walls again every day. The chronicle's repulsed block
+        // (the Isengard and Mordor split) rides this call, so the attack goes through ResolveStoryRepulsed, never ResolveStoryHeld.
+        _chronicle.ResolveStoryRepulsed("hornburg", Arg.Any<string>()).Returns(true);
 
         Assert.AreEqual(StoryResult.Held, _sut.Apply(Offer(), StorySide.Attacking, StoryOutcome.Lost));
 
-        _chronicle.Received(1).ResolveStoryHeld("hornburg", Arg.Is<string>(why => why.Contains("thrown back")));
+        _chronicle.Received(1).ResolveStoryRepulsed("hornburg", Arg.Is<string>(why => why.Contains("thrown back")));
+        _chronicle.DidNotReceiveWithAnyArgs().ResolveStoryHeld(default, default!);
         _campaign.DidNotReceiveWithAnyArgs().GiveSettlement(default!, default!, out _);
         _outcomes.Received(1).Pass(StoryOfferService.ResultId, "game1/hornburg/AttackLost", "side=Attacking verdict=Lost result=Held");
+    }
+
+    [TestMethod]
+    public void Apply_AttackLost_WindowNoLongerOpen_ChangesNothing()
+    {
+        _chronicle.ResolveStoryRepulsed("hornburg", Arg.Any<string>()).Returns(false);
+
+        Assert.AreEqual(StoryResult.Unchanged, _sut.Apply(Offer(), StorySide.Attacking, StoryOutcome.Lost));
+
+        _outcomes.DidNotReceiveWithAnyArgs().Pass(default!, default!, default!);
     }
 
     [TestMethod]

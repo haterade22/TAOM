@@ -16,6 +16,12 @@ public interface IChronicleStoryPort
     bool ResolveStoryHeld(string? eventId, string why);
 
     /// <summary>
+    /// A player-led attack in the story mission was thrown back (#1105 slice 5): resolves the window Held like <see cref="ResolveStoryHeld"/>,
+    /// with the story's <c>repulsed</c> text, and ends the permanent alliance the story names (single-player authority only).
+    /// </summary>
+    bool ResolveStoryRepulsed(string? eventId, string why);
+
+    /// <summary>
     /// Before the transfer of a fallen fortress: reconciles the target's live owner (which can change with no event) and is true only when the
     /// window is still Active and the war has not ended.
     /// </summary>

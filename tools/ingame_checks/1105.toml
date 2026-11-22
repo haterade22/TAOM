@@ -116,24 +116,44 @@ claim = "taom.story_open opens each of minas_tirith_defend, osgiliath_defend, pe
 # once per campaign and window when the popup opens; the result line once per campaign, window and verdict, when the menu returns from the mission.
 [[check]]
 id = "taom.story-missions.offer.shown"
-needs = "a campaign at the Full War, as a free player or a neutral player whose realm has not pledged (taom.print_war_pledges): taom.chronicle_open hornburg confirm, then the popup appears on the free map"
+needs = "a campaign at the Full War, as a free player, an evil player, or a neutral player whose realm has not pledged (taom.print_war_pledges): taom.chronicle_open hornburg confirm, then the popup appears on the free map"
 reached = ['\[Check\] id=taom\.story-missions\.offer\.shown result=\S+ (?!mission=parth_galen_)']
-pass = ['\[Check\] id=taom\.story-missions\.offer\.shown result=pass mission=helms_deep_defend target=town_V2 choices=Defend side=(Free|Neutral)$']
-# No attack mission ships for the Hornburg (#1326), so an evil player has no side to take there: a shown line for one is the fault this check exists
-# to catch. The Breaking's lines (mission=parth_galen_save) belong to the rows of slice 3 below, where an evil player is offered the hunt.
-fail = ['\[Check\] id=taom\.story-missions\.offer\.shown result=fail (?!mission=parth_galen_)', '\[Check\] id=taom\.story-missions\.offer\.shown result=pass mission=helms_deep_defend .* side=Evil$']
+# The Hornburg offers both battles (#1326, slice 5): a free player may only defend, an evil player only attack, a neutral player either. The Breaking's
+# lines (mission=parth_galen_save) belong to the rows of slice 3 below.
+pass = ['\[Check\] id=taom\.story-missions\.offer\.shown result=pass mission=helms_deep_defend target=town_V2 choices=(Defend side=Free|Defend\+Attack side=Neutral|Attack side=(Evil|Neutral))$']
+# A Hornburg shown line with any other pair of choices and side is a wrong offer (an evil player offered the defence, a free player the attack).
+fail = ['\[Check\] id=taom\.story-missions\.offer\.shown result=fail (?!mission=parth_galen_)', '\[Check\] id=taom\.story-missions\.offer\.shown result=pass mission=helms_deep_defend (?!target=town_V2 choices=(Defend side=Free|Defend\+Attack side=Neutral|Attack side=(Evil|Neutral))$)']
 absence = "not-reached"
 
 [[check]]
 id = "taom.story-missions.offer.result"
-needs = "the same run: Ride to Helm's Deep, Defend the walls, end the wave by a win or a loss; the line is written when the menu returns"
+needs = "the same run: Ride to Helm's Deep, Defend the walls or Storm the walls, end the wave by a win or a loss; the line is written when the menu returns"
 reached = ['\[Check\] id=taom\.story-missions\.offer\.result result=(?!.* hero=)']
-pass = ['\[Check\] id=taom\.story-missions\.offer\.result result=pass verdict=(Won result=Held|Lost result=Fell taker=(isengard|empire))$']
+pass = ['\[Check\] id=taom\.story-missions\.offer\.result result=pass (verdict=(Won result=Held|Lost result=Fell taker=(isengard|empire))|side=Attacking verdict=(Lost result=Held|Won result=Fell taker=(isengard|empire)))$']
 fail = ['\[Check\] id=taom\.story-missions\.offer\.result result=fail(?!.* hero=)']
 absence = "not-reached"
 
 [[human]]
-claim = "#1326, one campaign per side at an open Hornburg window (taom.chronicle_open hornburg confirm): a free player (Rohan, Gondor) gets the popup and the menu shows Defend the walls and Let fate decide, with no Storm the walls; a neutral player whose realm has not pledged (Khand, Dorwinion; taom.print_war_pledges) gets the same while no attack mission ships; an evil player (Mordor, Harad) and a player of Isengard or Dunland get no popup. The shown line reads choices=Defend and the player's side"
+claim = "#1326, one campaign per side at an open Hornburg window (taom.chronicle_open hornburg confirm): a free player (Rohan, Gondor) gets the popup and the menu shows Defend the walls and Let fate decide, with no Storm the walls; an evil player (Mordor, Harad) gets the popup with Storm the walls and Let fate decide, with no Defend; a neutral player whose realm has not pledged (Khand, Dorwinion; taom.print_war_pledges) gets both battles; a player of Isengard or Dunland (an attacker's own realm) gets Storm the walls only. The shown line reads choices=Defend, Attack or Defend+Attack and the player's side"
+
+# Slice 5: a lost player-led attack on Helm's Deep ends the permanent alliance of Isengard and Mordor (Main/Features/WarChronicle/Events/ChronicleService.cs,
+# DiplomacyService.EndPermanentAlliance). Written once per game process and result (the key is the event id), only in a single-player campaign.
+[[check]]
+id = "taom.war-chronicle.alliance-ended"
+needs = "a single-player campaign at the Full War, as an evil or neutral player: taom.chronicle_open hornburg confirm, Ride to Helm's Deep, Storm the walls, lose the battle (the walls hold), then Continue"
+reached = ['\[Check\] id=taom\.war-chronicle\.alliance-ended result=']
+pass = ['\[Check\] id=taom\.war-chronicle\.alliance-ended result=pass event=hornburg pair=isengard\+empire_s result=(Ended|AlreadyEnded) allied=False$']
+fail = ['\[Check\] id=taom\.war-chronicle\.alliance-ended result=fail']
+absence = "not-reached"
+
+[[human]]
+claim = "after a lost Storm the walls (an evil or neutral player): the event window reads 'The assault on Helm's Deep breaks. Sauron is angry that Saruman's greed spoiled his plan, and Mordor ends its alliance with Isengard.', taom.chronicle_status shows hornburg Held, and the encyclopedia shows no alliance between Isengard and Mordor (Mordor still allied to its other friends)"
+
+[[human]]
+claim = "after that: save, reload, and let ten days pass, also after the War Ended phase: the encyclopedia still shows no alliance between Isengard and Mordor, no vote or call to war brings it back, and the two never declare war on each other"
+
+[[human]]
+claim = "a won Storm the walls: Helm's Deep goes to Isengard, taom.chronicle_status shows hornburg Fell, the event window shows 'Permanent' beside the Rohan volunteer penalty, taom.war_effects lists that row as permanent, and the Isengard and Mordor alliance stands"
 
 [[human]]
 claim = "a won Helm's Deep defence: taom.chronicle_status shows hornburg Held, and two days later The Last March of the Ents occurs"

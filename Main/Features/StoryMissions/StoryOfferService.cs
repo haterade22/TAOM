@@ -171,7 +171,10 @@ internal sealed class StoryOfferService
         // The walls held: the defender won, or the attacker lost.
         if ((verdict == StoryOutcome.Won) != attacked)
         {
-            if (!_chronicle.ResolveStoryHeld(offer.EventId, attacked ? "the player's assault was thrown back" : "the player won the story mission"))
+            var settled = attacked
+                ? _chronicle.ResolveStoryRepulsed(offer.EventId, "the player's assault was thrown back")
+                : _chronicle.ResolveStoryHeld(offer.EventId, "the player won the story mission");
+            if (!settled)
             {
                 _logger.LogInfo($"[StoryMissions] the walls of '{offer.EventId}' held, but its window is no longer open: nothing changed.");
                 return StoryResult.Unchanged;

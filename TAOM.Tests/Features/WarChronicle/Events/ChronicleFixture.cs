@@ -188,9 +188,14 @@ internal sealed class ChronicleFixture
     public ChronicleService CreateService() => new ChronicleService(
         Config, Store, World, Alliance, Wotr,
         new ChronicleOutcomeService(Effects, Alliance, Alignment, Momentum, Ledger, Text, Logger),
-        Queue, Focus, Settings, Logger, Daily, Coop, Dedicated);
+        Queue, Focus, Settings, Logger, Daily, Coop, Dedicated, Diplomacy, Outcomes);
 
     public IDedicatedServerProvider Dedicated { get; }
+
+    /// <summary>The diplomacy seam; a test reads what the chronicle asked of it (#1105 slice 5).</summary>
+    public IDiplomacyService Diplomacy { get; } = Substitute.For<IDiplomacyService>();
+
+    public IOutcomeLog Outcomes { get; } = Substitute.For<IOutcomeLog>();
 
     public IEnumerable<string> LedgerLines => Logged.Where(l => l.Contains("ev=chronicle"));
 

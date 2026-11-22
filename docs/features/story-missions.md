@@ -59,8 +59,8 @@ bar and a player who can take a soldier after death.
 
 - **Source:** a War Chronicle siege with a `story` block (`war_chronicle.json`; the Hornburg names
   `helms_deep_defend`). The block may also name an `attackMission`, the same battle from the
-  attackers' side (#1326); no shipped window has one yet, because the maintainer has not decided the
-  key (#1409 step 6). `IChronicleStoryPort.GetStoryOffers` lists each Active story window that the
+  attackers' side (#1326); the Hornburg names `helms_deep_attack` (slice 5, #1409 step 6).
+  `IChronicleStoryPort.GetStoryOffers` lists each Active story window that the
   player has not declined, that no attacker has besieged, and whose target the defender still holds
   (read live), while no chronicle announcement waits to show ([war-chronicle.md](war-chronicle.md)
   "The event chain", "Story offer"). The MCM switch "Offer Story Missions" (War of the Ring/War
@@ -81,8 +81,9 @@ bar and a player who can take a soldier after death.
   is the window's defender he may only defend, and when it is one of the attackers he may only
   attack, so he never fights against his own realm. A window with no side for him is
   not offered at all: "Let fate decide" is a saved decline, and a player with nothing else to click
-  would close the window for good. So until an attack mission ships, an evil player and a player of
-  Isengard or Dunland get no Helm's Deep offer.
+  would close the window for good. The Hornburg ships both battles, so an evil player is offered the
+  attack only, a free player the defence only, a neutral player both, and a player of Isengard or
+  Dunland (an attacker's own realm) the attack only.
 - **Offer** (`StoryOfferBehavior`, `StoryOfferPopup`): every 30 campaign ticks while time runs, on
   a free map (`MapPopupGate.IsMapFree`), a two-button popup whose question follows the sides on
   offer (`StoryOfferText`). "Ride to Helm's Deep" ("March on Helm's Deep" for a player who may only
@@ -98,8 +99,10 @@ bar and a player who can take a soldier after death.
   (`MapState.OnActivate`, `MenuContext.Refresh`). That init applies the verdict through
   `StoryOfferService.Apply` once, before the player can save (the behavior saves nothing), and
   "Continue" only leaves. The verdict is read for the side the player took. Held walls (a won
-  defence, or a lost attack) resolve the window Held (`ResolveStoryHeld`: the owner check first,
-  nothing after War Ended). Fallen walls (a lost defence, or a won attack) call `ConfirmStoryWindow`
+  defence, or a lost attack) resolve the window Held (`ResolveStoryHeld` for a defence and
+  `ResolveStoryRepulsed` for an attack: the owner check first, nothing after War Ended; the attack's
+  call also ends the permanent alliance the story's `repulsed` block names, which at the Hornburg is
+  Isengard and Mordor, [war-chronicle.md](war-chronicle.md) "Repulsed assault"). Fallen walls (a lost defence, or a won attack) call `ConfirmStoryWindow`
   first, which runs the same owner check and War Ended guard, then
   `IStoryCampaignAdapter.GiveSettlement`, and the chronicle's owner check resolves Fell. A lost
   attack closes the window Held on purpose: a window left open would let the player storm the walls
@@ -339,7 +342,7 @@ Only Helm's Deep names a music track (`StoryMusic/isengard_vs_rohan.ogg`). Four 
 | `dale_defend` | `sturgia_town_g` | `sturgia`, `khuzait` | Stand-in scene |
 | `lorien_defend` | `battania_town_a` | `lothlorien`, `dolguldur` | Stand-in scene |
 | `north_defend` | `empire_town_c` | `arthedain`, `gundabad` | Stand-in scene |
-| `helms_deep_attack` | `taom_rohan_castle_helms_deep_forceatmo` | `vlandia`, `isengard` | Attack: the player's host of 250 (#1409). No window offers it |
+| `helms_deep_attack` | `taom_rohan_castle_helms_deep_forceatmo` | `vlandia`, `isengard` | Attack: the player's host of 250 (#1409). The Hornburg window offers it (slice 5) |
 | `parth_galen_save` | `battle_terrain_001` | `gondor`, `isengard` | Field. Waves of 20, 30 and 40, at most 10 alive; Boromir must live. Stand-in scene |
 | `parth_galen_kill` | `battle_terrain_001` | `gondor`, `isengard` | Field, Attack: the player's band of 20; won when Boromir falls |
 
@@ -433,8 +436,9 @@ Slice 4, in a campaign at the Full War:
 1. As a free player, or a neutral player whose realm has not pledged (`taom.print_war_pledges`),
    run `taom.chronicle_open hornburg confirm`. The popup appears on the free map, and the line
    `[Check] id=taom.story-missions.offer.shown result=pass` follows, ending `choices=Defend` and
-   the player's side. The menu has no "Storm the walls". An evil player, and a player of Isengard
-   or Dunland, gets no popup and no line (#1326).
+   the player's side. The menu has no "Storm the walls". An evil player gets the popup with
+   "Storm the walls" and no "Defend the walls" (`choices=Attack`), and a neutral player both
+   (`choices=Defend+Attack`) (#1326, slice 5).
 2. Choose "Ride to Helm's Deep", then "Defend the walls". End the wave, then choose "Continue". The
    line `taom.story-missions.offer.result` reads `verdict=Won result=Held` or
    `verdict=Lost result=Fell taker=isengard`. `taom.chronicle_status` shows the same state.
@@ -598,6 +602,10 @@ player report showed the Hornburg ending with no battle (2026-11-13).
   opened in a game.
 - 2026-11-15: #1326, the offer follows the player's side of the war (defend, attack or no offer),
   and a story block may name an `attackMission`. No attack mission ships yet.
+- 2026-11-21: Slice 5, the Hornburg offers `helms_deep_attack`. A lost attack the player led resolves
+  the window through `ResolveStoryRepulsed`, which ends the permanent alliance of Isengard and
+  Mordor. The mission's `{=!}` name is never shown: the offer popup and menu take their texts from
+  `StoryOfferText` and the window's title, and `StoryMissionDefinition.Name` has no other reader.
 - 2026-11-13: Slice 4, the Hornburg's offer of the Helm's Deep defence and its campaign result.
 - 2026-11-12: this doc, from the code on trunk.
 - 2026-11-10: Slice 1 (the campaign host and `taom.story_open`), the mission's own music, and seven

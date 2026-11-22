@@ -57,6 +57,24 @@ public class WarChronicleSaveCodecTests
     }
 
     [TestMethod]
+    public void RoundTrip_APartyMoraleAndAPermanentEffect_ComeBackEqual()
+    {
+        var payload = new WarChroniclePayload();
+        payload.Effects.Add(new WarEffect("chronicle:hornburg:Held:2", "vlandia", WarEffectKind.PartyMorale, 0.1f, 1234.5));
+        payload.Effects.Add(new WarEffect("chronicle:hornburg:Fell:2", "vlandia", WarEffectKind.VolunteerRate, -0.1f, WarEffect.PermanentEndHours));
+
+        var back = WarChronicleSaveCodec.Parse(WarChronicleSaveCodec.Serialize(payload));
+
+        Assert.AreEqual(0, back.Warnings.Count, string.Join(" | ", back.Warnings));
+        Assert.AreEqual(2, back.Effects.Count);
+        Assert.AreEqual(WarEffectKind.PartyMorale, back.Effects[0].Kind);
+        Assert.IsFalse(back.Effects[0].IsPermanent);
+        Assert.AreEqual(WarEffectKind.VolunteerRate, back.Effects[1].Kind);
+        Assert.AreEqual(WarEffect.PermanentEndHours, back.Effects[1].EndTimeHours);
+        Assert.IsTrue(back.Effects[1].IsPermanent);
+    }
+
+    [TestMethod]
     public void Serialize_WritesTheNamedShape()
     {
         var root = JObject.Parse(WarChronicleSaveCodec.Serialize(Sample()));

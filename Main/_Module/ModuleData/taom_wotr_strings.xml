@@ -56,6 +56,7 @@
 	<string id="taom_wc_hornburg_fate" text="{=taom_wc_hornburg_fate}The host of Isengard storms {TARGET} through the night, and at dawn the Hornburg still stands." />
 	<string id="taom_wc_hornburg_held" text="{=taom_wc_hornburg_held}The Hornburg holds through the night, and the host of Isengard breaks against its walls." />
 	<string id="taom_wc_hornburg_fell" text="{=taom_wc_hornburg_fell}{TARGET} falls, and the White Hand rules the Westfold." />
+	<string id="taom_wc_hornburg_repulsed" text="{=taom_wc_hornburg_repulsed}The assault on {TARGET} breaks. Sauron is angry that Saruman's greed spoiled his plan, and Mordor ends its alliance with Isengard." />
 	<string id="taom_wc_ents_title" text="{=taom_wc_ents_title}The Last March of the Ents" />
 	<string id="taom_wc_ents_occurred" text="{=taom_wc_ents_occurred}The Ents of Fangorn come down upon Isengard and drown the pits of Saruman. The forges of the White Hand fall silent." />
 	<string id="taom_wc_lorien_title" text="{=taom_wc_lorien_title}Lothlórien Assailed" />

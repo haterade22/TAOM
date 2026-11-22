@@ -124,6 +124,25 @@ public sealed class ChronicleStoryDefinition
     /// <see cref="AttackMissionId"/> against him, and with no answer he dies. Null for a siege's story.
     /// </summary>
     public string? HeroId { get; set; }
+
+    /// <summary>
+    /// Optional (#1105 slice 5): what a lost player-led attack in <see cref="AttackMissionId"/> does besides resolving the window Held.
+    /// Needs an attack mission; a siege's story only.
+    /// </summary>
+    public ChronicleRepulsedDefinition? Repulsed { get; set; }
+}
+
+/// <summary>
+/// The <c>repulsed</c> block of a story (#1105 slice 5): the announcement text of the repulsed assault and the permanent alliance it
+/// ends. <see cref="Text"/> is a <c>{=taom_wc_*}English</c> line; null falls back to the Held outcome's text.
+/// </summary>
+public sealed class ChronicleRepulsedDefinition
+{
+    public string? Text { get; set; }
+
+    public string KingdomA { get; set; } = string.Empty;
+
+    public string KingdomB { get; set; } = string.Empty;
 }
 
 /// <summary>An Active story window the player has not declined: what the offer shows and launches.</summary>
@@ -186,7 +205,11 @@ public sealed class ChronicleEffectDefinition
     /// <summary>A fraction: 0.15 is +15%. Finite, non-zero, at most 0.25 either way.</summary>
     public float Magnitude { get; set; }
 
+    /// <summary>Days the effect lasts, 1 to 60; 0 on a <see cref="Permanent"/> row.</summary>
     public int DurationDays { get; set; }
+
+    /// <summary>The effect never ends (<see cref="WarEffect.PermanentEndHours"/>); the row then has no duration.</summary>
+    public bool Permanent { get; set; }
 }
 
 /// <summary>An optional War of the Ring momentum award (M6) to one side, in displayed units.</summary>

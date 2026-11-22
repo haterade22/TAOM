@@ -949,7 +949,7 @@ Main/Features/DevConsole/InputStateDiagnosis.cs	8
 Main/Features/DevConsole/MissionReportFormatter.cs	11
 Main/Features/DevConsole/PlayerStateDiagnosis.cs	6
 Main/Features/DevConsole/TaomConsole.cs	13
-Main/Features/Diplomacy/DiplomacyBehavior.cs	18
+Main/Features/Diplomacy/DiplomacyBehavior.cs	19
 Main/Features/Diplomacy/DiplomacyConfigProvider.cs	1
 Main/Features/Diplomacy/DiplomacyIoC.cs	4
 Main/Features/Diplomacy/DiplomacyService.cs	29

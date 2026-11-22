@@ -7,13 +7,14 @@ namespace TAOM.Features.WarChronicle.Events;
 /// <summary>One effect row as <see cref="ChronicleOutcomeService.Apply"/> wrote it: the kingdoms it reached, never the ones it named.</summary>
 public sealed class ChronicleAppliedEffect
 {
-    public ChronicleAppliedEffect(string target, IReadOnlyList<string> kingdomIds, WarEffectKind kind, float magnitude, int durationDays)
+    public ChronicleAppliedEffect(string target, IReadOnlyList<string> kingdomIds, WarEffectKind kind, float magnitude, int durationDays, bool permanent = false)
     {
         Target = target;
         KingdomIds = kingdomIds;
         Kind = kind;
         Magnitude = magnitude;
         DurationDays = durationDays;
+        Permanent = permanent;
     }
 
     /// <summary>The row's target as the config wrote it: <c>free</c>, <c>evil</c>, <c>attacker</c>, <c>defender</c> or a kingdom id.</summary>
@@ -28,6 +29,9 @@ public sealed class ChronicleAppliedEffect
     public float Magnitude { get; }
 
     public int DurationDays { get; }
+
+    /// <summary>The effect never ends; <see cref="DurationDays"/> is 0.</summary>
+    public bool Permanent { get; }
 }
 
 /// <summary>A momentum award the momentum service accepted.</summary>

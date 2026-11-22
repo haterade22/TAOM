@@ -27,8 +27,9 @@ namespace TAOM.Features.WarChronicle.Events;
 /// before the Full War (decision D2: peace is not blocked before Phase 2).</item>
 /// <item>An effect row is skipped alone for: a blank target; <c>attacker</c> or <c>defender</c> on a
 /// narrative; an unknown kind; a magnitude that is not finite, is zero, or is past
-/// <see cref="MaxMagnitude"/> either way (finite-checked before the range check); a duration outside 1
-/// to 60.</item>
+/// <see cref="MaxMagnitude"/> either way (finite-checked before the range check); a <c>permanent</c> that
+/// is not true or false; <c>permanent: true</c> beside a <c>durationDays</c>; and, without <c>permanent:
+/// true</c>, a duration outside 1 to 60. A permanent row never ends, so it needs no duration.</item>
 /// <item>A momentum award is dropped alone when it is not an object, for a side other than <c>free</c> or
 /// <c>evil</c>, or units outside 1 to <see cref="MaxMomentumUnits"/>.</item>
 /// <item>Kinds, anchors, outcome states and effect kinds are names only (<see cref="EnumNames"/>: trimmed,
@@ -70,10 +71,11 @@ public static class ChronicleConfigValidator
         "windowDays", "target", "attackers", "defender", "openText", "lapsedText", "story",
     };
 
-    private static readonly string[] StoryKeys = { "mission", "attackMission", "fate", "fateText", "hero" };
+    private static readonly string[] StoryKeys = { "mission", "attackMission", "fate", "fateText", "hero", "repulsed" };
+    private static readonly string[] RepulsedKeys = { "text", "endAlliance" };
 
     private static readonly string[] OutcomeKeys = { "text", "effects", "momentum" };
-    private static readonly string[] EffectKeys = { "target", "kind", "magnitude", "durationDays" };
+    private static readonly string[] EffectKeys = { "target", "kind", "magnitude", "durationDays", "permanent" };
     private static readonly string[] MomentumKeys = { "side", "units" };
 
     public static IReadOnlyList<ChronicleEventDefinition> Parse(string? json, IList<string> warnings)
@@ -340,6 +342,7 @@ public static class ChronicleConfigValidator
             FateText = OptionalText(o, "fateText", where, warnings),
             HeroId = string.IsNullOrWhiteSpace(hero) ? null : hero,
         };
+        story.Repulsed = ReadRepulsed(o["repulsed"], where, story.AttackMissionId == null, warnings);
         if (o["fate"] != null && o["fate"]!.Type != JTokenType.Null)
         {
             // Read as requiresOutcome is read (EnumNames.TryParse: trimmed, any case).
@@ -350,6 +353,41 @@ public static class ChronicleConfigValidator
         }
 
         return story;
+    }
+
+    /// <summary>
+    /// A story's optional <c>repulsed</c> block (#1105 slice 5). Dropped with one warning, the rest of the story kept, when it is not an
+    /// object, when <c>endAlliance</c> is not two different non-blank strings, or when the story offers no attack mission.
+    /// </summary>
+    private static ChronicleRepulsedDefinition? ReadRepulsed(JToken? token, string where, bool noAttack, IList<string> warnings)
+    {
+        if (token == null || token.Type == JTokenType.Null)
+            return null;
+
+        var at = $"{where}: repulsed";
+        if (!(token is JObject block))
+        {
+            warnings.Add($"{at} is not an object, so it is ignored");
+            return null;
+        }
+
+        WarnUnknownKeys(block, RepulsedKeys, at, warnings);
+        if (noAttack)
+        {
+            warnings.Add($"{at} needs an attackMission, so it is ignored");
+            return null;
+        }
+
+        var pair = block["endAlliance"] as JArray;
+        var a = pair is { Count: 2 } ? Text(pair[0]) : null;
+        var b = pair is { Count: 2 } ? Text(pair[1]) : null;
+        if (string.IsNullOrWhiteSpace(a) || string.IsNullOrWhiteSpace(b) || string.Equals(a, b, StringComparison.Ordinal))
+        {
+            warnings.Add($"{at}: endAlliance must name two different kingdoms, so the repulsed block is ignored");
+            return null;
+        }
+
+        return new ChronicleRepulsedDefinition { Text = OptionalText(block, "text", at, warnings), KingdomA = a!, KingdomB = b! };
     }
 
     /// <summary>
@@ -365,6 +403,12 @@ public static class ChronicleConfigValidator
         var story = ReadStory(e["story"]!, definition.Id, warnings);
         if (story == null)
             return false;
+
+        if (story.Repulsed != null)
+        {
+            warnings.Add($"event '{definition.Id}': story: repulsed is a siege story's, so it is ignored on a hero story");
+            story.Repulsed = null;
+        }
 
         var defender = Text(e["defender"]);
         var attackers = new List<string>();
@@ -473,7 +517,7 @@ public static class ChronicleConfigValidator
 
         if (!EnumNames.TryParse<WarEffectKind>(Text(row["kind"]), out var kind))
         {
-            problem = $"kind '{Text(row["kind"])}' is not VolunteerRate or PrisonerEscape";
+            problem = $"kind '{Text(row["kind"])}' is not {string.Join(" or ", Enum.GetNames(typeof(WarEffectKind)))}";
             return null;
         }
 
@@ -485,13 +529,34 @@ public static class ChronicleConfigValidator
             return null;
         }
 
-        if (!TryInt(row["durationDays"], MinDurationDays, MaxDurationDays, out var days))
+        var permanent = false;
+        if (row.TryGetValue("permanent", out var permanentToken))
+        {
+            if (!(permanentToken is JValue pv && pv.Type == JTokenType.Boolean))
+            {
+                problem = "permanent must be true or false";
+                return null;
+            }
+
+            permanent = (bool)pv.Value!;
+        }
+
+        var days = 0;
+        if (permanent)
+        {
+            if (row.ContainsKey("durationDays"))
+            {
+                problem = "give durationDays or permanent, not both";
+                return null;
+            }
+        }
+        else if (!TryInt(row["durationDays"], MinDurationDays, MaxDurationDays, out days))
         {
             problem = $"durationDays must be a whole number from {MinDurationDays} to {MaxDurationDays}";
             return null;
         }
 
-        return new ChronicleEffectDefinition { Target = target!, Kind = kind, Magnitude = magnitude, DurationDays = days };
+        return new ChronicleEffectDefinition { Target = target!, Kind = kind, Magnitude = magnitude, DurationDays = days, Permanent = permanent };
     }
 
     private static ChronicleMomentumAward? ReadMomentum(JToken token, ChronicleEventDefinition definition, string name, IList<string> warnings)

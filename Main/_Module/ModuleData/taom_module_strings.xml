@@ -6978,5 +6978,10 @@
 	<string id="taom_story_breaking_fallen" text="{=taom_story_breaking_fallen}Boromir has fallen at Parth Galen, pierced by many arrows." />
 	<string id="taom_story_breaking_menu" text="{=taom_story_breaking_menu}The horn of Gondor sounds in the woods of Parth Galen. Time stands until you choose." />
 	<string id="taom_story_breaking_undecided" text="{=taom_story_breaking_undecided}The fight at Parth Galen is not decided. The call may come again." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- WarChronicle -->
+	<string id="taom_war_morale" text="{=taom_war_morale}Tidings of the war" />
+	<string id="taom_event_effect_morale" text="{=taom_event_effect_morale}Party morale" />
+	<string id="taom_event_effect_permanent" text="{=taom_event_effect_permanent}Permanent" />
 
 </strings>

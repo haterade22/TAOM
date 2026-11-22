@@ -163,6 +163,8 @@ internal sealed class FakeAllianceAdapter : IAllianceAdapter
 
     public void StartAlliance(string kingdomAId, string kingdomBId) { }
 
+    public void EndAlliance(string kingdomAId, string kingdomBId) { }
+
     /// <summary>The diplomacy model's constant war (Kingdom.IsAtWarWith asks it before the stance); null means none.</summary>
     public Func<string, string, bool>? ModelWar;
 

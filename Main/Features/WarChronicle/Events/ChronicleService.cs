@@ -47,6 +47,8 @@ public sealed class ChronicleService : IChronicleStoryPort
     /// </summary>
     public const string LostText = "{=taom_wc_siege_lost}{TARGET} changes hands before the battle can be decided.";
 
+    private const string AllianceEndedCheck = "taom.war-chronicle.alliance-ended";
+
     private readonly IChronicleConfigProvider _config;
     private readonly ChronicleStateStore _store;
     private readonly IChronicleWorldAdapter _world;
@@ -60,15 +62,20 @@ public sealed class ChronicleService : IChronicleStoryPort
     private readonly WarChronicleDailyGate _daily;
     private readonly ICoopSessionProvider _coop;
     private readonly IDedicatedServerProvider _dedicated;
+    private readonly IDiplomacyService _diplomacy;
+    private readonly IOutcomeLog _outcomeLog;
 
     public ChronicleService(
         IChronicleConfigProvider config, ChronicleStateStore store, IChronicleWorldAdapter world,
         IAllianceAdapter alliance, IWarOfTheRingService wotr, ChronicleOutcomeService outcomes,
         ChronicleAnnouncementQueue announcements, ArmyTargetFocusRegistry focus, IWarChronicleSettingsProvider settings,
-        IModLogger logger, WarChronicleDailyGate daily, ICoopSessionProvider coop, IDedicatedServerProvider dedicated)
+        IModLogger logger, WarChronicleDailyGate daily, ICoopSessionProvider coop, IDedicatedServerProvider dedicated,
+        IDiplomacyService diplomacy, IOutcomeLog outcomeLog)
     {
         _coop = coop;
         _dedicated = dedicated;
+        _diplomacy = diplomacy;
+        _outcomeLog = outcomeLog;
         _config = config;
         _store = store;
         _world = world;
@@ -733,7 +740,15 @@ public sealed class ChronicleService : IChronicleStoryPort
     /// (switched off, War Ended, a bad clock). A fallen fortress needs no call: the transfer to the attacker resolves the window Fell
     /// through <see cref="OnTargetOwnerChanged"/>.
     /// </summary>
-    public bool ResolveStoryHeld(string? eventId, string why)
+    public bool ResolveStoryHeld(string? eventId, string why) => ResolveStoryWindowHeld(eventId, why, repulsed: false);
+
+    /// <summary>
+    /// A player-led assault thrown back (#1105 slice 5): the same Held resolution, announced with the story's repulsed text, and the
+    /// permanent alliance its <c>repulsed</c> block names ends, in a single-player campaign only (the offers exist only there).
+    /// </summary>
+    public bool ResolveStoryRepulsed(string? eventId, string why) => ResolveStoryWindowHeld(eventId, why, repulsed: true);
+
+    private bool ResolveStoryWindowHeld(string? eventId, string why, bool repulsed)
     {
         var resolved = false;
         Guarded("story result", now =>
@@ -742,10 +757,24 @@ public sealed class ChronicleService : IChronicleStoryPort
             if (record == null || !definition!.IsSiege || CheckOwner(definition, record, now))
                 return;
 
-            Resolve(definition, record, ChronicleEventState.Held, now, true, why);
+            var block = repulsed ? definition.Story?.Repulsed : null;
+            Resolve(definition, record, ChronicleEventState.Held, now, true, why, block?.Text);
             resolved = true;
+            if (block != null && CoopSessionPolicy.IsSinglePlayerAuthority(_coop, _dedicated))
+                EndRepulsedAlliance(definition.Id, block);
         });
         return resolved;
+    }
+
+    private void EndRepulsedAlliance(string eventId, ChronicleRepulsedDefinition block)
+    {
+        var result = _diplomacy.EndPermanentAlliance(block.KingdomA, block.KingdomB, "chronicle:" + eventId);
+        var allied = _alliance.AreAllied(block.KingdomA, block.KingdomB);
+        var detail = $"event={eventId} pair={block.KingdomA}+{block.KingdomB} result={result} allied={allied}";
+        if (result is PermanentAllianceEnd.Ended or PermanentAllianceEnd.AlreadyEnded)
+            _outcomeLog.Pass(AllianceEndedCheck, eventId, detail);
+        else
+            _outcomeLog.Fail(AllianceEndedCheck, eventId, detail);
     }
 
     public bool ConfirmStoryWindow(string? eventId)
