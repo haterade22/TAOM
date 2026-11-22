@@ -376,13 +376,16 @@ ever fielded — not a concern at any realistic party size.
   `DwarfCivilianKitTests`. A companion promoted before this change keeps the clothes stored on
   the hero. Other races and the human realms still carry the reference (#1433); dwarf tunics
   carry no `Civilian` item flag, so civilian mode refuses to re-equip them (#1432).
-- 2026-11-22: a promoted goblin, orc, uruk or elf wears its own culture's light kit in the civilian
-  slots (#1433). 131 non-human troops (Dol Guldur, Gundabad, Isengard, Mordor, Mirkwood and the Fords of
-  War copies) ended with a reference to a vanilla Aserai or Battanian civilian template, which the
-  loader turns into a civilian set. Each reference is now inline civilian rosters (one per elf). Elves of
-  level 36 and above name the source `mirkwood_body` and `mirkwood_boots`; the two militia elves name
-  the `taom_band_lt_mirkwood_*` clones, as `generate_armour_band_clones.py` plans. Dol Guldur goblins
-  wear `sk_dg_uruk_chest_light_a` and `_b` with `sk_dg_uruk_boots_light_a`. Gate:
+- 2026-11-22: a promoted goblin, orc, uruk or elf wears its own culture's clothes in the civilian
+  slots (#1433). 131 non-human troops (Misty Mountains goblins, Dol Guldur, Gundabad, Isengard, Mordor,
+  Mirkwood and the Fords of War copies) ended with a reference to a vanilla Aserai or Battanian civilian
+  template, which the loader turns into a civilian set. Each reference is now inline civilian rosters
+  (one per elf) with Body and Leg only: the vanilla sets' sword, headwear, gloves and cape are gone.
+  The orc and uruk kits are their culture's light pieces. The elves, all of level 36 and above, wear the
+  source `mirkwood_body` and `mirkwood_boots`, the elite Palace Guard armour (body 48), because a band
+  clone resolves back to its source at that level; the two militia elves already had inline
+  `taom_band_lt_mirkwood_*` kits. Dol Guldur goblins wear `sk_dg_uruk_chest_light_a` and `_b` with
+  `sk_dg_uruk_boots_light_a`. Gate:
   `NonHumanCivilianKitTests`. None of the new civilian items carries the `Civilian` item flag (an
   Armory-side gap tracked by #1432), so a piece taken off cannot be put back in the civilian tab. Human
   troops keep vanilla civilian templates for now.
@@ -556,7 +559,8 @@ Owed for #1433, same preconditions, with orc, goblin and elf soldiers in the par
 
 1. Promote a `dg_goblin_crawler` soldier. Open the civilian tab. Pass: Body is a Dol Guldur light
    chest and Leg a Dol Guldur light boot, with no Aserai or Battanian clothes.
-2. Promote a `mirkwood_woodsman` soldier. Pass: Body and Leg are the Mirkwood light body and boots.
+2. Promote a `mirkwood_woodsman` soldier. Pass: Body and Leg are the Mirkwood Palace Guard body and
+   boots (`mirkwood_body`, `mirkwood_boots`).
 3. Promote a Mordor or Gundabad uruk. Pass: the civilian tab shows that culture's own light kit.
 4. Take one civilian piece off and try to put it back. Expected today: the game refuses, because the
    new items carry no `Civilian` flag (#1432). This is not a #1433 failure.
