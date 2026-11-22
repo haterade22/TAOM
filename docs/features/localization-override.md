@@ -2,7 +2,7 @@
 
 ## Overview
 
-Patches `MBTextManager.GetLocalizedText` so that English strings (489 registered ids today, 180 of them vanilla-style) can be overridden through the TAOM strings XML, including phrases like "The Empire" → "Gondor" or capitalization fixes. These vanilla string IDs aren't reachable through Bannerlord's standard `Languages/` translation pipeline because vanilla short-circuits the localization lookup for English. This feature is the **only intervention point** for fixing typos and replacing baked-in faction phrasing in English text. It applies **only while the game language is English** (#706): in every other language vanilla reads that language's translated row, and the override stays out of its way.
+Patches `MBTextManager.GetLocalizedText` so that English strings (990 registered ids on 2026-11-22, 203 of them vanilla-style) can be overridden through the TAOM strings XML, including phrases like "The Empire" → "Gondor" or capitalization fixes. These vanilla string IDs aren't reachable through Bannerlord's standard `Languages/` translation pipeline because vanilla short-circuits the localization lookup for English. This feature is the **only intervention point** for fixing typos and replacing baked-in faction phrasing in English text. It applies **only while the game language is English** (#706): in every other language vanilla reads that language's translated row, and the override stays out of its way.
 
 ## Distinction from `localization.md`
 
@@ -11,7 +11,7 @@ This feature is **not** about TAOM's added translation strings. There are two re
 | Doc | Scope |
 |---|---|
 | [localization.md](localization.md) | TAOM's 1,773 added translation strings shipped in `Languages/<locale>/` for 12 languages. Pure data, no C#. |
-| **localization-override.md** (this doc) | A Harmony Prefix on `MBTextManager.GetLocalizedText` that overrides the registered English string IDs (489 today) at runtime, in English only. C# only. |
+| **localization-override.md** (this doc) | A Harmony Prefix on `MBTextManager.GetLocalizedText` that overrides the registered English string IDs (990 on 2026-11-22) at runtime, in English only. C# only. |
 
 If a string already worked through TAOM's translation files, you wouldn't need this feature. If you only had this feature, you couldn't translate to French. They cover different gaps — keep them separate.
 
@@ -47,7 +47,7 @@ Until #706 the prefix applied in every language. For a non-English player that h
 - **The predicate is vanilla's:** the language id equals `"English"`, ordinal (`English`, `Deutsch`, `Français` and the rest are the ids in the `language_data.xml` files). Any other value, including `null`, turns the overrides off for that lookup.
 - **The language is read on every call** through `ITextLocalizerAdapter.ActiveLanguage` (over `MBTextManager.ActiveTextLanguage`), so a change while the game runs takes effect at once. It is not cached and there is no patch on `MBTextManager.ChangeLanguage` to keep a cache current: that would add a second patch to save a string compare that vanilla runs on every lookup too. Measured on 2026-10-03 in a throwaway Debug-build loop, the gate costs about 7 to 9 ns per lookup, and a lookup in another language now ends before the dictionary probe: about 27 ns for the whole prefix, against about 65 ns for an English lookup of a registered id.
 - **One INFO line per switch**, written when a lookup first sees the new language and never again for it, into TAOM's own log (`Logs/taom_debug_<timestamp>.log`): `[LocalizationOverride] Text language 'Deutsch' is not English: ...` when the language changes to a non-English one, and `[LocalizationOverride] Text language is English again: the English string overrides apply` when it changes back to English from one. A session that starts in English writes neither, since nothing was off before it. The only state is the last language seen, held in one interlocked field because a text can resolve on any thread; `NoteLanguageChange` is that latch step, internal so a test can call it directly. The logger is resolved from the container inside that rare path, and a logger that cannot be resolved costs one failed attempt, never a failed lookup.
-- **Left to vanilla:** a language with no row for an id shows the call site's inline English, as vanilla does for every other string, and no longer gets TAOM's override as a stand-in. None of today's twelve languages is in that state for the 489 ids.
+- **Left to vanilla:** a language with no row for an id shows the call site's inline English, as vanilla does for every other string, and no longer gets TAOM's override as a stand-in. None of today's twelve languages is in that state for the registered ids.
 
 ### A reworded vanilla key has no language rows
 

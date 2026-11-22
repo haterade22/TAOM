@@ -135,6 +135,7 @@ public static class CoopSettingsRelevance
         // Watch-Silver and Tidings of the Lists (#859): each switch only gates a player's click, and every write (a fief's loyalty,
         // the player's gold) is behind the single-player predicate, so peers holding different values never compute differently.
         "EnableWatchSilver", "EnableTidingsOfTheLists",
+        "EnableTeamPracticeFights",
         // Notable Services (#899): the switch only gates a player's click, and every write (the player's gold, a settlement's militia,
         // hearth or prosperity, met flags, tracker marks, relation, Roguery experience and the given rosters) is behind the
         // single-player predicate in NotableServicesService.
@@ -145,7 +146,7 @@ public static class CoopSettingsRelevance
         // Inn Rounds (#901): the switch and the two scales only shape a player's click at the tavern keeper. Every write (the player's
         // gold, the town's coffers, the party's morale, the clan's renown, Charm experience, tracker marks) is behind the
         // single-player predicate in InnRoundsService, so a peer holding a different value never changes a running simulation.
-        "EnableInnRounds", "InnRoundsMoraleScale", "InnRoundsRenownScale",
+        "EnableInnRounds", "InnRoundsMoraleScale", "InnRoundsRenownScale", "EnableTrainingWaves",
         "EnableQuickActions", "EnableInventorySearch", "QuickActionsShowConfirmation",
         "QuickActionsPlaySounds", "DamagedQualityDropdown", "DamagedThreshold",
         "UseCustomThreshold", "ExcludeDamagedHorses",

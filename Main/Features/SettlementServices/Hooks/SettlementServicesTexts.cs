@@ -41,10 +41,10 @@ internal static class SettlementServicesTexts
     internal static string TidingsTitle() => new TextObject("{=taom_tidings_title}Tidings of the Lists").ToString();
 
     internal static string TidingsNone() =>
-        new TextObject("{=taom_tidings_none}The arena master knows of no tournament in a friendly town. You keep your coin.").ToString();
+        new TextObject("{=taom_tidings_none}The training master knows of no tournament in a friendly town. You keep your coin.").ToString();
 
     /// <summary>Shown when asking failed for a reason the player cannot act on, or a gate closed since the menu was built.</summary>
-    internal static string TidingsRefused() => new TextObject("{=taom_tidings_refused}The arena master has no answer for you now.").ToString();
+    internal static string TidingsRefused() => new TextObject("{=taom_tidings_refused}The training master has no answer for you now.").ToString();
 
     /// <summary>The arena master's answer: one "Town (Realm)" line per row, nearest first.</summary>
     internal static string TidingsBody(IReadOnlyList<TidingsRow> rows)
@@ -53,7 +53,7 @@ internal static class SettlementServicesTexts
         foreach (var row in rows)
             lines.Add(new TextObject("{=taom_tidings_row}{TOWN} ({REALM})")
                 .SetTextVariable("TOWN", row.Town).SetTextVariable("REALM", row.Realm).ToString());
-        return new TextObject("{=taom_tidings_body}The arena master names the nearest tournaments:{newline}{LIST}")
+        return new TextObject("{=taom_tidings_body}The training master names the nearest tournaments:{newline}{LIST}")
             .SetTextVariable("LIST", string.Join("\n", lines)).ToString();
     }
 

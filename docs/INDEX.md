@@ -164,7 +164,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [from-the-ashes](features/from-the-ashes.md): your company rebuilds a looted village of your realm in a day (thralls for an evil player) or lends its labour to a fief's construction project (feature module, a wait menu, #856)
 - [reeves-ledger](features/reeves-ledger.md): the town management window shows the fief's name, its daily profit and patrol, tooltips on the stash and prison, and -10K and +10K reserve buttons (two UI mixins, #857)
 - [namegiving](features/namegiving.md): the ruler of a realm renames its towns, castles and villages for influence from the kingdom Fiefs tab, and four fiefs take a lore name while the matching side holds them (one UI mixin, a behavior, #858)
-- [settlement-services](features/settlement-services.md): a governor of an owned town or castle takes silver for the watch to raise loyalty, and the arena master names the nearest tournaments for a small fee (a dialogue behavior, a menu behavior, #859)
+- [settlement-services](features/settlement-services.md): a governor of an owned town or castle takes silver for the watch to raise loyalty, and the training master names the nearest tournaments for a small fee (a dialogue behavior, a menu behavior, #859)
 - [settlement-guards](features/settlement-guards.md) — per-settlement guard pools, clan/culture fallback (Patch28)
 - [settlement-nameplate-fade](features/settlement-nameplate-fade.md) — distance-based nameplate fade (Patch38)
 - [settlement-nameplate-relation](features/settlement-nameplate-relation.md): relation colour on the bar, name text and diamond frame; bar and frame follow vanilla's plate alpha; enemy and allied plates at 50% (#591, custom container widget, no patch)

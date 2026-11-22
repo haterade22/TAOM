@@ -5,7 +5,7 @@
 	<!-- Elves use default human race (no race attribute) -->
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_rivendell" race="elf" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.rivendell" name="{=aom_rv_arena}Arena Master">
+	<NPCCharacter id="tournament_master_rivendell" race="elf" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.rivendell" name="{=aom_rv_arena}Training Master">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Equipments>

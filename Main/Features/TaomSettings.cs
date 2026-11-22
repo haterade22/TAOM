@@ -202,8 +202,18 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_tournaments}Tournaments")]
     [SettingPropertyBool("{=taom_mcm_EnableTidingsOfTheLists}Tidings of the Lists", Order = 4, RequireRestart = false,
-        HintText = "{=taom_mcm_EnableTidingsOfTheLists_hint}Adds an option to a town's arena menu: for a small fee the arena master names the nearest towns holding a tournament now that are not at war with your realm. It marks nothing on the map. When off, the option is hidden. Single-player only. Default: on.")]
+        HintText = "{=taom_mcm_EnableTidingsOfTheLists_hint}Adds an option to a town's training grounds menu: for a small fee the training master names the nearest towns holding a tournament now that are not at war with your realm. It marks nothing on the map. When off, the option is hidden. Single-player only. Default: on.")]
     public bool EnableTidingsOfTheLists { get; set; } = true;
+
+    [SettingPropertyGroup("{=taom_mcm_group_tournaments}Tournaments")]
+    [SettingPropertyBool("{=taom_mcm_EnableTeamPracticeFights}Team Practice Fights", Order = 5, RequireRestart = false,
+        HintText = "{=taom_mcm_EnableTeamPracticeFights_hint}In a town of the Free Peoples the practice fight at the training grounds is a team fight: you and the fighters outlined in blue against the other side, and no one can hurt his own side. A town's side is its owner's, so a captured town follows its conqueror. Towns of the Shadow and neutral towns keep the fight where every fighter is alone. Takes effect the next time you enter the training grounds. Single-player only. Default: on.")]
+    public bool EnableTeamPracticeFights { get; set; } = true;
+
+    [SettingPropertyGroup("{=taom_mcm_group_tournaments}Tournaments")]
+    [SettingPropertyBool("{=taom_mcm_EnableTrainingWaves}Wave Fights at the Training Grounds", Order = 6, RequireRestart = false,
+        HintText = "{=taom_mcm_EnableTrainingWaves_hint}When on, the training master of a town also runs a wave fight. You wager on yourself before each wave and fight the town's own fighters with practice weapons. Clear a wave and the master pays your wager back with odds; go down, or leave the yard mid-fight, and the wager stays with the town. Between waves you may stop and keep your winnings. A town runs one wave fight a day, and none while it holds a tournament. The tournament bet cap also limits a wave wager, and a very low cap hides the offer. Single-player only. Default: on.")]
+    public bool EnableTrainingWaves { get; set; } = TAOM.Features.TrainingGrounds.Waves.TrainingWavesSettingsProvider.DefaultEnabled;
 
     // --- Armour Acquisition ---
 
@@ -1081,7 +1091,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_performance}Performance/{=taom_mcm_group_dead_mount_cleanup}Dead Mount Cleanup", GroupOrder = 49)]
     [SettingPropertyBool("{=taom_mcm_EnableDeadMountDespawn}Despawn Dead Mounts", Order = 0, RequireRestart = false,
-        HintText = "{=taom_mcm_EnableDeadMountDespawn_hint}Remove killed horses, wargs and other mounts a few seconds after they die instead of leaving them on the field. A mount is a full agent with a skeleton and a live ragdoll, so a cavalry battle piles up corpses that cost frame time and do nothing. Field battles, sieges and sally-outs only; towns, arenas and tournaments keep their bodies. Side effect: freeing agent slots lets reinforcements arrive slightly sooner than vanilla.")]
+        HintText = "{=taom_mcm_EnableDeadMountDespawn_hint}Remove killed horses, wargs and other mounts a few seconds after they die instead of leaving them on the field. A mount is a full agent with a skeleton and a live ragdoll, so a cavalry battle piles up corpses that cost frame time and do nothing. Field battles, sieges and sally-outs only; towns, training grounds and tournaments keep their bodies. Side effect: freeing agent slots lets reinforcements arrive slightly sooner than vanilla.")]
     public bool EnableDeadMountDespawn { get; set; } = true;
 
     [SettingPropertyGroup("{=taom_mcm_group_performance}Performance/{=taom_mcm_group_dead_mount_cleanup}Dead Mount Cleanup")]
@@ -1094,7 +1104,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_performance}Performance/{=taom_mcm_group_battle_corpses}Battle Corpses", GroupOrder = 55)]
     [SettingPropertyBool("{=taom_mcm_EnableBattleCorpseCleanup}Clean Up Battle Corpses", Order = 0, RequireRestart = false,
-        HintText = "{=taom_mcm_EnableBattleCorpseCleanup_hint}Fade fallen soldiers after a set time and cap how many bodies a battle keeps, whatever your Number of Corpses option says. The engine walks its whole corpse list every frame, and players reported mid-battle freezes at high corpse settings. Field battles, sieges and sally-outs only; towns, arenas and hideouts keep their bodies. Never raises your own Number of Corpses option.")]
+        HintText = "{=taom_mcm_EnableBattleCorpseCleanup_hint}Fade fallen soldiers after a set time and cap how many bodies a battle keeps, whatever your Number of Corpses option says. The engine walks its whole corpse list every frame, and players reported mid-battle freezes at high corpse settings. Field battles, sieges and sally-outs only; towns, training grounds and hideouts keep their bodies. Never raises your own Number of Corpses option.")]
     public bool EnableBattleCorpseCleanup { get; set; } = true;
 
     [SettingPropertyGroup("{=taom_mcm_group_performance}Performance/{=taom_mcm_group_battle_corpses}Battle Corpses")]
