@@ -5,7 +5,7 @@
 	<!-- Haradrim are humans - no race attribute -->
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_harad" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.aserai" name="{=aom_hd_arena}Arena Master">
+	<NPCCharacter id="tournament_master_harad" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.aserai" name="{=aom_hd_arena}Training Master">
 		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
 		<skills></skills>
 		<Equipments>

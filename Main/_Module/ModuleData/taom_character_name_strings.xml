@@ -6,7 +6,7 @@
 	<string id="aom_abanissa_lord_2" text="{=aom_abanissa_lord_2}Cautious Abanissa chieftain" />
 	<string id="aom_anduinvale_lord_1" text="{=aom_anduinvale_lord_1}Bold Beorning lord" />
 	<string id="aom_anduinvale_lord_2" text="{=aom_anduinvale_lord_2}Cautious Beorning lord" />
-	<string id="aom_ang_arena" text="{=aom_ang_arena}Arena Master" />
+	<string id="aom_ang_arena" text="{=aom_ang_arena}Training Master" />
 	<string id="aom_ang_armed_trader" text="{=aom_ang_armed_trader}Angáladh Armed Trader" />
 	<string id="aom_ang_armorer" text="{=aom_ang_armorer}Armorer" />
 	<string id="aom_ang_barber" text="{=aom_ang_barber}Barber" />
@@ -82,7 +82,7 @@
 	<string id="aom_ang_weaponsmith" text="{=aom_ang_weaponsmith}Weaponsmith" />
 	<string id="aom_angaladh_lord_1" text="{=aom_angaladh_lord_1}Bold Woodman lord" />
 	<string id="aom_angaladh_lord_2" text="{=aom_angaladh_lord_2}Cautious Woodman lord" />
-	<string id="aom_arth_arena" text="{=aom_arth_arena}Arena Master" />
+	<string id="aom_arth_arena" text="{=aom_arth_arena}Training Master" />
 	<string id="aom_arth_armed_trader" text="{=aom_arth_armed_trader}Arthedain Armed Trader" />
 	<string id="aom_arth_armorer" text="{=aom_arth_armorer}Armorer" />
 	<string id="aom_arth_barber" text="{=aom_arth_barber}Barber" />
@@ -152,7 +152,7 @@
 	<string id="aom_arth_weaponsmith" text="{=aom_arth_weaponsmith}Weaponsmith" />
 	<string id="aom_arthedain_lord_1" text="{=aom_arthedain_lord_1}Bold Arthedain lord" />
 	<string id="aom_arthedain_lord_2" text="{=aom_arthedain_lord_2}Cautious Arthedain lord" />
-	<string id="aom_av_arena" text="{=aom_av_arena}Arena Master" />
+	<string id="aom_av_arena" text="{=aom_av_arena}Training Master" />
 	<string id="aom_av_armed_trader" text="{=aom_av_armed_trader}Vale Armed Trader" />
 	<string id="aom_av_armorer" text="{=aom_av_armorer}Armorer" />
 	<string id="aom_av_barber" text="{=aom_av_barber}Barber" />
@@ -226,7 +226,7 @@
 	<string id="aom_av_villager_child" text="{=aom_av_villager_child}Village Child" />
 	<string id="aom_av_villager_teen" text="{=aom_av_villager_teen}Village Teenager" />
 	<string id="aom_av_weaponsmith" text="{=aom_av_weaponsmith}Weaponsmith" />
-	<string id="aom_bcg_arena" text="{=aom_bcg_arena}Arena Master" />
+	<string id="aom_bcg_arena" text="{=aom_bcg_arena}Training Master" />
 	<string id="aom_bcg_armed_trader" text="{=aom_bcg_armed_trader}Goblin Armed Trader" />
 	<string id="aom_bcg_armorer" text="{=aom_bcg_armorer}Armorer" />
 	<string id="aom_bcg_barber" text="{=aom_bcg_barber}Barber" />
@@ -297,7 +297,7 @@
 	<string id="aom_bcg_weaponsmith" text="{=aom_bcg_weaponsmith}Weaponsmith" />
 	<string id="aom_bluecraig_lord_1" text="{=aom_bluecraig_lord_1}Bold bluecraig chieftain" />
 	<string id="aom_bluecraig_lord_2" text="{=aom_bluecraig_lord_2}Cautious bluecraig chieftain" />
-	<string id="aom_card_arena" text="{=aom_card_arena}Arena Master" />
+	<string id="aom_card_arena" text="{=aom_card_arena}Training Master" />
 	<string id="aom_card_armed_trader" text="{=aom_card_armed_trader}Cardolan Armed Trader" />
 	<string id="aom_card_armorer" text="{=aom_card_armorer}Armorer" />
 	<string id="aom_card_barber" text="{=aom_card_barber}Barber" />
@@ -367,7 +367,7 @@
 	<string id="aom_card_weaponsmith" text="{=aom_card_weaponsmith}Weaponsmith" />
 	<string id="aom_cardolan_lord_1" text="{=aom_cardolan_lord_1}Bold Cardolan lord" />
 	<string id="aom_cardolan_lord_2" text="{=aom_cardolan_lord_2}Cautious Cardolan lord" />
-	<string id="aom_dg_arena" text="{=aom_dg_arena}Arena Master" />
+	<string id="aom_dg_arena" text="{=aom_dg_arena}Training Master" />
 	<string id="aom_dg_armed_trader" text="{=aom_dg_armed_trader}Dol Guldur Armed Trader" />
 	<string id="aom_dg_armorer" text="{=aom_dg_armorer}Armorer" />
 	<string id="aom_dg_barber" text="{=aom_dg_barber}Barber" />
@@ -445,7 +445,7 @@
 	<string id="aom_dg_villager_teen" text="{=aom_dg_villager_teen}Village Teenager" />
 	<string id="aom_dg_warg_merchant" text="{=aom_dg_warg_merchant}Warg Merchant" />
 	<string id="aom_dg_weaponsmith" text="{=aom_dg_weaponsmith}Weaponsmith" />
-	<string id="aom_dl_arena" text="{=aom_dl_arena}Arena Master" />
+	<string id="aom_dl_arena" text="{=aom_dl_arena}Training Master" />
 	<string id="aom_dl_armed_trader" text="{=aom_dl_armed_trader}Dale Armed Trader" />
 	<string id="aom_dl_armorer" text="{=aom_dl_armorer}Armorer" />
 	<string id="aom_dl_barber" text="{=aom_dl_barber}Barber" />
@@ -519,7 +519,7 @@
 	<string id="aom_dl_villager_child" text="{=aom_dl_villager_child}Village Child" />
 	<string id="aom_dl_villager_teen" text="{=aom_dl_villager_teen}Village Teenager" />
 	<string id="aom_dl_weaponsmith" text="{=aom_dl_weaponsmith}Weaponsmith" />
-	<string id="aom_dn_arena" text="{=aom_dn_arena}Arena Master" />
+	<string id="aom_dn_arena" text="{=aom_dn_arena}Training Master" />
 	<string id="aom_dn_armed_trader" text="{=aom_dn_armed_trader}Dunland Armed Trader" />
 	<string id="aom_dn_armorer" text="{=aom_dn_armorer}Armorer" />
 	<string id="aom_dn_barber" text="{=aom_dn_barber}Barber" />
@@ -589,7 +589,7 @@
 	<string id="aom_dn_weaponsmith" text="{=aom_dn_weaponsmith}Weaponsmith" />
 	<string id="aom_dolguldur_lord_1" text="{=aom_dolguldur_lord_1}Bold Dol Guldur captain" />
 	<string id="aom_dolguldur_lord_2" text="{=aom_dolguldur_lord_2}Cautious Dol Guldur captain" />
-	<string id="aom_dor_arena" text="{=aom_dor_arena}Arena Master" />
+	<string id="aom_dor_arena" text="{=aom_dor_arena}Training Master" />
 	<string id="aom_dor_armed_trader" text="{=aom_dor_armed_trader}Dorwinion Armed Trader" />
 	<string id="aom_dor_armorer" text="{=aom_dor_armorer}Armorer" />
 	<string id="aom_dor_barber" text="{=aom_dor_barber}Barber" />
@@ -665,7 +665,7 @@
 	<string id="aom_dor_weaponsmith" text="{=aom_dor_weaponsmith}Weaponsmith" />
 	<string id="aom_dorwinion_lord_1" text="{=aom_dorwinion_lord_1}Bold Dorwinion lord" />
 	<string id="aom_dorwinion_lord_2" text="{=aom_dorwinion_lord_2}Cautious Dorwinion lord" />
-	<string id="aom_elu_arena" text="{=aom_elu_arena}Arena Master" />
+	<string id="aom_elu_arena" text="{=aom_elu_arena}Training Master" />
 	<string id="aom_elu_armed_trader" text="{=aom_elu_armed_trader}Ered Luin Armed Trader" />
 	<string id="aom_elu_armorer" text="{=aom_elu_armorer}Armorer" />
 	<string id="aom_elu_barber" text="{=aom_elu_barber}Barber" />
@@ -737,7 +737,7 @@
 	<string id="aom_elu_villager_child" text="{=aom_elu_villager_child}Village Child" />
 	<string id="aom_elu_villager_teen" text="{=aom_elu_villager_teen}Village Teenager" />
 	<string id="aom_elu_weaponsmith" text="{=aom_elu_weaponsmith}Weaponsmith" />
-	<string id="aom_er_arena" text="{=aom_er_arena}Arena Master" />
+	<string id="aom_er_arena" text="{=aom_er_arena}Training Master" />
 	<string id="aom_er_armed_trader" text="{=aom_er_armed_trader}Erebor Armed Trader" />
 	<string id="aom_er_armorer" text="{=aom_er_armorer}Armorer" />
 	<string id="aom_er_barber" text="{=aom_er_barber}Barber" />
@@ -813,7 +813,7 @@
 	<string id="aom_erebor_lord_2" text="{=aom_erebor_lord_2}Cautious dwarven lord" />
 	<string id="aom_eredluin_lord_1" text="{=aom_eredluin_lord_1}Bold dwarven lord" />
 	<string id="aom_eredluin_lord_2" text="{=aom_eredluin_lord_2}Cautious dwarven lord" />
-	<string id="aom_gb_arena" text="{=aom_gb_arena}Arena Master" />
+	<string id="aom_gb_arena" text="{=aom_gb_arena}Training Master" />
 	<string id="aom_gb_armed_trader" text="{=aom_gb_armed_trader}Gundabad Armed Trader" />
 	<string id="aom_gb_armorer" text="{=aom_gb_armorer}Armorer" />
 	<string id="aom_gb_barber" text="{=aom_gb_barber}Barber" />
@@ -882,7 +882,7 @@
 	<string id="aom_gb_villager_teen" text="{=aom_gb_villager_teen}Village Teenager" />
 	<string id="aom_gb_warg_merchant" text="{=aom_gb_warg_merchant}Warg Merchant" />
 	<string id="aom_gb_weaponsmith" text="{=aom_gb_weaponsmith}Weaponsmith" />
-	<string id="aom_gd_arena" text="{=aom_gd_arena}Arena Master" />
+	<string id="aom_gd_arena" text="{=aom_gd_arena}Training Master" />
 	<string id="aom_gd_armed_trader" text="{=aom_gd_armed_trader}Gondor Armed Trader" />
 	<string id="aom_gd_armorer" text="{=aom_gd_armorer}Armorer" />
 	<string id="aom_gd_barber" text="{=aom_gd_barber}Barber" />
@@ -950,7 +950,7 @@
 	<string id="aom_gd_villager_child" text="{=aom_gd_villager_child}Village Child" />
 	<string id="aom_gd_villager_teen" text="{=aom_gd_villager_teen}Village Teenager" />
 	<string id="aom_gd_weaponsmith" text="{=aom_gd_weaponsmith}Weaponsmith" />
-	<string id="aom_gob_arena" text="{=aom_gob_arena}Arena Master" />
+	<string id="aom_gob_arena" text="{=aom_gob_arena}Training Master" />
 	<string id="aom_gob_armed_trader" text="{=aom_gob_armed_trader}Goblin Armed Trader" />
 	<string id="aom_gob_armorer" text="{=aom_gob_armorer}Armorer" />
 	<string id="aom_gob_barber" text="{=aom_gob_barber}Barber" />
@@ -1028,7 +1028,7 @@
 	<string id="aom_harad_lord_archer_name" text="{=aom_harad_lord_archer_name}Lord of Harwan (Archer)" />
 	<string id="aom_harad_lord_cavalry_name" text="{=aom_harad_lord_cavalry_name}Lord of Harwan (Cavalry)" />
 	<string id="aom_harad_lord_infantry_name" text="{=aom_harad_lord_infantry_name}Lord of Harwan (Infantry)" />
-	<string id="aom_hd_arena" text="{=aom_hd_arena}Arena Master" />
+	<string id="aom_hd_arena" text="{=aom_hd_arena}Training Master" />
 	<string id="aom_hd_armed_trader" text="{=aom_hd_armed_trader}Harad Armed Trader" />
 	<string id="aom_hd_armorer" text="{=aom_hd_armorer}Armorer" />
 	<string id="aom_hd_barber" text="{=aom_hd_barber}Barber" />
@@ -1096,7 +1096,7 @@
 	<string id="aom_hd_villager_m_child" text="{=aom_hd_villager_m_child}Village Child" />
 	<string id="aom_hd_villager_m_teen" text="{=aom_hd_villager_m_teen}Village Teenager" />
 	<string id="aom_hd_weaponsmith" text="{=aom_hd_weaponsmith}Weaponsmith" />
-	<string id="aom_ig_arena" text="{=aom_ig_arena}Arena Master" />
+	<string id="aom_ig_arena" text="{=aom_ig_arena}Training Master" />
 	<string id="aom_ig_armed_trader" text="{=aom_ig_armed_trader}Isengard Armed Trader" />
 	<string id="aom_ig_armorer" text="{=aom_ig_armorer}Armorer" />
 	<string id="aom_ig_barber" text="{=aom_ig_barber}Barber" />
@@ -1175,7 +1175,7 @@
 	<string id="aom_ig_weaponsmith" text="{=aom_ig_weaponsmith}Weaponsmith" />
 	<string id="aom_isengard_lord_1" text="{=aom_isengard_lord_1}Bold Uruk-hai captain" />
 	<string id="aom_isengard_lord_2" text="{=aom_isengard_lord_2}Cautious Uruk-hai captain" />
-	<string id="aom_kh_arena" text="{=aom_kh_arena}Arena Master" />
+	<string id="aom_kh_arena" text="{=aom_kh_arena}Training Master" />
 	<string id="aom_kh_armed_trader" text="{=aom_kh_armed_trader}Khand Armed Trader" />
 	<string id="aom_kh_armorer" text="{=aom_kh_armorer}Armorer" />
 	<string id="aom_kh_barber" text="{=aom_kh_barber}Barber" />
@@ -1288,7 +1288,7 @@
 	<string id="aom_mirkwood_lord_2" text="{=aom_mirkwood_lord_2}Cautious elven lord of Mirkwood" />
 	<string id="aom_mistymountainorcs_lord_1" text="{=aom_mistymountainorcs_lord_1}Bold Misty Mountain captain" />
 	<string id="aom_mistymountainorcs_lord_2" text="{=aom_mistymountainorcs_lord_2}Cautious Misty Mountain captain" />
-	<string id="aom_mk_arena" text="{=aom_mk_arena}Arena Master" />
+	<string id="aom_mk_arena" text="{=aom_mk_arena}Training Master" />
 	<string id="aom_mk_armed_trader" text="{=aom_mk_armed_trader}Mirkwood Armed Trader" />
 	<string id="aom_mk_armorer" text="{=aom_mk_armorer}Armorer" />
 	<string id="aom_mk_barber" text="{=aom_mk_barber}Barber" />
@@ -1356,7 +1356,7 @@
 	<string id="aom_mk_villager_child" text="{=aom_mk_villager_child}Village Child" />
 	<string id="aom_mk_villager_teen" text="{=aom_mk_villager_teen}Village Teenager" />
 	<string id="aom_mk_weaponsmith" text="{=aom_mk_weaponsmith}Weaponsmith" />
-	<string id="aom_mmo_arena" text="{=aom_mmo_arena}Arena Master" />
+	<string id="aom_mmo_arena" text="{=aom_mmo_arena}Training Master" />
 	<string id="aom_mmo_armed_trader" text="{=aom_mmo_armed_trader}Orc Armed Trader" />
 	<string id="aom_mmo_armorer" text="{=aom_mmo_armorer}Armorer" />
 	<string id="aom_mmo_barber" text="{=aom_mmo_barber}Barber" />
@@ -1427,7 +1427,7 @@
 	<string id="aom_mmo_weaponsmith" text="{=aom_mmo_weaponsmith}Weaponsmith" />
 	<string id="aom_mordor_lord_1" text="{=aom_mordor_lord_1}Bold Mordor captain" />
 	<string id="aom_mordor_lord_2" text="{=aom_mordor_lord_2}Cautious Mordor captain" />
-	<string id="aom_mr_arena" text="{=aom_mr_arena}Arena Master" />
+	<string id="aom_mr_arena" text="{=aom_mr_arena}Training Master" />
 	<string id="aom_mr_armed_trader" text="{=aom_mr_armed_trader}Mordor Armed Trader" />
 	<string id="aom_mr_armorer" text="{=aom_mr_armorer}Armorer" />
 	<string id="aom_mr_barber" text="{=aom_mr_barber}Barber" />
@@ -1496,7 +1496,7 @@
 	<string id="aom_mr_villager_teen" text="{=aom_mr_villager_teen}Village Teenager" />
 	<string id="aom_mr_warg_merchant" text="{=aom_mr_warg_merchant}Warg Merchant" />
 	<string id="aom_mr_weaponsmith" text="{=aom_mr_weaponsmith}Weaponsmith" />
-	<string id="aom_rh_arena" text="{=aom_rh_arena}Arena Master" />
+	<string id="aom_rh_arena" text="{=aom_rh_arena}Training Master" />
 	<string id="aom_rh_armed_trader" text="{=aom_rh_armed_trader}Rhun Armed Trader" />
 	<string id="aom_rh_armorer" text="{=aom_rh_armorer}Armorer" />
 	<string id="aom_rh_barber" text="{=aom_rh_barber}Barber" />
@@ -1564,7 +1564,7 @@
 	<string id="aom_rh_villager_m_child" text="{=aom_rh_villager_m_child}Village Child" />
 	<string id="aom_rh_villager_m_teen" text="{=aom_rh_villager_m_teen}Village Teenager" />
 	<string id="aom_rh_weaponsmith" text="{=aom_rh_weaponsmith}Weaponsmith" />
-	<string id="aom_rhud_arena" text="{=aom_rhud_arena}Arena Master" />
+	<string id="aom_rhud_arena" text="{=aom_rhud_arena}Training Master" />
 	<string id="aom_rhud_armed_trader" text="{=aom_rhud_armed_trader}Rhudaur Armed Trader" />
 	<string id="aom_rhud_armorer" text="{=aom_rhud_armorer}Armorer" />
 	<string id="aom_rhud_barber" text="{=aom_rhud_barber}Barber" />
@@ -1684,7 +1684,7 @@
 	<string id="aom_roh_tavern_wench" text="{=aom_roh_tavern_wench}Tavern Maid" />
 	<string id="aom_roh_taverngamehost" text="{=aom_roh_taverngamehost}Tavern Game Host" />
 	<string id="aom_roh_tavernkeeper" text="{=aom_roh_tavernkeeper}Tavernkeeper" />
-	<string id="aom_roh_tournament_master" text="{=aom_roh_tournament_master}Tournament Master" />
+	<string id="aom_roh_tournament_master" text="{=aom_roh_tournament_master}Training Master" />
 	<string id="aom_roh_townsman" text="{=aom_roh_townsman}Townsman" />
 	<string id="aom_roh_townsman_child" text="{=aom_roh_townsman_child}Townsman" />
 	<string id="aom_roh_townsman_infant" text="{=aom_roh_townsman_infant}Townsman" />
@@ -1704,7 +1704,7 @@
 	<string id="aom_roh_wpractice_1" text="{=aom_roh_wpractice_1}Weapon Practice Dummy Stage 1" />
 	<string id="aom_roh_wpractice_2" text="{=aom_roh_wpractice_2}Weapon Practice Dummy Stage 2" />
 	<string id="aom_roh_wpractice_3" text="{=aom_roh_wpractice_3}Weapon Practice Dummy Stage 3" />
-	<string id="aom_rv_arena" text="{=aom_rv_arena}Arena Master" />
+	<string id="aom_rv_arena" text="{=aom_rv_arena}Training Master" />
 	<string id="aom_rv_armed_trader" text="{=aom_rv_armed_trader}Rivendell Armed Trader" />
 	<string id="aom_rv_armorer" text="{=aom_rv_armorer}Armorer" />
 	<string id="aom_rv_barber" text="{=aom_rv_barber}Barber" />
@@ -2152,7 +2152,7 @@
 	<string id="aom_srh_tavern_wench" text="{=aom_srh_tavern_wench}Tavern Maid" />
 	<string id="aom_srh_taverngamehost" text="{=aom_srh_taverngamehost}Tavern Game Host" />
 	<string id="aom_srh_tavernkeeper" text="{=aom_srh_tavernkeeper}Tavernkeeper" />
-	<string id="aom_srh_tournament_master" text="{=aom_srh_tournament_master}Tournament Master" />
+	<string id="aom_srh_tournament_master" text="{=aom_srh_tournament_master}Training Master" />
 	<string id="aom_srh_townsman" text="{=aom_srh_townsman}Townsman" />
 	<string id="aom_srh_townsman_child" text="{=aom_srh_townsman_child}Townsman" />
 	<string id="aom_srh_townsman_infant" text="{=aom_srh_townsman_infant}Townsman" />

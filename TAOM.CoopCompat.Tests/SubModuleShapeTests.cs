@@ -58,6 +58,18 @@ public class SubModuleShapeTests
         }
     }
 
+    // Career sync: a client sends one career report per action, at the next frame; without the tick nothing goes out.
+    [TestMethod]
+    public void SubModule_TicksTheCareerRelay_EveryFrame_AndBuildsIt_WithTheOtherRelays()
+    {
+        var text = System.IO.File.ReadAllText(RepoFiles.Path("CoopCompat/CoopCompatSubModule.cs"));
+
+        StringAssert.Contains(text, "protected override void OnApplicationTick(float dt) => _careerSync?.Tick();");
+        var build = text.IndexOf("private void BuildServices(", StringComparison.Ordinal);
+        Assert.IsTrue(build >= 0 && text.IndexOf("new CareerSyncRelayService(", build, StringComparison.Ordinal) > build);
+        StringAssert.Contains(text, "_careerSync = null;");
+    }
+
     [TestMethod]
     public void SubModule_StaysUnder150Lines()
     {

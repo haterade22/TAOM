@@ -20,6 +20,7 @@ public class CareerPassiveServiceTests
     private ICareerRegistry _registry;
     private IModLogger _logger;
     private IPartySizeCacheInvalidator _invalidator;
+    private ICareerTierTrust _tierTrust;
     private List<List<string>> _invalidatedIds;
 
     private static readonly CareerDefinition WarbossCareer = new CareerDefinition(
@@ -37,7 +38,9 @@ public class CareerPassiveServiceTests
         _invalidatedIds = new List<List<string>>();
         _invalidator.When(i => i.InvalidateLedBy(Arg.Any<ICollection<string>>()))
             .Do(call => _invalidatedIds.Add(call.Arg<ICollection<string>>().OrderBy(id => id).ToList()));
-        _service = new CareerPassiveService(_logger, _invalidator);
+        _tierTrust = Substitute.For<ICareerTierTrust>();
+        _tierTrust.Counts(default!, default).ReturnsForAnyArgs(true);
+        _service = new CareerPassiveService(_logger, _invalidator, _tierTrust);
         _dataService = new CareerDataService();
         _registry = Substitute.For<ICareerRegistry>();
 
@@ -106,6 +109,79 @@ public class CareerPassiveServiceTests
         Assert.AreEqual(5f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.PartySize), 0.001f);
         _logger.Received(1).LogWarning(Arg.Any<string>());
     }
+
+    // Career tier trust (docs/features/coop-interop.md, "Career sync"): the co-op server leaves out a choice
+    // whose tier the hero's level does not open, and keeps the root choice, which has no group.
+    [TestMethod]
+    public void RefreshCache_ChoiceInAnUntrustedTier_AddsNoPassive_AndTheTrustedOnesStillCount()
+    {
+        GivenTieredChoices();
+        _tierTrust.Counts("hero1", 2).Returns(false);
+
+        _service.RefreshCache(_dataService, _registry);
+
+        Assert.AreEqual(5f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.PartySize), 0.001f,
+            "the root and the tier 1 choice count; the tier 2 choice does not");
+        Assert.AreEqual(0f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.Damage), 0.001f);
+    }
+
+    [TestMethod]
+    public void RefreshCache_EveryTierTrusted_CountsEveryChoice()
+    {
+        GivenTieredChoices();
+
+        _service.RefreshCache(_dataService, _registry);
+
+        Assert.AreEqual(5f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.PartySize), 0.001f);
+        Assert.AreEqual(0.1f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.Damage), 0.001f);
+    }
+
+    [TestMethod]
+    public void RefreshCache_AsksTheTrustWithEachChoicesGroupTier_AndNeverForTheRoot()
+    {
+        GivenTieredChoices();
+
+        _service.RefreshCache(_dataService, _registry);
+
+        _tierTrust.Received(1).Counts("hero1", 1);
+        _tierTrust.Received(1).Counts("hero1", 2);
+        _tierTrust.DidNotReceive().Counts("hero1", 0);
+    }
+
+    [TestMethod]
+    public void RefreshCache_ChoiceWithNoGroup_IsAskedAsTierZero()
+    {
+        // Tier 0 is no tier: the co-op server's trust refuses it, single player counts it as before.
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.TryAddChoice("hero1", "wb_root", 10);
+        _dataService.TryAddChoice("hero1", "wb_loose", 10);
+        _registry.GetChoice("wb_root").Returns(Choice("wb_root", "", PassiveEffectType.PartySize, 2f));
+        _registry.GetChoice("wb_loose").Returns(Choice("wb_loose", "", PassiveEffectType.Damage, 0.1f));
+        _tierTrust.Counts("hero1", 0).Returns(false);
+
+        _service.RefreshCache(_dataService, _registry);
+
+        Assert.AreEqual(2f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.PartySize), 0.001f);
+        Assert.AreEqual(0f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.Damage), 0.001f);
+    }
+
+    // hero1 holds the root (PartySize 2, no group), a tier 1 choice (PartySize 3) and a tier 2 choice (Damage 0.1).
+    private void GivenTieredChoices()
+    {
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.TryAddChoice("hero1", "wb_root", 10);
+        _dataService.TryAddChoice("hero1", "wb_t1", 10);
+        _dataService.TryAddChoice("hero1", "wb_t2", 10);
+        _registry.GetChoice("wb_root").Returns(Choice("wb_root", "", PassiveEffectType.PartySize, 2f));
+        _registry.GetChoice("wb_t1").Returns(Choice("wb_t1", "wb_g1", PassiveEffectType.PartySize, 3f));
+        _registry.GetChoice("wb_t2").Returns(Choice("wb_t2", "wb_g2", PassiveEffectType.Damage, 0.1f));
+        _registry.GetGroup("wb_g1").Returns(new CareerChoiceGroupDefinition("wb_g1", "warboss", 1, new[] { "wb_t1" }));
+        _registry.GetGroup("wb_g2").Returns(new CareerChoiceGroupDefinition("wb_g2", "warboss", 2, new[] { "wb_t2" }));
+    }
+
+    private static CareerChoiceDefinition Choice(string id, string groupId, PassiveEffectType type, float magnitude) =>
+        new(id: id, groupId: groupId, type: ChoiceType.Passive, description: "", iconSprite: "",
+            passives: new[] { new PassiveEffect(type, magnitude) }, mutations: null);
 
     [TestMethod]
     public void GetPassiveMagnitude_NoCareers_ReturnsZero()

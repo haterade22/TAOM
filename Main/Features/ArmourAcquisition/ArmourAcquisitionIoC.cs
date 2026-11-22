@@ -32,6 +32,7 @@ public static class ArmourAcquisitionIoC
         container.Register<LordsLadderService>(Reuse.Singleton);
         container.Register<HeroKillTally>(Reuse.Singleton);
         container.Register<Hooks.LadderPresenter>(Reuse.Singleton);
+        container.Register<Hooks.GuestLadderPresenter>(Reuse.Singleton);
         container.Register<Hooks.ArmouryPresenter>(Reuse.Singleton);
     }
 }

@@ -28,4 +28,7 @@ public sealed class CoopCompatHello : ICommand
     [ProtoMember(6)] public string[] GroupNames { get; set; } = Array.Empty<string>();
     [ProtoMember(7)] public string[] GroupHashes { get; set; } = Array.Empty<string>();
     [ProtoMember(8)] public bool Conclusive { get; set; }
+
+    /// <summary>The client's active module ids in load order (at most 256). Empty from a peer built before it existed.</summary>
+    [ProtoMember(9)] public string[] ModuleOrder { get; set; } = Array.Empty<string>();
 }

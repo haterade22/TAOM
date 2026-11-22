@@ -510,12 +510,12 @@ Same pattern as Gondor. `EquipmentSet id="aserai_troop_civilian_template_t3" civ
 
 ### `Main/_Module/ModuleData/characters/npcs_gondor.xml` (77 lines of `civilian="true"`)
 
-**Representative NPC** (line 8-17, Arena Master):
+**Representative NPC** (line 8-17, Training Master):
 
 ```xml
 <NPCCharacter id="tournament_master_gondor" default_group="Infantry"
         is_hero="false" occupation="ArenaMaster" culture="Culture.gondor"
-        name="{=aom_gd_arena}Arena Master">
+        name="{=aom_gd_arena}Training Master">
     <face><face_key_template value="BodyProperty.fighter_gondor" /></face>
     <skills></skills>
     <Equipments>

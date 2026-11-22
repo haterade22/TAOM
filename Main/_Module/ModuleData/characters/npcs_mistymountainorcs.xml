@@ -5,7 +5,7 @@
 	<!-- All use race="orc" for correct orc rendering -->
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.mistymountainorcs" name="{=aom_mmo_arena}Arena Master">
+	<NPCCharacter id="tournament_master_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.mistymountainorcs" name="{=aom_mmo_arena}Training Master">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>

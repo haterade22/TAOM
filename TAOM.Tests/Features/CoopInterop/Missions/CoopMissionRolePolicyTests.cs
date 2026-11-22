@@ -52,7 +52,7 @@ public class CoopMissionRolePolicyTests
     }
 
     [TestMethod]
-    public void Table_UnsafeSet_IsExactlyTheSevenDroppedInASession()
+    public void Table_UnsafeSet_IsExactlyTheEightDroppedInASession()
     {
         var unsafeNames = CoopMissionRoles.All
             .Where(p => p.Value == CoopMissionRole.Unsafe).Select(p => p.Key).OrderBy(n => n).ToArray();
@@ -61,6 +61,7 @@ public class CoopMissionRolePolicyTests
         {
             "EnlistmentMeritMissionBehavior", "FellFoesMissionLogic", "FieldCommissionMissionLogic",
             "LostFootingMissionLogic", "ShaderPrecompilePlayerAgentGuard", "SiegeDismountMissionBehavior", "StagedSiegeMissionBehavior",
+            "TrainingWavesMissionLogic",
         }, unsafeNames);
     }
 
@@ -106,7 +107,7 @@ public class CoopMissionRolePolicyTests
         Assert.AreEqual(30, added.Count, "AddTaomBehavior(() => new ...) call sites in SubModule.cs changed; recount and update the table");
 
         var declared = FeatureModules.All.SelectMany(m => m.MissionBehaviors).Select(d => d.BehaviorType.Name).ToList();
-        Assert.AreEqual(20, declared.Count, "module mission behavior declarations changed; update the table");
+        Assert.AreEqual(21, declared.Count, "module mission behavior declarations changed; update the table");
 
         // Added outside AddTaomBehavior: the load-phase closer (SubModule), the custom battle patches, the
         // host review launcher. All local by construction.

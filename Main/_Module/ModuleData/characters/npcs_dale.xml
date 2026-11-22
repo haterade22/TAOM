@@ -490,7 +490,7 @@
 	</NPCCharacter>
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_dale" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.sturgia" name="{=aom_dl_arena}Arena Master">
+	<NPCCharacter id="tournament_master_dale" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.sturgia" name="{=aom_dl_arena}Training Master">
 		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
 		<skills></skills>
 		<Equipments>

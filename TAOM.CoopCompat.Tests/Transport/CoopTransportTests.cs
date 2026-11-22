@@ -2,6 +2,7 @@ using System;
 using Autofac;
 using Common;
 using Common.Messaging;
+using Common.Network;
 using Coop.Core.Client.Messages;
 using GameInterface;
 using GameInterface.Services.Players;
@@ -301,5 +302,83 @@ public class CoopTransportTests
 
         ModInformation.IsServer = false;
         Assert.IsFalse(_transport.SendToPeer(peer, new CoopCompatTradeReply()));
+    }
+
+    [TestMethod]
+    public void CareerReport_OnServer_CarriesTheConnectionsHero_NotTheReportsHero()
+    {
+        var transport = new CoopTransport(a => { _marshalled++; a(); }, _ => "Player1");
+        transport.Start();
+        BeginSession(server: true);
+        string? heroId = null;
+        CoopCompatCareerReport? got = null;
+        transport.CareerReportReceived += (_, h, r) => { heroId = h; got = r; };
+
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatCareerReport { HeroId = "Player2", Sequence = 5 });
+        MessageBroker.Instance.Publish("not a peer", new CoopCompatCareerReport());
+
+        Assert.AreEqual("Player1", heroId, "the server names the hero from the connection; the report's id is only compared");
+        Assert.AreEqual("Player2", got!.HeroId);
+        Assert.AreEqual(5, got.Sequence);
+        Assert.IsTrue(_marshalled >= 1);
+    }
+
+    [TestMethod]
+    public void CareerReport_OnAClient_IsIgnored_AndCareerUpdate_OnlyOnAClient()
+    {
+        var transport = new CoopTransport(a => a(), _ => "Player1");
+        transport.Start();
+        var reports = 0;
+        var updates = 0;
+        transport.CareerReportReceived += (_, _, _) => reports++;
+        transport.CareerUpdateReceived += _ => updates++;
+
+        BeginSession(server: false);
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatCareerReport());
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatCareerUpdate());
+        Assert.AreEqual(0, reports);
+        Assert.AreEqual(1, updates);
+
+        ModInformation.IsServer = true;
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatCareerUpdate());
+        Assert.AreEqual(1, updates);
+    }
+
+    [TestMethod]
+    public void CareerSends_WithTheWrongRole_ReturnFalse()
+    {
+        var peer = new CoopPeer(FakePeer());
+        BeginSession(server: true);
+        Assert.IsFalse(_transport.SendToServer(new CoopCompatCareerReport()));
+
+        ModInformation.IsServer = false;
+        Assert.IsFalse(_transport.SendToPeer(peer, new CoopCompatCareerUpdate()));
+        Assert.IsFalse(_transport.Broadcast(new CoopCompatCareerUpdate()));
+        Assert.IsFalse(_transport.BroadcastExcept(peer, new CoopCompatCareerUpdate()));
+    }
+
+    [TestMethod]
+    public void BroadcastExcept_OnServer_SendsToEveryoneButThatPeer()
+    {
+        var network = Substitute.For<INetwork>();
+        var builder = new ContainerBuilder();
+        builder.RegisterInstance(network).As<INetwork>();
+        ContainerProvider.SetContainer(builder.Build());
+        ModInformation.IsServer = true;
+        var netPeer = FakePeer();
+        var update = new CoopCompatCareerUpdate { HeroId = "Player1" };
+        // An uninitialized NetPeer cannot be formatted or compared by NSubstitute, so the calls are captured by hand.
+        NetPeer? excluded = null;
+        IMessage? sentButOne = null;
+        IMessage? sentToAll = null;
+        network.When(n => n.SendAllBut(Arg.Any<NetPeer>(), Arg.Any<IMessage>())).Do(c => { excluded = c.ArgAt<NetPeer>(0); sentButOne = c.ArgAt<IMessage>(1); });
+        network.When(n => n.SendAll(Arg.Any<IMessage>())).Do(c => sentToAll = c.ArgAt<IMessage>(0));
+
+        Assert.IsTrue(_transport.BroadcastExcept(new CoopPeer(netPeer), update));
+        Assert.IsTrue(_transport.Broadcast(update));
+
+        Assert.AreSame(netPeer, excluded);
+        Assert.AreSame(update, sentButOne);
+        Assert.AreSame(update, sentToAll);
     }
 }
