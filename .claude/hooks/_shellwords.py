@@ -386,15 +386,36 @@ def _blind_pieces(text):
 WORDS_KEPT_MAX = 4096
 
 
+def _quoted_redirs_marked(seg):
+    """seg with each < or > that bash reads as a plain character (inside quotes, or after a
+    backslash) written as \x1f, so the judge, which strips quotes, never takes it for a redirection
+    (#691). Quote state follows shlex's posix rules; an unclosed quote fails the split that follows."""
+    out, quote, i = [], "", 0
+    while i < len(seg):
+        c = seg[i]
+        nxt = seg[i + 1] if i + 1 < len(seg) else ""
+        if c == "\\" and nxt and quote != "'" and (not quote or nxt in '"\\'):
+            out.append("\x1f" if nxt in "<>" else c + nxt)
+            i += 2
+            continue
+        if c in "<>" and quote:
+            c = "\x1f"
+        elif c in "'\"" and quote in ("", c):
+            quote = "" if quote else c
+        out.append(c)
+        i += 1
+    return "".join(out)
+
+
 def _words_kept(seg):
     """One quote-aware segment with each argument's boundary kept: a blank inside an argument
-    becomes \\x1f, and an empty argument \\x1e, so `-o "ci skip" origin` and `-o "" origin` still
-    hand validate-push the value as one word. None when it does not parse as POSIX words or is
+    becomes \\x1f (as does a quoted or escaped < or >, #691), and an empty argument \\x1e, so
+    `-o "ci skip" origin` and `-o "" origin` still hand validate-push the value as one word. None when it does not parse as POSIX words or is
     longer than WORDS_KEPT_MAX."""
     if len(seg) > WORDS_KEPT_MAX:
         return None
     try:
-        words = shlex.split(seg, comments=False, posix=True)
+        words = shlex.split(_quoted_redirs_marked(seg), comments=False, posix=True)
     except ValueError:
         return None
     return " ".join(re.sub(r"[\s'\"]", "\x1f", w) or "\x1e" for w in words)

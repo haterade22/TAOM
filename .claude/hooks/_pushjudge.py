@@ -11,7 +11,8 @@ read from the bash judge):
   - a line is judged as bash's $( ) received it: a lone surrogate the reader wrote as ?, every NUL
     dropped, then each distinct line once;
   - words split at space, tab and newline only, never str.split(), which also splits at \\v, \\f, NBSP
-    and the \\x1e and \\x1f the reader puts inside a word to keep an argument whole;
+    and the \\x1e and \\x1f the reader puts inside a word to keep an argument whole (\\x1f also
+    stands for a quoted or escaped < or >, #691);
   - git is recognised after lowering A-Z only, as bash's ${tok,,} does in the hook's C.UTF-8 locale;
   - an fd number is ASCII digits, never str.isdigit();
   - a refspec pattern of * and plain characters matches as bash's [[ == ]] does. One holding any other
