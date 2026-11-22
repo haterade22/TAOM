@@ -146,7 +146,9 @@ class ModuleList(unittest.TestCase):
             seen["modules"] = list(modules)
             raise RuntimeError("stop after the module list")
 
-        with mock.patch.object(aa.vm, "tpac_paths_for_modules", fake),                 mock.patch.object(aa, "ensure_exists", lambda p, _w: p),                 mock.patch.object(aa.vm, "extract_refs", return_value=[]):
+        with mock.patch.object(aa.vm, "tpac_paths_for_modules", fake), \
+                mock.patch.object(aa, "ensure_exists", lambda p, _w: p), \
+                mock.patch.object(aa.vm, "extract_refs", return_value=[]):
             with self.assertRaises(RuntimeError):
                 aa.build_summary(Path("g"), "LOTRLOME_Armory", Path("nowhere"), False)
         self.assertEqual(sorted(seen["modules"]), sorted(vm.DEFAULT_TPAC_MODULES))

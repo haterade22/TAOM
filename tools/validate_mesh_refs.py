@@ -101,6 +101,9 @@ DEFAULT_ITEMS = DEFAULT_GAME / "Modules" / "LOTRLOME_Armory" / "ModuleData"
 # (each module's loose Assets/ tree, else its AssetPackages/: tpac_paths_for_modules).
 # validate_moduledata reads this same list (#623).
 DEFAULT_TPAC_MODULES = ["LOTRLOME_Armory", "TAOM", "TAOM_Map", "Native", "SandBoxCore", "SandBox"]
+# Modules that ship no .tpac on a healthy install (SandBoxCore on v1.5.7): an empty one is not announced,
+# or the PARTIAL_RUN notice would fire on every run and stop meaning anything.
+NO_TPAC_EXPECTED = frozenset({"SandBoxCore"})
 DEFAULT_RGL_LOG_DIR = Path(r"C:\ProgramData\Mount and Blade II Bannerlord\logs")
 
 # Meshes accepted as dead on purpose: the art is gone, no surviving asset can
@@ -448,13 +451,13 @@ def module_tpacs(mod_dir: Path, name: str, skips: list = None) -> list:
     (never rebuilt from another spelling of Modules/; validate_moduledata's borrowed-body pass lists the Armory
     this way). A module with no .tpac at all is announced on stderr once per process, or, when the caller
     passes `skips`, appended there on every call instead (validate_moduledata turns each into a PARTIAL_RUN
-    notice, because an MCP client reads no stderr)."""
+    notice, because an MCP client reads no stderr). A module in NO_TPAC_EXPECTED is never announced."""
     mod_dir = Path(mod_dir)
     loose = sorted((mod_dir / "Assets").rglob("*.tpac"))
     if loose:
         return loose
     cooked = sorted((mod_dir / "AssetPackages").glob("*.tpac"))
-    if not cooked and mod_dir.exists():
+    if not cooked and mod_dir.exists() and name not in NO_TPAC_EXPECTED:
         text = (f"module {name!r} contributes no .tpac at all (neither "
                 f"AssetPackages/ nor Assets/), so every mesh it owns reads "
                 f"as MISSING.")
