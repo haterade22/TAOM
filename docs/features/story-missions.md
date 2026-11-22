@@ -179,7 +179,10 @@ not for sale; each is a row of the mission's `heroes` list.
   campaign. For the same reason the adapter puts each hero's own body and age on the build data, so the
   story mission's face cache cannot give him a garrison soldier's face. A fallen player can take over a
   hero there; the hero keeps his own health, counts as near his place in the `hunters` line, and his
-  later death is booked as his fall and as the player's death. The detail for abilities, take-over,
+  later death is booked as his fall and as the player's death. In an attack the player's team is the
+  wave, so a soldier he takes over is one of the wave's count: the wave check books him as taken
+  (`taom.story-missions.hosted.wave ... taken=1`), because his later fall is the player's and a fell
+  skips him. The detail for abilities, take-over,
   faces and the aura is in [hero-abilities.md](hero-abilities.md) and [hero-auras.md](hero-auras.md).
 - **Check lines:** the hero spawn line reads `taom.story-missions.hosted.hero` with
   `is_hero=0 campaign=1`; the `hunters` line is `taom.story-missions.hosted.hunters`. The ability,

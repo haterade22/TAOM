@@ -48,6 +48,7 @@ internal sealed partial class SurvivalRun
     private readonly bool[] _firstPlaced = new bool[2];
     private float _waveSeconds;
     private int _waveFelled;
+    private int _waveTaken;
     private float _healthFactor = 1f;
     private float _damageFactor = 1f;
     private StalemateState _stale;
@@ -211,6 +212,16 @@ internal sealed partial class SurvivalRun
             _purse.Earn(PurseSource.Bounty, GoldFactors.Apply(gold, _factors.Bounty));
     }
 
+    /// <summary>
+    /// A roster soldier of the wave became the player's body: a take-over in a story attack (#1409), where the player's team is the wave. He stays in the wave's count, but from now
+    /// on his fall is the player's and a fell skips him, so the wave names him as taken and its books still add up.
+    /// </summary>
+    public void AttackerTaken()
+    {
+        if (Result == null)
+            _waveTaken++;
+    }
+
     public void AttackerFled()
     {
         if (Result == null)
@@ -352,6 +363,7 @@ internal sealed partial class SurvivalRun
         _waveSeconds = 0f;
         _waveFelled = 0;
         _fieldGroupLeft = 0;
+        _waveTaken = 0;
         _stale = default;
         InitCommander(_plan.Waves.Commanders.ForWave(_wave));
         if (_stage == WaveStage.Fighting)
@@ -436,7 +448,7 @@ internal sealed partial class SurvivalRun
     {
         var bonus = GoldFactors.Apply(_r.WaveBonusBase + _r.WaveBonusPerWave * _wave, _factors.WaveBonus);
         _purse.Earn(PurseSource.WaveBonus, bonus);
-        _stats.CloseWave(_wave, _waveSeconds, _waveFelled, _healthFactor, _damageFactor, _waveAffixes, WaveRolesNow(), FortWaveNow());
+        _stats.CloseWave(_wave, _waveSeconds, _waveFelled, _healthFactor, _damageFactor, _waveAffixes, WaveRolesNow(), FortWaveNow(), _waveTaken);
         CloseVolleys();
         _careUsed = 0;
         _warCry = null;
