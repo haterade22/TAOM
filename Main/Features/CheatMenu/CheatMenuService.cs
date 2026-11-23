@@ -76,7 +76,7 @@ public sealed class CheatMenuService
         _partySizeCache = partySizeCache;
     }
 
-    /// <summary>The "Unlimited party" switch (<see cref="ICheatPartyRules"/>): no size limit and no desertion of enemy troops for the player's party.</summary>
+    /// <summary>The "Unlimited party" switch (<see cref="ICheatPartyRules"/>): no size limit, no desertion of enemy troops and no upkeep desertion for the player's party.</summary>
     public bool UnlimitedParty => _partyRules.UnlimitedParty;
 
     /// <summary>

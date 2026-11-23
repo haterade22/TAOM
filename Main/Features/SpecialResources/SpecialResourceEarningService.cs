@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TaleWorlds.Core;
 using TAOM.Core.Logging;
+using TAOM.Features.CheatMenu;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.SpecialResources.Domain;
 
@@ -28,6 +29,7 @@ public sealed class SpecialResourceEarningService
     private readonly ICoopSessionProvider _coop;
     private readonly IDedicatedServerProvider _dedicatedServer;
     private readonly IModLogger _logger;
+    private readonly ICheatPartyRules _cheatParty;
 
     // The single-player desertion grace (#133 P2): the first daily tick of a campaign never deserts, so a
     // player who saved at balance 0 is not punished before they can earn. Spent by the first tick that
@@ -37,6 +39,7 @@ public sealed class SpecialResourceEarningService
     private bool _suppressionLogged;
     private bool _prisonersLogged;
     private bool _desertionOffLogged;
+    private bool _cheatSparedLogged;
     private bool _recruitSuppressionLogged;
     private bool _recruitScopeLostLogged;
 
@@ -45,13 +48,15 @@ public sealed class SpecialResourceEarningService
         ISpecialResourceStorageService storage,
         ICoopSessionProvider coop,
         IDedicatedServerProvider dedicatedServer,
-        IModLogger logger)
+        IModLogger logger,
+        ICheatPartyRules cheatParty)
     {
         _service = service;
         _storage = storage;
         _coop = coop;
         _dedicatedServer = dedicatedServer;
         _logger = logger;
+        _cheatParty = cheatParty;
     }
 
     /// <summary>A co-op session is live, so earning and the daily tick run per player.</summary>
@@ -244,6 +249,8 @@ public sealed class SpecialResourceEarningService
             // C6 turn remote desertion on, give each player the first-tick grace here.
             if (session)
                 LogDesertionOff();
+            else if (_cheatParty.UnlimitedParty)
+                LogCheatSpared();
             else
                 outcome.Desertions = _service.CalculateDesertion(hero.HeroId, kingdomId, cultureId, troopUpkeep);
         }
@@ -341,6 +348,13 @@ public sealed class SpecialResourceEarningService
         _logger.LogInfo(
             "[SpecRes] Dedicated server: a recruit with no scoped guest party is not charged to the " +
             "world-gen hero. Further occurrences are not logged.");
+    }
+
+    private void LogCheatSpared()
+    {
+        if (_cheatSparedLogged) return;
+        _cheatSparedLogged = true;
+        _logger.LogInfo("[SpecRes] DailyTick: Unlimited party cheat is on, upkeep desertion skipped for the main party. Further occurrences are not logged.");
     }
 
     private void LogDesertionOff()

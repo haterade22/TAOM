@@ -1,5 +1,6 @@
 using NSubstitute;
 using TAOM.Core.Logging;
+using TAOM.Features.CheatMenu;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.SpecialResources;
 using TAOM.Features.SpecialResources.Domain;
@@ -19,15 +20,17 @@ internal sealed class EarningTestKit
     public ICoopSessionProvider Session { get; } = Substitute.For<ICoopSessionProvider>();
     public IDedicatedServerProvider Dedicated { get; } = Substitute.For<IDedicatedServerProvider>();
     public IModLogger Logger { get; } = Substitute.For<IModLogger>();
+    public ICheatPartyRules Cheat { get; } = new CheatPartyRules();
     public SpecialResourceEarningService Sut { get; }
 
-    public EarningTestKit(bool session = false, bool authority = true, bool dedicated = false)
+    public EarningTestKit(bool session = false, bool authority = true, bool dedicated = false, bool unlimitedParty = false)
     {
         Session.IsSessionActive.Returns(session);
         Session.IsAuthority.Returns(authority);
         Dedicated.IsDedicatedServer.Returns(dedicated);
+        Cheat.UnlimitedParty = unlimitedParty;
         Service.ResolveResource(Arg.Any<string>(), Arg.Any<string>()).Returns(Resource);
-        Sut = new SpecialResourceEarningService(Service, Storage, Session, Dedicated, Logger);
+        Sut = new SpecialResourceEarningService(Service, Storage, Session, Dedicated, Logger, Cheat);
     }
 
     // Local() is the single-player MainHero. A co-op server's own hero is Local(control: NotPlayer), and a
