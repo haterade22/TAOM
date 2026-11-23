@@ -59,7 +59,7 @@
 	</NPCCharacter>
 
 	<!-- Caravan Staff -->
-	<NPCCharacter id="caravan_master_bluecraig" race="goblin" default_group="Infantry" level="26" name="{=aom_bcg_caravan_master}Goblin Caravan Master" occupation="CaravanGuard" culture="Culture.bluecraig">
+	<NPCCharacter id="caravan_master_bluecraig" race="goblin" default_group="Infantry" level="26" name="{=aom_bcg_caravan_master}[Goblin] Caravan Master" occupation="CaravanGuard" culture="Culture.bluecraig">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -80,7 +80,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_guard_bluecraig" race="goblin" default_group="Infantry" level="21" name="{=aom_bcg_caravan_guard}Goblin Caravan Guard" occupation="CaravanGuard" culture="Culture.bluecraig">
+	<NPCCharacter id="caravan_guard_bluecraig" race="goblin" default_group="Infantry" level="21" name="{=aom_bcg_caravan_guard}[Goblin] Caravan Guard" occupation="CaravanGuard" culture="Culture.bluecraig">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills>
 			<skill id="Athletics" value="50" />
@@ -100,7 +100,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="veteran_caravan_guard_bluecraig" race="goblin" default_group="Infantry" level="26" name="{=aom_bcg_vet_caravan_guard}Goblin Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.bluecraig">
+	<NPCCharacter id="veteran_caravan_guard_bluecraig" race="goblin" default_group="Infantry" level="26" name="{=aom_bcg_vet_caravan_guard}[Goblin] Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.bluecraig">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -121,7 +121,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="armed_trader_bluecraig" race="goblin" default_group="Infantry" level="16" name="{=aom_bcg_armed_trader}Goblin Armed Trader" occupation="CaravanGuard" culture="Culture.bluecraig">
+	<NPCCharacter id="armed_trader_bluecraig" race="goblin" default_group="Infantry" level="16" name="{=aom_bcg_armed_trader}[Goblin] Armed Trader" occupation="CaravanGuard" culture="Culture.bluecraig">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills>
 			<skill id="Athletics" value="40" />

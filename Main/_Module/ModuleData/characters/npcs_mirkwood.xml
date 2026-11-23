@@ -59,7 +59,7 @@
 	</NPCCharacter>
 
 	<!-- Caravan Staff -->
-	<NPCCharacter id="caravan_master_mirkwood" race="elf" default_group="Infantry" level="26" name="{=aom_mk_caravan_master}Mirkwood Caravan Master" occupation="CaravanGuard" culture="Culture.mirkwood">
+	<NPCCharacter id="caravan_master_mirkwood" race="elf" default_group="Infantry" level="26" name="{=aom_mk_caravan_master}[Mirkwood] Caravan Master" occupation="CaravanGuard" culture="Culture.mirkwood">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -80,7 +80,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_guard_mirkwood" race="elf" default_group="Infantry" level="21" name="{=aom_mk_caravan_guard}Mirkwood Caravan Guard" occupation="CaravanGuard" culture="Culture.mirkwood">
+	<NPCCharacter id="caravan_guard_mirkwood" race="elf" default_group="Infantry" level="21" name="{=aom_mk_caravan_guard}[Mirkwood] Caravan Guard" occupation="CaravanGuard" culture="Culture.mirkwood">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills>
 			<skill id="Athletics" value="50" />
@@ -100,7 +100,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="veteran_caravan_guard_mirkwood" race="elf" default_group="Infantry" level="26" name="{=aom_mk_vet_caravan_guard}Mirkwood Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.mirkwood">
+	<NPCCharacter id="veteran_caravan_guard_mirkwood" race="elf" default_group="Infantry" level="26" name="{=aom_mk_vet_caravan_guard}[Mirkwood] Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.mirkwood">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -121,7 +121,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="armed_trader_mirkwood" race="elf" default_group="Infantry" level="16" name="{=aom_mk_armed_trader}Mirkwood Armed Trader" occupation="CaravanGuard" culture="Culture.mirkwood">
+	<NPCCharacter id="armed_trader_mirkwood" race="elf" default_group="Infantry" level="16" name="{=aom_mk_armed_trader}[Mirkwood] Armed Trader" occupation="CaravanGuard" culture="Culture.mirkwood">
 		<face><face_key_template value="BodyProperty.fighter_mirkwood" /></face>
 		<skills>
 			<skill id="Athletics" value="40" />

@@ -4048,7 +4048,7 @@
         race="dg_uruk"
         default_group="Infantry"
         level="11"
-        name="{=aom_dg_militia_spearman}Dol Guldur Militia Spearman"
+        name="{=aom_dg_militia_spearman}[Dol Guldur] Militia Spearman"
         occupation="Soldier"
         culture="Culture.dolguldur">
         <face>
@@ -4153,7 +4153,7 @@
         race="dg_uruk"
         default_group="Ranged"
         level="11"
-        name="{=aom_dg_militia_archer}Dol Guldur Militia Archer"
+        name="{=aom_dg_militia_archer}[Dol Guldur] Militia Archer"
         occupation="Soldier"
         culture="Culture.dolguldur">
         <face>
@@ -4264,7 +4264,7 @@
         race="dg_uruk"
         default_group="Infantry"
         level="16"
-        name="{=aom_dg_militia_vet_spear}Dol Guldur Militia Veteran Spearman"
+        name="{=aom_dg_militia_vet_spear}[Dol Guldur] Militia Veteran Spearman"
         occupation="Soldier"
         culture="Culture.dolguldur">
         <face>
@@ -4378,7 +4378,7 @@
         race="dg_uruk"
         default_group="Ranged"
         level="16"
-        name="{=aom_dg_militia_vet_archer}Dol Guldur Militia Veteran Archer"
+        name="{=aom_dg_militia_vet_archer}[Dol Guldur] Militia Veteran Archer"
         occupation="Soldier"
         culture="Culture.dolguldur">
         <face>
