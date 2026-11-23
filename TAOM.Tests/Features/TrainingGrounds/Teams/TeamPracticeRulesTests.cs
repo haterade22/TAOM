@@ -211,4 +211,30 @@ public class TeamPracticeRulesTests
     [TestMethod]
     public void WinCountSlipped_FightersStillToEnter_IsFalse()
         => Assert.IsFalse(TeamPracticeRules.WinCountSlipped(playerSurvived: true, unspawned: 3, alive: -1));
+
+    [DataTestMethod]
+    [DataRow(30, 0, 30)]
+    [DataRow(5, 2, 3)]
+    [DataRow(2, 2, 0)]
+    public void OpponentsLeft_AlliesFewerThanOrEqualToTheCount_IsTheCountMinusTheAllies(int remaining, int alliesStanding, int expected)
+        => Assert.AreEqual(expected, TeamPracticeRules.OpponentsLeft(remaining, alliesStanding));
+
+    [TestMethod]
+    public void OpponentsLeft_AfterTheTeamWin_CountZeroWithAlliesStanding_IsZeroNotNegative()
+        => Assert.AreEqual(0, TeamPracticeRules.OpponentsLeft(remaining: 0, alliesStanding: 2));
+
+    [TestMethod]
+    public void OpponentsLeft_MoreAlliesThanTheCount_IsZero()
+        => Assert.AreEqual(0, TeamPracticeRules.OpponentsLeft(remaining: 1, alliesStanding: 2));
+
+    [TestMethod]
+    public void OpponentsLeft_NegativeAllies_CountAsNoneStanding()
+        => Assert.AreEqual(5, TeamPracticeRules.OpponentsLeft(remaining: 5, alliesStanding: -2));
+
+    [TestMethod]
+    public void OpponentsLeft_NegativeCount_IsZero()
+    {
+        Assert.AreEqual(0, TeamPracticeRules.OpponentsLeft(remaining: -1, alliesStanding: 0));
+        Assert.AreEqual(0, TeamPracticeRules.OpponentsLeft(remaining: -4, alliesStanding: -2));
+    }
 }

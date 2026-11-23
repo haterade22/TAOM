@@ -157,4 +157,91 @@ public class Patch174TeamPracticeBindingTests
             ArenaPracticeFightMissionController_TeamPractice_Patch.Initialize(null, null);
         }
     }
+
+    private const string HudVm = "SandBox.ViewModelCollection.Missions.MissionArenaPracticeFightVM";
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void PracticeHudTick_IsPublicInstanceVoidWithNoArguments()
+    {
+        var method = Declared(HudVm, "Tick");
+
+        Assert.IsTrue(method.IsPublic && !method.IsStatic);
+        Assert.AreEqual(typeof(void), method.ReturnType);
+        Assert.AreEqual(0, method.GetParameters().Length);
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    [TestCategory("RequiresGameIL")]
+    public void PracticeHudTick_IsTooLargeForTheClrToInline()
+    {
+        var method = Declared(HudVm, "Tick");
+
+        Assert.IsFalse(method.MethodImplementationFlags.HasFlag(MethodImplAttributes.AggressiveInlining));
+        Assert.IsTrue(method.GetMethodBody()!.GetILAsByteArray()!.Length > 32,
+            "Tick is small enough to inline now: patch a method on the path the CLR cannot inline (lessons/harmony-il.md, #1189).");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void PracticeHud_HoldsTheControllerFieldAndASettableRemainingText()
+    {
+        if (!_gameLoaded)
+            Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
+        var type = AccessTools.TypeByName(HudVm);
+
+        Assert.AreEqual(AccessTools.TypeByName(Controller), AccessTools.Field(type, "_practiceMissionController").FieldType);
+        var text = AccessTools.Property(type, "OpponentsRemainingText");
+        Assert.AreEqual(typeof(string), text.PropertyType);
+        Assert.IsTrue(text.GetSetMethod() != null, "the patch assigns OpponentsRemainingText from outside the view model");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void PracticeHudPostfix_InjectsTheControllerFieldWithFourUnderscores()
+    {
+        if (!_gameLoaded)
+            Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
+        var postfix = typeof(MissionArenaPracticeFightVM_Tick_TeamPractice_Patch).GetMethod("Postfix")!;
+
+        CollectionAssert.AreEqual(new[] { "__instance", "____practiceMissionController" },
+            postfix.GetParameters().Select(p => p.Name).ToArray());
+    }
+
+    [TestMethod]
+    [TestCategory("RequiresGame")]
+    public void TryOpponentsLeft_ControllerNobodyDecidedFor_KeepsVanillasHud()
+    {
+        var args = new object?[] { UnbuiltController(), -1 };
+
+        var shown = typeof(TeamPracticeFight)
+            .GetMethod("TryOpponentsLeft", BindingFlags.Static | BindingFlags.NonPublic)!.Invoke(null, args);
+
+        Assert.AreEqual(false, shown);
+        Assert.AreEqual(0, args[1]);
+    }
+
+    /// <summary>
+    /// A team town's yard before the player fights, and a wave fight there: the controller is decided as a team fight, but
+    /// the player is not practising (<c>IsPlayerPracticing</c> is false on a controller nothing has started), so the HUD
+    /// stays vanilla's. The team list is filled in, because without it the glue answers false for a second reason and the
+    /// test would pass with the practising check removed.
+    /// </summary>
+    [TestMethod]
+    [TestCategory("RequiresGame")]
+    public void TryOpponentsLeft_ATeamControllerWhosePlayerIsNotPractising_KeepsVanillasHud()
+    {
+        var controller = UnbuiltController();
+        var teams = Activator.CreateInstance(typeof(List<>).MakeGenericType(AccessTools.TypeByName("TaleWorlds.MountAndBlade.Team")));
+        AccessTools.Field(controller.GetType(), "_AIParticipantTeams").SetValue(controller, teams);
+        Assert.IsTrue(TeamPracticeState.Decide(controller, () => true));
+        var args = new object?[] { controller, -1 };
+
+        var shown = typeof(TeamPracticeFight)
+            .GetMethod("TryOpponentsLeft", BindingFlags.Static | BindingFlags.NonPublic)!.Invoke(null, args);
+
+        Assert.AreEqual(false, shown);
+        Assert.AreEqual(0, args[1]);
+    }
 }
