@@ -30,8 +30,8 @@ public sealed class HuntPartySnapshot
     public bool IsEngagingPlayer { get; set; }
 
     /// <summary>
-    /// <c>Ai.DoNotAttackMainPartyUntil</c> is in the future: vanilla's promise to leave the player alone after a safe
-    /// passage bribe (32 h), a lord paid off in conversation (24 h) or an escape from a lost encounter (2 h).
+    /// Vanilla holds the hunter off the player: his <c>Ai.DoNotAttackMainPartyUntil</c> (bribe 32 h, lord paid off 24 h,
+    /// escape 2 h) or his faction's safe-passage oath (<c>NotAttackableByPlayerUntilTime</c>, 5 days a bribe) is ahead.
     /// </summary>
     public bool HoldsOffPlayer { get; set; }
 

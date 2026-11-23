@@ -72,6 +72,7 @@ public sealed class HunterPartyAdapter : IHunterPartyAdapter
             FactionId = faction?.StringId,
             // Null-safe, and handles eliminated factions, constant war and stances (FactionManager.cs:144-159).
             AtWarWithPlayerKingdom = playerKingdom != null && FactionManager.IsAtWarAgainstFaction(playerKingdom, faction),
+            FactionHoldsOath = faction?.NotAttackableByPlayerUntilTime.IsFuture ?? false,
             IsInAParty = party != null,
             LedPartyId = party != null && party.LeaderHero == hero ? party.StringId : null,
             CanLeadParty = hero.CanLeadParty(),
@@ -110,7 +111,9 @@ public sealed class HunterPartyAdapter : IHunterPartyAdapter
     private static bool IsEngaging(MobileParty party, MobileParty? main) =>
         main != null && party.DefaultBehavior == AiBehavior.EngageParty && party.TargetParty == main;
 
-    private static bool HoldsOff(MobileParty party) => party.Ai?.DoNotAttackMainPartyUntil.IsFuture ?? false;
+    private static bool HoldsOff(MobileParty party) =>
+        (party.Ai?.DoNotAttackMainPartyUntil.IsFuture ?? false)
+        || (party.MapFaction?.NotAttackableByPlayerUntilTime.IsFuture ?? false);
 
     public bool PinAndEngagePlayer(string partyId)
     {

@@ -289,6 +289,7 @@ public sealed class EyeOfSauronService : IEyeOfSauronHook
     /// <summary>Why a fit hunter cannot ride today, or null when he can (re-task his party, or spawn one).</summary>
     private string? WaitReason(string heroId, HunterHeroSnapshot hero)
     {
+        if (hero.FactionHoldsOath) return $"Waiting: {heroId}'s faction holds your safe-passage oath.";
         if (hero.LedPartyId != null)
         {
             string? busy = BusyReason(_adapter.ReadParty(hero.LedPartyId));
