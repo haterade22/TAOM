@@ -32,6 +32,7 @@ public sealed class CareerSyncRelayService : ICareerSyncLink
         _transport.ClientReady += _client.OnJoined;
         _transport.CareerReportReceived += OnReport;
         _transport.CareerUpdateReceived += OnUpdate;
+        _transport.HelloReceived += OnHello;
         _host.StoredCareerChanged += OnStoredCareerChanged;
         _client.Attach(this);
     }
@@ -85,6 +86,18 @@ public sealed class CareerSyncRelayService : ICareerSyncLink
 
         _client.Receive(new CareerSyncSnapshot(message.HeroId ?? "", OrNull(message.CareerId), message.Choices ?? Array.Empty<string>(),
             message.Tiers ?? Array.Empty<int>(), message.Flags ?? Array.Empty<string>()), message.Sequence, message.Refused, message.Known);
+    }
+
+    /// <summary>A broadcast goes only to connections that said hello, so a player who just said hello gets the stored careers.</summary>
+    private void OnHello(CoopPeer peer, CoopCompatHello hello)
+    {
+        if (_transport.CurrentRole != CoopRole.Server) return;
+
+        foreach (var answer in _host.Baseline())
+        {
+            if (!_transport.SendToPeer(peer, ToWire(answer)))
+                _logger.LogWarning($"[CareerSync] could not send the stored career of '{answer.Career.HeroId}' to peer {peer.Label}.");
+        }
     }
 
     /// <summary>Raised inside the career book's mutator (a death clear runs in a campaign event), so a failure stays here.</summary>

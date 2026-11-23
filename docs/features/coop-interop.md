@@ -687,6 +687,10 @@ first as a join report, and a refusal there must not wipe it.
   ways. For tiers the server applies no passive it cannot derive from the level (the filter above); a server
   check of quest-earned tiers would need the career quests to run on the server, and would become a second
   way for `CoopCareerTierTrust` to say yes.
+- A career update reaches a client on this build only from the server: another player in the same
+  mission cannot forge one over Coop's P2P link or relay, because each server message carries the
+  client's session token ([coop-compat.md](coop-compat.md), "Session token"). A client on a protocol 1
+  build has no such check.
 
 **Configuration.** TAOM's settings, Co-op, "Sync careers for co-op players" (`CoopCareerSync`, default
 on), read through `CoopSettingsProvider` in the co-op server process for each report. A dedicated server

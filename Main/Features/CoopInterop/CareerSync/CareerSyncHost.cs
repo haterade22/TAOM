@@ -90,6 +90,24 @@ public sealed class CareerSyncHost
         return new CareerSyncOutcome(CareerSyncRefusal.None, null, new CareerSyncAnswer(sent, sequence, false, true));
     }
 
+    /// <summary>
+    /// The stored career of every hero a player reported or the server changed in this process, for a player who just
+    /// said hello: a change passed on while that player loaded reached only the players who had said hello. Sequence 0:
+    /// a client counts its reports from 1 in each process, so its own hero's entry never beats its join report.
+    /// </summary>
+    public IReadOnlyList<CareerSyncAnswer> Baseline()
+    {
+        var answers = new List<CareerSyncAnswer>();
+        if (!_settings.CareerSync) return answers;
+
+        foreach (var heroId in _lastSequence.Keys)
+        {
+            if (Stored(heroId) is { } stored)
+                answers.Add(new CareerSyncAnswer(stored, 0, false, true));
+        }
+        return answers;
+    }
+
     private CareerSyncSnapshot? Stored(string heroId) =>
         _data.GetAllData().TryGetValue(heroId, out var entry) && entry != null ? CareerSyncSnapshot.Of(entry) : null;
 
@@ -101,6 +119,7 @@ public sealed class CareerSyncHost
         if (stored == null) return;
 
         _lastSequence.TryGetValue(heroId, out var sequence);
+        _lastSequence[heroId] = sequence;
         StoredCareerChanged?.Invoke(new CareerSyncAnswer(stored, sequence, false, true));
     }
 }

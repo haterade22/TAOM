@@ -11,7 +11,7 @@ namespace TAOM.CoopCompat.Messages;
 /// hero; <see cref="Refused"/> marks an answer to a refused report. Wire contract: never rename or renumber.
 /// </summary>
 [ProtoContract]
-public sealed class CoopCompatCareerUpdate : IEvent
+public sealed class CoopCompatCareerUpdate : IEvent, ISessionStamped
 {
     [ProtoMember(1)] public int ProtocolVersion { get; set; }
     [ProtoMember(2)] public long Sequence { get; set; }
@@ -22,4 +22,5 @@ public sealed class CoopCompatCareerUpdate : IEvent
     [ProtoMember(7)] public string[] Flags { get; set; } = Array.Empty<string>();
     [ProtoMember(8)] public bool Refused { get; set; }
     [ProtoMember(9)] public bool Known { get; set; }
+    [ProtoMember(10)] public string SessionToken { get; set; } = "";
 }

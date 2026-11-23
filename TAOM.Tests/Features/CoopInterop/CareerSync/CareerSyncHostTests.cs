@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -251,5 +252,37 @@ public class CareerSyncHostTests
         _data.SetCareer(Hero, "ranger");
 
         Assert.AreEqual(0, _raised.Count);
+    }
+
+    // --- Baseline for a player who just said hello: a change made while that player loaded reached nobody ---
+
+    [TestMethod]
+    public void Baseline_IsTheStoredCareerOfEveryHeroSyncedInThisProcess_AtSequenceZero()
+    {
+        var second = Substitute.For<ICareerHeroAdapter>();
+        second.Level.Returns(10);
+        _heroes.Find("Player2").Returns(second);
+        _host.Handle(Hero, Ranger1(), 3, joinReport: false);
+        _host.Handle("Player2", Ranger1("Player2"), 7, joinReport: false);
+        _data.SetCareer("changed_on_server", "ranger");
+        _data.ApplyHeroCareer(Ranger1("only_in_the_save").ToData());
+
+        var baseline = _host.Baseline();
+
+        CollectionAssert.AreEquivalent(new[] { Hero, "Player2", "changed_on_server" }, baseline.Select(a => a.Career.HeroId).ToList(),
+            "a career only in the save is in the joining player's save too");
+        Assert.IsTrue(baseline.All(a => a.Sequence == 0), "a client restart starts its counter again: 0 never beats the join report");
+        Assert.IsTrue(baseline.All(a => a.Known && !a.Refused));
+    }
+
+    [TestMethod]
+    public void Baseline_LeavesOutAReportedHeroWithNoStoredCareer_AndIsEmptyWithTheSwitchOff()
+    {
+        _host.Handle(Hero, Unknown(), 2, joinReport: false);
+        Assert.AreEqual(0, _host.Baseline().Count);
+
+        _host.Handle(Hero, Ranger1(), 3, joinReport: false);
+        _settings.CoopCareerSync = false;
+        Assert.AreEqual(0, _host.Baseline().Count);
     }
 }
