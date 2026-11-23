@@ -119,10 +119,12 @@ per-party call allocates nothing.
   released and no floor applies, but the hunter's own AI decides for itself, as any lord's does, and may still
   choose to engage the army on its own initiative.
 - **Bribes pause the hunt, and the timeout keeps counting:** each safe passage buys 32 hours of stand-off, so repeated
-  bribes can run a hunt out. The bribe also gives the player a 5-day oath not to attack the hunter's faction
-  (`NoAttackBarterable`, `IFaction.NotAttackableByPlayerUntilTime`); vanilla AI never reads it, so the hunt resumes
-  after 32 hours while the player's attack option still reads "You have sworn not to attack". Whether the hunt
-  should wait out the oath too is the maintainer's decision.
+  bribes can run a hunt out. The bribe also gives the player a 5-day oath (`NoAttackBarterable`,
+  `IFaction.NotAttackableByPlayerUntilTime`) that blocks only an attack the player starts on that faction; vanilla AI
+  never reads it. When the resumed hunter catches the player, the player defends, so the attack option stays open
+  (`MenuHelper.CheckEnemyAttackableHonorably` skips a defender), and the battle's start clears the oath
+  (`EncounterGameMenuBehavior.OnMapEventStarted`). Whether the hunt should wait out the 5 days anyway is the
+  maintainer's decision.
 - **Uninstalling mid-hunt** leaves the hunter's saved AI pin with nothing to clear it. The timeout bounds the window in
   a game that keeps TAOM; remove TAOM only between hunts.
 - **At sea:** the sea guards (`HunterAtSea`, `PlayerAtSea`) are unreachable in a supported setup. TAOM declares
@@ -296,8 +298,9 @@ Owed in game: #765 closed on 2026-10-14 with the `triage-needs-ingame` label, wh
     chasing again.
 16. **Bought off:** let the hunter catch you and pay him for safe passage. He stops chasing at once,
     `taom.print_eye_of_sauron` shows the hunt with "pinned: no" and the last hourly step "hunter promised to leave you
-    alone", and he does not come back to talk. About 32 hours later he is pinned and chasing again; until your 5-day
-    safe-passage oath ends, your attack option in that talk still reads "You have sworn not to attack".
+    alone", and he does not come back to talk. About 32 hours later he is pinned and chasing again; when he catches
+    you, you can fight him. Only if you ride at him yourself within the 5-day oath does the attack option read "You
+    have sworn not to attack".
 
 ## Changelog
 
