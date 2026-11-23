@@ -279,6 +279,18 @@ public class CultureMarketplaceStockRuleTests
     }
 
     [TestMethod]
+    public void ShippedConfig_TheodensHorseArmour_IsNeverSoldInRohan()
+    {
+        // The king's barding is Culture.vlandia merchandise in the Armory, and horse harness is not
+        // gated by armour acquisition, so only Rohan's blacklist keeps it out of the markets.
+        var paths = Substitute.For<IPathService>();
+        paths.ModuleDataPath.Returns(TAOM.Tests.Core.CultureDataFixture.ModuleDataPath());
+        var overrides = new CultureMarketplaceConfigProvider(paths, Substitute.For<IModLogger>()).GetOverridesByCulture();
+
+        Assert.IsTrue(overrides.ContainsKey("vlandia") && overrides["vlandia"].Blacklist.Contains("rohan_horse_armor_theoden"));
+    }
+
+    [TestMethod]
     public void Config_ARefusedArmourFromChain_KeepsTheStockRows()
     {
         var (provider, _) = ProviderFor(@"<Culture id=""lindon"" armour_from=""lothlorien""><Stock from=""rivendell"" kind=""weapons"" /></Culture>
