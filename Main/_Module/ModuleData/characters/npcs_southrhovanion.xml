@@ -1631,6 +1631,7 @@
         <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <Equipments>
             <EquipmentRoster>
+                <equipment slot="Item0" id="Item.empire_sword_1_t2" />
                 <equipment slot="Body" id="Item.rohan_militia_armour_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
@@ -1647,6 +1648,7 @@
         <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <Equipments>
             <EquipmentRoster>
+                <equipment slot="Item0" id="Item.empire_sword_3_t3" />
                 <equipment slot="Body" id="Item.rohan_militia_armour_b" />
                 <equipment slot="Head" id="Item.cts_rohan_helmet1" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
@@ -1665,6 +1667,7 @@
         <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <Equipments>
             <EquipmentRoster>
+                <equipment slot="Item0" id="Item.empire_sword_5_t4" />
                 <equipment slot="Body" id="Item.cts_rohan_armor3" />
                 <equipment slot="Head" id="Item.cts_rohan_helmet2" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
