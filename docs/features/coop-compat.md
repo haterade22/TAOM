@@ -66,6 +66,28 @@ current connection, never from the message, and every field is bounded before an
   `INetwork` for each send, and runs received work on the game thread through `GameThread.RunSafe`,
   which logs a throw and does not cancel the rest of the frame's queued work. `ICoopTransport` names
   no Coop type, so the services compile and run in tests without Coop.
+- Session token (Codex P1 on #1471, 2026-11-22). A client's broker also publishes what a mission peer
+  sends, over the direct P2P link (`LiteNetP2PClient`) or through Coop's relay
+  (`RelayPacketHandler` forwards the raw bytes over the server link), and nothing in the payload names
+  the real sender. So the client makes a random token (16 bytes, base64) once per Coop session (one
+  session container) and puts it in each `CoopCompatHello`, which goes to the server only. Coop
+  raises `ClientCampaignReady` again after every mission, so the hello comes again with the same
+  token. The server keeps the token per connection and stamps it on each of the four campaign
+  messages it sends that connection (`ISessionStamped`: the hello reply, the momentum snapshot, the
+  trade reply, the career update). A broadcast is one send per connection that said hello, never
+  Coop's `SendAll`; each hello and each broadcast forgets closed connections. The client drops a
+  server message whose token is not its own, and every one before its first hello in the session,
+  and logs the first drop of each session. One exception: a hello reply with no token that reports a
+  build mismatch is passed on as a bare build mismatch, because a host built before the token sends
+  none. A forged one can show that one warning and nothing else.
+- `CoopCompatProtocol.ProtocolVersion` is 2 since the token. A build that speaks 1 (v2.0.40 and the
+  co-op extras before the token) neither stamps nor checks, so each side drops the other's trade and
+  career messages, momentum snapshots and Long Defeat run-ended notices. The hello is still answered
+  across protocols, so the join notice shows the build mismatch. That needs Coop to admit the join:
+  Coop's own module check refuses a different TAOM.CoopCompat version first, so this case is two
+  builds with the same version number. A protocol 1 client stays open to a forged message of its own
+  protocol. Not covered: `CoopCompatLdRunEnded` on Coop's session channel carries no token; a forged
+  one shows a false "run ended" notice and changes no state.
 - `Handshake/SettingsHandshakeService`: on `ClientCampaignReady` the client sends a
   `CoopCompatHello` (protocol version, TAOM build text, the module version ids (MVIDs) of `TAOM.dll` and
   of both module DLLs, and its settings fingerprint). The server compares it with its own and
@@ -190,17 +212,23 @@ co-op server process: the hosting player is a client of it, like the others.
   the relay's `Tick`, and the client sends one report per action that changed its own hero's career.
 - The transport names the hero that the sender's current connection controls, as for guest trade; the
   report's `HeroId` is only compared with it. `CareerSyncHost.Handle` returns what to send: an accepted
-  career goes to every player but the sender (`BroadcastExcept`, Coop's `INetwork.SendAllBut`); a refused
-  one, or a join report that differs from the server's saved copy, goes back to the sender only
-  (`SendToPeer`). A change the server makes itself (a death clear, a tree migration) goes to every
-  player (`Broadcast`), on the server only.
+  career goes to every player that said hello but the sender (`BroadcastExcept`, one stamped send per
+  connection); a refused one, or a join report that differs from the server's saved copy, goes back to
+  the sender only (`SendToPeer`). A change the server makes itself (a death clear, a tree migration)
+  goes to every player that said hello (`Broadcast`), on the server only.
 - `CoopCompatCareerUpdate.Sequence` is the last report the server handled for that hero, so the
   player's own client drops an answer to an older report. `Known` is false when the server holds no
   entry for the hero, and the client then keeps its own copy.
-- No catch-up message on join: the join save already carries the server's career book, and Coop
-  queues messages for a peer that is still loading and replays them.
-- Two new contract types, `ProtocolVersion` 1. A peer without them drops them and keeps its careers on
-  its own PC, as before.
+- Catch-up on hello: a broadcast goes only to connections that said hello (see "Session token"), so a
+  change made while a player loaded never reaches Coop's queue for that player. When a player's hello
+  arrives, the server sends that player the stored career of every hero that a player reported or the
+  server changed (a death clear) in this server process (`CareerSyncHost.Baseline`). A career that
+  only the save holds is in the joining player's save already. The entries carry sequence 0: a client
+  counts its reports from 1 in each process, so after its first report it drops the entry for its own
+  hero, which its join report settles. The join report goes out before Coop delivers the queued
+  baseline.
+- Two new contract types, now at `ProtocolVersion` 2. A peer without them drops them and keeps its
+  careers on its own PC, as before.
 
 ## Configuration
 

@@ -11,7 +11,7 @@ namespace TAOM.CoopCompat.Messages;
 /// LadderMaterialId is "" when the rung waits for no materials.
 /// </summary>
 [ProtoContract]
-public sealed class CoopCompatTradeReply : IEvent
+public sealed class CoopCompatTradeReply : IEvent, ISessionStamped
 {
     [ProtoMember(1)] public int ProtocolVersion { get; set; }
     [ProtoMember(2)] public string RequestId { get; set; } = "";
@@ -35,4 +35,5 @@ public sealed class CoopCompatTradeReply : IEvent
     [ProtoMember(20)] public int LadderNeeded { get; set; }
     [ProtoMember(21)] public int LadderCarried { get; set; }
     [ProtoMember(22)] public string[] LadderChoices { get; set; } = Array.Empty<string>();
+    [ProtoMember(23)] public string SessionToken { get; set; } = "";
 }

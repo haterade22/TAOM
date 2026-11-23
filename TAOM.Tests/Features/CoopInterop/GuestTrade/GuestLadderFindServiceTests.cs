@@ -17,7 +17,7 @@ namespace TAOM.Tests.Features.CoopInterop.GuestTrade;
 /// Lord's materials for co-op players (docs/features/coop-interop.md, "Lords' Ladder for co-op players"): after a battle
 /// won, the co-op server rolls TAOM's own find for each co-op player's hero on the winning side (base chance: the kills
 /// are counted on the player's PC), keeps it in its save, and gives it to that hero's party once the party is free and out
-/// of battle. The local main hero is never rolled here: <c>LordsLadderBehavior</c> rolls that one.
+/// of battle. A co-op player marked as the local main hero (Coop's hideout finalize) is rolled too.
 /// </summary>
 [TestClass]
 public class GuestLadderFindServiceTests
@@ -93,11 +93,11 @@ public class GuestLadderFindServiceTests
     }
 
     [TestMethod]
-    public void OnBattleWon_TheLocalMainHero_IsNotRolledHere()
+    public void OnBattleWon_ACoopPlayerMarkedAsTheLocalHero_IsStillRolled()
     {
-        _finds.OnBattleWon(new[] { Winner("server_hero", local: true) }, Hit);
+        _finds.OnBattleWon(new[] { Winner(local: true) }, Hit);
 
-        Assert.AreEqual(0, _state.PendingFinds.Count);
+        Assert.AreEqual(3, _state.PendingFinds[Guest]);
     }
 
     [TestMethod]
