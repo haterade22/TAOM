@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -239,5 +240,33 @@ public class CareerSyncRelayServiceTests
 
         Assert.IsFalse(_data.HasCareer("Player2"));
         Assert.IsNull(_data.GetCareerStringId("Player2"));
+    }
+
+    [TestMethod]
+    public void Hello_OnTheServer_SendsThatPlayerTheStoredCareerOfEveryReportedHero()
+    {
+        _transport.CurrentRole = CoopRole.Server;
+        _transport.RaiseCareerReport(FakeCoopTransport.Peer("1"), Own, Report(Own, sequence: 2));
+        var joiner = FakeCoopTransport.Peer("2");
+
+        _transport.RaiseHello(joiner, new CoopCompatHello());
+
+        var sent = _transport.CareerUpdatesToPeer.Where(x => ReferenceEquals(x.Peer, joiner)).Select(x => x.Update).ToList();
+        Assert.AreEqual(1, sent.Count);
+        Assert.AreEqual(Own, sent[0].HeroId);
+        Assert.AreEqual("ranger", sent[0].CareerId);
+        Assert.AreEqual(0, sent[0].Sequence);
+        Assert.IsTrue(sent[0].Known);
+        Assert.AreEqual(CoopCompatProtocol.ProtocolVersion, sent[0].ProtocolVersion);
+    }
+
+    [TestMethod]
+    public void Hello_OnAClient_SendsNoBaseline()
+    {
+        _transport.CurrentRole = CoopRole.Client;
+
+        _transport.RaiseHello(FakeCoopTransport.Peer(), new CoopCompatHello());
+
+        Assert.AreEqual(0, _transport.CareerUpdatesToPeer.Count);
     }
 }

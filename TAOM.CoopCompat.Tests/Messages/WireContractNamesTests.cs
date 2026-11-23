@@ -19,17 +19,17 @@ public class WireContractNamesTests
 
     [TestMethod]
     public void Hello_Layout() => Assert.AreEqual(
-        "TAOM.CoopCompat.Messages.CoopCompatHello: 1=ProtocolVersion, 2=TaomVersion, 3=TaomMvid, 4=CoopCompatMvid, 5=SettingsGlobal, 6=GroupNames, 7=GroupHashes, 8=Conclusive, 9=ModuleOrder",
+        "TAOM.CoopCompat.Messages.CoopCompatHello: 1=ProtocolVersion, 2=TaomVersion, 3=TaomMvid, 4=CoopCompatMvid, 5=SettingsGlobal, 6=GroupNames, 7=GroupHashes, 8=Conclusive, 9=ModuleOrder, 10=SessionToken",
         Layout(typeof(CoopCompatHello)));
 
     [TestMethod]
     public void HelloReply_Layout() => Assert.AreEqual(
-        "TAOM.CoopCompat.Messages.CoopCompatHelloReply: 1=ProtocolVersion, 2=Verdict, 3=DivergentGroups, 4=BuildMismatch, 5=LoadOrderDiffers, 6=LoadOrderHostFirst, 7=LoadOrderHostSecond",
+        "TAOM.CoopCompat.Messages.CoopCompatHelloReply: 1=ProtocolVersion, 2=Verdict, 3=DivergentGroups, 4=BuildMismatch, 5=LoadOrderDiffers, 6=LoadOrderHostFirst, 7=LoadOrderHostSecond, 8=SessionToken",
         Layout(typeof(CoopCompatHelloReply)));
 
     [TestMethod]
     public void MomentumSnapshot_Layout() => Assert.AreEqual(
-        "TAOM.CoopCompat.Messages.CoopCompatMomentumSnapshot: 1=ProtocolVersion, 2=Sequence, 4=Keys, 5=Values",
+        "TAOM.CoopCompat.Messages.CoopCompatMomentumSnapshot: 1=ProtocolVersion, 2=Sequence, 4=Keys, 5=Values, 6=SessionToken",
         Layout(typeof(CoopCompatMomentumSnapshot)));
 
     [TestMethod]
@@ -46,7 +46,7 @@ public class WireContractNamesTests
     public void TradeReply_Layout() => Assert.AreEqual(
         "TAOM.CoopCompat.Messages.CoopCompatTradeReply: 1=ProtocolVersion, 2=RequestId, 3=Action, 4=Refusal, 5=Status, 6=Quantity, 7=TotalCost, 8=ResourceName, 9=ResourceId, 10=HasBalance, 11=Balance, 12=HasArmouryLevel, 13=ArmouryLevel, "
         + "14=HasLadder, 15=LadderSlot, 16=LadderReady, 17=LadderCanClaim, 18=LadderLordLevel, 19=LadderMaterialId, 20=LadderNeeded, "
-        + "21=LadderCarried, 22=LadderChoices",
+        + "21=LadderCarried, 22=LadderChoices, 23=SessionToken",
         Layout(typeof(CoopCompatTradeReply)));
 
     [TestMethod]
@@ -56,7 +56,7 @@ public class WireContractNamesTests
 
     [TestMethod]
     public void CareerUpdate_Layout() => Assert.AreEqual(
-        "TAOM.CoopCompat.Messages.CoopCompatCareerUpdate: 1=ProtocolVersion, 2=Sequence, 3=HeroId, 4=CareerId, 5=Choices, 6=Tiers, 7=Flags, 8=Refused, 9=Known",
+        "TAOM.CoopCompat.Messages.CoopCompatCareerUpdate: 1=ProtocolVersion, 2=Sequence, 3=HeroId, 4=CareerId, 5=Choices, 6=Tiers, 7=Flags, 8=Refused, 9=Known, 10=SessionToken",
         Layout(typeof(CoopCompatCareerUpdate)));
 
     [TestMethod]

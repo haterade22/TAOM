@@ -10,7 +10,11 @@ namespace TAOM.CoopCompat.Messages;
 /// </summary>
 public static class CoopCompatProtocol
 {
-    public const int ProtocolVersion = 1;
+    /// <summary>
+    /// 2: every server-to-client message carries the client's session token. A build that speaks 1 neither sends nor
+    /// checks it, so the two drop each other's requests instead of acting on them with no answer.
+    /// </summary>
+    public const int ProtocolVersion = 2;
 }
 
 /// <summary>
@@ -31,4 +35,6 @@ public sealed class CoopCompatHello : ICommand
 
     /// <summary>The client's active module ids in load order (at most 256). Empty from a peer built before it existed.</summary>
     [ProtoMember(9)] public string[] ModuleOrder { get; set; } = Array.Empty<string>();
+    /// <summary>A random token for this join, which the server echoes in every message to this client. Empty from a peer built before it existed.</summary>
+    [ProtoMember(10)] public string SessionToken { get; set; } = "";
 }
