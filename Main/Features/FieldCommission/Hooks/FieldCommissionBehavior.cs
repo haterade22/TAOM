@@ -118,8 +118,10 @@ public class FieldCommissionBehavior : CampaignBehaviorBase
 
     private void OnGameLoaded(CampaignGameStarter starter)
     {
-        if (_coopSession.IsAuthority)
-            _merit.PruneDeadPromotedHeroes(_heroCommission.IsHeroAliveAndValid);
+        if (!_coopSession.IsAuthority)
+            return;
+        foreach (var heroId in _merit.PruneDeadPromotedHeroes(_heroCommission.IsHeroAliveAndValid))
+            _heroCommission.RepairCivilianKitType(heroId);
     }
 
     private void OnNewGameCreated(CampaignGameStarter starter)

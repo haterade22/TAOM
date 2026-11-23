@@ -2178,3 +2178,11 @@ The free heroes of a story mission stand as one group, off AI control, under a M
 **Prevent:** before a co-op handler trusts a message, list every Coop path that can publish that type into the broker, the relay and the mission P2P client included, and say which one the check closes. When a fix gates delivery on a new condition, list what the old path delivered in the gap and who delivers it now. A sequence number is compared only inside the process that counts it.
 
 **Source:** [rca-coop-session-token-2026-11-22.md](../rca-coop-session-token-2026-11-22.md) classes 1 and 2.
+
+### An equipment set's type, not the slot it fills, decides where vanilla writes it back (#1544, 2026-11-23)
+
+**Why missed:** #486 fixed the `FillFrom` flag on a promoted companion's civilian set and treated the set's type as settled. The type came from earlier: for a troop with no civilian set, `Hero.SetInitialValuesFromCharacter` clones the `neutral_culture` civilian roster, whose `<EquipmentSet>` has no civilian flag, and `MBEquipmentRoster.InitEquipment` types such a set `Battle`. Vanilla's inventory Cancel (`InventoryLogic.PartyEquipment.ResetEquipment`) routes each saved copy by its type, so the civilian copy overwrote the battle kit and the player's committed gear was lost. Nothing in TAOM wrote the troop kit back, which is why a search for writers found none.
+
+**Prevent:** when a hero gets a set from a fallback, check the set's `EquipmentType` as well as its slots, and fix it where the hero is built. Before you call a hero's kit safe, list the engine readers that route by type (`EquipmentHelper.AssignHeroEquipmentFromEquipment`, `InventoryLogic.PartyEquipment.ResetEquipment`, `BasicCharacterObject.FirstCivilianEquipment`). A roster set in XML is `Battle` unless it says `civilian="true"` or `equipmentType`. A test of a kit copy fills real items, a modifier, a cosmetic item and the quest flag: an empty kit passes an implementation that erases the slots.
+
+**Source:** deep review of 2026-11-23 (lenses 2 and 5, Codex pre-review); `HeroCommissionAdapter.MakeCivilian`; [field-commission.md](../../features/field-commission.md) "The civilian set's type, and lost gear (#1544)".

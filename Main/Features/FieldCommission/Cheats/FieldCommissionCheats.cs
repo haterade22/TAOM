@@ -42,6 +42,28 @@ public static class FieldCommissionCheats
             return FormatGrant(troopId, amount, merit.GetMerit(troopId));
         });
 
+    private const string AddCompanionUsage =
+        "Format is \"taom.fc_add_companion [troopId] [name]\".\n"
+        + "Promotes one soldier of that troop from your party into a companion now: the real promotion,\n"
+        + "with no battle, offer or merit needed. The name is optional. Example: taom.fc_add_companion taom_soldier Beren";
+
+    [CommandLineFunctionality.CommandLineArgumentFunction("fc_add_companion", "taom")]
+    public static string AddCompanion(List<string> strings) =>
+        TaomConsole.RunInCampaign(strings, AddCompanionUsage, args =>
+        {
+            if (args.Count < 1) return "Expected a troop id.\n" + AddCompanionUsage;
+
+            var troopId = args[0];
+            if (MBObjectManager.Instance?.GetObject<CharacterObject>(troopId) == null)
+                return $"Unknown troop '{troopId}'. Check ModuleData/troops for the id.";
+
+            var name = args.Count > 1 ? string.Join(" ", args.Skip(1)) : null;
+            var heroId = IoC.Resolve<IFieldCommissionOfferFlowService>().PromoteNow(troopId, name);
+            return heroId == null
+                ? $"[FieldCommission] no promotion: '{troopId}' must be a soldier in your party that Field Commission can promote (not a hero, not a prison guard, an allowed race)."
+                : $"[FieldCommission] promoted one '{troopId}' to companion '{heroId}'.";
+        });
+
     [CommandLineFunctionality.CommandLineArgumentFunction("fc_status", "taom")]
     public static string Status(List<string> strings) =>
         TaomConsole.RunInCampaign(strings, StatusUsage, args =>
