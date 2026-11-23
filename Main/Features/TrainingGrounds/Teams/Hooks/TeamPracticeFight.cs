@@ -63,14 +63,27 @@ internal static class TeamPracticeFight
     /// <summary>
     /// Ends the fight in the player's favour when every fighter has entered and no team of the other side has one left.
     /// It writes 0 into vanilla's alive count before vanilla's own tick reads it, so vanilla's victory path runs unchanged.
+    /// Until the player is back at the master it also puts the count back at 0 when an ally's fall took it below
+    /// (<see cref="TeamPracticeRules.WinCountSlipped"/>).
     /// </summary>
-    internal static void TryDeclareWin(ArenaPracticeFightMissionController controller)
+    internal static void TryDeclareWin(ArenaPracticeFightMissionController controller, IModLogger? logger)
     {
-        if (!controller.IsPlayerPracticing || controller.AfterPractice || !TeamPracticeAccess.IsAvailable)
+        if (!controller.IsPlayerPracticing || !TeamPracticeAccess.IsAvailable)
             return;
 
         ref var alive = ref TeamPracticeAccess.AliveCount(controller);
         var unspawned = controller.RemainingOpponentCount - alive;
+        if (controller.AfterPractice)
+        {
+            if (TeamPracticeRules.WinCountSlipped(controller.IsPlayerSurvived, unspawned, alive))
+            {
+                logger?.LogInfo($"[TeamPractice] an ally fell after the team win: the count is put back at 0 (it was {alive})");
+                alive = 0;
+            }
+
+            return;
+        }
+
         if (unspawned > 0)
             return;
 

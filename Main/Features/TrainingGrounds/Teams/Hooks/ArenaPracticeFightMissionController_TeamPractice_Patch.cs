@@ -79,7 +79,7 @@ public static class ArenaPracticeFightMissionController_TeamPractice_Patch
             return;
         try
         {
-            TeamPracticeFight.TryDeclareWin(__instance);
+            TeamPracticeFight.TryDeclareWin(__instance, _logger);
         }
         catch (Exception ex)
         {
