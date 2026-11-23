@@ -75,8 +75,8 @@ be left pinned.
 | Free hunter | Spawned with `MobilePartyHelper.SpawnLordParty` at a reachable point 1.6 to 2.5 of the player's sight away (straight line beyond 1.5; the service passes the ring), after removing him as governor and re-checking that he belongs to no party. A failed search is not retried that day (the engine has already tried 250 points), and a refused spawn stops the day's search and is logged. |
 | Order | Host and grain first, then `SetPartyAiAction.GetActionForEngagingParty(hunter, MainParty)`, `CheckPartyNeedsUpdate`, `SetDoNotMakeNewDecisions(true)`. Re-issued hourly only when lost, since every call resets the party's movement state. |
 | Host | Registered as the hunter's party first, and its cached size limit invalidated (`MemberRoster.UpdateVersion`: `PartySizeLimit` is cached per roster version, which `MobileParty.UpdateVersionNo` does not touch), even when the top-up adds nobody; then topped up to `HunterStrengthRatio` times the player's strength (his army's when he leads one) with the host's troops, `ceil(deficit * share / power)` each, capped at `HunterMaxTroops` men. Every day the troops are topped up again (never during a battle), and the grain is brought back to three days (during a battle too). |
-| Steps (hourly) | First the end gates; then, while the player is in another lord's army, the hunter stands off (his pin released once, no re-engage, no step; the last step reads "player in another lord's army"); after a stand-off the first free hour re-pins and re-engages him once, whatever his own AI chose; while his AI has left him busy (the start's busy test: a battle, an army he leads or is attached to, a siege, a settlement, disbanding, another order's pin) the resume claims no pin, does not step, and retries the next hour. Out of sight only. The service judges the adapter's raw step state: the hunter active, not in a battle, siege, army, settlement or at sea, not visible, engaging the player; the player active, on the open map (no battle, siege, settlement, encounter or sea), no true sight, same island. Then, only beyond 1.5 S in a straight line, it rebuilds the path, walks `min(pathGap - 1.5 S - 3, StepCap)` along it, accepts the point only on the player's island with no enemy of the hunter within 3 and at least 1.5 S from the player, and moves the party. S is the player's seeing range, re-read each hour. `taom.print_eye_of_sauron` shows the last step's outcome. |
-| Speed | A main-thread frame tick finds the hunter with the locator search around the player (radius 1% beyond 1.5 S, the service's `SightMargin`, since the engine's locator skips a party at exactly its radius; no allocation) and publishes `{hunter party, in band, player speed, multiplier}`; the hunter is in band at a straight-line distance of at most 1.5 S (a NaN distance or S is out). The frame tick also stands the hunter off the moment the player is in another lord's army, and publishes him out of band whenever the hunt does not hold his pin (standing off, or not yet re-pinned). `TaomPartySpeedModel` raises the hunter to `player speed * HunterSpeedMultiplier` (never under 1) while in band, reading only that snapshot on the worker threads. The hunter's speed cache is refreshed when the in-band state flips or the player's speed moves more than 5%. |
+| Steps (hourly) | First the end gates; then, while the player is in another lord's army, the hunter stands off (his pin released once, no re-engage, no step; the last step reads "player in another lord's army"); next, while vanilla has promised the hunter will leave the player alone (`Ai.DoNotAttackMainPartyUntil` in the future: a safe passage bribe, a lord paid off in conversation, an escape from a lost encounter), he stands off the same way (the last step reads "hunter promised to leave you alone"); after a stand-off the first free hour re-pins and re-engages him once, whatever his own AI chose; while his AI has left him busy (the start's busy test: a battle, an army he leads or is attached to, a siege, a settlement, disbanding, another order's pin, the promise above) the resume claims no pin, does not step, and retries the next hour. Out of sight only. The service judges the adapter's raw step state: the hunter active, not in a battle, siege, army, settlement or at sea, not visible, engaging the player; the player active, on the open map (no battle, siege, settlement, encounter or sea), no true sight, same island. Then, only beyond 1.5 S in a straight line, it rebuilds the path, walks `min(pathGap - 1.5 S - 3, StepCap)` along it, accepts the point only on the player's island with no enemy of the hunter within 3 and at least 1.5 S from the player, and moves the party. S is the player's seeing range, re-read each hour. `taom.print_eye_of_sauron` shows the last step's outcome. |
+| Speed | A main-thread frame tick finds the hunter with the locator search around the player (radius 1% beyond 1.5 S, the service's `SightMargin`, since the engine's locator skips a party at exactly its radius; no allocation) and publishes `{hunter party, in band, player speed, multiplier}`; the hunter is in band at a straight-line distance of at most 1.5 S (a NaN distance or S is out). The frame tick also stands the hunter off the moment the player is in another lord's army or the sight reading shows vanilla's promise to leave the player alone, and publishes him out of band whenever the hunt does not hold his pin (standing off, or not yet re-pinned). `TaomPartySpeedModel` raises the hunter to `player speed * HunterSpeedMultiplier` (never under 1) while in band, reading only that snapshot on the worker threads. The hunter's speed cache is refreshed when the in-band state flips or the player's speed moves more than 5%. |
 | Size | `TaomPartySizeModel` lifts the hunter's limit to the larger of its raw and weighted head count, before the TroopWeight line, so the size sheds (the TroopWeight shed and vanilla's size rule) never trim the host. It does not stop vanilla's wage-limit desertion (up to 20 men a day once the clan leader holds 90,000 gold or less); the daily top-up replaces those men. |
 | End | The first of: a battle the hunter's side lost, or the player's battle against the hunter that someone won (`HuntBattleReader` reads the winner and the hunter's side at `MapEventEnded`; a flee, with no winner, never ends the hunt); the party destroyed, missing or under another leader; the hunter dead, captured or a fugitive; the war ending; the player kingdomless; a co-op session, an unprobeable co-op mod or a server; `HuntTimeoutDays`; the switch off; `taom.clear_eye_hunt`. The gates run at the hunter's hourly tick as well as daily, so a peace or a kingdom change ends the hunt within the hour. Every end releases the pin (dropping an engage order on the player and having the party rethink next hour) unless a stand-off already released it, clears the snapshot, refreshes the size limit and the speed and starts the cooldown. A start refused after the host was registered clears it and refreshes the size limit too. |
 
@@ -118,6 +118,11 @@ per-party call allocates nothing.
 - **Standing off frees the hunter's AI:** while the player is in another lord's army the hunt's order and pin are
   released and no floor applies, but the hunter's own AI decides for itself, as any lord's does, and may still
   choose to engage the army on its own initiative.
+- **Bribes pause the hunt, and the timeout keeps counting:** each safe passage buys 32 hours of stand-off, so repeated
+  bribes can run a hunt out. The bribe also gives the player a 5-day oath not to attack the hunter's faction
+  (`NoAttackBarterable`, `IFaction.NotAttackableByPlayerUntilTime`); vanilla AI never reads it, so the hunt resumes
+  after 32 hours while the player's attack option still reads "You have sworn not to attack". Whether the hunt
+  should wait out the oath too is the maintainer's decision.
 - **Uninstalling mid-hunt** leaves the hunter's saved AI pin with nothing to clear it. The timeout bounds the window in
   a game that keeps TAOM; remove TAOM only between hunts.
 - **At sea:** the sea guards (`HunterAtSea`, `PlayerAtSea`) are unreachable in a supported setup. TAOM declares
@@ -283,11 +288,16 @@ Owed in game: #765 closed on 2026-10-14 with the `triage-needs-ingame` label, wh
     chasing.
 13. **Kingdomless:** leave your kingdom with a high score; no hunt starts, and a running one ends.
 14. **Flee:** let the hunter catch you and choose "Try to get away". `taom.print_eye_of_sauron` still shows the hunt,
-    and within the hour he engages you again.
+    and within a few hours he engages you again (vanilla may first give you up to 2 hours' grace, which the hunt
+    honours).
 15. **Another lord's army:** with a high score, join another lord's army; no hunt starts while you stay. Start one,
     then join an army: the hunter stops chasing at once, `taom.print_eye_of_sauron` shows the hunt with "pinned: no" and
     the last hourly step "player in another lord's army"; leave the army and within the hour he is pinned and
     chasing again.
+16. **Bought off:** let the hunter catch you and pay him for safe passage. He stops chasing at once,
+    `taom.print_eye_of_sauron` shows the hunt with "pinned: no" and the last hourly step "hunter promised to leave you
+    alone", and he does not come back to talk. About 32 hours later he is pinned and chasing again; until your 5-day
+    safe-passage oath ends, your attack option in that talk still reads "You have sworn not to attack".
 
 ## Changelog
 
@@ -304,6 +314,11 @@ Owed in game: #765 closed on 2026-10-14 with the `triage-needs-ingame` label, wh
   locator search reaches just past 1.5 S.
 - 2026-10-14: review follow-ups (#792): the hunt popup's map-free check reads the stored `Campaign.Current?.MainParty`;
   the computed `PartyBase.MainParty` throws while it is null.
+- 2026-11-23: the hunt honours vanilla's promise not to attack the player (`Ai.DoNotAttackMainPartyUntil`: a safe
+  passage bribe 32 h, a lord paid off in conversation 24 h, an escape from a lost encounter 2 h). The hourly re-engage
+  overrode it, so a bought-off hunter kept catching the player in an encounter he would not fight. He now stands off
+  as in another lord's army (hourly and frame tick) and is re-pinned once the promise runs out; a hunt does not start
+  on a hunter who holds it.
 
 ## GitHub Issue
 
