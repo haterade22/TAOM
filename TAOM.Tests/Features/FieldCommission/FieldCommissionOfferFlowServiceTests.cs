@@ -236,4 +236,48 @@ public class FieldCommissionOfferFlowServiceTests
         _merit.DidNotReceiveWithAnyArgs().RecordPromotedHero(null);
         Assert.IsFalse(_sut.IsShowingOffer);
     }
+
+    // PromoteNow is the dev-console path (#1544): the same creation steps as an accepted offer, with
+    // no inquiry chain and no merit deduction, so a tester can get a promoted companion at once.
+    [TestMethod]
+    public void PromoteNow_TroopTheOfferPathWouldRefuse_BuildsNothing()
+    {
+        // A hero character (main_hero included) is in the roster, so without the gate the console
+        // would build a hero from it and take the player out of his own party (deep review, #1544).
+        _merit.CanPromote("main_hero").Returns(false);
+
+        Assert.IsNull(_sut.PromoteNow("main_hero", null));
+        _heroCommission.DidNotReceiveWithAnyArgs().CreateCompanionFromTroop(null, null, null);
+        _roster.DidNotReceiveWithAnyArgs().RemoveOneFromRoster(null);
+    }
+
+    [TestMethod]
+    public void PromoteNow_CreatesTheHero_TakesTheSoldierOutAndRecordsTheHero()
+    {
+        _merit.CanPromote("troop_a").Returns(true);
+        _roster.GetTroopInfo("troop_a").Returns(new TroopInfo("troop_a", "Troop A", false, false, 0, 10));
+        _roster.GetTroopSkillValues("troop_a").Returns(new Dictionary<string, int>());
+        _roster.RemoveOneFromRoster("troop_a").Returns(true);
+        _heroCommission.CreateCompanionFromTroop("troop_a", Arg.Any<CommissionSkillPlan>(), "Sir Test").Returns("hero_1");
+
+        var heroId = _sut.PromoteNow("troop_a", "Sir Test");
+
+        Assert.AreEqual("hero_1", heroId);
+        _roster.Received(1).RemoveOneFromRoster("troop_a");
+        _merit.Received(1).RecordPromotedHero("hero_1");
+        _merit.DidNotReceiveWithAnyArgs().CompleteOffer(null);
+    }
+
+    [TestMethod]
+    public void PromoteNow_HeroCreationFails_ReturnsNullAndTouchesNothing()
+    {
+        _merit.CanPromote("troop_a").Returns(true);
+        _roster.GetTroopInfo("troop_a").Returns(new TroopInfo("troop_a", "Troop A", false, false, 0, 10));
+        _roster.GetTroopSkillValues("troop_a").Returns(new Dictionary<string, int>());
+        _heroCommission.CreateCompanionFromTroop("troop_a", Arg.Any<CommissionSkillPlan>(), Arg.Any<string>()).Returns((string)null);
+
+        Assert.IsNull(_sut.PromoteNow("troop_a", null));
+        _roster.DidNotReceiveWithAnyArgs().RemoveOneFromRoster(null);
+        _merit.DidNotReceiveWithAnyArgs().RecordPromotedHero(null);
+    }
 }

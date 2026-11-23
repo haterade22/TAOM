@@ -260,7 +260,7 @@ literal, and those two must describe the same game.
 | `Main/Features/FieldCommission/Hooks/FieldCommissionDismissDialogBehavior.cs` | `CampaignBehaviorBase` entry point: the dismissal dialogue line, removal armed on `ConversationEnded` (#540) |
 | `Main/Features/FieldCommission/Hooks/FieldCommissionDismissMenuBehavior.cs` | `CampaignBehaviorBase` entry point: the settlement-menu picker option (#540) |
 | `Main/Features/FieldCommission/Hooks/MapEventSideHelper.cs` | Pure `MapEventSide` boundary helper (keeps the behavior under the ADR-002 line budget) |
-| `Main/Features/FieldCommission/Cheats/FieldCommissionCheats.cs` | `taom.fc_grant_merit`, `taom.fc_status` |
+| `Main/Features/FieldCommission/Cheats/FieldCommissionCheats.cs` | `taom.fc_grant_merit`, `taom.fc_add_companion`, `taom.fc_status` |
 | `Main/Adapters/ITroopRosterQueryAdapter.cs` / `TroopRosterQueryAdapter.cs` | Wraps `MobileParty`/`CharacterObject`/`SkillObject` roster + troop-template queries (and the two roster-count writes: the promotion decrement, the dismissal refund) |
 | `Main/Adapters/IHeroCommissionAdapter.cs` / `HeroCommissionAdapter.cs` | Wraps `HeroCreator`/`Hero`/`HeroDeveloper`/`AddCompanionAction`/`AddHeroToPartyAction`/`ClanTierModel`; for dismissal, the hero snapshot and `KillCharacterAction.ApplyByRemove` |
 | `Main/Adapters/IInquiryPresenterAdapter.cs` / `InquiryPresenterAdapter.cs` | Wraps `InformationManager`/`TextObject`/`InquiryData`/`TextInquiryData`, and for the dismissal picker `MBInformationManager`/`MultiSelectionInquiryData` |
@@ -427,6 +427,32 @@ Full mechanism, the campaign-wide-singleton trap in `Hero.BattleEquipment` and f
 bandit-culture stealth variant: [harmony-patch-registry.md](../reference/harmony-patch-registry.md)
 under `Patch71_HeroResetEquipmentsGuard`.
 
+## The civilian set's type, and lost gear (#1544)
+
+A player reported that a promoted companion's gear went back to the troop's default kit after some
+time, and the items they had given him were gone. The player's exact trigger is not known. The
+mechanism below produces that symptom, and a Codex probe reproduced it by calling the engine's own
+`ResetEquipment` on test objects; it was not reproduced in a game.
+
+1. For a troop with no civilian set, `Hero.SetInitialValuesFromCharacter` (v1.5.7 Hero.cs:2321-2350)
+   clones a set from `neutral_culture`'s `default_civilian_equipment_roster_neutral`. That roster
+   (SandBoxCore `sandboxcore_equipment_sets.xml:16198`) declares `<EquipmentSet>` with no `civilian`
+   or `equipmentType` attribute, and `MBEquipmentRoster.InitEquipment` (:91) types such a set
+   `Battle`. The #486 fix to the `FillFrom` flag kept that type; it did not cause it.
+2. Opening the inventory saves a copy of each hero's three sets
+   (`InventoryLogic.PartyEquipment.InitializeCopyFrom`, :56-72). Cancel or Reset runs
+   `PartyEquipment.ResetEquipment` (:74-99), which writes each copy back to the set of the same type.
+   The civilian copy is typed `Battle`, so it lands in the battle set after the real battle copy, and
+   the battle kit becomes the civilian contents: the troop's kit. The item roster goes back to the
+   session's backup, so gear equipped in an earlier, committed session is not returned.
+
+`HeroCommissionAdapter.MakeCivilian` retypes the set at promotion. On load,
+`FieldCommissionBehavior` runs `RepairCivilianKitType` for every promoted id that survives the prune,
+which retypes older companions and writes one `[FieldCommission] ... retyped Civilian (#1544)` line
+for each. Gear already lost cannot be recovered. `taom.fc_add_companion` promotes a soldier at once
+for this check; it refuses any troop `CanPromote` refuses, so a hero character (the player's own
+included) cannot be passed to it.
+
 ## Dismissing a promoted companion (return to the ranks, #540)
 
 Nothing in the feature took a commission back until #540. Vanilla's own dismissal exists, but players
@@ -585,6 +611,10 @@ Companions promoted before the change keep their stored tartan; that is expected
 - **#1431**: a promoted dwarf wore the Highland Tartan in the civilian slots. Code complete; the in-game
   check is under "How to verify in game". Follow-ups: #1432 (no `Civilian` item flag on dwarf tunics),
   #1433 (other races and human realms).
+- **#1544**: a promoted companion lost given gear to the troop kit after an inventory Cancel. Code
+  complete with unit tests; the in-game check is owed: `taom.fc_add_companion <troopId>`, give the
+  companion new battle gear and press Done, open the inventory again and press Cancel. Pass: the new
+  gear stays. On an older save, the load writes one "retyped Civilian" line for each promoted companion.
 
 ---
 

@@ -34,6 +34,11 @@ public interface IHeroCommissionAdapter
     /// Used to prune <c>_taom_fc_promotedHeroes</c> on load.</summary>
     bool IsHeroAliveAndValid(string heroId);
 
+    /// <summary>Retypes a promoted hero's civilian set Civilian when an older build left it typed
+    /// Battle, which let vanilla's inventory Cancel overwrite the battle kit (#1544). Slots are kept.
+    /// True when it changed the set.</summary>
+    bool RepairCivilianKitType(string heroId);
+
     /// <summary>What the dismissal verdict needs to know about the hero, or
     /// <see cref="PromotedHeroSnapshot.Missing"/> when no living hero carries the id.</summary>
     PromotedHeroSnapshot GetPromotedHeroSnapshot(string heroId);
