@@ -39,6 +39,7 @@ public class DiplomacyBehaviorPersistenceTests
     private static DiplomacyBehavior Behavior(DiplomacyService service) =>
         new DiplomacyBehavior(service, Substitute.For<IModLogger>(), Substitute.For<ICoopSessionProvider>());
 
+    [TestCategory("RequiresGame")]   // constructs CampaignBehaviorBase
     [TestMethod]
     public void SyncData_SaveThenLoad_RestoresTheBrokenPairBeforeEnforcementRuns()
     {
@@ -61,6 +62,7 @@ public class DiplomacyBehaviorPersistenceTests
         _alliance.Received().StartAlliance("erebor", "sturgia");
     }
 
+    [TestCategory("RequiresGame")]   // constructs CampaignBehaviorBase
     [TestMethod]
     public void SyncData_ASaveWithoutTheKey_LoadsAnEmptySet()
     {
@@ -72,6 +74,7 @@ public class DiplomacyBehaviorPersistenceTests
         Assert.AreEqual(0, service.BrokenAlliancesForSave().Count);
     }
 
+    [TestCategory("RequiresGame")]   // constructs CampaignBehaviorBase
     [TestMethod]
     public void SyncData_Saving_WritesTheSortedPairs()
     {
@@ -85,6 +88,7 @@ public class DiplomacyBehaviorPersistenceTests
         CollectionAssert.AreEqual(new[] { "empire_s|isengard" }, store.Get<List<string>>("_taom_brokenAlliances").ToArray());
     }
 
+    [TestCategory("RequiresGame")]   // constructs CampaignBehaviorBase
     [TestMethod]
     public void Constructor_ANewCampaign_ClearsThePairsOfTheCampaignBefore()
     {

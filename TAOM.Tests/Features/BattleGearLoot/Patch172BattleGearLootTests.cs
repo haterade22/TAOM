@@ -18,6 +18,7 @@ public class Patch172BattleGearLootTests
         Assert.IsTrue(Patch172_BattleGearLoot.Prefix(null!, null!, null!, 1, null!));
     }
 
+    [TestCategory("RequiresGame")]   // constructs ItemRoster
     [TestMethod]
     public void Prefix_SwitchOff_ReturnsTrue_AndCallsNothing()
     {
@@ -38,6 +39,7 @@ public class Patch172BattleGearLootTests
         armourConfig.DidNotReceive().GetConfig();
     }
 
+    [TestCategory("RequiresGame")]   // constructs ItemRoster
     [TestMethod]
     public void Prefix_NoBodyShareForThePlayer_LeavesVanillaWithoutReadingTheSettings()
     {

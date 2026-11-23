@@ -209,8 +209,8 @@ first target only, so diff its other targets by hand (#1038): `grep -rlE 'IEnume
      after Steam, so re-check before calling it blocked.
      `GameReferencesTargetsTests.BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild` goes
      red as soon as the engine moves (`DefaultChangeSet` is compiled in), whatever the pin says, and
-     stays red until BUTR publishes. No CI uses the reference assemblies since the workflows were
-     removed (`c8d69a0dc`). After the pin moves, run the three no-game commands in
+     stays red until BUTR publishes. The PR checks workflow builds every pull request against those
+     assemblies, so its C# job is red the same way until then. After the pin moves, run the three no-game commands in
      `.ai/verification.md` and quote that run.
    - The per-build native address pins. The two C# `KnownBuilds` tables, in
      `ClipBudgetSignatureInstalledBinaryTests` and `SkeletonBufferInstalledBinaryTests`, skip in the

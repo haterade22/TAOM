@@ -413,6 +413,7 @@ public class CharacterScreenPrefabTests
         Assert.IsNotNull(stats.Descendants().FirstOrDefault(x => (string?)x.Attribute("Text") == "@Definition"));
     }
 
+    [TestCategory("RequiresGame")]   // constructs ViewModel
     [TestMethod]
     public void TraitValue_IsSignedAndFlagsNegative()
     {
@@ -429,6 +430,7 @@ public class CharacterScreenPrefabTests
         Assert.AreEqual("+2", positive.ValueText);
     }
 
+    [TestCategory("RequiresGame")]   // constructs MBBindingList
     [TestMethod]
     public void RebuildTraits_MemberChange_ReplacesEveryItemWithTheNewMembers()
     {
@@ -886,6 +888,7 @@ public class CharacterScreenPrefabTests
         }
     }
 
+    [TestCategory("RequiresGame")]   // runs Color.ConvertStringToColor
     [DataTestMethod]
     [DataRow(2, true, false, 1f, 1f, DisplayName = "chosen: gold, the tick")]
     [DataRow(1, false, true, 1f, 1f, DisplayName = "available: ivory, the diamond")]
@@ -904,6 +907,7 @@ public class CharacterScreenPrefabTests
         if (state != 1 && state != 2) Assert.IsTrue(look.IconAlpha < 1f, "a dimmed icon");
     }
 
+    [TestCategory("RequiresGame")]   // runs Color.ConvertStringToColor
     [TestMethod]
     public void PerkLook_LockedIsFainterThanRejected()
     {

@@ -5277,3 +5277,11 @@ The command trial turned stamina on with an in-memory switch and cleared it when
 **Prevent:** When a fix is "every X", write it as one function that every X goes through and name that function in the list, in place of a list of call sites. Read the out-of-scope list against each "every" before the list goes out. Ask the implementer's report for the paths it found and did not change.
 
 **Source:** the second look at the #1529 fixes (lens 5 F1 and the Codex pass, prompt [codex-rereview-training-grounds-fixes-2026-11-22.prompt.md](../codex-rereview-training-grounds-fixes-2026-11-22.prompt.md)), fixed by `WaveFightDirector.AnnounceRefund`.
+
+### A manual check ported to code matches at least what the person matched, on real input (#1543, 2026-11-22)
+
+**Why missed:** `tools/pr_review_watch.py` ports the `/review-outside-pr` Phase 1 checks. Each port came out narrower than the check: no-patch files had to have `changes > 0` (GitHub reports a binary with 0), a rename was checked only on its new name, and the high-risk names matched only at the root and in one case. The tests were built from the same assumptions, so they passed.
+
+**Prevent:** Before you code a check a person does by hand, fetch one real response for each input shape the code reads (binary, rename, removal, nested path, other case) and build the fixtures from those. Write down each place the code is narrower than the manual check, and keep it only with a reason. A drift test between the two compares how entries match, not only their names.
+
+**Source:** [rca-pr-review-watcher-2026-11-22.md](../rca-pr-review-watcher-2026-11-22.md), the tier 2 review of #1543 (Tooling lens findings 1 to 3).

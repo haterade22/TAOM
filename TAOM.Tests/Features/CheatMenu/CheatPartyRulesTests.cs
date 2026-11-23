@@ -199,6 +199,7 @@ public class CheatPartyRulesTests
             "CampaignEvents.OnPlayerCharacterChangedEvent.AddNonSerializedListener(this, (_, _, _, _) => _service.OnPlayerCharacterChanged())");
     }
 
+    [TestCategory("RequiresGame")]   // constructs CampaignBehaviorBase
     [TestMethod]
     public void ANewCampaign_StartsWithTheSwitchOff()
     {

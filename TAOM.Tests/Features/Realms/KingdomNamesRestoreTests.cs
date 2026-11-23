@@ -59,6 +59,7 @@ public class KingdomNamesRestoreTests
     // bare template would come back without its variable. A plain name keeps its {=key}, so it follows a language change.
     // #1391: the world snapshot reads kingdom names through this overload, so a kingdom title keeps the {=key} of the
     // kingdom's name.
+    [TestCategory("RequiresGame")]   // constructs TextObject
     [TestMethod]
     public void OwnText_ATextObjectWithAKey_KeepsTheKey()
     {
@@ -67,6 +68,7 @@ public class KingdomNamesRestoreTests
         Assert.AreEqual("westoft", KingdomNames.OwnText(null, "westoft"));
     }
 
+    [TestCategory("RequiresGame")]   // constructs TextObject
     [TestMethod]
     public void OwnText_ATextObjectWithAVariable_KeepsItsResolvedText()
     {
@@ -79,6 +81,7 @@ public class KingdomNamesRestoreTests
     // #1391: the engine sets IS_SETTLEMENT, IS_CASTLE, IS_TOWN and IS_HIDEOUT on every settlement name
     // (Settlement.Deserialize, SetSettlementProperties), so the kingdom rule would resolve it. No settlement name's
     // text uses them, so a settlement title keeps the raw {=key} text.
+    [TestCategory("RequiresGame")]   // constructs TextObject
     [TestMethod]
     public void SettlementNameText_AFlaggedSettlementName_KeepsTheKey()
     {

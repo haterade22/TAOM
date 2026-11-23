@@ -59,6 +59,7 @@ public class BattleGearLootWiringTests
         Assert.IsInstanceOfType(container.Resolve<IBattleGearLootSettingsProvider>(), typeof(BattleGearLootSettingsProvider));
     }
 
+    [TestCategory("RequiresGame")]   // constructs ItemRoster
     [TestMethod]
     public void InitializeStatics_GivesThePatchItsService_AndTheSwitchOffLeavesVanilla()
     {

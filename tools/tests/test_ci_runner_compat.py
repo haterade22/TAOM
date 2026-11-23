@@ -1,5 +1,5 @@
 """`/verify` runs the tool tests with the standard library only: `python -m unittest discover -s tools/tests -t .`
-(the retired GitHub CI did the same), with no pytest required. A module that imports pytest fails to import there, and
+(the PR checks run the same command with pytest installed), with no pytest required. A module that imports pytest fails to import there, and
 one written as module-level `def test_*` functions collects 0 tests, so its checks never run there while passing
 under pytest (the hill troll binder's 13 tests, 2026-09-25 deep review).
 
@@ -32,7 +32,7 @@ def pytest_modules(folder=HERE):
 class CiRunnerCompatTests(unittest.TestCase):
     def test_no_new_tool_test_module_needs_pytest(self):
         new = sorted(pytest_modules() - PYTEST_BASELINE)
-        self.assertEqual(new, [], "these tool test modules import pytest, which CI's unittest runner does not have; "
+        self.assertEqual(new, [], "these tool test modules import pytest, which the plain unittest runner of /verify does not have; "
                                   "write them as unittest.TestCase classes (tempfile for tmp_path, "
                                   "contextlib.redirect_stdout for capsys)")
 
