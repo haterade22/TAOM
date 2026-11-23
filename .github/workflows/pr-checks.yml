@@ -9,8 +9,8 @@ name: PR checks
 # code on the game workstation). The token is read-only and the jobs use no secrets. A fork PR from any outside
 # contributor waits for the maintainer's approval before it runs (the repository's Actions setting,
 # all_external_contributors). Actions are pinned to commit SHAs. dotnet test and unittest exit 0 when nothing ran,
-# so each test step asserts a floor on the number of tests it executed: about 5% under a run on 2026-11-22 for the
-# C# steps (unit 38,012, gate 781) and 9% under it for the tool tests (10,943).
+# so each test step asserts a floor on the number of tests it executed, skips left out: about 5% under a run on
+# 2026-11-22 for the C# steps (unit 38,012, gate 781) and 7% under it for the tool tests (10,750 of 10,884 ran).
 # Doc: docs/features/pr-review-automation.md.
 
 on:
@@ -133,13 +133,18 @@ jobs:
           RC=$?
           set -e
           echo "$OUT"
-          RAN=$(echo "$OUT" | grep -oE 'Ran [0-9]+ test' | tail -1 | awk '{print $2}')
+          # "Ran N" counts skipped tests too, so the floor applies to N minus the skips. The step shell runs with
+          # -e and pipefail, so a grep that finds nothing must not end it before the messages below.
+          RAN=$(echo "$OUT" | grep -oE 'Ran [0-9]+ test' | tail -1 | awk '{print $2}' || true)
+          SKIPPED=$(echo "$OUT" | grep -oE 'skipped=[0-9]+' | tail -1 | cut -d= -f2 || true)
           if [ -z "$RAN" ]; then
             echo "::error::unittest printed no summary line, so discovery did not complete. This is not a pass."
             exit 1
           fi
-          if [ "$RAN" -lt 10000 ]; then
-            echo "::error::Only $RAN tests ran, expected at least 10000. Collection is broken or the search root moved."
+          EXECUTED=$((RAN - ${SKIPPED:-0}))
+          echo "tools: ran=$RAN skipped=${SKIPPED:-0} executed=$EXECUTED"
+          if [ "$EXECUTED" -lt 10000 ]; then
+            echo "::error::Only $EXECUTED tests executed ($RAN ran, ${SKIPPED:-0} skipped), expected at least 10000. Collection is broken, the search root moved or tests skip that should run."
             exit 1
           fi
           exit $RC

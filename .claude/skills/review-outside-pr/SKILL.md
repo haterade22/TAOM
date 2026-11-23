@@ -50,12 +50,14 @@ gh pr view <N> --json number,title,author,baseRefName,headRefName,headRepository
    it gets a line-by-line read by the session itself, never only by a subagent:
    `*.csproj`, `*.props`, `*.targets`, `*.sln`, `*.rsp`, `*.runsettings`, `NuGet.config`,
    `global.json`, `dotnet-tools.json`, `launchSettings.json`, `build.ps1`, `setup-dev-env.ps1`, `.claude/**`, `.ai/**`,
-   `.agents/**`, `.codex/**`, `.mcp.json`, `AGENTS.md`, `CLAUDE.md`, `.github/**`, `.gitattributes`,
-   `.gitmodules`, `.vscode/**`, `.githooks/**`, and any script under `tools/` that a hook, the build
-   or a test runs. Each entry matches at any depth and in any case (a nested CLAUDE.md or
-   nuget.config is read by its tool), and a rename counts its old name.
+   `.agents/**`, `.codex/**`, `.mcp.json`, `AGENTS.md`, `CLAUDE.md`, `CLAUDE.local.md`, `.github/**`,
+   `.gitattributes`, `.gitmodules`, `.vscode/**`, `.githooks/**`,
+   and any script under `tools/` that a hook, the build or a test runs. Each entry matches at any depth and in any case (a nested CLAUDE.md or
+   nuget.config is read by its tool), and a rename counts its old name. Such a script runs with
+   tools/ first on its import path, so a new package or source file in tools/ named like a module it
+   imports (the standard library's included, such as tools/json/) replaces that module.
    `tools/pr_review_watch.py` keeps the same list (`HIGH_RISK`) and finds the scripts a hook or the
-   build runs; a script that only a test runs is the session's check.
+   build runs and the names they import; a script that only a test runs is the session's check.
 4. **Read every added line.** The session reads the whole diff, not a summary. Flag and explain:
    - process launch, shell calls, or a new network client in mod or tool code
    - reflection that loads an assembly or calls a method by a computed name

@@ -20,8 +20,9 @@ A PR that passes gets a headless `claude -p` review. The PR's diff, body and cha
 the API, never checked out, so no git hook or build of the PR runs) go into its review folder. The model may only
 read: the available tools are Read, Grep and Glob, every tool that runs, writes, fetches or delegates is denied as
 well, no MCP server loads and only the project settings apply. It reads trunk in the checkout this script is in
-for context. The report goes to <out>/pr-<N>-<sha7>/report.md; a Windows notification names the PR number and the
-verdict only, never PR text.
+for context. Every PR read names the head the PR list gave (the compare API and the contents API at that SHA), so
+a push during a review cannot mix two heads. The report goes to <out>/pr-<N>-<head>/report.md; a Windows
+notification names the PR number and the verdict only, never PR text.
 
 Nothing is posted to GitHub, nothing is built and nothing is merged: those wait for the maintainer's word
 (/review-outside-pr open). The state file <out>/state.json records the head each PR was reviewed at. A failed
@@ -52,6 +53,8 @@ DEFAULT_MODEL = "opus"
 MAX_ATTEMPTS = 3
 LOCK_STALE_SECONDS = 2 * 3600
 CLAUDE_TIMEOUT_SECONDS = 45 * 60
+# gh pages the list itself; at 100, 100 reviewed PRs would hide every later one for good.
+PR_LIST_LIMIT = 1000
 
 # The /review-outside-pr Phase 1 high-risk list, in the skill's spelling (a test keeps the two equal). Each entry
 # matches at any depth and in any case: a nested CLAUDE.md or nuget.config is read by its tool, and a Windows
@@ -59,17 +62,20 @@ CLAUDE_TIMEOUT_SECONDS = 45 * 60
 # other entry a file name.
 HIGH_RISK = ["*.csproj", "*.props", "*.targets", "*.sln", "*.rsp", "*.runsettings", "NuGet.config", "global.json",
              "dotnet-tools.json", "launchSettings.json", "build.ps1", "setup-dev-env.ps1", ".claude/*", ".ai/*",
-             ".agents/*", ".codex/*", ".mcp.json", "AGENTS.md", "CLAUDE.md", ".github/*", ".gitattributes",
-             ".gitmodules", ".vscode/*", ".githooks/*"]
+             ".agents/*", ".codex/*", ".mcp.json", "AGENTS.md", "CLAUDE.md", "CLAUDE.local.md", ".github/*",
+             ".gitattributes", ".gitmodules", ".vscode/*", ".githooks/*"]
 RISKY_SUFFIXES = tuple(p[1:].casefold() for p in HIGH_RISK if p.startswith("*."))
 RISKY_DIRS = {p[:-2].casefold() for p in HIGH_RISK if p.endswith("/*")}
 RISKY_NAMES = {p.casefold() for p in HIGH_RISK if not p.startswith("*.") and not p.endswith("/*")}
 
 # Where trunk runs tools/ scripts without anyone asking: hooks, settings and the build. A PR that changes one of
-# those scripts, or a tools/ module one of them imports, changes what runs on the next commit or build.
+# those scripts, or a tools/ module one of them imports, changes what runs on the next commit or build. Such a script
+# runs as `python tools/x.py`, so tools/ is first on sys.path: a package (tools/json/) or another source file
+# (tools/json.pyw) of a name it imports, the standard library's included, is imported in place of the real module.
 SCRIPT_RUNNERS = [".claude/hooks/*", ".claude/settings.json", ".githooks/*", "*.props", "*.targets", "*/*.props",
                   "*/*.targets", "*/*.csproj", "build.ps1"]
 TOOL_SCRIPT = re.compile(r"tools/[\w./-]+?\.(?:py|ps1|sh)\b")
+IMPORT_SUFFIXES = (".py", ".pyw", ".pyc", ".pyd", ".so")
 
 # Characters a model reads and a person does not see: zero-width, bidirectional, invisible operators, blank
 # letters that are valid in a C# name, tag characters and variation selectors. The skill's grep lists the same
@@ -79,8 +85,10 @@ HIDDEN_RANGES = [(0x00AD, 0x00AD), (0x034F, 0x034F), (0x061C, 0x061C), (0x115F, 
                  (0xFEFF, 0xFEFF), (0xFFA0, 0xFFA0), (0xFFF9, 0xFFFB), (0xE0000, 0xE007F), (0xE0100, 0xE01EF)]
 HIDDEN = re.compile("[" + "".join(chr(lo) if lo == hi else f"{chr(lo)}-{chr(hi)}" for lo, hi in HIDDEN_RANGES) + "]")
 BAD_NAME_CHARS = re.compile(r'[\x00-\x1f\x7f<>:"|?*\\]')
-DEVICE_NAMES = re.compile(r"^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?$", re.IGNORECASE)
-VERDICT = re.compile(r"^\*\*Verdict:\*\*\s*(LOOKS RIGHT|CONCERNS|STOP)\b", re.MULTILINE)
+DEVICE_NAMES = re.compile(r"^(con|prn|aux|nul|com[1-9¹²³]|lpt[1-9¹²³])(\..*)?$",
+                          re.IGNORECASE)
+# Matched on the answer's first line only: a review that quotes a PR's fake verdict further down keeps its own.
+VERDICT = re.compile(r"\*\*Verdict:\*\*\s*(LOOKS RIGHT|CONCERNS|STOP)\b")
 
 READ_TOOLS = ["Read", "Grep", "Glob"]
 DENIED_TOOLS = ["Bash", "PowerShell", "Edit", "Write", "NotebookEdit", "WebFetch", "WebSearch", "Agent", "Task",
@@ -88,9 +96,13 @@ DENIED_TOOLS = ["Bash", "PowerShell", "Edit", "Write", "NotebookEdit", "WebFetch
 
 
 def is_high_risk(path, guarded=frozenset()):
+    """`guarded` holds tools/ script paths ("tools/x.py") and the names a guarded script imports ("tools/x"); a
+    name matches a package folder of that name, or a file of that name with an import suffix."""
     parts = [p.casefold() for p in path.split("/")]
+    module = (len(parts) > 1 and parts[0] == "tools" and (len(parts) > 2 or parts[1].endswith(IMPORT_SUFFIXES))
+              and "tools/" + parts[1].split(".")[0] in guarded)
     return (parts[-1] in RISKY_NAMES or parts[-1].endswith(RISKY_SUFFIXES)
-            or any(p in RISKY_DIRS for p in parts[:-1]) or "/".join(parts) in guarded)
+            or any(p in RISKY_DIRS for p in parts[:-1]) or "/".join(parts) in guarded or module)
 
 
 def high_risk_paths(paths, guarded=frozenset()):
@@ -98,10 +110,11 @@ def high_risk_paths(paths, guarded=frozenset()):
 
 
 def guarded_scripts(repo_dir):
-    """The tools/ scripts that trunk's hooks, settings and build files name, and the tools/ modules those import
-    (the scripts put tools/ on sys.path), casefolded."""
+    """The tools/ scripts that trunk's hooks, settings and build files name and the tools/ modules those import, as
+    paths, plus as "tools/<name>" every name they import and every standard library name, casefolded."""
     root = Path(repo_dir)
     found = set()
+    names = set(sys.stdlib_module_names)
     for pattern in SCRIPT_RUNNERS:
         for path in root.glob(pattern):
             if path.is_file():
@@ -115,15 +128,24 @@ def guarded_scripts(repo_dir):
         except (OSError, SyntaxError, ValueError):
             continue
         for node in ast.walk(tree):
-            names = ([a.name for a in node.names] if isinstance(node, ast.Import)
-                     else [node.module] if isinstance(node, ast.ImportFrom) and node.level == 0 and node.module
-                     else [])
-            for name in names:
+            if isinstance(node, ast.Constant) and isinstance(node.value, str):
+                # A script it runs or loads by path (validate_moduledata.py runs the generators that
+                # check_generator_item_refs.py names): guarded, and followed when it is Python.
+                for path in TOOL_SCRIPT.findall(node.value.replace("\\", "/")):
+                    if path not in found:
+                        found.add(path)
+                        if path.endswith(".py"):
+                            todo.append(path)
+            imported =([a.name for a in node.names] if isinstance(node, ast.Import)
+                        else [node.module] if isinstance(node, ast.ImportFrom) and node.level == 0 and node.module
+                        else [])
+            for name in imported:
+                names.add(name.split(".")[0])
                 module = f"tools/{name.split('.')[0]}.py"
                 if module not in found and (root / module).is_file():
                     found.add(module)
                     todo.append(module)
-    return frozenset(p.casefold() for p in found)
+    return frozenset(p.casefold() for p in found | {"tools/" + n for n in names})
 
 
 def unreadable_files(files):
@@ -146,6 +168,20 @@ def safe_relpath(path):
                for part in path.split("/"))
 
 
+def colliding_names(paths):
+    """The exported paths that a case-insensitive disk cannot hold side by side."""
+    seen, folders, clashes = {}, set(), []
+    for path in paths:
+        key = path.casefold()
+        if key in seen:
+            clashes += [seen[key], path]
+        seen.setdefault(key, path)
+        parts = key.split("/")
+        folders.update("/".join(parts[:i]) for i in range(1, len(parts)))
+    clashes += [p for k, p in seen.items() if k in folders]
+    return list(dict.fromkeys(clashes))
+
+
 @dataclass
 class Phase1:
     verdict: str
@@ -158,12 +194,18 @@ def phase1(files, diff_text, pr_text="", base=TRUNK, guarded=frozenset(), expect
         reasons.append(f"the base is {json.dumps(base)}, not {TRUNK}: the skill reviews such a PR in a session"
                        " (a bannerlord-1.4.5 PR against the 1.4.8 decompile)")
     if expected_files is not None and len(files) != expected_files:
-        reasons.append(f"GitHub listed {len(files)} of the {expected_files} changed files (the list stops at 3,000),"
-                       " so the rest were never checked")
+        reasons.append(f"GitHub listed {len(files)} of the {expected_files} changed files (the compare list stops at"
+                       " 300, and a base that moved since the PR list changes the count), so the rest were never"
+                       " checked")
     names = [n for f in files for n in (f["filename"], f.get("previous_filename")) if n]
     unsafe = [n for n in names if not safe_relpath(n)]
     if unsafe:
         reasons.append("file names that are not plain relative paths: " + ", ".join(json.dumps(n) for n in unsafe))
+    clashes = colliding_names([f["filename"] for f in files
+                               if f.get("status") != "removed" and safe_relpath(f["filename"])])
+    if clashes:
+        reasons.append("file names that collide on Windows (they differ only in case, or a file has a folder's"
+                       " name), so one would hide another: " + ", ".join(clashes))
     binary = unreadable_files([f for f in files if safe_relpath(f["filename"])])
     if binary:
         reasons.append("files with no text patch (binary, archive or too large to show): " + ", ".join(binary))
@@ -209,7 +251,8 @@ Then read the whole diff, every added line, and the changed files where you need
 - engine claims: when a claim names a TaleWorlds type, the decompiled v1.5.7 source may be under the
   additional directory .taom-src; say UNVERIFIED when you cannot read it.
 
-Answer in Markdown and nothing else, in this form:
+Answer in Markdown and nothing else, in this form. The first line of your answer must be the Verdict line: no
+preamble before it and no code fence around the answer.
 **Verdict:** LOOKS RIGHT, CONCERNS or STOP
 **Summary:** two or three sentences.
 **Findings:** one bullet each: severity (HIGH, MEDIUM or LOW), file:line, the defect, why it matters. "None" if none.
@@ -304,16 +347,29 @@ def save_state(out, state):
 
 
 def take_lock(out, clock):
+    """Create the lock in one step (O_EXCL), so a manual run and the scheduled one cannot both take it."""
     lock = out / ".lock"
-    if lock.exists():
+    for _ in range(2):
         try:
-            held = json.loads(lock.read_text(encoding="utf-8"))
-            if clock() - float(held.get("at", 0)) < LOCK_STALE_SECONDS:
+            fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+        except FileExistsError:
+            try:
+                at = float(json.loads(lock.read_text(encoding="utf-8")).get("at", 0))
+            except ValueError:
+                at = lock.stat().st_mtime  # created by another run and not written yet: its age on disk
+            except OSError:
                 return False
-        except (ValueError, OSError):
-            pass
-    stamp_lock(out, clock)
-    return True
+            if clock() - at < LOCK_STALE_SECONDS:
+                return False
+            try:
+                lock.unlink(missing_ok=True)
+            except OSError:
+                return False
+            continue
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(json.dumps({"pid": os.getpid(), "at": clock()}))
+        return True
+    return False
 
 
 def stamp_lock(out, clock):
@@ -326,9 +382,9 @@ def release_lock(out):
     try:
         if json.loads(lock.read_text(encoding="utf-8")).get("pid") != os.getpid():
             return
+        lock.unlink(missing_ok=True)
     except (ValueError, OSError):
-        pass
-    lock.unlink(missing_ok=True)
+        pass  # not readable as ours: another run's, or gone
 
 
 def stamp(clock):
@@ -336,13 +392,24 @@ def stamp(clock):
 
 
 def open_prs(repo, gh):
-    return json.loads(gh(["pr", "list", "--repo", repo, "--state", "open", "--limit", "100", "--json",
+    return json.loads(gh(["pr", "list", "--repo", repo, "--state", "open", "--limit", str(PR_LIST_LIMIT), "--json",
                           "number,headRefOid,baseRefName,isCrossRepository,author,title,body,changedFiles"]))
 
 
-def pr_files(repo, number, gh):
-    text = gh(["api", "--paginate", "--jq", ".[] | {filename, previous_filename, status, changes, patch}",
-               f"repos/{repo}/pulls/{number}/files?per_page=100"])
+def compare_path(repo, pr):
+    """The compare endpoint from the PR's base to the head the PR list named. Every PR read goes through it or the
+    contents API at that head, so a push during a review cannot pair one head's diff with another head's files.
+    It lists at most 300 files: a longer PR fails the file count check and stops."""
+    return f"repos/{repo}/compare/{urllib.parse.quote(pr.get('baseRefName') or '', safe='')}...{pr['headRefOid']}"
+
+
+def pr_diff(repo, pr, gh):
+    return gh(["api", "-H", "Accept: application/vnd.github.diff", compare_path(repo, pr)])
+
+
+def pr_files(repo, pr, gh):
+    text = gh(["api", "--jq", ".files[] | {filename, previous_filename, status, changes, patch}",
+               compare_path(repo, pr)])
     files = []
     # Split on "\n" only: gh leaves U+0085 and other line breaks raw inside a JSON string, and splitlines() cuts there.
     for line in text.split("\n"):
@@ -370,6 +437,8 @@ def header(pr, result, clock):
 
 def export_files(repo, pr, files, folder, gh):
     root = folder / "files"
+    if root.exists():
+        shutil.rmtree(root)  # a file it cannot remove is an OSError: a failed attempt, never a stale export
     for f in files:
         if f.get("status") == "removed":
             continue
@@ -384,7 +453,8 @@ def export_files(repo, pr, files, folder, gh):
 
 
 def pr_folder(out, pr):
-    return out / f"pr-{pr['number']}-{pr['headRefOid'][:7]}"
+    # The whole head: a commit made to share a seven-character prefix would otherwise reuse a folder.
+    return out / f"pr-{pr['number']}-{pr['headRefOid']}"
 
 
 def record_failure(pr, state, out, notify, clock, reason):
@@ -411,8 +481,8 @@ def record_failure(pr, state, out, notify, clock, reason):
 def review_one(repo, pr, state, out, gh, claude, notify, clock, claude_exe, model, repo_dir, extra_dirs,
                guarded=frozenset()):
     number, head = pr["number"], pr["headRefOid"]
-    files = pr_files(repo, number, gh)
-    diff = gh(["pr", "diff", str(number), "--repo", repo])
+    files = pr_files(repo, pr, gh)
+    diff = pr_diff(repo, pr, gh)
     result = phase1(files, diff, (pr.get("title") or "") + "\n" + (pr.get("body") or ""), pr.get("baseRefName"),
                     guarded, pr.get("changedFiles"))
     folder = pr_folder(out, pr)
@@ -429,14 +499,18 @@ def review_one(repo, pr, state, out, gh, claude, notify, clock, claude_exe, mode
         verdict = "STOP"
     else:
         export_files(repo, pr, files, folder, gh)
-        prompt = review_prompt(number, repo, head, str(folder))
+        (folder / "claude-error.txt").unlink(missing_ok=True)
+        prompt =review_prompt(number, repo, head, str(folder))
         rc, text = claude(claude_command(claude_exe, prompt, str(folder), model, extra_dirs), repo_dir,
                           CLAUDE_TIMEOUT_SECONDS)
-        match = VERDICT.search(text) if rc == 0 else None
+        match = VERDICT.match(text.strip().split("\n", 1)[0]) if rc == 0 else None
         if not match:
             (folder / "claude-error.txt").write_text(text, encoding="utf-8")
-            raise ReviewFailed(f"the model run exited {rc}" if rc != 0 else "the model's answer has no Verdict line")
-        report.write_text(header(pr, result, clock) + "\n" + text.strip() + "\n", encoding="utf-8")
+            raise ReviewFailed((f"the model run exited {rc}" if rc != 0
+                                else "the model's answer does not start with a Verdict line")
+                               + f"; its output is in {folder / 'claude-error.txt'}")
+        report.write_text(header(pr, result, clock) + "\n## Model review (untrusted: the model read the PR's text)\n\n"
+                          + text.strip() + "\n", encoding="utf-8")
         verdict = match.group(1)
     state["failed"].pop(str(number), None)
     state["reviewed"][str(number)] = {"head": head, "verdict": verdict, "report": str(report), "at": stamp(clock)}
@@ -445,8 +519,8 @@ def review_one(repo, pr, state, out, gh, claude, notify, clock, claude_exe, mode
 
 
 def pick(prs, state, only_pr, force):
-    if len(prs) >= 100:
-        print("warning: gh listed 100 open PRs, the limit; later PRs wait for the next run", file=sys.stderr)
+    if len(prs) >= PR_LIST_LIMIT:
+        print(f"warning: gh listed {PR_LIST_LIMIT} open PRs, the limit; raise PR_LIST_LIMIT", file=sys.stderr)
     return [pr for pr in prs if (only_pr is None or pr["number"] == only_pr)
             and (force or needs_review(state, pr["number"], pr["headRefOid"]))]
 
