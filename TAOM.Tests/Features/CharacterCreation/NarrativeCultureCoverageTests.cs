@@ -92,6 +92,27 @@ public class NarrativeCultureCoverageTests
     }
 
     [TestMethod]
+    public void NoCultureOffersTwoOptionsWithTheSameSkillsAndAttribute()
+    {
+        var duplicates = new List<string>();
+        foreach (var menu in CultureScopedMenus)
+        {
+            var options = JArray.Parse(File.ReadAllText(Path.Combine(ModuleDataPath, "charactercreation", menu)));
+            duplicates.AddRange(options
+                .GroupBy(o => string.Join("|",
+                    (o.Value<string>("culture_id") ?? string.Empty).ToLowerInvariant(),
+                    string.Join("+", (o["skills"]?.Values<string>() ?? Enumerable.Empty<string>()).OrderBy(s => s)),
+                    o.Value<string>("attribute")))
+                .Where(g => g.Count() > 1)
+                .Select(g => $"{menu}: {string.Join(", ", g.Select(o => o.Value<string>("string_id")))}"));
+        }
+
+        Assert.AreEqual(0, duplicates.Count,
+            "Two options on one page that give the same skills and attribute are one choice shown twice. "
+            + "Give one of them other skills or another attribute:\n  " + string.Join("\n  ", duplicates));
+    }
+
+    [TestMethod]
     public void DocumentedExceptions_AreStillSelectableAndStillEmpty()
     {
         // A documented exception that has been fixed, or that no longer exists, is a stale

@@ -505,6 +505,42 @@ public class FrontEndMovieServiceTests
         Assert.IsNull(_sut.BeginLoad(CampOverlayMovie, "SomeOtherVM"));
     }
 
+    /// <summary>Issue #1532: the themed army panel replaces SandBox's ArmyOverlay through the swap, not by file
+    /// name, so the movie hook keeps vanilla's panel wherever it keeps vanilla's map bar
+    /// (ThemedMapBarCoopPolicyTests).</summary>
+    [TestMethod]
+    public void BeginLoad_ArmyOverlay_UsesTheThemedPanelAndKeepsNativeFallback()
+    {
+        var swap = _sut.BeginLoad("ArmyOverlay", "ArmyMenuOverlayVM");
+
+        Assert.AreEqual("TAOMArmyOverlay", swap!.TargetName);
+        Assert.AreEqual(CharacterCreation, swap.Holds);
+        Assert.IsTrue(swap.HasVanillaFallback);
+    }
+
+    [TestMethod]
+    public void BeginLoad_ArmyOverlayDrivenByAnotherViewModel_IsLeftAlone()
+    {
+        Assert.IsNull(_sut.BeginLoad("ArmyOverlay", "SomeOtherVM"));
+    }
+
+    /// <summary>The themed panel is cut at the themed stats plate, so it stays vanilla where the map bar does.</summary>
+    [TestMethod]
+    public void BeginLoad_ArmyOverlayAfterTheThemedMapBarFailedToBuild_StaysVanilla()
+    {
+        _sut.LoadFailed(_sut.BeginLoad("MapBar", "MapBarVM")!);
+
+        Assert.IsNull(_sut.BeginLoad("ArmyOverlay", "ArmyMenuOverlayVM"));
+    }
+
+    [TestMethod]
+    public void BeginLoad_ArmyOverlayWithoutTheThemedMapBarInstalled_StaysVanilla()
+    {
+        _adapter.MissingPrefabs.Add("TAOMMapBar");
+
+        Assert.IsNull(_sut.BeginLoad("ArmyOverlay", "ArmyMenuOverlayVM"));
+    }
+
     [TestMethod]
     public void BeginLoad_ThemedFieldCampOverlayMissing_LeavesTheOriginalAndWarns()
     {

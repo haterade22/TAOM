@@ -500,10 +500,10 @@
         "text": "Rangers of the Dimrill Dale",
         "description": "Your family patrolled the borders of Lothlorien, guarding the passes and defending against Orcs and other intruders.",
         "skills": [
-            "Bow",
+            "Athletics",
             "Scouting"
         ],
-        "attribute": "Control",
+        "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1,
