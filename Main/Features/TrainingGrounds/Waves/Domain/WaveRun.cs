@@ -74,16 +74,29 @@ internal sealed class WaveRun
     /// The most that may be staked on the wave in hand: the row's cap, held to the hard ceiling (itself lowered to the tournament cap
     /// when that is above 0), times the perk factor. Computed in long and clamped to int.
     /// </summary>
-    public int MaxStake
+    public int MaxStake => MaxStakeOf(Row);
+
+    /// <summary>
+    /// The small wager that stays on offer in every wave: the smallest wager the first wave offers, after rounding and the table's
+    /// minimum. The limit of a wave grows, this does not, so clearing waves raises what the player may wager and never what he
+    /// must. 0 when the first wave offers none.
+    /// </summary>
+    public int SmallStake
     {
         get
         {
-            long ceiling = _table.Rules.HardCeiling;
-            if (_tournamentCap > 0)
-                ceiling = Math.Min(ceiling, _tournamentCap);
-            var limit = Math.Min(Row.Cap, ceiling) * _perkFactor;
-            return (int)Math.Min(int.MaxValue, limit);
+            var first = StakeOptions.For(MaxStakeOf(_table.Waves[0]), _table.Rules.MinStake);
+            return first.Count > 0 ? first[0] : 0;
         }
+    }
+
+    private int MaxStakeOf(WaveRow row)
+    {
+        long ceiling = _table.Rules.HardCeiling;
+        if (_tournamentCap > 0)
+            ceiling = Math.Min(ceiling, _tournamentCap);
+        var limit = Math.Min(row.Cap, ceiling) * _perkFactor;
+        return (int)Math.Min(int.MaxValue, limit);
     }
 
     /// <summary>The payout for a stake on the wave in hand: stake times odds over 10, floored, in long and clamped to int.</summary>
@@ -134,6 +147,19 @@ internal sealed class WaveRun
         }
 
         return payout;
+    }
+
+    /// <summary>
+    /// The gold that really reached the purse for the wave just cleared, when it is less than the payout (the engine stops a purse
+    /// at its limit): the run's account follows it, so the master never names winnings that did not arrive. The whole payout, more
+    /// than it, or a negative amount changes nothing.
+    /// </summary>
+    public void RecordPaid(int arrived)
+    {
+        if (arrived < 0 || arrived >= LastPayout)
+            return;
+        TotalPaid -= LastPayout - arrived;
+        LastPayout = arrived;
     }
 
     /// <summary>Fighting to Ended (Lost). Returns the stake the house keeps; 0 in another state.</summary>

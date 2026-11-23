@@ -118,7 +118,7 @@ compiled default.
 
 | Field | Type | Meaning |
 |-------|------|---------|
-| `rules.minStake` | int, 1 to 1,000 | The smallest wager the table allows. The smallest wager on offer is the first of the three stakes (a quarter of the wave's limit, rounded down to tens, so 120 on wave 1), and the purse must hold that much. |
+| `rules.minStake` | int, 1 to 1,000 | The smallest wager the table allows. The stakes on offer are at most three: a quarter, a half and the whole of the wave's limit, rounded down to tens, without those under this minimum. The smallest wager of the FIRST wave (`WaveRun.SmallStake`, 120 with the shipped table) goes in front on a later wave when it is below all of them, and takes the quarter's place when that makes four. So the smallest wager on offer is never above the first wave's, and since a cleared wave never lowers the purse, a player who could enter can always go on. The purse must hold the smallest stake on offer. |
 | `rules.hardCeiling` | int, 100 to 1,000,000 | The largest wager on any wave, before the perk factor; lowered to the MCM tournament bet cap when that is above 0. |
 | `rules.oneRunPerTownPerDay` | bool | One run for each town for each campaign day. |
 | `rules.returnSeconds` | int, 1 to 30 | The wait after a wave ends before the player is taken back to the master. |
@@ -146,7 +146,7 @@ The MCM switch `EnableTrainingWaves` ("Wave Fights at the Training Grounds", gro
 | 7 | 14 | 4 | 0:1:2 | 3 | 15000 | 2 |
 | 8 | 16 | 5 | 0:0:1 | 3 | 15000 | 2 |
 
-Rules: table minimum 10 (the smallest wager on offer is higher: 120 on wave 1), ceiling 15,000, one run for each town for each day (a run that ends in a refund before a wave is cleared gives the town its day back), 5 s before the return, 3 s to refill. The wager limit
+Rules: table minimum 10 (the smallest wager on offer is higher: 120 on every wave of the shipped table), ceiling 15,000, one run for each town for each day (a run that ends in a refund before a wave is cleared gives the town its day back), 5 s before the return, 3 s to refill. The wager limit
 is the smaller of the wave's cap and the ceiling, times the Deep Pockets factor of the player (1 to 10). A full run at every cap pays
 111,200 against 57,000 staked, a net of 54,200, and 108,400 with a factor of 2. A test pins both numbers.
 
@@ -202,10 +202,10 @@ forfeit and the town credit do not re-read it: a run that began as single-player
 ## How to verify in game
 
 **Preconditions:** a build with this change deployed (the version on the branch), a campaign in a town with no tournament, a healthy
-and undisguised hero with at least 120 denars (the smallest wager on wave 1), "Wave Fights at the Training Grounds" on (the default), no co-op session.
+and undisguised hero with at least 120 denars (the smallest wager, the same on every wave), "Wave Fights at the Training Grounds" on (the default), no co-op session.
 
 1. Walk to the Training Master and talk. The wave option shows; with a tournament, a wound, a disguise, a run already today or under
-   the smallest wager (120 on wave 1) it is greyed with its reason. Proof: `taom.training-waves.offer` (`result=pass town=...`, or `result=skip reason=...`).
+   the smallest wager (120) it is greyed with its reason. Proof: `taom.training-waves.offer` (`result=pass town=...`, or `result=skip reason=...`).
 2. Take the offer, read the rules, pay a wager, end the conversation. Proof: `taom.training-waves.stake`, then the vanilla practice
    fighters leave the yard and `taom.training-waves.stand-down` (`faded=N vanilla_spawned=30`). A person checks that none of them
    comes back during the fight.
@@ -252,6 +252,12 @@ process, so a line in the log shows that a result was seen at least once in this
 - 2026-11-22: review fixes (#1529): the "too poor" rule reads the smallest wager on offer, a refund shows a notice, the stand-down flag
   goes up before its call, the player's body is no longer faded when it cannot be built, the weapon set falls back to `empire`, the MCM
   hint names the tournament bet cap, and the reader warns about an unknown top-level key or a missing `waves`.
+- 2026-11-22: two of Mike's decisions (#1529). A small wager stays on offer in every wave: the smallest wager of the first wave is offered
+  on every later wave too (`StakeOptions.For`), where the lowest stake had been a quarter of the current wave's (250 on wave 2, up to 3,750 on wave 8), which stopped a
+  player with little gold after one wave. And the run's account follows the gold that arrives: when the engine stops a purse at its
+  limit and less than the payout comes in, `WaveRun.RecordPaid` lowers the payout the run records, so the notice and the master name
+  what was really won. Left as it is, also by decision: a lost wager into a town treasury that is already full, where the engine's sum wraps
+  and empties the treasury; vanilla's tournament bet makes the same call.
 
 ## GitHub Issue
 
