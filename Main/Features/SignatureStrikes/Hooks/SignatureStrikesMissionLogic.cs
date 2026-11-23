@@ -114,7 +114,7 @@ public sealed class SignatureStrikesMissionLogic : MissionLogic
 
     protected override void OnEndMission() => Reset();
 
-    // Read once per mission on first use; the combat type is set by native InitializeMission by then.
+    // Read once per mission on first use; the opener's mission behaviours, which the gate asks for, are attached by then.
     private bool Active()
     {
         if (_disabledForThisMission)

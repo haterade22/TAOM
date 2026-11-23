@@ -35,8 +35,11 @@ attacks on top of the engine's melee AI. Unlike the troll's, the dwarf tree is n
 lost Stand Fast. So `Hooks/DwarfTreeHost` holds the dwarf trees and runs them every mission tick on the main thread,
 with the component's own gates: the agent is still its slot's occupant and active, and in co-op only the owner runs it.
 
-The attacks run only in field battles, sieges and hideouts (`Mission.MissionCombatType.Combat`). An arena, a
-tournament or a conversation scene gets no tree, the rule the race abilities and signature strikes follow.
+The attacks run in every mission except the training yard and a tournament match (`SignatureMissionGate.IsCombatOutsideArena`,
+the rule the race abilities and signature strikes follow): the arena's practice mission and a tournament match get no tree.
+The yard and the tournament are known by their mission behaviours, because `Mission.CombatType` reads `Combat` in every
+mission (#1537). For the same reason that value does not exclude a town or conversation scene, and an arena quest duel,
+which carries neither behaviour, stays open.
 
 1. `DwarfAttackReadyDecorator` reads the engine: the dwarf is AI controlled and not the player's own, on foot, not on
    a machine, not already attacking, struck or falling, and at least one attack has its action and is off cooldown.

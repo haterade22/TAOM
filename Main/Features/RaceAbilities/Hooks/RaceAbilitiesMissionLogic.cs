@@ -94,8 +94,9 @@ public class RaceAbilitiesMissionLogic : MissionLogic
         var mcm = _runtime.Settings.Enabled;
         var json = _runtime.Resolver.ConfigEnabled;
         var eligible = mcm && json && SignatureMissionGate.IsEligible(Mission);
-        _runtime.MissionGate = $"{(eligible ? "open" : "closed")} (MCM={mcm}, json={json}, combatType={Mission?.CombatType})";
-        _runtime.Logger.LogInfo($"[RaceAbilities] mission gate: eligible={eligible} MCM={mcm} json={json} combatType={Mission?.CombatType}");
+        var arena = Mission != null && SignatureMissionGate.IsArenaOrTournament(Mission);
+        _runtime.MissionGate = $"{(eligible ? "open" : "closed")} (MCM={mcm}, json={json}, combatType={Mission?.CombatType}, arena={arena})";
+        _runtime.Logger.LogInfo($"[RaceAbilities] mission gate: eligible={eligible} MCM={mcm} json={json} combatType={Mission?.CombatType} arena={arena}");
         return eligible;
     }
 
