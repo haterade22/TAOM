@@ -263,7 +263,7 @@
         flag_mesh="info_screen_flags_b"
         name="{=taom_lothlorien_name}Lothlorien"
         short_name="{=taom_lothlorien_short_name}Lothlorien"
-        title="{=taom_lothlorien_title}Kingdom of Lóthlorien"
+        title="{=taom_lothlorien_title}Kingdom of Lothlórien"
         ruler_title="{=taom_lothlorien_ruler_title}Lady"
         text="{=taom_lothlorien_desc}The Golden Wood lies nestled between the Silverlode and the mighty Anduin. Guarded by the will of Galadriel and Celeborn, it stands as a bastion of Elven grace and defiance - a land untouched by time, where the leaves do not fall.">
         <relationships>

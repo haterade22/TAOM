@@ -13600,7 +13600,7 @@
             <EquipmentSet id="gundabad_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_G7_2" race="pale_uruk" name="{=aom_lord_G7_2_name}Uglûk" age="33" voice="earnest" is_hero="true" culture="Culture.gundabad" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_G7_2" race="pale_uruk" name="{=aom_lord_G7_2_name}Uglúk" age="33" voice="earnest" is_hero="true" culture="Culture.gundabad" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gundabad" />
             <hair_tags>
@@ -36025,7 +36025,7 @@
             <EquipmentSet id="goblin_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_GB3_3" race="goblin" name="{=aom_lord_GB3_3_name}Uglûk" age="39" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_GB3_3" race="goblin" name="{=aom_lord_GB3_3_name}Uglúk" age="39" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gundabad" />
             <hair_tags>
@@ -45647,7 +45647,7 @@
             <EquipmentSet id="goblin_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC5_2" race="goblin" name="{=aom_lord_BC5_2_name}Uglûk" age="36" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC5_2" race="goblin" name="{=aom_lord_BC5_2_name}Uglúk" age="36" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gundabad" />
             <hair_tags>

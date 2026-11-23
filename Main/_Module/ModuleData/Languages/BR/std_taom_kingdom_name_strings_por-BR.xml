@@ -45,7 +45,7 @@
     <string id="taom_lothlorien_name" text="{.NS}Lothlórien" />
     <string id="taom_lothlorien_ruler_title" text="Senhora" />
     <string id="taom_lothlorien_short_name" text="{.NS}Lothlórien" />
-    <string id="taom_lothlorien_title" text="{.MS}Reino de Lóthlorien" />
+    <string id="taom_lothlorien_title" text="{.MS}Reino de Lothlórien" />
     <string id="taom_mirkwood_desc" text="O Reino Silvestre da Floresta das Trevas suportou muitas provações ao longo dos anos. Sob a liderança de Thranduil, os Elfos da Floresta tornaram-se reclusos e desconfiados de estranhos. Contudo, no coração de Thranduil ainda arde um fogo aceso nos dias antigos da Primeira Era." />
     <string id="taom_mirkwood_name" text="{.NS}Lasgalen" />
     <string id="taom_mirkwood_ruler_title" text="Aran" />

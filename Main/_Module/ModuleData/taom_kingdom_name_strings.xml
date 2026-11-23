@@ -71,7 +71,7 @@
 	<string id="taom_lothlorien_name" text="{=taom_lothlorien_name}Lothlorien" />
 	<string id="taom_lothlorien_ruler_title" text="{=taom_lothlorien_ruler_title}Lady" />
 	<string id="taom_lothlorien_short_name" text="{=taom_lothlorien_short_name}Lothlorien" />
-	<string id="taom_lothlorien_title" text="{=taom_lothlorien_title}Kingdom of Lóthlorien" />
+	<string id="taom_lothlorien_title" text="{=taom_lothlorien_title}Kingdom of Lothlórien" />
 	<string id="taom_mirkwood_desc" text="{=taom_mirkwood_desc}The Woodland Realm of Mirkwood has endured much hardship over the years. Under the leadership of Thranduil, the Woodelves have become reclusive and wary of strangers. Yet in the heart of Thranduil lingers a fire kindled in the ancient days of the First Age." />
 	<string id="taom_mirkwood_name" text="{=taom_mirkwood_name}Lasgalen" />
 	<string id="taom_mirkwood_ruler_title" text="{=taom_mirkwood_ruler_title}Aran" />
