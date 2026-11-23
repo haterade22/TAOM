@@ -101,6 +101,7 @@ public sealed class HunterPartyAdapter : IHunterPartyAdapter
             IsDisbanding = party.IsDisbanding,
             AiPinned = party.Ai?.DoNotMakeNewDecisions ?? false,
             IsEngagingPlayer = IsEngaging(party, main),
+            HoldsOffPlayer = HoldsOff(party),
             HeadCount = party.MemberRoster?.TotalManCount ?? 0,
             Strength = party.Party.EstimatedStrength,
         };
@@ -108,6 +109,8 @@ public sealed class HunterPartyAdapter : IHunterPartyAdapter
 
     private static bool IsEngaging(MobileParty party, MobileParty? main) =>
         main != null && party.DefaultBehavior == AiBehavior.EngageParty && party.TargetParty == main;
+
+    private static bool HoldsOff(MobileParty party) => party.Ai?.DoNotAttackMainPartyUntil.IsFuture ?? false;
 
     public bool PinAndEngagePlayer(string partyId)
     {
@@ -250,6 +253,7 @@ public sealed class HunterPartyAdapter : IHunterPartyAdapter
             Distance = party.Position.Distance(main.Position),
             // Speed asserts on an inactive party (MobileParty.cs:419-431).
             PlayerSpeed = main.IsActive ? main.Speed : 0f,
+            HunterHoldsOffPlayer = HoldsOff(party),
         };
     }
 
