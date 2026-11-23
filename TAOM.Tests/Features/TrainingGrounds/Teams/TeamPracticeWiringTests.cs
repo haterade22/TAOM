@@ -5,6 +5,7 @@ using DryIoc;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Client;
 using TAOM.Composition;
 using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
@@ -173,5 +174,47 @@ public class TeamPracticeWiringTests
         Assert.IsTrue(at >= 0 && at + 2 < strings.Length, $"vanilla registers no line '{id}'");
         Assert.AreEqual(input, strings[at + 1], $"input token of '{id}'");
         Assert.AreEqual(output, strings[at + 2], $"output token of '{id}'");
+    }
+
+    [TestMethod]
+    public void ThePracticeHudPatch_LivesInTheClientAssembly_WithTheModulesCategory()
+    {
+        var type = typeof(MissionArenaPracticeFightVM_Tick_TeamPractice_Patch);
+
+        Assert.AreEqual(typeof(TAOM.Client.ClientSubModule).Assembly, type.Assembly, "the view model is in a client-only assembly (ADR-013)");
+        Assert.AreEqual(TeamPracticeModule.PatchCategory, type.GetCustomAttributes<HarmonyPatchCategory>().Single().info.category);
+    }
+
+    [TestMethod]
+    [TestCategory("RequiresGame")]
+    public void Index_FromTheLoadedTaomAssemblies_HoldsPatch174CoreClassesThenTheClientClass()
+    {
+        if (!GameAssemblies.EnsureLoaded())
+            Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
+
+        var previous = ClientComposition.Current;
+        ClientComposition.Current = new TaomClientComposition();
+        try
+        {
+            var index = PatchCategoryIndex.Build(ClientComposition.LoadedTaomAssemblies());
+            var classes = index.ClassesOf(TeamPracticeModule.PatchCategory);
+
+            Assert.AreEqual(0, index.SkippedClasses.Count, string.Join("; ", index.SkippedClasses.Select(k => k.Key.FullName)));
+            Assert.AreEqual(3, classes.Count);
+            Assert.AreEqual(typeof(MissionArenaPracticeFightVM_Tick_TeamPractice_Patch), classes[2], "the client class applies last, so a failure there keeps the core patches");
+        }
+        finally
+        {
+            ClientComposition.Current = previous;
+        }
+    }
+
+    [TestMethod]
+    public void ThePracticeHudPatch_AsksTheGlueAndNeverTouchesThePrize()
+    {
+        var src = RepoPaths.ReadSource("Client/Features/TrainingGrounds/Teams/Hooks/MissionArenaPracticeFightVM_Tick_TeamPractice_Patch.cs", stripComments: true);
+
+        Assert.IsTrue(src.Contains("TeamPracticeFight.TryOpponentsLeft("));
+        Assert.IsFalse(src.Contains("PrizeText") || src.Contains("UpdatePrizeText"), "the 250 prize rule stays vanilla's");
     }
 }
