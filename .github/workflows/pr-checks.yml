@@ -106,8 +106,27 @@ jobs:
       - name: Install test dependencies
         run: python -m pip install --disable-pip-version-check pytest lxml lz4 xxhash numpy scipy capstone pefile pyyaml pillow ruff==0.17.2
 
+      # The shell lint gate test needs ShellCheck 0.11.0, the version the dev machines use. The hash is that of the
+      # maintainer's installed shellcheck.exe from the same release, so a changed download fails here.
+      - name: ShellCheck 0.11.0
+        shell: pwsh
+        run: |
+          $zip = Join-Path $env:RUNNER_TEMP 'shellcheck.zip'
+          $dir = Join-Path $env:RUNNER_TEMP 'shellcheck'
+          Invoke-WebRequest 'https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.zip' -OutFile $zip
+          Expand-Archive $zip -DestinationPath $dir
+          $exe = Get-ChildItem $dir -Recurse -Filter shellcheck.exe | Select-Object -First 1
+          $hash = (Get-FileHash $exe.FullName -Algorithm SHA256).Hash
+          if ($hash -ne 'C9E82ADA36EF4B8D4CAF1F97FA89289048C8F4A33C2C76FFFFC88BFE09FF00C5') { Write-Host "::error::shellcheck.exe hash $hash is not the pinned one."; exit 1 }
+          "TAOM_SHELLCHECK=$($exe.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      # The runner's TEMP is the 8.3 short name C:\Users\RUNNER~1\..., and tests that compare a temp path with the
+      # long form git or Python resolves then fail. runner.temp is a long path.
       - name: Run tools/tests
         shell: bash
+        env:
+          TEMP: ${{ runner.temp }}
+          TMP: ${{ runner.temp }}
         run: |
           set +e
           OUT=$(python -m unittest discover -s tools/tests -t . 2>&1)
