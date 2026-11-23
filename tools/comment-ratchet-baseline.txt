@@ -217,7 +217,7 @@ Main/Adapters/DutyWorldAdapter.cs	5
 Main/Adapters/EmptyMeetingAdapter.cs	1
 Main/Adapters/EncounterAdapter.cs	62
 Main/Adapters/EncounterLinesAdapter.cs	2
-Main/Adapters/EncyclopediaCultureLookup.cs	4
+Main/Adapters/EncyclopediaCultureLookup.cs	3
 Main/Adapters/EnvoyPresenterAdapter.cs	1
 Main/Adapters/EquipmentRosterCatalogAdapter.cs	6
 Main/Adapters/EquipmentSlotAdapter.cs	6
