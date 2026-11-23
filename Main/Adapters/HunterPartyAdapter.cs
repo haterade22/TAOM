@@ -72,6 +72,7 @@ public sealed class HunterPartyAdapter : IHunterPartyAdapter
             FactionId = faction?.StringId,
             // Null-safe, and handles eliminated factions, constant war and stances (FactionManager.cs:144-159).
             AtWarWithPlayerKingdom = playerKingdom != null && FactionManager.IsAtWarAgainstFaction(playerKingdom, faction),
+            FactionHoldsOath = faction?.NotAttackableByPlayerUntilTime.IsFuture ?? false,
             IsInAParty = party != null,
             LedPartyId = party != null && party.LeaderHero == hero ? party.StringId : null,
             CanLeadParty = hero.CanLeadParty(),

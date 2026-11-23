@@ -59,8 +59,9 @@ Decided by the maintainer 2026-11-23:
 
 13. **A bribed hunter waits out the oath.** A safe passage gives the player a 5-day oath with the hunter's faction
    (`NoAttackBarterable` adds 5 days to `IFaction.NotAttackableByPlayerUntilTime`). The hunt stands off while that
-   oath or the party's own shorter promise holds, then resumes. The oath is the faction's, so a bribe to any lord of
-   the hunter's faction pauses the hunt too, and the hunt's timeout keeps counting.
+   oath or the party's own shorter promise holds, then resumes, and no new hunt starts from a faction under oath. The
+   oath is the faction's, so a bribe to any lord of the hunter's faction pauses the hunt too, and the hunt's timeout
+   keeps counting.
 
 ## Architecture
 
@@ -127,8 +128,10 @@ per-party call allocates nothing.
   choose to engage the army on its own initiative.
 - **Bribes pause the hunt, and the timeout keeps counting:** each safe passage adds 5 days to the faction's oath
   (decision 13), so repeated bribes can run a hunt out (`HuntTimeoutDays`). Vanilla AI never reads the oath; the hunt does. The
-  oath is cleared early when a party of that faction attacks the player (`EncounterGameMenuBehavior.OnMapEventStarted`),
-  and the hunt then resumes at the next hour.
+  oath is cleared early when a party of that faction attacks the player or starts a siege the player is part of
+  (`EncounterGameMenuBehavior.OnMapEventStarted`, `OnSiegeEventStarted`); the hunt then resumes at the next free hour,
+  unless it was the hunter's own attack and that battle ends the hunt. Vanilla AI honours only the party's 32-hour
+  promise, so after it the hunter's own AI may attack the player during the oath, as any bribed lord's may.
 - **Uninstalling mid-hunt** leaves the hunter's saved AI pin with nothing to clear it. The timeout bounds the window in
   a game that keeps TAOM; remove TAOM only between hunts.
 - **At sea:** the sea guards (`HunterAtSea`, `PlayerAtSea`) are unreachable in a supported setup. TAOM declares
@@ -302,9 +305,10 @@ Owed in game: #765 closed on 2026-10-14 with the `triage-needs-ingame` label, wh
     chasing again.
 16. **Bought off:** let the hunter catch you and pay him for safe passage. He stops chasing at once,
     `taom.print_eye_of_sauron` shows the hunt with "pinned: no" and the last hourly step "hunter promised to leave you
-    alone", and he does not come back to talk. He stays unpinned for the 5 days of the oath (until then your attack
-    option on his faction reads "You have sworn not to attack"); within the hour after it ends he is pinned and
-    chasing again, and when he catches you, you can fight him.
+    alone", and he does not come back to talk. The hunt leaves him unpinned for the 5 days of the oath (until then
+    your attack option on his faction reads "You have sworn not to attack"); after about 32 hours his own AI may still
+    choose to attack you, as any bribed lord's may. Within the hour after the oath ends he is pinned and chasing
+    again, and when he catches you, you can fight him.
 
 ## Changelog
 

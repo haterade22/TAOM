@@ -568,6 +568,22 @@ public class EyeOfSauronServiceTests
         AssertTheNextWraithRode("in another lord's party");
     }
 
+    // Decision 13: a partyless hunter whose faction holds the player's safe-passage oath waits too, as a led party does;
+    // otherwise a party is spawned and the hunt announced, only to stand off on the next frame.
+    [TestMethod]
+    public void TryStartHunt_FreeHeroWhoseFactionHoldsTheOath_TheNextWraithRides()
+    {
+        _sut.AddScore(FactionSide.Evil, 12f);
+        var wk = FreeHero();
+        wk.FactionHoldsOath = true;
+        _adapter.ReadHero(HuntTroopLists.WitchKingId).Returns(wk);
+        _adapter.ReadHero("lord_1_155").Returns(FreeHero());
+
+        _sut.TryStartHunt(ignoreScoreAndCooldown: false);
+
+        AssertTheNextWraithRode("his faction holds the oath");
+    }
+
     [DataTestMethod]
     [DataRow("cannotlead")]
     [DataRow("notlord")]

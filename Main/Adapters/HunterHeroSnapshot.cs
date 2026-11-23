@@ -31,6 +31,9 @@ public sealed class HunterHeroSnapshot
     /// <summary>The live faction is at war with the player's kingdom (<c>FactionManager.IsAtWarAgainstFaction</c>).</summary>
     public bool AtWarWithPlayerKingdom { get; set; }
 
+    /// <summary>His live faction's safe-passage oath with the player (<c>NotAttackableByPlayerUntilTime</c>) is in the future.</summary>
+    public bool FactionHoldsOath { get; set; }
+
     /// <summary><c>PartyBelongedTo != null</c>, led by him or not.</summary>
     public bool IsInAParty { get; set; }
 
