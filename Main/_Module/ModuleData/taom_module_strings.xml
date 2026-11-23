@@ -1523,7 +1523,7 @@
 	<string id="taom_faction_clans_of_forochel_name" text="{=taom_faction_clans_of_forochel_name}Clans of Forochel" />
 	<string id="taom_faction_clans_of_forochel_trait_0" text="{=taom_faction_clans_of_forochel_trait_0}Ice Bay Raiders" />
 	<string id="taom_faction_clans_of_forochel_trait_1" text="{=taom_faction_clans_of_forochel_trait_1}Frozen North Orcs" />
-	<string id="taom_faction_dominion_of_isengard_bonus_0" text="{=taom_faction_dominion_of_isengard_bonus_0}+5% party size limit (Uruk-hai Legions)" />
+	<string id="taom_faction_dominion_of_isengard_bonus_0" text="{=taom_faction_dominion_of_isengard_bonus_0}+10% party size limit (Uruk-hai Legions)" />
 	<string id="taom_faction_dominion_of_isengard_bonus_1" text="{=taom_faction_dominion_of_isengard_bonus_1}+15% building construction speed (Industrial Might)" />
 	<string id="taom_faction_dominion_of_isengard_bonus_2" text="{=taom_faction_dominion_of_isengard_bonus_2}-20% smithing energy cost (Industrial Forges)" />
 	<string id="taom_faction_dominion_of_isengard_bonus_3" text="{=taom_faction_dominion_of_isengard_bonus_3}-15% mounted recruit and upgrade cost (War Wargs)" />
@@ -1535,7 +1535,7 @@
 	<string id="taom_faction_dominion_of_isengard_bonus_9" text="{=taom_faction_dominion_of_isengard_bonus_9}+25% relationship penalties (Saruman's Grip)" />
 	<string id="taom_faction_dominion_of_isengard_desc" text="{=taom_faction_dominion_of_isengard_desc}Saruman's industrial fortress at Orthanc. The Ring of Isengard runs day and night — Uruk-hai legions, forge-line crossbows, war wargs. Isengard's one town swells to twenty notables: a recruitment hub equal to many cities of Rohan. Saruman's Grip alienates every neighbor." />
 	<string id="taom_faction_dominion_of_isengard_name" text="{=taom_faction_dominion_of_isengard_name}Dominion of Isengard" />
-	<string id="taom_faction_dominion_of_isengard_perk_0_desc" text="{=taom_faction_dominion_of_isengard_perk_0_desc}+5% party size limit and +10% march speed on plain and swamp." />
+	<string id="taom_faction_dominion_of_isengard_perk_0_desc" text="{=taom_faction_dominion_of_isengard_perk_0_desc}+10% party size limit and +10% march speed on plain and swamp." />
 	<string id="taom_faction_dominion_of_isengard_perk_0_name" text="{=taom_faction_dominion_of_isengard_perk_0_name}Uruk-hai Legions" />
 	<string id="taom_faction_dominion_of_isengard_perk_1_desc" text="{=taom_faction_dominion_of_isengard_perk_1_desc}+15% construction, -20% smithing energy, -15% mounted recruitment cost." />
 	<string id="taom_faction_dominion_of_isengard_perk_1_name" text="{=taom_faction_dominion_of_isengard_perk_1_name}Industrial Might" />
@@ -2594,7 +2594,7 @@
 	<string id="taom_feat_isen_dp" text="{=taom_feat_isen_dp}Saruman's Grip" />
 	<string id="taom_feat_isen_dp_desc" text="{=taom_feat_isen_dp_desc}Kingdom decision relationship penalties increased by 25%." />
 	<string id="taom_feat_isen_ps" text="{=taom_feat_isen_ps}Uruk-hai Legions" />
-	<string id="taom_feat_isen_ps_desc" text="{=taom_feat_isen_ps_desc}Party size limit increased by 5%." />
+	<string id="taom_feat_isen_ps_desc" text="{=taom_feat_isen_ps_desc}Party size limit increased by 10%." />
 	<string id="taom_feat_isen_cs" text="{=taom_feat_isen_cs}Industrial Might" />
 	<string id="taom_feat_isen_cs_desc" text="{=taom_feat_isen_cs_desc}Construction speed increased by 15%." />
 	<string id="taom_feat_isen_sm" text="{=taom_feat_isen_sm}Industrial Forges" />

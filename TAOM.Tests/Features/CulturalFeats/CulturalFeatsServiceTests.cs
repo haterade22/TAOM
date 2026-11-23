@@ -1372,7 +1372,7 @@ public class CulturalFeatsServiceTests
                 ("_isengardCheaperRecruits", "taom_isengard_cheaper_recruits", -0.15f),
                 ("_isengardGarrisonWage", "taom_isengard_garrison_wage", -0.2f),
                 ("_isengardDecisionPenalty", "taom_isengard_decision_penalty", 0.25f),
-                ("_isengardPartySize", "taom_isengard_party_size", 0.05f),
+                ("_isengardPartySize", "taom_isengard_party_size", 0.10f),
                 ("_isengardConstructionSpeed", "taom_isengard_construction_speed", 0.15f),
                 ("_isengardSmithing", "taom_isengard_smithing", -0.2f),
                 ("_isengardRaidDamage", "taom_isengard_raid_damage", 0.2f),
