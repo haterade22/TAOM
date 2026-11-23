@@ -148,7 +148,6 @@ public class PrefabAttributeNameBindingTests
     }
 
     [TestMethod]
-    [TestCategory("RequiresGameIL")]
     public void ResolveAttribute_GridLayoutImpMisspelledSuffix_IsUnknown()
     {
         if (!_gameLoaded) Assert.Inconclusive("Game assemblies unavailable: " + string.Join("; ", GameAssemblies.Diagnostics));
@@ -227,7 +226,6 @@ public class PrefabAttributeNameBindingTests
     }
 
     [TestMethod]
-    [TestCategory("RequiresGameIL")]
     public void CheckVisualAttributes_VisualDefinition_AcceptsOnlyTheFiveReadNames()
     {
         if (!_gameLoaded) Assert.Inconclusive("Game assemblies unavailable: " + string.Join("; ", GameAssemblies.Diagnostics));
@@ -251,7 +249,6 @@ public class PrefabAttributeNameBindingTests
     }
 
     [TestMethod]
-    [TestCategory("RequiresGameIL")]
     public void CheckVisualAttributes_VisualState_NeedsAPublicSettableProperty()
     {
         if (!_gameLoaded) Assert.Inconclusive("Game assemblies unavailable: " + string.Join("; ", GameAssemblies.Diagnostics));

@@ -62,8 +62,10 @@ while the maintainer is logged on. For each open PR whose head commit it has not
      skill's (`test_the_list_matches_the_review_outside_pr_skill` fails when the two drift apart), plus the
      `tools/` scripts that trunk's hooks, settings and build files name, the `tools/` modules they import, and the
      `tools/` scripts they run or load by a path in a string (`validate_moduledata.py` runs the generators that
-     `check_generator_item_refs.py` lists). On 2026-11-22 that made 172 of trunk's 1,385 `tools/` files high
-     risk, so a PR that changes one stops; comments and docstrings that name a path count too.
+     `check_generator_item_refs.py` lists). `.mcp.json` counts as a runner, since it starts the MCP server in every
+     session. In a Python script the watcher follows, comments never count, and docstrings count only when the
+     script reads `__doc__` (as data it could run); in a hook, settings or build file any path counts. On
+     2026-11-23 that made 162 of trunk's 1,385 `tools/` files high risk, so a PR that changes one stops.
      Such a script runs with `tools/` first on its import path, so a package or another source file in `tools/`
      named like any module it imports, the standard library's included (`tools/json/__init__.py`,
      `tools/_gamedir.pyw`), stops the PR too;
@@ -190,3 +192,5 @@ PR and its report exists.
 - 2026-11-22: added the PR checks workflow and the watcher (#1543); tagged the tests that need the game. A Codex
   review the same day led to the pinned compare reads, the import-shadow guard, the first-line verdict, the
   collision check, the whole-SHA folder, the 1,000-PR list, the atomic lock and the executed-test floor.
+- 2026-11-23: the guard reads paths in a docstring only when its script reads `__doc__`, and treats
+  `.mcp.json` as a runner (172 high-risk `tools/` files down to 162).

@@ -73,7 +73,7 @@ RISKY_NAMES = {p.casefold() for p in HIGH_RISK if not p.startswith("*.") and not
 # runs as `python tools/x.py`, so tools/ is first on sys.path: a package (tools/json/) or another source file
 # (tools/json.pyw) of a name it imports, the standard library's included, is imported in place of the real module.
 SCRIPT_RUNNERS = [".claude/hooks/*", ".claude/settings.json", ".githooks/*", "*.props", "*.targets", "*/*.props",
-                  "*/*.targets", "*/*.csproj", "build.ps1"]
+                  "*/*.targets", "*/*.csproj", "build.ps1", ".mcp.json"]
 TOOL_SCRIPT = re.compile(r"tools/[\w./-]+?\.(?:py|ps1|sh)\b")
 IMPORT_SUFFIXES = (".py", ".pyw", ".pyc", ".pyd", ".so")
 
@@ -127,8 +127,15 @@ def guarded_scripts(repo_dir):
             tree = ast.parse(script.read_text(encoding="utf-8", errors="replace"))
         except (OSError, SyntaxError, ValueError):
             continue
+        # A docstring never runs, so a path it names is no script this one runs, unless the code reads __doc__.
+        reads_doc = any(isinstance(n, ast.Name) and n.id == "__doc__"
+                        or isinstance(n, ast.Attribute) and n.attr == "__doc__" for n in ast.walk(tree))
+        docstrings = set() if reads_doc else {
+            id(n.body[0].value) for n in ast.walk(tree)
+            if isinstance(n, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef))
+            and n.body and isinstance(n.body[0], ast.Expr) and isinstance(n.body[0].value, ast.Constant)}
         for node in ast.walk(tree):
-            if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            if isinstance(node, ast.Constant) and isinstance(node.value, str) and id(node) not in docstrings:
                 # A script it runs or loads by path (validate_moduledata.py runs the generators that
                 # check_generator_item_refs.py names): guarded, and followed when it is Python.
                 for path in TOOL_SCRIPT.findall(node.value.replace("\\", "/")):
@@ -136,7 +143,7 @@ def guarded_scripts(repo_dir):
                         found.add(path)
                         if path.endswith(".py"):
                             todo.append(path)
-            imported =([a.name for a in node.names] if isinstance(node, ast.Import)
+            imported = ([a.name for a in node.names] if isinstance(node, ast.Import)
                         else [node.module] if isinstance(node, ast.ImportFrom) and node.level == 0 and node.module
                         else [])
             for name in imported:

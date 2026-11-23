@@ -148,14 +148,43 @@ class HighRiskPathTests(unittest.TestCase):
             (root / ".githooks" / "pre-commit").write_text("python tools/a.py\n", encoding="utf-8")
             (root / "tools").mkdir()
             (root / "tools" / "a.py").write_text(
-                'import subprocess, sys\nsubprocess.run([sys.executable, "tools/b.py"])\n'
-                'SPECS = ("tools/c.py",)\n', encoding="utf-8")
+                '"""Like tools/doc_only.py."""\nimport subprocess, sys\nsubprocess.run([sys.executable, "tools/b.py"])\n'
+                'SPECS = ("tools/c.py",)\n\n\ndef f():\n    """See tools/doc_too.py."""\n', encoding="utf-8")
             (root / "tools" / "b.py").write_text('x = 1\n', encoding="utf-8")
             (root / "tools" / "c.py").write_text('RUN = "tools/d.py"\n', encoding="utf-8")
             guarded = w.guarded_scripts(root)
 
         self.assertEqual(["tools/b.py", "tools/c.py", "tools/d.py"],
-                         w.high_risk_paths(["tools/b.py", "tools/c.py", "tools/d.py", "tools/unrelated.py"], guarded))
+                         w.high_risk_paths(["tools/b.py", "tools/c.py", "tools/d.py", "tools/unrelated.py",
+                                            "tools/doc_only.py", "tools/doc_too.py"], guarded),
+                         "a docstring never runs, so a path it names is not guarded")
+
+    def test_a_docstring_that_its_module_reads_as_data_still_counts(self):
+        # Codex 2026-11-23: runpy.run_path(__doc__) runs the path its docstring names.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / ".githooks").mkdir()
+            (root / ".githooks" / "pre-commit").write_text("python tools/a.py\n", encoding="utf-8")
+            (root / "tools").mkdir()
+            (root / "tools" / "a.py").write_text('"""tools/payload.py"""\nimport runpy\nrunpy.run_path(__doc__)\n',
+                                                 encoding="utf-8")
+            guarded = w.guarded_scripts(root)
+
+        self.assertEqual(["tools/payload.py"], w.high_risk_paths(["tools/payload.py"], guarded))
+
+    def test_a_script_that_mcp_json_starts_is_high_risk(self):
+        # .mcp.json starts tools/taom_mcp_server.py in every session on the desktop; only a docstring guarded it.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / ".mcp.json").write_text('{"mcpServers": {"x": {"args": ["E:/repos/TAOM/tools/server.py"]}}}',
+                                            encoding="utf-8")
+            (root / "tools").mkdir()
+            (root / "tools" / "server.py").write_text("import helper\n", encoding="utf-8")
+            (root / "tools" / "helper.py").write_text("x = 1\n", encoding="utf-8")
+            guarded = w.guarded_scripts(root)
+
+        self.assertEqual(["tools/server.py", "tools/helper.py"],
+                         w.high_risk_paths(["tools/server.py", "tools/helper.py", "tools/other.py"], guarded))
 
     def test_a_new_module_that_a_guarded_script_would_import_first_is_high_risk(self):
         # tools/ is first on sys.path when a hook runs `python tools/x.py`, so a package or another source file of
