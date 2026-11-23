@@ -122,7 +122,13 @@ class GuardTests(unittest.TestCase):
         self.assertIn("not both", p.stdout)
 
     def test_a_missing_pack_folder_exits_2_with_its_path(self):
-        p = _run_script("-Verify", "-PackMasters", "E:\\no\\such\\pack")
+        # The script checks the TpacTool DLL, the loader and the clip pack first, all on E: by default. Give it
+        # empty stand-ins so the pack-masters check is the one that fails on any machine; nothing is loaded.
+        with tempfile.TemporaryDirectory() as tmp:
+            with open(os.path.join(tmp, "TpacTool.Lib.dll"), "wb"), open(os.path.join(tmp, "Loader.cs"), "wb"):
+                pass
+            p = _run_script("-Verify", "-TpacBin", tmp, "-Loader", os.path.join(tmp, "Loader.cs"), "-Pack", tmp,
+                            "-PackMasters", "E:\\no\\such\\pack")
         self.assertEqual(p.returncode, 2, p.stdout + p.stderr)
         self.assertIn("no\\such\\pack", p.stdout)
 

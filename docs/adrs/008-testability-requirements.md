@@ -63,7 +63,7 @@ Before marking any abstraction task as complete:
 
 ## Enforcement
 
-Enforcement: review (lens 1). There is no coverage gate and no CI; the suite runs through /verify.
+Enforcement: review (lens 1). There is no coverage gate; the suite runs through /verify (the PR checks run only the no-game part).
 
 A text search for `CampaignTime.Now` cannot tell a violation from a boundary seam (the Rule 1
 exception), so static calls in services are a review check, not a grep.

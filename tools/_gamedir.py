@@ -56,12 +56,14 @@ def game_modules(default):
     derives from the install root, which means setting one variable is enough
     for a correct setup — a server answering queries against the previous
     install is hard to notice. `default` is the install root, not the Modules
-    folder.
+    folder. With neither variable set and a `None` default, the answer is
+    `None`, for the caller to report.
     """
     override = os.environ.get(MODULES_ENV_VAR)
     if override is not None and override.strip():
         return Path(override)
-    return Path(game_dir(default)) / "Modules"
+    root = game_dir(default)
+    return None if root is None else Path(root) / "Modules"
 
 
 def armory_trees(armory_md, asset_repo):

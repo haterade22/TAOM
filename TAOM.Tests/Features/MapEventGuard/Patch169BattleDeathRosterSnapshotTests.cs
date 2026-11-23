@@ -88,6 +88,7 @@ public class Patch169BattleDeathRosterSnapshotTests
         return seen;
     }
 
+    [TestCategory("RequiresGame")]   // runs LinQuick.WhereQ
     [TestMethod]
     public void EngineWhereQ_ThrowsWhenTheListShrinksMidLoop()
     {
@@ -97,6 +98,7 @@ public class Patch169BattleDeathRosterSnapshotTests
             () => DrainWhileShrinking(roster.WhereQ(x => x % 2 == 1), roster));
     }
 
+    [TestCategory("RequiresGame")]   // runs LinQuick.WhereQ
     [TestMethod]
     public void Materialize_FinishesAndYieldsEveryMatch_WhenTheListShrinksMidLoop()
     {
@@ -107,6 +109,7 @@ public class Patch169BattleDeathRosterSnapshotTests
         CollectionAssert.AreEqual(new[] { 1, 3 }, seen);
     }
 
+    [TestCategory("RequiresGame")]   // runs LinQuick.WhereQ
     [TestMethod]
     public void Materialize_KeepsOrder_AndReadsThePredicateOncePerElement()
     {

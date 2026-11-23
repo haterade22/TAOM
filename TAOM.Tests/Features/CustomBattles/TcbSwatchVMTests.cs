@@ -7,6 +7,7 @@ namespace TAOM.Tests.Features.CustomBattles;
 [TestClass]
 public class TcbSwatchVMTests
 {
+    [TestCategory("RequiresGame")]   // constructs ViewModel
     [TestMethod]
     public void MarkCurrent_ColourInPalette_SelectsOnlyThatSwatch()
     {
@@ -19,6 +20,7 @@ public class TcbSwatchVMTests
         Assert.IsTrue(blue.IsSelected);
     }
 
+    [TestCategory("RequiresGame")]   // constructs ViewModel
     [TestMethod]
     public void MarkCurrent_ColourChanged_MovesTheSelection()
     {

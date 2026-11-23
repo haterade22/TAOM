@@ -267,6 +267,7 @@ public class CampaignStartPhase2Tests
         shown2.DidNotReceive().ShowCampaignKeepsStartChoices();
     }
 
+    [TestCategory("RequiresGame")]   // constructs CampaignBehaviorBase
     [TestMethod]
     public void Behavior_AsksOncePerSession_AndSwallowsAFault()
     {

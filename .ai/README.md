@@ -104,8 +104,8 @@ reviewing, adjudicating, researching and verifying. They link to this shared
 contract; they do not install runtime subagents or invoke paid providers.
 
 The Python tool tests (`python -m unittest discover -s tools/tests -t .`,
-`/verify` Step 2b) include the review-tool and documentation tests; no CI runs
-them since 2026-10-05. This is regression testing, not an authenticated
+`/verify` Step 2b) include the review-tool and documentation tests; CI runs them
+on pull requests only. This is regression testing, not an authenticated
 adversarial-review service. Before
 making it a merge gate, separately authorize and configure trusted orchestration,
 provider accounts/budgets, isolated execution, authenticated report ingestion,

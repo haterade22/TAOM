@@ -89,6 +89,7 @@ public class CheatMenuServiceTests
     }
 
     // #1297: these four results have no Name, so the shared "Done: {NAME} {NUMBER}" line read "Done:  25,000".
+    [TestCategory("RequiresGame")]   // constructs TextObject
     [TestMethod]
     public void UnnamedResults_EachHaveTheirOwnWords()
     {
@@ -103,6 +104,7 @@ public class CheatMenuServiceTests
         Assert.IsTrue(CheatMenuTexts.Describe(_service.Heal()).Value.StartsWith("{=taom_cheat_done_heal}"));
     }
 
+    [TestCategory("RequiresGame")]   // constructs TextObject
     [TestMethod]
     public void RelationAndTeleportResults_HaveTheirOwnWords()
     {

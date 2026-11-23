@@ -38,6 +38,7 @@ public class SpecialResourcesBehaviorPartyScreenAttachTests
             .GetField(eventName, BindingFlags.Instance | BindingFlags.NonPublic)!
             .GetValue(logic);
 
+    [TestCategory("RequiresGame")]   // constructs CampaignBehaviorBase
     [TestMethod]
     public void AttachToPartyScreen_ANewScreenAfterAnUnclosedOne_MovesBothSubscriptions()
     {
@@ -54,6 +55,7 @@ public class SpecialResourcesBehaviorPartyScreenAttachTests
         Assert.IsNotNull(Handlers(second, "PartyScreenClosedEvent"));
     }
 
+    [TestCategory("RequiresGame")]   // constructs CampaignBehaviorBase
     [TestMethod]
     public void PartyScreenClosed_FromCancel_DetachesAndCancelsTheSession()
     {
@@ -69,6 +71,7 @@ public class SpecialResourcesBehaviorPartyScreenAttachTests
         service.Received(1).CancelSession();
     }
 
+    [TestCategory("RequiresGame")]   // constructs CampaignBehaviorBase
     [TestMethod]
     public void AttachToPartyScreen_TheSameScreenTwice_SubscribesOnce()
     {

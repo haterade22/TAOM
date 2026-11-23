@@ -231,6 +231,7 @@ public class ModuleRunnerTests
         Assert.IsNull(runner.TakeFaultSummary());
     }
 
+    [TestCategory("RequiresGame")]   // constructs TextObject
     [TestMethod]
     public void TakeFaultSummary_NamesEachFaultedModuleWithItsStep_ThenClears()
     {
