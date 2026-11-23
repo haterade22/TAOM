@@ -116,7 +116,8 @@ because the model probes it). Never `Agent.Index` (#592).
 adds TAOM's (`:3831`), and `AddMissionBehavior` calls only `OnCreated` (`:4699`), so it never runs
 for any TAOM behavior (#606; the first version gated the whole feature there and was inert in the
 first battle, with no log line). The mission gate is read once on first use from whichever
-callback arrives first; the combat type comes from native `InitializeMission` before any of them.
+callback arrives first; the mission behaviours the gate asks for (the arena's practice controller, the tournament
+behaviour) come from the mission's opener, which attaches them before any of those callbacks (#1537).
 
 **Weapon gate.** The attacker must hold a weapon whose ITEM type is not Bow, Crossbow, Sling,
 Thrown, Pistol, Musket or an ammo type. A javelin swung in melee mode has a melee usage but a
@@ -124,8 +125,8 @@ Thrown item, so it is out; so are kicks and shield bashes (`IsAlternativeAttack`
 A missile hit never reaches `OnMeleeHit` at all.
 
 **What does nothing:** a parry, a chamber block, a weapon block, a canceled hit (invulnerable
-victim, friendly fire, a swing that hit nothing), a horse charge, a thrust, a zero-damage hit, any hit inside the cooldown, any mission
-that is not `MissionCombatType.Combat` (arenas and tournaments out), any multiplayer session, the
+victim, friendly fire, a swing that hit nothing), a horse charge, a thrust, a zero-damage hit, any hit inside the cooldown, the training yard
+and every tournament match (known by their mission behaviours, #1537; `MissionCombatType` is `Combat` in every mission), any multiplayer session, the
 Combat Mechanics master toggle off, and everything for the rest of a mission in which the logic
 stood down on an exception (the stand-down clears the roster, so the model's verdicts stop with
 the ring; Codex review 114 F1). A shield block that still damages the shield fires the ring
@@ -332,7 +333,7 @@ Every stage writes one line, so a replay proves each one (`bin/Win64_Shipping_Cl
 | Line | Meaning |
 |---|---|
 | `SignatureStrikesConfigProvider: Loaded signature_strikes_config.json` | the shipped JSON parsed clean (a `contained invalid values` warning names the field otherwise) |
-| `[SignatureStrikes] mission gate: eligible=True combatType=Combat multiplayer=False` | the mission qualifies; `eligible=False` names why (ArenaCombat, NoCombat, multiplayer) |
+| `[SignatureStrikes] mission gate: eligible=True combatType=Combat arena=False multiplayer=False` | the mission qualifies; with `eligible=False` the line names why (`arena=True` in the training yard or a tournament, or `multiplayer=True`) |
 | `[SignatureStrikes] Witch-King of Angmar registered for 'nazgul' (id lord_1_15, race 15)` | identity resolved; the signature it carries, the id used (the hero's, or the character's in a Custom Battle) and the race id |
 | `[SignatureStrikes] first-tick scan: 2 signature agent(s) on the field` | the safety scan; the count is the roster size |
 | `[SignatureStrikes] hit by Sauron: Overhead StrikeAgent dmg=63 weapon=True canceled=False victim=Looter -> Slam` | one per signature-hero melee collision, with the direction the engine reported and the verdict (`-> no effect` with the reason readable off the fields: `Thrust`, `Parried`, `dmg=0`, `weapon=False`, or a cooldown) |

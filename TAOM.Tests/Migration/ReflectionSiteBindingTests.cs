@@ -185,6 +185,9 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.MBMusicManager", "MBMusicManager", "set_CurrentMode", "Method", "MenuMusicAdapter.cs:12")]
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.FaceGenerator.FaceGenVM", "FaceGenVM", "_faceGeneratorScreen", "Field", "CharacterCreationWidgets.cs:44")]
     [DataRow("TaleWorlds.GauntletUI.BaseTypes.ButtonWidget", "ButtonWidget", "HandleClick", "Method", "NarrativeRandomButton.cs:22")]
+    // #1545: a half-built themed movie whose Release threw leaves the layer's list here; missing, the layer
+    // releases it again at teardown and throws.
+    [DataRow("TaleWorlds.Engine.GauntletUI.GauntletLayer", "GauntletLayer", "_movieIdentifiers", "Field", "GauntletLayerLoadMoviePatch.cs:100")]
     // --- LoadTimeStamps (plan 040): the [Lifecycle] listener swap walks MbEvent's private listener records and
     // sets their private Action. Missing: per-handler timing is off for the session, dispatch totals only.
     [DataRow("TaleWorlds.CampaignSystem.MbEvent`1", "MbEvent`1", "_nonSerializedListenerList", "Field", "CampaignListenerAdapter.cs")]
@@ -292,6 +295,7 @@ public class ReflectionSiteBindingTests
     [DataRow("SandBox.Missions.MissionLogics.Arena.ArenaPracticeFightMissionController", "ArenaPracticeFightMissionController", "_AIParticipantTeams", "Field", "TeamPracticeAccess.cs:29")]
     [DataRow("SandBox.Missions.MissionLogics.Arena.ArenaPracticeFightMissionController", "ArenaPracticeFightMissionController", "_aliveOpponentCount", "Field", "TeamPracticeAccess.cs:31")]
     [DataRow("SandBox.CampaignBehaviors.ArenaMasterCampaignBehavior", "ArenaMasterCampaignBehavior", "conversation_arena_practice_fight_explain_reward_on_condition", "Method", "TeamPracticeDialogBehavior.cs:28")]
+    [DataRow("SandBox.ViewModelCollection.Missions.MissionArenaPracticeFightVM", "MissionArenaPracticeFightVM", "_practiceMissionController", "Field", "MissionArenaPracticeFightVM_Tick_TeamPractice_Patch.cs:26")]
     // --- Training Waves (ArenaPracticeControllerAccess.cs, #1529): the four private members of the practice controller that the wave fight reaches. Missing: a binding returns false and the wave refunds the stake.
     [DataRow("SandBox.Missions.MissionLogics.Arena.ArenaPracticeFightMissionController", "ArenaPracticeFightMissionController", "_participantAgents", "Field", "ArenaPracticeControllerAccess.cs:19")]
     [DataRow("SandBox.Missions.MissionLogics.Arena.ArenaPracticeFightMissionController", "ArenaPracticeFightMissionController", "_spawnedOpponentAgentCount", "Field", "ArenaPracticeControllerAccess.cs:22")]
