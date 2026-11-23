@@ -2387,12 +2387,12 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_realm_borders}Realm Borders/{=taom_mcm_group_realm_colours}Realm Colours")]
     [SettingPropertyText("{=taom_mcm_RealmColourMistyMountainOrcs}Misty Mountain Orcs", Order = 19, RequireRestart = false,
-        HintText = "{=taom_mcm_RealmColourMistyMountainOrcs_hint}Misty Mountain Orcs's colour on the map, written #RRGGBB. Blank uses the default, #7E7A50.")]
+        HintText = "{=taom_mcm_RealmColourMistyMountainOrcs_hint}Misty Mountain Orcs' colour on the map, written #RRGGBB. Blank uses the default, #7E7A50.")]
     public string RealmColourMistyMountainOrcs { get; set; } = string.Empty;
 
     [SettingPropertyGroup("{=taom_mcm_group_realm_borders}Realm Borders/{=taom_mcm_group_realm_colours}Realm Colours")]
     [SettingPropertyText("{=taom_mcm_RealmColourGoblins}Goblins", Order = 20, RequireRestart = false,
-        HintText = "{=taom_mcm_RealmColourGoblins_hint}Goblins's colour on the map, written #RRGGBB. Blank uses the default, #AFC93A.")]
+        HintText = "{=taom_mcm_RealmColourGoblins_hint}Goblins' colour on the map, written #RRGGBB. Blank uses the default, #AFC93A.")]
     public string RealmColourGoblins { get; set; } = string.Empty;
 
     [SettingPropertyGroup("{=taom_mcm_group_realm_borders}Realm Borders/{=taom_mcm_group_realm_colours}Realm Colours")]
