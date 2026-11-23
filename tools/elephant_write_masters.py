@@ -24,10 +24,26 @@ is 0.65 to 0.98 off. The engine's model space is the Blender rig turned 180 degr
 The root position track is the pelvis's offset from its rest position. The Kit writes it relative to the
 FBX's first frame; this tool writes it relative to REST, so a clip that rides lower than rest stays lower.
 
+KEY TIMES (2026-11-23). A clip record plays the keys from its Source1 to its Source2, and the editor accepts a
+track only when its first key time is at or under the lower source and its last at or over the upper one
+(FUN_180b8b810 in the wEditor TaleWorlds.Native.dll; each track that fails prints "... ipo does not fit with ...
+anim_clip's sources"). The Kit's own masters key from 0, and a Kit loop's last source key repeats its first
+(warg_canter: keys 0 to 17, sources 1 to 17, key 17 the pose of key 1). So this tool writes frame f at key time
+f, and a clip that loops (the default; a one-shot says "loop": false) gets one more key, at time N, that repeats
+frame 0: sources 0 to N then hold exactly N steps. Until that day it keyed 1 to N under sources 0 to N, as
+ADOD's elephant masters do: one warning per bone per clip, and the first key held for one key time each loop.
+--rekey brings a master of that form to this one without its clip file. It changes the key times every record of
+the master addresses, so it takes the record's sources and migrates one form only: keys 1 to N, played whole by
+one record with sources 0 to N. An in-place --clip rewrite of the same key count keeps the master's own key
+times, for the same reason: the records that play it name those times.
+
     python tools/elephant_write_masters.py --clip <clip.json> --master <x_geo.tpac> [--out <file>] [--apply]
     python tools/elephant_write_masters.py --clip <clip.json> --master <template_geo.tpac> --new --out <folder>
     python tools/elephant_write_masters.py --root-z 10:0.006 --master <adod_elephant_geo.tpac> [--out <file>] [--apply]
         (set_root_z: one height change on every key but the first, the rest pose)
+    python tools/elephant_write_masters.py --rekey loop|shot --sources 0:<N> --master <x_geo.tpac> [--apply --backup-dir <folder>]
+        (rekey: the keys as they are, timed from 0; a loop gets its closing key. --sources is its record's Source1
+        and Source2. The backup goes outside the module, and never beside the master)
 Dry run by default: it builds and verifies the new package in memory. --out writes it to a new file.
 --apply replaces --master, after a one-time backup beside it (<name>.bak-pre1474, never overwritten), and
 refuses while the game or the Kit runs. The clip must have the master's key count unless --resize is given;
@@ -96,8 +112,16 @@ def build_anim(a):
     return b"".join(out)
 
 
+def close_loop(rot, root):
+    """The keys with one more at the end that repeats the first: (rot [bone][key][4], root [key][k]). Each bone's
+    closing rotation takes the sign nearest its last key's, so the blend into it goes the short way."""
+    last = rot[:, :1].copy()
+    last[np.einsum("bk,bk->b", last[:, 0], rot[:, -1]) < 0] *= -1.0
+    return np.concatenate([rot, last], axis=1), np.vstack([root, root[:1]])
+
+
 def clip_keys(clip):
-    """(rotation keys [bone][frame] as w,x,y,z, root offsets [frame] as x,y,z) in engine space, frames 1..N."""
+    """(rotation keys [bone][frame] as w,x,y,z, root offsets [frame] as x,y,z) in engine space, one per frame."""
     names, parents = clip["bones"], clip["parents"]
     idx = {n: i for i, n in enumerate(names)}
     mats = np.array(clip["mats"]).reshape(len(clip["mats"]), len(names), 4, 4)
@@ -122,11 +146,13 @@ def clip_keys(clip):
     return rot, root
 
 
-def new_payload(old, clip, resize=False, name=None):
+def new_payload(old, clip, resize=False, name=None, keep_times=False):
     a = parse_anim(old)
     if name:
         a["name"] = name
     rot, root = clip_keys(clip)
+    if clip.get("loop", True):
+        rot, root = close_loop(rot, root)
     bones, n = rot.shape[0], rot.shape[1]
     if bones != len(a["rot"]):
         raise ValueError("clip has %d bones, master %d" % (bones, len(a["rot"])))
@@ -135,11 +161,14 @@ def new_payload(old, clip, resize=False, name=None):
         raise ValueError("master tracks have different key counts %s; this tool writes uniform tracks" % sorted(counts))
     have = counts.pop()
     if have != n and not resize:
-        raise ValueError("clip has %d frames, master has %d keys per track: rebuild the clip at %d frames or pass "
-                         "--resize" % (n, have, have))
+        raise ValueError("clip makes %d keys (a loop has one more than its frames), master has %d per track: run "
+                         "--rekey on the master first, or pass --resize and then write its records again "
+                         "(gen_elephant_anim_clips.ps1)" % (n, have))
     if any(len(p["t"]) for p in a["pos"]) or len(a["root_scale"]["t"]):
         raise ValueError("master carries bone position or root scale keys; this tool would drop them")
-    times = a["rot"][0]["t"] if have == n else [float(i + 1) for i in range(n)]
+    # keep_times: an in-place rewrite of the same key count, whose records name the master's own key times. A new
+    # master never keeps its template's (the first spider trot took the template's 0 to 29 under sources 0 to 30).
+    times = [float(t) for t in a["rot"][0]["t"]] if keep_times and have == n else [float(i) for i in range(n)]
     for b in range(bones):
         a["rot"][b] = {"u": a["rot"][b]["u"], "t": list(times), "v": rot[b]}
     a["root_pos"] = {"u": a["root_pos"]["u"], "t": list(times), "v": np.column_stack([root, np.zeros(n)])}
@@ -167,18 +196,93 @@ def rewrite(raw, clip, resize=False):
         raise ValueError("expected one SkeletalAnimation item with one data segment")
     item = items[0]
     seg = item.segments[0]
-    data, n, have = new_payload(tcm.segment_payload(item, seg), clip, resize)
+    # without --resize the records name the master's own key times; with it the master is written anew, from 0
+    data, n, have = new_payload(tcm.segment_payload(item, seg), clip, resize, keep_times=not resize)
     blob = _store(item, seg, data)
     if n != have:
-        start, end = tcm._metadata_span(item)
-        bone_num, duration, tail = struct.unpack_from("<iii", item.toc, end - 12)
-        if (bone_num, duration, tail) != (len(clip["bones"]), have, 0):
-            raise ValueError("metadata tail is %s, expected (%d, %d, 0)" % ((bone_num, duration, tail), len(clip["bones"]), have))
-        struct.pack_into("<i", item.toc, end - 8, n)
-        item.toc[end:end + 8] = tcm.expected_checksum(item)
+        _set_key_count(item, len(clip["bones"]), have, n)
     out = tcm.serialize(pkg.package_guid, pkg.items, pkg.version)
     verify(out, data, raw)
     return out, {"item": item.name, "frames": n, "was": have, "payload": len(data), "stored": len(blob)}
+
+
+def _set_key_count(item, bones, have, n):
+    """The item's key count in its metadata, and the checksum over it."""
+    start, end = tcm._metadata_span(item)
+    bone_num, duration, tail = struct.unpack_from("<iii", item.toc, end - 12)
+    if (bone_num, duration, tail) != (bones, have, 0):
+        raise ValueError("metadata tail is %s, expected (%d, %d, 0)" % ((bone_num, duration, tail), bones, have))
+    struct.pack_into("<i", item.toc, end - 8, n)
+    item.toc[end:end + 8] = tcm.expected_checksum(item)
+
+
+def rekey(raw, loop, sources=None):
+    """A master's keys as they are, timed from 0, and for a loop closed (KEY TIMES in the header): the migration
+    of a master this tool wrote before 2026-11-23, when no clip file is at hand. sources: (Source1, Source2) of the
+    record that plays the master.
+
+    Only one form is migrated: keys 1 to N on every track, under a record whose sources are 0 to N. The sources
+    are the caller's statement that one record plays the whole master. This function sees no record: a second
+    record on the same master with another range would be shifted, and nothing here can know of it. Every master
+    this tool and gen_elephant_anim_clips.ps1 write has one record. A master that keys from 0 is left as it is (a
+    second run changes nothing), and it is refused when it does not fit what was asked: a loop that does not end
+    on its first pose, or sources that reach past its keys. A one-key pose becomes two keys."""
+    pkg = tcm.parse(raw)
+    items = [it for it in pkg.items if it.type_guid == SKELETAL_ANIMATION_TYPE]
+    if len(items) != 1 or len(items[0].segments) != 1:
+        raise ValueError("expected one SkeletalAnimation item with one data segment (found %d)" % len(items))
+    item = items[0]
+    seg = item.segments[0]
+    old = tcm.segment_payload(item, seg)
+    a = parse_anim(old)
+    tracks = a["rot"] + [a["root_pos"]]
+    times = [float(t) for t in a["rot"][0]["t"]]
+    if any([float(t) for t in tr["t"]] != times for tr in tracks):
+        raise ValueError("the tracks have different key times; this tool writes uniform tracks")
+    if any(len(p["t"]) for p in a["pos"]) or len(a["root_scale"]["t"]):
+        raise ValueError("master carries bone position or root scale keys; this tool would drop them")
+    have = len(times)
+    if not have or any(abs(b - a_ - 1.0) > 1e-6 for a_, b in zip(times, times[1:])):
+        raise ValueError("the keys are not one run of whole key times (%s...): a master that holds several clips "
+                         "is not this tool's to rekey" % times[:4])
+    rot = np.array([np.asarray(tr["v"], dtype=np.float64).reshape(have, 4) for tr in a["rot"]])
+    root = np.asarray(a["root_pos"]["v"], dtype=np.float64).reshape(have, 4)
+    # a closing key is a copy of the first, or its negative: compared exactly, because the stored rotations are
+    # not unit length to the last digit and a test by their dot product took a closed loop for an open one
+    same = (rot[:, -1] == rot[:, 0]).all(axis=1) | (rot[:, -1] == -rot[:, 0]).all(axis=1)
+    closed = have > 1 and times[0] == 0.0 and bool(np.array_equal(root[0], root[-1])) and bool(same.all())
+    if sources is None:
+        raise ValueError("the record's sources are not given (--sources LO:HI): without them a master is neither "
+                         "migrated nor reported as done")
+    if times[0] == 0.0:                      # keyed from 0 already: nothing to migrate, only to check
+        if loop and not closed:
+            raise ValueError("the master keys from 0 and does not end on its first pose: it is not a loop this tool "
+                             "wrote before 2026-11-23. Pass shot for a one-shot, or write the clip again")
+        if not (times[0] <= sources[0] and sources[1] <= times[-1]):
+            raise ValueError("the master keys from 0 and its record plays %g to %g, past its keys %g to %g: not a "
+                             "master this tool migrated" % (sources[0], sources[1], times[0], times[-1]))
+        return raw, {"item": item.name, "keys": have, "was": have, "times_were": (times[0], times[-1])}
+    if times[0] != 1.0 or (float(sources[0]), float(sources[1])) != (0.0, float(have)):
+        raise ValueError("only a master keyed 1 to N under a record with sources 0 to N is migrated; this one keys "
+                         "%g to %g and its record's sources are %g to %g. A master that holds several clips is not "
+                         "this tool's to rekey" % (times[0], times[-1], sources[0], sources[1]))
+    if loop:
+        rot, root = close_loop(rot, root)
+    n = rot.shape[1]
+    new_times = [float(i) for i in range(n)]
+    for b in range(len(a["rot"])):
+        a["rot"][b] = {"u": a["rot"][b]["u"], "t": list(new_times), "v": rot[b]}
+    a["root_pos"] = {"u": a["root_pos"]["u"], "t": list(new_times), "v": root}
+    data = build_anim(a)
+    info = {"item": item.name, "keys": n, "was": have, "times_were": (times[0], times[-1])}
+    if data == old:
+        return raw, info
+    _store(item, seg, data)
+    if n != have:
+        _set_key_count(item, len(a["rot"]), have, n)
+    out = tcm.serialize(pkg.package_guid, pkg.items, pkg.version)
+    verify(out, data, raw)
+    return out, info
 
 
 def set_root_z(raw, ref_time, z, from_time=1.0):
@@ -349,6 +453,10 @@ def main(argv=None):
     ap.add_argument("--root-z", metavar="KEY:Z",
                     help="instead of --clip: move the root's height on every key but the first (the rest pose), by "
                          "the one amount that puts the key at time KEY at height Z (set_root_z)")
+    ap.add_argument("--rekey", choices=("loop", "shot"),
+                    help="instead of --clip: time the master's own keys from 0, and close a loop (rekey)")
+    ap.add_argument("--sources", metavar="LO:HI", help="with --rekey: Source1 and Source2 of the record that plays the master")
+    ap.add_argument("--backup-dir", help="with --rekey --apply: the folder, outside the module, for the one backup")
     ap.add_argument("--master", required=True)
     ap.add_argument("--out")
     ap.add_argument("--apply", action="store_true")
@@ -357,9 +465,49 @@ def main(argv=None):
                     help="write a NEW master named after the clip into the folder --out, with --master as the "
                          "template; an existing file is replaced only by a rebuild of the same master")
     a = ap.parse_args(argv)
-    if bool(a.clip) == bool(a.root_z):
-        ap.error("pass --clip or --root-z, one of them")
+    if sum(map(bool, (a.clip, a.root_z, a.rekey))) != 1:
+        ap.error("pass --clip, --root-z or --rekey, one of them")
     raw = open(a.master, "rb").read()
+    if a.rekey:
+        if a.new or a.resize or a.out:
+            ap.error("--rekey takes --apply and --backup-dir only")
+        try:
+            sources = tuple(float(v) for v in a.sources.split(":")) if a.sources else None
+            if sources is not None and len(sources) != 2:
+                raise ValueError("--sources is LO:HI")
+            out, info = rekey(raw, a.rekey == "loop", sources)
+        except ValueError as err:
+            print("REFUSED: %s: %s" % (os.path.basename(a.master), err))
+            return 1
+        print("%s: keys %g to %g (%d) become 0 to %d (%d), as a %s; %s" % (
+            info["item"], info["times_were"][0], info["times_were"][1], info["was"], info["keys"] - 1, info["keys"],
+            "loop" if a.rekey == "loop" else "one-shot", "unchanged" if out == raw else "changed"))
+        if not a.apply or out == raw:
+            return 0
+        if not a.backup_dir:
+            ap.error("--rekey --apply needs --backup-dir, a folder outside the module")
+        run = game_or_kit_running()
+        if run:
+            print("REFUSED: %s is running; close it and run again" % ", ".join(run))
+            return 2
+        if (os.sep + "modules" + os.sep) in os.path.abspath(a.backup_dir).lower() + os.sep:
+            print("REFUSED: --backup-dir %s is inside a module: the game would load the copy as a second package "
+                  "of the same GUIDs" % a.backup_dir)
+            return 2
+        bak = os.path.join(a.backup_dir, os.path.basename(a.master))
+        if os.path.normcase(os.path.abspath(bak)) == os.path.normcase(os.path.abspath(a.master)):
+            print("REFUSED: --backup-dir %s is the master's own folder: the backup would be the file about to be "
+                  "replaced" % a.backup_dir)
+            return 2
+        os.makedirs(a.backup_dir, exist_ok=True)
+        if not os.path.exists(bak):
+            shutil.copy2(a.master, bak)
+        tmp = a.master + ".rekey-tmp"          # written beside the master and moved over it: never half a package
+        with open(tmp, "wb") as fh:
+            fh.write(out)
+        os.replace(tmp, a.master)
+        print("applied to", a.master, "(backup %s)" % bak)
+        return 0
     if a.root_z:
         if a.new or a.resize:
             ap.error("--root-z takes neither --new nor --resize")
@@ -392,7 +540,7 @@ def main(argv=None):
         return 0
     if clip is not None:
         out, info = rewrite(raw, clip, a.resize)
-        print("%s: %d frames (was %d), data %d bytes, stored %d; stride %.3f m; %s" % (
+        print("%s: %d keys (was %d), data %d bytes, stored %d; stride %.3f m; %s" % (
             info["item"], info["frames"], info["was"], info["payload"], info["stored"], clip["stride_m"],
             "unchanged" if out == raw else "changed"))
     if a.out:

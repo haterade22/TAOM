@@ -24,6 +24,7 @@ Usage:
   python tools/verify_mount_assets.py --game "E:\\...\\Mount & Blade II Bannerlord" spider
 """
 import argparse
+import math
 import os
 import re
 import struct
@@ -54,7 +55,16 @@ CREATURES = {
             ("act_spider_trot_stand", "spider_trot_inplace"),
             ("act_spider_canter_stand", "spider_canter_inplace"),
             ("act_spider_run_stand", "spider_gallop_inplace"),
+            ("act_spider_walk_backward_stand", "spider_walk_backwards_inplace"),     # #1550: pace 0's none row
         ),
+        # The body capsule against the skeleton (capsule_findings). The hips are each leg's first long bone.
+        "body": {
+            "monster_xml": r"Modules\LOTRLOME_Armory\ModuleData\Monsters\LOTR\lotr_monster_spider.xml",
+            "monster_id": "spider",
+            "skeleton_tpac": r"Modules\LOTRLOME_Armory\Assets\creature\spider\animations\spider_correct_geo.tpac",
+            "skeleton": "spider_skeleton",
+            "hips": [f"joint{n}_{side}" for n in (41, 35, 29, 23) for side in ("l", "r")],
+        },
     },
     "elephant": {
         "asset_dir": r"Modules\LOTRLOME_Armory\Assets\creature\elephant",
@@ -125,6 +135,98 @@ def tpac_items(d):
     except Exception:
         return out
     return out
+
+
+CENTRE = 0.05          # metres: a bone this near the beast's middle plane is on its centre line
+CAPSULE_SLACK = 0.10   # metres a capsule end may stop short of the last centre-line bone
+
+
+def read_body_capsule(xml, monster_id):
+    """(radius, pos1, pos2) of the monster's <body_capsule>, or None. Comments are dropped first."""
+    xml = re.sub(r"<!--.*?-->", "", xml, flags=re.S)
+    for m in re.finditer(r"<Monster\b([^>]*)>(.*?)</Monster>", xml, re.S):
+        if not re.search(r'\bid="%s"' % re.escape(monster_id), m.group(1)):
+            continue
+        cap = re.search(r"<body_capsule\b([^>]*)/>", m.group(2), re.S)
+        if not cap:
+            return None
+        at = dict(re.findall(r'(\w+)="([^"]*)"', cap.group(1)))
+        try:
+            return (float(at["radius"]), tuple(float(v) for v in at["pos1"].split(",")),
+                    tuple(float(v) for v in at["pos2"].split(",")))
+        except (KeyError, ValueError):
+            return None
+    return None
+
+
+def capsule_findings(capsule, bones, hips):
+    """Why a body capsule does not cover the beast's body from above. bones: the skeleton's rest pose as
+    tools/tpac_skeleton_dump.py gives it (name, parent_idx, rest_frame: a column-major local 4x4), parents first;
+    Y is forward. Four checks, and no more: along Y the capsule reaches from the foremost to the rearmost bone on
+    the centre line, each end within CAPSULE_SLACK; its radius reaches the widest of `hips`; both ends sit on the
+    centre line; both ends sit within the height the centre line spans. It does NOT prove that every bone is
+    inside the capsule: under the spider's rear cap the abdomen's tip is 0.22 m outside it. The legs are not
+    held: no mount's are. The body capsule is what keeps two beasts apart; on 2026-11-23 the spider's stopped
+    1.7 m before its abdomen's tip."""
+    radius, p1, p2 = capsule
+    if not all(math.isfinite(v) for v in (radius,) + tuple(p1) + tuple(p2)) or radius <= 0 or len(p1) != 3 or len(p2) != 3:
+        return ["its radius or an end is no finite number above 0 (radius %s, pos1 %s, pos2 %s)" % (radius, p1, p2)]
+    world, at = [], {}
+    for b in bones:
+        f = b["rest_frame"]
+        m = [[f[c * 4 + r] for c in range(4)] for r in range(4)]
+        if b["parent_idx"] >= 0:
+            p = world[b["parent_idx"]]
+            m = [[sum(p[r][k] * m[k][c] for k in range(4)) for c in range(4)] for r in range(4)]
+        world.append(m)
+        at[b["name"]] = (m[0][3], m[1][3], m[2][3])
+    out = ["hip bone %s is not on the skeleton" % h for h in hips if h not in at]
+    centre = {n: p for n, p in at.items() if abs(p[0]) < CENTRE}
+    if not centre:
+        return out + ["the skeleton has no bone on its centre line"]
+    first = max(centre, key=lambda n: centre[n][1])
+    last = min(centre, key=lambda n: centre[n][1])
+    front, rear = max(p1[1], p2[1]) + radius, min(p1[1], p2[1]) - radius
+    if front < centre[first][1] - CAPSULE_SLACK:
+        out.append("its front end is at y %.2f, %.2f m behind the foremost centre bone %s" % (
+            front, centre[first][1] - front, first))
+    if rear > centre[last][1] + CAPSULE_SLACK:
+        out.append("its rear end is at y %.2f, %.2f m before the rearmost centre bone %s: that much of the body is "
+                   "outside it, and two beasts walk into each other" % (rear, rear - centre[last][1], last))
+    known = [h for h in hips if h in at]
+    if known:
+        wide = max(known, key=lambda h: abs(at[h][0]))
+        if radius < abs(at[wide][0]) - 1e-6:
+            out.append("its radius %.2f does not reach the hip %s, %.2f m from the middle" % (radius, wide, abs(at[wide][0])))
+    elif not hips:
+        out.append("no hip bone is named for it, so its radius is not checked")
+    # where it is, not only how long and how wide: beside the body, above it or tilted through it is no hold
+    low, high = min(p[2] for p in centre.values()), max(p[2] for p in centre.values())
+    for name, p in (("pos1", p1), ("pos2", p2)):
+        if abs(p[0]) > CAPSULE_SLACK:
+            out.append("%s is %.2f m to the side of the centre line" % (name, abs(p[0])))
+        if not low - CAPSULE_SLACK <= p[2] <= high + CAPSULE_SLACK:
+            out.append("%s is at height %.2f, outside the centre line's %.2f to %.2f" % (name, p[2], low, high))
+    return out
+
+
+def body_findings(game, body):
+    """(capsule or None, findings) for a creature's `body` entry: read_body_capsule and capsule_findings on the
+    live files. A file that is missing or cannot be read is a finding, never a traceback."""
+    import tpac_skeleton_dump as tsd
+    try:
+        with open(os.path.join(game, body["monster_xml"]), encoding="utf-8-sig") as fh:
+            capsule = read_body_capsule(fh.read(), body["monster_id"])
+        skel_path = os.path.join(game, body["skeleton_tpac"])
+        _, seg, _ = tsd.find_skeleton(skel_path, body["skeleton"])
+        bones = tsd.parse_skeleton_definition(tsd.read_segment_data(skel_path, seg))["bones"] if seg is not None else None
+    except (OSError, AssertionError, struct.error, ValueError, KeyError) as err:
+        return None, ["cannot read the monster file or the skeleton package (%s: %s)" % (type(err).__name__, err)]
+    if capsule is None:
+        return None, ["no <body_capsule> for %s" % body["monster_id"]]
+    if bones is None:
+        return capsule, ["no skeleton %s in %s" % (body["skeleton"], body["skeleton_tpac"])]
+    return capsule, capsule_findings(capsule, bones, body["hips"])
 
 
 def action_set_block(xml, set_id):
@@ -283,6 +385,19 @@ def main(argv=None):
         for sid, anim in phantom:
             print(f"           {sid}: animation=\"{anim}\" found in NO live tpac")
         fails.append("phantom")
+
+    # ---- CHECK 4: the body capsule holds the body (creatures that name a `body`) ----
+    body = c.get("body")
+    if body:
+        capsule, why = body_findings(game, body)
+        size = f" (radius {capsule[0]:.2f}, y {capsule[1][1]:.2f} to {capsule[2][1]:.2f})" if capsule else ""
+        if why:
+            print(f"  [FAIL] the body capsule of {body['monster_id']}{size}:")
+            for w in why:
+                print(f"           {w}")
+            fails.append("body_capsule")
+        else:
+            print(f"  [PASS] the body capsule holds the body{size}")
 
     print("=" * 60)
     if fails:

@@ -126,13 +126,13 @@ public class SpiderTrialRulesTests
     [TestMethod]
     public void SpidersThatStoodAndRan_Pass()
     {
-        Assert.IsTrue(SpiderTrialRules.Passes(riders: 12, stand: 0.2f, top: 8.4f, pictures: 4));
+        Assert.IsTrue(SpiderTrialRules.Passes(riders: 12, stand: 0.2f, top: 8.4f, pictures: 4, slide: 0f, judged: 60f));
     }
 
     [TestMethod]
     public void NoRider_Fails()
     {
-        Assert.IsFalse(SpiderTrialRules.Passes(riders: 0, stand: 0f, top: 8.4f, pictures: 4));
+        Assert.IsFalse(SpiderTrialRules.Passes(riders: 0, stand: 0f, top: 8.4f, pictures: 4, slide: 0f, judged: 60f));
     }
 
     [DataTestMethod]
@@ -142,7 +142,7 @@ public class SpiderTrialRulesTests
     [DataRow(float.NegativeInfinity)]
     public void SpidersThatDidNotRunFastEnough_Fail(float top)
     {
-        Assert.IsFalse(SpiderTrialRules.Passes(riders: 12, stand: 0.2f, top, pictures: 4));
+        Assert.IsFalse(SpiderTrialRules.Passes(riders: 12, stand: 0.2f, top, pictures: 4, slide: 0f, judged: 60f));
     }
 
     [DataTestMethod]
@@ -151,7 +151,7 @@ public class SpiderTrialRulesTests
     [DataRow(float.PositiveInfinity)]
     public void SpidersThatMovedWhileHeld_Fail(float stand)
     {
-        Assert.IsFalse(SpiderTrialRules.Passes(riders: 12, stand, top: 8.4f, pictures: 4));
+        Assert.IsFalse(SpiderTrialRules.Passes(riders: 12, stand, top: 8.4f, pictures: 4, slide: 0f, judged: 60f));
     }
 
     [DataTestMethod]
@@ -160,7 +160,7 @@ public class SpiderTrialRulesTests
     [DataRow(5)]
     public void ARunWithoutFourPictures_Fails(int pictures)
     {
-        Assert.IsFalse(SpiderTrialRules.Passes(riders: 12, stand: 0.2f, top: 8.4f, pictures));
+        Assert.IsFalse(SpiderTrialRules.Passes(riders: 12, stand: 0.2f, top: 8.4f, pictures, slide: 0f, judged: 60f));
     }
 
     [TestMethod]
@@ -168,7 +168,45 @@ public class SpiderTrialRulesTests
     {
         Assert.AreEqual(1.5f, SpiderTrialRules.StandAtMostMetresPerSecond);
         Assert.AreEqual(3f, SpiderTrialRules.TopAtLeastMetresPerSecond);
-        Assert.IsTrue(SpiderTrialRules.Passes(riders: 1, stand: 1.5f, top: 3f, pictures: 4));
+        Assert.IsTrue(SpiderTrialRules.Passes(riders: 1, stand: 1.5f, top: 3f, pictures: 4, slide: 0f, judged: 60f));
+    }
+
+    [DataTestMethod]
+    [DataRow(2.1f)]
+    [DataRow(19.9f)]
+    [DataRow(float.NaN)]
+    [DataRow(float.PositiveInfinity)]
+    public void SpidersThatSlid_Fail(float slide)
+    {
+        Assert.IsFalse(SpiderTrialRules.Passes(riders: 12, stand: 0.2f, top: 8.4f, pictures: 4, slide, judged: 60f));
+    }
+
+    // A slide of 0 from a meter that judged nothing is no measurement (no skeleton, readings too far apart, no fast spider).
+    [DataTestMethod]
+    [DataRow(0f)]
+    [DataRow(14f)]
+    [DataRow(23.9f)]
+    [DataRow(float.NaN)]
+    public void ARunWhoseSlideWasHardlyJudged_Fails(float judged)
+    {
+        Assert.IsFalse(SpiderTrialRules.Passes(riders: 12, stand: 0.2f, top: 8.4f, pictures: 4, slide: 0f, judged));
+    }
+
+    // Two seconds for each rider: one spider read through a whole charge of 14 s does not speak for twelve.
+    [TestMethod]
+    public void TheJudgedLimit_IsTwoSecondsForEachRider()
+    {
+        Assert.AreEqual(2f, SpiderTrialRules.JudgedAtLeastSecondsPerRider);
+        Assert.IsTrue(SpiderTrialRules.Passes(riders: 12, stand: 0.2f, top: 8.4f, pictures: 4, slide: 0f, judged: 24f));
+        Assert.IsTrue(SpiderTrialRules.Passes(riders: 1, stand: 0.2f, top: 8.4f, pictures: 4, slide: 0f, judged: 2f));
+        Assert.IsFalse(SpiderTrialRules.Passes(riders: 1, stand: 0.2f, top: 8.4f, pictures: 4, slide: 0f, judged: 1.9f));
+    }
+
+    [TestMethod]
+    public void TheSlideLimit_IsTwoSecondsOverAllTheSpiders()
+    {
+        Assert.AreEqual(2f, SpiderTrialRules.SlideAtMostSeconds);
+        Assert.IsTrue(SpiderTrialRules.Passes(riders: 12, stand: 0.2f, top: 8.4f, pictures: 4, slide: 2f, judged: 60f));
     }
 
     // The riders may be in a fight by the end of the stop wait, so neither fact is in the rule: a person reads them.
@@ -177,7 +215,7 @@ public class SpiderTrialRulesTests
     {
         var rule = typeof(SpiderTrialRules).GetMethod("Passes", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!;
 
-        CollectionAssert.AreEqual(new[] { "riders", "stand", "top", "pictures" }, rule.GetParameters().Select(p => p.Name).ToArray());
+        CollectionAssert.AreEqual(new[] { "riders", "stand", "top", "pictures", "slide", "judged" }, rule.GetParameters().Select(p => p.Name).ToArray());
     }
 
     [TestMethod]
@@ -188,9 +226,9 @@ public class SpiderTrialRulesTests
         {
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("de-DE");
 
-            var facts = SpiderTrialRules.Facts(riders: 12, mounted: 9, stand: 0.04f, top: 8.46f, stop: 1.25f, pictures: 4);
+            var facts = SpiderTrialRules.Facts(riders: 12, mounted: 9, stand: 0.04f, top: 8.46f, stop: 1.25f, pictures: 4, slide: 0.26f, judged: 96.54f);
 
-            Assert.AreEqual("riders=12 mounted=9 stand=0.0 top=8.5 stop=1.3 pictures=4", facts);
+            Assert.AreEqual("riders=12 mounted=9 stand=0.0 top=8.5 stop=1.3 pictures=4 slide=0.3 judged=96.5", facts);
         }
         finally
         {

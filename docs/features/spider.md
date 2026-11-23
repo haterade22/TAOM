@@ -349,7 +349,7 @@ each leg tip on a path and solves the five-bone leg to reach it, on `spider_skel
 | `spider_walk_backwards` | 54 | 0.90 s | 1.40 m | -1.56 to -0.2 | `act_spider_walk_backward` (new) |
 | `spider_strafe_left`, `_right` | 48 | 0.80 s | 1.20 m sideways | the template's 0.2 to 2.5 | `act_spider_walk_left`, `_right` |
 | `spider_turn_left`, `_right` | 48 | 0.80 s | 40 degrees | 0 to 0 | `act_spider_turn_left`, `_right` |
-| `spider_stand` | 1 | 4.0 s | 0 | -0.4 to 0.4 | `act_spider_stand` (new), the two quick stops |
+| `spider_stand` | 1 | 4.0 s | 0 | -0.4 to 0.4 | `act_spider_stand` (new); the two quick stops until 2026-11-23, when they took `spider_quick_stop` |
 | `spider_idle` | 120 | 4.0 s | 0 | none | the four idle actions, the inventory and conversation rows, the taunt |
 | `spider_<gait>_inplace` (four) | as the gait | as the gait | 0 | none | `act_spider_walk_stand`, `_trot_stand`, `_canter_stand`, `_run_stand` (new) |
 
@@ -360,8 +360,8 @@ legs out to 99% of their length; 3.0 m in 16 keys keeps them at 94%.
 
 **The pace table** takes the warg's and the elephant's shape: pace 0 the backward walk, pace 1 the stand, paces 2 to
 5 walk, trot, canter and gallop. The `direction="none"` row of paces 2 to 5 plays that gait's in-place twin: same
-timing and lift, no sweep. Pace 0 has no twin of its own yet and plays the walk's, which has the backward walk's
-loop time (0.9 s) and a slightly different step (#1550). The engine blends the twin with the gait by speed
+timing and lift, no sweep. Pace 0 played the walk's twin until 2026-11-23 and plays its own since,
+`spider_walk_backwards_inplace` (#1550). The engine blends the twin with the gait by speed
 ([elephant.md](elephant.md), "What the engine does with a clip record"), so a slow spider takes short steps at the
 gait's cadence. A twin's record is its gait's own with no clip usage, the shape of the vanilla `gait_walkfast` beside
 `horse_walkfast`. The node reads a clip usage only from a pace's front, strafe-right and turn-right slots, and from
@@ -371,14 +371,15 @@ with no usage is safe at every pace. Eight new actions carry the table; each has
 plays for that role; the gallop's twin takes `rider_warg_canter`, the clip the June `act_spider_run_forward` row has.
 The spider's table repeats an action across rows (`act_spider_walk_left` and `_right` in every pace, as since June,
 and now the walk's and the gallop's twins twice each), where the game's schema declares the action unique per table
-and the other mounts keep that; two battles ran clean on it, and #1550 holds the native read.
+and the other mounts keep that; two battles ran clean on it, and the native read (2026-11-23, under "Still open"
+below) shows why it is safe.
 
 **How the set is built.** No Kit import; one Kit start.
 
 ```
 python tools/spider_gait.py --rig tools/tests/fixtures/spider_rig.json --out <set>
 python tools/elephant_write_masters.py --clip <set>/<clip>.json --master <spider animations>/an_spi_walk_2_geo.tpac --new --out <spider animations>
-powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "& tools\gen_elephant_anim_clips.ps1 -Reports @('<set>\report.json') -Prefixes spider_ -Folder <spider animations> -Templates <elephant animations> -Apply"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "& tools\gen_elephant_anim_clips.ps1 -Reports @('<set>\report.json') -Prefixes spider_ -Folder <spider animations> -Templates @('<elephant animations>', '<warg animations>') -Apply"
 (start the Modding Kit once with the Armory loaded, then close it)
 python tools/bind_spider_clips.py --apply
 python tools/check_gait_stride.py --creature spider
@@ -410,18 +411,100 @@ pose in centimetres. Work folder of the first set: `E:\LOTRAOMAssets\Spider\gait
 
 - The turn records claim 0.873 (40 degrees in radians, divided by 0.8 s). The node advances a turn clip by turn
   speed / (Duration x LoopDisplacement) of the turn-RIGHT record, for both directions (native read, 0x74E9C0), so
-  Duration x LoopDisplacement is the turn per loop in the unit of the turn-speed input. Only that unit is unread:
-  the vanilla horse's product is 1.8 (#1550). A turn in place in a battle shows it.
-- The quick stops play `spider_stand`, a one-key record of 4.0 s, where the vanilla quick-stop clips are 2.4 to
-  2.5 s. Nobody has watched a hard stop (#1550).
+  Duration x LoopDisplacement is the turn per loop in the unit of the turn-speed input. That unit is still not
+  read. It is radians a second by inference only: the vanilla horse's and the mumak's product is 1.8, which is
+  about one loop a second at a horse's turn rate, and fifty a second if the input were in degrees. Two ways to read
+  it failed on 2026-11-23: the vanilla `animation_clips.tpac` (6,177 items) is in a cooked form `parse_anim` cannot
+  read, and the trial cannot turn one spider on command (its input drives the view). A turn in place in a battle
+  shows a wrong factor as slipping feet.
+- The quick stops play `spider_quick_stop` since 2026-11-23, 1.5 s, the warg's stop length. Nobody has watched a
+  hard stop. Whether the engine holds the mount for the clip's length is still not known.
 - The spider in the party screen, the encyclopedia and a conversation plays `spider_idle`, which has no
   `quad_movement` usage. The vanilla horse's `horse_inventory_idle` has none either, and the June note named those
   screens as the first to crash on an untagged MOVEMENT clip; nobody has opened them on the new idle.
 - `verify_mount_assets.py` exempts the four twins from its `quad_movement` check, as it does the dire wolf's. The
   vanilla horse, the warg and the elephant run that shape, and the spider ran it in two custom battles on 2026-11-22
   with no fault (the runs under "The spider gait step of the command trial").
-- `an_spi_jump` (the jump start) keeps its grafted 3.60 m record; the gate lists it as pending. It, the attacks,
-  hits, deaths, clip flags and the rider's own clips are a second pass (#1550).
+- The seven attack clips (on twelve actions) and the rider's clips are still June's (#1550, slices B and C). The
+  attacks wait because their timing must match `SpiderStrikes.cs`, which applies the damage.
+- The table repeats an action across rows, where the game's schema declares it unique. That is safe: the loader
+  (0x621E40, native read 2026-11-23) files each row in a map keyed on foot, pace, direction and turn direction
+  (`foot | pace << 7 | direction * 8 + 8 | turn * 2 + 2`), with the action as the stored value, and the first row
+  of a key wins. The row parser is 0x624B90.
+- **A `none` row is a wildcard, so a pace's `none/none` row goes last.** The loader files a `direction="none"` row
+  under "none" and all eight directions, a `turn_direction="none"` row under "none" and both turns, and an
+  `is_left_foot="True"` row under both feet, each only where no earlier row holds the key. From #1541 to
+  2026-11-23 the stand pace listed its `none/none` stand row first, so its two turn-in-place rows and its two
+  strafe rows were never stored: a spider that turned in place played the stand clip. The warg lists the stand
+  row last, and so does the spider now. `bind_spider_clips.py` (`hidden_rows`) fails a table with a row the
+  loader never stores. Nobody has watched a turn in place since.
+
+### The one-shot clips: hits, deaths, the stop and the jump start (2026-11-23, #1550)
+
+`tools/spider_gait.py` writes 13 more clips. A one-shot is a list of keyed poses (`kind="keyed"`): body height,
+pitch, roll, yaw, shift, abdomen, palps, a curl of the legs toward the body, and a move of each leg tip. Between
+keys every value eases with a smoothstep, and each leg is solved on its target as in a gait. The first key is the
+stand pose, so the clip blends in from any gait; a hit, the stop and the jump also end on it.
+
+| Clip | Length | Record cloned from | Plays on |
+|---|---|---|---|
+| `spider_hit_front`, `_back`, `_left`, `_right` | 0.6 s | `elephant_hit` (no flags) | the four hits; hit object and rear damaged play the front one |
+| `spider_death`, `_right`, `_left` | 1.5 s | `warg_death_backward`, `warg_death_right_side`, `warg_death_left_side` (`client_prediction`, `make_bodyfall_sound`) | `act_spider_death`, `_death_2` and the six falls |
+| `spider_dead`, `_right`, `_left` | one pose, 2.0 s | the wargs' `*_continue` records | the six `*_continue` actions, which had replayed the whole fall |
+| `spider_quick_stop` | 1.5 s | `warg_quick_stop` | both quick stops |
+| `spider_jump_start` | 1.25 s, in place | `horse_jump_start` | `act_spider_jump`; the stride gate's `pending` entry for the June clip is gone |
+| `spider_walk_backwards_inplace` | 0.9 s | the backward walk's own record, no usage | the new `act_spider_walk_backward_stand`, on pace 0's `none` row |
+
+The abdomen's tip is 2.6 m behind the body's centre and 0.30 m off the ground, so each degree of nose-up pitch
+lowers it about 4.5 cm. A pose that pitches up raises the abdomen, and a test fails any clip that puts a body bone
+under the ground. A folded leg tip stays 1.3 m from its hip: the hind legs cannot fold below 1.12 m.
+
+`act_spider_walk_backward_stand` is a ninth new action. Its rider row brings the dwarf set to 232 creature rider
+rows (`DwarfMountRiderRowsTests`).
+
+### Key times (2026-11-23, #1558)
+
+A clip record plays the keys from its `Source1` to its `Source2`, and the editor accepts a track only when its key
+times hold both. The first writer keyed a master 1 to N under sources 0 to N, and the Kit printed "ipo does not
+fit" once per bone per clip at each cook. Now frame f sits at key time f, a loop gets a closing key at time N that
+repeats frame 0 (so sources 0 to N hold N steps), and a one-shot has n keys under sources 0 to n-1.
+`tools/elephant_write_masters.py` holds the rule and its source in its header, `--rekey loop|shot` migrates an
+older master, and `tools/check_gait_stride.py` fails a bound clip whose sources reach outside its master's keys.
+All 28 spider masters were migrated in place. `--rekey` takes the record's sources (`--sources 0:<N>`), always, and
+migrates one form only, keys 1 to N under sources 0 to N. The sources are the caller's word that one record plays
+the whole master: the tool sees no record, and a second record on the same master would be shifted. [RCA](../reviews/rca-spider-key-times-slide-capsule-2026-11-23.md).
+
+### The overlay rows, and why the spiders slid (2026-11-23, #1559)
+
+The engine lays the clip of a `monster_usage_upper_body_movement` row, and of the usage set's
+`gallop_acceleration_head_action`, over the WHOLE body at a weight of up to 1. Since June the spider's rows had
+played the turn-in-place actions at every moving pace and the idle on the gallop's acceleration, so in a charge
+the idle replaced the gallop and the spiders slid. Measured over 11 spiders above 4 m/s, the leg tips moved 6.5 to
+6.8 m/s against the body in the gait, 1.0 to 1.3 under the idle and 2.1 to 3.8 under the turn clip. The back legs
+slowed as much as the front ones, so the overlay is not held to the bones under `neck_root_bone` (`spine2_m`).
+
+Each moving pace's two rows now play that pace's own gait action, as the warg's rows do (`warg_trot_r`, 0.73 s,
+beside `warg_trot`, 0.73 s), and the set names no gallop acceleration action, as the warg's names none.
+`tools/bind_spider_clips.py` owns the 13 rows (`OVERLAYS`) and `--check` holds them. There are still no turning
+variants of the gaits: a spider that turns while it runs plays the straight gait.
+
+### The body capsule (2026-11-23, #1560)
+
+The body capsule is what keeps two mounts, or a soldier and a mount, out of each other. June's was a pill around
+the chest (radius 0.50, y 0.45 to -0.45), and the spiders ran into each other's abdomens. It is now radius 0.70,
+pos1 `0.0, 0.25, 0.90`, pos2 `0.0, -1.95, 0.90`: from the head to the abdomen's tip, 3.6 m long and 1.4 m wide,
+1.75 times a horse's width. The legs are outside it, as every mount's are. `python tools/verify_mount_assets.py
+spider` fails a capsule that stops more than 0.10 m short of the foremost or rearmost bone on the centre line, or
+whose radius does not reach the widest hip, that sits beside or above the centre line, or whose numbers are not
+finite. Those are checks from above and of position; the gate does not prove that every bone is inside the capsule
+(the abdomen's tip is 0.22 m outside its rear cap). `tools/data_gates.py` runs it as `spider-body`. Not tested: a spider at a gate or on a narrow path.
+
+Two managed readers take the capsule's numbers. The rider's camera height is `rider_camera_height_adder` + pos1 z +
+radius, times the mount's scale (`MissionScreen.cs:1263`, and the lock-on look height in
+`MissionMainAgentController.cs:288`), so the wider capsule alone raised the camera from 2.0 to 2.5 m. The adder
+went from 0.9 to 0.4 in the same file and the camera stays at 2.0. An AI agent's retreat distance is 15 times the
+radius (`CommonAIComponent.cs:55`): 10.5 m now, 7.5 m before. What native collision and pathing do with the capsule,
+and whether it scales with the mount, is not read.
 
 ### The spider gait step of the command trial
 
@@ -440,28 +523,44 @@ the last 2 s of 6 s held (`stand`), 14 s after the Charge order (`top`) and the 
 four pictures, `hud_spider_gaits_1.png` to `_4.png`: the end of the stand, 3 s and 8 s into the charge, the end of the stop.
 The view stays at the keep's own distance. A person reads the pictures.
 
-The line is `[SeatTrial] step=spider_gaits result=<PASS|FAIL> riders=<n> mounted=<n> stand=<m/s> top=<m/s> stop=<m/s> pictures=<n>`,
+The line is `[SeatTrial] step=spider_gaits result=<PASS|FAIL> riders=<n> mounted=<n> stand=<m/s> top=<m/s> stop=<m/s> pictures=<n> slide=<s> judged=<s>`,
 then `kind`, `chosen`, `letgo`, `seated` and `faulted`. It passes with at least one rider, `top` of 3.0 or more, `stand` of 1.5 or
-less, four pictures and the keep facts. `stop` and `mounted` are not in the rule, because the riders may be fighting at the end;
-they are there for the reader. The limits 3.0 and 1.5 were set before the first run; the runs below read 10.0 to 10.3 at the
-charge and 0.0 standing.
+less, four pictures, `slide` of 2.0 or less, `judged` of 2.0 or more for each rider and the keep facts. `stop` and `mounted` are not in the rule, because the riders may be
+fighting at the end; they are there for the reader. The limits 3.0 and 1.5 were set before the first run; the runs below read 9.1
+to 11.4 at the charge and 0.0 standing.
 
-Runs, both on build `84f42bc85` with the #1541 changes not yet committed, 2026-11-22:
+`slide` (#1559) is the seconds, summed over all the spiders, in which a spider faster than 4 m/s moved its eight leg tips less
+than 0.3 of its own way through a window of 0.5 s (`SpiderSlideMeter`; the host reads the tip bones' frames in the mount's own
+space each mission tick). A gait reads 0.7 and more, the slide of 2026-11-23 read 0.17. A reading under 4 m/s is left out of a
+window, and ends it only when the mount has been slow for more than 0.2 s; two readings more than 0.2 s apart end it too. A mount whose tip bones cannot be read is not judged.
+`judged` is the seconds of fast movement the meter judged, slid or not: a `slide` of 0 from a run
+with no skeleton or tip bone to read, readings too far apart, no fast spider or one spider read out of many measured too
+little, and under 2 s of `judged` for each rider the step fails.
+Not read: whether the bone frames carry the mount's scale (the share was measured on 1.0 mounts; at 1.25 a gait still reads
+0.56), and whether a spider off the screen still animates.
+
+Runs. The two of 2026-11-22 were on build `84f42bc85` with the #1541 changes not yet committed; the five of 2026-11-23 on `435e5644a` with this change not yet committed:
 
 | Run folder | Line | What it showed |
 |---|---|---|
 | `E:\Temp\command-trial-runs\20261122-191545` | FAIL `riders=11 mounted=11 stand=2.7 top=10.3 stop=0.0 pictures=4` | No crash, clean unload. The rule then judged the whole stand, and the riders were still walking into their ranks when the Stop order came. One frame of 29.6 s at the spawn tick, in a session that compiled 1,067 shaders; earlier custom battle runs had 0.7 to 0.9 s. |
 | `E:\Temp\command-trial-runs\20261122-192218` | PASS `riders=11 mounted=11 stand=0.0 top=10.0 stop=0.0 pictures=4` | The stand judged on its last 2 s and the view kept close. Worst frame 1.09 s, so the long frame of the first run did not come back. |
+| `E:\Temp\command-trial-runs\20261123-103046` | FAIL `stand=0.0 top=9.1 stop=0.0 pictures=4 slide=3.5` | The first run with the slide meter, on the June overlay rows: the fault the maintainer had seen. |
+| `E:\Temp\command-trial-runs\20261123-103422` | PASS `stand=0.0 top=10.6 stop=0.0 pictures=4 slide=0.0` | The overlay rows on each pace's gait, the key times migrated and cooked, the one-shot clips bound. |
+| `E:\Temp\command-trial-runs\20261123-104155` | PASS `stand=0.0 top=10.8 stop=0.0 pictures=4 slide=0.0` | The same with the wider body capsule. |
+| `E:\Temp\command-trial-runs\20261123-110756` | PASS `stand=0.0 top=11.4 stop=0.0 pictures=4 slide=0.0 judged=147.4` | After the review: the stand pace's `none/none` row last, the camera adder at 0.4, and the meter's `judged` fact (147 mount-seconds above 4 m/s). |
+| `E:\Temp\command-trial-runs\20261123-112345` | PASS `stand=0.0 top=11.8 stop=0.0 pictures=4 slide=0.0 judged=152.9` | The final code of the day: a halt over 0.2 s ends a window, and the judged floor is 2 s for each rider (22 s for 11). |
 
-What the two runs prove: the new action sets and the pace table load, 11 riders spawn seated on `as_spider`, the spiders stand
+What the runs prove: the new action sets and the pace table load, 11 riders spawn seated on `as_spider`, the spiders stand
 still when held, reach 10 m/s at the charge (the gallop pace, limits 6.3 to 13.0, full stride at 11.25) and stop again. What they
 do not prove: how any gait looks. The pictures are stills from above. The walk, trot and canter paces, a step back, a strafe and a
 turn in place were not held long enough to see, and a person's eye in a battle decides those.
 
-## Current state & known issues (updated 2026-11-22)
+## Current state & known issues (updated 2026-11-23)
 
 | Item | Status |
 |---|---|
+| **Own clips, key times, slide and capsule (2026-11-23)** | Gates and three custom battles pass (`slide=0.0`). Owed, a person's eye: a charge, a turn in place and a sidestep from a stand, the rider's camera, spiders side by side, a gate with the wider capsule, a hit, a death, a hard stop, a jump, a slow step back. The attacks and the rider's clips are still June's (#1550). |
 | **KEYforce's whole meshes (2026-09-29, v1.5.3)** | ✅ Custom Battle, one change at a time: `spider_mount_a` on `sk_spider_forest_a1` first, then all five items. No crash at load, the troop picker or deployment; every spider renders whole (both sides, eight legs); riders sit on the back; walk, run and the strikes work. The TAOM log shows `[MountSpawn]` for all five items on `spider_skeleton` / `as_spider` and no exception |
 | **Goblin mountain spider riders (2026-09-29)** | ✅ [Goblin] Spider Rider and [Goblin] Spider Lord ride the mountain skins in Custom Battle; the Dol Guldur rungs ride the forest skins, the higher tiers visibly bigger. Owed: the campaign upgrade from `goblin_lurker` on the party screen |
 | Thumbnail / picker | ✅ mounted spider renders, no crash |
@@ -530,6 +629,7 @@ the module is outside this repo, so that ledger is the only durable record of it
 
 ## Changelog
 
+- 2026-11-23: own clips for the hits, the deaths with a held last pose, the quick stop and the jump start, and a twin for the backward walk (#1550, slice A); clip key times that the editor accepts, for the spider, the mumak and the war elephant (#1558); overlay rows on each pace's own gait, so a charging spider no longer slides (#1559); a body capsule that holds the body (#1560). The spider step of the command trial measures the slide. [RCA](../reviews/rca-spider-key-times-slide-capsule-2026-11-23.md).
 - 2026-11-19: a bite spares a riderless mount on the spider's side (#594). The engine gives a mount no team, so `MountRiderSides` records a rider's team against his mount when he spawns on it or mounts it, and `CreatureBiteSides.Spares`, shared with the warg, compares that side; a riderless mount whose side is unknown is spared. The creature bandits' capped strike still skips every loose mount.
 - 2026-11-09: Arachnophobia Mode (#1110) swaps every non-hero spider rider to a warg when it is on; see [arachnophobia-mode.md](arachnophobia-mode.md).
 - 2026-09-29: KEYforce's whole spider meshes (`sk_spiders_a_geo.tpac`) replace the split halves: the Giant, Great (was Brown, now forest_a1 at 1.10x) and Pale Spiders on forest_a1/_a2, and two new mountain mounts on mountain_a1/_a2 for a goblin-tree rider line (`goblin_spider_rider` L21, `goblin_spider_lord` L31, off `goblin_lurker`). Confirmed in game; the split was never needed for these meshes.

@@ -3,8 +3,9 @@ param(
   [switch]$Verify,
   [Parameter(Mandatory = $true)][string[]]$Reports,
   [string]$Folder = 'E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory\Assets\creature\elephant\animations',
-  [string]$Templates = '',
+  [string[]]$Templates = @(),
   [string[]]$Prefixes = @('war_elephant_', 'mumakil_'),
+  [string]$BackupDir = '',
   [string]$TpacBin = 'E:\Release_v0.5.1\bin',
   [string]$Loader = 'E:\LOTRAOMAssets\_auto_workspace\chariot\TolerantTpacLoader.cs'
 )
@@ -21,11 +22,15 @@ code and pace switch limits are today's. The trot clones the WALK clip, the one 
 trot action, and takes its pace limits from ADOD's own trot record ($LIMITS_FROM). Per clip only these change:
   Name, Guid         the report's clip name; a fresh GUID
   Animation          the master in -Folder with the clip's name
-  Source1, Source2   0 and the master's key count, as the Kit-made elephant clips have them
+  Source1, Source2   0 and the master's last key time, its key count less one. The editor accepts a record only
+                     when its sources lie inside the master's key times (tools/elephant_write_masters.py, KEY
+                     TIMES): that tool keys a master from 0 and closes a loop with one more key, so a loop of N
+                     frames has N + 1 keys and sources 0 to N. Until 2026-11-23 this wrote 0 and the key COUNT
+                     on masters keyed 1 to N, as ADOD's elephant clips are: one warning per bone per clip
   LoopDisplacement   gaits: the report's stride, which the feet in the master cover (tools/check_gait_stride.py)
   StepPoints         gaits: the four plants the report measured
   Duration           idles: the source take's length in seconds; a mumak idle plays 1.4 times slower.
-                     strafe: the keys' real length, keys / 30. The standing pace holds a strafe clip's loop between
+                     strafe: the keys' real length, (keys - 1) / 30: a loop's last key repeats its first. The standing pace holds a strafe clip's loop between
                      0.7 and 1.3 times its Duration, and ADOD's 1.0 s ran the walk cycle 2 to 3.6 times too fast
   PaceSwitchLimits   walk_backwards: the template's limits negated (0.2..2.5 becomes -2.5..-0.2), as the vanilla
                      horse has them. With positive limits the engine keeps a beast in the backward pace until it
@@ -51,11 +56,14 @@ sets travel on a usage that is there; it makes none), and a row whose planned so
 (INVALID, exit 1), and no file of that row is made. -Verify also holds the rule against each clip on disk.
 No role table applies and no strafe twin is derived. tools/spider_gait.py writes such rows:
   powershell.exe ... "& tools\gen_elephant_anim_clips.ps1 -Reports @('<set>\report.json') -Prefixes spider_ `
-      -Folder <Armory>\Assets\creature\spider\animations -Templates <Armory>\Assets\creature\elephant\animations"
+      -Folder <Armory>\Assets\creature\spider\animations -Templates @('<Armory>\Assets\creature\elephant\animations', `
+      '<Armory>\Assets\creature\warg\animations')"
 
 Dry run by default. -Apply refuses while the game or the Kit runs, never overwrites a clip (one exception: a clip
-that differs from the plan only in its pace limits gets them rewritten in place after a copy to
-<clip>_anm.tpac.bak-limits-<stamp>; package and item GUIDs stay, so the rows and the cache entry still name it),
+that differs from the plan only in its pace limits or its source range, every other simple field, the flags and
+each usage's fields compared with the template's (Get-FieldDiffs), gets them rewritten in place after a copy
+to <clip>_anm.tpac.bak-limits-<stamp>, or into -BackupDir when that is given, which keeps the copy out of the
+module; package and item GUIDs stay, so the rows and the cache entry still name it),
 re-reads each file and refreshes item checksums (tpac_fix_item_checksums.py). A new clip has no RuntimeDataCache
 entry, and the Kit cooks a rewritten record's entry again: start the Modding Kit once with the Armory after either
 (check_gait_stride.py fails a bound clip whose entry is older than its record). -Verify
@@ -74,7 +82,13 @@ if ($Apply) {
 }
 Add-Type -Path "$TpacBin\TpacTool.Lib.dll"
 Add-Type -Path $Loader -ReferencedAssemblies @("$TpacBin\TpacTool.Lib.dll", 'System.dll', 'System.Core.dll')
-if (-not $Templates) { $Templates = $Folder }
+if (-not $Templates) { $Templates = @($Folder) }
+# -Templates is a list of folders, searched in order: the spider's one-shots (#1550) clone the warg's and the
+# elephant's records, which sit in two folders.
+function Find-Template($name) {
+  foreach ($dir in $Templates) { $path = Join-Path $dir ($name + '_anm.tpac'); if (Test-Path $path) { return $path } }
+  $null
+}
 function Load($p) { [ChariotExtract.TolerantTpacLoader]::Load($p) }
 function V4($a, $b, $c, $d) { New-Object System.Numerics.Vector4 -ArgumentList @([float]$a, [float]$b, [float]$c, [float]$d) }
 
@@ -137,12 +151,13 @@ foreach ($rp in $Reports) {
     if ($g.template) {              # an explicit row: every record value is the row's own
       if (-not $masters.ContainsKey($g.clip)) { $errors++; Write-Output ('NO MASTER {0}' -f $g.clip); continue }
       $m = $masters[$g.clip]
-      if ($m.Keys -ne [int]$g.frames) { $errors++; Write-Output ('KEYS {0}: master has {1}, report {2}' -f $g.clip, $m.Keys, $g.frames); continue }
+      $wantKeys = $(if ($null -ne $g.keys) { [int]$g.keys } else { [int]$g.frames + 1 })   # a row with no `keys` is a loop
+      if ($m.Keys -ne $wantKeys) { $errors++; Write-Output ('KEYS {0}: master has {1} keys, the report row needs {2} (a loop has one more key than its frames; elephant_write_masters.py --rekey brings an older master there)' -f $g.clip, $m.Keys, $wantKeys); continue }
       $isGait = [double]$g.loop_displacement -gt 0
       if (-not ([double]$g.duration -gt 0)) { $errors++; Write-Output ('INVALID {0}: an explicit row needs a duration above 0' -f $g.clip); continue }
       if ($isGait -and $null -ne $g.usage -and -not [bool]$g.usage) { $errors++; Write-Output ('INVALID {0}: usage is false and loop_displacement is {1}; a record with no usage cannot claim travel' -f $g.clip, $g.loop_displacement); continue }
       $plan += [pscustomobject]@{
-        Clip = $g.clip; Role = 'explicit'; Template = [string]$g.template; Master = $m.Guid; Keys = $m.Keys; Gait = $isGait
+        Clip = $g.clip; Role = 'explicit'; Template = [string]$g.template; Master = $m.Guid; Keys = $m.Keys; Last = $m.Keys - 1; Gait = $isGait
         Loop = $(if ($isGait) { [float]$g.loop_displacement } else { $null })
         Steps = $(if ($null -ne $g.step_points) { @($g.step_points) } else { $null })
         Duration = [float]([math]::Round([double]$g.duration, 4))
@@ -156,25 +171,78 @@ foreach ($rp in $Reports) {
     if ($null -eq $r -or -not $TEMPLATE.Contains($r.Role)) { $errors++; Write-Output ('UNPLANNED {0}: no template for it' -f $g.clip); continue }
     if (-not $masters.ContainsKey($g.clip)) { $errors++; Write-Output ('NO MASTER {0}' -f $g.clip); continue }
     $m = $masters[$g.clip]
-    if ($m.Keys -ne [int]$g.frames) { $errors++; Write-Output ('KEYS {0}: master has {1}, report {2}' -f $g.clip, $m.Keys, $g.frames); continue }
+    if ($m.Keys -ne [int]$g.frames + 1) { $errors++; Write-Output ('KEYS {0}: master has {1} keys, the report has {2} frames: a loop has one more key than its frames (elephant_write_masters.py --rekey brings an older master there)' -f $g.clip, $m.Keys, $g.frames); continue }
     $isGait = [double]$g.loop_displacement -gt 0
     $slow = $(if ($IDLE_SLOW.ContainsKey($r.Prefix)) { $IDLE_SLOW[$r.Prefix] } else { 1.0 })
     $plan += [pscustomobject]@{
-      Clip = $g.clip; Role = $r.Role; Template = $TEMPLATE[$r.Role]; Master = $m.Guid; Keys = $m.Keys; Gait = $isGait
+      Clip = $g.clip; Role = $r.Role; Template = $TEMPLATE[$r.Role]; Master = $m.Guid; Keys = $m.Keys; Last = $m.Keys - 1; Gait = $isGait
       Loop = $(if ($isGait) { [float]$g.loop_displacement } else { $null })
       Steps = $(if ($isGait) { @($g.step_points) } else { $null })
-      Duration = $(if ($REAL_DURATION -contains $r.Role) { [float]([math]::Round($m.Keys / $KEY_RATE, 3)) }
+      Duration = $(if ($REAL_DURATION -contains $r.Role) { [float]([math]::Round(($m.Keys - 1) / $KEY_RATE, 3)) }
         elseif ($isGait) { $null } else { [float]([math]::Round([double]$g.source_seconds * $slow, 3)) })
       Limits = $null; NoUsage = $false; Sound = $null
     }
   }
 }
 
-function Get-Problem($c, $p, $tplDuration, $wantLim) {
+function Get-Planned($p, $tplPath, $wantLim) {
+  # The record the plan makes: a fresh load of the template with the plan's values. The writer saves it under a
+  # new GUID, and Get-Problem holds a clip on disk to every simple field of it.
+  $c = Get-AnimClip $tplPath
+  $c.Name = $p.Clip; $c.Animation = $p.Master
+  $c.Source1 = [float]0; $c.Source2 = [float]$p.Last
+  if ($p.Gait) {
+    $c.StepPoints = V4 $p.Steps[0] $p.Steps[1] $p.Steps[2] $p.Steps[3]
+    foreach ($u in $c.ClipUsages) {
+      if ($u.GetType().Name -eq 'QuadMovementUsage') {
+        $u.LoopDisplacement = $p.Loop; $u.PaceSwitchLimitMin = $wantLim[0]; $u.PaceSwitchLimitMax = $wantLim[1]
+      }
+    }
+  }
+  if ($null -ne $p.Duration) { $c.Duration = $p.Duration }
+  if ($p.Role -eq 'explicit') {
+    if ($null -ne $p.Steps -and -not $p.Gait) { $c.StepPoints = V4 $p.Steps[0] $p.Steps[1] $p.Steps[2] $p.Steps[3] }
+    if ($p.NoUsage) { $c.ClipUsages.Clear() }
+    if ($null -ne $p.Sound) { $c.SoundCode = $p.Sound }
+  }
+  $c
+}
+function Get-SimpleDiffs($got, $want, $label, $skip) {
+  # One line for each public property of a simple type whose value differs.
+  foreach ($prop in $got.GetType().GetProperties()) {
+    if (($skip -contains $prop.Name) -or $prop.GetIndexParameters().Count) { continue }
+    $t = $prop.PropertyType
+    if (-not ($t.IsPrimitive -or $t.IsEnum -or $t -eq [string] -or $t -eq [Guid] -or $t.Namespace -eq 'System.Numerics')) { continue }
+    $a = $prop.GetValue($got, $null); $b = $prop.GetValue($want, $null)
+    # typed, never as text: 0.3 and 0.300000042 are two floats and one string
+    if (-not [object]::Equals($a, $b)) {
+      $fmt = $(if ($a -is [single] -or $a -is [double]) { '{0} {1} is "{2:R}", planned "{3:R}"' } else { '{0} {1} is "{2}", planned "{3}"' })
+      $fmt -f $label, $prop.Name, $a, $b
+    }
+  }
+}
+function Get-FieldDiffs($c, $want) {
+  # The clip against the planned one: every simple property but its own GUID (priority, blends, voice and sound
+  # codes, the range), its flags (a list of names: lock_movement, client_prediction, make_bodyfall_sound) and
+  # every simple property of each clip usage. All of these come from the template, and a clip that differs in one
+  # of them is not "the plan but for its range".
+  Get-SimpleDiffs $c $want 'field' @('Guid')
+  $got = (@($c.Flags) | Sort-Object) -join ','; $exp = (@($want.Flags) | Sort-Object) -join ','
+  if ($got -ne $exp) { 'field Flags is "{0}", planned "{1}"' -f $got, $exp }
+  $cu = @($c.ClipUsages); $wu = @($want.ClipUsages)
+  if ($cu.Count -ne $wu.Count) { 'it carries {0} clip usage(s), planned {1}' -f $cu.Count, $wu.Count; return }
+  for ($i = 0; $i -lt $cu.Count; $i++) {
+    if ($cu[$i].GetType() -ne $wu[$i].GetType()) { 'usage {0} is a {1}, planned a {2}' -f $i, $cu[$i].GetType().Name, $wu[$i].GetType().Name; continue }
+    Get-SimpleDiffs $cu[$i] $wu[$i] ('usage {0} field' -f $i) @()
+  }
+}
+
+function Get-Problem($c, $p, $tplDuration, $wantLim, $want) {
   if ($null -eq $c) { return 'no AnimationClip item' }
+  if ($null -ne $want) { Get-FieldDiffs $c $want }
   if ($c.Name -ne $p.Clip) { 'name is {0}' -f $c.Name }
   if ([Guid]$c.Animation -ne $p.Master) { 'Animation is {0}, the master is {1}' -f $c.Animation, $p.Master }
-  if ([int]$c.Source1 -ne 0 -or [int]$c.Source2 -ne $p.Keys) { 'range is {0}..{1}, planned 0..{2}' -f $c.Source1, $c.Source2, $p.Keys }
+  if ([int]$c.Source1 -ne 0 -or [int]$c.Source2 -ne $p.Last) { 'range is {0}..{1}, planned 0..{2}' -f $c.Source1, $c.Source2, $p.Last }
   $want = $(if ($null -ne $p.Duration) { $p.Duration } else { $tplDuration })
   if ([math]::Abs([double]$c.Duration - $want) -gt 0.001) { 'Duration is {0}, planned {1}' -f $c.Duration, $want }
   $s = $c.StepPoints; $got = @($s.X, $s.Y, $s.Z, $s.W)
@@ -202,8 +270,8 @@ function Get-Problem($c, $p, $tplDuration, $wantLim) {
 $tplCache = @{}; $written = 0; $ok = 0   # record name -> @{ Duration; Limits }
 function Get-Template($name) {
   if (-not $tplCache.ContainsKey($name)) {
-    $path = Join-Path $Templates ($name + '_anm.tpac')
-    if (-not (Test-Path $path)) { return $null }
+    $path = Find-Template $name
+    if ($null -eq $path) { return $null }
     $t = Get-AnimClip $path
     $s = $t.StepPoints
     $tplCache[$name] = @{ Duration = [double]$t.Duration; Limits = (Get-Limits $t); BlendOut = [double]$t.BlendOutPeriod; Steps = @($s.X, $s.Y, $s.Z, $s.W); HasUsage = ($null -ne (Get-Loop $t)) }
@@ -211,10 +279,10 @@ function Get-Template($name) {
   $tplCache[$name]
 }
 foreach ($p in $plan) {
-  $tplPath = Join-Path $Templates ($p.Template + '_anm.tpac')
+  $tplPath = Find-Template $p.Template
   $limName = $(if ($LIMITS_FROM.ContainsKey($p.Role)) { $LIMITS_FROM[$p.Role] } else { $p.Template })
   $tpl = Get-Template $p.Template; $limTpl = Get-Template $limName
-  if ($null -eq $tpl -or $null -eq $limTpl) { $errors++; Write-Output ('NO TEMPLATE {0} or {1} in {2}' -f $p.Template, $limName, $Templates); continue }
+  if ($null -eq $tpl -or $null -eq $limTpl) { $errors++; Write-Output ('NO TEMPLATE {0} or {1} in {2}' -f $p.Template, $limName, ($Templates -join '; ')); continue }
   $wantLim = $(if ($null -ne $p.Limits) { $p.Limits } else { Get-WantLimits $p $limTpl.Limits })
   if ($p.Role -eq 'explicit' -and $p.Gait -and -not $tpl.HasUsage) {     # the writer sets travel on a usage that is there; it makes none
     $errors++
@@ -238,23 +306,8 @@ foreach ($p in $plan) {
       else { Write-Output ('PLAN   {0,-30} <- {1,-24} keys {2,-3} loop {3} steps {4} duration {5} limits {6}' -f $p.Clip, $p.Template, $p.Keys, $p.Loop, ($p.Steps -join ' '), $(if ($null -ne $p.Duration) { $p.Duration } else { $tpl.Duration }), ($wantLim -join '..')) }
       continue
     }
-    $c = Get-AnimClip $tplPath          # a fresh load per clip: nothing leaks from one clip into the next
-    $c.Name = $p.Clip; $c.Guid = [Guid]::NewGuid(); $c.Animation = $p.Master
-    $c.Source1 = [float]0; $c.Source2 = [float]$p.Keys
-    if ($p.Gait) {
-      $c.StepPoints = V4 $p.Steps[0] $p.Steps[1] $p.Steps[2] $p.Steps[3]
-      foreach ($u in $c.ClipUsages) {
-        if ($u.GetType().Name -eq 'QuadMovementUsage') {
-          $u.LoopDisplacement = $p.Loop; $u.PaceSwitchLimitMin = $wantLim[0]; $u.PaceSwitchLimitMax = $wantLim[1]
-        }
-      }
-    }
-    if ($null -ne $p.Duration) { $c.Duration = $p.Duration }
-    if ($p.Role -eq 'explicit') {
-      if ($null -ne $p.Steps -and -not $p.Gait) { $c.StepPoints = V4 $p.Steps[0] $p.Steps[1] $p.Steps[2] $p.Steps[3] }
-      if ($p.NoUsage) { $c.ClipUsages.Clear() }
-      if ($null -ne $p.Sound) { $c.SoundCode = $p.Sound }
-    }
+    $c = Get-Planned $p $tplPath $wantLim   # a fresh load per clip: nothing leaks from one clip into the next
+    $c.Guid = [Guid]::NewGuid()
     $c.TypelessDataSegments.Clear(); $c.UnknownDependences.Clear()
     $pkg = New-Object TpacTool.Lib.AssetPackage
     $pkg.Guid = [Guid]::NewGuid()
@@ -262,14 +315,25 @@ foreach ($p in $plan) {
     $pkg.Save($out, $false, 2)   # path, useOriginalChecksum, tpac version
     $written++
   }
-  $problems = @(Get-Problem (Get-AnimClip $out) $p $tpl.Duration $wantLim)
-  if ($problems.Count -and -not ($problems | Where-Object { $_ -notlike 'PaceSwitchLimits*' })) {
+  $planned = Get-Planned $p $tplPath $wantLim
+  $problems = @(Get-Problem (Get-AnimClip $out) $p $tpl.Duration $wantLim $planned)
+  # in place only when every difference is the range or the limits: any other field that differs is DIFFERS
+  if ($problems.Count -and -not ($problems | Where-Object { $_ -notlike 'PaceSwitchLimits*' -and $_ -notlike 'range is*' -and $_ -notlike 'field Source1 is*' -and $_ -notlike 'field Source2 is*' -and $_ -notlike 'usage * field PaceSwitchLimit*' })) {
     if ($Apply) {                         # the one in-place rewrite: both GUIDs stay; the Kit cooks the entry again
-      Copy-Item -LiteralPath $out -Destination ('{0}.bak-limits-{1}' -f $out, (Get-Date -Format 'yyyyMMdd-HHmmss')) -ErrorAction Stop
+      $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+      if ($BackupDir) {
+        New-Item -ItemType Directory -Force -Path $BackupDir | Out-Null
+        Copy-Item -LiteralPath $out -Destination (Join-Path $BackupDir ('{0}_anm.tpac.before-{1}' -f $p.Clip, $stamp)) -ErrorAction Stop
+      } else {
+        Copy-Item -LiteralPath $out -Destination ('{0}.bak-limits-{1}' -f $out, $stamp) -ErrorAction Stop
+      }
       $old = (Load $out).Package
       $c = @($old.Items | Where-Object { $_.GetType().Name -eq 'AnimationClip' })[0]
-      foreach ($u in $c.ClipUsages) {
-        if ($u.GetType().Name -eq 'QuadMovementUsage') { $u.PaceSwitchLimitMin = $wantLim[0]; $u.PaceSwitchLimitMax = $wantLim[1] }
+      $c.Source1 = [float]0; $c.Source2 = [float]$p.Last
+      if ($p.Gait) {
+        foreach ($u in $c.ClipUsages) {
+          if ($u.GetType().Name -eq 'QuadMovementUsage') { $u.PaceSwitchLimitMin = $wantLim[0]; $u.PaceSwitchLimitMax = $wantLim[1] }
+        }
       }
       $c.TypelessDataSegments.Clear(); $c.UnknownDependences.Clear()
       $pkg = New-Object TpacTool.Lib.AssetPackage
@@ -277,9 +341,9 @@ foreach ($p in $plan) {
       $pkg.Items.Add($c)
       $pkg.Save($out, $false, 2)
       $written++
-      $problems = @(Get-Problem (Get-AnimClip $out) $p $tpl.Duration $wantLim)
+      $problems = @(Get-Problem (Get-AnimClip $out) $p $tpl.Duration $wantLim $planned)
     } elseif (-not $Verify) {
-      Write-Output ('LIMITS {0}: {1} (-Apply rewrites them in place)' -f $p.Clip, ($problems -join '; ')); continue
+      Write-Output ('IN PLACE {0}: {1} (-Apply rewrites it in place)' -f $p.Clip, ($problems -join '; ')); continue
     }
   }
   if ($problems.Count) { $errors++; Write-Output ('DIFFERS {0}: {1}' -f $p.Clip, ($problems -join '; ')) } else { $ok++ }

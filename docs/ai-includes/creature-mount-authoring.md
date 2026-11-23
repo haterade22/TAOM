@@ -419,10 +419,12 @@ The native dispatch is **TYPE-driven**. Declare, exactly:
 > shipping builds). A MISSING key crashes; an EXTRA row is inert. Make every table TOTAL over
 > the key combinations the engine can produce.** 1.4.5 tolerated misses; 1.4.6 does not.
 
-The set element: all **10 verb attributes** wired to the Phase-3 typed actions
-(`rear`, `rear_damaged`, `dash`, `kick`, `fast_quick_stop` → `_when_fast`, `quick_stop`,
-`gallop_acceleration_head` (untyped idle is fine — horse/elephant parity), `hit_object`,
-`hit_object_falling`, `jump_start` → the `actt_dash`-typed jump). A verb-less set on a Mountable
+The set element: **9 verb attributes** wired to the Phase-3 typed actions
+(`rear`, `rear_damaged`, `dash`, `kick`, `fast_quick_stop` → `_when_fast`, `quick_stop`, `hit_object`,
+`hit_object_falling`, `jump_start` → the `actt_dash`-typed jump). Leave `gallop_acceleration_head_action` out
+unless the creature has a real acceleration clip in the gallop's rhythm, and never bind it to an idle: its clip
+plays over the whole body while the mount gallops (#1559, the spider slid; the camel and the warg name none).
+In the movement table, each pace's `none/none` row goes last: a `none` row fills every key no earlier row holds. A verb-less set on a Mountable
 monster leaves null native entries → spawn AV.
 
 | Table | Coverage rule | Evidence |

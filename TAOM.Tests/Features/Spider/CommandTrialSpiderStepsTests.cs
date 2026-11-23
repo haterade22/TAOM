@@ -74,12 +74,34 @@ public class CommandTrialSpiderStepsTests
         Assert.AreEqual("8.0", Fact(line, "top"));
         Assert.AreEqual("0.2", Fact(line, "stop"));
         Assert.AreEqual("4", Fact(line, "pictures"));
+        Assert.AreEqual("0.0", Fact(line, "slide"));
+        Assert.AreEqual("60.0", Fact(line, "judged"));
         Assert.AreEqual("Soldier", Fact(line, "kind"));
         Assert.AreEqual("1", Fact(line, "chosen"));
         Assert.AreEqual("1", Fact(line, "letgo"));
         Assert.AreEqual("1", Fact(line, "seated"));
         Assert.AreEqual("0", Fact(line, "faulted"));
         CollectionAssert.AreEqual(new[] { "final" }, _finished);
+    }
+
+    [TestMethod]
+    public void SpidersThatSlideWithStillLegs_FailWithTheSecondsInTheFacts()
+    {
+        _world.SpiderSlideSeconds = 19.9f;
+
+        Run();
+
+        AssertFails("slide=19.9", "top=8.0");
+    }
+
+    [TestMethod]
+    public void ARunWhoseSlideWasNotJudged_FailsThoughTheSlideReadsZero()
+    {
+        _world.SpiderJudgedSeconds = 0f;
+
+        Run();
+
+        AssertFails("slide=0.0", "judged=0.0");
     }
 
     [TestMethod]

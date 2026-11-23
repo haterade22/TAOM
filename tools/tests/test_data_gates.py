@@ -162,6 +162,15 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(clips.cmd, ("python", "tools/bind_spider_clips.py", "--check"))
         self.assertEqual(gaits.cmd, ("python", "tools/check_gait_stride.py", "--creature", "spider"))
 
+    def test_the_spiders_monster_file_selects_the_gate_that_reads_its_body_capsule(self):
+        # #1560: the capsule is in a file of the unversioned Armory, and no gate ran the tool that reads it
+        armory = "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/"
+        for path in (armory + "ModuleData/Monsters/LOTR/lotr_monster_spider.xml", "tools/verify_mount_assets.py",
+                     armory + "ModuleData/monster_usage_sets.xml"):
+            self.assertIn("spider-body", _ids(dg.select(dg.GATES, [path])), path)
+        body = next(g for g in dg.GATES if g.id == "spider-body")
+        self.assertEqual(body.cmd, ("python", "tools/verify_mount_assets.py", "spider"))
+
     def test_the_banner_sprite_folder_selects_banner_sheets(self):
         sprite = "Main/_Module/GUI/SpriteParts/ui_taom_bannericons/10000.png"
         self.assertIn("banner-sheets", [g.id for g in dg.select(dg.GATES, [sprite])])

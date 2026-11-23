@@ -79,7 +79,7 @@ second rider partial into a 4,843-action set.
 
 That paragraph describes the Armory's files before 2026-11-14, and its numbers did not match them even then: the
 dwarf set held 4,711 rows, 189 of them `act_horse_*` / `act_ride*`, the same 189 as Native's `as_human_warrior`. Since
-the move the Armory's own `as_dwarf_warrior` holds 4,934 rows, among them 223 creature-rider rows (231 since #1541 added eight spider rows; warg, spider,
+the move the Armory's own `as_dwarf_warrior` holds 4,934 rows, among them 223 creature-rider rows (231 since #1541 added eight spider rows, 232 since #1550 added one; warg, spider,
 elephant, chariot); see "A dwarf can mount a free warg or chariot" below.
 
 **The dwarf eye and camera correction belongs on the ram, not on the dwarf.** Because the ram is ridden only by
@@ -294,7 +294,7 @@ The head-butt fires under ANY rider, the player included, as the warg's bite doe
 | `Main/Features/WarRam/WarRamAttackService.cs` | Ram-tuned damage bands over the shared service |
 | `Main/Features/WarRam/WarRamCombat.cs` | Static `ElephantLikeCombatProfile` wiring `act_war_ram_butt` into all four slots |
 | `TAOM.Tests/Features/WarRam/WarRamConfigTests.cs` | Pins the action name, the four equal slots and cooldown > clip length |
-| `docs/reference/lotrlome-armory-snapshot/action_sets.xml` (and the live Armory file) | The dwarf creature-rider rows: 231 rows in `as_dwarf_warrior` (223 until #1541); the female set inherits them |
+| `docs/reference/lotrlome-armory-snapshot/action_sets.xml` (and the live Armory file) | The dwarf creature-rider rows: 232 rows in `as_dwarf_warrior` (223 until #1541, 231 until #1550); the female set inherits them |
 | `TAOM.Tests/Features/Warg/DwarfMountRiderRowsTests.cs` | Pins those rows to the Armory's human rider rows (snapshot always, live install under `LiveInstall`) |
 | `tools/blender/transfer_clip_to_engine_rig.py` | Authors the head-butt FBX on the engine rig (frames, order, rest frame 0, hold) |
 | `tools/wire_anim_master_clip.ps1` | Re-points the clip and sets the master skeleton after a fresh reimport |

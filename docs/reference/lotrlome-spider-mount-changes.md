@@ -209,6 +209,34 @@ back to restore). The `lotraom-assets` mirror was not touched.
   `Assets/creature/spider/meshes/sk_spiders_a_geo.tpac` (content identical to the 2026-09-29 copy) and
   `AssetPackages/pack0.tpac` to `pack10.tpac`.
 
+## 2026-11-23: one-shot clips, key times, overlay rows and the body capsule (#1550, #1558, #1559, #1560)
+
+- **`Assets/creature/spider/animations/`:** 13 new masters and 13 new records (the four hits, three deaths, three
+  held last poses, the quick stop, the jump start, the backward walk's twin), cooked by the Kit at 09:29. Then all
+  28 `spider_*` masters rewritten in place to key from 0, loops closed (`tools/elephant_write_masters.py --rekey`,
+  GUIDs kept), and nine one-shot records given an upper source one lower, in place; cooked again at 10:02.
+- **`Assets/creature/elephant/animations/`:** the same rekey on 28 masters: the 20 `war_elephant_*` and
+  `mumakil_*` clips, ADOD's `elephant_stand_2` and ADOD's seven unbound gaits. No record changed.
+- **`ModuleData/action_types.xml`, `action_sets.xml`, `monster_usage_sets.xml`:** `python tools/bind_spider_clips.py
+  --apply`, twice, the same change in the snapshot. One new action, `act_spider_walk_backward_stand`; 25 more rows
+  of `as_spider` on the new clips; a rider row for the new action in both rider sets; pace 0's `none` row; the 13
+  overlay rows on each pace's own gait; `gallop_acceleration_head_action` removed from the spider's set.
+- **`ModuleData/Monsters/LOTR/lotr_monster_spider.xml`:** the `body_capsule`, radius 0.50 and y 0.45 to -0.45
+  before, now radius 0.70, pos1 `0.0, 0.25, 0.90`, pos2 `0.0, -1.95, 0.90`, with a comment that names the gate;
+  and `rider_camera_height_adder` 0.9 to 0.4, which keeps the rider's camera at 2.0 m under the new capsule.
+  This file is not in the snapshot.
+- **`monster_usage_sets.xml`, a third bind at 11:06:** the stand pace's `none/none` row moved to the end of its
+  pace, after the two turn rows and the two strafe rows it had hidden since #1541 (backup
+  `bind_backup_20261123-110609\`).
+- **Gates after a reinstall:** `python tools/bind_spider_clips.py --check`, `python tools/check_gait_stride.py
+  --creature spider` and `--creature elephant`, `python tools/verify_mount_assets.py spider` (rows `spider-clips`,
+  `spider-gaits`, `elephant-gaits` and `spider-body` of `tools/data_gates.py`). A reinstall reverts
+  every line above, and each gate then fails on its part.
+- **Backups, outside the module, under `E:\LOTRAOMAssets\Spider\`:** `bind_backup_20261123-093237\` and
+  `bind_backup_20261123-103358\` (the XML files before each bind), `keyrange_backup_20261123\spider\`,
+  `\elephant\` and `\spider_records\` (each master and record before the rekey), `capsule_backup_20261123\`.
+  The clip files of the set are in `phase2_20261123\`.
+
 ## Verification trail (what each change fixed, in order)
 
 1. Mesh split + children + mount surface → thumbnail still AV'd (led to the probe battery).

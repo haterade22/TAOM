@@ -8,12 +8,15 @@ and has no step in foot speed, the 2-bone solve keeps both bone lengths and repo
 The master writer is tested on a tpac built here by hand from the layout it relies on, so the test does not
 lean on the tool's own parser for its expectations.
 """
+import io
 import math
 import os
 import struct
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stdout
+from unittest import mock
 import uuid
 
 import lz4.block
@@ -140,7 +143,7 @@ def _master_tpac(name, payload, bones, frames):
     return bytes(raw)
 
 
-def _clip(frames, bones=2, lift=0.25):
+def _clip(frames, bones=2, lift=0.25, loop=False):
     """A 2-bone clip in Blender rig space: the root turned 180 degrees about Z at rest, a child 1 m along +Y of it;
     in the loop the root rises by `lift` and the child turns about X by 10 degrees per frame."""
     rest_root = np.eye(4)
@@ -159,7 +162,7 @@ def _clip(frames, bones=2, lift=0.25):
         child[2, 3] += lift
         rows.append([root, child])
     return {"clip": "t", "frames": frames, "stride_m": 2.0, "bones": ["root", "child"], "parents": [None, "root"],
-            "mats": [[m.reshape(-1).tolist() for m in row] for row in rows]}
+            "loop": loop, "mats": [[m.reshape(-1).tolist() for m in row] for row in rows]}
 
 
 class MasterWriterTests(unittest.TestCase):
@@ -193,7 +196,7 @@ class MasterWriterTests(unittest.TestCase):
         data = tcm.segment_payload(item, seg)
         self.assertEqual(tcm.segment_hash(item, seg), xxhash.xxh64_intdigest(data))
         a = w.parse_anim(data)
-        self.assertEqual(a["rot"][0]["t"], [1.0, 2.0, 3.0])
+        self.assertEqual(a["rot"][0]["t"], [1.0, 2.0, 3.0])      # in place: the records name the master's own times
         np.testing.assert_allclose(a["root_pos"]["v"][:, 2], 0.25, atol=1e-6)
         old = tcm.parse(self.raw).items[0]
         start, end = tcm._metadata_span(item)
@@ -216,6 +219,197 @@ class MasterWriterTests(unittest.TestCase):
         self.assertEqual(struct.unpack_from("<iii", item.toc, end - 12), (2, 5, 0))
         self.assertEqual(bytes(item.toc[end:end + 8]), tcm.expected_checksum(item))
         self.assertEqual(item.segments[0].actual, len(tcm.segment_payload(item, item.segments[0])))
+
+
+class KeyTimeTests(unittest.TestCase):
+    """The editor's rule (FUN_180b8b810 in the wEditor TaleWorlds.Native.dll, 2026-11-23): a track fits a clip
+    record when its first key time is at or under the lower source and its last key time at or over the upper one.
+    A Kit master keys from 0, and a Kit loop's last source key repeats its first (warg_canter: keys 0..17, sources
+    1..17). The first writer keyed 1..N under sources 0..N: 412 warnings for 13 clips, one held key per loop."""
+
+    def setUp(self):
+        ident = (1.0, 0.0, 0.0, 0.0)
+        self.old = _anim_payload("t", [[ident] * 3, [ident] * 3], [(0, 0, 0)] * 3)      # keys 1, 2, 3: the old form
+
+    def _keys(self, payload):
+        a = w.parse_anim(payload)
+        return a["rot"][1]["t"], np.asarray(a["rot"][1]["v"], dtype=float), np.asarray(a["root_pos"]["v"], dtype=float), a
+
+    def test_a_loop_gets_a_closing_key_that_repeats_its_first(self):
+        data, n, _ = w.new_payload(self.old, _clip(3, loop=True), resize=True)
+        times, rot, root, a = self._keys(data)
+        self.assertEqual(n, 4)
+        self.assertEqual(times, [0.0, 1.0, 2.0, 3.0])
+        self.assertEqual(a["root_pos"]["t"], times)
+        self.assertAlmostEqual(abs(float(np.dot(rot[0], rot[3]))), 1.0, places=6)
+        np.testing.assert_allclose(root[3], root[0], atol=1e-7)
+        self.assertGreaterEqual(float(np.dot(rot[2], rot[3])), 0.0, "the closing key must blend the short way from the key before it")
+
+    def test_a_clip_that_does_not_say_is_a_loop(self):
+        clip = _clip(3)
+        del clip["loop"]            # the #1474 clip files carry no such field, and every one of them loops
+        self.assertEqual(w.new_payload(self.old, clip, resize=True)[1], 4)
+
+    def test_a_one_shot_keys_from_zero_to_its_last_frame(self):
+        data, n, _ = w.new_payload(self.old, _clip(3, loop=False))
+        self.assertEqual((n, self._keys(data)[0]), (3, [0.0, 1.0, 2.0]))
+
+    def test_an_in_place_rewrite_keeps_the_times_its_records_address(self):
+        # a master whose record plays keys 10 to 12: moving them to 0, 1, 2 leaves the record on keys that are gone
+        ident = (1.0, 0.0, 0.0, 0.0)
+        a = w.parse_anim(_anim_payload("t", [[ident] * 3, [ident] * 3], [(0, 0, 0)] * 3))
+        for tr in a["rot"] + [a["root_pos"]]:
+            tr["t"] = [10.0, 11.0, 12.0]
+        out, _ = w.rewrite(_master_tpac("t", w.build_anim(a), 2, 3), _clip(3, loop=False))
+        item = tcm.parse(out).items[0]
+        self.assertEqual(w.parse_anim(tcm.segment_payload(item, item.segments[0]))["rot"][0]["t"], [10.0, 11.0, 12.0])
+
+    def test_rekey_migrates_only_a_master_one_record_plays_whole(self):
+        shot = w.new_payload(self.old, _clip(3, loop=False))[0]
+        old_form = _master_tpac("t", self._shift_payload(shot, 1.0), 2, 3)
+        for sources in ((1.0, 3.0), (0.0, 2.0), (10.0, 12.0)):
+            with self.assertRaisesRegex(ValueError, "sources 0 to N"):
+                w.rekey(old_form, loop=False, sources=sources)
+        for master in (old_form, _master_tpac("t", shot, 2, 3)):                         # migrated or not: never without them
+            with self.assertRaisesRegex(ValueError, "not given"):
+                w.rekey(master, loop=False)
+        long_master = _master_tpac("t", self._shift_payload(shot, 10.0), 2, 3)          # keys 10, 11, 12
+        with self.assertRaisesRegex(ValueError, "several clips"):
+            w.rekey(long_master, loop=False, sources=(0.0, 3.0))
+
+    def test_rekey_refuses_a_zero_based_master_whose_record_plays_past_its_keys(self):
+        # poses A, B, A at 0, 1, 2 read as a closed loop; a record that plays 0 to 3 says it is not this tool's
+        ident, other = (1.0, 0.0, 0.0, 0.0), (0.9, 0.3, 0.1, 0.2)
+        a = w.parse_anim(_anim_payload("t", [[ident, other, ident], [other, ident, other]], [(0, 0, 0)] * 3))
+        for tr in a["rot"] + [a["root_pos"]]:
+            tr["t"] = [0.0, 1.0, 2.0]
+        a["rot"][1]["v"] = np.array([other, ident, other], dtype="<f4")
+        aba = _master_tpac("t", w.build_anim(a), 2, 3)
+        self.assertEqual(w.rekey(aba, loop=True, sources=(0.0, 2.0))[0], aba)
+        with self.assertRaisesRegex(ValueError, "past its keys"):
+            w.rekey(aba, loop=True, sources=(0.0, 3.0))
+
+    def test_rekey_closes_an_old_loop_and_a_second_run_changes_nothing(self):
+        raw = _master_tpac("t", w.new_payload(self.old, _clip(3, loop=False))[0], 2, 3)
+        old_form = _master_tpac("t", self._shift(raw, 1.0), 2, 3)
+        out, info = w.rekey(old_form, loop=True, sources=(0.0, 3.0))
+        item = tcm.parse(out).items[0]
+        times, rot, root, _ = self._keys(tcm.segment_payload(item, item.segments[0]))
+        self.assertEqual(times, [0.0, 1.0, 2.0, 3.0])
+        self.assertAlmostEqual(abs(float(np.dot(rot[0], rot[3]))), 1.0, places=6)
+        self.assertEqual((info["keys"], info["was"]), (4, 3))
+        start, end = tcm._metadata_span(item)
+        self.assertEqual(struct.unpack_from("<iii", item.toc, end - 12), (2, 4, 0))
+        self.assertEqual(bytes(item.toc[end:end + 8]), tcm.expected_checksum(item))
+        again, info2 = w.rekey(out, loop=True, sources=(0.0, 3.0))
+        self.assertEqual(again, out)
+        self.assertEqual(info2["keys"], info2["was"])
+
+    def test_rekey_gives_the_keys_the_writer_gives(self):
+        loop = _clip(3, loop=True)
+        want = w.new_payload(self.old, loop, resize=True)[0]
+        open_keys = w.new_payload(self.old, dict(loop, loop=False))[0]
+        out, _ = w.rekey(_master_tpac("t", self._shift_payload(open_keys, 1.0), 2, 3), loop=True, sources=(0.0, 3.0))
+        item = tcm.parse(out).items[0]
+        self.assertEqual(tcm.segment_payload(item, item.segments[0]), want)
+
+    def test_rekey_moves_a_one_shot_to_zero_and_keeps_its_keys(self):
+        shot = w.new_payload(self.old, _clip(3, loop=False))[0]
+        out, info = w.rekey(_master_tpac("t", self._shift_payload(shot, 1.0), 2, 3), loop=False, sources=(0.0, 3.0))
+        item = tcm.parse(out).items[0]
+        self.assertEqual(tcm.segment_payload(item, item.segments[0]), shot)
+        self.assertEqual((info["keys"], info["was"]), (3, 3))
+
+    def test_rekey_gives_a_one_key_pose_two_keys(self):
+        ident = (1.0, 0.0, 0.0, 0.0)
+        still = _master_tpac("t", _anim_payload("t", [[ident], [ident]], [(0, 0, 0.5)]), 2, 1)
+        out, info = w.rekey(still, loop=True, sources=(0.0, 1.0))
+        item = tcm.parse(out).items[0]
+        times, rot, root, _ = self._keys(tcm.segment_payload(item, item.segments[0]))
+        self.assertEqual(times, [0.0, 1.0])
+        np.testing.assert_allclose(root[0], root[1])
+        self.assertEqual(w.rekey(out, loop=True, sources=(0.0, 1.0))[0], out)
+
+    def test_rekey_knows_a_closed_loop_whose_rotations_are_not_unit_length(self):
+        # the elephant's retargeted keys are a few 1e-7 off unit length: a test by the dot product of the first and
+        # the last key took such a closed loop for an open one, and a second run added a second closing key
+        near = (0.9995, 0.01, 0.02, 0.0)
+        other = (0.9, 0.3, 0.1, 0.2)
+        old_form = _master_tpac("t", _anim_payload("t", [[near, other, other], [other, near, near]], [(0, 0, 0)] * 3), 2, 3)
+        once, info = w.rekey(old_form, loop=True, sources=(0.0, 3.0))
+        self.assertEqual(info["keys"], 4)
+        twice, info2 = w.rekey(once, loop=True, sources=(0.0, 3.0))
+        self.assertEqual(twice, once)
+        self.assertEqual(info2["keys"], 4)
+
+    def test_rekey_refuses_to_close_a_master_that_keys_from_zero_and_is_not_closed(self):
+        # only a master of the old form (keys from 1) is this migration's: a one-shot already at 0..n-1, passed as
+        # a loop by mistake, would gain a key and fall out of step with its record, and no gate would see it
+        shot = _master_tpac("t", w.new_payload(self.old, _clip(3, loop=False))[0], 2, 3)
+        with self.assertRaisesRegex(ValueError, "keys from 0"):
+            w.rekey(shot, loop=True, sources=(0.0, 2.0))
+        self.assertEqual(w.rekey(shot, loop=False, sources=(0.0, 2.0))[0], shot)
+
+    def test_a_resize_never_keeps_the_old_times_even_when_the_key_count_is_the_same(self):
+        # an old master of 4 keys at 1 to 4, written over with a loop of 3 frames: 4 keys again, and the records
+        # are written anew for 0 to 3, so the old 1 to 4 must not stay
+        ident = (1.0, 0.0, 0.0, 0.0)
+        old4 = _master_tpac("t", _anim_payload("t", [[ident] * 4, [ident] * 4], [(0, 0, 0)] * 4), 2, 4)
+        out, info = w.rewrite(old4, _clip(3, loop=True), resize=True)
+        item = tcm.parse(out).items[0]
+        self.assertEqual(w.parse_anim(tcm.segment_payload(item, item.segments[0]))["rot"][0]["t"], [0.0, 1.0, 2.0, 3.0])
+
+    def test_rekey_apply_refuses_a_backup_inside_a_module_and_leaves_no_half_written_file(self):
+        shot = w.new_payload(self.old, _clip(3, loop=False))[0]
+        old_form = _master_tpac("t", self._shift_payload(shot, 1.0), 2, 3)
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(w, "game_or_kit_running", return_value=[]), \
+                redirect_stdout(io.StringIO()) as said:
+            folder = os.path.join(tmp, "Modules", "X", "Assets")
+            os.makedirs(folder)
+            master = os.path.join(folder, "t_geo.tpac")
+            with open(master, "wb") as fh:
+                fh.write(old_form)
+            args = ["--rekey", "shot", "--sources", "0:3", "--master", master, "--apply", "--backup-dir"]
+            code = w.main(args + [os.path.join(tmp, "Modules", "bak")])
+            self.assertEqual(code, 2)
+            self.assertIn("inside a module", said.getvalue())
+            with open(master, "rb") as fh:
+                self.assertEqual(fh.read(), old_form)
+            free = os.path.join(tmp, "free")                    # a master outside any module: its own folder is no backup
+            os.makedirs(free)
+            beside = os.path.join(free, "t_geo.tpac")
+            with open(beside, "wb") as fh:
+                fh.write(old_form)
+            code = w.main(["--rekey", "shot", "--sources", "0:3", "--master", beside, "--apply", "--backup-dir", free])
+            self.assertEqual(code, 2)
+            self.assertIn("own folder", said.getvalue())
+            with open(beside, "rb") as fh:
+                self.assertEqual(fh.read(), old_form)
+            self.assertEqual(w.main(["--rekey", "shot", "--master", master]), 1)        # no --sources: refused, nothing written
+            code = w.main(args + [os.path.join(tmp, "bak")])
+            self.assertEqual(code, 0)
+            with open(os.path.join(tmp, "bak", "t_geo.tpac"), "rb") as fh:
+                self.assertEqual(fh.read(), old_form)
+            self.assertEqual(sorted(os.listdir(folder)), ["t_geo.tpac"])
+            with open(master, "rb") as fh:
+                self.assertNotEqual(fh.read(), old_form)
+
+    def test_rekey_refuses_keys_that_are_not_one_run(self):
+        a = w.parse_anim(self.old)
+        for tr in a["rot"] + [a["root_pos"]]:
+            tr["t"] = [1.0, 2.0, 5.0]
+        with self.assertRaisesRegex(ValueError, "one run"):
+            w.rekey(_master_tpac("t", w.build_anim(a), 2, 3), loop=True, sources=(0.0, 3.0))
+
+    def _shift_payload(self, payload, by):
+        a = w.parse_anim(payload)
+        for tr in a["rot"] + [a["root_pos"]]:
+            tr["t"] = [t + by for t in tr["t"]]
+        return w.build_anim(a)
+
+    def _shift(self, raw, by):
+        item = tcm.parse(raw).items[0]
+        return self._shift_payload(tcm.segment_payload(item, item.segments[0]), by)
 
 
 class RootHeightTests(unittest.TestCase):
@@ -361,7 +555,7 @@ class PaceTableTests(unittest.TestCase):
         spider = c.CREATURES["spider"]
         for clip in list(spider["gaits"]) + list(spider["turns"]) + list(spider["axis"]):
             self.assertIn(clip, spider_gait.CLIPS, clip)
-        self.assertEqual(set(spider["pending"]), {"an_spi_jump"})
+        self.assertNotIn("pending", spider, "#1550 put act_spider_jump on spider_jump_start, a clip with no travel")
         self.assertEqual(len(spider["feet"]), 8)
 
     def test_records_are_found_by_the_clips_own_name_and_two_files_with_one_name_are_a_finding(self):
@@ -537,6 +731,70 @@ class PaceTableTests(unittest.TestCase):
         self.assertIsNone(c.stand_finding(soles))
 
 
+class KeyRangeGateTests(unittest.TestCase):
+    """A record must play keys its master has (KeyTimeTests), and a loop's closing key is no step of its own."""
+
+    @staticmethod
+    def _anim(times):
+        n = len(times)
+        return {"rot": [{"t": list(times), "v": np.arange(4 * n, dtype=float).reshape(n, 4)}],
+                "root_pos": {"t": list(times), "v": np.zeros((n, 4))}}
+
+    def test_sources_inside_the_keys_fit(self):
+        self.assertIsNone(c.range_finding([0.0, 1.0, 2.0, 3.0], {"first": 0.0, "keys": 3.0}))
+        self.assertIsNone(c.range_finding([0.0, 1.0, 2.0, 3.0], {"first": 1.0, "keys": 2.0}))    # the warg's shape
+        self.assertIsNone(c.range_finding([0.0, 1.0], {"first": 0.0, "keys": 1.0}))                # a held pose
+
+    def test_a_first_source_before_the_first_key_is_a_finding(self):
+        why = c.range_finding([1.0, 2.0, 3.0], {"first": 0.0, "keys": 3.0})                        # the old writer
+        self.assertIn("plays keys 0 to 3", why)
+        self.assertIn("holds keys 1 to 3", why)
+
+    def test_a_last_source_after_the_last_key_is_a_finding(self):
+        self.assertIn("holds keys 0 to 29", c.range_finding([float(i) for i in range(30)], {"first": 0.0, "keys": 30.0}))
+
+    def test_a_master_with_no_key_is_a_finding(self):
+        self.assertIn("no key", c.range_finding([], {"first": 0.0, "keys": 3.0}))
+
+    def test_one_loop_is_the_keys_before_the_closing_one(self):
+        got = c.played_keys(self._anim([0.0, 1.0, 2.0, 3.0, 4.0]), {"first": 0.0, "keys": 4.0})
+        self.assertEqual(list(got["rot"][0]["t"]), [0.0, 1.0, 2.0, 3.0])
+        self.assertEqual(len(got["rot"][0]["v"]), 4)
+        self.assertEqual(len(got["root_pos"]["v"]), 4)
+
+    def test_a_record_that_starts_inside_the_master_plays_from_its_first_source(self):
+        got = c.played_keys(self._anim([0.0, 1.0, 2.0, 3.0, 4.0]), {"first": 1.0, "keys": 3.0})
+        self.assertEqual(list(got["rot"][0]["t"]), [1.0, 2.0, 3.0])
+
+    def test_range_findings_name_the_clip_and_a_clip_whose_master_is_not_found_is_a_finding(self):
+        # the first version skipped such a clip: on the live elephant two bound clips passed unread, their masters
+        # beside the mesh and not in the clips folder
+        records = {"a": {"first": 0.0, "keys": 3.0, "animation": b"A"}, "b": {"first": 0.0, "keys": 2.0, "animation": b"B"},
+                   "c": {"first": 0.0, "keys": 9.0, "animation": b"C"}}
+        held = {b"A": ("a_geo.tpac", self._anim([1.0, 2.0, 3.0])), b"B": ("b_geo.tpac", self._anim([0.0, 1.0, 2.0]))}
+        with mock.patch.object(c, "master_by_guid", side_effect=lambda paths, guid: held.get(guid)):
+            got, read = c.range_findings(["a", "b", "c", "no_record"], records, ["x"])
+        self.assertEqual(read, 2)
+        self.assertEqual(len(got), 2, got)
+        self.assertIn("a: its record plays keys 0 to 3", got[0])
+        self.assertIn("a_geo.tpac", got[0])
+        self.assertIn("c: no master", got[1])
+
+    def test_a_track_whose_key_times_are_no_numbers_is_a_finding(self):
+        anim = self._anim([0.0, 1.0, 2.0, 3.0])
+        anim["rot"].append({"t": [float("nan"), float("nan")], "v": np.zeros((2, 4))})
+        self.assertIn("holds keys nan to nan", c.range_finding(c.key_span(anim), {"first": 0.0, "keys": 3.0}))
+
+    def test_the_range_is_held_on_every_track_that_has_keys(self):
+        anim = self._anim([0.0, 1.0, 2.0, 3.0])
+        anim["rot"].append({"t": [1.0, 2.0], "v": np.zeros((2, 4))})          # a bone the Kit keyed for less
+        anim["rot"].append({"t": [], "v": np.zeros((0, 4))})                   # a bone with no key is not held
+        self.assertEqual(c.key_span(anim), [1.0, 2.0])
+        self.assertIsNone(c.range_finding(c.key_span(anim), {"first": 1.0, "keys": 1.0}))
+        self.assertIn("holds keys 1 to 2", c.range_finding(c.key_span(anim), {"first": 0.0, "keys": 3.0}))
+        self.assertEqual(c.key_span({"rot": [{"t": [], "v": []}], "root_pos": {"t": [], "v": []}}), [])
+
+
 class CacheStateTests(unittest.TestCase):
     def setUp(self):
         self.dir = tempfile.TemporaryDirectory()
@@ -671,7 +929,7 @@ class CloneMasterTests(unittest.TestCase):
         anim = now.items[1]
         keys = w.parse_anim(tcm.segment_payload(anim, anim.segments[0]))
         self.assertEqual((keys["name"], info["frames"]), ("new_walk", 5))
-        self.assertEqual(keys["rot"][0]["t"], [1.0, 2.0, 3.0, 4.0, 5.0])
+        self.assertEqual(keys["rot"][0]["t"], [0.0, 1.0, 2.0, 3.0, 4.0])
 
     def test_the_two_items_name_each_other_and_the_skeleton_is_kept(self):
         out, _ = w.clone_master(self.raw, self.clip, "new_walk")

@@ -22,6 +22,8 @@ internal sealed partial class CommandTrialScript
         internal float Top;
         internal float Stop;
         internal int Pictures;
+        internal float Slide;
+        internal float Judged;
         internal float PressedAt;
         internal bool KeepAgain;
     }
@@ -95,9 +97,9 @@ internal sealed partial class CommandTrialScript
         }
 
         var letGo = _host.Keeping == SeatKeepKind.None;
-        var facts = SpiderTrialRules.Facts(run.Riders, run.Mounted, run.Stand, run.Top, run.Stop, run.Pictures)
+        var facts = SpiderTrialRules.Facts(run.Riders, run.Mounted, run.Stand, run.Top, run.Stop, run.Pictures, run.Slide, run.Judged)
             + " kind=" + kind + " chosen=" + Bit(same) + " letgo=" + Bit(letGo) + Standing();
-        var pass = SpiderTrialRules.Passes(run.Riders, run.Stand, run.Top, run.Pictures)
+        var pass = SpiderTrialRules.Passes(run.Riders, run.Stand, run.Top, run.Pictures, run.Slide, run.Judged)
             && kind == SeatKeepKind.Soldier && same && letGo && Seated && !_host.Faulted;
         yield return pass ? Verdict.Passed(facts) : Verdict.Failed(facts);
     }
@@ -134,6 +136,8 @@ internal sealed partial class CommandTrialScript
             yield return Verdict.InMissionTick;
             var reading = _host.ReadSpiders();
             run.Mounted = reading.Mounted;
+            run.Slide = reading.SlideSeconds;
+            run.Judged = reading.JudgedSeconds;
             read(reading, _now - begunAt);
             run.KeepAgain = _host.Keeping == SeatKeepKind.None && _host.ChooseSpiderRider();
             yield return Verdict.Waiting(name);

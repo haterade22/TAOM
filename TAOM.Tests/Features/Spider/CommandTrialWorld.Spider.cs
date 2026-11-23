@@ -25,6 +25,12 @@ internal sealed partial class CommandTrialWorld
     internal bool NoOtherRider;
     internal bool SpiderSpeedIsNoNumber;
 
+    /// <summary>The seconds the stand-in's spiders have slid with still legs, as the host's meter would report them.</summary>
+    internal float SpiderSlideSeconds;
+
+    /// <summary>The seconds of fast movement the host's meter would have judged.</summary>
+    internal float SpiderJudgedSeconds = 60f;
+
     internal int HoldOrders;
     internal int SpiderReadsOutsideTheMissionTick;
     internal int SpiderChoices;
@@ -55,11 +61,11 @@ internal sealed partial class CommandTrialWorld
     {
         NoteSpiderRead();
         if (NoSpiders || Time < SpidersAppearAt)
-            return new SpiderReading(0, 0, 0f);
+            return new SpiderReading(0, 0, 0f, 0f, 0f);
 
         var mounted = SpiderMountsLive ? SpiderRiders : 0;
         var speed = SpiderSpeedIsNoNumber ? float.NaN : SpiderMountsLive ? SpiderSpeed : 0f;
-        return new SpiderReading(SpiderRiders, mounted, speed);
+        return new SpiderReading(SpiderRiders, mounted, speed, SpiderSlideSeconds, SpiderJudgedSeconds);
     }
 
     public bool ChooseSpiderRider()

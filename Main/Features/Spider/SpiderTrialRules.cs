@@ -6,9 +6,10 @@ namespace TAOM.Features.Spider;
 
 /// <summary>
 /// One read of the player's spider riders: the riders seen on a spider so far that still live, how many of those are still on a living
-/// spider, and the highest speed in metres per second of a living spider this tick (0 when none lives).
+/// spider, the highest speed in metres per second of a living spider this tick (0 when none lives), the seconds the spiders
+/// have slid so far (<see cref="SpiderSlideMeter"/>) and the seconds of fast movement the meter has judged so far.
 /// </summary>
-internal readonly record struct SpiderReading(int Alive, int Mounted, float TopSpeed);
+internal readonly record struct SpiderReading(int Alive, int Mounted, float TopSpeed, float SlideSeconds, float JudgedSeconds);
 
 /// <summary>
 /// The times and the pass rule of the spider gait step of the command trial (#1541): the rebuilt walk, trot, canter, gallop and stand
@@ -47,19 +48,37 @@ internal static class SpiderTrialRules
     /// <summary>The speed the held spiders may show. A stand clip that slides the mount along would show here.</summary>
     internal const float StandAtMostMetresPerSecond = 1.5f;
 
+    /// <summary>The seconds, summed over all the spiders, that fast spiders may show with legs that hardly move.</summary>
+    internal const float SlideAtMostSeconds = 2f;
+
+    /// <summary>
+    /// The seconds of fast movement the slide meter must have judged for each rider. A run in which no leg could be read, the
+    /// readings came too far apart, no spider reached the meter's speed, or one spider of many was read, gives a slide of 0 that
+    /// measured too little. A charge of <see cref="ChargeSeconds"/> gives each spider about 13.
+    /// </summary>
+    internal const float JudgedAtLeastSecondsPerRider = 2f;
+
+    /// <summary>The tip bone of each of the eight legs, front to back: the feet of the gait gate (<c>tools/check_gait_stride.py</c>).</summary>
+    internal static readonly IReadOnlyList<string> LegTipBones = new[]
+    {
+        "joint44_l", "joint44_r", "joint38_l", "joint38_r", "joint32_l", "joint32_r", "joint26_l", "joint26_r",
+    };
+
     /// <summary>
     /// <paramref name="stop"/> and <paramref name="mounted"/> are not in the rule: the riders may be in a fight by the end, and the facts show them to a person.
-    /// A speed that is no number fails.
+    /// A speed, a slide or a judged time that is no number fails.
     /// </summary>
-    internal static bool Passes(int riders, float stand, float top, int pictures) =>
+    internal static bool Passes(int riders, float stand, float top, int pictures, float slide, float judged) =>
         riders >= 1
         && FiniteFloatValidator.IsFiniteAtLeast(top, TopAtLeastMetresPerSecond)
         && FiniteFloatValidator.IsFiniteAtMost(stand, StandAtMostMetresPerSecond)
+        && FiniteFloatValidator.IsFiniteAtMost(slide, SlideAtMostSeconds)
+        && FiniteFloatValidator.IsFiniteAtLeast(judged, JudgedAtLeastSecondsPerRider * riders)
         && pictures == PictureCount;
 
-    internal static string Facts(int riders, int mounted, float stand, float top, float stop, int pictures) =>
+    internal static string Facts(int riders, int mounted, float stand, float top, float stop, int pictures, float slide, float judged) =>
         "riders=" + Whole(riders) + " mounted=" + Whole(mounted) + " stand=" + Tenth(stand) + " top=" + Tenth(top)
-        + " stop=" + Tenth(stop) + " pictures=" + Whole(pictures);
+        + " stop=" + Tenth(stop) + " pictures=" + Whole(pictures) + " slide=" + Tenth(slide) + " judged=" + Tenth(judged);
 
     private static string Whole(int value) => value.ToString(CultureInfo.InvariantCulture);
 

@@ -1666,3 +1666,56 @@ BannerlordCoop publishes an action change to other peers only for a typed action
   recipe proved on a mount is not proved for a humanoid. Before a type changes, grep BannerlordCoop's
   `AgentActionHandler` for what it publishes.
 - **Source:** #1499; `docs/features/dwarf-attacks.md`; `docs/reference/lotrlome-dwarf-attack-changes.md`.
+
+### A clip record's sources lie inside its master's key times, and a loop ends on a key that repeats its first (#1558, 2026-11-23)
+The master writer keyed a new master 1 to N and the record writer wrote sources 0 to N, "as the Kit-made elephant
+clips have them". The Kit printed "ipo does not fit" once per bone per clip at each cook (154 lines on 2026-11-22,
+412 on 2026-11-23), and in the game each loop of 49 bound clips stood on its first key for one key time.
+- **Why missed:** the form was copied from ADOD's clips, which are wrong in the same way, and nobody read the Kit's
+  error log after a cook. No gate compared a record's sources with its master's keys.
+- **Prevent:** the rule is the editor's (`FUN_180b8b810`, wEditor `TaleWorlds.Native.dll`): first key time at or
+  under the lower source, last at or over the upper. A master keys from 0; a loop of N frames has N + 1 keys, the
+  last a copy of the first, under sources 0 to N; a one-shot of n keys has sources 0 to n-1.
+  `tools/check_gait_stride.py` fails a bound clip out of range (`range_finding`). After a cook, grep the newest
+  `rgl_log_errors_*.txt` for "does not fit". A migration's "already done" test compares stored values exactly: a
+  test by the dot product of two stored rotations took a closed loop for an open one.
+- **Source:** [RCA](../rca-spider-key-times-slide-capsule-2026-11-23.md); `tools/elephant_write_masters.py` (KEY TIMES); `KeyTimeTests`, `KeyRangeGateTests`.
+
+### An overlay row's clip plays over the whole body, so it is the pace's own gait (#1559, 2026-11-23)
+The spider's `monster_usage_upper_body_movement` rows played the turn-in-place actions at every moving pace and its
+`gallop_acceleration_head_action` played the idle, with a comment that said the spider had no head-turn clips. In
+a charge the idle replaced the gallop at a weight of up to 1 and the spiders slid. The command trial's step passed,
+because it read speeds.
+- **Why missed:** "upper body" and "head" read as a part of the body. The engine blends the row's clip over every
+  bone: the back legs slowed as much as the front ones, though only the front ones hang under `neck_root_bone`.
+  A check that reads a speed cannot see a slide, and stills from above cannot either.
+- **Prevent:** each moving pace's overlay rows play a clip of that pace's rhythm (the warg: `warg_trot_r` beside
+  `warg_trot`, both 0.73 s), and a set with no gallop clip of its own names no gallop acceleration action. A
+  motion check measures the motion: the step's `slide` fact compares the leg tips' travel with the mount's
+  (`SpiderSlideMeter`). To find which action plays during a fault, log `GetCurrentAction` and
+  `GetActionChannelWeight` on both channels with the speed; channel 0 stays `act_none` while the movement node runs.
+- **Source:** [RCA](../rca-spider-key-times-slide-capsule-2026-11-23.md); `tools/bind_spider_clips.py` (`OVERLAYS`); `SpiderSlideMeterTests`.
+
+### In a mount's movement table a `none` row fills every key no earlier row holds, so it goes last (#1550, 2026-11-23)
+`bind_spider_clips.py` wrote the stand pace as `none/none` stand, turn right, turn left, strafe right, strafe left,
+and called it "the warg's layout". The usage loader files a `none` direction under all eight directions and a
+`none` turn under both turns, and keeps the first row of a key, so the four rows after the stand row were never
+stored. A spider turned in place on the stand clip from #1541 until a review read the loader.
+- **Why missed:** the loader had been read for one question (is a repeated action safe) and the answer was written
+  down without the expansion two lines above it. The warg's rows were copied by content, not by order.
+- **Prevent:** `hidden_rows` in `tools/bind_spider_clips.py` simulates the loader's filing and fails a table with a
+  row that files no key of its own. A native read is written down whole: every branch that touches the value in
+  question, not the line that answered the question asked.
+- **Source:** [RCA](../rca-spider-key-times-slide-capsule-2026-11-23.md); the decompile of 0x621E40, lines 651 to 706.
+
+### A body capsule is checked against the skeleton it must hold (#1560, 2026-11-23)
+The spider's `body_capsule` was a pill around the chest, 1.9 m of a 3.6 m body, typed in June. The spiders ran
+into each other's abdomens.
+- **Why missed:** the numbers were typed and nothing read them again. The hit capsules were fitted to the mesh on
+  2026-09-18; the body capsule, which is a different thing in a different file, was not.
+- **Prevent:** `python tools/verify_mount_assets.py <creature>` holds a creature that names a `body` entry to its
+  skeleton: the capsule reaches the foremost and the rearmost bone on the centre line within 0.10 m and its radius
+  reaches the widest hip. A new mount gets that entry. The width is a gameplay choice (a gate, a formation), so the
+  maintainer picks it. The capsule has managed readers too: the rider's camera height adds its pos1 z and its
+  radius (`MissionScreen.cs:1263`), so `rider_camera_height_adder` changes with it.
+- **Source:** [RCA](../rca-spider-key-times-slide-capsule-2026-11-23.md); `tools/verify_mount_assets.py` (`capsule_findings`); `BodyCapsuleTests`.

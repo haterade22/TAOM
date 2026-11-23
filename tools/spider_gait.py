@@ -96,8 +96,122 @@ CLIPS = {
     "spider_turn_right": dict(kind="turn", degrees=40.0, sign=-1.0, seconds=0.8, duty=0.56, lift=0.26,
                               template="mumakil_turn_right"),
 }
-for _name in ("spider_walk", "spider_trot", "spider_canter", "spider_gallop"):
+for _name in ("spider_walk", "spider_trot", "spider_canter", "spider_gallop", "spider_walk_backwards"):
     CLIPS[_name + "_inplace"] = _twin(_name)
+
+
+# ---------- the one-shot clips (#1550) ----------
+# A keyed clip is a list of (time 0..1, pose). A pose names what moves away from the stand pose: dz (m), pitch (deg,
+# nose up), roll (deg, right side down), yaw (deg, nose left), sx and sy (m, the body's shift), abdomen and palps
+# (deg, raised), curl (0 to 1: each tip goes to its folded point near the body) and legs ({tag: (dx, dy, dz)}, a
+# tip's move off its standing point). The abdomen's tip is 2.6 m behind the body's centre and 0.30 m off the
+# ground: each degree of nose-up pitch lowers it about 4.5 cm, so a pitched pose raises the abdomen. The first key is the stand pose, so the clip blends in from any gait; a hit,
+# the stop and the jump also end on it. Between keys every value eases with a smoothstep. The template is the
+# record the clip's record is cloned from: its flags (lock_movement, client_prediction, make_bodyfall_sound) and
+# its usages come with it (tools/gen_elephant_anim_clips.ps1).
+GROUPS = {"front": ("L1", "R1"), "back": ("L4", "R4"), "left": ("L1", "L2", "L3", "L4"),
+          "right": ("R1", "R2", "R3", "R4"), "all": ("L1", "L2", "L3", "L4", "R1", "R2", "R3", "R4")}
+CURL_REACH = 1.3                       # metres from the hip to a folded tip: the hind legs cannot fold below 1.12
+CURL_RISE = math.radians(30.0)         # a folded tip sits this far above the hip's level, seen from the hip
+STILL_POSE = {}
+
+
+def _legs(**moves):
+    """{tag: (dx, dy, dz)} from groups (front, back, left, right, all) or tags; a later name adds to an earlier."""
+    out = {}
+    for name, move in moves.items():
+        for tag in GROUPS.get(name, (name,)):
+            out[tag] = tuple(a + b for a, b in zip(out.get(tag, (0.0, 0.0, 0.0)), move))
+    return out
+
+
+def _mirror(keys):
+    """The same keys with left and right swapped: a fall to the other side."""
+    out = []
+    for t, pose in keys:
+        p = dict(pose)
+        for k in ("roll", "yaw", "sx"):
+            if k in p:
+                p[k] = -p[k]
+        if "legs" in p:
+            p["legs"] = {("R" if tag[0] == "L" else "L") + tag[1]: (-d[0], d[1], d[2]) for tag, d in p["legs"].items()}
+        out.append((t, p))
+    return out
+
+
+def _hit(sx=0.0, sy=0.0, pitch=0.0, roll=0.0):
+    return [(0.0, STILL_POSE), (0.3, dict(sx=sx, sy=sy, pitch=pitch, roll=roll, dz=-0.04, palps=8.0, abdomen=4.0)),
+            (1.0, STILL_POSE)]
+
+
+DEATH = [(0.0, STILL_POSE), (0.2, dict(dz=0.04, pitch=6.0, palps=14.0, abdomen=6.0, curl=0.1)),
+         (0.55, dict(dz=-0.12, curl=0.45, abdomen=2.0)),
+         (1.0, dict(dz=-0.24, pitch=-3.0, curl=0.85, abdomen=4.0, palps=-12.0))]
+FALL_RIGHT = [(0.0, STILL_POSE), (0.2, dict(dz=0.03, roll=-4.0, palps=12.0, curl=0.1)),
+              (0.55, dict(dz=-0.08, roll=10.0, sx=0.12, curl=0.4, legs=_legs(right=(0.12, 0.0, 0.0)))),
+              (1.0, dict(dz=-0.22, roll=16.0, sx=0.22, curl=0.8, abdomen=3.0, palps=-10.0,
+                         legs=_legs(right=(0.15, 0.0, 0.0))))]
+
+
+def _one_shot(keys, seconds, template):
+    return dict(kind="keyed", keys=keys, seconds=seconds, template=template)
+
+
+def _hold(of, template, seconds=2.0):
+    """The last pose of a death, one key long, for the *_continue actions: the June rows replayed the whole fall."""
+    return dict(kind="hold", of=of, seconds=seconds, frames=1, template=template)
+
+
+CLIPS.update({
+    "spider_hit_front": _one_shot(_hit(sy=-0.12, pitch=5.0), 0.6, "elephant_hit"),
+    "spider_hit_back": _one_shot(_hit(sy=0.12, pitch=-4.0), 0.6, "elephant_hit"),
+    "spider_hit_left": _one_shot(_hit(sx=0.12, roll=5.0), 0.6, "elephant_hit"),
+    "spider_hit_right": _one_shot(_hit(sx=-0.12, roll=-5.0), 0.6, "elephant_hit"),
+    "spider_death": _one_shot(DEATH, 1.5, "warg_death_backward"),
+    "spider_death_right": _one_shot(FALL_RIGHT, 1.5, "warg_death_right_side"),
+    "spider_death_left": _one_shot(_mirror(FALL_RIGHT), 1.5, "warg_death_left_side"),
+    "spider_dead": _hold("spider_death", "warg_death_backward_continue"),
+    "spider_dead_right": _hold("spider_death_right", "warg_death_right_side_continue"),
+    "spider_dead_left": _hold("spider_death_left", "warg_death_left_side_continue"),
+    # the warg's stop length: the vanilla horse's 2.4 s stops are for a heavier beast
+    "spider_quick_stop": _one_shot([(0.0, STILL_POSE),
+                                    (0.1, dict(pitch=4.0, sy=-0.04, abdomen=4.0, legs=_legs(front=(0.0, 0.12, 0.22)))),
+                                    (0.25, dict(pitch=8.0, dz=-0.06, sy=-0.1, palps=10.0, abdomen=9.0, legs=_legs(front=(0.0, 0.25, 0.0)))),
+                                    (0.6, dict(pitch=-3.0, dz=-0.03, sy=-0.04, legs=_legs(front=(0.0, 0.25, 0.0)))),
+                                    (0.8, dict(legs=_legs(front=(0.0, 0.12, 0.2)))),
+                                    (1.0, STILL_POSE)], 1.5, "warg_quick_stop"),
+    # in place: the engine lifts the agent; the clip crouches, springs and reaches with the front legs
+    "spider_jump_start": _one_shot([(0.0, STILL_POSE),
+                                    (0.45, dict(dz=-0.2, pitch=-4.0, abdomen=-5.0)),
+                                    (0.75, dict(dz=0.12, pitch=10.0, palps=12.0, abdomen=10.0, legs=_legs(front=(0.0, 0.3, 0.5)))),
+                                    (0.9, dict(dz=0.08, pitch=6.0, abdomen=6.0, legs=_legs(front=(0.0, 0.2, 0.3)))),
+                                    (1.0, STILL_POSE)], 1.25, "horse_jump_start"),
+})
+
+
+def _smooth(u):
+    return u * u * (3.0 - 2.0 * u)
+
+
+def pose_at(keys, phase):
+    """The eased pose at `phase` (0 to 1) of a key list."""
+    for (t0, a), (t1, b) in zip(keys, keys[1:]):
+        if phase <= t1 or (t1, b) == keys[-1]:
+            u = _smooth(min(1.0, max(0.0, (phase - t0) / (t1 - t0))))
+            out = {k: (1 - u) * a.get(k, 0.0) + u * b.get(k, 0.0)
+                   for k in set(a) | set(b) if k != "legs"}
+            la, lb = a.get("legs", {}), b.get("legs", {})
+            out["legs"] = {tag: tuple((1 - u) * p + u * q for p, q in zip(la.get(tag, (0.0,) * 3), lb.get(tag, (0.0,) * 3)))
+                           for tag in set(la) | set(lb)}
+            return out
+    return dict(keys[0][1], legs={})
+
+
+def keyed_pose(spec, phase):
+    """A keyed clip's pose at `phase`; a hold's is its death's last."""
+    if spec["kind"] == "hold":
+        return pose_at(CLIPS[spec["of"]]["keys"], 1.0)
+    return pose_at(spec["keys"], phase)
 
 
 # ---------- small maths (unit and rot_between are the elephant retarget's) ----------
@@ -215,9 +329,37 @@ def body_motion(spec, phase):
             math.radians(3.0) * math.sin(2 * w), math.radians(3.0) * math.sin(2 * w))
 
 
+def keyed_motion(pose):
+    """(rotation about a point over PIVOT, height change, abdomen pitch, left palp pitch, right palp pitch, shift)."""
+    turn = (axis_angle((0.0, 0.0, 1.0), math.radians(pose.get("yaw", 0.0)))
+            @ axis_angle((1.0, 0.0, 0.0), math.radians(pose.get("pitch", 0.0)))
+            @ axis_angle((0.0, 1.0, 0.0), math.radians(pose.get("roll", 0.0))))
+    palps = math.radians(pose.get("palps", 0.0))
+    # about the side axis a positive angle lowers whatever is behind the bone: a raised abdomen is the negative one
+    return (turn, pose.get("dz", 0.0), -math.radians(pose.get("abdomen", 0.0)), palps, palps,
+            np.array([pose.get("sx", 0.0), pose.get("sy", 0.0), 0.0]))
+
+
+def keyed_target(rig, tag, pose, body):
+    """Where a keyed clip puts a tip: its standing point moved by the pose's leg move, then drawn toward its folded
+    point by the pose's curl. The folded point rides with the body (`body` maps a rest point to its posed place)."""
+    hip = rig.rest[rig.idx[LEGS[tag][1]]][:3, 3]
+    rest_tip = rig.rest[rig.idx[LEGS[tag][4]]][:3, 3]
+    ground = rest_tip + np.array([0.0, CENTRE_Y[int(tag[1])], 0.0]) + np.array(pose["legs"].get(tag, (0.0, 0.0, 0.0)))
+    out = unit(np.array([rest_tip[0] - hip[0], rest_tip[1] - hip[1], 0.0]))
+    folded = body(hip + CURL_REACH * (math.cos(CURL_RISE) * out + np.array([0.0, 0.0, math.sin(CURL_RISE)])))
+    curl = pose.get("curl", 0.0)
+    return (1.0 - curl) * ground + curl * folded
+
+
 def frame_pose(rig, spec, phase):
     """(world 4x4 per bone, worst tip error, worst shortfall, worst reach) of one frame."""
-    turn, dz, abdomen, palp_l, palp_r = body_motion(spec, phase)
+    keyed = spec["kind"] in ("keyed", "hold")
+    pose = keyed_pose(spec, phase) if keyed else None
+    if keyed:
+        turn, dz, abdomen, palp_l, palp_r, shift = keyed_motion(pose)
+    else:
+        (turn, dz, abdomen, palp_l, palp_r), shift = body_motion(spec, phase), np.zeros(3)
     rots = [turn @ m[:3, :3] for m in rig.rest]
     side = turn @ np.array([1.0, 0.0, 0.0])
     for name, angle in ((ABDOMEN, abdomen), (PALPS[0], palp_l), (PALPS[1], palp_r)):
@@ -226,14 +368,18 @@ def frame_pose(rig, spec, phase):
             rots[i] = extra @ rots[i]
     root = rig.rest[0][:3, 3]
     centre = np.array([PIVOT[0], PIVOT[1], root[2]])
-    offset = centre + turn @ (root - centre) - root + np.array([0.0, 0.0, dz])
+    offset = centre + turn @ (root - centre) - root + np.array([0.0, 0.0, dz]) + shift
+
+    def body(point):
+        return centre + turn @ (point - centre) + np.array([0.0, 0.0, dz]) + shift
+
     world = rig.pose(rots, offset)
     short = reach = 0.0
     targets, missed = {}, set()
     for tag, leg in LEGS.items():
         i41, i42, i43, i44 = (rig.idx[b] for b in leg[1:])
         joint, knee, tip = world[i41][:3, 3], world[i42][:3, 3], world[i44][:3, 3]
-        targets[tag] = tip_target(rig, tag, spec, phase)
+        targets[tag] = keyed_target(rig, tag, pose, body) if keyed else tip_target(rig, tag, spec, phase)
         aim, bend, s = solve_leg(joint, knee, tip, targets[tag])
         rots[i41] = aim @ rots[i41]
         for i in (i42, i43, i44):
@@ -264,10 +410,11 @@ def limits_of(name):
 
 def build_clip(rig, name, spec):
     """(the clip JSON tools/elephant_write_masters.py reads, the record row)."""
-    n = spec.get("frames") or int(round(spec["seconds"] * KEY_RATE))
+    one_shot = spec["kind"] == "keyed"     # its last key is its end, not the start of the next loop
+    n = spec.get("frames") or int(round(spec["seconds"] * KEY_RATE)) + (1 if one_shot else 0)
     mats, error, short, reach = [[(RZ @ m).reshape(16).tolist() for m in rig.rest]], 0.0, 0.0, 0.0
     for f in range(n):
-        world, e, s, r = frame_pose(rig, spec, f / n)
+        world, e, s, r = frame_pose(rig, spec, f / (n - 1) if one_shot else f / n)
         mats.append([(RZ @ m).reshape(16).tolist() for m in world])
         error, short, reach = max(error, e), max(short, s), max(reach, r)
     stride = float(spec.get("stride", 0.0))
@@ -278,11 +425,13 @@ def build_clip(rig, name, spec):
     else:
         loop = stride
     plants = sorted(p % 1.0 for p in (0.0, RIPPLE, 0.5, 0.5 + RIPPLE)) if spec["kind"] in ("line", "turn") else [-1.0] * 4
+    loops = not one_shot       # the master writer closes a loop with one more key that repeats frame 0
     clip = {"clip": name, "bones": rig.names, "parents": [rig.names[p] if p >= 0 else None for p in rig.parent],
-            "frames": n, "mats": mats, "stride_m": stride}
-    row = {"clip": name, "frames": n, "duration": round(n / KEY_RATE if spec["kind"] in ("line", "turn") else spec["seconds"], 4),
+            "frames": n, "mats": mats, "stride_m": stride, "loop": loops}
+    row = {"clip": name, "frames": n, "loop": loops, "keys": n + (1 if loops else 0), "duration": round(n / KEY_RATE if spec["kind"] in ("line", "turn") else spec["seconds"], 4),
            "loop_displacement": loop, "limits": limits, "step_points": [round(p, 3) for p in plants],
-           "template": spec["template"], "kind": spec["kind"], "twin_of": twin, "usage": not twin,
+           "template": spec["template"], "kind": spec["kind"], "twin_of": twin,
+           "usage": None if spec["kind"] in ("keyed", "hold") else not twin,     # None: the template's usages stay
            "sound_code": "" if spec["kind"] == "idle" else None,
            "tip_error_m": error, "short_m": short, "reach": round(reach, 3)}
     return clip, row
