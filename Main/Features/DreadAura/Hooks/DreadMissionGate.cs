@@ -50,7 +50,7 @@ public static class DreadMissionGate
         if (GameNetwork.IsSessionActive)
             return false;
 
-        // ArenaCombat covers arenas and tournaments; NoCombat covers conversations and walkarounds.
+        // Never false in the installed game: nothing sets the combat type (#1537). The team-AI check keeps arenas and tournaments out.
         if (mission.CombatType != Mission.MissionCombatType.Combat)
             return false;
 

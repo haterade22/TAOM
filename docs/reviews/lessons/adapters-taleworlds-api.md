@@ -2178,6 +2178,13 @@ The free heroes of a story mission stand as one group, off AI control, under a M
 **Prevent:** before a co-op handler trusts a message, list every Coop path that can publish that type into the broker, the relay and the mission P2P client included, and say which one the check closes. When a fix gates delivery on a new condition, list what the old path delivered in the gap and who delivers it now. A sequence number is compared only inside the process that counts it.
 
 **Source:** [rca-coop-session-token-2026-11-22.md](../rca-coop-session-token-2026-11-22.md) classes 1 and 2.
+### An enum member named for a mission kind proves nothing until a line sets it (#1537, 2026-11-22)
+
+**Why missed:** several gates kept features out of arenas and tournaments with `mission.CombatType == MissionCombatType.Combat`, three of them under a comment that `ArenaCombat` covers arenas. The enum has that member, so the comment read as a fact and went from gate to gate and into four feature docs. No installed assembly calls the setter and the native reset writes 0, so the value is `Combat` in every mission and the test excluded nothing. Every kept log line agreed (`combatType=Combat`), but all of them came from battles, where `Combat` is the right answer too, so they could not show the fault.
+
+**Prevent:** before a gate relies on an engine value to tell two kinds of mission apart, find the line that writes each value (the setter's callers, then the native default) and quote it at the gate. Where nothing writes it, use a signal the mission kind itself creates: its mission behaviours. A log line proves a gate only when it comes from a mission the gate has to close.
+
+**Source:** the research on issue #1537 of 2026-11-22 (`Mission.cs:1173-1181` and `:1605`, native field offset `0x1044840`); `SignatureMissionGate.IsArenaOrTournament`; `SignatureMissionGateTests.EveryArenaGate_AsksForTheArenaBehaviours`.
 
 ### Detect an exception another mod swallows by the postfix it skips, not by the state it leaves (#1545, 2026-11-23)
 

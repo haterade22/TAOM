@@ -5,6 +5,7 @@ using BehaviorTreeWrapper;
 using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.DwarfAttacks.Hooks;
+using TAOM.Features.SignatureStrikes.Hooks;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
@@ -16,9 +17,9 @@ namespace TAOM.Features.DwarfAttacks;
 /// main thread, through <see cref="DwarfTreeHost"/>, which says why they are not agent components. MUST be
 /// <c>: MissionLogic</c>, NEVER <c>: MissionBehavior</c> (rca-looter-battle-nre-2026-05-24.md, pinned by
 /// BehaviorTreeMissionLogicInheritanceTests). Trees build whatever the MCM switch says, so switching it on mid-battle
-/// works; the ready decorator reads the switch live. Only field battles, sieges and hideouts
-/// (<see cref="Mission.MissionCombatType.Combat"/>): an arena or tournament gets no tree, as the race abilities and
-/// signature strikes do (SignatureMissionGate).
+/// works; the ready decorator reads the switch live. Only combat missions outside the training yard and the tournament
+/// (<see cref="SignatureMissionGate.IsCombatOutsideArena"/>, #1537): the yard and a tournament match get no tree, as the
+/// race abilities and signature strikes get none.
 /// </summary>
 public class DwarfAttacksMissionBehavior : MissionLogic
 {
@@ -41,8 +42,9 @@ public class DwarfAttacksMissionBehavior : MissionLogic
     {
         _initialized = true;
         Mission mission = Mission.Current;
-        _eligible = mission != null && mission.CombatType == Mission.MissionCombatType.Combat;
-        _logger.LogInfo($"[DwarfAttacks] mission gate: eligible={_eligible} combatType={mission?.CombatType}");
+        _eligible = mission != null && SignatureMissionGate.IsCombatOutsideArena(mission);
+        var arena = mission != null && SignatureMissionGate.IsArenaOrTournament(mission);
+        _logger.LogInfo($"[DwarfAttacks] mission gate: eligible={_eligible} combatType={mission?.CombatType} arena={arena}");
         if (!_eligible) return;
         if (BTRegister.Logger == null)
             BTRegister.AddLogger(new TaomBTLogger());
