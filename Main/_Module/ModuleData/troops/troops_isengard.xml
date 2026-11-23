@@ -729,7 +729,7 @@
         race="uruk_hai"
         default_group="Infantry"
         level="21"
-        name="{=aom_urukhai_swordman_name}[Isengard] Uruk-Hai Swordman"
+        name="{=aom_urukhai_swordman_name}[Isengard] Uruk-Hai Swordsman"
         occupation="Soldier"
         culture="Culture.isengard">
         <face>

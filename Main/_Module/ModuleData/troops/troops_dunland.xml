@@ -522,7 +522,7 @@
         id="dunland_veteran_swordman"
         default_group="Infantry"
         level="21"
-        name="{=aom_dunland_veteran_swordman_name}[Dunland] Wild-man Swordman"
+        name="{=aom_dunland_veteran_swordman_name}[Dunland] Wild-man Swordsman"
         occupation="Soldier"
         culture="Culture.empire">
         <face>
