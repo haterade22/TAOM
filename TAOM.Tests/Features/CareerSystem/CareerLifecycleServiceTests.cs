@@ -116,6 +116,39 @@ public class CareerLifecycleServiceTests
         _creationHandler.DidNotReceive().OnCareerSelected(Arg.Any<string>(), Arg.Any<string>());
     }
 
+    [TestMethod]
+    public void AssignFallbackCareerIfMissing_UnknownCareerId_ClearsOldDataThenReassigns()
+    {
+        // #1046: a save names a career the data no longer defines. HasCareer counts the id, so the
+        // hero sat in a half state; the fallback must treat it as missing and drop its leftovers.
+        _dataService.SetCareer(Hero, "retired_career");
+        _dataService.TryAddChoice(Hero, "retired_root", 10);
+        _dataService.UnlockTier(Hero, 2);
+        _dataService.SetFlag(Hero, "f");
+
+        Assert.IsTrue(_sut.AssignFallbackCareerIfMissing(Hero, "gondor"));
+
+        _creationHandler.Received(1).OnCareerSelected(Hero, "ranger");
+        Assert.IsNull(_dataService.GetCareerStringId(Hero));
+        Assert.AreEqual(0, _dataService.GetChoiceCount(Hero));
+        Assert.IsFalse(_dataService.IsTierUnlocked(Hero, 2));
+        Assert.IsFalse(_dataService.HasFlag(Hero, "f"));
+    }
+
+    [TestMethod]
+    public void AssignFallbackCareerIfMissing_UnknownCareerId_EmptyRegistry_KeepsSave()
+    {
+        _registry.GetAllCareers().Returns(new List<CareerDefinition>());
+        _dataService.SetCareer(Hero, "retired_career");
+        _dataService.TryAddChoice(Hero, "retired_root", 10);
+
+        Assert.IsFalse(_sut.AssignFallbackCareerIfMissing(Hero, "gondor"));
+
+        _creationHandler.DidNotReceive().OnCareerSelected(Arg.Any<string>(), Arg.Any<string>());
+        Assert.AreEqual("retired_career", _dataService.GetCareerStringId(Hero));
+        Assert.AreEqual(1, _dataService.GetChoiceCount(Hero));
+    }
+
     // -- the repair pass --
 
     [TestMethod]

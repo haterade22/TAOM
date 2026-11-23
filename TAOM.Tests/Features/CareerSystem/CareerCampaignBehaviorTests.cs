@@ -82,6 +82,7 @@ public class CareerAutoAssignTests
     public void AutoAssign_AlreadyHasCareer_DoesNotOverride()
     {
         _dataService.SetCareer("hero1", "warboss");
+        _registry.GetCareer("warboss").Returns(WarbossCareer);
 
         var result = TryAutoAssign("hero1", "mordor");
 
