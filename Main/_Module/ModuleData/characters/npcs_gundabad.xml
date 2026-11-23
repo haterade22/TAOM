@@ -59,7 +59,7 @@
 	</NPCCharacter>
 
 	<!-- Caravan Staff -->
-	<NPCCharacter id="caravan_master_gundabad" race="pale_uruk" default_group="Infantry" level="26" name="{=aom_gb_caravan_master}Gundabad Caravan Master" occupation="CaravanGuard" culture="Culture.gundabad">
+	<NPCCharacter id="caravan_master_gundabad" race="pale_uruk" default_group="Infantry" level="26" name="{=aom_gb_caravan_master}[Gundabad] Caravan Master" occupation="CaravanGuard" culture="Culture.gundabad">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -80,7 +80,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_guard_gundabad" race="pale_uruk" default_group="Infantry" level="21" name="{=aom_gb_caravan_guard}Gundabad Caravan Guard" occupation="CaravanGuard" culture="Culture.gundabad">
+	<NPCCharacter id="caravan_guard_gundabad" race="pale_uruk" default_group="Infantry" level="21" name="{=aom_gb_caravan_guard}[Gundabad] Caravan Guard" occupation="CaravanGuard" culture="Culture.gundabad">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills>
 			<skill id="Athletics" value="50" />
@@ -100,7 +100,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="veteran_caravan_guard_gundabad" race="pale_uruk" default_group="Infantry" level="26" name="{=aom_gb_vet_caravan_guard}Gundabad Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.gundabad">
+	<NPCCharacter id="veteran_caravan_guard_gundabad" race="pale_uruk" default_group="Infantry" level="26" name="{=aom_gb_vet_caravan_guard}[Gundabad] Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.gundabad">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -121,7 +121,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="armed_trader_gundabad" race="pale_uruk" default_group="Infantry" level="16" name="{=aom_gb_armed_trader}Gundabad Armed Trader" occupation="CaravanGuard" culture="Culture.gundabad">
+	<NPCCharacter id="armed_trader_gundabad" race="pale_uruk" default_group="Infantry" level="16" name="{=aom_gb_armed_trader}[Gundabad] Armed Trader" occupation="CaravanGuard" culture="Culture.gundabad">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills>
 			<skill id="Athletics" value="40" />

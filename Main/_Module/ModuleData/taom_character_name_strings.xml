@@ -7,13 +7,13 @@
 	<string id="aom_anduinvale_lord_1" text="{=aom_anduinvale_lord_1}Bold Beorning lord" />
 	<string id="aom_anduinvale_lord_2" text="{=aom_anduinvale_lord_2}Cautious Beorning lord" />
 	<string id="aom_ang_arena" text="{=aom_ang_arena}Training Master" />
-	<string id="aom_ang_armed_trader" text="{=aom_ang_armed_trader}Angáladh Armed Trader" />
+	<string id="aom_ang_armed_trader" text="{=aom_ang_armed_trader}[Angáladh] Armed Trader" />
 	<string id="aom_ang_armorer" text="{=aom_ang_armorer}Armorer" />
 	<string id="aom_ang_barber" text="{=aom_ang_barber}Barber" />
 	<string id="aom_ang_beggar" text="{=aom_ang_beggar}Beggar" />
 	<string id="aom_ang_blacksmith" text="{=aom_ang_blacksmith}Blacksmith" />
-	<string id="aom_ang_caravan_guard" text="{=aom_ang_caravan_guard}Angáladh Caravan Guard" />
-	<string id="aom_ang_caravan_master" text="{=aom_ang_caravan_master}Angáladh Caravan Master" />
+	<string id="aom_ang_caravan_guard" text="{=aom_ang_caravan_guard}[Angáladh] Caravan Guard" />
+	<string id="aom_ang_caravan_master" text="{=aom_ang_caravan_master}[Angáladh] Caravan Master" />
 	<string id="aom_ang_dancer" text="{=aom_ang_dancer}Dancer" />
 	<string id="aom_ang_edu_1" text="{=aom_ang_edu_1}Angáladh Youth" />
 	<string id="aom_ang_edu_2" text="{=aom_ang_edu_2}Angáladh Youth" />
@@ -72,7 +72,7 @@
 	<string id="aom_ang_townswoman_child" text="{=aom_ang_townswoman_child}Townswoman" />
 	<string id="aom_ang_townswoman_infant" text="{=aom_ang_townswoman_infant}Townswoman" />
 	<string id="aom_ang_townswoman_teen" text="{=aom_ang_townswoman_teen}Townswoman" />
-	<string id="aom_ang_vet_caravan_guard" text="{=aom_ang_vet_caravan_guard}Angáladh Veteran Caravan Guard" />
+	<string id="aom_ang_vet_caravan_guard" text="{=aom_ang_vet_caravan_guard}[Angáladh] Veteran Caravan Guard" />
 	<string id="aom_ang_village_woman" text="{=aom_ang_village_woman}Village Woman" />
 	<string id="aom_ang_village_woman_child" text="{=aom_ang_village_woman_child}Village Child" />
 	<string id="aom_ang_village_woman_teen" text="{=aom_ang_village_woman_teen}Village Teenager" />
@@ -83,13 +83,13 @@
 	<string id="aom_angaladh_lord_1" text="{=aom_angaladh_lord_1}Bold Woodman lord" />
 	<string id="aom_angaladh_lord_2" text="{=aom_angaladh_lord_2}Cautious Woodman lord" />
 	<string id="aom_arth_arena" text="{=aom_arth_arena}Training Master" />
-	<string id="aom_arth_armed_trader" text="{=aom_arth_armed_trader}Arthedain Armed Trader" />
+	<string id="aom_arth_armed_trader" text="{=aom_arth_armed_trader}[Arthedain] Armed Trader" />
 	<string id="aom_arth_armorer" text="{=aom_arth_armorer}Armorer" />
 	<string id="aom_arth_barber" text="{=aom_arth_barber}Barber" />
 	<string id="aom_arth_beggar" text="{=aom_arth_beggar}Beggar" />
 	<string id="aom_arth_blacksmith" text="{=aom_arth_blacksmith}Blacksmith" />
-	<string id="aom_arth_caravan_guard" text="{=aom_arth_caravan_guard}Arthedain Caravan Guard" />
-	<string id="aom_arth_caravan_master" text="{=aom_arth_caravan_master}Arthedain Caravan Master" />
+	<string id="aom_arth_caravan_guard" text="{=aom_arth_caravan_guard}[Arthedain] Caravan Guard" />
+	<string id="aom_arth_caravan_master" text="{=aom_arth_caravan_master}[Arthedain] Caravan Master" />
 	<string id="aom_arth_dancer" text="{=aom_arth_dancer}Dancer" />
 	<string id="aom_arth_female_beggar" text="{=aom_arth_female_beggar}Beggar" />
 	<string id="aom_arth_gamehost" text="{=aom_arth_gamehost}Game Host" />
@@ -142,7 +142,7 @@
 	<string id="aom_arth_townswoman_child" text="{=aom_arth_townswoman_child}Townswoman" />
 	<string id="aom_arth_townswoman_infant" text="{=aom_arth_townswoman_infant}Townswoman" />
 	<string id="aom_arth_townswoman_teen" text="{=aom_arth_townswoman_teen}Townswoman" />
-	<string id="aom_arth_vet_caravan_guard" text="{=aom_arth_vet_caravan_guard}Arthedain Veteran Caravan Guard" />
+	<string id="aom_arth_vet_caravan_guard" text="{=aom_arth_vet_caravan_guard}[Arthedain] Veteran Caravan Guard" />
 	<string id="aom_arth_village_woman" text="{=aom_arth_village_woman}Village Woman" />
 	<string id="aom_arth_village_woman_child" text="{=aom_arth_village_woman_child}Village Child" />
 	<string id="aom_arth_village_woman_teen" text="{=aom_arth_village_woman_teen}Village Teenager" />
@@ -153,13 +153,13 @@
 	<string id="aom_arthedain_lord_1" text="{=aom_arthedain_lord_1}Bold Arthedain lord" />
 	<string id="aom_arthedain_lord_2" text="{=aom_arthedain_lord_2}Cautious Arthedain lord" />
 	<string id="aom_av_arena" text="{=aom_av_arena}Training Master" />
-	<string id="aom_av_armed_trader" text="{=aom_av_armed_trader}Vale Armed Trader" />
+	<string id="aom_av_armed_trader" text="{=aom_av_armed_trader}[Anduin Vale] Armed Trader" />
 	<string id="aom_av_armorer" text="{=aom_av_armorer}Armorer" />
 	<string id="aom_av_barber" text="{=aom_av_barber}Barber" />
 	<string id="aom_av_beggar" text="{=aom_av_beggar}Beggar" />
 	<string id="aom_av_blacksmith" text="{=aom_av_blacksmith}Blacksmith" />
-	<string id="aom_av_caravan_guard" text="{=aom_av_caravan_guard}Vale Caravan Guard" />
-	<string id="aom_av_caravan_master" text="{=aom_av_caravan_master}Vale Caravan Master" />
+	<string id="aom_av_caravan_guard" text="{=aom_av_caravan_guard}[Anduin Vale] Caravan Guard" />
+	<string id="aom_av_caravan_master" text="{=aom_av_caravan_master}[Anduin Vale] Caravan Master" />
 	<string id="aom_av_dancer" text="{=aom_av_dancer}Dancer" />
 	<string id="aom_av_edu_1" text="{=aom_av_edu_1}Vale Youth" />
 	<string id="aom_av_edu_2" text="{=aom_av_edu_2}Vale Youth" />
@@ -218,7 +218,7 @@
 	<string id="aom_av_townswoman_child" text="{=aom_av_townswoman_child}Townswoman" />
 	<string id="aom_av_townswoman_infant" text="{=aom_av_townswoman_infant}Townswoman" />
 	<string id="aom_av_townswoman_teen" text="{=aom_av_townswoman_teen}Townswoman" />
-	<string id="aom_av_vet_caravan_guard" text="{=aom_av_vet_caravan_guard}Vale Veteran Caravan Guard" />
+	<string id="aom_av_vet_caravan_guard" text="{=aom_av_vet_caravan_guard}[Anduin Vale] Veteran Caravan Guard" />
 	<string id="aom_av_village_woman" text="{=aom_av_village_woman}Village Woman" />
 	<string id="aom_av_village_woman_child" text="{=aom_av_village_woman_child}Village Child" />
 	<string id="aom_av_village_woman_teen" text="{=aom_av_village_woman_teen}Village Teenager" />
@@ -227,13 +227,13 @@
 	<string id="aom_av_villager_teen" text="{=aom_av_villager_teen}Village Teenager" />
 	<string id="aom_av_weaponsmith" text="{=aom_av_weaponsmith}Weaponsmith" />
 	<string id="aom_bcg_arena" text="{=aom_bcg_arena}Training Master" />
-	<string id="aom_bcg_armed_trader" text="{=aom_bcg_armed_trader}Goblin Armed Trader" />
+	<string id="aom_bcg_armed_trader" text="{=aom_bcg_armed_trader}[Goblin] Armed Trader" />
 	<string id="aom_bcg_armorer" text="{=aom_bcg_armorer}Armorer" />
 	<string id="aom_bcg_barber" text="{=aom_bcg_barber}Barber" />
 	<string id="aom_bcg_beggar" text="{=aom_bcg_beggar}Beggar" />
 	<string id="aom_bcg_blacksmith" text="{=aom_bcg_blacksmith}Blacksmith" />
-	<string id="aom_bcg_caravan_guard" text="{=aom_bcg_caravan_guard}Goblin Caravan Guard" />
-	<string id="aom_bcg_caravan_master" text="{=aom_bcg_caravan_master}Goblin Caravan Master" />
+	<string id="aom_bcg_caravan_guard" text="{=aom_bcg_caravan_guard}[Goblin] Caravan Guard" />
+	<string id="aom_bcg_caravan_master" text="{=aom_bcg_caravan_master}[Goblin] Caravan Master" />
 	<string id="aom_bcg_dancer" text="{=aom_bcg_dancer}Dancer" />
 	<string id="aom_bcg_female_beggar" text="{=aom_bcg_female_beggar}Beggar" />
 	<string id="aom_bcg_gamehost" text="{=aom_bcg_gamehost}Game Host" />
@@ -286,7 +286,7 @@
 	<string id="aom_bcg_townswoman_child" text="{=aom_bcg_townswoman_child}Townswoman" />
 	<string id="aom_bcg_townswoman_infant" text="{=aom_bcg_townswoman_infant}Townswoman" />
 	<string id="aom_bcg_townswoman_teen" text="{=aom_bcg_townswoman_teen}Townswoman" />
-	<string id="aom_bcg_vet_caravan_guard" text="{=aom_bcg_vet_caravan_guard}Goblin Veteran Caravan Guard" />
+	<string id="aom_bcg_vet_caravan_guard" text="{=aom_bcg_vet_caravan_guard}[Goblin] Veteran Caravan Guard" />
 	<string id="aom_bcg_village_woman" text="{=aom_bcg_village_woman}Village Woman" />
 	<string id="aom_bcg_village_woman_child" text="{=aom_bcg_village_woman_child}Village Child" />
 	<string id="aom_bcg_village_woman_teen" text="{=aom_bcg_village_woman_teen}Village Teenager" />
@@ -298,13 +298,13 @@
 	<string id="aom_bluecraig_lord_1" text="{=aom_bluecraig_lord_1}Bold bluecraig chieftain" />
 	<string id="aom_bluecraig_lord_2" text="{=aom_bluecraig_lord_2}Cautious bluecraig chieftain" />
 	<string id="aom_card_arena" text="{=aom_card_arena}Training Master" />
-	<string id="aom_card_armed_trader" text="{=aom_card_armed_trader}Cardolan Armed Trader" />
+	<string id="aom_card_armed_trader" text="{=aom_card_armed_trader}[Cardolan] Armed Trader" />
 	<string id="aom_card_armorer" text="{=aom_card_armorer}Armorer" />
 	<string id="aom_card_barber" text="{=aom_card_barber}Barber" />
 	<string id="aom_card_beggar" text="{=aom_card_beggar}Beggar" />
 	<string id="aom_card_blacksmith" text="{=aom_card_blacksmith}Blacksmith" />
-	<string id="aom_card_caravan_guard" text="{=aom_card_caravan_guard}Cardolan Caravan Guard" />
-	<string id="aom_card_caravan_master" text="{=aom_card_caravan_master}Cardolan Caravan Master" />
+	<string id="aom_card_caravan_guard" text="{=aom_card_caravan_guard}[Cardolan] Caravan Guard" />
+	<string id="aom_card_caravan_master" text="{=aom_card_caravan_master}[Cardolan] Caravan Master" />
 	<string id="aom_card_dancer" text="{=aom_card_dancer}Dancer" />
 	<string id="aom_card_female_beggar" text="{=aom_card_female_beggar}Beggar" />
 	<string id="aom_card_gamehost" text="{=aom_card_gamehost}Game Host" />
@@ -357,7 +357,7 @@
 	<string id="aom_card_townswoman_child" text="{=aom_card_townswoman_child}Townswoman" />
 	<string id="aom_card_townswoman_infant" text="{=aom_card_townswoman_infant}Townswoman" />
 	<string id="aom_card_townswoman_teen" text="{=aom_card_townswoman_teen}Townswoman" />
-	<string id="aom_card_vet_caravan_guard" text="{=aom_card_vet_caravan_guard}Cardolan Veteran Caravan Guard" />
+	<string id="aom_card_vet_caravan_guard" text="{=aom_card_vet_caravan_guard}[Cardolan] Veteran Caravan Guard" />
 	<string id="aom_card_village_woman" text="{=aom_card_village_woman}Village Woman" />
 	<string id="aom_card_village_woman_child" text="{=aom_card_village_woman_child}Village Child" />
 	<string id="aom_card_village_woman_teen" text="{=aom_card_village_woman_teen}Village Teenager" />
@@ -368,13 +368,13 @@
 	<string id="aom_cardolan_lord_1" text="{=aom_cardolan_lord_1}Bold Cardolan lord" />
 	<string id="aom_cardolan_lord_2" text="{=aom_cardolan_lord_2}Cautious Cardolan lord" />
 	<string id="aom_dg_arena" text="{=aom_dg_arena}Training Master" />
-	<string id="aom_dg_armed_trader" text="{=aom_dg_armed_trader}Dol Guldur Armed Trader" />
+	<string id="aom_dg_armed_trader" text="{=aom_dg_armed_trader}[Dol Guldur] Armed Trader" />
 	<string id="aom_dg_armorer" text="{=aom_dg_armorer}Armorer" />
 	<string id="aom_dg_barber" text="{=aom_dg_barber}Barber" />
 	<string id="aom_dg_beggar" text="{=aom_dg_beggar}Beggar" />
 	<string id="aom_dg_blacksmith" text="{=aom_dg_blacksmith}Blacksmith" />
-	<string id="aom_dg_caravan_guard" text="{=aom_dg_caravan_guard}Dol Guldur Caravan Guard" />
-	<string id="aom_dg_caravan_master" text="{=aom_dg_caravan_master}Dol Guldur Caravan Master" />
+	<string id="aom_dg_caravan_guard" text="{=aom_dg_caravan_guard}[Dol Guldur] Caravan Guard" />
+	<string id="aom_dg_caravan_master" text="{=aom_dg_caravan_master}[Dol Guldur] Caravan Master" />
 	<string id="aom_dg_dancer" text="{=aom_dg_dancer}Dancer" />
 	<string id="aom_dg_female_beggar" text="{=aom_dg_female_beggar}Beggar" />
 	<string id="aom_dg_gamehost" text="{=aom_dg_gamehost}Game Host" />
@@ -436,7 +436,7 @@
 	<string id="aom_dg_townswoman_child" text="{=aom_dg_townswoman_child}Townswoman" />
 	<string id="aom_dg_townswoman_infant" text="{=aom_dg_townswoman_infant}Townswoman" />
 	<string id="aom_dg_townswoman_teen" text="{=aom_dg_townswoman_teen}Townswoman" />
-	<string id="aom_dg_vet_caravan_guard" text="{=aom_dg_vet_caravan_guard}Dol Guldur Veteran Caravan Guard" />
+	<string id="aom_dg_vet_caravan_guard" text="{=aom_dg_vet_caravan_guard}[Dol Guldur] Veteran Caravan Guard" />
 	<string id="aom_dg_village_woman" text="{=aom_dg_village_woman}Village Woman" />
 	<string id="aom_dg_village_woman_child" text="{=aom_dg_village_woman_child}Village Child" />
 	<string id="aom_dg_village_woman_teen" text="{=aom_dg_village_woman_teen}Village Teenager" />
@@ -446,13 +446,13 @@
 	<string id="aom_dg_warg_merchant" text="{=aom_dg_warg_merchant}Warg Merchant" />
 	<string id="aom_dg_weaponsmith" text="{=aom_dg_weaponsmith}Weaponsmith" />
 	<string id="aom_dl_arena" text="{=aom_dl_arena}Training Master" />
-	<string id="aom_dl_armed_trader" text="{=aom_dl_armed_trader}Dale Armed Trader" />
+	<string id="aom_dl_armed_trader" text="{=aom_dl_armed_trader}[Dale] Armed Trader" />
 	<string id="aom_dl_armorer" text="{=aom_dl_armorer}Armorer" />
 	<string id="aom_dl_barber" text="{=aom_dl_barber}Barber" />
 	<string id="aom_dl_beggar" text="{=aom_dl_beggar}Beggar" />
 	<string id="aom_dl_blacksmith" text="{=aom_dl_blacksmith}Blacksmith" />
-	<string id="aom_dl_caravan_guard" text="{=aom_dl_caravan_guard}Dale Caravan Guard" />
-	<string id="aom_dl_caravan_master" text="{=aom_dl_caravan_master}Dale Caravan Master" />
+	<string id="aom_dl_caravan_guard" text="{=aom_dl_caravan_guard}[Dale] Caravan Guard" />
+	<string id="aom_dl_caravan_master" text="{=aom_dl_caravan_master}[Dale] Caravan Master" />
 	<string id="aom_dl_dancer" text="{=aom_dl_dancer}Dancer" />
 	<string id="aom_dl_edu_1" text="{=aom_dl_edu_1}Dale Youth" />
 	<string id="aom_dl_edu_2" text="{=aom_dl_edu_2}Dale Youth" />
@@ -511,7 +511,7 @@
 	<string id="aom_dl_townswoman_child" text="{=aom_dl_townswoman_child}Townswoman" />
 	<string id="aom_dl_townswoman_infant" text="{=aom_dl_townswoman_infant}Townswoman" />
 	<string id="aom_dl_townswoman_teen" text="{=aom_dl_townswoman_teen}Townswoman" />
-	<string id="aom_dl_vet_caravan_guard" text="{=aom_dl_vet_caravan_guard}Dale Veteran Caravan Guard" />
+	<string id="aom_dl_vet_caravan_guard" text="{=aom_dl_vet_caravan_guard}[Dale] Veteran Caravan Guard" />
 	<string id="aom_dl_village_woman" text="{=aom_dl_village_woman}Village Woman" />
 	<string id="aom_dl_village_woman_child" text="{=aom_dl_village_woman_child}Village Child" />
 	<string id="aom_dl_village_woman_teen" text="{=aom_dl_village_woman_teen}Village Teenager" />
@@ -520,13 +520,13 @@
 	<string id="aom_dl_villager_teen" text="{=aom_dl_villager_teen}Village Teenager" />
 	<string id="aom_dl_weaponsmith" text="{=aom_dl_weaponsmith}Weaponsmith" />
 	<string id="aom_dn_arena" text="{=aom_dn_arena}Training Master" />
-	<string id="aom_dn_armed_trader" text="{=aom_dn_armed_trader}Dunland Armed Trader" />
+	<string id="aom_dn_armed_trader" text="{=aom_dn_armed_trader}[Dunland] Armed Trader" />
 	<string id="aom_dn_armorer" text="{=aom_dn_armorer}Armorer" />
 	<string id="aom_dn_barber" text="{=aom_dn_barber}Barber" />
 	<string id="aom_dn_beggar" text="{=aom_dn_beggar}Beggar" />
 	<string id="aom_dn_blacksmith" text="{=aom_dn_blacksmith}Blacksmith" />
-	<string id="aom_dn_caravan_guard" text="{=aom_dn_caravan_guard}Dunland Caravan Guard" />
-	<string id="aom_dn_caravan_master" text="{=aom_dn_caravan_master}Dunland Caravan Master" />
+	<string id="aom_dn_caravan_guard" text="{=aom_dn_caravan_guard}[Dunland] Caravan Guard" />
+	<string id="aom_dn_caravan_master" text="{=aom_dn_caravan_master}[Dunland] Caravan Master" />
 	<string id="aom_dn_dancer" text="{=aom_dn_dancer}Dancer" />
 	<string id="aom_dn_female_beggar" text="{=aom_dn_female_beggar}Beggar" />
 	<string id="aom_dn_gamehost" text="{=aom_dn_gamehost}Game Host" />
@@ -579,7 +579,7 @@
 	<string id="aom_dn_townswoman_child" text="{=aom_dn_townswoman_child}Townswoman" />
 	<string id="aom_dn_townswoman_infant" text="{=aom_dn_townswoman_infant}Townswoman" />
 	<string id="aom_dn_townswoman_teen" text="{=aom_dn_townswoman_teen}Townswoman" />
-	<string id="aom_dn_vet_caravan_guard" text="{=aom_dn_vet_caravan_guard}Dunland Veteran Caravan Guard" />
+	<string id="aom_dn_vet_caravan_guard" text="{=aom_dn_vet_caravan_guard}[Dunland] Veteran Caravan Guard" />
 	<string id="aom_dn_village_woman" text="{=aom_dn_village_woman}Village Woman" />
 	<string id="aom_dn_village_woman_child" text="{=aom_dn_village_woman_child}Village Child" />
 	<string id="aom_dn_village_woman_teen" text="{=aom_dn_village_woman_teen}Village Teenager" />
@@ -590,13 +590,13 @@
 	<string id="aom_dolguldur_lord_1" text="{=aom_dolguldur_lord_1}Bold Dol Guldur captain" />
 	<string id="aom_dolguldur_lord_2" text="{=aom_dolguldur_lord_2}Cautious Dol Guldur captain" />
 	<string id="aom_dor_arena" text="{=aom_dor_arena}Training Master" />
-	<string id="aom_dor_armed_trader" text="{=aom_dor_armed_trader}Dorwinion Armed Trader" />
+	<string id="aom_dor_armed_trader" text="{=aom_dor_armed_trader}[Dorwinion] Armed Trader" />
 	<string id="aom_dor_armorer" text="{=aom_dor_armorer}Armorer" />
 	<string id="aom_dor_barber" text="{=aom_dor_barber}Barber" />
 	<string id="aom_dor_beggar" text="{=aom_dor_beggar}Beggar" />
 	<string id="aom_dor_blacksmith" text="{=aom_dor_blacksmith}Blacksmith" />
-	<string id="aom_dor_caravan_guard" text="{=aom_dor_caravan_guard}Dorwinion Caravan Guard" />
-	<string id="aom_dor_caravan_master" text="{=aom_dor_caravan_master}Dorwinion Caravan Master" />
+	<string id="aom_dor_caravan_guard" text="{=aom_dor_caravan_guard}[Dorwinion] Caravan Guard" />
+	<string id="aom_dor_caravan_master" text="{=aom_dor_caravan_master}[Dorwinion] Caravan Master" />
 	<string id="aom_dor_dancer" text="{=aom_dor_dancer}Dancer" />
 	<string id="aom_dor_edu_1" text="{=aom_dor_edu_1}Dorwinion Youth" />
 	<string id="aom_dor_edu_2" text="{=aom_dor_edu_2}Dorwinion Youth" />
@@ -655,7 +655,7 @@
 	<string id="aom_dor_townswoman_child" text="{=aom_dor_townswoman_child}Townswoman" />
 	<string id="aom_dor_townswoman_infant" text="{=aom_dor_townswoman_infant}Townswoman" />
 	<string id="aom_dor_townswoman_teen" text="{=aom_dor_townswoman_teen}Townswoman" />
-	<string id="aom_dor_vet_caravan_guard" text="{=aom_dor_vet_caravan_guard}Dorwinion Veteran Caravan Guard" />
+	<string id="aom_dor_vet_caravan_guard" text="{=aom_dor_vet_caravan_guard}[Dorwinion] Veteran Caravan Guard" />
 	<string id="aom_dor_village_woman" text="{=aom_dor_village_woman}Village Woman" />
 	<string id="aom_dor_village_woman_child" text="{=aom_dor_village_woman_child}Village Child" />
 	<string id="aom_dor_village_woman_teen" text="{=aom_dor_village_woman_teen}Village Teenager" />
@@ -666,13 +666,13 @@
 	<string id="aom_dorwinion_lord_1" text="{=aom_dorwinion_lord_1}Bold Dorwinion lord" />
 	<string id="aom_dorwinion_lord_2" text="{=aom_dorwinion_lord_2}Cautious Dorwinion lord" />
 	<string id="aom_elu_arena" text="{=aom_elu_arena}Training Master" />
-	<string id="aom_elu_armed_trader" text="{=aom_elu_armed_trader}Ered Luin Armed Trader" />
+	<string id="aom_elu_armed_trader" text="{=aom_elu_armed_trader}[Ered Luin] Armed Trader" />
 	<string id="aom_elu_armorer" text="{=aom_elu_armorer}Armorer" />
 	<string id="aom_elu_barber" text="{=aom_elu_barber}Barber" />
 	<string id="aom_elu_beggar" text="{=aom_elu_beggar}Beggar" />
 	<string id="aom_elu_blacksmith" text="{=aom_elu_blacksmith}Blacksmith" />
-	<string id="aom_elu_caravan_guard" text="{=aom_elu_caravan_guard}Ered Luin Caravan Guard" />
-	<string id="aom_elu_caravan_master" text="{=aom_elu_caravan_master}Ered Luin Caravan Master" />
+	<string id="aom_elu_caravan_guard" text="{=aom_elu_caravan_guard}[Ered Luin] Caravan Guard" />
+	<string id="aom_elu_caravan_master" text="{=aom_elu_caravan_master}[Ered Luin] Caravan Master" />
 	<string id="aom_elu_dancer" text="{=aom_elu_dancer}Dancer" />
 	<string id="aom_elu_female_beggar" text="{=aom_elu_female_beggar}Beggar" />
 	<string id="aom_elu_gamehost" text="{=aom_elu_gamehost}Game Host" />
@@ -727,7 +727,7 @@
 	<string id="aom_elu_townswoman_child" text="{=aom_elu_townswoman_child}Townswoman" />
 	<string id="aom_elu_townswoman_infant" text="{=aom_elu_townswoman_infant}Townswoman" />
 	<string id="aom_elu_townswoman_teen" text="{=aom_elu_townswoman_teen}Townswoman" />
-	<string id="aom_elu_vet_caravan_guard" text="{=aom_elu_vet_caravan_guard}Ered Luin Veteran Caravan Guard" />
+	<string id="aom_elu_vet_caravan_guard" text="{=aom_elu_vet_caravan_guard}[Ered Luin] Veteran Caravan Guard" />
 	<string id="aom_elu_village_child" text="{=aom_elu_village_child}Village Child" />
 	<string id="aom_elu_village_teen" text="{=aom_elu_village_teen}Village Teenager" />
 	<string id="aom_elu_village_woman" text="{=aom_elu_village_woman}Village Woman" />
@@ -738,13 +738,13 @@
 	<string id="aom_elu_villager_teen" text="{=aom_elu_villager_teen}Village Teenager" />
 	<string id="aom_elu_weaponsmith" text="{=aom_elu_weaponsmith}Weaponsmith" />
 	<string id="aom_er_arena" text="{=aom_er_arena}Training Master" />
-	<string id="aom_er_armed_trader" text="{=aom_er_armed_trader}Erebor Armed Trader" />
+	<string id="aom_er_armed_trader" text="{=aom_er_armed_trader}[Erebor] Armed Trader" />
 	<string id="aom_er_armorer" text="{=aom_er_armorer}Armorer" />
 	<string id="aom_er_barber" text="{=aom_er_barber}Barber" />
 	<string id="aom_er_beggar" text="{=aom_er_beggar}Beggar" />
 	<string id="aom_er_blacksmith" text="{=aom_er_blacksmith}Blacksmith" />
-	<string id="aom_er_caravan_guard" text="{=aom_er_caravan_guard}Erebor Caravan Guard" />
-	<string id="aom_er_caravan_master" text="{=aom_er_caravan_master}Erebor Caravan Master" />
+	<string id="aom_er_caravan_guard" text="{=aom_er_caravan_guard}[Erebor] Caravan Guard" />
+	<string id="aom_er_caravan_master" text="{=aom_er_caravan_master}[Erebor] Caravan Master" />
 	<string id="aom_er_dancer" text="{=aom_er_dancer}Dancer" />
 	<string id="aom_er_female_beggar" text="{=aom_er_female_beggar}Beggar" />
 	<string id="aom_er_gamehost" text="{=aom_er_gamehost}Game Host" />
@@ -799,7 +799,7 @@
 	<string id="aom_er_townswoman_child" text="{=aom_er_townswoman_child}Townswoman" />
 	<string id="aom_er_townswoman_infant" text="{=aom_er_townswoman_infant}Townswoman" />
 	<string id="aom_er_townswoman_teen" text="{=aom_er_townswoman_teen}Townswoman" />
-	<string id="aom_er_vet_caravan_guard" text="{=aom_er_vet_caravan_guard}Erebor Veteran Caravan Guard" />
+	<string id="aom_er_vet_caravan_guard" text="{=aom_er_vet_caravan_guard}[Erebor] Veteran Caravan Guard" />
 	<string id="aom_er_village_child" text="{=aom_er_village_child}Village Child" />
 	<string id="aom_er_village_teen" text="{=aom_er_village_teen}Village Teenager" />
 	<string id="aom_er_village_woman" text="{=aom_er_village_woman}Village Woman" />
@@ -814,13 +814,13 @@
 	<string id="aom_eredluin_lord_1" text="{=aom_eredluin_lord_1}Bold dwarven lord" />
 	<string id="aom_eredluin_lord_2" text="{=aom_eredluin_lord_2}Cautious dwarven lord" />
 	<string id="aom_gb_arena" text="{=aom_gb_arena}Training Master" />
-	<string id="aom_gb_armed_trader" text="{=aom_gb_armed_trader}Gundabad Armed Trader" />
+	<string id="aom_gb_armed_trader" text="{=aom_gb_armed_trader}[Gundabad] Armed Trader" />
 	<string id="aom_gb_armorer" text="{=aom_gb_armorer}Armorer" />
 	<string id="aom_gb_barber" text="{=aom_gb_barber}Barber" />
 	<string id="aom_gb_beggar" text="{=aom_gb_beggar}Beggar" />
 	<string id="aom_gb_blacksmith" text="{=aom_gb_blacksmith}Blacksmith" />
-	<string id="aom_gb_caravan_guard" text="{=aom_gb_caravan_guard}Gundabad Caravan Guard" />
-	<string id="aom_gb_caravan_master" text="{=aom_gb_caravan_master}Gundabad Caravan Master" />
+	<string id="aom_gb_caravan_guard" text="{=aom_gb_caravan_guard}[Gundabad] Caravan Guard" />
+	<string id="aom_gb_caravan_master" text="{=aom_gb_caravan_master}[Gundabad] Caravan Master" />
 	<string id="aom_gb_dancer" text="{=aom_gb_dancer}Dancer" />
 	<string id="aom_gb_female_beggar" text="{=aom_gb_female_beggar}Beggar" />
 	<string id="aom_gb_gamehost" text="{=aom_gb_gamehost}Game Host" />
@@ -873,7 +873,7 @@
 	<string id="aom_gb_townswoman_child" text="{=aom_gb_townswoman_child}Townswoman" />
 	<string id="aom_gb_townswoman_infant" text="{=aom_gb_townswoman_infant}Townswoman" />
 	<string id="aom_gb_townswoman_teen" text="{=aom_gb_townswoman_teen}Townswoman" />
-	<string id="aom_gb_vet_caravan_guard" text="{=aom_gb_vet_caravan_guard}Gundabad Veteran Caravan Guard" />
+	<string id="aom_gb_vet_caravan_guard" text="{=aom_gb_vet_caravan_guard}[Gundabad] Veteran Caravan Guard" />
 	<string id="aom_gb_village_woman" text="{=aom_gb_village_woman}Village Woman" />
 	<string id="aom_gb_village_woman_child" text="{=aom_gb_village_woman_child}Village Child" />
 	<string id="aom_gb_village_woman_teen" text="{=aom_gb_village_woman_teen}Village Teenager" />
@@ -883,13 +883,13 @@
 	<string id="aom_gb_warg_merchant" text="{=aom_gb_warg_merchant}Warg Merchant" />
 	<string id="aom_gb_weaponsmith" text="{=aom_gb_weaponsmith}Weaponsmith" />
 	<string id="aom_gd_arena" text="{=aom_gd_arena}Training Master" />
-	<string id="aom_gd_armed_trader" text="{=aom_gd_armed_trader}Gondor Armed Trader" />
+	<string id="aom_gd_armed_trader" text="{=aom_gd_armed_trader}[Gondor] Armed Trader" />
 	<string id="aom_gd_armorer" text="{=aom_gd_armorer}Armorer" />
 	<string id="aom_gd_barber" text="{=aom_gd_barber}Barber" />
 	<string id="aom_gd_beggar" text="{=aom_gd_beggar}Beggar" />
 	<string id="aom_gd_blacksmith" text="{=aom_gd_blacksmith}Blacksmith" />
-	<string id="aom_gd_caravan_guard" text="{=aom_gd_caravan_guard}Gondor Caravan Guard" />
-	<string id="aom_gd_caravan_master" text="{=aom_gd_caravan_master}Gondor Caravan Master" />
+	<string id="aom_gd_caravan_guard" text="{=aom_gd_caravan_guard}[Gondor] Caravan Guard" />
+	<string id="aom_gd_caravan_master" text="{=aom_gd_caravan_master}[Gondor] Caravan Master" />
 	<string id="aom_gd_dancer" text="{=aom_gd_dancer}Dancer" />
 	<string id="aom_gd_female_beggar" text="{=aom_gd_female_beggar}Beggar" />
 	<string id="aom_gd_gamehost" text="{=aom_gd_gamehost}Game Host" />
@@ -942,7 +942,7 @@
 	<string id="aom_gd_townswoman_child" text="{=aom_gd_townswoman_child}Townswoman" />
 	<string id="aom_gd_townswoman_infant" text="{=aom_gd_townswoman_infant}Townswoman" />
 	<string id="aom_gd_townswoman_teen" text="{=aom_gd_townswoman_teen}Townswoman" />
-	<string id="aom_gd_vet_caravan_guard" text="{=aom_gd_vet_caravan_guard}Gondor Veteran Caravan Guard" />
+	<string id="aom_gd_vet_caravan_guard" text="{=aom_gd_vet_caravan_guard}[Gondor] Veteran Caravan Guard" />
 	<string id="aom_gd_village_woman" text="{=aom_gd_village_woman}Village Woman" />
 	<string id="aom_gd_village_woman_child" text="{=aom_gd_village_woman_child}Village Child" />
 	<string id="aom_gd_village_woman_teen" text="{=aom_gd_village_woman_teen}Village Teenager" />
@@ -951,13 +951,13 @@
 	<string id="aom_gd_villager_teen" text="{=aom_gd_villager_teen}Village Teenager" />
 	<string id="aom_gd_weaponsmith" text="{=aom_gd_weaponsmith}Weaponsmith" />
 	<string id="aom_gob_arena" text="{=aom_gob_arena}Training Master" />
-	<string id="aom_gob_armed_trader" text="{=aom_gob_armed_trader}Goblin Armed Trader" />
+	<string id="aom_gob_armed_trader" text="{=aom_gob_armed_trader}[Goblin] Armed Trader" />
 	<string id="aom_gob_armorer" text="{=aom_gob_armorer}Armorer" />
 	<string id="aom_gob_barber" text="{=aom_gob_barber}Barber" />
 	<string id="aom_gob_beggar" text="{=aom_gob_beggar}Beggar" />
 	<string id="aom_gob_blacksmith" text="{=aom_gob_blacksmith}Blacksmith" />
-	<string id="aom_gob_caravan_guard" text="{=aom_gob_caravan_guard}Goblin Caravan Guard" />
-	<string id="aom_gob_caravan_master" text="{=aom_gob_caravan_master}Goblin Caravan Master" />
+	<string id="aom_gob_caravan_guard" text="{=aom_gob_caravan_guard}[Goblin] Caravan Guard" />
+	<string id="aom_gob_caravan_master" text="{=aom_gob_caravan_master}[Goblin] Caravan Master" />
 	<string id="aom_gob_dancer" text="{=aom_gob_dancer}Dancer" />
 	<string id="aom_gob_female_beggar" text="{=aom_gob_female_beggar}Beggar" />
 	<string id="aom_gob_gamehost" text="{=aom_gob_gamehost}Game Host" />
@@ -1010,7 +1010,7 @@
 	<string id="aom_gob_townswoman_child" text="{=aom_gob_townswoman_child}Townswoman" />
 	<string id="aom_gob_townswoman_infant" text="{=aom_gob_townswoman_infant}Townswoman" />
 	<string id="aom_gob_townswoman_teen" text="{=aom_gob_townswoman_teen}Townswoman" />
-	<string id="aom_gob_vet_caravan_guard" text="{=aom_gob_vet_caravan_guard}Goblin Veteran Caravan Guard" />
+	<string id="aom_gob_vet_caravan_guard" text="{=aom_gob_vet_caravan_guard}[Goblin] Veteran Caravan Guard" />
 	<string id="aom_gob_village_woman" text="{=aom_gob_village_woman}Village Woman" />
 	<string id="aom_gob_village_woman_child" text="{=aom_gob_village_woman_child}Village Child" />
 	<string id="aom_gob_village_woman_teen" text="{=aom_gob_village_woman_teen}Village Teenager" />
@@ -1029,13 +1029,13 @@
 	<string id="aom_harad_lord_cavalry_name" text="{=aom_harad_lord_cavalry_name}Lord of Harwan (Cavalry)" />
 	<string id="aom_harad_lord_infantry_name" text="{=aom_harad_lord_infantry_name}Lord of Harwan (Infantry)" />
 	<string id="aom_hd_arena" text="{=aom_hd_arena}Training Master" />
-	<string id="aom_hd_armed_trader" text="{=aom_hd_armed_trader}Harad Armed Trader" />
+	<string id="aom_hd_armed_trader" text="{=aom_hd_armed_trader}[Harad] Armed Trader" />
 	<string id="aom_hd_armorer" text="{=aom_hd_armorer}Armorer" />
 	<string id="aom_hd_barber" text="{=aom_hd_barber}Barber" />
 	<string id="aom_hd_beggar" text="{=aom_hd_beggar}Beggar" />
 	<string id="aom_hd_blacksmith" text="{=aom_hd_blacksmith}Blacksmith" />
-	<string id="aom_hd_caravan_guard" text="{=aom_hd_caravan_guard}Harad Caravan Guard" />
-	<string id="aom_hd_caravan_master" text="{=aom_hd_caravan_master}Harad Caravan Master" />
+	<string id="aom_hd_caravan_guard" text="{=aom_hd_caravan_guard}[Harad] Caravan Guard" />
+	<string id="aom_hd_caravan_master" text="{=aom_hd_caravan_master}[Harad] Caravan Master" />
 	<string id="aom_hd_dancer" text="{=aom_hd_dancer}Dancer" />
 	<string id="aom_hd_female_beggar" text="{=aom_hd_female_beggar}Beggar" />
 	<string id="aom_hd_gamehost" text="{=aom_hd_gamehost}Game Host" />
@@ -1088,7 +1088,7 @@
 	<string id="aom_hd_townswoman_child" text="{=aom_hd_townswoman_child}Townswoman" />
 	<string id="aom_hd_townswoman_infant" text="{=aom_hd_townswoman_infant}Townswoman" />
 	<string id="aom_hd_townswoman_teen" text="{=aom_hd_townswoman_teen}Townswoman" />
-	<string id="aom_hd_vet_caravan_guard" text="{=aom_hd_vet_caravan_guard}Harad Veteran Caravan Guard" />
+	<string id="aom_hd_vet_caravan_guard" text="{=aom_hd_vet_caravan_guard}[Harad] Veteran Caravan Guard" />
 	<string id="aom_hd_village_woman" text="{=aom_hd_village_woman}Village Woman" />
 	<string id="aom_hd_villager" text="{=aom_hd_villager}Villager" />
 	<string id="aom_hd_villager_f_child" text="{=aom_hd_villager_f_child}Village Child" />
@@ -1097,13 +1097,13 @@
 	<string id="aom_hd_villager_m_teen" text="{=aom_hd_villager_m_teen}Village Teenager" />
 	<string id="aom_hd_weaponsmith" text="{=aom_hd_weaponsmith}Weaponsmith" />
 	<string id="aom_ig_arena" text="{=aom_ig_arena}Training Master" />
-	<string id="aom_ig_armed_trader" text="{=aom_ig_armed_trader}Isengard Armed Trader" />
+	<string id="aom_ig_armed_trader" text="{=aom_ig_armed_trader}[Isengard] Armed Trader" />
 	<string id="aom_ig_armorer" text="{=aom_ig_armorer}Armorer" />
 	<string id="aom_ig_barber" text="{=aom_ig_barber}Barber" />
 	<string id="aom_ig_beggar" text="{=aom_ig_beggar}Beggar" />
 	<string id="aom_ig_blacksmith" text="{=aom_ig_blacksmith}Blacksmith" />
-	<string id="aom_ig_caravan_guard" text="{=aom_ig_caravan_guard}Isengard Caravan Guard" />
-	<string id="aom_ig_caravan_master" text="{=aom_ig_caravan_master}Isengard Caravan Master" />
+	<string id="aom_ig_caravan_guard" text="{=aom_ig_caravan_guard}[Isengard] Caravan Guard" />
+	<string id="aom_ig_caravan_master" text="{=aom_ig_caravan_master}[Isengard] Caravan Master" />
 	<string id="aom_ig_dancer" text="{=aom_ig_dancer}Dancer" />
 	<string id="aom_ig_female_beggar" text="{=aom_ig_female_beggar}Beggar" />
 	<string id="aom_ig_gamehost" text="{=aom_ig_gamehost}Game Host" />
@@ -1164,7 +1164,7 @@
 	<string id="aom_ig_townswoman_child" text="{=aom_ig_townswoman_child}Townswoman" />
 	<string id="aom_ig_townswoman_infant" text="{=aom_ig_townswoman_infant}Townswoman" />
 	<string id="aom_ig_townswoman_teen" text="{=aom_ig_townswoman_teen}Townswoman" />
-	<string id="aom_ig_vet_caravan_guard" text="{=aom_ig_vet_caravan_guard}Isengard Veteran Caravan Guard" />
+	<string id="aom_ig_vet_caravan_guard" text="{=aom_ig_vet_caravan_guard}[Isengard] Veteran Caravan Guard" />
 	<string id="aom_ig_village_woman" text="{=aom_ig_village_woman}Village Woman" />
 	<string id="aom_ig_villager" text="{=aom_ig_villager}Villager" />
 	<string id="aom_ig_villager_f_child" text="{=aom_ig_villager_f_child}Village Child" />
@@ -1251,10 +1251,10 @@
 	<string id="aom_kh_weaponsmith" text="{=aom_kh_weaponsmith}Weaponsmith" />
 	<string id="aom_lindon_lord_1" text="{=aom_lindon_lord_1}Bold elven lord of Mithlond" />
 	<string id="aom_lindon_lord_2" text="{=aom_lindon_lord_2}Cautious elven lord of Mithlond" />
-	<string id="aom_ln_armed_trader" text="{=aom_ln_armed_trader}Lindon Armed Trader" />
-	<string id="aom_ln_caravan_guard" text="{=aom_ln_caravan_guard}Lindon Caravan Guard" />
-	<string id="aom_ln_caravan_master" text="{=aom_ln_caravan_master}Lindon Caravan Master" />
-	<string id="aom_ln_vet_caravan_guard" text="{=aom_ln_vet_caravan_guard}Lindon Veteran Caravan Guard" />
+	<string id="aom_ln_armed_trader" text="{=aom_ln_armed_trader}[Lindon] Armed Trader" />
+	<string id="aom_ln_caravan_guard" text="{=aom_ln_caravan_guard}[Lindon] Caravan Guard" />
+	<string id="aom_ln_caravan_master" text="{=aom_ln_caravan_master}[Lindon] Caravan Master" />
+	<string id="aom_ln_vet_caravan_guard" text="{=aom_ln_vet_caravan_guard}[Lindon] Veteran Caravan Guard" />
 	<string id="aom_lothlorien_lord_1" text="{=aom_lothlorien_lord_1}Bold elven lord of Lothlorien" />
 	<string id="aom_lothlorien_lord_2" text="{=aom_lothlorien_lord_2}Cautious elven lord of Lothlorien" />
 	<string id="aom_lt_headman_1" text="{=aom_lt_headman_1}Rebellious Lorien headman" />
@@ -1289,13 +1289,13 @@
 	<string id="aom_mistymountainorcs_lord_1" text="{=aom_mistymountainorcs_lord_1}Bold Misty Mountain captain" />
 	<string id="aom_mistymountainorcs_lord_2" text="{=aom_mistymountainorcs_lord_2}Cautious Misty Mountain captain" />
 	<string id="aom_mk_arena" text="{=aom_mk_arena}Training Master" />
-	<string id="aom_mk_armed_trader" text="{=aom_mk_armed_trader}Mirkwood Armed Trader" />
+	<string id="aom_mk_armed_trader" text="{=aom_mk_armed_trader}[Mirkwood] Armed Trader" />
 	<string id="aom_mk_armorer" text="{=aom_mk_armorer}Armorer" />
 	<string id="aom_mk_barber" text="{=aom_mk_barber}Barber" />
 	<string id="aom_mk_beggar" text="{=aom_mk_beggar}Beggar" />
 	<string id="aom_mk_blacksmith" text="{=aom_mk_blacksmith}Blacksmith" />
-	<string id="aom_mk_caravan_guard" text="{=aom_mk_caravan_guard}Mirkwood Caravan Guard" />
-	<string id="aom_mk_caravan_master" text="{=aom_mk_caravan_master}Mirkwood Caravan Master" />
+	<string id="aom_mk_caravan_guard" text="{=aom_mk_caravan_guard}[Mirkwood] Caravan Guard" />
+	<string id="aom_mk_caravan_master" text="{=aom_mk_caravan_master}[Mirkwood] Caravan Master" />
 	<string id="aom_mk_dancer" text="{=aom_mk_dancer}Dancer" />
 	<string id="aom_mk_female_beggar" text="{=aom_mk_female_beggar}Beggar" />
 	<string id="aom_mk_gamehost" text="{=aom_mk_gamehost}Game Host" />
@@ -1348,7 +1348,7 @@
 	<string id="aom_mk_townswoman_child" text="{=aom_mk_townswoman_child}Townswoman" />
 	<string id="aom_mk_townswoman_infant" text="{=aom_mk_townswoman_infant}Townswoman" />
 	<string id="aom_mk_townswoman_teen" text="{=aom_mk_townswoman_teen}Townswoman" />
-	<string id="aom_mk_vet_caravan_guard" text="{=aom_mk_vet_caravan_guard}Mirkwood Veteran Caravan Guard" />
+	<string id="aom_mk_vet_caravan_guard" text="{=aom_mk_vet_caravan_guard}[Mirkwood] Veteran Caravan Guard" />
 	<string id="aom_mk_village_woman" text="{=aom_mk_village_woman}Village Woman" />
 	<string id="aom_mk_village_woman_child" text="{=aom_mk_village_woman_child}Village Child" />
 	<string id="aom_mk_village_woman_teen" text="{=aom_mk_village_woman_teen}Village Teenager" />
@@ -1357,13 +1357,13 @@
 	<string id="aom_mk_villager_teen" text="{=aom_mk_villager_teen}Village Teenager" />
 	<string id="aom_mk_weaponsmith" text="{=aom_mk_weaponsmith}Weaponsmith" />
 	<string id="aom_mmo_arena" text="{=aom_mmo_arena}Training Master" />
-	<string id="aom_mmo_armed_trader" text="{=aom_mmo_armed_trader}Orc Armed Trader" />
+	<string id="aom_mmo_armed_trader" text="{=aom_mmo_armed_trader}[Misty Mountains] Orc Armed Trader" />
 	<string id="aom_mmo_armorer" text="{=aom_mmo_armorer}Armorer" />
 	<string id="aom_mmo_barber" text="{=aom_mmo_barber}Barber" />
 	<string id="aom_mmo_beggar" text="{=aom_mmo_beggar}Beggar" />
 	<string id="aom_mmo_blacksmith" text="{=aom_mmo_blacksmith}Blacksmith" />
-	<string id="aom_mmo_caravan_guard" text="{=aom_mmo_caravan_guard}Orc Caravan Guard" />
-	<string id="aom_mmo_caravan_master" text="{=aom_mmo_caravan_master}Orc Caravan Master" />
+	<string id="aom_mmo_caravan_guard" text="{=aom_mmo_caravan_guard}[Misty Mountains] Orc Caravan Guard" />
+	<string id="aom_mmo_caravan_master" text="{=aom_mmo_caravan_master}[Misty Mountains] Orc Caravan Master" />
 	<string id="aom_mmo_dancer" text="{=aom_mmo_dancer}Dancer" />
 	<string id="aom_mmo_female_beggar" text="{=aom_mmo_female_beggar}Beggar" />
 	<string id="aom_mmo_gamehost" text="{=aom_mmo_gamehost}Game Host" />
@@ -1416,7 +1416,7 @@
 	<string id="aom_mmo_townswoman_child" text="{=aom_mmo_townswoman_child}Townswoman" />
 	<string id="aom_mmo_townswoman_infant" text="{=aom_mmo_townswoman_infant}Townswoman" />
 	<string id="aom_mmo_townswoman_teen" text="{=aom_mmo_townswoman_teen}Townswoman" />
-	<string id="aom_mmo_vet_caravan_guard" text="{=aom_mmo_vet_caravan_guard}Orc Veteran Caravan Guard" />
+	<string id="aom_mmo_vet_caravan_guard" text="{=aom_mmo_vet_caravan_guard}[Misty Mountains] Orc Veteran Caravan Guard" />
 	<string id="aom_mmo_village_woman" text="{=aom_mmo_village_woman}Village Woman" />
 	<string id="aom_mmo_village_woman_child" text="{=aom_mmo_village_woman_child}Village Child" />
 	<string id="aom_mmo_village_woman_teen" text="{=aom_mmo_village_woman_teen}Village Teenager" />
@@ -1428,13 +1428,13 @@
 	<string id="aom_mordor_lord_1" text="{=aom_mordor_lord_1}Bold Mordor captain" />
 	<string id="aom_mordor_lord_2" text="{=aom_mordor_lord_2}Cautious Mordor captain" />
 	<string id="aom_mr_arena" text="{=aom_mr_arena}Training Master" />
-	<string id="aom_mr_armed_trader" text="{=aom_mr_armed_trader}Mordor Armed Trader" />
+	<string id="aom_mr_armed_trader" text="{=aom_mr_armed_trader}[Mordor] Armed Trader" />
 	<string id="aom_mr_armorer" text="{=aom_mr_armorer}Armorer" />
 	<string id="aom_mr_barber" text="{=aom_mr_barber}Barber" />
 	<string id="aom_mr_beggar" text="{=aom_mr_beggar}Beggar" />
 	<string id="aom_mr_blacksmith" text="{=aom_mr_blacksmith}Blacksmith" />
-	<string id="aom_mr_caravan_guard" text="{=aom_mr_caravan_guard}Mordor Caravan Guard" />
-	<string id="aom_mr_caravan_master" text="{=aom_mr_caravan_master}Mordor Caravan Master" />
+	<string id="aom_mr_caravan_guard" text="{=aom_mr_caravan_guard}[Mordor] Caravan Guard" />
+	<string id="aom_mr_caravan_master" text="{=aom_mr_caravan_master}[Mordor] Caravan Master" />
 	<string id="aom_mr_dancer" text="{=aom_mr_dancer}Dancer" />
 	<string id="aom_mr_female_beggar" text="{=aom_mr_female_beggar}Beggar" />
 	<string id="aom_mr_gamehost" text="{=aom_mr_gamehost}Game Host" />
@@ -1487,7 +1487,7 @@
 	<string id="aom_mr_townswoman_child" text="{=aom_mr_townswoman_child}Townswoman" />
 	<string id="aom_mr_townswoman_infant" text="{=aom_mr_townswoman_infant}Townswoman" />
 	<string id="aom_mr_townswoman_teen" text="{=aom_mr_townswoman_teen}Townswoman" />
-	<string id="aom_mr_vet_caravan_guard" text="{=aom_mr_vet_caravan_guard}Mordor Veteran Caravan Guard" />
+	<string id="aom_mr_vet_caravan_guard" text="{=aom_mr_vet_caravan_guard}[Mordor] Veteran Caravan Guard" />
 	<string id="aom_mr_village_woman" text="{=aom_mr_village_woman}Village Woman" />
 	<string id="aom_mr_village_woman_child" text="{=aom_mr_village_woman_child}Village Child" />
 	<string id="aom_mr_village_woman_teen" text="{=aom_mr_village_woman_teen}Village Teenager" />
@@ -1497,13 +1497,13 @@
 	<string id="aom_mr_warg_merchant" text="{=aom_mr_warg_merchant}Warg Merchant" />
 	<string id="aom_mr_weaponsmith" text="{=aom_mr_weaponsmith}Weaponsmith" />
 	<string id="aom_rh_arena" text="{=aom_rh_arena}Training Master" />
-	<string id="aom_rh_armed_trader" text="{=aom_rh_armed_trader}Rhun Armed Trader" />
+	<string id="aom_rh_armed_trader" text="{=aom_rh_armed_trader}[Rhûn] Armed Trader" />
 	<string id="aom_rh_armorer" text="{=aom_rh_armorer}Armorer" />
 	<string id="aom_rh_barber" text="{=aom_rh_barber}Barber" />
 	<string id="aom_rh_beggar" text="{=aom_rh_beggar}Beggar" />
 	<string id="aom_rh_blacksmith" text="{=aom_rh_blacksmith}Blacksmith" />
-	<string id="aom_rh_caravan_guard" text="{=aom_rh_caravan_guard}Rhun Caravan Guard" />
-	<string id="aom_rh_caravan_master" text="{=aom_rh_caravan_master}Rhun Caravan Master" />
+	<string id="aom_rh_caravan_guard" text="{=aom_rh_caravan_guard}[Rhûn] Caravan Guard" />
+	<string id="aom_rh_caravan_master" text="{=aom_rh_caravan_master}[Rhûn] Caravan Master" />
 	<string id="aom_rh_dancer" text="{=aom_rh_dancer}Dancer" />
 	<string id="aom_rh_female_beggar" text="{=aom_rh_female_beggar}Beggar" />
 	<string id="aom_rh_gamehost" text="{=aom_rh_gamehost}Game Host" />
@@ -1556,7 +1556,7 @@
 	<string id="aom_rh_townswoman_child" text="{=aom_rh_townswoman_child}Townswoman" />
 	<string id="aom_rh_townswoman_infant" text="{=aom_rh_townswoman_infant}Townswoman" />
 	<string id="aom_rh_townswoman_teen" text="{=aom_rh_townswoman_teen}Townswoman" />
-	<string id="aom_rh_vet_caravan_guard" text="{=aom_rh_vet_caravan_guard}Rhun Veteran Caravan Guard" />
+	<string id="aom_rh_vet_caravan_guard" text="{=aom_rh_vet_caravan_guard}[Rhûn] Veteran Caravan Guard" />
 	<string id="aom_rh_village_woman" text="{=aom_rh_village_woman}Village Woman" />
 	<string id="aom_rh_villager" text="{=aom_rh_villager}Villager" />
 	<string id="aom_rh_villager_f_child" text="{=aom_rh_villager_f_child}Village Child" />
@@ -1565,13 +1565,13 @@
 	<string id="aom_rh_villager_m_teen" text="{=aom_rh_villager_m_teen}Village Teenager" />
 	<string id="aom_rh_weaponsmith" text="{=aom_rh_weaponsmith}Weaponsmith" />
 	<string id="aom_rhud_arena" text="{=aom_rhud_arena}Training Master" />
-	<string id="aom_rhud_armed_trader" text="{=aom_rhud_armed_trader}Rhudaur Armed Trader" />
+	<string id="aom_rhud_armed_trader" text="{=aom_rhud_armed_trader}[Rhudaur] Armed Trader" />
 	<string id="aom_rhud_armorer" text="{=aom_rhud_armorer}Armorer" />
 	<string id="aom_rhud_barber" text="{=aom_rhud_barber}Barber" />
 	<string id="aom_rhud_beggar" text="{=aom_rhud_beggar}Beggar" />
 	<string id="aom_rhud_blacksmith" text="{=aom_rhud_blacksmith}Blacksmith" />
-	<string id="aom_rhud_caravan_guard" text="{=aom_rhud_caravan_guard}Rhudaur Caravan Guard" />
-	<string id="aom_rhud_caravan_master" text="{=aom_rhud_caravan_master}Rhudaur Caravan Master" />
+	<string id="aom_rhud_caravan_guard" text="{=aom_rhud_caravan_guard}[Rhudaur] Caravan Guard" />
+	<string id="aom_rhud_caravan_master" text="{=aom_rhud_caravan_master}[Rhudaur] Caravan Master" />
 	<string id="aom_rhud_dancer" text="{=aom_rhud_dancer}Dancer" />
 	<string id="aom_rhud_female_beggar" text="{=aom_rhud_female_beggar}Beggar" />
 	<string id="aom_rhud_gamehost" text="{=aom_rhud_gamehost}Game Host" />
@@ -1624,7 +1624,7 @@
 	<string id="aom_rhud_townswoman_child" text="{=aom_rhud_townswoman_child}Townswoman" />
 	<string id="aom_rhud_townswoman_infant" text="{=aom_rhud_townswoman_infant}Townswoman" />
 	<string id="aom_rhud_townswoman_teen" text="{=aom_rhud_townswoman_teen}Townswoman" />
-	<string id="aom_rhud_vet_caravan_guard" text="{=aom_rhud_vet_caravan_guard}Rhudaur Veteran Caravan Guard" />
+	<string id="aom_rhud_vet_caravan_guard" text="{=aom_rhud_vet_caravan_guard}[Rhudaur] Veteran Caravan Guard" />
 	<string id="aom_rhud_village_woman" text="{=aom_rhud_village_woman}Village Woman" />
 	<string id="aom_rhud_village_woman_child" text="{=aom_rhud_village_woman_child}Village Child" />
 	<string id="aom_rhud_village_woman_teen" text="{=aom_rhud_village_woman_teen}Village Teenager" />
@@ -1636,13 +1636,13 @@
 	<string id="aom_rhudaur_lord_2" text="{=aom_rhudaur_lord_2}Cautious Rhudaur lord" />
 	<string id="aom_rivendell_lord_1" text="{=aom_rivendell_lord_1}Bold elven lord of Imladris" />
 	<string id="aom_rivendell_lord_2" text="{=aom_rivendell_lord_2}Cautious elven lord of Imladris" />
-	<string id="aom_roh_armed_trader" text="{=aom_roh_armed_trader}Armed Trader" />
+	<string id="aom_roh_armed_trader" text="{=aom_roh_armed_trader}[Rohan] Armed Trader" />
 	<string id="aom_roh_armorer" text="{=aom_roh_armorer}Armorer" />
 	<string id="aom_roh_barber" text="{=aom_roh_barber}Barber" />
 	<string id="aom_roh_beggar" text="{=aom_roh_beggar}Beggar" />
 	<string id="aom_roh_blacksmith" text="{=aom_roh_blacksmith}Blacksmith" />
-	<string id="aom_roh_caravan_guard" text="{=aom_roh_caravan_guard}Caravan Guard" />
-	<string id="aom_roh_caravan_master" text="{=aom_roh_caravan_master}Caravan Master" />
+	<string id="aom_roh_caravan_guard" text="{=aom_roh_caravan_guard}[Rohan] Caravan Guard" />
+	<string id="aom_roh_caravan_master" text="{=aom_roh_caravan_master}[Rohan] Caravan Master" />
 	<string id="aom_roh_female_beggar" text="{=aom_roh_female_beggar}Beggar" />
 	<string id="aom_roh_female_dancer" text="{=aom_roh_female_dancer}Dancer" />
 	<string id="aom_roh_gangleader_bg" text="{=aom_roh_gangleader_bg}Bodyguard" />
@@ -1693,7 +1693,7 @@
 	<string id="aom_roh_townswoman_child" text="{=aom_roh_townswoman_child}Townswoman" />
 	<string id="aom_roh_townswoman_infant" text="{=aom_roh_townswoman_infant}Townswoman" />
 	<string id="aom_roh_townswoman_teen" text="{=aom_roh_townswoman_teen}Townswoman" />
-	<string id="aom_roh_vet_caravan_guard" text="{=aom_roh_vet_caravan_guard}Veteran Caravan Guard" />
+	<string id="aom_roh_vet_caravan_guard" text="{=aom_roh_vet_caravan_guard}[Rohan] Veteran Caravan Guard" />
 	<string id="aom_roh_village_woman" text="{=aom_roh_village_woman}Village Woman" />
 	<string id="aom_roh_village_woman_child" text="{=aom_roh_village_woman_child}Village Girl" />
 	<string id="aom_roh_village_woman_teen" text="{=aom_roh_village_woman_teen}Village Girl" />
@@ -1705,13 +1705,13 @@
 	<string id="aom_roh_wpractice_2" text="{=aom_roh_wpractice_2}Weapon Practice Dummy Stage 2" />
 	<string id="aom_roh_wpractice_3" text="{=aom_roh_wpractice_3}Weapon Practice Dummy Stage 3" />
 	<string id="aom_rv_arena" text="{=aom_rv_arena}Training Master" />
-	<string id="aom_rv_armed_trader" text="{=aom_rv_armed_trader}Rivendell Armed Trader" />
+	<string id="aom_rv_armed_trader" text="{=aom_rv_armed_trader}[Rivendell] Armed Trader" />
 	<string id="aom_rv_armorer" text="{=aom_rv_armorer}Armorer" />
 	<string id="aom_rv_barber" text="{=aom_rv_barber}Barber" />
 	<string id="aom_rv_beggar" text="{=aom_rv_beggar}Beggar" />
 	<string id="aom_rv_blacksmith" text="{=aom_rv_blacksmith}Blacksmith" />
-	<string id="aom_rv_caravan_guard" text="{=aom_rv_caravan_guard}Rivendell Caravan Guard" />
-	<string id="aom_rv_caravan_master" text="{=aom_rv_caravan_master}Rivendell Caravan Master" />
+	<string id="aom_rv_caravan_guard" text="{=aom_rv_caravan_guard}[Rivendell] Caravan Guard" />
+	<string id="aom_rv_caravan_master" text="{=aom_rv_caravan_master}[Rivendell] Caravan Master" />
 	<string id="aom_rv_dancer" text="{=aom_rv_dancer}Dancer" />
 	<string id="aom_rv_female_beggar" text="{=aom_rv_female_beggar}Beggar" />
 	<string id="aom_rv_gamehost" text="{=aom_rv_gamehost}Game Host" />
@@ -1766,7 +1766,7 @@
 	<string id="aom_rv_townswoman_child" text="{=aom_rv_townswoman_child}Townswoman" />
 	<string id="aom_rv_townswoman_infant" text="{=aom_rv_townswoman_infant}Townswoman" />
 	<string id="aom_rv_townswoman_teen" text="{=aom_rv_townswoman_teen}Townswoman" />
-	<string id="aom_rv_vet_caravan_guard" text="{=aom_rv_vet_caravan_guard}Rivendell Veteran Caravan Guard" />
+	<string id="aom_rv_vet_caravan_guard" text="{=aom_rv_vet_caravan_guard}[Rivendell] Veteran Caravan Guard" />
 	<string id="aom_rv_village_child" text="{=aom_rv_village_child}Village Child" />
 	<string id="aom_rv_village_teen" text="{=aom_rv_village_teen}Village Teenager" />
 	<string id="aom_rv_village_woman" text="{=aom_rv_village_woman}Village Woman" />
@@ -2104,13 +2104,13 @@
 	<string id="aom_spc_wanderer_umbar_7_name" text="{=aom_spc_wanderer_umbar_7_name}{FIRSTNAME} Falastur" />
 	<string id="aom_spc_wanderer_umbar_8_name" text="{=aom_spc_wanderer_umbar_8_name}{FIRSTNAME} Hyarmendacil" />
 	<string id="aom_spc_wanderer_umbar_9_name" text="{=aom_spc_wanderer_umbar_9_name}{FIRSTNAME} Ciryandil" />
-	<string id="aom_srh_armed_trader" text="{=aom_srh_armed_trader}Armed Trader" />
+	<string id="aom_srh_armed_trader" text="{=aom_srh_armed_trader}[South Rhovanion] Armed Trader" />
 	<string id="aom_srh_armorer" text="{=aom_srh_armorer}Armorer" />
 	<string id="aom_srh_barber" text="{=aom_srh_barber}Barber" />
 	<string id="aom_srh_beggar" text="{=aom_srh_beggar}Beggar" />
 	<string id="aom_srh_blacksmith" text="{=aom_srh_blacksmith}Blacksmith" />
-	<string id="aom_srh_caravan_guard" text="{=aom_srh_caravan_guard}Caravan Guard" />
-	<string id="aom_srh_caravan_master" text="{=aom_srh_caravan_master}Caravan Master" />
+	<string id="aom_srh_caravan_guard" text="{=aom_srh_caravan_guard}[South Rhovanion] Caravan Guard" />
+	<string id="aom_srh_caravan_master" text="{=aom_srh_caravan_master}[South Rhovanion] Caravan Master" />
 	<string id="aom_srh_female_beggar" text="{=aom_srh_female_beggar}Beggar" />
 	<string id="aom_srh_female_dancer" text="{=aom_srh_female_dancer}Dancer" />
 	<string id="aom_srh_gangleader_bg" text="{=aom_srh_gangleader_bg}Bodyguard" />
@@ -2161,7 +2161,7 @@
 	<string id="aom_srh_townswoman_child" text="{=aom_srh_townswoman_child}Townswoman" />
 	<string id="aom_srh_townswoman_infant" text="{=aom_srh_townswoman_infant}Townswoman" />
 	<string id="aom_srh_townswoman_teen" text="{=aom_srh_townswoman_teen}Townswoman" />
-	<string id="aom_srh_vet_caravan_guard" text="{=aom_srh_vet_caravan_guard}Veteran Caravan Guard" />
+	<string id="aom_srh_vet_caravan_guard" text="{=aom_srh_vet_caravan_guard}[South Rhovanion] Veteran Caravan Guard" />
 	<string id="aom_srh_village_woman" text="{=aom_srh_village_woman}Village Woman" />
 	<string id="aom_srh_village_woman_child" text="{=aom_srh_village_woman_child}Village Girl" />
 	<string id="aom_srh_village_woman_teen" text="{=aom_srh_village_woman_teen}Village Girl" />

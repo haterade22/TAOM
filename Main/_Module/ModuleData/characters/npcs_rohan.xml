@@ -838,7 +838,7 @@
     <NPCCharacter
         id="armed_trader_rohan"
         level="16"
-        name="{=aom_roh_armed_trader}Armed Trader"
+        name="{=aom_roh_armed_trader}[Rohan] Armed Trader"
         occupation="CaravanGuard"
         culture="Culture.vlandia"
         default_group="Infantry">
@@ -870,7 +870,7 @@
     <NPCCharacter
         id="caravan_master_rohan"
         level="26"
-        name="{=aom_roh_caravan_master}Caravan Master"
+        name="{=aom_roh_caravan_master}[Rohan] Caravan Master"
         occupation="CaravanGuard"
         culture="Culture.vlandia"
         default_group="Infantry">
@@ -907,7 +907,7 @@
     <NPCCharacter
         id="caravan_guard_rohan"
         level="21"
-        name="{=aom_roh_caravan_guard}Caravan Guard"
+        name="{=aom_roh_caravan_guard}[Rohan] Caravan Guard"
         occupation="CaravanGuard"
         culture="Culture.vlandia"
         default_group="Infantry">
@@ -951,7 +951,7 @@
     <NPCCharacter
         id="veteran_caravan_guard_rohan"
         level="26"
-        name="{=aom_roh_vet_caravan_guard}Veteran Caravan Guard"
+        name="{=aom_roh_vet_caravan_guard}[Rohan] Veteran Caravan Guard"
         occupation="CaravanGuard"
         culture="Culture.vlandia"
         default_group="Infantry">
