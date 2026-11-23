@@ -44,6 +44,17 @@ CREATURES = {
         "action_set_ids": ["as_spider", "as_spider_town_and_village", "as_spider_map"],
         "usage_id": "spider",
         "rider_prefix": "act_spider_",
+        # #1541: each pace's direction="none" row plays the gait's in-place twin, whose record is the gait's own
+        # with no clip usage. That is the vanilla horse's shape (gait_walkfast beside horse_walkfast: same Duration,
+        # step points and flags, no usage; read from Native animation_clips.tpac, 2026-11-22) and the warg's stand
+        # twins' below. The pair is the key: the same clip on a moving action still fails, and so does the pair
+        # itself when its action sits on a row that moves.
+        "untagged_ok": (
+            ("act_spider_walk_stand", "spider_walk_inplace"),
+            ("act_spider_trot_stand", "spider_trot_inplace"),
+            ("act_spider_canter_stand", "spider_canter_inplace"),
+            ("act_spider_run_stand", "spider_gallop_inplace"),
+        ),
     },
     "elephant": {
         "asset_dir": r"Modules\LOTRLOME_Armory\Assets\creature\elephant",
@@ -189,12 +200,16 @@ def main(argv=None):
     #   with them untagged) => WARN, not FAIL. Tag them anyway for 1.4.6 safety + spider parity.
     usage_block = re.search(r'<monster_usage_set\s+id="%s".*?</monster_usage_set>' % c["usage_id"],
                             usage_xml, re.S)
-    move_actions, upper_actions = set(), set()
+    move_actions, upper_actions, moving = set(), set(), set()
     if usage_block:
         ub = usage_block.group(0)
         tb = re.search(r'<monster_usage_movements>(.*?)</monster_usage_movements>', ub, re.S)
         if tb:
             move_actions.update(re.findall(r'action="([^"]+)"', tb.group(1)))
+            for tag in re.findall(r'<monster_usage_movement\b[^>]*>', tb.group(1)):     # a row may span lines
+                at = dict(re.findall(r'(\w+)="([^"]*)"', tag))
+                if at.get("direction") != "none" or at.get("turn_direction") != "none":
+                    moving.add(at.get("action"))
         tb = re.search(r'<monster_usage_upper_body_movements>(.*?)</monster_usage_upper_body_movements>', ub, re.S)
         if tb:
             upper_actions.update(re.findall(r'action="([^"]+)"', tb.group(1)))
@@ -216,7 +231,10 @@ def main(argv=None):
         return out, n
 
     bad_move, n_move = untagged_clips(move_actions)
-    exempt = set(c.get("untagged_ok", ()))
+    # An exempt pair counts only while its action sits on reference rows alone (direction and turn_direction
+    # "none"): the node reads a `none` clip for its Duration and nothing else. The same action on a front, strafe
+    # or turn row is a measured gait again.
+    exempt = {pair for pair in c.get("untagged_ok", ()) if pair[0] not in moving}
     exempted = [row for row in bad_move if row[:2] in exempt]
     for act, anim, _ in exempted:
         print(f"  [NOTE] {act} -> {anim}: exempt, no quad_movement")

@@ -3,6 +3,7 @@ using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Elephant;
 using TAOM.Features.SeatOfSeeing.Domain;
+using TAOM.Features.Spider;
 using TAOM.Features.Stamina.Domain;
 using TAOM.Tests.Infrastructure;
 
@@ -64,11 +65,11 @@ public class CrewTrialRulesTests
     }
 
     [TestMethod]
-    public void KnownSteps_AreTheDefaultOnesThenTheCrewOnesThenTheStaminaOnes_EachNameOnce()
+    public void KnownSteps_AreTheDefaultOnesThenTheCrewOnesThenTheStaminaOnesThenTheSpiderOne_EachNameOnce()
     {
         var known = SeatTrialSteps.Known.Select(s => s.Name).ToArray();
 
-        CollectionAssert.AreEqual(SeatTrialSteps.All.Concat(CrewTrialRows.Rows).Concat(StaminaTrialRows.Rows).Select(s => s.Name).ToArray(), known);
+        CollectionAssert.AreEqual(SeatTrialSteps.All.Concat(CrewTrialRows.Rows).Concat(StaminaTrialRows.Rows).Concat(SpiderTrialRows.Rows).Select(s => s.Name).ToArray(), known);
         Assert.AreEqual(known.Length, known.Distinct().Count());
     }
 
@@ -295,6 +296,6 @@ public class CrewTrialRulesTests
         Assert.IsTrue(times.Count >= 2);
         CollectionAssert.AreEqual(times.OrderBy(t => t).ToArray(), times.ToArray());
         Assert.IsTrue(times.Last() <= CrewTrialRules.MinWatchSeconds, "the shortest watch still takes every picture");
-        Assert.AreEqual("hud_crew_mumakil_2.bmp", CrewTrialRules.PictureName("crew_mumakil", 2));
+        Assert.AreEqual("hud_crew_mumakil_2.bmp", SeatTrialRules.PictureName("crew_mumakil", 2));
     }
 }

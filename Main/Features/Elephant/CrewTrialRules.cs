@@ -39,10 +39,6 @@ internal static class CrewTrialRules
     /// </summary>
     internal static readonly IReadOnlyList<float> PictureSeconds = new[] { 8f, 16f, 25f };
 
-    /// <summary>The runner turns <c>hud_*.bmp</c> into a PNG (tools/run_fords_autorun.py), so the name starts with it.</summary>
-    internal static string PictureName(string step, int number) =>
-        "hud_" + step + "_" + number.ToString(CultureInfo.InvariantCulture) + ".bmp";
-
     internal static bool EveryoneShot(IReadOnlyList<int> shots) => shots.Count > 0 && shots.All(s => s > 0);
 
     /// <summary>The watch ends when the beast is gone, at the limit, or when every archer shot and the shortest watch has passed. A time that is no number ends it.</summary>

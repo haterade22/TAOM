@@ -37,7 +37,8 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _gamedir import game_dir, game_or_kit_running  # noqa: E402
-from check_gait_stride import CREATURES, PREFIXES, cache_state  # noqa: E402
+from check_gait_stride import CREATURES, PREFIXES  # noqa: E402
+from check_gait_stride import clip_problems as _clip_problems  # noqa: E402
 
 REPO = Path(__file__).resolve().parent.parent
 SNAPSHOT = REPO / "docs" / "reference" / "lotrlome-armory-snapshot" / "action_sets.xml"
@@ -159,17 +160,7 @@ def plan_monster(text):
 
 
 def clip_problems(module_root, clips):
-    out = []
-    for c in clips:
-        anm = os.path.join(module_root, CLIPS, c + "_anm.tpac")
-        geo = os.path.join(module_root, CLIPS, c + "_geo.tpac")
-        if not (os.path.exists(anm) and os.path.exists(geo)):
-            out.append("%s: no clip record or no master" % c)
-            continue
-        why = cache_state(module_root, anm, geo)
-        if why:
-            out.append("%s: %s" % (c, why))
-    return out
+    return _clip_problems(module_root, CLIPS, clips)
 
 
 def main(argv=None):

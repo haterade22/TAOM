@@ -127,6 +127,7 @@ internal sealed partial class CommandTrialWorld
     {
         MarshalFrame(dt);
         CrewFrame();
+        SpiderFrame();
         StaminaFrame(dt);
         ResolveStageTwoAndThree();
         ResolveStageFourAndFive();

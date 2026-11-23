@@ -88,14 +88,40 @@ CREATURES = {
                                     "act_elephant_forward_gallop_right_foot", "act_elephant_forward_gallop_left_foot")},
         "stand_action": "act_elephant_stand_for_movement_data",
     },
+    # #1541: eight feet (the tip bone of each leg, front to back), the strafes travel along X, a turn clip goes
+    # round a point and has no straight stride, and tools/spider_gait.py writes 60 keys a second.
+    "spider": {
+        "module": "LOTRLOME_Armory", "clips": "Assets/creature/spider/animations",
+        "skeleton": ("Assets/creature/spider/animations/spider_correct_geo.tpac", "spider_skeleton"),
+        "feet": {side.upper() + n: "joint%s_%s" % (bone, side)
+                 for n, bone in (("1", "44"), ("2", "38"), ("3", "32"), ("4", "26")) for side in ("l", "r")},
+        "gaits": ["spider_walk", "spider_trot", "spider_canter", "spider_gallop", "spider_walk_backwards",
+                  "spider_strafe_left", "spider_strafe_right"],
+        "axis": {"spider_strafe_left": 0, "spider_strafe_right": 0},
+        "turns": ("spider_turn_left", "spider_turn_right"),
+        # A June clip that #1541 does not replace. Its record is a graft of the elephant canter's (3.60 m of
+        # travel on a jump start that stays in place); the jump belongs to the attacks, hits and deaths pass.
+        # Both lists are keyed by clip name. record_findings fails a pace action bound to a clip in either, so
+        # neither can hide a gait.
+        "pending": {"an_spi_jump": "the June jump start keeps a grafted travel record until the phase 2 clips"},
+        "key_rate": 60.0,
+        "action_sets": "ModuleData/action_sets.xml",
+        "sets": ("as_spider",),
+        "pace_actions": {"backward": "act_spider_walk_backward",
+                         "strafe": ("act_spider_walk_right", "act_spider_walk_left"),
+                         "walk": "act_spider_walk_forward",
+                         "faster": ("act_spider_trot_forward", "act_spider_canter_forward", "act_spider_run_forward")},
+        "stand_action": "act_spider_stand",
+    },
 }
 KEY_RATE = 30.0        # keys per second in a master: the pack's frame rate
 MIN_DURATION = 0.75    # of a strafe clip's real length; the vanilla horse records run from 0.8 to 1.19
 
 
-def measure(soles, claim):
+def measure(soles, claim, axis=1):
     """soles: {foot: array [frames, 3]} in model space (z up), one loop, in place. claim: metres per loop.
-    The feet travel along Y; the sign of the travel is taken from the data, so a backward walk measures the same."""
+    The feet travel along `axis` (1 is Y, forward; 0 is X, a sidestep); the sign of the travel is taken from the
+    data, so a backward walk measures the same."""
     n = len(next(iter(soles.values())))
     feet, speeds = {}, []
     for tag, p in soles.items():
@@ -105,14 +131,15 @@ def measure(soles, claim):
         step = (nxt - p)[planted]
         feet[tag] = {"duty": float(planted.mean()), "step": step}
         if len(step):
-            speeds.append(float(np.median(step[:, 1])))
+            speeds.append(float(np.median(step[:, axis])))
     if not speeds:
         return {"stride": 0.0, "slip": {t: float("inf") for t in soles}, "duty": {t: 0.0 for t in soles}, "frames": n}
     direction = 1.0 if np.median(speeds) >= 0 else -1.0
     belt = direction * abs(claim) / n
     return {
         "stride": abs(float(np.median(speeds))) * n,
-        "slip": {t: float(np.abs(f["step"][:, 1] - belt).sum() + np.abs(f["step"][:, 0]).sum()) for t, f in feet.items()},
+        "slip": {t: float(np.abs(f["step"][:, axis] - belt).sum() + np.abs(f["step"][:, 1 - axis]).sum())
+                 for t, f in feet.items()},
         "duty": {t: f["duty"] for t, f in feet.items()},
         "frames": n,
     }
@@ -138,6 +165,11 @@ def bound_clips(action_sets_text):
     return set(re.findall(r'animation="([^"]+)"', action_sets_text))
 
 
+def clip_name(anm_bytes):
+    """The clip's own name in a single-clip package: the sized string at 0x48."""
+    return bytes(anm_bytes[0x4C:0x4C + struct.unpack_from("<i", anm_bytes, 0x48)[0]]).decode("utf-8", "replace")
+
+
 def clip_record(anm_bytes):
     """Duration, key count and quad_movement usage of a single-clip package (the name is the sized string at 0x48)."""
     end = 0x4C + struct.unpack_from("<i", anm_bytes, 0x48)[0]
@@ -148,6 +180,32 @@ def clip_record(anm_bytes):
     if i >= 0:
         rec["loop"], rec["limit_min"], rec["limit_max"] = struct.unpack_from("<3f", anm_bytes, i + 13 + 4)
     return rec
+
+
+def records_in(folder, clips):
+    """({clip: clip_record}, {clip: its record file}, findings) for `clips`, each found by the clip's OWN name in
+    the folder's record files: the Kit names a file new_animation_clip_N. Two files that hold one clip name are a
+    finding, whichever of them has the clip's name as its file name; the gate cannot tell which the game plays. A
+    record file that cannot be read is a finding too, with its name."""
+    held, twice = {}, []
+    for f in sorted(os.listdir(folder)):
+        if f.endswith("_anm.tpac"):
+            try:
+                with open(os.path.join(folder, f), "rb") as fh:
+                    raw = fh.read()
+                clip_record(raw)                       # a file that is not a whole record is named, not a traceback
+                held.setdefault(clip_name(raw), []).append((f, raw))
+            except (OSError, struct.error, UnicodeError) as err:
+                twice.append("%s cannot be read as a clip record (%s)" % (f, err))
+    records, anm_of = {}, {}
+    for clip in sorted(clips):
+        files = held.get(clip, [])
+        if len(files) > 1:
+            twice.append("%s is the clip of %d record files: %s" % (clip, len(files), ", ".join(f for f, _ in files)))
+        own = [x for x in files if x[0] == clip + "_anm.tpac"] or files
+        if own:
+            records[clip], anm_of[clip] = clip_record(own[0][1]), os.path.join(folder, own[0][0])
+    return records, anm_of, twice
 
 
 def set_rows(action_sets_text):
@@ -170,6 +228,7 @@ def record_findings(rows, records, c, key_rate=KEY_RATE):
     rows: set_rows(); records: {clip: clip_record()} of the clip folder. A named set, a pace row or its record
     that is not there is a finding."""
     acts, out, read = c["pace_actions"], [], 0
+    skipped = set(c.get("turns", ())) | set(c.get("pending", {}))
     for set_id in c["sets"]:
         if set_id not in rows:
             out.append("no action set %s with rows" % set_id)
@@ -177,6 +236,9 @@ def record_findings(rows, records, c, key_rate=KEY_RATE):
         got, gone = {}, set()
         for act in (acts["backward"], *acts["strafe"], acts["walk"], *acts["faster"], c["stand_action"]):
             clip = rows[set_id].get(act)
+            if clip in skipped:     # the lists are keyed by clip, so a pace row on one would escape the stride check
+                out.append("%s binds %s to %s, a clip the stride check skips (a turn, or one listed as pending): "
+                           "a pace action must play a measured gait" % (set_id, act, clip))
             if clip is None:
                 out.append("%s has no %s row" % (set_id, act))
             elif clip not in records:
@@ -295,6 +357,23 @@ def cache_state(module_root, anm_path, geo_path):
     return None
 
 
+def clip_problems(module_root, folder, clips):
+    """Why a clip in `folder` (under the module root) is not ready to be bound: no clip record or no master, or
+    cache_state's reason. A clip bound with no cache entry crashed Agent.SetActionSet in another modder's test, so
+    both binders (bind_elephant_clips.py, bind_spider_clips.py) refuse on a non-empty answer."""
+    out = []
+    for clip in clips:
+        anm = os.path.join(module_root, folder, clip + "_anm.tpac")
+        geo = os.path.join(module_root, folder, clip + "_geo.tpac")
+        if not (os.path.exists(anm) and os.path.exists(geo)):
+            out.append("%s: no clip record or no master" % clip)
+            continue
+        why = cache_state(module_root, anm, geo)
+        if why:
+            out.append("%s: %s" % (clip, why))
+    return out
+
+
 def rest_world(bones):
     """Per bone: (parent index, local 4x4 column-major, world 4x4)."""
     local = [np.array(b["rest_frame"], dtype=float).reshape(4, 4).T for b in bones]
@@ -358,17 +437,20 @@ def main(argv=None):
     sets_text = open(sets_path, encoding="utf-8", errors="replace").read()
     bound, rows = bound_clips(sets_text), set_rows(sets_text)
     named = {clip for s in c["sets"] for clip in rows.get(s, {}).values()}
-    records = {}
-    for clip in sorted(named | set(c["gaits"])):
-        anm = os.path.join(root, c["clips"], clip + "_anm.tpac")
-        if os.path.exists(anm):
-            with open(anm, "rb") as fh:
-                records[clip] = clip_record(fh.read())
+    records, anm_of, twice = records_in(os.path.join(root, c["clips"]), named | set(c["gaits"]))
     # the listed gaits, and any other clip a named set binds that claims travel: none escapes the stride check
-    gaits = c["gaits"] + sorted(k for k in named - set(c["gaits"]) if k in records and records[k]["loop"])
-    bad = notes = 0
+    turns, pending = set(c.get("turns", ())), c.get("pending", {})
+    gaits = c["gaits"] + sorted(k for k in named - set(c["gaits"]) - turns - set(pending)
+                                if k in records and records[k]["loop"])
+    bad, notes = len(twice), 0
+    for why in twice:
+        print("FAIL record files: %s" % why)
+    for clip in sorted(turns & set(records)):
+        print("--   %-28s a turn: it goes round a point, so it has no straight stride to check" % clip)
+    for clip in sorted(set(pending) & named):
+        print("--   %-28s not checked: %s" % (clip, pending[clip]))
     for clip in gaits:
-        anm = os.path.join(root, c["clips"], clip + "_anm.tpac")
+        anm = anm_of.get(clip, os.path.join(root, c["clips"], clip + "_anm.tpac"))
         geo = os.path.join(root, c["clips"], clip + "_geo.tpac")
         if not (clip in records and os.path.exists(geo)):
             if clip in bound:
@@ -379,7 +461,7 @@ def main(argv=None):
                 print("--   %-28s unbound not installed (no clip record or no master)" % clip)
             continue
         claim = records[clip]["loop"]
-        m = measure(soles_of(load_anim(geo), bones, c["feet"]), claim or 0.0)
+        m = measure(soles_of(load_anim(geo), bones, c["feet"]), claim or 0.0, axis=c.get("axis", {}).get(clip, 1))
         why = judge(m, claim, a.tolerance, a.max_slip)
         stale, note = cache_state(root, anm, geo), ""
         if stale and clip in bound:
@@ -391,7 +473,7 @@ def main(argv=None):
         print("%-4s %-28s %s claims %.2f m, feet cover %.2f m in %d frames, worst slip %.3f m%s%s" % (
             "FAIL" if why else "ok", clip, "bound  " if clip in bound else "unbound", claim or 0.0, m["stride"],
             m["frames"], max(m["slip"].values()), "".join("\n       " + w for w in why), note))
-    pace, n_rows = record_findings(rows, records, c)
+    pace, n_rows = record_findings(rows, records, c, c.get("key_rate", KEY_RATE))
     stand, n_cached, n_poses = stand_findings(rows, records, c, root, bones)
     for why in pace:
         print("FAIL pace: %s" % why)

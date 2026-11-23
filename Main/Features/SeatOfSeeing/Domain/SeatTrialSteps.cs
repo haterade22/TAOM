@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TAOM.Features.Elephant;
 using TAOM.Features.MarshalsWord.Domain;
+using TAOM.Features.Spider;
 using TAOM.Features.Stamina.Domain;
 
 namespace TAOM.Features.SeatOfSeeing.Domain;
@@ -16,8 +17,8 @@ internal static class SeatTrialSteps
     /// <summary>The steps a run with no step list arms.</summary>
     internal static readonly IReadOnlyList<SeatTrialStep> All = SeatTrialRows.Rows.Concat(MarshalTrialRows.Rows).ToList();
 
-    /// <summary>Every step a list may name: <see cref="All"/>, then the crew rows and the stamina rows, which run only when they are named (<see cref="CrewTrialRows"/>, <see cref="StaminaTrialRows"/>).</summary>
-    internal static readonly IReadOnlyList<SeatTrialStep> Known = All.Concat(CrewTrialRows.Rows).Concat(StaminaTrialRows.Rows).ToList();
+    /// <summary>Every step a list may name: <see cref="All"/>, then the crew rows, the stamina rows and the spider row, which run only when they are named (<see cref="CrewTrialRows"/>, <see cref="StaminaTrialRows"/>, <see cref="SpiderTrialRows"/>).</summary>
+    internal static readonly IReadOnlyList<SeatTrialStep> Known = All.Concat(CrewTrialRows.Rows).Concat(StaminaTrialRows.Rows).Concat(SpiderTrialRows.Rows).ToList();
 
     /// <summary>The form a step name is compared in, shared by the step chooser and the roster that depends on which steps were chosen.</summary>
     internal static string NameOf(string name) => name.Trim().ToLowerInvariant();
@@ -56,6 +57,13 @@ internal static class SeatTrialSteps
                 error = "step '" + step.Name + "' needs step '" + missing + "' in the list";
                 return false;
             }
+        }
+
+        var spiderBeside = SpiderTrialRows.StepThatCannotShareASpiderBattle(chosen.Select(s => s.Name).ToList());
+        if (spiderBeside != null)
+        {
+            error = "a spider step runs with 'enter' only, in a battle of its own: step '" + spiderBeside + "' cannot share it";
+            return false;
         }
 
         var beside = CrewTrialRows.StepThatCannotShareACrewBattle(chosen.Select(s => s.Name).ToList());

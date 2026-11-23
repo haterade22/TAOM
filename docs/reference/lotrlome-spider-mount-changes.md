@@ -189,6 +189,26 @@ Backups (moved out of the module, since `.bak` must not ship):
 and the 13 `Languages\**\loc_LOTRAOM_horses.xml.bak-keyforce-2026-09-29` beside it (same relative paths; copy
 back to restore). The `lotraom-assets` mirror was not touched.
 
+## 2026-11-22: locomotion clips generated on the rig, and the pace table (#1541)
+
+- **`Assets/creature/spider/animations/`:** 15 new masters `spider_*_geo.tpac` (`tools/elephant_write_masters.py --new`,
+  cloned from `an_spi_walk_2_geo.tpac`) and 15 new records `spider_*_anm.tpac` (`tools/gen_elephant_anim_clips.ps1`,
+  cloned from elephant and mumak records), each with a cache entry the Kit cooked on 2026-11-22. No June file changed.
+- **`ModuleData/action_types.xml`, `action_sets.xml`, `monster_usage_sets.xml`:** `python tools/bind_spider_clips.py
+  --apply`, the same change in the snapshot. Eight new actions; 20 rows of `as_spider` and one of
+  `as_spider_town_and_village` on the new clips, eight new rows; eight rider rows in the partial `as_human_warrior`
+  and eight in `as_dwarf_warrior`; the spider's 29 movement rows. Four stale comments in the spider blocks corrected.
+- **Gate after a reinstall:** `python tools/bind_spider_clips.py --check` and `python tools/check_gait_stride.py
+  --creature spider` (rows `spider-clips` and `spider-gaits` of `tools/data_gates.py`). The clip packages are not in
+  the repo: a reinstall that drops them needs the build steps in [spider.md](../features/spider.md), then one Kit start.
+- **Backups, outside the module:** `E:\LOTRAOMAssets\Spider\bind_backup_20261122-184045\` (the three XML files before
+  the first bind), `bind_backup_20261122-comments\` and `bind_backup_20261122-200936\` (before the comment
+  corrections), and `gait_20261122\replaced_records_20261122\` (five first records the Kit refused, with their cache
+  entries).
+- **Also changed that day, by a Kit save and not by these tools:** the file date of
+  `Assets/creature/spider/meshes/sk_spiders_a_geo.tpac` (content identical to the 2026-09-29 copy) and
+  `AssetPackages/pack0.tpac` to `pack10.tpac`.
+
 ## Verification trail (what each change fixed, in order)
 
 1. Mesh split + children + mount surface → thumbnail still AV'd (led to the probe battery).

@@ -38,9 +38,9 @@ def _clip(name, tagged=True):
 
 
 USAGE = ('<monster_usage_sets><monster_usage_set id="x"><monster_usage_movements>'
-         '<monster_usage_movement action="act_x_trot" />'
-         '<monster_usage_movement action="act_x_strafe" />'
-         '<monster_usage_movement action="act_x_trot_stand" />'
+         '<monster_usage_movement direction="front" turn_direction="none" action="act_x_trot" />'
+         '<monster_usage_movement direction="right" turn_direction="none" action="act_x_strafe" />'
+         '<monster_usage_movement direction="none" turn_direction="none" action="act_x_trot_stand" />'
          '</monster_usage_movements></monster_usage_set></monster_usage_sets>')
 SETS = ('<action_sets><action_set id="as_x" skeleton="x_skel">'
         '<action type="act_x_trot" animation="x_trot" />'
@@ -117,6 +117,19 @@ class GateTests(unittest.TestCase):
         code, out = self._run()
         self.assertEqual(code, 1, out)
         self.assertIn("act_x_trot -> x_trot_stand", out)
+
+    def test_an_exempt_pair_on_a_row_that_moves_fails(self):
+        # the pair is exempt as a reference row only: the same action on a front, strafe or turn row is a measured gait
+        for attrs in ('direction="front" turn_direction="none"', 'direction="left" turn_direction="none"',
+                      'direction="none" turn_direction="right"', ''):
+            with self.subTest(attrs=attrs):
+                self._write("usage.xml", USAGE.replace(
+                    '</monster_usage_movements>',
+                    '<monster_usage_movement %s\n action="act_x_trot_stand" /></monster_usage_movements>' % attrs))
+                code, out = self._run()
+                self.assertEqual(code, 1, out)
+                self.assertIn("act_x_trot_stand -> x_trot_stand", out)
+                self.assertNotIn("exempt, no quad_movement", out)
 
     def test_a_usage_set_with_no_movement_rows_fails(self):
         self._write("usage.xml", '<monster_usage_sets><monster_usage_set id="x"></monster_usage_set></monster_usage_sets>')

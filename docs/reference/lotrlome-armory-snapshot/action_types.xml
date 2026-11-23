@@ -74,6 +74,15 @@
 	<action name="act_spider_strike_back_while_moving" />
 	<!-- Misc -->
 	<action name="act_spider_taunt" />
+	<!-- #1541, written by tools/bind_spider_clips.py -->
+	<action name="act_spider_stand" />
+	<action name="act_spider_walk_backward" />
+	<action name="act_spider_walk_stand" />
+	<action name="act_spider_trot_forward" />
+	<action name="act_spider_trot_stand" />
+	<action name="act_spider_canter_forward" />
+	<action name="act_spider_canter_stand" />
+	<action name="act_spider_run_stand" />
 
 	<!-- ==================== ELEPHANT ==================== -->
 	<!-- Action types for the war elephant mount. Ported from ADOD_Beasts

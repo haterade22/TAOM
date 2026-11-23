@@ -33,6 +33,16 @@ comparison rather than substring containment when deriving a target set from a r
 
 No lint: 92 of 124 XML-writing scripts trip a naive heuristic (rejected 2026-08-06). Backstop: the deep-review tooling lens.
 
+## Writing a gate, a `--check` or an exemption? Break each value it owns
+
+A gate that passed on the state you just made has proved nothing yet. Before it ships, give it one test per value
+it owns, each broken alone: the row is there with the WRONG value; the row sits inside an XML comment; the exempt
+pair moved to the place the exemption does not cover; the excluded clip bound where it must be judged. Write some
+expectations as literals, not from the tool's own tables. A tool that edits text byte-faithfully verifies its
+result as its READER reads it: parsed, and with what the reader merges or inherits (another block of the same id,
+a child set that overrides). A check that guards a write runs before the write, dry run included
+([lesson](../../docs/reviews/lessons/build-tooling-workflow.md), #1541; the gate RCAs of 2026-11-20 and 2026-11-22).
+
 ## Hand edit or script
 
 A judgment call (Mike, 2026-08-21): script when it repeats or needs replay, hand edit for a one-off. Keep the id, the gate and the doc note either way. A tool's activity count never describes what a file lacked.

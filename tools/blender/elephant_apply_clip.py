@@ -4,6 +4,11 @@ Headless (the Store launcher DETACHES: completion is <out>/_report/DONE.txt):
     blender-launcher.exe -b <elephant work .blend> -P tools/blender/elephant_apply_clip.py -- ^
         --clips <walk.json> [<trot.json> ...] --out <folder> [--render] [--sequences] [--compare <action>] ^
         [--fbx <folder>] [--save-as <new .blend>] [--armor]
+Another rig (#1541, the spider): --arm spider_skeleton --harness spider_cfg.py --rest-from-clip. The spider's
+clips come from tools/spider_gait.py, whose frame 0 is the ENGINE skeleton's rest pose; --rest-from-clip carries
+each bone's motion from that rest pose onto this .blend's own rest frames, so the two need the same rest shape
+and not the same bone axes or unit (the spider work scene is in centimetres under an object scale of 0.01: the
+unit factor is read from the root bone's rest position).
 Read-only on the opened .blend: nothing is saved unless --save-as names a NEW file.
 
 A clip JSON holds, for frame 0 (the rest pose) and frames 1..N, every bone's armature-space 4x4. The bone's
@@ -26,10 +31,13 @@ sys.path.insert(0, TOOLS)
 from blender_job import flag_value, job, report_path, script_args  # noqa: E402
 
 ARM = "elephant_skeleton"
-EXPORT_ARM = "elephant_skeleton_notused"
 
 
-def key_clip(arm, clip):
+def _mat(v):
+    return Matrix([v[0:4], v[4:8], v[8:12], v[12:16]])
+
+
+def key_clip(arm, clip, rest_from_clip=False):
     bones = arm.data.bones
     names = clip["bones"]
     for pb in arm.pose.bones:
@@ -45,8 +53,15 @@ def key_clip(arm, clip):
     rel_inv = {n: (m0[par[n]].inverted() @ m0[n]).inverted() if par[n] else m0[n].inverted() for n in names}
     last = {}
     worst = 0.0
+    undo = {n: _mat(clip["mats"][0][i]).inverted() for i, n in enumerate(names)} if rest_from_clip else None
+    unit = m0[names[0]].translation.length / _mat(clip["mats"][0][0]).translation.length if rest_from_clip else 1.0
     for f, row in enumerate(clip["mats"]):
-        M = {n: Matrix([row[i][0:4], row[i][4:8], row[i][8:12], row[i][12:16]]) for i, n in enumerate(names)}
+        M = {n: _mat(row[i]) for i, n in enumerate(names)}
+        if undo:    # M . undo is the bone's motion from the clip's rest pose, in armature space
+            for n in names:
+                move = M[n] @ undo[n]
+                move.translation = move.translation * unit
+                M[n] = move @ m0[n]
         for n in names:
             basis = rel_inv[n] @ (M[par[n]].inverted() @ M[n]) if par[n] else rel_inv[n] @ M[n]
             loc, rot, _ = basis.decompose()
@@ -65,12 +80,12 @@ def key_clip(arm, clip):
     return act, worst
 
 
-def export_fbx(arm, clip, path):
+def export_fbx(arm, clip, path, export_name):
     sc = bpy.context.scene
     sc.frame_start, sc.frame_end = 0, clip["frames"]
     scene_name, arm_name, data_name = sc.name, arm.name, arm.data.name
     sc.name = clip["clip"]            # the FBX take is the scene's name; the Kit names the master after it
-    arm.name = arm.data.name = EXPORT_ARM
+    arm.name = arm.data.name = export_name
     for ob in bpy.data.objects:
         ob.select_set(False)
     arm.select_set(True)
@@ -146,15 +161,18 @@ def main():
         ap.add_argument("--save-as")
         ap.add_argument("--armor", action="store_true")
         ap.add_argument("--tiles", type=int, default=12)
+        ap.add_argument("--arm", default=ARM, help="the armature object; its FBX export name is <arm>_notused")
+        ap.add_argument("--harness", default="harness.py", help="the harness layer beside this file to run")
+        ap.add_argument("--rest-from-clip", action="store_true")
         ap.add_argument("--sequences", action="store_true",
                         help="render one loop of frames per view over a ground that moves at the clip's stride")
         a = ap.parse_args(args)
         os.makedirs(a.out, exist_ok=True)
         if a.save_as and os.path.abspath(a.save_as) == os.path.abspath(bpy.data.filepath):
             raise SystemExit("--save-as must name a new file")
-        arm = bpy.data.objects[ARM]
+        arm = bpy.data.objects[a.arm]
         H = {}
-        exec(open(os.path.join(TOOLS, "harness.py")).read(), H)
+        exec(open(os.path.join(TOOLS, a.harness)).read(), H)
         H["RENDER_DIR"] = a.out
         rep["clips"] = {}
         if a.render or a.sequences:
@@ -162,17 +180,18 @@ def main():
             H["show_armor"](a.armor)
         for path in a.clips:
             clip = json.load(open(path))
-            act, worst = key_clip(arm, clip)
+            act, worst = key_clip(arm, clip, a.rest_from_clip)
             info = {"frames": clip["frames"], "child_translation_m": round(worst, 6), "stride_m": clip["stride_m"]}
             if worst > 1e-3:
                 raise RuntimeError("%s: a child bone would translate %.4f m" % (clip["clip"], worst))
             if a.render:
                 n = clip["frames"]
                 frames = [1 + round(i * n / a.tiles) for i in range(a.tiles)]
-                for view, fn in (("side", "view_side"), ("front", "view_front")):
+                views = [("side", "view_side"), ("front", "view_front")] + ([("top", "view_top")] if "view_top" in H else [])
+                for view, fn in views:
                     H[fn]()
                     tiles = [H["render_frame"](os.path.join(a.out, "_t_%s_%s_%03d.png" % (clip["clip"], view, f)), f)
-                             for f in (frames if view == "side" else frames[::2])]
+                             for f in (frames[::2] if view == "front" else frames)]
                     sheet = os.path.join(a.out, "%s_%s.png" % (clip["clip"], view))
                     H["montage"](tiles, sheet, cols=6 if view == "side" else 6)
                     for t in tiles:
@@ -184,7 +203,7 @@ def main():
                 os.makedirs(a.fbx, exist_ok=True)
                 fp = os.path.join(a.fbx, clip["clip"] + ".fbx")
                 info["fbx"] = fp
-                info["fbx_bytes"] = export_fbx(arm, clip, fp)
+                info["fbx_bytes"] = export_fbx(arm, clip, fp, a.arm + "_notused")
             rep["clips"][clip["clip"]] = info
         if a.render and a.compare:
             act = H["set_action"](a.compare)
