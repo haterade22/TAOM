@@ -88,7 +88,8 @@ jobs:
 
   python:
     name: Python tool tests
-    runs-on: ubuntu-latest
+    # Windows, like the machines the tools run on: on Linux 28 tests failed on Windows paths and PowerShell (#1546).
+    runs-on: windows-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
@@ -100,9 +101,10 @@ jobs:
           python-version: '3.14'
 
       # Every non-stdlib module a test or a tool under test imports, minus the ones only Blender, Ghidra or the
-      # Claude API provide: the tests that need those skip themselves, as do the tests that need the game.
+      # Claude API provide: the tests that need those skip themselves, as do the tests that need the game. Ruff is
+      # the version docs/reference/development-machines.md names; the lint gate test fails without it.
       - name: Install test dependencies
-        run: python -m pip install --disable-pip-version-check pytest lxml lz4 xxhash numpy scipy capstone pefile pyyaml pillow
+        run: python -m pip install --disable-pip-version-check pytest lxml lz4 xxhash numpy scipy capstone pefile pyyaml pillow ruff==0.17.2
 
       - name: Run tools/tests
         shell: bash
