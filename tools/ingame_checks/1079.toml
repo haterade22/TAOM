@@ -369,9 +369,11 @@ needs = "the same run, a wave played after the repair (--waves 3 --garrison-scal
 reached = ['\[Check\] id=taom\.long-defeat\.gate-attacked result=']
 pass = ['\[Check\] id=taom\.long-defeat\.gate-attacked result=pass w=[0-9]+ path=(broken|damaged) start=[0-9.]+ now=[0-9.]+ lost=-?[0-9.]+ fell=(true|false) through=0 samples=[1-9]']
 fail = ['\[Check\] id=taom\.long-defeat\.gate-attacked result=fail']
+# A line that ends reason=walls-reached is a skip: the gate was struck, and attackers stood above the walls' high line before any was seen behind the gate, so through= cannot tell who passed
+# the gate (Minas Tirith, run 20261122-095258). It is written only where that high line clears the gates' doorways, so never at Helm's Deep. before_walls= counts those seen before the walls were reached.
 # Written by LongDefeatDirector.Gates.cs, key w<N>, at the next clear or the run's end (ended=run): the repaired gates lost hit points since the repair (or a later level write) or fell again (A20), and through= attackers sampled on the 5 s state line within 3 m behind the gate's plane
 # while it stood stayed 0 (the plane is the gate's own forward axis, turned to face the keep; the box is 3 m deep, 5 m either side of the door's centre and 4 m up or down from the gate, a first guess, so the wall walk above the door does not count; samples= counts only the samples that measured a plane, and a pass over 0 of them is not accepted). An untouched gate is a skip (reason=no-blow): a wave whose ram died earlier brings no blow at all (E30, R4),
-# and that proves nothing, so the judge names it and fails the run. An attacker behind a gate that stood fails the line whether or not it was struck.
+# and that proves nothing, so the judge names it and fails the run. An attacker behind a gate that stood fails the line whether or not it was struck, unless he was seen there only after attackers stood above the walls (see the walls-reached lines above).
 absence = "not-reached"
 
 [[check]]
@@ -490,7 +492,10 @@ claim = "the Cavalry boons reach the horse: Gallop of the Eorlingas makes the lo
 claim = "a Cavalry lord who loses his horse (killed under him, or knocked off) fights on foot until he falls, because no remount path runs while fortresses.json holds no sally block; Mike decides whether that stands or whether the lord is remounted at the home point at a wave's start (plan D14 and the Slice 13 note)"
 
 [[human]]
-claim = "the second question reads well: after the fortress the prompt asks for a class, one row per class with its kit text, and Cancel starts nothing"
+claim = "the difficulty question reads well and hard plays harder: after the fortress the prompt asks for Normal or Hard, each row shows its own best run once it has one, and Cancel starts nothing; a hard run (--difficulty hard --waves 5 --seed 7) sends larger waves (138, 150, 150, 156 and 163 attackers in waves 1 to 5, against 110, 120, 120, 125 and 130 at normal), the attackers gain their powers from wave 3 instead of 5, and the end panel's best run is the hard one"
+
+[[human]]
+claim = "the class question reads well: after the fortress and the difficulty the prompt asks for a class, one row per class with its kit text, and Cancel starts nothing"
 
 [[human]]
 claim = "the repaired gate looks closed and whole, plank and door, and the ram plays its hits on it again (wave 2 of --waves 3 --garrison-scale 1.3 --start-gold 5000); a reinforced gate takes visibly more blows to break; the Fortifications group lists Reinforce the gate with its level, its percent and its price, and Repair the gate with a price only when a gate is hurt"

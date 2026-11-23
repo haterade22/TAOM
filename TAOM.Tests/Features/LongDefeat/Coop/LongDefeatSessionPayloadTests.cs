@@ -21,6 +21,7 @@ public class LongDefeatSessionPayloadTests
         BreakEnginesAtClear = 4,
         ClassId = "cavalry",
         LordFalls = 2,
+        Difficulty = RunDifficulty.Hard,
     };
 
     [TestMethod]
@@ -41,7 +42,7 @@ public class LongDefeatSessionPayloadTests
 
         CollectionAssert.AreEqual(new[]
         {
-            "Autoplay", "BreakEnginesAtClear", "ClassId", "GarrisonScale", "LordFalls", "Seed", "StartGold", "StartRerolls", "StartWave", "StopAfterWaves",
+            "Autoplay", "BreakEnginesAtClear", "ClassId", "Difficulty", "GarrisonScale", "LordFalls", "Seed", "StartGold", "StartRerolls", "StartWave", "StopAfterWaves",
         }, names, "add the new field to LongDefeatSessionPayload, then to this list");
     }
 
@@ -49,8 +50,8 @@ public class LongDefeatSessionPayloadTests
     [TestMethod]
     public void TryDecode_RefusesABadStringLength()
     {
-        var tooLong = new byte[] { 1, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x01 };
-        var negative = new byte[] { 1, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F };
+        var tooLong = new byte[] { 2, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x01 };
+        var negative = new byte[] { 2, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F };
 
         Assert.IsFalse(LongDefeatSessionPayload.TryDecode(tooLong, out _, out _));
         Assert.IsFalse(LongDefeatSessionPayload.TryDecode(negative, out _, out _));
@@ -73,6 +74,36 @@ public class LongDefeatSessionPayloadTests
         bytes[0] = 99;
 
         Assert.IsFalse(LongDefeatSessionPayload.TryDecode(bytes, out _, out _));
+    }
+
+    // Version 1 had no difficulty byte: a host and a guest on different builds must not read each other's bytes.
+    [TestMethod]
+    public void TryDecode_RefusesAVersionOnePayload()
+    {
+        var bytes = LongDefeatSessionPayload.Encode("helms", Full);
+        bytes[0] = 1;
+
+        Assert.IsFalse(LongDefeatSessionPayload.TryDecode(bytes, out _, out _));
+    }
+
+    [TestMethod]
+    public void TryDecode_RefusesAnUnknownDifficulty()
+    {
+        var bytes = LongDefeatSessionPayload.Encode("helms", Full);
+        bytes[bytes.Length - 1] = 2;
+
+        Assert.IsFalse(LongDefeatSessionPayload.TryDecode(bytes, out _, out _));
+    }
+
+    [TestMethod]
+    public void RoundTrip_KeepsNormalAndHard()
+    {
+        foreach (var difficulty in new[] { RunDifficulty.Normal, RunDifficulty.Hard })
+        {
+            Assert.IsTrue(LongDefeatSessionPayload.TryDecode(
+                LongDefeatSessionPayload.Encode("helms", Full with { Difficulty = difficulty }), out _, out var options));
+            Assert.AreEqual(difficulty, options!.Difficulty);
+        }
     }
 
     [TestMethod]

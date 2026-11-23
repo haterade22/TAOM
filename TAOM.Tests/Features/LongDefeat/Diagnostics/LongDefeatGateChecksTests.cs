@@ -214,6 +214,76 @@ public class LongDefeatGateChecksTests
         Assert.AreEqual(CheckResult.Fail, LongDefeatGateChecks.GateAttacked(Watch(through: 1), 15000f, false, false).Result, "nobody should stand behind an untouched gate");
     }
 
+    // Minas Tirith, run 20261122-095258: attackers climb the walls in every wave and reach the back of a standing gate without passing it. The doorway count cannot tell them from
+    // attackers who passed the gate, so once any attacker stood on the walls the line is a skip that says why; with no attacker on the walls a count above zero still fails.
+    [TestMethod]
+    public void GateAttacked_AttackersBehindAStandingGate_AfterTheWallsWereReached_IsASkipThatSaysWhy()
+    {
+        var watch = new GateWatch(3, 37998f, "broken", new[] { 0 });
+        watch.Sample(0, false);
+        watch.Sample(2, true);
+        watch.Sample(3, false);
+
+        var verdict = LongDefeatGateChecks.GateAttacked(watch, 477f, true, false);
+
+        Assert.AreEqual(CheckResult.Skip, verdict.Result);
+        StringAssert.Contains(verdict.Detail, " through=5 samples=3 before_walls=0");
+        StringAssert.EndsWith(verdict.Detail, " reason=walls-reached");
+    }
+
+    // An attacker seen behind the gate BEFORE anyone stood above the walls can only have passed it: a later climber does not excuse him.
+    [TestMethod]
+    public void GateAttacked_AnAttackerBehindTheGateBeforeTheWallsWereReached_StillFails_AndTheLineSaysHowMany()
+    {
+        var watch = new GateWatch(3, 15000f, "broken", new[] { 0 });
+        watch.Sample(1, false);
+        watch.Sample(4, true);
+
+        var verdict = LongDefeatGateChecks.GateAttacked(watch, 0f, true, false);
+
+        Assert.AreEqual(CheckResult.Fail, verdict.Result);
+        StringAssert.Contains(verdict.Detail, " through=5 samples=2 before_walls=1");
+        Assert.AreEqual(1, watch.ThroughBeforeWalls);
+    }
+
+    // The walls excuse a doorway count, never an unstruck gate: with no blow the line is still no-blow, and the judge still owes the pass.
+    [TestMethod]
+    public void GateAttacked_WithTheWallsReachedAndNoBlow_IsTheNoBlowSkip_NotTheWallsSkip()
+    {
+        var watch = new GateWatch(3, 15000f, "broken", new[] { 0 });
+        watch.Sample(2, true);
+
+        var verdict = LongDefeatGateChecks.GateAttacked(watch, 15000f, false, false);
+
+        Assert.AreEqual(CheckResult.Skip, verdict.Result);
+        StringAssert.EndsWith(verdict.Detail, " before_walls=0 reason=no-blow");
+    }
+
+    [TestMethod]
+    public void GateAttacked_WithTheWallsReachedAndNobodyBehindTheGate_IsJudgedAsBefore()
+    {
+        var watch = new GateWatch(2, 15000f, "broken", new[] { 0 });
+        watch.Sample(0, true);
+
+        Assert.AreEqual(CheckResult.Pass, LongDefeatGateChecks.GateAttacked(watch, 12000f, false, false).Result, "a blow and nobody behind the gate");
+        Assert.IsFalse(LongDefeatGateChecks.GateAttacked(watch, 12000f, false, false).Detail.Contains("reason="));
+    }
+
+    [TestMethod]
+    public void AWatch_RemembersTheWallsWereReached_FromAnySample_EvenOneThatMeasuredNoPlane()
+    {
+        var watch = new GateWatch(2, 15000f, "broken", new[] { 0 });
+        watch.Sample(1, false);
+        Assert.IsFalse(watch.WallsReached);
+
+        watch.Sample(-1, true);
+
+        Assert.IsTrue(watch.WallsReached, "the walls are read from the attackers, not from the gate's plane");
+        Assert.AreEqual((1, 1), (watch.Samples, watch.Through));
+        watch.Sample(0, false);
+        Assert.IsTrue(watch.WallsReached, "once crossed, crossed for the watch");
+    }
+
     [TestMethod]
     public void AWatch_CountsOnlyTheSamplesThatMeasuredAPlane_ForTheFieldAnswersMinusOneWhenItCouldNot()
     {

@@ -3,7 +3,7 @@
 
 Run:  python tools/run_long_defeat.py [--fortress helms] [--waves N] [--lose] [--garrison-scale X] [--live-limit S] [--screenshots 5,60]
                                       [--speed 1|2|4|10] [--class ID|all] [--seed N] [--start-wave N] [--start-rerolls N] [--start-gold N] [--posts-variant A|B|C] [--deep]
-                                      [--break-engines N] [--lord-falls N] [--require-idle-minutes N] [--runs N] [--dry-run]
+                                      [--break-engines N] [--lord-falls N] [--difficulty normal|hard] [--require-idle-minutes N] [--runs N] [--dry-run]
 
 Deploy the tree under test with ./build.ps1 first and check the [BuildStamp] line: a build without the autorun idles at the main menu and
 the run ends as a stall. The in-game LongDefeatAutorunDriver starts the run from the main menu with the shop bot and an AI-driven main
@@ -21,7 +21,7 @@ Phase 2 test options: --seed fixes every roll, --start-wave begins the run at th
 a reroll at clear 3), and --deep is --start-wave 12 --waves 4 judged by DEEP_CHECKS (a final or lost_* run). --class all gives each of --runs
 the next class. The report must be schema 2 and must echo the seed, start wave, rerolls and start gold that were armed (a run armed with no start gold must report startGold null); any owner_missing above 0 fails.
 --start-gold sets the gold the run starts with and makes the bot buy fortifications before packs (phase3-plan.md D27, 5000 for a fortification run; field care's proof is --waves 2 --garrison-scale 1.3 --start-gold 5000, which owes the field-care pass at clear 1). The report's purchases and gold books must replay from the shop (purchase_problem: leaderboard rules 8, 19 and 20), and a purchase of a kind or level this build does not offer (FORT_OFFERED) fails.
-The gate's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 (phase3-plan.md Slice 5): wave 1 meets the vanilla gate, the bot repairs it at clear 1 when the ram broke or dented it and then buys gate level 1, and level 2 at clear 2. A report that lists a gate level owes a gate-level pass, one that lists a repair owes gate-repair, one whose repaired gate met a later wave owes gate-attacked (a skip with reason=no-blow is named and fails), and a fortress that records tower or volley points owes a fort-points pass (it names a reader that accepted fewer points than the file records).
+The gate's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 (phase3-plan.md Slice 5): wave 1 meets the vanilla gate, the bot repairs it at clear 1 when the ram broke or dented it and then buys gate level 1, and level 2 at clear 2. A report that lists a gate level owes a gate-level pass, one that lists a repair owes gate-repair, one whose repaired gate met a later wave owes gate-attacked (a skip with reason=no-blow is named and fails; a skip that ends reason=walls-reached for the repair's own wave pays the debt and the verdict says so), and a fortress that records tower or volley points owes a fort-points pass (it names a reader that accepted fewer points than the file records).
 The Elven Volley's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded volley.origins (phase3-plan.md Slice 6; Helm's Deep records none until 2026-11-06, and then the volley is not for sale): the bot buys level 1 in the preparation and level 2 at clear 1 and looses the volley in every wave. A report that bought a level before a wave the run played owes a volley pass line (an auto one, and, once level 2 was bought, one with mode=crosshair); a skip (a window cut short) does not pay it.
 The report's class must be the one armed (--class, run by run for --class all) or, with none armed, the bot's draw from the seed (class_problem), and the class check must pass. --class takes the classes of classes.json only (the three foot classes and cavalry), so a name the game does not offer is refused here instead of being replaced by the game.
 The tower volley's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded tower posts and tower_volley spots (phase3-plan.md Slice 8; Helm's Deep records none until 2026-11-06, and then tower level 3 is not for sale): the bot buys tower level 3 at clear 2, and each tower with a spot and a post archer looses its volley in wave 3. A report that bought level 3 before a wave the run played owes a tower-volley pass for each recorded tower that holds a spot and a post, and a posts pass is owed for each recorded tower that holds a post (one tower's line never pays another's).
@@ -33,6 +33,7 @@ before a wave the run cleared owes a hunters pass or skip line, and the run buys
 The upgrades' proof run is --waves 2 --garrison-scale 1.3 --start-gold 5000 (#1161): the bot buys an upgrade step with the gold no pack and no fortification wants, an upgrade purchase's basePrice is its shop.json step's price for one soldier and its price is that times its count (no boon factor), and each upgrade purchase owes its own upgrade pass line.
 A cavalry run also owes sally and sally-return, except that both read skip with reason=no-sally-point while no sally point is recorded in fortresses.json (the run rides from Begin): the judge accepts that skip for that reason alone, and only while this tree's fortress row holds no sally key at all (sally_recorded: the game writes the same reason when it drops a malformed block), and sally-return is owed only once a wave was cleared (sally_waived, owes_return).
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
+--difficulty hard arms the hard run (phase5-plan.md Slice 6): the report must say difficulty hard (a report with no difficulty field reads as normal, and a run armed with none must report normal), each wave row's kills plus felled must be the hard count (short only by attackers that fled) and its two factors the hard growth (wave_problem), and the affixes replay from the schedule moved earlier (hard_schedule).
 A wave row's affixes must replay from the report's seed (affix_roll, the same SplitMix64 draw as the game's AffixPlan.Roll, cut by the Legend boons taken before that wave: affix_cut), and a run that cleared 5 waves or whose report shows a wave with affixes also owes the affix check, and a row with a stat power, hide, hammer, terror or blades an affix-effect line (pass or skip).
 The report's boons[] must replay too (boon_problem: each draw is the game's BoonDeck draw over the shipped boons.json rows the run's class and the fortress's troop groups make eligible, the rerolls add up), a run that cleared 4 waves or took a pick owes the boon check, one that took a boon with a stat or health key owes a read= token on that pick's boon line (read_owed_picks), and one that banked a reroll at its first pick or spent one owes the reroll check.
 
@@ -93,7 +94,7 @@ MAX_SEED = 2 ** 53 - 1
 DEEP_CHECKS = ("boot", "general", "class", "commander", "affix", "scale", "end")
 
 # The affixes (phase2-plan.md section 2): eight powers in the game's fixed order, of which AFFIX_POOL are rolled so far. A wave writes the affix check when it
-# starts, so wave 5 (the first with an affix) must have started: a run from wave 1 that cleared AFFIX_FROM_CLEARS waves, or whose report shows a wave with
+# starts, so wave 5 (the first with an affix at normal; on hard it is wave 3, see hard_schedule) must have started: a run from wave 1 that cleared AFFIX_FROM_CLEARS waves, or whose report shows a wave with
 # affixes, owes it. The plan's "4 or more clears" would fail a --waves 4 run, which stops at the clear of wave 4 and never starts wave 5.
 AFFIX_IDS = ("lash", "drums", "eye", "discipline", "hide", "hammer", "terror", "blades")
 # The powers with an effect in the game (AffixPlan.Pool): hammer and terror joined in Slice 8, blades in Slice 9 when its poison and its kill owner landed: all eight roll now.
@@ -315,6 +316,8 @@ def affix_problem(report_json):
     if not isinstance(rows, list) or isinstance(seed, bool) or not isinstance(seed, int):
         return None
     schedule = shipped_affix_schedule()
+    if report_difficulty(report_json) == "hard":
+        schedule = hard_schedule(schedule, shipped_hard()[1])
     boon_rows = shipped_boons()[0]
     for row in rows:
         if not isinstance(row, dict) or not isinstance(row.get("wave"), int) or isinstance(row.get("wave"), bool):
@@ -581,6 +584,132 @@ def reached_endless(report_json):
             if isinstance(factor, (int, float)) and not isinstance(factor, bool) and factor > 1:
                 return True
     return False
+
+
+# Difficulty (phase5-plan.md, Slice 6). waves.json "rules.hard" gives a factor and a number of waves earlier. On hard the wave count is min(1000, round(normal count * factor)), rounded once and
+# half away from zero after the roster's own cap, the health and damage growth per wave is multiplied by the factor (in 32-bit floats, as the game's WavePlan.Harder does), and each affix
+# stage starts that many waves sooner but never before wave 1 (AffixPlan.Earlier). Both fortresses use the same numbers today, so these read the roster the report's fortress names.
+HARD_DEFAULT = (1.25, 2)
+HARD_MAX_COUNT = 1000
+DIFFICULTIES = ("normal", "hard")
+
+
+def _number(value, low, high):
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
+    try:
+        return math.isfinite(value) and low <= value <= high
+    except OverflowError:
+        # A JSON integer too large for a float: the game's reader refuses it as out of range.
+        return False
+
+
+def _round_half_away(value):
+    """Math.Round(value, MidpointRounding.AwayFromZero) for a positive double; the built-in round() takes halves to the even number."""
+    floor = math.floor(value)
+    return int(floor + 1 if value - floor >= 0.5 else floor)
+
+
+def report_difficulty(report_json):
+    """The word hard or normal: a report of a build with no difficulty field is a normal run."""
+    return "hard" if report_json.get("difficulty") == "hard" else "normal"
+
+
+def shipped_hard(path=None):
+    """(factor, affixWavesEarlier) of waves.json rules.hard, read by the rules of WavesReader.ReadHard: no block, or one that is not an object, is the defaults; a factor that is not a number from 1.0 to
+    2.0, or an affixWavesEarlier that is not a whole number from 0 to 10, keeps its own default. The factor is the 32-bit float the game holds."""
+    rules = _json_object(path or WAVES_FILE).get("rules")
+    block = rules.get("hard") if isinstance(rules, dict) else None
+    if not isinstance(block, dict):
+        return HARD_DEFAULT
+    factor, earlier = block.get("factor"), block.get("affixWavesEarlier")
+    return (_f32(factor) if _number(factor, 1.0, 2.0) else HARD_DEFAULT[0], earlier if _whole(earlier, 0, 10) else HARD_DEFAULT[1])
+
+
+def hard_schedule(schedule, earlier):
+    """The affix schedule of a hard run: every fromWave `earlier` waves sooner, no earlier than wave 1; the rolls are unchanged."""
+    return tuple((max(1, from_wave - earlier), count) for from_wave, count in schedule) if earlier > 0 else tuple(schedule)
+
+
+def wave_spec(fortress_id, wave, difficulty, path=None):
+    """(count, healthFactor, damageFactor) of a wave of the fortress's roster, or None when the fortress, its roster or its waves are not in the files. A wave below 1 is wave 1. The authored
+    list gives counts and factors of 1; past it the count is min(maxCount, last + countPerWave * extra) and each factor min(maxFactor, 1 + perWave * extra) in 32-bit floats (WavePlan.ForWave,
+    EndlessScale.Factor). Hard then scales the count and the two per-wave growths by the factor. A wave row the game's reader would skip (count outside 101 to 1000, no mix) is skipped here too; the
+    shipped file is held valid by the C# shipped-data tests, so the mix rows themselves are not judged."""
+    fortress = next((f for f in _json_object(FORTRESS_FILE).get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None)
+    rosters = _json_object(path or WAVES_FILE).get("rosters")
+    roster = rosters.get(fortress.get("waves")) if fortress is not None and isinstance(rosters, dict) else None
+    rows = roster.get("waves") if isinstance(roster, dict) else None
+    if not isinstance(rows, list) or not _is_int(wave):
+        return None
+    counts = [row["count"] for row in rows if isinstance(row, dict) and _whole(row.get("count"), 101, 1000) and isinstance(row.get("mix"), list) and row["mix"]]
+    if not counts:
+        return None
+    scaling = roster.get("scaling") if isinstance(roster.get("scaling"), dict) else {}
+    per_wave = scaling.get("countPerWave") if _whole(scaling.get("countPerWave"), 0, 100) else 10
+    max_count = scaling.get("maxCount") if _whole(scaling.get("maxCount"), 101, 1000) else 300
+    health = _f32(scaling["healthPerWave"] if _number(scaling.get("healthPerWave"), 0.0, 1.0) else 0.05)
+    damage = _f32(scaling["damagePerWave"] if _number(scaling.get("damagePerWave"), 0.0, 1.0) else 0.03)
+    max_factor = _f32(scaling["maxFactor"] if _number(scaling.get("maxFactor"), 1.0, 10.0) else 3.0)
+    wave = max(1, wave)
+    extra = max(0, wave - len(counts))
+    count = counts[wave - 1] if extra == 0 else min(max_count, counts[-1] + per_wave * extra)
+    if difficulty == "hard":
+        factor = shipped_hard(path)[0]
+        count = min(HARD_MAX_COUNT, _round_half_away(count * factor))
+        health, damage = _f32(health * factor), _f32(damage * factor)
+    if extra == 0:
+        return count, 1.0, 1.0
+    return count, _f32(min(max_factor, 1.0 + health * extra)), _f32(min(max_factor, 1.0 + damage * extra))
+
+
+def wave_problem(report_json):
+    """None when the report's wave rows replay from the roster, else what is wrong (leaderboard rule 5). Every row that has healthFactor and damageFactor holds the roster's growth at the
+    report's difficulty to a relative 1e-5 (the game stores them as 32-bit floats), fled attackers or not. A row's shortfall is the wave's count minus kills plus felled: below 0 is wrong, and
+    the shortfalls together may not exceed the report's whole-number `fled` (a routed attacker counts as no kill; a missing or other `fled` is 0, so with none fled the counts are equal).
+    fleeingPeak bounds nothing. A kills or felled below 0 is wrong at any difficulty. A report that says hard must carry a usable wave, kills, felled, healthFactor and damageFactor in every row
+    and a fortress whose roster resolves; a normal report or one with no difficulty (older builds, fixture rows) skips a row without them and an unknown fortress."""
+    rows = report_json.get("waves")
+    if not isinstance(rows, list):
+        return None
+    fortress, difficulty = report_json.get("fortress"), report_difficulty(report_json)
+    hard = difficulty == "hard"
+    fled = report_json.get("fled")
+    fled = fled if _is_int(fled) and fled > 0 else 0
+    shortfall, first = 0, None
+    for index, row in enumerate(rows, 1):
+        if not isinstance(row, dict):
+            if hard:
+                return f"wave row {index} is not an object, so a hard report's count and factors cannot replay"
+            continue
+        wave, kills, felled = row.get("wave"), row.get("kills"), row.get("felled")
+        for name, value in (("kills", kills), ("felled", felled)):
+            if _is_int(value) and value < 0:
+                return f"wave {wave} lists {name} {value}, below 0"
+        factors = {"healthFactor": row.get("healthFactor"), "damageFactor": row.get("damageFactor")}
+        bad = [name for name, value in (("wave", wave), ("kills", kills), ("felled", felled)) if not _is_int(value)]
+        bad += [name for name, value in factors.items() if not _number(value, 0.0, 1e9)]
+        if hard and bad:
+            return f"wave row {index} of a hard report has no usable {', '.join(bad)}"
+        if not _is_int(wave):
+            continue
+        spec = wave_spec(fortress if isinstance(fortress, str) else None, wave, difficulty)
+        if spec is None:
+            if hard:
+                return f"a hard report names the fortress {fortress!r}, whose roster waves.json does not give"
+            continue
+        for (name, got), want in zip(factors.items(), spec[1:]):
+            if name not in bad and abs(got - want) > 1e-5 * max(1.0, abs(want)):
+                return f"wave {wave} {name} is {got}, but a {difficulty} wave {wave} takes {want:.6g}"
+        if _is_int(kills) and _is_int(felled):
+            if spec[0] - (kills + felled) < 0:
+                return f"wave {wave} lists {kills} kills and {felled} felled, more than the {spec[0]} a {difficulty} wave {wave} sends"
+            if spec[0] > kills + felled:
+                shortfall += spec[0] - (kills + felled)
+                first = first or f"wave {wave} lists {kills} kills and {felled} felled, but a {difficulty} wave {wave} sends {spec[0]}"
+    if shortfall > fled:
+        return f"{first}; {shortfall} attackers are missing in all and only {fled} fled"
+    return None
 
 
 # The commanders (phase2-plan.md section 2, "Commanders"): waves.json gives each roster an `every`, the ranks in order and the abilities, and the report lists the commander of every wave
@@ -1411,10 +1540,11 @@ def owed_hunters_lines(report_json, log_text):
 
 
 # The gates (Slice 5). The game writes gate-level (key l<N>) after each level it writes, gate-repair (key w<N>) after each repair and gate-attacked (key w<N>) at the next clear or the run's end for the
-# repaired gate; fort-points once at the boot. A report that lists the purchase owes the pass; a skip proves nothing (gate-attacked's reason=no-blow means the ram never struck the repaired gate, R4).
+# repaired gate; fort-points once at the boot. A report that lists the purchase owes the pass; a skip proves nothing (gate-attacked's reason=no-blow means the ram never struck the repaired gate, R4), with one exception: a gate-attacked skip that ends reason=walls-reached, for each repair's own wave, pays that debt (walls_reached_waves).
 GATE_LEVEL_CHECK = "gate-level"
 GATE_REPAIR_CHECK = "gate-repair"
 GATE_ATTACKED_CHECK = "gate-attacked"
+WALLS_REACHED = "walls-reached"
 FORT_POINTS_CHECK = "fort-points"
 
 
@@ -1438,6 +1568,32 @@ def _played(report_json):
     reached = report_json.get("wave")
     cleared = [w.get("wave") for w in report_json.get("waves") or [] if isinstance(w, dict)]
     return max([n for n in [reached] + cleared if _is_int(n)], default=0)
+
+
+WALLS_REACHED_ROW = re.compile(r"\bw=([0-9]+)\b.* reason=" + WALLS_REACHED + r"$")
+
+
+def walls_reached_waves(report_json, log_text):
+    """The waves whose gate-attacked line could not be judged, or [] when the gate-attacked debt stands. The game writes a skip that ends reason=walls-reached when the repaired gate was struck
+    and attackers stood above the walls before any was seen behind it: the doorway count then cannot tell who passed the gate. The debt is paid only when every repair the run played against
+    (a gateRepair before a wave it reached) has such a line for its own wave (w=N), and the log holds no other gate-attacked skip (no-blow, or a reason with text after it)."""
+    played = _played(report_json)
+    owed = sorted({p["beforeWave"] for p in _bought(report_json, "gateRepair") if _is_int(p.get("beforeWave")) and p["beforeWave"] <= played})
+    rows = _gate_attacked_skips(log_text)
+    reached = [WALLS_REACHED_ROW.search(row) for row in rows]
+    if not owed or not rows or not all(reached):
+        return []
+    waves = {int(m.group(1)) for m in reached}
+    return owed if all(wave in waves for wave in owed) else []
+
+
+def _gate_attacked_skips(log_text):
+    return [row.strip() for row in re.findall(r"\[Check\] id=" + re.escape(CHECK_PREFIX + GATE_ATTACKED_CHECK) + r" result=skip\b([^\r\n]*)", log_text)]
+
+
+def walls_reached_skips(log_text):
+    """The waves, in order, of every gate-attacked skip that ends reason=walls-reached: the waves whose gate the run could not judge, whether or not another wave's pass paid the debt."""
+    return sorted({int(m.group(1)) for m in (WALLS_REACHED_ROW.search(row) for row in _gate_attacked_skips(log_text)) if m})
 
 
 def owes_gate_attacked(report_json):
@@ -1908,8 +2064,14 @@ def judge(done, report_json, log_text=None):
     mismatch = waves_count_problem(report_json)
     if mismatch:
         return 1, f"the report's waves do not match its clears: {mismatch}{note}"
+    # A report of an older build has no difficulty field and is a normal run, and so is a run that armed none.
+    armed = {**expected_report}
+    armed_difficulty = armed.pop("difficulty", "normal")
+    got_difficulty = report_json.get("difficulty", "normal")
+    if got_difficulty != armed_difficulty:
+        return 1, f"armed with difficulty={armed_difficulty!r} (normal when none was given) but the report's difficulty={got_difficulty!r}: the arm key never took effect"
     # A run that armed no start wave is a run from wave 1, so the default is checked too, not only an armed value.
-    for key, wanted in {"startWave": 1, "startGold": None, "breakEngines": None, "lordFalls": None, **expected_report}.items():
+    for key, wanted in {"startWave": 1, "startGold": None, "breakEngines": None, "lordFalls": None, **armed}.items():
         got = report_json.get(key)
         if isinstance(got, bool) or got != wanted:
             return 1, f"armed with {key}={wanted!r} but the report's {key}={report_json.get(key)!r}: the arm key never took effect"
@@ -1919,6 +2081,9 @@ def judge(done, report_json, log_text=None):
     mismatch = class_problem(report_json)
     if mismatch:
         return 1, f"the report's class is wrong: {mismatch}"
+    mismatch = wave_problem(report_json)
+    if mismatch:
+        return 1, f"the report's waves do not replay from the roster: {mismatch}"
     mismatch = affix_problem(report_json)
     if mismatch:
         return 1, f"the report's affixes do not replay from its seed: {mismatch}"
@@ -2009,6 +2174,8 @@ def judge(done, report_json, log_text=None):
         required = required + (SPLIT_CHECK,)
     if not lose and posts_variant and not owes_posts(report_json):
         return 1, f"reason={reason} but --posts-variant {posts_variant} was armed and the report bought no tower level before a wave it played, so the variant was never tried (does the fortress record tower posts?)"
+    if GATE_ATTACKED_CHECK in required and not check_pattern(GATE_ATTACKED_CHECK, "pass").search(log_text) and walls_reached_waves(report_json, log_text):
+        required = tuple(name for name in required if name != GATE_ATTACKED_CHECK)
     missing = [name for name in required if not check_pattern(name, "pass").search(log_text)]
     if UPGRADE_CHECK not in missing:
         missing.extend(owed_upgrade_passes(report_json, log_text))
@@ -2054,7 +2221,12 @@ def judge(done, report_json, log_text=None):
     felled = report_json.get("wavesFelled", 0)
     speed = f"speed {expected_speed}x (report maxSpeed matches), " if expected_speed is not None else ""
     return 0, (f"build {build}, reason={reason}, {speed}{report_json.get('wavesCleared', 0)} waves cleared, checks {', '.join(required)} passed, "
-               f"no spawn level WRONG, no CrashReport block, {felled} waves ended by felling stragglers{contact_note(report_json, log_text)}{waived_note(waived)}{fort_points_note(report_json, log_text)}")
+               f"no spawn level WRONG, no CrashReport block, {felled} waves ended by felling stragglers{contact_note(report_json, log_text)}{waived_note(waived)}{walls_note(walls_reached_skips(log_text))}{fort_points_note(report_json, log_text)}")
+
+
+def walls_note(waves):
+    """"; gate-attacked not judged in wave 3, 4 (attackers above the walls)" for the waves whose walls-reached skip stood in for the pass, and "" when the check was judged."""
+    return f"; {GATE_ATTACKED_CHECK} not judged in wave {', '.join(str(w) for w in waves)} (attackers above the walls)" if waves else ""
 
 
 def waived_note(waived):
@@ -2138,6 +2310,8 @@ def build_parser():
                         help="at this clear the game destroys every ram and siege tower, so the next wave proves they come back (#1160; a test option, below --waves; the proof run adds --start-gold 5000 so the bot repairs the gate)")
     parser.add_argument("--lord-falls", type=whole_in_range(1, 1000),
                         help="in this wave the game fells the lord's own body 20 s after the first batch is out, so the run proves the death rule (phase4-plan.md D47; a test option, a wave the run clears, never with --lose; the run must then list a forced death in that wave, a rise, and the rise, general-down and player-death pass lines)")
+    parser.add_argument("--difficulty", choices=DIFFICULTIES,
+                        help="the run's difficulty (phase5-plan.md Slice 6): hard sends larger waves that grow stronger faster, and the attackers gain their powers sooner, by the factor and the waves earlier that waves.json rules.hard gives; the report must say so and its waves and affixes must replay at that difficulty. Left out, no key is armed and the game plays normal")
     parser.add_argument("--posts-variant", type=str.upper, choices=POSTS_VARIANTS,
                         help="how the high towers' archers are held (spike S6): A a scripted position, B with a speed limit of 0, C with the posts formation not splittable by AI; sets TAOM_LD_POSTS_VARIANT for the game (default: the game's own, A)")
     parser.add_argument("--start-rerolls", type=whole_in_range(0, 3), default=DEFAULT_START_REROLLS,
@@ -2164,7 +2338,7 @@ def arm_pairs(known, out, wall_limit, class_id=None):
     scale = known.garrison_scale if known.garrison_scale is not None else (LOSE_GARRISON_SCALE if known.lose else None)
     expect = "deep" if known.deep else ("lost" if known.lose else None)
     return [("fortress", known.fortress), ("waves", known.waves), ("garrison_scale", scale), ("expect", expect),
-            ("class", class_id), ("seed", known.seed), ("start_wave", known.start_wave), ("start_rerolls", known.start_rerolls), ("start_gold", known.start_gold), ("break_engines", known.break_engines), ("lord_falls", known.lord_falls),
+            ("class", class_id), ("difficulty", known.difficulty), ("seed", known.seed), ("start_wave", known.start_wave), ("start_rerolls", known.start_rerolls), ("start_gold", known.start_gold), ("break_engines", known.break_engines), ("lord_falls", known.lord_falls),
             ("live_limit_seconds", known.live_limit), ("wall_limit_seconds", wall_limit), ("screenshots", known.screenshots),
             ("speed", known.speed), ("out", out), ("quit", 1)]
 
@@ -2182,6 +2356,8 @@ def armed_report_fields(known):
         fields["breakEngines"] = known.break_engines
     if known.lord_falls is not None:
         fields["lordFalls"] = known.lord_falls
+    if known.difficulty is not None:
+        fields["difficulty"] = known.difficulty
     return fields
 
 

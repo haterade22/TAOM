@@ -4744,7 +4744,9 @@
 	<string id="taom_seat_mcm_keep_panel" text="{=taom_seat_mcm_keep_panel}Keep the order panel open" />
 	<string id="taom_seat_mcm_keep_panel_hint" text="{=taom_seat_mcm_keep_panel_hint}While you are in the Seat, the order panel opens again after an order. Closing it yourself (Escape, the right mouse button, or the panel key) keeps it closed. With the game option that slows time (on by default) while orders are given, the whole stay in the Seat runs at quarter speed apart from one frame per order. Default: off." />
 	<string id="TAOM_LD_Ability_Summon_Isengard" text="{=TAOM_LD_Ability_Summon_Isengard}Uruk-hai of Isengard" />
+	<string id="TAOM_LD_Ability_Summon_Mordor" text="{=TAOM_LD_Ability_Summon_Mordor}Uruks of Mordor" />
 	<string id="TAOM_LD_Ability_WarCry_Isengard" text="{=TAOM_LD_Ability_WarCry_Isengard}The White Hand Calls" />
+	<string id="TAOM_LD_Ability_WarCry_Mordor" text="{=TAOM_LD_Ability_WarCry_Mordor}The Lidless Eye Is Upon Them" />
 	<string id="TAOM_LD_Affix_Isengard_Blades" text="{=TAOM_LD_Affix_Isengard_Blades}Fouled Blades" />
 	<string id="TAOM_LD_Affix_Isengard_Discipline" text="{=TAOM_LD_Affix_Isengard_Discipline}Bred for War" />
 	<string id="TAOM_LD_Affix_Isengard_Drums" text="{=TAOM_LD_Affix_Isengard_Drums}War Drums of Orthanc" />
@@ -4770,13 +4772,16 @@
 	<string id="TAOM_LD_Boon_CouchedLances" text="{=TAOM_LD_Boon_CouchedLances}Couched Lances" />
 	<string id="TAOM_LD_Boon_CouchedLances_Text" text="{=TAOM_LD_Boon_CouchedLances_Text}Your riders hit 20 percent harder." />
 	<string id="TAOM_LD_Boon_EdgeOfTheMark" text="{=TAOM_LD_Boon_EdgeOfTheMark}Edge of the Mark" />
+	<string id="TAOM_LD_Boon_EdgeOfTheMark_Gondor" text="{=TAOM_LD_Boon_EdgeOfTheMark_Gondor}Blades of Westernesse" />
 	<string id="TAOM_LD_Boon_EdgeOfTheMark_Drawback" text="{=TAOM_LD_Boon_EdgeOfTheMark_Drawback}You take 10 percent more damage." />
 	<string id="TAOM_LD_Boon_EdgeOfTheMark_Text" text="{=TAOM_LD_Boon_EdgeOfTheMark_Text}Your blows hit 20 percent harder." />
 	<string id="TAOM_LD_Boon_FleetHorsesOfTheMark" text="{=TAOM_LD_Boon_FleetHorsesOfTheMark}Fleet Horses of the Mark" />
+	<string id="TAOM_LD_Boon_FleetHorsesOfTheMark_Gondor" text="{=TAOM_LD_Boon_FleetHorsesOfTheMark_Gondor}Fleet Horses of Belfalas" />
 	<string id="TAOM_LD_Boon_FleetHorsesOfTheMark_Text" text="{=TAOM_LD_Boon_FleetHorsesOfTheMark_Text}Your riders and their horses move 12 percent faster." />
 	<string id="TAOM_LD_Boon_FletchersFavour" text="{=TAOM_LD_Boon_FletchersFavour}Fletcher's Favour" />
 	<string id="TAOM_LD_Boon_FletchersFavour_Text" text="{=TAOM_LD_Boon_FletchersFavour_Text}Your archers hit 15 percent harder." />
 	<string id="TAOM_LD_Boon_GallopOfTheEorlingas" text="{=TAOM_LD_Boon_GallopOfTheEorlingas}Gallop of the Eorlingas" />
+	<string id="TAOM_LD_Boon_GallopOfTheEorlingas_Gondor" text="{=TAOM_LD_Boon_GallopOfTheEorlingas_Gondor}Charge of Dol Amroth" />
 	<string id="TAOM_LD_Boon_GallopOfTheEorlingas_Text" text="{=TAOM_LD_Boon_GallopOfTheEorlingas_Text}You and your horse move 15 percent faster." />
 	<string id="TAOM_LD_Boon_GlitteringCavesRefuge" text="{=TAOM_LD_Boon_GlitteringCavesRefuge}Refuge of the Inner Keep" />
 	<string id="TAOM_LD_Boon_GlitteringCavesRefuge_Drawback" text="{=TAOM_LD_Boon_GlitteringCavesRefuge_Drawback}Every intermission is 15 seconds shorter." />
@@ -4784,11 +4789,13 @@
 	<string id="TAOM_LD_Boon_GranaryStores" text="{=TAOM_LD_Boon_GranaryStores}Stores of the Granary" />
 	<string id="TAOM_LD_Boon_GranaryStores_Text" text="{=TAOM_LD_Boon_GranaryStores_Text}Every cleared wave pays 35 percent more gold." />
 	<string id="TAOM_LD_Boon_HagglerOfEdoras" text="{=TAOM_LD_Boon_HagglerOfEdoras}The Haggler of Edoras" />
+	<string id="TAOM_LD_Boon_HagglerOfEdoras_Gondor" text="{=TAOM_LD_Boon_HagglerOfEdoras_Gondor}The Haggler of Pelargir" />
 	<string id="TAOM_LD_Boon_HagglerOfEdoras_Drawback" text="{=TAOM_LD_Boon_HagglerOfEdoras_Drawback}The horn pays half as much." />
 	<string id="TAOM_LD_Boon_HagglerOfEdoras_Text" text="{=TAOM_LD_Boon_HagglerOfEdoras_Text}Everything in the shop costs 20 percent less." />
 	<string id="TAOM_LD_Boon_HealersOfTheHold" text="{=TAOM_LD_Boon_HealersOfTheHold}Healers of the Hold" />
 	<string id="TAOM_LD_Boon_HealersOfTheHold_Text" text="{=TAOM_LD_Boon_HealersOfTheHold_Text}After each wave your defenders mend a further quarter of the health they lost." />
 	<string id="TAOM_LD_Boon_HeartsOfTheEored" text="{=TAOM_LD_Boon_HeartsOfTheEored}Hearts of the Eored" />
+	<string id="TAOM_LD_Boon_HeartsOfTheEored_Gondor" text="{=TAOM_LD_Boon_HeartsOfTheEored_Gondor}Hearts of the Swan Knights" />
 	<string id="TAOM_LD_Boon_HeartsOfTheEored_Text" text="{=TAOM_LD_Boon_HeartsOfTheEored_Text}Your riders have 25 percent more health." />
 	<string id="TAOM_LD_Boon_HornblowersBargain" text="{=TAOM_LD_Boon_HornblowersBargain}The Hornblower's Bargain" />
 	<string id="TAOM_LD_Boon_HornblowersBargain_Drawback" text="{=TAOM_LD_Boon_HornblowersBargain_Drawback}Everything in the shop costs 10 percent more." />
@@ -4797,18 +4804,23 @@
 	<string id="TAOM_LD_Boon_LightOfThePhial_Drawback" text="{=TAOM_LD_Boon_LightOfThePhial_Drawback}Everything in the shop costs 25 percent more." />
 	<string id="TAOM_LD_Boon_LightOfThePhial_Text" text="{=TAOM_LD_Boon_LightOfThePhial_Text}Every wave carries one affix fewer." />
 	<string id="TAOM_LD_Boon_LongbowOfTheMark" text="{=TAOM_LD_Boon_LongbowOfTheMark}The Longbow of the Mark" />
+	<string id="TAOM_LD_Boon_LongbowOfTheMark_Gondor" text="{=TAOM_LD_Boon_LongbowOfTheMark_Gondor}The Longbow of Morthond" />
 	<string id="TAOM_LD_Boon_LongbowOfTheMark_Drawback" text="{=TAOM_LD_Boon_LongbowOfTheMark_Drawback}You draw your bow 10 percent slower." />
 	<string id="TAOM_LD_Boon_LongbowOfTheMark_Text" text="{=TAOM_LD_Boon_LongbowOfTheMark_Text}Your arrows hit 25 percent harder." />
 	<string id="TAOM_LD_Boon_MarksmansCall" text="{=TAOM_LD_Boon_MarksmansCall}The Marksman's Call" />
 	<string id="TAOM_LD_Boon_MarksmansCall_Text" text="{=TAOM_LD_Boon_MarksmansCall_Text}Your archers aim 20 percent truer and draw 10 percent faster." />
 	<string id="TAOM_LD_Boon_OathOfEorl" text="{=TAOM_LD_Boon_OathOfEorl}Oath of Eorl" />
+	<string id="TAOM_LD_Boon_OathOfEorl_Gondor" text="{=TAOM_LD_Boon_OathOfEorl_Gondor}Oath of Cirion" />
 	<string id="TAOM_LD_Boon_OathOfEorl_Text" text="{=TAOM_LD_Boon_OathOfEorl_Text}You can take 35 percent more punishment before you fall." />
 	<string id="TAOM_LD_Boon_RiddermarkLevy" text="{=TAOM_LD_Boon_RiddermarkLevy}Levy of the Riddermark" />
+	<string id="TAOM_LD_Boon_RiddermarkLevy_Gondor" text="{=TAOM_LD_Boon_RiddermarkLevy_Gondor}Levy of the Fiefs" />
 	<string id="TAOM_LD_Boon_RiddermarkLevy_Text" text="{=TAOM_LD_Boon_RiddermarkLevy_Text}Reeves of the Westfold send coin to the keep: 300 gold, paid now." />
+	<string id="TAOM_LD_Boon_RiddermarkLevy_Text_Gondor" text="{=TAOM_LD_Boon_RiddermarkLevy_Text_Gondor}The lords of the southern fiefs send coin to the City: 300 gold, paid now." />
 	<string id="TAOM_LD_Boon_RidersAtDawn" text="{=TAOM_LD_Boon_RidersAtDawn}Riders at Dawn" />
 	<string id="TAOM_LD_Boon_RidersAtDawn_Drawback" text="{=TAOM_LD_Boon_RidersAtDawn_Drawback}The keep holds 40 fewer defenders." />
 	<string id="TAOM_LD_Boon_RidersAtDawn_Text" text="{=TAOM_LD_Boon_RidersAtDawn_Text}Every wave carries two affixes fewer." />
 	<string id="TAOM_LD_Boon_RohirrimFury" text="{=TAOM_LD_Boon_RohirrimFury}Fury of the Rohirrim" />
+	<string id="TAOM_LD_Boon_RohirrimFury_Gondor" text="{=TAOM_LD_Boon_RohirrimFury_Gondor}Fury of Lossarnach" />
 	<string id="TAOM_LD_Boon_RohirrimFury_Drawback" text="{=TAOM_LD_Boon_RohirrimFury_Drawback}You take 15 percent more damage." />
 	<string id="TAOM_LD_Boon_RohirrimFury_Text" text="{=TAOM_LD_Boon_RohirrimFury_Text}You swing 20 percent faster." />
 	<string id="TAOM_LD_Boon_ShieldsLocked" text="{=TAOM_LD_Boon_ShieldsLocked}Shields Locked" />
@@ -4820,9 +4832,11 @@
 	<string id="TAOM_LD_Boon_ShieldwallOath_Drawback" text="{=TAOM_LD_Boon_ShieldwallOath_Drawback}You move 5 percent slower." />
 	<string id="TAOM_LD_Boon_ShieldwallOath_Text" text="{=TAOM_LD_Boon_ShieldwallOath_Text}You take 20 percent less damage." />
 	<string id="TAOM_LD_Boon_SpearOfEorl" text="{=TAOM_LD_Boon_SpearOfEorl}Spear of Eorl" />
+	<string id="TAOM_LD_Boon_SpearOfEorl_Gondor" text="{=TAOM_LD_Boon_SpearOfEorl_Gondor}Lance of the Prince" />
 	<string id="TAOM_LD_Boon_SpearOfEorl_Drawback" text="{=TAOM_LD_Boon_SpearOfEorl_Drawback}You swing and thrust 10 percent slower." />
 	<string id="TAOM_LD_Boon_SpearOfEorl_Text" text="{=TAOM_LD_Boon_SpearOfEorl_Text}Your blows hit 25 percent harder." />
 	<string id="TAOM_LD_Boon_SpearsOfTheWestfold" text="{=TAOM_LD_Boon_SpearsOfTheWestfold}Spears of the Westfold" />
+	<string id="TAOM_LD_Boon_SpearsOfTheWestfold_Gondor" text="{=TAOM_LD_Boon_SpearsOfTheWestfold_Gondor}Spears of Pinnath Gelin" />
 	<string id="TAOM_LD_Boon_SpearsOfTheWestfold_Text" text="{=TAOM_LD_Boon_SpearsOfTheWestfold_Text}Your infantry hit 15 percent harder." />
 	<string id="TAOM_LD_Boon_SteadyAim" text="{=TAOM_LD_Boon_SteadyAim}Steady Aim" />
 	<string id="TAOM_LD_Boon_SteadyAim_Drawback" text="{=TAOM_LD_Boon_SteadyAim_Drawback}Your archers reload 10 percent slower." />
@@ -4843,19 +4857,24 @@
 	<string id="TAOM_LD_Boon_TheLongWatch" text="{=TAOM_LD_Boon_TheLongWatch}The Long Watch" />
 	<string id="TAOM_LD_Boon_TheLongWatch_Text" text="{=TAOM_LD_Boon_TheLongWatch_Text}Every intermission lasts 30 seconds longer." />
 	<string id="TAOM_LD_Boon_WainsOfTheWestfold" text="{=TAOM_LD_Boon_WainsOfTheWestfold}Wains of the Westfold" />
+	<string id="TAOM_LD_Boon_WainsOfTheWestfold_Gondor" text="{=TAOM_LD_Boon_WainsOfTheWestfold_Gondor}Wains of Anórien" />
 	<string id="TAOM_LD_Boon_WainsOfTheWestfold_Drawback" text="{=TAOM_LD_Boon_WainsOfTheWestfold_Drawback}Everything in the shop costs 10 percent more." />
 	<string id="TAOM_LD_Boon_WainsOfTheWestfold_Text" text="{=TAOM_LD_Boon_WainsOfTheWestfold_Text}Every pack brings 3 more soldiers." />
 	<string id="TAOM_LD_Boon_WeregildOfTheMark" text="{=TAOM_LD_Boon_WeregildOfTheMark}Weregild of the Mark" />
+	<string id="TAOM_LD_Boon_WeregildOfTheMark_Gondor" text="{=TAOM_LD_Boon_WeregildOfTheMark_Gondor}The Steward's Bounty" />
 	<string id="TAOM_LD_Boon_WeregildOfTheMark_Drawback" text="{=TAOM_LD_Boon_WeregildOfTheMark_Drawback}Wave bonuses are 15 percent smaller." />
 	<string id="TAOM_LD_Boon_WeregildOfTheMark_Text" text="{=TAOM_LD_Boon_WeregildOfTheMark_Text}Every foe you cut down pays 30 percent more gold." />
 	<string id="TAOM_LD_Class_Archer" text="{=TAOM_LD_Class_Archer}Archer" />
 	<string id="TAOM_LD_Class_Archer_Text" text="{=TAOM_LD_Class_Archer_Text}A bow, two kinds of arrow and a sword for when they close in." />
 	<string id="TAOM_LD_Class_Cavalry" text="{=TAOM_LD_Class_Cavalry}Cavalry" />
 	<string id="TAOM_LD_Class_Cavalry_Text" text="{=TAOM_LD_Class_Cavalry_Text}A rider of the Mark in a rider's armour, with spear, shield and sword, and a horse to carry you into the fight." />
+	<string id="TAOM_LD_Class_Cavalry_Text_Gondor" text="{=TAOM_LD_Class_Cavalry_Text_Gondor}A knight of Dol Amroth in full harness, with lance, shield and sword, and a horse to carry you into the fight." />
 	<string id="TAOM_LD_Class_SwordBoard" text="{=TAOM_LD_Class_SwordBoard}Sword and Board" />
 	<string id="TAOM_LD_Class_SwordBoard_Text" text="{=TAOM_LD_Class_SwordBoard_Text}A sword and a shield. Stand in the line and take the blows." />
 	<string id="TAOM_LD_Class_TwoHanded" text="{=TAOM_LD_Class_TwoHanded}Two Handed Infantry" />
 	<string id="TAOM_LD_Class_TwoHanded_Text" text="{=TAOM_LD_Class_TwoHanded_Text}A two-handed axe. No shield, and a heavy blow." />
+	<string id="TAOM_LD_Difficulty_Hard" text="{=TAOM_LD_Difficulty_Hard}Hard" />
+	<string id="TAOM_LD_Difficulty_Normal" text="{=TAOM_LD_Difficulty_Normal}Normal" />
 	<string id="TAOM_LD_End_Abandoned" text="{=TAOM_LD_End_Abandoned}You left the fortress" />
 	<string id="TAOM_LD_End_Best" text="{=TAOM_LD_End_Best}Best run: waves cleared {WAVES}, kills {KILLS}" />
 	<string id="TAOM_LD_End_Boons" text="{=TAOM_LD_End_Boons}Boons: {NAMES}" />
@@ -4958,6 +4977,12 @@
 	<string id="TAOM_LD_Offer_Knights" text="{=TAOM_LD_Offer_Knights}King's Knights, on foot" />
 	<string id="TAOM_LD_Offer_Militia" text="{=TAOM_LD_Offer_Militia}Westfold Militia" />
 	<string id="TAOM_LD_Offer_Yeomen" text="{=TAOM_LD_Offer_Yeomen}Eastfold Yeomen" />
+	<string id="TAOM_LD_Offer_Gondor_Militia" text="{=TAOM_LD_Offer_Gondor_Militia}Anórien Militia" />
+	<string id="TAOM_LD_Offer_Gondor_ArcherMilitia" text="{=TAOM_LD_Offer_Gondor_ArcherMilitia}Anórien Archer Militia" />
+	<string id="TAOM_LD_Offer_Gondor_Lossarnach" text="{=TAOM_LD_Offer_Gondor_Lossarnach}Axemen of Lossarnach" />
+	<string id="TAOM_LD_Offer_Gondor_Morthond" text="{=TAOM_LD_Offer_Gondor_Morthond}Morthond Bowmen" />
+	<string id="TAOM_LD_Offer_Gondor_PinnathGelin" text="{=TAOM_LD_Offer_Gondor_PinnathGelin}Spearmen of Pinnath Gelin" />
+	<string id="TAOM_LD_Offer_Gondor_Citadel" text="{=TAOM_LD_Offer_Gondor_Citadel}Guards of the Citadel" />
 	<string id="TAOM_LD_Up_Axemen" text="{=TAOM_LD_Up_Axemen}Militia to Westfold Axemen" />
 	<string id="TAOM_LD_Up_VeteranAxemen" text="{=TAOM_LD_Up_VeteranAxemen}Axemen to Veteran Axemen" />
 	<string id="TAOM_LD_Up_HeavyAxemen" text="{=TAOM_LD_Up_HeavyAxemen}Axemen to Heavy Axemen" />
@@ -4967,6 +4992,21 @@
 	<string id="TAOM_LD_Up_VeteranBowmen" text="{=TAOM_LD_Up_VeteranBowmen}Bowmen to Veteran Bowmen" />
 	<string id="TAOM_LD_Up_RoyalGuard" text="{=TAOM_LD_Up_RoyalGuard}King's Knights to the King's Royal Guard" />
 	<string id="TAOM_LD_Up_Riders" text="{=TAOM_LD_Up_Riders}Royal Guard to the Riders of Rohan" />
+	<string id="TAOM_LD_Up_Gondor_Footmen" text="{=TAOM_LD_Up_Gondor_Footmen}Militia to Anórien Footmen" />
+	<string id="TAOM_LD_Up_Gondor_Guardsmen" text="{=TAOM_LD_Up_Gondor_Guardsmen}Footmen to Anórien Guardsmen" />
+	<string id="TAOM_LD_Up_Gondor_Infantry" text="{=TAOM_LD_Up_Gondor_Infantry}Guardsmen to Anórien Infantry" />
+	<string id="TAOM_LD_Up_Gondor_VeteranInfantry" text="{=TAOM_LD_Up_Gondor_VeteranInfantry}Infantry to Anórien Veteran Infantry" />
+	<string id="TAOM_LD_Up_Gondor_Skirmishers" text="{=TAOM_LD_Up_Gondor_Skirmishers}Archer Militia to Anórien Skirmishers" />
+	<string id="TAOM_LD_Up_Gondor_Bowmen" text="{=TAOM_LD_Up_Gondor_Bowmen}Skirmishers to Anórien Bowmen" />
+	<string id="TAOM_LD_Up_Gondor_Archers" text="{=TAOM_LD_Up_Gondor_Archers}Bowmen to Anórien Archers" />
+	<string id="TAOM_LD_Up_Gondor_VeteranAxebearers" text="{=TAOM_LD_Up_Gondor_VeteranAxebearers}Axemen to Lossarnach Veteran Axebearers" />
+	<string id="TAOM_LD_Up_Gondor_LossarnachGuard" text="{=TAOM_LD_Up_Gondor_LossarnachGuard}Veteran Axebearers to the Lossarnach Guard" />
+	<string id="TAOM_LD_Up_Gondor_BlackrootScouts" text="{=TAOM_LD_Up_Gondor_BlackrootScouts}Morthond Bowmen to Blackroot Vale Scouts" />
+	<string id="TAOM_LD_Up_Gondor_BlackrootArchers" text="{=TAOM_LD_Up_Gondor_BlackrootArchers}Scouts to Blackroot Vale Archers" />
+	<string id="TAOM_LD_Up_Gondor_VeteranSpearmen" text="{=TAOM_LD_Up_Gondor_VeteranSpearmen}Spearmen to Pinnath Gelin Veteran Spearmen" />
+	<string id="TAOM_LD_Up_Gondor_Spearwardens" text="{=TAOM_LD_Up_Gondor_Spearwardens}Veteran Spearmen to Pinnath Gelin Spearwardens" />
+	<string id="TAOM_LD_Up_Gondor_CitadelVeterans" text="{=TAOM_LD_Up_Gondor_CitadelVeterans}Guards of the Citadel to Citadel Veterans" />
+	<string id="TAOM_LD_Up_Gondor_CitadelSergeants" text="{=TAOM_LD_Up_Gondor_CitadelSergeants}Citadel Veterans to Citadel Sergeants" />
 	<string id="TAOM_LD_Hero_Aragorn_Text" text="{=TAOM_LD_Hero_Aragorn_Text}The heir of Isildur, sword in hand. If he falls, he can be called again." />
 	<string id="TAOM_LD_Hero_Legolas_Text" text="{=TAOM_LD_Hero_Legolas_Text}The prince of Mirkwood and his bow. If he falls, he can be called again." />
 	<string id="TAOM_LD_Hero_Gimli_Text" text="{=TAOM_LD_Hero_Gimli_Text}The son of Glóin and his axe. If he falls, he can be called again." />
@@ -4976,6 +5016,8 @@
 	<string id="TAOM_LD_Prompt_ClassDesc" text="{=TAOM_LD_Prompt_ClassDesc}Your class sets the weapons you carry into the fight. Cavalry also sets your armour and puts you on a horse; the other classes leave your armour as it is." />
 	<string id="TAOM_LD_Prompt_ClassTitle" text="{=TAOM_LD_Prompt_ClassTitle}Choose your class" />
 	<string id="TAOM_LD_Prompt_Desc" text="{=TAOM_LD_Prompt_Desc}Hold a fortress against wave after wave of attackers. Spend gold between waves on more defenders. The run ends when the garrison or the keep falls. If a shader error window appears while the fortress loads, press Cancel." />
+	<string id="TAOM_LD_Prompt_DifficultyDesc" text="{=TAOM_LD_Prompt_DifficultyDesc}Hard sends larger waves that grow stronger faster, and the attackers gain their powers sooner. Each difficulty keeps its own best run." />
+	<string id="TAOM_LD_Prompt_DifficultyTitle" text="{=TAOM_LD_Prompt_DifficultyTitle}Choose the difficulty" />
 	<string id="TAOM_LD_Rank_Captain" text="{=TAOM_LD_Rank_Captain}Captain" />
 	<string id="TAOM_LD_Rank_General" text="{=TAOM_LD_Rank_General}General" />
 	<string id="TAOM_LD_Rank_Lieutenant" text="{=TAOM_LD_Rank_Lieutenant}Lieutenant" />

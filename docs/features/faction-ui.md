@@ -69,9 +69,10 @@ editor are themed only inside character creation, so the barber and the campaign
 vanilla. A themed prefab missing from the install keeps the vanilla screen with one warning, and a
 themed movie that throws while building falls back to vanilla's and is not tried again until restart.
 
-**The campaign map bar under co-op.** The themed `TAOMMapBar` and the themed Camp icon beside its clock
-(`TAOMFieldCampOverlay`) swap together, and since v2.0.42 they swap under co-op too.
-`GauntletLayerLoadMoviePatch` keeps vanilla's bar for both only when `ThemedMapBarCoopPolicy.KeepsNativeMapBar`
+**The campaign map bar under co-op.** The themed `TAOMMapBar`, the themed Camp icon beside its clock
+(`TAOMFieldCampOverlay`) and the themed army panel cut at its stats plate (`TAOMArmyOverlay`,
+[campaign-army-panel.md](campaign-army-panel.md)) swap together, and since v2.0.42 they swap under co-op too.
+`GauntletLayerLoadMoviePatch` keeps vanilla's for all three only when `ThemedMapBarCoopPolicy.KeepsNativeMapBar`
 is true: `ICoopSessionProvider.ShouldDeferToHost` and no session TAOM can see (`!IsSessionActive`). That is the
 reading under a co-op mod whose roles TAOM cannot probe (BannerlordTogether), whose own extensions to vanilla's MapBar
 prefab would not reach the themed one, and after a failed Coop role bind (as for the camp button, [field-camp.md](field-camp.md)

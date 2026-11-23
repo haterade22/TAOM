@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -8,6 +10,7 @@ using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.FactionUI;
 using TAOM.Features.FactionUI.Resources;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.FactionUI;
 
@@ -647,5 +650,39 @@ public class FrontEndSpriteServiceTests
         TickPastReleaseDelay();
 
         Assert.IsFalse(_adapter.IsSpriteRegistered("bh_band_mask"));
+    }
+
+    /// <summary>Issue #1532: the engine binds a brush layer's sprite once, when it parses the brush file, and a
+    /// runtime sprite registers only when a themed screen acquires its group. A brush file that names a runtime
+    /// sprite but is in no group's reload list keeps a null sprite and draws blank (TAOMCampaignArmy did).
+    /// This loads every real runtime sprite, acquires every group, and checks every real brush file.</summary>
+    [TestMethod]
+    public void Acquire_EveryGroup_RereadsEveryBrushFileThatNamesARuntimeSprite()
+    {
+        var adapter = new FakeFrontEndResourceAdapter();
+        var spriteNames = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var file in Directory.GetFiles(RepoPaths.RepoPath("Main", "_Module", "GUI", "FactionUI", "RuntimeSprites")))
+        {
+            var name = Path.GetFileNameWithoutExtension(file);
+            var extension = Path.GetExtension(file);
+            if (extension == ".png")
+                spriteNames.Add(name);
+            else if (extension == ".nine")
+                spriteNames.Add(name + "_9");
+            else
+                continue;
+            adapter.AddFile(Path.Combine(_paths.RuntimeSprites, Path.GetFileName(file)), extension == ".nine" ? File.ReadAllText(file) : "");
+        }
+        var sut = new FrontEndSpriteService(adapter, _paths, _logger);
+
+        sut.Acquire(Enum.GetValues(typeof(FrontEndImageGroups)).Cast<FrontEndImageGroups>().Aggregate((a, b) => a | b));
+
+        var sprite = new Regex("Sprite=\"([^\"]+)\"");
+        var neverReread = Directory.GetFiles(RepoPaths.RepoPath("Main", "_Module", "GUI", "Brushes"), "*.xml", SearchOption.AllDirectories)
+            .Where(file => sprite.Matches(File.ReadAllText(file)).Cast<Match>().Any(m => spriteNames.Contains(m.Groups[1].Value)))
+            .Select(Path.GetFileNameWithoutExtension)
+            .Where(brushFile => !adapter.BrushFileLoads.Contains(brushFile))
+            .ToList();
+        Assert.AreEqual(0, neverReread.Count, "brush files that name runtime sprites but no group re-reads: " + string.Join(", ", neverReread));
     }
 }

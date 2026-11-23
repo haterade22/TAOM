@@ -26,6 +26,26 @@ public class LongDefeatBestRunStoreTests
     [TestMethod]
     public void Load_WithNoFile_IsNull() => Assert.IsNull(Store().Load("helms"));
 
+    // Normal keeps the bare fortress id so a stored file from before difficulties still reads and stays byte for byte the same.
+    [TestMethod]
+    public void KeyFor_NormalIsTheFortressId_AndHardAddsAColonSuffix()
+    {
+        Assert.AreEqual("helms", LongDefeatBestRunStore.KeyFor("helms", RunDifficulty.Normal));
+        Assert.AreEqual("helms:hard", LongDefeatBestRunStore.KeyFor("helms", RunDifficulty.Hard));
+    }
+
+    [TestMethod]
+    public void NormalAndHardRows_AreKeptApart()
+    {
+        var store = Store();
+
+        store.TrySave(LongDefeatBestRunStore.KeyFor("helms", RunDifficulty.Normal), new BestRun(4, 321), out _);
+        store.TrySave(LongDefeatBestRunStore.KeyFor("helms", RunDifficulty.Hard), new BestRun(2, 90), out _);
+
+        Assert.AreEqual(new BestRun(4, 321), store.Load("helms"));
+        Assert.AreEqual(new BestRun(2, 90), store.Load("helms:hard"));
+    }
+
     [TestMethod]
     public void Save_ThenLoad_RoundTripsPerFortress()
     {

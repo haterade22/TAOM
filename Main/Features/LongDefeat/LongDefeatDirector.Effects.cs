@@ -378,7 +378,8 @@ internal sealed partial class LongDefeatDirector
             return;
 
         var run = new BestRun(result.WavesCleared, result.Kills);
-        var current = store.Load(_plan.FortressId);
+        var key = LongDefeatBestRunStore.KeyFor(_plan.FortressId, _plan.Options.Difficulty);
+        var current = store.Load(key);
         if (!run.IsBetter(current))
         {
             _session.RecordBest(current!);
@@ -386,7 +387,7 @@ internal sealed partial class LongDefeatDirector
             return;
         }
 
-        var saved = store.TrySave(_plan.FortressId, run, out var error);
+        var saved = store.TrySave(key, run, out var error);
         if (saved)
             _session.RecordBest(run);
         else
@@ -397,6 +398,6 @@ internal sealed partial class LongDefeatDirector
         }
 
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.BestRunId, _mission,
-            LongDefeatChecks.BestRunSaved(run, saved ? store.Load(_plan.FortressId) : null, error));
+            LongDefeatChecks.BestRunSaved(run, saved ? store.Load(key) : null, error));
     }
 }

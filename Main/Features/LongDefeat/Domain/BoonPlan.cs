@@ -19,6 +19,9 @@ internal enum BoonCategory
 /// <summary>One number a boon changes, by the key of <see cref="BoonKeys"/>. A key that <see cref="BoonKeys.IsTargeted"/> says whom it changes in <paramref name="Target"/>; the others have none.</summary>
 internal readonly record struct BoonEffect(string Key, float Value, BoonTarget? Target = null);
 
+/// <summary>The name and text a boon shows at a fortress of one defender culture, each as <c>{=KEY}English</c>.</summary>
+internal sealed record BoonWords(string Name, string Text);
+
 /// <summary>
 /// One boon: TAOM's own name and text as <c>{=KEY}English</c>, what it gives and what it costs. A drawback uses the same keys as an effect and
 /// shows on its own line (<see cref="DrawbackText"/>, required whenever <see cref="Drawback"/> is not empty, so a cost is never hidden).
@@ -33,6 +36,18 @@ internal sealed record BoonRow(string Id, BoonCategory Category, string Name, st
     public string DrawbackText { get; init; } = "";
 
     public bool HasDrawback => Drawback.Count > 0;
+
+    private static readonly IReadOnlyDictionary<string, BoonWords> NoWords = new Dictionary<string, BoonWords>();
+
+    /// <summary>The words this boon shows to one defender culture, where its own name would name another people ("Oath of Eorl" at Minas Tirith); empty for most rows.</summary>
+    public IReadOnlyDictionary<string, BoonWords> Cultures { get; init; } = NoWords;
+
+    /// <summary>This boon as a fortress of <paramref name="culture"/> shows it: the same id, effects and drawback under that culture's words, or the row itself when it has none. The culture is matched without case.</summary>
+    public BoonRow For(string culture)
+    {
+        var words = Cultures.FirstOrDefault(c => string.Equals(c.Key, culture, StringComparison.OrdinalIgnoreCase)).Value;
+        return words == null ? this : this with { Name = words.Name, Text = words.Text };
+    }
 }
 
 /// <summary>A boon as the HUD and the shop bot see it: no numbers, only what is shown and whether it costs something.</summary>
@@ -64,6 +79,9 @@ internal sealed class BoonPlan
     public IReadOnlyList<BoonRow> Rows { get; }
 
     public int LegendWeight { get; }
+
+    /// <summary>The same rows, order and weights under the words of one defender culture, so a seed draws the same cards at every fortress.</summary>
+    public BoonPlan For(string culture) => new(Rows.Select(r => r.For(culture)).ToList(), LegendWeight);
 
     public int WeightOf(BoonRow row) => row.Category == BoonCategory.Legend ? LegendWeight : RowWeight;
 

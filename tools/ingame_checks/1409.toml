@@ -175,7 +175,7 @@ absence = "not-reached"
 claim = "the order bar shows the attacker formations, an order takes a formation off AI, and the key presses work"
 
 [[human]]
-claim = "after his death the player takes over one of his own soldiers, the run goes on, and his death is not counted as a kill (a takeover after his death makes the wave check write a false hosted.wave result=fail, because Read and Fell skip the taken-over soldier; no manifest reads that line)"
+claim = "after his death the player takes over one of his own soldiers, the run goes on, and his death is not counted as a kill (in an attack the soldier he takes is one of the wave's count, so the wave check names him: hosted.wave ... taken=1, and its kills, felled and taken still reach the count)"
 
 [[human]]
 claim = "the boss cast lines are red and read 'Enemy Aragorn' (and 'Enemy Legolas', 'Enemy Gimli')"

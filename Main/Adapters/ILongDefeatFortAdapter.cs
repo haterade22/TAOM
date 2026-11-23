@@ -35,6 +35,13 @@ internal interface ILongDefeatFortAdapter
     /// </summary>
     int AttackersBehindGates(LdPoint? inside, IReadOnlyCollection<int> gates);
 
+    /// <summary>
+    /// Whether the line above which a soldier counts as high (the highest wall segment less 3 m) lies above every visible gate's doorway band (its height and <see cref="GateRules.HeightBand"/>).
+    /// Only then is an attacker counted high a different man from one counted behind a gate, so only then can attackers above the walls excuse a doorway count. At Helm's Deep the gate stands
+    /// above the Deeping Wall's line, so this is false there; at Minas Tirith it is true.
+    /// </summary>
+    bool HighLineClearsGates { get; }
+
     /// <summary>Whether each point has a navmesh and lies inside the mission boundary, in the order given: the <c>fort-points</c> boot check.</summary>
     IReadOnlyList<LdPointFacts> PointsUsable(IReadOnlyList<LdPlace> points);
 

@@ -37,7 +37,7 @@ public static class GauntletLayerLoadMoviePatch
 
         try
         {
-            // Only a co-op mod TAOM cannot probe keeps the native map bar, and with it the vanilla Camp icon (ThemedMapBarCoopPolicy).
+            // Only a co-op mod TAOM cannot probe keeps the native map bar, and with it the vanilla Camp icon and army panel (ThemedMapBarCoopPolicy).
             if (ThemedMapBarCoopPolicy.IsMapBarMovie(movieName) && ThemedMapBarCoopPolicy.KeepsNativeMapBar(FactionUIPatchContext.Coop))
                 return;
 

@@ -18,6 +18,9 @@ internal sealed record WaveStats(int Wave, int Kills, int Felled, int Lost, floa
 
     public int SummonFelled { get; init; }
 
+    /// <summary>Roster soldiers of this wave that became the player's body (a take-over in a story attack, where the player's team is the wave). Each is in the wave's count and is neither a kill nor felled.</summary>
+    public int Taken { get; init; }
+
     /// <summary>The wave's commander, or null when it had none.</summary>
     public CommanderRecord? Commander { get; init; }
 
@@ -98,7 +101,7 @@ internal sealed class RunStats
     /// <summary>The engine's own fleeing flag fires no callback, so the run also keeps the most attackers seen running at once.</summary>
     public void ObserveFleeing(int fleeingNow) => FleeingPeak = Math.Max(FleeingPeak, fleeingNow);
 
-    public void CloseWave(int wave, float seconds, int felled, float healthFactor = 1f, float damageFactor = 1f, IReadOnlyList<string>? affixes = null, WaveRoles? roles = null, FortWave? fort = null)
+    public void CloseWave(int wave, float seconds, int felled, float healthFactor = 1f, float damageFactor = 1f, IReadOnlyList<string>? affixes = null, WaveRoles? roles = null, FortWave? fort = null, int taken = 0)
     {
         var r = roles ?? WaveRoles.None;
         _waves.Add(new WaveStats(wave, _kills, felled, _lost, seconds, healthFactor, damageFactor)
@@ -110,6 +113,7 @@ internal sealed class RunStats
             SummonFelled = r.SummonFelled,
             Commander = r.Commander,
             Fort = fort ?? FortWave.None,
+            Taken = taken,
         });
         _kills = 0;
         _lost = 0;

@@ -48,7 +48,8 @@ public class ThemedMapBarCoopPolicyTests
     [DataTestMethod]
     [DataRow("MapBar")]
     [DataRow("TaomFieldCampOverlay")]
-    public void IsMapBarMovie_TheBarAndTheCampIconBesideItsClock_True(string movie)
+    [DataRow("ArmyOverlay")]
+    public void IsMapBarMovie_TheBarAndTheMoviesThatSitOnIt_True(string movie)
     {
         Assert.IsTrue(ThemedMapBarCoopPolicy.IsMapBarMovie(movie));
     }

@@ -651,4 +651,147 @@ public class LongDefeatDirectorLordTests
         rig.Director.Shutdown();
         Assert.AreEqual(1, rig.Lines(LongDefeatChecks.GeneralDownId).Count, "written once");
     }
+
+    // ---- the wave's books after a take-over in an attack (#1409) ----
+
+    // In a story attack the player's team is the wave. The soldier a fallen player takes is one of the wave's count, and from then on he is the player's body: his fall is the player's,
+    // never a wave kill, and the attacker read and a fell both skip him. The wave names him as taken, or a lost attack reads one short for each take-over (run 20261122-093421: 349 of 350).
+    [TestMethod]
+    public void InAnAttack_TheSoldierTheBotTakes_IsBookedAsTaken_SoTheWaveStillAddsUp()
+    {
+        var rig = new Rig(autoplay: true);
+        rig.Field.PlayerAttacks = true;
+        rig.StartAndFight();
+        rig.LordFalls();
+        for (var i = 0; i < 5; i++)
+            rig.Tick();
+        Assert.AreEqual("pass " + LongDefeatChecks.PlayerDeathId + " d1 via=takeover by=bot", rig.Lines(LongDefeatChecks.PlayerDeathId).Single());
+
+        for (var i = 0; i < 19; i++)
+            rig.Director.OnAgentRemoved("A:orc", true);
+        rig.Clear();
+
+        var line = rig.Lines(LongDefeatChecks.WaveId).Single();
+        StringAssert.StartsWith(line, "pass " + LongDefeatChecks.WaveId + " w1 kills=19 felled=0 taken=1 lost=0 ", string.Join("\n", rig.Outcomes.Lines));
+        StringAssert.EndsWith(line, " count=20");
+    }
+
+    // The same fall in a defence takes a defender, who was never in the wave: every attacker must still fall, and the line keeps the form the manifests read.
+    [TestMethod]
+    public void InADefence_ATakenSoldierIsNoWaveSoldier_SoNothingIsBookedAndNineteenKillsAreOneShort()
+    {
+        var rig = new Rig(autoplay: true);
+        rig.StartAndFight();
+        rig.LordFalls();
+        for (var i = 0; i < 5; i++)
+            rig.Tick();
+        Assert.AreEqual(1, rig.Field.Count("TakeOver"));
+
+        for (var i = 0; i < 19; i++)
+            rig.Director.OnAgentRemoved("A:orc", true);
+        rig.Clear();
+
+        var line = rig.Lines(LongDefeatChecks.WaveId).Single();
+        StringAssert.StartsWith(line, "fail " + LongDefeatChecks.WaveId + " w1 kills=19 felled=0 lost=0 ", string.Join("\n", rig.Outcomes.Lines));
+    }
+
+    // A hero the player takes in an attack (#1366) is no wave soldier either: his body is booked as a hero's, so the wave must not count him as taken.
+    [TestMethod]
+    public void InAnAttack_ATakenHeroIsNoWaveSoldier_SoNothingIsBookedAsTaken()
+    {
+        var rig = new Rig(autoplay: true);
+        rig.Field.PlayerAttacks = true;
+        rig.Field.MainIsHeldHero = true;
+        rig.StartAndFight();
+        rig.LordFalls();
+        for (var i = 0; i < 5; i++)
+            rig.Tick();
+
+        for (var i = 0; i < 20; i++)
+            rig.Director.OnAgentRemoved("A:orc", true);
+        rig.Clear();
+
+        StringAssert.StartsWith(rig.Lines(LongDefeatChecks.WaveId).Single(), "pass " + LongDefeatChecks.WaveId + " w1 kills=20 felled=0 lost=0 ");
+    }
+
+    // One frame lies between the take and the tick that adopts the body. A soldier who falls inside it is never adopted, so his own removal books him.
+    [TestMethod]
+    public void InAnAttack_ATakenSoldierWhoFallsBeforeHisAdoption_IsStillBookedAsTaken_Once()
+    {
+        var rig = new Rig(autoplay: true);
+        rig.Field.PlayerAttacks = true;
+        rig.StartAndFight();
+        rig.Director.OnAgentRemoved("P", true);
+        rig.Director.OnAgentRemoved("P", true);
+        rig.Field.MainBody = 0;
+        rig.Tick();
+
+        for (var i = 0; i < 19; i++)
+            rig.Director.OnAgentRemoved("A:orc", true);
+        rig.Clear();
+
+        StringAssert.StartsWith(rig.Lines(LongDefeatChecks.WaveId).Single(), "pass " + LongDefeatChecks.WaveId + " w1 kills=19 felled=0 taken=1 lost=0 ", string.Join("\n", rig.Outcomes.Lines));
+    }
+
+    [TestMethod]
+    public void InADefence_TwoFallsBeforeAnAdoption_BookNothingAsTaken()
+    {
+        var rig = new Rig(autoplay: true);
+        rig.StartAndFight();
+        rig.Director.OnAgentRemoved("P", true);
+        rig.Director.OnAgentRemoved("P", true);
+        rig.Field.MainBody = 0;
+        rig.Tick();
+
+        for (var i = 0; i < 20; i++)
+            rig.Director.OnAgentRemoved("A:orc", true);
+        rig.Clear();
+
+        StringAssert.StartsWith(rig.Lines(LongDefeatChecks.WaveId).Single(), "pass " + LongDefeatChecks.WaveId + " w1 kills=20 felled=0 lost=0 ");
+    }
+
+    [TestMethod]
+    public void InAnAttack_TwoTakeOversInOneWave_BookTwo()
+    {
+        var rig = new Rig(autoplay: true);
+        rig.Field.PlayerAttacks = true;
+        rig.StartAndFight();
+        rig.LordFalls();
+        for (var i = 0; i < 5; i++)
+            rig.Tick();
+        rig.LordFalls();
+        for (var i = 0; i < 5; i++)
+            rig.Tick();
+        Assert.AreEqual(2, rig.Field.Count("TakeOver"), string.Join(",", rig.Field.Calls));
+
+        for (var i = 0; i < 18; i++)
+            rig.Director.OnAgentRemoved("A:orc", true);
+        rig.Clear();
+
+        StringAssert.StartsWith(rig.Lines(LongDefeatChecks.WaveId).Single(), "pass " + LongDefeatChecks.WaveId + " w1 kills=18 felled=0 taken=2 lost=0 ", string.Join("\n", rig.Outcomes.Lines));
+    }
+
+    // The rise at a clear gives the lord a body of his own: that adoption is no take-over, and the next wave starts its books at zero.
+    [TestMethod]
+    public void InAnAttack_TheRiseAtAClear_IsNoTakeOver_AndTheNextWaveBooksNothingAsTaken()
+    {
+        var rig = new Rig(autoplay: true);
+        rig.Field.PlayerAttacks = true;
+        rig.StartAndFight();
+        rig.LordFalls();
+        for (var i = 0; i < 5; i++)
+            rig.Tick();
+        for (var i = 0; i < 19; i++)
+            rig.Director.OnAgentRemoved("A:orc", true);
+        rig.Clear();
+        StringAssert.Contains(rig.Lines(LongDefeatChecks.WaveId).Single(), " taken=1 ");
+
+        rig.NextWave();
+        Assert.AreEqual(1, rig.Field.Rises.Count, "the lord rose at the clear");
+        for (var i = 0; i < 30; i++)
+            rig.Director.OnAgentRemoved("A:orc", true);
+        rig.Clear();
+
+        StringAssert.StartsWith(rig.Lines(LongDefeatChecks.WaveId).Last(), "pass " + LongDefeatChecks.WaveId + " w2 kills=30 felled=0 lost=0 ", string.Join("\n", rig.Outcomes.Lines));
+    }
 }

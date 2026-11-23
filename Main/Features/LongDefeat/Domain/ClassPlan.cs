@@ -41,6 +41,18 @@ internal sealed record ClassKit(IReadOnlyList<LdKitSlot> Slots);
 /// <summary>One class of classes.json: TAOM's own name and one-line kit text as <c>{=KEY}English</c>, whether it rides, and a kit per defender culture.</summary>
 internal sealed record RunClass(string Id, string Name, string Text, bool Mounted, IReadOnlyDictionary<string, ClassKit> Kits)
 {
+    private static readonly IReadOnlyDictionary<string, string> NoTexts = new Dictionary<string, string>();
+
+    /// <summary>A text for one defender culture, where the class's own text would name another people (the Cavalry of Minas Tirith is no rider of the Mark); empty for most classes.</summary>
+    public IReadOnlyDictionary<string, string> Texts { get; init; } = NoTexts;
+
+    /// <summary>This class as a fortress of <paramref name="culture"/> shows it: the same class under that culture's text, or the class itself when it has none. The culture is matched without case.</summary>
+    public RunClass For(string culture)
+    {
+        var text = Texts.FirstOrDefault(t => string.Equals(t.Key, culture, StringComparison.OrdinalIgnoreCase)).Value;
+        return text == null ? this : this with { Text = text };
+    }
+
     public bool HasKit(string culture) => Find(culture) != null;
 
     /// <summary>The loadout for a culture, or null when the class has no kit for it. A foot class gets both horse slots cleared after its kit.</summary>
@@ -73,8 +85,8 @@ internal sealed class ClassPlan
 
     public IReadOnlyList<RunClass> Classes { get; }
 
-    /// <summary>The classes with a kit for this defender culture, in file order: what a fortress of that culture offers.</summary>
-    public IReadOnlyList<RunClass> OnOffer(string culture) => Classes.Where(c => c.HasKit(culture)).ToList();
+    /// <summary>The classes with a kit for this defender culture, in file order and under that culture's text: what a fortress of that culture offers.</summary>
+    public IReadOnlyList<RunClass> OnOffer(string culture) => Classes.Where(c => c.HasKit(culture)).Select(c => c.For(culture)).ToList();
 
     /// <summary>
     /// The class a run plays: the one asked for when it is on offer, else the bot's draw <c>RunRandom.For(seed, 3, 0, 0).Below(count)</c> or, for a person, the first class on

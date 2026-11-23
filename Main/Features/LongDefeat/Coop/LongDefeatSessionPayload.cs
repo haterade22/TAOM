@@ -12,7 +12,7 @@ namespace TAOM.Features.LongDefeat.Coop;
 /// </summary>
 internal static class LongDefeatSessionPayload
 {
-    private const byte Version = 1;
+    private const byte Version = 2;
 
     public static byte[] Encode(string fortressId, RunOptions options)
     {
@@ -35,6 +35,7 @@ internal static class LongDefeatSessionPayload
             if (options.ClassId != null)
                 writer.Write(options.ClassId);
             WriteNullable(writer, options.LordFalls);
+            writer.Write((byte)options.Difficulty);
         }
 
         return stream.ToArray();
@@ -65,8 +66,11 @@ internal static class LongDefeatSessionPayload
                 ClassId = reader.ReadBoolean() ? reader.ReadString() : null,
                 LordFalls = ReadNullable(reader),
             };
-            if (reader.BaseStream.Position != payload.Length)
+            var difficulty = reader.ReadByte();
+            if (difficulty > (byte)RunDifficulty.Hard || reader.BaseStream.Position != payload.Length)
                 return false;
+
+            decoded = decoded with { Difficulty = (RunDifficulty)difficulty };
 
             fortressId = id;
             options = decoded;

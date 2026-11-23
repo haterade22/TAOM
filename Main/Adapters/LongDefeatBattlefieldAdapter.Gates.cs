@@ -144,6 +144,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatFortAdap
 
     private LdGateWrite Written(List<LdGateChange> changes) => new(changes, _hiddenGates.Count, _hiddenGates.Count(h => !h.IsDestroyed), _gateReset != null);
 
+    public bool HighLineClearsGates => _gates.Count > 0 && _gates.All(g => _highZ > g.GameEntity.GlobalPosition.z + GateRules.HeightBand);
+
     private int DefendersNear(Vec3 at) =>
         _mission.DefenderTeam.ActiveAgents.Count(a => a.IsHuman && a.IsActive() && (a.Position - at).Length <= GateRules.NearRadius);
 

@@ -218,7 +218,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         return new LdRemoval(LdRemovalKind.Defender, id, Key: key);
     }
 
-    // The engine nulls MainAgent around this callback, so the body the adapter last saw is the player's too.
+    // The engine clears MainAgent only after this callback (Mission.cs:3015, then :3021), so the dying main body is still MainAgent here, so the body the adapter last saw is the player's too.
     private bool IsPlayerBody(Agent agent) => agent == _mission.MainAgent || ReferenceEquals(agent, _knownMain) || agent.Controller == AgentControllerType.Player;
 
     public bool IsAttacker(object? agent) =>

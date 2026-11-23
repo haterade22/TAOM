@@ -19,6 +19,10 @@ internal sealed class LongDefeatBestRunStore
 
     internal string FilePath => Path.Combine(_directory, FileName);
 
+    /// <summary>The row of a fortress and difficulty. Normal is the bare fortress id, so a file written before difficulties reads as it did and stays as it was.</summary>
+    internal static string KeyFor(string fortressId, RunDifficulty difficulty) =>
+        difficulty == RunDifficulty.Hard ? fortressId + ":" + RunDifficulties.Id(difficulty) : fortressId;
+
     /// <summary>Null when the file is missing or unreadable, or the row is not two whole, non-negative numbers. A NaN or a fraction is rejected, never rounded.</summary>
     internal BestRun? Load(string fortressId)
     {

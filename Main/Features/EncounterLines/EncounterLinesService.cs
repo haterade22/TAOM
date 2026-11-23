@@ -138,11 +138,11 @@ internal sealed class EncounterLinesService : IEncounterBucketSource
     /// <summary>Read by the greeting prefixes before vanilla records the meeting; false with the feature off.</summary>
     internal bool IsFirstVillagerMeeting() => Active && _adapter.IsFirstVillagerMeeting();
 
-    /// <summary>On a first meeting on land with someone else's caravan, a roll under <see cref="GreetingChance"/> sets its greeting.</summary>
+    /// <summary>On a first meeting on land with someone else's caravan, a roll under <see cref="GreetingChance"/> sets its greeting; an Orc caravan always.</summary>
     internal bool TryCaravanGreeting(bool firstMeeting) =>
         firstMeeting && TryTradeLine(CaravanGreetingVariable, CaravanGreetText, GreetingChance, skipPlayersOwn: true);
 
-    /// <summary>On a first meeting on land with villagers, a roll under <see cref="GreetingChance"/> sets their greeting.</summary>
+    /// <summary>On a first meeting on land with villagers, a roll under <see cref="GreetingChance"/> sets their greeting; Orc villagers always.</summary>
     internal bool TryVillagerGreeting(bool firstMeeting) =>
         firstMeeting && TryTradeLine(VillagerGreetingVariable, VillagerGreetText, GreetingChance, skipPlayersOwn: false);
 
@@ -221,6 +221,8 @@ internal sealed class EncounterLinesService : IEncounterBucketSource
         var group = map.GroupOfCulture(party.HomeCultureId);
         if (group == null)
             return false;
+        if (map.FamilyOfGroup(group) == EncounterGroupMap.Orc)
+            chance = 1.0;
         if (chance < 1.0 && _random.NextDouble() >= chance)
             return false;
 

@@ -18,6 +18,10 @@ internal sealed class LongDefeatSetupPrompt
     private const string PromptTitle = "{=TAOM_LD_MenuOption}The Long Defeat";
     private const string PromptDescription = "{=TAOM_LD_Prompt_Desc}Hold a fortress against wave after wave of attackers. Spend gold between waves on more defenders. The run ends when the garrison or the keep falls. If a shader error window appears while the fortress loads, press Cancel.";
     private const string ChoiceWithBest = "{=TAOM_LD_Prompt_ChoiceBest}{NAME}, best run: waves cleared {WAVES}, kills {KILLS}";
+    private const string DifficultyTitle = "{=TAOM_LD_Prompt_DifficultyTitle}Choose the difficulty";
+    private const string DifficultyDescription = "{=TAOM_LD_Prompt_DifficultyDesc}Hard sends larger waves that grow stronger faster, and the attackers gain their powers sooner. Each difficulty keeps its own best run.";
+    private const string NormalName = "{=TAOM_LD_Difficulty_Normal}Normal";
+    private const string HardName = "{=TAOM_LD_Difficulty_Hard}Hard";
     private const string ClassTitle = "{=TAOM_LD_Prompt_ClassTitle}Choose your class";
     private const string ClassDescription = "{=TAOM_LD_Prompt_ClassDesc}Your class sets the weapons you carry into the fight. Cavalry also sets your armour and puts you on a horse; the other classes leave your armour as it is.";
     internal const string StartFailedMessage = "{=TAOM_LD_StartFailed}The Long Defeat could not start. The log has the reason.";
@@ -39,7 +43,7 @@ internal sealed class LongDefeatSetupPrompt
     }
 
     /// <summary>
-    /// Asks which fortress, then which class when the fortress offers one, and starts the run. Cancelling either question starts nothing.
+    /// Asks which fortress, then which difficulty, then which class when the fortress offers one, and starts the run. Cancelling any question starts nothing.
     /// <paramref name="start"/> takes the finished setup in place of <see cref="Start"/>: a co-op host (#1280) hosts it instead.
     /// </summary>
     public void Begin(Func<LongDefeatSetup, bool>? start = null)
@@ -53,7 +57,7 @@ internal sealed class LongDefeatSetupPrompt
             }
 
             _menu.Choose(PromptTitle, PromptDescription, _catalog.Fortresses.Select(Choice).ToList(),
-                fortressId => AskClass(fortressId, start ?? Start));
+                fortressId => AskDifficulty(fortressId, start ?? Start));
         }
         catch (Exception ex)
         {
@@ -83,19 +87,43 @@ internal sealed class LongDefeatSetupPrompt
         }
     }
 
-    private void AskClass(string fortressId, Func<LongDefeatSetup, bool> start)
+    private void AskDifficulty(string fortressId, Func<LongDefeatSetup, bool> start)
+    {
+        try
+        {
+            var rows = new[]
+            {
+                DifficultyChoice(fortressId, RunDifficulty.Normal, NormalName),
+                DifficultyChoice(fortressId, RunDifficulty.Hard, HardName),
+            };
+            _menu.Choose(DifficultyTitle, DifficultyDescription, rows, word =>
+            {
+                if (RunDifficulties.TryParse(word, out var difficulty))
+                    AskClass(fortressId, difficulty, start);
+            });
+        }
+        catch (Exception ex)
+        {
+            Fault(ex);
+        }
+    }
+
+    private LongDefeatChoice DifficultyChoice(string fortressId, RunDifficulty difficulty, string name) =>
+        BestChoice(RunDifficulties.Id(difficulty), name, _best.Load(LongDefeatBestRunStore.KeyFor(fortressId, difficulty)));
+
+    private void AskClass(string fortressId, RunDifficulty difficulty, Func<LongDefeatSetup, bool> start)
     {
         try
         {
             var classes = _catalog.TryGetFortress(fortressId, out var fortress) ? _catalog.ClassesFor(fortress) : Array.Empty<RunClass>();
             if (classes.Count == 0)
             {
-                start(new LongDefeatSetup(fortressId, "menu", RunOptions.Default));
+                start(new LongDefeatSetup(fortressId, "menu", RunOptions.Default with { Difficulty = difficulty }));
                 return;
             }
 
             _menu.Choose(ClassTitle, ClassDescription, classes.Select(ClassChoice).ToList(),
-                classId => start(new LongDefeatSetup(fortressId, "menu", RunOptions.Default with { ClassId = classId })));
+                classId => start(new LongDefeatSetup(fortressId, "menu", RunOptions.Default with { ClassId = classId, Difficulty = difficulty })));
         }
         catch (Exception ex)
         {
@@ -105,15 +133,16 @@ internal sealed class LongDefeatSetupPrompt
 
     private static LongDefeatChoice ClassChoice(RunClass cls) => new(cls.Id, cls.Name, Hint: cls.Text);
 
-    private LongDefeatChoice Choice(FortressEntry fortress)
-    {
-        var best = _best.Load(fortress.Id);
-        if (best == null)
-            return new LongDefeatChoice(fortress.Id, fortress.Name);
+    private LongDefeatChoice Choice(FortressEntry fortress) => BestChoice(fortress.Id, fortress.Name, _best.Load(fortress.Id));
 
-        return new LongDefeatChoice(fortress.Id, ChoiceWithBest, new Dictionary<string, string>
+    private static LongDefeatChoice BestChoice(string id, string name, BestRun? best)
+    {
+        if (best == null)
+            return new LongDefeatChoice(id, name);
+
+        return new LongDefeatChoice(id, ChoiceWithBest, new Dictionary<string, string>
         {
-            ["NAME"] = fortress.Name,
+            ["NAME"] = name,
             ["WAVES"] = best.Waves.ToString(System.Globalization.CultureInfo.InvariantCulture),
             ["KILLS"] = best.Kills.ToString(System.Globalization.CultureInfo.InvariantCulture),
         });

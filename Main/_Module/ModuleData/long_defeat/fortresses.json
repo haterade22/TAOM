@@ -17,6 +17,21 @@
       "muster": {"foot": {"x": 199.589, "y": 151.634, "z": 1.492, "fx": 0.721, "fy": 0.693}, "archers": {"x": 197.678, "y": 151.557, "z": 1.728, "fx": 0.739, "fy": 0.673}},
       "sally": {"x": 329.65, "y": 187.305, "z": 8.326, "fx": -0.672, "fy": 0.741},
       "split": {"wallFoot": 0.7, "lowArchers": 0.7}
+    },
+    {
+      "id": "minas_tirith",
+      "name": "{=TAOM_FOW_Region_MinasTirith}Minas Tirith",
+      "scene": "taom_gondor_town_minas_tirith_forceatmo",
+      "defenderCulture": "gondor",
+      "attackerCulture": "mordor",
+      "playerTroop": "lord_1_9",
+      "waves": "minas_mordor",
+      "shop": "gondor",
+      "garrison": [
+        { "troop": "fow_gondor_ano_militia", "class": "Infantry", "count": 100 },
+        { "troop": "fow_gondor_ano_archer_militia", "class": "Ranged", "count": 50 }
+      ],
+      "keep": null
     }
   ]
 }
