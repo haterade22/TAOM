@@ -25,7 +25,8 @@ public interface ICareerLifecycleService
     /// #1046: a hero whose stored career id the registry no longer defines gets the career, its choices,
     /// tiers and flags cleared (no refund: points derive from level), so the fallback can reassign.
     /// Returns true when something was cleared. Acts only while the registry holds at least one career:
-    /// a partly loaded registry resolves nothing and must not reset everyone. Loaded-save path only.
+    /// a partly loaded registry resolves nothing and must not reset everyone. A career whose XML element
+    /// failed to parse is still declared, so it is kept too. Loaded-save path only.
     /// </summary>
     bool ClearUnknownCareer(string heroStringId);
 

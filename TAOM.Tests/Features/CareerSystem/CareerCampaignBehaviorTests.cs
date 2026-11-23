@@ -82,7 +82,6 @@ public class CareerAutoAssignTests
     public void AutoAssign_AlreadyHasCareer_DoesNotOverride()
     {
         _dataService.SetCareer("hero1", "warboss");
-        _registry.GetCareer("warboss").Returns(WarbossCareer);
 
         var result = TryAutoAssign("hero1", "mordor");
 
@@ -160,5 +159,27 @@ public class CareerSessionLaunchOrderTests
         Assert.IsTrue(refresh >= 0, "OnSessionLaunched must call RefreshCache");
         Assert.IsTrue(repair < migrate, "the repair must run before the migration, so it judges a clean list");
         Assert.IsTrue(migrate < refresh, "the migration must run before the cache refresh, so the passives reflect the refund");
+    }
+
+    [TestMethod]
+    public void OnGameLoaded_ClearsTheUnknownCareer_ThenAssignsTheFallback_ThenTellsThePlayer()
+    {
+        // #1046: the message says a new career was chosen, so it may show only after the fallback
+        // reports that it assigned one (a culture with no eligible career leaves the hero without).
+        var src = TAOM.Tests.Infrastructure.RepoPaths.ReadSource(
+            "Main/Features/CareerSystem/CareerCampaignBehavior.cs", stripComments: true);
+
+        int start = src.IndexOf("void OnGameLoaded(", System.StringComparison.Ordinal);
+        Assert.IsTrue(start >= 0, "OnGameLoaded was renamed: update this pin.");
+        int next = src.IndexOf("private void ", start + 1, System.StringComparison.Ordinal);
+        var body = next > start ? src.Substring(start, next - start) : src.Substring(start);
+
+        int clear = body.IndexOf("_lifecycle.ClearUnknownCareer(", System.StringComparison.Ordinal);
+        int assign = body.IndexOf("_lifecycle.AssignFallbackCareerIfMissing(", System.StringComparison.Ordinal);
+        int message = body.IndexOf("taom_career_unknown_reset", System.StringComparison.Ordinal);
+
+        Assert.IsTrue(clear >= 0 && assign >= 0 && message >= 0, "OnGameLoaded must clear, assign and tell the player");
+        Assert.IsTrue(clear < assign, "the clear must run before the fallback, so the fallback sees no career");
+        Assert.IsTrue(assign < message, "the message must follow the fallback's result, never precede it");
     }
 }

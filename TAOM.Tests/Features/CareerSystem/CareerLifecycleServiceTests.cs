@@ -190,6 +190,19 @@ public class CareerLifecycleServiceTests
         Assert.AreEqual("retired_career", _dataService.GetCareerStringId(Hero));
     }
 
+    [TestMethod]
+    public void ClearUnknownCareer_CareerDeclaredButFailedToParse_KeepsSave()
+    {
+        // The provider drops only the <Career> element that throws, so the registry still holds
+        // the other careers. A save must not lose a career the XML still declares.
+        _registry.IsCareerDeclared("retired_career").Returns(true);
+        GiveHeroUnknownCareer();
+
+        Assert.IsFalse(_sut.ClearUnknownCareer(Hero));
+        Assert.AreEqual("retired_career", _dataService.GetCareerStringId(Hero));
+        Assert.AreEqual(1, _dataService.GetChoiceCount(Hero));
+    }
+
     // -- the repair pass --
 
     [TestMethod]

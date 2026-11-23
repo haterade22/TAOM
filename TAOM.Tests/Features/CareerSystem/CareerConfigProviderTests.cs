@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -35,6 +36,26 @@ public class CareerConfigProviderTests
     {
         if (Directory.Exists(_tempDir))
             Directory.Delete(_tempDir, true);
+    }
+
+    [TestMethod]
+    public void IsCareerDeclared_ElementThatFailsToParse_IsStillDeclared()
+    {
+        // No attribute makes a <Career> throw today, so the logger throws on the element's warning
+        // to reach the per-element catch, the path that drops one career and keeps the rest.
+        _logger.When(l => l.LogWarning(Arg.Is<string>(s => s.Contains("'broken'") && s.Contains("keystone_icon"))))
+            .Do(_ => throw new InvalidOperationException("parse failure"));
+        WriteCareersXml(@"<?xml version='1.0'?>
+<Careers max_perk_points=""25"">
+  <Career id=""broken"" display_name=""Broken"" root_choice_id=""b_root"" />
+  <Career id=""warboss"" display_name=""Warboss"" root_choice_id=""wb_root"" keystone_icon=""wb_icon"" />
+</Careers>");
+
+        Assert.AreEqual(1, _provider.LoadCareers().Count);
+        Assert.IsTrue(_provider.IsCareerDeclared("broken"));
+        Assert.IsTrue(_provider.IsCareerDeclared("warboss"));
+        Assert.IsFalse(_provider.IsCareerDeclared("retired"));
+        Assert.IsFalse(_provider.IsCareerDeclared(null));
     }
 
     [TestMethod]
