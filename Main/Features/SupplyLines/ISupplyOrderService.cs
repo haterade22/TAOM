@@ -62,7 +62,7 @@ public interface ISupplyOrderService
     /// Clears the book AND every transient cache (caravan trackers, route visuals) for a session
     /// with no saved record. The services are process singletons and SyncData only fires when a
     /// record exists, so without this a NEW campaign inherits the previous campaign's orders
-    /// (round-A CRITICAL). The behavior calls it from OnSessionLaunched when no load occurred.
+    /// (round-A CRITICAL). The behavior's constructor calls it in every campaign (#773).
     /// </summary>
     void ResetForNewSession();
 
