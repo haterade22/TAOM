@@ -68,6 +68,15 @@ review, banner, clan-naming and options stages, and the faction screen. The face
 editor are themed only inside character creation, so the barber and the campaign banner editor stay
 vanilla. A themed prefab missing from the install keeps the vanilla screen with one warning, and a
 themed movie that throws while building falls back to vanilla's and is not tried again until restart.
+BannerlordCoop's `RobustnessPatches` swallows that exception inside the engine's private
+`GauntletMovie.LoadMovie`, so in a Coop session the layer returns a half-built movie. A second patch on that
+method marks each movie while it builds; Harmony skips its postfix whenever the build throws, so the mark
+stays. For a swap with a vanilla movie, the load patch's postfix then takes the half-built movie off the
+layer and throws, and its finalizer falls back as before (#1545; both Harmony facts:
+`HarmonyPatchSemanticsTests`). A swap that keeps its own name, with no vanilla movie (`CareerScreen`, `MainAgentHUD`, `TAOMFactionScreen`,
+`TaomCustomBattle`), keeps the
+half-built screen in a Coop session, as before. The themed Camp icon, like the army panel, stays vanilla
+when the themed map bar is missing or failed to build.
 
 **The campaign map bar under co-op.** The themed `TAOMMapBar`, the themed Camp icon beside its clock
 (`TAOMFieldCampOverlay`) and the themed army panel cut at its stats plate (`TAOMArmyOverlay`,

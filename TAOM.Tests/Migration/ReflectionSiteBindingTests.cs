@@ -185,6 +185,9 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.MBMusicManager", "MBMusicManager", "set_CurrentMode", "Method", "MenuMusicAdapter.cs:12")]
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.FaceGenerator.FaceGenVM", "FaceGenVM", "_faceGeneratorScreen", "Field", "CharacterCreationWidgets.cs:44")]
     [DataRow("TaleWorlds.GauntletUI.BaseTypes.ButtonWidget", "ButtonWidget", "HandleClick", "Method", "NarrativeRandomButton.cs:22")]
+    // #1545: a half-built themed movie whose Release threw leaves the layer's list here; missing, the layer
+    // releases it again at teardown and throws.
+    [DataRow("TaleWorlds.Engine.GauntletUI.GauntletLayer", "GauntletLayer", "_movieIdentifiers", "Field", "GauntletLayerLoadMoviePatch.cs:100")]
     // --- LoadTimeStamps (plan 040): the [Lifecycle] listener swap walks MbEvent's private listener records and
     // sets their private Action. Missing: per-handler timing is off for the session, dispatch totals only.
     [DataRow("TaleWorlds.CampaignSystem.MbEvent`1", "MbEvent`1", "_nonSerializedListenerList", "Field", "CampaignListenerAdapter.cs")]

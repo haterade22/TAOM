@@ -2185,3 +2185,11 @@ The free heroes of a story mission stand as one group, off AI control, under a M
 **Prevent:** before a gate relies on an engine value to tell two kinds of mission apart, find the line that writes each value (the setter's callers, then the native default) and quote it at the gate. Where nothing writes it, use a signal the mission kind itself creates: its mission behaviours. A log line proves a gate only when it comes from a mission the gate has to close.
 
 **Source:** the research on issue #1537 of 2026-11-22 (`Mission.cs:1173-1181` and `:1605`, native field offset `0x1044840`); `SignatureMissionGate.IsArenaOrTournament`; `SignatureMissionGateTests.EveryArenaGate_AsksForTheArenaBehaviours`.
+
+### Detect an exception another mod swallows by the postfix it skips, not by the state it leaves (#1545, 2026-11-23)
+
+**Why missed:** BannerlordCoop's finalizer on `GauntletMovie.LoadMovie` swallows a themed prefab's build exception. The first fix inferred the failure from `RootWidget == null`, which only one of the failure points leaves; a binding failure left a root, and a parse failure left a movie whose `Release` throws.
+
+**Prevent:** to learn whether a method threw when another patcher may swallow it, mark in a prefix and clear in a postfix: Harmony skips every postfix when the original throws, whoever's finalizer handles it (`HarmonyPatchSemanticsTests`). Before cleaning up a half-built engine object, read its `Release` for fields the failed build left null.
+
+**Source:** [rca-coop-themed-fallback-2026-11-23.md](../rca-coop-themed-fallback-2026-11-23.md) rows 1 and 2.

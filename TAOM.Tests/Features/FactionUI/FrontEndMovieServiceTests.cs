@@ -534,6 +534,15 @@ public class FrontEndMovieServiceTests
     }
 
     [TestMethod]
+    public void BeginLoad_FieldCampOverlayAfterTheThemedMapBarFailedToBuild_StaysVanilla()
+    {
+        // The Camp icon sits beside the themed bar's clock; next to vanilla's bar it would stand alone (#1545).
+        _sut.LoadFailed(_sut.BeginLoad("MapBar", "MapBarVM")!);
+
+        Assert.IsNull(_sut.BeginLoad("TaomFieldCampOverlay", "FieldCampOverlayVM"));
+    }
+
+    [TestMethod]
     public void BeginLoad_ArmyOverlayWithoutTheThemedMapBarInstalled_StaysVanilla()
     {
         _adapter.MissingPrefabs.Add("TAOMMapBar");
