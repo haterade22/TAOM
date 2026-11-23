@@ -73,4 +73,28 @@ public class IsengardPartySlotTests
 
         Assert.AreEqual(0, heavy.Count, "weighted at level 31 or below: " + string.Join(", ", heavy));
     }
+
+    /// <summary>
+    /// The level 31 to 40 sweep in <c>TroopWeightCoverageTests</c> no longer covers Isengard, so this test keeps the
+    /// 2.0 floor for its level-36 warden and Nazg-hai: a lost row would drop them to 1.0 unseen.
+    /// </summary>
+    [TestMethod]
+    public void ShippedWeights_IsengardTroopsAboveLevel31AndBelow41_WeighTwo()
+    {
+        string data = CultureDataFixture.ModuleDataPath();
+        var weighted = XDocument.Load(Path.Combine(data, "TroopWeights", "troop_weights.xml"))
+            .Descendants("TroopWeight")
+            .ToDictionary(w => (string)w.Attribute("id"), w => (string)w.Attribute("weight"));
+        var elites = XDocument.Load(Path.Combine(data, "troops", "troops_isengard.xml"))
+            .Descendants("NPCCharacter")
+            .Where(t => t.Attribute("level") != null)
+            .Where(t => int.Parse((string)t.Attribute("level")) is > 31 and < 41)
+            .Select(t => (string)t.Attribute("id"))
+            .ToList();
+        Assert.IsTrue(elites.Count >= 2, "no Isengard troop between level 32 and 40 read");
+
+        var wrong = elites.Where(id => !weighted.TryGetValue(id, out var w) || w != "2.0").ToList();
+
+        Assert.AreEqual(0, wrong.Count, "not weighted 2.0: " + string.Join(", ", wrong));
+    }
 }
