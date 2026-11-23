@@ -508,9 +508,9 @@ class GeneratorAppliesTheSwapTests(unittest.TestCase):
         self.assertIn('slot="Item1" id="Item.shield_z"', xml)
 
 
-class PlaceholderBladeHiddenTests(unittest.TestCase):
+class PlaceholderBladePieceTests(unittest.TestCase):
     """A cloned blade is a troop weapon's part, so the weapon designer never lists it
-    (the engine reads is_hidden as CraftingPiece.IsHiddenOnDesigner)."""
+    (the engine reads is_hidden as CraftingPiece.IsHiddenOnDesigner), and its name is clean."""
 
     def build_piece(self, pieces_xml=PIECES):
         tmp = tempfile.TemporaryDirectory()
@@ -525,6 +525,11 @@ class PlaceholderBladeHiddenTests(unittest.TestCase):
         piece = self.build_piece()
         self.assertEqual(piece.count('is_hidden="true"'), 1, piece)
         self.assertIn('(placeholder)" is_hidden="true"', piece)
+
+    def test_a_donor_name_with_a_double_space_is_written_with_one(self):
+        # The Armory names the Iron Hills blades "Iron Hills  Sword Blade A", with two spaces.
+        piece = self.build_piece(PIECES.replace('{=b1}Blade', '{=b1}Iron Hills  Sword  Blade '))
+        self.assertIn('}Iron Hills Sword Blade (placeholder)"', piece)
 
     def test_a_donor_blade_already_hidden_keeps_one_attribute(self):
         piece = self.build_piece(PIECES.replace('piece_type="Blade"', 'is_hidden="false" piece_type="Blade"'))
