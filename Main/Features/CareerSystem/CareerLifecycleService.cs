@@ -34,13 +34,7 @@ public class CareerLifecycleService : ICareerLifecycleService
     public bool AssignFallbackCareerIfMissing(string heroStringId, string cultureId)
     {
         if (string.IsNullOrEmpty(heroStringId)) return false;
-        if (_dataService.HasCareer(heroStringId))
-        {
-            if (!IsUnknownCareer(_dataService.GetCareerStringId(heroStringId))) return false;
-
-            _logger.LogWarning($"CareerSystem: hero '{heroStringId}' holds unknown career '{_dataService.GetCareerStringId(heroStringId)}', clearing it for reassignment");
-            _dataService.ClearCareer(heroStringId);
-        }
+        if (_dataService.HasCareer(heroStringId)) return false;
 
         _logger.LogInfo($"CareerSystem: Legacy save detected — hero '{heroStringId}' has no career (culture='{cultureId ?? "null"}')");
         if (string.IsNullOrEmpty(cultureId)) return false;
@@ -63,11 +57,16 @@ public class CareerLifecycleService : ICareerLifecycleService
         return false;
     }
 
-    private bool IsUnknownCareer(string careerId)
+    public bool ClearUnknownCareer(string heroStringId)
     {
-        if (string.IsNullOrEmpty(careerId)) return false;
+        if (string.IsNullOrEmpty(heroStringId) || !_dataService.HasCareer(heroStringId)) return false;
+        var careerId = _dataService.GetCareerStringId(heroStringId);
         var all = _registry.GetAllCareers();
-        return all != null && all.Count > 0 && _registry.GetCareer(careerId) == null;
+        if (all == null || all.Count == 0 || _registry.GetCareer(careerId) != null) return false;
+
+        _logger.LogWarning($"CareerSystem: hero '{heroStringId}' holds career '{careerId}' which the data no longer defines, clearing it");
+        _dataService.ClearCareer(heroStringId);
+        return true;
     }
 
     public int RepairForeignChoices(string heroStringId)

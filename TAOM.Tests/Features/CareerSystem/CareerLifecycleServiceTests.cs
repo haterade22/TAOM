@@ -116,37 +116,78 @@ public class CareerLifecycleServiceTests
         _creationHandler.DidNotReceive().OnCareerSelected(Arg.Any<string>(), Arg.Any<string>());
     }
 
-    [TestMethod]
-    public void AssignFallbackCareerIfMissing_UnknownCareerId_ClearsOldDataThenReassigns()
+    private void GiveHeroUnknownCareer()
     {
-        // #1046: a save names a career the data no longer defines. HasCareer counts the id, so the
-        // hero sat in a half state; the fallback must treat it as missing and drop its leftovers.
         _dataService.SetCareer(Hero, "retired_career");
         _dataService.TryAddChoice(Hero, "retired_root", 10);
         _dataService.UnlockTier(Hero, 2);
         _dataService.SetFlag(Hero, "f");
+    }
 
-        Assert.IsTrue(_sut.AssignFallbackCareerIfMissing(Hero, "gondor"));
+    [TestMethod]
+    public void ClearUnknownCareer_UnknownId_ClearsEverythingThenFallbackReassigns()
+    {
+        GiveHeroUnknownCareer();
 
-        _creationHandler.Received(1).OnCareerSelected(Hero, "ranger");
+        Assert.IsTrue(_sut.ClearUnknownCareer(Hero));
         Assert.IsNull(_dataService.GetCareerStringId(Hero));
         Assert.AreEqual(0, _dataService.GetChoiceCount(Hero));
         Assert.IsFalse(_dataService.IsTierUnlocked(Hero, 2));
         Assert.IsFalse(_dataService.HasFlag(Hero, "f"));
+
+        Assert.IsTrue(_sut.AssignFallbackCareerIfMissing(Hero, "gondor"));
+        _creationHandler.Received(1).OnCareerSelected(Hero, "ranger");
     }
 
     [TestMethod]
-    public void AssignFallbackCareerIfMissing_UnknownCareerId_EmptyRegistry_KeepsSave()
+    public void ClearUnknownCareer_NoEligibleCareer_DataStaysClearedAndFallbackReturnsFalse()
+    {
+        GiveHeroUnknownCareer();
+
+        Assert.IsTrue(_sut.ClearUnknownCareer(Hero));
+        Assert.IsFalse(_sut.AssignFallbackCareerIfMissing(Hero, "erebor"));
+        Assert.IsFalse(_sut.AssignFallbackCareerIfMissing(Hero, null));
+        Assert.IsFalse(_dataService.HasCareer(Hero));
+        Assert.AreEqual(0, _dataService.GetChoiceCount(Hero));
+    }
+
+    [TestMethod]
+    public void ClearUnknownCareer_KnownCareer_ChangesNothing()
+    {
+        _dataService.SetCareer(Hero, "ranger");
+        _dataService.TryAddChoice(Hero, "ranger_root", 10);
+
+        Assert.IsFalse(_sut.ClearUnknownCareer(Hero));
+        Assert.AreEqual("ranger", _dataService.GetCareerStringId(Hero));
+        Assert.AreEqual(1, _dataService.GetChoiceCount(Hero));
+    }
+
+    [TestMethod]
+    public void ClearUnknownCareer_NoCareerOrNullHero_ReturnsFalse()
+    {
+        Assert.IsFalse(_sut.ClearUnknownCareer(Hero));
+        Assert.IsFalse(_sut.ClearUnknownCareer(null));
+    }
+
+    [TestMethod]
+    public void ClearUnknownCareer_EmptyRegistry_KeepsSave()
     {
         _registry.GetAllCareers().Returns(new List<CareerDefinition>());
-        _dataService.SetCareer(Hero, "retired_career");
-        _dataService.TryAddChoice(Hero, "retired_root", 10);
+        GiveHeroUnknownCareer();
 
-        Assert.IsFalse(_sut.AssignFallbackCareerIfMissing(Hero, "gondor"));
-
-        _creationHandler.DidNotReceive().OnCareerSelected(Arg.Any<string>(), Arg.Any<string>());
+        Assert.IsFalse(_sut.ClearUnknownCareer(Hero));
         Assert.AreEqual("retired_career", _dataService.GetCareerStringId(Hero));
         Assert.AreEqual(1, _dataService.GetChoiceCount(Hero));
+    }
+
+    [TestMethod]
+    public void ClearUnknownCareer_NullRegistryList_KeepsSave()
+    {
+        _registry.GetAllCareers().Returns((IReadOnlyList<CareerDefinition>)null);
+        GiveHeroUnknownCareer();
+
+        Assert.IsFalse(_sut.ClearUnknownCareer(Hero));
+        Assert.AreEqual("retired_career", _dataService.GetCareerStringId(Hero));
     }
 
     // -- the repair pass --

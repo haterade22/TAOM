@@ -110,6 +110,9 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
     {
         var hero = Hero.MainHero;
         if (hero == null) return;
+        if (_lifecycle.ClearUnknownCareer(hero.StringId))
+            InformationManager.DisplayMessage(new InformationMessage(
+                new TextObject("{=taom_career_unknown_reset}Your career no longer exists in this version, so a new one was chosen.").ToString()));
         _lifecycle.AssignFallbackCareerIfMissing(hero.StringId, hero.Culture?.StringId);
     }
 

@@ -22,6 +22,14 @@ public interface ICareerLifecycleService
     bool AssignFallbackCareerIfMissing(string heroStringId, string cultureId);
 
     /// <summary>
+    /// #1046: a hero whose stored career id the registry no longer defines gets the career, its choices,
+    /// tiers and flags cleared (no refund: points derive from level), so the fallback can reassign.
+    /// Returns true when something was cleared. Acts only while the registry holds at least one career:
+    /// a partly loaded registry resolves nothing and must not reset everyone. Loaded-save path only.
+    /// </summary>
+    bool ClearUnknownCareer(string heroStringId);
+
+    /// <summary>
     /// Drop stored choices that positively belong to a DIFFERENT career, returning how many went.
     ///
     /// Deleting requires proof of foreignness, never absence of proof of belonging. A choice whose
