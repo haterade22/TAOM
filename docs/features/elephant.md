@@ -761,8 +761,9 @@ the third idle are the list to replace.
   anim_clip's sources 0.00 and 76.00". Every master's key times run from 1 to its key count, the Kit-made ADOD
   masters too (`elephant_walk`: 1 to 61), and every record's range starts at 0, as ADOD's records do. The Kit
   cooks the clip all the same: the seven `elephant_*` clips raised it at 06:22 on 2026-11-19, the 18 new ones at
-  07:14 and the two strafe and two backward clips at 13:27 (`rgl_log_errors_<pid>.txt`). A range that starts at
-  1 would silence it and shorten each loop by one frame; not done.
+  07:14 and the two strafe and two backward clips at 13:27 (`rgl_log_errors_<pid>.txt`). **Fixed on 2026-11-23
+  (#1558):** the masters key from 0 and each loop ends on a key that repeats its first, so the records' sources
+  0 to N fit and no record changed (the changelog line of that day).
 - The fast paces (#1504): the trot covers 2.5 to 4.8 m/s on the way up and holds down to 2.3, at one
   loop a second whatever the speed; the canter is skipped on the way down; the walk's and the backward walk's
   "none" rows bind an idle (`elephant_stand_2`, 4.0 s) where the vanilla horse binds an in-place gait.
@@ -1451,6 +1452,7 @@ terrain reads 0 as well, and face id 0 is walkable.
 
 ## Changelog
 
+- 2026-11-23 (#1558): the masters of the 20 `war_elephant_*` and `mumakil_*` clips, of ADOD's `elephant_stand_2` and of ADOD's seven unbound gaits key from 0 and close their loops (`tools/elephant_write_masters.py --rekey loop`, GUIDs kept, no record changed). They had keyed 1 to N under sources 0 to N, as ADOD's clips do, so every loop stood on its first key for one key time and the Kit warned once per bone at each cook. `tools/check_gait_stride.py --creature elephant` reads the key range of 37 bound clips. Owed: a person's eye on the gaits after the change. [RCA](../reviews/rca-spider-key-times-slide-capsule-2026-11-23.md).
 - 2026-11-20 (#1474): each beast plays its own gait, turn, strafe and idle clips, the mumak on its own action set
   `as_mumakil`. Corrected with them: the backward walk's pace limits, the strafe rows' `Duration`, the trot's pace
   limits and the root height of the ADOD master. Gates: `tools/check_gait_stride.py`,

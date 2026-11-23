@@ -87,8 +87,10 @@ MOUNTS = ["spider", "warg", "elephant", "mumakil", "dire_wolf"]
 # mid-jump and so query every direction. Not the warg (front and none only, by its baseline) and
 # not the horse.
 STRICT_MOUNTS = ("spider", "elephant", "mumakil")
+# gallop_acceleration_head_action is not one: the camel's and the warg's sets name none, and its clip plays over
+# the whole body while the mount gallops (#1559: the spider's was an idle, and the spiders slid).
 STRICT_VERBS = ("rear_action", "rear_damaged_action", "dash_action", "kick_action",
-                "fast_quick_stop_action", "quick_stop_action", "gallop_acceleration_head_action",
+                "fast_quick_stop_action", "quick_stop_action",
                 "hit_object_action", "hit_object_falling_action", "jump_start_action")
 JUMP_DIRECTIONS = ("front", "front_left", "front_right", "none", "left", "right", "back", "back_left", "back_right")
 

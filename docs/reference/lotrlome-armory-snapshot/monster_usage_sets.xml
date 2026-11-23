@@ -31,40 +31,42 @@
 		dash_action="act_spider_dash"
 		kick_action="act_spider_kick"
 		fast_quick_stop_action="act_spider_quick_stop_when_fast"
-		gallop_acceleration_head_action="act_spider_idle"
 		quick_stop_action="act_spider_quick_stop"
 		hit_object_action="act_spider_hit_object"
 		hit_object_falling_action="act_spider_hit_object_while_falling"
 		jump_start_action="act_spider_jump">
 		<monster_usage_upper_body_movements>
-			<!-- Spider has no head-turn clips; turn rows use the full-body turn actions, pace-1 rows idle. -->
-			<monster_usage_upper_body_movement pace="0" direction="none" turn_direction="right" action="act_spider_turn_right" />
-			<monster_usage_upper_body_movement pace="0" direction="none" turn_direction="left" action="act_spider_turn_left" />
-			<monster_usage_upper_body_movement pace="2" direction="none" turn_direction="right" action="act_spider_turn_right" />
-			<monster_usage_upper_body_movement pace="2" direction="none" turn_direction="left" action="act_spider_turn_left" />
-			<monster_usage_upper_body_movement pace="3" direction="none" turn_direction="right" action="act_spider_turn_right" />
-			<monster_usage_upper_body_movement pace="3" direction="none" turn_direction="left" action="act_spider_turn_left" />
-			<monster_usage_upper_body_movement pace="4" direction="none" turn_direction="right" action="act_spider_turn_right" />
-			<monster_usage_upper_body_movement pace="4" direction="none" turn_direction="left" action="act_spider_turn_left" />
-			<monster_usage_upper_body_movement pace="5" direction="none" turn_direction="right" action="act_spider_turn_right" />
-			<monster_usage_upper_body_movement pace="5" direction="none" turn_direction="left" action="act_spider_turn_left" />
+			<!-- #1550, written by tools/bind_spider_clips.py. The engine lays an overlay row's clip over the whole
+			     body, so each moving pace's rows play that pace's own gait. The turn-in-place actions here, and
+			     the idle as the gallop's acceleration action, made the spiders slide (2026-11-23). -->
+			<monster_usage_upper_body_movement pace="0" direction="none" turn_direction="right" action="act_spider_walk_backward" />
+			<monster_usage_upper_body_movement pace="0" direction="none" turn_direction="left" action="act_spider_walk_backward" />
+			<monster_usage_upper_body_movement pace="2" direction="none" turn_direction="right" action="act_spider_walk_forward" />
+			<monster_usage_upper_body_movement pace="2" direction="none" turn_direction="left" action="act_spider_walk_forward" />
+			<monster_usage_upper_body_movement pace="3" direction="none" turn_direction="right" action="act_spider_trot_forward" />
+			<monster_usage_upper_body_movement pace="3" direction="none" turn_direction="left" action="act_spider_trot_forward" />
+			<monster_usage_upper_body_movement pace="4" direction="none" turn_direction="right" action="act_spider_canter_forward" />
+			<monster_usage_upper_body_movement pace="4" direction="none" turn_direction="left" action="act_spider_canter_forward" />
+			<monster_usage_upper_body_movement pace="5" direction="none" turn_direction="right" action="act_spider_run_forward" />
+			<monster_usage_upper_body_movement pace="5" direction="none" turn_direction="left" action="act_spider_run_forward" />
 			<monster_usage_upper_body_movement pace="1" direction="front" action="act_spider_idle_1" />
 			<monster_usage_upper_body_movement pace="1" direction="back" action="act_spider_idle" />
 			<monster_usage_upper_body_movement pace="1" direction="none" action="act_spider_idle" />
 		</monster_usage_upper_body_movements>
 		<monster_usage_movements>
 			<!-- #1541, written by tools/bind_spider_clips.py. Pace 0 backward, 1 stand, 2 walk, 3 trot, 4 canter, 5 gallop (both feet). The
-			     direction="none" row of paces 2 to 5 is that gait's in-place twin; pace 0 plays the walk's.
-			     Every pace keeps a none row: a missing one is a native division by zero (2026-06-04). -->
+			     direction="none" row of paces 2 to 5 is that gait's in-place twin, and so is pace 0's.
+			     Every pace keeps a none row: a missing one is a native division by zero (2026-06-04). A none row
+			     fills every direction and turn no earlier row holds, so a pace's none/none row is its last. -->
 			<monster_usage_movement is_left_foot="False" pace="0" direction="front" turn_direction="none" action="act_spider_walk_backward" />
 			<monster_usage_movement is_left_foot="False" pace="0" direction="right" turn_direction="none" action="act_spider_walk_right" />
 			<monster_usage_movement is_left_foot="False" pace="0" direction="left" turn_direction="none" action="act_spider_walk_left" />
-			<monster_usage_movement is_left_foot="False" pace="0" direction="none" turn_direction="none" action="act_spider_walk_stand" />
-			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="none" action="act_spider_stand" />
+			<monster_usage_movement is_left_foot="False" pace="0" direction="none" turn_direction="none" action="act_spider_walk_backward_stand" />
 			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="right" action="act_spider_turn_right" />
 			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="left" action="act_spider_turn_left" />
 			<monster_usage_movement is_left_foot="False" pace="1" direction="right" turn_direction="none" action="act_spider_walk_right" />
 			<monster_usage_movement is_left_foot="False" pace="1" direction="left" turn_direction="none" action="act_spider_walk_left" />
+			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="none" action="act_spider_stand" />
 			<monster_usage_movement is_left_foot="False" pace="2" direction="front" turn_direction="none" action="act_spider_walk_forward" />
 			<monster_usage_movement is_left_foot="False" pace="2" direction="right" turn_direction="none" action="act_spider_walk_right" />
 			<monster_usage_movement is_left_foot="False" pace="2" direction="left" turn_direction="none" action="act_spider_walk_left" />

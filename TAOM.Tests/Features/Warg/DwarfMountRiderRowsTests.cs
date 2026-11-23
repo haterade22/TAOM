@@ -45,13 +45,13 @@ public class DwarfMountRiderRowsTests
     {
         string snapshot = SnapshotActionSets();
         var human = HumanPartialRows(snapshot);
-        Assert.AreEqual(130, human.Count, "the snapshot's as_human_warrior partial changed size: refresh the dwarf rows");
+        Assert.AreEqual(131, human.Count, "the snapshot's as_human_warrior partial changed size: refresh the dwarf rows");
         AssertEachBoundToItsClip(human, DwarfRows(snapshot), "snapshot as_dwarf_warrior", "");
     }
 
     [DataTestMethod]
     [DataRow("^act_warg_", 75)]
-    [DataRow("^act_spider_", 55)]
+    [DataRow("^act_spider_", 56)]
     [DataRow("^act_elephant_", 72)]
     [DataRow("^act_chariot_", 23)]
     [DataRow("^act_mount_chariot_", 4)]
@@ -69,7 +69,7 @@ public class DwarfMountRiderRowsTests
     {
         // A repeated type is the state a copy-paste of the human rows leaves behind; native keeps the last row of a type.
         var types = DwarfRows(SnapshotActionSets()).Where(r => RiderType.IsMatch(r.Type)).Select(r => r.Type).ToList();
-        Assert.AreEqual(231, types.Count, "the dwarf set must hold 231 creature rider rows");
+        Assert.AreEqual(232, types.Count, "the dwarf set must hold 232 creature rider rows");
         var repeated = types.GroupBy(t => t).Where(g => g.Count() > 1).Select(g => g.Key).ToList();
         Assert.AreEqual(0, repeated.Count, "as_dwarf_warrior binds a creature type twice: " + string.Join(", ", repeated));
     }

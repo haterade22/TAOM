@@ -3,11 +3,12 @@
 
 Three files change together, the same change in the LIVE Armory and in docs/reference/lotrlome-armory-snapshot:
 
-action_types.xml        declares the eight new actions (NEW), by name only, as the elephant's and the warg's are.
+action_types.xml        declares the nine new actions (NEW), by name only, as the elephant's and the warg's are.
 action_sets.xml
   as_spider             every action that played a June gait, turn or idle clip takes the spider_* clip of its role
-                        (REBIND), and the eight new actions get their rows. Attacks, hits, deaths and the jump
-                        start keep their June clips (phase 2). The eight act_horse_jump_* rows played the June walk,
+                        (REBIND), and the nine new actions get their rows. #1550 slice A adds the hits, the falls and
+                        deaths (each *_continue action holds its fall's last pose), the quick stop and the jump start;
+                        the attacks keep their June clips until slice B. The eight act_horse_jump_* rows played the June walk,
                         so they take the new walk.
   as_spider_town_and_village   its idle row takes spider_idle.
   rider sets            every set that seats a rider on the spider (the partial as_human_warrior and the dwarf
@@ -19,9 +20,17 @@ action_sets.xml
 monster_usage_sets.xml  the spider's movement rows take the warg's and the elephant's layout: pace 0 is the backward
                         walk, pace 1 the stand, paces 2 to 5 walk, trot, canter and gallop. The direction="none" row
                         of paces 2 to 5 plays that gait's in-place twin, as the vanilla horse's gait_* clips do; pace
-                        0 has no twin of its own yet and plays the walk's (same loop time). Until now pace 0 played
+                        0 plays the backward walk's twin (#1550; until then the forward walk's). Until #1541 pace 0 played
                         the forward walk, the stand pace's row was an idle whose record carried the elephant
                         canter's limits, and trot, canter and gallop all played one run clip.
+                        The upper-body overlay rows (OVERLAYS, #1559): each moving pace's two rows play that pace's
+                        own gait action, and the set names no gallop_acceleration_head_action. The engine lays an
+                        overlay's clip over the WHOLE body at up to full weight (measured in a battle on 2026-11-23:
+                        the leg tips of a spider at 7 m/s moved 1.0 to 1.3 m/s against its body under the idle
+                        clip, 2 to 4 under the turn-in-place clip, 6.5 to 6.8 in the gait). Since June the rows
+                        had played the turn actions at every pace and the idle on the gallop's acceleration, so
+                        the spiders slid in a charge. The warg's and the elephant's rows play a clip of the
+                        pace's own rhythm, and the warg's set has no gallop acceleration action.
 
 A row is upserted: a missing row is added, and a row that is there on another clip is put on the right one. Rows
 inside an XML comment are neither edited nor counted (the live action_sets.xml holds hundreds of commented-out
@@ -89,12 +98,24 @@ REBIND = {
     "act_spider_walk_forward": "spider_walk", "act_spider_walk_left": "spider_strafe_left",
     "act_spider_walk_right": "spider_strafe_right", "act_spider_run_forward": "spider_gallop",
     "act_spider_turn_left": "spider_turn_left", "act_spider_turn_right": "spider_turn_right",
-    "act_spider_quick_stop": "spider_stand", "act_spider_quick_stop_when_fast": "spider_stand",
+    # #1550 slice A: the hits, the falls and deaths with a held last pose for each *_continue, the stop, the jump
+    "act_spider_quick_stop": "spider_quick_stop", "act_spider_quick_stop_when_fast": "spider_quick_stop",
+    "act_spider_hit_front": "spider_hit_front", "act_spider_hit_back": "spider_hit_back",
+    "act_spider_hit_left": "spider_hit_left", "act_spider_hit_right": "spider_hit_right",
+    "act_spider_hit_object": "spider_hit_front", "act_spider_hit_object_while_falling": "spider_hit_front",
+    "act_spider_rear_damaged": "spider_hit_front",
+    "act_spider_death": "spider_death", "act_spider_death_2": "spider_death_right",
+    **{"act_spider_fall_" + way + end: clip + side
+       for way, side in (("roll", ""), ("backwards", ""), ("right", "_right"), ("slow_right", "_right"),
+                         ("left", "_left"), ("slow_left", "_left"))
+       for end, clip in (("", "spider_death"), ("_continue", "spider_dead"))},
+    "act_spider_jump": "spider_jump_start",
 }
 # new action, its clip in as_spider, the rider's clip
 NEW = [
     ("act_spider_stand", "spider_stand", "rider_warg_stand_for_movement"),
     ("act_spider_walk_backward", "spider_walk_backwards", "rider_warg_walkbackfast"),
+    ("act_spider_walk_backward_stand", "spider_walk_backwards_inplace", "rider_warg_walkbackfast"),     # #1550
     ("act_spider_walk_stand", "spider_walk_inplace", "rider_warg_forward_walk"),
     ("act_spider_trot_forward", "spider_trot", "rider_warg_trot"),
     ("act_spider_trot_stand", "spider_trot_inplace", "rider_warg_trot"),
@@ -108,10 +129,11 @@ RIDER_WANT = {a: r for a, _, r in NEW}               # every rider row this tool
 # (is_left_foot, pace, direction, turn_direction, action): the warg's layout with the spider's actions
 MOVEMENTS = (
     [("False", 0, "front", "none", "act_spider_walk_backward"), ("False", 0, "right", "none", "act_spider_walk_right"),
-     ("False", 0, "left", "none", "act_spider_walk_left"), ("False", 0, "none", "none", "act_spider_walk_stand"),
-     ("False", 1, "none", "none", "act_spider_stand"), ("False", 1, "none", "right", "act_spider_turn_right"),
-     ("False", 1, "none", "left", "act_spider_turn_left"), ("False", 1, "right", "none", "act_spider_walk_right"),
-     ("False", 1, "left", "none", "act_spider_walk_left")]
+     ("False", 0, "left", "none", "act_spider_walk_left"), ("False", 0, "none", "none", "act_spider_walk_backward_stand"),
+     # the stand pace's none/none row is its LAST: listed first (until #1550) it hid the four rows after it
+     ("False", 1, "none", "right", "act_spider_turn_right"), ("False", 1, "none", "left", "act_spider_turn_left"),
+     ("False", 1, "right", "none", "act_spider_walk_right"), ("False", 1, "left", "none", "act_spider_walk_left"),
+     ("False", 1, "none", "none", "act_spider_stand")]
     + [(foot, pace, direction, "none", {"front": front, "right": "act_spider_walk_right", "left": "act_spider_walk_left",
                                         "none": stand}[direction])
        for foot, pace, front, stand in (("False", 2, "act_spider_walk_forward", "act_spider_walk_stand"),
@@ -120,7 +142,34 @@ MOVEMENTS = (
                                         ("False", 5, "act_spider_run_forward", "act_spider_run_stand"),
                                         ("True", 5, "act_spider_run_forward", "act_spider_run_stand"))
        for direction in ("front", "right", "left", "none")])
+# (pace, direction, turn_direction or None, action): the upper-body overlay rows. A moving pace's rows play the
+# pace's own front action; the stand pace keeps the idles it has had since June.
+OVERLAYS = ([(pace, "none", turn, action)
+             for pace, action in ((0, "act_spider_walk_backward"), (2, "act_spider_walk_forward"), (3, "act_spider_trot_forward"),
+                                  (4, "act_spider_canter_forward"), (5, "act_spider_run_forward"))
+             for turn in ("right", "left")]
+            + [(1, "front", None, "act_spider_idle_1"), (1, "back", None, "act_spider_idle"), (1, "none", None, "act_spider_idle")])
+HEAD_ACTION = "gallop_acceleration_head_action"      # the spider's set names none: see the header
 MARK = "#1541, written by tools/bind_spider_clips.py"
+DIRECTIONS = ("left", "right", "front", "front_left", "front_right", "back", "back_left", "back_right")
+
+
+def hidden_rows(rows):
+    """The movement rows the engine never stores. Its loader (0x621E40, native read 2026-11-23) files a row under
+    foot | pace | direction | turn and keeps the first row of a key. direction="none" is filed under "none" and
+    all eight directions, turn_direction="none" under "none" and both turns, is_left_foot="True" under both feet.
+    So a none/none row listed before a pace's turn and strafe rows takes their keys, and they are hidden."""
+    held, out = set(), []
+    for row in rows:
+        foot, pace, direction, turn, _ = row
+        keys = {(f, pace, d, t)
+                for f in (("False", "True") if foot == "True" else ("False",))
+                for d in ((("none",) + DIRECTIONS) if direction == "none" else (direction,))
+                for t in (("none", "left", "right") if turn == "none" else (turn,))}
+        if keys <= held:
+            out.append(row)
+        held |= keys
+    return out
 # A comment is matched first, whole, so a row inside one is never group 2: it is neither edited nor counted.
 ROW = re.compile(r'<!--.*?-->|(<action\s+type="([^"]+)"\s+animation=")([^"]+)(")', re.S)
 RIDER = re.compile(r'<action\s+type="act_spider_run_forward"\s+animation="rider_[^"]+"')
@@ -232,25 +281,51 @@ def plan_action_types(text):
 
 def movement_rows(nl, indent="\t\t\t"):
     out = ["%s<!-- %s. Pace 0 backward, 1 stand, 2 walk, 3 trot, 4 canter, 5 gallop (both feet). The" % (indent, MARK),
-           "%s     direction=\"none\" row of paces 2 to 5 is that gait's in-place twin; pace 0 plays the walk's." % indent,
-           "%s     Every pace keeps a none row: a missing one is a native division by zero (2026-06-04). -->" % indent]
+           "%s     direction=\"none\" row of paces 2 to 5 is that gait's in-place twin, and so is pace 0's." % indent,
+           "%s     Every pace keeps a none row: a missing one is a native division by zero (2026-06-04). A none row" % indent,
+           "%s     fills every direction and turn no earlier row holds, so a pace's none/none row is its last. -->" % indent]
     out += ['%s<monster_usage_movement is_left_foot="%s" pace="%d" direction="%s" turn_direction="%s" action="%s" />' % (
         (indent,) + row) for row in MOVEMENTS]
     return nl + nl.join(out) + nl + indent[:-1]
 
 
-def plan_usage(text):
+def overlay_rows(nl, indent="\t\t\t"):
+    out = ["%s<!-- #1550, written by tools/bind_spider_clips.py. The engine lays an overlay row's clip over the whole" % indent,
+           "%s     body, so each moving pace's rows play that pace's own gait. The turn-in-place actions here, and" % indent,
+           "%s     the idle as the gallop's acceleration action, made the spiders slide (2026-11-23). -->" % indent]
+    for pace, direction, turn, action in OVERLAYS:
+        out.append('%s<monster_usage_upper_body_movement pace="%d" direction="%s"%s action="%s" />' % (
+            indent, pace, direction, ' turn_direction="%s"' % turn if turn else "", action))
+    return nl + nl.join(out) + nl + indent[:-1]
+
+
+def _spider_usage(text):
+    """(start of the spider usage set's opening tag, end of that tag, start of its closing tag) in `text`."""
     masked = _mask(text)
     m = re.search(r'<monster_usage_set\b[^>]*?\bid="spider"', masked)
     if not m:
         raise BindError("no monster usage set spider")
-    close = masked.find("</monster_usage_set>", m.end())
-    s = masked.find("<monster_usage_movements>", m.end())
-    e = masked.find("</monster_usage_movements>", s)
+    return m.start(), masked.index(">", m.end()) + 1, masked.find("</monster_usage_set>", m.end())
+
+
+def _block(text, tag, rows):
+    """`text` with the content of the spider usage set's <tag> block replaced by `rows`."""
+    _, opened, close = _spider_usage(text)
+    masked = _mask(text)
+    s = masked.find("<%s>" % tag, opened)
+    e = masked.find("</%s>" % tag, s)
     if s < 0 or e < 0 or not s < e < close:
-        raise BindError("the spider usage set has no monster_usage_movements block")
-    s += len("<monster_usage_movements>")
-    return text[:s] + movement_rows(_nl(text)) + text[e:]
+        raise BindError("the spider usage set has no %s block" % tag)
+    return text[:s + len(tag) + 2] + rows + text[e:]
+
+
+def plan_usage(text):
+    nl = _nl(text)
+    start, opened, _ = _spider_usage(text)
+    tag = re.sub(r'\s+%s="[^"]*"' % HEAD_ACTION, "", text[start:opened])
+    text = text[:start] + tag + text[opened:]
+    text = _block(text, "monster_usage_upper_body_movements", overlay_rows(nl))
+    return _block(text, "monster_usage_movements", movement_rows(nl))
 
 
 PLANS = {"action_types.xml": plan_action_types, "action_sets.xml": plan_action_sets, "monster_usage_sets.xml": plan_usage}
@@ -290,6 +365,9 @@ def planned_problems(roots):
         out.append("%d set(s) seat a rider on the spider; the partial as_human_warrior and the dwarf copy make two" % len(riders))
     for n, rider in enumerate(riders, 1):
         out += _pairs(rider, RIDER_WANT, "rider set %d (%s)" % (n, rider.get("id")))
+        has = {a.get("type") for a in rider.findall("action")}
+        out += ["rider set %d (%s) has no row for %s, which an overlay row plays: the rider would have no clip for it" % (
+            n, rider.get("id"), action) for action in sorted({o[3] for o in OVERLAYS} - has)]
     usage = [u for u in roots["monster_usage_sets.xml"].iter("monster_usage_set") if u.get("id") == "spider"]
     block = usage[0].find("monster_usage_movements") if len(usage) == 1 else None
     if block is None:
@@ -298,8 +376,21 @@ def planned_problems(roots):
              for r in block.findall("monster_usage_movement")]
     if moves != list(MOVEMENTS):
         out.append("the spider's movement rows are not the table this tool writes (%d rows, %d wanted)" % (len(moves), len(MOVEMENTS)))
+    out += ["the engine never stores the movement row %s: an earlier row of pace %d holds every key it files" % (
+        " ".join(map(str, row)), row[1]) for row in hidden_rows(moves)]
+    upper = usage[0].find("monster_usage_upper_body_movements")
+    overlays = [(int(r.get("pace")), r.get("direction"), r.get("turn_direction"), r.get("action"))
+                for r in (upper.findall("monster_usage_upper_body_movement") if upper is not None else [])]
+    if overlays != list(OVERLAYS):
+        out.append("the spider's upper-body overlay rows are not the table this tool writes (%d rows, %d wanted): the engine "
+                   "lays a row's clip over the whole body, and one that is not its pace's gait takes the legs out of the gait" % (
+                       len(overlays), len(OVERLAYS)))
+    if usage[0].get(HEAD_ACTION) is not None:
+        out.append("the spider usage set names %s=%s: its clip plays over the whole body while the spider gallops" % (
+            HEAD_ACTION, usage[0].get(HEAD_ACTION)))
     bound = {a.get("type") for a in spider[0].findall("action")}
-    out += ["the usage set names %s and as_spider has no row for it" % a for a in sorted({m[4] for m in moves} - bound)]
+    named = {m[4] for m in moves} | {o[3] for o in overlays}
+    out += ["the usage set names %s and as_spider has no row for it" % a for a in sorted(named - bound)]
     # The engine merges every block of one id and lets a child set override its base, so a row for an owned
     # action ANYWHERE else counts: another partial as_human_warrior block, or a race set, on another clip.
     base_of = {}

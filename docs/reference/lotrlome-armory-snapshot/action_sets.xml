@@ -22,6 +22,8 @@
 		<action type="act_spider_walk_right" animation="rider_warg_strafe_right_faster" />
 		<action type="act_spider_run_forward" animation="rider_warg_canter" />
 		<!-- #1541, written by tools/bind_spider_clips.py -->
+		<action type="act_spider_walk_backward_stand" animation="rider_warg_walkbackfast" />
+		<!-- #1541, written by tools/bind_spider_clips.py -->
 		<action type="act_spider_stand" animation="rider_warg_stand_for_movement" />
 		<action type="act_spider_walk_backward" animation="rider_warg_walkbackfast" />
 		<action type="act_spider_walk_stand" animation="rider_warg_forward_walk" />
@@ -14911,6 +14913,8 @@
 		<action type="act_spider_walk_left" animation="rider_warg_strafe_left_faster" />
 		<action type="act_spider_walk_right" animation="rider_warg_strafe_right_faster" />
 		<action type="act_spider_run_forward" animation="rider_warg_canter" />
+		<!-- #1541, written by tools/bind_spider_clips.py -->
+		<action type="act_spider_walk_backward_stand" animation="rider_warg_walkbackfast" />
 		<!-- #1541, written by tools/bind_spider_clips.py -->
 		<action type="act_spider_stand" animation="rider_warg_stand_for_movement" />
 		<action type="act_spider_walk_backward" animation="rider_warg_walkbackfast" />
@@ -66719,40 +66723,40 @@
 		<action type="act_spider_attack_right" animation="an_spi_attack_right" />
 		<action type="act_spider_attack_top" animation="an_spi_attack_top" />
 						<action type="act_spider_rear" animation="an_spi_attack_front" />
-		<action type="act_spider_rear_damaged" animation="an_spi_hit_front" />
+		<action type="act_spider_rear_damaged" animation="spider_hit_front" />
 		<action type="act_spider_dash" animation="an_spi_attack_charge" />
 		<action type="act_spider_kick" animation="an_spi_attack_front" />
-		<action type="act_spider_quick_stop" animation="spider_stand" />
-		<action type="act_spider_quick_stop_when_fast" animation="spider_stand" />
-		<action type="act_spider_hit_object" animation="an_spi_hit_front" />
-		<action type="act_spider_hit_object_while_falling" animation="an_spi_hit_front" />
+		<action type="act_spider_quick_stop" animation="spider_quick_stop" />
+		<action type="act_spider_quick_stop_when_fast" animation="spider_quick_stop" />
+		<action type="act_spider_hit_object" animation="spider_hit_front" />
+		<action type="act_spider_hit_object_while_falling" animation="spider_hit_front" />
 		<action type="act_spider_strike_front" animation="an_spi_attack_front" />
 		<action type="act_spider_strike_back" animation="an_spi_attack_front" />
 		<action type="act_spider_strike_front_while_moving" animation="an_spi_attack_front" />
 		<action type="act_spider_strike_back_while_moving" animation="an_spi_attack_front" />
-		<action type="act_spider_fall_right" animation="an_spi_death_2" />
-		<action type="act_spider_fall_right_continue" animation="an_spi_death_2" />
-		<action type="act_spider_fall_left" animation="an_spi_death_2" />
-		<action type="act_spider_fall_left_continue" animation="an_spi_death_2" />
-		<action type="act_spider_fall_roll" animation="an_spi_death_1" />
-		<action type="act_spider_fall_roll_continue" animation="an_spi_death_1" />
-		<action type="act_spider_fall_backwards" animation="an_spi_death_1" />
-		<action type="act_spider_fall_backwards_continue" animation="an_spi_death_1" />
-		<action type="act_spider_fall_slow_right" animation="an_spi_death_2" />
-		<action type="act_spider_fall_slow_right_continue" animation="an_spi_death_2" />
-		<action type="act_spider_fall_slow_left" animation="an_spi_death_2" />
-		<action type="act_spider_fall_slow_left_continue" animation="an_spi_death_2" />
-		<action type="act_spider_death" animation="an_spi_death_1" />
-		<action type="act_spider_death_2" animation="an_spi_death_2" />
-		<action type="act_spider_hit_back" animation="an_spi_hit_back" />
-		<action type="act_spider_hit_front" animation="an_spi_hit_front" />
-		<action type="act_spider_hit_left" animation="an_spi_hit_left" />
-		<action type="act_spider_hit_right" animation="an_spi_hit_right" />
+		<action type="act_spider_fall_right" animation="spider_death_right" />
+		<action type="act_spider_fall_right_continue" animation="spider_dead_right" />
+		<action type="act_spider_fall_left" animation="spider_death_left" />
+		<action type="act_spider_fall_left_continue" animation="spider_dead_left" />
+		<action type="act_spider_fall_roll" animation="spider_death" />
+		<action type="act_spider_fall_roll_continue" animation="spider_dead" />
+		<action type="act_spider_fall_backwards" animation="spider_death" />
+		<action type="act_spider_fall_backwards_continue" animation="spider_dead" />
+		<action type="act_spider_fall_slow_right" animation="spider_death_right" />
+		<action type="act_spider_fall_slow_right_continue" animation="spider_dead_right" />
+		<action type="act_spider_fall_slow_left" animation="spider_death_left" />
+		<action type="act_spider_fall_slow_left_continue" animation="spider_dead_left" />
+		<action type="act_spider_death" animation="spider_death" />
+		<action type="act_spider_death_2" animation="spider_death_right" />
+		<action type="act_spider_hit_back" animation="spider_hit_back" />
+		<action type="act_spider_hit_front" animation="spider_hit_front" />
+		<action type="act_spider_hit_left" animation="spider_hit_left" />
+		<action type="act_spider_hit_right" animation="spider_hit_right" />
 		<action type="act_spider_idle" animation="spider_idle" />
 		<action type="act_spider_idle_1" animation="spider_idle" />
 		<action type="act_spider_idle_2" animation="spider_idle" />
 		<action type="act_spider_idle_dg" animation="spider_idle" />
-		<action type="act_spider_jump" animation="an_spi_jump" />
+		<action type="act_spider_jump" animation="spider_jump_start" />
 		<action type="act_spider_run_forward" animation="spider_gallop" />
 		<action type="act_spider_taunt" animation="spider_idle" />
 		<action type="act_spider_turn_left" animation="spider_turn_left" />
@@ -66769,6 +66773,8 @@
 		<action type="act_spider_canter_forward" animation="spider_canter" />
 		<action type="act_spider_canter_stand" animation="spider_canter_inplace" />
 		<action type="act_spider_run_stand" animation="spider_gallop_inplace" />
+		<!-- #1541, written by tools/bind_spider_clips.py -->
+		<action type="act_spider_walk_backward_stand" animation="spider_walk_backwards_inplace" />
 	</action_set>
 
 	<!-- Spider child action sets (2026-06-10) - REQUIRED for ridden mounts (elephant Crash #4

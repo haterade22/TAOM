@@ -224,6 +224,111 @@ class BuildTests(unittest.TestCase):
             s.main(["--rig", FIXTURE, "--out", out, "--only", "spider_walk"])
 
 
+class KeyedClipTests(unittest.TestCase):
+    """#1550: the one-shot clips (hits, deaths, the quick stop and the jump start) and the death holds."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.rig = rig()
+        with open(FIXTURE) as fh:
+            cls.bones = json.load(fh)["bones"]
+        cls.keyed = [n for n, spec in s.CLIPS.items() if spec["kind"] in ("keyed", "hold")]
+        cls.clips = {n: s.build_clip(cls.rig, n, s.CLIPS[n]) for n in cls.keyed}
+        cls.stand = s.build_clip(cls.rig, "spider_stand", s.CLIPS["spider_stand"])[0]
+
+    def frames(self, name):
+        return np.array(self.clips[name][0]["mats"])[1:].reshape(self.clips[name][0]["frames"], -1, 4, 4)
+
+    def test_phase_2_brings_the_hits_deaths_holds_stop_and_jump(self):
+        want = {"spider_hit_front", "spider_hit_back", "spider_hit_left", "spider_hit_right", "spider_death",
+                "spider_death_left", "spider_death_right", "spider_dead", "spider_dead_left", "spider_dead_right",
+                "spider_quick_stop", "spider_jump_start"}
+        self.assertEqual(set(self.keyed), want)
+
+    def test_each_one_shot_begins_on_the_stand_pose(self):
+        stand = np.array(self.stand["mats"])[1].reshape(-1, 4, 4)
+        for name in self.keyed:
+            if s.CLIPS[name]["kind"] == "keyed":
+                self.assertTrue(np.allclose(self.frames(name)[0], stand, atol=1e-6), name)
+
+    def test_a_hit_the_stop_and_the_jump_end_on_the_stand_pose_and_a_death_does_not(self):
+        stand = np.array(self.stand["mats"])[1].reshape(-1, 4, 4)
+        for name in ("spider_hit_front", "spider_hit_left", "spider_quick_stop", "spider_jump_start"):
+            self.assertTrue(np.allclose(self.frames(name)[-1], stand, atol=1e-6), name)
+        self.assertFalse(np.allclose(self.frames("spider_death")[-1], stand, atol=1e-2))
+
+    def test_a_hold_is_one_key_and_it_is_its_deaths_last_frame(self):
+        for hold, death in (("spider_dead", "spider_death"), ("spider_dead_left", "spider_death_left"),
+                            ("spider_dead_right", "spider_death_right")):
+            self.assertEqual(self.clips[hold][0]["frames"], 1)
+            self.assertTrue(np.allclose(self.frames(hold)[0], self.frames(death)[-1], atol=1e-9), hold)
+
+    def test_no_body_bone_goes_under_the_ground(self):
+        legs = {self.rig.idx[b] for leg in s.LEGS.values() for b in leg}
+        body = [i for i in range(len(self.rig.names)) if i not in legs]
+        for name in self.keyed:
+            low = (s.RZ[:3, :3].T @ self.frames(name)[:, body, :3, 3].reshape(-1, 3).T)[2].min()
+            self.assertGreater(low, 0.0, "%s: a body bone is %.3f m under the ground" % (name, low))
+
+    def test_a_hit_keeps_every_tip_where_it_stands(self):
+        for name in ("spider_hit_front", "spider_hit_back", "spider_hit_left", "spider_hit_right"):
+            for tag, p in tips_from_keys(self.clips[name][0], self.bones).items():
+                self.assertLess(np.ptp(p, axis=0).max(), NEAR, "%s %s" % (name, tag))
+
+    def test_a_hit_moves_the_body_away_from_the_blow(self):
+        away = {"spider_hit_front": (1, -1.0), "spider_hit_back": (1, 1.0), "spider_hit_left": (0, 1.0),
+                "spider_hit_right": (0, -1.0)}
+        for name, (axis, sign) in away.items():
+            root = (s.RZ[:3, :3].T @ self.frames(name)[:, 0, :3, 3].T).T
+            moved = root[:, axis] - root[0, axis]
+            self.assertGreater(sign * moved[np.argmax(np.abs(moved))], 0.05, name)
+
+    def test_the_side_deaths_mirror_each_other(self):
+        left = tips_from_keys(self.clips["spider_death_left"][0], self.bones)
+        right = tips_from_keys(self.clips["spider_death_right"][0], self.bones)
+        for n in "1234":
+            self.assertTrue(np.allclose(left["L" + n] * np.array([-1.0, 1.0, 1.0]), right["R" + n], atol=1e-4), n)
+
+    def test_a_death_lowers_the_body_and_curls_the_legs_in(self):
+        for name in ("spider_death", "spider_death_right"):
+            root = (s.RZ[:3, :3].T @ self.frames(name)[:, 0, :3, 3].T).T
+            self.assertLess(root[-1, 2], root[0, 2] - 0.2, name)
+            tips = tips_from_keys(self.clips[name][0], self.bones)
+            spread = [np.linalg.norm(p[:, :2], axis=1) for p in tips.values()]
+            self.assertLess(np.mean([d[-1] for d in spread]), np.mean([d[0] for d in spread]) - 0.2, name)
+
+    def test_the_jump_start_does_not_travel(self):
+        root = (s.RZ[:3, :3].T @ self.frames("spider_jump_start")[:, 0, :3, 3].T).T
+        self.assertLess(np.ptp(root[:, :2], axis=0).max(), 0.2)
+
+    def test_the_knee_stays_above_the_line_from_the_joint_to_the_tip(self):
+        for name in self.keyed:
+            for f, world in enumerate(self.frames(name)):
+                world = [s.RZ.T @ m for m in world]
+                for tag, leg in s.LEGS.items():
+                    joint, knee, tip = (world[self.rig.idx[b]][:3, 3] for b in (leg[1], leg[2], leg[4]))
+                    along = (knee - joint) @ (tip - joint) / ((tip - joint) @ (tip - joint))
+                    self.assertGreater(knee[2], (joint + along * (tip - joint))[2], "%s %s frame %d" % (name, tag, f))
+
+    def test_a_one_shot_row_claims_no_travel_and_keeps_its_templates_usages(self):
+        for name in self.keyed:
+            row = self.clips[name][1]
+            self.assertEqual(row["loop_displacement"], 0.0, name)
+            self.assertIsNone(row["limits"], name)
+            self.assertIsNone(row["usage"], name)
+            self.assertEqual(row["step_points"], [-1.0] * 4, name)
+            self.assertAlmostEqual(row["duration"], s.CLIPS[name]["seconds"], places=4, msg=name)
+
+    def test_each_one_shot_takes_the_template_with_its_flags(self):
+        want = {"spider_death": "warg_death_backward", "spider_death_right": "warg_death_right_side",
+                "spider_death_left": "warg_death_left_side", "spider_dead": "warg_death_backward_continue",
+                "spider_dead_right": "warg_death_right_side_continue", "spider_dead_left": "warg_death_left_side_continue",
+                "spider_hit_front": "elephant_hit", "spider_quick_stop": "warg_quick_stop",
+                "spider_jump_start": "horse_jump_start"}
+        for name, template in want.items():
+            self.assertEqual(self.clips[name][1]["template"], template, name)
+
+
 class RecordTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -275,6 +380,19 @@ class RecordTests(unittest.TestCase):
         row = self.rows["spider_gallop"]
         self.assertEqual(row["limits"][1], 13.0)
         self.assertGreaterEqual(row["limits"][1], row["loop_displacement"] / row["duration"])
+
+    def test_a_row_and_its_clip_file_say_whether_the_clip_loops_and_how_many_keys_its_master_gets(self):
+        # tools/elephant_write_masters.py closes a loop with one more key; tools/gen_elephant_anim_clips.ps1 holds the
+        # master to `keys` and writes sources 0 to keys - 1
+        r = rig()
+        for name, spec in s.CLIPS.items():
+            clip, row = s.build_clip(r, name, spec)
+            loops = spec["kind"] != "keyed"
+            self.assertEqual(clip["loop"], loops, name)
+            self.assertEqual(row["loop"], loops, name)
+            self.assertEqual(row["keys"], row["frames"] + (1 if loops else 0), name)
+        self.assertEqual(self.rows["spider_stand"]["keys"], 2)       # a held pose: two keys of one pose, sources 0 to 1
+        self.assertEqual(self.rows["spider_hit_front"]["keys"], 37)  # 0.6 s at 60 keys a second, both ends keyed
 
     def test_the_idle_clears_its_templates_sound(self):
         self.assertEqual(self.rows["spider_idle"]["sound_code"], "")

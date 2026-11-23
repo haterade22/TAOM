@@ -835,6 +835,8 @@ game binds clips that do not exist.
 
 Drift check 2026-11-03 (live Armory `ModuleData/` against this folder, line endings normalised to LF): `action_sets.xml`, `action_types.xml`, `monsters.xml`, `monster_usage_sets.xml` and `project.mbproj` equal live; `skins.xml` (live 5,623,378 bytes, here 5,619,454) and `weapon_descriptions.xslt` (live 87,812, here 87,261) are behind live. Nothing was re-copied.
 
+2026-11-23: the same three files patched again by `python tools/bind_spider_clips.py --apply` (LIVE and this snapshot; #1550, #1559): one more spider action (`act_spider_walk_backward_stand`, 232 creature rider rows now), the hit, fall, death, stop and jump rows of `as_spider` on the `spider_*` clips, the spider's 13 overlay rows on each pace's own gait, and its `gallop_acceleration_head_action` removed. The spider's body capsule changed in `Monsters/LOTR/lotr_monster_spider.xml`, which is not in this folder ([ledger](../lotrlome-spider-mount-changes.md)).
+
 2026-11-22: `action_types.xml`, `action_sets.xml` and `monster_usage_sets.xml` patched in place (LIVE and this snapshot, #1541) by `python tools/bind_spider_clips.py --apply`: eight new spider actions declared, the gait, turn, idle and stop rows of `as_spider` on the `spider_*` clips, a rider row for each new action in the partial `as_human_warrior` and in `as_dwarf_warrior` (231 creature rider rows now), and the spider's movement rows on the warg's table. `--check` is the gate that notices a reinstall. Account: [spider.md](../../features/spider.md), "Locomotion generated on its own rig".
 
 2026-11-14: `action_sets.xml` patched in place (LIVE and this snapshot, #1226): the 223 creature mount rider rows (warg 75,

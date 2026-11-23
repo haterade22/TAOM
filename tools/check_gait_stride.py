@@ -99,11 +99,6 @@ CREATURES = {
                   "spider_strafe_left", "spider_strafe_right"],
         "axis": {"spider_strafe_left": 0, "spider_strafe_right": 0},
         "turns": ("spider_turn_left", "spider_turn_right"),
-        # A June clip that #1541 does not replace. Its record is a graft of the elephant canter's (3.60 m of
-        # travel on a jump start that stays in place); the jump belongs to the attacks, hits and deaths pass.
-        # Both lists are keyed by clip name. record_findings fails a pace action bound to a clip in either, so
-        # neither can hide a gait.
-        "pending": {"an_spi_jump": "the June jump start keeps a grafted travel record until the phase 2 clips"},
         "key_rate": 60.0,
         "action_sets": "ModuleData/action_sets.xml",
         "sets": ("as_spider",),
@@ -327,6 +322,61 @@ def stand_findings(rows, records, c, module_root, bones):
     return out, cached, poses
 
 
+def range_finding(times, rec):
+    """Why a clip record's sources do not fit its master's key times, or None. The rule is the editor's own
+    (FUN_180b8b810 in the wEditor TaleWorlds.Native.dll, read 2026-11-23): a track fits when its first key time is
+    at or under the lower source and its last at or over the upper. A record that fails it draws one "ipo does not
+    fit" line per bone when the Kit cooks the clip, and the game holds a key where the record names none: the
+    first writer keyed 1 to N under sources 0 to N, and every loop stood still for one key time."""
+    lo, hi = rec["first"], rec["first"] + rec["keys"]
+    if not len(times):
+        return "its record plays keys %g to %g and its master has no key" % (lo, hi)
+    if times[0] <= lo + 1e-6 and hi <= times[-1] + 1e-6:
+        return None
+    return "its record plays keys %g to %g and its master holds keys %g to %g" % (lo, hi, times[0], times[-1])
+
+
+def key_span(anim):
+    """[latest first key time, earliest last key time] over every track that has keys: the editor holds each
+    track to the record's sources, not the first bone's alone. [] when no track has a key."""
+    tracks = [t["t"] for t in list(anim["rot"]) + list(anim.get("pos", ())) + [anim["root_pos"]]
+              + ([anim["root_scale"]] if "root_scale" in anim else []) if len(t["t"])]
+    if not tracks:
+        return []
+    if not all(np.isfinite(t[0]) and np.isfinite(t[-1]) for t in tracks):
+        return [float("nan"), float("nan")]         # no number fits a range: range_finding reports it
+    return [max(t[0] for t in tracks), min(t[-1] for t in tracks)]
+
+
+def played_keys(anim, rec):
+    """The master's keys that one loop of the record steps through: from its first source up to, not including,
+    its last, which in a loop repeats the first (tools/elephant_write_masters.py, KEY TIMES)."""
+    times = np.asarray(anim["rot"][0]["t"], dtype=float)
+    keep = np.flatnonzero((times >= rec["first"] - 1e-6) & (times < rec["first"] + rec["keys"] - 1e-6))
+    return {"rot": [{"t": times[keep], "v": np.asarray(r["v"])[keep]} for r in anim["rot"]],
+            "root_pos": {"v": np.asarray(anim["root_pos"]["v"])[keep]}}
+
+
+def range_findings(clips, records, masters):
+    """(findings, masters read): range_finding for each clip that has a record, against its master among
+    `masters`, on every track (key_span). A clip with a record and no master there is a finding: the gate says so,
+    it does not pass what it could not read. A clip with no record is another gate's (record_findings)."""
+    out, read = [], 0
+    for clip in clips:
+        if clip not in records:
+            continue
+        found = master_by_guid(masters, records[clip]["animation"])
+        if not found:
+            out.append("%s: no master with its Animation GUID under the creature's assets, so its key range is not checked" % clip)
+            continue
+        read += 1
+        why = range_finding(key_span(found[1]), records[clip])
+        if why:
+            out.append("%s: %s (%s): the Kit warns on every bone and the game has no key for the rest" % (
+                clip, why, os.path.basename(found[0])))
+    return out, read
+
+
 def master_by_guid(paths, guid):
     """(file, parsed animation) of the SkeletalAnimation item with this GUID in one of `paths`, or None."""
     for path in paths:
@@ -461,7 +511,12 @@ def main(argv=None):
                 print("--   %-28s unbound not installed (no clip record or no master)" % clip)
             continue
         claim = records[clip]["loop"]
-        m = measure(soles_of(load_anim(geo), bones, c["feet"]), claim or 0.0, axis=c.get("axis", {}).get(clip, 1))
+        played = played_keys(load_anim(geo), records[clip])
+        if not len(played["rot"][0]["t"]):
+            bad += 1
+            print("FAIL %-28s its record plays no key of its master" % clip)
+            continue
+        m = measure(soles_of(played, bones, c["feet"]), claim or 0.0, axis=c.get("axis", {}).get(clip, 1))
         why = judge(m, claim, a.tolerance, a.max_slip)
         stale, note = cache_state(root, anm, geo), ""
         if stale and clip in bound:
@@ -475,16 +530,23 @@ def main(argv=None):
             m["frames"], max(m["slip"].values()), "".join("\n       " + w for w in why), note))
     pace, n_rows = record_findings(rows, records, c, c.get("key_rate", KEY_RATE))
     stand, n_cached, n_poses = stand_findings(rows, records, c, root, bones)
+    # every master package under the creature's own asset folder: ADOD keeps two elephant masters beside the mesh
+    creature = os.path.dirname(os.path.join(root, c["clips"]))
+    masters = sorted({skel_path} | {os.path.join(dp, f) for dp, _, fs in os.walk(creature) for f in fs if f.endswith("_geo.tpac")})
+    ranges, n_ranges = range_findings(sorted(named), records, masters)
     for why in pace:
         print("FAIL pace: %s" % why)
     for why in stand:
         print("FAIL bound clip: %s" % why)
+    for why in ranges:
+        print("FAIL key range: %s" % why)
     print("%s: read %d pace rows of %d named sets, %d cache entries of clips on the skeleton's package, %d standing "
-          "pose(s): %d finding(s)" % (a.creature, n_rows, len(c["sets"]), n_cached, n_poses, len(pace) + len(stand)))
+          "pose(s), the key range of %d bound clip(s): %d finding(s)" % (
+              a.creature, n_rows, len(c["sets"]), n_cached, n_poses, n_ranges, len(pace) + len(stand) + len(ranges)))
     print("%s: %d of %d gait clips fail" % (a.creature, bad, len(gaits)) if bad else
           "%s: all %d gait clips cover the ground they claim%s" % (
               a.creature, len(gaits), "; %d wait for a Kit start before an action set can bind them" % notes if notes else ""))
-    return 1 if bad or pace or stand else 0
+    return 1 if bad or pace or stand or ranges else 0
 
 
 if __name__ == "__main__":

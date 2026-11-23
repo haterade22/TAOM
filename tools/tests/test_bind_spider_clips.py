@@ -32,6 +32,8 @@ def rider_set(set_id, extra=""):
     return ('\t<action_set id="%s" skeleton="human_skeleton" movement_system="bipedal">\r\n'
             '\t\t<action type="act_spider_walk_forward" animation="rider_warg_forward_walk" />\r\n'
             '\t\t<action type="act_spider_run_forward" animation="rider_warg_canter" />\r\n'
+            '\t\t<action type="act_spider_idle" animation="rider_warg_idle" />\r\n'
+            '\t\t<action type="act_spider_idle_1" animation="rider_warg_idle" />\r\n'
             '%s\t\t<action type="act_warg_rear" animation="rider_warg_taunt" />\r\n'
             '\t</action_set>\r\n' % (set_id, extra))
 
@@ -60,14 +62,18 @@ def roots(types, sets, usage):
             "monster_usage_sets.xml": ET.fromstring(usage.encode("utf-8"))}
 
 
-USAGE = ('<monster_usage_sets>\r\n\t<monster_usage_set\r\n\t\tid="spider"\r\n\t\trear_action="act_spider_rear">\r\n'
+USAGE = ('<monster_usage_sets>\r\n\t<monster_usage_set\r\n\t\tid="spider"\r\n\t\trear_action="act_spider_rear"\r\n'
+         '\t\tgallop_acceleration_head_action="act_spider_idle"\r\n\t\tjump_start_action="act_spider_jump">\r\n'
          '\t\t<monster_usage_upper_body_movements>\r\n'
+         '\t\t\t<!-- Spider has no head-turn clips; turn rows use the full-body turn actions, pace-1 rows idle. -->\r\n'
+         '\t\t\t<monster_usage_upper_body_movement pace="3" direction="none" turn_direction="right" action="act_spider_turn_right" />\r\n'
          '\t\t\t<monster_usage_upper_body_movement pace="1" direction="none" action="act_spider_idle" />\r\n'
          '\t\t</monster_usage_upper_body_movements>\r\n\t\t<monster_usage_movements>\r\n'
          '\t\t\t<!-- Pace 0 -->\r\n'
          '\t\t\t<monster_usage_movement is_left_foot="False" pace="0" direction="front" turn_direction="none" action="act_spider_walk_forward" />\r\n'
          '\t\t</monster_usage_movements>\r\n\t</monster_usage_set>\r\n'
-         '\t<monster_usage_set id="elephant">\r\n\t\t<monster_usage_movements>\r\n'
+         '\t<monster_usage_set id="elephant" gallop_acceleration_head_action="act_elephant_gallop_acceleration_head">\r\n'
+         '\t\t<monster_usage_movements>\r\n'
          '\t\t\t<monster_usage_movement is_left_foot="False" pace="0" direction="front" turn_direction="none" action="act_elephant_backward_walk" />\r\n'
          '\t\t</monster_usage_movements>\r\n\t</monster_usage_set>\r\n</monster_usage_sets>\r\n')
 TYPES = ('<action_types>\r\n\t<action name="act_spider_idle_1" type="actt_idle" />\r\n'
@@ -93,9 +99,29 @@ class ActionSetTests(unittest.TestCase):
                              ("act_spider_walk_backward", "spider_walk_backwards"), ("act_spider_stand", "spider_stand"),
                              ("act_spider_walk_stand", "spider_walk_inplace"), ("act_spider_run_stand", "spider_gallop_inplace"),
                              ("act_spider_walk_left", "spider_strafe_left"), ("act_spider_turn_right", "spider_turn_right"),
-                             ("act_spider_idle", "spider_idle"), ("act_spider_quick_stop", "spider_stand"),
-                             ("act_horse_jump_forward", "spider_walk")):
+                             ("act_spider_idle", "spider_idle"), ("act_spider_quick_stop", "spider_quick_stop"),
+                             ("act_horse_jump_forward", "spider_walk"),
+                             ("act_spider_walk_backward_stand", "spider_walk_backwards_inplace")):
             self.assertEqual(rows[action], clip, action)
+
+    def test_phase_2_puts_the_hits_falls_deaths_and_jump_on_the_spiders_own_clips(self):
+        rows = rows_of(b.plan_action_sets(action_sets()), "as_spider")
+        want = {"act_spider_hit_front": "spider_hit_front", "act_spider_hit_back": "spider_hit_back",
+                "act_spider_hit_left": "spider_hit_left", "act_spider_hit_right": "spider_hit_right",
+                "act_spider_hit_object": "spider_hit_front", "act_spider_hit_object_while_falling": "spider_hit_front",
+                "act_spider_rear_damaged": "spider_hit_front",
+                "act_spider_death": "spider_death", "act_spider_death_2": "spider_death_right",
+                "act_spider_fall_roll": "spider_death", "act_spider_fall_roll_continue": "spider_dead",
+                "act_spider_fall_backwards": "spider_death", "act_spider_fall_backwards_continue": "spider_dead",
+                "act_spider_fall_right": "spider_death_right", "act_spider_fall_right_continue": "spider_dead_right",
+                "act_spider_fall_slow_right": "spider_death_right", "act_spider_fall_slow_right_continue": "spider_dead_right",
+                "act_spider_fall_left": "spider_death_left", "act_spider_fall_left_continue": "spider_dead_left",
+                "act_spider_fall_slow_left": "spider_death_left", "act_spider_fall_slow_left_continue": "spider_dead_left",
+                "act_spider_quick_stop_when_fast": "spider_quick_stop", "act_spider_jump": "spider_jump_start"}
+        for action, clip in want.items():
+            self.assertEqual(rows[action], clip, action)
+        for action in ("act_spider_attack_front", "act_spider_strike_front", "act_spider_rear", "act_spider_kick"):
+            self.assertNotIn(action, b.WANT, "the attacks are the next slice of #1550")
 
     def test_every_rider_set_gets_a_rider_row_for_each_new_action(self):
         out = b.plan_action_sets(action_sets())
@@ -167,17 +193,102 @@ class UsageAndTypeTests(unittest.TestCase):
         root = ET.fromstring(out.encode("utf-8"))
         spider, elephant = root.findall("monster_usage_set")
         self.assertEqual(self._moves(out), list(b.MOVEMENTS))
-        self.assertEqual(len(spider.find("monster_usage_upper_body_movements")), 1)
+        self.assertEqual(self._overlays(out), list(b.OVERLAYS))
         self.assertEqual([r.get("action") for r in elephant.find("monster_usage_movements")], ["act_elephant_backward_walk"])
         self.assertEqual(b.plan_usage(out), out)
         self.assertNotIn("\n", out.replace("\r\n", ""))
+
+    def _overlays(self, text):
+        spider = ET.fromstring(text.encode("utf-8")).findall("monster_usage_set")[0]
+        return [(int(r.get("pace")), r.get("direction"), r.get("turn_direction"), r.get("action"))
+                for r in spider.find("monster_usage_upper_body_movements")]
+
+    def test_each_moving_paces_overlay_rows_play_that_paces_own_gait(self):
+        # 2026-11-23: the engine lays an overlay row's clip over the whole body at up to full weight. The rows played
+        # the turn-in-place clip at every moving pace, and the legs left the gait: at 7 m/s the leg tips moved 2 to
+        # 4 m/s against the body, where the gait moves them 6.5 to 6.8. The warg's and the elephant's rows play a
+        # clip of the pace's own rhythm.
+        overlays = self._overlays(b.plan_usage(USAGE))
+        front = {m[1]: m[4] for m in b.MOVEMENTS if m[2] == "front" and m[0] == "False"}
+        self.assertEqual(len(overlays), 13)                         # the warg has 12, the elephant and the horse 13
+        for pace in (0, 2, 3, 4, 5):
+            for turn in ("right", "left"):
+                self.assertIn((pace, "none", turn, front[pace]), overlays)
+        self.assertEqual([o for o in overlays if o[0] == 1],
+                         [(1, "front", None, "act_spider_idle_1"), (1, "back", None, "act_spider_idle"), (1, "none", None, "act_spider_idle")])
+        self.assertFalse([o for o in overlays if o[0] != 1 and "turn" in o[3]])
+
+    def test_the_spider_has_no_gallop_acceleration_action_and_the_elephant_keeps_its_own(self):
+        # the action was act_spider_idle: the idle clip over a galloping body, the slide Mike saw on 2026-11-23
+        # (leg tips 1.0 to 1.3 m/s against the body at 7 m/s). The warg's set has no such attribute.
+        out = b.plan_usage(USAGE)
+        spider, elephant = ET.fromstring(out.encode("utf-8")).findall("monster_usage_set")
+        self.assertIsNone(spider.get("gallop_acceleration_head_action"))
+        self.assertEqual(spider.get("rear_action"), "act_spider_rear")
+        self.assertEqual(spider.get("jump_start_action"), "act_spider_jump")
+        self.assertEqual(elephant.get("gallop_acceleration_head_action"), "act_elephant_gallop_acceleration_head")
+        self.assertEqual(b.plan_usage(out), out)
+        self.assertNotIn("\n", out.replace("\r\n", ""))
+
+    def test_an_overlay_row_on_another_action_or_a_gallop_acceleration_action_is_a_planned_problem(self):
+        good = b.plan_usage(USAGE)
+        sets, types = b.plan_action_sets(action_sets()), b.plan_action_types(TYPES)
+        self.assertEqual(b.planned_problems(roots(types, sets, good)), [])
+        wrong = good.replace('pace="3" direction="none" turn_direction="left" action="act_spider_trot_forward"',
+                             'pace="3" direction="none" turn_direction="left" action="act_spider_turn_left"')
+        self.assertNotEqual(wrong, good)
+        got = b.planned_problems(roots(types, sets, wrong))
+        self.assertEqual(len(got), 1, got)
+        self.assertIn("overlay rows", got[0])
+        again = good.replace('rear_action="act_spider_rear"', 'rear_action="act_spider_rear" gallop_acceleration_head_action="act_spider_idle"')
+        got = b.planned_problems(roots(types, sets, again))
+        self.assertEqual(len(got), 1, got)
+        self.assertIn("gallop_acceleration_head_action", got[0])
+
+    def test_no_movement_row_is_hidden_by_an_earlier_one(self):
+        # 2026-11-23, native read of the loader: a none direction fills all eight directions, a none turn fills
+        # both turns, the first row of a key wins. Pace 1 listed its none/none stand row first since #1541, so its
+        # turn-in-place and strafe rows were never stored and a spider turned in place on the stand clip.
+        self.assertEqual(b.hidden_rows(b.MOVEMENTS), [])
+        june = [("False", 1, "none", "none", "act_spider_stand"), ("False", 1, "none", "right", "act_spider_turn_right"),
+                ("False", 1, "right", "none", "act_spider_walk_right")]
+        self.assertEqual(b.hidden_rows(june), june[1:])
+        self.assertEqual([m for m in b.MOVEMENTS if m[1] == 1][-1], ("False", 1, "none", "none", "act_spider_stand"))
+        both_feet = [("False", 5, "front", "none", "a"), ("True", 5, "front", "none", "a")]
+        self.assertEqual(b.hidden_rows(both_feet), [])              # the left foot's keys are new
+
+    def test_a_hidden_row_in_the_file_is_a_planned_problem(self):
+        good = b.plan_usage(USAGE)
+        sets, types = b.plan_action_sets(action_sets()), b.plan_action_types(TYPES)
+        stand = '\t\t\t<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="none" action="act_spider_stand" />\r\n'
+        first = '\t\t\t<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="right" action="act_spider_turn_right" />\r\n'
+        self.assertEqual(good.count(stand), 1)
+        self.assertEqual(good.count(first), 1)
+        wrong = good.replace(stand, "").replace(first, stand + first)
+        got = b.planned_problems(roots(types, sets, wrong))
+        self.assertTrue([g for g in got if "never stores" in g and "act_spider_turn_right" in g], got)
+
+    def test_every_overlay_action_needs_a_rider_row_in_each_rider_set(self):
+        # the rider rows this tool writes are those of its new actions; an overlay also plays actions that are June's
+        usage, types = b.plan_usage(USAGE), b.plan_action_types(TYPES)
+        sets = b.plan_action_sets(action_sets())
+        self.assertEqual(b.planned_problems(roots(types, sets, usage)), [])
+        row = '\t\t<action type="act_spider_walk_forward" animation="rider_warg_forward_walk" />\r\n'
+        self.assertEqual(sets.count(row), 2)
+        got = b.planned_problems(roots(types, sets.replace(row, ""), usage))
+        self.assertEqual(len(got), 2, got)
+        self.assertIn("has no row for act_spider_walk_forward, which an overlay row plays", got[0])
+
+    def test_the_strict_parity_gate_does_not_ask_for_the_action_this_tool_removes(self):
+        import audit_mount_parity
+        self.assertNotIn(b.HEAD_ACTION, audit_mount_parity.STRICT_VERBS)
 
     def test_the_table_has_the_keys_of_the_wargs_and_one_literal_row_for_each_pace(self):
         moves = self._moves(b.plan_usage(USAGE))
         keys = [m[:4] for m in moves]
         self.assertEqual(len(keys), 29)                     # the warg, the elephant and the vanilla horse have 29
         self.assertEqual(len(set(keys)), 29)
-        for row in (("False", 0, "front", "none", "act_spider_walk_backward"), ("False", 0, "none", "none", "act_spider_walk_stand"),
+        for row in (("False", 0, "front", "none", "act_spider_walk_backward"), ("False", 0, "none", "none", "act_spider_walk_backward_stand"),
                     ("False", 1, "none", "none", "act_spider_stand"), ("False", 1, "none", "left", "act_spider_turn_left"),
                     ("False", 2, "front", "none", "act_spider_walk_forward"), ("False", 2, "none", "none", "act_spider_walk_stand"),
                     ("False", 3, "front", "none", "act_spider_trot_forward"), ("False", 3, "none", "none", "act_spider_trot_stand"),
@@ -191,10 +302,11 @@ class UsageAndTypeTests(unittest.TestCase):
     def test_the_new_actions_are_declared_once(self):
         out = b.plan_action_types(TYPES)
         names = re.findall(r'<action\s+name="([^"]+)"', out)
-        for action in ("act_spider_stand", "act_spider_walk_backward", "act_spider_walk_stand", "act_spider_trot_forward",
-                       "act_spider_trot_stand", "act_spider_canter_forward", "act_spider_canter_stand", "act_spider_run_stand"):
+        for action in ("act_spider_stand", "act_spider_walk_backward", "act_spider_walk_backward_stand", "act_spider_walk_stand",
+                       "act_spider_trot_forward", "act_spider_trot_stand", "act_spider_canter_forward", "act_spider_canter_stand",
+                       "act_spider_run_stand"):
             self.assertEqual(names.count(action), 1, action)
-        self.assertEqual(len(b.NEW), 8)
+        self.assertEqual(len(b.NEW), 9)
         self.assertLess(names.index("act_spider_taunt"), names.index("act_spider_stand"))
         self.assertLess(names.index("act_spider_run_stand"), names.index("act_elephant_forward_trot"))
         self.assertEqual(b.plan_action_types(out), out)
