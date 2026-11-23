@@ -579,6 +579,7 @@ TARGETS["anduinvale"] = _northman_successor(
         ("Bard", "Beorn"),
         ("laketown", "riverside"),
         ("Erebor", "the Carrock"),
+        ("[Dale]", "[Anduin Vale]"),
         ("of Dale", "of the Vale"),
         ("Dale", "Vale"),
     ],
