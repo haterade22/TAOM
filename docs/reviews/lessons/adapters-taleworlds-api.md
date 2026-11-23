@@ -2178,3 +2178,11 @@ The free heroes of a story mission stand as one group, off AI control, under a M
 **Prevent:** before a co-op handler trusts a message, list every Coop path that can publish that type into the broker, the relay and the mission P2P client included, and say which one the check closes. When a fix gates delivery on a new condition, list what the old path delivered in the gap and who delivers it now. A sequence number is compared only inside the process that counts it.
 
 **Source:** [rca-coop-session-token-2026-11-22.md](../rca-coop-session-token-2026-11-22.md) classes 1 and 2.
+
+### Detect an exception another mod swallows by the postfix it skips, not by the state it leaves (#1545, 2026-11-23)
+
+**Why missed:** BannerlordCoop's finalizer on `GauntletMovie.LoadMovie` swallows a themed prefab's build exception. The first fix inferred the failure from `RootWidget == null`, which only one of the failure points leaves; a binding failure left a root, and a parse failure left a movie whose `Release` throws.
+
+**Prevent:** to learn whether a method threw when another patcher may swallow it, mark in a prefix and clear in a postfix: Harmony skips every postfix when the original throws, whoever's finalizer handles it (`HarmonyPatchSemanticsTests`). Before cleaning up a half-built engine object, read its `Release` for fields the failed build left null.
+
+**Source:** [rca-coop-themed-fallback-2026-11-23.md](../rca-coop-themed-fallback-2026-11-23.md) rows 1 and 2.

@@ -251,10 +251,10 @@ public class FactionUIBindingTests
                         && t.GetCustomAttributes(typeof(HarmonyPatch), false).Length > 0)
             .ToList();
 
-        // Eleven while the TEMPORARY diagnostic FaceGenFirstOpenDiagnosticPatch and its nested TickWatch ship
-        // (d5522c9f5). Removing them: put this to nine and regenerate the API snapshot
+        // Twelve while the TEMPORARY diagnostic FaceGenFirstOpenDiagnosticPatch and its nested TickWatch ship
+        // (d5522c9f5). Removing them: put this to ten and regenerate the API snapshot
         // (pwsh tools/snapshot_api_surface.ps1).
-        Assert.AreEqual(11, patchClasses.Count, "Patch95 has eleven patch classes: " + string.Join(", ", patchClasses.Select(t => t.Name)));
+        Assert.AreEqual(12, patchClasses.Count, "Patch95 has twelve patch classes: " + string.Join(", ", patchClasses.Select(t => t.Name)));
         foreach (var patch in patchClasses)
         {
             var category = patch.GetCustomAttribute<HarmonyPatchCategory>();
