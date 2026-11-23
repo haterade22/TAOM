@@ -698,7 +698,7 @@
 	</NPCCharacter>
 
 	<!-- Gang -->
-	<NPCCharacter id="gangleader_bodyguard_rhun" default_group="Infantry" level="16" is_hero="false" occupation="Soldier" culture="Culture.khuzait" name="{=aom_rh_gang_bodyguard}Gang Bodyguard" skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+	<NPCCharacter id="gangleader_bodyguard_rhun" default_group="Infantry" level="16" is_hero="false" occupation="Townsfolk" culture="Culture.khuzait" name="{=aom_rh_gang_bodyguard}Gang Bodyguard" skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Equipments>
