@@ -243,17 +243,12 @@
     <TroopWeight id="harad_mumakil_rider" weight="20.0" />
 
     <!-- ===== ISENGARD ===== -->
-    <!-- Orthanc Guard Line: 2.0, the level-41 bodyguard 3.0 -->
-    <TroopWeight id="orthanc_guard" weight="2.0" />
+    <!-- Isengard counts as one man per troop up to level 31 (its numbers are its strength). Orthanc Line:
+         the level-36 warden 2.0, the level-41 bodyguard 3.0 -->
     <TroopWeight id="orthanc_warden" weight="2.0" />
     <TroopWeight id="orthanc_bodyguard" weight="3.0" />
     <!-- Urukhai Elites (Weight 2.0) -->
     <TroopWeight id="urukhai_nazg_hai" weight="2.0" />
-    <!-- Warg Riders (Weight 2.0) -->
-    <TroopWeight id="orc_warg_scout" weight="2.0" />
-    <TroopWeight id="orc_warg_overseer" weight="2.0" />
-    <TroopWeight id="orc_warg_enforcer" weight="2.0" />
-    <TroopWeight id="orc_warg_lieutenant" weight="2.0" />
     <!-- Black Numenorean line: 2.0 up to level 36, 3.0 from level 41 (knight/warden/marksman
          and the three level-46 temple tips) -->
     <TroopWeight id="mordor_num_initiate" weight="2.0" />
@@ -297,7 +292,6 @@
     <TroopWeight id="dw_mirkwood_twinblade_huntress" weight="3.0" />
     <TroopWeight id="dw_goblintown_twinblade" weight="2.0" />
     <TroopWeight id="dw_gundabad_pale_twinaxe" weight="2.0" />
-    <TroopWeight id="dw_isengard_urukhai_twinblade" weight="2.0" />
     <TroopWeight id="dw_mordor_uruk_twinblade" weight="2.0" />
     <!-- ===== LEVEL 31 TO 36 SWEEP, evil and dwarf trees (15 Nov 2026 audit) ===== -->
     <!-- These cultures weighted their level 31 to 40 troops one at a time and skipped many, so a level 36 troop paid
@@ -325,13 +319,6 @@
     <TroopWeight id="dg_uruk_fell_archer" weight="2.0" />
     <TroopWeight id="dg_uruk_fell_fang" weight="2.0" />
     <TroopWeight id="dg_uruk_fell_infantry" weight="2.0" />
-    <!-- ISENGARD -->
-    <TroopWeight id="urukhai_berserker" weight="2.0" />
-    <TroopWeight id="urukhai_pavise" weight="2.0" />
-    <TroopWeight id="urukhai_reaver" weight="2.0" />
-    <TroopWeight id="urukhai_veterancrossbowman" weight="2.0" />
-    <TroopWeight id="urukhai_veteraninfantry" weight="2.0" />
-    <TroopWeight id="urukhai_veteranpikeman" weight="2.0" />
     <!-- MORDOR -->
     <TroopWeight id="mordor_uruk_shieldguard" weight="2.0" />
     <TroopWeight id="mordor_uruk_vanguard" weight="2.0" />

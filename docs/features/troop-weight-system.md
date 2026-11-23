@@ -465,7 +465,7 @@ layers six TAOM modifiers onto the single `ExplainedNumber` vanilla hands back, 
 | 6 | `ITroopWeightService.ApplyPartySizeWeightPenalty` (this feature) | result-frame subtraction of the weight surplus |
 
 So the elite tax **competes** with a culture bonus on the same number, and the two can cancel. On a
-Mordor, Isengard, Dol Guldur or Gundabad party the weight-2.0 uruks, wargs and black guards can make
+Mordor, Dol Guldur or Gundabad party the weight-2.0 uruks, wargs and black guards can make (Isengard's troops count as one man up to level 31 since 2026-11-23)
 the surplus subtract more than a small percentage bonus adds. Those cultures' party-size feats carried
 a 20% floor for that reason until 2026-10-18 (#818), when a balance pass capped them at 10% (orc realms
 +5%) and accepted that the tax can cancel the bonus. Rationale and the excluded cultures:

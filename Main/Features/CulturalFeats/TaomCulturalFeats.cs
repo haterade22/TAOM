@@ -648,8 +648,8 @@ public class TaomCulturalFeats
             0.25f, isPositiveEffect: false, FeatObject.AdditionType.AddFactor);
         _isengardPartySize.Initialize(
             "{=taom_feat_isen_ps}Uruk-hai Legions",
-            "{=taom_feat_isen_ps_desc}Party size limit increased by 5%.",
-            0.05f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+            "{=taom_feat_isen_ps_desc}Party size limit increased by 10%.",
+            0.10f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
         _isengardConstructionSpeed.Initialize(
             "{=taom_feat_isen_cs}Industrial Might",
             "{=taom_feat_isen_cs_desc}Construction speed increased by 15%.",

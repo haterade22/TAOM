@@ -138,16 +138,19 @@ public class TroopWeightCoverageTests
         }
     }
 
-    /// <summary>The Dual Wield evil twin-blades are level 31 troops of cultures that weigh level 31 at 2.0.</summary>
+    /// <summary>The Dual Wield evil twin-blades are level 31 troops of cultures that weigh level 31 at 2.0. Isengard's
+    /// twin-blade is not: Isengard counts as one man up to level 31 (owner, 2026-11-23).</summary>
     [TestMethod]
     public void DualWieldEvilTwinBlades_WeighTwo()
     {
         foreach (var id in new[]
                  {
                      "dw_goblintown_twinblade", "dw_gundabad_pale_twinaxe",
-                     "dw_isengard_urukhai_twinblade", "dw_mordor_uruk_twinblade",
+                     "dw_mordor_uruk_twinblade",
                  })
             Assert.AreEqual(2.0f, WeightOf(id), id);
+
+        Assert.AreEqual(1.0f, WeightOf("dw_isengard_urukhai_twinblade"));
     }
 
     /// <summary>
@@ -165,13 +168,14 @@ public class TroopWeightCoverageTests
     /// The evil and dwarf trees weighed their level 31 to 40 troops one at a time and skipped many, so a
     /// level 36 Uruk sat at 2.0 above a level 31 Uruk at 1.0. Humans (Gondor, Rohan, Rhun, Harad, Dunland, ...)
     /// carry no weights by design and are not swept; this is haterade's call and is recorded in the PR.
-    /// The disabled cave troll is named because its row is commented out on purpose.
+    /// The disabled cave troll is named because its row is commented out on purpose. Isengard is out of the sweep:
+    /// its troops count as one man up to level 31 (owner, 2026-11-23, IsengardPartySlotTests).
     /// </summary>
     [TestMethod]
     public void EvilAndDwarfTroopsAtLevel31To40_AreWeighted()
     {
         var cultures = new HashSet<string>(StringComparer.Ordinal)
-            { "erebor", "eredluin", "dolguldur", "isengard", "mordor", "gundabad", "goblin", "bluecraig", "mistymountainorcs" };
+            { "erebor", "eredluin", "dolguldur", "mordor", "gundabad", "goblin", "bluecraig", "mistymountainorcs" };
         var disabled = new HashSet<string>(StringComparer.Ordinal) { "cave_troll" };
 
         var missing = _troops.Values
