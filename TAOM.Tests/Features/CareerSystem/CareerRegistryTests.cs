@@ -58,6 +58,15 @@ public class CareerRegistryTests
     }
 
     [TestMethod]
+    public void IsCareerDeclared_AsksTheProvider()
+    {
+        _config.IsCareerDeclared("broken").Returns(true);
+
+        Assert.IsTrue(_registry.IsCareerDeclared("broken"));
+        Assert.IsFalse(_registry.IsCareerDeclared("retired"));
+    }
+
+    [TestMethod]
     public void GetCareer_ExistingId_ReturnsCareer()
     {
         var career = _registry.GetCareer("warboss");

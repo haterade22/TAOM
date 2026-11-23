@@ -7101,5 +7101,8 @@
 	<string id="taom_lg_coop_changed" text="{=taom_lg_coop_changed}Your lord's gear has changed since you looked. Visit the armoury again." />
 	<string id="taom_lg_coop_not_choice" text="{=taom_lg_coop_not_choice}The armourer cannot fit that piece." />
 	<string id="taom_lg_coop_off" text="{=taom_lg_coop_off}The co-op server has turned off the Lords' Ladder for co-op players." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CareerSystem -->
+	<string id="taom_career_unknown_reset" text="{=taom_career_unknown_reset}Your career no longer exists in this version, so a new one was chosen." />
 
 </strings>

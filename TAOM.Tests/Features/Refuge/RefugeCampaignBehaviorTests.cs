@@ -20,11 +20,11 @@ namespace TAOM.Tests.Features.Refuge;
 
 /// <summary>
 /// The session-reset pattern on <see cref="RefugeCampaignBehavior"/> (the
-/// FieldCampBehaviorSessionResetTests shape): SyncData marks the session synced ONLY when the
-/// store is loading; OnGameLoaded and the session-launch gate reset the process-lifetime service
-/// for a fresh campaign AND for a save with no refuge record. Without it, campaign B inherits
-/// campaign A's book from the singleton and then saves it as its own. The gate latches, so the
-/// two callers cannot double-wipe a book founded right after launch.
+/// FieldCampBehaviorSessionResetTests shape): the constructor resets the process-lifetime service
+/// (#773), and SubModule builds the behavior in every campaign's OnGameStart, before any campaign
+/// event and before a load's SyncData (pinned in <c>PerCampaignBehaviorWiringTests</c>). A fresh
+/// campaign AND a save with no refuge record therefore start empty; without the reset, campaign B
+/// inherits campaign A's book from the singleton and then saves it as its own.
 /// </summary>
 [TestClass]
 [TestCategory("RequiresGame")]
@@ -65,38 +65,27 @@ public class RefugeCampaignBehaviorTests
     // --- The reset gate ---
 
     [TestMethod]
-    public void FreshCampaign_NoSyncData_ResetsTheService()
+    public void Constructor_FreshCampaign_ResetsTheService()
     {
-        Assert.IsTrue(_sut.ResetIfNoLoadedRecord());
-
         _refuges.Received(1).ResetForNewSession();
     }
 
     [TestMethod]
-    public void LoadingSyncData_MarksTheSessionSynced_NoReset()
+    public void LoadingSyncData_LoadsTheBookOverTheConstructorReset()
     {
         SyncWith(isLoading: true);
 
-        Assert.IsFalse(_sut.ResetIfNoLoadedRecord());
-        _refuges.DidNotReceive().ResetForNewSession();
+        Received.InOrder(() =>
+        {
+            _refuges.ResetForNewSession();
+            _refuges.LoadFrom(null, 0);
+        });
     }
 
     [TestMethod]
-    public void SavingSyncData_DoesNotCountAsSynced()
+    public void SavingSyncData_DoesNotResetAgain()
     {
-        // Only the LOADING direction proves this session's book came from this save; a save pass
-        // over a stale book must not launder it into "synced".
         SyncWith(isLoading: false);
-
-        Assert.IsTrue(_sut.ResetIfNoLoadedRecord());
-        _refuges.Received(1).ResetForNewSession();
-    }
-
-    [TestMethod]
-    public void ResetLatches_SecondCallerCannotWipeThePostLaunchBook()
-    {
-        _sut.ResetIfNoLoadedRecord();
-        Assert.IsFalse(_sut.ResetIfNoLoadedRecord());
 
         _refuges.Received(1).ResetForNewSession();
     }
@@ -111,18 +100,18 @@ public class RefugeCampaignBehaviorTests
         InvokeOnGameLoaded();
 
         _refuges.Received(1).OnGameLoaded();
-        _refuges.DidNotReceive().ResetForNewSession();
+        _refuges.Received(1).ResetForNewSession();
     }
 
     [TestMethod]
-    public void OnGameLoaded_PreFeatureSave_ResetsInsteadOfReconcilingStaleState()
+    public void OnGameLoaded_PreFeatureSave_RepairsTheBookTheConstructorReset()
     {
-        // No SyncData ran (the save predates the feature): the singleton still holds the
-        // previous session's book; reconciling it would adopt/re-show stale state.
+        // No SyncData ran (the save predates the feature): the constructor already emptied the
+        // book, so the repair reconciles an empty book and nothing resets a second time.
         InvokeOnGameLoaded();
 
         _refuges.Received(1).ResetForNewSession();
-        _refuges.DidNotReceive().OnGameLoaded();
+        _refuges.Received(1).OnGameLoaded();
     }
 
     // --- SyncData plumbing (direction-split: save never replays the load-time transient wipe) ---

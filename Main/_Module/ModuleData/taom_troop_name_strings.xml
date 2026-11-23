@@ -184,10 +184,10 @@
 	<string id="aom_dg_khamul_veiled_knight_name" text="{=aom_dg_khamul_veiled_knight_name}[Dol Guldur] Khamûl's Veiled Knight" />
 	<string id="aom_dg_khamul_veiled_marksman_name" text="{=aom_dg_khamul_veiled_marksman_name}[Dol Guldur] Khamûl's Veiled Marksman" />
 	<string id="aom_dg_khamul_veiled_reaper_name" text="{=aom_dg_khamul_veiled_reaper_name}[Dol Guldur] Khamûl's Veiled Reaper" />
-	<string id="aom_dg_militia_archer" text="{=aom_dg_militia_archer}Dol Guldur Militia Archer" />
-	<string id="aom_dg_militia_spearman" text="{=aom_dg_militia_spearman}Dol Guldur Militia Spearman" />
-	<string id="aom_dg_militia_vet_archer" text="{=aom_dg_militia_vet_archer}Dol Guldur Militia Veteran Archer" />
-	<string id="aom_dg_militia_vet_spear" text="{=aom_dg_militia_vet_spear}Dol Guldur Militia Veteran Spearman" />
+	<string id="aom_dg_militia_archer" text="{=aom_dg_militia_archer}[Dol Guldur] Militia Archer" />
+	<string id="aom_dg_militia_spearman" text="{=aom_dg_militia_spearman}[Dol Guldur] Militia Spearman" />
+	<string id="aom_dg_militia_vet_archer" text="{=aom_dg_militia_vet_archer}[Dol Guldur] Militia Veteran Archer" />
+	<string id="aom_dg_militia_vet_spear" text="{=aom_dg_militia_vet_spear}[Dol Guldur] Militia Veteran Spearman" />
 	<string id="aom_dg_orc_archer_name" text="{=aom_dg_orc_archer_name}[Dol Guldur] Orc Archer" />
 	<string id="aom_dg_orc_gnasher_name" text="{=aom_dg_orc_gnasher_name}[Dol Guldur] Orc Gnasher" />
 	<string id="aom_dg_orc_reaver_name" text="{=aom_dg_orc_reaver_name}[Dol Guldur] Orc Reaver" />
@@ -862,10 +862,10 @@
 	<string id="aom_morannon_skirmisher_name" text="{=aom_morannon_skirmisher_name}[Mordor] Morannon Skirmisher" />
 	<string id="aom_morannon_spearman_name" text="{=aom_morannon_spearman_name}[Mordor] Morannon Spearman" />
 	<string id="aom_morannon_warrior_name" text="{=aom_morannon_warrior_name}[Mordor] Morannon Warrior" />
-	<string id="aom_mordor_mil_arch" text="{=aom_mordor_mil_arch}Mordor Militia Archer" />
-	<string id="aom_mordor_mil_spear" text="{=aom_mordor_mil_spear}Mordor Militia Spearman" />
-	<string id="aom_mordor_mil_vet_arch" text="{=aom_mordor_mil_vet_arch}Mordor Militia Veteran Archer" />
-	<string id="aom_mordor_mil_vet_spear" text="{=aom_mordor_mil_vet_spear}Mordor Militia Veteran Spearman" />
+	<string id="aom_mordor_mil_arch" text="{=aom_mordor_mil_arch}[Mordor] Militia Archer" />
+	<string id="aom_mordor_mil_spear" text="{=aom_mordor_mil_spear}[Mordor] Militia Spearman" />
+	<string id="aom_mordor_mil_vet_arch" text="{=aom_mordor_mil_vet_arch}[Mordor] Militia Veteran Archer" />
+	<string id="aom_mordor_mil_vet_spear" text="{=aom_mordor_mil_vet_spear}[Mordor] Militia Veteran Spearman" />
 	<string id="aom_mordor_num_archer_name" text="{=aom_mordor_num_archer_name}[Mordor] Black Numenorean Archer" />
 	<string id="aom_mordor_num_cavalry_name" text="{=aom_mordor_num_cavalry_name}[Mordor] Black Numenorean Cavalry" />
 	<string id="aom_mordor_num_infantry_name" text="{=aom_mordor_num_infantry_name}[Mordor] Black Numenorean Infantry" />

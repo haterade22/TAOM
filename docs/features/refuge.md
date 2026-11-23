@@ -84,13 +84,16 @@ clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition
   itself cannot be observed (it swallows its exceptions and reads plain members), so an IL-order test per
   listener pins that the book is read before the battle is walked, and a guard moved below the walk fails
   it. It pins call order, not control flow.
-- **Session reset.** `RefugeCampaignBehavior` marks the session synced only when SyncData runs in
-  loading mode; `OnSessionLaunched` calls `RefugeService.ResetForNewSession()` when it did not
-  (fresh campaign, or a pre-feature save), so the process-lifetime singleton cannot leak campaign
-  A's book into campaign B. `LoadFrom` also scrubs null rows and clears every transient. This is the latch shape
-  that the amended session-reset rule (`.claude/rules/csharp-architecture.md`, "Singleton Services Holding
-  Per-Campaign State", `9ab3952a7`) no longer prescribes for persisted state. Refuge keeps it until its visuals
-  reset is checked safe at `OnGameStart` (#773; `docs/reviews/rca-wotr-session-reset-2026-10-08.md`, Follow-ups).
+- **Session reset.** `RefugeCampaignBehavior`'s constructor calls `RefugeService.ResetForNewSession()`
+  (#773, the constructor shape of `.claude/rules/csharp-architecture.md`, "Singleton Services Holding
+  Per-Campaign State"). SubModule builds the behavior fresh in every campaign's `OnGameStart`, before any
+  campaign event and before a load's SyncData (`PerCampaignBehaviorWiringTests`), so a fresh campaign or a
+  pre-feature save starts empty and the process-lifetime singleton cannot leak campaign A's book into
+  campaign B. The reset's visual clear removes the previous scene's entities, the same call
+  `RefugeService.OnGameLoaded` already makes on every load, after the old `MapScreen` is finalized. Whether
+  native `GameEntity.Remove` is safe on an entity of a cleared scene is unverified; the `catch` in
+  `CampLayoutBuilder.Remove` cannot stop a native access violation. `LoadFrom` also
+  scrubs null rows and clears every transient.
 - **Orphans get an exit.** A party adopted on load without a book row (`Established=false`,
   `Building=false`) is dismantlable (menu + encounter open for it, everything else greyed), so it
   cannot eat a refuge-cap slot forever.

@@ -23,6 +23,5 @@ public static class WarOfTheRingMomentumIoC
         container.Register<IWarEventSnapshotAdapter, WarEventSnapshotAdapter>(Reuse.Singleton);
         container.Register<IKingdomStrengthAdapter, KingdomStrengthAdapter>(Reuse.Singleton);
         container.Register<UI.IMomentumUIService, UI.NullMomentumUIService>(Reuse.Singleton);
-        container.Register<WarOfTheRingMomentumBehavior>(Reuse.Singleton);
     }
 }

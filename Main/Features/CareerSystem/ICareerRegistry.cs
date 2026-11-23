@@ -8,6 +8,9 @@ public interface ICareerRegistry
 {
     CareerDefinition GetCareer(string careerStringId);
     IReadOnlyList<CareerDefinition> GetAllCareers();
+
+    /// <summary>#1046: true when the career XML declares this id, even if its element failed to parse.</summary>
+    bool IsCareerDeclared(string careerStringId);
     CareerChoiceDefinition GetChoice(string choiceStringId);
     CareerChoiceGroupDefinition GetGroup(string groupStringId);
     IReadOnlyList<CareerChoiceDefinition> GetChoicesForGroup(string groupStringId);

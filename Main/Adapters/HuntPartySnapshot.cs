@@ -29,6 +29,12 @@ public sealed class HuntPartySnapshot
     /// <summary>Its default behaviour is to engage the player's party.</summary>
     public bool IsEngagingPlayer { get; set; }
 
+    /// <summary>
+    /// <c>Ai.DoNotAttackMainPartyUntil</c> is in the future: vanilla's promise to leave the player alone after a safe
+    /// passage bribe (32 h), a lord paid off in conversation (24 h) or an escape from a lost encounter (2 h).
+    /// </summary>
+    public bool HoldsOffPlayer { get; set; }
+
     public int HeadCount { get; set; }
 
     /// <summary><c>Party.EstimatedStrength</c>.</summary>

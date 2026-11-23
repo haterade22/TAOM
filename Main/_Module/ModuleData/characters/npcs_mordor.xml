@@ -103,7 +103,7 @@
 	</NPCCharacter>
 
 	<!-- Caravan Staff -->
-	<NPCCharacter id="caravan_master_mordor" race="uruk" default_group="Infantry" level="26" name="{=aom_mr_caravan_master}Mordor Caravan Master" occupation="CaravanGuard" culture="Culture.mordor">
+	<NPCCharacter id="caravan_master_mordor" race="uruk" default_group="Infantry" level="26" name="{=aom_mr_caravan_master}[Mordor] Caravan Master" occupation="CaravanGuard" culture="Culture.mordor">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -133,7 +133,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="armed_trader_mordor" race="uruk" default_group="Infantry" level="16" name="{=aom_mr_armed_trader}Mordor Armed Trader" occupation="CaravanGuard" culture="Culture.mordor">
+	<NPCCharacter id="armed_trader_mordor" race="uruk" default_group="Infantry" level="16" name="{=aom_mr_armed_trader}[Mordor] Armed Trader" occupation="CaravanGuard" culture="Culture.mordor">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills>
 			<skill id="Athletics" value="40" />
@@ -154,7 +154,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_guard_mordor" race="uruk" default_group="Infantry" level="21" name="{=aom_mr_caravan_guard}Mordor Caravan Guard" occupation="CaravanGuard" culture="Culture.mordor">
+	<NPCCharacter id="caravan_guard_mordor" race="uruk" default_group="Infantry" level="21" name="{=aom_mr_caravan_guard}[Mordor] Caravan Guard" occupation="CaravanGuard" culture="Culture.mordor">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills>
 			<skill id="Athletics" value="50" />
@@ -182,7 +182,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="veteran_caravan_guard_mordor" race="uruk" default_group="Infantry" level="26" name="{=aom_mr_vet_caravan_guard}Mordor Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.mordor">
+	<NPCCharacter id="veteran_caravan_guard_mordor" race="uruk" default_group="Infantry" level="26" name="{=aom_mr_vet_caravan_guard}[Mordor] Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.mordor">
 		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />

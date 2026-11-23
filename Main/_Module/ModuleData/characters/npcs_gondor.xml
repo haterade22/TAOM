@@ -83,7 +83,7 @@
 	</NPCCharacter>
 
 	<!-- Caravan Staff -->
-	<NPCCharacter id="caravan_master_gondor" default_group="Infantry" level="26" name="{=aom_gd_caravan_master}Gondor Caravan Master" occupation="CaravanGuard" culture="Culture.gondor">
+	<NPCCharacter id="caravan_master_gondor" default_group="Infantry" level="26" name="{=aom_gd_caravan_master}[Gondor] Caravan Master" occupation="CaravanGuard" culture="Culture.gondor">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -103,7 +103,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="armed_trader_gondor" default_group="Infantry" level="16" name="{=aom_gd_armed_trader}Gondor Armed Trader" occupation="CaravanGuard" culture="Culture.gondor">
+	<NPCCharacter id="armed_trader_gondor" default_group="Infantry" level="16" name="{=aom_gd_armed_trader}[Gondor] Armed Trader" occupation="CaravanGuard" culture="Culture.gondor">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills>
 			<skill id="Athletics" value="40" />
@@ -119,7 +119,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_guard_gondor" default_group="Infantry" level="21" name="{=aom_gd_caravan_guard}Gondor Caravan Guard" occupation="CaravanGuard" culture="Culture.gondor">
+	<NPCCharacter id="caravan_guard_gondor" default_group="Infantry" level="21" name="{=aom_gd_caravan_guard}[Gondor] Caravan Guard" occupation="CaravanGuard" culture="Culture.gondor">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills>
 			<skill id="Athletics" value="50" />
@@ -139,7 +139,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="veteran_caravan_guard_gondor" default_group="Infantry" level="26" name="{=aom_gd_vet_caravan_guard}Gondor Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.gondor">
+	<NPCCharacter id="veteran_caravan_guard_gondor" default_group="Infantry" level="26" name="{=aom_gd_vet_caravan_guard}[Gondor] Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.gondor">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />

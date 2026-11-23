@@ -528,6 +528,7 @@ public class EyeOfSauronServiceTests
     [DataRow("settlement")]
     [DataRow("disbanding")]
     [DataRow("pinned")]
+    [DataRow("sworn")]
     [DataRow("inactive")]
     public void TryStartHunt_HisPartyIsBusy_TheNextWraithRides_AndNeverASecondParty(string busy)
     {
@@ -543,6 +544,7 @@ public class EyeOfSauronServiceTests
             case "settlement": party.InSettlement = true; break;
             case "disbanding": party.IsDisbanding = true; break;
             case "pinned": party.AiPinned = true; break;
+            case "sworn": party.HoldsOffPlayer = true; break;
             case "inactive": party.IsActive = false; break;
         }
         _adapter.ReadParty("wk_party").Returns(party);
@@ -1683,6 +1685,53 @@ public class EyeOfSauronServiceTests
         _sut.OnHourlyTickParty(Party);
         InSight(distance: 5f);
         Assert.IsTrue(_sut.TryGetSpeedFloor(Party, 3f, out _), "re-pinned: the floor applies again");
+    }
+
+    // A paid safe passage (or an escape) makes vanilla promise the hunter will not attack the player for a while. The
+    // hunt stands off for that span instead of re-engaging him every hour, then resumes.
+    [TestMethod]
+    public void OnHourlyTickParty_HunterSwornNotToAttack_StandsOff_ThenResumes()
+    {
+        StartWitchKingHunt();
+        StraightPathTo(100f, 10f);
+        var bought = FreeParty(HuntTroopLists.WitchKingId, engaging: true);
+        bought.HoldsOffPlayer = true;
+        _adapter.ReadParty(Party).Returns(bought);
+        _adapter.ClearReceivedCalls();
+
+        _sut.OnHourlyTickParty(Party);
+        _sut.OnHourlyTickParty(Party);
+
+        Assert.IsTrue(_sut.IsHunting, "a bribe pauses the hunt, it does not end it");
+        _adapter.Received(1).ReleasePin(Party);
+        _adapter.DidNotReceive().PinAndEngagePlayer(Arg.Any<string>());
+        _adapter.DidNotReceive().Relocate(Arg.Any<string>(), Arg.Any<float>(), Arg.Any<float>());
+        StringAssert.Contains(string.Join("\n", _sut.Describe()), "Last hourly step: hunter promised to leave you alone");
+
+        // The promise runs out: the next hour re-pins and re-engages exactly once.
+        _adapter.ReadParty(Party).Returns(FreeParty(HuntTroopLists.WitchKingId, engaging: false));
+        _sut.OnHourlyTickParty(Party);
+
+        _adapter.Received(1).PinAndEngagePlayer(Party);
+    }
+
+    // The frame tick sees the promise the moment the encounter ends, before the next hour re-engages him.
+    [TestMethod]
+    public void OnTick_HunterSwornNotToAttack_ReleasesOnce_AndPublishesNoFloor()
+    {
+        StartWitchKingHunt();
+        _adapter.ReadSight(Party, Arg.Any<float>()).Returns(new HuntSightReading
+        {
+            Valid = true, HunterActive = true, PlayerActive = true, SeeingRange = 10f, Distance = 5f,
+            PlayerSpeed = 4f, HunterHoldsOffPlayer = true,
+        });
+
+        _sut.OnTick();
+        _sut.OnTick();
+
+        Assert.IsTrue(_sut.IsHunting);
+        Assert.IsFalse(_sut.TryGetSpeedFloor(Party, 3f, out _), "no floor while he keeps his word");
+        _adapter.Received(1).ReleasePin(Party);
     }
 
     // E17: an end during the stand-off keeps the hunt's other effects but never releases a second time; the timeout

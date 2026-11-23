@@ -586,7 +586,7 @@
 	</NPCCharacter>
 
 	<!-- Caravan Staff -->
-	<NPCCharacter id="armed_trader_dale" default_group="Infantry" level="16" name="{=aom_dl_armed_trader}Dale Armed Trader" occupation="CaravanGuard" culture="Culture.sturgia">
+	<NPCCharacter id="armed_trader_dale" default_group="Infantry" level="16" name="{=aom_dl_armed_trader}[Dale] Armed Trader" occupation="CaravanGuard" culture="Culture.sturgia">
 		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
 		<skills>
 			<skill id="Athletics" value="40" />
@@ -602,7 +602,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_master_dale" default_group="Infantry" level="26" name="{=aom_dl_caravan_master}Dale Caravan Master" occupation="CaravanGuard" culture="Culture.sturgia">
+	<NPCCharacter id="caravan_master_dale" default_group="Infantry" level="26" name="{=aom_dl_caravan_master}[Dale] Caravan Master" occupation="CaravanGuard" culture="Culture.sturgia">
 		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -622,7 +622,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_guard_dale" default_group="Infantry" level="21" name="{=aom_dl_caravan_guard}Dale Caravan Guard" occupation="CaravanGuard" culture="Culture.sturgia">
+	<NPCCharacter id="caravan_guard_dale" default_group="Infantry" level="21" name="{=aom_dl_caravan_guard}[Dale] Caravan Guard" occupation="CaravanGuard" culture="Culture.sturgia">
 		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
 		<skills>
 			<skill id="Athletics" value="50" />
@@ -642,7 +642,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="veteran_caravan_guard_dale" default_group="Infantry" level="26" name="{=aom_dl_vet_caravan_guard}Dale Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.sturgia">
+	<NPCCharacter id="veteran_caravan_guard_dale" default_group="Infantry" level="26" name="{=aom_dl_vet_caravan_guard}[Dale] Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.sturgia">
 		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />

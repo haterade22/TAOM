@@ -59,7 +59,7 @@
 	</NPCCharacter>
 
 	<!-- Caravan Staff -->
-	<NPCCharacter id="caravan_master_dolguldur" race="dg_uruk" default_group="Infantry" level="26" name="{=aom_dg_caravan_master}Dol Guldur Caravan Master" occupation="CaravanGuard" culture="Culture.dolguldur">
+	<NPCCharacter id="caravan_master_dolguldur" race="dg_uruk" default_group="Infantry" level="26" name="{=aom_dg_caravan_master}[Dol Guldur] Caravan Master" occupation="CaravanGuard" culture="Culture.dolguldur">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -80,7 +80,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_guard_dolguldur" race="dg_uruk" default_group="Infantry" level="21" name="{=aom_dg_caravan_guard}Dol Guldur Caravan Guard" occupation="CaravanGuard" culture="Culture.dolguldur">
+	<NPCCharacter id="caravan_guard_dolguldur" race="dg_uruk" default_group="Infantry" level="21" name="{=aom_dg_caravan_guard}[Dol Guldur] Caravan Guard" occupation="CaravanGuard" culture="Culture.dolguldur">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills>
 			<skill id="Athletics" value="50" />
@@ -100,7 +100,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="veteran_caravan_guard_dolguldur" race="dg_uruk" default_group="Infantry" level="26" name="{=aom_dg_vet_caravan_guard}Dol Guldur Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.dolguldur">
+	<NPCCharacter id="veteran_caravan_guard_dolguldur" race="dg_uruk" default_group="Infantry" level="26" name="{=aom_dg_vet_caravan_guard}[Dol Guldur] Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.dolguldur">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -121,7 +121,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="armed_trader_dolguldur" race="dg_uruk" default_group="Infantry" level="16" name="{=aom_dg_armed_trader}Dol Guldur Armed Trader" occupation="CaravanGuard" culture="Culture.dolguldur">
+	<NPCCharacter id="armed_trader_dolguldur" race="dg_uruk" default_group="Infantry" level="16" name="{=aom_dg_armed_trader}[Dol Guldur] Armed Trader" occupation="CaravanGuard" culture="Culture.dolguldur">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
 		<skills>
 			<skill id="Athletics" value="40" />

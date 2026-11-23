@@ -28,4 +28,7 @@ public readonly struct HuntSightReading
 
     /// <summary><c>MobileParty.MainParty.Speed</c>.</summary>
     public float PlayerSpeed { get; init; }
+
+    /// <summary>The hunter's <c>Ai.DoNotAttackMainPartyUntil</c> is in the future (see <see cref="HuntPartySnapshot.HoldsOffPlayer"/>).</summary>
+    public bool HunterHoldsOffPlayer { get; init; }
 }

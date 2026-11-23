@@ -598,7 +598,7 @@
 	</NPCCharacter>
 
 	<!-- Caravan Staff -->
-	<NPCCharacter id="armed_trader_dunland" default_group="Infantry" level="16" name="{=aom_dn_armed_trader}Dunland Armed Trader" occupation="CaravanGuard" culture="Culture.empire">
+	<NPCCharacter id="armed_trader_dunland" default_group="Infantry" level="16" name="{=aom_dn_armed_trader}[Dunland] Armed Trader" occupation="CaravanGuard" culture="Culture.empire">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills>
 			<skill id="Athletics" value="40" />
@@ -614,7 +614,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_master_dunland" default_group="Infantry" level="26" name="{=aom_dn_caravan_master}Dunland Caravan Master" occupation="CaravanGuard" culture="Culture.empire">
+	<NPCCharacter id="caravan_master_dunland" default_group="Infantry" level="26" name="{=aom_dn_caravan_master}[Dunland] Caravan Master" occupation="CaravanGuard" culture="Culture.empire">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -635,7 +635,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_guard_dunland" default_group="Infantry" level="21" name="{=aom_dn_caravan_guard}Dunland Caravan Guard" occupation="CaravanGuard" culture="Culture.empire">
+	<NPCCharacter id="caravan_guard_dunland" default_group="Infantry" level="21" name="{=aom_dn_caravan_guard}[Dunland] Caravan Guard" occupation="CaravanGuard" culture="Culture.empire">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills>
 			<skill id="Athletics" value="50" />
@@ -656,7 +656,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="veteran_caravan_guard_dunland" default_group="Infantry" level="26" name="{=aom_dn_vet_caravan_guard}Dunland Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.empire">
+	<NPCCharacter id="veteran_caravan_guard_dunland" default_group="Infantry" level="26" name="{=aom_dn_vet_caravan_guard}[Dunland] Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.empire">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />

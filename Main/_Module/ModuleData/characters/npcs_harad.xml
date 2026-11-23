@@ -83,7 +83,7 @@
 	</NPCCharacter>
 
 	<!-- Caravan Staff -->
-	<NPCCharacter id="caravan_master_harad" default_group="Infantry" level="26" name="{=aom_hd_caravan_master}Harad Caravan Master" occupation="CaravanGuard" culture="Culture.aserai">
+	<NPCCharacter id="caravan_master_harad" default_group="Infantry" level="26" name="{=aom_hd_caravan_master}[Harad] Caravan Master" occupation="CaravanGuard" culture="Culture.aserai">
 		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -103,7 +103,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="armed_trader_harad" default_group="Infantry" level="16" name="{=aom_hd_armed_trader}Harad Armed Trader" occupation="CaravanGuard" culture="Culture.aserai">
+	<NPCCharacter id="armed_trader_harad" default_group="Infantry" level="16" name="{=aom_hd_armed_trader}[Harad] Armed Trader" occupation="CaravanGuard" culture="Culture.aserai">
 		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
 		<skills>
 			<skill id="Athletics" value="40" />
@@ -119,7 +119,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_guard_harad" default_group="Infantry" level="16" name="{=aom_hd_caravan_guard}Harad Caravan Guard" occupation="Soldier" culture="Culture.aserai">
+	<NPCCharacter id="caravan_guard_harad" default_group="Infantry" level="16" name="{=aom_hd_caravan_guard}[Harad] Caravan Guard" occupation="Soldier" culture="Culture.aserai">
 		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
 		<skills>
 			<skill id="Athletics" value="50" />
@@ -139,7 +139,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="veteran_caravan_guard_harad" default_group="Infantry" level="21" name="{=aom_hd_vet_caravan_guard}Harad Veteran Caravan Guard" occupation="Soldier" culture="Culture.aserai">
+	<NPCCharacter id="veteran_caravan_guard_harad" default_group="Infantry" level="21" name="{=aom_hd_vet_caravan_guard}[Harad] Veteran Caravan Guard" occupation="Soldier" culture="Culture.aserai">
 		<face><face_key_template value="BodyProperty.fighter_haradrim" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
