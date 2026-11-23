@@ -208,8 +208,8 @@ never touches the player or a hero, and it does not override the morale model, w
   reaches the engine's 0.01 panic threshold anyway. The aura there works through the fear voice and the
   race-ability frights. Not seen in game.
 - `!GameNetwork.IsSessionActive` excludes multiplayer
-- `CombatType == Combat` excludes arenas and tournaments (`ArenaCombat`) and conversations and
-  town walkarounds (`NoCombat`)
+- `CombatType == Combat` excludes nothing in the installed game: no code sets the combat type, so every
+  mission reads `Combat` (#1537). The team-AI check below is what keeps arenas, tournaments and town scenes out
 - `Mode == MissionMode.Battle` excludes the pre-battle **Deployment** phase. This one is not
   redundant with the team-AI check below: `MissionTeamAIType` is assigned *before* deployment
   (`DeploymentHandler.cs:41` sets `Mode = Deployment`; `MissionCombatantsLogic.cs:225` flips it to

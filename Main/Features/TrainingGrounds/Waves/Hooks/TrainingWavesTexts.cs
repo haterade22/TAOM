@@ -74,7 +74,7 @@ internal static class TrainingWavesTexts
         MBTextManager.SetTextVariable(RulesCap, run.MaxStake);
     }
 
-    /// <summary>The stake lines count from the largest: slot 0 is the full cap, 1 the half, 2 the quarter.</summary>
+    /// <summary>The stake lines count from the largest: slot 0 is the full cap, 1 the half, 2 the small one.</summary>
     internal static void SetStake(int slot, int amount)
     {
         var variable = slot switch

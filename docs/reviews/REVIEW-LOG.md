@@ -6004,3 +6004,19 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 
 - **Not changed:** F2 (the Ents after a repulsed assault) and F3 (the morale effect on a co-op client) wait for the maintainer; F6 (runtime validation of two config references) declined as a speculative guard, the shipped file being gated by tests.
 - **In-game owed:** one unattended Breaking offer run on the fixed build; play by a person of every mission and offer.
+
+## Review (number assigned at merge): PR review automation (#1543, PR #1546), tier-2 deep review in two waves, Codex xhigh (2026-11-22)
+
+- **Scope:** `feat/pr-automation`: `.github/workflows/pr-checks.yml`, `tools/pr_review_watch.py` and its tests, `tools/register_pr_review_task.ps1`, the `/review-outside-pr` Phase 1 list, `tools/_gamedir.py`, and the `RequiresGame` and `RequiresGameIL` tags on the C# tests.
+- **Lenses:** wave 1 Lens 5 and Tooling, wave 2 Lenses 3, 4 and 6: four HIGH Phase 1 gaps, fixed before the first commit (`rca-pr-review-watcher-2026-11-22.md` F1 to F4).
+- **Codex:** `codex-adversarial-pr-automation-2026-11-22.md` at `xhigh` on `b0960772a`: two HIGH, six MEDIUM. All eight were confirmed and fixed; S2 (the read-only fence) and the live GitHub and fork behaviour stay UNVERIFIED in its report. Each fix, broken in a copy, fails a test.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| Codex F1 (HIGH) | File list and diff read by PR number, contents at the listed head: a push between the calls mixed two heads | Stale state / lifecycle | Only the read that took a `ref` was pinned | Compare API at the listed head; test that every read names it |
+| Codex F2 (HIGH) | A new `tools/<name>/` package, or a standard library name in `tools/`, replaced a module a hook script imports | Other: port narrower than Python's import order | The guard listed trunk's files, not the resolution order | Imported and standard library names guarded as packages and import suffixes; lesson line in `build-tooling-workflow.md` |
+| Codex F3 (MEDIUM) | A fake verdict quoted above the real one set the verdict | Logic error | First regex match anywhere | First line only; the report marks model text untrusted |
+| Codex F4 to F8 (MEDIUM) | Case collisions, a 100-PR window, a 7-character folder, a non-atomic lock, a tool floor that counted skips | Logic error | Each a Windows, scale or race case no fixture tried | Phase 1 collision stop, 1,000 PRs, whole SHA and a fresh `files/`, `O_EXCL`, executed-count floor |
+| Tooling re-review 1 (HIGH) | Generators that the pre-commit validator runs or loads by a path string were not guarded | Other: port narrower than the mechanism | The closure followed imports only | String constants followed too; test with a subprocess and a load by path |
+
+- **In-game owed:** none (no game code). Owed: the first scheduled run on a real PR after registration, and a fork PR through the compare API.

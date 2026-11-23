@@ -75,6 +75,7 @@ public class CampaignStartOptionsWiringTests
         Assert.AreSame((object)container.Resolve<ICampaignStartOptions>(), (object)container.Resolve<CampaignStartOptionsStore>());
     }
 
+    [TestCategory("RequiresGame")]   // runs Campaign.get_Current
     [TestMethod]
     public void BeginningASession_WithNoCampaign_DoesNothing()
     {

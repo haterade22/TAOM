@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using HarmonyLib;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.Library;
@@ -12,7 +13,9 @@ namespace TAOM.Features.FactionUI.Hooks;
 /// <c>MainMenu_LoadMovie_Patch</c>. <see cref="FrontEndMovieService"/> decides, checks the themed prefab
 /// is installed and registers the images first. If the themed movie throws while building, the
 /// finalizer removes what the failed build attached to the layer and loads vanilla's movie instead, so
-/// a broken prefab costs the theme, not the screen.
+/// a broken prefab costs the theme, not the screen. When a co-op mod swallows that exception (#1545),
+/// <see cref="GauntletMovieBuildWatchPatch"/> still marks the build as failed; for a swap with a vanilla movie,
+/// the postfix takes the half-built movie off the layer and throws, so the finalizer falls back the same way.
 /// <para>
 /// Target: the public <c>GauntletLayer.LoadMovie(string movieName, ViewModel dataSource)</c> (v1.5.3
 /// GauntletLayer.cs:119), which every screen calls to load a movie; only the engine's resource refresh
@@ -27,6 +30,7 @@ public static class GauntletLayerLoadMoviePatch
 {
     [ThreadStatic] private static bool _loadingVanillaFallback;
     private static bool _reported;
+    private static bool _reportedDiscard;
 
     static void Prefix(GauntletLayer __instance, ref string movieName, ref ViewModel dataSource, out SwapState? __state)
     {
@@ -60,6 +64,11 @@ public static class GauntletLayerLoadMoviePatch
     {
         if (__result == null || _loadingVanillaFallback)
             return;
+        if (__state is { Swap.HasVanillaFallback: true } && GauntletMovieBuildWatchPatch.BuildThrew(__result.Movie))
+        {
+            Discard(__instance, __result);
+            throw new InvalidOperationException($"{__result.MovieName} failed to build");
+        }
 
         try
         {
@@ -71,6 +80,24 @@ public static class GauntletLayerLoadMoviePatch
         catch (Exception ex)
         {
             FactionUIPatchContext.ReportOnce(ref _reported, nameof(GauntletLayerLoadMoviePatch), ex);
+        }
+    }
+
+    /// <summary>Takes a movie whose build threw under a co-op mod's finalizer (#1545) off the layer, so the
+    /// throw that follows takes the same path as a build whose exception reached the layer. A half-built
+    /// movie's <c>Release</c> can throw (a prefab that failed to parse leaves <c>_moviePrefab</c> null, v1.5.7
+    /// GauntletMovie.cs:113) before the layer drops the identifier (GauntletLayer.cs:144-148); the layer's
+    /// teardown would release it again and throw, so the identifier leaves the layer's list directly.</summary>
+    private static void Discard(GauntletLayer layer, GauntletMovieIdentifier movie)
+    {
+        try
+        {
+            layer.ReleaseMovie(movie);
+        }
+        catch (Exception ex)
+        {
+            FactionUIPatchContext.ReportOnce(ref _reportedDiscard, nameof(GauntletLayerLoadMoviePatch), ex);
+            (AccessTools.Field(typeof(GauntletLayer), "_movieIdentifiers")?.GetValue(layer) as List<GauntletMovieIdentifier>)?.Remove(movie);
         }
     }
 

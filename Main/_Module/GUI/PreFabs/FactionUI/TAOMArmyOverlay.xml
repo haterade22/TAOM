@@ -53,6 +53,7 @@
                                 <BrushWidget Id="FillWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="86" SuggestedHeight="14" VerticalAlignment="Center" Brush="TAOM.Army.Cohesion.Fill" />
                               </Children>
                             </ArmyOverlayCohesionFillBarWidget>
+                            <HintWidget DataSource="{CohesionHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
                           </Children>
                         </ButtonWidget>
                         <HintWidget DataSource="{CohesionHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />

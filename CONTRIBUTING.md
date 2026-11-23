@@ -28,8 +28,9 @@ If you cannot build (no SDK, or a different game version), say so in the PR. We 
 on our side, but tell us exactly what you did and did not run.
 
 Turn on the repo's git hooks once per clone: `git config core.hooksPath .githooks`. They check the
-commit subject, the doc budgets and the ModuleData you stage. There is no CI, so these and your own
-test run are the only checks before a review.
+commit subject, the doc budgets and the ModuleData you stage. On a pull request to `bannerlord-1.5.x`, GitHub runs the PR
+checks (for an outside contributor, the run waits for the maintainer's approval): a C# build and tests without the game, the Python tool tests and the doc checks. They cannot
+run the tests that need the game, so run the suite yourself too.
 
 ## What a good PR has
 

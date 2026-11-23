@@ -78,32 +78,40 @@ public class FieldCommissionOfferFlowService : IFieldCommissionOfferFlowService
     {
         var name = string.IsNullOrWhiteSpace(chosenName) ? offer.TroopName : chosenName.Trim();
 
+        if (Promote(offer.TroopId, name) != null)
+            _merit.CompleteOffer(offer.TroopId);
+        Close();
+    }
+
+    public string PromoteNow(string troopId, string chosenName) =>
+        _merit.CanPromote(troopId) ? Promote(troopId, chosenName) : null;
+
+    private string Promote(string troopId, string chosenName)
+    {
         var config = _configProvider.GetConfig();
-        var info = _roster.GetTroopInfo(offer.TroopId);
-        var troopSkills = _roster.GetTroopSkillValues(offer.TroopId);
+        var info = _roster.GetTroopInfo(troopId);
+        var troopSkills = _roster.GetTroopSkillValues(troopId);
         var plan = _skillBudget.Compute(info.Level, troopSkills, config.SkillPointsPerLevel, MaxSkillValue);
 
-        var heroId = _heroCommission.CreateCompanionFromTroop(offer.TroopId, plan, name);
+        var heroId = _heroCommission.CreateCompanionFromTroop(troopId, plan, chosenName);
         if (string.IsNullOrEmpty(heroId))
         {
             // Race condition (troop id vanished from the roster between offer and completion, or
             // the adapter otherwise couldn't build the hero) — never partially apply: no roster
             // removal, no merit deduction, no promoted-hero record.
-            _logger?.LogWarning($"[FieldCommission] promotion completion failed for troop {offer.TroopId} — merit and roster left untouched");
-            Close();
-            return;
+            _logger?.LogWarning($"[FieldCommission] promotion completion failed for troop {troopId} — merit and roster left untouched");
+            return null;
         }
 
         // The adapter refuses to build a hero unless the troop is still in the roster, so a false
         // here means the roster changed underneath a completed promotion. Nothing can be rolled back
         // at this point — the hero exists — but it must not pass silently, because the symptom
         // players see is a companion who appeared without a soldier disappearing.
-        if (!_roster.RemoveOneFromRoster(offer.TroopId))
-            _logger?.LogWarning($"[FieldCommission] promoted {offer.TroopId} but the roster decrement failed — party count is now one too high");
+        if (!_roster.RemoveOneFromRoster(troopId))
+            _logger?.LogWarning($"[FieldCommission] promoted {troopId} but the roster decrement failed — party count is now one too high");
 
-        _merit.CompleteOffer(offer.TroopId);
         _merit.RecordPromotedHero(heroId);
-        Close();
+        return heroId;
     }
 
     public void Reset() => IsShowingOffer = false;

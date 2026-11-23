@@ -106,7 +106,7 @@ public sealed class CoopCompatSubModule : MBSubModuleBase
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void StartTransport()
     {
-        var transport = new CoopTransport();
+        var transport = CoopTransport.Create(Log);
         transport.Start();
         _transport = transport;
     }

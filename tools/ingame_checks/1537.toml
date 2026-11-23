@@ -1,0 +1,48 @@
+# In-game checks for #1537, read by tools/ingame_verdict.py. They read the "mission gate" log lines that the three
+# features write on the first tick of a mission (the dwarf attacks and the race abilities) or on first use (the
+# signature strikes):
+#   [DwarfAttacks] mission gate: eligible=<bool> combatType=<type> arena=<bool>
+#   [RaceAbilities] mission gate: eligible=<bool> MCM=<bool> json=<bool> combatType=<type> arena=<bool>
+# arena=True means the mission holds the arena's practice controller or the tournament behaviour
+# (SignatureMissionGate.IsArenaOrTournament). A line with arena=True comes only from a training yard or a tournament
+# match, so every check here is NOT REACHED until someone enters one.
+#
+# The third check is the fact behind the fix: Mission.CombatType reads Combat in the yard too, because nothing in the
+# installed game sets it. A line that reads ArenaCombat there would mean the research of 2026-11-22 was wrong.
+#
+# fixed_in is the commit that changes the gates (6130a03c3). A build from before it writes no arena= field, so it is
+# NOT REACHED here, never FAIL.
+issue = 1537
+title = "Signature Strikes, Race Abilities and Dwarf Attacks stay out of the training yard and the tournament"
+fixed_in = "6130a03c3"
+logs = ["taom"]
+
+[[check]]
+id = "taom.arena-gates.dwarf-attacks"
+needs = "enter the Training Grounds of any town (the yard itself is enough), or fight a tournament match"
+reached = ['\[DwarfAttacks\] mission gate: eligible=\w+ combatType=\w+ arena=True']
+pass = ['\[DwarfAttacks\] mission gate: eligible=False combatType=\w+ arena=True']
+fail = ['\[DwarfAttacks\] mission gate: eligible=True combatType=\w+ arena=True']
+absence = "not-reached"
+
+[[check]]
+id = "taom.arena-gates.race-abilities"
+needs = "the same visit; the line is written on the first tick of the mission"
+reached = ['\[RaceAbilities\] mission gate: eligible=\w+ MCM=\w+ json=\w+ combatType=\w+ arena=True']
+pass = ['\[RaceAbilities\] mission gate: eligible=False MCM=\w+ json=\w+ combatType=\w+ arena=True']
+fail = ['\[RaceAbilities\] mission gate: eligible=True MCM=\w+ json=\w+ combatType=\w+ arena=True']
+absence = "not-reached"
+
+[[check]]
+id = "taom.arena-gates.combat-type"
+needs = "the same visit: the combat type of the yard or the tournament mission"
+reached = ['\[DwarfAttacks\] mission gate: eligible=\w+ combatType=\w+ arena=True']
+pass = ['\[DwarfAttacks\] mission gate: eligible=\w+ combatType=Combat arena=True']
+fail = ['\[DwarfAttacks\] mission gate: eligible=\w+ combatType=(ArenaCombat|NoCombat) arena=True']
+absence = "not-reached"
+
+[[human]]
+claim = "in a practice fight, a team fight, a wave fight and a tournament match no race ability, signature strike or dwarf attack shows: no ability effect, no head butt or drop kick, no slam ring"
+
+[[human]]
+claim = "in a field battle the same abilities still work as before"

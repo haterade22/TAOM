@@ -1859,7 +1859,6 @@ Main/Features/SiegePropDiagnostics/SiegePropDiagnosticsSettingsProvider.cs	2
 Main/Features/SiegeRetreatLoot/SiegeRetreatLootService.cs	1
 Main/Features/SignatureStrikes/Hooks/SignatureAgentRoster.cs	2
 Main/Features/SignatureStrikes/Hooks/SignatureInstantKill.cs	2
-Main/Features/SignatureStrikes/Hooks/SignatureMissionGate.cs	1
 Main/Features/SignatureStrikes/Hooks/SignatureStrikeRunner.cs	18
 Main/Features/SignatureStrikes/Hooks/SignatureStrikeVerdicts.cs	5
 Main/Features/SignatureStrikes/Hooks/SignatureStrikesMissionLogic.cs	8

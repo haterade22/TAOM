@@ -2976,6 +2976,13 @@ The #1223 tests called a pure helper on `CustomAttacksUtils`. Any static call ru
 **Prevent:** when a pure slice hands out an effect ahead of its consumer, a test lists every unserved effect by name with the slice that will serve it, and fails both when an unlisted effect has no reader and when a listed one gains one. What an unserved effect would deliver stays off sale behind the same list, and a tool that arms a test option refuses it while the option's effect is on the list. A judge that checks an armed option also checks that the option did something, not only that the report echoes it.
 
 **Source:** [rca-long-defeat-phase4-2026-11-06.md](../rca-long-defeat-phase4-2026-11-06.md) row 15 (Tooling lens and Data flow lens); the gate is `LongDefeatEffectsServedTests`.
+### A test table whose numbers share a pattern proves the rule only for that pattern (#1529, 2026-11-22)
+
+**Why missed:** the small wager rule of the wave fight kept the first wave's smallest stake only while it was below a quarter of the current wave's limit. Its tests used the shipped table and a three-row table, and in both each limit is double the one before, so that quarter was always the higher number and the tests passed. With the shipped limits, a table minimum of 200 and a tournament bet cap of 600, wave one asked at least 250 and wave two at least 300: a player who entered with 250 denars and won could be refused the next wave. Two reviews rejected two versions of the formula, because each fix answered the example in the finding and not the property behind it.
+
+**Prevent:** when a review rejects a formula a second time, write down the property it must keep (here: the smallest wager on offer is never above the first wave's), then test that property over a grid of inputs that breaks each pattern the fixed examples share: limits that grow by less than double, a minimum above the quarter, an outside cap that binds. Then run mutants of the rule against the tests. A mutant that survives names a missing test or a condition that does nothing; here it was a bound the other conditions already implied, and the bound came out.
+
+**Source:** Codex re-review and Data flow lens of 2026-11-22 (P2); `StakeOptions.For`; `WaveRunTests.StakeChoices_OverAGridOfTables_TheSmallestWagerNeverRisesAboveTheFirstWaves`.
 
 ### A count named for what it suggests is read at the line that makes it (gate rule, 2026-11-22)
 

@@ -80,8 +80,8 @@ public class CreatureSaddleFamiliesTests
     public void MustUnequipHarness_OnlyWhenFamiliesDiffer(int mount, int harness, bool expected)
         => Assert.AreEqual(expected, CreatureSaddleFamilies.MustUnequipHarness(mount, harness));
 
+    [TestCategory("RequiresGame")]   // constructs Monster
     [TestMethod]
-    [TestCategory("RequiresGameIL")]
     public void Writer_SetsTheFamily_OnARealMonsterAndARealSaddle()
     {
         if (!_gameLoaded) Assert.Inconclusive("Game assemblies unavailable.");

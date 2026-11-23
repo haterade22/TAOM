@@ -168,6 +168,11 @@ class GameModulesTests(_EnvIsolated):
     def test_neither_set_falls_back_to_the_literal(self):
         self.assertEqual(_gamedir.game_modules(DEFAULT), Path(DEFAULT) / "Modules")
 
+    def test_neither_set_and_no_default_is_none(self):
+        # A caller that passes None checks for None (audit_troop_formation.main); Path(None) used to raise there
+        # on any machine without the variable, such as the PR checks runner.
+        self.assertIsNone(_gamedir.game_modules(None))
+
     def test_game_dir_alone_is_enough(self):
         os.environ[_gamedir.ENV_VAR] = r"D:\SteamLibrary\Bannerlord"
         self.assertEqual(_gamedir.game_modules(DEFAULT),

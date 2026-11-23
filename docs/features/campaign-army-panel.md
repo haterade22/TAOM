@@ -45,6 +45,11 @@ opaque map bar. The TAOM plate has transparent margins, so that does not work he
 - **Input.** Gauntlet sends hover and click events only to a widget whose rectangle holds the pointer, so the
   cut-off portraits get none. The army layer still takes the mouse over the panel's whole footprint, as vanilla's
   did, so with the panel closed a map click over the stats plate's bare stone inside that footprint does nothing.
+- **Cohesion tooltip.** A `HintWidget` relays its parent's hover, and the engine hovers one widget: the top one
+  that takes the mouse. While the player can manage the army, that is the enabled cohesion button, so vanilla's
+  hint, which sits beside the button, never opens for the army's leader. The panel carries the cohesion hint twice,
+  as vanilla's army button does: inside the button (enabled: the leader) and beside it (disabled: a member, or a
+  leader who is a prisoner or in an encounter or a map event).
 - **Position.** With the clip carrying the stats bar's height, both `OverlayNormal` states are the same: 166 px
   down, so 68 px stand above the cut and the whole header clears the plate's frame. Opening the panel raises it by
   the grid's height. The pager sits low enough that a closed panel hides it behind the shoulder too.
@@ -128,7 +133,9 @@ from this branch, game restarted.
 5. With fewer than 13 parties, look at the panel's right edge. Pass: the plate's right border lines up with the
    stats plate's, and the chevron stays at the header's right end.
 6. Hover the cohesion bar, the food and the men, and click a portrait. Pass: each shows vanilla's tooltip, and the
-   portrait opens the party's context menu.
+   portrait opens the party's context menu. Hover the cohesion bar twice: as the army's leader (a click still opens
+   army management) and as a member of another lord's army. Pass: the cohesion tooltip shows both times, and it
+   closes when the pointer moves on to the food.
 7. As the army's leader, click the army button and the cohesion bar. Pass: army management opens. As a member of
    another lord's army, the button is hidden.
 8. With 13 to 16 parties, open the panel and click the page button. Pass: the next page shows one row, and the page

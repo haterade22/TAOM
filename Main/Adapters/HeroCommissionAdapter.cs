@@ -91,10 +91,12 @@ public class HeroCommissionAdapter : IHeroCommissionAdapter
         // Their own battle kit is the closer thing to right.
         var civilian = template.FirstCivilianEquipment ?? template.FirstBattleEquipment;
         if (civilian != null)
-            // useSourceEquipmentType is false on the battle fallback: FillFrom copies the source's
-            // EquipmentType onto the target, so passing true here retyped the hero's civilian kit
-            // EquipmentType.Battle. Same defect Patch71 guards against on the fire path (#486).
+            // useSourceEquipmentType is false on the battle fallback, so the target keeps its own type
+            // rather than taking Battle from the source (#486). That own type is already Battle when the
+            // engine used the neutral fallback, which MakeCivilian below corrects (#1544).
             hero.CivilianEquipment.FillFrom(civilian, civilian.IsCivilian);
+
+        MakeCivilian(hero.CivilianEquipment);
 
         hero.SetNewOccupation(Occupation.Wanderer);
         // AddCompanionAction — NEVER a raw Clan.Heroes.Add (bug fix (e); donor's dropped
@@ -110,6 +112,38 @@ public class HeroCommissionAdapter : IHeroCommissionAdapter
     {
         var hero = FindAliveHero(heroId);
         return hero != null && hero.IsAlive;
+    }
+
+    public bool RepairCivilianKitType(string heroId)
+    {
+        var hero = FindAliveHero(heroId);
+        var campaign = Campaign.Current;
+        if (hero == null || campaign == null)
+            return false;
+
+        var civilian = hero.CivilianEquipment;
+        if (ReferenceEquals(civilian, campaign.DeadCivilianEquipment) || !MakeCivilian(civilian))
+            return false;
+
+        _logger?.LogInfo($"[FieldCommission] '{heroId}': civilian kit was typed Battle; retyped Civilian (#1544)");
+        return true;
+    }
+
+    /// <summary>
+    /// #1544: a troop with no civilian set leaves the hero the neutral fallback, which the engine types Battle (its
+    /// <c>EquipmentSet</c> has no civilian flag), and vanilla's inventory Cancel routes each saved set by type, so it
+    /// wrote that set over the battle kit. Retypes in place, slots kept: <c>FillFrom(source, true)</c> is Equipment's
+    /// only public type write. True when it changed.
+    /// </summary>
+    internal static bool MakeCivilian(Equipment equipment)
+    {
+        if (equipment == null || equipment.IsCivilian)
+            return false;
+
+        var typed = new Equipment(Equipment.EquipmentType.Civilian);
+        typed.FillFrom(equipment, useSourceEquipmentType: false);
+        equipment.FillFrom(typed, useSourceEquipmentType: true);
+        return true;
     }
 
     public PromotedHeroSnapshot GetPromotedHeroSnapshot(string heroId)

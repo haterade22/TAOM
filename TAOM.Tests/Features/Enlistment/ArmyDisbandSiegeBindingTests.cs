@@ -24,6 +24,7 @@ public class ArmyDisbandSiegeBindingTests
 {
     private const BindingFlags All = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 
+    [TestCategory("RequiresGameIL")]   // reads engine method bodies, which the reference assemblies do not have
     [TestMethod]
     public void FinishArmyObjective_StillSetsTheLeaderToHold()
     {
@@ -36,6 +37,7 @@ public class ArmyDisbandSiegeBindingTests
             "FinishArmyObjective no longer calls SetMoveModeHold: re-check whether the siege restore is still needed.");
     }
 
+    [TestCategory("RequiresGameIL")]   // reads engine method bodies, which the reference assemblies do not have
     [TestMethod]
     public void BesiegerCamp_StillDropsPartiesThatStoppedBesieging()
     {

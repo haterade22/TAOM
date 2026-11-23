@@ -71,6 +71,24 @@ public static class TeamPracticeRules
         return false;
     }
 
+    /// <summary>
+    /// True when the count the team win wrote has slipped below zero: the player won and still stood, every fighter has entered,
+    /// and an ally fell after the win was declared (an arrow already in flight might do that in the seconds before the return;
+    /// the source does not prove it). Vanilla pays the top prize only at exactly zero, so the count is put back.
+    /// </summary>
+    public static bool WinCountSlipped(bool playerSurvived, int unspawned, int alive) =>
+        playerSurvived && unspawned <= 0 && alive < 0;
+
+    /// <summary>
+    /// The number the practice HUD shows as "remaining opponents" in a team fight: vanilla's count minus the allies
+    /// still standing, never below 0. Vanilla's count is the fighters still to enter plus every fighter in the yard, so
+    /// it holds the player's allies too. A fighter who has not entered has no side yet, so the result is exact once every
+    /// fighter has entered and an upper bound before that. After the team win the count is 0 and the allies stand, so the
+    /// subtraction would go negative: it stops at 0. A negative allies value counts as 0.
+    /// </summary>
+    public static int OpponentsLeft(int remaining, int alliesStanding) =>
+        Math.Max(0, remaining - Math.Max(0, alliesStanding));
+
     /// <summary>True when a fighter of this AI team wears the ally outline.</summary>
     public static bool ShouldOutline(bool practising, int aiIndex, int aiCount) =>
         practising && IsAllyTeam(aiIndex, aiCount);

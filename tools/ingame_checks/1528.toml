@@ -49,3 +49,6 @@ claim = "in a Shadow town and in a neutral town, and with the switch off in a Fr
 
 [[human]]
 claim = "after the win the Training Master's debrief says your side held the yard, and the gold counts once"
+
+[[human]]
+claim = "the HUD line remaining opponents starts at 28 in a Free town (vanilla reads 30), does not change at the moment an ally falls, drops by one when an opponent falls or a fighter enters an ally's empty place, and reads 0 after the win while your allies still stand; the prize line under it is unchanged"

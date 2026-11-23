@@ -949,18 +949,13 @@ public class CampaignHotPathSettingsProvidersTests
             nameof(TAOM.Features.MarriageAlignment.MarriageAlignmentSettingsProvider.IsEnabled), nameof(TaomSettings.EnableMarriageAlignment)),
         [typeof(TAOM.Features.Encyclopedia.EncyclopediaSettingsProvider)] = (() => new TAOM.Features.Encyclopedia.EncyclopediaSettingsProvider(),
             nameof(TAOM.Features.Encyclopedia.EncyclopediaSettingsProvider.ShowAllEncyclopediaCharacters), nameof(TaomSettings.ShowAllEncyclopediaCharacters)),
-        // The two settlement models keep the switch in a private Enabled property.
+        // The two settlement models keep the switch in a private Enabled property. Their vanilla base constructors need the game,
+        // and the switch touches no field a constructor sets.
         [typeof(TAOM.Features.SettlementFood.Models.TaomSettlementFoodModel)] = (
-            // The vanilla base constructor needs a running campaign, and the switch touches no field it sets.
             () => System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(TAOM.Features.SettlementFood.Models.TaomSettlementFoodModel)),
             "Enabled", nameof(TaomSettings.EnableSettlementFoodTuning)),
-        [typeof(TAOM.Features.SettlementEconomy.Models.TaomSettlementEconomyModel)] = (() =>
-            {
-                var config = Substitute.For<TAOM.Features.SettlementEconomy.ISettlementEconomyConfigProvider>();
-                config.GetConfig().Returns(new TAOM.Features.SettlementEconomy.SettlementEconomyConfig());
-                return new TAOM.Features.SettlementEconomy.Models.TaomSettlementEconomyModel(
-                    Substitute.For<TAOM.Features.SettlementEconomy.ISettlementEconomyService>(), config);
-            },
+        [typeof(TAOM.Features.SettlementEconomy.Models.TaomSettlementEconomyModel)] = (
+            () => System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(TAOM.Features.SettlementEconomy.Models.TaomSettlementEconomyModel)),
             "Enabled", nameof(TaomSettings.EnableSettlementEconomyTuning)),
         [typeof(TAOM.Features.TroopWeight.TroopWeightSettingsProvider)] = (
             () => new TAOM.Features.TroopWeight.TroopWeightSettingsProvider(Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>()),

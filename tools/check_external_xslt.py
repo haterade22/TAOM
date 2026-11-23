@@ -6,7 +6,7 @@ TAOM ships 20 stylesheets across three modules (11 in the repo, 8 in `LOTRLOME_A
 own had any gate at all. The "Validate XML & XSLT" CI job globbed
 `Main/_Module/ModuleData/**/*.xslt`, so it never reached `TAOM_Map` or `LOTRLOME_Armory`:
 those modules are not in the checkout. That job went with the workflows in `c8d69a0dc`, and
-no CI has run since. This script is the only gate for the live modules, so run it by hand.
+no hosted job covers them. This script is the only gate for the live modules, so run it by hand.
 
 Why it matters more than "a malformed file would be obvious": `taom_schema.py`
 decides whether vanilla's settlements were stripped by regex-matching

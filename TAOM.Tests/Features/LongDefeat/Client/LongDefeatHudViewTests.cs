@@ -49,6 +49,7 @@ public class LongDefeatHudViewTests
         StringAssert.Contains(fail.Detail, "text=empty");
     }
 
+    [TestCategory("RequiresGame")]   // constructs ViewModel
     [TestMethod]
     public void TheUpgradeNoticeCheck_IsRecordedOncePerSerial()
     {

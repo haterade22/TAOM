@@ -243,6 +243,7 @@ public class LongDefeatBindingTests
 
     // The class kit (Slice 5): the override the engine reads first (Mission.cs:4108), the no-horse flag, the slot names and the fit test the adapter calls,
     // and the equipment read back from the spawned lord.
+    [TestCategory("RequiresGameIL")]   // runs Equipment.GetEquipmentIndexFromOldEquipmentIndexName
     [TestMethod]
     [TestCategory("BindingVerification")]
     public void TheClassKitMembers_StillResolve()
@@ -312,6 +313,7 @@ public class LongDefeatBindingTests
 
     // The wrapper's replay (tools/run_long_defeat.py, troop_groups) reads each troop's default_group from fords_troops.xml and applies this table, because the report names no troop group.
     // Each class once: NumberOfDefaultFormations is Skirmisher and NumberOfRegularFormations is General, which Distinct merges.
+    [TestCategory("RequiresGameIL")]   // runs TroopClassExtensions.IsMounted
     [TestMethod]
     [TestCategory("BindingVerification")]
     public void TheFormationClassFlags_AreTheTableTheWrapperReplayAssumes()
