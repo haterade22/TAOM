@@ -110,7 +110,9 @@ public sealed class HunterPartyAdapter : IHunterPartyAdapter
     private static bool IsEngaging(MobileParty party, MobileParty? main) =>
         main != null && party.DefaultBehavior == AiBehavior.EngageParty && party.TargetParty == main;
 
-    private static bool HoldsOff(MobileParty party) => party.Ai?.DoNotAttackMainPartyUntil.IsFuture ?? false;
+    private static bool HoldsOff(MobileParty party) =>
+        (party.Ai?.DoNotAttackMainPartyUntil.IsFuture ?? false)
+        || (party.MapFaction?.NotAttackableByPlayerUntilTime.IsFuture ?? false);
 
     public bool PinAndEngagePlayer(string partyId)
     {
