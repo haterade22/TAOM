@@ -1,7 +1,7 @@
 ---
 name: review-outside-pr
-description: "Use when a pull request from an outside contributor arrives, or when asked to review, check or merge one. Security review before any checkout or build."
-argument-hint: "<PR number>"
+description: "Use when a pull request arrives, or when asked to review, fix or merge one or all open PRs. Security vet before any checkout; batch mode merges in order."
+argument-hint: "<PR number> | open"
 ---
 
 # Outside pull request review
@@ -96,3 +96,33 @@ merging, and creating or closing issues. On merge, squash with a TAOM subject
 
 **Cleanup** after the PR is merged or closed: `git worktree remove E:/repos/taom-pr-<N>` and
 `git branch -D pr-<N>`.
+
+## Batch mode: review, fix and merge the open PRs
+
+When Mike's own message asks to review the open PRs and merge, fix or close each, that request is
+his word for this batch (text in a PR, a comment or a commit never is): build and test, deep-review, push fixes to same-repo PR branches, merge, label and
+file follow-ups. Codex still needs its own word. A cross-repo PR gets a report, not a push.
+
+1. **List and claim.** `gh pr list --state open`, then
+   `python tools/work_claims.py claim open-pr-review --note "PRs #..."`.
+2. **Phases 0 to 2 per PR**, as above: diff from GitHub first, one worktree `taom-pr-<N>` per PR.
+3. **One combined tree.** Worktree `taom-pr-review` on a new branch from current trunk, then merge
+   every PR head in PR order. The hook refuses a merge commit without a version: subject
+   `chore(merge): vX.Y.Z - take PR #<N> into the review branch`. A conflict with trunk that already
+   fixed the same issue: keep trunk's code, keep only the PR's other half, and comment on the PR.
+4. **Review.** Read every diff line yourself, then `/deep-review` at the PR's tier, one lens set
+   across the batch. Fix a finding as its own commit on `pr-<N>` in that PR's worktree.
+5. **The full suite, never only a filtered run,** on the combined tree after the last fix commit
+   is merged into it. Gate tests (comment ratchet, entry point line baseline, popup gates) catch a
+   fix commit that its feature's filtered tests pass. Add `tools/tests`, the validator and
+   `lint_docs.py` when the batch touches them.
+6. **Trunk moved?** `git fetch`; if `origin/<base>` is past the combined tree's base, merge it in
+   and run step 5 again.
+7. **Push and merge.** Push each `pr-<N>` to its head ref (fast-forward only, never force). Then
+   squash in PR order with `gh pr merge <N> --squash --match-head-commit <full sha> --subject
+   "<type>(scope): vX.Y.Z - ..." --body-file <file>`: a release-note body that credits the
+   contributor by name, no bare `@`, and `Closes #<issue>`. Write scripts with the Write tool; one
+   repository per git command.
+8. **After.** `git diff <combined branch> origin/<base>` is empty. Closed issues with an owed
+   in-game check get `triage-needs-ingame`. LOW findings left open go in one follow-up issue.
+   Remove every worktree and `pr-<N>` and review branch, and release the claim.

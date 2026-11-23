@@ -106,13 +106,14 @@ An unreachable step is reported with the command tried and the unmet preconditio
 
 ## Known limits
 
-- The HUD line "remaining opponents" (`MissionArenaPracticeFightVM`) counts allies too in a team fight. The lead files a follow-up.
+- The HUD line "remaining opponents" (`MissionArenaPracticeFightVM`) counts allies too in a team fight (#1536).
 - The ally outline needs `AgentVisuals` valid at spawn; not run in game yet.
 - Vanilla's `SelectRandomAiTeam` (`ArenaPracticeFightMissionController.cs:230-246`) fills the first team with no fighter, by index, so a fallen ally (teams 0 and 1) is replaced before any opponent team. Each team holds at most one fighter, so the yard holds at most two allies and four opponents.
 
 ## Changelog
 
 - 2026-11-22: team practice fights in Free towns (#1528).
+- 2026-11-22: the win count is held at zero until the player is back at the master (#1528, Mike's decision). After the team win is declared the allies stand for about five seconds; an ally who falls in that time (an arrow already in flight might do it; the source does not prove it) took vanilla's count below zero, and vanilla pays the 250 only at exactly zero. The tick patch now puts the count back for a player who won and still stood (`TeamPracticeRules.WinCountSlipped`), and writes one `[TeamPractice]` log line when it does. Not seen in play: three reviews raised the case and none could prove it.
 
 ## GitHub Issue
 

@@ -253,12 +253,12 @@ public class WaveBetServiceTests
     }
 
     [TestMethod]
-    public void StakeChoices_ThenTheRunMovesToWaveTwo_RaiseTheCap()
+    public void StakeChoices_ThenTheRunMovesToWaveTwo_RaiseTheCap_AndKeepTheFirstWavesSmallStake()
     {
         _f.Fighting(500);
         Bets.PayClearedWave();
 
-        CollectionAssert.AreEqual(new[] { 250, 500, 1000 }, Bets.StakeChoices.ToArray());
+        CollectionAssert.AreEqual(new[] { 120, 500, 1000 }, Bets.StakeChoices.ToArray());
     }
 
     // ---- PrepareRun
@@ -913,5 +913,49 @@ public class WaveBetServiceTests
 
         Bets.ImportDays(null);
         Assert.IsFalse(Bets.Ledger.RanToday(WaveBetFixture.TownId, 100));
+    }
+
+    [TestMethod]
+    public void Refusal_BetweenWaves_APurseThatCoversOnlyTheSmallStake_IsNone()
+    {
+        _f.Fighting(250);
+        Bets.PayClearedWave();
+        _f.Purse.Gold = 150;
+
+        Assert.AreEqual(OfferRefusal.None, Bets.Refusal);
+    }
+
+    [TestMethod]
+    public void PayClearedWave_TheLastWavePaidInPart_TheRunEndCheckSeesTheCorrectedAccount()
+    {
+        var waves = WaveTable.Default.Waves.Count;
+        for (var wave = 1; wave < waves; wave++)
+        {
+            _f.Fighting(200);
+            Bets.PayClearedWave();
+        }
+
+        _f.Fighting(200);
+        _f.Purse.GrantAdds = 100;
+        _f.Outcomes.ClearReceivedCalls();
+
+        Assert.AreEqual(100, Bets.PayClearedWave());
+
+        Assert.AreEqual(WaveRunEnd.Completed, Bets.Run!.EndReason);
+        _f.Outcomes.Received().Pass(TrainingWavesChecks.RunEnd, Arg.Any<string>(), Arg.Any<string>());
+        _f.Outcomes.DidNotReceive().Fail(TrainingWavesChecks.RunEnd, Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void PayClearedWave_ThePurseTakesLessThanThePayout_TheRunFollowsTheGoldThatArrived()
+    {
+        _f.Fighting(500);
+        _f.Purse.GrantAdds = 500;
+
+        var paid = Bets.PayClearedWave();
+
+        Assert.AreEqual(500, paid);
+        Assert.AreEqual(500, Bets.Run!.LastPayout);
+        Assert.AreEqual(0, Bets.Run!.Net);
     }
 }
