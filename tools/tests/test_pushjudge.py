@@ -459,6 +459,12 @@ ISSUE_691 = [
     ("feature", 'git push --force --repo "\\>" origin bannerlord-1.5.x', "block", T1),
     ("feature", 'git push --force origin bannerlord-1.5.x "x\\\\">log', "block", T1),
     ("feature", 'git push --force --repo "it\'s >" origin bannerlord-1.5.x', "block", T1),
+    # Codex review of #1540: the quoted > must stay a word in a segment too long for the shlex
+    # pass, inside a bash -c script, after a second command, and inside a $( ) substitution.
+    ("feature", "git push --force -o '>' origin HEAD:bannerlord-1.5.x" + " " * 4100, "block", T1),
+    ("feature", 'bash -c "git push --force -o \'>\' origin HEAD:bannerlord-1.5.x"', "block", T1),
+    ("feature", 'git push origin feature; bash -c "git push --force -o \'>\' origin HEAD:bannerlord-1.5.x"', "block", T1),
+    ("feature", 'echo "$(git push --force -o \'>\' origin HEAD:bannerlord-1.5.x)"', "block", T1),
 ]
 
 

@@ -410,8 +410,8 @@ def _quoted_redirs_marked(seg):
 def _words_kept(seg):
     """One quote-aware segment with each argument's boundary kept: a blank inside an argument
     becomes \\x1f (as does a quoted or escaped < or >, #691), and an empty argument \\x1e, so
-    `-o "ci skip" origin` and `-o "" origin` still hand validate-push the value as one word. None when it does not parse as POSIX words or is
-    longer than WORDS_KEPT_MAX."""
+    `-o "ci skip" origin` and `-o "" origin` still hand validate-push the value as one word.
+    None when it does not parse as POSIX words or is longer than WORDS_KEPT_MAX."""
     if len(seg) > WORDS_KEPT_MAX:
         return None
     try:
@@ -430,7 +430,10 @@ def push_candidates(cmd, tool):
        together), and each such segment up to WORDS_KEPT_MAX again with its argument boundaries
        kept;
     3. the raw command split outside quotes with the tool's own escape, the split validate-push ran
-       before plan 027, so reading PowerShell never loses a push the raw text showed.
+       before plan 027, so reading PowerShell never loses a push the raw text showed;
+    4. each line above again with its quoted or escaped < and > marked as words (#691): linear, so
+       it also covers a segment too long for the shlex pass, a bash -c script and a $( ) body. A
+       real redirection inside a nested script then reads as a word, which can only refuse more.
     In the order they are produced, never sorted: the judge stops at the first refused line, so the
     order only decides which target a message names, and it answers inside its deadline in any
     order (#680)."""
@@ -445,6 +448,7 @@ def push_candidates(cmd, tool):
     lines += quoted
     lines += [w for w in (_words_kept(q) for q in quoted if "push" in q) if w]
     lines += segments(cmd, "`" if tool == "PowerShell" else "\\").split("\n")
+    lines += [_quoted_redirs_marked(line) for line in lines if "push" in line]
     seen, keep = set(), []
     for line in lines:
         if "push" in line and line not in seen:
