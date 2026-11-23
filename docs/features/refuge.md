@@ -89,8 +89,10 @@ clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition
   Per-Campaign State"). SubModule builds the behavior fresh in every campaign's `OnGameStart`, before any
   campaign event and before a load's SyncData (`PerCampaignBehaviorWiringTests`), so a fresh campaign or a
   pre-feature save starts empty and the process-lifetime singleton cannot leak campaign A's book into
-  campaign B. The reset's visual clear is safe that early: it only removes the previous scene's entities,
-  each removal inside a catch, as `RefugeService.OnGameLoaded` already does on every load. `LoadFrom` also
+  campaign B. The reset's visual clear removes the previous scene's entities, the same call
+  `RefugeService.OnGameLoaded` already makes on every load, after the old `MapScreen` is finalized. Whether
+  native `GameEntity.Remove` is safe on an entity of a cleared scene is unverified; the `catch` in
+  `CampLayoutBuilder.Remove` cannot stop a native access violation. `LoadFrom` also
   scrubs null rows and clears every transient.
 - **Orphans get an exit.** A party adopted on load without a book row (`Established=false`,
   `Building=false`) is dismantlable (menu + encounter open for it, everything else greyed), so it
