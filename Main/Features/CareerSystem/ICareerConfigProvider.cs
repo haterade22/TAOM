@@ -6,6 +6,10 @@ namespace TAOM.Features.CareerSystem;
 public interface ICareerConfigProvider
 {
     IReadOnlyList<CareerDefinition> LoadCareers();
+
+    /// <summary>#1046: true when taom_careers.xml has a &lt;Career&gt; element with this id, whether or
+    /// not it parsed. A failed element is missing from <see cref="LoadCareers"/> but not retired.</summary>
+    bool IsCareerDeclared(string careerId);
     IReadOnlyList<CareerChoiceGroupDefinition> LoadChoiceGroups();
     IReadOnlyList<CareerChoiceDefinition> LoadChoices();
     int GetMaxPerkPoints();

@@ -110,7 +110,11 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
     {
         var hero = Hero.MainHero;
         if (hero == null) return;
-        _lifecycle.AssignFallbackCareerIfMissing(hero.StringId, hero.Culture?.StringId);
+        var cleared = _lifecycle.ClearUnknownCareer(hero.StringId);
+        var assigned = _lifecycle.AssignFallbackCareerIfMissing(hero.StringId, hero.Culture?.StringId);
+        if (cleared && assigned)
+            InformationManager.DisplayMessage(new InformationMessage(
+                new TextObject("{=taom_career_unknown_reset}Your career no longer exists in this version, so a new one was chosen.").ToString()));
     }
 
     private void OnHeroLeveledUp(Hero hero, bool shouldNotify)
