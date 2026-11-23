@@ -37,12 +37,8 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
         _visuals = visuals;
         _logger = logger;
         _menuController = new RefugeMenuController(refuges, wardens, settings, menus, encounters);
+        _refuges.ResetForNewSession();
     }
-
-    /// <summary>True once SyncData ran in LOADING mode this session: the book was rebuilt from a
-    /// real save record. False for a fresh campaign AND for a save written before this feature
-    /// existed - both must start from an empty book, not the previous session's singleton state.</summary>
-    private bool _syncedThisSession;
 
     public override void RegisterEvents()
     {
@@ -82,7 +78,6 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
             dataStore.SyncData("_taomRefuges", ref refuges);
             dataStore.SyncData("_taomRefugeCounter", ref counter);
             _refuges.LoadFrom(refuges, counter);
-            _syncedThisSession = true;
         }
         else
         {
@@ -94,38 +89,12 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
 
     private void OnSessionLaunched(CampaignGameStarter starter)
     {
-        // FIRST: the session-reset gate, before any menu or tick can read the book.
-        ResetIfNoLoadedRecord();
         // Menus register unconditionally; runtime gates live at the option conditions, so an MCM
         // toggle mid-session needs no relaunch (FiefHub lesson).
         _menuController.AddMenus(starter);
     }
 
-    /// <summary>The reset half of the singleton-leak fix (the FieldCamp/SupplyLines shape): when
-    /// no save record loaded this session (fresh campaign, or a pre-feature save), the
-    /// process-lifetime service still holds the PREVIOUS campaign's book and would save it into
-    /// this one. Latches afterwards so the OnGameLoaded and OnSessionLaunched callers cannot
-    /// double-reset (a second wipe would eat anything founded right after launch). Internal for
-    /// direct test access (OnSessionLaunched also needs a real CampaignGameStarter).</summary>
-    internal bool ResetIfNoLoadedRecord()
-    {
-        if (_syncedThisSession)
-            return false;
-        _refuges.ResetForNewSession();
-        _syncedThisSession = true;
-        _logger.LogInfo("[Refuge] no saved record this session - book and transients reset.");
-        return true;
-    }
-
-    private void OnGameLoaded(CampaignGameStarter starter)
-    {
-        // A save from before the feature has no record: SyncData never ran and the singleton
-        // book still belongs to the previous session, so reset instead of reconciling (and
-        // re-showing) its stale state. (OnSessionLaunched re-checks for fresh campaigns.)
-        if (ResetIfNoLoadedRecord())
-            return;
-        _refuges.OnGameLoaded();
-    }
+    private void OnGameLoaded(CampaignGameStarter starter) => _refuges.OnGameLoaded();
 
     private void OnTick(float dt)
     {

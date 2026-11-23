@@ -12,8 +12,8 @@ namespace TAOM.Features.FiefGranting;
 /// <c>SiegeDefenseService.SnapshotForSave</c> shape), so no new saveable type and no definer change.
 ///
 /// Reuse.Singleton holding per-campaign state, so it carries the session-reset story from
-/// <c>csharp-architecture.md</c>: the behavior calls <see cref="ResetForNewSession"/> when no save
-/// record loaded this session, and <see cref="RestoreFromSave"/> replaces rather than merges.
+/// <c>csharp-architecture.md</c>: the behavior's constructor calls <see cref="ResetForNewSession"/> in
+/// every campaign (#773), and <see cref="RestoreFromSave"/> replaces rather than merges.
 /// </summary>
 public sealed class FiefSiegeParticipationService : IFiefSiegeParticipationService
 {

@@ -1205,9 +1205,19 @@ public class SubModule : MBSubModuleBase
         // a container singleton would reset it once per process (WarOfTheRingWiringTests).
         campaignStarter.AddBehavior(new WarOfTheRingBehavior(wotrService, wotrLogger,
             IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
-        // WotR Momentum #327 — Evil-vs-Good progress tracking + victory; behavior is a
-        // Reuse.Singleton (it carries the state store's persistence dict).
-        campaignStarter.AddBehavior(IoC.Resolve<Features.WarOfTheRingMomentum.WarOfTheRingMomentumBehavior>());
+        // WotR Momentum #327. #773: must stay `new` per campaign; its constructor resets the
+        // process-lifetime momentum store (PerCampaignBehaviorWiringTests).
+        campaignStarter.AddBehavior(new Features.WarOfTheRingMomentum.WarOfTheRingMomentumBehavior(
+            IoC.Resolve<Features.WarOfTheRingMomentum.IMomentumStateStore>(),
+            IoC.Resolve<Features.WarOfTheRingMomentum.IMomentumEventService>(),
+            IoC.Resolve<Features.WarOfTheRingMomentum.IMomentumEnrollmentService>(),
+            IoC.Resolve<Features.WarOfTheRingMomentum.IMomentumVictoryService>(),
+            IoC.Resolve<IWarEventSnapshotAdapter>(),
+            IoC.Resolve<Features.WarOfTheRingMomentum.IMomentumSettingsProvider>(),
+            wotrService,
+            IoC.Resolve<Features.WarOfTheRingMomentum.UI.IMomentumUIService>(),
+            IoC.Resolve<IModLogger>(),
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
 
         var siegeDefenseService = IoC.Resolve<ISiegeDefenseService>();
         var siegeDefenseLogger = IoC.Resolve<IModLogger>();

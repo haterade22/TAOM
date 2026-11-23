@@ -17,8 +17,9 @@ namespace TAOM.Tests.Features.FiefGranting;
 /// <summary>
 /// #565: the participation record lives in a process-lifetime singleton and SyncData only runs when
 /// a save record exists, so a fresh campaign, or a save from before the feature, MUST reset the
-/// service or it inherits (and then saves) the previous campaign's record. Same shape as
-/// <c>FieldCampBehaviorSessionResetTests</c>. The two event handlers are exercised through
+/// service or it inherits (and then saves) the previous campaign's record. The reset runs in the
+/// constructor (#773), the WarOfTheRingBehavior shape; SubModule's per-campaign construction is
+/// pinned in <c>PerCampaignBehaviorWiringTests</c>. The two event handlers are exercised through
 /// reflection with uninitialized engine objects, which is enough to pin their gates: neither
 /// handler may touch the record for a null settlement, a non-siege battle, or a co-op client.
 /// </summary>
@@ -57,53 +58,37 @@ public class FiefGrantingBehaviorSessionResetTests
     // ---------------------------------------------------------------- session reset
 
     [TestMethod]
-    public void FreshCampaign_NoSyncData_ResetsTheService()
+    public void Constructor_FreshCampaign_ResetsTheService()
     {
-        Assert.IsTrue(_sut.ResetIfNoLoadedRecord());
-
+        // #773: the behavior is built in every campaign's OnGameStart, before any campaign event and
+        // before a load's SyncData, so the reset sits in its constructor.
         _participation.Received(1).ResetForNewSession();
     }
 
     [TestMethod]
-    public void ResetIfNoLoadedRecord_Latches_SecondCallNeverWipesAgain()
-    {
-        Assert.IsTrue(_sut.ResetIfNoLoadedRecord());
-
-        Assert.IsFalse(_sut.ResetIfNoLoadedRecord());
-        _participation.Received(1).ResetForNewSession();
-    }
-
-    [TestMethod]
-    public void OnSessionLaunched_AndOnGameLoaded_ShareOneLatch()
-    {
-        Invoke("OnGameLoaded", new object?[] { null });
-        Invoke("OnSessionLaunched", new object?[] { null });
-
-        _participation.Received(1).ResetForNewSession();
-    }
-
-    [TestMethod]
-    public void LoadingSyncData_RestoresTheRecordAndMarksTheSessionSynced()
+    public void LoadingSyncData_RestoresTheRecordOverTheConstructorReset()
     {
         SyncWith(isLoading: true);
 
         // A substitute IDataStore leaves the ref null, which is exactly a pre-#565 save: the
         // service must be told to start empty, not left holding the previous session's record.
-        _participation.Received(1).RestoreFromSave(null);
-        Assert.IsFalse(_sut.ResetIfNoLoadedRecord());
-        _participation.DidNotReceive().ResetForNewSession();
+        Received.InOrder(() =>
+        {
+            _participation.ResetForNewSession();
+            _participation.RestoreFromSave(null);
+        });
     }
 
     [TestMethod]
-    public void SavingSyncData_SnapshotsTheRecord_AndDoesNotCountAsSynced()
+    public void SavingSyncData_SnapshotsTheRecord_AndNeitherResetsAgainNorRestores()
     {
         _participation.SnapshotForSave().Returns(new Dictionary<string, string>());
 
         SyncWith(isLoading: false);
 
         _participation.Received(1).SnapshotForSave();
+        _participation.Received(1).ResetForNewSession();
         _participation.DidNotReceive().RestoreFromSave(Arg.Any<Dictionary<string, string>>());
-        Assert.IsTrue(_sut.ResetIfNoLoadedRecord(), "a save pass over a stale record must not launder it into synced");
     }
 
     // ---------------------------------------------------------------- owner-change gate

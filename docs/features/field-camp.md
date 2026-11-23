@@ -73,10 +73,10 @@ short prefix.
   (settlement / engage / escort target + navigation type, not just the point), so "break camp and
   move" still enters the town or presses the attack instead of walking to a stale position.
 - **Session reset**: the camp book lives in a process-lifetime singleton and SyncData only runs
-  when a save record exists, so the behavior tracks whether a LOADING SyncData ran and calls
-  `ICampService.ResetForNewSession()` from OnSessionLaunched / OnGameLoaded otherwise (fresh
-  campaign, or a pre-feature save). The reset latches `_syncedThisSession` so a stray later call
-  cannot wipe a camp pitched right after launch (the Refuge/SupplyLines shape). `LoadFrom` also
+  when a save record exists, so the behavior's constructor calls `ICampService.ResetForNewSession()`
+  (#773). SubModule builds the behavior fresh in every campaign's `OnGameStart`, before any campaign
+  event and before a load's SyncData, so a fresh campaign or a pre-feature save starts empty and a
+  load restores its book over the reset (`PerCampaignBehaviorWiringTests` pins the `new`). `LoadFrom` also
   clears every transient (ambush scan clock, move latch, inquiry latch) and drops null book rows,
   logging once.
 - **SyncData branches on direction** (the SupplyLines shape): the save half is SaveInto + SyncData
@@ -338,10 +338,10 @@ A co-op guest gets no camp. `ICampMenuActivationQuery.DefersToCoopHost` (`MapScr
 - Banner-cloth wind is ticked from `Show`/`IsShown` polling; `CampService.FrameTick` polls
   `IsShown` every pass while the visual stands, and that poll IS the steady-state wind driver: if
   it is ever removed, flags go limp shortly after placement (visuals builder note).
-- The behavior's `_syncedThisSession` flag is set by a loading SyncData or by the one-shot reset
-  itself (the latch). Do not "simplify" the OnSessionLaunched / OnGameLoaded reset checks away:
-  without them a fresh campaign inherits the previous campaign's camp book from the
-  process-lifetime singleton and saves it.
+- The reset lives in the behavior's constructor and holds only while SubModule builds the behavior
+  with `new` per campaign. Do not move it to OnSessionLaunched or OnGameLoaded, and do not register
+  the behavior in the container: a fresh campaign would then inherit the previous campaign's camp
+  book from the process-lifetime singleton and save it.
 - `ICampOverlayContributor` consumers all contain per-contributor (and per-`Lazy` factory)
   exceptions: `CampService.FirstContributorBlockReason` feeds a GameMenuOption condition whose
   engine dispatch is unguarded, so a throwing contributor there is a menu-open crash, not a
