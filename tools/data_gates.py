@@ -122,6 +122,10 @@ ELEPHANT_GLOBS = CREATURE_GLOBS + (
 SPIDER_GLOBS = CREATURE_GLOBS + (
     "*/creature/spider/*.tpac", "*tools/check_gait_stride.py", "*tools/bind_spider_clips.py", "*tools/spider_gait.py",
     "*tools/elephant_write_masters.py", "*tools/gen_elephant_anim_clips.ps1")
+# The warg's clip records and masters, the Armory's cache entries (the gate reads the cook of seven of them, and a
+# cache entry is named by a GUID, not by its creature), the plan that sets the records, and the tool that writes them (#1563).
+WARG_GLOBS = ("*/creature/warg/animations/*.tpac", "*/lotrlome_armory/runtimedatacache/*.rdc",
+              "*tools/warg_gait_plan.json", "*tools/repoint_anim_clip.py", "*tools/set_clip_balance_name.py")
 FBX_GLOBS = ("*/assetsources/*.fbx",)
 LANG_GLOBS = ("*/languages/*.xml", "*/taom_module_strings.xml", "*/taom_xslt_strings.xml")
 # Every source and output of generate_name_localization_strings.py CATEGORIES not already in TROOP_GLOBS,
@@ -314,6 +318,12 @@ GATES = (
          ("python", "tools/verify_mount_assets.py", "spider"), ("docs/features/spider.md",),
          note="the skeleton is in a live package, every movement clip carries its tag, no row names a clip that is "
               "not there, and the body capsule holds the body (#1560: a reinstall brings back the chest pill)"),
+    Gate("warg-gaits", "warg clip records, their plan and its tool", WARG_GLOBS,
+         ("python", "tools/repoint_anim_clip.py", "--plan", "tools/warg_gait_plan.json", "--under",
+          "creature/warg/animations", "--check"), ("docs/reference/lotrlome-warg-gait-changes.md",),
+         note="a reinstall or an art drop puts the canter back on the trot's keys and the gallop back on a travel "
+              "twice what its paws cover, and no other gate sees it; exit 1 also while a changed record waits for "
+              "its cook (start the Modding Kit once)"),
     Gate("dwarf-attacks", "dwarf attack actions and their as_dwarf_warrior rows", CREATURE_GLOBS,
          ("python", "tools/bind_dwarf_attack_actions.py", "--check"), ("docs/features/dwarf-attacks.md",),
          note="a reinstall drops the two declarations and rows, and parity still passes; it also fails while the "

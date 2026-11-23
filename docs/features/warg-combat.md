@@ -139,6 +139,7 @@ step 3 above never happens.
 
 - **Adapter cache (#592):** `TAOM.Tests/Adapters/AgentAdapterCacheTests.cs` (15) and `MissionAdapterFactoryTests.cs` (6, on bare uninitialized `Agent` objects): reference identity, eviction, index-reuse count and the once-per-mission reuse log.
 - **Current:** `TAOM.Tests/Features/Warg/WargAttackServiceTests.cs` has 26 tests (2026-11-08): the damage formula in `CalculateWargAttackDamage` (through a testable subclass that stubs the sealed armor lookup), the `HandleWargTargetHit` guards and branches, the `WargAttack` null and inactive guards, and the constructor. `IWargAttackService` takes `IAgentAdapter` throughout since #178.
+- **The gait step and the gait plan (#1563):** `TAOM.Tests/Features/Warg/WargTrialRulesTests.cs` (the pass rule on both sides of 6 m/s, NaN, no rider, the facts line) and `CommandTrialWargStepsTests.cs` (the step against the stand-in: the orders, the mission-tick reads, the roster, the refusal beside another step); `tools/tests/test_warg_gait_plan.py` (the plan's relations, and the installed masters measured against its travel values).
 - **Coverage gap:** the two `WargAttack` dispatch tests (running or standing bite by speed) are `[Ignore]`d because `ActionIndexCache.Create` needs the engine's animation registry.
 - **Tick-cost tests (plan 015, #659):** `TAOM.Tests/Features/Warg/WargTickCostTests.cs` (17) pins, in the IL, that no per-tick node method reaches `IoC.Resolve` or `IoC.ResolveAll`, that the five warg nodes that scan or hold a service reach neither from any body (constructors and field initializers included) while `WargBehaviorTree.BuildTree` resolves each service exactly once, and that the grid scans use the buffer overload without constructing a list; it checks by reflection that no node keeps a service or buffer in a static field, and proves the IL checks against control fixtures; `TAOM.Tests/Features/AdvancedCombat/BoneCheckDuringAnimationTickTests.cs` (7) drives the bite's `Tick` with substitutes: a wind-up frame never touches the attacker's visuals, the window end and a missing skeleton or visuals in the window expire the bite, and a NaN progress keeps it without a hit test; one IL rule pins a single progress read per tick; `WargTreeNodeInjectionTests.cs` (3) drives `WargAttackTask` and `WargAiControlledIsNotFacingEnemy` with substitute services; `TAOM.Tests/Features/AdvancedCombat/SpatialGridQueryTests.cs` (9) checks the grid query against a brute-force sphere scan through its generic helpers, plus column order and a point that moved since the rebuild; `BoneCheckRangeGateTests.cs` (10) pins that a target's skeleton is fetched only inside the range gate, that a NaN frame fails the gate, and every per-target skip.
 
@@ -151,6 +152,66 @@ step 3 above never happens.
 5. Create `{Creature}AttackService.cs` for damage calculation. Resolve each service a node needs once in the tree's static `BuildTree` and pass it to the node's constructor (never `IoC.Resolve` in a node: its root runs every mission tick), and scan into a reused instance buffer; `WargTickCostTests` is the pattern to copy (#659)
 6. Register services in IoC, add MissionBehavior in SubModule.cs `OnMissionBehaviorInitialize`
 7. Identify warg/creature via `agent.Monster.StringId == "your_monster_id"`
+
+## Gaits
+
+The warg's walk, trot, canter and gallop are clip records in the Armory, not code. Their masters, travel, pace
+limits and cadence, and the change of 2026-11-23 that gave the canter its own master and made the canter's and
+the gallop's cadence follow the speed (#1563), are in
+[lotrlome-warg-gait-changes.md](../reference/lotrlome-warg-gait-changes.md). The gate is the `warg-gaits` row of
+`tools/data_gates.py`. A reinstall of the Armory reverts the records.
+
+### The warg gait step of the command trial
+
+The unattended custom battle (`tools/run_command_trial.py`, [unattended runs](../reference/unattended-game-runs.md))
+has a step for warg riders, `warg_gaits` (#1563). It runs only when named, with `enter` and no other step, in a
+battle of its own: twelve `fow_mordor_warg_raider` troops join the player's army, whose twenty
+`fow_gondor_pg_cavalry` horsemen are the control, against the crew battle's 300 melee orcs. On the runs below the
+line read `riders=11`, probably for the reason the spider step's doc gives: the battle size setting holds some
+soldiers back as reinforcements.
+
+Run it from a checkout built with `./build.ps1`, with no game running:
+`python tools/run_command_trial.py --steps enter,warg_gaits`.
+
+The step waits up to 20 s for a rider on a warg-family mount (`WargConfig.IsWargMonster`), holds the whole army
+with the Stop order for 6 s, gives the Charge order and reads every mission tick for 14 s, then holds the army
+again. It takes no picture.
+
+The line is `[SeatTrial] step=warg_gaits result=<PASS|FAIL> riders=<n> mounted=<n> stand=<m/s> top=<m/s>
+limit=<n> horse=<m/s> scale=<n>`, then `seated` and `faulted`:
+
+| Fact | Meaning |
+|---|---|
+| `riders`, `mounted` | the most warg riders alive at once in the charge; those still on a living warg at its end |
+| `stand` | the highest warg speed in the last 2 s of the hold |
+| `top` | the highest warg speed in the charge, the length of `Agent.MovementVelocity` |
+| `limit` | the highest `DrivenProperty.MountSpeed` of a warg |
+| `horse` | the highest speed of another mount under a rider of the team |
+| `scale` | a warg's `Agent.AgentScale`; the movement node's pace limits apply to speed divided by it |
+
+It passes with at least one rider and a `top` of 6.0 m/s or more. **A PASS means the wargs ran. It does not
+mean their gaits are right:** managed code cannot read which gait clip plays (a moving mount's channel 0 holds
+`act_none`), and the step passed on the records that made the legs look like a walk. The records are held by
+the `warg-gaits` gate, and the legs by a person's eye.
+
+| Run | Armory records | Line |
+|---|---|---|
+| `20261123-143843` | before the change | `top=9.8 limit=13.0 horse=10.3` (an older form of the step) |
+| `20261123-160513` | after the change and its cook | `result=PASS riders=11 mounted=11 stand=0.0 top=10.0 limit=13.0 horse=10.3 scale=1.10` |
+
+## How to verify in game
+
+For the gaits (#1563), after any change to the warg's clip records and one Modding Kit start:
+
+1. `python tools/repoint_anim_clip.py --plan tools/warg_gait_plan.json --under creature/warg/animations --check`
+   exits 0 (each record `DONE` and `cooked=True`).
+2. Start a custom battle with warg riders in the player's army and order a charge across open ground.
+3. At a medium run (the canter, about 5 to 7.7 m/s) and at full speed (the gallop), the paws keep pace with the
+   ground: no slide, and no legs that turn over slowly under a fast body.
+4. Turn the formation at speed, and watch the change from canter to gallop: no jump in the legs.
+5. Repeat with a fell warg rider.
+
+Checked on 2026-11-23 by the maintainer: step 3. Steps 4 and 5 are owed.
 
 ## Bannerlord 1.3.12 Gotchas
 
@@ -192,6 +253,12 @@ step 3 above never happens.
 
 ## Changelog
 
+- 2026-11-23 (#1563): players reported AI warg riders that "walk". The wargs ran at full speed; the canter
+  record played the trot's keys, the gallop record claimed twice the ground its paws cover, and each pace kept
+  one cadence. Seven clip records in the Armory were rewritten
+  ([ledger](../reference/lotrlome-warg-gait-changes.md)); no C# of the feature changed. New: the `warg_gaits`
+  step of the command trial (above), the `warg-gaits` data gate, and travel, pace limits and step points in
+  `tools/repoint_anim_clip.py`.
 - 2026-11-19: a bite spares a riderless mount on the warg's side (#594), through `CreatureBiteSides.Spares`, shared with the spider: a mount carries its last rider's team (`MountRiderSides`), and a riderless mount whose side is unknown is spared, by a riderless warg too. A riderless warg still compares no team with soldiers.
 - 2026-11-04: `SwitchMainAgentController(false)` no longer calls vanilla's `Enable()` while `SeatPresence.IsSeated` (the Seat's leave
   does), so a calm warg's death, a rage that ends between two screen ticks or a lost warg cannot turn vanilla's controller on under the
@@ -235,6 +302,8 @@ step 3 above never happens.
 
 ## GitHub Issue
 
+- **Issue:** #1563, [AI warg riders reported walking instead of running (v2.0.41)](https://github.com/haterade22/TAOM/issues/1563)
+- **Status:** Open (a turn at speed, the pace change and a fell warg owed in game; the Armory package for each channel owed). Follow-ups: #1565 (walk, trot, the stride gate), #1566, #1567
 - **Issue:** #44 — [feat: Port warg combat system from LOTRAOM](https://github.com/haterade22/TAOM/issues/44)
 - **Status:** Closed (2026-08-08 issue triage)
 - **Issue:** #659, [Warg battles: cut per-tick service lookups, scan allocations and skeleton wrappers](https://github.com/haterade22/TAOM/issues/659) (plan 015)

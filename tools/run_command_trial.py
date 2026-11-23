@@ -32,6 +32,10 @@ A failed taom.crew-seats check line fails the run.
 The spider step (#1541) is not in that list either: --steps enter,spider_gaits fields twelve spider riders in the player's army against 300 melee orcs, holds the army, charges it,
 holds it again while the Seat follows one rider, saves hud_spider_gaits_*.png pictures and reports the mounts' speeds (docs/features/spider.md, "The spider gait step of the command trial").
 
+The warg step (#1563) is not in that list either: --steps enter,warg_gaits adds twelve warg riders to the player's army against 300 melee orcs, holds the army,
+charges it and reports the wargs' top speed, speed limit and scale beside the horsemen's top speed. It cannot see which gait clip
+plays, so a PASS means the wargs ran, not that their gaits are right (docs/reference/lotrlome-warg-gait-changes.md).
+
 The stamina steps (#1506) are not in that list either: --steps stamina_gate,stamina_walk,stamina_fight (stamina_gate alone, or with either or both of the others) turns the stamina rules on
 for the run, fields 300 orc fighters against the player's army and forces bands on soldiers (docs/features/stamina.md, "The stamina steps of the command
 trial"). They run beside no step of another feature. A failed taom.stamina.* check line or an [ERROR] line of the stamina feature fails every run of
@@ -119,7 +123,10 @@ STAMINA_STEPS = ("stamina_gate", "stamina_walk", "stamina_fight")
 # The spider step (#1541), the step name of Main/Features/Spider/SpiderTrialRows.cs: twelve spider riders in the player's army against the crew battle's melee enemy,
 # held, charged and held again while the Seat follows one of them. It runs only when --steps names it, beside enter and no other step.
 SPIDER_STEPS = ("spider_gaits",)
-KNOWN_STEPS = STEPS + CREW_STEPS + STAMINA_STEPS + SPIDER_STEPS
+# The warg step (#1563), the step name of Main/Features/Warg/WargTrialRows.cs: twelve warg riders beside the army's horsemen against the crew battle's melee enemy,
+# held and charged. It runs only when --steps names it, beside enter and no other step.
+WARG_STEPS = ("warg_gaits",)
+KNOWN_STEPS = STEPS + CREW_STEPS + STAMINA_STEPS + SPIDER_STEPS + WARG_STEPS
 # The two thrower steps each run in a battle of their own: the roster swaps javelineers in for the spearmen for the whole battle (SeatTrialRoster.PlayerFor).
 THROWER_STEPS = ("advance_throwers", "advance_throwers_vanilla")
 
@@ -222,7 +229,7 @@ def judge(done, report_json, log_text=None, steps=STEPS, checkout=None):
 
 def normalised_steps(text):
     """The steps in the table's order, names lower-cased and trimmed, duplicates dropped. None means every step of STEPS, which holds no crew and no stamina step.
-    A name not in the table raises ValueError, and so does a list that names a thrower step beside any other step, a crew step beside any step but enter, the spider step beside any step but enter, or a stamina step beside any step but another stamina step (the game refuses those lists too: SeatTrialSteps.TryChoose). Prerequisites are the game's to check: it refuses to start on a list that skips one, and the done file says start_refused."""
+    A name not in the table raises ValueError, and so does a list that names a thrower step beside any other step, a crew step beside any step but enter, the spider step or the warg step beside any step but enter, or a stamina step beside any step but another stamina step (the game refuses those lists too: SeatTrialSteps.TryChoose). Prerequisites are the game's to check: it refuses to start on a list that skips one, and the done file says start_refused."""
     if text is None:
         return STEPS
     names = {name.strip().lower() for name in text.split(",") if name.strip()}
@@ -236,6 +243,9 @@ def normalised_steps(text):
     spider_beside = sorted(names - set(SPIDER_STEPS) - {"enter"})
     if names & set(SPIDER_STEPS) and spider_beside:
         raise ValueError("a spider step runs with enter only, in a battle of its own; it cannot share it with: " + ", ".join(spider_beside))
+    warg_beside = sorted(names - set(WARG_STEPS) - {"enter"})
+    if names & set(WARG_STEPS) and warg_beside:
+        raise ValueError("a warg step runs with enter only, in a battle of its own; it cannot share it with: " + ", ".join(warg_beside))
     beside = sorted(names - set(CREW_STEPS) - {"enter"})
     if names & set(CREW_STEPS) and beside:
         raise ValueError("a crew step runs with enter only, in a battle of its own; it cannot share it with: " + ", ".join(beside))
@@ -259,7 +269,8 @@ def build_parser():
     parser.add_argument("--live-limit", type=runner.positive_seconds, default=DEFAULT_LIVE_LIMIT, help="real seconds with a mission open before the game ends the run (default %(default)s)")
     parser.add_argument("--steps", help="a comma list of steps (default: all of " + ", ".join(STEPS) + "). The crew steps run only when named, each with enter: "
                         + ", ".join(CREW_STEPS) + ". The stamina steps run only when named, beside each other and no other step: " + ", ".join(STAMINA_STEPS)
-                        + ". The spider step runs only when named, with enter and no other step: " + ", ".join(SPIDER_STEPS))
+                        + ". The spider step runs only when named, with enter and no other step: " + ", ".join(SPIDER_STEPS)
+                        + ". The warg step runs only when named, with enter and no other step: " + ", ".join(WARG_STEPS))
     return parser
 
 

@@ -225,6 +225,12 @@ or in PowerShell `$env:BANNERLORD_GAME_DIR = "E:/LOTRAOM_Releases/<channel>"` fi
 settings file turns a missing channel folder into a failure, where the default run would skip the test and print
 nothing wrong. On 2026-11-14 it failed for `public`, `testing` and `patreon`: their Armory packages (dated 2026-11-06
 and 2026-09-26) predate the rows, so the next release needs a new Armory package from Mike's packaging pass.
+Since #1563 (2026-11-23) seven warg clip records carry a new master, travel, pace limits or `Duration`
+([ledger](lotrlome-warg-gait-changes.md)); a package built before that plays the canter on the trot's keys, and
+the wargs' legs look like a walk at full speed. A channel ships the Armory as compiled `AssetPackages`, which
+the check cannot read, so run it on the install the package is built from, after the Kit start that cooks the
+records: `python tools/repoint_anim_clip.py --plan tools/warg_gait_plan.json --under creature/warg/animations --check`
+must exit 0.
 
 **TAOM and TAOM_Map ship as a pair.** They are separate packages that name each other's rows: the map's settlements name TAOM's cultures and clans, and TAOM's clans and kingdoms name the map's settlements. A map ahead of its TAOM points settlements at undefined cultures and clans. A TAOM ahead of its map names home settlements the map lacks and can leave a culture owning no settlement, the daily-tick crash `LANDLESS_CULTURE` reports (#374). Every realm since Arthedain carries this coupling, among them the Dale lord expansion, Ered Luin, Anduin Vale, Angáladh and the Feral Orcs. Check each channel before publishing: `python tools/check_release_pair.py E:/LOTRAOM_Releases/<channel>/Modules`. Pass means exit 0 and a `PASS:` line. Exit 1 lists each disagreement with its code, file and line, including a prison scene no module ships, which the validator only warns about. Exit 2 means a file the check needs is missing or does not parse, or the map has no settlement or prison row; exit 3 means the tool crashed: neither judged anything. It compares the pair with each other: a pair that agrees can still lag the current build. It counts no rows, so a map holding part of a realm passes when every reference resolves, and it does not read the bare ids in TAOM's JSON files (`war_chronicle.json`, `army_targeting.json`, `named_companion_config.json`). Vanilla's cultures and clans come from the install, because a channel holds no SandBox.
 

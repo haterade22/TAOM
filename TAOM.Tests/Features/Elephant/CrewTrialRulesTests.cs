@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Elephant;
 using TAOM.Features.SeatOfSeeing.Domain;
 using TAOM.Features.Spider;
+using TAOM.Features.Warg;
 using TAOM.Features.Stamina.Domain;
 using TAOM.Tests.Infrastructure;
 
@@ -65,11 +66,11 @@ public class CrewTrialRulesTests
     }
 
     [TestMethod]
-    public void KnownSteps_AreTheDefaultOnesThenTheCrewOnesThenTheStaminaOnesThenTheSpiderOne_EachNameOnce()
+    public void KnownSteps_AreTheDefaultOnesThenTheCrewOnesThenTheStaminaOnesThenTheSpiderOneThenTheWargOne_EachNameOnce()
     {
         var known = SeatTrialSteps.Known.Select(s => s.Name).ToArray();
 
-        CollectionAssert.AreEqual(SeatTrialSteps.All.Concat(CrewTrialRows.Rows).Concat(StaminaTrialRows.Rows).Concat(SpiderTrialRows.Rows).Select(s => s.Name).ToArray(), known);
+        CollectionAssert.AreEqual(SeatTrialSteps.All.Concat(CrewTrialRows.Rows).Concat(StaminaTrialRows.Rows).Concat(SpiderTrialRows.Rows).Concat(WargTrialRows.Rows).Select(s => s.Name).ToArray(), known);
         Assert.AreEqual(known.Length, known.Distinct().Count());
     }
 

@@ -5,6 +5,7 @@ using TAOM.Features.Elephant;
 using TAOM.Features.MarshalsWord.Domain;
 using TAOM.Features.Spider;
 using TAOM.Features.Stamina.Domain;
+using TAOM.Features.Warg;
 
 namespace TAOM.Features.SeatOfSeeing.Domain;
 
@@ -17,8 +18,8 @@ internal static class SeatTrialSteps
     /// <summary>The steps a run with no step list arms.</summary>
     internal static readonly IReadOnlyList<SeatTrialStep> All = SeatTrialRows.Rows.Concat(MarshalTrialRows.Rows).ToList();
 
-    /// <summary>Every step a list may name: <see cref="All"/>, then the crew rows, the stamina rows and the spider row, which run only when they are named (<see cref="CrewTrialRows"/>, <see cref="StaminaTrialRows"/>, <see cref="SpiderTrialRows"/>).</summary>
-    internal static readonly IReadOnlyList<SeatTrialStep> Known = All.Concat(CrewTrialRows.Rows).Concat(StaminaTrialRows.Rows).Concat(SpiderTrialRows.Rows).ToList();
+    /// <summary>Every step a list may name: <see cref="All"/>, then the crew rows, the stamina rows, the spider row and the warg row, which run only when they are named (<see cref="CrewTrialRows"/>, <see cref="StaminaTrialRows"/>, <see cref="SpiderTrialRows"/>, <see cref="WargTrialRows"/>).</summary>
+    internal static readonly IReadOnlyList<SeatTrialStep> Known = All.Concat(CrewTrialRows.Rows).Concat(StaminaTrialRows.Rows).Concat(SpiderTrialRows.Rows).Concat(WargTrialRows.Rows).ToList();
 
     /// <summary>The form a step name is compared in, shared by the step chooser and the roster that depends on which steps were chosen.</summary>
     internal static string NameOf(string name) => name.Trim().ToLowerInvariant();
@@ -63,6 +64,13 @@ internal static class SeatTrialSteps
         if (spiderBeside != null)
         {
             error = "a spider step runs with 'enter' only, in a battle of its own: step '" + spiderBeside + "' cannot share it";
+            return false;
+        }
+
+        var wargBeside = WargTrialRows.StepThatCannotShareAWargBattle(chosen.Select(s => s.Name).ToList());
+        if (wargBeside != null)
+        {
+            error = "a warg step runs with 'enter' only, in a battle of its own: step '" + wargBeside + "' cannot share it";
             return false;
         }
 

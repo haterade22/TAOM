@@ -976,8 +976,9 @@ class CrewStepTests(unittest.TestCase):
     def test_the_known_steps_are_joined_the_way_the_game_joins_them(self):
         source = (DOMAIN_SOURCE / "SeatTrialSteps.cs").read_text(encoding="utf-8")
         self.assertIn("All = SeatTrialRows.Rows.Concat(MarshalTrialRows.Rows)", source)
-        self.assertIn("Known = All.Concat(CrewTrialRows.Rows).Concat(StaminaTrialRows.Rows).Concat(SpiderTrialRows.Rows)", source)
-        self.assertEqual(trial.KNOWN_STEPS, trial.SEAT_STEPS + trial.MARSHAL_STEPS + trial.CREW_STEPS + trial.STAMINA_STEPS + trial.SPIDER_STEPS)
+        self.assertIn("Known = All.Concat(CrewTrialRows.Rows).Concat(StaminaTrialRows.Rows).Concat(SpiderTrialRows.Rows)"
+                      ".Concat(WargTrialRows.Rows).ToList();", source)
+        self.assertEqual(trial.KNOWN_STEPS, trial.SEAT_STEPS + trial.MARSHAL_STEPS + trial.CREW_STEPS + trial.STAMINA_STEPS + trial.SPIDER_STEPS + trial.WARG_STEPS)
         self.assertEqual(len(set(trial.KNOWN_STEPS)), len(trial.KNOWN_STEPS), "no step name is shared by two features")
 
     def test_a_crew_step_beside_a_step_other_than_enter_is_refused_as_the_game_refuses_it(self):
@@ -1228,6 +1229,29 @@ class StaminaStepTests(unittest.TestCase):
         heading = "The stamina steps of the command trial"
         self.assertIn('"' + heading + '"', " ".join(trial.__doc__.split()))
         self.assertIn("### " + heading, (REPO / "docs" / "features" / "stamina.md").read_text(encoding="utf-8"))
+
+
+class WargStepTests(unittest.TestCase):
+    """The warg step (#1563): known by name, left out of a run with no step list, and refused beside any step but enter."""
+
+    def test_a_run_with_no_step_list_arms_no_warg_step(self):
+        self.assertFalse(set(trial.WARG_STEPS) & set(trial.STEPS))
+        self.assertFalse(set(trial.normalised_steps(None)) & set(trial.WARG_STEPS))
+
+    def test_a_named_warg_step_is_accepted_with_enter(self):
+        self.assertEqual(trial.normalised_steps(" Warg_Gaits , ENTER "), ("enter", "warg_gaits"))
+
+    def test_the_warg_step_beside_a_step_other_than_enter_is_refused_as_the_game_refuses_it(self):
+        with self.assertRaisesRegex(ValueError, "warg step runs with enter only.*fly"):
+            trial.normalised_steps("enter,fly,warg_gaits")
+        with self.assertRaises(ValueError):
+            trial.normalised_steps("enter,spider_gaits,warg_gaits")
+        self.assertIn("a warg step runs with 'enter' only", (DOMAIN_SOURCE / "SeatTrialSteps.cs").read_text(encoding="utf-8"))
+
+    def test_the_warg_steps_are_the_warg_row_lists_names(self):
+        source = (REPO / "Main" / "Features" / "Warg" / "WargTrialRows.cs").read_text(encoding="utf-8")
+        self.assertIn('Gaits = "warg_gaits"', source)
+        self.assertEqual(trial.WARG_STEPS, ("warg_gaits",))
 
 
 if __name__ == "__main__":

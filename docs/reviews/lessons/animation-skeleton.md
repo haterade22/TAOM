@@ -1719,3 +1719,24 @@ into each other's abdomens.
   maintainer picks it. The capsule has managed readers too: the rider's camera height adds its pos1 z and its
   radius (`MissionScreen.cs:1263`), so `rider_camera_height_adder` changes with it.
 - **Source:** [RCA](../rca-spider-key-times-slide-capsule-2026-11-23.md); `tools/verify_mount_assets.py` (`capsule_findings`); `BodyCapsuleTests`.
+
+### "The wargs walk" was a cadence defect: full speed, legs on another gait's keys (#1563, 2026-11-23)
+Players said AI warg riders walk everywhere. Two custom battles showed the wargs at 9.4 m/s beside horses at
+11.1, and at 9.8 beside 10.3. The cause was three values in clip records that had shipped since August. The canter record
+played the trot's master, though the pack's own canter (`Warg_Slow_run`) sat unbound in the same folder. The
+gallop record claimed 8.5 m of travel where its paws cover 3.92 m. Each pace had one `Duration`, so the legs kept
+one cadence at every speed. A warg's scale is 1.10, so the gallop began at 8.8 m/s and a charge spent most of its
+time in the canter, on trot legs that covered 2.71 m while the body moved about 3.9 m a loop.
+- **Why missed:** the warg was the reference mount ("when in doubt, do what the warg does"), so nobody measured
+  it. The stride gate covers only the creatures listed in it. The first hour of this investigation searched code
+  and XML for a speed change, because the report said "walk" and a speed is what code can lower.
+- **Dead end:** a moving mount's channel 0 holds `act_none`; the native movement node plays the gaits. Managed
+  code cannot read which gait clip plays (run `20261123-143843`: 23042 of 23254 reads).
+- **Prevent:** when a report describes how a mount looks, measure the feet before reading code: the planted feet
+  of each bound master against the record's travel (`check_gait_stride.measure`), then each pace's two
+  `Duration` values against travel divided by its limits. A record's master is the GUID in the record, never the
+  file that shares the clip's name: `warg_canter` named `Warg_Trot`. List a folder's masters against the masters
+  its records name; an unbound master with a gait's name is a finding. Gate: the `warg-gaits` row of
+  `tools/data_gates.py`.
+- **Source:** issue #1563; [ledger](../../reference/lotrlome-warg-gait-changes.md);
+  `tools/tests/test_warg_gait_plan.py`, `tools/tests/test_repoint_anim_clip.py`.

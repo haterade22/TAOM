@@ -162,6 +162,21 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(clips.cmd, ("python", "tools/bind_spider_clips.py", "--check"))
         self.assertEqual(gaits.cmd, ("python", "tools/check_gait_stride.py", "--creature", "spider"))
 
+    def test_the_wargs_clip_packages_the_plan_and_its_tool_select_the_warg_gate(self):
+        armory = "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/"
+        for path in (armory + "Assets/creature/warg/animations/warg_canter_anm.tpac",
+                     armory + "Assets/creature/warg/animations/Warg_Slow_run_geo.tpac",
+                     armory + "RuntimeDataCache/20CCE2C2-1073-4B9A-9A57-3FFF1C8DE432.rdc",
+                     "tools/warg_gait_plan.json", "tools/repoint_anim_clip.py", "tools/set_clip_balance_name.py"):
+            self.assertIn("warg-gaits", _ids(dg.select(dg.GATES, [path])), path)
+        for path in (TROOPS, armory + "Assets/creature/spider/animations/spider_walk_anm.tpac",
+                     armory + "Assets/creature/warg/mesh/Warg_Rig_V5_geo.tpac",
+                     armory + "Assets/creature/warg/animations/warg_canter_anm.tpac.bak-repoint-20261123-154054"):
+            self.assertNotIn("warg-gaits", _ids(dg.select(dg.GATES, [path])), path)
+        gate = next(g for g in dg.GATES if g.id == "warg-gaits")
+        self.assertEqual(gate.cmd, ("python", "tools/repoint_anim_clip.py", "--plan", "tools/warg_gait_plan.json",
+                                    "--under", "creature/warg/animations", "--check"))
+
     def test_the_spiders_monster_file_selects_the_gate_that_reads_its_body_capsule(self):
         # #1560: the capsule is in a file of the unversioned Armory, and no gate ran the tool that reads it
         armory = "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/"

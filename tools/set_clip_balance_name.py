@@ -93,6 +93,7 @@ class Clip:
     flags: list = dc_field(default_factory=list)
     usages: int = 0
     userdata: int = 0
+    usages_at: int = 0          # where the clip usage count is: repoint_anim_clip.py reads a gait's usage after it
 
 
 def _str(buf, at, end):
@@ -160,7 +161,7 @@ def parse(buf):
     return Clip(name=name, package_guid=buf[8:24], item_guid=buf[52:68], mlen_at=mlen_at, m0=m0, ck_at=ck_at,
                 meta_version=version, blends_action_at=blends_action_at, blends_action_end=blends_action_end,
                 blends_with_action=blends_action, field_at=field_at, field_end=field_end, field=fld, src1=src1,
-                src2=src2, gen_index=gen, flags=flags, usages=usages, userdata=ud)
+                src2=src2, gen_index=gen, flags=flags, usages=usages, userdata=ud, usages_at=p)
 
 
 def is_self_keyed(c, name):

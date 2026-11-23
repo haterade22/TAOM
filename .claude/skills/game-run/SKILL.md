@@ -34,7 +34,7 @@ A run is owed when in-game evidence is missing for the change, not for its own s
 - the change touches mission code that a custom battle shows and no step of the command trial proves it yet. Add the step
   first, then run it: the recipe is "A custom battle check for your own work" in
   [unattended-game-runs.md](../../../docs/reference/unattended-game-runs.md#a-custom-battle-check-for-your-own-work). The
-  steps that exist are the tuples in `tools/run_command_trial.py` (`SEAT_STEPS`, `MARSHAL_STEPS`, `CREW_STEPS`).
+  steps that exist are the tuples in `tools/run_command_trial.py` (`SEAT_STEPS`, `MARSHAL_STEPS`, `CREW_STEPS`, `STAMINA_STEPS`, `SPIDER_STEPS`, `WARG_STEPS`).
 
 If none holds, or no driver can reach the check (campaign screens, a town or tavern scene, a siege, co-op), stop and say what a
 person must play instead. Do not run the game to feel safe.

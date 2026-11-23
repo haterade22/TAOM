@@ -5293,3 +5293,18 @@ The command trial turned stamina on with an in-memory switch and cleared it when
 **Prevent:** Before you code a check a person does by hand, fetch one real response for each input shape the code reads (binary, rename, removal, nested path, other case) and build the fixtures from those. Write down each place the code is narrower than the manual check, and keep it only with a reason. A drift test between the two compares how entries match, not only their names. When the check models a mechanism (how Python resolves an import), code the mechanism's full order, not the files that exist today. When it reads several views of one object that can change (a PR's file list, diff and files), read every view at one pinned version.
 
 **Source:** [rca-pr-review-watcher-2026-11-22.md](../rca-pr-review-watcher-2026-11-22.md), the tier 2 review of #1543 (Tooling lens findings 1 to 3) and the Codex review after it (C1, C2).
+
+### A check that reads a hand-typed plan refuses what it does not know (#1563, 2026-11-23)
+`tools/repoint_anim_clip.py --check` became the `warg-gaits` gate. It read each row's optional fields with
+`r.get`, so a row that said `travle` for `travel` planned no change, the record read `DONE` and the gate passed
+with that value never compared. Two rows for one clip did worse in silence: each was built from the file as it
+was, and the second write replaced the first. On a machine without the Armory or without `xxhash` the gate ended
+in a traceback with exit 1, which `tools/data_gates.py` reads as a finding, where 2 is NOT RUN.
+- **Why missed:** the plan had one author, who typed it right, and every test broke a value of a correct row.
+  No test wrote a row a person could mistype, and the gate was never run on a machine without the install.
+- **Prevent:** a tool whose `--check` reads a plan, a clip list or a config that a person types holds the names
+  it accepts in one tuple, refuses a row with any other name or without a required one, refuses a doubled key,
+  and does so before the first write, in the dry run too. Its tests include a misspelled field, a doubled row
+  and a missing install. A gate's exit codes follow `tools/data_gates.py`: 1 a finding, 2 not run.
+- **Source:** issue #1563; [RCA](../rca-warg-gaits-2026-11-23.md) F1 to F3;
+  `tools/tests/test_repoint_anim_clip.py` (`PlanRowTests`).

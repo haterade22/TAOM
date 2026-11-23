@@ -1,0 +1,11 @@
+[
+  {"clip": "warg_canter", "master": "Warg_Slow_run", "source1": 820, "source2": 850, "duration": 0.46,
+   "travel": 3.22, "limits": [4.6, 7.0], "step_points": [0.167, 0.3, 0.467, 0.667]},
+  {"clip": "warg_canter_stand", "master": "Warg_Slow_run", "source1": 820, "source2": 850, "duration": 0.70},
+  {"clip": "warg_canter_strafe", "master": "Warg_Slow_run", "source1": 820, "source2": 850, "duration": 0.46},
+  {"clip": "warg_canter_l", "master": "Warg_Run_L", "source1": 760, "source2": 780, "duration": 0.46},
+  {"clip": "warg_canter_r", "master": "Warg_Run_R", "source1": 790, "source2": 810, "duration": 0.46},
+  {"clip": "warg_forward_gallop_left_foot", "master": "Warg_Run", "source1": 180, "source2": 200, "duration": 0.33,
+   "travel": 3.92, "limits": [7.0, 12.0]},
+  {"clip": "warg_forward_gallop_left_foot_stand", "master": "Warg_Run", "source1": 180, "source2": 200, "duration": 0.56}
+]

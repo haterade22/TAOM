@@ -20,14 +20,30 @@ old master and range, so it must go stale until the Modding Kit re-cooks the pac
 Kit, save, close). Then `python tools/set_clip_balance_name.py --clips-file <names> --check` (the melee key, the
 checksum, the stamp) and `python tools/check_rdc_entries.py` confirm it.
 
+A QUADRUPED GAIT RECORD (#1563, the warg's canter and gallop) states three more things, and a plan row may set each:
+  "travel"       LoopDisplacement, the metres the planted feet cover in one loop of the range. Measure it on the master
+                 (tools/check_gait_stride.py, measure); a typed value that the feet do not cover makes the beast slide
+  "limits"       [PaceSwitchLimitMin, PaceSwitchLimitMax], the speeds at model size between which the pace plays
+  "step_points"  the four step points, each -1 (none) or a part of the loop from 0 up to 1
+Travel and limits live in the record's quad_movement clip usage. The tool writes them into a usage that is there and
+makes none: a gait's in-place twin (warg_canter_stand) has no usage, and a row that gives it travel is refused. The
+movement node takes a pace's loop time from two Durations: the "none" row's clip at the lower limit and the front
+clip at the upper (docs/features/elephant.md, "What the engine does with a clip record"), so the two records of a
+pace take different "duration" values when the cadence must follow the speed.
+
 REFUSES a clip missing from the folder or carried by two packages there, a master whose package is missing or holds
-no single SkeletalAnimation, a range touching frame 0 (a master's rest frame, never played), and a package the
-parser refuses (set_clip_balance_name.parse).
+no single SkeletalAnimation, a range touching frame 0 (a master's rest frame, never played), a package the
+parser refuses (set_clip_balance_name.parse), a row with a field this tool does not know or without one it needs
+(a misspelled field would be skipped and --check would pass with that value never compared), and a clip named by
+two rows (the second would overwrite the first). Every refusal comes before the first write, in the dry run too.
+Exit codes: 0 done; 1 a refusal, or with --check a record that is pending or not cooked; 2 not run (no clips
+folder, no xxhash, or --apply while the game or the Kit runs).
 
     python tools/repoint_anim_clip.py --plan <plan.json>             # dry run: what would change
     python tools/repoint_anim_clip.py --plan <plan.json> --apply     # write (refused while the game or Kit runs)
     python tools/repoint_anim_clip.py --plan <plan.json> --check     # report each clip's master, range, checksum
-The plan is a JSON list of {"clip", "master", "source1", "source2", optional "duration"}. --apply backs each package
+The plan is a JSON list of {"clip", "master", "source1", "source2", optional "duration", "travel", "limits",
+"step_points"}; a field not given keeps the clip's own value. --apply backs each package
 up to `<file>.bak-repoint-<stamp>` (not a .tpac, so no scanner reads it), writes, re-reads and verifies, and restores
 on any failure.
 """
@@ -35,6 +51,7 @@ import argparse
 import datetime as dt
 import glob
 import json
+import math
 import os
 import struct
 import sys
@@ -50,29 +67,84 @@ class RepointError(Exception):
     pass
 
 
+GAIT_USAGE = "quad_movement"
+
+
+def _travel_at(buf, c):
+    """Where the travel float of the clip's quad_movement usage is, or None when the clip has no such usage. The
+    usage is the record's last field: its name, an empty list, then travel and the two pace limits (the warg's
+    records, read 2026-11-23). Anything else there is not taken for one."""
+    if c.usages != 1:
+        return None
+    try:
+        name, p = scb._str(buf, c.usages_at + 4, c.ck_at)
+    except scb.ClipError:
+        return None
+    if name != GAIT_USAGE or p + 16 != c.ck_at or struct.unpack_from("<i", buf, p)[0] != 0:
+        return None
+    return p + 4
+
+
 def timing(buf):
-    """(duration, source1, source2, master GUID) of a clip package: the first three floats after the metadata
-    version, then the master's GUID after the three floats and the priority that follow them."""
+    """Duration, source1, source2 and master GUID of a clip package (the first three floats after the metadata
+    version, then the master's GUID after the three floats and the priority that follow them), its four step points,
+    and the travel and [lower, upper] pace limits of its quad_movement usage (None for a clip with no such usage)."""
     c = scb.parse(buf)
     p = c.m0 + 4
     duration, s1, s2 = struct.unpack_from("<3f", buf, p)
+    at = _travel_at(buf, c)
+    gait = struct.unpack_from("<3f", buf, at) if at is not None else None
     return {"duration": float(duration), "source1": float(s1), "source2": float(s2),
-            "master_guid": str(uuid.UUID(bytes_le=bytes(buf[p + 28:p + 44])))}
+            "master_guid": str(uuid.UUID(bytes_le=bytes(buf[p + 28:p + 44]))),
+            "step_points": [float(v) for v in struct.unpack_from("<4f", buf, p + 44)],
+            "travel": float(gait[0]) if gait else None,
+            "limits": [float(gait[1]), float(gait[2])] if gait else None}
 
 
-def repoint(buf, master_guid, source1, source2, duration=None):
+def _floats(what, values, count):
+    try:
+        out = [float(v) for v in values]
+    except (TypeError, ValueError):
+        raise RepointError("%s must be %d number(s), got %r" % (what, count, values))
+    if len(out) != count or not all(math.isfinite(v) for v in out):
+        raise RepointError("%s must be %d finite number(s), got %r" % (what, count, values))
+    return out
+
+
+def repoint(buf, master_guid, source1, source2, duration=None, travel=None, limits=None, step_points=None):
     """New package bytes playing `master_guid` from source1 to source2 (either way round) over `duration`
-    seconds (the clip's own when None). Pure."""
+    seconds, with the gait fields a row gave; a field that is None keeps the clip's own value. Pure."""
     if min(source1, source2) < 1:
         raise RepointError("a range must not touch frame 0, the master's rest frame")
     c = scb.parse(buf)
     p = c.m0 + 4
     new = bytearray(buf)
     old_duration = struct.unpack_from("<f", buf, p)[0]
+    if duration is not None and not _floats("duration", [duration], 1)[0] > 0:
+        raise RepointError("duration must be above 0, got %r" % (duration,))
     struct.pack_into("<3f", new, p, old_duration if duration is None else float(duration), float(source1),
                      float(source2))
     g = master_guid if isinstance(master_guid, uuid.UUID) else uuid.UUID(str(master_guid))
     new[p + 28:p + 44] = g.bytes_le
+    if step_points is not None:
+        points = _floats("step_points", step_points, 4)
+        if not all(v == -1.0 or 0.0 <= v < 1.0 for v in points):
+            raise RepointError("each step point is -1 (none) or a part of the loop from 0 up to 1, got %r" % (step_points,))
+        struct.pack_into("<4f", new, p + 44, *points)
+    if travel is not None or limits is not None:
+        at = _travel_at(buf, c)
+        if at is None:
+            raise RepointError("%s has no quad_movement usage to hold travel or pace limits; this tool writes into a "
+                               "usage that is there and makes none" % c.name)
+        if travel is not None:
+            if not _floats("travel", [travel], 1)[0] >= 0:
+                raise RepointError("travel must not be negative, got %r" % (travel,))
+            struct.pack_into("<f", new, at, float(travel))
+        if limits is not None:
+            low, high = _floats("limits", limits, 2)
+            if low > high:
+                raise RepointError("the lower pace limit %g is above the upper %g" % (low, high))
+            struct.pack_into("<2f", new, at + 4, low, high)
     new[c.ck_at:c.ck_at + 8] = struct.pack("<Q", scb._xxh64(bytes(new[c.mlen_at:c.ck_at])))
     new = bytes(new)
     a, b = scb.parse(buf), scb.parse(new)
@@ -96,9 +168,34 @@ def master_guid(folder, master):
 
 
 Row = namedtuple("Row", "clip path buf new changed master")
+REQUIRED = ("clip", "master", "source1", "source2")
+OPTIONAL = ("duration", "travel", "limits", "step_points")      # each one a keyword of repoint()
+
+
+def _refuse_bad_rows(rows):
+    """A plan is typed by hand and its --check is a gate. A field this tool does not know would be skipped in
+    silence and the record would read DONE with that value never compared; of two rows for one clip the second
+    would overwrite the first, because each is built from the file as it is. Both are refused before anything
+    is planned. So is a plan with no row: its --check would pass having compared nothing."""
+    if not isinstance(rows, list) or not rows or not all(isinstance(r, dict) for r in rows):
+        raise RepointError("the plan must be a JSON list of at least one row object")
+    for r in rows:
+        name = r.get("clip", "(a row with no clip)")
+        missing = [k for k in REQUIRED if k not in r]
+        if missing:
+            raise RepointError("%s: the row lacks %s" % (name, ", ".join(missing)))
+        unknown = sorted(set(r) - set(REQUIRED) - set(OPTIONAL))
+        if unknown:
+            raise RepointError("%s: unknown field(s) %s; a row takes %s" % (
+                name, ", ".join(unknown), ", ".join(REQUIRED + OPTIONAL)))
+    names = [r["clip"] for r in rows]
+    twice = sorted({n for n in names if names.count(n) > 1})
+    if twice:
+        raise RepointError("a clip is named by two rows: %s" % ", ".join(twice))
 
 
 def plan(rows, folder):
+    _refuse_bad_rows(rows)
     index = {}
     for path in glob.glob(os.path.join(folder, "*_anm.tpac")):
         with open(path, "rb") as fh:
@@ -114,7 +211,7 @@ def plan(rows, folder):
         with open(paths[0], "rb") as fh:
             buf = fh.read()
         g = master_guid(folder, r["master"])
-        new = repoint(buf, g, r["source1"], r["source2"], r.get("duration"))
+        new = repoint(buf, g, r["source1"], r["source2"], **{k: r[k] for k in OPTIONAL if k in r})
         out.append(Row(r["clip"], paths[0], buf, new, new != buf, r["master"]))
     return out
 
@@ -144,26 +241,74 @@ def apply(rows, stamp=None):
 
 def _range(buf):
     t = timing(buf)
-    return "%g..%g over %.2f s" % (t["source1"], t["source2"], t["duration"])
+    gait = "" if t["travel"] is None else ", travel %.2f m, limits %g..%g" % (t["travel"], t["limits"][0], t["limits"][1])
+    return "%g..%g over %.2f s%s" % (t["source1"], t["source2"], t["duration"], gait)
+
+
+def cook_fault(module, buf, master_path):
+    """None when the Kit cooked the clip as it is now, else why not. The game plays the keys in the clip's
+    RuntimeDataCache entry, so a clip repointed since its last cook still plays its old master. Two signals, because
+    neither covers the other: the entry carries the record's stored checksum (a changed record), and the entry is no
+    older than the master's file (a master whose keys changed under one GUID leaves record and stamp alike; the
+    dates are then the only signal, as tools/check_gait_stride.py cache_state reads them)."""
+    c = scb.parse(buf)
+    entry = scb.rdc_path(module, c.package_guid)
+    if not os.path.isfile(entry):
+        return "it has no cache entry (%s)" % entry
+    with open(entry, "rb") as fh:
+        if not scb.rdc_current(fh.read(), c, buf):
+            return "its cache entry does not carry the record's checksum"
+    if os.path.getmtime(entry) < os.path.getmtime(master_path):
+        return "its cache entry is older than its master %s" % os.path.basename(master_path)
+    return None
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--plan", required=True)
     ap.add_argument("--clips-dir", default=scb.CLIPS_DIR)
+    ap.add_argument("--module", default=scb.MODULE, help="the module root, which holds RuntimeDataCache/")
+    ap.add_argument("--under", help="the clips folder as a subfolder of the module's Assets, e.g. "
+                                    "creature/warg/animations; replaces --clips-dir")
     ap.add_argument("--apply", action="store_true")
     ap.add_argument("--check", action="store_true")
     args = ap.parse_args(argv)
-    with open(args.plan, encoding="utf-8-sig") as fh:
-        rows = plan(json.load(fh), args.clips_dir)
+    clips_dir = os.path.join(args.module, "Assets", *args.under.split("/")) if args.under else args.clips_dir
+    # Exit 2 is NOT RUN, as tools/data_gates.py reads it: a machine without the module or without xxhash has no
+    # finding to report. A plan the tool refuses is a finding: exit 1 and the reason, no traceback.
+    if not os.path.isdir(clips_dir):
+        print("NOT RUN: no clips folder %s" % clips_dir)
+        return 2
+    try:
+        with open(args.plan, encoding="utf-8-sig") as fh:
+            wanted = json.load(fh)
+    except (OSError, ValueError) as exc:
+        print("refused: cannot read the plan %s: %s" % (args.plan, exc))
+        return 1
+    try:
+        rows = plan(wanted, clips_dir)
+    except ModuleNotFoundError as exc:
+        if exc.name != "xxhash":            # any other import fault is a fault of this tool, and must fail
+            raise
+        print("NOT RUN: %s (the item checksum needs xxhash)" % exc)
+        return 2
+    except RepointError as exc:
+        print("refused: %s" % exc)
+        return 1
     if args.check:
-        bad = 0
+        bad = raw = 0
         for r in rows:
             done = not r.changed
+            fault = cook_fault(args.module, r.buf, os.path.join(os.path.dirname(r.path), r.master + "_geo.tpac"))
             bad += not done
-            print("%-8s %-60s %s %s checksum=%s" % ("DONE" if done else "PENDING", r.clip, r.master, _range(r.buf),
-                                                   scb.checksum_ok(r.buf)))
-        return 1 if bad else 0
+            raw += done and fault is not None
+            print("%-8s %-60s %s %s checksum=%s cooked=%s%s" % (
+                "DONE" if done else "PENDING", r.clip, r.master, _range(r.buf), scb.checksum_ok(r.buf), fault is None,
+                " (%s)" % fault if done and fault else ""))
+        if raw:
+            print("%d record(s) are not cooked as they are now: the game still plays their old keys. Start the "
+                  "Modding Kit once with the module loaded, close it, and run this check again" % raw)
+        return 1 if bad or raw else 0
     for r in rows:
         print("%-8s %-60s -> %s %s" % ("CHANGE" if r.changed else "same", r.clip, r.master, _range(r.new)))
     if not args.apply:
