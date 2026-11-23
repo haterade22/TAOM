@@ -370,7 +370,7 @@ public class TaomCulturalFeatsDefinitionTests
             ("_bluecraigPartySize", "0.1f", "10%"),
             ("_mistyMountainOrcsPartySize", "0.1f", "10%"),
             ("_mordorPartySize", "0.05f", "5%"),
-            ("_isengardPartySize", "0.05f", "5%"),
+            ("_isengardPartySize", "0.10f", "10%"),
             ("_gundabadPartySize", "0.05f", "5%"),
             ("_dolguldurPartySize", "0.05f", "5%"),
         };

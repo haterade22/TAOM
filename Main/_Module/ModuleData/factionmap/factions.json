@@ -940,7 +940,7 @@
       "{=taom_faction_dominion_of_isengard_trait_3}The White Hand"
     ],
     "bonuses": [
-      {"text": "{=taom_faction_dominion_of_isengard_bonus_0}+5% party size limit (Uruk-hai Legions)", "positive": true},
+      {"text": "{=taom_faction_dominion_of_isengard_bonus_0}+10% party size limit (Uruk-hai Legions)", "positive": true},
       {"text": "{=taom_faction_dominion_of_isengard_bonus_1}+15% building construction speed (Industrial Might)", "positive": true},
       {"text": "{=taom_faction_dominion_of_isengard_bonus_2}-20% smithing energy cost (Industrial Forges)", "positive": true},
       {"text": "{=taom_faction_dominion_of_isengard_bonus_3}-15% mounted recruit and upgrade cost (War Wargs)", "positive": true},
@@ -957,7 +957,7 @@
       {"name": "{=taom_faction_dominion_of_isengard_su_2_name}Warg Rider", "description": "{=taom_faction_dominion_of_isengard_su_2_desc}Fast hit-and-run cavalry of the White Hand."}
     ],
     "perks": [
-      {"name": "{=taom_faction_dominion_of_isengard_perk_0_name}Uruk-hai Legions", "description": "{=taom_faction_dominion_of_isengard_perk_0_desc}+5% party size limit and +10% march speed on plain and swamp."},
+      {"name": "{=taom_faction_dominion_of_isengard_perk_0_name}Uruk-hai Legions", "description": "{=taom_faction_dominion_of_isengard_perk_0_desc}+10% party size limit and +10% march speed on plain and swamp."},
       {"name": "{=taom_faction_dominion_of_isengard_perk_1_name}Industrial Might", "description": "{=taom_faction_dominion_of_isengard_perk_1_desc}+15% construction, -20% smithing energy, -15% mounted recruitment cost."},
       {"name": "{=taom_faction_dominion_of_isengard_perk_2_name}Orthanc Quartermasters", "description": "{=taom_faction_dominion_of_isengard_perk_2_desc}Isengard's single town swells to 20 notables — 4 Merchant, 2 Artisan, 14 Gang Leader."}
     ],

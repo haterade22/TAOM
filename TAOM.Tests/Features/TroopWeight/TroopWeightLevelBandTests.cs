@@ -53,7 +53,6 @@ public class TroopWeightLevelBandTests
         "dw_mirkwood_twinblade_huntress",
         "dw_goblintown_twinblade",
         "dw_gundabad_pale_twinaxe",
-        "dw_isengard_urukhai_twinblade",
         "dw_mordor_uruk_twinblade",
     };
 

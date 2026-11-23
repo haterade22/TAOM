@@ -99,7 +99,7 @@ Each culture has a `<cultural_feats>` block; the number of feat IDs varies by cu
 | Isengard | `taom_isengard_cheaper_recruits` | -15% mounted recruit cost | -0.15 | Yes |
 | Isengard | `taom_isengard_garrison_wage` | -20% garrison wage | -0.2 | Yes |
 | Isengard | `taom_isengard_decision_penalty` | +25% decision penalty | 0.25 | No |
-| Isengard | `taom_isengard_party_size` | +5% party size (was +20%, capped 2026-10-18, #818) | 0.05 | Yes |
+| Isengard | `taom_isengard_party_size` | +10% party size (was +20%, capped at +5% 2026-10-18 by #818, raised to the 10% cap 2026-11-23) | 0.10 | Yes |
 | Isengard | `taom_isengard_construction_speed` | +15% construction speed | 0.15 | Yes |
 | Isengard | `taom_isengard_smithing` | -20% smithing energy cost | -0.2 | Yes |
 | Isengard | `taom_isengard_raid_damage` | +20% raid damage | 0.2 | Yes |
@@ -312,7 +312,7 @@ so the split changed no behaviour; both went to 10% on 2026-10-18 (#818). Both r
 ### Evil-culture party-size cap
 
 Since 2026-10-18 (#818) the evil party-size feats are capped at 10%: Goblin-town, Blue Craig and
-Misty Mountain Orcs at +10%, Mordor, Isengard, Gundabad and Dol Guldur at +5%. In a 200-day balance
+Misty Mountain Orcs at +10%, Mordor, Gundabad and Dol Guldur at +5%. Isengard went from +5% to the +10% cap on 2026-11-23 ([faction-balance.md](faction-balance.md) "Isengard's numbers"). In a 200-day balance
 simulation the free side lost ground while the evil party-size bonuses stood at 20 to 40% (Gondor's
 +2.5% was the only party-size bonus on the free side), and the cap replaced the 20% to 50% floor of
 2026-08-14. At +5% the TroopWeight elite tax on an orc roster can cancel the bonus
