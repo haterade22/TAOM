@@ -345,6 +345,74 @@ class PaceTableTests(unittest.TestCase):
     def _findings(self, rows, records):
         return c.record_findings(rows, records, self.CONFIG)[0]
 
+    def test_a_pace_action_on_a_clip_the_stride_check_skips_is_a_finding(self):
+        # `turns` and `pending` are keyed by clip name: without this a gait action bound to one escaped the gate
+        rows, records = self._sound()
+        rows["as_a"]["act_c"], rows["as_a"]["act_w"] = "leap", "spin"
+        records["leap"], records["spin"] = self._rec(1.0, 44.0, 4.8, 7.2), self._rec(0.8, 48.0, 0.0, 0.0)
+        config = dict(self.CONFIG, turns=("spin",), pending={"leap": "kept until phase 2"})
+        got = c.record_findings(rows, records, config)[0]
+        self.assertTrue([f for f in got if "act_c" in f and "leap" in f and "skips" in f], got)
+        self.assertTrue([f for f in got if "act_w" in f and "spin" in f and "skips" in f], got)
+        self.assertEqual([f for f in c.record_findings(*self._sound(), config)[0] if "skips" in f], [])
+
+    def test_the_spider_entry_names_only_clips_the_generator_makes_or_june_left(self):
+        import spider_gait
+        spider = c.CREATURES["spider"]
+        for clip in list(spider["gaits"]) + list(spider["turns"]) + list(spider["axis"]):
+            self.assertIn(clip, spider_gait.CLIPS, clip)
+        self.assertEqual(set(spider["pending"]), {"an_spi_jump"})
+        self.assertEqual(len(spider["feet"]), 8)
+
+    def test_records_are_found_by_the_clips_own_name_and_two_files_with_one_name_are_a_finding(self):
+        with tempfile.TemporaryDirectory() as folder:
+            def put(file_name, clip, loop):
+                with open(os.path.join(folder, file_name), "wb") as fh:
+                    fh.write(_record_bytes(clip, 1.0, 30.0, (loop, 0.2, 2.5)))
+
+            put("x_walk_anm.tpac", "x_walk", 2.0)
+            put("new_animation_clip_3_anm.tpac", "x_idle", 0.0)              # the Kit's name for a record file
+            put("x_trot_anm.tpac", "x_trot", 3.0)
+            put("new_animation_clip_7_anm.tpac", "x_trot", 9.0)              # a second file with the trot's name
+            put("x_walk_geo.tpac", "not a record", 0.0)
+            records, files, twice = c.records_in(folder, {"x_walk", "x_idle", "x_trot", "x_gone"})
+        self.assertEqual(sorted(records), ["x_idle", "x_trot", "x_walk"])
+        self.assertEqual(os.path.basename(files["x_idle"]), "new_animation_clip_3_anm.tpac")
+        self.assertAlmostEqual(records["x_trot"]["loop"], 3.0, places=6)     # the file of its own name is the one read
+        self.assertEqual(len(twice), 1, twice)
+        self.assertIn("x_trot is the clip of 2 record files", twice[0])
+        self.assertIn("new_animation_clip_7_anm.tpac", twice[0])
+
+    def test_a_record_file_that_is_cut_short_is_a_named_finding_not_a_traceback(self):
+        with tempfile.TemporaryDirectory() as folder:
+            with open(os.path.join(folder, "x_walk_anm.tpac"), "wb") as fh:
+                fh.write(_record_bytes("x_walk", 1.0, 30.0, (2.0, 0.2, 2.5)))
+            with open(os.path.join(folder, "broken_anm.tpac"), "wb") as fh:
+                fh.write(b"TPAC")
+            records, _, problems = c.records_in(folder, {"x_walk"})
+        self.assertEqual(sorted(records), ["x_walk"])
+        self.assertEqual(len(problems), 1, problems)
+        self.assertIn("broken_anm.tpac cannot be read as a clip record", problems[0])
+
+    def test_clip_problems_names_a_missing_file_and_an_uncooked_clip(self):
+        with tempfile.TemporaryDirectory() as root:
+            folder = os.path.join(root, "clips")
+            os.makedirs(folder)
+            os.makedirs(os.path.join(root, "RuntimeDataCache"))
+            guid = uuid.uuid4()
+            for name in ("ready_anm.tpac", "ready_geo.tpac", "raw_anm.tpac", "raw_geo.tpac"):
+                with open(os.path.join(folder, name), "wb") as fh:
+                    fh.write(b"TPAC" + b"\0" * 4 + (guid if name.startswith("ready") else uuid.uuid4()).bytes_le + b"\0" * 8)
+                os.utime(os.path.join(folder, name), (1_000_000, 1_000_000))
+            entry = os.path.join(root, "RuntimeDataCache", str(guid) + ".rdc")
+            with open(entry, "wb") as fh:
+                fh.write(b"RDC0")
+            os.utime(entry, (2_000_000, 2_000_000))
+            got = c.clip_problems(root, "clips", ["ready", "raw", "gone"])
+        self.assertEqual(len(got), 2, got)
+        self.assertIn("raw: it has no cache entry", got[0])
+        self.assertIn("gone: no clip record or no master", got[1])
+
     def test_clip_record_reads_duration_key_range_and_the_pace_limits(self):
         r = c.clip_record(_record_bytes("mumakil_walk", 1.0, 76.0, (3.0, 0.2, 2.5)))
         self.assertAlmostEqual(r["duration"], 1.0, places=6)

@@ -4,6 +4,7 @@ param(
   [Parameter(Mandatory = $true)][string[]]$Reports,
   [string]$Folder = 'E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory\Assets\creature\elephant\animations',
   [string]$Templates = '',
+  [string[]]$Prefixes = @('war_elephant_', 'mumakil_'),
   [string]$TpacBin = 'E:\Release_v0.5.1\bin',
   [string]$Loader = 'E:\LOTRAOMAssets\_auto_workspace\chariot\TolerantTpacLoader.cs'
 )
@@ -34,6 +35,23 @@ trot action, and takes its pace limits from ADOD's own trot record ($LIMITS_FROM
                      2.5 m/s trotted down to 0.2 m/s (the native reads: tools/check_gait_stride.py)
 The strafe clip has no report row of its own: it is the walk's row under the name <prefix>strafe, and its master is
 a copy of the walk's keys under that name.
+
+Another creature (#1541, the spider): a report row that names its own `template` is taken as written. Its clip
+clones that record from -Templates and takes the row's `duration`, its `step_points`, and for a row with travel
+the row's `loop_displacement` and `limits` (no `limits`: the template's stay). `usage: false` removes the
+template's clip usages: a gait's in-place twin is the gait's record with no usage, as the vanilla horse's
+gait_walkfast is beside horse_walkfast. `sound_code` replaces the template's (the elephant's idles carry a
+horse_eating sound with sound points at 0.2 and 0.5). The editor refuses a sound point at or past
+(Duration - BlendOutPeriod) / Duration with a "Sound Point Error" dialog. Seen twice on 2026-11-22: a record of
+0.9 s with a blend-out of 0.8 s and a point at 0.2 was refused ("should be smaller than 0.111111"), and a record
+of 0.267 s with a blend-IN of 0.3 s, a blend-out of 0 and points up to 0.53 loaded, so the blend-in is not in the
+rule. An explicit row is judged BEFORE anything is written, in a dry run too: a row with no `duration`, a row
+that says `usage: false` and claims travel, a row that claims travel on a template with no clip usage (the writer
+sets travel on a usage that is there; it makes none), and a row whose planned sound points break that rule are refused
+(INVALID, exit 1), and no file of that row is made. -Verify also holds the rule against each clip on disk.
+No role table applies and no strafe twin is derived. tools/spider_gait.py writes such rows:
+  powershell.exe ... "& tools\gen_elephant_anim_clips.ps1 -Reports @('<set>\report.json') -Prefixes spider_ `
+      -Folder <Armory>\Assets\creature\spider\animations -Templates <Armory>\Assets\creature\elephant\animations"
 
 Dry run by default. -Apply refuses while the game or the Kit runs, never overwrites a clip (one exception: a clip
 that differs from the plan only in its pace limits gets them rewritten in place after a copy to
@@ -70,7 +88,7 @@ $KEY_RATE = 30.0
 $REAL_DURATION = @('strafe')          # roles whose record states the keys' real length
 $NEGATED_LIMITS = @('walk_backwards') # roles whose pace limits are the template's, negated
 $LIMITS_FROM = @{ trot = 'elephant_trot' }   # roles whose pace limits come from another record than their template
-$PREFIXES = 'war_elephant_', 'mumakil_'
+$PREFIXES = $Prefixes
 $IDLE_SLOW = @{ 'mumakil_' = 1.4 }
 
 function Get-Role($clip) {
@@ -109,12 +127,31 @@ foreach ($rp in $Reports) {
   foreach ($g in @($rep.gaits) + @($rep.takes)) {
     if ($null -eq $g) { continue }
     $rows += $g
+    if ($g.template) { continue }   # an explicit row: no strafe twin
     $w = Get-Role $g.clip
     if ($null -ne $w -and $w.Role -eq 'walk') {   # the strafe clip: the walk's row under its own name
       $twin = $g.PSObject.Copy(); $twin.clip = $w.Prefix + 'strafe'; $rows += $twin
     }
   }
   foreach ($g in $rows) {
+    if ($g.template) {              # an explicit row: every record value is the row's own
+      if (-not $masters.ContainsKey($g.clip)) { $errors++; Write-Output ('NO MASTER {0}' -f $g.clip); continue }
+      $m = $masters[$g.clip]
+      if ($m.Keys -ne [int]$g.frames) { $errors++; Write-Output ('KEYS {0}: master has {1}, report {2}' -f $g.clip, $m.Keys, $g.frames); continue }
+      $isGait = [double]$g.loop_displacement -gt 0
+      if (-not ([double]$g.duration -gt 0)) { $errors++; Write-Output ('INVALID {0}: an explicit row needs a duration above 0' -f $g.clip); continue }
+      if ($isGait -and $null -ne $g.usage -and -not [bool]$g.usage) { $errors++; Write-Output ('INVALID {0}: usage is false and loop_displacement is {1}; a record with no usage cannot claim travel' -f $g.clip, $g.loop_displacement); continue }
+      $plan += [pscustomobject]@{
+        Clip = $g.clip; Role = 'explicit'; Template = [string]$g.template; Master = $m.Guid; Keys = $m.Keys; Gait = $isGait
+        Loop = $(if ($isGait) { [float]$g.loop_displacement } else { $null })
+        Steps = $(if ($null -ne $g.step_points) { @($g.step_points) } else { $null })
+        Duration = [float]([math]::Round([double]$g.duration, 4))
+        Limits = $(if ($null -ne $g.limits) { @([float]$g.limits[0], [float]$g.limits[1]) } else { $null })
+        NoUsage = ($null -ne $g.usage -and -not [bool]$g.usage)
+        Sound = $(if ($null -ne $g.sound_code) { [string]$g.sound_code } else { $null })
+      }
+      continue
+    }
     $r = Get-Role $g.clip
     if ($null -eq $r -or -not $TEMPLATE.Contains($r.Role)) { $errors++; Write-Output ('UNPLANNED {0}: no template for it' -f $g.clip); continue }
     if (-not $masters.ContainsKey($g.clip)) { $errors++; Write-Output ('NO MASTER {0}' -f $g.clip); continue }
@@ -128,6 +165,7 @@ foreach ($rp in $Reports) {
       Steps = $(if ($isGait) { @($g.step_points) } else { $null })
       Duration = $(if ($REAL_DURATION -contains $r.Role) { [float]([math]::Round($m.Keys / $KEY_RATE, 3)) }
         elseif ($isGait) { $null } else { [float]([math]::Round([double]$g.source_seconds * $slow, 3)) })
+      Limits = $null; NoUsage = $false; Sound = $null
     }
   }
 }
@@ -139,6 +177,16 @@ function Get-Problem($c, $p, $tplDuration, $wantLim) {
   if ([int]$c.Source1 -ne 0 -or [int]$c.Source2 -ne $p.Keys) { 'range is {0}..{1}, planned 0..{2}' -f $c.Source1, $c.Source2, $p.Keys }
   $want = $(if ($null -ne $p.Duration) { $p.Duration } else { $tplDuration })
   if ([math]::Abs([double]$c.Duration - $want) -gt 0.001) { 'Duration is {0}, planned {1}' -f $c.Duration, $want }
+  $s = $c.StepPoints; $got = @($s.X, $s.Y, $s.Z, $s.W)
+  if ($p.Role -eq 'explicit') {
+    if ($null -ne $p.Steps -and -not $p.Gait) {     # a gait's step points are compared below
+      for ($i = 0; $i -lt 4; $i++) { if ([math]::Abs($got[$i] - [double]$p.Steps[$i]) -gt 0.001) { 'StepPoints are {0}, planned {1}' -f $s, ($p.Steps -join ', '); break } }
+    }
+    if ($p.NoUsage -and @($c.ClipUsages).Count) { 'it carries {0} clip usage(s), planned none' -f @($c.ClipUsages).Count }
+    if ($null -ne $p.Sound -and [string]$c.SoundCode -ne $p.Sound) { 'SoundCode is "{0}", planned "{1}"' -f $c.SoundCode, $p.Sound }
+    $limit = ([double]$c.Duration - [double]$c.BlendOutPeriod) / [double]$c.Duration
+    foreach ($v in $got) { if ($v -ge $limit) { 'sound point {0} is not below (Duration - BlendOutPeriod) / Duration = {1:N3}: the editor refuses it' -f $v, $limit; break } }
+  }
   if ($p.Gait) {
     $lim = Get-Limits $c
     if ($null -eq $lim -or [math]::Abs($lim[0] - $wantLim[0]) -gt 0.001 -or [math]::Abs($lim[1] - $wantLim[1]) -gt 0.001) {
@@ -157,7 +205,8 @@ function Get-Template($name) {
     $path = Join-Path $Templates ($name + '_anm.tpac')
     if (-not (Test-Path $path)) { return $null }
     $t = Get-AnimClip $path
-    $tplCache[$name] = @{ Duration = [double]$t.Duration; Limits = (Get-Limits $t) }
+    $s = $t.StepPoints
+    $tplCache[$name] = @{ Duration = [double]$t.Duration; Limits = (Get-Limits $t); BlendOut = [double]$t.BlendOutPeriod; Steps = @($s.X, $s.Y, $s.Z, $s.W); HasUsage = ($null -ne (Get-Loop $t)) }
   }
   $tplCache[$name]
 }
@@ -166,7 +215,22 @@ foreach ($p in $plan) {
   $limName = $(if ($LIMITS_FROM.ContainsKey($p.Role)) { $LIMITS_FROM[$p.Role] } else { $p.Template })
   $tpl = Get-Template $p.Template; $limTpl = Get-Template $limName
   if ($null -eq $tpl -or $null -eq $limTpl) { $errors++; Write-Output ('NO TEMPLATE {0} or {1} in {2}' -f $p.Template, $limName, $Templates); continue }
-  $wantLim = Get-WantLimits $p $limTpl.Limits
+  $wantLim = $(if ($null -ne $p.Limits) { $p.Limits } else { Get-WantLimits $p $limTpl.Limits })
+  if ($p.Role -eq 'explicit' -and $p.Gait -and -not $tpl.HasUsage) {     # the writer sets travel on a usage that is there; it makes none
+    $errors++
+    Write-Output ('INVALID {0}: it claims travel ({1}) and its template {2} has no clip usage to carry it. Nothing was written for it' -f $p.Clip, $p.Loop, $p.Template)
+    continue
+  }
+  if ($p.Role -eq 'explicit') {     # the editor's sound point rule, on the planned values, before any write
+    $steps = $(if ($null -ne $p.Steps) { $p.Steps } else { $tpl.Steps })
+    $limit = ([double]$p.Duration - $tpl.BlendOut) / [double]$p.Duration
+    $late = @($steps | Where-Object { [double]$_ -ge $limit })
+    if ($late.Count) {
+      $errors++
+      Write-Output ('INVALID {0}: sound point {1} is not below (Duration {2} - BlendOutPeriod {3}) / Duration = {4:N3}; the editor refuses it. Nothing was written for it' -f $p.Clip, $late[0], $p.Duration, $tpl.BlendOut, $limit)
+      continue
+    }
+  }
   $out = Join-Path $Folder ($p.Clip + '_anm.tpac')
   if (-not (Test-Path $out)) {
     if (-not $Apply) {
@@ -186,6 +250,11 @@ foreach ($p in $plan) {
       }
     }
     if ($null -ne $p.Duration) { $c.Duration = $p.Duration }
+    if ($p.Role -eq 'explicit') {
+      if ($null -ne $p.Steps -and -not $p.Gait) { $c.StepPoints = V4 $p.Steps[0] $p.Steps[1] $p.Steps[2] $p.Steps[3] }
+      if ($p.NoUsage) { $c.ClipUsages.Clear() }
+      if ($null -ne $p.Sound) { $c.SoundCode = $p.Sound }
+    }
     $c.TypelessDataSegments.Clear(); $c.UnknownDependences.Clear()
     $pkg = New-Object TpacTool.Lib.AssetPackage
     $pkg.Guid = [Guid]::NewGuid()

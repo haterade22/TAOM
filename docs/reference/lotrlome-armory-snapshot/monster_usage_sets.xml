@@ -3,7 +3,7 @@
 	type="monster_usage_set">
 	<!-- ==================== SPIDER ==================== -->
 	<!-- Behavior template for the giant spider creature. Movements use our custom act_spider_* actions.
-	     num_paces=6 -> paces 0-5: 0=slow/backward, 1=idle, 2=walk, 3-5=run (one fast gait reused).
+	     num_paces=6 -> paces 0-5: 0=backward, 1=stand, 2=walk, 3=trot, 4=canter, 5=gallop (#1541: tools/bind_spider_clips.py writes the rows).
 	     EVERY mountable monster in the game is num_paces=6 (horse/camel/mule/warg/elephant) - the
 	     mount machinery indexes the gallop pace (5); the detached-era num_paces=5 left no pace-5
 	     data for a Mountable monster (2026-06-10 thumbnail-AV investigation, bisect step).
@@ -22,8 +22,8 @@
 	     them -> AccessViolation (target=base+0x10). The detached-walker era never hit this because
 	     non-mounted spawns don't read the mount verbs. The adder rows use the GLOBAL horse RIDER
 	     adder codes (they animate the rider, not the spider); jumps reuse the act_horse_jump_* codes
-	     which as_spider binds (elephant-parity, action_sets.xml). Rows stop at pace 4 (num_paces=5;
-	     the elephant defines pace 5 because its num_paces is higher - do not copy pace-5 rows here). -->
+	     which as_spider binds (elephant-parity, action_sets.xml). The movement rows run to pace 5, both
+	     feet (num_paces=6). -->
 	<monster_usage_set
 		id="spider"
 		rear_action="act_spider_rear"
@@ -53,40 +53,38 @@
 			<monster_usage_upper_body_movement pace="1" direction="none" action="act_spider_idle" />
 		</monster_usage_upper_body_movements>
 		<monster_usage_movements>
-			<!-- Pace 0: slow/backward (no dedicated backward clip -> reuse walk; idle = the required reference) -->
-			<monster_usage_movement is_left_foot="False" pace="0" direction="front" turn_direction="none" action="act_spider_walk_forward" />
+			<!-- #1541, written by tools/bind_spider_clips.py. Pace 0 backward, 1 stand, 2 walk, 3 trot, 4 canter, 5 gallop (both feet). The
+			     direction="none" row of paces 2 to 5 is that gait's in-place twin; pace 0 plays the walk's.
+			     Every pace keeps a none row: a missing one is a native division by zero (2026-06-04). -->
+			<monster_usage_movement is_left_foot="False" pace="0" direction="front" turn_direction="none" action="act_spider_walk_backward" />
 			<monster_usage_movement is_left_foot="False" pace="0" direction="right" turn_direction="none" action="act_spider_walk_right" />
-			<monster_usage_movement is_left_foot="False" pace="0" direction="left"  turn_direction="none" action="act_spider_walk_left" />
-			<monster_usage_movement is_left_foot="False" pace="0" direction="none"  turn_direction="none" action="act_spider_idle" />
-			<!-- Pace 1: stand + turns + strafes -->
-			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="none"  action="act_spider_idle" />
+			<monster_usage_movement is_left_foot="False" pace="0" direction="left" turn_direction="none" action="act_spider_walk_left" />
+			<monster_usage_movement is_left_foot="False" pace="0" direction="none" turn_direction="none" action="act_spider_walk_stand" />
+			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="none" action="act_spider_stand" />
 			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="right" action="act_spider_turn_right" />
-			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="left"  action="act_spider_turn_left" />
+			<monster_usage_movement is_left_foot="False" pace="1" direction="none" turn_direction="left" action="act_spider_turn_left" />
 			<monster_usage_movement is_left_foot="False" pace="1" direction="right" turn_direction="none" action="act_spider_walk_right" />
-			<monster_usage_movement is_left_foot="False" pace="1" direction="left"  turn_direction="none" action="act_spider_walk_left" />
-			<!-- Pace 2: walk (forward + strafes + movement-data reference) -->
+			<monster_usage_movement is_left_foot="False" pace="1" direction="left" turn_direction="none" action="act_spider_walk_left" />
 			<monster_usage_movement is_left_foot="False" pace="2" direction="front" turn_direction="none" action="act_spider_walk_forward" />
 			<monster_usage_movement is_left_foot="False" pace="2" direction="right" turn_direction="none" action="act_spider_walk_right" />
-			<monster_usage_movement is_left_foot="False" pace="2" direction="left"  turn_direction="none" action="act_spider_walk_left" />
-			<monster_usage_movement is_left_foot="False" pace="2" direction="none"  turn_direction="none" action="act_spider_walk_forward" />
-			<!-- Paces 3-4: run (one fast gait; each needs its own movement-data reference; no run-strafe clips -> walk strafes) -->
-			<monster_usage_movement is_left_foot="False" pace="3" direction="front" turn_direction="none" action="act_spider_run_forward" />
+			<monster_usage_movement is_left_foot="False" pace="2" direction="left" turn_direction="none" action="act_spider_walk_left" />
+			<monster_usage_movement is_left_foot="False" pace="2" direction="none" turn_direction="none" action="act_spider_walk_stand" />
+			<monster_usage_movement is_left_foot="False" pace="3" direction="front" turn_direction="none" action="act_spider_trot_forward" />
 			<monster_usage_movement is_left_foot="False" pace="3" direction="right" turn_direction="none" action="act_spider_walk_right" />
-			<monster_usage_movement is_left_foot="False" pace="3" direction="left"  turn_direction="none" action="act_spider_walk_left" />
-			<monster_usage_movement is_left_foot="False" pace="3" direction="none"  turn_direction="none" action="act_spider_run_forward" />
-			<monster_usage_movement is_left_foot="False" pace="4" direction="front" turn_direction="none" action="act_spider_run_forward" />
+			<monster_usage_movement is_left_foot="False" pace="3" direction="left" turn_direction="none" action="act_spider_walk_left" />
+			<monster_usage_movement is_left_foot="False" pace="3" direction="none" turn_direction="none" action="act_spider_trot_stand" />
+			<monster_usage_movement is_left_foot="False" pace="4" direction="front" turn_direction="none" action="act_spider_canter_forward" />
 			<monster_usage_movement is_left_foot="False" pace="4" direction="right" turn_direction="none" action="act_spider_walk_right" />
-			<monster_usage_movement is_left_foot="False" pace="4" direction="left"  turn_direction="none" action="act_spider_walk_left" />
-			<monster_usage_movement is_left_foot="False" pace="4" direction="none"  turn_direction="none" action="act_spider_run_forward" />
-			<!-- Pace 5: gallop (mount machinery indexes this pace; warg/elephant define both foot variants) -->
+			<monster_usage_movement is_left_foot="False" pace="4" direction="left" turn_direction="none" action="act_spider_walk_left" />
+			<monster_usage_movement is_left_foot="False" pace="4" direction="none" turn_direction="none" action="act_spider_canter_stand" />
 			<monster_usage_movement is_left_foot="False" pace="5" direction="front" turn_direction="none" action="act_spider_run_forward" />
 			<monster_usage_movement is_left_foot="False" pace="5" direction="right" turn_direction="none" action="act_spider_walk_right" />
-			<monster_usage_movement is_left_foot="False" pace="5" direction="left"  turn_direction="none" action="act_spider_walk_left" />
-			<monster_usage_movement is_left_foot="False" pace="5" direction="none"  turn_direction="none" action="act_spider_run_forward" />
-			<monster_usage_movement is_left_foot="True"  pace="5" direction="front" turn_direction="none" action="act_spider_run_forward" />
-			<monster_usage_movement is_left_foot="True"  pace="5" direction="right" turn_direction="none" action="act_spider_walk_right" />
-			<monster_usage_movement is_left_foot="True"  pace="5" direction="left"  turn_direction="none" action="act_spider_walk_left" />
-			<monster_usage_movement is_left_foot="True"  pace="5" direction="none"  turn_direction="none" action="act_spider_run_forward" />
+			<monster_usage_movement is_left_foot="False" pace="5" direction="left" turn_direction="none" action="act_spider_walk_left" />
+			<monster_usage_movement is_left_foot="False" pace="5" direction="none" turn_direction="none" action="act_spider_run_stand" />
+			<monster_usage_movement is_left_foot="True" pace="5" direction="front" turn_direction="none" action="act_spider_run_forward" />
+			<monster_usage_movement is_left_foot="True" pace="5" direction="right" turn_direction="none" action="act_spider_walk_right" />
+			<monster_usage_movement is_left_foot="True" pace="5" direction="left" turn_direction="none" action="act_spider_walk_left" />
+			<monster_usage_movement is_left_foot="True" pace="5" direction="none" turn_direction="none" action="act_spider_run_stand" />
 		</monster_usage_movements>
 		<monster_usage_movement_adders>
 			<!-- Rider-side additive anims (GLOBAL act_horse_rider_* codes - animate the rider, not the spider). -->
@@ -121,7 +119,7 @@
 			<monster_usage_movement_adder is_left_foot="True" pace="5" direction="none" turn_direction="none" action="act_horse_rider_gallop_forward_adder" />
 		</monster_usage_movement_adders>
 		<monster_usage_jumps>
-			<!-- act_horse_jump_* are bound in as_spider (elephant-parity bindings -> an_spi_walk_2).
+			<!-- act_horse_jump_* are bound in as_spider (elephant-parity bindings -> spider_walk since #1541).
 			     TOTAL direction coverage (2026-06-12): the engine's jump-record lookup accepts NINE
 			     directions (front/none/left/right/back/front_left/front_right/back_left/back_right —
 			     the monster_usage.cpp parser's own vocabulary) but every vanilla/warg set covers only

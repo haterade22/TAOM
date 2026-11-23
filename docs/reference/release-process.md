@@ -216,7 +216,7 @@ errors and no dwarf ever uses either attack. Check each channel:
 `python tools/bind_dwarf_attack_actions.py --check --armory E:/LOTRAOM_Releases/<channel>/Modules/LOTRLOME_Armory/ModuleData`
 must exit 0.
 Since #1226 (2026-11-14) the dwarf creature rider rows (the warg, spider, elephant and chariot rows of
-`as_human_warrior`, 223 rows) live in the Armory's `as_dwarf_warrior`, no longer in TAOM's `action_sets.xml`. TAOM
+`as_human_warrior`, 231 rows since #1541) live in the Armory's `as_dwarf_warrior`, no longer in TAOM's `action_sets.xml`. TAOM
 2.0.39 carried them itself, so a TAOM build released with an older Armory package leaves the dwarves without them,
 and the missing rows are the leading hypothesis for the free-warg crash of #1226. Check each channel after a normal
 build:

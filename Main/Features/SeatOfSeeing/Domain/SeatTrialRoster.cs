@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TAOM.Features.Elephant;
+using TAOM.Features.Spider;
 using TAOM.Features.Stamina.Domain;
 
 namespace TAOM.Features.SeatOfSeeing.Domain;
@@ -42,7 +43,7 @@ internal static class SeatTrialRoster
 
     /// <summary>
     /// The player's army for a step list: an explicit list that names a thrower step fields javelineers where the spearmen stand, so the infantry company is a pure thrower company,
-    /// and a list that names a crew step adds the beasts of <see cref="CrewTrialRows.Beasts"/> after the army.
+    /// a list that names the spider step adds the riders of <see cref="SpiderTrialRows.Riders"/>, and a list that names a crew step adds the beasts of <see cref="CrewTrialRows.Beasts"/> after the army.
     /// </summary>
     internal static IReadOnlyList<SeatTrialGroup> PlayerFor(string? steps)
     {
@@ -50,11 +51,13 @@ internal static class SeatTrialRoster
         var army = chosen.Any(s => ThrowerSteps.Contains(s))
             ? Player.Select(g => g.Id == SpearmenTroop ? g with { Id = ThrowerTroop } : g).ToList()
             : Player;
+        if (SpiderTrialRows.NamedIn(steps))
+            army = army.Concat(SpiderTrialRows.Riders).ToList();
         return CrewTrialRows.NamedIn(steps) ? army.Concat(CrewTrialRows.Beasts).ToList() : army;
     }
 
-    /// <summary>The enemy's army for a step list: <see cref="Enemy"/>, or the melee army of <see cref="CrewTrialRows.Enemy"/> when the list names a crew or a stamina step.</summary>
-    internal static IReadOnlyList<SeatTrialGroup> EnemyFor(string? steps) => CrewTrialRows.NamedIn(steps) || StaminaTrialRows.NamedIn(steps) ? CrewTrialRows.Enemy : Enemy;
+    /// <summary>The enemy's army for a step list: <see cref="Enemy"/>, or the melee army of <see cref="CrewTrialRows.Enemy"/> when the list names a crew, a stamina or the spider step.</summary>
+    internal static IReadOnlyList<SeatTrialGroup> EnemyFor(string? steps) => CrewTrialRows.NamedIn(steps) || StaminaTrialRows.NamedIn(steps) || SpiderTrialRows.NamedIn(steps) ? CrewTrialRows.Enemy : Enemy;
 
     /// <summary>The ids the game does not have, each once and tagged <c>culture:</c> or <c>character:</c>, empty when the mission can open.</summary>
     internal static IReadOnlyList<string> Missing(Func<string, bool> cultureExists, Func<string, bool> characterExists, string? steps = null)

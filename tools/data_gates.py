@@ -117,6 +117,11 @@ CREATURE_GLOBS = ("*/action_sets.xml", "*/action_types.xml", "*/monster_usage_se
 ELEPHANT_GLOBS = CREATURE_GLOBS + (
     "*/creature/elephant/*.tpac", "*tools/check_gait_stride.py", "*tools/bind_elephant_clips.py",
     "*tools/elephant_write_masters.py", "*tools/gen_elephant_anim_clips.ps1", "*tools/elephant_gait_retarget.py")
+# The same for the two spider gates (#1541). gen_elephant_anim_clips.ps1 and elephant_write_masters.py write the
+# spider's records and masters too, and check_gait_stride.py reads both creatures.
+SPIDER_GLOBS = CREATURE_GLOBS + (
+    "*/creature/spider/*.tpac", "*tools/check_gait_stride.py", "*tools/bind_spider_clips.py", "*tools/spider_gait.py",
+    "*tools/elephant_write_masters.py", "*tools/gen_elephant_anim_clips.ps1")
 FBX_GLOBS = ("*/assetsources/*.fbx",)
 LANG_GLOBS = ("*/languages/*.xml", "*/taom_module_strings.xml", "*/taom_xslt_strings.xml")
 # Every source and output of generate_name_localization_strings.py CATEGORIES not already in TROOP_GLOBS,
@@ -295,6 +300,15 @@ GATES = (
          note="each gait clip's feet cover the ground its record claims; the pace rows of as_elephant and as_mumakil "
               "carry limits and Durations the engine plays well; the standing pose is on the ground; a bound clip "
               "has a cache entry no older than its record and master (start the Modding Kit once)"),
+    Gate("spider-clips", "spider action sets, usage rows, clip packages and their tools", SPIDER_GLOBS,
+         ("python", "tools/bind_spider_clips.py", "--check"), ("docs/features/spider.md",),
+         note="a reinstall drops the rebound rows, the eight new actions, their rider rows and the pace table, and "
+              "parity still passes; exit 1 also when a bound clip has no current cache entry (start the Modding Kit once)"),
+    Gate("spider-gaits", "spider action sets, usage rows, clip packages and their tools", SPIDER_GLOBS,
+         ("python", "tools/check_gait_stride.py", "--creature", "spider"), ("docs/features/spider.md",),
+         note="each gait clip's tips cover the ground its record claims; the pace rows of as_spider carry limits and "
+              "Durations the engine plays well; the standing pose is on the ground; a bound gait clip has a current cache "
+              "entry (the stand, the idle, the twins and the turns: spider-clips)"),
     Gate("dwarf-attacks", "dwarf attack actions and their as_dwarf_warrior rows", CREATURE_GLOBS,
          ("python", "tools/bind_dwarf_attack_actions.py", "--check"), ("docs/features/dwarf-attacks.md",),
          note="a reinstall drops the two declarations and rows, and parity still passes; it also fails while the "
@@ -303,7 +317,7 @@ GATES = (
          _dotnet("DwarfAttacksWiringTests"), ("docs/features/dwarf-attacks.md",), dotnet=True),
     Gate("dwarf-rider-rows", "dwarf creature rider rows in as_dwarf_warrior", CREATURE_GLOBS,
          _dotnet("DwarfMountRiderRowsTests", "MountRiderFallRowsTests"), ("docs/features/war-ram.md",), dotnet=True,
-         note="a reinstall or art drop drops the 223 rows (#1226), and every other gate still passes"),
+         note="a reinstall or art drop drops the 231 rows (#1226; eight of them the spider's, #1541), and every other gate still passes"),
     Gate("race-morphs", "hill troll and dwarf rig FBX in the live Armory AssetSources", FBX_GLOBS,
          ("python", "tools/check_race_morph_channels.py"), ("tools/check_race_morph_channels.py",),
          note="exact counts: head, eye and mouth 101, hands or arms 26; a new race rig is unchecked until its meshes are in SPEC"),

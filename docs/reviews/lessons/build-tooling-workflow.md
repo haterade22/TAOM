@@ -610,6 +610,14 @@ Per-commit runs of the no-growth ratchet passed on the branch, because their bas
 - **Prevent:** prefer an allow list of the names a table may hold, and print how many rows got no credit. Before a number drives a spend decision, read a sample of the rows behind it.
 - **Source:** `docs/reviews/rca-rules-review-2026-11-03.md` rows 14, 15, 31.
 
+### A gate is reviewed by feeding it a wrong state: one test for each value it owns, broken alone (#1541, 2026-11-22)
+
+**Why missed:** Four gates of the spider work passed states they were written to reject. The binder's `--check` asked whether a row existed, not which clip it played. The mount asset check exempted an (action, clip) pair wherever the action sat. The stride gate skipped two clips by name, whatever row bound them. The binder counted rows inside XML comments. Each gate had been run on the state the work had just made, it passed, and that was taken as proof. The binder's tests compared its output with the tables that produced it. Five lenses read correct data through these gates and saw true PASS lines; Codex found all four by changing one value in memory and running the real gate.
+
+**Prevent:** A gate, a `--check` or an exemption ships with one test per value it owns, each broken alone: a row that is there with the wrong value, a row inside a comment, an exempt thing moved to the place the exemption does not cover, an excluded thing bound where it must be judged. Write some expectations as literals, never all from the tool's own tables. Where a tool edits text and must stay byte-faithful, verify the RESULT with a parser and compare it with the tables (`bind_spider_clips.planned_problems`). A check that guards a write runs before the write, in the dry run too. This is the second gate RCA in a week ([elephant](../rca-elephant-gait-gate-2026-11-20.md): a gate with missing input); the rule is in `.claude/rules/data-scripts.md` now.
+
+**Source:** [rca-spider-locomotion-2026-11-22.md](../rca-spider-locomotion-2026-11-22.md) F1 to F6; `tools/tests/test_bind_spider_clips.py` (`PlannedProblemTests`, `MainTests`).
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

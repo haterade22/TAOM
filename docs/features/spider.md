@@ -113,15 +113,15 @@ the detached spawn paths that earlier testing exercised.
 | Piece | File | Key facts |
 |---|---|---|
 | Monster | `ModuleData/Monsters/LOTR/lotr_monster_spider.xml` | `id="spider"`, `Mountable="true"`, `rider_sit_bone="chest_m"`, `num_paces="6"` (every mountable monster is 6; paces 0 to 5), **`family_type="1"`** (the horse family; was 11 during the bisect, returned to 1 on 06-11 for the vanilla rider-death/dismount surface; deployed is 1, and TAOM's Patch154 sets 13 in memory after the load, [creature-saddles.md](creature-saddles.md)), slope block (head + front/back leg roots), `action_set="as_spider"`, `monster_usage="spider"` |
-| Action set | `ModuleData/action_sets.xml` → `as_spider` | `skeleton="spider_skeleton"`, `movement_system="quadrupedal"`, 36 bindings. Movement actions bind ONLY tagged clips (walk_2/left/right, run). Idles/turns/jump/taunt currently bind tagged walk clips (pose-correct idles need a tagged Kit recompile). `act_horse_forward_canter` is bound explicitly (the tableau pose; warg precedent — `as_warg` binds it too) |
+| Action set | `ModuleData/action_sets.xml` → `as_spider` | `skeleton="spider_skeleton"`, `movement_system="quadrupedal"`, 69 rows since 2026-11-22 (#1541; 36 at the June fix). Every front, strafe, turn and stand row plays a `spider_*` clip with the `quad_movement` usage; the four in-place twins on the `none` rows and `spider_idle` carry none, as the vanilla horse's do ("Locomotion generated on its own rig" below). `act_horse_forward_canter` is bound explicitly (the tableau pose; warg precedent: `as_warg` binds it too) |
 | Child sets | same file: `as_spider_town_and_village`, `as_spider_map` | `base_set="as_spider"`. **Only `_map` is load-bearing**: `SandBox.View` looks it up by name (`MBGlobals.GetActionSet(monster.ActionSetCode + "_map")`), and a miss returns the default set 0, a human set, not a throw ([animation system map](../reference/bannerlord-animation-system-map.md) section 7). Whether that caused the 2026-06-03 map-icon AV (above) is UNVERIFIED; elephant Crash #4 had another cause, its whole set family unregistered in native ([elephant.md](elephant.md) "Crash #4"). **CORRECTED 2026-08-28:** `_town_and_village` was listed here as equally required and is not. No managed code appends `_town_and_village` (0 hits, v1.4.8), and the rideable vanilla `as_camel` and `as_horse_2` ship without one. Keeping the spider's is harmless |
-| Usage set | `ModuleData/monster_usage_sets.xml` → `id="spider"` | Full mount surface: 10 verb attrs (rear/dash/kick/quick-stops/jump/hit-object…), upper-body movements, movements (paces 0–5, gallop both foot variants), rider movement-adders (`act_horse_rider_*` — global codes animating the RIDER), jumps (`act_horse_jump_*`, bound in as_spider), falls, strikes. Every pace 0–5 keeps a `direction="none"` reference row (missing one = native ÷0, the 2026-06-04 crash) |
+| Usage set | `ModuleData/monster_usage_sets.xml` → `id="spider"` | Full mount surface: 10 verb attrs (rear/dash/kick/quick-stops/jump/hit-object…), upper-body movements, movements (paces 0-5, gallop both foot variants), rider movement-adders (`act_horse_rider_*`: global codes animating the RIDER), jumps (`act_horse_jump_*`, bound in as_spider), falls, strikes. Every pace 0-5 keeps a `direction="none"` reference row (missing one = native ÷0, the 2026-06-04 crash). Since 2026-11-22 (#1541) the movement rows are the warg's table on the spider's actions, written by `tools/bind_spider_clips.py` |
 | Mount items | `ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` → `spider_mount_a`, `spider_mount_brown`, `spider_mount_pale`, `spider_mount_mountain_a1`, `spider_mount_mountain_a2` | Five items on one body (2026-09-29), each `is_mountable`, `<Horse monster="Monster.spider" maneuver=85 speed=65 charge_damage=15>` (the #615 retune) with `body_length` as the tier: 100 / 110 / 125 becomes `SetInitialAgentScale` 1.0 / 1.10 / 1.25 at build (`Mission.cs:4056`, the mumakil precedent). Forest: `spider_mount_a` "Giant Spider" on `sk_spider_forest_a1` (100), `spider_mount_brown` "Great Spider" on `sk_spider_forest_a1` (110; the id stays for saves, the brown skin is gone), `spider_mount_pale` "Pale Spider" on `sk_spider_forest_a2` (125). Mountain: `spider_mount_mountain_a1` "Mountain Spider" on `sk_spider_mountain_a1` (100), `spider_mount_mountain_a2` "Great Mountain Spider" on `sk_spider_mountain_a2` (125). Every mesh is whole, so no item has `<AdditionalMeshes>`. **No `<Materials>` block, on purpose:** `MountVisualCreator.SetMaterialProperties` applies it with `SetMaterialToSubMeshesWithTag(mat, "horse_body")` on the base mesh only, and the spider meshes carry no `horse_body` tag (Byak0's `warg_low` does), so the vanilla-horse recolour is a silent no-op here; each skin is its own mesh instead. Every C# seam keys on `Monster.spider`, never the item id, so a new spider item needs no code |
 | Meshes (live) | `Assets/creature/spider/meshes/sk_spiders_a_geo.tpac` (8.9 MB, KEYforce, 2026-09-29) | Four whole metameshes: `sk_spider_forest_a1`, `sk_spider_forest_a2`, `sk_spider_mountain_a1`, `sk_spider_mountain_a2`, LOD0 to LOD5, skinned to `spider_skeleton`. The package bundles no skeleton of its own (`tpac_skeleton_scan.py` finds none), so it cannot collide with the one in `spider_correct_geo.tpac`, and it has its `RuntimeDataCache` entry (`check_rdc_entries.py`) |
 | Skin variants (retired) | `Assets/creature/spider/animations/spider_variants_geo.tpac` (5.56MB, generated 2026-09-17) | Four metamesh items, `sk_spider_forest_a`/`_a_2` (a1) and `sk_spider_forest_b`/`_b_2` (a2): the #616 clones of the split c halves, built by `python tools/tpac_clone_metamesh.py` and cooked by one Kit save (the client renders meshes from `RuntimeDataCache/<package GUID>.rdc`, which only the editor writes). **No item references them since 2026-09-29.** The package stays on disk until the new meshes have shipped a release, as the rollback: restoring the three forest items' old `mesh` and `<AdditionalMeshes>` lines brings them back. Rebuild: the command in [lotrlome-spider-mount-changes.md](../reference/lotrlome-spider-mount-changes.md), 2026-09-17 section |
 | Skeleton + old meshes (bundled) | `Assets/creature/spider/animations/spider_correct_geo.tpac` (2.78MB) | **Load-bearing: it carries the 62-bone `spider_skeleton` resource** that `as_spider`'s `skeleton="spider_skeleton"` resolves and every spider mesh rides; never delete or re-export it. LIVE = the proven 6/11 bundle, restored 2026-06-14 from `E:\LOTRAOMAssets\_tpac_backup_20260613\spider\` (skeleton `owner_guid a9ec7d87…`, `Usage='horse'`). It also holds the old `sk_spider_forest_c` / `_c_2` L/R-split meshes, unreferenced since 2026-09-29. (The split was made for the June 58-bone single mesh that AV'd `PreloadForRendering`; KEYforce's whole meshes on this skeleton do not, and that crash's cause is still unestablished.) **The 2026-06-13 Kit-rebuild bundle (different mesh) caused a FATAL battle-spawn AV** in the native `sound_and_collision_info` agent-build (`Agent.BuildAux`→native `Build`, RVA 0x490E02), preserved as `.bak-kitbroken-20260614`; my physics-transplant attempts (`.transplanted-20260614`, `.bak-bundled-crashing-20260614`) likewise didn't fix it. **Restoring the backup did, in one copy.** Lesson: `feedback_creature_rework_restore_from_backup_first.md`. Every battle since June ran on this skeleton, the 2026-09-29 ones included. |
 | Skeleton history (DO NOT repeat) | — | The 06-13 Blender-loop mesh re-export shipped `spider_correct_geo.tpac` **mesh-only**, dropping the skeleton → `CreateAgentSkeleton` null → riderless spiders. First fix attempt (2026-06-13) extracted the skeleton into a **STANDALONE** `meshes/spider_skeleton_geo.tpac` via `tpac_skeleton_extract.py` — this **CRASHED** the engine (recursive worker-thread native AV reading null; the standalone reused the skeleton's item_guid as its package_guid + no creature ships a standalone skeleton tpac). Deleted 2026-06-14. Correct fix = re-bundle into the mesh tpac via `tools/tpac_skeleton_inject.py`. Skeleton source of truth: `meshes/sk_spider_forest_c_geo.tpac.backup` (item [2], the un-split a/b/c original). Mesh-only backup of the dropped state: `animations/spider_correct_geo.tpac.bak-meshonly-20260614`. Lesson: `feedback_mesh_reexport_drops_skeleton_resource.md`. |
-| Clips | `Assets/creature/spider/animations/an_spi_*_{anm,geo}.tpac` | Loose-pair format (same as ADOD_Beasts elephant). Movement clips tagged (see ROOT CAUSE). The 13 `new_animation_clip*_anm.tpac` files are NOT garbage — Kit default filenames whose internal resource names are real (`an_spi_hit_front`, `an_spi_death_1`, …; quirk: `an_spi_idle2` has no second underscore) |
+| Clips | `Assets/creature/spider/animations/an_spi_*_{anm,geo}.tpac` | Loose-pair format (same as ADOD_Beasts elephant). Movement clips tagged (see ROOT CAUSE). The 13 `new_animation_clip*_anm.tpac` files are NOT garbage: Kit default filenames whose internal resource names are real (`an_spi_hit_front`, `an_spi_death_1`, …; quirk: `an_spi_idle2` has no second underscore). Since 2026-11-22 (#1541) the 15 `spider_*` pairs beside them carry the locomotion; the June gait clips are unbound and stay as the way back |
 | Rider line | TAOM `Main/_Module/ModuleData/characters/spider_creature.xml` | Three rungs, the warg line's shape: `taom_spider_creature` Spider Rider (L21, Giant Spider, light uruk kit) upgrades to `taom_spider_rider_brown` Great Spider Rider (L26, Great Spider at 1.10, medium kit: a one-handed sword in every roster, and in Item1 a shield or, in one roster, a two-handed axe, never both, #1312; TwoHanded skill 130; "Brown" until 2026-09-29, id kept for saves) upgrades to `taom_spider_rider_pale` Pale Spider Rider (L31, Pale Spider at 1.25, heavy kit in the same shape, TwoHanded skill 170), the warg line's levels (16/21/26/31) from its second rung up. Every roster of a rung carries that rung's mount. Only the base is pooled (Dol Guldur fiefs, weight 1); the rungs cost 2 / 3 War Spoils on the party screen (`troop_resource_costs.xml`, player only) at the creature upkeep of 1; all three sit in `_HARNESSLESS_BY_DESIGN` with the base |
 | Goblin rider line | TAOM `Main/_Module/ModuleData/troops/troops_goblin.xml` | Added 2026-09-29 for the mountain skins. `goblin_lurker` (L16) gains a second upgrade, `goblin_spider_rider` [Goblin] Spider Rider (L21, Mountain Spider), which upgrades to `goblin_spider_lord` [Goblin] Spider Lord (L31, Great Mountain Spider). One tree serves Goblin-town, the Misty Mountain Orcs and Blue Craig, so all three field them. Skills mirror the Dol Guldur rungs at 21 and 31, clamped up to the Lurker's so the upgrade costs no stat (`UPGRADE_SKILL_REGRESSION`); kit is the goblin tree's own L21 and L31 gear, every set with a one-handed weapon, a shield and the spider. No resource cost or Elite Emissary row (the goblin cultures have no special resource); both sit in `_HARNESSLESS_BY_DESIGN` |
 | Troop weight | `TroopWeights/troop_weights.xml` | 4.0 for all five riders: the three Dol Guldur rungs and the two goblin ones. It was 3.0 (2 mount + 1 rider) until `c9fae4dc` (2026-07-24), which also set the Harad elephant rider to 10.0 (12.0 since `43dada47`) |
@@ -157,7 +157,7 @@ a thrust action. The supported mechanism (the warg precedent: the FIRST set in
 `action_sets_warg.xml` is a partial `as_human_warrior`!) is a **partial `as_human_warrior`
 block that the engine merges into the global set**, binding every usage-referenced mount action
 to a rider animation. The spider's partial lives in the root `action_sets.xml` right above
-`as_spider` (24 bindings) and **reuses the globally-registered `rider_warg_*` clips**
+`as_spider` (24 bindings in June, 55 spider rows since #1541) and **reuses the globally-registered `rider_warg_*` clips**
 (they ship in LOTRLOME_Armory since the 2026-08-28 warg absorption; before that they made
 Alliance.Wargs an undeclared hard dependency of the spider) until bespoke spider-rider clips
 exist. `act_horse_*`
@@ -310,7 +310,155 @@ mesh if hits feel wrong.
 **Owed:** a Custom Battle hit test (strike and shoot legs, head and abdomen) on the new meshes. The
 2026-09-29 battles showed spiders taking and dealing damage, but no one aimed at body parts.
 
-## Current state & known issues (updated 2026-09-29)
+## Locomotion generated on its own rig (2026-11-22, #1541)
+
+**What was wrong.** The June gait records were byte-grafts of elephant records (the fix for the missing
+`quad_movement` usage), so their travel per loop and pace limits described another animal, and the clips came from
+a retarget across two rigs with different bone axes. Read from the installed files with the gate's reader:
+
+| June clip | Record said | Leg tips did |
+|---|---|---|
+| `an_spi_walk_2` | 3.60 m a loop, limits 4.8 to 7.2 (the elephant canter's) | 2.93 m; tips 0.20 to 0.30 m under the ground; the left front leg worked behind its rest point and the right one ahead of it |
+| `an_spi_run` | 3.00 m, limits 4.3 to 13.0 | 6.45 m; the third leg pair never lifted; 0.59 m between the first and last key at the front tips |
+| `an_spi_walk_left`, `_right` | 3.60 m | not mirror images: left lifted all eight tips together, right kept six tips under the ground |
+| `an_spi_turn_left`, `_right` | 3.60 m | no loop: first and last key 2 to 4.5 m apart at the tips |
+| `an_spi_idle`, `an_spi_jump` | 3.60 m | 0 m |
+
+The spider had no backward walk. Pace 0 played the forward walk, the stand pace's row was an idle whose record
+carried the canter's limits, and trot, canter and gallop all played `an_spi_run`.
+
+**The method** (`tools/spider_gait.py`, pure Python; its header has the full account). No retarget: the tool places
+each leg tip on a path and solves the five-bone leg to reach it, on `spider_skeleton`'s own rest pose
+(`tools/tests/fixtures/spider_rig.json`, dumped from the installed skeleton).
+
+- The gait is an alternating tetrapod: L1, R2, L3, R4 step together and R1, L2, R3, L4 half a loop later, each pair
+  0.03 of a loop after the pair in front of it. A faster gait keeps that order and plants each tip for a smaller
+  share of the loop.
+- A planted tip moves back at the ground's speed and nowhere else. The swing is a quintic that joins the stance at
+  both ends with no step in speed and no acceleration; a cubic scuffed the tip 6 cm near the ground.
+- The leg bends at the knee to the target's distance (the upper bone, and knee to tip as one stiff piece), then
+  turns about the upper bone's joint, first about the vertical and then in the vertical plane, so the knee stays up.
+- Front tips sweep about a point 0.25 m ahead of rest and rear tips 0.25 m behind it, so neighbours do not meet.
+
+| Clip | Keys | Loop | Travel | Pace limits | Plays on |
+|---|---|---|---|---|---|
+| `spider_walk` | 54 | 0.90 s | 2.00 m | 0.2 to 2.22 | `act_spider_walk_forward`, the `act_horse_jump_*` rows |
+| `spider_trot` | 30 | 0.50 s | 2.30 m | 2.0 to 4.6 | `act_spider_trot_forward` (new) |
+| `spider_canter` | 24 | 0.40 s | 2.80 m | 4.14 to 7.0 | `act_spider_canter_forward` (new), `act_horse_forward_canter` |
+| `spider_gallop` | 16 | 0.267 s | 3.00 m | 6.3 to 13.0 | `act_spider_run_forward` |
+| `spider_walk_backwards` | 54 | 0.90 s | 1.40 m | -1.56 to -0.2 | `act_spider_walk_backward` (new) |
+| `spider_strafe_left`, `_right` | 48 | 0.80 s | 1.20 m sideways | the template's 0.2 to 2.5 | `act_spider_walk_left`, `_right` |
+| `spider_turn_left`, `_right` | 48 | 0.80 s | 40 degrees | 0 to 0 | `act_spider_turn_left`, `_right` |
+| `spider_stand` | 1 | 4.0 s | 0 | -0.4 to 0.4 | `act_spider_stand` (new), the two quick stops |
+| `spider_idle` | 120 | 4.0 s | 0 | none | the four idle actions, the inventory and conversation rows, the taunt |
+| `spider_<gait>_inplace` (four) | as the gait | as the gait | 0 | none | `act_spider_walk_stand`, `_trot_stand`, `_canter_stand`, `_run_stand` (new) |
+
+A gait's upper limit is its travel divided by its loop time, the speed at which the full stride is right, and the
+next pace starts at 0.9 of that. The vanilla horse's walk does the same: 1.52 m in 0.8 s, upper limit 1.9
+(`Native/AssetPackages/animation_clips.tpac`, read 2026-11-22). A first gallop of 3.8 m a loop drew the front
+legs out to 99% of their length; 3.0 m in 16 keys keeps them at 94%.
+
+**The pace table** takes the warg's and the elephant's shape: pace 0 the backward walk, pace 1 the stand, paces 2 to
+5 walk, trot, canter and gallop. The `direction="none"` row of paces 2 to 5 plays that gait's in-place twin: same
+timing and lift, no sweep. Pace 0 has no twin of its own yet and plays the walk's, which has the backward walk's
+loop time (0.9 s) and a slightly different step (#1550). The engine blends the twin with the gait by speed
+([elephant.md](elephant.md), "What the engine does with a clip record"), so a slow spider takes short steps at the
+gait's cadence. A twin's record is its gait's own with no clip usage, the shape of the vanilla `gait_walkfast` beside
+`horse_walkfast`. The node reads a clip usage only from a pace's front, strafe-right and turn-right slots, and from
+the `none` slot only the clip's Duration (native read of the movement node on v1.5.7, the #1541 review), so a twin
+with no usage is safe at every pace. Eight new actions carry the table; each has a rider row in the partial
+`as_human_warrior` and in the dwarf copy. A walk, trot, canter or backward row takes the clip the warg's rider
+plays for that role; the gallop's twin takes `rider_warg_canter`, the clip the June `act_spider_run_forward` row has.
+The spider's table repeats an action across rows (`act_spider_walk_left` and `_right` in every pace, as since June,
+and now the walk's and the gallop's twins twice each), where the game's schema declares the action unique per table
+and the other mounts keep that; two battles ran clean on it, and #1550 holds the native read.
+
+**How the set is built.** No Kit import; one Kit start.
+
+```
+python tools/spider_gait.py --rig tools/tests/fixtures/spider_rig.json --out <set>
+python tools/elephant_write_masters.py --clip <set>/<clip>.json --master <spider animations>/an_spi_walk_2_geo.tpac --new --out <spider animations>
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "& tools\gen_elephant_anim_clips.ps1 -Reports @('<set>\report.json') -Prefixes spider_ -Folder <spider animations> -Templates <elephant animations> -Apply"
+(start the Modding Kit once with the Armory loaded, then close it)
+python tools/bind_spider_clips.py --apply
+python tools/check_gait_stride.py --creature spider
+python tools/verify_mount_assets.py spider
+```
+
+The game and the Kit must be closed for every step that writes. The Kit cooks a clip's cache entry when it loads the
+module, before any save. `bind_spider_clips.py` refuses while a clip it binds has no current entry, and it changes
+the live `action_types.xml`, `action_sets.xml` and `monster_usage_sets.xml` and the three snapshot copies together.
+Check sheets on the mesh: `tools/blender/elephant_apply_clip.py --arm spider_skeleton --harness spider_cfg.py
+--rest-from-clip` on `E:\LOTRAOMAssets\_auto_workspace\spider_anim_WORK_20260612.blend`, which holds the engine's rest
+pose in centimetres. Work folder of the first set: `E:\LOTRAOMAssets\Spider\gait_20261122\`.
+
+**The way back.** The June `an_spi_*` clips are on disk and their records are unchanged. Copy the three files of
+`E:\LOTRAOMAssets\Spider\bind_backup_20261122-184045\` over the live ones and the June binding is back.
+
+**Two traps met on the way.**
+
+- The editor refuses a clip whose sound point is at or past (Duration - BlendOutPeriod) / Duration, with a "Sound
+  Point Error" dialog. Two observations stand behind the rule, no read of the editor: the refused twin (0.9 s, both
+  blends 0.8 s, a point at 0.2, "should be smaller than 0.111111"), and `spider_gallop`, which loads with a
+  blend-in of 0.3 s on a 0.267 s loop, so the blend-in is not in it. The first twins cloned `elephant_stand_2`, an idle record with sound points at 0.2 and 0.5, a
+  `horse_eating` sound and a 0.8 s blend-out on loops of 0.27 to 0.9 s. `gen_elephant_anim_clips.ps1` now fails such a
+  row before it writes.
+- A record written again gets a new package GUID, and the entry the Kit cooked for the old one stays in
+  `RuntimeDataCache` with no owner. Move it out with the record.
+
+**Still open.**
+
+- The turn records claim 0.873 (40 degrees in radians, divided by 0.8 s). The node advances a turn clip by turn
+  speed / (Duration x LoopDisplacement) of the turn-RIGHT record, for both directions (native read, 0x74E9C0), so
+  Duration x LoopDisplacement is the turn per loop in the unit of the turn-speed input. Only that unit is unread:
+  the vanilla horse's product is 1.8 (#1550). A turn in place in a battle shows it.
+- The quick stops play `spider_stand`, a one-key record of 4.0 s, where the vanilla quick-stop clips are 2.4 to
+  2.5 s. Nobody has watched a hard stop (#1550).
+- The spider in the party screen, the encyclopedia and a conversation plays `spider_idle`, which has no
+  `quad_movement` usage. The vanilla horse's `horse_inventory_idle` has none either, and the June note named those
+  screens as the first to crash on an untagged MOVEMENT clip; nobody has opened them on the new idle.
+- `verify_mount_assets.py` exempts the four twins from its `quad_movement` check, as it does the dire wolf's. The
+  vanilla horse, the warg and the elephant run that shape, and the spider ran it in two custom battles on 2026-11-22
+  with no fault (the runs under "The spider gait step of the command trial").
+- `an_spi_jump` (the jump start) keeps its grafted 3.60 m record; the gate lists it as pending. It, the attacks,
+  hits, deaths, clip flags and the rider's own clips are a second pass (#1550).
+
+### The spider gait step of the command trial
+
+The rebuilt locomotion clips are bound in the live data and nobody had seen them in the game. The command trial
+(`tools/run_command_trial.py`, [unattended runs](../reference/unattended-game-runs.md)) has a step for them, `spider_gaits`
+(#1541). It runs only when named, with `enter` and no other step, in a battle of its own: twelve `fow_goblin_spider_rider`
+troops join the player's army against the crew battle's 300 melee orcs. That is 413 soldiers; at the battle size
+setting of 400 the engine holds 13 back as reinforcements, one of them a spider rider on the runs below, so the
+line read `riders=11`.
+
+Run it from a checkout built with `./build.ps1`, with no game running: `python tools/run_command_trial.py --steps enter,spider_gaits`.
+
+The step waits up to 20 s for a rider on a mount whose Monster id is `spider`, holds the whole army with the Stop order and keeps
+the Seat's view on one rider. It then reads the highest mount speed (the length of `Agent.MovementVelocity`) in three phases:
+the last 2 s of 6 s held (`stand`), 14 s after the Charge order (`top`) and the last 2 s of 6 s held again (`stop`). It saves
+four pictures, `hud_spider_gaits_1.png` to `_4.png`: the end of the stand, 3 s and 8 s into the charge, the end of the stop.
+The view stays at the keep's own distance. A person reads the pictures.
+
+The line is `[SeatTrial] step=spider_gaits result=<PASS|FAIL> riders=<n> mounted=<n> stand=<m/s> top=<m/s> stop=<m/s> pictures=<n>`,
+then `kind`, `chosen`, `letgo`, `seated` and `faulted`. It passes with at least one rider, `top` of 3.0 or more, `stand` of 1.5 or
+less, four pictures and the keep facts. `stop` and `mounted` are not in the rule, because the riders may be fighting at the end;
+they are there for the reader. The limits 3.0 and 1.5 were set before the first run; the runs below read 10.0 to 10.3 at the
+charge and 0.0 standing.
+
+Runs, both on build `84f42bc85` with the #1541 changes not yet committed, 2026-11-22:
+
+| Run folder | Line | What it showed |
+|---|---|---|
+| `E:\Temp\command-trial-runs\20261122-191545` | FAIL `riders=11 mounted=11 stand=2.7 top=10.3 stop=0.0 pictures=4` | No crash, clean unload. The rule then judged the whole stand, and the riders were still walking into their ranks when the Stop order came. One frame of 29.6 s at the spawn tick, in a session that compiled 1,067 shaders; earlier custom battle runs had 0.7 to 0.9 s. |
+| `E:\Temp\command-trial-runs\20261122-192218` | PASS `riders=11 mounted=11 stand=0.0 top=10.0 stop=0.0 pictures=4` | The stand judged on its last 2 s and the view kept close. Worst frame 1.09 s, so the long frame of the first run did not come back. |
+
+What the two runs prove: the new action sets and the pace table load, 11 riders spawn seated on `as_spider`, the spiders stand
+still when held, reach 10 m/s at the charge (the gallop pace, limits 6.3 to 13.0, full stride at 11.25) and stop again. What they
+do not prove: how any gait looks. The pictures are stills from above. The walk, trot and canter paces, a step back, a strafe and a
+turn in place were not held long enough to see, and a person's eye in a battle decides those.
+
+## Current state & known issues (updated 2026-11-22)
 
 | Item | Status |
 |---|---|
@@ -329,7 +477,7 @@ mesh if hits feel wrong.
 | Rider non-lethal `CanDismount` hit | ✅ **Patch48 (2026-06-15) — confirmed in-game.** A surviving mounted rider taking a dismountable melee hit AV'd in native `HandleBlowAux` (`0x3`); the prefix strips `CanDismount` for spider riders. Sibling of Patch47 (death) on the same broken native dismount path. See "Damage + bite-collision tuning" / RCA |
 | `lotrtaom_iron_hills_01_forceatmo` | ❌ **SEPARATE BUG — not spider. The scene has NEVER loaded: 8/8 CTDs** (2026-06-10 20:53→2026-06-12 06:27), all dying at `scene.xscene` load, pre-agent-spawn — incl. runs with all-green spider probes. `taom_gondor_village_001_forceatmo` loads fine, so the forceatmo/Patch16 mechanism is exonerated — it's this scene's assets. Several 6/10 "spider mission CTDs" were this scene, conflated into the spider evidence. **Removed from `custom_battle_scenes.xml` 2026-06-12** so it stops eating test runs; restore once repaired. Own issue/investigation |
 | **Rein attributes on v1.4.8 (2026-08-10)** | ✅ **crash-free on v1.5.3 (2026-09-29), rein visual not inspected.** Ridden spiders died in numbers in the 2026-09-29 Custom Battles (one ended with 36 of 84 alive) and every battle ran to the end. Original note: `lotr_monster_spider.xml` declares **5 of the 12** rein attributes the engine reads (`rein_handle_bone`, both `rein_handle_*_local_pos`, `rein_collision_1/2_bone`); every vanilla `Mountable` monster carries all twelve. Warg parity holds: it declares the same five. v1.4.8 fixed a "horse rein visual bug when a mounted agent died", native with no managed diff, in a path that runs on **mounted-agent death** ([v1.4.8-impact.md](../migration/v1.4.8-impact.md) N7). No crash is predicted; the 1.4.6 river battle below covered rider and spider deaths but predates this change. `audit_mount_parity.py` has no rein check (zero occurrences of "rein"); it always exits 0. Kill a ridden spider and a mounted rider and watch. Contract: [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md) "The rein-attribute invariant" |
-| Walk gait skew | ⚠️ known from the retarget work (pre-existing; polish) |
+| Walk gait skew | Replaced 2026-11-22 (#1541): the gait, turn, idle and stand clips are generated on the rig, see "Locomotion generated on its own rig". The rows above that name `an_spi_idle`, the turns and the walk describe the June clips |
 | Charge visual | 💡 unused 112KB `an_spi_charge` clip exists — possible upgrade over `an_spi_attack_charge` for the pounce; evaluate later |
 | Inventory equip | ❓ retest (was the second AV repro; same root cause, expected fixed) |
 | Campaign map icon | ❓ ladder step (c) pending (needs campaign) |

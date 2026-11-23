@@ -21,6 +21,15 @@
 		<action type="act_spider_walk_left" animation="rider_warg_strafe_left_faster" />
 		<action type="act_spider_walk_right" animation="rider_warg_strafe_right_faster" />
 		<action type="act_spider_run_forward" animation="rider_warg_canter" />
+		<!-- #1541, written by tools/bind_spider_clips.py -->
+		<action type="act_spider_stand" animation="rider_warg_stand_for_movement" />
+		<action type="act_spider_walk_backward" animation="rider_warg_walkbackfast" />
+		<action type="act_spider_walk_stand" animation="rider_warg_forward_walk" />
+		<action type="act_spider_trot_forward" animation="rider_warg_trot" />
+		<action type="act_spider_trot_stand" animation="rider_warg_trot" />
+		<action type="act_spider_canter_forward" animation="rider_warg_canter" />
+		<action type="act_spider_canter_stand" animation="rider_warg_canter" />
+		<action type="act_spider_run_stand" animation="rider_warg_canter" />
 		<action type="act_spider_turn_left" animation="rider_warg_strafe_left_faster" />
 		<action type="act_spider_turn_right" animation="rider_warg_strafe_right_faster" />
 		<action type="act_spider_jump" animation="rider_warg_dash" />
@@ -14902,6 +14911,15 @@
 		<action type="act_spider_walk_left" animation="rider_warg_strafe_left_faster" />
 		<action type="act_spider_walk_right" animation="rider_warg_strafe_right_faster" />
 		<action type="act_spider_run_forward" animation="rider_warg_canter" />
+		<!-- #1541, written by tools/bind_spider_clips.py -->
+		<action type="act_spider_stand" animation="rider_warg_stand_for_movement" />
+		<action type="act_spider_walk_backward" animation="rider_warg_walkbackfast" />
+		<action type="act_spider_walk_stand" animation="rider_warg_forward_walk" />
+		<action type="act_spider_trot_forward" animation="rider_warg_trot" />
+		<action type="act_spider_trot_stand" animation="rider_warg_trot" />
+		<action type="act_spider_canter_forward" animation="rider_warg_canter" />
+		<action type="act_spider_canter_stand" animation="rider_warg_canter" />
+		<action type="act_spider_run_stand" animation="rider_warg_canter" />
 		<action type="act_spider_turn_left" animation="rider_warg_strafe_left_faster" />
 		<action type="act_spider_turn_right" animation="rider_warg_strafe_right_faster" />
 		<action type="act_spider_jump" animation="rider_warg_dash" />
@@ -66679,20 +66697,20 @@
 		     byte-patch; originals at *.bak-untagged). A quadrupedal action set measuring untagged
 		     movement clips builds a null native gait structure -> AccessViolation (+0x10) on the
 		     first Skeleton.TickAnimations in EVERY context (thumbnail/inventory tableau/mission).
-		     idle/turn/jump/taunt bindings stay on tagged movement clips until the pose-correct
-		     clips get a tagged recompile in the Kit. -->
-		<action type="act_horse_forward_canter" animation="an_spi_walk_2" />
-		<action type="act_horse_conversation_start" animation="an_spi_walk_2" />
-		<action type="act_horse_jump_forward" animation="an_spi_walk_2" />
-		<action type="act_horse_jump_forward_end" animation="an_spi_walk_2" />
-		<action type="act_horse_jump_forward_end_hard" animation="an_spi_walk_2" />
-		<action type="act_horse_jump_forward_loop" animation="an_spi_walk_2" />
-		<action type="act_horse_jump_high" animation="an_spi_walk_2" />
-		<action type="act_horse_jump_high_end" animation="an_spi_walk_2" />
-		<action type="act_horse_jump_high_end_hard" animation="an_spi_walk_2" />
-		<action type="act_horse_jump_high_loop" animation="an_spi_walk_2" />
-		<action type="act_inventory_idle" animation="an_spi_idle" />
-		<action type="act_inventory_idle_start" animation="an_spi_idle" />
+		     Since #1541 the gait, turn, stand and jump rows play spider_* clips, each with the tag; the
+		     idle rows play spider_idle, which has none, as the vanilla horse's idle clips have none. -->
+		<action type="act_horse_forward_canter" animation="spider_canter" />
+		<action type="act_horse_conversation_start" animation="spider_idle" />
+		<action type="act_horse_jump_forward" animation="spider_walk" />
+		<action type="act_horse_jump_forward_end" animation="spider_walk" />
+		<action type="act_horse_jump_forward_end_hard" animation="spider_walk" />
+		<action type="act_horse_jump_forward_loop" animation="spider_walk" />
+		<action type="act_horse_jump_high" animation="spider_walk" />
+		<action type="act_horse_jump_high_end" animation="spider_walk" />
+		<action type="act_horse_jump_high_end_hard" animation="spider_walk" />
+		<action type="act_horse_jump_high_loop" animation="spider_walk" />
+		<action type="act_inventory_idle" animation="spider_idle" />
+		<action type="act_inventory_idle_start" animation="spider_idle" />
 		<action type="act_spider_attack_back" animation="an_spi_attack_front" />
 		<action type="act_spider_attack_bottom" animation="an_spi_attack_bottom" />
 		<action type="act_spider_attack_charge" animation="an_spi_attack_charge" />
@@ -66704,8 +66722,8 @@
 		<action type="act_spider_rear_damaged" animation="an_spi_hit_front" />
 		<action type="act_spider_dash" animation="an_spi_attack_charge" />
 		<action type="act_spider_kick" animation="an_spi_attack_front" />
-		<action type="act_spider_quick_stop" animation="an_spi_idle" />
-		<action type="act_spider_quick_stop_when_fast" animation="an_spi_idle" />
+		<action type="act_spider_quick_stop" animation="spider_stand" />
+		<action type="act_spider_quick_stop_when_fast" animation="spider_stand" />
 		<action type="act_spider_hit_object" animation="an_spi_hit_front" />
 		<action type="act_spider_hit_object_while_falling" animation="an_spi_hit_front" />
 		<action type="act_spider_strike_front" animation="an_spi_attack_front" />
@@ -66730,28 +66748,37 @@
 		<action type="act_spider_hit_front" animation="an_spi_hit_front" />
 		<action type="act_spider_hit_left" animation="an_spi_hit_left" />
 		<action type="act_spider_hit_right" animation="an_spi_hit_right" />
-		<action type="act_spider_idle" animation="an_spi_idle" />
-		<action type="act_spider_idle_1" animation="an_spi_idle" />
-		<action type="act_spider_idle_2" animation="an_spi_idle" />
-		<action type="act_spider_idle_dg" animation="an_spi_idle" />
+		<action type="act_spider_idle" animation="spider_idle" />
+		<action type="act_spider_idle_1" animation="spider_idle" />
+		<action type="act_spider_idle_2" animation="spider_idle" />
+		<action type="act_spider_idle_dg" animation="spider_idle" />
 		<action type="act_spider_jump" animation="an_spi_jump" />
-		<action type="act_spider_run_forward" animation="an_spi_run" />
-		<action type="act_spider_taunt" animation="an_spi_walk_2" />
-		<action type="act_spider_turn_left" animation="an_spi_turn_left" />
-		<action type="act_spider_turn_right" animation="an_spi_turn_right" />
-		<action type="act_spider_walk_forward" animation="an_spi_walk_2" />
-		<action type="act_spider_walk_left" animation="an_spi_walk_left" />
-		<action type="act_spider_walk_right" animation="an_spi_walk_right" />
+		<action type="act_spider_run_forward" animation="spider_gallop" />
+		<action type="act_spider_taunt" animation="spider_idle" />
+		<action type="act_spider_turn_left" animation="spider_turn_left" />
+		<action type="act_spider_turn_right" animation="spider_turn_right" />
+		<action type="act_spider_walk_forward" animation="spider_walk" />
+		<action type="act_spider_walk_left" animation="spider_strafe_left" />
+		<action type="act_spider_walk_right" animation="spider_strafe_right" />
+		<!-- #1541, written by tools/bind_spider_clips.py -->
+		<action type="act_spider_stand" animation="spider_stand" />
+		<action type="act_spider_walk_backward" animation="spider_walk_backwards" />
+		<action type="act_spider_walk_stand" animation="spider_walk_inplace" />
+		<action type="act_spider_trot_forward" animation="spider_trot" />
+		<action type="act_spider_trot_stand" animation="spider_trot_inplace" />
+		<action type="act_spider_canter_forward" animation="spider_canter" />
+		<action type="act_spider_canter_stand" animation="spider_canter_inplace" />
+		<action type="act_spider_run_stand" animation="spider_gallop_inplace" />
 	</action_set>
 
 	<!-- Spider child action sets (2026-06-10) - REQUIRED for ridden mounts (elephant Crash #4
 	     class): party-screen/encyclopedia thumbnails + campaign-map party icons resolve
 	     <base>_town_and_village / <base>_map; if absent => AV in native Skeleton.TickAnimations /
 	     ForceUpdateBoneFrames (the crash that killed the original spider-mount attempt).
-	     Mirrors as_elephant_town_and_village / as_elephant_map below. Clip choice: an_spi_walk_2 /
-	     an_spi_attack_front are _anm-bearing (an_spi_idle_2 is not - see TEMP-ANM-UNBLOCK above). -->
+	     Mirrors as_elephant_town_and_village / as_elephant_map below. The idle row plays spider_idle
+	     since #1541; the map rows play an_spi_attack_front. -->
 	<action_set id="as_spider_town_and_village" skeleton="spider_skeleton" base_set="as_spider">
-		<action type="act_spider_idle" animation="an_spi_idle" />
+		<action type="act_spider_idle" animation="spider_idle" />
 	</action_set>
 	<action_set id="as_spider_map" skeleton="spider_skeleton" base_set="as_spider">
 		<action type="act_map_mount_attack_1h" animation="an_spi_attack_front" />

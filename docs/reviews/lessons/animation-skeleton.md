@@ -596,6 +596,22 @@ extent) and the formation width the measured shoulders times `AgentScale`.
   (shoulders, hips) and size the capsule, formation width and reach from those.
 - **Source:** `docs/reference/lotrlome-hill-troll-changes.md` `monsters.xml` row; `TrollBruteForceConfig.ShoulderWidthByMonster`.
 
+### A cloned clip record carries its template's sounds and blends, and the editor judges them against the new length (#1541, 2026-11-22)
+The spider's four in-place gait twins cloned `elephant_stand_2`, because that record plays in the elephant's own
+`none` rows. It is an idle record: sound points at 0.2 and 0.5, a `horse_eating` sound, blends of 0.8 s. On loops
+of 0.27 to 0.9 s the Modding Kit refused each twin at load with a "Sound Point Error" dialog. The rule it applies,
+read back from the dialog's number: a sound point must be below (Duration - BlendOutPeriod) / Duration.
+- **Why missed:** the template was chosen by where its clone would be bound, not by what the record holds. The
+  generator set name, master, range, Duration, travel and limits, and nothing printed the fields it left alone.
+  The four records passed every offline check, since no tool here knew the editor's rule.
+- **Prevent:** take a twin's record from the vanilla pattern, read not assumed: `gait_walkfast` is `horse_walkfast`
+  with the same Duration, step points, flags and blends and no clip usage (`Native/AssetPackages/animation_clips.tpac`).
+  `tools/gen_elephant_anim_clips.ps1` fails an explicit row whose sound point breaks the rule, and a row states
+  `usage`, `step_points` and `sound_code` itself. Before a record is cloned for a clip of another length, print the
+  template's StepPoints, SoundCode and both blend periods. A record written again leaves an orphan cache entry
+  under its old GUID: move it out with the record.
+- **Source:** #1541; `docs/features/spider.md` ("Locomotion generated on its own rig"); `tools/spider_gait.py` (`_twin`).
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

@@ -145,6 +145,23 @@ class SelectionTests(unittest.TestCase):
         gate = next(g for g in dg.GATES if g.id == "elephant-clips")
         self.assertEqual(gate.cmd, ("python", "tools/bind_elephant_clips.py", "--check"))
 
+    def test_the_action_sets_the_spider_clips_and_their_tools_select_the_spider_gates(self):
+        armory = "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/"
+        for path in (armory + "ModuleData/action_sets.xml", armory + "ModuleData/monster_usage_sets.xml",
+                     armory + "ModuleData/action_types.xml",
+                     armory + "Assets/creature/spider/animations/spider_walk_anm.tpac",
+                     armory + "Assets/creature/spider/animations/spider_walk_geo.tpac",
+                     "tools/bind_spider_clips.py", "tools/spider_gait.py", "tools/check_gait_stride.py",
+                     "tools/gen_elephant_anim_clips.ps1", "tools/elephant_write_masters.py"):
+            got = _ids(dg.select(dg.GATES, [path]))
+            self.assertIn("spider-clips", got, path)
+            self.assertIn("spider-gaits", got, path)
+        self.assertNotIn("spider-clips", _ids(dg.select(dg.GATES, [TROOPS])))
+        clips = next(g for g in dg.GATES if g.id == "spider-clips")
+        gaits = next(g for g in dg.GATES if g.id == "spider-gaits")
+        self.assertEqual(clips.cmd, ("python", "tools/bind_spider_clips.py", "--check"))
+        self.assertEqual(gaits.cmd, ("python", "tools/check_gait_stride.py", "--creature", "spider"))
+
     def test_the_banner_sprite_folder_selects_banner_sheets(self):
         sprite = "Main/_Module/GUI/SpriteParts/ui_taom_bannericons/10000.png"
         self.assertIn("banner-sheets", [g.id for g in dg.select(dg.GATES, [sprite])])
