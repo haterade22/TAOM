@@ -31,14 +31,20 @@ only (not companions' parties, garrisons or AI parties):
   an opposed alignment or enemy culture), and `DesertionRecruitGuard` stops blocking such troops for it: prisoner recruiting
   and its conformity tick (Patch150), and the player's volunteer slots (`CapHeroIndex`). Both read the switch before they test
   for the main party, so with it off nothing changes for anyone.
+- **No upkeep desertion.** At a special-resource balance of 0, `SpecialResourceEarningService.OnDailyTick` deserts no
+  upkeep troops from the main party (project owner, 2026-11-23: War Drums elites still deserted with the switch on). The
+  upkeep is still charged, and the daily line, the overdraft line and the running-out warning still show; the map-bar
+  tooltip drops its "Elite troops desert each day" line (`SpecialResourceMapBarMixin`). The switch's hint and on-message
+  were not reworded, so the 12 translations stay current. The log says so
+  once per campaign (`[SpecRes] DailyTick: Unlimited party cheat is on`). Single player only: in a co-op session upkeep
+  desertion is off for everyone anyway.
 - **At once.** `PartyBase.PartySizeLimit` is cached until the roster's `VersionNo` changes, so each flip calls
   `IPartySizeCacheInvalidator.InvalidateLedBy` with the main hero (which also refreshes the army leader party's speed
   cache). At session launch, after a load, a switch saved on does the same (`CheatMenuService.ReconcileAtSessionLaunch`).
   When the player changes character (heir selection, Player Switcher), the main party moves to another hero with no roster
   change, so while the switch is on every party's cached limit is refreshed (`OnPlayerCharacterChanged`).
 - Not changed: vanilla's low-morale desertion, which hits every troop alike whatever its culture (TAOM's morale model has no
-  penalty for enemy troops); special-resource upkeep desertion (at a balance of 0, a tenth of each upkeep troop type each
-  day, [special-resources.md](special-resources.md)); and Recruitment Alignment's source block (a settlement of an
+  penalty for enemy troops); and Recruitment Alignment's source block (a settlement of an
   enemy-aligned kingdom still offers no volunteers, [alignment-recruitment.md](alignment-recruitment.md)).
 - The switch stays in force with the MCM **Enable Cheat Menu** off: that switch only hides the menu. Turn Unlimited party
   off before turning the menu off.
@@ -251,7 +257,8 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
    "Unlimited party: off" turns to "on" with a message. Take more troops than the size limit allows: the party screen and
    town recruiting accept them, and the next days none desert, Mordor troops in a Gondor party included. Save, load: still
    "on". Turn it off: the troops stay; the next day a quarter of the men over the limit desert, and opposed troops desert
-   again.
+   again. With the special resource at 0 and elite upkeep troops in the party, wait a day with the switch on: no
+   "elite troops deserted" banner; turn it off and wait a day: they desert again.
 4. Teleport: Towns..., type a town name in the search box, choose it. The menu closes and the party stands outside that
    town's gate with the camera on it. Enter the town and leave again, and the village or town menus work as usual (the case
    12 crash path).
@@ -309,5 +316,7 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
   the campaign (`CheatPartyRules`).
 - 2026-11-16: Unlimited party takes effect at once (party-size cache refreshed on each flip and after a load), is turned
   off when a save is loaded into a co-op session, and shows a tooltip line for its bonus.
+- 2026-11-23: Unlimited party also stops special-resource upkeep desertion (War Drums, War Spoils and the rest) for the
+  main party.
 - 2026-11-15: Troops page: "Every troop (party screen)...", the game's own cheat party screen (every troop, 10 of each),
   opened without the engine's cheat mode.

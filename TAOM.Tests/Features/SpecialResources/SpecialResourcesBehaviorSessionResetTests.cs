@@ -41,7 +41,8 @@ public class SpecialResourcesBehaviorSessionResetTests
             storage,
             Substitute.For<IModLogger>(),
             new SpecialResourceEarningService(service, storage, Substitute.For<ICoopSessionProvider>(),
-                Substitute.For<IDedicatedServerProvider>(), Substitute.For<IModLogger>()),
+                Substitute.For<IDedicatedServerProvider>(), Substitute.For<IModLogger>(),
+                new TAOM.Features.CheatMenu.CheatPartyRules()),
             Substitute.For<ISpecialResourceEventAdapter>());
 
     private void LeavePriorCampaignBalances()
