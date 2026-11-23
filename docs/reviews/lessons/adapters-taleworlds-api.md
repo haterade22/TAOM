@@ -2186,3 +2186,10 @@ The free heroes of a story mission stand as one group, off AI control, under a M
 **Prevent:** when a hero gets a set from a fallback, check the set's `EquipmentType` as well as its slots, and fix it where the hero is built. Before you call a hero's kit safe, list the engine readers that route by type (`EquipmentHelper.AssignHeroEquipmentFromEquipment`, `InventoryLogic.PartyEquipment.ResetEquipment`, `BasicCharacterObject.FirstCivilianEquipment`). A roster set in XML is `Battle` unless it says `civilian="true"` or `equipmentType`. A test of a kit copy fills real items, a modifier, a cosmetic item and the quest flag: an empty kit passes an implementation that erases the slots.
 
 **Source:** deep review of 2026-11-23 (lenses 2 and 5, Codex pre-review); `HeroCommissionAdapter.MakeCivilian`; [field-commission.md](../../features/field-commission.md) "The civilian set's type, and lost gear (#1544)".
+### Detect an exception another mod swallows by the postfix it skips, not by the state it leaves (#1545, 2026-11-23)
+
+**Why missed:** BannerlordCoop's finalizer on `GauntletMovie.LoadMovie` swallows a themed prefab's build exception. The first fix inferred the failure from `RootWidget == null`, which only one of the failure points leaves; a binding failure left a root, and a parse failure left a movie whose `Release` throws.
+
+**Prevent:** to learn whether a method threw when another patcher may swallow it, mark in a prefix and clear in a postfix: Harmony skips every postfix when the original throws, whoever's finalizer handles it (`HarmonyPatchSemanticsTests`). Before cleaning up a half-built engine object, read its `Release` for fields the failed build left null.
+
+**Source:** [rca-coop-themed-fallback-2026-11-23.md](../rca-coop-themed-fallback-2026-11-23.md) rows 1 and 2.

@@ -97,6 +97,32 @@ internal static class TeamPracticeFight
         Outcomes.Pass(WinCheckId, "player-side", $"alliesStanding={allies}");
     }
 
+    /// <summary>
+    /// The number the practice HUD shows as "remaining opponents" (<see cref="TeamPracticeRules.OpponentsLeft"/>), asked by the
+    /// client patch on <c>MissionArenaPracticeFightVM.Tick</c> (#1536). False, with <paramref name="count"/> 0, leaves the HUD
+    /// vanilla's: the player is not practising (the yard before a fight, and a wave fight, where the panel is hidden), the
+    /// controller was not decided as a team fight, or the AI teams did not resolve. The allies standing are the
+    /// living fighters of the teams <see cref="TeamPracticeRules.IsAllyTeam"/> accepts; <c>Team.ActiveAgents</c> loses an agent
+    /// in <c>Mission.OnAgentRemoved</c> before the behaviours run, where vanilla lowers its alive count. Main mission thread.
+    /// </summary>
+    internal static bool TryOpponentsLeft(ArenaPracticeFightMissionController controller, out int count)
+    {
+        count = 0;
+        if (!controller.IsPlayerPracticing || !TeamPracticeState.IsTeams(controller))
+            return false;
+        var teams = TeamPracticeAccess.AiTeams(controller);
+        if (teams == null)
+            return false;
+
+        var alliesStanding = 0;
+        for (var i = 0; i < teams.Count; i++)
+            if (TeamPracticeRules.IsAllyTeam(i, teams.Count))
+                alliesStanding += teams[i].ActiveAgents.Count;
+
+        count = TeamPracticeRules.OpponentsLeft(controller.RemainingOpponentCount, alliesStanding);
+        return true;
+    }
+
     /// <summary>One has-bots flag for each AI team by index; no teams read (null) is an empty list, which the rules treat as no data.</summary>
     private static List<bool> TeamsHaveBots(List<Team>? teams)
     {

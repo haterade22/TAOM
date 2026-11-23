@@ -84,6 +84,14 @@ cultures fight in, so it is a deliberate content decision rather than a typo rep
 <!-- measured: culture ids from taom_spcultures.xml and spcultures.xslt template matches, checked
      against the gear_practice_dummy_/weapon_practice_stage_1_ id set of the merged install, 2026-09-06 -->
 
+### What the practice weapon sets hold (2026-11-22, #1534)
+
+`AddRandomWeapons` picks one roster of `weapon_practice_stage_N_<culture id>` at random and copies the slots Item0 to Item3 to the fighter, the player included (:325-338). It reads no other slot, so the armour pieces in those rosters do nothing in a practice fight. The wave fight reads the same ids (`ArenaWaveArena.WeaponSets`).
+
+Each of the 26 TAOM cultures with such a set gives each stage one vanilla Empire sword in Item0: `empire_sword_1_t2` for stage 1, `empire_sword_3_t3` for stage 2 and `empire_sword_5_t4` for stage 3 (Isengard and Mordor have two rosters, both with that sword). So in a town of a culture with its own id every practice fighter carries the same sword, where vanilla's sets for the six reskinned cultures offer several kits (swords, polearms, bows or a crossbow, shields). The rename named above would therefore also replace six varied weapon sets with one sword each. Lore weapon sets have to be authored before that rename is worth making; it stays the maintainer's content decision.
+
+The South Rhovanion sets shipped with armour only (v2.0.36; they are identical to Rohan's, which the engine never asks for). South Rhovanion has its own culture id and starts with two towns, Vidugard and Southwood. The engine reads the culture of the faction that holds the town, so there, and in any town that kingdom takes, it found a set with nothing in Item0 to Item3 and every fighter entered with bare hands. Read from the source and the data; nobody reported it from play. The sets of both cultures now hold the same sword as the other 24, and `PracticeWeaponSetTests` fails on a practice set whose battle rosters do not all hold a weapon, and on one with no battle roster (a set of civilian rosters only leaves `BattleEquipments` empty and makes vanilla's `list[index]` throw).
+
 ## Prize Item Selection
 
 `GetRegularRewardItems` and `GetEliteRewardItems` both scan `Items.All` filtered by settlement culture and the armour class (2026-10-02; weapons by the class their engine tier implies):
