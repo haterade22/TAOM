@@ -508,6 +508,30 @@ class GeneratorAppliesTheSwapTests(unittest.TestCase):
         self.assertIn('slot="Item1" id="Item.shield_z"', xml)
 
 
+class PlaceholderBladeHiddenTests(unittest.TestCase):
+    """A cloned blade is a troop weapon's part, so the weapon designer never lists it
+    (the engine reads is_hidden as CraftingPiece.IsHiddenOnDesigner)."""
+
+    def build_piece(self, pieces_xml=PIECES):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = armory(Path(tmp.name))
+        (root / "ModuleData" / "LOTRLOME_crafting_pieces.xml").write_text(pieces_xml, encoding="utf-8")
+        cat, priced = donor_weapon("OneHandedSword", slow_sword())
+        pieces, _i, _plan, _s, _d, _t = gen.build(spec_for(3), cat, priced, [], root)
+        return pieces[0]
+
+    def test_the_cloned_blade_is_hidden_on_the_designer(self):
+        piece = self.build_piece()
+        self.assertEqual(piece.count('is_hidden="true"'), 1, piece)
+        self.assertIn('(placeholder)" is_hidden="true"', piece)
+
+    def test_a_donor_blade_already_hidden_keeps_one_attribute(self):
+        piece = self.build_piece(PIECES.replace('piece_type="Blade"', 'is_hidden="false" piece_type="Blade"'))
+        self.assertEqual(piece.count('is_hidden='), 1, piece)
+        self.assertIn('is_hidden="true"', piece)
+
+
 class LiveNumberedLineTests(unittest.TestCase):
     """LiveInstall: every numbered line of the installed Armory plus the placeholders, priced by the engine
     port, keeps unique numerals and does not fall at any step a placeholder takes part in."""
