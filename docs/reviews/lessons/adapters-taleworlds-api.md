@@ -2170,3 +2170,11 @@ The free heroes of a story mission stand as one group, off AI control, under a M
 **Prevent:** when an adapter returns what the engine did, every value needs a branch in the caller that changes state; a log line alone is not a branch, and a test named "still resolves" for a value that is not success is the warning sign. Before a comment or a doc says that the engine "finishes" something later, read each completion path to its first `return` and write its conditions beside the claim. When state must wait for the engine, prefer what is already saved (here the window's close day and the engine's own death mark) with a daily retry over a new saved field. A retry must keep the engine's own guard: a second `ApplyByBattle` on a marked hero kills him inside his battle, which the engine's daily tick never does.
 
 **Source:** Codex adversarial review of 2026-11-22, F1 (HIGH); `ChronicleService.ResolveHero`, `ChronicleWorldAdapter.KillHeroInBattle`; `docs/reviews/rca-story-missions-codex-2026-11-22.md`.
+
+### A message's direction in our code is not its sender: trace every Coop path into the broker (#1471, 2026-11-22)
+
+**Why missed:** TAOM.CoopCompat named its messages by direction ("server to client") and the client handlers trusted any message of that type. Coop has two paths that publish a message into a client's broker with no sender identity: the mission P2P client (`LiteNetP2PClient.HandleReceivedPayload`) and the server relay (`RelayPacketHandler.HandlePacket`, which sends a mission peer's raw bytes over the server link). So a mission peer could forge a career update, and a check of the sender's `NetPeer` could not have stopped the relayed copy. The token that fixed it then cut a path Coop's join queue covered: a player who loads gets queued packets, but the token broadcast skipped every connection that had not said hello yet.
+
+**Prevent:** before a co-op handler trusts a message, list every Coop path that can publish that type into the broker, the relay and the mission P2P client included, and say which one the check closes. When a fix gates delivery on a new condition, list what the old path delivered in the gap and who delivers it now. A sequence number is compared only inside the process that counts it.
+
+**Source:** [rca-coop-session-token-2026-11-22.md](../rca-coop-session-token-2026-11-22.md) classes 1 and 2.

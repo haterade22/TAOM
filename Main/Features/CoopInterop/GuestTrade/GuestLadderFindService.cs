@@ -14,7 +14,9 @@ namespace TAOM.Features.CoopInterop.GuestTrade;
 /// adapter) for each co-op player's hero on the winning side, at the base chance: the hero's kills are counted on the
 /// player's PC, and the server takes no count from a client. The find is kept in the server's save
 /// (<see cref="ArmourAcquisitionState.PendingFinds"/>) and given to the hero's party on a later hourly tick, once the
-/// party is free and out of battle. The local main hero is never rolled here; <c>LordsLadderBehavior</c> rolls that one.
+/// party is free and out of battle. A winner marked as the local main hero is rolled too: Coop's hideout finalize sets
+/// <c>Game.PlayerTroop</c> to the hero of the first co-op player on the attacking side, and <c>LordsLadderBehavior</c>
+/// rolls only on <c>OnPlayerBattleEnd</c>, which the co-op server does not raise for a player's battle.
 /// </summary>
 public sealed class GuestLadderFindService
 {
@@ -49,7 +51,7 @@ public sealed class GuestLadderFindService
         var seen = new HashSet<string>(StringComparer.Ordinal);
         foreach (var winner in winners)
         {
-            if (winner == null || winner.Control != PlayerControl.Player || winner.IsLocalMainHero
+            if (winner == null || winner.Control != PlayerControl.Player
                 || string.IsNullOrEmpty(winner.HeroId) || !seen.Add(winner.HeroId))
                 continue;
             if (_ladder.RollMaterialDrop(winner.HeroId, true, 0, winner.CultureId, rng) is not { } find)

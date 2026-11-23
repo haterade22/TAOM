@@ -177,6 +177,23 @@ public class ArmyOverlayPrefabTests
     }
 
     [TestMethod]
+    public void CohesionHint_ListensToTheButtonAndToTheWidgetAroundIt()
+    {
+        // A HintWidget relays its parent's HoverBegin, and the engine hovers only the top widget that takes the
+        // mouse: the enabled cohesion button while the player can manage the army, else the widget around it.
+        var parents = Load().SelectNodes("//HintWidget[@DataSource='{CohesionHint}']")!.Cast<XmlNode>()
+            .Select(hint => (XmlElement)hint.ParentNode!.ParentNode!).ToList();
+
+        Assert.AreEqual(2, parents.Count);
+        var button = parents.Single(p => p.Name == "ButtonWidget");
+        Assert.AreEqual("ExecuteOpenArmyManagement", button.GetAttribute("Command.Click"));
+        var around = parents.Single(p => p != button);
+        Assert.AreSame(button.ParentNode!.ParentNode, around);
+        Assert.AreEqual("true", button.GetAttribute("DoNotPassEventsToChildren"));
+        Assert.AreEqual("", around.GetAttribute("DoNotAcceptEvents"), "the widget around a disabled button must take the hover");
+    }
+
+    [TestMethod]
     public void EveryVanillaBindingAndCommand_IsKept()
     {
         // The VM is vanilla's ArmyMenuOverlayVM; a binding lost in the restyle fails silently in game.
