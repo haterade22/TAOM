@@ -77,7 +77,7 @@ internal sealed class TrainingWavesDialogBehavior : CampaignBehaviorBase
         return true;
     });
 
-    /// <summary>The stake lines count from the largest: slot 0 is the full cap, 1 the half, 2 the quarter.</summary>
+    /// <summary>The stake lines count from the largest: slot 0 is the full cap, 1 the half, 2 the small one.</summary>
     internal bool WantsStake(int slot) => _bets.StakeChoice(slot) > 0;
 
     internal bool CanStakeLine(int slot) => _faults.Condition("stake condition", () =>
