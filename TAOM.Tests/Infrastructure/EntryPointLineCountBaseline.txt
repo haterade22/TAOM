@@ -2,7 +2,7 @@
 # Entry point: a CampaignBehaviorBase, MissionBehavior, MissionLogic or MissionView subclass, a Taom*Model, or a Harmony patch class (attributed, with a static Prefix, Postfix, Transpiler or Finalizer, or with new HarmonyMethod(typeof(Self), ...)).
 # The list may only shrink. Never add a line: move the logic into a service. To prune: set TAOM_WRITE_ENTRY_POINT_BASELINE=1,
 # run EntryPointLineCountGateTests.Baseline_Regenerate_WhenAsked.
-# Entries: 18.
+# Entries: 17.
 BehaviorTreeWrapper.BehaviorTreeMissionLogic 468
 TAOM.Features.AdvancedCombat.AutonomousMovementPlayerController 661
 TAOM.Features.CareerSystem.CareerPerkMissionBehavior 214
@@ -15,9 +15,8 @@ TAOM.Features.Enlistment.Hooks.EnlistmentBattleBehavior 289
 TAOM.Features.Messengers.MessengerCampaignBehavior 656
 TAOM.Features.MountDespawn.Hooks.MountDespawnMissionBehavior 173
 TAOM.Features.NavalTravel.Models.TaomPartyNavigationModel 197
-TAOM.Features.Refuge.Hooks.RefugeCampaignBehavior 201
+TAOM.Features.Refuge.Hooks.RefugeCampaignBehavior 170
 TAOM.Features.SpecialResources.SpecialResourcesBehavior 261
-TAOM.Features.SupplyLines.Hooks.SupplyLinesCampaignBehavior 155
 TAOM.Features.TroopProgression.Models.TaomPartyWageModel 190
 TAOM.Features.WarOfTheRingMomentum.WarOfTheRingMomentumBehavior 307
 TAOM.Features.Warg.WargMissionBehavior 183

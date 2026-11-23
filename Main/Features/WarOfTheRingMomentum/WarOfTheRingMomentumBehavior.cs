@@ -73,13 +73,13 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
         _uiService = uiService;
         _logger = logger;
         _coopSession = coopSession;
+        _stateStore.ResetForNewGame();
     }
 
     private static double NowHours => CampaignTime.Now.ToHours;
 
     public override void RegisterEvents()
     {
-        CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, _ => _stateStore.ResetForNewGame());
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
         CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
         CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);

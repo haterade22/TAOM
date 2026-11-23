@@ -1190,7 +1190,7 @@ Main/Features/FieldCamp/CampTerrainService.cs	20
 Main/Features/FieldCamp/Domain/CampState.cs	4
 Main/Features/FieldCamp/FieldCampIoC.cs	11
 Main/Features/FieldCamp/Hooks/CampNameplateIconPresenter.cs	6
-Main/Features/FieldCamp/Hooks/FieldCampCampaignBehavior.cs	24
+Main/Features/FieldCamp/Hooks/FieldCampCampaignBehavior.cs	18
 Main/Features/FieldCamp/Hooks/FieldCampMenuController.cs	39
 Main/Features/FieldCamp/Hooks/PartyNameplateCampIconPatch.cs	4
 Main/Features/FieldCamp/UI/CampButtonBlock.cs	1
@@ -1745,7 +1745,7 @@ Main/Features/Refuge/Components/RefugePartyComponent.cs	7
 Main/Features/Refuge/Domain/RefugeBookRepair.cs	8
 Main/Features/Refuge/Domain/RefugeData.cs	4
 Main/Features/Refuge/Hooks/RefugeCampContributor.cs	3
-Main/Features/Refuge/Hooks/RefugeCampaignBehavior.cs	34
+Main/Features/Refuge/Hooks/RefugeCampaignBehavior.cs	30
 Main/Features/Refuge/Hooks/RefugeClanRowRefreshPatch.cs	2
 Main/Features/Refuge/Hooks/RefugeClanScreenPatch.cs	9
 Main/Features/Refuge/Hooks/RefugeDamageHooks.cs	3
@@ -1965,7 +1965,7 @@ Main/Features/SupplyLines/Components/SupplyCaravanComponent.cs	5
 Main/Features/SupplyLines/Domain/SupplyLinesSaveDefiner.cs	2
 Main/Features/SupplyLines/Hooks/SupplyCaravanEncounterPatch.cs	1
 Main/Features/SupplyLines/Hooks/SupplyCaravanMeetingMenu.cs	1
-Main/Features/SupplyLines/Hooks/SupplyLinesCampaignBehavior.cs	14
+Main/Features/SupplyLines/Hooks/SupplyLinesCampaignBehavior.cs	8
 Main/Features/SupplyLines/SupplyCaravanService.cs	111
 Main/Features/SupplyLines/SupplyGoodsSearch.cs	1
 Main/Features/SupplyLines/SupplyLinesIoC.cs	3

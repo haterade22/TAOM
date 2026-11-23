@@ -13,11 +13,11 @@ namespace TAOM.Tests.Features.SupplyLines;
 
 /// <summary>
 /// The session reset contract on the behavior (round-A CRITICAL: process-singleton books leak
-/// across campaigns because SyncData only fires when a saved record exists). Both boundary paths
-/// are pinned: a session that loaded a record installs it and does NOT reset; a session that
-/// never loaded one (fresh campaign, or a save predating the feature) resets the singleton
-/// before use. The internal seam <c>EnsureSessionInitialized</c> is what OnSessionLaunched runs
-/// first (InternalsVisibleTo).
+/// across campaigns because SyncData only fires when a saved record exists). The constructor
+/// resets the singleton (#773), and SubModule builds the behavior in every campaign's OnGameStart
+/// (pinned in <c>PerCampaignBehaviorWiringTests</c>): a session that loads a record installs it
+/// over the reset, and one that never loads one (fresh campaign, or a save predating the
+/// feature) keeps the empty book.
 /// </summary>
 [TestClass]
 [TestCategory("RequiresGame")]
@@ -43,29 +43,30 @@ public class SupplyLinesCampaignBehaviorTests
     }
 
     [TestMethod]
-    public void SessionWithoutSyncData_ResetsTheService()
+    public void Constructor_FreshCampaign_ResetsTheService()
     {
-        // Fresh campaign AND record-less save both look like this: SyncData never ran.
-        _behavior.EnsureSessionInitialized();
-
+        // Fresh campaign AND record-less save both start here: SubModule builds the behavior in
+        // OnGameStart, before any campaign event and before a load's SyncData.
         _orders.Received(1).ResetForNewSession();
     }
 
     [TestMethod]
-    public void SessionAfterLoadingSyncData_InstallsBookAndDoesNotReset()
+    public void LoadingSyncData_InstallsTheBookOverTheConstructorReset()
     {
         var dataStore = Substitute.For<IDataStore>();
         dataStore.IsLoading.Returns(true);
 
         _behavior.SyncData(dataStore);
-        _behavior.EnsureSessionInitialized();
 
-        _orders.Received(1).LoadFrom(Arg.Any<Dictionary<string, SupplyOrder>>(), Arg.Any<int>());
-        _orders.DidNotReceive().ResetForNewSession();
+        Received.InOrder(() =>
+        {
+            _orders.ResetForNewSession();
+            _orders.LoadFrom(Arg.Any<Dictionary<string, SupplyOrder>>(), Arg.Any<int>());
+        });
     }
 
     [TestMethod]
-    public void SyncDataWhileSaving_SavesTheBookWithoutReinstallingIt()
+    public void SyncDataWhileSaving_SavesTheBookWithoutReinstallingOrResettingIt()
     {
         var dataStore = Substitute.For<IDataStore>();
         dataStore.IsLoading.Returns(false);
@@ -74,28 +75,14 @@ public class SupplyLinesCampaignBehaviorTests
 
         _orders.Received(1).SaveInto(out Arg.Any<Dictionary<string, SupplyOrder>>(), out Arg.Any<int>());
         _orders.DidNotReceiveWithAnyArgs().LoadFrom(default, default);
-    }
-
-    [TestMethod]
-    public void SyncDataWhileSaving_DoesNotMarkTheSessionSynced()
-    {
-        // Only a LOAD proves the singleton holds this session's book. (In practice a save
-        // cannot precede OnSessionLaunched; this pins the flag's polarity regardless.)
-        var dataStore = Substitute.For<IDataStore>();
-        dataStore.IsLoading.Returns(false);
-
-        _behavior.SyncData(dataStore);
-        _behavior.EnsureSessionInitialized();
-
         _orders.Received(1).ResetForNewSession();
     }
 
     [TestMethod]
-    public void GameLoadedWithoutRecord_ResetsBeforeRespawning()
+    public void GameLoadedWithoutRecord_RespawnsFromTheBookTheConstructorReset()
     {
-        // OnGameLoaded fires BEFORE OnSessionLaunched. A record-less save (SyncData never ran)
-        // still holds the previous session's book at that point; the reset must land before the
-        // respawn pass or the dead session's caravans are spawned into this campaign.
+        // OnGameLoaded fires BEFORE OnSessionLaunched. A record-less save (SyncData never ran) must
+        // not respawn the previous session's caravans: the constructor already emptied the book.
         _behavior.HandleGameLoaded();
 
         Received.InOrder(() =>
@@ -106,7 +93,7 @@ public class SupplyLinesCampaignBehaviorTests
     }
 
     [TestMethod]
-    public void GameLoadedAfterLoadingSyncData_RespawnsWithoutReset()
+    public void GameLoadedAfterLoadingSyncData_RespawnsWithoutASecondReset()
     {
         var dataStore = Substitute.For<IDataStore>();
         dataStore.IsLoading.Returns(true);
@@ -114,19 +101,8 @@ public class SupplyLinesCampaignBehaviorTests
 
         _behavior.HandleGameLoaded();
 
-        _orders.DidNotReceive().ResetForNewSession();
-        _orders.Received(1).OnGameLoaded();
-    }
-
-    [TestMethod]
-    public void EnsureSessionInitialized_RunsTheResetOnlyOnce()
-    {
-        // The reset empties the book; a stray second call after orders were placed must not
-        // wipe them, so the first reset latches the session as initialized.
-        _behavior.EnsureSessionInitialized();
-        _behavior.EnsureSessionInitialized();
-
         _orders.Received(1).ResetForNewSession();
+        _orders.Received(1).OnGameLoaded();
     }
 
     // --- The town menu option and the destroyed-caravan forward (the authority gates live in the service, #1086) ---

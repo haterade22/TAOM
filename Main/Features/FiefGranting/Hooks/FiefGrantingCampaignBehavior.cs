@@ -29,21 +29,17 @@ public class FiefGrantingCampaignBehavior : CampaignBehaviorBase
     private readonly ICoopSessionProvider _coop;
     private readonly IModLogger _logger;
 
-    /// <summary>True once SyncData ran in LOADING mode this session; a fresh campaign and a pre-#565 save start empty.</summary>
-    private bool _syncedThisSession;
-
     public FiefGrantingCampaignBehavior(
         IFiefSiegeParticipationService participation, ICoopSessionProvider coop, IModLogger logger)
     {
         _participation = participation;
         _coop = coop;
         _logger = logger;
+        _participation.ResetForNewSession();
     }
 
     public override void RegisterEvents()
     {
-        CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
-        CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
         CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
         CampaignEvents.OnSettlementOwnerChangedEvent.AddNonSerializedListener(this, OnSettlementOwnerChanged);
     }
@@ -56,28 +52,12 @@ public class FiefGrantingCampaignBehavior : CampaignBehaviorBase
             Dictionary<string, string> snapshot = null;
             dataStore.SyncData(SaveKey, ref snapshot);
             _participation.RestoreFromSave(snapshot);
-            _syncedThisSession = true;
         }
         else
         {
             var snapshot = _participation.SnapshotForSave();
             dataStore.SyncData(SaveKey, ref snapshot);
         }
-    }
-
-    private void OnSessionLaunched(CampaignGameStarter starter) => ResetIfNoLoadedRecord();
-
-    private void OnGameLoaded(CampaignGameStarter starter) => ResetIfNoLoadedRecord();
-
-    /// <summary>When no save record loaded this session, the process-lifetime service still holds the
-    /// PREVIOUS campaign's record. Latches so the two callers cannot double-reset. Internal for tests.</summary>
-    internal bool ResetIfNoLoadedRecord()
-    {
-        if (_syncedThisSession)
-            return false;
-        _participation.ResetForNewSession();
-        _syncedThisSession = true;
-        return true;
     }
 
     private void OnMapEventEnded(MapEvent mapEvent)

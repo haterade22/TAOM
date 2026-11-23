@@ -66,10 +66,11 @@ the source module had one, which would have collided with TAOM's Patch36 prefix.
   `_taomSupplyOrders` / `_taomSupplyOrderCounter`. The source module's save identity
   (841200501, other type names) is deliberately not carried.
 - **Session reset contract**: the services are process singletons and SyncData fires only when a
-  saved record exists, so the behavior tracks `_syncedThisSession` (set only on a LOADING
-  SyncData) and OnSessionLaunched calls `ResetForNewSession()` when it is false. That covers
-  fresh campaigns AND saves without the record; without it, campaign A's orders ride into and
-  get SAVED into campaign B. `LoadFrom` additionally drops the caravan trackers (a tracker's
+  saved record exists, so the behavior's constructor calls `ResetForNewSession()` (#773). SubModule
+  builds the behavior fresh in every campaign's `OnGameStart`, before any campaign event and before
+  a load's SyncData (`PerCampaignBehaviorWiringTests`). That covers fresh campaigns AND saves
+  without the record; without it, campaign A's orders ride into and get SAVED into campaign B.
+  `LoadFrom` additionally drops the caravan trackers (a tracker's
   cached `MobileParty` belongs to the previous session; a loaded campaign has new objects under
   the same ids) and scrubs null/id-less rows from hostile save shapes, then `OnGameLoaded`
   rebinds trackers from the live campaign's party list.

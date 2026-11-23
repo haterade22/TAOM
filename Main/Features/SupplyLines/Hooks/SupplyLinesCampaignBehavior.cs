@@ -26,12 +26,6 @@ public sealed class SupplyLinesCampaignBehavior : CampaignBehaviorBase
 
     private bool _frameTickFaulted;
 
-    // True only after SyncData ran on a LOADING data store, i.e. this session installed a saved
-    // order book. OnSessionLaunched reads it: a session that never loaded a record (fresh
-    // campaign, or a save written before the feature existed) must reset the process-singleton
-    // service or the previous campaign's orders ride along.
-    private bool _syncedThisSession;
-
     public SupplyLinesCampaignBehavior(
         ISupplyOrderService orders,
         ISupplyLinesSettingsProvider settings,
@@ -44,6 +38,7 @@ public sealed class SupplyLinesCampaignBehavior : CampaignBehaviorBase
         _routeVisual = routeVisual;
         _townMenu = new SupplyOrderTownMenu(settings, coop);
         _logger = logger;
+        _orders.ResetForNewSession();
     }
 
     public override void RegisterEvents()
@@ -69,7 +64,6 @@ public sealed class SupplyLinesCampaignBehavior : CampaignBehaviorBase
             // LoadFrom also drops the caravan trackers: a tracker's cached party belongs to
             // the previous session, and OnGameLoaded rebinds from the loaded campaign.
             _orders.LoadFrom(orders, counter);
-            _syncedThisSession = true;
         }
         else
         {
@@ -81,25 +75,8 @@ public sealed class SupplyLinesCampaignBehavior : CampaignBehaviorBase
 
     private void OnSessionLaunched(CampaignGameStarter starter)
     {
-        EnsureSessionInitialized();
         _routeVisual.ClearAll(); // a previous session's map entities must never leak into this one
         _townMenu.AddTo(starter);
-    }
-
-    /// <summary>
-    /// The reset half of the session contract (internal for direct unit testing via
-    /// InternalsVisibleTo): when SyncData never ran on a loading store this session, the
-    /// singleton book still holds the PREVIOUS session's orders; both the fresh-campaign path
-    /// and the record-less-save path land here and start empty.
-    /// </summary>
-    internal void EnsureSessionInitialized()
-    {
-        if (_syncedThisSession)
-            return;
-        _orders.ResetForNewSession();
-        // The singleton book now belongs to this session (empty); a stray second call must not
-        // wipe orders placed after launch.
-        _syncedThisSession = true;
     }
 
     private void OnHourlyTick()
@@ -160,14 +137,12 @@ public sealed class SupplyLinesCampaignBehavior : CampaignBehaviorBase
 
     /// <summary>
     /// OnGameLoaded dispatches BEFORE OnSessionLaunched (verified v1.4.8: LoadBehaviorData →
-    /// OnGameLoadedEvent → OnSessionLaunchedEvent), so the reset gate must run here too: loading
-    /// a record-less save with the previous session's book still installed would otherwise
-    /// RESPAWN that session's caravans into this campaign before the launch handler ever gets to
-    /// reset the book. Internal for direct unit testing (InternalsVisibleTo).
+    /// OnGameLoadedEvent → OnSessionLaunchedEvent). The constructor reset has already run by then,
+    /// so a record-less save respawns from an empty book, never the previous session's caravans.
+    /// Internal for direct unit testing (InternalsVisibleTo).
     /// </summary>
     internal void HandleGameLoaded()
     {
-        EnsureSessionInitialized();
         _orders.OnGameLoaded();
     }
 }
