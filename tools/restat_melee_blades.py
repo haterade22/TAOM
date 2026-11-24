@@ -75,7 +75,7 @@ the tier target and the ceiling, so older ladder drift does not ride along with 
 
 Usage:
     python tools/restat_melee_blades.py                  # report the plan
-    python tools/restat_melee_blades.py --culture gondor    # a craft row (ladder.craft_key), not an engine culture; skips blades another row wears
+    python tools/restat_melee_blades.py --culture gondor    # tier pass only, for a craft row (ladder.craft_key), not an engine culture; skips blades another row wears; the mixed, unworn and hero lowering still run
     python tools/restat_melee_blades.py --limits-only    # lower what breaks a limit, nothing else
     python tools/restat_melee_blades.py --apply
 """
@@ -684,7 +684,9 @@ def main(argv=None) -> int:
     ap.add_argument("--culture", action="append",
                     help="limit the tier pass to these craft rows (repeatable): a blade is restatted "
                          "only when every troop that wears a weapon built on it is of these rows; "
-                         "a blade another row shares is listed and left alone. A troop's "
+                         "a blade another row shares is listed and left alone. The mixed-blade, "
+                         "unworn and hero-blade lowering passes ignore it and judge every blade. "
+                         "Cannot be combined with --limits-only. A troop's "
                          "ladder.craft_key, which is its culture except for Black Numenoreans "
                          "(mordor_numenorean). It is not the engine culture id; "
                          "fix_melee_ladder.py takes that")

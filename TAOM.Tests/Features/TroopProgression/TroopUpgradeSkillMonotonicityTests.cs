@@ -228,6 +228,16 @@ public class TroopUpgradeSkillMonotonicityTests
 
         foreach (var source in troops.Values.OrderBy(t => t.Id, StringComparer.Ordinal))
         {
+            if (source.Templated)
+            {
+                var key = source.Template.Substring(source.Template.IndexOf('.') + 1);
+                if (!sets.ContainsKey(key))
+                {
+                    failures.Add(source.File + ": " + source.Id + " skill_template " + source.Template +
+                                 " names no SkillSet, so its skills would be read as inline rows only");
+                }
+            }
+
             var from = Effective(source, sets);
             foreach (var targetId in source.Upgrades)
             {
@@ -296,6 +306,31 @@ public class TroopUpgradeSkillMonotonicityTests
 
         child.Skills["Bow"] = 100;
         Assert.AreEqual(0, FindDrops(troops, new HashSet<string>(), sets).Count);
+    }
+
+    [TestMethod]
+    public void ATroopWhoseTemplateNamesNoSkillSet_IsAFailureNotInlineRowsOnly()
+    {
+        var sets = new Dictionary<string, Dictionary<string, int>>
+        {
+            ["fixture_set"] = new Dictionary<string, int> { ["Bow"] = 100 },
+        };
+        var lost = new Dictionary<string, Troop>
+        {
+            ["fixture_lost"] = new Troop
+            {
+                Id = "fixture_lost", File = "f.xml", Template = "SkillSet.fixture_missing", Templated = true,
+            },
+        };
+
+        var failures = FindDrops(lost, new HashSet<string>(), sets);
+
+        Assert.AreEqual(1, failures.Count, string.Join(Environment.NewLine, failures));
+        StringAssert.Contains(failures[0], "fixture_lost");
+        StringAssert.Contains(failures[0], "fixture_missing");
+
+        lost["fixture_lost"].Template = "SkillSet.fixture_set";
+        Assert.AreEqual(0, FindDrops(lost, new HashSet<string>(), sets).Count);
     }
 
     [TestMethod]
