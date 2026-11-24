@@ -22,6 +22,7 @@ public sealed class BattleShaderNoticeService : IScreenShaderNotice
     private readonly IModLogger _logger;
     private readonly IShaderCompileQueueAdapter _queue;
     private bool? _isServer;
+    private bool _queueUnreadableReported;
 
     public BattleShaderNoticeService(
         IBattleShaderNoticeRunner runner, IBattleShaderNoticeTextSource textSource, IDedicatedServerProvider server, IModLogger logger,
@@ -77,6 +78,11 @@ public sealed class BattleShaderNoticeService : IScreenShaderNotice
         if (!screenOpen && !_screenGate.Shown) return;
 
         int queued = screenOpen ? _queue.QueuedShaders() : 0;
+        if (queued < 0 && !_queueUnreadableReported)
+        {
+            _queueUnreadableReported = true;
+            _logger.LogWarning("[BattleShaderNotice] shader queue unreadable: no notice on this screen");
+        }
         switch (_screenGate.Observe(screenOpen && queued > 0, queued))
         {
             case BattleShaderNoticeAction.Start:
