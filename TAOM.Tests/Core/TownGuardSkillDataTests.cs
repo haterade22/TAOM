@@ -45,4 +45,20 @@ public class TownGuardSkillDataTests
         Assert.IsTrue(seen > 60, $"only {seen} guard NPCs read from {folder}");
         Assert.AreEqual(0, bad.Count, "no level or no skills (the engine fields them at level 1, skills 0): " + string.Join(", ", bad));
     }
+
+    [TestMethod]
+    public void GangBodyguards_EveryCulture_AreTownsfolk()
+    {
+        // Vanilla's gang bodyguards are Townsfolk, and so is every TAOM culture's but one, which said Soldier.
+        var folder = Path.Combine(CultureDataFixture.ModuleDataPath(), "characters");
+        var bodyguards = Directory.GetFiles(folder, "npcs_*.xml")
+            .SelectMany(f => XDocument.Load(f).Descendants("NPCCharacter"))
+            .Where(n => ((string)n.Attribute("id") ?? string.Empty).StartsWith("gangleader_bodyguard_"))
+            .ToList();
+
+        Assert.IsTrue(bodyguards.Count > 20, $"only {bodyguards.Count} gang bodyguards read");
+        var other = bodyguards.Where(n => (string)n.Attribute("occupation") != "Townsfolk")
+                              .Select(n => (string)n.Attribute("id")).ToList();
+        Assert.AreEqual(0, other.Count, "not Townsfolk: " + string.Join(", ", other));
+    }
 }
