@@ -174,8 +174,9 @@ internal sealed class EncounterLinesService : IEncounterBucketSource
     }
 
     /// <summary>
-    /// For the three sentences the text seam handles (caravan and villager surrender, the hideout boss's challenge), sets
-    /// <see cref="SentenceLineVariable"/> to the TAOM line and answers true; any other sentence, or a missing row, false.
+    /// For the sentences the text seam handles (caravan and villager surrender, the hideout boss's challenge, and the liege
+    /// conversations in <see cref="LiegeLines"/>), sets <see cref="SentenceLineVariable"/> to the TAOM line and answers true;
+    /// any other sentence, or a missing row, false.
     /// </summary>
     internal bool TrySetSentenceLine(string? sentenceId)
     {
@@ -188,9 +189,34 @@ internal sealed class EncounterLinesService : IEncounterBucketSource
             case HideoutBossSentence:
                 return TryHideoutLine();
             default:
-                return false;
+                return sentenceId != null && LiegeLines.TextOfSentence.TryGetValue(sentenceId, out var textId) && TryLiegeLine(textId);
         }
     }
+
+    /// <summary>
+    /// A liege conversation line, in a hall as on the map: the realm's own row when the lord rules his kingdom and the beat
+    /// has realm rows, else the row of the lord's speaker group. A lord of the player's clan, a lord no group fits, or a
+    /// missing row leaves vanilla's line.
+    /// </summary>
+    private bool TryLiegeLine(string textId)
+    {
+        if (!Active)
+            return false;
+        var lord = _adapter.ConversationLord();
+        if (lord == null || !lord.IsLord || lord.InPlayerClan)
+            return false;
+
+        if (lord.RuledRealmId.Length > 0 && LiegeLines.RealmTexts.Contains(textId)
+            && SetLiegeVariation(textId, LiegeLines.RealmPrefix + lord.RuledRealmId))
+            return true;
+        var group = SpeakerGroup(lord);
+        return group != null && SetLiegeVariation(textId, LiegeLines.GroupPrefix + group);
+    }
+
+    private bool SetLiegeVariation(string textId, string variation) =>
+        textId == LiegeLines.MercenaryPitch
+            ? _adapter.TrySetMercenaryPitch(SentenceLineVariable, textId, variation)
+            : _adapter.TrySetVariable(SentenceLineVariable, textId, variation);
 
     /// <summary>The lord's speaker group (by race first, then culture), or null when his race family is not the group's.</summary>
     private string? SpeakerGroup(LordFacts lord)
