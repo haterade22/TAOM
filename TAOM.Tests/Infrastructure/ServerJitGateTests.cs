@@ -32,7 +32,7 @@ public class ServerJitGateTests
     /// <see cref="Baseline_HasNoStaleEntriesAndIsSortedUnique"/> until this is lowered to match, and a net addition
     /// fails unless this is raised. A line added in the same change as a prune keeps the count, so only review sees it.
     /// </summary>
-    private const int MaxBaselineEntries = 269;
+    private const int MaxBaselineEntries = 264;
 
     private static string BaselinePath => RepoPaths.RepoPath("TAOM.Tests", "Infrastructure", "ServerJitBaseline.txt");
 

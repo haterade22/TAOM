@@ -357,6 +357,31 @@ commit hook and in `/armory-audit` Step 1; add `--game-modules <channel>/Modules
 **Gate after any Armory update:** `python tools/oneoff/add_sauron_eye_colours.py --check` (exit 1 while a sauron
 skin lacks the stops; `--apply` restores them).
 
+### ⚠️ PENDING EDIT: the elf combat voice on the adult male `elf` skin (#1568, 2026-11-23; goes on at deploy)
+
+**One live edit an Armory reinstall WILL revert: `ModuleData/skins.xml`, the `<voice_types>` of the adult male
+skin in `<race id="elf">`. It goes on only after the deployed TAOM defines `elf_01`.**
+
+- **What.** The pool holds the seven vanilla voices `male_02` to `male_08`. Bound, it holds `elf_01` alone, TAOM's
+  elf combat voice (`Main/_Module/ModuleData/lotr_elf_voice_def.xml`): 14 lines become 2 and every other byte
+  stays. `python tools/oneoff/bind_elf_voice.py --apply` writes it and a backup `skins.xml.bak-elf-voice-<stamp>`;
+  `--revert --apply` puts the vanilla pool back, byte for byte. This snapshot carries the bound pool
+  (`--file <snapshot> --apply --no-backup`).
+- **State on 2026-11-23.** Not applied to the live Armory. It was applied at 17:31 and reverted at 18:31, because
+  the TAOM in the game folder was a trunk build without the definition. The backups of both writes are beside the
+  live file (`...-173124` is the vanilla state, `...-183135` the bound one).
+- **Order.** Deploy a TAOM build that holds `elf_01`, then bind. With the binding and no definition, native
+  `FUN_180575720` (v1.5.7) logs `Voice def can not be found "elf_01"` and stores a null entry in the pool; what an
+  agent does with that entry is not established. KAOE shares this Armory, so it needs the definition before the
+  binding stays on, and a release ships the Armory and TAOM together.
+- **Not changed.** The adult female elf skin (vanilla `female_01` to `female_05`: `elf_01` is a male voice), the
+  young elf skins, and the `sauron` race, which is a copy of the elf skins with the same seven-voice pool.
+- **If it reverts.** Male elves use the vanilla human voices again, with no error and no log line.
+
+**Gate after any Armory update or deploy:** `VoiceBindingDataTests` in `TAOM.Tests`
+(`LiveArmory_AdultSkinPools_EqualTheSnapshot` fails while a live adult pool differs from this snapshot, so it
+fails on a checkout of this change until the binding is on). Repair: `python tools/oneoff/bind_elf_voice.py --apply`.
+
 ### ⚠️ APPLIED EDIT: the Mouth of Sauron's helm (2026-09-28; armour 50 since 2026-10-04)
 
 **Live edits an Armory reinstall WILL revert:**

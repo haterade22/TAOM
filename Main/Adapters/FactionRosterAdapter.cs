@@ -84,6 +84,9 @@ public sealed class FactionRosterAdapter : IFactionRosterAdapter
 
     public int RaceCount => FaceGen.GetRaceCount();
 
+    public string? RaceName(int race) =>
+        race >= 0 && race < FaceGen.GetRaceCount() ? FaceGen.GetBaseMonsterNameFromRace(race) : null;
+
     private static CultureObject? Culture(string cultureId) =>
         string.IsNullOrEmpty(cultureId) ? null : MBObjectManager.Instance?.GetObject<CultureObject>(cultureId);
 

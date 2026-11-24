@@ -228,8 +228,6 @@
         </skills>
         <upgrade_targets>
             <upgrade_target
-                id="NPCCharacter.gundabad_warg_tamer" />
-            <upgrade_target
                 id="NPCCharacter.gundabad_lurker" />
         </upgrade_targets>
         <Equipments>

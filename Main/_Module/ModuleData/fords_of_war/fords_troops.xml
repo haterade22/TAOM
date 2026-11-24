@@ -1468,7 +1468,7 @@
       is_obsolete="true"
       default_group="Infantry"
       level="16"
-      name="{=aom_gondor_lam_swordman_name}[Gondor] Lamedon Swordman"
+      name="{=aom_gondor_lam_swordman_name}[Gondor] Lamedon Swordsman"
       occupation="Soldier"
       culture="Culture.gondor">
     <face>
@@ -1539,7 +1539,7 @@
       is_obsolete="true"
       default_group="Infantry"
       level="26"
-      name="{=aom_gondor_lam_vet_swordman_name}[Gondor] Lamedon Veteran Swordman"
+      name="{=aom_gondor_lam_vet_swordman_name}[Gondor] Lamedon Veteran Swordsman"
       occupation="Soldier"
       culture="Culture.gondor">
     <face>
@@ -3444,7 +3444,7 @@
         race="uruk"
         default_group="Infantry"
         level="36"
-        name="{=aom_mordor_uruk_baraddurguard_name}[Mordor] Black Uruk Barad-Dur Guard"
+        name="{=aom_mordor_uruk_baraddurguard_name}[Mordor] Black Uruk Barad-dûr Guard"
         occupation="Soldier"
         culture="Culture.mordor">
         <face>
@@ -4038,7 +4038,7 @@
         is_obsolete="true"
         default_group="Ranged"
         level="16"
-        name="{=aom_rohan_eastfold_bowman_name}[Rohan] East-Fold Bowman"
+        name="{=aom_rohan_eastfold_bowman_name}[Rohan] Eastfold Bowman"
         occupation="Soldier"
         culture="Culture.vlandia">
         <face>
@@ -5568,7 +5568,7 @@
         race="uruk_hai"
         default_group="Infantry"
         level="21"
-        name="{=aom_urukhai_swordman_name}[Isengard] Uruk-Hai Swordman"
+        name="{=aom_urukhai_swordman_name}[Isengard] Uruk-Hai Swordsman"
         occupation="Soldier"
         culture="Culture.isengard">
         <face>

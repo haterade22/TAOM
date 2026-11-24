@@ -891,7 +891,7 @@
 	<string id="taom_cw_t1b_p2" text="{=taom_cw_t1b_p2}+5 max health." />
 	<string id="taom_cw_t1b_p3" text="{=taom_cw_t1b_p3}+5% troop morale." />
 	<string id="taom_cw_t1b_p4" text="{=taom_cw_t1b_p4}+5% battle renown gain." />
-	<string id="taom_cw_t2a_key" text="{=taom_cw_t2a_key}Scything Charge charge reduced, wheels never stop turning." />
+	<string id="taom_cw_t2a_key" text="{=taom_cw_t2a_key}Scything Charge: charge reduced, wheels never stop turning." />
 	<string id="taom_cw_t2a_p1" text="{=taom_cw_t2a_p1}+13% horse charge damage." />
 	<string id="taom_cw_t2a_p2" text="{=taom_cw_t2a_p2}+10% party movement speed." />
 	<string id="taom_cw_t2a_p3" text="{=taom_cw_t2a_p3}+10% troop morale." />
@@ -906,7 +906,7 @@
 	<string id="taom_cw_t3a_p2" text="{=taom_cw_t3a_p2}+15% melee damage." />
 	<string id="taom_cw_t3a_p3" text="{=taom_cw_t3a_p3}+7% troop damage." />
 	<string id="taom_cw_t3a_p4" text="{=taom_cw_t3a_p4}+15% battle renown gain." />
-	<string id="taom_cw_t3b_key" text="{=taom_cw_t3b_key}Scything Charge charge greatly reduced, the wheels grind ceaselessly." />
+	<string id="taom_cw_t3b_key" text="{=taom_cw_t3b_key}Scything Charge: charge greatly reduced, the wheels grind ceaselessly." />
 	<string id="taom_cw_t3b_p1" text="{=taom_cw_t3b_p1}+15% horse health." />
 	<string id="taom_cw_t3b_p2" text="{=taom_cw_t3b_p2}+15% party movement speed." />
 	<string id="taom_cw_t3b_p3" text="{=taom_cw_t3b_p3}+20% troop morale." />
@@ -1294,7 +1294,7 @@
 	<string id="taom_rr_t1_b_p2" text="{=taom_rr_t1_b_p2}+5 max health." />
 	<string id="taom_rr_t1_b_p3" text="{=taom_rr_t1_b_p3}-5% troop wages." />
 	<string id="taom_rr_t1_b_p4" text="{=taom_rr_t1_b_p4}+5% resistance." />
-	<string id="taom_rr_t2_a_key" text="{=taom_rr_t2_a_key}Mountain Charge charge reduced, swifter activation." />
+	<string id="taom_rr_t2_a_key" text="{=taom_rr_t2_a_key}Mountain Charge: charge reduced, swifter activation." />
 	<string id="taom_rr_t2_a_p1" text="{=taom_rr_t2_a_p1}+10% party movement speed." />
 	<string id="taom_rr_t2_a_p2" text="{=taom_rr_t2_a_p2}-10% troop wages." />
 	<string id="taom_rr_t2_a_p3" text="{=taom_rr_t2_a_p3}+10% troop morale." />
@@ -1309,7 +1309,7 @@
 	<string id="taom_rr_t3_a_p2" text="{=taom_rr_t3_a_p2}+15% horse charge damage." />
 	<string id="taom_rr_t3_a_p3" text="{=taom_rr_t3_a_p3}+15% swing speed." />
 	<string id="taom_rr_t3_a_p4" text="{=taom_rr_t3_a_p4}+7% troop damage." />
-	<string id="taom_rr_t3_b_key" text="{=taom_rr_t3_b_key}Mountain Charge charge greatly reduced, ride without ceasing." />
+	<string id="taom_rr_t3_b_key" text="{=taom_rr_t3_b_key}Mountain Charge: charge greatly reduced, ride without ceasing." />
 	<string id="taom_rr_t3_b_p1" text="{=taom_rr_t3_b_p1}+15% horse health." />
 	<string id="taom_rr_t3_b_p2" text="{=taom_rr_t3_b_p2}-15% troop wages." />
 	<string id="taom_rr_t3_b_p3" text="{=taom_rr_t3_b_p3}+15% party movement speed." />
@@ -1852,7 +1852,7 @@
 	<string id="taom_flr_t1_b_p2" text="{=taom_flr_t1_b_p2}+5 max health." />
 	<string id="taom_flr_t1_b_p3" text="{=taom_flr_t1_b_p3}-5% troop wages." />
 	<string id="taom_flr_t1_b_p4" text="{=taom_flr_t1_b_p4}+5% resistance." />
-	<string id="taom_flr_t2_a_key" text="{=taom_flr_t2_a_key}Dread Charge charge reduced, swifter activation." />
+	<string id="taom_flr_t2_a_key" text="{=taom_flr_t2_a_key}Dread Charge: charge reduced, swifter activation." />
 	<string id="taom_flr_t2_a_p1" text="{=taom_flr_t2_a_p1}+10% party movement speed." />
 	<string id="taom_flr_t2_a_p2" text="{=taom_flr_t2_a_p2}-10% troop wages." />
 	<string id="taom_flr_t2_a_p3" text="{=taom_flr_t2_a_p3}+10% troop morale." />
@@ -1867,7 +1867,7 @@
 	<string id="taom_flr_t3_a_p2" text="{=taom_flr_t3_a_p2}+15% horse charge damage." />
 	<string id="taom_flr_t3_a_p3" text="{=taom_flr_t3_a_p3}+15% swing speed." />
 	<string id="taom_flr_t3_a_p4" text="{=taom_flr_t3_a_p4}+7% troop damage." />
-	<string id="taom_flr_t3_b_key" text="{=taom_flr_t3_b_key}Dread Charge charge greatly reduced, ride without ceasing." />
+	<string id="taom_flr_t3_b_key" text="{=taom_flr_t3_b_key}Dread Charge: charge greatly reduced, ride without ceasing." />
 	<string id="taom_flr_t3_b_p1" text="{=taom_flr_t3_b_p1}+15% horse health." />
 	<string id="taom_flr_t3_b_p2" text="{=taom_flr_t3_b_p2}-15% troop wages." />
 	<string id="taom_flr_t3_b_p3" text="{=taom_flr_t3_b_p3}+15% party movement speed." />
