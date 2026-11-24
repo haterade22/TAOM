@@ -4,7 +4,7 @@ namespace TAOM.Adapters;
 /// Resolves an encyclopedia link — the <c>href="event:..."</c> payload the engine embeds in
 /// hyperlink markup — to the culture StringId of the object it points at.
 ///
-/// Wraps <c>MBObjectManager</c> plus the sealed <c>Settlement</c> / <c>Hero</c> / <c>Kingdom</c> /
+/// Wraps <c>MBObjectManager</c>, <c>CampaignObjectManager</c> and the sealed <c>Settlement</c> / <c>Hero</c> / <c>Kingdom</c> /
 /// <c>Clan</c> types so services never touch them directly (ADR-007).
 /// </summary>
 public interface IEncyclopediaCultureLookup
