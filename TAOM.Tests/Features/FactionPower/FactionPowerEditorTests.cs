@@ -119,6 +119,17 @@ public class FactionPowerEditorTests
     }
 
     [TestMethod]
+    public void Preset_StoppedPartway_StillRefreshesThePartySizeCache()
+    {
+        _data.Values[FactionPowerStore.KeyPrefix + "isengard"] = "written by a newer TAOM";
+
+        var reply = _editor.Preset("evil50");
+
+        StringAssert.Contains(reply, "Could not write");
+        _cache.Received(1).InvalidateAll();
+    }
+
+    [TestMethod]
     public void Preset_Reset_PutsEveryChangedCultureBackToOne()
     {
         _editor.Preset("evil50");

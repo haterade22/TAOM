@@ -31,7 +31,7 @@ public sealed class FactionPowerPartyHook : IFactionPowerPartyHook
     public void ApplyLordLimit(PartyBase? party, ref ExplainedNumber limit)
     {
         var mobile = party?.MobileParty;
-        if (mobile == null) return;
+        if (mobile == null || !mobile.IsLordParty || party!.LeaderHero == null) return;
 
         var multiplier = _service.Multiplier(FactionPowerRealm.KeyOf(mobile.MapFaction));
         if (multiplier == 1f) return;

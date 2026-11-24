@@ -71,7 +71,11 @@ public sealed class FactionPowerEditor
         if (values.Count == 0) return "Nothing to change.";
 
         foreach (var pair in values)
-            if (!_settings.TrySet(pair.Key, pair.Value)) return $"Could not write {pair.Key} into this campaign.";
+        {
+            if (_settings.TrySet(pair.Key, pair.Value)) continue;
+            _partySizeCache.InvalidateAll();
+            return $"Could not write {pair.Key} into this campaign.";
+        }
         _partySizeCache.InvalidateAll();
         _logger.LogInfo($"FactionPower.Changed: preset={presetId.Trim().ToLowerInvariant()} ({values.Count} realms, console)");
         return $"Preset {presetId.Trim().ToLowerInvariant()} applied to {values.Count} realms. Save the game to keep it.";
