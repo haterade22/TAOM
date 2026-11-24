@@ -286,7 +286,7 @@
 	<string id="aom_dunland_stag_rider_name" text="{=aom_dunland_stag_rider_name}[Dunland] Caru-lûth Rider" />
 	<string id="aom_dunland_swordsman_name" text="{=aom_dunland_swordsman_name}[Dunland] Tribal Swordsman" />
 	<string id="aom_dunland_veteran_spearman_name" text="{=aom_dunland_veteran_spearman_name}[Dunland] Wild-man Spearman" />
-	<string id="aom_dunland_veteran_swordman_name" text="{=aom_dunland_veteran_swordman_name}[Dunland] Wild-man Swordman" />
+	<string id="aom_dunland_veteran_swordman_name" text="{=aom_dunland_veteran_swordman_name}[Dunland] Wild-man Swordsman" />
 	<string id="aom_dunland_wolf_axeman_name" text="{=aom_dunland_wolf_axeman_name}[Dunland] Blaidd-lûth Axeman" />
 	<string id="aom_dunland_wolf_champion_name" text="{=aom_dunland_wolf_champion_name}[Dunland] Blaidd-lûth Champion" />
 	<string id="aom_dunland_wolf_raider_name" text="{=aom_dunland_wolf_raider_name}[Dunland] Blaidd-lûth Raider" />
@@ -490,8 +490,8 @@
 	<string id="aom_gondor_lam_clansman_name" text="{=aom_gondor_lam_clansman_name}[Gondor] Lamedon Clansman" />
 	<string id="aom_gondor_lam_footman_name" text="{=aom_gondor_lam_footman_name}[Gondor] Lamedon Footman" />
 	<string id="aom_gondor_lam_hill_warden_name" text="{=aom_gondor_lam_hill_warden_name}[Gondor] Lamedon Hill-Warden" />
-	<string id="aom_gondor_lam_swordman_name" text="{=aom_gondor_lam_swordman_name}[Gondor] Lamedon Swordman" />
-	<string id="aom_gondor_lam_vet_swordman_name" text="{=aom_gondor_lam_vet_swordman_name}[Gondor] Lamedon Veteran Swordman" />
+	<string id="aom_gondor_lam_swordman_name" text="{=aom_gondor_lam_swordman_name}[Gondor] Lamedon Swordsman" />
+	<string id="aom_gondor_lam_vet_swordman_name" text="{=aom_gondor_lam_vet_swordman_name}[Gondor] Lamedon Veteran Swordsman" />
 	<string id="aom_gondor_leb_archer_name" text="{=aom_gondor_leb_archer_name}[Gondor] Lebennin Archer" />
 	<string id="aom_gondor_leb_infantry_name" text="{=aom_gondor_leb_infantry_name}[Gondor] Lebennin Infantry" />
 	<string id="aom_gondor_leb_longbowman_name" text="{=aom_gondor_leb_longbowman_name}[Gondor] Lebennin Longbowman" />
@@ -890,7 +890,7 @@
 	<string id="aom_mordor_orc_scout_name" text="{=aom_mordor_orc_scout_name}[Mordor] Orc Scout" />
 	<string id="aom_mordor_orc_warrior_name" text="{=aom_mordor_orc_warrior_name}[Mordor] Orc Warrior" />
 	<string id="aom_mordor_uruk_archer_name" text="{=aom_mordor_uruk_archer_name}[Mordor] Black Uruk Archer" />
-	<string id="aom_mordor_uruk_baraddurguard_name" text="{=aom_mordor_uruk_baraddurguard_name}[Mordor] Black Uruk Barad-Dur Guard" />
+	<string id="aom_mordor_uruk_baraddurguard_name" text="{=aom_mordor_uruk_baraddurguard_name}[Mordor] Black Uruk Barad-dûr Guard" />
 	<string id="aom_mordor_uruk_captain_name" text="{=aom_mordor_uruk_captain_name}[Mordor] Black Uruk Captain" />
 	<string id="aom_mordor_uruk_crossbow_name" text="{=aom_mordor_uruk_crossbow_name}[Mordor] Black Uruk Crossbow" />
 	<string id="aom_mordor_uruk_fighter_name" text="{=aom_mordor_uruk_fighter_name}[Mordor] Black Uruk Fighter" />
@@ -959,7 +959,7 @@
 	<string id="aom_rohan_eastemnet_recruit_name" text="{=aom_rohan_eastemnet_recruit_name}[Rohan] East Emnet Recruit" />
 	<string id="aom_rohan_eastemnet_royal_lancer_name" text="{=aom_rohan_eastemnet_royal_lancer_name}[Rohan] East Emnet Royal Lancer" />
 	<string id="aom_rohan_eastemnet_veteran_lancer_name" text="{=aom_rohan_eastemnet_veteran_lancer_name}[Rohan] East Emnet Veteran Lancer" />
-	<string id="aom_rohan_eastfold_bowman_name" text="{=aom_rohan_eastfold_bowman_name}[Rohan] East-Fold Bowman" />
+	<string id="aom_rohan_eastfold_bowman_name" text="{=aom_rohan_eastfold_bowman_name}[Rohan] Eastfold Bowman" />
 	<string id="aom_rohan_eastfold_recruit_name" text="{=aom_rohan_eastfold_recruit_name}[Rohan] Eastfold Freeman" />
 	<string id="aom_rohan_eastfold_skirmisher_name" text="{=aom_rohan_eastfold_skirmisher_name}[Rohan] Eastfold Yeoman Archer" />
 	<string id="aom_rohan_eastfold_veteran_bowman_name" text="{=aom_rohan_eastfold_veteran_bowman_name}[Rohan] Eastfold Veteran Bowman" />
@@ -1075,7 +1075,7 @@
 	<string id="aom_urukhai_skirmisher_name" text="{=aom_urukhai_skirmisher_name}[Isengard] Uruk-Hai Skirmisher" />
 	<string id="aom_urukhai_slayer_name" text="{=aom_urukhai_slayer_name}[Isengard] Uruk-Hai Slayer" />
 	<string id="aom_urukhai_spearman_name" text="{=aom_urukhai_spearman_name}[Isengard] Uruk-Hai Spearman" />
-	<string id="aom_urukhai_swordman_name" text="{=aom_urukhai_swordman_name}[Isengard] Uruk-Hai Swordman" />
+	<string id="aom_urukhai_swordman_name" text="{=aom_urukhai_swordman_name}[Isengard] Uruk-Hai Swordsman" />
 	<string id="aom_urukhai_tracker_name" text="{=aom_urukhai_tracker_name}[Isengard] Uruk-Hai Tracker" />
 	<string id="aom_urukhai_veterancrossbowman_name" text="{=aom_urukhai_veterancrossbowman_name}[Isengard] Uruk-Hai Veteran Crossbowman" />
 	<string id="aom_urukhai_veteraninfantry_name" text="{=aom_urukhai_veteraninfantry_name}[Isengard] Champions of the White Hand" />
