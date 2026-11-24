@@ -864,11 +864,11 @@ class StandFindingsTests(unittest.TestCase):
 
     def test_a_grounded_pose_with_a_current_entry_passes_and_is_counted(self):
         root, records = self._module(0.001)
-        self.assertEqual(c.stand_findings(self.ROWS, records, self.CONFIG, root, self.BONES), ([], 1, 1))
+        self.assertEqual(c.stand_findings(self.ROWS, records, self.CONFIG, root, self.BONES, [self.skel]), ([], 1, 1))
 
     def test_a_pose_that_rides_above_the_ground_is_a_finding(self):
         root, records = self._module(0.13)
-        why = c.stand_findings(self.ROWS, records, self.CONFIG, root, self.BONES)[0]
+        why = c.stand_findings(self.ROWS, records, self.CONFIG, root, self.BONES, [self.skel])[0]
         self.assertEqual(len(why), 1, why)
         self.assertIn("+0.130", why[0])
 
@@ -876,7 +876,7 @@ class StandFindingsTests(unittest.TestCase):
         # the HIGH review finding: --root-z grounds the master, and until a Kit start the game plays the old keys
         root, records = self._module(0.001)
         os.utime(self.skel, (3_000_000, 3_000_000))
-        why = c.stand_findings(self.ROWS, records, self.CONFIG, root, self.BONES)[0]
+        why = c.stand_findings(self.ROWS, records, self.CONFIG, root, self.BONES, [self.skel])[0]
         self.assertEqual(len(why), 1, why)
         self.assertIn("pose", why[0])
         self.assertIn("older than its master", why[0])
@@ -886,7 +886,7 @@ class StandFindingsTests(unittest.TestCase):
         records["other"] = dict(records["pose"], animation=bytes([8] * 16))
         os.utime(self.skel, (3_000_000, 3_000_000))
         rows = {"as_a": {"act_walk": "other"}}
-        self.assertEqual(c.stand_findings(rows, records, self.CONFIG, root, self.BONES), ([], 0, 0))
+        self.assertEqual(c.stand_findings(rows, records, self.CONFIG, root, self.BONES, [self.skel]), ([], 0, 0))
 
 
 def _kit_master(name, payload, bones, frames):

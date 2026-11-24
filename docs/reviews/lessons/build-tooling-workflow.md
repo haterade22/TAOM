@@ -5338,3 +5338,39 @@ backup too. A missing snapshot also read as a pass of the one file that was foun
   run.
 - **Source:** issue #1565; Codex pre-review P2 1 and 3; `tools/tests/test_bind_warg_clips.py`
   (`test_a_file_another_session_changed_after_the_read_is_not_overwritten`).
+
+### A cook check by file dates fails on a copied install: hold the entry to its record's checksum (#1565, 2026-11-24)
+`tools/check_gait_stride.py` called a cache entry stale when it was older than its record or its master. On the
+warg that named all seven clips with travel that no tool had rewritten, and 30 of the 41 clips of `as_warg` have an
+entry older than their master's file. The files were not newer in content: 32 masters are dated 2026-08-31
+09:01 and every untouched record 2026-08-28 20:33, the dates of copies, and the five masters the Kit cooked
+again in November gave the August payload byte for byte. A Kit start does not clear such a finding, because
+the Kit sees nothing to cook.
+- **Why missed:** the rule was written for masters that tools here write (the elephant's, the spider's), where
+  the date is the only signal of changed keys. Nobody had run it on files that only a copy had touched.
+- **Prevent:** where no tool writes a creature's masters, hold an entry to the checksum of its record, which
+  the Kit writes into the entry (`check_gait_stride.stamp_state`, the creature's `cooked: "stamp"`). State
+  beside the rule what it gives up: it does not see a master rewritten under one GUID, nor a record edited
+  without a new checksum (the gate cannot recompute a checksum the Kit wrote). Before a
+  date finding sends anyone to the Kit, compare the suspect entry's payload with a later entry of the same keys.
+  A first run of a gate on data it never read is a measurement: sort each finding into a defect, a rule that
+  does not fit the data, or a known failure with its issue, before the gate ships.
+- **Source:** issue #1565 item 2, follow-up #1591; `tools/tests/test_gait_stride_creatures.py`
+  (`StampStateTests`, `CookedRuleTests`, `KnownFailureTests`).
+
+### A list of known failures names the one failure it excuses, with its numbers (#1565, 2026-11-24)
+The warg's two side-step records fail the stride gate, and the gate shipped a `known` list for them: measured,
+printed, not counted. The first version excused every finding on a listed clip. A listed clip could gain a
+paw that never plants, lose its travel, or get a master with half the stride, and the gate still exited 0. A
+listed gait that no set bound any more was only a note.
+- **Why missed:** the author tested that a listed clip which starts to PASS fails the gate, and took that for
+  the whole duty of the list. No test made a listed clip fail in a second way. The same fault is in the rule
+  the author had open (`.claude/rules/data-scripts.md`: break each value a gate owns), which named the exempt
+  pair that moves and not the exempt item that gets worse.
+- **Prevent:** an entry of a known-failure or exemption list states the failure as data (here: metres claimed
+  and metres covered), and the gate compares both on every run. Everything else about the item is judged as
+  for any other item. Three tests per list: the item fails in a second way; its listed numbers change; the
+  item is gone or unbound.
+- **Source:** issue #1565 item 2; Codex pre-review P1 and P2 3, the Data flow lens trace 2;
+  [RCA](../rca-warg-stride-gate-2026-11-24.md) F1 and F3; `tools/tests/test_gait_stride_creatures.py`
+  (`KnownFailureTests`).

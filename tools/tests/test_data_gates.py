@@ -177,6 +177,45 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(gate.cmd, ("python", "tools/repoint_anim_clip.py", "--plan", "tools/warg_gait_plan.json",
                                     "--under", "creature/warg/animations", "--check"))
 
+    def test_the_wargs_rows_packages_rig_and_the_stride_tool_select_the_warg_stride_gate(self):
+        """#1565 item 2. The stride gate reads the warg's action set, records, masters, rig and cache entries, and
+        it runs every module check_gait_stride.py imports: a change to one of those selects it."""
+        armory = "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/"
+        for path in (armory + "ModuleData/action_sets.xml",
+                     armory + "Assets/creature/warg/animations/warg_canter_anm.tpac",
+                     armory + "Assets/creature/warg/animations/Warg_Slow_run_geo.tpac",
+                     armory + "Assets/creature/warg/mesh/Warg_Rig_V5_geo.tpac",
+                     armory + "RuntimeDataCache/20CCE2C2-1073-4B9A-9A57-3FFF1C8DE432.rdc",
+                     "tools/check_gait_stride.py", "tools/set_clip_balance_name.py", "tools/_gamedir.py",
+                     "tools/tpac_clone_metamesh.py", "tools/tpac_skeleton_dump.py",
+                     "tools/elephant_gait_retarget.py", "tools/elephant_write_masters.py"):
+            self.assertIn("warg-stride", _ids(dg.select(dg.GATES, [path])), path)
+        for path in (TROOPS, armory + "Assets/creature/spider/animations/spider_walk_anm.tpac",
+                     armory + "Assets/creature/direwolf/animations/dire_wolf_trot_anm.tpac",
+                     armory + "Assets/creature/warg/animations/warg_canter_anm.tpac.bak-repoint-20261123-154054"):
+            self.assertNotIn("warg-stride", _ids(dg.select(dg.GATES, [path])), path)
+        gate = next(g for g in dg.GATES if g.id == "warg-stride")
+        self.assertEqual(gate.cmd, ("python", "tools/check_gait_stride.py", "--creature", "warg"))
+
+    def test_a_cache_entry_selects_every_gate_that_reads_the_cook(self):
+        """The elephant's and the spider's rows had no glob for the entries their checks read (the Standards lens,
+        2026-11-24). An entry is named by a GUID, so it selects each creature's rows."""
+        entry = ("E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/RuntimeDataCache/"
+                 "20CCE2C2-1073-4B9A-9A57-3FFF1C8DE432.rdc")
+        got = _ids(dg.select(dg.GATES, [entry]))
+        for gate in ("elephant-gaits", "elephant-clips", "spider-gaits", "spider-clips", "warg-stride", "warg-gaits"):
+            self.assertIn(gate, got)
+        self.assertNotIn("elephant-gaits", _ids(dg.select(dg.GATES, [entry + ".bak-balancename-20261101-000000"])))
+
+    def test_a_module_the_stride_gate_imports_selects_every_stride_gate(self):
+        """check_gait_stride.py runs these for each creature; the elephant's and the spider's rows named only the
+        tool itself (the cause of F6 in docs/reviews/rca-warg-walk-trot-2026-11-24.md, a second time)."""
+        for path in ("tools/set_clip_balance_name.py", "tools/tpac_clone_metamesh.py", "tools/tpac_skeleton_dump.py",
+                     "tools/_gamedir.py", "tools/elephant_gait_retarget.py"):
+            got = _ids(dg.select(dg.GATES, [path]))
+            for gate in ("elephant-gaits", "spider-gaits", "warg-stride"):
+                self.assertIn(gate, got, path)
+
     def test_the_dire_wolfs_clip_packages_its_plan_and_the_tool_select_the_wolf_gate(self):
         armory = "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/"
         for path in (armory + "Assets/creature/direwolf/animations/dire_wolf_trot_anm.tpac",

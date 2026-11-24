@@ -1760,6 +1760,24 @@ the wargs animations") found all three.
   `docs/reference/lotrlome-warg-gait-changes.md` "The walk and the trot (#1565)";
   `tools/tests/test_gen_dire_wolf_anim_clips.py` (`test_the_installed_wolf_records_are_the_plan`).
 
+### A standing side step's travel sets a loop time; the stride is not its measure (#1565, 2026-11-24)
+The stride gate measures a gait's feet against its record's `LoopDisplacement`. Pointed at the warg, it found
+the two side-step records at 1.60 m on paws that move 0.73 m and 1.00 m sideways, and the author wrote them
+up as a typed travel to correct to the measured stride. The node does not use that value as metres a loop. At
+the standing pace it plays one loop in travel / (`Duration` x its sideways input) seconds, held between 0.7
+and 1.3 times the `Duration` (0x749C20). If that input is the sideways speed, which is not read, the body
+moves travel / `Duration` in a loop inside that band: 2.13 m for these records, whose `Duration` is 0.75 s.
+A turn in place takes its rate from the turn-right
+row's travel and `Duration` (0x74E9C0), and `as_warg` binds that row to the right side step's record. A
+moving pace's strafe record gives its travel as the divisor of the sideways blend's weight.
+- **Why missed:** the formula was in the tool's own docstring since 2026-11-19, and the author called the
+  node's use of the value "not read". No reviewer could read native code until the second wave.
+- **Prevent:** before a measure is pointed at a new kind of row, quote the line of the node that reads the
+  value for THAT row kind (front, "none", strafe, turn), and write the relation the line gives beside the
+  measure. A record bound to two rows is read twice: list both readers before a value is proposed.
+- **Source:** issue #1565 item 2, follow-up #1591; the Engine lens of the second wave;
+  [RCA](../rca-warg-stride-gate-2026-11-24.md) F10; `TaleWorlds.Native.dll` v1.5.7, 0x749C20 and 0x74E9C0.
+
 ### A loop is its master's whole cycle: hold the first key to the last (#1565, 2026-11-24)
 The pack's dire wolf canter played keys 1 to 16 of a gallop master keyed 0 to 16. Keys 0 and 16 are one pose, so
 the cut loop skipped one interval and the paws jumped up to 0.39 m at each seam. The stride measure passed it:

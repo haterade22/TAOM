@@ -137,6 +137,13 @@ still makes all 40 records with the pack's values, and no longer holds the `Dura
 the plan names (its `-Verify` named two wolf records after #1563 changed the warg's travel, because it read the
 warg's records for the wolf's strafe ratios; those six ratios are numbers in the script now).
 
+Measured on 2026-11-24, while the warg was added to the stride gate, and not changed yet (#1591): the backward
+walk's two records claim 1.17 m on the forward walk's keys, whose paws cover 2.08 m, and the two side-step
+records hold a travel of 1.60 m where the paws move 0.10 m and 0.08 m sideways (for a side step the stride is
+not the node's measure: [warg ledger](lotrlome-warg-gait-changes.md), "Known limitations"). The wolf is not a
+creature of
+`tools/check_gait_stride.py`: that gate has no setting for a rig whose paws stay above its contact height.
+
 Check: `python tools/repoint_anim_clip.py --plan tools/dire_wolf_gait_plan.json --under
 creature/direwolf/animations --check` (the `dire-wolf-gaits` row of `tools/data_gates.py`) and `python
 tools/bind_warg_clips.py --check` (the `warg-clips` row). Roll back: copy the two `.bak-warg-bind-<stamp>` files
