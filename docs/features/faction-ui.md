@@ -35,7 +35,7 @@ loads, and it can only be released once no screen draws it.
 |---|---|---|
 | Main menu (`MenuChrome`) | `mm_*`, plus the `TAOMMainMenu` brushes | while the themed main menu holds it |
 | Character creation (`Chrome`) | `cc_*` and every other `fs_*` (`fs_minimap_big` included), plus the `TAOMCharCreation` and `TAOMFactionScreen` brushes | while any themed character-creation screen or the faction screen holds it |
-| Faction art (`Art`) | `fs_portrait_*` (the hero cards), `fs_emblem_*`, `fs_territory_*`, `fs_bg_*` (`fs_reveal_*` is no longer drawn) | loaded one image at a time as the faction screen shows it; held with the faction screen |
+| Faction art (`Art`) | `fs_portrait_*` (the hero cards), `fs_emblem_*`, `fs_territory_*`, `fs_bg_*` (no `fs_reveal_*` files ship) | loaded one image at a time as the faction screen shows it; held with the faction screen |
 | Resident | `ld_*`, the `TAOMLoading` brushes and the three bitmap fonts | the process: the loading window is built once, and the engine cannot remove a font |
 | Skill icons | `gui_skills_icon_*`, registered under vanilla's names from `sprite_overrides.json` | the process |
 
@@ -116,7 +116,8 @@ not its prefab, so nothing of Coop's is lost by the swap. Pinned by `ThemedMapBa
   anywhere else is drawn at human scale (`FactionRoster.ShownRace`), since those bodies overflow the frame;
   only the picture changes, the pick keeps its race. The small painted cards stay as the buttons. Kysaro's large painted
   faction portraits (`fs_portrait_<faction>`) and hero reveal pictures (`fs_reveal_*`) are no longer
-  drawn; their files are still in `RuntimeSprites`.
+  drawn, and their 54 files (about 76 MB) are removed from `RuntimeSprites`. The copies are in
+  `E:/TAOM-Backups/faction-art-2026-11-24` on the desktop, with SHA-256 lists.
 - **Taking over a hero.** Mike, 2026-10-01: "When I pick an existing character like Thranduil from the
   UI, it should skip the character creation all of the way until the career picker, user picks the
   career and it starts the game." `FactionPickService` decides each pick. A card or list entry whose
