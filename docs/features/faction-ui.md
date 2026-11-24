@@ -198,7 +198,8 @@ every tick for the resources of each face generator model still loading, because
 request leaves the model hidden. They are applied in `OnSubModuleLoad` because the splash, the main menu and the loading window all appear before
 any campaign. Two of Kysaro's per-frame patches are gone: the loading window gets its fonts, stone bars
 and brushes registered before its movie is built (so its prefab names them directly), and the
-menu-music silence is lifted from `FactionUITicker` when the player leaves the main menu, not from a
+menu-music silence is lifted from `FactionUITicker` when the player leaves the main menu and the
+game-loading screen (the two states with `IsMusicMenuState`), not from a
 prefix on `MBMusicManager.Update`.
 
 **Not ported:**

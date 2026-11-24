@@ -15,7 +15,7 @@ namespace TAOM.Features.FactionUI.Menus;
 /// </para>
 /// <para>
 /// The silence is a latch opened by <see cref="OnActivateMenuMode"/> and closed by <see cref="OnTick"/>
-/// once the player has left the main menu. Per TAOM's latch rules the settings gate only the opening: a
+/// on the first tick whose state is not a music-menu state (the main menu or the game-loading screen). Per TAOM's latch rules the settings gate only the opening: a
 /// silence already in force is always lifted on leaving, so turning the option off mid-menu cannot
 /// leave the music stuck off.
 /// </para>
