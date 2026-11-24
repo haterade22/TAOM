@@ -170,6 +170,21 @@ def refuse_unparsable(outputs):
         raise SystemExit("REFUSING: these outputs do not parse, so nothing was written:\n  " + "\n  ".join(bad))
 
 
+def extract_gundabad_strings(src_strings):
+    """Gundabad localisation <string> elements (faction + culture + parent-name), whole elements.
+
+    A string with <tags> children spans several lines, so a one-line copy kept the opening tag and
+    dropped the rest (#1590). The liege titles (str_liege_title*.gundabad) are left out: the Liege
+    Titles feature writes one row pair per realm by hand, so a clone would define the id twice
+    (the same exclusion tools/promote_borrowed_cultures.py makes).
+    """
+    elements = re.findall(r'[ \t]*<string\b[^>]*?(?:/>|>.*?</string>)', src_strings, re.S)
+    keep = [e for e in elements
+            if "gundabad" in e.split(">", 1)[0] and "taom_faction_" not in e.split(">", 1)[0]
+            and "str_liege_title" not in e.split(">", 1)[0]]
+    return "".join("  " + e.strip() + "\n" for e in keep)
+
+
 def main():
     src_cult = open(os.path.join(MD, "taom_spcultures.xml"), encoding="utf-8").read()
     src_wand = open(os.path.join(MD, "taom_wanderers.xml"), encoding="utf-8").read()
@@ -191,10 +206,7 @@ def main():
     gund_party = "".join(
         extract(src_party, r'([ \t]*<MBPartyTemplate\b[^>]*\bid="%s".*?</MBPartyTemplate>\n)' % re.escape(t))
         for t in party_ids)
-    # gundabad localisation <string> lines (faction + culture + parent-name)
-    gund_str_lines = [ln for ln in src_strings.splitlines()
-                      if "gundabad" in ln and "<string" in ln and "taom_faction_" not in ln]
-    gund_strings = "\n".join("  " + ln.strip() for ln in gund_str_lines) + "\n"
+    gund_strings = extract_gundabad_strings(src_strings)
     # child / lord(+teen) / education equipment templates — cloned from gundabad; the armor+weapon
     # remap happens inside transform(). The orc cultures lacked these, so vanilla
     # EquipmentSelectionModel.GetEquipmentForInitialChildrenGeneration found no culture-matching
