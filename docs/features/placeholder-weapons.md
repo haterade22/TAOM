@@ -43,6 +43,8 @@ item and troop that carries one, and a real weapon can replace it later.
    (`restat_melee_blades.py`). The Swing and Thrust factors are capped separately, each by its own attack's
    tier limit (as `restat_melee_blades.class_ratios` does), so a thrust already at its limit does not hold the
    swing back (#1296). An attack the donor does not have takes the other attack's factor.
+   The clone carries `is_hidden="true"` (the engine's `IsHiddenOnDesigner`), so the smithy never lists
+   a placeholder blade; the troop weapon still builds from it.
 2. Clones the donor CraftedItem with the new id, a `{=<id>_name}` name, the cloned blade, and
    `is_merchandise="false"`, so it does not sell in shops or drop as loot.
 3. Appends the cloned blade to every WeaponDescription that lists the donor blade, and to the donor's
