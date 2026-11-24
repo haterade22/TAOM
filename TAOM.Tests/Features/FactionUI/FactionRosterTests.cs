@@ -155,7 +155,7 @@ public class FactionRosterTests
         var placeholder = Troop("placeholder", 4);
         _adapter.CultureTroop("culture").Returns(placeholder);
 
-        Assert.AreSame(placeholder, _sut.CardCharacter(new SpecialCharacter("Nobody", "missing_id", "p", "r", 400f), "culture"));
+        Assert.AreSame(placeholder, _sut.CardCharacter(new SpecialCharacter("Nobody", "missing_id", "p"), "culture"));
     }
 
     [TestMethod]
@@ -164,7 +164,7 @@ public class FactionRosterTests
         var gandalf = Troop("taom_fui_gandalf", 0);
         _adapter.Character("taom_fui_gandalf").Returns(gandalf);
 
-        Assert.AreSame(gandalf, _sut.CardCharacter(new SpecialCharacter("Gandalf", "taom_fui_gandalf", "p", "r", 551f), "culture"));
+        Assert.AreSame(gandalf, _sut.CardCharacter(new SpecialCharacter("Gandalf", "taom_fui_gandalf", "p"), "culture"));
     }
 
     // ── The 3D viewport ───────────────────────────────────────────────────────────────────────
@@ -203,6 +203,28 @@ public class FactionRosterTests
         WriteConfig(FactionScreenConfigProvider.ViewportFile, "{ \"dominion_of_mordor\": { \"race\": 12 } }");
 
         Assert.IsNull(_sut.ViewportRace(Faction("dominion_of_mordor")));
+    }
+
+    [TestMethod]
+    public void ShownRace_ARingwraithOrSauron_IsDrawnAtHumanScale()
+    {
+        _adapter.RaceName(7).Returns("nazghul");
+        _adapter.RaceName(8).Returns("sauron");
+        _adapter.RaceName(3).Returns("elf");
+
+        Assert.AreEqual(0, _sut.ShownRace(Faction("overlordship_of_dol_guldur"), isFactionCharacter: true, race: 7));
+        Assert.AreEqual(0, _sut.ShownRace(Faction("kingdom_of_rohan"), isFactionCharacter: false, race: 8));
+        Assert.AreEqual(3, _sut.ShownRace(Faction("kingdom_of_lasgalen"), isFactionCharacter: false, race: 3));
+    }
+
+    [TestMethod]
+    public void ShownRace_TheFactionsTunedRace_WinsOnlyForItsOwnCharacter()
+    {
+        WriteConfig(FactionScreenConfigProvider.ViewportFile, "{ \"dominion_of_mordor\": { \"race\": 2 } }");
+        _adapter.RaceName(3).Returns("orc");
+
+        Assert.AreEqual(2, _sut.ShownRace(Faction("dominion_of_mordor"), isFactionCharacter: true, race: 3));
+        Assert.AreEqual(3, _sut.ShownRace(Faction("dominion_of_mordor"), isFactionCharacter: false, race: 3));
     }
 
     [TestMethod]

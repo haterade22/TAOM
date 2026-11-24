@@ -6,6 +6,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Core.ViewModelCollection;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using TAOM.Adapters;
 using TAOM.Features.FactionMap.ViewModels;
 using TAOM.Features.FactionUI.FactionScreen;
 using TAOM.Features.FactionUI.Presets;
@@ -26,7 +27,6 @@ namespace TAOM.Features.FactionUI.UI.FactionScreen;
 /// </summary>
 public sealed class FactionScreenVM : ViewModel
 {
-    private const float DefaultPortraitHeight = 850f;
     private const string LeaderCategory = "Leader";
     private const string LordCategory = "Lord";
     private const string WandererCategory = "Wanderer";
@@ -38,24 +38,12 @@ public sealed class FactionScreenVM : ViewModel
     private FactionInfo? _selected;
     private FactionDetailVM? _selectedDetail;
     private string _browseCategory = "";
-    private bool _activeHeroPortraitIsB;
 
     private string _backgroundSprite = "";
     private string _hoveredFactionName = "";
     private float _viewportOffset;
-    private bool _hasPaintedPortrait;
-    private bool _showCharacterViewport = true;
-    private string _paintedPortraitSprite = "";
-    private float _paintedPortraitWidth = 640f;
-    private float _paintedPortraitHeight = DefaultPortraitHeight;
     private float _minimapGlowAlpha;
     private bool _showLeaderCategory = true;
-    private string _heroPortraitSprite = "";
-    private float _heroPortraitWidth = 500f;
-    private float _heroPortraitHeight = DefaultPortraitHeight;
-    private string _heroPortraitSpriteB = "";
-    private float _heroPortraitWidthB = 500f;
-    private float _heroPortraitHeightB = DefaultPortraitHeight;
 
     public FactionScreenVM(FactionSelectionVM factionMap, List<FactionInfo> factions, FactionScreenServices services)
     {
@@ -125,41 +113,6 @@ public sealed class FactionScreenVM : ViewModel
     }
 
     [DataSourceProperty]
-    public bool HasPaintedPortrait
-    {
-        get => _hasPaintedPortrait;
-        set => SetValue(ref _hasPaintedPortrait, value, nameof(HasPaintedPortrait));
-    }
-
-    [DataSourceProperty]
-    public bool ShowCharacterViewport
-    {
-        get => _showCharacterViewport;
-        set => SetValue(ref _showCharacterViewport, value, nameof(ShowCharacterViewport));
-    }
-
-    [DataSourceProperty]
-    public string PaintedPortraitSprite
-    {
-        get => _paintedPortraitSprite;
-        set => SetSprite(ref _paintedPortraitSprite, value, nameof(PaintedPortraitSprite));
-    }
-
-    [DataSourceProperty]
-    public float PaintedPortraitWidth
-    {
-        get => _paintedPortraitWidth;
-        set => SetValue(ref _paintedPortraitWidth, value, nameof(PaintedPortraitWidth));
-    }
-
-    [DataSourceProperty]
-    public float PaintedPortraitHeight
-    {
-        get => _paintedPortraitHeight;
-        set => SetValue(ref _paintedPortraitHeight, value, nameof(PaintedPortraitHeight));
-    }
-
-    [DataSourceProperty]
     public float MinimapGlowAlpha
     {
         get => _minimapGlowAlpha;
@@ -171,60 +124,6 @@ public sealed class FactionScreenVM : ViewModel
     {
         get => _showLeaderCategory;
         set => SetValue(ref _showLeaderCategory, value, nameof(ShowLeaderCategory));
-    }
-
-    [DataSourceProperty]
-    public string SelectedHeroPortraitSprite
-    {
-        get => _heroPortraitSprite;
-        set
-        {
-            if (SetSprite(ref _heroPortraitSprite, value, nameof(SelectedHeroPortraitSprite)))
-                OnPropertyChanged(nameof(HasSelectedHeroPortrait));
-        }
-    }
-
-    [DataSourceProperty] public bool HasSelectedHeroPortrait => !string.IsNullOrEmpty(SelectedHeroPortraitSprite);
-
-    [DataSourceProperty]
-    public float SelectedHeroPortraitWidth
-    {
-        get => _heroPortraitWidth;
-        set => SetValue(ref _heroPortraitWidth, value, nameof(SelectedHeroPortraitWidth));
-    }
-
-    [DataSourceProperty]
-    public float SelectedHeroPortraitHeight
-    {
-        get => _heroPortraitHeight;
-        set => SetValue(ref _heroPortraitHeight, value, nameof(SelectedHeroPortraitHeight));
-    }
-
-    [DataSourceProperty]
-    public string SelectedHeroPortraitSpriteB
-    {
-        get => _heroPortraitSpriteB;
-        set
-        {
-            if (SetSprite(ref _heroPortraitSpriteB, value, nameof(SelectedHeroPortraitSpriteB)))
-                OnPropertyChanged(nameof(HasSelectedHeroPortraitB));
-        }
-    }
-
-    [DataSourceProperty] public bool HasSelectedHeroPortraitB => !string.IsNullOrEmpty(SelectedHeroPortraitSpriteB);
-
-    [DataSourceProperty]
-    public float SelectedHeroPortraitWidthB
-    {
-        get => _heroPortraitWidthB;
-        set => SetValue(ref _heroPortraitWidthB, value, nameof(SelectedHeroPortraitWidthB));
-    }
-
-    [DataSourceProperty]
-    public float SelectedHeroPortraitHeightB
-    {
-        get => _heroPortraitHeightB;
-        set => SetValue(ref _heroPortraitHeightB, value, nameof(SelectedHeroPortraitHeightB));
     }
 
     public void ExecuteBrowseLeader() => SetBrowseCategory(_browseCategory == LeaderCategory ? "" : LeaderCategory);
@@ -270,7 +169,6 @@ public sealed class FactionScreenVM : ViewModel
 
     private void SelectFaction(FactionInfo info)
     {
-        var replay = HasPaintedPortrait != !string.IsNullOrEmpty(info.PaintedPortraitSprite) || _selected?.Key != info.Key;
         _selected = info;
         foreach (var item in Factions)
             item.IsSelected = item.Info == info;
@@ -282,19 +180,6 @@ public sealed class FactionScreenVM : ViewModel
         ShowFactionCharacter(info);
         _services.Widgets.ResetRightColumnToTop();
 
-        var hasPortrait = !string.IsNullOrEmpty(info.PaintedPortraitSprite);
-        PaintedPortraitSprite = info.PaintedPortraitSprite;
-        PaintedPortraitWidth = info.PaintedPortraitWidth * info.PaintedPortraitScale;
-        PaintedPortraitHeight = DefaultPortraitHeight * info.PaintedPortraitScale;
-        HasPaintedPortrait = hasPortrait;
-        ShowCharacterViewport = !hasPortrait;
-        if (hasPortrait && replay)
-            _services.Widgets.OnFactionSelected();
-
-        SelectedHeroPortraitSprite = "";
-        SelectedHeroPortraitSpriteB = "";
-        _activeHeroPortraitIsB = false;
-        _services.Widgets.ResetHeroPortraits();
         _services.Picks.Clear();
 
         ShowLeaderCategory = _services.Roster.ShowLeaderCategory(info);
@@ -329,9 +214,6 @@ public sealed class FactionScreenVM : ViewModel
             Heroes.Add(new HeroItemVM(character?.Name ?? card.FallbackName, pick, SelectHero)
             {
                 PortraitSprite = card.PortraitSprite,
-                RevealSprite = card.RevealSprite,
-                RevealWidth = card.RevealWidth,
-                RevealScale = card.RevealScale,
             });
         }
     }
@@ -383,8 +265,6 @@ public sealed class FactionScreenVM : ViewModel
         if (hero.IsCustom)
         {
             _services.Picks.Clear();
-            SelectedHeroPortraitSprite = "";
-            SelectedHeroPortraitSpriteB = "";
             ExecuteConfirm();
             return;
         }
@@ -392,42 +272,34 @@ public sealed class FactionScreenVM : ViewModel
         if (hero.Pick is not { } pick)
             return;
         _services.Picks.Pick(pick, _selected?.CultureId);
-
-        var portrait = !string.IsNullOrEmpty(hero.RevealSprite) ? hero.RevealSprite : hero.PortraitSprite;
-        if (!string.IsNullOrEmpty(portrait))
-            ShowHeroPortrait(portrait, hero.RevealWidth * hero.RevealScale, DefaultPortraitHeight * hero.RevealScale);
-    }
-
-    private void ShowHeroPortrait(string sprite, float width, float height)
-    {
-        _activeHeroPortraitIsB = !_activeHeroPortraitIsB;
-        if (_activeHeroPortraitIsB)
-        {
-            SelectedHeroPortraitSpriteB = sprite;
-            SelectedHeroPortraitWidthB = width;
-            SelectedHeroPortraitHeightB = height;
-        }
-        else
-        {
-            SelectedHeroPortraitSprite = sprite;
-            SelectedHeroPortraitWidth = width;
-            SelectedHeroPortraitHeight = height;
-        }
-        _services.Widgets.OnHeroSelected(_activeHeroPortraitIsB);
+        if (_selected != null)
+            ShowFactionCharacter(_selected, pick);
     }
 
     private void HoverFaction(FactionInfo? info) => HoveredFactionName = (info ?? _selected)?.Name ?? "";
 
-    private void ShowFactionCharacter(FactionInfo info)
+    /// <summary>Shows <paramref name="pick"/> in the 3D viewport, or the faction's own character when there is
+    /// none. A pick shows the body and gear the player will get (<see cref="FactionPickService.Display"/>); the
+    /// faction's race and weapon tweaks frame only its own character, picked or not.</summary>
+    private void ShowFactionCharacter(FactionInfo info, RosterEntry? pick = null)
     {
         try
         {
-            if (_services.Roster.ViewportCharacter(info)?.Source is not CharacterObject character)
+            var source = pick?.Source ?? _services.Roster.ViewportCharacter(info)?.Source;
+            var character = source as CharacterObject ?? (source as Hero)?.CharacterObject;
+            if (character == null)
                 return;
 
             Character.FillFrom(character);
-            if (_services.Roster.ViewportRace(info) is { } race)
-                Character.Race = race;
+            var display = pick == null ? null : _services.Picks.Display;
+            if (display != null)
+            {
+                Character.BodyProperties = display.BodyProperties;
+                Character.Race = display.Race;
+                Character.IsFemale = display.IsFemale;
+            }
+            var isFactionCharacter = pick == null || pick.Id == _services.Roster.ViewportCharacter(info)?.Id;
+            Character.Race = _services.Roster.ShownRace(info, isFactionCharacter, Character.Race);
 
             var culture = character.Culture ?? TaleWorlds.ObjectSystem.MBObjectManager.Instance?.GetObject<CultureObject>(info.CultureId);
             if (culture != null)
@@ -438,12 +310,12 @@ public sealed class FactionScreenVM : ViewModel
                     Character.ArmorColor2 = culture.Color2;
             }
 
-            var equipment = character.Equipment?.Clone();
+            var equipment = (display?.Battle as Equipment ?? character.Equipment)?.Clone();
             if (equipment != null)
             {
                 equipment[EquipmentIndex.Horse] = EquipmentElement.Invalid;
                 equipment[EquipmentIndex.HorseHarness] = EquipmentElement.Invalid;
-                if (_services.Roster.HideViewportWeapons(info))
+                if (isFactionCharacter && _services.Roster.HideViewportWeapons(info))
                 {
                     for (var slot = EquipmentIndex.WeaponItemBeginSlot; slot < EquipmentIndex.NumAllWeaponSlots; slot++)
                         equipment[slot] = EquipmentElement.Invalid;
@@ -455,6 +327,7 @@ public sealed class FactionScreenVM : ViewModel
 
             ViewportOffset = _services.Roster.ViewportOffset(info);
             Character.IsTableauEnabled = true;
+            _services.Widgets.OnCharacterShown();
         }
         catch (Exception)
         {

@@ -30,4 +30,7 @@ public interface IFactionRosterAdapter
 
     /// <summary>How many races the engine knows.</summary>
     int RaceCount { get; }
+
+    /// <summary>The engine's name for <paramref name="race"/> ("human", "nazghul"), or null when it knows no such race.</summary>
+    string? RaceName(int race);
 }

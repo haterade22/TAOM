@@ -24,6 +24,16 @@ public class StoryMissionWiringPinTests
     }
 
     [TestMethod]
+    public void TheLauncher_BuildsItsPlanWithTheLongDefeatCatalogsHeroLines()
+    {
+        // One plan feeds both behavior lists (the siege list and the field list), so this is the only place a story run gets its hero lines (#1569).
+        var launcher = Source("Main/Features/StoryMissions/Hooks/StoryMissionLauncher.cs");
+
+        StringAssert.Contains(launcher, "StoryPlanBuilder.Build(definition, RunOptions.Default with { Autoplay = autoplay }, _longDefeat.HeroLines)");
+        Assert.AreEqual(1, Regex.Matches(launcher, "StoryPlanBuilder.Build").Count, "a second plan site would miss the lines");
+    }
+
+    [TestMethod]
     public void TheStoryViewList_IsKeyedByTheStoryMissionName_AndKeepsToViewMethodStatics()
     {
         var views = Source("Client/Features/StoryMissions/StoryMissionViews.cs");

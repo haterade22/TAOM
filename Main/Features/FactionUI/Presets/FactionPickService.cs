@@ -78,6 +78,9 @@ public sealed class FactionPickService
     /// <summary>The current pick is a hero the player takes over.</summary>
     public bool IsTakeover => !_takeover.IsEmpty;
 
+    /// <summary>The current pick's body, race, sex and gear for the 3D viewport, or null.</summary>
+    public PresetDisplay? Display => _presets.PendingDisplay;
+
     /// <summary>A card or a browse-list entry was picked on the faction whose culture is
     /// <paramref name="cultureId"/>. Never throws: a click on the faction screen must not.</summary>
     public void Pick(RosterEntry pick, string? cultureId)

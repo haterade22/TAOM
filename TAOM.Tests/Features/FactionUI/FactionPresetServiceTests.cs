@@ -34,6 +34,23 @@ public class FactionPresetServiceTests
     }
 
     [TestMethod]
+    public void PendingDisplay_FollowsThePickThroughTheFaceGeneratorUntilCleared()
+    {
+        var display = new PresetDisplay("body", 3, isFemale: true, battle: new object());
+        _appearance.Display(_resolvedTemplate).Returns(display);
+        Assert.IsNull(_sut.PendingDisplay);
+
+        _sut.SelectTemplate(_template);
+        Assert.AreSame(display, _sut.PendingDisplay);
+        _sut.OnFaceGeneratorOpening();
+        Assert.AreSame(display, _sut.PendingDisplay);
+
+        _sut.Clear();
+        Assert.IsNull(_sut.PendingDisplay);
+        _appearance.Received(1).Resolve(_template, false);
+    }
+
+    [TestMethod]
     public void SelectHero_ResolvesThePickOnce_SoThePreviewAndBothCopiesShareOneGearDraw()
     {
         _sut.SelectHero(_hero);

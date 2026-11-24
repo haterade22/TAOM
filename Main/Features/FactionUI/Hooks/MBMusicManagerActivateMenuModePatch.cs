@@ -15,7 +15,7 @@ namespace TAOM.Features.FactionUI.Hooks;
 /// Kysaro's matching prefix on <c>DeactivateMenuMode</c> is not ported: vanilla's body there is
 /// <c>MenuModeLeave(); CurrentMode = Paused;</c> (:445-449), and <c>Logik.MenuModeLeave</c> only
 /// returns <c>commandIgnored</c> when psai never entered menu mode, so vanilla already does what that
-/// prefix did. <c>FactionUITicker</c> lifts the silence once the player leaves the main menu.
+/// prefix did. <c>FactionUITicker</c> lifts the silence once the player leaves the main menu and the game-loading screen.
 /// </para>
 /// </summary>
 [HarmonyPatch(typeof(MBMusicManager), "ActivateMenuMode")]

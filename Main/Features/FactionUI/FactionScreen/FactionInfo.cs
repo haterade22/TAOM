@@ -34,12 +34,6 @@ public sealed class FactionInfo
 
     public double MapY { get; set; } = 0.5;
 
-    public string PaintedPortraitSprite { get; set; } = "";
-
-    public float PaintedPortraitWidth { get; set; } = 640f;
-
-    public float PaintedPortraitScale { get; set; } = 1f;
-
     /// <summary>The faction's side from <c>factions.json</c> (<c>free</c>, <c>evil</c> or
     /// <c>neutral</c>): the minimap marker colour.</summary>
     public string Alignment { get; set; } = "neutral";

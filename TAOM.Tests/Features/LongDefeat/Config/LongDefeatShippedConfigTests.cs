@@ -28,6 +28,7 @@ public class LongDefeatShippedConfigTests
         var logger = Substitute.For<IModLogger>();
         var paths = Substitute.For<IPathService>();
         paths.ModuleDataPath.Returns(ModuleData);
+        paths.ModuleRootPath.Returns(RepoPaths.RepoPath("Main", "_Module") + "/");
         return (new LongDefeatConfigCatalog(paths, logger), logger);
     }
 

@@ -15,7 +15,7 @@ namespace TAOM.Features.FactionUI.Menus;
 /// </para>
 /// <para>
 /// The silence is a latch opened by <see cref="OnActivateMenuMode"/> and closed by <see cref="OnTick"/>
-/// once the player has left the main menu. Per TAOM's latch rules the settings gate only the opening: a
+/// on the first tick whose state is neither the main menu nor the game-loading screen. Per TAOM's latch rules the settings gate only the opening: a
 /// silence already in force is always lifted on leaving, so turning the option off mid-menu cannot
 /// leave the music stuck off.
 /// </para>
@@ -81,12 +81,13 @@ public sealed class MenuMediaService
         return true;
     }
 
-    /// <summary>True once, when the player has left the main menu while silenced: the caller sets the
-    /// music back to paused, so vanilla starts its menu theme on the next music-menu state (the new-game
-    /// loading screen) and, as in vanilla, stops it when character creation opens.</summary>
-    public bool OnTick(bool isMainMenu)
+    /// <summary>True once, when the player has left the main menu and the game-loading screen while
+    /// silenced: the caller sets the music back to paused, so vanilla plays what the
+    /// next state calls for. Held through the loading screen (Luiz, 2026-11-24), where vanilla's
+    /// theme used to start and play through a long load.</summary>
+    public bool OnTick(bool isMainMenuOrLoading)
     {
-        if (!IsMenuMusicSilenced || isMainMenu)
+        if (!IsMenuMusicSilenced || isMainMenuOrLoading)
             return false;
         IsMenuMusicSilenced = false;
         return true;

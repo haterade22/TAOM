@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
+using TAOM.Features.LongDefeat;
 using TAOM.Features.StoryMissions;
 using TAOM.Features.StoryMissions.Config;
 using TAOM.Features.StoryMissions.Domain;
@@ -27,7 +28,7 @@ public class StoryMissionLauncherTests
     private static string Source() => RepoPaths.ReadSource(LauncherPath, stripComments: true);
 
     private static StoryMissionLauncher Launcher(string? json, IModLogger logger) =>
-        new(StoryMissionCatalog.FromText(json, logger), logger, Substitute.For<IOutcomeLog>());
+        new(StoryMissionCatalog.FromText(json, logger), logger, Substitute.For<IOutcomeLog>(), LongDefeatConfigCatalog.FromTexts(null, null, null, logger));
 
     private static string Mission(string side) =>
         "{\"missions\":[{\"id\":\"m1\",\"scene\":\"scene_a\",\"side\":\"" + side + "\",\"defenderCulture\":\"vlandia\",\"attackerCulture\":\"isengard\","

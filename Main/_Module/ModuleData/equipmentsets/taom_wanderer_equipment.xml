@@ -143,63 +143,68 @@
 	<!-- GUNDABAD companion equipment -->
 	<EquipmentRoster id="npc_companion_equipment_template_gundabad" culture="Culture.gundabad">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Head" id="Item.roughhide_cap" />
-			<Equipment slot="Body" id="Item.nordic_hauberk" />
-			<Equipment slot="Cape" id="Item.scarf" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a03" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_a" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Head" id="Item.roughhide_cap" />
-			<Equipment slot="Body" id="Item.nordic_hauberk" />
-			<Equipment slot="Cape" id="Item.scarf" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a02" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_a" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_c" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_cape_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Head" id="Item.northern_fur_cap" />
-			<Equipment slot="Body" id="Item.nordic_sloven" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a02" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_a" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_med_a" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_c" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_b" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Head" id="Item.northern_fur_cap" />
-			<Equipment slot="Body" id="Item.nordic_sloven" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a02" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_a" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_med_b" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_b" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Head" id="Item.roughhide_cap" />
-			<Equipment slot="Body" id="Item.nordic_tunic" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a03" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_c" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_med_a" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_cape_b" />
+			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_c" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_b" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Head" id="Item.roughhide_cap" />
-			<Equipment slot="Body" id="Item.nordic_tunic" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a02" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_f" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_med_d" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Body" id="Item.nordic_tunic" />
-			<Equipment slot="Leg" id="Item.woven_leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a03" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Body" id="Item.long_woolen_tunic" />
-			<Equipment slot="Leg" id="Item.leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a02" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_c" />
+			<Equipment slot="Cape" id="Item.sk_gb_uruk_cape_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_b" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Body" id="Item.nordic_sloven" />
-			<Equipment slot="Leg" id="Item.woven_leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a02" />
+			<Equipment slot="Body" id="Item.sk_gb_uruk_chest_med_a" />
+			<Equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_b" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -1565,63 +1570,67 @@
   <!-- TAOM-NEWFACTIONS:goblin:BEGIN -->
 	<EquipmentRoster id="npc_companion_equipment_template_goblin" culture="Culture.goblin">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Head" id="Item.roughhide_cap" />
-			<Equipment slot="Body" id="Item.nordic_hauberk" />
-			<Equipment slot="Cape" id="Item.scarf" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+			<Equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Head" id="Item.roughhide_cap" />
-			<Equipment slot="Body" id="Item.nordic_hauberk" />
-			<Equipment slot="Cape" id="Item.scarf" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+			<Equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Head" id="Item.northern_fur_cap" />
-			<Equipment slot="Body" id="Item.nordic_sloven" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+			<Equipment slot="Head" id="Item.sk_gn_orc_inf_helmet_med_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Head" id="Item.northern_fur_cap" />
-			<Equipment slot="Body" id="Item.nordic_sloven" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a02" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Head" id="Item.roughhide_cap" />
-			<Equipment slot="Body" id="Item.nordic_tunic" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_med_a" />
+			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Head" id="Item.roughhide_cap" />
-			<Equipment slot="Body" id="Item.nordic_tunic" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+			<Equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_light_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_b" />
+			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Body" id="Item.nordic_tunic" />
-			<Equipment slot="Leg" id="Item.woven_leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Body" id="Item.long_woolen_tunic" />
-			<Equipment slot="Leg" id="Item.leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Body" id="Item.nordic_sloven" />
-			<Equipment slot="Leg" id="Item.woven_leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a02" />
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_med_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -1629,63 +1638,67 @@
   <!-- TAOM-NEWFACTIONS:mistymountainorcs:BEGIN -->
 	<EquipmentRoster id="npc_companion_equipment_template_mistymountainorcs" culture="Culture.mistymountainorcs">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Head" id="Item.roughhide_cap" />
-			<Equipment slot="Body" id="Item.nordic_hauberk" />
-			<Equipment slot="Cape" id="Item.scarf" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+			<Equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Head" id="Item.roughhide_cap" />
-			<Equipment slot="Body" id="Item.nordic_hauberk" />
-			<Equipment slot="Cape" id="Item.scarf" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+			<Equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Head" id="Item.northern_fur_cap" />
-			<Equipment slot="Body" id="Item.nordic_sloven" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+			<Equipment slot="Head" id="Item.sk_gn_orc_inf_helmet_med_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Head" id="Item.northern_fur_cap" />
-			<Equipment slot="Body" id="Item.nordic_sloven" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a02" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Head" id="Item.roughhide_cap" />
-			<Equipment slot="Body" id="Item.nordic_tunic" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_med_a" />
+			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Head" id="Item.roughhide_cap" />
-			<Equipment slot="Body" id="Item.nordic_tunic" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+			<Equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_light_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_b" />
+			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Body" id="Item.nordic_tunic" />
-			<Equipment slot="Leg" id="Item.woven_leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Body" id="Item.long_woolen_tunic" />
-			<Equipment slot="Leg" id="Item.leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Body" id="Item.nordic_sloven" />
-			<Equipment slot="Leg" id="Item.woven_leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a02" />
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_med_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -1822,63 +1835,67 @@
   <!-- TAOM-NEWCULTURE:bluecraig:BEGIN -->
 	<EquipmentRoster id="npc_companion_equipment_template_bluecraig" culture="Culture.bluecraig">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Head" id="Item.roughhide_cap" />
-			<Equipment slot="Body" id="Item.nordic_hauberk" />
-			<Equipment slot="Cape" id="Item.scarf" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+			<Equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Head" id="Item.roughhide_cap" />
-			<Equipment slot="Body" id="Item.nordic_hauberk" />
-			<Equipment slot="Cape" id="Item.scarf" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+			<Equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Head" id="Item.northern_fur_cap" />
-			<Equipment slot="Body" id="Item.nordic_sloven" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+			<Equipment slot="Head" id="Item.sk_gn_orc_inf_helmet_med_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Head" id="Item.northern_fur_cap" />
-			<Equipment slot="Body" id="Item.nordic_sloven" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a02" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Head" id="Item.roughhide_cap" />
-			<Equipment slot="Body" id="Item.nordic_tunic" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+			<Equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_med_a" />
+			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Head" id="Item.roughhide_cap" />
-			<Equipment slot="Body" id="Item.nordic_tunic" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+			<Equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+			<Equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_light_a" />
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_b" />
+			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Body" id="Item.nordic_tunic" />
-			<Equipment slot="Leg" id="Item.woven_leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Body" id="Item.long_woolen_tunic" />
-			<Equipment slot="Leg" id="Item.leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
-			<Equipment slot="Body" id="Item.nordic_sloven" />
-			<Equipment slot="Leg" id="Item.woven_leather_boots" />
+			<Equipment slot="Item0" id="Item.wm_gundabad_sword_a02" />
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_med_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
