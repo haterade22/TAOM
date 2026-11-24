@@ -1806,15 +1806,15 @@
 	<Hero
 		id="lord_M10_1"
 		faction="Faction.clan_empire_south_10"
-		text="{=aom_lord_M10_1_bio}Mauhoshat was hammered into a captain in the marshalling camps of Udun, where the legions of the Morannon are sorted and counted before the long march out. He took the Arki standard by goading three rivals into a knife-quarrel and walking out of the pit alone, a tale the muster-clerks of Lugburz are said to have written down. He covets the favour of the Great Eye above all, and trains his uruks to be noticed by the wraiths who ride down from the iron gate. The Ikhon under Maugrukh he names a company of pit-rats, for they reported his muster-count light at the last great gathering." />
+		text="{=aom_lord_M10_1_bio}Mauhoshat was hammered into a captain in the marshalling camps of Udûn, where the legions of the Morannon are sorted and counted before the long march out. He took the Arki standard by goading three rivals into a knife-quarrel and walking out of the pit alone, a tale the muster-clerks of Lugburz are said to have written down. He covets the favour of the Great Eye above all, and trains his uruks to be noticed by the wraiths who ride down from the iron gate. The Ikhon under Maugrukh he names a company of pit-rats, for they reported his muster-count light at the last great gathering." />
 	<Hero
 		id="lord_M11_1"
 		faction="Faction.clan_empire_south_11"
-		text="{=aom_lord_M11_1_bio}Maugrukh commands the watcher-tower of Cirith Ungol, that high paranoid roost above the Morgul Vale where Shelob lairs in the under-passes. He took the tower by cutting down the previous captain on the stair, an old quarrel about a shipment of mail looted from the tarks at Osgiliath. The Eye sees little of him there, and he likes it so, for a captain far from Lugburz may eat his own ghash and answer to none. He hates Mauhoshat of Udun, who once named his garrison a kennel of snaga." />
+		text="{=aom_lord_M11_1_bio}Maugrukh commands the watcher-tower of Cirith Ungol, that high paranoid roost above the Morgul Vale where Shelob lairs in the under-passes. He took the tower by cutting down the previous captain on the stair, an old quarrel about a shipment of mail looted from the tarks at Osgiliath. The Eye sees little of him there, and he likes it so, for a captain far from Lugburz may eat his own ghash and answer to none. He hates Mauhoshat of Udûn, who once named his garrison a kennel of snaga." />
 	<Hero
 		id="lord_M12_1"
 		faction="Faction.clan_empire_south_12"
-		text="{=aom_lord_M12_1_bio}Rûklash holds his banner in the slag-pits and forges of Gorgoroth, under the red light of Orodruin, where his sire was a taskmaster of the bellows. He clawed up out of the labour-gangs by breaking the captain who had flogged him as a snaga, and dragged the body up the slag-heap so the smiths would see who walked down. The men of Gondor know nothing of him yet, but the smith-orcs name him the Hammer of the Pit. He despises the Arki of Udun, who he says do nothing but stand in lines and be counted." />
+		text="{=aom_lord_M12_1_bio}Rûklash holds his banner in the slag-pits and forges of Gorgoroth, under the red light of Orodruin, where his sire was a taskmaster of the bellows. He clawed up out of the labour-gangs by breaking the captain who had flogged him as a snaga, and dragged the body up the slag-heap so the smiths would see who walked down. The men of Gondor know nothing of him yet, but the smith-orcs name him the Hammer of the Pit. He despises the Arki of Udûn, who he says do nothing but stand in lines and be counted." />
 	<Hero
 		id="lord_M13_1"
 		faction="Faction.clan_empire_south_13"
@@ -1830,7 +1830,7 @@
 	<Hero
 		id="lord_M13_4"
 		faction="Faction.clan_empire_south_13"
-		text="{=aom_lord_M13_4_bio}Ufthak clawed his way up from the slave-gangs of Udun to a banner of his own, and means to drown the memory of the lash in the blood of Men." />
+		text="{=aom_lord_M13_4_bio}Ufthak clawed his way up from the slave-gangs of Udûn to a banner of his own, and means to drown the memory of the lash in the blood of Men." />
 	<Hero
 		id="lord_M13_5"
 		faction="Faction.clan_empire_south_13"
@@ -1854,7 +1854,7 @@
 	<Hero
 		id="lord_M14_1"
 		faction="Faction.clan_empire_south_14"
-		text="{=aom_lord_M14_1_bio}Uznash is an overseer-captain of the Nurn slave-pens, where the thralls of Harad and the East break their backs to feed the legions. He came up through the whip-gangs, and his hatred of Men is a cold practiced thing, learned on the fields and not in any battle. The horse-boys of the Mark have never heard of him, and that is a wound he means to repair when the great muster comes. He has an old quarrel with Gûlnak of the Arki, who named his uruks farm-snaga at a Udun counting." />
+		text="{=aom_lord_M14_1_bio}Uznash is an overseer-captain of the Nurn slave-pens, where the thralls of Harad and the East break their backs to feed the legions. He came up through the whip-gangs, and his hatred of Men is a cold practiced thing, learned on the fields and not in any battle. The horse-boys of the Mark have never heard of him, and that is a wound he means to repair when the great muster comes. He has an old quarrel with Gûlnak of the Arki, who named his uruks farm-snaga at a Udûn counting." />
 	<Hero
 		id="lord_M14_2"
 		faction="Faction.clan_empire_south_14"
@@ -1926,7 +1926,7 @@
 	<Hero
 		id="lord_M16_1"
 		faction="Faction.clan_empire_south_10"
-		text="{=aom_lord_M16_1_bio}Gûlnak stands at Mauhoshat's right hand in the Udun camps, and the clerks of Lugburz mark him as the sharper blade of the two. He has been passed over twice for a banner of his own, and the resentment of it sits behind his teeth like a second tongue. He waits for Mauhoshat to be summoned to the Black Gate or thinned in the Pelennor, and reckons the Arki muster will fall to him before the next great war-march. Until that day he flatters his captain and counts his rivals." />
+		text="{=aom_lord_M16_1_bio}Gûlnak stands at Mauhoshat's right hand in the Udûn camps, and the clerks of Lugburz mark him as the sharper blade of the two. He has been passed over twice for a banner of his own, and the resentment of it sits behind his teeth like a second tongue. He waits for Mauhoshat to be summoned to the Black Gate or thinned in the Pelennor, and reckons the Arki muster will fall to him before the next great war-march. Until that day he flatters his captain and counts his rivals." />
 	<Hero
 		id="lord_M17_1"
 		faction="Faction.clan_empire_south_11"
