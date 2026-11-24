@@ -106,7 +106,7 @@ not its prefab, so nothing of Coop's is lost by the swap. Pinned by `ThemedMapBa
   still runs for a hero taken over on the screen. Quitting to the main menu from the screen pops the
   character-creation state without closing the culture stage, so `SubModule.OnGameEnd` calls
   `ResetForGameEnd`, which lets go of the screen and the pick and shows the panel again.
-- **The 3D character (project owner, 2026-11-24).** The centre of the screen is always the 3D viewport, for
+- **The 3D character (Luiz, 2026-11-24).** The centre of the screen is always the 3D viewport, for
   every faction: it shows the faction's character (`faction_characters.json`, else its elite infantry
   troop) and slides in on each change (`FactionScreenWidgets.OnCharacterShown`, Kysaro's portrait slide).
   Clicking a hero card or a Leader, Lord or Wanderer entry swaps it to that character, drawn from the

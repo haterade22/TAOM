@@ -9,7 +9,7 @@
 
         <!-- CENTER: the 3D character. The widget is far taller than the screen on purpose: the full body is rendered
              into it, so only the upper body (head to waist) lands on screen. Drag to rotate. It shows the faction's
-             character, or the picked hero (project owner, 2026-11-24), and slides in on each change. -->
+             character, or the picked hero (Luiz, 2026-11-24), and slides in on each change. -->
         <Widget Id="CharacterViewportWrapper" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginTop="@ViewportOffset"><Children>
         <CharacterTableauWidget DataSource="{Character}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1250" SuggestedHeight="2040" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="-168" BannerCodeText="@BannerCodeText" CharStringId="@CharStringId" EquipmentCode="@EquipmentCode" BodyProperties="@BodyProperties" IsFemale="@IsFemale" MountCreationKey="@MountCreationKey" Race="@Race" StanceIndex="@StanceIndex" ArmorColor1="@ArmorColor1" ArmorColor2="@ArmorColor2" IsTableauEnabled="@IsTableauEnabled" DoNotUseCustomScale="true" />
         </Children></Widget>

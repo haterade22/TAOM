@@ -32,7 +32,7 @@ only (not companions' parties, garrisons or AI parties):
   and its conformity tick (Patch150), and the player's volunteer slots (`CapHeroIndex`). Both read the switch before they test
   for the main party, so with it off nothing changes for anyone.
 - **No upkeep desertion.** At a special-resource balance of 0, `SpecialResourceEarningService.OnDailyTick` deserts no
-  upkeep troops from the main party (project owner, 2026-11-23: War Drums elites still deserted with the switch on). The
+  upkeep troops from the main party (Luiz, 2026-11-23: War Drums elites still deserted with the switch on). The
   upkeep is still charged, and the daily line, the overdraft line and the running-out warning still show; the map-bar
   tooltip drops its "Elite troops desert each day" line (`SpecialResourceMapBarMixin`). The switch's hint and on-message
   were not reworded, so the 12 translations stay current. The log says so
@@ -93,7 +93,7 @@ the left are released.
   `AccessTools`; the binding gate `ReflectionSiteBindingTests` pins it). Its Done handler does what vanilla's private
   `PartyScreenHelper.DefaultDoneHandler` does: it releases the prisoners moved to the left
   (`EndCaptivityAction.ApplyByReleasedByChoice`). Without that, a lord moved left stays a prisoner with no captor. If a game update renames that method, the entry says there is nothing to do.
-- No faction or culture filter: vanilla's call takes no roster (project owner, 2026-11-15: "just look at the games own
+- No faction or culture filter: vanilla's call takes no roster (Luiz, 2026-11-15: "just look at the games own
   cheat mode"). Going over the party-size limit is allowed there, as in vanilla.
 
 ## Map key

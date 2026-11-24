@@ -90,8 +90,8 @@ public sealed class FactionRoster
 
     /// <summary>
     /// The race the 3D viewport draws a character of <paramref name="race"/> in: the faction's tuned race for its
-    /// own character, human scale (race 0) for a Ringwraith or Sauron, whose bodies overflow the frame (project
-    /// owner, 2026-11-24), else the character's own race. Only the picture changes; the pick keeps its race.
+    /// own character, human scale (race 0) for a Ringwraith or Sauron, whose bodies overflow the frame (Luiz,
+    /// 2026-11-24), else the character's own race. Only the picture changes; the pick keeps its race.
     /// </summary>
     public int ShownRace(FactionInfo info, bool isFactionCharacter, int race)
     {

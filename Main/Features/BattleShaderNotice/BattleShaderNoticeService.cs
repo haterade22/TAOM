@@ -67,7 +67,7 @@ public sealed class BattleShaderNoticeService : IScreenShaderNotice
     }
 
     /// <summary>
-    /// Character creation (project owner, 2026-11-24): the faction screen's and face generator's 3D characters compile
+    /// Character creation (Luiz, 2026-11-24): the faction screen's and face generator's 3D characters compile
     /// their shaders on a cold cache. The same window shows from the same 50 queued and closes when the queue is empty
     /// or the screen closes. A battle notice already up owns the window.
     /// </summary>

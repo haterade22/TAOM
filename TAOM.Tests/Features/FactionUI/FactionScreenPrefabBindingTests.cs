@@ -79,7 +79,7 @@ public class FactionScreenPrefabBindingTests
     [TestMethod]
     public void Prefab_CentreIsAlwaysThe3DCharacter_NoPaintedPortraitWidgets()
     {
-        // Project owner, 2026-11-24: every faction shows its 3D character, and a picked hero swaps it.
+        // Luiz, 2026-11-24: every faction shows its 3D character, and a picked hero swaps it.
         var widgets = LoadPrefab().Descendants().ToList();
         var ids = widgets.Select(e => (string?)e.Attribute("Id")).Where(id => id != null).ToList();
 

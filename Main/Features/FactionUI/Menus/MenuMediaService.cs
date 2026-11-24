@@ -83,7 +83,7 @@ public sealed class MenuMediaService
 
     /// <summary>True once, when the player has left every music-menu state (the main menu and the new-game
     /// loading screen) while silenced: the caller sets the music back to paused, so vanilla plays what the
-    /// next state calls for. Held through the loading screen (project owner, 2026-11-24), where vanilla's
+    /// next state calls for. Held through the loading screen (Luiz, 2026-11-24), where vanilla's
     /// theme used to start and play through a long load.</summary>
     public bool OnTick(bool isMenuMusicState)
     {
