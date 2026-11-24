@@ -31,6 +31,7 @@ from unittest import mock
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import generate_armour_classes as gac  # noqa: E402
+import generate_lothlorien_armor as gla  # noqa: E402
 
 
 def piece(item_id, cls, folder='gondor', slot='body'):
@@ -95,6 +96,15 @@ class Classify(unittest.TestCase):
         rows = gac.build_rows(records, targets=lambda *a: {})
         self.assertEqual(rows['sk_ll_ml_helmet_med_a'][0], 'heavy')
         self.assertEqual(rows['sk_ll_ml_helmet_heavy_b'][0], 'elite')
+
+    def test_the_mallorn_step_up_copy_agrees_with_the_lothlorien_generators_table(self):
+        # MALLORN_BAND_UP is a copy of generate_lothlorien_armor.ML_BAND_UP for the bands an unworn piece may
+        # move through; elite and lord are left out on purpose (never up into lord). A changed price step in
+        # the generator must change the class step here (#1587).
+        self.assertEqual(set(gac.MALLORN_BAND_UP), {'light', 'medium', 'heavy'})
+        for band, up in gac.MALLORN_BAND_UP.items():
+            self.assertEqual(gla.ML_BAND_UP[band], up, band)
+        self.assertEqual(gla.ML_BAND_UP['elite'], 'lord')
 
     def test_the_mallorn_step_up_never_reaches_lord_or_moves_a_worn_or_other_kit_piece(self):
         records = {
