@@ -114,7 +114,7 @@ N/A. Skills bake at hero CREATION (one-time, ~ms per hero). No per-tick / per-fr
 | Rivendell | 7 | Elrond, Celebrían, Elladan, Elrohir, Arwen, Glorfindel |
 | Lothlórien | 3 | Galadriel, Celeborn |
 | Mordor | 97 | 3 Nazgûl, Grishnâkh, Verina, Svala Redfang |
-| Isengard | 34 | Uglûk, Mauhûr, Lugdush, Lurtz, Sharku |
+| Isengard | 34 | Uglúk, Mauhûr, Lugdush, Lurtz, Sharku |
 | Dol Guldur | 59 | 6 compound chieftains (no Tolkien-canonical) |
 | Mount Gundabad | 50 | 5 chieftains incl. Bolgath |
 | Dale | 82 | (TAOM-invented Bardings) |
