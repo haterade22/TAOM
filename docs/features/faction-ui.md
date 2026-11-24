@@ -112,7 +112,9 @@ not its prefab, so nothing of Coop's is lost by the swap. Pinned by `ThemedMapBa
   Clicking a hero card or a Leader, Lord or Wanderer entry swaps it to that character, drawn from the
   resolved pick (`FactionPickService.Display`): the same body, race and battle gear the face generator and
   the player then get, no mount. The faction's race and weapon tweaks (`faction_viewport.json`) frame its
-  own character, also when that character is picked (Sauron's card on Mordor). The small painted cards stay as the buttons. Kysaro's large painted
+  own character, also when that character is picked (Sauron's card on Mordor). A Ringwraith or Sauron
+  anywhere else is drawn at human scale (`FactionRoster.ShownRace`), since those bodies overflow the frame;
+  only the picture changes, the pick keeps its race. The small painted cards stay as the buttons. Kysaro's large painted
   faction portraits (`fs_portrait_<faction>`) and hero reveal pictures (`fs_reveal_*`) are no longer
   drawn; their files are still in `RuntimeSprites`.
 - **Taking over a hero.** Mike, 2026-10-01: "When I pick an existing character like Thranduil from the
@@ -237,7 +239,7 @@ ICultureStageMovieOverride -> FactionScreenLauncher -> FactionScreenVM -> Factio
 | Themed Main Menu | on | Kysaro's main menu; the next time the menu opens |
 | Hide Game Version | on | hides the version line on the main menu (the TAOM log still records it); after a restart, because the game builds that line once |
 | Main Menu Video | on | the Sauron video behind the main menu; the next time the menu opens |
-| Mute Menu Music Under The Video | on | keeps the vanilla theme off the main menu while the video plays (needs Main Menu Video); vanilla's music returns once you leave the main menu |
+| Mute Menu Music Under The Video | on | keeps the vanilla theme off the main menu while the video plays (needs Main Menu Video), and off the new-game loading screen after it (2026-11-24: the theme used to start there and play through a long shader load); vanilla's music returns at the next state that calls for it |
 | Themed Loading Screens | on | Kysaro's paintings, never the same twice in a row; from the next loading screen |
 | Themed Skill Icons | on | on applies at the next main menu; off applies after a restart |
 

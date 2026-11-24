@@ -206,6 +206,28 @@ public class FactionRosterTests
     }
 
     [TestMethod]
+    public void ShownRace_ARingwraithOrSauron_IsDrawnAtHumanScale()
+    {
+        _adapter.RaceName(7).Returns("nazghul");
+        _adapter.RaceName(8).Returns("sauron");
+        _adapter.RaceName(3).Returns("elf");
+
+        Assert.AreEqual(0, _sut.ShownRace(Faction("overlordship_of_dol_guldur"), isFactionCharacter: true, race: 7));
+        Assert.AreEqual(0, _sut.ShownRace(Faction("kingdom_of_rohan"), isFactionCharacter: false, race: 8));
+        Assert.AreEqual(3, _sut.ShownRace(Faction("kingdom_of_lasgalen"), isFactionCharacter: false, race: 3));
+    }
+
+    [TestMethod]
+    public void ShownRace_TheFactionsTunedRace_WinsOnlyForItsOwnCharacter()
+    {
+        WriteConfig(FactionScreenConfigProvider.ViewportFile, "{ \"dominion_of_mordor\": { \"race\": 2 } }");
+        _adapter.RaceName(3).Returns("orc");
+
+        Assert.AreEqual(2, _sut.ShownRace(Faction("dominion_of_mordor"), isFactionCharacter: true, race: 3));
+        Assert.AreEqual(3, _sut.ShownRace(Faction("dominion_of_mordor"), isFactionCharacter: false, race: 3));
+    }
+
+    [TestMethod]
     public void ViewportTweaks_NoEntry_MeansNoOffsetAndWeaponsShown()
     {
         Assert.IsNull(_sut.ViewportRace(Faction("kingdom_of_rohan")));

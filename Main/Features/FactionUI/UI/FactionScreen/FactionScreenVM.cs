@@ -299,8 +299,7 @@ public sealed class FactionScreenVM : ViewModel
                 Character.IsFemale = display.IsFemale;
             }
             var isFactionCharacter = pick == null || pick.Id == _services.Roster.ViewportCharacter(info)?.Id;
-            if (isFactionCharacter && _services.Roster.ViewportRace(info) is { } race)
-                Character.Race = race;
+            Character.Race = _services.Roster.ShownRace(info, isFactionCharacter, Character.Race);
 
             var culture = character.Culture ?? TaleWorlds.ObjectSystem.MBObjectManager.Instance?.GetObject<CultureObject>(info.CultureId);
             if (culture != null)

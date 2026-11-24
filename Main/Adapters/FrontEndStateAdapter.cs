@@ -11,6 +11,8 @@ public sealed class FrontEndStateAdapter : IFrontEndStateAdapter
 {
     public bool IsMainMenuActive() => GameStateManager.Current?.ActiveState is InitialState;
 
+    public bool IsMenuMusicStateActive() => GameStateManager.Current?.ActiveState?.IsMusicMenuState == true;
+
     public bool IsInCharacterCreation() => GameStateManager.Current?.LastOrDefault<CharacterCreationState>() != null;
 
     // Every way a movie dies ends in IGauntletMovie.Release(), which sets IsReleased: the layer's own

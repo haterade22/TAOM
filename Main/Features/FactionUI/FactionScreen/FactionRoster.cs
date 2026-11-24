@@ -13,6 +13,8 @@ namespace TAOM.Features.FactionUI.FactionScreen;
 /// </summary>
 public sealed class FactionRoster
 {
+    private static readonly HashSet<string> HumanScaleRaces = new(StringComparer.OrdinalIgnoreCase) { "nazghul", "sauron" };
+
     private readonly IFactionRosterAdapter _roster;
     private readonly FactionScreenConfigProvider _config;
 
@@ -85,6 +87,18 @@ public sealed class FactionRoster
     /// knows it.</summary>
     public int? ViewportRace(FactionInfo info) =>
         Tweak(info)?.Race is { } race && race < _roster.RaceCount ? race : null;
+
+    /// <summary>
+    /// The race the 3D viewport draws a character of <paramref name="race"/> in: the faction's tuned race for its
+    /// own character, human scale (race 0) for a Ringwraith or Sauron, whose bodies overflow the frame (project
+    /// owner, 2026-11-24), else the character's own race. Only the picture changes; the pick keeps its race.
+    /// </summary>
+    public int ShownRace(FactionInfo info, bool isFactionCharacter, int race)
+    {
+        if (isFactionCharacter && ViewportRace(info) is { } tuned)
+            return tuned;
+        return HumanScaleRaces.Contains(_roster.RaceName(race) ?? "") ? 0 : race;
+    }
 
     public float ViewportOffset(FactionInfo info) => Tweak(info)?.Offset ?? 0f;
 

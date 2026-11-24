@@ -23,6 +23,15 @@ on a cold load, then one or two frames with the count falling, then a gap of 15 
 `shaders=0`. On 15 Nov the gap was 44 s (15:09:11 to 15:09:55) and the engine wrote 706 `compile_shader` lines in it,
 6 to 25 a second. Warm loads queued 0 to 20 and waited about 0.3 s.
 
+## Character creation (2026-11-24)
+
+The faction screen shows a 3D character for every faction and pick, so on a cold shader cache character creation
+compiles many shaders too. `FactionUITicker` calls `BattleShaderNoticeService.OnScreenTick` every application tick
+with "character creation is on the stack" (`IScreenShaderNotice`). While it is, the service reads the queued count
+(`IShaderCompileQueueAdapter`) and starts the same window from the same 50 queued, with no loading-screen line, and
+closes it when the queue is empty or character creation closes. A battle notice already up owns the window.
+Owed in game: on a cold cache, open the faction screen; the window counts while it loads and closes after.
+
 ## Architecture
 
 ### Design Challenge

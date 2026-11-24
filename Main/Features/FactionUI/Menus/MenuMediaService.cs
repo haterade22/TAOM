@@ -81,12 +81,13 @@ public sealed class MenuMediaService
         return true;
     }
 
-    /// <summary>True once, when the player has left the main menu while silenced: the caller sets the
-    /// music back to paused, so vanilla starts its menu theme on the next music-menu state (the new-game
-    /// loading screen) and, as in vanilla, stops it when character creation opens.</summary>
-    public bool OnTick(bool isMainMenu)
+    /// <summary>True once, when the player has left every music-menu state (the main menu and the new-game
+    /// loading screen) while silenced: the caller sets the music back to paused, so vanilla plays what the
+    /// next state calls for. Held through the loading screen (project owner, 2026-11-24), where vanilla's
+    /// theme used to start and play through a long load.</summary>
+    public bool OnTick(bool isMenuMusicState)
     {
-        if (!IsMenuMusicSilenced || isMainMenu)
+        if (!IsMenuMusicSilenced || isMenuMusicState)
             return false;
         IsMenuMusicSilenced = false;
         return true;

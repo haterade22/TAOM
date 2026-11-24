@@ -27,10 +27,12 @@ public sealed class FactionUITicker
     private readonly IMenuMusicAdapter _music;
     private readonly IFrontEndStateAdapter _state;
     private readonly FrontEndScreenEffects _effects;
+    private readonly BattleShaderNotice.IScreenShaderNotice _shaderNotice;
     private readonly IModLogger _logger;
     private bool _imagesReported;
     private bool _musicReported;
     private bool _effectsReported;
+    private bool _shadersReported;
 
     public FactionUITicker(
         FrontEndSpriteService sprites,
@@ -39,6 +41,7 @@ public sealed class FactionUITicker
         IMenuMusicAdapter music,
         IFrontEndStateAdapter state,
         FrontEndScreenEffects effects,
+        BattleShaderNotice.IScreenShaderNotice shaderNotice,
         IModLogger logger)
     {
         _sprites = sprites;
@@ -47,6 +50,7 @@ public sealed class FactionUITicker
         _music = music;
         _state = state;
         _effects = effects;
+        _shaderNotice = shaderNotice;
         _logger = logger;
     }
 
@@ -63,12 +67,21 @@ public sealed class FactionUITicker
 
         try
         {
-            if (_media.IsMenuMusicSilenced && _media.OnTick(_state.IsMainMenuActive()))
+            if (_media.IsMenuMusicSilenced && _media.OnTick(_state.IsMenuMusicStateActive()))
                 _music.MarkPaused(null);
         }
         catch (Exception ex)
         {
             Report(ref _musicReported, "menu music", ex);
+        }
+
+        try
+        {
+            _shaderNotice.OnScreenTick(_state.IsInCharacterCreation());
+        }
+        catch (Exception ex)
+        {
+            Report(ref _shadersReported, "shader notice", ex);
         }
 
         try

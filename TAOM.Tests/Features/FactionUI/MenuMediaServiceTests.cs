@@ -177,9 +177,9 @@ public class MenuMediaServiceTests
     {
         _sut.OnActivateMenuMode(isMainMenu: true);
 
-        Assert.IsFalse(_sut.OnTick(isMainMenu: true));
-        Assert.IsTrue(_sut.OnTick(isMainMenu: false));
-        Assert.IsFalse(_sut.OnTick(isMainMenu: false));
+        Assert.IsFalse(_sut.OnTick(isMenuMusicState: true));
+        Assert.IsTrue(_sut.OnTick(isMenuMusicState: false));
+        Assert.IsFalse(_sut.OnTick(isMenuMusicState: false));
     }
 
     [TestMethod]
@@ -188,6 +188,6 @@ public class MenuMediaServiceTests
         _sut.OnActivateMenuMode(isMainMenu: true);
         _settings.Value = new FactionUISettings(true, true, true, muteMenuMusic: false, true, true);
 
-        Assert.IsTrue(_sut.OnTick(isMainMenu: false));
+        Assert.IsTrue(_sut.OnTick(isMenuMusicState: false));
     }
 }

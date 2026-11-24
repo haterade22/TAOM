@@ -1,4 +1,5 @@
 using System;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 
@@ -11,22 +12,26 @@ namespace TAOM.Features.BattleShaderNotice;
 /// <c>compile_shader</c> log lines, and puts one fixed line on the loading screen, set in the frames before the stop.
 /// Called on the game thread only.
 /// </summary>
-public sealed class BattleShaderNoticeService
+public sealed class BattleShaderNoticeService : IScreenShaderNotice
 {
     private readonly BattleShaderNoticeGate _gate = new();
+    private readonly BattleShaderNoticeGate _screenGate = new();
     private readonly IBattleShaderNoticeRunner _runner;
     private readonly IBattleShaderNoticeTextSource _textSource;
     private readonly IDedicatedServerProvider _server;
     private readonly IModLogger _logger;
+    private readonly IShaderCompileQueueAdapter _queue;
     private bool? _isServer;
 
     public BattleShaderNoticeService(
-        IBattleShaderNoticeRunner runner, IBattleShaderNoticeTextSource textSource, IDedicatedServerProvider server, IModLogger logger)
+        IBattleShaderNoticeRunner runner, IBattleShaderNoticeTextSource textSource, IDedicatedServerProvider server, IModLogger logger,
+        IShaderCompileQueueAdapter queue)
     {
         _runner = runner;
         _textSource = textSource;
         _server = server;
         _logger = logger;
+        _queue = queue;
     }
 
     /// <summary>True from the frame the notice starts until the frame the render wait ends.</summary>
@@ -52,7 +57,7 @@ public sealed class BattleShaderNoticeService
         switch (_gate.Observe(waitingForRender, queuedShaders))
         {
             case BattleShaderNoticeAction.Start:
-                Start(queuedShaders);
+                Start(queuedShaders, "mission", withLoadingLine: true);
                 break;
             case BattleShaderNoticeAction.Stop:
                 LoadingScreenLine = null;
@@ -61,7 +66,29 @@ public sealed class BattleShaderNoticeService
         }
     }
 
-    private void Start(int queuedShaders)
+    /// <summary>
+    /// Character creation (project owner, 2026-11-24): the faction screen's and face generator's 3D characters compile
+    /// their shaders on a cold cache. The same window shows from the same 50 queued and closes when the queue is empty
+    /// or the screen closes. A battle notice already up owns the window.
+    /// </summary>
+    public void OnScreenTick(bool screenOpen)
+    {
+        if (IsDedicatedServer || _gate.Shown) return;
+        if (!screenOpen && !_screenGate.Shown) return;
+
+        int queued = screenOpen ? _queue.QueuedShaders() : 0;
+        switch (_screenGate.Observe(screenOpen && queued > 0, queued))
+        {
+            case BattleShaderNoticeAction.Start:
+                Start(queued, "screen", withLoadingLine: false);
+                break;
+            case BattleShaderNoticeAction.Stop:
+                _runner.Stop();
+                break;
+        }
+    }
+
+    private void Start(int queuedShaders, string where, bool withLoadingLine)
     {
         BattleShaderNoticeTexts texts;
         try
@@ -74,8 +101,9 @@ public sealed class BattleShaderNoticeService
             return;
         }
 
-        LoadingScreenLine = texts.LoadingLine;
-        _logger.LogInfo($"[BattleShaderNotice] {queuedShaders} shaders queued for this mission: notice started");
+        if (withLoadingLine)
+            LoadingScreenLine = texts.LoadingLine;
+        _logger.LogInfo($"[BattleShaderNotice] {queuedShaders} shaders queued for this {where}: notice started");
         try
         {
             _runner.Start(texts.Window);

@@ -2,6 +2,7 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.BattleShaderNotice;
 using TAOM.Features.CoopInterop;
@@ -16,6 +17,7 @@ public class BattleShaderNoticeServiceTests
     private IBattleShaderNoticeTextSource _textSource = null!;
     private IDedicatedServerProvider _server = null!;
     private IModLogger _logger = null!;
+    private IShaderCompileQueueAdapter _queue = null!;
     private BattleShaderNoticeTexts _texts = null!;
 
     [TestInitialize]
@@ -25,13 +27,66 @@ public class BattleShaderNoticeServiceTests
         _textSource = Substitute.For<IBattleShaderNoticeTextSource>();
         _server = Substitute.For<IDedicatedServerProvider>();
         _logger = Substitute.For<IModLogger>();
+        _queue = Substitute.For<IShaderCompileQueueAdapter>();
         _texts = new BattleShaderNoticeTexts(
             new ShaderCompileNoticeTexts("Preparing this scene: %COUNT%", "Preparing this scene: %COUNT%", "detail"),
             "loading line");
         _textSource.Resolve().Returns(_texts);
     }
 
-    private BattleShaderNoticeService NewService() => new(_runner, _textSource, _server, _logger);
+    private BattleShaderNoticeService NewService() => new(_runner, _textSource, _server, _logger, _queue);
+
+    [TestMethod]
+    public void OnScreenTick_CharacterCreationCompilesMany_ShowsTheWindowUntilTheQueueEmpties()
+    {
+        var service = NewService();
+        _queue.QueuedShaders().Returns(640);
+
+        service.OnScreenTick(screenOpen: true);
+        _runner.Received(1).Start(_texts.Window);
+        Assert.IsNull(service.LoadingScreenLine, "a screen has no loading-screen line");
+
+        _queue.QueuedShaders().Returns(0);
+        service.OnScreenTick(screenOpen: true);
+        _runner.Received(1).Stop();
+    }
+
+    [TestMethod]
+    public void OnScreenTick_AFewShaders_ShowsNothing()
+    {
+        var service = NewService();
+        _queue.QueuedShaders().Returns(12);
+
+        service.OnScreenTick(screenOpen: true);
+
+        _runner.DidNotReceiveWithAnyArgs().Start(default!);
+    }
+
+    [TestMethod]
+    public void OnScreenTick_ScreenClosed_ReadsNoQueueAndClosesAShownWindow()
+    {
+        var service = NewService();
+        service.OnScreenTick(screenOpen: false);
+        _queue.DidNotReceive().QueuedShaders();
+
+        _queue.QueuedShaders().Returns(300);
+        service.OnScreenTick(screenOpen: true);
+        service.OnScreenTick(screenOpen: false);
+
+        _runner.Received(1).Stop();
+    }
+
+    [TestMethod]
+    public void OnScreenTick_WhileABattleNoticeIsUp_LeavesTheWindowAlone()
+    {
+        var service = NewService();
+        service.OnMissionStateTick(waitingForRender: true, queuedShaders: 1192);
+        _queue.QueuedShaders().Returns(0);
+
+        service.OnScreenTick(screenOpen: true);
+
+        _runner.DidNotReceive().Stop();
+    }
 
     [TestMethod]
     public void OnMissionStateTick_ColdLoadStarts_StartsTheWindowWithTheResolvedTexts()
