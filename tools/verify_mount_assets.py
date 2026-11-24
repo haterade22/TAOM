@@ -100,8 +100,10 @@ CREATURES = {
         # (action, clip) rows exempt from the quad_movement check. These clips clone warg_trot_stand, warg_canter_stand
         # and warg_forward_gallop_left_foot_stand, which have no quad_movement either (byte scan, 2026-11-04). The pair
         # is the key: the same clip bound to a moving action still fails. gen_dire_wolf_anim_clips.ps1 -Verify holds
-        # the flags to the warg twin.
+        # the flags to the warg twin. The walk's twin (#1565) is tools/dire_wolf_gait_plan.json's: a pace's "none" row
+        # on an untagged in-place clip is vanilla's own shape (as_horse binds act_horse_forward_walk_stand to gait_walkfast).
         "untagged_ok": (
+            ("act_warg_forward_walk_stand", "dire_wolf_walk_stand"),
             ("act_warg_forward_trot_stand", "dire_wolf_trot_stand"),
             ("act_warg_forward_canter_stand", "dire_wolf_canter_stand"),
             ("act_warg_forward_gallop_right_foot_stand", "dire_wolf_forward_gallop_left_foot_stand"),

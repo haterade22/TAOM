@@ -1,0 +1,17 @@
+[
+  {"clip": "dire_wolf_walkfast", "master": "adod_wolf_walk", "source1": 0, "source2": 32, "duration": 0.82,
+   "travel": 2.08, "limits": [0.1, 2.4]},
+  {"clip": "dire_wolf_walk_stand", "template": "dire_wolf_forward_gallop_left_foot_stand", "master": "adod_wolf_walk",
+   "source1": 0, "source2": 32, "duration": 2.38},
+  {"clip": "dire_wolf_trot", "master": "adod_wolf_trot", "source1": 0, "source2": 24, "duration": 0.76,
+   "travel": 3.94, "limits": [2.2, 4.8]},
+  {"clip": "dire_wolf_trot_stand", "master": "adod_wolf_trot", "source1": 0, "source2": 24, "duration": 1.66},
+  {"clip": "dire_wolf_canter", "master": "adod_wolf_gallop", "source1": 0, "source2": 16, "duration": 0.75,
+   "travel": 6.22, "limits": [4.6, 8.0]},
+  {"clip": "dire_wolf_canter_stand", "master": "adod_wolf_gallop", "source1": 0, "source2": 16, "duration": 1.30},
+  {"clip": "dire_wolf_canter_strafe", "master": "adod_wolf_gallop", "source1": 0, "source2": 16, "duration": 0.75},
+  {"clip": "dire_wolf_forward_gallop_left_foot", "master": "adod_wolf_gallop", "source1": 0, "source2": 16,
+   "duration": 0.42, "travel": 6.22, "limits": [8.0, 14.1]},
+  {"clip": "dire_wolf_forward_gallop_left_foot_stand", "master": "adod_wolf_gallop", "source1": 0, "source2": 16,
+   "duration": 0.75}
+]

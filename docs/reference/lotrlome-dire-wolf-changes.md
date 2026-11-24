@@ -77,6 +77,77 @@ exactly 2.08 times the pack's. The 0.52 move is in the skeleton's Pelvis rest po
 Nothing. The repo's build deploys the troops, the costs and `DsAssetPackages/taom_creature_skeletons.tpac`, which
 now holds the wolf skeleton (`python tools/build_ds_skeleton_pack.py --check`).
 
+## Gaits (#1565, 2026-11-23)
+
+The wolf's gait records were clones of the warg's with the pack's own `Duration` and the pack's travel times
+`RIG_SCALE`. Measured on the installed masters (`check_gait_stride.measure` on the paw joints `L Finger0`,
+`R Finger0`, `L Foot`, `R Foot` of `adod_wolf_armature_unused`, each paw's height taken from its own lowest
+point), the paws cover far more ground than the pack's travel claims, so the legs turned over too fast at every
+speed: at mid trot the body covered 2.3 m in a loop while the paws covered 3.94 m. The walk also had one record
+on its front row and its "none" row, as the warg's had.
+
+`python tools/repoint_anim_clip.py --plan tools/dire_wolf_gait_plan.json --under creature/direwolf/animations
+--apply`, 2026-11-23 20:29. Every file is under `Assets/creature/direwolf/animations/`. Backups:
+`<file>.bak-repoint-20261123-202916` beside each changed record. The new record has none.
+
+| Record | Keys (kept) | `Duration` | Travel | Limits (kept) |
+|---|---|---|---|---|
+| `dire_wolf_walkfast` | `adod_wolf_walk` 0 to 32 | 1.00 to 0.82 | 1.248 to 2.08 | 0.1..2.4 |
+| `dire_wolf_walk_stand` | NEW, `adod_wolf_walk` 0 to 32 | 2.38 | none | none |
+| `dire_wolf_trot` | `adod_wolf_trot` 0 to 24 | 0.66 to 0.76 | 1.706 to 3.94 | 2.2..4.8 |
+| `dire_wolf_trot_stand` | the same | 0.66 to 1.66 | none | none |
+| `dire_wolf_canter` | `adod_wolf_gallop` 1 to 16, now 0 to 16 | 0.50 to 0.75 | 2.496 to 6.22 | 4.6..8.0 |
+| `dire_wolf_canter_stand` | the same | 0.50 to 1.30 | none | none |
+| `dire_wolf_canter_strafe` | the same | 0.50 to 0.75 | 0.499, kept | 0..0 |
+| `dire_wolf_forward_gallop_left_foot` | `adod_wolf_gallop` 0 to 16 | 0.43 to 0.42 | 4.576 to 6.22 | 8.0..14.1 |
+| `dire_wolf_forward_gallop_left_foot_stand` | the same | 0.43 to 0.75 | none | none |
+
+One row of `as_dire_wolf` changes with them: `act_warg_forward_walk_stand` plays `dire_wolf_walk_stand`, where it
+played `dire_wolf_walkfast`. `python tools/bind_warg_clips.py --apply` writes it after the cook, with the warg's
+row, in the live file and in the snapshot (backups `.bak-warg-bind-<stamp>`).
+
+Cooked on 2026-11-24 at 10:17 and bound at 10:20 (backups `.bak-warg-bind-20261124-102002`); both checks below
+exit 0. Each in-place twin's cache entry holds byte for byte the payload of its front record's entry (walk 7,080
+bytes, trot 5,791, canter 4,139, gallop 4,334), so the new `dire_wolf_walk_stand` plays the walk's keys. No game
+has loaded the new row of `as_dire_wolf` yet.
+
+- **The method** is the warg's ([ledger](lotrlome-warg-gait-changes.md)): travel is what the paws cover, the
+  in-place twin carries the loop time of the pace's lower limit and the front record that of the upper, and the two
+  values keep the ground the body covers in a loop within 8% of the travel over the pace (the walk from 1.2 m/s
+  up). `tools/tests/test_dire_wolf_gait_plan.py` holds the numbers and repeats the measure on the installed
+  masters.
+- **The legs are slower now, on purpose.** A loop of the trot takes 1.66 s to 0.76 s where it took 0.66 s, and a
+  loop of the canter 1.30 s to 0.75 s where it took 0.50 s. The rig is the pack's wolf at 2.08 times its size, and
+  its strides are that much longer (6.2 m at a gallop); the pack's loop times belong to the small wolf.
+- **The canter plays the gallop's whole loop.** The pack cut it to keys 1 to 16 of a master keyed 0 to 16, so
+  each loop skipped its first interval and the paws jumped up to 0.39 m at the seam (keys 0 and 16 are one pose;
+  found by the Codex pre-review of this change). The three canter records play 0 to 16 since 2026-11-24 10:38
+  (backups `.bak-repoint-20261124-103840`; for the two that the first write changed, the pack's own record is the
+  `-202916` backup). The canter and the gallop are now one loop with one travel, and where they meet, at
+  8.0 m/s, they have one loop time (0.75 s). Cooked on 2026-11-24 at 10:57: the canter's two cache entries now hold
+  byte for byte the payload of the gallop's (4,334 bytes), where they held a shorter one (4,139 bytes).
+- **The limits are kept.** With `taom_body_length` 115 the gallop begins near 9.2 m/s on the field. Nobody has
+  measured the wolf's top speed; the warg, whose stats its items copy, reached 10.0 m/s. A charge is therefore
+  mostly the canter.
+
+Not changed: the walk's, the trot's and the gallop's strafe records, the backward and turn records, and the
+step points. No gate holds the step points: a wolf record that the generator makes again takes the warg record's
+of that day, which changes when its footsteps sound and nothing else. `tools/gen_dire_wolf_anim_clips.ps1`
+still makes all 40 records with the pack's values, and no longer holds the `Duration` and the travel of the eight
+the plan names (its `-Verify` named two wolf records after #1563 changed the warg's travel, because it read the
+warg's records for the wolf's strafe ratios; those six ratios are numbers in the script now).
+
+Check: `python tools/repoint_anim_clip.py --plan tools/dire_wolf_gait_plan.json --under
+creature/direwolf/animations --check` (the `dire-wolf-gaits` row of `tools/data_gates.py`) and `python
+tools/bind_warg_clips.py --check` (the `warg-clips` row). Roll back: copy the two `.bak-warg-bind-<stamp>` files
+over the two `action_sets.xml` files, then each `.bak-repoint-20261123-202916` file over its record, then start
+the Kit once.
+
+Owed: one battle load with a dire wolf (no unattended step has a wolf rider), and, each by a person's eye, a
+wolf at a walk, a trot and a charge. The first thing to judge is the canter's
+tempo. If the long, slower bounds read as too slow, the alternative is the trot's master on the canter's rows
+(a 3.94 m stride, 0.86 s to 0.49 s a loop): three rows of the plan.
+
 ## Replay after a reinstall
 
 1. Copy the meshes and animation FBX back from `E:\LOTRAOMAssets\_reskin_out\dire_wolf_x208`, or run
@@ -92,10 +163,15 @@ now holds the wolf skeleton (`python tools/build_ds_skeleton_pack.py --check`).
    python tools/skeleton_hit_capsules.py patch --tpac <grey geo> --fit <fit.json> --apply
    ```
 4. In Windows PowerShell 5.1, run `powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/gen_dire_wolf_anim_clips.ps1 -Apply`.
+   Then run `python tools/repoint_anim_clip.py --plan tools/dire_wolf_gait_plan.json --under creature/direwolf/animations --apply`
+   (the gaits, #1565).
 5. Open the Kit once, save and close it, so that it writes the clip entries.
 6. Run `python tools/check_rdc_entries.py --under creature/direwolf`.
-7. Run `python tools/apply_dire_wolf_armory.py --apply`. A second run reports nothing to write.
-8. Run `python tools/verify_mount_assets.py dire_wolf`, `python tools/audit_mount_parity.py`,
+7. Run `python tools/apply_dire_wolf_armory.py --apply`. A second run reports nothing to write. Then, and not
+   before, run `python tools/bind_warg_clips.py --apply`: it binds each walk's twin, it needs `as_dire_wolf`, which
+   this step makes, and it refuses before the cook of step 5. After a reinstall the warg's row waits for this
+   step too, because the tool writes both rows or none.
+8. Run `python tools/verify_mount_assets.py dire_wolf` (the `dire-wolf-body` row of `tools/data_gates.py`), `python tools/audit_mount_parity.py`,
    `python tools/validate_xml_schemas.py --live` and `python tools/build_ds_skeleton_pack.py --check`.
 
 ## Removing the wolves

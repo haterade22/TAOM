@@ -1740,3 +1740,34 @@ time in the canter, on trot legs that covered 2.71 m while the body moved about 
   `tools/data_gates.py`.
 - **Source:** issue #1563; [ledger](../../reference/lotrlome-warg-gait-changes.md);
   `tools/tests/test_warg_gait_plan.py`, `tools/tests/test_repoint_anim_clip.py`.
+
+### A corrected record is a change for every record cloned from it and every tool that reads it (#1565, 2026-11-24)
+#1563 corrected the warg's canter and gallop records. Three things that depend on those records were not in its
+scope and went wrong unseen. `tools/gen_dire_wolf_anim_clips.ps1` read the warg's travel to plan the dire wolf's
+strafe travel, so its `-Verify` named two wolf records nobody had changed. The rider's two gallop turn clips
+carried no `synch_with_horse` and had kept step with the warg only because both loops took 0.58 s; the gallop's
+loop time now follows its speed. And the dire wolf's own gaits, clones of the warg's records with the pack's
+numbers, claimed 26% to 57% less ground than its paws cover. The maintainer's question ("anything else that uses
+the wargs animations") found all three.
+- **Why missed:** the #1563 review asked who PLAYS the seven records (action sets, usage rows) and never who was
+  MADE from them or who is timed BESIDE them. `-Verify` was in no gate, so its failure had no reader.
+- **Prevent:** before a creature's gait record changes, list three kinds of dependant and name each in the plan:
+  the action sets that bind it, the records cloned from it (`gen_*_anim_clips.ps1` `$MAP` tables, another
+  creature's set derived from this one) and the clips that play beside it without a sync flag (a rider clip with
+  no `synch_with_horse`, a turn row with no `synch_with_movement`). A generator's `-Verify` belongs in a test or
+  a gate, and a value it derives from another creature's live record is a literal with its date.
+- **Source:** issue #1565; `docs/reference/lotrlome-dire-wolf-changes.md` "Gaits";
+  `docs/reference/lotrlome-warg-gait-changes.md` "The walk and the trot (#1565)";
+  `tools/tests/test_gen_dire_wolf_anim_clips.py` (`test_the_installed_wolf_records_are_the_plan`).
+
+### A loop is its master's whole cycle: hold the first key to the last (#1565, 2026-11-24)
+The pack's dire wolf canter played keys 1 to 16 of a gallop master keyed 0 to 16. Keys 0 and 16 are one pose, so
+the cut loop skipped one interval and the paws jumped up to 0.39 m at each seam. The stride measure passed it:
+the median speed of the planted keys does not see a seam.
+- **Why missed:** the author kept the range "as the pack made it" and measured only the stride. The Codex
+  pre-review decoded the keys and compared the range's two ends.
+- **Prevent:** a test that measures a gait's stride on its master also holds the loop closed (the paws at the
+  first key and at the key after the last agree within 0.02 m) and each paw planted at least twice. A range that
+  a pack cut is evidence of nothing.
+- **Source:** issue #1565; `tools/tests/test_dire_wolf_gait_plan.py`
+  (`test_each_gaits_loop_closes_and_each_paw_is_planted_in_it`).

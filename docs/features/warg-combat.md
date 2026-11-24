@@ -156,10 +156,14 @@ step 3 above never happens.
 ## Gaits
 
 The warg's walk, trot, canter and gallop are clip records in the Armory, not code. Their masters, travel, pace
-limits and cadence, and the change of 2026-11-23 that gave the canter its own master and made the canter's and
-the gallop's cadence follow the speed (#1563), are in
-[lotrlome-warg-gait-changes.md](../reference/lotrlome-warg-gait-changes.md). The gate is the `warg-gaits` row of
-`tools/data_gates.py`. A reinstall of the Armory reverts the records.
+limits and cadence are in [lotrlome-warg-gait-changes.md](../reference/lotrlome-warg-gait-changes.md), with the
+two changes of 2026-11-23: the canter got its own master and the canter's and the gallop's cadence follow the
+speed (#1563), then the walk and the trot got the travel their paws cover and a cadence that follows the speed,
+for which the walk needed an in-place twin record of its own (#1565). The same work tied the rider's two gallop
+turn clips to the warg's stride and gave the dire wolf's gaits the same treatment
+([dire wolf ledger](../reference/lotrlome-dire-wolf-changes.md)). The gates are the `warg-gaits`, `warg-clips`
+and `dire-wolf-gaits` rows of `tools/data_gates.py`. A reinstall of the Armory reverts the records and the twins'
+rows.
 
 ### The warg gait step of the command trial
 
@@ -201,17 +205,22 @@ the `warg-gaits` gate, and the legs by a person's eye.
 
 ## How to verify in game
 
-For the gaits (#1563), after any change to the warg's clip records and one Modding Kit start:
+For the gaits (#1563, #1565), after any change to the warg's clip records and one Modding Kit start:
 
 1. `python tools/repoint_anim_clip.py --plan tools/warg_gait_plan.json --under creature/warg/animations --check`
-   exits 0 (each record `DONE` and `cooked=True`).
+   exits 0 (each record `DONE` and `cooked=True`), and `python tools/bind_warg_clips.py --check` exits 0.
 2. Start a custom battle with warg riders in the player's army and order a charge across open ground.
 3. At a medium run (the canter, about 5 to 7.7 m/s) and at full speed (the gallop), the paws keep pace with the
    ground: no slide, and no legs that turn over slowly under a fast body.
 4. Turn the formation at speed, and watch the change from canter to gallop: no jump in the legs.
 5. Repeat with a fell warg rider.
+6. Order the riders to follow you, and walk your own mount: the wargs walk (up to about 2.6 m/s) with paws
+   that keep pace with the ground. Ride a little faster, so that they trot (about 2.4 to 5.3 m/s): the same. In
+   the first steps from a stand the legs still turn over faster than the ground passes; that is the known limit.
 
-Checked on 2026-11-23 by the maintainer: step 3. Steps 4 and 5 are owed.
+7. In a gallop turn, the rider leans and rises with the warg, not at a rhythm of its own.
+
+Checked on 2026-11-23 by the maintainer: step 3. Steps 4, 5, 6 and 7 are owed.
 
 ## Bannerlord 1.3.12 Gotchas
 
@@ -253,6 +262,13 @@ Checked on 2026-11-23 by the maintainer: step 3. Steps 4 and 5 are owed.
 
 ## Changelog
 
+- 2026-11-23 (#1565): the walk and the trot. Both records claimed a travel their paws do not cover (1.6 m
+  against 1.80 m, 2.9 m against 2.71 m) and kept one cadence at every speed; the walk could not do otherwise,
+  because one record sat on both of its rows. Three records were rewritten, the walk got an in-place twin
+  (`warg_walk_stand`) and `as_warg` binds it ([ledger](../reference/lotrlome-warg-gait-changes.md)). New: the
+  `template` field of `tools/repoint_anim_clip.py`, `tools/bind_warg_clips.py` and the `warg-clips` gate. The
+  rider's two gallop turn clips got `synch_with_horse`: since #1563 they ran at a loop time the gallop no longer
+  has. No C# changed.
 - 2026-11-23 (#1563): players reported AI warg riders that "walk". The wargs ran at full speed; the canter
   record played the trot's keys, the gallop record claimed twice the ground its paws cover, and each pace kept
   one cadence. Seven clip records in the Armory were rewritten

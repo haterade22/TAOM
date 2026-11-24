@@ -125,6 +125,14 @@ class GateTests(unittest.TestCase):
         self.assertEqual(code, 1, out)
         self.assertIn('animation="x_trot"', out)
 
+    def test_the_dire_wolf_exempts_each_in_place_twin_its_gait_plan_binds(self):
+        """A pace's "none" row plays an in-place twin with no quad_movement, as vanilla's does
+        (act_horse_forward_walk_stand plays gait_walkfast). #1565 gave the wolf's walk its twin, and this list
+        did not know it: the gate printed "do NOT battle-test" for a row in vanilla's own shape."""
+        pairs = set(vma.CREATURES["dire_wolf"]["untagged_ok"])
+        self.assertIn(("act_warg_forward_walk_stand", "dire_wolf_walk_stand"), pairs)
+        self.assertEqual(len(pairs), 5)
+
     def test_an_exempt_clip_bound_to_another_action_fails(self):
         self._write("action_sets.xml", SETS.replace('type="act_x_trot" animation="x_trot"',
                                                     'type="act_x_trot" animation="x_trot_stand"'))

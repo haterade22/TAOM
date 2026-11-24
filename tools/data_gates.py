@@ -122,10 +122,17 @@ ELEPHANT_GLOBS = CREATURE_GLOBS + (
 SPIDER_GLOBS = CREATURE_GLOBS + (
     "*/creature/spider/*.tpac", "*tools/check_gait_stride.py", "*tools/bind_spider_clips.py", "*tools/spider_gait.py",
     "*tools/elephant_write_masters.py", "*tools/gen_elephant_anim_clips.ps1")
-# The warg's clip records and masters, the Armory's cache entries (the gate reads the cook of seven of them, and a
-# cache entry is named by a GUID, not by its creature), the plan that sets the records, and the tool that writes them (#1563).
+# The warg's clip records and masters, the Armory's cache entries (the gate reads the cook of each planned record,
+# and a cache entry is named by a GUID, not by its creature), the plan that sets the records, and the tool that writes
+# them (#1563, #1565).
+# The check also runs creature_fit.master_item (each master's GUID) and _gamedir (the install).
+GAIT_TOOL_GLOBS = ("*tools/repoint_anim_clip.py", "*tools/set_clip_balance_name.py", "*tools/creature_fit.py",
+                   "*tools/_gamedir.py")
 WARG_GLOBS = ("*/creature/warg/animations/*.tpac", "*/lotrlome_armory/runtimedatacache/*.rdc",
-              "*tools/warg_gait_plan.json", "*tools/repoint_anim_clip.py", "*tools/set_clip_balance_name.py")
+              "*tools/warg_gait_plan.json") + GAIT_TOOL_GLOBS
+# The same for the dire wolf, whose gait records its own plan sets (#1565).
+DIRE_WOLF_GLOBS = ("*/creature/direwolf/animations/*.tpac", "*/lotrlome_armory/runtimedatacache/*.rdc",
+                   "*tools/dire_wolf_gait_plan.json") + GAIT_TOOL_GLOBS
 FBX_GLOBS = ("*/assetsources/*.fbx",)
 LANG_GLOBS = ("*/languages/*.xml", "*/taom_module_strings.xml", "*/taom_xslt_strings.xml")
 # Every source and output of generate_name_localization_strings.py CATEGORIES not already in TROOP_GLOBS,
@@ -321,9 +328,26 @@ GATES = (
     Gate("warg-gaits", "warg clip records, their plan and its tool", WARG_GLOBS,
          ("python", "tools/repoint_anim_clip.py", "--plan", "tools/warg_gait_plan.json", "--under",
           "creature/warg/animations", "--check"), ("docs/reference/lotrlome-warg-gait-changes.md",),
-         note="a reinstall or an art drop puts the canter back on the trot's keys and the gallop back on a travel "
-              "twice what its paws cover, and no other gate sees it; exit 1 also while a changed record waits for "
-              "its cook (start the Modding Kit once)"),
+         note="a reinstall or an art drop puts the canter back on the trot's keys, the gallop back on a travel "
+              "twice what its paws cover and each pace back on one loop time, and it removes the walk's in-place "
+              "twin; no other gate sees it; exit 1 also while a changed record waits for its cook (start the "
+              "Modding Kit once)"),
+    Gate("dire-wolf-gaits", "dire wolf clip records, their plan and its tool", DIRE_WOLF_GLOBS,
+         ("python", "tools/repoint_anim_clip.py", "--plan", "tools/dire_wolf_gait_plan.json", "--under",
+          "creature/direwolf/animations", "--check"), ("docs/reference/lotrlome-dire-wolf-changes.md",),
+         note="a reinstall, or a run of gen_dire_wolf_anim_clips.ps1 on a folder without the records, puts each gait "
+              "back on the pack's travel and Duration (26% to 57% less ground than the paws cover) and removes the "
+              "walk's in-place twin; exit 1 also while a changed record waits for its cook"),
+    Gate("dire-wolf-body", "dire wolf action sets, usage rows, clip packages and the mount asset check",
+         CREATURE_GLOBS + ("*/creature/direwolf/*.tpac", "*tools/verify_mount_assets.py"),
+         ("python", "tools/verify_mount_assets.py", "dire_wolf"), ("docs/features/dire-wolf.md",),
+         note="every clip on a moving row carries its quad_movement tag and no row names a clip that is not there; "
+              "a new in-place twin needs its exact (action, clip) pair in the tool's untagged_ok list (#1565)"),
+    Gate("warg-clips", "action sets and the warg's bind tool", ("*/action_sets.xml", "*tools/bind_warg_clips.py"),
+         ("python", "tools/bind_warg_clips.py", "--check"), ("docs/reference/lotrlome-warg-gait-changes.md",),
+         note="a reinstall puts the walk's \"none\" row of as_warg and of as_dire_wolf back on the walk's front "
+              "record, so the walk has one loop time again; the live file and the repo's snapshot must both carry "
+              "both bindings"),
     Gate("dwarf-attacks", "dwarf attack actions and their as_dwarf_warrior rows", CREATURE_GLOBS,
          ("python", "tools/bind_dwarf_attack_actions.py", "--check"), ("docs/features/dwarf-attacks.md",),
          note="a reinstall drops the two declarations and rows, and parity still passes; it also fails while the "
