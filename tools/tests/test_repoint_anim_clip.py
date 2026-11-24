@@ -602,7 +602,7 @@ class TemplateTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             made = self.folder(d)
             row = rp.plan([self.ROW], d)[0]
-            with self.assertRaises(TypeError):
+            with self.assertRaisesRegex(rp.RepointError, "TypeError"):
                 rp.apply([row._replace(new="not bytes")], stamp="t")      # the file is open when the write fails
             self.assertFalse(os.path.exists(made))
             with mock.patch.object(rp.scb, "checksum_ok", return_value=False), self.assertRaises(rp.RepointError):
@@ -659,6 +659,53 @@ class TemplateTests(unittest.TestCase):
             self.assertRegex(out.getvalue(), r"PENDING\s+warg_walk_stand")
             self.assertIn("warg_trot_stand", out.getvalue())
             self.assertFalse(os.path.exists(made))
+
+
+class LowFindingTests(unittest.TestCase):
+    """The low findings of the #1563 review (#1566): a half-done --apply says how far it got, --under stays inside
+    the module's Assets folder, and a NaN range is refused."""
+
+    def test_a_nan_range_is_refused(self):
+        for s1, s2 in ((float("nan"), 50.0), (10.0, float("nan")), (float("inf"), 50.0)):
+            with self.assertRaisesRegex(rp.RepointError, "source"):
+                rp.repoint(clip(), uuid.uuid4(), s1, s2)
+
+    def test_a_failure_on_a_middle_row_says_how_far_apply_got(self):
+        with tempfile.TemporaryDirectory() as d:
+            rows = []
+            for i in range(3):
+                name = "anim_x_%d" % i
+                path = os.path.join(d, name + "_anm.tpac")
+                buf = clip(name)
+                with open(path, "wb") as fh:
+                    fh.write(buf)
+                new = rp.repoint(buf, uuid.uuid4(), 27.0, 59.0)
+                rows.append(rp.Row(name, path, buf, new, True, "m", None))
+            rows[1] = rows[1]._replace(new="not bytes")
+            with self.assertRaises(rp.RepointError) as ctx:
+                rp.apply(rows, stamp="t")
+            text = str(ctx.exception)
+            self.assertIn("anim_x_1", text)
+            self.assertIn("1 of 3", text)
+            self.assertIn("anim_x_0", text)
+            self.assertEqual(read(rows[1].path), rows[1].buf, "the failed row is restored")
+            self.assertEqual(read(rows[2].path), rows[2].buf, "the later row is untouched")
+
+    def test_under_resolves_inside_assets_and_refuses_an_escape(self):
+        ok = rp.under_folder("M", "creature/warg/animations")
+        self.assertEqual(ok, os.path.join("M", "Assets", "creature", "warg", "animations"))
+        for bad in ("../x", "creature/../../x", "/abs/path", "C:/abs", "C:\\abs", "a\\..\\b", "", "."):
+            with self.assertRaises(rp.RepointError, msg=bad):
+                rp.under_folder("M", bad)
+
+    def test_main_refuses_an_escaping_under_with_exit_1(self):
+        import contextlib
+        import io
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = rp.main(["--plan", "p.json", "--module", "M", "--under", "../outside", "--check"])
+        self.assertEqual(code, 1)
+        self.assertIn("refused", out.getvalue())
 
 
 if __name__ == "__main__":

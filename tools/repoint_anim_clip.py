@@ -58,7 +58,8 @@ folder, no xxhash, or --apply while the game or the Kit runs).
 The plan is a JSON list of {"clip", "master", "source1", "source2", optional "duration", "travel", "limits",
 "step_points", "flags", "template"}; a field not given keeps the clip's own value. --apply backs each package
 up to `<file>.bak-repoint-<stamp>` (not a .tpac, so no scanner reads it), writes, re-reads and verifies, and restores
-on any failure.
+on any failure; a failure on a middle row says which clip failed and how many were written before it.
+--under must stay inside the module's Assets folder (no absolute path, drive or `..`).
 """
 import argparse
 import datetime as dt
@@ -145,6 +146,7 @@ def repoint(buf, master_guid, source1, source2, duration=None, travel=None, limi
     """New package bytes playing `master_guid` from source1 to source2 (either way round) over `duration`
     seconds, with the gait fields and the flag list a row gave; a field that is None keeps the clip's own value.
     `rest_frame_played`: a record already plays this master from frame 0, so frame 0 is a key of the loop. Pure."""
+    source1, source2 = _floats("source1/source2", [source1, source2], 2)
     if min(source1, source2) < 1 and not (rest_frame_played and min(source1, source2) == 0):
         raise RepointError("a range must not touch frame 0, the master's rest frame")
     before = scb.parse(buf)
@@ -310,24 +312,36 @@ def apply(rows, stamp=None):
     for r in todo:
         if r.buf is not None and os.path.exists(r.path + ".bak-repoint-" + stamp):
             raise RepointError("backup exists: %s.bak-repoint-%s" % (r.path, stamp))
+    written = []
     for r in todo:
-        if r.buf is None:
-            _make(r)
-            continue
-        with open(r.path + ".bak-repoint-" + stamp, "wb") as fh:
-            fh.write(r.buf)
         try:
-            with open(r.path, "wb") as fh:
-                fh.write(r.new)
-            with open(r.path, "rb") as fh:
-                if fh.read() != r.new or not scb.checksum_ok(r.new):
-                    raise RepointError("%s: read-back or checksum differs" % r.clip)
-        except Exception:
-            with open(r.path, "wb") as fh:
-                fh.write(r.buf)
-            raise
-        print("written %s -> %s %s (backup .bak-repoint-%s)" % (r.clip, r.master, _range(r.new), stamp))
+            _write_row(r, stamp)
+        except Exception as exc:
+            raise RepointError("%s failed (%s: %s). %d of %d changed record(s) were written before it%s; this one is "
+                               "restored and the rest are untouched" % (
+                                   r.clip, type(exc).__name__, exc, len(written), len(todo),
+                                   " (" + ", ".join(written) + ")" if written else "")) from exc
+        written.append(r.clip)
     return len(todo)
+
+
+def _write_row(r, stamp):
+    if r.buf is None:
+        _make(r)
+        return
+    with open(r.path + ".bak-repoint-" + stamp, "wb") as fh:
+        fh.write(r.buf)
+    try:
+        with open(r.path, "wb") as fh:
+            fh.write(r.new)
+        with open(r.path, "rb") as fh:
+            if fh.read() != r.new or not scb.checksum_ok(r.new):
+                raise RepointError("%s: read-back or checksum differs" % r.clip)
+    except Exception:
+        with open(r.path, "wb") as fh:
+            fh.write(r.buf)
+        raise
+    print("written %s -> %s %s (backup .bak-repoint-%s)" % (r.clip, r.master, _range(r.new), stamp))
 
 
 def _make(r):
@@ -347,6 +361,17 @@ def _make(r):
         os.remove(r.path)
         raise
     print("made    %s from %s -> %s %s (a new file: no backup)" % (r.clip, r.made_from, r.master, _range(r.new)))
+
+
+def under_folder(module, under):
+    """The clips folder `under` names inside the module's Assets folder. An absolute path, a drive, or a `..` part
+    would resolve outside it, so each is refused (#1566)."""
+    parts = under.replace("\\", "/").split("/")
+    if os.path.isabs(under) or under.startswith(("/", "\\")) or ":" in under or ".." in parts \
+            or not any(p not in ("", ".") for p in parts):
+        raise RepointError("--under %r must be a folder inside the module's Assets folder: no absolute path, no "
+                           "drive and no '..'" % under)
+    return os.path.join(module, "Assets", *[p for p in parts if p not in ("", ".")])
 
 
 def _range(buf):
@@ -383,7 +408,11 @@ def main(argv=None):
     ap.add_argument("--apply", action="store_true")
     ap.add_argument("--check", action="store_true")
     args = ap.parse_args(argv)
-    clips_dir = os.path.join(args.module, "Assets", *args.under.split("/")) if args.under else args.clips_dir
+    try:
+        clips_dir = under_folder(args.module, args.under) if args.under is not None else args.clips_dir
+    except RepointError as exc:
+        print("refused: %s" % exc)
+        return 1
     # Exit 2 is NOT RUN, as tools/data_gates.py reads it: a machine without the module or without xxhash has no
     # finding to report. A plan the tool refuses is a finding: exit 1 and the reason, no traceback.
     if not os.path.isdir(clips_dir):
