@@ -537,14 +537,14 @@ Simple XML format with one element per weighted troop. Any troop not listed defa
 
 > **Note (2026-05-14):** `cave_troll`'s weight-4.0 row sits inside a comment block in `troop_weights.xml` (WIP: see CHANGELOG "Phase 9c: Disable troll content in-place"), so it is NOT one of the live rows counted below. Re-enable by uncommenting.
 
-**212 live rows** (re-measured 2026-11-23, after the Isengard numbers pass removed 12 rows; the 133 the older tables carried had already drifted to 160 on trunk), measured rather than estimated:
+**214 live rows** (re-measured 2026-11-24, with the two Ironpass chariot troops at 3.0; 212 on 2026-11-23, after the Isengard numbers pass removed 12 rows; the 133 the older tables carried had already drifted to 160 on trunk), measured rather than estimated:
 
 | Weight | Count | Troop ids |
 |--------|-------|-----------|
 | 20.0 | 1 | `harad_mumakil_rider` |
 | 12.0 | 1 | `harad_elephant_rider` |
 | 4.0 | 6 | `hill_troll`, `taom_spider_creature`, `taom_spider_rider_brown`, `taom_spider_rider_pale` (the three Spider Rider rungs, #616), `goblin_spider_rider`, `goblin_spider_lord` (`cave_troll` would be one more, but is commented out) |
-| 3.0 | 79 | Every other listed troop at level 41 or above: the Rivendell and Lindon Gondolin lines (5 each) and Mirkwood palace guard + Thingol's heir (2) at level 51, and at level 41 to 46 the Imladris, Lindon and Mirkwood elites, the Erebor/Iron Hills royal wardens and nobles' tips, `ironpass_ram_marshal`, Khamûl's shadow and veiled lines, the Black Númenórean knight/warden/marksman and temple tips, `orthanc_bodyguard`, `battlemaster_of_the_first_age` |
+| 3.0 | 81 | Every other listed troop at level 41 or above (the two Ironpass chariot troops, `ironpass_war_chariot` and `ironpass_steel_chariot`, among them): the Rivendell and Lindon Gondolin lines (5 each) and Mirkwood palace guard + Thingol's heir (2) at level 51, and at level 41 to 46 the Imladris, Lindon and Mirkwood elites, the Erebor/Iron Hills royal wardens and nobles' tips, `ironpass_ram_marshal`, Khamûl's shadow and veiled lines, the Black Númenórean knight/warden/marksman and temple tips, `orthanc_bodyguard`, `battlemaster_of_the_first_age` |
 | 2.0 | 125 | Every other listed troop below level 41: the lower Imladris/Lindon/Mirkwood elves, warg riders (every culture but Isengard), the Black Númenórean initiate to veteran rungs, Dol Guldur uruk black guard, Mordor elite captains, the Orthanc warden and Nazg-hai (level 36), the lower Erebor/Iron Hills nobles, Ironpass ram cavalry rungs, Gundabad elites, `gondor_pg_vet_cavalry`, the Hired copies of 2.0 troops, the level 31 Dual Wield troops but Isengard's, and every level 31 to 36 troop of the evil and dwarf cultures (the 2026-11-15 sweep), except Isengard at level 31. Isengard counts as one man per troop up to level 31 since 2026-11-23 ([faction-balance.md](faction-balance.md) "Isengard's numbers") |
 | 1.0 | default | Every unlisted troop, stated in the file's own header comment, and there is no other default anywhere |
 

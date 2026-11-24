@@ -5308,3 +5308,15 @@ in a traceback with exit 1, which `tools/data_gates.py` reads as a finding, wher
   and a missing install. A gate's exit codes follow `tools/data_gates.py`: 1 a finding, 2 not run.
 - **Source:** issue #1563; [RCA](../rca-warg-gaits-2026-11-23.md) F1 to F3;
   `tools/tests/test_repoint_anim_clip.py` (`PlanRowTests`).
+
+### A guard that looks for a package matches the whole file name, and a rollback removes its own bytes
+
+- **Why missed:** two scripts wrote item rows into the live Armory and refused while "the Kit-cooked package" was missing. The guard took the first `.tpac` whose file name contained the wanted name, so a material passed on a texture package and one mesh passed on another mesh's package; the first run was right only because every real package existed. Each script's `--rollback` copied back a whole-file backup, and three scripts plus one inline edit had each saved the same file at a different time, so the oldest rollback would have dropped the later edits.
+- **Prevent:** a package guard names one file per kind and says what that kind needs (`<mesh>_geo.tpac` with a RuntimeDataCache entry, `<material>_mtl.tpac` without one: no material package in the Armory has an entry), and its tests feed it the near miss (a longer name, another kind). A writer of a shared, unversioned file undoes itself by removing exactly the bytes it wrote and refuses when they differ; it never restores a snapshot. One file per live edit, in the repo, with `--check`: `tools/apply_dwarf_chariot_armory.py` (`CookedPackageGuardTests`, `DriftAndRemoveTests`).
+- **Source:** [RCA](../rca-dwarf-chariot-2026-11-24.md) F1, F2, F6.
+
+### A writer's fixture holds what the real document holds, and its restore is tested on a copy of the real file
+
+- **Why missed:** `tools/apply_dwarf_chariot_armory.py` found the end of its anchor item by the next `<Item`, which also matches `<ItemComponent>`. Every real item has one; the test fixture's anchor item did not. So 21 tests passed and `--apply` could never write on the real file. The test against the live install ran `--check` only, with the rows already in, and never reached the insertion.
+- **Prevent:** build a writer's fixture from a real row of the file it writes (copy one whole item, child elements included), not from the shortest XML that parses. Where the install is present, test the full round trip on a copy of the real files in a temp tree (`--remove`, then `--apply`, bytes equal to the live file): a check that only reads the present state proves nothing about the write. Judge presence from the parsed document and ownership from the bytes: a substring test fails both on a longer tag name and on other quotes.
+- **Source:** [RCA](../rca-dwarf-chariot-2026-11-24.md) F11, F12; `test_remove_then_apply_on_a_copy_of_the_live_files_gives_the_live_bytes_back`.

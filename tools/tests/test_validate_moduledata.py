@@ -1287,7 +1287,7 @@ class MountedDwarfTests(unittest.TestCase):
         self.md.mkdir(parents=True)
         self.registries = ts.Registries(
             items={"None", "good_sword", "saddle_horse", "sumpter_horse",
-                   "taom_war_ram_a", "taom_war_ram_b"},
+                   "taom_war_ram_a", "taom_war_ram_b", "taom_ram_chariot_a", "taom_chariot_a"},
             item_def_files={},
             npccharacters=set(),
             cultures={"erebor", "vlandia"},
@@ -1450,6 +1450,19 @@ class MountedDwarfTests(unittest.TestCase):
     def test_dwarf_on_the_second_war_ram_variant_is_clean(self):
         self._write_lord(group="Cavalry", body=self._inline("taom_war_ram_b"))
         self.assertEqual(self._mounted(), [])
+
+    def test_dwarf_cavalry_on_the_ram_chariot_is_clean(self):
+        # The ram team of the dwarven war chariot is on the allowlist (why: docs/features/chariot.md,
+        # "A dwarf on a chariot").
+        # This case fails without that entry.
+        self._write_lord(group="Cavalry", body=self._inline("taom_ram_chariot_a"))
+        self.assertEqual(self._mounted(), [])
+
+    def test_dwarf_on_the_wainrider_chariot_is_still_reported(self):
+        # The horse team is not a dwarf mount: only the ram team is listed. Both halves fire, the group and the mount.
+        # It passes with or without the ram team's entry; it fails if the allowlist is ever widened to a name pattern.
+        self._write_lord(group="Cavalry", body=self._inline("taom_chariot_a"))
+        self.assertEqual(len(self._mounted()), 2)
 
     def test_dwarf_infantry_on_a_war_ram_is_clean(self):
         self._write_lord(group="Infantry", body=self._inline("taom_war_ram_a"))

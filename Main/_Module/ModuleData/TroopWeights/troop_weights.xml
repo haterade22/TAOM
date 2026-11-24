@@ -163,6 +163,10 @@
     <TroopWeight id="ironpass_ram_breaker" weight="2.0" />
     <TroopWeight id="ironpass_ram_vanguard" weight="2.0" />
     <TroopWeight id="ironpass_ram_marshal" weight="3.0" />
+    <!-- The two chariot troops the Ram Vanguard can also upgrade into (levels 41 and 46): the level rule, 3.0,
+         as the Ram Marshal beside them. -->
+    <TroopWeight id="ironpass_war_chariot" weight="3.0" />
+    <TroopWeight id="ironpass_steel_chariot" weight="3.0" />
 
     <!-- ===== MORDOR ===== -->
     <TroopWeight id="mordor_uruk_baraddurguard" weight="2.0" />

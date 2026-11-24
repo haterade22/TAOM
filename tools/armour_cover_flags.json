@@ -183,7 +183,7 @@
     }
   ],
   "snapshot": {
-    "taken": "2026-11-21",
+    "taken": "2026-11-24",
     "files": {
       "LOTRLOME_items/LOTRAOM_horses.xml": {
         "dire_wolf_saddle": {"mane_cover_type": "none"},
@@ -225,6 +225,8 @@
         "sm_md_num_barding_med_a": {"mane_cover_type": "all"},
         "sm_md_num_barding_med_b": {"mane_cover_type": "all"},
         "starter_cavalry_gondor_horse_armor_a": {"mane_cover_type": "all"},
+        "taom_chariot_armour_dwarf": {"mane_cover_type": "all"},
+        "taom_chariot_armour_dwarf_b": {"mane_cover_type": "all"},
         "taom_chariot_armour_imperial": {"mane_cover_type": "all"},
         "taom_chariot_armour_rhun": {"mane_cover_type": "all"},
         "taom_elk_saddle_a": {"mane_cover_type": "none"},

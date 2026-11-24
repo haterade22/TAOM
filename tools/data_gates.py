@@ -223,6 +223,13 @@ GATES = (
               "or a rule changed: --apply --backup-tag <tag> restores, --snapshot --expect N after a change you meant "
               "(never before --apply on a reset); a bad spec or two rules that disagree are also exit 1; "
               "exit 2 is NOT RUN (no install)"),
+    Gate("dwarf-chariot-armory", "the dwarven war chariot's Armory rows, their packages and their carriers",
+         ARMORY_GLOBS + ("*tools/apply_dwarf_chariot_armory.py", "*/troops/troops_erebor.xml",
+                         "*/lotrlome_armory/assets/creature/chariot/*", "*/lotrlome_armory/assets/creature/ram/*"),
+         ("python", "tools/apply_dwarf_chariot_armory.py", "--check"), ("docs/features/chariot.md",),
+         note="exit 1 when a reinstall dropped the three items or their names, a row differs from the tool's, or a "
+              "mesh or material package is gone: --apply with the Kit and the game closed puts the rows back, the "
+              "Modding Kit writes the packages; exit 2 is NOT RUN (no install), exit 3 a crash"),
     Gate("placeholder-weapons", "placeholder weapons, their spec, the melee tools, donors and carriers", PLACEHOLDER_GLOBS,
          ("python", "tools/generate_placeholder_weapons.py", "--verify"), ("docs/features/placeholder-weapons.md",),
          note="exit 1 when a generated file differs from the render or a placeholder is over its carriers' tier "

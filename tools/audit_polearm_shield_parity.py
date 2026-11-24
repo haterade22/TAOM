@@ -167,6 +167,8 @@ KNOWN_FAILURES: dict[tuple[str, str], tuple[int, str]] = {
     ("ironpass_ram_marshal", "sm_dwarf_iron_axe_c"): (4, "#1312: backup after the shield breaks"),
     ("ironpass_ram_rider", "sm_dwarf_iron_axe_a"): (4, "#1312: backup after the shield breaks"),
     ("ironpass_ram_vanguard", "sm_dwarf_iron_axe_c"): (4, "#1312: backup after the shield breaks"),
+    ("ironpass_steel_chariot", "sm_dwarf_iron_axe_c"): (2, "#1312: backup after the shield breaks"),
+    ("ironpass_war_chariot", "sm_dwarf_iron_axe_c"): (2, "#1312: backup after the shield breaks"),
     # troops_gondor.xml
     ("gondor_da_foot_knight", "numenorean_greatsword_elite_a"): (2, "#1312: backup after the shield breaks"),
     ("gondor_da_foot_knight", "numenorean_greatsword_elite_b"): (2, "#1312: backup after the shield breaks"),

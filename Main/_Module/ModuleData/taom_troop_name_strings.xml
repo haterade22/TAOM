@@ -706,8 +706,10 @@
 	<string id="aom_ironpass_ram_vanguard_name" text="{=aom_ironpass_ram_vanguard_name}[Ironpass] Ram Vanguard" />
 	<string id="aom_ironpass_recruit_name" text="{=aom_ironpass_recruit_name}[Ironpass] Recruit" />
 	<string id="aom_ironpass_sharpshooter_name" text="{=aom_ironpass_sharpshooter_name}[Ironpass] Sharpshooter" />
+	<string id="aom_ironpass_steel_chariot_name" text="{=aom_ironpass_steel_chariot_name}[Ironpass] Steel Chariot" />
 	<string id="aom_ironpass_veteran_arbalest_name" text="{=aom_ironpass_veteran_arbalest_name}[Ironpass] Veteran Arbalest" />
 	<string id="aom_ironpass_veteran_axeman_name" text="{=aom_ironpass_veteran_axeman_name}[Ironpass] Veteran Axeman" />
+	<string id="aom_ironpass_war_chariot_name" text="{=aom_ironpass_war_chariot_name}[Ironpass] War Chariot" />
 	<string id="aom_ironpass_warrior_name" text="{=aom_ironpass_warrior_name}[Ironpass] Warrior" />
 	<string id="aom_isen_mil_arch_name" text="{=aom_isen_mil_arch_name}[Isengard] Militia Archer" />
 	<string id="aom_isen_mil_spear_name" text="{=aom_isen_mil_spear_name}[Isengard] Militia Spearman" />

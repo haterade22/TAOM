@@ -3632,6 +3632,8 @@ public class VolunteerRecruitmentServiceTests
         "ironpass_ram_breaker",
         "ironpass_ram_vanguard",
         "ironpass_ram_marshal",
+        "ironpass_war_chariot",
+        "ironpass_steel_chariot",
     };
 
     [TestMethod]

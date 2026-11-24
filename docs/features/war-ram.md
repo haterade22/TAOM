@@ -328,6 +328,9 @@ ironpass_ram_herder (16)  [pooled, is_basic_troop]
                             -> ironpass_ram_breaker (31)   [Gems]
                             -> ironpass_ram_vanguard (36)  [Gems]
                             -> ironpass_ram_marshal (41)   [Gems]
+ironpass_ram_vanguard (36) also
+                            -> ironpass_war_chariot (41)   [Gems]   the dwarven war chariot, docs/features/chariot.md
+                            -> ironpass_steel_chariot (46) [Gems]
 ```
 
 Every rung steps by exactly 5. That is worth stating because it was not true in the first draft: the
