@@ -10,6 +10,72 @@ no mission behavior, **no C# at all** (a 100% data port). Issue #279.
 Erebor has a second chariot on the same rig, pulled by two war rams, with two Ironpass troops: see
 [Dwarven war chariot](#dwarven-war-chariot-erebor-2026-11-24).
 
+## The rig since 2026-11-23
+
+The first rig (June 2026) is gone from the live Armory. Five sections describe it and are its history: "Animation
+refinement", "Architecture", "Hit capsules fitted to the mesh", "Status / pending", "The missing second horse" and
+the mesh notes of "Rhûn barding". Every other section describes what runs now. The chariot runs on the rig of the
+upstream chariot pack, taken whole:
+
+- **One package**, `Assets/creature/chariot/chariot_rig_geo.tpac` (137 items: 75 clips, 54 animation masters, 3
+  skeletons, 5 metameshes; no material and no texture). `tools/tpac_slim_package.py` built it from the pack's
+  package by leaving out the pack's cart, its materials and its textures. The skeletons are
+  `horse_skeleton_chariot` (60 bones: the root `chariot_bone`, two horse skeletons with the suffixes
+  `_chariot_left` and `_chariot_right`, the cart bone and two wheel bones), `horse_chariot_rein` and
+  `horse_skeleton_chariot_unused`.
+- **The horse team** `taom_chariot_a` draws the pack's two horse bodies (`horse_chariot_brown`) and their mane.
+- **The cart is the harness item.** `taom_chariot_armour_rhun` and `taom_chariot_armour_imperial` draw
+  `rhun_war_chariot`: TAOM's own cart (built 2026-11-24, no geometry of the pack) and the Rhûn horse armour for both
+  horses. Its sources are `AssetSources/creature/chariot/mesh/rhun_war_chariot.fbx` and six maps in
+  `.../chariot/textures`; the Modding Kit imports them.
+- **ModuleData of the Armory** that the port wrote: the Monster (`Monsters/LOTR/lotr_monster_chariot.xml`,
+  `rider_sit_bone="chariot_bone"`), the `act_chariot_*` rows of `action_types.xml`, the three `as_chariot` sets and
+  the dwarf rider rows in `action_sets.xml`, the rider rows that `action_sets.xslt` adds to the human sets, the
+  `chariot` usage set, ten `taom_chariot_*` sounds in `module_sounds.xml` with 131 wave files, the collision class
+  `taom_chariot` (its rows in `CollisionInfos/LOTR/collision_infos_warg.xml`, its declaration in
+  `physics_materials.xml` and in `physics_materials.xslt`), the cloth bodies, and `voice_definitions.xml` with its
+  `project.mbproj` row.
+- **Two actions are not typed as the pack typed them.** `act_chariot_rear` is `actt_rear`, as the vanilla horse's
+  is, and `act_chariot_kick` has no type. The pack typed both `actt_kick`; the kick is bound to an idle clip, also
+  on the rider, which is the hang class that `tools/tests/test_armory_kick_typed_actions.py` guards (#1499).
+- **Three gait clips carry no `quad_movement`**: `chariot_gait_walk_backward`, `chariot_gait_walkfast` and
+  `chariot_gait_trot`, each bound only on an in-place row (direction and turn `none`). The vanilla horse has the
+  same shape on the same three rows (`gait_walk_backward`, `gait_walkfast`, `horse_gait_trot_2`): it binds untagged
+  clips on six of its seven in-place rows. `tools/verify_mount_assets.py chariot` lists the three as exempt and
+  `tools/audit_mount_parity.py` section F names them. Both read the tag from the usage list of the clip's own
+  metadata, and the data gate `chariot-body` runs the first one.
+- **The mount, dismount and jump rows are the pack's, not the horse's.** The four actions `act_mount_chariot_left`,
+  `_right`, `act_dismount_chariot_left` and `_right` have no action type (vanilla types its own `actt_mount` and
+  `actt_dismount`). The jump rows exist for the directions `front` and `none` only, their two start rows name no
+  action, and the usage set's `jump_start_action` is `act_chariot_dash`. All of it equals the pack's files. A troop
+  spawns mounted, so a battle of troops uses none of it: the player's mount, dismount and jump are checks 8 and 9
+  below.
+- **TAOM's creature mount patches apply.** `CreatureMounts.IsCreatureMount("chariot")` is true, so
+  `Agent_Die_SpiderDismount_Patch` takes a dying rider off the chariot before the native death, and takes the rider
+  off a dying chariot (he gets no fall action from the engine), and `Agent_HandleBlowAux_SpiderDismountGuard_Patch`
+  removes the dismount flag from a blow on a chariot rider.
+- **Hit capsules are the rig's own.** 51 of the 60 bones have a hit capsule. Nine have none, the cart bone
+  `chariot_bone.001` and both wheel bones among them, so a blow or an arrow passes through the cart. The fit of
+  2026-09-18 was made on the first rig and is gone with it (`python tools/skeleton_hit_capsules.py show`, read
+  2026-11-24).
+- **Dedicated server.** A server loads no loose Armory asset, so
+  `Main/_Module/DsAssetPackages/taom_creature_skeletons.tpac` carries the creature skeletons (8, the two chariot
+  skeletons among them); `tools/build_ds_skeleton_pack.py --check` holds it to the live Armory.
+
+**What the repo holds, and what it does not.** `docs/reference/lotrlome-armory-snapshot/` holds five of the port's
+files as they were on 2026-11-24: `action_sets.xml`, `action_types.xml`, `monster_usage_sets.xml`,
+`monster_usage_sets.xslt` and `project.mbproj`. The rig package, the Monster file, the rider rows of
+`action_sets.xslt`, the sounds with their wave files, the collision class, the cloth bodies, the voice file and the
+three Wainrider item rows are only in the Armory, which is not versioned, and no tool puts any of it back after a
+reinstall. Only the dwarven chariot's item rows have a tool (`tools/apply_dwarf_chariot_armory.py`). The gate
+`chariot-body` goes red when the rig or a clip is gone. The asset mirror still holds the first rig.
+
+**Left as they are in the live files.** Comments in `action_sets.xml`, `action_types.xml`,
+`monster_usage_sets.xml`, `monster_usage_sets.xslt` and `LOTRAOM_horses.xml` still describe the first rig (a cart
+inside the horse mesh, `chariot_skeleton`, mount names "derived by the engine"). Eight declared action types are
+bound nowhere: the first rig's four `act_mount_chariot_*from*` and the pack's four `act_map_chariot_attack_*`.
+`taom_chariot` is declared in both physics material files, as the warg's class has been since August 2026.
+
 ## Why This Exists
 
 Rhûn's troop tree already had chariot-named tiers (`wainrider_swift_chariot` T8 →
@@ -134,12 +200,17 @@ speed 70, charge 80 since #615, riding difficulty 120) and the Monster XML.
 | File | Purpose |
 |---|---|
 | `Main/_Module/ModuleData/troops/troops_rhun_new.xml` | Horse-slot swap on the two wainrider chariot tiers (Horse `taom_chariot_a` plus HorseHarness `taom_chariot_armour_rhun`, see the barding section) |
-| LOTRLOME_Armory (see table above) | Monster/actions/usage/XSLT/item + compiled assets under `Assets/creature/chariot/` |
+| LOTRLOME_Armory (see "The rig since 2026-11-23") | Monster, actions, usage set, stylesheets, sounds, items, and the compiled packages under `Assets/creature/chariot/` |
+| `tools/verify_mount_assets.py chariot`, gate `chariot-body` | The rig's two skeletons, the tag on each gait clip, and every clip a mount or rider row names |
+| `tools/audit_mount_parity.py` section F, gate `mount-parity` | The chariot against the vanilla horse: attributes, usage rows, bindings |
+| `tools/tpac_slim_package.py` | Built the rig package from the upstream chariot pack's package |
+| `docs/reference/lotrlome-armory-snapshot/` | Five of the rig's ModuleData files as they were on 2026-11-24 |
+| `Main/_Module/DsAssetPackages/taom_creature_skeletons.tpac` | The creature skeletons a dedicated server needs, the chariot's two among them |
 | `Main/_Module/ModuleData/troops/troops_erebor.xml` | The two Ironpass chariot troops and the Ram Vanguard's second upgrade |
 | `Main/_Module/ModuleData/TroopWeights/troop_weights.xml`, `special_resources/troop_resource_costs.xml` | Party weight (3.0) and Gems rows of the two troops |
 | `tools/apply_dwarf_chariot_armory.py` | Holds the three dwarf chariot items and their names for the unversioned Armory: `--check`, `--apply`, `--remove`; gate `dwarf-chariot-armory` in `tools/data_gates.py` |
 | `tools/taom_schema.py` (`DWARF_MOUNT_IDS`) | The ram team is a mount a dwarf may ride |
-| `E:\LOTRAOMAssets\_auto_workspace\chariot\*.ps1` | TpacTool-based generators (clips, skeleton wiring, inspection) |
+| `E:\LOTRAOMAssets\_auto_workspace\chariot\*.ps1` | The first rig's TpacTool-based generators (clips, skeleton wiring, inspection) |
 
 ## Recruitment
 
@@ -152,13 +223,22 @@ Erebor: no pool and no party template lists the two chariot troops. They are rea
 
 ## Tests
 
-No unit tests — there is no C# (the data port is covered by `validate_moduledata.py` +
-`validate_all_troop_refs.py`, both PASS, and the in-game checklist). Full suite green at 3,143
-after the mount-lock removal.
+The chariot has no C# of its own, so no unit test of behaviour. The data and the tools are held by
+`DwarfMountRiderRowsTests` (the dwarf rider rows, snapshot against live), `tools/tests/test_verify_mount_assets.py`,
+`test_audit_mount_parity_strict.py`, `test_tpac_slim_package.py`, `test_apply_dwarf_chariot_armory.py` and
+`test_armory_kick_typed_actions.py`, and by the data gates `chariot-body`, `mount-parity`, `dwarf-chariot-armory`
+and `dwarf-rider-rows`. The in-game list is at the end of this doc.
 
 ## Provenance & rights
 
-Art/animations/XML extracted from the **upstream pack** tpacs; rights to
+Two sources, at two times. This doc calls the first rig's source "the upstream pack" and the source of the
+rig of 2026-11-23 "the upstream chariot pack"; they were two different downloads. On 2026-11-23 the maintainer said
+that the rights for the second are cleared, and that the pack and its author are not named in tracked text. The
+Rhûn cart and both dwarven chariots are TAOM's own geometry. The register row is
+[provenance-register.md](../reference/provenance-register.md), "upstream chariot pack"; its status is the
+maintainer's to change.
+
+The first rig: art, animations and XML extracted from the **upstream pack** tpacs; rights to
 ship confirmed by the TAOM maintainer 2026-06-12. The upstream pack's chariot itself builds on vanilla empire
 hippodrome assets (cart material/textures are vanilla `roman_statue_chariot_*`). Extraction
 tooling + format notes: `E:\LOTRAOMAssets\_auto_workspace\chariot\` + the transfer package
@@ -253,7 +333,7 @@ the neck plates.
 
 | Item | Type | Notes |
 |---|---|---|
-| `taom_ram_chariot_a` | Horse | The ram team. Its Horse row copies `taom_chariot_a` (maneuver 25, speed 70, charge 80, riding difficulty 120, `Monster.chariot`) without its `skeleton_scale` (see below). |
+| `taom_ram_chariot_a` | Horse | The ram team. Its Horse row copies `taom_chariot_a` (maneuver 25, speed 70, charge 80, riding difficulty 120, `Monster.chariot`); neither has a `skeleton_scale` (see below). |
 | `taom_chariot_armour_dwarf` | HorseHarness | Chariot a. `family_type="4"`, `UseTeamColor`. |
 | `taom_chariot_armour_dwarf_b` | HorseHarness | Chariot b. `family_type="4"`, `UseTeamColor`. |
 
@@ -282,8 +362,8 @@ Monster that bone is `chariot_bone`, not a horse spine bone. The rider plays the
 for the human skeleton, so where a dwarf stands on the cart is decided by the in-game check below, and the id comes
 off the list if he stands wrong. The Wainrider horse team `taom_chariot_a` is not on the list.
 
-**No `skeleton_scale` on the ram team.** `taom_chariot_a` carries `skeleton_scale="empire_horse"` from the upstream
-pack. The engine applies a scale by bone index of the scale's own skeleton (`horse_skeleton`), not by name
+**No `skeleton_scale` on a chariot team.** `taom_chariot_a` carried `skeleton_scale="empire_horse"` from the
+upstream pack until 2026-11-24. The engine applies a scale by bone index of the scale's own skeleton (`horse_skeleton`), not by name
 (`MBGameManager`, then native `ApplySkeletonScale`, which checks only the index bound). On `horse_skeleton_chariot`
 the five indices are `chariot_bone` (the root), `horsespine2_chariot_left`, `horsepelvis_chariot_right`,
 `horsespine1_chariot_right` and `horsespine2_chariot_right`, so the right animal is stretched by up to 15 percent
@@ -328,8 +408,20 @@ game and the Kit, build this branch into the game, then:
 6. Move the camera far from a chariot. Expect no hole in the plates and no sudden change of the cart's shape.
 7. Kill a chariot. Expect the rams and the cart to go down together, and no hang.
 
+Owed for the rig (2026-11-23), with sound on:
+
+8. In a custom battle, leave a Rhûn chariot and stand beside it. Mount it from the left and from the right, at a
+   walk and at a run, and dismount on both sides. Expect the rider to climb in and out, and no freeze.
+9. On a chariot, press the jump key at a stand, and again at a gallop in a turn. Expect a dash or nothing, never a
+   freeze or a rider in a T-pose.
+10. Drive over grass, stone, sand, wood and snow. Expect wheel sounds that change with the ground, and horse voices.
+11. Kill a chariot that has a rider, and kill a rider on a chariot. Expect the chariot to fall with a clip, the rider
+    to stand or die beside it, and the battle to go on.
+12. Start the dedicated server with this Armory. Expect no new message about a voice definition or a chariot clip.
+
 ## Changelog
 
+- 2026-11-24: Recorded the rig that replaced the first one on 2026-11-23 (one package from the upstream chariot pack, TAOM's own Rhûn cart as the harness mesh), refreshed five snapshot files, made the two asset checks read each clip's usage list, added the gate `chariot-body` and rebuilt the server skeleton pack. Review: [rca-chariot-rig-2026-11-24.md](../reviews/rca-chariot-rig-2026-11-24.md). No issue: waived by the maintainer.
 - 2026-11-24: Added the dwarven war chariot for Erebor: a ram team (`taom_ram_chariot_a`), two harness meshes (chariot a in iron, chariot b in the ram barding style) and two Ironpass troops at levels 41 and 46. In-game checks are owed. No issue: waived by the maintainer.
 - 2026-06-13 — Tagged the 2 untagged gait clips (`chariot_gait_walkfast` + `chariot_gait_walkbackfast`) with `quad_movement` to fix a latent mount-crash; in-game mission test still pending.
 - 2026-06-12 — Ported the upstream pack's war chariot as the Rhûn Wainrider ridden mount (issue #279): one Monster / 60-bone skeleton, zero TAOM C#, swift/warlord chariot tiers swapped onto `taom_chariot_a`.

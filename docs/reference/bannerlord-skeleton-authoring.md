@@ -178,8 +178,8 @@ Each of these was measured, believed, and turned out not to be the cause:
   neck under `horsespine3`, so its node order was wrong too (fact 4). Two faults, one mangled result.
 - **TimeMode**, changed from 30 to 24fps to match the chariot. Shipped clips use both.
 - **Clip flags.** `an_spi_attack_front` ships with zero flags and works.
-- **The chariot as a reference.** `as_chariot` uses `chariot_skeleton`: two horses plus a cart, on its
-  own skeleton asset. Its horse-named bones sit 90 degrees from every mesh rig, which looked like a
+- **The chariot as a reference.** `as_chariot` uses `horse_skeleton_chariot` (`chariot_skeleton` until the rig
+  changed on 2026-11-23): two horses plus a cart, on its own skeleton asset. Its horse-named bones sit 90 degrees from every mesh rig, which looked like a
   smoking gun and sent two rounds of work in the wrong direction. **Compare a creature mount against
   the warg, the spider or the elephant.** They are single-creature mounts with BT-driven attacks,
   which is the same shape as a war ram; the chariot is not.
@@ -329,7 +329,8 @@ in the Armory on 2026-09-18 (radius within 10% of length / 9):
 
 | Skeleton | Bodies | Kit-default hit capsules |
 |---|---|---|
-| `chariot_skeleton` | 60 | 57 before the fit; 5 after (2026-09-18: 8.8% of the skin hittable before, 98.0% after; the cart body and wheels are the gaps) |
+| `chariot_skeleton` (the first chariot rig, gone from the Armory since 2026-11-23) | 60 | 57 before the fit; 5 after (2026-09-18: 8.8% of the skin hittable before, 98.0% after; the cart body and wheels are the gaps) |
+| `horse_skeleton_chariot` (the chariot's rig since 2026-11-23) | 60 | Not fitted: the capsules are the ones the rig came with. 51 bones have a hit capsule; 9 have none, the cart bone `chariot_bone.001` and both wheel bones among them (`skeleton_hit_capsules.py show`, 2026-11-24) |
 | `elephant_skeleton` | 60 | 41 before the fit; 27 after, all bones owning under 15 skin vertices (nine bones of one trunk chain, all 14 of the duplicate chain, both clavicles, three tail bones), whose skin the neighbouring capsules cover |
 | `spider_skeleton` | 62 | 40 before the fit; 22 after, bones with too little skin (2026-09-18: 49.9% hittable before, 97.2% after) |
 | `skeleton_warg` | 49 | 2 |
