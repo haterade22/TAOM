@@ -72,10 +72,10 @@ public class HostedRunOutcomeLogTests
         var seen = new System.Collections.Generic.List<string>();
         _inner.When(i => i.Pass(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())).Do(c => seen.Add(c.ArgAt<string>(0)));
 
-        foreach (var id in new[] { LongDefeatHeroChecks.SpawnId, LongDefeatHeroChecks.FallId, LongDefeatHeroChecks.HuntersId })
+        foreach (var id in new[] { LongDefeatHeroChecks.SpawnId, LongDefeatHeroChecks.FallId, LongDefeatHeroChecks.HuntersId, LongDefeatHeroChecks.LineId })
             Sut().Pass(id, "story1", "d");
 
-        CollectionAssert.AreEqual(new[] { HostedRunOutcomeLog.HeroId, HostedRunOutcomeLog.HeroFallId, HostedRunOutcomeLog.HuntersId }, seen);
+        CollectionAssert.AreEqual(new[] { HostedRunOutcomeLog.HeroId, HostedRunOutcomeLog.HeroFallId, HostedRunOutcomeLog.HuntersId, HostedRunOutcomeLog.HeroLineId }, seen);
     }
 
     [TestMethod]

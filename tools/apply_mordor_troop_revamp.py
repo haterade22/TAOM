@@ -72,7 +72,7 @@ RENAMES: Dict[str, Dict[str, str]] = {
     "mordor_uruk_captain":       {"name": "Black Uruk Captain",          "level": "36"},
     "mordor_uruk_shieldbearer":  {"name": "Black Uruk Shieldbearer",     "level": "26"},
     "mordor_uruk_shieldguard":   {"name": "Black Uruk Shield Guard",     "level": "31"},
-    "mordor_uruk_baraddurguard": {"name": "Black Uruk Barad-Dur Guard",  "level": "36"},
+    "mordor_uruk_baraddurguard": {"name": "Black Uruk Barad-dûr Guard",  "level": "36"},
     "mordor_uruk_archer":        {"name": "Black Uruk Archer",           "level": "26"},
 }
 

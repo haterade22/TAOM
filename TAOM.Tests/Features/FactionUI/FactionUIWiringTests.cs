@@ -43,6 +43,7 @@ public class FactionUIWiringTests
         container.RegisterInstance(Substitute.For<IPlayerSwitchSessionWriter>());
         container.RegisterInstance(Substitute.For<IPlayerIdentityAdapter>());
         container.RegisterInstance(Substitute.For<INarrativeDataProvider>());
+        container.RegisterInstance(Substitute.For<TAOM.Features.BattleShaderNotice.IScreenShaderNotice>());
 
         container.RegisterInstance(Substitute.For<IFrontEndResourceAdapter>(), IfAlreadyRegistered.Replace);
         container.RegisterInstance(Substitute.For<IMenuMusicAdapter>(), IfAlreadyRegistered.Replace);
@@ -128,6 +129,7 @@ public class FactionUIWiringTests
         container.RegisterInstance(Substitute.For<IPathService>());
         container.RegisterInstance(Substitute.For<IFactionSelectionService>());
         container.RegisterInstance(Substitute.For<INarrativeDataProvider>());
+        container.RegisterInstance(Substitute.For<TAOM.Features.BattleShaderNotice.IScreenShaderNotice>());
         container.RegisterInstance(Substitute.For<IPlayerIdentityAdapter>(), IfAlreadyRegistered.Replace);
 
         Assert.IsNotNull(container.Resolve<FactionScreenLauncher>());
@@ -146,6 +148,7 @@ public class FactionUIWiringTests
         container.RegisterInstance(Substitute.For<IPathService>());
         container.RegisterInstance(Substitute.For<IFactionSelectionService>());
         container.RegisterInstance(Substitute.For<INarrativeDataProvider>());
+        container.RegisterInstance(Substitute.For<TAOM.Features.BattleShaderNotice.IScreenShaderNotice>());
         container.RegisterInstance(Substitute.For<TAOM.Features.UncapturableHeroes.IUncapturableRegistry>());
         // The real identity adapter probes Campaign.PlayerDefaultFaction by reflection in its constructor,
         // which needs the engine assemblies; this test is about the container, not the engine.

@@ -28,6 +28,9 @@ internal sealed class HostedRunOutcomeLog : IOutcomeLog
     /// <summary>The wave-clear hold check (<c>taom.long-defeat.hunters</c> renamed).</summary>
     internal const string HuntersId = "taom.story-missions.hosted.hunters";
 
+    /// <summary>The hero's spoken line check (<c>taom.long-defeat.hero-line</c> renamed); tools/ingame_checks/1569.toml reads it.</summary>
+    internal const string HeroLineId = "taom.story-missions.hosted.hero-line";
+
     private const string From = "taom.long-defeat.";
     private const string To = "taom.story-missions.hosted.";
 

@@ -43,7 +43,7 @@ GameMenuVM.set_ContextText(value)          ← Patch64 prefix, ref string value
         │
 MenuLinkStyleRewriter.Rewrite(text)        ← pure string transform, fully unit-tested
         │  for each <a style="Link.{Settlement|Hero|Kingdom|Clan}" href="event:X-id">
-        ├─ IEncyclopediaCultureLookup      ← X-id → MBObjectManager → object → Culture.StringId
+        ├─ IEncyclopediaCultureLookup      ← X-id → object manager (see below) → Culture.StringId
         ├─ TaomCultureLinkStyles           ← is this culture authored?  → "Link.Taom.<id>"
         └─ IMenuBrushStyleProbe            ← does the LIVE brush define that style?
         │
@@ -52,9 +52,13 @@ GameMenu.InfoText brush                    ← Main/_Module/GUI/Brushes/GameMenu
 
 The href payload is `"<ElementName>-<StringId>"` — `Settlement-town_ES1`, `Hero-lord_1_1`,
 `Kingdom-gondor`, and for clans **`Faction-clan_xyz`**, because `Clan` is registered in the object
-manager under the element name `Faction` (`Campaign.cs:1543`). Splitting on the first dash and
-calling `MBObjectManager.GetObject(elementName, stringId)` mirrors vanilla's own round-trip in
-`EncyclopediaManager.GoToLink`.
+manager under the element name `Faction` (`Campaign.cs:1543`). The lookup splits on the first dash.
+Settlements resolve through `MBObjectManager`. Heroes, kingdoms and clans resolve through
+`Campaign.Current.CampaignObjectManager.Find<T>`, as vanilla's hero and faction encyclopedia pages
+do: 1.5.7 registers those three as temporary object-manager types and `RemoveTemporaryTypes` drops
+them once a new campaign is built, so `MBObjectManager.GetObject("Hero", id)` returns null. Until
+v2.0.42 the lookup used the object manager for all four, and lord, kingdom and clan links kept the
+vanilla colour (the first-menu trace read `culture=<unresolved>` for them).
 
 ### Why the setter is the patch target
 

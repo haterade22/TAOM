@@ -82,6 +82,9 @@ public sealed class PresetAppearanceAdapter : IPresetAppearanceAdapter
     public object? DisplayEquipment(object resolved) =>
         resolved is ResolvedPick { Battle: { } battle } ? battle.Clone() : null;
 
+    public PresetDisplay? Display(object resolved) =>
+        resolved is ResolvedPick pick ? new PresetDisplay(pick.Body.ToString(), pick.Race, pick.IsFemale, pick.Battle?.Clone()) : null;
+
     private static void SetLook(BodyProperties body, int race, bool isFemale, Equipment? battle, Equipment? civilian)
     {
         var player = CharacterObject.PlayerCharacter;

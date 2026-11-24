@@ -1844,7 +1844,7 @@
         race="uruk"
         default_group="Infantry"
         level="36"
-        name="{=aom_mordor_uruk_baraddurguard_name}[Mordor] Black Uruk Barad-Dur Guard"
+        name="{=aom_mordor_uruk_baraddurguard_name}[Mordor] Black Uruk Barad-dûr Guard"
         occupation="Soldier"
         culture="Culture.mordor">
         <face>

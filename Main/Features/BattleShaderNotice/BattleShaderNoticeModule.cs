@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DryIoc;
+using TAOM.Adapters;
 using TAOM.Composition;
 using TAOM.Core.Logging;
 using TAOM.Features.BattleShaderNotice.Hooks;
@@ -26,7 +27,9 @@ internal sealed class BattleShaderNoticeModule : TaomFeatureModule
     {
         registrator.Register<IBattleShaderNoticeRunner, BattleShaderNoticeRunner>(Reuse.Singleton);
         registrator.Register<IBattleShaderNoticeTextSource, BattleShaderNoticeTextSource>(Reuse.Singleton);
+        registrator.Register<IShaderCompileQueueAdapter, ShaderCompileQueueAdapter>(Reuse.Singleton);
         registrator.Register<BattleShaderNoticeService>(Reuse.Singleton);
+        registrator.RegisterMapping<IScreenShaderNotice, BattleShaderNoticeService>();
     }
 
     public override void InitializeStatics(IResolver resolver)

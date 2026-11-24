@@ -172081,19 +172081,7 @@
 			</deform_keys>
 			<voice_types>
 				<voice_type
-					name="male_02" />
-				<voice_type
-					name="male_03" />
-				<voice_type
-					name="male_04" />
-				<voice_type
-					name="male_05" />
-				<voice_type
-					name="male_06" />
-				<voice_type
-					name="male_07" />
-				<voice_type
-					name="male_08" />
+					name="elf_01" />
 			</voice_types>
 			<hair_meshes
 				group_id="7">

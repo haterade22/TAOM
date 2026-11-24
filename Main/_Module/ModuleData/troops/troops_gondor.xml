@@ -1446,7 +1446,7 @@
       id="gondor_lam_swordman"
       default_group="Infantry"
       level="16"
-      name="{=aom_gondor_lam_swordman_name}[Gondor] Lamedon Swordman"
+      name="{=aom_gondor_lam_swordman_name}[Gondor] Lamedon Swordsman"
       occupation="Soldier"
       culture="Culture.gondor">
     <face>
@@ -1519,7 +1519,7 @@
       id="gondor_lam_vet_swordman"
       default_group="Infantry"
       level="26"
-      name="{=aom_gondor_lam_vet_swordman_name}[Gondor] Lamedon Veteran Swordman"
+      name="{=aom_gondor_lam_vet_swordman_name}[Gondor] Lamedon Veteran Swordsman"
       occupation="Soldier"
       culture="Culture.gondor">
     <face>
