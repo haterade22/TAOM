@@ -531,6 +531,12 @@ class PlaceholderBladePieceTests(unittest.TestCase):
         piece = self.build_piece(PIECES.replace('{=b1}Blade', '{=b1}Iron Hills  Sword  Blade '))
         self.assertIn('}Iron Hills Sword Blade (placeholder)"', piece)
 
+    def test_a_child_element_keeps_its_own_is_hidden(self):
+        piece = self.build_piece(PIECES.replace('<BladeData physics_material="metal_weapon">',
+                                                '<BladeData is_hidden="false" physics_material="metal_weapon">'))
+        self.assertIn('<BladeData is_hidden="false"', piece)
+        self.assertEqual(piece.count('is_hidden="true"'), 1, piece)
+
     def test_a_donor_blade_already_hidden_keeps_one_attribute(self):
         piece = self.build_piece(PIECES.replace('piece_type="Blade"', 'is_hidden="false" piece_type="Blade"'))
         self.assertEqual(piece.count('is_hidden='), 1, piece)
