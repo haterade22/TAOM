@@ -48,7 +48,38 @@ Per clip the named sets bind (stand_findings):
   cache    a clip whose master is in the skeleton's package (the ADOD clips: one --root-z write moves all of
            them) needs an entry no older than that package, or the game still plays the keys from before.
 
-    python tools/check_gait_stride.py [--creature elephant] [--tolerance 0.05] [--max-slip 0.08]
+Every gait's master is the SkeletalAnimation item whose GUID its record names, in any master package under the
+creature's asset folder: a bought master carries the pack's name (Warg_Slow_run) and serves several records, so a
+file named after the clip is not looked for. A creature whose clips were bought, not made here (the warg, #1565)
+may set these keys in its CREATURES entry:
+  limits   the keys "max_slip" and "min_duty" (LIMITS holds the defaults, the elephant's). The pack's paws slip
+           up to 0.91 m in a stance (the gallop's left hind paw) and a trot's fore paw is down for 3 of 16 keys.
+           The warg's values sit just above what its clips have today, so a clip that gets worse fails. They are
+           not a standard for a new clip: no tool here writes the warg's masters.
+  cooked   "stamp": an entry is held to the checksum of its record (stamp_state), not to the files' dates. Of the
+           warg's own masters 32 are dated 2026-08-31 09:01 (Warg_Trot: 2026-08-28 20:39), and every record no
+           tool has rewritten 2026-08-28 20:33: the dates of copies. All but one are later than the entry the Kit
+           cooked on 2026-08-28 (at 18:08 and 18:09), so the date rule calls those entries stale. The five
+           masters the Kit cooked again in November gave the August payload byte for byte (read 2026-11-24).
+           What the stamp does not see is in stamp_state. Any other value of "cooked" is a finding.
+  known    {clip: (metres in the record, metres the feet cover, why with its issue)}: a gait that fails the
+           stride judgement and that nobody has settled yet. The list excuses the stride line alone, for
+           exactly those two numbers, compared at two decimals. The clip is measured and printed on every run.
+           It fails when its stride starts to equal its travel (until it leaves the list), when either number
+           is no longer the listed one, when a paw slips or does not plant (judged against the ground the feet
+           cover, not the travel), when its entry is not cooked, and when no named set binds it or the run
+           does not measure it. The warg's two are its side steps. For those the stride is not the node's
+           measure: at the standing pace the node plays one loop in LoopDisplacement / (Duration x its
+           sideways input) seconds, and it takes the rate of a turn in place from the turn-right row, which is
+           the right side step's record (0x749C20 and 0x74E9C0, read 2026-11-24). So the list pins what the
+           two records hold, and #1591 decides their travel and how this gate judges such a row.
+  pending  {clip: why}: a clip that carries travel and has no stride to measure (a moving pace's strafe record,
+           which plays the pace's forward keys; the node divides the sideways input by that travel for the
+           weight of the sideways blend, 0x74E9C0). A pace action bound to one is a finding (record_findings),
+           and so is a listed clip that no named set binds.
+A gait whose animation is in two master files fails: the gate cannot tell which one the game plays.
+
+    python tools/check_gait_stride.py [--creature elephant|spider|warg] [--tolerance 0.05] [--max-slip 0.08]
 Exit 0 pass, 1 a clip fails, 2 the install or a file is missing (a laptop without the Armory: an environment gap).
 """
 import argparse
@@ -62,6 +93,7 @@ import uuid
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import set_clip_balance_name as scb  # noqa: E402
 import tpac_clone_metamesh as tcm  # noqa: E402
 import tpac_skeleton_dump as tsd  # noqa: E402
 from _gamedir import game_dir  # noqa: E402
@@ -108,9 +140,45 @@ CREATURES = {
                          "faster": ("act_spider_trot_forward", "act_spider_canter_forward", "act_spider_run_forward")},
         "stand_action": "act_spider_stand",
     },
+    # #1565: the pack's own masters, found by GUID. tools/warg_gait_plan.json sets the forward gaits' records, and
+    # tools/tests/test_warg_gait_plan.py measures the same paws.
+    "warg": {
+        "module": "LOTRLOME_Armory", "clips": "Assets/creature/warg/animations",
+        "skeleton": ("Assets/creature/warg/mesh/Warg_Rig_V5_geo.tpac", "skeleton_warg"),
+        "feet": {"FL": "Fingers1_L", "FR": "Fingers1_R", "BL": "Toes1_L", "BR": "Toes1_R"},
+        "gaits": ["warg_walkfast", "warg_trot", "warg_canter", "warg_forward_gallop_left_foot",
+                  "warg_walkbackfast", "warg_walkbackfast_straight",
+                  "warg_strafe_left_faster", "warg_strafe_right_faster"],
+        "axis": {"warg_strafe_left_faster": 0, "warg_strafe_right_faster": 0},
+        "max_slip": 1.0, "min_duty": 0.15, "cooked": "stamp",
+        "known": {clip: (1.6, covers, "a side step and a turn in place: the node takes a loop time from this "
+                                      "travel and the Duration, not a stride, so no travel is set yet (#1591)")
+                  for clip, covers in (("warg_strafe_left_faster", 0.73), ("warg_strafe_right_faster", 1.0))},
+        "pending": {clip: "a moving pace's strafe record: it plays the pace's forward keys, which do not move "
+                          "sideways" for clip in ("warg_walk_strafe", "warg_trot_strafe", "warg_canter_strafe",
+                                                  "warg_forward_gallop_left_foot_strafe")},
+        "action_sets": "ModuleData/action_sets.xml",
+        "sets": ("as_warg",),
+        "pace_actions": {"backward": "act_warg_backward_walk",
+                         "strafe": ("act_warg_strafe_right", "act_warg_strafe_left"),
+                         "walk": "act_warg_forward_walk",
+                         "faster": ("act_warg_forward_trot", "act_warg_forward_canter",
+                                    "act_warg_forward_gallop_right_foot", "act_warg_forward_gallop_left_foot")},
+        "stand_action": "act_warg_stand_for_movement_data",
+    },
 }
 KEY_RATE = 30.0        # keys per second in a master: the pack's frame rate
 MIN_DURATION = 0.75    # of a strafe clip's real length; the vanilla horse records run from 0.8 to 1.19
+# tolerance: stride against the claim, as a part of the claim. max_slip: metres a planted foot may leave the ground's
+# speed in one stance. min_duty: the part of a loop a foot must be planted, under which it is named as not planting.
+LIMITS = {"tolerance": 0.05, "max_slip": 0.08, "min_duty": 0.2}
+
+
+def limits(creature, tolerance=None, max_slip=None):
+    """The three limits a creature's gaits are judged with: an argument given on the command line, else the
+    creature's own value, else LIMITS."""
+    given = {"tolerance": tolerance, "max_slip": max_slip}
+    return {k: given[k] if given.get(k) is not None else creature.get(k, default) for k, default in LIMITS.items()}
 
 
 def measure(soles, claim, axis=1):
@@ -140,15 +208,23 @@ def measure(soles, claim, axis=1):
     }
 
 
-def judge(m, claim, tolerance, max_slip):
+def stride_finding(m, claim, tolerance):
+    """The line for a stride that misses the claim (above 0) by more than the tolerance, or None."""
+    if abs(m["stride"] - claim) > tolerance * claim:
+        return "feet cover %.2f m a loop, the clip claims %.2f m (%+.0f%%)" % (
+            m["stride"], claim, 100 * (m["stride"] - claim) / claim)
+    return None
+
+
+def judge(m, claim, tolerance, max_slip, min_duty=LIMITS["min_duty"]):
     out = []
     if claim is None or claim <= 0:
         return ["the clip carries no quad_movement travel"]
-    if abs(m["stride"] - claim) > tolerance * claim:
-        out.append("feet cover %.2f m a loop, the clip claims %.2f m (%+.0f%%)" % (
-            m["stride"], claim, 100 * (m["stride"] - claim) / claim))
+    miss = stride_finding(m, claim, tolerance)
+    if miss:
+        out.append(miss)
     for t, s in m["slip"].items():
-        if m["duty"][t] < 0.2:
+        if m["duty"][t] < min_duty:
             out.append("%s is planted for only %.0f%% of the loop" % (t, 100 * m["duty"][t]))
         elif s > max_slip:
             out.append("%s slips %.2f m in a stance" % (t, s))
@@ -281,10 +357,11 @@ def stand_finding(soles):
     return None
 
 
-def stand_findings(rows, records, c, module_root, bones):
+def stand_findings(rows, records, c, module_root, bones, masters):
     """(findings, cache entries read, poses measured) for the clips the sets named in c["sets"] bind: a clip whose
-    master is in the skeleton's package needs a cache entry no older than it, and the pose on the stand action
-    must have its lowest sole on the ground."""
+    master is in the skeleton's package needs a current cache entry (cook_state), and the pose on the stand action
+    must have its lowest sole on the ground. masters: the packages a pose's master is looked for in (report gives
+    every one under the creature's folder)."""
     out, cached, poses = [], 0, 0
     folder = os.path.join(module_root, c["clips"])
     skel = os.path.join(module_root, c["skeleton"][0])
@@ -295,10 +372,9 @@ def stand_findings(rows, records, c, module_root, bones):
         if records[clip]["animation"] not in skel_raw:
             continue
         cached += 1
-        stale = cache_state(module_root, os.path.join(folder, clip + "_anm.tpac"), skel)
+        stale = cook_state(c, module_root, os.path.join(folder, clip + "_anm.tpac"), skel)
         if stale:
             out.append("%s plays keys of %s, and %s: the game plays the old keys" % (clip, os.path.basename(skel), stale))
-    masters = [skel] + sorted(os.path.join(folder, f) for f in os.listdir(folder) if f.endswith("_geo.tpac"))
     for clip in sorted({acts.get(c["stand_action"]) for acts in named} & set(records)):
         rec = records[clip]
         found = master_by_guid(masters, rec["animation"])
@@ -377,8 +453,8 @@ def range_findings(clips, records, masters):
     return out, read
 
 
-def master_by_guid(paths, guid):
-    """(file, parsed animation) of the SkeletalAnimation item with this GUID in one of `paths`, or None."""
+def masters_by_guid(paths, guid):
+    """Yield (file, parsed animation) for each SkeletalAnimation item with this GUID in `paths`, in their order."""
     for path in paths:
         with open(path, "rb") as fh:
             raw = fh.read()
@@ -386,8 +462,12 @@ def master_by_guid(paths, guid):
             continue
         for it in tcm.parse(raw).items:
             if it.type_guid == SKELETAL_ANIMATION_TYPE and it.item_guid == guid:
-                return path, parse_anim(tcm.segment_payload(it, it.segments[0]))
-    return None
+                yield path, parse_anim(tcm.segment_payload(it, it.segments[0]))
+
+
+def master_by_guid(paths, guid):
+    """(file, parsed animation) of the first SkeletalAnimation item with this GUID in `paths`, or None."""
+    return next(masters_by_guid(paths, guid), None)
 
 
 def cache_state(module_root, anm_path, geo_path):
@@ -405,6 +485,63 @@ def cache_state(module_root, anm_path, geo_path):
         if os.path.getmtime(entry) < os.path.getmtime(path):
             return "its cache entry is older than its %s (cooked %s, %s written %s)" % (what, when(entry), what, when(path))
     return None
+
+
+def stamp_state(module_root, anm_path):
+    """None when the clip's RuntimeDataCache entry carries the stored checksum of its record, else why not. The
+    Kit writes that checksum into the entry when it cooks, so the stamp ties an entry to the record it was cooked
+    from whatever the files' dates say. Two things it does not see, which the dates did (cache_state):
+      a master whose keys changed under one GUID, so this is the rule of a creature whose masters no tool writes;
+      a record edited without a new stored checksum (a hex edit). The gate cannot recompute the checksum to find
+      one: set_clip_balance_name.checksum_ok is false for 30 of the 41 records of as_warg, every one the Kit
+      wrote and no tool here rewrote (read 2026-11-24). An edited travel still fails the stride check itself."""
+    with open(anm_path, "rb") as fh:
+        buf = fh.read()
+    try:
+        clip = scb.parse(buf)
+    except (scb.ClipError, struct.error, IndexError, ValueError) as err:
+        return "its record cannot be read (%s)" % err
+    entry = scb.rdc_path(module_root, clip.package_guid)
+    if not os.path.isfile(entry):
+        return "it has no cache entry"
+    with open(entry, "rb") as fh:
+        if not scb.rdc_current(fh.read(), clip, buf):
+            return "its cache entry does not carry its record's checksum: the record changed after the Kit cooked it"
+    return None
+
+
+COOK_RULES = (None, "stamp")       # what a creature's "cooked" may say; None is the date rule
+
+
+def cook_state(c, module_root, anm_path, geo_path):
+    """Why the clip's cache entry is not current by the creature's rule, or None: stamp_state where the creature
+    says cooked "stamp", else the dates (cache_state)."""
+    if c.get("cooked") == "stamp":
+        return stamp_state(module_root, anm_path)
+    return cache_state(module_root, anm_path, geo_path)
+
+
+def known_verdict(entry, soles, axis, claim, m, why, lim):
+    """(label, the measurement to print, lines) for a gait in a creature's known list. entry: (claimed metres,
+    covered metres, why). m, why: the gait's measurement against its claim and judge's lines for it. The list
+    excuses one thing, that record on those feet: the label is KNOWN only for it."""
+    claims, covers, reason = entry
+    if claim is None or claim <= 0:
+        return "FAIL", m, why
+    miss = stride_finding(m, claim, lim["tolerance"])
+    if not miss:
+        return "FAIL", m, why + ["it is in the known list (%s) and its feet now cover its travel: remove it from "
+                                 "the creature's known list" % reason]
+    if (round(claim, 2), round(m["stride"], 2)) != (claims, covers):
+        return "FAIL", m, why + ["the known list holds %.2f m claimed and %.2f m covered (%s): the record or the "
+                                 "master changed, so correct it or the list" % (claims, covers, reason)]
+    # the slip and the stance against the ground the feet do cover: against the claim every stance of a short
+    # stride reads as a slip
+    own = measure(soles, m["stride"], axis=axis)
+    rest = judge(own, m["stride"], lim["tolerance"], lim["max_slip"], lim["min_duty"])
+    if rest:
+        return "FAIL", own, [miss] + rest + ["the known list covers the stride alone (%s)" % reason]
+    return "KNOWN", own, [miss, "not counted: %s" % reason]
 
 
 def clip_problems(module_root, folder, clips):
@@ -462,11 +599,114 @@ def load_anim(path):
     return parse_anim(tcm.segment_payload(item, item.segments[0]))
 
 
+def report(name, c, root, bones, sets_text, tolerance=None, max_slip=None):
+    """Print the creature's report and return the exit code: 1 on a finding, else 0. root: the module folder;
+    bones: the skeleton's; sets_text: the action sets file. The two arguments go over the creature's own limits."""
+    if c.get("cooked") not in COOK_RULES:
+        print("FAIL table: cooked is %r, and the only rule a creature may name is \"stamp\"" % (c.get("cooked"),))
+        return 1
+    lim = limits(c, tolerance, max_slip)
+    skel_path = os.path.join(root, c["skeleton"][0])
+    bound, rows = bound_clips(sets_text), set_rows(sets_text)
+    named = {clip for s in c["sets"] for clip in rows.get(s, {}).values()}
+    records, anm_of, twice = records_in(os.path.join(root, c["clips"]), named | set(c["gaits"]))
+    # the listed gaits, and any other clip a named set binds that claims travel: none escapes the stride check
+    turns, pending, known = set(c.get("turns", ())), c.get("pending", {}), c.get("known", {})
+    gaits = c["gaits"] + sorted(k for k in named - set(c["gaits"]) - turns - set(pending)
+                                if k in records and records[k]["loop"])
+    # every master package under the creature's own asset folder, each once: ADOD keeps two elephant masters
+    # beside the mesh, and a bought master carries the pack's name, not its clip's
+    creature = os.path.dirname(os.path.join(root, c["clips"]))
+    masters = sorted({os.path.normpath(p) for p in [skel_path] + [
+        os.path.join(dp, f) for dp, _, fs in os.walk(creature) for f in fs if f.endswith("_geo.tpac")]})
+    bad, notes, excused = len(twice), 0, 0
+    for why in twice:
+        print("FAIL record files: %s" % why)
+    for clip in sorted(known):
+        why = ("is also in the pending list" if clip in pending else "is also listed as a turn" if clip in turns else
+               "is listed and no named set binds it" if clip not in named else
+               "is listed and is not a gait this run measures" if clip not in gaits else None)
+        if why:
+            bad += 1
+            print("FAIL known list: %s %s; a known failure is a bound gait that the run measures" % (clip, why))
+    for clip in sorted(set(pending) - named):
+        bad += 1
+        print("FAIL pending list: %s is listed and no named set binds it: take it off the list" % clip)
+    for clip in sorted(turns & set(records)):
+        print("--   %-28s a turn: it goes round a point, so it has no straight stride to check" % clip)
+    for clip in sorted(set(pending) & named):
+        print("--   %-28s not checked: %s" % (clip, pending[clip]))
+    for clip in gaits:
+        found = list(masters_by_guid(masters, records[clip]["animation"])) if clip in records else []
+        if len(found) > 1:
+            bad += 1
+            print("FAIL %-28s %d master files hold the animation its record names (%s): the gate cannot tell which "
+                  "one the game plays" % (clip, len(found), ", ".join(os.path.basename(p) for p, _ in found)))
+            continue
+        if not found:
+            if clip in bound:
+                bad += 1
+                print("FAIL %-28s bound   an action set binds it, and its clip record is missing or no master under "
+                      "%s holds the animation its record names" % (clip, os.path.relpath(creature, root)))
+            else:
+                notes += 1
+                print("--   %-28s unbound not installed (no clip record or no master)" % clip)
+            continue
+        (geo, anim), anm = found[0], anm_of[clip]
+        claim = records[clip]["loop"]
+        played = played_keys(anim, records[clip])
+        if not len(played["rot"][0]["t"]):
+            bad += 1
+            print("FAIL %-28s its record plays no key of its master" % clip)
+            continue
+        soles, axis = soles_of(played, bones, c["feet"]), c.get("axis", {}).get(clip, 1)
+        m = measure(soles, claim or 0.0, axis=axis)
+        why = judge(m, claim, lim["tolerance"], lim["max_slip"], lim["min_duty"])
+        label = "FAIL" if why else "ok"
+        if clip in known:
+            label, m, why = known_verdict(known[clip], soles, axis, claim, m, why, lim)
+        stale, note = cook_state(c, root, anm, geo), ""
+        if stale and clip in bound:
+            label = "FAIL"
+            why.append("an action set binds it and %s: the game plays what the Kit cooked before" % stale)
+        elif stale:
+            notes += 1
+            note = "\n       note: no action set binds it yet, and %s" % stale
+        bad += label == "FAIL"
+        excused += label == "KNOWN"
+        print("%-4s %-28s %s claims %.2f m, feet cover %.2f m in %d frames, worst slip %.3f m%s%s" % (
+            label, clip, "bound  " if clip in bound else "unbound", claim or 0.0, m["stride"],
+            m["frames"], max(m["slip"].values()), "".join("\n       " + w for w in why), note))
+    pace, n_rows = record_findings(rows, records, c, c.get("key_rate", KEY_RATE))
+    stand, n_cached, n_poses = stand_findings(rows, records, c, root, bones, masters)
+    ranges, n_ranges = range_findings(sorted(named), records, masters)
+    for why in pace:
+        print("FAIL pace: %s" % why)
+    for why in stand:
+        print("FAIL bound clip: %s" % why)
+    for why in ranges:
+        print("FAIL key range: %s" % why)
+    print("%s: read %d pace rows of %d named sets, %d cache entries of clips on the skeleton's package, %d standing "
+          "pose(s), the key range of %d bound clip(s): %d finding(s)" % (
+              name, n_rows, len(c["sets"]), n_cached, n_poses, n_ranges, len(pace) + len(stand) + len(ranges)))
+    wait = "; %d wait for a Kit start before an action set can bind them" % notes if notes else ""
+    if bad:
+        print("%s: %d finding(s) in the record files, the lists and the %d gait clips" % (name, bad, len(gaits)))
+    elif excused:
+        print("%s: %d gait clips, %d of them held at the numbers the known list gives and not judged by stride; the "
+              "others cover the ground they claim%s" % (name, len(gaits), excused, wait))
+    else:
+        print("%s: all %d gait clips cover the ground they claim%s" % (name, len(gaits), wait))
+    return 1 if bad or pace or stand or ranges else 0
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--creature", default="elephant", choices=sorted(CREATURES))
-    ap.add_argument("--tolerance", type=float, default=0.05)
-    ap.add_argument("--max-slip", type=float, default=0.08)
+    ap.add_argument("--tolerance", type=float, default=None,
+                    help="stride against the claim, as a part of it (default %s)" % LIMITS["tolerance"])
+    ap.add_argument("--max-slip", type=float, default=None,
+                    help="metres in one stance (default: the creature's, else %s)" % LIMITS["max_slip"])
     ap.add_argument("--game", default=None)
     a = ap.parse_args(argv)
     c = CREATURES[a.creature]
@@ -484,69 +724,9 @@ def main(argv=None):
     if not os.path.exists(sets_path):
         print("cannot run: %s not found" % sets_path)
         return 2
-    sets_text = open(sets_path, encoding="utf-8", errors="replace").read()
-    bound, rows = bound_clips(sets_text), set_rows(sets_text)
-    named = {clip for s in c["sets"] for clip in rows.get(s, {}).values()}
-    records, anm_of, twice = records_in(os.path.join(root, c["clips"]), named | set(c["gaits"]))
-    # the listed gaits, and any other clip a named set binds that claims travel: none escapes the stride check
-    turns, pending = set(c.get("turns", ())), c.get("pending", {})
-    gaits = c["gaits"] + sorted(k for k in named - set(c["gaits"]) - turns - set(pending)
-                                if k in records and records[k]["loop"])
-    bad, notes = len(twice), 0
-    for why in twice:
-        print("FAIL record files: %s" % why)
-    for clip in sorted(turns & set(records)):
-        print("--   %-28s a turn: it goes round a point, so it has no straight stride to check" % clip)
-    for clip in sorted(set(pending) & named):
-        print("--   %-28s not checked: %s" % (clip, pending[clip]))
-    for clip in gaits:
-        anm = anm_of.get(clip, os.path.join(root, c["clips"], clip + "_anm.tpac"))
-        geo = os.path.join(root, c["clips"], clip + "_geo.tpac")
-        if not (clip in records and os.path.exists(geo)):
-            if clip in bound:
-                bad += 1
-                print("FAIL %-28s bound   an action set binds it, and its clip record or its master is missing" % clip)
-            else:
-                notes += 1
-                print("--   %-28s unbound not installed (no clip record or no master)" % clip)
-            continue
-        claim = records[clip]["loop"]
-        played = played_keys(load_anim(geo), records[clip])
-        if not len(played["rot"][0]["t"]):
-            bad += 1
-            print("FAIL %-28s its record plays no key of its master" % clip)
-            continue
-        m = measure(soles_of(played, bones, c["feet"]), claim or 0.0, axis=c.get("axis", {}).get(clip, 1))
-        why = judge(m, claim, a.tolerance, a.max_slip)
-        stale, note = cache_state(root, anm, geo), ""
-        if stale and clip in bound:
-            why.append("an action set binds it and %s: the game plays what the Kit cooked before" % stale)
-        elif stale:
-            notes += 1
-            note = "\n       note: no action set binds it yet, and %s" % stale
-        bad += bool(why)
-        print("%-4s %-28s %s claims %.2f m, feet cover %.2f m in %d frames, worst slip %.3f m%s%s" % (
-            "FAIL" if why else "ok", clip, "bound  " if clip in bound else "unbound", claim or 0.0, m["stride"],
-            m["frames"], max(m["slip"].values()), "".join("\n       " + w for w in why), note))
-    pace, n_rows = record_findings(rows, records, c, c.get("key_rate", KEY_RATE))
-    stand, n_cached, n_poses = stand_findings(rows, records, c, root, bones)
-    # every master package under the creature's own asset folder: ADOD keeps two elephant masters beside the mesh
-    creature = os.path.dirname(os.path.join(root, c["clips"]))
-    masters = sorted({skel_path} | {os.path.join(dp, f) for dp, _, fs in os.walk(creature) for f in fs if f.endswith("_geo.tpac")})
-    ranges, n_ranges = range_findings(sorted(named), records, masters)
-    for why in pace:
-        print("FAIL pace: %s" % why)
-    for why in stand:
-        print("FAIL bound clip: %s" % why)
-    for why in ranges:
-        print("FAIL key range: %s" % why)
-    print("%s: read %d pace rows of %d named sets, %d cache entries of clips on the skeleton's package, %d standing "
-          "pose(s), the key range of %d bound clip(s): %d finding(s)" % (
-              a.creature, n_rows, len(c["sets"]), n_cached, n_poses, n_ranges, len(pace) + len(stand) + len(ranges)))
-    print("%s: %d of %d gait clips fail" % (a.creature, bad, len(gaits)) if bad else
-          "%s: all %d gait clips cover the ground they claim%s" % (
-              a.creature, len(gaits), "; %d wait for a Kit start before an action set can bind them" % notes if notes else ""))
-    return 1 if bad or pace or stand or ranges else 0
+    with open(sets_path, encoding="utf-8", errors="replace") as fh:
+        sets_text = fh.read()
+    return report(a.creature, c, root, bones, sets_text, a.tolerance, a.max_slip)
 
 
 if __name__ == "__main__":

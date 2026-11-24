@@ -212,6 +212,7 @@ measured and changed in the same work: [lotrlome-dire-wolf-changes.md](lotrlome-
 ```bash
 python tools/repoint_anim_clip.py --plan tools/warg_gait_plan.json --under creature/warg/animations --check
 python tools/bind_warg_clips.py --check
+python tools/check_gait_stride.py --creature warg
 ```
 
 The first exits 0 when each of the thirteen records holds the plan's values and is cooked as it is now (above); 1
@@ -221,7 +222,38 @@ package, to a cache entry of the Armory, to the plan or to the tool selects. The
 `as_warg` and `as_dire_wolf`, and the snapshot's, bind the walk's "none" row to the creature's own twin (the
 `warg-clips` row, which a change to an action set file or to the tool selects).
 
-A reinstall of the Armory or an art drop reverts the records and the row, and no other gate sees it. In this
+The third (since 2026-11-24, item 2 of #1565) measures the installed masters. For the four forward gaits and the
+backward walk the paws must cover the record's travel within 5%, on the master the record names by GUID. It also
+holds the pace rows of `as_warg` (the limits, the standing pose, each bound clip's key range) and each gait's
+cache entry. It is the `warg-stride` row, which a change to an action set file, to a package under the warg's
+folder, to a cache entry or to the tool and its imports selects. Three things in it are the warg's own:
+
+- **Limits.** A paw may slip 1.0 m in a stance and must be down for 15% of a loop. The pack's clips have 0.91 m
+  (the gallop's left hind paw) and 3 of 16 keys (the trot's fore paws). The limits sit just above what the
+  clips have today, so a clip that gets worse fails. They are not a standard for a new clip: no tool here writes
+  the warg's masters. The elephant's limits are 8 cm and 20%.
+- **The cook, by checksum.** 32 of the warg's masters are dated 2026-08-31 09:01 and every record no tool has
+  rewritten 2026-08-28 20:33. All but one of those dates are later than the entry the Kit cooked on 2026-08-28
+  (at 18:08 and 18:09), so a rule by dates calls the entries stale. They are the dates of copies: the five
+  masters the Kit cooked again in November gave the August payload byte for byte. So the gate holds a gait's
+  entry to the checksum of its record, which the Kit writes into the entry. That rule does not see a master
+  whose keys changed under one GUID (the plan check above still compares that date for the planned records),
+  and it does not see a record edited by hand without a new checksum: the gate cannot recompute the checksum of
+  a record the Kit wrote (30 of the 41 records of `as_warg`). An edited travel still fails the stride measure.
+- **Two listed records.** The side steps (below) fail the stride judgement, and the gate lists each with the
+  travel its record holds and the travel its paws cover. They are measured and printed on every run and not
+  counted. A listed record fails when its stride starts to equal its travel (until it leaves the list), when
+  either number changes, when a paw slips more than the limit or does not plant, and when its cache entry is not
+  current.
+
+A gait whose animation two master files hold fails, because the gate cannot tell which one the game plays.
+
+The plan check stays beside it. The stride gate does not hold a forward pace's cadence (the two `Duration`
+values), a twin's tie to its gait or the rider's flags.
+
+A reinstall of the Armory or an art drop reverts the records and the row. The third command then fails on the
+travel (the pack's 1.6 m of walk against paws that cover 1.80 m is outside its 5%); only the first two see the
+loop times, the twin and its row. In this
 order: run the first command with `--apply` in place of `--check`, start the Kit once and close it, then run the
 second with `--apply`. The bind tool writes both rows or none, so after a reinstall it also waits for the dire
 wolf's replay to restore `as_dire_wolf`
@@ -244,8 +276,16 @@ is the old state.
 - Below 1.2 m/s at model size the walk's legs turn over faster than the ground passes (above). A walk whose
   stride shortens at low speed needs an in-place master with a smaller leg movement, which the pack does not
   have.
-- The warg is not yet a creature of `tools/check_gait_stride.py`: that gate finds a master by its clip's name
-  and holds every clip to a slip limit the purchased clips do not meet (still open in #1565).
+- The two side-step records (`warg_strafe_left_faster`, `warg_strafe_right_faster`) hold a travel of 1.60 m, and
+  the paws move 0.73 m and 1.00 m sideways in a loop (measured 2026-11-24). The stride is not the node's measure
+  for these rows. At the standing pace it plays one loop in travel / (`Duration` x its sideways input) seconds,
+  held between 0.7 and 1.3 times the `Duration`, and it takes the rate of a turn in place from the turn-right
+  row, which is the right side step's record (0x749C20 and 0x74E9C0 on v1.5.7, read 2026-11-24). The unit of
+  the node's sideways and turn inputs is not read, so no travel is set: the stride gate lists both records with
+  the numbers they hold today (#1591).
+- The strafe records of the four moving paces play their pace's forward keys, which do not move sideways, so
+  the stride gate prints them as not measured. The node divides the sideways input by such a record's travel
+  for the weight of the sideways blend (0x74E9C0): the value is read, and it is not a stride.
 - The players' copies of the Armory change only with a new Armory package for each channel. A channel ships the
   Armory as compiled `AssetPackages/pack*.tpac` with no `Assets` folder, so the check below cannot read a
   channel: build the package from an install on which the check exits 0

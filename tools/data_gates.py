@@ -113,15 +113,22 @@ BAND_CLONE_GLOBS = ("*/armour_band_clones/*", "*tools/armour_band_clones.json", 
                     ) + ARMOUR_CURVE_GLOBS + TROOP_GLOBS + ARMORY_GLOBS
 CREATURE_GLOBS = ("*/action_sets.xml", "*/action_types.xml", "*/monster_usage_sets.xml", "*/monsters/*.xml",
                   "*/lotr_monster_*.xml")
+# check_gait_stride.py and every module it imports: the stride gate of each creature runs them all.
+STRIDE_TOOL_GLOBS = ("*tools/check_gait_stride.py", "*tools/set_clip_balance_name.py", "*tools/tpac_clone_metamesh.py",
+                     "*tools/tpac_skeleton_dump.py", "*tools/_gamedir.py", "*tools/elephant_gait_retarget.py",
+                     "*tools/elephant_write_masters.py")
+# The Armory's cache entries. A stride gate and a bind check read the cook of each clip they judge, and an entry is
+# named by a GUID, not by its creature. Git does not see the live Armory, so such a path selects a gate only when
+# it is named on the command line.
+CACHE_GLOBS = ("*/lotrlome_armory/runtimedatacache/*.rdc",)
 # What the two elephant gates read beside the creature XML (masters, clip records), and the tools that write it.
-ELEPHANT_GLOBS = CREATURE_GLOBS + (
-    "*/creature/elephant/*.tpac", "*tools/check_gait_stride.py", "*tools/bind_elephant_clips.py",
-    "*tools/elephant_write_masters.py", "*tools/gen_elephant_anim_clips.ps1", "*tools/elephant_gait_retarget.py")
+ELEPHANT_GLOBS = CREATURE_GLOBS + STRIDE_TOOL_GLOBS + CACHE_GLOBS + (
+    "*/creature/elephant/*.tpac", "*tools/bind_elephant_clips.py", "*tools/gen_elephant_anim_clips.ps1")
 # The same for the two spider gates (#1541). gen_elephant_anim_clips.ps1 and elephant_write_masters.py write the
 # spider's records and masters too, and check_gait_stride.py reads both creatures.
-SPIDER_GLOBS = CREATURE_GLOBS + (
-    "*/creature/spider/*.tpac", "*tools/check_gait_stride.py", "*tools/bind_spider_clips.py", "*tools/spider_gait.py",
-    "*tools/elephant_write_masters.py", "*tools/gen_elephant_anim_clips.ps1")
+SPIDER_GLOBS = CREATURE_GLOBS + STRIDE_TOOL_GLOBS + CACHE_GLOBS + (
+    "*/creature/spider/*.tpac", "*tools/bind_spider_clips.py", "*tools/spider_gait.py",
+    "*tools/gen_elephant_anim_clips.ps1")
 # The warg's clip records and masters, the Armory's cache entries (the gate reads the cook of each planned record,
 # and a cache entry is named by a GUID, not by its creature), the plan that sets the records, and the tool that writes
 # them (#1563, #1565).
@@ -130,6 +137,9 @@ GAIT_TOOL_GLOBS = ("*tools/repoint_anim_clip.py", "*tools/set_clip_balance_name.
                    "*tools/_gamedir.py")
 WARG_GLOBS = ("*/creature/warg/animations/*.tpac", "*/lotrlome_armory/runtimedatacache/*.rdc",
               "*tools/warg_gait_plan.json") + GAIT_TOOL_GLOBS
+# What the warg's stride gate reads (#1565 item 2): the action set, every package under the warg's folder (records,
+# masters, the rig) and the cache entries of the gaits.
+WARG_STRIDE_GLOBS = CREATURE_GLOBS + STRIDE_TOOL_GLOBS + CACHE_GLOBS + ("*/creature/warg/*.tpac",)
 # The same for the dire wolf, whose gait records its own plan sets (#1565).
 DIRE_WOLF_GLOBS = ("*/creature/direwolf/animations/*.tpac", "*/lotrlome_armory/runtimedatacache/*.rdc",
                    "*tools/dire_wolf_gait_plan.json") + GAIT_TOOL_GLOBS
@@ -337,8 +347,15 @@ GATES = (
           "creature/warg/animations", "--check"), ("docs/reference/lotrlome-warg-gait-changes.md",),
          note="a reinstall or an art drop puts the canter back on the trot's keys, the gallop back on a travel "
               "twice what its paws cover and each pace back on one loop time, and it removes the walk's in-place "
-              "twin; no other gate sees it; exit 1 also while a changed record waits for its cook (start the "
-              "Modding Kit once)"),
+              "twin; warg-stride sees the reverted travel and none of the rest; exit 1 also while a changed "
+              "record waits for its cook (start the Modding Kit once)"),
+    Gate("warg-stride", "warg action set, clip records, masters, rig and the stride gate", WARG_STRIDE_GLOBS,
+         ("python", "tools/check_gait_stride.py", "--creature", "warg"),
+         ("docs/reference/lotrlome-warg-gait-changes.md",),
+         note="the paws cover the ground each forward gait and the backward walk claims, on the master its record "
+              "names; the pace rows of as_warg carry limits the engine plays well; a bound gait's cache entry carries "
+              "its record's checksum; the two side steps fail the stride judgement, are listed with the numbers "
+              "they hold (#1591) and are not counted, and the gate fails when one of those numbers changes"),
     Gate("dire-wolf-gaits", "dire wolf clip records, their plan and its tool", DIRE_WOLF_GLOBS,
          ("python", "tools/repoint_anim_clip.py", "--plan", "tools/dire_wolf_gait_plan.json", "--under",
           "creature/direwolf/animations", "--check"), ("docs/reference/lotrlome-dire-wolf-changes.md",),

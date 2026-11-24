@@ -161,8 +161,8 @@ two changes of 2026-11-23: the canter got its own master and the canter's and th
 speed (#1563), then the walk and the trot got the travel their paws cover and a cadence that follows the speed,
 for which the walk needed an in-place twin record of its own (#1565). The same work tied the rider's two gallop
 turn clips to the warg's stride and gave the dire wolf's gaits the same treatment
-([dire wolf ledger](../reference/lotrlome-dire-wolf-changes.md)). The gates are the `warg-gaits`, `warg-clips`
-and `dire-wolf-gaits` rows of `tools/data_gates.py`. A reinstall of the Armory reverts the records and the twins'
+([dire wolf ledger](../reference/lotrlome-dire-wolf-changes.md)). The gates are the `warg-gaits`, `warg-stride`,
+`warg-clips` and `dire-wolf-gaits` rows of `tools/data_gates.py`. A reinstall of the Armory reverts the records and the twins'
 rows.
 
 ### The warg gait step of the command trial
@@ -196,7 +196,7 @@ limit=<n> horse=<m/s> scale=<n>`, then `seated` and `faulted`:
 It passes with at least one rider and a `top` of 6.0 m/s or more. **A PASS means the wargs ran. It does not
 mean their gaits are right:** managed code cannot read which gait clip plays (a moving mount's channel 0 holds
 `act_none`), and the step passed on the records that made the legs look like a walk. The records are held by
-the `warg-gaits` gate, and the legs by a person's eye.
+the `warg-gaits` and `warg-stride` gates, and the legs by a person's eye.
 
 | Run | Armory records | Line |
 |---|---|---|
@@ -262,6 +262,12 @@ Checked on 2026-11-23 by the maintainer: step 3. Steps 4, 5, 6 and 7 are owed.
 
 ## Changelog
 
+- 2026-11-24 (#1565, item 2): the warg is a creature of `tools/check_gait_stride.py`, the `warg-stride` data
+  gate. It measures the paws of the installed masters against each gait's travel, which until now only a test
+  of the plan did. The gate finds a master by the GUID in its record and takes a creature's own slip limit,
+  stance limit and cook rule. The four forward gaits and the backward walk pass. The two side-step records do
+  not (a travel of 1.60 m, paws that move 0.73 m and 1.00 m) and are listed with those numbers. The stride is not
+  the node's measure for a standing side step, and their travel is open in #1591. No record and no C# changed.
 - 2026-11-23 (#1565): the walk and the trot. Both records claimed a travel their paws do not cover (1.6 m
   against 1.80 m, 2.9 m against 2.71 m) and kept one cadence at every speed; the walk could not do otherwise,
   because one record sat on both of its rows. Three records were rewritten, the walk got an in-place twin
@@ -319,7 +325,7 @@ Checked on 2026-11-23 by the maintainer: step 3. Steps 4, 5, 6 and 7 are owed.
 ## GitHub Issue
 
 - **Issue:** #1563, [AI warg riders reported walking instead of running (v2.0.41)](https://github.com/haterade22/TAOM/issues/1563)
-- **Status:** Open (a turn at speed, the pace change and a fell warg owed in game; the Armory package for each channel owed). Follow-ups: #1565 (walk, trot, the stride gate), #1566, #1567
+- **Status:** Open (a turn at speed, the pace change and a fell warg owed in game; the Armory package for each channel owed). Follow-ups: #1565 (walk, trot, the stride gate), #1566, #1567, #1591 (side steps, the dire wolf in the stride gate)
 - **Issue:** #44 — [feat: Port warg combat system from LOTRAOM](https://github.com/haterade22/TAOM/issues/44)
 - **Status:** Closed (2026-08-08 issue triage)
 - **Issue:** #659, [Warg battles: cut per-tick service lookups, scan allocations and skeleton wrappers](https://github.com/haterade22/TAOM/issues/659) (plan 015)

@@ -37,7 +37,8 @@ No lint: 92 of 124 XML-writing scripts trip a naive heuristic (rejected 2026-08-
 
 A gate that passed on the state you just made has proved nothing yet. Before it ships, give it one test per value
 it owns, each broken alone: the row is there with the WRONG value; the row sits inside an XML comment; the exempt
-pair moved to the place the exemption does not cover; the excluded clip bound where it must be judged. Write some
+pair moved to the place the exemption does not cover; the excluded clip bound where it must be judged; the
+excused item failing in a second way, with other numbers than the list names, or gone from every set that binds it. Write some
 expectations as literals, not from the tool's own tables. A tool that edits text byte-faithfully verifies its
 result as its READER reads it: parsed, and with what the reader merges or inherits (another block of the same id,
 a child set that overrides). A check that guards a write runs before the write, dry run included
