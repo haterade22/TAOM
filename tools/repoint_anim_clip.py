@@ -31,11 +31,24 @@ movement node takes a pace's loop time from two Durations: the "none" row's clip
 clip at the upper (docs/features/elephant.md, "What the engine does with a clip record"), so the two records of a
 pace take different "duration" values when the cadence must follow the speed.
 
+A ROW MAY STATE THE RECORD'S "flags" (#1565): the whole list, in the Kit's order. The rider's two gallop turn clips
+lacked synch_with_horse, so each ran at its own Duration beside a warg whose loop time follows its speed. A plan
+refuses a flag that no record of the folder carries: a misspelled flag is a name the engine does not know.
+
+A ROW MAY NAME A "template" (#1565, the warg's walk). The warg's walk bound one record on its front and its "none"
+row, so the pace had one loop time; its in-place twin did not exist. A clip that is not in the folder is made from
+the template record: the template's bytes under the clip's name, with a package GUID and an item GUID derived from
+that name (so a reinstall or a second machine makes the same package), then the row's fields. A clip that is there
+ignores its template. A new record has no cache entry: never bind it in an action set before the Kit cooks it
+(tools/bind_warg_clips.py holds the warg's binding to that).
+
 REFUSES a clip missing from the folder or carried by two packages there, a master whose package is missing or holds
-no single SkeletalAnimation, a range touching frame 0 (a master's rest frame, never played), a package the
+no single SkeletalAnimation, a range touching frame 0 (the rest frame of a Kit import, never played; allowed only on a
+master that a record of the folder already plays from frame 0, as the dire wolf's are), a package the
 parser refuses (set_clip_balance_name.parse), a row with a field this tool does not know or without one it needs
-(a misspelled field would be skipped and --check would pass with that value never compared), and a clip named by
-two rows (the second would overwrite the first). Every refusal comes before the first write, in the dry run too.
+(a misspelled field would be skipped and --check would pass with that value never compared), a clip named by
+two rows (the second would overwrite the first), a missing clip whose template is missing too, and a file of the new
+clip's name that holds another clip. Every refusal comes before the first write, in the dry run too.
 Exit codes: 0 done; 1 a refusal, or with --check a record that is pending or not cooked; 2 not run (no clips
 folder, no xxhash, or --apply while the game or the Kit runs).
 
@@ -43,7 +56,7 @@ folder, no xxhash, or --apply while the game or the Kit runs).
     python tools/repoint_anim_clip.py --plan <plan.json> --apply     # write (refused while the game or Kit runs)
     python tools/repoint_anim_clip.py --plan <plan.json> --check     # report each clip's master, range, checksum
 The plan is a JSON list of {"clip", "master", "source1", "source2", optional "duration", "travel", "limits",
-"step_points"}; a field not given keeps the clip's own value. --apply backs each package
+"step_points", "flags", "template"}; a field not given keeps the clip's own value. --apply backs each package
 up to `<file>.bak-repoint-<stamp>` (not a .tpac, so no scanner reads it), writes, re-reads and verifies, and restores
 on any failure.
 """
@@ -111,11 +124,32 @@ def _floats(what, values, count):
     return out
 
 
-def repoint(buf, master_guid, source1, source2, duration=None, travel=None, limits=None, step_points=None):
+def _with_flags(buf, flags):
+    """`buf` with its flag list replaced, the metadata length and the package size following. Pure."""
+    if not isinstance(flags, (list, tuple)) or len(set(map(str, flags))) != len(flags) or not all(
+            isinstance(f, str) and f.isascii() and f.replace("_", "").isalnum() for f in flags):
+        raise RepointError("flags must be a list of distinct flag names, got %r" % (flags,))
+    c = scb.parse(buf)
+    if list(flags) == c.flags:
+        return buf
+    packed = struct.pack("<i", len(flags)) + b"".join(struct.pack("<i", len(f)) + f.encode("ascii") for f in flags)
+    new = bytearray(buf[:c.flags_at] + packed + buf[c.usages_at:])
+    delta = len(new) - len(buf)
+    struct.pack_into("<q", new, c.mlen_at, struct.unpack_from("<q", buf, c.mlen_at)[0] + delta)
+    struct.pack_into("<Q", new, 28, len(new) - scb.HEADER)
+    return bytes(new)
+
+
+def repoint(buf, master_guid, source1, source2, duration=None, travel=None, limits=None, step_points=None,
+            flags=None, rest_frame_played=False):
     """New package bytes playing `master_guid` from source1 to source2 (either way round) over `duration`
-    seconds, with the gait fields a row gave; a field that is None keeps the clip's own value. Pure."""
-    if min(source1, source2) < 1:
+    seconds, with the gait fields and the flag list a row gave; a field that is None keeps the clip's own value.
+    `rest_frame_played`: a record already plays this master from frame 0, so frame 0 is a key of the loop. Pure."""
+    if min(source1, source2) < 1 and not (rest_frame_played and min(source1, source2) == 0):
         raise RepointError("a range must not touch frame 0, the master's rest frame")
+    before = scb.parse(buf)
+    if flags is not None:
+        buf = _with_flags(buf, flags)
     c = scb.parse(buf)
     p = c.m0 + 4
     new = bytearray(buf)
@@ -147,10 +181,35 @@ def repoint(buf, master_guid, source1, source2, duration=None, travel=None, limi
             struct.pack_into("<2f", new, at + 4, low, high)
     new[c.ck_at:c.ck_at + 8] = struct.pack("<Q", scb._xxh64(bytes(new[c.mlen_at:c.ck_at])))
     new = bytes(new)
-    a, b = scb.parse(buf), scb.parse(new)
-    if (a.name, a.field, a.blends_with_action, a.flags, a.usages, a.userdata) != \
+    a, b = before, scb.parse(new)
+    if (a.name, a.field, a.blends_with_action, a.flags if flags is None else list(flags), a.usages, a.userdata) != \
             (b.name, b.field, b.blends_with_action, b.flags, b.usages, b.userdata):
         raise RepointError("%s: the rewritten package does not re-parse as the same clip" % a.name)
+    return new
+
+
+# The namespace of the GUIDs a made clip gets. Changing it gives every such clip a new identity and a new cache entry.
+CLONE_NAMESPACE = uuid.UUID("6f0a4c1e-9a53-4d1b-8a55-1565c11be5a7")
+
+
+def clone(buf, name):
+    """New package bytes: the clip in `buf` under `name`, with a package GUID and an item GUID of its own. Both come
+    from the name, so every machine makes one package and its cache entry keeps its file name. Pure."""
+    c = scb.parse(buf)
+    if not name or not name.isascii() or len(name) > scb.MAX_NAME or not name.replace("_", "").isalnum():
+        raise RepointError("%r: a clip name is 1 to %d ASCII letters, digits and underscores" % (name, scb.MAX_NAME))
+    if c.field or c.src1 or c.src2 or c.gen_index != -1:
+        raise RepointError("%s: the template %s is keyed to a clip (%r) or generated from two (%r, %r); its copy "
+                           "would carry that" % (name, c.name, c.field, c.src1, c.src2))
+    new = bytearray(buf[:72] + struct.pack("<i", len(name)) + name.encode("ascii") + buf[c.mlen_at:])
+    struct.pack_into("<Q", new, 28, len(new) - scb.HEADER)
+    new[8:24] = uuid.uuid5(CLONE_NAMESPACE, "package:" + name).bytes_le
+    new[52:68] = uuid.uuid5(CLONE_NAMESPACE, "clip:" + name).bytes_le
+    new = bytes(new)
+    made = scb.parse(new)
+    if (made.name, made.field, made.blends_with_action, made.flags, made.usages, made.userdata) != \
+            (name, c.field, c.blends_with_action, c.flags, c.usages, c.userdata) or not scb.checksum_ok(new):
+        raise RepointError("%s: the copy of %s does not re-parse as that clip under a new name" % (name, c.name))
     return new
 
 
@@ -167,9 +226,10 @@ def master_guid(folder, master):
     return uuid.UUID(guid)
 
 
-Row = namedtuple("Row", "clip path buf new changed master")
+Row = namedtuple("Row", "clip path buf new changed master made_from")     # buf None: the clip is not there yet
 REQUIRED = ("clip", "master", "source1", "source2")
-OPTIONAL = ("duration", "travel", "limits", "step_points")      # each one a keyword of repoint()
+OPTIONAL = ("duration", "travel", "limits", "step_points", "flags")      # each one a keyword of repoint()
+MAKES = ("template",)                                           # the record a missing clip is made from
 
 
 def _refuse_bad_rows(rows):
@@ -184,10 +244,10 @@ def _refuse_bad_rows(rows):
         missing = [k for k in REQUIRED if k not in r]
         if missing:
             raise RepointError("%s: the row lacks %s" % (name, ", ".join(missing)))
-        unknown = sorted(set(r) - set(REQUIRED) - set(OPTIONAL))
+        unknown = sorted(set(r) - set(REQUIRED) - set(OPTIONAL) - set(MAKES))
         if unknown:
             raise RepointError("%s: unknown field(s) %s; a row takes %s" % (
-                name, ", ".join(unknown), ", ".join(REQUIRED + OPTIONAL)))
+                name, ", ".join(unknown), ", ".join(REQUIRED + OPTIONAL + MAKES)))
     names = [r["clip"] for r in rows]
     twice = sorted({n for n in names if names.count(n) > 1})
     if twice:
@@ -196,33 +256,64 @@ def _refuse_bad_rows(rows):
 
 def plan(rows, folder):
     _refuse_bad_rows(rows)
-    index = {}
+    index, known_flags, from_zero = {}, set(), set()
     for path in glob.glob(os.path.join(folder, "*_anm.tpac")):
         with open(path, "rb") as fh:
             try:
-                index.setdefault(scb.parse(fh.read()).name, []).append(path)
+                data = fh.read()
+                c = scb.parse(data)
             except (scb.ClipError, struct.error):
                 continue
+        index.setdefault(c.name, []).append(path)
+        known_flags.update(c.flags)
+        t = timing(data)
+        if min(t["source1"], t["source2"]) == 0:
+            from_zero.add(uuid.UUID(t["master_guid"]))
     out = []
     for r in rows:
+        strange = [f for f in r.get("flags") or () if isinstance(f, str) and f not in known_flags]
+        if strange:
+            raise RepointError("%s: no record under %s carries the flag(s) %s; a misspelled flag is a name the "
+                               "engine does not know" % (r["clip"], folder, ", ".join(strange)))
         paths = index.get(r["clip"], [])
-        if len(paths) != 1:
+        if not paths and r.get("template") is not None:
+            buf, base, path = None, _from_template(r, index, folder), os.path.join(folder, r["clip"] + "_anm.tpac")
+        elif len(paths) != 1:
             raise RepointError("%s: %d packages carry that clip under %s" % (r["clip"], len(paths), folder))
-        with open(paths[0], "rb") as fh:
-            buf = fh.read()
+        else:
+            path = paths[0]
+            with open(path, "rb") as fh:
+                buf = base = fh.read()
         g = master_guid(folder, r["master"])
-        new = repoint(buf, g, r["source1"], r["source2"], **{k: r[k] for k in OPTIONAL if k in r})
-        out.append(Row(r["clip"], paths[0], buf, new, new != buf, r["master"]))
+        new = repoint(base, g, r["source1"], r["source2"], rest_frame_played=g in from_zero,
+                      **{k: r[k] for k in OPTIONAL if k in r})
+        out.append(Row(r["clip"], path, buf, new, new != buf, r["master"], r.get("template") if buf is None else None))
     return out
+
+
+def _from_template(r, index, folder):
+    """The bytes a missing clip starts from: its template under the clip's name. Row.buf is None for such a clip."""
+    donors = index.get(r["template"], [])
+    if len(donors) != 1:
+        raise RepointError("%s: %d packages carry its template %s under %s" % (
+            r["clip"], len(donors), r["template"], folder))
+    path = os.path.join(folder, r["clip"] + "_anm.tpac")
+    if os.path.exists(path):
+        raise RepointError("%s: %s is there and does not carry that clip; it is never overwritten" % (r["clip"], path))
+    with open(donors[0], "rb") as fh:
+        return clone(fh.read(), r["clip"])
 
 
 def apply(rows, stamp=None):
     stamp = stamp or dt.datetime.now().strftime("%Y%m%d-%H%M%S")
     todo = [r for r in rows if r.changed]
     for r in todo:
-        if os.path.exists(r.path + ".bak-repoint-" + stamp):
+        if r.buf is not None and os.path.exists(r.path + ".bak-repoint-" + stamp):
             raise RepointError("backup exists: %s.bak-repoint-%s" % (r.path, stamp))
     for r in todo:
+        if r.buf is None:
+            _make(r)
+            continue
         with open(r.path + ".bak-repoint-" + stamp, "wb") as fh:
             fh.write(r.buf)
         try:
@@ -237,6 +328,25 @@ def apply(rows, stamp=None):
             raise
         print("written %s -> %s %s (backup .bak-repoint-%s)" % (r.clip, r.master, _range(r.new), stamp))
     return len(todo)
+
+
+def _make(r):
+    """Write a clip that was not there. Mode x: a file that appeared since the plan is never overwritten. A new
+    file has nothing to back up, and a failed write leaves none behind."""
+    try:
+        fh = open(r.path, "xb")
+    except FileExistsError:
+        raise RepointError("%s: %s appeared since the plan; it is never overwritten" % (r.clip, r.path))
+    try:                        # from here the file is this call's own, so any failure takes it away again
+        with fh:
+            fh.write(r.new)
+        with open(r.path, "rb") as back:
+            if back.read() != r.new or not scb.checksum_ok(r.new):
+                raise RepointError("%s: read-back or checksum differs" % r.clip)
+    except Exception:
+        os.remove(r.path)
+        raise
+    print("made    %s from %s -> %s %s (a new file: no backup)" % (r.clip, r.made_from, r.master, _range(r.new)))
 
 
 def _range(buf):
@@ -298,6 +408,10 @@ def main(argv=None):
     if args.check:
         bad = raw = 0
         for r in rows:
+            if r.buf is None:
+                bad += 1
+                print("%-8s %-60s is not there: --apply makes it from %s" % ("PENDING", r.clip, r.made_from))
+                continue
             done = not r.changed
             fault = cook_fault(args.module, r.buf, os.path.join(os.path.dirname(r.path), r.master + "_geo.tpac"))
             bad += not done
@@ -310,14 +424,20 @@ def main(argv=None):
                   "Modding Kit once with the module loaded, close it, and run this check again" % raw)
         return 1 if bad or raw else 0
     for r in rows:
-        print("%-8s %-60s -> %s %s" % ("CHANGE" if r.changed else "same", r.clip, r.master, _range(r.new)))
+        print("%-8s %-60s -> %s %s" % ("MAKE" if r.buf is None else "CHANGE" if r.changed else "same", r.clip, r.master,
+                                       _range(r.new)))
     if not args.apply:
         print("dry run: %d of %d would change; --apply writes" % (sum(r.changed for r in rows), len(rows)))
         return 0
     if game_or_kit_running():
         print("refused: the game or the Modding Kit is running")
         return 2
-    n = apply(rows)
+    try:
+        n = apply(rows)
+    except RepointError as exc:
+        print("refused: %s. A record written before it stays written, with its backup beside it; --check shows "
+              "what is left, and --apply again writes it" % exc)
+        return 1
     print("%d written. Next: open the Armory in the Modding Kit, save, close (the Kit re-cooks their RuntimeDataCache "
           "entries), then set_clip_balance_name.py --check and check_rdc_entries.py" % n)
     return 0

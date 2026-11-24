@@ -177,6 +177,48 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(gate.cmd, ("python", "tools/repoint_anim_clip.py", "--plan", "tools/warg_gait_plan.json",
                                     "--under", "creature/warg/animations", "--check"))
 
+    def test_the_dire_wolfs_clip_packages_its_plan_and_the_tool_select_the_wolf_gate(self):
+        armory = "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/"
+        for path in (armory + "Assets/creature/direwolf/animations/dire_wolf_trot_anm.tpac",
+                     armory + "Assets/creature/direwolf/animations/adod_wolf_trot_geo.tpac",
+                     armory + "RuntimeDataCache/20CCE2C2-1073-4B9A-9A57-3FFF1C8DE432.rdc",
+                     "tools/dire_wolf_gait_plan.json", "tools/repoint_anim_clip.py", "tools/set_clip_balance_name.py",
+                     "tools/creature_fit.py", "tools/_gamedir.py"):
+            self.assertIn("dire-wolf-gaits", _ids(dg.select(dg.GATES, [path])), path)
+        # the check imports these two: creature_fit reads each master's GUID, _gamedir finds the install
+        for path in ("tools/creature_fit.py", "tools/_gamedir.py"):
+            self.assertIn("warg-gaits", _ids(dg.select(dg.GATES, [path])), path)
+        for path in (TROOPS, armory + "Assets/creature/warg/animations/warg_trot_anm.tpac", "tools/warg_gait_plan.json",
+                     armory + "Assets/creature/direwolf/mesh/dire_wolf_grey_geo.tpac"):
+            self.assertNotIn("dire-wolf-gaits", _ids(dg.select(dg.GATES, [path])), path)
+        self.assertNotIn("warg-gaits", _ids(dg.select(dg.GATES, ["tools/dire_wolf_gait_plan.json"])))
+        gate = next(g for g in dg.GATES if g.id == "dire-wolf-gaits")
+        self.assertEqual(gate.cmd, ("python", "tools/repoint_anim_clip.py", "--plan", "tools/dire_wolf_gait_plan.json",
+                                    "--under", "creature/direwolf/animations", "--check"))
+
+    def test_the_dire_wolfs_rows_and_packages_select_its_mount_asset_gate(self):
+        """#1565: the wolf's new walk twin failed verify_mount_assets.py dire_wolf, and no gate ran that check."""
+        armory = "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/"
+        for path in (armory + "ModuleData/action_sets.xml", armory + "ModuleData/monster_usage_sets.xml",
+                     armory + "Assets/creature/direwolf/animations/dire_wolf_walk_stand_anm.tpac",
+                     "tools/verify_mount_assets.py"):
+            self.assertIn("dire-wolf-body", _ids(dg.select(dg.GATES, [path])), path)
+        self.assertNotIn("dire-wolf-body", _ids(dg.select(dg.GATES, [TROOPS])))
+        gate = next(g for g in dg.GATES if g.id == "dire-wolf-body")
+        self.assertEqual(gate.cmd, ("python", "tools/verify_mount_assets.py", "dire_wolf"))
+
+    def test_an_action_set_file_and_the_bind_tool_select_the_wargs_binding_gate(self):
+        """A reinstall puts the walk's "none" row back on the front record, and the plan check does not read XML."""
+        armory = "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/"
+        for path in (armory + "ModuleData/action_sets.xml", "docs/reference/lotrlome-armory-snapshot/action_sets.xml",
+                     "tools/bind_warg_clips.py"):
+            self.assertIn("warg-clips", _ids(dg.select(dg.GATES, [path])), path)
+        for path in (TROOPS, armory + "Assets/creature/warg/animations/warg_walk_stand_anm.tpac",
+                     "tools/warg_gait_plan.json"):
+            self.assertNotIn("warg-clips", _ids(dg.select(dg.GATES, [path])), path)
+        gate = next(g for g in dg.GATES if g.id == "warg-clips")
+        self.assertEqual(gate.cmd, ("python", "tools/bind_warg_clips.py", "--check"))
+
     def test_the_spiders_monster_file_selects_the_gate_that_reads_its_body_capsule(self):
         # #1560: the capsule is in a file of the unversioned Armory, and no gate ran the tool that reads it
         armory = "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/"

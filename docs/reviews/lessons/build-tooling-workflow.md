@@ -5320,3 +5320,32 @@ in a traceback with exit 1, which `tools/data_gates.py` reads as a finding, wher
 - **Why missed:** `tools/apply_dwarf_chariot_armory.py` found the end of its anchor item by the next `<Item`, which also matches `<ItemComponent>`. Every real item has one; the test fixture's anchor item did not. So 21 tests passed and `--apply` could never write on the real file. The test against the live install ran `--check` only, with the rows already in, and never reached the insertion.
 - **Prevent:** build a writer's fixture from a real row of the file it writes (copy one whole item, child elements included), not from the shortest XML that parses. Where the install is present, test the full round trip on a copy of the real files in a temp tree (`--remove`, then `--apply`, bytes equal to the live file): a check that only reads the present state proves nothing about the write. Judge presence from the parsed document and ownership from the bytes: a substring test fails both on a longer tag name and on other quotes.
 - **Source:** [RCA](../rca-dwarf-chariot-2026-11-24.md) F11, F12; `test_remove_then_apply_on_a_copy_of_the_live_files_gives_the_live_bytes_back`.
+### A new member of an exempt class needs its entry in each gate that lists the class by name (#1565, 2026-11-24)
+The dire wolf's walk got an in-place twin, a clip with no `quad_movement` on a pace's "none" row, as its trot,
+canter and gallop twins are. `tools/verify_mount_assets.py` exempts such twins by exact (action, clip) pair, the
+new pair was not in its list, and the tool printed "do NOT battle-test" for a row in vanilla's own shape. No data
+gate ran that tool for the wolf, so three reviewers found it and the author's own gates did not. The gait gates'
+globs also left out `creature_fit.py` and `_gamedir.py`, which the check imports: the same fault as F11 of the
+#1563 RCA (the globs listed what the tool writes, not what its check runs).
+- **Why missed:** the author searched for consumers of the records, not for lists that name the records' kind.
+  The glob fault was fixed for one gate on 2026-11-23 and the rule was not applied to the next gate.
+- **Prevent:** when a change adds a record of a kind some check exempts or enumerates, grep the tools for a
+  sibling's name (`grep -rn dire_wolf_trot_stand tools`) and add the new member beside each hit. A check that a
+  feature doc names as its gate is a row of `tools/data_gates.py`, with the imports of its command in its globs
+  (`python -X importtime` or a read of its import lines).
+- **Source:** issue #1565; the Data flow, XML and Engine lenses and the Codex pre-review
+  (`docs/reviews/raw/codex-prereview-warg-walk-trot-2026-11-24.md`, P2 2 and P3 6);
+  `tools/tests/test_data_gates.py`, `tools/tests/test_verify_mount_assets.py`.
+
+### A tool that rewrites a shared live file reads it again before it writes (#1565, 2026-11-24)
+`tools/bind_warg_clips.py` built its write and its backup from the bytes it read at its start. Another session
+edits the same live `action_sets.xml`; an edit between that read and the write would have been lost, from the
+backup too. A missing snapshot also read as a pass of the one file that was found.
+- **Why missed:** the tool was modelled on the older bind tools, which have the same window, and its tests ran
+  one process on files nobody else touched.
+- **Prevent:** a writer of a live Armory or `TAOM_Map` file compares the file with the bytes it planned from,
+  immediately before the first write, and refuses a difference; its backup is opened in mode `x`; a file of the
+  repo that the check needs is a refusal when missing, never a skip. One test changes the file from inside the
+  run.
+- **Source:** issue #1565; Codex pre-review P2 1 and 3; `tools/tests/test_bind_warg_clips.py`
+  (`test_a_file_another_session_changed_after_the_read_is_not_overwritten`).

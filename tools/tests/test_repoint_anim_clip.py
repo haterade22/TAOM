@@ -9,6 +9,7 @@ import sys
 import tempfile
 import unittest
 import uuid
+from unittest import mock
 
 try:
     import xxhash  # noqa: F401
@@ -386,6 +387,278 @@ class CookedCheckTests(unittest.TestCase):
             code, text = self.check(d, plan_path)
             self.assertEqual(code, 0, text)
             self.assertIn("cooked=True", text)
+
+
+class FlagTests(unittest.TestCase):
+    """A row may state the record's whole flag list (#1565: the rider's two gallop turn clips lacked
+    synch_with_horse, so they ran at their own Duration beside a warg whose loop time follows its speed)."""
+
+    def test_a_flag_is_added_and_every_other_field_survives(self):
+        old = gait_clip(name="rider_x", travel=2.5, limits=(1.0, 3.0))
+        new = rp.repoint(old, uuid.uuid4(), 1.0, 17.0, flags=["make_walk_sound", "synch_with_horse"])
+        a, b = scb.parse(old), scb.parse(new)
+        self.assertEqual(b.flags, ["make_walk_sound", "synch_with_horse"])
+        self.assertEqual(len(new) - len(old), 4 + len("synch_with_horse"))
+        self.assertTrue(scb.checksum_ok(new))
+        self.assertEqual((a.name, a.field, a.usages, a.userdata), (b.name, b.field, b.usages, b.userdata))
+        meta = rp.timing(new)
+        self.assertAlmostEqual(meta["travel"], 2.5, places=5)            # the usage after the flags moved with them
+        self.assertEqual([round(v, 3) for v in meta["limits"]], [1.0, 3.0])
+
+    def test_flags_and_gait_fields_in_one_row_land_in_the_right_bytes(self):
+        new = rp.repoint(gait_clip(), uuid.uuid4(), 1.0, 17.0, flags=["make_walk_sound", "enforce_lowerbody"],
+                         travel=3.0, limits=[2.0, 5.0], duration=0.5)
+        meta = rp.timing(new)
+        self.assertEqual(scb.parse(new).flags, ["make_walk_sound", "enforce_lowerbody"])
+        self.assertAlmostEqual(meta["travel"], 3.0, places=5)
+        self.assertEqual(meta["limits"], [2.0, 5.0])
+        self.assertAlmostEqual(meta["duration"], 0.5, places=5)
+        self.assertTrue(scb.checksum_ok(new))
+
+    def test_a_flag_can_be_taken_off_and_the_same_list_changes_nothing(self):
+        old = gait_clip()
+        g = uuid.UUID(rp.timing(old)["master_guid"])
+        self.assertEqual(scb.parse(rp.repoint(old, g, 1.0, 17.0, flags=[])).flags, [])
+        self.assertEqual(rp.repoint(old, g, 1.0, 17.0, flags=["make_walk_sound"]), old)
+
+    def test_a_bad_flag_list_is_refused(self):
+        for bad in ("synch_with_horse", ["a", "a"], [""], ["two words"], [7], ["caf\u00e9"]):
+            with self.assertRaises(rp.RepointError, msg=repr(bad)):
+                rp.repoint(gait_clip(), uuid.uuid4(), 1.0, 17.0, flags=bad)
+
+    def test_a_plan_refuses_a_flag_no_record_of_the_folder_carries(self):
+        """A misspelled flag is a name the engine does not know: the record would read DONE and the clip would
+        stay unsynchronised. A flag some record of the folder already carries is a spelling the engine reads."""
+        with tempfile.TemporaryDirectory() as d:
+            for name, flags in (("rider_turn", ("client_prediction",)), ("rider_walk", ("client_prediction", "synch_with_horse"))):
+                m = bytearray(tsb.meta(flags=flags, usages=0))
+                struct.pack_into("<3f", m, 4, 0.58, 1.0, 20.0)
+                with open(os.path.join(d, name + "_anm.tpac"), "wb") as fh:
+                    fh.write(tsb.package(name, m=bytes(m), pkg=tsb.pkg_guid(name)))
+            with open(os.path.join(d, "rider_master_geo.tpac"), "wb") as fh:
+                fh.write(tcf.master_package("rider_master", uuid.uuid4()))
+            row = {"clip": "rider_turn", "master": "rider_master", "source1": 1, "source2": 20}
+            with self.assertRaisesRegex(rp.RepointError, "synch_with_hores"):
+                rp.plan([dict(row, flags=["client_prediction", "synch_with_hores"])], d)
+            rows = rp.plan([dict(row, flags=["client_prediction", "synch_with_horse"])], d)
+            rp.apply(rows, stamp="t")
+            self.assertEqual(scb.parse(read(os.path.join(d, "rider_turn_anm.tpac"))).flags,
+                             ["client_prediction", "synch_with_horse"])
+            self.assertFalse(rp.plan([dict(row, flags=["client_prediction", "synch_with_horse"])], d)[0].changed)
+
+
+class RestFrameTests(unittest.TestCase):
+    """Frame 0 of a Kit import is the rest pose, so a range that touches it is refused. The dire wolf's masters are
+    keyed from 0 and its records play from 0: a master some record of the folder already plays from frame 0 may be
+    played from 0 by another row (#1565)."""
+
+    def folder(self, d, front_from=0.0):
+        self.master = uuid.uuid4()
+        with open(os.path.join(d, "wolf_walk_geo.tpac"), "wb") as fh:
+            fh.write(tcf.master_package("wolf_walk", self.master))
+        for name, first in (("wolf_walkfast", front_from), ("wolf_trot_stand", 1.0)):
+            m = bytearray(tsb.meta(flags=(), usages=0))
+            struct.pack_into("<3f", m, 4, 1.0, first, 32.0)
+            m[4 + 28:4 + 44] = self.master.bytes_le
+            with open(os.path.join(d, name + "_anm.tpac"), "wb") as fh:
+                fh.write(tsb.package(name, m=bytes(m), pkg=tsb.pkg_guid(name)))
+
+    def test_a_record_that_plays_from_frame_0_may_keep_it(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.folder(d)
+            rows = rp.plan([{"clip": "wolf_walkfast", "master": "wolf_walk", "source1": 0, "source2": 32, "duration": 0.82}], d)
+            self.assertTrue(rows[0].changed)
+            self.assertEqual(rp.timing(rows[0].new)["source1"], 0.0)
+
+    def test_a_twin_may_play_from_frame_0_of_a_master_its_front_record_plays_from_0(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.folder(d)
+            rows = rp.plan([{"clip": "wolf_walk_stand", "template": "wolf_trot_stand", "master": "wolf_walk",
+                             "source1": 0, "source2": 32, "duration": 2.38}], d)
+            self.assertEqual(rp.timing(rows[0].new)["source1"], 0.0)
+
+    def test_frame_0_of_a_master_no_record_plays_from_0_is_still_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.folder(d, front_from=1.0)
+            with self.assertRaisesRegex(rp.RepointError, "frame 0"):
+                rp.plan([{"clip": "wolf_trot_stand", "master": "wolf_walk", "source1": 0, "source2": 32}], d)
+
+    def test_frame_0_of_one_master_does_not_open_frame_0_of_another(self):
+        """The permission belongs to the master a record plays from 0. The warg's folder holds a placeholder record
+        that plays its own master from 0: that must not let a gait row start at a rest frame."""
+        with tempfile.TemporaryDirectory() as d:
+            self.folder(d)                                            # wolf_walkfast plays wolf_walk from 0
+            with open(os.path.join(d, "wolf_trot_geo.tpac"), "wb") as fh:
+                fh.write(tcf.master_package("wolf_trot", uuid.uuid4()))
+            with self.assertRaisesRegex(rp.RepointError, "frame 0"):
+                rp.plan([{"clip": "wolf_trot_stand", "master": "wolf_trot", "source1": 0, "source2": 24}], d)
+
+    def test_the_pure_function_refuses_frame_0_unless_told_the_master_plays_it(self):
+        with self.assertRaisesRegex(rp.RepointError, "frame 0"):
+            rp.repoint(clip(), uuid.uuid4(), 0.0, 32.0)
+        self.assertEqual(rp.timing(rp.repoint(clip(), uuid.uuid4(), 0.0, 32.0, rest_frame_played=True))["source1"], 0.0)
+        with self.assertRaisesRegex(rp.RepointError, "frame 0"):          # a frame before the first is never a key
+            rp.repoint(clip(), uuid.uuid4(), -1.0, 32.0, rest_frame_played=True)
+
+
+class TemplateTests(unittest.TestCase):
+    """A row may name a "template": a clip that is not in the folder is then made from that record, under its own
+    name and GUIDs (#1565: the warg's walk had no in-place twin, so its front and "none" rows shared one Duration)."""
+
+    MASTER = uuid.UUID("11111111-2222-3333-4444-555555555555")
+    ROW = {"clip": "warg_walk_stand", "template": "warg_trot_stand", "master": "Warg_Walk", "source1": 1,
+           "source2": 29, "duration": 2.06}
+
+    def folder(self, d):
+        with open(os.path.join(d, "warg_trot_stand_anm.tpac"), "wb") as fh:
+            fh.write(gait_clip(name="warg_trot_stand", usage=None, duration=0.73))
+        with open(os.path.join(d, "Warg_Walk_geo.tpac"), "wb") as fh:
+            fh.write(tcf.master_package("warg_walk", self.MASTER))
+        return os.path.join(d, "warg_walk_stand_anm.tpac")
+
+    def test_a_clip_that_is_not_there_is_made_from_its_template(self):
+        with tempfile.TemporaryDirectory() as d:
+            made = self.folder(d)
+            donor = read(os.path.join(d, "warg_trot_stand_anm.tpac"))
+            rows = rp.plan([self.ROW], d)
+            self.assertTrue(rows[0].changed)
+            self.assertFalse(os.path.exists(made), "the plan writes nothing")
+            self.assertEqual(rp.apply(rows, stamp="t"), 1)
+            new, old = scb.parse(read(made)), scb.parse(donor)
+            self.assertEqual(new.name, "warg_walk_stand")
+            self.assertNotEqual(new.package_guid, old.package_guid)
+            self.assertNotEqual(new.item_guid, old.item_guid)
+            self.assertNotEqual(new.package_guid, new.item_guid)
+            self.assertEqual((new.flags, new.usages, new.userdata, new.field), (old.flags, old.usages, old.userdata, old.field))
+            meta = rp.timing(read(made))
+            self.assertEqual((meta["master_guid"], meta["source1"], meta["source2"]), (str(self.MASTER), 1.0, 29.0))
+            self.assertAlmostEqual(meta["duration"], 2.06, places=5)
+            self.assertTrue(scb.checksum_ok(read(made)))
+            self.assertEqual(read(os.path.join(d, "warg_trot_stand_anm.tpac")), donor, "the template is not written")
+            self.assertEqual(sorted(os.listdir(d)), ["Warg_Walk_geo.tpac", "warg_trot_stand_anm.tpac",
+                                                     "warg_walk_stand_anm.tpac"], "a new file has nothing to back up")
+
+    def test_a_second_run_finds_the_made_clip_and_changes_nothing(self):
+        with tempfile.TemporaryDirectory() as d:
+            made = self.folder(d)
+            rp.apply(rp.plan([self.ROW], d), stamp="t")
+            first = read(made)
+            again = rp.plan([self.ROW], d)
+            self.assertFalse(again[0].changed)
+            self.assertEqual(rp.apply(again, stamp="u"), 0)
+            self.assertEqual(read(made), first)
+
+    def test_the_guids_come_from_the_name_so_every_machine_makes_one_package(self):
+        donor = gait_clip(name="warg_trot_stand", usage=None)
+        self.assertEqual(rp.clone(donor, "warg_walk_stand"), rp.clone(donor, "warg_walk_stand"))
+        a, b = scb.parse(rp.clone(donor, "warg_walk_stand")), scb.parse(rp.clone(donor, "warg_walk_idle"))
+        self.assertNotEqual(a.package_guid, b.package_guid)
+        self.assertNotEqual(a.item_guid, b.item_guid)
+
+    def test_a_name_of_another_length_still_reads_as_a_package(self):
+        donor = gait_clip(name="warg_trot_stand", usage=None)
+        for name in ("w", "warg_walk_stand_of_a_much_longer_name"):
+            new = rp.clone(donor, name)
+            self.assertEqual(scb.parse(new).name, name)                 # parse holds the size field to the file
+            self.assertEqual(len(new) - len(donor), len(name) - len("warg_trot_stand"))
+
+    def test_a_name_the_engine_or_a_file_cannot_hold_is_refused(self):
+        donor = gait_clip(name="warg_trot_stand", usage=None)
+        for name in ("", "warg walk", "warg/walk", "..\\warg", "w" * 64, "warg_wälk"):
+            with self.assertRaises(rp.RepointError, msg=name):
+                rp.clone(donor, name)
+
+    def test_a_clip_that_is_not_there_and_names_no_template_is_refused_as_before(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.folder(d)
+            row = {k: v for k, v in self.ROW.items() if k != "template"}
+            with self.assertRaisesRegex(rp.RepointError, "0 packages carry that clip"):
+                rp.plan([row], d)
+
+    def test_a_template_that_is_not_there_is_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.folder(d)
+            with self.assertRaisesRegex(rp.RepointError, "template warg_no_such"):
+                rp.plan([dict(self.ROW, template="warg_no_such")], d)
+
+    def test_a_file_of_that_name_that_holds_another_clip_is_never_overwritten(self):
+        with tempfile.TemporaryDirectory() as d:
+            made = self.folder(d)
+            with open(made, "wb") as fh:
+                fh.write(gait_clip(name="some_other_clip", usage=None))
+            before = read(made)
+            with self.assertRaisesRegex(rp.RepointError, "does not carry that clip"):
+                rp.plan([self.ROW], d)
+            self.assertEqual(read(made), before)
+
+    def test_a_template_keyed_to_a_clip_or_generated_from_two_is_refused(self):
+        """Its copy would carry the key of the template, or stay a generated child of the template's parents."""
+        for field in ({"field": "warg_trot_stand"}, {"src1": "a", "src2": "b", "gen": 0}):
+            m = bytearray(tsb.meta(flags=(), usages=0, **field))
+            with self.assertRaisesRegex(rp.RepointError, "template", msg=repr(field)):
+                rp.clone(tsb.package("warg_trot_stand", m=bytes(m)), "warg_walk_stand")
+
+    def test_a_write_that_fails_leaves_no_file_of_the_new_clip(self):
+        with tempfile.TemporaryDirectory() as d:
+            made = self.folder(d)
+            row = rp.plan([self.ROW], d)[0]
+            with self.assertRaises(TypeError):
+                rp.apply([row._replace(new="not bytes")], stamp="t")      # the file is open when the write fails
+            self.assertFalse(os.path.exists(made))
+            with mock.patch.object(rp.scb, "checksum_ok", return_value=False), self.assertRaises(rp.RepointError):
+                rp.apply([row], stamp="t")                                # the read-back check fails
+            self.assertFalse(os.path.exists(made))
+            self.assertEqual(rp.apply(rp.plan([self.ROW], d), stamp="t"), 1, "the next run is not blocked")
+
+    def test_a_failure_while_applying_exits_1_with_a_reason_and_no_traceback(self):
+        import contextlib
+        import io
+        import json
+        with tempfile.TemporaryDirectory() as d:
+            clips = os.path.join(d, "Assets", "creature", "warg", "animations")
+            os.makedirs(clips)
+            self.folder(clips)
+            plan_path = os.path.join(d, "plan.json")
+            with open(plan_path, "w", encoding="utf-8") as fh:
+                json.dump([self.ROW], fh)
+            out = io.StringIO()
+            with mock.patch.object(rp, "game_or_kit_running", return_value=False), \
+                    mock.patch.object(rp, "apply", side_effect=rp.RepointError("warg_walk_stand: read-back differs")), \
+                    contextlib.redirect_stdout(out):
+                code = rp.main(["--plan", plan_path, "--module", d, "--under", "creature/warg/animations", "--apply"])
+            self.assertEqual(code, 1)
+            self.assertIn("refused: warg_walk_stand: read-back differs", out.getvalue())
+            self.assertIn("--check", out.getvalue())
+
+    def test_a_clip_that_is_there_ignores_its_template(self):
+        """The template only makes a missing record. A record that exists keeps every byte the row does not name."""
+        with tempfile.TemporaryDirectory() as d:
+            made = self.folder(d)
+            rp.apply(rp.plan([self.ROW], d), stamp="t")
+            first = read(made)
+            os.remove(os.path.join(d, "warg_trot_stand_anm.tpac"))
+            again = rp.plan([self.ROW], d)
+            self.assertFalse(again[0].changed)
+            self.assertEqual(read(made), first)
+
+    def test_check_reads_pending_for_a_clip_not_made_yet_and_writes_nothing(self):
+        import contextlib
+        import io
+        import json
+        with tempfile.TemporaryDirectory() as d:
+            clips = os.path.join(d, "Assets", "creature", "warg", "animations")
+            os.makedirs(clips)
+            made = self.folder(clips)
+            plan_path = os.path.join(d, "plan.json")
+            with open(plan_path, "w", encoding="utf-8") as fh:
+                json.dump([self.ROW], fh)
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = rp.main(["--plan", plan_path, "--module", d, "--under", "creature/warg/animations", "--check"])
+            self.assertEqual(code, 1)
+            self.assertRegex(out.getvalue(), r"PENDING\s+warg_walk_stand")
+            self.assertIn("warg_trot_stand", out.getvalue())
+            self.assertFalse(os.path.exists(made))
 
 
 if __name__ == "__main__":

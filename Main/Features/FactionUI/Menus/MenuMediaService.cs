@@ -31,6 +31,7 @@ public sealed class MenuMediaService
     private readonly Random _random;
 
     private IReadOnlyList<(string Video, string Audio)>? _menuVideos;
+    private bool _restartAskedThisVisit;
 
     public MenuMediaService(IFrontEndResourceAdapter adapter, FactionUIPaths paths, FactionUISettingsProvider settings, Random random)
     {
@@ -71,14 +72,36 @@ public sealed class MenuMediaService
     /// <summary>True when vanilla's menu theme should not start: our video plays its own audio.</summary>
     public bool OnActivateMenuMode(bool isMainMenu)
     {
-        if (!isMainMenu)
-            return false;
-        var settings = _settings.Current;
-        if (!settings.MuteMenuMusic || !settings.MenuVideo || MenuVideos.Count == 0)
+        if (!isMainMenu || !CanSilence())
             return false;
 
         IsMenuMusicSilenced = true;
         return true;
+    }
+
+    /// <summary>True once per main-menu visit when vanilla's theme is already playing there and would be
+    /// silenced if it started now: after Custom Battle setup, whose state also has <c>IsMusicMenuState</c>,
+    /// the mode is still Menu, so vanilla never calls <c>ActivateMenuMode</c> again. The caller leaves menu
+    /// mode; vanilla's next update then re-enters it through the silencing patch. Once per visit, so a
+    /// patch that is not applied cannot make the theme restart over and over.</summary>
+    public bool ShouldRestartMenuMode(bool isMainMenu, bool menuThemePlaying)
+    {
+        if (!isMainMenu)
+        {
+            _restartAskedThisVisit = false;
+            return false;
+        }
+        if (_restartAskedThisVisit || IsMenuMusicSilenced || !menuThemePlaying || !CanSilence())
+            return false;
+
+        _restartAskedThisVisit = true;
+        return true;
+    }
+
+    private bool CanSilence()
+    {
+        var settings = _settings.Current;
+        return settings.MuteMenuMusic && settings.MenuVideo && MenuVideos.Count > 0;
     }
 
     /// <summary>True once, when the player has left the main menu and the game-loading screen while

@@ -493,5 +493,17 @@ class CommittedTableAgainstTheArmory(unittest.TestCase):
         self.assertEqual(bad, [], 'run python tools/generate_armour_classes.py --apply')
 
 
+
+class MallornBandUpMatchesTheLothlorienGenerator(unittest.TestCase):
+    """The class table raises an unworn Mallorn piece one band, as generate_lothlorien_armor.py prices it.
+    The two tables are kept apart on purpose (the class table stops at elite, never lord), so this pins
+    them together below lord."""
+
+    def test_every_band_below_lord_steps_up_alike(self):
+        import generate_lothlorien_armor as lothlorien
+        for band, raised in gac.MALLORN_BAND_UP.items():
+            self.assertEqual(lothlorien.ML_BAND_UP[band], raised, band)
+        self.assertEqual(set(gac.MALLORN_BAND_UP), {'light', 'medium', 'heavy'})
+
 if __name__ == '__main__':
     unittest.main()

@@ -4,11 +4,12 @@
 Idempotent: each inserted region is wrapped in <!-- TAOM-NEWFACTIONS:<id>:BEGIN/END -->
 markers and replaced where it stands, or refused when the file is damaged (tools/_marker_region.py,
 #976). Every output is parsed before anything is written (#979). Its older regions have drifted
-from what a run would produce, so do not run it without reading the diff first.
+from what a run would produce, so do not run it without reading the diff first. The wanderer
+companion rosters (equipmentsets/taom_wanderer_equipment.xml) are no longer written: since #1571
+they carry each culture's own race gear, and a rerun cloned Gundabad's roster over them.
 
 Targets:
   taom_wanderers.xml                       <- 10 wanderers per culture
-  equipmentsets/taom_wanderer_equipment.xml<- wanderer companion roster per culture
   taom_partyTemplates.xml                  <- 10 standard party templates per culture
   taom_spcultures.xml                      <- <Culture> block per culture (NO cultural_feats)
   taom_module_strings.xml                  <- str_faction_*/str_culture_* per culture
@@ -172,7 +173,6 @@ def refuse_unparsable(outputs):
 def main():
     src_cult = open(os.path.join(MD, "taom_spcultures.xml"), encoding="utf-8").read()
     src_wand = open(os.path.join(MD, "taom_wanderers.xml"), encoding="utf-8").read()
-    src_wequip = open(os.path.join(MD, "equipmentsets", "taom_wanderer_equipment.xml"), encoding="utf-8").read()
     src_party = open(os.path.join(MD, "taom_partyTemplates.xml"), encoding="utf-8").read()
     src_strings = open(os.path.join(MD, "taom_module_strings.xml"), encoding="utf-8").read()
     src_child = open(os.path.join(MD, "equipmentsets", "taom_child_equipment_templates.xml"), encoding="utf-8").read()
@@ -184,7 +184,6 @@ def main():
     gund_wanderers = "".join(
         extract(src_wand, r'([ \t]*<NPCCharacter\b[^>]*\bid="spc_wanderer_gundabad_%d".*?</NPCCharacter>\n)' % n)
         for n in range(10))
-    gund_wroster = extract(src_wequip, r'([ \t]*<EquipmentRoster\b[^>]*\bid="npc_companion_equipment_template_gundabad".*?</EquipmentRoster>\n)')
     party_ids = ["villager_gundabad_template", "caravan_template_gundabad", "elite_caravan_template_gundabad",
                  "kingdom_hero_party_gundabad_template", "militia_gundabad_template",
                  "patrol_party_gundabad_template_level_1", "patrol_party_gundabad_template_level_2",
@@ -204,7 +203,7 @@ def main():
     gund_lord = extract_rosters_with_id_substr(src_lord, "gundabad")
     gund_edu = extract_rosters_with_id_substr(src_edu, "gundabad")
 
-    out_cult, out_wand, out_wequip, out_party, out_strings = src_cult, src_wand, src_wequip, src_party, src_strings
+    out_cult, out_wand, out_party, out_strings = src_cult, src_wand, src_party, src_strings
     out_child, out_lord, out_edu = src_child, src_lord, src_edu
 
     for culture, cfg in ORC.items():
@@ -223,9 +222,6 @@ def main():
         # --- wanderers ---
         out_wand = upsert_before(out_wand, "</NPCCharacters>", transform(gund_wanderers, culture, cfg),
                                  f"TAOM-NEWFACTIONS:{culture}")
-        # --- wanderer roster ---
-        out_wequip = upsert_before(out_wequip, "</EquipmentRosters>", transform(gund_wroster, culture, cfg),
-                                   f"TAOM-NEWFACTIONS:{culture}")
         # --- party templates (strip stacks referencing dropped cavalry troops) ---
         party_text = transform(gund_party, culture, cfg)
         party_text = strip_cavalry_stacks(party_text, DROPPED_CAV.get(culture, []))
@@ -244,7 +240,6 @@ def main():
 
     outputs = [(os.path.join(MD, "taom_spcultures.xml"), out_cult),
                (os.path.join(MD, "taom_wanderers.xml"), out_wand),
-               (os.path.join(MD, "equipmentsets", "taom_wanderer_equipment.xml"), out_wequip),
                (os.path.join(MD, "taom_partyTemplates.xml"), out_party),
                (os.path.join(MD, "taom_module_strings.xml"), out_strings),
                (os.path.join(MD, "equipmentsets", "taom_child_equipment_templates.xml"), out_child),
