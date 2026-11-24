@@ -13,4 +13,13 @@ public interface IMenuMusicAdapter
     /// <summary>Puts <paramref name="musicManager"/> (null: the current one) back to paused, so vanilla's
     /// next update starts the music its state calls for.</summary>
     void MarkPaused(object? musicManager);
+
+    /// <summary>The current music manager is in menu mode, so vanilla's menu theme is playing (or, under
+    /// our silence, marked as playing).</summary>
+    bool IsMenuThemePlaying();
+
+    /// <summary>Runs vanilla's private <c>DeactivateMenuMode</c> on the current music manager: the menu
+    /// theme stops and the mode goes back to paused (v1.5.7 MBMusicManager.cs:445-449: <c>PsaiCore.MenuModeLeave()</c>,
+    /// then <c>CurrentMode = Paused</c>), so vanilla's next update enters menu mode again.</summary>
+    void LeaveMenuMode();
 }
