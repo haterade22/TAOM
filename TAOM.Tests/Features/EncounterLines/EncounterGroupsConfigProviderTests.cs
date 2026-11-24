@@ -217,4 +217,35 @@ public class EncounterGroupsConfigProviderTests
         _logger.Received(3).LogWarning(Arg.Any<string>());
         _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("See prior warnings")));
     }
+
+    [TestMethod]
+    public void GetMap_AGroupThatListsRaces_IsTheGroupOfThoseRaces_BeforeTheCulturesGroup()
+    {
+        WriteConfig(@"{ ""groups"": {
+            ""orcs"": { ""family"": ""orc"", ""cultures"": [""mordor""] },
+            ""sauron"": { ""family"": ""none"", ""races"": [""Sauron""] } } }");
+
+        var map = _sut.GetMap();
+
+        Assert.AreEqual("none", map.FamilyOfGroup("sauron"));
+        Assert.AreEqual("sauron", map.GroupOf("mordor", "sauron"));
+        Assert.AreEqual("orcs", map.GroupOf("mordor", "orc"));
+        Assert.AreEqual("orcs", map.GroupOfCulture("mordor"));
+        Assert.IsNull(map.GroupOf("gondor", "human"));
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetMap_RaceInTwoGroups_KeepsTheFirst_AndWarns()
+    {
+        WriteConfig(@"{ ""groups"": {
+            ""sauron"": { ""family"": ""none"", ""races"": [""sauron""] },
+            ""saruman"": { ""family"": ""none"", ""races"": [""sauron"", ""saruman""] } } }");
+
+        var map = _sut.GetMap();
+
+        Assert.AreEqual("sauron", map.GroupOf(null, "sauron"));
+        Assert.AreEqual("saruman", map.GroupOf(null, "saruman"));
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("race 'sauron'") && m.Contains("keeping 'sauron'")));
+    }
 }

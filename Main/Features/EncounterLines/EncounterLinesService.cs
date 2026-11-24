@@ -77,8 +77,8 @@ internal sealed class EncounterLinesService : IEncounterBucketSource
 
     /// <summary>
     /// True when <paramref name="lord"/> speaks for <paramref name="group"/>: a lord outside the player's clan, met on the
-    /// map, whose culture is in the group and whose race family is the group's. A lord under the player's command is
-    /// left to vanilla unless the player rules the lord's realm, where the liege rows apply.
+    /// map, whose race (the dark lords) or culture is in the group and whose race family is the group's. A lord under the
+    /// player's command is left to vanilla unless the player rules the lord's realm, where the liege rows apply.
     /// </summary>
     internal bool IsSpeaker(LordFacts? lord, string group)
     {
@@ -87,9 +87,7 @@ internal sealed class EncounterLinesService : IEncounterBucketSource
         if (_adapter.InSettlement)
             return false;
 
-        var map = _groups.GetMap();
-        var family = map.FamilyOfGroup(group);
-        return family != null && map.GroupOfCulture(lord.CultureId) == group && map.FamilyOfRace(lord.RaceName) == family;
+        return SpeakerGroup(lord) == group;
     }
 
     /// <summary>True when the player stands in <paramref name="bucket"/> towards <paramref name="lord"/>.</summary>
@@ -192,6 +190,15 @@ internal sealed class EncounterLinesService : IEncounterBucketSource
             default:
                 return false;
         }
+    }
+
+    /// <summary>The lord's speaker group (by race first, then culture), or null when his race family is not the group's.</summary>
+    private string? SpeakerGroup(LordFacts lord)
+    {
+        var map = _groups.GetMap();
+        var group = map.GroupOf(lord.CultureId, lord.RaceName);
+        var family = map.FamilyOfGroup(group);
+        return family != null && map.FamilyOfRace(lord.RaceName) == family ? group : null;
     }
 
     /// <summary>

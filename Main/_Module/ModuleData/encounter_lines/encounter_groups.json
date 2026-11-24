@@ -8,7 +8,10 @@
     "easterlings": { "family": "man", "cultures": ["khuzait", "battania"] },
     "elves": { "family": "elf", "cultures": ["rivendell", "mirkwood", "lothlorien", "lindon"] },
     "dwarves": { "family": "dwarf", "cultures": ["erebor", "eredluin"] },
-    "orcs": { "family": "orc", "cultures": ["mordor", "isengard", "gundabad", "dolguldur", "goblin", "mistymountainorcs", "bluecraig"] }
+    "orcs": { "family": "orc", "cultures": ["mordor", "isengard", "gundabad", "dolguldur", "goblin", "mistymountainorcs", "bluecraig"] },
+    "sauron": { "family": "none", "races": ["sauron"] },
+    "saruman": { "family": "none", "races": ["saruman"] },
+    "nazgul": { "family": "none", "races": ["nazghul"] }
   },
   "races": {
     "human": "man",

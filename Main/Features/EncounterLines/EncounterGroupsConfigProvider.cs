@@ -11,9 +11,9 @@ namespace TAOM.Features.EncounterLines;
 /// <summary>
 /// Validating boundary loader for <c>encounter_lines/encounter_groups.json</c> (config-providers.md "Config Providers MUST
 /// Validate"). A missing file or unreadable JSON gives an empty map and one warning, so every encounter keeps vanilla's
-/// text. A bad row is dropped with a warning: a group, race or clan whose family is not a known family, a clan whose side
-/// is not free, evil or neutral, or whose home group is not a listed group. A culture listed in two groups stays in the
-/// first. Keys and values are trimmed and lower-cased. There is no built-in copy: the file is the only source.
+/// text. A bad row is dropped with a warning: a group, race or clan whose family is not a known family (a group may take
+/// <c>none</c> only when it lists races), a clan whose side is not free, evil or neutral, or whose home group is not a
+/// listed group. A culture or a race listed in two groups stays in the first. Keys and values are trimmed and lower-cased. There is no built-in copy: the file is the only source.
 /// </summary>
 internal sealed class EncounterGroupsConfigProvider : IEncounterGroupsConfigProvider
 {
@@ -68,13 +68,15 @@ internal sealed class EncounterGroupsConfigProvider : IEncounterGroupsConfigProv
         var rejected = false;
         var cultureGroups = new Dictionary<string, string>(StringComparer.Ordinal);
         var groupFamilies = new Dictionary<string, string>(StringComparer.Ordinal);
+        var raceGroups = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var pair in parsed.Groups ?? new Dictionary<string, GroupRow?>())
         {
             var group = EncounterGroupMap.Normalize(pair.Key);
             var family = EncounterGroupMap.Normalize(pair.Value?.Family);
-            if (string.IsNullOrEmpty(group) || family == null || !IsSpeakingFamily(family) || groupFamilies.ContainsKey(group!))
+            var listsRaces = pair.Value?.Races is { Count: > 0 };
+            if (string.IsNullOrEmpty(group) || family == null || !(IsSpeakingFamily(family) || (listsRaces && family == EncounterGroupMap.NoFamily)) || groupFamilies.ContainsKey(group!))
             {
-                Reject($"groups['{pair.Key}'] has an empty or repeated id or the family '{pair.Value?.Family}', which is not one of {string.Join(", ", EncounterGroupMap.SpeakingFamilies)}; dropping the group", ref rejected);
+                Reject($"groups['{pair.Key}'] has an empty or repeated id or the family '{pair.Value?.Family}', which is not one of {string.Join(", ", EncounterGroupMap.SpeakingFamilies)} ({EncounterGroupMap.NoFamily} only for a group that lists races); dropping the group", ref rejected);
                 continue;
             }
             groupFamilies[group!] = family;
@@ -89,6 +91,18 @@ internal sealed class EncounterGroupsConfigProvider : IEncounterGroupsConfigProv
                     continue;
                 }
                 cultureGroups[culture!] = group!;
+            }
+            foreach (var raw in pair.Value!.Races ?? new List<string?>())
+            {
+                var race = EncounterGroupMap.Normalize(raw);
+                if (string.IsNullOrEmpty(race))
+                    continue;
+                if (raceGroups.TryGetValue(race!, out var first))
+                {
+                    Reject($"race '{race}' is listed in group '{first}' and again in '{group}'; keeping '{first}'", ref rejected);
+                    continue;
+                }
+                raceGroups[race!] = group!;
             }
         }
 
@@ -128,7 +142,7 @@ internal sealed class EncounterGroupsConfigProvider : IEncounterGroupsConfigProv
         else
             _logger.LogInfo(Tag + $"Loaded {FileName} ({groupFamilies.Count} group(s), {cultureGroups.Count} culture(s), {raceFamilies.Count} race(s), {bandits.Count} bandit clan(s))");
 
-        return new EncounterGroupMap(cultureGroups, groupFamilies, raceFamilies, bandits);
+        return new EncounterGroupMap(cultureGroups, groupFamilies, raceFamilies, bandits, raceGroups);
     }
 
     private void Reject(string message, ref bool rejected)
@@ -174,6 +188,9 @@ internal sealed class EncounterGroupsConfigProvider : IEncounterGroupsConfigProv
 
         [JsonProperty("cultures")]
         public List<string?>? Cultures { get; set; }
+
+        [JsonProperty("races")]
+        public List<string?>? Races { get; set; }
     }
 
     private sealed class BanditRow
