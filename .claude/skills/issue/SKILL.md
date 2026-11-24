@@ -36,7 +36,7 @@ Same procedure, with these sections:
 
 ## Steps
 
-1. Search open and recently closed issues for the same file, tool, symptom or feature name first: `gh issue list --state all --search "<terms> in:title,body"`. If one matches, update or comment on it (a closed one: say what recurred) instead of filing a duplicate (#922 duplicated #781).
+1. Search open and closed issues for the same file, tool, symptom or feature name first: `gh issue list --state all --search "<terms> in:title,body"`. If one matches, update or comment on it (a closed one: say what recurred) instead of filing a duplicate (#922 duplicated #781).
 2. Determine issue type from `$ARGUMENTS`
 3. Fill in all sections; do NOT leave placeholder text
 4. Write the body to a file, run `check_public_text.py`, then `gh issue create --body-file`
