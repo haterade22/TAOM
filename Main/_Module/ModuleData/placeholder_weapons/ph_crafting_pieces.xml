@@ -1638,7 +1638,7 @@
     <!-- taom_ph_sm_dwarf_iron_sword_a_t6: donor blade sm_dwarf_iron_sword_blade_a, damage_factor swing x1.336, thrust x1.328 -->
     <CraftingPiece
         id="taom_ph_sm_dwarf_iron_sword_a_t6_blade"
-        name="{=taom_ph_sm_dwarf_iron_sword_a_t6_blade_name}Iron Hills  Sword Blade A (placeholder)"
+        name="{=taom_ph_sm_dwarf_iron_sword_a_t6_blade_name}Iron Hills Sword Blade A (placeholder)"
         is_hidden="true"
         tier="5"
         piece_type="Blade"
@@ -1676,7 +1676,7 @@
     <!-- taom_ph_sm_dwarf_iron_sword_b_t6: donor blade sm_dwarf_iron_sword_blade_a, damage_factor swing x1.336, thrust x1.328 -->
     <CraftingPiece
         id="taom_ph_sm_dwarf_iron_sword_b_t6_blade"
-        name="{=taom_ph_sm_dwarf_iron_sword_b_t6_blade_name}Iron Hills  Sword Blade A (placeholder)"
+        name="{=taom_ph_sm_dwarf_iron_sword_b_t6_blade_name}Iron Hills Sword Blade A (placeholder)"
         is_hidden="true"
         tier="5"
         piece_type="Blade"
