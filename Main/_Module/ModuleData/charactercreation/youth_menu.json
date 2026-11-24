@@ -1533,7 +1533,7 @@
         "string_id": "taom_youth_mistymountainorcs_5",
         "culture_id": "mistymountainorcs",
         "title_type": "infantry",
-        "text": "Held the line in the Misty Mountains's spear legions.",
+        "text": "Held the line in the Misty Mountains' spear legions.",
         "description": "You drilled and marched with the heavy spear formations of the Misty Mountains, learning to brace against a charge and hold position under brutal northern conditions until the line could be relieved.",
         "skills": [
             "Polearm",
