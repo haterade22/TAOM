@@ -26,7 +26,8 @@ public class SpecialResourcesBehaviorPartyScreenAttachTests
         var storage = Substitute.For<ISpecialResourceStorageService>();
         return new SpecialResourcesBehavior(service, storage, Substitute.For<IModLogger>(),
             new SpecialResourceEarningService(service, storage, Substitute.For<ICoopSessionProvider>(),
-                Substitute.For<IDedicatedServerProvider>(), Substitute.For<IModLogger>()),
+                Substitute.For<IDedicatedServerProvider>(), Substitute.For<IModLogger>(),
+                new TAOM.Features.CheatMenu.CheatPartyRules()),
             Substitute.For<ISpecialResourceEventAdapter>());
     }
 
