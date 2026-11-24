@@ -35,7 +35,7 @@ loads, and it can only be released once no screen draws it.
 |---|---|---|
 | Main menu (`MenuChrome`) | `mm_*`, plus the `TAOMMainMenu` brushes | while the themed main menu holds it |
 | Character creation (`Chrome`) | `cc_*` and every other `fs_*` (`fs_minimap_big` included), plus the `TAOMCharCreation` and `TAOMFactionScreen` brushes | while any themed character-creation screen or the faction screen holds it |
-| Faction art (`Art`) | `fs_portrait_*` (the hero cards), `fs_emblem_*`, `fs_territory_*`, `fs_bg_*` | loaded one image at a time as the faction screen shows it; held with the faction screen |
+| Faction art (`Art`) | `fs_portrait_*` (the hero cards), `fs_emblem_*`, `fs_territory_*`, `fs_bg_*` (no `fs_reveal_*` files ship) | loaded one image at a time as the faction screen shows it; held with the faction screen |
 | Resident | `ld_*`, the `TAOMLoading` brushes and the three bitmap fonts | the process: the loading window is built once, and the engine cannot remove a font |
 | Skill icons | `gui_skills_icon_*`, registered under vanilla's names from `sprite_overrides.json` | the process |
 
