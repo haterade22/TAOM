@@ -382,8 +382,15 @@ def build(spec, cat, priced, troops, armory, shields=frozenset()):
         new_blade = f"{wid}_blade"
         piece_xml = element_text(armory / "ModuleData" / "LOTRLOME_crafting_pieces.xml", "CraftingPiece", blade_id)
         piece_xml = piece_xml.replace(f'id="{blade_id}"', f'id="{new_blade}"', 1)
-        piece_xml = re.sub(r'name="\{=[^}]*\}([^"]*)"', lambda m: f'name="{{={new_blade}_name}}{m.group(1)} (placeholder)"',
+        # The donor's name with runs of spaces closed up (the Armory writes "Iron Hills  Sword Blade A").
+        piece_xml = re.sub(r'name="\{=[^}]*\}([^"]*)"', lambda m: f'name="{{={new_blade}_name}}{" ".join(m.group(1).split())} (placeholder)"',
                            piece_xml, count=1)
+        # A troop weapon's part, never a smithing choice: hidden on the weapon designer
+        # (is_hidden is CraftingPiece.IsHiddenOnDesigner), as the Armory hides its own troop-only parts.
+        tag, close, body = piece_xml.partition(">")
+        tag = re.sub(r'\s+is_hidden="[^"]*"', '', tag)
+        tag = re.sub(r'(\s+)(name="[^"]*")', r'\1\2\1is_hidden="true"', tag, count=1)
+        piece_xml = tag + close + body
         piece_xml = scale_factors(piece_xml, k_swing, k_thrust)
         item_xml = element_text(find_item_file(armory, w["donor"]), "CraftedItem", w["donor"])
         item_xml = item_xml.replace(f'id="{w["donor"]}"', f'id="{wid}"', 1)

@@ -41,12 +41,6 @@ public sealed class HeroItemVM : ViewModel
     /// <summary>The character or hero this card picks; null for "Custom Character".</summary>
     public RosterEntry? Pick { get; }
 
-    public string RevealSprite { get; set; } = "";
-
-    public float RevealWidth { get; set; } = 500f;
-
-    public float RevealScale { get; set; } = 1f;
-
     [DataSourceProperty] public bool IsCustom { get; }
 
     [DataSourceProperty] public bool IsAvailable { get; }

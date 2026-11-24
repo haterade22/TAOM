@@ -575,6 +575,21 @@ Nimlothiel, `lord_L3_3` Silivren) had the same shape from a different route: `is
 - **Source:** 2026-08-28, `a00086da`; the same class shipped three weeks earlier as `3c7f4e25`
   (Grimbold) with no lesson recorded, which is why it recurred.
 
+### A live Armory edit that names something a TAOM build defines goes on at deploy, not when it is written (elf voice, 2026-11-23)
+
+- **Why missed:** the plan listed "bind the live Armory and the snapshot" as one step of the data work, and its risk
+  section named only KAOE as a module without the new voice definition. Nobody asked what the game folder itself
+  held: the deployed TAOM was a trunk build, so for one hour the live `skins.xml` named `elf_01` and no loaded
+  module defined it. Native logs `Voice def can not be found` and stores a null entry in the pool; what an agent
+  does with it is not established. The XML lens of the review found it; no game session ran in that hour.
+- **Prevent:** an Armory or `TAOM_Map` edit that refers to an id, a voice, an action or an item that only the
+  change's own build defines is written to the repo snapshot in the change and to the live file after that build
+  is deployed. Before a live write, list every module set that loads the live file (the deployed TAOM, KAOE, each
+  worktree build that can be deployed over it) and check that each defines what the edit names. The gate that
+  compares live with the snapshot then fails on the checkout until the edit is on, and its message gives the order.
+- **Source:** `/deep-review` of #1568, 2026-11-23; `docs/reference/lotrlome-armory-snapshot/README.md`, the elf
+  combat voice section; `docs/features/kingdom-voices.md`, "Known defects".
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

@@ -31,13 +31,15 @@ internal sealed class StoryMissionLauncher
     private readonly StoryMissionCatalog _catalog;
     private readonly IModLogger _logger;
     private readonly IOutcomeLog _outcomes;
+    private readonly LongDefeatConfigCatalog _longDefeat;
     private int _missions;
 
-    public StoryMissionLauncher(StoryMissionCatalog catalog, IModLogger logger, IOutcomeLog outcomes)
+    public StoryMissionLauncher(StoryMissionCatalog catalog, IModLogger logger, IOutcomeLog outcomes, LongDefeatConfigCatalog longDefeat)
     {
         _catalog = catalog;
         _logger = logger;
         _outcomes = outcomes;
+        _longDefeat = longDefeat;
     }
 
     /// <summary>True once the mission is open. An unknown id, no campaign, a missing culture or troop, or an engine failure logs an error and returns false.</summary>
@@ -54,7 +56,7 @@ internal sealed class StoryMissionLauncher
             var objects = MBObjectManager.Instance;
             var defenderCulture = objects?.GetObject<BasicCultureObject>(definition.DefenderCulture);
             var attackerCulture = objects?.GetObject<BasicCultureObject>(definition.AttackerCulture);
-            var plan = StoryPlanBuilder.Build(definition, RunOptions.Default with { Autoplay = autoplay });
+            var plan = StoryPlanBuilder.Build(definition, RunOptions.Default with { Autoplay = autoplay }, _longDefeat.HeroLines);
             var missing = RunPlanTroops.AllTroopIds(plan).Where(id => objects?.GetObject<BasicCharacterObject>(id) == null).ToList();
             if (defenderCulture == null || attackerCulture == null || missing.Count > 0)
                 return Refuse($"cannot load '{definition.Id}': defender culture {defenderCulture != null}, attacker culture {attackerCulture != null}, missing troops [{string.Join(", ", missing)}]");

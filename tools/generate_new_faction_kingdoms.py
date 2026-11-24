@@ -414,7 +414,7 @@ LORD_TEMPLATES = {
 }
 
 ORC_M = ["Grishnák", "Muzgash", "Lugdush", "Radbug", "Gorbag", "Shagrat", "Ufthak", "Lagduf", "Orcobal",
-         "Yazneg", "Narzug", "Grukhash", "Mauhur", "Uglûk", "Bûrzum", "Throkmaw", "Skarsnik", "Gnashrak",
+         "Yazneg", "Narzug", "Grukhash", "Mauhur", "Uglúk", "Bûrzum", "Throkmaw", "Skarsnik", "Gnashrak",
          "Vrakthar", "Dushgar", "Krimpük", "Gashnar", "Morgrub", "Snagbut", "Hrakdush", "Boldog", "Lugbol",
          "Grizznak", "Frakû", "Mughash"]
 ORC_F = ["Gralza", "Shelza", "Ulga", "Brakza", "Gnarla", "Vugza", "Skralga", "Hagza", "Mogra", "Urshza", "Lazgha", "Burza"]

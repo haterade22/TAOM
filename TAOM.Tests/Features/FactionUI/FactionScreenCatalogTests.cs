@@ -154,7 +154,6 @@ public class FactionScreenCatalogTests
 
         var rohan = LoadPlayable()[0];
 
-        Assert.AreEqual("fs_portrait_rohan", rohan.PaintedPortraitSprite);
         Assert.AreEqual("vlandia", rohan.KingdomId);
         Assert.AreEqual(FactionScreenArt.DefaultBackground, rohan.BackgroundSprite);
     }

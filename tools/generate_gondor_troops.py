@@ -1037,13 +1037,13 @@ def build_all_troops() -> list[Troop]:
     equip_lamedon(t)
     troops.append(t)
 
-    t = Troop("gondor_lam_swordman", "Lamedon Swordman", 3, "Infantry", weapon_spec="sword",
+    t = Troop("gondor_lam_swordman", "Lamedon Swordsman", 3, "Infantry", weapon_spec="sword",
               upgrades=["gondor_lam_vet_swordman"])
     equip_lamedon(t)
     troops.append(t)
 
     # Skips T4 intentionally
-    t = Troop("gondor_lam_vet_swordman", "Lamedon Veteran Swordman", 5, "Infantry", weapon_spec="sword",
+    t = Troop("gondor_lam_vet_swordman", "Lamedon Veteran Swordsman", 5, "Infantry", weapon_spec="sword",
               upgrades=["gondor_lam_hill_warden"])
     equip_lamedon(t)
     troops.append(t)

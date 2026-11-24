@@ -44,7 +44,7 @@ CLANS_NEW = {
 # 30 male first names (6 per clan), 20 female (4 per clan) - all distinct
 MALE_NAMES = [
     "Grok", "Muzgash", "Gorbag", "Shagrat", "Ufthak", "Radbug",
-    "Mauhur", "Uglûk", "Yazneg", "Brogg", "Durbuz", "Hrog",
+    "Mauhur", "Uglúk", "Yazneg", "Brogg", "Durbuz", "Hrog",
     "Mogdar", "Skraat", "Vrasku", "Lagduf", "Muzgur", "Orbug",
     "Zogdush", "Karash", "Dushgar", "Gribnak", "Rukhash", "Targ",
     "Buzgra", "Hrakgar", "Molghor", "Snagduf", "Wruk", "Drubog",

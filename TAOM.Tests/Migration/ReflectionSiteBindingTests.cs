@@ -182,6 +182,7 @@ public class ReflectionSiteBindingTests
     // fonts' glyphs are not drawn, vanilla retries menu mode every frame on the main menu, the face
     // generator skips its fade-in, the backstory Random button presses nothing.
     [DataRow("TaleWorlds.TwoDimension.SpriteCategory", "SpriteCategory", "set_IsLoaded", "Method", "FrontEndResourceAdapter.cs:27")]
+    [DataRow("TaleWorlds.MountAndBlade.MBMusicManager", "MBMusicManager", "DeactivateMenuMode", "Method", "MenuMusicAdapter.cs:15")]
     [DataRow("TaleWorlds.MountAndBlade.MBMusicManager", "MBMusicManager", "set_CurrentMode", "Method", "MenuMusicAdapter.cs:12")]
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.FaceGenerator.FaceGenVM", "FaceGenVM", "_faceGeneratorScreen", "Field", "CharacterCreationWidgets.cs:44")]
     [DataRow("TaleWorlds.GauntletUI.BaseTypes.ButtonWidget", "ButtonWidget", "HandleClick", "Method", "NarrativeRandomButton.cs:22")]

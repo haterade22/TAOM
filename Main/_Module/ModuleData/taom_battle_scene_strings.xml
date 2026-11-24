@@ -36,7 +36,7 @@
 	<string id="aom_taom_rohan_battle_001_forceatmo_name" text="{=aom_taom_rohan_battle_001_forceatmo_name}[Rohan] Rohan Plains" />
 	<string id="aom_taom_rohan_battle_002_forceatmo_name" text="{=aom_taom_rohan_battle_002_forceatmo_name}[Rohan] Rohan Plains II" />
 	<string id="aom_taom_rohan_battle_fords_of_isen_forceatmo_name" text="{=aom_taom_rohan_battle_fords_of_isen_forceatmo_name}[Rohan] Fords of Isen" />
-	<string id="aom_taom_rohan_castle_helms_deep_forceatmo_name" text="{=aom_taom_rohan_castle_helms_deep_forceatmo_name}[Rohan] Helms Deep - Night Rain" />
+	<string id="aom_taom_rohan_castle_helms_deep_forceatmo_name" text="{=aom_taom_rohan_castle_helms_deep_forceatmo_name}[Rohan] Helm's Deep - Night Rain" />
 	<string id="aom_taom_rohan_edoras_town_forceatmo_name" text="{=aom_taom_rohan_edoras_town_forceatmo_name}[Rohan] Edoras" />
 
 </strings>

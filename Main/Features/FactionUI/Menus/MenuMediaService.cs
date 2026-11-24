@@ -15,7 +15,7 @@ namespace TAOM.Features.FactionUI.Menus;
 /// </para>
 /// <para>
 /// The silence is a latch opened by <see cref="OnActivateMenuMode"/> and closed by <see cref="OnTick"/>
-/// once the player has left the main menu. Per TAOM's latch rules the settings gate only the opening: a
+/// on the first tick whose state is neither the main menu nor the game-loading screen. Per TAOM's latch rules the settings gate only the opening: a
 /// silence already in force is always lifted on leaving, so turning the option off mid-menu cannot
 /// leave the music stuck off.
 /// </para>
@@ -31,6 +31,7 @@ public sealed class MenuMediaService
     private readonly Random _random;
 
     private IReadOnlyList<(string Video, string Audio)>? _menuVideos;
+    private bool _restartAskedThisVisit;
 
     public MenuMediaService(IFrontEndResourceAdapter adapter, FactionUIPaths paths, FactionUISettingsProvider settings, Random random)
     {
@@ -71,22 +72,45 @@ public sealed class MenuMediaService
     /// <summary>True when vanilla's menu theme should not start: our video plays its own audio.</summary>
     public bool OnActivateMenuMode(bool isMainMenu)
     {
-        if (!isMainMenu)
-            return false;
-        var settings = _settings.Current;
-        if (!settings.MuteMenuMusic || !settings.MenuVideo || MenuVideos.Count == 0)
+        if (!isMainMenu || !CanSilence())
             return false;
 
         IsMenuMusicSilenced = true;
         return true;
     }
 
-    /// <summary>True once, when the player has left the main menu while silenced: the caller sets the
-    /// music back to paused, so vanilla starts its menu theme on the next music-menu state (the new-game
-    /// loading screen) and, as in vanilla, stops it when character creation opens.</summary>
-    public bool OnTick(bool isMainMenu)
+    /// <summary>True once per main-menu visit when vanilla's theme is already playing there and would be
+    /// silenced if it started now: after Custom Battle setup, whose state also has <c>IsMusicMenuState</c>,
+    /// the mode is still Menu, so vanilla never calls <c>ActivateMenuMode</c> again. The caller leaves menu
+    /// mode; vanilla's next update then re-enters it through the silencing patch. Once per visit, so a
+    /// patch that is not applied cannot make the theme restart over and over.</summary>
+    public bool ShouldRestartMenuMode(bool isMainMenu, bool menuThemePlaying)
     {
-        if (!IsMenuMusicSilenced || isMainMenu)
+        if (!isMainMenu)
+        {
+            _restartAskedThisVisit = false;
+            return false;
+        }
+        if (_restartAskedThisVisit || IsMenuMusicSilenced || !menuThemePlaying || !CanSilence())
+            return false;
+
+        _restartAskedThisVisit = true;
+        return true;
+    }
+
+    private bool CanSilence()
+    {
+        var settings = _settings.Current;
+        return settings.MuteMenuMusic && settings.MenuVideo && MenuVideos.Count > 0;
+    }
+
+    /// <summary>True once, when the player has left the main menu and the game-loading screen while
+    /// silenced: the caller sets the music back to paused, so vanilla plays what the
+    /// next state calls for. Held through the loading screen (Luiz, 2026-11-24), where vanilla's
+    /// theme used to start and play through a long load.</summary>
+    public bool OnTick(bool isMainMenuOrLoading)
+    {
+        if (!IsMenuMusicSilenced || isMainMenuOrLoading)
             return false;
         IsMenuMusicSilenced = false;
         return true;

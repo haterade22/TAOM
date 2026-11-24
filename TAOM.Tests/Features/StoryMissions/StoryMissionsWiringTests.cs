@@ -10,6 +10,7 @@ using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.DevConsole.Cheats;
+using TAOM.Features.LongDefeat;
 using TAOM.Features.Enlistment;
 using TAOM.Features.HeroAbilities;
 using TAOM.Features.StoryMissions;
@@ -46,6 +47,7 @@ public class StoryMissionsWiringTests
         container.RegisterInstance(Substitute.For<IEncounterAdapter>());
         container.RegisterInstance(Substitute.For<IObjectManagerAdapter>());
         container.RegisterInstance(Substitute.For<IHeroAbilitiesConfigProvider>());
+        container.Register<LongDefeatConfigCatalog>(Reuse.Singleton);
         new StoryMissionsModule().RegisterServices(container);
         return container;
     }
@@ -66,7 +68,7 @@ public class StoryMissionsWiringTests
         encounter.HasCurrent.Returns(inEncounter);
         encounter.IsMainPartyInMapEvent.Returns(inMapEvent);
         var catalog = StoryMissionCatalog.FromText(json, logger);
-        var launcher = new StoryMissionLauncher(catalog, logger, Substitute.For<IOutcomeLog>());
+        var launcher = new StoryMissionLauncher(catalog, logger, Substitute.For<IOutcomeLog>(), LongDefeatConfigCatalog.FromTexts(null, null, null, logger));
         var behavior = new StoryDevMenuBehavior(catalog, launcher, menus, coop, Substitute.For<IDedicatedServerProvider>(), enlistment, encounter);
         return (behavior, menus);
     }

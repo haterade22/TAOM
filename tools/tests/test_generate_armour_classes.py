@@ -83,6 +83,33 @@ class Classify(unittest.TestCase):
         # The Dol Guldur "Khamul ..." line is named after its captain, not worn by him.
         self.assertEqual(gac.classify('sk_dg_khml_chest_heavy_a', 'Khamul Guard Chest', 'heavy', None), 'heavy')
 
+    def test_an_unworn_mallorn_piece_is_classed_one_band_above_its_id_word(self):
+        # generate_lothlorien_armor prices Mallorn one band up (ML_BAND_UP), so the Mallorn Medium
+        # Helmet carries head armour 40, the heavy target; classed medium it sold with no armoury.
+        records = {
+            'sk_ll_ml_helmet_med_a': {'tier': 'medium', 'tierSource': 'id-keyword', 'slot': 'head',
+                                      'culture': 'lothlorien', 'name': 'Mallorn Medium Helmet'},
+            'sk_ll_ml_helmet_heavy_b': {'tier': 'heavy', 'tierSource': 'id-keyword', 'slot': 'head',
+                                        'culture': 'lothlorien', 'name': 'Mallorn Heavy Helmet'},
+        }
+        rows = gac.build_rows(records, targets=lambda *a: {})
+        self.assertEqual(rows['sk_ll_ml_helmet_med_a'][0], 'heavy')
+        self.assertEqual(rows['sk_ll_ml_helmet_heavy_b'][0], 'elite')
+
+    def test_the_mallorn_step_up_never_reaches_lord_or_moves_a_worn_or_other_kit_piece(self):
+        records = {
+            'sk_ll_ml_helmet_elite_a': {'tier': 'elite', 'tierSource': 'id-keyword', 'slot': 'head',
+                                        'culture': 'lothlorien', 'name': 'Mallorn Elite Helmet'},
+            'sk_ll_ml_helmet_heavy_a': {'tier': 'elite', 'tierSource': 'roster(L46)', 'slot': 'head',
+                                        'culture': 'lothlorien', 'name': 'Mallorn Heavy Helmet'},
+            'sk_ll_gl_helmet_med_b': {'tier': 'medium', 'tierSource': 'id-keyword', 'slot': 'head',
+                                      'culture': 'lothlorien', 'name': 'Galadhrim Medium Helmet'},
+        }
+        rows = gac.build_rows(records, targets=lambda *a: {})
+        self.assertEqual(rows['sk_ll_ml_helmet_elite_a'][0], 'elite')
+        self.assertEqual(rows['sk_ll_ml_helmet_heavy_a'][0], 'elite')
+        self.assertEqual(rows['sk_ll_gl_helmet_med_b'][0], 'medium')
+
 
 class StatBand(unittest.TestCase):
     def test_nearest_target_wins(self):
@@ -465,6 +492,18 @@ class CommittedTableAgainstTheArmory(unittest.TestCase):
                 bad.append(f'{item_id} ({kind}) -> {nxt} ({index.get(nxt, {}).get("type")})')
         self.assertEqual(bad, [], 'run python tools/generate_armour_classes.py --apply')
 
+
+
+class MallornBandUpMatchesTheLothlorienGenerator(unittest.TestCase):
+    """The class table raises an unworn Mallorn piece one band, as generate_lothlorien_armor.py prices it.
+    The two tables are kept apart on purpose (the class table stops at elite, never lord), so this pins
+    them together below lord."""
+
+    def test_every_band_below_lord_steps_up_alike(self):
+        import generate_lothlorien_armor as lothlorien
+        for band, raised in gac.MALLORN_BAND_UP.items():
+            self.assertEqual(lothlorien.ML_BAND_UP[band], raised, band)
+        self.assertEqual(set(gac.MALLORN_BAND_UP), {'light', 'medium', 'heavy'})
 
 if __name__ == '__main__':
     unittest.main()

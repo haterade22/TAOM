@@ -109,6 +109,7 @@ public class FactionUIBindingTests
         var manager = AccessTools.TypeByName("TaleWorlds.MountAndBlade.MBMusicManager");
         AssertParameterNames(AccessTools.Method(manager, "ActivateMenuMode", Type.EmptyTypes), "MBMusicManager.ActivateMenuMode");
         Assert.IsNotNull(AccessTools.PropertySetter(manager, "CurrentMode"), "MBMusicManager.CurrentMode has no setter to restore the mode with.");
+        AssertParameterNames(AccessTools.Method(manager, "DeactivateMenuMode", Type.EmptyTypes), "MBMusicManager.DeactivateMenuMode");
     }
 
     [TestMethod]

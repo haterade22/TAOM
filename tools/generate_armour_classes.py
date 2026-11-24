@@ -22,6 +22,7 @@ Class precedence:
   2. lord      an id carrying the `_lord` token, whoever wears it (the artist's lord variant)
   3. civilian  `_civ` kit, off the combat ladder
   4. derive_armor_tiers' tier: the lowest battle wearer's band, else the id token
+     (an unworn Mallorn piece one band above its id token, as its stats are priced)
   5. the band whose kingdom-cap target is nearest the piece's own primary stat
   6. light, when nothing classes it (fail open: the piece stays obtainable)
 
@@ -72,6 +73,13 @@ CLASS_ORDER = ('light', 'medium', 'heavy', 'elite', 'lord')
 UPGRADABLE = ('light', 'medium', 'heavy', 'elite')
 BANDS = ('light', 'medium', 'heavy', 'elite')
 Row = Tuple[str, Optional[str]]
+
+# tools/generate_lothlorien_armor.py prices a Mallorn piece (`sk_ll_ml_`) one band above the band its
+# id word names (ML_BAND_UP; KEYforce: "ML medium is roughly GL heavy"), so an unworn Mallorn piece
+# classed by its id word follows the price. Never up into lord: the Mallorn `_elite_` pieces are lord
+# kit the XML never sells, and a lord class would move the elite-to-lord forge links.
+MALLORN_PREFIX = 'sk_ll_ml_'
+MALLORN_BAND_UP = {'light': 'medium', 'medium': 'heavy', 'heavy': 'elite'}
 
 
 @dataclass(frozen=True)
@@ -208,6 +216,8 @@ def build_rows(records: Dict[str, dict], targets: TargetsFn = stat_targets) -> D
     pieces = []
     for item_id, rec in records.items():
         derived = rec.get('tier')
+        if item_id.startswith(MALLORN_PREFIX) and rec.get('tierSource') == 'id-keyword':
+            derived = MALLORN_BAND_UP.get(derived, derived)
         band = None
         if derived is None and ra.mesh_tier_of(item_id) is None:
             band = stat_band(rec.get('current'), targets(item_id, rec.get('slot'), rec.get('culture')))
