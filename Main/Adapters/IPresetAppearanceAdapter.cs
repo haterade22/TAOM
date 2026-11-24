@@ -29,4 +29,8 @@ public interface IPresetAppearanceAdapter
     /// <summary>The battle gear to dress the face generator's model in, as a fresh engine
     /// <c>Equipment</c> copy, or null when the pick has none.</summary>
     object? DisplayEquipment(object resolved);
+
+    /// <summary>The body, race, sex and battle gear of a resolved pick, for the faction screen's 3D viewport;
+    /// null when <paramref name="resolved"/> is not one.</summary>
+    PresetDisplay? Display(object resolved);
 }
