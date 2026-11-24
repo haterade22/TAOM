@@ -30,6 +30,7 @@ internal sealed partial class LongDefeatDirector
     private readonly ILongDefeatBattlefieldAdapter _field;
     private readonly ILongDefeatEffectsAdapter? _effects;
     private readonly ILongDefeatFortAdapter? _fort;
+    private readonly ILongDefeatHeroVoiceAdapter? _voice;
     private readonly LongDefeatSession _session;
     private readonly IModLogger _logger;
     private readonly IOutcomeLog _outcomes;
@@ -64,9 +65,11 @@ internal sealed partial class LongDefeatDirector
 
     /// <param name="effects">The engine writes and reads beyond the field; null runs the wave with no published factors and no <c>scale</c> check (the director's tests).</param>
     /// <param name="fort">The fortification engine work (the gates; later the posts and the volleys), the same object as <paramref name="field"/> in the game; null buys and checks no fortification effect (the director's tests).</param>
+    /// <param name="voice">The mission heroes' recorded lines (#1569), the same object as <paramref name="field"/> in the game; null keeps every hero silent (the director's tests).</param>
     /// <param name="lord">The engine half of the death rule (the rise, the bot's take-over, the general's seat, the forced fall), the same object as <paramref name="field"/> in the game; null keeps the old respawn and serves none of it (the director's tests only: every run in the game passes one, a co-op host's and a story mission's too).</param>
     public LongDefeatDirector(RunPlan plan, ILongDefeatBattlefieldAdapter field, LongDefeatSession session, IModLogger logger,
-        IOutcomeLog outcomes, string missionKey, LongDefeatRunRecords? records = null, ILongDefeatEffectsAdapter? effects = null, ILongDefeatFortAdapter? fort = null, ILongDefeatLordAdapter? lord = null)
+        IOutcomeLog outcomes, string missionKey, LongDefeatRunRecords? records = null, ILongDefeatEffectsAdapter? effects = null, ILongDefeatFortAdapter? fort = null, ILongDefeatLordAdapter? lord = null,
+        ILongDefeatHeroVoiceAdapter? voice = null)
     {
         _plan = plan;
         _run = new SurvivalRun(plan);
@@ -74,6 +77,8 @@ internal sealed partial class LongDefeatDirector
         _effects = effects;
         _fort = fort;
         _lord = lord;
+        _voice = voice;
+        _heroVoiceSalt = plan.Options.Seed ?? unchecked((uint)Environment.TickCount);
         _session = session;
         _logger = logger;
         _outcomes = outcomes;
@@ -284,6 +289,7 @@ internal sealed partial class LongDefeatDirector
         if (_shutDown)
             return;
 
+        StopHeroVoice();
         _deferred.Drain();
         _shutDown = true;
         _poisonHits = false;

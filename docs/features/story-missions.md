@@ -191,6 +191,13 @@ not for sale; each is a row of the mission's `heroes` list.
   or a loaded save, through `StoryRosterBehavior` and `StoryRosterService`): the troop ids of every
   mission's plan and the extra arrow item of every hero kit that resolve to nothing. It is a log line
   at session start, so a new game and a loaded save in the same process write one line, not two.
+- **Spoken line (#1569):** a free hero with rows in `long_defeat/hero_lines.json` speaks one line when the
+  field takes his spawn and he fights on the player's side; today that is Legolas, in `helms_deep_defend`
+  and `parth_galen_save`. In `helms_deep_attack` and `parth_galen_kill` he is the player's enemy and says
+  nothing. `StoryMissionLauncher` takes the Long Defeat's config catalog and hands its lines to
+  `StoryPlanBuilder.Build`, so the hosted director plays them as the Long Defeat does. The check reads
+  `taom.story-missions.hosted.hero-line` (`HostedRunOutcomeLog.HeroLineId`). The rule, the engine call
+  and the limits are in [long-defeat.md](long-defeat.md), "Heroes at the shop". Not heard in game yet.
 - **Not done:** no hero strip on the HUD, no message when a hero falls, no per-hero position (the three
   stand where the heroes' home place puts them, at the nearest wall lane), no `<Hero>` entry, and no
   unattended driver beyond the one defence mission of #1368 ([scenario autorun](scenario-autorun.md)).
@@ -712,4 +719,5 @@ assault on the Hornburg (#1409): both of its results are proven by unattended ru
 
 - **Issue:** #1105
 - **Issue:** #1366, Phase 6 of #1325: the free heroes (built, in-game proof owed)
+- **Issue:** #1569, a free hero's spoken line (built, in-game check owed)
 - **Status:** Open (Slices 1 to 5 built; the machine rows of slices 1 to 4 pass in unattended runs; slice 5's run and a person's play are owed)

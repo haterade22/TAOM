@@ -127,6 +127,52 @@ public class LongDefeatConfigCatalogTests
         Assert.AreNotEqual(hash, Load(Fortresses(Fortress(replaceKey: "'scene':'s'", replaceWith: "'scene':'t'")), one).BalanceHash);
     }
 
+    private const string HeroLines = "{'heroes':{'legolas':[['H/a1.ogg','H/a2.ogg'],['H/b1.ogg']]}}";
+
+    [TestMethod]
+    public void BuildPlan_CarriesTheHeroLinesWithTheResolvedPaths()
+    {
+        var catalog = LongDefeatConfigCatalog.FromTexts(Fortresses(Fortress()), Waves(), Shop(), _logger, Affixes, Boons, Classes, HeroLines, p => "M/" + p);
+
+        var plan = catalog.BuildPlan(catalog.Fortresses[0], RunOptions.Default);
+
+        Assert.AreEqual("M/H/b1.ogg", plan.HeroLines.Pick("legolas", 2, 0UL));
+        Assert.AreSame(catalog.HeroLines, plan.HeroLines);
+    }
+
+    [TestMethod]
+    public void BuildPlan_NoHeroLinesText_CarriesNoLinesAndNoWarning()
+    {
+        var plan = Load().BuildPlan(Load().Fortresses[0], RunOptions.Default);
+
+        Assert.AreSame(HeroLinePlan.None, plan.HeroLines);
+        _logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void BalanceHash_IsTheSameWithAndWithoutHeroLinesText()
+    {
+        var without = Load().BalanceHash;
+
+        var with = LongDefeatConfigCatalog.FromTexts(Fortresses(Fortress()), Waves(), Shop(), _logger, Affixes, Boons, Classes, HeroLines).BalanceHash;
+
+        Assert.AreEqual(without, with);
+    }
+
+    [TestMethod]
+    public void BuildPlan_Twice_ReadsTheHeroLinesOnce()
+    {
+        var resolved = 0;
+        var catalog = LongDefeatConfigCatalog.FromTexts(Fortresses(Fortress()), Waves(), Shop(), _logger, Affixes, Boons, Classes, HeroLines, p => { resolved++; return p; });
+
+        catalog.BuildPlan(catalog.Fortresses[0], RunOptions.Default);
+        var first = resolved;
+        catalog.BuildPlan(catalog.Fortresses[0], RunOptions.Default);
+
+        Assert.AreEqual(3, first);
+        Assert.AreEqual(first, resolved);
+    }
+
     [TestMethod]
     public void BuildPlan_CarriesRulesBountiesAndOptions()
     {

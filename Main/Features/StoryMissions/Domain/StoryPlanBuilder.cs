@@ -10,7 +10,7 @@ namespace TAOM.Features.StoryMissions.Domain;
 /// </summary>
 internal static class StoryPlanBuilder
 {
-    public static RunPlan Build(StoryMissionDefinition definition, RunOptions options) =>
+    public static RunPlan Build(StoryMissionDefinition definition, RunOptions options, HeroLinePlan? heroLines = null) =>
         new(definition.Id, definition.Garrison, definition.Waves, new ShopPlan(0, Array.Empty<ShopOffer>()), definition.Rules,
             options with { StopAfterWaves = definition.Waves.Authored.Count, ClassId = null })
         {
@@ -21,5 +21,6 @@ internal static class StoryPlanBuilder
             FreeHeroes = definition.Heroes,
             Field = definition.Field,
             MustLive = definition.MustLive,
+            HeroLines = heroLines ?? HeroLinePlan.None,
         };
 }

@@ -34,6 +34,9 @@ internal sealed record RunPlan(
 
     public RunProvenance Provenance { get; init; } = RunProvenance.Unknown;
 
+    /// <summary>The recorded lines a mission hero speaks when the field takes his spawn (#1569). <see cref="HeroLinePlan.None"/>: no hero speaks.</summary>
+    public HeroLinePlan HeroLines { get; init; } = HeroLinePlan.None;
+
     /// <summary>The affix schedule, numbers and the fortress's attacker culture names. <see cref="AffixPlan.None"/>: no wave carries an affix.</summary>
     public AffixPlan Affixes { get; init; } = AffixPlan.None;
 
