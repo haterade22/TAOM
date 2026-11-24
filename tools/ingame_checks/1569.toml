@@ -1,0 +1,37 @@
+# In-game checks for #1569 (a mission hero speaks one recorded line when the field takes his spawn), read by tools/ingame_verdict.py. The [Check] line comes from
+# Main/Features/LongDefeat/LongDefeatDirector.Heroes.cs and Diagnostics/LongDefeatHeroChecks.cs; the sound call is Main/Adapters/LongDefeatBattlefieldAdapter.HeroVoice.cs.
+# hero-line, key <mission>v<N> with N counting the mission's line checks, is written for each spawn the field took of a hero who has lines in long_defeat/hero_lines.json (Legolas has four, each with
+# three takes). It passes when the engine started the sound (hero=<id> file=<file name>, never the full path). It fails with problem=refused when the engine made or played no sound, and with
+# problem=fault error=<type> when the call threw. A hero with no lines, a refused spawn and a hero who fights against the player (a story attack) write no line. Only a person hears the line, so the human claims below carry the rest.
+# run_long_defeat.py owes no line for this check, and its generic rule fails a run that holds a fail line of any taom.long-defeat.* id, this one included.
+issue = 1569
+title = "Mission heroes speak a recorded line when they spawn"
+# fixed_in is the branch base, which holds none of these lines, so a build before the feature reads NOT REACHED. Replace it with the fix commit once that exists.
+fixed_in = "bdc77c2b2"
+logs = ["taom"]
+
+[[check]]
+id = "taom.long-defeat.hero-line"
+needs = "a Long Defeat run in which Legolas is bought (python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000), on a client with sound"
+reached = ['\[Check\] id=taom\.long-defeat\.hero-line result=']
+pass = ['\[Check\] id=taom\.long-defeat\.hero-line result=pass hero=legolas file=\S+\.[oO][gG][gG]$']
+fail = ['\[Check\] id=taom\.long-defeat\.hero-line result=fail']
+absence = "not-reached"
+
+# A story mission writes the same line under the hosted id (HostedRunOutcomeLog renames taom.long-defeat.* to taom.story-missions.hosted.*).
+[[check]]
+id = "taom.story-missions.hosted.hero-line"
+needs = "a story mission in which Legolas fights on the player's side (taom.story_open helms_deep_defend, or python tools/run_scenario.py --kind story-mission --mission helms_deep_defend), on a client with sound"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.hero-line result=']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.hero-line result=pass hero=legolas file=\S+\.[oO][gG][gG]$']
+fail = ['\[Check\] id=taom\.story-missions\.hosted\.hero-line result=fail']
+absence = "not-reached"
+
+[[human]]
+claim = "when Legolas spawns in a Long Defeat run or a story mission, one recorded line plays once, loud enough to hear over the battle, and it does not cut off or repeat"
+
+[[human]]
+claim = "a second spawn of Legolas in the same mission (bought again after his fall) plays the next line, and the fifth plays the first again"
+
+[[human]]
+claim = "ending or leaving the mission while a line plays stops it at once, with no sound in the main menu or on the map"

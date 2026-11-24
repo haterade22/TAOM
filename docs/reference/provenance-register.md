@@ -728,6 +728,12 @@ writing, and whether the track uses third-party samples or quotes a film, game o
 the receipt or the composer turns up, record the name and terms here. It keeps its own folder and
 row so that its status can change without the rest of the audio.
 
+**Elf voice lines.** The 195 WAV files under `ModuleSounds/LOTR/Elves/Voice/` (#1568, 2026-11-23) and the 12 OGG files under `ModuleSounds/LOTR/Heroes/Legolas/` (#1569, OGG encodes of his WAV takes) are
+voice lines that the team member TierOneTemplar recorded himself for TAOM (maintainer, 2026-11-23). They
+are not audio of unknown origin, as the other files of this row are. Not recorded yet: the terms on
+which he gives them to TAOM. Until the maintainer records those, the files stay under the module audio
+row; a folder and row of their own, as the story music has, is the next step.
+
 ### Fonts: Aniron, Minion Pro, Ringbearer (UNCLEARED)
 
 `Main/_Module/GUI/Fonts/` ships three faces in Bannerlord's compiled `.fnt`/`.bfnt` form.

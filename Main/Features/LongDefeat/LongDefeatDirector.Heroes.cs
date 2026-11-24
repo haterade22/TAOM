@@ -22,6 +22,9 @@ internal sealed partial class LongDefeatDirector
     private float _heroWaitSeconds;
 
     private int _heroSpawns;
+    private int _heroVoiceChecks;
+    private readonly ulong _heroVoiceSalt;
+    private readonly Dictionary<string, int> _heroLanded = new(StringComparer.Ordinal);
     private int _heroFalls;
     private int _heroesLanded;
     private int _huntersRepairs;
@@ -86,10 +89,47 @@ internal sealed partial class LongDefeatDirector
             {
                 _heroesLanded++;
                 _heroesStanding.Add(hero.Id);
+                if (!report.Enemy)
+                    SpeakHeroLine(hero.Id);
                 _logger.LogInfo($"{Tag}[Hero] {hero.Id} ({hero.TroopId}) joins the defenders: formation {report.FormationIndex}, health x{report.HealthFactor:0.00}, holds {report.Wielded}");
             }
             else
                 _logger.LogError($"{Tag}[Hero] {hero.Id} ({hero.TroopId}) could not be spawned ({report.Problem}); {HeroRefusedTail(InShop(hero.Id))}");
+        }
+    }
+
+    private void SpeakHeroLine(string heroId)
+    {
+        _heroLanded.TryGetValue(heroId, out var before);
+        var landed = _heroLanded[heroId] = before + 1;
+        var path = _voice == null ? null : _plan.HeroLines.Pick(heroId, landed, _heroVoiceSalt);
+        if (path == null)
+            return;
+
+        string? problem = null;
+        try
+        {
+            if (!_voice!.PlayHeroLine(path))
+                problem = "refused";
+        }
+        catch (Exception ex)
+        {
+            problem = "fault error=" + ex.GetType().Name;
+            _logger.LogError($"{Tag}[Hero] the line of {heroId} faulted: {ex}");
+        }
+
+        LongDefeatChecks.Record(_outcomes, LongDefeatHeroChecks.LineId, _mission + "v" + ++_heroVoiceChecks, LongDefeatHeroChecks.Line(heroId, path, problem));
+    }
+
+    private void StopHeroVoice()
+    {
+        try
+        {
+            _voice?.StopHeroLine();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"{Tag}[Hero] stopping the hero's line faulted: {ex}");
         }
     }
 

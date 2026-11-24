@@ -139,7 +139,7 @@ public class TroopWeightCoverageTests
     }
 
     /// <summary>The Dual Wield evil twin-blades are level 31 troops of cultures that weigh level 31 at 2.0. Isengard's
-    /// twin-blade is not: Isengard counts as one man up to level 31 (owner, 2026-11-23).</summary>
+    /// twin-blade is not: Isengard counts as one man up to level 31 (Luiz, 2026-11-23).</summary>
     [TestMethod]
     public void DualWieldEvilTwinBlades_WeighTwo()
     {
@@ -169,7 +169,7 @@ public class TroopWeightCoverageTests
     /// level 36 Uruk sat at 2.0 above a level 31 Uruk at 1.0. Humans (Gondor, Rohan, Rhun, Harad, Dunland, ...)
     /// carry no weights by design and are not swept; this is haterade's call and is recorded in the PR.
     /// The disabled cave troll is named because its row is commented out on purpose. Isengard is out of the sweep:
-    /// its troops count as one man up to level 31 (owner, 2026-11-23, IsengardPartySlotTests).
+    /// its troops count as one man up to level 31 (Luiz, 2026-11-23, IsengardPartySlotTests).
     /// </summary>
     [TestMethod]
     public void EvilAndDwarfTroopsAtLevel31To40_AreWeighted()

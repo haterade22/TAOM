@@ -3,9 +3,10 @@
 ## Overview
 
 Per-race combat voice sets: the grunts, pain cries, death screams, war cries and shouted formation
-orders an agent emits in battle. TAOM ships three custom voice definitions (`dwarf_01`, `uruk_01`,
-`uruk_hai_01`) bound to seven of the fourteen custom races, plus 437 audio files under
-`Main/_Module/ModuleSounds/`.
+orders an agent emits in battle. TAOM ships four custom voice definitions (`dwarf_01`, `uruk_01`,
+`uruk_hai_01`, `elf_01`) bound to eight of the fourteen custom races (the elf binding goes on the live
+Armory when a build with the definition is deployed, see Known defects), plus 633 audio files under
+`Main/_Module/ModuleSounds/` (counted 2026-11-23). TierOneTemplar recorded the elf voice (#1568).
 
 This doc is a **system reference written from research, not from an implementation**. Apart from
 [orc-battle-voice.md](orc-battle-voice.md), which sets the plain orc race's voice from C# (route C),
@@ -21,7 +22,7 @@ installed modules, and nothing in the repo captured it.
 - **TAOM requirement:** dwarves, Uruk-hai, orcs, elves and trolls cannot all sound like Calradian
   levies. Middle-earth reads wrong the moment an Uruk grunts like an Imperial recruit.
 - **Without this feature:** every race falls through to `male_02` through `male_08`, which is still the
-  live state for seven of the fourteen races (see the binding table).
+  live state for six of the fourteen races (see the binding table).
 
 ## Architecture
 
@@ -78,7 +79,8 @@ ModuleSounds/LOTR/<Race>/Voice/*.wav      (loose audio, no FMOD bank)
 
 ### Race to voice binding
 
-Extracted from the live `LOTRLOME_Armory/ModuleData/skins.xml`, re-measured 2026-08-25.
+Extracted from the live `LOTRLOME_Armory/ModuleData/skins.xml`, re-measured 2026-08-25. The `elf` row and the
+`dwarf` female cell were read again on 2026-11-23.
 
 **Read the maturity row, not the race.** Each `<race>` holds ten `<skin>` elements, one per gender
 and maturity (adult, teenager, tween, child, toddler), and the `<voice_types>` pool is per skin, not
@@ -87,10 +89,12 @@ what a battle sounds like.
 
 | Race | Adult male pool | Adult female pool |
 |------|-----------------|-------------------|
-| `dwarf`, `uruk`, `pale_uruk`, `dg_uruk`, `goblin` | custom only | custom only |
+| `uruk`, `pale_uruk`, `dg_uruk`, `goblin` | custom only | custom only |
+| `dwarf` | `dwarf_01` only | two pools, `dwarf_01` and vanilla `female_01` to `_05` (Known defects) |
 | `uruk_hai` | `uruk_hai_01` only | vanilla `female_01` to `_05` |
 | `berserker` | `uruk_01` only | vanilla `female_01` to `_05` |
-| `orc`, `nazghul`, `elf`, `cave_troll`, `hill_troll`, `saruman`, `sauron` | vanilla `male_02` to `_08` | vanilla `female_01` to `_05` |
+| `elf` | `elf_01` only (#1568; in the snapshot, and on the live Armory once it is bound at deploy) | vanilla `female_01` to `_05` |
+| `orc`, `nazghul`, `cave_troll`, `hill_troll`, `saruman`, `sauron` | vanilla `male_02` to `_08` | vanilla `female_01` to `_05` |
 
 **Every bound race is 100% custom on the adult male skin.** There is no dilution on any troop line.
 
@@ -116,18 +120,22 @@ attribute gotcha recorded under Gotchas below.
 
 | Artifact | Count |
 |----------|-------|
-| Audio files under `Main/_Module/ModuleSounds/` | 437 (342 `.wav`, 93 `.mp3`, 2 `.ogg`) |
-| `<module_sound>` entries in `module_sounds.xml` | 250 |
-| Voice slots per TAOM voice definition | 56, all distinct types |
-| Distinct audio paths referenced (dwarf / uruk / uruk_hai) | 47 / 35 / 35 |
+| Audio files under `Main/_Module/ModuleSounds/` | 633 (537 `.wav`, 93 `.mp3`, 3 `.ogg`), counted 2026-11-23 |
+| `<module_sound>` entries in `module_sounds.xml` | 296, counted 2026-11-23 |
+| Voice slots per TAOM voice definition | 56, all distinct types; `elf_01` has 57 (it also fills `Drown`) |
+| Distinct sound groups referenced (dwarf / uruk / uruk_hai / elf) | 47 / 35 / 35 / 46 |
+| Audio files behind `elf_01` | 195 `.wav`, 48 kHz mono 16-bit, 24.5 MB |
 
 ### Known defects
 
 | Defect | Detail |
 |--------|--------|
 | ~~**Long clips on frequently-fired slots**~~ | FIXED 2026-09-06 for `dwarf_01`. `D1_Grunts1/2.wav` (7.93 / 8.77 s) sat on `Grunt`, `Pain` and `Focus`, and the warcries (up to 11.81 s) on `Yell`. Those files are sound-set compilations holding several complete spoken lines, so players heard a full line every 2 to 4 seconds. `Yell` now points at the short `Battlecries` bank and the warcries moved to `Charge`, which fires once per order on one agent. Gated by `tools/audit_voice_clip_lengths.py`. `uruk_hai_01` has the same defect and is still open, baselined in `tools/voice-clip-baseline.txt` |
-| **Unbound adult female skins** | `uruk_hai` and `berserker` have a custom voice on the adult male skin and vanilla `female_*` on the adult female one. Narrow, since female troops are rare, but it is a real hole. Corrected 2026-08-25 from an earlier and wrong "diluted skins" reading |
-| **Seven unbound races** | `elf`, `orc`, `nazghul`, `cave_troll`, `hill_troll`, `saruman`, `sauron` have no custom voice in `skins.xml`. Male adult `orc` AI agents in any mission get `uruk_01` from C# at spawn ([orc-battle-voice.md](orc-battle-voice.md), route C); female orcs and the player's own orc keep the skin's vanilla voices |
+| **Unbound adult female skins** | `uruk_hai`, `berserker` and `elf` have a custom voice on the adult male skin and vanilla `female_*` on the adult female one. Narrow for the Uruk races, since female troops are rare, but it is a real hole. For `elf` it is the design: `elf_01` is a male voice and no female set exists. Corrected 2026-08-25 from an earlier and wrong "diluted skins" reading |
+| **Two voice pools on the adult female dwarf skin** | The live `skins.xml` gives that skin two `<voice_types>` blocks: `dwarf_01` alone (line 3193) and `female_01` to `female_05` (line 3548). Which one the engine reads is not established, so nobody knows today whether dwarf women use the male dwarf voice, the vanilla female ones, or both. Found 2026-11-23 by `VoiceBindingDataTests`, which pins the state so a change shows; the choice is the maintainer's |
+| **Three elf `Focus` takes held back** | `elf_focus_03`, `_04` and `_05` (5.15 s, 4.02 s, 5.41 s) are over the 4 s `mission_voice` cap, so `Focus` ships with takes 01 and 02 (#1568). Take 04 holds 0.53 s of silence and needs a cut of 0.02 s; the originals are in the asset archive |
+| **The binding and the definition must load together** | A module set that loads the Armory with `elf_01` in the elf pool and a TAOM build without the definition gives male elves a pool of one null entry: native `FUN_180575720` (v1.5.7) logs `Voice def can not be found "elf_01"` and stores 0 in the pool slot. What an agent then does with that entry is not established (silence, or a fault). So the live binding goes on only after the deployed build defines the voice, a release ships the Armory and TAOM together, and KAOE, which shares the Armory, needs the definition first. On 2026-11-23 the binding sat on the live Armory for one hour before any such build was deployed, and was reverted; the newest game log is older than that hour |
+| **Six unbound races** | `orc`, `nazghul`, `cave_troll`, `hill_troll`, `saruman`, `sauron` have no custom voice in `skins.xml`. Male adult `orc` AI agents in any mission get `uruk_01` from C# at spawn ([orc-battle-voice.md](orc-battle-voice.md), route C); female orcs and the player's own orc keep the skin's vanilla voices |
 | **Orphaned Théoden set** | 83 clips under `ModuleSounds/LOTR/Rohan/Voice/Theoden` are registered in `module_sounds.xml` and reachable by nothing: no Rohan voice definition exists, and Rohan is the vanilla human race anyway |
 | ~~**Dangling mbproj entry**~~ | FIXED 2026-08-28. `project.mbproj` line 9 declares `ModuleData/VoiceDefinitions/LOTR/lotr_warg_voice_def.xml`; the file now exists, carrying `warg_01` absorbed from the retired `Alliance.Wargs` module. See [lotrlome-warg-changes.md](../reference/lotrlome-warg-changes.md) |
 | ~~**`uruk_01` defined twice**~~ | RESOLVED 2026-08-28 by retiring `Alliance.Wargs`. Its duplicate `uruk_01` was deliberately not carried over in the absorption; TAOM's is now the only definition |
@@ -141,11 +149,11 @@ clips plays, so it should follow asset replacement rather than precede it.
 
 | Route | Applies to | Mechanism | Status |
 |-------|-----------|-----------|--------|
-| **A. `skins.xml` `<voice_types>`** | any race with its own `<race>` entry | add the definition name to the skin's voice pool | **Proven, in use, 7 races bound.** Per-race only. Edits an unversioned external module |
+| **A. `skins.xml` `<voice_types>`** | any race with its own `<race>` entry | add the definition name to the skin's voice pool | **Proven, in use, 8 races bound.** Per-race only. Edits an unversioned external module |
 | **B. monster sound class** | orcs, trolls, ents, wargs | distinct `sound_and_collision_info_class` on the `<monster>`, matched on the `<voice_definition>` | Untried here. All three TAOM definitions declare `human`. This is how vanilla does `horse` / `camel` / `bovine`, and how `warg_01` works |
 | **C. `MBAgentVisuals.SetVoiceDefinitionIndex`** | anything | force a voice definition on agent spawn from C# | **Only route that can key on culture.** Needs a MissionBehavior. In use for male `orc` soldiers ([orc-battle-voice.md](orc-battle-voice.md)), not yet confirmed by ear |
 
-**Route A is the default.** It already works and needs no code. Every one of the seven unbound races
+**Route A is the default.** It already works and needs no code. Every one of the six unbound races
 has its own `<race>` entry, so a voice added there lands on that race alone.
 
 **Route C is the only answer for the Mannish kingdoms**, since they share the vanilla human race.
@@ -199,6 +207,9 @@ a thin passthrough to native, so a slot with no managed call site is fired by th
 | `Infantry`, `Archers`, `Cavalry`, `HorseArchers`, `Everyone`, `Mixed` | `OrderController` | once per formation select |
 | `Mp*` | `Agent.HandleBark` | player keypress, dead in singleplayer |
 | `Fear` | no vanilla caller; only TAOM's `DreadPulseRunner` | 2% per dread pulse |
+| `Climb`, `Focus`, `Jump` | no managed call site in the installed v1.5.7 DLLs (TaleWorlds.MountAndBlade, its View and ViewModelCollection, SandBox, NavalDLC; searched 2026-11-23). Whether native fires them, or they are dead slots, is not established | not known |
+| `Drown` | `Mission.cs:3695` (v1.5.7), in the `RegisterDrownBlow` tick action | with each drown blow (10 damage) an agent takes; how often that action runs is not measured |
+| `Debacle` | `AgentMoraleInteractionLogic.OnAgentFleeing` (`:66-68`, v1.5.7) | 70% of the times a human agent starts to flee |
 
 `PlayOrderGestures(orderType, Owner, _selectedFormations)` is handed the order controller's `Owner`,
 not the formation, which is why an order slot is the right home for a long scripted line: exactly one
@@ -287,14 +298,18 @@ This is fixed by #821: a `VoiceOverModel` override maps each TAOM culture to a f
 | File | Purpose |
 |------|---------|
 | `Main/_Module/ModuleData/project.mbproj` | Registers the voice definitions and `module_sounds.xml`. **The only registration point**; `SubModule.xml` plays no part |
-| `Main/_Module/ModuleData/module_sounds.xml` | 250 `<module_sound>` entries mapping names to loose audio |
+| `Main/_Module/ModuleData/module_sounds.xml` | 296 `<module_sound>` entries (counted 2026-11-23) mapping names to loose audio |
 | `Main/_Module/ModuleData/lotr_dwarf_voice_def.xml` | 56-slot reference definition, the model to copy |
 | `docs/audio/vo-script-dwarves.html` | The written line sheet for `dwarf_01`: what each slot actually says, and which stem feeds which sound group |
 | `docs/audio/vo-recording-guide.html`, `docs/audio/khuzdul-lexicon.html` | The actor-facing brief and the dwarvish reference behind that script |
-| `Main/_Module/ModuleData/lotr_uruk_voice_def.xml`, `lotr_uruk_hai_voice_def.xml` | The other two definitions |
+| `Main/_Module/ModuleData/lotr_uruk_voice_def.xml`, `lotr_uruk_hai_voice_def.xml` | The two Uruk definitions |
+| `Main/_Module/ModuleData/lotr_elf_voice_def.xml` | `elf_01`, 57 slots, every slot on a group of takes under `ModuleSounds/LOTR/Elves/Voice/` (#1568) |
+| `tools/oneoff/bind_elf_voice.py` | Writes the `elf_01` binding into the live Armory `skins.xml` and the snapshot; dry run by default, `--revert` puts the vanilla pool back. The model for the next race |
+| `TAOM.Tests/Features/KingdomVoices/VoiceBindingDataTests.cs` | The binding gate: every registered human definition is in an adult skin pool, no adult pool mixes a TAOM voice with another, only the known dwarf skin holds two pools, the live Armory's adult pools match the snapshot both ways |
+| `tools/audit_voice_clip_lengths.py`, `tools/voice-clip-baseline.txt` | The clip length gate, per slot and per sound category |
 | `Main/_Module/ModuleSounds/LOTR/<Race>/Voice/` | Audio assets |
 | `<game>/Modules/LOTRLOME_Armory/ModuleData/skins.xml` | **External, unversioned.** Owns `soln_skins` and every race-to-voice binding |
-| `docs/reference/lotrlome-armory-snapshot/skins.xml` | Repo snapshot, byte-identical to live as of 2026-08-12 (5,678,421 bytes, 45 custom refs) |
+| `docs/reference/lotrlome-armory-snapshot/skins.xml` | Repo snapshot. Its adult voice pools are what the live file must hold (`VoiceBindingDataTests`); the rest of the file is not compared, and the two files were not byte-identical on 2026-11-23 |
 | `Main/_Module/ModuleData/VoiceDefinitions/LOTR/lotr_warg_voice_def.xml` | `warg_01`, the route B mount example. Moved here 2026-08-28 from the retired `Alliance.Wargs`, filling the dangling `project.mbproj` entry |
 
 ## How to add a voice for a race
@@ -311,8 +326,13 @@ This is fixed by #821: a `VoiceOverModel` override maps each TAOM culture to a f
 7. Field-battle smoke. A voice that fails to bind is silent, not an error.
 
 **Step 5 is the trap.** `skins.xml` lives in an unversioned dependency module, so a reinstall
-silently reverts it. Land a repo-side validator gate alongside the edit, per the dependency-module
-trap in CLAUDE.md.
+silently reverts it. `VoiceBindingDataTests` is the gate: it reads the voice definitions from
+`project.mbproj`, so a new definition is covered with no test change. Write the edit with a tool
+after `tools/oneoff/bind_elf_voice.py`, not by hand: the same vanilla pool text repeats in other
+skins (the `sauron` race is a copy of the elf skins), and attributes sit on their own lines. Run
+`python tools/audit_voice_clip_lengths.py` after step 3; a take over its slot's limit goes to a
+rare slot such as `Charge`, or stays out. Bind the snapshot in the change, and the live Armory only
+after the build that defines the voice is deployed (Known defects, the binding and the definition).
 
 ## Generation facts (measured 2026-08-13, not inferred)
 
@@ -362,6 +382,9 @@ brackets are wildcard syntax. Rename immediately after each render, while you st
 the file belongs to; a folder of `tts_[shou_*` files is unidentifiable after three rounds.
 
 ## Designed voices
+
+The shipped `elf_01` definition plays the voice lines TierOneTemplar delivered (#1568, 2026-11-23).
+It uses neither designed voice below; the name `elf_01` in this table is a voice in the ElevenLabs library.
 
 | Name | Voice ID | Register | Status |
 |------|----------|----------|--------|
@@ -433,7 +456,10 @@ resampled off 44.1 kHz regardless.
 
 ## Validation
 
-There is no voice validator today. A check worth building should assert four things:
+Two gates exist. `tools/audit_voice_clip_lengths.py` covers check 1 for every path a registered
+definition names (it does not look at a `<module_sound>` nothing binds, so the orphaned Théoden set
+passes). `VoiceBindingDataTests` covers checks 2 and 3 on the adult skins of the snapshot, and check
+4 for the adult voice pools only, not the whole file. The four checks:
 
 1. Every `<voice type=… path=X>` resolves to a real `<module_sound name=X>`, and every referenced
    file exists on disk. Catches the orphaned Théoden set and the dangling mbproj entry.
@@ -459,13 +485,56 @@ Check 3 earns its keep: dilution is invisible in play because the voice does fir
 
 ## Tests
 
-No validator covers the data, and no test covers the voice API. One TAOM feature does call it:
+- `tools/tests/test_audit_voice_clip_lengths.py`: the clip length gate.
+- `TAOM.Tests/Features/KingdomVoices/VoiceBindingDataTests.cs`: five tests read the shipped data (every
+  registered human definition is in an adult pool, no single pool mixes a TAOM voice with another,
+  only the known dwarf skin holds two pools, `elf/0` is `elf_01` alone, and under `LiveInstall` the
+  live adult pools equal the snapshot's, both ways and block by block). The others prove the readers
+  on synthetic skins: a teenager skin, a voice inside a comment, a misspelled name, a mixed pool, two
+  blocks in one skin, two blocks merged into one, a skin only one file holds.
+- `tools/tests/test_bind_elf_voice.py`: the binding tool. Only the elf adult male pool changes, the
+  `sauron` copy stays, commented blocks are not matched, line endings stay, a revert gives the
+  original bytes, and each refusal: an unknown pool, a pool in another layout or with an extra
+  attribute, a look-alike attribute, a skin or race the text scan and the parser read differently, a
+  file that does not parse, `--no-backup` on the live file, a write that does not read back.
+
+No test covers the voice API. One TAOM feature does call it:
 `Main/Features/DreadAura/Hooks/DreadPulseRunner.cs:101` fires `VoiceType.Fear` on a dread pulse, gated
-by `DreadAuraConfig.FearVoiceChancePerPulse` (default 0.02). `Fear` is bound only on `dwarf_01`,
-`uruk_01` and `uruk_hai_01`, so on any other race that call is silent.
+by `DreadAuraConfig.FearVoiceChancePerPulse` (default 0.02). `Fear` is bound on `dwarf_01`,
+`uruk_01`, `uruk_hai_01` and `elf_01`, so on any other race that call is silent. Male elves voice
+it since #1568.
+
+## How to verify in game
+
+**Preconditions, in this order:** (1) deploy a TAOM build that holds `elf_01` (from a worktree, press
+F5 in that worktree's `TAOM.sln`); (2) with the game closed, `python tools/oneoff/bind_elf_voice.py
+--apply`; (3) `VoiceBindingDataTests` is green; (4) sound on. Never bind first (Known defects, the
+binding and the definition). If that build goes away before the change is on trunk, run the tool
+with `--revert --apply`. Only a person can judge the steps below.
+
+1. Start a Custom Battle with a Lothlórien or Mirkwood army against any enemy, and command it as a
+   male elf.
+2. In the melee, listen to male elves: grunts, pain cries and death cries are the new voice, not the
+   vanilla human ones. Compare with a Gondor soldier if one is on the field.
+3. Give orders (charge, advance, fall back, each formation, hold fire, fire at will) and select
+   each troop class. The commander speaks each order in the elf voice.
+4. Win the battle. The cheering elves use the new victory lines.
+5. Confirm that no male elf is silent and that female elves still use the vanilla female voices.
+6. Listen for `Climb` and `Focus`: no managed code fires either slot, and whether native does is not
+   established. If they play, the takes run to 3.9 s and 3.7 s, so listen for them repeating too
+   often (a siege with ladders is the likely place for `Climb`). If they never play, record that in
+   the slot table.
+7. Judge the pitch spread (`min_pitch_multiplier` 0.9, `max_pitch_multiplier` 1.1 in
+   `lotr_elf_voice_def.xml`). How the engine applies the range is not established (one value for
+   each agent is the assumption): elves should differ a little and none should sound wrong.
 
 ## Changelog
 
+- 2026-11-23: `elf_01` (#1568), the elf combat voice by TierOneTemplar: 195 takes in 46
+  sound groups, 57 slots, bound to the adult male `elf` skin. New binding gate
+  (`VoiceBindingDataTests`) and binding tool. The gate found two voice pools on the adult female
+  dwarf skin (Known defects). Counts and the binding table brought up to date. The live binding goes on when a build with the
+  definition is deployed.
 - 2026-10-18: dialogue voice-over is now handled by `TaomVoiceOverModel` (#821), see [voice-accents.md](voice-accents.md).
 - 2026-08-25: corrected the race-to-voice table against the live `skins.xml`. The dilution defect was
   a miscount across the ten per-maturity skins and does not exist; every bound race is fully custom on
@@ -477,7 +546,7 @@ by `DreadAuraConfig.FearVoiceChancePerPulse` (default 0.02). `Fear` is bound onl
 
 ## GitHub Issue
 
-#821 covers the dialogue voices (random vanilla voice for TAOM cultures). Otherwise none filed. The dangling mbproj entry, the unbound adult female skins, and the asset provenance each
+#1568 is the elf combat voice. #821 covers the dialogue voices (random vanilla voice for TAOM cultures). Otherwise none filed. The dangling mbproj entry, the unbound adult female skins, and the asset provenance each
 warrant one.
 
 ---

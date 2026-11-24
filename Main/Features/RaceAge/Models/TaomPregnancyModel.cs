@@ -35,6 +35,9 @@ public class TaomPregnancyModel : DefaultPregnancyModel
         if (!_raceAgeService.CanConceive(race, hero.Spouse.CharacterObject.Race, hero.Age))
             return 0f;
 
+        if (hero.Clan == null)
+            return 0f;
+
         bool playerOrSpouseInvolved = IsPlayerMarriage(hero, hero.Spouse, _players);
 
         // Phase 9b Codex review (2026-05-13): heroAge MUST be float (not int). Vanilla

@@ -5,6 +5,7 @@
     <CraftingPiece
         id="taom_ph_isengard_1h_sword_t7_blade"
         name="{=taom_ph_isengard_1h_sword_t7_blade_name}Isengard Sword Blade A (placeholder)"
+        is_hidden="true"
         tier="2"
         piece_type="Blade"
         mesh="wm_isengard_1h_sword_a01_blade"
@@ -42,6 +43,7 @@
     <CraftingPiece
         id="taom_ph_erebor_spear_a_t4_blade"
         name="{=taom_ph_erebor_spear_a_t4_blade_name}Erebor Spear Blade A (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="sm_dwarf_erebor_spear_blade_a"
@@ -93,6 +95,7 @@
     <CraftingPiece
         id="taom_ph_erebor_spear_b_t4_blade"
         name="{=taom_ph_erebor_spear_b_t4_blade_name}Erebor Spear Blade B (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="sm_dwarf_erebor_spear_blade_b"
@@ -144,6 +147,7 @@
     <CraftingPiece
         id="taom_ph_erebor_spear_a_t8_blade"
         name="{=taom_ph_erebor_spear_a_t8_blade_name}Erebor Spear Blade A (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="sm_dwarf_erebor_spear_blade_a"
@@ -195,6 +199,7 @@
     <CraftingPiece
         id="taom_ph_erebor_spear_b_t8_blade"
         name="{=taom_ph_erebor_spear_b_t8_blade_name}Erebor Spear Blade B (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="sm_dwarf_erebor_spear_blade_b"
@@ -246,6 +251,7 @@
     <CraftingPiece
         id="taom_ph_gondor_spear_b_t5_blade"
         name="{=taom_ph_gondor_spear_b_t5_blade_name}Gondor Spear Head C (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_gondor_spear_b_blade"
@@ -282,6 +288,7 @@
     <CraftingPiece
         id="taom_ph_gondor_spear_b_gondor_t5_blade"
         name="{=taom_ph_gondor_spear_b_gondor_t5_blade_name}Gondor Spear Head C (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_gondor_spear_b_blade"
@@ -318,6 +325,7 @@
     <CraftingPiece
         id="taom_ph_gondor_spear_b_pg_t5_blade"
         name="{=taom_ph_gondor_spear_b_pg_t5_blade_name}Gondor Spear Head C (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_gondor_spear_b_blade"
@@ -354,6 +362,7 @@
     <CraftingPiece
         id="taom_ph_gondor_spear_b_swan_t5_blade"
         name="{=taom_ph_gondor_spear_b_swan_t5_blade_name}Gondor Spear Head C (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_gondor_spear_b_blade"
@@ -390,6 +399,7 @@
     <CraftingPiece
         id="taom_ph_gondor_spear_b_t8_blade"
         name="{=taom_ph_gondor_spear_b_t8_blade_name}Gondor Spear Head C (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_gondor_spear_b_blade"
@@ -426,6 +436,7 @@
     <CraftingPiece
         id="taom_ph_gondor_spear_b_gondor_t8_blade"
         name="{=taom_ph_gondor_spear_b_gondor_t8_blade_name}Gondor Spear Head C (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_gondor_spear_b_blade"
@@ -462,6 +473,7 @@
     <CraftingPiece
         id="taom_ph_gondor_spear_b_pg_t8_blade"
         name="{=taom_ph_gondor_spear_b_pg_t8_blade_name}Gondor Spear Head C (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_gondor_spear_b_blade"
@@ -498,6 +510,7 @@
     <CraftingPiece
         id="taom_ph_gondor_spear_b_swan_t8_blade"
         name="{=taom_ph_gondor_spear_b_swan_t8_blade_name}Gondor Spear Head C (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_gondor_spear_b_blade"
@@ -534,6 +547,7 @@
     <CraftingPiece
         id="taom_ph_gondor_spear_a_t8_blade"
         name="{=taom_ph_gondor_spear_a_t8_blade_name}Gondor Spear Head D (placeholder)"
+        is_hidden="true"
         tier="4"
         piece_type="Blade"
         mesh="wm_gondor_spear_a_blade"
@@ -570,6 +584,7 @@
     <CraftingPiece
         id="taom_ph_mirkwood_sword_t8_blade"
         name="{=taom_ph_mirkwood_sword_t8_blade_name}[Mirkwood] Sword Blade (placeholder)"
+        is_hidden="true"
         tier="4"
         piece_type="Blade"
         mesh="wm_mirkwood_sword_a01_blade"
@@ -607,6 +622,7 @@
     <CraftingPiece
         id="taom_ph_mirkwood_sword_t10_blade"
         name="{=taom_ph_mirkwood_sword_t10_blade_name}[Mirkwood] Sword Blade (placeholder)"
+        is_hidden="true"
         tier="4"
         piece_type="Blade"
         mesh="wm_mirkwood_sword_a01_blade"
@@ -644,6 +660,7 @@
     <CraftingPiece
         id="taom_ph_gundabad_spear_a02_t4_blade"
         name="{=taom_ph_gundabad_spear_a02_t4_blade_name}Gundabad Orc Spear Blade II (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_gundabad_spear_a02_blade"
@@ -681,6 +698,7 @@
     <CraftingPiece
         id="taom_ph_gundabad_spear_a03_t5_blade"
         name="{=taom_ph_gundabad_spear_a03_t5_blade_name}Gundabad Orc Spear Blade III (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_gundabad_spear_a03_blade"
@@ -716,6 +734,7 @@
     <CraftingPiece
         id="taom_ph_gundabad_spear_a03_t8_blade"
         name="{=taom_ph_gundabad_spear_a03_t8_blade_name}Gundabad Orc Spear Blade III (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_gundabad_spear_a03_blade"
@@ -748,7 +767,7 @@
     </CraftingPiece>
 
     <!-- taom_ph_dale_great_axe_a_t5: donor blade wm_dale_ws_2h_axe_a01_blade, damage_factor swing x1.135, thrust x1.135 -->
-    <CraftingPiece id="taom_ph_dale_great_axe_a_t5_blade" name="{=taom_ph_dale_great_axe_a_t5_blade_name}Dale Great Axe Head (placeholder)" tier="4" piece_type="Blade" mesh="wm_dale_ws_2h_axe_a01_blade" length="25" weight="2.4">
+    <CraftingPiece id="taom_ph_dale_great_axe_a_t5_blade" name="{=taom_ph_dale_great_axe_a_t5_blade_name}Dale Great Axe Head (placeholder)" is_hidden="true" tier="4" piece_type="Blade" mesh="wm_dale_ws_2h_axe_a01_blade" length="25" weight="2.4">
         <BladeData stack_amount="3" blade_length="25" blade_width="42.57" physics_material="metal_weapon" body_name="bo_wm_dale_ws_2h_axe_a01_blade">
             <Swing damage_type="Cut" damage_factor="3.04" />
         </BladeData>
@@ -758,7 +777,7 @@
     </CraftingPiece>
 
     <!-- taom_ph_dale_poleaxe_a_t6: donor blade wm_dale_ws_polearm_head_a03, damage_factor swing x1.355, thrust x1.277 -->
-    <CraftingPiece id="taom_ph_dale_poleaxe_a_t6_blade" name="{=taom_ph_dale_poleaxe_a_t6_blade_name}Dale Poleaxe Head (placeholder)" tier="3" piece_type="Blade" mesh="wm_dale_ws_polearm_head_a03" length="43.03" weight="1.1">
+    <CraftingPiece id="taom_ph_dale_poleaxe_a_t6_blade" name="{=taom_ph_dale_poleaxe_a_t6_blade_name}Dale Poleaxe Head (placeholder)" is_hidden="true" tier="3" piece_type="Blade" mesh="wm_dale_ws_polearm_head_a03" length="43.03" weight="1.1">
         <BladeData stack_amount="3" physics_material="metal_weapon" body_name="bo_wm_dale_ws_polearm_head_a03">
             <Thrust damage_type="Pierce" damage_factor="2.29" />
             <Swing damage_type="Cut" damage_factor="3.16" />
@@ -769,7 +788,7 @@
     </CraftingPiece>
 
     <!-- taom_ph_dale_poleaxe_a_t7: donor blade wm_dale_ws_polearm_head_a03, damage_factor swing x1.355, thrust x1.277 -->
-    <CraftingPiece id="taom_ph_dale_poleaxe_a_t7_blade" name="{=taom_ph_dale_poleaxe_a_t7_blade_name}Dale Poleaxe Head (placeholder)" tier="3" piece_type="Blade" mesh="wm_dale_ws_polearm_head_a03" length="43.03" weight="1.1">
+    <CraftingPiece id="taom_ph_dale_poleaxe_a_t7_blade" name="{=taom_ph_dale_poleaxe_a_t7_blade_name}Dale Poleaxe Head (placeholder)" is_hidden="true" tier="3" piece_type="Blade" mesh="wm_dale_ws_polearm_head_a03" length="43.03" weight="1.1">
         <BladeData stack_amount="3" physics_material="metal_weapon" body_name="bo_wm_dale_ws_polearm_head_a03">
             <Thrust damage_type="Pierce" damage_factor="2.29" />
             <Swing damage_type="Cut" damage_factor="3.16" />
@@ -783,6 +802,7 @@
     <CraftingPiece
         id="taom_ph_isengard_berserker_sword_2h_t5_blade"
         name="{=taom_ph_isengard_berserker_sword_2h_t5_blade_name}Isengard Berserker Blade A (placeholder)"
+        is_hidden="true"
         tier="4"
         piece_type="Blade"
         mesh="wm_isengard_berserker_sword_a01_blade"
@@ -824,6 +844,7 @@
     <CraftingPiece
         id="taom_ph_isengard_berserker_sword_2h_t6_blade"
         name="{=taom_ph_isengard_berserker_sword_2h_t6_blade_name}Isengard Berserker Blade A (placeholder)"
+        is_hidden="true"
         tier="4"
         piece_type="Blade"
         mesh="wm_isengard_berserker_sword_a01_blade"
@@ -865,6 +886,7 @@
     <CraftingPiece
         id="taom_ph_isengard_spear_b_t6_blade"
         name="{=taom_ph_isengard_spear_b_t6_blade_name}Isengard Spear Blade B01 (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_isengard_1h_spear_b01_blade"
@@ -902,6 +924,7 @@
     <CraftingPiece
         id="taom_ph_mirkwood_glaive_a01_t8_blade"
         name="{=taom_ph_mirkwood_glaive_a01_t8_blade_name}[Mirkwood] Glaive Blade (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_mirkwood_glaive_a01_blade"
@@ -947,6 +970,7 @@
     <CraftingPiece
         id="taom_ph_mirkwood_spear_a01_t2_blade"
         name="{=taom_ph_mirkwood_spear_a01_t2_blade_name}[Mirkwood] Spear Blade I (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_mirkwood_spear_a01_blade"
@@ -992,6 +1016,7 @@
     <CraftingPiece
         id="taom_ph_mirkwood_spear_a01_t8_blade"
         name="{=taom_ph_mirkwood_spear_a01_t8_blade_name}[Mirkwood] Spear Blade I (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_mirkwood_spear_a01_blade"
@@ -1037,6 +1062,7 @@
     <CraftingPiece
         id="taom_ph_mirkwood_spear_a02_t2_blade"
         name="{=taom_ph_mirkwood_spear_a02_t2_blade_name}[Mirkwood] Spear Blade II (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_mirkwood_spear_a02_blade"
@@ -1082,6 +1108,7 @@
     <CraftingPiece
         id="taom_ph_mirkwood_spear_a02_t8_blade"
         name="{=taom_ph_mirkwood_spear_a02_t8_blade_name}[Mirkwood] Spear Blade II (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_mirkwood_spear_a02_blade"
@@ -1127,6 +1154,7 @@
     <CraftingPiece
         id="taom_ph_numenorean_bastard_heavy_a_t4_blade"
         name="{=taom_ph_numenorean_bastard_heavy_a_t4_blade_name}Numenorean Sword Blade D (Elite) (placeholder)"
+        is_hidden="true"
         tier="4"
         piece_type="Blade"
         mesh="numenorean_sword_blade_d"
@@ -1160,6 +1188,7 @@
     <CraftingPiece
         id="taom_ph_numenorean_bastard_heavy_b_t4_blade"
         name="{=taom_ph_numenorean_bastard_heavy_b_t4_blade_name}Numenorean Sword Blade D (Elite) (placeholder)"
+        is_hidden="true"
         tier="4"
         piece_type="Blade"
         mesh="numenorean_sword_blade_d"
@@ -1193,6 +1222,7 @@
     <CraftingPiece
         id="taom_ph_numenorean_greatsword_heavy_a_t7_blade"
         name="{=taom_ph_numenorean_greatsword_heavy_a_t7_blade_name}Numenorean Sword Blade B (placeholder)"
+        is_hidden="true"
         tier="4"
         piece_type="Blade"
         mesh="numenorean_sword_blade_b"
@@ -1228,6 +1258,7 @@
     <CraftingPiece
         id="taom_ph_numenorean_greatsword_heavy_b_t6_blade"
         name="{=taom_ph_numenorean_greatsword_heavy_b_t6_blade_name}Numenorean Sword Blade B (placeholder)"
+        is_hidden="true"
         tier="4"
         piece_type="Blade"
         mesh="numenorean_sword_blade_b"
@@ -1263,6 +1294,7 @@
     <CraftingPiece
         id="taom_ph_numenorean_greatsword_heavy_b_t7_blade"
         name="{=taom_ph_numenorean_greatsword_heavy_b_t7_blade_name}Numenorean Sword Blade B (placeholder)"
+        is_hidden="true"
         tier="4"
         piece_type="Blade"
         mesh="numenorean_sword_blade_b"
@@ -1298,6 +1330,7 @@
     <CraftingPiece
         id="taom_ph_numenorean_greatsword_medium_a_t6_blade"
         name="{=taom_ph_numenorean_greatsword_medium_a_t6_blade_name}Numenorean Sword Blade A (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="numenorean_sword_blade_a"
@@ -1333,6 +1366,7 @@
     <CraftingPiece
         id="taom_ph_numenorean_greatsword_medium_b_t6_blade"
         name="{=taom_ph_numenorean_greatsword_medium_b_t6_blade_name}Numenorean Sword Blade A (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="numenorean_sword_blade_a"
@@ -1368,6 +1402,7 @@
     <CraftingPiece
         id="taom_ph_numenorean_poleaxe_heavy_t8_blade"
         name="{=taom_ph_numenorean_poleaxe_heavy_t8_blade_name}Arnor Poleaxe Blade (Heavy) (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="sm_ar_art_poleaxe_blade_a"
@@ -1407,6 +1442,7 @@
     <CraftingPiece
         id="taom_ph_sm_dg_khml_1h_mace_a_t9_blade"
         name="{=taom_ph_sm_dg_khml_1h_mace_a_t9_blade_name}Khamul Mace 1H Head A (placeholder)"
+        is_hidden="true"
         tier="2"
         piece_type="Blade"
         mesh="sm_dg_khml_mace_blade_1h_a"
@@ -1447,6 +1483,7 @@
     <CraftingPiece
         id="taom_ph_sm_dwarf_erebor_spear_a_t6_blade"
         name="{=taom_ph_sm_dwarf_erebor_spear_a_t6_blade_name}Erebor Spear Blade A (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="sm_dwarf_erebor_spear_blade_a"
@@ -1498,6 +1535,7 @@
     <CraftingPiece
         id="taom_ph_sm_dwarf_erebor_spear_b_t4_blade"
         name="{=taom_ph_sm_dwarf_erebor_spear_b_t4_blade_name}Erebor Spear Blade B (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="sm_dwarf_erebor_spear_blade_b"
@@ -1549,6 +1587,7 @@
     <CraftingPiece
         id="taom_ph_sm_dwarf_erebor_spear_a_t2_blade"
         name="{=taom_ph_sm_dwarf_erebor_spear_a_t2_blade_name}Erebor Spear Blade A (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="sm_dwarf_erebor_spear_blade_a"
@@ -1600,6 +1639,7 @@
     <CraftingPiece
         id="taom_ph_sm_dwarf_iron_sword_a_t6_blade"
         name="{=taom_ph_sm_dwarf_iron_sword_a_t6_blade_name}Iron Hills  Sword Blade A (placeholder)"
+        is_hidden="true"
         tier="5"
         piece_type="Blade"
         mesh="sm_dwarf_iron_sword_blade_a"
@@ -1637,6 +1677,7 @@
     <CraftingPiece
         id="taom_ph_sm_dwarf_iron_sword_b_t6_blade"
         name="{=taom_ph_sm_dwarf_iron_sword_b_t6_blade_name}Iron Hills  Sword Blade A (placeholder)"
+        is_hidden="true"
         tier="5"
         piece_type="Blade"
         mesh="sm_dwarf_iron_sword_blade_a"
@@ -1674,6 +1715,7 @@
     <CraftingPiece
         id="taom_ph_sm_rh_drag_2h_mace_b_t9_blade"
         name="{=taom_ph_sm_rh_drag_2h_mace_b_t9_blade_name}Dragon Mace 2H Head B (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="sm_rh_drag_mace_blade_2h_b"
@@ -1717,6 +1759,7 @@
     <CraftingPiece
         id="taom_ph_sm_uruk_halberd_b_t9_blade"
         name="{=taom_ph_sm_uruk_halberd_b_t9_blade_name}Uruk Halberd Blade A2 (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="sm_uruk_halberd_blade_a2"
@@ -1752,6 +1795,7 @@
     <CraftingPiece
         id="taom_ph_sm_uruk_halberd_j_t7_blade"
         name="{=taom_ph_sm_uruk_halberd_j_t7_blade_name}Uruk Halberd Blade A3 (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="sm_uruk_halberd_blade_a3"
@@ -1787,6 +1831,7 @@
     <CraftingPiece
         id="taom_ph_wm_dol_goldur_1h_mace_a02_t7_blade"
         name="{=taom_ph_wm_dol_goldur_1h_mace_a02_t7_blade_name}Dol Guldur Orc Mace 1H Head II (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_dol_goldur_1h_mace_a02_blade"
@@ -1827,6 +1872,7 @@
     <CraftingPiece
         id="taom_ph_wm_dol_goldur_halberd_a01_t1_blade"
         name="{=taom_ph_wm_dol_goldur_halberd_a01_t1_blade_name}Dol Guldur Orc Spear Blade I (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_dol_goldur_halberd_a01_blade"
@@ -1866,6 +1912,7 @@
     <CraftingPiece
         id="taom_ph_wm_dol_goldur_halberd_a02_t1_blade"
         name="{=taom_ph_wm_dol_goldur_halberd_a02_t1_blade_name}Dol Guldur Orc Spear Blade II (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_dol_goldur_halberd_a02_blade"
@@ -1905,6 +1952,7 @@
     <CraftingPiece
         id="taom_ph_wm_dol_goldur_halberd_a03_t1_blade"
         name="{=taom_ph_wm_dol_goldur_halberd_a03_t1_blade_name}Dol Guldur Orc Spear Blade III (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_dol_goldur_halberd_a03_blade"
@@ -1944,6 +1992,7 @@
     <CraftingPiece
         id="taom_ph_wm_dol_goldur_halberd_a04_t1_blade"
         name="{=taom_ph_wm_dol_goldur_halberd_a04_t1_blade_name}Dol Guldur Orc Spear Blade IV (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_dol_goldur_halberd_a04_blade"
@@ -1983,6 +2032,7 @@
     <CraftingPiece
         id="taom_ph_wm_gondor_lamedon_2h_sword_c_t6_blade"
         name="{=taom_ph_wm_gondor_lamedon_2h_sword_c_t6_blade_name}Numenorean Sword Blade B (placeholder)"
+        is_hidden="true"
         tier="4"
         piece_type="Blade"
         mesh="numenorean_sword_blade_b"
@@ -2018,6 +2068,7 @@
     <CraftingPiece
         id="taom_ph_wm_gondor_lossarnach_1h_axe_black_ash_a_t6_blade"
         name="{=taom_ph_wm_gondor_lossarnach_1h_axe_black_ash_a_t6_blade_name}Gondor Lossarnach 1H Black Ash Axe Blade A (placeholder)"
+        is_hidden="true"
         tier="4"
         piece_type="Blade"
         mesh="wm_lossarnach_1h_axe_black_ash_blade"
@@ -2059,6 +2110,7 @@
     <CraftingPiece
         id="taom_ph_wm_gondor_spear_b_t6_blade"
         name="{=taom_ph_wm_gondor_spear_b_t6_blade_name}Gondor Spear Head C (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_gondor_spear_b_blade"
@@ -2095,6 +2147,7 @@
     <CraftingPiece
         id="taom_ph_wm_gondor_spear_b_cardolan_t4_blade"
         name="{=taom_ph_wm_gondor_spear_b_cardolan_t4_blade_name}Gondor Spear Head C (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_gondor_spear_b_blade"
@@ -2131,6 +2184,7 @@
     <CraftingPiece
         id="taom_ph_wm_gondor_sword_a03_t10_blade"
         name="{=taom_ph_wm_gondor_sword_a03_t10_blade_name}Gondor Sword Blade Elite A (placeholder)"
+        is_hidden="true"
         tier="4"
         piece_type="Blade"
         mesh="wm_gondor_sword_a03_blade"
@@ -2164,6 +2218,7 @@
     <CraftingPiece
         id="taom_ph_wm_gundabad_axe_a01_t7_blade"
         name="{=taom_ph_wm_gundabad_axe_a01_t7_blade_name}Gundabad Orc Axe 1H Blade I (placeholder)"
+        is_hidden="true"
         tier="2"
         piece_type="Blade"
         mesh="wm_gundabad_axe_a01_blade"
@@ -2204,6 +2259,7 @@
     <CraftingPiece
         id="taom_ph_wm_gundabad_axe_a02_t6_blade"
         name="{=taom_ph_wm_gundabad_axe_a02_t6_blade_name}Gundabad Orc Axe 1H Blade II (placeholder)"
+        is_hidden="true"
         tier="2"
         piece_type="Blade"
         mesh="wm_gundabad_axe_a02_blade"
@@ -2244,6 +2300,7 @@
     <CraftingPiece
         id="taom_ph_wm_gundabad_axe_a03_t8_blade"
         name="{=taom_ph_wm_gundabad_axe_a03_t8_blade_name}Gundabad Orc Axe 1H Blade III (placeholder)"
+        is_hidden="true"
         tier="2"
         piece_type="Blade"
         mesh="wm_gundabad_axe_a03_blade"
@@ -2284,6 +2341,7 @@
     <CraftingPiece
         id="taom_ph_wm_gundabad_mace_a01_t7_blade"
         name="{=taom_ph_wm_gundabad_mace_a01_t7_blade_name}Gundabad Orc Axe 1H Head I (placeholder)"
+        is_hidden="true"
         tier="2"
         piece_type="Blade"
         mesh="wm_gundabad_mace_a01_blade"
@@ -2330,6 +2388,7 @@
     <CraftingPiece
         id="taom_ph_wm_gundabad_spear_a02_t3_blade"
         name="{=taom_ph_wm_gundabad_spear_a02_t3_blade_name}Gundabad Orc Spear Blade II (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_gundabad_spear_a02_blade"
@@ -2367,6 +2426,7 @@
     <CraftingPiece
         id="taom_ph_wm_mordor_set1_polearm_a01_t4_blade"
         name="{=taom_ph_wm_mordor_set1_polearm_a01_t4_blade_name}Mordor Orc Polearm Blade A (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_mordor_set1_polearm_a01_blade"
@@ -2406,6 +2466,7 @@
     <CraftingPiece
         id="taom_ph_wm_mordor_set1_polearm_a01_t6_blade"
         name="{=taom_ph_wm_mordor_set1_polearm_a01_t6_blade_name}Mordor Orc Polearm Blade A (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_mordor_set1_polearm_a01_blade"
@@ -2445,6 +2506,7 @@
     <CraftingPiece
         id="taom_ph_wm_rivendell_sword_a01_black_t10_blade"
         name="{=taom_ph_wm_rivendell_sword_a01_black_t10_blade_name}Rivendell Sword Blade Black (placeholder)"
+        is_hidden="true"
         tier="5"
         piece_type="Blade"
         mesh="wm_rivendell_sword_a01_black_blade"
@@ -2482,6 +2544,7 @@
     <CraftingPiece
         id="taom_ph_wm_rohan_spear_a_t7_blade"
         name="{=taom_ph_wm_rohan_spear_a_t7_blade_name}Rohan Spear Head A (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="sm_ro_rohan_spear_blade_a"
@@ -2513,6 +2576,7 @@
     <CraftingPiece
         id="taom_ph_wm_rohan_ws_axe_1h_a01_t5_blade"
         name="{=taom_ph_wm_rohan_ws_axe_1h_a01_t5_blade_name}Rohan 1H Axe Blade A (placeholder)"
+        is_hidden="true"
         tier="2"
         piece_type="Blade"
         mesh="wm_rohan_ws_axe_1h_a01_blade"
@@ -2553,6 +2617,7 @@
     <CraftingPiece
         id="taom_ph_wm_rohan_ws_spear_a01_t5_blade"
         name="{=taom_ph_wm_rohan_ws_spear_a01_t5_blade_name}Rohan Spear WS A Blade (placeholder)"
+        is_hidden="true"
         tier="2"
         piece_type="Blade"
         mesh="wm_rohan_ws_spear_a01_blade"
@@ -2588,6 +2653,7 @@
     <CraftingPiece
         id="taom_ph_wm_rohan_ws_spear_a02_t6_blade"
         name="{=taom_ph_wm_rohan_ws_spear_a02_t6_blade_name}Rohan Spear WS B Blade (placeholder)"
+        is_hidden="true"
         tier="2"
         piece_type="Blade"
         mesh="wm_rohan_ws_spear_a02_blade"
@@ -2623,6 +2689,7 @@
     <CraftingPiece
         id="taom_ph_wm_rohan_ws_spear_a03_t6_blade"
         name="{=taom_ph_wm_rohan_ws_spear_a03_t6_blade_name}Rohan Spear WS C Blade (placeholder)"
+        is_hidden="true"
         tier="2"
         piece_type="Blade"
         mesh="wm_rohan_ws_spear_a03_blade"
@@ -2658,6 +2725,7 @@
     <CraftingPiece
         id="taom_ph_wm_rohan_ws_sword_a01_t5_blade"
         name="{=taom_ph_wm_rohan_ws_sword_a01_t5_blade_name}Rohan Sword A Blade (placeholder)"
+        is_hidden="true"
         tier="2"
         piece_type="Blade"
         mesh="wm_rohan_ws_sword_a01_blade"
@@ -2695,6 +2763,7 @@
     <CraftingPiece
         id="taom_ph_wm_rohan_ws_sword_a02_t6_blade"
         name="{=taom_ph_wm_rohan_ws_sword_a02_t6_blade_name}Rohan Sword B Blade (placeholder)"
+        is_hidden="true"
         tier="2"
         piece_type="Blade"
         mesh="wm_rohan_ws_sword_a02_blade"
@@ -2732,6 +2801,7 @@
     <CraftingPiece
         id="taom_ph_wm_rohan_ws_sword_a03_t6_blade"
         name="{=taom_ph_wm_rohan_ws_sword_a03_t6_blade_name}Rohan Sword C Blade (placeholder)"
+        is_hidden="true"
         tier="2"
         piece_type="Blade"
         mesh="wm_rohan_ws_sword_a03_blade"
@@ -2769,6 +2839,7 @@
     <CraftingPiece
         id="taom_ph_wm_swan_knight_lance_a_t5_blade"
         name="{=taom_ph_wm_swan_knight_lance_a_t5_blade_name}[Gondor] Swan Knight Lance Head I (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_swan_knight_lance_blade_blade_a"
@@ -2809,6 +2880,7 @@
     <CraftingPiece
         id="taom_ph_wm_swan_knight_lance_a_t6_blade"
         name="{=taom_ph_wm_swan_knight_lance_a_t6_blade_name}[Gondor] Swan Knight Lance Head I (placeholder)"
+        is_hidden="true"
         tier="3"
         piece_type="Blade"
         mesh="wm_swan_knight_lance_blade_blade_a"
@@ -2849,6 +2921,7 @@
     <CraftingPiece
         id="taom_ph_wm_swan_knight_sworda_t7_blade"
         name="{=taom_ph_wm_swan_knight_sworda_t7_blade_name}Swan Knight Sword Blade A (placeholder)"
+        is_hidden="true"
         tier="4"
         piece_type="Blade"
         mesh="wm_swan_knight_sword_a_blade"
@@ -2882,6 +2955,7 @@
     <CraftingPiece
         id="taom_ph_wm_swan_knight_swordb_t9_blade"
         name="{=taom_ph_wm_swan_knight_swordb_t9_blade_name}Swan Knight Sword Blade B (placeholder)"
+        is_hidden="true"
         tier="4"
         piece_type="Blade"
         mesh="wm_swan_knight_sword_b_blade"

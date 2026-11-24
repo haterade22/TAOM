@@ -3431,7 +3431,7 @@
   </ChoiceGroup>
 
   <ChoiceGroup id="chariot_warlord_t2_a" display_name="{=taom_career_grp_chariot_warlord_t2_a}Reaping Charge" career_id="chariot_warlord" tier="2">
-    <Choice id="chariot_warlord_t2_a_key" type="Keystone" description="{=taom_cw_t2a_key}Scything Charge charge reduced, wheels never stop turning." icon_sprite="career_choice_cw_t2a_key">
+    <Choice id="chariot_warlord_t2_a_key" type="Keystone" description="{=taom_cw_t2a_key}Scything Charge: charge reduced, wheels never stop turning." icon_sprite="career_choice_cw_t2a_key">
       <Mutations><Mutation target_id="chariot_warlord_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="chariot_warlord_t2_a_p1" type="Passive" description="{=taom_cw_t2a_p1}+13% horse charge damage." icon_sprite="career_choice_cw_t2a_p1">
@@ -3485,7 +3485,7 @@
   </ChoiceGroup>
 
   <ChoiceGroup id="chariot_warlord_t3_b" display_name="{=taom_career_grp_chariot_warlord_t3_b}Wheel of Khand" career_id="chariot_warlord" tier="3">
-    <Choice id="chariot_warlord_t3_b_key" type="Keystone" description="{=taom_cw_t3b_key}Scything Charge charge greatly reduced, the wheels grind ceaselessly." icon_sprite="career_choice_cw_t3b_key">
+    <Choice id="chariot_warlord_t3_b_key" type="Keystone" description="{=taom_cw_t3b_key}Scything Charge: charge greatly reduced, the wheels grind ceaselessly." icon_sprite="career_choice_cw_t3b_key">
       <Mutations><Mutation target_id="chariot_warlord_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="chariot_warlord_t3_b_p1" type="Passive" description="{=taom_cw_t3b_p1}+15% horse health." icon_sprite="career_choice_cw_t3b_p1">
@@ -4968,7 +4968,7 @@
   </ChoiceGroup>
 
   <ChoiceGroup id="ram_rider_t2_a" display_name="{=taom_career_grp_ram_rider_t2_a}Charge of the Iron Hills" career_id="ram_rider" tier="2">
-    <Choice id="ram_rider_t2_a_key" type="Keystone" description="{=taom_rr_t2_a_key}Mountain Charge charge reduced, swifter activation." icon_sprite="career_choice_rr_t2_a_key">
+    <Choice id="ram_rider_t2_a_key" type="Keystone" description="{=taom_rr_t2_a_key}Mountain Charge: charge reduced, swifter activation." icon_sprite="career_choice_rr_t2_a_key">
       <Mutations><Mutation target_id="ram_rider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="ram_rider_t2_a_p1" type="Passive" description="{=taom_rr_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_rr_t2_a_p1">
@@ -5022,7 +5022,7 @@
   </ChoiceGroup>
 
   <ChoiceGroup id="ram_rider_t3_b" display_name="{=taom_career_grp_ram_rider_t3_b}Rider of the Lonely Mountain" career_id="ram_rider" tier="3">
-    <Choice id="ram_rider_t3_b_key" type="Keystone" description="{=taom_rr_t3_b_key}Mountain Charge charge greatly reduced, ride without ceasing." icon_sprite="career_choice_rr_t3_b_key">
+    <Choice id="ram_rider_t3_b_key" type="Keystone" description="{=taom_rr_t3_b_key}Mountain Charge: charge greatly reduced, ride without ceasing." icon_sprite="career_choice_rr_t3_b_key">
       <Mutations><Mutation target_id="ram_rider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="ram_rider_t3_b_p1" type="Passive" description="{=taom_rr_t3_b_p1}+15% horse health." icon_sprite="career_choice_rr_t3_b_p1">
@@ -7092,7 +7092,7 @@
   </ChoiceGroup>
 
   <ChoiceGroup id="fell_rider_t2_a" display_name="{=taom_career_grp_fell_rider_t2_a}Herald of Dread" career_id="fell_rider" tier="2">
-    <Choice id="fell_rider_t2_a_key" type="Keystone" description="{=taom_flr_t2_a_key}Dread Charge charge reduced, swifter activation." icon_sprite="career_choice_flr_t2_a_key">
+    <Choice id="fell_rider_t2_a_key" type="Keystone" description="{=taom_flr_t2_a_key}Dread Charge: charge reduced, swifter activation." icon_sprite="career_choice_flr_t2_a_key">
       <Mutations><Mutation target_id="fell_rider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="fell_rider_t2_a_p1" type="Passive" description="{=taom_flr_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_flr_t2_a_p1">
@@ -7146,7 +7146,7 @@
   </ChoiceGroup>
 
   <ChoiceGroup id="fell_rider_t3_b" display_name="{=taom_career_grp_fell_rider_t3_b}Shadow of the East" career_id="fell_rider" tier="3">
-    <Choice id="fell_rider_t3_b_key" type="Keystone" description="{=taom_flr_t3_b_key}Dread Charge charge greatly reduced, ride without ceasing." icon_sprite="career_choice_flr_t3_b_key">
+    <Choice id="fell_rider_t3_b_key" type="Keystone" description="{=taom_flr_t3_b_key}Dread Charge: charge greatly reduced, ride without ceasing." icon_sprite="career_choice_flr_t3_b_key">
       <Mutations><Mutation target_id="fell_rider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="fell_rider_t3_b_p1" type="Passive" description="{=taom_flr_t3_b_p1}+15% horse health." icon_sprite="career_choice_flr_t3_b_p1">

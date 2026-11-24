@@ -91,7 +91,8 @@ whether or not gating is enabled.
    HandArmor or Cape, never by the file it sits in) and writes `armour_classes.xml`: named hero kit
    (`rebalance_armor.is_excluded`) first, then the `_lord` token (a lord variant is a lord variant
    whoever wears it), then `_civ` kit, then `derive_armor_tiers`' tier (the lowest battle wearer's band,
-   else the id token), then the band whose kingdom-cap target is nearest the piece's primary stat. Each
+   else the id token, one band higher for an unworn Mallorn `sk_ll_ml_` piece below elite, as
+   `generate_lothlorien_armor.py` prices it), then the band whose kingdom-cap target is nearest the piece's primary stat. Each
    row also names the piece the armoury upgrades it into: the nearest class above it with a candidate,
    in the piece's own tokened line first (`fix_armour_mesh_ladder.split_id`), then among same-slot pieces
    of the same kit line (`rebalance_armor.kingdom_key`, else the Armory folder: the mordor folder holds
