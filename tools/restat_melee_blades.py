@@ -14,7 +14,8 @@ it names pieces, and the engine simulates the rest. So this writes `damage_facto
 `<CraftingPiece>` elements in `LOTRLOME_crafting_pieces.xml`, inside the **unversioned**
 LOTRLOME_Armory. There is no git backup there, so:
 
-  * dry-run is the default and `--apply` is explicit,
+  * dry-run is the default and `--apply` is explicit; `--check` is the dry run as a gate (exit 1 when
+    any blade would move),
   * every written file is backed up first to `<name>.bak-<tag>` (never `*.xml`: these folders
     are globbed by the engine and an `.xml` backup injects duplicate item ids),
   * the transformed text is parsed before anything is written,
@@ -688,11 +689,16 @@ def main(argv=None) -> int:
                          "ladder.craft_key, which is its culture except for Black Numenoreans "
                          "(mordor_numenorean). It is not the engine culture id; "
                          "fix_melee_ladder.py takes that")
+    ap.add_argument("--check", action="store_true",
+                    help="the report pass as a gate: exit 1 when any blade would move, 0 when none "
+                         "(writes nothing; cannot be combined with --apply)")
     ap.add_argument("--limits-only", action="store_true",
                     help="only lower weapons above a class or hero limit; raise nothing")
     ap.add_argument("--top", type=int, default=30)
     ap.add_argument("--pieces", default=str(PIECES_XML), help="crafting pieces XML to write")
     args = ap.parse_args(argv)
+    if args.check and args.apply:
+        ap.error("--check writes nothing; it cannot be combined with --apply")
     if args.limits_only and args.culture:
         ap.error("--limits-only judges every blade; it cannot be combined with --culture")
 
@@ -753,6 +759,14 @@ def main(argv=None) -> int:
               + (f"  [{p.clamped}]" if p.clamped else ""))
     if len(plans) > args.top:
         print(f"... and {len(plans) - args.top} more")
+
+    if args.check:
+        if plans:
+            print(f"\nCHECK FAILED: {len(plans)} blade piece(s) would move; the Armory stats have "
+                  "drifted from the ladder (run without --check to read the plan)")
+            return 1
+        print("\nCHECK OK: no blade would move")
+        return 0
 
     if not args.apply:
         print("\n(dry run; pass --apply to write the Armory)")
