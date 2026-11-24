@@ -6,7 +6,7 @@ namespace TAOM.Features.FactionUI.Resources;
 /// <summary>
 /// Classifies Kysaro's runtime images by name and reads their <c>.nine</c> border files (#704). The art
 /// prefixes are the images his faction screen binds by data (a faction's emblem and territory, a
-/// hero's portrait and reveal, a background). No prefab or brush names one of them directly, and every
+/// hero's portrait, a background). No prefab or brush names one of them directly, and every
 /// image a prefab or brush does name is chrome (fs_minimap_big included: TAOMFactionScreen names it).
 /// The main menu's prefab and brush file name only <c>mm_*</c> images, and nothing else names one, so
 /// they are a group of their own.
@@ -16,7 +16,6 @@ public static class FrontEndSpriteCatalog
     private static readonly string[] ArtPrefixes =
     {
         "fs_portrait_",
-        "fs_reveal_",
         "fs_emblem_",
         "fs_territory_",
         "fs_bg_",
