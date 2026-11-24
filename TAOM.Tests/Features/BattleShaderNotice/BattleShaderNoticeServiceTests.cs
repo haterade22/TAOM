@@ -77,6 +77,19 @@ public class BattleShaderNoticeServiceTests
     }
 
     [TestMethod]
+    public void OnScreenTick_QueueUnreadable_WarnsOnceAndShowsNothing()
+    {
+        var service = NewService();
+        _queue.QueuedShaders().Returns(-1);
+
+        service.OnScreenTick(screenOpen: true);
+        service.OnScreenTick(screenOpen: true);
+
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("shader queue")));
+        _runner.DidNotReceiveWithAnyArgs().Start(default!);
+    }
+
+    [TestMethod]
     public void OnScreenTick_WhileABattleNoticeIsUp_LeavesTheWindowAlone()
     {
         var service = NewService();
