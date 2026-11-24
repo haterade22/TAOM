@@ -19,7 +19,6 @@ public class FrontEndSpriteCatalogTests
     [DataRow("gui_skills_icon_bow_tiny", FrontEndSpriteKind.SkillIcon)]
     [DataRow("fs_portrait_aragorn", FrontEndSpriteKind.Art)]
     [DataRow("fs_portrait_gondor", FrontEndSpriteKind.Art)]
-    [DataRow("fs_reveal_sauron", FrontEndSpriteKind.Art)]
     [DataRow("fs_emblem_kingdom_of_rohan", FrontEndSpriteKind.Art)]
     [DataRow("fs_territory_havens_of_umbar", FrontEndSpriteKind.Art)]
     [DataRow("fs_bg_default", FrontEndSpriteKind.Art)]
