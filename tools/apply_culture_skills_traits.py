@@ -705,15 +705,15 @@ CULTURES = {
                             Charm=325,Leadership=390,Trade=240,Steward=400,Medicine=200,Engineering=300),
                 traits=dict(Honor=-2, Generosity=-1, Calculating=2, Mercy=-2, Valor=1,
                             Egalitarian=-2, Oligarchic=2, Authoritarian=2)),
-            'lord_I1_1': dict(archetype='orc_chieftain',   # Uglûk — Saruman's captain, leader of Amon Hen raid
+            'lord_I1_1': dict(archetype='orc_chieftain',   # Uglúk — Saruman's captain, leader of Amon Hen raid
                 skills=dict(OneHanded=275,TwoHanded=265,Polearm=240,Bow=170,Crossbow=110,Throwing=200,
                             Riding=180,Athletics=275,Crafting=150,Scouting=250,Tactics=255,Roguery=255,
                             Charm=200,Leadership=275,Trade=140,Steward=210,Medicine=90,Engineering=190)),
-            'lord_I2_1': dict(archetype='orc_chieftain',   # Mauhûr — Uruk-Hai War leader (rescued Uglûk's band)
+            'lord_I2_1': dict(archetype='orc_chieftain',   # Mauhûr — Uruk-Hai War leader (rescued Uglúk's band)
                 skills=dict(OneHanded=265,TwoHanded=255,Polearm=235,Bow=170,Crossbow=110,Throwing=190,
                             Riding=170,Athletics=270,Crafting=140,Scouting=255,Tactics=240,Roguery=240,
                             Charm=160,Leadership=255,Trade=120,Steward=190,Medicine=80,Engineering=170)),
-            'lord_I3_1': dict(archetype='orc_warrior',     # Lugdush — Uruk-hai with Uglûk
+            'lord_I3_1': dict(archetype='orc_warrior',     # Lugdush — Uruk-hai with Uglúk
                 skills=dict(OneHanded=245,TwoHanded=240,Polearm=225,Bow=160,Crossbow=110,Throwing=180,
                             Riding=160,Athletics=255,Crafting=130,Scouting=220,Tactics=200,Roguery=230,
                             Charm=140,Leadership=200,Trade=120,Steward=170,Medicine=80,Engineering=160)),
