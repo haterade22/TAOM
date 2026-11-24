@@ -5465,6 +5465,18 @@ class ArmourAcquisitionRefTests(unittest.TestCase):
         self._one(self._run(MARKET='<CultureMarketplaceConfig><Culture id="lindon">'
                                    '<Stock from="gondr" /></Culture></CultureMarketplaceConfig>'), "'gondr'")
 
+    ROUTING = ('<CultureMarketplaceConfig><Routing><Item id="%s" cultures="%s" min_stock="1" /></Routing>'
+               '</CultureMarketplaceConfig>')
+
+    def test_a_routing_row_that_resolves_raises_nothing(self):
+        self.assertEqual(self._run(MARKET=self.ROUTING % ("riv_chest", "lindon, gondor")), [])
+
+    def test_a_routing_item_id_nothing_defines_is_an_error(self):
+        self._one(self._run(MARKET=self.ROUTING % ("taom_elk_typo", "lindon")), "'taom_elk_typo'")
+
+    def test_a_routing_culture_nothing_defines_is_an_error(self):
+        self._one(self._run(MARKET=self.ROUTING % ("riv_chest", "lindon,mirkwod")), "'mirkwod'")
+
     def test_a_stock_match_that_does_not_compile_is_an_error(self):
         self._one(self._run(MARKET='<CultureMarketplaceConfig><Culture id="lindon">'
                                    '<Stock match="[unclosed" /></Culture></CultureMarketplaceConfig>'), "does not compile")

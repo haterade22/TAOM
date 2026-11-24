@@ -217,7 +217,7 @@ def armour_acquisition_ref_issues(registries, moduledata: Path) -> list:
     Checked: every LotrIssue row's cultures, reward_item and item_source="item:X"; the armour
     config's NamedWeapons, upgrade Material ids, <LordsLadder> rung quests (against
     taom_career_quests.xml), <LordsMaterials>, <LadderWeapons> and <LadderPieces> items and cultures; the culture
-    marketplace config's <Culture id>, armour_from and <Stock> rows (a `from` culture that exists, a
+    marketplace config's <Culture id>, armour_from, <Routing> item ids and cultures (#639) and <Stock> rows (a `from` culture that exists, a
     `match` that compiles and finds at least one id: an empty row silently drops a culture's market
     stock, #755). A file that does not parse is reported, never
     passed. Callers skip the pass without the install: the registry is TAOM-only then, and every
@@ -307,6 +307,14 @@ def armour_acquisition_ref_issues(registries, moduledata: Path) -> list:
                 continue
             if not any(compiled.search(item) for item in items):
                 report(rel, cid, f"<Stock> match '{pattern}' finds no item id (an Armory rename empties the row)")
+    # <Routing> rows name items by bare id and cultures by a comma list; a typo in either never matches,
+    # so min_stock never injects and a player who needs a remount finds none (#639).
+    for routed in (root.iter("Routing") if root is not None else ()):
+        for row in routed.iter("Item"):
+            rid = (row.get("id") or "").strip()
+            check(rel, rid, "<Routing> item", rid, items)
+            for token in (row.get("cultures") or "").split(","):
+                check(rel, rid, "<Routing> culture", token.strip(), cultures)
     return issues
 
 
