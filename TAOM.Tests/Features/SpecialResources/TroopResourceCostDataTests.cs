@@ -138,6 +138,43 @@ public class TroopResourceCostDataTests
     }
 
     /// <summary>
+    /// The Ironpass ram line pays Gems from the Ram-Breaker (level 31) up. The two chariot troops were added
+    /// beside the Ram Marshal with no row, so the Ram Vanguard had a free upgrade next to one that costs 5 Gems.
+    /// Every troop an upgrade reaches from <c>ironpass_ram_breaker</c> must carry an upgrade cost and a daily
+    /// upkeep, so a later branch of the line fails here. Erebor's other troops pay no Gems and are not read.
+    /// </summary>
+    [TestMethod]
+    public void EveryTroopOnTheIronpassRamLineFromTheBreaker_CarriesUpgradeCostAndDailyUpkeep()
+    {
+        var troopsPath = Path.Combine(CultureDataFixture.ModuleDataPath(), "troops", "troops_erebor.xml");
+        var upgrades = XDocument.Load(troopsPath).Root.Elements("NPCCharacter").ToDictionary(
+            c => (string)c.Attribute("id"),
+            c => c.Descendants("upgrade_target").Select(u => ((string)u.Attribute("id")).Replace("NPCCharacter.", "")).ToList());
+        Assert.IsTrue(upgrades.ContainsKey("ironpass_ram_breaker"), "troops_erebor.xml has no ironpass_ram_breaker");
+
+        var line = new List<string>();
+        var open = new Queue<string>(new[] { "ironpass_ram_breaker" });
+        while (open.Count > 0)
+        {
+            var id = open.Dequeue();
+            if (line.Contains(id) || !upgrades.ContainsKey(id))
+                continue;
+            line.Add(id);
+            foreach (var target in upgrades[id])
+                open.Enqueue(target);
+        }
+        Assert.IsTrue(line.Count >= 5, "the ram line from the Ram-Breaker has fewer than 5 troops: " + string.Join(", ", line));
+
+        var rows = CostRows().ToDictionary(r => r.TroopId);
+        var free = line
+            .Where(id => !rows.TryGetValue(id, out var row) || row.UpgradeCost <= 0 || row.DailyUpkeep <= 0f)
+            .ToList();
+
+        Assert.AreEqual(0, free.Count,
+            $"Of {line.Count} troops on the Ironpass ram line from the Ram-Breaker, these carry no upgrade_cost or no daily_upkeep: " + string.Join(", ", free));
+    }
+
+    /// <summary>
     /// Arthedain troops cost no special resource (Mike, 2026-10-21, #963). Its four elites were priced
     /// on Gondor's Castar band when the realm was cloned (2026-10-07). Any row for a troop in
     /// <c>troops_arthedain.xml</c> fails here, an Elite Emissary price included, so no cost, gate or

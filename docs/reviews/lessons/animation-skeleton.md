@@ -1741,6 +1741,11 @@ time in the canter, on trot legs that covered 2.71 m while the body moved about 
 - **Source:** issue #1563; [ledger](../../reference/lotrlome-warg-gait-changes.md);
   `tools/tests/test_warg_gait_plan.py`, `tools/tests/test_repoint_anim_clip.py`.
 
+### A skeleton scale is applied by bone index, so it belongs to one skeleton
+
+- **Why missed:** the ram team item of the dwarven war chariot copied `skeleton_scale="empire_horse"` from the Wainrider chariot item, which had it from the upstream pack. The scale names `horse_skeleton` and five of its bones. The engine resolves those names to indices against the scale's own skeleton (`MBGameManager`, `Skeleton.GetBoneIndexFromName(objectType.SkeletonModel, ...)`) and native `ApplySkeletonScale` writes each scale by index with a bounds check only. On `horse_skeleton_chariot` (60 bones, root first) the indices 0, 3, 29, 30 and 31 are `chariot_bone`, `horsespine2_chariot_left`, `horsepelvis_chariot_right`, `horsespine1_chariot_right` and `horsespine2_chariot_right`: the root and one animal, by up to 1.15.
+- **Prevent:** an item on a skeleton other than the scale's own carries no `skeleton_scale` unless the bone at each of the scale's indices was read from that skeleton and is the bone meant. Read both bone lists (a skeleton dump from the package) and print the bone at each index before the attribute goes on a row; an attribute copied from a neighbour row is engine behaviour and gets the same proof as a new one. Pin: `test_the_ram_team_row_carries_no_skeleton_scale`.
+- **Source:** [RCA](../rca-dwarf-chariot-2026-11-24.md) F9; the Wainrider item still carries the attribute (open there).
 ### A corrected record is a change for every record cloned from it and every tool that reads it (#1565, 2026-11-24)
 #1563 corrected the warg's canter and gallop records. Three things that depend on those records were not in its
 scope and went wrong unseen. `tools/gen_dire_wolf_anim_clips.ps1` read the warg's travel to plan the dire wolf's

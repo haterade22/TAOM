@@ -16156,15 +16156,25 @@
    "how": "measured",
    "texture": "t_rh_prop_a1_d"
   },
+  "taom_chariot_armour_dwarf": {
+   "family": "silver",
+   "how": "measured",
+   "texture": "t_eb_ram_barding_a1_d"
+  },
+  "taom_chariot_armour_dwarf_b": {
+   "family": "silver",
+   "how": "measured",
+   "texture": "t_eb_ram_barding_a1_d"
+  },
   "taom_chariot_armour_imperial": {
-   "family": "unknown",
-   "how": "no image",
-   "texture": ""
+   "family": "bronze",
+   "how": "measured",
+   "texture": "rhun_war_chariot_front_d"
   },
   "taom_chariot_armour_rhun": {
    "family": "bronze",
    "how": "measured",
-   "texture": "LRD_horse_armour_4_body_d"
+   "texture": "rhun_war_chariot_front_d"
   },
   "taom_elk_saddle_a": {
    "family": "neutral",

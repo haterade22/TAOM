@@ -211,17 +211,21 @@ def _lineno(text: str, pos: int) -> int:
 _SETTLEMENT_XSLT_RE = re.compile(r'(?:"|>)\s*Settlement\.([A-Za-z0-9_.\-]+)\s*(?=["<])')
 
 
-# The mounts a dwarf may ride: the Dwarven war ram (#515) and the three WildMesh3D dwarf mounts (#794, the
-# War Boar, Bristleback Boar and Iron Hills Goat). All four Monsters (the war ram's, which both ram items
+# The mounts a dwarf may ride: the Dwarven war ram (#515), the three WildMesh3D dwarf mounts (#794, the
+# War Boar, Bristleback Boar and Iron Hills Goat) and the ram team of the dwarven war chariot. The first four Monsters (the war ram's, which both ram items
 # share, and the three WildMesh ones) inherit the vanilla horse's seat (rider_sit_bone and the rider
 # adders, through base_monster="horse"); what makes them dwarf mounts is their
 # size and the ram bardings that carry the seat mesh, so each seat is an in-game check, and if that check
 # fails the three WildMesh ids come out. Every other mount stays a hard MOUNTED_DWARF error. The ids are
 # pinned rather than prefix-matched, so a later mount has to be reviewed and added here on purpose instead
 # of arriving by name alone.
+# The chariot's ram team (taom_ram_chariot_a, Monster.chariot) is here for another reason, which is in
+# docs/features/chariot.md "A dwarf on a chariot"; if its in-game check of the rider fails, the id comes out.
+# The Wainrider horse team (taom_chariot_a) is not listed.
 DWARF_MOUNT_IDS = frozenset({
     "taom_war_ram_a", "taom_war_ram_b",
     "taom_wildmesh_boar_a", "taom_wildmesh_warthog_a", "taom_wildmesh_mountaingoat_a",
+    "taom_ram_chariot_a",
 })
 
 
@@ -1435,8 +1439,8 @@ class Validator:
     # creation, career starters) are deliberately out of scope -- no NPCCharacter
     # references them, and every culture ships the same sumpter-horse template.
     #
-    # The carve-out is the set DWARF_MOUNT_IDS (the war ram, issue #515, and the three
-    # WildMesh3D dwarf mounts, #794). A dwarf on one of them is legal and is genuinely
+    # The carve-out is the set DWARF_MOUNT_IDS (the war ram, issue #515, the three
+    # WildMesh3D dwarf mounts, #794, and the ram team of the dwarven war chariot). A dwarf on one of them is legal and is genuinely
     # Cavalry, so the group rule relaxes too -- but only for a character who actually
     # carries one, and only for the ids in that set: every OTHER mount he can reach is
     # still reported.

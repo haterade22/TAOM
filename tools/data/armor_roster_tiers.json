@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-21 10:10:45",
+  "generatedAt": "2026-11-24 14:46:04",
   "armoryDir": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\LOTRLOME_Armory\\ModuleData\\LOTRLOME_items",
   "items": {
     "sk_ar_art_helmet_inf_light_a": {
@@ -21206,7 +21206,7 @@
       "anchorLevel": 41,
       "maxLevel": 41,
       "levelSpan": 0,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -21223,6 +21223,10 @@
         },
         {
           "troop": "ironpass_ram_marshal",
+          "level": 41
+        },
+        {
+          "troop": "ironpass_war_chariot",
           "level": 41
         }
       ]
@@ -21350,7 +21354,7 @@
       "anchorLevel": 41,
       "maxLevel": 46,
       "levelSpan": 5,
-      "wearerCount": 2,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -21363,6 +21367,10 @@
       "wearers": [
         {
           "troop": "ironpass_ram_marshal",
+          "level": 41
+        },
+        {
+          "troop": "ironpass_war_chariot",
           "level": 41
         },
         {
@@ -23251,7 +23259,7 @@
       "anchorLevel": 31,
       "maxLevel": 41,
       "levelSpan": 10,
-      "wearerCount": 7,
+      "wearerCount": 8,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -23289,6 +23297,10 @@
         {
           "troop": "ironpass_ram_marshal",
           "level": 41
+        },
+        {
+          "troop": "ironpass_war_chariot",
+          "level": 41
         }
       ]
     },
@@ -23307,7 +23319,7 @@
       "anchorLevel": 31,
       "maxLevel": 46,
       "levelSpan": 15,
-      "wearerCount": 7,
+      "wearerCount": 8,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -23340,6 +23352,10 @@
         },
         {
           "troop": "ironpass_ram_marshal",
+          "level": 41
+        },
+        {
+          "troop": "ironpass_war_chariot",
           "level": 41
         },
         {
@@ -24871,7 +24887,7 @@
       "anchorLevel": 36,
       "maxLevel": 46,
       "levelSpan": 10,
-      "wearerCount": 11,
+      "wearerCount": 12,
       "heroWorn": true,
       "lordWorn": false,
       "tier": "elite",
@@ -24919,6 +24935,10 @@
           "level": 41
         },
         {
+          "troop": "ironpass_war_chariot",
+          "level": 41
+        },
+        {
           "troop": "erebor_noble_royal_warden",
           "level": 46
         },
@@ -24943,7 +24963,7 @@
       "anchorLevel": 36,
       "maxLevel": 46,
       "levelSpan": 10,
-      "wearerCount": 11,
+      "wearerCount": 12,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -24988,6 +25008,10 @@
         },
         {
           "troop": "ironpass_ram_marshal",
+          "level": 41
+        },
+        {
+          "troop": "ironpass_war_chariot",
           "level": 41
         },
         {
@@ -41766,7 +41790,7 @@
       "maxLevel": 21,
       "levelSpan": 5,
       "wearerCount": 6,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
@@ -41944,7 +41968,7 @@
       "maxLevel": 26,
       "levelSpan": 10,
       "wearerCount": 3,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
@@ -42024,7 +42048,7 @@
       "maxLevel": 16,
       "levelSpan": 5,
       "wearerCount": 5,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L11)",
@@ -42112,7 +42136,7 @@
       "maxLevel": 21,
       "levelSpan": 5,
       "wearerCount": 2,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
@@ -42643,7 +42667,7 @@
       "maxLevel": 11,
       "levelSpan": 0,
       "wearerCount": 4,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L11)",
@@ -42731,7 +42755,7 @@
       "maxLevel": 16,
       "levelSpan": 5,
       "wearerCount": 5,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L11)",
@@ -42978,7 +43002,7 @@
       "maxLevel": 21,
       "levelSpan": 5,
       "wearerCount": 5,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
@@ -43026,7 +43050,7 @@
       "maxLevel": 21,
       "levelSpan": 5,
       "wearerCount": 4,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
@@ -43114,7 +43138,7 @@
       "maxLevel": 21,
       "levelSpan": 5,
       "wearerCount": 5,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
@@ -43578,7 +43602,7 @@
       "maxLevel": 21,
       "levelSpan": 5,
       "wearerCount": 6,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
@@ -43666,7 +43690,7 @@
       "maxLevel": 26,
       "levelSpan": 10,
       "wearerCount": 6,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
@@ -44066,7 +44090,7 @@
       "maxLevel": 11,
       "levelSpan": 0,
       "wearerCount": 3,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L11)",
@@ -44106,7 +44130,7 @@
       "maxLevel": 16,
       "levelSpan": 5,
       "wearerCount": 4,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L11)",
@@ -44150,7 +44174,7 @@
       "maxLevel": 26,
       "levelSpan": 10,
       "wearerCount": 5,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
@@ -44198,7 +44222,7 @@
       "maxLevel": 21,
       "levelSpan": 5,
       "wearerCount": 5,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
@@ -44286,7 +44310,7 @@
       "maxLevel": 16,
       "levelSpan": 0,
       "wearerCount": 1,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
@@ -44318,7 +44342,7 @@
       "maxLevel": 21,
       "levelSpan": 10,
       "wearerCount": 4,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L11)",
@@ -44824,7 +44848,7 @@
       "maxLevel": 31,
       "levelSpan": 15,
       "wearerCount": 11,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
@@ -51664,7 +51688,7 @@
       "anchorLevel": 46,
       "maxLevel": 46,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -51675,6 +51699,10 @@
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "ironpass_steel_chariot",
+          "level": 46
+        },
         {
           "troop": "iron_hills_noble_royal_warden",
           "level": 46
@@ -51693,20 +51721,25 @@
         0
       ],
       "weight": 4.6,
-      "anchorLevel": null,
-      "maxLevel": null,
+      "anchorLevel": 46,
+      "maxLevel": 46,
       "levelSpan": 0,
-      "wearerCount": 0,
+      "wearerCount": 1,
       "heroWorn": false,
       "lordWorn": false,
-      "tier": "lord",
-      "tierSource": "id-keyword",
-      "target": 58,
-      "delta": -4,
-      "status": "under",
+      "tier": "elite",
+      "tierSource": "roster(L46)",
+      "target": 54,
+      "delta": 0,
+      "status": "match",
       "line": null,
       "shared": false,
-      "wearers": []
+      "wearers": [
+        {
+          "troop": "ironpass_steel_chariot",
+          "level": 46
+        }
+      ]
     },
     "sk_dwarf_dain_helmet_elite_a": {
       "culture": "iron_hills",
@@ -51945,7 +51978,7 @@
       "anchorLevel": 31,
       "maxLevel": 46,
       "levelSpan": 15,
-      "wearerCount": 7,
+      "wearerCount": 8,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -51979,6 +52012,10 @@
         {
           "troop": "iron_hills_noble_ironbreaker",
           "level": 41
+        },
+        {
+          "troop": "ironpass_steel_chariot",
+          "level": 46
         },
         {
           "troop": "iron_hills_noble_royal_warden",
@@ -52405,7 +52442,7 @@
       "anchorLevel": 31,
       "maxLevel": 41,
       "levelSpan": 10,
-      "wearerCount": 6,
+      "wearerCount": 7,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -52438,6 +52475,10 @@
         },
         {
           "troop": "ironpass_ram_marshal",
+          "level": 41
+        },
+        {
+          "troop": "ironpass_war_chariot",
           "level": 41
         }
       ]
@@ -52919,9 +52960,9 @@
       ],
       "weight": 2.2,
       "anchorLevel": 31,
-      "maxLevel": 41,
-      "levelSpan": 10,
-      "wearerCount": 2,
+      "maxLevel": 46,
+      "levelSpan": 15,
+      "wearerCount": 3,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -52930,7 +52971,7 @@
       "delta": 0,
       "status": "match",
       "line": null,
-      "shared": false,
+      "shared": true,
       "wearers": [
         {
           "troop": "eredluin_firebeard_master",
@@ -52939,6 +52980,10 @@
         {
           "troop": "iron_hills_noble_ironbreaker",
           "level": 41
+        },
+        {
+          "troop": "ironpass_steel_chariot",
+          "level": 46
         }
       ]
     },
@@ -52957,7 +53002,7 @@
       "anchorLevel": 46,
       "maxLevel": 46,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -52968,6 +53013,10 @@
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "ironpass_steel_chariot",
+          "level": 46
+        },
         {
           "troop": "iron_hills_noble_royal_warden",
           "level": 46
@@ -55336,7 +55385,7 @@
       "anchorLevel": 46,
       "maxLevel": 46,
       "levelSpan": 0,
-      "wearerCount": 1,
+      "wearerCount": 2,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -55347,6 +55396,10 @@
       "line": null,
       "shared": false,
       "wearers": [
+        {
+          "troop": "ironpass_steel_chariot",
+          "level": 46
+        },
         {
           "troop": "iron_hills_noble_royal_warden",
           "level": 46
@@ -55860,7 +55913,7 @@
       "anchorLevel": 36,
       "maxLevel": 46,
       "levelSpan": 10,
-      "wearerCount": 5,
+      "wearerCount": 7,
       "heroWorn": false,
       "lordWorn": false,
       "tier": "elite",
@@ -55884,8 +55937,16 @@
           "level": 41
         },
         {
+          "troop": "ironpass_war_chariot",
+          "level": 41
+        },
+        {
           "troop": "iron_hills_noble_gate_warden",
           "level": 41
+        },
+        {
+          "troop": "ironpass_steel_chariot",
+          "level": 46
         },
         {
           "troop": "iron_hills_noble_royal_warden",
@@ -67943,7 +68004,7 @@
       "maxLevel": 16,
       "levelSpan": 15,
       "wearerCount": 9,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L1)",
@@ -68351,7 +68412,7 @@
       "maxLevel": 21,
       "levelSpan": 10,
       "wearerCount": 8,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L11)",
@@ -69549,7 +69610,7 @@
       "maxLevel": 21,
       "levelSpan": 10,
       "wearerCount": 3,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L11)",
@@ -69589,7 +69650,7 @@
       "maxLevel": 26,
       "levelSpan": 10,
       "wearerCount": 6,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
@@ -73421,7 +73482,7 @@
       "maxLevel": 16,
       "levelSpan": 10,
       "wearerCount": 7,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L6)",
@@ -73517,7 +73578,7 @@
       "maxLevel": 21,
       "levelSpan": 10,
       "wearerCount": 7,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L11)",
@@ -73808,7 +73869,7 @@
       "maxLevel": 11,
       "levelSpan": 0,
       "wearerCount": 5,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L11)",
@@ -73987,7 +74048,7 @@
       "maxLevel": 31,
       "levelSpan": 15,
       "wearerCount": 23,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
@@ -76323,7 +76384,7 @@
       "maxLevel": 31,
       "levelSpan": 15,
       "wearerCount": 28,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
@@ -77975,7 +78036,7 @@
       "maxLevel": 11,
       "levelSpan": 5,
       "wearerCount": 11,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L6)",
@@ -78047,7 +78108,7 @@
       "maxLevel": 16,
       "levelSpan": 5,
       "wearerCount": 7,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L11)",
@@ -78103,7 +78164,7 @@
       "maxLevel": 26,
       "levelSpan": 15,
       "wearerCount": 14,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L11)",
@@ -78187,7 +78248,7 @@
       "maxLevel": 31,
       "levelSpan": 15,
       "wearerCount": 24,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",
@@ -79510,7 +79571,7 @@
       "maxLevel": 26,
       "levelSpan": 20,
       "wearerCount": 7,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L6)",
@@ -79566,7 +79627,7 @@
       "maxLevel": 21,
       "levelSpan": 10,
       "wearerCount": 9,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "light",
       "tierSource": "roster(L11)",
@@ -79657,7 +79718,7 @@
       "maxLevel": 31,
       "levelSpan": 15,
       "wearerCount": 23,
-      "heroWorn": false,
+      "heroWorn": true,
       "lordWorn": false,
       "tier": "medium",
       "tierSource": "roster(L16)",

@@ -1,4 +1,4 @@
-# War Chariot (Rhûn Wainriders)
+# War Chariot (Rhûn Wainriders, Erebor rams)
 
 ## Overview
 
@@ -6,6 +6,9 @@ The upstream pack's standard war chariot ported into TAOM as a **ridden mount** 
 tree. One Monster (`chariot`), one 60-bone skeleton carrying both horses + cart + wheels; the rider
 stands in the cart. Vanilla cavalry spawn via a Horse-slot item — no spawn patch, no behavior tree,
 no mission behavior, **no C# at all** (a 100% data port). Issue #279.
+
+Erebor has a second chariot on the same rig, pulled by two war rams, with two Ironpass troops: see
+[Dwarven war chariot](#dwarven-war-chariot-erebor-2026-11-24).
 
 ## Why This Exists
 
@@ -113,7 +116,7 @@ directly, and vanilla rein/harness systems (`horse_harness_rein_skel`) work unmo
 
 | File | Content |
 |---|---|
-| `Monsters/LOTR/lotr_monster_chariot.xml` (+ SubModule.xml XmlNode) | upstream-pack Monster verbatim: family_type 4, weight 2000/HP 600, rider_sit_bone=root, wheel terrain decals, Mountable, CanRear=false, no ragdoll_bone_* attrs (skeleton-side physics/IK comes from the transplanted SkeletonUserData — see pipeline notes) |
+| `Monsters/LOTR/lotr_monster_chariot.xml` (+ SubModule.xml XmlNode) | upstream-pack Monster verbatim: family_type 4, weight 2000/HP 600, rider_sit_bone=chariot_bone, wheel terrain decals, Mountable, CanRear=false, no ragdoll_bone_* attrs (skeleton-side physics/IK comes from the transplanted SkeletonUserData: see pipeline notes) |
 | `action_types.xml` | 23 `act_chariot_*` + 4 `actt_mount` (`act_mount_chariot_*` — the engine derives these names from `monster_usage="chariot"`) |
 | `action_sets.xml` | `as_chariot` + `_town_and_village` + `_map`. **10 substitutions** → `chariot_stand_1`: the upstream pack mapped rear/strike/fall to `howdah_*`/`elephant_death_front_continue`/`elephant_rear`, absent from TAOM packs (death-visual polish is a follow-up) |
 | `monster_usage_sets.xml` | upstream-pack `chariot` usage set verbatim |
@@ -132,6 +135,10 @@ speed 70, charge 80 since #615, riding difficulty 120) and the Monster XML.
 |---|---|
 | `Main/_Module/ModuleData/troops/troops_rhun_new.xml` | Horse-slot swap on the two wainrider chariot tiers (Horse `taom_chariot_a` plus HorseHarness `taom_chariot_armour_rhun`, see the barding section) |
 | LOTRLOME_Armory (see table above) | Monster/actions/usage/XSLT/item + compiled assets under `Assets/creature/chariot/` |
+| `Main/_Module/ModuleData/troops/troops_erebor.xml` | The two Ironpass chariot troops and the Ram Vanguard's second upgrade |
+| `Main/_Module/ModuleData/TroopWeights/troop_weights.xml`, `special_resources/troop_resource_costs.xml` | Party weight (3.0) and Gems rows of the two troops |
+| `tools/apply_dwarf_chariot_armory.py` | Holds the three dwarf chariot items and their names for the unversioned Armory: `--check`, `--apply`, `--remove`; gate `dwarf-chariot-armory` in `tools/data_gates.py` |
+| `tools/taom_schema.py` (`DWARF_MOUNT_IDS`) | The ram team is a mount a dwarf may ride |
 | `E:\LOTRAOMAssets\_auto_workspace\chariot\*.ps1` | TpacTool-based generators (clips, skeleton wiring, inspection) |
 
 ## Recruitment
@@ -139,6 +146,9 @@ speed 70, charge 80 since #615, riding difficulty 120) and the Monster XML.
 None added — the existing Wain tree upgrade path delivers the chariot (wain_youngblood → … →
 wainrider_cavalry T6 → swift_chariot T8 → warlord_chariot T9). No VolunteerRecruitmentService
 change, no clan wiring.
+
+Erebor: no pool and no party template lists the two chariot troops. They are reached by upgrade only, from
+`ironpass_ram_vanguard`, as the Ram Marshal is; `EreborRamCavalry_IsNotOfferedByAnyVolunteerPool` holds that.
 
 ## Tests
 
@@ -168,6 +178,12 @@ segment is byte-identical; the bone segment kept its order and parents and moved
 nothing was restored. Check again after any future re-import
 ([armory-guide.md](../reference/armory-guide.md) "LODs in the FBX sources").
 **Owed:** load LOTRLOME_Armory in the Kit once (re-cooks the package's `.rdc`), then a Custom Battle hit test.
+
+The dwarven chariot has tests: `tools/tests/test_apply_dwarf_chariot_armory.py` (the Armory rows, the package
+guard, drift and removal, and the live install), two `MountedDwarfTests` cases in
+`tools/tests/test_validate_moduledata.py`, and in C#
+`EveryTroopOnTheIronpassRamLineFromTheBreaker_CarriesUpgradeCostAndDailyUpkeep` and the two ids in
+`EreborRamCavalry_IsNotOfferedByAnyVolunteerPool`.
 
 ## Status / pending
 
@@ -213,7 +229,107 @@ Two non-obvious authoring rules came out of this (both in `feedback_custom_mount
   always render; only the mane stays an AdditionalMesh (hidden by the barding's `mane_cover_type="all"`
   anyway). All three render together, verified in-game.
 
+## Dwarven war chariot (Erebor, 2026-11-24)
+
+Two war rams pull an armoured cart for the Ironpass line of Erebor. It reuses the chariot rig as it is: the same
+Monster (`chariot`), the same 60-bone skeleton `horse_skeleton_chariot` and the same clips. Only meshes, items and
+troops are new, so there is still no C#.
+
+**Meshes** (sources in `LOTRLOME_Armory/AssetSources/creature/chariot/mesh`, imported through the Modding Kit):
+
+| Mesh | Slot | What it holds |
+|---|---|---|
+| `dwarf_chariot_rams` | Horse | Two war ram bodies on the two horse skeletons of the rig, material `M_EB_Ram_A1`. The horn span of each ram is scaled to 0.581 so the horns of the two rams do not cross. |
+| `dwarf_war_chariot` | HorseHarness | Chariot a: an iron-plated cart (materials `dwarf_war_chariot_iron` and `dwarf_war_chariot_wood`, six 2048 maps in `.../chariot/textures`), the elite ram barding on both rams, a leather collar with iron hame plates, the yoke link and the reins. |
+| `dwarf_war_chariot_b` | HorseHarness | Chariot b: the same rams, barding and collar with a steel cart built on the ram barding's own two materials (`M_EB_Ram_Barding_A1` for the plate courses with the gold band, `M_EB_Ram_Barding_A2` for the pointed tiles, leather and cloth). The frame, floor, axle and the wheel wood stay on `dwarf_war_chariot_iron` and `dwarf_war_chariot_wood`, so the mesh has four materials. It ships no texture of its own. |
+
+The barding is the `SK_EB_Goat_Bard_Elite_B` set of `AssetSources/creature/ram/SK_EB_Goat_Bard_A.fbx`, placed on each
+ram with the saddle seat removed. The rams stand 0.78 m apart because the rig fixes the two skeletons, and the
+barding stands 5 to 18 cm off the skin, so the two bardings pass through each other between the rams. The
+maintainer accepted that on 2026-11-24. The yoke bar sits 6.3 cm higher than on the unarmoured build so it clears
+the neck plates.
+
+**Items** (`LOTRLOME_items/LOTRAOM_horses.xml`):
+
+| Item | Type | Notes |
+|---|---|---|
+| `taom_ram_chariot_a` | Horse | The ram team. Its Horse row copies `taom_chariot_a` (maneuver 25, speed 70, charge 80, riding difficulty 120, `Monster.chariot`) without its `skeleton_scale` (see below). |
+| `taom_chariot_armour_dwarf` | HorseHarness | Chariot a. `family_type="4"`, `UseTeamColor`. |
+| `taom_chariot_armour_dwarf_b` | HorseHarness | Chariot b. `family_type="4"`, `UseTeamColor`. |
+
+The Armory is unversioned, so `tools/apply_dwarf_chariot_armory.py` holds these three rows and their three English
+name rows: `--check` fails when the live files differ from it, `--apply` puts them back after a reinstall (it
+refuses while a mesh or material has no Kit-cooked package), and `--remove` takes out only its own rows.
+
+The cloth of the barding and the two rear pennants of chariot b take the team colour: `t_eb_ram_barding_a2_d2.png`
+is non-zero only over the grey cloth area of the A2 sheet, and the pennants are mapped inside that area.
+
+**Troops** (`troops_erebor.xml`): `ironpass_ram_vanguard` (level 36) gains a second upgrade, to
+`ironpass_war_chariot` (level 41, chariot a, the Ram Marshal's kit), which upgrades to `ironpass_steel_chariot`
+(level 46, chariot b, the top iron armour, with a second helmet and bracers in its second set). Both keep the line's weapons: spear, shield and axe. The Erebor emissary sells both for Gems (`elite_emissary/elite_emissary_config.xml`, 18 and 22 before the resource's multiplier), beside the three ram troops it already sold. Their skills are
+what `tools/rebalance_troops.py` writes for their level and kit. Each counts 3.0 party slots
+(`TroopWeights/troop_weights.xml`, the level rule, as the Ram Marshal). In Gems
+(`special_resources/troop_resource_costs.xml`) the War Chariot pays the Ram Marshal's row, so the Ram Vanguard's two
+upgrades cost the same, and the Steel Chariot pays one rung more. The line's axe is two-handed, so a rider draws it
+only after the shield breaks; the two troops have the same ratchet rows in `tools/audit_polearm_shield_parity.py` as
+the ram riders.
+
+**A dwarf on a chariot.** `MOUNTED_DWARF` forbids a dwarf on a mount because the dwarf skeleton does not fit the
+horse seat. The ram team is on the allowlist (`DWARF_MOUNT_IDS` in `tools/taom_schema.py`) for another reason than
+the war ram. The engine places every rider the same way, his clip against the mount's sit bone, and on this
+Monster that bone is `chariot_bone`, not a horse spine bone. The rider plays the chariot rider rows that
+`as_dwarf_warrior` binds (all 47 rider action types, which the two other dwarf sets inherit). Those clips are made
+for the human skeleton, so where a dwarf stands on the cart is decided by the in-game check below, and the id comes
+off the list if he stands wrong. The Wainrider horse team `taom_chariot_a` is not on the list.
+
+**No `skeleton_scale` on the ram team.** `taom_chariot_a` carries `skeleton_scale="empire_horse"` from the upstream
+pack. The engine applies a scale by bone index of the scale's own skeleton (`horse_skeleton`), not by name
+(`MBGameManager`, then native `ApplySkeletonScale`, which checks only the index bound). On `horse_skeleton_chariot`
+the five indices are `chariot_bone` (the root), `horsespine2_chariot_left`, `horsepelvis_chariot_right`,
+`horsespine1_chariot_right` and `horsespine2_chariot_right`, so the right animal is stretched by up to 15 percent
+and the left one is not. The ram meshes were fitted to the unscaled rig, so the ram team has no scale. The maintainer
+had it removed from `taom_chariot_a` too on 2026-11-24, in the live Armory; the Rhûn cart and horse armour were also
+fitted to the unscaled rig.
+
+**Known limits.**
+
+- The ram team uses `Monster.chariot`, so it has the horse voices of the Wainrider chariot. A second Monster with
+  ram voices is not made.
+- Both chariots are `family_type="4"`, so in the inventory the Rhûn barding fits the ram team and a dwarf harness
+  fits the horse team. No troop is equipped that way. The dwarf cart is part of the harness mesh, so a ram team
+  with no harness, or with the Rhûn harness, has no dwarf cart. All three items are `is_merchandise="false"`.
+- `UseTeamColor` reaches every material of the harness mesh, the cart's iron and wood too. What it does on a
+  material with no colour mask is not proven.
+- `mesh_preflight` reports the far LODs of both harness meshes as FAIL ("seen only from behind") on the barding's
+  stacked plates. Back-face-culled views of LOD3 and LOD5 show no hole, and flipping those faces opened real
+  holes, so the faces stay as the artist made them.
+- The pole shows behind the rams' rumps and at the yoke, and 14 pole faces show from above between the rams' backs.
+
+**Not yet checked in game** (the steps are in [How to verify in game](#how-to-verify-in-game)): where the dwarf stands on the cart, the collar and the reins in a gallop and in a
+turn, the far LODs, the team colour on the cloth, and the two troops in a battle.
+
+## How to verify in game
+
+Owed for the dwarven war chariot (no issue: the maintainer waived the public issue for the chariot work). Close the
+game and the Kit, build this branch into the game, then:
+
+1. In a campaign with cheat mode on, run `campaign.add_item_to_player_party taom_ram_chariot_a`, then the same for
+   `taom_chariot_armour_dwarf` and `taom_chariot_armour_dwarf_b`. Equip the ram team and one harness and enter a
+   battle. Expect two armoured rams and the cart: iron for the first harness, steel plate courses for the second.
+2. Give a party `ironpass_ram_vanguard` troops and open the upgrade screen. Expect two upgrades, Ram Marshal and War
+   Chariot, each for 5 Gems, and from the War Chariot one upgrade to Steel Chariot for 7 Gems.
+3. Field both chariot troops in a battle. Expect a dwarf standing on the cart, not inside a ram or below the floor.
+   If he stands wrong, take `taom_ram_chariot_a` out of `DWARF_MOUNT_IDS` and report it.
+4. Watch one chariot in a gallop and in a tight turn. Expect the collar on the armour and the reins attached at
+   both ends. A rein that stretches or cuts the armour is a known risk: the long rein is one part of the harness and
+   can be built without it.
+5. Put the same troops on two sides of a battle. Expect the cloth on the rams' backs, and the two rear pennants of
+   the steel cart, in each side's colour, and the cart's iron and wood unchanged.
+6. Move the camera far from a chariot. Expect no hole in the plates and no sudden change of the cart's shape.
+7. Kill a chariot. Expect the rams and the cart to go down together, and no hang.
+
 ## Changelog
 
+- 2026-11-24: Added the dwarven war chariot for Erebor: a ram team (`taom_ram_chariot_a`), two harness meshes (chariot a in iron, chariot b in the ram barding style) and two Ironpass troops at levels 41 and 46. In-game checks are owed. No issue: waived by the maintainer.
 - 2026-06-13 — Tagged the 2 untagged gait clips (`chariot_gait_walkfast` + `chariot_gait_walkbackfast`) with `quad_movement` to fix a latent mount-crash; in-game mission test still pending.
 - 2026-06-12 — Ported the upstream pack's war chariot as the Rhûn Wainrider ridden mount (issue #279): one Monster / 60-bone skeleton, zero TAOM C#, swift/warlord chariot tiers swapped onto `taom_chariot_a`.
