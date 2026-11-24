@@ -306,6 +306,294 @@
 		<module_sound name="LOTR/Dwarf/dwarf_grunt" sound_category="mission_voice" path="LOTR/Dwarf/dwarf_grunt.mp3" />
 		<module_sound name="LOTR/Dwarf/victory_1" sound_category="mission_voice" path="LOTR/Dwarf/victory_1.mp3" />
 		<module_sound name="LOTR/Dwarf/D1_Battlecry1.wav" sound_category="mission_voice_shout" path="LOTR/Dwarf/D1_Battlecry1.wav" />
+		<!--Sounds in LOTR/Elves/Voice: the elf combat voice elf_01, by TierOneTemplar-->
+		<module_sound name="LOTR/Elves/Voice/grunt" sound_category="mission_voice">
+			<variation path="LOTR/Elves/Voice/elf_grunt_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_grunt_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_grunt_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_grunt_04.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_grunt_05.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/jump" sound_category="mission_voice">
+			<variation path="LOTR/Elves/Voice/elf_jump_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_jump_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_jump_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_jump_04.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_jump_05.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/battlecry" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_battlecry_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_battlecry_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_battlecry_04.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_battlecry_05.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/pain" sound_category="mission_voice">
+			<variation path="LOTR/Elves/Voice/elf_pain_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_pain_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_pain_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_pain_04.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_pain_05.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/death" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_death_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_death_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_death_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_death_04.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_death_05.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/stun" sound_category="mission_voice">
+			<variation path="LOTR/Elves/Voice/elf_stun_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_stun_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_stun_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_stun_04.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_stun_05.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/fear" sound_category="mission_voice">
+			<variation path="LOTR/Elves/Voice/elf_fear_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_fear_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_fear_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_fear_04.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_fear_05.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/climb" sound_category="mission_voice">
+			<variation path="LOTR/Elves/Voice/elf_climb_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_climb_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_climb_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_climb_04.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_climb_05.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/focus" sound_category="mission_voice">
+			<variation path="LOTR/Elves/Voice/elf_focus_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_focus_02.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/no" sound_category="mission_voice">
+			<variation path="LOTR/Elves/Voice/elf_no_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_no_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_no_03.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/victory" sound_category="mission_voice">
+			<variation path="LOTR/Elves/Voice/elf_victory_05.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_victory_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_victory_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_victory_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_victory_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/drown" sound_category="mission_voice">
+			<variation path="LOTR/Elves/Voice/elf_drown_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_drown_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_drown_03.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/charge" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_battlecry_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_charge_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_charge_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_charge_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_charge_04.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_warcry_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_warcry_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_warcry_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_warcry_04.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_warcry_05.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/killthemall" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_killthemall_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_killthemall_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_killthemall_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_killthemall_04.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_killthemall_05.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/move" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_move_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_move_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_move_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_move_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/stop" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_stop_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_stop_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_stop_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_stop_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/follow" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_follow_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_follow_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_follow_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_follow_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/advance" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_advance_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_advance_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_advance_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_advance_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/fallback" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_fallback_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_fallback_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_fallback_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_fallback_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/retreat" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_retreat_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_retreat_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_retreat_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_retreat_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/mount" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_mount_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_mount_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_mount_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_mount_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/dismount" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_dismount_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_dismount_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_dismount_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_dismount_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/fireatwill" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_fireatwill_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_fireatwill_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_fireatwill_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_fireatwill_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/holdfire" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_holdfire_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_holdfire_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_holdfire_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_holdfire_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/pickspears" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_pickspears_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_pickspears_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_pickspears_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_pickspears_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/pickdefault" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_pickdefault_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_pickdefault_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_pickdefault_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_pickdefault_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/facenemy" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_facenemy_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_facenemy_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_facenemy_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_facenemy_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/facedirection" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_facedirection_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_facedirection_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_facedirection_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_facedirection_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/attackgate" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_attackgate_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_attackgate_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_attackgate_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_attackgate_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/siegeweapon" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_siegeweapon_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_siegeweapon_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_siegeweapon_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_siegeweapon_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/ladders" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_ladders_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_ladders_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_ladders_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_ladders_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/delegate" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_delegate_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_delegate_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_delegate_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_delegate_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/undelegate" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_undelegate_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_undelegate_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_undelegate_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_undelegate_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/line" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_line_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_line_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_line_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_line_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/shieldwall" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_shieldwall_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_shieldwall_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_shieldwall_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_shieldwall_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/loose" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_loose_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_loose_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_loose_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_loose_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/scatter" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_scatter_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_scatter_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_scatter_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_scatter_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/circle" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_circle_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_circle_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_circle_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_circle_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/square" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_square_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_square_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_square_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_square_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/skein" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_skein_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_skein_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_skein_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_skein_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/column" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_column_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_column_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_column_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_column_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/infantry" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_infantry_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_infantry_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_infantry_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_infantry_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/cavalry" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_cavalry_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_cavalry_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_cavalry_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_cavalry_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/archers" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_archers_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_archers_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_archers_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_archers_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/horsearchers" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_horsearchers_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_horsearchers_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_horsearchers_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_horsearchers_04.wav" weight="1" />
+		</module_sound>
+		<module_sound name="LOTR/Elves/Voice/everyone" sound_category="mission_voice_shout">
+			<variation path="LOTR/Elves/Voice/elf_everyone_01.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_everyone_02.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_everyone_03.wav" weight="1" />
+			<variation path="LOTR/Elves/Voice/elf_everyone_04.wav" weight="1" />
+		</module_sound>
 		<!--Sounds in LOTR/Isengard/Voice/Warg-->
 		<module_sound name="LOTR/Monsters/Warg/attacks" sound_category="mission_voice_shout" min_pitch_multiplier="0.9" max_pitch_multiplier="1.1">
 			<variation path="LOTR/Monsters/Warg/attack_1.wav" weight="1" />
