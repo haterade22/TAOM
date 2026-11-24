@@ -766,6 +766,7 @@
 
     <NPCCharacter
         id="prison_guard_southrhovanion"
+        level="4"
         name="{=aom_srh_prison_guard}Prison Guard"
         occupation="PrisonGuard"
         culture="Culture.southrhovanion"
@@ -773,6 +774,13 @@
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
+        <skills>
+            <skill id="OneHanded" value="50" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="50" />
+            <skill id="Athletics" value="30" />
+            <skill id="Throwing" value="20" />
+        </skills>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Body" id="Item.cts_rohan_armor1" />
@@ -795,6 +803,7 @@
 
     <NPCCharacter
         id="guard_southrhovanion"
+        level="16"
         name="{=aom_srh_guard}Guard"
         occupation="Soldier"
         culture="Culture.southrhovanion"
@@ -802,6 +811,11 @@
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
+        <skills>
+            <skill id="Athletics" value="50" />
+            <skill id="OneHanded" value="80" />
+            <skill id="Polearm" value="80" />
+        </skills>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Body" id="Item.cts_rohan_armor2" />
@@ -1032,6 +1046,8 @@
 
     <NPCCharacter
         id="gangleader_bodyguard_southrhovanion"
+        level="16"
+        skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills"
         name="{=aom_srh_gangleader_bg}Bodyguard"
         occupation="Townsfolk"
         culture="Culture.southrhovanion"
