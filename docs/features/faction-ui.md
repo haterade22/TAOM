@@ -424,7 +424,8 @@ career page and into the game. Owed:
   screen is not tried again until the game restarts: the engine keeps a movie that failed to build
   referenced by its resource factories, with no way for TAOM to release it, so at most one is retained
   per broken prefab.
-- **After a Custom Battle round trip** the vanilla theme may play under the menu video (step 13).
+- **After a Custom Battle round trip** the vanilla theme fades out on the main menu before the
+  silence takes over, rather than starting silent (step 13).
 - **During a takeover the career menu's button still reads "Next"**, though it now starts the game
   (only the options stage relabels it), and **the CHARACTER button on the backstory ribbon does
   nothing**: it jumps to stage 1, which is the backstory stage itself once the face generator is out.
@@ -493,8 +494,8 @@ career page and into the game. Owed:
     released` lines appear; Player Switcher's panel is offered only when the faction screen setting is off.
 12. Quit to the main menu from the faction screen, then start again with the faction screen off: Player
     Switcher's panel is offered. Start a second campaign without restarting: no pick or takeover carries over.
-13. Known limitation to note, not fix: open Custom Battle from the main menu and come back; the vanilla
-    theme may now play under the menu video (Kysaro's module behaved the same).
+13. With the menu video's muting on, open Custom Battle from the main menu: the vanilla theme plays.
+    Come back: the theme fades out and only the menu video's audio remains.
 14. Co-op (BannerlordCoop): join a session as a client. The themed map bar and the themed Camp icon show;
     Pause, Play and Fast Forward change the speed for every player through the server; Extra Fast Forward is
     hidden. Solo with the Coop module enabled, before any co-op session in that process, shows Extra Fast Forward
