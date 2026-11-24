@@ -43,7 +43,7 @@
     is_siege_map="true" />
   <Scene
     id="taom_rohan_castle_helms_deep_forceatmo"
-    name="{=aom_taom_rohan_castle_helms_deep_forceatmo_name}[Rohan] Helms Deep - Night Rain"
+    name="{=aom_taom_rohan_castle_helms_deep_forceatmo_name}[Rohan] Helm's Deep - Night Rain"
     terrain="Plain"
     is_siege_map="true" />
   <Scene

@@ -907,7 +907,7 @@
     <Duchy id="seregost" name="{=realms_duchy_seregost}Seregost" kingdom="empire_s">
       <County settlement="town_ES4" /> <!-- Seregost -->
     </Duchy>
-    <Duchy id="udun" name="{=realms_duchy_udun}Ûdun" kingdom="empire_s">
+    <Duchy id="udun" name="{=realms_duchy_udun}Udûn" kingdom="empire_s">
       <Barony settlement="castle_ES2" /> <!-- Carach Angren -->
     </Duchy>
 
