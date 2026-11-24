@@ -50,7 +50,7 @@ public class FrontEndSpriteServiceTests
         AddSprite("cc_card");
         _adapter.AddFile(Path.Combine(_paths.RuntimeSprites, "cc_card.nine"), "4 4 4 4");
         AddSprite("ld_bar_stone");
-        AddSprite("fs_emblem_rohan");
+        AddSprite("fs_reveal_aragorn");
         AddSprite("fs_portrait_gondor");
         AddSprite("gui_skills_icon_bow");
         _adapter.AddFile(Path.Combine(_paths.RuntimeFonts, "FS_Garamond", "FS_Garamond.png"));
@@ -87,7 +87,7 @@ public class FrontEndSpriteServiceTests
         Assert.IsTrue(_adapter.IsSpriteRegistered("cc_panel_bg"));
         Assert.IsTrue(_adapter.IsSpriteRegistered("fs_confirm"));
         Assert.IsFalse(_adapter.IsSpriteRegistered("mm_logo"), "the main menu's images are its own group");
-        Assert.IsFalse(_adapter.IsSpriteRegistered("fs_emblem_rohan"), "art loads per image, as shown");
+        Assert.IsFalse(_adapter.IsSpriteRegistered("fs_reveal_aragorn"), "art loads per image, as shown");
         Assert.IsFalse(_adapter.IsSpriteRegistered("fs_portrait_gondor"));
     }
 
@@ -216,11 +216,11 @@ public class FrontEndSpriteServiceTests
     public void Tick_FactionScreenLeftForTheNextStage_ReleasesTheArtButKeepsTheFrame()
     {
         _sut.Acquire(CharacterCreation | FactionArt);
-        Assert.IsTrue(_sut.EnsureArt("fs_emblem_rohan"));
+        Assert.IsTrue(_sut.EnsureArt("fs_reveal_aragorn"));
 
         TickPastReleaseDelay(held: CharacterCreation);
 
-        Assert.IsFalse(_adapter.IsSpriteRegistered("fs_emblem_rohan"));
+        Assert.IsFalse(_adapter.IsSpriteRegistered("fs_reveal_aragorn"));
         Assert.IsTrue(_adapter.IsSpriteRegistered("cc_panel_bg"));
     }
 
@@ -283,7 +283,7 @@ public class FrontEndSpriteServiceTests
     {
         _sut.Acquire(CharacterCreation | FactionArt);
 
-        Assert.IsFalse(_sut.EnsureArt("fs_emblem_nobody"));
+        Assert.IsFalse(_sut.EnsureArt("fs_reveal_nobody"));
     }
 
     [TestMethod]
@@ -291,7 +291,7 @@ public class FrontEndSpriteServiceTests
     {
         _adapter.UiReady = false;
 
-        Assert.IsFalse(_sut.EnsureArt("fs_emblem_rohan"));
+        Assert.IsFalse(_sut.EnsureArt("fs_reveal_aragorn"));
         Assert.AreEqual(0, _adapter.LoadedTextures.Count);
     }
 
@@ -320,11 +320,11 @@ public class FrontEndSpriteServiceTests
     [TestMethod]
     public void EnsureArt_WhenNothingHoldsTheArt_ReleasesItAfterTheDelay()
     {
-        Assert.IsTrue(_sut.EnsureArt("fs_emblem_rohan"));
+        Assert.IsTrue(_sut.EnsureArt("fs_reveal_aragorn"));
 
         TickPastReleaseDelay();
 
-        Assert.IsFalse(_adapter.IsSpriteRegistered("fs_emblem_rohan"));
+        Assert.IsFalse(_adapter.IsSpriteRegistered("fs_reveal_aragorn"));
     }
 
     [TestMethod]
@@ -561,7 +561,7 @@ public class FrontEndSpriteServiceTests
     public void OnEngineResourcesRefreshed_PutsBackEveryLoadedImageFontAndBrushFile()
     {
         _sut.Acquire(CharacterCreation | FactionArt);
-        Assert.IsTrue(_sut.EnsureArt("fs_emblem_rohan"));
+        Assert.IsTrue(_sut.EnsureArt("fs_reveal_aragorn"));
         _sut.ShowLoadingImage(AddLoadingScreen("loading_erebor"));
         _adapter.SimulateEngineRefresh();
         var loads = _adapter.LoadedTextures.Count;
@@ -570,7 +570,7 @@ public class FrontEndSpriteServiceTests
 
         Assert.IsTrue(_adapter.IsSpriteRegistered("cc_panel_bg"));
         Assert.IsTrue(_adapter.IsSpriteRegistered("cc_card_9"));
-        Assert.IsTrue(_adapter.IsSpriteRegistered("fs_emblem_rohan"));
+        Assert.IsTrue(_adapter.IsSpriteRegistered("fs_reveal_aragorn"));
         Assert.IsTrue(_adapter.IsSpriteRegistered("ld_bar_stone"));
         Assert.IsTrue(_adapter.IsSpriteRegistered("fs_loading_loading_erebor"));
         CollectionAssert.Contains(_adapter.FontsRegistered, "FS_Garamond");
