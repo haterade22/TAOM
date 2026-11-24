@@ -507,8 +507,8 @@
 			<Trait id="Generosity" value="-1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
-			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+			<EquipmentSet id="npc_companion_equipment_template_empire" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_empire" />
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter
@@ -532,8 +532,8 @@
 			<Trait id="Mercy" value="-2" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
-			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+			<EquipmentSet id="npc_companion_equipment_template_empire" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_empire" />
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter
@@ -677,8 +677,8 @@
 			<Trait id="Calculating" value="1" />
 		</Traits>
 		<Equipments>
-			<EquipmentSet id="npc_companion_equipment_template_mordor" equipmentType="Civilian" />
-			<EquipmentSet id="npc_companion_equipment_template_mordor" />
+			<EquipmentSet id="npc_companion_equipment_template_empire" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_empire" />
 		</Equipments>
 	</NPCCharacter>
 
