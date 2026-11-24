@@ -3120,7 +3120,7 @@
 		id="lord_MM6_2"
 		spouse="Hero.lord_MM6_7"
 		faction="Faction.clan_mistymountainorcs_6"
-		text="{=aom_lord_MM6_2_bio}Ugluk of the Grobûrz warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+		text="{=aom_lord_MM6_2_bio}Uglúk of the Grobûrz warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
 	<Hero
 		id="lord_MM6_3"
 		spouse="Hero.lord_MM6_8"
