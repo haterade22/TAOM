@@ -6,9 +6,9 @@ public interface IFrontEndStateAdapter
     /// <summary>The main menu is the active game state.</summary>
     bool IsMainMenuActive();
 
-    /// <summary>The active game state is one vanilla plays its menu theme on: the main menu or the game-loading
-    /// screen (<c>GameState.IsMusicMenuState</c>).</summary>
-    bool IsMenuMusicStateActive();
+    /// <summary>The active game state is the main menu or the game-loading screen. Not
+    /// <c>GameState.IsMusicMenuState</c>: Custom Battle setup also sets it, and its theme must play.</summary>
+    bool IsMainMenuOrLoadingActive();
 
     /// <summary>Character creation is on the game-state stack.</summary>
     bool IsInCharacterCreation();

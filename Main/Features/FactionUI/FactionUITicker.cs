@@ -67,7 +67,7 @@ public sealed class FactionUITicker
 
         try
         {
-            if (_media.IsMenuMusicSilenced && _media.OnTick(_state.IsMenuMusicStateActive()))
+            if (_media.IsMenuMusicSilenced && _media.OnTick(_state.IsMainMenuOrLoadingActive()))
                 _music.MarkPaused(null);
         }
         catch (Exception ex)

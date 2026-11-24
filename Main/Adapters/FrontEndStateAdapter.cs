@@ -11,7 +11,7 @@ public sealed class FrontEndStateAdapter : IFrontEndStateAdapter
 {
     public bool IsMainMenuActive() => GameStateManager.Current?.ActiveState is InitialState;
 
-    public bool IsMenuMusicStateActive() => GameStateManager.Current?.ActiveState?.IsMusicMenuState == true;
+    public bool IsMainMenuOrLoadingActive() => GameStateManager.Current?.ActiveState is InitialState or GameLoadingState;
 
     public bool IsInCharacterCreation() => GameStateManager.Current?.LastOrDefault<CharacterCreationState>() != null;
 
