@@ -39003,7 +39003,7 @@
             <EquipmentSet id="mistymountainorcs_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_MM6_2" race="orc" name="{=aom_lord_MM6_2_name}Ugluk" age="31" voice="earnest" is_hero="true" culture="Culture.mistymountainorcs" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_MM6_2" race="orc" name="{=aom_lord_MM6_2_name}Uglúk" age="31" voice="earnest" is_hero="true" culture="Culture.mistymountainorcs" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gundabad" />
             <hair_tags>
