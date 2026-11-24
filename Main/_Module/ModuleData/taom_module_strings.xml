@@ -6723,9 +6723,9 @@
 	<string id="taom_mcm_RealmColourGundabad" text="{=taom_mcm_RealmColourGundabad}Gundabad" />
 	<string id="taom_mcm_RealmColourGundabad_hint" text="{=taom_mcm_RealmColourGundabad_hint}Gundabad's colour on the map, written #RRGGBB. Blank uses the default, #5A6367." />
 	<string id="taom_mcm_RealmColourMistyMountainOrcs" text="{=taom_mcm_RealmColourMistyMountainOrcs}Misty Mountain Orcs" />
-	<string id="taom_mcm_RealmColourMistyMountainOrcs_hint" text="{=taom_mcm_RealmColourMistyMountainOrcs_hint}Misty Mountain Orcs' colour on the map, written #RRGGBB. Blank uses the default, #7E7A50." />
+	<string id="taom_mcm_RealmColourMistyMountainOrcs_hint" text="{=taom_mcm_RealmColourMistyMountainOrcs_hint}Misty Mountain Orcs's colour on the map, written #RRGGBB. Blank uses the default, #7E7A50." />
 	<string id="taom_mcm_RealmColourGoblins" text="{=taom_mcm_RealmColourGoblins}Goblins" />
-	<string id="taom_mcm_RealmColourGoblins_hint" text="{=taom_mcm_RealmColourGoblins_hint}Goblins' colour on the map, written #RRGGBB. Blank uses the default, #AFC93A." />
+	<string id="taom_mcm_RealmColourGoblins_hint" text="{=taom_mcm_RealmColourGoblins_hint}Goblins's colour on the map, written #RRGGBB. Blank uses the default, #AFC93A." />
 	<string id="taom_mcm_RealmColourBlueCraig" text="{=taom_mcm_RealmColourBlueCraig}Goblins of Blue Craig" />
 	<string id="taom_mcm_RealmColourBlueCraig_hint" text="{=taom_mcm_RealmColourBlueCraig_hint}Goblins of Blue Craig's colour on the map, written #RRGGBB. Blank uses the default, #6A8AA8." />
 	<string id="taom_mcm_RealmColourArthedain" text="{=taom_mcm_RealmColourArthedain}Arthedain" />
