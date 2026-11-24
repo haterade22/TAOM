@@ -159,15 +159,10 @@ TAOM.Features.FactionUI.UI.FactionScreen.FactionScreenVM::get_Character
 TAOM.Features.FactionUI.UI.FactionScreenWidgets::Attach
 TAOM.Features.FactionUI.UI.FactionScreenWidgets::Detach
 TAOM.Features.FactionUI.UI.FactionScreenWidgets::Find
-TAOM.Features.FactionUI.UI.FactionScreenWidgets::FindHeroWidgets
 TAOM.Features.FactionUI.UI.FactionScreenWidgets::PlaceFog
-TAOM.Features.FactionUI.UI.FactionScreenWidgets::ResetHeroPortraits
 TAOM.Features.FactionUI.UI.FactionScreenWidgets::ResetRightColumnToTop
-TAOM.Features.FactionUI.UI.FactionScreenWidgets::Show
-TAOM.Features.FactionUI.UI.FactionScreenWidgets::Slide
 TAOM.Features.FactionUI.UI.FactionScreenWidgets::Tick
 TAOM.Features.FactionUI.UI.FactionScreenWidgets::TickFog
-TAOM.Features.FactionUI.UI.FactionScreenWidgets::TickHeroPortraits
 TAOM.Features.FactionUI.UI.FactionScreenWidgets::TickMinimap
 TAOM.Features.FactionUI.UI.FactionScreenWidgets::TickPortrait
 TAOM.Features.FactionUI.UI.FactionScreenWidgets::TryGetMinimapClick

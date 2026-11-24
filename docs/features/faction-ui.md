@@ -35,7 +35,7 @@ loads, and it can only be released once no screen draws it.
 |---|---|---|
 | Main menu (`MenuChrome`) | `mm_*`, plus the `TAOMMainMenu` brushes | while the themed main menu holds it |
 | Character creation (`Chrome`) | `cc_*` and every other `fs_*` (`fs_minimap_big` included), plus the `TAOMCharCreation` and `TAOMFactionScreen` brushes | while any themed character-creation screen or the faction screen holds it |
-| Faction art (`Art`) | `fs_portrait_*`, `fs_reveal_*`, `fs_emblem_*`, `fs_territory_*`, `fs_bg_*` | loaded one image at a time as the faction screen shows it; held with the faction screen |
+| Faction art (`Art`) | `fs_portrait_*` (the hero cards), `fs_emblem_*`, `fs_territory_*`, `fs_bg_*` (`fs_reveal_*` is no longer drawn) | loaded one image at a time as the faction screen shows it; held with the faction screen |
 | Resident | `ld_*`, the `TAOMLoading` brushes and the three bitmap fonts | the process: the loading window is built once, and the engine cannot remove a font |
 | Skill icons | `gui_skills_icon_*`, registered under vanilla's names from `sprite_overrides.json` | the process |
 
@@ -106,6 +106,15 @@ not its prefab, so nothing of Coop's is lost by the swap. Pinned by `ThemedMapBa
   still runs for a hero taken over on the screen. Quitting to the main menu from the screen pops the
   character-creation state without closing the culture stage, so `SubModule.OnGameEnd` calls
   `ResetForGameEnd`, which lets go of the screen and the pick and shows the panel again.
+- **The 3D character (project owner, 2026-11-24).** The centre of the screen is always the 3D viewport, for
+  every faction: it shows the faction's character (`faction_characters.json`, else its elite infantry
+  troop) and slides in on each change (`FactionScreenWidgets.OnCharacterShown`, Kysaro's portrait slide).
+  Clicking a hero card or a Leader, Lord or Wanderer entry swaps it to that character, drawn from the
+  resolved pick (`FactionPickService.Display`): the same body, race and battle gear the face generator and
+  the player then get, no mount. The faction's race and weapon tweaks (`faction_viewport.json`) frame its
+  own character, also when that character is picked (Sauron's card on Mordor). The small painted cards stay as the buttons. Kysaro's large painted
+  faction portraits (`fs_portrait_<faction>`) and hero reveal pictures (`fs_reveal_*`) are no longer
+  drawn; their files are still in `RuntimeSprites`.
 - **Taking over a hero.** Mike, 2026-10-01: "When I pick an existing character like Thranduil from the
   UI, it should skip the character creation all of the way until the career picker, user picks the
   career and it starts the game." `FactionPickService` decides each pick. A card or list entry whose
@@ -446,8 +455,9 @@ career page and into the game. Owed:
 3. MCM toggles: Themed Main Menu and Main Menu Video off show vanilla's menu and video the next time the
    menu opens; Hide Game Version off brings the version line back after a restart.
 4. Loading screens: a painting each time, never the same twice in a row; off shows vanilla's.
-5. New campaign: the faction screen replaces the faction map; each faction shows its portrait, pin and
-   emblem tile; the minimap opens and its pins select factions.
+5. New campaign: the faction screen replaces the faction map; each faction shows its 3D character, pin and
+   emblem tile; the minimap opens and its pins select factions. Click Théoden on Rohan, then a lord in the
+   Lord list, then a wanderer: the 3D model changes to each one (an orc lord shows as an orc).
 6. Takeover: pick Thranduil's card on Lasgalen and confirm. The career menu opens next, showing his face
    (no face generator, no backstory menus); pick a career and press its button (it still reads "Next"):
    the campaign starts with "You now play as Thranduil", in his clan and kingdom, with his gear, skills
@@ -517,6 +527,9 @@ career page and into the game. Owed:
 
 - 2026-11-22 (v2.0.42): the themed map bar and Camp icon show under BannerlordCoop too; only a co-op mod TAOM
   cannot probe keeps the native bar (`ThemedMapBarCoopPolicy`).
+
+- 2026-11-24 (v2.0.42): the faction screen shows the 3D character for every faction, and a picked hero, lord
+  or wanderer replaces it with that character; the painted faction portraits and hero reveals are gone.
 
 ## GitHub Issue
 

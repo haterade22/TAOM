@@ -155,7 +155,7 @@ public class FactionRosterTests
         var placeholder = Troop("placeholder", 4);
         _adapter.CultureTroop("culture").Returns(placeholder);
 
-        Assert.AreSame(placeholder, _sut.CardCharacter(new SpecialCharacter("Nobody", "missing_id", "p", "r", 400f), "culture"));
+        Assert.AreSame(placeholder, _sut.CardCharacter(new SpecialCharacter("Nobody", "missing_id", "p"), "culture"));
     }
 
     [TestMethod]
@@ -164,7 +164,7 @@ public class FactionRosterTests
         var gandalf = Troop("taom_fui_gandalf", 0);
         _adapter.Character("taom_fui_gandalf").Returns(gandalf);
 
-        Assert.AreSame(gandalf, _sut.CardCharacter(new SpecialCharacter("Gandalf", "taom_fui_gandalf", "p", "r", 551f), "culture"));
+        Assert.AreSame(gandalf, _sut.CardCharacter(new SpecialCharacter("Gandalf", "taom_fui_gandalf", "p"), "culture"));
     }
 
     // ── The 3D viewport ───────────────────────────────────────────────────────────────────────

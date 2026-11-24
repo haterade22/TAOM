@@ -76,6 +76,20 @@ public class FactionScreenPrefabBindingTests
         Assert.AreEqual(0, failures.Count, string.Join(Environment.NewLine, failures));
     }
 
+    [TestMethod]
+    public void Prefab_CentreIsAlwaysThe3DCharacter_NoPaintedPortraitWidgets()
+    {
+        // Project owner, 2026-11-24: every faction shows its 3D character, and a picked hero swaps it.
+        var widgets = LoadPrefab().Descendants().ToList();
+        var ids = widgets.Select(e => (string?)e.Attribute("Id")).Where(id => id != null).ToList();
+
+        CollectionAssert.DoesNotContain(ids, "FactionPortrait");
+        CollectionAssert.DoesNotContain(ids, "HeroPortrait");
+        CollectionAssert.DoesNotContain(ids, "HeroPortraitB");
+        var viewport = widgets.Single(e => (string?)e.Attribute("Id") == "CharacterViewportWrapper");
+        Assert.IsNull(viewport.Attribute("IsVisible"), "the viewport is never hidden");
+    }
+
     private static void Walk(XElement element, Type? scope, List<string> failures, Dictionary<Type, HashSet<string>> bound)
     {
         Type? itemType = null;
