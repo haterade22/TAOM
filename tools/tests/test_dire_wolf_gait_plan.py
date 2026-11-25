@@ -26,6 +26,8 @@ PACES = {"walk": ("dire_wolf_walkfast", "dire_wolf_walk_stand", 1.2),
          "canter": ("dire_wolf_canter", "dire_wolf_canter_stand", 4.6),
          "gallop": ("dire_wolf_forward_gallop_left_foot", "dire_wolf_forward_gallop_left_foot_stand", 8.0)}
 MISFIT = 0.08          # the most the ground a loop covers may differ from the paws' travel, as a part of the travel
+# #1591: the two backward records (the front row and the "none" row bind the first, the two strafe rows the second)
+BACKWARD = ("dire_wolf_walkbackfast_straight", "dire_wolf_walkbackfast")
 
 
 def rows():
@@ -38,9 +40,27 @@ class PlanNumbersTests(unittest.TestCase):
         with open(PLAN, encoding="utf-8-sig") as fh:
             names = [r["clip"] for r in json.load(fh)]
         self.assertEqual(sorted(names), sorted([c for front, stand, _ in PACES.values() for c in (front, stand)]
-                                               + ["dire_wolf_canter_strafe"]))
+                                               + ["dire_wolf_canter_strafe"] + list(BACKWARD)))
 
-    def test_each_record_plays_a_whole_loop_of_its_master(self):
+    def test_the_backward_walk_plays_the_walks_keys_from_last_to_first(self):
+        """The pack has no backward walk, and both records played the walk's keys 0 to 32: the paws stepped forward
+        while the wolf backed up. A record whose second source is under its first plays its master backward."""
+        r = rows()
+        for clip in BACKWARD:
+            self.assertEqual((r[clip]["master"], r[clip]["source1"], r[clip]["source2"]), ("adod_wolf_walk", 32, 0), clip)
+            self.assertEqual(r[clip]["limits"], [-1.25, -0.01], clip)
+            self.assertEqual(r[clip]["travel"], r["dire_wolf_walkfast"]["travel"], clip)
+            self.assertFalse({"template", "flags", "step_points"} & set(r[clip]), clip)
+        self.assertEqual(r[BACKWARD[0]]["duration"], r[BACKWARD[1]]["duration"])
+
+    def test_the_backward_walks_one_loop_time_fits_the_top_of_its_pace(self):
+        """One record is on the front row and the "none" row, so the pace has one loop time (0x749B10 mixes two
+        equal Durations). It is the one that fits the pace's top speed, 1.25 m/s at model size; below that the legs
+        turn over faster than the ground passes, as before."""
+        row = rows()[BACKWARD[0]]
+        self.assertLessEqual(abs(1.25 * row["duration"] / row["travel"] - 1.0), 0.01)
+
+    def test_each_forward_record_plays_a_whole_loop_of_its_master(self):
         """The wolf's masters are keyed from 0 and its records play from 0. The pack's canter played keys 1 to 16
         of the gallop's 0 to 16: a loop that skips its first interval, so the paws jumped up to 0.39 m at the seam
         (keys 0 and 16 are one pose). The canter plays the whole loop now, and its strafe record with it."""
@@ -117,16 +137,12 @@ class InstalledMastersTests(unittest.TestCase):
         measure's fixed ground height would find no planted paw."""
         master = self.gait.load_anim(os.path.join(WOLF, "animations", row["master"] + "_geo.tpac"))
         low, high = self.gait.key_span(master)
-        self.assertTrue(low <= row["source1"] and row["source2"] <= high,
+        self.assertTrue(low <= min(row["source1"], row["source2"]) and max(row["source1"], row["source2"]) <= high,
                         "%s plays %s..%s of a master keyed %s..%s" % (row["clip"], row["source1"], row["source2"], low, high))
+        span = row["source2"] - row["source1"]
         played = self.gait.played_keys(master, {"first": row["source1"],
-                                                "keys": row["source2"] - row["source1"] + (1 if closed else 0)})
-        out = {}
-        for paw, path in self.gait.soles_of(played, self.bones, PAWS).items():
-            path = self.np.array(path, dtype=float)
-            path[:, 2] -= path[:, 2].min()
-            out[paw] = path
-        return out
+                                                "keys": span + (0 if not closed else 1 if span > 0 else -1)})
+        return self.gait.grounded(self.gait.soles_of(played, self.bones, PAWS))
 
     def test_the_paws_cover_the_travel_each_gait_claims(self):
         r = rows()
@@ -134,6 +150,15 @@ class InstalledMastersTests(unittest.TestCase):
             with self.subTest(clip=front):
                 stride = self.gait.measure(self.soles(r[front]), r[front]["travel"])["stride"]
                 self.assertAlmostEqual(stride, r[front]["travel"], delta=0.05 * r[front]["travel"])
+
+    def test_the_backward_walks_paws_cover_its_travel_and_move_against_the_walks(self):
+        r = rows()
+        walk = self.gait.measure(self.soles(r["dire_wolf_walkfast"]), r["dire_wolf_walkfast"]["travel"])
+        for clip in BACKWARD:
+            with self.subTest(clip=clip):
+                back = self.gait.measure(self.soles(r[clip]), r[clip]["travel"])
+                self.assertAlmostEqual(back["stride"], r[clip]["travel"], delta=0.05 * r[clip]["travel"])
+                self.assertEqual(back["direction"], -walk["direction"])
 
     def test_each_gaits_loop_closes_and_each_paw_is_planted_in_it(self):
         """The stride is the median speed of the planted keys times the keys of the loop: a loop that does not end

@@ -106,8 +106,8 @@ One row of `as_dire_wolf` changes with them: `act_warg_forward_walk_stand` plays
 played `dire_wolf_walkfast`. `python tools/bind_warg_clips.py --apply` writes it after the cook, with the warg's
 row, in the live file and in the snapshot (backups `.bak-warg-bind-<stamp>`).
 
-Cooked on 2026-11-24 at 10:17 and bound at 10:20 (backups `.bak-warg-bind-20261124-102002`); both checks below
-exit 0. Each in-place twin's cache entry holds byte for byte the payload of its front record's entry (walk 7,080
+Cooked on 2026-11-24 at 10:17 and bound at 10:20 (backups `.bak-warg-bind-20261124-102002`); the plan check and
+the bind check below exited 0. Each in-place twin's cache entry holds byte for byte the payload of its front record's entry (walk 7,080
 bytes, trot 5,791, canter 4,139, gallop 4,334), so the new `dire_wolf_walk_stand` plays the walk's keys. No game
 has loaded the new row of `as_dire_wolf` yet.
 
@@ -130,28 +130,80 @@ has loaded the new row of `as_dire_wolf` yet.
   measured the wolf's top speed; the warg, whose stats its items copy, reached 10.0 m/s. A charge is therefore
   mostly the canter.
 
-Not changed: the walk's, the trot's and the gallop's strafe records, the backward and turn records, and the
-step points. No gate holds the step points: a wolf record that the generator makes again takes the warg record's
+Not changed by #1565: the walk's, the trot's and the gallop's strafe records, the backward records (#1591
+changed them, below), the turn records, and the step points. No gate holds the step points: a wolf record that the generator makes again takes the warg record's
 of that day, which changes when its footsteps sound and nothing else. `tools/gen_dire_wolf_anim_clips.ps1`
-still makes all 40 records with the pack's values, and no longer holds the `Duration` and the travel of the eight
-the plan names (its `-Verify` named two wolf records after #1563 changed the warg's travel, because it read the
+still makes all 40 records with the pack's values, and no longer holds the `Duration` and the travel of the
+records the plan names (eight then, ten since #1591; its `-Verify` named two wolf records after #1563 changed the warg's travel, because it read the
 warg's records for the wolf's strafe ratios; those six ratios are numbers in the script now).
 
-Measured on 2026-11-24, while the warg was added to the stride gate, and not changed yet (#1591): the backward
-walk's two records claim 1.17 m on the forward walk's keys, whose paws cover 2.08 m, and the two side-step
-records hold a travel of 1.60 m where the paws move 0.10 m and 0.08 m sideways (for a side step the stride is
-not the node's measure: [warg ledger](lotrlome-warg-gait-changes.md), "Known limitations"). The wolf is not a
-creature of
-`tools/check_gait_stride.py`: that gate has no setting for a rig whose paws stay above its contact height.
-
 Check: `python tools/repoint_anim_clip.py --plan tools/dire_wolf_gait_plan.json --under
-creature/direwolf/animations --check` (the `dire-wolf-gaits` row of `tools/data_gates.py`) and `python
-tools/bind_warg_clips.py --check` (the `warg-clips` row). Roll back: copy the two `.bak-warg-bind-<stamp>` files
+creature/direwolf/animations --check` (the `dire-wolf-gaits` row of `tools/data_gates.py`), `python
+tools/bind_warg_clips.py --check` (the `warg-clips` row) and, since #1591, `python tools/check_gait_stride.py
+--creature dire_wolf` (the `dire-wolf-stride` row). Roll back: copy the two `.bak-warg-bind-<stamp>` files
 over the two `action_sets.xml` files, then each `.bak-repoint-20261123-202916` file over its record, then start
 the Kit once.
 
+### The backward walk (#1591, 2026-11-24)
+
+The pack has no backward walk, so the generator gave the two backward records the forward walk's keys 0 to 32.
+The wolf's paws stepped forward while it backed up. The records also claimed 1.17 m of travel on keys whose paws
+cover 2.08 m. The warg, the elephant and the spider each have a backward clip whose planted feet move the other
+way.
+
+A clip record whose second source is under its first plays its master backward
+([animation system map](bannerlord-animation-system-map.md), "Source 1, Source 2"). Vanilla does it for a
+looped backward walk: `camel_walk_backwards` plays 45 to 1 with a `quad_movement` travel of 1.8 m and limits of
+-1.25 to -0.1, on `act_camel_backward_walk` and the pace's two strafe rows (Native `animation_clips.tpac` and
+`action_sets.xml`, read 2026-11-24). So both records now play `adod_wolf_walk` from key 32 to key 0, and no
+new master was needed. Same command as above with two more rows in the plan, 2026-11-24 17:36. Backups:
+`<file>.bak-repoint-20261124-173648` beside each.
+
+Cooked on 2026-11-24 at 18:45; the plan check, the bind check and the stride gate exit 0. Each of the two cache
+entries holds the payload of the forward walk's entry byte for byte (7,080 bytes; only the GUIDs and the stamp
+in the header differ). So the cook does not carry the direction: the game takes it from the record's sources
+when it samples the clip, as it does for the camel. No game has loaded the two records yet.
+
+| Record | Rows of `as_dire_wolf` | Keys | `Duration` | Travel | Limits (kept) |
+|---|---|---|---|---|---|
+| `dire_wolf_walkbackfast_straight` | the backward pace's front row and its "none" row | 0 to 32, now 32 to 0 | 1.00 to 1.66 | 1.17 to 2.08 | -1.25..-0.01 |
+| `dire_wolf_walkbackfast` | the backward pace's two strafe rows | the same | the same | the same | the same |
+
+- **One loop time for the whole pace.** One record is on the front row and the "none" row, so the node has one
+  `Duration` for every backward speed. 1.66 s fits the top of the pace: 1.25 m/s x 1.66 s = 2.08 m, the travel.
+  Under that speed the body covers less ground in a loop than the paws do, so the paws slip most at the slowest
+  backing. A fit at every speed needs an in-place twin as the walk has; nobody has asked for one.
+- **The step points are kept.** Both records keep the forward walk's four step points (0.05, 0.30, 0.55,
+  0.80 of the loop), so a footstep sounds at the walk's moments, not at the reversed loop's. What else reads a
+  step point is not read.
+- **The stride gate holds the direction.** `tools/check_gait_stride.py` fails a record of the backward pace
+  (the clip on the backward action, or any measured clip with negative pace limits) whose planted feet
+  move the way the walk's do. The plan test (`tools/tests/test_dire_wolf_gait_plan.py`) holds the sources, the
+  loop time and the travel.
+- **The generator** still maps both records to the forward walk with the pack's values. They are in the plan
+  now, so its `-Verify` no longer holds their keys, `Duration` and travel. After a reinstall, the plan's
+  `--apply` puts them back.
+
+The wolf has been a creature of `tools/check_gait_stride.py` since #1591. Its paw joints do not rest at height
+0 (in the walk they stay 0.04 to 0.08 m above it, in the gallop they go 0.2 m under it), so the gate takes each
+paw's height from that paw's own lowest point (the creature key `ground: "lowest"`), as the plan test does. Its
+limits are a slip of 0.35 m a stance and a stance of 10% of the loop: the trot's worst slip is 0.30 m. A paw
+whose lowest point is more than 0.06 m above the lowest paw's is a finding (the wolf's are 0.04 m apart at
+most), because under this rule a leg that never comes down would read as planted.
+
+Not changed: the two side-step records. They play the pack's turn clips, whose paws move 0.10 m and 0.08 m
+sideways and 0.27 m and 0.26 m lengthways, with a travel of 1.60 m and a `Duration` of 1.00 s. While the loop time is
+inside its clamp the node moves the body travel / `Duration` = 1.60 m in a loop
+([warg ledger](lotrlome-warg-gait-changes.md), "Known limitations"), so the paws slip in a side step whatever
+the travel is: the pack has no side-step clip. The stride gate prints both records and gives no stride verdict.
+It holds their stance, and their slip with a limit of their own, by clip name (`side_slip`, 1.2 m): paws that
+go round a point move 1.10 m and 1.09 m against a straight line, and the `side` line prints that number. Roll back the backward walk: remove the two `walkbackfast` rows from
+`tools/dire_wolf_gait_plan.json` (or the plan's next `--apply` reverses the records again), copy each
+`.bak-repoint-20261124-173648` file over its record, then start the Kit once. The stride gate then fails on
+the direction, as it did before the change.
+
 Owed: one battle load with a dire wolf (no unattended step has a wolf rider), and, each by a person's eye, a
-wolf at a walk, a trot and a charge. The first thing to judge is the canter's
+wolf at a walk, a trot and a charge, and a wolf that backs up (#1591). The first thing to judge is the canter's
 tempo. If the long, slower bounds read as too slow, the alternative is the trot's master on the canter's rows
 (a 3.94 m stride, 0.86 s to 0.49 s a loop): three rows of the plan.
 
@@ -171,7 +223,7 @@ tempo. If the long, slower bounds read as too slow, the alternative is the trot'
    ```
 4. In Windows PowerShell 5.1, run `powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/gen_dire_wolf_anim_clips.ps1 -Apply`.
    Then run `python tools/repoint_anim_clip.py --plan tools/dire_wolf_gait_plan.json --under creature/direwolf/animations --apply`
-   (the gaits, #1565).
+   (the gaits, #1565, and the backward walk, #1591).
 5. Open the Kit once, save and close it, so that it writes the clip entries.
 6. Run `python tools/check_rdc_entries.py --under creature/direwolf`.
 7. Run `python tools/apply_dire_wolf_armory.py --apply`. A second run reports nothing to write. Then, and not
@@ -179,7 +231,9 @@ tempo. If the long, slower bounds read as too slow, the alternative is the trot'
    this step makes, and it refuses before the cook of step 5. After a reinstall the warg's row waits for this
    step too, because the tool writes both rows or none.
 8. Run `python tools/verify_mount_assets.py dire_wolf` (the `dire-wolf-body` row of `tools/data_gates.py`), `python tools/audit_mount_parity.py`,
-   `python tools/validate_xml_schemas.py --live` and `python tools/build_ds_skeleton_pack.py --check`.
+   `python tools/validate_xml_schemas.py --live` and `python tools/build_ds_skeleton_pack.py --check`. Then run
+   the three gait checks of "Gaits": the plan's `--check`, `python tools/bind_warg_clips.py --check` and
+   `python tools/check_gait_stride.py --creature dire_wolf`.
 
 ## Removing the wolves
 

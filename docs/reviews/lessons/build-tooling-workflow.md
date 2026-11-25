@@ -5383,5 +5383,25 @@ listed gait that no set bound any more was only a note.
   for any other item. Three tests per list: the item fails in a second way; its listed numbers change; the
   item is gone or unbound.
 - **Source:** issue #1565 item 2; Codex pre-review P1 and P2 3, the Data flow lens trace 2;
-  [RCA](../rca-warg-stride-gate-2026-11-24.md) F1 and F3; `tools/tests/test_gait_stride_creatures.py`
-  (`KnownFailureTests`).
+  [RCA](../rca-warg-stride-gate-2026-11-24.md) F1 and F3. The list and its tests were removed with #1591,
+  when the standing strafe rows stopped being stride gaits; the rule stands for any list of this kind.
+
+### Taking a verdict out of a gate: list what the deleted tests held, and keep what the reason does not cover (#1591, 2026-11-24)
+#1591 found that the stride is the wrong measure for a clip on a mount's standing strafe rows, so the stride gate
+stopped judging such a clip. The author deleted the whole branch: the stride verdict, and with it the stance and
+slip checks that trunk made on the spider's, the elephant's and the warg's side clips. A side-step master whose
+foot never plants passed with exit 0. The same change wrote a direction rule for "the backward action" where the
+backward pace has two records, and a ground rule that took each foot's ground from that foot with nothing to
+hold the feet to one ground.
+- **Why missed:** the reason for the change covered one number, and the code that fell was a branch. The author
+  deleted `KnownFailureTests` and the `axis` test without a list of what they held, then ran 31 mutations, all
+  of lines that exist. A mutation run cannot show a check that is gone. The lesson of the review before (an
+  excused item is judged in every other way as any item is) was written about a list, and the author did not
+  apply it to the code that replaced the list.
+- **Prevent:** a change that takes a verdict out of a gate names, for each test it deletes, the test that still
+  holds what that test held, or the reason the check is dropped (`.claude/rules/data-scripts.md`). Run the old
+  tool and the new one on one broken input for each thing the old branch judged. A rule that names one row (an
+  action, a foot) says in its docstring what stands for the rest (the pace's other records, the other feet).
+- **Source:** issue #1591; [RCA](../rca-side-steps-wolf-stride-2026-11-24.md) F1, F3 and F5; the Tooling lens,
+  the Data flow lens and the Codex pre-review; `tools/tests/test_gait_stride_creatures.py` (`SideStepTests`,
+  `BackwardDirectionTests`, `GroundRuleTests`).

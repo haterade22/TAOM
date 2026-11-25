@@ -226,7 +226,9 @@ The third (since 2026-11-24, item 2 of #1565) measures the installed masters. Fo
 backward walk the paws must cover the record's travel within 5%, on the master the record names by GUID. It also
 holds the pace rows of `as_warg` (the limits, the standing pose, each bound clip's key range) and each gait's
 cache entry. It is the `warg-stride` row, which a change to an action set file, to a package under the warg's
-folder, to a cache entry or to the tool and its imports selects. Three things in it are the warg's own:
+folder, to a cache entry, to the plan or to the tool and its imports selects. The first two points below are
+the warg's (the dire wolf has limits of its own and the same cook rule); the last two hold for every creature
+of the gate since #1591:
 
 - **Limits.** A paw may slip 1.0 m in a stance and must be down for 15% of a loop. The pack's clips have 0.91 m
   (the gallop's left hind paw) and 3 of 16 keys (the trot's fore paws). The limits sit just above what the
@@ -240,11 +242,16 @@ folder, to a cache entry or to the tool and its imports selects. Three things in
   whose keys changed under one GUID (the plan check above still compares that date for the planned records),
   and it does not see a record edited by hand without a new checksum: the gate cannot recompute the checksum of
   a record the Kit wrote (30 of the 41 records of `as_warg`). An edited travel still fails the stride measure.
-- **Two listed records.** The side steps (below) fail the stride judgement, and the gate lists each with the
-  travel its record holds and the travel its paws cover. They are measured and printed on every run and not
-  counted. A listed record fails when its stride starts to equal its travel (until it leaves the list), when
-  either number changes, when a paw slips more than the limit or does not plant, and when its cache entry is not
-  current.
+- **The two side steps get no stride verdict** (#1591). A clip that only the standing strafe rows bind is not
+  a stride gait. The gate prints what the node does with it beside what the paws do: 2.13 m of body in a loop
+  (1.60 m of travel / 0.75 s), and paws that move 0.73 m and 1.00 m sideways. It still judges the paws'
+  stance and slip, against the ground they cover (a slip of 0.28 m and 0.32 m on 2026-11-24, under the
+  warg's limit). The record must carry a travel and a `Duration`; its master and its cache entry are held as
+  a gait's are. The gate does not hold the value of the travel. The first version of the gate listed the two
+  as known failures of the stride; that list is gone.
+- **The backward walk's direction.** The planted feet of each record of the backward pace must move against
+  the walk's: the clip on the backward action, and any other measured clip whose pace limits are negative
+  (the pace's strafe rows bind `warg_walkbackfast`). The warg's do (it has a backward master of its own).
 
 A gait whose animation two master files hold fails, because the gate cannot tell which one the game plays.
 
@@ -280,9 +287,16 @@ is the old state.
   the paws move 0.73 m and 1.00 m sideways in a loop (measured 2026-11-24). The stride is not the node's measure
   for these rows. At the standing pace it plays one loop in travel / (`Duration` x its sideways input) seconds,
   held between 0.7 and 1.3 times the `Duration`, and it takes the rate of a turn in place from the turn-right
-  row, which is the right side step's record (0x749C20 and 0x74E9C0 on v1.5.7, read 2026-11-24). The unit of
-  the node's sideways and turn inputs is not read, so no travel is set: the stride gate lists both records with
-  the numbers they hold today (#1591).
+  row, which is the right side step's record (0x749C20 and 0x74E9C0 on v1.5.7, read 2026-11-24). The sideways
+  input is the warg's speed across its own frame at model size (0x5F75B0). While the loop time is inside the
+  clamp (a sideways speed of 2.2 to 4.1 m/s) the body moves travel / `Duration` = 2.13 m in a loop, about
+  twice what the paws cover. Under that band a loop takes 0.98 s and the clip plays at a weight of sideways
+  speed x loop time / travel against the stand clip (0x74E9C0), so the paws make about 62% (right) and 46%
+  (left) of the body's ground. A travel of 1.00 m, the right record's stride, fits the paws under the band,
+  and 0.75 m (1.00 m x 0.75 s) fits them inside it. Either makes the turn in place cycle 1.6 to 2.1 times as
+  fast, because that rate is the turn input / (`Duration` x travel). Nobody has measured the sideways speed
+  of a real side step. The two records are not changed (#1591): nobody has reported either motion, and one
+  travel cannot fit both.
 - The strafe records of the four moving paces play their pace's forward keys, which do not move sideways, so
   the stride gate prints them as not measured. The node divides the sideways input by such a record's travel
   for the weight of the sideways blend (0x74E9C0): the value is read, and it is not a stride.

@@ -138,9 +138,15 @@ GAIT_TOOL_GLOBS = ("*tools/repoint_anim_clip.py", "*tools/set_clip_balance_name.
 WARG_GLOBS = ("*/creature/warg/animations/*.tpac", "*/lotrlome_armory/runtimedatacache/*.rdc",
               "*tools/warg_gait_plan.json") + GAIT_TOOL_GLOBS
 # What the warg's stride gate reads (#1565 item 2): the action set, every package under the warg's folder (records,
-# masters, the rig) and the cache entries of the gaits.
-WARG_STRIDE_GLOBS = CREATURE_GLOBS + STRIDE_TOOL_GLOBS + CACHE_GLOBS + ("*/creature/warg/*.tpac",)
-# The same for the dire wolf, whose gait records its own plan sets (#1565).
+# masters, the rig) and the cache entries of the gaits. The gate does not read the plan; the plan sets the records
+# the gate measures, and git does not see those, so a changed plan selects the gate as the records' writers do for
+# the elephant and the spider (#1591).
+WARG_STRIDE_GLOBS = CREATURE_GLOBS + STRIDE_TOOL_GLOBS + CACHE_GLOBS + (
+    "*/creature/warg/*.tpac", "*tools/warg_gait_plan.json")
+# The same for the dire wolf's stride gate (#1591).
+DIRE_WOLF_STRIDE_GLOBS = CREATURE_GLOBS + STRIDE_TOOL_GLOBS + CACHE_GLOBS + (
+    "*/creature/direwolf/*.tpac", "*tools/dire_wolf_gait_plan.json")
+# What the dire wolf's plan check reads: its gait records, which its own plan sets (#1565).
 DIRE_WOLF_GLOBS = ("*/creature/direwolf/animations/*.tpac", "*/lotrlome_armory/runtimedatacache/*.rdc",
                    "*tools/dire_wolf_gait_plan.json") + GAIT_TOOL_GLOBS
 FBX_GLOBS = ("*/assetsources/*.fbx",)
@@ -354,14 +360,23 @@ GATES = (
          ("docs/reference/lotrlome-warg-gait-changes.md",),
          note="the paws cover the ground each forward gait and the backward walk claims, on the master its record "
               "names; the pace rows of as_warg carry limits the engine plays well; a bound gait's cache entry carries "
-              "its record's checksum; the two side steps fail the stride judgement, are listed with the numbers "
-              "they hold (#1591) and are not counted, and the gate fails when one of those numbers changes"),
+              "its record's checksum; the backward walk's feet move against the walk's; the two side steps are "
+              "printed with what the node does with them, and their stance, slip, Duration, master and cook are "
+              "held (#1591)"),
     Gate("dire-wolf-gaits", "dire wolf clip records, their plan and its tool", DIRE_WOLF_GLOBS,
          ("python", "tools/repoint_anim_clip.py", "--plan", "tools/dire_wolf_gait_plan.json", "--under",
           "creature/direwolf/animations", "--check"), ("docs/reference/lotrlome-dire-wolf-changes.md",),
          note="a reinstall, or a run of gen_dire_wolf_anim_clips.ps1 on a folder without the records, puts each gait "
               "back on the pack's travel and Duration (26% to 57% less ground than the paws cover) and removes the "
               "walk's in-place twin; exit 1 also while a changed record waits for its cook"),
+    Gate("dire-wolf-stride", "dire wolf action set, clip records, masters, rig and the stride gate",
+         DIRE_WOLF_STRIDE_GLOBS, ("python", "tools/check_gait_stride.py", "--creature", "dire_wolf"),
+         ("docs/reference/lotrlome-dire-wolf-changes.md",),
+         note="the paws cover the ground each forward gait and the backward walk claims, each paw's height taken "
+              "from its own lowest point; the backward walk plays the walk's keys from last to first, so its feet "
+              "move against the walk's (a reinstall puts them back on the forward keys); a bound gait's cache "
+              "entry carries its record's checksum; the two side clips, the pack's turn clips, are printed, and "
+              "their stance, slip (a limit of their own), Duration, master and cook are held"),
     Gate("dire-wolf-body", "dire wolf action sets, usage rows, clip packages and the mount asset check",
          CREATURE_GLOBS + ("*/creature/direwolf/*.tpac", "*tools/verify_mount_assets.py"),
          ("python", "tools/verify_mount_assets.py", "dire_wolf"), ("docs/features/dire-wolf.md",),
