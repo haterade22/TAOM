@@ -5477,6 +5477,24 @@ class ArmourAcquisitionRefTests(unittest.TestCase):
     def test_a_routing_culture_nothing_defines_is_an_error(self):
         self._one(self._run(MARKET=self.ROUTING % ("riv_chest", "lindon,mirkwod")), "'mirkwod'")
 
+    def test_a_routing_row_with_no_id_is_an_error(self):
+        self._one(self._run(MARKET='<CultureMarketplaceConfig><Routing><Item cultures="lindon" />'
+                                   '</Routing></CultureMarketplaceConfig>'), "has no id; the game skips it")
+
+    def test_a_routing_row_naming_no_cultures_is_an_error(self):
+        for cultures in (None, "", " , "):
+            attr = "" if cultures is None else f' cultures="{cultures}"'
+            self._one(self._run(MARKET='<CultureMarketplaceConfig><Routing><Item id="riv_chest"%s />'
+                                       '</Routing></CultureMarketplaceConfig>' % attr),
+                      "names no cultures; the game skips it")
+
+    def test_a_routing_item_id_with_spaces_is_an_error(self):
+        self._one(self._run(MARKET=self.ROUTING % (" riv_chest ", "lindon")),
+                  "id has spaces; the game does not trim it")
+
+    def test_a_routing_culture_list_with_a_trailing_comma_is_still_clean(self):
+        self.assertEqual(self._run(MARKET=self.ROUTING % ("riv_chest", "lindon,")), [])
+
     def test_a_stock_match_that_does_not_compile_is_an_error(self):
         self._one(self._run(MARKET='<CultureMarketplaceConfig><Culture id="lindon">'
                                    '<Stock match="[unclosed" /></Culture></CultureMarketplaceConfig>'), "does not compile")
