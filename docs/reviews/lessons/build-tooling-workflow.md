@@ -5388,5 +5388,52 @@ listed gait that no set bound any more was only a note.
   for any other item. Three tests per list: the item fails in a second way; its listed numbers change; the
   item is gone or unbound.
 - **Source:** issue #1565 item 2; Codex pre-review P1 and P2 3, the Data flow lens trace 2;
-  [RCA](../rca-warg-stride-gate-2026-11-24.md) F1 and F3; `tools/tests/test_gait_stride_creatures.py`
-  (`KnownFailureTests`).
+  [RCA](../rca-warg-stride-gate-2026-11-24.md) F1 and F3. The list and its tests were removed with #1591,
+  when the standing strafe rows stopped being stride gaits; the rule stands for any list of this kind.
+
+### Taking a verdict out of a gate: list what the deleted tests held, and keep what the reason does not cover (#1591, 2026-11-24)
+#1591 found that the stride is the wrong measure for a clip on a mount's standing strafe rows, so the stride gate
+stopped judging such a clip. The author deleted the whole branch: the stride verdict, and with it the stance and
+slip checks that trunk made on the spider's, the elephant's and the warg's side clips. A side-step master whose
+foot never plants passed with exit 0. The same change wrote a direction rule for "the backward action" where the
+backward pace has two records, and a ground rule that took each foot's ground from that foot with nothing to
+hold the feet to one ground.
+- **Why missed:** the reason for the change covered one number, and the code that fell was a branch. The author
+  deleted `KnownFailureTests` and the `axis` test without a list of what they held, then ran 31 mutations, all
+  of lines that exist. A mutation run cannot show a check that is gone. The lesson of the review before (an
+  excused item is judged in every other way as any item is) was written about a list, and the author did not
+  apply it to the code that replaced the list.
+- **Prevent:** a change that takes a verdict out of a gate names, for each test it deletes, the test that still
+  holds what that test held, or the reason the check is dropped (`.claude/rules/data-scripts.md`). Run the old
+  tool and the new one on one broken input for each thing the old branch judged. A rule that names one row (an
+  action, a foot) says in its docstring what stands for the rest (the pace's other records, the other feet).
+- **Source:** issue #1591; [RCA](../rca-side-steps-wolf-stride-2026-11-24.md) F1, F3 and F5; the Tooling lens,
+  the Data flow lens and the Codex pre-review; `tools/tests/test_gait_stride_creatures.py` (`SideStepTests`,
+  `BackwardDirectionTests`, `GroundRuleTests`).
+
+### A value from a hand-typed JSON plan is held to its JSON type before `float()` sees it (#1566, 2026-11-24)
+`tools/repoint_anim_clip.py` took a plan row's numbers with `float(v)`. `float(True)` is 1.0 and `float("820")` is
+820.0, so `"source1": true` planned frame 1 and a quoted number passed for a number. A NaN went past the frame 0
+rule, because `min(nan, x) < 1` is false. A value over the record's 32-bit range raised out of `struct.pack` as a
+traceback, where the tool's contract is a refusal with a reason.
+- **Why missed:** the checks were written for wrong numbers (negative, out of order), and `float()` was the type
+  check. The first fix of this change covered the NaN and left the other three, and its one test of the command
+  line broke both sources in one row, so it passed without the new line.
+- **Prevent:** a number from JSON is an `int` or a `float` and not a `bool`, and it fits the field it is written
+  to; the tool refuses anything else by the row's name. A test of such a rule breaks one value in a row and keeps
+  the rest sound.
+- **Source:** issue #1566; Codex pre-review P2 and P3, the Tooling lens;
+  `tools/tests/test_repoint_anim_clip.py` (`LowFindingTests`).
+
+### A time limit in a test is a budget for one input: it does not show how the cost grows (#1566, 2026-11-24)
+`test_heredoc_regex_is_linear_in_a_long_delimiter` failed once at 5.68 s against a limit of 5 s, on a wall clock,
+while the C# suite ran beside it. The measure that followed showed more: the call the limit sat on,
+`git_call_dirs` in `.claude/hooks/_shellwords.py`, takes about 0.1 s of CPU for 750 lines with `<<`, 0.4 s for
+1,500 and 1.5 s for 3,000. It grows with the square of their number, under a test named "is linear".
+- **Why missed:** one input under one threshold passes for any growth rate that fits under the threshold. The
+  name said what the author meant to hold, not what the assertion holds.
+- **Prevent:** a timing test reads `time.process_time()`, so another job's load is not in it, and its name says
+  that it is a budget. A claim about growth needs two sizes and their ratio.
+- **Source:** issue #1566 (the comment of 2026-11-24 has the numbers); the Tooling lens and the Codex pre-review;
+  `tools/tests/test_shellwords.py`. The hook is not changed: the Bash tool's 7,500 character cap keeps a real
+  command near the smallest of those sizes.

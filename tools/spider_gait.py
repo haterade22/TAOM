@@ -420,7 +420,8 @@ def build_clip(rig, name, spec):
     stride = float(spec.get("stride", 0.0))
     twin = spec.get("twin_of")
     limits = limits_of(name) if spec["kind"] == "line" else None     # a twin's record has no usage, so no limits
-    if spec["kind"] == "turn":       # see docs/features/spider.md: the unit of the engine's turn rate is not read yet
+    if spec["kind"] == "turn":       # the engine's turn rate is in radians a second, so in one loop the body turns
+                                     # Duration x this value: the clip's own angle (docs/features/elephant.md)
         loop = round(math.radians(spec["degrees"]) / spec["seconds"], 3)
     else:
         loop = stride
