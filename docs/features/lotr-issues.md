@@ -351,8 +351,9 @@ template share one runtime type: 27 Combat → `typeof(CombatLotrIssue)`, 53 Del
 - **Accept gate — FIXED (Codex review, 2026-06-20).** `IssueBase.CheckPreconditions` blocks accepting a second active
   quest of the same `GetType()` unless `IssueQuestCanBeDuplicated` is overridden — by default
   (`IssueQuestCanBeDuplicated => false`) the player could hold at most ONE active quest per template across all its
-  configs. All three templates now override `protected override bool IssueQuestCanBeDuplicated => true`, so configs of a
-  template run concurrently.
+  configs. Combat, DeliverGoods, DeliverPersonnel and HuntBand override `protected override bool IssueQuestCanBeDuplicated => true`,
+  so configs of a template run concurrently. TrainRetainers keeps `false` on purpose: the gate is per type, so the player
+  holds one retainer loan at a time, across all cultures.
 - **Spawn throttle — accepted.** The over-representation score + per-settlement zero-out + cooldown in
   `IssuesCampaignBehavior` still key on type, so the world hosts fewer simultaneous LOTR issues than vanilla's 43
   distinct types would, and rare Combat variants surface infrequently. A true per-config type bucket is impossible
@@ -363,7 +364,9 @@ template share one runtime type: 27 Combat → `typeof(CombatLotrIssue)`, 53 Del
 
 Two rows used to share the Combat counter although their text promised more: "Blooding the Retainers"
 (`lotr_landlord_training`) promised lent troops, and "Swindled and Sore" (`lotr_inn_and_out`) promised swindlers to
-break. Both now have their own template. Each has its own saved fields and its own cleanup, which would be dead weight
+break. Each now has a template of its own, but both rows in `taom_lotr_issues.xml` still name `template="Combat"` until
+a later data patch moves them. Fix #1605 first: until then, TrainRetainers can send home the player's own troops. Each
+template has its own saved fields and its own cleanup, which would be dead weight
 on the other 25 Combat rows, and TrainRetainers must not allow duplicate quests while Combat must.
 
 | Template | What the player gets | Ends when |
@@ -460,7 +463,7 @@ Ring](war-of-the-ring.md) feature. Register saveables in the same `726900801` se
 
 ## Changelog
 
-- 2026-11-25: added the TrainRetainers and HuntBand templates (save ids 107 to 110); `lotr_landlord_training` and `lotr_inn_and_out` moved off Combat onto them.
+- 2026-11-25: PR #1603 (Luiz): added the TrainRetainers and HuntBand templates (save ids 107 to 110). The rows of `lotr_landlord_training` and `lotr_inn_and_out` move onto them in a later data patch, after #1605.
 - 2026-06-20 — Implemented: `Main/Features/LotrIssues/` suppresses all 43 vanilla issue behaviors (`LotrIssueSuppression.SuppressAll` → guarded `RemoveBehaviors<T>`, host `IssuesCampaignBehavior` kept) and replaces them via 3 generic templates (DeliverGoods/DeliverPersonnel/Combat) driven by `taom_lotr_issues.xml`; saves at base `726900801` (localIds 101–106), 308 localization keys.
 - 2026-06-16 — Authored the conversion plan doc: 43-issue disposition matrix (41 Replace / 1 Reskin / 0 Drop), custom-issue framework, `RemoveBehaviors<T>` suppression strategy, localization, verification, and risks.
 
