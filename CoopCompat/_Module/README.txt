@@ -24,6 +24,10 @@ Without it, TAOM still runs in co-op, but you do not get these features:
 3. Elite Emissary and town armoury. A guest can buy elite troops and use a
    town armoury. The host's game does the purchase for you.
 4. Fief elections. Every player sees the same candidates and can vote.
+5. Careers. Your career choices go to the host's game, which keeps them
+   in its save. The other players see your career.
+6. Lord's materials. When your side wins a battle, you can find lord's
+   materials for the lord's gear ladder, as in a single-player game.
 
 In a single-player game this module does nothing.
 
@@ -35,6 +39,8 @@ Every player needs all of these:
 
 - Mount & Blade II: Bannerlord, game version v1.5.7.
 - The TAOM download. Every player must use the SAME TAOM version.
+- The TAOM.CoopCompat download (TAOM.CoopCompat.zip) for that TAOM
+  version. This download is for TAOM v2.0.42.
 - Bannerlord Co-op v0.1.8, from the Coop team's GitHub page (Part 2).
   Every player must use the SAME Coop version.
 
@@ -131,13 +137,14 @@ PART 3: INSTALL TAOM AND TAOM.CoopCompat
      Bannerlord.MBOptionScreen
    The four "Bannerlord." folders are small helper modules that come
    with TAOM. Keep them.
-2. Copy the "TAOM.CoopCompat" folder into your Modules folder, next to the
-   "TAOM" folder.
+2. Extract the download "TAOM.CoopCompat.zip". It holds one folder,
+   "TAOM.CoopCompat". Copy that folder into your Modules folder, next to
+   the "TAOM" folder.
 3. Check the folder. You must see this file:
 
      Modules\TAOM.CoopCompat\SubModule.xml
 
-Use the TAOM.CoopCompat folder that came with YOUR TAOM version. A
+Use the TAOM.CoopCompat download for YOUR TAOM version. A
 TAOM.CoopCompat from a different TAOM version does not match.
 
 
@@ -338,7 +345,8 @@ Bannerlord v1.5.7, the old build makes Coop refuse your join.
 
 If that happens:
 1. Delete the folder Modules\TAOM.CoopCompat.
-2. Copy TAOM.CoopCompat again from your TAOM download (Part 3).
+2. Copy TAOM.CoopCompat again from the TAOM.CoopCompat.zip download
+   (Part 3).
 
 
 DEDICATED SERVER
