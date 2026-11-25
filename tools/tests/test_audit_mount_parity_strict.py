@@ -206,7 +206,7 @@ class MissingInstallTests(unittest.TestCase):
 class SectionGGateTests(unittest.TestCase):
     """data_gates.py reads only the exit code, so a gap section G prints must count under --strict."""
 
-    SECTIONS = ("section_a", "section_bc", "section_d", "section_e", "section_f")
+    SECTIONS = ("section_a", "section_bc", "section_d", "section_e", "section_f", "section_h")
 
     def run_main(self, args, ram_gaps=None, ram_path="missing"):
         with tempfile.TemporaryDirectory() as td, contextlib.ExitStack() as stack:
