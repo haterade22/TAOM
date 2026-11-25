@@ -16,7 +16,8 @@ namespace TAOM.Features.LotrIssues;
 ///
 /// One (Issue, Quest) pair per template. Wave 0 ships T1 (DeliverGoods) at 101/102. Each later wave
 /// appends its pair at the next free localId (103/104, …) — additive, never renumbered, so older saves
-/// keep loading.
+/// keep loading. Combat took 105/106; TrainRetainers and HuntBand took 107 to 110
+/// (global ids 726900908 to 726900911). Never renumber 101 to 106.
 /// </remarks>
 public sealed class LotrIssueSaveableTypeDefiner : SaveableTypeDefiner
 {
@@ -35,5 +36,9 @@ public sealed class LotrIssueSaveableTypeDefiner : SaveableTypeDefiner
         // Combat — defeat-raids / capture-lords (Wave 2)
         AddClassDefinition(typeof(CombatLotrIssue), 105);
         AddClassDefinition(typeof(CombatLotrIssueQuest), 106);
+        AddClassDefinition(typeof(TrainRetainersLotrIssue), 107);
+        AddClassDefinition(typeof(TrainRetainersLotrIssueQuest), 108);
+        AddClassDefinition(typeof(HuntBandLotrIssue), 109);
+        AddClassDefinition(typeof(HuntBandLotrIssueQuest), 110);
     }
 }

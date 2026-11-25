@@ -351,13 +351,62 @@ template share one runtime type: 27 Combat → `typeof(CombatLotrIssue)`, 53 Del
 - **Accept gate — FIXED (Codex review, 2026-06-20).** `IssueBase.CheckPreconditions` blocks accepting a second active
   quest of the same `GetType()` unless `IssueQuestCanBeDuplicated` is overridden — by default
   (`IssueQuestCanBeDuplicated => false`) the player could hold at most ONE active quest per template across all its
-  configs. All three templates now override `protected override bool IssueQuestCanBeDuplicated => true`, so configs of a
-  template run concurrently.
+  configs. Combat, DeliverGoods, DeliverPersonnel and HuntBand override `protected override bool IssueQuestCanBeDuplicated => true`,
+  so configs of a template run concurrently. TrainRetainers keeps `false` on purpose: the gate is per type, so the player
+  holds one retainer loan at a time, across all cultures.
 - **Spawn throttle — accepted.** The over-representation score + per-settlement zero-out + cooldown in
   `IssuesCampaignBehavior` still key on type, so the world hosts fewer simultaneous LOTR issues than vanilla's 43
   distinct types would, and rare Combat variants surface infrequently. A true per-config type bucket is impossible
   under the generic-template design without code generation; the deferred mitigation is to split the high-volume
   templates into a few `def.Id`-keyed subclasses if in-game observation shows the rate is too low.
+
+## The two quest templates: TrainRetainers and HuntBand
+
+Two rows used to share the Combat counter although their text promised more: "Blooding the Retainers"
+(`lotr_landlord_training`) promised lent troops, and "Swindled and Sore" (`lotr_inn_and_out`) promised swindlers to
+break. Each now has a template of its own, but both rows in `taom_lotr_issues.xml` still name `template="Combat"` until
+a later data patch moves them. Fix #1605 first: until then, TrainRetainers can send home the player's own troops. Each
+template has its own saved fields and its own cleanup, which would be dead weight
+on the other 25 Combat rows, and TrainRetainers must not allow duplicate quests while Combat must.
+
+| Template | What the player gets | Ends when |
+|---|---|---|
+| **TrainRetainers** | The giver lends `troops` (+ `troops_per_difficulty`) of his culture's basic troop; they join the main party on accept. | The player wins `count` battles with a lent troop still alive: the highest-tier troops of the line go home, gold and renown are paid, and the relation moves by how many came back (+5 all, +3 more than half, +1 half or fewer, as vanilla). All dead: fail, -5. Timeout: troops called home, -5. Cancel: troops called home. |
+| **HuntBand** | A named bandit party (`band_name_key`, `troops` + `troops_per_difficulty` men) spawns near the village and carries the quest marker. | The player's party, or the army the player fights in, destroys it (battle, surrender or "serve under my command"): reward and +5. Someone else destroys it: cancel, no penalty. Timeout, fail or cancel remove the party. |
+
+The band's clan is the non-creature bandit clan whose culture has the hideout nearest the village
+(`LotrQuestBandRules.PickClan`); spider and troll clans never play swindlers. The party is built the way vanilla builds a
+quest bandit party and is filled from the clan's party template, or with its basic troop when the template cannot be
+scaled. A lost fight changes nothing: the band stays and the timer runs.
+
+TrainRetainers lends the culture's basic troop, not vanilla's `borrowed_troop`, which is a Dunland human and wrong for an
+orc, dwarf or elf giver. The giver refuses a loan the alignment desertion rule would cancel (`IDesertionRecruitGuard`),
+and a full party refuses the accept (`PartySizeLimit`).
+
+**Known limit, who beat the band.** The engine names the leader of the winning side as the band's destroyer. A player who
+helps an ally's battle against the band outside an army is not that leader, so the quest cancels as "someone else got
+there". No producer is known: the band is ignored by other parties and has aggressiveness 0. A HuntBand row's `count`
+is unused (one band per quest); it stays only because every row needs a count above 0.
+
+A lent troop's alignment is checked when the player accepts (refused as not in the same faction), not while the offer
+stands, so an offer is not withdrawn because the player changed kingdom.
+
+**Known limit, survivor count.** The roster cannot tell a lent troop from the player's own troop of the same line.
+`TrackSurvivors` only ever falls, so the player cannot raise the count, but the player's own troops can hide a lent
+troop's death, and the troops sent home are the highest tier of the line, which may be the player's own. Vanilla avoids
+this only through its unique `borrowed_troop`. A per-culture retainer troop would remove the limit at the cost of about
+thirty new character entries.
+
+**Co-op.** Writes to the main party roster and the band spawn run only when `ICoopSessionProvider.ShouldDeferToHost` is
+false, and both issues refuse the accept on a peer that defers. Replication of an accepted quest to guests is unverified.
+
+**Old saves.** A quest accepted under the old Combat logic keeps counting won battles (it saved its `_variant`). An
+untaken Combat offer for these two ids is dropped at the next daily tick (`StillUses`) and a fresh offer of the new
+template can spawn later. A save made with this change does not load in an older build (new type ids 726900908 to
+726900911).
+
+Save ids: `TrainRetainersLotrIssue` 107, its quest 108, `HuntBandLotrIssue` 109, its quest 110. In-game outcome ids:
+`lotr_issues.retainers_lent`, `lotr_issues.retainers_returned`, `lotr_issues.band_spawned`, `lotr_issues.band_defeated`.
 
 ## Appendix — Future LOTR Main Quest (out of this effort)
 
@@ -390,7 +439,8 @@ Ring](war-of-the-ring.md) feature. Register saveables in the same `726900801` se
 |------|---------|
 | `Main/Features/LotrIssues/LotrIssuesCampaignBehavior.cs` | thin behavior: one `OnCheckForIssueEvent` listener → `AddPotentialIssueData` with def-carrying `RelatedObject` |
 | `Main/Features/LotrIssues/ILotrIssueService.cs` / `LotrIssueService.cs` | pure: eligibility, count/reward math, reward application |
-| `Main/Features/LotrIssues/Templates/{DeliverGoods,DeliverPersonnel,Combat}LotrIssue.cs` | the 3 generic mechanic `IssueBase` + paired `QuestBase` classes |
+| `Main/Features/LotrIssues/Templates/{DeliverGoods,DeliverPersonnel,Combat,TrainRetainers,HuntBand}LotrIssue.cs` | the 5 generic mechanic `IssueBase` + paired `QuestBase` classes |
+| `Main/Features/LotrIssues/LotrRetainerLoanRules.cs` / `LotrQuestBandRules.cs` | pure rules of the two quest templates: survivor tracking, grading, return plan; clan pick, who counts as the killer |
 | `Main/Features/LotrIssues/LotrIssueTemplateRules.cs` | rules the 3 templates share: the frequency map (the behavior's too) and the relation floor for taking a quest (-10 with no definition); static, so no class enters the IssueBase hierarchy (save ids) |
 | `Main/Features/LotrIssues/LotrIssueConfigProvider.cs` | validating XML loader (skips-invalid-and-warns, `FiniteFloatValidator`) |
 | `Main/Features/LotrIssues/LotrIssueSuppression.cs` | `RemoveBehaviors<T>` of all 43 vanilla issue behaviors + suppression-list test |
@@ -413,6 +463,7 @@ Ring](war-of-the-ring.md) feature. Register saveables in the same `726900801` se
 
 ## Changelog
 
+- 2026-11-25: PR #1603: added the TrainRetainers and HuntBand templates (save ids 107 to 110). The rows of `lotr_landlord_training` and `lotr_inn_and_out` move onto them in a later data patch, after #1605.
 - 2026-06-20 — Implemented: `Main/Features/LotrIssues/` suppresses all 43 vanilla issue behaviors (`LotrIssueSuppression.SuppressAll` → guarded `RemoveBehaviors<T>`, host `IssuesCampaignBehavior` kept) and replaces them via 3 generic templates (DeliverGoods/DeliverPersonnel/Combat) driven by `taom_lotr_issues.xml`; saves at base `726900801` (localIds 101–106), 308 localization keys.
 - 2026-06-16 — Authored the conversion plan doc: 43-issue disposition matrix (41 Replace / 1 Reskin / 0 Drop), custom-issue framework, `RemoveBehaviors<T>` suppression strategy, localization, verification, and risks.
 

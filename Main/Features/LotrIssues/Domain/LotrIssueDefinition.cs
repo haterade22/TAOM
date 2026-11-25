@@ -87,6 +87,15 @@ public sealed class LotrIssueDefinition
 
     public LotrIssueText Text { get; }
 
+    /// <summary>Base troops a TrainRetainers issue lends, or a HuntBand issue's band size; 0 for other templates.</summary>
+    public int Troops { get; }
+
+    /// <summary>Additional troops scaled by issue difficulty (0..1); added to <see cref="Troops"/>.</summary>
+    public float TroopsPerDifficulty { get; }
+
+    /// <summary>Localized name key of a HuntBand party; empty keeps the code fallback name.</summary>
+    public string BandNameKey { get; }
+
     public LotrIssueDefinition(
         string id,
         LotrIssueTemplate template,
@@ -105,8 +114,14 @@ public sealed class LotrIssueDefinition
         int relationMin,
         LotrIssueText text,
         int rewardItemCount = 1,
-        bool forPlayerCulture = false)
+        bool forPlayerCulture = false,
+        int troops = 0,
+        float troopsPerDifficulty = 0f,
+        string bandNameKey = "")
     {
+        Troops = troops;
+        TroopsPerDifficulty = troopsPerDifficulty;
+        BandNameKey = bandNameKey ?? "";
         Id = id;
         Template = template;
         GiverOccupation = giverOccupation;

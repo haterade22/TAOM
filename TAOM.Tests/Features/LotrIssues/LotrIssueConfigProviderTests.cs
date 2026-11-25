@@ -259,8 +259,10 @@ public class LotrIssueConfigProviderTests
             Assert.IsTrue(
                 d.Template == LotrIssueTemplate.DeliverGoods
                 || d.Template == LotrIssueTemplate.DeliverPersonnel
-                || d.Template == LotrIssueTemplate.Combat,
-                $"{d.Id}: only DeliverGoods/DeliverPersonnel/Combat are implemented so far");
+                || d.Template == LotrIssueTemplate.Combat
+                || d.Template == LotrIssueTemplate.TrainRetainers
+                || d.Template == LotrIssueTemplate.HuntBand,
+                $"{d.Id}: only DeliverGoods/DeliverPersonnel/Combat/TrainRetainers/HuntBand are implemented so far");
             if (d.Template == LotrIssueTemplate.DeliverGoods)
                 Assert.IsTrue(d.ItemSource.StartsWith("item:", StringComparison.OrdinalIgnoreCase), $"{d.Id}: DeliverGoods must be item:-sourced");
             Assert.IsFalse(string.IsNullOrEmpty(d.Text.TitleKey), $"{d.Id}: missing title key");
@@ -268,4 +270,45 @@ public class LotrIssueConfigProviderTests
             Assert.IsTrue(d.Count > 0, $"{d.Id}: count must be > 0");
         }
     }
+
+    private const string TroopRowAttrs = "giver_occupation='RuralNotable' count='2' title_key='t' description_key='d'";
+
+    [TestMethod]
+    public void TrainRetainers_WithoutTroops_IsSkipped()
+        => Assert.AreEqual(0, Parse($"<LotrIssues><LotrIssue id='x' template='TrainRetainers' {TroopRowAttrs} /></LotrIssues>").Count);
+
+    [TestMethod]
+    public void HuntBand_WithoutTroops_IsSkipped()
+        => Assert.AreEqual(0, Parse($"<LotrIssues><LotrIssue id='x' template='HuntBand' {TroopRowAttrs} troops='0' /></LotrIssues>").Count);
+
+    [TestMethod]
+    public void Troops_NonFinitePerDifficulty_RevertsToZero()
+    {
+        var list = Parse($"<LotrIssues><LotrIssue id='x' template='HuntBand' {TroopRowAttrs} troops='10' troops_per_difficulty='NaN' /></LotrIssues>");
+        Assert.AreEqual(1, list.Count);
+        Assert.AreEqual(0f, list[0].TroopsPerDifficulty);
+    }
+
+    [TestMethod]
+    public void TrainRetainers_ParsesTroopsAndBandNameKey()
+    {
+        var list = Parse($"<LotrIssues><LotrIssue id='x' template='TrainRetainers' {TroopRowAttrs} troops='4' troops_per_difficulty='8' band_name_key='{{=k}}Swindlers' /></LotrIssues>");
+        Assert.AreEqual(1, list.Count);
+        Assert.AreEqual(LotrIssueTemplate.TrainRetainers, list[0].Template);
+        Assert.AreEqual(4, list[0].Troops);
+        Assert.AreEqual(8f, list[0].TroopsPerDifficulty);
+        Assert.AreEqual("{=k}Swindlers", list[0].BandNameKey);
+    }
+
+    [TestMethod]
+    public void HuntBand_WithoutBandNameKey_IsKept()
+    {
+        var list = Parse($"<LotrIssues><LotrIssue id='x' template='HuntBand' {TroopRowAttrs} troops='10' /></LotrIssues>");
+        Assert.AreEqual(1, list.Count);
+        Assert.AreEqual("", list[0].BandNameKey);
+    }
+
+    [TestMethod]
+    public void Troops_OnAnotherTemplate_IsNotRequired()
+        => Assert.AreEqual(1, Parse($"<LotrIssues><LotrIssue id='x' template='Combat' {TroopRowAttrs} /></LotrIssues>").Count);
 }
