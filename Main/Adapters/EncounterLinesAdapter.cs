@@ -63,7 +63,25 @@ public sealed class EncounterLinesAdapter : IEncounterLinesAdapter
             FactionSides.OfHero(hero),
             faction != null && playerFaction != null && FactionManager.IsAtWarAgainstFaction(faction, playerFaction),
             faction != null && faction.IsKingdomFaction && faction == playerFaction && playerFaction.Leader == main,
-            hero.StringId ?? string.Empty);
+            hero.StringId ?? string.Empty,
+            faction is Kingdom kingdom && kingdom.Leader == hero ? kingdom.StringId ?? string.Empty : string.Empty);
+    }
+
+    public LordFacts? ConversationLord() =>
+        Campaign.Current == null ? null : DescribeLord(Hero.OneToOneConversationHero?.CharacterObject);
+
+    public bool TrySetMercenaryPitch(string variable, string textId, string variation)
+    {
+        var models = Campaign.Current?.Models;
+        var kingdom = models == null ? null : Hero.OneToOneConversationHero?.Clan?.Kingdom;
+        if (kingdom == null || models?.MinorFactionsModel == null || Clan.PlayerClan == null)
+            return false;
+        if (!GameTexts.TryGetText(textId, out var text, variation))
+            return false;
+
+        text.SetTextVariable("MERCENARY_AWARD", models.MinorFactionsModel.GetMercenaryAwardFactorToJoinKingdom(Clan.PlayerClan, kingdom));
+        MBTextManager.SetTextVariable(variable, text);
+        return true;
     }
 
     public PlayerFacts? Player()

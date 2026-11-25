@@ -408,15 +408,22 @@ class CommandWordTests(unittest.TestCase):
         self.assertIn("git reset --hard", self.lines("cat <<'EOF' > f.txt\ndon't\nEOF\ngit reset --hard", blind=True))
 
     def test_heredoc_regex_is_linear_in_a_long_delimiter(self):
+        # The clock is this process's CPU time. A wall clock failed this test at 5.68 s on 2026-11-24, while the C#
+        # suite ran beside it; alone the last call takes about 2.5 s (#1566).
         import time
         cmd = "git reset --hard && python -c '" + "".join("x = 1 << %s = 2\n" % ("a" * 200) for _ in range(64)) + "y = 2\n" * 30000 + "'"
         for blind in (False, True):
-            start = time.perf_counter()
+            start = time.process_time()
             sw.commands(cmd, "Bash", blind)
-            self.assertLess(time.perf_counter() - start, 2.0)
-        start = time.perf_counter()
+            self.assertLess(time.process_time() - start, 2.0)
+
+    def test_git_call_dirs_on_3000_heredoc_openers_stays_under_its_cpu_budget(self):
+        # A budget, not a proof of linear cost: the call takes about 0.1 s of CPU for 750 such lines, 0.4 s for
+        # 1,500 and 1.5 s for 3,000, so it grows with the square of their number (measured 2026-11-24, #1566).
+        import time
+        start = time.process_time()
         sw.git_call_dirs("git commit -m x && python -c '" + "x = 1 << abcdefghijklmnopqrstuvwxyz\n" * 3000 + "'", "Bash", "E:/w")
-        self.assertLess(time.perf_counter() - start, 5.0)
+        self.assertLess(time.process_time() - start, 5.0)
 
     def test_v3_cd_behind_a_wrapper_runs_in_a_child_process(self):
         self.assertEqual(self.dirs("timeout 5 cd /e/repos/TAOM; git commit -m x"), ["E:/w"])

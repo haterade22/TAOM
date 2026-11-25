@@ -129,27 +129,35 @@ def _sized(name: str | bytes) -> bytes:
 
 def _read_item(data: bytes, pos: int, version: int) -> tuple[Item, int]:
     start = pos
+
+    def size(fmt: str, what: str) -> int:
+        # A negative count walks no loop and a negative length moves the cursor back, so the item would parse.
+        n = struct.unpack_from(fmt, data, pos)[0]
+        if n < 0:
+            raise CloneError(f"item at offset {start}: {what} is {n}")
+        return n
+
     type_guid = data[pos:pos + 16]
     item_guid = data[pos + 16:pos + 32]
     pos += 32
     if version > 1:
         pos += 4
-    name_len = struct.unpack_from("<i", data, pos)[0]
+    name_len = size("<i", "name length")
     pos += 4
     name = data[pos:pos + name_len].decode("utf-8", "replace")
     pos += name_len
-    meta_len = struct.unpack_from("<q", data, pos)[0]
+    meta_len = size("<q", "metadata length")
     pos += 8 + meta_len
     checksum = data[pos:pos + 8]
     pos += 8
-    seg_count = struct.unpack_from("<i", data, pos)[0]
+    seg_count = size("<i", "segment count")
     pos += 4
     segments = []
     for _ in range(seg_count):
         offset, actual, storage = struct.unpack_from("<QQQ", data, pos)
         segments.append(Segment(pos - start, offset, actual, storage, data[pos + 24:pos + 40], data[pos + 40:pos + 44]))
         pos += SEG_ENTRY_SIZE
-    userdata = struct.unpack_from("<i", data, pos)[0]
+    userdata = size("<i", "dependency count")
     pos += 4 + userdata * USERDATA_ENTRY_SIZE
     return Item(bytearray(data[start:pos]), name, type_guid, item_guid, checksum, segments), pos
 

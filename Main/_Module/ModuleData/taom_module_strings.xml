@@ -7105,6 +7105,8 @@
 	<!-- CareerSystem -->
 	<string id="taom_career_unknown_reset" text="{=taom_career_unknown_reset}Your career no longer exists in this version, so a new one was chosen." />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- FactionPower -->
+	<string id="taom_fp_realm_power" text="{=taom_fp_realm_power}Realm power" />
 	<!-- LotrIssues -->
 	<string id="taom_lotr_issue_band_task" text="{=taom_lotr_issue_band_task}Hunt down the band ({COUNT})" />
 	<string id="taom_lotr_issue_band_lost" text="{=taom_lotr_issue_band_lost}Someone else got to the band first. The agreement is void." />

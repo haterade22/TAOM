@@ -382,6 +382,13 @@ GATES = (
          ("python", "tools/verify_mount_assets.py", "dire_wolf"), ("docs/features/dire-wolf.md",),
          note="every clip on a moving row carries its quad_movement tag and no row names a clip that is not there; "
               "a new in-place twin needs its exact (action, clip) pair in the tool's untagged_ok list (#1565)"),
+    Gate("chariot-body", "war chariot action sets, usage rows, the rig package and the mount asset check",
+         CREATURE_GLOBS + ("*/action_sets.xslt", "*/creature/chariot/*.tpac", "*tools/verify_mount_assets.py"),
+         ("python", "tools/verify_mount_assets.py", "chariot"), ("docs/features/chariot.md",),
+         note="the action set's skeleton and the Monster's rein skeleton are in a live package, every clip on a "
+              "moving row carries a quad_movement usage record (read per clip: the rig is one package), and no row "
+              "of the chariot's sets or of a rider's names a clip that is not there; a reinstall removes the rig, "
+              "and no repo tool puts it back"),
     Gate("warg-clips", "action sets and the warg's bind tool", ("*/action_sets.xml", "*tools/bind_warg_clips.py"),
          ("python", "tools/bind_warg_clips.py", "--check"), ("docs/reference/lotrlome-warg-gait-changes.md",),
          note="a reinstall puts the walk's \"none\" row of as_warg and of as_dire_wolf back on the walk's front "

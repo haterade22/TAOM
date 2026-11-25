@@ -266,6 +266,18 @@ class SelectionTests(unittest.TestCase):
         gate = next(g for g in dg.GATES if g.id == "dire-wolf-body")
         self.assertEqual(gate.cmd, ("python", "tools/verify_mount_assets.py", "dire_wolf"))
 
+    def test_the_chariots_rows_and_rig_package_select_its_mount_asset_gate(self):
+        """The rig is one package of many clips: a clip that loses its tag there, or a row that names a clip the
+        package no longer holds, was seen by no gate (the tool ran by hand only)."""
+        armory = "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/"
+        for path in (armory + "ModuleData/action_sets.xml", armory + "ModuleData/monster_usage_sets.xml",
+                     armory + "ModuleData/action_sets.xslt", armory + "ModuleData/Monsters/LOTR/lotr_monster_chariot.xml",
+                     armory + "Assets/creature/chariot/chariot_rig_geo.tpac", "tools/verify_mount_assets.py"):
+            self.assertIn("chariot-body", _ids(dg.select(dg.GATES, [path])), path)
+        self.assertNotIn("chariot-body", _ids(dg.select(dg.GATES, [TROOPS])))
+        gate = next(g for g in dg.GATES if g.id == "chariot-body")
+        self.assertEqual(gate.cmd, ("python", "tools/verify_mount_assets.py", "chariot"))
+
     def test_an_action_set_file_and_the_bind_tool_select_the_wargs_binding_gate(self):
         """A reinstall puts the walk's "none" row back on the front record, and the plan check does not read XML."""
         armory = "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/"

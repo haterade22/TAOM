@@ -812,6 +812,14 @@ its purest form: the port is documented, the source is not identifiable, and no 
 terms. `docs/features/chariot.md:15` records that "rights to the art confirmed by the maintainer",
 which covers the assets but says nothing about the code or who granted it.
 
+**2026-11-23, a second source.** The chariot's rig was replaced that day with one taken from another download,
+which `docs/features/chariot.md` calls "the upstream chariot pack" ("The rig since 2026-11-23"). The maintainer
+said that day that its rights are cleared and that the pack and its author stay unnamed in tracked text. What comes
+from it: the rig package in the unversioned Armory, the two skeletons `horse_skeleton_chariot` and
+`horse_chariot_rein` inside the shipped `Main/_Module/DsAssetPackages/taom_creature_skeletons.tpac`, and the reason
+`tools/tpac_slim_package.py` exists. `tools/check_provenance.py` scans binaries under `_Module/bin` only, so it does
+not see that package. The row's status and its file list are unchanged: both are the maintainer's decision.
+
 This row is deliberately left with the euphemism as its token rather than a guessed name.
 **To resolve:** the maintainer names the mod, and the pre-de-naming text is recoverable from history
 (`git log -S chariot -- docs/` around 2026-06-12). Then the euphemisms in `docs/features/chariot.md`

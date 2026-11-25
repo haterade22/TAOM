@@ -19,7 +19,9 @@ from unittest import mock
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, TOOLS)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import audit_mount_parity as amp  # noqa: E402
+import test_verify_mount_assets as tv  # noqa: E402  (its package and metadata builders, in the engine's order)
 
 DIRECTIONS = ("front", "front_left", "front_right", "none", "left", "right", "back", "back_left", "back_right")
 
@@ -122,6 +124,74 @@ class WarRamGapsTests(unittest.TestCase):
                 self.assertIn("act_war_ram_butt", gaps[0])
 
 
+class GaitTagTests(unittest.TestCase):
+    """Section F4: a chariot clip on a base locomotion row needs quad_movement only where the vanilla horse's clip
+    on the same row has it. The horse's six in-place (_stand) rows bind clips with no tag."""
+
+    WALK = (("is_left_foot", "false"), ("pace", "2"), ("direction", "front"), ("turn_direction", "none"))
+    STAND = (("is_left_foot", "false"), ("pace", "2"), ("direction", "none"), ("turn_direction", "none"))
+    HORSE = {WALK: "act_horse_forward_walk", STAND: "act_horse_forward_walk_stand"}
+
+    def untagged(self, bound, inv):
+        rows = {self.WALK: "act_chariot_forward_walk", self.STAND: "act_chariot_forward_walk_stand"}
+        return amp.untagged_gait_clips(rows, bound, inv, self.HORSE)
+
+    def test_an_untagged_clip_on_an_in_place_row_is_what_the_vanilla_horse_has(self):
+        bound = {"act_chariot_forward_walk": "walk", "act_chariot_forward_walk_stand": "walk_stand"}
+        self.assertEqual(self.untagged(bound, {"walk": ["quad_movement"], "walk_stand": []}), [])
+
+    def test_an_untagged_clip_on_a_moving_row_is_reported(self):
+        bound = {"act_chariot_forward_walk": "walk", "act_chariot_forward_walk_stand": "walk_stand"}
+        self.assertEqual(self.untagged(bound, {"walk": [], "walk_stand": []}), ["walk"])
+
+    def test_one_untagged_clip_on_both_rows_is_reported(self):
+        bound = {"act_chariot_forward_walk": "walk", "act_chariot_forward_walk_stand": "walk"}
+        self.assertEqual(self.untagged(bound, {"walk": []}), ["walk"])
+
+    def test_a_clip_that_is_not_deployed_is_left_to_the_target_check(self):
+        bound = {"act_chariot_forward_walk": "gone", "act_chariot_forward_walk_stand": "walk_stand"}
+        self.assertEqual(self.untagged(bound, {"walk_stand": []}), [])
+
+    def test_the_exemption_follows_the_horses_row_and_not_the_mounts_action_name(self):
+        """A mount action named _stand that sits on a row that moves is a measured gait."""
+        rows = {self.WALK: "act_chariot_forward_walk_stand"}
+        bound = {"act_chariot_forward_walk_stand": "walk"}
+        self.assertEqual(amp.untagged_gait_clips(rows, bound, {"walk": []}, self.HORSE), ["walk"])
+
+    def test_the_inventory_reads_the_tag_from_each_clips_usage_list(self):
+        """A real package of two clips: one with the usage record, one with the text only in a source name."""
+        with tempfile.TemporaryDirectory() as tmp:
+            rig = os.path.join(tmp, "rig.tpac")
+            with open(rig, "wb") as fh:
+                fh.write(tv._tpac([(tv.vma.CLIP_GUID, "gait", tv._meta()),
+                                   (tv.vma.CLIP_GUID, "idle", tv._meta(False, source1=b"quad_movement"))]))
+            with mock.patch.dict(amp.CHARIOT, {"clips": rig}):
+                self.assertEqual(amp.chariot_clips(), {"gait": ["quad_movement"], "idle": []})
+
+    def test_a_map_clip_counts_as_a_chariot_clip_and_a_commented_row_does_not(self):
+        text = ('<action type="a" animation="chariot_rider_idle" /><action type="b" animation="map_chariot_rider_walk" />'
+                '<action type="c" animation="rider_horse_idle" /><!-- <action type="d" animation="chariot_rider_gone" /> -->')
+        self.assertEqual(amp.chariot_clip_names(text), {"chariot_rider_idle", "map_chariot_rider_walk"})
+
+    def test_the_rider_rows_are_read_from_the_stylesheet_and_from_the_action_sets(self):
+        """The human rider's rows are in the stylesheet, the dwarf rider's in action_sets.xml; a file that is
+        not there adds nothing."""
+        with tempfile.TemporaryDirectory() as tmp:
+            xslt, sets = os.path.join(tmp, "action_sets.xslt"), os.path.join(tmp, "action_sets.xml")
+            with open(xslt, "w", encoding="utf-8") as fh:
+                fh.write('<action type="a" animation="chariot_rider_idle" />')
+            with open(sets, "w", encoding="utf-8") as fh:
+                fh.write('<action type="b" animation="map_chariot_rider_walk" />')
+            self.assertEqual(amp.chariot_row_clips((xslt, sets, os.path.join(tmp, "absent.xml"))),
+                             {"chariot_rider_idle", "map_chariot_rider_walk"})
+            self.assertEqual(amp.chariot_row_clips((xslt,)), {"chariot_rider_idle"})
+
+    def test_a_named_clip_that_is_not_deployed_is_missing_and_a_map_clip_counts(self):
+        names = {"chariot_gait_walk", "map_chariot_rider_walk", "chariot_rider_idle", "rider_horse_idle", None}
+        inv = {"chariot_gait_walk": []}
+        self.assertEqual(amp.missing_chariot_clips(names, inv), ["chariot_rider_idle", "map_chariot_rider_walk"])
+
+
 class MissingInstallTests(unittest.TestCase):
     def test_a_missing_armory_exits_two_not_one(self):
         """Exit 1 is what --strict returns for a gap; a missing install is bad input."""
@@ -136,7 +206,7 @@ class MissingInstallTests(unittest.TestCase):
 class SectionGGateTests(unittest.TestCase):
     """data_gates.py reads only the exit code, so a gap section G prints must count under --strict."""
 
-    SECTIONS = ("section_a", "section_bc", "section_d", "section_e", "section_f")
+    SECTIONS = ("section_a", "section_bc", "section_d", "section_e", "section_f", "section_h")
 
     def run_main(self, args, ram_gaps=None, ram_path="missing"):
         with tempfile.TemporaryDirectory() as td, contextlib.ExitStack() as stack:

@@ -13,6 +13,8 @@ Compares, at the XML level, every surface a mountable creature exposes to the en
      deliberately do not cover it.
   G. war ram vs the vanilla horse -- a horse-skeleton reskin that inherits the horse's usage set;
      checks the inheritance and the three action sets that chain over the horse's.
+  H. reins -- every rideable mount in MOUNTS must declare rein_* attributes or inherit them through
+     base_monster, as vanilla's rideable monsters do (#479).
 
 Read-only. Prints diffs only (parity rows are counted, not listed). The report always ends
 "AUDIT COMPLETE" and exits 0; --strict adds a verdict on top of it and exits 1 on a gap.
@@ -22,17 +24,18 @@ Usage: python tools/audit_mount_parity.py [--strict]
 be total over the keys the engine can query: all ten verbs, nine jump directions x (start, loop and
 end by is_hard) = 45 rows, and a direction="none" turn_direction="none" reference row at every pace
 0..5. A missing key crashes the game (creature-mount-authoring.md Phase 5). The warg and the
-vanilla horse ship only front and none jumps and are not in the list.
+vanilla horse ship only front and none jumps and are not in the list. --strict also fails on a rideable
+mount with no rein attributes (section H), except the mounts in KNOWN_REIN_GAPS, which are printed as
+KNOWN; a known mount that gains reins fails until it is removed from that list.
 """
 import argparse
-import glob
 import sys
 import os
 import re
 import xml.etree.ElementTree as ET
 from collections import OrderedDict
 
-from tpac_clipinfo import parse as parse_clip
+from verify_mount_assets import clip_metas, quad_tagged
 from _gamedir import game_dir
 
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
@@ -83,6 +86,14 @@ FILES = {
 
 MOUNTS = ["spider", "warg", "elephant", "mumakil", "dire_wolf"]
 
+# Rideable mounts that declare no rein_* attribute and have no base_monster to inherit them from
+# (#479). Their values are unknown, so the data is left alone and the gap is printed, not failed.
+# A mount that gains reins must leave this list: --strict fails on a stale entry.
+KNOWN_REIN_GAPS = {
+    "elephant": "#479: taom_war_elephant declares no rein_* attributes",
+    "mumakil": "#479: taom_mumakil declares no rein_* attributes",
+}
+
 # The mounts --strict holds to a total usage set: the creatures a behaviour tree steers, which turn
 # mid-jump and so query every direction. Not the warg (front and none only, by its baseline) and
 # not the horse.
@@ -102,7 +113,8 @@ CHARIOT = {
     "monster": (LOTR + r"\Monsters\LOTR\lotr_monster_chariot.xml", "chariot"),
     "usage": (LOTR + r"\monster_usage_sets.xml", "chariot"),
     "action_set": (LOTR + r"\action_sets.xml", "as_chariot"),
-    "clips": LOTR.replace(r"\ModuleData", r"\Assets\creature\chariot\animations"),
+    # One package holds the skeleton, meshes and every clip (the old rig had one _anm.tpac per clip).
+    "clips": LOTR.replace(r"\ModuleData", r"\Assets\creature\chariot\chariot_rig_geo.tpac"),
 }
 HORSE = {
     "monster": (NATIVE + r"\monsters.xml", "horse"),
@@ -401,14 +413,64 @@ def elem_by_id(path, tag, want):
     return None
 
 
+# The vanilla horse binds clips with NO quad_movement on six of its seven in-place rows (direction none, turn none;
+# the seventh, act_horse_stand_for_movement_data, binds a tagged clip), so the engine runs without the tag there.
+# Measured 2026-11-24 from the Native packages: of the horse's 29 base locomotion clips these six carry none (gait_walk_backward, gait_walkfast, horse_gait_trot_2, gait_canterfast,
+# horse_forward_gallop_right_foot_stand, horse_forward_gallop_left_foot_stand); the other 23 carry it. A chariot
+# clip on one of these rows is judged by the same measure. A row that moves still needs the tag.
+VANILLA_UNTAGGED_MOVEMENT_ACTIONS = frozenset({
+    "act_horse_backward_walk_stand", "act_horse_forward_walk_stand", "act_horse_forward_trot_stand",
+    "act_horse_forward_canter_stand", "act_horse_forward_gallop_right_foot_stand",
+    "act_horse_forward_gallop_left_foot_stand",
+})
+
+
+def untagged_gait_clips(rows, bound, inv, horse_rows):
+    """The deployed clips bound on a base locomotion row that lack quad_movement where the vanilla horse's clip
+    on the same row has it. rows and horse_rows map a row key to its action; bound maps an action to its clip;
+    inv maps a deployed clip to its flags. A clip that is not deployed is the target check's finding, not this one's."""
+    out = set()
+    for key, action in rows.items():
+        clip = bound.get(action)
+        if clip in inv and "quad_movement" not in inv[clip] \
+                and horse_rows.get(key) not in VANILLA_UNTAGGED_MOVEMENT_ACTIONS:
+            out.add(clip)
+    return sorted(out)
+
+
 def chariot_clips():
-    """Deployed clip inventory: internal resource name -> flag list. Filename != resource name."""
+    """Deployed clip inventory: internal resource name -> ["quad_movement"] when the clip's usage list holds that
+    record, else []. Filename != resource name."""
     inv = {}
-    for f in sorted(glob.glob(os.path.join(CHARIOT["clips"], "*_anm.tpac"))):
-        info = parse_clip(f)
-        if info.get("name"):
-            inv[info["name"]] = info.get("flags", [])
+    if not os.path.exists(CHARIOT["clips"]):
+        return inv
+    with open(CHARIOT["clips"], "rb") as fh:
+        for name, meta in clip_metas(fh.read()).items():
+            inv[name] = ["quad_movement"] if quad_tagged(meta) else []
     return inv
+
+
+def chariot_clip_names(rows_text):
+    """Every chariot clip that a text of action rows names, the mount's and the rider's, mission and map
+    (`chariot*`, `map_chariot*`). A row inside a comment is not a row."""
+    return set(re.findall(r'animation="((?:map_)?chariot[^"]*)"', re.sub(r'<!--.*?-->', '', rows_text, flags=re.S)))
+
+
+def chariot_row_clips(paths):
+    """The chariot clips named in the files of `paths` that exist. The rider STANDS in the cart, so his clips are
+    not bound in as_chariot: action_sets.xslt adds the human rider's rows to as_human_warrior, and the dwarf
+    rider's rows are in action_sets.xml."""
+    names = set()
+    for path in paths:
+        if os.path.exists(path):
+            with open(path, encoding="utf-8", errors="replace") as fh:
+                names |= chariot_clip_names(fh.read())
+    return names
+
+
+def missing_chariot_clips(names, inv):
+    """The chariot clips among `names` that the deployed inventory does not hold, sorted."""
+    return sorted({a for a in names if a and a.startswith(("chariot", "map_chariot")) and a not in inv})
 
 
 def section_f(types):
@@ -493,30 +555,30 @@ def section_f(types):
     for r in unbound:
         print(f"      usage action NOT bound in as_chariot: {r} (type={types.get(r, '<UNDECLARED>')})")
 
-    # The rider STANDS in the cart, so its clips are injected into as_human_warrior by
-    # action_sets.xslt rather than bound in as_chariot -- count them as referenced.
     xslt = CHARIOT["action_set"][0].replace("action_sets.xml", "action_sets.xslt")
-    rider_refs = set()
-    if os.path.exists(xslt):
-        with open(xslt, encoding="utf-8", errors="replace") as fh:
-            rider_refs = {m for m in re.findall(r'animation="(chariot[^"]*)"', fh.read())}
+    rider_refs = chariot_row_clips((xslt, CHARIOT["action_set"][0]))
 
-    dangling = sorted({a for a in set(bound.values()) | rider_refs
-                       if a and a.startswith("chariot") and a not in inv})
+    dangling = missing_chariot_clips(set(bound.values()) | rider_refs, inv)
     for a in dangling:
         print(f"      ANIMATION TARGET DOES NOT EXIST: {a}   <-- degenerate record, AVs on use")
 
     # ONLY the base locomotion table. Upper-body overlays (the *_head look clips) and non-gait
-    # clips must NOT carry quad_movement -- tagging them is itself a defect. Measured-gait clips
-    # that lack it build a NULL native gait structure and AV on the first Skeleton.TickAnimations.
-    gait_refs = set(rows_of(cs, "monster_usage_movements/monster_usage_movement").values())
-    untagged = sorted({bound[r] for r in gait_refs
-                       if r in bound and bound[r] in inv and "quad_movement" not in inv[bound[r]]})
+    # clips must NOT carry quad_movement -- tagging them is itself a defect. A clip on a row that
+    # moves and lacks it builds a NULL native gait structure and AVs on the first Skeleton.TickAnimations.
+    # The in-place rows are judged as the vanilla horse's are (VANILLA_UNTAGGED_MOVEMENT_ACTIONS).
+    gait_rows = rows_of(cs, "monster_usage_movements/monster_usage_movement")
+    horse_rows = rows_of(hs, "monster_usage_movements/monster_usage_movement")
+    untagged = untagged_gait_clips(gait_rows, bound, inv, horse_rows)
     for a in untagged:
         print(f"      GAIT CLIP MISSING quad_movement: {a}   <-- Skeleton.TickAnimations AV")
+    in_place = sorted({bound[a] for k, a in gait_rows.items()
+                       if a in bound and bound[a] in inv and "quad_movement" not in inv[bound[a]]} - set(untagged))
+    if in_place:
+        print(f"      {len(in_place)} in-place clip(s) carry no quad_movement, as the vanilla horse's do on the same "
+              f"rows: {', '.join(in_place)}")
 
     if not (unbound or dangling or untagged):
-        print("      every usage action bound, every target resolves, every gait clip tagged")
+        print("      every usage action bound, every target resolves, every clip on a row that moves is tagged")
 
     orphans = sorted(set(inv) - {a for a in bound.values() if a} - rider_refs)
     if orphans:
@@ -573,10 +635,63 @@ def section_g(types):
     return gaps
 
 
+# ---------- H. reins on rideable mounts ----------
+def rein_gap(monster):
+    """Why a rideable mount has no reins, or None. A Monster with a base_monster inherits its base's."""
+    if monster is None:
+        return "Monster not found"
+    if monster.get("base_monster"):
+        return None
+    flags = monster.find("Flags")
+    if flags is None or flags.get("Mountable") != "true":
+        return None
+    if any(k.startswith("rein_") for k in monster.attrib):
+        return None
+    return "rideable but declares no rein_* attribute and has no base_monster to inherit them from"
+
+
+def rein_findings(monsters, known):
+    """Split the mounts into (new gaps, known gaps, stale known entries), each a list of printable lines.
+
+    `monsters` maps a mount name to its Monster element (or None); `known` maps a name to its note."""
+    new, known_hits, stale = [], [], []
+    for name, el in monsters.items():
+        if el is None:
+            new.append(f"{name}: Monster not found")
+            continue
+        gap = rein_gap(el)
+        if gap and name in known:
+            known_hits.append(f"{name}: {known[name]}")
+        elif gap:
+            new.append(f"{name}: {gap}")
+        elif name in known:
+            stale.append(f"{name} now has reins; remove it from KNOWN_REIN_GAPS")
+    return new, known_hits, stale
+
+
+def section_h():
+    """Prints section H and returns the gaps --strict counts: data_gates.py reads only the exit code."""
+    print("=" * 72)
+    print("H. REINS on rideable mounts (rein_* attributes, or inherited through base_monster)")
+    monsters = {}
+    for name in MOUNTS:
+        path = FILES["monster"][name]
+        monsters[name] = elem_by_id(path, "Monster", MONSTER_IDS[name]) if os.path.isfile(path) else None
+    new, known_hits, stale = rein_findings(monsters, KNOWN_REIN_GAPS)
+    for line in known_hits:
+        print(f"      KNOWN {line}")
+    for line in new + stale:
+        print(f"      {line}   <-- REVIEW")
+    if not (new or stale or known_hits):
+        print("      every rideable mount declares or inherits rein attributes")
+    return new + stale
+
+
 def main():
     ap = argparse.ArgumentParser(description="Mount parity audit (report-only unless --strict).")
     ap.add_argument("--strict", action="store_true",
-                    help="exit 1 when a mount in STRICT_MOUNTS has a gap in its usage tables, or the war ram (section G) has a gap")
+                    help="exit 1 when a mount in STRICT_MOUNTS has a gap in its usage tables, the war ram (section G) has a gap, "
+                         "or a rideable mount has no reins (section H, minus KNOWN_REIN_GAPS)")
     args = ap.parse_args()
     if not os.path.isdir(LOTR):
         print(f"no LOTRLOME_Armory ModuleData at {LOTR}; set BANNERLORD_GAME_DIR to the Bannerlord install",
@@ -590,7 +705,8 @@ def main():
     section_e()
     section_f(types)
     ram_gaps_found = section_g(types)
-    failed = (section_strict() + len(ram_gaps_found)) if args.strict else 0
+    rein_gaps_found = section_h()
+    failed = (section_strict() + len(ram_gaps_found) + len(rein_gaps_found)) if args.strict else 0
     print("=" * 72)
     print("AUDIT COMPLETE")
     return 1 if failed else 0

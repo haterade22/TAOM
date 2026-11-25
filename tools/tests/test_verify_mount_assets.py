@@ -33,8 +33,28 @@ def _tpac(items):
     return header + body
 
 
+def _text(raw=b""):
+    return struct.pack("<i", len(raw)) + raw
+
+
+QUAD = (b"quad_movement", struct.pack("<3f", 1.5, 0.0, 9.0))          # travel and the two pace limits
+DISPLACEMENT = (b"displacement", struct.pack("<5f", 0.0, 1.0, 0.0, 1.0, 1.0))
+
+
+def _meta(tagged=True, source1=b"", usages=None, flags=1):
+    """One clip's metadata in the engine's order (version 6). `usages` is a list of (name, payload) records;
+    by default one quad_movement record, or none when `tagged` is False. `flags` is the flag count written
+    (one real flag string follows when it is 1)."""
+    if usages is None:
+        usages = [QUAD] if tagged else []
+    records = b"".join(_text(name) + struct.pack("<i", 0) + payload for name, payload in usages)
+    return (struct.pack("<I", 6) + bytes(28 + 16 + 16) + _text() * 5 + bytes(8) + _text() + bytes(13) + _text()
+            + _text(source1) + _text() + bytes(7) + struct.pack("<i", flags)
+            + (_text(b"make_walk_sound") if flags == 1 else b"") + struct.pack("<i", len(usages)) + records)
+
+
 def _clip(name, tagged=True):
-    return _tpac([(vma.CLIP_GUID, name, b"quad_movement" if tagged else b"plain")])
+    return _tpac([(vma.CLIP_GUID, name, _meta(tagged))])
 
 
 USAGE = ('<monster_usage_sets><monster_usage_set id="x"><monster_usage_movements>'
@@ -118,6 +138,130 @@ class GateTests(unittest.TestCase):
         code, out = self._run()
         self.assertEqual(code, 1, out)
         self.assertIn("act_x_trot -> x_trot", out)
+
+    def _one_package(self, trot_tagged):
+        """The whole rig in one package, as the war chariot's is: the skeleton and every clip."""
+        for stem in ("x_geo", "x_trot_anm", "x_trot_strafe_anm", "x_trot_stand_anm"):
+            os.remove(os.path.join(self.assets, stem + ".tpac"))
+        self._package("x_rig_geo", _tpac([
+            (vma.SKELETON_GUID, "x_skel", b""),
+            (vma.CLIP_GUID, "x_trot", _meta(trot_tagged)),
+            (vma.CLIP_GUID, "x_trot_strafe", _meta()),
+            (vma.CLIP_GUID, "x_trot_stand", _meta(False))]))
+
+    def test_a_lost_tag_is_not_hidden_by_a_tagged_clip_in_the_same_package(self):
+        self._one_package(trot_tagged=False)
+        code, out = self._run()
+        self.assertEqual(code, 1, out)
+        self.assertIn("act_x_trot -> x_trot", out)
+        self.assertNotIn("act_x_strafe -> x_trot_strafe", out)
+
+    def test_a_tagged_rig_in_one_package_passes(self):
+        self._one_package(trot_tagged=True)
+        code, out = self._run()
+        self.assertEqual(code, 0, out)
+        self.assertIn("all 2 measured-gait clips", out)
+        self.assertIn("1 exempt", out)
+
+    def test_the_tag_is_read_from_the_usage_list_not_from_any_text_of_the_clip(self):
+        """A clip that only names quad_movement in another field (here its first source) has no gait data."""
+        self._package("x_trot_anm", _tpac([(vma.CLIP_GUID, "x_trot", _meta(False, source1=b"quad_movement"))]))
+        code, out = self._run()
+        self.assertEqual(code, 1, out)
+        self.assertIn("act_x_trot -> x_trot", out)
+
+    def test_metadata_that_does_not_parse_counts_as_untagged(self):
+        self.assertTrue(vma.quad_tagged(_meta()))
+        self.assertFalse(vma.quad_tagged(_meta(False)))
+        self.assertFalse(vma.quad_tagged(_meta()[:-20]))          # cut inside the record's name
+        self.assertFalse(vma.quad_tagged(_meta()[:-4]))           # the name is whole, the payload is cut
+        self.assertFalse(vma.quad_tagged(_meta() + b"\x00"))      # a byte the records do not account for
+        self.assertFalse(vma.quad_tagged(b"quad_movement"))
+        self.assertFalse(vma.quad_tagged(b""))
+        old = struct.pack("<I", 4) + _meta()[4:]                   # a layout before version 5 is not read
+        self.assertFalse(vma.quad_tagged(old))
+        self.assertFalse(vma.quad_tagged(_meta(flags=-1)))         # a count below zero walks no flag
+        self.assertFalse(vma.quad_tagged(_meta(usages=[(b"new_kind", b"")])))     # a record it cannot size
+
+    def test_the_tag_is_a_record_of_the_usage_list_and_not_a_text_inside_one(self):
+        """The records are walked by their own sizes: the text inside another record's numbers is not a record,
+        and a quad_movement record counts wherever it stands in the list."""
+        hidden = (b"displacement", (_text(b"quad_movement") + bytes(20))[:20])
+        self.assertFalse(vma.quad_tagged(_meta(usages=[hidden])))
+        self.assertFalse(vma.quad_tagged(_meta(source1=b"quad_movement", usages=[DISPLACEMENT])))
+        self.assertTrue(vma.quad_tagged(_meta(usages=[DISPLACEMENT, QUAD])))
+        self.assertTrue(vma.quad_tagged(_meta(usages=[QUAD, DISPLACEMENT])))
+        # Each record kind the engine saves, with the size the animation system map gives it, before the tag: a
+        # wrong size in the tool misreads the next record. A size one byte off is refused.
+        for name, size in ((b"displacement", 20), (b"bip_mov_ik", 28), (b"blend", 8), (b"mount_change", 8),
+                           (b"hand_switch", 12)):
+            self.assertTrue(vma.quad_tagged(_meta(usages=[(name, bytes(size)), QUAD])), name)
+            self.assertFalse(vma.quad_tagged(_meta(usages=[(name, bytes(size + 1)), QUAD])), name)
+        self.assertEqual(sorted(vma.USAGE_PAYLOAD), sorted([b"displacement", b"quad_movement", b"bip_mov_ik", b"blend",
+                                                            b"mount_change", b"hand_switch"]))
+        nonzero = _meta()                                           # the int32 after the record's name is 0
+        at = nonzero.index(b"quad_movement") + 13
+        self.assertEqual(nonzero[at:at + 4], bytes(4))
+        self.assertFalse(vma.quad_tagged(nonzero[:at] + struct.pack("<i", 1) + nonzero[at + 4:]))
+
+    def test_a_missing_install_is_not_run_and_not_a_failure(self):
+        """Exit 2 with an ERROR line is what tools/data_gates.py reports as NOT RUN."""
+        out = io.StringIO()
+        with mock.patch.dict(vma.CREATURES, {"x": CONFIG}), redirect_stdout(out):
+            with self.assertRaises(SystemExit) as caught:
+                vma.main(["--game", os.path.join(self.tmp.name, "nowhere"), "x"])
+        self.assertEqual(caught.exception.code, 2)
+        self.assertRegex(out.getvalue(), r"(?m)^ERROR: .*action_sets\.xml")
+
+    def test_the_monsters_rein_skeleton_must_be_in_a_live_package(self):
+        self._write("monster.xml", '<Monsters><!-- rein_skeleton="x_old_rein" -->'
+                                   '<Monster id="x" rein_skeleton="x_rein" /></Monsters>')
+        config = dict(CONFIG, rein_monster_xml="monster.xml")
+        code, out = self._run(config)
+        self.assertEqual(code, 1, out)
+        self.assertIn("rein skeleton 'x_rein'", out)
+        self._package("x_rein_anm", _tpac([(vma.CLIP_GUID, "x_rein", _meta())]))       # the name on another item kind
+        self.assertEqual(self._run(config)[0], 1)
+        self._package("x_rein_geo", _tpac([(vma.SKELETON_GUID, "x_rein", b"")]))
+        code, out = self._run(config)
+        self.assertEqual(code, 0, out)
+        self.assertIn("rein skeleton 'x_rein'", out)
+
+    def test_a_missing_monster_file_or_stylesheet_fails_and_names_the_file(self):
+        """The install is there and a file of the rig is not: that is what a reinstall leaves, so it is a FAIL."""
+        code, out = self._run(dict(CONFIG, rein_monster_xml="monster.xml"))
+        self.assertEqual(code, 1, out)
+        self.assertRegex(out, r"FAIL.*monster\.xml")
+        code, out = self._run(dict(CONFIG, rider_clip_prefixes=("x_rider_",), rider_rows_xslt="action_sets.xslt"))
+        self.assertEqual(code, 1, out)
+        self.assertIn("the stylesheet action_sets.xslt is not there", out)
+
+    def test_a_master_of_the_same_name_does_not_stand_in_for_the_clips_metadata(self):
+        self._package("x_trot_anm", _tpac([(vma.CLIP_GUID, "x_trot", _meta(False)), (MASTER_TYPE, "x_trot", _meta())]))
+        code, out = self._run()
+        self.assertEqual(code, 1, out)
+        self.assertIn("act_x_trot -> x_trot", out)
+
+    def test_a_rider_row_that_names_a_clip_no_package_holds_fails(self):
+        """The rider's rows are in other sets and in the stylesheet, not in the mount's own sets."""
+        self._write("action_sets.xml", SETS.replace("</action_sets>", '<action_set id="as_dwarf" skeleton="human">'
+                                                    '<action type="act_x_rider_idle" animation="x_rider_idle" />'
+                                                    '<action type="act_walk" animation="walk_forward" />'
+                                                    '</action_set></action_sets>'))
+        self._write("action_sets.xslt", '<xsl:stylesheet><action type="act_map_x_rider" animation="map_x_rider" />'
+                                        '<!-- <action type="act_old" animation="x_rider_gone" /> --></xsl:stylesheet>')
+        config = dict(CONFIG, rider_clip_prefixes=("x_rider_", "map_x_"), rider_rows_xslt="action_sets.xslt")
+        code, out = self._run(config)
+        self.assertEqual(code, 1, out)
+        self.assertIn('animation="x_rider_idle"', out)
+        self.assertIn('animation="map_x_rider"', out)
+        self.assertNotIn("walk_forward", out)
+        self.assertNotIn("x_rider_gone", out)
+        self._package("x_rider_idle_anm", _clip("x_rider_idle", tagged=False))
+        self._package("map_x_rider_anm", _clip("map_x_rider", tagged=False))
+        code, out = self._run(config)
+        self.assertEqual(code, 0, out)
+        self.assertIn("2 rider clip", out)
 
     def test_a_deleted_clip_is_not_hidden_by_a_longer_clip_name(self):
         os.remove(os.path.join(self.assets, "x_trot_anm.tpac"))

@@ -7,8 +7,9 @@ namespace TAOM.Features.EncounterLines;
 internal sealed record BanditClan(FactionSide Side, string Family, string? HomeGroup);
 
 /// <summary>
-/// The validated contents of <c>encounter_lines/encounter_groups.json</c>: culture to speaker group, group to race family,
-/// race to family, and the bandit clans. Every lookup answers null for an id it does not hold.
+/// The validated contents of <c>encounter_lines/encounter_groups.json</c>: culture to speaker group, race to speaker group
+/// (the dark lords, found before their culture), group to race family, race to family, and the bandit clans. Every
+/// lookup answers null for an id it does not hold.
 /// </summary>
 internal sealed class EncounterGroupMap
 {
@@ -24,18 +25,21 @@ internal sealed class EncounterGroupMap
         new Dictionary<string, string>(),
         new Dictionary<string, string>(),
         new Dictionary<string, string>(),
-        new Dictionary<string, BanditClan>());
+        new Dictionary<string, BanditClan>(),
+        new Dictionary<string, string>());
 
     internal EncounterGroupMap(
         IReadOnlyDictionary<string, string> cultureGroups,
         IReadOnlyDictionary<string, string> groupFamilies,
         IReadOnlyDictionary<string, string> raceFamilies,
-        IReadOnlyDictionary<string, BanditClan> bandits)
+        IReadOnlyDictionary<string, BanditClan> bandits,
+        IReadOnlyDictionary<string, string>? raceGroups = null)
     {
         CultureGroups = cultureGroups;
         GroupFamilies = groupFamilies;
         RaceFamilies = raceFamilies;
         Bandits = bandits;
+        RaceGroups = raceGroups ?? new Dictionary<string, string>();
     }
 
     internal IReadOnlyDictionary<string, string> CultureGroups { get; }
@@ -46,7 +50,12 @@ internal sealed class EncounterGroupMap
 
     internal IReadOnlyDictionary<string, BanditClan> Bandits { get; }
 
+    internal IReadOnlyDictionary<string, string> RaceGroups { get; }
+
     internal string? GroupOfCulture(string? cultureId) => Find(CultureGroups, cultureId);
+
+    /// <summary>The speaker group of a lord: the group that lists the race, else the culture's group.</summary>
+    internal string? GroupOf(string? cultureId, string? race) => Find(RaceGroups, race) ?? GroupOfCulture(cultureId);
 
     internal string? FamilyOfGroup(string? group) => Find(GroupFamilies, group);
 

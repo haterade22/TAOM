@@ -5350,6 +5350,11 @@ backup too. A missing snapshot also read as a pass of the one file that was foun
 - **Source:** issue #1565; Codex pre-review P2 1 and 3; `tools/tests/test_bind_warg_clips.py`
   (`test_a_file_another_session_changed_after_the_read_is_not_overwritten`).
 
+### A check that reports a text absent from a package reads the compressed payloads too
+
+- **Why missed:** `--forbid` of `tools/tpac_slim_package.py` searched the bytes of the output file. LZ4 writes a repeated run as a back reference, so a text can be in a segment's payload and in no byte run of the file, and all 182 segments of the war chariot's rig package are compressed: 316 strings of that package (bone names among them) are readable only after unpacking. The option existed to prove that the source's names were gone from a package we ship, and it printed "absent" for data it had not read. Its test put the text in a Texture's metadata, which is never compressed.
+- **Prevent:** a check that says "absent" reads every place the text can be: the file's bytes and each unpacked segment (`forbidden_hits`), and its message names both. "Is this segment packed" is not read from its two sizes: the Kit packs a segment as LZ4 even when that saves nothing (139 such segments were in the Armory's creature folder on 2026-11-24; the storage format is the last byte of the segment's entry), so the first fix, which unpacked only where the sizes differ, still skipped data. The search now tries every segment and refuses one that is marked packed and does not unpack. The fixtures hold a compressed segment in which a back reference splits the text, and one whose packed and unpacked sizes are equal, and each first asserts that the text is not in the file's bytes (`test_forbid_reads_the_payload_of_a_compressed_segment`, `test_forbid_reads_a_packed_segment_whose_two_sizes_are_equal`). The live rig package was read again with the final search on 2026-11-24 (a dry run of the tool with six `--forbid` texts): no name of the pack, its author or its carts is in it. Its cache entry was searched as bytes only, with the same result. The same question for any search of a cooked package: is the thing I look for in the item table, or in a payload?
+- **Source:** [rca-chariot-rig-2026-11-24.md](../rca-chariot-rig-2026-11-24.md) F1.
 ### A cook check by file dates fails on a copied install: hold the entry to its record's checksum (#1565, 2026-11-24)
 `tools/check_gait_stride.py` called a cache entry stale when it was older than its record or its master. On the
 warg that named all seven clips with travel that no tool had rewritten, and 30 of the 41 clips of `as_warg` have an
@@ -5405,3 +5410,30 @@ hold the feet to one ground.
 - **Source:** issue #1591; [RCA](../rca-side-steps-wolf-stride-2026-11-24.md) F1, F3 and F5; the Tooling lens,
   the Data flow lens and the Codex pre-review; `tools/tests/test_gait_stride_creatures.py` (`SideStepTests`,
   `BackwardDirectionTests`, `GroundRuleTests`).
+
+### A value from a hand-typed JSON plan is held to its JSON type before `float()` sees it (#1566, 2026-11-24)
+`tools/repoint_anim_clip.py` took a plan row's numbers with `float(v)`. `float(True)` is 1.0 and `float("820")` is
+820.0, so `"source1": true` planned frame 1 and a quoted number passed for a number. A NaN went past the frame 0
+rule, because `min(nan, x) < 1` is false. A value over the record's 32-bit range raised out of `struct.pack` as a
+traceback, where the tool's contract is a refusal with a reason.
+- **Why missed:** the checks were written for wrong numbers (negative, out of order), and `float()` was the type
+  check. The first fix of this change covered the NaN and left the other three, and its one test of the command
+  line broke both sources in one row, so it passed without the new line.
+- **Prevent:** a number from JSON is an `int` or a `float` and not a `bool`, and it fits the field it is written
+  to; the tool refuses anything else by the row's name. A test of such a rule breaks one value in a row and keeps
+  the rest sound.
+- **Source:** issue #1566; Codex pre-review P2 and P3, the Tooling lens;
+  `tools/tests/test_repoint_anim_clip.py` (`LowFindingTests`).
+
+### A time limit in a test is a budget for one input: it does not show how the cost grows (#1566, 2026-11-24)
+`test_heredoc_regex_is_linear_in_a_long_delimiter` failed once at 5.68 s against a limit of 5 s, on a wall clock,
+while the C# suite ran beside it. The measure that followed showed more: the call the limit sat on,
+`git_call_dirs` in `.claude/hooks/_shellwords.py`, takes about 0.1 s of CPU for 750 lines with `<<`, 0.4 s for
+1,500 and 1.5 s for 3,000. It grows with the square of their number, under a test named "is linear".
+- **Why missed:** one input under one threshold passes for any growth rate that fits under the threshold. The
+  name said what the author meant to hold, not what the assertion holds.
+- **Prevent:** a timing test reads `time.process_time()`, so another job's load is not in it, and its name says
+  that it is a budget. A claim about growth needs two sizes and their ratio.
+- **Source:** issue #1566 (the comment of 2026-11-24 has the numbers); the Tooling lens and the Codex pre-review;
+  `tools/tests/test_shellwords.py`. The hook is not changed: the Bash tool's 7,500 character cap keeps a real
+  command near the smallest of those sizes.

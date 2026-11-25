@@ -142,6 +142,37 @@ public class AiPartySizeOrderingTests
     }
 
     [TestMethod]
+    public void PartySizeModel_AppliesFactionPowerAfterAiLordScaling_BeforeTheFlatBonusesAndTheEliteTax()
+    {
+        var src = ReadSource("Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs", stripComments: true);
+
+        int aiLord = src.IndexOf("_aiPartySize.ApplyAiLordScaling(", System.StringComparison.Ordinal);
+        int power = src.IndexOf("_factionPower.ApplyLordLimit(party, ref result)", System.StringComparison.Ordinal);
+        int flat = src.IndexOf("_careerPassives.ApplyFlat(", System.StringComparison.Ordinal);
+        int weightPenalty = src.IndexOf("_troopWeight.ApplyPartySizeWeightPenalty(", System.StringComparison.Ordinal);
+
+        Assert.AreNotEqual(-1, power, "TaomPartySizeModel must call _factionPower.ApplyLordLimit(party, ref result)");
+        Assert.IsTrue(aiLord < power,
+            "Faction power multiplies the number after Large AI armies has added its factor and flat bonus, so the slider scales the whole AI limit.");
+        Assert.IsTrue(power < flat,
+            "ApplyFlat divides out only the factors already on the number, so the power factor must be on it first.");
+        Assert.IsTrue(power < weightPenalty,
+            "The weight penalty snapshots (int)result.ResultNumber as the true base the daily shed trims to; a power factor applied after it silently does nothing above 100 percent.");
+    }
+
+    [TestMethod]
+    public void PartySizeModel_AppliesFactionPowerToGarrisonsAfterTheGarrisonScale()
+    {
+        var src = ReadSource("Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs", stripComments: true);
+
+        int garrison = src.IndexOf("_aiPartySize.ApplyGarrisonScaling(", System.StringComparison.Ordinal);
+        int power = src.IndexOf("_factionPower.ApplyGarrisonLimit(settlement, ref result)", System.StringComparison.Ordinal);
+
+        Assert.AreNotEqual(-1, power, "CalculateGarrisonPartySizeLimit must call _factionPower.ApplyGarrisonLimit(settlement, ref result)");
+        Assert.IsTrue(garrison < power);
+    }
+
+    [TestMethod]
     public void PartySizeModel_ScalesGarrisonsThroughTheGarrisonOverride()
     {
         var src = ReadPartySizeModel();
