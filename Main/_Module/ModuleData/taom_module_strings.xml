@@ -7104,5 +7104,8 @@
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- CareerSystem -->
 	<string id="taom_career_unknown_reset" text="{=taom_career_unknown_reset}Your career no longer exists in this version, so a new one was chosen." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- FactionPower -->
+	<string id="taom_fp_realm_power" text="{=taom_fp_realm_power}Realm power" />
 
 </strings>
