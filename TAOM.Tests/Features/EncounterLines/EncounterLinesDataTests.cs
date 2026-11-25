@@ -40,6 +40,45 @@ public class EncounterLinesDataTests
     private static readonly string[] BanditBuckets = { "kin", "side", "foe" };
     private static readonly string[] RobberyKinds = { "threat", "pay_agreement", "conclusion", "start_fight" };
 
+    /// <summary>
+    /// The liege beats and the text variables of the vanilla line each replaces, which its rows must carry exactly (a missing
+    /// one loses the player's name or the award; an extra one shows unresolved). Vanilla's gender switch is left out on purpose.
+    /// </summary>
+    internal static readonly Dictionary<string, string[]> LiegeBeats = new()
+    {
+        ["leave_ask"] = new[] { "PLAYER.NAME" },
+        ["leave_confirm"] = new string[0],
+        ["leave_granted"] = new[] { "PLAYER.NAME" },
+        ["leave_farewell"] = new[] { "PLAYER.NAME" },
+        ["merc_end"] = new string[0],
+        ["merc_end_final"] = new string[0],
+        ["join_how"] = new string[0],
+        ["vassal_low"] = new[] { "PLAYER.NAME" },
+        ["vassal_reject"] = new[] { "PLAYER.NAME" },
+        ["vassal_accept"] = new[] { "PLAYER.NAME" },
+        ["vassal_bond"] = new string[0],
+        ["vassal_welcome"] = new[] { "PLAYER.NAME" },
+        ["merc_pitch"] = new[] { "MERCENARY_AWARD", "GOLD_ICON" },
+        ["merc_accept"] = new[] { "KINGDOM_FORMAL_NAME" },
+        ["merc_decline"] = new string[0],
+    };
+
+    /// <summary>The beats a realm's ruler speaks in the realm's own words (<c>LiegeLines.RealmTexts</c>).</summary>
+    internal static readonly string[] RealmBeats = { "leave_ask", "leave_granted", "vassal_accept", "merc_accept" };
+
+    private static readonly Regex Variable = new(@"\{(?<name>[A-Z_.]+)\}");
+
+    /// <summary>Every kingdom id the shipped data defines: the vanilla kingdoms spkingdoms.xslt rewrites and the kingdoms of taom_spkingdoms.xml.</summary>
+    internal static List<string> RealmIds()
+    {
+        var vanilla = Regex.Matches(File.ReadAllText(ModuleData("spkingdoms.xslt")), @"match=""Kingdom\[@id='(?<id>[^']+)'\]""")
+            .Cast<Match>().Select(m => m.Groups["id"].Value);
+        var taom = XDocument.Load(ModuleData("taom_spkingdoms.xml")).Descendants("Kingdom").Select(k => (string)k.Attribute("id")!);
+        return vanilla.Concat(taom).Distinct().ToList();
+    }
+
+    private static bool IsLiege(Row row) => row.TextId.StartsWith("str_taom_liege_", StringComparison.Ordinal);
+
     /// <summary>A lord row's text id and the short name its key uses.</summary>
     private static readonly Dictionary<string, string> LordShort = new()
     {
@@ -131,15 +170,27 @@ public class EncounterLinesDataTests
                     Add("str_taom_enc_hideout_boss", $"{c}_{b}", "hideout_boss", $"{c}_{b}");
             }
         }
+        foreach (var beat in LiegeBeats.Keys)
+        {
+            foreach (var g in Groups.Concat(DarkGroups))
+                Add("str_taom_liege_" + beat, "group_" + g, "liege_" + beat, "group_" + g);
+            if (RealmBeats.Contains(beat))
+            {
+                foreach (var realm in RealmIds())
+                    Add("str_taom_liege_" + beat, "realm_" + realm, "liege_" + beat, "realm_" + realm);
+            }
+        }
         return ids;
     }
 
     [TestMethod]
-    public void TheSpecMatrix_Is738Ids_303ForLordsAnd435Keyed()
+    public void TheSpecMatrix_Is1038Ids_303ForLords_435KeyedEncounterRows_And300LiegeRows()
     {
         var ids = ExpectedIds();
 
-        Assert.AreEqual(738, ids.Count);
+        Assert.AreEqual(30, RealmIds().Count, "a kingdom was added or removed: give it its realm lines");
+        Assert.AreEqual(1038, ids.Count);
+        Assert.AreEqual(300, ids.Keys.Count(k => k.StartsWith("str_taom_liege_", StringComparison.Ordinal)));
         Assert.AreEqual(303, ids.Keys.Count(k => k.Contains(".taom_")));
         Assert.AreEqual(60, ids.Keys.Count(k => DarkGroups.Any(g => k.Contains(".taom_" + g + "_"))));
     }
@@ -154,9 +205,9 @@ public class EncounterLinesDataTests
         var extra = actual.Select(r => r.Id).Except(expected.Keys).ToList();
         Assert.AreEqual(0, missing.Count, "missing: " + string.Join(", ", missing.Take(20)));
         Assert.AreEqual(0, extra.Count, "extra: " + string.Join(", ", extra.Take(20)));
-        Assert.AreEqual(738, actual.Count, "an id appears twice");
+        Assert.AreEqual(1038, actual.Count, "an id appears twice");
         Assert.AreEqual(303, LordRows.Value.Count);
-        Assert.AreEqual(435, KeyedRows.Value.Count);
+        Assert.AreEqual(735, KeyedRows.Value.Count);
         foreach (var row in actual)
             Assert.AreEqual(expected[row.Id], row.Key, row.Id + " key");
     }
@@ -234,10 +285,35 @@ public class EncounterLinesDataTests
         var gendered = new Regex(@"\b(lads?|boys?|sir|sirs|brothers?|gentlemen|fellows?|sons?|he|him|his|himself|woman|women|lady|ladies|she|her|hers|herself|sisters?|girls?|lass|lasses|maids?|(?!human)[\w-]*(?:man|men))\b", RegexOptions.IgnoreCase);
         foreach (var row in AllRows)
         {
-            Assert.IsFalse(gendered.IsMatch(row.Body), row.Id + " names a gender: " + row.Body);
-            Assert.IsFalse(row.Body.IndexOfAny(new[] { '{', '}', '[', ']' }) >= 0, row.Id + " carries a placeholder or a tag: " + row.Body);
+            var body = IsLiege(row) ? Variable.Replace(row.Body, "") : row.Body;
+            Assert.IsFalse(gendered.IsMatch(body), row.Id + " names a gender: " + row.Body);
+            Assert.IsFalse(body.IndexOfAny(new[] { '{', '}', '[', ']' }) >= 0, row.Id + " carries a placeholder or a tag: " + row.Body);
             Assert.IsFalse(row.Body.Contains('—') || row.Body.Contains('–'), row.Id + " has an em or en dash");
         }
+    }
+
+    [TestMethod]
+    public void EveryLiegeRow_CarriesExactlyTheTextVariablesOfTheVanillaLineItReplaces()
+    {
+        var liege = KeyedRows.Value.Where(IsLiege).ToList();
+        Assert.AreEqual(300, liege.Count);
+        foreach (var row in liege)
+        {
+            var beat = row.TextId.Substring("str_taom_liege_".Length);
+            var found = Variable.Matches(row.Body).Cast<Match>().Select(m => m.Groups["name"].Value).Distinct().ToList();
+            CollectionAssert.AreEquivalent(LiegeBeats[beat], found, row.Id + ": " + row.Body);
+        }
+    }
+
+    [TestMethod]
+    public void TheLiegeBeats_AreTheTextsTheServiceAsksFor()
+    {
+        CollectionAssert.AreEquivalent(
+            LiegeBeats.Keys.Select(b => "str_taom_liege_" + b).ToList(),
+            TAOM.Features.EncounterLines.LiegeLines.TextOfSentence.Values.Distinct().ToList());
+        CollectionAssert.AreEquivalent(
+            RealmBeats.Select(b => "str_taom_liege_" + b).ToList(),
+            TAOM.Features.EncounterLines.LiegeLines.RealmTexts.ToList());
     }
 
     [TestMethod]

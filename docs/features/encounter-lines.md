@@ -2,7 +2,7 @@
 
 ## Overview
 
-Lords, caravans, villagers, bandits and hideout bosses met on the map speak in the voice of their people and by who the player is to them. A lord greets, threatens, yields, is released and takes leave in one of nine speaker groups (Men of the West, Rohirrim, Northmen, Dunlendings, Southrons, Easterlings, Elves, Dwarves, Orcs) and one of five buckets (liege, ally, rival, foe, kin). Sauron, Saruman and the Nazgul have a group each, found by race, which no row uses yet. The liege conversations (leaving a realm, joining it as a vassal, the mercenary contract) can take TAOM lines through the same text seam; see "Liege conversations". Caravans and villagers greet and surrender by group and bucket, ten bandit clans rob and greet the player by bucket, and the nine that hold hideouts (not looters) challenge the player from one. One MCM switch, default on. Text only: nothing else about the encounter changes, but TAOM lines are not voiced.
+Lords, caravans, villagers, bandits and hideout bosses met on the map speak in the voice of their people and by who the player is to them. A lord greets, threatens, yields, is released and takes leave in one of nine speaker groups (Men of the West, Rohirrim, Northmen, Dunlendings, Southrons, Easterlings, Elves, Dwarves, Orcs) or one of three dark-lord groups (Sauron, Saruman, the Nine), and one of five buckets (liege, ally, rival, foe, kin). In the liege conversations (leaving a realm's service, vassalage, the mercenary contract) a lord speaks for the same group, and a realm's ruler speaks in the realm's own words on four beats. Caravans and villagers greet and surrender by group and bucket, ten bandit clans rob and greet the player by bucket, and the nine that hold hideouts (not looters) challenge the player from one. One MCM switch, default on. Text only: nothing else about the encounter changes, but TAOM lines are not voiced.
 
 ## Why This Exists
 
@@ -33,26 +33,48 @@ The player always has a side: `FactionSides.OfPlayer` reads the player clan's ma
 | Hideout boss challenge | text seam on sentence `bandit_hideout_start_defender` | 1.0 |
 | Bandit greeting (player attacks) | Bandit Voices' Patch122 postfix: one roll, below 0.25 the legacy clan greeting, then (or when that row is missing) below 0.75 the bucket greeting `<clan>_<bucket>_<1 or 2>` | 0.5 bucket for clans with a legacy greeting, 0.75 for Feral Orcs and looters; `_1` and `_2` split each band evenly. Needs Bandit Voices' greeting switch on |
 | Robbery | postfix on `BanditInteractionsCampaignBehavior.bandit_start_defender_condition`: all four `ROBBERY_*` from one variation `<clan>_<bucket>_<n>`, only when all four rows exist | 0.5 for clans with legacy rows, 0.8 for Feral Orcs and looters; land only |
+| Liege conversations (16 lord sentences, "Liege conversations" below) | text seam, rows `str_taom_liege_<beat>.realm_<kingdom>` or `.group_<group>` | 1.0, in a settlement too |
 
-**Where vanilla stays:** non-lords (wanderers, companions, notables), lords of the player's clan, messenger conversations, lords you speak to inside a settlement (any settlement encounter, sieges and settlement battles included, so a lord's yield and the player's release of him after a siege keep vanilla's lines; the hideout boss's challenge is spoken inside a hideout and is still TAOM's line), a speaker whose race family is not the group's (trolls and Men of Mordor), Sauron, Saruman and the Nazgul (their groups have no rows yet), a dedicated server, the switch off. Lords outside the player's clan are not excluded for serving under the player: `HeroHelper.UnderPlayerCommand` is true for a lord outside the clan only when the player leads his faction, which is the vassal of the player's realm who gets the liege rows, and a lord in the player's army is not excluded. Parley (`str_parley_comment`), the caravan's refusal (`CARAVAN_DEFIANCE`) and "Heaven will avenge us" are untouched. Romance (`RomanticallyInvolvedTag` -1) and the yield of a non-combatant (`CombatantTag`) stay vanilla.
+**Where vanilla stays:** non-lords (wanderers, companions, notables), lords of the player's clan, messenger conversations, lords you speak to inside a settlement (any settlement encounter, sieges and settlement battles included, so a lord's yield and the player's release of him after a siege keep vanilla's lines; the hideout boss's challenge is spoken inside a hideout and is still TAOM's line), a speaker whose race family is not the group's (trolls and Men of Mordor; a Man of Mordor who rules a realm still speaks that realm's four liege lines), a dedicated server, the switch off. Lords outside the player's clan are not excluded for serving under the player: `HeroHelper.UnderPlayerCommand` is true for a lord outside the clan only when the player leads his faction, which is the vassal of the player's realm who gets the liege rows, and a lord in the player's army is not excluded. Parley (`str_parley_comment`), the caravan's refusal (`CARAVAN_DEFIANCE`) and "Heaven will avenge us" are untouched. Romance (`RomanticallyInvolvedTag` -1) and the yield of a non-combatant (`CombatantTag`) stay vanilla.
 
 **What TAOM lines displace.** Every TAOM lord row scores 200 or more, so wherever its tags pass it outranks vanilla's situational rows for the same id: the relationship greetings (`FriendlyRelationshipTag`, `HostileRelationshipTag`), the under-command and attacking greetings, the war farewells (`PlayerIsEnemyTag`) and the courtship farewells (`AttractedToPlayerTag`). The one exception is the kin greeting and farewell: those 27 rows carry `PlayerIsEnemyTag` -1 because the kin bucket also wins at war on the same side, and at war vanilla's greeting and farewell show instead.
 
 **Voice and animation.** TAOM lines are unvoiced. Vanilla voices the lord greeting (`str_context_line`), the lord's yield (`str_surrender_offer`), the robbery threat and the hideout boss challenge, and each of these goes silent when TAOM's line shows. Orc speakers were silent already. The caravan and villager surrender lines never had a voice. The lines also carry no animation tags (the data rule forbids `[` and `]`), so the face and body animation vanilla sets on the lines it replaces (for example `[if:convo_mocking_revenge]` on the robbery threat, `[if:idle_angry][ib:nervous]` on the caravan surrender) is not applied while a TAOM line shows.
 
+## Dark lords
+
+Sauron (race `sauron`), Saruman (race `saruman`) and the Nine (race `nazghul`) each have a speaker group found by race before culture, so Sauron does not fall into the Orcs group of his culture `mordor` and then out of it on race. Each group has 20 lord rows: liege, ally, rival and foe greetings and farewells, and rival and foe surrender demands, yields and releases. There are no kin rows: the three races keep the family `none`, which is never kin, so a Nazgul player hears another of the Nine as an ally or a foe. Sauron and Saruman are single lords and the Nine one family (`NazgulRegistry`), so one group for the Nine fits their shared voice.
+
+Left out: trolls, because no troll is a lord in the shipped `lords.xml` or `lords.xslt` (troll races appear only on troops and the troll bandits, which are not a speaking clan), and Men of Mordor, because the Orc lines do not suit them and a voice of their own was not asked for.
+
 ## Liege conversations
 
-`LiegeLines.TextOfSentence` maps 16 sentence ids of vanilla's `LordConversationsCampaignBehavior` to 15 TAOM game texts (`str_taom_liege_*`): asking to leave a realm and the ruler's answers, the end of a mercenary contract, how to join, the vassalage offer (low relation, rejected, accepted, the oath and the welcome), and the mercenary pitch, accept and decline. The text seam's postfix sets the line when a row exists:
+Vanilla's lord-to-vassal talks in `LordConversationsCampaignBehavior` are dialog lines added with their own text, for example `AddDialogLine("1220", "lord_ask_leave_service", "lord_ask_leave_service_verify", "{=roIaYqrx}Hmm. Has your oath become burdensome, {PLAYER.NAME}? ...")`. They are not game texts, so the tag-scored rows of the greetings cannot replace them, and lines per kingdom would need a tag class per kingdom. They go through the text seam instead: `LiegeLines.TextOfSentence` maps the 16 sentence ids to 15 TAOM game texts (`str_taom_liege_<beat>`).
 
-- A lord who rules his kingdom speaks the variation `realm_<kingdom id>` on four beats (`LiegeLines.RealmTexts`: leave ask, leave granted, vassalage accepted, mercenary accepted), when that row exists.
-- Otherwise, the lord speaks `group_<speaker group>`.
-- No row, the switch off, a dedicated server, an open messenger conversation, a non-lord or a lord of the player's clan: vanilla's line stands. The settlement rule does not apply, so a lord in a hall gets the line too.
+| Beat | Vanilla sentence (text id) | Rows |
+|---|---|---|
+| `leave_ask` | `1220` (roIaYqrx), `1221` (231s4Fqi) | realm and group |
+| `leave_confirm` | `1225` (CtEbTd47, the fiefs are surrendered) | group |
+| `leave_granted` | `player_leave_faction_accepted` (xCjCHRcS) | realm and group |
+| `leave_farewell` | `player_leaves_faction` (ZMbvMK6K) | group |
+| `merc_end`, `merc_end_final` | `player_want_to_end_mercenary_service_response` (EN9s6oZz), `lord_ask_exit_service_confirm_final` (7Qr1yZhJ) | group |
+| `join_how` | `player_want_to_join_faction_as_mercenary_or_vassal_answer` (MlTofjrU) | group |
+| `vassal_low`, `vassal_reject` | `vassalage_offer_player_has_low_relation` (r3pGLoKN), `vassalage_offer_rejected` (`{VASSALAGE_REJECTION}`, Calradian per culture) | group |
+| `vassal_accept` | `vassalage_offer_accepted` (2c7dIRla) | realm and group |
+| `vassal_bond`, `vassal_welcome` | `player_is_accepted_as_a_vassal` (`{PLAYER_ACCEPTED_AS_VASSAL}`, Calradian per culture), `1210` (dT3cdDSg) | group |
+| `merc_pitch` | `player_want_to_join_faction_as_mercenary_lord_answer_3` (`{MERCENARY_HIRING_PITCH}`) | group; the adapter sets `MERCENARY_AWARD` from `MinorFactionsModel.GetMercenaryAwardFactorToJoinKingdom` as vanilla does |
+| `merc_accept`, `merc_decline` | `mercenary_player_accepts_lord_answer` (yUYNlQhU), `mercenary_player_rejects_lord_answer` (wxK1bTZm) | realm (accept only) and group |
 
-No `str_taom_liege_*` row ships yet, so every liege line is vanilla today. For whoever writes the rows:
+The speaker is `Hero.OneToOneConversationHero`. The text seam's postfix sets the line:
 
-- Vanilla's `vassalage_offer_rejected` text ends with `[ib:closed]` (`LordConversationsCampaignBehavior.cs:360` in the installed build). The gesture is read from the replaced text, so a row without the tag loses it.
-- The mercenary pitch row can use `{MERCENARY_AWARD}`: the adapter sets it as vanilla does. `{KINGDOM_FORMAL_NAME}` is a global and also works.
-- A mercenary accept row takes the place of vanilla's `{=yUYNlQhU}` line, and so of TAOM's grammar fix `taom_the_fix_yUYNlQhU`.
+- A lord who rules his kingdom (`Kingdom.Leader`) speaks `realm_<kingdom id>` on the four realm beats (`LiegeLines.RealmTexts`). The kingdom is read from the campaign, so a new ruler of a realm speaks its lines.
+- Every other line, and a ruler whose realm row is missing, is `group_<speaker group>`.
+- No row, the switch off, a dedicated server, an open messenger conversation, a non-lord, a lord no group fits or a lord of the player's clan: vanilla's line stands. The settlement rule does not apply, so a lord in a hall gets the line too.
+
+Each row carries exactly the text variables of the vanilla line (`EncounterLinesDataTests`), without vanilla's gender switch. The oath itself (`{OATH_LINE_1}` to `4`, which the player repeats), the player's own lines and the give-up answers stay vanilla. The seam stores `{=!}{TAOM_ENC_LINE}`, so a liege line is unvoiced, as every TAOM line is. Two side effects:
+
+- Vanilla's `vassalage_offer_rejected` text ends with `[ib:closed]` (`LordConversationsCampaignBehavior.cs:360` in the installed build). The gesture is read from the replaced text, and the data rule forbids `[` in a row, so the gesture is lost where a `vassal_reject` row shows.
+- A `merc_accept` row takes the place of vanilla's `{=yUYNlQhU}` line, and so of TAOM's grammar fix `taom_the_fix_yUYNlQhU`.
 
 ## Architecture
 
@@ -61,7 +83,7 @@ No `str_taom_liege_*` row ships yet, so every liege line is vanilla today. For w
 - `ConversationManager.FindMatchingTextOrNull` adds the absolute weight of every tag on a row whose tags all pass, stops at the first failing tag, and keeps the first row with the strictly highest sum; the highest vanilla lord row scores 101 (Istiana), 19 for any other lord.
 - Conversation tags are created by the engine with `Activator.CreateInstance` and looked up by `StringId`, so they take no services and need no shared base.
 - Two surrender demands per bucket would tie, and the second would never show.
-- The caravan and villager conditions record the meeting while they run, and the three fixed sentences have no text variable.
+- The caravan and villager conditions record the meeting while they run, and the three fixed sentences (surrenders and the hideout challenge) have no text variable.
 
 ### Solution Approach
 
@@ -69,7 +91,7 @@ Lord rows carry `taom_speaker_<group>` (weight 100) first and `taom_player_<buck
 
 The tags ask `EncounterTagGate`, which describes the character through `EncounterLinesAdapter.DescribeLord` (a delegate, because the adapter interface may not name an engine class) and asks `EncounterLinesService`. A missing service or a fault answers false, so the row drops out and vanilla's line stands.
 
-The text seam is one postfix on `ConversationManager.UpdateCurrentSentenceText`: for the three sentence ids it sets `TAOM_ENC_LINE` and stores `{=!}{TAOM_ENC_LINE}` as the sentence text. The `{=!}` id keeps `CurrentSentenceText` from re-resolving the line by its game-text id.
+The text seam is one postfix on `ConversationManager.UpdateCurrentSentenceText`: for the three surrender and hideout sentence ids and the liege sentences ("Liege conversations" above) it sets `TAOM_ENC_LINE` and stores `{=!}{TAOM_ENC_LINE}` as the sentence text. The `{=!}` id keeps `CurrentSentenceText` from re-resolving the line by its game-text id.
 
 The greeting patches read the first meeting in a prefix (vanilla's private `_interactedCaravans` and `_interactedVillagers`, bound once as `object` and read as `IDictionary`) and pass it through `__state`; a stripped prefix leaves `false` and the postfix does nothing.
 
@@ -91,7 +113,7 @@ tags (Tags/) -> EncounterTagGate -> EncounterLinesService <- 4 patches (Hooks/)
 | `races` | `{ "<race>": "<family>" }` | race to `man`, `elf`, `dwarf`, `orc` or `none`. `none` is never kin; a `none` race speaks only for a group that lists it in `races` |
 | `bandits` | `{ "<clan>": { "side": "evil", "family": "man", "home_group": "southrons" } }` | the ten speaking clans |
 
-The provider validates: a missing file or bad JSON gives an empty map (every line vanilla) and one warning; a group, race or clan with an unknown family, a clan with an unknown side or an unlisted home group is dropped with a warning; a culture in two groups stays in the first. Loaded once per process: an edit needs a full game restart.
+The provider validates: a missing file or bad JSON gives an empty map (every line vanilla) and one warning; a group with the family `none` that lists no race, a group, race or clan with an unknown family, a clan with an unknown side or an unlisted home group is dropped with a warning; a culture or race in two groups stays in the first. Loaded once per process: an edit needs a full game restart.
 
 MCM "World/Encounter Lines" (`GroupOrder = 89`), "Enable Encounter Lines" (`EnableEncounterLines`, default on, `RequireRestart = false`), read live.
 
@@ -103,11 +125,12 @@ MCM "World/Encounter Lines" (`GroupOrder = 89`), "Enable Encounter Lines" (`Enab
 | `Main/Features/EncounterLines/EncounterBuckets.cs` | the pure bucket rules, `StableHash`, `IsAltLine` |
 | `Main/Features/EncounterLines/EncounterGroupMap.cs`, `EncounterGroupsConfigProvider.cs` | the validated data |
 | `Main/Features/EncounterLines/EncounterLinesService.cs` | every choice; holds no per-campaign state |
-| `Main/Features/EncounterLines/Tags/` | 9 speaker tags, 5 bucket tags, `taom_alt_line` |
+| `Main/Features/EncounterLines/Tags/` | 12 speaker tags, 5 bucket tags, `taom_alt_line` |
+| `Main/Features/EncounterLines/LiegeLines.cs` | the liege sentence table and the realm beats |
 | `Main/Features/EncounterLines/Hooks/` | `EncounterTagGate` and the four patches |
 | `Main/Adapters/IEncounterLinesAdapter.cs`, `EncounterLinesAdapter.cs` | campaign facts as plain records, the text variables |
-| `Main/_Module/ModuleData/taom_encounter_lord_strings.xml` | 243 tagged lord rows |
-| `Main/_Module/ModuleData/taom_encounter_strings.xml` | 435 keyed rows: caravans and villagers 108, robbery 240, bandit greetings 60, hideout 27 (nine clans) |
+| `Main/_Module/ModuleData/taom_encounter_lord_strings.xml` | 303 tagged lord rows (60 for the dark lords) |
+| `Main/_Module/ModuleData/taom_encounter_strings.xml` | 735 keyed rows: caravans and villagers 108, robbery 240, bandit greetings 60, hideout 27 (nine clans), liege 300 (15 beats for 12 groups, 4 beats for 30 realms) |
 
 ## Co-op
 
@@ -118,18 +141,19 @@ No gate. The patches skip nothing and write only local conversation text variabl
 - `EncounterBucketsTests`: every bucket branch and its order, the alternation of `IsAltLine`.
 - `EncounterGroupsConfigProviderTests`, `ShippedEncounterGroupsTests`: one test per validation rule; the shipped table equals the spec and covers every main culture, every race and the ten clans.
 - `EncounterLinesServiceTests`: every gate that leaves vanilla (a missing conversation party and a missing player included), the greeting, robbery and seam paths and their chances.
-- `EncounterLinesDataTests`: the exact 678 ids and keys, one dot per id, the four robbery rows, the writing rules, the tag order and weights per beat, and the reversed war tag on the 27 kin greetings and farewells.
+- `LiegeLinesServiceTests`: the sentence table, the realm row before the group row, and every gate that leaves vanilla's liege line.
+- `EncounterLinesDataTests`: the exact 1,038 ids and keys (the realm ids read from `spkingdoms.xslt` and `taom_spkingdoms.xml`), the text variables of every liege row, one dot per id, the four robbery rows, the writing rules, the tag order and weights per beat, and the reversed war tag on the 27 kin greetings and farewells.
 - `EncounterLinesScoreTests` (`LiveInstall`, `RequiresGame`): the lowest TAOM score per id beats vanilla's highest; every tag name is a real tag.
 - `EncounterSentenceTextPatchTests` (`RequiresGame`): runs the text seam's postfix on a `ConversationManager` shell for a replaced line, a sentence that is not patched, the switch off, no conversation party, a missing row, an index outside the list and a fault, and pins that the postfix calls `TrySetSentenceLine`.
-- `EncounterLinesBindingTests` (also pins the five vanilla lord text ids and `ProcessSentence`'s call to `UpdateCurrentSentenceText`), `EncounterLinesPatchTests`, `EncounterLinesWiringTests`, `EncounterLinesSettingsProviderTests`; `BanditVoicesServiceTests` for the greeting order.
+- `EncounterLinesBindingTests` (also pins the 16 liege sentence ids with the start of their vanilla text, the five vanilla lord text ids and `ProcessSentence`'s call to `UpdateCurrentSentenceText`), `EncounterLinesPatchTests`, `EncounterLinesWiringTests`, `EncounterLinesSettingsProviderTests`; `BanditVoicesServiceTests` for the greeting order.
 
 ## How to verify in game
 
-In-game check owed; none of these has been run. No `taom.*` command drives these beats, so every result is one only a person can see, read from the conversation text, plus the log check in step 10.
+In-game check owed; none of these has been run. No `taom.*` command drives these beats, so every result is one only a person can see, read from the conversation text, plus the log check in step 12.
 
 **Preconditions:** a TAOM campaign, MCM "World/Encounter Lines" on, no restart needed.
 
-1. As a Gondor-culture player, talk to a Mordor orc lord at peace and at war, then to a Gondor lord. Check: an orc foe line both times, a west kin line from the Gondor lord, and Sauron or a Man of Mordor keeps vanilla's line. The greeting is silent where vanilla's was voiced; accept or refuse that trade.
+1. As a Gondor-culture player, talk to a Mordor orc lord at peace and at war, then to a Gondor lord. Check: an orc foe line both times, a west kin line from the Gondor lord, and a Man of Mordor keeps vanilla's line. The greeting is silent where vanilla's was voiced; accept or refuse that trade.
 2. As a Neutral (Khand or Umbar) player at peace, talk to an orc lord. Check: the orc ally line reads as "no enemy of ours today", with no claim that you march on the orcs' side.
 3. At war with a realm of your own people, let one of its lords attack you. Check: the greeting before the demand is vanilla's war greeting, not a kin line, and the demand is a kin line.
 4. Get a surrender demand from one lord on two campaign days. Check: the demand changes between the two lines.
@@ -137,11 +161,14 @@ In-game check owed; none of these has been run. No `taom.*` command drives these
 6. Get robbed by Feral Orcs or looters several times (about 80% TAOM) and by a Bandit Voices clan (about 50%). Attack a bandit party for the greeting, and assault a hideout for the boss's challenge.
 7. Take a lord's yield after a field battle and release him. Check: TAOM lines in the field, vanilla inside a settlement.
 8. As a Neutral (Khand or Umbar) player at peace, get robbed by a Gondor soldiers band and a Rhûn raiders band, and assault a Gondor soldiers hideout. Check: no line calls you an enemy (#1281).
-9. Switch the setting off. Check: every line is vanilla.
-10. Log check, with the switch on after the first conversation: `rgl_log` has no `ERROR: Text with id` line and no `[EncounterLines]` warning, shows `EncounterGroupsConfigProvider: Loaded encounter_groups.json (...)`, and has no other `EncounterGroupsConfigProvider:` warning. Grep for both prefixes; the config loader does not use the `[EncounterLines]` one, and with the switch off it reads nothing.
+9. As a vassal of Mordor (the Witch-king start), ask Sauron to release you from your oath, then say no; ask again in a castle hall and go on. Check: Mordor's line both times, the fiefs warning in his voice, then the Mordor release line. As a clanless player, offer vassalage to Théoden and take a mercenary contract from a lord of Rohan who is not the king. Check: Rohan's lines from Théoden, the Rohirrim lines from the other lord, and the award amount in the offer.
+10. Meet Saruman and one of the Nine on the map. Check: their own greeting, not vanilla's.
+11. Switch the setting off. Check: every line is vanilla.
+12. Log check, with the switch on after the first conversation: `rgl_log` has no `ERROR: Text with id` line and no `[EncounterLines]` warning, shows `EncounterGroupsConfigProvider: Loaded encounter_groups.json (...)`, and has no other `EncounterGroupsConfigProvider:` warning. Grep for both prefixes; the config loader does not use the `[EncounterLines]` one, and with the switch off it reads nothing.
 
 ## Changelog
 
+- 2026-11-25: the rows: 60 lord rows for Sauron, Saruman and the Nine, and 300 liege rows by group, with a realm's ruler speaking by realm on four beats.
 - 2026-11-25: PR #1601: groups for Sauron, Saruman and the Nazgul found by race, and the liege conversation seam for 16 vanilla sentence ids. The rows come later; until then every line stays vanilla.
 - 2026-11-13: first version (Patch149).
 - 2026-11-13: follow-up to the merged review: kin greetings and farewells step aside at war; the orc ally greeting, three foe greetings and six bandit lines no longer claim a side or an act the listener may not have; the hideout rows for looters are removed (looters never hold a hideout); the text seam's postfix is run in tests; the voice, animation, settlement and displacement notes above.
