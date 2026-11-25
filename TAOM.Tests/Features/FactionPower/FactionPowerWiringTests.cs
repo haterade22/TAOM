@@ -37,6 +37,8 @@ public class FactionPowerWiringTests
         Assert.IsNotNull(container.Resolve<FactionPowerService>());
         Assert.IsNotNull(container.Resolve<FactionPowerEditor>());
         Assert.IsNotNull(container.Resolve<IFactionPowerPartyHook>());
+        Assert.IsNotNull(container.Resolve<IFactionPowerEconomyHook>());
+        Assert.IsNotNull(container.Resolve<IFactionPowerStrikeHook>());
     }
 
     [TestMethod]

@@ -3,7 +3,8 @@
 ## Overview
 
 Faction Power gives each realm culture a power percent, from 50 to 200, that scales the party size limit of that
-realm's AI lord parties and the size limit of its garrisons. 100 is the default and changes nothing. The player's own
+realm's AI lord parties, the size limit of its garrisons, its militia growth, its volunteer refill, its auto-resolve
+strikes, and (above 100) lowers its AI wages. 100 is the default and changes nothing. The player's own
 clan, and every human player's clan in co-op, is never scaled. The percents are set per campaign with the
 `taom.faction_power` console command.
 
@@ -36,6 +37,20 @@ the stored percents are read through an immutable snapshot.
   `taom_fp_<culture>` and `taom_fp_version`), which the engine saves. There is no TAOM save definer.
   `CampaignStartSession.Begin` reloads them for every new game and every load.
 
+### The economy levers
+
+All levers return before touching a number when the realm is at 100, and none touches the player's clan (every human
+player's clan in co-op) or the main party.
+
+| Lever | Where | Effect |
+|-------|-------|--------|
+| Militia | `TaomSettlementMilitiaModel.CalculateMilitiaChange` | Scales the daily inflow (change plus the 2.5 percent retired), so the militia equilibrium (40 x inflow) scales by the percent. Vanilla's 0.025 is line 98 of `DefaultSettlementMilitiaModel`. |
+| Volunteers | `VolunteerProductionService.Compute` | The probability times the percent, after the War of the Ring step, one clamp to 0..1. A hit also upgrades a filled slot, so tier-ups speed up too. Castles go through the same call. |
+| Auto-resolve | `TaomCombatSimulationModel.SimulateHit` | Damage of the striker party's realm times the square root of the percent (k = 0.5, strength then moves by about m^2.1 with full rosters, 200 percent gives 4.3x, 50 percent gives 0.23x). |
+| Wages | `TaomPartyWageModel.GetTotalWage` | Above 100: AI lord parties and garrisons of the realm pay wages x 1/percent. At or below 100: normal wages. Applied after the AI wage relief and before free garrison upkeep. |
+
+`MilitiaToSpawnAfterSiege` is not scaled: the decompiled dump holds no caller of it, so what reads it is unconfirmed.
+
 ### Component Diagram
 
 ```
@@ -48,6 +63,9 @@ factions.json (game_faction / power_culture, side)
   FactionPowerService (multiplier, player clan rule)
         |
   FactionPowerPartyHook <- TaomPartySizeModel (lord limit, garrison limit)
+  FactionPowerEconomyHook <- TaomSettlementMilitiaModel, TaomPartyWageModel
+  FactionPowerStrikeHook <- TaomCombatSimulationModel
+  VolunteerProductionService <- TaomVolunteerModel, CastleRecruitmentService
 ```
 
 ## Configuration
@@ -90,6 +108,8 @@ A write clears the party size cache of every party (`PartySizeCacheInvalidator.I
 | `Main/Features/FactionPower/FactionPowerService.cs` | Multiplier lookup and the player clan rule |
 | `Main/Features/FactionPower/FactionPowerEditor.cs` | `list`, `set` and `preset` |
 | `Main/Features/FactionPower/Hooks/FactionPowerPartyHook.cs` | The seam `TaomPartySizeModel` calls |
+| `Main/Features/FactionPower/Hooks/FactionPowerEconomyHook.cs` | The seam the militia and wage models call |
+| `Main/Features/FactionPower/Hooks/FactionPowerStrikeHook.cs` | The seam `TaomCombatSimulationModel` calls |
 | `Main/Features/FactionPower/Cheats/FactionPowerCheats.cs` | Console entry |
 | `Main/Adapters/FactionPowerRealm.cs` | Realm key of a map faction |
 | `Main/Features/FactionPower/FactionPowerIoC.cs` | Registration |
@@ -105,6 +125,7 @@ A write clears the party size cache of every party (`PartySizeCacheInvalidator.I
 
 - `TAOM.Tests/Features/FactionPower/`: the math, catalog, store, editor, presets, service and wiring.
 - `FactionPowerCatalogTests.EveryShippedKingdomCulture_HasASlider`: every TAOM kingdom culture has a slider.
+- `FactionPowerEconomyTests`: militia equilibrium, strike, wage relief, volunteers and the model call order.
 - `TAOM.Tests/Features/AiPartySize/AiPartySizeOrderingTests.cs`: the call order in `TaomPartySizeModel`.
 
 ## How to verify in game
@@ -120,6 +141,10 @@ A write clears the party size cache of every party (`PartySizeCacheInvalidator.I
 
 ## Known limits
 
+- A realm above 100 percent also gets faster volunteer tier-ups (a hit upgrades a filled slot).
+- Siege veto asymmetry: the militia and garrison of a stronger realm raise the strength an attacker must beat, so a
+  100 percent realm attacking a 150 percent realm needs about 1.5x the force it needs today.
+
 - A garrison's culture party size feat is added after the garrison limit returns, so a feat culture's garrison gets a
   little less than the full percent (at 200 percent with a +10% feat: 420, not 440). `ApplyGarrisonScaling` has the same
   order.
@@ -129,6 +154,7 @@ A write clears the party size cache of every party (`PartySizeCacheInvalidator.I
 
 ## Changelog
 
+- 2026-11-26: PR B: militia, volunteer refill, auto-resolve strength and wage relief.
 - 2026-11-25: PR #1592: the feature, the console command, and the realm key `power_culture` for Shaghâna and
   Âbanissa.
 
