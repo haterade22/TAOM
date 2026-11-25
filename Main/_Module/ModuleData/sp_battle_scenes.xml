@@ -146,6 +146,18 @@
 				name="Mountain" />
 		</TerrainTypes>
 	</Scene>
+	<!-- Gondor: south and west (Comprehend terrains) -->
+	<Scene
+		id="Lotraom_comprehend_battle_terrain_01"
+		terrain="Plain"
+		forest_density="Low"
+		map_indices="97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108"></Scene>
+	<!-- Gondor: south and west (Comprehend terrains) -->
+	<Scene
+		id="Lotraom_comprehend_battle_terrain_02"
+		terrain="Plain"
+		forest_density="Low"
+		map_indices="97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108"></Scene>
 	<!-- Ithilien; Lothlorien; Rivendell; Mirkwood and the Woodland Realm -->
 	<Scene
 		id="battle_terrain_001"
