@@ -78,6 +78,7 @@ Usage:
     python tools/restat_melee_blades.py                  # report the plan
     python tools/restat_melee_blades.py --culture gondor    # a craft row (ladder.craft_key), not an engine culture; skips blades another row wears
     python tools/restat_melee_blades.py --limits-only    # lower what breaks a limit, nothing else
+    python tools/restat_melee_blades.py --check          # write nothing; exit 1 if a blade would move or a weapon cannot be priced, 2 if it judged nothing
     python tools/restat_melee_blades.py --apply
 """
 
@@ -761,6 +762,15 @@ def main(argv=None) -> int:
         print(f"... and {len(plans) - args.top} more")
 
     if args.check:
+        if not priced or not troops:
+            what = " and ".join(
+                [s for s, bad in (("priced 0 weapons", not priced), ("loaded 0 troops", not troops)) if bad])
+            print(f"SKIPPED: {what}; the check judged nothing", file=sys.stderr)
+            return 2
+        if failures:
+            print(f"\nCHECK FAILED: {len(failures)} weapon(s) could not be priced; "
+                  "the check cannot vouch for them")
+            return 1
         if plans:
             print(f"\nCHECK FAILED: {len(plans)} blade piece(s) would move; the Armory stats have "
                   "drifted from the ladder (run without --check to read the plan)")
