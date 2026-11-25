@@ -815,6 +815,20 @@ class SharedBladeTests(TmpCase):
             restat.main(["--help"])
         assert "craft row" in " ".join(out.getvalue().split())
 
+    def test_culture_help_says_which_passes_it_does_not_limit_and_that_limits_only_refuses_it(self):
+        """#1533 item 1: --culture scopes the tier pass only. The mixed-blade, unworn and hero-blade lowering
+        passes judge every blade, and --limits-only with --culture is an argument error."""
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out), self.assertRaises(SystemExit):
+            restat.main(["--help"])
+        text = " ".join(out.getvalue().split())
+        for word in ("tier pass", "mixed", "unworn", "hero", "--limits-only"):
+            assert word in text, word
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err), self.assertRaises(SystemExit):
+            restat.main(["--limits-only", "--culture", "gondor"])
+        assert "cannot be combined" in err.getvalue()
+
     def test_a_second_restat_of_its_own_output_plans_nothing(self):
         """M3: a swing held at its blow limit never reaches the DPS target, and the free thrust
         used to be raised again on every run."""
