@@ -6,7 +6,9 @@ using TAOM.Features.FactionMap.Models;
 namespace TAOM.Features.FactionPower;
 
 /// <summary>
-/// The list of sliders, built from factions.json: one per distinct non-empty game_faction (the realm culture id). Where several
+/// The list of sliders, built from factions.json: one per distinct realm culture id, which is an entry's power_culture when it
+/// has one and its game_faction otherwise. power_culture exists for a kingdom whose culture is not the start culture its map
+/// entry picks (Shaghana starts as aserai, Abanissa has no start culture); nothing else reads it. Where several
 /// entries share a culture, the playable entry's side and name win; with none playable, the entry whose key sorts first
 /// (ordinal) wins, because the provider returns a Dictionary and file order is not stable. A culture whose entries disagree on
 /// the side logs one warning. A new factions.json entry with a game_faction and a side needs no code.
@@ -21,8 +23,8 @@ public static class FactionPowerCatalog
     {
         var result = new List<FactionPowerEntry>();
         var byCulture = factions
-            .Where(f => f.Value != null && !string.IsNullOrWhiteSpace(f.Value.GameFaction))
-            .GroupBy(f => f.Value.GameFaction.Trim(), StringComparer.Ordinal)
+            .Where(f => f.Value != null && !string.IsNullOrWhiteSpace(RealmCulture(f.Value)))
+            .GroupBy(f => RealmCulture(f.Value), StringComparer.Ordinal)
             .OrderBy(g => g.Key, StringComparer.Ordinal);
 
         foreach (var group in byCulture)
@@ -40,6 +42,9 @@ public static class FactionPowerCatalog
 
         return result;
     }
+
+    private static string RealmCulture(FactionData faction)
+        => (string.IsNullOrWhiteSpace(faction.PowerCulture) ? faction.GameFaction ?? "" : faction.PowerCulture).Trim();
 
     private static string NormaliseSide(string? side)
     {

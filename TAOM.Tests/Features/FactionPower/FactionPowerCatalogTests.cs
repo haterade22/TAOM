@@ -1,8 +1,15 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
+using TAOM.Core.Infrastructure;
+using TAOM.Core.Logging;
+using TAOM.Features.FactionMap;
 using TAOM.Features.FactionMap.Models;
 using TAOM.Features.FactionPower;
+using TAOM.Tests.Core;
 
 namespace TAOM.Tests.Features.FactionPower;
 
@@ -97,5 +104,41 @@ public class FactionPowerCatalogTests
         var catalog = Build(new List<string>(), F("z", "zeta", "evil", true), F("a", "alpha", "free", true), F("n", "brandnew", "evil", true));
 
         CollectionAssert.AreEqual(new[] { "alpha", "brandnew", "zeta" }, catalog.Select(e => e.CultureId).ToArray());
+    }
+
+    [TestMethod]
+    public void APowerCulture_KeysTheSliderInPlaceOfTheGameFaction()
+    {
+        var shaghana = F("taskralan_of_shaghana", "aserai", "evil", false, "Shaghana");
+        shaghana.Value.PowerCulture = "shaghana";
+        var abanissa = F("chajaphan_of_abanissa", "", "neutral", false, "Abanissa");
+        abanissa.Value.PowerCulture = "abanissa";
+
+        var catalog = Build(new List<string>(), F("harwan", "aserai", "evil", true, "Harwan"), shaghana, abanissa);
+
+        CollectionAssert.AreEqual(new[] { "abanissa", "aserai", "shaghana" }, catalog.Select(e => e.CultureId).ToArray());
+        Assert.AreEqual("Harwan", catalog.Single(e => e.CultureId == "aserai").Name);
+        Assert.AreEqual("Shaghana", catalog.Single(e => e.CultureId == "shaghana").Name);
+    }
+
+    // The slider key is the kingdom's culture id at run time (FactionPowerRealm.KeyOf), so a kingdom whose culture no
+    // factions.json row names has no slider and always reads 100. Reads the TAOM kingdom file; the vanilla kingdoms the
+    // XSLT renames keep vanilla culture ids, which factions.json already names.
+    [TestMethod]
+    public void EveryShippedKingdomCulture_HasASlider()
+    {
+        var moduleData = CultureDataFixture.ModuleDataPath();
+        var paths = Substitute.For<IPathService>();
+        paths.ModuleDataPath.Returns(moduleData);
+        var factions = new FactionConfigProvider(paths, Substitute.For<IModLogger>()).LoadFactions();
+        var keys = new HashSet<string>(FactionPowerCatalog.Build(factions, null).Select(e => e.CultureId));
+
+        var missing = XDocument.Load(Path.Combine(moduleData, "taom_spkingdoms.xml")).Descendants("Kingdom")
+            .Select(k => ((string?)k.Attribute("culture") ?? "").Replace("Culture.", "").Trim())
+            .Where(c => c.Length > 0 && !keys.Contains(c))
+            .Distinct().OrderBy(c => c, System.StringComparer.Ordinal).ToList();
+
+        Assert.AreEqual(0, missing.Count,
+            "These kingdom cultures have no faction power slider; give a factions.json row power_culture: " + string.Join(", ", missing));
     }
 }
