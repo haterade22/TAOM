@@ -142,7 +142,7 @@ In-game check owed; none of these has been run. No `taom.*` command drives these
 
 ## Changelog
 
-- 2026-11-25: PR #1601 (Luiz): groups for Sauron, Saruman and the Nazgul found by race, and the liege conversation seam for 16 vanilla sentence ids. The rows come later; until then every line stays vanilla.
+- 2026-11-25: PR #1601: groups for Sauron, Saruman and the Nazgul found by race, and the liege conversation seam for 16 vanilla sentence ids. The rows come later; until then every line stays vanilla.
 - 2026-11-13: first version (Patch149).
 - 2026-11-13: follow-up to the merged review: kin greetings and farewells step aside at war; the orc ally greeting, three foe greetings and six bandit lines no longer claim a side or an act the listener may not have; the hideout rows for looters are removed (looters never hold a hideout); the text seam's postfix is run in tests; the voice, animation, settlement and displacement notes above.
 - 2026-11-13: review fixes: the hideout boss speaks for the clan of his own party (the hideout's map faction only when that reads nothing); notables are no longer described as lords; the bucket greeting's `_1` and `_2` split evenly.
