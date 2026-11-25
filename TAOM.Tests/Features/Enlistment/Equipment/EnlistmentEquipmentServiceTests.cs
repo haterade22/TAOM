@@ -68,6 +68,21 @@ public class EnlistmentEquipmentServiceTests
     }
 
     [TestMethod]
+    public void IssueForTier_AmmunitionIsIssuedButNotRecordedInTheLedger()
+    {
+        // Discharge reclaims by item id, so a recorded quiver would also take looted arrows (#527).
+        SetupRoster("enlist_vlandia_archer_recruit", "bow_a", "arrows_a", "chest_a");
+        _itemPool.IsAmmunition("arrows_a").Returns(true);
+
+        var result = _service.IssueForTier("vlandia", ServiceAssignment.Archer, EnlistmentKitTier.Recruit);
+
+        Assert.AreEqual(EquipmentIssueResult.Issued, result);
+        _partyItems.Received(1).AddItem("arrows_a", 1);
+        CollectionAssert.AreEqual(new[] { "bow_a", "chest_a" },
+            (System.Collections.ICollection)_ledger.IssuedItemIds);
+    }
+
+    [TestMethod]
     public void IssueForTier_SecondCallSameTier_ReturnsAlreadyIssued_NoSecondAdd()
     {
         SetupRoster("enlist_vlandia_infantry_recruit", "chest_a");

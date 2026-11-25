@@ -107,6 +107,22 @@ public class ItemPoolAdapter : IItemPoolAdapter
         }
     }
 
+    public bool IsAmmunition(string itemId)
+    {
+        if (string.IsNullOrEmpty(itemId)) return false;
+        try
+        {
+            var type = MBObjectManager.Instance?.GetObject<ItemObject>(itemId)?.ItemType;
+            return type == ItemObject.ItemTypeEnum.Arrows || type == ItemObject.ItemTypeEnum.Bolts
+                || type == ItemObject.ItemTypeEnum.Bullets;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"ItemPoolAdapter: IsAmmunition('{itemId}') failed: {ex.Message}");
+            return false;
+        }
+    }
+
     private static string ResolveByPrefix(string itemId)
     {
         if (string.IsNullOrEmpty(itemId)) return null;
