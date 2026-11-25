@@ -360,15 +360,13 @@ public class HuntBandLotrIssueQuest : QuestBase
     }
 
     /// <summary>
-    /// The clan's template through the vanilla filler, or the clan's basic troop when the template cannot be scaled:
-    /// the filler divides by the template's spread of minimum and maximum, which is zero for a fixed-size template.
+    /// The clan's template through the vanilla filler, or the clan's basic troop when the clan has no template or an
+    /// empty one: the filler's top-up loop reads the template's first stack.
     /// </summary>
     private void FillBand(MobileParty band, Clan clan)
     {
         var template = clan.DefaultPartyTemplate;
-        int min = template?.Stacks.Sum(s => s.MinValue) ?? 0;
-        int max = template?.Stacks.Sum(s => s.MaxValue) ?? 0;
-        if (template != null && min > 0 && max > min)
+        if (template != null && template.Stacks.Count > 0)
             MobilePartyHelper.FillPartyManuallyAfterCreation(band, template, _bandSize);
         if (band.MemberRoster.TotalManCount == 0)
             band.MemberRoster.AddToCounts(clan.BasicTroop, _bandSize);

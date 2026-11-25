@@ -110,8 +110,7 @@ public class TrainRetainersLotrIssue : IssueBase
         var troop = LentTroop;
         return LotrIssueTemplateRules.StillUses(_def, LotrIssueTemplate.TrainRetainers)
             && (_def?.OffersTo(Hero.MainHero?.Culture?.StringId) ?? true)
-            && troop != null
-            && !Guard.WouldDesertFromParty(Campaign.Current?.MainParty?.Party, troop);
+            && troop != null;
     }
 
     protected override float GetIssueEffectAmountInternal(IssueEffect issueEffect)

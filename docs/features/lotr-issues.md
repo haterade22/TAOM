@@ -380,6 +380,14 @@ TrainRetainers lends the culture's basic troop, not vanilla's `borrowed_troop`, 
 orc, dwarf or elf giver. The giver refuses a loan the alignment desertion rule would cancel (`IDesertionRecruitGuard`),
 and a full party refuses the accept (`PartySizeLimit`).
 
+**Known limit, who beat the band.** The engine names the leader of the winning side as the band's destroyer. A player who
+helps an ally's battle against the band outside an army is not that leader, so the quest cancels as "someone else got
+there". No producer is known: the band is ignored by other parties and has aggressiveness 0. A HuntBand row's `count`
+is unused (one band per quest); it stays only because every row needs a count above 0.
+
+A lent troop's alignment is checked when the player accepts (refused as not in the same faction), not while the offer
+stands, so an offer is not withdrawn because the player changed kingdom.
+
 **Known limit, survivor count.** The roster cannot tell a lent troop from the player's own troop of the same line.
 `TrackSurvivors` only ever falls, so the player cannot raise the count, but the player's own troops can hide a lent
 troop's death, and the troops sent home are the highest tier of the line, which may be the player's own. Vanilla avoids
