@@ -140,7 +140,9 @@ whether or not gating is enabled.
    hideout, a raid, a naval battle, a duel, a town's alley fight that starts a battle) and in no other (an
    arena, a tournament, a plain settlement scene, a custom battle); `LordsLadderBehavior` credits the
    tally to the owner's running rung quest through `CareerQuest.AddProgress` when the battle ends, then
-   rolls the lord's material find. After a Player Switcher change, the next daily tick cancels the former
+   rolls the lord's material find. The credit does not depend on the Armour Acquisition switch (the armoury's
+   hand-in is hidden while it is off, so a running quest must still be able to finish by its deeds); the
+   find does, and a co-op guest or a dedicated server gets neither. After a Player Switcher change, the next daily tick cancels the former
    hero's rung quest, because it could never finish; the ladder state stays, so that hero can start the rung
    again on a return. A rung readies for the quest's owner when its quest completes, or at once when the materials are handed over (which also completes
    a running quest); a rung with no piece to claim offers no hand-in. The claim offers the culture's lord
