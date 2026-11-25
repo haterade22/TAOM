@@ -45,6 +45,25 @@ class GundabadStringsTests(unittest.TestCase):
         self.assertNotIn("gondor", out)
         self.assertNotIn("taom_faction_", out)
 
+    def test_a_comment_or_a_quoted_bracket_does_not_drop_a_row(self):
+        src = """<strings>
+	<!-- the <string> rows -->
+	<string id="str_hint.gondor" text="{=g}{?DAYS>1}days{?}" />
+	<string id="str_faction_name.gundabad" text="{=a}Gundabad" />
+	<string id="str_after.gondor" text="{=h}x"></string>
+</strings>"""
+        out = inf.extract_gundabad_strings(src)
+        self.assertIn("str_faction_name.gundabad", out)
+        self.assertNotIn("gondor", out)
+
+    def test_a_duplicate_string_id_refuses_the_run(self):
+        doubled = '<strings><string id="a.goblin" text="x" /><string id="a.goblin" text="y" /></strings>'
+        with self.assertRaises(SystemExit) as ex:
+            inf.refuse_duplicate_string_ids("taom_module_strings.xml", doubled)
+        self.assertIn("a.goblin", str(ex.exception))
+        inf.refuse_duplicate_string_ids("taom_module_strings.xml",
+                                        '<strings><string id="a.goblin" text="x" /></strings>')
+
     def test_real_strings_file_extracts_to_parseable_xml(self):
         path = os.path.join(inf.MD, "taom_module_strings.xml")
         src = open(path, encoding="utf-8").read()

@@ -176,13 +176,33 @@ def extract_gundabad_strings(src_strings):
     A string with <tags> children spans several lines, so a one-line copy kept the opening tag and
     dropped the rest (#1590). The liege titles (str_liege_title*.gundabad) are left out: the Liege
     Titles feature writes one row pair per realm by hand, so a clone would define the id twice
-    (the same exclusion tools/promote_borrowed_cultures.py makes).
+    (the same exclusion tools/promote_borrowed_cultures.py makes). Comments are removed first and
+    the opening tag is read quote by quote, so a "<string>" in a comment or a ">" in a text value
+    cannot end one element early and silently drop the rows after it.
     """
-    elements = re.findall(r'[ \t]*<string\b[^>]*?(?:/>|>.*?</string>)', src_strings, re.S)
-    keep = [e for e in elements
-            if "gundabad" in e.split(">", 1)[0] and "taom_faction_" not in e.split(">", 1)[0]
-            and "str_liege_title" not in e.split(">", 1)[0]]
+    body = re.sub(r'<!--.*?-->', '', src_strings, flags=re.S)
+    elements = re.findall(r'[ \t]*<string\b(?:[^>"]|"[^"]*")*?(?:/>|>.*?</string>)', body, re.S)
+    keep = []
+    for e in elements:
+        m = re.search(r'\bid="([^"]*)"', e)
+        sid = m.group(1) if m else ""
+        if "gundabad" in sid and "taom_faction_" not in sid and "str_liege_title" not in sid:
+            keep.append(e)
     return "".join("  " + e.strip() + "\n" for e in keep)
+
+
+def refuse_duplicate_string_ids(path, content):
+    """Exit before any write when a <string> id occurs twice: a cloned row whose id a hand-written
+    row already uses would define the id twice, and the parse check alone lets that through."""
+    seen, dupes = set(), []
+    for el in ET.fromstring(content.encode("utf-8")).iter("string"):
+        sid = el.get("id")
+        if sid in seen and sid not in dupes:
+            dupes.append(sid)
+        seen.add(sid)
+    if dupes:
+        raise SystemExit(f"REFUSING: {path} would define these <string> ids twice, so nothing was written:\n  "
+                         + "\n  ".join(dupes))
 
 
 def main():
@@ -288,6 +308,7 @@ def main():
     # Every output, SubModule.xml included, is built and parsed before the first write (#979).
     outputs.append((SUBMODULE, sm))
     refuse_unparsable(outputs)
+    refuse_duplicate_string_ids(os.path.join(MD, "taom_module_strings.xml"), out_strings)
     for path, content in outputs:
         open(path, "w", encoding="utf-8").write(content)
         ET.parse(path)
