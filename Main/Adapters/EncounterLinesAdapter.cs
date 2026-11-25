@@ -72,8 +72,8 @@ public sealed class EncounterLinesAdapter : IEncounterLinesAdapter
 
     public bool TrySetMercenaryPitch(string variable, string textId, string variation)
     {
-        var kingdom = Hero.OneToOneConversationHero?.Clan?.Kingdom;
         var models = Campaign.Current?.Models;
+        var kingdom = models == null ? null : Hero.OneToOneConversationHero?.Clan?.Kingdom;
         if (kingdom == null || models?.MinorFactionsModel == null || Clan.PlayerClan == null)
             return false;
         if (!GameTexts.TryGetText(textId, out var text, variation))
