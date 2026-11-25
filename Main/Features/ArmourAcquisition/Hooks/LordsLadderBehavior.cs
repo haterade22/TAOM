@@ -44,11 +44,9 @@ public sealed class LordsLadderBehavior : CampaignBehaviorBase
         _logger = logger;
     }
 
-    private bool Ready => _gate.IsActive && CanCredit;
-
     /// <summary>
     /// Kills count for a running rung whether or not the switch is on: the armoury's hand-in is hidden while it is
-    /// off, so the quest's own deeds are then the only way to finish it. Finds, which add items, need <see cref="Ready"/>.
+    /// off, so the quest's own deeds are then the only way to finish it. Finds, which add items, also need the gate on.
     /// </summary>
     private bool CanCredit => !_coop.ShouldDeferToHost && !_server.IsDedicatedServer;
 

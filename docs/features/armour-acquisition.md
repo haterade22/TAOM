@@ -140,7 +140,7 @@ whether or not gating is enabled.
    hideout, a raid, a naval battle, a duel, a town's alley fight that starts a battle) and in no other (an
    arena, a tournament, a plain settlement scene, a custom battle); `LordsLadderBehavior` credits the
    tally to the owner's running rung quest through `CareerQuest.AddProgress` when the battle ends, then
-   rolls the lord's material find. The credit does not depend on the Armour Acquisition switch (the armoury's
+   rolls the lord's material find. The credit, and the mission counter that feeds it, do not depend on the Armour Acquisition switch (the armoury's
    hand-in is hidden while it is off, so a running quest must still be able to finish by its deeds); the
    find does, and a co-op guest or a dedicated server gets neither. After a Player Switcher change, the next daily tick cancels the former
    hero's rung quest, because it could never finish; the ladder state stays, so that hero can start the rung
@@ -306,7 +306,7 @@ routed to Mirkwood with `min_stock="1"`.
 
 `Enable Armour Acquisition`, `Lord's Harness After Battle`, `Visiting Master Armourers` (all on). The master
 switch applies from the next game load; the two sub-toggles are read live, and matter only while that
-game's gate is on. The ladder has no toggle of its own: it runs while the gate is on.
+game's gate is on. The ladder has no toggle of its own: it starts from the armoury, so only while the gate is on, and a rung already running keeps counting its kills and battles with the gate off.
 
 ### Data rows elsewhere
 
