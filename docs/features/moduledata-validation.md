@@ -689,7 +689,8 @@ arrives) or `item_source="item:X"`; a named weapon (it stays on sale) or an upgr
 lord's gear ladder's weapon picks and lord's materials and their cultures (never handed out), and each
 rung's quest, which must be a root-level `<CareerQuest>` in `taom_career_quests.xml` as the game reads
 it (the rung never starts); a marketplace `<Culture id>` or `armour_from` (the culture draws on no
-armour), and a `<Stock>` row's `from` culture or a `match` that does not compile or finds no item id
+armour), a `<Routing>` row's bare item id or `cultures` token (a typo never matches, so `min_stock` never
+injects, #639; the gate reads only the first direct `<Routing>` child and its direct `<Item>` rows as the game does, and reports a row with no id, an id padded with spaces (the game keys it untrimmed) or no culture token (the game skips it)), and a `<Stock>` row's `from` culture or a `match` that does not compile or finds no item id
 (the row silently stocks nothing, #755), and a `<LadderPieces><Piece>` culture or item (the rung offers nothing). Each resolves against `Registries.items` and `Registries.cultures`, plus the items the engine
 registers in C# (`DefaultItems`: the metals among them), which no XML defines. The item registry counts
 only documents with an `<Items>` root, so a config or the generated class table quoting an id never
