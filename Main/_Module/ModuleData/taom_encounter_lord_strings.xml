@@ -1882,7 +1882,7 @@
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
 		</tags>
 	</string>
-	<string id="str_surrender_demand_hero.taom_sauron_rival_1" text="{=taom_enc_surrender_demand_sauron_rival_1}Lay down your arms. We serve the same darkness, and you will learn where you stand in it.">
+	<string id="str_surrender_demand_hero.taom_sauron_rival_1" text="{=taom_enc_surrender_demand_sauron_rival_1}Lay down your arms. We march under the same darkness, and you will learn where you stand in it.">
 		<tags>
 			<tag tag_name="taom_speaker_sauron" weight="100" />
 			<tag tag_name="taom_player_rival" weight="100" />
@@ -2130,7 +2130,7 @@
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
 		</tags>
 	</string>
-	<string id="str_context_line.taom_nazgul_ally_first" text="{=taom_enc_context_line_nazgul_ally_first}Do not fear the cold, servant of the Eye. It is not meant for you. Not today.">
+	<string id="str_context_line.taom_nazgul_ally_first" text="{=taom_enc_context_line_nazgul_ally_first}Do not fear the cold. It is not meant for you. Not today.">
 		<tags>
 			<tag tag_name="taom_speaker_nazgul" weight="100" />
 			<tag tag_name="taom_player_ally" weight="100" />
