@@ -5405,3 +5405,30 @@ hold the feet to one ground.
 - **Source:** issue #1591; [RCA](../rca-side-steps-wolf-stride-2026-11-24.md) F1, F3 and F5; the Tooling lens,
   the Data flow lens and the Codex pre-review; `tools/tests/test_gait_stride_creatures.py` (`SideStepTests`,
   `BackwardDirectionTests`, `GroundRuleTests`).
+
+### A value from a hand-typed JSON plan is held to its JSON type before `float()` sees it (#1566, 2026-11-24)
+`tools/repoint_anim_clip.py` took a plan row's numbers with `float(v)`. `float(True)` is 1.0 and `float("820")` is
+820.0, so `"source1": true` planned frame 1 and a quoted number passed for a number. A NaN went past the frame 0
+rule, because `min(nan, x) < 1` is false. A value over the record's 32-bit range raised out of `struct.pack` as a
+traceback, where the tool's contract is a refusal with a reason.
+- **Why missed:** the checks were written for wrong numbers (negative, out of order), and `float()` was the type
+  check. The first fix of this change covered the NaN and left the other three, and its one test of the command
+  line broke both sources in one row, so it passed without the new line.
+- **Prevent:** a number from JSON is an `int` or a `float` and not a `bool`, and it fits the field it is written
+  to; the tool refuses anything else by the row's name. A test of such a rule breaks one value in a row and keeps
+  the rest sound.
+- **Source:** issue #1566; Codex pre-review P2 and P3, the Tooling lens;
+  `tools/tests/test_repoint_anim_clip.py` (`LowFindingTests`).
+
+### A time limit in a test is a budget for one input: it does not show how the cost grows (#1566, 2026-11-24)
+`test_heredoc_regex_is_linear_in_a_long_delimiter` failed once at 5.68 s against a limit of 5 s, on a wall clock,
+while the C# suite ran beside it. The measure that followed showed more: the call the limit sat on,
+`git_call_dirs` in `.claude/hooks/_shellwords.py`, takes about 0.1 s of CPU for 750 lines with `<<`, 0.4 s for
+1,500 and 1.5 s for 3,000. It grows with the square of their number, under a test named "is linear".
+- **Why missed:** one input under one threshold passes for any growth rate that fits under the threshold. The
+  name said what the author meant to hold, not what the assertion holds.
+- **Prevent:** a timing test reads `time.process_time()`, so another job's load is not in it, and its name says
+  that it is a budget. A claim about growth needs two sizes and their ratio.
+- **Source:** issue #1566 (the comment of 2026-11-24 has the numbers); the Tooling lens and the Codex pre-review;
+  `tools/tests/test_shellwords.py`. The hook is not changed: the Bash tool's 7,500 character cap keeps a real
+  command near the smallest of those sizes.

@@ -409,14 +409,12 @@ pose in centimetres. Work folder of the first set: `E:\LOTRAOMAssets\Spider\gait
 
 **Still open.**
 
-- The turn records claim 0.873 (40 degrees in radians, divided by 0.8 s). The node advances a turn clip by turn
-  speed / (Duration x LoopDisplacement) of the turn-RIGHT record, for both directions (native read, 0x74E9C0), so
-  Duration x LoopDisplacement is the turn per loop in the unit of the turn-speed input. That unit is still not
-  read. It is radians a second by inference only: the vanilla horse's and the mumak's product is 1.8, which is
-  about one loop a second at a horse's turn rate, and fifty a second if the input were in degrees. Two ways to read
-  it failed on 2026-11-23: the vanilla `animation_clips.tpac` (6,177 items) is in a cooked form `parse_anim` cannot
-  read, and the trial cannot turn one spider on command (its input drives the view). A turn in place in a battle
-  shows a wrong factor as slipping feet.
+- Settled on 2026-11-24: the turn records' unit. They claim 0.873 (40 degrees in radians, divided by 0.8 s). The
+  node advances a turn clip by turn speed / (Duration x LoopDisplacement) of the turn-RIGHT record, for both
+  directions (0x74E9C0), and the turn speed is the mount's yaw rate in radians a second (0x66AAE0 writes it and
+  0x66A0A0 adds it x the tick time to the yaw: [elephant.md](elephant.md), "Speed at model size"). So in one
+  loop the body turns Duration x LoopDisplacement = 0.698 rad, the 40 degrees the clip turns: the records fit.
+  Nobody has watched a turn in place yet.
 - The quick stops play `spider_quick_stop` since 2026-11-23, 1.5 s, the warg's stop length. Nobody has watched a
   hard stop. Whether the engine holds the mount for the clip's length is still not known.
 - The spider in the party screen, the encyclopedia and a conversation plays `spider_idle`, which has no

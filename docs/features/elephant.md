@@ -673,7 +673,10 @@ weights 0x749920 and 0x74F0F0; constants read from the DLL). A pace's table entr
   both records and holds their stance and slip along the body. Nobody has reported the motion. In the walk or the backward pace, a sideways speed above twice the forward speed
   forces the standing pace. A turn in place advances the turn clip by turn speed / (`Duration` x
   LoopDisplacement) of the turn-RIGHT record, for both directions: 1.8 for the mumak (1.0 x 1.8) and 1.5 for
-  the war elephant (1.0 x 1.5). The turn-left record's values are not read for the rate.
+  the war elephant (1.0 x 1.5). The turn-left record's values are not read for the rate. The turn speed is
+  the mount's yaw rate in radians a second (below), so in one loop of the turn clip the body turns
+  `Duration` x LoopDisplacement radians: 1.8 rad, 103 degrees, for the mumak. A turn clip's feet fit when
+  the clip turns that far in a loop, so a turn record's travel is the clip's angle in radians / `Duration`.
 - **The "none" row.** The loader of `monster_usage_sets.xml` (0x621E40) files a `direction="none"` row under
   every direction that has no row of its own, so it fills a pace's back slot, and
   `act_elephant_stand_for_movement_data` fills the standing pace's front slot. When LoopDisplacement is 0 the
@@ -684,8 +687,14 @@ weights 0x749920 and 0x74F0F0; constants read from the DLL). A pace's table entr
   term divided by the tick time, projects the sum on the agent's side and forward axes, divides by the field
   that `IMBAgent.GetAgentScale` returns (0x6E58C0), caps the length of the pair, and stores it in the horse
   animation system, whose tick (0x6459F0) copies it into the node with the turn input. That the unit is m/s
-  is inferred from the term over the tick time. The turn input comes
-  from the agent's movement record; its writer and its unit are not read. First read on v1.5.6 for #1081
+  is inferred from the term over the tick time. The turn input is the yaw rate in the same movement record
+  (+0x138), in radians a second (read 2026-11-24 for #1550); the second, like the m/s, assumes that the tick
+  time is in seconds. 0x66AAE0 writes it: it moves the rate toward the turn command (+0x134) x a value of
+  the mount's data (+0x16c) x 0.04 (0.012 under one flag, and less while the mount moves), holds it inside
+  that limit, and lets it fall when there is no command. Its caller 0x66A0A0 adds the rate x the tick time
+  to the yaw (+0x34), which wraps at pi. 0x5F73C0 runs the agent tick 0x602040, which reaches both with
+  `*(agent+0x20)`, then the node's writer 0x5F75B0 and the animation system's tick, with one agent and one
+  tick time, for the mount before its rider. Agent scale does not enter the turn input. First read on v1.5.6 for #1081
   (`FUN_1805f7580`, [RCA](../reviews/rca-dire-wolf-resize-2026-11-06.md)). The mumak's walk looks right at 2.6
   to 5.1 m/s, which is the walk pace only with that division.
 

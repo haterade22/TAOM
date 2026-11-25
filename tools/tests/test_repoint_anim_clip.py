@@ -362,6 +362,11 @@ class CookedCheckTests(unittest.TestCase):
             code, text = self.check(d, plan_path)
             self.assertEqual(code, 1)
             self.assertIn("cooked=False", text)
+            # #1566: the line says that the entry is missing and where it would be, not that the record changed
+            entry = scb.rdc_path(d, scb.parse(read(os.path.join(clips, "warg_canter_anm.tpac"))).package_guid)
+            self.assertIn("it has no cache entry (%s)" % entry, text)
+            self.assertNotIn("changed since", text)
+            self.assertIn("skips a record that has no entry", text)
 
     def test_a_master_written_after_the_cook_fails_though_the_record_did_not_change(self):
         """The stamp is the RECORD's checksum. A master whose keys changed under one GUID leaves record and stamp
@@ -627,7 +632,7 @@ class TemplateTests(unittest.TestCase):
                     contextlib.redirect_stdout(out):
                 code = rp.main(["--plan", plan_path, "--module", d, "--under", "creature/warg/animations", "--apply"])
             self.assertEqual(code, 1)
-            self.assertIn("refused: warg_walk_stand: read-back differs", out.getvalue())
+            self.assertIn("failed: warg_walk_stand: read-back differs", out.getvalue())
             self.assertIn("--check", out.getvalue())
 
     def test_a_clip_that_is_there_ignores_its_template(self):
@@ -659,6 +664,148 @@ class TemplateTests(unittest.TestCase):
             self.assertRegex(out.getvalue(), r"PENDING\s+warg_walk_stand")
             self.assertIn("warg_trot_stand", out.getvalue())
             self.assertFalse(os.path.exists(made))
+
+
+class LowFindingTests(unittest.TestCase):
+    """#1566: the low findings of the #1563 review. None could write a wrong byte; each could mislead or crash."""
+
+    ROWS = [{"clip": "clip_%s" % k, "master": "Warg_Slow_run", "source1": 820, "source2": 850} for k in "abc"]
+
+    def folder(self, d):
+        for k in "abc":
+            with open(os.path.join(d, "clip_%s_anm.tpac" % k), "wb") as fh:
+                fh.write(gait_clip(name="clip_%s" % k))
+        with open(os.path.join(d, "Warg_Slow_run_geo.tpac"), "wb") as fh:
+            fh.write(tcf.master_package("warg_slow_run", uuid.uuid4()))
+
+    def main(self, *argv, running=False):
+        import contextlib
+        import io
+        out = io.StringIO()
+        with mock.patch.object(rp, "game_or_kit_running", return_value=running), contextlib.redirect_stdout(out):
+            code = rp.main(list(argv))
+        return code, out.getvalue()
+
+    def plan_file(self, d, rows):
+        import json
+        path = os.path.join(d, "plan.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(rows, fh)
+        return path
+
+    def test_a_source_that_is_not_a_finite_number_is_refused(self):
+        """min(nan, x) < 1 is false, so a NaN went past the frame 0 rule and into the record. A plan is JSON: true
+        is 1.0 to float(), "820" is 820.0, and a number over the record's 32-bit range raised out of struct."""
+        for bad in (float("nan"), float("inf"), "abc", None, [1], True, False, "820", 1e39, -1e39, 10 ** 400):
+            with self.subTest(bad=bad):
+                with self.assertRaisesRegex(rp.RepointError, "source1 and source2"):
+                    rp.repoint(clip(), uuid.uuid4(), bad, 9.0)
+                with self.assertRaisesRegex(rp.RepointError, "source1 and source2"):
+                    rp.repoint(clip(), uuid.uuid4(), 9.0, bad)
+
+    def test_a_plan_row_with_such_a_source_exits_1_with_no_traceback(self):
+        """One bad value a row, the other source sound: each must be refused for itself."""
+        with tempfile.TemporaryDirectory() as d:
+            self.folder(d)
+            path = os.path.join(d, "plan.json")
+            for bad in ("NaN", "Infinity", '"820"', "true", "1e39", "1" + "0" * 400):
+                for row in ('"source1": %s, "source2": 850' % bad, '"source1": 820, "source2": %s' % bad):
+                    with self.subTest(row=row[:40]):
+                        with open(path, "w", encoding="utf-8") as fh:
+                            fh.write('[{"clip": "clip_a", "master": "Warg_Slow_run", %s}]' % row)
+                        code, text = self.main("--plan", path, "--clips-dir", d)
+                        self.assertEqual(code, 1, text)
+                        self.assertIn("refused: source1 and source2 must be", text)
+
+    def test_the_other_number_fields_take_the_same_rule(self):
+        for field, bad in (("duration", True), ("duration", "0.5"), ("travel", 1e39), ("limits", [True, 2.0]),
+                           ("step_points", [0.1, 0.2, "0.3", 0.4])):
+            with self.subTest(field=field, bad=bad):
+                with self.assertRaises(rp.RepointError):
+                    rp.repoint(gait_clip(), uuid.uuid4(), 1.0, 17.0, **{field: bad})
+
+    def test_under_is_held_inside_the_modules_assets_folder(self):
+        with tempfile.TemporaryDirectory() as d:
+            module = os.path.join(d, "mod")
+            inside = os.path.join(module, "Assets", "creature", "warg", "animations")
+            for folder in (inside, os.path.join(module, "elsewhere"), os.path.join(d, "outside")):
+                os.makedirs(folder)
+                self.folder(folder)
+            plan = self.plan_file(d, self.ROWS)
+            os.makedirs(os.path.join(module, "Assets2"))       # a sibling whose name begins as Assets does
+            self.folder(os.path.join(module, "Assets2"))
+            other_drive = ("C" if os.path.splitdrive(os.path.realpath(d))[0].upper() != "C:" else "D") + ":/x"
+            for under in ("../elsewhere", "../../outside", "creature/../../elsewhere", os.path.join(d, "outside"),
+                          "../Assets2", other_drive):
+                with self.subTest(under=under):
+                    code, text = self.main("--plan", plan, "--module", module, "--under", under)
+                    self.assertEqual(code, 1, text)
+                    self.assertIn("refused: --under", text)
+                    self.assertIn("Assets", text)
+            code, text = self.main("--plan", plan, "--module", module, "--under", "creature/warg/animations")
+            self.assertEqual(code, 0, text)
+            code, text = self.main("--plan", plan, "--module", module, "--under", "creature/warg/../warg/animations")
+            self.assertEqual(code, 0, "a path that comes back inside is inside: " + text)
+
+    def test_a_failure_on_a_middle_row_says_how_far_the_write_got(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.folder(d)
+            before = {k: read(os.path.join(d, "clip_%s_anm.tpac" % k)) for k in "abc"}
+            rows = rp.plan(self.ROWS, d)
+            with mock.patch.object(rp.scb, "checksum_ok", side_effect=[True, False]), \
+                    self.assertRaisesRegex(rp.RepointError, r"clip_b: read-back or checksum differs.*1 of 3"):
+                rp.apply(rows, stamp="t")
+            after = {k: read(os.path.join(d, "clip_%s_anm.tpac" % k)) for k in "abc"}
+            self.assertNotEqual(after["a"], before["a"], "the first row stays written")
+            self.assertEqual((after["b"], after["c"]), (before["b"], before["c"]), "the failed row is restored")
+            for k in "ab":
+                self.assertEqual(read(os.path.join(d, "clip_%s_anm.tpac.bak-repoint-t" % k)), before[k])
+            self.assertFalse(os.path.exists(os.path.join(d, "clip_c_anm.tpac.bak-repoint-t")))
+
+    def test_a_restore_that_fails_too_names_both_errors_and_the_backup(self):
+        """The write of clip_b fails and so does putting its old bytes back: the record is broken, and the next
+        run cannot find it. The message must say so, and must not say that a second --apply writes the rest."""
+        with tempfile.TemporaryDirectory() as d:
+            self.folder(d)
+            plan = self.plan_file(d, self.ROWS)
+            target = os.path.join(d, "clip_b_anm.tpac")
+            real_open, errors = open, iter([OSError(28, "No space left on device"), PermissionError(13, "Permission denied")])
+
+            def fake_open(path, mode="r", *a, **k):
+                if os.path.normpath(str(path)) == os.path.normpath(target) and "w" in mode:
+                    raise next(errors)
+                return real_open(path, mode, *a, **k)
+            with mock.patch.object(rp, "open", fake_open, create=True):
+                code, text = self.main("--plan", plan, "--clips-dir", d, "--apply")
+            self.assertEqual(code, 1, text)
+            self.assertIn("failed: clip_b", text)
+            self.assertIn("No space left on device", text)
+            self.assertIn("Permission denied", text)
+            self.assertIn("clip_b_anm.tpac.bak-repoint-", text)
+            self.assertIn("by hand", text)
+            self.assertIn("1 of 3", text)
+            self.assertNotIn("--apply again writes it", text)
+
+    def test_a_file_the_system_refuses_is_a_refusal_with_its_count_not_a_traceback(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.folder(d)
+            plan = self.plan_file(d, self.ROWS)
+            real = rp._replace
+            calls = []
+
+            def second_fails(row, stamp):
+                calls.append(row.clip)
+                if len(calls) == 2:
+                    raise PermissionError(13, "Permission denied", row.path)
+                return real(row, stamp)
+            with mock.patch.object(rp, "_replace", side_effect=second_fails):
+                code, text = self.main("--plan", plan, "--clips-dir", d, "--apply")
+            self.assertEqual(code, 1, text)
+            self.assertIn("failed: clip_b", text)
+            self.assertIn("Permission denied", text)
+            self.assertIn("1 of 3", text)
+            self.assertIn("--apply again writes it", text)
+            self.assertEqual(calls, ["clip_a", "clip_b"], "nothing is tried after the failure")
 
 
 if __name__ == "__main__":
