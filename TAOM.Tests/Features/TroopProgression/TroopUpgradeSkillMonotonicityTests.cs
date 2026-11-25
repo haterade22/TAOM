@@ -271,6 +271,7 @@ public class TroopUpgradeSkillMonotonicityTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void EveryUpgradeTarget_HasNoSkillLowerThanTheTroopItUpgradesFrom()
     {
         var moduleData = ResolveModuleData();
