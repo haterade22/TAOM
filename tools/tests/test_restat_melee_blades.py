@@ -1020,5 +1020,77 @@ class ShieldCarrierTests(TmpCase):
         assert p.swing_dps * ratio_s <= POLEARM["swing_dps"] + 1e-9
 
 
+class CheckFlagTests(TmpCase):
+    """--check (#673): the dry-run pass, exit 1 when any blade would move, 0 when none."""
+
+    def _run(self, plans, argv, priced=None, failures=None, troops=None):
+        from unittest import mock
+        priced = {"sword": object()} if priced is None else priced
+        failures = [] if failures is None else failures
+        troops = [object()] if troops is None else troops
+        pieces = self.tmp_path / "pieces.xml"
+        pieces.write_text("<CraftingPieces/>", encoding="utf-8")
+        with mock.patch.object(restat, "MODULES", self.tmp_path), \
+                mock.patch.object(restat.ladder, "load_spec", return_value={}), \
+                mock.patch.object(restat.mc, "load", return_value=None), \
+                mock.patch.object(restat.mc, "price_all", return_value=(priced, failures)), \
+                mock.patch.object(restat, "mixed_blades", return_value=[]), \
+                mock.patch.object(restat.mc, "load_shield_ids", return_value=[]), \
+                mock.patch.object(restat.report, "load_troops", return_value=troops), \
+                mock.patch.object(restat, "build_plans", return_value=(plans, [])), \
+                mock.patch.object(restat, "write_pieces") as write, \
+                contextlib.redirect_stdout(io.StringIO()) as out, \
+                contextlib.redirect_stderr(io.StringIO()) as err:
+            code = restat.main(["--pieces", str(pieces)] + argv)
+        self.err = err.getvalue()
+        return code, out.getvalue(), write, pieces.read_text(encoding="utf-8")
+
+    def _plan(self):
+        return restat.BladePlan("blade_one", ["sword"], 6, "gondor", 100.0, 90.0,
+                                1.0, 1.1, 1.0, 1.0, 1)
+
+    def test_check_exits_1_when_a_blade_would_move_and_writes_nothing(self):
+        code, out, write, text = self._run([self._plan()], ["--check"])
+        assert code == 1, out
+        write.assert_not_called()
+        assert text == "<CraftingPieces/>"
+
+    def test_check_exits_0_when_nothing_would_move(self):
+        code, out, write, _ = self._run([], ["--check"])
+        assert code == 0, out
+        write.assert_not_called()
+
+    def test_plain_run_still_exits_0_with_a_pending_change(self):
+        code, _, write, _ = self._run([self._plan()], [])
+        assert code == 0
+        write.assert_not_called()
+
+    def test_check_exits_1_when_a_weapon_could_not_be_priced(self):
+        code, out, write, _ = self._run([], ["--check"], priced={"sword": object()},
+                                        failures=[("bow", "no ammo")])
+        assert code == 1, out
+        assert "CHECK FAILED: 1 weapon(s) could not be priced" in out
+        write.assert_not_called()
+
+    def test_check_exits_2_when_nothing_was_priced(self):
+        code, out, write, _ = self._run([], ["--check"], priced={}, failures=[])
+        assert code == 2, out
+        assert "SKIPPED" in self.err and "priced 0 weapons" in self.err
+        assert "CHECK OK" not in out
+        write.assert_not_called()
+
+    def test_check_exits_2_when_no_troops_loaded(self):
+        code, out, _, _ = self._run([], ["--check"], troops=[])
+        assert code == 2, out
+        assert "SKIPPED" in self.err and "loaded 0 troops" in self.err
+        assert "CHECK OK" not in out
+
+    def test_check_cannot_be_combined_with_apply(self):
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err), self.assertRaises(SystemExit):
+            restat.main(["--check", "--apply"])
+        assert "cannot be combined with --apply" in err.getvalue()
+
+
 if __name__ == "__main__":
     unittest.main()
