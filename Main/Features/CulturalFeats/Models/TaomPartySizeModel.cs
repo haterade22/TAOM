@@ -89,7 +89,7 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
         // bug. Culture party-size feats above remain factor-based (ApplyPartySizeFeats uses AddFactor).
         // Leader only, not CareerPassiveHero.ResolveId (owner first): a +50 pick must not grow every
         // caravan the player owns (#768).
-        // MUST run after the last AddFactor (the culture feats and the AI lord scaling above; the caravan bonus adds no factor): ApplyFlat divides
+        // MUST run after the last AddFactor (the culture feats, the AI lord scaling and the faction power factor above; the caravan bonus adds no factor): ApplyFlat divides
         // out only the factors already on the number, so a later factor would multiply the flat count
         // again. MUST run before the TroopWeight line below so its snapshot includes the career count.
         // Pinned by AiPartySizeOrderingTests.
