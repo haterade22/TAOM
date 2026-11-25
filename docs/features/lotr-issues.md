@@ -463,7 +463,7 @@ Ring](war-of-the-ring.md) feature. Register saveables in the same `726900801` se
 
 ## Changelog
 
-- 2026-11-25: PR #1603 (Luiz): added the TrainRetainers and HuntBand templates (save ids 107 to 110). The rows of `lotr_landlord_training` and `lotr_inn_and_out` move onto them in a later data patch, after #1605.
+- 2026-11-25: PR #1603: added the TrainRetainers and HuntBand templates (save ids 107 to 110). The rows of `lotr_landlord_training` and `lotr_inn_and_out` move onto them in a later data patch, after #1605.
 - 2026-06-20 — Implemented: `Main/Features/LotrIssues/` suppresses all 43 vanilla issue behaviors (`LotrIssueSuppression.SuppressAll` → guarded `RemoveBehaviors<T>`, host `IssuesCampaignBehavior` kept) and replaces them via 3 generic templates (DeliverGoods/DeliverPersonnel/Combat) driven by `taom_lotr_issues.xml`; saves at base `726900801` (localIds 101–106), 308 localization keys.
 - 2026-06-16 — Authored the conversion plan doc: 43-issue disposition matrix (41 Replace / 1 Reskin / 0 Drop), custom-issue framework, `RemoveBehaviors<T>` suppression strategy, localization, verification, and risks.
 
