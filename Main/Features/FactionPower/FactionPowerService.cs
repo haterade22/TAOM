@@ -38,12 +38,15 @@ public sealed class FactionPowerService
         FactionPowerMath.MultiplyResult(ref limit, multiplier, PowerText);
     }
 
-    /// <summary>Lever 2b: scales the militia inflow of a fief that is not the player clan's, so its equilibrium scales by the multiplier.</summary>
-    public void ScaleMilitiaChange(float multiplier, bool isPlayerClan, float militia, ref ExplainedNumber change)
+    /// <summary>
+    /// Lever 2b: scales the militia inflow of a fief that is not the player clan's, so its equilibrium scales by the multiplier.
+    /// A looted or burning village gets no change at all from the base (no Retired row), so nothing is added there.
+    /// </summary>
+    public void ScaleMilitiaChange(float multiplier, bool isPlayerClan, bool isInactiveVillage, float militia, ref ExplainedNumber change)
     {
-        if (multiplier == 1f || isPlayerClan)
+        if (multiplier == 1f || isPlayerClan || isInactiveVillage)
             return;
-        var delta = FactionPowerMath.MilitiaDelta(change.ResultNumber, militia, multiplier);
+        var delta = FactionPowerMath.MilitiaDelta(change.ResultNumber, militia, change.SumOfFactors, multiplier);
         FactionPowerMath.AddResultFrameDelta(ref change, delta, PowerText);
     }
 
@@ -67,4 +70,8 @@ public sealed class FactionPowerService
         if (eligible)
             FactionPowerMath.MultiplyResult(ref wage, FactionPowerMath.WageMultiplier(multiplier), WageText);
     }
+
+    /// <summary>Lever 2b: the militia a defended siege spawns, scaled and rounded; never for a player clan's fief.</summary>
+    public int ScaleMilitiaAfterSiege(float multiplier, bool isPlayerClan, int militia)
+        => multiplier == 1f || isPlayerClan ? militia : FactionPowerMath.ScaleCount(militia, multiplier);
 }

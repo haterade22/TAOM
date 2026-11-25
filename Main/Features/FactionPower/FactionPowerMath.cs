@@ -46,15 +46,17 @@ public static class FactionPowerMath
 
     /// <summary>
     /// The extra militia per day that moves the equilibrium from 40 x inflow to 40 x inflow x m: the inflow is scaled and the
-    /// retirement rate is kept. The inflow is the day's change plus what retires (<see cref="MilitiaRetireRate"/> x militia).
-    /// Zero for a multiplier of 1, a non-finite input or an inflow that is not positive.
+    /// retirement rate is kept. The inflow is the day's change plus what retires: the "Retired" row is added to the base
+    /// number, so it reaches the result times (1 + <paramref name="sumOfFactors"/>). Zero for a multiplier of 1, a
+    /// non-finite input or an inflow that is not positive.
     /// </summary>
-    public static float MilitiaDelta(float changeResult, float militia, float multiplier)
+    public static float MilitiaDelta(float changeResult, float militia, float sumOfFactors, float multiplier)
     {
-        if (!IsApplicable(multiplier) || !FiniteFloatValidator.IsFinite(changeResult) || !FiniteFloatValidator.IsFinite(militia))
+        if (!IsApplicable(multiplier) || !FiniteFloatValidator.IsFinite(changeResult) || !FiniteFloatValidator.IsFinite(militia)
+            || !FiniteFloatValidator.IsFinite(sumOfFactors))
             return 0f;
 
-        float inflow = changeResult + MilitiaRetireRate * militia;
+        float inflow = changeResult + MilitiaRetireRate * militia * (1f + sumOfFactors);
         return inflow > 0f ? (multiplier - 1f) * inflow : 0f;
     }
 
@@ -90,4 +92,8 @@ public static class FactionPowerMath
     /// </summary>
     public static float WageMultiplier(float multiplier) =>
         IsApplicable(multiplier) && multiplier > 1f ? 1f / multiplier : 1f;
+
+    /// <summary>A whole count (the militia spawned after a defended siege) times the multiplier, rounded. Unchanged for a multiplier of 1 or out of range.</summary>
+    public static int ScaleCount(int count, float multiplier) =>
+        IsApplicable(multiplier) ? (int)Math.Round(count * multiplier) : count;
 }

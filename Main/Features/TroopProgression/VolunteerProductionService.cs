@@ -23,8 +23,8 @@ namespace TAOM.Features.TroopProgression;
 /// value above unchanged, so with no active effect the result is today's result.
 ///
 /// Faction power (lever 3) multiplies the same product by the settlement realm's multiplier, after the war step, with one
-/// clamp to 0..1 at the end. The player-clan return above covers it. A hit also upgrades a filled slot
-/// (<c>RecruitmentCampaignBehavior</c> line 250), so a realm above 100 percent speeds volunteer tier-ups too.
+/// clamp to 0..1 at the end. The player-clan return above covers it. A hit on a filled slot also rolls the notable's small
+/// tier-up chance (<c>RecruitmentCampaignBehavior</c> lines 250 to 256), so tier-ups speed up too.
 /// </summary>
 public sealed class VolunteerProductionService
 {

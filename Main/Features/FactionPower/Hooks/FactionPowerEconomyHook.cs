@@ -14,6 +14,8 @@ public interface IFactionPowerEconomyHook
 {
     void ApplyMilitiaChange(Settlement? settlement, ref ExplainedNumber change);
 
+    int ScaleMilitiaAfterSiege(Settlement? settlement, int militia);
+
     void ApplyWageRelief(MobileParty? party, ref ExplainedNumber wage);
 }
 
@@ -36,7 +38,22 @@ public sealed class FactionPowerEconomyHook : IFactionPowerEconomyHook
         if (multiplier == 1f) return;
 
         _service.ScaleMilitiaChange(
-            multiplier, PlayerClanCheck.IsAPlayersClan(settlement.OwnerClan, _players), settlement.Militia, ref change);
+            multiplier, PlayerClanCheck.IsAPlayersClan(settlement.OwnerClan, _players),
+            settlement.IsVillage && settlement.Village.VillageState != Village.VillageStates.Normal, settlement.Militia, ref change);
+    }
+
+    /// <summary>
+    /// <c>MilitiasCampaignBehavior.OnAfterSiegeCompleted</c> adds this when the siege ends in a defender victory
+    /// (<c>_isSiegeWon</c> is set on <c>DefenderVictory</c>), so the settlement still belongs to the realm that defended it.
+    /// </summary>
+    public int ScaleMilitiaAfterSiege(Settlement? settlement, int militia)
+    {
+        if (settlement == null) return militia;
+
+        var multiplier = _service.Multiplier(FactionPowerRealm.KeyOf(settlement.MapFaction));
+        if (multiplier == 1f) return militia;
+
+        return _service.ScaleMilitiaAfterSiege(multiplier, PlayerClanCheck.IsAPlayersClan(settlement.OwnerClan, _players), militia);
     }
 
     public void ApplyWageRelief(MobileParty? party, ref ExplainedNumber wage)

@@ -21,6 +21,9 @@ public class TaomSettlementMilitiaModel : DefaultSettlementMilitiaModel
         _factionPower = factionPower;
     }
 
+    public override int MilitiaToSpawnAfterSiege(Town town)
+        => _factionPower.ScaleMilitiaAfterSiege(town?.Settlement, base.MilitiaToSpawnAfterSiege(town));
+
     public override ExplainedNumber CalculateMilitiaChange(Settlement settlement, bool includeDescriptions = false)
     {
         var result = base.CalculateMilitiaChange(settlement, includeDescriptions);

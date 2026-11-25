@@ -1,6 +1,9 @@
+using DryIoc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TaleWorlds.CampaignSystem;
+using TAOM.Adapters;
+using TAOM.Core.Logging;
 using TAOM.Features.CulturalFeats;
 using TAOM.Features.FactionPower;
 using TAOM.Features.TroopProgression;
@@ -27,7 +30,7 @@ public class FactionPowerEconomyTests
         for (int day = 0; day < 2000; day++)
         {
             float change = inflow - FactionPowerMath.MilitiaRetireRate * militia;
-            militia += change + FactionPowerMath.MilitiaDelta(change, militia, multiplier);
+            militia += change + FactionPowerMath.MilitiaDelta(change, militia, 0f, multiplier);
         }
         return militia;
     }
@@ -45,11 +48,11 @@ public class FactionPowerEconomyTests
     [TestMethod]
     public void MilitiaDelta_AtOneOrWithBadInput_IsZero()
     {
-        Assert.AreEqual(0f, FactionPowerMath.MilitiaDelta(2f, 10f, 1f));
-        Assert.AreEqual(0f, FactionPowerMath.MilitiaDelta(-5f, 0f, 1.5f), "a non-positive inflow");
-        Assert.AreEqual(0f, FactionPowerMath.MilitiaDelta(float.NaN, 10f, 1.5f));
-        Assert.AreEqual(0f, FactionPowerMath.MilitiaDelta(2f, float.NaN, 1.5f));
-        Assert.AreEqual(0f, FactionPowerMath.MilitiaDelta(2f, 10f, 3f), "out of range");
+        Assert.AreEqual(0f, FactionPowerMath.MilitiaDelta(2f, 10f, 0f, 1f));
+        Assert.AreEqual(0f, FactionPowerMath.MilitiaDelta(-5f, 0f, 0f, 1.5f), "a non-positive inflow");
+        Assert.AreEqual(0f, FactionPowerMath.MilitiaDelta(float.NaN, 10f, 0f, 1.5f));
+        Assert.AreEqual(0f, FactionPowerMath.MilitiaDelta(2f, float.NaN, 0f, 1.5f));
+        Assert.AreEqual(0f, FactionPowerMath.MilitiaDelta(2f, 10f, 0f, 3f), "out of range");
     }
 
     [TestMethod]
@@ -99,7 +102,7 @@ public class FactionPowerEconomyTests
         var change = new ExplainedNumber(2f, true);
         var before = (change.BaseNumber, change.SumOfFactors, change.ResultNumber, change.GetLines().Count);
 
-        Create().ScaleMilitiaChange(1f, false, 50f, ref change);
+        Create().ScaleMilitiaChange(1f, false, false, 50f, ref change);
 
         Assert.AreEqual(before, (change.BaseNumber, change.SumOfFactors, change.ResultNumber, change.GetLines().Count));
     }
@@ -109,12 +112,75 @@ public class FactionPowerEconomyTests
     {
         // Inflow 3 per day, 40 militia: the change is 3 - 1 = 2; the inflow is 3, so 150 percent adds 1.5.
         var change = new ExplainedNumber(2f);
-        Create().ScaleMilitiaChange(1.5f, false, 40f, ref change);
+        Create().ScaleMilitiaChange(1.5f, false, false, 40f, ref change);
         Assert.AreEqual(3.5f, change.ResultNumber, Tolerance);
 
         var player = new ExplainedNumber(2f);
-        Create().ScaleMilitiaChange(1.5f, true, 40f, ref player);
+        Create().ScaleMilitiaChange(1.5f, true, false, 40f, ref player);
         Assert.AreEqual(2f, player.ResultNumber, Tolerance);
+    }
+
+    [TestMethod]
+    public void MilitiaDelta_RetiredRowIsReadThroughTheFactors()
+    {
+        // Retired row 0.025 x 40 = 1 lands as 1 x (1 + 1) = 2 in the result: change 3 means inflow 3 + 2 = 5, so 150 percent adds 2.5.
+        Assert.AreEqual(2.5f, FactionPowerMath.MilitiaDelta(3f, 40f, 1f, 1.5f), Tolerance);
+    }
+
+    [TestMethod]
+    public void Militia_LootedOrBurningVillage_GetsNothing()
+    {
+        var change = new ExplainedNumber(0f);
+
+        Create().ScaleMilitiaChange(2f, false, true, 100f, ref change);
+
+        Assert.AreEqual(0f, change.ResultNumber);
+    }
+
+    [TestMethod]
+    public void MilitiaAfterSiege_RoundedAndScaled_NeverForThePlayerClan_AndNoOpAt100()
+    {
+        Assert.AreEqual(135, Create().ScaleMilitiaAfterSiege(1.5f, false, 90));
+        Assert.AreEqual(45, Create().ScaleMilitiaAfterSiege(0.5f, false, 90));
+        Assert.AreEqual(110, Create().ScaleMilitiaAfterSiege(1.5f, false, 73), "109.5 rounds to even");
+        Assert.AreEqual(90, Create().ScaleMilitiaAfterSiege(1.5f, true, 90));
+        Assert.AreEqual(90, Create().ScaleMilitiaAfterSiege(1f, false, 90));
+        Assert.AreEqual(90, FactionPowerMath.ScaleCount(90, float.NaN));
+    }
+
+    [DataTestMethod]
+    [DataRow(false, false, false, false, false)]
+    [DataRow(true, false, false, false, true)]
+    [DataRow(false, true, false, false, true)]
+    [DataRow(false, false, true, false, true)]
+    [DataRow(false, false, false, true, true)]
+    public void OwnerClan_ComesFromTheFief_ForGarrisonMilitiaVillagerAndPatrol(bool garrison, bool militia, bool villager, bool patrol, bool fief)
+    {
+        Assert.AreEqual(fief, FactionPowerRealm.UsesHomeFiefOwner(garrison, militia, villager, patrol));
+    }
+
+    [TestMethod]
+    public void TheRealContainer_InjectsTheFactionPowerStoreIntoVolunteerProduction()
+    {
+        var data = new FakeAdvancedStartData();
+        data.Values["taom_fp_mordor"] = 150;
+        using var container = new Container();
+        container.RegisterInstance<IAdvancedStartDataAdapter>(data);
+        container.RegisterInstance<IFactionPowerCatalog>(new FakeFactionPowerCatalog("mordor"));
+        container.RegisterInstance(Substitute.For<IModLogger>());
+        container.RegisterInstance(Substitute.For<ICulturalFeatsService>());
+        var war = Substitute.For<IWarEffectService>();
+        war.GetMultiplier(NSubstitute.Arg.Any<string>(), NSubstitute.Arg.Any<WarEffectKind>()).Returns(1f);
+        container.RegisterInstance(war);
+        container.Register<FactionPowerStore>(Reuse.Singleton);
+        container.RegisterMapping<IFactionPowerSettings, FactionPowerStore>();
+        container.Register<VolunteerProductionService>(Reuse.Singleton);
+        container.Resolve<IFactionPowerSettings>().Reload();
+
+        var sut = container.Resolve<VolunteerProductionService>();
+
+        Assert.AreEqual(0.6f, sut.Compute(0.4f, null, null, false, "mordor"), 1e-6f);
+        Assert.AreEqual(0.4f, sut.Compute(0.4f, null, null, false, "gondor"), 1e-6f);
     }
 
     [TestMethod]
@@ -189,7 +255,7 @@ public class FactionPowerEconomyTests
     {
         var feats = Substitute.For<ICulturalFeatsService>();
         var warService = Substitute.For<IWarEffectService>();
-        warService.GetMultiplier(Arg.Any<string>(), Arg.Any<WarEffectKind>()).Returns(war);
+        warService.GetMultiplier(NSubstitute.Arg.Any<string>(), NSubstitute.Arg.Any<WarEffectKind>()).Returns(war);
         return new VolunteerProductionService(feats, warService, _settings);
     }
 
