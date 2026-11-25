@@ -15,6 +15,7 @@ internal static class ContractSamples
         GroupNames = new[] { "Battle Tactics", "Momentum" },
         GroupHashes = new[] { "h1", "h2" },
         Conclusive = true,
+        ModuleOrder = new[] { "TAOM_Map", "TAOM" },
     };
 
     public static CoopCompatHelloReply Reply() => new CoopCompatHelloReply
@@ -23,6 +24,9 @@ internal static class ContractSamples
         Verdict = 2,
         DivergentGroups = new[] { "Battle Tactics" },
         BuildMismatch = true,
+        LoadOrderDiffers = true,
+        LoadOrderHostFirst = "TAOM Map (TAOM_Map)",
+        LoadOrderHostSecond = "TAOM",
     };
 
     public static CoopCompatMomentumSnapshot Snapshot() => new CoopCompatMomentumSnapshot
@@ -71,7 +75,41 @@ internal static class ContractSamples
         Balance = 12.5f,
         HasArmouryLevel = true,
         ArmouryLevel = 2,
+        HasLadder = true,
+        LadderSlot = 3,
+        LadderReady = true,
+        LadderCanClaim = true,
+        LadderLordLevel = 3,
+        LadderMaterialId = "m_gondor",
+        LadderNeeded = 30,
+        LadderCarried = 12,
+        LadderChoices = new[] { "gd_lord_helm", "gd_lord_helm_b" },
     };
 
-    public static IMessage[] All() => new IMessage[] { Hello(), Reply(), Snapshot(), LdRunEnded(), TradeRequest(), TradeReply() };
+    public static CoopCompatCareerReport CareerReport() => new CoopCompatCareerReport
+    {
+        ProtocolVersion = 1,
+        Sequence = 9_000_000_001L,
+        JoinReport = true,
+        HeroId = "Player1",
+        CareerId = "ranger_of_ithilien",
+        Choices = new[] { "root", "fork_a" },
+        Tiers = new[] { 2, 3 },
+        Flags = new[] { "career_tree_v2" },
+    };
+
+    public static CoopCompatCareerUpdate CareerUpdate() => new CoopCompatCareerUpdate
+    {
+        ProtocolVersion = 1,
+        Sequence = 42,
+        HeroId = "Player2",
+        CareerId = "warden_of_fornost",
+        Choices = new[] { "root" },
+        Tiers = new[] { 2 },
+        Flags = new[] { "proven" },
+        Refused = true,
+        Known = true,
+    };
+
+    public static IMessage[] All() => new IMessage[] { Hello(), Reply(), Snapshot(), LdRunEnded(), TradeRequest(), TradeReply(), CareerReport(), CareerUpdate() };
 }

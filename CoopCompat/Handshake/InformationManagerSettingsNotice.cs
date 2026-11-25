@@ -20,4 +20,12 @@ public sealed class InformationManagerSettingsNotice : ISettingsNotice
         var text = new TextObject("{=taom_coopcompat_build_mismatch}Your TAOM build is not the host's build. Co-op can desync or misbehave. Install the same TAOM download as the host.");
         InformationManager.DisplayMessage(new InformationMessage(text.ToString(), Colors.Red));
     }
+
+    public void LoadOrderDiffers(string hostFirst, string hostSecond)
+    {
+        var text = new TextObject("{=taom_coopcompat_load_order_differs}Your mod load order differs from the host's: on the host {FIRST} loads before {SECOND}, for you after it. A mod that loads later replaces items and troops from earlier ones, so you may see other gear or troops than the host. Load your mods in the host's order and restart the game.")
+            .SetTextVariable("FIRST", hostFirst)
+            .SetTextVariable("SECOND", hostSecond);
+        InformationManager.DisplayMessage(new InformationMessage(text.ToString(), Colors.Yellow));
+    }
 }

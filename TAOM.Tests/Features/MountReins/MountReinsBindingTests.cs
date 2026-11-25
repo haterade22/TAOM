@@ -67,7 +67,6 @@ public class MountReinsBindingTests
     }
 
     [TestMethod]
-    [TestCategory("RequiresGameIL")]
     public void TheHook_ReadsTheReinSkeleton_AndStillCallsTheEngineCloth()
     {
         // Call presence only: it proves neither call was deleted, not the branch between them (rule tests cover that).

@@ -1205,9 +1205,19 @@ public class SubModule : MBSubModuleBase
         // a container singleton would reset it once per process (WarOfTheRingWiringTests).
         campaignStarter.AddBehavior(new WarOfTheRingBehavior(wotrService, wotrLogger,
             IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
-        // WotR Momentum #327 — Evil-vs-Good progress tracking + victory; behavior is a
-        // Reuse.Singleton (it carries the state store's persistence dict).
-        campaignStarter.AddBehavior(IoC.Resolve<Features.WarOfTheRingMomentum.WarOfTheRingMomentumBehavior>());
+        // WotR Momentum #327. #773: must stay `new` per campaign; its constructor resets the
+        // process-lifetime momentum store (PerCampaignBehaviorWiringTests).
+        campaignStarter.AddBehavior(new Features.WarOfTheRingMomentum.WarOfTheRingMomentumBehavior(
+            IoC.Resolve<Features.WarOfTheRingMomentum.IMomentumStateStore>(),
+            IoC.Resolve<Features.WarOfTheRingMomentum.IMomentumEventService>(),
+            IoC.Resolve<Features.WarOfTheRingMomentum.IMomentumEnrollmentService>(),
+            IoC.Resolve<Features.WarOfTheRingMomentum.IMomentumVictoryService>(),
+            IoC.Resolve<IWarEventSnapshotAdapter>(),
+            IoC.Resolve<Features.WarOfTheRingMomentum.IMomentumSettingsProvider>(),
+            wotrService,
+            IoC.Resolve<Features.WarOfTheRingMomentum.UI.IMomentumUIService>(),
+            IoC.Resolve<IModLogger>(),
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
 
         var siegeDefenseService = IoC.Resolve<ISiegeDefenseService>();
         var siegeDefenseLogger = IoC.Resolve<IModLogger>();
@@ -1250,7 +1260,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomSettlementFoodModel(IoC.Resolve<ISettlementFoodService>(), IoC.Resolve<ISettlementFoodConfigProvider>(), IoC.Resolve<IBattleBalanceConfigProvider>()));
         campaignStarter.AddModel(new TaomSettlementEconomyModel(IoC.Resolve<ISettlementEconomyService>(), IoC.Resolve<ISettlementEconomyConfigProvider>()));
         campaignStarter.AddModel(new TaomBanditDensityModel(IoC.Resolve<IBanditScalingService>(), IoC.Resolve<IHideoutBossFightService>()));
-        campaignStarter.AddModel(new TaomPartyMoraleModel(culturalFeats, careerPassives));
+        campaignStarter.AddModel(new TaomPartyMoraleModel(culturalFeats, careerPassives, IoC.Resolve<TAOM.Features.WarChronicle.Effects.WarMoraleService>(), IoC.Resolve<Features.CoopInterop.IPlayerControlQuery>()));
         campaignStarter.AddModel(new TaomSmithingModel(culturalFeats, careerPassives));
         campaignStarter.AddModel(new TaomClanFinanceModel(
             culturalFeats,
@@ -1934,6 +1944,7 @@ public class SubModule : MBSubModuleBase
         PartyCharacterVM_InitializeUpgrades_Patch.Initialize(resourceHook, specResLogger);
         PartyScreenLogic_UpgradeTroop_Patch.Initialize(resourceHook, specResLogger);
         PartyScreenLogic_AddCommand_Patch.Initialize(resourceHook, specResLogger);
+        PartyScreenLogic_DoneLogic_ChargePatch.Initialize(resourceHook, specResLogger);
         RecruitmentVM_RecruitGate_Patch.Initialize(IoC.Resolve<IOnRecruitmentResourceGate>(), specResLogger);
         TryPatchCategory("Patch26_SpecialResources");
         TryPatchCategory("Patch51_RecruitmentResourceGate");

@@ -1,6 +1,7 @@
 # In-game checks for #1409 (Phase 7 of #1325: the Helm's Deep attack, the player storms the walls as the attacker in the story mission helms_deep_attack), read by
 # tools/ingame_verdict.py. The unattended run is: python tools/run_scenario.py --kind story-mission --mission helms_deep_attack, then python tools/ingame_verdict.py --issue 1409
-# on its log. Only the dev menu and that driver can open the row: the War Chronicle offers no attack yet. The story mission hosts the Long Defeat run, whose check lines
+# on its log. The dev menu and that driver open the row. Since #1105 slice 5 the War Chronicle's Hornburg offer (--kind story-offer --event hornburg --choice attack) launches the same
+# mission: such a run reaches the scoped rows only, because the done row reads the story-mission kind's line. The story mission hosts the Long Defeat run, whose check lines
 # HostedRunOutcomeLog writes as taom.story-missions.hosted.<name>; the ability and signature lines are not renamed.
 #
 # Every row but the done row carries a scope that opens a segment at each launch of helms_deep_attack (StoryMissionLauncher's "[StoryMissions] launching <scene> for '<id>' (...)")
@@ -86,14 +87,14 @@ scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_attack\x27 '
 scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "the same run: the wave ended by a win or a loss that the mission reached by itself (a reason=Abandoned end reads FAIL here)"
 reached = ['\[Check\] id=taom\.story-missions\.ended result=']
-pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost) side=Attacking reason=(TargetReached|DefendersDead|KeepLost) waves=\d+$']
+pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won side=Attacking reason=(DefendersDead|KeepLost)|Lost side=Attacking reason=TargetReached) waves=\d+$']
 fail = ['\[Check\] id=taom\.story-missions\.ended result=fail', '\[Check\] id=taom\.story-missions\.ended result=pass verdict=Lost side=Attacking reason=Abandoned ',
         '\[Check\] id=taom\.story-missions\.ended result=\S+ verdict=\S+ side=Defending ',
         '\[Check\] id=taom\.story-missions\.ended result=pass verdict=Lost side=Attacking reason=(KeepLost|DefendersDead) ',
         '\[Check\] id=taom\.story-missions\.ended result=pass verdict=Won side=Attacking reason=TargetReached ']
 absence = "not-reached"
 
-# A balance result for the maintainer, not a fault. The keep rule is KeepHoldRule.cs:19 (attackers at the keep at or above keepMinAttackers, 26 on this row, and twice the defenders
+# A balance result for the maintainer, not a fault. The keep rule is KeepHoldRule.cs:19 (attackers at the keep at or above keepMinAttackers, 36 on this row, and twice the defenders
 # there) for the hold time of RunRules.cs:27-30; the other win is every defender down. NOT REACHED here means the attack was not won at the shipped numbers.
 [[check]]
 id = "taom.story-missions.attack-won"
@@ -174,7 +175,7 @@ absence = "not-reached"
 claim = "the order bar shows the attacker formations, an order takes a formation off AI, and the key presses work"
 
 [[human]]
-claim = "after his death the player takes over one of his own soldiers, the run goes on, and his death is not counted as a kill (a takeover after his death makes the wave check write a false hosted.wave result=fail, because Read and Fell skip the taken-over soldier; no manifest reads that line)"
+claim = "after his death the player takes over one of his own soldiers, the run goes on, and his death is not counted as a kill (in an attack the soldier he takes is one of the wave's count, so the wave check names him: hosted.wave ... taken=1, and its kills, felled and taken still reach the count)"
 
 [[human]]
 claim = "the boss cast lines are red and read 'Enemy Aragorn' (and 'Enemy Legolas', 'Enemy Gimli')"

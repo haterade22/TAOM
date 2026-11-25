@@ -30,6 +30,7 @@ internal sealed partial class LongDefeatDirector
     private readonly ILongDefeatBattlefieldAdapter _field;
     private readonly ILongDefeatEffectsAdapter? _effects;
     private readonly ILongDefeatFortAdapter? _fort;
+    private readonly ILongDefeatHeroVoiceAdapter? _voice;
     private readonly LongDefeatSession _session;
     private readonly IModLogger _logger;
     private readonly IOutcomeLog _outcomes;
@@ -41,6 +42,8 @@ internal sealed partial class LongDefeatDirector
 
     private LdPoint? _keepAt;
     private float _keepRadius;
+
+    private FieldPlaces? _fieldStarts;
     private int _chargedWave;
     private bool _started;
     private DateTime _startedUtc;
@@ -56,21 +59,26 @@ internal sealed partial class LongDefeatDirector
     private int _mainBody;
     private int _adoptedBody;
     private bool _deathPending;
-    private bool _respawned;
     private RunPhase _botPhase = RunPhase.Ended;
     private float _botClock;
     private int _musterBatchesSpawned;
 
     /// <param name="effects">The engine writes and reads beyond the field; null runs the wave with no published factors and no <c>scale</c> check (the director's tests).</param>
     /// <param name="fort">The fortification engine work (the gates; later the posts and the volleys), the same object as <paramref name="field"/> in the game; null buys and checks no fortification effect (the director's tests).</param>
+    /// <param name="voice">The mission heroes' recorded lines (#1569), the same object as <paramref name="field"/> in the game; null keeps every hero silent (the director's tests).</param>
+    /// <param name="lord">The engine half of the death rule (the rise, the bot's take-over, the general's seat, the forced fall), the same object as <paramref name="field"/> in the game; null keeps the old respawn and serves none of it (the director's tests only: every run in the game passes one, a co-op host's and a story mission's too).</param>
     public LongDefeatDirector(RunPlan plan, ILongDefeatBattlefieldAdapter field, LongDefeatSession session, IModLogger logger,
-        IOutcomeLog outcomes, string missionKey, LongDefeatRunRecords? records = null, ILongDefeatEffectsAdapter? effects = null, ILongDefeatFortAdapter? fort = null)
+        IOutcomeLog outcomes, string missionKey, LongDefeatRunRecords? records = null, ILongDefeatEffectsAdapter? effects = null, ILongDefeatFortAdapter? fort = null, ILongDefeatLordAdapter? lord = null,
+        ILongDefeatHeroVoiceAdapter? voice = null)
     {
         _plan = plan;
         _run = new SurvivalRun(plan);
         _field = field;
         _effects = effects;
         _fort = fort;
+        _lord = lord;
+        _voice = voice;
+        _heroVoiceSalt = plan.Options.Seed ?? unchecked((uint)Environment.TickCount);
         _session = session;
         _logger = logger;
         _outcomes = outcomes;
@@ -104,15 +112,35 @@ internal sealed partial class LongDefeatDirector
             return false;
         }
 
-        var broken = _field.BreakHiddenGates();
-        _field.DeployEngines();
-        _logger.LogInfo($"{Tag}[Boot] hidden gates broken {broken}");
-        _logger.LogInfo($"{Tag}{_field.DescribeEngines()}");
+        var field = _plan.Field != null;
+        if (field)
+        {
+            var starts = _field.FieldStarts();
+            if (starts?.Defenders == null || starts.Attackers == null)
+            {
+                var missing = $"the field gave no start place for the {(starts?.Defenders == null ? "defenders" : "attackers")}";
+                _logger.LogError($"{Tag}[Boot] the field cannot host a run: {missing}");
+                LongDefeatChecks.Record(_outcomes, LongDefeatChecks.BootId, _mission, LongDefeatChecks.BootFailed(missing));
+                return false;
+            }
+
+            _fieldStarts = starts;
+            _logger.LogInfo($"{Tag}[Boot] field run: defenders start ({F1(starts.Defenders.X)}, {F1(starts.Defenders.Y)}, {F1(starts.Defenders.Z)}), attackers start ({F1(starts.Attackers.X)}, {F1(starts.Attackers.Y)}, {F1(starts.Attackers.Z)})");
+        }
+        else
+        {
+            var broken = _field.BreakHiddenGates();
+            _field.DeployEngines();
+            _logger.LogInfo($"{Tag}[Boot] hidden gates broken {broken}");
+            _logger.LogInfo($"{Tag}{_field.DescribeEngines()}");
+        }
 
         var recorded = _plan.Keep;
-        _keepAt = recorded is { } r ? new LdPoint(r.X, r.Y, r.Z) : _field.KeepFromScene();
-        LongDefeatChecks.Record(_outcomes, LongDefeatChecks.KeepId, _mission,
-            LongDefeatChecks.Keep(_keepAt, recorded != null ? "recorded" : "scene", _keepRadius));
+        _keepAt = recorded is { } r ? new LdPoint(r.X, r.Y, r.Z) : field ? null : _field.KeepFromScene();
+        ChooseRisePlace();
+        if (!field || _keepAt != null)
+            LongDefeatChecks.Record(_outcomes, LongDefeatChecks.KeepId, _mission,
+                LongDefeatChecks.Keep(_keepAt, recorded != null ? "recorded" : "scene", _keepRadius));
         var refusal = PrepareSally();
         if (refusal.Length > 0)
         {
@@ -120,8 +148,6 @@ internal sealed partial class LongDefeatDirector
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.BootId, _mission, LongDefeatChecks.BootFailed(refusal));
             return false;
         }
-
-        CheckFortPoints();
 
         _session.Fill(_run);
         _started = true;
@@ -131,8 +157,9 @@ internal sealed partial class LongDefeatDirector
         AdoptIfNew();
         var facts = _field.BootFacts();
         _playerAttacks = facts.PlayerAttacks;
+        CheckFortPoints();
         _logger.LogInfo($"{Tag}[Player] start {_field.DescribePlayer()}");
-        LongDefeatChecks.Record(_outcomes, LongDefeatChecks.BootId, _mission, LongDefeatChecks.Boot(facts));
+        LongDefeatChecks.Record(_outcomes, LongDefeatChecks.BootId, _mission, LongDefeatChecks.Boot(facts, field));
         LogArcherPositions();
         _logger.LogInfo($"{Tag}[Boot] run started: fortress {_plan.FortressId}, keep {KeepText()} ({(recorded != null ? "recorded" : "scene")}), autoplay {_plan.Options.Autoplay}");
         return true;
@@ -146,6 +173,7 @@ internal sealed partial class LongDefeatDirector
         if (!_started || _shutDown || _run.Result != null || !(dt > 0f))
             return;
 
+        _tickNo++;
         DrainBodyEvents();
 
         _session.AddLiveSeconds(dt);
@@ -163,15 +191,17 @@ internal sealed partial class LongDefeatDirector
 
         _mainBody = read.MainBody;
         AdoptIfNew();
+        JudgeRise();
         JudgeFieldCare(read.DefenderHealthMean);
         ReadPostsTick();
         WatchRoom(read);
         var fx = _run.Tick(new RunSnapshot(dt, read.AttackersStanding, read.AttackersFleeing, read.DefendersStanding, _atKeep,
-            _defendersAtKeep, read.SiegeBattleSize, read.Gates));
+            _defendersAtKeep, read.SiegeBattleSize, read.Gates, _field.ReadLord(false), read.DefenderHealthMean));
         Apply(fx);
         if (_run.Result != null)
             return;
 
+        JudgeGeneralDown();
         TickWaitingHeroes(dt);
         TickStanding(dt, fx);
         TickSplit(dt, fx.DefenderBatches.Count > 0);
@@ -211,23 +241,35 @@ internal sealed partial class LongDefeatDirector
                     _run.DefenderDown();
                     break;
                 case LdRemovalKind.Player:
-                    LordFell();
+                    if (_deathPending && _playerAttacks && _riseVia.Length == 0)
+                        _run.AttackerTaken();
+                    LordFell(removal.TroopId, removal.Forced);
                     break;
                 case LdRemovalKind.Hero:
                     HeroLeft(removal.TroopId, removal.Loss);
                     if (removal.PlayerBody && removal.Loss)
-                        LordFell();
+                        LordFell(HeroTroop(removal.TroopId), false);
                     break;
             }
         });
     }
 
-    /// <summary>The lord's body fell. Main thread only, called from the deferred removal.</summary>
-    private void LordFell()
+    /// <summary>The troop of a hero the field names by his id (a hero's removal carries the id his row and his spawn use), so a death row names the body as a takeover's reading does. An id no hero of the plan has is returned as it is.</summary>
+    private string HeroTroop(string heroId) =>
+        _plan.Shop.Heroes.FirstOrDefault(h => h.Id == heroId)?.TroopId ?? _plan.FreeHeroes.FirstOrDefault(h => h.Id == heroId)?.TroopId ?? heroId;
+
+    /// <summary>
+    /// A body the player controlled fell: the lord's, a soldier's or a hero's, named by its troop. <paramref name="forced"/> is the field's fact that it is the removal the <c>lord_falls</c> blow produced. Main thread only,
+    /// called from the deferred removal, so it only notes the death: the seat and its check come on the next tick.
+    /// A fall while the last one still waits for its adoption, with no rise on the way, is a soldier who was taken and fell before the next tick could adopt him: the removal above
+    /// books him as taken in an attack, because <see cref="AdoptIfNew"/> never sees him.
+    /// </summary>
+    private void LordFell(string troopId, bool forced)
     {
-        _run.PlayerDown();
+        _run.PlayerDown(troopId, forced);
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.LordFellId, _mission + "-f" + _run.Stats.PlayerDeaths, LongDefeatChecks.LordFell(_run.Stats.PlayerDeaths, _playerAttacks));
         _deathPending = true;
+        NoteLordFall(troopId, forced);
         NoteEngineTookSplit("the lord fell");
     }
 
@@ -247,6 +289,7 @@ internal sealed partial class LongDefeatDirector
         if (_shutDown)
             return;
 
+        StopHeroVoice();
         _deferred.Drain();
         _shutDown = true;
         _poisonHits = false;
@@ -258,6 +301,8 @@ internal sealed partial class LongDefeatDirector
 
         _sallyHits = false;
         _sally = null;
+        ReleaseLordHolds();
+        ReleaseErrandWalk("run-ended");
 
         _session.Clear();
         _field.Clear();
@@ -275,15 +320,18 @@ internal sealed partial class LongDefeatDirector
         DressNewBody(heldHero);
         _logger.LogInfo($"{Tag}[General] {_field.DescribeFormations()}");
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.GeneralId, _mission, LongDefeatChecks.General(_field.BootFacts()));
+        LogBotTakeoverAfter();
+        var via = TakeRiseVia();
         if (!_deathPending)
             return;
 
         _deathPending = false;
-        if (_respawned)
+        if (via.Length > 0)
             _logger.LogInfo($"{Tag}[Player] respawned {_field.DescribePlayer()}");
+        else if (_playerAttacks && !heldHero)
+            _run.AttackerTaken();
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.PlayerDeathId, "d" + _run.Stats.PlayerDeaths,
-            LongDefeatChecks.PlayerDeath(true, _respawned ? "respawn" : "takeover"));
-        _respawned = false;
+            via.Length > 0 ? LongDefeatChecks.PlayerDeath(true, via) : LongDefeatChecks.PlayerDeath(true, "takeover", _plan.Options.Autoplay ? "bot" : "person"));
     }
 
     private void PlayShop(float dt)
@@ -309,7 +357,7 @@ internal sealed partial class LongDefeatDirector
             _run.TryReroll();
         else if (action.Kind == BotActionKind.Horn)
             _run.TryStartWave();
-        else
+        else if (!PlayPlace(action))
             BuyFortification(action.Kind);
     }
 
@@ -341,7 +389,7 @@ internal sealed partial class LongDefeatDirector
         var v = _run.GetView();
         if (v.Phase == RunPhase.Wave)
         {
-            SampleGateWatch();
+            SampleGateWatch(read.AttackersHigh > 0);
             LogArcherPositionsInWave();
         }
         _logger.LogInfo($"{Tag}[State] wave {v.Wave} {v.Phase}: attackers {read.AttackersStanding} fleeing {read.AttackersFleeing} high {read.AttackersHigh}, "
@@ -352,7 +400,8 @@ internal sealed partial class LongDefeatDirector
         _frames = 0;
         SampleLateScale();
         LogCommander();
-        _logger.LogInfo($"{Tag}{_field.DescribeEngines()}");
+        if (_plan.Field == null)
+            _logger.LogInfo($"{Tag}{_field.DescribeEngines()}");
         _logger.LogInfo($"{Tag}[Keep] attackers={_atKeep} defenders={_defendersAtKeep} progress={F2(v.KeepProgress)} at={KeepText()} positions={SampleText()}");
     }
 

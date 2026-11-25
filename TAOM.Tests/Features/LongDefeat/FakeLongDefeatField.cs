@@ -12,7 +12,7 @@ namespace TAOM.Tests.Features.LongDefeat;
 /// slot of its index in its batch, as the engine does, so a later batch reuses an earlier one's slots. Agents are strings:
 /// "A:troop" is an attacker, "D:troop" a defender and "P" the player.
 /// </summary>
-internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapter, ILongDefeatFortAdapter
+internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapter, ILongDefeatFortAdapter, ILongDefeatLordAdapter
 {
     private readonly List<LdPoint> _defenderPoints = new();
 
@@ -96,10 +96,22 @@ internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapte
     /// <summary>Whether a recorded muster place has a navmesh; false makes <see cref="SetMusterFrame"/> refuse.</summary>
     public bool MusterOk { get; set; } = true;
 
-    public bool SetMusterFrame(FormationSlot slot, MusterFrame frame)
+    public bool SetMusterFrame(FormationSlot slot, MusterFrame frame, bool attackers = false)
     {
-        Calls.Add($"Muster:{slot}:{frame.X.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
-        return MusterOk;
+        Calls.Add($"{(attackers ? "AttackerMuster" : "Muster")}:{slot}:{frame.X.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
+        return MusterOk && frame.X != MusterRefusedX;
+    }
+
+    /// <summary>The X of the one place <see cref="SetMusterFrame"/> refuses while every other place is taken; null refuses none.</summary>
+    public float? MusterRefusedX { get; set; }
+
+    /// <summary>What <see cref="FieldStarts"/> answers: the start places of a field run (#1105), or null on a siege scene.</summary>
+    public FieldPlaces? Starts { get; set; }
+
+    public FieldPlaces? FieldStarts()
+    {
+        Calls.Add("FieldStarts");
+        return Starts;
     }
 
     /// <summary>Every batch the field was asked to spawn, with the side, so a test can read what the run put on it (a health factor).</summary>
@@ -165,7 +177,7 @@ internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapte
     {
         LordReads++;
         Calls.Add(detail ? "ReadLord:detail" : "ReadLord");
-        return Lord;
+        return MainBody == 0 ? LdLordFacts.None : Lord;
     }
 
     public List<LdPlace> Teleports { get; } = new();
@@ -295,12 +307,21 @@ internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapte
     public bool AdoptMain(bool aiDriven)
     {
         Calls.Add($"Adopt:{aiDriven}");
+        ControllerName = aiDriven ? "AI" : "Player";
+        NoteAdopted();
         return MainIsHeldHero;
     }
 
     public LdBootFacts BootFacts() => Facts;
 
-    public string DescribeEngines() => "[Engines] none";
+    /// <summary>How often the director asked for the siege engines' line; a field run never does.</summary>
+    public int EngineDescriptions { get; private set; }
+
+    public string DescribeEngines()
+    {
+        EngineDescriptions++;
+        return "[Engines] none";
+    }
 
     public string DescribePlayer() => "main=fake";
 
@@ -323,7 +344,9 @@ internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapte
         if (!loss)
             return new LdRemoval(LdRemovalKind.None, "", Key: key);
         if (text == "P")
-            return new LdRemoval(LdRemovalKind.Player, "", Key: key);
+            return new LdRemoval(LdRemovalKind.Player, "lord_4_1", Key: key);
+        if (text == "PF")
+            return new LdRemoval(LdRemovalKind.Player, "lord_4_1", Key: key, Forced: true);
         if (text.StartsWith("A:", StringComparison.Ordinal) || text.StartsWith("S:", StringComparison.Ordinal))
         {
             var marked = text.EndsWith("!", StringComparison.Ordinal);

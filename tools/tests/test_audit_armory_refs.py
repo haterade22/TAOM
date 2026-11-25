@@ -138,6 +138,23 @@ class ReportAndExitCode(unittest.TestCase):
         self.assertIn("DRIFT: x missing", text)
 
 
+class ModuleList(unittest.TestCase):
+    def test_the_audit_reads_the_modules_the_validator_reads(self):
+        seen = {}
+
+        def fake(game, modules):
+            seen["modules"] = list(modules)
+            raise RuntimeError("stop after the module list")
+
+        with mock.patch.object(aa.vm, "tpac_paths_for_modules", fake), \
+                mock.patch.object(aa, "ensure_exists", lambda p, _w: p), \
+                mock.patch.object(aa.vm, "extract_refs", return_value=[]):
+            with self.assertRaises(RuntimeError):
+                aa.build_summary(Path("g"), "LOTRLOME_Armory", Path("nowhere"), False)
+        self.assertEqual(sorted(seen["modules"]), sorted(vm.DEFAULT_TPAC_MODULES))
+        self.assertEqual(seen["modules"][0], "LOTRLOME_Armory")
+
+
 class GeneratorChecks(unittest.TestCase):
     def test_the_server_skeleton_package_is_checked_after_an_armory_sync(self):
         # An art drop that changes a creature skeleton leaves the dedicated server's

@@ -18,6 +18,10 @@ internal readonly record struct SeatHandOverReading(bool ControllerOwnerIsMain, 
 /// </summary>
 internal static class SeatTrialRules
 {
+    /// <summary>The name of a step's picture. The runner turns <c>hud_*.bmp</c> into a PNG (tools/run_fords_autorun.py), so the name starts with it.</summary>
+    internal static string PictureName(string step, int number) =>
+        "hud_" + step + "_" + number.ToString(CultureInfo.InvariantCulture) + ".bmp";
+
     /// <summary>Real seconds since the script began at which the trial finishes the deployment (once the refusal step has reported).</summary>
     internal const float DeploymentFinishSeconds = 5f;
 

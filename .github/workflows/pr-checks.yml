@@ -1,0 +1,173 @@
+name: PR checks
+
+# The checks every pull request to the 1.5.x trunk gets on arrival (#1543). They restore the no-game jobs removed in
+# c8d69a0dc (2026-10-05), now that the tests that need the game carry the RequiresGame and RequiresGameIL tags.
+# They cover less than /verify on the maintainer's machine: no game, no live Armory or TAOM_Map, no ModuleData
+# validator against the installed modules. A green run is not a review and not an approval.
+#
+# Safety: a GitHub-hosted VM, discarded after each run, never a self-hosted runner (.ai/policy.md: no untrusted PR
+# code on the game workstation). The token is read-only and the jobs use no secrets. A fork PR from any outside
+# contributor waits for the maintainer's approval before it runs (the repository's Actions setting,
+# all_external_contributors). Actions are pinned to commit SHAs. dotnet test and unittest exit 0 when nothing ran,
+# so each test step asserts a floor on the number of tests it executed, skips left out: about 5% under a run on
+# 2026-11-22 for the C# steps (unit 38,012, gate 781) and 7% under it for the tool tests (10,750 of 10,884 ran).
+# Doc: docs/features/pr-review-automation.md.
+
+on:
+  pull_request:
+    branches: [bannerlord-1.5.x]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-checks-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  csharp:
+    name: C# build and tests (no game)
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build against reference assemblies
+        id: build
+        shell: pwsh
+        run: |
+          dotnet build TAOM.Tests -p:TaomGameRefs=RefAsm -p:DisableModuleCopy=true -p:ModuleId=
+          exit $LASTEXITCODE
+
+      - name: Unit tests (RequiresGame, LiveInstall and BindingVerification left out)
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        shell: pwsh
+        run: |
+          dotnet test TAOM.Tests --no-build -p:TaomGameRefs=RefAsm -p:DisableModuleCopy=true -p:ModuleId= --filter "TestCategory!=RequiresGame&TestCategory!=LiveInstall&TestCategory!=BindingVerification" --logger "trx;LogFileName=unit.trx" --results-directory TestResults
+          $rc = $LASTEXITCODE
+          $c = ([xml](Get-Content -Raw TestResults/unit.trx)).TestRun.ResultSummary.Counters
+          Write-Host "unit: total=$($c.total) executed=$($c.executed) passed=$($c.passed) failed=$($c.failed)"
+          $floor = 36000
+          if ([int]$c.executed -lt $floor) { Write-Host "::error::Only $($c.executed) unit tests executed, expected at least $floor. A filter or discovery problem is not a pass."; exit 1 }
+          exit $rc
+
+      - name: Binding gate on reference assemblies (a skip fails)
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        shell: pwsh
+        run: |
+          $game = Join-Path $PWD 'TAOM.Tests/bin/Debug/net472/refasm-game'
+          if (-not (Test-Path (Join-Path $game 'bin/Win64_Shipping_Client/Bannerlord.exe'))) { Write-Host "::error::$game was not written by the RefAsm build (GameReferences.targets)."; exit 1 }
+          $env:BANNERLORD_GAME_DIR = $game
+          dotnet test TAOM.Tests --no-build -p:TaomGameRefs=RefAsm -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=BindingVerification&TestCategory!=RequiresGameIL&TestCategory!=LiveInstall" --logger "trx;LogFileName=gate.trx" --results-directory TestResults
+          $rc = $LASTEXITCODE
+          $c = ([xml](Get-Content -Raw TestResults/gate.trx)).TestRun.ResultSummary.Counters
+          Write-Host "gate: total=$($c.total) executed=$($c.executed) passed=$($c.passed) failed=$($c.failed)"
+          $floor = 740
+          if ([int]$c.executed -lt $floor) { Write-Host "::error::Only $($c.executed) binding checks executed, expected at least $floor."; exit 1 }
+          if ([int]$c.total -ne [int]$c.executed) { Write-Host "::error::$([int]$c.total - [int]$c.executed) binding checks did not execute. A skipped binding check is not a pass."; exit 1 }
+          exit $rc
+
+      - name: Keep the test results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: test-results
+          path: TestResults/*.trx
+          if-no-files-found: ignore
+
+  python:
+    name: Python tool tests
+    # Windows, like the machines the tools run on: on Linux 28 tests failed on Windows paths and PowerShell (#1546).
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.14'
+
+      # Every non-stdlib module a test or a tool under test imports, minus the ones only Blender, Ghidra or the
+      # Claude API provide: the tests that need those skip themselves, as do the tests that need the game. Ruff is
+      # the version docs/reference/development-machines.md names; the lint gate test fails without it.
+      - name: Install test dependencies
+        run: python -m pip install --disable-pip-version-check pytest lxml lz4 xxhash numpy scipy capstone pefile pyyaml pillow ruff==0.17.2
+
+      # The shell lint gate test needs ShellCheck 0.11.0, the version the dev machines use. The hash is that of the
+      # maintainer's installed shellcheck.exe from the same release, so a changed download fails here.
+      - name: ShellCheck 0.11.0
+        shell: pwsh
+        run: |
+          $zip = Join-Path $env:RUNNER_TEMP 'shellcheck.zip'
+          $dir = Join-Path $env:RUNNER_TEMP 'shellcheck'
+          Invoke-WebRequest 'https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.zip' -OutFile $zip
+          Expand-Archive $zip -DestinationPath $dir
+          $exe = Get-ChildItem $dir -Recurse -Filter shellcheck.exe | Select-Object -First 1
+          $hash = (Get-FileHash $exe.FullName -Algorithm SHA256).Hash
+          if ($hash -ne 'C9E82ADA36EF4B8D4CAF1F97FA89289048C8F4A33C2C76FFFFC88BFE09FF00C5') { Write-Host "::error::shellcheck.exe hash $hash is not the pinned one."; exit 1 }
+          "TAOM_SHELLCHECK=$($exe.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      # The runner's TEMP is the 8.3 short name C:\Users\RUNNER~1\..., and tests that compare a temp path with the
+      # long form git or Python resolves then fail. runner.temp is a long path.
+      - name: Run tools/tests
+        shell: bash
+        env:
+          TEMP: ${{ runner.temp }}
+          TMP: ${{ runner.temp }}
+        run: |
+          set +e
+          OUT=$(python -m unittest discover -s tools/tests -t . 2>&1)
+          RC=$?
+          set -e
+          echo "$OUT"
+          # "Ran N" counts skipped tests too, so the floor applies to N minus the skips. The step shell runs with
+          # -e and pipefail, so a grep that finds nothing must not end it before the messages below.
+          RAN=$(echo "$OUT" | grep -oE 'Ran [0-9]+ test' | tail -1 | awk '{print $2}' || true)
+          SKIPPED=$(echo "$OUT" | grep -oE 'skipped=[0-9]+' | tail -1 | cut -d= -f2 || true)
+          if [ -z "$RAN" ]; then
+            echo "::error::unittest printed no summary line, so discovery did not complete. This is not a pass."
+            exit 1
+          fi
+          EXECUTED=$((RAN - ${SKIPPED:-0}))
+          echo "tools: ran=$RAN skipped=${SKIPPED:-0} executed=$EXECUTED"
+          if [ "$EXECUTED" -lt 10000 ]; then
+            echo "::error::Only $EXECUTED tests executed ($RAN ran, ${SKIPPED:-0} skipped), expected at least 10000. Collection is broken, the search root moved or tests skip that should run."
+            exit 1
+          fi
+          exit $RC
+
+  docs:
+    name: Doc drift and context budget
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.14'
+
+      # The linter is stdlib apart from PyYAML, which parses rule frontmatter.
+      - name: PyYAML
+        run: python -m pip install --quiet --disable-pip-version-check pyyaml
+
+      # A CI checkout is clean, so the default base (HEAD) gives the dash, RCA and feature-doc checks nothing to read.
+      # On pull_request HEAD is the merge commit and its first parent is the base, so HEAD^1 checks the PR's changes.
+      - name: lint_docs.py --fail-on-drift
+        run: python tools/lint_docs.py --fail-on-drift --dash-base HEAD^1

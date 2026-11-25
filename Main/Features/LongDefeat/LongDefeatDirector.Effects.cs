@@ -25,6 +25,9 @@ internal sealed partial class LongDefeatDirector
         if (fx.PublishStats is { } stats)
             _effects?.PublishStats(stats);
 
+        if (fx.General is { } seat)
+            WriteGeneral(seat);
+
         // The engines destroyed in an earlier wave come back first, so the Hammer writes their hit points too (#1160).
         if (fx.StartWave is { } begun)
             RestoreEngines(begun.Wave);
@@ -48,7 +51,7 @@ internal sealed partial class LongDefeatDirector
 
         // A defending lord on foot joins the foot formation's open batch, which closes after him; a mounted one joins the cavalry formation, so the batch closes on its own.
         // When the player attacks, the lord spawns alone into the attackers' foot, so the slot reserved here is never filled; that is harmless (the formation is laid out for one more while it spawns).
-        var joinsBatch = fx.SpawnPlayer && !LordRides;
+        var joinsBatch = fx.SpawnPlayer && !LordRides && _plan.Field == null;
         var closes = joinsBatch ? new List<FormationSlot>() : null;
         foreach (var batch in fx.DefenderBatches)
             SpawnBatch(batch, false, joinsBatch, standing, closes);
@@ -83,6 +86,11 @@ internal sealed partial class LongDefeatDirector
         foreach (var batch in fx.AttackerBatches)
             SpawnBatch(batch, true, false, standing, closes);
 
+        if (fx.TakeOverForBot)
+            AskBotTakeover();
+        if (fx.FellLord)
+            AskForcedFall();
+
         if (fx.RefreshAttackerTactic)
         {
             _field.RefreshAttackerTactic();
@@ -112,6 +120,8 @@ internal sealed partial class LongDefeatDirector
             SallyHome();
         foreach (var e in fx.Events)
             OnEvent(e);
+        if (fx.RiseLord is { } rise)
+            RiseLord(rise);
         if (fx.RestShare > 0f)
         {
             var rest = _field.RestDefenders(fx.RestShare);
@@ -125,6 +135,11 @@ internal sealed partial class LongDefeatDirector
         // After the batches, so a pack bought beside the care is healed too; before any volley.
         if (fx.FieldCare > 0f)
             ApplyFieldCare(fx.FieldCare);
+
+        if (fx.Errand is { } errand)
+            ServeErrand(errand);
+        if (fx.SwapGear is { } gear)
+            SwapLordGear(gear);
 
         // Last: a volley reads the attackers this tick's batches spawned (D30), and every order is answered here, fired or withheld, so a ready source never orders twice.
         FireVolleys(fx.FireVolleys);
@@ -150,8 +165,11 @@ internal sealed partial class LongDefeatDirector
                 _field.PlaceFormation(b.Slot, b.BatchTotal + reserve, attackers);
             else
                 _field.BeginBatch(b.Slot, b.BatchTotal + reserve, attackers);
-            if (!attackers)
-                UseMusterPlace(b.Slot);
+            UseMusterPlace(b.Slot, attackers);
+        }
+        else if (attackers && _fieldStarts != null)
+        {
+            UseMusterPlace(b.Slot, true);
         }
 
         var report = _field.SpawnBatch(b, attackers);
@@ -174,20 +192,30 @@ internal sealed partial class LongDefeatDirector
         }
     }
 
-    // Every defender batch, garrison or bought pack, goes to the recorded place of its class, since the formation's own order position moves with the AI. Attackers never do.
-    private void UseMusterPlace(FormationSlot slot)
+    // Every defender batch, garrison or bought pack, goes to the recorded place of its class, since the formation's own order position moves with the AI. Attackers do so only on a field run.
+    private void UseMusterPlace(FormationSlot slot, bool attackers)
     {
-        var frame = _plan.Muster?.For(slot);
-        if (frame == null || _musterFallback.Contains(slot))
-            return;
+        var recorded = attackers || _musterFallback.Contains(slot) ? null : _plan.Muster?.For(slot);
+        if (recorded != null)
+        {
+            if (_field.SetMusterFrame(slot, recorded))
+                return;
 
-        if (_field.SetMusterFrame(slot, frame))
-            return;
+            _musterFallback.Add(slot);
+            LongDefeatChecks.Record(_outcomes, LongDefeatChecks.MusterId, _mission + slot, LongDefeatChecks.MusterPlaceLost(slot));
+            _logger.LogWarning($"{Tag}[Muster] the recorded {slot} place ({F1(recorded.X)}, {F1(recorded.Y)}, {F1(recorded.Z)}) has no navmesh; defenders of that class spawn at the {(_fieldStarts == null ? "scene's frame" : "field's start place")}");
+        }
 
-        _musterFallback.Add(slot);
-        LongDefeatChecks.Record(_outcomes, LongDefeatChecks.MusterId, _mission + slot, LongDefeatChecks.MusterPlaceLost(slot));
-        _logger.LogWarning($"{Tag}[Muster] the recorded {slot} place ({F1(frame.X)}, {F1(frame.Y)}, {F1(frame.Z)}) has no navmesh; defenders of that class spawn at the scene's frame");
+        var start = attackers ? AttackerStart() : _fieldStarts?.Defenders;
+        if (start != null && !_field.SetMusterFrame(slot, start, attackers))
+            throw new InvalidOperationException($"the {(attackers ? "attackers'" : "defenders'")} start place ({F1(start.X)}, {F1(start.Y)}, {F1(start.Z)}) has no navmesh");
     }
+
+    /// <summary>Where the attackers' next batch starts on a field run: the player's own band at its one place, the attackers of a defence at the place farther from the defenders.</summary>
+    private MusterFrame? AttackerStart() =>
+        _fieldStarts == null || _playerAttacks || _fieldStarts.AttackersBehind == null
+            ? _fieldStarts?.Attackers
+            : _fieldStarts.AttackersFartherFrom(_field.StandingDefenderPoints());
 
     private void LogSpawnLevel(SoldierBatch b, bool attackers, LdSpawnReport report, bool last)
     {
@@ -292,13 +320,6 @@ internal sealed partial class LongDefeatDirector
             _chargedWave = 0;
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + e.Wave, LongDefeatChecks.StaleCleared());
         }
-
-        if (_run.Result != null || _mainBody != 0)
-            return;
-
-        _respawned = true;
-        if (!SpawnLord(true))
-            LongDefeatChecks.Record(_outcomes, LongDefeatChecks.PlayerDeathId, "d" + _run.Stats.PlayerDeaths, LongDefeatChecks.PlayerDeath(false, "respawn-refused"));
     }
 
     /// <summary>The end of the run, from the tick that ended it or from <see cref="Shutdown"/>. Once.</summary>
@@ -314,13 +335,15 @@ internal sealed partial class LongDefeatDirector
         CloseSplit(SplitWave(), "run-ended");
         JudgeEngineUse(true);
         FinishVolleys();
+        ReleaseErrandWalk("run-ended");
+        ReleaseLordHolds();
         if (_chargedWave != 0)
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + _chargedWave, LongDefeatChecks.StaleStranded(result.Reason, _run.GetView().DefendersStanding));
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.NoRoutId, _mission, LongDefeatChecks.NoRout(_run.Stats));
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.GoldId, _mission, _plan.Bounties.Count == 0
             ? LongDefeatChecks.GoldWithoutBounties()
             : LongDefeatChecks.Gold(_run.Purse, _run.Stats, _run.WavesCleared));
-        ReportText = LongDefeatRunReport.Build(_plan.FortressId, _plan.Options, _plan.Provenance, result, _run.Stats, _run.Purse, _startedUtc, DateTime.UtcNow, _session.MaxSpeed, _run.BoonSummary(), _run.FortSummary());
+        ReportText = LongDefeatRunReport.Build(_plan.FortressId, _plan.Options, _plan.Provenance, result, _run.Stats, _run.Purse, _startedUtc, DateTime.UtcNow, _session.MaxSpeed, _run.BoonSummary(), _run.FortSummary(), _run.LordSummary());
         var written = WriteReport();
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.EndId, _mission, LongDefeatChecks.End(result, ReportText.Length > 0 && written));
         SaveBestRun(result);
@@ -355,7 +378,8 @@ internal sealed partial class LongDefeatDirector
             return;
 
         var run = new BestRun(result.WavesCleared, result.Kills);
-        var current = store.Load(_plan.FortressId);
+        var key = LongDefeatBestRunStore.KeyFor(_plan.FortressId, _plan.Options.Difficulty);
+        var current = store.Load(key);
         if (!run.IsBetter(current))
         {
             _session.RecordBest(current!);
@@ -363,7 +387,7 @@ internal sealed partial class LongDefeatDirector
             return;
         }
 
-        var saved = store.TrySave(_plan.FortressId, run, out var error);
+        var saved = store.TrySave(key, run, out var error);
         if (saved)
             _session.RecordBest(run);
         else
@@ -374,6 +398,6 @@ internal sealed partial class LongDefeatDirector
         }
 
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.BestRunId, _mission,
-            LongDefeatChecks.BestRunSaved(run, saved ? store.Load(_plan.FortressId) : null, error));
+            LongDefeatChecks.BestRunSaved(run, saved ? store.Load(key) : null, error));
     }
 }

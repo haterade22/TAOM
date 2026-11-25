@@ -37,6 +37,28 @@ public class AllianceActionHookTests
         Assert.IsTrue(_sut.ShouldPreventAllianceEnd("empire_w", "vlandia"));
     }
 
+    // #1105 slice 5: EndPermanentAlliance records the pair before it asks the engine, so the real service answers Neutral and the
+    // prefix lets the engine's EndAlliance through.
+    [TestMethod]
+    public void ShouldPreventAllianceEnd_ABrokenPermanentPair_ReturnsFalse()
+    {
+        var provider = Substitute.For<IDiplomacyConfigProvider>();
+        provider.LoadConfig().Returns(new DiplomacyConfig
+        {
+            Relationships = new System.Collections.Generic.List<KingdomRelationship>
+            {
+                new() { KingdomA = "isengard", KingdomB = "empire_s", Tier = AllianceTier.Permanent },
+            },
+        });
+        var service = new DiplomacyService(provider, Substitute.For<TAOM.Adapters.IAllianceAdapter>(), Substitute.For<TAOM.Features.Execution.IAlignmentService>(), _logger);
+        var sut = new AllianceActionHook(service, _wotr, _logger, _coop);
+        Assert.IsTrue(sut.ShouldPreventAllianceEnd("isengard", "empire_s"), "before the end");
+
+        service.EndPermanentAlliance("isengard", "empire_s", "test");
+
+        Assert.IsFalse(sut.ShouldPreventAllianceEnd("empire_s", "isengard"));
+    }
+
     [TestMethod]
     public void ShouldPreventAllianceEnd_NaturalAllies_ReturnsFalse()
     {

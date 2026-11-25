@@ -67,15 +67,28 @@ internal sealed class GateWatch
 
     public int Through { get; private set; }
 
+    /// <summary>
+    /// Whether any sample of this watch saw an attacker above the walls' high line, at a fortress where that line clears the gates' doorways (<c>HighLineClearsGates</c>). From that sample on an
+    /// attacker behind a gate may have climbed there, so only <see cref="ThroughBeforeWalls"/> still proves the gate was passed.
+    /// </summary>
+    public bool WallsReached { get; private set; }
+
+    /// <summary>The part of <see cref="Through"/> counted in samples before the walls were first reached: attackers who can only have passed the gate.</summary>
+    public int ThroughBeforeWalls { get; private set; }
+
     public void Rebase(float baseline) => Baseline = baseline;
 
     /// <summary>One 5-second sample. A negative <paramref name="behind"/> is the field saying it could not measure (no keep, no plane, no standing gate): it is not counted, so <c>samples=</c> is the number of real readings.</summary>
-    public void Sample(int behind)
+    public void Sample(int behind, bool attackersOnWalls = false)
     {
-        if (behind < 0)
-            return;
+        if (behind >= 0)
+        {
+            Samples++;
+            Through += behind;
+            if (!WallsReached && !attackersOnWalls)
+                ThroughBeforeWalls += behind;
+        }
 
-        Samples++;
-        Through += behind;
+        WallsReached |= attackersOnWalls;
     }
 }

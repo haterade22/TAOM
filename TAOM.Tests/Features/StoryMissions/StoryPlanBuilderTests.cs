@@ -26,6 +26,24 @@ public class StoryPlanBuilderTests
     }
 
     [TestMethod]
+    public void Build_CarriesTheHeroLinesItIsGiven()
+    {
+        var lines = new HeroLinePlan(new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IReadOnlyList<System.Collections.Generic.IReadOnlyList<string>>>
+        {
+            ["legolas"] = new System.Collections.Generic.IReadOnlyList<string>[] { new[] { "a.ogg" } },
+        });
+
+        var plan = StoryPlanBuilder.Build(StoryTestData.Definition(), RunOptions.Default, lines);
+
+        Assert.AreSame(lines, plan.HeroLines);
+        Assert.AreEqual("a.ogg", plan.HeroLines.Pick("legolas", 1, 0UL));
+    }
+
+    [TestMethod]
+    public void Build_GivenNoHeroLines_CarriesNone() =>
+        Assert.AreSame(HeroLinePlan.None, StoryPlanBuilder.Build(StoryTestData.Definition(), RunOptions.Default).HeroLines);
+
+    [TestMethod]
     public void Build_CarriesTheRecordedKeepAndMusterPoints()
     {
         var keep = new KeepPoint(1f, 2f, 3f, 12f);
@@ -130,5 +148,27 @@ public class StoryPlanBuilderTests
         var plan = StoryPlanBuilder.Build(StoryTestData.Definition(heroes: heroes), RunOptions.Default);
 
         CollectionAssert.AreEquivalent(new[] { "g1", "g2", "a1", "a2", "h_a" }, RunPlanTroops.AllTroopIds(plan).ToArray());
+    }
+
+    [TestMethod]
+    public void Build_CarriesTheFieldPlacesAndTheHeroWhoMustLive()
+    {
+        MusterFrame.TryCreate(1f, 2f, 3f, 0.6f, 0.8f, out var frame);
+        var field = new FieldPlaces(frame, null);
+        var definition = StoryTestData.Definition(heroes: new[] { new HeroSpawn("boromir", "h_b", 5f) }) with { Field = field, MustLive = "boromir" };
+
+        var plan = StoryPlanBuilder.Build(definition, RunOptions.Default);
+
+        Assert.AreSame(field, plan.Field);
+        Assert.AreEqual("boromir", plan.MustLive);
+    }
+
+    [TestMethod]
+    public void Build_ASiegeMission_HasNoFieldAndNoHeroWhoMustLive()
+    {
+        var plan = StoryPlanBuilder.Build(StoryTestData.Definition(), RunOptions.Default);
+
+        Assert.IsNull(plan.Field);
+        Assert.IsNull(plan.MustLive);
     }
 }

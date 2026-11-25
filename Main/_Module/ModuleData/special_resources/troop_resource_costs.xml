@@ -60,6 +60,10 @@
   <Troop id="ironpass_ram_breaker" resource_id="gems" upgrade_cost="2" recruit_cost="10" daily_upkeep="0.1" merchant_cost="10" />
   <Troop id="ironpass_ram_vanguard" resource_id="gems" upgrade_cost="3" recruit_cost="14" daily_upkeep="0.15" merchant_cost="14" />
   <Troop id="ironpass_ram_marshal" resource_id="gems" upgrade_cost="5" recruit_cost="18" daily_upkeep="0.25" merchant_cost="18" />
+  <!-- The chariot branch beside the marshal: the War Chariot (41) pays the marshal's row, so the Ram Vanguard's
+       two upgrades cost the same, and the Steel Chariot (46) pays one rung more on the same scale. -->
+  <Troop id="ironpass_war_chariot" resource_id="gems" upgrade_cost="5" recruit_cost="18" daily_upkeep="0.25" merchant_cost="18" />
+  <Troop id="ironpass_steel_chariot" resource_id="gems" upgrade_cost="7" recruit_cost="22" daily_upkeep="0.35" merchant_cost="22" />
 
   <!-- Gondor (Castar), level 41 and above (#600). Same band as the Mordor uruk and Black
        Numenorean lines: L41 upgrade 4 / upkeep 0.2, L46 5 / 0.3, and L51 6 / 0.4 extrapolated one

@@ -76,6 +76,13 @@ STANDARD = BOONED + ("affix", "affix-effect", "commander")
 FULL_LOG = log_of(STANDARD, 5)
 LOSE_LOG = log_of(ld.LOSE_CHECKS, 0)
 FINAL = {"reason": "final", "started": "2026-11-04T10:00:00"}
+
+# The three lines the death rule's engine half writes for one fall, rise and adoption (LongDefeatLordChecks and LongDefeatChecks.PlayerDeath, pinned by LongDefeatLordChecksTests against the manifest rows).
+DEATH_RULE_LINES = "\n".join((
+    "[2026-11-04 10:05:00] [INFO] [Check] id=taom.long-defeat.general-down result=pass seat=none want=none",
+    "[2026-11-04 10:05:01] [INFO] [Check] id=taom.long-defeat.player-death result=pass via=rise",
+    "[2026-11-04 10:05:02] [INFO] [Check] id=taom.long-defeat.rise result=pass at=recorded main_is_lord=1 dist=0.0 dz=0.0 controller=AI want=AI others=0 handed_back=noop was_using=0 general_is_lord=1 owner_is_lord=1",
+))
 def wave_row(wave, seed=7, **more):
     """A wave row of a schema 2 report with the affixes the game would roll for it (the scheduled count of the shipped schedule, drawn from the seed) and the commander the
     roster configures for the wave, killed with no ability used (the summon counts are 0)."""
@@ -88,13 +95,20 @@ def wave_row(wave, seed=7, **more):
 
 # A run that bought nothing of the fortifications: no purchase, no gold spent, no level, and a wave row whose volleys never fired.
 NO_VOLLEYS = {"volley": {"uses": 0, "arrows": 0, "hits": 0, "kills": 0, "withheld": 0}, "towerVolley": {"uses": 0, "arrows": 0, "hits": 0, "kills": 0, "withheld": 0}}
-NO_FORT = {"purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0}},
+NO_FORT = {"purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0, "gear": 0, "engines": 0}},
            "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 0}}
 
 
 # The class is the bot's draw for the report's seed, as the game takes it when the arm file names none (ld.bot_class, pinned to ClassPlanTests.cs).
+# A run in which the lord never fell: the block and the count the game writes in every report (LongDefeatRunReport, rule 25).
+NO_LORD = {"wave": 5, "playerDeaths": 0, "lord": {"deaths": [], "takeovers": [], "rises": []}}
 REPORT = {"schema": 2, "seed": 7, "class": ld.bot_class(7), "startWave": 1, "poison": {"ownerMissing": 0}, "final": True, "wavesCleared": 5, "wavesFelled": 1,
-          "waves": [wave_row(n) for n in range(1, 6)], **NO_FORT}
+          "waves": [wave_row(n) for n in range(1, 6)], **NO_FORT, **NO_LORD}
+def owes_seat(report, lost=False):
+    """Whether a log with no general-down line leaves the judge a debt for this report."""
+    return bool(ld.owed_general_down_passes(report, lost, ""))
+
+
 def cleared(n, seed=7, **more):
     """REPORT with n cleared waves and the one row the game writes for each (RunStats.CloseWave); a wave a run ends in has no row."""
     return {**REPORT, "seed": seed, "class": ld.bot_class(seed), "wavesCleared": n, "waves": [wave_row(w, seed) for w in range(1, n + 1)], **more}
@@ -642,7 +656,7 @@ class ManifestTests(unittest.TestCase):
         lines = self.fixture_lines()
         for row in manifest.checks:
             result = iv.judge_segment(row, lines, []).verdict
-            if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death", "taom.long-defeat.scale", "taom.long-defeat.affix", "taom.long-defeat.affix-effect",
+            if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death", "taom.long-defeat.rise", "taom.long-defeat.general-down", "taom.long-defeat.scale", "taom.long-defeat.affix", "taom.long-defeat.affix-effect",
                           "taom.long-defeat.boon", "taom.long-defeat.reroll", "taom.long-defeat.commander", "taom.long-defeat.summon",
                           "taom.long-defeat.sally", "taom.long-defeat.sally-return", "taom.long-defeat.sally-contact", "taom.long-defeat.field-care",
                           "taom.long-defeat.fort-points", "taom.long-defeat.gate-level", "taom.long-defeat.gate-repair", "taom.long-defeat.gate-attacked", "taom.long-defeat.volley", "taom.long-defeat.posts", "taom.long-defeat.tower-volley",
@@ -1290,6 +1304,34 @@ class PhaseTwoJudgeTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("taom.long-defeat.sally-return", why)
 
+    def test_a_rider_who_fell_in_every_cleared_wave_owes_no_return(self):
+        # Run 20261121-205801 (--class cavalry --lord-falls 1): the rider fell in each of the three waves, every clear wrote a sally-return skip with reason=taken-over, and he rose at home.
+        def fell(*waves, body="own"):
+            return {"wavesCleared": 3, "waves": [wave_row(n) for n in range(1, 4)], "lord": {"deaths": [{"wave": w, "body": body, "troop": "lord_4_1", "forced": False} for w in waves], "takeovers": [], "rises": []}}
+
+        self.assertFalse(ld.owes_return(fell(1, 2, 3), False), "he returned in no wave: his own body was down at every clear")
+        self.assertTrue(ld.owes_return(fell(1, 2), False), "wave 3 was cleared with the rider alive, so its return is owed")
+        self.assertTrue(ld.owes_return(fell(), False))
+        self.assertTrue(ld.owes_return(fell(1, 2, 3, body="soldier"), False), "a soldier's death is not the rider's")
+        self.assertFalse(ld.owes_return(fell(1, 2), True), "never to a run built to lose")
+        self.assertTrue(ld.owes_return({"wavesCleared": 2}, False), "a report with no rows keeps the old rule")
+        self.assertFalse(ld.owes_return({"wavesCleared": 0, "waves": []}, False))
+
+    def test_the_judge_owes_no_return_to_a_rider_who_fell_in_every_wave_and_one_to_a_rider_who_survived_a_wave(self):
+        ld.expected_report = {"class": "cavalry"}
+
+        def run(fell_in):
+            lord = {"deaths": [{"wave": w, "body": "own", "troop": "lord_4_1", "forced": False} for w in fell_in], "takeovers": [],
+                    "rises": [{"beforeWave": w + 1, "at": "home", "handedBack": False} for w in fell_in if w < 5]}
+            report = {**REPORT, "class": "cavalry", "playerDeaths": len(fell_in), "lord": lord}
+            log = log_of(STANDARD + ("sally",), 5) + "".join("\n" + DEATH_RULE_LINES for _ in fell_in) + "".join("\n" + skip_line("sally-return", w, "taken-over") for w in fell_in)
+            return ld.judge(FINAL, report, log)
+
+        self.assertEqual(run((1, 2, 3, 4, 5))[0], 0, "every clear found the rider's own body down: there is no return to prove")
+        code, why = run((1, 2, 3, 4))
+        self.assertEqual(code, 1, "he was alive at the clear of wave 5, so that return is owed")
+        self.assertIn("taom.long-defeat.sally-return", why)
+
     def test_once_a_point_exists_both_checks_are_required_again(self):
         report, _ = self.cavalry_run()
         # A sally that went out passes, so the point is recorded: a return skip that claims no point does not stand in for the return.
@@ -1409,12 +1451,15 @@ class PhaseTwoJudgeTests(unittest.TestCase):
         self.assertEqual(ld.judge(FINAL, report, log_of(STANDARD + ("scale",), 5))[0], 0)
 
     def test_a_damage_factor_alone_also_owes_the_scale_check(self):
-        # The game's own rule (a wave is scaled when health, damage or the tier steps moved) also holds for a roster whose health line is flat.
-        rows = [wave_row(n) for n in range(7, 11)] + [wave_row(11, healthFactor=1.0, damageFactor=1.03)]
+        # The game's own rule (a wave is scaled when health, damage or the tier steps moved). The row carries the shipped roster's factors for wave 11, which wave_problem now holds every row to.
+        rows = [wave_row(n) for n in range(7, 11)] + [wave_row(11, healthFactor=1.05, damageFactor=1.03)]
         report = {**REPORT, "wavesCleared": len(rows), "waves": rows}
         code, why = ld.judge(FINAL, report, FULL_LOG)
         self.assertEqual(code, 1)
         self.assertIn("taom.long-defeat.scale", why)
+        # The judge's row must carry the roster's own health factor, so damage alone is pinned on the rule itself: a roster with a flat health line.
+        self.assertTrue(ld.reached_endless({"waves": [{"healthFactor": 1.0, "damageFactor": 1.03}]}))
+        self.assertFalse(ld.reached_endless({"waves": [{"healthFactor": 1.0, "damageFactor": 1.0}]}))
 
     def test_a_run_inside_the_authored_list_asks_no_scale_check(self):
         for waves in ([], [wave_row(1, healthFactor=1.0)], [wave_row(1)], [wave_row(1, healthFactor=True)],
@@ -1898,10 +1943,11 @@ class ClassManifestTests(unittest.TestCase):
         for cid in list(ld.CLASSES) + ["two-handed", "archer2", "Cavalry_1"]:
             self.assertTrue(pattern.search(CLASS_LINE.replace("class=archer", "class=" + cid)), cid)
 
-    def test_the_human_rows_for_the_kit_and_the_second_question_are_here(self):
+    def test_the_human_rows_for_the_kit_the_difficulty_question_and_the_class_question_are_here(self):
         claims = [h["claim"] for h in self.manifest()["human"]]
         self.assertTrue(any("class kit" in c for c in claims), claims)
-        self.assertTrue(any("second question" in c for c in claims), claims)
+        self.assertTrue(any("difficulty question" in c for c in claims), claims)
+        self.assertTrue(any("class question" in c and "after the fortress and the difficulty" in c for c in claims), claims)
 
 
 # The pinned boon draws over the shipped boons.json (thirteen free rows since Slice 7 added the third Legend row): seed 1, pick 1 draws 0, 1 and 2 (each reroll leaves out the three just shown), and
@@ -2718,6 +2764,218 @@ class FortPriceTests(unittest.TestCase):
         self.assertEqual(ld.shipped_price_percents(), {"haggler_of_edoras": -20, "hornblowers_bargain": 10, "wains_of_the_westfold": 10, "light_of_the_phial": 25, "the_long_silence": 15})
 
 
+class LordJudgeTests(unittest.TestCase):
+    """Rule 25 of leaderboard-plan.md (phase4-plan.md Slice 3): the report's lord block against its playerDeaths, its waves and lordFalls."""
+
+    def death(self, wave=2, body="own", troop="lord_4_1", forced=False):
+        return {"wave": wave, "body": body, "troop": troop, "forced": forced}
+
+    def take(self, wave=2, by="person", troop="fow_militia"):
+        return {"wave": wave, "by": by, "troop": troop}
+
+    def rise(self, before=3, at="respawn", handed=False):
+        return {"beforeWave": before, "at": at, "handedBack": handed}
+
+    def report(self, deaths=(), takeovers=(), rises=(), wave=5, cleared=None, **more):
+        """A run in wave `wave` that cleared waves 1 (or its start wave) to `cleared`, by default every wave before the one it is in."""
+        first = more.get("startWave", 1)
+        rows = [{"wave": w} for w in range(first, (wave - 1 if cleared is None else cleared) + 1)]
+        return {"wave": wave, "waves": rows, "playerDeaths": len(deaths), "lord": {"deaths": list(deaths), "takeovers": list(takeovers), "rises": list(rises)}, **more}
+
+    def test_a_run_with_no_fall_replays(self):
+        self.assertIsNone(ld.lord_problem(self.report()))
+
+    def test_a_report_must_carry_the_block_the_count_and_its_wave(self):
+        # Without this a report hides its deaths by leaving the keys out, and nothing else in the judge reads them.
+        for report in ({}, {"playerDeaths": 0}, {"lord": {"deaths": [], "takeovers": [], "rises": []}}):
+            why = ld.lord_problem(report)
+            self.assertIn("no lord block or no playerDeaths", why, repr(report))
+            self.assertIn("BuildStamp", why)
+        no_wave = self.report([self.death(wave=999)])
+        del no_wave["wave"]
+        self.assertIn("the report's wave is None", ld.lord_problem(no_wave), "with no wave nothing bounds the rows")
+        self.assertIn("the report's wave is True", ld.lord_problem({**self.report(), "wave": True}))
+
+    def test_a_fall_a_takeover_a_second_fall_and_a_rise_replay(self):
+        report = self.report([self.death(), self.death(body="soldier", troop="fow_militia")], [self.take()], [self.rise()])
+
+        self.assertIsNone(ld.lord_problem(report))
+
+    def test_player_deaths_is_the_number_of_bodies_that_fell(self):
+        report = self.report([self.death()])
+        report["playerDeaths"] = 2
+
+        self.assertIn("playerDeaths", ld.lord_problem(report))
+        self.assertIn("playerDeaths", ld.lord_problem({**self.report([self.death()]), "playerDeaths": True}))
+
+    def test_a_block_that_is_not_three_lists_is_refused(self):
+        for lord in ([], "none", {"deaths": []}, {"deaths": [], "takeovers": [], "rises": None}):
+            self.assertIn("lord is", ld.lord_problem({"playerDeaths": 0, "lord": lord}), repr(lord))
+
+    def test_a_death_row_holds_a_wave_a_body_a_troop_and_a_flag(self):
+        for bad in ({"wave": 0}, {"wave": True}, {"body": "horse"}, {"troop": 7}, {"forced": 1}):
+            self.assertIn("lord.deaths[0]", ld.lord_problem(self.report([{**self.death(), **bad}])), repr(bad))
+        self.assertIn("lord.deaths[0]", ld.lord_problem(self.report(["fell"])))
+
+    def test_a_death_and_a_takeover_lie_inside_the_waves_the_run_played(self):
+        self.assertIn("lord.deaths[0]", ld.lord_problem(self.report([self.death(wave=999)])), "a five-wave run has no wave 999")
+        self.assertIn("lord.takeovers[0]", ld.lord_problem(self.report([self.death()], [self.take(wave=6)])))
+        self.assertIsNone(ld.lord_problem(self.report([self.death(wave=5)])), "the wave the run is in")
+
+    def test_a_run_that_ends_in_its_first_preparation_may_hold_a_death_in_wave_one(self):
+        # The game books a fall before the first wave to max(1, wave) while the report's wave is still 0 (SurvivalRun.PlayerDown and RunResult.Wave).
+        self.assertIsNone(ld.lord_problem(self.report([self.death(wave=1)], [self.take(wave=1)], wave=0)))
+        self.assertIn("lord.deaths[0]", ld.lord_problem(self.report([self.death(wave=2)], wave=0)), "a death in wave 2 of a run that began none is still refused")
+
+    def test_a_run_from_a_start_wave_books_a_fall_in_the_preparation_to_the_wave_before(self):
+        self.assertIsNone(ld.lord_problem(self.report([self.death(wave=11)], wave=13, startWave=12)))
+        self.assertIsNone(ld.lord_problem(self.report([self.death(wave=11)], wave=11, startWave=12)), "the run ended in that preparation")
+        self.assertIn("lord.deaths[0]", ld.lord_problem(self.report([self.death(wave=10)], wave=13, startWave=12)))
+
+    def test_a_forced_death_needs_the_test_option_for_that_wave_and_the_lords_own_body(self):
+        forced = self.death(forced=True)
+
+        self.assertIsNone(ld.lord_problem(self.report([forced], lordFalls=2)))
+        self.assertIn("forced", ld.lord_problem(self.report([forced])), "a board run arms no lord_falls, so none of its deaths is forced")
+        self.assertIn("forced", ld.lord_problem(self.report([forced], lordFalls=3)))
+        self.assertIn("forced", ld.lord_problem(self.report([self.death(body="soldier", forced=True)], lordFalls=2)))
+        self.assertIn("forced", ld.lord_problem(self.report([forced, self.death(forced=True)], lordFalls=2)), "the option fells the lord once")
+
+    def test_a_run_armed_with_lord_falls_that_cleared_its_wave_owes_a_death_in_it(self):
+        self.assertIn("never felled the lord", ld.lord_problem(self.report(lordFalls=2, wave=3)), "the option was armed and nothing fell: the run proves nothing")
+        self.assertIn("never felled the lord", ld.lord_problem(self.report([self.death(wave=1)], lordFalls=2, wave=3)), "a death in another wave does not pay it")
+        self.assertIsNone(ld.lord_problem(self.report([self.death(forced=True)], lordFalls=2, wave=3)))
+        self.assertIsNone(ld.lord_problem(self.report([self.death()], lordFalls=2, wave=3)), "the lord fell by himself before the 20 s: the death rule still ran")
+        self.assertIsNone(ld.lord_problem(self.report(lordFalls=2, wave=2)), "a run lost inside wave 2 owes nothing")
+
+    def test_a_takeover_and_a_rise_need_no_death(self):
+        # A lord the AI drives can rout: his body leaves with no death, a person may then take a soldier, and the clear raises him (LongDefeatDirectorTests, the lord whose body left with no death).
+        self.assertIsNone(ld.lord_problem(self.report(takeovers=[self.take()], rises=[self.rise()])))
+        self.assertIsNone(ld.lord_problem(self.report([self.death(wave=2)], [self.take(wave=3, by="bot")])), "a rise the field refused leaves him down, and he takes a soldier in the next wave")
+        for bad in ({"wave": 0}, {"by": "ghost"}, {"troop": None}):
+            self.assertIn("lord.takeovers[0]", ld.lord_problem(self.report([self.death()], [{**self.take(), **bad}])), repr(bad))
+
+    def test_a_rise_comes_once_at_a_clear_the_run_went_on_from(self):
+        self.assertIsNone(ld.lord_problem(self.report([self.death(wave=5)], rises=[self.rise(before=6)], cleared=5)), "a run left in the intermission after wave 5")
+        self.assertIn("did not clear wave 5", ld.lord_problem(self.report([self.death(wave=5)], rises=[self.rise(before=6)])), "a run lost inside wave 5 cleared only four")
+        self.assertIn("did not clear wave 999", ld.lord_problem(self.report([self.death()], rises=[self.rise(before=1000)])))
+        self.assertIn("did not clear wave 0", ld.lord_problem(self.report([self.death()], rises=[self.rise(before=1)])), "no clear comes before the first wave")
+        self.assertIn("did not clear wave 11", ld.lord_problem(self.report([self.death(wave=11)], rises=[self.rise(before=12)], wave=13, startWave=12)), "wave 11 was the preparation")
+        target = self.report([self.death(wave=5)], rises=[self.rise(before=6)], cleared=5, reason="TargetReached")
+        self.assertIn("did not clear wave 5 and go on", ld.lord_problem(target), "the clear that reaches the target raises nobody")
+        self.assertIsNone(ld.lord_problem(self.report([self.death(wave=4)], rises=[self.rise(before=5)], cleared=5, reason="TargetReached")))
+        self.assertIn("second rise", ld.lord_problem(self.report([self.death(), self.death(wave=3)], rises=[self.rise(), self.rise()])))
+
+    def test_a_rise_row_holds_a_wave_a_place_and_a_flag(self):
+        for bad in ({"beforeWave": "3"}, {"beforeWave": True}, {"at": "moon"}, {"handedBack": "yes"}):
+            self.assertIn("lord.rises[0]", ld.lord_problem(self.report([self.death()], rises=[{**self.rise(), **bad}])), repr(bad))
+        for at in ("respawn", "home", "recorded", "scene"):
+            self.assertIsNone(ld.lord_problem(self.report([self.death()], rises=[self.rise(at=at)], **{"class": "cavalry" if at == "home" else "archer"})), at)
+
+    def test_the_judge_refuses_a_report_whose_lord_block_does_not_replay(self):
+        ld.target_waves = 5
+        ld.checkout = (HEAD, {})
+        ld.expected_report = {}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "checkout", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+        code, why = ld.judge(FINAL, {**REPORT, "playerDeaths": 3}, FULL_LOG)
+
+        self.assertEqual(code, 1)
+        self.assertIn("lord block", why)
+
+    def test_the_names_are_the_games(self):
+        report = source("Diagnostics", "LongDefeatRunReport.cs")
+        for name in ('"own"', '"soldier"', '"bot"', '"person"', '["deaths"]', '["takeovers"]', '["rises"]', '["handedBack"]', '["forced"]'):
+            self.assertIn(name, report)
+        lord = source("LongDefeatDirector.Lord.cs")
+        for at in ('"home"', '"respawn"', '"recorded"', '"scene"'):
+            self.assertIn(at, lord)
+            self.assertIn(at.strip('"'), ld.RISE_AT)
+
+    def test_a_rise_owes_its_pass_a_death_owes_the_seat_and_a_body_after_a_fall_owes_the_adoption(self):
+        rise = self.report([self.death()], rises=[self.rise(at="recorded")])
+        self.assertTrue(ld.owes_rise(rise))
+        self.assertTrue(owes_seat(rise))
+        self.assertTrue(ld.owes_player_death(rise), "the risen body was adopted, armed or not")
+        quiet = self.report([])
+        self.assertFalse(any(owes(quiet) for owes in (ld.owes_rise, owes_seat, ld.owes_player_death)), "a run with no fall owes none of them")
+        self.assertFalse(ld.owes_rise({"lord": "x"}), "a block that is no dict owes nothing: lord_problem refuses it")
+        self.assertFalse(owes_seat({}))
+
+    def test_the_rise_is_owed_by_the_rise_row_or_by_a_fall_in_a_wave_the_run_went_on_from(self):
+        rout = self.report(rises=[self.rise()])
+        self.assertTrue(ld.owes_rise(rout), "a lord who routed leaves a rise and no death")
+        self.assertFalse(owes_seat(rout), "and no death owes no seat")
+        self.assertFalse(ld.owes_player_death(rout))
+
+        lost_rise = self.report([self.death(wave=2)], wave=4)
+        self.assertTrue(ld.owes_rise(lost_rise), "wave 2 was cleared and the run went on: a build that lost the rise cannot pass by leaving the row out")
+        last = self.report([self.death(wave=4)], wave=4)
+        self.assertFalse(ld.owes_rise(last), "the run ended inside wave 4: no clear, no rise")
+        final = self.report([self.death(wave=5)], wave=5, cleared=5, final=True)
+        self.assertFalse(ld.owes_rise(final), "the clear that reached the target raises nobody")
+        self.assertTrue(ld.owes_rise(self.report([self.death(wave=4)], wave=5, cleared=5, final=True)))
+
+    def test_the_adoption_is_owed_only_when_a_body_followed_the_fall(self):
+        alone = self.report([self.death(wave=5)], wave=5, cleared=5, final=True, lordFalls=5)
+        self.assertFalse(ld.owes_player_death(alone), "a forced fall in the last wave, cleared before the bot's five seconds: no take-over, and the final clear raises nobody")
+        self.assertTrue(ld.owes_player_death(self.report([self.death(wave=2)], [self.take(wave=2, by="bot")])))
+        self.assertTrue(ld.owes_player_death(self.report([self.death(wave=2)], [self.take(wave=3, by="bot")])), "a take-over in the wave after an unanswered rise")
+        self.assertFalse(ld.owes_player_death(self.report([self.death(wave=3)], [self.take(wave=2)])), "a take-over before the first death followed a rout, not a fall")
+        self.assertFalse(ld.owes_player_death(self.report([self.death(wave=3)], rises=[self.rise(before=3)])), "a rise before the wave of the fall")
+
+    def test_a_lost_run_owes_no_seat_for_a_fall_in_the_wave_it_ended_in(self):
+        ended = self.report([self.death(wave=4)], wave=4)
+        self.assertFalse(owes_seat(ended, lost=True), "the lord fell as the last defender: the run ended on that tick and the seat was never read")
+        self.assertTrue(owes_seat(ended), "a run that was not lost reads it")
+        self.assertTrue(owes_seat(self.report([self.death(wave=2), self.death(wave=4)], wave=4), lost=True), "an earlier fall still owes its read")
+
+    def test_the_judge_names_the_death_rule_checks_it_does_not_find(self):
+        ld.target_waves = 5
+        ld.checkout = (HEAD, {})
+        ld.expected_report = {}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "checkout", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+        report = {**REPORT, "playerDeaths": 1, "lord": {"deaths": [self.death(wave=1)], "takeovers": [], "rises": [self.rise(before=2, at="recorded")]}}
+
+        code, why = ld.judge(FINAL, report, FULL_LOG)
+
+        self.assertEqual(code, 1, why)
+        for name in ("rise", "general-down"):
+            self.assertIn("taom.long-defeat." + name, why)
+
+    def test_the_manifest_reads_the_death_rule_lines_the_game_writes(self):
+        manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
+        rows = {c.id: c for c in manifest.checks}
+        lines = [(None, n, text) for n, text in enumerate(DEATH_RULE_LINES.splitlines(), 1)]
+        for name in ("rise", "general-down", "player-death"):
+            self.assertEqual(iv.judge_segment(rows["taom.long-defeat." + name], lines, []).verdict, iv.PASS, name)
+        rise = DEATH_RULE_LINES.splitlines()[2]
+        skip = [(None, 1, "[2026-11-04 10:05:00] [INFO] [Check] id=taom.long-defeat.general-down result=skip seat=main want=lord reason=has-main")]
+        self.assertEqual(iv.judge_segment(rows["taom.long-defeat.general-down"], skip, []).verdict, iv.NOT_REACHED, "a skip proves nothing and is not a fail")
+        refused = [(None, 1, "[2026-11-04 10:05:00] [INFO] [Check] id=taom.long-defeat.rise result=fail at=recorded reason=spawn-refused handed_back=none")]
+        self.assertEqual(iv.judge_segment(rows["taom.long-defeat.rise"], refused, []).verdict, iv.FAIL)
+        for via in ("respawn", "takeover by=bot", "takeover by=person"):
+            line = [(None, 1, "[2026-11-04 10:05:01] [INFO] [Check] id=taom.long-defeat.player-death result=pass via=" + via)]
+            self.assertEqual(iv.judge_segment(rows["taom.long-defeat.player-death"], line, []).verdict, iv.PASS, via)
+        self.assertIn("handed_back=noop", rise)
+
+    def test_the_names_of_the_new_checks_are_the_games(self):
+        checks = source("Diagnostics", "LongDefeatChecks.cs")
+        for const, name in (("RiseId", ld.RISE_CHECK), ("GeneralDownId", ld.GENERAL_DOWN_CHECK), ("PlayerDeathId", ld.PLAYER_DEATH_CHECK)):
+            self.assertIn(f'{const} = "{ld.CHECK_PREFIX}{name}"', checks)
+
+    def test_the_reach_names_are_the_games_enum_in_lower_case(self):
+        enum = re.search(r"enum ErrandReach\s*\{([^}]*)\}", source("Domain", "LdLocations.cs")).group(1)
+        names = tuple(name.strip().lower() for name in enum.split(",") if name.strip())
+
+        self.assertEqual(names, ld.REACHES)
+        self.assertIn("p.Reach.ToString().ToLowerInvariant()", source("Diagnostics", "LongDefeatRunReport.cs"))
+
+
 class PurchaseJudgeTests(unittest.TestCase):
     """Rules 8, 19 and 20 of leaderboard-plan.md, replayed over a report (phase3-plan.md Slice 2): the books, the prices through the boons' price factor, the levels in order, the volley counts."""
 
@@ -2757,8 +3015,144 @@ class PurchaseJudgeTests(unittest.TestCase):
 
     HEROES = {"aragorn": 300}
 
-    def problem(self, report):
-        return ld.purchase_problem(report, "helms", fort=self.PLAN, offers=self.OFFERS, percents=self.PERCENTS, upgrades=self.UPGRADES, heroes=self.HEROES)
+    LOCATIONS = {
+        "armoury": {"reach": 4, "sets": [
+            {"id": "armour_1", "name": "armour_1", "text": "", "kind": "armour", "classes": None, "price": 250, "slots": {"Body": "mail"}},
+            {"id": "weapons_archer", "name": "weapons_archer", "text": "", "kind": "weapons", "classes": ["archer"], "price": 200, "slots": {"Item0": "bow"}},
+        ]},
+        "yard": {"reach": 6, "engines": [["mangonel", 450], ["trebuchet", 700]]},
+    }
+
+    def problem(self, report, locations=None, armoury_point=True):
+        return ld.purchase_problem(report, "helms", fort=self.PLAN, offers=self.OFFERS, percents=self.PERCENTS, upgrades=self.UPGRADES, heroes=self.HEROES,
+                                   locations=self.LOCATIONS if locations is None else locations, armoury_point=armoury_point)
+
+    def gear(self, wave, base, price, id="armour_1", reach="walk"):
+        return {**self.buy(wave, "gearSet", base, price, id=id), "reach": reach}
+
+    def engine(self, wave, base, price, site, id="mangonel", reach="walk"):
+        return {**self.buy(wave, "engine", base, price, id=id), "site": site, "reach": reach}
+
+    def places_on_sale(self, **offered):
+        patcher = mock.patch.dict(ld.LOCATION_OFFERED, {"armoury": True, "mangonel": True, "trebuchet": False, **offered})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def test_a_gear_set_replays_at_its_shop_price_through_the_boons_price_factor(self):
+        self.places_on_sale()
+        pick = {"pick": 1, "taken": "haggler", "takenBeforeWave": 2}
+
+        self.assertIsNone(self.problem(self.report([self.gear(1, 250, 250)], armoury=["armour_1"], **{"class": "sword"})))
+        self.assertIsNone(self.problem(self.report([self.gear(2, 250, 200)], boons=[pick], armoury=["armour_1"], **{"class": "sword"})))
+        self.assertIn("paid 249", self.problem(self.report([self.gear(1, 250, 249)], armoury=["armour_1"], **{"class": "sword"})))
+        self.assertIn("basePrice", self.problem(self.report([self.gear(1, 240, 240)], armoury=["armour_1"], **{"class": "sword"})))
+
+    def test_rule_22_a_gear_set_is_of_the_shop_bought_once_and_sold_to_the_reports_class(self):
+        self.places_on_sale()
+        sword = {"class": "sword"}
+
+        self.assertIn("not a set", self.problem(self.report([self.gear(1, 250, 250, id="armour_9")], armoury=["armour_9"], **sword)))
+        self.assertIn("twice", self.problem(self.report([self.gear(1, 250, 250), self.gear(2, 250, 250)], armoury=["armour_1", "armour_1"], **sword)))
+        self.assertIn("class 'sword'", self.problem(self.report([self.gear(1, 200, 200, id="weapons_archer")], armoury=["weapons_archer"], **sword)))
+        self.assertIsNone(self.problem(self.report([self.gear(1, 200, 200, id="weapons_archer")], armoury=["weapons_archer"], **{"class": "archer"})))
+        self.assertIn("class ''", self.problem(self.report([self.gear(1, 250, 250)], armoury=["armour_1"], **{"class": ""})), "a lord with no class buys nothing")
+
+    def test_rule_22_the_armoury_list_is_the_gear_sets_bought_in_order(self):
+        self.places_on_sale()
+        both = [self.gear(1, 250, 250), self.gear(2, 200, 200, id="weapons_archer")]
+
+        self.assertIsNone(self.problem(self.report(both, armoury=["armour_1", "weapons_archer"], **{"class": "archer"})))
+        for armoury in (["weapons_archer", "armour_1"], ["armour_1"], [], None, "armour_1"):
+            self.assertIn("armoury", self.problem(self.report(both, armoury=armoury, **{"class": "archer"})), armoury)
+        self.assertIn("armoury", self.problem(self.report([], armoury=["armour_1"])), "a set nobody paid for")
+        self.assertIsNone(self.problem(self.report([])), "a report that bought no set may carry no armoury key")
+
+    def test_rule_22_a_gear_set_needs_a_fortress_that_records_the_armoury_point(self):
+        self.places_on_sale()
+        bought = self.report([self.gear(1, 250, 250)], armoury=["armour_1"], **{"class": "sword"})
+
+        self.assertIsNone(self.problem(bought))
+        self.assertIn("armoury point", self.problem(bought, armoury_point=False), "the game sells only at a recorded place (SurvivalRun.ArmourySold): a build that ignored the point must not pass")
+        self.assertFalse(ld.records_armoury_point("helms"), "the shipped Helm's Deep records none yet")
+        self.assertTrue(ld.records_armoury_point("x", {"fortresses": [{"id": "x", "armoury": {"x": 1, "y": 2, "z": 3, "fx": 0, "fy": 1}}]}))
+        self.assertFalse(ld.records_armoury_point("x", {"fortresses": [{"id": "x", "armoury": {}}]}))
+
+    def test_no_gear_set_replays_while_the_build_offers_no_armoury(self):
+        self.places_on_sale(armoury=False)
+
+        self.assertIn("not offered", self.problem(self.report([self.gear(1, 250, 250)], armoury=["armour_1"], **{"class": "sword"})))
+
+    def test_a_gear_set_names_how_the_buyer_came(self):
+        self.places_on_sale()
+
+        for reach in ("person", "walk", "teleport"):
+            self.assertIsNone(self.problem(self.report([self.gear(1, 250, 250, reach=reach)], armoury=["armour_1"], **{"class": "sword"})), reach)
+        for reach in ("flew", "", None, 1):
+            self.assertIn("reach", self.problem(self.report([self.gear(1, 250, 250, reach=reach)], armoury=["armour_1"], **{"class": "sword"})), repr(reach))
+
+    def test_rule_23_an_engine_is_a_kind_the_yard_lists_and_the_build_delivers_at_a_site_bought_once(self):
+        self.places_on_sale()
+
+        self.assertIsNone(self.problem(self.report([self.engine(2, 450, 450, 0), self.engine(3, 450, 450, 1)])))
+        self.assertIn("site 0", self.problem(self.report([self.engine(2, 450, 450, 0), self.engine(3, 450, 450, 0)])))
+        self.assertIn("not offered", self.problem(self.report([self.engine(2, 700, 700, 0, id="trebuchet")])), "the build does not deliver the trebuchet")
+        self.assertIn("not offered", self.problem(self.report([self.engine(2, 450, 450, 0, id="ballista")])))
+        self.assertIn("basePrice", self.problem(self.report([self.engine(2, 400, 400, 0)])))
+        for site in (-1, None, "0", True, 1.5):
+            self.assertIn("site", self.problem(self.report([self.engine(2, 450, 450, site)])), repr(site))
+        self.assertIn("reach", self.problem(self.report([self.engine(2, 450, 450, 0, reach="flew")])))
+
+    def test_no_engine_replays_while_the_build_delivers_none(self):
+        self.assertEqual(ld.LOCATION_OFFERED, {"armoury": True, "mangonel": False, "trebuchet": False}, "raise this with LocationOffer.Offered")
+
+        self.assertIn("not offered", self.problem(self.report([self.engine(2, 450, 450, 0)])))
+
+    def test_a_shop_with_no_places_sells_none(self):
+        self.places_on_sale()
+
+        self.assertIn("not a set", self.problem(self.report([self.gear(1, 250, 250)], armoury=["armour_1"], **{"class": "sword"}), locations={"armoury": None, "yard": None}))
+        self.assertIn("not offered", self.problem(self.report([self.engine(2, 450, 450, 0)]), locations={"armoury": None, "yard": None}))
+
+    def test_gear_and_engine_gold_belong_in_their_own_sinks(self):
+        self.places_on_sale()
+        report = self.report([self.gear(1, 250, 250), self.engine(2, 450, 450, 0)], armoury=["armour_1"], **{"class": "sword"})
+        self.assertEqual((report["gold"]["spentOn"]["gear"], report["gold"]["spentOn"]["engines"]), (250, 450))
+        self.assertIsNone(self.problem(report))
+
+        report["gold"]["spentOn"]["gear"] = 0
+        report["gold"]["spentOn"]["packs"] = 250
+        self.assertIn("gold.spentOn", self.problem(report))
+
+    def test_the_shipped_shop_sells_no_place_yet(self):
+        self.assertEqual(ld.shipped_locations("helms"), None, "shop.json carries no armoury and no yard until their slices ship them")
+
+    def test_shipped_locations_reads_the_blocks_of_the_fortress_shop(self):
+        shop = json.loads(ld.SHOP_FILE.read_text(encoding="utf-8"))
+        fortress = next(f for f in json.loads(ld.FORTRESS_FILE.read_text(encoding="utf-8"))["fortresses"] if f["id"] == "helms")
+        shop["shops"][fortress["shop"]]["yard"] = {"reach": 6, "engines": [{"kind": "mangonel", "price": 450}]}
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "shop.json"
+            path.write_text(json.dumps(shop), encoding="utf-8")
+
+            plan = ld.shipped_locations("helms", path)
+
+        self.assertEqual(plan, {"armoury": None, "yard": {"reach": 6, "engines": [["mangonel", 450]]}})
+        self.assertIsNone(ld.shipped_locations("no_such_fortress"))
+
+    def test_a_gear_set_id_that_is_no_text_is_refused_not_a_crash(self):
+        self.places_on_sale()
+
+        self.assertIn("not a set", self.problem(self.report([self.gear(1, 250, 250, id=["armour_1"])], armoury=[], **{"class": "sword"})))
+
+    def test_a_report_that_lacks_a_sink_is_named_as_an_older_build(self):
+        report = self.report([])
+        del report["gold"]["spentOn"]["gear"]
+
+        why = self.problem(report)
+
+        self.assertIn("missing key(s): gear", why)
+        self.assertIn("no 'gear' key comes from a build older than this tool", why)
+        self.assertIn("BuildStamp", why)
 
     def test_a_hero_replays_at_his_shop_price_through_the_boons_price_factor(self):
         pick = {"pick": 1, "taken": "haggler", "takenBeforeWave": 2}
@@ -3059,7 +3453,7 @@ class PurchaseJudgeTests(unittest.TestCase):
         ld.expected_report = {}
         self.addCleanup(setattr, ld, "target_waves", None)
         self.addCleanup(setattr, ld, "checkout", None)
-        report = {**REPORT, "gold": {"spent": 5, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0}}}
+        report = {**REPORT, "gold": {"spent": 5, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0, "gear": 0, "engines": 0}}}
 
         code, why = ld.judge(FINAL, report, FULL_LOG)
 
@@ -3133,6 +3527,217 @@ class StartGoldArgumentTests(unittest.TestCase):
 
     def test_the_report_writes_start_gold(self):
         self.assertIn('["startGold"]', source("Diagnostics", "LongDefeatRunReport.cs"))
+
+
+class LordFallsTests(unittest.TestCase):
+    """--lord-falls (phase4-plan.md D47): armed as lord_falls, echoed back in the report's lordFalls, and refused for a wave the run does not play."""
+
+    def setUp(self):
+        ld.target_waves = 5
+        ld.checkout = (HEAD, {})
+        ld.expected_report = {}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "checkout", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def parse(self, *argv):
+        return ld.build_parser().parse_known_args(list(argv))[0]
+
+    def captured_arm(self, *argv):
+        return PhaseTwoArmTests.captured_arm(self, *argv)
+
+    def test_lord_falls_defaults_to_none_and_takes_one_to_a_thousand(self):
+        self.assertIsNone(self.parse().lord_falls)
+        self.assertEqual(self.parse("--lord-falls", "1").lord_falls, 1)
+        self.assertEqual(self.parse("--lord-falls", "1000").lord_falls, 1000)
+        for bad in ("0", "1001", "x", "1.5"):
+            with mock.patch("sys.stderr", new_callable=io.StringIO), self.assertRaises(SystemExit, msg=bad):
+                self.parse("--lord-falls", bad)
+
+    def test_the_flag_reaches_the_arm_text_and_none_arms_nothing(self):
+        self.delivered()
+        text, _ = self.captured_arm("--lord-falls", "2", "--waves", "3")("E:/out", SimpleNamespace(wall_limit=None))
+        self.assertIn("lord_falls=2\n", text)
+        text, _ = self.captured_arm()("E:/out", SimpleNamespace(wall_limit=None))
+        self.assertNotIn("lord_falls", text)
+
+    def test_the_arm_key_and_its_range_are_the_games(self):
+        plan = source("Autorun", "LongDefeatAutorunPlan.cs")
+        self.assertIn('case "lord_falls":', plan)
+        self.assertIn("wave >= 1 && wave <= MaxLordFallsWave", plan)
+        self.assertIn("private const int MaxLordFallsWave = 1000;", plan)
+        self.assertIn(("lord_falls", 2), ld.arm_pairs(self.parse("--lord-falls", "2"), "out", 3900))
+
+    def delivered(self):
+        patcher = mock.patch.object(ld, "LORD_FALLS_DELIVERED", True)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def test_the_flag_is_refused_until_the_game_fells_the_lord(self):
+        director = "".join(path.read_text(encoding="utf-8") for path in sorted((REPO / "Main" / "Features" / "LongDefeat").glob("LongDefeatDirector*.cs")))
+        director = re.sub(r"//[^\n]*", "", director)  # a comment that names the effect serves nothing; the C# gate strips comments too
+        served = re.search(r"\bfx\.FellLord\b", director) is not None
+
+        self.assertEqual(ld.LORD_FALLS_DELIVERED, served, "LORD_FALLS_DELIVERED must say whether a LongDefeatDirector file reads fx.FellLord: turn it on in the change that serves the fall")
+        if not served:
+            self.assertIn("not delivered yet", ld.lord_falls_problem(self.parse("--lord-falls", "1", "--waves", "3")))
+            self.assertIn("not delivered yet", BreakEnginesTests.refused(self, ["--lord-falls", "1", "--waves", "3"]), "main refuses it before the game starts")
+            self.assertIsNone(ld.lord_falls_problem(self.parse("--waves", "3")), "a run that arms none is not refused")
+
+    def test_deep_sets_its_waves_before_the_fall_is_judged(self):
+        self.delivered()
+
+        self.assertIn("waves 12 to 15", BreakEnginesTests.refused(self, ["--deep", "--waves", "2", "--lord-falls", "3"]))
+
+    def test_a_fall_in_a_wave_the_run_does_not_play_is_refused(self):
+        self.delivered()
+        self.assertIsNone(ld.lord_falls_problem(self.parse("--lord-falls", "1", "--waves", "3")))
+        self.assertIsNone(ld.lord_falls_problem(self.parse("--lord-falls", "3", "--waves", "3")), "the last wave the run plays")
+        self.assertIsNone(ld.lord_falls_problem(self.parse("--waves", "2")))
+        self.assertIn("waves 1 to 3", ld.lord_falls_problem(self.parse("--lord-falls", "4", "--waves", "3")))
+        self.assertIsNone(ld.lord_falls_problem(self.parse("--lord-falls", "13", "--start-wave", "12", "--waves", "2")), "wave numbers count from the start wave")
+        self.assertIn("waves 12 to 13", ld.lord_falls_problem(self.parse("--lord-falls", "2", "--start-wave", "12", "--waves", "2")))
+
+    def test_the_proof_needs_the_forced_death_itself(self):
+        ld.expected_report = {"lordFalls": 2}
+        natural = {"playerDeaths": 1, "lord": {"deaths": [{"wave": 2, "body": "own", "troop": "lord_4_1", "forced": False}], "takeovers": [], "rises": [{"beforeWave": 3, "at": "recorded", "handedBack": False}]}}
+
+        code, why = ld.judge(FINAL, {**REPORT, "lordFalls": 2, **natural}, FULL_LOG + "\n" + DEATH_RULE_LINES)
+
+        self.assertEqual(code, 1, why)
+        self.assertIn("no forced death in wave 2", why)
+
+    def test_a_forced_fall_with_no_rise_is_refused_though_its_report_replays(self):
+        ld.expected_report = {"lordFalls": 1}
+        fell = {"playerDeaths": 1, "lord": {"deaths": [{"wave": 1, "body": "own", "troop": "lord_4_1", "forced": True}], "takeovers": [{"wave": 1, "by": "bot", "troop": "fow_militia"}], "rises": []}}
+        lines = "\n".join(line for line in DEATH_RULE_LINES.splitlines() if "long-defeat.rise" not in line)
+
+        code, why = ld.judge(FINAL, {**REPORT, "lordFalls": 1, **fell}, FULL_LOG + "\n" + lines)
+
+        self.assertEqual(code, 1, "wave 1 was cleared and the run went on, so the lord must rise: a build that lost the rise lost the row too")
+        self.assertIn("no rise before wave 2", why)
+
+    def test_a_rise_one_wave_late_is_refused(self):
+        ld.expected_report = {"lordFalls": 1}
+        late = {"playerDeaths": 1, "lord": {"deaths": [{"wave": 1, "body": "own", "troop": "lord_4_1", "forced": True}], "takeovers": [{"wave": 1, "by": "bot", "troop": "fow_militia"}],
+                                            "rises": [{"beforeWave": 3, "at": "recorded", "handedBack": True}]}}
+
+        code, why = ld.judge(FINAL, {**REPORT, "lordFalls": 1, **late}, FULL_LOG + "\n" + DEATH_RULE_LINES)
+
+        self.assertEqual(code, 1, "the lord spent wave 2 in the soldier: the clear of wave 1 raised nobody (Codex re-review)")
+        self.assertIn("no rise before wave 2", why)
+
+    def test_each_rise_and_each_fall_owes_a_line_of_its_own(self):
+        ld.expected_report = {}
+        twice = {"playerDeaths": 2, "lord": {"deaths": [{"wave": 1, "body": "own", "troop": "lord_4_1", "forced": False}, {"wave": 2, "body": "own", "troop": "lord_4_1", "forced": False}], "takeovers": [],
+                                             "rises": [{"beforeWave": 2, "at": "recorded", "handedBack": False}, {"beforeWave": 3, "at": "recorded", "handedBack": False}]}}
+
+        code, why = ld.judge(FINAL, {**REPORT, **twice}, FULL_LOG + "\n" + DEATH_RULE_LINES)
+        self.assertEqual(code, 1, "one rise line and one seat line cannot pay for two falls and two rises")
+        self.assertIn("taom.long-defeat.rise (1 line(s) for 2 rise(s)", why)
+        self.assertIn("taom.long-defeat.general-down (1 line(s) for 2 death(s)", why)
+
+        self.assertEqual(ld.judge(FINAL, {**REPORT, **twice}, FULL_LOG + "\n" + DEATH_RULE_LINES + "\n" + DEATH_RULE_LINES)[0], 0)
+
+    def test_a_fall_on_the_tick_of_the_final_clear_is_paid_by_its_run_ended_skip(self):
+        ld.expected_report = {}
+        last = {"playerDeaths": 1, "lord": {"deaths": [{"wave": 5, "body": "own", "troop": "lord_4_1", "forced": False}], "takeovers": [], "rises": []}}
+        ended = "[2026-11-04 10:05:00] [INFO] [Check] id=taom.long-defeat.general-down result=skip seat=unread reason=run-ended"
+
+        self.assertEqual(ld.judge(FINAL, {**REPORT, **last}, FULL_LOG + "\n" + ended)[0], 0, "the run ended on the tick the fall was drained: the game writes this skip and no pass (Codex re-review)")
+        code, why = ld.judge(FINAL, {**REPORT, **last}, FULL_LOG)
+        self.assertEqual(code, 1, "no line at all pays nothing")
+        self.assertIn("taom.long-defeat.general-down", why)
+
+    def test_a_mounted_class_rises_at_home_and_no_other_class_does(self):
+        self.assertEqual(ld.mounted_classes(), {"cavalry"}, "the shipped classes.json")
+        fell = {"wave": 5, "playerDeaths": 1, "waves": REPORT["waves"],
+                "lord": {"deaths": [{"wave": 1, "body": "own", "troop": "lord_4_1", "forced": False}], "takeovers": [], "rises": [{"beforeWave": 2, "at": "scene", "handedBack": False}]}}
+        home = {**fell, "lord": {**fell["lord"], "rises": [{"beforeWave": 2, "at": "home", "handedBack": False}]}}
+
+        self.assertIn("a mounted class rises at its home point", ld.lord_problem({**fell, "class": "cavalry"}))
+        self.assertIsNone(ld.lord_problem({**home, "class": "cavalry"}))
+        self.assertIn("a mounted class rises at its home point", ld.lord_problem({**home, "class": "archer"}))
+        self.assertIsNone(ld.lord_problem({**fell, "class": "archer"}))
+        self.assertIsNone(ld.lord_problem({**fell, "class": None}), "a run with no class kit rises on foot")
+
+    def test_a_seat_read_after_a_body_stood_is_a_skip_that_pays(self):
+        ld.expected_report = {}
+        fell = {"playerDeaths": 1, "lord": {"deaths": [{"wave": 2, "body": "own", "troop": "lord_4_1", "forced": False}], "takeovers": [{"wave": 2, "by": "bot", "troop": "fow_militia"}], "rises": [{"beforeWave": 3, "at": "recorded", "handedBack": True}]}}
+        skip = "[2026-11-04 10:05:00] [INFO] [Check] id=taom.long-defeat.general-down result=skip seat=main want=lord reason=has-main"
+        rest = "\n".join(line for line in DEATH_RULE_LINES.splitlines() if "general-down" not in line)
+
+        self.assertEqual(ld.judge(FINAL, {**REPORT, **fell}, FULL_LOG + "\n" + rest + "\n" + skip)[0], 0, "a take-over beat the read: the general is the player's body again, and there is no seat to judge")
+        code, why = ld.judge(FINAL, {**REPORT, **fell}, FULL_LOG + "\n" + rest)
+        self.assertEqual(code, 1, "no line at all pays nothing")
+        self.assertIn("taom.long-defeat.general-down", why)
+        ended = skip.replace("seat=main want=lord reason=has-main", "seat=unread reason=run-ended")
+        self.assertEqual(ld.judge(FINAL, {**REPORT, **fell}, FULL_LOG + "\n" + rest + "\n" + ended)[0], 1, "a run-ended skip pays nothing")
+
+    def test_a_lose_run_with_a_death_and_none_of_the_new_lines_still_passes(self):
+        ld.expected_report = {}
+        fell = {"playerDeaths": 1, "wave": 2, "lord": {"deaths": [{"wave": 2, "body": "own", "troop": "lord_4_1", "forced": False}], "takeovers": [], "rises": []}}
+        lost = {"reason": "lost_defenders", "expect": "lost", "started": "2026-11-04T10:00:00"}
+
+        code, why = ld.judge(lost, {**cleared(1, final=False), **fell}, LOSE_LOG)
+
+        self.assertEqual(code, 0, why)
+
+    def test_a_lose_run_cannot_prove_a_fall(self):
+        self.delivered()
+
+        self.assertIn("--lose is judged on a lost run", ld.lord_falls_problem(self.parse("--lose", "--lord-falls", "2", "--waves", "3")))
+
+    def test_an_armed_fall_needs_a_run_that_cleared_its_wave(self):
+        ld.expected_report = {"lordFalls": 4}
+        lost = {**cleared(3, final=False), "lordFalls": 4, "wave": 4}
+
+        code, why = ld.judge({"reason": "lost_defenders", "expect": "deep", "started": "2026-11-04T10:00:00"}, lost, LOSE_LOG)
+
+        self.assertEqual(code, 1, why)
+        self.assertIn("cleared no wave 4", why)
+
+    def test_main_refuses_it_before_the_game_starts(self):
+        self.delivered()
+        err = BreakEnginesTests.refused(self, ["--lord-falls", "9", "--waves", "2"])
+        self.assertIn("waves 1 to 2", err)
+
+    def test_the_report_must_echo_the_armed_wave(self):
+        self.delivered()
+        self.captured_arm("--lord-falls", "2", "--start-rerolls", "0")
+        ld.checkout = (HEAD, {})
+        self.assertEqual(ld.expected_report["lordFalls"], 2)
+
+        fell = {"playerDeaths": 1, "lord": {"deaths": [{"wave": 2, "body": "own", "troop": "lord_4_1", "forced": True}], "takeovers": [], "rises": [{"beforeWave": 3, "at": "recorded", "handedBack": False}]}}
+        armed = {**REPORT, "startRerolls": 0, "wave": 5, **fell}
+        played = FULL_LOG + "\n" + DEATH_RULE_LINES
+        self.assertEqual(ld.judge(FINAL, {**armed, "lordFalls": 2}, played)[0], 0, ld.judge(FINAL, {**armed, "lordFalls": 2}, played)[1])
+        code, why = ld.judge(FINAL, {**armed, "lordFalls": 2}, FULL_LOG)
+        self.assertEqual(code, 1, "a death in the report owes the rise, the seat and the adoption")
+        for name in ("rise", "general-down", "player-death"):
+            self.assertIn("taom.long-defeat." + name, why)
+        code, why = ld.judge(FINAL, {**REPORT, "startRerolls": 0, "lordFalls": 2}, FULL_LOG)
+        self.assertEqual(code, 1, "armed, wave 2 cleared and nobody fell: the option did nothing")
+        self.assertIn("never felled the lord", why)
+        for report in (armed, {**armed, "lordFalls": 3}, {**armed, "lordFalls": "2"}, {**armed, "lordFalls": True}):
+            code, why = ld.judge(FINAL, report, FULL_LOG)
+            self.assertEqual(code, 1, report.get("lordFalls"))
+            self.assertIn("lordFalls", why)
+
+    def test_a_run_armed_with_none_must_report_none(self):
+        self.captured_arm("--start-rerolls", "0")
+        ld.checkout = (HEAD, {})
+        self.assertNotIn("lordFalls", ld.expected_report)
+
+        armed = {**REPORT, "startRerolls": 0}
+        self.assertEqual(ld.judge(FINAL, {**armed, "lordFalls": None}, FULL_LOG)[0], 0)
+        self.assertEqual(ld.judge(FINAL, armed, FULL_LOG)[0], 0, "a report with no key at all is a null one")
+        code, why = ld.judge(FINAL, {**armed, "lordFalls": 1}, FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("lordFalls", why)
+
+    def test_the_report_writes_lord_falls(self):
+        self.assertIn('["lordFalls"]', source("Diagnostics", "LongDefeatRunReport.cs"))
 
 
 class BreakEnginesTests(unittest.TestCase):
@@ -3512,7 +4117,7 @@ class HeroJudgeTests(unittest.TestCase):
         bought = [{"beforeWave": before, "kind": "hero", "id": h, "level": 0, "basePrice": self.PRICES[h], "price": self.PRICES[h], "share": 0.0} for h in heroes]
         spent = sum(p["price"] for p in bought)
         return {**REPORT, "wavesCleared": 2, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(1), wave_row(2)], "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": spent}}}
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": spent, "gear": 0, "engines": 0}}}
 
     def log(self, *extra, hunters=True):
         return log_of(ld.REQUIRED_CHECKS, 2) + "\n" + "\n".join(extra + ((self.HUNTERS_PASS,) if hunters else ()))
@@ -3701,7 +4306,7 @@ class UpgradeJudgeTests(unittest.TestCase):
         bought = [{"beforeWave": 2, "kind": "upgrade", "id": self.STEP, "level": 0, "basePrice": 15, "price": 45, "share": 0.0, "count": 3} for _ in range(orders)]
         spent = 45 * orders
         return {**REPORT, "wavesCleared": 2, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(1), wave_row(2)], "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": spent, "heroes": 0}}}
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": spent, "heroes": 0, "gear": 0, "engines": 0}}}
 
     def log(self, *extra):
         return log_of(ld.REQUIRED_CHECKS, 2) + "\n" + "\n".join(extra)
@@ -3782,7 +4387,7 @@ class FieldCareJudgeTests(unittest.TestCase):
         bought = [{"beforeWave": 2, "kind": "fieldCare", "id": "", "level": 0, "basePrice": 150, "price": 150, "share": 0.75}] if care else []
         spent = 150 if care else 0
         return {**REPORT, "wavesCleared": 2, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(1), wave_row(2)], "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": spent, "volley": 0, "upgrades": 0, "heroes": 0}}, **more}
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": spent, "volley": 0, "upgrades": 0, "heroes": 0, "gear": 0, "engines": 0}}, **more}
 
     def log(self, *extra):
         return log_of(ld.REQUIRED_CHECKS, 2) + "\n" + "\n".join(extra)
@@ -3797,7 +4402,7 @@ class FieldCareJudgeTests(unittest.TestCase):
         # Tower level 3 is the tower volley (Slice 8): all three levels are for sale; a fourth is no row of the shop.
         def towers(levels):
             bought = [{"beforeWave": n, "kind": "towerLevel", "id": "", "level": n, "basePrice": price, "price": price, "share": 0.0} for n, price in levels]
-            return self.report(care=False, purchases=bought, gold={"spent": sum(p for _, p in levels), "spentOn": {"packs": 0, "gate": 0, "towers": sum(p for _, p in levels), "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0}},
+            return self.report(care=False, purchases=bought, gold={"spent": sum(p for _, p in levels), "spentOn": {"packs": 0, "gate": 0, "towers": sum(p for _, p in levels), "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0, "gear": 0, "engines": 0}},
                                fortifications={"gateLevel": 0, "towerLevel": len(levels), "volleyLevel": 0})
         self.assertIsNone(ld.purchase_problem(towers(((1, 250), (2, 300), (3, 400)))))
         self.assertIsNotNone(ld.purchase_problem(towers(((1, 250), (2, 300), (3, 400), (4, 400)))))
@@ -3896,7 +4501,7 @@ class GateJudgeTests(unittest.TestCase):
             bought.append({"beforeWave": 2, "kind": "gateLevel", "id": "", "level": 1, "basePrice": 200, "price": 200, "share": 0.0})
         spent = sum(p["price"] for p in bought)
         return {**REPORT, "wavesCleared": waves, "wave": waves, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(n) for n in range(1, waves + 1)], "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": spent, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0}},
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": spent, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0, "gear": 0, "engines": 0}},
                 "fortifications": {"gateLevel": 1 if level else 0, "towerLevel": 0, "volleyLevel": 0}, **more}
 
     def log(self, *extra):
@@ -3954,6 +4559,44 @@ class GateJudgeTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("gate-attacked", why)
         self.assertIn("no-blow", why)
+
+    def test_a_walls_reached_skip_stands_in_for_the_pass_and_a_mixed_or_other_skip_does_not(self):
+        # Minas Tirith: attackers climb the walls in every wave, so the doorway count cannot be judged and the game writes a skip that says so.
+        crossed = self.line("gate-attacked", "skip", self.ATTACKED.replace("through=0", "through=48") + " before_walls=0 reason=walls-reached")
+        no_blow = self.line("gate-attacked", "skip", self.ATTACKED + " reason=no-blow")
+
+        code, why = ld.judge(FINAL, self.report(), self.log(self.passes()[0], self.passes()[1], crossed))
+        self.assertEqual(code, 0, why)
+        self.assertIn("gate-attacked not judged in wave 2 (attackers above the walls)", why, "a waived check is not called passed")
+        self.assertNotIn("gate-attacked passed", why)
+        self.assertNotIn("gate-repair, gate-attacked", why)
+        self.assertEqual(ld.judge(FINAL, self.report(), self.log(self.passes()[0], self.passes()[1], crossed, no_blow))[0], 1, "a no-blow skip beside it is still a debt")
+        self.assertEqual(ld.walls_reached_waves(self.report(), crossed), [2])
+        self.assertEqual(ld.walls_reached_waves(self.report(), no_blow), [])
+        self.assertEqual(ld.walls_reached_waves(self.report(), ""), [])
+        # A pass in one wave pays the debt as before, and the verdict still names a wave that was not judged.
+        code, why = ld.judge(FINAL, self.report(), self.log(*self.passes(), crossed.replace("w=2", "w=3")))
+        self.assertEqual(code, 0, why)
+        self.assertIn("gate-attacked", why.split(" passed, ")[0])
+        self.assertIn("gate-attacked not judged in wave 3 (attackers above the walls)", why)
+
+    def test_the_walls_reached_skip_must_be_the_repairs_own_wave_and_must_end_the_line(self):
+        def skip(detail):
+            return self.line("gate-attacked", "skip", detail)
+
+        crossed = self.ATTACKED.replace("through=0", "through=48") + " before_walls=0 reason=walls-reached"
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed.replace("w=2", "w=99"))), [], "a skip of another wave pays nothing")
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed + "-something")), [])
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed + " extra=1")), [], "the reason ends the line")
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed + " reason=no-blow")), [])
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed.replace(" reason=", " ended=run reason="))), [2], "a run-end watch is still that repair's watch")
+        self.assertEqual(ld.walls_reached_waves(self.report(), skip(crossed).replace("\n", "\r\n")), [2])
+        self.assertEqual(ld.walls_reached_waves(self.report(repair=False), skip(crossed)), [], "no repair, no debt to waive")
+        two = self.report()
+        two["purchases"] = two["purchases"] + [dict(next(p for p in two["purchases"] if p.get("kind") == "gateRepair"), beforeWave=3)]
+        two["wave"] = 3
+        self.assertEqual(ld.walls_reached_waves(two, skip(crossed)), [], "the second repair's watch wrote no line")
+        self.assertEqual(ld.walls_reached_waves(two, skip(crossed) + "\n" + skip(crossed.replace("w=2", "w=3"))), [2, 3])
 
     def test_a_failed_line_fails_the_run(self):
         code, why = ld.judge(FINAL, self.report(), self.log(*self.passes(), self.line("gate-attacked", "fail", self.ATTACKED.replace("through=0", "through=2"))))
@@ -4019,7 +4662,7 @@ class GateJudgeTests(unittest.TestCase):
         for const, name in (("GateLevelId", "gate-level"), ("GateRepairId", "gate-repair"), ("GateAttackedId", "gate-attacked"), ("FortPointsId", "fort-points")):
             self.assertIn(f'{const} = "taom.long-defeat.{name}"', ids, name)
         for key in ("l=", "factor=", "gates=", "max=", "hp=", "share=", "index=", "w=", "path=", "disabled=", "closed=", "open=", "near=", "hidden_down=", "reset=",
-                    "start=", "now=", "lost=", "fell=", "through=", "samples=", "ended=run", "reason=no-blow", "points=", "failed=", "reason=none-recorded"):
+                    "start=", "now=", "lost=", "fell=", "through=", "samples=", "ended=run", "reason=no-blow", "reason=walls-reached", "points=", "failed=", "reason=none-recorded"):
             self.assertIn(key, checks, key)
         self.assertRegex(self.LEVEL, r"^l=[0-9]+ factor=[0-9.]+ gates=[0-9]+ max=[0-9.]+/[0-9.]+ hp=[0-9.]+->[0-9.]+ share=[0-9.]+->[0-9.]+ index=[0-9]+->[0-9]+$")
         self.assertRegex(self.REPAIR, r"^w=[0-9]+ path=(broken|damaged) gates=[0-9]+ hp=[0-9.]+/[0-9.]+ index=[0-9]+ disabled=(true|false) closed=(true|false) open=(true|false) near=[0-9]+ hidden_down=(true|false) reset=(found|missing)$")
@@ -4046,6 +4689,13 @@ class FortPointsJudgeTests(unittest.TestCase):
         self.assertTrue(ld.recorded_fort_points("helms", self.fortresses({"towers": [{"id": "hornburg", "posts": [{"x": 1}], "volley": []}]})))
         self.assertTrue(ld.recorded_fort_points("helms", self.fortresses({"towers": [{"id": "hornburg", "volley": [{"x": 1}]}]})))
         self.assertTrue(ld.recorded_fort_points("helms", self.fortresses({"volley": {"origins": [{"x": 1, "y": 2, "z": 3}]}})))
+
+    def test_a_fortress_that_records_only_the_armoury_point_owes_the_pass(self):
+        self.assertTrue(ld.recorded_fort_points("helms", self.fortresses({"armoury": {"x": 1, "y": 2, "z": 3, "fx": 0, "fy": 1}})))
+        self.assertTrue(ld.recorded_fort_points("helms", self.fortresses({"keep": {"x": 1, "y": 2, "z": 3, "radius": 12}})), "the keep is the lord's rise point, and the game judges it on the same line")
+        self.assertFalse(ld.recorded_fort_points("helms", self.fortresses({"keep": None})))
+        for armoury in (None, {}, "x", []):
+            self.assertFalse(ld.recorded_fort_points("helms", self.fortresses({"armoury": armoury})), repr(armoury))
 
     def test_the_shipped_helms_records_none_yet(self):
         self.assertFalse(ld.recorded_fort_points("helms"), "Mike records the points on 2026-11-06")
@@ -4085,7 +4735,7 @@ class VolleyJudgeTests(unittest.TestCase):
             volley = {"uses": 1, "arrows": arrows, "hits": 8, "kills": 3, "withheld": 0} if fire else NO_VOLLEYS["volley"]
             rows.append(wave_row(n, volley=volley))
         return {**REPORT, "wavesCleared": waves, "wave": waves, "wavesFelled": 0, "startGold": 5000, "waves": rows, "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": spent, "upgrades": 0, "heroes": 0}},
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": spent, "upgrades": 0, "heroes": 0, "gear": 0, "engines": 0}},
                 "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": levels}, **more}
 
     def line(self, result, detail, name="volley"):
@@ -4289,7 +4939,7 @@ class PostsJudgeTests(unittest.TestCase):
             bought.append({"beforeWave": 2, "kind": "towerLevel", "id": "", "level": 2, "basePrice": 300, "price": 300, "share": 0.0})
         spent = sum(p["price"] for p in bought)
         return {**cleared(waves), "wave": waves, "wavesFelled": 0, "startGold": 5000, "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0}},
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0, "gear": 0, "engines": 0}},
                 "fortifications": {"gateLevel": 0, "towerLevel": levels, "volleyLevel": 0}, **more}
 
     @staticmethod
@@ -4387,7 +5037,7 @@ class PostsJudgeTests(unittest.TestCase):
         self.assertIn("failed check", why)
 
     def towerless(self):
-        return {**self.report(), "purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0}},
+        return {**self.report(), "purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0, "gear": 0, "engines": 0}},
                 "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 0}}
 
     def test_a_run_that_bought_no_tower_owes_no_posts_line(self):
@@ -4488,7 +5138,7 @@ class TowerVolleyJudgeTests(unittest.TestCase):
         bought = [{"beforeWave": n, "kind": "towerLevel", "id": "", "level": n, "basePrice": price, "price": price, "share": 0.0} for n, price in prices]
         spent = sum(price for _, price in prices)
         return {**cleared(waves), "wave": waves, "wavesFelled": 0, "startGold": 5000, "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0}},
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0, "gear": 0, "engines": 0}},
                 "fortifications": {"gateLevel": 0, "towerLevel": levels, "volleyLevel": 0}, **more}
 
     @staticmethod
@@ -4557,7 +5207,7 @@ class TowerVolleyJudgeTests(unittest.TestCase):
         self.assertIn("taom.long-defeat.tower-volley", why)
 
         elven = {**self.report(levels=0), "purchases": [{"beforeWave": 1, "kind": "volleyLevel", "id": "", "level": 1, "basePrice": 350, "price": 350, "share": 0.0}],
-                 "gold": {"spent": 350, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 350, "upgrades": 0, "heroes": 0}}, "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 1}}
+                 "gold": {"spent": 350, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 350, "upgrades": 0, "heroes": 0, "gear": 0, "engines": 0}}, "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 1}}
         code, why = ld.judge(FINAL, elven, self.log(*self.volley("hornburg")))
         self.assertEqual(code, 1)
         self.assertIn("taom.long-defeat.volley", why)
@@ -4721,20 +5371,20 @@ class LocationOfferedTests(unittest.TestCase):
 
     def test_a_kind_raised_on_one_side_only_is_caught(self):
         text = source("Domain", "LocationsPlan.cs")
-        raised = text.replace("Offered { get; } = new(false, false, false);", "Offered { get; } = new(true, false, false);")
+        raised = text.replace("Offered { get; } = new(true, false, false);", "Offered { get; } = new(true, true, false);")
         self.assertNotEqual(raised, text, "the planted edit found its line")
         self.assertNotEqual(self.parse(raised, "Offered"), ld.LOCATION_OFFERED)
 
     def test_an_argument_that_is_not_a_bare_literal_is_refused_not_read_as_false(self):
         text = source("Domain", "LocationsPlan.cs")
-        named = text.replace("Offered { get; } = new(false, false, false);", "Offered { get; } = new(Armoury: true, false, false);")
+        named = text.replace("Offered { get; } = new(true, false, false);", "Offered { get; } = new(Armoury: true, false, false);")
         self.assertNotEqual(named, text, "the planted edit found its line")
         with self.assertRaises(AssertionError):
             self.parse(named, "Offered")
 
-    def test_this_slice_delivers_nothing_so_every_row_stays_hidden(self):
-        self.assertEqual(ld.LOCATION_OFFERED, {"armoury": False, "mangonel": False, "trebuchet": False})
-        self.assertEqual(self.parse(source("Domain", "LocationsPlan.cs"), "None"), ld.LOCATION_OFFERED)
+    def test_this_slice_delivers_the_armoury_and_no_engine(self):
+        self.assertEqual(ld.LOCATION_OFFERED, {"armoury": True, "mangonel": False, "trebuchet": False})
+        self.assertEqual(self.parse(source("Domain", "LocationsPlan.cs"), "None"), {"armoury": False, "mangonel": False, "trebuchet": False})
 
 
 class LaunchCheckoutTests(unittest.TestCase):
@@ -4772,6 +5422,314 @@ class LaunchCheckoutTests(unittest.TestCase):
         self.assertEqual(done[0], 0, done[1])
         self.assertIn(f"build {HEAD[:9]} built 20261104-100000 UTC,", done[1])
         self.assertEqual(git.call_count, 1)
+
+
+
+class DifficultyTests(unittest.TestCase):
+    """Slice 6 (phase5-plan.md): hard scales the wave count, the health and damage growth and the affix schedule. The absolute values are the ones WavePlanTests.cs and
+    LongDefeatShippedConfigTests.cs pin, taken by hand from waves.json, so neither side can drift alone."""
+
+    # (wave, count, health, damage) of the shipped rosters at normal and at hard. Both fortresses share them.
+    NORMAL = [(1, 110, 1.0, 1.0), (2, 120, 1.0, 1.0), (3, 120, 1.0, 1.0), (4, 125, 1.0, 1.0), (5, 130, 1.0, 1.0), (10, 200, 1.0, 1.0), (13, 230, 1.15, 1.09), (20, 300, 1.5, 1.3)]
+    HARD = [(1, 138, 1.0, 1.0), (2, 150, 1.0, 1.0), (3, 150, 1.0, 1.0), (4, 156, 1.0, 1.0), (5, 163, 1.0, 1.0), (10, 250, 1.0, 1.0), (13, 288, 1.1875, 1.1125), (20, 375, 1.625, 1.375)]
+
+    def setUp(self):
+        ld.target_waves = 5
+        ld.checkout = (HEAD, {})
+        ld.expected_report = {}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "checkout", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def waves_file(self, content, name="waves.json"):
+        folder = tempfile.TemporaryDirectory()
+        self.addCleanup(folder.cleanup)
+        path = Path(folder.name) / name
+        path.write_text(json.dumps(content), encoding="utf-8")
+        return path
+
+    def test_the_shipped_hard_block_is_a_quarter_more_and_two_waves_earlier(self):
+        self.assertEqual((1.25, 2), ld.shipped_hard())
+
+    def test_the_csharp_defaults_are_the_shipped_numbers(self):
+        self.assertIn("new(1.25f, 2)", source("Domain", "RunDifficulty.cs"))
+
+    def test_a_bad_hard_block_keeps_the_defaults_value_by_value(self):
+        for block, want in (({}, (1.25, 2)), ({"factor": 1.5}, (1.5, 2)), ({"affixWavesEarlier": 4}, (1.25, 4)), ({"factor": 1.0, "affixWavesEarlier": 0}, (1.0, 0)),
+                            ({"factor": 2.0, "affixWavesEarlier": 10}, (2.0, 10)), ({"factor": 0.9}, (1.25, 2)), ({"factor": 2.1}, (1.25, 2)), ({"factor": "1.5"}, (1.25, 2)),
+                            ({"factor": True}, (1.25, 2)), ({"affixWavesEarlier": -1}, (1.25, 2)), ({"affixWavesEarlier": 11}, (1.25, 2)), ({"affixWavesEarlier": 2.0}, (1.25, 2)),
+                            ({"affixWavesEarlier": 2.5}, (1.25, 2)), ({"affixWavesEarlier": "2"}, (1.25, 2)), (5, (1.25, 2)), ([], (1.25, 2))):
+            with self.subTest(block=block):
+                self.assertEqual(want, ld.shipped_hard(self.waves_file({"rules": {"hard": block}})))
+        self.assertEqual((1.25, 2), ld.shipped_hard(self.waves_file({"rules": 5})))
+        self.assertEqual((1.25, 2), ld.shipped_hard(self.waves_file({})))
+
+    def test_a_factor_too_large_for_a_float_is_the_default_as_in_the_game(self):
+        self.assertEqual((1.25, 2), ld.shipped_hard(self.waves_file({"rules": {"hard": {"factor": 10 ** 400}}})))
+
+    def test_the_factor_105_is_the_32_bit_float_so_110_attackers_become_115_not_116(self):
+        # 110 * 1.05f is 115.4999948 in the game's float, where the decimal 1.05 gives 115.5, which rounds to 116.
+        roster = {"waves": [{"count": 110, "mix": [{}]}]}
+        file = self.waves_file({"rules": {"hard": {"factor": 1.05}}, "rosters": {"r": roster}})
+        fortresses = self.waves_file({"fortresses": [{"id": "x", "waves": "r"}]}, "fortresses.json")
+        with mock.patch.object(ld, "FORTRESS_FILE", fortresses):
+            self.assertEqual(115, ld.wave_spec("x", 1, "hard", file)[0])
+
+    def test_the_factor_is_held_as_the_games_32_bit_float(self):
+        self.assertEqual(ld._f32(1.1), ld.shipped_hard(self.waves_file({"rules": {"hard": {"factor": 1.1}}}))[0])
+
+    def test_the_schedule_moves_earlier_but_never_before_wave_one(self):
+        shipped = ld.shipped_affix_schedule()
+        self.assertEqual(((3, 1), (8, 2), (13, 3)), ld.hard_schedule(shipped, 2))
+        self.assertEqual(shipped, ld.hard_schedule(shipped, 0))
+        self.assertEqual(((1, 1), (5, 2), (10, 3)), ld.hard_schedule(shipped, 5))
+        self.assertEqual(((1, 1), (1, 2)), ld.hard_schedule(((2, 1), (6, 2)), 5))
+        self.assertEqual([0, 0, 1, 1, 2, 2, 3], [ld.affix_count(ld.hard_schedule(shipped, 2), w) for w in (1, 2, 3, 7, 8, 12, 13)])
+        self.assertEqual([0, 0, 1, 1, 2, 2, 3], [ld.affix_count(shipped, w) for w in (1, 4, 5, 9, 10, 14, 15)])
+
+    def test_each_shipped_fortress_follows_the_table_at_normal_and_at_hard(self):
+        for fortress in ("helms", "minas_tirith"):
+            for difficulty, table in (("normal", self.NORMAL), ("hard", self.HARD)):
+                for wave, count, health, damage in table:
+                    with self.subTest(fortress=fortress, difficulty=difficulty, wave=wave):
+                        got = ld.wave_spec(fortress, wave, difficulty)
+                        self.assertEqual(count, got[0])
+                        self.assertAlmostEqual(health, got[1], delta=1e-5)
+                        self.assertAlmostEqual(damage, got[2], delta=1e-5)
+
+    def test_a_wave_below_one_is_wave_one_and_an_unknown_fortress_has_no_spec(self):
+        self.assertEqual(138, ld.wave_spec("helms", 0, "hard")[0])
+        self.assertIsNone(ld.wave_spec("rivendell", 1, "hard"))
+        self.assertIsNone(ld.wave_spec("helms", True, "hard"))
+
+    def test_hard_rounds_once_half_away_from_zero_and_stops_at_one_thousand(self):
+        # 103 * 1.5 = 154.5: half away from zero is 155, where Python's round() gives 154.
+        roster = {"scaling": {"countPerWave": 10, "maxCount": 1000}, "waves": [{"count": 103, "mix": [{}]}]}
+        file = self.waves_file({"rules": {"hard": {"factor": 1.5}}, "rosters": {"r": roster}})
+        fortresses = self.waves_file({"fortresses": [{"id": "x", "waves": "r"}]}, "fortresses.json")
+        with mock.patch.object(ld, "FORTRESS_FILE", fortresses):
+            self.assertEqual(155, ld.wave_spec("x", 1, "hard", file)[0])
+            self.assertEqual(103, ld.wave_spec("x", 1, "normal", file)[0])
+            self.assertEqual(1000, ld.wave_spec("x", 200, "hard", file)[0])
+
+    def test_half_away_from_zero_is_not_the_builtin_round(self):
+        # 2.5 and 4.5 are the halves Python's round() sends to 2 and 4.
+        self.assertEqual([3, 5, 138], [ld._round_half_away(x) for x in (2.5, 4.5, 137.5)])
+
+    def hard_rows(self, count, difficulty="hard", seed=7, **more):
+        """Report rows of cleared waves 1 to count that carry what the game writes for the wave: kills, felled, the two factors and the affixes of the difficulty's schedule."""
+        schedule = ld.shipped_affix_schedule()
+        if difficulty == "hard":
+            schedule = ld.hard_schedule(schedule, ld.shipped_hard()[1])
+        rows = []
+        for wave in range(1, count + 1):
+            spec = ld.wave_spec("helms", wave, difficulty)
+            rows.append(wave_row(wave, seed, kills=spec[0], felled=0, healthFactor=spec[1], damageFactor=spec[2],
+                                 affixes=ld.affix_roll(seed, wave, ld.affix_count(schedule, wave)), **more))
+        return rows
+
+    def hard_report(self, count=5, difficulty="hard", **more):
+        return {**cleared(count), "fortress": "helms", "difficulty": difficulty, "waves": self.hard_rows(count, difficulty), **more}
+
+    def test_the_hard_counts_of_waves_one_to_five_are_the_proof_runs(self):
+        self.assertEqual([138, 150, 150, 156, 163], [row["kills"] for row in self.hard_rows(5)])
+
+    def test_wave_problem_accepts_a_hard_report_at_hard_and_a_normal_one_at_normal(self):
+        self.assertIsNone(ld.wave_problem(self.hard_report(10)))
+        self.assertIsNone(ld.wave_problem(self.hard_report(10, "normal")))
+
+    def test_wave_problem_refuses_normal_counts_in_a_hard_report_and_the_other_way_round(self):
+        self.assertIn("wave 1", ld.wave_problem(self.hard_report(5, "hard", waves=self.hard_rows(5, "normal"))))
+        self.assertIn("138", ld.wave_problem(self.hard_report(5, "hard", waves=self.hard_rows(5, "normal"))))
+        self.assertIn("110", ld.wave_problem(self.hard_report(5, "normal", waves=self.hard_rows(5, "hard"))))
+
+    def test_wave_problem_reads_a_report_with_no_difficulty_as_normal(self):
+        report = self.hard_report(5, "normal")
+        del report["difficulty"]
+        self.assertIsNone(ld.wave_problem(report))
+        self.assertIsNotNone(ld.wave_problem({**report, "waves": self.hard_rows(5, "hard")}))
+
+    def test_wave_problem_refuses_a_wrong_growth_factor(self):
+        rows = self.hard_rows(13)
+        rows[12] = {**rows[12], "healthFactor": 1.15}
+        self.assertIn("healthFactor", ld.wave_problem({**self.hard_report(13), "waves": rows}))
+        rows[12] = {**rows[12], "healthFactor": 1.1875, "damageFactor": 1.09}
+        self.assertIn("damageFactor", ld.wave_problem({**self.hard_report(13), "waves": rows}))
+
+    def test_wave_problem_adds_felled_to_kills(self):
+        rows = self.hard_rows(2)
+        rows[0] = {**rows[0], "kills": 130, "felled": 8}
+        self.assertIsNone(ld.wave_problem({**self.hard_report(2), "waves": rows}))
+        rows[0] = {**rows[0], "felled": 7}
+        self.assertIn("wave 1", ld.wave_problem({**self.hard_report(2), "waves": rows}))
+
+    def test_wave_problem_on_hard_refuses_a_row_that_lacks_a_field_or_is_not_an_object(self):
+        for key in ("wave", "kills", "felled", "healthFactor", "damageFactor"):
+            for bad in (None, "5", True):
+                rows = self.hard_rows(2)
+                rows[0] = {**rows[0], key: bad}
+                self.assertIn(key, ld.wave_problem({**self.hard_report(2), "waves": rows}), (key, bad))
+            rows = self.hard_rows(2)
+            del rows[0][key]
+            self.assertIn(key, ld.wave_problem({**self.hard_report(2), "waves": rows}), key)
+        for junk in ("x", None, 5):
+            self.assertIsNotNone(ld.wave_problem({**self.hard_report(2), "waves": [junk]}), junk)
+
+    def test_wave_problem_on_hard_refuses_normal_counts_with_each_field_removed(self):
+        for key in ("kills", "felled", "healthFactor", "damageFactor", "wave"):
+            rows = self.hard_rows(2, "normal")
+            del rows[0][key]
+            self.assertIsNotNone(ld.wave_problem({**self.hard_report(2), "waves": rows}), key)
+
+    def test_wave_problem_on_hard_refuses_normal_counts_whatever_fled(self):
+        rows = self.hard_rows(2, "normal")
+        for extra in ({}, {"fled": 1}, {"fleeingPeak": 1}, {"fled": "1"}):
+            self.assertIn("wave 1", ld.wave_problem({**self.hard_report(2), "waves": rows, **extra}), extra)
+
+    def test_wave_problem_on_hard_refuses_an_unknown_fortress_naming_it(self):
+        report = {**self.hard_report(2), "fortress": "rivendell"}
+        self.assertIn("rivendell", ld.wave_problem(report))
+
+    def test_wave_problem_on_normal_or_no_difficulty_skips_rows_without_the_fields_and_an_unknown_fortress(self):
+        for difficulty in ("normal", None):
+            report = {**cleared(5), "waves": [wave_row(1), "x", None, {"wave": 2}], "fortress": "rivendell"}
+            if difficulty:
+                report["difficulty"] = difficulty
+            self.assertIsNone(ld.wave_problem(report))
+        self.assertIsNone(ld.wave_problem({**cleared(5), "waves": [wave_row(n) for n in range(1, 6)]}))
+        self.assertIsNone(ld.wave_problem({**self.hard_report(2), "waves": "none"}))
+        self.assertIsNone(ld.wave_problem({"schema": 2}))
+
+    def test_wave_problem_checks_the_factors_of_every_row_even_when_attackers_fled(self):
+        rows = self.hard_rows(13)
+        rows[12] = {**rows[12], "healthFactor": 1.15}
+        why = ld.wave_problem({**self.hard_report(13), "waves": rows, "fled": 3})
+        self.assertIn("healthFactor", why)
+        self.assertIn("wave 13", why)
+        normal = self.hard_rows(13, "normal")
+        normal[12] = {**normal[12], "damageFactor": 1.3}
+        self.assertIn("damageFactor", ld.wave_problem({**self.hard_report(13, "normal"), "waves": normal, "fled": 5}))
+
+    def test_wave_problem_bounds_the_total_shortfall_by_the_fled_attackers(self):
+        def report(short, fled=None, peak=None):
+            rows = self.hard_rows(5, "normal")
+            for index, lost in enumerate(short):
+                rows[index] = {**rows[index], "kills": rows[index]["kills"] - lost}
+            more = {} if fled is None else {"fled": fled}
+            more.update({} if peak is None else {"fleeingPeak": peak})
+            return {**self.hard_report(5, "normal"), "waves": rows, **more}
+
+        self.assertIsNone(ld.wave_problem(report([])))
+        self.assertIsNone(ld.wave_problem(report([1, 1], fled=2)))
+        self.assertIn("fled", ld.wave_problem(report([1, 1, 1], fled=2)))
+        self.assertIsNotNone(ld.wave_problem(report([1])), "no fled attacker: the counts must be equal")
+        self.assertIsNotNone(ld.wave_problem(report([1], fled="1")), "a fled that is not a whole number counts as 0")
+        self.assertIsNotNone(ld.wave_problem(report([1], peak=9)), "fleeingPeak bounds nothing")
+        self.assertIsNone(ld.wave_problem(report([3], fled=3)))
+
+    def test_wave_problem_refuses_more_than_the_count_and_a_negative_kills_or_felled(self):
+        rows = self.hard_rows(2, "normal")
+        self.assertIn("wave 1", ld.wave_problem({**self.hard_report(2, "normal"), "waves": [{**rows[0], "kills": 111}, rows[1]], "fled": 5}))
+        negative = {**self.hard_report(2, "normal"), "waves": [{**rows[0], "kills": -1, "felled": 111}, rows[1]]}
+        self.assertIn("kills", ld.wave_problem(negative))
+        self.assertIn("felled", ld.wave_problem({**negative, "waves": [{**rows[0], "kills": 111, "felled": -1}, rows[1]]}))
+        old = {**cleared(2), "waves": [wave_row(1, kills=-1, felled=111), wave_row(2)]}
+        self.assertIn("kills", ld.wave_problem(old))
+
+    def test_affix_problem_replays_the_shifted_schedule_for_a_hard_report(self):
+        self.assertIsNone(ld.affix_problem(self.hard_report(8)))
+        shifted_as_normal = {**self.hard_report(8), "difficulty": "normal"}
+        self.assertIn("wave 3", ld.affix_problem(shifted_as_normal))
+        normal_as_hard = {**self.hard_report(8, "normal"), "difficulty": "hard"}
+        self.assertIn("wave 3", ld.affix_problem(normal_as_hard))
+        self.assertIsNone(ld.affix_problem(self.hard_report(8, "normal")))
+
+    def judged(self, report, log=FULL_LOG, expected=None):
+        ld.expected_report = {} if expected is None else expected
+        return ld.judge(FINAL, report, log)
+
+    def test_a_report_of_an_older_build_with_no_difficulty_still_judges_as_normal(self):
+        self.assertEqual(0, self.judged(REPORT)[0])
+        self.assertEqual(0, self.judged(REPORT, expected={"difficulty": "normal"})[0])
+        # Complete rows of a real normal run (110, 120, 120, 125 and 130 attackers, factors 1), so wave_spec is called and the counts count.
+        counts = (110, 120, 120, 125, 130)
+        rows = [wave_row(n, kills=counts[n - 1], felled=0, healthFactor=1.0, damageFactor=1.0) for n in range(1, 6)]
+        self.assertNotIn("difficulty", REPORT)
+        self.assertEqual(0, self.judged({**REPORT, "waves": rows})[0])
+        wrong = [{**rows[0], "kills": 111}] + rows[1:]
+        code, why = self.judged({**REPORT, "waves": wrong})
+        self.assertEqual(1, code)
+        self.assertIn("waves do not replay", why)
+        short = [{**rows[0], "kills": 109}] + rows[1:]
+        self.assertEqual(1, self.judged({**REPORT, "waves": short})[0])
+
+    def test_the_judge_refuses_normal_counts_labelled_hard_even_when_attackers_fled(self):
+        rows = self.hard_rows(5, "normal")
+        schedule = ld.hard_schedule(ld.shipped_affix_schedule(), 2)
+        rows = [{**row, "affixes": ld.affix_roll(7, row["wave"], ld.affix_count(schedule, row["wave"]))} for row in rows]
+        for extra in ({"fled": 1}, {"fleeingPeak": 1}):
+            code, why = self.judged({**self.hard_report(5, "hard", waves=rows), **extra}, expected={"difficulty": "hard"})
+            self.assertEqual(1, code, extra)
+            self.assertIn("waves do not replay", why)
+
+    def test_armed_hard_needs_a_hard_report(self):
+        self.assertEqual(0, self.judged(self.hard_report(5), expected={"difficulty": "hard"})[0])
+        code, why = self.judged(REPORT, expected={"difficulty": "hard"})
+        self.assertEqual(1, code)
+        self.assertIn("difficulty", why)
+        self.assertIn("hard", why)
+
+    def test_a_hard_report_from_a_run_armed_with_no_difficulty_fails_naming_both(self):
+        code, why = self.judged(self.hard_report(5))
+        self.assertEqual(1, code)
+        self.assertIn("difficulty", why)
+        self.assertIn("'normal'", why)
+
+    def test_a_run_armed_normal_fails_on_a_hard_report(self):
+        self.assertEqual(1, self.judged(self.hard_report(5), expected={"difficulty": "normal"})[0])
+
+    def test_the_judge_refuses_normal_counts_in_a_report_that_says_hard(self):
+        report = self.hard_report(5, "hard", waves=self.hard_rows(5, "normal"))
+        report["waves"] = [{**row, "affixes": ld.affix_roll(7, row["wave"], ld.affix_count(ld.hard_schedule(ld.shipped_affix_schedule(), 2), row["wave"]))} for row in report["waves"]]
+        code, why = self.judged(report, expected={"difficulty": "hard"})
+        self.assertEqual(1, code)
+        self.assertIn("waves", why)
+
+    def test_the_flag_arms_the_key_and_the_report_field_only_when_given(self):
+        known = ld.build_parser().parse_known_args(["--difficulty", "hard"])[0]
+        self.assertEqual("hard", known.difficulty)
+        self.assertEqual("hard", ld.armed_report_fields(known)["difficulty"])
+        self.assertIn(("difficulty", "hard"), ld.arm_pairs(known, "E:/out", 3900))
+        bare = ld.build_parser().parse_known_args([])[0]
+        self.assertIsNone(bare.difficulty)
+        self.assertNotIn("difficulty", ld.armed_report_fields(bare))
+        self.assertIn(("difficulty", None), ld.arm_pairs(bare, "E:/out", 3900))
+
+    def test_the_flag_refuses_a_word_that_is_neither_normal_nor_hard(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit):
+                ld.build_parser().parse_known_args(["--difficulty", "nightmare"])
+
+    def test_the_arm_text_names_the_difficulty_only_when_given(self):
+        keep = {name: getattr(runner, name) for name in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs", "show_results")}
+        captured = {}
+        for argv in (["--difficulty", "hard"], []):
+            with mock.patch.multiple(runner, main=lambda rest: captured.setdefault("arm", runner.arm_text_for), **keep), \
+                    mock.patch.object(autorun_build, "checkout_state", return_value=(HEAD, {})):
+                ld.main(argv)
+            self.addCleanup(setattr, ld, "checkout", None)
+            self.addCleanup(setattr, ld, "target_waves", None)
+            self.addCleanup(setattr, ld, "expected_report", {})
+            text, _ = captured.pop("arm")("E:/out", SimpleNamespace(wall_limit=None))
+            self.assertEqual(bool(argv), "difficulty=hard\n" in text)
+            self.assertEqual(bool(argv), "difficulty=" in text)
+
+    def test_the_games_ids_are_the_wrappers(self):
+        game = source("Domain", "RunDifficulty.cs")
+        self.assertIn('"hard"', game)
+        self.assertIn('"normal"', game)
+        self.assertIn('["difficulty"] = RunDifficulties.Id(options.Difficulty)', source("Diagnostics", "LongDefeatRunReport.cs"))
+        self.assertIn('case "difficulty":', source("Autorun", "LongDefeatAutorunPlan.cs"))
 
 
 if __name__ == "__main__":

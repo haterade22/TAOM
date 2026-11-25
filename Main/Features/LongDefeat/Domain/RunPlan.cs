@@ -34,6 +34,9 @@ internal sealed record RunPlan(
 
     public RunProvenance Provenance { get; init; } = RunProvenance.Unknown;
 
+    /// <summary>The recorded lines a mission hero speaks when the field takes his spawn (#1569). <see cref="HeroLinePlan.None"/>: no hero speaks.</summary>
+    public HeroLinePlan HeroLines { get; init; } = HeroLinePlan.None;
+
     /// <summary>The affix schedule, numbers and the fortress's attacker culture names. <see cref="AffixPlan.None"/>: no wave carries an affix.</summary>
     public AffixPlan Affixes { get; init; } = AffixPlan.None;
 
@@ -85,6 +88,15 @@ internal sealed record RunPlan(
 
     /// <summary>The heroes that stand with the garrison from the first tick, paid for by nobody (#1366): a story mission names them, the shop sells none. Empty: the shop's heroes only.</summary>
     public IReadOnlyList<HeroSpawn> FreeHeroes { get; init; } = System.Array.Empty<HeroSpawn>();
+
+    /// <summary>
+    /// The id of the free hero who must live (#1105: Boromir at Parth Galen), or null. His fall ends the run as <see cref="RunEndReason.HeroFell"/>, whichever side the player took;
+    /// a spawn the field refuses for him ends it as a stalemate, which decides nothing.
+    /// </summary>
+    public string? MustLive { get; init; }
+
+    /// <summary>The start places of a run on a field scene (#1105 slice 2), or null: a siege run on a scene with walls, gates and engines.</summary>
+    public FieldPlaces? Field { get; init; }
 
     /// <summary>The ids of gear sets with an item the spawn would refuse, found once at launch (<see cref="LongDefeatGearItems"/>). Nothing reads it yet; a later slice hides those sets for the run.</summary>
     public IReadOnlyList<string> HiddenGearSets { get; init; } = System.Array.Empty<string>();

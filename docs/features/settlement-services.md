@@ -2,7 +2,7 @@
 
 ## Overview
 
-Two small settlement services (#859). **Watch-Silver:** talking to the governor of a town or castle your clan owns, inside that fief, you can offer silver for the watch. The governor names the fief's loyalty and offers up to three amounts (+5, +10 and +20 loyalty, clipped so loyalty never passes 50), each with its price in denars, and paying raises the loyalty at once. **Tidings of the Lists:** a new option in a town's arena menu, "Ask after tournaments elsewhere" with the fee (20 and the coin icon), names the three nearest towns that hold a tournament now and are not at war with your realm. Single-player only, two MCM switches, nothing saved by TAOM, no Harmony, no reflection and no prefab.
+Two small settlement services (#859). **Watch-Silver:** talking to the governor of a town or castle your clan owns, inside that fief, you can offer silver for the watch. The governor names the fief's loyalty and offers up to three amounts (+5, +10 and +20 loyalty, clipped so loyalty never passes 50), each with its price in denars, and paying raises the loyalty at once. **Tidings of the Lists:** a new option in a town's training grounds menu (the `town_arena` menu), "Ask after tournaments elsewhere" with the fee (20 and the coin icon), names the three nearest towns that hold a tournament now and are not at war with your realm. Single-player only, two MCM switches, nothing saved by TAOM, no Harmony, no reflection and no prefab.
 
 ## Why This Exists
 
@@ -129,7 +129,7 @@ All of this is unseen in game.
 7. Arena: the option sits above "Back to town center" and shows the fee; a list of up to three, nearest first, with no hostile town, one "Town (Realm)" per line under the header; none means free; under 20 denars means greyed.
 8. Asking shows vanilla's "gold removed" line for the 20 denar fee.
 9. "Never mind." in the governor's tiers returns to the governor's options.
-10. A refusal (a switch, co-op or disguise gate that closed since the menu was built): the line "The arena master has no answer for you now." and nothing charged.
+10. A refusal (a switch, co-op or disguise gate that closed since the menu was built): the line "The training master has no answer for you now." and nothing charged.
 11. Disguised in a hostile town's arena: the option is hidden.
 12. Save, load and a new campaign: one copy of each line and option.
 13. Either switch off: its line or option is gone at the next conversation or menu open.

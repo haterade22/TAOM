@@ -596,6 +596,22 @@ extent) and the formation width the measured shoulders times `AgentScale`.
   (shoulders, hips) and size the capsule, formation width and reach from those.
 - **Source:** `docs/reference/lotrlome-hill-troll-changes.md` `monsters.xml` row; `TrollBruteForceConfig.ShoulderWidthByMonster`.
 
+### A cloned clip record carries its template's sounds and blends, and the editor judges them against the new length (#1541, 2026-11-22)
+The spider's four in-place gait twins cloned `elephant_stand_2`, because that record plays in the elephant's own
+`none` rows. It is an idle record: sound points at 0.2 and 0.5, a `horse_eating` sound, blends of 0.8 s. On loops
+of 0.27 to 0.9 s the Modding Kit refused each twin at load with a "Sound Point Error" dialog. The rule it applies,
+read back from the dialog's number: a sound point must be below (Duration - BlendOutPeriod) / Duration.
+- **Why missed:** the template was chosen by where its clone would be bound, not by what the record holds. The
+  generator set name, master, range, Duration, travel and limits, and nothing printed the fields it left alone.
+  The four records passed every offline check, since no tool here knew the editor's rule.
+- **Prevent:** take a twin's record from the vanilla pattern, read not assumed: `gait_walkfast` is `horse_walkfast`
+  with the same Duration, step points, flags and blends and no clip usage (`Native/AssetPackages/animation_clips.tpac`).
+  `tools/gen_elephant_anim_clips.ps1` fails an explicit row whose sound point breaks the rule, and a row states
+  `usage`, `step_points` and `sound_code` itself. Before a record is cloned for a clip of another length, print the
+  template's StepPoints, SoundCode and both blend periods. A record written again leaves an orphan cache entry
+  under its old GUID: move it out with the record.
+- **Source:** #1541; `docs/features/spider.md` ("Locomotion generated on its own rig"); `tools/spider_gait.py` (`_twin`).
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
@@ -1634,3 +1650,176 @@ their records alone.
   and expect exit 1.
 - **Source:** [RCA](../rca-elephant-gait-gate-2026-11-20.md); `tools/tests/test_elephant_gait_tools.py`
   (`StandFindingsTests`, `PaceTableTests`, `CacheStateTests`).
+
+### An action's type is read by native code and by other mods, so it is chosen from their readers (#1499, 2026-11-22)
+The two dwarf attacks were typed `actt_kick` for one managed reader (`StandingPoint` lets a kicking agent go of a
+machine), with the note "what native code does with the type beyond that is unverified". The native kick code reads
+the combat parameter of a kick-typed action's clip with no test for "none", the clips had none on purpose, and a
+battle hung on the lock that read led to. The fix took the type away. The review then found a third reader:
+BannerlordCoop publishes an action change to other peers only for a typed action.
+- **Why missed:** the type was picked by searching the managed source, where it has one reader. The doc recorded the
+  native side as unverified and the work went on; the war ram's "kick type, no combat parameter" recipe was copied
+  from a mount, which has no `CanKick` flag and so never starts the engine's kick state.
+- **Prevent:** an action that TAOM plays itself gets no type unless a reader that needs the type is named, and then
+  its clip carries what that type's native code reads (`python tools/native_decompile.py --rva 0x670270` for the
+  kick family). `tools/tests/test_armory_kick_typed_actions.py` holds the list of kick-family actions fixed. A
+  recipe proved on a mount is not proved for a humanoid. Before a type changes, grep BannerlordCoop's
+  `AgentActionHandler` for what it publishes.
+- **Source:** #1499; `docs/features/dwarf-attacks.md`; `docs/reference/lotrlome-dwarf-attack-changes.md`.
+
+### A clip record's sources lie inside its master's key times, and a loop ends on a key that repeats its first (#1558, 2026-11-23)
+The master writer keyed a new master 1 to N and the record writer wrote sources 0 to N, "as the Kit-made elephant
+clips have them". The Kit printed "ipo does not fit" once per bone per clip at each cook (154 lines on 2026-11-22,
+412 on 2026-11-23), and in the game each loop of 49 bound clips stood on its first key for one key time.
+- **Why missed:** the form was copied from ADOD's clips, which are wrong in the same way, and nobody read the Kit's
+  error log after a cook. No gate compared a record's sources with its master's keys.
+- **Prevent:** the rule is the editor's (`FUN_180b8b810`, wEditor `TaleWorlds.Native.dll`): first key time at or
+  under the lower source, last at or over the upper. A master keys from 0; a loop of N frames has N + 1 keys, the
+  last a copy of the first, under sources 0 to N; a one-shot of n keys has sources 0 to n-1.
+  `tools/check_gait_stride.py` fails a bound clip out of range (`range_finding`). After a cook, grep the newest
+  `rgl_log_errors_*.txt` for "does not fit". A migration's "already done" test compares stored values exactly: a
+  test by the dot product of two stored rotations took a closed loop for an open one.
+- **Source:** [RCA](../rca-spider-key-times-slide-capsule-2026-11-23.md); `tools/elephant_write_masters.py` (KEY TIMES); `KeyTimeTests`, `KeyRangeGateTests`.
+
+### An overlay row's clip plays over the whole body, so it is the pace's own gait (#1559, 2026-11-23)
+The spider's `monster_usage_upper_body_movement` rows played the turn-in-place actions at every moving pace and its
+`gallop_acceleration_head_action` played the idle, with a comment that said the spider had no head-turn clips. In
+a charge the idle replaced the gallop at a weight of up to 1 and the spiders slid. The command trial's step passed,
+because it read speeds.
+- **Why missed:** "upper body" and "head" read as a part of the body. The engine blends the row's clip over every
+  bone: the back legs slowed as much as the front ones, though only the front ones hang under `neck_root_bone`.
+  A check that reads a speed cannot see a slide, and stills from above cannot either.
+- **Prevent:** each moving pace's overlay rows play a clip of that pace's rhythm (the warg: `warg_trot_r` beside
+  `warg_trot`, both 0.73 s), and a set with no gallop clip of its own names no gallop acceleration action. A
+  motion check measures the motion: the step's `slide` fact compares the leg tips' travel with the mount's
+  (`SpiderSlideMeter`). To find which action plays during a fault, log `GetCurrentAction` and
+  `GetActionChannelWeight` on both channels with the speed; channel 0 stays `act_none` while the movement node runs.
+- **Source:** [RCA](../rca-spider-key-times-slide-capsule-2026-11-23.md); `tools/bind_spider_clips.py` (`OVERLAYS`); `SpiderSlideMeterTests`.
+
+### In a mount's movement table a `none` row fills every key no earlier row holds, so it goes last (#1550, 2026-11-23)
+`bind_spider_clips.py` wrote the stand pace as `none/none` stand, turn right, turn left, strafe right, strafe left,
+and called it "the warg's layout". The usage loader files a `none` direction under all eight directions and a
+`none` turn under both turns, and keeps the first row of a key, so the four rows after the stand row were never
+stored. A spider turned in place on the stand clip from #1541 until a review read the loader.
+- **Why missed:** the loader had been read for one question (is a repeated action safe) and the answer was written
+  down without the expansion two lines above it. The warg's rows were copied by content, not by order.
+- **Prevent:** `hidden_rows` in `tools/bind_spider_clips.py` simulates the loader's filing and fails a table with a
+  row that files no key of its own. A native read is written down whole: every branch that touches the value in
+  question, not the line that answered the question asked.
+- **Source:** [RCA](../rca-spider-key-times-slide-capsule-2026-11-23.md); the decompile of 0x621E40, lines 651 to 706.
+
+### A body capsule is checked against the skeleton it must hold (#1560, 2026-11-23)
+The spider's `body_capsule` was a pill around the chest, 1.9 m of a 3.6 m body, typed in June. The spiders ran
+into each other's abdomens.
+- **Why missed:** the numbers were typed and nothing read them again. The hit capsules were fitted to the mesh on
+  2026-09-18; the body capsule, which is a different thing in a different file, was not.
+- **Prevent:** `python tools/verify_mount_assets.py <creature>` holds a creature that names a `body` entry to its
+  skeleton: the capsule reaches the foremost and the rearmost bone on the centre line within 0.10 m and its radius
+  reaches the widest hip. A new mount gets that entry. The width is a gameplay choice (a gate, a formation), so the
+  maintainer picks it. The capsule has managed readers too: the rider's camera height adds its pos1 z and its
+  radius (`MissionScreen.cs:1263`), so `rider_camera_height_adder` changes with it.
+- **Source:** [RCA](../rca-spider-key-times-slide-capsule-2026-11-23.md); `tools/verify_mount_assets.py` (`capsule_findings`); `BodyCapsuleTests`.
+
+### "The wargs walk" was a cadence defect: full speed, legs on another gait's keys (#1563, 2026-11-23)
+Players said AI warg riders walk everywhere. Two custom battles showed the wargs at 9.4 m/s beside horses at
+11.1, and at 9.8 beside 10.3. The cause was three values in clip records that had shipped since August. The canter record
+played the trot's master, though the pack's own canter (`Warg_Slow_run`) sat unbound in the same folder. The
+gallop record claimed 8.5 m of travel where its paws cover 3.92 m. Each pace had one `Duration`, so the legs kept
+one cadence at every speed. A warg's scale is 1.10, so the gallop began at 8.8 m/s and a charge spent most of its
+time in the canter, on trot legs that covered 2.71 m while the body moved about 3.9 m a loop.
+- **Why missed:** the warg was the reference mount ("when in doubt, do what the warg does"), so nobody measured
+  it. The stride gate covers only the creatures listed in it. The first hour of this investigation searched code
+  and XML for a speed change, because the report said "walk" and a speed is what code can lower.
+- **Dead end:** a moving mount's channel 0 holds `act_none`; the native movement node plays the gaits. Managed
+  code cannot read which gait clip plays (run `20261123-143843`: 23042 of 23254 reads).
+- **Prevent:** when a report describes how a mount looks, measure the feet before reading code: the planted feet
+  of each bound master against the record's travel (`check_gait_stride.measure`), then each pace's two
+  `Duration` values against travel divided by its limits. A record's master is the GUID in the record, never the
+  file that shares the clip's name: `warg_canter` named `Warg_Trot`. List a folder's masters against the masters
+  its records name; an unbound master with a gait's name is a finding. Gate: the `warg-gaits` row of
+  `tools/data_gates.py`.
+- **Source:** issue #1563; [ledger](../../reference/lotrlome-warg-gait-changes.md);
+  `tools/tests/test_warg_gait_plan.py`, `tools/tests/test_repoint_anim_clip.py`.
+
+### A skeleton scale is applied by bone index, so it belongs to one skeleton
+
+- **Why missed:** the ram team item of the dwarven war chariot copied `skeleton_scale="empire_horse"` from the Wainrider chariot item, which had it from the upstream pack. The scale names `horse_skeleton` and five of its bones. The engine resolves those names to indices against the scale's own skeleton (`MBGameManager`, `Skeleton.GetBoneIndexFromName(objectType.SkeletonModel, ...)`) and native `ApplySkeletonScale` writes each scale by index with a bounds check only. On `horse_skeleton_chariot` (60 bones, root first) the indices 0, 3, 29, 30 and 31 are `chariot_bone`, `horsespine2_chariot_left`, `horsepelvis_chariot_right`, `horsespine1_chariot_right` and `horsespine2_chariot_right`: the root and one animal, by up to 1.15.
+- **Prevent:** an item on a skeleton other than the scale's own carries no `skeleton_scale` unless the bone at each of the scale's indices was read from that skeleton and is the bone meant. Read both bone lists (a skeleton dump from the package) and print the bone at each index before the attribute goes on a row; an attribute copied from a neighbour row is engine behaviour and gets the same proof as a new one. Pin: `test_the_ram_team_row_carries_no_skeleton_scale`.
+- **Source:** [RCA](../rca-dwarf-chariot-2026-11-24.md) F9; the Wainrider item still carries the attribute (open there).
+### A corrected record is a change for every record cloned from it and every tool that reads it (#1565, 2026-11-24)
+#1563 corrected the warg's canter and gallop records. Three things that depend on those records were not in its
+scope and went wrong unseen. `tools/gen_dire_wolf_anim_clips.ps1` read the warg's travel to plan the dire wolf's
+strafe travel, so its `-Verify` named two wolf records nobody had changed. The rider's two gallop turn clips
+carried no `synch_with_horse` and had kept step with the warg only because both loops took 0.58 s; the gallop's
+loop time now follows its speed. And the dire wolf's own gaits, clones of the warg's records with the pack's
+numbers, claimed 26% to 57% less ground than its paws cover. The maintainer's question ("anything else that uses
+the wargs animations") found all three.
+- **Why missed:** the #1563 review asked who PLAYS the seven records (action sets, usage rows) and never who was
+  MADE from them or who is timed BESIDE them. `-Verify` was in no gate, so its failure had no reader.
+- **Prevent:** before a creature's gait record changes, list three kinds of dependant and name each in the plan:
+  the action sets that bind it, the records cloned from it (`gen_*_anim_clips.ps1` `$MAP` tables, another
+  creature's set derived from this one) and the clips that play beside it without a sync flag (a rider clip with
+  no `synch_with_horse`, a turn row with no `synch_with_movement`). A generator's `-Verify` belongs in a test or
+  a gate, and a value it derives from another creature's live record is a literal with its date.
+- **Source:** issue #1565; `docs/reference/lotrlome-dire-wolf-changes.md` "Gaits";
+  `docs/reference/lotrlome-warg-gait-changes.md` "The walk and the trot (#1565)";
+  `tools/tests/test_gen_dire_wolf_anim_clips.py` (`test_the_installed_wolf_records_are_the_plan`).
+
+### A standing side step's travel sets a loop time; the stride is not its measure (#1565, 2026-11-24)
+The stride gate measures a gait's feet against its record's `LoopDisplacement`. Pointed at the warg, it found
+the two side-step records at 1.60 m on paws that move 0.73 m and 1.00 m sideways, and the author wrote them
+up as a typed travel to correct to the measured stride. The node does not use that value as metres a loop. At
+the standing pace it plays one loop in travel / (`Duration` x its sideways input) seconds, held between 0.7
+and 1.3 times the `Duration` (0x749C20). If that input is the sideways speed, which is not read, the body
+moves travel / `Duration` in a loop inside that band: 2.13 m for these records, whose `Duration` is 0.75 s.
+A turn in place takes its rate from the turn-right
+row's travel and `Duration` (0x74E9C0), and `as_warg` binds that row to the right side step's record. A
+moving pace's strafe record gives its travel as the divisor of the sideways blend's weight.
+- **Why missed:** the formula was in the tool's own docstring since 2026-11-19, and the author called the
+  node's use of the value "not read". No reviewer could read native code until the second wave.
+- **Prevent:** before a measure is pointed at a new kind of row, quote the line of the node that reads the
+  value for THAT row kind (front, "none", strafe, turn), and write the relation the line gives beside the
+  measure. A record bound to two rows is read twice: list both readers before a value is proposed.
+- **Source:** issue #1565 item 2, follow-up #1591; the Engine lens of the second wave;
+  [RCA](../rca-warg-stride-gate-2026-11-24.md) F10; `TaleWorlds.Native.dll` v1.5.7, 0x749C20 and 0x74E9C0.
+- **Since #1591:** the sideways input is read (0x5F75B0: the agent's speed across its own frame, divided by
+  agent scale), and so is the strafe clip's weight (0x74E9C0: min(1, sideways speed x loop time / travel)).
+  No one travel fits the feet at every sideways speed: inside the clamp with a `Duration` of 1 s or less it
+  is the sideways stride x `Duration`; under the clamp's speed band it is the stride. The stride gate prints
+  a standing strafe clip with both numbers, gives no verdict on them, and still judges its stance and slip.
+
+### A backward row's feet must step backward: a stride measure that takes its sign from the data passes any direction (#1591, 2026-11-24)
+The dire wolf's two backward records played the forward walk's keys 0 to 32, because the pack has no backward
+walk and the record generator mapped the role to the walk's master. The wolf's paws stepped forward while it
+backed up. #1565 corrected the travel of its four forward gaits and wrote the backward walk up as "a typed
+travel" (1.17 m against 2.08 m): the stride measure reads the travel's sign from the feet, so it called the
+forward-stepping loop a backward walk of 2.08 m. The warg, the elephant and the spider each have a backward
+clip whose planted feet move the other way.
+- **Why missed:** `measure` was made sign-blind on purpose, so that a backward walk measures like a forward
+  one, and nothing else compared the two rows. The measure of 2026-11-24 printed a stride and no direction.
+- **Prevent:** `tools/check_gait_stride.py` fails a backward row whose planted feet move the way the walk's
+  do. A creature with no backward master gets one from its walk: a record whose second source is under its
+  first plays its master backward (vanilla `camel_walk_backwards` plays 45 to 1 on the camel's backward rows;
+  `blocked_slashright_2h` is a one-shot case), so the wolf's two records play the walk
+  32 to 0 and no new master is needed.
+- **Source:** issue #1591; `tools/tests/test_gait_stride_creatures.py` (`BackwardDirectionTests`,
+  `ReversedRangeTests`), `tools/tests/test_dire_wolf_gait_plan.py`;
+  [animation system map](../../reference/bannerlord-animation-system-map.md), "Source 1, Source 2".
+
+### A loop is its master's whole cycle: hold the first key to the last (#1565, 2026-11-24)
+The pack's dire wolf canter played keys 1 to 16 of a gallop master keyed 0 to 16. Keys 0 and 16 are one pose, so
+the cut loop skipped one interval and the paws jumped up to 0.39 m at each seam. The stride measure passed it:
+the median speed of the planted keys does not see a seam.
+- **Why missed:** the author kept the range "as the pack made it" and measured only the stride. The Codex
+  pre-review decoded the keys and compared the range's two ends.
+- **Prevent:** a test that measures a gait's stride on its master also holds the loop closed (the paws at the
+  first key and at the key after the last agree within 0.02 m) and each paw planted at least twice. A range that
+  a pack cut is evidence of nothing.
+- **Source:** issue #1565; `tools/tests/test_dire_wolf_gait_plan.py`
+  (`test_each_gaits_loop_closes_and_each_paw_is_planted_in_it`).
+
+### A flag read per package is blind when one package holds many clips
+
+- **Why missed:** `tools/verify_mount_assets.py` tested a movement clip for `quad_movement` by searching the whole file of the package that holds it. That was right while every creature kept one clip per `_anm.tpac`. The war chariot's rig is one package with 75 clips, so any tagged clip made all 29 movement clips pass, and three untagged ones went unseen. `tools/audit_mount_parity.py` read the same clips one by one and said the opposite, and its rule was too strict the other way: it called every untagged movement clip a crash, while the vanilla horse binds untagged clips on six of its seven in-place rows. The first fix still searched the clip's metadata for the text `quad_movement`, so the same text in a source name would have passed, and the second searched everything after the usage count, so the text inside another record's numbers would have passed (Codex, twice, 2026-11-24).
+- **Prevent:** read the tag as a record of the usage list in the clip's own metadata (`verify_mount_assets.quad_tagged` over `clip_metas`, which the audit calls too), never as a text in the file or in the metadata: walk the fields to the list, then each record by its own size (`USAGE_PAYLOAD`), and require the walk to end at the last byte. On 2026-11-24 that walk ended exactly at the end of the metadata for all 534 creature clips of the Armory and all 6,177 vanilla clips, and agreed with the text search on every one, so the stricter read changed no result. A search narrowed twice is still a search: when a format has records, read the records. A rule about what the engine needs is measured on vanilla first: of the horse's 29 base locomotion clips, six of the seven bound on in-place rows (direction and turn `none`) carry no tag (`audit_mount_parity.VANILLA_UNTAGGED_MOVEMENT_ACTIONS`; the seventh, `horse_stand_for_movement_data`, is tagged), so a mount's clip on those rows may go without, and a clip on a row that moves may not. What the engine reads of an untagged in-place clip is not traced. Pins: `test_a_lost_tag_is_not_hidden_by_a_tagged_clip_in_the_same_package`, `test_the_tag_is_a_record_of_the_usage_list_and_not_a_text_inside_one`, `test_metadata_that_does_not_parse_counts_as_untagged`, `GaitTagTests`.
+- **Source:** the rig replacement of 2026-11-23, [chariot.md](../../features/chariot.md) "The rig since 2026-11-23".

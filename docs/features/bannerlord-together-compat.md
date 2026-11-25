@@ -73,7 +73,7 @@ does today.
 | `SaveShield` on the `MISSION-INIT` chain | Swallows | Swallows (unchanged; a rethrow from `OnMissionTick` hangs the next frame, `Mission.cs:3749`, `:3594-3599`) |
 | Harmony census | Not written | Written at the end of `OnGameInitializationFinished` |
 | TAOM diplomacy veto (war / peace / alliance-end) | Enforced | **Off** — host is authoritative (see "Diplomacy ordering") |
-| TAOM time-acceleration UI (`MapBar` extra fast-forward + 4 layout patches + `MapTimeControlVM` mixin) | Registered | **Not registered** — BT owns `Campaign.TimeControlMode` |
+| TAOM time-acceleration UI (`MapBar` extra fast-forward + 4 layout patches + `MapTimeControlVM` mixin) | Registered | The five prefab extensions are **not registered**. The mixin is registered (since v2.0.42) and writes no multiplier, because every BT peer defers (`ShouldDeferToHost`); a click only calls vanilla's `ExecuteTimeControlChange`. BT owns `Campaign.TimeControlMode` |
 | Seasoned Hosts bonuses and steward skip ([seasoned-hosts.md](seasoned-hosts.md)) | AI lord skill XP multiplier and training bonus apply; the steward skip applies when its switch is on | **Off under BannerlordTogether, for a solo player too.** TAOM cannot read BT's host or client role, so `ShouldDeferToHost` holds on every peer: the two bonuses return the neutral answer and the Steward XP grant runs as vanilla. The learning floor still runs, from each peer's own setting. Under BannerlordCoop they apply on the host and off a client |
 | Eye of Sauron hunt ([eye-of-sauron.md](eye-of-sauron.md)) | Runs | **Off under BannerlordTogether, for a solo player too.** TAOM cannot read BT's host or client role, so `ShouldDeferToHost` holds on every peer: no hunt starts and a running one ends (the maintainer's call, E08). Under BannerlordCoop the hunt runs until a session goes live |
 
@@ -208,6 +208,15 @@ runtime check inside the mixin cannot un-inject an already-built widget. Solo pl
 registered/suppressed counts are logged either way, which is the first thing to check if a TAOM
 widget goes missing.
 
+**Since v2.0.42** only the five prefab extensions carry `[CoopSuppressedUi]`. The mixin adds no widget and stays
+registered under co-op, because FactionUI's themed map bar binds its two fast-forward commands. Under BannerlordTogether
+every peer defers (`ShouldDeferToHost`), so the commands write no multiplier and only call vanilla's
+`ExecuteTimeControlChange`, the same call vanilla's own button makes.
+The themed map bar itself stays off under BannerlordTogether: `GauntletLayerLoadMoviePatch` keeps the native bar
+while a co-op mod defers with no session TAOM can see (`ThemedMapBarCoopPolicy`), so any extension
+BannerlordTogether makes to vanilla's MapBar prefab keeps working. Whether it makes one is unknown (no decompile,
+see Overview).
+
 **Is the co-op flag reliable that early? Yes — verified, not assumed.** This is the only
 `CoopPresence` consumer that cannot self-correct later, so it mattered. Decompiled v1.4.7 (two
 independent Codex passes, 2026-08-01): `Module.Initialize` populates `ModuleHelper`'s
@@ -298,7 +307,7 @@ An override that fully replaces a vanilla body silently deletes any BT patch on 
 
 | Limitation | Impact | Workaround |
 |------------|--------|------------|
-| **Settings parity is reported, not exchanged** | TAOM's 570 MCM settings live in a per-user file outside the save; **370 are simulation-relevant** (traced per setting to the consuming feature, see [coop-interop.md](coop-interop.md) "What is NOT done"). Two players with different values still simulate differently (battle autocalc, bandit spawn density, AI army targeting, desertion rates) and nothing on the wire corrects it | `SettingsFingerprint` writes one code per MCM group to each peer's log under the co-op gate, so the manual comparison is a few short strings rather than every value. Exchanging them through save metadata and warning on join is the remaining step and needs two machines to verify |
+| **Settings parity is reported, not exchanged** | TAOM's 577 MCM settings live in a per-user file outside the save; **372 are simulation-relevant** (traced per setting to the consuming feature, see [coop-interop.md](coop-interop.md) "What is NOT done"). Two players with different values still simulate differently (battle autocalc, bandit spawn density, AI army targeting, desertion rates) and nothing on the wire corrects it | `SettingsFingerprint` writes one code per MCM group to each peer's log under the co-op gate, so the manual comparison is a few short strings rather than every value. Exchanging them through save metadata and warning on join is the remaining step and needs two machines to verify |
 | **PatchShield still swallows the missing-API trinity everywhere it shields** | The co-op SAVE-LOAD rethrow covers SaveShield's own targets (PatchShield now skips those), but on any other method a `MissingMethod`/`MissingField`/`TypeLoad` exception is still swallowed | Intended: that swallow is what keeps a stale third-party mod from killing the session |
 | **TAOM state that mutates mid-session is join-time-only** | War of the Ring momentum, War Chronicle effects, event rows and rally tiers, culture-conversion progress, messenger fleet, career progression and caravan memory reach the client through the host's save at join and then drift. BT has no schema for these fields, so its replication cannot correct them. Under BannerlordTogether every peer also runs the War Chronicle itself, since `IsAuthority` fails open there. Watchful Holds is the exception beside it: it stands down on every peer there (`ShouldDeferToHost`), like Eye of Sauron. | None yet. Needs an "am I the simulation authority" signal from BT. One exception: the character-creation package (race, culture gold, career, resource seed) is re-applied on **detection** rather than replicated, so a joiner keeps it even though nothing syncs it |
 | Siege defense rewards fire on the host only | Client players don't trigger `SiegeDefenseBehavior` rewards | Host handles siege events; client still fights |

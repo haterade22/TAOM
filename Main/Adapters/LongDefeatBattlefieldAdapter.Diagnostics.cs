@@ -90,7 +90,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         // A lord who attacks (#1409) also gets the attackers' foot frame, the place his spawn is meant to be near. inside= is the test MissionBoundaryCrossingHandler makes for the
         // main agent (MissionBoundaryCrossingHandler.cs:210): a body outside it starts the retreat countdown, and the run ends Abandoned.
         var owner = PlayerSideTeam?.PlayerOrderController?.Owner;
-        var frameText = PlayerAttacks && FrameOf(_mission.AttackerTeam, FormationClass.Infantry, true) is { } frame ? $" frame={At(frame)}" : "";
+        var frameText = !IsField && PlayerAttacks && FrameOf(_mission.AttackerTeam, FormationClass.Infantry, true) is { } frame ? $" frame={At(frame)}" : "";
         var inside = _mission.IsPositionInsideBoundaries(main.Position.AsVec2) ? "true" : "false";
         return $"main={main.Name} owner={owner?.Name?.ToString() ?? "null"} controller={main.Controller} z={Num(main.Position.z)} at={At(main.Position)}{frameText} inside={inside}";
     }
@@ -198,7 +198,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
 
         // The player's body on his own team, before the side: in a story attack (#1409) it stands on the attacker team, and its loss is his fall, never a wave kill.
         if (team == PlayerSideTeam && IsPlayerBody(agent))
-            return loss ? new LdRemoval(LdRemovalKind.Player, id, Key: key) : new LdRemoval(LdRemovalKind.None, "", Key: key);
+            return loss ? new LdRemoval(LdRemovalKind.Player, id, Key: key, Forced: _lordWatch.IsForced(agent)) : new LdRemoval(LdRemovalKind.None, "", Key: key);
 
         if (team.Side == BattleSideEnum.Attacker)
         {
@@ -218,7 +218,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         return new LdRemoval(LdRemovalKind.Defender, id, Key: key);
     }
 
-    // The engine nulls MainAgent around this callback, so the body the adapter last saw is the player's too.
+    // The engine clears MainAgent only after this callback (Mission.cs:3015, then :3021), so the dying main body is still MainAgent here, so the body the adapter last saw is the player's too.
     private bool IsPlayerBody(Agent agent) => agent == _mission.MainAgent || ReferenceEquals(agent, _knownMain) || agent.Controller == AgentControllerType.Player;
 
     public bool IsAttacker(object? agent) =>

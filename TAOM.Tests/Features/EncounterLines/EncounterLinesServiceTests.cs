@@ -255,6 +255,30 @@ public class EncounterLinesServiceTests
         AssertNothingSet();
     }
 
+    [DataTestMethod]
+    [DataRow(0.5)]
+    [DataRow(0.99)]
+    public void TheGreetings_OfOrcLands_IgnoreTheRoll_BecauseVanillasFarmerLineDoesNotFitOrcs(double roll)
+    {
+        _random.NextDouble().Returns(roll);
+        _adapter.ConversationParty().Returns(new PartyFacts("mordor", false, false, false));
+
+        Assert.IsTrue(_service.TryCaravanGreeting(true));
+        Assert.IsTrue(_service.TryVillagerGreeting(true));
+
+        _adapter.Received(1).TrySetVariable("CARAVAN_GREETING", "str_taom_enc_caravan_greet", "orcs_friend");
+        _adapter.Received(1).TrySetVariable("VILLAGER_GREETING", "str_taom_enc_villager_greet", "orcs_friend");
+    }
+
+    [TestMethod]
+    public void TryVillagerGreeting_OfOrcLands_ARepeatMeeting_StillLeavesVanilla()
+    {
+        _adapter.ConversationParty().Returns(new PartyFacts("mordor", false, false, false));
+
+        Assert.IsFalse(_service.TryVillagerGreeting(false));
+        AssertNothingSet();
+    }
+
     [TestMethod]
     public void TryCaravanGreeting_ARepeatMeeting_LeavesVanilla_AndNeverRolls()
     {

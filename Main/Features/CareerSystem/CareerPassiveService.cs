@@ -11,6 +11,7 @@ public class CareerPassiveService : ICareerPassiveService
 {
     private readonly IModLogger _logger;
     private readonly IPartySizeCacheInvalidator _partySizeCache;
+    private readonly ICareerTierTrust _tierTrust;
 
     // Phase 9b #173 F2 — snapshot-swap pattern + lock-on-mutation to fix the data race the
     // sister service FormationLayoutService already locks for. RefreshCache builds a brand-new
@@ -40,10 +41,11 @@ public class CareerPassiveService : ICareerPassiveService
     // converting a flat count into it is meaningless. Matches TroopWeightService.MinFactorScale.
     private const float MinFactorScale = 0.01f;
 
-    public CareerPassiveService(IModLogger logger, IPartySizeCacheInvalidator partySizeCache)
+    public CareerPassiveService(IModLogger logger, IPartySizeCacheInvalidator partySizeCache, ICareerTierTrust tierTrust)
     {
         _logger = logger;
         _partySizeCache = partySizeCache;
+        _tierTrust = tierTrust;
     }
 
     public void RefreshCache(ICareerDataService dataService, ICareerRegistry registry)
@@ -63,16 +65,16 @@ public class CareerPassiveService : ICareerPassiveService
 
             var effectMap = new Dictionary<PassiveEffectType, float>();
             var maskedMap = new Dictionary<PassiveEffectType, Dictionary<(AttackTypeMask Mask, TroopClassMask TroopClass), float>>();
+            var career = registry.GetCareer(heroData.CareerStringId);
 
             foreach (var choiceId in heroData.ChoiceIds)
             {
                 var choice = registry.GetChoice(choiceId);
-                if (choice != null)
+                if (choice != null && (choiceId == career?.RootChoiceId || TierCounts(heroId, choice, registry)))
                     Accumulate(effectMap, maskedMap, choice.Passives);
             }
 
             // Root choice passive is always active even if not in ChoiceIds.
-            var career = registry.GetCareer(heroData.CareerStringId);
             if (career != null)
             {
                 var rootChoice = registry.GetChoice(career.RootChoiceId);
@@ -112,6 +114,10 @@ public class CareerPassiveService : ICareerPassiveService
             _logger.LogWarning($"CareerSystem: party-size cache invalidation failed after passive refresh: {ex.Message}");
         }
     }
+
+    /// <summary>The co-op server leaves out a choice whose tier the hero's level does not open (<see cref="ICareerTierTrust"/>).</summary>
+    private bool TierCounts(string heroId, CareerChoiceDefinition choice, ICareerRegistry registry) =>
+        _tierTrust.Counts(heroId, registry.GetGroup(choice.GroupId)?.Tier ?? 0);
 
     // Accumulates a choice's passives (one or two, #769 E8) into both the unfiltered per-type total and
     // the per-(type, mask, class) breakdown. Shared by the choice loop + the root-choice path so the two

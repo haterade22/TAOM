@@ -321,7 +321,7 @@ Everything goes to the TAOM log with the `[RaceAbilities]` tag.
 
 | Line | When | Tells you |
 |---|---|---|
-| `mission gate: eligible=True MCM=True json=True combatType=Combat` | first tick of every mission | the feature is on for this battle (False in arenas, tournaments, conversations, or with either switch off) |
+| `mission gate: eligible=True MCM=True json=True combatType=Combat arena=False` | first tick of every mission | the feature is on for this battle (False in the training yard and in a tournament, where `arena=True`, or with either switch off; #1537) |
 | `Attached ability trees to N soldier(s) at the first tick` | first tick | in Custom Battle this is usually 0: the armies spawn afterwards |
 | `First late-spawn tree attached` | the first later spawn | trees are attaching |
 | `<ability> by <name> (tier T, player side) at S s, trigger=<kind>, rallied=R` | the first 12 waves of a battle; every wave with the debug log on | an ability fired, why, and how many joined |

@@ -74,6 +74,17 @@
 	<action name="act_spider_strike_back_while_moving" />
 	<!-- Misc -->
 	<action name="act_spider_taunt" />
+	<!-- #1541, written by tools/bind_spider_clips.py -->
+	<action name="act_spider_stand" />
+	<action name="act_spider_walk_backward" />
+	<action name="act_spider_walk_stand" />
+	<action name="act_spider_trot_forward" />
+	<action name="act_spider_trot_stand" />
+	<action name="act_spider_canter_forward" />
+	<action name="act_spider_canter_stand" />
+	<action name="act_spider_run_stand" />
+	<!-- #1541, written by tools/bind_spider_clips.py -->
+	<action name="act_spider_walk_backward_stand" />
 
 	<!-- ==================== ELEPHANT ==================== -->
 	<!-- Action types for the war elephant mount. Ported from ADOD_Beasts
@@ -231,10 +242,10 @@
 	     kick pipeline, so actt_kick would buy nothing. Bound in as_cave_troll_warrior by tools/bind_troll_action_set.py. -->
 	<action name="act_troll_brute_force" />
 	<!-- #1087 dwarf head butt and drop kick, played by TAOM Main/Features/DwarfAttacks from its behaviour tree.
-	     actt_kick, the vanilla kick's type (StandingPoint lets go of a machine on it). Clips from
+	     No type on purpose (#1499): the engine's kick code reads the clip's combat parameter of a kick-typed action, and these clips have none. Clips from
 	     tools/gen_dwarf_attack_clips.ps1; bound in as_dwarf_warrior by tools/bind_dwarf_attack_actions.py. -->
-	<action name="act_dwarf_head_butt" type="actt_kick" />
-	<action name="act_dwarf_drop_kick" type="actt_kick" />
+	<action name="act_dwarf_head_butt" />
+	<action name="act_dwarf_drop_kick" />
 	<action name="act_warg_stand_1"/>
 	<action name="act_warg_stand_2"/>
 	<action name="act_warg_idle_1" type="actt_idle" />
@@ -360,4 +371,118 @@
 	<!-- Polearm brace ready stance. -->
 	<action name="act_polearm_brace_ready" />
 	<!-- ===== /LOTR MISC ===== -->
+	<!-- CHARIOT-RIG: actions of the upstream chariot pack that the Armory did not declare. -->
+	<action name="act_chariot_stand_2" type="actt_idle" />
+	<action name="act_chariot_stand_3" type="actt_idle" />
+	<action name="act_chariot_stand_4" type="actt_idle" />
+	<action name="act_chariot_riderless_idle_1" type="actt_idle" />
+	<action name="act_chariot_idle_2" type="actt_idle" />
+	<action name="act_chariot_idle_3" type="actt_idle" />
+	<action name="act_chariot_idle_4" type="actt_idle" />
+	<action name="act_chariot_forward_gallop_right_foot_strafe_right" />
+	<action name="act_chariot_forward_gallop_right_foot_strafe_left" />
+	<action name="act_chariot_forward_gallop_left_foot_strafe_right" />
+	<action name="act_chariot_forward_gallop_left_foot_strafe_left" />
+	<action name="act_chariot_backward_walk_strafe_right" />
+	<action name="act_chariot_backward_walk_strafe_left" />
+	<action name="act_chariot_rear" type="actt_rear" />
+	<action name="act_chariot_rear_damaged" type="actt_rear" />
+	<action name="act_chariot_kick" />
+	<action name="act_chariot_jump_start" type="actt_dash" />
+	<action name="act_chariot_dash" type="actt_dash" />
+	<action name="act_chariot_quick_stop" type="actt_mount_quick_stop" />
+	<action name="act_chariot_quick_stop_when_fast" type="actt_mount_quick_stop" />
+	<action name="act_chariot_hit_object" type="actt_hit_object" />
+	<action name="act_chariot_hit_object_while_falling" type="actt_hit_object" />
+	<action name="act_chariot_jump_high" />
+	<action name="act_chariot_jump_high_loop" type="actt_jump" />
+	<action name="act_chariot_jump_high_end" type="actt_jump_end" />
+	<action name="act_chariot_jump_high_end_hard" type="actt_jump_end_hard" />
+	<action name="act_chariot_jump_forward" />
+	<action name="act_chariot_jump_forward_loop" type="actt_jump" />
+	<action name="act_chariot_jump_forward_end" type="actt_jump_end" />
+	<action name="act_chariot_jump_forward_end_hard" type="actt_jump_end_hard" />
+	<action name="act_chariot_strafe_right" />
+	<action name="act_chariot_strafe_left" />
+	<action name="act_chariot_turn_right_head" />
+	<action name="act_chariot_turn_left_head" />
+	<action name="act_chariot_walk_turn_right_head" />
+	<action name="act_chariot_walk_turn_left_head" />
+	<action name="act_chariot_trot_turn_right_head" />
+	<action name="act_chariot_trot_turn_left_head" />
+	<action name="act_chariot_canter_turn_right_head" />
+	<action name="act_chariot_canter_turn_left_head" />
+	<action name="act_chariot_gallop_turn_right_head" />
+	<action name="act_chariot_gallop_turn_left_head" />
+	<action name="act_chariot_gallop_acceleration_head" />
+	<action name="act_chariot_strike_back" type="actt_mount_strike" />
+	<action name="act_chariot_strike_front" type="actt_mount_strike" />
+	<action name="act_chariot_strike_back_while_moving" type="actt_mount_strike" />
+	<action name="act_chariot_strike_front_while_moving" type="actt_mount_strike" />
+	<action name="act_chariot_fall_right" type="actt_fall" />
+	<action name="act_chariot_fall_left" type="actt_fall" />
+	<action name="act_chariot_fall_right_continue" type="actt_fall" />
+	<action name="act_chariot_fall_left_continue" type="actt_fall" />
+	<action name="act_chariot_fall_roll" type="actt_fall" />
+	<action name="act_chariot_fall_roll_continue" type="actt_fall" />
+	<action name="act_chariot_fall_backwards" type="actt_fall" />
+	<action name="act_chariot_fall_slow_right" type="actt_fall" />
+	<action name="act_chariot_fall_slow_right_continue" type="actt_fall" />
+	<action name="act_chariot_fall_slow_left" type="actt_fall" />
+	<action name="act_chariot_fall_slow_left_continue" type="actt_fall" />
+	<action name="act_chariot_conversation_start" />
+	<action name="act_map_chariot_attack_1h" />
+	<action name="act_map_chariot_attack_spear" />
+	<action name="act_map_chariot_attack_swing" />
+	<action name="act_map_chariot_attack_unarmed" />
+	<action name="act_chariot_rider_idle_spear_1" type="actt_idle" />
+	<action name="act_chariot_rider_idle_spear_2" type="actt_idle" />
+	<action name="act_chariot_rider_idle_spear_3" type="actt_idle" />
+	<action name="act_chariot_rider_idle_spear_4" type="actt_idle" />
+	<action name="act_chariot_rider_idle_lance_1" type="actt_idle" />
+	<action name="act_chariot_rider_idle_lance_2" type="actt_idle" />
+	<action name="act_chariot_rider_idle_lance_3" type="actt_idle" />
+	<action name="act_chariot_rider_idle_lance_4" type="actt_idle" />
+	<action name="act_chariot_rider_idle_bow_1" type="actt_idle" />
+	<action name="act_chariot_rider_idle_bow_2" type="actt_idle" />
+	<action name="act_chariot_rider_idle_bow_3" type="actt_idle" />
+	<action name="act_chariot_rider_idle_bow_4" type="actt_idle" />
+	<action name="act_chariot_rider_idle_crossbow_1" type="actt_idle" />
+	<action name="act_chariot_rider_idle_crossbow_2" type="actt_idle" />
+	<action name="act_chariot_rider_idle_crossbow_3" type="actt_idle" />
+	<action name="act_chariot_rider_idle_crossbow_4" type="actt_idle" />
+	<action name="act_mount_chariot_left" />
+	<action name="act_mount_chariot_right" />
+	<action name="act_dismount_chariot_left" />
+	<action name="act_dismount_chariot_right" />
+	<action name="act_chariot_rider_stand_bow_pace_0" />
+	<action name="act_chariot_rider_stand_bow_pace_1" />
+	<action name="act_chariot_rider_stand_bow_pace_2" />
+	<action name="act_chariot_rider_stand_bow_pace_3" />
+	<action name="act_chariot_rider_stand_bow_pace_4" />
+	<action name="act_chariot_rider_stand_bow_pace_5" />
+	<action name="act_chariot_rider_stand_lance_pace_0" />
+	<action name="act_chariot_rider_stand_lance_pace_1" />
+	<action name="act_chariot_rider_stand_lance_pace_2" />
+	<action name="act_chariot_rider_stand_lance_pace_3" />
+	<action name="act_chariot_rider_stand_lance_pace_4" />
+	<action name="act_chariot_rider_stand_lance_pace_5" />
+	<action name="act_chariot_rider_stand_polearm_pace_0" />
+	<action name="act_chariot_rider_stand_polearm_pace_1" />
+	<action name="act_chariot_rider_stand_polearm_pace_2" />
+	<action name="act_chariot_rider_stand_polearm_pace_3" />
+	<action name="act_chariot_rider_stand_polearm_pace_4" />
+	<action name="act_chariot_rider_stand_polearm_pace_5" />
+	<action name="act_chariot_rider_stand_crossbow_pace_0" />
+	<action name="act_chariot_rider_stand_crossbow_pace_1" />
+	<action name="act_chariot_rider_stand_crossbow_pace_2" />
+	<action name="act_chariot_rider_stand_crossbow_pace_3" />
+	<action name="act_chariot_rider_stand_crossbow_pace_4" />
+	<action name="act_chariot_rider_stand_crossbow_pace_5" />
+	<action name="act_chariot_rider_stand_throw_pace_0" />
+	<action name="act_chariot_rider_stand_throw_pace_1" />
+	<action name="act_chariot_rider_stand_throw_pace_2" />
+	<action name="act_chariot_rider_stand_throw_pace_3" />
+	<action name="act_chariot_rider_stand_throw_pace_4" />
+	<action name="act_chariot_rider_stand_throw_pace_5" />
 </action_types>

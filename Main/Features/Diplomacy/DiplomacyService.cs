@@ -17,6 +17,7 @@ public class DiplomacyService : IDiplomacyService
     private readonly List<KingdomRelationship> _permanentRelationships;
     private readonly HashSet<(string Called, string Target)> _callToWarRefusals = new();
     private readonly WarPledgeStore? _pledges;
+    private volatile HashSet<(string, string)> _broken = new();
 
     // pledges: optional for the same reason as in AlignmentService; the container always passes the store.
     public DiplomacyService(
@@ -59,6 +60,8 @@ public class DiplomacyService : IDiplomacyService
     {
         var key = MakeKey(kingdomAId, kingdomBId);
         var tier = _relationships.TryGetValue(key, out var listed) ? listed : AllianceTier.Neutral;
+        if (tier == AllianceTier.Permanent && _broken.Contains(key))
+            tier = AllianceTier.Neutral;
         if (tier == AllianceTier.Permanent || _pledges == null || _pledges.Count == 0)
             return tier;
         if (!_pledges.IsPledged(kingdomAId) && !_pledges.IsPledged(kingdomBId))
@@ -82,6 +85,9 @@ public class DiplomacyService : IDiplomacyService
 
     public float GetAllianceScoreModifier(string kingdomAId, string kingdomBId, bool involvesPlayer)
     {
+        if (IsBrokenAlliance(kingdomAId, kingdomBId))
+            return -10000f;
+
         if (involvesPlayer)
             return PlayerAllianceScoreBonus;
 
@@ -97,13 +103,13 @@ public class DiplomacyService : IDiplomacyService
 
     public bool IsAllianceAllowed(string kingdomAId, string kingdomBId)
     {
-        return GetRelationshipTier(kingdomAId, kingdomBId) != AllianceTier.Hostile;
+        return !IsBrokenAlliance(kingdomAId, kingdomBId) && GetRelationshipTier(kingdomAId, kingdomBId) != AllianceTier.Hostile;
     }
 
     public bool IsAllianceDecisionAllowed(string kingdomAId, string kingdomBId, bool involvesPlayer)
     {
-        // Full freedom: lore Hostile never blocks a decision involving the player.
-        return involvesPlayer || IsAllianceAllowed(kingdomAId, kingdomBId);
+        // Full freedom: lore Hostile never blocks a decision involving the player. A broken permanent alliance does: it is a story result.
+        return !IsBrokenAlliance(kingdomAId, kingdomBId) && (involvesPlayer || IsAllianceAllowed(kingdomAId, kingdomBId));
     }
 
     public bool CanPlayerProposeAlliance(string playerKingdomId, string targetKingdomId)
@@ -116,7 +122,7 @@ public class DiplomacyService : IDiplomacyService
             return false;
         if (_allianceAdapter.AreAllied(playerKingdomId, targetKingdomId))
             return false;
-        return true;
+        return !IsBrokenAlliance(playerKingdomId, targetKingdomId);
     }
 
     public bool FormPlayerAlliance(string playerKingdomId, string targetKingdomId)
@@ -136,7 +142,7 @@ public class DiplomacyService : IDiplomacyService
 
     public bool IsWarAllowed(string kingdomAId, string kingdomBId)
     {
-        if (GetRelationshipTier(kingdomAId, kingdomBId) == AllianceTier.Permanent)
+        if (GetRelationshipTier(kingdomAId, kingdomBId) == AllianceTier.Permanent || IsBrokenAlliance(kingdomAId, kingdomBId))
             return false;
         if (_alignmentService.AreSameAlignment(kingdomAId, kingdomBId))
             return false;
@@ -191,6 +197,9 @@ public class DiplomacyService : IDiplomacyService
         int restored = 0, stillMissing = 0, alreadyAllied = 0, warsEnded = 0, warsEndedWhileAllied = 0;
         foreach (var rel in _permanentRelationships)
         {
+            if (IsBrokenAlliance(rel.KingdomA, rel.KingdomB))
+                continue;
+
             // Two independent invariants for a Permanent pair:
             //   1. NOT at war
             //   2. Allied
@@ -233,6 +242,64 @@ public class DiplomacyService : IDiplomacyService
             $"{restored} alliances restored, {warsEnded} total wars ended, " +
             $"{stillMissing} STILL MISSING (vanilla StartAlliance rejected the call)");
     }
+
+    public PermanentAllianceEnd EndPermanentAlliance(string kingdomAId, string kingdomBId, string why)
+    {
+        var key = MakeKey(kingdomAId, kingdomBId);
+        if (!_permanentRelationships.Exists(r => MakeKey(r.KingdomA, r.KingdomB) == key))
+            return PermanentAllianceEnd.NotPermanent;
+
+        var already = _broken.Contains(key);
+        if (!already)
+            _broken = new HashSet<(string, string)>(_broken) { key };
+
+        if (_allianceAdapter.AreAllied(kingdomAId, kingdomBId))
+            _allianceAdapter.EndAlliance(kingdomAId, kingdomBId);
+
+        if (_allianceAdapter.AreAllied(kingdomAId, kingdomBId))
+        {
+            _logger.LogWarning($"[Diplomacy] Permanent alliance {kingdomAId} <-> {kingdomBId} is recorded as broken ({why}), but the engine still reports it.");
+            return PermanentAllianceEnd.StillAllied;
+        }
+
+        if (!already)
+            _logger.LogInfo($"[Diplomacy] Permanent alliance ended: {kingdomAId} <-> {kingdomBId} ({why})");
+        return already ? PermanentAllianceEnd.AlreadyEnded : PermanentAllianceEnd.Ended;
+    }
+
+    public bool IsBrokenAlliance(string kingdomAId, string kingdomBId)
+    {
+        var broken = _broken;
+        return broken.Count > 0 && broken.Contains(MakeKey(kingdomAId, kingdomBId));
+    }
+
+    public IReadOnlyList<string> BrokenAlliancesForSave()
+    {
+        var pairs = new List<string>();
+        foreach (var (a, b) in _broken)
+            pairs.Add(a + "|" + b);
+        pairs.Sort(StringComparer.Ordinal);
+        return pairs;
+    }
+
+    public void RestoreBrokenAlliances(IEnumerable<string>? saved)
+    {
+        var restored = new HashSet<(string, string)>();
+        foreach (var pair in saved ?? Array.Empty<string>())
+        {
+            var parts = pair?.Split('|');
+            if (parts is not { Length: 2 } || parts[0].Length == 0 || parts[1].Length == 0)
+                continue;
+
+            var key = MakeKey(parts[0], parts[1]);
+            if (_permanentRelationships.Exists(r => MakeKey(r.KingdomA, r.KingdomB) == key))
+                restored.Add(key);
+        }
+
+        _broken = restored;
+    }
+
+    public void ResetBrokenAlliances() => _broken = new HashSet<(string, string)>();
 
     private static (string, string) MakeKey(string a, string b)
     {

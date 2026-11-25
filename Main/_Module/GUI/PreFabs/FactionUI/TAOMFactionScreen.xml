@@ -8,50 +8,11 @@
         <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1000" HorizontalAlignment="Right" Sprite="fs_scrim_r" />
 
         <!-- CENTER: the 3D character. The widget is far taller than the screen on purpose: the full body is rendered
-             into it, so only the upper body (head to waist) lands on screen. Drag to rotate. Hidden (IsVisible=
-             @ShowCharacterViewport) for factions with a painted portrait instead (TEST, Isengard only so far). -->
-        <Widget Id="CharacterViewportWrapper" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginTop="@ViewportOffset" IsVisible="@ShowCharacterViewport"><Children>
+             into it, so only the upper body (head to waist) lands on screen. Drag to rotate. It shows the faction's
+             character, or the picked hero (Luiz, 2026-11-24), and slides in on each change. -->
+        <Widget Id="CharacterViewportWrapper" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginTop="@ViewportOffset"><Children>
         <CharacterTableauWidget DataSource="{Character}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1250" SuggestedHeight="2040" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="-168" BannerCodeText="@BannerCodeText" CharStringId="@CharStringId" EquipmentCode="@EquipmentCode" BodyProperties="@BodyProperties" IsFemale="@IsFemale" MountCreationKey="@MountCreationKey" Race="@Race" StanceIndex="@StanceIndex" ArmorColor1="@ArmorColor1" ArmorColor2="@ArmorColor2" IsTableauEnabled="@IsTableauEnabled" DoNotUseCustomScale="true" />
         </Children></Widget>
-
-        <!-- PAINTED PORTRAIT (TEST, Isengard only, 2026-09-22): shown instead of the 3D viewport for factions with
-             FactionInfo.PaintedPortraitSprite set. Slides in from behind the right column and fades in
-             (src\PortraitReveal.cs drives PositionXOffset/AlphaFactor each frame - Gauntlet can't animate a
-             transition on its own). AlphaFactor starts at 0; the reveal always resets and replays it from there. -->
-        <!-- SuggestedWidth bound per-faction (2026-09-29, user: "fix the proportions... look at the actual image
-             on it") - height stays fixed at 850, width varies to preserve each image's own real content aspect
-             ratio (FactionCatalog.PaintedPortraitWidths) instead of stretching every faction's art into one box. -->
-        <!-- SuggestedHeight bound to @PaintedPortraitHeight instead of a hardcoded 850 (2026-09-30, user:
-             "the gondor soldier seems horizontally stretched a little") - "make it bigger" requests used to
-             only ever adjust PaintedPortraitWidth (via FactionCatalog.PaintedPortraitWidths), silently
-             stretching the image wider with no matching height increase since every faction shared this same
-             literal 850. Now driven by FactionCatalog.PaintedPortraitScales, which scales width and height
-             together - see ViewModels.cs's PaintedPortraitHeight/DefaultPaintedPortraitHeight. -->
-        <Widget Id="FactionPortrait" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="@PaintedPortraitWidth" SuggestedHeight="@PaintedPortraitHeight" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="0" IsVisible="@HasPaintedPortrait" Sprite="@PaintedPortraitSprite" AlphaFactor="0" DoNotUseCustomScale="true" DoNotAcceptEvents="true" />
-
-        <!-- HERO PORTRAIT (2026-09-29, user: "once you click on the special character button for Sauron, the
-             image fades/slides in from the right"): same slide+fade mechanism as FACTION PORTRAIT above
-             (src\HeroPortraitReveal.cs), but keyed to picking a specific special-character tile with hand-made
-             art (FactionCatalog.SpecialCharacters' PortraitSprite column) rather than to the faction itself.
-             Declared AFTER FactionPortrait so it draws on top when both would apply. -->
-        <!-- SuggestedWidth bound per-hero (2026-09-29, user: "fix the proportions... look at the actual image on
-             it to determine whether its too tall or small") - height stays fixed at 900, width varies to
-             preserve each hero's own reveal image's real (transparent-padding-trimmed) content aspect ratio
-             instead of stretching every image into one box - see FactionCatalog.SpecialCharacters' RevealWidth
-             field and FactionScreenVM.SelectedHeroPortraitWidth. -->
-        <!-- SuggestedHeight now also bound per-hero (2026-09-30, user: "the special character images are too
-             big") - RevealScale (FactionCatalog.SpecialCharacters) shrinks both dimensions together for
-             characters whose source photo frames them more tightly than the others. -->
-        <Widget Id="HeroPortrait" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="@SelectedHeroPortraitWidth" SuggestedHeight="@SelectedHeroPortraitHeight" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="0" IsVisible="@HasSelectedHeroPortrait" Sprite="@SelectedHeroPortraitSprite" AlphaFactor="0" DoNotUseCustomScale="true" DoNotAcceptEvents="true" />
-
-        <!-- HERO PORTRAIT, SECOND SLOT (2026-09-30, user: "switching between... one specialized [character] into
-             a different specialized one of that same faction, the fade out keeps being the one from the initial
-             one"): HeroPortrait above is a single widget whose Sprite gets overwritten immediately on every pick,
-             so once a SECOND hero is chosen there's nothing left holding the FIRST hero's image for an outgoing
-             fade to act on. This twin widget lets FactionScreenVM.ShowHeroPortrait alternate which slot receives
-             the newly-picked hero's art, leaving the other slot untouched (still showing the previous hero) for
-             src\HeroPortraitReveal.cs to animate out for real - see that file for the crossfade logic. -->
-        <Widget Id="HeroPortraitB" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="@SelectedHeroPortraitWidthB" SuggestedHeight="@SelectedHeroPortraitHeightB" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="0" IsVisible="@HasSelectedHeroPortraitB" Sprite="@SelectedHeroPortraitSpriteB" AlphaFactor="0" DoNotUseCustomScale="true" DoNotAcceptEvents="true" />
 
         <!-- GROUND FOG: two drifting layers (driven each frame by src\FogDrift.cs - Gauntlet prefabs can't loop an
              animation on their own). No real 3D scene exists on this screen for a true particle system

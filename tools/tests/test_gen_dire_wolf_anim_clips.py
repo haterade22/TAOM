@@ -6,6 +6,7 @@ first: the script's runtime.
 """
 import json
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -19,7 +20,7 @@ param([string]$Script)
 $ErrorActionPreference = 'Stop'
 $ast = [System.Management.Automation.Language.Parser]::ParseFile($Script, [ref]$null, [ref]$null)
 $fn = @($ast.FindAll({ param($a) $a -is [System.Management.Automation.Language.FunctionDefinitionAst] }, $true) |
-  Where-Object { 'Get-ClipProblem', 'Resolve-Master', 'Add-MasterName', 'Get-MasterFrameProblem' -contains $_.Name })
+  Where-Object { 'Get-ClipProblem', 'Resolve-Master', 'Add-MasterName', 'Get-MasterFrameProblem', 'Get-Unmapped' -contains $_.Name })
 foreach ($f in $fn) { . ([scriptblock]::Create($f.Extent.Text)) }
 function W($extra = @{}) {
   $t = @{ Name = 'c'; Animation = 'g1'; Flags = 'a,b'; Source1 = 1.0; Source2 = 9.0; Duration = 0.5; Loop = 2.4 }
@@ -40,6 +41,8 @@ function P($got) { @(Get-ClipProblem $got (W) $masters) -join '; ' }
   loop       = P (W @{ Loop = 3.0 })
   loop_gone  = P (W @{ Loop = $null })
   no_master  = @(Get-ClipProblem (W) (W) @{}) -join '; '
+  owned      = @(Get-ClipProblem (W @{ Source1 = 0.0; Source2 = 10.0; Duration = 0.75; Loop = 3.0 }) (W) $masters $true) -join '; '
+  owned_name = @(Get-ClipProblem (W @{ Name = 'other'; Flags = 'a'; Animation = 'g2'; Duration = 0.75 }) (W) $masters $true) -join '; '
   remapped   = "$(Resolve-Master 'pg1' @{ pg1 = 'adod_wolf_walk' } @{ adod_wolf_walk = 'kg1' } 1.73)"
   same_guid  = "$(Resolve-Master 'pg1' @{ pg1 = 'adod_wolf_walk' } @{ adod_wolf_walk = 'pg1' } 1.0)"
   pack_size  = "$(Resolve-Master 'pg1' @{ pg1 = 'adod_wolf_walk' } @{ adod_wolf_walk = 'pg1' } 1.73)"
@@ -51,6 +54,8 @@ function P($got) { @(Get-ClipProblem $got (W) $masters) -join '; ' }
   frames_ok  = "$(Get-MasterFrameProblem 'walk' 33 @{ walk = 33 })"
   frames_bad = "$(Get-MasterFrameProblem 'walk' 32 @{ walk = 33 })"
   frames_new = "$(Get-MasterFrameProblem 'extra' 10 @{ walk = 33 })"
+  unmapped   = @(Get-Unmapped @('warg_trot', 'warg_walk_stand', 'warg_new', 'horse_walk') ([ordered]@{ trot = 'trot' }) @('walk_stand')) -join ','
+  all_mapped = @(Get-Unmapped @('warg_trot', 'warg_walk_stand') ([ordered]@{ trot = 'trot' }) @('walk_stand')).Count
 } | ConvertTo-Json -Compress
 """
 
@@ -113,16 +118,62 @@ class ClipProblemTests(unittest.TestCase):
         self.assertEqual(self.got["no_name"], "")
         self.assertEqual(self.got["not_in_out"], "")
 
+    def test_a_record_the_gait_plan_names_is_not_held_to_the_packs_keys_duration_and_travel(self):
+        """tools/dire_wolf_gait_plan.json states those fields (#1565: the canter plays keys 0 to 16 where the pack
+        cut 1 to 16), and tools/repoint_anim_clip.py --check holds them. The name, the flags and a master that is
+        in the folder are still this script's."""
+        self.assertEqual(self.got["owned"], "")
+        self.assertIn("Name is other", self.got["owned_name"])
+        self.assertIn("Flags is a", self.got["owned_name"])
+        self.assertIn("NO MASTER g2", self.got["owned_name"])
+        self.assertNotIn("Duration", self.got["owned_name"])
+
+    def test_a_warg_binding_the_plan_does_not_hold_is_named_unless_it_is_warg_only(self):
+        """A new warg binding must not leave the wolf behind, so the generator fails on one. The warg's walk twin
+        (#1565) is the one binding the wolf does not copy: its own walk keeps one record on both rows."""
+        self.assertEqual(self.got["unmapped"], "warg_new,horse_walk")
+        self.assertEqual(self.got["all_mapped"], 0)
+
 
 @unittest.skipUnless(SHELL, "no PowerShell on PATH: these tests need powershell.exe or pwsh")
 class GuardTests(unittest.TestCase):
+    def test_the_side_travels_keep_the_ratios_the_wolf_was_made_with(self):
+        """The wolf's strafe and backward travels were the pack's forward travel times the warg's ratio of that day.
+        Read from the warg's records they moved with every correction of a warg travel (#1563, #1565), and -Verify
+        then named wolf records that nobody had changed."""
+        with open(SCRIPT, encoding="utf-8-sig") as fh:
+            text = fh.read()
+        block = text[text.index("$FAMILY = @{"):]
+        block = block[:block.index("}")]
+        got = dict((k, float(v)) for k, v in re.findall(r"(\w+) = ([0-9.]+)", block))
+        want = {"walk_strafe": 1.65 / 1.6, "walkbackfast": 1.5 / 1.6, "walkbackfast_straight": 1.5 / 1.6,
+                "trot_strafe": 1.1 / 2.9, "canter_strafe": 0.8 / 4.0, "forward_gallop_left_foot_strafe": 1.5 / 8.5}
+        self.assertEqual(sorted(got), sorted(want))
+        for stem, ratio in want.items():
+            self.assertAlmostEqual(got[stem], ratio, places=5, msg=stem)
+
+    def test_the_installed_wolf_records_are_the_plan(self):
+        """-Verify on this machine's Armory. It skips where the generator cannot run (exit 2: no TpacTool, no pack,
+        no Windows PowerShell 5.1)."""
+        done = _run_script("-Verify")
+        if done.returncode == 2:
+            self.skipTest("the generator cannot run here: %s" % (done.stdout.strip().splitlines() or ["no output"])[-1])
+        self.assertEqual(done.returncode, 0, done.stdout[-2000:] + done.stderr[-500:])
+        self.assertRegex(done.stdout, r"MODE = VERIFY .* errors=0")
+
     def test_apply_and_verify_together_exit_2(self):
         p = _run_script("-Apply", "-Verify")
         self.assertEqual(p.returncode, 2, p.stdout + p.stderr)
         self.assertIn("not both", p.stdout)
 
     def test_a_missing_pack_folder_exits_2_with_its_path(self):
-        p = _run_script("-Verify", "-PackMasters", "E:\\no\\such\\pack")
+        # The script checks the TpacTool DLL, the loader and the clip pack first, all on E: by default. Give it
+        # empty stand-ins so the pack-masters check is the one that fails on any machine; nothing is loaded.
+        with tempfile.TemporaryDirectory() as tmp:
+            with open(os.path.join(tmp, "TpacTool.Lib.dll"), "wb"), open(os.path.join(tmp, "Loader.cs"), "wb"):
+                pass
+            p = _run_script("-Verify", "-TpacBin", tmp, "-Loader", os.path.join(tmp, "Loader.cs"), "-Pack", tmp,
+                            "-PackMasters", "E:\\no\\such\\pack")
         self.assertEqual(p.returncode, 2, p.stdout + p.stderr)
         self.assertIn("no\\such\\pack", p.stdout)
 

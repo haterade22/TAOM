@@ -98,7 +98,11 @@ public sealed class GuestTradeHost
 
         var level = _shops.ArmouryLevel(request.SettlementId);
         var reply = new GuestTradeReply(request.RequestId, request.Action, GuestTradeRefusal.None, ArmouryLevel: level);
-        if (request.Action == GuestTradeAction.ArmouryUpgrade)
+        if (request.Action is GuestTradeAction.LadderHandIn or GuestTradeAction.LadderClaim)
+        {
+            reply = reply with { Status = (int)Ladder(hero, request, level) };
+        }
+        else if (request.Action == GuestTradeAction.ArmouryUpgrade)
         {
             var modifier = string.IsNullOrEmpty(request.Modifier) ? null : request.Modifier;
             var offer = _shops.ArmouryOffers(hero, level).FirstOrDefault(o =>
@@ -110,7 +114,38 @@ public sealed class GuestTradeHost
                 : offer.Block;
             reply = reply with { Status = (int)outcome };
         }
-        return WithBalance(reply, hero.HeroId, hero.Player.KingdomId, hero.Player.CultureId);
+        return WithBalance(WithLadder(reply, hero, level), hero.HeroId, hero.Player.KingdomId, hero.Player.CultureId);
+    }
+
+    /// <summary>The switch is read first: with it off no ladder is built for the guest at all.</summary>
+    private GuestLadderOutcome Ladder(GuestTradeHero hero, GuestTradeRequest request, int level)
+    {
+        if (!_shops.LadderOpen)
+            return GuestLadderOutcome.Off;
+        LadderSlotRules.TryParse(request.Subject, out var slot);
+        var ladder = _shops.Ladder(hero);
+        return request.Action == GuestTradeAction.LadderHandIn
+            ? GuestLadderDesk.HandIn(ladder, hero.HeroId, slot)
+            : GuestLadderDesk.Claim(ladder, hero.HeroId, hero.Player.CultureId, slot, request.Target!, level);
+    }
+
+    /// <summary>The rung as the server holds it after the request. Reading it must never change the answer to the request itself.</summary>
+    private GuestTradeReply WithLadder(GuestTradeReply reply, GuestTradeHero hero, int level)
+    {
+        if (!_shops.LadderOpen)
+            return reply;
+        try
+        {
+            return reply with
+            {
+                Ladder = GuestLadderDesk.View(_shops.Ladder(hero), hero.HeroId, hero.Player.CultureId, level, _shops.LadderLordLevel),
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"[GuestTrade] the lord's gear ladder of {hero.HeroId} could not be read: {ex.Message}");
+            return reply;
+        }
     }
 
     private GuestTradeReply WithBalance(GuestTradeReply reply, string heroId, string? kingdomId, string? cultureId)
@@ -128,7 +163,8 @@ public sealed class GuestTradeHost
     private static bool IsWellFormed(GuestTradeRequest request)
     {
         if (request.Action is not (GuestTradeAction.EmissaryBalance or GuestTradeAction.EmissaryBuy
-            or GuestTradeAction.ArmouryBalance or GuestTradeAction.ArmouryUpgrade))
+            or GuestTradeAction.ArmouryBalance or GuestTradeAction.ArmouryUpgrade
+            or GuestTradeAction.LadderHandIn or GuestTradeAction.LadderClaim))
             return false;
         if (!IsId(request.RequestId) || !IsId(request.SettlementId))
             return false;
@@ -138,6 +174,8 @@ public sealed class GuestTradeHost
         {
             GuestTradeAction.EmissaryBuy => IsId(request.Subject) && request.Quantity is >= 1 and <= MaxQuantity,
             GuestTradeAction.ArmouryUpgrade => IsId(request.Subject) && IsId(request.Target),
+            GuestTradeAction.LadderHandIn => LadderSlotRules.TryParse(request.Subject, out _),
+            GuestTradeAction.LadderClaim => LadderSlotRules.TryParse(request.Subject, out _) && IsId(request.Target),
             _ => true,
         };
     }

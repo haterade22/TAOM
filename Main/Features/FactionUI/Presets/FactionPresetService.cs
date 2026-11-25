@@ -38,6 +38,10 @@ public sealed class FactionPresetService
     /// culture race filter then leaves the face generator's race alone.</summary>
     public bool HasPick => _pending != null || _applied != null;
 
+    /// <summary>The current pick as the faction screen's 3D viewport shows it, the same draw the player gets;
+    /// null with no pick.</summary>
+    public PresetDisplay? PendingDisplay => (_pending ?? _applied) is { } pick ? _appearance.Display(pick) : null;
+
     /// <summary>A lord or leader from the faction screen's browse lists: copied with his name.</summary>
     public void SelectHero(object hero) => Select(hero, isHero: true);
 

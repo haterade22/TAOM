@@ -106,6 +106,47 @@ public class SurvivalRunFortTests
         return run;
     }
 
+    [TestMethod]
+    public void TheFortView_CarriesTheDefendersMeanHealth_AsTheLastTickReadIt()
+    {
+        var run = Begun(Plan());
+        Assert.AreEqual(-1f, run.GetView().Fort.DefenderHealthMean, "before any tick nothing was read");
+
+        run.Tick(Snap() with { DefenderHealthMean = 0.91f });
+
+        Assert.AreEqual(0.91f, run.GetView().Fort.DefenderHealthMean, "what the bot reads to decide a field care buy (#1143)");
+    }
+
+    [TestMethod]
+    public void AClear_ForgetsTheMeanHealth_UntilTheNextTickReadsItAfterTheRest()
+    {
+        var run = Begun(Plan());
+        Func<RunSnapshot> hurt = () => Snap() with { DefenderHealthMean = 0.6f };
+
+        ClearTo(run, 1, hurt);
+
+        Assert.AreEqual(-1f, run.GetView().Fort.DefenderHealthMean, "the clear's tick read the mean before the rest: the bot must not judge a care buy by it");
+        run.Tick(Snap() with { DefenderHealthMean = 0.8f });
+        Assert.AreEqual(0.8f, run.GetView().Fort.DefenderHealthMean, "the next tick's reading is after the rest");
+    }
+
+    [TestMethod]
+    public void ATickThatSendsAPackToTheField_ThinsTheMeanHealth_BecauseTheRecruitsJoinAfterTheReading()
+    {
+        var run = Begun(Plan());
+        ClearTo(run, 1);
+        run.Tick(Snap() with { DefenderHealthMean = 0.965f });
+        Assert.AreEqual(BuyResult.Ok, run.TryBuy("militia"));
+
+        var fx = run.Tick(Snap() with { DefenderHealthMean = 0.965f });
+
+        Assert.IsTrue(fx.DefenderBatches.Count > 0, "the pack goes out on this tick");
+        Assert.AreEqual(0, run.GetView().DefendersPending, "so nobody is pending any more");
+        Assert.AreEqual((0.965f * 40 + 12) / 52, run.GetView().Fort.DefenderHealthMean, 0.0001f, "and the reading was of the forty before the twelve joined at full health (Codex re-review, 2026-11-21)");
+        run.Tick(Snap() with { DefenderHealthMean = 0.975f });
+        Assert.AreEqual(0.975f, run.GetView().Fort.DefenderHealthMean, "the next tick's reading counts them");
+    }
+
     // ---- D31: nothing is for sale until a slice lands its effect ----
 
     [TestMethod]

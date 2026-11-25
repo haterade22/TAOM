@@ -8,13 +8,17 @@
     "quietSeconds": 60, "quietAnySeconds": 180, "strandedSeconds": 90, "stragglerShare": 0.10, "stragglerCount": 5, "stragglerSeconds": 60,
     "keepRadius": 12.0, "keepHeightBand": 4.0, "keepHoldSeconds": 45.0, "keepDecaySeconds": 90.0,
     "keepMinAttackers": 12, "keepDominance": 2.0,
-    "restShare": 0.5
+    "restShare": 0.5,
+    "hard": { "factor": 1.25, "affixWavesEarlier": 2 }
   },
   "bounties": {
     "fow_urukhai_fighter": 6, "fow_isengard_militia_spearman": 6, "fow_urukhai_skirmisher": 9,
     "fow_urukhai_warrior": 9, "fow_urukhai_spearman": 12, "fow_urukhai_swordman": 12, "fow_urukhai_arbalest": 12,
     "fow_urukhai_crossbowman": 15, "fow_urukhai_infantry": 15, "fow_urukhai_berserker": 20,
-    "fow_urukhai_veteranspearman": 15, "fow_urukhai_veteranpikeman": 20, "fow_urukhai_veteraninfantry": 20, "fow_urukhai_veterancrossbowman": 20
+    "fow_urukhai_veteranspearman": 15, "fow_urukhai_veteranpikeman": 20, "fow_urukhai_veteraninfantry": 20, "fow_urukhai_veterancrossbowman": 20,
+    "fow_mordor_orc_fighter": 6, "fow_mordor_orc_hunter": 6, "fow_mordor_orc_impaler": 9, "fow_mordor_orc_warrior": 9, "fow_mordor_orc_scout": 9,
+    "fow_morannon_spearman": 12, "fow_mordor_uruk_warrior": 12, "fow_mordor_uruk_crossbow": 15,
+    "fow_mordor_uruk_baraddurguard": 20, "fow_mordor_num_temple_guard": 24
   },
   "rosters": {
     "helms_isengard": {
@@ -93,6 +97,76 @@
           { "troop": "fow_urukhai_infantry", "class": "Infantry", "weight": 25 },
           { "troop": "fow_urukhai_berserker", "class": "Infantry", "weight": 25 },
           { "troop": "fow_urukhai_crossbowman", "class": "Ranged", "weight": 25 } ] }
+      ]
+    },
+    "minas_mordor": {
+      "scaling": { "countPerWave": 10, "maxCount": 300, "healthPerWave": 0.05, "damagePerWave": 0.03, "maxFactor": 3.0, "tierEveryWaves": 3 },
+      "tiers": {
+        "fow_mordor_orc_fighter": "fow_mordor_orc_warrior", "fow_mordor_orc_warrior": "fow_morannon_spearman",
+        "fow_mordor_orc_impaler": "fow_mordor_uruk_warrior", "fow_mordor_uruk_warrior": "fow_mordor_uruk_baraddurguard",
+        "fow_mordor_orc_hunter": "fow_mordor_orc_scout", "fow_mordor_orc_scout": "fow_mordor_uruk_crossbow"
+      },
+      "commanders": {
+        "every": 4,
+        "ranks": [
+          { "rank": "captain", "name": "{=aom_lord_1_63_name}Gorbag, Captain of Minas Morgul", "troop": "lord_1_63", "bounty": 150, "health": 2.0, "abilities": [ "war_cry" ] },
+          { "rank": "lieutenant", "name": "{=aom_lord_1_30_name}Gothmog, Lieutenant of Morgul", "troop": "lord_1_30", "bounty": 250, "health": 3.0, "abilities": [ "war_cry", "summon_uruks" ] },
+          { "rank": "general", "name": "{=aom_lord_1_15_name}Witch-King of Angmar", "troop": "lord_1_15", "bounty": 400, "health": 4.0, "abilities": [ "war_cry", "summon_uruks" ] }
+        ],
+        "beyond": { "healthPerStep": 0.25, "cooldownFactorPerStep": 0.9, "summonPerStep": 5, "maxSteps": 10 },
+        "abilities": {
+          "war_cry": { "kind": "WarCry", "name": "{=TAOM_LD_Ability_WarCry_Mordor}The Lidless Eye Is Upon Them",
+            "firstSeconds": 20, "cooldownSeconds": 60, "durationSeconds": 15, "swingSpeedPercent": 15, "moveSpeedPercent": 10 },
+          "summon_uruks": { "kind": "Summon", "name": "{=TAOM_LD_Ability_Summon_Mordor}Uruks of Mordor",
+            "firstSeconds": 30, "cooldownSeconds": 120, "count": 20,
+            "mix": [ { "troop": "fow_mordor_uruk_baraddurguard", "class": "Infantry", "weight": 3 },
+                     { "troop": "fow_mordor_uruk_crossbow", "class": "Ranged", "weight": 1 } ] }
+        }
+      },
+      "waves": [
+        { "count": 110, "mix": [
+          { "troop": "fow_mordor_orc_fighter", "class": "Infantry", "weight": 75 },
+          { "troop": "fow_mordor_orc_hunter", "class": "Ranged", "weight": 25 } ] },
+        { "count": 120, "mix": [
+          { "troop": "fow_mordor_orc_fighter", "class": "Infantry", "weight": 60 },
+          { "troop": "fow_mordor_orc_impaler", "class": "Infantry", "weight": 20 },
+          { "troop": "fow_mordor_orc_hunter", "class": "Ranged", "weight": 20 } ] },
+        { "count": 120, "mix": [
+          { "troop": "fow_mordor_orc_warrior", "class": "Infantry", "weight": 50 },
+          { "troop": "fow_mordor_orc_impaler", "class": "Infantry", "weight": 25 },
+          { "troop": "fow_mordor_orc_scout", "class": "Ranged", "weight": 25 } ] },
+        { "count": 125, "mix": [
+          { "troop": "fow_mordor_orc_warrior", "class": "Infantry", "weight": 50 },
+          { "troop": "fow_morannon_spearman", "class": "Infantry", "weight": 25 },
+          { "troop": "fow_mordor_orc_scout", "class": "Ranged", "weight": 25 } ] },
+        { "count": 130, "mix": [
+          { "troop": "fow_mordor_orc_warrior", "class": "Infantry", "weight": 30 },
+          { "troop": "fow_morannon_spearman", "class": "Infantry", "weight": 30 },
+          { "troop": "fow_mordor_uruk_warrior", "class": "Infantry", "weight": 15 },
+          { "troop": "fow_mordor_orc_scout", "class": "Ranged", "weight": 25 } ] },
+        { "count": 140, "mix": [
+          { "troop": "fow_morannon_spearman", "class": "Infantry", "weight": 40 },
+          { "troop": "fow_mordor_uruk_warrior", "class": "Infantry", "weight": 30 },
+          { "troop": "fow_mordor_orc_scout", "class": "Ranged", "weight": 20 },
+          { "troop": "fow_mordor_uruk_crossbow", "class": "Ranged", "weight": 10 } ] },
+        { "count": 150, "mix": [
+          { "troop": "fow_mordor_uruk_warrior", "class": "Infantry", "weight": 50 },
+          { "troop": "fow_morannon_spearman", "class": "Infantry", "weight": 25 },
+          { "troop": "fow_mordor_uruk_crossbow", "class": "Ranged", "weight": 25 } ] },
+        { "count": 170, "mix": [
+          { "troop": "fow_mordor_uruk_warrior", "class": "Infantry", "weight": 50 },
+          { "troop": "fow_mordor_uruk_baraddurguard", "class": "Infantry", "weight": 15 },
+          { "troop": "fow_morannon_spearman", "class": "Infantry", "weight": 10 },
+          { "troop": "fow_mordor_uruk_crossbow", "class": "Ranged", "weight": 25 } ] },
+        { "count": 185, "mix": [
+          { "troop": "fow_mordor_uruk_warrior", "class": "Infantry", "weight": 40 },
+          { "troop": "fow_mordor_uruk_baraddurguard", "class": "Infantry", "weight": 25 },
+          { "troop": "fow_mordor_uruk_crossbow", "class": "Ranged", "weight": 35 } ] },
+        { "count": 200, "mix": [
+          { "troop": "fow_mordor_uruk_warrior", "class": "Infantry", "weight": 30 },
+          { "troop": "fow_mordor_uruk_baraddurguard", "class": "Infantry", "weight": 35 },
+          { "troop": "fow_mordor_num_temple_guard", "class": "Infantry", "weight": 10 },
+          { "troop": "fow_mordor_uruk_crossbow", "class": "Ranged", "weight": 25 } ] }
       ]
     }
   }

@@ -216,7 +216,7 @@ errors and no dwarf ever uses either attack. Check each channel:
 `python tools/bind_dwarf_attack_actions.py --check --armory E:/LOTRAOM_Releases/<channel>/Modules/LOTRLOME_Armory/ModuleData`
 must exit 0.
 Since #1226 (2026-11-14) the dwarf creature rider rows (the warg, spider, elephant and chariot rows of
-`as_human_warrior`, 223 rows) live in the Armory's `as_dwarf_warrior`, no longer in TAOM's `action_sets.xml`. TAOM
+`as_human_warrior`, 232 rows since #1550) live in the Armory's `as_dwarf_warrior`, no longer in TAOM's `action_sets.xml`. TAOM
 2.0.39 carried them itself, so a TAOM build released with an older Armory package leaves the dwarves without them,
 and the missing rows are the leading hypothesis for the free-warg crash of #1226. Check each channel after a normal
 build:
@@ -225,6 +225,18 @@ or in PowerShell `$env:BANNERLORD_GAME_DIR = "E:/LOTRAOM_Releases/<channel>"` fi
 settings file turns a missing channel folder into a failure, where the default run would skip the test and print
 nothing wrong. On 2026-11-14 it failed for `public`, `testing` and `patreon`: their Armory packages (dated 2026-11-06
 and 2026-09-26) predate the rows, so the next release needs a new Armory package from Mike's packaging pass.
+Since #1563 and #1565 (2026-11-23) the warg's and the dire wolf's gait records carry a new master, travel,
+pace limits, `Duration` or flag, each creature has one new record, and `as_warg` and `as_dire_wolf` bind it
+([warg ledger](lotrlome-warg-gait-changes.md), [dire wolf ledger](lotrlome-dire-wolf-changes.md)); a package
+built before that plays the canter on the trot's keys, and the wargs' legs look like a walk at full speed. Since
+#1591 (2026-11-24) the dire wolf's two backward records play the walk's keys from last to first; a package
+built before that steps the wolf's paws forward while it backs up. A
+channel ships the Armory as compiled `AssetPackages`, which the check cannot read, so run it on the install the
+package is built from, after the Kit start that cooks the records:
+`python tools/repoint_anim_clip.py --plan tools/warg_gait_plan.json --under creature/warg/animations --check`,
+the same with `tools/dire_wolf_gait_plan.json` and `creature/direwolf/animations`, and
+`python tools/bind_warg_clips.py --check`, `python tools/check_gait_stride.py --creature warg` and the same with `--creature dire_wolf` must all exit 0. The package and the Armory's `action_sets.xml` ship
+together: each row names a record that an older package does not hold.
 
 **TAOM and TAOM_Map ship as a pair.** They are separate packages that name each other's rows: the map's settlements name TAOM's cultures and clans, and TAOM's clans and kingdoms name the map's settlements. A map ahead of its TAOM points settlements at undefined cultures and clans. A TAOM ahead of its map names home settlements the map lacks and can leave a culture owning no settlement, the daily-tick crash `LANDLESS_CULTURE` reports (#374). Every realm since Arthedain carries this coupling, among them the Dale lord expansion, Ered Luin, Anduin Vale, Angáladh and the Feral Orcs. Check each channel before publishing: `python tools/check_release_pair.py E:/LOTRAOM_Releases/<channel>/Modules`. Pass means exit 0 and a `PASS:` line. Exit 1 lists each disagreement with its code, file and line, including a prison scene no module ships, which the validator only warns about. Exit 2 means a file the check needs is missing or does not parse, or the map has no settlement or prison row; exit 3 means the tool crashed: neither judged anything. It compares the pair with each other: a pair that agrees can still lag the current build. It counts no rows, so a map holding part of a realm passes when every reference resolves, and it does not read the bare ids in TAOM's JSON files (`war_chronicle.json`, `army_targeting.json`, `named_companion_config.json`). Vanilla's cultures and clans come from the install, because a channel holds no SandBox.
 

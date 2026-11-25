@@ -31,12 +31,6 @@ public class FieldCampCampaignBehavior : CampaignBehaviorBase
     private readonly IModLogger _logger;
     private readonly FieldCampMenuController _menuController;
 
-    /// <summary>True once this session's book is settled: SyncData ran in the LOADING direction,
-    /// or ResetIfNoLoadedRecord wiped the stale one. OnSessionLaunched consults it FIRST: false
-    /// means a fresh campaign OR a save without our record, and either way the process-lifetime
-    /// service must not keep the previous session's book (round-A CRITICAL).</summary>
-    private bool _syncedThisSession;
-
     public FieldCampCampaignBehavior(
         ICampService camps,
         ICampSettingsProvider settings,
@@ -49,6 +43,7 @@ public class FieldCampCampaignBehavior : CampaignBehaviorBase
         _visuals = visuals;
         _logger = logger;
         _menuController = new FieldCampMenuController(camps, settings, supplySettings, menus);
+        _camps.ResetForNewSession();
     }
 
     public override void RegisterEvents()
@@ -74,7 +69,6 @@ public class FieldCampCampaignBehavior : CampaignBehaviorBase
             Dictionary<string, CampState> camps = null;
             dataStore.SyncData("_taomFieldCamps", ref camps);
             _camps.LoadFrom(camps);
-            _syncedThisSession = true;
         }
         else
         {
@@ -88,40 +82,12 @@ public class FieldCampCampaignBehavior : CampaignBehaviorBase
 
     private void OnSessionLaunched(CampaignGameStarter starter)
     {
-        // FIRST: reset before anything can read or save a stale book.
-        ResetIfNoLoadedRecord();
-
         // Menus register unconditionally; runtime gates live at the option conditions and the
         // overlay button, so an MCM toggle mid-session needs no relaunch (FiefHub lesson).
         _menuController.AddMenus(starter);
     }
 
-    /// <summary>
-    /// True when this session had no loading SyncData (fresh campaign, or a save from before the
-    /// feature): whatever book the process-lifetime singleton holds belongs to a PREVIOUS session
-    /// and has been reset. Internal for TAOM.Tests (InternalsVisibleTo); idempotent, so both
-    /// OnGameLoaded and OnSessionLaunched may call it.
-    /// </summary>
-    internal bool ResetIfNoLoadedRecord()
-    {
-        if (_syncedThisSession)
-            return false;
-        _camps.ResetForNewSession();
-        // Latch: a stray second call must not wipe a camp pitched right after launch (the
-        // Refuge/SupplyLines twins document this guard as load-bearing; round-B parity fix).
-        _syncedThisSession = true;
-        return true;
-    }
-
-    private void OnGameLoaded(CampaignGameStarter starter)
-    {
-        // A save from before the feature has no record, so SyncData never ran and the book still
-        // belongs to the previous session; reset instead of re-showing its stale visuals.
-        // (OnSessionLaunched re-checks, covering fresh campaigns where this event never fires.)
-        if (ResetIfNoLoadedRecord())
-            return;
-        _camps.OnGameLoaded();
-    }
+    private void OnGameLoaded(CampaignGameStarter starter) => _camps.OnGameLoaded();
 
     private void OnHourlyTick()
     {

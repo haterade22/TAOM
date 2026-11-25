@@ -28,6 +28,55 @@ public class WarEffectServiceTests
         WarEffectKind kind = WarEffectKind.VolunteerRate, float magnitude = 0.1f, double end = 100d) =>
         new WarEffect(source, kingdom, kind, magnitude, end);
 
+    [DataTestMethod]
+    [DataRow(0.25f, 1.2f)]
+    [DataRow(-0.25f, 0.8f)]
+    public void GetMultiplier_PartyMoraleAtStrengthTwo_ClampsToPointTwoEitherWay(float magnitude, float expected)
+    {
+        _settings.WarEffectStrength.Returns(2f);
+        _sut.Apply(Fx(kind: WarEffectKind.PartyMorale, magnitude: magnitude));
+
+        Assert.AreEqual(expected, _sut.GetMultiplier("k", WarEffectKind.PartyMorale), 1e-6f);
+    }
+
+    [TestMethod]
+    public void GetMultiplier_PartyMoraleWithinTheClamp_IsOnePlusMagnitude()
+    {
+        _sut.Apply(Fx(kind: WarEffectKind.PartyMorale, magnitude: 0.1f));
+
+        Assert.AreEqual(1.1f, _sut.GetMultiplier("k", WarEffectKind.PartyMorale), 1e-6f);
+        Assert.AreEqual(1f, _sut.GetMultiplier("k", WarEffectKind.VolunteerRate));
+    }
+
+    [TestMethod]
+    public void Expire_APermanentEffect_NeverGoes()
+    {
+        _sut.Apply(Fx(magnitude: -0.1f, end: WarEffect.PermanentEndHours));
+        _sut.Apply(Fx(source: "timed", kind: WarEffectKind.PrisonerEscape, end: 100d));
+
+        _sut.Expire(1e11);
+
+        Assert.AreEqual(1, _sut.Snapshot().Count);
+        Assert.IsTrue(_sut.Snapshot().Single().IsPermanent);
+        Assert.AreEqual(0.9f, _sut.GetMultiplier("k", WarEffectKind.VolunteerRate), 1e-6f);
+    }
+
+    [TestMethod]
+    public void IsPermanent_OnlyAtTheSentinel()
+    {
+        Assert.IsTrue(Fx(end: WarEffect.PermanentEndHours).IsPermanent);
+        Assert.IsFalse(Fx(end: 1e9).IsPermanent);
+    }
+
+    [TestMethod]
+    public void Apply_APermanentEffect_PassesValidation()
+    {
+        _sut.Apply(Fx(end: WarEffect.PermanentEndHours));
+
+        Assert.AreEqual(1, _sut.Snapshot().Count);
+        _logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
     [TestMethod]
     public void GetMultiplier_NoEffects_ReturnsOne()
     {

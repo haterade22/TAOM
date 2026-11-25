@@ -29,8 +29,10 @@ segment, a metadata version below 5 (TpacTool AnimationClip.ReadMetadata: the th
 and the generated child index in 5, so an older layout is not the one this parser walks; the live clips are 5 and
 6), a "Blends with animation" that names ANOTHER clip, a generated blend child (parent names set or a child index
 other than -1), a name over the engine's 63-character row buffer or not ASCII, a name missing in the folder or
-carried by two packages there, a package with no RDC entry, and an RDC entry that belongs to another item. Every
-refusal comes from the plan, so the dry run reports it and --apply refuses before writing anything.
+carried by two packages there, a package with no RDC entry, an RDC entry that belongs to another item, and, for a
+clip it would change, an RDC entry whose stamp is not the package's checksum (the record changed since the Kit
+cooked it, as after tools/repoint_anim_clip.py: the entry holds the old keys, and a new stamp would pass them for
+cooked). Every refusal comes from the plan, so the dry run reports it and --apply refuses before writing anything.
 
     python tools/set_clip_balance_name.py --clip anim_hill_troll_release_slashleft_2h ...     # dry run
     python tools/set_clip_balance_name.py --clips-file names.txt --apply                     # write
@@ -93,6 +95,8 @@ class Clip:
     flags: list = dc_field(default_factory=list)
     usages: int = 0
     userdata: int = 0
+    usages_at: int = 0          # where the clip usage count is: repoint_anim_clip.py reads a gait's usage after it
+    flags_at: int = 0           # where the flag count is: repoint_anim_clip.py rewrites the list from here to usages_at
 
 
 def _str(buf, at, end):
@@ -105,7 +109,9 @@ def _str(buf, at, end):
 
 
 def parse(buf):
-    """The fields this tool touches and checks, located in the engine's metadata order (0x58C500)."""
+    """The fields this tool touches and checks, located in the engine's metadata order (the reader of a stored
+    record: 0x58C500 on v1.5.3, 0x58D980 on v1.5.7, read again 2026-11-24. After an engine bump it is slot 2 of
+    the vtable of Animation_clip_item_metadata, through a jump: `native_sig_author.py vtable`)."""
     if len(buf) < HEADER + 40 or buf[:4] != b"TPAC" or struct.unpack_from("<I", buf, 4)[0] != 2:
         raise ClipError("not a version-2 TPAC package")
     if struct.unpack_from("<I", buf, 24)[0] != 1:
@@ -150,6 +156,7 @@ def parse(buf):
     src2, p = _str(buf, p, end)
     gen = struct.unpack_from("<b", buf, p)[0]
     p += 1 + 4 + 2
+    flags_at = p
     nflags = struct.unpack_from("<i", buf, p)[0]
     p += 4
     flags = []
@@ -160,7 +167,7 @@ def parse(buf):
     return Clip(name=name, package_guid=buf[8:24], item_guid=buf[52:68], mlen_at=mlen_at, m0=m0, ck_at=ck_at,
                 meta_version=version, blends_action_at=blends_action_at, blends_action_end=blends_action_end,
                 blends_with_action=blends_action, field_at=field_at, field_end=field_end, field=fld, src1=src1,
-                src2=src2, gen_index=gen, flags=flags, usages=usages, userdata=ud)
+                src2=src2, gen_index=gen, flags=flags, usages=usages, userdata=ud, usages_at=p, flags_at=flags_at)
 
 
 def is_self_keyed(c, name):
@@ -271,9 +278,11 @@ def index_clips(folder):
 Row = namedtuple("Row", "name path buf new changed rdc entry new_entry")
 
 
-def plan(names, folder, module):
+def plan(names, folder, module, for_check=False):
     """One Row per distinct name with everything --apply would write already computed (the self-keyed package and
-    its restamped RDC entry), so every refusal happens here: the dry run reports it and --apply writes nothing."""
+    its restamped RDC entry), so every refusal happens here: the dry run reports it and --apply writes nothing.
+    `for_check`: the rows are for check(), which writes nothing and whose table names each stale clip, so an entry
+    that is not current is no refusal there."""
     index = index_clips(folder)
     rows = []
     for name in dict.fromkeys(names):
@@ -283,7 +292,8 @@ def plan(names, folder, module):
         with open(paths[0], "rb") as fh:
             buf = fh.read()
         new, changed = self_key(buf)
-        rdc = rdc_path(module, parse(buf).package_guid)
+        c = parse(buf)
+        rdc = rdc_path(module, c.package_guid)
         if not os.path.isfile(rdc):
             raise ClipError("%s: no RuntimeDataCache entry %s; save the package in the Kit first" % (name, rdc))
         with open(rdc, "rb") as fh:
@@ -295,6 +305,10 @@ def plan(names, folder, module):
                 new_entry = stamp_rdc(entry, n.item_guid, new[n.ck_at:n.ck_at + 8])
             except ClipError as exc:
                 raise ClipError("%s: %s (%s)" % (name, exc, rdc))
+            if not for_check and not rdc_current(entry, c, buf):
+                raise ClipError("%s: its RuntimeDataCache entry is not current: the record changed since the Kit "
+                                "cooked it. Start the Kit once first; a new stamp would pass its old keys for cooked "
+                                "(%s)" % (name, rdc))
         rows.append(Row(name, paths[0], buf, new, changed, rdc, entry, new_entry))
     return rows
 
@@ -360,7 +374,7 @@ def main(argv=None):
     if not names:
         ap.error("name at least one clip")
     try:
-        rows = plan(names, args.clips_dir, args.module)
+        rows = plan(names, args.clips_dir, args.module, for_check=args.check)
         if args.check:
             return check(rows)
         for r in rows:

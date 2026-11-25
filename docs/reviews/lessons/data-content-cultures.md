@@ -575,6 +575,21 @@ Nimlothiel, `lord_L3_3` Silivren) had the same shape from a different route: `is
 - **Source:** 2026-08-28, `a00086da`; the same class shipped three weeks earlier as `3c7f4e25`
   (Grimbold) with no lesson recorded, which is why it recurred.
 
+### A live Armory edit that names something a TAOM build defines goes on at deploy, not when it is written (elf voice, 2026-11-23)
+
+- **Why missed:** the plan listed "bind the live Armory and the snapshot" as one step of the data work, and its risk
+  section named only KAOE as a module without the new voice definition. Nobody asked what the game folder itself
+  held: the deployed TAOM was a trunk build, so for one hour the live `skins.xml` named `elf_01` and no loaded
+  module defined it. Native logs `Voice def can not be found` and stores a null entry in the pool; what an agent
+  does with it is not established. The XML lens of the review found it; no game session ran in that hour.
+- **Prevent:** an Armory or `TAOM_Map` edit that refers to an id, a voice, an action or an item that only the
+  change's own build defines is written to the repo snapshot in the change and to the live file after that build
+  is deployed. Before a live write, list every module set that loads the live file (the deployed TAOM, KAOE, each
+  worktree build that can be deployed over it) and check that each defines what the edit names. The gate that
+  compares live with the snapshot then fails on the checkout until the edit is on, and its message gives the order.
+- **Source:** `/deep-review` of #1568, 2026-11-23; `docs/reference/lotrlome-armory-snapshot/README.md`, the elf
+  combat voice section; `docs/features/kingdom-voices.md`, "Known defects".
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
@@ -2442,6 +2457,7 @@ Mike corrected the hair and beard cover types on Armory helmets by hand several 
 - **Why missed:** the Armory is outside the repo, so no gate read `beard_cover_type`, and a ledger describes an edit without making it reproducible.
 - **Prevent:** when a fix lands in an unversioned module, put the intended values in a spec in the repo, write the tool that re-applies them (dry run, backup tag, a no-op second run), and register its `--check` in `tools/data_gates.py` with exit 2 for a missing install. Hold the whole attribute family for every item, not only the items fixed that day, so a reset of a neighbour (gloves, boots, a mane) shows as drift too.
 - **Source:** [lotrlome-beard-cover-changes.md](../../reference/lotrlome-beard-cover-changes.md), "Redo"; `tools/armour_cover_flags.json`.
+- **Source (repeat, 2026-11-24):** three dwarf chariot items went into the live Armory with no repo record until the review asked; now `tools/apply_dwarf_chariot_armory.py` with `--check` ([RCA](../rca-dwarf-chariot-2026-11-24.md) F6).
 ### A tool that fits a troop to a number must hold the troop's weapon category fixed (melee ladder, #1271, 2026-11-14)
 The maintainer's rule: every troop was made for one weapon category (sword and shield, two handed sword or axe, spear and shield, couchable lance, polearm, pike, bow). The melee ladder fixer ranks candidates by damage per second and tier band, so its plan of 176 swaps replaced poleaxes with short spears, for example `rhudaur_lord_of_the_angle` from `numenorean_poleaxe_heavy` at 92 DPS to `dunland_caerdh_short_spear_e` at 33. Every swap fitted its number and none fitted the troop.
 - **Why missed:** the fixer's own class is the crafting template (step 2 of its candidate order), which is coarser than the category: the plan above passed it. Its other filters are numbers (tier limit, DPS band, culture), so a swap that landed in the band looked correct.
@@ -2552,3 +2568,15 @@ The clone tool wrote an upgrade's replacement into a top wearer's battle sets, a
 ### A plan that rebuilds its scope from one kind of wearer drops what other wearers still need (green militia, 2026-11-18)
 
 Moving the Mirkwood militia off the bronze pieces made the band clone tool retire clones that villager, wanderer and Fords kits still wore, and drop two helmet upgrades that still matched in colour. The scope counted battle troops only. Rule: when a tool rebuilds a plan from scratch, a row it shipped stays until no wearer of any kind needs it (`kept_sources`, `held_upgrades`). Evidence: docs/reviews/rca-armour-colour-sets-2026-11-18.md R18, R20.
+
+### A second roster copied by role, not by level, lands on a different difficulty (Minas Tirith waves, 2026-11-22)
+
+The first Mordor wave table for The Long Defeat put "the next stronger troop" in each wave, as the Isengard table does, but Mordor's line jumps from level 21 to 36 and 46 where Isengard's goes 21, 26, 31. Wave 9 came out 15 troop levels above Helm's Deep's wave 9, each level paid less gold, and the commander's summon was weaker than the wave it joined. The XML lens found it by computing the mean troop level per wave of both rosters; no test compared them. Rule: when a roster, shop or kit is authored as the twin of a shipped one, compare the numbers the engine reads (level, bounty, price) wave by wave before the first run, and pin the allowed gap in a test (`ShippedMinasTirith_FollowsTheHelmsDeepCurve_InTroopLevelPerWave_AndInBountyPerLevel`). Evidence: the review of `feat/ld-minas-tirith` on 2026-11-22, recorded in docs/features/long-defeat/phase5-plan.md "State on 2026-11-22".
+
+### A set copied from a culture the engine never asks for carries its gap to one it does ask for (practice weapons, 2026-11-22)
+
+The practice weapon sets of South Rhovanion shipped identical to Rohan's, which hold armour and no weapon. Rohan keeps vanilla's culture id, so the engine never reads Rohan's sets and the gap never showed. South Rhovanion has its own id, so `AddRandomWeapons` did read the copy, and by the source every practice fighter in its two towns entered unarmed. No load error and no validator reports an empty weapon slot. The issue that first described the practice sets (#1534) also proposed a rename without a look at what the sets hold: one vanilla sword each, against several kits in vanilla's sets. Rule: before a set is copied to a new culture, or wired to an id the engine reads, read which slots the engine copies from it (the quoted line, not the set's name) and check those slots in the source set. Gate: `PracticeWeaponSetTests`.
+
+### A new troop is a row in every per-id ledger of its line (dwarven war chariot, 2026-11-24)
+
+Two Ironpass chariot troops were made by copying the Ram Marshal's block, and `validate_moduledata.py` passed. The copy held what the block holds and nothing that other files hold about the Ram Marshal by id. So the new branch paid no Gems where its sibling pays 5 (`special_resources/troop_resource_costs.xml`), counted 1.0 party slots after a 2.0 parent (`TroopWeights/troop_weights.xml`), failed the shield and two-handed axe ratchet (`tools/audit_polearm_shield_parity.py`), and left the colour family table, the armour tier list, the cover flag snapshot and the external localization baseline behind. The two worst were found by the full suites, which ran after the review had started. Rule: before a copied troop goes to review, search the repo for the id it was copied from (`grep -rn "<donor id>" Main/_Module tools --include=*.xml --include=*.json --include=*.py`) and decide each hit; then run `python tools/data_gates.py --all` and both full suites, and only then launch the lenses. A validator pass says the references resolve, not that the ledgers are complete. Gates: `NoUpgrade_LowersTheWeight`, `audit_polearm_shield_parity.py`, `scan_armour_colours.py --check`, `check_external_loc_coverage.py`. No test pins Erebor's Gems rows the way `TroopResourceCostDataTests` pins Gondor's. Source: [RCA](../rca-dwarf-chariot-2026-11-24.md) F3, F4, F5, F7.

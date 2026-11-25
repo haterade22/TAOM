@@ -85,6 +85,9 @@ internal sealed partial class FakeLongDefeatField
         return new LdGateWrite(changes, 1, HiddenStanding, ResetFound);
     }
 
+    /// <summary>False is Helm's Deep, where the gate stands above the walls' high line and the old rule holds; a test sets true for Minas Tirith's case.</summary>
+    public bool HighLineClearsGates { get; set; }
+
     public int AttackersBehindGates(LdPoint? inside, IReadOnlyCollection<int> gates)
     {
         SamplesAsked.Add(inside);

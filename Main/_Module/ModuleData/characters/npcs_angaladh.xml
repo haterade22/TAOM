@@ -490,7 +490,7 @@
 	</NPCCharacter>
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_angaladh" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.angaladh" name="{=aom_ang_arena}Arena Master">
+	<NPCCharacter id="tournament_master_angaladh" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.angaladh" name="{=aom_ang_arena}Training Master">
 		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
 		<skills></skills>
 		<Equipments>
@@ -586,7 +586,7 @@
 	</NPCCharacter>
 
 	<!-- Caravan Staff -->
-	<NPCCharacter id="armed_trader_angaladh" default_group="Infantry" level="16" name="{=aom_ang_armed_trader}Angáladh Armed Trader" occupation="CaravanGuard" culture="Culture.angaladh">
+	<NPCCharacter id="armed_trader_angaladh" default_group="Infantry" level="16" name="{=aom_ang_armed_trader}[Angáladh] Armed Trader" occupation="CaravanGuard" culture="Culture.angaladh">
 		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
 		<skills>
 			<skill id="Athletics" value="40" />
@@ -602,7 +602,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_master_angaladh" default_group="Infantry" level="26" name="{=aom_ang_caravan_master}Angáladh Caravan Master" occupation="CaravanGuard" culture="Culture.angaladh">
+	<NPCCharacter id="caravan_master_angaladh" default_group="Infantry" level="26" name="{=aom_ang_caravan_master}[Angáladh] Caravan Master" occupation="CaravanGuard" culture="Culture.angaladh">
 		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -622,7 +622,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_guard_angaladh" default_group="Infantry" level="21" name="{=aom_ang_caravan_guard}Angáladh Caravan Guard" occupation="CaravanGuard" culture="Culture.angaladh">
+	<NPCCharacter id="caravan_guard_angaladh" default_group="Infantry" level="21" name="{=aom_ang_caravan_guard}[Angáladh] Caravan Guard" occupation="CaravanGuard" culture="Culture.angaladh">
 		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
 		<skills>
 			<skill id="Athletics" value="50" />
@@ -642,7 +642,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="veteran_caravan_guard_angaladh" default_group="Infantry" level="26" name="{=aom_ang_vet_caravan_guard}Angáladh Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.angaladh">
+	<NPCCharacter id="veteran_caravan_guard_angaladh" default_group="Infantry" level="26" name="{=aom_ang_vet_caravan_guard}[Angáladh] Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.angaladh">
 		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />

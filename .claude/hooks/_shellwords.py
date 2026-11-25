@@ -386,15 +386,36 @@ def _blind_pieces(text):
 WORDS_KEPT_MAX = 4096
 
 
+def _quoted_redirs_marked(seg):
+    """seg with each < or > that bash reads as a plain character (inside quotes, or after a
+    backslash) written as \x1f, so the judge, which strips quotes, never takes it for a redirection
+    (#691). Quote state follows shlex's posix rules; an unclosed quote fails the split that follows."""
+    out, quote, i = [], "", 0
+    while i < len(seg):
+        c = seg[i]
+        nxt = seg[i + 1] if i + 1 < len(seg) else ""
+        if c == "\\" and nxt and quote != "'" and (not quote or nxt in '"\\'):
+            out.append("\x1f" if nxt in "<>" else c + nxt)
+            i += 2
+            continue
+        if c in "<>" and quote:
+            c = "\x1f"
+        elif c in "'\"" and quote in ("", c):
+            quote = "" if quote else c
+        out.append(c)
+        i += 1
+    return "".join(out)
+
+
 def _words_kept(seg):
     """One quote-aware segment with each argument's boundary kept: a blank inside an argument
-    becomes \\x1f, and an empty argument \\x1e, so `-o "ci skip" origin` and `-o "" origin` still
-    hand validate-push the value as one word. None when it does not parse as POSIX words or is
-    longer than WORDS_KEPT_MAX."""
+    becomes \\x1f (as does a quoted or escaped < or >, #691), and an empty argument \\x1e, so
+    `-o "ci skip" origin` and `-o "" origin` still hand validate-push the value as one word.
+    None when it does not parse as POSIX words or is longer than WORDS_KEPT_MAX."""
     if len(seg) > WORDS_KEPT_MAX:
         return None
     try:
-        words = shlex.split(seg, comments=False, posix=True)
+        words = shlex.split(_quoted_redirs_marked(seg), comments=False, posix=True)
     except ValueError:
         return None
     return " ".join(re.sub(r"[\s'\"]", "\x1f", w) or "\x1e" for w in words)
@@ -409,7 +430,10 @@ def push_candidates(cmd, tool):
        together), and each such segment up to WORDS_KEPT_MAX again with its argument boundaries
        kept;
     3. the raw command split outside quotes with the tool's own escape, the split validate-push ran
-       before plan 027, so reading PowerShell never loses a push the raw text showed.
+       before plan 027, so reading PowerShell never loses a push the raw text showed;
+    4. each line above again with its quoted or escaped < and > marked as words (#691): linear, so
+       it also covers a segment too long for the shlex pass, a bash -c script and a $( ) body. A
+       real redirection inside a nested script then reads as a word, which can only refuse more.
     In the order they are produced, never sorted: the judge stops at the first refused line, so the
     order only decides which target a message names, and it answers inside its deadline in any
     order (#680)."""
@@ -424,6 +448,7 @@ def push_candidates(cmd, tool):
     lines += quoted
     lines += [w for w in (_words_kept(q) for q in quoted if "push" in q) if w]
     lines += segments(cmd, "`" if tool == "PowerShell" else "\\").split("\n")
+    lines += [_quoted_redirs_marked(line) for line in lines if "push" in line]
     seen, keep = set(), []
     for line in lines:
         if "push" in line and line not in seen:

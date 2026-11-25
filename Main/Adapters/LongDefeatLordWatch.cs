@@ -16,6 +16,7 @@ internal sealed class LongDefeatLordWatch
     private readonly List<LdBodyEvent> _events = new();
     private volatile object? _lord;
     private volatile object? _planned;
+    private volatile object? _forced;
 
     /// <summary>The body the field spawned for the lord last, or null.</summary>
     public object? Lord => _lord;
@@ -26,6 +27,14 @@ internal sealed class LongDefeatLordWatch
     public void Plan(object old) => _planned = old;
 
     public bool IsPlanned(object? agent) => agent != null && ReferenceEquals(agent, _planned);
+
+    /// <summary>The body the <c>lord_falls</c> blow struck: its removal is the forced fall, a fact the run books instead of inferring it from the ask. Matched by identity, like <see cref="Plan"/>.</summary>
+    public void MarkForced(object body) => _forced = body;
+
+    public bool IsForced(object? agent) => agent != null && ReferenceEquals(agent, _forced);
+
+    /// <summary>Withdraws the mark, for a blow that left the body standing: a later natural death in it is not the test option's.</summary>
+    public void ClearForced() => _forced = null;
 
     /// <summary>
     /// A removal or a deletion reached an agent. Kept when it is the planned body, the lord's current one or the main agent (<paramref name="isMain"/>), for the director to log; anyone else's is not.
@@ -90,6 +99,7 @@ internal sealed class LongDefeatLordWatch
     {
         _lord = null;
         _planned = null;
+        _forced = null;
         lock (_gate)
             _events.Clear();
     }

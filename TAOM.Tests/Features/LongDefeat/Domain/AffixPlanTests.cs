@@ -32,6 +32,39 @@ public class AffixPlanTests
         Assert.AreEqual(expected, Plan().CountFor(wave));
     }
 
+    [DataTestMethod]
+    [DataRow(1, 0)]
+    [DataRow(2, 0)]
+    [DataRow(3, 1)]
+    [DataRow(7, 1)]
+    [DataRow(8, 2)]
+    [DataRow(12, 2)]
+    [DataRow(13, 3)]
+    public void Earlier_MovesEveryStageSoonerByTheGivenWaves(int wave, int expected)
+    {
+        Assert.AreEqual(expected, Plan().Earlier(2).CountFor(wave));
+    }
+
+    [TestMethod]
+    public void Earlier_NeverStartsBeforeWaveOne_AndKeepsTheRoll()
+    {
+        var plan = new AffixPlan(new[] { new AffixStage(2, 1), new AffixStage(6, 2) }, new Dictionary<string, IReadOnlyDictionary<string, float>>(),
+            new Dictionary<string, string>());
+        var earlier = plan.Earlier(5);
+
+        CollectionAssert.AreEqual(new[] { 1, 1 }, earlier.Schedule.Select(s => s.FromWave).ToArray());
+        Assert.AreEqual(2, earlier.CountFor(1), "the later stage wins when two collapse onto wave 1");
+        CollectionAssert.AreEqual(Plan().Roll(7, 12).Take(2).ToList(), Plan().Earlier(2).Roll(7, 12).Take(2).ToList());
+    }
+
+    [TestMethod]
+    public void Earlier_ByZero_IsThePlanItself()
+    {
+        var plan = Plan();
+
+        Assert.AreSame(plan, plan.Earlier(0));
+    }
+
     [TestMethod]
     public void CountFor_WithNoSchedule_IsZeroEverywhere()
     {

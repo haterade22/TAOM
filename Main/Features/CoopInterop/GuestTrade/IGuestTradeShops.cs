@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TAOM.Adapters;
+using TAOM.Features.ArmourAcquisition;
 using TAOM.Features.ArmourAcquisition.Domain;
 using TAOM.Features.EliteEmissary;
 
@@ -23,4 +24,16 @@ public interface IGuestTradeShops
     IReadOnlyList<UpgradeOffer> ArmouryOffers(GuestTradeHero hero, int armouryLevel);
 
     UpgradeBlock Upgrade(GuestTradeHero hero, UpgradeOffer offer);
+
+    /// <summary>
+    /// Armour Acquisition is on and the server's "Lords' Ladder for co-op players" switch is on, read now. Checked before
+    /// <see cref="Ladder"/> is called.
+    /// </summary>
+    bool LadderOpen { get; }
+
+    /// <summary>The armoury level a ladder piece needs (the config's lord level).</summary>
+    int LadderLordLevel { get; }
+
+    /// <summary>TAOM's lord's gear ladder for the hero: its state is the server's, saved per hero.</summary>
+    LordsLadderService Ladder(GuestTradeHero hero);
 }

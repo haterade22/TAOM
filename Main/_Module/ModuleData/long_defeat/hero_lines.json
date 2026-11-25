@@ -1,0 +1,26 @@
+{
+  "heroes": {
+    "legolas": [
+      [
+        "LOTR/Heroes/Legolas/legolas_backstory_a_01.ogg",
+        "LOTR/Heroes/Legolas/legolas_backstory_a_02.ogg",
+        "LOTR/Heroes/Legolas/legolas_backstory_a_03.ogg"
+      ],
+      [
+        "LOTR/Heroes/Legolas/legolas_backstory_b_01.ogg",
+        "LOTR/Heroes/Legolas/legolas_backstory_b_02.ogg",
+        "LOTR/Heroes/Legolas/legolas_backstory_b_03.ogg"
+      ],
+      [
+        "LOTR/Heroes/Legolas/legolas_backstory_c_01.ogg",
+        "LOTR/Heroes/Legolas/legolas_backstory_c_02.ogg",
+        "LOTR/Heroes/Legolas/legolas_backstory_c_03.ogg"
+      ],
+      [
+        "LOTR/Heroes/Legolas/legolas_backstory_d_01.ogg",
+        "LOTR/Heroes/Legolas/legolas_backstory_d_02.ogg",
+        "LOTR/Heroes/Legolas/legolas_backstory_d_03.ogg"
+      ]
+    ]
+  }
+}

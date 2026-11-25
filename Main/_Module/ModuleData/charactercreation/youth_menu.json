@@ -231,10 +231,10 @@
         "text": "Stood in the vanguard.",
         "description": "You trained as part of Erebor's vanguard, mastering the two-handed axe and polearm in the disciplined dwarven battle formations.",
         "skills": [
-            "Polearm",
-            "TwoHanded"
+            "TwoHanded",
+            "Athletics"
         ],
-        "attribute": "Vigor",
+        "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
@@ -1533,7 +1533,7 @@
         "string_id": "taom_youth_mistymountainorcs_5",
         "culture_id": "mistymountainorcs",
         "title_type": "infantry",
-        "text": "Held the line in the Misty Mountains's spear legions.",
+        "text": "Held the line in the Misty Mountains' spear legions.",
         "description": "You drilled and marched with the heavy spear formations of the Misty Mountains, learning to brace against a charge and hold position under brutal northern conditions until the line could be relieved.",
         "skills": [
             "Polearm",
@@ -1958,8 +1958,8 @@
         "title_type": "infantry",
         "text": "Stood in the vanguard of the Broadbeams.",
         "description": "You trained in the vanguard of the Broadbeams, mastering the long spear and the two-handed axe in the close formations of the dwarven host.",
-        "skills": ["Polearm", "TwoHanded"],
-        "attribute": "Vigor",
+        "skills": ["TwoHanded", "Athletics"],
+        "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1

@@ -220,7 +220,7 @@
 	<string id="taom_cc_taom_parent_mistymountainorcs_5_text" text="{=taom_cc_taom_parent_mistymountainorcs_5_text}Rangers of the Misty Mountains" />
 	<string id="taom_cc_taom_parent_mistymountainorcs_5_desc" text="{=taom_cc_taom_parent_mistymountainorcs_5_desc}Your family served as rangers, patrolling the wilds around the Misty Mountains and safeguarding its borders from harm." />
 	<string id="taom_cc_taom_parent_mistymountainorcs_6_text" text="{=taom_cc_taom_parent_mistymountainorcs_6_text}Outcasts of the Mountains" />
-	<string id="taom_cc_taom_parent_mistymountainorcs_6_desc" text="{=taom_cc_taom_parent_mistymountainorcs_6_desc}Your family lived on the fringes of the Misty Mountains's society, surviving through cunning and ruthlessness in the unforgiving mountain passes." />
+	<string id="taom_cc_taom_parent_mistymountainorcs_6_desc" text="{=taom_cc_taom_parent_mistymountainorcs_6_desc}Your family lived on the fringes of the Misty Mountains' society, surviving through cunning and ruthlessness in the unforgiving mountain passes." />
 
 
 	<!-- CHILDHOOD -->
@@ -445,7 +445,7 @@
 	<string id="taom_cc_taom_youth_mistymountainorcs_3_desc" text="{=taom_cc_taom_youth_mistymountainorcs_3_desc}You were among the berserkers of the Misty Mountains, learning to fight with reckless fury and overwhelming force." />
 	<string id="taom_cc_taom_youth_mistymountainorcs_4_text" text="{=taom_cc_taom_youth_mistymountainorcs_4_text}Scouted the mountain passes." />
 	<string id="taom_cc_taom_youth_mistymountainorcs_4_desc" text="{=taom_cc_taom_youth_mistymountainorcs_4_desc}You roamed the treacherous mountain paths around the Misty Mountains, tracking enemies and ensuring safe passage for your kin." />
-	<string id="taom_cc_taom_youth_mistymountainorcs_5_text" text="{=taom_cc_taom_youth_mistymountainorcs_5_text}Held the line in the Misty Mountains's spear legions." />
+	<string id="taom_cc_taom_youth_mistymountainorcs_5_text" text="{=taom_cc_taom_youth_mistymountainorcs_5_text}Held the line in the Misty Mountains' spear legions." />
 	<string id="taom_cc_taom_youth_mistymountainorcs_5_desc" text="{=taom_cc_taom_youth_mistymountainorcs_5_desc}You drilled and marched with the heavy spear formations of the Misty Mountains, learning to brace against a charge and hold position under brutal northern conditions until the line could be relieved." />
 	<string id="taom_cc_taom_youth_mistymountainorcs_6_text" text="{=taom_cc_taom_youth_mistymountainorcs_6_text}Ran with the scavenger bands of the passes." />
 	<string id="taom_cc_taom_youth_mistymountainorcs_6_desc" text="{=taom_cc_taom_youth_mistymountainorcs_6_desc}You lived outside the structure of the mountain clans, moving with the quick-fingered opportunists who followed warbands and picked over the aftermath of every skirmish. Throwing weapons and a fast pair of legs kept you alive when nothing else would." />

@@ -118,6 +118,14 @@
       <Item id="sk_ar_art_crown_king_a" />
     </Blacklist>
   </Culture>
+  <!-- Theoden's own barding is Armory merchandise, and horse harness is not gated by armour acquisition,
+       so Rohan's blacklist keeps the king's horse armour out of what Culture Marketplace stocks there.
+       With Culture Marketplace off, vanilla stocking can still pick it (the Armory flag is not ours). -->
+  <Culture id="vlandia">
+    <Blacklist>
+      <Item id="rohan_horse_armor_theoden" />
+    </Blacklist>
+  </Culture>
   <Culture id="abanissa" armour_from="aserai" />
   <Culture id="shaghana" armour_from="aserai" />
   <Culture id="battania" armour_from="khuzait" />

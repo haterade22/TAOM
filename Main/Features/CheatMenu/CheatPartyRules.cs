@@ -5,7 +5,7 @@ namespace TAOM.Features.CheatMenu;
 /// has no real size limit (<see cref="SizeBonusFor"/>, read by TaomPartySizeModel) and keeps troops of enemy or
 /// opposite-alignment cultures: AlignmentDesertionBehavior skips it, and DesertionRecruitGuard no longer blocks recruiting such
 /// troops into it. Those two read it through IAlignmentDesertionService.KeepsMainPartyTroops, before they test for the main
-/// party, so with the switch off they cost nothing. Only the main party: other player-clan parties, garrisons and AI parties
+/// party. SpecialResourceEarningService skips upkeep desertion while it is on. Only the main party: other parties
 /// keep every rule. Saved with the campaign by <c>CheatMenuCampaignBehavior</c>; off in a new campaign.
 /// </summary>
 public interface ICheatPartyRules

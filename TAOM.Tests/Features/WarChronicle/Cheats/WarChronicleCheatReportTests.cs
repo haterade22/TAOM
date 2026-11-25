@@ -165,8 +165,33 @@ public class WarChronicleCheatReportTests
         StringAssert.Contains(text, "empire_w VolunteerRate +0.100");
         StringAssert.Contains(text, "ends in 10.0 days");
         StringAssert.Contains(text, "ended");
-        StringAssert.Contains(text, "empire_w: VolunteerRate x1.10, PrisonerEscape x1.00");
-        StringAssert.Contains(text, "empire_s: VolunteerRate x1.00, PrisonerEscape x1.00");
+        StringAssert.Contains(text, "empire_w: VolunteerRate x1.10, PrisonerEscape x1.00, PartyMorale x1.00");
+        StringAssert.Contains(text, "empire_s: VolunteerRate x1.00, PrisonerEscape x1.00, PartyMorale x1.00");
+    }
+
+    [TestMethod]
+    public void FormatEffects_APermanentEffect_SaysPermanentAndNotEnded()
+    {
+        var effects = new List<WarEffect>
+        {
+            new WarEffect("chronicle:hornburg:Fell:2", "vlandia", WarEffectKind.VolunteerRate, -0.1f, WarEffect.PermanentEndHours),
+        };
+
+        var text = WarChronicleCheatReport.FormatEffects(effects, 100d, (_, _) => 1f);
+
+        StringAssert.Contains(text, "vlandia VolunteerRate -0.100, permanent");
+        Assert.IsFalse(text.Contains("ends in"), text);
+        Assert.IsFalse(text.Contains("ended"), text);
+    }
+
+    [TestMethod]
+    public void AddUsage_ListsEveryKindAndTheBuilderAcceptsPartyMorale()
+    {
+        foreach (var name in System.Enum.GetNames(typeof(WarEffectKind)))
+            StringAssert.Contains(WarChronicleCheatReport.AddUsage, name);
+
+        Assert.IsTrue(TryBuild(new[] { "empire_w", "PartyMorale", "0.1", "10" }, out var effect, out var error), error);
+        Assert.AreEqual(WarEffectKind.PartyMorale, effect.Kind);
     }
 
     [TestMethod]

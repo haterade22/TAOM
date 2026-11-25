@@ -160,4 +160,25 @@ public class LongDefeatClassesReaderTests
         Assert.AreEqual("a", plan.OnOffer("vlandia").Single().LoadoutFor("vlandia")!.Slots[0].ItemId);
         Assert.AreEqual("b", plan.OnOffer("gondor").Single().LoadoutFor("gondor")!.Slots[0].ItemId);
     }
+
+    // Phase 5 (D62): a class may carry a text for one defender culture, so the Cavalry of Minas Tirith is not called a rider of the Mark.
+    [TestMethod]
+    public void AClassWithATextForACulture_ShowsItToThatCultureOnly_WithNoWarning()
+    {
+        var plan = Plan(File(Row("sword", "{'vlandia':{'Item0':'sword_a'},'gondor':{'Item0':'sword_g'}}", extra: ",'texts':{'Gondor':'{=T_sword_G}City text'}")));
+
+        Assert.AreEqual("{=T_sword_G}City text", plan.OnOffer("gondor").Single().Text, "the culture is matched without case");
+        Assert.AreEqual("{=T_sword}Text", plan.OnOffer("vlandia").Single().Text);
+        Assert.AreEqual("{=N_sword}Name", plan.OnOffer("gondor").Single().Name);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(m => m.Contains("classes.json")));
+    }
+
+    [TestMethod]
+    public void ATextsEntryThatIsNoText_IsOneWarning_AndTheClassKeepsItsOwnText()
+    {
+        var plan = Plan(File(Row("sword", extra: ",'texts':{'vlandia':7}")));
+
+        Assert.AreEqual("{=T_sword}Text", plan.OnOffer("vlandia").Single().Text);
+        AssertOneWarningNaming("classes[0].texts.vlandia");
+    }
 }

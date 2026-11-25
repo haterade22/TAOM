@@ -702,7 +702,7 @@
 
     <NPCCharacter
         id="tournament_master_southrhovanion"
-        name="{=aom_srh_tournament_master}Tournament Master"
+        name="{=aom_srh_tournament_master}Training Master"
         occupation="ArenaMaster"
         culture="Culture.southrhovanion"
         default_group="Infantry">
@@ -766,6 +766,7 @@
 
     <NPCCharacter
         id="prison_guard_southrhovanion"
+        level="4"
         name="{=aom_srh_prison_guard}Prison Guard"
         occupation="PrisonGuard"
         culture="Culture.southrhovanion"
@@ -773,6 +774,13 @@
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
+        <skills>
+            <skill id="OneHanded" value="50" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="50" />
+            <skill id="Athletics" value="30" />
+            <skill id="Throwing" value="20" />
+        </skills>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Body" id="Item.cts_rohan_armor1" />
@@ -795,6 +803,7 @@
 
     <NPCCharacter
         id="guard_southrhovanion"
+        level="16"
         name="{=aom_srh_guard}Guard"
         occupation="Soldier"
         culture="Culture.southrhovanion"
@@ -802,6 +811,11 @@
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
+        <skills>
+            <skill id="Athletics" value="50" />
+            <skill id="OneHanded" value="80" />
+            <skill id="Polearm" value="80" />
+        </skills>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Body" id="Item.cts_rohan_armor2" />
@@ -838,7 +852,7 @@
     <NPCCharacter
         id="armed_trader_southrhovanion"
         level="16"
-        name="{=aom_srh_armed_trader}Armed Trader"
+        name="{=aom_srh_armed_trader}[South Rhovanion] Armed Trader"
         occupation="CaravanGuard"
         culture="Culture.southrhovanion"
         default_group="Infantry">
@@ -870,7 +884,7 @@
     <NPCCharacter
         id="caravan_master_southrhovanion"
         level="26"
-        name="{=aom_srh_caravan_master}Caravan Master"
+        name="{=aom_srh_caravan_master}[South Rhovanion] Caravan Master"
         occupation="CaravanGuard"
         culture="Culture.southrhovanion"
         default_group="Infantry">
@@ -907,7 +921,7 @@
     <NPCCharacter
         id="caravan_guard_southrhovanion"
         level="21"
-        name="{=aom_srh_caravan_guard}Caravan Guard"
+        name="{=aom_srh_caravan_guard}[South Rhovanion] Caravan Guard"
         occupation="CaravanGuard"
         culture="Culture.southrhovanion"
         default_group="Infantry">
@@ -951,7 +965,7 @@
     <NPCCharacter
         id="veteran_caravan_guard_southrhovanion"
         level="26"
-        name="{=aom_srh_vet_caravan_guard}Veteran Caravan Guard"
+        name="{=aom_srh_vet_caravan_guard}[South Rhovanion] Veteran Caravan Guard"
         occupation="CaravanGuard"
         culture="Culture.southrhovanion"
         default_group="Infantry">
@@ -1032,6 +1046,8 @@
 
     <NPCCharacter
         id="gangleader_bodyguard_southrhovanion"
+        level="16"
+        skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills"
         name="{=aom_srh_gangleader_bg}Bodyguard"
         occupation="Townsfolk"
         culture="Culture.southrhovanion"
@@ -1631,6 +1647,7 @@
         <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <Equipments>
             <EquipmentRoster>
+                <equipment slot="Item0" id="Item.empire_sword_1_t2" />
                 <equipment slot="Body" id="Item.rohan_militia_armour_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
@@ -1647,6 +1664,7 @@
         <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <Equipments>
             <EquipmentRoster>
+                <equipment slot="Item0" id="Item.empire_sword_3_t3" />
                 <equipment slot="Body" id="Item.rohan_militia_armour_b" />
                 <equipment slot="Head" id="Item.cts_rohan_helmet1" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
@@ -1665,6 +1683,7 @@
         <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
         <Equipments>
             <EquipmentRoster>
+                <equipment slot="Item0" id="Item.empire_sword_5_t4" />
                 <equipment slot="Body" id="Item.cts_rohan_armor3" />
                 <equipment slot="Head" id="Item.cts_rohan_helmet2" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />

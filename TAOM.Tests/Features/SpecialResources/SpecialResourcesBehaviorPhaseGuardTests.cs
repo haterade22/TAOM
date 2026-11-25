@@ -28,7 +28,8 @@ public class SpecialResourcesBehaviorPhaseGuardTests
             Substitute.For<ISpecialResourceStorageService>(),
             Substitute.For<IModLogger>(),
             new SpecialResourceEarningService(_service, Substitute.For<ISpecialResourceStorageService>(), Substitute.For<ICoopSessionProvider>(),
-                Substitute.For<IDedicatedServerProvider>(), Substitute.For<IModLogger>()),
+                Substitute.For<IDedicatedServerProvider>(), Substitute.For<IModLogger>(),
+                new TAOM.Features.CheatMenu.CheatPartyRules()),
             Substitute.For<ISpecialResourceEventAdapter>());
     }
 

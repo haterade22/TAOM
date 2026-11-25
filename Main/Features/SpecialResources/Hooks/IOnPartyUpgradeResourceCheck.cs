@@ -6,7 +6,7 @@ public interface IOnPartyUpgradeResourceCheck
 {
     bool CanAffordUpgrade(string heroId, string kingdomId, string cultureId, string troopId, int count);
     void QueueUpgradeSpend(string heroId, string troopId, int count);
-    int ClampUpgradeCount(string heroId, string kingdomId, string cultureId, string troopId, int requestedCount);
+    int ClampUpgradeCount(string heroId, string kingdomId, string cultureId, string troopId, int requestedCount, IReadOnlyList<RecruitCartEntry> recruitedThisSession);
     int GetUpgradeCost(string troopId);
     int ClampRecruitCount(string heroId, string kingdomId, string cultureId, string troopId, int requestedCount, IReadOnlyList<RecruitCartEntry> recruitedThisSession);
     int GetRecruitCost(string troopId);
@@ -15,4 +15,5 @@ public interface IOnPartyUpgradeResourceCheck
     void BeginSession();
     void CommitSession(string heroId, string kingdomId, string cultureId);
     void CancelSession();
+    float ChargeAppliedUpgrades(string heroId, string kingdomId, string cultureId);
 }

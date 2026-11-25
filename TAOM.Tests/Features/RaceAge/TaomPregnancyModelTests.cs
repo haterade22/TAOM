@@ -25,6 +25,20 @@ public class TaomPregnancyModelTests
         Assert.IsFalse(src.Contains("baseChance <= 0f"), "a negative chance must reach the Virile factor as it did");
     }
 
+    // A clanless married hero inside the fertility window passes the guards, and the engine still calls the model
+    // for her (DailyTickHero allows hero.Clan == null). Clan.Tier and Clan.AliveLords must not be read then.
+    [TestMethod]
+    public void GetDailyChance_ReturnsZeroForAClanlessHero_BeforeReadingClanTier()
+    {
+        var src = TAOM.Tests.Infrastructure.RepoPaths.ReadSource("Main/Features/RaceAge/Models/TaomPregnancyModel.cs", stripComments: true);
+
+        var nullCheck = src.IndexOf("hero.Clan == null", System.StringComparison.Ordinal);
+        var tier = src.IndexOf("hero.Clan.Tier", System.StringComparison.Ordinal);
+
+        Assert.IsTrue(nullCheck >= 0, "no clanless check: a clanless married hero throws on the daily tick");
+        Assert.IsTrue(tier > nullCheck, "hero.Clan.Tier is read before the clanless check");
+    }
+
     // --- Age-factor branches (heroAge relative to comesOfAge .. fertilityEnd) ---
 
     [TestMethod]

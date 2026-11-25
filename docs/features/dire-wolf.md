@@ -3,6 +3,7 @@
 ## GitHub Issue
 
 [#1081](https://github.com/haterade22/TAOM/issues/1081) ridden dire wolves. Follow-up: #1082 riderless packs.
+Gaits: #1565 (the four forward gaits) and #1591 (the backward walk, the wolf in the stride gate).
 
 ## Overview
 
@@ -41,7 +42,12 @@ to clips on the wolf's skeleton. The warg usage set, the action types, the rider
 `act_warg_attack_*` calls all apply unchanged.
 
 - **Clips:** each `warg_X` has a twin `dire_wolf_X` with the warg clip's flags and the wolf's frames
-  (`tools/gen_dire_wolf_anim_clips.ps1`). The generator fails on any warg binding it does not map.
+  (`tools/gen_dire_wolf_anim_clips.ps1`). The generator fails on any warg binding it does not map, except the
+  warg's walk twin `warg_walk_stand` (#1565), which the generator does not copy: the wolf's own twin,
+  `dire_wolf_walk_stand`, and the `Duration`, travel and limits of its four forward gaits come from
+  `tools/dire_wolf_gait_plan.json` (gates `dire-wolf-gaits`, `warg-clips`). The plan also sets the two backward
+  records, which play the walk's keys from last to first because the pack has no backward walk (#1591); the
+  `dire-wolf-stride` gate measures the paws against each gait's travel and holds the backward walk's direction.
 - **Behavior:** `WargConfig.WargMonsterIds` holds `dire_wolf`, which attaches the behavior tree and the rider hand
   posing. `WargConfig.ImpactBoneIds` picks the wolf's bite bones by Monster id, because the warg's hard-coded bone
   indices mean nothing on this skeleton. Fords of War's `RiderlessMountRule` removes every riderless mount, so it needs no list.
@@ -145,8 +151,9 @@ sub-meshes. This route is not proven in game, and the tag is not set yet.
   `wire_anim_master_skeletons.ps1` after every import.
 - **`warg_attack_run`:** the Kit warns that this combat parameter is missing. The warg's own `warg_attack_running` clip
   names it, no module defines it, and `dire_wolf_attack_running` copies it. It is older than the wolf.
-- **`_stand` clips:** `dire_wolf_trot_stand`, `_canter_stand` and `_forward_gallop_left_foot_stand` have no
-  `quad_movement`, the same as their warg twins. `verify_mount_assets.py` exempts their four exact action and clip pairs,
+- **`_stand` clips:** `dire_wolf_walk_stand` (#1565), `_trot_stand`, `_canter_stand` and
+  `_forward_gallop_left_foot_stand` have no `quad_movement`, the same as their warg twins and as vanilla's
+  `gait_walkfast`. `verify_mount_assets.py` exempts their five exact action and clip pairs (gate `dire-wolf-body`),
   and `gen_dire_wolf_anim_clips.ps1 -Verify` holds their flags to the warg's. A mission crash at
   `Skeleton.TickAnimations` goes to `/native-crash-triage`.
 - **Mesh materials:** an FBX with several materials binds per sub-mesh. Setting face indices before
@@ -172,8 +179,10 @@ Spawn with `taom.spawn_troops goblin_wolf_lord 3 ally` and `taom.spawn_troops gu
 
 1. All four skins spawn. The rider sits in the saddle, not over the hips and not above it (see "Seat"), and the
    straps do not pass through the fur. Check the seat at a stand, a walk, a gallop and a turn.
-2. The gaits do not slide. The clips hold the pack's travel times `RIG_SCALE`, and the engine scales it by the
-   agent size (see "Size").
+2. The gaits do not slide. Since #1565 the four forward gaits hold the travel their paws cover and a loop time
+   that follows the speed ([ledger](../reference/lotrlome-dire-wolf-changes.md), "Gaits"); the engine scales the
+   travel by the agent size (see "Size"). Judge the canter's tempo first: its bounds are long and slower than they
+   were. Back a wolf up (#1591): its paws step backward, where they stepped forward before.
 3. The bite and the rage fire. The log shows `[Warg] Added behavior trees to N wargs`, and no `act_none` plays.
 4. The size looks right beside a warg (`taom_body_length` 115, about 2.22 m against the warg's 1.87 m; the log shows
    a `[MonsterSize]` line), with the rider camera and eye values. The portrait and the inventory show the wolf a little
@@ -198,6 +207,8 @@ Spawn with `taom.spawn_troops goblin_wolf_lord 3 ally` and `taom.spawn_troops gu
 | `Main/_Module/ModuleData/troops/troops_goblin.xml`, `troops_gundabad.xml` | The six troops |
 | `Main/_Module/ModuleData/special_resources/` | War Spoils cultures and cost rows |
 | `tools/apply_dire_wolf_armory.py` | The live Armory data |
+| `tools/dire_wolf_gait_plan.json` | The gait records' keys, `Duration`, travel and limits (`tools/repoint_anim_clip.py` writes them) |
+| `tools/check_gait_stride.py` | `CREATURES["dire_wolf"]`: the paws against each gait's travel |
 
 ## Dependencies
 
@@ -215,8 +226,11 @@ Costs: `special_resources/troop_resource_costs.xml`. Size: `taom_body_length` on
 - `TAOM.Tests/Features/Warg/WargMonsterIdTests.cs`.
 - `tools/tests/test_apply_dire_wolf_armory.py`, `test_apply_dire_wolf_skeleton.py`, `test_gen_dire_wolf_anim_clips.py`,
   `test_verify_mount_assets.py`.
+- The gaits: `tools/tests/test_dire_wolf_gait_plan.py` (the plan's numbers, and the paws of the installed
+  masters) and `tools/tests/test_gait_stride_creatures.py` (`DireWolfEntryTests`, `InstalledDireWolfTests`).
 - Gates: `python tools/verify_mount_assets.py dire_wolf`, `python tools/audit_mount_parity.py`,
-  `python tools/build_ds_skeleton_pack.py --check`.
+  `python tools/build_ds_skeleton_pack.py --check`, and the `dire-wolf-gaits`, `dire-wolf-stride` and
+  `warg-clips` rows of `tools/data_gates.py`.
 
 ## Out of scope
 
@@ -231,3 +245,13 @@ The wolf art and clips are purchased from ADOD_Beasts (`data-port`). No ADOD wol
 ## Changelog
 
 - 2026-11-04: first version, #1081.
+- 2026-11-23 (#1565): the four forward gaits. The records claimed 26% to 57% less ground than the paws cover, so
+  the legs turned over too fast, and the walk had one record on both of its rows. Seven records were rewritten, the
+  walk got an in-place twin and `as_dire_wolf` binds it
+  ([ledger](../reference/lotrlome-dire-wolf-changes.md), "Gaits"). No C# changed.
+- 2026-11-24 (#1591): the backward walk. Its two records played the forward walk's keys, so the paws stepped
+  forward while the wolf backed up. Both now play the walk from its last key to its first, with a loop of 1.66 s
+  and a travel of 2.08 m ([ledger](../reference/lotrlome-dire-wolf-changes.md), "The backward walk"). The wolf is
+  a creature of `tools/check_gait_stride.py` (the `dire-wolf-stride` data gate), which now fails a backward row
+  whose feet step the forward way. The two side-step records are not changed. No C# changed. Cooked on
+  2026-11-24; nobody has watched a wolf back up yet.

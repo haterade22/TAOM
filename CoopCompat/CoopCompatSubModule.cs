@@ -5,13 +5,16 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TAOM.Core.Logging;
+using TAOM.CoopCompat.CareerSync;
 using TAOM.CoopCompat.Decisions;
 using TAOM.CoopCompat.GuestTrade;
 using TAOM.CoopCompat.Handshake;
+using TAOM.CoopCompat.LoadOrder;
 using TAOM.CoopCompat.Momentum;
 using TAOM.CoopCompat.Sessions;
 using TAOM.CoopCompat.Transport;
 using TAOM.Features.CoopInterop;
+using TAOM.Features.CoopInterop.CareerSync;
 using TAOM.Features.LongDefeat.Coop;
 using TAOM.Features.CoopInterop.GuestTrade;
 using TAOM.Features.WarOfTheRingMomentum;
@@ -30,12 +33,16 @@ public sealed class CoopCompatSubModule : MBSubModuleBase
     private SettingsHandshakeService? _handshake;
     private MomentumRelayService? _momentum;
     private GuestTradeRelayService? _guestTrade;
+    private CareerSyncRelayService? _careerSync;
     private bool _startTried;
     private ICoopSessionTransport? _sessions;
     private LongDefeatSessionLink? _sessionLink;
     private bool _sessionsTried;
 
     protected override void OnSubModuleLoad() => Log("[CoopCompat] module loaded");
+
+    /// <summary>Career sync sends a client's waiting career report once per frame, so one career action goes out as one report.</summary>
+    protected override void OnApplicationTick(float dt) => _careerSync?.Tick();
 
     // Long Defeat co-op (#1280) starts from the main menu, before any campaign, so the session launcher starts here,
     // after every module's OnSubModuleLoad.
@@ -90,6 +97,7 @@ public sealed class CoopCompatSubModule : MBSubModuleBase
             _handshake = null;
             _momentum = null;
             _guestTrade = null;
+            _careerSync = null;
             Log("[CoopCompat] off, Coop is not usable: " + ex.GetType().Name + ": " + ex.Message);
         }
     }
@@ -98,7 +106,7 @@ public sealed class CoopCompatSubModule : MBSubModuleBase
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void StartTransport()
     {
-        var transport = new CoopTransport();
+        var transport = CoopTransport.Create(Log);
         transport.Start();
         _transport = transport;
     }
@@ -115,11 +123,14 @@ public sealed class CoopCompatSubModule : MBSubModuleBase
     {
         var logger = IoC.Resolve<IModLogger>();
         var outcomes = IoC.Resolve<IOutcomeLog>();
+        var coopSettings = new CoopSettingsProvider();
+        var loadOrder = new LoadOrderCheckService(new ActiveModulesAdapter(), () => coopSettings.LoadOrderWarning, logger);
         _handshake = new SettingsHandshakeService(transport, () => SettingsFingerprint.ComputeAcross(TaomSettingsPages.All()),
-            BuildIdentity.FromLoadedAssemblies(), new InformationManagerSettingsNotice(), logger, outcomes);
+            BuildIdentity.FromLoadedAssemblies(), loadOrder, new InformationManagerSettingsNotice(), logger, outcomes);
         _momentum = new MomentumRelayService(transport, IoC.Resolve<IMomentumStateStore>(), logger, outcomes,
             () => Stopwatch.GetTimestamp() / (double)Stopwatch.Frequency, () => CampaignTime.Now.ToHours);
         _guestTrade = new GuestTradeRelayService(transport, IoC.Resolve<GuestTradeClient>(), IoC.Resolve<GuestTradeHost>(), logger);
+        _careerSync = new CareerSyncRelayService(transport, IoC.Resolve<CareerSyncClient>(), IoC.Resolve<CareerSyncHost>(), logger);
     }
 
     private static void Log(string message)

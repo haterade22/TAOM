@@ -17,6 +17,7 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
     private readonly ISpecialResourceService _service;
     private readonly ISpecialResourceConfigProvider _config;
     private readonly IModLogger _logger;
+    private readonly TAOM.Features.CheatMenu.ICheatPartyRules _cheatParty;
 
     // Rate limiting, keyed per exception type rather than latched once. Both members below run per
     // map-bar refresh / per hover, so an unguarded log call would spam the file at frame rate. A
@@ -38,6 +39,7 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         _service = IoC.Resolve<ISpecialResourceService>();
         _config = IoC.Resolve<ISpecialResourceConfigProvider>();
         _logger = IoC.Resolve<IModLogger>();
+        _cheatParty = IoC.Resolve<TAOM.Features.CheatMenu.ICheatPartyRules>();
         _resourceInfo = new MapInfoItemVM("special_resource", GetTooltipProperties);
     }
 
@@ -224,7 +226,7 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
             result.Add(new TooltipProperty(Label("{=taom_res_tt_depleted_in}Depleted in"),
                 new TextObject("{=taom_res_tt_days}{DAYS} days").SetTextVariable("DAYS", daysLeft.Value).ToString(), 0));
         }
-        else if (amount <= 0f && breakdown.HasUpkeepDue && breakdown.Net <= 0f)
+        else if (amount <= 0f && breakdown.HasUpkeepDue && breakdown.Net <= 0f && !_cheatParty.UnlimitedParty)
         {
             // The tick adds the net BEFORE it tests the balance, so at zero with income covering upkeep
             // nothing deserts; the notice shows only when the icon is red for the same reason, and it

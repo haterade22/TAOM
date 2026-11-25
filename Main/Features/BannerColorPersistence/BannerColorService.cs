@@ -1,14 +1,17 @@
 using TAOM.Adapters;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Features.BannerColorPersistence;
 
 public class BannerColorService : IBannerColorService
 {
     private readonly IBannerColorConfigProvider _configProvider;
+    private readonly ICoopSessionProvider _coop;
 
-    public BannerColorService(IBannerColorConfigProvider configProvider)
+    public BannerColorService(IBannerColorConfigProvider configProvider, ICoopSessionProvider coop)
     {
         _configProvider = configProvider;
+        _coop = coop;
     }
 
     public bool IsEnabled() => _configProvider.GetConfig().EnableColorPersistence;
@@ -40,4 +43,6 @@ public class BannerColorService : IBannerColorService
     public bool IsAgentVisualColorsEnabled() => _configProvider.GetConfig().EnableAgentVisualColors;
 
     public bool IsConversationTableauColorsEnabled() => _configProvider.GetConfig().EnableConversationTableauColors;
+
+    public bool ShouldSkipLoadRepaint(bool insideClanLoad) => insideClanLoad && _coop.IsCoopClient;
 }

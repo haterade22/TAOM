@@ -68,10 +68,10 @@
 	<string id="taom_lindon_short_name" text="{=taom_lindon_short_name}Lindon" />
 	<string id="taom_lindon_title" text="{=taom_lindon_title}High Kingdom of Lindon" />
 	<string id="taom_lothlorien_desc" text="{=taom_lothlorien_desc}The Golden Wood lies nestled between the Silverlode and the mighty Anduin. Guarded by the will of Galadriel and Celeborn, it stands as a bastion of Elven grace and defiance - a land untouched by time, where the leaves do not fall." />
-	<string id="taom_lothlorien_name" text="{=taom_lothlorien_name}Lothlorien" />
+	<string id="taom_lothlorien_name" text="{=taom_lothlorien_name}Lothlórien" />
 	<string id="taom_lothlorien_ruler_title" text="{=taom_lothlorien_ruler_title}Lady" />
-	<string id="taom_lothlorien_short_name" text="{=taom_lothlorien_short_name}Lothlorien" />
-	<string id="taom_lothlorien_title" text="{=taom_lothlorien_title}Kingdom of Lóthlorien" />
+	<string id="taom_lothlorien_short_name" text="{=taom_lothlorien_short_name}Lothlórien" />
+	<string id="taom_lothlorien_title" text="{=taom_lothlorien_title}Kingdom of Lothlórien" />
 	<string id="taom_mirkwood_desc" text="{=taom_mirkwood_desc}The Woodland Realm of Mirkwood has endured much hardship over the years. Under the leadership of Thranduil, the Woodelves have become reclusive and wary of strangers. Yet in the heart of Thranduil lingers a fire kindled in the ancient days of the First Age." />
 	<string id="taom_mirkwood_name" text="{=taom_mirkwood_name}Lasgalen" />
 	<string id="taom_mirkwood_ruler_title" text="{=taom_mirkwood_ruler_title}Aran" />

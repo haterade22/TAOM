@@ -139,6 +139,7 @@ public class CharacterOpenTiersTests
         Assert.IsTrue(tiers.NeedsRecount(hero, new[] { 1 }, true), "Reset and a perk choice recount at once");
     }
 
+    [TestCategory("RequiresGame")]   // runs Color.ConvertStringToColor
     [TestMethod]
     public void PerkLook_Selectable_HasABrighterIvoryRimAndNoTick()
     {

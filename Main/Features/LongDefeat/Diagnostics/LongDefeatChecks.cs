@@ -57,6 +57,8 @@ internal static class LongDefeatChecks
     internal const string VolleyId = "taom.long-defeat.volley";
     internal const string TowerVolleyId = "taom.long-defeat.tower-volley";
     internal const string PostsId = "taom.long-defeat.posts";
+    internal const string RiseId = "taom.long-defeat.rise";
+    internal const string GeneralDownId = "taom.long-defeat.general-down";
 
     /// <summary>A new soldier within this many metres of one from an earlier batch counts as an overlap. A first guess, below a healthy formation's spacing.</summary>
     internal const float OverlapRadius = 0.4f;
@@ -74,10 +76,11 @@ internal static class LongDefeatChecks
         return Verdict(fortresses > 0, detail);
     }
 
-    internal static CheckVerdict Boot(LdBootFacts f)
+    /// <param name="field">A field run (#1105 slice 2) passes with no siege team AI, and fails with one: a field scene under the siege list is the wrong world.</param>
+    internal static CheckVerdict Boot(LdBootFacts f, bool field = false)
     {
-        var ok = f.DeploymentFinished && f.SiegeTeamAi && f.HasMainAgent && !f.IsFriendlyMission;
-        return Verdict(ok, $"deployment_finished={Flag(f.DeploymentFinished)} siege_ai={Flag(f.SiegeTeamAi)} main={Flag(f.HasMainAgent)} friendly={Flag(f.IsFriendlyMission)}");
+        var ok = f.DeploymentFinished && f.SiegeTeamAi != field && f.HasMainAgent && !f.IsFriendlyMission;
+        return Verdict(ok, $"deployment_finished={Flag(f.DeploymentFinished)} siege_ai={Flag(f.SiegeTeamAi)} main={Flag(f.HasMainAgent)} friendly={Flag(f.IsFriendlyMission)}{(field ? " field=true" : "")}");
     }
 
     /// <summary>A boot that never got as far as the facts: the check still writes its line, so the run reads FAIL, not NOT REACHED.</summary>
@@ -118,8 +121,8 @@ internal static class LongDefeatChecks
 
     /// <summary>The roster soldiers must all be killed or felled, and the felled at most the straggler share of the wave as the stalemate rule counts it: roster plus summons (<c>SurvivalRun.RunWave</c>).</summary>
     internal static CheckVerdict Wave(WaveStats w, int count, float stragglerShare) =>
-        Verdict(w.Felled <= stragglerShare * (count + w.Summoned) && w.Kills + w.Felled >= count,
-            $"kills={Num(w.Kills)} felled={Num(w.Felled)} lost={Num(w.Lost)} seconds={F1(w.Seconds)} count={Num(count)}");
+        Verdict(w.Felled <= stragglerShare * (count + w.Summoned) && w.Kills + w.Felled + w.Taken >= count,
+            $"kills={Num(w.Kills)} felled={Num(w.Felled)}{(w.Taken > 0 ? " taken=" + Num(w.Taken) : "")} lost={Num(w.Lost)} seconds={F1(w.Seconds)} count={Num(count)}");
 
     internal static CheckVerdict StaleCleared() => new(CheckResult.Pass, "cleared=true");
 
@@ -210,7 +213,8 @@ internal static class LongDefeatChecks
     // Written as the requirement, so a NaN on either side fails it.
     private static bool NearFactor(float ratio, float factor) => Math.Abs(ratio - factor) <= 0.01f * factor;
 
-    internal static CheckVerdict PlayerDeath(bool adopted, string via) => Verdict(adopted, $"via={via}");
+    /// <summary>One row per death. <paramref name="via"/> is how the next body came (<c>takeover</c>, <c>rise</c>, or <c>respawn</c> for a build with no lord adapter); <paramref name="by"/> names who took the soldier, for a take-over only.</summary>
+    internal static CheckVerdict PlayerDeath(bool adopted, string via, string? by = null) => Verdict(adopted, by == null ? $"via={via}" : $"via={via} by={by}");
 
     internal static CheckVerdict End(RunResult r, bool reportBuilt) =>
         Verdict(reportBuilt, $"reason={r.Reason} wave={Num(r.Wave)} cleared={Num(r.WavesCleared)} kills={Num(r.Kills)} report={(reportBuilt ? "built" : "missing")}");

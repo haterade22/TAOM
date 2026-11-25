@@ -175,6 +175,72 @@ public class SpecialResourcePrisonerRecruitGateTests
     }
 
     [TestMethod]
+    public void ClampUpgradeCount_PrisonersRecruitedThisScreen_CountAgainstTheBalance()
+    {
+        SetBalance(150f);
+        _service.BeginPartyScreenSession();
+        var earlier = new List<RecruitCartEntry> { new(Troll, 2) };
+
+        Assert.AreEqual(2, _service.ClampUpgradeCount(HeroId, Kingdom, Culture, Captain, 2, None));
+        Assert.AreEqual(0, _service.ClampUpgradeCount(HeroId, Kingdom, Culture, Captain, 2, earlier));
+    }
+
+    [TestMethod]
+    public void RecruitTwoTrollsThenUpgrade_DoneLeavesNoFreeUpgrade()
+    {
+        SetBalance(170f);
+        _service.BeginPartyScreenSession();
+        var earlier = new List<RecruitCartEntry> { new(Troll, 2) };
+
+        var upgrades = _service.ClampUpgradeCount(HeroId, Kingdom, Culture, Captain, 2, earlier);
+        if (upgrades > 0) _service.QueueUpgradeSpend(HeroId, Captain, upgrades);
+        _service.ChargeRecruitCost(HeroId, Kingdom, Culture, Troll, 2);
+        _service.CommitSession(HeroId, Kingdom, Culture);
+
+        Assert.AreEqual(1, upgrades);
+        Assert.AreEqual(10f, Balance);
+    }
+
+    [TestMethod]
+    public void RestartPartyScreenSession_UpgradesTheScreenStillHolds_AreChargedAtDone()
+    {
+        SetBalance(200f);
+        _service.BeginPartyScreenSession();
+        _service.QueueUpgradeSpend(HeroId, Captain, 2);
+
+        _service.CancelSession();
+        _service.RestartPartyScreenSession(HeroId, new List<RecruitCartEntry> { new(Captain, 2), new(Plain, 3) });
+
+        Assert.AreEqual(80f, _service.GetAvailableAfterPending(HeroId, Kingdom, Culture));
+        Assert.AreEqual(120f, _service.CommitSession(HeroId, Kingdom, Culture));
+        Assert.AreEqual(80f, Balance);
+    }
+
+    [TestMethod]
+    public void RestartPartyScreenSession_FullResetHoldsNoUpgrades_ChargesNothing()
+    {
+        SetBalance(200f);
+        _service.BeginPartyScreenSession();
+        _service.QueueUpgradeSpend(HeroId, Captain, 2);
+
+        _service.CancelSession();
+        _service.RestartPartyScreenSession(HeroId, None);
+
+        Assert.AreEqual(0f, _service.CommitSession(HeroId, Kingdom, Culture));
+        Assert.AreEqual(200f, Balance);
+    }
+
+    [TestMethod]
+    public void RestartPartyScreenSession_NoHero_OpensAnEmptySession()
+    {
+        SetBalance(200f);
+        _service.RestartPartyScreenSession(null, new List<RecruitCartEntry> { new(Captain, 2) });
+
+        Assert.AreEqual(200f, _service.GetAvailableAfterPending(HeroId, Kingdom, Culture));
+        Assert.AreEqual(0f, _service.CommitSession(HeroId, Kingdom, Culture));
+    }
+
+    [TestMethod]
     public void GetRecruitCost_RowsWithAndWithoutARecruitCost_ReturnTheCostOrZero()
     {
         var hook = new PartyUpgradeResourceCheckHook(_service, _config,

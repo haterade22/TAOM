@@ -35,6 +35,7 @@ internal static class FeatureModules
         new Features.MapEventGuard.StuckBattleModule(),
         new Features.MapEventGuard.EncounterGuardModule(),
         new Features.SiegeRetreatLoot.SiegeRetreatLootModule(),
+        new Features.BattleGearLoot.BattleGearLootModule(),
         new Features.WarChronicle.WarChronicleModule(),
         new Features.MissionStartGuard.MissionStartGuardModule(),
         new Features.SkeletonBuffer.SkeletonBufferModule(),
@@ -118,10 +119,13 @@ internal static class FeatureModules
         new Features.Autorun.AutorunModule(),
         new Features.BattleShaderNotice.BattleShaderNoticeModule(),
         new Features.CoopInterop.GuestTrade.GuestTradeModule(),
+        new Features.CoopInterop.CareerSync.CareerSyncModule(),
         new Features.OrcBattleVoice.OrcBattleVoiceModule(),
         new Features.HostilePeace.HostilePeaceModule(),
         new Features.HeroAbilities.HeroAbilitiesModule(),
         new Features.CampaignStartOptions.CampaignStartOptionsModule(),
         new Features.NavalTravel.NavalTravelModule(),
+        new Features.TrainingGrounds.Teams.TeamPracticeModule(),
+        new Features.TrainingGrounds.Waves.TrainingWavesModule(),
     };
 }

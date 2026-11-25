@@ -57,6 +57,16 @@
       "offsetDays": 0,
       "title": "{=taom_wc_breaking_title}The Breaking of the Fellowship",
       "image": "taom_event_breaking.png",
+      "windowDays": 10,
+      "defender": "empire_w",
+      "attackers": [
+        "isengard"
+      ],
+      "story": {
+        "mission": "parth_galen_save",
+        "attackMission": "parth_galen_kill",
+        "hero": "lord_1_75"
+      },
       "outcomes": {
         "occurred": {
           "text": "{=taom_wc_breaking_occurred}At Parth Galen the Uruk-hai fall upon the Company. Boromir dies defending the hobbits, and Gondor loses its heir.",
@@ -71,6 +81,17 @@
               "target": "empire_w",
               "kind": "VolunteerRate",
               "magnitude": -0.05,
+              "durationDays": 15
+            }
+          ]
+        },
+        "averted": {
+          "text": "{=taom_wc_breaking_averted}At Parth Galen the Uruk-hai are thrown back. Boromir lives, and Gondor keeps its Captain-General.",
+          "effects": [
+            {
+              "target": "empire_w",
+              "kind": "VolunteerRate",
+              "magnitude": 0.1,
               "durationDays": 15
             }
           ]
@@ -116,8 +137,16 @@
       "lapsedText": "{=taom_wc_hornburg_lapsed}No assault comes to {TARGET}. The muster of Isengard turns elsewhere.",
       "story": {
         "mission": "helms_deep_defend",
+        "attackMission": "helms_deep_attack",
         "fate": "Held",
-        "fateText": "{=taom_wc_hornburg_fate}The host of Isengard storms {TARGET} through the night, and at dawn the Hornburg still stands."
+        "fateText": "{=taom_wc_hornburg_fate}The host of Isengard storms {TARGET} through the night, and at dawn the Hornburg still stands.",
+        "repulsed": {
+          "text": "{=taom_wc_hornburg_repulsed}The assault on {TARGET} breaks. Sauron is angry that Saruman's greed spoiled his plan, and Mordor ends its alliance with Isengard.",
+          "endAlliance": [
+            "isengard",
+            "empire_s"
+          ]
+        }
       },
       "outcomes": {
         "held": {
@@ -133,6 +162,12 @@
               "target": "attacker",
               "kind": "PrisonerEscape",
               "magnitude": 0.2,
+              "durationDays": 25
+            },
+            {
+              "target": "defender",
+              "kind": "PartyMorale",
+              "magnitude": 0.1,
               "durationDays": 25
             }
           ],
@@ -155,6 +190,12 @@
               "kind": "PrisonerEscape",
               "magnitude": 0.2,
               "durationDays": 25
+            },
+            {
+              "target": "defender",
+              "kind": "VolunteerRate",
+              "magnitude": -0.1,
+              "permanent": true
             }
           ]
         }

@@ -3,7 +3,7 @@
 # since the last source edit. Enforces the "verification before done" half of
 # .claude/rules/evidence-over-claims.md.
 #
-# Why it stays: with no CI, this is the only automatic nudge before a done claim.
+# Why it stays: the PR checks cannot see a local session, so this is the only automatic nudge before a done claim.
 #
 # Channel: one JSON {"decision":"block","reason":...} on stdout per unbuilt streak, through
 # _stop_reminder.sh, the Stop channel TAOM uses (exit-0 stderr goes to the debug log;

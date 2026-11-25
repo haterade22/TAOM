@@ -21,6 +21,7 @@ public class StaminaStatApplierTests
         AIAttackOnDecideChance = 0.6f,
     };
 
+    [TestCategory("RequiresGame")]   // constructs AgentDrivenProperties
     [TestMethod]
     public void Apply_NoEffect_LeavesEveryValueIdentical()
     {
@@ -36,6 +37,7 @@ public class StaminaStatApplierTests
         Assert.AreEqual(0.6f, p.AIAttackOnDecideChance);
     }
 
+    [TestCategory("RequiresGame")]   // constructs AgentDrivenProperties
     [TestMethod]
     public void Apply_TiredOnFoot_ScalesEachPropertyByItsOwnMultiplier()
     {
@@ -52,6 +54,7 @@ public class StaminaStatApplierTests
         Assert.AreEqual(0.6f * 0.25f, p.AIAttackOnDecideChance, Delta);
     }
 
+    [TestCategory("RequiresGame")]   // constructs AgentDrivenProperties
     [TestMethod]
     public void Apply_Mounted_KeepsTheSpeedValuesAndStillSlowsTheArm()
     {
@@ -64,6 +67,7 @@ public class StaminaStatApplierTests
         Assert.AreEqual(0.93f * 0.9f, p.SwingSpeedMultiplier, Delta);
     }
 
+    [TestCategory("RequiresGame")]   // constructs AgentDrivenProperties
     [TestMethod]
     public void Apply_OnAFreshBaseEachTime_GivesTheSameResult()
     {
@@ -79,6 +83,7 @@ public class StaminaStatApplierTests
         Assert.AreEqual(first.AIAttackOnDecideChance, second.AIAttackOnDecideChance);
     }
 
+    [TestCategory("RequiresGame")]   // constructs AgentDrivenProperties
     [TestMethod]
     public void Apply_AttackChanceWouldFallBelowTheEngineFloor_StopsAtTheFloor()
     {
@@ -90,6 +95,7 @@ public class StaminaStatApplierTests
         Assert.AreEqual(StaminaStatApplier.MinAttackChance, p.AIAttackOnDecideChance, Delta);
     }
 
+    [TestCategory("RequiresGame")]   // constructs AgentDrivenProperties
     [TestMethod]
     public void Apply_AttackChanceAlreadyBelowTheFloor_IsNotRaised()
     {
@@ -101,6 +107,7 @@ public class StaminaStatApplierTests
         Assert.AreEqual(0.02f, p.AIAttackOnDecideChance, Delta);
     }
 
+    [TestCategory("RequiresGame")]   // constructs AgentDrivenProperties
     [TestMethod]
     public void Apply_MultiplierNotANumber_LeavesTheValuesAsTheyWere()
     {

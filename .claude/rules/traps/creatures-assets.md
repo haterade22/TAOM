@@ -23,6 +23,10 @@ paths:
   - "docs/reference/bannerlord-skeleton-authoring.md"
   - "docs/reference/ue-to-bannerlord-asset-pipeline.md"
   - "tools/rename_anim_clip_tpac.py"
+  - "tools/spider_gait.py"
+  - "tools/bind_spider_clips.py"
+  - "tools/check_gait_stride.py"
+  - "tools/gen_elephant_anim_clips.ps1"
 ---
 
 # Trap sheet: creatures and assets
@@ -43,7 +47,13 @@ history and the gate. A new trap for this area is a new row here, never a row in
 | Animation | Engine skeleton: engine frames, rest pose at frame 0, list order; own skeleton: retarget the clips too | [skeleton](../../../docs/reference/bannerlord-skeleton-authoring.md) |
 | Gait stride | A gait master's feet must cover its clip's `LoopDisplacement`, or it skates; never type the value, and never reimport the elephant's June FBX: `check_gait_stride.py` | [elephant](../../../docs/features/elephant.md) |
 | Cooked clip keys | The game plays a clip from the cache entry the Kit cooked, not from its master: a master or clip record written by a tool shows only after a Kit start; never bind a clip with no entry | [elephant](../../../docs/features/elephant.md) |
-| Quadruped clip records | The mount node takes cadence from `Duration` and pace from the limits, and a cloned record keeps its template's: backward limits negative, strafe `Duration` = keys / 30, each faster pace's minimum above the walk's: `check_gait_stride.py` | [elephant](../../../docs/features/elephant.md) |
+| Quadruped clip records | The mount node takes cadence from `Duration` and pace from the limits, and a cloned record keeps its template's: backward limits negative, strafe `Duration` = (keys - 1) / the master's key rate (30; the spider's 60), each faster pace's minimum above the walk's: `check_gait_stride.py` | [elephant](../../../docs/features/elephant.md) |
+| Cloned clip records | A clone keeps its template's sound points, sound and blends: a sound point at or past (Duration - BlendOut) / Duration is an editor error; a gait's in-place twin is the gait's record with no usage: `gen_elephant_anim_clips.ps1` | [spider](../../../docs/features/spider.md) |
+| Clip key times | A record's sources lie inside its master's key times; a loop ends on a key that repeats its first: `check_gait_stride.py`, `elephant_write_masters.py --rekey` | [lesson](../../../docs/reviews/lessons/animation-skeleton.md) |
+| Movement rows | A `none` direction or turn fills every key no earlier row holds: a pace's `none/none` row goes last (`bind_spider_clips.py` `hidden_rows`) | [lesson](../../../docs/reviews/lessons/animation-skeleton.md) |
+| Overlay rows | An upper-body row's clip and the gallop acceleration action play over the whole body: each pace's own gait, never an idle or a turn in place | [spider](../../../docs/features/spider.md) |
+| Warg, dire wolf gaits | A reinstall or art drop reverts the planned clip records and each walk's twin row; a record plays only after a Kit cook, and a twin is bound only after it: `repoint_anim_clip.py --plan tools/<warg or dire_wolf>_gait_plan.json --under creature/<warg or direwolf>/animations --check`, `bind_warg_clips.py --check`; the paws against the travel: `check_gait_stride.py --creature warg`, `--creature dire_wolf`. A changed warg travel or loop time is a change for the wolf and the riders too | [ledger](../../../docs/reference/lotrlome-warg-gait-changes.md) |
+| Spider clips | Generated, never retargeted or typed: `spider_gait.py`, then `bind_spider_clips.py --check` and `check_gait_stride.py --creature spider`; keep the June `an_spi_*` gaits on disk and unbound as the rollback, never bind one as a fix | [spider](../../../docs/features/spider.md) |
 | Kit clip rename | Corrupts the clip: keep the name, close the Kit, `rename_anim_clip_tpac.py`. A rope-flagged copy lacking `{clip}_weapon` CTDs | [tools](../../../tools/README.md) |
 | New race rigs | LOD0 head/eye/mouth: 101 morphs, eyes following their sockets; release/blocked codes: vanilla or self-keyed clip. Else CTD | [troll](../../../docs/features/troll-race.md) |
 | UE clip export | The root node carries pelvis height above bind; keep root height, drop only travel and yaw | [pipeline](../../../docs/reference/ue-to-bannerlord-asset-pipeline.md) |

@@ -215,8 +215,8 @@ Record each pending feature's module, source file, exact keys and English text, 
 | `taom_ph_sm_dwarf_erebor_spear_a_t6_blade_name` | Erebor Spear Blade A (placeholder) (tier clone, #631) |
 | `taom_ph_sm_dwarf_erebor_spear_b_t4_blade_name` | Erebor Spear Blade B (placeholder) (tier clone, #631) |
 | `taom_ph_sm_dwarf_erebor_spear_a_t2_blade_name` | Erebor Spear Blade A (placeholder) (tier clone, #631) |
-| `taom_ph_sm_dwarf_iron_sword_a_t6_blade_name` | Iron Hills  Sword Blade A (placeholder) (tier clone, #631) |
-| `taom_ph_sm_dwarf_iron_sword_b_t6_blade_name` | Iron Hills  Sword Blade A (placeholder) (tier clone, #631) |
+| `taom_ph_sm_dwarf_iron_sword_a_t6_blade_name` | Iron Hills Sword Blade A (placeholder) (tier clone, #631) |
+| `taom_ph_sm_dwarf_iron_sword_b_t6_blade_name` | Iron Hills Sword Blade A (placeholder) (tier clone, #631) |
 | `taom_ph_sm_rh_drag_2h_mace_b_t9_blade_name` | Dragon Mace 2H Head B (placeholder) (tier clone, #631) |
 | `taom_ph_sm_uruk_halberd_b_t9_blade_name` | Uruk Halberd Blade A2 (placeholder) (tier clone, #631) |
 | `taom_ph_sm_uruk_halberd_j_t7_blade_name` | Uruk Halberd Blade A3 (placeholder) (tier clone, #631) |

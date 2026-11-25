@@ -1983,8 +1983,8 @@
   <Item id="sk_ll_gl_helmet_heavy_b" class="elite" next="sk_ll_mw_helmet_lord_a" />
   <Item id="sk_ll_gl_helmet_heavy_c" class="elite" next="sk_ll_mw_helmet_lord_a" />
   <Item id="sk_ll_gl_helmet_med_a" class="elite" next="sk_ll_mw_helmet_lord_a" />
-  <Item id="sk_ll_gl_helmet_med_b" class="medium" next="sk_ll_ml_helmet_heavy_b" />
-  <Item id="sk_ll_gl_helmet_med_c" class="medium" next="sk_ll_ml_helmet_heavy_b" />
+  <Item id="sk_ll_gl_helmet_med_b" class="medium" next="sk_ll_ml_helmet_med_a" />
+  <Item id="sk_ll_gl_helmet_med_c" class="medium" next="sk_ll_ml_helmet_med_a" />
   <Item id="sk_ll_gl_pauld_cape_heavy_a" class="elite" />
   <Item id="sk_ll_gl_pauld_heavy_a" class="elite" />
   <Item id="sk_ll_gl_pauld_med_a" class="elite" />
@@ -2000,14 +2000,14 @@
   <Item id="sk_ll_ml_helmet_elite_b" class="elite" next="sk_ll_mw_helmet_lord_a" />
   <Item id="sk_ll_ml_helmet_elite_c" class="elite" next="sk_ll_mw_helmet_lord_a" />
   <Item id="sk_ll_ml_helmet_heavy_a" class="elite" next="sk_ll_mw_helmet_lord_a" />
-  <Item id="sk_ll_ml_helmet_heavy_b" class="heavy" next="sk_ll_ml_helmet_elite_b" />
+  <Item id="sk_ll_ml_helmet_heavy_b" class="elite" next="sk_ll_mw_helmet_lord_a" />
   <Item id="sk_ll_ml_helmet_heavy_c" class="elite" next="sk_ll_mw_helmet_lord_a" />
-  <Item id="sk_ll_ml_helmet_med_a" class="medium" next="sk_ll_ml_helmet_heavy_b" />
+  <Item id="sk_ll_ml_helmet_med_a" class="heavy" next="sk_ll_ml_helmet_elite_a" />
   <Item id="sk_ll_ml_helmet_med_b" class="elite" next="sk_ll_mw_helmet_lord_a" />
-  <Item id="sk_ll_ml_helmet_med_c" class="medium" next="sk_ll_ml_helmet_heavy_b" />
+  <Item id="sk_ll_ml_helmet_med_c" class="heavy" next="sk_ll_ml_helmet_elite_c" />
   <Item id="sk_ll_ml_pauld_cape_heavy_a" class="elite" />
   <Item id="sk_ll_ml_pauld_heavy_a" class="elite" />
-  <Item id="sk_ll_ml_pauld_med_a" class="medium" next="sk_ll_rg_pauld_light_a" />
+  <Item id="sk_ll_ml_pauld_med_a" class="heavy" next="sk_ll_ml_pauld_heavy_a" />
   <Item id="sk_ll_mw_bracer_heavy_a" class="elite" />
   <Item id="sk_ll_mw_bracer_med_a" class="heavy" next="sk_ll_mw_bracer_heavy_a" />
   <Item id="sk_ll_mw_chest_heavy_a" class="elite" />

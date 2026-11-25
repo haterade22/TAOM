@@ -225,25 +225,25 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
     public void AttachToPartyScreen(PartyScreenLogic logic)
     {
-        if (_activePartyScreenLogic != null) return;
-
+        if (_activePartyScreenLogic == logic) return;
+        DetachFromPartyScreen();
         _activePartyScreenLogic = logic;
         _activePartyScreenLogic.PartyScreenClosedEvent += OnPartyScreenClosed;
         _activePartyScreenLogic.AfterReset += OnPartyScreenReset;
     }
 
-    private void OnPartyScreenClosed(
-        PartyBase leftOwner, TroopRoster leftMembers, TroopRoster leftPrisoners,
-        PartyBase rightOwner, TroopRoster rightMembers, TroopRoster rightPrisoners,
-        bool fromCancel)
+    private void DetachFromPartyScreen()
     {
-        if (_activePartyScreenLogic != null)
-        {
-            _activePartyScreenLogic.PartyScreenClosedEvent -= OnPartyScreenClosed;
-            _activePartyScreenLogic.AfterReset -= OnPartyScreenReset;
-            _activePartyScreenLogic = null;
-        }
+        if (_activePartyScreenLogic == null) return;
+        _activePartyScreenLogic.PartyScreenClosedEvent -= OnPartyScreenClosed;
+        _activePartyScreenLogic.AfterReset -= OnPartyScreenReset;
+        _activePartyScreenLogic = null;
+    }
 
+    private void OnPartyScreenClosed(PartyBase leftOwner, TroopRoster leftMembers, TroopRoster leftPrisoners,
+        PartyBase rightOwner, TroopRoster rightMembers, TroopRoster rightPrisoners, bool fromCancel)
+    {
+        DetachFromPartyScreen();
         if (fromCancel)
         {
             _service.CancelSession();
@@ -264,8 +264,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
     private void OnPartyScreenReset(PartyScreenLogic logic, bool fromCancel)
     {
-        _service.CancelSession();
-        _service.BeginPartyScreenSession();
+        _service.RestartPartyScreenSession(Hero.MainHero?.StringId, Hooks.PartyScreenHeldUpgrades.Read(logic));
     }
 
     private static void GetHeroIds(Hero hero, out string kingdomId, out string cultureId)

@@ -1842,7 +1842,7 @@
         id="rohan_eastfold_bowman"
         default_group="Ranged"
         level="16"
-        name="{=aom_rohan_eastfold_bowman_name}[Rohan] East-Fold Bowman"
+        name="{=aom_rohan_eastfold_bowman_name}[Rohan] Eastfold Bowman"
         occupation="Soldier"
         culture="Culture.vlandia">
         <face>

@@ -279,7 +279,7 @@ feeds morale, garrisons, and party size only via perks.
 
 | Archetype | Primary | Leadership | Key Traits | Use when |
 |---|---|---|---|---|
-| `orc_chieftain` | OneHanded 275 / TwoHanded 265 / Roguery 240 | 270 | Honor -2, Mercy -2, Authoritarian +2 | Uglûk / Lurtz / Grishnâkh tier |
+| `orc_chieftain` | OneHanded 275 / TwoHanded 265 / Roguery 240 | 270 | Honor -2, Mercy -2, Authoritarian +2 | Uglúk / Lurtz / Grishnâkh tier |
 | `orc_warrior` | OneHanded 235 / TwoHanded 220 / Roguery 200 | 160 | Honor -2, Valor +2 | Standard orc combatant |
 | `orc_berserker` | TwoHanded 285 / Athletics 275 | 130 | Honor -2, Valor +2 | Frothing close-combat specialist |
 | `orc_scout` | Bow 255 / Scouting 270 / Roguery 240 | 140 | Calculating +2, Mercy -2 | Stealth/raid orc |

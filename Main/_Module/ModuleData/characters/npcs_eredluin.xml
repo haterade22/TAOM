@@ -5,7 +5,7 @@
 	<!-- All dwarves use race="dwarf" -->
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_eredluin" race="dwarf" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.eredluin" name="{=aom_elu_arena}Arena Master">
+	<NPCCharacter id="tournament_master_eredluin" race="dwarf" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.eredluin" name="{=aom_elu_arena}Training Master">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Equipments>
@@ -57,7 +57,7 @@
 	</NPCCharacter>
 
 	<!-- Caravan Staff -->
-	<NPCCharacter id="caravan_master_eredluin" race="dwarf" default_group="Infantry" level="26" name="{=aom_elu_caravan_master}Ered Luin Caravan Master" occupation="CaravanGuard" culture="Culture.eredluin">
+	<NPCCharacter id="caravan_master_eredluin" race="dwarf" default_group="Infantry" level="26" name="{=aom_elu_caravan_master}[Ered Luin] Caravan Master" occupation="CaravanGuard" culture="Culture.eredluin">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -77,7 +77,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="armed_trader_eredluin" race="dwarf" default_group="Infantry" level="16" name="{=aom_elu_armed_trader}Ered Luin Armed Trader" occupation="CaravanGuard" culture="Culture.eredluin">
+	<NPCCharacter id="armed_trader_eredluin" race="dwarf" default_group="Infantry" level="16" name="{=aom_elu_armed_trader}[Ered Luin] Armed Trader" occupation="CaravanGuard" culture="Culture.eredluin">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills>
 			<skill id="Athletics" value="40" />
@@ -93,7 +93,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_guard_eredluin" race="dwarf" default_group="Infantry" level="21" name="{=aom_elu_caravan_guard}Ered Luin Caravan Guard" occupation="CaravanGuard" culture="Culture.eredluin">
+	<NPCCharacter id="caravan_guard_eredluin" race="dwarf" default_group="Infantry" level="21" name="{=aom_elu_caravan_guard}[Ered Luin] Caravan Guard" occupation="CaravanGuard" culture="Culture.eredluin">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills>
 			<skill id="Athletics" value="50" />
@@ -113,7 +113,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="veteran_caravan_guard_eredluin" race="dwarf" default_group="Infantry" level="26" name="{=aom_elu_vet_caravan_guard}Ered Luin Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.eredluin">
+	<NPCCharacter id="veteran_caravan_guard_eredluin" race="dwarf" default_group="Infantry" level="26" name="{=aom_elu_vet_caravan_guard}[Ered Luin] Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.eredluin">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />

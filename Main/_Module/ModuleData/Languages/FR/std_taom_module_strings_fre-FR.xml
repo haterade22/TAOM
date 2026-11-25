@@ -8597,7 +8597,7 @@
     <string id="taom_mcm_bld_CullHiddenNameplates" text="Cull Hidden Settlement Nameplates" />
     <string id="taom_mcm_bld_CullHiddenNameplates_hint" text="The campaign map updates every settlement nameplate every frame (about a thousand in TAOM), hidden ones included. When on, a nameplate that is hidden and cannot become visible this frame (out of height range, not tracked, not in range, nothing about its settlement changed) is left alone, which saves frame time on the map, most in fast forward. Everything else updates exactly as in the vanilla game. Takes effect on the next frame, so it can be switched with the map profiler on to compare the [MapProfile] lines. Default ON." />
     <string id="taom_mcm_bld_ReleaseMapViewMemory" text="Release Map View Memory" />
-    <string id="taom_mcm_bld_ReleaseMapViewMemory_hint" text="In the measurement this feature is adapted from, every screen or menu that covered the campaign map left three colour targets and one depth target of the map view's old set behind (tens of megabytes of graphics memory per closed screen, more at a high resolution). That memory stays until a battle, or a town, village or arena scene, starts. When on, every Nth cover (see Map View Release Interval) has the map view release its graphics memory as you return to the map. The map then shows a short loading screen until its view is ready again, on one return in N (about 0.4 s instead of 0.08 s in that measurement). Takes effect at the next cover. Default ON." />
+    <string id="taom_mcm_bld_ReleaseMapViewMemory_hint" text="In the measurement this feature is adapted from, every screen or menu that covered the campaign map left three colour targets and one depth target of the map view's old set behind (tens of megabytes of graphics memory per closed screen, more at a high resolution). That memory stays until a battle, or a town, village or training grounds scene, starts. When on, every Nth cover (see Map View Release Interval) has the map view release its graphics memory as you return to the map. The map then shows a short loading screen until its view is ready again, on one return in N (about 0.4 s instead of 0.08 s in that measurement). Takes effect at the next cover. Default ON." />
     <string id="taom_mcm_bld_MapViewReleaseInterval" text="Map View Release Interval" />
     <string id="taom_mcm_bld_MapViewReleaseInterval_hint" text="Release the map view's memory on every Nth cover of the map. Default 20. A lower number gives memory back sooner but shows the short loading screen on more returns to the map (about 0.4 s in the measurement this feature is adapted from); 1 releases on every cover. Takes effect at the next cover." />
     <string id="taom_mcm_group_load_time_stamps" text="Load-Time Stamps" />
@@ -8704,7 +8704,7 @@
     <string id="taom_mcm_TournamentKeepEnemySidesOut" text="Keep Enemy Sides Out" />
     <string id="taom_mcm_TournamentKeepEnemySidesOut_hint" text="A Free People's tournament seats no lord, wanderer or troop of the Shadow, and a tournament of the Shadow seats none of the Free Peoples; each is replaced by one of the town's own troops. A town's side is its owner's, so a captured town follows its conqueror, and a town held by a neutral realm bars nobody. Neutral lords and wanderers, the troops the town itself recruits, you and your clan always compete. Fewer lords in the field means a lesser prize. Default: on." />
     <string id="taom_mcm_EnableTidingsOfTheLists" text="Tidings of the Lists" />
-    <string id="taom_mcm_EnableTidingsOfTheLists_hint" text="Adds an option to a town's arena menu: for a small fee the arena master names the nearest towns holding a tournament now that are not at war with your realm. It marks nothing on the map. When off, the option is hidden. Single-player only. Default: on." />
+    <string id="taom_mcm_EnableTidingsOfTheLists_hint" text="Adds an option to a town's training grounds menu: for a small fee the training master names the nearest towns holding a tournament now that are not at war with your realm. It marks nothing on the map. When off, the option is hidden. Single-player only. Default: on." />
     <string id="taom_mcm_group_armour_acquisition" text="Armour Acquisition" />
     <string id="taom_mcm_EnableArmourAcquisition" text="Enable Armour Acquisition" />
     <string id="taom_mcm_EnableArmourAcquisition_hint" text="Markets and battle loot hand out light and medium armour freely. Heavy, elite and lord pieces are sold only where a town's armoury, its Barracks, is high enough; lord kit can also be forged there or earned piece by piece on the lord's gear ladder, whose last rung awards the named hero weapons; they are never sold or looted. Visit a town's armoury to upgrade a piece with metals. Takes effect from the next game load." />
@@ -9003,12 +9003,12 @@
     <string id="taom_mcm_group_performance" text="Performance" />
     <string id="taom_mcm_group_dead_mount_cleanup" text="Dead Mount Cleanup" />
     <string id="taom_mcm_EnableDeadMountDespawn" text="Despawn Dead Mounts" />
-    <string id="taom_mcm_EnableDeadMountDespawn_hint" text="Remove killed horses, wargs and other mounts a few seconds after they die instead of leaving them on the field. A mount is a full agent with a skeleton and a live ragdoll, so a cavalry battle piles up corpses that cost frame time and do nothing. Field battles, sieges and sally-outs only; towns, arenas and tournaments keep their bodies. Side effect: freeing agent slots lets reinforcements arrive slightly sooner than vanilla." />
+    <string id="taom_mcm_EnableDeadMountDespawn_hint" text="Remove killed horses, wargs and other mounts a few seconds after they die instead of leaving them on the field. A mount is a full agent with a skeleton and a live ragdoll, so a cavalry battle piles up corpses that cost frame time and do nothing. Field battles, sieges and sally-outs only; towns, training grounds and tournaments keep their bodies. Side effect: freeing agent slots lets reinforcements arrive slightly sooner than vanilla." />
     <string id="taom_mcm_DeadMountDespawnDelaySeconds" text="Despawn Delay (seconds)" />
     <string id="taom_mcm_DeadMountDespawnDelaySeconds_hint" text="Seconds between a mount's death and its fade. Default 5. Below 3 the corpse pops while the death animation is still playing, so values outside 3-30 fall back to 5." />
     <string id="taom_mcm_group_battle_corpses" text="Battle Corpses" />
     <string id="taom_mcm_EnableBattleCorpseCleanup" text="Clean Up Battle Corpses" />
-    <string id="taom_mcm_EnableBattleCorpseCleanup_hint" text="Fade fallen soldiers after a set time and cap how many bodies a battle keeps, whatever your Number of Corpses option says. The engine walks its whole corpse list every frame, and players reported mid-battle freezes at high corpse settings. Field battles, sieges and sally-outs only; towns, arenas and hideouts keep their bodies. Never raises your own Number of Corpses option." />
+    <string id="taom_mcm_EnableBattleCorpseCleanup_hint" text="Fade fallen soldiers after a set time and cap how many bodies a battle keeps, whatever your Number of Corpses option says. The engine walks its whole corpse list every frame, and players reported mid-battle freezes at high corpse settings. Field battles, sieges and sally-outs only; towns, training grounds and hideouts keep their bodies. Never raises your own Number of Corpses option." />
     <string id="taom_mcm_BattleCorpseFadeSeconds" text="Corpse Fade Time (seconds)" />
     <string id="taom_mcm_BattleCorpseFadeSeconds_hint" text="Seconds a body stays on the field, counted from when it settles, before it fades. Default 60. The engine's own default is an hour, so without this a body only goes when the corpse cap pushes it out. Values outside 10-300 fall back to 60." />
     <string id="taom_mcm_BattleCorpseCap" text="Maximum Corpses" />
@@ -9724,6 +9724,110 @@
     <string id="taom_stamina_mcm_ai_hint" text="When on, the soldiers the AI controls have stamina while Combat Stamina is on, allies and enemies alike. Off exempts them all: only the soldier you control tires, if the setting above is on. Read at each battle tick. Default: on." />
     <string id="taom_res_recruit_clamped" text="Only enough resources for {COUNT} recruit(s)." />
     <string id="taom_caravan_pack_train_speed" text="Caravan pack train" />
+    <string id="taom_res_upgrade_clamped" text="Only enough resources for {COUNT} upgrade(s)." />
+    <string id="taom_mcm_group_battle_gear_loot" text="Battle Gear Loot" />
+    <string id="taom_mcm_EnableBattleGearLoot" text="Enable Battle Gear Loot" />
+    <string id="taom_mcm_EnableBattleGearLoot_hint" text="When on, the loot from enemies your party beats in a battle your side wins is the gear they fought in: each weapon, armour piece, horse and harness drops on its own roll, at the chance below. It replaces the usual random loot from fallen enemies; captured baggage, gold, prisoners and renown are unchanged. Heavy, elite and lord armour held back by Armour Acquisition, named weapons and banners never drop. Singleplayer only: in a co-op session the usual loot applies. Default: off." />
+    <string id="taom_mcm_BattleGearLootChancePercent" text="Gear Drop Chance (%)" />
+    <string id="taom_mcm_BattleGearLootChancePercent_hint" text="The chance, from 0 to 100%, that each item of each beaten enemy drops. In a battle fought beside allies you loot your share of the enemies, as usual. Default: 10." />
+    <string id="TAOM_LD_Ability_Summon_Mordor" text="Uruks of Mordor" />
+    <string id="TAOM_LD_Ability_WarCry_Mordor" text="The Lidless Eye Is Upon Them" />
+    <string id="TAOM_LD_Boon_EdgeOfTheMark_Gondor" text="Blades of Westernesse" />
+    <string id="TAOM_LD_Boon_FleetHorsesOfTheMark_Gondor" text="Fleet Horses of Belfalas" />
+    <string id="TAOM_LD_Boon_GallopOfTheEorlingas_Gondor" text="Charge of Dol Amroth" />
+    <string id="TAOM_LD_Boon_HagglerOfEdoras_Gondor" text="The Haggler of Pelargir" />
+    <string id="TAOM_LD_Boon_HeartsOfTheEored_Gondor" text="Hearts of the Swan Knights" />
+    <string id="TAOM_LD_Boon_LongbowOfTheMark_Gondor" text="The Longbow of Morthond" />
+    <string id="TAOM_LD_Boon_OathOfEorl_Gondor" text="Oath of Cirion" />
+    <string id="TAOM_LD_Boon_RiddermarkLevy_Gondor" text="Levy of the Fiefs" />
+    <string id="TAOM_LD_Boon_RiddermarkLevy_Text_Gondor" text="The lords of the southern fiefs send coin to the City: 300 gold, paid now." />
+    <string id="TAOM_LD_Boon_RohirrimFury_Gondor" text="Fury of Lossarnach" />
+    <string id="TAOM_LD_Boon_SpearOfEorl_Gondor" text="Lance of the Prince" />
+    <string id="TAOM_LD_Boon_SpearsOfTheWestfold_Gondor" text="Spears of Pinnath Gelin" />
+    <string id="TAOM_LD_Boon_WainsOfTheWestfold_Gondor" text="Wains of Anórien" />
+    <string id="TAOM_LD_Boon_WeregildOfTheMark_Gondor" text="The Steward's Bounty" />
+    <string id="TAOM_LD_Class_Cavalry_Text_Gondor" text="A knight of Dol Amroth in full harness, with lance, shield and sword, and a horse to carry you into the fight." />
+    <string id="TAOM_LD_Difficulty_Hard" text="Hard" />
+    <string id="TAOM_LD_Difficulty_Normal" text="Normal" />
+    <string id="TAOM_LD_Offer_Gondor_Militia" text="Anórien Militia" />
+    <string id="TAOM_LD_Offer_Gondor_ArcherMilitia" text="Anórien Archer Militia" />
+    <string id="TAOM_LD_Offer_Gondor_Lossarnach" text="Axemen of Lossarnach" />
+    <string id="TAOM_LD_Offer_Gondor_Morthond" text="Morthond Bowmen" />
+    <string id="TAOM_LD_Offer_Gondor_PinnathGelin" text="Spearmen of Pinnath Gelin" />
+    <string id="TAOM_LD_Offer_Gondor_Citadel" text="Guards of the Citadel" />
+    <string id="TAOM_LD_Up_Gondor_Footmen" text="Militia to Anórien Footmen" />
+    <string id="TAOM_LD_Up_Gondor_Guardsmen" text="Footmen to Anórien Guardsmen" />
+    <string id="TAOM_LD_Up_Gondor_Infantry" text="Guardsmen to Anórien Infantry" />
+    <string id="TAOM_LD_Up_Gondor_VeteranInfantry" text="Infantry to Anórien Veteran Infantry" />
+    <string id="TAOM_LD_Up_Gondor_Skirmishers" text="Archer Militia to Anórien Skirmishers" />
+    <string id="TAOM_LD_Up_Gondor_Bowmen" text="Skirmishers to Anórien Bowmen" />
+    <string id="TAOM_LD_Up_Gondor_Archers" text="Bowmen to Anórien Archers" />
+    <string id="TAOM_LD_Up_Gondor_VeteranAxebearers" text="Axemen to Lossarnach Veteran Axebearers" />
+    <string id="TAOM_LD_Up_Gondor_LossarnachGuard" text="Veteran Axebearers to the Lossarnach Guard" />
+    <string id="TAOM_LD_Up_Gondor_BlackrootScouts" text="Morthond Bowmen to Blackroot Vale Scouts" />
+    <string id="TAOM_LD_Up_Gondor_BlackrootArchers" text="Scouts to Blackroot Vale Archers" />
+    <string id="TAOM_LD_Up_Gondor_VeteranSpearmen" text="Spearmen to Pinnath Gelin Veteran Spearmen" />
+    <string id="TAOM_LD_Up_Gondor_Spearwardens" text="Veteran Spearmen to Pinnath Gelin Spearwardens" />
+    <string id="TAOM_LD_Up_Gondor_CitadelVeterans" text="Guards of the Citadel to Citadel Veterans" />
+    <string id="TAOM_LD_Up_Gondor_CitadelSergeants" text="Citadel Veterans to Citadel Sergeants" />
+    <string id="TAOM_LD_Prompt_DifficultyDesc" text="Hard sends larger waves that grow stronger faster, and the attackers gain their powers sooner. Each difficulty keeps its own best run." />
+    <string id="TAOM_LD_Prompt_DifficultyTitle" text="Choose the difficulty" />
+    <string id="taom_coopcompat_load_order_differs" text="Your mod load order differs from the host's: on the host {FIRST} loads before {SECOND}, for you after it. A mod that loads later replaces items and troops from earlier ones, so you may see other gear or troops than the host. Load your mods in the host's order and restart the game." />
+    <string id="taom_mcm_EnableTeamPracticeFights" text="Team Practice Fights" />
+    <string id="taom_mcm_EnableTeamPracticeFights_hint" text="In a town of the Free Peoples the practice fight at the training grounds is a team fight: you and the fighters outlined in blue against the other side, and no one can hurt his own side. A town's side is its owner's, so a captured town follows its conqueror. Towns of the Shadow and neutral towns keep the fight where every fighter is alone. Takes effect the next time you enter the training grounds. Single-player only. Default: on." />
+    <string id="taom_tg_team_rules" text="Here we train the way soldiers fight: in teams. You join one side, and the fighters outlined in blue fight beside you. Your blows can't hurt them, and theirs can't hurt you. Thirty fighters take their turn in the yard, and your side wins when the last fighter of the other side goes down. Sounds like fun, eh?[ib:confident2]" />
+    <string id="taom_tg_team_reward" text="If you can beat {OPPONENT_COUNT_1} opponents yourself before going down, you'll earn {PRIZE_1}{GOLD_ICON}. You'll get {PRIZE_2}{GOLD_ICON} for striking down at least {OPPONENT_COUNT_2}, {PRIZE_3}{GOLD_ICON} for {OPPONENT_COUNT_3} and {PRIZE_4}{GOLD_ICON} for {OPPONENT_COUNT_4}. Only the ones you put down yourself count. If your side wins while you're still on your feet, you earn the great prize of the fights, {PRIZE_5}{GOLD_ICON}. Sounds good, eh?[if:convo_nonchalant]" />
+    <string id="taom_tg_team_win" text="Well fought, {PLAYER.LINK}! Your side held the yard, and you were still standing at the end. You took down {OPPONENT_COUNT} of them yourself, and that earns you the top prize: {PRIZE}{GOLD_ICON}." />
+    <string id="taom_mcm_EnableTrainingWaves" text="Wave Fights at the Training Grounds" />
+    <string id="taom_mcm_EnableTrainingWaves_hint" text="When on, the training master of a town also runs a wave fight. You wager on yourself before each wave and fight the town's own fighters with practice weapons. Clear a wave and the master pays your wager back with odds; go down, or leave the yard mid-fight, and the wager stays with the town. Between waves you may stop and keep your winnings. A town runs one wave fight a day, and none while it holds a tournament. The tournament bet cap also limits a wave wager, and a very low cap hides the offer. Single-player only. Default: on." />
+    <string id="taom_tgw_offer" text="I want to fight your waves, with a wager on each one." />
+    <string id="taom_tgw_rules" text="Waves of fighters, one after another, all against you, with practice weapons. Before each wave you wager on yourself. Clear it and I pay back {TAOM_TGW_RU_ODDS} times your wager, more on later waves. Go down, or leave the yard mid-fight, and the wager stays with the house. Between waves you may stop and keep what you won. The first wager is at most {TAOM_TGW_RU_CAP} denars, and the limit rises with each wave you clear." />
+    <string id="taom_tgw_stake_low" text="I wager {TAOM_TGW_ST_LOW_AMOUNT} denars." />
+    <string id="taom_tgw_stake_mid" text="I wager {TAOM_TGW_ST_MID_AMOUNT} denars." />
+    <string id="taom_tgw_stake_high" text="I wager {TAOM_TGW_ST_HIGH_AMOUNT} denars." />
+    <string id="taom_tgw_not_today" text="On second thought, not today." />
+    <string id="taom_tgw_withdraw" text="I will stop here and keep my winnings." />
+    <string id="taom_tgw_go" text="Wave {TAOM_TGW_GO_WAVE}: {TAOM_TGW_GO_COUNT} fighters, no more than {TAOM_TGW_GO_ATONCE} at once. Take a practice weapon and go to it!" />
+    <string id="taom_tgw_go_failed" text="Your purse does not hold that much. Come back when it does." />
+    <string id="taom_tgw_withdrawn" text="A wise choice. You leave the yard {TAOM_TGW_WD_NET} denars richer." />
+    <string id="taom_tgw_cleared" text="Well fought! Wave {TAOM_TGW_CL_WAVE} is yours, and so are {TAOM_TGW_CL_PAYOUT} denars: {TAOM_TGW_CL_NET} won so far. The next wave is harder. You may wager up to {TAOM_TGW_CL_CAP} denars on it, and I pay back {TAOM_TGW_CL_ODDS} times the wager. Will you go on?" />
+    <string id="taom_tgw_lost" text="You went down in wave {TAOM_TGW_LO_WAVE}, and your wager of {TAOM_TGW_LO_STAKE} denars stays with the house. Before that you had won {TAOM_TGW_LO_EARLIER} denars." />
+    <string id="taom_tgw_done" text="That was the last wave. Few have stood through them all. You leave the yard {TAOM_TGW_DO_NET} denars richer." />
+    <string id="taom_tgw_ref_today" text="You have already fought the waves here today." />
+    <string id="taom_tgw_ref_tournament" text="The yard is kept for the tournament." />
+    <string id="taom_tgw_ref_poor" text="You need at least {TAOM_TGW_RF_MIN} denars to wager." />
+    <string id="taom_tgw_ref_short" text="Your purse does not hold that much." />
+    <string id="taom_tgw_an_start" text="Wave {TAOM_TGW_AN_START_WAVE}: {TAOM_TGW_AN_START_COUNT} fighters!" />
+    <string id="taom_tgw_an_cleared" text="Wave {TAOM_TGW_AN_CLEARED_WAVE} cleared! You win {TAOM_TGW_AN_CLEARED_PAYOUT} denars." />
+    <string id="taom_tgw_an_lost" text="You went down in wave {TAOM_TGW_AN_LOST_WAVE}. The house keeps your wager of {TAOM_TGW_AN_LOST_STAKE} denars." />
+    <string id="taom_tgw_an_refunded" text="The wave was called off. Your wager of {TAOM_TGW_AN_REFUNDED_STAKE} denars is returned." />
+    <string id="taom_story_breaking_stand" text="Stand with the Fellowship" />
+    <string id="taom_story_breaking_hunt" text="Lead the Uruk-hai" />
+    <string id="taom_story_breaking_go" text="Go to Parth Galen" />
+    <string id="taom_story_breaking_body_both" text="The Uruk-hai of the White Hand close on the Company at Parth Galen. Will you go there and choose your side, or let fate decide?" />
+    <string id="taom_story_breaking_body_attack" text="The Company rests at Parth Galen, and the Uruk-hai of the White Hand are near. Will you lead the hunt yourself, or let fate decide?" />
+    <string id="taom_story_breaking_body" text="The Uruk-hai of the White Hand close on the Company at Parth Galen. Will you stand with the Fellowship yourself, or let fate decide?" />
+    <string id="taom_story_breaking_escaped" text="Your band is broken at Parth Galen, and Boromir lives." />
+    <string id="taom_story_breaking_saved" text="The Uruk-hai are thrown back at Parth Galen, and Boromir lives." />
+    <string id="taom_story_breaking_slain" text="Boromir is slain at Parth Galen, and the Company is scattered." />
+    <string id="taom_story_breaking_fallen" text="Boromir has fallen at Parth Galen, pierced by many arrows." />
+    <string id="taom_story_breaking_menu" text="The horn of Gondor sounds in the woods of Parth Galen. Time stands until you choose." />
+    <string id="taom_story_breaking_undecided" text="The fight at Parth Galen is not decided. The call may come again." />
+    <string id="taom_war_morale" text="Tidings of the war" />
+    <string id="taom_event_effect_morale" text="Party morale" />
+    <string id="taom_event_effect_permanent" text="Permanent" />
+    <string id="taom_mcm_group_coop" text="Co-op" />
+    <string id="taom_mcm_CoopLoadOrderWarning" text="Warn players whose load order differs from the host's" />
+    <string id="taom_mcm_CoopLoadOrderWarning_hint" text="When a player joins a co-op campaign, the co-op server compares the order of TAOM and of every mod that adds items, troops or factions with its own, and tells a player whose order differs which two mods are the other way round. Nothing is blocked. The co-op server process reads this switch each time a player joins; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopLoadOrderWarning), which it reads once at start, so change it there and restart the server. Default: on." />
+    <string id="taom_mcm_CoopCareerSync" text="Sync careers for co-op players" />
+    <string id="taom_mcm_CoopCareerSync_hint" text="When on, a career a co-op player picks or changes goes to the co-op server, which checks it with the career rules, keeps it in its save and shows it to the other players, so the career is still there after the player joins again. The co-op server process reads this switch each time a player reports a career; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopCareerSync), which it reads once at start, so change it there and restart the server. Off: each player's career stays only on that player's PC and is lost when the player joins again. Default: on." />
+    <string id="taom_career_sync_refused" text="The co-op server did not accept that career change and keeps the career it has saved for you." />
+    <string id="taom_career_sync_refused_unsaved" text="The co-op server did not accept your career and has none saved for you. You keep it for now, but it is gone when you join again." />
+    <string id="taom_mcm_CoopGuestLadder" text="Lords' Ladder for co-op players" />
+    <string id="taom_mcm_CoopGuestLadder_hint" text="When on, the co-op server runs the lord's gear ladder for each co-op player's hero: a player's armoury lists the rung the server keeps for that hero, takes the lord's materials for it and fits the claimed piece, and a battle a co-op player wins can yield lord's materials, given to the party once it is free and out of battle. The rung quests are not offered to co-op players. The co-op server process reads this switch each time a player uses an armoury or a battle ends; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopGuestLadder), which it reads once at start, so change it there and restart the server. Off: co-op players see no ladder at the armoury and find no new lord's materials after battles; materials already found are still given. Default: on." />
+    <string id="taom_lg_coop_changed" text="Your lord's gear has changed since you looked. Visit the armoury again." />
+    <string id="taom_lg_coop_not_choice" text="The armourer cannot fit that piece." />
+    <string id="taom_lg_coop_off" text="The co-op server has turned off the Lords' Ladder for co-op players." />
   </strings>
 
 </base>

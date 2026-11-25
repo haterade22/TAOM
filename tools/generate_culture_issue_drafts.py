@@ -111,9 +111,9 @@ CULTURES = [
 
     ("isengard",   "isengard",   "Isengard (Saruman)",
      34, "uruk_hai",
-     "Uglûk (captain of the Amon Hen raid that took Merry+Pippin — `orc_chieftain`: "
-     "OneHanded 275, Leadership 275), Mauhûr (Uruk-Hai War leader who rescued Uglûk's "
-     "band), Lugdush (Uruk with Uglûk), Lurtz (Uruk-hai Commander, film canon — killed "
+     "Uglúk (captain of the Amon Hen raid that took Merry+Pippin — `orc_chieftain`: "
+     "OneHanded 275, Leadership 275), Mauhûr (Uruk-Hai War leader who rescued Uglúk's "
+     "band), Lugdush (Uruk with Uglúk), Lurtz (Uruk-hai Commander, film canon — killed "
      "Boromir, OneHanded 270), Sharku (Warg-Rider Captain killed at Helm's Deep — "
      "`orc_warg` with Riding 295)",
      "Uruk-Hai are stronger than regular orcs but use the same archetype values "

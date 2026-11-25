@@ -13,6 +13,7 @@ namespace TAOM.Tests.Features.LongDefeat.Coop;
 [TestClass]
 public class LongDefeatCoopMissionTests
 {
+    [TestCategory("RequiresGame")]   // constructs MissionOptionsComponent
     [TestMethod]
     public void Compose_PutsTheSessionBehavioursFirst()
     {
@@ -35,6 +36,7 @@ public class LongDefeatCoopMissionTests
         Assert.IsNull(parts.Run);
     }
 
+    [TestCategory("RequiresGame")]   // constructs MissionOptionsComponent
     [TestMethod]
     public void For_ACoopRun_TakesCoopsBehaviours_AndHasACoopSide()
     {

@@ -693,7 +693,13 @@ armour), and a `<Stock>` row's `from` culture or a `match` that does not compile
 (the row silently stocks nothing, #755), and a `<LadderPieces><Piece>` culture or item (the rung offers nothing). Each resolves against `Registries.items` and `Registries.cultures`, plus the items the engine
 registers in C# (`DefaultItems`: the metals among them), which no XML defines. The item registry counts
 only documents with an `<Items>` root, so a config or the generated class table quoting an id never
-defines it. A file that does not parse, or declares an unknown encoding, is reported. Without the
+defines it. It also reads only the files a Campaign or CustomGame row of the module's `SubModule.xml`
+names (`taom_schema._row_named_files`, the rule the shield gate uses), so Native's multiplayer-only
+`mpitems.xml` defines no item (#1404). Differences from the gate: a malformed row is skipped here, not
+fatal (the gate exits 2 on it), and a module folder with no `SubModule.xml` beside it (a test fixture)
+reads every file. On the live install the registry holds 5,809 ids, down from 6,661: 848 that only
+`mpitems.xml` defines and 4 `dragon_banner*` ids StoryMode defines for its own game type
+(count: `python -c` over `build_registries(...).items`, or `registry_sizes()`). A file that does not parse, or declares an unknown encoding, is reported. Without the
 install the registry is TAOM-only, so the pass is skipped and says so.
 
 ## Borrowed collision body (`COLLISION_BODY_BORROWED`)
@@ -793,7 +799,7 @@ have passed. Test: `test_loose_assets_win_when_both_trees_exist` in
 
 ## Dependencies
 
-The **engine + query API + CLI** use the **Python 3 standard library only** (`re`, `json`, `glob`, `fnmatch`, `dataclasses`, `enum`, `pathlib`), no pip install. The **MCP server** additionally needs the **`mcp` Python SDK** (FastMCP); it is present in this environment. The **XSD layer** (`validate_xml_schemas.py`, `SCHEMA_INVALID`) needs **`lxml`** and the engine's `XmlSchemas` folder; without either it reports that it did not run (the CLI exits 2, the validator pass emits one WARNING), and its lxml tests skip on a machine without lxml (they run from `/verify` Step 2b; the CI workflows were removed in `c8d69a0dc`). Registries are built from the installed game at `E:\Steam\...\Modules` (override with `--game-modules`, or the `BANNERLORD_GAME_MODULES` env var for the MCP server) + `Main/_Module/ModuleData`.
+The **engine + query API + CLI** use the **Python 3 standard library only** (`re`, `json`, `glob`, `fnmatch`, `dataclasses`, `enum`, `pathlib`), no pip install. The **MCP server** additionally needs the **`mcp` Python SDK** (FastMCP); it is present in this environment. The **XSD layer** (`validate_xml_schemas.py`, `SCHEMA_INVALID`) needs **`lxml`** and the engine's `XmlSchemas` folder; without either it reports that it did not run (the CLI exits 2, the validator pass emits one WARNING), and its lxml tests skip on a machine without lxml (they run from `/verify` Step 2b; the older CI workflows were removed in `c8d69a0dc`; the PR checks of #1543 run them with lxml installed). Registries are built from the installed game at `E:\Steam\...\Modules` (override with `--game-modules`, or the `BANNERLORD_GAME_MODULES` env var for the MCP server) + `Main/_Module/ModuleData`.
 
 ## Tests
 
@@ -834,7 +840,7 @@ python tools/validate_moduledata.py --game-modules /nonexistent
 | `registry_sizes()` | `{items, npccharacters, cultures, party_templates}` — confirms the game install was found |
 | `list_schemas()` | the schemas + what each checks |
 
-`validate_moduledata` runs `validate_moduledata.run_all_passes`, the same composition as the CLI (#623), so it takes about as long as a CLI run and returns the same findings. No install, a live module's missing ModuleData or a registry that looks too small comes back as a `PARTIAL_RUN` warning. Two narrower skips still go to the server's stderr only: `ARMOUR_CLASS_TABLE_DRIFT` with no `LOTRLOME_Armory` (the missing Armory root also raises a `PARTIAL_RUN`), and a module that ships no `.tpac`.
+`validate_moduledata` runs `validate_moduledata.run_all_passes`, the same composition as the CLI (#623), so it takes about as long as a CLI run and returns the same findings. No install, a live module's missing ModuleData or a registry that looks too small comes back as a `PARTIAL_RUN` warning. The two narrower skips come back the same way: `ARMOUR_CLASS_TABLE_DRIFT` with no `LOTRLOME_Armory`, and a module that ships no `.tpac` (SandBoxCore ships none on a healthy install, so `validate_mesh_refs.NO_TPAC_EXPECTED` exempts it). The CLI prints the same lines on stderr. The run clears the file read cache it filled, so the long-lived server does not hold about 4,400 file texts between calls.
 
 **Activation** (one-time; the server can't be loaded mid-session — Claude reads MCP config at startup):
 1. Ensure the `mcp` Python SDK is installed (`python -c "import mcp.server.fastmcp"` — present in this environment).
@@ -989,8 +995,8 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
   `run_all_passes` and that `main()` and `ModuleDataQuery.validate` both call it;
   `RunAllPassesParityTests` pins that the CLI and the MCP tool report the same codes. New code
   `PARTIAL_RUN`: no install, a live module's missing ModuleData or a registry that looks too small,
-  returned as a warning by the MCP tool whatever its `codes` filter (the two stderr-only skips are
-  named in the MCP server section). The CLI's stderr
+  returned as a warning by the MCP tool whatever its `codes` filter (the armour class table skip and a
+  module with no `.tpac` included). The CLI's stderr
   lines keep their text; the no-install and missing-root warnings now print after the `Registry:` line.
   `MISSING_COLLISION_BODY` and `MISSING_VISUAL_MESH` now resolve against TAOM and `TAOM_Map` packs too
   (the repo module for TAOM); on the live install the report was unchanged (0 added, 0 removed).

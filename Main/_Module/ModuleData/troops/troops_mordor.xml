@@ -881,9 +881,14 @@
                     id="Item.sk_uruk_mordor_greaves_medium_c" />
                 <equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_c" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="battania_troop_civilian_template_t2"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+                <equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <!--Black Uruk Sword & Shield -->
@@ -1261,9 +1266,14 @@
                     slot="Leg"
                     id="Item.sk_uruk_mordor_greaves_medium_c" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="battania_troop_civilian_template_t2"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+                <equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1495,9 +1505,14 @@
                     slot="Leg"
                     id="Item.sk_uruk_mordor_greaves_heavy_f" />
             </EquipmentRoster>
-            <EquipmentSet
-                id="battania_troop_civilian_template_t2"
-                equipmentType="Civilian" />
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+                <equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
@@ -1829,7 +1844,7 @@
         race="uruk"
         default_group="Infantry"
         level="36"
-        name="{=aom_mordor_uruk_baraddurguard_name}[Mordor] Black Uruk Barad-Dur Guard"
+        name="{=aom_mordor_uruk_baraddurguard_name}[Mordor] Black Uruk Barad-dûr Guard"
         occupation="Soldier"
         culture="Culture.mordor">
         <face>
@@ -2181,7 +2196,7 @@
         race="uruk"
         default_group="Infantry"
         level="11"
-        name="{=aom_mordor_mil_spear}Mordor Militia Spearman"
+        name="{=aom_mordor_mil_spear}[Mordor] Militia Spearman"
         occupation="Soldier"
         culture="Culture.mordor">
         <face>
@@ -2248,7 +2263,7 @@
         race="uruk"
         default_group="Ranged"
         level="11"
-        name="{=aom_mordor_mil_arch}Mordor Militia Archer"
+        name="{=aom_mordor_mil_arch}[Mordor] Militia Archer"
         occupation="Soldier"
         culture="Culture.mordor">
         <face>
@@ -2317,7 +2332,7 @@
         race="uruk"
         default_group="Infantry"
         level="16"
-        name="{=aom_mordor_mil_vet_spear}Mordor Militia Veteran Spearman"
+        name="{=aom_mordor_mil_vet_spear}[Mordor] Militia Veteran Spearman"
         occupation="Soldier"
         culture="Culture.mordor">
         <face>
@@ -2387,7 +2402,7 @@
         race="uruk"
         default_group="Ranged"
         level="16"
-        name="{=aom_mordor_mil_vet_arch}Mordor Militia Veteran Archer"
+        name="{=aom_mordor_mil_vet_arch}[Mordor] Militia Veteran Archer"
         occupation="Soldier"
         culture="Culture.mordor">
         <face>

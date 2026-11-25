@@ -143,8 +143,11 @@ public sealed class FrontEndMovieService
 
             // The Camp icon beside the clock. Its layer is built by FieldCampMapView, in no fixed order
             // with the MapBar, so it takes its own hold on the chrome its icon draws from.
-            case "TaomFieldCampOverlay" when dataSourceTypeName == "FieldCampOverlayVM":
+            case "TaomFieldCampOverlay" when dataSourceTypeName == "FieldCampOverlayVM" && CanTheme("TAOMMapBar"):
                 return Themed(movieName, "TAOMFieldCampOverlay", CreationFrame);
+
+            case "ArmyOverlay" when dataSourceTypeName == "ArmyMenuOverlayVM" && CanTheme("TAOMMapBar"):
+                return Themed(movieName, "TAOMArmyOverlay", CreationFrame);
 
             // The Long Defeat HUD and its panel (shop, boons, end summary), both bound to one LongDefeatHudVM. Each
             // holds the chrome for as long as its mission movie lives; a missing or failed themed prefab keeps the
@@ -183,9 +186,10 @@ public sealed class FrontEndMovieService
     }
 
     /// <summary>The themed movie threw while building. Its groups are simply never held, so they are
-    /// released once nothing else holds them. It is not tried again until the game restarts: the engine
-    /// keeps a failed movie subscribed to its resource factories (v1.5.3 <c>GauntletMovie.cs:52-53</c>,
-    /// undone only by <c>Release</c>, which nothing can call on it), so every retry would leak another.</summary>
+    /// released once nothing else holds them. It is not tried again until the game restarts: when the
+    /// build's exception reaches the layer, the engine keeps the failed movie subscribed to its resource
+    /// factories (v1.5.3 <c>GauntletMovie.cs:52-53</c>, undone only by <c>Release</c>, which nothing can call
+    /// on it), so every retry would leak another.</summary>
     public void LoadFailed(MovieSwap swap)
     {
         _failedBuilds.Add(swap.TargetName);

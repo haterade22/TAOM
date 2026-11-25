@@ -14,7 +14,7 @@ namespace TAOM.Features.StoryMissions.Config;
 /// </summary>
 internal static class StoryHeroesReader
 {
-    public const int MaxHeroes = 3;
+    public const int MaxHeroes = 4;
 
     public static IReadOnlyList<HeroSpawn> Read(JToken? token, string label, LongDefeatConfigScope s)
     {

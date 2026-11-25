@@ -167,6 +167,8 @@ KNOWN_FAILURES: dict[tuple[str, str], tuple[int, str]] = {
     ("ironpass_ram_marshal", "sm_dwarf_iron_axe_c"): (4, "#1312: backup after the shield breaks"),
     ("ironpass_ram_rider", "sm_dwarf_iron_axe_a"): (4, "#1312: backup after the shield breaks"),
     ("ironpass_ram_vanguard", "sm_dwarf_iron_axe_c"): (4, "#1312: backup after the shield breaks"),
+    ("ironpass_steel_chariot", "sm_dwarf_iron_axe_c"): (2, "#1312: backup after the shield breaks"),
+    ("ironpass_war_chariot", "sm_dwarf_iron_axe_c"): (2, "#1312: backup after the shield breaks"),
     # troops_gondor.xml
     ("gondor_da_foot_knight", "numenorean_greatsword_elite_a"): (2, "#1312: backup after the shield breaks"),
     ("gondor_da_foot_knight", "numenorean_greatsword_elite_b"): (2, "#1312: backup after the shield breaks"),
@@ -291,13 +293,25 @@ def module_dirs(modules: Path, own: Path | None, skip: frozenset[str],
     return [by_id[k] for k in sorted(by_id) if k in keep and k not in skip]
 
 
-def _rows(root):
+def _rows(root, sub: Path):
     """(id, path, XmlNode) per row, as XmlResource.GetXmlListAndApply reads them: each
-    Module/Xmls/XmlNode and only its first <XmlName> (SelectSingleNode, #1398)."""
+    Module/Xmls/XmlNode and only its first <XmlName> (SelectSingleNode, #1398). The engine throws
+    on an XmlNode with no <XmlName>, an XmlName with no `id` or `path` attribute, and an
+    <IncludedGameTypes> element child with no `value` (XmlResource.cs:279-305); so does this,
+    naming `sub` (#1404). An empty attribute passes there, so it passes here."""
     for node in root.iterfind("Xmls/XmlNode"):
         name = node.find("XmlName")
-        if name is not None and name.get("id") and name.get("path"):
-            yield name.get("id"), name.get("path"), node
+        if name is None:
+            raise GateInputError(f"{sub}: line {node.sourceline}: an <XmlNode> has no <XmlName> child")
+        for attr in ("id", "path"):
+            if name.get(attr) is None:
+                raise GateInputError(f"{sub}: line {name.sourceline}: an <XmlName> has no '{attr}' attribute")
+        types = node.find("IncludedGameTypes")
+        for child in types if types is not None else ():
+            if isinstance(child.tag, str) and child.get("value") is None:
+                raise GateInputError(
+                    f"{sub}: line {child.sourceline}: an <IncludedGameTypes> child has no 'value' attribute")
+        yield name.get("id"), name.get("path"), node
 
 
 def _in_taom_game(node) -> bool:
@@ -309,22 +323,33 @@ def _in_taom_game(node) -> bool:
     return not values or bool(values & GAME_TYPES)
 
 
-def other_game_files(module: Path) -> frozenset[Path]:
-    """The data files under this module's ModuleData that only rows for other game types name,
-    such as Native's mpitems.xml and mp_crafting_pieces.xml: TAOM's games never load them, so a
-    loader that globs files by name must skip them (#1398). A row names `<path>.xml`, or each
-    `*.xml` in the folder `<path>` (MBObjectManager.GetMergedXmlForManaged)."""
+def loaded_files(module: Path) -> frozenset[Path] | None:
+    """The data files under this module's ModuleData that a Campaign or CustomGame row names, or
+    None for a module with no SubModule.xml (nothing to judge by, so every file counts).
+
+    The engine loads data only through SubModule.xml rows: `<path>.xml`, or each `*.xml` in the
+    folder `<path>` when that file is absent (MBObjectManager.GetMergedXmlForManaged). A file no
+    row names is config, not data: armour_classes.xml holds 3,044 `<Item id class>` stubs that
+    would shadow real items, and Native's rows for mpitems.xml and mp_crafting_pieces.xml name
+    them for multiplayer only (#1398, #1404). A file one TAOM-game row names loads, whatever
+    other rows say about it."""
     sub = module / "SubModule.xml"
     if not sub.is_file():
-        return frozenset()
+        return None
     data = module / "ModuleData"
     loaded: set[Path] = set()
-    other: set[Path] = set()
-    for _xml_id, path, node in _rows(_submodule(sub)):
+    for _xml_id, path, node in _rows(_submodule(sub), sub):
+        if not _in_taom_game(node):
+            continue
         file, folder = data / f"{path}.xml", data / path
-        files = {file} if file.is_file() else set(folder.glob("*.xml")) if folder.is_dir() else set()
-        (loaded if _in_taom_game(node) else other).update(files)
-    return frozenset(other - loaded)
+        loaded.update({file} if file.is_file() else set(folder.glob("*.xml")) if folder.is_dir() else set())
+    return frozenset(loaded)
+
+
+def row_named(module: Path, paths) -> list[Path]:
+    """`paths`, sorted, less every file no Campaign or CustomGame row of `module` names."""
+    loaded = loaded_files(module)
+    return [p for p in sorted(paths) if loaded is None or p in loaded]
 
 
 def stylesheets(module: Path, xml_id: str) -> list[Path]:
@@ -345,7 +370,7 @@ def stylesheets(module: Path, xml_id: str) -> list[Path]:
         return []
     data = module / "ModuleData"
     sheets = []
-    for row_id, path, node in _rows(_submodule(sub)):
+    for row_id, path, node in _rows(_submodule(sub), sub):
         if row_id != xml_id or not _in_taom_game(node):
             continue
         if (data / f"{path}.xml").is_file() or (data / path).is_dir():
@@ -417,10 +442,7 @@ def crafting_pieces(dirs: list[Path]) -> dict[str, set[str]]:
         data = module / "ModuleData"
         if not data.is_dir():
             continue
-        other = other_game_files(module)
-        for path in list(data.glob("*crafting_pieces*.xml")) + list(data.glob("*/*crafting_pieces*.xml")):
-            if path in other:
-                continue
+        for path in row_named(module, list(data.glob("*crafting_pieces*.xml")) + list(data.glob("*/*crafting_pieces*.xml"))):
             for node in _parse(path).getroot().iter("CraftingPiece"):
                 excluded = node.get("excluded_item_usage_features") or ""
                 out[node.get("id")] = {t for t in excluded.split(":") if t}
@@ -486,10 +508,7 @@ def items(dirs: list[Path]):
         data = module / "ModuleData"
         if not data.is_dir():
             continue
-        other = other_game_files(module)
-        for path in data.rglob("*.xml"):
-            if path in other:
-                continue
+        for path in row_named(module, data.rglob("*.xml")):
             try:
                 root = _parse(path).getroot()
             except (ET.XMLSyntaxError, OSError):

@@ -116,6 +116,93 @@ public class CareerLifecycleServiceTests
         _creationHandler.DidNotReceive().OnCareerSelected(Arg.Any<string>(), Arg.Any<string>());
     }
 
+    private void GiveHeroUnknownCareer()
+    {
+        _dataService.SetCareer(Hero, "retired_career");
+        _dataService.TryAddChoice(Hero, "retired_root", 10);
+        _dataService.UnlockTier(Hero, 2);
+        _dataService.SetFlag(Hero, "f");
+    }
+
+    [TestMethod]
+    public void ClearUnknownCareer_UnknownId_ClearsEverythingThenFallbackReassigns()
+    {
+        GiveHeroUnknownCareer();
+
+        Assert.IsTrue(_sut.ClearUnknownCareer(Hero));
+        Assert.IsNull(_dataService.GetCareerStringId(Hero));
+        Assert.AreEqual(0, _dataService.GetChoiceCount(Hero));
+        Assert.IsFalse(_dataService.IsTierUnlocked(Hero, 2));
+        Assert.IsFalse(_dataService.HasFlag(Hero, "f"));
+
+        Assert.IsTrue(_sut.AssignFallbackCareerIfMissing(Hero, "gondor"));
+        _creationHandler.Received(1).OnCareerSelected(Hero, "ranger");
+    }
+
+    [TestMethod]
+    public void ClearUnknownCareer_NoEligibleCareer_DataStaysClearedAndFallbackReturnsFalse()
+    {
+        GiveHeroUnknownCareer();
+
+        Assert.IsTrue(_sut.ClearUnknownCareer(Hero));
+        Assert.IsFalse(_sut.AssignFallbackCareerIfMissing(Hero, "erebor"));
+        Assert.IsFalse(_sut.AssignFallbackCareerIfMissing(Hero, null));
+        Assert.IsFalse(_dataService.HasCareer(Hero));
+        Assert.AreEqual(0, _dataService.GetChoiceCount(Hero));
+    }
+
+    [TestMethod]
+    public void ClearUnknownCareer_KnownCareer_ChangesNothing()
+    {
+        _dataService.SetCareer(Hero, "ranger");
+        _dataService.TryAddChoice(Hero, "ranger_root", 10);
+
+        Assert.IsFalse(_sut.ClearUnknownCareer(Hero));
+        Assert.AreEqual("ranger", _dataService.GetCareerStringId(Hero));
+        Assert.AreEqual(1, _dataService.GetChoiceCount(Hero));
+    }
+
+    [TestMethod]
+    public void ClearUnknownCareer_NoCareerOrNullHero_ReturnsFalse()
+    {
+        Assert.IsFalse(_sut.ClearUnknownCareer(Hero));
+        Assert.IsFalse(_sut.ClearUnknownCareer(null));
+    }
+
+    [TestMethod]
+    public void ClearUnknownCareer_EmptyRegistry_KeepsSave()
+    {
+        _registry.GetAllCareers().Returns(new List<CareerDefinition>());
+        GiveHeroUnknownCareer();
+
+        Assert.IsFalse(_sut.ClearUnknownCareer(Hero));
+        Assert.AreEqual("retired_career", _dataService.GetCareerStringId(Hero));
+        Assert.AreEqual(1, _dataService.GetChoiceCount(Hero));
+    }
+
+    [TestMethod]
+    public void ClearUnknownCareer_NullRegistryList_KeepsSave()
+    {
+        _registry.GetAllCareers().Returns((IReadOnlyList<CareerDefinition>)null);
+        GiveHeroUnknownCareer();
+
+        Assert.IsFalse(_sut.ClearUnknownCareer(Hero));
+        Assert.AreEqual("retired_career", _dataService.GetCareerStringId(Hero));
+    }
+
+    [TestMethod]
+    public void ClearUnknownCareer_CareerDeclaredButFailedToParse_KeepsSave()
+    {
+        // The provider drops only the <Career> element that throws, so the registry still holds
+        // the other careers. A save must not lose a career the XML still declares.
+        _registry.IsCareerDeclared("retired_career").Returns(true);
+        GiveHeroUnknownCareer();
+
+        Assert.IsFalse(_sut.ClearUnknownCareer(Hero));
+        Assert.AreEqual("retired_career", _dataService.GetCareerStringId(Hero));
+        Assert.AreEqual(1, _dataService.GetChoiceCount(Hero));
+    }
+
     // -- the repair pass --
 
     [TestMethod]

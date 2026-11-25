@@ -177,9 +177,40 @@ public class MenuMediaServiceTests
     {
         _sut.OnActivateMenuMode(isMainMenu: true);
 
-        Assert.IsFalse(_sut.OnTick(isMainMenu: true));
-        Assert.IsTrue(_sut.OnTick(isMainMenu: false));
-        Assert.IsFalse(_sut.OnTick(isMainMenu: false));
+        Assert.IsFalse(_sut.OnTick(isMainMenuOrLoading: true));
+        Assert.IsTrue(_sut.OnTick(isMainMenuOrLoading: false));
+        Assert.IsFalse(_sut.OnTick(isMainMenuOrLoading: false));
+    }
+
+    [TestMethod]
+    public void ShouldRestartMenuMode_ThemePlayingOnReturnToTheMainMenu_AsksOncePerVisit()
+    {
+        Assert.IsTrue(_sut.ShouldRestartMenuMode(isMainMenu: true, menuThemePlaying: true));
+        Assert.IsFalse(_sut.ShouldRestartMenuMode(isMainMenu: true, menuThemePlaying: true), "a second ask on the same visit would loop");
+
+        Assert.IsFalse(_sut.ShouldRestartMenuMode(isMainMenu: false, menuThemePlaying: true));
+        Assert.IsTrue(_sut.ShouldRestartMenuMode(isMainMenu: true, menuThemePlaying: true), "a new visit asks again");
+    }
+
+    [TestMethod]
+    public void ShouldRestartMenuMode_SilencedOrThemeOff_DoesNotAsk()
+    {
+        Assert.IsFalse(_sut.ShouldRestartMenuMode(isMainMenu: true, menuThemePlaying: false));
+
+        _sut.OnActivateMenuMode(isMainMenu: true);
+        Assert.IsFalse(_sut.ShouldRestartMenuMode(isMainMenu: true, menuThemePlaying: true));
+    }
+
+    [TestMethod]
+    public void ShouldRestartMenuMode_MutingOffOrNoVideo_LetsTheThemePlay()
+    {
+        _settings.Value = new FactionUISettings(true, true, true, muteMenuMusic: false, true, true);
+        Assert.IsFalse(_sut.ShouldRestartMenuMode(isMainMenu: true, menuThemePlaying: true));
+
+        _settings.Value = FactionUISettings.Default;
+        _adapter.Directories.Clear();
+        Assert.IsFalse(new MenuMediaService(_adapter, _paths, _settings, new Random(1))
+            .ShouldRestartMenuMode(isMainMenu: true, menuThemePlaying: true));
     }
 
     [TestMethod]
@@ -188,6 +219,6 @@ public class MenuMediaServiceTests
         _sut.OnActivateMenuMode(isMainMenu: true);
         _settings.Value = new FactionUISettings(true, true, true, muteMenuMusic: false, true, true);
 
-        Assert.IsTrue(_sut.OnTick(isMainMenu: false));
+        Assert.IsTrue(_sut.OnTick(isMainMenuOrLoading: false));
     }
 }

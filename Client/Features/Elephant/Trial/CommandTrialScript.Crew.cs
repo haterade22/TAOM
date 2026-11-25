@@ -69,7 +69,7 @@ internal sealed partial class CommandTrialScript
             if (pictures < CrewTrialRules.PictureSeconds.Count && _now - keptAt >= CrewTrialRules.PictureSeconds[pictures])
             {
                 pictures++;
-                _host.Screenshot(CrewTrialRules.PictureName(step, pictures));
+                _host.Screenshot(SeatTrialRules.PictureName(step, pictures));
                 if (pictures == 1)
                 {
                     foreach (var waiting in ZoomOut())

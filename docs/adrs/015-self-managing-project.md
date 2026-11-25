@@ -27,6 +27,9 @@ Read on 2026-11-18:
 - There is no machine bar. The GitHub workflows were removed on 2026-10-05. The trunk ruleset
   requires a pull request with no approval and no status check, and repository roles 4 and 5
   bypass it (which role id 4 is, is unconfirmed).
+  Update 2026-11-22: #1543 added advisory PR checks (a no-game build and tests, the tool tests,
+  the doc lint); see [pr-review-automation.md](../features/pr-review-automation.md). They are not
+  the bar Alternative 2 rejects: the ruleset still requires no status check.
   `.ai/policy.md` says a trusted merge controller "is not installed".
 
 Three designs were drawn independently and each was attacked by a reviewer. All three failed at

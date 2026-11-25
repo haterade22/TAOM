@@ -26,7 +26,10 @@ why they are not shipped: locomotion would hide their attacks in battle. Per cli
              are refused, and so is a master whose frame count differs from the pack master's.
   Source1, Source2, Duration   the pack clip's, so the wolf's own frames play at the pack's rate
   LoopDisplacement   gaits only: the pack clip's value times $RIG_SCALE, so it is in the rig's own model units.
-             A strafe or backward clip keeps the warg's ratio to its forward gait. The engine applies the agent scale
+             A strafe or backward clip takes that value times the ratio its warg record had to the warg's forward
+             gait when the wolf was made ($FAMILY). The ratios are numbers here, not read from the warg: a corrected
+             warg travel (#1563, #1565) must not move the wolf's records. The gait plan has since changed the wolf's
+             forward travel, so a side record's travel is no longer that ratio of its forward gait's. The engine applies the agent scale
              itself (native v1.5.6: the horse movement node compares this value with the agent's velocity divided by
              its agent scale), so the Monster's taom_body_length does not enter it.
   a *_continue clip  the last frame of its death clip, as the warg's are.
@@ -42,6 +45,14 @@ folder, equals the plan (name, master, flags, frames, duration, travel) and has 
 is that one check, for existing clips in every mode, so -Apply exits 1 on an existing clip that differs from the plan.
 To change a clip (a new $RIG_SCALE), delete it, run -Apply, then open and save the Kit once.
 All modes fail when as_warg binds a clip $MAP does not plan, so a new warg binding cannot leave the wolf behind.
+$WARG_ONLY names the bindings this script does not copy.
+Since #1565 tools/dire_wolf_gait_plan.json sets the Duration, the travel and the pace limits of the wolf's four forward
+gaits and their in-place twins (repoint_anim_clip.py; the pack's values claimed 26% to 57% less ground than the paws
+cover), and the canter's keys (0 to 16; the pack cut 1 to 16). Since #1591 it also sets the two backward records:
+they play the walk's keys from 32 to 0, where $MAP gives them the forward walk 0 to 32 (the paws stepped forward
+while the wolf backed up). This script still makes those records, with the
+pack's values, and no longer holds their keys, Duration and travel: after a reinstall run -Apply here, then
+repoint_anim_clip.py --apply with that plan.
 #>
 $ErrorActionPreference = 'Stop'
 if ($Apply -and $Verify) { Write-Output 'ERROR: pass -Apply or -Verify, not both (-Apply already re-verifies)'; exit 2 }
@@ -75,11 +86,17 @@ $MAP = [ordered]@{
   death_right_side = 'death_right'; death_left_side = 'death_left'
   death_right_side_continue = 'death_right'; death_left_side_continue = 'death_left'
 }
-# A clip whose travel follows its forward gait's: warg stem -> the warg's forward gait stem
+# A clip whose travel is a part of its forward gait's: warg stem -> the warg's ratio on 2026-11-06, when the wolf's
+# records were made (strafe or backward travel over the forward gait's: 1.65/1.6, 1.5/1.6, 1.1/2.9, 0.8/4.0, 1.5/8.5).
 $FAMILY = @{
-  walk_strafe = 'walkfast'; walkbackfast = 'walkfast'; walkbackfast_straight = 'walkfast'
-  trot_strafe = 'trot'; canter_strafe = 'canter'; forward_gallop_left_foot_strafe = 'forward_gallop_left_foot'
+  walk_strafe = 1.03125; walkbackfast = 0.9375; walkbackfast_straight = 0.9375
+  trot_strafe = 0.3793103; canter_strafe = 0.2; forward_gallop_left_foot_strafe = 0.1764706
 }
+# Warg bindings this script does not copy. walk_stand (#1565) is the in-place twin that lets the walk change its loop
+# time with speed. The wolf has its own, dire_wolf_walk_stand, which tools/repoint_anim_clip.py makes from the gait plan.
+$WARG_ONLY = @('walk_stand')
+# The records whose keys, Duration and travel the gait plan sets.
+$GAIT_PLAN = @((Get-Content -Raw (Join-Path $PSScriptRoot 'dire_wolf_gait_plan.json') | ConvertFrom-Json) | ForEach-Object { $_.clip })
 
 $WARG_TIME = 'rear_damaged', 'run_collide', 'dash', 'quick_stop', 'jump_forward_end'
 $WARG_CUT = 'quick_stop', 'jump_forward_end'
@@ -110,12 +127,14 @@ function Get-ClipFacts($c) {
   @{ Name = $c.Name; Animation = "$($c.Animation)"; Flags = (($c.Flags | ForEach-Object { "$_" }) -join ',')
     Source1 = [double]$c.Source1; Source2 = [double]$c.Source2; Duration = [double]$c.Duration; Loop = Get-Loop $c }
 }
-function Get-ClipProblem($got, $want, $masters) {
+function Get-ClipProblem($got, $want, $masters, $planOwned = $false) {
+  # $planOwned: the gait plan sets this record's keys, Duration and travel, so they are not held here.
   if ($null -eq $got) { return 'no AnimationClip item' }
   foreach ($k in 'Name', 'Animation', 'Flags') {
     if ("$($got[$k])" -ne "$($want[$k])") { '{0} is {1}, planned {2}' -f $k, $got[$k], $want[$k] }
   }
   foreach ($k in 'Source1', 'Source2', 'Duration', 'Loop') {
+    if ($planOwned) { continue }
     if ($null -eq $got[$k] -and $null -eq $want[$k]) { continue }
     if ($null -eq $got[$k] -or $null -eq $want[$k] -or [math]::Abs($got[$k] - $want[$k]) -gt 0.001) {
       '{0} is {1}, planned {2}' -f $k, $got[$k], $want[$k]
@@ -144,6 +163,10 @@ function Get-MasterFrameProblem($name, $frames, $packFrames) {
   if ($packFrames.ContainsKey($name) -and $frames -ne $packFrames[$name]) {
     'FRAMES {0}: {1}, the pack master has {2}' -f $name, $frames, $packFrames[$name]
   }
+}
+function Get-Unmapped($bound, $map, $wargOnly) {
+  # The bound clips that are neither planned for the wolf nor named warg-only.
+  @($bound | Where-Object { -not $_.StartsWith('warg_') -or (-not $map.Contains($_.Substring(5)) -and $wargOnly -notcontains $_.Substring(5)) })
 }
 function Get-SavedClip($path) {
   $item = @((Load $path).Package.Items | Where-Object { $_.GetType().Name -eq 'AnimationClip' })[0]
@@ -183,9 +206,7 @@ foreach ($n in $masterFrames.Keys) {
 $bound = @($actionXml.action_sets.action_set | Where-Object { $SETS -contains $_.id } | ForEach-Object { $_.action } |
   ForEach-Object { $_.animation } | Where-Object { $_ } | Sort-Object -Unique)
 if (-not $bound.Count) { Write-Output 'ERROR: no warg bindings found in action_sets.xml'; exit 1 }
-foreach ($b in $bound) {
-  if (-not $b.StartsWith('warg_') -or -not $MAP.Contains($b.Substring(5))) { $errors++; Write-Output ('UNMAPPED {0}' -f $b) }
-}
+foreach ($b in (Get-Unmapped $bound $MAP $WARG_ONLY)) { $errors++; Write-Output ('UNMAPPED {0}' -f $b) }
 
 $rows = @(); $written = 0; $skipped = 0
 foreach ($stem in $MAP.Keys) {
@@ -218,14 +239,14 @@ foreach ($stem in $MAP.Keys) {
     $packLoop = Get-Loop $p
     if ($null -eq $packLoop) { $errors++; Write-Output ('NO PACK TRAVEL {0}' -f $packName); continue }
     $value = $packLoop * $RIG_SCALE
-    if ($FAMILY.ContainsKey($stem)) { $value = $value * $wargLoop / (Get-Loop (Get-Clip $wargFiles "warg_$($FAMILY[$stem])")) }
+    if ($FAMILY.ContainsKey($stem)) { $value = $value * $FAMILY[$stem] }
     foreach ($u in $c.ClipUsages) { if ($u.GetType().Name -eq 'QuadMovementUsage') { $u.LoopDisplacement = [float]$value } }
     $loop = 'loop={0:0.###}' -f $value
   }
   $rows += ('{0,-46} <- {1,-30} {2,-30} s={3}..{4} dur={5} {6} [{7}]' -f $clipName, $wargName, $packName, $c.Source1, $c.Source2, $c.Duration, $loop, (($c.Flags | ForEach-Object { "$_" }) -join ','))
   $want = Get-ClipFacts $c
   if (Test-Path $path) {
-    foreach ($problem in @(Get-ClipProblem (Get-SavedClip $path) $want $masterGuids)) { $errors++; Write-Output ('WRONG {0}: {1}' -f $clipName, $problem) }
+    foreach ($problem in @(Get-ClipProblem (Get-SavedClip $path) $want $masterGuids ($GAIT_PLAN -contains $clipName))) { $errors++; Write-Output ('WRONG {0}: {1}' -f $clipName, $problem) }
     $skipped++
     continue
   }

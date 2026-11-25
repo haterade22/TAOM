@@ -80,6 +80,12 @@ internal sealed class AffixPlan
         return Math.Min(count, Pool.Count);
     }
 
+    /// <summary>The same plan with every stage <paramref name="waves"/> waves sooner, no earlier than wave 1; the roll is unchanged. Zero returns this plan.</summary>
+    public AffixPlan Earlier(int waves) =>
+        waves <= 0
+            ? this
+            : new AffixPlan(_schedule.Select(s => s with { FromWave = Math.Max(1, s.FromWave - waves) }).ToArray(), _powers, _names);
+
     /// <summary>
     /// The wave's affixes, drawn from <see cref="RunRandom"/> stream <see cref="RunRandom.AffixStream"/> at <c>(wave, 0)</c>: a partial Fisher-Yates over
     /// <see cref="Pool"/> (for i from 0, <c>j = i + Below(Pool.Count - i)</c>, swap), so the powers are distinct and a shorter roll is a prefix of a longer one.

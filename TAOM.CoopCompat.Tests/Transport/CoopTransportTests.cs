@@ -2,6 +2,7 @@ using System;
 using Autofac;
 using Common;
 using Common.Messaging;
+using Common.Network;
 using Coop.Core.Client.Messages;
 using GameInterface;
 using GameInterface.Services.Players;
@@ -45,6 +46,24 @@ public class CoopTransportTests
     {
         ContainerProvider.SetContainer(new ContainerBuilder().Build());
         ModInformation.IsServer = server;
+    }
+
+    private static INetwork BeginSessionWithNetwork(bool server)
+    {
+        var network = Substitute.For<INetwork>();
+        var builder = new ContainerBuilder();
+        builder.RegisterInstance(network).As<INetwork>();
+        ContainerProvider.SetContainer(builder.Build());
+        ModInformation.IsServer = server;
+        return network;
+    }
+
+    /// <summary>The client's hello, which carries the session token that the server echoes; returns that token.</summary>
+    private static string SayHello(CoopTransport transport)
+    {
+        var hello = new CoopCompatHello();
+        Assert.IsTrue(transport.SendToServer(hello));
+        return hello.SessionToken;
     }
 
     private static NetPeer FakePeer() => (NetPeer)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(NetPeer));
@@ -120,9 +139,10 @@ public class CoopTransportTests
         _transport.HelloReplyReceived += _ => replies++;
         _transport.SnapshotReceived += _ => snapshots++;
 
-        BeginSession(server: false);
-        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatHelloReply());
-        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatMomentumSnapshot());
+        BeginSessionWithNetwork(server: false);
+        var token = SayHello(_transport);
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatHelloReply { SessionToken = token });
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatMomentumSnapshot { SessionToken = token });
         Assert.AreEqual(1, replies);
         Assert.AreEqual(1, snapshots);
 
@@ -281,9 +301,10 @@ public class CoopTransportTests
         transport.TradeRequestReceived += (_, _, _) => requests++;
         transport.TradeReplyReceived += _ => replies++;
 
-        BeginSession(server: false);
+        BeginSessionWithNetwork(server: false);
+        var token = SayHello(transport);
         MessageBroker.Instance.Publish(FakePeer(), new CoopCompatTradeRequest());
-        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatTradeReply());
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatTradeReply { SessionToken = token });
         Assert.AreEqual(0, requests);
         Assert.AreEqual(1, replies);
 
@@ -301,5 +322,278 @@ public class CoopTransportTests
 
         ModInformation.IsServer = false;
         Assert.IsFalse(_transport.SendToPeer(peer, new CoopCompatTradeReply()));
+    }
+
+    [TestMethod]
+    public void CareerReport_OnServer_CarriesTheConnectionsHero_NotTheReportsHero()
+    {
+        var transport = new CoopTransport(a => { _marshalled++; a(); }, _ => "Player1");
+        transport.Start();
+        BeginSession(server: true);
+        string? heroId = null;
+        CoopCompatCareerReport? got = null;
+        transport.CareerReportReceived += (_, h, r) => { heroId = h; got = r; };
+
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatCareerReport { HeroId = "Player2", Sequence = 5 });
+        MessageBroker.Instance.Publish("not a peer", new CoopCompatCareerReport());
+
+        Assert.AreEqual("Player1", heroId, "the server names the hero from the connection; the report's id is only compared");
+        Assert.AreEqual("Player2", got!.HeroId);
+        Assert.AreEqual(5, got.Sequence);
+        Assert.IsTrue(_marshalled >= 1);
+    }
+
+    [TestMethod]
+    public void CareerReport_OnAClient_IsIgnored_AndCareerUpdate_OnlyOnAClient()
+    {
+        var transport = new CoopTransport(a => a(), _ => "Player1");
+        transport.Start();
+        var reports = 0;
+        var updates = 0;
+        transport.CareerReportReceived += (_, _, _) => reports++;
+        transport.CareerUpdateReceived += _ => updates++;
+
+        BeginSessionWithNetwork(server: false);
+        var token = SayHello(transport);
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatCareerReport());
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatCareerUpdate { SessionToken = token });
+        Assert.AreEqual(0, reports);
+        Assert.AreEqual(1, updates);
+
+        ModInformation.IsServer = true;
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatCareerUpdate());
+        Assert.AreEqual(1, updates);
+    }
+
+    [TestMethod]
+    public void CareerSends_WithTheWrongRole_ReturnFalse()
+    {
+        var peer = new CoopPeer(FakePeer());
+        BeginSession(server: true);
+        Assert.IsFalse(_transport.SendToServer(new CoopCompatCareerReport()));
+
+        ModInformation.IsServer = false;
+        Assert.IsFalse(_transport.SendToPeer(peer, new CoopCompatCareerUpdate()));
+        Assert.IsFalse(_transport.Broadcast(new CoopCompatCareerUpdate()));
+        Assert.IsFalse(_transport.BroadcastExcept(peer, new CoopCompatCareerUpdate()));
+    }
+
+    // --- Session token (Codex P1 on #1471): a mission peer can reach a client's broker directly or through Coop's relay ---
+
+    [TestMethod]
+    public void ServerMessages_OnAClient_WithAnotherTokenOrNone_AreDropped()
+    {
+        var transport = new CoopTransport(a => a());
+        transport.Start();
+        var raised = 0;
+        transport.HelloReplyReceived += _ => raised++;
+        transport.SnapshotReceived += _ => raised++;
+        transport.TradeReplyReceived += _ => raised++;
+        transport.CareerUpdateReceived += _ => raised++;
+        BeginSessionWithNetwork(server: false);
+        SayHello(transport);
+
+        foreach (var token in new[] { "forged", "" })
+        {
+            MessageBroker.Instance.Publish(FakePeer(), new CoopCompatHelloReply { SessionToken = token });
+            MessageBroker.Instance.Publish(FakePeer(), new CoopCompatMomentumSnapshot { SessionToken = token });
+            MessageBroker.Instance.Publish(FakePeer(), new CoopCompatTradeReply { SessionToken = token });
+            MessageBroker.Instance.Publish(FakePeer(), new CoopCompatCareerUpdate { SessionToken = token, Known = false });
+        }
+
+        Assert.AreEqual(0, raised);
+    }
+
+    [TestMethod]
+    public void ServerMessages_BeforeTheClientsHello_AreDropped()
+    {
+        var transport = new CoopTransport(a => a());
+        transport.Start();
+        var raised = 0;
+        transport.CareerUpdateReceived += _ => raised++;
+        BeginSessionWithNetwork(server: false);
+
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatCareerUpdate { SessionToken = "" });
+
+        Assert.AreEqual(0, raised);
+    }
+
+    [TestMethod]
+    public void HelloReply_WithNoToken_IsRaised_OnlyAsABuildMismatch()
+    {
+        var transport = new CoopTransport(a => a());
+        transport.Start();
+        var replies = new System.Collections.Generic.List<CoopCompatHelloReply>();
+        transport.HelloReplyReceived += replies.Add;
+        BeginSessionWithNetwork(server: false);
+        SayHello(transport);
+
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatHelloReply { BuildMismatch = false });
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatHelloReply
+        {
+            ProtocolVersion = 1, BuildMismatch = true, Verdict = 2, DivergentGroups = new[] { "forged" },
+            LoadOrderDiffers = true, LoadOrderHostFirst = "a", LoadOrderHostSecond = "b",
+        });
+
+        Assert.AreEqual(1, replies.Count, "a host built before the token sends none, and a newer client always differs from it");
+        Assert.IsTrue(replies[0].BuildMismatch);
+        Assert.AreEqual(0, replies[0].ProtocolVersion, "an unknown protocol makes the handshake inconclusive, never a match");
+        Assert.AreEqual(0, replies[0].DivergentGroups.Length, "no group list or load order comes from a reply with no token");
+        Assert.IsFalse(replies[0].LoadOrderDiffers);
+    }
+
+    [TestMethod]
+    public void AHelloInTheSameSession_KeepsTheToken_SoAnAnswerOnTheWayStillCounts()
+    {
+        var transport = new CoopTransport(a => a());
+        transport.Start();
+        var raised = 0;
+        transport.CareerUpdateReceived += _ => raised++;
+        BeginSessionWithNetwork(server: false);
+
+        var first = SayHello(transport);
+        var second = SayHello(transport);
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatCareerUpdate { SessionToken = first });
+
+        Assert.IsTrue(first.Length >= 16);
+        Assert.AreEqual(first, second, "Coop raises ClientCampaignReady after every mission, so the hello comes again");
+        Assert.AreEqual(1, raised);
+    }
+
+    [TestMethod]
+    public void ANewSession_GetsANewToken_AndTheOldOneStopsCounting_BeforeTheNewHello()
+    {
+        var transport = new CoopTransport(a => a());
+        transport.Start();
+        var raised = 0;
+        transport.CareerUpdateReceived += _ => raised++;
+        BeginSessionWithNetwork(server: false);
+        var first = SayHello(transport);
+
+        BeginSessionWithNetwork(server: false);
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatCareerUpdate { SessionToken = first });
+        var second = SayHello(transport);
+
+        Assert.AreEqual(0, raised);
+        Assert.AreNotEqual(first, second);
+    }
+
+    [TestMethod]
+    public void ADroppedServerMessage_IsLoggedOncePerSession()
+    {
+        var warnings = new System.Collections.Generic.List<string>();
+        var transport = new CoopTransport(a => a(), null, null, warnings.Add);
+        transport.Start();
+        BeginSessionWithNetwork(server: false);
+        SayHello(transport);
+
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatCareerUpdate { SessionToken = "forged" });
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatTradeReply { SessionToken = "forged" });
+        Assert.AreEqual(1, warnings.Count);
+
+        BeginSessionWithNetwork(server: false);
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatMomentumSnapshot { SessionToken = "forged" });
+        Assert.AreEqual(2, warnings.Count);
+    }
+
+    [TestMethod]
+    public void AHello_ForgetsClosedConnections()
+    {
+        var a = FakePeer();
+        var b = FakePeer();
+        var aClosed = false;
+        var transport = new CoopTransport(x => x(), _ => null, p => !(aClosed && ReferenceEquals(p, a)));
+        transport.Start();
+        BeginSessionWithNetwork(server: true);
+        MessageBroker.Instance.Publish(a, new CoopCompatHello { SessionToken = "tA" });
+        aClosed = true;
+
+        MessageBroker.Instance.Publish(b, new CoopCompatHello { SessionToken = "tB" });
+
+        Assert.AreEqual(1, transport.KnownConnections);
+    }
+
+    [TestMethod]
+    public void SendToPeer_OnServer_StampsThatPeersOwnToken()
+    {
+        var transport = new CoopTransport(a => a(), _ => null, _ => true);
+        transport.Start();
+        var network = BeginSessionWithNetwork(server: true);
+        var known = FakePeer();
+        var stranger = FakePeer();
+        var stamps = new System.Collections.Generic.List<string>();
+        // An uninitialized NetPeer cannot be formatted or compared by NSubstitute, so the calls are captured by hand.
+        network.When(n => n.Send(Arg.Any<NetPeer>(), Arg.Any<IMessage>())).Do(c => stamps.Add(((ISessionStamped)c.ArgAt<IMessage>(1)).SessionToken));
+        MessageBroker.Instance.Publish(known, new CoopCompatHello { SessionToken = "tokenA" });
+
+        Assert.IsTrue(transport.SendToPeer(new CoopPeer(known), new CoopCompatCareerUpdate()));
+        Assert.IsTrue(transport.SendToPeer(new CoopPeer(known), new CoopCompatTradeReply()));
+        Assert.IsTrue(transport.SendToPeer(new CoopPeer(stranger), new CoopCompatCareerUpdate()));
+
+        CollectionAssert.AreEqual(new[] { "tokenA", "tokenA", "" }, stamps);
+    }
+
+    [TestMethod]
+    public void HelloReply_IsStamped_WithTheTokenOfTheHelloItAnswers()
+    {
+        var transport = new CoopTransport(a => a(), _ => null, _ => true);
+        transport.Start();
+        var network = BeginSessionWithNetwork(server: true);
+        var peer = FakePeer();
+        string? stamped = null;
+        network.When(n => n.Send(Arg.Any<NetPeer>(), Arg.Any<IMessage>())).Do(c => stamped = ((ISessionStamped)c.ArgAt<IMessage>(1)).SessionToken);
+        void Answer(CoopPeer p, CoopCompatHello _) => transport.SendToPeer(p, new CoopCompatHelloReply());
+        transport.HelloReceived += Answer;
+
+        MessageBroker.Instance.Publish(peer, new CoopCompatHello { SessionToken = "tokenA" });
+        transport.HelloReceived -= Answer;
+
+        Assert.AreEqual("tokenA", stamped, "the token is known before the hello is raised");
+    }
+
+    [TestMethod]
+    public void Broadcasts_OnServer_GoToEachLivePeerThatSaidHello_WithItsOwnToken()
+    {
+        var a = FakePeer();
+        var b = FakePeer();
+        var gone = FakePeer();
+        var transport = new CoopTransport(x => x(), _ => null, p => !ReferenceEquals(p, gone));
+        transport.Start();
+        var network = BeginSessionWithNetwork(server: true);
+        var sent = new System.Collections.Generic.List<(NetPeer Peer, string Token)>();
+        network.When(n => n.Send(Arg.Any<NetPeer>(), Arg.Any<IMessage>()))
+            .Do(c => sent.Add((c.ArgAt<NetPeer>(0), ((ISessionStamped)c.ArgAt<IMessage>(1)).SessionToken)));
+        MessageBroker.Instance.Publish(a, new CoopCompatHello { SessionToken = "tA" });
+        MessageBroker.Instance.Publish(b, new CoopCompatHello { SessionToken = "tB" });
+        MessageBroker.Instance.Publish(gone, new CoopCompatHello { SessionToken = "tG" });
+
+        Assert.IsTrue(transport.Broadcast(new CoopCompatMomentumSnapshot()));
+        Assert.IsTrue(transport.Broadcast(new CoopCompatCareerUpdate()));
+        Assert.IsTrue(transport.BroadcastExcept(new CoopPeer(a), new CoopCompatCareerUpdate()));
+
+        Assert.AreEqual(5, sent.Count);
+        Assert.IsTrue(ReferenceEquals(a, sent[0].Peer) && sent[0].Token == "tA");
+        Assert.IsTrue(ReferenceEquals(b, sent[1].Peer) && sent[1].Token == "tB");
+        Assert.IsTrue(ReferenceEquals(a, sent[2].Peer) && sent[2].Token == "tA");
+        Assert.IsTrue(ReferenceEquals(b, sent[3].Peer) && sent[3].Token == "tB");
+        Assert.IsTrue(ReferenceEquals(b, sent[4].Peer) && sent[4].Token == "tB", "BroadcastExcept skips the excluded peer");
+        network.DidNotReceive().SendAll(Arg.Any<IMessage>());
+        network.DidNotReceive().SendAllBut(Arg.Any<NetPeer>(), Arg.Any<IMessage>());
+    }
+
+    [TestMethod]
+    public void Hello_WithAnOversizeToken_IsStoredAsNone()
+    {
+        var transport = new CoopTransport(a => a(), _ => null, _ => true);
+        transport.Start();
+        var network = BeginSessionWithNetwork(server: true);
+        var peer = FakePeer();
+        string? stamped = null;
+        network.When(n => n.Send(Arg.Any<NetPeer>(), Arg.Any<IMessage>())).Do(c => stamped = ((ISessionStamped)c.ArgAt<IMessage>(1)).SessionToken);
+        MessageBroker.Instance.Publish(peer, new CoopCompatHello { SessionToken = new string('x', 65) });
+
+        transport.SendToPeer(new CoopPeer(peer), new CoopCompatCareerUpdate());
+
+        Assert.AreEqual("", stamped);
     }
 }

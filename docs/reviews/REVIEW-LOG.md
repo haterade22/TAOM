@@ -5977,3 +5977,46 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 
 - **Verified by the reviewers, switch off:** the setting is read once per mission at the first tick (`StaminaMissionLogic.DecideArmed`), after the runtime is cleared; every hook (`ApplyStats`, `TryRead`, `RefusesSpecialAttack`, `StripPlayerInput`) returns on `Armed` false before an engine read; Patch171 is applied whatever the setting says and its postfix returns at the same test; the bar's mapper returns not visible; each hit callback returns after one volatile read; with no stamina claim, `OwnerClaimLedger` makes Marshal's Word set and clear the AI input flag at the same moments as the direct writes it replaced.
 - **In-game:** 40 unattended Fords of War matches (`docs/features/stamina.md`, "Unattended runs"); the three check lines pass in every match with the switch on that ended normally. No step that needs a person has been run: the label `triage-needs-ingame` is on #1497.
+
+## Review (number assigned at merge): special-resource charge on a successful DoneLogic (#1516), tier-1 deep review (Lens 2, Lens 5), Codex xhigh plus a high re-review of the fix (2026-11-21)
+
+- **Scope:** `fix/party-screen-done-charge`: `PartyScreenLogic_DoneLogic_ChargePatch` (Patch26 postfix), `ISpecialResourceService.CommitAppliedUpgrades`, `IOnPartyUpgradeResourceCheck.ChargeAppliedUpgrades` (0 in a co-op session), `SpecialResourcesBehavior.AttachToPartyScreen` moving its subscriptions, tests, the feature doc, the registry and the patch snapshot.
+- **Lenses:** Engine compatibility, 9 verified, 0 incompatible, 3 LOW wording items (fixed); Data flow, 12 flows, 0 correctness gaps, 3 LOW (snapshot row, two stale doc lines; fixed). Data flow on the F1 fix: 8 flows, 0 gaps, 2 LOW (a missing close-detach test, added; a pre-existing stale pending display, #1517).
+- **Codex:** `codex-adversarial-party-done-charge-2026-11-21.md` at `xhigh`, one P2 (F1). Re-review at `high` on the fix: 0 findings, its replay ends at the expected balance.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| Codex F1 (P2) | The map bar applies a party screen (`IChangeableScreen.ApplyChanges`) and pops it with no `PartyScreenClosedEvent`. The behavior stayed attached to the popped logic and refused the next one, so the next screen's Reset never reached the session and the new Done postfix charged upgrades the player reset | Stale state / lifecycle | The lenses listed the callers of `DoneLogic`, not every way a party screen ends; `MapNavigationHelper` closes a screen through `PopState` alone | `AttachToPartyScreen` moves both subscriptions to a new logic; `SpecialResourcesBehaviorPartyScreenAttachTests` pins the move, the single subscribe and the close detach |
+
+- **In-game owed:** Talk confirm then Escape charges once; map bar apply, new screen, upgrade, Reset, Done charges nothing for the reset upgrade.
+
+## Review (number assigned at merge): Story Missions slices 2, 3 and 5 (#1105), tier-1 deep reviews per slice, Codex ultra (2026-11-22)
+
+- **Scope:** `feat/story-missions-fellowship`, `5cf79902c..6c5ff7c5a`: the field mode of the story mission run machine and the two Parth Galen missions; the hero story of the Breaking (state `Averted = 7`, the kill of `lord_1_75`); the story-offer scenario driver; the Hornburg attack offer, the `PartyMorale` and `permanent` effects and the broken Isengard and Mordor alliance.
+- **Lenses:** a tier-1 `/deep-review` ran on each slice before its commit; their fixes are in the slice commits.
+- **Codex:** `codex-adversarial-story-missions-1105-2026-11-22.md` at `ultra`: one HIGH, three MEDIUM, three LOW; five of nine suspects disputed with engine evidence, field mode UNVERIFIED on its native side. Assessment and root causes: `rca-story-missions-codex-2026-11-22.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| Codex F1 (HIGH) | A death the engine deferred or refused still resolved the Breaking `Occurred` and paid it | Missing vanilla gate | The completion paths of a death mark were not read to their conditions | The event waits and asks again each day; lesson in `adapters-taleworlds-api.md` |
+| Codex F4 (MEDIUM) | The scenario judge and three manifest rows accepted a verdict, a reason and a result that contradict each other | Logic error | Patterns built to match good lines, never tried on bad ones | Paired patterns from the mapping code; lesson in `testing-qa.md` |
+| Codex F5 (LOW) | The judge re-read two mission traits after the run | Stale state / lifecycle | The launch snapshot was not extended with the new traits | Captured at launch |
+
+- **Not changed:** F2 (the Ents after a repulsed assault) and F3 (the morale effect on a co-op client) wait for the maintainer; F6 (runtime validation of two config references) declined as a speculative guard, the shipped file being gated by tests.
+- **In-game owed:** one unattended Breaking offer run on the fixed build; play by a person of every mission and offer.
+
+## Review (number assigned at merge): PR review automation (#1543, PR #1546), tier-2 deep review in two waves, Codex xhigh (2026-11-22)
+
+- **Scope:** `feat/pr-automation`: `.github/workflows/pr-checks.yml`, `tools/pr_review_watch.py` and its tests, `tools/register_pr_review_task.ps1`, the `/review-outside-pr` Phase 1 list, `tools/_gamedir.py`, and the `RequiresGame` and `RequiresGameIL` tags on the C# tests.
+- **Lenses:** wave 1 Lens 5 and Tooling, wave 2 Lenses 3, 4 and 6: four HIGH Phase 1 gaps, fixed before the first commit (`rca-pr-review-watcher-2026-11-22.md` F1 to F4).
+- **Codex:** `codex-adversarial-pr-automation-2026-11-22.md` at `xhigh` on `b0960772a`: two HIGH, six MEDIUM. All eight were confirmed and fixed; S2 (the read-only fence) and the live GitHub and fork behaviour stay UNVERIFIED in its report. Each fix, broken in a copy, fails a test.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| Codex F1 (HIGH) | File list and diff read by PR number, contents at the listed head: a push between the calls mixed two heads | Stale state / lifecycle | Only the read that took a `ref` was pinned | Compare API at the listed head; test that every read names it |
+| Codex F2 (HIGH) | A new `tools/<name>/` package, or a standard library name in `tools/`, replaced a module a hook script imports | Other: port narrower than Python's import order | The guard listed trunk's files, not the resolution order | Imported and standard library names guarded as packages and import suffixes; lesson line in `build-tooling-workflow.md` |
+| Codex F3 (MEDIUM) | A fake verdict quoted above the real one set the verdict | Logic error | First regex match anywhere | First line only; the report marks model text untrusted |
+| Codex F4 to F8 (MEDIUM) | Case collisions, a 100-PR window, a 7-character folder, a non-atomic lock, a tool floor that counted skips | Logic error | Each a Windows, scale or race case no fixture tried | Phase 1 collision stop, 1,000 PRs, whole SHA and a fresh `files/`, `O_EXCL`, executed-count floor |
+| Tooling re-review 1 (HIGH) | Generators that the pre-commit validator runs or loads by a path string were not guarded | Other: port narrower than the mechanism | The closure followed imports only | String constants followed too; test with a subprocess and a load by path |
+
+- **In-game owed:** none (no game code). Owed: the first scheduled run on a real PR after registration, and a fork PR through the compare API.

@@ -12,16 +12,20 @@ internal sealed class WavesConfig
     public static WavesConfig Empty { get; } = new(RunRules.Default,
         new Dictionary<string, int>(StringComparer.Ordinal), new Dictionary<string, WavePlan>(StringComparer.OrdinalIgnoreCase));
 
-    public WavesConfig(RunRules rules, IReadOnlyDictionary<string, int> bounties, IReadOnlyDictionary<string, WavePlan> rosters)
+    public WavesConfig(RunRules rules, IReadOnlyDictionary<string, int> bounties, IReadOnlyDictionary<string, WavePlan> rosters, HardRules? hard = null)
     {
         Rules = rules;
         Bounties = bounties;
         Rosters = rosters;
+        Hard = hard ?? HardRules.Default;
     }
 
     public RunRules Rules { get; }
     public IReadOnlyDictionary<string, int> Bounties { get; }
     public IReadOnlyDictionary<string, WavePlan> Rosters { get; }
+
+    /// <summary>What a hard run changes (<c>rules.hard</c>). Not on <see cref="RunRules"/>: a normal run never reads it.</summary>
+    public HardRules Hard { get; }
 }
 
 /// <summary>
@@ -32,6 +36,9 @@ internal sealed class WavesConfig
 /// </summary>
 internal static class WavesReader
 {
+    /// <summary>The smallest wave of a siege roster: at 100 attackers or fewer the breach tactic stops every siege engine (<c>SurvivalRun.LiveFloor</c>).</summary>
+    internal const int SiegeWaveFloor = 101;
+
     private const int DefaultCountPerWave = 10;
     private const int DefaultMaxCount = 300;
     private const float DefaultHealthPerWave = 0.05f;
@@ -45,7 +52,9 @@ internal static class WavesReader
         if (root == null)
             return WavesConfig.Empty;
 
-        var rules = ReadRules(s.Group(root, "rules", ""), s);
+        var rulesBlock = s.Group(root, "rules", "");
+        var rules = ReadRules(rulesBlock, s);
+        var hard = ReadHard(rulesBlock, s);
         var bounties = ReadBounties(s.Group(root, "bounties", ""), s);
         var rosters = new Dictionary<string, WavePlan>(StringComparer.OrdinalIgnoreCase);
         var block = s.Group(root, "rosters", "");
@@ -62,7 +71,7 @@ internal static class WavesReader
         WarnUnpaid(bounties, rosters.Values, s);
         var ordered = KeepAboveStragglers(rules, rosters.Values, s);
         s.Loaded($"{rosters.Count} roster(s)");
-        return new WavesConfig(ordered, bounties, rosters);
+        return new WavesConfig(ordered, bounties, rosters, hard);
     }
 
     internal static RunRules KeepAboveStragglers(RunRules rules, IEnumerable<WavePlan> rosters, LongDefeatConfigScope s)
@@ -70,7 +79,7 @@ internal static class WavesReader
         var floor = 0;
         foreach (var plan in rosters)
         {
-            var smallest = plan.Authored.Min(w => w.Count);
+            var smallest = plan.SmallestAuthoredCount;
             floor = Math.Max(floor, (int)(rules.StragglerShare * smallest) + 1);
         }
 
@@ -80,7 +89,8 @@ internal static class WavesReader
         return rules with { KeepMinAttackers = floor };
     }
 
-    internal static RunRules ReadRules(JObject? o, LongDefeatConfigScope s)
+    /// <param name="minLiveCap">The smallest <c>liveCap</c> the rules may author: <see cref="SiegeWaveFloor"/> for a siege, 1 for a field mission (#1105 slice 2).</param>
+    internal static RunRules ReadRules(JObject? o, LongDefeatConfigScope s, int minLiveCap = SiegeWaveFloor)
     {
         var d = RunRules.Default;
         const string p = "rules";
@@ -93,7 +103,7 @@ internal static class WavesReader
             WaveBonusBase = s.Int(o, p, "waveBonusBase", d.WaveBonusBase, 0, 1_000_000),
             WaveBonusPerWave = s.Int(o, p, "waveBonusPerWave", d.WaveBonusPerWave, 0, 1_000_000),
             SpawnsPerTick = s.Int(o, p, "spawnsPerTick", d.SpawnsPerTick, 1, 50),
-            LiveCap = s.Int(o, p, "liveCap", d.LiveCap, 101, 400),
+            LiveCap = s.Int(o, p, "liveCap", d.LiveCap, minLiveCap, 400),
             GarrisonCap = s.Int(o, p, "garrisonCap", d.GarrisonCap, 1, 400),
             MusterBatch = s.Int(o, p, "musterBatch", d.MusterBatch, 1, 50),
             MusterBatchSeconds = s.Float(o, p, "musterBatchSeconds", d.MusterBatchSeconds, 1f, 3600f),
@@ -111,6 +121,16 @@ internal static class WavesReader
             KeepDominance = s.Float(o, p, "keepDominance", d.KeepDominance, 1f, 10f),
             RestShare = s.Float(o, p, "restShare", d.RestShare, 0f, 1f),
         };
+    }
+
+    /// <summary>The <c>hard</c> block of <c>rules</c>: no block is the defaults with no warning, and a bad value keeps its default with one warning.</summary>
+    internal static HardRules ReadHard(JObject? rules, LongDefeatConfigScope s)
+    {
+        var d = HardRules.Default;
+        var block = s.Group(rules, "hard", "rules");
+        return new HardRules(
+            s.Float(block, "rules.hard", "factor", d.Factor, 1f, 2f),
+            s.Int(block, "rules.hard", "affixWavesEarlier", d.AffixWavesEarlier, 0, 10));
     }
 
     private static Dictionary<string, int> ReadBounties(JObject? o, LongDefeatConfigScope s)
@@ -134,7 +154,8 @@ internal static class WavesReader
         return result;
     }
 
-    internal static WavePlan? ReadRoster(string id, JObject? roster, LongDefeatConfigScope s)
+    /// <param name="minWaveCount">The smallest wave the roster may author. A siege needs <see cref="SiegeWaveFloor"/>; a field mission has no engine to keep in use (#1105 slice 2).</param>
+    internal static WavePlan? ReadRoster(string id, JObject? roster, LongDefeatConfigScope s, int minWaveCount = SiegeWaveFloor)
     {
         var label = $"rosters.{id}";
         if (roster == null)
@@ -158,7 +179,7 @@ internal static class WavesReader
         {
             for (var i = 0; i < array.Count; i++)
             {
-                var spec = ReadWave(array[i] as JObject, $"{label}.waves[{i}]", s);
+                var spec = ReadWave(array[i] as JObject, $"{label}.waves[{i}]", s, minWaveCount);
                 if (spec != null)
                     waves.Add(spec);
             }
@@ -228,7 +249,7 @@ internal static class WavesReader
         return at == from;
     }
 
-    private static WaveSpec? ReadWave(JObject? wave, string label, LongDefeatConfigScope s)
+    private static WaveSpec? ReadWave(JObject? wave, string label, LongDefeatConfigScope s, int minCount)
     {
         if (wave == null)
         {
@@ -236,7 +257,7 @@ internal static class WavesReader
             return null;
         }
 
-        if (!LongDefeatConfigScope.TryInt(wave["count"], 101, 1000, out var count, out var why))
+        if (!LongDefeatConfigScope.TryInt(wave["count"], minCount, 1000, out var count, out var why))
         {
             s.Warn($"'{label}.count' {why}; wave skipped");
             return null;

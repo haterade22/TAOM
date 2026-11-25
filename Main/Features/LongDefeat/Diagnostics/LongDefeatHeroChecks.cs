@@ -28,6 +28,12 @@ internal static class LongDefeatHeroChecks
     internal const string SpawnId = "taom.long-defeat.hero";
     internal const string FallId = "taom.long-defeat.hero-fall";
 
+    /// <summary>
+    /// A mission hero's recorded line (#1569), key <c>&lt;mission&gt;v&lt;N&gt;</c> with N counting the mission's line checks. Written for each spawn the field took of a hero who has lines. It passes when the voice
+    /// adapter started the sound; it fails with <c>problem=refused</c> when the engine refused it and <c>problem=fault</c> (with <c>error=</c>) when the call threw. <c>file=</c> is the file name, never the full path.
+    /// </summary>
+    internal const string LineId = "taom.long-defeat.hero-line";
+
     internal static CheckVerdict Spawned(HeroSpawn hero, LdHeroReport report)
     {
         var detail = $"hero={hero.Id} troop={hero.TroopId}";
@@ -39,11 +45,13 @@ internal static class LongDefeatHeroChecks
             + $" health_factor={report.HealthFactor.ToString("0.00", CultureInfo.InvariantCulture)} wanted_factor={hero.HealthFactor.ToString("0.00", CultureInfo.InvariantCulture)}"
             + $" wielded={(report.Wielded.Length > 0 ? Words(report.Wielded) : "none")}";
         var scaled = Math.Abs(report.HealthFactor - hero.HealthFactor) <= 0.01f;
-        var placed = report.Enemy
+        var placed = report.Enemy || report.Loose
             ? report.FormationIndex >= 0 && report.FormationIndex != HeroGroup.FormationIndex && !report.Held
             : report.FormationIndex == HeroGroup.FormationIndex && report.Held && report.Strangers == 0;
         if (report.Enemy)
             detail += " side=enemy";
+        else if (report.Loose)
+            detail += " group=class";
 
         return LongDefeatChecks.Verdict(report.IsHero != report.CampaignCharacter && !report.Mounted && placed && scaled, detail);
     }
@@ -67,6 +75,12 @@ internal static class LongDefeatHeroChecks
             + $" retaken={totals.Retaken} moved_out={totals.MovedOut} moved_back={totals.MovedBack}";
         var placed = !read.OwnOrder || !(read.SettledSeconds >= HeroGroup.SettleSeconds) || near == facts.Count;
         return LongDefeatChecks.Verdict(inGroup == facts.Count && read.GroupUnits == inGroup && read.GroupHeld && placed, detail);
+    }
+
+    internal static CheckVerdict Line(string heroId, string fullPath, string? problem)
+    {
+        var detail = $"hero={heroId} file={Words(System.IO.Path.GetFileName(fullPath))}";
+        return LongDefeatChecks.Verdict(problem == null, problem == null ? detail : detail + " problem=" + problem);
     }
 
     internal static CheckVerdict Fell(string heroId, bool loss) => new(CheckResult.Pass, $"hero={heroId} cause={(loss ? "killed" : "fled")}");

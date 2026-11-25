@@ -13,7 +13,7 @@ internal static class LongDefeatRunReport
     private const int Schema = 2;
 
     internal static string Build(string fortressId, RunOptions options, RunProvenance provenance, RunResult result, RunStats stats, Purse purse,
-        DateTime startedUtc, DateTime endedUtc, int maxSpeed = 1, RunBoons? boons = null, RunFort? fort = null)
+        DateTime startedUtc, DateTime endedUtc, int maxSpeed = 1, RunBoons? boons = null, RunFort? fort = null, RunLord? lord = null)
     {
         var report = new JObject
         {
@@ -28,10 +28,12 @@ internal static class LongDefeatRunReport
             ["maxSpeed"] = maxSpeed,
             ["seed"] = options.Seed is ulong seed ? new JValue(seed) : JValue.CreateNull(),
             ["class"] = options.ClassId ?? "",
+            ["difficulty"] = RunDifficulties.Id(options.Difficulty),
             ["startWave"] = options.StartWave,
             ["startRerolls"] = options.StartRerolls,
             ["startGold"] = options.StartGold is int startGold ? new JValue(startGold) : JValue.CreateNull(),
             ["breakEngines"] = options.BreakEnginesAtClear is int breakAt ? new JValue(breakAt) : JValue.CreateNull(),
+            ["lordFalls"] = options.LordFalls is int lordFalls ? new JValue(lordFalls) : JValue.CreateNull(),
             ["boons"] = new JArray((boons?.Picks ?? Array.Empty<BoonPickRecord>()).Select(Pick)),
             ["rerolls"] = new JObject { ["earned"] = boons?.Earned ?? 0, ["used"] = boons?.Used ?? 0, ["banked"] = boons?.Banked ?? 0 },
             ["targetWaves"] = options.StopAfterWaves is int target ? new JValue(target) : JValue.CreateNull(),
@@ -86,9 +88,13 @@ internal static class LongDefeatRunReport
                     ["volley"] = purse.SpentOn(PurseSink.Volley),
                     ["upgrades"] = purse.SpentOn(PurseSink.Upgrades),
                     ["heroes"] = purse.SpentOn(PurseSink.Heroes),
+                    ["gear"] = purse.SpentOn(PurseSink.Gear),
+                    ["engines"] = purse.SpentOn(PurseSink.Engines),
                 },
             },
             ["purchases"] = new JArray((fort ?? RunFort.None).Purchases.Select(Purchase)),
+            ["armoury"] = new JArray((fort ?? RunFort.None).Purchases.Where(p => p.Kind == PurchaseKind.GearSet).Select(p => p.Id)),
+            ["lord"] = Lord(lord ?? RunLord.None),
             ["fortifications"] = new JObject
             {
                 ["gateLevel"] = (fort ?? RunFort.None).GateLevel,
@@ -117,11 +123,20 @@ internal static class LongDefeatRunReport
         ["fellAtSeconds"] = g.FellAtSeconds is float at ? new JValue(at) : JValue.CreateNull(),
     };
 
+    /// <summary>The lord through the run (phase4-plan.md section 7): each body of the player's that fell (<c>own</c> or <c>soldier</c>, <c>forced</c> only for the <c>lord_falls</c> test option), each soldier taken (<c>by</c> a person or the bot) and each rise (<c>at</c> is <c>respawn</c>, <c>home</c>, <c>recorded</c> or <c>scene</c>, as <see cref="LordRise"/> names them).</summary>
+    private static JObject Lord(RunLord lord) => new()
+    {
+        ["deaths"] = new JArray(lord.Deaths.Select(d => new JObject { ["wave"] = d.Wave, ["body"] = d.Body == LordBody.Own ? "own" : "soldier", ["troop"] = d.Troop, ["forced"] = d.Forced })),
+        ["takeovers"] = new JArray(lord.Takeovers.Select(t => new JObject { ["wave"] = t.Wave, ["by"] = t.ByBot ? "bot" : "person", ["troop"] = t.Troop })),
+        ["rises"] = new JArray(lord.Rises.Select(r => new JObject { ["beforeWave"] = r.BeforeWave, ["at"] = r.At, ["handedBack"] = r.HandedBack })),
+    };
+
     private static JObject Volley(VolleyWaveRecord v) => new() { ["uses"] = v.Uses, ["arrows"] = v.Arrows, ["hits"] = v.Hits, ["kills"] = v.Kills, ["withheld"] = v.Withheld };
 
-    private static readonly string[] PurchaseKinds = { "pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel", "upgrade", "hero" };
+    private static readonly string[] PurchaseKinds = { "pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel", "upgrade", "hero", "gearSet", "engine" };
 
     /// <summary>One purchase: the wave it precedes, its kind, the offer (a pack's), the step (an upgrade's) or the hero's id (a hero's), the level a level kind reached, shop.json's price and the price paid (an upgrade's for one soldier, and its <c>count</c>), and the share (a repair's priced share summed over its gates, care's heal share) to three decimals; a repair also lists each gate's own share in <c>shares</c>.</summary>
+    /// <remarks>A gear set and an engine are bought standing at a place (phase4-plan.md section 7): <c>reach</c> says how the buyer came there (a person, the bot's walk, or the bot's teleport), and an engine names its <c>site</c>.</remarks>
     private static JObject Purchase(FortPurchase p)
     {
         var row = new JObject
@@ -141,6 +156,10 @@ internal static class LongDefeatRunReport
         // An upgrade (#1161) is priced per soldier: basePrice is the step's price for one, price is what the soldiers replaced cost, and count says how many.
         if (p.Kind == PurchaseKind.Upgrade)
             row["count"] = p.Count;
+        if (p.Kind == PurchaseKind.Engine)
+            row["site"] = p.Site;
+        if (p.Kind is PurchaseKind.GearSet or PurchaseKind.Engine)
+            row["reach"] = p.Reach.ToString().ToLowerInvariant();
         return row;
     }
 

@@ -75,18 +75,21 @@ public class CoopUiRegistrationPolicyTests
     // --- Invariant pin (#370) --------------------------------------------------------------
     // These are the real production types the gate exists for. BannerlordTogether's
     // TimeControlModePatch prefixes the Campaign.TimeControlMode setter and overwrites the value
-    // whenever a co-op session is active, so every one of these presents a dead control. If
-    // someone removes the attribute, this test fails rather than the button silently returning.
+    // whenever a co-op session is active, so every prefab extension below would put a dead
+    // control on the vanilla map bar. If someone removes the attribute, this test fails rather
+    // than the button silently returning. The mixin is the exception: it adds no widget, and the
+    // themed map bar's time buttons bind its commands, which under co-op only forward vanilla's
+    // time change to the co-op server (the service writes nothing on a deferring peer).
 
     [TestMethod]
-    public void TimeAccelerationUi_IsMarkedCoopSuppressed()
+    public void TimeAccelerationPrefabs_AreMarkedCoopSuppressed()
     {
         var uiTypes = CoopUiRegistrationPolicy
             .CollectUiExtensionTypes(typeof(TimeAccelerationMixin).Assembly)
-            .Where(t => t.Namespace == "TAOM.Features.TimeAcceleration.UI")
+            .Where(t => t.Namespace == "TAOM.Features.TimeAcceleration.UI" && t != typeof(TimeAccelerationMixin))
             .ToList();
 
-        Assert.AreNotEqual(0, uiTypes.Count, "expected TimeAcceleration UI extension types");
+        Assert.AreNotEqual(0, uiTypes.Count, "expected TimeAcceleration prefab extension types");
 
         var unmarked = uiTypes
             .Where(t => !Attribute.IsDefined(t, typeof(CoopSuppressedUiAttribute)))
@@ -95,6 +98,16 @@ public class CoopUiRegistrationPolicyTests
 
         Assert.AreEqual(
             0, unmarked.Count,
-            "TimeAcceleration UI types missing [CoopSuppressedUi]: " + string.Join(", ", unmarked));
+            "TimeAcceleration prefab extensions missing [CoopSuppressedUi]: " + string.Join(", ", unmarked));
+    }
+
+    [TestMethod]
+    public void TimeAccelerationMixin_IsRegisteredUnderCoop()
+    {
+        var registered = CoopUiRegistrationPolicy.Filter(
+            CoopUiRegistrationPolicy.CollectUiExtensionTypes(typeof(TimeAccelerationMixin).Assembly), coopActive: true);
+
+        CollectionAssert.Contains(registered.ToList(), typeof(TimeAccelerationMixin),
+            "the themed map bar's fast-forward buttons bind the mixin's commands, so it must exist under co-op");
     }
 }

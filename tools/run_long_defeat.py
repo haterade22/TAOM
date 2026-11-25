@@ -3,7 +3,7 @@
 
 Run:  python tools/run_long_defeat.py [--fortress helms] [--waves N] [--lose] [--garrison-scale X] [--live-limit S] [--screenshots 5,60]
                                       [--speed 1|2|4|10] [--class ID|all] [--seed N] [--start-wave N] [--start-rerolls N] [--start-gold N] [--posts-variant A|B|C] [--deep]
-                                      [--break-engines N] [--require-idle-minutes N] [--runs N] [--dry-run]
+                                      [--break-engines N] [--lord-falls N] [--difficulty normal|hard] [--require-idle-minutes N] [--runs N] [--dry-run]
 
 Deploy the tree under test with ./build.ps1 first and check the [BuildStamp] line: a build without the autorun idles at the main menu and
 the run ends as a stall. The in-game LongDefeatAutorunDriver starts the run from the main menu with the shop bot and an AI-driven main
@@ -21,7 +21,7 @@ Phase 2 test options: --seed fixes every roll, --start-wave begins the run at th
 a reroll at clear 3), and --deep is --start-wave 12 --waves 4 judged by DEEP_CHECKS (a final or lost_* run). --class all gives each of --runs
 the next class. The report must be schema 2 and must echo the seed, start wave, rerolls and start gold that were armed (a run armed with no start gold must report startGold null); any owner_missing above 0 fails.
 --start-gold sets the gold the run starts with and makes the bot buy fortifications before packs (phase3-plan.md D27, 5000 for a fortification run; field care's proof is --waves 2 --garrison-scale 1.3 --start-gold 5000, which owes the field-care pass at clear 1). The report's purchases and gold books must replay from the shop (purchase_problem: leaderboard rules 8, 19 and 20), and a purchase of a kind or level this build does not offer (FORT_OFFERED) fails.
-The gate's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 (phase3-plan.md Slice 5): wave 1 meets the vanilla gate, the bot repairs it at clear 1 when the ram broke or dented it and then buys gate level 1, and level 2 at clear 2. A report that lists a gate level owes a gate-level pass, one that lists a repair owes gate-repair, one whose repaired gate met a later wave owes gate-attacked (a skip with reason=no-blow is named and fails), and a fortress that records tower or volley points owes a fort-points pass (it names a reader that accepted fewer points than the file records).
+The gate's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 (phase3-plan.md Slice 5): wave 1 meets the vanilla gate, the bot repairs it at clear 1 when the ram broke or dented it and then buys gate level 1, and level 2 at clear 2. A report that lists a gate level owes a gate-level pass, one that lists a repair owes gate-repair, one whose repaired gate met a later wave owes gate-attacked (a skip with reason=no-blow is named and fails; a skip that ends reason=walls-reached for the repair's own wave pays the debt and the verdict says so), and a fortress that records tower or volley points owes a fort-points pass (it names a reader that accepted fewer points than the file records).
 The Elven Volley's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded volley.origins (phase3-plan.md Slice 6; Helm's Deep records none until 2026-11-06, and then the volley is not for sale): the bot buys level 1 in the preparation and level 2 at clear 1 and looses the volley in every wave. A report that bought a level before a wave the run played owes a volley pass line (an auto one, and, once level 2 was bought, one with mode=crosshair); a skip (a window cut short) does not pay it.
 The report's class must be the one armed (--class, run by run for --class all) or, with none armed, the bot's draw from the seed (class_problem), and the class check must pass. --class takes the classes of classes.json only (the three foot classes and cavalry), so a name the game does not offer is refused here instead of being replaced by the game.
 The tower volley's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded tower posts and tower_volley spots (phase3-plan.md Slice 8; Helm's Deep records none until 2026-11-06, and then tower level 3 is not for sale): the bot buys tower level 3 at clear 2, and each tower with a spot and a post archer looses its volley in wave 3. A report that bought level 3 before a wave the run played owes a tower-volley pass for each recorded tower that holds a spot and a post, and a posts pass is owed for each recorded tower that holds a post (one tower's line never pays another's).
@@ -33,6 +33,7 @@ before a wave the run cleared owes a hunters pass or skip line, and the run buys
 The upgrades' proof run is --waves 2 --garrison-scale 1.3 --start-gold 5000 (#1161): the bot buys an upgrade step with the gold no pack and no fortification wants, an upgrade purchase's basePrice is its shop.json step's price for one soldier and its price is that times its count (no boon factor), and each upgrade purchase owes its own upgrade pass line.
 A cavalry run also owes sally and sally-return, except that both read skip with reason=no-sally-point while no sally point is recorded in fortresses.json (the run rides from Begin): the judge accepts that skip for that reason alone, and only while this tree's fortress row holds no sally key at all (sally_recorded: the game writes the same reason when it drops a malformed block), and sally-return is owed only once a wave was cleared (sally_waived, owes_return).
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
+--difficulty hard arms the hard run (phase5-plan.md Slice 6): the report must say difficulty hard (a report with no difficulty field reads as normal, and a run armed with none must report normal), each wave row's kills plus felled must be the hard count (short only by attackers that fled) and its two factors the hard growth (wave_problem), and the affixes replay from the schedule moved earlier (hard_schedule).
 A wave row's affixes must replay from the report's seed (affix_roll, the same SplitMix64 draw as the game's AffixPlan.Roll, cut by the Legend boons taken before that wave: affix_cut), and a run that cleared 5 waves or whose report shows a wave with affixes also owes the affix check, and a row with a stat power, hide, hammer, terror or blades an affix-effect line (pass or skip).
 The report's boons[] must replay too (boon_problem: each draw is the game's BoonDeck draw over the shipped boons.json rows the run's class and the fortress's troop groups make eligible, the rerolls add up), a run that cleared 4 waves or took a pick owes the boon check, one that took a boon with a stat or health key owes a read= token on that pick's boon line (read_owed_picks), and one that banked a reroll at its first pick or spent one owes the reroll check.
 
@@ -93,7 +94,7 @@ MAX_SEED = 2 ** 53 - 1
 DEEP_CHECKS = ("boot", "general", "class", "commander", "affix", "scale", "end")
 
 # The affixes (phase2-plan.md section 2): eight powers in the game's fixed order, of which AFFIX_POOL are rolled so far. A wave writes the affix check when it
-# starts, so wave 5 (the first with an affix) must have started: a run from wave 1 that cleared AFFIX_FROM_CLEARS waves, or whose report shows a wave with
+# starts, so wave 5 (the first with an affix at normal; on hard it is wave 3, see hard_schedule) must have started: a run from wave 1 that cleared AFFIX_FROM_CLEARS waves, or whose report shows a wave with
 # affixes, owes it. The plan's "4 or more clears" would fail a --waves 4 run, which stops at the clear of wave 4 and never starts wave 5.
 AFFIX_IDS = ("lash", "drums", "eye", "discipline", "hide", "hammer", "terror", "blades")
 # The powers with an effect in the game (AffixPlan.Pool): hammer and terror joined in Slice 8, blades in Slice 9 when its poison and its kill owner landed: all eight roll now.
@@ -156,7 +157,7 @@ target_waves = None
 checkout = None
 # The --speed the run was armed with, or None: the report's maxSpeed must equal it, or the arm key never took effect.
 expected_speed = None
-# The report fields the arm file fixed ({"seed": N, "startWave": N, "startRerolls": N, "startGold": N, "breakEngines": N}): each must come back equal, or the arm key never took effect.
+# The report fields the arm file fixed ({"seed": N, "startWave": N, "startRerolls": N, "startGold": N, "breakEngines": N, "lordFalls": N}): each must come back equal, or the arm key never took effect.
 expected_report = {}
 
 
@@ -209,6 +210,16 @@ def shipped_classes(path=None):
         if isinstance(row, dict) and isinstance(row.get("id"), str) and row["id"] and isinstance(row.get("kits"), dict) and row["kits"]:
             found.append((row["id"], {culture.lower() for culture in row["kits"]}))
     return found
+
+
+def mounted_classes(path=None):
+    """The ids of the classes of this tree's classes.json whose mounted is true (the game's ClassesReader takes a JSON true only; anything else is a foot class). A mounted lord rises at his home point."""
+    try:
+        root = json.loads(Path(path or CLASS_FILE).read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError):
+        return set()
+    rows = root.get("classes") if isinstance(root, dict) else None
+    return {row["id"] for row in rows if isinstance(row, dict) and isinstance(row.get("id"), str) and row.get("mounted") is True} if isinstance(rows, list) else set()
 
 
 def fortress_culture(fortress_id):
@@ -305,6 +316,8 @@ def affix_problem(report_json):
     if not isinstance(rows, list) or isinstance(seed, bool) or not isinstance(seed, int):
         return None
     schedule = shipped_affix_schedule()
+    if report_difficulty(report_json) == "hard":
+        schedule = hard_schedule(schedule, shipped_hard()[1])
     boon_rows = shipped_boons()[0]
     for row in rows:
         if not isinstance(row, dict) or not isinstance(row.get("wave"), int) or isinstance(row.get("wave"), bool):
@@ -573,6 +586,132 @@ def reached_endless(report_json):
     return False
 
 
+# Difficulty (phase5-plan.md, Slice 6). waves.json "rules.hard" gives a factor and a number of waves earlier. On hard the wave count is min(1000, round(normal count * factor)), rounded once and
+# half away from zero after the roster's own cap, the health and damage growth per wave is multiplied by the factor (in 32-bit floats, as the game's WavePlan.Harder does), and each affix
+# stage starts that many waves sooner but never before wave 1 (AffixPlan.Earlier). Both fortresses use the same numbers today, so these read the roster the report's fortress names.
+HARD_DEFAULT = (1.25, 2)
+HARD_MAX_COUNT = 1000
+DIFFICULTIES = ("normal", "hard")
+
+
+def _number(value, low, high):
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
+    try:
+        return math.isfinite(value) and low <= value <= high
+    except OverflowError:
+        # A JSON integer too large for a float: the game's reader refuses it as out of range.
+        return False
+
+
+def _round_half_away(value):
+    """Math.Round(value, MidpointRounding.AwayFromZero) for a positive double; the built-in round() takes halves to the even number."""
+    floor = math.floor(value)
+    return int(floor + 1 if value - floor >= 0.5 else floor)
+
+
+def report_difficulty(report_json):
+    """The word hard or normal: a report of a build with no difficulty field is a normal run."""
+    return "hard" if report_json.get("difficulty") == "hard" else "normal"
+
+
+def shipped_hard(path=None):
+    """(factor, affixWavesEarlier) of waves.json rules.hard, read by the rules of WavesReader.ReadHard: no block, or one that is not an object, is the defaults; a factor that is not a number from 1.0 to
+    2.0, or an affixWavesEarlier that is not a whole number from 0 to 10, keeps its own default. The factor is the 32-bit float the game holds."""
+    rules = _json_object(path or WAVES_FILE).get("rules")
+    block = rules.get("hard") if isinstance(rules, dict) else None
+    if not isinstance(block, dict):
+        return HARD_DEFAULT
+    factor, earlier = block.get("factor"), block.get("affixWavesEarlier")
+    return (_f32(factor) if _number(factor, 1.0, 2.0) else HARD_DEFAULT[0], earlier if _whole(earlier, 0, 10) else HARD_DEFAULT[1])
+
+
+def hard_schedule(schedule, earlier):
+    """The affix schedule of a hard run: every fromWave `earlier` waves sooner, no earlier than wave 1; the rolls are unchanged."""
+    return tuple((max(1, from_wave - earlier), count) for from_wave, count in schedule) if earlier > 0 else tuple(schedule)
+
+
+def wave_spec(fortress_id, wave, difficulty, path=None):
+    """(count, healthFactor, damageFactor) of a wave of the fortress's roster, or None when the fortress, its roster or its waves are not in the files. A wave below 1 is wave 1. The authored
+    list gives counts and factors of 1; past it the count is min(maxCount, last + countPerWave * extra) and each factor min(maxFactor, 1 + perWave * extra) in 32-bit floats (WavePlan.ForWave,
+    EndlessScale.Factor). Hard then scales the count and the two per-wave growths by the factor. A wave row the game's reader would skip (count outside 101 to 1000, no mix) is skipped here too; the
+    shipped file is held valid by the C# shipped-data tests, so the mix rows themselves are not judged."""
+    fortress = next((f for f in _json_object(FORTRESS_FILE).get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None)
+    rosters = _json_object(path or WAVES_FILE).get("rosters")
+    roster = rosters.get(fortress.get("waves")) if fortress is not None and isinstance(rosters, dict) else None
+    rows = roster.get("waves") if isinstance(roster, dict) else None
+    if not isinstance(rows, list) or not _is_int(wave):
+        return None
+    counts = [row["count"] for row in rows if isinstance(row, dict) and _whole(row.get("count"), 101, 1000) and isinstance(row.get("mix"), list) and row["mix"]]
+    if not counts:
+        return None
+    scaling = roster.get("scaling") if isinstance(roster.get("scaling"), dict) else {}
+    per_wave = scaling.get("countPerWave") if _whole(scaling.get("countPerWave"), 0, 100) else 10
+    max_count = scaling.get("maxCount") if _whole(scaling.get("maxCount"), 101, 1000) else 300
+    health = _f32(scaling["healthPerWave"] if _number(scaling.get("healthPerWave"), 0.0, 1.0) else 0.05)
+    damage = _f32(scaling["damagePerWave"] if _number(scaling.get("damagePerWave"), 0.0, 1.0) else 0.03)
+    max_factor = _f32(scaling["maxFactor"] if _number(scaling.get("maxFactor"), 1.0, 10.0) else 3.0)
+    wave = max(1, wave)
+    extra = max(0, wave - len(counts))
+    count = counts[wave - 1] if extra == 0 else min(max_count, counts[-1] + per_wave * extra)
+    if difficulty == "hard":
+        factor = shipped_hard(path)[0]
+        count = min(HARD_MAX_COUNT, _round_half_away(count * factor))
+        health, damage = _f32(health * factor), _f32(damage * factor)
+    if extra == 0:
+        return count, 1.0, 1.0
+    return count, _f32(min(max_factor, 1.0 + health * extra)), _f32(min(max_factor, 1.0 + damage * extra))
+
+
+def wave_problem(report_json):
+    """None when the report's wave rows replay from the roster, else what is wrong (leaderboard rule 5). Every row that has healthFactor and damageFactor holds the roster's growth at the
+    report's difficulty to a relative 1e-5 (the game stores them as 32-bit floats), fled attackers or not. A row's shortfall is the wave's count minus kills plus felled: below 0 is wrong, and
+    the shortfalls together may not exceed the report's whole-number `fled` (a routed attacker counts as no kill; a missing or other `fled` is 0, so with none fled the counts are equal).
+    fleeingPeak bounds nothing. A kills or felled below 0 is wrong at any difficulty. A report that says hard must carry a usable wave, kills, felled, healthFactor and damageFactor in every row
+    and a fortress whose roster resolves; a normal report or one with no difficulty (older builds, fixture rows) skips a row without them and an unknown fortress."""
+    rows = report_json.get("waves")
+    if not isinstance(rows, list):
+        return None
+    fortress, difficulty = report_json.get("fortress"), report_difficulty(report_json)
+    hard = difficulty == "hard"
+    fled = report_json.get("fled")
+    fled = fled if _is_int(fled) and fled > 0 else 0
+    shortfall, first = 0, None
+    for index, row in enumerate(rows, 1):
+        if not isinstance(row, dict):
+            if hard:
+                return f"wave row {index} is not an object, so a hard report's count and factors cannot replay"
+            continue
+        wave, kills, felled = row.get("wave"), row.get("kills"), row.get("felled")
+        for name, value in (("kills", kills), ("felled", felled)):
+            if _is_int(value) and value < 0:
+                return f"wave {wave} lists {name} {value}, below 0"
+        factors = {"healthFactor": row.get("healthFactor"), "damageFactor": row.get("damageFactor")}
+        bad = [name for name, value in (("wave", wave), ("kills", kills), ("felled", felled)) if not _is_int(value)]
+        bad += [name for name, value in factors.items() if not _number(value, 0.0, 1e9)]
+        if hard and bad:
+            return f"wave row {index} of a hard report has no usable {', '.join(bad)}"
+        if not _is_int(wave):
+            continue
+        spec = wave_spec(fortress if isinstance(fortress, str) else None, wave, difficulty)
+        if spec is None:
+            if hard:
+                return f"a hard report names the fortress {fortress!r}, whose roster waves.json does not give"
+            continue
+        for (name, got), want in zip(factors.items(), spec[1:]):
+            if name not in bad and abs(got - want) > 1e-5 * max(1.0, abs(want)):
+                return f"wave {wave} {name} is {got}, but a {difficulty} wave {wave} takes {want:.6g}"
+        if _is_int(kills) and _is_int(felled):
+            if spec[0] - (kills + felled) < 0:
+                return f"wave {wave} lists {kills} kills and {felled} felled, more than the {spec[0]} a {difficulty} wave {wave} sends"
+            if spec[0] > kills + felled:
+                shortfall += spec[0] - (kills + felled)
+                first = first or f"wave {wave} lists {kills} kills and {felled} felled, but a {difficulty} wave {wave} sends {spec[0]}"
+    if shortfall > fled:
+        return f"{first}; {shortfall} attackers are missing in all and only {fled} fled"
+    return None
+
+
 # The commanders (phase2-plan.md section 2, "Commanders"): waves.json gives each roster an `every`, the ranks in order and the abilities, and the report lists the commander of every wave
 # that had one. COMMANDER_CHECK is written when his wave clears, SUMMON_CHECK for each summon of it.
 WAVES_FILE = MODULE_DATA / "waves.json"
@@ -676,11 +815,13 @@ def owes_summon(report_json):
 # purchase_problem replays rules 8, 19 and 20 of leaderboard-plan.md over a report.
 MAX_PRICE = 1_000_000
 FORT_OFFERED = {"gate": 3, "towers": 3, "fieldCare": True, "volley": 2}  # field care landed in Slice 4, the gate in Slice 5, the Elven Volley in Slice 6, tower levels 1 and 2 in Slice 7 and level 3, the tower volley, in Slice 8; each later slice raises its kind here and in FortOffer.Offered
-PURCHASE_KINDS = ("pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel", "upgrade", "hero")
+PURCHASE_KINDS = ("pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel", "upgrade", "hero", "gearSet", "engine")
 # "upgrades" is the sink of the shop's troop upgrades (#1161): one "upgrade" purchase per order the field carried out, its count the soldiers it replaced.
 # "heroes" is the sink of the shop's named heroes (#1325): one "hero" purchase per hero bought, its id the shop's hero id. A hero the field could not spawn is paid back and leaves no row.
-SPENT_ON = ("packs", "gate", "towers", "fieldCare", "volley", "upgrades", "heroes")
-KIND_SINK = {"pack": "packs", "gateLevel": "gate", "gateRepair": "gate", "towerLevel": "towers", "fieldCare": "fieldCare", "volleyLevel": "volley", "upgrade": "upgrades",
+SPENT_ON = ("packs", "gate", "towers", "fieldCare", "volley", "upgrades", "heroes", "gear", "engines")
+# How the buyer of a gear set or an engine came to the place (ErrandReach, lower case): a person's own walk, the bot's walk, or the bot's teleport when the walk ran out of time (phase4-plan.md D44).
+REACHES = ("person", "walk", "teleport")
+KIND_SINK = {"gearSet": "gear", "engine": "engines", "pack": "packs", "gateLevel": "gate", "gateRepair": "gate", "towerLevel": "towers", "fieldCare": "fieldCare", "volleyLevel": "volley", "upgrade": "upgrades",
              "hero": "heroes"}
 SHARE_TOLERANCE = 0.0005
 
@@ -858,8 +999,17 @@ def shipped_fortifications(fortress_id=None, path=None):
 
 # The Phase 4 places (phase4-plan.md section 5). shop.json carries an `armoury` and a `yard` block per shop. Any other key, a retired `marshal` block included, is ignored (the shop's heroes list replaced it, #1337). read_locations mirrors LocationsReader rule for rule (both suites read
 # tools/tests/long_defeat_location_cases.json), and LOCATION_OFFERED mirrors LocationOffer.Offered (D46): a test reads the C# source and compares the two, since FORT_OFFERED is pinned only to literals.
-# Nothing is delivered yet, so a shop's rows stay hidden; each later slice raises its kind here and in LocationOffer.Offered.
-LOCATION_OFFERED = {"armoury": False, "mangonel": False, "trebuchet": False}
+# Slice 5 delivers the armoury (the live gear swap and the bot's errand); a shop's armoury rows still stay hidden until the fortress records the point. Each later slice raises its kind here and in LocationOffer.Offered.
+LOCATION_OFFERED = {"armoury": True, "mangonel": False, "trebuchet": False}
+
+
+def shipped_locations(fortress_id=None, path=None):
+    """The armoury and yard plan of this tree's shop.json for the fortress's shop (read_locations' plan), or None when the file, the fortress or both blocks are missing."""
+    fortress = next((f for f in _json_object(FORTRESS_FILE).get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None)
+    shops = _json_object(path or SHOP_FILE).get("shops", {})
+    shop = shops.get(fortress.get("shop")) if fortress is not None and isinstance(shops, dict) else None
+    return read_locations(shop)[0] if isinstance(shop, dict) else None
+
 ARMOURY_REACH = 4
 YARD_REACH = 6
 REACH_RANGE = (1, 15)
@@ -1083,20 +1233,24 @@ def shipped_heroes(fortress_id=None, path=None):
 
 
 def spent_on_keys_note(spent_on):
-    """"; missing key(s): ...; extra key(s): ..." for a gold.spentOn dict whose keys are not the sinks, and "" for any other fault. A missing heroes key means the report comes from a build
-    older than this tool, which the log's [BuildStamp] line names."""
+    """"; missing key(s): ...; extra key(s): ..." for a gold.spentOn dict whose keys are not the sinks, and "" for any other fault. A missing heroes, gear or engines key (the sinks added last) means the report
+    comes from a build older than this tool, which the log's [BuildStamp] line names; any other missing sink is a broken report."""
     if not isinstance(spent_on, dict):
         return ""
     missing = [k for k in SPENT_ON if k not in spent_on]
     extra = sorted(str(k) for k in spent_on if k not in SPENT_ON)
     note = (f"; missing key(s): {', '.join(missing)}" if missing else "") + (f"; extra key(s): {', '.join(extra)}" if extra else "")
-    if "heroes" in missing:
-        note += " (a report with no 'heroes' key comes from a build older than this tool: read the [BuildStamp] line of the log)"
+    newest = [k for k in missing if k in ("heroes", "gear", "engines")]
+    if newest:
+        note += f" (a report with no {' or '.join(repr(k) for k in newest)} key comes from a build older than this tool: read the [BuildStamp] line of the log)"
     return note
 
 
-def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, percents=None, upgrades=None, heroes=None):
-    """None when the report's gold books and purchases replay from the shop, else what is wrong (leaderboard-plan.md rules 8, 19 and 20, phase3-plan.md section 7).
+def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, percents=None, upgrades=None, heroes=None, locations=None, armoury_point=None):
+    """None when the report's gold books and purchases replay from the shop, else what is wrong (leaderboard-plan.md rules 8, 19, 20, 22 and 23, phase3-plan.md and phase4-plan.md section 7).
+
+    Rule 22: a gearSet is a set of the shop's armoury at a fortress that records the armoury's point (the game sells nowhere else: SurvivalRun.ArmourySold), bought at most once and sold to the report's class, and the report's armoury list is the gearSet ids in purchase order. Rule 23: an engine is a
+    kind the shop's yard lists and this build delivers (LOCATION_OFFERED), and each site is bought at most once. Both take the price factor as a pack does, and both name how the buyer came (REACHES).
 
     Rule 8: gold.spent equals the sum of gold.spentOn, and each spentOn part equals the prices of its purchases. Rule 19: each purchase's basePrice is shop.json's for its kind and level
     (the offer's for a pack), its price is max(1, the base through the price factor of the boons owned before that wave) and, for a repair, max(1, ceil(that * share)); levels are bought in order,
@@ -1109,6 +1263,10 @@ def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, perc
     offers = shipped_offers(fortress_id) if offers is None else offers
     upgrades = shipped_upgrades(fortress_id) if upgrades is None else upgrades
     heroes = shipped_heroes(fortress_id) if heroes is None else heroes
+    locations = (shipped_locations(fortress_id) if locations is None else locations) or {}
+    gear_sets = {s["id"]: s for s in (locations.get("armoury") or {}).get("sets", [])}
+    engine_prices = {kind: price for kind, price in (locations.get("yard") or {}).get("engines", [])}
+    klass = report_json.get("class")
     percents = shipped_price_percents() if percents is None else percents
     purchases, gold, final = report_json.get("purchases"), report_json.get("gold"), report_json.get("fortifications")
     if not isinstance(purchases, list):
@@ -1136,6 +1294,7 @@ def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, perc
     by_sink = dict.fromkeys(SPENT_ON, 0)
     care_by_wave = {}
     bought_at = {"volleyLevel": [], "towerLevel": []}
+    gear_bought, sites_bought = [], set()
     for number, p in enumerate(purchases):
         where = f"purchase {number}"
         if not isinstance(p, dict) or p.get("kind") not in PURCHASE_KINDS:
@@ -1151,6 +1310,35 @@ def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, perc
         elif kind == "hero":
             if heroes.get(p.get("id")) != base:
                 return f"{where}: hero {p.get('id')!r} has basePrice {base}, shop.json's hero is {heroes.get(p.get('id'))!r}"
+        elif kind in ("gearSet", "engine"):
+            if kind == "gearSet":
+                chosen = gear_sets.get(p["id"]) if isinstance(p.get("id"), str) else None
+                if not LOCATION_OFFERED["armoury"]:
+                    return f"{where}: the armoury is not offered by this build"
+                if not (records_armoury_point(fortress_id) if armoury_point is None else armoury_point):
+                    return f"{where}: the fortress records no armoury point, so the armoury sells nothing"
+                if chosen is None:
+                    return f"{where}: gear set {p.get('id')!r} is not a set of the shop's armoury"
+                if p["id"] in gear_bought:
+                    return f"{where}: gear set {p['id']!r} is bought twice, a set is bought once a run"
+                if not isinstance(klass, str) or not klass or (chosen["classes"] is not None and klass not in chosen["classes"]):
+                    return f"{where}: gear set {p['id']!r} is not sold to class {klass!r}"
+                expected = chosen["price"]
+                gear_bought.append(p["id"])
+            else:
+                site = p.get("site")
+                if not isinstance(p.get("id"), str) or p["id"] not in engine_prices or not LOCATION_OFFERED.get(p["id"]):
+                    return f"{where}: engine {p.get('id')!r} is not offered by this build and the shop's yard"
+                if not (_is_int(site) and site >= 0):
+                    return f"{where}: engine {p['id']!r} has site {site!r}, wanted the number of the site it stands at, 0 or more"
+                if site in sites_bought:
+                    return f"{where}: site {site} is bought twice, a site holds one engine a run"
+                expected = engine_prices[p["id"]]
+                sites_bought.add(site)
+            if base != expected:
+                return f"{where}: {kind} {p['id']!r} has basePrice {base}, shop.json's is {expected}"
+            if p.get("reach") not in REACHES:
+                return f"{where}: {kind} {p['id']!r} has reach {p.get('reach')!r}, wanted one of {', '.join(REACHES)}"
         elif kind == "upgrade":
             count = p.get("count")
             if upgrades.get(p.get("id")) != base:
@@ -1204,6 +1392,9 @@ def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, perc
     for key, kind in (("gateLevel", "gateLevel"), ("towerLevel", "towerLevel"), ("volleyLevel", "volleyLevel")):
         if final[key] != owned[kind]:
             return f"fortifications.{key} is {final[key]}, but the highest bought is {owned[kind]}"
+    # A report from before the armoury has no key, which reads as an empty list; any other value must be the sets bought, in order.
+    if report_json.get("armoury", []) != gear_bought:
+        return f"armoury is {report_json.get('armoury')!r}, but the gear sets bought are {gear_bought}"
     return volley_problem(report_json, plan, bought_at)
 
 
@@ -1349,10 +1540,11 @@ def owed_hunters_lines(report_json, log_text):
 
 
 # The gates (Slice 5). The game writes gate-level (key l<N>) after each level it writes, gate-repair (key w<N>) after each repair and gate-attacked (key w<N>) at the next clear or the run's end for the
-# repaired gate; fort-points once at the boot. A report that lists the purchase owes the pass; a skip proves nothing (gate-attacked's reason=no-blow means the ram never struck the repaired gate, R4).
+# repaired gate; fort-points once at the boot. A report that lists the purchase owes the pass; a skip proves nothing (gate-attacked's reason=no-blow means the ram never struck the repaired gate, R4), with one exception: a gate-attacked skip that ends reason=walls-reached, for each repair's own wave, pays that debt (walls_reached_waves).
 GATE_LEVEL_CHECK = "gate-level"
 GATE_REPAIR_CHECK = "gate-repair"
 GATE_ATTACKED_CHECK = "gate-attacked"
+WALLS_REACHED = "walls-reached"
 FORT_POINTS_CHECK = "fort-points"
 
 
@@ -1376,6 +1568,32 @@ def _played(report_json):
     reached = report_json.get("wave")
     cleared = [w.get("wave") for w in report_json.get("waves") or [] if isinstance(w, dict)]
     return max([n for n in [reached] + cleared if _is_int(n)], default=0)
+
+
+WALLS_REACHED_ROW = re.compile(r"\bw=([0-9]+)\b.* reason=" + WALLS_REACHED + r"$")
+
+
+def walls_reached_waves(report_json, log_text):
+    """The waves whose gate-attacked line could not be judged, or [] when the gate-attacked debt stands. The game writes a skip that ends reason=walls-reached when the repaired gate was struck
+    and attackers stood above the walls before any was seen behind it: the doorway count then cannot tell who passed the gate. The debt is paid only when every repair the run played against
+    (a gateRepair before a wave it reached) has such a line for its own wave (w=N), and the log holds no other gate-attacked skip (no-blow, or a reason with text after it)."""
+    played = _played(report_json)
+    owed = sorted({p["beforeWave"] for p in _bought(report_json, "gateRepair") if _is_int(p.get("beforeWave")) and p["beforeWave"] <= played})
+    rows = _gate_attacked_skips(log_text)
+    reached = [WALLS_REACHED_ROW.search(row) for row in rows]
+    if not owed or not rows or not all(reached):
+        return []
+    waves = {int(m.group(1)) for m in reached}
+    return owed if all(wave in waves for wave in owed) else []
+
+
+def _gate_attacked_skips(log_text):
+    return [row.strip() for row in re.findall(r"\[Check\] id=" + re.escape(CHECK_PREFIX + GATE_ATTACKED_CHECK) + r" result=skip\b([^\r\n]*)", log_text)]
+
+
+def walls_reached_skips(log_text):
+    """The waves, in order, of every gate-attacked skip that ends reason=walls-reached: the waves whose gate the run could not judge, whether or not another wave's pass paid the debt."""
+    return sorted({int(m.group(1)) for m in (WALLS_REACHED_ROW.search(row) for row in _gate_attacked_skips(log_text)) if m})
 
 
 def owes_gate_attacked(report_json):
@@ -1487,8 +1705,16 @@ def posts_variant_pattern(variant):
     return re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX + POSTS_CHECK) + r" result=pass\b[^\n]*\bvariant=" + re.escape(variant) + r"\b")
 
 
+def records_armoury_point(fortress_id, root=None):
+    """Whether the fortress row of fortresses.json holds an armoury point: the place the game needs before it sells a gear set."""
+    root = _json_object(FORTRESS_FILE) if root is None else root
+    fortress = next((f for f in root.get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None) if isinstance(root, dict) else None
+    return fortress is not None and isinstance(fortress.get("armoury"), dict) and bool(fortress["armoury"])
+
+
 def recorded_fort_points(fortress_id, root=None):
-    """Whether the fortress row of fortresses.json records a tower post, a tower volley spot or a volley origin (the points the game's fort-points check reads); Mike records them in play."""
+    """Whether the fortress row of fortresses.json records a tower post, a tower volley spot, a volley origin, the armoury's point or a keep (the points the game's fort-points check reads; the keep is
+    the lord's rise point, judged when the player defends, as every run of this wrapper does); Mike records them in play."""
     root = _json_object(FORTRESS_FILE) if root is None else root
     fortress = next((f for f in root.get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None) if isinstance(root, dict) else None
     if fortress is None:
@@ -1497,7 +1723,9 @@ def recorded_fort_points(fortress_id, root=None):
     volley = fortress.get("volley")
     tower_points = isinstance(towers, list) and any(isinstance(t, dict) and (t.get("posts") or t.get("volley")) for t in towers)
     origins = isinstance(volley, dict) and bool(volley.get("origins"))
-    return bool(tower_points or origins)
+    armoury = isinstance(fortress.get("armoury"), dict) and bool(fortress.get("armoury"))
+    keep = isinstance(fortress.get("keep"), dict) and bool(fortress.get("keep"))
+    return bool(tower_points or origins or armoury or keep)
 
 
 def recorded_fort_point_count(fortress_id, root=None):
@@ -1622,12 +1850,182 @@ def sally_waived(name, log_text, recorded=False):
     return bool(reasons) and all(reason == NO_SALLY_POINT for reason in reasons)
 
 
+# The lord (phase4-plan.md section 7, leaderboard rule 25). Each body of the player's that falls is one death: the lord's own, or a soldier he took over. A takeover follows a death in its wave,
+# and a rise comes at a clear that the run goes on from. A rise's place is `recorded` (the keep as recorded), `scene` (the scene's keep frame, also the fallback for an unusable recorded keep) or `home` (a mounted lord);
+# `respawn` is the place of a build with no lord adapter, which an older report still holds.
+LORD_BODIES = ("own", "soldier")
+TAKEOVER_BY = ("person", "bot")
+RISE_AT = ("respawn", "home", "recorded", "scene")
+
+# The checks the death rule's engine half writes (Slice 4). A report that lists a rise owes the rise pass, one that lists a death owes a general-down pass (the seat after a fall) and, when it armed lordFalls, a
+# player-death pass (the next body adopted, via=takeover|rise). A skip proves nothing: general-down writes one when a take-over beat its read.
+RISE_CHECK = "rise"
+GENERAL_DOWN_CHECK = "general-down"
+PLAYER_DEATH_CHECK = "player-death"
+
+
+def _lord_rows(report_json, key):
+    lord = report_json.get("lord")
+    rows = lord.get(key) if isinstance(lord, dict) else None
+    return rows if isinstance(rows, list) else []
+
+
+def _cleared_and_final(report_json):
+    """(the wave numbers the report has a row for, the wave whose clear ended a run that reached its target or None). The clear that reaches the target raises nobody (SurvivalRun.ClearWave)."""
+    rows = report_json.get("waves")
+    cleared = {row.get("wave") for row in rows if isinstance(row, dict) and _is_int(row.get("wave"))} if isinstance(rows, list) else set()
+    reached = report_json.get("reason") == "TargetReached" or report_json.get("final") is True
+    return cleared, (max(cleared) if cleared and reached else None)
+
+
+def owes_rise(report_json):
+    """The rise pass is owed once the report lists a rise, and also when a body of the player's fell in a wave the run cleared and went on from: that clear raises the lord, so a build that
+    lost the rise owes it too and cannot pass by leaving the row out."""
+    if _lord_rows(report_json, "rises"):
+        return True
+    cleared, final = _cleared_and_final(report_json)
+    return any(isinstance(d, dict) and d.get("wave") in cleared and d.get("wave") != final for d in _lord_rows(report_json, "deaths"))
+
+
+def missing_rise(report_json):
+    """None, or what is wrong: a body of the player's fell in a wave the run cleared and went on from, and no rise precedes the next wave. That clear raises the lord, so a build that raised him a
+    wave late, or not at all, cannot pass on its other rows. A judge's debt and no leaderboard rule: a body that falls between the waves is booked to the wave just cleared and rises a clear later."""
+    cleared, final = _cleared_and_final(report_json)
+    before = {r.get("beforeWave") for r in _lord_rows(report_json, "rises") if isinstance(r, dict)}
+    for d in _lord_rows(report_json, "deaths"):
+        wave = d.get("wave") if isinstance(d, dict) else None
+        if _is_int(wave) and wave in cleared and wave != final and wave + 1 not in before:
+            return (f"a body of the player's fell in wave {wave}, which the run cleared and went on from, but lord.rises holds no rise before wave {wave + 1}: the lord rises at that clear "
+                    "(a body that fell between the waves is booked to the same wave: read the log's [Lord] lines)")
+    return None
+
+
+def owed_rise_passes(report_json, log_text):
+    """One entry when the log holds fewer rise lines than the report lists rises (at least one when owes_rise says so). Each rise writes its own pass on the tick after; a rise on the run's last
+    tick writes a run-ended skip, which pays for that one."""
+    owed = len(_lord_rows(report_json, "rises")) or (1 if owes_rise(report_json) else 0)
+    paid = len(check_pattern(RISE_CHECK, "pass").findall(log_text)) + min(1, skip_reasons(RISE_CHECK, log_text).count("run-ended"))
+    return [] if paid >= owed else [f"{RISE_CHECK} ({paid} line(s) for {owed} rise(s): each rise writes its own pass)"]
+
+
+def owed_general_down_passes(report_json, lost, log_text):
+    """One entry when fewer general-down lines pay than the report's deaths owe. Each death owes a line: a pass (the engine's general is the chosen standing hero or nobody), or a skip with
+    reason=has-main (a body already stood at the read: a take-over, or the rise of a fall on a clear's own tick, so the general is the player's body again). A fall the run ended on is never read
+    back: a lost run owes nothing for a death in the wave it ended in, and in any other run one run-ended skip pays for a death in the last wave (a fall drained on the tick of the final clear)."""
+    deaths = [d for d in _lord_rows(report_json, "deaths") if isinstance(d, dict)]
+    in_last = sum(1 for d in deaths if d.get("wave") == report_json.get("wave"))
+    owed = len(deaths) - (in_last if lost else 0)
+    reasons = skip_reasons(GENERAL_DOWN_CHECK, log_text)
+    paid = len(check_pattern(GENERAL_DOWN_CHECK, "pass").findall(log_text)) + reasons.count("has-main")
+    if not lost and in_last:
+        paid += min(1, reasons.count("run-ended"))
+    return [] if paid >= owed else [f"{GENERAL_DOWN_CHECK} ({paid} line(s) for {owed} death(s): each fall owes a pass, or a skip with reason=has-main)"]
+
+
+def owes_player_death(report_json):
+    """The player-death pass is owed when a body followed a fall: a soldier taken in or after the wave of the first death, or a rise after it. The game writes the line when it adopts that
+    body. A fall with no body after it (in the last wave, before the bot's five seconds, and the final clear raises nobody) owes none."""
+    waves = [d["wave"] for d in _lord_rows(report_json, "deaths") if isinstance(d, dict) and _is_int(d.get("wave"))]
+    if not waves:
+        return False
+    first = min(waves)
+    return (any(isinstance(t, dict) and _is_int(t.get("wave")) and t["wave"] >= first for t in _lord_rows(report_json, "takeovers"))
+            or any(isinstance(r, dict) and _is_int(r.get("beforeWave")) and r["beforeWave"] > first for r in _lord_rows(report_json, "rises")))
+
+
+def lord_problem(report_json):
+    """None when the report's lord block replays, else what is wrong (rule 25). The report must carry playerDeaths, the lord block and its wave, and playerDeaths is the number of deaths listed.
+    Every death and takeover lies inside the waves the run played. A rise precedes the wave after one the run cleared and went on from (the clear that reached the target raises nobody), and
+    no two rises precede one wave, and a rise is at home exactly when the report's class is mounted. A forced death needs lordFalls for that wave and the lord's own body, and there is at most one. A run armed with lordFalls that cleared that wave must list
+    a death in it, or the test option never took effect. The rules do not tie a takeover or a rise to a death: a lord the AI drives can rout, which removes his body with no death, and he is
+    still raised at the clear."""
+    if "lord" not in report_json or "playerDeaths" not in report_json:
+        return "the report has no lord block or no playerDeaths; this build writes both in every report (a report without them comes from a build older than this tool: read the [BuildStamp] line of the log)"
+    lord = report_json["lord"]
+    if not isinstance(lord, dict) or not all(isinstance(lord.get(k), list) for k in ("deaths", "takeovers", "rises")):
+        return f"lord is {lord!r}, wanted deaths, takeovers and rises, each a list"
+    deaths, takeovers, rises = lord["deaths"], lord["takeovers"], lord["rises"]
+    player_deaths = report_json["playerDeaths"]
+    if not _is_int(player_deaths) or player_deaths != len(deaths):
+        return f"playerDeaths is {player_deaths!r}, but lord.deaths lists {len(deaths)}"
+
+    last = report_json.get("wave")
+    if not _is_int(last):
+        return f"the report's wave is {last!r}, wanted the number of the last wave the run began: the lord's rows cannot be placed without it"
+    # A fall before the first wave begins is booked to the wave before the start wave, never below 1 (SurvivalRun.PlayerDown), while the report's wave is still that wave or 0: a run that
+    # ends in its first preparation reports wave 0 and may hold a death in wave 1.
+    start = report_json.get("startWave")
+    first = max(1, (start if _is_int(start) else 1) - 1)
+    last = max(first, last)
+
+    def played(wave):
+        return _is_int(wave) and first <= wave <= last
+
+    falls = report_json.get("lordFalls")
+    for i, d in enumerate(deaths):
+        if not (isinstance(d, dict) and played(d.get("wave")) and d.get("body") in LORD_BODIES and isinstance(d.get("troop"), str) and isinstance(d.get("forced"), bool)):
+            return f"lord.deaths[{i}] is {d!r}, wanted a wave the run played ({first} to {last}), a body of {' or '.join(LORD_BODIES)}, a troop and a forced flag"
+        if d["forced"] and (not _is_int(falls) or falls != d["wave"] or d["body"] != "own"):
+            return f"lord.deaths[{i}] is forced in wave {d['wave']}, but lordFalls is {falls!r}: only the lord_falls test option fells the lord, his own body, in its wave"
+    if sum(1 for d in deaths if d["forced"]) > 1:
+        return "lord.deaths holds more than one forced death; the lord_falls test option fells the lord once"
+
+    for i, t in enumerate(takeovers):
+        if not (isinstance(t, dict) and played(t.get("wave")) and t.get("by") in TAKEOVER_BY and isinstance(t.get("troop"), str)):
+            return f"lord.takeovers[{i}] is {t!r}, wanted a wave the run played ({first} to {last}), a by of {' or '.join(TAKEOVER_BY)} and a troop"
+
+    # The clear that reaches the target ends the run before any rise is ordered (SurvivalRun.ClearWave), so that one clear raises nobody.
+    cleared, final_clear = _cleared_and_final(report_json)
+    mounted = report_json.get("class") in mounted_classes()
+    before = set()
+    for i, r in enumerate(rises):
+        if not (isinstance(r, dict) and _is_int(r.get("beforeWave")) and r.get("at") in RISE_AT and isinstance(r.get("handedBack"), bool)):
+            return f"lord.rises[{i}] is {r!r}, wanted a beforeWave, an at of {', '.join(RISE_AT)} and a handedBack flag"
+        if r["beforeWave"] - 1 not in cleared or r["beforeWave"] - 1 == final_clear:
+            return f"lord.rises[{i}] precedes wave {r['beforeWave']}, but the run did not clear wave {r['beforeWave'] - 1} and go on: the lord rises only at such a clear"
+        if r["beforeWave"] in before:
+            return f"lord.rises[{i}] is a second rise before wave {r['beforeWave']}; the lord rises once at a clear"
+        before.add(r["beforeWave"])
+        if (r["at"] == "home") != mounted:
+            return f"lord.rises[{i}] is at {r['at']} for class {report_json.get('class')!r}: a mounted class rises at its home point (home), and no other class does"
+
+    if _is_int(falls) and falls in cleared and not any(d["wave"] == falls for d in deaths):
+        return f"lordFalls is {falls} and wave {falls} was cleared, but lord.deaths lists no death in it: the game never felled the lord"
+    return None
+
+
+# --lord-falls is refused while the game does not carry the fall out: the run asks for it (RunEffects.FellLord) and the director serves it since phase4-plan.md Slice 4 (the adapter fells the lord's own body with a
+# blow owned by a standing attacker). A test reads the director's source for that reader and compares, so a build that stops serving it must turn this off, and nobody starts a game run for an option that does nothing.
+LORD_FALLS_DELIVERED = True
+
+
+def lord_falls_problem(known):
+    """Why --lord-falls cannot prove the death rule with these flags, or None: the game fells the lord inside the named wave, so the run must play that wave."""
+    if known.lord_falls is None:
+        return None
+    if not LORD_FALLS_DELIVERED:
+        return "--lord-falls is not delivered yet: this build arms the option but does not fell the lord (phase4-plan.md Slice 4 serves it)"
+    if known.lose:
+        return "--lord-falls needs a run that clears its wave, and --lose is judged on a lost run: a run lost before or inside that wave would pass with no fall"
+    first = known.start_wave if known.start_wave is not None else 1
+    last = first + known.waves - 1
+    if not first <= known.lord_falls <= last:
+        return f"--lord-falls {known.lord_falls} names a wave the run does not play: it plays waves {first} to {last}"
+    return None
+
+
 def owes_return(report_json, lose):
-    """The sally-return pass is owed only when a wave was cleared (the return happens at a clear), never to a run built to lose. A deep run lost in its first wave has cleared none.
-    Plan item 17 wanted "a wave cleared after a sally"; this is looser and accepted: the point is per fortress, so every wave sallies or none does, and a false FAIL would need a
-    cleared wave that did not sally beside one that did, which a recorded point never gives (a taken-over wave writes its own return skip with its reason, a real miss)."""
+    """The sally-return pass is owed only when a wave was cleared (the return happens at a clear) in which the rider did not fall in his own body, never to a run built to lose. A deep run
+    lost in its first wave has cleared none. A rider who fell in every cleared wave returned in none: each of those clears writes a skip with reason=taken-over and the lord rises at home
+    instead (run 20261121-205801). Plan item 17 wanted "a wave cleared after a sally"; this is looser and accepted: the point is per fortress, so every wave sallies or none does. A report
+    with no wave rows keeps the rule of any cleared wave."""
     cleared = report_json.get("wavesCleared")
-    return not lose and _is_int(cleared) and cleared >= 1
+    if lose or not _is_int(cleared) or cleared < 1:
+        return False
+    rows = report_json.get("waves")
+    waves = {row.get("wave") for row in rows if isinstance(row, dict)} if isinstance(rows, list) else set()
+    fell = {d.get("wave") for d in _lord_rows(report_json, "deaths") if isinstance(d, dict) and d.get("body") == "own"}
+    return not waves or bool(waves - fell)
 
 
 def waves_count_problem(report_json):
@@ -1666,8 +2064,14 @@ def judge(done, report_json, log_text=None):
     mismatch = waves_count_problem(report_json)
     if mismatch:
         return 1, f"the report's waves do not match its clears: {mismatch}{note}"
+    # A report of an older build has no difficulty field and is a normal run, and so is a run that armed none.
+    armed = {**expected_report}
+    armed_difficulty = armed.pop("difficulty", "normal")
+    got_difficulty = report_json.get("difficulty", "normal")
+    if got_difficulty != armed_difficulty:
+        return 1, f"armed with difficulty={armed_difficulty!r} (normal when none was given) but the report's difficulty={got_difficulty!r}: the arm key never took effect"
     # A run that armed no start wave is a run from wave 1, so the default is checked too, not only an armed value.
-    for key, wanted in {"startWave": 1, "startGold": None, "breakEngines": None, **expected_report}.items():
+    for key, wanted in {"startWave": 1, "startGold": None, "breakEngines": None, "lordFalls": None, **armed}.items():
         got = report_json.get(key)
         if isinstance(got, bool) or got != wanted:
             return 1, f"armed with {key}={wanted!r} but the report's {key}={report_json.get(key)!r}: the arm key never took effect"
@@ -1677,6 +2081,9 @@ def judge(done, report_json, log_text=None):
     mismatch = class_problem(report_json)
     if mismatch:
         return 1, f"the report's class is wrong: {mismatch}"
+    mismatch = wave_problem(report_json)
+    if mismatch:
+        return 1, f"the report's waves do not replay from the roster: {mismatch}"
     mismatch = affix_problem(report_json)
     if mismatch:
         return 1, f"the report's affixes do not replay from its seed: {mismatch}"
@@ -1689,6 +2096,19 @@ def judge(done, report_json, log_text=None):
     mismatch = purchase_problem(report_json)
     if mismatch:
         return 1, f"the report's gold books and purchases do not replay from the shop: {mismatch}"
+    mismatch = lord_problem(report_json)
+    if mismatch:
+        return 1, f"the report's lord block does not replay: {mismatch}"
+    # An armed fall proves the death rule only in a run that cleared its wave: a --deep run may be lost, and one lost before or inside that wave writes no row for it and owes no death.
+    armed_fall = expected_report.get("lordFalls")
+    if armed_fall is not None and not any(isinstance(row, dict) and row.get("wave") == armed_fall for row in report_json["waves"]):
+        return 1, f"armed with lordFalls={armed_fall} but the run cleared no wave {armed_fall}: a run that ends before or inside that wave proves no fall"
+    # The proof is the forced blow itself. A lord who fell by himself before the 20 s keeps the report consistent (rule 25 accepts it), and proves nothing about the test option: run it again.
+    if armed_fall is not None and not any(isinstance(d, dict) and d.get("forced") is True and d.get("wave") == armed_fall for d in _lord_rows(report_json, "deaths")):
+        return 1, f"armed with lordFalls={armed_fall} but the report lists no forced death in wave {armed_fall}: the lord fell by himself first, or the blow never landed"
+    mismatch = None if lose else missing_rise(report_json)
+    if mismatch:
+        return 1, f"the report's lord block lacks a rise: {mismatch}"
     poison = report_json.get("poison")
     reported_missing = poison.get("ownerMissing") if isinstance(poison, dict) else None
     if isinstance(reported_missing, bool) or not isinstance(reported_missing, int):
@@ -1740,6 +2160,8 @@ def judge(done, report_json, log_text=None):
         required = required + (REROLL_CHECK,)
     if not lose and owes_field_care(report_json) and FIELD_CARE_CHECK not in required:
         required = required + (FIELD_CARE_CHECK,)
+    if not lose and owes_player_death(report_json) and PLAYER_DEATH_CHECK not in required:
+        required = required + (PLAYER_DEATH_CHECK,)
     for owed, name in ((owes_gate_level, GATE_LEVEL_CHECK), (owes_gate_repair, GATE_REPAIR_CHECK), (owes_gate_attacked, GATE_ATTACKED_CHECK), (owes_fort_points, FORT_POINTS_CHECK),
                        (owes_volley, VOLLEY_CHECK), (owes_posts, POSTS_CHECK), (owes_tower_volley, TOWER_VOLLEY_CHECK)):
         if not lose and owed(report_json) and name not in required:
@@ -1752,6 +2174,8 @@ def judge(done, report_json, log_text=None):
         required = required + (SPLIT_CHECK,)
     if not lose and posts_variant and not owes_posts(report_json):
         return 1, f"reason={reason} but --posts-variant {posts_variant} was armed and the report bought no tower level before a wave it played, so the variant was never tried (does the fortress record tower posts?)"
+    if GATE_ATTACKED_CHECK in required and not check_pattern(GATE_ATTACKED_CHECK, "pass").search(log_text) and walls_reached_waves(report_json, log_text):
+        required = tuple(name for name in required if name != GATE_ATTACKED_CHECK)
     missing = [name for name in required if not check_pattern(name, "pass").search(log_text)]
     if UPGRADE_CHECK not in missing:
         missing.extend(owed_upgrade_passes(report_json, log_text))
@@ -1769,6 +2193,9 @@ def judge(done, report_json, log_text=None):
     missing.extend(owed_engine_passes(report_json, log_text))
     if not lose and reached_effect_affixes(report_json) and not check_pattern(AFFIX_EFFECT_CHECK, "(?:pass|skip)").search(log_text):
         missing.append(AFFIX_EFFECT_CHECK)
+    if not lose:
+        missing.extend(owed_rise_passes(report_json, log_text))
+        missing.extend(owed_general_down_passes(report_json, lost, log_text))
     if missing:
         hint = ""
         if GATE_ATTACKED_CHECK in missing and "no-blow" in skip_reasons(GATE_ATTACKED_CHECK, log_text):
@@ -1794,7 +2221,12 @@ def judge(done, report_json, log_text=None):
     felled = report_json.get("wavesFelled", 0)
     speed = f"speed {expected_speed}x (report maxSpeed matches), " if expected_speed is not None else ""
     return 0, (f"build {build}, reason={reason}, {speed}{report_json.get('wavesCleared', 0)} waves cleared, checks {', '.join(required)} passed, "
-               f"no spawn level WRONG, no CrashReport block, {felled} waves ended by felling stragglers{contact_note(report_json, log_text)}{waived_note(waived)}{fort_points_note(report_json, log_text)}")
+               f"no spawn level WRONG, no CrashReport block, {felled} waves ended by felling stragglers{contact_note(report_json, log_text)}{waived_note(waived)}{walls_note(walls_reached_skips(log_text))}{fort_points_note(report_json, log_text)}")
+
+
+def walls_note(waves):
+    """"; gate-attacked not judged in wave 3, 4 (attackers above the walls)" for the waves whose walls-reached skip stood in for the pass, and "" when the check was judged."""
+    return f"; {GATE_ATTACKED_CHECK} not judged in wave {', '.join(str(w) for w in waves)} (attackers above the walls)" if waves else ""
 
 
 def waived_note(waived):
@@ -1876,6 +2308,10 @@ def build_parser():
                         help="the gold the run starts with instead of the shop's, and the sign that the bot buys fortifications before packs (a test option: the report is not a board run; fortification runs use 5000)")
     parser.add_argument("--break-engines", type=whole_in_range(1, 100),
                         help="at this clear the game destroys every ram and siege tower, so the next wave proves they come back (#1160; a test option, below --waves; the proof run adds --start-gold 5000 so the bot repairs the gate)")
+    parser.add_argument("--lord-falls", type=whole_in_range(1, 1000),
+                        help="in this wave the game fells the lord's own body 20 s after the first batch is out, so the run proves the death rule (phase4-plan.md D47; a test option, a wave the run clears, never with --lose; the run must then list a forced death in that wave, a rise, and the rise, general-down and player-death pass lines)")
+    parser.add_argument("--difficulty", choices=DIFFICULTIES,
+                        help="the run's difficulty (phase5-plan.md Slice 6): hard sends larger waves that grow stronger faster, and the attackers gain their powers sooner, by the factor and the waves earlier that waves.json rules.hard gives; the report must say so and its waves and affixes must replay at that difficulty. Left out, no key is armed and the game plays normal")
     parser.add_argument("--posts-variant", type=str.upper, choices=POSTS_VARIANTS,
                         help="how the high towers' archers are held (spike S6): A a scripted position, B with a speed limit of 0, C with the posts formation not splittable by AI; sets TAOM_LD_POSTS_VARIANT for the game (default: the game's own, A)")
     parser.add_argument("--start-rerolls", type=whole_in_range(0, 3), default=DEFAULT_START_REROLLS,
@@ -1902,7 +2338,7 @@ def arm_pairs(known, out, wall_limit, class_id=None):
     scale = known.garrison_scale if known.garrison_scale is not None else (LOSE_GARRISON_SCALE if known.lose else None)
     expect = "deep" if known.deep else ("lost" if known.lose else None)
     return [("fortress", known.fortress), ("waves", known.waves), ("garrison_scale", scale), ("expect", expect),
-            ("class", class_id), ("seed", known.seed), ("start_wave", known.start_wave), ("start_rerolls", known.start_rerolls), ("start_gold", known.start_gold), ("break_engines", known.break_engines),
+            ("class", class_id), ("difficulty", known.difficulty), ("seed", known.seed), ("start_wave", known.start_wave), ("start_rerolls", known.start_rerolls), ("start_gold", known.start_gold), ("break_engines", known.break_engines), ("lord_falls", known.lord_falls),
             ("live_limit_seconds", known.live_limit), ("wall_limit_seconds", wall_limit), ("screenshots", known.screenshots),
             ("speed", known.speed), ("out", out), ("quit", 1)]
 
@@ -1918,6 +2354,10 @@ def armed_report_fields(known):
         fields["startGold"] = known.start_gold
     if known.break_engines is not None:
         fields["breakEngines"] = known.break_engines
+    if known.lord_falls is not None:
+        fields["lordFalls"] = known.lord_falls
+    if known.difficulty is not None:
+        fields["difficulty"] = known.difficulty
     return fields
 
 
@@ -1942,7 +2382,7 @@ def main(argv=None):
     parser = build_parser()
     known, rest = parser.parse_known_args(argv)
     apply_deep(known)
-    problem = break_engines_problem(known)
+    problem = break_engines_problem(known) or lord_falls_problem(known)
     if problem:
         parser.error(problem)
     posts_variant = known.posts_variant

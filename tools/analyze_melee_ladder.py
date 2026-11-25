@@ -124,6 +124,14 @@ class Troop:
     # sit in two different slots on one troop (e.g. erebor_reg_skirmisher's axe in Item0 and
     # Item2), leaving the troop carrying both the old and the new weapon.
     slots_of: dict[str, frozenset[str]] = field(default_factory=dict)
+    # The items of each BATTLE roster, with a troop-level override laid over it. The engine draws a
+    # spawn's weapons from these sets (Equipment.GetRandomEquipmentElements), so a gate that scored
+    # only `items` read the best set as if every spawn carried it (#1242). Empty: one set, `items`.
+    sets: tuple[frozenset[str], ...] = ()
+
+    @property
+    def battle_sets(self) -> tuple[frozenset[str], ...]:
+        return self.sets or (self.items,)
 
     @property
     def tier(self) -> int:
@@ -181,10 +189,13 @@ def load_troops(root: Path) -> list[Troop]:
                 level = 0
             items: set[str] = set()
             slots: dict[str, set[str]] = {}
+            roster_sets: list[dict[str, str]] = []   # per battle roster: slot (or a placeholder) -> item id
+            overrides: dict[str, str] = {}
             for block in node.iter("Equipments"):
                 for roster in block.iter("EquipmentRoster"):
                     if _is_civilian_roster(roster):
                         continue
+                    row: dict[str, str] = {}
                     for eq in roster.iter("equipment", "Equipment"):
                         ref = eq.get("id")
                         if not ref:
@@ -192,8 +203,10 @@ def load_troops(root: Path) -> list[Troop]:
                         item_id = ref.split(".", 1)[-1]
                         items.add(item_id)
                         slot = eq.get("slot")
+                        row[slot or f"?{len(row)}"] = item_id
                         if slot:
                             slots.setdefault(item_id, set()).add(slot)
+                    roster_sets.append(row)
                 # A troop-level <equipment> directly under <Equipments> is laid over every battle set
                 # (BasicCharacterObject.Deserialize), so what it names is part of the kit (#1295).
                 for eq in block.findall("equipment"):
@@ -204,6 +217,9 @@ def load_troops(root: Path) -> list[Troop]:
                     items.add(item_id)
                     if eq.get("slot"):
                         slots.setdefault(item_id, set()).add(eq.get("slot"))
+                        overrides[eq.get("slot")] = item_id
+            # An override replaces its slot in every battle set (AddOverriddenEquipments).
+            battle_sets = tuple(frozenset({**row, **overrides}.values()) for row in roster_sets)
             out.append(
                 Troop(
                     id=tid,
@@ -214,6 +230,7 @@ def load_troops(root: Path) -> list[Troop]:
                     items=frozenset(items),
                     path=str(path),
                     slots_of={k: frozenset(v) for k, v in slots.items()},
+                    sets=tuple(dict.fromkeys(battle_sets)),
                 )
             )
     return out

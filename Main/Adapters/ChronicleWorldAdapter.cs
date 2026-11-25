@@ -1,4 +1,5 @@
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Settlements;
 
 namespace TAOM.Adapters;
@@ -43,4 +44,45 @@ public sealed class ChronicleWorldAdapter : IChronicleWorldAdapter
 
     private static Settlement? Find(string settlementId) =>
         Campaign.Current == null || string.IsNullOrEmpty(settlementId) ? null : Settlement.Find(settlementId);
+
+    public bool IsHeroAlive(string heroId) => FindAliveHero(heroId) != null;
+
+    public bool IsPlayerHero(string heroId) => FindAliveHero(heroId)?.IsHumanPlayerCharacter == true;
+
+    // ApplyByBattle takes a null killer, as the engine's own PartyAgentOrigin.SetKilled passes one (PartyAgentOrigin.cs:193). ApplyInternal only marks a victim whose
+    // party is in a map event or besieges (KillCharacterAction.cs:51) and does nothing for one who cannot die (:34, Hero.CanDie) or is the human player (:56), so the
+    // result is read back from the hero and the caller asks again each day (docs/features/story-missions.md, "The kill"). A second ApplyByBattle on a marked hero
+    // skips the mark branch and kills him, so one marked in a battle, as a besieger or for an execution is left alone, as the engine's daily tick leaves him (AgingCampaignBehavior.cs:110).
+    public ChronicleHeroDeath KillHeroInBattle(string heroId)
+    {
+        var hero = FindAliveHero(heroId);
+        if (hero == null || hero.IsHumanPlayerCharacter)
+            return ChronicleHeroDeath.Refused;
+
+        var party = hero.PartyBelongedTo;
+        var mark = hero.DeathMark;
+        if (mark == KillCharacterAction.KillCharacterActionDetail.ExecutionAfterMapEvent
+            || (mark != KillCharacterAction.KillCharacterActionDetail.None && (party?.MapEvent != null || party?.SiegeEvent != null)))
+            return ChronicleHeroDeath.Deferred;
+
+        KillCharacterAction.ApplyByBattle(hero, null);
+        if (!hero.IsAlive)
+            return ChronicleHeroDeath.Killed;
+
+        return hero.DeathMark != KillCharacterAction.KillCharacterActionDetail.None ? ChronicleHeroDeath.Deferred : ChronicleHeroDeath.Refused;
+    }
+
+    private static Hero? FindAliveHero(string heroId)
+    {
+        if (Campaign.Current == null || string.IsNullOrEmpty(heroId))
+            return null;
+
+        foreach (var hero in Hero.AllAliveHeroes)
+        {
+            if (hero != null && hero.StringId == heroId)
+                return hero;
+        }
+
+        return null;
+    }
 }

@@ -113,10 +113,42 @@ BAND_CLONE_GLOBS = ("*/armour_band_clones/*", "*tools/armour_band_clones.json", 
                     ) + ARMOUR_CURVE_GLOBS + TROOP_GLOBS + ARMORY_GLOBS
 CREATURE_GLOBS = ("*/action_sets.xml", "*/action_types.xml", "*/monster_usage_sets.xml", "*/monsters/*.xml",
                   "*/lotr_monster_*.xml")
+# check_gait_stride.py and every module it imports: the stride gate of each creature runs them all.
+STRIDE_TOOL_GLOBS = ("*tools/check_gait_stride.py", "*tools/set_clip_balance_name.py", "*tools/tpac_clone_metamesh.py",
+                     "*tools/tpac_skeleton_dump.py", "*tools/_gamedir.py", "*tools/elephant_gait_retarget.py",
+                     "*tools/elephant_write_masters.py")
+# The Armory's cache entries. A stride gate and a bind check read the cook of each clip they judge, and an entry is
+# named by a GUID, not by its creature. Git does not see the live Armory, so such a path selects a gate only when
+# it is named on the command line.
+CACHE_GLOBS = ("*/lotrlome_armory/runtimedatacache/*.rdc",)
 # What the two elephant gates read beside the creature XML (masters, clip records), and the tools that write it.
-ELEPHANT_GLOBS = CREATURE_GLOBS + (
-    "*/creature/elephant/*.tpac", "*tools/check_gait_stride.py", "*tools/bind_elephant_clips.py",
-    "*tools/elephant_write_masters.py", "*tools/gen_elephant_anim_clips.ps1", "*tools/elephant_gait_retarget.py")
+ELEPHANT_GLOBS = CREATURE_GLOBS + STRIDE_TOOL_GLOBS + CACHE_GLOBS + (
+    "*/creature/elephant/*.tpac", "*tools/bind_elephant_clips.py", "*tools/gen_elephant_anim_clips.ps1")
+# The same for the two spider gates (#1541). gen_elephant_anim_clips.ps1 and elephant_write_masters.py write the
+# spider's records and masters too, and check_gait_stride.py reads both creatures.
+SPIDER_GLOBS = CREATURE_GLOBS + STRIDE_TOOL_GLOBS + CACHE_GLOBS + (
+    "*/creature/spider/*.tpac", "*tools/bind_spider_clips.py", "*tools/spider_gait.py",
+    "*tools/gen_elephant_anim_clips.ps1")
+# The warg's clip records and masters, the Armory's cache entries (the gate reads the cook of each planned record,
+# and a cache entry is named by a GUID, not by its creature), the plan that sets the records, and the tool that writes
+# them (#1563, #1565).
+# The check also runs creature_fit.master_item (each master's GUID) and _gamedir (the install).
+GAIT_TOOL_GLOBS = ("*tools/repoint_anim_clip.py", "*tools/set_clip_balance_name.py", "*tools/creature_fit.py",
+                   "*tools/_gamedir.py")
+WARG_GLOBS = ("*/creature/warg/animations/*.tpac", "*/lotrlome_armory/runtimedatacache/*.rdc",
+              "*tools/warg_gait_plan.json") + GAIT_TOOL_GLOBS
+# What the warg's stride gate reads (#1565 item 2): the action set, every package under the warg's folder (records,
+# masters, the rig) and the cache entries of the gaits. The gate does not read the plan; the plan sets the records
+# the gate measures, and git does not see those, so a changed plan selects the gate as the records' writers do for
+# the elephant and the spider (#1591).
+WARG_STRIDE_GLOBS = CREATURE_GLOBS + STRIDE_TOOL_GLOBS + CACHE_GLOBS + (
+    "*/creature/warg/*.tpac", "*tools/warg_gait_plan.json")
+# The same for the dire wolf's stride gate (#1591).
+DIRE_WOLF_STRIDE_GLOBS = CREATURE_GLOBS + STRIDE_TOOL_GLOBS + CACHE_GLOBS + (
+    "*/creature/direwolf/*.tpac", "*tools/dire_wolf_gait_plan.json")
+# What the dire wolf's plan check reads: its gait records, which its own plan sets (#1565).
+DIRE_WOLF_GLOBS = ("*/creature/direwolf/animations/*.tpac", "*/lotrlome_armory/runtimedatacache/*.rdc",
+                   "*tools/dire_wolf_gait_plan.json") + GAIT_TOOL_GLOBS
 FBX_GLOBS = ("*/assetsources/*.fbx",)
 LANG_GLOBS = ("*/languages/*.xml", "*/taom_module_strings.xml", "*/taom_xslt_strings.xml")
 # Every source and output of generate_name_localization_strings.py CATEGORIES not already in TROOP_GLOBS,
@@ -214,6 +246,13 @@ GATES = (
               "or a rule changed: --apply --backup-tag <tag> restores, --snapshot --expect N after a change you meant "
               "(never before --apply on a reset); a bad spec or two rules that disagree are also exit 1; "
               "exit 2 is NOT RUN (no install)"),
+    Gate("dwarf-chariot-armory", "the dwarven war chariot's Armory rows, their packages and their carriers",
+         ARMORY_GLOBS + ("*tools/apply_dwarf_chariot_armory.py", "*/troops/troops_erebor.xml",
+                         "*/lotrlome_armory/assets/creature/chariot/*", "*/lotrlome_armory/assets/creature/ram/*"),
+         ("python", "tools/apply_dwarf_chariot_armory.py", "--check"), ("docs/features/chariot.md",),
+         note="exit 1 when a reinstall dropped the three items or their names, a row differs from the tool's, or a "
+              "mesh or material package is gone: --apply with the Kit and the game closed puts the rows back, the "
+              "Modding Kit writes the packages; exit 2 is NOT RUN (no install), exit 3 a crash"),
     Gate("placeholder-weapons", "placeholder weapons, their spec, the melee tools, donors and carriers", PLACEHOLDER_GLOBS,
          ("python", "tools/generate_placeholder_weapons.py", "--verify"), ("docs/features/placeholder-weapons.md",),
          note="exit 1 when a generated file differs from the render or a placeholder is over its carriers' tier "
@@ -295,14 +334,75 @@ GATES = (
          note="each gait clip's feet cover the ground its record claims; the pace rows of as_elephant and as_mumakil "
               "carry limits and Durations the engine plays well; the standing pose is on the ground; a bound clip "
               "has a cache entry no older than its record and master (start the Modding Kit once)"),
+    Gate("spider-clips", "spider action sets, usage rows, clip packages and their tools", SPIDER_GLOBS,
+         ("python", "tools/bind_spider_clips.py", "--check"), ("docs/features/spider.md",),
+         note="a reinstall drops the rebound rows, the nine new actions, their rider rows, the pace table and the "
+              "overlay rows, and "
+              "parity still passes; exit 1 also when a bound clip has no current cache entry (start the Modding Kit once)"),
+    Gate("spider-gaits", "spider action sets, usage rows, clip packages and their tools", SPIDER_GLOBS,
+         ("python", "tools/check_gait_stride.py", "--creature", "spider"), ("docs/features/spider.md",),
+         note="each gait clip's tips cover the ground its record claims; the pace rows of as_spider carry limits and "
+              "Durations the engine plays well; the standing pose is on the ground; a bound gait clip has a current cache "
+              "entry (the stand, the idle, the twins and the turns: spider-clips)"),
+    Gate("spider-body", "spider action sets, usage rows, clip packages and their tools", SPIDER_GLOBS + ("*tools/verify_mount_assets.py",),
+         ("python", "tools/verify_mount_assets.py", "spider"), ("docs/features/spider.md",),
+         note="the skeleton is in a live package, every movement clip carries its tag, no row names a clip that is "
+              "not there, and the body capsule holds the body (#1560: a reinstall brings back the chest pill)"),
+    Gate("warg-gaits", "warg clip records, their plan and its tool", WARG_GLOBS,
+         ("python", "tools/repoint_anim_clip.py", "--plan", "tools/warg_gait_plan.json", "--under",
+          "creature/warg/animations", "--check"), ("docs/reference/lotrlome-warg-gait-changes.md",),
+         note="a reinstall or an art drop puts the canter back on the trot's keys, the gallop back on a travel "
+              "twice what its paws cover and each pace back on one loop time, and it removes the walk's in-place "
+              "twin; warg-stride sees the reverted travel and none of the rest; exit 1 also while a changed "
+              "record waits for its cook (start the Modding Kit once)"),
+    Gate("warg-stride", "warg action set, clip records, masters, rig and the stride gate", WARG_STRIDE_GLOBS,
+         ("python", "tools/check_gait_stride.py", "--creature", "warg"),
+         ("docs/reference/lotrlome-warg-gait-changes.md",),
+         note="the paws cover the ground each forward gait and the backward walk claims, on the master its record "
+              "names; the pace rows of as_warg carry limits the engine plays well; a bound gait's cache entry carries "
+              "its record's checksum; the backward walk's feet move against the walk's; the two side steps are "
+              "printed with what the node does with them, and their stance, slip, Duration, master and cook are "
+              "held (#1591)"),
+    Gate("dire-wolf-gaits", "dire wolf clip records, their plan and its tool", DIRE_WOLF_GLOBS,
+         ("python", "tools/repoint_anim_clip.py", "--plan", "tools/dire_wolf_gait_plan.json", "--under",
+          "creature/direwolf/animations", "--check"), ("docs/reference/lotrlome-dire-wolf-changes.md",),
+         note="a reinstall, or a run of gen_dire_wolf_anim_clips.ps1 on a folder without the records, puts each gait "
+              "back on the pack's travel and Duration (26% to 57% less ground than the paws cover) and removes the "
+              "walk's in-place twin; exit 1 also while a changed record waits for its cook"),
+    Gate("dire-wolf-stride", "dire wolf action set, clip records, masters, rig and the stride gate",
+         DIRE_WOLF_STRIDE_GLOBS, ("python", "tools/check_gait_stride.py", "--creature", "dire_wolf"),
+         ("docs/reference/lotrlome-dire-wolf-changes.md",),
+         note="the paws cover the ground each forward gait and the backward walk claims, each paw's height taken "
+              "from its own lowest point; the backward walk plays the walk's keys from last to first, so its feet "
+              "move against the walk's (a reinstall puts them back on the forward keys); a bound gait's cache "
+              "entry carries its record's checksum; the two side clips, the pack's turn clips, are printed, and "
+              "their stance, slip (a limit of their own), Duration, master and cook are held"),
+    Gate("dire-wolf-body", "dire wolf action sets, usage rows, clip packages and the mount asset check",
+         CREATURE_GLOBS + ("*/creature/direwolf/*.tpac", "*tools/verify_mount_assets.py"),
+         ("python", "tools/verify_mount_assets.py", "dire_wolf"), ("docs/features/dire-wolf.md",),
+         note="every clip on a moving row carries its quad_movement tag and no row names a clip that is not there; "
+              "a new in-place twin needs its exact (action, clip) pair in the tool's untagged_ok list (#1565)"),
+    Gate("chariot-body", "war chariot action sets, usage rows, the rig package and the mount asset check",
+         CREATURE_GLOBS + ("*/action_sets.xslt", "*/creature/chariot/*.tpac", "*tools/verify_mount_assets.py"),
+         ("python", "tools/verify_mount_assets.py", "chariot"), ("docs/features/chariot.md",),
+         note="the action set's skeleton and the Monster's rein skeleton are in a live package, every clip on a "
+              "moving row carries a quad_movement usage record (read per clip: the rig is one package), and no row "
+              "of the chariot's sets or of a rider's names a clip that is not there; a reinstall removes the rig, "
+              "and no repo tool puts it back"),
+    Gate("warg-clips", "action sets and the warg's bind tool", ("*/action_sets.xml", "*tools/bind_warg_clips.py"),
+         ("python", "tools/bind_warg_clips.py", "--check"), ("docs/reference/lotrlome-warg-gait-changes.md",),
+         note="a reinstall puts the walk's \"none\" row of as_warg and of as_dire_wolf back on the walk's front "
+              "record, so the walk has one loop time again; the live file and the repo's snapshot must both carry "
+              "both bindings"),
     Gate("dwarf-attacks", "dwarf attack actions and their as_dwarf_warrior rows", CREATURE_GLOBS,
          ("python", "tools/bind_dwarf_attack_actions.py", "--check"), ("docs/features/dwarf-attacks.md",),
-         note="a reinstall drops the two declarations and rows, and parity still passes"),
+         note="a reinstall drops the two declarations and rows, and parity still passes; it also fails while the "
+              "rows still carry actt_kick (#1499: run it with --apply)"),
     Gate("dwarf-attacks-tests", "dwarf attack actions and their as_dwarf_warrior rows", CREATURE_GLOBS,
          _dotnet("DwarfAttacksWiringTests"), ("docs/features/dwarf-attacks.md",), dotnet=True),
     Gate("dwarf-rider-rows", "dwarf creature rider rows in as_dwarf_warrior", CREATURE_GLOBS,
          _dotnet("DwarfMountRiderRowsTests", "MountRiderFallRowsTests"), ("docs/features/war-ram.md",), dotnet=True,
-         note="a reinstall or art drop drops the 223 rows (#1226), and every other gate still passes"),
+         note="a reinstall or art drop drops the 232 rows (#1226; eight of them the spider's, #1541, one more #1550), and every other gate still passes"),
     Gate("race-morphs", "hill troll and dwarf rig FBX in the live Armory AssetSources", FBX_GLOBS,
          ("python", "tools/check_race_morph_channels.py"), ("tools/check_race_morph_channels.py",),
          note="exact counts: head, eye and mouth 101, hands or arms 26; a new race rig is unchecked until its meshes are in SPEC"),

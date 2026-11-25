@@ -24,6 +24,8 @@ internal sealed class LongDefeatConfigCatalog
     private const string AffixesFile = "affixes.json";
     private const string BoonsFile = "boons.json";
     private const string ClassesFile = "classes.json";
+    private const string HeroLinesFile = "hero_lines.json";
+    private const string SoundsFolder = "ModuleSounds/";
 
     private readonly IModLogger _logger;
     private readonly Lazy<string> _balance;
@@ -31,16 +33,17 @@ internal sealed class LongDefeatConfigCatalog
     private readonly Lazy<AffixesConfig> _affixes;
     private readonly Lazy<BoonPlan> _boons;
     private readonly Lazy<ClassPlan> _classes;
+    private readonly Lazy<HeroLinePlan> _heroLines;
     private readonly HashSet<string> _unnamedCultures = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lazy<IReadOnlyDictionary<string, ShopPlan>> _shops;
     private readonly Lazy<IReadOnlyList<FortressEntry>> _fortresses;
 
     public LongDefeatConfigCatalog(IPathService pathService, IModLogger logger)
-        : this(logger, name => ReadFile(pathService, name, logger))
+        : this(logger, name => ReadFile(pathService, name, logger), rel => SoundFile(pathService, rel))
     {
     }
 
-    private LongDefeatConfigCatalog(IModLogger logger, Func<string, string?> readFile)
+    private LongDefeatConfigCatalog(IModLogger logger, Func<string, string?> readFile, Func<string, string?> resolveSound)
     {
         _logger = logger;
         var texts = new ConcurrentDictionary<string, string?>();
@@ -53,6 +56,7 @@ internal sealed class LongDefeatConfigCatalog
             s => AffixesReader.Read(read(AffixesFile), s)));
         _boons = new Lazy<BoonPlan>(() => Guard(logger, BoonsFile, BoonPlan.None, s => BoonsReader.Read(read(BoonsFile), s)));
         _classes = new Lazy<ClassPlan>(() => Guard(logger, ClassesFile, ClassPlan.None, s => ClassesReader.Read(read(ClassesFile), s)));
+        _heroLines = new Lazy<HeroLinePlan>(() => Guard(logger, HeroLinesFile, HeroLinePlan.None, s => HeroLinesReader.Read(read(HeroLinesFile), s, resolveSound)));
         _shops = new Lazy<IReadOnlyDictionary<string, ShopPlan>>(() => Guard<IReadOnlyDictionary<string, ShopPlan>>(logger, ShopFile,
             new Dictionary<string, ShopPlan>(), s => ShopReader.Read(read(ShopFile), s, () => _classes.Value.Classes.Select(c => c.Id).ToList())));
         _fortresses = new Lazy<IReadOnlyList<FortressEntry>>(() => Guard<IReadOnlyList<FortressEntry>>(logger, FortressesFile,
@@ -61,7 +65,7 @@ internal sealed class LongDefeatConfigCatalog
 
     /// <summary>For tests: the same validation over text instead of the files. Null text is the missing-file case.</summary>
     internal static LongDefeatConfigCatalog FromTexts(string? fortresses, string? waves, string? shop, IModLogger logger,
-        string? affixes = null, string? boons = null, string? classes = null) =>
+        string? affixes = null, string? boons = null, string? classes = null, string? heroLines = null, Func<string, string?>? resolveSound = null) =>
         new(logger, name => name switch
         {
             FortressesFile => fortresses,
@@ -70,8 +74,9 @@ internal sealed class LongDefeatConfigCatalog
             AffixesFile => affixes,
             BoonsFile => boons,
             ClassesFile => classes,
+            HeroLinesFile => heroLines,
             _ => null,
-        });
+        }, resolveSound ?? (rel => rel));
 
     /// <summary>16 hex digits over the six files as loaded, in the order fortresses, waves, shop, affixes, boons, classes (a missing file joins as empty text), line endings normalized: a checkout's line endings must not make a new balance version.</summary>
     public string BalanceHash => _balance.Value;
@@ -82,6 +87,9 @@ internal sealed class LongDefeatConfigCatalog
         using var sha = SHA256.Create();
         return BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(joined)), 0, 8).Replace("-", "").ToLowerInvariant();
     }
+
+    /// <summary>The lines of <c>hero_lines.json</c> with full paths (#1569). Presentation, so it is no part of <see cref="BalanceHash"/>.</summary>
+    public HeroLinePlan HeroLines => _heroLines.Value;
 
     /// <summary>Every valid fortress, in file order.</summary>
     public IReadOnlyList<FortressEntry> Fortresses => _fortresses.Value;
@@ -123,17 +131,22 @@ internal sealed class LongDefeatConfigCatalog
         if (seeded.ClassId != null && !string.Equals(seeded.ClassId, chosen?.Id, StringComparison.OrdinalIgnoreCase))
             _logger.LogWarning($"LongDefeatConfigCatalog: the class '{seeded.ClassId}' is not on offer at '{fortress.Id}' (defenders of {fortress.DefenderCulture}); playing {chosen?.Id ?? "in his own gear"} instead");
 
-        return new RunPlan(fortress.Id, fortress.Garrison, fortress.Waves, fortress.Shop, Rules, seeded.ClassId == chosen?.Id ? seeded : seeded with { ClassId = chosen?.Id })
+        var hard = seeded.Difficulty == RunDifficulty.Hard ? _waves.Value.Hard : null;
+        var affixes = AffixesFor(fortress.AttackerCulture);
+        var waves = hard == null ? fortress.Waves : fortress.Waves.Harder(hard.Factor);
+        var rules = hard == null ? Rules : Rules with { KeepMinAttackers = Math.Max(Rules.KeepMinAttackers, (int)(Rules.StragglerShare * waves.SmallestAuthoredCount) + 1) };
+        return new RunPlan(fortress.Id, fortress.Garrison, waves, fortress.Shop, rules, seeded.ClassId == chosen?.Id ? seeded : seeded with { ClassId = chosen?.Id })
         {
             Provenance = RunProvenance.Unknown with { Balance = BalanceHash },
+            HeroLines = HeroLines,
             Bounties = _waves.Value.Bounties,
             Keep = fortress.Keep,
             Muster = fortress.Muster,
             Sally = fortress.Sally,
             Towers = fortress.Towers ?? Array.Empty<LdTower>(),
             Volley = fortress.Volley,
-            Affixes = AffixesFor(fortress.AttackerCulture),
-            Boons = _boons.Value,
+            Affixes = hard == null ? affixes : affixes.Earlier(hard.AffixWavesEarlier),
+            Boons = _boons.Value.For(fortress.DefenderCulture),
             Loadout = chosen?.LoadoutFor(fortress.DefenderCulture),
             ClassName = chosen?.Name ?? "",
             ArmouryPoint = fortress.ArmouryPoint,
@@ -163,6 +176,12 @@ internal sealed class LongDefeatConfigCatalog
             scope.Warn($"could not be loaded ({ex.GetType().Name}: {ex.Message}); using the fallback");
             return fallback;
         }
+    }
+
+    private static string? SoundFile(IPathService pathService, string relative)
+    {
+        var path = pathService.ModuleRootPath + SoundsFolder + relative;
+        return File.Exists(path) ? path : null;
     }
 
     private static string? ReadFile(IPathService pathService, string name, IModLogger logger)

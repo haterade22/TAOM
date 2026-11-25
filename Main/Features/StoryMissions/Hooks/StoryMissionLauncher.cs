@@ -31,13 +31,15 @@ internal sealed class StoryMissionLauncher
     private readonly StoryMissionCatalog _catalog;
     private readonly IModLogger _logger;
     private readonly IOutcomeLog _outcomes;
+    private readonly LongDefeatConfigCatalog _longDefeat;
     private int _missions;
 
-    public StoryMissionLauncher(StoryMissionCatalog catalog, IModLogger logger, IOutcomeLog outcomes)
+    public StoryMissionLauncher(StoryMissionCatalog catalog, IModLogger logger, IOutcomeLog outcomes, LongDefeatConfigCatalog longDefeat)
     {
         _catalog = catalog;
         _logger = logger;
         _outcomes = outcomes;
+        _longDefeat = longDefeat;
     }
 
     /// <summary>True once the mission is open. An unknown id, no campaign, a missing culture or troop, or an engine failure logs an error and returns false.</summary>
@@ -54,7 +56,7 @@ internal sealed class StoryMissionLauncher
             var objects = MBObjectManager.Instance;
             var defenderCulture = objects?.GetObject<BasicCultureObject>(definition.DefenderCulture);
             var attackerCulture = objects?.GetObject<BasicCultureObject>(definition.AttackerCulture);
-            var plan = StoryPlanBuilder.Build(definition, RunOptions.Default with { Autoplay = autoplay });
+            var plan = StoryPlanBuilder.Build(definition, RunOptions.Default with { Autoplay = autoplay }, _longDefeat.HeroLines);
             var missing = RunPlanTroops.AllTroopIds(plan).Where(id => objects?.GetObject<BasicCharacterObject>(id) == null).ToList();
             if (defenderCulture == null || attackerCulture == null || missing.Count > 0)
                 return Refuse($"cannot load '{definition.Id}': defender culture {defenderCulture != null}, attacker culture {attackerCulture != null}, missing troops [{string.Join(", ", missing)}]");
@@ -64,7 +66,10 @@ internal sealed class StoryMissionLauncher
             var attacker = Combatant("{=!}Story mission, attackers", attackerCulture, BattleSideEnum.Attacker);
             var key = "story" + Interlocked.Increment(ref _missions);
             _logger.LogInfo($"[StoryMissions] launching {definition.Scene} for '{definition.Id}' ({key}, autoplay {autoplay})");
-            var opened = MissionState.OpenNew(StoryMission.MissionName, Record(definition.Scene), opening => CreateBehaviors(opening, plan, session, definition.Side, defender, attacker, key, definition.Music, onVerdict));
+            var field = definition.Field != null;
+            var opened = MissionState.OpenNew(StoryMission.MissionName, Record(definition.Scene, field), opening => field
+                ? CreateFieldBehaviors(opening, plan, session, definition.Side, defender, attacker, key, definition.Music, onVerdict)
+                : CreateBehaviors(opening, plan, session, definition.Side, defender, attacker, key, definition.Music, onVerdict));
 
             // Both are needed: a dead player may take a soldier, and IsFriendlyMission true makes Tab end the mission and leaves the order bar empty.
             opened.SetPlayerCanTakeControlOfAnotherAgentWhenDead();
@@ -106,13 +111,37 @@ internal sealed class StoryMissionLauncher
             new StoryMissionLogic(session, side, _logger, _outcomes, key, music, onVerdict),
         };
 
+    /// <summary>
+    /// The list of a mission on a field scene (#1105 slice 2): the siege list above without its two siege behaviors (<c>SiegeMissionPreparationHandler</c>,
+    /// <c>MissionSiegeEnginesLogic</c>), with the field team AI and with the hard border vanilla's field lists place (BannerlordMissions.OpenCustomBattleMission).
+    /// </summary>
+    private IReadOnlyList<MissionBehavior> CreateFieldBehaviors(Mission mission, RunPlan plan, LongDefeatSession session, StorySide side, CustomBattleCombatant defender,
+        CustomBattleCombatant attacker, string key, string? music, Action<StoryOutcome>? onVerdict) =>
+        new MissionBehavior[]
+        {
+            new BattleSpawnLogic("battle_set"),
+            new MissionOptionsComponent(),
+            new MissionCombatantsLogic(null, side == StorySide.Attacking ? attacker : defender, defender, attacker, Mission.MissionTeamAITypeEnum.FieldBattle, isPlayerSergeant: false),
+            new AgentHumanAILogic(),
+            new AmmoSupplyLogic(new List<BattleSideEnum> { BattleSideEnum.Defender }),
+            new AssignPlayerRoleInTeamMissionController(true, false, false),
+            new MissionAgentPanicHandler(),
+            new MissionHardBorderPlacer(),
+            new MissionBoundaryPlacer(),
+            new MissionBoundaryCrossingHandler(),
+            new AgentMoraleInteractionLogic(),
+            new EquipmentControllerLeaveLogic(),
+            new LongDefeatMissionLogic(plan, session, _logger, new HostedRunOutcomeLog(_outcomes), mission.EndMission, key),
+            new StoryMissionLogic(session, side, _logger, _outcomes, key, music, onVerdict),
+        };
+
     private static List<MissionSiegeWeapon> Weapons(SiegeEngineType first, int firstCount, SiegeEngineType second, int secondCount) =>
         Enumerable.Repeat(first, firstCount).Concat(Enumerable.Repeat(second, secondCount)).Select(t => MissionSiegeWeapon.CreateDefaultWeapon(t)).ToList();
 
     // "level_3 siege" is vanilla's scene level string for upgrade level 0 (BannerlordMissions.cs:162-167). A campaign mission, with no friendly fire (Host Review's record).
     // For a "forceatmo" scene, Patch16 (AtmospherePersistence) then rewrites PlayingInCampaignMode and the atmosphere in Mission.Initialize. OpenNew reads the
     // values here once before that, in OnMissionIsStarting, and the scene keeps its own atmosphere.
-    private static MissionInitializerRecord Record(string scene) =>
+    private static MissionInitializerRecord Record(string scene, bool field) =>
         new(scene)
         {
             DoNotUseLoadingScreen = false,
@@ -120,7 +149,7 @@ internal sealed class StoryMissionLauncher
             DamageToFriendsMultiplier = 0f,
             DamageFromPlayerToFriendsMultiplier = 0f,
             AtmosphereOnCampaign = BannerlordMissions.CreateAtmosphereInfoForMission("spring", 12),
-            SceneLevels = "level_3 siege",
+            SceneLevels = field ? "" : "level_3 siege",
             DecalAtlasGroup = 2,
         };
 

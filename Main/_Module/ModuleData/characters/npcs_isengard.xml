@@ -5,7 +5,7 @@
 	<!-- All use race="uruk_hai" for correct uruk-hai rendering -->
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.isengard" name="{=aom_ig_arena}Arena Master">
+	<NPCCharacter id="tournament_master_isengard" race="uruk_hai" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.isengard" name="{=aom_ig_arena}Training Master">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Equipments>
@@ -95,7 +95,7 @@
 	</NPCCharacter>
 
 	<!-- Caravan Staff -->
-	<NPCCharacter id="caravan_master_isengard" race="uruk_hai" default_group="Infantry" level="26" name="{=aom_ig_caravan_master}Isengard Caravan Master" occupation="CaravanGuard" culture="Culture.isengard">
+	<NPCCharacter id="caravan_master_isengard" race="uruk_hai" default_group="Infantry" level="26" name="{=aom_ig_caravan_master}[Isengard] Caravan Master" occupation="CaravanGuard" culture="Culture.isengard">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -123,7 +123,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="armed_trader_isengard" race="uruk_hai" default_group="Infantry" level="16" name="{=aom_ig_armed_trader}Isengard Armed Trader" occupation="CaravanGuard" culture="Culture.isengard">
+	<NPCCharacter id="armed_trader_isengard" race="uruk_hai" default_group="Infantry" level="16" name="{=aom_ig_armed_trader}[Isengard] Armed Trader" occupation="CaravanGuard" culture="Culture.isengard">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills>
 			<skill id="Athletics" value="40" />
@@ -144,7 +144,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_guard_isengard" race="uruk_hai" default_group="Infantry" level="16" name="{=aom_ig_caravan_guard}Isengard Caravan Guard" occupation="Soldier" culture="Culture.isengard">
+	<NPCCharacter id="caravan_guard_isengard" race="uruk_hai" default_group="Infantry" level="16" name="{=aom_ig_caravan_guard}[Isengard] Caravan Guard" occupation="Soldier" culture="Culture.isengard">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills>
 			<skill id="Athletics" value="50" />
@@ -172,7 +172,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="veteran_caravan_guard_isengard" race="uruk_hai" default_group="Infantry" level="21" name="{=aom_ig_vet_caravan_guard}Isengard Veteran Caravan Guard" occupation="Soldier" culture="Culture.isengard">
+	<NPCCharacter id="veteran_caravan_guard_isengard" race="uruk_hai" default_group="Infantry" level="21" name="{=aom_ig_vet_caravan_guard}[Isengard] Veteran Caravan Guard" occupation="Soldier" culture="Culture.isengard">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />

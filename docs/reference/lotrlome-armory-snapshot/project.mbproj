@@ -48,4 +48,6 @@
 	<file id="soln_monsters" name="ModuleData/Monsters/LOTR/lotr_monster_dire_wolf.xml" type="monster" />
 	<file id="soln_physics_materials" name="ModuleData/physics_materials.xml" type="physics_material" />
 	<file id="soln_collision_infos" name="ModuleData/CollisionInfos/LOTR/collision_infos_warg.xml" type="collision_infos" />
+	<!-- CHARIOT-RIG: horse voices for the taom_chariot class (the upstream chariot pack). -->
+	<file id="soln_voice_definitions" name="ModuleData/voice_definitions.xml" type="voice_definitions" />
 </base>

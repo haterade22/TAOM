@@ -6,6 +6,7 @@ using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.LongDefeat;
 using TAOM.Features.LongDefeat.Coop;
+using TAOM.Features.LongDefeat.Domain;
 using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.LongDefeat.Coop;
@@ -53,9 +54,9 @@ public class LongDefeatCoopMenuEntryTests
     }
 
     [TestMethod]
-    public void Host_AsksForTheFortress_ThenHostsInsteadOfStartingAlone()
+    public void Host_AsksForTheFortressAndDifficulty_ThenHostsInsteadOfStartingAlone()
     {
-        var menu = new FakeLongDefeatMenu(LongDefeatCoopMenuEntry.HostChoice, "helms");
+        var menu = new FakeLongDefeatMenu(LongDefeatCoopMenuEntry.HostChoice, "helms", "normal");
         var (entry, runs) = Entry(menu);
         runs.Attach(_link);
         entry.Install();
@@ -63,6 +64,19 @@ public class LongDefeatCoopMenuEntryTests
         menu.Options[LongDefeatCoopMenuEntry.OptionId].OnChosen();
 
         _link.Received(1).Host(Arg.Is<byte[]>(payload => Decodes(payload, "helms")));
+    }
+
+    [TestMethod]
+    public void Host_AHardRun_CarriesTheDifficultyInThePayload()
+    {
+        var menu = new FakeLongDefeatMenu(LongDefeatCoopMenuEntry.HostChoice, "helms", "hard");
+        var (entry, runs) = Entry(menu);
+        runs.Attach(_link);
+        entry.Install();
+
+        menu.Options[LongDefeatCoopMenuEntry.OptionId].OnChosen();
+
+        _link.Received(1).Host(Arg.Is<byte[]>(payload => DecodesHard(payload)));
     }
 
     [TestMethod]
@@ -78,6 +92,9 @@ public class LongDefeatCoopMenuEntryTests
 
         _link.Received(1).Join("10.0.0.5", 4200);
     }
+
+    private static bool DecodesHard(byte[] payload) =>
+        LongDefeatSessionPayload.TryDecode(payload, out _, out var options) && options!.Difficulty == RunDifficulty.Hard;
 
     private static bool Decodes(byte[] payload, string fortress) =>
         LongDefeatSessionPayload.TryDecode(payload, out var id, out _) && id == fortress;

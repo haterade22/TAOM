@@ -87,6 +87,13 @@ class ParseBeforeWriteTests(unittest.TestCase):
         self.assertLess(guard, body.index('open(path, "w"'), "the guard runs before the first write")
         self.assertEqual(body.count('"w"'), 1, "every write goes through the guarded loop")
 
+    def test_insert_leaves_the_hand_made_wanderer_rosters_alone(self):
+        # Since #1571 the goblin and orc wanderer rosters carry their own race gear; a rerun cloned
+        # Gundabad's roster over them.
+        path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "insert_new_factions.py")
+        body = open(path, encoding="utf-8").read().split("def main():", 1)[1]
+        self.assertNotIn("taom_wanderer_equipment.xml", body)
+
 
 if __name__ == "__main__":
     unittest.main()

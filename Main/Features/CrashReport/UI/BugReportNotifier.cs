@@ -45,7 +45,7 @@ public static class BugReportNotifier
                 negativeText: new TextObject("{=taom_bugreport_open_folder}Open folder").ToString(),
                 affirmativeAction: () => { },
                 negativeAction: () => CrashNotifier.TryOpenInExplorer(written ? zipPath : logsFolder, select: written)),
-                pauseGameActiveState: false);
+                pauseGameActiveState: true);
         }
         catch (Exception) { } // swallow-ok: the zip is on disk whether or not the notice shows
     }

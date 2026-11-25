@@ -442,6 +442,32 @@ ISSUE_689 = [
 ]
 
 
+# #691: a quoted < or > (or a value ending in one) is a word, never a redirection; a bare one is
+# still a redirection. (current branch, command, kind, target)
+ISSUE_691 = [
+    ("feature", "git push --force --repo '>' origin bannerlord-1.5.x", "block", T1),
+    ("feature", 'git push --force --repo "<" origin bannerlord-1.5.x', "block", T1),
+    ("feature", "git push --force --repo 'a>' origin bannerlord-1.5.x", "block", T1),
+    ("feature", "git push --force --repo \\> origin bannerlord-1.5.x", "block", T1),
+    ("feature", "git push --force -o '>' origin bannerlord-1.5.x", "block", T1),
+    ("feature", "git push --force --repo '>' origin feature", "allow", ""),
+    ("feature", "git push --repo '>' origin bannerlord-1.5.x", "warn", T1),
+    ("feature", "git push --force origin bannerlord-1.5.x 2>&1", "block", T1),
+    ("feature", "git push --force origin 2> bannerlord-1.5.x", "allow", ""),
+    ("feature", "git push --force origin feature > bannerlord-1.5.x", "allow", ""),
+    ("bannerlord-1.5.x", "git push --force --repo '>' origin", "block", T1),
+    ("feature", 'git push --force --repo "\\>" origin bannerlord-1.5.x', "block", T1),
+    ("feature", 'git push --force origin bannerlord-1.5.x "x\\\\">log', "block", T1),
+    ("feature", 'git push --force --repo "it\'s >" origin bannerlord-1.5.x', "block", T1),
+    # Codex review of #1540: the quoted > must stay a word in a segment too long for the shlex
+    # pass, inside a bash -c script, after a second command, and inside a $( ) substitution.
+    ("feature", "git push --force -o '>' origin HEAD:bannerlord-1.5.x" + " " * 4100, "block", T1),
+    ("feature", 'bash -c "git push --force -o \'>\' origin HEAD:bannerlord-1.5.x"', "block", T1),
+    ("feature", 'git push origin feature; bash -c "git push --force -o \'>\' origin HEAD:bannerlord-1.5.x"', "block", T1),
+    ("feature", 'echo "$(git push --force -o \'>\' origin HEAD:bannerlord-1.5.x)"', "block", T1),
+]
+
+
 class SevenCTests(unittest.TestCase):
     def test_every_7c_command_gets_the_bash_verdict_and_target(self):
         self.assertGreater(len(SEVEN_C), 150)
@@ -468,6 +494,12 @@ class PinTests(unittest.TestCase):
 
     def test_issue_689_shapes_refuse_every_trunk(self):
         for branch, cmd, kind, target in ISSUE_689:
+            for tool in ("Bash", "PowerShell"):
+                with self.subTest(tool=tool, branch=branch, cmd=cmd):
+                    self.assertEqual(verdict(cmd, tool, branch), (kind, target))
+
+    def test_issue_691_a_quoted_redirection_character_is_a_word(self):
+        for branch, cmd, kind, target in ISSUE_691:
             for tool in ("Bash", "PowerShell"):
                 with self.subTest(tool=tool, branch=branch, cmd=cmd):
                     self.assertEqual(verdict(cmd, tool, branch), (kind, target))

@@ -52,6 +52,48 @@ public class ChronicleOutcomeReportTests
     }
 
     [TestMethod]
+    public void Apply_APermanentRow_WritesThePermanentEndAndReportsItPermanent()
+    {
+        var siege = ChronicleFixture.SiegeDef();
+        siege.Fell = new ChronicleOutcomeDefinition
+        {
+            Text = "{=taom_wc_hornburg_fell}fell",
+            Effects = new[]
+            {
+                new ChronicleEffectDefinition { Target = "defender", Kind = WarEffectKind.VolunteerRate, Magnitude = -0.1f, Permanent = true },
+                ChronicleFixture.Effect("attacker", WarEffectKind.VolunteerRate, 0.15f, 25),
+            },
+        };
+
+        var report = Service().Apply(siege, ChronicleEventState.Fell, 1000d);
+
+        Assert.IsTrue(report.Effects[0].Permanent);
+        Assert.IsFalse(report.Effects[1].Permanent);
+        var written = _f.Effects.Snapshot();
+        var permanent = written.Single(e => e.KingdomId == "vlandia");
+        Assert.AreEqual(WarEffect.PermanentEndHours, permanent.EndTimeHours);
+        Assert.AreEqual("chronicle:hornburg:Fell:0", permanent.SourceId);
+        Assert.IsTrue(written.Where(e => e.KingdomId != "vlandia").All(e => e.EndTimeHours == 1000d + 25 * 24d));
+        _f.Effects.Expire(1e11);
+        Assert.AreEqual(0.9f, _f.Volunteers("vlandia"), 1e-6f);
+    }
+
+    [TestMethod]
+    public void Apply_APartyMoraleRow_WritesATimedMoraleEffect()
+    {
+        var siege = ChronicleFixture.SiegeDef();
+        siege.Held = new ChronicleOutcomeDefinition
+        {
+            Effects = new[] { ChronicleFixture.Effect("defender", WarEffectKind.PartyMorale, 0.10f, 25) },
+        };
+
+        Service().Apply(siege, ChronicleEventState.Held, 1000d);
+
+        Assert.AreEqual(1.1f, _f.Effects.GetMultiplier("vlandia", WarEffectKind.PartyMorale), 1e-6f);
+        Assert.AreEqual(1000d + 25 * 24d, _f.Effects.Snapshot().Single().EndTimeHours);
+    }
+
+    [TestMethod]
     public void Apply_Lapsed_ReportsNothing()
     {
         var report = Service().Apply(ChronicleFixture.SiegeDef(), ChronicleEventState.Lapsed, 1000d);

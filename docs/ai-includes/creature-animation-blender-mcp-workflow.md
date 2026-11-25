@@ -86,10 +86,11 @@ rider-animation system, and fixed the chariot's untagged gait clips. Companion t
     fast gait is a faster **amble**). Feet low; body stays level.
   - *Spider* — 8 legs, **alternating tetrapod** (two diagonal sets of 4 alternate); body low/level.
     An *idle* holds a braced splayed stance — NOT a walk-in-place.
-  - *Chariot* — a **horse team** (two full vanilla-named horse bone sets, A + B, on one 60-bone
-    `chariot_skeleton`) + cart/pole/wheels; the wheels carry a baked rotation spin, and the rider
-    STANDS (sit bone `root`). Watch for the two horses being phase-locked (a unison "toy" look) —
-    desync horse-B with `phase_shift_bones` if so.
+  - *Chariot*: a **horse team** (two horse bone sets with the suffixes `_chariot_left` and
+    `_chariot_right`, on the 60-bone `horse_skeleton_chariot` since 2026-11-23) + cart/pole/wheels; the
+    wheels carry a baked rotation spin, and the rider STANDS (sit bone `chariot_bone`, the root).
+    Watch for the two horses being phase-locked (a unison "toy" look): desync horse-B with
+    `phase_shift_bones` if so.
 - **Loop cleanliness** — `analyze_gait` reports the frame-1↔frame-N pose delta; a cyclic clip wants it
   near 0. Time-shift/freeze ops that sample cyclically preserve a clean loop.
 

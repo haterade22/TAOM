@@ -28,4 +28,7 @@ public readonly struct HuntSightReading
 
     /// <summary><c>MobileParty.MainParty.Speed</c>.</summary>
     public float PlayerSpeed { get; init; }
+
+    /// <summary>Vanilla holds the hunter off the player: his own promise or his faction's oath (see <see cref="HuntPartySnapshot.HoldsOffPlayer"/>).</summary>
+    public bool HunterHoldsOffPlayer { get; init; }
 }

@@ -121,8 +121,8 @@ public class LongDefeatSetupPromptTests
         var prompt = _menu.Prompts.Single();
         Assert.AreEqual("{=TAOM_LD_MenuOption}The Long Defeat", prompt.Title);
         StringAssert.Contains(prompt.Description, "If a shader error window appears while the fortress loads, press Cancel.");
-        Assert.AreEqual("helms", prompt.Choices.Single().Id);
-        Assert.AreEqual(Catalog().Fortresses[0].Name, prompt.Choices[0].Label, "no best run yet: the plain name");
+        CollectionAssert.AreEqual(new[] { "helms", "minas_tirith" }, prompt.Choices.Select(c => c.Id).ToArray(), "every shipped fortress, in the file's order");
+        CollectionAssert.AreEqual(Catalog().Fortresses.Select(f => f.Name).ToArray(), prompt.Choices.Select(c => c.Label).ToArray(), "no best run yet: the plain names");
     }
 
     [TestMethod]
@@ -133,22 +133,124 @@ public class LongDefeatSetupPromptTests
 
         Prompt(best: store).Begin();
 
-        var choice = _menu.Prompts.Single().Choices.Single();
+        var choices = _menu.Prompts.Single().Choices;
+        var choice = choices.Single(c => c.Id == "helms");
         StringAssert.StartsWith(choice.Label, "{=TAOM_LD_Prompt_ChoiceBest}");
         Assert.AreEqual("4", choice.Variables!["WAVES"]);
         Assert.AreEqual("321", choice.Variables["KILLS"]);
         Assert.AreEqual(Catalog().Fortresses[0].Name, choice.Variables["NAME"]);
+        Assert.AreEqual(Catalog().Fortresses[1].Name, choices.Single(c => c.Id == "minas_tirith").Label, "a fortress with no best run keeps its plain name");
     }
 
     [TestMethod]
-    public void Begin_PickingTheFortress_StartsAMenuRunWithTheDefaultOptions()
+    public void Begin_PickingTheFortressAndNormal_StartsAMenuRunWithTheDefaultOptions()
     {
-        _menu = new FakeLongDefeatMenu("helms");
+        _menu = new FakeLongDefeatMenu("helms", "normal");
         _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
 
         Prompt().Begin();
 
         _factory.Received(1).Start(new LongDefeatSetup("helms", "menu", RunOptions.Default));
+    }
+
+    [TestMethod]
+    public void Begin_AfterTheFortress_AsksTheDifficulty_NormalThenHard()
+    {
+        _menu = new FakeLongDefeatMenu("helms");
+
+        Prompt().Begin();
+
+        Assert.AreEqual(2, _menu.Prompts.Count);
+        var second = _menu.Prompts[1];
+        Assert.AreEqual("{=TAOM_LD_Prompt_DifficultyTitle}Choose the difficulty", second.Title);
+        StringAssert.StartsWith(second.Description, "{=TAOM_LD_Prompt_DifficultyDesc}");
+        CollectionAssert.AreEqual(new[] { "normal", "hard" }, second.Choices.Select(c => c.Id).ToArray());
+        Assert.AreEqual("{=TAOM_LD_Difficulty_Normal}Normal", second.Choices[0].Label);
+        Assert.AreEqual("{=TAOM_LD_Difficulty_Hard}Hard", second.Choices[1].Label);
+        _factory.DidNotReceive().Start(Arg.Any<LongDefeatSetup>());
+    }
+
+    [TestMethod]
+    public void Begin_EachDifficultyRowShowsItsOwnBestRun()
+    {
+        var store = Store();
+        Assert.IsTrue(store.TrySave("helms", new BestRun(4, 321), out _));
+        Assert.IsTrue(store.TrySave("helms:hard", new BestRun(2, 90), out _));
+        _menu = new FakeLongDefeatMenu("helms");
+
+        Prompt(best: store).Begin();
+
+        var rows = _menu.Prompts[1].Choices;
+        StringAssert.StartsWith(rows[0].Label, "{=TAOM_LD_Prompt_ChoiceBest}");
+        Assert.AreEqual("{=TAOM_LD_Difficulty_Normal}Normal", rows[0].Variables!["NAME"]);
+        Assert.AreEqual("4", rows[0].Variables["WAVES"]);
+        Assert.AreEqual("321", rows[0].Variables["KILLS"]);
+        StringAssert.StartsWith(rows[1].Label, "{=TAOM_LD_Prompt_ChoiceBest}");
+        Assert.AreEqual("{=TAOM_LD_Difficulty_Hard}Hard", rows[1].Variables!["NAME"]);
+        Assert.AreEqual("2", rows[1].Variables["WAVES"]);
+        Assert.AreEqual("90", rows[1].Variables["KILLS"]);
+    }
+
+    [TestMethod]
+    public void Begin_ADifficultyWithNoBestRunKeepsItsPlainName_AndTheFortressRowShowsOnlyTheNormalBest()
+    {
+        var store = Store();
+        Assert.IsTrue(store.TrySave("helms:hard", new BestRun(2, 90), out _));
+        _menu = new FakeLongDefeatMenu("helms");
+
+        Prompt(best: store).Begin();
+
+        Assert.AreEqual(Catalog().Fortresses[0].Name, _menu.Prompts[0].Choices[0].Label, "a hard best does not ride on the fortress row");
+        var rows = _menu.Prompts[1].Choices;
+        Assert.AreEqual("{=TAOM_LD_Difficulty_Normal}Normal", rows[0].Label);
+        StringAssert.StartsWith(rows[1].Label, "{=TAOM_LD_Prompt_ChoiceBest}");
+    }
+
+    [TestMethod]
+    public void Begin_PickingHard_StartsAMenuRunOnHard()
+    {
+        _menu = new FakeLongDefeatMenu("helms", "hard");
+        _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
+
+        Prompt().Begin();
+
+        _factory.Received(1).Start(new LongDefeatSetup("helms", "menu", RunOptions.Default with { Difficulty = RunDifficulty.Hard }));
+    }
+
+    [TestMethod]
+    public void Begin_PickingHardThenAClass_StartsAMenuRunWithBoth()
+    {
+        _menu = new FakeLongDefeatMenu("helms", "hard", "bow");
+        _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
+
+        PromptWithClasses().Begin();
+
+        _factory.Received(1).Start(new LongDefeatSetup("helms", "menu", RunOptions.Default with { ClassId = "bow", Difficulty = RunDifficulty.Hard }));
+    }
+
+    [TestMethod]
+    public void Begin_CancellingTheDifficultyQuestion_StartsNothing()
+    {
+        _menu = new FakeLongDefeatMenu("helms");
+
+        PromptWithClasses().Begin();
+
+        Assert.AreEqual(2, _menu.Prompts.Count, "no class question follows a cancel");
+        _factory.DidNotReceive().Start(Arg.Any<LongDefeatSetup>());
+        Assert.AreEqual(0, _menu.Messages.Count);
+    }
+
+    [TestMethod]
+    public void Begin_WhenTheDifficultyPromptCannotShow_TellsThePlayerAndDoesNotThrow()
+    {
+        _menu = new FakeLongDefeatMenu("helms");
+        var prompt = Prompt();
+        _menu.ChooseThrowsAfter = 1;
+
+        prompt.Begin();
+
+        Assert.AreEqual(LongDefeatSetupPrompt.StartFailedMessage, _menu.Messages.Single());
+        _logger.Received().LogError(Arg.Is<string>(s => s.Contains("the start flow failed")));
     }
 
     private const string TwoClasses = "{'classes':[" +
@@ -161,14 +263,14 @@ public class LongDefeatSetupPromptTests
             new LongDefeatRunRecords(Store(), null));
 
     [TestMethod]
-    public void Begin_WithClassesOnOffer_AsksTheClassSecond_OneRowPerClassWithItsKitText()
+    public void Begin_WithClassesOnOffer_AsksTheClassThird_OneRowPerClassWithItsKitText()
     {
-        _menu = new FakeLongDefeatMenu("helms");
+        _menu = new FakeLongDefeatMenu("helms", "normal");
 
         PromptWithClasses().Begin();
 
-        Assert.AreEqual(2, _menu.Prompts.Count);
-        var second = _menu.Prompts[1];
+        Assert.AreEqual(3, _menu.Prompts.Count);
+        var second = _menu.Prompts[2];
         Assert.AreEqual("{=TAOM_LD_Prompt_ClassTitle}Choose your class", second.Title);
         CollectionAssert.AreEqual(new[] { "sword", "bow" }, second.Choices.Select(c => c.Id).ToArray());
         Assert.AreEqual("{=N_sword}Sword", second.Choices[0].Label);
@@ -180,7 +282,7 @@ public class LongDefeatSetupPromptTests
     [TestMethod]
     public void Begin_PickingTheClass_StartsAMenuRunWithThatClassInTheOptions()
     {
-        _menu = new FakeLongDefeatMenu("helms", "bow");
+        _menu = new FakeLongDefeatMenu("helms", "normal", "bow");
         _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
 
         PromptWithClasses().Begin();
@@ -191,7 +293,7 @@ public class LongDefeatSetupPromptTests
     [TestMethod]
     public void Begin_WithAStartOfItsOwn_HandsThePickedClassToThatStart()
     {
-        _menu = new FakeLongDefeatMenu("helms", "bow");
+        _menu = new FakeLongDefeatMenu("helms", "normal", "bow");
         var started = new List<LongDefeatSetup>();
 
         PromptWithClasses().Begin(setup => { started.Add(setup); return true; });
@@ -208,11 +310,11 @@ public class LongDefeatSetupPromptTests
     [TestMethod]
     public void Begin_WithTheShippedClasses_ListsCavalryLast_WithItsKitText()
     {
-        _menu = new FakeLongDefeatMenu("helms");
+        _menu = new FakeLongDefeatMenu("helms", "normal");
 
         PromptWithShippedClasses().Begin();
 
-        var second = _menu.Prompts[1];
+        var second = _menu.Prompts[2];
         CollectionAssert.AreEqual(new[] { "sword_and_board", "two_handed", "archer", "cavalry" }, second.Choices.Select(c => c.Id).ToArray());
         Assert.AreEqual("{=TAOM_LD_Class_Cavalry}Cavalry", second.Choices[3].Label);
         StringAssert.StartsWith(second.Choices[3].Hint, "{=TAOM_LD_Class_Cavalry_Text}");
@@ -223,11 +325,11 @@ public class LongDefeatSetupPromptTests
     [TestMethod]
     public void Begin_TheClassQuestion_SaysCavalrySetsTheArmourAndTheHorse_NotThatTheRestOfTheGearStays()
     {
-        _menu = new FakeLongDefeatMenu("helms");
+        _menu = new FakeLongDefeatMenu("helms", "normal");
 
         PromptWithShippedClasses().Begin();
 
-        var description = _menu.Prompts[1].Description;
+        var description = _menu.Prompts[2].Description;
         StringAssert.Contains(description, "armour");
         StringAssert.Contains(description, "horse");
         Assert.IsFalse(description.Contains("stays as it is"), description);
@@ -236,7 +338,7 @@ public class LongDefeatSetupPromptTests
     [TestMethod]
     public void Begin_PickingCavalry_StartsAMenuRunWithCavalryInTheOptions()
     {
-        _menu = new FakeLongDefeatMenu("helms", "cavalry");
+        _menu = new FakeLongDefeatMenu("helms", "normal", "cavalry");
         _factory.Start(Arg.Any<LongDefeatSetup>()).Returns(true);
 
         PromptWithShippedClasses().Begin();
@@ -247,10 +349,11 @@ public class LongDefeatSetupPromptTests
     [TestMethod]
     public void Begin_CancellingTheClassQuestion_StartsNothing()
     {
-        _menu = new FakeLongDefeatMenu("helms");
+        _menu = new FakeLongDefeatMenu("helms", "normal");
 
         PromptWithClasses().Begin();
 
+        Assert.AreEqual(3, _menu.Prompts.Count, "fortress, difficulty, then the class question that was cancelled");
         _factory.DidNotReceive().Start(Arg.Any<LongDefeatSetup>());
         Assert.AreEqual(0, _menu.Messages.Count);
     }
@@ -258,9 +361,9 @@ public class LongDefeatSetupPromptTests
     [TestMethod]
     public void Begin_WhenTheClassPromptCannotShow_TellsThePlayerAndDoesNotThrow()
     {
-        _menu = new FakeLongDefeatMenu("helms");
+        _menu = new FakeLongDefeatMenu("helms", "normal");
         var prompt = PromptWithClasses();
-        _menu.ChooseThrowsAfter = 1;
+        _menu.ChooseThrowsAfter = 2;
 
         prompt.Begin();
 

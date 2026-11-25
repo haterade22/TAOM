@@ -150,7 +150,7 @@ given `--report -`.
 
 ## 5. Checks to run before every commit
 
-TAOM's CI was removed on 2026-10-05. The repo's git hooks (`.githooks/commit-msg`, `pre-commit` and
+TAOM's CI runs on pull requests only, never on a direct commit. The repo's git hooks (`.githooks/commit-msg`, `pre-commit` and
 `pre-merge-commit`) run on a plain `git commit` once the clone sets `git config core.hooksPath .githooks`; set
 it once per clone. Without it nothing runs on your commit, and a Harad tree replacement plus the next commit
 reached trunk with red gates for five days. The hooks run a subset, so run these yourself too, from the TAOM

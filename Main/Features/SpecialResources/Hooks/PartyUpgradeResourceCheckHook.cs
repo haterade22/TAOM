@@ -23,8 +23,9 @@ public class PartyUpgradeResourceCheckHook : IOnPartyUpgradeResourceCheck
     public void QueueUpgradeSpend(string heroId, string troopId, int count)
         => _service.QueueUpgradeSpend(heroId, troopId, count);
 
-    public int ClampUpgradeCount(string heroId, string kingdomId, string cultureId, string troopId, int requestedCount)
-        => _service.ClampUpgradeCount(heroId, kingdomId, cultureId, troopId, requestedCount);
+    public int ClampUpgradeCount(string heroId, string kingdomId, string cultureId, string troopId, int requestedCount, IReadOnlyList<RecruitCartEntry> recruitedThisSession)
+        => _service.ClampUpgradeCount(heroId, kingdomId, cultureId, troopId, requestedCount,
+            _coop.IsSessionActive ? null : recruitedThisSession);
 
     public int GetUpgradeCost(string troopId)
     {
@@ -54,4 +55,7 @@ public class PartyUpgradeResourceCheckHook : IOnPartyUpgradeResourceCheck
     public void BeginSession() => _service.BeginPartyScreenSession();
     public void CommitSession(string heroId, string kingdomId, string cultureId) => _service.CommitSession(heroId, kingdomId, cultureId);
     public void CancelSession() => _service.CancelSession();
+
+    public float ChargeAppliedUpgrades(string heroId, string kingdomId, string cultureId)
+        => _coop.IsSessionActive ? 0f : _service.CommitAppliedUpgrades(heroId, kingdomId, cultureId);
 }

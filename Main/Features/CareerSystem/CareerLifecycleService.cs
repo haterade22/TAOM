@@ -57,6 +57,19 @@ public class CareerLifecycleService : ICareerLifecycleService
         return false;
     }
 
+    public bool ClearUnknownCareer(string heroStringId)
+    {
+        if (string.IsNullOrEmpty(heroStringId) || !_dataService.HasCareer(heroStringId)) return false;
+        var careerId = _dataService.GetCareerStringId(heroStringId);
+        var all = _registry.GetAllCareers();
+        if (all == null || all.Count == 0 || _registry.GetCareer(careerId) != null) return false;
+        if (_registry.IsCareerDeclared(careerId)) return false;
+
+        _logger.LogWarning($"CareerSystem: hero '{heroStringId}' holds career '{careerId}' which the data no longer defines, clearing it");
+        _dataService.ClearCareer(heroStringId);
+        return true;
+    }
+
     public int RepairForeignChoices(string heroStringId)
     {
         var careerId = _dataService.GetCareerStringId(heroStringId);

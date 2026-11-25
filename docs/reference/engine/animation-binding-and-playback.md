@@ -123,6 +123,23 @@ For a custom creature (spider/elephant/warg) to animate correctly, its `Monster`
 5. **A compiled clip (`_anm.tpac`) for every `animation="…"` referenced** — a missing `_anm` → the gait builder
    divides by a 0 duration → DivideByZero at spawn (the spider's `TEMP-ANM-UNBLOCK` substitutions).
 
+6. **Sources inside the master's key times** (#1558). A clip record plays keys `Source1` to `Source2`; the editor
+   accepts a track only when its first key time is at or under the lower source and its last at or over the upper
+   (`FUN_180b8b810`, wEditor `TaleWorlds.Native.dll`, 2026-11-23), and prints "ipo does not fit" per track
+   otherwise. A Kit master keys from 0, and a Kit loop's last source key repeats its first.
+7. **Overlay rows in the pace's rhythm** (#1559, a mount). The clip of a `monster_usage_upper_body_movement` row
+   and of `gallop_acceleration_head_action` plays on channel 1 over the WHOLE body at a weight of up to 1 (measured
+   on the spider in a battle, 2026-11-23); channel 0 reads `act_none` while the movement node runs. The usage
+   file's loader (0x621E40) keys a movement row on foot, pace, direction and turn direction, never on its action.
+   A `none` direction is filed under all eight directions, a `none` turn under both turns and
+   `is_left_foot="True"` under both feet, each where no earlier row holds the key: a pace's `none/none` row goes
+   LAST, or it hides the turn and strafe rows after it. The upper-body rows are filed in a second map with no
+   such expansion. `gallop_acceleration_head_action` is optional: the loader writes its field only when the
+   attribute is there (the camel's and the warg's sets name none).
+8. **The body capsule has managed readers.** The rider's camera height is `rider_camera_height_adder` + the
+   capsule's pos1 z + its radius, times the mount's scale (`MissionScreen.cs:1263`); an AI agent's retreat
+   distance is 15 times the radius (`CommonAIComponent.cs:55`). Change the capsule and the adder together.
+
 So "the creature won't animate" decomposes into: action set invalid? monster_usage wrong? bone names wrong? clip
 missing `_anm`? clip flags unset? — check in that order.
 

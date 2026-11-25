@@ -86,6 +86,26 @@ public class WarOfTheRingWarVetoTests
 
     // --- GetWarVeto ---------------------------------------------------------------------------
 
+    // #1105 slice 5: a pair whose permanent alliance a story ended reads Neutral, and keeps its veto after the War Ended phase.
+    [DataTestMethod]
+    [DataRow(WarPhase.IsengardWar)]
+    [DataRow(WarPhase.FullWar)]
+    [DataRow(WarPhase.WarEnded)]
+    public void GetWarVeto_ABrokenAlliance_IsSameAlignmentInEveryPhaseAfterPeace(WarPhase phase)
+    {
+        _diplomacyService.IsBrokenAlliance("isengard", "empire_s").Returns(true);
+        _diplomacyService.IsBrokenAlliance("empire_s", "isengard").Returns(true);
+
+        Assert.AreEqual(WarVeto.SameAlignment, SutAt(phase).GetWarVeto("isengard", "empire_s"));
+        Assert.AreEqual(WarVeto.SameAlignment, SutAt(phase).GetWarVeto("empire_s", "isengard", causedByPlayer: true));
+    }
+
+    [TestMethod]
+    public void GetWarVeto_APairWithNoBrokenAlliance_StillEndsItsVetoAtWarEnded()
+    {
+        Assert.AreEqual(WarVeto.None, SutAt(WarPhase.WarEnded).GetWarVeto("isengard", "empire_s"));
+    }
+
     [TestMethod]
     public void GetWarVeto_PeacePhase_ReturnsPhasePeace()
     {

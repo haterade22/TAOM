@@ -610,6 +610,14 @@ Per-commit runs of the no-growth ratchet passed on the branch, because their bas
 - **Prevent:** prefer an allow list of the names a table may hold, and print how many rows got no credit. Before a number drives a spend decision, read a sample of the rows behind it.
 - **Source:** `docs/reviews/rca-rules-review-2026-11-03.md` rows 14, 15, 31.
 
+### A gate is reviewed by feeding it a wrong state: one test for each value it owns, broken alone (#1541, 2026-11-22)
+
+**Why missed:** Four gates of the spider work passed states they were written to reject. The binder's `--check` asked whether a row existed, not which clip it played. The mount asset check exempted an (action, clip) pair wherever the action sat. The stride gate skipped two clips by name, whatever row bound them. The binder counted rows inside XML comments. Each gate had been run on the state the work had just made, it passed, and that was taken as proof. The binder's tests compared its output with the tables that produced it. Five lenses read correct data through these gates and saw true PASS lines; Codex found all four by changing one value in memory and running the real gate.
+
+**Prevent:** A gate, a `--check` or an exemption ships with one test per value it owns, each broken alone: a row that is there with the wrong value, a row inside a comment, an exempt thing moved to the place the exemption does not cover, an excluded thing bound where it must be judged. Write some expectations as literals, never all from the tool's own tables. Where a tool edits text and must stay byte-faithful, verify the RESULT with a parser and compare it with the tables (`bind_spider_clips.planned_problems`). A check that guards a write runs before the write, in the dry run too. This is the second gate RCA in a week ([elephant](../rca-elephant-gait-gate-2026-11-20.md): a gate with missing input); the rule is in `.claude/rules/data-scripts.md` now.
+
+**Source:** [rca-spider-locomotion-2026-11-22.md](../rca-spider-locomotion-2026-11-22.md) F1 to F6; `tools/tests/test_bind_spider_clips.py` (`PlannedProblemTests`, `MainTests`).
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
@@ -5188,7 +5196,7 @@ After #1354 the gate and the catalogue found stylesheets through `SubModule.xml`
 ### A tool that models one game mode must name every mode the mod plays (shield gate, #1398, 2026-11-16)
 The first #1398 change kept only rows for Campaign. On the live install that dropped TAOM's own Fords of War `fords_items.xml` (a CustomGame row) from the gate, and it made 429 pieces that Native's campaign `weapon_descriptions.xml` lists, but only its multiplayer file defines, read as dangling. The side-by-side run against trunk showed both before any commit.
 - **Why missed:** the issue text named only the multiplayer files to drop; nobody listed the game types TAOM itself uses.
-- **Prevent:** before filtering data by game type, list the files the filter drops on the live install (one line of Python over `other_game_files`) and read each name. Name the mod's game types in one constant (`GAME_TYPES`).
+- **Prevent:** before filtering data by game type, list the files the filter drops on the live install (one line of Python over `loaded_files`, which replaced `other_game_files` in #1404) and read each name. Name the mod's game types in one constant (`GAME_TYPES`).
 - **Source:** issue #1398.
 
 ### A ladder rule reaches every tool that prices against the ladder (shield view, #631, 2026-11-16)
@@ -5261,3 +5269,171 @@ The command trial turned stamina on with an in-memory switch and cleared it when
 - **Why missed:** "clear it at Finish" was a critic's answer to a leak into a later battle, and it was taken as the whole lifetime. Nobody listed what still reads the switch after the last step, or every path that ends a run. The first game run showed the summary line; a lens found the refused start.
 - **Prevent:** set a trial switch when the run arms and clear it at the one place every run ends, the autostart's done-file write (`CommandTrialRun.Close`). Test the two ends: the switch is still on while the mission closes, and a refused start gives it back.
 - **Source:** #1506; run `E:/Temp/command-trial-runs/20261120-152853` (the summary line), `Live_TheStaminaSwitch_StaysOnUntilTheDoneFile_SoTheBattlesEndReadsTheTrialsSettings`, `WaitForMenu_ARefusedStaminaList_GivesTheStaminaSwitchBackWithTheDoneFile`.
+
+### Two builders that each add one of a counted thing merge cleanly to a count that is one short (#1528, #1529, 2026-11-22)
+
+**Why missed:** The team practice fight and the wave fight were built in two worktrees from one commit. Each added one MCM setting and raised the same numbers by one (the `TaomSettings` count, the schema total, the count in two co-op docs). A three-way merge sees the same edit on both sides and keeps it with no conflict, so the joined tree said 539 where it held 540. The same join dropped a `[SettingPropertyGroup]` line: both sides had added a property under an identical attribute line, and the merge kept one copy of that line for two properties. Only the count tests and one attribute test showed either defect. The merge of trunk a few hours later met the same class again, because trunk had added three settings of its own.
+
+**Prevent:** After joining two builder trees, or a branch with trunk, run the count and schema tests before anything else and expect them to fail: `SettingsFingerprintTests`, `ServerSettingsSchemaTests`, `CoopMissionRolePolicyTests`, `FeatureModulesTests`. When the line is a count, or sits between two additions, treat a hunk that both sides changed in the same way as a conflict to read, not as a merge that worked. In the builder briefs, name the counted files as shared and say that the lead sets the final numbers.
+
+**Source:** the join of `feat/training-grounds-teams` and `feat/training-grounds-waves`, and the merge of trunk, in PR #1535.
+
+### A fix list that says "every" must not rule one case out of scope (#1529, 2026-11-22)
+
+**Why missed:** A review found that a refund in the wave fight told the player nothing. The lead's fix list said to show the notice on every path where a stake is refunded and, lower down, listed "a wave with no room for any fighter" as out of scope. The implementer followed both and left that refund silent. The second review found it, with two more paths the list had not named: a mission that ends while a wave is due, and a notice that came after a call that could throw.
+
+**Prevent:** When a fix is "every X", write it as one function that every X goes through and name that function in the list, in place of a list of call sites. Read the out-of-scope list against each "every" before the list goes out. Ask the implementer's report for the paths it found and did not change.
+
+**Source:** the second look at the #1529 fixes (lens 5 F1 and the Codex pass, prompt [codex-rereview-training-grounds-fixes-2026-11-22.prompt.md](../codex-rereview-training-grounds-fixes-2026-11-22.prompt.md)), fixed by `WaveFightDirector.AnnounceRefund`.
+
+### A manual check ported to code matches at least what the person matched, on real input (#1543, 2026-11-22)
+
+**Why missed:** `tools/pr_review_watch.py` ports the `/review-outside-pr` Phase 1 checks. Each port came out narrower than the check: no-patch files had to have `changes > 0` (GitHub reports a binary with 0), a rename was checked only on its new name, and the high-risk names matched only at the root and in one case. The tests were built from the same assumptions, so they passed.
+
+**Prevent:** Before you code a check a person does by hand, fetch one real response for each input shape the code reads (binary, rename, removal, nested path, other case) and build the fixtures from those. Write down each place the code is narrower than the manual check, and keep it only with a reason. A drift test between the two compares how entries match, not only their names. When the check models a mechanism (how Python resolves an import), code the mechanism's full order, not the files that exist today. When it reads several views of one object that can change (a PR's file list, diff and files), read every view at one pinned version.
+
+**Source:** [rca-pr-review-watcher-2026-11-22.md](../rca-pr-review-watcher-2026-11-22.md), the tier 2 review of #1543 (Tooling lens findings 1 to 3) and the Codex review after it (C1, C2).
+
+### A check that reads a hand-typed plan refuses what it does not know (#1563, 2026-11-23)
+`tools/repoint_anim_clip.py --check` became the `warg-gaits` gate. It read each row's optional fields with
+`r.get`, so a row that said `travle` for `travel` planned no change, the record read `DONE` and the gate passed
+with that value never compared. Two rows for one clip did worse in silence: each was built from the file as it
+was, and the second write replaced the first. On a machine without the Armory or without `xxhash` the gate ended
+in a traceback with exit 1, which `tools/data_gates.py` reads as a finding, where 2 is NOT RUN.
+- **Why missed:** the plan had one author, who typed it right, and every test broke a value of a correct row.
+  No test wrote a row a person could mistype, and the gate was never run on a machine without the install.
+- **Prevent:** a tool whose `--check` reads a plan, a clip list or a config that a person types holds the names
+  it accepts in one tuple, refuses a row with any other name or without a required one, refuses a doubled key,
+  and does so before the first write, in the dry run too. Its tests include a misspelled field, a doubled row
+  and a missing install. A gate's exit codes follow `tools/data_gates.py`: 1 a finding, 2 not run.
+- **Source:** issue #1563; [RCA](../rca-warg-gaits-2026-11-23.md) F1 to F3;
+  `tools/tests/test_repoint_anim_clip.py` (`PlanRowTests`).
+
+### A guard that looks for a package matches the whole file name, and a rollback removes its own bytes
+
+- **Why missed:** two scripts wrote item rows into the live Armory and refused while "the Kit-cooked package" was missing. The guard took the first `.tpac` whose file name contained the wanted name, so a material passed on a texture package and one mesh passed on another mesh's package; the first run was right only because every real package existed. Each script's `--rollback` copied back a whole-file backup, and three scripts plus one inline edit had each saved the same file at a different time, so the oldest rollback would have dropped the later edits.
+- **Prevent:** a package guard names one file per kind and says what that kind needs (`<mesh>_geo.tpac` with a RuntimeDataCache entry, `<material>_mtl.tpac` without one: no material package in the Armory has an entry), and its tests feed it the near miss (a longer name, another kind). A writer of a shared, unversioned file undoes itself by removing exactly the bytes it wrote and refuses when they differ; it never restores a snapshot. One file per live edit, in the repo, with `--check`: `tools/apply_dwarf_chariot_armory.py` (`CookedPackageGuardTests`, `DriftAndRemoveTests`).
+- **Source:** [RCA](../rca-dwarf-chariot-2026-11-24.md) F1, F2, F6.
+
+### A writer's fixture holds what the real document holds, and its restore is tested on a copy of the real file
+
+- **Why missed:** `tools/apply_dwarf_chariot_armory.py` found the end of its anchor item by the next `<Item`, which also matches `<ItemComponent>`. Every real item has one; the test fixture's anchor item did not. So 21 tests passed and `--apply` could never write on the real file. The test against the live install ran `--check` only, with the rows already in, and never reached the insertion.
+- **Prevent:** build a writer's fixture from a real row of the file it writes (copy one whole item, child elements included), not from the shortest XML that parses. Where the install is present, test the full round trip on a copy of the real files in a temp tree (`--remove`, then `--apply`, bytes equal to the live file): a check that only reads the present state proves nothing about the write. Judge presence from the parsed document and ownership from the bytes: a substring test fails both on a longer tag name and on other quotes.
+- **Source:** [RCA](../rca-dwarf-chariot-2026-11-24.md) F11, F12; `test_remove_then_apply_on_a_copy_of_the_live_files_gives_the_live_bytes_back`.
+### A new member of an exempt class needs its entry in each gate that lists the class by name (#1565, 2026-11-24)
+The dire wolf's walk got an in-place twin, a clip with no `quad_movement` on a pace's "none" row, as its trot,
+canter and gallop twins are. `tools/verify_mount_assets.py` exempts such twins by exact (action, clip) pair, the
+new pair was not in its list, and the tool printed "do NOT battle-test" for a row in vanilla's own shape. No data
+gate ran that tool for the wolf, so three reviewers found it and the author's own gates did not. The gait gates'
+globs also left out `creature_fit.py` and `_gamedir.py`, which the check imports: the same fault as F11 of the
+#1563 RCA (the globs listed what the tool writes, not what its check runs).
+- **Why missed:** the author searched for consumers of the records, not for lists that name the records' kind.
+  The glob fault was fixed for one gate on 2026-11-23 and the rule was not applied to the next gate.
+- **Prevent:** when a change adds a record of a kind some check exempts or enumerates, grep the tools for a
+  sibling's name (`grep -rn dire_wolf_trot_stand tools`) and add the new member beside each hit. A check that a
+  feature doc names as its gate is a row of `tools/data_gates.py`, with the imports of its command in its globs
+  (`python -X importtime` or a read of its import lines).
+- **Source:** issue #1565; the Data flow, XML and Engine lenses and the Codex pre-review
+  (`docs/reviews/raw/codex-prereview-warg-walk-trot-2026-11-24.md`, P2 2 and P3 6);
+  `tools/tests/test_data_gates.py`, `tools/tests/test_verify_mount_assets.py`.
+
+### A tool that rewrites a shared live file reads it again before it writes (#1565, 2026-11-24)
+`tools/bind_warg_clips.py` built its write and its backup from the bytes it read at its start. Another session
+edits the same live `action_sets.xml`; an edit between that read and the write would have been lost, from the
+backup too. A missing snapshot also read as a pass of the one file that was found.
+- **Why missed:** the tool was modelled on the older bind tools, which have the same window, and its tests ran
+  one process on files nobody else touched.
+- **Prevent:** a writer of a live Armory or `TAOM_Map` file compares the file with the bytes it planned from,
+  immediately before the first write, and refuses a difference; its backup is opened in mode `x`; a file of the
+  repo that the check needs is a refusal when missing, never a skip. One test changes the file from inside the
+  run.
+- **Source:** issue #1565; Codex pre-review P2 1 and 3; `tools/tests/test_bind_warg_clips.py`
+  (`test_a_file_another_session_changed_after_the_read_is_not_overwritten`).
+
+### A check that reports a text absent from a package reads the compressed payloads too
+
+- **Why missed:** `--forbid` of `tools/tpac_slim_package.py` searched the bytes of the output file. LZ4 writes a repeated run as a back reference, so a text can be in a segment's payload and in no byte run of the file, and all 182 segments of the war chariot's rig package are compressed: 316 strings of that package (bone names among them) are readable only after unpacking. The option existed to prove that the source's names were gone from a package we ship, and it printed "absent" for data it had not read. Its test put the text in a Texture's metadata, which is never compressed.
+- **Prevent:** a check that says "absent" reads every place the text can be: the file's bytes and each unpacked segment (`forbidden_hits`), and its message names both. "Is this segment packed" is not read from its two sizes: the Kit packs a segment as LZ4 even when that saves nothing (139 such segments were in the Armory's creature folder on 2026-11-24; the storage format is the last byte of the segment's entry), so the first fix, which unpacked only where the sizes differ, still skipped data. The search now tries every segment and refuses one that is marked packed and does not unpack. The fixtures hold a compressed segment in which a back reference splits the text, and one whose packed and unpacked sizes are equal, and each first asserts that the text is not in the file's bytes (`test_forbid_reads_the_payload_of_a_compressed_segment`, `test_forbid_reads_a_packed_segment_whose_two_sizes_are_equal`). The live rig package was read again with the final search on 2026-11-24 (a dry run of the tool with six `--forbid` texts): no name of the pack, its author or its carts is in it. Its cache entry was searched as bytes only, with the same result. The same question for any search of a cooked package: is the thing I look for in the item table, or in a payload?
+- **Source:** [rca-chariot-rig-2026-11-24.md](../rca-chariot-rig-2026-11-24.md) F1.
+### A cook check by file dates fails on a copied install: hold the entry to its record's checksum (#1565, 2026-11-24)
+`tools/check_gait_stride.py` called a cache entry stale when it was older than its record or its master. On the
+warg that named all seven clips with travel that no tool had rewritten, and 30 of the 41 clips of `as_warg` have an
+entry older than their master's file. The files were not newer in content: 32 masters are dated 2026-08-31
+09:01 and every untouched record 2026-08-28 20:33, the dates of copies, and the five masters the Kit cooked
+again in November gave the August payload byte for byte. A Kit start does not clear such a finding, because
+the Kit sees nothing to cook.
+- **Why missed:** the rule was written for masters that tools here write (the elephant's, the spider's), where
+  the date is the only signal of changed keys. Nobody had run it on files that only a copy had touched.
+- **Prevent:** where no tool writes a creature's masters, hold an entry to the checksum of its record, which
+  the Kit writes into the entry (`check_gait_stride.stamp_state`, the creature's `cooked: "stamp"`). State
+  beside the rule what it gives up: it does not see a master rewritten under one GUID, nor a record edited
+  without a new checksum (the gate cannot recompute a checksum the Kit wrote). Before a
+  date finding sends anyone to the Kit, compare the suspect entry's payload with a later entry of the same keys.
+  A first run of a gate on data it never read is a measurement: sort each finding into a defect, a rule that
+  does not fit the data, or a known failure with its issue, before the gate ships.
+- **Source:** issue #1565 item 2, follow-up #1591; `tools/tests/test_gait_stride_creatures.py`
+  (`StampStateTests`, `CookedRuleTests`, `KnownFailureTests`).
+
+### A list of known failures names the one failure it excuses, with its numbers (#1565, 2026-11-24)
+The warg's two side-step records fail the stride gate, and the gate shipped a `known` list for them: measured,
+printed, not counted. The first version excused every finding on a listed clip. A listed clip could gain a
+paw that never plants, lose its travel, or get a master with half the stride, and the gate still exited 0. A
+listed gait that no set bound any more was only a note.
+- **Why missed:** the author tested that a listed clip which starts to PASS fails the gate, and took that for
+  the whole duty of the list. No test made a listed clip fail in a second way. The same fault is in the rule
+  the author had open (`.claude/rules/data-scripts.md`: break each value a gate owns), which named the exempt
+  pair that moves and not the exempt item that gets worse.
+- **Prevent:** an entry of a known-failure or exemption list states the failure as data (here: metres claimed
+  and metres covered), and the gate compares both on every run. Everything else about the item is judged as
+  for any other item. Three tests per list: the item fails in a second way; its listed numbers change; the
+  item is gone or unbound.
+- **Source:** issue #1565 item 2; Codex pre-review P1 and P2 3, the Data flow lens trace 2;
+  [RCA](../rca-warg-stride-gate-2026-11-24.md) F1 and F3. The list and its tests were removed with #1591,
+  when the standing strafe rows stopped being stride gaits; the rule stands for any list of this kind.
+
+### Taking a verdict out of a gate: list what the deleted tests held, and keep what the reason does not cover (#1591, 2026-11-24)
+#1591 found that the stride is the wrong measure for a clip on a mount's standing strafe rows, so the stride gate
+stopped judging such a clip. The author deleted the whole branch: the stride verdict, and with it the stance and
+slip checks that trunk made on the spider's, the elephant's and the warg's side clips. A side-step master whose
+foot never plants passed with exit 0. The same change wrote a direction rule for "the backward action" where the
+backward pace has two records, and a ground rule that took each foot's ground from that foot with nothing to
+hold the feet to one ground.
+- **Why missed:** the reason for the change covered one number, and the code that fell was a branch. The author
+  deleted `KnownFailureTests` and the `axis` test without a list of what they held, then ran 31 mutations, all
+  of lines that exist. A mutation run cannot show a check that is gone. The lesson of the review before (an
+  excused item is judged in every other way as any item is) was written about a list, and the author did not
+  apply it to the code that replaced the list.
+- **Prevent:** a change that takes a verdict out of a gate names, for each test it deletes, the test that still
+  holds what that test held, or the reason the check is dropped (`.claude/rules/data-scripts.md`). Run the old
+  tool and the new one on one broken input for each thing the old branch judged. A rule that names one row (an
+  action, a foot) says in its docstring what stands for the rest (the pace's other records, the other feet).
+- **Source:** issue #1591; [RCA](../rca-side-steps-wolf-stride-2026-11-24.md) F1, F3 and F5; the Tooling lens,
+  the Data flow lens and the Codex pre-review; `tools/tests/test_gait_stride_creatures.py` (`SideStepTests`,
+  `BackwardDirectionTests`, `GroundRuleTests`).
+
+### A value from a hand-typed JSON plan is held to its JSON type before `float()` sees it (#1566, 2026-11-24)
+`tools/repoint_anim_clip.py` took a plan row's numbers with `float(v)`. `float(True)` is 1.0 and `float("820")` is
+820.0, so `"source1": true` planned frame 1 and a quoted number passed for a number. A NaN went past the frame 0
+rule, because `min(nan, x) < 1` is false. A value over the record's 32-bit range raised out of `struct.pack` as a
+traceback, where the tool's contract is a refusal with a reason.
+- **Why missed:** the checks were written for wrong numbers (negative, out of order), and `float()` was the type
+  check. The first fix of this change covered the NaN and left the other three, and its one test of the command
+  line broke both sources in one row, so it passed without the new line.
+- **Prevent:** a number from JSON is an `int` or a `float` and not a `bool`, and it fits the field it is written
+  to; the tool refuses anything else by the row's name. A test of such a rule breaks one value in a row and keeps
+  the rest sound.
+- **Source:** issue #1566; Codex pre-review P2 and P3, the Tooling lens;
+  `tools/tests/test_repoint_anim_clip.py` (`LowFindingTests`).
+
+### A time limit in a test is a budget for one input: it does not show how the cost grows (#1566, 2026-11-24)
+`test_heredoc_regex_is_linear_in_a_long_delimiter` failed once at 5.68 s against a limit of 5 s, on a wall clock,
+while the C# suite ran beside it. The measure that followed showed more: the call the limit sat on,
+`git_call_dirs` in `.claude/hooks/_shellwords.py`, takes about 0.1 s of CPU for 750 lines with `<<`, 0.4 s for
+1,500 and 1.5 s for 3,000. It grows with the square of their number, under a test named "is linear".
+- **Why missed:** one input under one threshold passes for any growth rate that fits under the threshold. The
+  name said what the author meant to hold, not what the assertion holds.
+- **Prevent:** a timing test reads `time.process_time()`, so another job's load is not in it, and its name says
+  that it is a budget. A claim about growth needs two sizes and their ratio.
+- **Source:** issue #1566 (the comment of 2026-11-24 has the numbers); the Tooling lens and the Codex pre-review;
+  `tools/tests/test_shellwords.py`. The hook is not changed: the Bash tool's 7,500 character cap keeps a real
+  command near the smallest of those sizes.

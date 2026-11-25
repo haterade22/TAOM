@@ -116,6 +116,8 @@ public class ClientSubModuleTests
         Assert.IsTrue(suppressed.Count > 0, "the client declares [CoopSuppressedUi] types, so the filter has work to do");
         CollectionAssert.AreEquivalent(all.Except(suppressed).ToList(), typeLists[0].ToList());
         Assert.AreEqual(all.Count - suppressed.Count, typeLists[0].Count);
+        CollectionAssert.Contains(typeLists[0].ToList(), typeof(TAOM.Features.TimeAcceleration.UI.TimeAccelerationMixin),
+            "the themed map bar's time buttons bind the mixin under co-op too");
     }
 
     [TestMethod]

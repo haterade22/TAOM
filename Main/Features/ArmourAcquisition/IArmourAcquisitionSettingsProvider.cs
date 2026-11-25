@@ -9,4 +9,10 @@ public interface IArmourAcquisitionSettingsProvider
     bool LordEventEnabled { get; }
 
     bool VisitingArmourerEnabled { get; }
+
+    /// <summary>
+    /// "Lords' Ladder for co-op players": the co-op server runs the ladder for its players' heroes. Read live in the
+    /// server process; a player's own value is not read.
+    /// </summary>
+    bool CoopGuestLadderEnabled { get; }
 }

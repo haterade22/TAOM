@@ -23,7 +23,7 @@ Two problems exist:
 - `AllianceActionHook` (implements `IOnAllianceAction`) consults `DiplomacyService` to decide whether to block alliance-end and war-declaration events.
 - `Patch11_Diplomacy` uses Harmony Prefix patches on `AllianceCampaignBehavior.EndAlliance`, `DeclareWarAction.ApplyInternal` and `AllianceCampaignBehavior.StartCallToWarAgreement` and `OnCallToWarAgreementProposedByPlayerKingdom`, plus `IsAllowed` on `ProposeCallToWarAgreementDecision` and `AcceptCallToWarAgreementDecision` and the lord dialogue's sponsor-a-call-to-war clickable condition, delegating to `IOnAllianceAction`. The war prefixes ask `IWarOfTheRingService.GetWarVeto`, which checks Permanent first, then `WarEnded`, then the same-alignment rule, and only then the phase rule ([war-of-the-ring.md](war-of-the-ring.md)); a same-side pair therefore reads the alignment text in every phase before `WarEnded`, and the phase text reaches only opposed or neutral pairs. The `DeclareWarAction` prefix reads `declareWarDetail`: a player-caused war (`CausedByPlayerHostility`, `CausedByCrimeRatingChange`, `CausedByKingdomCreation`) skips the two phase vetoes only. `TaomDiplomacyModel.GetScoreOfDeclaringWar` subtracts a 10,000,000 (phase veto) or 100,000,000 (Permanent, same-alignment) penalty so the AI does not propose a war the rule would cancel, and `TaomKingdomDecisionPermissionModel` takes its refusal text from `AllianceActionHook.GetWarRefusalText`.
 - `TaomAllianceModel` overrides `DefaultAllianceModel.GetScoreOfStartingAlliance` to add a score modifier (+1000 for Permanent, +500 for Natural, -10000 for Hostile) so the AI naturally favors or avoids alliances matching lore.
-- `DiplomacyBehavior` (`CampaignBehaviorBase`) establishes initial permanent alliances on new game creation and re-enforces them on every session load.
+- `DiplomacyBehavior` (`CampaignBehaviorBase`) establishes initial permanent alliances on new game creation and re-enforces them on every session load, and saves the pairs a story ended (below, "Broken permanent alliances").
 
 **Player Alliance Freedom subsystem:**
 
@@ -250,6 +250,20 @@ economy of the bands and needs the maintainer's call first.
 - `GetRelationCostOfDisbandingArmy` returns -(28 to 32) for an army's leader, so the player loses 28 to 32 relation with him (vanilla loses 4). A member keeps vanilla's -1.
 - `GetRelationChangeAfterClanLeaderIsDead` returns 0 for the player when a clan's leader changes (death, a leader changing clan, a member elected king), so an heir keeps the relation he earned himself, instead of inheriting 0.7 of the dead leader's.
 
+### Broken permanent alliances (#1105 slice 5)
+
+A story can end a Permanent row's alliance for good: the Hornburg's repulsed assault ends the alliance of Isengard and Mordor ([war-chronicle.md](war-chronicle.md) "Repulsed assault"). `DiplomacyService.EndPermanentAlliance(a, b, why)` answers `PermanentAllianceEnd`:
+
+- `NotPermanent` for a pair with no Permanent row, and nothing changes.
+- Otherwise the pair joins a set of broken pairs first (a new immutable `HashSet`, swapped whole: `GetRelationshipTier` is read on worker threads), then, when the two are allied, `IAllianceAdapter.EndAlliance` calls `IAllianceCampaignBehavior.EndAlliance`. Recording first matters: the `EndAlliance` prefix (`AllianceActionHook.ShouldPreventAllianceEnd`) reads the tier, and a Permanent pair is refused. The result is `Ended`, `AlreadyEnded` for a pair recorded before, or `StillAllied` when the engine still reports them allied.
+- The engine's `EndAlliance` ends the pair's call-to-war agreements, removes the alliance and raises `OnAllianceEnded`; it makes no peace and no war.
+
+While a pair is broken, `GetRelationshipTier` reads Neutral instead of Permanent (before the pledge rules), `IsAllianceAllowed` and `IsWarAllowed` are false, `TaomKingdomDecisionPermissionModel` refuses the proposal and `GetAllianceScoreModifier` is -10000, also when a player rules one of the two (the player's freedom to ally with anybody does not undo a story result; `CanPlayerProposeAlliance` is false for the pair), `EnforcePermanentAlliances` skips the pair, and `WarOfTheRingService.GetWarVeto` answers `SameAlignment` for it in every phase, War Ended included: the two never go to war with each other. No patch target changed: the `EndAlliance` prefix reads the tier, which is Neutral for a broken pair.
+
+The set is saved by `DiplomacyBehavior.SyncData` under one additive key, `_taom_brokenAlliances` (a list of sorted `"a|b"` strings). A save without the key loads an empty set; a restored pair with no Permanent row in the current `diplomacy.json` is dropped. The behavior's constructor clears the set for a new campaign. Behavior data loads (`Campaign.cs:1448`) before `OnSessionStart` raises `OnSessionLaunchedEvent` (`Campaign.cs:1686`, `CampaignEvents.cs:2090`), where `EnforcePermanentAlliances` runs, so a loaded pair is back before enforcement. A save made after the end and loaded in an older build gets the alliance back.
+
+Co-op: only a single-player authority ends a pair (the chronicle checks it), and a client that restores a host's set is harmless: its `ShouldPreventAllianceEnd` defers to the host.
+
 ### War declaration lines
 
 `DeclareWarAction_ApplyInternal_Patch` writes `[Diplomacy] War declaration allowed: <a> -> <b> (<DeclareWarDetail>)` at INFO for each kingdom war it lets through, and `DiplomacyBehavior` writes `[Diplomacy] Call to war started: <caller> calls <called> against <target>` from the engine's `OnCallToWarAgreementStartedEvent`, which comes after the engine's ally check and before the declaration (#1283). A war between a kingdom and a rebel clan has no line. On a co-op peer that defers to the host, "allowed" means TAOM deferred, not that its rules passed, and a Coop client can log one war twice: once for its own attempt and once when the host's war replays.
@@ -375,6 +389,7 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 
 ## Changelog
 
+- 2026-11-21: `EndPermanentAlliance`, `IAllianceAdapter.EndAlliance` and a saved set of broken pairs (#1105 slice 5). The Hornburg's repulsed assault ends the alliance of Isengard and Mordor, and the pair keeps a war veto after War Ended.
 - 2026-11-16: Blue Craig's Hostile rows with Gondor, Rohan, Erebor, Lothlorien, Mirkwood and Dale are removed from `diplomacy.json` (#1283). Full War declared ten wars on Blue Craig on day 2, and it lost its capital in both 150-day runs with Dunland's refusal. Those six pairs now read Neutral: either side can still declare that war by its own choice, and peace is not blocked.
 - 2026-11-16: Each row of the lord dialogue's sponsor-a-call-to-war list shows its own price (#1381). Vanilla showed the last row's price on every row, so a vetoed last row made every live row look like it cost millions.
 - 2026-11-16: The lord dialogue's sponsor-a-call-to-war option is greyed out for a call TAOM refuses, with the reason as its hint (#1350). Before, a `callToWarRefusals` pair kept a live option that did nothing, and a vetoed pair showed only "not enough money". The option's consequence also called the war against the first kingdom on the dialogue page, not the clicked one (a vanilla bug); it now uses the clicked kingdom.

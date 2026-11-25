@@ -10,7 +10,7 @@ namespace TAOM.Tests.Features.LongDefeat;
 /// <summary>
 /// A kill needs a living affector (phase2-plan.md, "A kill must have a living affector"): <c>AgentMoraleInteractionLogic</c> reads the affector's
 /// formation with no null test, and <c>Agent.Die</c> swaps in a stale last hitter when the owner is -1 or the victim itself. The only code
-/// allowed to kill is <c>ApplyPoison</c> and <c>Fell</c>. <c>KillAgentCheat</c> uses <c>MainAgent ?? victim</c> (<c>Mission.cs:6220-6221</c>), so with the player dead the victim
+/// allowed to kill is <c>ApplyPoison</c>, <c>Fell</c>, the forced fall of the lord (<c>FellLord</c>, phase4-plan.md D47) and the blow they share (<c>StrikeFelled</c>). <c>KillAgentCheat</c> uses <c>MainAgent ?? victim</c> (<c>Mission.cs:6220-6221</c>), so with the player dead the victim
 /// would own his own death; <c>Fell</c> therefore keeps <c>KillAgentCheat</c> only while the player's body stands and otherwise strikes with its own blow owned by a standing defender,
 /// and <c>ApplyPoison</c> gives every killing tick an owner through <c>PoisonOwner.Choose</c>. The two pins below read those members' source. This gate reads the Long Defeat source and fails on <c>new Blow(-1)</c> anywhere, or on any <c>Agent.Die</c>, <c>KillAgentCheat</c> or
 /// <c>new Blow(</c> outside those two methods, so it keeps every other member from adding a kill.
@@ -18,7 +18,7 @@ namespace TAOM.Tests.Features.LongDefeat;
 [TestClass]
 public class LongDefeatBlowOwnerTests
 {
-    private static readonly string[] Allowed = { "ApplyPoison", "Fell" };
+    private static readonly string[] Allowed = { "ApplyPoison", "Fell", "FellLord", "StrikeFelled" };
 
     private static readonly Regex Kill = new(@"\bAgent\.Die\b|\.Die\s*\(|\bKillAgentCheat\b|\bnew\s+Blow\s*\(", RegexOptions.Compiled);
     private static readonly Regex NoOwnerBlow = new(@"\bnew\s+Blow\s*\(\s*-\s*1\s*\)", RegexOptions.Compiled);
@@ -104,9 +104,9 @@ public class LongDefeatBlowOwnerTests
         StringAssert.Contains(owner, "MainAgent");
         StringAssert.Contains(owner, "IsActive()");
         StringAssert.Contains(owner, "StandingDefenders()");
-        StringAssert.Contains(fell, "new Blow(owner.Index)");
-        StringAssert.Contains(fell, "RegisterBlow(");
-        Assert.IsFalse(Regex.IsMatch(fell, @"new\s+Blow\s*\(\s*agent\.Index"), "the felled soldier must not own his own death");
+        StringAssert.Contains(fell, "StrikeFelled(agent, owner)", "the blow is built once, in the helper Fell and FellLord share");
+        Assert.IsFalse(Regex.IsMatch(fell, @"new\s+Blow\s*\("), "Fell builds no blow of its own any more");
+        Assert.IsFalse(Regex.IsMatch(fell, @"StrikeFelled\(\s*owner"), "the felled soldier must not own his own death");
         Assert.IsTrue(fell.IndexOf("KillAgentCheat", System.StringComparison.Ordinal) > fell.IndexOf("MainAgent", System.StringComparison.Ordinal), "KillAgentCheat only when the main agent stands");
     }
 
@@ -117,8 +117,51 @@ public class LongDefeatBlowOwnerTests
 
         var mark = fell.IndexOf("MarkFelled(", System.StringComparison.Ordinal);
         Assert.IsTrue(mark >= 0);
-        Assert.IsTrue(mark < fell.IndexOf("KillAgentCheat", System.StringComparison.Ordinal) && mark < fell.IndexOf("RegisterBlow(", System.StringComparison.Ordinal), "marked before the kill");
-        Assert.IsTrue(fell.IndexOf("FellHealth(", System.StringComparison.Ordinal) < fell.IndexOf("RegisterBlow(", System.StringComparison.Ordinal), "health capped under half the blow before it lands");
+        Assert.IsTrue(mark < fell.IndexOf("KillAgentCheat", System.StringComparison.Ordinal) && mark < fell.IndexOf("StrikeFelled(", System.StringComparison.Ordinal), "marked before the kill");
+        Assert.IsTrue(fell.IndexOf("FellHealth(", System.StringComparison.Ordinal) < fell.IndexOf("StrikeFelled(", System.StringComparison.Ordinal), "health capped under half the blow before it lands");
+    }
+
+    [TestMethod]
+    public void StrikeFelled_BuildsTheBlowOnce_OwnedByTheOwnerArgument_NeverTheVictim()
+    {
+        var strike = BodyOf(SourceOf("LongDefeatBattlefieldAdapter.cs"), "private static void StrikeFelled(");
+
+        StringAssert.Contains(strike, "new Blow(owner.Index)");
+        StringAssert.Contains(strike, "RegisterBlow(");
+        Assert.IsFalse(Regex.IsMatch(strike, @"new\s+Blow\s*\(\s*victim\.Index"), "the victim must not own his own death");
+        Assert.AreEqual(1, Regex.Matches(SourceOf("LongDefeatBattlefieldAdapter.cs"), @"\bnew\s+Blow\s*\(").Count, "one blow construction in the field adapter: Fell and FellLord share it");
+    }
+
+    [TestMethod]
+    public void FellLord_NeverCallsKillAgentCheat_AndItsOwnerIsNeverTheVictim()
+    {
+        var source = SourceOf("LongDefeatBattlefieldAdapter.Lord.cs");
+        var fell = BodyOf(source, "public bool FellLord(");
+        var foe = BodyOf(source, "private Agent? NearestStandingFoe(");
+
+        Assert.IsFalse(fell.Contains("KillAgentCheat"), "KillAgentCheat credits MainAgent ?? agent, which is the lord himself (Mission.cs:6220)");
+        StringAssert.Contains(fell, "StrikeFelled(lord, owner)");
+        Assert.IsFalse(Regex.IsMatch(fell, @"StrikeFelled\(\s*owner"), "the lord must not own his own death");
+        StringAssert.Contains(fell, "NearestStandingFoe(lord)");
+        StringAssert.Contains(foe, "ReferenceEquals(agent, victim)");
+        StringAssert.Contains(foe, "Side(!PlayerAttacks)", "the owner stands on the side opposite the player's");
+        Assert.IsFalse(foe.Contains("MainAgent"), "the main agent is never an owner candidate");
+    }
+
+    [TestMethod]
+    public void FellLord_ChoosesAnOwnerBeforeItMarksOrStrikes_AndMarksBeforeTheBlow()
+    {
+        var fell = BodyOf(SourceOf("LongDefeatBattlefieldAdapter.Lord.cs"), "public bool FellLord(");
+
+        var none = fell.IndexOf("owner == null", System.StringComparison.Ordinal);
+        var mark = fell.IndexOf("MarkForced(", System.StringComparison.Ordinal);
+        var cap = fell.IndexOf("FellHealth(", System.StringComparison.Ordinal);
+        var strike = fell.IndexOf("StrikeFelled(", System.StringComparison.Ordinal);
+        Assert.IsTrue(none >= 0 && none < mark && mark < cap && cap < strike, "no owner means nobody is marked or struck; the mark and the health cap come before the blow");
+        StringAssert.Contains(fell.Substring(none, mark - none), "return false");
+        StringAssert.Contains(fell, "Live(lord)", "a held body is gated before it is struck");
+        StringAssert.Contains(fell, "ReferenceEquals(lord, _mission.MainAgent)", "only the lord's own body, which is the main agent");
+        Assert.IsTrue(fell.IndexOf("ClearForced()", strike, System.StringComparison.Ordinal) > strike, "a blow that leaves him standing withdraws the mark");
     }
 
     [TestMethod]

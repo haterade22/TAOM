@@ -24,10 +24,15 @@ Without it, TAOM still runs in co-op, but you do not get these features:
 3. Elite Emissary and town armoury. A guest can buy elite troops and use a
    town armoury. The host's game does the purchase for you.
 4. Fief elections. Every player sees the same candidates and can vote.
-5. Careers. Your career choices go to the host's game, which keeps them
-   in its save. The other players see your career.
-6. Lord's materials. When your side wins a battle, you can find lord's
-   materials for the lord's gear ladder, as in a single-player game.
+5. Load order check. When you join, the host compares your load order of
+   TAOM and of the mods that add items, troops or factions with its own.
+   If they differ, you see a message. It only warns you. It never
+   disconnects you.
+6. Careers. The host keeps your TAOM career in its save. Your career is
+   still there when you join again, and the other players see it.
+7. Lords' Ladder. A town armoury shows your rung of the lord's gear
+   ladder. The host keeps your ladder, takes the lord's materials and fits
+   the piece you claim. Battles you win can give you lord's materials.
 
 In a single-player game this module does nothing.
 
@@ -318,6 +323,64 @@ MESSAGES FROM TAOM.CoopCompat
 "The host cannot trade for you here: ..."
     (Elite Emissary or armoury.) Your party must be in the settlement, and
     not in a battle or a siege. Nothing was charged.
+
+
+MESSAGES YOU CAN SEE
+--------------------
+
+"Your TAOM build is not the host's build."
+    You and the host have different TAOM downloads. Install the same TAOM
+    download as the host, and the TAOM.CoopCompat download for that TAOM
+    version.
+
+"Your TAOM settings differ from the host's in: ..."
+    Some of your TAOM mod settings are not the same as the host's. The
+    message names the settings groups. Change your settings in the mod
+    options to match the host's, or co-op can behave differently for you.
+
+"The host has not answered your last request yet."
+    (Elite Emissary or armoury.) The host is still working on your last
+    request. Wait a few seconds.
+
+"The host did not answer your last request. Try again."
+    (Elite Emissary or armoury.) The host did not reply within 15 seconds.
+    The first request can still go through late, so check your gold, troops
+    and items before you click again. If it happens every time, the host may
+    have a different TAOM build.
+
+"The host cannot trade for you here: ..."
+    (Elite Emissary or armoury.) Your party must be in the settlement, and
+    not in a battle or a siege. Nothing was charged.
+
+"Your mod load order differs from the host's: on the host ... loads before
+..."
+    Two of your mods load in the opposite order to the host's. A mod that
+    loads later replaces items and troops from earlier ones, so you can see
+    different gear or troops from the host's. Put your mods in the host's
+    order in the launcher, then restart the game.
+
+"The co-op server did not accept that career change and keeps the career
+it has saved for you."
+    The host checked your career change against the career rules and did
+    not take it. You keep the career the host has saved for you.
+
+"The co-op server did not accept your career and has none saved for you.
+You keep it for now, but it is gone when you join again."
+    The host checked your career against the career rules and did not take
+    it, and it has no career saved for you. Your career still works until
+    you leave. When you join again, pick a career the rules allow.
+
+"Your lord's gear has changed since you looked. Visit the armoury again."
+    (Lords' Ladder.) Your ladder changed on the host while the armoury was
+    open. Leave the armoury and open it again.
+
+"The armourer cannot fit that piece."
+    (Lords' Ladder.) That piece is not one you can claim now. Open the
+    armoury again and pick one of the pieces it lists.
+
+"The co-op server has turned off the Lords' Ladder for co-op players."
+    (Lords' Ladder.) The host has the ladder switched off for players.
+    Ask the host if you want it on.
 
 
 IF YOU CANNOT JOIN

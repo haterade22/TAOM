@@ -113,7 +113,7 @@ one inquiry that lists every problem it found:
   unticking a module unticks every module that depends on its Id (`ChangeIsSelectedOf`).
 - **TAOM requirement:** TAOM.Dependencies ships alias stubs with the ids `Bannerlord.Harmony`,
   `Bannerlord.ButterLib`, `Bannerlord.UIExtenderEx` and `Bannerlord.MBOptionScreen`
-  ([dr3-maintenance.md](../migration/dr3-maintenance.md) "Stub modules"). The project owner decided
+  ([dr3-maintenance.md](../migration/dr3-maintenance.md) "Stub modules"). Luiz decided
   (2026-11-15) that every player uses the stubs.
 - **Without this alert:** a player subscribed to the Workshop BUTR modules sees each id twice in the
   launcher and can't untick one copy without the other. Over a Workshop copy the stub wins in game:
@@ -233,5 +233,5 @@ ILoadedModuleIds         IModuleFolderReader
 
 ## GitHub Issue
 
-- **Issue:** none (project owner's decision, 2026-11-15)
+- **Issue:** none (Luiz's decision, 2026-11-15)
 - **Status:** n/a

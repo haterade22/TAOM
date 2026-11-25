@@ -202,8 +202,18 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_tournaments}Tournaments")]
     [SettingPropertyBool("{=taom_mcm_EnableTidingsOfTheLists}Tidings of the Lists", Order = 4, RequireRestart = false,
-        HintText = "{=taom_mcm_EnableTidingsOfTheLists_hint}Adds an option to a town's arena menu: for a small fee the arena master names the nearest towns holding a tournament now that are not at war with your realm. It marks nothing on the map. When off, the option is hidden. Single-player only. Default: on.")]
+        HintText = "{=taom_mcm_EnableTidingsOfTheLists_hint}Adds an option to a town's training grounds menu: for a small fee the training master names the nearest towns holding a tournament now that are not at war with your realm. It marks nothing on the map. When off, the option is hidden. Single-player only. Default: on.")]
     public bool EnableTidingsOfTheLists { get; set; } = true;
+
+    [SettingPropertyGroup("{=taom_mcm_group_tournaments}Tournaments")]
+    [SettingPropertyBool("{=taom_mcm_EnableTeamPracticeFights}Team Practice Fights", Order = 5, RequireRestart = false,
+        HintText = "{=taom_mcm_EnableTeamPracticeFights_hint}In a town of the Free Peoples the practice fight at the training grounds is a team fight: you and the fighters outlined in blue against the other side, and no one can hurt his own side. A town's side is its owner's, so a captured town follows its conqueror. Towns of the Shadow and neutral towns keep the fight where every fighter is alone. Takes effect the next time you enter the training grounds. Single-player only. Default: on.")]
+    public bool EnableTeamPracticeFights { get; set; } = true;
+
+    [SettingPropertyGroup("{=taom_mcm_group_tournaments}Tournaments")]
+    [SettingPropertyBool("{=taom_mcm_EnableTrainingWaves}Wave Fights at the Training Grounds", Order = 6, RequireRestart = false,
+        HintText = "{=taom_mcm_EnableTrainingWaves_hint}When on, the training master of a town also runs a wave fight. You wager on yourself before each wave and fight the town's own fighters with practice weapons. Clear a wave and the master pays your wager back with odds; go down, or leave the yard mid-fight, and the wager stays with the town. Between waves you may stop and keep your winnings. A town runs one wave fight a day, and none while it holds a tournament. The tournament bet cap also limits a wave wager, and a very low cap hides the offer. Single-player only. Default: on.")]
+    public bool EnableTrainingWaves { get; set; } = TAOM.Features.TrainingGrounds.Waves.TrainingWavesSettingsProvider.DefaultEnabled;
 
     // --- Armour Acquisition ---
 
@@ -1081,7 +1091,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_performance}Performance/{=taom_mcm_group_dead_mount_cleanup}Dead Mount Cleanup", GroupOrder = 49)]
     [SettingPropertyBool("{=taom_mcm_EnableDeadMountDespawn}Despawn Dead Mounts", Order = 0, RequireRestart = false,
-        HintText = "{=taom_mcm_EnableDeadMountDespawn_hint}Remove killed horses, wargs and other mounts a few seconds after they die instead of leaving them on the field. A mount is a full agent with a skeleton and a live ragdoll, so a cavalry battle piles up corpses that cost frame time and do nothing. Field battles, sieges and sally-outs only; towns, arenas and tournaments keep their bodies. Side effect: freeing agent slots lets reinforcements arrive slightly sooner than vanilla.")]
+        HintText = "{=taom_mcm_EnableDeadMountDespawn_hint}Remove killed horses, wargs and other mounts a few seconds after they die instead of leaving them on the field. A mount is a full agent with a skeleton and a live ragdoll, so a cavalry battle piles up corpses that cost frame time and do nothing. Field battles, sieges and sally-outs only; towns, training grounds and tournaments keep their bodies. Side effect: freeing agent slots lets reinforcements arrive slightly sooner than vanilla.")]
     public bool EnableDeadMountDespawn { get; set; } = true;
 
     [SettingPropertyGroup("{=taom_mcm_group_performance}Performance/{=taom_mcm_group_dead_mount_cleanup}Dead Mount Cleanup")]
@@ -1094,7 +1104,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_performance}Performance/{=taom_mcm_group_battle_corpses}Battle Corpses", GroupOrder = 55)]
     [SettingPropertyBool("{=taom_mcm_EnableBattleCorpseCleanup}Clean Up Battle Corpses", Order = 0, RequireRestart = false,
-        HintText = "{=taom_mcm_EnableBattleCorpseCleanup_hint}Fade fallen soldiers after a set time and cap how many bodies a battle keeps, whatever your Number of Corpses option says. The engine walks its whole corpse list every frame, and players reported mid-battle freezes at high corpse settings. Field battles, sieges and sally-outs only; towns, arenas and hideouts keep their bodies. Never raises your own Number of Corpses option.")]
+        HintText = "{=taom_mcm_EnableBattleCorpseCleanup_hint}Fade fallen soldiers after a set time and cap how many bodies a battle keeps, whatever your Number of Corpses option says. The engine walks its whole corpse list every frame, and players reported mid-battle freezes at high corpse settings. Field battles, sieges and sally-outs only; towns, training grounds and hideouts keep their bodies. Never raises your own Number of Corpses option.")]
     public bool EnableBattleCorpseCleanup { get; set; } = true;
 
     [SettingPropertyGroup("{=taom_mcm_group_performance}Performance/{=taom_mcm_group_battle_corpses}Battle Corpses")]
@@ -2584,6 +2594,16 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "{=taom_mcm_BondsOverpayRelationCap_hint}The most relation one barter can buy by offering more than the goods are worth. The loop buys at most 3 points in vanilla (the setting here), before the Tribute perk (x1.2, rounded up) and the Charm relation bonus the engine adds when it applies the change. Points cost more the further relation is from 0, so only a large overpay reaches the cap. Default: 15.")]
     public int BondsOverpayRelationCap { get; set; } = TAOM.Features.BondsOfBattle.BondsOfBattleSettingsProvider.DefaultOverpayRelationCap;
 
+    [SettingPropertyGroup("{=taom_mcm_group_battle_gear_loot}Battle Gear Loot", GroupOrder = 91)]
+    [SettingPropertyBool("{=taom_mcm_EnableBattleGearLoot}Enable Battle Gear Loot", Order = 0, RequireRestart = false,
+        HintText = "{=taom_mcm_EnableBattleGearLoot_hint}When on, the loot from enemies your party beats in a battle your side wins is the gear they fought in: each weapon, armour piece, horse and harness drops on its own roll, at the chance below. It replaces the usual random loot from fallen enemies; captured baggage, gold, prisoners and renown are unchanged. Heavy, elite and lord armour held back by Armour Acquisition, named weapons and banners never drop. Singleplayer only: in a co-op session the usual loot applies. Default: off.")]
+    public bool EnableBattleGearLoot { get; set; } = TAOM.Features.BattleGearLoot.BattleGearLootSettingsProvider.DefaultEnabled;
+
+    [SettingPropertyGroup("{=taom_mcm_group_battle_gear_loot}Battle Gear Loot")]
+    [SettingPropertyInteger("{=taom_mcm_BattleGearLootChancePercent}Gear Drop Chance (%)", TAOM.Features.BattleGearLoot.BattleGearLootSettingsProvider.MinChancePercent, TAOM.Features.BattleGearLoot.BattleGearLootSettingsProvider.MaxChancePercent, Order = 1, RequireRestart = false,
+        HintText = "{=taom_mcm_BattleGearLootChancePercent_hint}The chance, from 0 to 100%, that each item of each beaten enemy drops. In a battle fought beside allies you loot your share of the enemies, as usual. Default: 10.")]
+    public int BattleGearLootChancePercent { get; set; } = TAOM.Features.BattleGearLoot.BattleGearLootSettingsProvider.DefaultChancePercent;
+
     // --- Personal Relations (docs/features/personal-relations.md, #862) ---
     //
     // The master switch is read on every relation read (it gates TaomDiplomacyModel.GetHeroesForEffectiveRelation, on the
@@ -3295,6 +3315,31 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "{=taom_battlehud_mcm_colour_mode_hint}Changes only three rings of the round battle HUD: your player health, mount health and shield. Default keeps their stone look and colours. Each other choice draws those rings in flat colours that are easier to tell apart for that type of colour vision, on a dark track. The rings keep their order and fill as before, so their place and length also tell them apart. The career ability centre, the ammo count and all other screens do not change. A change applies in the current battle, with no restart.")]
     public Dropdown<string> BattleHudColourMode { get; set; } = new Dropdown<string>(
         TAOM.Features.BattleHud.UI.BattleHudColourPalette.Choices, 0);
+
+    // --- Co-op (docs/features/coop-compat.md) ---
+
+    // Read by TAOM.CoopCompat in the co-op server process only, through CoopSettingsProvider; a player's own value is never
+    // read. On a dedicated server TaomSettings.Instance comes from taom-server-settings.json, loaded once per process
+    // (ServerSettingsSource). Instrumentation in CoopSettingsRelevance: it gates log lines and one notice to the joining player.
+    [SettingPropertyGroup("{=taom_mcm_group_coop}Co-op", GroupOrder = 8)]
+    [SettingPropertyBool("{=taom_mcm_CoopLoadOrderWarning}Warn players whose load order differs from the host's", Order = 0, RequireRestart = false,
+        HintText = "{=taom_mcm_CoopLoadOrderWarning_hint}When a player joins a co-op campaign, the co-op server compares the order of TAOM and of every mod that adds items, troops or factions with its own, and tells a player whose order differs which two mods are the other way round. Nothing is blocked. The co-op server process reads this switch each time a player joins; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopLoadOrderWarning), which it reads once at start, so change it there and restart the server. Default: on.")]
+    public bool CoopLoadOrderWarning { get; set; } = TAOM.Features.CoopInterop.CoopSettingsProvider.DefaultLoadOrderWarning;
+
+    // Read by CareerSyncHost (Main/Features/CoopInterop/CareerSync) in the co-op server process, through
+    // CoopSettingsProvider, for each report and each career change the server makes. In the fingerprint: it changes what
+    // the server stores and sends.
+    [SettingPropertyGroup("{=taom_mcm_group_coop}Co-op", GroupOrder = 8)]
+    [SettingPropertyBool("{=taom_mcm_CoopCareerSync}Sync careers for co-op players", Order = 1, RequireRestart = false,
+        HintText = "{=taom_mcm_CoopCareerSync_hint}When on, a career a co-op player picks or changes goes to the co-op server, which checks it with the career rules, keeps it in its save and shows it to the other players, so the career is still there after the player joins again. The co-op server process reads this switch each time a player reports a career; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopCareerSync), which it reads once at start, so change it there and restart the server. Off: each player's career stays only on that player's PC and is lost when the player joins again. Default: on.")]
+    public bool CoopCareerSync { get; set; } = TAOM.Features.CoopInterop.CoopSettingsProvider.DefaultCareerSync;
+
+    // Read by the co-op server process through IArmourAcquisitionSettingsProvider (the guest armoury in
+    // Main/Features/CoopInterop/GuestTrade). In the fingerprint: it changes what the server does to a player's party.
+    [SettingPropertyGroup("{=taom_mcm_group_coop}Co-op", GroupOrder = 8)]
+    [SettingPropertyBool("{=taom_mcm_CoopGuestLadder}Lords' Ladder for co-op players", Order = 2, RequireRestart = false,
+        HintText = "{=taom_mcm_CoopGuestLadder_hint}When on, the co-op server runs the lord's gear ladder for each co-op player's hero: a player's armoury lists the rung the server keeps for that hero, takes the lord's materials for it and fits the claimed piece, and a battle a co-op player wins can yield lord's materials, given to the party once it is free and out of battle. The rung quests are not offered to co-op players. The co-op server process reads this switch each time a player uses an armoury or a battle ends; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopGuestLadder), which it reads once at start, so change it there and restart the server. Off: co-op players see no ladder at the armoury and find no new lord's materials after battles; materials already found are still given. Default: on.")]
+    public bool CoopGuestLadder { get; set; } = TAOM.Features.ArmourAcquisition.ArmourAcquisitionSettingsProvider.DefaultCoopGuestLadder;
 
     // --- Cheat Menu (docs/features/cheat-menu.md) ---
 

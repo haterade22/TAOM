@@ -145,7 +145,7 @@
     <!-- Ironpass ram cavalry (#515): 2.0 from level 21, and the level-41 marshal pays 3.0 under
          the level rule like every other listed troop. Until #585 the whole branch sat flat at
          2.0 on the argument that no mounted line escalated with tier (warg riders are 2.0 from
-         level 11 to 36); the level rule now overrides that for any mounted troop at 41+, which
+         level 11 to 36, Isengard's 1.0 since 2026-11-23); the level rule now overrides that for any mounted troop at 41+, which
          also lifts the Black Numenorean knight and temple knight, the noldorin lancer, the
          rider of Himring, the Imladris horse archer and outrider, and Khamul's knights. 2.0 is
          double the Ironpass foot peers (infantry/axeman/veteran_axeman/mountain_guard, all
@@ -163,6 +163,10 @@
     <TroopWeight id="ironpass_ram_breaker" weight="2.0" />
     <TroopWeight id="ironpass_ram_vanguard" weight="2.0" />
     <TroopWeight id="ironpass_ram_marshal" weight="3.0" />
+    <!-- The two chariot troops the Ram Vanguard can also upgrade into (levels 41 and 46): the level rule, 3.0,
+         as the Ram Marshal beside them. -->
+    <TroopWeight id="ironpass_war_chariot" weight="3.0" />
+    <TroopWeight id="ironpass_steel_chariot" weight="3.0" />
 
     <!-- ===== MORDOR ===== -->
     <TroopWeight id="mordor_uruk_baraddurguard" weight="2.0" />
@@ -243,17 +247,12 @@
     <TroopWeight id="harad_mumakil_rider" weight="20.0" />
 
     <!-- ===== ISENGARD ===== -->
-    <!-- Orthanc Guard Line: 2.0, the level-41 bodyguard 3.0 -->
-    <TroopWeight id="orthanc_guard" weight="2.0" />
+    <!-- Isengard counts as one man per troop up to level 31 (its numbers are its strength). Orthanc Line:
+         the level-36 warden 2.0, the level-41 bodyguard 3.0 -->
     <TroopWeight id="orthanc_warden" weight="2.0" />
     <TroopWeight id="orthanc_bodyguard" weight="3.0" />
     <!-- Urukhai Elites (Weight 2.0) -->
     <TroopWeight id="urukhai_nazg_hai" weight="2.0" />
-    <!-- Warg Riders (Weight 2.0) -->
-    <TroopWeight id="orc_warg_scout" weight="2.0" />
-    <TroopWeight id="orc_warg_overseer" weight="2.0" />
-    <TroopWeight id="orc_warg_enforcer" weight="2.0" />
-    <TroopWeight id="orc_warg_lieutenant" weight="2.0" />
     <!-- Black Numenorean line: 2.0 up to level 36, 3.0 from level 41 (knight/warden/marksman
          and the three level-46 temple tips) -->
     <TroopWeight id="mordor_num_initiate" weight="2.0" />
@@ -289,7 +288,8 @@
          Left at 1.0 on purpose: the level 21 to 26 twin-blades (below tier 6), the human twin-blades of Gondor, Rohan,
          Rhun, Harad and Dunland (those cultures carry no troop weights beyond gondor_pg_vet_cavalry and
          the two Harad mount packages, a design call), and the Armored Troll with Twin
-         Maces (monster, its parent cave_troll is disabled above). -->
+         Maces (monster, its parent cave_troll is disabled above). The Isengard Uruk twin-blade (level 31) is 1.0 too:
+         Isengard counts as one man per troop up to level 31 (2026-11-23). -->
     <TroopWeight id="dw_imladris_bladedancer" weight="2.0" />
     <TroopWeight id="dw_lindon_bladedancer" weight="2.0" />
     <TroopWeight id="dw_imladris_blademaiden" weight="3.0" />
@@ -297,13 +297,13 @@
     <TroopWeight id="dw_mirkwood_twinblade_huntress" weight="3.0" />
     <TroopWeight id="dw_goblintown_twinblade" weight="2.0" />
     <TroopWeight id="dw_gundabad_pale_twinaxe" weight="2.0" />
-    <TroopWeight id="dw_isengard_urukhai_twinblade" weight="2.0" />
     <TroopWeight id="dw_mordor_uruk_twinblade" weight="2.0" />
     <!-- ===== LEVEL 31 TO 36 SWEEP, evil and dwarf trees (15 Nov 2026 audit) ===== -->
     <!-- These cultures weighted their level 31 to 40 troops one at a time and skipped many, so a level 36 troop paid
          2.0 above a level 31 troop of the same line at 1.0. Every one now pays 2.0, the level rule for a troop below 41
          (TroopWeightCoverageTests.EvilAndDwarfTroopsAtLevel31To40_AreWeighted). Humans (Gondor, Rohan, Rhun, Harad, Dunland)
-         carry no troop weights beyond gondor_pg_vet_cavalry and the two Harad mount packages, by design, and are not swept. -->
+         carry no troop weights beyond gondor_pg_vet_cavalry and the two Harad mount packages, by design, and are not swept.
+         Isengard left the sweep on 2026-11-23: its level 31 troops count as one man (IsengardPartySlotTests). -->
     <!-- EREBOR, IRON HILLS AND IRONPASS -->
     <TroopWeight id="erebor_noble_axe_guard" weight="2.0" />
     <TroopWeight id="erebor_noble_guard" weight="2.0" />
@@ -325,13 +325,6 @@
     <TroopWeight id="dg_uruk_fell_archer" weight="2.0" />
     <TroopWeight id="dg_uruk_fell_fang" weight="2.0" />
     <TroopWeight id="dg_uruk_fell_infantry" weight="2.0" />
-    <!-- ISENGARD -->
-    <TroopWeight id="urukhai_berserker" weight="2.0" />
-    <TroopWeight id="urukhai_pavise" weight="2.0" />
-    <TroopWeight id="urukhai_reaver" weight="2.0" />
-    <TroopWeight id="urukhai_veterancrossbowman" weight="2.0" />
-    <TroopWeight id="urukhai_veteraninfantry" weight="2.0" />
-    <TroopWeight id="urukhai_veteranpikeman" weight="2.0" />
     <!-- MORDOR -->
     <TroopWeight id="mordor_uruk_shieldguard" weight="2.0" />
     <TroopWeight id="mordor_uruk_vanguard" weight="2.0" />

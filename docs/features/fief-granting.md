@@ -425,8 +425,8 @@ The participation record rides `FiefGrantingCampaignBehavior.SyncData` under the
 `_taomFiefSiegeParticipation` as a `Dictionary<string, string>` (settlement id to
 `clanId=contribution;clanId=contribution`, clans sorted by id), the `SiegeDefenseService` shape, so
 no new saveable class. A save written before #565 has no key and loads as an empty record; a fresh
-campaign never runs the loading half, so the behavior resets the singleton on session launch (the
-Refuge/FieldCamp latch). Malformed parts of a saved string are skipped with one warning and the
+campaign never runs the loading half, so the behavior resets the singleton in its constructor, which
+SubModule runs in every campaign's `OnGameStart` before a load's `SyncData` (#773). Malformed parts of a saved string are skipped with one warning and the
 affected clans score as absent.
 
 ## The starting-ownership data pass
@@ -466,8 +466,8 @@ a separate design question, deliberately out of scope.
   relative to the top clan, zero and negative contributions, empty ids, replace on re-record,
   separator-carrying ids refused, forget, snapshot encoding and round trip, malformed save parts,
   session reset.
-- `TAOM.Tests/Features/FiefGranting/FiefGrantingBehaviorSessionResetTests.cs`: the session-reset
-  latch, both SyncData directions, and the forget and authority gates of both handlers
+- `TAOM.Tests/Features/FiefGranting/FiefGrantingBehaviorSessionResetTests.cs`: the constructor
+  reset, both SyncData directions, and the forget and authority gates of both handlers
   (reflection-invoked with uninitialized engine objects), including a siege that opens no claim
   forgetting its own record.
 - `TAOM.Tests/Features/FiefGranting/FiefGrantingBehaviorCaptureGateTests.cs`: every rule in

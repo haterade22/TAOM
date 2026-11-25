@@ -71,7 +71,31 @@ internal static class ClassesReader
             return null;
 
         seen.Add(id);
-        return new RunClass(id, name, text, mounted, kits);
+        return new RunClass(id, name, text, mounted, kits) { Texts = ReadTexts(o["texts"], label, s) };
+    }
+
+    private static IReadOnlyDictionary<string, string> ReadTexts(JToken? token, string label, LongDefeatConfigScope s)
+    {
+        var read = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (token == null)
+            return read;
+
+        if (!(token is JObject texts))
+        {
+            s.Warn($"'{label}.texts' is not an object; the class shows its own text at every fortress");
+            return read;
+        }
+
+        foreach (var culture in texts.Properties())
+        {
+            var text = LongDefeatConfigScope.Text(culture.Value);
+            if (text == null)
+                s.Warn($"'{label}.texts.{culture.Name}' is not a text; that culture sees the class's own text");
+            else
+                read[culture.Name] = text;
+        }
+
+        return read;
     }
 
     private static IReadOnlyDictionary<string, ClassKit>? ReadKits(JToken? token, string label, string id, bool mounted, LongDefeatConfigScope s)

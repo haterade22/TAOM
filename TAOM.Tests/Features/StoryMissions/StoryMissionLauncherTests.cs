@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
+using TAOM.Features.LongDefeat;
 using TAOM.Features.StoryMissions;
 using TAOM.Features.StoryMissions.Config;
 using TAOM.Features.StoryMissions.Domain;
@@ -27,18 +28,18 @@ public class StoryMissionLauncherTests
     private static string Source() => RepoPaths.ReadSource(LauncherPath, stripComments: true);
 
     private static StoryMissionLauncher Launcher(string? json, IModLogger logger) =>
-        new(StoryMissionCatalog.FromText(json, logger), logger, Substitute.For<IOutcomeLog>());
+        new(StoryMissionCatalog.FromText(json, logger), logger, Substitute.For<IOutcomeLog>(), LongDefeatConfigCatalog.FromTexts(null, null, null, logger));
 
     private static string Mission(string side) =>
         "{\"missions\":[{\"id\":\"m1\",\"scene\":\"scene_a\",\"side\":\"" + side + "\",\"defenderCulture\":\"vlandia\",\"attackerCulture\":\"isengard\","
         + "\"garrison\":[{\"troop\":\"g1\",\"class\":\"Infantry\",\"count\":10}],"
         + "\"roster\":{\"waves\":[{\"count\":110,\"mix\":[{\"troop\":\"a1\",\"class\":\"Infantry\",\"weight\":1}]}]}}]}";
 
-    // The behavior types the engine is given, in order: the new-expressions that start a line of CreateBehaviors.
-    private static string[] BuiltNames(string source)
+    // The behavior types the engine is given, in order: the new-expressions that start a line of the method's list, from its definition to the list's closing brace.
+    private static string[] BuiltNames(string source, string method = "CreateBehaviors")
     {
-        var body = source.Substring(source.IndexOf("CreateBehaviors(", StringComparison.Ordinal));
-        body = body.Substring(0, body.IndexOf("private static List<MissionSiegeWeapon> Weapons(", StringComparison.Ordinal));
+        var body = source.Substring(source.IndexOf("IReadOnlyList<MissionBehavior> " + method + "(", StringComparison.Ordinal));
+        body = body.Substring(0, body.IndexOf("};", StringComparison.Ordinal));
         return Regex.Matches(body, @"^\s+new (\w+)\(", RegexOptions.Multiline).Cast<Match>().Select(x => x.Groups[1].Value).ToArray();
     }
 
@@ -147,9 +148,36 @@ public class StoryMissionLauncherTests
     }
 
     [TestMethod]
+    public void CreateFieldBehaviors_IsTheSiegeListWithoutItsTwoSiegeBehaviors_PlusTheHardBorder()
+    {
+        // #1105 slice 2: a field scene has no wall and no engine. Vanilla's field lists place a hard border before the boundary (BannerlordMissions.OpenCustomBattleMission).
+        var siege = BuiltNames(Source()).ToList();
+        siege.Remove("SiegeMissionPreparationHandler");
+        siege.Remove("MissionSiegeEnginesLogic");
+        siege.Insert(siege.IndexOf("MissionBoundaryPlacer"), "MissionHardBorderPlacer");
+
+        CollectionAssert.AreEqual(siege.ToArray(), BuiltNames(Source(), "CreateFieldBehaviors"));
+    }
+
+    [TestMethod]
+    public void TheFieldList_RunsTheFieldTeamAi_AndTheSiegeListTheSiegeTeamAi()
+    {
+        var source = Source();
+        var field = source.Substring(source.IndexOf("IReadOnlyList<MissionBehavior> CreateFieldBehaviors(", StringComparison.Ordinal));
+        field = field.Substring(0, field.IndexOf("};", StringComparison.Ordinal));
+        var siege = source.Substring(source.IndexOf("IReadOnlyList<MissionBehavior> CreateBehaviors(", StringComparison.Ordinal));
+        siege = siege.Substring(0, siege.IndexOf("};", StringComparison.Ordinal));
+
+        StringAssert.Contains(field, "MissionTeamAITypeEnum.FieldBattle");
+        Assert.IsFalse(field.Contains("MissionTeamAITypeEnum.Siege"));
+        StringAssert.Contains(siege, "MissionTeamAITypeEnum.Siege");
+        StringAssert.Contains(source, "SceneLevels = field ? \"\" : \"level_3 siege\"");
+    }
+
+    [TestMethod]
     public void CreateBehaviors_LeaveOutEverythingThatReadsAMapEventOrEndsTheSiege()
     {
-        var names = BuiltNames(Source());
+        var names = BuiltNames(Source()).Concat(BuiltNames(Source(), "CreateFieldBehaviors")).ToArray();
         var source = Source();
 
         foreach (var banned in new[] { "BattleAgentLogic", "CampaignMissionComponent", "BattleEndLogic", "MissionPreloadView", "MountAgentLogic" })

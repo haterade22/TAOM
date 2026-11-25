@@ -16,6 +16,7 @@ public class CareerConfigProvider : ICareerConfigProvider
     private readonly IModLogger _logger;
 
     private List<CareerDefinition> _careers;
+    private HashSet<string> _declaredCareerIds;
     private List<CareerChoiceGroupDefinition> _groups;
     private List<CareerChoiceDefinition> _choices;
     // #769 E8: effects one option may carry. A third and later element is warned about and ignored.
@@ -46,6 +47,12 @@ public class CareerConfigProvider : ICareerConfigProvider
     {
         EnsureLoaded();
         return _careers;
+    }
+
+    public bool IsCareerDeclared(string careerId)
+    {
+        EnsureLoaded();
+        return !string.IsNullOrEmpty(careerId) && _declaredCareerIds.Contains(careerId);
     }
 
     public IReadOnlyList<CareerChoiceGroupDefinition> LoadChoiceGroups()
@@ -98,6 +105,7 @@ public class CareerConfigProvider : ICareerConfigProvider
         _logger.LogInfo("CareerSystem: Loading career config...");
 
         _careers = new List<CareerDefinition>();
+        _declaredCareerIds = new HashSet<string>(StringComparer.Ordinal);
         _groups = new List<CareerChoiceGroupDefinition>();
         _choices = new List<CareerChoiceDefinition>();
         _abilityTemplates = new Dictionary<string, AbilityTemplateData>();
@@ -135,6 +143,9 @@ public class CareerConfigProvider : ICareerConfigProvider
 
             foreach (var el in root.Elements("Career"))
             {
+                var declaredId = el.Attribute("id")?.Value;
+                if (!string.IsNullOrEmpty(declaredId))
+                    _declaredCareerIds.Add(declaredId);
                 try
                 {
                     var cultureIds = new List<string>();

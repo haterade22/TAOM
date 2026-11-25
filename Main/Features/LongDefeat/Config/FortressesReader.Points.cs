@@ -123,7 +123,7 @@ internal static partial class FortressesReader
     private const string YardFallback = "the engineer's yard is hidden";
 
     // The armoury and the yard (phase4-plan.md section 5), each recorded as the muster point is: {x,y,z,fx,fy}. Absent or null is no place and no warning; a bad one is one warning and no place, and the fortress stays.
-    private static MusterFrame? ReadPlace(JToken? token, string fortress, string key, string fallback, LongDefeatConfigScope s)
+    internal static MusterFrame? ReadPlace(JToken? token, string fortress, string key, string fallback, LongDefeatConfigScope s)
     {
         if (token == null || token.Type == JTokenType.Null)
             return null;

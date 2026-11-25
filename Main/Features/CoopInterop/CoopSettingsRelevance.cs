@@ -98,6 +98,9 @@ public static class CoopSettingsRelevance
         "LogScreenOpenTimes",
         // The bug report offer after an unexpected end (docs/features/crash-report.md): a main-menu notice, never a computation.
         "OfferBugReportAfterUnexpectedEnd",
+        // The co-op load order warning (docs/features/coop-compat.md): it gates log lines and one notice to the joining
+        // player, never a computation, and only the co-op server's value is read, so a client holding another value changes nothing.
+        "CoopLoadOrderWarning",
     };
 
     /// <summary>
@@ -121,6 +124,7 @@ public static class CoopSettingsRelevance
         // switch is inert under co-op: the buttons are hidden and a click refuses. A peer holding a different value never
         // changes a running simulation.
         "EnableReserveSteps",
+        "EnableBattleGearLoot", "BattleGearLootChancePercent",
         // Camp work (#860): the men hunt, fell timber or fish from a raised camp. A work starts only behind the single-player
         // predicate (CampActivityService.GlobalBlock), and one already running when a shared campaign begins is cleared at the wait's
         // next tick with nothing paid, so a peer holding a different value never changes a running simulation.
@@ -131,6 +135,7 @@ public static class CoopSettingsRelevance
         // Watch-Silver and Tidings of the Lists (#859): each switch only gates a player's click, and every write (a fief's loyalty,
         // the player's gold) is behind the single-player predicate, so peers holding different values never compute differently.
         "EnableWatchSilver", "EnableTidingsOfTheLists",
+        "EnableTeamPracticeFights",
         // Notable Services (#899): the switch only gates a player's click, and every write (the player's gold, a settlement's militia,
         // hearth or prosperity, met flags, tracker marks, relation, Roguery experience and the given rosters) is behind the
         // single-player predicate in NotableServicesService.
@@ -141,7 +146,7 @@ public static class CoopSettingsRelevance
         // Inn Rounds (#901): the switch and the two scales only shape a player's click at the tavern keeper. Every write (the player's
         // gold, the town's coffers, the party's morale, the clan's renown, Charm experience, tracker marks) is behind the
         // single-player predicate in InnRoundsService, so a peer holding a different value never changes a running simulation.
-        "EnableInnRounds", "InnRoundsMoraleScale", "InnRoundsRenownScale",
+        "EnableInnRounds", "InnRoundsMoraleScale", "InnRoundsRenownScale", "EnableTrainingWaves",
         "EnableQuickActions", "EnableInventorySearch", "QuickActionsShowConfirmation",
         "QuickActionsPlaySounds", "DamagedQualityDropdown", "DamagedThreshold",
         "UseCustomThreshold", "ExcludeDamagedHorses",
@@ -212,8 +217,8 @@ public static class CoopSettingsRelevance
         // text variables; it writes no campaign state and rolls on TAOM's own random source.
         "EnableEncounterLines",
         "EnableShaderPrecompileScenePasses", "EnableShaderPrecompilation",
-        // Already suppressed under co-op — TimeAcceleration's UI carries
-        // [CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")].
+        // Inert on a co-op peer: TimeAccelerationService writes no multiplier while it defers to the co-op server
+        // (ShouldDeferToHost), and the vanilla map bar's TimeAcceleration extensions carry [CoopSuppressedUi].
         "FastForwardMultiplier", "ExtraFastForwardMultiplier", "CtrlSpaceMultiplier",
         // Realm Borders (#698): meshes, labels and notices drawn on this client only. EnableRealmBorders also decides
         // whether Watchful Holds uses the province gate, which runs in singleplayer only, so it stays presentation here.

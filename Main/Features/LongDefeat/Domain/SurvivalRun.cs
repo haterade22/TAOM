@@ -48,11 +48,13 @@ internal sealed partial class SurvivalRun
     private readonly bool[] _firstPlaced = new bool[2];
     private float _waveSeconds;
     private int _waveFelled;
+    private int _waveTaken;
     private float _healthFactor = 1f;
     private float _damageFactor = 1f;
     private StalemateState _stale;
     private float _keep;
     private bool _lossThisTick;
+    private int _fieldGroupLeft;
 
     public SurvivalRun(RunPlan plan)
     {
@@ -125,11 +127,17 @@ internal sealed partial class SurvivalRun
         _lastDefenders = s.DefendersStanding;
         _lastAttackers = s.AttackersStanding;
         ObserveGates(s.Gates);
+        _defenderHealthMean = s.DefenderHealthMean;
+        ObserveLord(s.Lord);
+        ObserveLordLife(s);
         _stats.ObserveFleeing(s.AttackersFleeing);
         fx.Events.AddRange(_pendingEvents);
         _pendingEvents.Clear();
         TakePendingBoon(fx);
-        var holdStart = TakePendingFort(fx) || _upgrades.Count > 0;
+        var holdStart = TakePendingFort(fx);
+        holdStart |= TakePendingLocations(fx);
+        holdStart |= _upgrades.Count > 0;
+        TickErrand(s.Dt, fx);
         var loss = _lossThisTick;
         _lossThisTick = false;
 
@@ -142,13 +150,17 @@ internal sealed partial class SurvivalRun
         EmitMuster(s.Dt, fx);
         EmitPacks(fx);
         EmitHeroes(fx);
+        _defenderHealthMean = CareProof.AfterJoin(_defenderHealthMean, s.DefendersStanding, fx.DefenderBatches.Sum(b => b.Count) + fx.SpawnHeroes.Count);
         EmitUpgrades(fx);
 
         if (BetweenWaves)
         {
             _left -= s.Dt;
             if (!(_left > 0f) && !holdStart)
+            {
                 BeginWave();
+                WithdrawErrandOrder(fx);
+            }
         }
 
         // A wave the horn began waits one tick when fortification effects went out on this one.
@@ -161,6 +173,7 @@ internal sealed partial class SurvivalRun
                 TickVolleys(fx);
         }
 
+        TickLordClocks(s, fx);
         return fx;
     }
 
@@ -199,6 +212,16 @@ internal sealed partial class SurvivalRun
             _purse.Earn(PurseSource.Bounty, GoldFactors.Apply(gold, _factors.Bounty));
     }
 
+    /// <summary>
+    /// A roster soldier of the wave became the player's body: a take-over in a story attack (#1409), where the player's team is the wave. He stays in the wave's count, but from now
+    /// on his fall is the player's and a fell skips him, so the wave names him as taken and its books still add up.
+    /// </summary>
+    public void AttackerTaken()
+    {
+        if (Result == null)
+            _waveTaken++;
+    }
+
     public void AttackerFled()
     {
         if (Result == null)
@@ -212,12 +235,6 @@ internal sealed partial class SurvivalRun
 
         _stats.DefenderLost();
         _lossThisTick = true;
-    }
-
-    public void PlayerDown()
-    {
-        if (Result == null)
-            _stats.PlayerDied();
     }
 
     public void Abandon()
@@ -261,6 +278,7 @@ internal sealed partial class SurvivalRun
             Upgrades = UpgradeRowsNow(),
             UpgradeNotice = _upgradeNotice,
             Heroes = HeroRowsNow(),
+            Locations = LocationsViewNow(),
         };
     }
 
@@ -322,6 +340,7 @@ internal sealed partial class SurvivalRun
         _left = 0f;
         _waveInit = true;
         ForgetStanding();
+        ForgetErrands();
         _waveAffixes = CutRoll(_plan.Affixes.Roll(Seed, _wave));
     }
 
@@ -343,6 +362,8 @@ internal sealed partial class SurvivalRun
         _stage = _firstBatch > 0 ? WaveStage.Spawning : WaveStage.Fighting;
         _waveSeconds = 0f;
         _waveFelled = 0;
+        _fieldGroupLeft = 0;
+        _waveTaken = 0;
         _stale = default;
         InitCommander(_plan.Waves.Commanders.ForWave(_wave));
         if (_stage == WaveStage.Fighting)
@@ -361,11 +382,14 @@ internal sealed partial class SurvivalRun
     }
 
     /// <summary>The attackers the field may hold. The floor keeps siege engines in use: at 100 or fewer the breach tactic stops every machine.</summary>
-    private int LiveCap(RunSnapshot s) => LiveRoom(_r, s.SiegeBattleSize, s.DefendersStanding);
+    private int LiveCap(RunSnapshot s) => LiveRoom(_r, s.SiegeBattleSize, s.DefendersStanding, _plan.Field != null);
 
-    /// <summary>The attackers the field may hold at once for a battle size and a defender count; the director's scale check reads the same rule.</summary>
-    internal static int LiveRoom(RunRules rules, int siegeBattleSize, int defendersStanding) =>
-        Math.Max(LiveFloor, Math.Min(rules.LiveCap, siegeBattleSize - defendersStanding));
+    /// <summary>
+    /// The attackers the field may hold at once for a battle size and a defender count; the director's scale check reads the same rule. A run on a
+    /// <paramref name="field"/> scene has no siege engine to keep in use, so its floor is one attacker and the rules' cap can make a wave a stream of small groups (#1105).
+    /// </summary>
+    internal static int LiveRoom(RunRules rules, int siegeBattleSize, int defendersStanding, bool field = false) =>
+        Math.Max(field ? 1 : LiveFloor, Math.Min(rules.LiveCap, siegeBattleSize - defendersStanding));
 
     private int SpawnAttackers(RunSnapshot s, RunEffects fx)
     {
@@ -373,6 +397,8 @@ internal sealed partial class SurvivalRun
         var opening = _stage == WaveStage.Spawning;
         if (opening)
             n = Math.Min(n, _firstBatch - _firstSpawned);
+        else if (_plan.Field != null)
+            n = FieldGroupPart(s, n);
         if (n <= 0)
             return 0;
 
@@ -397,11 +423,32 @@ internal sealed partial class SurvivalRun
         return n;
     }
 
+    /// <summary>
+    /// On a field run (#1105) the attackers after the opening join in groups of half the live room, never one at a time: a group starts only when the field has
+    /// room for all of it, and then comes in over as many ticks as it needs. The size and the gate read the same room, so a battle size below the rules' cap cannot stall a wave. Returns how many of <paramref name="n"/> may spawn on this tick.
+    /// </summary>
+    private int FieldGroupPart(RunSnapshot s, int n)
+    {
+        if (_fieldGroupLeft == 0)
+        {
+            var room = LiveCap(s);
+            var group = Math.Min(QueueLeft, Math.Max(1, room / 2));
+            if (room - s.AttackersStanding < group)
+                return 0;
+
+            _fieldGroupLeft = group;
+        }
+
+        n = Math.Max(0, Math.Min(n, _fieldGroupLeft));
+        _fieldGroupLeft -= n;
+        return n;
+    }
+
     private void ClearWave(RunEffects fx)
     {
         var bonus = GoldFactors.Apply(_r.WaveBonusBase + _r.WaveBonusPerWave * _wave, _factors.WaveBonus);
         _purse.Earn(PurseSource.WaveBonus, bonus);
-        _stats.CloseWave(_wave, _waveSeconds, _waveFelled, _healthFactor, _damageFactor, _waveAffixes, WaveRolesNow(), FortWaveNow());
+        _stats.CloseWave(_wave, _waveSeconds, _waveFelled, _healthFactor, _damageFactor, _waveAffixes, WaveRolesNow(), FortWaveNow(), _waveTaken);
         CloseVolleys();
         _careUsed = 0;
         _warCry = null;
@@ -422,8 +469,10 @@ internal sealed partial class SurvivalRun
             return;
         }
 
+        OrderRise(fx);
         RefillPosts(fx);
         fx.RestShare = _r.RestShare;
+        _defenderHealthMean = -1f;
         _phase = RunPhase.Intermission;
         _left = _r.IntermissionSeconds;
     }

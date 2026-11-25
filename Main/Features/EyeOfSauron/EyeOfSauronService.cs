@@ -61,7 +61,7 @@ public sealed class EyeOfSauronService : IEyeOfSauronHook
     private float _huntStartDay;
     private string? _lastStep;
 
-    // The hunt holds the hunter's AI pin. False while he stands off for another lord's army (E17); every release goes
+    // The hunt holds the hunter's AI pin. False while he stands off (E17, or a bribe or escape); every release goes
     // through it, so a stand-off release and an end never release twice. Main thread only.
     private bool _pinnedByUs;
 
@@ -197,7 +197,7 @@ public sealed class EyeOfSauronService : IEyeOfSauronHook
     /// <summary>
     /// E06 (the maintainer, 2026-10-14): a battle ends the hunt only when the hunter's side was defeated, or when it was
     /// the player's battle against the hunter and someone won it. A player who got away (no winner) keeps the hunt, and
-    /// the hourly re-issue restores the engage order; a battle without the player that the hunter won keeps it too.
+    /// the hourly re-issue restores the engage order after vanilla's grace; a battle without the player that the hunter won keeps it too.
     /// </summary>
     private static bool EndsTheHunt(HuntBattleSummary s) =>
         s.InvolvesHunter && (s.HunterLost || (s.IsPlayerEvent && s.HasWinner));
@@ -289,6 +289,7 @@ public sealed class EyeOfSauronService : IEyeOfSauronHook
     /// <summary>Why a fit hunter cannot ride today, or null when he can (re-task his party, or spawn one).</summary>
     private string? WaitReason(string heroId, HunterHeroSnapshot hero)
     {
+        if (hero.FactionHoldsOath) return $"Waiting: {heroId}'s faction holds your safe-passage oath.";
         if (hero.LedPartyId != null)
         {
             string? busy = BusyReason(_adapter.ReadParty(hero.LedPartyId));
@@ -310,6 +311,7 @@ public sealed class EyeOfSauronService : IEyeOfSauronHook
         if (party.InSettlement) return "in a settlement";
         if (party.IsDisbanding) return "disbanding";
         if (party.AiPinned) return "held by another order";
+        if (party.HoldsOffPlayer) return "promised to leave you alone";
         return null;
     }
 
@@ -462,6 +464,13 @@ public sealed class EyeOfSauronService : IEyeOfSauronHook
             return;
         }
 
+        if (party.HoldsOffPlayer)
+        {
+            StandOff(partyId!);
+            _lastStep = "hunter promised to leave you alone";
+            return;
+        }
+
         if (!_pinnedByUs)
         {
             // Resuming after a stand-off: re-pin and re-engage once, whatever the free AI chose. A hunter his own AI
@@ -491,7 +500,7 @@ public sealed class EyeOfSauronService : IEyeOfSauronHook
 
     /// <summary>
     /// E17: drops the hunter's engage order and pin through the end's release path, once, so his own AI resumes while
-    /// the hunt state stays (no end, no cooldown). The hourly tick re-pins him when the player leaves the army.
+    /// the hunt state stays (no end, no cooldown). The hourly tick re-pins him when the army or the bribe is over.
     /// </summary>
     private void StandOff(string partyId)
     {
@@ -618,6 +627,11 @@ public sealed class EyeOfSauronService : IEyeOfSauronHook
         if (_adapter.PlayerInAnotherLordsArmy)
             StandOff(partyId);
         var reading = _pinnedByUs ? _adapter.ReadSight(partyId, SightMargin) : HuntSightReading.Missing;
+        if (reading.HunterHoldsOffPlayer)
+        {
+            StandOff(partyId);
+            reading = HuntSightReading.Missing;
+        }
         bool inSight = IsInFloorBand(reading);
         // A non-finite speed is published as it is: SpeedMoved and TryGetSpeedFloor refuse it.
         float speed = reading.PlayerSpeed;

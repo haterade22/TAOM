@@ -31,7 +31,7 @@ public sealed class TournamentChoicePresenter : ITournamentChoicePresenter
         }
 
         Show(new TextObject("{=taom_tr_prize_title}Choose Your Prize").ToString(),
-            new TextObject("{=taom_tr_prize_desc}The tournament master offers a choice of prizes. Choose the one you will fight for; it is yours if you win.").ToString(),
+            new TextObject("{=taom_tr_prize_desc}The training master offers a choice of prizes. Choose the one you will fight for; it is yours if you win.").ToString(),
             elements, onPicked, onCancel);
     }
 
@@ -75,5 +75,5 @@ public sealed class TournamentChoicePresenter : ITournamentChoicePresenter
                 }
                 onPicked(id);
             },
-            negativeAction: _ => onCancel()));
+            negativeAction: _ => onCancel()), pauseGameActiveState: true);
 }

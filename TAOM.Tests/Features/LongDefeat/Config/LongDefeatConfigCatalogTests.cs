@@ -127,6 +127,52 @@ public class LongDefeatConfigCatalogTests
         Assert.AreNotEqual(hash, Load(Fortresses(Fortress(replaceKey: "'scene':'s'", replaceWith: "'scene':'t'")), one).BalanceHash);
     }
 
+    private const string HeroLines = "{'heroes':{'legolas':[['H/a1.ogg','H/a2.ogg'],['H/b1.ogg']]}}";
+
+    [TestMethod]
+    public void BuildPlan_CarriesTheHeroLinesWithTheResolvedPaths()
+    {
+        var catalog = LongDefeatConfigCatalog.FromTexts(Fortresses(Fortress()), Waves(), Shop(), _logger, Affixes, Boons, Classes, HeroLines, p => "M/" + p);
+
+        var plan = catalog.BuildPlan(catalog.Fortresses[0], RunOptions.Default);
+
+        Assert.AreEqual("M/H/b1.ogg", plan.HeroLines.Pick("legolas", 2, 0UL));
+        Assert.AreSame(catalog.HeroLines, plan.HeroLines);
+    }
+
+    [TestMethod]
+    public void BuildPlan_NoHeroLinesText_CarriesNoLinesAndNoWarning()
+    {
+        var plan = Load().BuildPlan(Load().Fortresses[0], RunOptions.Default);
+
+        Assert.AreSame(HeroLinePlan.None, plan.HeroLines);
+        _logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void BalanceHash_IsTheSameWithAndWithoutHeroLinesText()
+    {
+        var without = Load().BalanceHash;
+
+        var with = LongDefeatConfigCatalog.FromTexts(Fortresses(Fortress()), Waves(), Shop(), _logger, Affixes, Boons, Classes, HeroLines).BalanceHash;
+
+        Assert.AreEqual(without, with);
+    }
+
+    [TestMethod]
+    public void BuildPlan_Twice_ReadsTheHeroLinesOnce()
+    {
+        var resolved = 0;
+        var catalog = LongDefeatConfigCatalog.FromTexts(Fortresses(Fortress()), Waves(), Shop(), _logger, Affixes, Boons, Classes, HeroLines, p => { resolved++; return p; });
+
+        catalog.BuildPlan(catalog.Fortresses[0], RunOptions.Default);
+        var first = resolved;
+        catalog.BuildPlan(catalog.Fortresses[0], RunOptions.Default);
+
+        Assert.AreEqual(3, first);
+        Assert.AreEqual(first, resolved);
+    }
+
     [TestMethod]
     public void BuildPlan_CarriesRulesBountiesAndOptions()
     {
@@ -140,6 +186,58 @@ public class LongDefeatConfigCatalogTests
         Assert.AreEqual(4, plan.Bounties["a_inf"]);
         Assert.AreSame(options, plan.Options);
         Assert.AreEqual(150, plan.Garrison.Sum(g => g.Count));
+    }
+
+    [TestMethod]
+    public void BuildPlan_Normal_KeepsTheFortresssWavesAndSchedule()
+    {
+        var catalog = Load();
+        var fortress = catalog.Fortresses[0];
+
+        var plan = catalog.BuildPlan(fortress, RunOptions.Default);
+
+        Assert.AreSame(fortress.Waves, plan.Waves);
+        Assert.AreEqual(0, plan.Affixes.CountFor(4));
+        Assert.AreEqual(1, plan.Affixes.CountFor(5));
+    }
+
+    [TestMethod]
+    public void BuildPlan_Hard_TakesTheShippedDefaultsWhenTheFileHasNoHardBlock()
+    {
+        var catalog = Load();
+
+        var plan = catalog.BuildPlan(catalog.Fortresses[0], new RunOptions { Difficulty = RunDifficulty.Hard });
+
+        Assert.AreEqual(138, plan.Waves.ForWave(1).Count);
+        Assert.AreEqual(1, plan.Affixes.CountFor(3));
+        Assert.AreEqual(0, plan.Affixes.CountFor(2));
+        Assert.AreEqual(RunDifficulty.Hard, plan.Options.Difficulty);
+    }
+
+    [TestMethod]
+    public void BuildPlan_Hard_RaisesTheKeepMinimumAboveTheStragglerShareOfItsSmallestWave()
+    {
+        var catalog = Load();
+        var fortress = catalog.Fortresses[0];
+
+        var normal = catalog.BuildPlan(fortress, RunOptions.Default).Rules;
+        var hard = catalog.BuildPlan(fortress, new RunOptions { Difficulty = RunDifficulty.Hard }).Rules;
+
+        Assert.AreEqual(12, normal.KeepMinAttackers);
+        Assert.AreEqual(14, hard.KeepMinAttackers, "138 attackers in wave 1, a tenth is 13");
+        Assert.AreEqual(normal with { KeepMinAttackers = 14 }, hard);
+    }
+
+    [TestMethod]
+    public void BuildPlan_Hard_ReadsTheRulesHardBlock()
+    {
+        var catalog = Load(waves: Waves(rules: "'hard':{'factor':1.5,'affixWavesEarlier':4}"));
+
+        var plan = catalog.BuildPlan(catalog.Fortresses[0], new RunOptions { Difficulty = RunDifficulty.Hard });
+
+        Assert.AreEqual(165, plan.Waves.ForWave(1).Count);
+        Assert.AreEqual(1, plan.Affixes.CountFor(1));
+        Assert.AreEqual(110, catalog.Fortresses[0].Waves.ForWave(1).Count, "the fortress's own plan is not changed");
     }
 
     [TestMethod]

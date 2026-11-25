@@ -66,6 +66,9 @@
       <Troop id="ironpass_ram_marshal" />
       <Troop id="ironpass_ram_vanguard" />
       <Troop id="ironpass_ram_breaker" />
+      <!-- The two chariot troops of the same line (the Ram Vanguard also upgrades into the War Chariot). -->
+      <Troop id="ironpass_war_chariot" />
+      <Troop id="ironpass_steel_chariot" />
     </Culture>
 
     <Culture id="dolguldur">

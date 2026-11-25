@@ -677,7 +677,7 @@ public class SpecialResourceServiceTests
         _storage.Get("hero1", "war_spoils").Returns(10f);
 
         _service.BeginPartyScreenSession();
-        Assert.AreEqual(2, _service.ClampUpgradeCount("hero1", "empire_s", null, "mordor_uruk_captain", 5));
+        Assert.AreEqual(2, _service.ClampUpgradeCount("hero1", "empire_s", null, "mordor_uruk_captain", 5, null));
     }
 
     [TestMethod]
@@ -721,6 +721,64 @@ public class SpecialResourceServiceTests
         _service.CommitSession("hero1", "empire_s", null);
 
         _storage.Received(1).Add("hero1", "war_spoils", -30f);
+    }
+
+    // #1516: a Done that succeeds while the screen stays open (Talk, a TAOM forced commit) applies the queued upgrades.
+    [TestMethod]
+    public void CommitAppliedUpgrades_ChargesNow_AndALaterCancelRefundsNothing()
+    {
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", 4, 0.2f);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+
+        _service.BeginPartyScreenSession();
+        _service.QueueUpgradeSpend("hero1", "mordor_uruk_captain", 3);
+        _service.CommitAppliedUpgrades("hero1", "empire_s", null);
+        _service.CancelSession();
+
+        _storage.Received(1).Add("hero1", "war_spoils", -12f);
+    }
+
+    [TestMethod]
+    public void CommitAppliedUpgrades_ThenDoneCloses_ChargesOnce()
+    {
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", 4, 0.2f);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+
+        _service.BeginPartyScreenSession();
+        _service.QueueUpgradeSpend("hero1", "mordor_uruk_captain", 3);
+        _service.CommitAppliedUpgrades("hero1", "empire_s", null);
+        _service.CommitSession("hero1", "empire_s", null);
+
+        _storage.ReceivedWithAnyArgs(1).Add(default!, default!, default);
+    }
+
+    [TestMethod]
+    public void CommitAppliedUpgrades_KeepsTheSessionOpen_ForLaterUpgrades()
+    {
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", 4, 0.2f);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+
+        _service.BeginPartyScreenSession();
+        _service.QueueUpgradeSpend("hero1", "mordor_uruk_captain", 3);
+        _service.CommitAppliedUpgrades("hero1", "empire_s", null);
+        _service.QueueUpgradeSpend("hero1", "mordor_uruk_captain", 1);
+        _service.CommitSession("hero1", "empire_s", null);
+
+        _storage.Received(1).Add("hero1", "war_spoils", -12f);
+        _storage.Received(1).Add("hero1", "war_spoils", -4f);
+    }
+
+    [TestMethod]
+    public void CommitAppliedUpgrades_NoOp_WhenNotInSession()
+    {
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", 4, 0.2f);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+
+        _service.QueueUpgradeSpend("hero1", "mordor_uruk_captain", 3);
+        _service.CommitAppliedUpgrades("hero1", "empire_s", null);
+        _service.CommitSession("hero1", "empire_s", null);
+
+        _storage.DidNotReceiveWithAnyArgs().Add(default!, default!, default);
     }
 
     [TestMethod]
@@ -937,7 +995,7 @@ public class SpecialResourceServiceTests
 
         _service.BeginPartyScreenSession();
         // At cost 4 with -50% = effective cost 2, available 10 → can afford 5
-        Assert.AreEqual(5, _service.ClampUpgradeCount("hero1", "empire_s", null, "mordor_uruk_captain", 5));
+        Assert.AreEqual(5, _service.ClampUpgradeCount("hero1", "empire_s", null, "mordor_uruk_captain", 5, null));
     }
 
     [TestMethod]

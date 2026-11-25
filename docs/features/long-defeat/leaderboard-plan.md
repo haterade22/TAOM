@@ -31,6 +31,7 @@ The mod stays offline: TAOM has no network code, and this adds none. A direct up
 | `balance` | A hash of the six JSON files (schema 1 hashed the first three): join `fortresses.json`, `waves.json`, `shop.json`, `affixes.json`, `boons.json` and `classes.json`, in that order, with `\n\0\n`, after changing CRLF to LF. Take SHA-256 of the UTF-8 bytes, and write its first 8 bytes in lower hex | Must match that release, and picks the board |
 | `cheatMode` | `NativeConfig.CheatMode` at launch | Must be false |
 | `mods` | Active modules, as `<id> <version>`. These versions are the only record of the engine changeset, the Armory and `TAOM_Map` | Shown to moderators |
+| `difficulty` | `normal` or `hard`, written right after `class`. It is added to schema 2 without a bump: a report with no `difficulty` predates the field and reads as `normal` | Rules 5 and 15 replay at this difficulty (see the amendments), and it is part of the board key |
 | `autoplay`, `garrisonScale`, `targetWaves` | The run's options | Must be false, 1 and null: anything else is a test run |
 | `maxSpeed` | The highest mission speed the run used: 1, 2, 4 or 10. It is added to schema 1 without a bump, because no released build writes schema 1 yet. A report with no `maxSpeed` predates the field and reads as 1 | Rule 13 scales by it. A run at any speed counts on the board, see "The boards" |
 | `startedUtc`, `endedUtc` | Real time | The wave times must fit between them, scaled by `maxSpeed` |
@@ -110,9 +111,38 @@ Phase 3 adds fields to schema 2 and no schema 2 rule changes meaning ([phase3-pl
 
 The wrapper (`tools/run_long_defeat.py`, `purchase_problem`) replays rules 8, 19 and 20 over a report it judges, with `FORT_OFFERED` mirroring the build's `Offered`; rule 21 is the bot's to flag.
 
+## Schema 2, Phase 4 (Locations)
+
+Phase 4 adds fields to schema 2 and changes the meaning of no rule ([phase4-plan.md](phase4-plan.md), section 7, D45). Slice 2 writes and judges the money side below. From Slice 5 the build can sell the armoury's sets (`LocationOffer.Offered`), and no shipped fortress records an armoury point and no shop lists a set, so every report so far holds the money fields at their empty value; the `lord` block is filled in any run in which the lord falls or leaves his body. The Marshal of the first plan was dropped for the shop's heroes (#1337), so the plan's rule 24 does not exist. The engine rows (`engines[]` and each wave's `engines`) come with Slice 8.
+
+**New fields:** `lord` (Slice 3: `deaths[]`, each with `wave`, `body` of `own` or `soldier`, `troop` and `forced`; `takeovers[]`, each with `wave`, `by` of `person` or `bot` and `troop`; `rises[]`, each with `beforeWave`, `at` and `handedBack`; `at` is `recorded` for the keep as recorded, `scene` for the scene's keep frame, `home` for a mounted lord, and `respawn` where the engine's own frame placed him: a story mission in which the player attacks, and a report from a build before the engine half of the death rule), `lordFalls` (a test option, 1 to 1000, the wave in which the game fells the lord to prove the death rule; null on a board run), `gold.spentOn.gear` and `gold.spentOn.engines`, two purchase kinds, and `armoury` (the ids of the gear sets the lord owns, in purchase order). A `gearSet` purchase carries the set's `id` and a `reach`. An `engine` purchase carries the engine kind as its `id` (`mangonel` or `trebuchet`), the `site` it stands at (the number of the scene's deployment point, from 0) and a `reach`. `reach` is `person` when a person walked to the place, `walk` when the unattended bot walked the lord there, and `teleport` when the bot's walk ran out of its 20 seconds and the game put the lord at the place.
+
+**Amended rules:**
+
+- Rule 3: also `lordFalls` is null.
+- Rule 8: the `gear` part equals the sum of the `price` of the `gearSet` purchases, and the `engines` part that of the `engine` purchases.
+- Rule 19 reaches the two new kinds: `basePrice` is the set's price in the shop's `armoury`, or the kind's price in its `yard`, and `price` takes the price factor as a pack does.
+- Rule 22: a `gearSet` id is a set of the fortress's shop, at a fortress whose row records the `armoury` point, is bought at most once, and is sold to the report's `class` (a set with no `classes` list is sold to every class; a report with no class buys none). `armoury` equals the `gearSet` ids in purchase order.
+- Rule 23: an `engine` kind is listed in the shop's `yard.engines` and delivered by the build, and each `site` is bought at most once in a run.
+- Rule 25 (Slice 3): the report carries `playerDeaths` and the `lord` block, and `playerDeaths` equals the length of `lord.deaths`. A death with `forced` true needs `lordFalls` equal to its wave and a `body` of `own`, and a report holds at most one, so a board run holds none. The report's `wave` is a whole number. Every death and takeover names a wave the run played: from `startWave - 1`, never below 1, because a fall before the first wave is booked to the wave before the start wave, up to the report's `wave` (or that first booked wave when the run ended in its first preparation, where `wave` is still lower). Every rise precedes the wave after one the run cleared and went on from, so the clear that reached `targetWaves` has none, and no two rises precede one wave. A rise is at `home` exactly when the report's `class` is a mounted class of `classes.json`. A takeover or a rise needs no death: a lord the AI drives can rout, which removes his body with no death, and he is still raised at the clear.
+
+**What these rules cannot see, added:** where an engine stood, and whether a person walked to a place. `reach` names only the bot's teleport.
+
+The wrapper's `purchase_problem` replays rules 8, 19, 22 and 23, with `LOCATION_OFFERED` mirroring the build's `LocationOffer.Offered` (a test reads the C# source and compares the two), and its `lord_problem` replays rule 25. Each body of the player's that falls counts one death, the lord's own or a soldier he took over, so `playerDeaths` can exceed the number of waves. Beyond rule 25 the judge fails a run armed with `lordFalls` unless that wave was cleared and `lord.deaths` holds a forced death in it: a lord who fell by himself first proves nothing about the option. That is a proof-run rule and not a board rule, because a board run holds no `lordFalls`.
+
+## Schema 2, Phase 5 (Difficulty)
+
+Slice 6 adds the `difficulty` field and changes the arithmetic of two rules for a hard report, with no schema bump ([phase5-plan.md](phase5-plan.md), D64). A report with no `difficulty` is normal, so every report on record keeps its meaning.
+
+- Rule 5, count: on hard a row's `kills + felled` is `min(1000, round(normal count * factor))`: the normal count after its own `maxCount` cap, rounded once, half away from zero, with `factor` from `rules.hard.factor` in `waves.json` (1.25 shipped). The cap of 300 therefore becomes 375. A normal row is unchanged. The wrapper bounds the total shortfall (count minus `kills + felled`, summed over the rows) by the report's `fled`, and a row may not be short by a negative amount, so with no fled attacker it is the equality above. `fleeingPeak` bounds nothing.
+- Rule 5, factors: on hard the `healthPerWave` and `damagePerWave` of the roster's `scaling` are each multiplied by the same factor, as 32-bit floats, before `min(maxFactor, 1 + perWave * extra)`. `maxFactor` and `tierEveryWaves` do not change. The factors are checked on every row that has them, also when attackers fled. A hard report whose rows lack a field, or whose fortress has no roster, is refused.
+- Rule 15, affixes: on hard each `fromWave` of the schedule is lowered by `rules.hard.affixWavesEarlier` (2 shipped), no lower than 1. The roll of a wave is the same as at normal.
+
+The wrapper replays both: `wave_problem` and `affix_problem` in `tools/run_long_defeat.py` read the report's `difficulty`, and the judge fails a run whose report names another difficulty than the one armed. The board key is fortress, difficulty and balance (see "The boards").
+
 ## The boards
 
-- **One board per fortress and per `balance`:** a change to any of the six JSON files, even to a display name, opens a new board and keeps the old one readable. A release that changes troops, gear, the scene or AI code with the same files needs a board opened by hand, because the hash cannot see those.
+- **One board per fortress, per difficulty and per `balance`:** a change to any of the six JSON files, even to a display name, opens a new board and keeps the old one readable. A release that changes troops, gear, the scene or AI code with the same files needs a board opened by hand, because the hash cannot see those.
 - **Rank:** `wavesCleared`, then fewest defenders lost, summed over `waves[].lost`. `kills` is a weak tiebreak, because the wave table nearly fixes it. The game's own "Best run" line ranks waves, then kills, so it can disagree with the board.
 - **A run at any speed counts (Mike, 2026-11-04).** `maxSpeed` above 1 needs no separate board, flag or refusal. The report still records it, so a board can show it. Four unattended runs at 10x cleared 5 waves once, against three of three at 1x, and Mike accepted that 10x may play harder.
 - **One entry per Discord account per board:** the best one shows.

@@ -7,8 +7,8 @@ namespace TAOM.Features.FactionUI.UI;
 
 /// <summary>
 /// The faction screen's live touches (#704), from Kysaro's <c>FogDrift</c>, <c>PortraitReveal</c>,
-/// <c>HeroPortraitReveal</c>, <c>MinimapPopup</c> and <c>RightColumnScroll</c>: two layers of drifting
-/// fog, the painted faction portrait and the hero art sliding in, the minimap opening into a large
+/// <c>MinimapPopup</c> and <c>RightColumnScroll</c>: two layers of drifting fog, the 3D character
+/// sliding in on each new faction or pick, the minimap opening into a large
 /// clickable map, and the right column scrolling back to the top on a new faction. Widgets are found by
 /// id once the screen is built.
 /// </summary>
@@ -34,16 +34,8 @@ public sealed class FactionScreenWidgets
     private float _fogNearTime;
     private float _fogFarTime;
 
-    private Widget? _factionPortrait;
-    private float _portraitTime = -1f;
-
-    private Widget? _heroA;
-    private Widget? _heroB;
     private Widget? _viewport;
-    private float _heroTime = -1f;
-    private bool _incomingIsB;
-    private bool _hadPreviousHero;
-    private bool _anyHeroSelected;
+    private float _portraitTime = -1f;
 
     private Widget? _popup;
     private Widget? _popupButton;
@@ -71,41 +63,22 @@ public sealed class FactionScreenWidgets
 
     public void Detach()
     {
-        _root = _fogNear = _fogNear2 = _fogFar = _fogFar2 = _factionPortrait = _heroA = _heroB = _viewport = null;
+        if (_viewport != null)
+        {
+            _viewport.AlphaFactor = 1f;
+            _viewport.PositionXOffset = 0f;
+        }
+        _root = _fogNear = _fogNear2 = _fogFar = _fogFar2 = _viewport = null;
         _popup = _popupButton = _popupPin = _smallPin = _popupMap = _closeCatcher = null;
         _rightColumn = null;
         _fogNearTime = _fogFarTime = 0f;
-        _portraitTime = _heroTime = -1f;
-        _hadPreviousHero = _anyHeroSelected = false;
+        _portraitTime = -1f;
         _minimapTime = 0f;
         _minimapOpen = false;
         _haveClosedOffset = false;
     }
 
-    public void OnFactionSelected() => _portraitTime = 0f;
-
-    public void OnHeroSelected(bool incomingIsB)
-    {
-        _incomingIsB = incomingIsB;
-        _hadPreviousHero = _anyHeroSelected;
-        _anyHeroSelected = true;
-        _heroTime = 0f;
-    }
-
-    /// <summary>A new faction: hides both hero portraits and shows the viewport and painted portrait.</summary>
-    public void ResetHeroPortraits()
-    {
-        _heroTime = -1f;
-        _hadPreviousHero = false;
-        _anyHeroSelected = false;
-        if (_root == null)
-            return;
-        FindHeroWidgets();
-        Show(_heroA, alpha: 0f, offset: SlideOffset);
-        Show(_heroB, alpha: 0f, offset: SlideOffset);
-        Show(_viewport, alpha: 1f, offset: 0f);
-        Show(_factionPortrait, alpha: 1f, offset: 0f);
-    }
+    public void OnCharacterShown() => _portraitTime = 0f;
 
     public void ResetRightColumnToTop()
     {
@@ -148,7 +121,6 @@ public sealed class FactionScreenWidgets
         {
             TickFog(dt);
             TickPortrait(dt);
-            TickHeroPortraits(dt);
             TickMinimap(dt);
         }
         catch (Exception)
@@ -184,8 +156,8 @@ public sealed class FactionScreenWidgets
     {
         if (_portraitTime < 0f)
             return;
-        _factionPortrait ??= Find("FactionPortrait");
-        if (_factionPortrait == null)
+        _viewport ??= Find("CharacterViewportWrapper");
+        if (_viewport == null)
         {
             _portraitTime = -1f;
             return;
@@ -193,42 +165,10 @@ public sealed class FactionScreenWidgets
 
         _portraitTime += dt;
         var eased = EaseOut(_portraitTime, SlideDuration, out var done);
-        _factionPortrait.PositionXOffset = SlideOffset * (1f - eased);
-        _factionPortrait.AlphaFactor = eased;
+        _viewport.PositionXOffset = SlideOffset * (1f - eased);
+        _viewport.AlphaFactor = eased;
         if (done)
             _portraitTime = -1f;
-    }
-
-    private void TickHeroPortraits(float dt)
-    {
-        if (_heroTime < 0f)
-            return;
-        FindHeroWidgets();
-        if (_heroA == null || _heroB == null)
-        {
-            _heroTime = -1f;
-            return;
-        }
-
-        var incoming = _incomingIsB ? _heroB : _heroA;
-        var outgoing = _incomingIsB ? _heroA : _heroB;
-        _heroTime += dt;
-        var eased = EaseOut(_heroTime, SlideDuration, out var done);
-        incoming.PositionXOffset = SlideOffset * (1f - eased);
-        incoming.AlphaFactor = eased;
-        if (_hadPreviousHero)
-        {
-            outgoing.PositionXOffset = -SlideOffset * eased;
-            outgoing.AlphaFactor = 1f - eased;
-        }
-        else
-        {
-            Slide(_viewport, eased);
-            Slide(_factionPortrait, eased);
-        }
-
-        if (done)
-            _heroTime = -1f;
     }
 
     private void TickMinimap(float dt)
@@ -275,14 +215,6 @@ public sealed class FactionScreenWidgets
         _popupButton.IsVisible = eased < 0.5f;
     }
 
-    private void FindHeroWidgets()
-    {
-        _heroA ??= Find("HeroPortrait");
-        _heroB ??= Find("HeroPortraitB");
-        _viewport ??= Find("CharacterViewportWrapper");
-        _factionPortrait ??= Find("FactionPortrait");
-    }
-
     private Widget? Find(string id) => _root?.GetFirstInChildrenAndThisRecursive(w => w.Id == id);
 
     private static float EaseOut(float time, float duration, out bool done)
@@ -290,21 +222,5 @@ public sealed class FactionScreenWidgets
         var progress = Math.Min(1f, time / duration);
         done = progress >= 1f;
         return 1f - (1f - progress) * (1f - progress);
-    }
-
-    private static void Slide(Widget? widget, float eased)
-    {
-        if (widget == null)
-            return;
-        widget.PositionXOffset = -SlideOffset * eased;
-        widget.AlphaFactor = 1f - eased;
-    }
-
-    private static void Show(Widget? widget, float alpha, float offset)
-    {
-        if (widget == null)
-            return;
-        widget.AlphaFactor = alpha;
-        widget.PositionXOffset = offset;
     }
 }

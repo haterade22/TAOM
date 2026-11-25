@@ -465,7 +465,7 @@ layers six TAOM modifiers onto the single `ExplainedNumber` vanilla hands back, 
 | 6 | `ITroopWeightService.ApplyPartySizeWeightPenalty` (this feature) | result-frame subtraction of the weight surplus |
 
 So the elite tax **competes** with a culture bonus on the same number, and the two can cancel. On a
-Mordor, Isengard, Dol Guldur or Gundabad party the weight-2.0 uruks, wargs and black guards can make
+Mordor, Dol Guldur or Gundabad party the weight-2.0 uruks, wargs and black guards can make (Isengard's troops count as one man up to level 31 since 2026-11-23)
 the surplus subtract more than a small percentage bonus adds. Those cultures' party-size feats carried
 a 20% floor for that reason until 2026-10-18 (#818), when a balance pass capped them at 10% (orc realms
 +5%) and accepted that the tax can cancel the bonus. Rationale and the excluded cultures:
@@ -537,15 +537,15 @@ Simple XML format with one element per weighted troop. Any troop not listed defa
 
 > **Note (2026-05-14):** `cave_troll`'s weight-4.0 row sits inside a comment block in `troop_weights.xml` (WIP: see CHANGELOG "Phase 9c: Disable troll content in-place"), so it is NOT one of the live rows counted below. Re-enable by uncommenting.
 
-**224 live rows** (re-measured 2026-11-15; the 133 the older tables carried had already drifted to 160 on trunk), measured rather than estimated:
+**214 live rows** (re-measured 2026-11-24, with the two Ironpass chariot troops at 3.0; 212 on 2026-11-23, after the Isengard numbers pass removed 12 rows; the 133 the older tables carried had already drifted to 160 on trunk), measured rather than estimated:
 
 | Weight | Count | Troop ids |
 |--------|-------|-----------|
 | 20.0 | 1 | `harad_mumakil_rider` |
 | 12.0 | 1 | `harad_elephant_rider` |
 | 4.0 | 6 | `hill_troll`, `taom_spider_creature`, `taom_spider_rider_brown`, `taom_spider_rider_pale` (the three Spider Rider rungs, #616), `goblin_spider_rider`, `goblin_spider_lord` (`cave_troll` would be one more, but is commented out) |
-| 3.0 | 79 | Every other listed troop at level 41 or above: the Rivendell and Lindon Gondolin lines (5 each) and Mirkwood palace guard + Thingol's heir (2) at level 51, and at level 41 to 46 the Imladris, Lindon and Mirkwood elites, the Erebor/Iron Hills royal wardens and nobles' tips, `ironpass_ram_marshal`, Khamûl's shadow and veiled lines, the Black Númenórean knight/warden/marksman and temple tips, `orthanc_bodyguard`, `battlemaster_of_the_first_age` |
-| 2.0 | 137 | Every other listed troop below level 41: the lower Imladris/Lindon/Mirkwood elves, warg riders (all cultures), the Black Númenórean initiate to veteran rungs, Dol Guldur uruk black guard, Mordor elite captains, Orthanc guard/warden, the lower Erebor/Iron Hills nobles, Ironpass ram cavalry rungs, Gundabad elites, `gondor_pg_vet_cavalry`, the Hired copies of 2.0 troops, the level 31 Dual Wield troops, and every level 31 to 36 troop of the evil and dwarf cultures (the 2026-11-15 sweep) |
+| 3.0 | 81 | Every other listed troop at level 41 or above (the two Ironpass chariot troops, `ironpass_war_chariot` and `ironpass_steel_chariot`, among them): the Rivendell and Lindon Gondolin lines (5 each) and Mirkwood palace guard + Thingol's heir (2) at level 51, and at level 41 to 46 the Imladris, Lindon and Mirkwood elites, the Erebor/Iron Hills royal wardens and nobles' tips, `ironpass_ram_marshal`, Khamûl's shadow and veiled lines, the Black Númenórean knight/warden/marksman and temple tips, `orthanc_bodyguard`, `battlemaster_of_the_first_age` |
+| 2.0 | 125 | Every other listed troop below level 41: the lower Imladris/Lindon/Mirkwood elves, warg riders (every culture but Isengard), the Black Númenórean initiate to veteran rungs, Dol Guldur uruk black guard, Mordor elite captains, the Orthanc warden and Nazg-hai (level 36), the lower Erebor/Iron Hills nobles, Ironpass ram cavalry rungs, Gundabad elites, `gondor_pg_vet_cavalry`, the Hired copies of 2.0 troops, the level 31 Dual Wield troops but Isengard's, and every level 31 to 36 troop of the evil and dwarf cultures (the 2026-11-15 sweep), except Isengard at level 31. Isengard counts as one man per troop up to level 31 since 2026-11-23 ([faction-balance.md](faction-balance.md) "Isengard's numbers") |
 | 1.0 | default | Every unlisted troop, stated in the file's own header comment, and there is no other default anywhere |
 
 **The level rule (#585, 2026-09-13).** A listed troop at level 41 or above pays 3.0 and a listed troop
@@ -632,7 +632,7 @@ that moves the anchors fails there.
 | `Main/Features/TroopWeight/PartyScreenOwnLimits.cs` | Per-screen own-limit verdicts, a `ConditionalWeakTable` keyed by the `PartyScreenLogic` (#1430) |
 | `Main/Features/TroopWeight/TroopTransferPlanning.cs` | **Pure** `WeightedFillBudget`: how many troops fit the free weighted slots, row by row (#1430) |
 | `Main/Features/TroopWeight/Diagnostics/` | TEMPORARY diagnostics: the special-currency count diagnostic (separate investigation) and the main-roster loss diagnostic (`MainRosterLossDiagnostics` plus the two `TroopRoster_*_Patch` prefixes) |
-| `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` | Weight definitions, **224 live rows: 137 at 2.0, 79 at 3.0, six at 4.0, one at 12.0, one at 20.0.** A raw grep returns one more because a `cave_troll` row sits inside a comment block. Unlisted troops weigh 1.0 <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))" 2026-11-15 --> |
+| `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` | Weight definitions, **212 live rows: 125 at 2.0, 79 at 3.0, six at 4.0, one at 12.0, one at 20.0.** A raw grep returns one more because a `cave_troll` row sits inside a comment block. Unlisted troops weigh 1.0 <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))" 2026-11-23 --> |
 | `Main/_Module/ModuleData/taom_module_strings.xml` | `{=taom_troop_weight_size}` (enforcement label, no longer rendered) + `{=taom_troop_weight_tag}` (row `×N` tag) |
 | `Main/Features/TaomSettings.cs` | MCM toggle (`EnableTroopWeight`), the new-campaign default; `TroopWeightSettingsProvider` puts the campaign's choice first |
 

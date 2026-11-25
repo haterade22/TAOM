@@ -77,6 +77,7 @@ public class StoryRosterCheckTests
         Assert.AreEqual(CheckResult.Fail, verdict.Result);
     }
 
+    [TestCategory("RequiresGame")]   // constructs BasicCharacterObject, and the service catches the throw
     [TestMethod]
     public void Report_EveryIdResolves_WritesOnePass_CountingTheFreeHeroTroop()
     {
@@ -85,6 +86,7 @@ public class StoryRosterCheckTests
         CollectionAssert.AreEqual(new[] { "pass taom.story-missions.roster  missions=1 troops=3 missing=- items=1 items_missing=-" }, _log.Lines);
     }
 
+    [TestCategory("RequiresGame")]   // constructs BasicCharacterObject, and the service catches the throw
     [TestMethod]
     public void Report_AMissingHeroTroop_Fails_NamingTheTroop()
     {
@@ -93,6 +95,7 @@ public class StoryRosterCheckTests
         CollectionAssert.AreEqual(new[] { "fail taom.story-missions.roster  missions=1 troops=3 missing=hero_a items=1 items_missing=-" }, _log.Lines);
     }
 
+    [TestCategory("RequiresGame")]   // constructs BasicCharacterObject, and the service catches the throw
     [TestMethod]
     public void Report_AMissingExtraArrowItem_Fails_NamingTheItem()
     {
@@ -101,6 +104,7 @@ public class StoryRosterCheckTests
         CollectionAssert.AreEqual(new[] { "fail taom.story-missions.roster  missions=1 troops=3 missing=- items=1 items_missing=arrow_x" }, _log.Lines);
     }
 
+    [TestCategory("RequiresGame")]   // constructs BasicCharacterObject, and the service catches the throw
     [TestMethod]
     public void Report_TwoKitsWithTheSameArrow_CountOneItem_AndAKitWithNoRangedBlockCountsNone()
     {
@@ -117,6 +121,7 @@ public class StoryRosterCheckTests
         Assert.IsTrue(_log.Has("fail", StoryRosterCheck.Id));
     }
 
+    [TestCategory("RequiresGame")]   // constructs BasicCharacterObject
     [TestMethod]
     public void Report_AnAdapterThatThrows_IsLogged_AndNeverEscapes()
     {

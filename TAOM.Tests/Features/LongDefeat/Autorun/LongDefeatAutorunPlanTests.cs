@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.LongDefeat.Autorun;
+using TAOM.Features.LongDefeat.Domain;
 
 namespace TAOM.Tests.Features.LongDefeat.Autorun;
 
@@ -223,6 +224,32 @@ public class LongDefeatAutorunPlanTests
     }
 
     [TestMethod]
+    public void Resolve_DifficultyDefaultsToNormal_AndReadsHardWithoutCase()
+    {
+        var plain = Resolve(Out);
+        var hard = Resolve(Out + "difficulty=Hard\n");
+
+        Assert.AreEqual(RunDifficulty.Normal, plain.Difficulty);
+        Assert.AreEqual(RunDifficulty.Hard, hard.Difficulty);
+        Assert.AreEqual(0, hard.Warnings.Count);
+        Assert.AreEqual(RunDifficulty.Normal, plain.ToSetup("helms").Options.Difficulty);
+        Assert.AreEqual(RunDifficulty.Hard, hard.ToSetup("helms").Options.Difficulty);
+        StringAssert.Contains(plain.Describe(), " difficulty=normal ");
+        StringAssert.Contains(hard.Describe(), " difficulty=hard ");
+    }
+
+    [TestMethod]
+    public void Resolve_AnUnknownDifficulty_WarnsOnceNamingTheValue_AndPlaysNormal()
+    {
+        var plan = Resolve(Out + "difficulty=nightmare\n");
+
+        Assert.AreEqual(RunDifficulty.Normal, plan.Difficulty);
+        Assert.AreEqual(RunDifficulty.Normal, plan.ToSetup("helms").Options.Difficulty);
+        Assert.AreEqual(1, plan.Warnings.Count);
+        StringAssert.Contains(plan.Warnings[0], "difficulty='nightmare'");
+    }
+
+    [TestMethod]
     public void Resolve_PhaseTwoKeys_DefaultToABoardRun()
     {
         var plan = Resolve(Out);
@@ -410,6 +437,44 @@ public class LongDefeatAutorunPlanTests
 
         Assert.IsNull(plan.BreakEngines);
         Assert.AreEqual(1, plan.Warnings.Count(w => w.Contains("break_engines")));
+    }
+
+    [TestMethod]
+    public void Resolve_LordFalls_DefaultsToNone_SoNoLordIsFelled()
+    {
+        var plan = Resolve(Out);
+
+        Assert.IsNull(plan.LordFalls);
+        Assert.IsNull(plan.ToSetup("helms").Options.LordFalls);
+        StringAssert.Contains(plan.Describe(), "lord_falls=-");
+    }
+
+    [DataTestMethod]
+    [DataRow("1", 1)]
+    [DataRow("13", 13)]
+    [DataRow("1000", 1000)]
+    public void Resolve_LordFalls_TakesAWaveFromOneToOneThousand(string value, int expected)
+    {
+        var plan = Resolve(Out + "lord_falls=" + value + "\n");
+
+        Assert.AreEqual(expected, plan.LordFalls);
+        Assert.AreEqual(expected, plan.ToSetup("helms").Options.LordFalls);
+        Assert.AreEqual(0, plan.Warnings.Count);
+        StringAssert.Contains(plan.Describe(), "lord_falls=" + expected);
+    }
+
+    [DataTestMethod]
+    [DataRow("0")]
+    [DataRow("1001")]
+    [DataRow("-1")]
+    [DataRow("twice")]
+    [DataRow("")]
+    public void Resolve_LordFalls_OutOfRangeIsNoneWithAWarning(string value)
+    {
+        var plan = Resolve(Out + "lord_falls=" + value + "\n");
+
+        Assert.IsNull(plan.LordFalls);
+        Assert.AreEqual(1, plan.Warnings.Count(w => w.Contains("lord_falls")));
     }
 
     [TestMethod]

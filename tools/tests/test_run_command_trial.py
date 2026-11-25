@@ -976,8 +976,9 @@ class CrewStepTests(unittest.TestCase):
     def test_the_known_steps_are_joined_the_way_the_game_joins_them(self):
         source = (DOMAIN_SOURCE / "SeatTrialSteps.cs").read_text(encoding="utf-8")
         self.assertIn("All = SeatTrialRows.Rows.Concat(MarshalTrialRows.Rows)", source)
-        self.assertIn("Known = All.Concat(CrewTrialRows.Rows).Concat(StaminaTrialRows.Rows)", source)
-        self.assertEqual(trial.KNOWN_STEPS, trial.SEAT_STEPS + trial.MARSHAL_STEPS + trial.CREW_STEPS + trial.STAMINA_STEPS)
+        self.assertIn("Known = All.Concat(CrewTrialRows.Rows).Concat(StaminaTrialRows.Rows).Concat(SpiderTrialRows.Rows)"
+                      ".Concat(WargTrialRows.Rows).ToList();", source)
+        self.assertEqual(trial.KNOWN_STEPS, trial.SEAT_STEPS + trial.MARSHAL_STEPS + trial.CREW_STEPS + trial.STAMINA_STEPS + trial.SPIDER_STEPS + trial.WARG_STEPS)
         self.assertEqual(len(set(trial.KNOWN_STEPS)), len(trial.KNOWN_STEPS), "no step name is shared by two features")
 
     def test_a_crew_step_beside_a_step_other_than_enter_is_refused_as_the_game_refuses_it(self):
@@ -1031,15 +1032,62 @@ class CrewStepTests(unittest.TestCase):
         self.assertFalse(trial.CREW_CHECK_FAIL.search("[Check] id=taom.seat-of-seeing.fault result=fail mission=1"))
 
     def test_the_picture_name_is_one_the_runner_turns_into_a_png(self):
-        source = (REPO / "Main" / "Features" / "Elephant" / "CrewTrialRules.cs").read_text(encoding="utf-8")
+        source = (REPO / "Main" / "Features" / "SeatOfSeeing" / "Domain" / "SeatTrialRules.cs").read_text(encoding="utf-8")
         self.assertIn('"hud_" + step', source)
         self.assertIn('.bmp"', source)
         self.assertIn('glob("hud_*.bmp")', (REPO / "tools" / "run_fords_autorun.py").read_text(encoding="utf-8"))
+        crew = (REPO / "Client" / "Features" / "Elephant" / "Trial" / "CommandTrialScript.Crew.cs").read_text(encoding="utf-8")
+        self.assertIn("SeatTrialRules.PictureName(", crew)
 
     def test_the_docstring_points_at_the_heading_of_the_feature_doc_for_the_crew_steps(self):
         heading = "The crew steps of the command trial"
         self.assertIn('"' + heading + '"', " ".join(trial.__doc__.split()))
         self.assertIn("### " + heading, (REPO / "docs" / "features" / "mumakil.md").read_text(encoding="utf-8"))
+
+
+class SpiderStepTests(unittest.TestCase):
+    """The spider step (#1541): known by name, left out of a run with no step list, and refused beside any step but enter."""
+
+    SPIDER_RUN = ("enter", "spider_gaits")
+
+    def test_the_spider_steps_are_the_spider_row_lists_names_in_order(self):
+        source = (REPO / "Main" / "Features" / "Spider" / "SpiderTrialRows.cs").read_text(encoding="utf-8")
+        names = dict(re.findall(r'const string (\w+) = "(\w+)"', source))
+        rows = tuple(names[key] for key in re.findall(r"new SeatTrialStep\((\w+),", source))
+        self.assertEqual(rows, trial.SPIDER_STEPS)
+
+    def test_a_run_with_no_step_list_arms_no_spider_step(self):
+        self.assertFalse(set(trial.SPIDER_STEPS) & set(trial.STEPS))
+        self.assertFalse(set(trial.normalised_steps(None)) & set(trial.SPIDER_STEPS))
+
+    def test_a_named_spider_step_is_accepted_with_enter_and_put_in_the_tables_order(self):
+        self.assertEqual(trial.normalised_steps(" Spider_Gaits , ENTER "), self.SPIDER_RUN)
+
+    def test_the_spider_step_beside_a_step_other_than_enter_is_refused_as_the_game_refuses_it(self):
+        for text, other in (("enter,fly,spider_gaits", "fly"), ("spider_gaits,enter,let_go_on_death", "let_go_on_death"), ("enter,crew_mumakil,spider_gaits", "crew_mumakil"),
+                            ("enter,stamina_gate,spider_gaits", "stamina_gate"), ("spider_gaits,hero_falls,enter", "hero_falls")):
+            with self.subTest(steps=text):
+                with self.assertRaisesRegex(ValueError, "spider step runs with enter only.*" + other):
+                    trial.normalised_steps(text)
+        self.assertIn("a spider step runs with 'enter' only", (DOMAIN_SOURCE / "SeatTrialSteps.cs").read_text(encoding="utf-8"))
+
+    def test_an_unknown_step_is_refused_and_the_text_names_the_spider_step(self):
+        with self.assertRaisesRegex(ValueError, "unknown step: spider_gait; known: .*spider_gaits"):
+            trial.normalised_steps("enter,spider_gait")
+
+    def test_the_help_of_steps_names_the_spider_step(self):
+        action = next(a for a in trial.build_parser()._actions if a.dest == "steps")
+        for step in trial.SPIDER_STEPS:
+            self.assertIn(step, action.help)
+
+    def test_the_picture_name_is_one_the_runner_turns_into_a_png(self):
+        step = (REPO / "Client" / "Features" / "Spider" / "Trial" / "CommandTrialScript.Spider.cs").read_text(encoding="utf-8")
+        self.assertIn("SeatTrialRules.PictureName(", step)       # the one rule the runner's hud_*.bmp glob depends on
+
+    def test_the_docstring_points_at_the_heading_of_the_feature_doc_for_the_spider_step(self):
+        heading = "The spider gait step of the command trial"
+        self.assertIn('"' + heading + '"', " ".join(trial.__doc__.split()))
+        self.assertIn("### " + heading, (REPO / "docs" / "features" / "spider.md").read_text(encoding="utf-8"))
 
 
 class StaminaStepTests(unittest.TestCase):
@@ -1181,6 +1229,29 @@ class StaminaStepTests(unittest.TestCase):
         heading = "The stamina steps of the command trial"
         self.assertIn('"' + heading + '"', " ".join(trial.__doc__.split()))
         self.assertIn("### " + heading, (REPO / "docs" / "features" / "stamina.md").read_text(encoding="utf-8"))
+
+
+class WargStepTests(unittest.TestCase):
+    """The warg step (#1563): known by name, left out of a run with no step list, and refused beside any step but enter."""
+
+    def test_a_run_with_no_step_list_arms_no_warg_step(self):
+        self.assertFalse(set(trial.WARG_STEPS) & set(trial.STEPS))
+        self.assertFalse(set(trial.normalised_steps(None)) & set(trial.WARG_STEPS))
+
+    def test_a_named_warg_step_is_accepted_with_enter(self):
+        self.assertEqual(trial.normalised_steps(" Warg_Gaits , ENTER "), ("enter", "warg_gaits"))
+
+    def test_the_warg_step_beside_a_step_other_than_enter_is_refused_as_the_game_refuses_it(self):
+        with self.assertRaisesRegex(ValueError, "warg step runs with enter only.*fly"):
+            trial.normalised_steps("enter,fly,warg_gaits")
+        with self.assertRaises(ValueError):
+            trial.normalised_steps("enter,spider_gaits,warg_gaits")
+        self.assertIn("a warg step runs with 'enter' only", (DOMAIN_SOURCE / "SeatTrialSteps.cs").read_text(encoding="utf-8"))
+
+    def test_the_warg_steps_are_the_warg_row_lists_names(self):
+        source = (REPO / "Main" / "Features" / "Warg" / "WargTrialRows.cs").read_text(encoding="utf-8")
+        self.assertIn('Gaits = "warg_gaits"', source)
+        self.assertEqual(trial.WARG_STEPS, ("warg_gaits",))
 
 
 if __name__ == "__main__":

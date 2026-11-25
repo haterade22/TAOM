@@ -1,0 +1,19 @@
+{
+  "rules": {
+    "minStake": 10,
+    "hardCeiling": 15000,
+    "oneRunPerTownPerDay": true,
+    "returnSeconds": 5,
+    "refillSeconds": 3
+  },
+  "waves": [
+    { "count": 3,  "atOnce": 1, "tiers": { "3": 1, "4": 0, "5": 0 }, "weaponStage": 1, "cap": 500,   "oddsTenths": 15 },
+    { "count": 5,  "atOnce": 2, "tiers": { "3": 1, "4": 0, "5": 0 }, "weaponStage": 1, "cap": 1000,  "oddsTenths": 16 },
+    { "count": 6,  "atOnce": 2, "tiers": { "3": 2, "4": 1, "5": 0 }, "weaponStage": 2, "cap": 2000,  "oddsTenths": 17 },
+    { "count": 8,  "atOnce": 3, "tiers": { "3": 1, "4": 2, "5": 0 }, "weaponStage": 2, "cap": 4000,  "oddsTenths": 18 },
+    { "count": 10, "atOnce": 3, "tiers": { "3": 0, "4": 2, "5": 1 }, "weaponStage": 2, "cap": 7500,  "oddsTenths": 19 },
+    { "count": 12, "atOnce": 4, "tiers": { "3": 0, "4": 1, "5": 1 }, "weaponStage": 3, "cap": 12000, "oddsTenths": 20 },
+    { "count": 14, "atOnce": 4, "tiers": { "3": 0, "4": 1, "5": 2 }, "weaponStage": 3, "cap": 15000, "oddsTenths": 20 },
+    { "count": 16, "atOnce": 5, "tiers": { "3": 0, "4": 0, "5": 1 }, "weaponStage": 3, "cap": 15000, "oddsTenths": 20 }
+  ]
+}

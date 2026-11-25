@@ -53,6 +53,21 @@ public class HunterPartyAdapterIlTests
         Assert.IsTrue(CallsOf(nameof(HunterPartyAdapter.ReadParty)).Any(m =>
                 m.DeclaringType == typeof(MobileParty) && m.Name == "get_" + nameof(MobileParty.AttachedTo)),
             "ReadParty must read AttachedTo as well as Army");
+
+    // The maintainer, 2026-11-23: the hunt waits out the 5-day safe-passage oath too. NoAttackBarterable writes it to
+    // the hunter's map faction (NotAttackableByPlayerUntilTime), and vanilla AI never reads it, so the hold must.
+    [TestMethod]
+    public void HoldsOff_ReadsTheSafePassageOathOnTheHuntersFaction()
+    {
+        var method = typeof(HunterPartyAdapter).GetMethod("HoldsOff", BindingFlags.NonPublic | BindingFlags.Static)!;
+        var calls = IlCallScanner.ExtractCalledMethods(method, method.GetMethodBody()!.GetILAsByteArray()).ToArray();
+
+        Assert.IsTrue(calls.Any(m => m.Name == "get_" + nameof(MobileParty.MapFaction)), "HoldsOff must read the hunter's map faction");
+        Assert.IsTrue(calls.Any(m => m.DeclaringType == typeof(IFaction) && m.Name == "get_" + nameof(IFaction.NotAttackableByPlayerUntilTime)),
+            "HoldsOff must read the faction's safe-passage oath");
+        Assert.IsTrue(calls.Any(m => m.Name == "get_" + nameof(MobilePartyAi.DoNotAttackMainPartyUntil)),
+            "HoldsOff must still read the party's own promise");
+    }
 }
 
 /// <summary>

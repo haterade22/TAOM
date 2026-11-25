@@ -204,7 +204,7 @@
 	<string id="str_culture_description.sturgia" text="{=taom_str_culture_description.sturgia}The Dalríngi, or simply 'Dalemen', are the inhabitants of the great northern realm of Men. Due to the heroics of one of their own kind, Bard the Bowman, they are also sometimes referred to as 'Bardings'. Mercantile and highly crafty in nature, much wealth has flown through Dale, and the surrounding lands, including the great dwarven realm of Erebor and the Eryn Lasgalen under the steadfast rule of Thranduil has flurished. After the death of Smaug and the rebuilding of Dale, the Dalríngi have once again re-established themselves as great traders, marksmen and able sailors. Their lands now stretch from the Withered Approach in the north into the western reaches of Rhûn. Friendly to most of their neighbors, though distrustful of some, the Dalemen are a good friend to have, in times when friends grow rare." />
 
 	<!-- Custom culture descriptions -->
-	<string id="str_culture_description.erebor" text="{=taom_str_culture_description.erebor}Durin's Folk. The most well known clan of the dwarves, the Longbeards are once again on the rise towards the zenith of their power. After the death of the dragon under the Lonely Mountain and the ascension of Dáin Ironfoot to King, the Iron Hills have been integrated into the Kingdom of Erebor. Though the true treasure of their kind is not the Lonely Mountain, the Arkenstone or their ancient heritage - but Khâzad-dûm. Moria, as it is now called, has long been the golden apple for the Longbeards and efforts have been made in the past to reclaim the ancient capital of their people. Spread across the eastern bounds of the Ered Mithrin, the Longbeards have established friendships with the Elves of Mirkwood, the Men of Dale and the Avari of Neldoreth. As long as coin keeps flowing into their purses, the Gates of Erebor will stay open and the land will thrive." />
+	<string id="str_culture_description.erebor" text="{=taom_str_culture_description.erebor}Durin's Folk. The most well known clan of the dwarves, the Longbeards are once again on the rise towards the zenith of their power. After the death of the dragon under the Lonely Mountain and the ascension of Dáin Ironfoot to King, the Iron Hills have been integrated into the Kingdom of Erebor. Though the true treasure of their kind is not the Lonely Mountain, the Arkenstone or their ancient heritage - but Khazad-dûm. Moria, as it is now called, has long been the golden apple for the Longbeards and efforts have been made in the past to reclaim the ancient capital of their people. Spread across the eastern bounds of the Ered Mithrin, the Longbeards have established friendships with the Elves of Mirkwood, the Men of Dale and the Avari of Neldoreth. As long as coin keeps flowing into their purses, the Gates of Erebor will stay open and the land will thrive." />
 	<string id="str_culture_description.rivendell" text="{=taom_str_culture_description.rivendell}The Noldor of Lindon and Imladris are among the last of the High Elves remaining in Middle-earth. Once mighty princes of Beleriand and jewel-smiths without equal, they now dwell in fading havens west of the Misty Mountains, their glory tempered by sorrow. In Lindon, beneath the watch of the Grey Havens, they maintain what remains of their ancient realms - dignified, restrained and ever mindful of the Sea. In Rivendell, wisdom rather than power defines them. Lore, memory and quiet vigilance are their chosen pursuits. The fire that once drove them across the Helcaraxë burns lower now, yet it has not gone out entirely. Proud but no longer wrathful, the Noldor have learned hard lessons. They are courteous to allies, distant to strangers and implacable to enemies. Though the world of Men waxes and their own wanes, the Noldor endure as stewards of memory, a memory that is not easily extinguished." />
 	<string id="str_culture_description.mirkwood" text="{=taom_str_culture_description.mirkwood}The Silvan Elves of Mirkwood are a woodland folk in the truest sense. Less concerned with what goes on in the south and the west, they are hunters, foresters and wardens of Greenwood the Great. Under the rule of the great King Thranduil, the Silvan elves have grown more structured, though they retain their rustic heart. They favor strong drink, hearty feasts and skilled archery. Their halls beneath the forest are less concerned with grandeur than with defense and practicality. Having endured the shadow of Dol Guldur and the creeping corruption of their woods, the Silvan Elves are wary and resolute. They are slower to trust than many of their kindred - but once given, their friendship is steadfast and long lasting. Just like their forests." />
 	<string id="str_culture_description.lothlorien" text="{=taom_str_culture_description.lothlorien}The Sindar of Lothlórien dwell beneath golden leaves and timeless boughs. Though ruled by Galadriel of the Noldor and Celeborn of Doriath, the woodland realm is largely Silvan and Sindarin in custom, blending ancient forest life with the echoes of long lost Beleriand. Graceful and contemplative, the Sindar of Lórien are less restless than their western kin. They seek preservation over departure and healing over memory. Within the eaves of their guarded land, time itself seems reluctant to pass. Song and quiet watchfulness define their days. Yet beneath their serenity lies vigilance. None cross the borders of Lórien unseen, and few depart unchanged. Though they desire no glory or might, they will defend their Golden Wood with a resolve as deep as its roots." />
@@ -1523,7 +1523,7 @@
 	<string id="taom_faction_clans_of_forochel_name" text="{=taom_faction_clans_of_forochel_name}Clans of Forochel" />
 	<string id="taom_faction_clans_of_forochel_trait_0" text="{=taom_faction_clans_of_forochel_trait_0}Ice Bay Raiders" />
 	<string id="taom_faction_clans_of_forochel_trait_1" text="{=taom_faction_clans_of_forochel_trait_1}Frozen North Orcs" />
-	<string id="taom_faction_dominion_of_isengard_bonus_0" text="{=taom_faction_dominion_of_isengard_bonus_0}+5% party size limit (Uruk-hai Legions)" />
+	<string id="taom_faction_dominion_of_isengard_bonus_0" text="{=taom_faction_dominion_of_isengard_bonus_0}+10% party size limit (Uruk-hai Legions)" />
 	<string id="taom_faction_dominion_of_isengard_bonus_1" text="{=taom_faction_dominion_of_isengard_bonus_1}+15% building construction speed (Industrial Might)" />
 	<string id="taom_faction_dominion_of_isengard_bonus_2" text="{=taom_faction_dominion_of_isengard_bonus_2}-20% smithing energy cost (Industrial Forges)" />
 	<string id="taom_faction_dominion_of_isengard_bonus_3" text="{=taom_faction_dominion_of_isengard_bonus_3}-15% mounted recruit and upgrade cost (War Wargs)" />
@@ -1535,7 +1535,7 @@
 	<string id="taom_faction_dominion_of_isengard_bonus_9" text="{=taom_faction_dominion_of_isengard_bonus_9}+25% relationship penalties (Saruman's Grip)" />
 	<string id="taom_faction_dominion_of_isengard_desc" text="{=taom_faction_dominion_of_isengard_desc}Saruman's industrial fortress at Orthanc. The Ring of Isengard runs day and night — Uruk-hai legions, forge-line crossbows, war wargs. Isengard's one town swells to twenty notables: a recruitment hub equal to many cities of Rohan. Saruman's Grip alienates every neighbor." />
 	<string id="taom_faction_dominion_of_isengard_name" text="{=taom_faction_dominion_of_isengard_name}Dominion of Isengard" />
-	<string id="taom_faction_dominion_of_isengard_perk_0_desc" text="{=taom_faction_dominion_of_isengard_perk_0_desc}+5% party size limit and +10% march speed on plain and swamp." />
+	<string id="taom_faction_dominion_of_isengard_perk_0_desc" text="{=taom_faction_dominion_of_isengard_perk_0_desc}+10% party size limit and +10% march speed on plain and swamp." />
 	<string id="taom_faction_dominion_of_isengard_perk_0_name" text="{=taom_faction_dominion_of_isengard_perk_0_name}Uruk-hai Legions" />
 	<string id="taom_faction_dominion_of_isengard_perk_1_desc" text="{=taom_faction_dominion_of_isengard_perk_1_desc}+15% construction, -20% smithing energy, -15% mounted recruitment cost." />
 	<string id="taom_faction_dominion_of_isengard_perk_1_name" text="{=taom_faction_dominion_of_isengard_perk_1_name}Industrial Might" />
@@ -2594,7 +2594,7 @@
 	<string id="taom_feat_isen_dp" text="{=taom_feat_isen_dp}Saruman's Grip" />
 	<string id="taom_feat_isen_dp_desc" text="{=taom_feat_isen_dp_desc}Kingdom decision relationship penalties increased by 25%." />
 	<string id="taom_feat_isen_ps" text="{=taom_feat_isen_ps}Uruk-hai Legions" />
-	<string id="taom_feat_isen_ps_desc" text="{=taom_feat_isen_ps_desc}Party size limit increased by 5%." />
+	<string id="taom_feat_isen_ps_desc" text="{=taom_feat_isen_ps_desc}Party size limit increased by 10%." />
 	<string id="taom_feat_isen_cs" text="{=taom_feat_isen_cs}Industrial Might" />
 	<string id="taom_feat_isen_cs_desc" text="{=taom_feat_isen_cs_desc}Construction speed increased by 15%." />
 	<string id="taom_feat_isen_sm" text="{=taom_feat_isen_sm}Industrial Forges" />
@@ -3403,7 +3403,7 @@
 	<string id="taom_tr_prize_advertised" text="{=taom_tr_prize_advertised}{ITEM_NAME} (the advertised prize)" />
 	<string id="taom_tr_prize_hint" text="{=taom_tr_prize_hint}Worth about {VALUE} denars." />
 	<string id="taom_tr_prize_title" text="{=taom_tr_prize_title}Choose Your Prize" />
-	<string id="taom_tr_prize_desc" text="{=taom_tr_prize_desc}The tournament master offers a choice of prizes. Choose the one you will fight for; it is yours if you win." />
+	<string id="taom_tr_prize_desc" text="{=taom_tr_prize_desc}The training master offers a choice of prizes. Choose the one you will fight for; it is yours if you win." />
 	<string id="taom_tr_skill_title" text="{=taom_tr_skill_title}Choose Your Training" />
 	<string id="taom_tr_skill_desc" text="{=taom_tr_skill_desc}Choose the skill this tournament trains. You gain experience in it for every round you win, and more for winning the tournament." />
 	<string id="taom_tr_skill_gained" text="{=taom_tr_skill_gained}The tournament trained your {SKILL_NAME}." />
@@ -4095,10 +4095,10 @@
 	<string id="taom_wsilver_tier" text="{=taom_wsilver_tier}Raise loyalty by {POINTS} for {COST}{GOLD_ICON}." />
 	<string id="taom_wsilver_at_ceiling" text="{=taom_wsilver_at_ceiling}Silver cannot steady this place beyond what it holds now." />
 	<string id="taom_tidings_title" text="{=taom_tidings_title}Tidings of the Lists" />
-	<string id="taom_tidings_none" text="{=taom_tidings_none}The arena master knows of no tournament in a friendly town. You keep your coin." />
-	<string id="taom_tidings_refused" text="{=taom_tidings_refused}The arena master has no answer for you now." />
+	<string id="taom_tidings_none" text="{=taom_tidings_none}The training master knows of no tournament in a friendly town. You keep your coin." />
+	<string id="taom_tidings_refused" text="{=taom_tidings_refused}The training master has no answer for you now." />
 	<string id="taom_tidings_row" text="{=taom_tidings_row}{TOWN} ({REALM})" />
-	<string id="taom_tidings_body" text="{=taom_tidings_body}The arena master names the nearest tournaments:{newline}{LIST}" />
+	<string id="taom_tidings_body" text="{=taom_tidings_body}The training master names the nearest tournaments:{newline}{LIST}" />
 	<string id="taom_tidings_option" text="{=taom_tidings_option}Ask after tournaments elsewhere ({TAOM_TIDINGS_FEE}{GOLD_ICON})" />
 	<string id="taom_wsilver_offer" text="{=taom_wsilver_offer}The watch here could use some silver to keep the peace." />
 	<string id="taom_wsilver_ask" text="{=taom_wsilver_ask}Silver in the right hands steadies the watch. Loyalty here stands at {TAOM_WSILVER_LOYALTY}. What will you spend?" />
@@ -4744,7 +4744,9 @@
 	<string id="taom_seat_mcm_keep_panel" text="{=taom_seat_mcm_keep_panel}Keep the order panel open" />
 	<string id="taom_seat_mcm_keep_panel_hint" text="{=taom_seat_mcm_keep_panel_hint}While you are in the Seat, the order panel opens again after an order. Closing it yourself (Escape, the right mouse button, or the panel key) keeps it closed. With the game option that slows time (on by default) while orders are given, the whole stay in the Seat runs at quarter speed apart from one frame per order. Default: off." />
 	<string id="TAOM_LD_Ability_Summon_Isengard" text="{=TAOM_LD_Ability_Summon_Isengard}Uruk-hai of Isengard" />
+	<string id="TAOM_LD_Ability_Summon_Mordor" text="{=TAOM_LD_Ability_Summon_Mordor}Uruks of Mordor" />
 	<string id="TAOM_LD_Ability_WarCry_Isengard" text="{=TAOM_LD_Ability_WarCry_Isengard}The White Hand Calls" />
+	<string id="TAOM_LD_Ability_WarCry_Mordor" text="{=TAOM_LD_Ability_WarCry_Mordor}The Lidless Eye Is Upon Them" />
 	<string id="TAOM_LD_Affix_Isengard_Blades" text="{=TAOM_LD_Affix_Isengard_Blades}Fouled Blades" />
 	<string id="TAOM_LD_Affix_Isengard_Discipline" text="{=TAOM_LD_Affix_Isengard_Discipline}Bred for War" />
 	<string id="TAOM_LD_Affix_Isengard_Drums" text="{=TAOM_LD_Affix_Isengard_Drums}War Drums of Orthanc" />
@@ -4770,13 +4772,16 @@
 	<string id="TAOM_LD_Boon_CouchedLances" text="{=TAOM_LD_Boon_CouchedLances}Couched Lances" />
 	<string id="TAOM_LD_Boon_CouchedLances_Text" text="{=TAOM_LD_Boon_CouchedLances_Text}Your riders hit 20 percent harder." />
 	<string id="TAOM_LD_Boon_EdgeOfTheMark" text="{=TAOM_LD_Boon_EdgeOfTheMark}Edge of the Mark" />
+	<string id="TAOM_LD_Boon_EdgeOfTheMark_Gondor" text="{=TAOM_LD_Boon_EdgeOfTheMark_Gondor}Blades of Westernesse" />
 	<string id="TAOM_LD_Boon_EdgeOfTheMark_Drawback" text="{=TAOM_LD_Boon_EdgeOfTheMark_Drawback}You take 10 percent more damage." />
 	<string id="TAOM_LD_Boon_EdgeOfTheMark_Text" text="{=TAOM_LD_Boon_EdgeOfTheMark_Text}Your blows hit 20 percent harder." />
 	<string id="TAOM_LD_Boon_FleetHorsesOfTheMark" text="{=TAOM_LD_Boon_FleetHorsesOfTheMark}Fleet Horses of the Mark" />
+	<string id="TAOM_LD_Boon_FleetHorsesOfTheMark_Gondor" text="{=TAOM_LD_Boon_FleetHorsesOfTheMark_Gondor}Fleet Horses of Belfalas" />
 	<string id="TAOM_LD_Boon_FleetHorsesOfTheMark_Text" text="{=TAOM_LD_Boon_FleetHorsesOfTheMark_Text}Your riders and their horses move 12 percent faster." />
 	<string id="TAOM_LD_Boon_FletchersFavour" text="{=TAOM_LD_Boon_FletchersFavour}Fletcher's Favour" />
 	<string id="TAOM_LD_Boon_FletchersFavour_Text" text="{=TAOM_LD_Boon_FletchersFavour_Text}Your archers hit 15 percent harder." />
 	<string id="TAOM_LD_Boon_GallopOfTheEorlingas" text="{=TAOM_LD_Boon_GallopOfTheEorlingas}Gallop of the Eorlingas" />
+	<string id="TAOM_LD_Boon_GallopOfTheEorlingas_Gondor" text="{=TAOM_LD_Boon_GallopOfTheEorlingas_Gondor}Charge of Dol Amroth" />
 	<string id="TAOM_LD_Boon_GallopOfTheEorlingas_Text" text="{=TAOM_LD_Boon_GallopOfTheEorlingas_Text}You and your horse move 15 percent faster." />
 	<string id="TAOM_LD_Boon_GlitteringCavesRefuge" text="{=TAOM_LD_Boon_GlitteringCavesRefuge}Refuge of the Inner Keep" />
 	<string id="TAOM_LD_Boon_GlitteringCavesRefuge_Drawback" text="{=TAOM_LD_Boon_GlitteringCavesRefuge_Drawback}Every intermission is 15 seconds shorter." />
@@ -4784,11 +4789,13 @@
 	<string id="TAOM_LD_Boon_GranaryStores" text="{=TAOM_LD_Boon_GranaryStores}Stores of the Granary" />
 	<string id="TAOM_LD_Boon_GranaryStores_Text" text="{=TAOM_LD_Boon_GranaryStores_Text}Every cleared wave pays 35 percent more gold." />
 	<string id="TAOM_LD_Boon_HagglerOfEdoras" text="{=TAOM_LD_Boon_HagglerOfEdoras}The Haggler of Edoras" />
+	<string id="TAOM_LD_Boon_HagglerOfEdoras_Gondor" text="{=TAOM_LD_Boon_HagglerOfEdoras_Gondor}The Haggler of Pelargir" />
 	<string id="TAOM_LD_Boon_HagglerOfEdoras_Drawback" text="{=TAOM_LD_Boon_HagglerOfEdoras_Drawback}The horn pays half as much." />
 	<string id="TAOM_LD_Boon_HagglerOfEdoras_Text" text="{=TAOM_LD_Boon_HagglerOfEdoras_Text}Everything in the shop costs 20 percent less." />
 	<string id="TAOM_LD_Boon_HealersOfTheHold" text="{=TAOM_LD_Boon_HealersOfTheHold}Healers of the Hold" />
 	<string id="TAOM_LD_Boon_HealersOfTheHold_Text" text="{=TAOM_LD_Boon_HealersOfTheHold_Text}After each wave your defenders mend a further quarter of the health they lost." />
 	<string id="TAOM_LD_Boon_HeartsOfTheEored" text="{=TAOM_LD_Boon_HeartsOfTheEored}Hearts of the Eored" />
+	<string id="TAOM_LD_Boon_HeartsOfTheEored_Gondor" text="{=TAOM_LD_Boon_HeartsOfTheEored_Gondor}Hearts of the Swan Knights" />
 	<string id="TAOM_LD_Boon_HeartsOfTheEored_Text" text="{=TAOM_LD_Boon_HeartsOfTheEored_Text}Your riders have 25 percent more health." />
 	<string id="TAOM_LD_Boon_HornblowersBargain" text="{=TAOM_LD_Boon_HornblowersBargain}The Hornblower's Bargain" />
 	<string id="TAOM_LD_Boon_HornblowersBargain_Drawback" text="{=TAOM_LD_Boon_HornblowersBargain_Drawback}Everything in the shop costs 10 percent more." />
@@ -4797,18 +4804,23 @@
 	<string id="TAOM_LD_Boon_LightOfThePhial_Drawback" text="{=TAOM_LD_Boon_LightOfThePhial_Drawback}Everything in the shop costs 25 percent more." />
 	<string id="TAOM_LD_Boon_LightOfThePhial_Text" text="{=TAOM_LD_Boon_LightOfThePhial_Text}Every wave carries one affix fewer." />
 	<string id="TAOM_LD_Boon_LongbowOfTheMark" text="{=TAOM_LD_Boon_LongbowOfTheMark}The Longbow of the Mark" />
+	<string id="TAOM_LD_Boon_LongbowOfTheMark_Gondor" text="{=TAOM_LD_Boon_LongbowOfTheMark_Gondor}The Longbow of Morthond" />
 	<string id="TAOM_LD_Boon_LongbowOfTheMark_Drawback" text="{=TAOM_LD_Boon_LongbowOfTheMark_Drawback}You draw your bow 10 percent slower." />
 	<string id="TAOM_LD_Boon_LongbowOfTheMark_Text" text="{=TAOM_LD_Boon_LongbowOfTheMark_Text}Your arrows hit 25 percent harder." />
 	<string id="TAOM_LD_Boon_MarksmansCall" text="{=TAOM_LD_Boon_MarksmansCall}The Marksman's Call" />
 	<string id="TAOM_LD_Boon_MarksmansCall_Text" text="{=TAOM_LD_Boon_MarksmansCall_Text}Your archers aim 20 percent truer and draw 10 percent faster." />
 	<string id="TAOM_LD_Boon_OathOfEorl" text="{=TAOM_LD_Boon_OathOfEorl}Oath of Eorl" />
+	<string id="TAOM_LD_Boon_OathOfEorl_Gondor" text="{=TAOM_LD_Boon_OathOfEorl_Gondor}Oath of Cirion" />
 	<string id="TAOM_LD_Boon_OathOfEorl_Text" text="{=TAOM_LD_Boon_OathOfEorl_Text}You can take 35 percent more punishment before you fall." />
 	<string id="TAOM_LD_Boon_RiddermarkLevy" text="{=TAOM_LD_Boon_RiddermarkLevy}Levy of the Riddermark" />
+	<string id="TAOM_LD_Boon_RiddermarkLevy_Gondor" text="{=TAOM_LD_Boon_RiddermarkLevy_Gondor}Levy of the Fiefs" />
 	<string id="TAOM_LD_Boon_RiddermarkLevy_Text" text="{=TAOM_LD_Boon_RiddermarkLevy_Text}Reeves of the Westfold send coin to the keep: 300 gold, paid now." />
+	<string id="TAOM_LD_Boon_RiddermarkLevy_Text_Gondor" text="{=TAOM_LD_Boon_RiddermarkLevy_Text_Gondor}The lords of the southern fiefs send coin to the City: 300 gold, paid now." />
 	<string id="TAOM_LD_Boon_RidersAtDawn" text="{=TAOM_LD_Boon_RidersAtDawn}Riders at Dawn" />
 	<string id="TAOM_LD_Boon_RidersAtDawn_Drawback" text="{=TAOM_LD_Boon_RidersAtDawn_Drawback}The keep holds 40 fewer defenders." />
 	<string id="TAOM_LD_Boon_RidersAtDawn_Text" text="{=TAOM_LD_Boon_RidersAtDawn_Text}Every wave carries two affixes fewer." />
 	<string id="TAOM_LD_Boon_RohirrimFury" text="{=TAOM_LD_Boon_RohirrimFury}Fury of the Rohirrim" />
+	<string id="TAOM_LD_Boon_RohirrimFury_Gondor" text="{=TAOM_LD_Boon_RohirrimFury_Gondor}Fury of Lossarnach" />
 	<string id="TAOM_LD_Boon_RohirrimFury_Drawback" text="{=TAOM_LD_Boon_RohirrimFury_Drawback}You take 15 percent more damage." />
 	<string id="TAOM_LD_Boon_RohirrimFury_Text" text="{=TAOM_LD_Boon_RohirrimFury_Text}You swing 20 percent faster." />
 	<string id="TAOM_LD_Boon_ShieldsLocked" text="{=TAOM_LD_Boon_ShieldsLocked}Shields Locked" />
@@ -4820,9 +4832,11 @@
 	<string id="TAOM_LD_Boon_ShieldwallOath_Drawback" text="{=TAOM_LD_Boon_ShieldwallOath_Drawback}You move 5 percent slower." />
 	<string id="TAOM_LD_Boon_ShieldwallOath_Text" text="{=TAOM_LD_Boon_ShieldwallOath_Text}You take 20 percent less damage." />
 	<string id="TAOM_LD_Boon_SpearOfEorl" text="{=TAOM_LD_Boon_SpearOfEorl}Spear of Eorl" />
+	<string id="TAOM_LD_Boon_SpearOfEorl_Gondor" text="{=TAOM_LD_Boon_SpearOfEorl_Gondor}Lance of the Prince" />
 	<string id="TAOM_LD_Boon_SpearOfEorl_Drawback" text="{=TAOM_LD_Boon_SpearOfEorl_Drawback}You swing and thrust 10 percent slower." />
 	<string id="TAOM_LD_Boon_SpearOfEorl_Text" text="{=TAOM_LD_Boon_SpearOfEorl_Text}Your blows hit 25 percent harder." />
 	<string id="TAOM_LD_Boon_SpearsOfTheWestfold" text="{=TAOM_LD_Boon_SpearsOfTheWestfold}Spears of the Westfold" />
+	<string id="TAOM_LD_Boon_SpearsOfTheWestfold_Gondor" text="{=TAOM_LD_Boon_SpearsOfTheWestfold_Gondor}Spears of Pinnath Gelin" />
 	<string id="TAOM_LD_Boon_SpearsOfTheWestfold_Text" text="{=TAOM_LD_Boon_SpearsOfTheWestfold_Text}Your infantry hit 15 percent harder." />
 	<string id="TAOM_LD_Boon_SteadyAim" text="{=TAOM_LD_Boon_SteadyAim}Steady Aim" />
 	<string id="TAOM_LD_Boon_SteadyAim_Drawback" text="{=TAOM_LD_Boon_SteadyAim_Drawback}Your archers reload 10 percent slower." />
@@ -4843,19 +4857,24 @@
 	<string id="TAOM_LD_Boon_TheLongWatch" text="{=TAOM_LD_Boon_TheLongWatch}The Long Watch" />
 	<string id="TAOM_LD_Boon_TheLongWatch_Text" text="{=TAOM_LD_Boon_TheLongWatch_Text}Every intermission lasts 30 seconds longer." />
 	<string id="TAOM_LD_Boon_WainsOfTheWestfold" text="{=TAOM_LD_Boon_WainsOfTheWestfold}Wains of the Westfold" />
+	<string id="TAOM_LD_Boon_WainsOfTheWestfold_Gondor" text="{=TAOM_LD_Boon_WainsOfTheWestfold_Gondor}Wains of Anórien" />
 	<string id="TAOM_LD_Boon_WainsOfTheWestfold_Drawback" text="{=TAOM_LD_Boon_WainsOfTheWestfold_Drawback}Everything in the shop costs 10 percent more." />
 	<string id="TAOM_LD_Boon_WainsOfTheWestfold_Text" text="{=TAOM_LD_Boon_WainsOfTheWestfold_Text}Every pack brings 3 more soldiers." />
 	<string id="TAOM_LD_Boon_WeregildOfTheMark" text="{=TAOM_LD_Boon_WeregildOfTheMark}Weregild of the Mark" />
+	<string id="TAOM_LD_Boon_WeregildOfTheMark_Gondor" text="{=TAOM_LD_Boon_WeregildOfTheMark_Gondor}The Steward's Bounty" />
 	<string id="TAOM_LD_Boon_WeregildOfTheMark_Drawback" text="{=TAOM_LD_Boon_WeregildOfTheMark_Drawback}Wave bonuses are 15 percent smaller." />
 	<string id="TAOM_LD_Boon_WeregildOfTheMark_Text" text="{=TAOM_LD_Boon_WeregildOfTheMark_Text}Every foe you cut down pays 30 percent more gold." />
 	<string id="TAOM_LD_Class_Archer" text="{=TAOM_LD_Class_Archer}Archer" />
 	<string id="TAOM_LD_Class_Archer_Text" text="{=TAOM_LD_Class_Archer_Text}A bow, two kinds of arrow and a sword for when they close in." />
 	<string id="TAOM_LD_Class_Cavalry" text="{=TAOM_LD_Class_Cavalry}Cavalry" />
 	<string id="TAOM_LD_Class_Cavalry_Text" text="{=TAOM_LD_Class_Cavalry_Text}A rider of the Mark in a rider's armour, with spear, shield and sword, and a horse to carry you into the fight." />
+	<string id="TAOM_LD_Class_Cavalry_Text_Gondor" text="{=TAOM_LD_Class_Cavalry_Text_Gondor}A knight of Dol Amroth in full harness, with lance, shield and sword, and a horse to carry you into the fight." />
 	<string id="TAOM_LD_Class_SwordBoard" text="{=TAOM_LD_Class_SwordBoard}Sword and Board" />
 	<string id="TAOM_LD_Class_SwordBoard_Text" text="{=TAOM_LD_Class_SwordBoard_Text}A sword and a shield. Stand in the line and take the blows." />
 	<string id="TAOM_LD_Class_TwoHanded" text="{=TAOM_LD_Class_TwoHanded}Two Handed Infantry" />
 	<string id="TAOM_LD_Class_TwoHanded_Text" text="{=TAOM_LD_Class_TwoHanded_Text}A two-handed axe. No shield, and a heavy blow." />
+	<string id="TAOM_LD_Difficulty_Hard" text="{=TAOM_LD_Difficulty_Hard}Hard" />
+	<string id="TAOM_LD_Difficulty_Normal" text="{=TAOM_LD_Difficulty_Normal}Normal" />
 	<string id="TAOM_LD_End_Abandoned" text="{=TAOM_LD_End_Abandoned}You left the fortress" />
 	<string id="TAOM_LD_End_Best" text="{=TAOM_LD_End_Best}Best run: waves cleared {WAVES}, kills {KILLS}" />
 	<string id="TAOM_LD_End_Boons" text="{=TAOM_LD_End_Boons}Boons: {NAMES}" />
@@ -4958,6 +4977,12 @@
 	<string id="TAOM_LD_Offer_Knights" text="{=TAOM_LD_Offer_Knights}King's Knights, on foot" />
 	<string id="TAOM_LD_Offer_Militia" text="{=TAOM_LD_Offer_Militia}Westfold Militia" />
 	<string id="TAOM_LD_Offer_Yeomen" text="{=TAOM_LD_Offer_Yeomen}Eastfold Yeomen" />
+	<string id="TAOM_LD_Offer_Gondor_Militia" text="{=TAOM_LD_Offer_Gondor_Militia}Anórien Militia" />
+	<string id="TAOM_LD_Offer_Gondor_ArcherMilitia" text="{=TAOM_LD_Offer_Gondor_ArcherMilitia}Anórien Archer Militia" />
+	<string id="TAOM_LD_Offer_Gondor_Lossarnach" text="{=TAOM_LD_Offer_Gondor_Lossarnach}Axemen of Lossarnach" />
+	<string id="TAOM_LD_Offer_Gondor_Morthond" text="{=TAOM_LD_Offer_Gondor_Morthond}Morthond Bowmen" />
+	<string id="TAOM_LD_Offer_Gondor_PinnathGelin" text="{=TAOM_LD_Offer_Gondor_PinnathGelin}Spearmen of Pinnath Gelin" />
+	<string id="TAOM_LD_Offer_Gondor_Citadel" text="{=TAOM_LD_Offer_Gondor_Citadel}Guards of the Citadel" />
 	<string id="TAOM_LD_Up_Axemen" text="{=TAOM_LD_Up_Axemen}Militia to Westfold Axemen" />
 	<string id="TAOM_LD_Up_VeteranAxemen" text="{=TAOM_LD_Up_VeteranAxemen}Axemen to Veteran Axemen" />
 	<string id="TAOM_LD_Up_HeavyAxemen" text="{=TAOM_LD_Up_HeavyAxemen}Axemen to Heavy Axemen" />
@@ -4967,6 +4992,21 @@
 	<string id="TAOM_LD_Up_VeteranBowmen" text="{=TAOM_LD_Up_VeteranBowmen}Bowmen to Veteran Bowmen" />
 	<string id="TAOM_LD_Up_RoyalGuard" text="{=TAOM_LD_Up_RoyalGuard}King's Knights to the King's Royal Guard" />
 	<string id="TAOM_LD_Up_Riders" text="{=TAOM_LD_Up_Riders}Royal Guard to the Riders of Rohan" />
+	<string id="TAOM_LD_Up_Gondor_Footmen" text="{=TAOM_LD_Up_Gondor_Footmen}Militia to Anórien Footmen" />
+	<string id="TAOM_LD_Up_Gondor_Guardsmen" text="{=TAOM_LD_Up_Gondor_Guardsmen}Footmen to Anórien Guardsmen" />
+	<string id="TAOM_LD_Up_Gondor_Infantry" text="{=TAOM_LD_Up_Gondor_Infantry}Guardsmen to Anórien Infantry" />
+	<string id="TAOM_LD_Up_Gondor_VeteranInfantry" text="{=TAOM_LD_Up_Gondor_VeteranInfantry}Infantry to Anórien Veteran Infantry" />
+	<string id="TAOM_LD_Up_Gondor_Skirmishers" text="{=TAOM_LD_Up_Gondor_Skirmishers}Archer Militia to Anórien Skirmishers" />
+	<string id="TAOM_LD_Up_Gondor_Bowmen" text="{=TAOM_LD_Up_Gondor_Bowmen}Skirmishers to Anórien Bowmen" />
+	<string id="TAOM_LD_Up_Gondor_Archers" text="{=TAOM_LD_Up_Gondor_Archers}Bowmen to Anórien Archers" />
+	<string id="TAOM_LD_Up_Gondor_VeteranAxebearers" text="{=TAOM_LD_Up_Gondor_VeteranAxebearers}Axemen to Lossarnach Veteran Axebearers" />
+	<string id="TAOM_LD_Up_Gondor_LossarnachGuard" text="{=TAOM_LD_Up_Gondor_LossarnachGuard}Veteran Axebearers to the Lossarnach Guard" />
+	<string id="TAOM_LD_Up_Gondor_BlackrootScouts" text="{=TAOM_LD_Up_Gondor_BlackrootScouts}Morthond Bowmen to Blackroot Vale Scouts" />
+	<string id="TAOM_LD_Up_Gondor_BlackrootArchers" text="{=TAOM_LD_Up_Gondor_BlackrootArchers}Scouts to Blackroot Vale Archers" />
+	<string id="TAOM_LD_Up_Gondor_VeteranSpearmen" text="{=TAOM_LD_Up_Gondor_VeteranSpearmen}Spearmen to Pinnath Gelin Veteran Spearmen" />
+	<string id="TAOM_LD_Up_Gondor_Spearwardens" text="{=TAOM_LD_Up_Gondor_Spearwardens}Veteran Spearmen to Pinnath Gelin Spearwardens" />
+	<string id="TAOM_LD_Up_Gondor_CitadelVeterans" text="{=TAOM_LD_Up_Gondor_CitadelVeterans}Guards of the Citadel to Citadel Veterans" />
+	<string id="TAOM_LD_Up_Gondor_CitadelSergeants" text="{=TAOM_LD_Up_Gondor_CitadelSergeants}Citadel Veterans to Citadel Sergeants" />
 	<string id="TAOM_LD_Hero_Aragorn_Text" text="{=TAOM_LD_Hero_Aragorn_Text}The heir of Isildur, sword in hand. If he falls, he can be called again." />
 	<string id="TAOM_LD_Hero_Legolas_Text" text="{=TAOM_LD_Hero_Legolas_Text}The prince of Mirkwood and his bow. If he falls, he can be called again." />
 	<string id="TAOM_LD_Hero_Gimli_Text" text="{=TAOM_LD_Hero_Gimli_Text}The son of Glóin and his axe. If he falls, he can be called again." />
@@ -4976,6 +5016,8 @@
 	<string id="TAOM_LD_Prompt_ClassDesc" text="{=TAOM_LD_Prompt_ClassDesc}Your class sets the weapons you carry into the fight. Cavalry also sets your armour and puts you on a horse; the other classes leave your armour as it is." />
 	<string id="TAOM_LD_Prompt_ClassTitle" text="{=TAOM_LD_Prompt_ClassTitle}Choose your class" />
 	<string id="TAOM_LD_Prompt_Desc" text="{=TAOM_LD_Prompt_Desc}Hold a fortress against wave after wave of attackers. Spend gold between waves on more defenders. The run ends when the garrison or the keep falls. If a shader error window appears while the fortress loads, press Cancel." />
+	<string id="TAOM_LD_Prompt_DifficultyDesc" text="{=TAOM_LD_Prompt_DifficultyDesc}Hard sends larger waves that grow stronger faster, and the attackers gain their powers sooner. Each difficulty keeps its own best run." />
+	<string id="TAOM_LD_Prompt_DifficultyTitle" text="{=TAOM_LD_Prompt_DifficultyTitle}Choose the difficulty" />
 	<string id="TAOM_LD_Rank_Captain" text="{=TAOM_LD_Rank_Captain}Captain" />
 	<string id="TAOM_LD_Rank_General" text="{=TAOM_LD_Rank_General}General" />
 	<string id="TAOM_LD_Rank_Lieutenant" text="{=TAOM_LD_Rank_Lieutenant}Lieutenant" />
@@ -5193,6 +5235,7 @@
 	<!-- InformationManagerSettingsNotice -->
 	<string id="taom_coopcompat_settings_differ" text="{=taom_coopcompat_settings_differ}Your TAOM settings differ from the host's in: {GROUPS}. Co-op may behave differently for you." />
 	<string id="taom_coopcompat_build_mismatch" text="{=taom_coopcompat_build_mismatch}Your TAOM build is not the host's build. Co-op can desync or misbehave. Install the same TAOM download as the host." />
+	<string id="taom_coopcompat_load_order_differs" text="{=taom_coopcompat_load_order_differs}Your mod load order differs from the host's: on the host {FIRST} loads before {SECOND}, for you after it. A mod that loads later replaces items and troops from earlier ones, so you may see other gear or troops than the host. Load your mods in the host's order and restart the game." />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- TaomSettings.cs -->
 	<string id="taom_hero_auras_mcm_enabled" text="{=taom_hero_auras_mcm_enabled}Enable Hero Auras" />
@@ -5806,7 +5849,7 @@
 	<string id="taom_mcm_bld_CullHiddenNameplates" text="{=taom_mcm_bld_CullHiddenNameplates}Cull Hidden Settlement Nameplates" />
 	<string id="taom_mcm_bld_CullHiddenNameplates_hint" text="{=taom_mcm_bld_CullHiddenNameplates_hint}The campaign map updates every settlement nameplate every frame (about a thousand in TAOM), hidden ones included. When on, a nameplate that is hidden and cannot become visible this frame (out of height range, not tracked, not in range, nothing about its settlement changed) is left alone, which saves frame time on the map, most in fast forward. Everything else updates exactly as in the vanilla game. Takes effect on the next frame, so it can be switched with the map profiler on to compare the [MapProfile] lines. Default ON." />
 	<string id="taom_mcm_bld_ReleaseMapViewMemory" text="{=taom_mcm_bld_ReleaseMapViewMemory}Release Map View Memory" />
-	<string id="taom_mcm_bld_ReleaseMapViewMemory_hint" text="{=taom_mcm_bld_ReleaseMapViewMemory_hint}In the measurement this feature is adapted from, every screen or menu that covered the campaign map left three colour targets and one depth target of the map view's old set behind (tens of megabytes of graphics memory per closed screen, more at a high resolution). That memory stays until a battle, or a town, village or arena scene, starts. When on, every Nth cover (see Map View Release Interval) has the map view release its graphics memory as you return to the map. The map then shows a short loading screen until its view is ready again, on one return in N (about 0.4 s instead of 0.08 s in that measurement). Takes effect at the next cover. Default ON." />
+	<string id="taom_mcm_bld_ReleaseMapViewMemory_hint" text="{=taom_mcm_bld_ReleaseMapViewMemory_hint}In the measurement this feature is adapted from, every screen or menu that covered the campaign map left three colour targets and one depth target of the map view's old set behind (tens of megabytes of graphics memory per closed screen, more at a high resolution). That memory stays until a battle, or a town, village or training grounds scene, starts. When on, every Nth cover (see Map View Release Interval) has the map view release its graphics memory as you return to the map. The map then shows a short loading screen until its view is ready again, on one return in N (about 0.4 s instead of 0.08 s in that measurement). Takes effect at the next cover. Default ON." />
 	<string id="taom_mcm_bld_MapViewReleaseInterval" text="{=taom_mcm_bld_MapViewReleaseInterval}Map View Release Interval" />
 	<string id="taom_mcm_bld_MapViewReleaseInterval_hint" text="{=taom_mcm_bld_MapViewReleaseInterval_hint}Release the map view's memory on every Nth cover of the map. Default 20. A lower number gives memory back sooner but shows the short loading screen on more returns to the map (about 0.4 s in the measurement this feature is adapted from); 1 releases on every cover. Takes effect at the next cover." />
 	<string id="taom_mcm_group_load_time_stamps" text="{=taom_mcm_group_load_time_stamps}Load-Time Stamps" />
@@ -5916,7 +5959,7 @@
 	<string id="taom_mcm_TournamentKeepEnemySidesOut" text="{=taom_mcm_TournamentKeepEnemySidesOut}Keep Enemy Sides Out" />
 	<string id="taom_mcm_TournamentKeepEnemySidesOut_hint" text="{=taom_mcm_TournamentKeepEnemySidesOut_hint}A Free People's tournament seats no lord, wanderer or troop of the Shadow, and a tournament of the Shadow seats none of the Free Peoples; each is replaced by one of the town's own troops. A town's side is its owner's, so a captured town follows its conqueror, and a town held by a neutral realm bars nobody. Neutral lords and wanderers, the troops the town itself recruits, you and your clan always compete. Fewer lords in the field means a lesser prize. Default: on." />
 	<string id="taom_mcm_EnableTidingsOfTheLists" text="{=taom_mcm_EnableTidingsOfTheLists}Tidings of the Lists" />
-	<string id="taom_mcm_EnableTidingsOfTheLists_hint" text="{=taom_mcm_EnableTidingsOfTheLists_hint}Adds an option to a town's arena menu: for a small fee the arena master names the nearest towns holding a tournament now that are not at war with your realm. It marks nothing on the map. When off, the option is hidden. Single-player only. Default: on." />
+	<string id="taom_mcm_EnableTidingsOfTheLists_hint" text="{=taom_mcm_EnableTidingsOfTheLists_hint}Adds an option to a town's training grounds menu: for a small fee the training master names the nearest towns holding a tournament now that are not at war with your realm. It marks nothing on the map. When off, the option is hidden. Single-player only. Default: on." />
 	<string id="taom_mcm_group_armour_acquisition" text="{=taom_mcm_group_armour_acquisition}Armour Acquisition" />
 	<string id="taom_mcm_EnableArmourAcquisition" text="{=taom_mcm_EnableArmourAcquisition}Enable Armour Acquisition" />
 	<string id="taom_mcm_EnableArmourAcquisition_hint" text="{=taom_mcm_EnableArmourAcquisition_hint}Markets and battle loot hand out light and medium armour freely. Heavy, elite and lord pieces are sold only where a town's armoury, its Barracks, is high enough; lord kit can also be forged there or earned piece by piece on the lord's gear ladder, whose last rung awards the named hero weapons; they are never sold or looted. Visit a town's armoury to upgrade a piece with metals. Takes effect from the next game load." />
@@ -6215,12 +6258,12 @@
 	<string id="taom_mcm_group_performance" text="{=taom_mcm_group_performance}Performance" />
 	<string id="taom_mcm_group_dead_mount_cleanup" text="{=taom_mcm_group_dead_mount_cleanup}Dead Mount Cleanup" />
 	<string id="taom_mcm_EnableDeadMountDespawn" text="{=taom_mcm_EnableDeadMountDespawn}Despawn Dead Mounts" />
-	<string id="taom_mcm_EnableDeadMountDespawn_hint" text="{=taom_mcm_EnableDeadMountDespawn_hint}Remove killed horses, wargs and other mounts a few seconds after they die instead of leaving them on the field. A mount is a full agent with a skeleton and a live ragdoll, so a cavalry battle piles up corpses that cost frame time and do nothing. Field battles, sieges and sally-outs only; towns, arenas and tournaments keep their bodies. Side effect: freeing agent slots lets reinforcements arrive slightly sooner than vanilla." />
+	<string id="taom_mcm_EnableDeadMountDespawn_hint" text="{=taom_mcm_EnableDeadMountDespawn_hint}Remove killed horses, wargs and other mounts a few seconds after they die instead of leaving them on the field. A mount is a full agent with a skeleton and a live ragdoll, so a cavalry battle piles up corpses that cost frame time and do nothing. Field battles, sieges and sally-outs only; towns, training grounds and tournaments keep their bodies. Side effect: freeing agent slots lets reinforcements arrive slightly sooner than vanilla." />
 	<string id="taom_mcm_DeadMountDespawnDelaySeconds" text="{=taom_mcm_DeadMountDespawnDelaySeconds}Despawn Delay (seconds)" />
 	<string id="taom_mcm_DeadMountDespawnDelaySeconds_hint" text="{=taom_mcm_DeadMountDespawnDelaySeconds_hint}Seconds between a mount's death and its fade. Default 5. Below 3 the corpse pops while the death animation is still playing, so values outside 3-30 fall back to 5." />
 	<string id="taom_mcm_group_battle_corpses" text="{=taom_mcm_group_battle_corpses}Battle Corpses" />
 	<string id="taom_mcm_EnableBattleCorpseCleanup" text="{=taom_mcm_EnableBattleCorpseCleanup}Clean Up Battle Corpses" />
-	<string id="taom_mcm_EnableBattleCorpseCleanup_hint" text="{=taom_mcm_EnableBattleCorpseCleanup_hint}Fade fallen soldiers after a set time and cap how many bodies a battle keeps, whatever your Number of Corpses option says. The engine walks its whole corpse list every frame, and players reported mid-battle freezes at high corpse settings. Field battles, sieges and sally-outs only; towns, arenas and hideouts keep their bodies. Never raises your own Number of Corpses option." />
+	<string id="taom_mcm_EnableBattleCorpseCleanup_hint" text="{=taom_mcm_EnableBattleCorpseCleanup_hint}Fade fallen soldiers after a set time and cap how many bodies a battle keeps, whatever your Number of Corpses option says. The engine walks its whole corpse list every frame, and players reported mid-battle freezes at high corpse settings. Field battles, sieges and sally-outs only; towns, training grounds and hideouts keep their bodies. Never raises your own Number of Corpses option." />
 	<string id="taom_mcm_BattleCorpseFadeSeconds" text="{=taom_mcm_BattleCorpseFadeSeconds}Corpse Fade Time (seconds)" />
 	<string id="taom_mcm_BattleCorpseFadeSeconds_hint" text="{=taom_mcm_BattleCorpseFadeSeconds_hint}Seconds a body stays on the field, counted from when it settles, before it fades. Default 60. The engine's own default is an hour, so without this a body only goes when the corpse cap pushes it out. Values outside 10-300 fall back to 60." />
 	<string id="taom_mcm_BattleCorpseCap" text="{=taom_mcm_BattleCorpseCap}Maximum Corpses" />
@@ -6954,5 +6997,112 @@
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- CulturalFeats -->
 	<string id="taom_caravan_pack_train_speed" text="{=taom_caravan_pack_train_speed}Caravan pack train" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- SpecialResources -->
+	<string id="taom_res_upgrade_clamped" text="{=taom_res_upgrade_clamped}Only enough resources for {COUNT} upgrade(s)." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_mcm_group_battle_gear_loot" text="{=taom_mcm_group_battle_gear_loot}Battle Gear Loot" />
+	<string id="taom_mcm_EnableBattleGearLoot" text="{=taom_mcm_EnableBattleGearLoot}Enable Battle Gear Loot" />
+	<string id="taom_mcm_EnableBattleGearLoot_hint" text="{=taom_mcm_EnableBattleGearLoot_hint}When on, the loot from enemies your party beats in a battle your side wins is the gear they fought in: each weapon, armour piece, horse and harness drops on its own roll, at the chance below. It replaces the usual random loot from fallen enemies; captured baggage, gold, prisoners and renown are unchanged. Heavy, elite and lord armour held back by Armour Acquisition, named weapons and banners never drop. Singleplayer only: in a co-op session the usual loot applies. Default: off." />
+	<string id="taom_mcm_BattleGearLootChancePercent" text="{=taom_mcm_BattleGearLootChancePercent}Gear Drop Chance (%)" />
+	<string id="taom_mcm_BattleGearLootChancePercent_hint" text="{=taom_mcm_BattleGearLootChancePercent_hint}The chance, from 0 to 100%, that each item of each beaten enemy drops. In a battle fought beside allies you loot your share of the enemies, as usual. Default: 10." />
+	<!-- Training Grounds (#1527): vanilla keys reworded, English only -->
+	<string id="taom_training_grounds_mMU3H6HZ" text="{=mMU3H6HZ}Training Grounds" />
+	<string id="taom_training_grounds_Duoo5R2P" text="{=Duoo5R2P}Training Master" />
+	<string id="taom_training_grounds_CfDlOdTH" text="{=CfDlOdTH}Go to the training grounds" />
+	<string id="taom_training_grounds_YQ3vm6er" text="{=YQ3vm6er}Enter the training grounds" />
+	<string id="taom_training_grounds_5id9mGrc" text="{=5id9mGrc}You are near the training grounds. {ADDITIONAL_STRING}" />
+	<string id="taom_training_grounds_brzz79Je" text="{=brzz79Je}You cannot enter the training grounds while in disguise." />
+	<string id="taom_training_grounds_wsbkjJhz" text="{=wsbkjJhz}The training grounds are closed at night." />
+	<string id="taom_training_grounds_CeYwClaG" text="{=CeYwClaG}Yes, there is one starting at {NEARBY_TOURNAMENTS_LIST}. I am sure the training master can explain the rules, if you need to know them." />
+	<string id="taom_training_grounds_ocIutUyu" text="{=ocIutUyu}Also, here at the training grounds, we think a lot about the arts of war - and many other related skills as well. Often you pick up certain habits while learning your skills. If you need to change those, to practice one of your skills in a certain way, we can help you." />
+	<string id="taom_training_grounds_guEjfYhO" text="{=guEjfYhO}One of your {TROOP_NAME} had some drinks with the training master in {TOWN} and left the tavern with a job offer - work as a trainer and occasional combatant. The signing bonus is generous. He is reluctant to leave you, and you'd be reluctant to lose a valuable soldier, but he'd be in a fine position to sing your praises." />
+	<string id="taom_training_grounds_Qb3axqdZ" text="{=Qb3axqdZ}Persuade him to stay. The training grounds are fine for practice but true glory is not won with blunted weapons." />
+	<string id="taom_training_grounds_GuWWKgEm" text="{=GuWWKgEm}As you approach the training grounds, you overhear gossip about the contestants and prizes. Apparently there {?(NOBLE_COUNT &gt; 1)}are {NOBLE_COUNT} lords{?}is 1 lord{\?} with renowned fighting skills present in the city who plan to enter the tournament. Given this turnout, the organizers are offering {.a} &quot;{.%}{TOURNAMENT_PRIZE}{.%}&quot; for the victor." />
+	<string id="taom_training_grounds_mnAdqeGu" text="{=mnAdqeGu}As you approach the training grounds, you overhear gossip about the contestants and prizes. Apparently there are no lords who plan to compete, but the winner will still receive a {TOURNAMENT_PRIZE}." />
+	<string id="taom_training_grounds_cPmV8S4e" text="{=cPmV8S4e}We leave the training grounds open to anyone who wants to practice. There are no rules, no teams. Everyone beats at each other until there is only one fighter left standing. Sounds like fun, eh?[ib:confident2]" />
+	<string id="taom_training_grounds_FguHzavX" text="{=FguHzavX}You can't practice at the training grounds because there is a tournament going on right now." />
+	<string id="taom_training_grounds_KtrZs3yA" text="{=KtrZs3yA}Certainly! The training grounds are open to anyone who doesn't mind hard knocks. Looks like a few of our lads are warming up now. You can go and hop in if you want to. Or come back later when there's a tournament.[ib:warrior]" />
+	<string id="taom_training_grounds_Sph9Nliz" text="{=Sph9Nliz}You need to learn more about the training grounds by talking with the training master." />
+	<string id="taom_training_grounds_ZvzxcRbc" text="{=ZvzxcRbc}Good day, friend. You look like you know your way around the training grounds. How can I help you?" />
+	<string id="taom_training_grounds_DUVqJifX" text="{=DUVqJifX}Yeah. I've seen one like that around the training grounds, asking all matter of outlandish questions. Middle-aged, normal head of hair, that's really all I can remember though.[if:convo_thinking]" />
+	<string id="taom_training_grounds_bFjtk0Op" text="{=bFjtk0Op}Well.. Sometimes when you learn a skill, you pick up a certain way of doing it that can help you in some circumstances and hurt you in others. If you wanted to retrain yourself, your companions, or members of your clan to do things a different way, you might try the training master at the training grounds. They'll help you - for a price, of course." />
+	<string id="taom_training_grounds_waUxgr5b" text="{=waUxgr5b}Let me tell you something else - war is not a game. It's not a game. Play by the rules and you die. The streets aren't the training grounds. If you think someone's your enemy, you take them down - don't wait for a polite challenge." />
+	<string id="taom_training_grounds_IHKXNP9H" text="{=IHKXNP9H}Training Master" />
+	<string id="taom_training_grounds_CQZJLWfw" text="{=CQZJLWfw}You can reset your perks at the training master...for the right price. " />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_mcm_EnableTeamPracticeFights" text="{=taom_mcm_EnableTeamPracticeFights}Team Practice Fights" />
+	<string id="taom_mcm_EnableTeamPracticeFights_hint" text="{=taom_mcm_EnableTeamPracticeFights_hint}In a town of the Free Peoples the practice fight at the training grounds is a team fight: you and the fighters outlined in blue against the other side, and no one can hurt his own side. A town's side is its owner's, so a captured town follows its conqueror. Towns of the Shadow and neutral towns keep the fight where every fighter is alone. Takes effect the next time you enter the training grounds. Single-player only. Default: on." />
+	<!-- TrainingGrounds -->
+	<string id="taom_tg_team_rules" text="{=taom_tg_team_rules}Here we train the way soldiers fight: in teams. You join one side, and the fighters outlined in blue fight beside you. Your blows can't hurt them, and theirs can't hurt you. Thirty fighters take their turn in the yard, and your side wins when the last fighter of the other side goes down. Sounds like fun, eh?[ib:confident2]" />
+	<string id="taom_tg_team_reward" text="{=taom_tg_team_reward}If you can beat {OPPONENT_COUNT_1} opponents yourself before going down, you'll earn {PRIZE_1}{GOLD_ICON}. You'll get {PRIZE_2}{GOLD_ICON} for striking down at least {OPPONENT_COUNT_2}, {PRIZE_3}{GOLD_ICON} for {OPPONENT_COUNT_3} and {PRIZE_4}{GOLD_ICON} for {OPPONENT_COUNT_4}. Only the ones you put down yourself count. If your side wins while you're still on your feet, you earn the great prize of the fights, {PRIZE_5}{GOLD_ICON}. Sounds good, eh?[if:convo_nonchalant]" />
+	<string id="taom_tg_team_win" text="{=taom_tg_team_win}Well fought, {PLAYER.LINK}! Your side held the yard, and you were still standing at the end. You took down {OPPONENT_COUNT} of them yourself, and that earns you the top prize: {PRIZE}{GOLD_ICON}." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_mcm_EnableTrainingWaves" text="{=taom_mcm_EnableTrainingWaves}Wave Fights at the Training Grounds" />
+	<string id="taom_mcm_EnableTrainingWaves_hint" text="{=taom_mcm_EnableTrainingWaves_hint}When on, the training master of a town also runs a wave fight. You wager on yourself before each wave and fight the town's own fighters with practice weapons. Clear a wave and the master pays your wager back with odds; go down, or leave the yard mid-fight, and the wager stays with the town. Between waves you may stop and keep your winnings. A town runs one wave fight a day, and none while it holds a tournament. The tournament bet cap also limits a wave wager, and a very low cap hides the offer. Single-player only. Default: on." />
+	<!-- TrainingGrounds -->
+	<string id="taom_tgw_offer" text="{=taom_tgw_offer}I want to fight your waves, with a wager on each one." />
+	<string id="taom_tgw_rules" text="{=taom_tgw_rules}Waves of fighters, one after another, all against you, with practice weapons. Before each wave you wager on yourself. Clear it and I pay back {TAOM_TGW_RU_ODDS} times your wager, more on later waves. Go down, or leave the yard mid-fight, and the wager stays with the house. Between waves you may stop and keep what you won. The first wager is at most {TAOM_TGW_RU_CAP} denars, and the limit rises with each wave you clear." />
+	<string id="taom_tgw_stake_low" text="{=taom_tgw_stake_low}I wager {TAOM_TGW_ST_LOW_AMOUNT} denars." />
+	<string id="taom_tgw_stake_mid" text="{=taom_tgw_stake_mid}I wager {TAOM_TGW_ST_MID_AMOUNT} denars." />
+	<string id="taom_tgw_stake_high" text="{=taom_tgw_stake_high}I wager {TAOM_TGW_ST_HIGH_AMOUNT} denars." />
+	<string id="taom_tgw_not_today" text="{=taom_tgw_not_today}On second thought, not today." />
+	<string id="taom_tgw_withdraw" text="{=taom_tgw_withdraw}I will stop here and keep my winnings." />
+	<string id="taom_tgw_go" text="{=taom_tgw_go}Wave {TAOM_TGW_GO_WAVE}: {TAOM_TGW_GO_COUNT} fighters, no more than {TAOM_TGW_GO_ATONCE} at once. Take a practice weapon and go to it!" />
+	<string id="taom_tgw_go_failed" text="{=taom_tgw_go_failed}Your purse does not hold that much. Come back when it does." />
+	<string id="taom_tgw_withdrawn" text="{=taom_tgw_withdrawn}A wise choice. You leave the yard {TAOM_TGW_WD_NET} denars richer." />
+	<string id="taom_tgw_cleared" text="{=taom_tgw_cleared}Well fought! Wave {TAOM_TGW_CL_WAVE} is yours, and so are {TAOM_TGW_CL_PAYOUT} denars: {TAOM_TGW_CL_NET} won so far. The next wave is harder. You may wager up to {TAOM_TGW_CL_CAP} denars on it, and I pay back {TAOM_TGW_CL_ODDS} times the wager. Will you go on?" />
+	<string id="taom_tgw_lost" text="{=taom_tgw_lost}You went down in wave {TAOM_TGW_LO_WAVE}, and your wager of {TAOM_TGW_LO_STAKE} denars stays with the house. Before that you had won {TAOM_TGW_LO_EARLIER} denars." />
+	<string id="taom_tgw_done" text="{=taom_tgw_done}That was the last wave. Few have stood through them all. You leave the yard {TAOM_TGW_DO_NET} denars richer." />
+	<string id="taom_tgw_ref_today" text="{=taom_tgw_ref_today}You have already fought the waves here today." />
+	<string id="taom_tgw_ref_tournament" text="{=taom_tgw_ref_tournament}The yard is kept for the tournament." />
+	<string id="taom_tgw_ref_poor" text="{=taom_tgw_ref_poor}You need at least {TAOM_TGW_RF_MIN} denars to wager." />
+	<string id="taom_tgw_ref_short" text="{=taom_tgw_ref_short}Your purse does not hold that much." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TrainingGrounds -->
+	<string id="taom_tgw_an_start" text="{=taom_tgw_an_start}Wave {TAOM_TGW_AN_START_WAVE}: {TAOM_TGW_AN_START_COUNT} fighters!" />
+	<string id="taom_tgw_an_cleared" text="{=taom_tgw_an_cleared}Wave {TAOM_TGW_AN_CLEARED_WAVE} cleared! You win {TAOM_TGW_AN_CLEARED_PAYOUT} denars." />
+	<string id="taom_tgw_an_lost" text="{=taom_tgw_an_lost}You went down in wave {TAOM_TGW_AN_LOST_WAVE}. The house keeps your wager of {TAOM_TGW_AN_LOST_STAKE} denars." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TrainingGrounds -->
+	<string id="taom_tgw_an_refunded" text="{=taom_tgw_an_refunded}The wave was called off. Your wager of {TAOM_TGW_AN_REFUNDED_STAKE} denars is returned." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- StoryMissions -->
+	<string id="taom_story_breaking_stand" text="{=taom_story_breaking_stand}Stand with the Fellowship" />
+	<string id="taom_story_breaking_hunt" text="{=taom_story_breaking_hunt}Lead the Uruk-hai" />
+	<string id="taom_story_breaking_go" text="{=taom_story_breaking_go}Go to Parth Galen" />
+	<string id="taom_story_breaking_body_both" text="{=taom_story_breaking_body_both}The Uruk-hai of the White Hand close on the Company at Parth Galen. Will you go there and choose your side, or let fate decide?" />
+	<string id="taom_story_breaking_body_attack" text="{=taom_story_breaking_body_attack}The Company rests at Parth Galen, and the Uruk-hai of the White Hand are near. Will you lead the hunt yourself, or let fate decide?" />
+	<string id="taom_story_breaking_body" text="{=taom_story_breaking_body}The Uruk-hai of the White Hand close on the Company at Parth Galen. Will you stand with the Fellowship yourself, or let fate decide?" />
+	<string id="taom_story_breaking_escaped" text="{=taom_story_breaking_escaped}Your band is broken at Parth Galen, and Boromir lives." />
+	<string id="taom_story_breaking_saved" text="{=taom_story_breaking_saved}The Uruk-hai are thrown back at Parth Galen, and Boromir lives." />
+	<string id="taom_story_breaking_slain" text="{=taom_story_breaking_slain}Boromir is slain at Parth Galen, and the Company is scattered." />
+	<string id="taom_story_breaking_fallen" text="{=taom_story_breaking_fallen}Boromir has fallen at Parth Galen, pierced by many arrows." />
+	<string id="taom_story_breaking_menu" text="{=taom_story_breaking_menu}The horn of Gondor sounds in the woods of Parth Galen. Time stands until you choose." />
+	<string id="taom_story_breaking_undecided" text="{=taom_story_breaking_undecided}The fight at Parth Galen is not decided. The call may come again." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- WarChronicle -->
+	<string id="taom_war_morale" text="{=taom_war_morale}Tidings of the war" />
+	<string id="taom_event_effect_morale" text="{=taom_event_effect_morale}Party morale" />
+	<string id="taom_event_effect_permanent" text="{=taom_event_effect_permanent}Permanent" />
+	<!-- TaomSettings.cs: Co-op -->
+	<string id="taom_mcm_group_coop" text="{=taom_mcm_group_coop}Co-op" />
+	<string id="taom_mcm_CoopLoadOrderWarning" text="{=taom_mcm_CoopLoadOrderWarning}Warn players whose load order differs from the host's" />
+	<string id="taom_mcm_CoopLoadOrderWarning_hint" text="{=taom_mcm_CoopLoadOrderWarning_hint}When a player joins a co-op campaign, the co-op server compares the order of TAOM and of every mod that adds items, troops or factions with its own, and tells a player whose order differs which two mods are the other way round. Nothing is blocked. The co-op server process reads this switch each time a player joins; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopLoadOrderWarning), which it reads once at start, so change it there and restart the server. Default: on." />
+	<string id="taom_mcm_CoopCareerSync" text="{=taom_mcm_CoopCareerSync}Sync careers for co-op players" />
+	<string id="taom_mcm_CoopCareerSync_hint" text="{=taom_mcm_CoopCareerSync_hint}When on, a career a co-op player picks or changes goes to the co-op server, which checks it with the career rules, keeps it in its save and shows it to the other players, so the career is still there after the player joins again. The co-op server process reads this switch each time a player reports a career; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopCareerSync), which it reads once at start, so change it there and restart the server. Off: each player's career stays only on that player's PC and is lost when the player joins again. Default: on." />
+	<string id="taom_career_sync_refused" text="{=taom_career_sync_refused}The co-op server did not accept that career change and keeps the career it has saved for you." />
+	<string id="taom_career_sync_refused_unsaved" text="{=taom_career_sync_refused_unsaved}The co-op server did not accept your career and has none saved for you. You keep it for now, but it is gone when you join again." />
+	<string id="taom_mcm_CoopGuestLadder" text="{=taom_mcm_CoopGuestLadder}Lords' Ladder for co-op players" />
+	<string id="taom_mcm_CoopGuestLadder_hint" text="{=taom_mcm_CoopGuestLadder_hint}When on, the co-op server runs the lord's gear ladder for each co-op player's hero: a player's armoury lists the rung the server keeps for that hero, takes the lord's materials for it and fits the claimed piece, and a battle a co-op player wins can yield lord's materials, given to the party once it is free and out of battle. The rung quests are not offered to co-op players. The co-op server process reads this switch each time a player uses an armoury or a battle ends; a player's own value is not read. A dedicated server takes it from taom-server-settings.json (CoopGuestLadder), which it reads once at start, so change it there and restart the server. Off: co-op players see no ladder at the armoury and find no new lord's materials after battles; materials already found are still given. Default: on." />
+	<string id="taom_lg_coop_changed" text="{=taom_lg_coop_changed}Your lord's gear has changed since you looked. Visit the armoury again." />
+	<string id="taom_lg_coop_not_choice" text="{=taom_lg_coop_not_choice}The armourer cannot fit that piece." />
+	<string id="taom_lg_coop_off" text="{=taom_lg_coop_off}The co-op server has turned off the Lords' Ladder for co-op players." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CareerSystem -->
+	<string id="taom_career_unknown_reset" text="{=taom_career_unknown_reset}Your career no longer exists in this version, so a new one was chosen." />
 
 </strings>

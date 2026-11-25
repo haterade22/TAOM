@@ -367,6 +367,16 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         _logger.LogDebug("[SpecRes] PartyScreen session BEGUN");
     }
 
+    public void RestartPartyScreenSession(string? heroId, IReadOnlyList<RecruitCartEntry> heldUpgrades)
+    {
+        BeginPartyScreenSession();
+        if (heroId == null || heldUpgrades == null) return;
+        foreach (var entry in heldUpgrades)
+        {
+            if (entry != null && entry.Count > 0) QueueUpgradeSpend(heroId, entry.TroopId, entry.Count);
+        }
+    }
+
     public void QueueUpgradeSpend(string heroId, string troopId, int count)
     {
         var cost = _config.GetTroopCost(troopId);
@@ -388,7 +398,7 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         return _storage.Get(heroId, resource.Id) - _pendingSpend;
     }
 
-    public int ClampUpgradeCount(string heroId, string? kingdomId, string? cultureId, string troopId, int requestedCount)
+    public int ClampUpgradeCount(string heroId, string? kingdomId, string? cultureId, string troopId, int requestedCount, IReadOnlyList<RecruitCartEntry>? recruitedThisSession)
     {
         var cost = _config.GetTroopCost(troopId);
         if (cost == null || cost.UpgradeCost <= 0) return requestedCount;
@@ -396,7 +406,7 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         var effectivePerUnit = GetEffectiveUpgradeCost(heroId, cost.UpgradeCost, 1);
         if (effectivePerUnit <= 0) return requestedCount;
 
-        var available = GetAvailableAfterPending(heroId, kingdomId, cultureId);
+        var available = GetAvailableAfterPending(heroId, kingdomId, cultureId) - RecruitCostOf(recruitedThisSession);
         var maxAffordable = (int)(available / effectivePerUnit);
         var clamped = Math.Max(0, Math.Min(requestedCount, maxAffordable));
 
@@ -433,6 +443,15 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
 
         _pendingSpend = 0f;
         _inSession = false;
+        return debited;
+    }
+
+    public float CommitAppliedUpgrades(string heroId, string? kingdomId, string? cultureId)
+    {
+        if (!_inSession) return 0f;
+
+        var debited = CommitSession(heroId, kingdomId, cultureId);
+        _inSession = true;
         return debited;
     }
 

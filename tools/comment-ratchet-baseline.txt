@@ -6,7 +6,7 @@ Client/Adapters/ThumbnailCacheAdapter.cs	3
 Client/ClientSubModule.cs	24
 Client/ClientUiExtensions.cs	25
 Client/Features/AdvancedCombat/AutonomousMovementPlayerController.cs	2
-Client/Features/Autorun/CampaignAutorunHost.cs	24
+Client/Features/Autorun/CampaignAutorunHost.cs	28
 Client/Features/BattleHud/UI/BattleHudNativeSuppressionPrefabs.cs	15
 Client/Features/BattleHud/UI/MissionAgentStatusBattleHudMixin.cs	16
 Client/Features/BattleHud/Widgets/TaomBattleHudRingWidget.cs	52
@@ -160,6 +160,7 @@ CoopCompat/CoopCompatSubModule.cs	8
 CoopCompat/Decisions/DecisionTypeRegistration.cs	2
 CoopCompat/Handshake/BuildIdentity.cs	1
 CoopCompat/Handshake/SettingsHandshakeService.cs	2
+CoopCompat/LoadOrder/ActiveModulesAdapter.cs	1
 CoopCompat/Momentum/MomentumRelayService.cs	4
 Dependencies/AliasStubSubModule.cs	17
 Dependencies/EarlyLog.cs	4
@@ -202,10 +203,12 @@ Main/Adapters/BorderRenderAdapter.cs	5
 Main/Adapters/CampaignListenerAdapter.cs	14
 Main/Adapters/CampaignSessionAdapter.cs	5
 Main/Adapters/CareerPurseAdapter.cs	1
+Main/Adapters/CareerSyncHeroAdapter.cs	1
 Main/Adapters/CastlePatrolAdapter.cs	1
 Main/Adapters/CavalryCommandAdapter.cs	6
 Main/Adapters/CheatWorldAdapter.cs	8
 Main/Adapters/ChildCreatorAdapter.cs	11
+Main/Adapters/ChronicleWorldAdapter.cs	4
 Main/Adapters/CommanderLordAdapter.cs	20
 Main/Adapters/CreatureSiegeAgentAdapter.cs	4
 Main/Adapters/CreatureSiegeMissionAdapter.cs	15
@@ -214,7 +217,7 @@ Main/Adapters/DutyWorldAdapter.cs	5
 Main/Adapters/EmptyMeetingAdapter.cs	1
 Main/Adapters/EncounterAdapter.cs	62
 Main/Adapters/EncounterLinesAdapter.cs	2
-Main/Adapters/EncyclopediaCultureLookup.cs	4
+Main/Adapters/EncyclopediaCultureLookup.cs	3
 Main/Adapters/EnvoyPresenterAdapter.cs	1
 Main/Adapters/EquipmentRosterCatalogAdapter.cs	6
 Main/Adapters/EquipmentSlotAdapter.cs	6
@@ -281,6 +284,7 @@ Main/Adapters/KingdomStrengthAdapter.cs	5
 Main/Adapters/KingdomWarSnapshotAdapter.cs	1
 Main/Adapters/LongDefeatBattlefieldAdapter.Diagnostics.cs	20
 Main/Adapters/LongDefeatBattlefieldAdapter.Engines.cs	21
+Main/Adapters/LongDefeatBattlefieldAdapter.Field.cs	2
 Main/Adapters/LongDefeatBattlefieldAdapter.Gates.cs	17
 Main/Adapters/LongDefeatBattlefieldAdapter.Heroes.cs	42
 Main/Adapters/LongDefeatBattlefieldAdapter.Player.cs	28
@@ -761,7 +765,7 @@ Main/Features/CompanionTactics/Roles/RoleTooltipDecorator.cs	2
 Main/Features/CoopInterop/CoopInteropIoC.cs	7
 Main/Features/CoopInterop/CoopPlayerControlQuery.cs	18
 Main/Features/CoopInterop/CoopSessionProvider.cs	32
-Main/Features/CoopInterop/CoopSettingsRelevance.cs	117
+Main/Features/CoopInterop/CoopSettingsRelevance.cs	119
 Main/Features/CoopInterop/DedicatedServerProvider.cs	3
 Main/Features/CoopInterop/Diagnostics/HarmonyCensusReportBuilder.cs	3
 Main/Features/CoopInterop/Diagnostics/HarmonyCensusWriter.cs	6
@@ -947,7 +951,7 @@ Main/Features/DevConsole/InputStateDiagnosis.cs	8
 Main/Features/DevConsole/MissionReportFormatter.cs	11
 Main/Features/DevConsole/PlayerStateDiagnosis.cs	6
 Main/Features/DevConsole/TaomConsole.cs	13
-Main/Features/Diplomacy/DiplomacyBehavior.cs	18
+Main/Features/Diplomacy/DiplomacyBehavior.cs	19
 Main/Features/Diplomacy/DiplomacyConfigProvider.cs	1
 Main/Features/Diplomacy/DiplomacyIoC.cs	4
 Main/Features/Diplomacy/DiplomacyService.cs	29
@@ -1139,7 +1143,7 @@ Main/Features/FactionUI/FactionScreen/FactionScreenLauncher.cs	5
 Main/Features/FactionUI/FactionUIIoC.cs	2
 Main/Features/FactionUI/Hooks/BodyGeneratorViewOnTickPatch.cs	2
 Main/Features/FactionUI/Hooks/FaceGenFirstOpenDiagnosticPatch.cs	4
-Main/Features/FactionUI/Hooks/GauntletLayerLoadMoviePatch.cs	8
+Main/Features/FactionUI/Hooks/GauntletLayerLoadMoviePatch.cs	6
 Main/Features/FactionUI/Menus/FrontEndMovieService.cs	24
 Main/Features/FactionUI/Presets/FactionPickService.cs	17
 Main/Features/FactionUI/Presets/FactionPresetRegistrationBehavior.cs	3
@@ -1186,7 +1190,7 @@ Main/Features/FieldCamp/CampTerrainService.cs	20
 Main/Features/FieldCamp/Domain/CampState.cs	4
 Main/Features/FieldCamp/FieldCampIoC.cs	11
 Main/Features/FieldCamp/Hooks/CampNameplateIconPresenter.cs	6
-Main/Features/FieldCamp/Hooks/FieldCampCampaignBehavior.cs	24
+Main/Features/FieldCamp/Hooks/FieldCampCampaignBehavior.cs	18
 Main/Features/FieldCamp/Hooks/FieldCampMenuController.cs	39
 Main/Features/FieldCamp/Hooks/PartyNameplateCampIconPatch.cs	4
 Main/Features/FieldCamp/UI/CampButtonBlock.cs	1
@@ -1741,7 +1745,7 @@ Main/Features/Refuge/Components/RefugePartyComponent.cs	7
 Main/Features/Refuge/Domain/RefugeBookRepair.cs	8
 Main/Features/Refuge/Domain/RefugeData.cs	4
 Main/Features/Refuge/Hooks/RefugeCampContributor.cs	3
-Main/Features/Refuge/Hooks/RefugeCampaignBehavior.cs	34
+Main/Features/Refuge/Hooks/RefugeCampaignBehavior.cs	30
 Main/Features/Refuge/Hooks/RefugeClanRowRefreshPatch.cs	2
 Main/Features/Refuge/Hooks/RefugeClanScreenPatch.cs	9
 Main/Features/Refuge/Hooks/RefugeDamageHooks.cs	3
@@ -1855,7 +1859,6 @@ Main/Features/SiegePropDiagnostics/SiegePropDiagnosticsSettingsProvider.cs	2
 Main/Features/SiegeRetreatLoot/SiegeRetreatLootService.cs	1
 Main/Features/SignatureStrikes/Hooks/SignatureAgentRoster.cs	2
 Main/Features/SignatureStrikes/Hooks/SignatureInstantKill.cs	2
-Main/Features/SignatureStrikes/Hooks/SignatureMissionGate.cs	1
 Main/Features/SignatureStrikes/Hooks/SignatureStrikeRunner.cs	18
 Main/Features/SignatureStrikes/Hooks/SignatureStrikeVerdicts.cs	5
 Main/Features/SignatureStrikes/Hooks/SignatureStrikesMissionLogic.cs	8
@@ -1954,14 +1957,14 @@ Main/Features/StoryMissions/Config/StoryMissionCatalog.cs	1
 Main/Features/StoryMissions/Domain/StorySideGate.cs	1
 Main/Features/StoryMissions/Hooks/StoryDevMenuBehavior.cs	3
 Main/Features/StoryMissions/Hooks/StoryMissionLauncher.cs	4
-Main/Features/StoryMissions/Hooks/StoryOfferBehavior.cs	6
+Main/Features/StoryMissions/Hooks/StoryOfferBehavior.cs	3
 Main/Features/StoryMissions/StoryMusicCue.cs	2
 Main/Features/StoryMissions/StoryOfferService.cs	10
 Main/Features/SupplyLines/Components/SupplyCaravanComponent.cs	5
 Main/Features/SupplyLines/Domain/SupplyLinesSaveDefiner.cs	2
 Main/Features/SupplyLines/Hooks/SupplyCaravanEncounterPatch.cs	1
 Main/Features/SupplyLines/Hooks/SupplyCaravanMeetingMenu.cs	1
-Main/Features/SupplyLines/Hooks/SupplyLinesCampaignBehavior.cs	14
+Main/Features/SupplyLines/Hooks/SupplyLinesCampaignBehavior.cs	8
 Main/Features/SupplyLines/SupplyCaravanService.cs	111
 Main/Features/SupplyLines/SupplyGoodsSearch.cs	1
 Main/Features/SupplyLines/SupplyLinesIoC.cs	3
@@ -1981,7 +1984,7 @@ Main/Features/SwornAnew/SwornAnewService.cs	4
 Main/Features/TaomBuildings/Hooks/Patch108_TaomBuildings.cs	3
 Main/Features/TaomBuildings/Hooks/TaomBuildingUiHooks.cs	2
 Main/Features/TaomBuildings/TaomBuildingsModule.cs	1
-Main/Features/TaomSettings.cs	472
+Main/Features/TaomSettings.cs	481
 Main/Features/TelcharsMark/ItemUpgradeScorer.cs	5
 Main/Features/TelcharsMark/TelcharsMarkLog.cs	1
 Main/Features/TelcharsMark/TelcharsMarkSettingsProvider.cs	1

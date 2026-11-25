@@ -65,6 +65,9 @@ internal sealed partial class SurvivalRun
         }
 
         _heroes.Remove(heroId);
+
+        if (IsMustLive(heroId) && Result == null)
+            End(RunEndReason.Stalemate);
     }
 
     /// <summary>A standing hero left the field: he is for sale again. A fall is also a defender's loss; a rout is not.</summary>
@@ -74,9 +77,15 @@ internal sealed partial class SurvivalRun
             return;
 
         _heroes.Remove(heroId);
-        if (loss)
-            DefenderDown();
+        if (!loss)
+            return;
+
+        DefenderDown();
+        if (IsMustLive(heroId) && Result == null)
+            End(RunEndReason.HeroFell);
     }
+
+    private bool IsMustLive(string heroId) => _plan.MustLive != null && string.Equals(_plan.MustLive, heroId, StringComparison.Ordinal);
 
     private int PendingHeroes
     {

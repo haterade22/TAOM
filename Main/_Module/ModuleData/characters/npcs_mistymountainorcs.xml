@@ -5,7 +5,7 @@
 	<!-- All use race="orc" for correct orc rendering -->
 
 	<!-- Tournament / Arena -->
-	<NPCCharacter id="tournament_master_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.mistymountainorcs" name="{=aom_mmo_arena}Arena Master">
+	<NPCCharacter id="tournament_master_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.mistymountainorcs" name="{=aom_mmo_arena}Training Master">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Equipments>
@@ -59,7 +59,7 @@
 	</NPCCharacter>
 
 	<!-- Caravan Staff -->
-	<NPCCharacter id="caravan_master_mistymountainorcs" race="orc" default_group="Infantry" level="26" name="{=aom_mmo_caravan_master}Orc Caravan Master" occupation="CaravanGuard" culture="Culture.mistymountainorcs">
+	<NPCCharacter id="caravan_master_mistymountainorcs" race="orc" default_group="Infantry" level="26" name="{=aom_mmo_caravan_master}[Misty Mountains] Orc Caravan Master" occupation="CaravanGuard" culture="Culture.mistymountainorcs">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -80,7 +80,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_guard_mistymountainorcs" race="orc" default_group="Infantry" level="21" name="{=aom_mmo_caravan_guard}Orc Caravan Guard" occupation="CaravanGuard" culture="Culture.mistymountainorcs">
+	<NPCCharacter id="caravan_guard_mistymountainorcs" race="orc" default_group="Infantry" level="21" name="{=aom_mmo_caravan_guard}[Misty Mountains] Orc Caravan Guard" occupation="CaravanGuard" culture="Culture.mistymountainorcs">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills>
 			<skill id="Athletics" value="50" />
@@ -100,7 +100,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="veteran_caravan_guard_mistymountainorcs" race="orc" default_group="Infantry" level="26" name="{=aom_mmo_vet_caravan_guard}Orc Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.mistymountainorcs">
+	<NPCCharacter id="veteran_caravan_guard_mistymountainorcs" race="orc" default_group="Infantry" level="26" name="{=aom_mmo_vet_caravan_guard}[Misty Mountains] Orc Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.mistymountainorcs">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -121,7 +121,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="armed_trader_mistymountainorcs" race="orc" default_group="Infantry" level="16" name="{=aom_mmo_armed_trader}Orc Armed Trader" occupation="CaravanGuard" culture="Culture.mistymountainorcs">
+	<NPCCharacter id="armed_trader_mistymountainorcs" race="orc" default_group="Infantry" level="16" name="{=aom_mmo_armed_trader}[Misty Mountains] Orc Armed Trader" occupation="CaravanGuard" culture="Culture.mistymountainorcs">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills>
 			<skill id="Athletics" value="40" />

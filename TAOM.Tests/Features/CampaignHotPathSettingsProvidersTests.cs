@@ -151,6 +151,8 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(TAOM.Features.NotableServices.NotableServicesSettingsProvider))]
     // Inn Rounds: read by each of three dialog conditions when a tavern keeper's conversation is built; the accessor takes the settings once.
     [DataRow(typeof(TAOM.Features.InnRounds.InnRoundsSettingsProvider))]
+    // Wave fights at the training master: read by the offer's dialog condition each time the master's menu is built; the accessor takes the settings once.
+    [DataRow(typeof(TAOM.Features.TrainingGrounds.Waves.TrainingWavesSettingsProvider))]
     // #873: not a hot path (read a few times per party row when the Army Management screen opens); it still takes the settings once.
     [DataRow(typeof(RedArrowSettingsProvider))]
     // #867: not a hot path; read once when a clan signs on as a mercenary. The accessor still takes the settings once.
@@ -312,6 +314,7 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(IKingsMusterSettingsProvider), typeof(KingsMusterSettingsProvider))]
     [DataRow(typeof(TAOM.Features.NotableServices.INotableServicesSettingsProvider), typeof(TAOM.Features.NotableServices.NotableServicesSettingsProvider))]
     [DataRow(typeof(TAOM.Features.InnRounds.IInnRoundsSettingsProvider), typeof(TAOM.Features.InnRounds.InnRoundsSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.TrainingGrounds.Waves.ITrainingWavesSettingsProvider), typeof(TAOM.Features.TrainingGrounds.Waves.TrainingWavesSettingsProvider))]
     [DataRow(typeof(ISmithsMeasureSettingsProvider), typeof(SmithsMeasureSettingsProvider))]
     [DataRow(typeof(TAOM.Features.KingdomAllegiance.IKingdomAllegianceSettingsProvider), typeof(TAOM.Features.KingdomAllegiance.KingdomAllegianceSettingsProvider))]
     [DataRow(typeof(TAOM.Features.TroopWeight.ITroopWeightSettingsProvider), typeof(TAOM.Features.TroopWeight.TroopWeightSettingsProvider))]
@@ -946,18 +949,13 @@ public class CampaignHotPathSettingsProvidersTests
             nameof(TAOM.Features.MarriageAlignment.MarriageAlignmentSettingsProvider.IsEnabled), nameof(TaomSettings.EnableMarriageAlignment)),
         [typeof(TAOM.Features.Encyclopedia.EncyclopediaSettingsProvider)] = (() => new TAOM.Features.Encyclopedia.EncyclopediaSettingsProvider(),
             nameof(TAOM.Features.Encyclopedia.EncyclopediaSettingsProvider.ShowAllEncyclopediaCharacters), nameof(TaomSettings.ShowAllEncyclopediaCharacters)),
-        // The two settlement models keep the switch in a private Enabled property.
+        // The two settlement models keep the switch in a private Enabled property. Their vanilla base constructors need the game,
+        // and the switch touches no field a constructor sets.
         [typeof(TAOM.Features.SettlementFood.Models.TaomSettlementFoodModel)] = (
-            // The vanilla base constructor needs a running campaign, and the switch touches no field it sets.
             () => System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(TAOM.Features.SettlementFood.Models.TaomSettlementFoodModel)),
             "Enabled", nameof(TaomSettings.EnableSettlementFoodTuning)),
-        [typeof(TAOM.Features.SettlementEconomy.Models.TaomSettlementEconomyModel)] = (() =>
-            {
-                var config = Substitute.For<TAOM.Features.SettlementEconomy.ISettlementEconomyConfigProvider>();
-                config.GetConfig().Returns(new TAOM.Features.SettlementEconomy.SettlementEconomyConfig());
-                return new TAOM.Features.SettlementEconomy.Models.TaomSettlementEconomyModel(
-                    Substitute.For<TAOM.Features.SettlementEconomy.ISettlementEconomyService>(), config);
-            },
+        [typeof(TAOM.Features.SettlementEconomy.Models.TaomSettlementEconomyModel)] = (
+            () => System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(TAOM.Features.SettlementEconomy.Models.TaomSettlementEconomyModel)),
             "Enabled", nameof(TaomSettings.EnableSettlementEconomyTuning)),
         [typeof(TAOM.Features.TroopWeight.TroopWeightSettingsProvider)] = (
             () => new TAOM.Features.TroopWeight.TroopWeightSettingsProvider(Substitute.For<TAOM.Features.CampaignStartOptions.ICampaignStartOptions>()),

@@ -501,10 +501,10 @@
         "text": "Patrolled the silver borders of the Golden Wood.",
         "description": "You walked the outer marches of Lothlórien, learning to spot the signs of Orc incursion at the Dimrill Dale passes. Long days of silent observation followed by sudden action shaped you into a hunter as patient as the wood and as quick as the arrow.",
         "skills": [
-            "Bow",
+            "Athletics",
             "Scouting"
         ],
-        "attribute": "Control",
+        "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1

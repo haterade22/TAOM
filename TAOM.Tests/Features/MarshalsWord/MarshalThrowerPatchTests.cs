@@ -20,8 +20,8 @@ using TAOM.Tests.Migration;
 namespace TAOM.Tests.Features.MarshalsWord;
 
 /// <summary>
-/// The two thrower patches (build-spec 9.4) on <c>MovementOrder</c>. Harmony binds by NAME and the postfix target is private, so the binding tests pin both
-/// targets and every parameter name; the behaviour tests drive each patch with identity-only engine objects.
+/// The two thrower patches (build-spec 9.4) on <c>MovementOrder</c>, driven with identity-only engine objects. The metadata binding tests are in
+/// <see cref="MarshalThrowerBindingTests"/>, because this class's setup runs <c>Mission.set_Current</c>.
 /// </summary>
 [TestClass]
 [TestCategory("RequiresGame")]
@@ -95,78 +95,6 @@ public class MarshalThrowerPatchTests
             Assert.AreEqual("Patch_MissionTime_MarshalsWord", categories[0].info.category, patch.Name);
             Assert.AreEqual("TAOM.Features.MarshalsWord.Hooks", patch.Namespace);
         }
-    }
-
-    [TestMethod]
-    [TestCategory("BindingVerification")]
-    public void ThePostfixTarget_IsThePrivateInstanceGetPositionAux_WithThePinnedParameterNames()
-    {
-        var target = AccessTools.Method(typeof(MovementOrder), "GetPositionAux", new[] { typeof(Formation), typeof(WorldPosition.WorldPositionEnforcedCache) });
-
-        Assert.IsNotNull(target, "MovementOrder.GetPositionAux (private, v1.5.6 MovementOrder.cs:1133)");
-        Assert.IsTrue(target.IsPrivate && !target.IsStatic);
-        Assert.AreEqual(typeof(WorldPosition), target.ReturnType);
-        CollectionAssert.AreEqual(new[] { "f", "worldPositionEnforcedCache" }, target.GetParameters().Select(p => p.Name).ToArray());
-        Assert.IsTrue(typeof(MovementOrder).IsValueType);
-        var attribute = typeof(MarshalThrowerPatch).GetCustomAttributes<HarmonyPatch>().Single().info;
-        Assert.AreEqual("GetPositionAux", attribute.methodName);
-        CollectionAssert.AreEqual(new[] { typeof(Formation), typeof(WorldPosition.WorldPositionEnforcedCache) }, attribute.argumentTypes);
-    }
-
-    [TestMethod]
-    [TestCategory("BindingVerification")]
-    public void ThePostfix_NamesItsParametersByTheEnginesNames_AndTakesTheStructByRef()
-    {
-        var postfix = typeof(MarshalThrowerPatch).GetMethod("Postfix")!;
-
-        CollectionAssert.AreEqual(new[] { "__instance", "f", "__result" }, postfix.GetParameters().Select(p => p.Name).ToArray());
-        Assert.IsTrue(postfix.GetParameters()[0].ParameterType.IsByRef, "a struct's instance is injected by reference");
-        Assert.IsTrue(postfix.GetParameters()[2].ParameterType.IsByRef, "the result is rewritten in place");
-        Assert.AreEqual(typeof(Formation), postfix.GetParameters()[1].ParameterType);
-    }
-
-    [TestMethod]
-    [TestCategory("BindingVerification")]
-    public void TheTimerTarget_IsThePublicCreateNewOrderWorldPositionMT_AndItsPatchNamesEveryParameterByTheEnginesNames()
-    {
-        var target = AccessTools.Method(typeof(MovementOrder), nameof(MovementOrder.CreateNewOrderWorldPositionMT));
-
-        Assert.IsNotNull(target);
-        Assert.IsTrue(target.IsPublic);
-        CollectionAssert.AreEqual(new[] { "f", "worldPositionEnforcedCache" }, target.GetParameters().Select(p => p.Name).ToArray());
-        Assert.AreEqual("CreateNewOrderWorldPositionMT", typeof(MarshalThrowerTimer).GetCustomAttributes<HarmonyPatch>().Single().info.methodName);
-
-        var prefix = typeof(MarshalThrowerTimer).GetMethod("Prefix")!;
-        var postfix = typeof(MarshalThrowerTimer).GetMethod("Postfix")!;
-        CollectionAssert.AreEqual(new[] { "__instance", "__state" }, prefix.GetParameters().Select(p => p.Name).ToArray());
-        Assert.IsTrue(prefix.GetParameters()[0].ParameterType.IsByRef && !prefix.GetParameters()[0].IsOut, "the order is read, as the postfix reads it");
-        Assert.IsTrue(prefix.GetParameters()[1].IsOut);
-        CollectionAssert.AreEqual(new[] { "__instance", "f", "__result", "__state" }, postfix.GetParameters().Select(p => p.Name).ToArray());
-        Assert.AreEqual(typeof(void), prefix.ReturnType, "a void prefix cannot skip the original, so the co-op veto test has nothing to classify");
-        Assert.AreEqual(typeof(long), postfix.GetParameters()[3].ParameterType, "the state the prefix wrote");
-    }
-
-    [TestMethod]
-    [TestCategory("BindingVerification")]
-    public void TheEngineMembers_TheThrowerPatchesReadAreStillThere()
-    {
-        Assert.AreEqual(typeof(MovementOrder.MovementOrderEnum), typeof(MovementOrder).GetField("OrderEnum")!.FieldType);
-        Assert.IsTrue(typeof(MovementOrder).GetField("OrderEnum")!.IsInitOnly);
-        Assert.AreEqual(typeof(void), typeof(WorldPosition).GetMethod("SetVec2MT")!.ReturnType);
-        Assert.IsNotNull(typeof(WorldPosition).GetProperty("IsValid"));
-        Assert.IsNotNull(typeof(WorldPosition).GetProperty("X"));
-        Assert.IsNotNull(typeof(WorldPosition).GetProperty("Y"));
-        Assert.AreEqual(typeof(MissionMode), typeof(Mission).GetProperty("Mode")!.PropertyType);
-        Assert.AreEqual(10, (int)MovementOrder.MovementOrderEnum.Advance, "pin the numeric value, read from MovementOrder.cs:12-24");
-        Assert.AreEqual(11, (int)MovementOrder.MovementOrderEnum.FallBack);
-    }
-
-    [TestMethod]
-    [TestCategory("BindingVerification")]
-    public void BothTargets_StayShielded_BecauseTheShieldIsCheapAtTheirRate()
-    {
-        foreach (var name in new[] { "GetPositionAux", nameof(MovementOrder.CreateNewOrderWorldPositionMT) })
-            Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod(typeof(MovementOrder).FullName, name), name);
     }
 
     // ---- the postfix ----
@@ -276,6 +204,7 @@ public class MarshalThrowerPatchTests
 
     [TestMethod]
     [TestCategory("BindingVerification")]
+    [TestCategory("RequiresGameIL")]   // the class setup runs Mission.set_Current, and the test reads WorldPosition.IsValid
     public void TheEngagePoint_IsAPrivateWorldPositionFieldOfMovementOrder_AndForgetSetsItInvalid()
     {
         var field = typeof(MovementOrder).GetField("_engageTargetPositionCache", BindingFlags.NonPublic | BindingFlags.Instance);

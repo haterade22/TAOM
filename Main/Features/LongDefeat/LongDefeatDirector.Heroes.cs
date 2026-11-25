@@ -22,6 +22,9 @@ internal sealed partial class LongDefeatDirector
     private float _heroWaitSeconds;
 
     private int _heroSpawns;
+    private int _heroVoiceChecks;
+    private readonly ulong _heroVoiceSalt;
+    private readonly Dictionary<string, int> _heroLanded = new(StringComparer.Ordinal);
     private int _heroFalls;
     private int _heroesLanded;
     private int _huntersRepairs;
@@ -34,7 +37,8 @@ internal sealed partial class LongDefeatDirector
     /// Where a body that joins no batch appears: the recorded foot muster, else the keep. The mounted lord's home point and a hero's place.
     /// With no place the engine would lay the body out from a deployment plan nobody built for its formation, so the caller refuses.
     /// </summary>
-    private LdPlace? PlanHome => _plan.Muster?.Foot is { } foot ? LdPlace.From(foot) : _keepAt is { } keep ? LdPlace.At(keep) : null;
+    /// On a field run (#1105) with no recorded muster it is the defenders' start place.
+    private LdPlace? PlanHome => _plan.Muster?.Foot is { } foot ? LdPlace.From(foot) : _fieldStarts?.Defenders is { } start ? LdPlace.From(start) : _keepAt is { } keep ? LdPlace.At(keep) : null;
 
     // The heroes the run asks for wait until a lane holds a defender formation (#1370, ILongDefeatBattlefieldAdapter.DefenderLanesAssigned):
     // before that pick the castle tactic merges its foot formations into the heroes' formation 7, which is off AI control, and the
@@ -60,7 +64,7 @@ internal sealed partial class LongDefeatDirector
         if (_heroesWaiting.Count == 0)
             return;
 
-        if (!_field.DefenderLanesAssigned())
+        if (_plan.Field == null && !_field.DefenderLanesAssigned())
         {
             if (_heroWaitSeconds < HeroLaneWaitSeconds)
                 return;
@@ -85,12 +89,52 @@ internal sealed partial class LongDefeatDirector
             {
                 _heroesLanded++;
                 _heroesStanding.Add(hero.Id);
+                if (!report.Enemy)
+                    SpeakHeroLine(hero.Id);
                 _logger.LogInfo($"{Tag}[Hero] {hero.Id} ({hero.TroopId}) joins the defenders: formation {report.FormationIndex}, health x{report.HealthFactor:0.00}, holds {report.Wielded}");
             }
             else
                 _logger.LogError($"{Tag}[Hero] {hero.Id} ({hero.TroopId}) could not be spawned ({report.Problem}); {HeroRefusedTail(InShop(hero.Id))}");
         }
     }
+
+    private void SpeakHeroLine(string heroId)
+    {
+        _heroLanded.TryGetValue(heroId, out var before);
+        var landed = _heroLanded[heroId] = before + 1;
+        var path = _voice == null ? null : _plan.HeroLines.Pick(heroId, landed, _heroVoiceSalt);
+        if (path == null)
+            return;
+
+        string? problem = null;
+        try
+        {
+            if (!_voice!.PlayHeroLine(path))
+                problem = "refused";
+        }
+        catch (Exception ex)
+        {
+            problem = "fault error=" + ex.GetType().Name;
+            _logger.LogError($"{Tag}[Hero] the line of {heroId} faulted: {ex}");
+        }
+
+        LongDefeatChecks.Record(_outcomes, LongDefeatHeroChecks.LineId, _mission + "v" + ++_heroVoiceChecks, LongDefeatHeroChecks.Line(heroId, path, problem));
+    }
+
+    private void StopHeroVoice()
+    {
+        try
+        {
+            _voice?.StopHeroLine();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"{Tag}[Hero] stopping the hero's line faulted: {ex}");
+        }
+    }
+
+    /// <summary>The heroes stand as one group held at a wall post only when the player defends a siege; in an attack (#1409) and on a field (#1105) they fight in their class formations under the team AI.</summary>
+    private bool HeroesHeld => !_playerAttacks && _plan.Field == null;
 
     private bool InShop(string heroId) => _plan.Shop.Heroes.Any(offer => offer.Id == heroId);
 
@@ -103,7 +147,7 @@ internal sealed partial class LongDefeatDirector
     // nothing; a refused spawn does not count.
     private void JudgeHunters(int wave)
     {
-        if (_heroesLanded == 0 || _playerAttacks)
+        if (_heroesLanded == 0 || !HeroesHeld)
             return;
 
         TickHunters();
@@ -114,7 +158,7 @@ internal sealed partial class LongDefeatDirector
     // (ILongDefeatBattlefieldAdapter.HoldHunters names the hand-backs). Every regain is logged; a membership repair only the first few times.
     private void TickHunters()
     {
-        if (_heroesStanding.Count == 0 || _playerAttacks)
+        if (_heroesStanding.Count == 0 || !HeroesHeld)
             return;
 
         var hold = _field.HoldHunters();

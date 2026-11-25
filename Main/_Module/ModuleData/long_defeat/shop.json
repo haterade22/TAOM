@@ -53,6 +53,50 @@
           ]
         }
       }
+    },
+    "gondor": {
+      "startingGold": 600,
+      "offers": [
+        { "id": "militia", "name": "{=TAOM_LD_Offer_Gondor_Militia}Anórien Militia", "troop": "fow_gondor_ano_militia", "class": "Infantry", "packSize": 12, "price": 180 },
+        { "id": "archer_militia", "name": "{=TAOM_LD_Offer_Gondor_ArcherMilitia}Anórien Archer Militia", "troop": "fow_gondor_ano_archer_militia", "class": "Ranged", "packSize": 10, "price": 180 },
+        { "id": "lossarnach_axes", "name": "{=TAOM_LD_Offer_Gondor_Lossarnach}Axemen of Lossarnach", "troop": "fow_gondor_loss_axebearer", "class": "Infantry", "packSize": 8, "price": 200 },
+        { "id": "morthond_bowmen", "name": "{=TAOM_LD_Offer_Gondor_Morthond}Morthond Bowmen", "troop": "fow_gondor_brv_bowman", "class": "Ranged", "packSize": 8, "price": 200 },
+        { "id": "pinnath_gelin", "name": "{=TAOM_LD_Offer_Gondor_PinnathGelin}Spearmen of Pinnath Gelin", "troop": "fow_gondor_pg_spearman", "class": "Infantry", "packSize": 8, "price": 240 },
+        { "id": "citadel_guard", "name": "{=TAOM_LD_Offer_Gondor_Citadel}Guards of the Citadel", "troop": "fow_gondor_mt_trainee", "class": "Infantry", "packSize": 6, "price": 360 }
+      ],
+      "upgrades": [
+        { "from": "fow_gondor_ano_militia", "to": "fow_gondor_ano_footman", "price": 15, "name": "{=TAOM_LD_Up_Gondor_Footmen}Militia to Anórien Footmen" },
+        { "from": "fow_gondor_ano_footman", "to": "fow_gondor_ano_guardsman", "price": 25, "name": "{=TAOM_LD_Up_Gondor_Guardsmen}Footmen to Anórien Guardsmen" },
+        { "from": "fow_gondor_ano_guardsman", "to": "gondor_ano_infantry", "price": 40, "name": "{=TAOM_LD_Up_Gondor_Infantry}Guardsmen to Anórien Infantry" },
+        { "from": "gondor_ano_infantry", "to": "gondor_ano_vet_infantry", "price": 60, "name": "{=TAOM_LD_Up_Gondor_VeteranInfantry}Infantry to Anórien Veteran Infantry" },
+        { "from": "fow_gondor_ano_archer_militia", "to": "fow_gondor_ano_skirmisher", "price": 15, "name": "{=TAOM_LD_Up_Gondor_Skirmishers}Archer Militia to Anórien Skirmishers" },
+        { "from": "fow_gondor_ano_skirmisher", "to": "fow_gondor_ano_bowman", "price": 25, "name": "{=TAOM_LD_Up_Gondor_Bowmen}Skirmishers to Anórien Bowmen" },
+        { "from": "fow_gondor_ano_bowman", "to": "gondor_ano_archer", "price": 40, "name": "{=TAOM_LD_Up_Gondor_Archers}Bowmen to Anórien Archers" },
+        { "from": "fow_gondor_loss_axebearer", "to": "gondor_loss_vet_axebearer", "price": 25, "name": "{=TAOM_LD_Up_Gondor_VeteranAxebearers}Axemen to Lossarnach Veteran Axebearers" },
+        { "from": "gondor_loss_vet_axebearer", "to": "gondor_loss_guard", "price": 40, "name": "{=TAOM_LD_Up_Gondor_LossarnachGuard}Veteran Axebearers to the Lossarnach Guard" },
+        { "from": "fow_gondor_brv_bowman", "to": "fow_gondor_brv_scout", "price": 25, "name": "{=TAOM_LD_Up_Gondor_BlackrootScouts}Morthond Bowmen to Blackroot Vale Scouts" },
+        { "from": "fow_gondor_brv_scout", "to": "fow_gondor_brv_archer", "price": 40, "name": "{=TAOM_LD_Up_Gondor_BlackrootArchers}Scouts to Blackroot Vale Archers" },
+        { "from": "fow_gondor_pg_spearman", "to": "gondor_pg_vet_spearman", "price": 40, "name": "{=TAOM_LD_Up_Gondor_VeteranSpearmen}Spearmen to Pinnath Gelin Veteran Spearmen" },
+        { "from": "gondor_pg_vet_spearman", "to": "gondor_pg_spearwarden", "price": 60, "name": "{=TAOM_LD_Up_Gondor_Spearwardens}Veteran Spearmen to Pinnath Gelin Spearwardens" },
+        { "from": "fow_gondor_mt_trainee", "to": "gondor_mt_veteran", "price": 60, "name": "{=TAOM_LD_Up_Gondor_CitadelVeterans}Guards of the Citadel to Citadel Veterans" },
+        { "from": "gondor_mt_veteran", "to": "fow_gondor_mt_sergeant", "price": 90, "name": "{=TAOM_LD_Up_Gondor_CitadelSergeants}Citadel Veterans to Citadel Sergeants" }
+      ],
+      "heroes": [
+        { "id": "aragorn", "troop": "taom_hero_aragorn", "price": 350, "healthFactor": 8.0, "name": "{=nc_aragorn_name}Aragorn", "text": "{=TAOM_LD_Hero_Aragorn_Text}The heir of Isildur, sword in hand. If he falls, he can be called again." },
+        { "id": "legolas", "troop": "taom_hero_legolas", "price": 300, "healthFactor": 8.0, "name": "{=nc_legolas_name}Legolas", "text": "{=TAOM_LD_Hero_Legolas_Text}The prince of Mirkwood and his bow. If he falls, he can be called again." },
+        { "id": "gimli", "troop": "taom_hero_gimli", "price": 300, "healthFactor": 8.0, "name": "{=nc_gimli_name}Gimli", "text": "{=TAOM_LD_Hero_Gimli_Text}The son of Glóin and his axe. If he falls, he can be called again." }
+      ],
+      "fortifications": {
+        "gate": {
+          "repairPrice": 200,
+          "levels": [
+            { "hitPointsPercent": 50, "price": 200 },
+            { "hitPointsPercent": 100, "price": 300 },
+            { "hitPointsPercent": 150, "price": 450 }
+          ]
+        },
+        "fieldCare": { "share": 0.75, "price": 150, "perIntermission": 1 }
+      }
     }
   }
 }

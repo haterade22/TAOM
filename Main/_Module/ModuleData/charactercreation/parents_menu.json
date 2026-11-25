@@ -500,10 +500,10 @@
         "text": "Rangers of the Dimrill Dale",
         "description": "Your family patrolled the borders of Lothlorien, guarding the passes and defending against Orcs and other intruders.",
         "skills": [
-            "Bow",
+            "Athletics",
             "Scouting"
         ],
-        "attribute": "Control",
+        "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1,
@@ -1608,7 +1608,7 @@
         "string_id": "taom_parent_mistymountainorcs_6",
         "culture_id": "mistymountainorcs",
         "text": "Outcasts of the Mountains",
-        "description": "Your family lived on the fringes of the Misty Mountains's society, surviving through cunning and ruthlessness in the unforgiving mountain passes.",
+        "description": "Your family lived on the fringes of the Misty Mountains' society, surviving through cunning and ruthlessness in the unforgiving mountain passes.",
         "skills": [
             "Roguery",
             "Throwing"

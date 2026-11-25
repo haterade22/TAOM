@@ -6805,6 +6805,8 @@
         <upgrade_targets>
             <upgrade_target
                 id="NPCCharacter.ironpass_ram_marshal" />
+            <upgrade_target
+                id="NPCCharacter.ironpass_war_chariot" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
@@ -7104,6 +7106,220 @@
                 <equipment
                     slot="HorseHarness"
                     id="Item.taom_ram_barding_elite_b" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter
+        id="ironpass_war_chariot"
+        race="dwarf"
+        default_group="Cavalry"
+        level="41"
+        name="{=aom_ironpass_war_chariot_name}[Ironpass] War Chariot"
+        occupation="Soldier"
+        culture="Culture.erebor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_erebor" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="110" />
+            <skill
+                id="Riding"
+                value="185" />
+            <skill
+                id="OneHanded"
+                value="105" />
+            <skill
+                id="TwoHanded"
+                value="210" />
+            <skill
+                id="Polearm"
+                value="225" />
+            <skill
+                id="Bow"
+                value="85" />
+            <skill
+                id="Crossbow"
+                value="85" />
+            <skill
+                id="Throwing"
+                value="85" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.ironpass_steel_chariot" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.taom_ph_erebor_spear_b_t8" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_d" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_c" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_erebor_helmet_plate_lord_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_iron_pauldron_heavy_cape_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_erebor_bracers_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_erebor_greaves_elite_a" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_ram_chariot_a" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_chariot_armour_dwarf" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.taom_ph_erebor_spear_b_t8" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_d2" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_c" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_erebor_helmet_plate_lord_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_heavy_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_iron_pauldron_heavy_cape_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_erebor_bracers_elite_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_erebor_greaves_elite_b" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_ram_chariot_a" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_chariot_armour_dwarf" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter
+        id="ironpass_steel_chariot"
+        race="dwarf"
+        default_group="Cavalry"
+        level="46"
+        name="{=aom_ironpass_steel_chariot_name}[Ironpass] Steel Chariot"
+        occupation="Soldier"
+        culture="Culture.erebor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_erebor" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="125" />
+            <skill
+                id="Riding"
+                value="210" />
+            <skill
+                id="OneHanded"
+                value="115" />
+            <skill
+                id="TwoHanded"
+                value="235" />
+            <skill
+                id="Polearm"
+                value="255" />
+            <skill
+                id="Bow"
+                value="95" />
+            <skill
+                id="Crossbow"
+                value="95" />
+            <skill
+                id="Throwing"
+                value="95" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.taom_ph_erebor_spear_b_t8" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_d" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_c" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_lord_d1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_iron_pauldron_heavy_cape_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_elite_c3" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_lord_c1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_ram_chariot_a" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_chariot_armour_dwarf_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.taom_ph_erebor_spear_b_t8" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_shield_metal_d2" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_iron_axe_c" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_iron_helmet_lord_d2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_iron_chest_elite_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_iron_pauldron_heavy_cape_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_iron_bracer_elite_c2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_iron_boots_lord_c1" />
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_ram_chariot_a" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.taom_chariot_armour_dwarf_b" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>

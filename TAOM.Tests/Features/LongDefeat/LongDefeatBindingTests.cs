@@ -243,6 +243,7 @@ public class LongDefeatBindingTests
 
     // The class kit (Slice 5): the override the engine reads first (Mission.cs:4108), the no-horse flag, the slot names and the fit test the adapter calls,
     // and the equipment read back from the spawned lord.
+    [TestCategory("RequiresGameIL")]   // runs Equipment.GetEquipmentIndexFromOldEquipmentIndexName
     [TestMethod]
     [TestCategory("BindingVerification")]
     public void TheClassKitMembers_StillResolve()
@@ -312,6 +313,7 @@ public class LongDefeatBindingTests
 
     // The wrapper's replay (tools/run_long_defeat.py, troop_groups) reads each troop's default_group from fords_troops.xml and applies this table, because the report names no troop group.
     // Each class once: NumberOfDefaultFormations is Skirmisher and NumberOfRegularFormations is General, which Distinct merges.
+    [TestCategory("RequiresGameIL")]   // runs TroopClassExtensions.IsMounted
     [TestMethod]
     [TestCategory("BindingVerification")]
     public void TheFormationClassFlags_AreTheTableTheWrapperReplayAssumes()
@@ -513,6 +515,59 @@ public class LongDefeatBindingTests
         Method(typeof(Team), "GetFormation", typeof(Formation), typeof(FormationClass));
         Method(typeof(MissionBehavior), "OnAgentShootMissile", typeof(void), typeof(Agent), typeof(EquipmentIndex), typeof(Vec3), typeof(Vec3), typeof(Mat3), typeof(bool), typeof(int));
         Assert.AreEqual(4, (int)FormationClass.Skirmisher, "the posts formation index the A23 boot line was read for");
+    }
+
+    // The death rule's engine half (phase4-plan.md Slice 4): the engine's own take-over test and call, the controller and general writes of the rise, the hand-back and the seat, the use test of a soldier handed back,
+    // and the formation and order the take-over and hand-back lines read.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheDeathRuleMembers_StillResolve()
+    {
+        Method(typeof(Mission), "CanTakeControlOfAgent", typeof(bool), typeof(Agent));
+        Method(typeof(Mission), "TakeControlOfAgent", typeof(void), typeof(Agent));
+        Method(typeof(Mission), "SetPlayerCanTakeControlOfAnotherAgentWhenDead", typeof(void));
+        var general = Property(typeof(Team), "GeneralAgent", typeof(Agent));
+        Assert.IsNotNull(general.GetSetMethod(), "Team.GeneralAgent lost its public setter: SetGeneral writes it");
+        var controller = Property(typeof(Agent), "Controller", typeof(AgentControllerType));
+        Assert.IsNotNull(controller.GetSetMethod(), "Agent.Controller lost its public setter: the rise hands a soldier back with it");
+        Property(typeof(Agent), "IsUsingGameObject", typeof(bool));
+        Property(typeof(Agent), "IsHuman", typeof(bool));
+        Property(typeof(Agent), "IsRunningAway", typeof(bool));
+        Property(typeof(Agent), "Formation", typeof(Formation));
+        Field(typeof(Formation), "FormationIndex", typeof(FormationClass));
+        Method(typeof(Formation), "GetReadonlyMovementOrderReference", typeof(MovementOrder).MakeByRefType());
+        Field(typeof(MovementOrder), "OrderEnum", typeof(MovementOrder.MovementOrderEnum));
+        Method(typeof(Agent), "RegisterBlow", typeof(void), typeof(Blow), typeof(AttackCollisionData).MakeByRefType());
+        Assert.IsNotNull(typeof(Agent).GetProperty("Controller", AnyMember)!.GetSetMethod(), "the setter the rise and the adoption call is public");
+        Assert.IsFalse(typeof(Mission).GetMethod("TakeControlOfAgent", AnyMember)!.IsStatic, "TakeControlOfAgent is an instance call on the mission");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheArmouryAndErrandMembers_StillResolve()
+    {
+        Method(typeof(Agent), "UpdateSpawnEquipmentAndRefreshVisuals", typeof(void), typeof(Equipment));
+        Method(typeof(Agent), "UpdateAgentProperties", typeof(void));
+        Method(typeof(Agent), "SetScriptedPosition", typeof(void), typeof(WorldPosition).MakeByRefType(), typeof(bool), typeof(Agent.AIScriptedFrameFlags));
+        Method(typeof(Agent), "DisableScriptedMovement", typeof(void));
+        Method(typeof(Agent), "GetScriptedFlags", typeof(Agent.AIScriptedFrameFlags));
+        Method(typeof(Agent), "CanBeAssignedForScriptedMovement", typeof(bool));
+        Method(typeof(Agent), "GetPrimaryWieldedItemIndex", typeof(EquipmentIndex));
+        Property(typeof(Agent), "AgentDrivenProperties", typeof(AgentDrivenProperties));
+        Property(typeof(Agent), "SpawnEquipment", typeof(Equipment));
+        Property(typeof(Agent), "IsAIControlled", typeof(bool));
+        Property(typeof(Agent), "HasMount", typeof(bool));
+        Assert.IsTrue(Enum.IsDefined(typeof(Agent.AIScriptedFrameFlags), "GoToPosition"), "the scripted flag the errand reads");
+        Method(typeof(AgentStatCalculateModel), "InitializeAgentStats", typeof(void), typeof(Agent), typeof(Equipment), typeof(AgentDrivenProperties), typeof(AgentBuildData));
+        Property(typeof(MissionGameModels), "AgentStatCalculateModel", typeof(AgentStatCalculateModel));
+        Property(typeof(MissionGameModels), "Current", typeof(MissionGameModels));
+        foreach (var armour in new[] { "ArmorHead", "ArmorTorso", "ArmorLegs", "ArmorArms", "ArmorEncumbrance" })
+            Property(typeof(AgentDrivenProperties), armour, typeof(float));
+        Method(typeof(Equipment), "GetHeadArmorSum", typeof(float));
+        Method(typeof(Equipment), "GetHumanBodyArmorSum", typeof(float));
+        Method(typeof(Equipment), "GetLegArmorSum", typeof(float));
+        Method(typeof(Equipment), "GetArmArmorSum", typeof(float));
+        Method(typeof(Equipment), "GetTotalWeightOfArmor", typeof(float), typeof(bool));
     }
 
     private static PropertyInfo Property(Type type, string name, Type expected)

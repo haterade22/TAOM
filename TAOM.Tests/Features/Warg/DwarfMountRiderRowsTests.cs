@@ -18,7 +18,7 @@ namespace TAOM.Tests.Features.Warg;
 /// copies the base's slots when it parses the child, and its driver FUN_180590080 (0x590080) parses the sets in
 /// document order, so the male set must be declared first. Until the move, TAOM's own action_sets.xml held the rows
 /// (PR #1209); it must not declare the dwarf sets again, or the copies drift. The snapshot does not hold the Armory's
-/// action_sets.xslt, so the 101 elephant and chariot rows are pinned offline by their family counts and compared with
+/// action_sets.xslt, so the elephant and chariot rows are pinned offline by their family counts and compared with
 /// the xslt only in the live test. The live test also serves as the release-channel check
 /// (docs/reference/release-process.md): point BANNERLORD_GAME_DIR at a channel folder.
 /// </summary>
@@ -29,7 +29,7 @@ public class DwarfMountRiderRowsTests
     private const string DwarfSet = "as_dwarf_warrior";
     private const string FemaleSet = "as_dwarf_female_warrior";
 
-    // The creature mount rider action types: the warg, spider, elephant and chariot rows, the chariot mounts and the elephant dismounts.
+    // The creature mount rider action types: the warg, spider, elephant and chariot rows, the chariot mounts and dismounts and the elephant dismounts.
     private static readonly Regex RiderType = new Regex("^act_(mount_|dismount_)?(warg|spider|elephant|chariot)_", RegexOptions.CultureInvariant);
 
     [TestMethod]
@@ -45,16 +45,17 @@ public class DwarfMountRiderRowsTests
     {
         string snapshot = SnapshotActionSets();
         var human = HumanPartialRows(snapshot);
-        Assert.AreEqual(122, human.Count, "the snapshot's as_human_warrior partial changed size: refresh the dwarf rows");
+        Assert.AreEqual(131, human.Count, "the snapshot's as_human_warrior partial changed size: refresh the dwarf rows");
         AssertEachBoundToItsClip(human, DwarfRows(snapshot), "snapshot as_dwarf_warrior", "");
     }
 
     [DataTestMethod]
     [DataRow("^act_warg_", 75)]
-    [DataRow("^act_spider_", 47)]
+    [DataRow("^act_spider_", 56)]
     [DataRow("^act_elephant_", 72)]
-    [DataRow("^act_chariot_", 23)]
-    [DataRow("^act_mount_chariot_", 4)]
+    [DataRow("^act_chariot_", 128)]
+    [DataRow("^act_mount_chariot_", 2)]
+    [DataRow("^act_dismount_chariot_", 2)]
     [DataRow("^act_dismount_elephant_", 2)]
     public void Snapshot_DwarfWarriorSet_BindsTheCreatureFamilyRows(string typePattern, int count)
     {
@@ -69,7 +70,7 @@ public class DwarfMountRiderRowsTests
     {
         // A repeated type is the state a copy-paste of the human rows leaves behind; native keeps the last row of a type.
         var types = DwarfRows(SnapshotActionSets()).Where(r => RiderType.IsMatch(r.Type)).Select(r => r.Type).ToList();
-        Assert.AreEqual(223, types.Count, "the dwarf set must hold 223 creature rider rows");
+        Assert.AreEqual(337, types.Count, "the dwarf set must hold 337 creature rider rows");
         var repeated = types.GroupBy(t => t).Where(g => g.Count() > 1).Select(g => g.Key).ToList();
         Assert.AreEqual(0, repeated.Count, "as_dwarf_warrior binds a creature type twice: " + string.Join(", ", repeated));
     }
@@ -78,7 +79,7 @@ public class DwarfMountRiderRowsTests
     [DataRow("act_warg_forward_walk", "rider_warg_forward_walk")]
     [DataRow("act_warg_attack_running", "rider_warg_attack_running")]
     [DataRow("act_spider_idle", "rider_warg_idle")]
-    [DataRow("act_chariot_forward_walk", "chariot_rider_forward_walk_stand")]
+    [DataRow("act_chariot_forward_walk", "chariot_rider_forward_walk")]
     [DataRow("act_elephant_forward_walk", "elephant_rider_walk")]
     public void Snapshot_DwarfWarriorSet_IncludesTheWalkAndAttackRows(string type, string clip)
     {

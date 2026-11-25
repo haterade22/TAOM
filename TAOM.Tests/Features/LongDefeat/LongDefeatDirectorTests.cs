@@ -10,6 +10,7 @@ using TAOM.Features.LongDefeat.Autorun;
 using TAOM.Features.LongDefeat.Diagnostics;
 using TAOM.Features.LongDefeat.Domain;
 using TAOM.Tests.Features.LoadTimeStamps;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.LongDefeat;
 
@@ -996,6 +997,76 @@ public class LongDefeatDirectorTests
     }
 
     [TestMethod]
+    public void PlayerDeath_TheRespawnAtTheClear_AnswersTheRunsRiseOrder_SoTheReportListsTheRise()
+    {
+        var rig = NewRig();
+        rig.StartAndSpawnWave();
+        rig.Director.OnAgentRemoved("P", true);
+        rig.Field.MainBody = 0;
+        rig.Tick();
+        rig.KillAttackers(110);
+        rig.Tick();
+        rig.Field.MainBody = 2;
+        rig.Tick();
+
+        rig.Director.Shutdown();
+
+        var lord = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.Linq.JObject.Parse(rig.Director.ReportText)["lord"]!;
+        Assert.AreEqual(1, ((Newtonsoft.Json.Linq.JArray)lord["deaths"]!).Count);
+        var rise = ((Newtonsoft.Json.Linq.JArray)lord["rises"]!).Single();
+        Assert.AreEqual((2, "respawn", false), ((int)rise["beforeWave"]!, (string)rise["at"]!, (bool)rise["handedBack"]!));
+    }
+
+    [TestMethod]
+    public void ALordWhoseBodyLeftWithNoDeath_IsStillRaisedAtTheClear()
+    {
+        // A lord the AI drives can rout (the morale hold keeps attackers only): his body is removed with no loss, so no death is booked and the main agent is gone.
+        var rig = NewRig();
+        rig.StartAndSpawnWave();
+        rig.Director.OnAgentRemoved("P", false);
+        rig.Field.MainBody = 0;
+        rig.Tick();
+        Assert.AreEqual(0, rig.Field.Count("SpawnPlayer:True"), "no respawn during the wave");
+
+        rig.KillAttackers(110);
+        rig.Tick();
+
+        Assert.AreEqual(1, rig.Field.Count("SpawnPlayer:True"), "the run reads that no lord stands and orders the rise");
+        rig.Director.Shutdown();
+        var report = JObject.Parse(rig.Director.ReportText);
+        Assert.AreEqual(0, (int)report["playerDeaths"]!, "a rout is not a death");
+        Assert.AreEqual(1, ((JArray)report["lord"]!["rises"]!).Count);
+    }
+
+    [TestMethod]
+    public void ALordsDeath_IsBookedWithTheTroopOfTheBodyThatFell()
+    {
+        var rig = NewRig();
+        rig.StartAndSpawnWave();
+        rig.Director.OnAgentRemoved("P", true);
+        rig.Director.Shutdown();
+
+        var death = JObject.Parse(rig.Director.ReportText)["lord"]!["deaths"]!.Single();
+
+        Assert.AreEqual("lord_4_1", (string)death["troop"]!, "the removal's troop id reaches the report, as the field's classify gives it");
+        Assert.AreEqual("own", (string)death["body"]!);
+    }
+
+    [TestMethod]
+    public void TheRespawn_IsTheRunsDecision_NotTheClearHandlers()
+    {
+        var effects = RepoPaths.ReadSource("Main/Features/LongDefeat/LongDefeatDirector.Effects.cs", stripComments: true).Replace("\r\n", "\n");
+        var handler = effects.Substring(effects.IndexOf("private void OnWaveCleared(", StringComparison.Ordinal));
+        handler = handler.Substring(0, handler.IndexOf("\n    }\n", StringComparison.Ordinal));
+
+        Assert.IsFalse(handler.Contains("SpawnLord") || handler.Contains("_respawned"), "the clear handler must not raise the lord itself: the run orders it through RunEffects.RiseLord");
+        var events = effects.IndexOf("foreach (var e in fx.Events)", StringComparison.Ordinal);
+        var rise = effects.IndexOf("if (fx.RiseLord is { } rise)", StringComparison.Ordinal);
+        var rest = effects.IndexOf("if (fx.RestShare > 0f)", StringComparison.Ordinal);
+        Assert.IsTrue(events >= 0 && rise > events && rest > rise, "the rise is served after the clear's events and before the rest, so the risen lord is rested with the others");
+    }
+
+    [TestMethod]
     public void PlayerDeath_ATakeoverBeforeTheIntermission_NeedsNoRespawn()
     {
         var rig = NewRig();
@@ -1215,6 +1286,27 @@ public class LongDefeatDirectorTests
             Assert.AreEqual(new BestRun(1, 110), records.Best.Load("helms"));
             Assert.AreEqual(new BestRun(1, 110), rig.Session.Best, "the end panel reads the saved best");
             Assert.IsTrue(rig.Outcomes.Has("pass", LongDefeatChecks.BestRunId), string.Join("\n", rig.Outcomes.Lines));
+        }
+        finally
+        {
+            System.IO.Directory.Delete(dir, true);
+        }
+    }
+
+    [TestMethod]
+    public void Finish_AHardRun_SavesUnderTheHardKey_AndLeavesTheNormalRowAlone()
+    {
+        var (records, dir) = Records();
+        try
+        {
+            records.Best.TrySave("helms", new BestRun(9, 999), out _);
+            var rig = NewRig(new RunOptions { StopAfterWaves = 1, Difficulty = RunDifficulty.Hard }, records: records);
+
+            ClearOneWave(rig);
+
+            Assert.AreEqual(new BestRun(1, 110), records.Best.Load("helms:hard"));
+            Assert.AreEqual(new BestRun(9, 999), records.Best.Load("helms"), "the normal best is its own row");
+            Assert.AreEqual(new BestRun(1, 110), rig.Session.Best, "the end panel shows the hard best, not the normal one");
         }
         finally
         {

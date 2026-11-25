@@ -237,6 +237,19 @@ class CloneContract(SyntheticFixture):
         self.assertIn(_sized("m_test_mat_a1"), raw)
         self.assertEqual(tcm.serialize(back.package_guid, back.items), out)
 
+    def test_a_negative_length_or_count_in_an_item_is_refused(self):
+        """A count of -1 walks no loop and a length of -1 moves the cursor back, so the item would parse."""
+        item = tcm.parse(self.data).items[0]
+        start, end = tcm._metadata_span(item)
+        self.assertEqual(struct.unpack_from("<i", item.toc, len(item.toc) - 4)[0], 0)      # no dependency entry
+        fields = {"name length": (36, "<i"), "metadata length": (start, "<q"), "segment count": (end + 8, "<i"),
+                  "dependency count": (len(item.toc) - 4, "<i")}
+        for what, (at, fmt) in fields.items():
+            bad = bytearray(self.data)
+            struct.pack_into(fmt, bad, tcm.HEADER_SIZE + at, -1)
+            with self.assertRaisesRegex(tcm.CloneError, what, msg=what):
+                tcm.parse(bytes(bad))
+
     def test_refuses_a_name_of_a_different_length(self):
         pkg = tcm.parse(self.data)
         with self.assertRaises(tcm.CloneError):

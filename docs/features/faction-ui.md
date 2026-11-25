@@ -35,7 +35,7 @@ loads, and it can only be released once no screen draws it.
 |---|---|---|
 | Main menu (`MenuChrome`) | `mm_*`, plus the `TAOMMainMenu` brushes | while the themed main menu holds it |
 | Character creation (`Chrome`) | `cc_*` and every other `fs_*` (`fs_minimap_big` included), plus the `TAOMCharCreation` and `TAOMFactionScreen` brushes | while any themed character-creation screen or the faction screen holds it |
-| Faction art (`Art`) | `fs_portrait_*`, `fs_reveal_*`, `fs_emblem_*`, `fs_territory_*`, `fs_bg_*` | loaded one image at a time as the faction screen shows it; held with the faction screen |
+| Faction art (`Art`) | `fs_portrait_*` (the hero cards), `fs_emblem_*`, `fs_territory_*`, `fs_bg_*` (no `fs_reveal_*` files ship) | loaded one image at a time as the faction screen shows it; held with the faction screen |
 | Resident | `ld_*`, the `TAOMLoading` brushes and the three bitmap fonts | the process: the loading window is built once, and the engine cannot remove a font |
 | Skill icons | `gui_skills_icon_*`, registered under vanilla's names from `sprite_overrides.json` | the process |
 
@@ -68,6 +68,31 @@ review, banner, clan-naming and options stages, and the faction screen. The face
 editor are themed only inside character creation, so the barber and the campaign banner editor stay
 vanilla. A themed prefab missing from the install keeps the vanilla screen with one warning, and a
 themed movie that throws while building falls back to vanilla's and is not tried again until restart.
+BannerlordCoop's `RobustnessPatches` swallows that exception inside the engine's private
+`GauntletMovie.LoadMovie`, so in a Coop session the layer returns a half-built movie. A second patch on that
+method marks each movie while it builds; Harmony skips its postfix whenever the build throws, so the mark
+stays. For a swap with a vanilla movie, the load patch's postfix then takes the half-built movie off the
+layer and throws, and its finalizer falls back as before (#1545; both Harmony facts:
+`HarmonyPatchSemanticsTests`). A swap that keeps its own name, with no vanilla movie (`CareerScreen`, `MainAgentHUD`, `TAOMFactionScreen`,
+`TaomCustomBattle`), keeps the
+half-built screen in a Coop session, as before. The themed Camp icon, like the army panel, stays vanilla
+when the themed map bar is missing or failed to build.
+
+**The campaign map bar under co-op.** The themed `TAOMMapBar`, the themed Camp icon beside its clock
+(`TAOMFieldCampOverlay`) and the themed army panel cut at its stats plate (`TAOMArmyOverlay`,
+[campaign-army-panel.md](campaign-army-panel.md)) swap together, and since v2.0.42 they swap under co-op too.
+`GauntletLayerLoadMoviePatch` keeps vanilla's for all three only when `ThemedMapBarCoopPolicy.KeepsNativeMapBar`
+is true: `ICoopSessionProvider.ShouldDeferToHost` and no session TAOM can see (`!IsSessionActive`). That is the
+reading under a co-op mod whose roles TAOM cannot probe (BannerlordTogether), whose own extensions to vanilla's MapBar
+prefab would not reach the themed one, and after a failed Coop role bind (as for the camp button, [field-camp.md](field-camp.md)
+"Co-op"). A BannerlordCoop client, its server process and solo play with the Coop
+module enabled all get the themed bar. Until v2.0.42 the swap was skipped whenever a co-op module was merely
+loaded (`CoopPresence.IsActive`), because the themed clock's fast-forward buttons bind `TimeAccelerationMixin`,
+which the co-op UI registration dropped. The mixin is now registered under co-op and only forwards vanilla's time
+change on a deferring peer, and the themed Extra Fast Forward hides there
+([time-acceleration.md](time-acceleration.md), "Under co-op"). BannerlordCoop patches the map bar's view models,
+not its prefab, so nothing of Coop's is lost by the swap. Pinned by `ThemedMapBarCoopPolicyTests` and
+`CoopPresenceReadGateTests`.
 
 ### Character creation
 
@@ -81,6 +106,18 @@ themed movie that throws while building falls back to vanilla's and is not tried
   still runs for a hero taken over on the screen. Quitting to the main menu from the screen pops the
   character-creation state without closing the culture stage, so `SubModule.OnGameEnd` calls
   `ResetForGameEnd`, which lets go of the screen and the pick and shows the panel again.
+- **The 3D character (Luiz, 2026-11-24).** The centre of the screen is always the 3D viewport, for
+  every faction: it shows the faction's character (`faction_characters.json`, else its elite infantry
+  troop) and slides in on each change (`FactionScreenWidgets.OnCharacterShown`, Kysaro's portrait slide).
+  Clicking a hero card or a Leader, Lord or Wanderer entry swaps it to that character, drawn from the
+  resolved pick (`FactionPickService.Display`): the same body, race and battle gear the face generator and
+  the player then get, no mount. The faction's race and weapon tweaks (`faction_viewport.json`) frame its
+  own character, also when that character is picked (Sauron's card on Mordor). A Ringwraith or Sauron
+  anywhere else is drawn at human scale (`FactionRoster.ShownRace`), since those bodies overflow the frame;
+  only the picture changes, the pick keeps its race. The small painted cards stay as the buttons. Kysaro's large painted
+  faction portraits (`fs_portrait_<faction>`) and hero reveal pictures (`fs_reveal_*`) are no longer
+  drawn, and their 54 files (about 76 MB) are removed from `RuntimeSprites`. The copies are in
+  `E:/TAOM-Backups/faction-art-2026-11-24` on the desktop, with SHA-256 lists.
 - **Taking over a hero.** Mike, 2026-10-01: "When I pick an existing character like Thranduil from the
   UI, it should skip the character creation all of the way until the career picker, user picks the
   career and it starts the game." `FactionPickService` decides each pick. A card or list entry whose
@@ -161,8 +198,9 @@ every tick for the resources of each face generator model still loading, because
 request leaves the model hidden. They are applied in `OnSubModuleLoad` because the splash, the main menu and the loading window all appear before
 any campaign. Two of Kysaro's per-frame patches are gone: the loading window gets its fonts, stone bars
 and brushes registered before its movie is built (so its prefab names them directly), and the
-menu-music silence is lifted from `FactionUITicker` when the player leaves the main menu, not from a
-prefix on `MBMusicManager.Update`.
+menu-music silence is lifted from `FactionUITicker` when the player leaves the main menu and the
+game-loading screen (Custom Battle setup also has `IsMusicMenuState`, so the check names the two
+states), not from a prefix on `MBMusicManager.Update`.
 
 **Not ported:**
 
@@ -203,7 +241,7 @@ ICultureStageMovieOverride -> FactionScreenLauncher -> FactionScreenVM -> Factio
 | Themed Main Menu | on | Kysaro's main menu; the next time the menu opens |
 | Hide Game Version | on | hides the version line on the main menu (the TAOM log still records it); after a restart, because the game builds that line once |
 | Main Menu Video | on | the Sauron video behind the main menu; the next time the menu opens |
-| Mute Menu Music Under The Video | on | keeps the vanilla theme off the main menu while the video plays (needs Main Menu Video); vanilla's music returns once you leave the main menu |
+| Mute Menu Music Under The Video | on | keeps the vanilla theme off the main menu while the video plays (needs Main Menu Video), and off the new-game loading screen after it (2026-11-24: the theme used to start there and play through a long shader load); vanilla's music returns at the next state that calls for it |
 | Themed Loading Screens | on | Kysaro's paintings, never the same twice in a row; from the next loading screen |
 | Themed Skill Icons | on | on applies at the next main menu; off applies after a restart |
 
@@ -386,7 +424,8 @@ career page and into the game. Owed:
   screen is not tried again until the game restarts: the engine keeps a movie that failed to build
   referenced by its resource factories, with no way for TAOM to release it, so at most one is retained
   per broken prefab.
-- **After a Custom Battle round trip** the vanilla theme may play under the menu video (step 13).
+- **After a Custom Battle round trip** the vanilla theme fades out on the main menu before the
+  silence takes over, rather than starting silent (step 13).
 - **During a takeover the career menu's button still reads "Next"**, though it now starts the game
   (only the options stage relabels it), and **the CHARACTER button on the backstory ribbon does
   nothing**: it jumps to stage 1, which is the backstory stage itself once the face generator is out.
@@ -421,8 +460,9 @@ career page and into the game. Owed:
 3. MCM toggles: Themed Main Menu and Main Menu Video off show vanilla's menu and video the next time the
    menu opens; Hide Game Version off brings the version line back after a restart.
 4. Loading screens: a painting each time, never the same twice in a row; off shows vanilla's.
-5. New campaign: the faction screen replaces the faction map; each faction shows its portrait, pin and
-   emblem tile; the minimap opens and its pins select factions.
+5. New campaign: the faction screen replaces the faction map; each faction shows its 3D character, pin and
+   emblem tile; the minimap opens and its pins select factions. Click Théoden on Rohan, then a lord in the
+   Lord list, then a wanderer: the 3D model changes to each one (an orc lord shows as an orc).
 6. Takeover: pick Thranduil's card on Lasgalen and confirm. The career menu opens next, showing his face
    (no face generator, no backstory menus); pick a career and press its button (it still reads "Next"):
    the campaign starts with "You now play as Thranduil", in his clan and kingdom, with his gear, skills
@@ -454,8 +494,12 @@ career page and into the game. Owed:
     released` lines appear; Player Switcher's panel is offered only when the faction screen setting is off.
 12. Quit to the main menu from the faction screen, then start again with the faction screen off: Player
     Switcher's panel is offered. Start a second campaign without restarting: no pick or takeover carries over.
-13. Known limitation to note, not fix: open Custom Battle from the main menu and come back; the vanilla
-    theme may now play under the menu video (Kysaro's module behaved the same).
+13. With the menu video's muting on, open Custom Battle from the main menu: the vanilla theme plays.
+    Come back: the theme fades out and only the menu video's audio remains.
+14. Co-op (BannerlordCoop): join a session as a client. The themed map bar and the themed Camp icon show;
+    Pause, Play and Fast Forward change the speed for every player through the server; Extra Fast Forward is
+    hidden. Solo with the Coop module enabled, before any co-op session in that process, shows Extra Fast Forward
+    and it runs at the configured speed (Coop's patches stay installed after a session ends).
 
 ## Changelog
 
@@ -485,6 +529,12 @@ career page and into the game. Owed:
   `spc_wanderer_rohan_9` (#762). They spawned before, but their culture's `notable_templates` did not name
   them, and the tab reads that list. `RenamedCultureWandererListTests` now checks every culture,
   the ones `taom_spcultures.xml` defines as well.
+
+- 2026-11-22 (v2.0.42): the themed map bar and Camp icon show under BannerlordCoop too; only a co-op mod TAOM
+  cannot probe keeps the native bar (`ThemedMapBarCoopPolicy`).
+
+- 2026-11-24 (v2.0.42): the faction screen shows the 3D character for every faction, and a picked hero, lord
+  or wanderer replaces it with that character; the painted faction portraits and hero reveals are gone.
 
 ## GitHub Issue
 

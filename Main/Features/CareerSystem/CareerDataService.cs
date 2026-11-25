@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CareerSystem;
@@ -7,6 +8,8 @@ public class CareerDataService : ICareerDataService
 {
     private Dictionary<string, HeroCareerData> _heroData = new Dictionary<string, HeroCareerData>();
     private static readonly IReadOnlyList<string> EmptyChoices = new List<string>();
+
+    public event Action<string>? HeroCareerChanged;
 
     public HeroCareerData GetOrCreateData(string heroStringId)
     {
@@ -21,20 +24,24 @@ public class CareerDataService : ICareerDataService
     public void SetCareer(string heroStringId, string careerStringId)
     {
         var data = GetOrCreateData(heroStringId);
+        if (data.CareerStringId == careerStringId) return;
         data.CareerStringId = careerStringId;
+        Changed(heroStringId);
     }
 
     public bool TryAddChoice(string heroStringId, string choiceStringId, int maxChoicesAllowed)
     {
         var data = GetOrCreateData(heroStringId);
         if (data.GetChoiceCount() >= maxChoicesAllowed) return false;
-        return data.AddChoice(choiceStringId);
+        if (!data.AddChoice(choiceStringId)) return false;
+        Changed(heroStringId);
+        return true;
     }
 
     public void RemoveChoice(string heroStringId, string choiceStringId)
     {
-        if (_heroData.TryGetValue(heroStringId, out var data))
-            data.RemoveChoice(choiceStringId);
+        if (_heroData.TryGetValue(heroStringId, out var data) && data.RemoveChoice(choiceStringId))
+            Changed(heroStringId);
     }
 
     public bool HasCareer(string heroStringId)
@@ -65,8 +72,9 @@ public class CareerDataService : ICareerDataService
     public void UnlockTier(string heroStringId, int tier)
     {
         var data = GetOrCreateData(heroStringId);
-        if (!data.TierUnlocks.Contains(tier))
-            data.TierUnlocks.Add(tier);
+        if (data.TierUnlocks.Contains(tier)) return;
+        data.TierUnlocks.Add(tier);
+        Changed(heroStringId);
     }
 
     public bool IsTierUnlocked(string heroStringId, int tier)
@@ -78,7 +86,8 @@ public class CareerDataService : ICareerDataService
     public void SetFlag(string heroStringId, string flag)
     {
         var data = GetOrCreateData(heroStringId);
-        data.AddFlag(flag);
+        if (data.AddFlag(flag))
+            Changed(heroStringId);
     }
 
     public bool HasFlag(string heroStringId, string flag)
@@ -89,10 +98,12 @@ public class CareerDataService : ICareerDataService
     public void ClearCareer(string heroStringId)
     {
         if (!_heroData.TryGetValue(heroStringId, out var data)) return;
+        var hadAny = data.CareerStringId != null || data.ChoiceIds.Count > 0 || data.TierUnlocks.Count > 0 || data.Flags.Count > 0;
         data.CareerStringId = null;
         data.ChoiceIds.Clear();
         data.TierUnlocks.Clear();
         data.Flags.Clear();
+        if (hadAny) Changed(heroStringId);
     }
 
     public void ResetForNewCampaign()
@@ -111,4 +122,17 @@ public class CareerDataService : ICareerDataService
     {
         _heroData = data ?? new Dictionary<string, HeroCareerData>();
     }
+
+    public void ApplyHeroCareer(HeroCareerData? career)
+    {
+        if (career == null || string.IsNullOrEmpty(career.HeroStringId)) return;
+
+        var copy = new HeroCareerData(career.HeroStringId) { CareerStringId = career.CareerStringId };
+        copy.ChoiceIds.AddRange(career.ChoiceIds ?? new List<string>());
+        copy.TierUnlocks.AddRange(career.TierUnlocks ?? new List<int>());
+        copy.Flags.AddRange(career.Flags ?? new List<string>());
+        _heroData[career.HeroStringId] = copy;
+    }
+
+    private void Changed(string heroStringId) => HeroCareerChanged?.Invoke(heroStringId);
 }

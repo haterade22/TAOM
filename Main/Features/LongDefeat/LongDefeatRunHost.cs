@@ -177,7 +177,7 @@ internal sealed class LongDefeatRunHost
     private void StartRun()
     {
         var field = _fieldFactory();
-        var director = new LongDefeatDirector(_plan, field, _session, _logger, _outcomes, _missionKey, _records, _effectsFactory?.Invoke(), field as ILongDefeatFortAdapter);
+        var director = new LongDefeatDirector(_plan, field, _session, _logger, _outcomes, _missionKey, _records, _effectsFactory?.Invoke(), field as ILongDefeatFortAdapter, field as ILongDefeatLordAdapter, field as ILongDefeatHeroVoiceAdapter);
         _director = director;
         if (director.Start())
             return;

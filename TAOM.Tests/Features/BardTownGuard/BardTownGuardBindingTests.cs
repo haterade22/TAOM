@@ -79,7 +79,6 @@ public class BardTownGuardBindingTests
     }
 
     [TestMethod]
-    [TestCategory("RequiresGameIL")]
     public void PickTown_RunsTheEnginePickTwice_ThenNamesTheCurrentSettlement()
     {
         if (!_gameLoaded) Assert.Inconclusive("Game assemblies unavailable.");

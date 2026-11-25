@@ -124,9 +124,19 @@ public class LongDefeatAdapterRulesTests
         var body = Body("Main/Adapters/LongDefeatBattlefieldAdapter.Upgrades.cs", "public LdUpgradeReport ReplaceDefenders(");
 
         StringAssert.Contains(body, "var active = fresh.IsActive();");
-        StringAssert.Contains(body, "spawns.Add(new UpgradeSpawn(active, stood.Distance(at), ",
-            "the tally decides replaced and read back; the troop id cannot fail, because the engine copies it from the same object, and the place can");
+        StringAssert.Contains(body, "spawns.Add(new UpgradeSpawn(active, UpgradeTally.Moved(stood.AsVec2.Distance(at.AsVec2), stood.z - at.z), ",
+            "the tally decides replaced and read back; the troop id cannot fail, because the engine copies it from the same object, and the place can; the ground distance within a height band, because a replacement may settle a little lower but not onto another floor (#1402)");
         StringAssert.Contains(body, "return UpgradeTally.Of(old.Count, spawns, FramePointRadius);");
+    }
+
+    // The gate rule's safety at Helm's Deep rests on this one comparison, and the fake field cannot hold a scene's heights: every visible gate, a strict greater-than, the doorway band added.
+    // With Any, or without the band, a man in a doorway could count as above the walls and excuse himself (docs/reviews/rca-ld-gate-walls-2026-11-22.md).
+    [TestMethod]
+    public void HighLineClearsGates_ComparesTheHighLineWithEveryGatesDoorwayBand_Strictly()
+    {
+        var body = Body("Adapters/LongDefeatBattlefieldAdapter.Gates.cs", "public bool HighLineClearsGates");
+
+        StringAssert.Contains(body, "_gates.Count > 0 && _gates.All(g => _highZ > g.GameEntity.GlobalPosition.z + GateRules.HeightBand)");
     }
 
     private static string Body(string relative, string header)

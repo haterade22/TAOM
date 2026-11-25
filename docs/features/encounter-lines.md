@@ -27,8 +27,8 @@ The player always has a side: `FactionSides.OfPlayer` reads the player clan's ma
 | Beat | How | Chance |
 |---|---|---|
 | Lord greeting (first meeting, met before), surrender demand, yield, release, leave | rows in `taom_encounter_lord_strings.xml` under vanilla ids, picked by tag score | always, where the tags pass |
-| Caravan greeting | postfix on `CaravansCampaignBehavior.caravan_start_talk_on_condition` sets `CARAVAN_GREETING` | 0.5, first meeting on land, not the player's own caravan |
-| Villager greeting | postfix on `VillagerCampaignBehavior.village_farmer_talk_start_on_condition` sets `VILLAGER_GREETING` | 0.5, first meeting on land |
+| Caravan greeting | postfix on `CaravansCampaignBehavior.caravan_start_talk_on_condition` sets `CARAVAN_GREETING` | 0.5, first meeting on land, not the player's own caravan; 1.0 for an Orc caravan, since vanilla's line is a free trader's |
+| Villager greeting | postfix on `VillagerCampaignBehavior.village_farmer_talk_start_on_condition` sets `VILLAGER_GREETING` | 0.5, first meeting on land; 1.0 for Orc villagers, since vanilla's "We're farmers from the village of..." is a free peasant's |
 | Caravan and villager surrender | text seam on sentences `caravan_accepted_to_give_everything` and `village_farmer_accepted_to_give_everything` | 1.0 |
 | Hideout boss challenge | text seam on sentence `bandit_hideout_start_defender` | 1.0 |
 | Bandit greeting (player attacks) | Bandit Voices' Patch122 postfix: one roll, below 0.25 the legacy clan greeting, then (or when that row is missing) below 0.75 the bucket greeting `<clan>_<bucket>_<1 or 2>` | 0.5 bucket for clans with a legacy greeting, 0.75 for Feral Orcs and looters; `_1` and `_2` split each band evenly. Needs Bandit Voices' greeting switch on |
@@ -119,7 +119,7 @@ In-game check owed; none of these has been run. No `taom.*` command drives these
 2. As a Neutral (Khand or Umbar) player at peace, talk to an orc lord. Check: the orc ally line reads as "no enemy of ours today", with no claim that you march on the orcs' side.
 3. At war with a realm of your own people, let one of its lords attack you. Check: the greeting before the demand is vanilla's war greeting, not a kin line, and the demand is a kin line.
 4. Get a surrender demand from one lord on two campaign days. Check: the demand changes between the two lines.
-5. Meet several caravans and villager parties for the first time, then rob one. Check: about half greet in their people's voice, and the surrender line is TAOM's. This proves the `UpdateCurrentSentenceText` postfix runs. If the surrender and hideout boss lines stay vanilla while the greetings are TAOM's, the seam postfix did not run: check the log for the Patch149 apply and any `[EncounterLines]` warning; if the patch applied, move the seam to the `CurrentSentenceText` getter or to `ProcessSentence`.
+5. Meet several caravans and villager parties for the first time, then rob one. Check: about half greet in their people's voice (every Orc party does), and the surrender line is TAOM's. This proves the `UpdateCurrentSentenceText` postfix runs. If the surrender and hideout boss lines stay vanilla while the greetings are TAOM's, the seam postfix did not run: check the log for the Patch149 apply and any `[EncounterLines]` warning; if the patch applied, move the seam to the `CurrentSentenceText` getter or to `ProcessSentence`.
 6. Get robbed by Feral Orcs or looters several times (about 80% TAOM) and by a Bandit Voices clan (about 50%). Attack a bandit party for the greeting, and assault a hideout for the boss's challenge.
 7. Take a lord's yield after a field battle and release him. Check: TAOM lines in the field, vanilla inside a settlement.
 8. As a Neutral (Khand or Umbar) player at peace, get robbed by a Gondor soldiers band and a Rhûn raiders band, and assault a Gondor soldiers hideout. Check: no line calls you an enemy (#1281).

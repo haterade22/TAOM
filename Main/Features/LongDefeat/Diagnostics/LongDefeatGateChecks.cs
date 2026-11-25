@@ -78,34 +78,42 @@ internal static class LongDefeatGateChecks
     /// <summary>
     /// At the next clear or the run's end, for the watch begun by a repair: the gates lost hit points since (<paramref name="hitPointsNow"/> against the watch's baseline) or fell (pass), and no attacker was sampled
     /// behind a standing gate's plane (<c>through=0</c>); an untouched gate is a skip (<c>reason=no-blow</c>), because a wave whose ram died brings no blow at all (E30, R4). An attacker behind a gate that stood fails
-    /// whether or not it was struck.
+    /// whether or not it was struck, when he was seen there before any attacker stood above the walls' high line (<see cref="GateWatch.ThroughBeforeWalls"/>). Attackers seen there only after
+    /// the walls were reached may have climbed, so a struck gate then reads a skip with <c>reason=walls-reached</c> and an unstruck one the usual <c>reason=no-blow</c>.
     /// </summary>
     internal static CheckVerdict GateAttacked(GateWatch watch, float hitPointsNow, bool fell, bool endedRun)
     {
         var lost = watch.Baseline - hitPointsNow;
         var detail = $"w={watch.Wave.ToString(CultureInfo.InvariantCulture)} path={watch.Path} start={F1(watch.Baseline)} now={F1(hitPointsNow)} lost={F1(lost)} fell={Flag(fell)} "
-            + $"through={watch.Through.ToString(CultureInfo.InvariantCulture)} samples={watch.Samples.ToString(CultureInfo.InvariantCulture)}{(endedRun ? " ended=run" : "")}";
-        if (float.IsNaN(lost) || float.IsNaN(hitPointsNow) || watch.Through > 0)
+            + $"through={watch.Through.ToString(CultureInfo.InvariantCulture)} samples={watch.Samples.ToString(CultureInfo.InvariantCulture)}"
+            + $"{(watch.WallsReached ? " before_walls=" + watch.ThroughBeforeWalls.ToString(CultureInfo.InvariantCulture) : "")}{(endedRun ? " ended=run" : "")}";
+        if (float.IsNaN(lost) || float.IsNaN(hitPointsNow) || watch.ThroughBeforeWalls > 0)
             return new CheckVerdict(CheckResult.Fail, detail);
-        if (fell || lost >= BlowFloor)
-            return new CheckVerdict(CheckResult.Pass, detail);
+        if (!fell && lost < BlowFloor)
+            return new CheckVerdict(CheckResult.Skip, detail + " reason=no-blow");
 
-        return new CheckVerdict(CheckResult.Skip, detail + " reason=no-blow");
+        return watch.Through > 0 ? new CheckVerdict(CheckResult.Skip, detail + " reason=walls-reached") : new CheckVerdict(CheckResult.Pass, detail);
     }
 
     /// <summary>
     /// At the boot: every recorded tower post, tower volley spot and volley origin has a navmesh and lies inside the mission boundary (the sally points' test). <paramref name="points"/> is each point's name and answer;
     /// none recorded is a skip. A volley origin whose ray out over the parapet hits something within 2 m is named with <c>clear=no</c> (phase3-plan.md section 4, R5).
+    /// <paramref name="rise"/> is the recorded keep's answer when the plan records one (phase4-plan.md D49): the lord rises there, so it must have a navmesh and lie inside the boundary too. It is kept out of
+    /// <c>points=</c>, which counts the tower and volley points the wrapper compares with the file, and named as <c>rise=recorded</c>, or <c>rise=scene-fallback</c> with what it lacks when the rise falls back to the scene's frame.
+    /// <paramref name="armoury"/> is the recorded armoury point's answer (phase4-plan.md D46): the bot's errand teleports the lord onto it, so it must have a navmesh and lie inside the boundary. Like the keep it is not counted in
+    /// <c>points=</c>; it is named <c>armoury=recorded</c>, or <c>armoury=unusable</c> with what it lacks, and an unusable one fails the check.
     /// </summary>
-    internal static CheckVerdict FortPoints(IReadOnlyList<(string Name, LdPointFacts Facts)> points)
+    internal static CheckVerdict FortPoints(IReadOnlyList<(string Name, LdPointFacts Facts)> points, LdPointFacts? rise = null, LdPointFacts? armoury = null)
     {
-        if (points.Count == 0)
+        if (points.Count == 0 && rise == null && armoury == null)
             return new CheckVerdict(CheckResult.Skip, "points=0 reason=none-recorded");
 
         var bad = points.Where(p => !p.Facts.Usable).ToList();
         var named = string.Join(",", bad.Take(NamedBad).Select(p => $"{p.Name}(navmesh={Answer(p.Facts.Navmesh)} boundary={Answer(p.Facts.Boundary)}{(p.Facts.Clear ? "" : " clear=no")})"));
-        return LongDefeatChecks.Verdict(bad.Count == 0,
-            $"points={points.Count.ToString(CultureInfo.InvariantCulture)} failed={bad.Count.ToString(CultureInfo.InvariantCulture)}{(bad.Count > 0 ? " bad=" + named : "")}");
+        var riseText = rise is not { } r ? "" : r.Usable ? " rise=recorded" : $" rise=scene-fallback rise_navmesh={Answer(r.Navmesh)} rise_boundary={Answer(r.Boundary)}";
+        var armouryText = armoury is not { } a ? "" : a.Usable ? " armoury=recorded" : $" armoury=unusable armoury_navmesh={Answer(a.Navmesh)} armoury_boundary={Answer(a.Boundary)}";
+        return LongDefeatChecks.Verdict(bad.Count == 0 && (rise is not { } r2 || r2.Usable) && (armoury is not { } a2 || a2.Usable),
+            $"points={points.Count.ToString(CultureInfo.InvariantCulture)} failed={bad.Count.ToString(CultureInfo.InvariantCulture)}{(bad.Count > 0 ? " bad=" + named : "")}{riseText}{armouryText}");
     }
 
     /// <summary>The key prefix of gate <paramref name="index"/> in a line: none for the one gate Helm's Deep has, <c>g0.</c>, <c>g1.</c> and so on when there are several.</summary>

@@ -163,6 +163,21 @@ public class SpecialResourceEarningServiceDailyTests
     }
 
     [TestMethod]
+    public void OnDailyTick_EmptyBalanceWithUnlimitedPartyCheat_DesertsNobody()
+    {
+        var kit = new EarningTestKit(unlimitedParty: true);
+        Arrange(kit, "main", Breakdown(0f, 1f), 0f, 0f);
+        kit.Service.CalculateDesertion("main", "k", "c", Troops).Returns(new[] { new TroopDesertionEntry("troll", 1) });
+        kit.Sut.OnDailyTick(Input());
+
+        var outcome = kit.Sut.OnDailyTick(Input());
+
+        Assert.AreEqual(0, outcome.Desertions.Count);
+        kit.Service.DidNotReceiveWithAnyArgs().CalculateDesertion(default, default, default, default);
+        Assert.IsNotNull(outcome.DailyLine);
+    }
+
+    [TestMethod]
     public void OnDailyTick_FirstTickOfACampaign_SparesDesertionAndTheSecondDeserts()
     {
         // Single-player grace (#133 P2): one tick per service instance, which is one per campaign.

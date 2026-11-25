@@ -59,10 +59,10 @@ python -m unittest discover -s tools/tests -t . 2>&1
 
 The tests for `tools/` (the validators, generators, the release packager, the doc linter). Plain
 `unittest`, no pytest (`tools/tests/test_ci_runner_compat.py` keeps every module runnable that way).
-Nothing else runs them automatically since the GitHub CI was removed (2026-10-05). Tests that need
+The PR checks workflow runs them on each pull request, never on a trunk push. Tests that need
 the live install skip without it.
 
-Report `Ran N tests` and the failures. No `Ran N tests` line, or fewer than 6,500 tests, means
+Report `Ran N tests` and the failures. No `Ran N tests` line, or fewer than 10,000 tests, means
 discovery broke: not a pass.
 
 The suite includes the lint gates (#1020), which need Ruff (`python -m ruff`), PyYAML and

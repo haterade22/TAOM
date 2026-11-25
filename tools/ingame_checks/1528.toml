@@ -1,0 +1,54 @@
+# In-game checks for #1528, read by tools/ingame_verdict.py. The [Check] lines come from
+# Main/Features/TrainingGrounds/Teams/Hooks/TeamPracticeFight.cs (the ids are its ModeCheckId and WinCheckId consts):
+#   taom.team-practice.mode  written from the postfix on ArrangePlayerTeamEnmity once the AI teams are split, with
+#                            mode=<yard|practice> teams=<count> allies=<count>; the mode in the detail tells the
+#                            yard line (before the player enters) from the player's fight line (when it starts)
+#   taom.team-practice.win   written when the player's side wins a fight while he stands
+# OutcomeLog writes a line the first time an (id, result, key) is seen in a game process and only counts after that
+# (Main/Core/Logging/OutcomeLog.cs Record). Each of the keys "yard", "practice" and "player-side" is therefore written
+# once for each game process, not once for each fight: a line proves the path ran at least once in that session, and a
+# second win in the same session writes nothing new.
+# A failed patch writes "[Swallowed] feature=TeamPractice site=<site>" (Outcomes.Swallowed), the only fail signal.
+#
+# fixed_in is the commit that adds the feature (2faebdbda). A build from before it writes no [Check] line, so it is
+# NOT REACHED here, never FAIL.
+issue = 1528
+title = "Team practice fights in the towns of the Free Peoples"
+fixed_in = "2faebdbda"
+logs = ["taom"]
+
+[[check]]
+id = "taom.team-practice.mode"
+needs = "single-player, Team Practice Fights on (Tournaments): enter the Training Grounds of a Free town, talk to the Training Master, ask about the practice fights and say you will fight; the yard line is written on entry and the practice line when the first fight of the session starts"
+pass = ['\[Check\] id=taom\.team-practice\.mode result=pass mode=practice teams=6 allies=2']
+fail = [
+  '\[Check\] id=taom\.team-practice\.mode result=fail',
+  '\[Swallowed\] feature=TeamPractice ',
+]
+absence = "not-reached"
+
+[[check]]
+id = "taom.team-practice.win"
+needs = "in that fight, down every fighter of the other side while you stand: the fight ends with Victory and the Training Master pays 250 denars; the win line is written the first time in a session, so a later win in the same session adds none"
+reached = ['\[Check\] id=taom\.team-practice\.mode result=pass mode=practice']
+pass = ['\[Check\] id=taom\.team-practice\.win result=pass alliesStanding=[1-9][0-9]*']
+fail = ['\[Swallowed\] feature=TeamPractice ']
+absence = "not-reached"
+
+[[human]]
+claim = "the fighters of your side wear a blue outline from the first six who enter, and the other four do not"
+
+[[human]]
+claim = "an arrow or a blow of yours does nothing to a fighter outlined in blue, and no ally is counted among the opponents you beat"
+
+[[human]]
+claim = "in a Free town the Training Master's rules and prize speeches talk of teams and quote vanilla's amounts (3, 6, 10 and 20 opponents; 5, 10, 25, 60 and 250 denars)"
+
+[[human]]
+claim = "in a Shadow town and in a neutral town, and with the switch off in a Free town, the fight and both speeches are vanilla's: no outline, every fighter against every other"
+
+[[human]]
+claim = "after the win the Training Master's debrief says your side held the yard, and the gold counts once"
+
+[[human]]
+claim = "the HUD line remaining opponents starts at 28 in a Free town (vanilla reads 30), does not change at the moment an ally falls, drops by one when an opponent falls or a fighter enters an ally's empty place, and reads 0 after the win while your allies still stand; the prize line under it is unchanged"

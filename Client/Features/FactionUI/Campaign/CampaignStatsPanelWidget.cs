@@ -21,6 +21,9 @@ namespace TAOM.Features.FactionUI.Campaign
         public Widget SecondaryItemsWidget { get; set; } = null!;
         public Widget ExpandButtonWidget { get; set; } = null!;
         public float Expansion { get; private set; }
+        /// <summary>The <see cref="Expansion"/> the plate showed on its last update, for the army panel's clip
+        /// (<see cref="ArmyOverlayClipWidget"/>, #1532), which lives on another layer.</summary>
+        public static float ShownExpansion { get; private set; }
         private float _progress;
 
         public CampaignStatsPanelWidget(UIContext context) : base(context) { }
@@ -31,6 +34,7 @@ namespace TAOM.Features.FactionUI.Campaign
             float direction = IsInfoBarExtended ? 1f : -1f;
             _progress = Math.Max(0f, Math.Min(1f, _progress + direction * dt / TransitionSeconds));
             Expansion = _progress * _progress * (3f - 2f * _progress);
+            ShownExpansion = Expansion;
             float upperY = SlideDistance * (1f - Expansion);
             float lowerY = PanelHeight - LowerPlateHeight * Expansion;
             UpperPlate.PositionYOffset = upperY;

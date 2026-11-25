@@ -48,12 +48,13 @@ internal sealed record LocationsPlan(ArmouryPlan? Armoury, YardPlan? Yard);
 
 /// <summary>
 /// What this build can deliver (D46), in the <see cref="FortOffer"/> shape: the armoury and each engine kind. Each slice raises its kind when its effect lands, and the Python judge
-/// mirrors it as <c>LOCATION_OFFERED</c> (a test reads this source, so the two cannot drift). Slice 1 delivers nothing, so every row of shop.json stays hidden and shipped play is unchanged.
+/// mirrors it as <c>LOCATION_OFFERED</c> (a test reads this source, so the two cannot drift). Slice 5 delivers the armoury (the live gear swap and the bot's errand): a shipped run still sells nothing until shop.json carries an
+/// <c>armoury</c> block and the fortress records its point, and the yard's engines are Slice 7's.
 /// </summary>
 internal sealed record LocationOffer(bool Armoury, bool Mangonel, bool Trebuchet)
 {
     /// <summary>What this build can deliver.</summary>
-    public static LocationOffer Offered { get; } = new(false, false, false);
+    public static LocationOffer Offered { get; } = new(true, false, false);
 
     /// <summary>Nothing for sale: a run that plays as it did before any location.</summary>
     public static LocationOffer None { get; } = new(false, false, false);

@@ -219,6 +219,106 @@ public class WavePlanTests
         Assert.AreSame(EndlessScale.None, Plan().Endless);
     }
 
+    // The shipped shape: ten authored counts, then 10 more a wave up to 300, health 0.05 and damage 0.03 a wave.
+    private static WavePlan Shipped()
+    {
+        var counts = new[] { 110, 120, 120, 125, 130, 140, 150, 170, 185, 200 };
+        return new WavePlan(
+            counts.Select(c => Spec(c, T("a", FormationSlot.Infantry, 3), T("c", FormationSlot.Ranged, 1))).ToArray(),
+            new WaveScaling(10, 300),
+            Growth());
+    }
+
+    [DataTestMethod]
+    [DataRow(1, 138)]
+    [DataRow(2, 150)]
+    [DataRow(3, 150)]
+    [DataRow(4, 156)]
+    [DataRow(5, 163)]
+    [DataRow(10, 250)]
+    [DataRow(13, 288)]
+    [DataRow(20, 375)]
+    [DataRow(60, 375)]
+    public void Harder_ScalesTheCountOnceAfterTheCap_HalfAwayFromZero(int wave, int expected)
+    {
+        Assert.AreEqual(expected, Shipped().Harder(1.25f).ForWave(wave).Count);
+    }
+
+    [DataTestMethod]
+    [DataRow(1, 110)]
+    [DataRow(5, 130)]
+    [DataRow(10, 200)]
+    [DataRow(13, 230)]
+    [DataRow(20, 300)]
+    public void Harder_LeavesTheOriginalPlanAlone(int wave, int expected)
+    {
+        var normal = Shipped();
+        normal.Harder(1.25f);
+
+        Assert.AreEqual(expected, normal.ForWave(wave).Count);
+    }
+
+    [TestMethod]
+    public void Harder_GrowsHealthAndDamageFasterAndKeepsTheCapAndTheTiers()
+    {
+        var hard = Shipped().Harder(1.25f);
+        var wave13 = hard.ForWave(13);
+        var wave20 = hard.ForWave(20);
+
+        Assert.AreEqual(1.1875f, wave13.HealthFactor, 1e-5f);
+        Assert.AreEqual(1.1125f, wave13.DamageFactor, 1e-5f);
+        Assert.AreEqual(1.625f, wave20.HealthFactor, 1e-5f);
+        Assert.AreEqual(1.375f, wave20.DamageFactor, 1e-5f);
+        Assert.AreEqual(3.0f, hard.Endless.MaxFactor);
+        Assert.AreEqual(Shipped().ForWave(13).TierSteps, wave13.TierSteps);
+        Assert.AreEqual(1f, hard.ForWave(10).HealthFactor, "authored waves keep factor 1");
+    }
+
+    [TestMethod]
+    public void Harder_KeepsTheAuthoredListAndTheCommanders()
+    {
+        var commanders = new CommanderPlan(4, new[] { new CommanderRank("captain", "{=K}Captain", "t", 100, 2f, new string[0]) },
+            new Dictionary<string, CommanderAbility>(), CommanderBeyond.None);
+        var normal = new WavePlan(Shipped().Authored, new WaveScaling(10, 300), Growth(), commanders);
+        var hard = normal.Harder(1.25f);
+
+        Assert.AreNotSame(CommanderPlan.None, hard.Commanders);
+        Assert.AreSame(normal.Authored, hard.Authored);
+        Assert.AreSame(normal.Commanders, hard.Commanders);
+    }
+
+    [TestMethod]
+    public void SmallestAuthoredCount_IsTheSmallestWaveAfterTheHardFactor()
+    {
+        Assert.AreEqual(110, Plan().SmallestAuthoredCount);
+        Assert.AreEqual(138, Plan().Harder(1.25f).SmallestAuthoredCount);
+    }
+
+    [TestMethod]
+    public void Harder_ByOne_IsThePlanItself()
+    {
+        var normal = Shipped();
+
+        Assert.AreSame(normal, normal.Harder(1f));
+    }
+
+    // 110 * 1.05f is 115.4999948 as the game's float holds 1.05, so it sends 115 where the decimal reading gives 116.
+    [TestMethod]
+    public void Harder_UsesTheGames32BitFactor()
+    {
+        var plan = new WavePlan(new[] { Spec(110, T("a", FormationSlot.Infantry, 1)) }, new WaveScaling(10, 300));
+
+        Assert.AreEqual(115, plan.Harder(1.05f).ForWave(1).Count);
+    }
+
+    [TestMethod]
+    public void Harder_StopsTheCountAtOneThousand()
+    {
+        var plan = new WavePlan(new[] { Spec(900, T("a", FormationSlot.Infantry, 1)) }, new WaveScaling(10, 1000));
+
+        Assert.AreEqual(1000, plan.Harder(2f).ForWave(1).Count);
+    }
+
     [TestMethod]
     public void Targets_ListsEveryLinkTarget()
     {

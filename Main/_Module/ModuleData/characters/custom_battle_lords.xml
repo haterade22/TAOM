@@ -12,7 +12,8 @@
        An id may have a stub when lords.xslt has a whole-lord template for it and characters/lords.xml
        has no row for it; CustomBattleLordStubsTests checks both. Outside a campaign these lords are
        named by custom_battle/custom_battle_commanders.json, fords_of_war/factions.json,
-       long_defeat/fortresses.json (playerTroop lord_4_1), hero_auras/hero_auras.json and
+       long_defeat/fortresses.json (playerTroop lord_4_1 and lord_1_9), long_defeat/waves.json (the Mordor
+       commanders lord_1_63, lord_1_30 and lord_1_15), hero_auras/hero_auras.json and
        SeatTrialRoster.Hero (lord_1_9), among others; the default commanders and the muster hero
        lists pick the rest by culture.
        Until #648, 176 vanilla-id lords reached Custom Battle through their characters/lords.xml rows.
@@ -25,6 +26,7 @@
   <NPCCharacter id="lord_1_17" culture="Culture.mordor" />
   <NPCCharacter id="lord_1_15" culture="Culture.mordor" />
   <NPCCharacter id="lord_1_63" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_30" culture="Culture.mordor" />
   <NPCCharacter id="lord_1_54" culture="Culture.mordor" />
   <NPCCharacter id="lord_1_155" culture="Culture.mordor" />
   <NPCCharacter id="lord_1_16" culture="Culture.mordor" />

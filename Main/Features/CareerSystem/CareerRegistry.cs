@@ -36,6 +36,8 @@ public class CareerRegistry : ICareerRegistry
         return _careers.TryGetValue(careerStringId, out var career) ? career : null;
     }
 
+    public bool IsCareerDeclared(string careerStringId) => _configProvider.IsCareerDeclared(careerStringId);
+
     public IReadOnlyList<CareerDefinition> GetAllCareers()
     {
         EnsureLoaded();
