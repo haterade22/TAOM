@@ -20,6 +20,9 @@ public interface ILotrIssueService
     /// <summary>Base count plus difficulty-scaled count, rounded; difficulty is clamped to [0,1].</summary>
     int ComputeTargetCount(LotrIssueDefinition def, float difficulty);
 
+    /// <summary>Base troops (the loan of a TrainRetainers issue, the band of a HuntBand issue) plus the difficulty-scaled troops, rounded; difficulty is clamped to [0,1].</summary>
+    int ComputeTroopCount(LotrIssueDefinition def, float difficulty);
+
     /// <summary>Base reward gold plus difficulty-scaled gold, rounded; difficulty is clamped to [0,1].</summary>
     int ComputeRewardGold(LotrIssueDefinition def, float difficulty);
 

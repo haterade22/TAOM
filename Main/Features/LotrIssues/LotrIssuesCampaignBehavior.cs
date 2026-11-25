@@ -126,6 +126,8 @@ public class LotrIssuesCampaignBehavior : CampaignBehaviorBase
             case LotrIssueTemplate.DeliverGoods: return new DeliverGoodsLotrIssue(owner, def);
             case LotrIssueTemplate.DeliverPersonnel: return new DeliverPersonnelLotrIssue(owner, def);
             case LotrIssueTemplate.Combat: return new CombatLotrIssue(owner, def);
+            case LotrIssueTemplate.TrainRetainers: return new TrainRetainersLotrIssue(owner, def);
+            case LotrIssueTemplate.HuntBand: return new HuntBandLotrIssue(owner, def);
             default: return null; // implemented in later waves
         }
     }
@@ -137,6 +139,8 @@ public class LotrIssuesCampaignBehavior : CampaignBehaviorBase
             case LotrIssueTemplate.DeliverGoods: return typeof(DeliverGoodsLotrIssue);
             case LotrIssueTemplate.DeliverPersonnel: return typeof(DeliverPersonnelLotrIssue);
             case LotrIssueTemplate.Combat: return typeof(CombatLotrIssue);
+            case LotrIssueTemplate.TrainRetainers: return typeof(TrainRetainersLotrIssue);
+            case LotrIssueTemplate.HuntBand: return typeof(HuntBandLotrIssue);
             default: return null;
         }
     }
