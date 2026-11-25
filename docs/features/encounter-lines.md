@@ -162,13 +162,13 @@ In-game check owed; none of these has been run. No `taom.*` command drives these
 7. Take a lord's yield after a field battle and release him. Check: TAOM lines in the field, vanilla inside a settlement.
 8. As a Neutral (Khand or Umbar) player at peace, get robbed by a Gondor soldiers band and a Rhûn raiders band, and assault a Gondor soldiers hideout. Check: no line calls you an enemy (#1281).
 9. As a vassal of Mordor (the Witch-king start), ask Sauron to release you from your oath, then say no; ask again in a castle hall and go on. Check: Mordor's line both times, the fiefs warning in his voice, then the Mordor release line. As a clanless player, offer vassalage to Théoden and take a mercenary contract from a lord of Rohan who is not the king. Check: Rohan's lines from Théoden, the Rohirrim lines from the other lord, and the award amount in the offer.
-10. Meet Saruman and one of the Nine on the map. Check: their own greeting, not vanilla's.
+10. Meet Saruman and one of the Nine on the map. Check: their own greeting, not vanilla's. Then take a mercenary contract from Gundabad's ruler. Check: "For Gundabad", with no "the" before the name.
 11. Switch the setting off. Check: every line is vanilla.
 12. Log check, with the switch on after the first conversation: `rgl_log` has no `ERROR: Text with id` line and no `[EncounterLines]` warning, shows `EncounterGroupsConfigProvider: Loaded encounter_groups.json (...)`, and has no other `EncounterGroupsConfigProvider:` warning. Grep for both prefixes; the config loader does not use the `[EncounterLines]` one, and with the switch off it reads nothing.
 
 ## Changelog
 
-- 2026-11-25: the rows: 60 lord rows for Sauron, Saruman and the Nine, and 300 liege rows by group, with a realm's ruler speaking by realm on four beats.
+- 2026-11-25 (#1608): the rows: 60 lord rows for Sauron, Saruman and the Nine, and 300 liege rows by group, with a realm's ruler speaking by realm on four beats.
 - 2026-11-25: PR #1601: groups for Sauron, Saruman and the Nazgul found by race, and the liege conversation seam for 16 vanilla sentence ids. The rows come later; until then every line stays vanilla.
 - 2026-11-13: first version (Patch149).
 - 2026-11-13: follow-up to the merged review: kin greetings and farewells step aside at war; the orc ally greeting, three foe greetings and six bandit lines no longer claim a side or an act the listener may not have; the hideout rows for looters are removed (looters never hold a hideout); the text seam's postfix is run in tests; the voice, animation, settlement and displacement notes above.
@@ -177,5 +177,5 @@ In-game check owed; none of these has been run. No `taom.*` command drives these
 
 ## GitHub Issue
 
-- **Issue:** none. The owed in-game checks above need an issue with the `triage-needs-ingame` label, or a waiver from the maintainer recorded here; neither exists yet.
+- **Issue:** [#1608](https://github.com/haterade22/TAOM/issues/1608) (the dark lord and liege rows), closed with the `triage-needs-ingame` label for the steps above. The first version and its follow-ups had no issue.
 - **Status:** In-game check owed.
