@@ -323,6 +323,20 @@ def to_posix(cmd, tool):
     return bash_to_posix(cmd)
 
 
+# A & or | that belongs to a redirection (2>&1, >&2, &>log, >|log, <&0, 2>&-) is not a command
+# separator: cutting there dropped every word after it from the line holding the push (#1556).
+# && , || and |& stay separators.
+SEPARATOR = re.compile(r"[;\n]|(?<![<>])&(?!>)|(?<!>)\|")
+
+
+def _redirection_char(text, i):
+    """True when the & or | at text[i] is part of a redirection, not a separator."""
+    c = text[i]
+    if c == "&":
+        return (text[i - 1:i] in ("<", ">") and i > 0) or text[i + 1:i + 2] == ">"
+    return c == "|" and i > 0 and text[i - 1] == ">"
+
+
 def segments(text, esc="\\"):
     """Text split at ; & | and newlines outside quotes, one segment per line. A newline inside
     quotes becomes a space, an escaped newline joins its lines, and a # that starts a word outside
@@ -348,7 +362,7 @@ def segments(text, esc="\\"):
             j = text.find("\n", i)
             i = n if j < 0 else j
             continue
-        elif c in ";&|\n":
+        elif c in ";&|\n" and not _redirection_char(text, i):
             out.append("\n")
         else:
             out.append(c)
@@ -371,7 +385,7 @@ def _blind_pieces(text):
     q = QUOTE.search(text)
     limit = q.start() if q else len(text)
     out, start = [], 0
-    for piece in re.split(r"[;&|\n]", text):
+    for piece in SEPARATOR.split(text):
         m = WORD_HASH.search(piece) if start < limit else None
         out.append(piece[:m.start()] if m and start + m.start() < limit else piece)
         start += len(piece) + 1

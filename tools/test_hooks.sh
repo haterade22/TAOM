@@ -1973,6 +1973,13 @@ VP_CASES=(
   # let a trunk force push through; and only the last refspec was judged. Each command of a
   # line is now judged on its own, a redirection is never a refspec, and every refspec counts.
   "2|git push --force origin bannerlord-1.5.x 2>&1"
+  "2|git push --force origin 2>&1 bannerlord-1.5.x"
+  "2|git push --force origin >&2 bannerlord-1.5.x"
+  "2|git push --force origin &>log bannerlord-1.5.x"
+  "2|git push --force origin >|log bannerlord-1.5.x"
+  "2|git push --force origin <&0 bannerlord-1.5.x"
+  "2|git push --force origin 2>&- bannerlord-1.5.x"
+  "0|git push --force origin 2>&1 feature"
   "2|git push --force origin bannerlord-1.5.x 2>&1 | tail -5"
   "2|git push --force origin bannerlord-1.5.x && echo done"
   "2|git push --force origin bannerlord-1.5.x; git status"
