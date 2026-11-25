@@ -20,7 +20,7 @@ namespace TAOM.Features.CastleRecruitment.Hooks;
 ///    recruit screen, which is already settlement-type-agnostic).
 /// 2. Drive castle notable population + daily volunteer generation via the maintainer (new games AND
 ///    existing saves).
-/// 3. Suppress campaign issues/quests for castle notables (relations untouched).
+/// 3. Suppress campaign issues/quests for castle notables only, never for lords (relations untouched).
 /// 4. Hourly, let an AI lord party inside a castle recruit through the dispatcher.
 /// </summary>
 public class CastleRecruitmentBehavior : CampaignBehaviorBase
@@ -151,7 +151,13 @@ public class CastleRecruitmentBehavior : CampaignBehaviorBase
 
     private void OnCanHaveCampaignIssues(Hero hero, ref bool result)
     {
-        if (result && _service.IsEnabled && hero.CurrentSettlement?.IsCastle == true)
+        if (result && BlocksIssues(_service.IsEnabled, hero.CurrentSettlement?.IsCastle == true, hero.IsNotable))
             result = false;
     }
+
+    /// <summary>
+    /// Only a castle's notables lose their issues. The engine reads a lord's settlement from his party, so a lord
+    /// resting in a castle is in a castle too and keeps his.
+    /// </summary>
+    internal static bool BlocksIssues(bool enabled, bool inCastle, bool isNotable) => enabled && inCastle && isNotable;
 }
