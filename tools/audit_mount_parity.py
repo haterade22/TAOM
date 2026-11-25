@@ -606,6 +606,9 @@ def rein_findings(monsters, known):
     `monsters` maps a mount name to its Monster element (or None); `known` maps a name to its note."""
     new, known_hits, stale = [], [], []
     for name, el in monsters.items():
+        if el is None:
+            new.append(f"{name}: Monster not found")
+            continue
         gap = rein_gap(el)
         if gap and name in known:
             known_hits.append(f"{name}: {known[name]}")

@@ -57,6 +57,11 @@ class ReinFindingsTests(unittest.TestCase):
         new, known, stale = amp.rein_findings({"a": monster()}, {"a": "#479"})
         self.assertEqual((new, len(known), stale), ([], 1, []))
 
+    def test_a_listed_mount_with_no_monster_is_new_not_known(self):
+        new, known, stale = amp.rein_findings({"a": None}, {"a": "#479"})
+        self.assertEqual((len(new), known, stale), (1, [], []))
+        self.assertIn("Monster not found", new[0])
+
     def test_a_listed_mount_that_gained_reins_is_stale(self):
         new, known, stale = amp.rein_findings({"a": monster(rein_handle_bone="x")}, {"a": "#479"})
         self.assertEqual((new, known, len(stale)), ([], [], 1))
