@@ -5390,3 +5390,103 @@ listed gait that no set bound any more was only a note.
 - **Source:** issue #1565 item 2; Codex pre-review P1 and P2 3, the Data flow lens trace 2;
   [RCA](../rca-warg-stride-gate-2026-11-24.md) F1 and F3; `tools/tests/test_gait_stride_creatures.py`
   (`KnownFailureTests`).
+
+### A build that passes every gate still needs a review of what a viewer sees (2026-11-25)
+Horse armour 1 v29 of the Rhûn chariot work passed its builder's gates, as every armour version the maintainer
+rejected that day had. A read-only review (four reviewers with one scope each, one checker per scope) read 381
+views, confirmed 60 findings, refuted 3, and its checkers added 20: 80 faults a viewer can see, 26 of the 60 at
+normal distance. Among them: a crest holder with daylight under it, loose tabs inside the eye rings, rings with
+no strap through them, and at LOD1 to LOD3 with face culling on, lames through each other and eye openings gone.
+- **Why missed:** each gate measures one number (islands within 4 mm, vertices under the skin, a face class,
+  face pairs in the poses), and the session's own reads before a showing covered only the parts he had marked.
+- **Prevent:** the review runs on each armour version before the maintainer sees it, one reviewer at a time;
+  its findings are sorted into required fixes and an approved look reported to him
+  ([blender-asset-gates.md](../../features/blender-asset-gates.md), "An independent review before the
+  maintainer sees a build").
+- **Source:** the chariot work folder under `E:\LOTRAOMAssets\_auto_workspace`: `NIGHT_LOG.md` (11:42, 12:15)
+  and `out\review\armour_1_v29\review_result.json`.
+
+### A clearance gate met by leaving plates out passes on a build with holes (2026-11-25)
+Horse armour 5 had to keep a gap to the cart pole and 0.020 m off the sweep of the cart's forks in a neck turn.
+v14 left plates out at the hips for the pole, and v15 left more out at the shoulder fronts for the forks and
+cut backing cells, so the horse showed through. Every gate passed, the session accepted v15 with the holes
+listed as "open points", and the maintainer rejected it on sight: "Fill these gaps and make the scalemail
+straightish so it doesnt deform". v16 filled the zones in straight rows (410 plates, none left out) with a pole
+gap of 0.055 m.
+- **Why missed:** the gates measured the clearances, no gate measured the bare patches, and the session listed
+  a visible hole as an open point instead of a fault.
+- **Prevent:** a clearance is met with tight, thin plates, never a hole; a conflict between clearance and
+  coverage goes to the maintainer with its numbers before a build is called accepted
+  ([blender-asset-gates.md](../../features/blender-asset-gates.md), "A plate field has no gaps" and "A
+  clearance gate must not be met with a hole").
+- **Source:** `NIGHT_LOG.md` (07:58, 09:46) and `out\armours\HANDOVER_agent2.md` (v15, v16) in the chariot
+  work folder.
+
+### A saved pose in an exported armature bends the mesh in viewers; gates that reset it see nothing (2026-11-25)
+The source armature of the horse armours carries a saved pose on `horseneck1`, `horseneck2` and `horserleg2`.
+The builds exported it, so the maintainer's viewer showed skin through the neck lames while the skin gate,
+which resets the pose first, reported 0. On armour 1 v27, 955 of 10,500 neck-lame samples lay inside the skin
+(worst 8.61 mm) with the saved pose and 0 with it cleared; on armour 5 the neck guard was bent by up to 24.8 mm.
+- **Why missed:** the gates measured the rest state they had set up, never the file as exported.
+- **Prevent:** both armour builds reset every pose bone before the export and report it (`source_pose_reset`,
+  `pose_reset_bones`); the skin-view gate `rharm_skinview.py` counts a case with the saved pose beside five
+  poses (v27 4,252 skin samples, v28 0) ([blender-asset-gates.md](../../features/blender-asset-gates.md), "A
+  viewer shows the exported pose").
+- **Source:** `NIGHT_LOG.md` (09:46, 09:48, 10:36); `out\armours\HANDOVER_agent1.md` (state after the power
+  cut) and `HANDOVER_agent2.md` (v16, item 2) in the chariot work folder.
+
+### Faces that 89 cameras do not see are not hidden: 84 percent failed a strict test (2026-11-25)
+Cart F's build had a hidden-face cull. Removing the javelin case showed two of its faults: each side slab had
+lost a large outer triangle, so a slit showed its inner face at a slant, and a boss had lost its cap (82 faces
+restored). Those slab faces count as hidden by the rule of 89 cameras that the cart agent then used to list
+cuts. Of its 7,242 candidate triangles, 1,173 passed a strict test. A first strict try with 2,000 directions
+still cut two faces seen through thin slits (121 changed pixels); 20,000 directions and 16 samples per face gave
+back 46 faces, and 1,127 faces were cut at LOD0 with 0 of 3,240,000 pixels changed in grey renders at LOD0 to
+LOD2.
+- **Why missed:** a sparse camera set was taken as proof that no sight line exists; slits and slanting views
+  fall between the cameras.
+- **Prevent:** a face is cut as hidden only when a dense test finds no sight line from either side
+  (`rhun2_strict_hidden.py`) and a view diff shows 0 changed pixels and 0 new back-face hits; any other cut,
+  such as lighter meshes for rivets, needs the maintainer's word, because it can change the look
+  ([chariot.md](../../features/chariot.md), "Rhûn cart variants and new horse armours").
+- **Source:** `NIGHT_LOG.md` (11:08, 12:15) and `out\rhun2\HANDOVER_carts.md` ("F-HIDDEN") in the chariot work
+  folder.
+
+### Substance Painter textures the first UV layer of a mesh (2026-11-24)
+The cart meshes sent to Painter had the UV layers `dco` and `UVMap`, in that order, and Painter textured the
+first. In the cart A wood set 1,446,901 of 2,744,305 slot texels (52.72 percent) were export padding, 52.65
+percent of the texels a player sees; in the wheel gold set 621,594 of 716,285 wheel texels (86.78 percent).
+Cart D had taken the padded wood set, and its wood acceptance was withdrawn.
+- **Why missed:** the first sets were judged from their compare sheets, and no count of real Painter texels per
+  mask class ran until the pilot's first cart B try, where about 40 percent were Painter texture.
+- **Prevent:** send Painter a mesh with `UVMap` as its only UV layer and prove that each mask class covers 100
+  percent of its texels; the first-pass sets are never installed ([chariot.md](../../features/chariot.md),
+  "Rhûn cart variants and new horse armours", the "Textures" list).
+- **Source:** `NIGHT_LOG.md` (23:04, 23:14) and `out\painter_pilot\truth\truth.json` in the chariot work folder.
+
+### A stopped agent leaves its Blender jobs running, and a wide fan-out of Blender agents fills the memory (2026-11-25)
+At 13:07 two armour builders and a cart review run five wide each had headless Blender jobs, beside another
+session's work: 49 Blender processes held 37.8 GB of 61.6 GB, with 4.2 GB free. The maintainer: "We have like
+36 blenders open, can we close some?". TaskStop ended the review, and its 18 Blender processes ran on until the
+session stopped them by process id; free memory rose to 26.3 GB, and the other session's 22 were not touched.
+- **Why missed:** the session counted agents (seven in flight at 11:42, above its usual four), not Blender
+  processes or free memory, and TaskStop ends an agent, not the processes it started.
+- **Prevent:** one set in work until the maintainer approves it, one Blender job at a time, a review with one
+  reviewer at a time; count Blender processes and free memory before Blender work; after a TaskStop, stop by
+  process id only the leftover Blender jobs whose command line names the session's own folder
+  ([blender-asset-gates.md](../../features/blender-asset-gates.md), "One asset at a time, one Blender job at a
+  time").
+- **Source:** `NIGHT_LOG.md` (11:42, 12:16, 13:10) in the chariot work folder.
+
+### A clock time in a log is read from the clock, never written ahead of it (2026-11-24)
+The night log of the Rhûn chariot work says "Times are the desktop clock.", yet several of its entries carried
+times ahead of the clock. Each was corrected later from a clock read, and the morning report lists the fault
+among the session's own.
+- **Why missed:** no step made a clock read come before the time an entry states; the cause of each wrong time
+  is not recorded.
+- **Prevent:** a clock time is a fact like a count ([AGENTS.md](../../../AGENTS.md), "Evidence, never
+  invention"; [evidence-over-claims.md](../../../.claude/rules/evidence-over-claims.md)): read the clock in the
+  step that writes the time, and write "about" with the read time when the event itself was not timed, as the
+  later entries do ("clock read 23:40 to 23:43").
+- **Source:** `NIGHT_LOG.md` ("MORNING REPORT", "The session's own faults this night"; 23:43) in the chariot
+  work folder.
