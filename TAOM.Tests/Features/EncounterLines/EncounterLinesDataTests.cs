@@ -23,6 +23,9 @@ public class EncounterLinesDataTests
 
     internal static readonly string[] Groups = { "west", "rohirrim", "northmen", "dunlendings", "southrons", "easterlings", "elves", "dwarves", "orcs" };
 
+    /// <summary>The dark-lord groups: one lord each (Sauron, Saruman) or one family (the Nine). Their race family is none, so they have no kin rows.</summary>
+    internal static readonly string[] DarkGroups = { "sauron", "saruman", "nazgul" };
+
     internal static readonly string[] Clans =
     {
         "dunland_raiders", "rhun_raiders", "harad_raiders", "gundabad_raiders", "umbar_corsairs",
@@ -31,6 +34,8 @@ public class EncounterLinesDataTests
 
     private static readonly string[] AllLordBuckets = { "liege", "ally", "rival", "foe", "kin" };
     private static readonly string[] WarBuckets = { "rival", "foe", "kin" };
+    private static readonly string[] DarkLordBuckets = { "liege", "ally", "rival", "foe" };
+    private static readonly string[] DarkWarBuckets = { "rival", "foe" };
     private static readonly string[] TradeBuckets = { "kin", "friend", "foe" };
     private static readonly string[] BanditBuckets = { "kin", "side", "foe" };
     private static readonly string[] RobberyKinds = { "threat", "pay_agreement", "conclusion", "start_fight" };
@@ -83,21 +88,28 @@ public class EncounterLinesDataTests
         void Add(string textId, string variation, string shortName, string keyVariation) =>
             ids.Add(textId + "." + variation, "taom_enc_" + shortName + "_" + keyVariation);
 
-        foreach (var g in Groups)
+        void AddLordRows(string g, string[] buckets, string[] warBuckets)
         {
-            foreach (var b in AllLordBuckets)
+            foreach (var b in buckets)
             {
                 foreach (var when in new[] { "first", "met" })
                     Add("str_context_line", $"taom_{g}_{b}_{when}", "context_line", $"{g}_{b}_{when}");
                 Add("hero_leave", $"taom_{g}_{b}", "hero_leave", $"{g}_{b}");
             }
-            foreach (var b in WarBuckets)
+            foreach (var b in warBuckets)
             {
                 foreach (var n in new[] { 1, 2 })
                     Add("str_surrender_demand_hero", $"taom_{g}_{b}_{n}", "surrender_demand", $"{g}_{b}_{n}");
                 Add("str_surrender_offer", $"taom_{g}_{b}", "surrender_offer", $"{g}_{b}");
                 Add("str_prisoner_released", $"taom_{g}_{b}", "prisoner_released", $"{g}_{b}");
             }
+        }
+
+        foreach (var g in DarkGroups)
+            AddLordRows(g, DarkLordBuckets, DarkWarBuckets);
+        foreach (var g in Groups)
+        {
+            AddLordRows(g, AllLordBuckets, WarBuckets);
             foreach (var b in TradeBuckets)
             {
                 foreach (var beat in new[] { "caravan_greet", "caravan_defy", "villager_greet", "villager_defy" })
@@ -123,12 +135,13 @@ public class EncounterLinesDataTests
     }
 
     [TestMethod]
-    public void TheSpecMatrix_Is678Ids_243ForLordsAnd435Keyed()
+    public void TheSpecMatrix_Is738Ids_303ForLordsAnd435Keyed()
     {
         var ids = ExpectedIds();
 
-        Assert.AreEqual(678, ids.Count);
-        Assert.AreEqual(243, ids.Keys.Count(k => k.Contains(".taom_")));
+        Assert.AreEqual(738, ids.Count);
+        Assert.AreEqual(303, ids.Keys.Count(k => k.Contains(".taom_")));
+        Assert.AreEqual(60, ids.Keys.Count(k => DarkGroups.Any(g => k.Contains(".taom_" + g + "_"))));
     }
 
     [TestMethod]
@@ -141,8 +154,8 @@ public class EncounterLinesDataTests
         var extra = actual.Select(r => r.Id).Except(expected.Keys).ToList();
         Assert.AreEqual(0, missing.Count, "missing: " + string.Join(", ", missing.Take(20)));
         Assert.AreEqual(0, extra.Count, "extra: " + string.Join(", ", extra.Take(20)));
-        Assert.AreEqual(678, actual.Count, "an id appears twice");
-        Assert.AreEqual(243, LordRows.Value.Count);
+        Assert.AreEqual(738, actual.Count, "an id appears twice");
+        Assert.AreEqual(303, LordRows.Value.Count);
         Assert.AreEqual(435, KeyedRows.Value.Count);
         foreach (var row in actual)
             Assert.AreEqual(expected[row.Id], row.Key, row.Id + " key");
