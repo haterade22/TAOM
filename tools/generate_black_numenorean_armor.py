@@ -46,6 +46,7 @@ from typing import Optional
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import rebalance_armor as ra  # noqa: E402  (curve source of truth)
+from _gamedir import ASSET_REPO  # noqa: E402
 
 CULTURE = "mordor"          # the Armory folder; the CAP is the line's (mordor_numenorean, 57 since
                             # #583), which calculate_stats routes by item id, so every call passes it
@@ -59,10 +60,7 @@ LIVE_ARMORY = (
     r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
     r"\Modules\LOTRLOME_Armory\ModuleData\LOTRLOME_items\mordor"
 )
-REPO_ARMORY = (
-    r"E:\repos\lotraom-assets\v1.4\LOTRLOME_Armory"
-    r"\ModuleData\LOTRLOME_items\mordor"
-)
+REPO_ARMORY = os.path.join(str(ASSET_REPO), "ModuleData", "LOTRLOME_items", "mordor")
 
 APPEARANCE = {"light": 1, "medium": 3, "heavy": 4, "elite": 6, "lord": 7}
 

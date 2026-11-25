@@ -48,7 +48,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from _gamedir import ensure_exists, game_dir  # noqa: E402
+from _gamedir import ASSET_REPO, ensure_exists, game_dir  # noqa: E402
 from apply_dead_mesh_item_swaps import (  # noqa: E402
     _protect_comments, _restore_comments, read_xml, swap_item_refs, write_xml,
 )
@@ -56,7 +56,7 @@ from apply_dead_mesh_item_swaps import (  # noqa: E402
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_GAME = game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
 DEFAULT_ARMORY = Path(DEFAULT_GAME) / "Modules" / "LOTRLOME_Armory"
-DEFAULT_ASSET_REPO = Path(r"E:\repos\lotraom-assets") / "v1.4" / "LOTRLOME_Armory"
+DEFAULT_ASSET_REPO = ASSET_REPO
 DEFAULT_TROOPS = REPO_ROOT / "Main" / "_Module" / "ModuleData"
 
 # --------------------------------------------------------------------------- #

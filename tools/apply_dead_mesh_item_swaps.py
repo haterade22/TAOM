@@ -78,7 +78,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from _gamedir import ensure_exists, game_dir  # noqa: E402
+from _gamedir import ASSET_REPO, ensure_exists, game_dir  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_GAME = game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
@@ -87,7 +87,7 @@ DEFAULT_CONSUMERS = REPO_ROOT / "Main" / "_Module" / "ModuleData"
 # The asset repo versions a copy of the Armory ModuleData. Keeping the two in
 # step is what stops a module reinstall silently reverting this (CLAUDE.md
 # Traps: "a fix in a dependency module").
-DEFAULT_ASSET_REPO = Path(r"E:\repos\lotraom-assets") / "v1.4" / "LOTRLOME_Armory"
+DEFAULT_ASSET_REPO = ASSET_REPO
 
 # --------------------------------------------------------------------------- #
 # The decision                                                                 #

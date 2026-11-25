@@ -37,12 +37,15 @@ import re
 import sys
 from datetime import date
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _gamedir import ASSET_REPO  # noqa: E402
+
 CULTURE = "Culture.mordor"
 LINE = "Black Numenorean"
 
 LIVE_MD = (r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
            r"\Modules\LOTRLOME_Armory\ModuleData")
-REPO_MD = r"E:\repos\lotraom-assets\v1.4\LOTRLOME_Armory\ModuleData"
+REPO_MD = os.path.join(str(ASSET_REPO), "ModuleData")
 
 MARKER = "Black Numenorean weapons"
 

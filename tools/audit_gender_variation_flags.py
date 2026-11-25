@@ -46,11 +46,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import validate_mesh_refs as vm  # noqa: E402
-from _gamedir import ensure_exists, game_dir  # noqa: E402
+from _gamedir import ASSET_REPO, ensure_exists, game_dir  # noqa: E402
 
 DEFAULT_GAME = game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
 DEFAULT_ARMORY = Path(DEFAULT_GAME) / "Modules" / "LOTRLOME_Armory"
-DEFAULT_ASSET_REPO = Path(r"E:\repos\lotraom-assets") / "v1.4" / "LOTRLOME_Armory"
+DEFAULT_ASSET_REPO = ASSET_REPO
 
 FEMALE_SUFFIXES = ("_female", "_converted", "_converted_slim")
 _COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
