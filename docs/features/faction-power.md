@@ -129,7 +129,7 @@ A write clears the party size cache of every party (`PartySizeCacheInvalidator.I
 
 ## Changelog
 
-- 2026-11-25: PR #1592 (Luiz): the feature, the console command, and the realm key `power_culture` for Shaghâna and
+- 2026-11-25: PR #1592: the feature, the console command, and the realm key `power_culture` for Shaghâna and
   Âbanissa.
 
 ## GitHub Issue
