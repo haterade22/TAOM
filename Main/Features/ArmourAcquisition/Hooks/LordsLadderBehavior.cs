@@ -44,7 +44,11 @@ public sealed class LordsLadderBehavior : CampaignBehaviorBase
         _logger = logger;
     }
 
-    private bool Ready => _gate.IsActive && !_coop.ShouldDeferToHost && !_server.IsDedicatedServer;
+    /// <summary>
+    /// Kills count for a running rung whether or not the switch is on: the armoury's hand-in is hidden while it is
+    /// off, so the quest's own deeds are then the only way to finish it. Finds, which add items, also need the gate on.
+    /// </summary>
+    private bool CanCredit => !_coop.ShouldDeferToHost && !_server.IsDedicatedServer;
 
     public override void RegisterEvents()
     {
@@ -64,9 +68,11 @@ public sealed class LordsLadderBehavior : CampaignBehaviorBase
     private void OnPlayerBattleEnd(MapEvent mapEvent)
     {
         var kills = _tally.Take();
-        if (mapEvent == null || !Ready)
+        if (mapEvent == null || !CanCredit)
             return;
         CreditKills(kills);
+        if (!_gate.IsActive)
+            return;
         var won = mapEvent.WinningSide != BattleSideEnum.None && mapEvent.WinningSide == mapEvent.PlayerSide;
         if (_ladder.RollMaterialDrop(_player.HeroId, won, kills, _player.CultureId, _rng) is not { } find
             || !_player.AddPiece(find.ItemId, null, find.Units))
@@ -77,10 +83,10 @@ public sealed class LordsLadderBehavior : CampaignBehaviorBase
     }
 
     // A battle the hero left before it ended raises no battle end for the player; its kills still count.
-    private void OnHourlyTick()
+    internal void OnHourlyTick()
     {
         var kills = _tally.Take();
-        if (kills > 0 && Ready)
+        if (kills > 0 && CanCredit)
             CreditKills(kills);
     }
 
