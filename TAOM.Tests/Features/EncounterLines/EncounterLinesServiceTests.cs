@@ -43,7 +43,7 @@ public class EncounterLinesServiceTests
         },
         new Dictionary<string, string>
         {
-            ["west"] = "man", ["rohirrim"] = "man", ["orcs"] = "orc", ["southrons"] = "man", ["dwarves"] = "dwarf",
+            ["west"] = "man", ["rohirrim"] = "man", ["orcs"] = "orc", ["southrons"] = "man", ["dwarves"] = "dwarf", ["sauron"] = "none",
         },
         new Dictionary<string, string>
         {
@@ -53,7 +53,8 @@ public class EncounterLinesServiceTests
         {
             ["harad_raiders"] = new(FactionSide.Evil, "man", "southrons"),
             ["feral_orcs"] = new(FactionSide.Evil, "orc", null),
-        });
+        },
+        new Dictionary<string, string> { ["sauron"] = "sauron" });
 
     private static LordFacts Lord(
         string culture = "mordor",
@@ -144,6 +145,21 @@ public class EncounterLinesServiceTests
     [TestMethod]
     public void IsSpeaker_SauronInMordor_IsFalse_TheFamilyDoesNotMatch()
         => Assert.IsFalse(_service.IsSpeaker(Lord(race: "sauron"), "orcs"));
+
+    [TestMethod]
+    public void IsSpeaker_SauronInMordor_SpeaksForTheSauronGroup_FoundByRace()
+        => Assert.IsTrue(_service.IsSpeaker(Lord(race: "sauron"), "sauron"));
+
+    [TestMethod]
+    public void IsSpeaker_AnOrcOfMordor_DoesNotSpeakForTheSauronGroup()
+        => Assert.IsFalse(_service.IsSpeaker(Lord(), "sauron"));
+
+    [TestMethod]
+    public void IsLordBucket_SauronIsNeverKin_EvenToAnotherNoFamilyPlayer()
+    {
+        _adapter.Player().Returns(new PlayerFacts("mordor", "sauron", new SideIds("empire_s", "mordor")));
+        Assert.IsTrue(_service.IsLordBucket(Lord(race: "sauron"), "ally"));
+    }
 
     [TestMethod]
     public void IsSpeaker_AManOfMordor_IsFalse()

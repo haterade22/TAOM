@@ -77,8 +77,8 @@ internal sealed class EncounterLinesService : IEncounterBucketSource
 
     /// <summary>
     /// True when <paramref name="lord"/> speaks for <paramref name="group"/>: a lord outside the player's clan, met on the
-    /// map, whose culture is in the group and whose race family is the group's. A lord under the player's command is
-    /// left to vanilla unless the player rules the lord's realm, where the liege rows apply.
+    /// map, whose race (the dark lords) or culture is in the group and whose race family is the group's. A lord under the
+    /// player's command is left to vanilla unless the player rules the lord's realm, where the liege rows apply.
     /// </summary>
     internal bool IsSpeaker(LordFacts? lord, string group)
     {
@@ -87,9 +87,7 @@ internal sealed class EncounterLinesService : IEncounterBucketSource
         if (_adapter.InSettlement)
             return false;
 
-        var map = _groups.GetMap();
-        var family = map.FamilyOfGroup(group);
-        return family != null && map.GroupOfCulture(lord.CultureId) == group && map.FamilyOfRace(lord.RaceName) == family;
+        return SpeakerGroup(lord) == group;
     }
 
     /// <summary>True when the player stands in <paramref name="bucket"/> towards <paramref name="lord"/>.</summary>
@@ -176,8 +174,9 @@ internal sealed class EncounterLinesService : IEncounterBucketSource
     }
 
     /// <summary>
-    /// For the three sentences the text seam handles (caravan and villager surrender, the hideout boss's challenge), sets
-    /// <see cref="SentenceLineVariable"/> to the TAOM line and answers true; any other sentence, or a missing row, false.
+    /// For the sentences the text seam handles (caravan and villager surrender, the hideout boss's challenge, and the liege
+    /// conversations in <see cref="LiegeLines"/>), sets <see cref="SentenceLineVariable"/> to the TAOM line and answers true;
+    /// any other sentence, or a missing row, false.
     /// </summary>
     internal bool TrySetSentenceLine(string? sentenceId)
     {
@@ -190,8 +189,42 @@ internal sealed class EncounterLinesService : IEncounterBucketSource
             case HideoutBossSentence:
                 return TryHideoutLine();
             default:
-                return false;
+                return sentenceId != null && LiegeLines.TextOfSentence.TryGetValue(sentenceId, out var textId) && TryLiegeLine(textId);
         }
+    }
+
+    /// <summary>
+    /// A liege conversation line, in a hall as on the map: the realm's own row when the lord rules his kingdom and the beat
+    /// has realm rows, else the row of the lord's speaker group. A lord of the player's clan, a lord no group fits, or a
+    /// missing row leaves vanilla's line.
+    /// </summary>
+    private bool TryLiegeLine(string textId)
+    {
+        if (!Active)
+            return false;
+        var lord = _adapter.ConversationLord();
+        if (lord == null || !lord.IsLord || lord.InPlayerClan)
+            return false;
+
+        if (lord.RuledRealmId.Length > 0 && LiegeLines.RealmTexts.Contains(textId)
+            && SetLiegeVariation(textId, LiegeLines.RealmPrefix + lord.RuledRealmId))
+            return true;
+        var group = SpeakerGroup(lord);
+        return group != null && SetLiegeVariation(textId, LiegeLines.GroupPrefix + group);
+    }
+
+    private bool SetLiegeVariation(string textId, string variation) =>
+        textId == LiegeLines.MercenaryPitch
+            ? _adapter.TrySetMercenaryPitch(SentenceLineVariable, textId, variation)
+            : _adapter.TrySetVariable(SentenceLineVariable, textId, variation);
+
+    /// <summary>The lord's speaker group (by race first, then culture), or null when his race family is not the group's.</summary>
+    private string? SpeakerGroup(LordFacts lord)
+    {
+        var map = _groups.GetMap();
+        var group = map.GroupOf(lord.CultureId, lord.RaceName);
+        var family = map.FamilyOfGroup(group);
+        return family != null && map.FamilyOfRace(lord.RaceName) == family ? group : null;
     }
 
     /// <summary>

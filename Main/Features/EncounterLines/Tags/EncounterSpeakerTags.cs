@@ -92,3 +92,30 @@ public sealed class TaomSpeakerOrcsTag : ConversationTag
 
     public override bool IsApplicableTo(CharacterObject character) => EncounterTagGate.Speaker(character, Group);
 }
+
+public sealed class TaomSpeakerSauronTag : ConversationTag
+{
+    public const string Group = "sauron";
+
+    public override string StringId => "taom_speaker_" + Group;
+
+    public override bool IsApplicableTo(CharacterObject character) => EncounterTagGate.Speaker(character, Group);
+}
+
+public sealed class TaomSpeakerSarumanTag : ConversationTag
+{
+    public const string Group = "saruman";
+
+    public override string StringId => "taom_speaker_" + Group;
+
+    public override bool IsApplicableTo(CharacterObject character) => EncounterTagGate.Speaker(character, Group);
+}
+
+public sealed class TaomSpeakerNazgulTag : ConversationTag
+{
+    public const string Group = "nazgul";
+
+    public override string StringId => "taom_speaker_" + Group;
+
+    public override bool IsApplicableTo(CharacterObject character) => EncounterTagGate.Speaker(character, Group);
+}
