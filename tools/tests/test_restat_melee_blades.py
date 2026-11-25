@@ -1013,7 +1013,15 @@ class CheckFlagTests(TmpCase):
         from unittest import mock
         pieces = self.tmp_path / "pieces.xml"
         pieces.write_text("<CraftingPieces/>", encoding="utf-8")
-        with mock.patch.object(restat, "MODULES", self.tmp_path),                 mock.patch.object(restat.ladder, "load_spec", return_value={}),                 mock.patch.object(restat.mc, "load", return_value=None),                 mock.patch.object(restat.mc, "price_all", return_value=({}, [])),                 mock.patch.object(restat.mc, "load_shield_ids", return_value=[]),                 mock.patch.object(restat.report, "load_troops", return_value=[]),                 mock.patch.object(restat, "build_plans", return_value=(plans, [])),                 mock.patch.object(restat, "write_pieces") as write,                 contextlib.redirect_stdout(io.StringIO()) as out:
+        with mock.patch.object(restat, "MODULES", self.tmp_path), \
+                mock.patch.object(restat.ladder, "load_spec", return_value={}), \
+                mock.patch.object(restat.mc, "load", return_value=None), \
+                mock.patch.object(restat.mc, "price_all", return_value=({}, [])), \
+                mock.patch.object(restat.mc, "load_shield_ids", return_value=[]), \
+                mock.patch.object(restat.report, "load_troops", return_value=[]), \
+                mock.patch.object(restat, "build_plans", return_value=(plans, [])), \
+                mock.patch.object(restat, "write_pieces") as write, \
+                contextlib.redirect_stdout(io.StringIO()) as out:
             code = restat.main(["--pieces", str(pieces)] + argv)
         return code, out.getvalue(), write, pieces.read_text(encoding="utf-8")
 
