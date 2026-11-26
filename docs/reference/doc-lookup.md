@@ -19,6 +19,9 @@
 | Work on The Long Defeat (wave survival on the siege maps): its `[Check]` lines, how a soldier gets a place, the decisions for later phases | [long-defeat.md](../features/long-defeat.md) |
 | Build or change The Long Defeat's leaderboard: the report's fields, the server's rules, the boards | [leaderboard-plan.md](../features/long-defeat/leaderboard-plan.md) |
 | Debug / iterate on problem | `/investigate` |
+| Find the technique or the procedure for a task, or the knowledge entries for a file | `python tools/knowledge.py find <words>` and `python tools/knowledge.py for <file>`, which prints each entry with how it acts today; [knowledge-library.md](../features/knowledge-library.md). The procedure list is computed, so a procedure that is one section of a larger doc is found only through the task rows of this table or an entry's `see` |
+| Record a technique or a standing correction of the maintainer | [knowledge-library.md](../features/knowledge-library.md), "How to add a technique". Write an entry only when no single area rule reaches every file the technique applies to |
+| An outside tool, a reference or a review did the work better than our own rounds, or the maintainer rejected one result twice | [`/teardown`](../../.claude/skills/teardown/SKILL.md): measure both, write the record in `docs/knowledge/teardowns/` and one knowledge entry per default |
 | Compare multiple approaches | [think-before-coding.md](../../.claude/rules/think-before-coding.md) |
 | Understand architecture | [architecture.md](../../docs/ai-includes/architecture.md) |
 | Check thread-local and cache patterns | [patterns.md](../../docs/ai-includes/patterns.md) |

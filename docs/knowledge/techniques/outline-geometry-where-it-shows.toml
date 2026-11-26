@@ -1,0 +1,24 @@
+title = "Spend geometry where the outline shows"
+line = "Put the columns of a curved part where its outline shows (the crest, the band ends), and carry the normals of LOD0 to the far levels."
+why = "A faceted hoop reads as low detail at the outline, and the outline is where a normal map cannot help."
+area = "asset-craft"
+status = "active"
+next = "A report of the facets on half a hoop and of the share of faces that meet a neighbour at more than 30 degrees, and the carry of the LOD0 normals as a shared tool. The cap of 11,300 triangles for one horse stands against more columns at the outline."
+
+[when]
+outside = ["*rharmb_bands*.py", "*rharmb_lodnormals*.py", "*rharm*design*.py"]
+tasks = ["mesh outline", "mesh silhouette", "far lods", "curved part"]
+
+[[evidence]]
+grade = "measured"
+value = "Model 01: 4.6 percent of the neck's faces meet a neighbour at more than 30 degrees. Ours: v16 77.0 percent, v18ay 75.9 percent, about six straight facets on half a hoop, under a cap of 11,300 triangles for one horse."
+method = "the teardown record docs/knowledge/teardowns/2026-11-26-horse-armour-neck-and-head.md; the probe td_probe.py and its crest scripts are kept with the asset job, outside the repo"
+date = 2026-11-26
+
+[[acts]]
+state = "instance"
+where = "rharmb_lodnormals.py: the far levels take the shading normals of LOD0"
+scope = "the neck bands, the collar and the head shell of armour 5; the columns at the outline are not built"
+
+[[source]]
+teardown = "2026-11-26-horse-armour-neck-and-head"

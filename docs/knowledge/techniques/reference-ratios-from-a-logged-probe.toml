@@ -1,0 +1,24 @@
+title = "Take ratios from a reference with a probe that logs its arguments"
+line = "Scale a reference by one named landmark, measure ratios (bead to pitch, step to pitch, tilt) with a script kept beside the result, and let the script write its arguments into its output."
+why = "A reference gives ratios, not lengths, and a number nobody can run again is a guess. A width in the build came from a picture probe whose columns were not logged and that could not be repeated."
+area = "asset-craft"
+status = "active"
+next = "One general probe in tools/blender: sections, circle fits, pitch and mirror error, with its arguments written into its output."
+
+[when]
+outside = ["*/tripo_in/*", "*/tripo_refs/*", "*td_probe*.py"]
+tasks = ["reference model", "reference probe", "teardown"]
+
+[[evidence]]
+grade = "measured"
+value = "The picture probe of 2026-11-25 gave a bead of 0.2 of the pitch and could not be repeated; the two models give 0.147 and 0.167. Of the teardown's scripts only td_probe.py writes its arguments."
+method = "the teardown record docs/knowledge/teardowns/2026-11-26-horse-armour-neck-and-head.md; the probe td_probe.py and its crest scripts are kept with the asset job, outside the repo"
+date = 2026-11-26
+
+[[acts]]
+state = "instance"
+where = "td_probe.py in the teardown folder of the asset job: it writes its arguments into its report"
+scope = "sections, face shares and the mirror error; the two crest scripts do not write their arguments"
+
+[[source]]
+teardown = "2026-11-26-horse-armour-neck-and-head"

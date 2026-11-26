@@ -44,6 +44,7 @@ This skill owns none of these procedures. Open the owner and follow it; come bac
 | Task | Owner |
 |---|---|
 | Tripo AI FBX to a prop or map icon; new UVs; Painter textures; rebuild from solids | `/prep-tripo-prop` |
+| A reference from an outside tool for a part we build ourselves; a part Mike rejected twice | `/teardown`, before the next build round |
 | Hair, beards, eyebrows, grooms | `/groom-hair` |
 | New creature or mount; replace a mount's FBX or tpac | [creature-mount-authoring.md](../../../docs/ai-includes/creature-mount-authoring.md) |
 | Creature or rider clips | [creature-animation-blender-mcp-workflow.md](../../../docs/ai-includes/creature-animation-blender-mcp-workflow.md) |
