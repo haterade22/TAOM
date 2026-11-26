@@ -4,6 +4,7 @@ using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
 using TAOM.Core.Logging;
 using TAOM.Features.CultureMarketplace.Domain;
+using TAOM.Features.TelcharsMark;
 
 namespace TAOM.Adapters;
 
@@ -112,9 +113,8 @@ public class ItemPoolAdapter : IItemPoolAdapter
         if (string.IsNullOrEmpty(itemId)) return false;
         try
         {
-            var type = MBObjectManager.Instance?.GetObject<ItemObject>(itemId)?.ItemType;
-            return type == ItemObject.ItemTypeEnum.Arrows || type == ItemObject.ItemTypeEnum.Bolts
-                || type == ItemObject.ItemTypeEnum.Bullets;
+            var item = MBObjectManager.Instance?.GetObject<ItemObject>(itemId);
+            return item != null && UpgradeItemKindMap.FromItemType(item.ItemType) == UpgradeItemKind.Ammo;
         }
         catch (Exception ex)
         {

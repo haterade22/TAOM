@@ -1410,7 +1410,7 @@ enlistment. There is no save migration for that, deliberately.
   skeleton. That predates #525 for armour; weapons make it visible in-hand as well.
 - **Honourable discharge reclaims the issued kit by item id**, one per ledger entry.
   `IPartyItemRosterAdapter.RemoveItem` drains the unmodified stack with no notion of provenance.
-  Since #527 ammunition (arrows, bolts, bullets, per `IItemPoolAdapter.IsAmmunition`) is issued
+  Since #527 ammunition (arrows, bolts, sling stones, bullets: `UpgradeItemKindMap`'s `Ammo` types, per `IItemPoolAdapter.IsAmmunition`) is issued
   but never written to the ledger, so a quiver refilled from loot is never taken. Weapons and
   armour are still reclaimed by id, so a looted copy of an issued weapon can be the one taken.
   Desertion keeps the kit and is unaffected.

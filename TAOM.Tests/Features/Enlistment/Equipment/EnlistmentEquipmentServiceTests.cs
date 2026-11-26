@@ -83,6 +83,18 @@ public class EnlistmentEquipmentServiceTests
     }
 
     [TestMethod]
+    public void IsAmmunition_ReadsTheAmmoKindOfTheItemKindMap()
+    {
+        // UpgradeItemKindMapTests pins every engine item type; SlingStones is Ammo there, as the engine pairs it with the Sling.
+        var adapter = TAOM.Tests.Infrastructure.RepoPaths.ReadSource("Main/Adapters/ItemPoolAdapter.cs", stripComments: true);
+        int method = adapter.IndexOf("public bool IsAmmunition(", System.StringComparison.Ordinal);
+        Assert.IsTrue(method >= 0, "IsAmmunition is gone from ItemPoolAdapter");
+        int end = adapter.IndexOf("private static string ResolveByPrefix", method, System.StringComparison.Ordinal);
+        StringAssert.Contains(adapter.Substring(method, end - method),
+            "UpgradeItemKindMap.FromItemType(item.ItemType) == UpgradeItemKind.Ammo");
+    }
+
+    [TestMethod]
     public void IssueForTier_SecondCallSameTier_ReturnsAlreadyIssued_NoSecondAdd()
     {
         SetupRoster("enlist_vlandia_infantry_recruit", "chest_a");
