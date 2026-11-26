@@ -4,7 +4,8 @@ The bash judge the hook ran before #680 cost about 25 microseconds a word, so un
 force push carrying 250 KB of quoted text holding `push` outran the 5 s registration it then had
 (idle, 400 KB took 4.9 s) and ran unjudged. The port must give every verdict, and name every
 target, the bash judge did. SEVEN_C holds every tools/test_hooks.sh 7c command of 143f0fa8 with the
-verdict the bash judge gave it there, on a checkout of bannerlord-1.5.x or of a feature branch. PINS
+verdict the bash judge gave it there, on a checkout of bannerlord-1.5.x or of a feature branch, plus
+the #1556 redirection rows, whose verdicts are the issue's. PINS
 hold one line per place where a natural Python choice reads a line differently from bash; each
 verdict was read from the bash judge's own functions at 143f0fa8 with the current branch pinned.
 GLOB_OVERBLOCK is the one designed difference of the port: a refspec pattern holding any bracket, ?,
@@ -18,6 +19,7 @@ import sys
 import tempfile
 import time
 import unittest
+import unittest.mock
 
 HOOKS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".claude", "hooks")
 sys.path.insert(0, HOOKS)
@@ -516,6 +518,23 @@ class Issue1556Tests(unittest.TestCase):
         # reading is the push judge's extra candidate only, never their default.
         self.assertIn("\ngit reset --hard", sw.segments("echo \\>|git reset --hard"))
         self.assertIn("\ngit reset --hard", sw.segments("echo \\>&git reset --hard"))
+        for cmd in ("echo a\\>&git reset --hard", "echo a\\>|git clean -fdx", "echo a\\<&git add -A"):
+            with self.subTest(cmd=cmd):
+                self.assertIn(cmd.split("&")[-1].split("|")[-1], sw.commands(cmd, "Bash", True).split("\n"))
+
+    def test_the_second_split_runs_only_where_a_redirection_pair_is(self):
+        # It can add a line only at <& >& &> >| (REDIRECTION_PAIR), so skipping it elsewhere keeps
+        # the candidate lines and the 7i deadline (#1556 review).
+        real, seps = sw.segments, []
+
+        def counting(text, esc="\\", separator=sw.EVERY_SEPARATOR):
+            seps.append(separator)
+            return real(text, esc, separator)
+        with unittest.mock.patch.object(sw, "segments", counting):
+            sw.push_candidates("git push --force origin a; git push origin b > log", "PowerShell")
+            self.assertNotIn(sw.COMMAND_SEPARATOR, seps)
+            sw.push_candidates("git push --force origin 2>&1 bannerlord-1.5.x", "Bash")
+            self.assertIn(sw.COMMAND_SEPARATOR, seps)
 
 
 class SevenCTests(unittest.TestCase):

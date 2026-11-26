@@ -5437,3 +5437,19 @@ while the C# suite ran beside it. The measure that followed showed more: the cal
 - **Source:** issue #1566 (the comment of 2026-11-24 has the numbers); the Tooling lens and the Codex pre-review;
   `tools/tests/test_shellwords.py`. The hook is not changed: the Bash tool's 7,500 character cap keeps a real
   command near the smallest of those sizes.
+
+### A gate that may only refuse more is proved against the gate it replaces, over generated input (#1556, 2026-11-26)
+PR #1609 kept the words after a redirection (`2>&1`, `&>log`) on the push's line by making an `&` or `|` that
+follows `<` or `>` a non-separator in `segments()` and the quote-blind split. Its rows all passed, and two
+shapes that trunk refused got through: `&>/dev/null` with no refspec, and `echo \>|git push ...`, where the
+`>` is escaped and the `|` is real. The change also reached every confirm gate that calls `segments()`. The
+first fix kept trunk's split and read the new one beside it, which is safe by construction, but doubled the
+reader's work, and a 2 MB force push then overran the judge's 3 s budget and was asked instead of blocked.
+- **Why missed:** the tests held the cases the change was written for. Nothing compared the old and the new
+  verdicts on input the author did not choose, nobody listed the callers of the shared function, and the fix
+  was timed by no one.
+- **Prevent:** before changing a function several hooks share, list its callers and change only the reader the
+  issue names. Prove "only refuses more" by diffing the old and new verdicts over generated commands, and run
+  `tools/test_hooks.sh` 7i for any change to the push reader.
+- **Source:** issue #1556, PR #1609; Codex pre-review, Tooling, Efficiency, Completeness and Design lenses;
+  `docs/reviews/rca-push-judge-redirection-2026-11-26.md`; `tools/tests/test_pushjudge.py` (`Issue1556Tests`).

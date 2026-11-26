@@ -323,30 +323,25 @@ def to_posix(cmd, tool):
     return bash_to_posix(cmd)
 
 
-# Every ; & | and newline: the split every gate reads.
+# Every ; & | and newline: the default split of segments() and of the push reader's blind pieces.
 EVERY_SEPARATOR = re.compile(r"[;&|\n]")
 # A & or | that belongs to a redirection (2>&1, >&2, &>log, >|log, <&0, 2>&-) is not a command
 # separator: cutting there dropped every word after it from the line holding the push (#1556).
 # && , || and |& stay separators. It cannot see an escaped < or > (echo \>|git push ...), so
 # push_candidates reads it beside EVERY_SEPARATOR, never instead of it: a second set of lines can
 # only refuse more.
-SEPARATOR = re.compile(r"[;\n]|(?<![<>])&(?!>)|(?<!>)\|")
+COMMAND_SEPARATOR = re.compile(r"[;\n]|(?<![<>])&(?!>)|(?<!>)\|")
+# The only text where COMMAND_SEPARATOR cuts differently from EVERY_SEPARATOR, so the push reader
+# skips the second split where it cannot add a line (the 7i deadline, #1556 review).
+REDIRECTION_PAIR = re.compile(r"[<>]&|&>|>\|")
 
 
-def _redirection_char(text, i):
-    """True when the & or | at text[i] is part of a redirection, not a separator."""
-    c = text[i]
-    if c == "&":
-        return (text[i - 1:i] in ("<", ">") and i > 0) or text[i + 1:i + 2] == ">"
-    return c == "|" and i > 0 and text[i - 1] == ">"
-
-
-def segments(text, esc="\\", redirections=False):
-    """Text split at ; & | and newlines outside quotes, one segment per line. A newline inside
-    quotes becomes a space, an escaped newline joins its lines, and a # that starts a word outside
-    quotes drops the rest of its line. esc is the shell's escape: \\ for POSIX text, a backtick for
-    a raw PowerShell command. redirections=True keeps a redirection's & or | in its segment (the
-    push judge's extra reading, #1556)."""
+def segments(text, esc="\\", separator=EVERY_SEPARATOR):
+    """Text split at the separator's ; & | and newlines outside quotes, one segment per line. A
+    newline inside quotes becomes a space, an escaped newline joins its lines, and a # that starts a
+    word outside quotes drops the rest of its line. esc is the shell's escape: \\ for POSIX text, a
+    backtick for a raw PowerShell command. COMMAND_SEPARATOR keeps a redirection's & or | in its
+    segment (the push judge's extra reading, #1556)."""
     text = text.replace("\r", "")
     out, q, i, n = [], "", 0, len(text)
     while i < n:
@@ -367,7 +362,7 @@ def segments(text, esc="\\", redirections=False):
             j = text.find("\n", i)
             i = n if j < 0 else j
             continue
-        elif c in ";&|\n" and not (redirections and _redirection_char(text, i)):
+        elif c in ";&|\n" and separator.match(text, i):
             out.append("\n")
         else:
             out.append(c)
@@ -391,7 +386,7 @@ def _blind_pieces(text, separator=EVERY_SEPARATOR):
     q = QUOTE.search(text)
     limit = q.start() if q else len(text)
     out, start = [], 0
-    for piece in separator.split(text):
+    for piece in separator.split(text):  # every separator match is one character
         m = WORD_HASH.search(piece) if start < limit else None
         out.append(piece[:m.start()] if m and start + m.start() < limit else piece)
         start += len(piece) + 1
@@ -451,6 +446,9 @@ def push_candidates(cmd, tool):
        kept;
     3. the raw command split outside quotes with the tool's own escape, the split validate-push ran
        before plan 027, so reading PowerShell never loses a push the raw text showed;
+    Each of 1 to 3 is read a second time with COMMAND_SEPARATOR when its text holds a
+    REDIRECTION_PAIR, so the words after a redirection stay on the push's line (#1556). The first
+    reading stays, so the extra lines can only refuse more;
     4. each line above again with its quoted or escaped < and > marked as words (#691): linear, so
        it also covers a segment too long for the shlex pass, a bash -c script and a $( ) body. A
        real redirection inside a nested script then reads as a word, which can only refuse more.
@@ -463,19 +461,20 @@ def push_candidates(cmd, tool):
     texts = [unfold(posix)]
     if unfold(cmd) != texts[0]:
         texts.append(unfold(cmd))
-    lines = [p for t in texts for sep in (EVERY_SEPARATOR, SEPARATOR) for p in _blind_pieces(t, sep)]
-    quoted = segments(posix).split("\n") + segments(posix, redirections=True).split("\n")
+    def readings(t):
+        # segments() drops \r before it reads, so the pair test does too (a >\r& is a >&).
+        return (EVERY_SEPARATOR, COMMAND_SEPARATOR) if REDIRECTION_PAIR.search(t.replace("\r", "")) \
+            else (EVERY_SEPARATOR,)
+    lines = [p for t in texts for sep in readings(t) for p in _blind_pieces(t, sep)]
+    quoted = list(dict.fromkeys(s for sep in readings(posix) for s in segments(posix, separator=sep).split("\n")
+                                if "push" in s))
     lines += quoted
-    lines += [w for w in (_words_kept(q) for q in quoted if "push" in q) if w]
+    lines += [w for w in map(_words_kept, quoted) if w]
     esc = "`" if tool == "PowerShell" else "\\"
-    lines += segments(cmd, esc).split("\n") + segments(cmd, esc, redirections=True).split("\n")
-    lines += [_quoted_redirs_marked(line) for line in lines if "push" in line]
-    seen, keep = set(), []
-    for line in lines:
-        if "push" in line and line not in seen:
-            seen.add(line)
-            keep.append(line)
-    return keep
+    lines += [s for sep in readings(cmd) for s in segments(cmd, esc, sep).split("\n")]
+    lines = list(dict.fromkeys(line for line in lines if "push" in line))
+    lines += [_quoted_redirs_marked(line) for line in lines]
+    return list(dict.fromkeys(line for line in lines if "push" in line))
 
 
 # ---- git invocations and the repository each runs in (2026-10-16) -------------------------------

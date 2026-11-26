@@ -41,7 +41,8 @@ BLOCK_MATCHING = "every matching branch, both trunks included (a : refspec or pu
 _CLEAN = str.maketrans({c: " " for c in "\"'(){}`"})
 _IFS = re.compile(r"[ \t\n]+")
 _ASCII_LOWER = str.maketrans("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")
-_REDIR = re.compile(r"[<>]")
+# A redirection: < or >, with the & of &> and &>> (#1556).
+_REDIR = re.compile(r"&?>|<")
 _FD = re.compile(r"[0-9]+")
 _FORCE = ("--force", "--force-with-lease", "--force-if-includes")
 _EVERY = ("--all", "--branches")
@@ -189,9 +190,7 @@ class Judge:
             m = _REDIR.search(tok)
             if m:
                 rskip = tok[-1] in "<>"
-                # The & of &> and &>> is the redirection's, never a word of its own (#1556).
-                cut = m.start() - 1 if tok[m.start()] == ">" and tok[:m.start()].endswith("&") else m.start()
-                tok = tok[:cut]
+                tok = tok[:m.start()]
                 if not tok or _FD.fullmatch(tok) or tok == "*":
                     continue
             if tok.startswith("--"):
