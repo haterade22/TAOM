@@ -64,9 +64,11 @@ public class IncidentVoicesBindingTests
     [TestCategory("BindingVerification")]
     public void CanIncidentBeInvoked_IsTooLargeForTheClrToInline()
     {
-        var il = Target().GetMethodBody()!.GetILAsByteArray()!.Length;
+        var body = Target().GetMethodBody()!;
+        var il = body.GetILAsByteArray()!.Length;
 
-        Assert.IsTrue(il > 32, "IL size " + il + " could be inlined into a caller compiled first, which would skip the postfix");
+        // a method with an exception clause is never inlined; the installed body is 158 bytes with two try/finally regions
+        Assert.IsTrue(body.ExceptionHandlingClauses.Count > 0 || il > 100, "IL size " + il + " could be inlined into a caller compiled first, which would skip the postfix");
     }
 
     [TestMethod]
@@ -134,6 +136,54 @@ public class IncidentVoicesBindingTests
         foreach (var rule in ShippedCatalog().Rules)
             foreach (var variable in rule.Places.Select(p => p.Variable))
                 Assert.IsTrue(strings.Contains(variable), rule.Id + " " + variable);
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheVariablesVanillaSetsOnADescription_AreAllInTheCatalogsVars()
+    {
+        RequireGame();
+        // every RegisterIncident call is followed by its description lambda; the SetTextVariable names that lambda loads are the incident's variables
+        var register = AccessTools.Method(typeof(IncidentsCampaignBehaviour), "InitializeIncidents")!;
+        var lambdas = typeof(IncidentsCampaignBehaviour).GetNestedTypes(BindingFlags.NonPublic | BindingFlags.Public)
+            .SelectMany(n => n.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
+            .Where(m => m.GetMethodBody() != null && m.GetParameters().Length == 1 && m.GetParameters()[0].ParameterType == typeof(TextObject) && m.ReturnType == typeof(bool))
+            .ToDictionary(m => m.Name, m => m);
+
+        var found = new Dictionary<string, HashSet<string>>();
+        string? current = null;
+        foreach (var instruction in PatchProcessor.GetOriginalInstructions(register))
+        {
+            if (instruction.opcode == OpCodes.Ldstr && instruction.operand is string text && text.StartsWith("incident_", StringComparison.Ordinal))
+            {
+                current = text;
+                found[current] = new HashSet<string>();
+            }
+            else if (current != null && (instruction.opcode == OpCodes.Ldftn) && instruction.operand is MethodInfo lambda
+                && lambda.GetParameters().Length == 1 && lambda.GetParameters()[0].ParameterType == typeof(TextObject) && lambda.ReturnType == typeof(bool))
+            {
+                // a description condition: its SetTextVariable names belong to the description of the incident registered just before it
+                // the name is the string loaded right after the TextObject argument, before the value
+                var all = PatchProcessor.GetOriginalInstructions(lambda).ToList();
+                for (var k = 1; k < all.Count; k++)
+                {
+                    var previous = all[k - 1].opcode;
+                    if (all[k].opcode == OpCodes.Ldstr && all[k].operand is string name && System.Text.RegularExpressions.Regex.IsMatch(name, "^[A-Z][A-Z0-9_]*$")
+                        && (previous == OpCodes.Ldarg_0 || previous == OpCodes.Ldarg_1 || previous == OpCodes.Ldarg_S || previous == OpCodes.Ldarg))
+                        found[current].Add(name);
+                }
+            }
+        }
+
+        Assert.IsTrue(lambdas.Count > 0 && found.Count > 0, "no description conditions were found in the installed IL");
+        var missing = new List<string>();
+        foreach (var rule in ShippedCatalog().Rules)
+        {
+            var listed = rule.Vars.Select(v => v.ToUpperInvariant()).ToHashSet();
+            foreach (var name in found[rule.Id].Where(n => !listed.Contains(n)))
+                missing.Add(rule.Id + " " + name);
+        }
+        Assert.AreEqual(0, missing.Count, "vanilla sets variables the catalog does not list: " + string.Join("; ", missing));
     }
 
     [TestMethod]

@@ -56,7 +56,7 @@ public sealed class IncidentVoiceAdapter : IIncidentVoiceAdapter
         if (incident == null)
             return "The game has no incident '" + incidentId + "'.";
         if (!(Game.Current.GameStateManager.ActiveState is MapState map))
-            return "Go back to the campaign map first (no menu, no battle, no conversation).";
+            return "Go back to the campaign map first (the game must be showing the map state).";
         if (closedReason != null)
             return incidentId + " is closed for you: " + closedReason;
         if (!incident.CanIncidentBeInvoked())

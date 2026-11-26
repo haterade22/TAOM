@@ -61,7 +61,7 @@
     {"id": "incident_migrant_influx", "verdict": "RESTRICT", "versions": ["all"], "options": 3, "vars": ["NEARBY_ENEMY_FACTION"], "restrict": {"families": ["man"]}, "vanilla_text": true},
     {"id": "incident_nomads_wish_to_settle", "verdict": "RESTRICT", "versions": ["all"], "options": 3, "restrict": {"groups": ["easterlings", "southrons"]}},
     {"id": "incident_conflict_over_commons_both_yours", "verdict": "RESTRICT", "versions": ["all"], "options": 4, "vars": ["POORER_VILLAGE", "RICHER_VILLAGE", "TOWN_OR_CASTLE_NAME"], "restrict": {"families": ["man"]}},
-    {"id": "incident_conflict_over_commons", "verdict": "RESTRICT", "versions": ["all"], "options": 2, "vars": ["LORD", "NOBLE", "VILLAGE"], "restrict": {"families": ["man"]}},
+    {"id": "incident_conflict_over_commons", "verdict": "RESTRICT", "versions": ["all"], "options": 2, "vars": ["LORD", "NOBLE", "VILLAGE", "VILLAGE2"], "restrict": {"families": ["man"]}},
     {"id": "incident_educational_advancements", "verdict": "KEEP-REWORD", "versions": ["all"], "options": 3},
     {"id": "incident_gold_rush", "verdict": "KEEP-REWORD", "versions": ["all"], "options": 3},
     {"id": "incident_wages_of_war_and_diseases", "verdict": "RESTRICT", "versions": ["all"], "options": 3, "vars": ["FIEF_NAME"], "restrict": {"families": ["man"]}},

@@ -34,7 +34,7 @@ public sealed record PlaceFix(string Variable, string Kind);
 /// <summary>
 /// One row of <c>incidents_lotr.json</c>.
 /// <c>Versions</c> is <c>["all"]</c> for one text everyone sees, or <c>["free","shadow"]</c> for two. <c>Options</c> is the number of
-/// options vanilla registers, <c>Vars</c> the text variables vanilla's own condition sets. <c>VanillaText</c> keeps every
+/// options vanilla registers, <c>Vars</c> the text variables vanilla's own condition sets (parsed, but not read at runtime: only the converter and the binding tests use it). <c>VanillaText</c> keeps every
 /// text vanilla's (another developer's override stands) while the gates still apply.
 /// </summary>
 public sealed record IncidentRule(

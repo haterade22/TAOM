@@ -75,7 +75,7 @@ Vocabulary: `taom_inc_voc_<free|shadow>_<word>` for the words `GODS`, `POWER_OAT
 
 ### Drafts to rows
 
-`python tools/incidents_drafts_to_xml.py <drafts.tsv>...` checks the writers' drafts (columns key, incident_id, side, slot, text, notes) and `--apply` rewrites the generated block (between `INCIDENT-VOICES-BEGIN` and `INCIDENT-VOICES-END`) from them. It refuses a key that does not match, an unknown incident or side, an option vanilla does not have, a `{VARIABLE}` that is neither vanilla's for that incident nor a vocabulary word, a vocabulary word without both its rows, an em or en dash, and the banned words (Calradia, Heaven, Empire, imperial). The 12 language files are the project lead's pass (`localize` skill): new keys leave `LanguageFileCoverageTests.EveryLanguage_DeclaresARowForEveryEnglishKey` red until then.
+`python tools/incidents_drafts_to_xml.py <drafts.tsv>...` checks the writers' drafts (columns key, incident_id, side, slot, text, notes) and `--apply` rewrites the generated block (between `INCIDENT-VOICES-BEGIN` and `INCIDENT-VOICES-END`) from them. It refuses a key that does not match, an unknown incident or side, an option vanilla does not have, a `{VARIABLE}` that is neither vanilla's for that incident nor a vocabulary word, a vocabulary word without both its rows, an em or en dash, and the banned words (Calradia, Heaven, Empire, imperial). The catalog lists variables per incident, not per slot, so the check is per incident. The 12 language files are the project lead's pass (`localize` skill): new keys leave `LanguageFileCoverageTests.EveryLanguage_DeclaresARowForEveryEnglishKey` red until then.
 
 ## Key Files
 
