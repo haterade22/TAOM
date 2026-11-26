@@ -17,6 +17,8 @@ paths:
   - "Main/Features/NavalTravel/**"
   - "Main/Features/ShaderPrecompilation/**"
   - "Main/Features/DevConsole/**"
+  - "Client/**/*MapView.cs"
+  - "Main/**/UI/Gauntlet*Screen.cs"
 ---
 
 # Trap sheet: campaign C#
@@ -40,6 +42,7 @@ Campaign behaviors, ticks, menus, map events, capture, marriage, settings, conso
 | `Town.LastCapturedBy` | A leader-clan stamp, not participation; score sieges from `IFiefSiegeParticipationService` | [fiefs](../../../docs/features/fief-granting.md) |
 | MarriageModel | One slot: `AddModel` does not compose, so every marriage rule goes in `TaomMarriageModel` | [marriage](../../../docs/features/marriage-alignment.md) |
 | Player Switcher | Register at priority 1100; reassign the player clan before removing the created hero | [switcher](../../../docs/features/player-switcher.md) |
+| Custom layers | A `GauntletLayer` with widgets calls `SetInputRestrictions`, and `ResetInputRestrictions` before `RemoveLayer`; `IsFocusLayer` only when the layer is the screen | [rule](../gui-ui.md) |
 | Settlement menus | Need an encounter; only `IEncounterAdapter.EnsureSettlementEncounter` places the player | [enlistment](../../../docs/features/enlistment.md) |
 | Popups and menu hotkeys | Escape runs an inquiry's option B and a menu hotkey its first leave option: never a saved choice; a popup button rechecks the map | [lessons](../../../docs/reviews/lessons/localization-ui.md) |
 | Popup pause | Every `ShowInquiry`, `ShowTextInquiry` and `ShowMultiSelectionInquiry` that can open over the map passes `pauseGameActiveState: true` by name, or the party keeps moving under it; `PopupPauseGateTests` allow-lists the mission and main-menu only calls | [gate](../../../TAOM.Tests/Infrastructure/PopupPauseGateTests.cs) |

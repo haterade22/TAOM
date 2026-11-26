@@ -183,18 +183,35 @@ results of `tools/test_hooks.sh` and of the Python tool tests go in the commit b
   goes") do not wait for the hook, and were not made: each takes text out of automatic delivery. Both
   kinds get one adversarial pass over the list of moved lines, and ten fixed questions asked of a fresh
   session, a Sonnet agent and a Haiku agent, in the main checkout and in a worktree.
-- **The `/issue` policy:** CLAUDE.md says never auto-invoke `/issue`, and the standing word of 2026-11-12
-  in `think-before-coding.md` says to file the issues the repository requires. The plan listed this as
-  fixed in Phase 1; it is not. Mike decides which stands.
-- **`native-cpp-ports.md`:** round 1 took out its dead `NativeHooks` path. Whether to keep, rewrite or
-  retire the rule is Mike's decision. The path in `/armory-audit` that the plan called stale
-  (`E:\repos\lotraom-assets`) exists, so that line stays.
 - **Phase 2, the settings pass:** unused tools, bundled skills and MCP servers. It needs Mike's
   `/context all` output and his choice.
-- **A larger cut of the path rules:** only by moving sections behind a link, which takes them out of
-  automatic delivery. Mike decides which, if any.
-- **Layer input rules reach no layer builder:** a row in the campaign and mission trap sheets would fix it.
-  Not done here; no issue is filed.
-- `MEMORY.md` (7,106 B against 4,096): a per-line proposal for Mike.
-- A GitHub issue for this work: not filed, and not waived. Mike decides.
-- A Codex pre-review of the hook and tool changes: not authorized, owed before merge.
+- **Layer input rules, the rest:** 5 of the 16 files that create a `GauntletLayer` still get no rule by
+  path (`SeatScreenAdapter.cs`, `CustomBattleScreen_OnInitialize_Patch.cs`, `OOBOverlayService.cs`,
+  `Patch33_GauntletInventoryScreen.cs`, `MomentumPopupController.cs`). No issue is filed.
+- `MEMORY.md`: which of the two Blender limits stands, and the nine stale cards the retro counts.
+
+## After the merge (2026-11-26)
+
+The three commits went to trunk on 2026-11-26 (`0e92a28f9`, `7217b7336`, `ce12141e2`) by a fast-forward
+from `236abe0f6`. The worktree hook is proven live: a Read of `Main/IoC.cs` in a sibling worktree
+returned the note that names `csharp-architecture.md` and `csharp-patterns.md`.
+
+Mike's answers that day, with what each changed:
+
+- **No GitHub issue:** waived by Mike (a harness and docs refactor). The first commit body says only
+  that none is filed; this line is the waiver.
+- **Codex:** no pre-review ran before the merge. Mike asked for a Codex review of the merged hook and
+  tool changes after it.
+- **The `/issue` policy:** the standing word of 2026-11-12 wins. CLAUDE.md now excepts an issue the
+  repo requires from "never auto-invoke".
+- **`native-cpp-ports.md`:** stays as it is.
+- **The path rule target:** the result is accepted. No section moves behind a link.
+- **The seven generic lines, the tests rule split, the reviewer's fallback evidence line, the bodies of
+  `review-codex` and `release`:** each stays as the branch left it.
+- **Layer input rules:** the mission and campaign trap sheets each have a row that points at
+  `gui-ui.md`, and four new globs (`Client/Features/LongDefeat/**`, `Client/Features/FordsOfWar/**`,
+  `Client/**/*MapView.cs`, `Main/**/UI/Gauntlet*Screen.cs`). The rows reach 11 of the 16 files.
+- **`MEMORY.md`:** three memories that the repo holds in full are deleted (branch and merge at key
+  points, clean up after commits, a troop keeps its weapon category). A fourth stays: its exception for
+  changes a player would feel in play is in no repo file. The long index lines were not shortened: two
+  running sessions were writing to the index.

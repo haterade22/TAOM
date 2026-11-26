@@ -62,7 +62,8 @@ any other step. What no description carries:
   skills, engine bindings after a bump, an ADR): find the procedure in
   [doc-lookup.md](docs/reference/doc-lookup.md) and follow it once told "do it", not while sketching.
 - **Offer, don't auto-invoke:** `/freeze`, `/unfreeze`. **Never auto-invoke:** `/review-codex`
-  (paid), `/issue` (public), `/manage` (public, starts workers).
+  (paid), `/manage` (public, starts workers), and `/issue` (public) except for an issue the repo requires,
+  under the standing word in `think-before-coding.md`.
 
 ## Subagents
 
