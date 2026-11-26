@@ -208,6 +208,38 @@ public class EncounterLinesBindingTests
     [TestMethod]
     [TestCategory("RequiresGameIL")]
     [TestCategory("BindingVerification")]
+    public void TheNotableIntroductions_AreStillAddedWithTheirVanillaText_InInstalledEngine()
+    {
+        RequireGame();
+        var expected = new Dictionary<string, string>
+        {
+            ["artisan_introduction"] = "{=ntEBl43n}",
+            ["headman_introduction"] = "{=eOSJHbBD}",
+            ["rural_notable_introduction"] = "{=1bhjQFOe}",
+        };
+        CollectionAssert.AreEquivalent(expected.Keys.ToList(), NotableIntroLines.TextOfSentence.Keys.ToList());
+
+        var found = new HashSet<string>();
+        var lordTypes = new[] { typeof(LordConversationsCampaignBehavior) }
+            .Concat(typeof(LordConversationsCampaignBehavior).GetNestedTypes(BindingFlags.NonPublic | BindingFlags.Public));
+        foreach (var method in lordTypes.SelectMany(t => AccessTools.GetDeclaredMethods(t)).Where(m => !m.IsAbstract))
+        {
+            var strings = Strings(method);
+            // AddDialogLine(id, input token, output token, text, ...): the text is the fourth literal after the id.
+            for (var i = 0; i + 3 < strings.Count; i++)
+            {
+                if (expected.TryGetValue(strings[i], out var text) && strings[i + 3].StartsWith(text, StringComparison.Ordinal))
+                    found.Add(strings[i]);
+            }
+        }
+
+        var missing = expected.Keys.Where(k => !found.Contains(k)).ToList();
+        Assert.AreEqual(0, missing.Count, "no longer added with their vanilla text: " + string.Join(", ", missing));
+    }
+
+    [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
     public void ProcessSentence_StillCallsUpdateCurrentSentenceText_InInstalledEngine()
     {
         var processSentence = Method(typeof(ConversationManager), "ProcessSentence");
