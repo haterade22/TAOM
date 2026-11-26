@@ -619,6 +619,14 @@ assault on the Hornburg (#1409): both of its results are proven by unattended ru
 
 ## Known limits
 
+- **A lore hero you play is not fielded twice.** `LoreHeroPersons` (`Main/Features/LongDefeat/Domain/LoreHeroPersons.cs`) holds one row per
+  person: `taom_hero_gimli` and `named_companion_gimli`; `taom_hero_legolas`, `named_companion_legolas` and the lord `lord_M1_11`;
+  `taom_hero_aragorn` and `named_companion_aragorn`; `taom_hero_boromir` and the lord `lord_1_75`. `StoryMissionLauncher.Launch` passes the
+  plan through `WithoutPlayed` with the local main hero's hero id and character id (`LorePlayerIds`), so a free hero who is the player is left out
+  and his slot stays empty, with no substitute. A must-live hero who is left out is no longer required. Only the local main hero counts: story
+  missions run on single-player authority only, and no companion of the player's party is fielded, so nothing else can double a hero. A later hero
+  is one more row. Not verified in game.
+
 - **The assault on Helm's Deep is not balanced yet (#1409).** With the bot as the commander it lost at 250 attackers and in all three
   runs at 350, and did not finish at 450. The defenders lost between 17 and 125 of their 153 (a garrison of 150 and three heroes), and the
   spread between runs of one size is large: 34, 56 and 125 at 350. So no single run says how close the assault is. Unattended runs,
@@ -649,6 +657,7 @@ assault on the Hornburg (#1409): both of its results are proven by unattended ru
 
 ## Changelog
 
+- 2026-11-26: a free hero is left out when the player is that person (Player Switcher on Gimli no longer meets a second Gimli at Helm's Deep). See "Known limits".
 - 2026-11-22: Slice 5 proven for the lost assault by an unattended run of the Hornburg offer as an Isengard player (`20261121-230907`):
   `'hornburg' Held on day 8 (the player's assault was thrown back)`, `[Diplomacy] Permanent alliance ended: isengard <-> empire_s`, and
   `taom.war-chronicle.alliance-ended result=pass ... result=Ended allied=False`. The attack host is 350 after the tuning runs

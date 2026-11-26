@@ -62,7 +62,7 @@ internal sealed class LongDefeatMissionLauncher
             var defenderCulture = objects?.GetObject<BasicCultureObject>(fortress.DefenderCulture);
             var attackerCulture = objects?.GetObject<BasicCultureObject>(fortress.AttackerCulture);
             var player = objects?.GetObject<BasicCharacterObject>(fortress.PlayerTroop);
-            var plan = _catalog.BuildPlan(fortress, setup.Options);
+            var plan = LoreHeroPersons.WithoutPlayed(_catalog.BuildPlan(fortress, setup.Options), LorePlayerIds.Read());
             var missing = RunPlanTroops.AllTroopIds(plan).Where(id => objects?.GetObject<BasicCharacterObject>(id) == null).ToList();
             if (defenderCulture == null || attackerCulture == null || player == null || missing.Count > 0)
             {
