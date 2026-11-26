@@ -52,14 +52,15 @@ AUDITS_DIR = DOCS_DIR / "audits"
 # ADR-011's routing: a trap's full text lives in its owning doc with one line in its area's trap
 # sheet (.claude/rules/traps/, path-scoped) or, when no sheet reaches the work, in the orientation.md
 # trap index; a standing lesson is one line in its area rule, and nothing is restated. The 2026-11-13
-# amendment lowered the entry-doc and trap-row caps after the sheets took 33 of the 47 rows. AGENTS.md
+# amendment lowered the entry-doc and trap-row caps after the sheets took 33 of the 47 rows, and the
+# 2026-11-25 one set the entry-doc and unscoped-rule caps to the sizes that pass reached plus about 5%. AGENTS.md
 # alone is also capped at 8,192 bytes by tools/reviewctl.py (the provider-neutral bootstrap every
 # Codex session pays for), which is stricter than anything here. Bytes are counted with CRLF
 # folded to LF, so a Windows and any other checkout agree.
 ENTRY_DOC_ROOT = "CLAUDE.md"
 IMPORT_MAX_HOPS = 4                # Claude Code follows nested @-imports this deep (memory docs)
-ENTRY_DOCS_MAX_BYTES = 22_528      # hard cap on the entry docs together (fails --fail-on-drift)
-ENTRY_DOCS_WARN_BYTES = 20_480     # report-only early warning
+ENTRY_DOCS_MAX_BYTES = 20_000      # hard cap on the entry docs together (fails --fail-on-drift)
+ENTRY_DOCS_WARN_BYTES = 19_500     # report-only early warning
 ENTRY_DOC_MAX_LINES = 200          # per file: the Claude Code docs' adherence ceiling
 ENTRY_DOC_MAX_TABLE_ROW = 400      # chars; a row is an index entry
 ENTRY_DOC_MAX_PROSE_LINE = 600     # chars; catches paragraph bloat outside tables
@@ -68,7 +69,7 @@ TRAP_INDEX_HEADING = "## Trap index"
 TRAP_INDEX_MAX_ROWS = 24           # when full, merge a line or move one into its trap sheet
 TRAP_INDEX_MAX_ROW_CHARS = 180
 RULES_DIR_REL = ".claude/rules"
-UNSCOPED_RULES_MAX_BYTES = 16_384  # hard cap on every rule without `paths:`, together
+UNSCOPED_RULES_MAX_BYTES = 16_000  # hard cap on every rule without `paths:`, together
 UNSCOPED_RULES_WARN_BYTES = 14_500
 SCOPED_RULE_MAX_BYTES = 12_288     # per path-scoped rule; over it, only growth over HEAD gates
 SKILLS_DIR_REL = ".claude/skills"

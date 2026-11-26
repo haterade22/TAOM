@@ -51,16 +51,42 @@ Disabling servers is a `settings.local.json` / `.mcp.json` decision — user's c
 | MCP servers | 7 (~116 tools est) | 7 (~100 tools — `taom-moduledata` EXACT 9, `imagine` HEURISTIC 5 added; deferral observed) |
 | Eager excl. MCP | ~26,056 tok | **~16,841 tok (−35%)** |
 
+## Baseline 2026-11-25, before the second ADR-011 diet
+
+Measured on trunk `236abe0f6`. Bytes are from `python tools/lint_docs.py --context-budget-json`
+(CRLF folded to LF); tokens are from `bash tools/context_budget_scan.sh`. The "After" column was measured
+in the worktree of the diet on 2026-11-25, before its merge. Both cells of the SKILL.md row are CRLF folded
+(the first version of this table gave 268,731 B, a `wc -c` of a CRLF checkout).
+
+| Measure | Before | After |
+|---|--:|--:|
+| Entry docs (CLAUDE.md, AGENTS.md, orientation.md) | 19,941 B (cap 22,528) | 18,949 B (cap 20,000) |
+| Unscoped rules | 7 files, 15,220 B (cap 16,384) | 7 files, 15,184 B (cap 16,000) |
+| MEMORY.md | 7,081 B, 41 lines (target 4,096 B, 40 lines) | 7,106 B, 42 lines: not part of this pass, its lines are the maintainer's and other sessions' |
+| Path rules | 25 files, 167,610 B | 26 files, 163,302 B |
+| SKILL.md bodies | 28 files, 265,313 B; 2 over 20,480 B | 28 files, 257,843 B; none over 20,480 B |
+| Skill descriptions | 4,417 characters | 4,496 characters |
+| Eager baseline (scan) | about 12,645 tokens | about 12,423 tokens |
+| Per custom-agent spawn (scan) | about 8,788 tokens | about 8,531 tokens |
+
+The scan reports no high-leverage trim at this size: the eager baseline is about 1% of a 1M-token
+window. The reason for the diet is the instruction count, not the token cost. How often each tier
+loaded in the week before, and where path rules failed to load, is in
+[harness-retro-2026-11-25.md](reviews/harness-retro-2026-11-25.md).
+
 ## Regrowth guards
 
 - Entry docs (CLAUDE.md, AGENTS.md and orientation.md together; this paragraph described CLAUDE.md alone
-  on 2026-08-05): `tools/lint_docs.py` budget (25,600 B hard / 23,000 B warn, 200 lines per file,
+  on 2026-08-05): `tools/lint_docs.py` budget (20,000 B hard and 19,500 B warn since 2026-11-25, 200 lines per file,
   400-char rows, 600-char prose; `python tools/lint_docs.py --context-budget-json` prints the caps),
   ENFORCED via `--fail-on-drift` in the `check-doc-config-drift.sh` pre-commit hook and by
   `.githooks/pre-commit` for every committer. Since 2026-08-05 the warn is report-only (it used to
   hard-gate, a bug); only hard violations block. On 2026-08-05 CLAUDE.md alone measured 28.4 KB, with about
   15.6 KB of headroom under that date's 44 KB warn cap (46 KB hard); the user declined a cap ratchet, so watch
   this line in future baselines.
+- Path rules and `SKILL.md` bodies (2026-11-25): `SCOPED_RULE_MAX_BYTES` and `SKILL_BODY_MAX_BYTES` in
+  `tools/lint_docs.py`. A file over its cap only warns; growth past its base copy fails
+  `--fail-on-drift`, in the commit hooks and in CI (`--dash-base HEAD^1` in `pr-checks.yml`).
 - Skill descriptions ≤30 words: flagged by this scan.
 - Re-baseline here after: adding an MCP server or plugin, a new always-load rule, or ±10 KB on
   CLAUDE.md.

@@ -133,11 +133,11 @@ also what `bash tools/context_budget_scan.sh` reads, so the report and the gate 
 
 | Constant | Value | Covers |
 |---|---|---|
-| `ENTRY_DOCS_MAX_BYTES` / `ENTRY_DOCS_WARN_BYTES` | 22,528 / 20,480 B | CLAUDE.md plus every file it imports, together |
+| `ENTRY_DOCS_MAX_BYTES` / `ENTRY_DOCS_WARN_BYTES` | 20,000 / 19,500 B | CLAUDE.md plus every file it imports, together |
 | `ENTRY_DOC_MAX_LINES` | 200 | each entry doc (the Claude Code docs' adherence ceiling) |
 | `ENTRY_DOC_MAX_TABLE_ROW` / `ENTRY_DOC_MAX_PROSE_LINE` | 400 / 600 chars | each entry doc line; fenced code exempt |
 | `TRAP_INDEX_MAX_ROWS` / `TRAP_INDEX_MAX_ROW_CHARS` | 24 / 180 | the `## Trap index` table in orientation.md; the trap sheets in `.claude/rules/traps/` are path rules under `SCOPED_RULE_MAX_BYTES` |
-| `UNSCOPED_RULES_MAX_BYTES` / `UNSCOPED_RULES_WARN_BYTES` | 16,384 / 14,500 B | the rules without `paths:`, together |
+| `UNSCOPED_RULES_MAX_BYTES` / `UNSCOPED_RULES_WARN_BYTES` | 16,000 / 14,500 B | the rules without `paths:`, together |
 | `SCOPED_RULE_MAX_BYTES` | 12,288 B | each path-scoped rule; over it, `size-warn`, unless the rule is larger than its HEAD copy (the staged copy under `--staged`), which fails `--fail-on-drift` |
 | `SKILL_BODY_MAX_BYTES` | 20,480 B | each `.claude/skills/<name>/SKILL.md`, about the 5,000 tokens of an invoked skill that come back after a compaction; judged like a path rule (`size-warn`, or `skill-size` when larger than its HEAD copy). A reference file beside the SKILL.md is not measured: that is where the text over the cap goes |
 
@@ -290,6 +290,10 @@ may delete this one.
   growth of an over-cap rule or skill against `--dash-base`; until then such a run compared the tree
   with itself, so the two growth gates held only in the local commit hooks. A renamed skill folder
   counts as a new one. No issue, a harness refactor (the second ADR-011 diet).
+- **2026-11-25**: lower caps, set to the sizes that diet reached plus about 5%: `ENTRY_DOCS_MAX_BYTES`
+  22,528 B to 20,000 B, its warn 20,480 B to 19,500 B, `UNSCOPED_RULES_MAX_BYTES` 16,384 B to 16,000 B
+  ([ADR-011](../adrs/011-knowledge-delivery-tiers.md), amendment of that date). The cap for one path rule
+  and the AGENTS.md cap in `tools/reviewctl.py` stay: the largest file plus 5% is over each.
 - **2026-10-26**: an unresolvable `--dash-base` now exits 2 before any check runs. `git-diff-failed`
   stays for a diff that fails on a resolvable base (repository damage).
 - **2026-10-26**: #987 review fixes. `>|` is no path; a directory path commit runs the gate only for
