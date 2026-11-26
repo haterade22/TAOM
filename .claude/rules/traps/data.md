@@ -20,11 +20,6 @@ paths:
 
 Troop and character XML, equipment sets, player start kits, culture files and ranged ladders.
 
-One line per trap: its trigger and what never to do. The linked doc holds the mechanism, the
-history and the gate. A new trap for this area is a new row here, never a row in the always-loaded
-[trap index](../../../docs/ai-includes/orientation.md)
-([ADR-011](../../../docs/adrs/011-knowledge-delivery-tiers.md)).
-
 | Trap | Rule | Doc |
 |---|---|---|
 | Shield plus polearm or two-hander | A shield troop never draws a polearm absent from `OneHandedPolearm`, or a two-handed weapon; a new pair fails `audit_polearm_shield_parity.py` (#1312) | [pipeline](../../../docs/features/weapon-xml-pipeline.md) |

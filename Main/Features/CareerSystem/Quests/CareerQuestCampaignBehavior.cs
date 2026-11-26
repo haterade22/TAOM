@@ -61,15 +61,9 @@ public class CareerQuestCampaignBehavior : CampaignBehaviorBase
 
         if (AnyActiveCareerQuestFor(hero, careerId)) return;   // one quest of this career at a time, PER PLAYER
 
-        for (int tier = 1; tier <= 3; tier++)
-        {
-            if (_dataService.IsTierUnlocked(hero.StringId, tier)) continue;   // quest already completed this tier
-            var def = _questService.GetQuestFor(careerId, tier);
-            if (def == null) continue;                                        // no authored quest — level gate handles it
-            if (IsDeclined(hero.StringId, def.Id)) continue;                  // player passed on it
-            Offer(def, hero);
-            return;
-        }
+        var next = CareerQuestOffers.NextOffer(_questService, careerId, hero.Level, hero.StringId, defId => IsDeclined(hero.StringId, defId));
+        if (next != null)
+            Offer(next, hero);
     }
 
     private void Offer(CareerQuestDefinition def, Hero hero)

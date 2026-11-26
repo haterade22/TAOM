@@ -56,6 +56,9 @@ REGIONS: list[tuple[str, list[int], list[str]]] = [
     ("Gondor: Belfalas, Dol Amroth, Anfalas, Andrast coast", rng(100, 108),
      [T + "p", T + "021", T + "029", T + "030"]),
     ("Gondor: Lamedon, Ringlo, Morthond", [98, 99], MOUNTAIN),
+    # Comprehend terrains for the south and west of Gondor.
+    ("Gondor: south and west (Comprehend terrains)", rng(97, 108),
+     ["Lotraom_comprehend_battle_terrain_01", "Lotraom_comprehend_battle_terrain_02"]),
     ("Ithilien", [94, 95, 96], FOREST),
     # Rohan, Dunland, Isengard
     ("Rohan", [80, 81, 87, 88, 89],
@@ -126,6 +129,8 @@ CUSTOM: dict[str, tuple[str, str | None]] = {
     "taom_rohan_battle_fords_of_isen_forceatmo": ("Plain", "Low"),
     "taom_gondor_battle_001_forceatmo": ("Plain", "Low"),
     "taom_gondor_pelennor_fields_forceatmo": ("Plain", "Low"),
+    "Lotraom_comprehend_battle_terrain_01": ("Plain", "Low"),
+    "Lotraom_comprehend_battle_terrain_02": ("Plain", "Low"),
     CATCH_ALL: ("Plain", None),
 }
 

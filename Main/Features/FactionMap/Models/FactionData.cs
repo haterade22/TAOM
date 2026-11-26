@@ -8,6 +8,8 @@ public class FactionData
     public string Color { get; set; } = "";
     public bool Playable { get; set; }
     public string GameFaction { get; set; } = "";
+    /// <summary>The kingdom culture id the faction power slider keys on, when it differs from GameFaction (the start culture).</summary>
+    public string PowerCulture { get; set; } = "";
     public string Description { get; set; } = "";
     public string Image { get; set; } = "";
     public string[] Traits { get; set; } = Array.Empty<string>();

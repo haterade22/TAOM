@@ -7,9 +7,9 @@ paths:
 
 # Native C++ Port Discipline
 
-**When porting C++ code from an upstream mod into TAOM (`Dependencies/*.NativeHooks/`, scene scripts, or any other vendored native), audit the port from scratch. "Upstream worked" only means "produced correct output" — it does NOT mean the port is fit to ship in TAOM.**
+**When porting C++ code from an upstream mod into TAOM (scene scripts or any other vendored native), audit the port from scratch. "Upstream worked" only means "produced correct output"; it does NOT mean the port is fit to ship in TAOM.**
 
-The recurring failure mode: architectural changes (rename functions, change export signatures, retarget output path) consume the audit budget; behavioral preservation (logging, exception handling, lock balance) flies through unaudited. Three review findings on the NativeSkinFixes port (2026-05-26) traced to this — all inherited verbatim from the upstream Nexus mod. See `docs/reviews/rca-native-skin-fixes-port-2026-05-26.md`.
+The recurring failure mode: architectural changes (rename functions, change export signatures, retarget output path) consume the audit budget; behavioral preservation (logging, exception handling, lock balance) flies through unaudited ([RCA](../../docs/reviews/rca-native-skin-fixes-port-2026-05-26.md)).
 
 Before you commit a C++ port, walk this checklist:
 
@@ -19,6 +19,3 @@ Before you commit a C++ port, walk this checklist:
 4. **Atomic counters.** Any `static int counter` touched from a hook body is racy if the engine fires on multiple threads. Use `volatile LONG64` + `InterlockedIncrement64`.
 5. **SRWLock balance.** Reads use `AcquireSRWLockShared`; writes use `AcquireSRWLockExclusive`. Verify both sides — upstream mods routinely take the exclusive lock for reads ("just in case") and silently serialise everything.
 6. `/deep-review` adds its C++ checks when `.c`, `.cpp` or `.h` files are in the changeset.
-
-This is a project-level discipline, not a one-off feature note: every future C++ port has the same risk profile.
-

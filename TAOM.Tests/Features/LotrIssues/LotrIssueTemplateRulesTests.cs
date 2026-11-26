@@ -50,4 +50,16 @@ public class LotrIssueTemplateRulesTests
     [DataRow(-10, false)]
     public void IsBelowRelationMin_NoDefinition_UsesMinusTen(int relation, bool expected)
         => Assert.AreEqual(expected, LotrIssueTemplateRules.IsBelowRelationMin(relation, null));
+
+    [TestMethod]
+    public void StillUses_FalseOnceTheDefinitionMovedTemplate()
+        => Assert.IsFalse(LotrIssueTemplateRules.StillUses(Def(), LotrIssueTemplate.Combat));
+
+    [TestMethod]
+    public void StillUses_TrueForItsOwnTemplate()
+        => Assert.IsTrue(LotrIssueTemplateRules.StillUses(Def(), LotrIssueTemplate.DeliverGoods));
+
+    [TestMethod]
+    public void StillUses_TrueWithNoDefinition()
+        => Assert.IsTrue(LotrIssueTemplateRules.StillUses(null, LotrIssueTemplate.Combat));
 }

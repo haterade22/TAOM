@@ -326,4 +326,25 @@ public class LotrIssueServiceTests
         _sut.ApplyRewards(Def(rewardGoldBase: 0), 0f, hero);
         hero.DidNotReceive().AddGold(Arg.Any<int>());
     }
+
+    [TestMethod]
+    public void ComputeTroopCount_AddsScaledDifficulty()
+    {
+        var def = new LotrIssueDefinition("t", LotrIssueTemplate.TrainRetainers, IssueGiverOccupation.RuralNotable,
+            IssueFrequencyTier.Common, null, 1, 0f, "", "", 0, 0f, 0, "", "", -10,
+            new LotrIssueText("t", "d", "", "", "", "", "", "", ""), troops: 4, troopsPerDifficulty: 8f);
+        Assert.AreEqual(4, _sut.ComputeTroopCount(def, 0f));
+        Assert.AreEqual(8, _sut.ComputeTroopCount(def, 0.5f));
+        Assert.AreEqual(12, _sut.ComputeTroopCount(def, 5f));
+        Assert.AreEqual(0, _sut.ComputeTroopCount(null, 0.5f));
+    }
+
+    [TestMethod]
+    public void ComputeTroopCount_NaNDifficulty_IsBase()
+    {
+        var def = new LotrIssueDefinition("t", LotrIssueTemplate.HuntBand, IssueGiverOccupation.RuralNotable,
+            IssueFrequencyTier.Common, null, 1, 0f, "", "", 0, 0f, 0, "", "", -10,
+            new LotrIssueText("t", "d", "", "", "", "", "", "", ""), troops: 10, troopsPerDifficulty: 14f);
+        Assert.AreEqual(10, _sut.ComputeTroopCount(def, float.NaN));
+    }
 }

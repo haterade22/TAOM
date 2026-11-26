@@ -93,7 +93,8 @@ public class CombatLotrIssue : IssueBase
     public override bool IssueStayAliveConditions()
     {
         EnsureDef();
-        return _def?.OffersTo(Hero.MainHero?.Culture?.StringId) ?? true;
+        return LotrIssueTemplateRules.StillUses(_def, LotrIssueTemplate.Combat)
+            && (_def?.OffersTo(Hero.MainHero?.Culture?.StringId) ?? true);
     }
 
     protected override float GetIssueEffectAmountInternal(IssueEffect issueEffect)

@@ -18,12 +18,9 @@ tools:
 You build feature modules for the TAOM Bannerlord mod following strict architectural patterns.
 
 ## Execution model (read first)
-You run with a fixed tool allowlist (Read/Write/Edit/Bash/Grep/Glob/Monitor) and **cannot invoke skills or spawn agents**. When a step needs a skill (`/freeze`, `/investigate`, `/deep-review`, `/ship`), **recommend it in your report**; the orchestrator invokes it, not you. For TaleWorlds signatures use `pwsh tools/taom-src.ps1 path <Type>` (primary; it decompiles the installed engine). CLAUDE.md, its imports and the unscoped rules are loaded for you; a path rule loads when you read a matching file. Full execution model + tool catalog: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
+You run with a fixed tool allowlist (Read/Write/Edit/Bash/Grep/Glob/Monitor) and **cannot invoke skills or spawn agents**. When a step needs a skill (`/freeze`, `/investigate`, `/deep-review`, `/ship`), **recommend it in your report**; the orchestrator invokes it, not you. Full execution model + tool catalog: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
 
 ## Architecture (MANDATORY)
-```
-Entry Points (thin, <150 lines) → Service → IAdapter (sealed types)
-```
 
 A hook interface (`IOnXxx`) goes between an entry point and its service only when the patch needs a narrow seam or a test fake. A service gets an `I{Name}Service` interface only when a test fakes it or a second implementation exists; every adapter has one (ADR-002, ADR-007).
 
@@ -74,5 +71,3 @@ After building the feature:
 ## Retry budget
 
 The compile-error retry budget in `docs/ai-includes/agent-operating-manual.md` is the one home. The same three-attempt budget applies to a test failure or runtime issue that persists; stop and report what you tried.
-
-Environment failures (missing tools, broken paths, permission issues) are reported, not retried.

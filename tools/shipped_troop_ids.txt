@@ -1,7 +1,7 @@
-# Troop ids shipped in v2.0.42: the baseline of the TROOP_ID_REMOVED gate.
+# Troop ids shipped in v2.0.43: the baseline of the TROOP_ID_REMOVED gate.
 # Regenerate after a release: python tools/validate_moduledata.py --regenerate-shipped-troop-ids
 # One id per line. [exceptions] rows are `id | reason` for a break the maintainer accepted.
-# tag: v2.0.42
+# tag: v2.0.43
 anduinvale_axe_lord
 anduinvale_axe_warrior
 anduinvale_axeman
@@ -742,8 +742,10 @@ ironpass_ram_rider
 ironpass_ram_vanguard
 ironpass_recruit
 ironpass_sharpshooter
+ironpass_steel_chariot
 ironpass_veteran_arbalest
 ironpass_veteran_axeman
+ironpass_war_chariot
 ironpass_warrior
 isengard_militia_archer
 isengard_militia_spearman

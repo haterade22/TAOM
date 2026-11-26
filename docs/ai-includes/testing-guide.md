@@ -1,6 +1,6 @@
 # Testing Guide: shipped-data tests
 
-The rest of the test rules (TDD, MSTest and NSubstitute, no-deploy commands) are in `.claude/rules/tests.md`, which loads when you open a test. Run the suite with `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`.
+The rest of the test rules (TDD, MSTest and NSubstitute, no-deploy commands) are in `.claude/rules/test-workflow.md` and `.claude/rules/tests.md`, which load when you open a C# test. Run the suite with `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`.
 
 ## Shipped-Data Tests (required for content that can fail silently)
 

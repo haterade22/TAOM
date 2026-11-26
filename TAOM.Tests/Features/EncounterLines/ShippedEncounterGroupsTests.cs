@@ -35,10 +35,19 @@ public class ShippedEncounterGroupsTests
         ["orcs"] = new[] { "mordor", "isengard", "gundabad", "dolguldur", "goblin", "mistymountainorcs", "bluecraig" },
     };
 
+    /// <summary>The dark-lord speaker groups, each found by race before culture (liege lines change, 25 Nov 2026).</summary>
+    internal static readonly IReadOnlyDictionary<string, string[]> SpecRaceGroups = new Dictionary<string, string[]>
+    {
+        ["sauron"] = new[] { "sauron" },
+        ["saruman"] = new[] { "saruman" },
+        ["nazgul"] = new[] { "nazghul" },
+    };
+
     private static readonly IReadOnlyDictionary<string, string> SpecGroupFamilies = new Dictionary<string, string>
     {
         ["west"] = "man", ["rohirrim"] = "man", ["northmen"] = "man", ["dunlendings"] = "man", ["southrons"] = "man",
         ["easterlings"] = "man", ["elves"] = "elf", ["dwarves"] = "dwarf", ["orcs"] = "orc",
+        ["sauron"] = "none", ["saruman"] = "none", ["nazgul"] = "none",
     };
 
     /// <summary>The ten speaking bandit clans: side, race family and home group, as the spec and the lead's 13 Nov change list them.</summary>
@@ -102,12 +111,30 @@ public class ShippedEncounterGroupsTests
     [TestMethod]
     public void TheGroupTable_EqualsTheSpec()
     {
-        CollectionAssert.AreEquivalent(SpecGroups.Keys.ToList(), _map.GroupFamilies.Keys.ToList());
+        CollectionAssert.AreEquivalent(SpecGroups.Keys.Concat(SpecRaceGroups.Keys).ToList(), _map.GroupFamilies.Keys.ToList());
         foreach (var pair in SpecGroups)
         {
             Assert.AreEqual(SpecGroupFamilies[pair.Key], _map.FamilyOfGroup(pair.Key), pair.Key + " family");
             CollectionAssert.AreEquivalent(pair.Value, _map.CultureGroups.Where(c => c.Value == pair.Key).Select(c => c.Key).ToList(), pair.Key + " cultures");
         }
+        foreach (var pair in SpecRaceGroups)
+        {
+            Assert.AreEqual(SpecGroupFamilies[pair.Key], _map.FamilyOfGroup(pair.Key), pair.Key + " family");
+            CollectionAssert.AreEquivalent(pair.Value, _map.RaceGroups.Where(r => r.Value == pair.Key).Select(r => r.Key).ToList(), pair.Key + " races");
+        }
+        Assert.AreEqual(SpecRaceGroups.Values.Sum(r => r.Length), _map.RaceGroups.Count, "a race group key that is not in the spec");
+    }
+
+    [TestMethod]
+    public void SauronSarumanAndTheNine_SpeakForTheirOwnGroup_WhileTrollsAndMenOfMordor_SpeakForNone()
+    {
+        Assert.AreEqual("sauron", _map.GroupOf("mordor", "sauron"));
+        Assert.AreEqual("saruman", _map.GroupOf("isengard", "saruman"));
+        Assert.AreEqual("nazgul", _map.GroupOf("mordor", "nazghul"));
+        Assert.AreEqual("nazgul", _map.GroupOf("dolguldur", "nazghul"));
+        foreach (var troll in new[] { "cave_troll", "hill_troll" })
+            Assert.AreNotEqual(_map.FamilyOfGroup(_map.GroupOf("mordor", troll)), _map.FamilyOfRace(troll), troll + " would pass the speaker check");
+        Assert.AreNotEqual(_map.FamilyOfGroup(_map.GroupOf("mordor", "human")), _map.FamilyOfRace("human"), "a Man of Mordor would speak as an orc");
     }
 
     [TestMethod]

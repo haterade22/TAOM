@@ -1,5 +1,6 @@
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.FactionPower;
 
 namespace TAOM.Features.CampaignStartOptions;
 
@@ -15,19 +16,23 @@ public sealed class CampaignStartSession : ICampaignStartSession
     private readonly CampaignStartOptionsStore _store;
     private readonly ICampaignStartDefaults _defaults;
     private readonly IModLogger _logger;
+    private readonly IFactionPowerSettings _factionPower;
 
     public CampaignStartSession(
-        IAdvancedStartDataAdapter data, CampaignStartOptionsStore store, ICampaignStartDefaults defaults, IModLogger logger)
+        IAdvancedStartDataAdapter data, CampaignStartOptionsStore store, ICampaignStartDefaults defaults, IModLogger logger,
+        IFactionPowerSettings factionPower)
     {
         _data = data;
         _store = store;
         _defaults = defaults;
         _logger = logger;
+        _factionPower = factionPower;
     }
 
     public void Begin()
     {
         _store.Reload();
+        _factionPower.Reload();
         if (_data.IsAvailable && _data.IsNewCampaign)
         {
             Pin();

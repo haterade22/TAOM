@@ -18,8 +18,8 @@ CLAUDE.md imports it ([ADR-011](../adrs/011-knowledge-delivery-tiers.md)).
 - **Two machines:** every `E:\` path is the desktop. The laptop holds a partial install, so
   reference failures there are environment gaps, never repo defects
   ([development-machines.md](../reference/development-machines.md)).
-- **Localization:** new player-facing text is `{=KEY}default`, then registered, translated and
-  validated. 12 languages, all AI first drafts; `tools/translation_overrides/<lang>.json` wins
+- **Localization:** new player-facing text is `{=KEY}default` plus its English row, through
+  `/localize`. The translation files are the project lead's
   ([TRANSLATOR_GUIDE.md](../localization/TRANSLATOR_GUIDE.md)).
 - **Lessons:** the evidence archive per subsystem is `docs/reviews/lessons/<category>.md`
   ([index](../reviews/LESSONS-LEARNED.md)). Before touching a subsystem, list its headings with
@@ -30,9 +30,9 @@ CLAUDE.md imports it ([ADR-011](../adrs/011-knowledge-delivery-tiers.md)).
 
 One line per trap: its trigger and what never to do. The linked doc holds the mechanism, the history
 and the gate. The first four rows are trap sheets: path rules that load when you open a matching file
-in this checkout. Read a sheet by hand before you design in its area, and wherever no path rule
-fires (a sibling worktree, a client without path rules). A new trap goes in its sheet; it goes here
-only when no sheet's files reach the work.
+in this checkout; in a sibling worktree a hook names the sheet on the first matching file. Read a
+sheet by hand before you design in its area, and in a client without path rules. A new trap goes in
+its sheet; it goes here only when no sheet's files reach the work.
 
 | Trap | Rule | Doc |
 |---|---|---|

@@ -5798,3 +5798,90 @@ warned of an id outside its snapshot: red for every other session, with the caus
   entries wait for a commit, the hand-over and the work claim's note name the trunk gate that is red and why.
 - **Source:** the XML lens report of the item review of 2026-11-26 (finding 1), `git diff -- tools` on the branch
   `feat/rhun-chariot-variants`, and a run of `check_external_loc_coverage.py` from the trunk checkout on 2026-11-26.
+  [RCA](../rca-warg-stride-gate-2026-11-24.md) F1 and F3. The list and its tests were removed with #1591,
+  when the standing strafe rows stopped being stride gaits; the rule stands for any list of this kind.
+
+### Taking a verdict out of a gate: list what the deleted tests held, and keep what the reason does not cover (#1591, 2026-11-24)
+#1591 found that the stride is the wrong measure for a clip on a mount's standing strafe rows, so the stride gate
+stopped judging such a clip. The author deleted the whole branch: the stride verdict, and with it the stance and
+slip checks that trunk made on the spider's, the elephant's and the warg's side clips. A side-step master whose
+foot never plants passed with exit 0. The same change wrote a direction rule for "the backward action" where the
+backward pace has two records, and a ground rule that took each foot's ground from that foot with nothing to
+hold the feet to one ground.
+- **Why missed:** the reason for the change covered one number, and the code that fell was a branch. The author
+  deleted `KnownFailureTests` and the `axis` test without a list of what they held, then ran 31 mutations, all
+  of lines that exist. A mutation run cannot show a check that is gone. The lesson of the review before (an
+  excused item is judged in every other way as any item is) was written about a list, and the author did not
+  apply it to the code that replaced the list.
+- **Prevent:** a change that takes a verdict out of a gate names, for each test it deletes, the test that still
+  holds what that test held, or the reason the check is dropped (`.claude/rules/data-scripts.md`). Run the old
+  tool and the new one on one broken input for each thing the old branch judged. A rule that names one row (an
+  action, a foot) says in its docstring what stands for the rest (the pace's other records, the other feet).
+- **Source:** issue #1591; [RCA](../rca-side-steps-wolf-stride-2026-11-24.md) F1, F3 and F5; the Tooling lens,
+  the Data flow lens and the Codex pre-review; `tools/tests/test_gait_stride_creatures.py` (`SideStepTests`,
+  `BackwardDirectionTests`, `GroundRuleTests`).
+
+### A value from a hand-typed JSON plan is held to its JSON type before `float()` sees it (#1566, 2026-11-24)
+`tools/repoint_anim_clip.py` took a plan row's numbers with `float(v)`. `float(True)` is 1.0 and `float("820")` is
+820.0, so `"source1": true` planned frame 1 and a quoted number passed for a number. A NaN went past the frame 0
+rule, because `min(nan, x) < 1` is false. A value over the record's 32-bit range raised out of `struct.pack` as a
+traceback, where the tool's contract is a refusal with a reason.
+- **Why missed:** the checks were written for wrong numbers (negative, out of order), and `float()` was the type
+  check. The first fix of this change covered the NaN and left the other three, and its one test of the command
+  line broke both sources in one row, so it passed without the new line.
+- **Prevent:** a number from JSON is an `int` or a `float` and not a `bool`, and it fits the field it is written
+  to; the tool refuses anything else by the row's name. A test of such a rule breaks one value in a row and keeps
+  the rest sound.
+- **Source:** issue #1566; Codex pre-review P2 and P3, the Tooling lens;
+  `tools/tests/test_repoint_anim_clip.py` (`LowFindingTests`).
+
+### A time limit in a test is a budget for one input: it does not show how the cost grows (#1566, 2026-11-24)
+`test_heredoc_regex_is_linear_in_a_long_delimiter` failed once at 5.68 s against a limit of 5 s, on a wall clock,
+while the C# suite ran beside it. The measure that followed showed more: the call the limit sat on,
+`git_call_dirs` in `.claude/hooks/_shellwords.py`, takes about 0.1 s of CPU for 750 lines with `<<`, 0.4 s for
+1,500 and 1.5 s for 3,000. It grows with the square of their number, under a test named "is linear".
+- **Why missed:** one input under one threshold passes for any growth rate that fits under the threshold. The
+  name said what the author meant to hold, not what the assertion holds.
+- **Prevent:** a timing test reads `time.process_time()`, so another job's load is not in it, and its name says
+  that it is a budget. A claim about growth needs two sizes and their ratio.
+- **Source:** issue #1566 (the comment of 2026-11-24 has the numbers); the Tooling lens and the Codex pre-review;
+  `tools/tests/test_shellwords.py`. The hook is not changed: the Bash tool's 7,500 character cap keeps a real
+  command near the smallest of those sizes.
+
+### A gate that moves where the work happens moves it away from every trigger tied to the old place (path rules in worktrees, 2026-11-25)
+The trunk edit gate of 2026-11-16 sent all edits to sibling worktrees. A path rule loads only for a file in the
+checkout the session started in, so from that day the area rules, the trap sheets and the lessons promoted into
+them stopped reaching most of the work. In the nine days after, 186 subagents and 14 main sessions touched C#
+only in a worktree, and `csharp-architecture.md` loaded in 2 of those 200; in the main checkout it loaded in 32
+of 33. One subagent read the rule by hand.
+- **Why missed:** the limit was written down three times (`harness-loading.md`, `agent-teams.md`, the trap
+  index), each time with an instruction to carry the rules by hand, and nothing counted whether anyone did. The
+  gate's review asked whether edits on trunk were refused, which they were. The retro's rule-load table counts
+  loads per rule, so it cannot show a rule that should have loaded and did not.
+- **Prevent:** when a change moves the work to another place, list the triggers keyed to the old place (path
+  rules, a skill's `paths`, a hook that reads `$CLAUDE_PROJECT_DIR`, a stamp at a relative path, a file's time
+  on disk, which `git worktree add` sets to the time of the checkout) and test one of each from the new place.
+  A check that compares file times gets a row in a real fresh checkout, not only rows that `touch` the times.
+  A written "do it by hand" is not a delivery channel until a count shows it happening.
+- **Source:** [harness-retro-2026-11-25.md](../harness-retro-2026-11-25.md), proposal P1. The retro miner now
+  counts it ("Rule delivery by checkout" in `tools/harness_retro.py`). The same day the
+  review of P3 found the fault again, in a drift check that compared a pack's time with the catalogue's time
+  on disk ([rca-armory-drift-fresh-checkout-2026-11-25.md](../rca-armory-drift-fresh-checkout-2026-11-25.md)).
+
+### Before a path rule's globs get narrower, find the files that only a neighbour's touch delivers it to (2026-11-25)
+
+Round 2 of the path rule diet proposed that `gui-ui.md` stop loading on ViewModel files, which would save
+about 7 KB on each of 75 files. The skeptic accepted it twice and the final checker once: they read
+ViewModel classes and found that none of the moved sections applies to one.
+- **Why missed:** the contract asked whether a file that loses the rule needs it. The moved section on
+  layer input is for the class that creates the `GauntletLayer`. 16 files in `Main` and `Client` do that
+  (`git grep -l "new GauntletLayer" -- Main Client`), and `gui-ui.md` loads for none of them: their names
+  share no pattern a glob could hold. So the section reaches a session that writes a screen only because
+  the session also touches the ViewModel or the prefab beside it. The proposal would have cut one of those
+  two routes, and no check looked at a file outside the set that loses the rule.
+- **Prevent:** for each section a glob change takes away from a set of files, grep the symbols the section
+  is about, and run the rule match on the files that hold them. When those files match no glob, the rule is
+  delivered by its neighbours: give it a trigger of its own first (a glob, a trap sheet row), and narrow
+  after that.
+- **Source:** [adopt-instruction-debloat-2026-11-25.md](../adopt-instruction-debloat-2026-11-25.md), "Path
+  rules, skills and caps". The split was not applied. The missing trigger for layer builders is owed there.

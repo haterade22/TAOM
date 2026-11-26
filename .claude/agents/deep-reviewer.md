@@ -20,8 +20,7 @@ completely, in the output format it gives.
 
 ## Execution model (read first)
 
-- CLAUDE.md, its imports and the unscoped rules are loaded for you; a path rule loads when you read
-  a matching file. [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md)
+- [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md)
   is the tool catalog; its build and test rows are for
   builders; as a reviewer you never build or run `dotnet` (below).
 - You **cannot invoke skills or spawn agents**. When a finding calls for one (`/investigate`),
@@ -49,8 +48,6 @@ completely, in the output format it gives.
 - Own two questions: **is it wrong?** and **is this the best way to do it?** A change that works
   but could be simpler, more effective or cheaper is a finding, judged by
   `.claude/rules/simplicity-criterion.md`.
-- Engine signatures come from the installed DLLs (`taom-src` / `ilspycmd`), never from the
-  decompile dump alone; the dump can lag an engine bump.
 - A rule with `paths:` loads by itself when you Read a matching file in the repo, so "read the
   relevant rules" means make sure you have them. Read a `.claude/rules/` file only if it has not
   arrived in your context, and then only the section you need (Grep its heading, Read that range).

@@ -170,6 +170,41 @@ def refuse_unparsable(outputs):
         raise SystemExit("REFUSING: these outputs do not parse, so nothing was written:\n  " + "\n  ".join(bad))
 
 
+def extract_gundabad_strings(src_strings):
+    """Gundabad localisation <string> elements (faction + culture + parent-name), whole elements.
+
+    A string with <tags> children spans several lines, so a one-line copy kept the opening tag and
+    dropped the rest (#1590). The liege titles (str_liege_title*.gundabad) are left out: the Liege
+    Titles feature writes one row pair per realm by hand, so a clone would define the id twice
+    (the same exclusion tools/promote_borrowed_cultures.py makes). Comments are removed first and
+    the opening tag is read quote by quote, so a "<string>" in a comment or a ">" in a text value
+    cannot end one element early and silently drop the rows after it.
+    """
+    body = re.sub(r'<!--.*?-->', '', src_strings, flags=re.S)
+    elements = re.findall(r'[ \t]*<string\b(?:[^>"]|"[^"]*")*?(?:/>|>.*?</string>)', body, re.S)
+    keep = []
+    for e in elements:
+        m = re.search(r'\bid="([^"]*)"', e)
+        sid = m.group(1) if m else ""
+        if "gundabad" in sid and "taom_faction_" not in sid and "str_liege_title" not in sid:
+            keep.append(e)
+    return "".join("  " + e.strip() + "\n" for e in keep)
+
+
+def refuse_duplicate_string_ids(path, content):
+    """Exit before any write when a <string> id occurs twice: a cloned row whose id a hand-written
+    row already uses would define the id twice, and the parse check alone lets that through."""
+    seen, dupes = set(), []
+    for el in ET.fromstring(content.encode("utf-8")).iter("string"):
+        sid = el.get("id")
+        if sid in seen and sid not in dupes:
+            dupes.append(sid)
+        seen.add(sid)
+    if dupes:
+        raise SystemExit(f"REFUSING: {path} would define these <string> ids twice, so nothing was written:\n  "
+                         + "\n  ".join(dupes))
+
+
 def main():
     src_cult = open(os.path.join(MD, "taom_spcultures.xml"), encoding="utf-8").read()
     src_wand = open(os.path.join(MD, "taom_wanderers.xml"), encoding="utf-8").read()
@@ -191,10 +226,7 @@ def main():
     gund_party = "".join(
         extract(src_party, r'([ \t]*<MBPartyTemplate\b[^>]*\bid="%s".*?</MBPartyTemplate>\n)' % re.escape(t))
         for t in party_ids)
-    # gundabad localisation <string> lines (faction + culture + parent-name)
-    gund_str_lines = [ln for ln in src_strings.splitlines()
-                      if "gundabad" in ln and "<string" in ln and "taom_faction_" not in ln]
-    gund_strings = "\n".join("  " + ln.strip() for ln in gund_str_lines) + "\n"
+    gund_strings = extract_gundabad_strings(src_strings)
     # child / lord(+teen) / education equipment templates — cloned from gundabad; the armor+weapon
     # remap happens inside transform(). The orc cultures lacked these, so vanilla
     # EquipmentSelectionModel.GetEquipmentForInitialChildrenGeneration found no culture-matching
@@ -276,6 +308,7 @@ def main():
     # Every output, SubModule.xml included, is built and parsed before the first write (#979).
     outputs.append((SUBMODULE, sm))
     refuse_unparsable(outputs)
+    refuse_duplicate_string_ids(os.path.join(MD, "taom_module_strings.xml"), out_strings)
     for path, content in outputs:
         open(path, "w", encoding="utf-8").write(content)
         ET.parse(path)

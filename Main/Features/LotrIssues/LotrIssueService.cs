@@ -55,6 +55,12 @@ public class LotrIssueService : ILotrIssueService
         return def.Count + (int)Math.Round(def.CountPerDifficulty * Clamp01(difficulty));
     }
 
+    public int ComputeTroopCount(LotrIssueDefinition def, float difficulty)
+    {
+        if (def == null) return 0;
+        return def.Troops + (int)Math.Round(def.TroopsPerDifficulty * Clamp01(difficulty));
+    }
+
     public int ComputeRewardGold(LotrIssueDefinition def, float difficulty)
     {
         if (def == null) return 0;

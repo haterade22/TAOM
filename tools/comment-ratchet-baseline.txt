@@ -669,7 +669,7 @@ Main/Features/CareerSystem/Models/TaomClanTierModel.cs	4
 Main/Features/CareerSystem/Models/TaomMapVisibilityModel.cs	8
 Main/Features/CareerSystem/Mutations/MutationService.cs	3
 Main/Features/CareerSystem/Quests/CareerQuest.cs	29
-Main/Features/CareerSystem/Quests/CareerQuestCampaignBehavior.cs	12
+Main/Features/CareerSystem/Quests/CareerQuestCampaignBehavior.cs	9
 Main/Features/CareerSystem/UI/CareerChoiceGroupObjectVM.cs	3
 Main/Features/CareerSystem/UI/CareerChoiceObjectVM.cs	28
 Main/Features/CareerSystem/UI/CareerEffectDisplayMap.cs	4

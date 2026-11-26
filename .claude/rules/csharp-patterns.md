@@ -16,9 +16,7 @@ Top-down, stopping at the first rung that works:
 1. The engine already provides it (a GameModel hook, a `CampaignEvent`): verify with `taom-src`.
 2. An existing TAOM service or adapter already does it (ADR-002, ADR-007).
 3. A one-line delegation into that service would do.
-4. Only then write the minimum: an interface only to wrap an engine type (an adapter), for a test
-   fake, for a second implementer or to narrow a wide service for a patch (a hook, AGENTS.md
-   "Architecture"); no plumbing "for later" (`simplicity-criterion.md`).
+4. Only then write the minimum: an interface only where csharp-architecture.md "Interfaces that earn their file" allows one; no plumbing "for later" (`simplicity-criterion.md`).
 
 Cache `IoC.Resolve` lazily on a hot path.
 

@@ -12,7 +12,7 @@ paths:
 - TAOM's other stylesheets are live under `<game>/Modules/{TAOM_Map,LOTRLOME_Armory}/ModuleData`, in no
   checkout. `python tools/check_external_xslt.py` reaches them.
 - Most inputs exist in only one module. Transform and diff against this file (checked against the
-  v1.5.6 install, 2026-11-03):
+  v1.5.7 install, 2026-11-25):
 
 | Stylesheet | Vanilla input |
 |---|---|
@@ -27,7 +27,7 @@ paths:
 - Never filter out vanilla attributes — critical ones like `is_main_culture`, `can_have_settlement`, `faction_banner_key` will be silently dropped
 - Only override the specific attributes/elements you intend to change
 
-## Passthrough cuts both ways (the bug that has now shipped four times)
+## Passthrough cuts both ways
 
 The rules above cover one direction: passthrough protects you from DROPPING a vanilla attribute.
 The other direction is the one that keeps shipping. **An attribute your block never names is not
@@ -39,12 +39,13 @@ every attribute the deserializer reads (`pwsh tools/taom-src.ps1 path TaleWorlds
 then read `Deserialize`), and classify each BIND / PASSTHROUGH / N-A with the decision in a comment.
 Then prove it mechanically rather than by eye: transform over installed
 `SandBoxCore/ModuleData/spcultures.xml` with lxml and flag every emitted attribute whose value still
-carries a vanilla culture id. That is a ten-line script and it is what found the last seven.
+carries a vanilla culture id. That is a ten-line script; what it found is in
+[xslt-moduledata.md](../../docs/reviews/lessons/xslt-moduledata.md) "XSLT passthrough silently inherits vanilla attributes you didn't intend to keep".
 
 ## Overriding a CHILD element takes two edits, not one
 
-Attributes replace. Child elements **union**. `CultureObject.Deserialize` (v1.4.8,
-`CultureObject.cs:485-497`) does `mBList10.Add(...)` inside a loop over EVERY child named
+Attributes replace. Child elements **union**. `CultureObject.Deserialize` (v1.5.7,
+`CultureObject.cs:488-494`) does `mBList10.Add(...)` inside a loop over EVERY child named
 `caravan_party_templates`, so emitting your own does not displace vanilla's:
 
 - Emit the TAOM child element, **and**
@@ -69,6 +70,9 @@ Reading the `<xsl:attribute>` markup textually cannot do this: it cannot see an 
 it cannot see an attribute that is not there. If you extend the stylesheet to bind something new,
 extend that test's attribute list too. Contract:
 [`docs/features/culture-playability-wiring.md`](../../docs/features/culture-playability-wiring.md).
+Run it with `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~CulturePartyTemplate`.
+It allows cross-culture sharing when the target id is TAOM-authored. The general technique is in
+tests.md "Testing data that reaches the game through a transform".
 
 A race a stylesheet spells (`xsl:attribute name="race"` or a literal `NPCCharacter race=`) is checked
 verbatim against the installed `skins.xml` races by

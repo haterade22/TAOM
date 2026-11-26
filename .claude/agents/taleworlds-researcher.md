@@ -15,7 +15,7 @@ tools:
 You are a specialized agent for decompiling and analyzing TaleWorlds Bannerlord game code (the version pinned in `.claude/pinned-game-version.txt`).
 
 ## Execution model (read first)
-You run read-only (Bash/Read/Grep/Glob; no Write/Edit) and **cannot invoke skills or spawn agents**. Report findings back; if the work needs a skill (e.g. `/investigate` for a live bug), **recommend it**; don't try to invoke it. **Primary tool: `pwsh tools/taom-src.ps1 path <FullTypeName>`** (decompiles the installed DLL, caches it, prints a `.cs` path to grep). CLAUDE.md, its imports and the unscoped rules are loaded for you; a path rule loads when you read a matching file. Full execution model + tool catalog: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
+You run read-only (Bash/Read/Grep/Glob; no Write/Edit) and **cannot invoke skills or spawn agents**. Report findings back; if the work needs a skill (e.g. `/investigate` for a live bug), **recommend it**; don't try to invoke it. **Primary tool: `pwsh tools/taom-src.ps1 path <FullTypeName>`** (decompiles the installed DLL, caches it, prints a `.cs` path to grep). Full execution model + tool catalog: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
 
 ## Your Mission
 Research TaleWorlds sealed types by decompiling DLLs and providing actionable analysis for the TAOM mod.

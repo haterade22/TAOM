@@ -553,7 +553,8 @@ class PaceTableTests(unittest.TestCase):
     def test_the_spider_entry_names_only_clips_the_generator_makes_or_june_left(self):
         import spider_gait
         spider = c.CREATURES["spider"]
-        for clip in list(spider["gaits"]) + list(spider["turns"]) + list(spider["axis"]):
+        # the two side steps are literals: a clip on the standing strafe rows is not listed as a gait (#1591)
+        for clip in list(spider["gaits"]) + list(spider["turns"]) + ["spider_strafe_left", "spider_strafe_right"]:
             self.assertIn(clip, spider_gait.CLIPS, clip)
         self.assertNotIn("pending", spider, "#1550 put act_spider_jump on spider_jump_start, a clip with no travel")
         self.assertEqual(len(spider["feet"]), 8)

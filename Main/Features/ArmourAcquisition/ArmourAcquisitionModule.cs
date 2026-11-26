@@ -67,13 +67,13 @@ internal sealed class ArmourAcquisitionModule : TaomFeatureModule
     public override IReadOnlyList<CampaignBehaviorDecl> CampaignBehaviors => Behaviors;
 
     // The lord's gear ladder's kill counter (#693), in every mission; it counts only in a campaign battle of
-    // the player's encounter, and only while the gate is on.
+    // the player's encounter, with the gate on or off, so a running rung can finish while the armoury is hidden.
     private static readonly MissionBehaviorDecl[] Missions =
     {
         MissionBehaviorDecl.Of((_, r) => new HeroKillCounterMissionLogic(
             r.Resolve<HeroKillTally>(),
             r.Resolve<IArmourAcquisitionConfigProvider>().GetConfig().Ladder.CountsKnockouts,
-            r.Resolve<IArmourGateService>().IsActive && HeroKillCounterMissionLogic.IsCampaignBattle())),
+            HeroKillCounterMissionLogic.IsCampaignBattle())),
     };
 
     public override IReadOnlyList<MissionBehaviorDecl> MissionBehaviors => Missions;

@@ -33,7 +33,7 @@ A loose PNG plus a hand-added manifest entry renders blank. Run the bake pipelin
 
 ## GUI Prefab Clones Go Stale Across Engine Versions
 
-TAOM ships full `<Prefab>` clones of many vanilla prefabs. Vanilla renames widget attributes between versions; a stale clone keeps the old one and the widget silently mis-renders. A prefab clone goes stale across versions: diff it against installed vanilla before editing and after an engine bump; gates and method in [gui-prefab-clones.md](../../docs/reference/gui-prefab-clones.md). Only the running game confirms a prefab renders.
+TAOM ships full `<Prefab>` clones of many vanilla prefabs. Vanilla renames widget attributes between versions; a stale clone keeps the old one and the widget silently mis-renders. A prefab clone goes stale across versions: diff it against the installed vanilla `Modules/{SandBox,SandBoxCore,Native}/GUI/Prefabs/<same-name>.xml` (`diff -w --strip-trailing-cr <vanilla> <taom>`) before editing and after an engine bump; gates and method in [gui-prefab-clones.md](../../docs/reference/gui-prefab-clones.md). Only the running game confirms a prefab renders.
 
 A clone can also stop consuming an engine signal with every attribute still valid: moving the `Sprite` off the widget the engine writes `Color` / `AlphaFactor` / `ColorFactor` to (vanilla's `SettlementNameplateItemWidget`) leaves those writes with nothing to draw, because `Widget.Render` never passes them to children. TAOM's nameplate redesign lost relation colour and plate transparency this way for five months (#591). When a clone re-parents visuals, list what the engine writes on the original element and make a custom container widget consume it: `docs/features/settlement-nameplate-relation.md`.
 
@@ -48,7 +48,7 @@ Before injecting into ANY vanilla prefab container:
 
 If ANY of these are true: **do NOT inject children into that container**. Use bound `[DataSourceProperty]` on a ViewModel mixin + inject into a DIFFERENT container that's safe.
 
-**Why:** the four checks above are the general rule and they stand. Any data-bound `ListPanel` whose contents vanilla indexes by position is unsafe to grow.
+**Why:** any data-bound `ListPanel` whose contents vanilla indexes by position is unsafe to grow.
 
 `PrefabInsertPositionTests` fails a Child insert without its own Index or not on `/Children`, and an Append or Prepend on `/Children`.
 
@@ -121,7 +121,7 @@ A sibling that works by hotkey is no proof its mouse path works (`rca-companiont
 | ViewModel | `Main/Features/<Feature>/UI/` | `<Name>VM.cs` |
 | Mixin | `Client/Features/<Feature>/UI/` (TAOM.Client registers every UIExtenderEx extension, ADR-013; `ClientIsolationGateTests` fails one in TAOM.dll) | `<Target>Mixin.cs` |
 | Prefab extension | `Client/Features/<Feature>/UI/` (same rule) | `<Feature>Prefab.cs` |
-| Harmony patch that names a TAOM.Client type | `Client/Features/<Feature>/Hooks/` (the patch index reads both assemblies) | `Patch<N>_<Target>.cs` |
+| Harmony patch that names a TAOM.Client type | `Client/Features/<Feature>/Hooks/` (the patch index reads both assemblies; harmony-patches.md "Patch Organization") | `Patch<N>_<Target>.cs` |
 | Custom widget | `Client/Features/<Feature>/Widgets/` (TAOM.Client, ADR-013; `ServerLoadGateTests` fails a new widget in TAOM.dll) | `<Name>Widget.cs` |
 | MapView, map navigation element, map conversation provider | `Client/Features/<Feature>/`, behind a core interface with a null version (ADR-013) | `<Name>MapView.cs` |
 | Map-scene visual service (entities on MapScreen.MapScene) | `Client/Features/<Feature>/` with the source's relative path, behind the core interface with a `Null<Name>` registered by the feature's IoC and replaced in `TaomClientComposition` (ADR-013) | `<Name>VisualService.cs` |

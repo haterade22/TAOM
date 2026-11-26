@@ -94,7 +94,7 @@ The tag list in a preset needs the entries in `skins.xml`. The 170 preset lords 
 
 ## How to verify in game
 
-**Preconditions:** a new campaign for lords. Saved lords keep their stored face. Run `/armory-audit` first if the ARMORY ART DRIFT banner shows. These results are visible only to a person.
+**Preconditions:** a new campaign for lords. Saved lords keep their stored face. Run `python tools/generate_armory_catalogue.py --check` first, and `/armory-audit` if it reports drift. These results are visible only to a person.
 
 1. In the character creator, select the last tattoo tile. The grid holds 39 tiles for men and 41 for women, and the last designs show paint on the head. The tile pictures are wrong (see Known limits). The tattoo colour selector offers 24 colours; 12 means the engine replaced Native's list.
 2. Examine the paint on the head. It follows the face, and is not black or upside down.

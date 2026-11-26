@@ -660,19 +660,43 @@ weights 0x749920 and 0x74F0F0; constants read from the DLL). A pace's table entr
   cadence is constant in a pace and its stride follows the speed.
 - **Standing pace.** A sideways speed above 0.2 m/s brings in the strafe clip, and it stays in while the speed
   is above 0.05. One loop takes LoopDisplacement / (`Duration` x sideways speed) seconds, held between 0.7 and
-  1.3 times the `Duration`. In the walk or the backward pace, a sideways speed above twice the forward speed
+  1.3 times the `Duration`. So while the loop time is inside that clamp the body moves LoopDisplacement /
+  `Duration` in one loop, whatever the feet do. The strafe clip plays at a weight of min(1, sideways speed x
+  loop time / LoopDisplacement) against the stand clip (0x74E9C0, the strafe-right slot), so no one travel
+  fits a side step's feet at every sideways speed. Inside the clamp with a `Duration` of 1 s or less the
+  feet fit when the travel is their stride times the `Duration`. With a longer `Duration`, and under the
+  clamp's speed band, the weight is under 1, the feet make about that part of their stride, and they fit
+  when the travel is their stride (#1591). The sideways speed of a real side step is not measured. The
+  strafe-right record gives the travel and the `Duration` for both sides. The elephant and the mumak have no
+  side-step clip: `war_elephant_strafe` and `mumakil_strafe` play the walk's keys, so in a side step the feet
+  step along the body while it moves sideways (1.18 m in a loop inside the clamp). The stride gate prints
+  both records and holds their stance and slip along the body. Nobody has reported the motion. In the walk or the backward pace, a sideways speed above twice the forward speed
   forces the standing pace. A turn in place advances the turn clip by turn speed / (`Duration` x
   LoopDisplacement) of the turn-RIGHT record, for both directions: 1.8 for the mumak (1.0 x 1.8) and 1.5 for
-  the war elephant (1.0 x 1.5). The turn-left record's values are not read for the rate.
+  the war elephant (1.0 x 1.5). The turn-left record's values are not read for the rate. The turn speed is
+  the mount's yaw rate in radians a second (below), so in one loop of the turn clip the body turns
+  `Duration` x LoopDisplacement radians: 1.8 rad, 103 degrees, for the mumak. A turn clip's feet fit when
+  the clip turns that far in a loop, so a turn record's travel is the clip's angle in radians / `Duration`.
 - **The "none" row.** The loader of `monster_usage_sets.xml` (0x621E40) files a `direction="none"` row under
   every direction that has no row of its own, so it fills a pace's back slot, and
   `act_elephant_stand_for_movement_data` fills the standing pace's front slot. When LoopDisplacement is 0 the
   loop time is the front clip's `Duration`.
-- **Speed at model size.** The node's speed is the agent's velocity divided by agent scale: read from the
-  v1.5.6 native code for #1081 (`FUN_1805f7580`,
-  [RCA](../reviews/rca-dire-wolf-resize-2026-11-06.md)), not read again on v1.5.7, where the writer of the
-  node's speed inputs was not found. The mumak's walk looks right at 2.6 to 5.1 m/s, which is the walk pace
-  only with that division.
+- **Speed at model size.** The node's forward and sideways speeds are the agent's velocity along and across
+  its own frame, divided by agent scale. On v1.5.7 the writer is 0x5F75B0 (read 2026-11-24 for #1591). It
+  takes a planar velocity from the agent's movement record (`*(agent+0x20)+0x22c`), adds a position-correction
+  term divided by the tick time, projects the sum on the agent's side and forward axes, divides by the field
+  that `IMBAgent.GetAgentScale` returns (0x6E58C0), caps the length of the pair, and stores it in the horse
+  animation system, whose tick (0x6459F0) copies it into the node with the turn input. That the unit is m/s
+  is inferred from the term over the tick time. The turn input is the yaw rate in the same movement record
+  (+0x138), in radians a second (read 2026-11-24 for #1550); the second, like the m/s, assumes that the tick
+  time is in seconds. 0x66AAE0 writes it: it moves the rate toward the turn command (+0x134) x a value of
+  the mount's data (+0x16c) x 0.04 (0.012 under one flag, and less while the mount moves), holds it inside
+  that limit, and lets it fall when there is no command. Its caller 0x66A0A0 adds the rate x the tick time
+  to the yaw (+0x34), which wraps at pi. 0x5F73C0 runs the agent tick 0x602040, which reaches both with
+  `*(agent+0x20)`, then the node's writer 0x5F75B0 and the animation system's tick, with one agent and one
+  tick time, for the mount before its rider. Agent scale does not enter the turn input. First read on v1.5.6 for #1081
+  (`FUN_1805f7580`, [RCA](../reviews/rca-dire-wolf-resize-2026-11-06.md)). The mumak's walk looks right at 2.6
+  to 5.1 m/s, which is the walk pace only with that division.
 
 Every elephant record still carries ADOD's `Duration` of 1.0 s (0.6 on the gallop) and ADOD's limits, and
 `gen_elephant_anim_clips.ps1` copied them into the 18 new records. Two defects follow, both reported by Mike on

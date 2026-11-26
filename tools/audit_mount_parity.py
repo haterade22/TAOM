@@ -13,6 +13,8 @@ Compares, at the XML level, every surface a mountable creature exposes to the en
      deliberately do not cover it.
   G. war ram vs the vanilla horse -- a horse-skeleton reskin that inherits the horse's usage set;
      checks the inheritance and the three action sets that chain over the horse's.
+  H. reins -- every rideable mount in MOUNTS must declare rein_* attributes or inherit them through
+     base_monster, as vanilla's rideable monsters do (#479).
 
 Read-only. Prints diffs only (parity rows are counted, not listed). The report always ends
 "AUDIT COMPLETE" and exits 0; --strict adds a verdict on top of it and exits 1 on a gap.
@@ -22,7 +24,9 @@ Usage: python tools/audit_mount_parity.py [--strict]
 be total over the keys the engine can query: all ten verbs, nine jump directions x (start, loop and
 end by is_hard) = 45 rows, and a direction="none" turn_direction="none" reference row at every pace
 0..5. A missing key crashes the game (creature-mount-authoring.md Phase 5). The warg and the
-vanilla horse ship only front and none jumps and are not in the list.
+vanilla horse ship only front and none jumps and are not in the list. --strict also fails on a rideable
+mount with no rein attributes (section H), except the mounts in KNOWN_REIN_GAPS, which are printed as
+KNOWN; a known mount that gains reins fails until it is removed from that list.
 """
 import argparse
 import sys
@@ -81,6 +85,14 @@ FILES = {
 }
 
 MOUNTS = ["spider", "warg", "elephant", "mumakil", "dire_wolf"]
+
+# Rideable mounts that declare no rein_* attribute and have no base_monster to inherit them from
+# (#479). Their values are unknown, so the data is left alone and the gap is printed, not failed.
+# A mount that gains reins must leave this list: --strict fails on a stale entry.
+KNOWN_REIN_GAPS = {
+    "elephant": "#479: taom_war_elephant declares no rein_* attributes",
+    "mumakil": "#479: taom_mumakil declares no rein_* attributes",
+}
 
 # The mounts --strict holds to a total usage set: the creatures a behaviour tree steers, which turn
 # mid-jump and so query every direction. Not the warg (front and none only, by its baseline) and
@@ -623,10 +635,63 @@ def section_g(types):
     return gaps
 
 
+# ---------- H. reins on rideable mounts ----------
+def rein_gap(monster):
+    """Why a rideable mount has no reins, or None. A Monster with a base_monster inherits its base's."""
+    if monster is None:
+        return "Monster not found"
+    if monster.get("base_monster"):
+        return None
+    flags = monster.find("Flags")
+    if flags is None or flags.get("Mountable") != "true":
+        return None
+    if any(k.startswith("rein_") for k in monster.attrib):
+        return None
+    return "rideable but declares no rein_* attribute and has no base_monster to inherit them from"
+
+
+def rein_findings(monsters, known):
+    """Split the mounts into (new gaps, known gaps, stale known entries), each a list of printable lines.
+
+    `monsters` maps a mount name to its Monster element (or None); `known` maps a name to its note."""
+    new, known_hits, stale = [], [], []
+    for name, el in monsters.items():
+        if el is None:
+            new.append(f"{name}: Monster not found")
+            continue
+        gap = rein_gap(el)
+        if gap and name in known:
+            known_hits.append(f"{name}: {known[name]}")
+        elif gap:
+            new.append(f"{name}: {gap}")
+        elif name in known:
+            stale.append(f"{name} now has reins; remove it from KNOWN_REIN_GAPS")
+    return new, known_hits, stale
+
+
+def section_h():
+    """Prints section H and returns the gaps --strict counts: data_gates.py reads only the exit code."""
+    print("=" * 72)
+    print("H. REINS on rideable mounts (rein_* attributes, or inherited through base_monster)")
+    monsters = {}
+    for name in MOUNTS:
+        path = FILES["monster"][name]
+        monsters[name] = elem_by_id(path, "Monster", MONSTER_IDS[name]) if os.path.isfile(path) else None
+    new, known_hits, stale = rein_findings(monsters, KNOWN_REIN_GAPS)
+    for line in known_hits:
+        print(f"      KNOWN {line}")
+    for line in new + stale:
+        print(f"      {line}   <-- REVIEW")
+    if not (new or stale or known_hits):
+        print("      every rideable mount declares or inherits rein attributes")
+    return new + stale
+
+
 def main():
     ap = argparse.ArgumentParser(description="Mount parity audit (report-only unless --strict).")
     ap.add_argument("--strict", action="store_true",
-                    help="exit 1 when a mount in STRICT_MOUNTS has a gap in its usage tables, or the war ram (section G) has a gap")
+                    help="exit 1 when a mount in STRICT_MOUNTS has a gap in its usage tables, the war ram (section G) has a gap, "
+                         "or a rideable mount has no reins (section H, minus KNOWN_REIN_GAPS)")
     args = ap.parse_args()
     if not os.path.isdir(LOTR):
         print(f"no LOTRLOME_Armory ModuleData at {LOTR}; set BANNERLORD_GAME_DIR to the Bannerlord install",
@@ -640,7 +705,8 @@ def main():
     section_e()
     section_f(types)
     ram_gaps_found = section_g(types)
-    failed = (section_strict() + len(ram_gaps_found)) if args.strict else 0
+    rein_gaps_found = section_h()
+    failed = (section_strict() + len(ram_gaps_found) + len(rein_gaps_found)) if args.strict else 0
     print("=" * 72)
     print("AUDIT COMPLETE")
     return 1 if failed else 0

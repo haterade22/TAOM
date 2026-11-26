@@ -10,6 +10,4041 @@
 > [`docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md`](docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md);
 > older ones are in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md).
 
+## v2.0.43 (2026-11-25)
+
+Commits since v2.0.42: 162 (162 with the version label, 0 without).
+
+### Features
+
+#### feat(dialogue): v2.0.42 - lieges speak in their realm's voice
+
+`4bf56c60`
+
+A liege asked for release from homage no longer answers in vanilla's
+Calradian words. 300 new lines cover the release from homage, the end
+of a mercenary contract, the vassalage offer and the mercenary offer,
+in each of the nine speaker groups and for Sauron, Saruman and the
+Nine. The ruler of each of the 30 kingdoms speaks the realm's own
+words when asked for release, when granting it, when accepting a
+vassal and when signing a mercenary: Gondor speaks of the White Tower,
+Rohan of the oath of Eorl, Mordor of the Eye.
+
+The lines keep vanilla's text variables, so the player's name, the
+mercenary award and the realm's name still show. The oath the player
+repeats, the player's own lines and the give-up answers stay vanilla.
+Vanilla's Calradian vassalage refusal and vassal bond lines are
+replaced as well.
+
+No issue: Luiz waived new GitHub issues for this work.
+
+#### feat(dialogue): v2.0.42 - Sauron, Saruman and the Nine speak in voice
+
+`655d8075`
+
+Met on the map, Sauron, Saruman and the Nazgul now greet, demand
+surrender, yield, are released and take leave in their own words
+instead of vanilla's. Each of the three speaker groups has 20 lines,
+for the liege, ally, rival and foe buckets: Sauron imperious and
+watchful, Saruman smooth and reasonable, the Nine cold and brief. There
+are no kin lines, because their race family is none.
+
+No issue: Luiz waived new GitHub issues for this work.
+
+#### feat(lotr-issues): v2.0.42 - retainer loan and band hunt quests
+
+`0c39fbc4`
+
+LotR Issues gains two quest templates. TrainRetainers lends troops
+into the player's party and grades the return by how many come home;
+HuntBand spawns a bandit band for the player to destroy. No quest row
+uses them yet: the rows that move "Blooding the Retainers" and
+"Swindled and Sore" onto them come in a later data patch, after #1605
+fixes two loan defects. Save ids 107 to 110 are new, and the quest
+text is registered for translation.
+
+Thanks to REDACTEDSTUFF for the change.
+No issue: waived for this work. Follow-up: #1605.
+
+#### feat(dialogue): v2.0.42 - dark lord groups and a liege line seam
+
+`cc5a2604`
+
+Encounter Lines gives Sauron, Saruman and the Nazgul speaker groups of
+their own, found by race, and routes 16 of vanilla's liege
+conversation lines (leaving a realm, joining it as a vassal, the
+mercenary contract) through its text seam. A realm's ruler can speak
+the realm's own row on four of those beats, and other lords speak for
+their group. No row ships yet, so every one of these lines stays
+vanilla until the text rows land. docs/features/encounter-lines.md
+has notes for whoever writes them.
+
+Thanks to REDACTEDSTUFF for the change.
+No issue: waived for this work.
+
+#### feat(faction-power): v2.0.42 - realm power for AI lords and garrisons
+
+`53e9d686`
+
+Each realm culture now has a power percent from 50 to 200 that scales
+the party size limit of its AI lords and the size of its garrisons.
+100, the default, changes nothing, and the player's clan (every human
+player's clan in co-op) is never scaled. The percents are saved with
+the campaign. Set them with the console:
+taom.faction_power list, taom.faction_power set <culture> <percent>,
+or taom.faction_power preset standard|evil50|free50|reset.
+
+Shaghana and Abanissa get a slider through a new power_culture field
+in factions.json, which only Faction Power reads, and a test fails
+when any kingdom culture has no slider. The "Realm power" line is
+registered for translation. Known limits are in
+docs/features/faction-power.md.
+
+Thanks to REDACTEDSTUFF for the change.
+No issue: waived for this work.
+
+#### feat(chariot): v2.0.42 - new war chariot rig recorded and gated
+
+`cd0d0bff`
+
+The Rhûn war chariot and the two dwarven chariots run on a rig of one
+package: two animals, the cart bone and two wheel bones on one 60-bone
+skeleton, with 75 clips. The rig came into the Armory on 2026-11-23
+from the upstream chariot pack. This commit records it in the repo
+and makes the repo's checks read it.
+
+For a dedicated server: the creature skeleton pack now holds the
+chariot's two skeletons (horse_skeleton_chariot and its rein
+skeleton) in place of the first rig's one, so a server can resolve
+the bones of the chariot Monster.
+
+Checks:
+- verify_mount_assets.py has a chariot entry and a data gate,
+  chariot-body. It reads the quad_movement tag from the usage list
+  in each clip's own metadata, record by record, so a package of many
+  clips is read clip by clip. It also checks the Monster's rein
+  skeleton and every rider clip that an action set or the stylesheet
+  names.
+- audit_mount_parity.py judges a clip on an in-place row as the
+  vanilla horse's is judged: the horse binds untagged clips on six of
+  its seven such rows.
+- tpac_slim_package.py is the tool that built the rig package. Its
+  --forbid search reads the file's bytes and every unpacked segment.
+- The shared package parser refuses a negative length or count.
+- The Armory snapshot holds the rig's action sets, action types,
+  usage set, usage stylesheet and project.mbproj.
+
+Review: /deep-review at tier 1 in two waves, with two Codex passes
+and a convergence pass, found 1 HIGH and 9 MEDIUM findings. All are
+in the tools, tests and docs of this change; none is in the live
+rig. Nine are fixed here. One is left as the pack has it and is an
+in-game check: the chariot's mount and dismount actions have no
+action type, and its jump rows have no start action. Each finding
+is in docs/reviews/rca-chariot-rig-2026-11-24.md.
+
+Known limitation: no tool in the repo puts the rig's live Armory
+data back after a reinstall; the gate chariot-body reports the loss.
+A blow passes through the cart and the wheels, because those three
+bones have no hit capsule.
+
+Not-tested: the maintainer ran the Rhûn chariot and both dwarven
+chariots in battle on this rig. Not checked in game: mount and
+dismount by the player, the jump key, wheel sounds and voices, a
+chariot death with its rider, and a dedicated server start
+(docs/features/chariot.md, "How to verify in game", checks 8 to 12).
+
+Three tests are red on trunk too and are not from this change:
+EveryLanguage_DeclaresARowForEveryEnglishKey,
+LiveArmory_AdultSkinPools_EqualTheSnapshot and
+test_the_installed_wolf_records_are_the_plan.
+
+No issue: the maintainer waived the public issue for the chariot
+work.
+
+#### feat(erebor): v2.0.42 - dwarven war chariots pulled by rams
+
+`f0e62f15`
+
+Erebor can now field war chariots. Two armoured war rams pull a
+dwarven cart, and a dwarf fights from it with spear, shield and axe.
+
+The Ironpass ram line has a second branch. A Ram Vanguard can become
+a Ram Marshal, as before, or an Ironpass War Chariot (level 41) in an
+iron-plated cart. The War Chariot upgrades to the Ironpass Steel
+Chariot (level 46), whose cart is plated in the style of the rams'
+barding and flies two pennants in your colours. The two upgrades
+cost 5 and 7 Gems, on the scale of the ram line. Both troops have a
+daily Gems upkeep, count 3 party slots, and are sold by the Erebor
+emissary.
+
+The chariots use the rig of the Rhun Wainrider chariot. The Wainrider
+horse team loses a skeleton scale that the engine applied to the
+wrong bones, so its two horses are now the same size.
+
+For modders: the three chariot items live in the Armory module, which
+is not versioned. tools/apply_dwarf_chariot_armory.py holds their
+rows; --check reports when a reinstall dropped them and --apply puts
+them back. The ram team is on the list of mounts a dwarf may ride
+(DWARF_MOUNT_IDS). The review record is
+docs/reviews/rca-dwarf-chariot-2026-11-24.md.
+
+Known limitation: the ram team sounds like the horse team, and in the
+inventory a chariot harness of one people fits the team of the other.
+
+Not-tested: nothing in this change was seen in the game. The steps
+are in docs/features/chariot.md, "How to verify in game": where the
+dwarf stands on the cart, the harness and reins in motion, the team
+colour, the far view, the upgrade screen and a chariot's death. The
+two troop names and three item names are English only until the
+language pass, so LanguageFileCoverageTests is red for them.
+
+No GitHub issue was filed: the maintainer waived it for the chariot
+work.
+
+#### feat(faction-ui): v2.0.42 - 3D character for every faction and pick
+
+`24a95622`
+
+The faction screen now shows every faction's character in 3D, as
+Arthedain already did, and the model changes to the character the
+player clicks: a hero card, or a Leader, Lord or Wanderer entry.
+Thanks to REDACTEDSTUFF for the feature.
+
+The model shows the same body, race and battle gear that the face
+generator and the player then get, read from the resolved pick, so
+the preview and the granted kit cannot differ. It slides in on each
+change. A faction's viewport tweaks apply to its own character, also
+when that character's card is picked (Sauron on Mordor). Ringwraiths
+and Sauron elsewhere are drawn at human scale, because their bodies
+overflowed the frame; the pick keeps its race.
+
+Also in this change:
+- Character creation compiles more shaders on a cold cache, so the
+  battle shader notice also shows there from 50 queued shaders.
+- With the menu video's muting on, the vanilla menu theme no longer
+  starts on the new-game loading screen and plays through the load.
+  The silence holds through the main menu and the loading screen and
+  lifts in Custom Battle setup, where the theme still plays.
+- The large painted faction portraits and the hero reveal pictures
+  are no longer drawn. Their code, bindings and widgets are gone, and
+  the 54 unused images (about 79 MB) are removed from the module. The
+  small painted hero cards stay.
+
+Not yet checked in game after the review fixes: the menu theme plays
+in Custom Battle setup with the menu video's muting on, and is silent
+on the new-game loading screen.
+
+No issue: owner waived new GitHub issues for this work.
+
+#### feat(long-defeat): v2.0.42 - Legolas speaks when he joins the defence
+
+`c4625367`
+
+In the Long Defeat and in the story missions, Legolas now says one of
+his lines when he takes the field (#1569). TierOneTemplar recorded
+the four lines, three takes each. His first spawn of a mission plays
+the first line, and each time he is bought again after a fall he says
+the next. He speaks only when he fights on the player's side: in the
+Helm's Deep attack and in the Parth Galen hunt he is the enemy and
+stays silent. Aragorn and Gimli have no lines yet; a row in
+long_defeat/hero_lines.json gives a hero his lines with no code.
+
+The line plays through the engine's voice-over event from a loose
+OGG file, placed at the player, so it is heard anywhere on the field.
+It stops when the mission ends. A new check line,
+taom.long-defeat.hero-line (taom.story-missions.hosted.hero-line in
+a story mission), records that the engine started the sound.
+
+Known limitation: in a co-op run only the host hears the line. There
+is no subtitle and no lip movement. A second hero with lines needs a
+queue first, because a new line stops the one that plays.
+
+Not-tested: nothing ran in the game, so nobody has heard a line. The
+engine plays this event in conversations, eavesdrop scenes and map
+notifications, never in a field battle, so the first run decides
+whether it is audible there. Owed: an unattended
+tools/run_long_defeat.py run with --start-gold 5000 for the pass
+line, and by ear the steps of "A hero's spoken line" in
+docs/features/long-defeat.md.
+
+The provenance register now records that TierOneTemplar recorded
+these lines and the elf combat voice himself; the terms on which he
+gives them to TAOM are still to be written down there.
+
+Reviewed with /deep-review at tier 1 (four lenses, two Codex passes).
+
+#### feat(voices): v2.0.42 - Elves fight with their own voices
+
+`c2e329be`
+
+Male elves grunt, cry out, shout orders and die in an elf voice in
+place of the vanilla human ones (#1568). TierOneTemplar recorded the
+set: 195 takes for 57 voice slots, from grunts and death cries to
+every formation order and troop call, with a drowning set and a
+scatter order the dwarves do not have. Female elves keep the vanilla
+female voices, because the set is a male voice.
+
+The voice is a new definition, elf_01, on loose WAV files that ship
+as delivered. Like the dwarf voice it reaches a soldier through his
+race's skin in LOTRLOME_Armory, so players hear it only with an
+Armory package whose elf skin names elf_01. This commit holds the
+snapshot of that skin and tools/oneoff/bind_elf_voice.py, which
+writes the binding into a live Armory and can take it out again.
+
+Known limitation: the binding must go on after the TAOM build that
+defines elf_01 is deployed, and a release must ship the Armory and
+TAOM together. With the binding and no definition the engine logs
+"Voice def can not be found" and leaves a null entry in the elf
+voice pool; what a soldier then does is not established. On the
+development machine the binding is off until that deploy, so one
+LiveInstall test (LiveArmory_AdultSkinPools_EqualTheSnapshot) fails
+there by design.
+
+Three delivered takes (elf_focus_03, 04 and 05) are over the 4 second
+limit of their sound category and are held back for a shorter cut.
+The 3.8 second battle cry plays on the Charge order and not as a
+melee yell, which has a 3.5 second limit.
+
+A new gate, VoiceBindingDataTests, checks that every voice TAOM
+registers is bound to an adult skin, that no skin mixes a TAOM voice
+with others, and that the live Armory matches the snapshot. It found
+that the adult female dwarf skin holds two voice pools; that is
+recorded in docs/features/kingdom-voices.md and not changed here.
+
+Not-tested: nothing ran in the game. The checks by ear are the steps
+of "How to verify in game" in docs/features/kingdom-voices.md. No
+managed code fires the Climb and Focus slots, and whether native
+code does is not established.
+
+Reviewed with /deep-review at tier 1 (four lenses, two Codex passes).
+The lesson on the binding order is in
+docs/reviews/lessons/data-content-cultures.md.
+
+#### feat(spider): v2.0.42 - own hits, deaths and stop; no slide in a charge
+
+`6c404693`
+
+The giant spider gets its own clips for the things it still played
+from June's takes, and three faults that showed in a battle on
+2026-11-23 are fixed. None of the three began that day.
+
+New clips (#1550, slice A). Four hits, three deaths, the quick stop
+and the jump start, generated on the spider's skeleton by
+tools/spider_gait.py. Each death has a held last pose for the
+"continue" actions, which had replayed the whole fall. The backward
+pace has its own in-place twin. The attacks and the rider's clips are
+still June's.
+
+The slide (#1559). In a charge the spiders slid with still legs. The
+engine lays an overlay row's clip over the whole body, and since June
+the spider's rows played the turn-in-place clip at every pace and the
+idle on the gallop's acceleration. Each moving pace's rows now play
+that pace's own gait, as the warg's do. Measured in a battle: the leg
+tips moved 6.5 to 6.8 m/s against the body in the gait and 1.0 to 1.3
+under the idle.
+
+The body (#1560). Spiders ran into each other: the body capsule held
+only the chest, 1.9 m of a 3.6 m body. It now runs from the head to
+the abdomen's tip, 1.4 m wide. The rider's camera height adds the
+capsule's size, so rider_camera_height_adder went from 0.9 to 0.4 and
+the camera stays where it was.
+
+Turning in place. The stand pace listed its none/none row first, and
+the engine files such a row under every direction and turn, so the
+turn-in-place and sidestep rows after it were never stored. The row
+is last now.
+
+Key times (#1558). The Modding Kit warned "ipo does not fit" once per
+bone for 49 bound clips of the spider, the mumak and the war
+elephant: their masters keyed 1 to N under records that play 0 to N,
+and each loop stood on its first key for one key time. Masters now
+key from 0 and a loop ends on a key that repeats its first.
+
+Gates that fail on the old state: check_gait_stride.py (a record's
+sources inside its master's keys, on every track), bind_spider_clips.py
+--check (the overlay rows, a hidden movement row, a rider row for each
+overlay action), verify_mount_assets.py spider (the capsule against the
+skeleton; row spider-body of data_gates.py), and the command trial's
+spider step, which now measures the slide and how much it judged.
+
+The live LOTRLOME_Armory is not in git, and this commit holds only its
+snapshot and the tools. A reinstall of the Armory reverts the clips,
+the rows and the capsule; the gates above then fail. The ledger is
+docs/reference/lotrlome-spider-mount-changes.md.
+
+The last of the day's custom battles passed with slide=0.0 over 153
+judged seconds and a top speed of 11.8 m/s (run 20261123-112345).
+
+Known limitation: no turning variants of the gaits exist, so a spider
+that turns while it runs plays the straight gait.
+
+Review record and root causes:
+docs/reviews/rca-spider-key-times-slide-capsule-2026-11-23.md
+
+Not-tested: a person's eye on a charge, a turn in place, a hit, a
+death, a hard stop, a jump, a gate with the wider body, and the
+mumak's and the war elephant's gaits after the key time change
+Research: native usage loader 0x621E40 and row parser 0x624B90
+(client), FUN_180b8b810 (editor), MissionScreen camera height
+
+Refs #1550, #1558, #1559, #1560
+
+#### feat(data): v2.0.42 - tag caravan and militia names with their culture
+
+`71503f7d`
+
+Caravan troops, militia and named characters now open their English
+name with a culture tag, such as [Gondor] Caravan Guard or
+[Misty Mountains] Orc Militia, so a roster shows whose they are.
+
+Only display text changed: 108 names across 29 files, with the same
+ids, keys, cultures and equipment. The Harad caravans read [Harad]
+because Harwan, Shaghana and Abanissa share them. The Anduin Vale
+names come from a generator that clones Dale, so the generator now
+maps [Dale] to [Anduin Vale] and its check stays in sync.
+
+The 12 translations keep the old names until the next language pass
+(#1129). The tag choices and an in-game length check are in #1557.
+
+Contributed by REDACTEDSTUFF. Reviewed: the XML lens and its data
+gates, and Codex at ultra.
+
+#### feat(spider): v2.0.42 - Spider walks, trots and charges on its own clips
+
+`42d2af33`
+
+Spider mounts now move on locomotion clips generated for the spider's
+own skeleton, the method the elephant and the mumakil got in #1474.
+The legs plant and lift in an alternating tetrapod gait, and the gait
+gate measures every foot against the ground speed: the worst slip over
+the seven gaits is 3.2 cm.
+
+What ships in this repo:
+- tools/spider_gait.py writes the walk, trot, canter, gallop, back,
+  strafe and turn clips and their in-place twins. Each leg is solved
+  on the rig, the swing uses a quintic curve so a tip does not scuff,
+  and the generator fails when a tip misses its target.
+- tools/bind_spider_clips.py binds the clips into the live Armory's
+  action_types, action_sets and monster_usage_sets, and --check proves
+  that the three files carry the binding and that every bound clip has
+  a cooked cache entry. It does not read any module's stylesheet.
+- New data gates spider-clips and spider-gaits, a spider entry in
+  check_gait_stride.py and verify_mount_assets.py, and the clip row
+  checks in gen_elephant_anim_clips.ps1 now run before any file is
+  written.
+- A spider_gaits step in the unattended command trial. Two custom
+  battles ran: the second passed with 11 riders mounted, stand 0.0,
+  top speed 10.0 and stop 0.0. Only 11 riders spawned because the
+  battle size cap of 400 cut a 413-soldier field.
+
+The live Armory change is separate from this commit. The Armory is
+not in git, so a reinstall of LOTRLOME_Armory reverts the binding;
+run python tools/bind_spider_clips.py --check after any reinstall.
+The repo snapshot of the three files now matches the live install,
+which also turns DwarfMountRiderRowsTests green on other checkouts.
+
+The jump rows now play spider_walk; a real jump clip is phase 2
+(#1550), with attacks, hits, deaths and the rider clips.
+
+Known limitation: --apply moves six files in turn. If it stops after
+the second move, do not start the game; a second --apply ends that
+state. The header of bind_spider_clips.py names it.
+
+Root cause and review record:
+docs/reviews/rca-spider-locomotion-2026-11-22.md
+
+Not-tested: a human look at the gaits in battle (owed on #1541)
+
+Refs #1541, #1550
+
+#### feat(ci): v2.0.42 - check every PR on GitHub and review it locally
+
+`8b9cc1f7`
+
+Every pull request to bannerlord-1.5.x now gets two checks without
+anyone asking.
+
+GitHub Actions runs three jobs on each PR: the C# build and tests
+against BUTR's reference assemblies (no game), the Python tool tests
+on Windows with ruff and a pinned ShellCheck, and the doc lint. Each
+test step fails when fewer tests executed than its floor, so a filter
+that matches nothing is never a green run. About 50 tests that run
+engine code are tagged RequiresGame or RequiresGameIL so the no-game
+job can pass, and five metadata-only Marshal binding checks moved to
+their own class so they still run there.
+
+A scheduled task on the maintainer's desktop
+(tools/register_pr_review_task.ps1) runs tools/pr_review_watch.py
+every 30 minutes. For each new PR head it runs the
+/review-outside-pr Phase 1 checks in code from the GitHub API, with
+no checkout: binaries, high-risk paths at any depth and case, the
+tools/ scripts trunk's hooks and build run with everything they
+import or load, hidden Unicode, unsafe or colliding file names, a
+short file list and a wrong base all stop the PR. A PR that passes
+gets a read-only Opus review: the model has only Read, Grep and
+Glob, no MCP server and the project settings only, and every read
+of the PR is pinned to one head. The report goes to
+E:/TAOM-PR-Reviews with a Windows notification. Nothing is posted,
+built or merged. There is no daily cap on model reviews, by the
+maintainer's decision.
+
+Two review waves and a Codex pass (xhigh) found six HIGH gaps in
+Phase 1 before this merge; all are fixed with tests, and the RCA is
+docs/reviews/rca-pr-review-watcher-2026-11-22.md.
+
+Also: game_modules(None) returns None instead of raising, and the
+dire wolf clip test no longer needs files on E:.
+
+Refs #1543
+
+#### feat(training-grounds): v2.0.42 - Wave fights with a wager on each wave
+
+`12f4d098`
+
+The Training Master of a town now runs a wave fight, after a player's
+suggestion: a fight against waves of opponents with a bet on your own
+victory in each round, and a limit that grows the further you get, so
+that three fights do not make a millionaire.
+
+Ask the master, wager on yourself, and fight a wave of the town's own
+fighters with practice weapons. Clear it and he pays the wager back
+at that wave's odds, 1.5 times on the first wave and 2 times from the
+sixth. You are then back at the master: wager on the next wave, or
+stop and keep what you won. Go down, or leave the yard mid-wave, and
+that wave's wager stays with the town. There are eight waves, from 3
+fighters one at a time to 16 with five at once. The largest wager
+starts at 500 denars and reaches 15,000 on the last two waves; the
+tournament bet cap in MCM limits it too, and Deep Pockets doubles it.
+A full run at the largest wagers nets 54,200 denars. Each town runs
+the waves once a day.
+
+Your hero is not wounded or killed by a wave. If a wave cannot start,
+or a fault ends it, the wager comes back with a notice and the town's
+day is free again.
+
+The waves and the rules are data:
+ModuleData/training_grounds/training_waves.json. A new MCM switch,
+Wave Fights at the Training Grounds (Tournaments group, on by
+default), hides the offer. Single-player only: the offer does not
+show in a co-op session.
+
+Save-compat: one new saved value, the day each town last ran the
+waves; a save without it loads as "no run yet".
+
+Not-tested: nothing has been fought in play. One unattended new
+campaign (run 20261122-122853) proves the module loads and plays
+three days with the feature; it opened no training yard. The mission
+side, which stands vanilla's practice down and brings it back, needs
+a real wave: the checks are in tools/ingame_checks/1529.toml. 23 new
+English texts wait for the language pass, so
+LanguageFileCoverageTests is red for them.
+
+Research: ArenaPracticeFightMissionController,
+ArenaMasterCampaignBehavior, TournamentBehavior (bets), Mission
+(teams, agent state), SimpleAgentOrigin (v1.5.7)
+
+Reviewed by the data flow, engine and XML lenses, a lens on every
+all-mission behavior, and Codex twice. Its prompts are in
+docs/reviews:
+codex-prereview-training-waves-2026-11-22.prompt.md
+codex-rereview-training-grounds-fixes-2026-11-22.prompt.md
+
+Refs #1529
+
+#### feat(training-grounds): v2.0.42 - Team practice fights in Free towns
+
+`2faebdbd`
+
+In a town held by the Free Peoples the practice fight at the training
+grounds is now a team fight, after a player's suggestion that soldiers
+of the West would train in teams while Sauron's towns keep the brawl.
+You fight beside two allies, outlined in blue, against four others,
+and nobody can hurt his own side. The side of a town is its owner's,
+so a captured town follows its conqueror. Towns of the Shadow and
+neutral towns keep the fight where every fighter is alone.
+
+The prizes are vanilla's: 5 to 60 denars for the opponents you put
+down yourself, and 250 when your side wins while you still stand. In
+a Free town the Training Master explains the team rules and prizes.
+
+A new MCM switch, Team Practice Fights (Tournaments group, on by
+default), turns it off. It takes effect the next time you enter the
+training grounds. Single-player only: a co-op session keeps vanilla's
+fight.
+
+Known limitation: the practice HUD line "remaining opponents" also
+counts your allies in a team fight.
+
+Not-tested: nothing has been seen in play. The four patches on
+vanilla's practice controller and its master (Patch174_TeamPractice),
+the outline and the friendly fire rule need a fight in a Free town;
+the checks are in tools/ingame_checks/1528.toml. Five new English
+texts wait for the language pass, so LanguageFileCoverageTests is red
+for them.
+
+Research: ArenaPracticeFightMissionController,
+ArenaMasterCampaignBehavior, Mission.ForceNoFriendlyFire (v1.5.7)
+
+Reviewed by the data flow, engine and XML lenses and by Codex. Its
+prompt is in docs/reviews:
+codex-prereview-team-practice-2026-11-22.prompt.md
+
+Refs #1528
+
+#### feat(coop-compat): v2.0.42 - carry the lord's gear ladder in guest trade
+
+`f241ce75`
+
+TAOM.CoopCompat now carries a co-op player's rung of the lord's gear
+ladder from the co-op server to that player, and the player's ladder
+hand-in and claim to the server. With TAOM's matching change a co-op
+player's armoury lists the ladder and climbs it on the server.
+
+The guest trade reply gets nine new fields (14 to 22): whether a
+ladder is sent, the rung's slot, done, claimable at this armoury, the
+lord level, the material with the count needed and carried, and up to
+64 pieces to choose from. The client reads them with the server's
+caps; an unknown slot gives no ladder. The hand-in and the claim use
+the existing request fields. The protocol version stays 1: a v2.0.40
+peer skips the new fields, and a reply from a v2.0.40 server reads as
+no ladder, so that player's armoury looks as before.
+
+The player README now lists the Lords' Ladder and explains its three
+messages.
+
+No issue: proposed directly as a pull request.
+
+#### feat(coop-compat): v2.0.42 - relay careers between players and server
+
+`0716d1b8`
+
+TAOM.CoopCompat now carries TAOM's career sync. A player's TAOM career
+reaches the co-op server, which keeps it in its save, so it is still
+there when the player joins again, and the other players see it.
+
+CareerSyncRelayService attaches itself to TAOM's CareerSyncClient.
+When a client's campaign join is ready it sends a join report of the
+player's own hero; after that the submodule's frame tick lets the
+client send one report per action that changed that career. On the
+server, the hero comes from the sender's connection, TAOM's
+CareerSyncHost decides, and the relay sends what it returns: an
+accepted career to every player but the sender, a refusal or a saved
+copy that differs back to the sender only. Changes the server makes
+itself (a death clear, a tree migration) go to every player. A
+message of another protocol version is dropped and logged once. A
+failure to send on the frame tick, or to pass on a server change, is
+logged once and goes no further.
+
+The switch is TAOM's settings, Co-op, "Sync careers for co-op
+players", read in the co-op server process for each report; a
+dedicated server takes it from taom-server-settings.json
+(CoopCareerSync) once at start, so a change there needs a server
+restart. A peer without this version keeps its careers on its own PC,
+as before.
+
+Not tested in a co-op session yet: the in-game check is step 7 of
+"How to verify in game" in docs/features/coop-compat.md. Design
+credit: minimalcash63 (TAOM Co-op Bridge career sync).
+
+The player README now lists career sync and explains the refusal
+message.
+
+No issue: proposed directly as a pull request.
+
+#### feat(coop-compat): v2.0.42 - career sync wire contracts and transport
+
+`b5b6a465`
+
+Adds the two messages the co-op career sync travels on, and the
+transport that carries them. CoopCompatCareerReport goes from a client
+to the server with the career of the hero that client plays, a
+sequence number and a join flag. CoopCompatCareerUpdate goes from the
+server to clients with a hero's career as the server holds it, the
+sequence of the last report the server handled for that hero, and two
+flags: Refused (an answer to a refused report) and Known (the server
+holds an entry for that hero).
+
+Both are new contract types; ProtocolVersion stays 1 and no existing
+field moves. WireContractNamesTests pins their layouts, and the round
+trip tests cover every field and empty lists. A peer without these
+types drops them.
+
+CoopTransport raises CareerReportReceived on the server only, with the
+hero that the sender's current connection controls (read when the
+report is handled, as for trade requests), and CareerUpdateReceived on
+a client only. It gains BroadcastExcept (Coop's INetwork.SendAllBut),
+so an accepted career reaches every player but its sender. Nothing
+uses the transport yet.
+
+No issue: proposed directly as a pull request.
+
+#### feat(coop-compat): v2.0.42 - Warn a player whose load order differs
+
+`fe3184e6`
+
+Coop's join check compares the players' module lists but not their
+order. The game merges module data in load order, so a player whose
+data mods load in another order than the server's sees other gear or
+troops, with no hint. TAOM.CoopCompat now checks it at join.
+
+The client sends its module load order in the settings hello. The
+co-op server compares TAOM's own block and every non-official mod that
+adds items, troops, cultures or factions, logs the result, and answers
+with the first two modules that load the other way round. The player
+gets one yellow line naming them. Nothing is blocked. The switch is
+TAOM's settings, Co-op, "Warn players whose load order differs from
+the host's", read in the server process at each join. A dedicated
+server reads it from taom-server-settings.json (CoopLoadOrderWarning)
+once at start, so a change there needs a server restart. A client
+that cannot read its module list logs it and sends no order.
+
+The hello gains field 9 and the reply fields 5 to 7; ProtocolVersion
+stays 1. The order is compared only when both sides use the same
+protocol. A v2.0.40 peer skips the new fields, a server that gets no
+order warns nobody, and a client that gets a reply without them shows
+nothing; OlderPeerLayoutTests reads both old layouts.
+
+Not tested in a co-op session yet: the in-game check is step 6 of
+"How to verify in game" in docs/features/coop-compat.md. The notice
+text's translations are owed to the next language pass.
+
+The player README (CoopCompat/_Module/README.txt) now explains the
+check and the notice.
+
+No issue: proposed directly as a pull request.
+
+#### feat(coop-compat): v2.0.42 - Add the load order rules and module list
+
+`10ea8741`
+
+Adds the pieces of a co-op load order check to TAOM.CoopCompat; the
+next commit wires them into the join handshake.
+
+LoadOrderRules decides which modules are compared: TAOM's own block
+(TAOM.Dependencies, LOTRLOME_Armory, DualWield, TAOM_Map, TAOM,
+TAOM_AIO_Compat) and every other non-official module whose SubModule.xml
+lists items, troops, cultures, factions or other object data. It cuts
+the server's and the player's orders to the compared modules both have
+and reports the first pair that differs. ActiveModulesAdapter reads the
+engine's active module list, which is in load order, and each module's
+SubModule.xml. LoadOrderCheckService runs the check in the co-op server
+process: it reads the server's switch on every check, logs the result
+and never throws, so the hello reply always goes.
+
+No issue: proposed directly as a pull request.
+
+#### feat(coop-interop): v2.0.42 - co-op server rolls lord's materials
+
+`fb5e364c`
+
+A co-op player who wins a battle can now find their culture's lord's
+materials, as a single player can. The co-op server rolls the find
+for each co-op player's hero on the winning side and gives it to that
+player's party on the first in-game hour in which the party is free
+and out of battle. Until now only the server's own main hero was
+ever rolled, so co-op players found nothing.
+
+The roll is TAOM's own one, at the base chance: the hero's kills are
+counted on the player's PC, and the server takes no count from a
+client. The winners come from the special resources' victory
+snapshot, which lists them only on the server of a live session, with
+the player control from Coop's registry; the local main hero is left
+to the existing ladder behavior, so no hero is rolled twice. A find
+waits in the server's save (a new "find" kind in the armour state, 1
+to 999 units per hero; a v2.0.40 build skips it on load). A hero the
+server no longer has, or a material that cannot be added, drops the
+find with a warning. A party that retreated from a won battle may
+still roll, because the winning side keeps it in its list.
+
+The switch "Lords' Ladder for co-op players" now covers the finds too;
+its hint says so in all twelve language files (English rows). Already
+found materials are still given with the switch off.
+
+No issue: proposed directly as a pull request.
+
+#### feat(armour-acquisition): v2.0.42 - co-op players see the ladder rows
+
+`fc36c217`
+
+A co-op player's armoury now lists the lord's gear ladder again: the
+claim of a rung that is done, or the hand-over of the lord's materials
+for a rung that waits for them, both built from the co-op server's
+view of that player's rung and sent to the server when chosen. Until
+now the guest armoury left the ladder out entirely.
+
+The claim row is enabled at an armoury of the lord level, the
+hand-over row when the party carries enough; the claim list is the
+server's choices. The outcome comes back as one message line, and the
+server's sync of the party inventory shows the change. The rung quests
+("Take up the commission") are not offered to co-op players. A local
+player's armoury is unchanged.
+
+Three new strings have English rows in all twelve language files;
+translations are owed. TAOM.CoopCompat carries the server's view in a
+separate change; until then a player sees no ladder rows, as before.
+
+No issue: proposed directly as a pull request.
+
+#### feat(coop-interop): v2.0.42 - co-op server runs a player's lord ladder
+
+`b4fc9bb5`
+
+The co-op server now answers a player's armoury with that player's
+rung of the lord's gear ladder, as the server keeps it in its save,
+and runs a hand-in of lord's materials or the claim of a lord piece
+for that player's hero. Until now TAOM's guest armoury had no ladder,
+so a co-op player could never climb it.
+
+The server builds TAOM's own LordsLadderService for the hero of the
+sender's connection, with that hero's armoury adapter, and checks
+what the armoury window checks for a local player: the rung the
+player saw is still the current one, enough materials, an armoury of
+the lord level, and a piece the rung awards. The armoury reply gets
+an optional ladder view; two new guest trade actions (5 hand-in,
+6 claim) carry the slot name and the piece. A v2.0.40 server answers
+those actions BadRequest, and a player sends them only after a reply
+that carried a ladder. Reading the ladder never changes the answer to
+the request itself. The rung quests are not offered to co-op players.
+
+The switch is TAOM's settings, Co-op, "Lords' Ladder for co-op
+players" (on by default), read through the Armour Acquisition settings
+provider. The co-op server process reads it for each armoury request;
+a dedicated server takes it from taom-server-settings.json
+(CoopGuestLadder) once at start, so a change there needs a server
+restart. It is in the settings fingerprint. The counts move from 563
+to 564 settings (364 to 365 simulation relevant).
+
+GuestTradeReply gains a trailing optional parameter, so TAOM.CoopCompat
+must ship rebuilt against this TAOM.dll; its relay carries the view in
+a separate change. Without that change the view never leaves the
+server and players see what they saw before. The two new strings have
+English rows in all twelve language files; translations are owed.
+
+No issue: proposed directly as a pull request.
+
+#### feat(coop-interop): v2.0.42 - career sync client, server and switch
+
+`cd55db60`
+
+A career a co-op player picks or changes now reaches the co-op server,
+which keeps it in its save, so the career is still there when the
+player joins again, and the other players see it. Until now TAOM kept
+a guest's career only on that guest's PC.
+
+On a client, CareerSyncClient sends the player's own career once when
+the campaign join is ready, then once per action that changed it (a
+free career switch is several changes and goes out as one report).
+Each report carries a sequence number; an answer to an older report,
+or one that arrives while a newer change waits, is dropped.
+
+On the server, CareerSyncHost checks a report against the hero the
+sender's connection controls, with the career rules from the previous
+change. An accepted career is stored, the passive cache refreshed and
+the career passed on to the other players. A refused one is logged,
+and the sender gets the server's copy back with one line: "The co-op
+server did not accept that career change and keeps the career it has
+saved for you." When a player joins again and the server already
+holds a career for that hero, the server's copy wins. Eligibility for
+the hero's culture is logged, not enforced. Changes the server makes
+itself (a death clear, a tree migration) are passed on too.
+
+The switch is TAOM's settings, Co-op, "Sync careers for co-op
+players" (on by default), read through CoopSettingsProvider. The co-op
+server process reads it for each report; a dedicated server takes it
+from taom-server-settings.json (CoopCareerSync) once at start, so a
+change there needs a server restart. It is in the settings
+fingerprint: it changes what the server stores and sends. The counts
+in SettingsFingerprintTests, ServerSettingsSchemaTests and the two
+co-op docs move from 562 to 563 settings (363 to 364 simulation
+relevant).
+
+TAOM.CoopCompat attaches the relay in a separate change; without it
+nothing resolves these services and single player is unchanged. The
+three new strings have English rows in all twelve language files; the
+translations are owed to the next language pass.
+
+No issue: proposed directly as a pull request.
+
+#### feat(coop-interop): v2.0.42 - server rules for co-op career reports
+
+`6f594f6b`
+
+Adds the check the co-op server runs on a career a player reports, so
+the server can keep every player's career in its own save. The check
+uses TAOM's own career rules: the career must exist, the root choice
+comes first, and every other choice is replayed in the order it was
+taken through CareerChoiceRules.CanTake, against the choice budget
+the server's copy of the hero's level gives. A full fork, a keystone
+lock, a locked tier, a foreign or duplicate choice and one choice too
+many are refused. A cleared career (as a free career switch leaves
+for a moment) is accepted.
+
+Tier unlocks and quest flags come from career quests that run on the
+player's own machine, so the server can only bound them: tiers 1 to 3,
+and flags that a career quest reward names or the career's tree
+version stamp. Ids are capped at 128 characters and lists at 64
+entries.
+
+CareerSyncSnapshot carries one hero's career in the form the career
+book saves. Nothing calls the check yet.
+
+No issue: proposed directly as a pull request.
+
+#### feat(careers): v2.0.42 - career book change event and apply seam
+
+`74f486ff`
+
+The career book (CareerDataService) now raises HeroCareerChanged with
+the hero's id after SetCareer, TryAddChoice, RemoveChoice, UnlockTier,
+SetFlag or ClearCareer changed that hero's entry. A call that changes
+nothing raises nothing, and loading a save (RestoreData) or starting a
+new campaign raises nothing.
+
+ApplyHeroCareer replaces one hero's entry with a copy of a given
+career and raises no event. Together they are the seam the co-op
+career sync uses: it listens for changes and writes the career the
+co-op server holds. In single player nothing listens, so nothing
+changes for players.
+
+No issue: proposed directly as a pull request.
+
+#### feat(coop-interop): v2.0.42 - Add the Co-op settings group
+
+`5d4540a9`
+
+TAOM's settings page gains a Co-op group with one switch, "Warn
+players whose load order differs from the host's" (on by default).
+TAOM.CoopCompat reads it in the co-op server process when a player
+joins, and warns that player when TAOM and the mods that add items,
+troops or factions load in another order than on the server. A
+player's own value is never read. A dedicated server takes the value
+from taom-server-settings.json (CoopLoadOrderWarning), which it reads
+once at start, so a change there needs a server restart; the hint
+says so.
+
+The switch is read through the new CoopSettingsProvider. It is
+excluded from the co-op settings fingerprint as instrumentation: it
+gates log lines and one notice to the joining player and changes no
+computation, so a client holding another value would only see a
+spurious "settings differ" line. The counts in SettingsFingerprintTests,
+ServerSettingsSchemaTests and the two co-op docs move from 561 to 562
+settings (198 to 199 excluded).
+
+The three new strings have English rows in all twelve language files;
+the translations are owed to the next language pass.
+
+No issue: proposed directly as a pull request.
+
+#### feat(long-defeat): v2.0.42 - Choose Normal or Hard in The Long Defeat
+
+`5705f402`
+
+The Long Defeat now asks for a difficulty after the fortress and
+before the class (#1079, Phase 5 Slice 6). Normal plays as before.
+
+Hard sends a quarter more attackers in every wave (wave 1 has 138
+where Normal has 110, and the cap is 375 where Normal's is 300), the
+endless waves grow in health and damage a quarter faster, and the
+attackers gain their first power in wave 3, two waves sooner. The two
+numbers are in waves.json under rules.hard.
+
+Each difficulty keeps its own best run, and the run report names the
+difficulty. taom.ld_start takes a last word of normal or hard, and
+the unattended runner takes --difficulty.
+
+Known effects: Hard pays about a quarter more bounty in each wave,
+because there are more attackers to fell. Every leaderboard board
+opens anew, because the balance version changes with waves.json. A
+co-op host and member must run the same TAOM version: the session
+message changed, and an older build is refused with the usual
+"install the same TAOM as the host" notice.
+
+Under the hood the scaling is applied once, when the run's plan is
+built, so the wave, its checks and the HUD all read the same numbers.
+The keep's minimum attacker count follows the larger waves (14 on
+Hard), and the unattended judge now replays each wave's count and
+health and damage factors from the report.
+
+Localization: four more English keys have no language row yet
+(TAOM_LD_Prompt_DifficultyTitle, TAOM_LD_Prompt_DifficultyDesc,
+TAOM_LD_Difficulty_Normal, TAOM_LD_Difficulty_Hard), 42 with the
+earlier Minas Tirith keys. The language files are the project lead's.
+
+Not played yet: no Hard run has been started in the game.
+
+#### feat(campaign-ui): v2.0.42 - Themed army panel above the stats plate
+
+`41527740`
+
+The army panel (cohesion, army food and men, the party portraits) no
+longer hides under the TAOM campaign stats plate. It now stands above
+the plate's gold frame, rides up and down with the plate when the
+stats bar extends, and is restyled in the campaign bar theme: a stone
+and gold plate cut from Thyrell's stats plate art, the stats icons, the
+character creation slider for cohesion and gold portrait frames, the
+army leader's brighter.
+
+A page now holds 12 parties in four columns (vanilla 15 in five) to
+fit the plate, so an army of 13 to 15 parties has a second page. Under
+co-op, or if the themed map bar does not load, the vanilla panel and
+map bar show as before.
+
+The review found that the panel's brushes would have drawn blank: a
+brush file that names a runtime sprite must be in an image group's
+reload list. A new gate fails any brush file that is not. The record
+is in docs/reviews/rca-army-overlay-2026-11-22.md; the in-game check
+in docs/features/campaign-army-panel.md is still owed.
+
+Refs #1532
+
+#### feat(long-defeat): v2.0.42 - Gondor names for the boons of Minas Tirith
+
+`8bd9d89a`
+
+At Minas Tirith the boons no longer speak of Rohan. The thirteen
+boons with Rohan names show Gondor names there: Oath of Eorl is Oath
+of Cirion, Wains of the Westfold is Wains of Anorien, The Longbow of
+the Mark is The Longbow of Morthond. The levy's text names the
+southern fiefs, and the Cavalry class reads as a knight of Dol
+Amroth (#1079, Phase 5 Slice 5).
+
+Helm's Deep shows exactly what it showed before. No English text
+changed, so no translation went stale.
+
+How: a boon row in boons.json may carry "cultures", a name and an
+optional text for one defender culture, and a class in classes.json
+may carry "texts". The fortress's defender culture picks the words
+when a run's plan is built. A boon's id, effects, drawback and weight
+are the same at both fortresses.
+
+Known gap: Minas Tirith sells no rider, so its boon pool leaves out
+the three cavalry boons that Helm's Deep gets from the King's
+Knights. A pack of Dol Amroth knights would open them.
+
+Localization: 15 more English keys have no language row yet
+(thirteen TAOM_LD_Boon_*_Gondor, TAOM_LD_Boon_RiddermarkLevy_Text_
+Gondor and TAOM_LD_Class_Cavalry_Text_Gondor), 38 with the keys of
+the last commit. In a translated game these names show in English
+beside translated ones until the language pass. The language files
+are the project lead's.
+
+Not played yet.
+
+#### feat(arena): v2.0.42 - The town arena is the Training Grounds
+
+`af5ddb61`
+
+In English the town arena is now the Training Grounds and its keeper
+the Training Master, after a player's suggestion: a drill yard suits a
+town of Gondor or Rohan better than a hippodrome. The town menu, the
+location name, the keeper's name in every culture, the practice and
+tournament talk and the Tidings of the Lists all use the new names.
+What the place does is unchanged.
+
+Only text changed. The menu, location and occupation ids keep their
+names, so mods that reach them by id are not affected.
+
+The other twelve languages keep their own word for the arena. The
+rewording of vanilla's text applies in English only (#706), and
+TAOM's translated rows for the keeper and the Tidings still match
+vanilla's word there, so tools/check_stale_loc_rows.py lists them as
+stale on purpose. Four MCM hints that were never translated now hold
+the new English in ten language files.
+
+TrainingGroundsTextTests fails when player text says "arena" or
+"tournament master" again, when a keeper carries another name, when a
+reworded line loses a variable, or when a game update adds vanilla
+text with either wording.
+
+Not-tested: no in-game look yet at the town menu, the location name
+and the keeper's name.
+
+Reviewed by the data flow and XML lenses and a Codex pre-review. Its
+prompt is in docs/reviews:
+codex-prereview-training-grounds-rename-2026-11-22.prompt.md
+All three found that three cultures still showed "Tournament Master";
+that is fixed here, with the lesson in
+docs/reviews/lessons/localization-ui.md.
+
+Refs #1527
+
+#### feat(campaign): v2.0.42 - Birth and Aging option on the new game screen
+
+`eb3d41b9`
+
+TAOM now offers the game's own "Enable Birth and Aging" switch on the
+new-campaign options screen, so players no longer need the optional
+Birth and Aging Options module for it. It is on by default. Turned off
+at the start of a campaign, heroes stop ageing, nobody dies of old age
+(TAOM's race lifespans included) and no children are born. As in the
+base game, the choice is fixed for that campaign: the in-game options
+screen shows it read-only.
+
+When the Birth and Aging Options module is also loaded, TAOM hides its
+own copy, because the game would otherwise list the box twice. The box
+uses the game's own text, so it is translated in every language the
+base game ships.
+
+Starting children keep their age with the switch off: the children
+TAOM creates at the start of a campaign set their birthday from the
+age they were made at. Takeover and adoption starts skip the options
+page, so they always keep the cycle on.
+
+Contributed by REDACTEDSTUFF (PR #1521). No issue: the owner waived
+new GitHub issues for this work.
+
+#### feat(long-defeat): v2.0.42 - Minas Tirith joins The Long Defeat
+
+`bd3b9f28`
+
+The Long Defeat has a second fortress. Choose Minas Tirith in the
+menu and you defend the first circle as Imrahil, with Gondor against
+Mordor (#1079, Phase 5 Slices 1 to 4).
+
+Mordor's waves open with orcs, bring Morannon spearmen and uruks from
+waves 4 and 5, the Barad-dur guard from wave 8 and the temple guard
+in wave 10. Gorbag, Gothmog and the Witch-king lead every fourth
+wave. The table follows the curve of Helm's Deep in troop level and
+in bounty per level, and it is a first guess for the balance pass.
+
+The Gondor shop sells six companies (Anorien militia and archers,
+Lossarnach axemen, Morthond bowmen, Pinnath Gelin spearmen and the
+Guards of the Citadel), fifteen upgrade steps along Gondor's own
+troop tree, Aragorn, Legolas and Gimli, gate repair and levels, and
+field care. Each of the four classes has a Gondor kit; Cavalry
+wears a Dol Amroth knight's gear.
+
+It is data only: no C# changed. No place is recorded at Minas Tirith
+yet, so soldiers stand on the scene's own siege frames, as Helm's
+Deep did before its muster was recorded.
+
+Side effect: Gothmog gets a Custom Battle stub, so he also joins
+Mordor's lord list in Custom Battle.
+
+Not played yet: nobody has started this fortress in the game. Still
+open from the plan: neutral boon and Cavalry text (13 boons carry
+Rohan names), difficulty levels, trolls and the recorded places.
+Decisions D51, D53, D54 and D60 of phase5-plan.md were taken at
+their recommendations.
+
+Localization: 23 new English keys have no language row yet (two
+Mordor ability names, six TAOM_LD_Offer_Gondor_* and fifteen
+TAOM_LD_Up_Gondor_*), so the two language coverage tests fail until
+the language pass. The language files are the project lead's.
+
+#### feat(story-missions): v2.0.42 - the host at Helm's Deep is 350
+
+`3f2698eb`
+
+The player's host in the assault on Helm's Deep grows from 250 to 350
+Uruk-hai and men of Isengard. The maintainer's range was 350 to 450;
+a host of 450 does not finish the battle inside 20 minutes.
+
+The assault is still very hard, and that is not settled by this
+change. With the bot in command it lost at 250 and at 350 and did not
+finish at 450, with 6 to 15 attackers dead for each defender lost.
+The runs suggest that the size is not the lever: in one of them
+Legolas alone made 118 of the 349 kills. Whether a person in command
+can win it is not known. The numbers and the balance options are in
+the feature doc ("Known limits") and on #1409.
+
+Proven in the game for the lost assault, through the Hornburg offer
+as an Isengard player (run 20261121-230907): the walls hold, the
+event window gets the repulsed text, and Mordor's alliance with
+Isengard ends (alliance-ended check: result=Ended allied=False).
+
+For the tool: an unattended offer run now also prints
+taom.war_effects at its end, so a run shows the effect rows that an
+outcome wrote.
+
+Not-tested: a won assault (the fallen Hornburg and Rohan's permanent
+penalty) has no game run, because the bot does not win it. No person
+has played the assault.
+
+Review: one deep review pass (data flow and tooling). It corrected
+two overstated sentences in the doc; no code finding. The Codex pass
+is owed before the merge.
+
+Refs #1105, #1409
+
+#### feat(story-missions): v2.0.42 - storm Helm's Deep, and pay for it
+
+`7557d4ed`
+
+The Hornburg's story window now offers both battles. A free player
+may defend the walls, an evil player may storm them, and a neutral
+player may do either. Nobody fights their own realm.
+
+What the result changes:
+
+- The walls hold, by any road: Rohan's parties gain 5 morale for 25
+  days ("Tidings of the war" in the morale tooltip), beside the
+  volunteer boost they already had. A party of a player's clan gets
+  none of it.
+- A player leads the assault and loses it: Sauron ends Mordor's
+  alliance with Isengard. The two stay at peace with each other for
+  the rest of the campaign, and the alliance does not come back, also
+  when a player rules one of them. Isengard takes no other penalty.
+- Helm's Deep falls, in the story battle or on the map: Rohan raises
+  10 percent fewer volunteers for the rest of the campaign.
+
+For modders: a chronicle effect row may say "permanent": true in
+place of durationDays; PartyMorale is a third effect kind; a siege
+story may carry an attackMission and a repulsed block with a text
+and an endAlliance pair that names a Permanent row of diplomacy.json.
+
+Saves: the broken alliance is saved under a new key of the diplomacy
+data, and a permanent effect is an ordinary effect row with a far end
+time. An older save loads unchanged. A save made after the alliance
+ended, loaded in an older build, gets the alliance back.
+
+Known limits: the daily war ledger line does not show the morale
+effect (taom.war_effects does), and the setting hint of War Effect
+Strength does not name morale yet, although the strength scales it.
+Four new English strings (taom_war_morale, taom_event_effect_morale,
+taom_event_effect_permanent, taom_wc_hornburg_repulsed) have no
+translation yet, so the language coverage test stays red for them.
+
+Not-tested: no game run and no play by a person yet. The unattended
+offer run for the Hornburg follows on this branch.
+
+Review: tier 1 deep review (data flow, engine compatibility, XML).
+No HIGH finding. Fixed: the check manifest no longer caught a wrong
+side offered to a player; a player who ruled Isengard or Mordor could
+form the broken alliance again; the morale model asked who owns a
+party before it knew that any effect was active; a doc stated the
+vanilla food morale wrongly. The Codex pass is owed before the merge.
+
+Refs #1105, #1409
+
+#### feat(long-defeat): v2.0.42 - A bought gear set reaches the lord's body
+
+`91eb037c`
+
+The Long Defeat can now put gear bought at the armoury on the lord
+while he stands on the field. On the tick after a buy his body takes
+the new armour and weapons where he stands, and every later body of
+his (the rise at the keep, a rider's remount) is built in the same
+kit. A swap also refills his arrows and mends his shield.
+
+Nothing is for sale yet. The armoury sells only at a fortress that
+records an armoury point and from a shop that lists gear sets, and no
+shipped file has either, so play does not change.
+
+For unattended runs the shop bot walks the lord to the armoury. He is
+put there after twenty seconds if he has not arrived, and the walk is
+released when the errand ends, the wave starts or the run ends.
+
+Also in this change: the run's judge refuses a gear purchase at a
+fortress with no armoury point, and it owes the fort-points check for
+a fortress that records a keep.
+
+Not played. It cannot be until an armoury point is recorded at Helm's
+Deep and two gear sets are in shop.json. The review's findings are
+rows 51 to 58 of docs/reviews/rca-long-defeat-phase4-2026-11-06.md.
+
+Refs #1079
+
+#### feat(autorun): v2.0.42 - story offer run can wait for its day
+
+`e7511b99`
+
+The unattended story offer run could not reach the Hornburg: a siege
+window opens only in the Full War, and no console command brings that
+phase. The first run said so and stopped ("a siege opens only in the
+Full War (the phase is Peace)").
+
+  python tools/run_scenario.py --kind story-offer
+      --event hornburg --choice defend --by-date
+
+With --by-date the run arms no open command. The campaign runs on
+fast forward (speed 15, or --speed) until the window opens on its own
+day, and the driver waits for the offer popup as long as the wall
+limit less the mission's share of it. Everything after the popup is
+as before. Without the flag nothing changes, except that an arm file
+with no open command now ends at once with offer_refused.
+
+Proof of the plain path on the build before this one (0b440211d):
+three runs of the Breaking of the Fellowship passed. Defence lost
+(Boromir killed), hunt lost (Averted, Boromir lives) and "Let fate
+decide" (Boromir killed): run folders 20261121-215614, -220814 and
+-221113 under E:/Temp/scenario-runs. The Hornburg refusal is run
+20261121-221235.
+
+Known limit: the by-date wait has no stall check, so a locked clock
+or a window the map resolves with no offer costs the whole wait.
+
+Not-tested: no game run of the by-date path yet; it follows this
+commit.
+
+Review: one deep review pass (data flow and tooling). Fixed: the
+popup wait used the mission's share of the wall limit, so a late
+popup could let the runner stop the game inside the mission. The
+Codex pass is owed before the merge.
+
+Refs #1105
+
+#### feat(autorun): v2.0.42 - unattended run of the story offer
+
+`0b440211`
+
+A third kind for the unattended scenario runner plays the real story
+offer with nobody at the keyboard:
+
+  python tools/run_scenario.py --kind story-offer
+      --event <breaking|hornburg> --choice <defend|attack|fate>
+
+It starts a new campaign, opens the War Chronicle window with the
+console command, waits for the offer popup, presses its accept button,
+picks the side in the offer menu, lets the bot play the mission,
+clicks Continue and prints the check lines, the chronicle's result
+line and the event states. "fate" picks "Let fate decide" and plays no
+mission. Until now only the dev menu could be driven, so the popup,
+the menu and the result written to the campaign had no machine proof.
+
+The runner refuses at once what the game would never show: an event
+with no story, an attack where no attack mission ships, and a culture
+that sees no side of the event or is not in the alignment table. A
+refused run prints the driver's own line that says why.
+
+Nothing changes for a player. The driver is armed only by the
+TAOM_AUTORUN variable and its arm file, and the one new switch on the
+offer (the bot plays the mission) is set only for the armed click.
+
+Not-tested: no game run yet. The driver is unit tested with a fake
+host; its first runs follow on this branch when the game is free.
+
+Review: tier 2 deep review (data flow, tooling). No HIGH finding.
+Fixed: the host could press a popup that was not the offer's; an event
+that resolved at once counted as an opened window; the runner accepted
+a fate run for a culture that is never offered the event. The Codex
+pass is owed before the merge.
+
+Refs #1105
+
+#### feat(story-missions): v2.0.42 - The Breaking decides Boromir's fate
+
+`914f7de4`
+
+The Breaking of the Fellowship is no longer only a line of text. In a
+single-player campaign with "Offer Story Missions" on, the War
+Chronicle now opens a window of 10 days and offers the fight at Parth
+Galen. A free player may stand with the Fellowship, an evil player may
+lead the Uruk-hai, and a neutral player may do either. Nobody fights
+their own realm.
+
+The result is Boromir's life. He lives when his side wins, whichever
+side the player took: the event then ends in a new state, Averted,
+with its own line, and Gondor gets a small volunteer boost for 15
+days. He dies when his side loses, when the player lets fate decide,
+and when nobody answers in 10 days: the chronicle kills him as a death
+in battle and the event reads as the book has it.
+
+In co-op, with the offers off, when Boromir is already dead and when
+the player is Boromir, the event stays text only and nobody dies. The
+same holds when one of those changes while the window is open.
+
+For modders: a Narrative event in war_chronicle.json may carry a
+story block that names a hero, with windowDays, defender, attackers
+and an averted outcome. A child event may require the Averted outcome
+of such an event.
+
+Known limits: a hero whose party is in a battle or besieges is only
+marked by the engine and dies when that battle ends. The 13 new
+English strings (taom_story_breaking_* and taom_wc_breaking_averted)
+have no translation yet, so
+LanguageFileCoverageTests.EveryLanguage_DeclaresARowForEveryEnglishKey
+is red for those keys until the next language pass.
+
+Not-tested: no game run and no play by a person yet. No unattended
+driver reaches the offer popup and its menu; that driver is the next
+change on this branch.
+
+Review: tier 1 deep review (data flow, engine compatibility, XML). No
+HIGH finding. Fixed: older Hornburg rows of the 1105 check manifest
+read a Breaking line as a failure; the doc and two comments stated the
+deferred kill wrongly; a window now rechecks the offers, the session
+and the player's hero at each offer and at the kill. The Codex pass
+is skipped on the maintainer's word and is owed before the merge.
+
+Refs #1105
+
+#### feat(story-missions): v2.0.42 - Fight at Parth Galen on a field
+
+`8d8c5857`
+
+Two story missions now play the Breaking of the Fellowship on a field
+scene. In "stand with the Fellowship" you fight beside Aragorn,
+Legolas, Gimli and Boromir against three waves of Uruk-hai, and you
+lose the moment Boromir falls. In "hunt the Company" you lead a band of
+20 Uruk-hai, and you win the moment Boromir falls. For now only the dev
+console command taom.story_open opens them. The War Chronicle will
+offer them in the next slice of #1105; until then their result changes
+nothing in the campaign.
+
+Before this, a story mission could run only on a siege scene. A row of
+story_missions.json with a "field" block now opens with a field list
+and field team AI. Each side starts at a recorded place, or at a point
+of the scene's spawn path. The attackers of a defence come from two
+sides in groups, with at most "liveCap" of them alive at once, and each
+new group starts on the side farther from the defenders. On a field the
+heroes fight under the team AI, and the player can still order them.
+"mustLive" names the hero whose fall ends the mission.
+
+Boromir in these missions is a copy of the lord, as the other three
+heroes are copies of the companions, so the mission never touches the
+campaign's Boromir.
+
+Proven by unattended runs on 2026-11-21; the last two are
+E:/Temp/scenario-runs/20261121-190746 and 20261121-191916. With the bot
+as the player, the defence killed 86 of 90 Uruk-hai before Boromir fell
+in wave 3. No person has played either mission, and the numbers are
+first values.
+
+Review: four lenses and one pass on the fixes, with no CRITICAL or HIGH
+finding. The Codex pass was skipped on the maintainer's word and is
+owed before merge.
+
+Known limitation: a Boromir who routs does not end the hunt, so a hunt
+in which he flees and the other three die is still won.
+
+Refs #1105
+
+#### feat(long-defeat): v2.0.42 - A fallen lord rises at the keep
+
+`d433e8a9`
+
+The Long Defeat's death rule now runs in the game. When your lord
+falls you can take over a soldier, as before. At the next cleared
+wave the lord rises at the keep in his own body, and the soldier you
+took goes back to the AI and fights on. Until a keep is recorded for
+a fortress he rises at the scene's keep frame, and a mounted class
+rises at its home point. Before this, a fallen lord came back inside
+his formation and a soldier you had taken stayed yours.
+
+While the lord is down, the general's seat goes to the first hero you
+bought who still stands, else to nobody. The game no longer leaves
+the dead lord as the defenders' general.
+
+For unattended proof runs, the bot takes over the nearest soldier
+five seconds after a fall, and --lord-falls N fells the lord in wave
+N with a blow owned by an attacker. Two checks are new, rise and
+general-down, and the wrapper's judge owes each from what the report
+shows.
+
+Nothing here has been played. The proof run is
+python tools/run_long_defeat.py --waves 3 --lord-falls 1, then the
+same with --class cavalry. The review's findings are rows 32 to 49 of
+docs/reviews/rca-long-defeat-phase4-2026-11-06.md.
+
+Refs #1079
+
+#### feat(long-defeat): v2.0.42 - The run orders the lord's rise at a clear
+
+`0e68b32d`
+
+Groundwork for the Long Defeat's armoury, engineer's yard and death
+rule (Phase 4, Slices 2 and 3). Nothing new is for sale yet, and play
+does not change.
+
+The run can now sell a gear set at the armoury and an engine at the
+yard to a lord who stands at the recorded place, and the unattended
+bot can walk him there. No fortress records these places and the
+build offers neither, so every buy is refused and the shop shows no
+new row.
+
+The run now keeps track of the lord's body: his own, a soldier he
+took over, or none. At a cleared wave it orders his rise when he is
+not in a body of his own, and the game respawns him as it did. A
+lord the AI drives who routs is still raised at the next clear.
+
+The run report gains a lord block (each fall, take-over and rise),
+the armoury list, two gold sinks and the lordFalls test option. The
+unattended wrapper checks them, and refuses --lord-falls until the
+game can fell the lord (Slice 4).
+
+A new gate test fails when the run hands the game an effect that no
+code carries out and that is not listed as owed by a later slice.
+
+Reviewed at tier 1: seven lenses and two Codex passes. One HIGH was
+fixed before this commit. The --lord-falls option was armed while
+nothing felled the lord, and the judge passed such a run.
+RCA: docs/reviews/rca-long-defeat-phase4-2026-11-06.md, rows 15 to 31.
+
+Tests: 43,856 passed, 0 failed, 11 skipped. Tool tests: 10,750 ran,
+13 skipped. Not played in game.
+
+Refs #1079
+
+#### feat(loot): v2.0.42 - Battle Gear Loot drops the gear of beaten enemies
+
+`2e135841`
+
+New optional MCM group "Battle Gear Loot", off by default. When it is
+on, the loot from the enemies your party beats in a battle your side
+wins is the gear they fought in: each weapon, armour piece, horse and
+harness drops on its own roll, at a chance you set (0 to 100%, default
+10%).
+
+It replaces only the random loot from fallen enemies. Captured
+baggage, gold, prisoners, renown and the enlistment spoils are
+unchanged, and beside allies you still loot your usual share of
+bodies. Fought and auto-resolved battles, sieges, raids and fought
+hideouts all use it.
+
+Some items never drop: pieces that Armour Acquisition holds back
+(heavy, elite and lord armour), named weapons, banners, quest items,
+and giant spider, war elephant and Mumakil mounts. In co-op and on a
+dedicated server the usual loot applies. The new settings show in
+English in every language until the translation pass (#1129).
+
+Not checked in game: with the switch off, loot as before; on at 100,
+every allowed item of each beaten enemy; on at 10, a few items.
+
+Contributed by REDACTEDSTUFF (PR #1515).
+
+#### feat(lorien): v2.0.42 - add the Lord's Crown A item
+
+`d1452035`
+
+Adds sk_ll_gl_crown_b, a Lorien crown that shipped in the Galad crowns
+tpac with full LODs but had no item. It is "[Lothlórien] Lord's Crown
+A": head armour 52, weight 3.5, appearance 7, not for sale. The row is
+in GALADRIEL, so generate_lothlorien_armor.py owns the XML, and the live
+head_armors.xml was written with --apply.
+
+The id is also in EXCLUDE_ID_SUBSTRINGS, because the display name has no
+hero name. A restat already skips every sk_ll_ item. The entry makes the
+class table call the crown named, so it is never sold, looted or
+upgraded. A new test pins that every hero piece is excluded.
+
+Derived files refreshed: armour_classes.xml, armor_roster_tiers.json,
+the colour family row for the crown only, the cover flag snapshot and
+the external loc baseline (one English row, 12 translations owed).
+Nothing equips the crown yet.
+
+Known limitation: scan_armour_colours.py --check still reports 24 Lorien
+rows (gold to bronze) from an art drop of 2026-11-21 that this change
+does not touch, and the Armory ref audit still fails on dwarf LOD gaps.
+The Codex pre-review was not run and is owed before merge.
+
+Live install files changed: LOTRLOME_Armory head_armors.xml and
+loc_lothlorien.xml.
+
+### Fixes
+
+#### fix(dialogue): v2.0.42 - six liege and dark lord lines read right
+
+`184d6271`
+
+A Gundabad mercenary contract now reads "For Gundabad", not "For the
+Gundabad". The rulers of Rohan, Erebor and Mirkwood no longer name a
+king in their release and vassalage lines, so a queen who takes the
+throne says them too. One of the Nine no longer calls a player at
+peace a servant of the Eye, and Sauron no longer says he serves the
+darkness.
+
+No issue: Luiz waived new GitHub issues for this work.
+
+#### fix(resources): v2.0.42 - Drop the x20 Elite Emissary price
+
+`31f70b11`
+
+The Elite Emissary charges each troop's base merchant_cost again. A
+Rohan player reported 360 Marks for one Riders of Rohan at Edoras,
+while a win against 50 raiders paid about 25 Marks. Riders of Rohan
+now cost 18 Marks and the King's Own riders 12; a level 46 troop costs
+28 of its resource and a level 51 troop 45 (#1607).
+
+v2.0.38 set emissary_price_multiplier="20" on ten resources. The ten
+attributes are removed from special_resources_config.xml, so each
+resource uses the parser's default of 1. The multiplier code stays, so
+a resource can take one again. Battle pay stays scaled to enemy size.
+War Drums prices (70 and 2,800) and the gold-only prices do not change.
+
+Saves made on v2.0.38 to v2.0.42 keep their balances, which now buy 20
+times as many emissary troops.
+
+The test EveryEmissaryPrice_ExceptWarDrums_IsAtLeastOneHundred is
+replaced by EveryEmissaryPrice_EqualsItsMerchantCost, which fails if a
+shipped resource sets a multiplier again.
+
+Review: /deep-review at tier 2, Data flow and XML lenses: 0 findings,
+one LOW doc wording item fixed. The Codex pass was not run and is
+owed before merge.
+
+Verification: build 0 errors; dotnet test TAOM.Tests 45,518 passed,
+2 failed, 9 skipped. The two failures,
+EveryLanguage_DeclaresARowForEveryEnglishKey (12 rows owed by other
+work) and LiveArmory_AdultSkinPools_EqualTheSnapshot (live Armory),
+read no file this change touches. Python tool tests ran 11,456, OK.
+Canary tripped, API snapshot reproduces, data gates 1 PASS 0 FAIL,
+provenance 0 misses. Not tested in game: read the Edoras emissary
+prices.
+
+#### fix(quests): v2.0.42 - ladder credit, career tiers and castle issues
+
+`996a7ad4`
+
+Three quest fixes. Lords' Ladder kills now count with the Armour
+Acquisition setting off; the gear rewards still need it on. A career
+tier quest is no longer offered for a tier the hero's level already
+opened. In a castle, only notables lose their campaign issues; lords
+and their families resting there keep theirs, because the engine
+reads a lord's settlement from his party.
+
+Thanks to REDACTEDSTUFF for the change.
+No issue: waived for this work.
+
+#### fix(tools): v2.0.42 - validator resolves marketplace Routing rows
+
+`b7b86c38`
+
+validate_moduledata.py now resolves the culture marketplace <Routing>
+rows: each item id and each culture must exist, or min_stock never
+adds the item. It reads the rows as the game does (the first
+<Routing> block, its direct <Item> rows), and reports a row with no
+id, an id with spaces (the game does not trim it) and a row that names
+no culture, which the game skips. The shipped config passes.
+
+Thanks to REDACTEDSTUFF for the change.
+Closes #639
+
+#### fix(tools): v2.0.42 - mount parity audit checks for reins
+
+`1410f216`
+
+audit_mount_parity.py has a section H that lists every rideable mount
+whose Monster declares no rein_* attribute and has no base_monster to
+inherit them from; --strict counts a new one. The war elephant and
+the mumakil are held as known gaps until they get rein values, and a
+listed mount whose Monster is missing is a new gap, never a known
+one.
+
+Thanks to REDACTEDSTUFF for the change.
+Refs #479
+
+#### fix(tools): v2.0.42 - restat_melee_blades gets a --check gate
+
+`87093057`
+
+restat_melee_blades.py --check writes nothing and exits 1 when a blade
+would move, so a re-sync that reverts the live Armory's blade stats
+is caught. It also exits 1 when a weapon cannot be priced, and exits
+2 with SKIPPED when it priced no weapon or loaded no troop, or when
+the install or the crafting pieces file is missing. --check refuses
+--apply. Today's Armory passes. The rebalance_armor.py half of #673
+and the /armory-audit step are still open.
+
+Thanks to REDACTEDSTUFF for the change.
+Refs #673
+
+#### fix(tools): v2.0.42 - insert_new_factions copies whole string elements
+
+`ad1005da`
+
+insert_new_factions.py copies each gundabad <string> as a whole
+element, so a string with <tags> children survives, and leaves the
+hand-written liege titles alone. A run now refuses, and writes
+nothing, when its output would define a <string> id twice; today's
+file makes it refuse on four ids. Comments are removed and the
+opening tag is read quote by quote before rows are selected, so a
+<string> in a comment or a > in a text value cannot drop the rows
+after it.
+
+Thanks to REDACTEDSTUFF for the change.
+Refs #1590
+
+#### fix(tools): v2.0.42 - troop tool errors and a missing SkillSet
+
+`829022e3`
+
+analyze_troop_balance.py now ends a bad input with one ERROR line and
+exit 1, not a traceback. restat_melee_blades.py's help says how
+--culture works with the mixed loop, and --limits-only refuses
+--culture. TroopUpgradeSkillMonotonicityTests now fails a troop whose
+skill template names no SkillSet, where it used to read the troop as
+its inline rows only; the shipped-data test needs the installed game,
+so the build without the game skips it.
+
+Thanks to REDACTEDSTUFF for the change.
+Refs #1533
+
+#### fix(tools): v2.0.42 - the clip record tools refuse bad numbers and paths
+
+`dec2c136`
+
+No change for players. The tools that write animation clip records for
+the warg, the dire wolf and the hill troll close the low findings of
+their reviews (#1566), and two engine facts are now read and not
+inferred.
+
+tools/repoint_anim_clip.py:
+- A number in a plan row must be a JSON number that a 32-bit float
+  holds. true, "820", NaN and 1e39 were taken or ended in a traceback.
+- --under is held inside the module's Assets folder.
+- --apply stops at the first row that fails and says how many records
+  it wrote before. When putting the old bytes back fails too, the
+  message names both errors and the backup to copy back by hand.
+
+tools/set_clip_balance_name.py no longer puts a new stamp on a cache
+entry that is not current. Such an entry holds the keys of an older
+record, and the stamp made them read as cooked. After a reinstall of
+the Armory, start the Modding Kit once before the tool
+(docs/reference/lotrlome-hill-troll-changes.md).
+
+Read in TaleWorlds.Native.dll v1.5.7:
+- The reader of a stored clip record is 0x58D980. It takes a
+  quad_movement usage as the tools write it: four bytes it does not
+  read, then travel and the two pace limits.
+- A mount's turn input is its yaw rate in radians a second. So a turn
+  record's travel is the clip's angle in radians / Duration, and the
+  spider's two turn records fit as they are (#1550).
+Both are in docs/features/elephant.md, "What the engine does with a
+clip record".
+
+A timing test that failed once under load now measures CPU time, and
+its second half is a test of its own, named for the budget it holds.
+The measure showed that git_call_dirs in .claude/hooks/_shellwords.py
+grows with the square of its input; the Bash tool's 7,500 character
+cap keeps real input small, and the hook is not changed.
+
+Looked at and left, with the reasons on #1566: the bind tools that
+find a master by file name, and a gate for the in-place twins.
+
+Review: tier 2, a Codex pre-review and three lenses, no high finding.
+Lessons in docs/reviews/lessons/build-tooling-workflow.md.
+
+#### fix(dire-wolf): v2.0.42 - the dire wolf steps backward when it backs up
+
+`cdab5910`
+
+A dire wolf that backed up played its forward walk: the paws stepped
+forward while the body moved back. The pack has no backward walk, so
+both backward records had been given the forward walk's keys. They now
+play that walk from its last key to its first, with a loop of 1.66 s
+and a travel of 2.08 m, which is what the paws cover. Vanilla does the
+same for the camel. No new animation was needed. Nobody has watched a
+wolf back up in game yet (#1591).
+
+The records are in the live LOTRLOME_Armory, which this repo does not
+version: dire_wolf_walkbackfast_anm.tpac and
+dire_wolf_walkbackfast_straight_anm.tpac under
+Assets/creature/direwolf/animations, written by
+tools/repoint_anim_clip.py from two new rows of
+tools/dire_wolf_gait_plan.json and cooked by a Modding Kit start. An
+Armory package built before this still plays the forward walk
+(docs/reference/release-process.md).
+
+The stride gate, tools/check_gait_stride.py:
+- The dire wolf is one of its creatures, with the data gate row
+  dire-wolf-stride. Its paw joints do not rest at height 0, so each
+  paw's height is taken from that paw's own lowest point, and a paw
+  that stays more than 0.06 m above the others fails.
+- A record of the backward pace whose planted feet move the way the
+  walk's do fails. The gate knows such a record by its negative pace
+  limits, so it also reads the record on the pace's strafe rows.
+- A clip that only the standing strafe rows bind gets no verdict on
+  its travel. The gate prints what the engine does with it beside what
+  the feet do, and still holds its stance, slip, Duration, master and
+  cache entry. The list of known failures from #1565 is gone.
+
+Why no travel verdict: the node's sideways input is the mount's speed
+across its own frame at model size (native 0x5F75B0), and the
+side-step clip plays at a weight that falls with that speed
+(0x74E9C0). No one travel fits the feet at every sideways speed, so no
+side-step record of the warg, the wolf, the spider or the elephant is
+changed. The warg's right record also sets the rate of its turn in
+place.
+
+Deleted tests and what holds their checks now: KnownFailureTests and
+the test of the axis key held a side clip's stance, slip, cook and
+master, which SideStepTests holds, and its travel against its stride,
+which is dropped for the reason above.
+
+Review: docs/reviews/rca-side-steps-wolf-stride-2026-11-24.md. Its
+first wave found that the first version of this change dropped a side
+clip's stance and slip checks with its travel verdict.
+
+Not from this change: the data gates armour-colours and rdc-entries
+fail on trunk in the same way.
+
+#### fix(warg): v2.0.42 - warg walk and trot and dire wolf legs keep pace
+
+`0873ebc0`
+
+A warg's legs now keep pace with the ground at a walk and a trot, as
+they do at a canter and a gallop since #1563. The dire wolf gets the
+same correction at all four gaits, and a rider in a gallop turn moves
+in step with the mount again (#1565).
+
+The warg. The walk record claimed 1.6 m of ground a loop where the
+paws cover 1.80 m, and the trot 2.9 m where they cover 2.71 m. At the
+top of each pace the body covered 47% (walk) and 29% (trot) more
+ground in a loop than the paws. The walk also had one record on both
+rows of its pace, so no value could make its cadence follow the speed.
+It has an in-place twin now (warg_walk_stand), which is the shape
+vanilla's horse has. A walk loop takes 2.06 s at the bottom of the
+pace and 0.71 s at the top, a trot loop 1.14 s and 0.52 s. From
+1.2 m/s up the body covers within 8% of the paws' travel.
+
+The dire wolf. Its records were copies of the warg's with travel that
+nobody had measured. They claimed far less ground than its paws cover
+(at a trot 1.71 m against 3.94 m), so its legs turned over too fast
+at every speed. Travel is now what the paws cover (walk 2.08 m, trot
+3.94 m, canter and gallop 6.22 m), with loop times fitted the same
+way. The wolf's legs are slower than before, on purpose: the rig is
+the pack's wolf at 2.08 times its size and its strides are that much
+longer. Its canter also plays the whole loop now; the pack cut the
+first key, and the paws jumped up to 0.39 m at the seam.
+
+The rider. The two gallop turn clips kept step with the warg only by
+an equal loop time, which #1563 made variable. They now carry
+synch_with_horse, as every other moving rider clip of the warg does.
+
+The fix is data in LOTRLOME_Armory, which is not in git: five warg and
+rider records and eight dire wolf records rewritten, two new records,
+and one row each in as_warg and as_dire_wolf. This commit holds the
+plans, the tools and the docs:
+- tools/dire_wolf_gait_plan.json, and six more rows in
+  tools/warg_gait_plan.json.
+- tools/repoint_anim_clip.py makes a record from a template and sets
+  flags. tools/bind_warg_clips.py binds the two walk twins and refuses
+  until the Modding Kit has cooked them.
+- Four data gates: warg-gaits now covers thirteen records, and
+  dire-wolf-gaits, dire-wolf-body and warg-clips are new. A reinstall
+  of the Armory or an art drop reverts the records and the rows, and
+  no other gate sees it.
+- tools/gen_dire_wolf_anim_clips.ps1 -Verify failed since #1563,
+  because it read the warg's travel to plan the wolf's. It holds its
+  own ratios now, and a test runs it.
+- The ledgers, with every value and the rollback:
+  docs/reference/lotrlome-warg-gait-changes.md
+  docs/reference/lotrlome-dire-wolf-changes.md
+
+Known limitation: players get the fix only with a new Armory package
+for each release channel, shipped together with its action_sets.xml
+(#1588). Below 1.2 m/s the warg's walk still turns its legs over
+faster than the ground passes. The warg is not yet a creature of
+tools/check_gait_stride.py (item 2 of #1565, still open).
+
+Reviewed with /deep-review at tier 1: a Codex pre-review and four
+lenses, no finding above medium. All are fixed in this commit but two
+that the RCA names with their reasons:
+docs/reviews/rca-warg-walk-trot-2026-11-24.md
+
+Tested in game: run 20261124-140224 after the Kit cooked the records
+and the rows were bound (11 warg riders mounted, 9.4 m/s beside horses
+at 10.0, no fault, clean unload).
+Not-tested: the look of the legs at any gait, a rider in a gallop
+turn, a fell warg, any dire wolf in a battle, and any release
+channel's Armory package
+Research: rglAnim_node_horse_movement and the channel tick,
+TaleWorlds.Native.dll v1.5.7
+Save-compat: no save data
+
+Refs #1565, #1588
+
+#### fix(npcs): v2.0.42 - Mordor's three human wanderers wear Empire gear
+
+`a9e38384`
+
+Three of Mordor's wanderers (spc_wanderer_mordor_7, _8 and _14) are
+human, but they took the Mordor companion roster, which is orc gear.
+They now use the vanilla Empire companion roster
+(npc_companion_equipment_template_empire) for both their battle and
+civilian sets. That roster's battle sets can include a sumpter horse.
+
+Refs #1587 (item 12).
+
+#### fix(text): v2.0.42 - Lothlorien kingdom name takes its accent
+
+`ae97202f`
+
+The Lothlórien kingdom's name and short name read "Lothlorien",
+next to its title "Kingdom of Lothlórien". All twelve translations of
+the two names already carry the accent; only the English lacked it.
+
+Part of #1587.
+
+#### fix(tools): v2.0.42 - new-faction script leaves wanderer gear alone
+
+`80b6daaf`
+
+insert_new_factions.py rewrote the goblin and orc wanderer companion
+rosters from a clone of Gundabad's on every run. Since #1571 those
+rosters carry each culture's own race gear, so a rerun would have
+put Gundabad's pale uruk kit on the goblins and orcs. The script no
+longer writes taom_wanderer_equipment.xml, and a test pins that.
+
+Part of #1587.
+
+#### fix(smithing): v2.0.42 - hide placeholder blades on the piece tag only
+
+`3e58c808`
+
+generate_placeholder_weapons.py stripped and wrote is_hidden anywhere
+in a cloned blade's XML. It now edits the CraftingPiece opening tag
+only, so a child element keeps its own attributes. No donor in the
+current Armory has one, so the generated file does not change
+(--verify OK).
+
+Part of #1587.
+
+#### fix(faction-ui): v2.0.42 - menu video stays quiet after Custom Battle
+
+`60884d2b`
+
+With the menu video's muting on, coming back to the main menu from
+Custom Battle setup left vanilla's menu theme playing under the
+video. Both screens count as menu-music states, so the music stayed
+in menu mode and the silencing patch never ran again. On the return,
+the theme now fades out once and the silence takes over, as on a
+fresh start. It restarts at most once per visit to the main menu.
+
+Not yet checked in game: go to Custom Battle and back with the muting
+on, and only the video's audio plays.
+
+Part of #1587.
+
+#### fix(shader-notice): v2.0.42 - say when the shader queue cannot be read
+
+`9e5be871`
+
+The faction screen and character creation show the shader notice from
+the engine's queued-shader count. When that count could not be read,
+the adapter returned -1 and the notice quietly stayed off, with no log
+line. The service now writes one warning to the log the first time
+the count cannot be read.
+
+Part of #1587.
+
+#### fix(npcs): v2.0.42 - Rhun's gang bodyguard is townsfolk like the rest
+
+`bcecab80`
+
+The Rhûn gang bodyguard is now townsfolk, as every other culture's
+bodyguard and vanilla's are. As a soldier he showed in the Rhûn troop
+list of Custom Battle and in the cheat menu's troop list; he no
+longer does. A new data test checks that every gang bodyguard is
+townsfolk. Thanks to MinimalCash63 for the fix.
+
+No GitHub issue was filed for this fix.
+
+#### fix(smithing): v2.0.42 - Iron Hills placeholder blades lose a space
+
+`3147beb3`
+
+The two Iron Hills placeholder sword blades read "Iron Hills Sword
+Blade A (placeholder)", without the doubled space the Armory's donor
+blade has. generate_placeholder_weapons.py now closes up runs of
+spaces in a donor's name, so a rerun keeps the fix, and a new test
+covers it. Thanks to MinimalCash63 for the fix.
+
+No GitHub issue was filed for this fix.
+
+#### fix(text): v2.0.42 - wanderer stories read as plain English
+
+`4f05621f`
+
+Wanderer backstories, two Misty Mountains character creation texts
+and the Erebor culture description read as plain English. The
+backstories had sentences starting in lower case, plural subjects
+with singular verbs ("the forces of darkness grows bolder") and
+plural possessives such as "the clan chiefs's"; they now read "The
+forces of darkness grow bolder" and "the clan chiefs'". Thanks to
+MinimalCash63 for the fix.
+
+The two map colour hints in the settings menu keep "Goblins's" for
+now: their Japanese, Korean and Russian rows are still English, so
+the change waits for the next translation pass. The translated rows
+of the other strings keep their old text until that pass too.
+
+No GitHub issue was filed for this fix.
+
+#### fix(text): v2.0.42 - five Tolkien names spelled as in the books
+
+`e67462ec`
+
+Five names now read as Tolkien spelled them: Uglúk (four lords and a
+biography that said Uglûk or Ugluk), Helm's Deep (the night-rain
+custom battle scene), Udûn (the Mordor duchy and six Mordor lord
+biographies), Lothlórien (the kingdom title) and Khazad-dûm (the
+Erebor culture description). The two name generators carry the new
+Uglúk so a rerun keeps it. Thanks to MinimalCash63 for the fix.
+
+The translated rows of these strings keep their old text until the
+next translation pass; the language files were left to the project
+lead.
+
+No GitHub issue was filed for this fix.
+
+#### fix(troops): v2.0.42 - names say Swordsman, Eastfold and Barad-dur
+
+`d4fe1563`
+
+Six troop names are spelled right: "Swordman" is now "Swordsman" on
+the Dunland Wild-man, the two Lamedon swordsmen of Gondor and the
+Isengard Uruk-Hai, "East-Fold Bowman" is now "Eastfold Bowman", and
+the Black Uruk guard is of Barad-dûr. The campaign troops, their Fords
+of War copies and the two generators that wrote the names changed
+together, so a rerun keeps the spelling. Ids are unchanged. Thanks to
+MinimalCash63 for the fix.
+
+No GitHub issue was filed for this fix.
+
+#### fix(careers): v2.0.42 - keystones no longer read "Charge charge"
+
+`0d1fc0d6`
+
+Six keystone texts of the Chariot Warlord, Ram Rider and Fell Rider
+careers no longer read "Scything Charge charge reduced" and the like.
+They now read "Scything Charge: charge reduced, wheels never stop
+turning." and so on. The meaning is unchanged, so the 12 translations
+stay as they are. Thanks to MinimalCash63 for the fix.
+
+No GitHub issue was filed for this fix.
+
+#### fix(troops): v2.0.42 - Gundabad Hunter no longer jumps to a wolf rider
+
+`68808481`
+
+The level 11 Gundabad Hunter now upgrades only to its own Lurker. It
+also offered the level 31 Pale Uruk Wolf Rider, four tiers up, which
+the troop tree spec places after the Spear Warrior; the Wolf Rider is
+still reached from there. A new data gate fails any upgrade step that
+climbs more than 10 levels. Thanks to MinimalCash63 for the fix.
+
+No GitHub issue was filed for this fix.
+
+#### fix(rohan): v2.0.42 - Rohan town guards fight at Gondor's level
+
+`409f6cb3`
+
+The town guard, prison guard and gang bodyguard of Rohan and South
+Rhovanion are no longer level 1 recruits with no skills. They had no
+level and no skill template. They now carry Gondor's values: the
+guard and the bodyguard at level 16, the prison guard at level 4,
+each with Gondor's skills. Their kit is unchanged. Thanks to
+MinimalCash63 for the fix.
+
+No GitHub issue was filed for this fix.
+
+#### fix(smithing): v2.0.42 - placeholder blades leave the weapon designer
+
+`ef78b992`
+
+The 77 placeholder weapon blades no longer show in the smithy. Once
+unlocked, they appeared at piece tiers 2 to 4 with the damage factors
+of tier 6 to 10 troop weapons. generate_placeholder_weapons.py now
+writes is_hidden="true" on each cloned blade, as the Armory does for
+its own troop-only parts, and the file was regenerated. Thanks to
+MinimalCash63 for the fix.
+
+Not yet checked in game: the smithy lists no placeholder blade.
+
+No GitHub issue was filed for this fix.
+
+#### fix(market): v2.0.42 - Theoden's horse armour is not sold in Rohan
+
+`2bb2b29f`
+
+Rohan markets no longer stock Theoden's horse armour for about
+60,000. The Armory marks it as merchandise and horse harness is not
+gated by armour acquisition. Rohan's culture marketplace row now
+blacklists it, the way the Arnor crown is kept out of Gondor and
+Arthedain. Thanks to MinimalCash63 for the fix.
+
+Known: the Armory flag itself is outside the repo and stays. With the
+culture marketplace off, vanilla stocking can still pick the item.
+
+No GitHub issue was filed for this fix.
+
+#### fix(armour): v2.0.42 - Mallorn medium helmets need a Lorien armoury
+
+`9b307814`
+
+The two Lothlorien Mallorn medium helmets now need an armoury level,
+like the Galadhrim heavy helmets beside them. Their armour is priced
+one band above their name, at the heavy target, but the armour class
+table read only the name, so every Lothlorien market sold them with
+no armoury level for about 36,500. Thanks to MinimalCash63 for the
+fix.
+
+generate_armour_classes.py now raises an unworn Mallorn piece by one
+band, as its price does, never up into lord kit. Six table rows
+change: the two medium helmets and the medium pauldrons become heavy,
+the heavy helmet b becomes elite, and the upgrade links follow. Worn
+Mallorn pieces keep their wearers' band.
+
+No GitHub issue was filed for this fix.
+
+#### fix(menus): v2.0.42 - lord, kingdom and clan links get their colour
+
+`1f01baae`
+
+Town and village menus now colour lord, kingdom and clan links in
+their TAOM culture colour, as the settlement link already was. Thanks
+to MinimalCash63 for the fix.
+
+The culture lookup asked the object manager for every link, but
+Bannerlord 1.5.7 registers heroes, kingdoms and clans as temporary
+types and drops their records once a campaign is built, so the lookup
+returned nothing and the link kept the vanilla colour. Heroes,
+kingdoms and clans are now found through the campaign's object
+manager, as vanilla's encyclopedia pages do.
+
+Not yet checked in game: a town menu shows its lord and kingdom links
+in the culture colour.
+
+No GitHub issue was filed for this fix.
+
+#### fix(pregnancy): v2.0.42 - clanless wives no longer throw on the tick
+
+`06600703`
+
+A married hero with no clan no longer throws a NullReferenceException
+in the daily tick. Vanilla's pregnancy behaviour lets a clanless hero
+through and asks the pregnancy model for her daily chance when her
+spouse is near; TAOM's model then read her clan's tier with no null
+check. A clanless hero now gets a chance of 0. Thanks to MinimalCash63
+for the fix.
+
+Found by reading the engine and TAOM code; the crash was not seen in
+game.
+
+No GitHub issue was filed for this fix.
+
+#### fix(data): v2.0.42 - goblin, orc and Gundabad wanderers wear race gear
+
+`e8c27407`
+
+Goblin Town, Blue Craig, Misty Mountains orc and Gundabad wanderers
+now wear their own culture's gear. All four wanderer rosters (40
+templates of goblin, orc and pale uruk race) held the same 13 vanilla
+Nordic items, cloned from one human donor when the cultures were
+added, so a goblin in a tavern wore a green tunic, a coif and a
+Sturgian axe. Thanks to REDACTEDSTUFF for the fix.
+
+Each roster now has 6 battle and 3 civilian sets copied from the
+culture's own low and mid tier troop kits. Roster ids and set counts
+are unchanged; mounts and polearms from the troop kits are left out.
+
+Known: rerunning tools/insert_new_factions.py would clone the
+Gundabad roster over the three goblin cultures again, and the three
+human Mordor wanderers still wear uruk armour.
+
+Not yet checked in game: in a new campaign, a goblin, orc or Gundabad
+wanderer in a tavern wears orc or uruk gear.
+
+No issue: owner waived new GitHub issues for this work.
+
+#### fix(cheats): v2.0.42 - Unlimited party also stops upkeep desertion
+
+`3dcf173c`
+
+With the cheat menu's Unlimited party switch on, the main party no
+longer loses elite troops when its special resource (War Drums, War
+Spoils and the rest) is at 0. Thanks to REDACTEDSTUFF for the fix.
+
+The upkeep is still charged, and the daily, overdraft and running-out
+lines still show. The map-bar tooltip hides its "Elite troops desert
+each day" line while the switch is on. Other parties keep the rule, and
+co-op is unchanged: a session has no upkeep desertion yet.
+
+Not yet checked in game: with the switch on and the resource at 0, wait
+a day and no troops desert; switch it off and they desert again.
+
+No issue: owner waived new GitHub issues for this work.
+
+#### fix(warg): v2.0.42 - warg legs keep pace at a canter and a gallop
+
+`37129c14`
+
+Players reported that AI warg riders "walk everywhere" (#1563). The
+wargs ran at full speed: two custom battles measured 9.4 and 9.8 m/s
+beside horsemen at 11.1 and 10.3. Their legs did not match it, so a
+charge looked like a walk. Wargs and fell wargs now canter on their
+own canter clip, and at both the canter and the gallop the legs turn
+over faster as the warg speeds up.
+
+The cause was three values in the warg's clip records, in place since
+the warg moved into the Armory in August. The canter record played the
+trot's keys, though the pack's own canter (Warg_Slow_run) sat unbound
+beside it. The gallop record claimed 8.5 m of ground a loop where its
+paws cover 3.92 m. Each pace had one loop time at every speed. A warg
+is 1.10 times its model's size, so the gallop began near 8.8 m/s and a
+charge spent most of its time in the canter, on trot legs.
+
+The fix is data. Seven clip records in LOTRLOME_Armory were rewritten
+from tools/warg_gait_plan.json: the canter plays the slow run with the
+travel its paws cover (3.22 m, measured on the master), the gallop
+keeps the run with its travel corrected, and each pace's loop time now
+runs from travel over its lowest speed to travel over its highest
+(canter 0.70 s down to 0.46 s, gallop 0.56 s down to 0.33 s). The
+gallop begins at 7.0 m/s at model size, near 7.7 on the field. No game
+code of the warg changed.
+
+The Armory is not in git, and this commit holds the plan, the tools
+and the docs, not the records. What ships here:
+- tools/repoint_anim_clip.py can set a gait record's travel, pace
+  limits and step points, refuses a plan row it does not understand,
+  and its --check fails a record the Modding Kit has not cooked as it
+  is now.
+- A warg-gaits data gate. A reinstall of the Armory or an art drop
+  reverts the records and no other gate sees it.
+- A warg_gaits step in the unattended command trial. It proves that
+  the wargs run and cannot see their legs: it passed before the fix.
+- The ledger, with every value and the rollback:
+  docs/reference/lotrlome-warg-gait-changes.md
+
+Known limitation: players get the fix only with a new Armory package
+for each release channel; a package built before 2026-11-23 keeps the
+old legs. A turning canter plays the run's turning keys, because the
+pack has no turning slow run. The walk and the trot keep smaller
+errors of the same kind (#1565).
+
+Reviewed with /deep-review at tier 1: six lenses, a convergence pass
+and a Codex pre-review. One HIGH (a misspelled plan field passed the
+gate) and the rest were fixed in this commit:
+docs/reviews/rca-warg-gaits-2026-11-23.md
+
+Tested in game: run 20261123-160513 after the Kit cooked the records
+(wargs 10.0 m/s, horses 10.3, clean unload), and the maintainer
+watched a warg charge: the legs look better.
+Not-tested: a turn at speed, the change from canter to gallop, a
+fell warg, and any release channel's Armory package
+Research: rglAnim_node_horse_movement, TaleWorlds.Native.dll v1.5.7
+Save-compat: no save data
+
+Refs #1563, #1565, #1566, #1567
+
+#### fix(eye): v2.0.42 - a bribed hunter waits out the 5-day oath
+
+`63e7d82b`
+
+A hunter of the Eye of Sauron that you bribe for safe passage now
+leaves you alone for the full 5 days of the oath. Before, the hunt
+released him only for his own 32-hour promise, then pinned him on you
+again while the oath still stopped you from attacking him.
+
+While his faction's oath holds, the hunt stands him off and starts no
+new hunt from that faction; within the hour after the oath ends, the
+hunt resumes. The oath belongs to the faction, so a bribe to any of its
+lords pauses the hunt. Vanilla AI honours only the 32-hour promise, so
+after it the hunter may still choose to attack you, as any bribed lord
+may; that battle ends the oath.
+
+#### fix(eye): v2.0.42 - a bought-off hunter stops chasing for the paid time
+
+`df65e603`
+
+A hunter the player pays for safe passage now leaves the player alone
+for the time paid. Before, the hunt re-issued its "engage the player"
+order every hour, which overrode the bribe: the hunter kept catching
+up, and each encounter offered only "You have sworn not to attack".
+
+The hunt now reads vanilla's promise not to attack the player
+(Ai.DoNotAttackMainPartyUntil: 32 hours for safe passage, 24 for a
+lord paid off in conversation, 2 after escaping a lost encounter).
+While it holds, the hunter stands off as he does when the player rides
+in another lord's army: the hunt releases its pin on him once, takes
+no step and gives him no speed floor. When the promise ends, the next
+hour pins him again. The hunt's timeout keeps counting, and a hunt does
+not start on a hunter who holds the promise.
+
+The 5-day oath from the same bribe blocks only an attack the player
+starts. When the resumed hunter catches the player, the player can
+fight back, and the battle's start clears the oath.
+
+Not tested in game: check 16 in docs/features/eye-of-sauron.md.
+
+Contributed by REDACTEDSTUFF. Reviewed: data flow and engine
+compatibility lenses, and Codex at ultra. Open items are in #1557.
+
+#### fix(career): v2.0.42 - reassign a career the data no longer defines
+
+`4a222bc3`
+
+A save whose hero holds a career the current data no longer defines
+now gets a working career on load. Before, the hero kept the dead id,
+and because HasCareer counts any id, the fallback never replaced it.
+
+On a loaded save, CareerCampaignBehavior.OnGameLoaded clears the
+unknown career with its choices, tiers and flags, then the legacy
+fallback picks a career for the hero's culture. A message tells the
+player only when a new career was chosen. No refund is owed: career
+points come from the hero's level.
+
+The clear acts only when it can prove the career is gone. It needs
+at least one loaded career, and it skips any id that
+taom_careers.xml still declares, because the loader drops only a
+<Career> element that fails to parse. A bad edit to one career
+therefore cannot wipe it from every save.
+
+The new message key taom_career_unknown_reset has no translations
+yet; the language coverage test stays red for it until the next
+language pass (#1129). Co-op guest heroes are out of scope (#1557).
+
+Contributed by REDACTEDSTUFF. Reviewed: data flow and engine
+compatibility lenses, and Codex at ultra.
+
+Closes #1046
+
+#### fix(campaign): v2.0.42 - reset five stores when each campaign starts
+
+`187b8385`
+
+A save loaded after another campaign in the same game session no
+longer inherits that campaign's momentum war, siege participation
+records, supply orders, field camps or refuges when the save has no
+record of its own. Momentum was the case players could hit: a save
+written before #327 kept the previous campaign's momentum totals and
+victor, wrote them on its first save, and with momentum victory on
+could end the war for the previous campaign's victor.
+
+Each of the five campaign behaviors now resets its store in its
+constructor, and SubModule builds each one with new in every
+campaign's OnGameStart. On v1.5.7 that runs before LoadBehaviorData
+(Campaign.OnInitialize), so a load restores its record over the reset
+and a save without one stays empty. WarOfTheRingMomentumBehavior is
+no longer a container singleton. PerCampaignBehaviorWiringTests pins
+the per-campaign construction.
+
+Not tested in game: a second campaign, or a pre-#327 save loaded
+after another campaign, in one session.
+
+Contributed by REDACTEDSTUFF. Reviewed: data flow and engine
+compatibility lenses, and Codex at ultra. Open items are in #1557.
+
+Part of #773
+
+#### fix(hooks): v2.0.42 - push judge reads a quoted < or > as a word
+
+`11f995db`
+
+The push guard reads a quoted < or > as part of a word. Before, a
+value such as -o '>' made the judge treat the next word as a
+redirection target and skip it, so a forced push to a protected
+branch could pass as a push to the current branch.
+
+Each candidate line is now judged a second time with its quoted or
+escaped < and > marked as plain characters. That marking is linear,
+so it also covers a command longer than 4,096 characters, a bash -c
+script, a command after a semicolon and a $( ) body, which the
+review found still open after the first commit. The change only adds
+candidate lines, so the guard can refuse more but never less.
+
+A separate, older gap (an fd-duplicating redirection such as 2>&1
+before the refspec) is tracked in #1556.
+
+Contributed by REDACTEDSTUFF. Reviewed: the Tooling lens with a
+differential fuzz against bash, and Codex at ultra.
+
+Closes #691
+
+#### fix(ci): v2.0.42 - stop fewer tool PRs for docstrings, guard MCP server
+
+`435e5644`
+
+fix(ci): v2.0.42 - stop fewer tool PRs for docstrings, guard MCP server
+
+The PR watcher stops a pull request that changes a tools/ script one
+of trunk's hooks or build files runs. Since #1546 it also followed
+tools/ paths written in those scripts' strings, and docstrings
+counted, so a script named only in prose made a PR stop. A docstring
+now counts only when its script reads __doc__, which keeps a path the
+code could run (Codex pre-review). Trunk's high-risk tools/ files go
+from 172 to 162, and the six generators the ModuleData validator runs
+stay guarded.
+
+.mcp.json now counts as a runner. It starts tools/taom_mcp_server.py
+in every session on the desktop, and a docstring was the only thing
+that kept that script and its imports guarded.
+
+Five RequiresGameIL tags are removed from test methods that carry no
+BindingVerification tag (MountReins, BardTownGuard and three prefab
+attribute tests). Only the binding gate reads the tag, and it selects
+BindingVerification tests, so no filter result changes.
+
+Reviewed: Lens 5 and the Tooling lens, and Codex at high. Watcher
+tests 60 of 60; C# suite 45,080 passed, with the one known LiveArmory
+spider-row failure that trunk also has.
+
+#### fix(fieldcommission): v2.0.42 - Promoted companions keep given gear
+
+`13c3bb0b`
+
+A promoted companion could lose the gear the player gave him and go
+back to his troop's default kit (#1544). Most TAOM troops have no
+civilian outfit, so the engine gives the new hero one from a neutral
+fallback list, and that list marks its outfits as battle outfits. The
+companion's civilian outfit was therefore typed Battle. When the
+player then cancelled or reset the inventory screen, vanilla wrote
+the saved civilian copy over the battle outfit, and items equipped in
+an earlier session were lost.
+
+Promotion now marks the civilian outfit as civilian and keeps its
+items. On load, every promoted companion still alive gets the same
+repair, with one log line each. Gear lost before this fix cannot be
+recovered.
+
+New dev command for testing without a battle: taom.fc_add_companion
+<troopId> [name] promotes one soldier from the party at once. It
+refuses any troop a promotion offer would refuse, so a hero character
+cannot be passed to it.
+
+Not tested in game: the mechanism was traced in the v1.5.7 code and
+reproduced by calling the engine's ResetEquipment on test objects,
+but the player's exact trigger is not known. Deep review: data flow
+and engine lenses plus Codex; their findings are fixed.
+
+#### fix(combat): v2.0.42 - Abilities stay out of the yard and tournaments
+
+`6130a03c`
+
+Signature Strikes, Race Abilities and Dwarf Attacks no longer run in
+the fights of the Training Grounds (practice, team and wave fights)
+or in a tournament match. Their docs always said so, but the check
+behind it did nothing: it compared the mission's combat type with
+"Combat", and the game never sets that value, so it reads "Combat"
+in every mission. By the code, the three features could act in
+arenas. Nobody reported it from play.
+
+The gates now look for the arena's own mission parts, the practice
+controller and the tournament behaviour. Mike's decision of
+2026-11-22 (#1537).
+
+Nothing changes in a battle, a siege, a hideout, a custom battle,
+Fords of War, The Long Defeat or a Story Mission. A quest duel in
+the arena scene is not a practice fight or a tournament match, so
+it stays open.
+
+The three "mission gate" log lines gain an arena= field, so one
+visit to a training yard proves the result. Four feature docs and
+three code comments that named an "ArenaCombat" value are corrected.
+
+Not tested in game.
+
+#### fix(faction-ui): v2.0.42 - themed screens fall back to vanilla in Coop
+
+`21e111bc`
+
+In a BannerlordCoop session, a themed TAOM screen that failed to build
+showed up empty or half built instead of falling back to the vanilla
+screen. Coop catches and logs every exception from the engine's movie
+build, so TAOM's fallback never saw the failure.
+
+TAOM now marks each movie while the engine builds it and clears the
+mark only when the build finishes. A mark left behind means the build
+threw, whatever caught it. For a themed screen that has a vanilla
+version (the map bar, the army panel, the Camp icon, the main menu and
+the character creation screens), TAOM removes the half-built screen
+and loads the vanilla one, as in solo play. Screens with no vanilla
+version (career screen, battle HUD, faction screen, custom battle)
+behave as before.
+
+The themed Camp icon now also stays vanilla when the themed map bar is
+missing or failed to build, like the army panel.
+
+Reviewed at tier 1: Codex at xhigh and a re-review at high, and the
+engine and data flow lenses twice. The first version, which judged the
+failure from the movie's state, missed a binding failure and could
+leave a dead movie in the layer; see
+docs/reviews/rca-coop-themed-fallback-2026-11-23.md.
+
+Closes #1545
+
+#### fix(training-grounds): v2.0.42 - Team fight HUD counts opponents only
+
+`02e5dfcd`
+
+In a team practice fight the practice HUD's "Remaining opponent"
+line also counted the fighters on the player's side, so the number
+was too high until they fell. The line now leaves the allies out.
+
+It starts at 28. An opponent who falls lowers it by one and an ally
+who falls does not move it. Until all 30 fighters have entered, the
+number is an upper limit: a fighter who has not entered has no side
+yet, and one of them may take a fallen ally's place. The prize line
+and the fight itself are unchanged, and so is the HUD in a town of
+Sauron's side.
+
+If the player is knocked down and his allies then beat the last
+opponents, the line reads 0 although the fight is lost. The number
+is true; the win needs the player on his feet.
+
+Not tested in game (#1536).
+
+#### fix(arena): v2.0.42 - South Rhovanion practice fighters carry a sword
+
+`4f14f3c4`
+
+In a practice fight or a wave fight in a town that South Rhovanion
+holds (it starts with Vidugard and Southwood), every fighter and the
+player entered with bare hands. The three practice weapon sets of
+that culture held armour and no weapon, and the arena takes its
+weapons from the four weapon slots of those sets. The sets now hold
+the same swords as those of the other cultures, one for each of the
+three stages of a fight.
+
+Rohan's sets had the same gap and get the same swords. The engine
+does not read them today, because Rohan keeps the vanilla culture
+id, so nothing changes in Rohan's towns.
+
+A new data test fails on a practice weapon set whose battle rosters
+do not all hold a weapon. The six cultures that keep a vanilla id
+(Rohan, Dunland, Harad, Rhun, Dale, Khand) still fight with
+vanilla's practice kits; lore weapon sets for the arena stay a
+content decision (#1534).
+
+Read from the source and the data, never reported from play. Not
+tested in game.
+
+#### fix(faction-ui): v2.0.42 - show the army cohesion tooltip to the leader
+
+`0fdd6ddc`
+
+Hovering the cohesion bar on the campaign army panel showed no tooltip
+while the player led the army. The bar's hint listens to the widget
+around the cohesion button, but the engine hovers only the top widget
+that takes the mouse, and while the leader can manage the army that is
+the enabled button. Vanilla's panel has the same gap.
+
+The panel now carries the cohesion hint twice, as vanilla's army
+button does: inside the button for the leader, and beside it for a
+member of another lord's army, whose button is disabled. Clicking the
+bar still opens army management.
+
+Refs #1532
+
+#### fix(coop-interop): v2.0.42 - Sign server messages to co-op players
+
+`098be016`
+
+A player in the same co-op mission could send another player a forged
+career update. Coop's mission P2P client and its server relay both
+deliver a message to a client with no sender identity, so the client
+could not tell a forgery from the server.
+
+Each client now picks a random session token and sends it in its hello.
+The server stamps that token on every message it sends to that player:
+hello replies, momentum snapshots, trade replies and career updates. The
+client drops a message with another token or none.
+
+When a player says hello, the server also sends the stored career of
+every hero that changed in this server process. Before, a career change
+made while a player was loading never reached that player.
+
+The co-op protocol is now 2. Players on builds with the same version
+number but a different protocol get the build notice at join, and
+trades and career reports between them are refused before anything
+changes. A protocol 1 client stays open to the forged update until it
+updates. The Long Defeat run-ended notice carries no token; a forged
+one shows a false notice and ends nothing.
+
+RCA: docs/reviews/rca-coop-session-token-2026-11-22.md
+Refs #1471
+
+#### fix(training-grounds): v2.0.42 - Wave fight keeps a small wager on offer
+
+`1e03b050`
+
+Two of Mike's decisions of 2026-11-22 on the wave fight (#1529).
+
+The lowest wager used to be a quarter of each wave's limit: 120
+denars on wave 1, 250 on wave 2 and up to 3,750 on wave 8, so a
+player with little gold was stopped after one wave. The smallest
+wager of the first wave now stays on offer on every later wave,
+beside half the limit and the whole of it. An edited bet table keeps
+the same promise: the smallest wager is never above the first
+wave's, and a cleared wave never lowers the purse, so a player who
+could enter can always go on.
+
+The run's account now follows the gold that really arrived. When the
+purse is at the engine's limit and less than the payout comes in,
+the notice and the training master name what was won, not what the
+table promised.
+
+Left alone, also by decision: a lost wager into a town treasury that
+is already full still wraps the engine's sum, as vanilla's
+tournament bet does.
+
+Not tested in game: no wave fight has been played on this build.
+
+#### fix(training-grounds): v2.0.42 - Team prize survives a late ally fall
+
+`807a8f22`
+
+In a team practice fight the allies stand for about five seconds
+after the win is declared. If one of them falls in that time, the
+arena's count of opponents drops below zero, and the training master
+pays the 250 denars only when that count is exactly zero. The fight
+now puts the count back at zero for a player who won and is still on
+his feet, until he is back at the master, and writes one
+[TeamPractice] log line when it does.
+
+Nobody has seen this happen in play. Three reviews raised the case
+and none could prove that a blow can still land after the win, so
+the guard is Mike's decision of 2026-11-22 on #1528.
+
+Not tested in game: no training yard has been opened on this build.
+
+#### fix(dialogue): v2.0.42 - Orc villagers always greet as Orcs
+
+`db8a1ae2`
+
+A tester met villagers from Bar-noss in Isengard and got the base
+game's "Greetings, my lord. We're farmers from the village of
+Bar-noss" from an Orc. Encounter Lines replaced the first-meeting
+caravan and villager greeting on a 0.5 roll, so half the meetings kept
+the base game's free peasant's line.
+
+Orc caravans and villagers (Mordor, Isengard, Gundabad, Dol Guldur,
+the goblins, the Misty Mountains Orcs and Blue Craig) now always greet
+in their own voice on a first meeting. Other peoples keep the 0.5
+roll, and repeat meetings are unchanged.
+
+Contributed by REDACTEDSTUFF (PR #1539). No issue: the owner waived new
+GitHub issues for this work.
+
+#### fix(charcreation): v2.0.42 - each creation choice gives its own skills
+
+`1ff4044d`
+
+A tester found character creation choices in Lothlorien that give
+exactly the same skills and attribute. Five such pairs existed; the
+second choice of each now gives its own:
+
+- Lothlorien family, Rangers of the Dimrill Dale: Athletics and
+  Scouting, Endurance (was Bow and Scouting, Control).
+- Lothlorien education, Patrolled the silver borders: Athletics and
+  Scouting, Endurance (was Bow and Scouting, Control).
+- Lothlorien adulthood, Detected a Nazgul: Scouting and Tactics,
+  Cunning (was Bow and Scouting, Control).
+- Erebor youth, Stood in the vanguard, and Ered Luin youth, Vanguard
+  of the Broadbeams: Two Handed and Athletics, Endurance (was Polearm
+  and Two Handed, Vigor).
+
+Bonus sizes and texts are unchanged. A new test fails when one page
+offers two options of a culture with the same skills and attribute.
+
+Contributed by REDACTEDSTUFF (PR #1531). No issue: the owner waived new
+GitHub issues for this work.
+
+#### fix(coop-interop): v2.0.42 - Hideout guest gets a lord's material find
+
+`9fa3bd53`
+
+A co-op player who cleared a hideout on a co-op server got no lord's
+material find. Coop ends a hideout battle with Game.PlayerTroop set to
+the hero of the first co-op player on the attacking side, so TAOM's
+battle snapshot marked that player as the local main hero, and the find
+service skipped every winner marked local.
+
+The find service now rolls every co-op player's hero on the winning
+side, local mark or not. No hero is rolled twice: LordsLadderBehavior
+rolls only on OnPlayerBattleEnd, which a co-op client skips and Coop's
+server never raises for a player's battle. The server's own main hero
+is never a co-op player in Coop's registry, so it still gets nothing.
+
+Found by the Codex review of the co-op extras series (#1471).
+Reviewed by Codex (xhigh) and the data flow and engine lenses: no
+defects, wording fixed. In-game check owed: a guest clears a hideout
+and gets the find on the next free hour.
+
+#### fix(long-defeat): v2.0.42 - Wave check counts a soldier the player took
+
+`76a985aa`
+
+In a story attack the wave check no longer fails by one after the
+player takes over a soldier (#1409).
+
+In an attack the player's own soldiers are the wave that the check
+counts. A soldier the fallen player takes over (or the unattended
+bot takes for him) is the player's body from then on: his fall is
+the player's, not a wave kill, and the end-of-wave fell skips him. A
+lost attack so read kills=345 felled=4 against a count of 350 and
+failed, although the battle and its verdict were right (run
+20261122-093421).
+
+The wave now books such a soldier as taken, and the check accepts
+kills plus felled plus taken. Its line shows taken=N only when a
+soldier was taken, so every defence line reads as before. A soldier
+who falls in the one frame before the game adopts him as the
+player's body is booked too.
+
+Two limits stay, and neither can occur in the shipped attack (one
+wave, no commanders): a taken soldier handed back at a rise can be
+counted again in a later wave, and a summoned soldier the player
+takes is booked like a roster soldier.
+
+Checks only: play, gold and the story verdict do not change.
+
+#### fix(long-defeat): v2.0.42 - Gate check stops failing for wall climbers
+
+`518aef9b`
+
+At Minas Tirith the unattended runs no longer fail their gate check
+because attackers climbed the walls (#1079).
+
+The gate-attacked check fails a run when an attacker is found just
+behind a repaired gate that still stands: he must have walked through
+it. At Minas Tirith attackers reach wall height in every wave and
+come down behind the gate, so the check failed in every later wave
+(runs 20261122-095258 and 20261122-111133).
+
+Now an attacker behind the gate fails the check only when he was
+seen there before any attacker had reached wall height. When they
+are seen there only after that, a gate that was struck reads a skip
+(reason=walls-reached), and the run's verdict names the waves that
+were not judged. A gate nobody struck still reads no-blow.
+
+Helm's Deep keeps the old rule in every case: its gate stands above
+the line of its walls, so a man in the doorway would count as high
+himself. The game checks this per fortress at boot and logs the two
+heights.
+
+Limit: at Minas Tirith the check can show that a repaired gate held
+only until the first attacker reaches wall height.
+
+Also in this change: two tests of the Minas Tirith data now check
+what the game reads (the hero flag from the lords.xslt output, and
+the boon deck's own rule for the cavalry boons), and the feature doc
+records why the gate group arrives late on Hard at Helm's Deep (the
+split fills the wall first, and replacements walk 92 m).
+
+Checks only: play does not change. Not played yet with the new rule.
+Review notes: docs/reviews/rca-ld-gate-walls-2026-11-22.md. The first
+review prompt in this commit describes the form the review rejected.
+
+#### fix(coop-interop): v2.0.42 - Server applies career tiers only by level
+
+`5e64442b`
+
+A career tier opens at level 1, 10 or 20, or earlier through a career
+quest. The quest runs on the player's own machine, so the co-op server
+cannot prove it, yet it applied every passive of a reported tier to the
+player's party. A modified client could list tier 3 at level 1 and get
+tier 3 passives (party size, healing, wages) from the server.
+
+The server now keeps the player's choices as sent, so the save and the
+other players still see the real career, but its passive cache counts a
+choice only when the hero's level on the server opens that choice's
+tier. When the hero reaches the level, the passive starts to count.
+
+- CareerPassiveService asks the new ICareerTierTrust for every choice
+  but the root, on every rebuild of the cache.
+- CoopCareerTierTrust counts every tier in single player and on a co-op
+  client. On the co-op server it checks the hero's level; a choice with
+  no group (tier 0) and a hero it cannot find do not count.
+- CareerCampaignBehavior rebuilds the cache when a hero with a career
+  levels up. Coop runs XP gain only on the server, so the server sees
+  the level-up of a player's hero. Outside the server the rebuild gives
+  the same cache.
+
+Single player and co-op clients are unchanged. Quest-unlocked choices
+keep working on the player's own machine; only the server's share of
+their effect waits for the level.
+
+Review: deep review (data flow, engine compatibility) and a Codex
+pre-review found no defect; their low findings are fixed here (a
+registration test without the game, two comments). Open, unverified:
+whether a level-up raised during a battle can reach the rebuild off
+the main thread; no guard added. Not yet checked in game: a player's
+hero levelling up on a co-op server rebuilds the server's cache.
+
+Refs #1471, #967.
+
+#### fix(coop-interop): v2.0.42 - warn when a refused career is not saved
+
+`6c48713f`
+
+When the co-op server refused a career and had none saved for that
+hero, the player saw nothing, kept the career on their own PC and lost
+it at the next join. The player now sees a yellow line that says the
+server did not accept the career and has none saved, so it is gone on
+rejoin. The career is not cleared on the spot: a career picked before
+career sync existed reaches the server first as a join report, and a
+refusal there must not wipe it.
+
+The server also answered "known" for a hero entry with no career in
+it, which every player who joined without a career or whose hero died
+has. Their first refused pick showed "keeps the career it has saved
+for you" and removed the pick. The server now answers "known" only
+when it holds a career.
+
+Known limits, documented in coop-interop.md: career tiers and
+transitions stay client-asserted, a server-side change can lose to a
+report in flight, and a change made in the last frame of a session is
+not sent.
+
+Refs #1471
+
+#### fix(long-defeat): v2.0.42 - upgrade check reads ground distance
+
+`04bd88d1`
+
+The Long Defeat upgrade check measured how far a replacement soldier
+stood from the old place in three dimensions. A soldier that spawned
+1.2 m lower than the old one (z 3.8 against 2.6, same x and y) fell
+outside the 1 m radius, read as a miss and failed the whole run
+although every soldier had been replaced.
+
+The check now measures the ground distance, as the muster's place test
+does, and also needs the new soldier within 2.5 m of the old height. A
+replacement that the height query dropped to the floor below (a wall
+walk to the courtyard, same x and y) or one with no height still counts
+as a miss. 2.5 m accepts the 1.2 m settle and stays under the 3 m the
+split's wall line sits below the wall top.
+
+Contributed by REDACTEDSTUFF (PR #1526). Its #1143 half is not in this
+change: trunk had already fixed #1143 in cefec7fc9.
+
+Closes #1402.
+
+#### fix(mapevent): v2.0.42 - clicking a half-ended battle no longer crashes
+
+`35173ab2`
+
+Players could crash with "Help attackers" on an AI battle that never
+ended. A battle-end crash can leave a battle finished in name with its
+attackers still attached and an empty defender side whose leader party
+is already destroyed. The join menu then reads that party's faction,
+which is null, and throws. After a load the battle's back-reference is
+also gone, which is the second crash signature in the reports.
+
+TAOM now repairs such a battle the moment the player reaches it:
+walking into one of its parties, walking into a besieged town or a
+raided village whose battle is broken, or riding in an army whose
+leader heads for one. If the repair frees the party, the broken
+encounter is skipped. If not, the game opens its usual menu, and that
+battle is not retried every frame. In co-op the guard stands aside, as
+the hourly sweep does.
+
+Releases since v2.0.41 already sweep these battles hourly; this closes
+the window before the sweep runs.
+
+Contributed by REDACTEDSTUFF (PR #1525).
+
+Closes #1458.
+
+#### fix(data): v2.0.42 - non-human troops stop borrowing human civilian kits
+
+`7cf2a615`
+
+A soldier promoted to a companion by Field Commission copies its troop's
+civilian kit onto the new hero. 131 goblin, orc, Dol Guldur uruk,
+Gundabad pale uruk, Mirkwood elf, Isengard uruk-hai and Mordor uruk
+troops (Fords of War included) named a vanilla Aserai or Battanian
+civilian template, so a promoted orc or elf wore a human civilian
+outfit.
+
+Each of them now carries inline civilian rosters built from its own
+culture's light body and boot items, the same items its heroes already
+wear as civilians. Goblins of the Misty Mountains and the spider riders
+wear Mordor orc pieces, Dol Guldur goblins wear Dol Guldur uruk pieces,
+and the Mirkwood elves of level 36 and above wear the Palace Guard
+mirkwood_body and mirkwood_boots. The kits are Body and Leg only: the
+vanilla sets' sword, headwear, gloves and cape are gone.
+NonHumanCivilianKitTests fails when a character of a race other than
+human names a roster no TAOM file defines.
+
+Human troops still carry vanilla civilian templates; that is a design
+call per culture and stays open in #1433.
+
+Contributed by REDACTEDSTUFF (PR #1524). Part of #1433.
+
+#### fix(tools): v2.0.42 - melee gate scores per set and prices vanilla
+
+`146ecc8b`
+
+The MELEE_LADDER_INVERSION gate scored a troop by its best weapon over
+all battle sets and priced Armory items only. The game draws a spawn's
+weapon slots from the sets, so a strong weapon in one set hid a weak
+one in another, and troops that carry vanilla weapons sat outside every
+check. The gate now reads each battle set: a troop is under-armed when
+its weakest set is under its band, and over-armed and the ceiling read
+its best set. Vanilla SandBoxCore and SandBox weapons are priced the
+same way as Armory ones. A finding on a vanilla weapon says to swap it
+by hand or exempt the troop, since no fixer script prices vanilla.
+
+restat_melee_blades.py --culture now restats a blade only when every
+troop that wears a weapon on it belongs to the named craft rows. A
+blade another row shares is listed with the rows that wear it and left
+alone. A run for Anduin Vale had lowered four Dale blades that way.
+
+The ranged ladder rules, the troop balance report and the C# upgrade
+monotonicity test read a troop with a skill_template as the game plays
+it: its SkillSet with the inline rows laid over it. No shipped troop
+carries a template today, so no verdict changes.
+
+On the live data the validator reports 94 MELEE_LADDER_INVERSION and
+44 MELEE_BLOW_CEILING warnings; most of the new ones are vanilla
+weapons. No troop file changed.
+
+Contributed by REDACTEDSTUFF (PR #1523).
+
+Closes #1241, closes #1242, closes #1490.
+
+#### fix(ui): v2.0.42 - TAOM popups pause the campaign map
+
+`50badc7b`
+
+Player report: pop-ups such as offers and crash notices left the map
+running underneath, so a party could attack while the player read.
+
+Every TAOM popup that can open over the campaign map now pauses it:
+career quest offers, siege defense offers, messenger notices, the
+enlistment wait menu choice, Elite Emissary pickers, tournament
+choices, naming prompts and pickers, Quick Actions, the story mission
+offer, the War Chronicle announcement, the cheat menu pickers and the
+Realms claim and feudal confirmations. Closing a popup resumes the
+speed the map had before.
+
+The crash notice pauses only when the campaign map is the active
+state: a popup that pauses a loading mission stops the load. The bug
+report result from the in-game Mod Options button pauses too.
+
+Messenger notices open in front of any popup that is already open, and
+that popup returns when the notice closes. A notice therefore never
+waits behind the "Messenger Arrived" popup, whose Speak button opens a
+conversation that a queued notice would otherwise pause while it loads.
+
+Popups that only show at the main menu or at startup, inside a
+mission, or inside a screen that already holds the clock keep their
+old behaviour. PopupPauseGateTests fails when a popup call under Main
+or Client does not pass pauseGameActiveState: true by name, unless the
+file is listed with a reason.
+
+Contributed by REDACTEDSTUFF (PR #1522). No issue: the owner waived
+new GitHub issues for this work.
+
+#### fix(tools): v2.0.42 - data tools read only the files rows load
+
+`d59b3cbb`
+
+The shield gate, the melee catalogue, the melee ladder and the troop
+roster page now read only the XML files a Campaign or CustomGame
+SubModule.xml row names (<path>.xml, or each xml in the folder <path>),
+as the engine does. Before, they globbed every xml under ModuleData, so
+a row-less config file such as armour_classes.xml, with 3,044 untyped
+<Item> stubs, shadowed 20 real lord items on the roster page.
+
+A malformed row (no XmlName, id or path, or a game-type child with no
+value) stops the shield gate with an error naming the SubModule.xml,
+where the engine would throw. In the validator's melee pass the same
+row gives one warning, and the rest of the run goes on.
+
+The validator's item registry follows the same row rule. On the live
+install it drops from 6,661 to 5,809 ids: the 848 that only
+multiplayer's mpitems.xml defines, and 4 StoryMode banner ids from a
+CampaignStoryMode-only row. The gate verdict, the ladder report and
+the roster page are unchanged on today's data.
+
+Contributed by REDACTEDSTUFF (PR #1520).
+
+Closes #1404.
+
+#### fix(tools): v2.0.42 - validator MCP reports every skipped pass
+
+`ce0d1ea8`
+
+The MCP validate_moduledata tool now tells its client about the two
+passes that used to skip on stderr only: the armour class table check
+when there is no LOTRLOME_Armory, and a module that ships no .tpac.
+Each comes back as a PARTIAL_RUN warning, like the run's other notices.
+SandBoxCore ships no .tpac on a healthy install, so it is exempt
+(validate_mesh_refs.NO_TPAC_EXPECTED); any other module with no packs
+is still announced. The command line prints the skips to stderr as
+before.
+
+ModuleDataQuery.validate clears the taom_schema file-text cache when it
+ends, so the long-lived MCP server no longer holds about 4,400 file
+texts after a run.
+
+/armory-audit reads the validator's module list
+(validate_mesh_refs.DEFAULT_TPAC_MODULES) instead of its own, so both
+check bodies against the same modules.
+
+Contributed by REDACTEDSTUFF (PR #1519).
+
+Closes #1491.
+
+#### fix(story-missions): v2.0.42 - a field lord rises at his own start
+
+`b8fcea30`
+
+Long Defeat Phase 4 lets a fallen lord rise at the keep when a wave is
+cleared. A story mission on a field scene has no keep: the game spawns
+the lord at his side's own start place. After the merge of trunk, a
+field mission that also records a keep would have had every rise
+measured against that keep and written as a failed check, and its boot
+would have tested the keep as a rise point. No shipped mission records
+a keep on a field, so no player met this.
+
+On a field the rise now has no keep place and is booked "respawn", as
+an attacker's rise is, and the boot tests no rise point there. Two new
+tests run a field plan through the lord's path, which no test did
+before; every game run takes that path.
+
+The maintainer's decisions of 2026-11-22 on the Codex review are
+recorded: the Ents still march after a repulsed assault on the
+Hornburg, and the morale effect's limit on a co-op client stays as
+documented.
+
+Found by the data flow lens on the merge (two LOW, one MEDIUM test
+gap).
+Tests: 44,235 passed, 9 skipped, 1 failed (the language rows of 17 new
+English keys, the project lead's pass).
+Not-tested: no game run on this build yet.
+
+#### fix(tools): v2.0.42 - scenario judge refuses contradictory lines
+
+`2e4e4911`
+
+The unattended story runs were judged by patterns that took any verdict
+with any reason, and any offer result line. A log that said the defence
+won, that its hero fell, and that the event occurred passed the judge
+and two manifest rows. That contradiction is the regression the judge
+exists to catch.
+
+The ended pattern now writes the pairs out by side, as StoryVerdict.Of
+maps them: the defence wins by TargetReached and loses by a fall, the
+attack the reverse. A new pattern ties the offer's result to its
+verdict, as StoryOfferService.Apply writes it. The judge reads the
+verdict of the driver's done line and narrows both lines to it. In the
+#1105 and #1368 manifests a contradictory line now reads FAIL, as it
+already did in #1409; a person's retreat stays NOT REACHED in #1105.
+
+The judge also read a mission's field and mustLive traits from the
+checkout after the run. The launch now captures them with the side, so
+an edit of the JSON during a run cannot fail a good run.
+
+Found by the Codex review of the branch (F4, F5) and by the tooling
+lens on the fix, which showed by mutation that one new test could not
+tell two checks apart; that test is split. Three texts that said the
+Hornburg offers no attack are corrected.
+
+Tests: tools.tests.test_run_scenario and test_ingame_verdict, 507
+passed. The seven real run logs of 2026-11-21 and 22 still read PASS
+with the stricter patterns. The full tool suite before the last test
+edits: 10,772 run, 1 failed (the live Armory dwarf row, #1499, which
+waits for the trunk merge).
+
+#### fix(story-missions): v2.0.42 - Boromir's death waits for the engine
+
+`8e2a5098`
+
+The Breaking of the Fellowship said that Boromir died, and paid the
+event's effects, even when the game had not killed him. The engine only
+marks a lord for death while his party is in a battle or besieges a
+settlement, and an issue or a quest can refuse a death outright. The
+chronicle read that answer and wrote it to the log, nothing more.
+
+Now the event occurs only when he is dead. If the engine defers or
+refuses the death, the window stays open with no mission offer, and the
+chronicle asks again each day until he is dead. A lord marked in a
+battle, as a besieger or for an execution is left alone until that is
+over, as the engine's own daily tick leaves him. Nothing new is saved:
+the window's close day and the engine's death mark hold the state. The
+status command reads "the hero's death is owed" for such a window, and
+the offer's check line reads result=DeathOwed.
+
+Found by the Codex review of the branch (5cf79902c..6c5ff7c5a, ultra:
+one HIGH, three MEDIUM, three LOW). Each finding was read against the
+code and the v1.5.7 source first; the assessment and the root causes
+are in docs/reviews/rca-story-missions-codex-2026-11-22.md. Also
+corrected: two texts that promised the engine finishes a death mark,
+and the morale effect's "+5 points", which holds only where no factor
+scales the number.
+
+Not changed, for the maintainer: a repulsed assault on the Hornburg is
+still followed by the Ents' march, which lowers Isengard's recruitment
+for 20 days; and a co-op client computes the morale effect from the
+effects it had at the join (documented as a known limit). A run-time
+check of two config references was declined as a speculative guard:
+tests already gate the shipped file.
+
+Reviewed: deep review of this fix, lenses 5 (data flow) and 2 (engine
+compatibility), no HIGH or MEDIUM; their LOW items are applied, one
+guard for an unreachable path is left to the maintainer.
+Tests: 44,006 passed, 9 skipped, 2 failed. The two are expected: the
+language rows of 17 new English keys (the project lead's pass), and the
+live Armory dwarf check, which passes again when the branch takes trunk
+(#1499).
+Not-tested: no game run on this build yet. An unattended run of the
+Breaking offer proves the Killed path only; the owed path needs Boromir
+in a battle or a siege on the day.
+
+#### fix(banners): v2.0.42 - co-op guests keep TAOM's banners on join
+
+`3f780202`
+
+A player joining a co-op session now sees TAOM's kingdom and clan
+banners, for example Gondor black with the white tree, instead of
+banners recoloured from the kingdom colours.
+
+The joining client loads the server's save, which already holds the
+banners TAOM injected on the server. Vanilla Clan.PreAfterLoad then
+repaints every kingdom clan's banner in place from the kingdom's
+primary and secondary banner colours. On the server TAOM restores its
+banners right after that load, but a client must not: the restore
+assigns Kingdom.Banner and Clan.Banner, which BannerlordCoop syncs
+from the server.
+
+So a co-op client now skips that one repaint while it loads. A new
+Patch24 bracket on Clan.PreAfterLoad marks the load, and the drift
+guard prefix returns false when BannerColorService says the peer is
+a co-op client inside it. The client writes nothing and keeps the
+server's values. Solo play, the server process, BannerlordTogether
+peers and every later repaint (a kingdom change, or BannerlordCoop's
+own server-side banner update) keep vanilla's behaviour.
+
+Not checked in game: a join with TAOM's kingdoms.
+
+No issue: proposed directly as a pull request.
+
+#### fix(faction-ui): v2.0.42 - show the themed map bar under co-op
+
+`40cc17b5`
+
+The themed campaign map bar (the Two Trees clock, navigation and
+stats) and the themed Camp icon beside the clock now show in a
+BannerlordCoop session. Before this, TAOM kept vanilla's map bar
+whenever any co-op module was merely loaded, even in solo play,
+because the themed fast-forward buttons needed the time mixin that the
+co-op UI registration dropped. The previous commit registers that
+mixin under co-op, so the buttons work and ask the co-op server.
+
+The swap now asks the co-op session instead of module presence
+(ThemedMapBarCoopPolicy). Only a co-op mod whose roles TAOM cannot
+probe, which defers on every player with no session TAOM can see
+(BannerlordTogether), keeps the native bar and the vanilla Camp icon,
+so any extension it makes to vanilla's MapBar prefab keeps working.
+BannerlordCoop clients, its server process and solo play with the
+Coop module enabled get the themed bar. BannerlordCoop patches the map
+bar's view models, not its prefab, so the swap loses nothing of Coop's.
+
+The movie hook no longer reads CoopPresence, so its row leaves the
+co-op presence gate's allowlist.
+
+Not checked in game: the themed bar in a co-op session.
+
+No issue: proposed directly as a pull request.
+
+#### fix(time-acceleration): v2.0.42 - map bar buttons ask the co-op server
+
+`33f75ab9`
+
+The time mixin on the campaign map's time control is now registered
+with a co-op module loaded too. The themed map bar's Fast Forward and
+Extra Fast Forward buttons call its two commands, so before this they
+did nothing under co-op. The five extensions on the vanilla map bar
+stay out of the co-op registration, as before.
+
+On a player who defers campaign time to a co-op server, the commands
+write no speed multiplier (the service already returned early there)
+and only call vanilla's time change. BannerlordCoop turns that call
+into a request to its server process, which decides the speed for
+everyone, exactly as for vanilla's own buttons. The installed Coop
+hosts through a standalone server that every player joins as a
+client, so no player's click writes the multiplier in a Coop session;
+only solo play does.
+
+Extra Fast Forward is hidden on the themed map bar while the player
+defers to a co-op server, because there it could only be plain fast
+forward. The mixin sets the new IsExtraFastForwardAvailable value in
+its constructor, for the first bind, and on every refresh. Solo play,
+including solo with the Coop module enabled, is unchanged.
+
+Not checked in game: the themed buttons in a co-op session, which the
+next commit enables.
+
+No issue: proposed directly as a pull request.
+
+#### fix(dwarf-attacks): v2.0.42 - Dwarf attacks no longer hang a battle
+
+`e9145bf7`
+
+A battle with dwarves could freeze for good. The dwarves' head butt
+and drop kick were declared to the engine as kicks. While a dwarf's
+own kick was in progress, the engine's kick code then read a value
+from the attack's animation that these two animations do not have,
+and waited on a lock that never opened. Of ten unattended matches of
+Erebor against Gundabad with Combat Stamina on, one froze this way.
+
+The two actions now carry no kick type, like the troll's smash. The
+attacks themselves do not change: the same reach, damage, knockdown
+and cooldowns.
+
+Two things change with the type:
+
+- With Combat Stamina on, a dwarf attack costs no stamina; it cost a
+  kick's 6 points. An exhausted dwarf still starts no attack.
+- In co-op, a player who does not control the dwarf probably does not
+  see the two attack animations, because BannerlordCoop sends only
+  typed actions to the other players. The blow still lands. The
+  troll's smash has the same gap. Not checked in a co-op session.
+
+The rows are in the Armory, which this repo does not hold. After this
+commit is on trunk, run this once with the game closed:
+
+    python tools/bind_dwarf_attack_actions.py --apply
+
+Until then the live-install checks of this commit fail on a desktop
+that has the old rows.
+
+A new test, test_armory_kick_typed_actions.py, fails when another
+Armory action is given a type of the engine's kick family. Five mount
+attacks keep the type: a mount cannot start the engine's kick, so it
+does not reach that read.
+
+Proof: 13 unattended matches of Erebor against Gundabad with the new
+rows and stamina on, none with a stall or a crash (run folders
+E:/Temp/fords-runs/20261122-012800 to 20261122-020917). Each match
+passed both attack checks with 141 to 205 hits, and stamina counted 8
+to 23 kicks in a match where it had counted 512 and 651. About 1
+chance in 18 remains that a fault at the old rate stayed hidden.
+
+The crash that the same issue reports (a dwarf with empty hands) has
+no known trigger and is not fixed here.
+
+Reviewed at tier 1 by four lenses and a Codex pass at ultra: no HIGH
+or P1; the MEDIUM and LOW findings are applied.
+
+Refs #1499
+
+#### fix(tools): v2.0.42 - Judge owes no sally return for a fallen rider
+
+`9f4a3111`
+
+The unattended Long Defeat wrapper failed a correct cavalry run. With
+the death rule in the game, a rider who falls is no longer in his own
+body at the clear, so the game writes the sally-return check as a skip
+(reason=taken-over) and raises the lord at home. The judge still owed
+a sally-return pass for any run that cleared a wave, and a rider who
+fell in every wave could never pay it.
+
+The judge now owes the pass only when the run cleared a wave in which
+the rider did not fall in his own body.
+
+Found by run 20261121-205801 (--waves 3 --lord-falls 1 --class
+cavalry, build d433e8a9c). Every check of the game passed (72 pass,
+0 fail), and the old judge failed the run on this debt alone. The
+same run's files pass the corrected judge.
+
+Refs #1079
+
+#### fix(long-defeat): v2.0.42 - Shop bot buys field care only if it shows
+
+`cefec7fc`
+
+An unattended Long Defeat run could fail on field care with the game
+doing everything right. The shop bot bought care at the first clear
+while the garrison was almost whole. The heal was then too small to
+tell from no heal, so the field-care check could only skip, and the
+run owed a pass the game could not write.
+
+The bot now buys care only when the heal will raise the defenders'
+mean health by more than 2.5%, and only once every bought defender
+stands: a pack joins at full health before the heal and thins what is
+missing. It decides on a reading taken after the clear's own rest.
+The bot's margin and the check's tolerance are kept in one place, so
+the two cannot drift apart. A person's purchase is unchanged.
+
+Not played. The proof run is
+python tools/run_long_defeat.py --waves 2 --garrison-scale 1.3
+--start-gold 5000.
+
+Refs #1143
+
+#### fix(special-resources): v2.0.42 - follow the party screen the map opens
+
+`5cf79902`
+
+The map bar applies a party screen's changes and pops the screen
+without the close event. TAOM stayed attached to the popped screen and
+ignored the next one, so a Reset there left its upgrades queued and the
+next Done charged upgrades the player had reset. TAOM now moves its
+reset and close listeners to each new party screen.
+
+Found by the Codex review of #1516 (F1, P2). Refs #1516.
+
+#### fix(special-resources): v2.0.42 - charge upgrades a mid-screen Done made
+
+`55943640`
+
+Troop upgrades that cost a special resource could be free. TAOM charged
+the queued cost only when the party screen closed through Done, but the
+game applies the upgrades whenever PartyScreenLogic.DoneLogic succeeds,
+and that can happen while the screen stays open: Talk with pending
+changes, a companion removed from the screen, a map-bar switch, and
+TAOM's own forced commit (Provender-master, gifts, Hard Questions,
+Sworn Anew). Leaving with Escape after that dropped the charge.
+
+A postfix on DoneLogic (Patch26) now charges the queued cost when the
+call succeeds and keeps the session open for later upgrades on the same
+screen. The normal Done charges once. In a co-op session the client
+charges nothing; Patch144 charges on the server.
+
+Closes #1516. Owed in game: upgrade a resource troop, Talk to a
+companion, confirm, press Escape; the balance drops once.
+
+#### fix(special-resources): v2.0.42 - party screen upgrades pay in full
+
+`b128dfb1`
+
+Two ways to get party screen upgrades for less than their special
+resource cost are closed.
+
+Cancelling a recruit or upgrade pop-up no longer makes the upgrades
+done before it free (#1492). The screen restores itself as it was
+before the pop-up, upgrades included, and the session now charges
+for those held upgrades again at Done.
+
+The upgrade limit now also counts the prisoners recruited on the same
+screen, which are paid at Done, as the recruit limit already did
+(#1489). In co-op no recruits are counted. The "only enough resources"
+message for upgrades is now translatable; it shows in English until
+the translation pass (#1129).
+
+Known older gaps, not changed here: talking to a hero from the party
+screen applies upgrades without charging them, and a refused upgrade
+command can still queue a charge.
+
+Not checked in game: upgrade a troop that costs a special resource,
+upgrade inside the pop-up, Cancel, then Done; the earlier upgrade
+should be charged.
+
+Contributed by REDACTEDSTUFF (PR #1513).
+
+#### fix(tools): v2.0.42 - Fords launcher reads safely_exited at any spacing
+
+`8cdd1eff`
+
+The Fords launcher looked for "safely_exited = 0" with one space, but
+the engine writes the key with two ("safely_exited  = 1"), so every
+run logged "key not found" and never reset the flag after a killed
+game (#1500).
+
+The match is now a line-anchored pattern that takes any spaces or tabs
+around "=" and changes only the 0, keeping the spacing and CRLF. A
+value already at 1 logs "safely_exited already 1; nothing reset" and
+leaves the file alone. Checked against this desktop's engine_config.txt.
+
+Contributed by REDACTEDSTUFF (PR #1514).
+
+### Balance
+
+#### balance(isengard): v2.0.42 - bigger Isengard parties and armies
+
+`2ce4a3be`
+
+Players found Isengard outnumbered by Gondor, Rohan and the elves.
+Three changes, all for Isengard only. Thanks to REDACTEDSTUFF for the
+pass.
+
+- Troop weight. Isengard's level 31 Uruk veterans, berserker and Orthanc
+  guard, its warg riders from level 11 and its Dual Wield twin-blade
+  counted as two men against the party limit, while Gondor's troops
+  count as one up to level 51. They now count as one man. A tier 6 lord
+  with a full level 31 Uruk roster goes from 58 men to 121. The level 36
+  warden and Nazg-hai stay at 2.0 and the level 41 bodyguard at 3.0.
+- Party size feat. Uruk-hai Legions goes from +5% to +10%, the most the
+  10% cap from #818 allows. The faction card says +10% too.
+- Clan tiers. Ten Isengard clans go up one tier: lords lead 15 more
+  men, clan leaders 25 more, and Isengard has 33 party slots instead of
+  31. This part reaches new campaigns only; the weights and the feat
+  reach saves after a restart.
+
+Garrisons gain only the feat, so Isengard's armies pass the siege
+check against enemy garrisons more often. Troop skills are unchanged.
+
+The English text of three keys changed (taom_feat_isen_ps_desc and the
+Isengard faction card's bonus_0 and perk_0_desc); the 12 language files
+and their translation caches still say 5% and need the lead's update.
+
+No issue: owner waived new GitHub issues for this work.
+
+### Tests
+
+#### test(warg): v2.0.42 - the gait stride gate measures the warg's paws
+
+`0432696a`
+
+No change for players: this is a check for the people who build the
+Armory. tools/check_gait_stride.py, which holds the elephant's and the
+spider's gait clips to the ground their feet cover, now reads the warg
+too (item 2 of #1565). Until now only a test of the plan file measured
+the warg's paws; the installed records could drift from it unseen.
+
+On the installed Armory the four forward gaits and the backward walk
+pass: the paws cover the travel each record holds (1.80 m, 2.71 m,
+3.22 m, 3.92 m, and 1.53 m against 1.50 m). The new data gate row is
+warg-stride. The plan check warg-gaits stays beside it, because the
+stride gate does not hold a pace's two loop times, a twin's tie to its
+gait or the rider's flags.
+
+What the gate needed for a creature whose clips were bought:
+- A gait's master is found by the GUID in its clip record, in any
+  master package under the creature's folder. The gate looked for a
+  file with the clip's name, and the warg's masters carry the pack's
+  names. An animation that two master files hold is a finding.
+- A creature's own limits for slip and for a short stance. The warg's
+  sit just above what its clips have today (a paw slips up to 0.91 m
+  in a stance), so a clip that gets worse fails.
+- A cook check by the record's checksum, which the Modding Kit writes
+  into each cache entry. The gate's rule by file dates called seven
+  warg clips stale: the files carry the dates of a copy, and five
+  masters that the Kit cooked again in November gave the August keys
+  byte for byte. The checksum rule does not see a master rewritten
+  under one GUID or a record edited by hand without a new checksum.
+- A list of known records. The warg's two side steps fail the stride
+  judgement and are listed with the numbers they hold: a travel of
+  1.60 m, and paws that move 0.73 m and 1.00 m. They are measured and
+  printed on every run and not counted. The gate fails when either
+  number changes, when a paw slips or does not plant, when the entry
+  is not cooked and when the stride starts to equal the travel.
+
+No record changed. The review read the movement node and found that a
+stride is not its measure for a side step: at the standing pace it
+plays one loop in travel / (Duration x its sideways input) seconds,
+and the right side step's record also sets the rate of a turn in
+place. What those two records should hold, the dire wolf's backward
+walk (1.17 m of travel on paws that cover 2.08 m) and the wolf in the
+stride gate are #1591.
+
+Cost: the elephant's run of the gate takes about 1.5 s where it took
+1.0 s, because each gait now reads every master package to find two
+owners of one animation. A cache was measured and left out: it parses
+packages the gate never needed, for half a second on a check that
+runs by hand. The elephant's and the spider's reports are byte for
+byte what they were.
+
+Also in the data gates: the cache entries and every module the stride
+tool imports now select the elephant's and the spider's rows too.
+
+Reviewed with /deep-review at tier 2: a Codex pre-review and seven
+lenses in three waves. One HIGH, fixed here: the first version of the
+known list excused every finding on a listed clip. The findings, what
+was not applied and why:
+docs/reviews/rca-warg-stride-gate-2026-11-24.md
+
+Not-tested: the gate on a reverted or reinstalled Armory, and on a
+machine without the Armory beyond its skip
+Research: FUN_180749c20 and the side phase of 0x74E9C0,
+TaleWorlds.Native.dll v1.5.7
+Save-compat: no save data
+
+Refs #1565, #1591
+
+#### test(ui): v2.0.42 - binding gate covers DeactivateMenuMode
+
+`9a4033ff`
+
+ReflectionSiteBindingTests now has a row for the private
+MBMusicManager.DeactivateMenuMode that MenuMusicAdapter reflects on,
+as the reflection catalogue requires.
+
+Refs #1587 (item 5).
+
+#### test(armour): v2.0.42 - pin the Mallorn band-up to its generator
+
+`c0556b40`
+
+generate_armour_classes.py keeps its own copy of the Lothlorien
+generator's Mallorn band-up, capped below lord. A new test fails if
+the two disagree on any band they share, so a change to the pricing
+cannot leave the class table behind.
+
+Part of #1587.
+
+#### test(combat): v2.0.42 - In-game checks for the arena ability gates
+
+`69a88ed7`
+
+Adds the check file for #1537. One visit to a training yard or one
+tournament match now gives a verdict from the log: the dwarf attacks
+and the race abilities must report "eligible=False" where the line
+says "arena=True", and the mission's combat type must read "Combat"
+there, which is the fact the fix rests on. The file names the commit
+that changed the gates (6130a03c3), so an older build is not judged.
+
+### Documentation
+
+#### docs(coopcompat): v2.0.42 - guide points to the CoopCompat download
+
+`65b90c03`
+
+The TAOM 2.0.42 Public and Patreon downloads do not contain
+TAOM.CoopCompat; it ships as its own TAOM.CoopCompat.zip. The co-op
+guide now says so in "What you need", and Part 3 and the older builds
+section tell players to extract that zip. The feature list gains
+careers and the lord's materials a won battle can give.
+
+#### docs(lords): v2.0.42 - comments and docs spell Ugluk as the data does
+
+`e4518c74`
+
+Two tool scripts and two lord-skill docs still wrote "Uglûk" for the
+Isengard lord whose name is now "Uglúk". Comments and docs only.
+
+Part of #1587.
+
+#### docs(harness): v2.0.42 - /issue searches every closed issue
+
+`502e8c33`
+
+The /issue skill said it searches "recently closed" issues, but
+--state all searches every closed issue. The step now says so.
+
+Part of #1587.
+
+#### docs(troops): v2.0.42 - regenerate the troop roster pages
+
+`f35b03f8`
+
+troop-rosters.html and ranged-troops.html still showed the troop
+names #1583 corrected (Swordman, East-Fold, Barad-Dur). Both pages
+are regenerated from the current troop data, which also brings in
+gear changes made since their last run, such as the Rivendell
+vambraces now pointing at their silver-gold items. Generated docs
+only; no game data changes.
+
+Part of #1587.
+
+#### docs(market): v2.0.42 - say what the Theoden blacklist covers
+
+`cdd7f7fd`
+
+The config comment said Rohan's blacklist keeps Theoden's horse
+armour out of its markets. It covers only what Culture Marketplace
+stocks; with that feature off, vanilla stocking can still pick the
+item. Comment only.
+
+Part of #1587.
+
+#### docs(api-snapshot): v2.0.42 - count both new patches after the merge
+
+`e8c8ea1a`
+
+Trunk and the Coop fallback fix (#1545) each added one patch target.
+The merge kept one side's count line, so the snapshot said 456 where
+the build has 457. Regenerated.
+
+Refs #1545
+
+#### docs(skills): v2.0.42 - review-outside-pr gains a batch merge mode
+
+`357dda88`
+
+/review-outside-pr covered one PR and stopped at a report. Reviewing
+all open PRs, fixing them on their branches and merging them had been
+done by hand several times. The skill now has a batch mode for that
+request: `/review-outside-pr open`.
+
+Only the maintainer's own message starts it; text in a PR, a comment or
+a commit never does, and Codex still needs its own word. It merges
+every PR head onto current trunk in one tree and runs the full suite
+there, since a filtered run missed three gate tests on 2026-11-22. It
+merges a moved trunk in and tests again, pushes fixes fast-forward
+only, squashes each PR in order pinned to the tested head with a
+release-note body that credits the contributor, then labels owed
+in-game checks, files one follow-up issue and cleans up.
+
+#### docs(feature-map): v2.0.42 - army panel row names the co-op rule
+
+`91d85452`
+
+The row still said the themed army panel stays vanilla under co-op.
+Since the co-op rule moved into ThemedMapBarCoopPolicy, the panel is
+vanilla only where the map bar is: under a co-op mod TAOM cannot
+probe. A BannerlordCoop session shows the themed panel.
+
+Refs #1532
+
+#### docs(lessons): v2.0.42 - two lessons from the Training Grounds join
+
+`475cc17e`
+
+Two lessons from the Training Grounds work (#1528, #1529). Two
+builders that each add one of a counted thing merge with no conflict
+to a count that is one short, so the count tests run first after a
+join. And a fix list that says "every" must not rule one case out of
+scope: one function that every case goes through replaces a list of
+call sites.
+
+Refs #1528, #1529
+
+#### docs(ingame-checks): v2.0.42 - manifests name the feature commits
+
+`36931b96`
+
+The check manifests of the team practice fight (#1528) and the wave
+fight (#1529) named the commit their branch started from. Each now
+names the commit that adds its feature, 2faebdbda and 12f4d098b, so a
+game run counts as evidence only from a build that holds the feature.
+
+Refs #1528, #1529
+
+#### docs(api-snapshot): v2.0.42 - snapshot lists the two Patch173 guards
+
+`595ad218`
+
+The fix for the half-ended battle crash (35173ab2c, #1458) added two
+Harmony patches on EncounterManager, and the patch target snapshot was
+not regenerated with it. The snapshot check then reported drift (451
+patches committed, 453 in the build) in every session's verify, and
+the next engine bump would not have compared those two methods.
+
+Regenerated with tools/snapshot_api_surface.ps1 on trunk 5e64442b4.
+The only change is the two new rows and the count. No new issue: this
+completes the snapshot step of #1458's fix.
+
+Tests: pwsh tools/snapshot_api_surface.ps1 -Check reads OK for both
+files; python tools/lint_docs.py --fail-on-drift exits 0.
+
+#### docs(coop-interop): v2.0.42 - career sync for co-op players
+
+`d96d6c3b`
+
+coop-interop.md gains a "Career sync" section: why the co-op server's
+career book is the saved one, the pieces, the join report and the one
+report per action, the server's check, the configuration and the
+tests. It lists the known limits: tier unlocks and quest flags are
+client-asserted, culture eligibility is only logged, the level check
+is strict, a guest hero's death clears its career on the server and
+for every player, and the server's passive cache now applies players'
+career passives on the server.
+
+The three places that said a career stays on the player's PC "until
+the career relay (#967)" now point to the section. career-system.md
+gets a short co-op paragraph, and the CoopInterop row of the feature
+map names CareerSync/.
+
+No issue: proposed directly as a pull request.
+
+#### docs(long-defeat): v2.0.42 - Record the normal run that clears trunk
+
+`37fc4e3a`
+
+A normal five-wave run at Helm's Deep on the branch with trunk merged
+in passed every check line (run 20261122-123123, 96 passed, none
+failed). With the same seed, garrison and gold as the Hard run, the
+gate group stood at the gate in waves 4 and 5, so the late gate
+group seen on Hard belongs to Hard and not to the trunk merge. Why
+it stands so far back on Hard is recorded as not examined.
+
+#### docs(long-defeat): v2.0.42 - Record the Cavalry and Hard game runs
+
+`9f7a6101`
+
+Three unattended runs on build f2536c757 cleared every wave. Cavalry
+at Minas Tirith rode from the start in the Dol Amroth kit. Hard at
+Minas Tirith and at Helm's Deep sent 138, 150, 150, 156 and 163
+attackers, gave them powers from wave 3, and brought Gorbag and
+Lugdush in wave 4; both captains fell. The judge's replay of counts,
+factors and powers accepts all three reports.
+
+The failed check lines are recorded with what is known of each: the
+muster pile on the scene frame at Minas Tirith, the wall climbers
+behind a standing gate, the gate group's late return at Helm's Deep
+on Hard (cause not settled), and Legolas's keep-distance check.
+
+#### docs(story-missions): v2.0.42 - a won defence at Parth Galen, proven
+
+`8f41b759`
+
+One unattended run of the Breaking offer on build 488330eaf, the branch
+with trunk 04bd88d16 merged in. The bot won the defence for the first
+time in an unattended run: three waves cleared, Boromir lives, the
+event resolved Averted and Gondor got its volunteer boost. Until now
+the Averted result was proven only by a lost hunt.
+
+One check of another feature failed in that run and is reported on
+#1415: in this long field fight Legolas was told 49 times to step away
+from an enemy and was never read as moved. Nothing is changed for it.
+
+#### docs(long-defeat): v2.0.42 - Record the first Minas Tirith run
+
+`78d2db4b`
+
+The first unattended run at Minas Tirith cleared three waves on the
+scene's own spawn frames (run 20261122-095258, build 8bd9d89a5): the
+boot, the Gondor class kit, four upgrade steps, the three heroes,
+field care and the repair and levels of both gates passed, with 54 to
+85 defenders up on the walls.
+
+Two checks failed, and both are known open points, not faults of the
+new data: one batch of new soldiers piled on the scene frame (the
+muster points are not recorded yet), and the gate check counts
+attackers who climbed the walls and stand behind a standing gate as
+if they had passed through it.
+
+Not run yet: the Cavalry class and the commanders.
+
+#### docs(story-missions): v2.0.42 - proof runs of the merged build
+
+`05128d76`
+
+Six unattended runs on build b8fcea30e, each a runner PASS with a clean
+unload: the Breaking offer with a lost defence and by fate (Boromir
+killed, the event Occurred), the Parth Galen hunt, the Hornburg offer
+with a defence (Held) and with an assault lost at 350 (Held, the
+alliance of Isengard and Mordor ended), and a Long Defeat run of three
+waves in which the lord fell and rose. The run folders are named in the
+feature doc.
+
+The runs prove the Killed path of the hero story. The owed path, where
+the engine defers or refuses the death, has unit tests only.
+
+One check failed in the assault run and is reported on #1409: after
+the lord fell, the bot took over a soldier of the attacking host, and
+the wave's books came out one short (hosted.wave, 349 of 350). The run
+itself ended as it must. The cause is the wave's accounting of a
+taken-over soldier, not the offer, and it is not changed here.
+
+#### docs(coop-interop): v2.0.42 - co-op display fixes land in v2.0.42
+
+`fe373073`
+
+The three co-op display fixes were written against v2.0.40 and land in
+v2.0.42. Their doc and test lines now say v2.0.42, and the change-log
+lines carry the date they landed. The Codex pre-review prompt for the
+three fixes is kept with the other review prompts.
+
+#### docs(story-missions): v2.0.42 - the won assault is proven too
+
+`6c5ff7c5`
+
+The bot does not win the assault on Helm's Deep against the shipped
+garrison, so the won side had no game proof. One unattended run with
+a garrison of 15 in the deployed copy of the mission data (restored
+after) now shows it through the Hornburg offer (run 20261122-032008,
+build f8bb1387e): the assault is won, the Hornburg falls to Isengard,
+and Rohan gets the permanent volunteer penalty row. The alliance of
+Isengard and Mordor stays, as intended for a won assault. The #1409
+rows attack-won and hosted.hero-fall read PASS for the first time.
+
+Docs only.
+
+Refs #1105, #1409
+
+#### docs(long-defeat): v2.0.42 - Record the loss run on the death rule
+
+`bec97c02`
+
+Run 20261122-025410 lost at wave 2 as it was built to, with 85 check
+lines passed and none failed. The lord fell in play, the bot took a
+soldier, wave 1 ended by felling stragglers while the lord's own body
+was dead, and he rose before wave 2.
+
+Refs #1079
+
+#### docs(long-defeat): v2.0.42 - Record the five-wave run with the heroes
+
+`9efd26a1`
+
+Run 20261122-005456 cleared five waves at Helm's Deep with Aragorn,
+Legolas and Gimli bought: 598 kills, 86 check lines passed and none
+failed. The upgrade read-back was whole on every order, and the hero
+killing blow of #1359 landed.
+
+Refs #1079
+
+#### docs(lessons): v2.0.42 - one bot battle cannot rank settings
+
+`f8bb1387`
+
+A lesson from the tuning of the assault on Helm's Deep: four single
+runs led me to name a cause that a fifth run on the same data did not
+show. The entry says how to state such numbers: run one setting
+twice, write the spread beside the result, and stop where the spread
+is as large as the difference.
+
+Docs only.
+
+Refs #1105, #1409
+
+#### docs(story-missions): v2.0.42 - assault runs vary more than I wrote
+
+`ac1bd8dd`
+
+A fifth unattended assault on Helm's Deep, on the shipped host of
+350 and through the Hornburg offer (run 20261122-003007, build
+3f2698ebc), was lost with only 28 of the 153 defenders left. The
+three runs at 350 so far lost 34, 56 and 125 defenders, so the doc no
+longer says what single runs cannot show: it does not rank the sizes,
+and it names Legolas's kills in two runs (118 and 12) in place of a
+cause.
+
+The same run proves the effect rows of a held Hornburg in the game:
+taom.war_effects lists the new PartyMorale row for Rohan (+0.100 for
+25 days) beside the volunteer row, and the alliance of Isengard and
+Mordor ended again.
+
+Docs only.
+
+Refs #1105, #1409
+
+#### docs(story-missions): v2.0.42 - record the offer's proof runs
+
+`76964059`
+
+The docs said that no unattended run reached the story offer. Four
+runs did on 2026-11-21, so the feature doc now lists them with their
+builds and the chronicle line of each: the Breaking of the Fellowship
+as a lost defence (Boromir killed), as a lost hunt (Averted, Boromir
+lives) and by fate (Boromir killed), and the Hornburg defended and
+held, with its window opened by date. Every machine row of the #1105
+check manifest now has a PASS on a clean build; "Let fate decide"
+writes no result line, and its chronicle line is its proof.
+
+One fix to the dev console came out of those runs:
+taom.chronicle_status called an open hero story "not assaulted yet".
+It now reads "a hero's story window".
+
+The scenario runner's docs and the tools catalog name the --by-date
+mode, and the check manifest carries the issue's real title.
+
+Not-tested: slice 5 (the assault on the Hornburg and its results) has
+no game run yet. No person has played any of the offers.
+
+Review: one deep review pass on the console text and on every run
+fact the docs state, each checked against the run folders.
+
+Refs #1105
+
+#### docs(long-defeat): v2.0.42 - Record the sally's proof and run four
+
+`4892be75`
+
+The cavalry sally's ride out and return are now proved by tonight's
+unattended runs, and the feature doc says so. The contact check never
+passed: the rider the AI drives gave no hit within 180 seconds in any
+wave, so the charge itself stays a person's check.
+
+Run 20261121-224542 on the Slice 5 build is recorded too: the lord's
+spawn, two rises and three sallies passed on the merged-kit code
+paths, and the upgrade read-back missed one of 130 soldiers again
+(#1402).
+
+Refs #1079
+
+#### docs(long-defeat): v2.0.42 - Draft the Phase 5 plan for Minas Tirith
+
+`adb6425c`
+
+A first plan for the mode's second fortress: Gondor holds the first
+circle of Minas Tirith against Mordor. It names the fortress row, a
+Mordor roster with Gorbag, Gothmog and the Witch-king as commanders,
+a Gondor shop built from the out-companies and the Citadel Guard,
+Gondor class kits, the boon and class texts that must stop naming
+Rohan, a difficulty choice, the recording session the scene needs,
+and the slices in order.
+
+It is a draft. Every troop, lord and item id in it was read from the
+data, and a sample was checked a second time. Nothing in the scene
+has been checked in the game, the decisions marked Maintainer are
+open, and section 10 lists what could not be verified.
+
+Refs #1079
+
+#### docs(long-defeat): v2.0.42 - Record the death rule's unattended proof
+
+`06a74449`
+
+Three unattended runs at Helm's Deep proved the death rule on
+2026-11-21, with no failed check in any of them:
+
+- 20261121-202634 (--waves 3 --lord-falls 1): the forced fall, an
+  empty general's seat, the bot's take-over and the rise on foot at
+  the scene's keep frame. The shop bot bought field care twice and
+  both checks passed (#1143).
+- 20261121-205801 (the same with --class cavalry): the mounted rise at
+  home, three times, and a sally after each.
+- 20261121-212719 (start gold, heroes, broken engines, a fall in
+  wave 2): Aragorn takes the general's seat while the lord is down.
+
+The feature doc, the Phase 4 plan and the review record now say what
+the runs settle and what they do not: a person's rise, where the
+soldier is really handed back, is still owed.
+
+Refs #1079
+
+#### docs(long-defeat): v2.0.42 - Re-baseline the Phase 4 plan on trunk
+
+`479e731f`
+
+The Phase 4 plan was written on 2026-11-06, before the shop's heroes
+replaced the Marshal, before co-op, and before the game moved to
+v1.5.7. A new section at its top says where the text below no longer
+holds: what the Marshal's removal makes void, the state of each slice
+with what it owes now, what Slices 2 and 3 settled, and the 36 source
+citations that moved since the plan was written.
+
+Docs only. No issue of its own: it is the plan pass of #1079.
+
+Refs #1079
+
+#### docs(coopcompat): v2.0.42 - dedicated server status for Coop v0.1.8
+
+`9c706d33`
+
+The co-op guide now tells players what works on a Coop dedicated
+server today. TAOM ran on the public Coop v0.1.8 server: one player
+joined and played on the campaign map. The server download does not
+yet do all the setup TAOM needs, so the guide sends players to the
+Coodsz TAOM tools instead of a manual setup.
+
+The guide also names the real server log file
+(coop-server-<date>-<time>.log), and the Coop version table records
+the three manual steps the server needed.
+
+#### docs(coopcompat): v2.0.42 - step-by-step co-op guide for Coop v0.1.8
+
+`98915462`
+
+The TAOM.CoopCompat README is now a full player guide for Host and
+Client co-op on Bannerlord v1.5.7. It walks a player through finding
+the Modules folder, removing the old Workshop Coop, downloading and
+unblocking Bannerlord Co-op v0.1.8 from its GitHub release, installing
+TAOM.CoopCompat, the launcher mod list and order, hosting, joining,
+port forwarding and reporting a problem.
+
+It also corrects three things the old README got wrong: Coop for
+v1.5.7 now comes from the public v0.1.8 release, TAOM.CoopCompat loads
+after Coop (not anywhere), and the Coop nightly installs a module
+named CoopNightly that TAOM.CoopCompat does not load with.
+
+coop-interop.md gains the v0.1.8 row with the 2026-11-21 evidence:
+TAOM.CoopCompat.Tests 119/119 against the release DLLs, and a harness
+run on a DEBUG build of the release commit in which a host and two
+clients joined, saved, reloaded, rejoined and won a field battle.
+
+### Chores
+
+#### chore(faction-ui): v2.0.42 - drop the unused hero reveal prefix
+
+`d3866828`
+
+The faction screen no longer draws hero reveal pictures and no
+fs_reveal_ image ships, so the sprite catalog stops listing the
+prefix. The sprite service tests use an emblem name in its place.
+No behaviour change.
+
+Part of #1587.
+
+#### chore(harness): v2.0.42 - /issue searches closed issues and bodies
+
+`c6d55878`
+
+The /issue skill now searches open and closed issues, titles and
+bodies, before it files a new one, and comments on a closed match
+with what recurred. It searched only open issues, so a bug fixed
+earlier or described only in a body was filed again. Thanks to
+REDACTEDSTUFF for the change.
+
+Closes #928
+
+#### chore(loc): v2.0.42 - English seed rows for 100 untranslated keys
+
+`d938b3e1`
+
+The 12 language files now hold a row for each of the 100 text keys
+added since the last language pass. Each row holds the English text,
+so a translated game shows these lines in English, as it did before
+this change. The rows give the translator a place to write.
+
+The keys by source:
+
+- 42 for The Long Defeat at Minas Tirith (#1079): the Gondor shop,
+  the Gondor boon names, two Mordor abilities, the Cavalry text and
+  the difficulty question.
+- 28 for the Training Grounds waves and team practice fights
+  (taom_tgw_*, taom_tg_team_*, and two settings with their hints).
+- 17 for the Story Missions (#1105).
+- 13 for the co-op extras (#1471).
+
+Each language gains 98 rows in its module strings file and 2 in its
+War of the Ring strings file: 1,200 added lines, none changed.
+
+Language files are the project lead's to edit. Mike asked for this
+seed on 2026-11-22 ("seed the english rows please"). It is the
+project's own command, run once per language with no translation
+call:
+
+  python tools/translate_with_claude.py --lang <L> --module TAOM
+    --sync-ids --seed-only --apply
+
+No translation, cache or override file changed. The next paid
+translation run selects these rows, because their text equals the
+English. A row whose English is reworded before that run keeps the
+old English, so reset it as the translator guide says ("Changing
+English Text That Is Already Translated").
+
+LanguageFileCoverageTests and LongDefeatHudStringsTests pass again.
+Translation is still owed for all 100 keys (#1129).
+
+#### chore(coop-interop): v2.0.42 - Apply the comment rules to co-op extras
+
+`ff242cbd`
+
+The co-op extras series was written before the comment ratchet gate
+(ADR-009 amendment, #1501) reached trunk, so 20 files went over their
+comment baseline after the rebase. This pass applies the keep-list:
+
+- Member comments became /// summaries (relay services, the guest
+  ladder find service, the guest trade host, the CoopCompat tick).
+- In-method comments whose fact the feature docs already state were
+  deleted (career sync client, host and rules, the transport, the
+  handshake, the load order rules and check, the ladder find behavior).
+  Two facts moved to the docs: no tier or flag comes twice in a career
+  report, and the load order log lists the compared modules even when
+  the list is empty.
+- Four stay and raise their baseline: the swallow-ok marker in
+  ActiveModulesAdapter, the engine fact in CareerSyncHeroAdapter, and
+  the per-setting notes in TaomSettings and CoopSettingsRelevance.
+
+No code changed. Refs #1471.
+
+#### chore(localization): v2.0.42 - Register the load order notice text
+
+`65410e92`
+
+Registers taom_coopcompat_load_order_differs, the line TAOM.CoopCompat
+shows a co-op player whose mod load order differs from the host's. It
+names the first two mods that load in the other order and asks the
+player to load the mods in the host's order and restart.
+
+The key sits with the other TAOM.CoopCompat notice text in
+taom_module_strings.xml and has an English row in all twelve language
+files; the translations are owed to the next language pass.
+
+No issue: proposed directly as a pull request.
+
+#### chore(release): v2.0.42 - troop id baseline from the v2.0.42 tag
+
+`ee97fbb9`
+
+The TROOP_ID_REMOVED gate now reads its shipped troop ids from the
+v2.0.42 tag. The 1,120 ids are the same as at v2.0.41; only the tag
+line changed.
+
+### revert
+
+#### revert(ui): v2.0.42 - keep the fs_reveal_ sprite prefix as art
+
+`c45f0e61`
+
+This reverts commit 15d8ff1dd. The repo ships no fs_reveal_ image now,
+but releases v2.0.38, v2.0.40 and v2.0.41 each shipped 34 of them, and
+a build only adds files to the game install. An upgraded install still
+holds those 34 images, and without the prefix the catalogue sorted
+them as chrome instead of art.
+
+Refs #1587 (item 3).
+
 ## v2.0.42 (2026-11-20)
 
 Commits since v2.0.41: 5 (5 with the version label, 0 without).

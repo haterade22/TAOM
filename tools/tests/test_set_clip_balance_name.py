@@ -1,7 +1,7 @@
 """set_clip_balance_name.py: self-key a clip for the engine's melee attack table, the way the Modding Kit does.
 
 The clip packages are built byte by byte here (not with the tool's parser), in the engine's metadata order
-(TaleWorlds.Native.dll 0x58C500; the Kit writes the same order at 0xB8C890).
+(TaleWorlds.Native.dll 0x58C500 on v1.5.3, 0x58D980 on v1.5.7; the Kit wrote the same order at 0xB8C890).
 """
 import contextlib
 import io
@@ -388,6 +388,38 @@ class MainTests(unittest.TestCase):
         rc, _, _ = self.run_main("--clip", self.A, "--clip", self.B, "--apply")
         self.assertEqual(rc, 1)
         self.assertEqual(self.snapshot(), before)
+
+    def test_an_entry_that_is_not_current_is_never_restamped(self):
+        """#1566: tools/repoint_anim_clip.py leaves an entry stale on purpose, because it holds the keys of the old
+        master. A self-key between that write and the Kit's cook moved the stamp, and the old keys read as cooked."""
+        with open(self.entry(self.A), "wb") as fh:
+            fh.write(rdc(b"\x07" * 8))                       # the stamp of an older record
+        before = self.snapshot()
+        rc, _, err = self.run_main("--clip", self.A)
+        self.assertEqual(rc, 1)
+        self.assertIn("is not current", err)
+        self.assertIn("Kit", err)
+        rc, _, _ = self.run_main("--clip", self.A, "--clip", self.B, "--apply")
+        self.assertEqual(rc, 1)
+        self.assertEqual(self.snapshot(), before, "nothing is written, the other clip included")
+
+    def test_check_still_gives_a_row_for_each_clip_when_one_entry_is_not_current(self):
+        """The refusal guards a write. --check writes nothing, and its table is what says which clips are stale."""
+        with open(self.entry(self.A), "wb") as fh:
+            fh.write(rdc(b"\x07" * 8))
+        rc, out, err = self.run_main("--clip", self.A, "--clip", self.B, "--check")
+        self.assertEqual(rc, 1, out + err)
+        self.assertNotIn("REFUSED", err)
+        self.assertEqual(len([ln for ln in out.splitlines() if ln.startswith("STALE")]), 2, out)
+
+    def test_a_stale_entry_of_a_clip_that_needs_no_change_is_reported_not_refused(self):
+        rc, out, err = self.run_main("--clip", self.A, "--apply")
+        self.assertEqual(rc, 0, out + err)
+        with open(self.entry(self.A), "wb") as fh:
+            fh.write(rdc(b"\x07" * 8))
+        rc, out, err = self.run_main("--clip", self.A, "--check")
+        self.assertEqual(rc, 1, "the check still says STALE: " + out + err)
+        self.assertIn("STALE", out)
 
     def test_a_doubled_name_is_written_once(self):
         rc, out, err = self.run_main("--clip", self.A, "--clip", self.A, "--apply")

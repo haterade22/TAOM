@@ -10,6 +10,7 @@ using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
 using TAOM.Features.CulturalFeats.Diagnostics;
 using TAOM.Features.EyeOfSauron;
+using TAOM.Features.FactionPower.Hooks;
 using TAOM.Features.KeepWardens;
 using TAOM.Features.TroopWeight;
 
@@ -26,6 +27,7 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
     private readonly IEyeOfSauronHook _eyeOfSauron;
     private readonly ICastlePatrolSizeHook _castlePatrolSize;
     private readonly IPatrolRosterHook _patrolRoster;
+    private readonly IFactionPowerPartyHook _factionPower;
     private readonly CheatMenu.ICheatPartyRules _cheatParty;
     // The tooltip line of the cheat menu's "Unlimited party" bonus.
     private static readonly TaleWorlds.Localization.TextObject UnlimitedPartyBonusText =
@@ -50,6 +52,7 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
         // Resolved once here, not as a constructor parameter: that would need an edit to SubModule.cs, where this model is built.
         _castlePatrolSize = IoC.Resolve<ICastlePatrolSizeHook>();
         _patrolRoster = IoC.Resolve<IPatrolRosterHook>();
+        _factionPower = IoC.Resolve<IFactionPowerPartyHook>();
         _cheatParty = IoC.Resolve<CheatMenu.ICheatPartyRules>();
         _weightedCountOf = p => _troopWeight.CalculateWeightedMemberCount((PartyBase)p!);
     }
@@ -72,6 +75,7 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
         // so scaling applied after it would leave the shed trimming to the UNSCALED limit and this
         // whole feature would silently no-op. Pinned by AiPartySizeOrderingTests.
         _aiPartySize.ApplyAiLordScaling(party, ref result);
+        _factionPower.ApplyLordLimit(party, ref result);
         // Caravan escort cap. Vanilla's caravan branch is 20 + (10 | 20 | 30) and its clan-tier and
         // Steward branch is guarded !party.IsCaravan, so a caravan is capped far below the roster
         // TAOM's parity templates spawn. MUST run before the TroopWeight line below for the same
@@ -85,7 +89,7 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
         // bug. Culture party-size feats above remain factor-based (ApplyPartySizeFeats uses AddFactor).
         // Leader only, not CareerPassiveHero.ResolveId (owner first): a +50 pick must not grow every
         // caravan the player owns (#768).
-        // MUST run after the last AddFactor (the culture feats and the AI lord scaling above; the caravan bonus adds no factor): ApplyFlat divides
+        // MUST run after the last AddFactor (the culture feats, the AI lord scaling and the faction power factor above; the caravan bonus adds no factor): ApplyFlat divides
         // out only the factors already on the number, so a later factor would multiply the flat count
         // again. MUST run before the TroopWeight line below so its snapshot includes the career count.
         // Pinned by AiPartySizeOrderingTests.
@@ -138,6 +142,7 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
         // Reached both directly and via base.GetPartyMemberSizeLimit's garrison branch, which dispatches
         // virtually onto this override.
         _aiPartySize.ApplyGarrisonScaling(ref result);
+        _factionPower.ApplyGarrisonLimit(settlement, ref result);
         return result;
     }
 }

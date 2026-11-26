@@ -45,7 +45,7 @@ skip the whole report — including the six checks that were correct.
 | 4 | **Missing feature docs** | no | a `Main/Features/<X>/` with no `docs/features/<x>.md`. PascalCase→kebab plus a fuzzy match (exact, `-system` suffix, prefix, substring either way) — the same algorithm as `.claude/hooks/detect-docs-gaps.sh` |
 | 5 | **Config-example drift** | **yes** | a `docs/features/*.md` ```json block labelled with a config path whose values disagree with the shipped `Main/_Module/ModuleData/**/*.json`, or a doc key the shipped config no longer has. Shared keys only, so a partial example is fine; an unparseable (annotated) block is skipped rather than guessed at |
 | 6 | **Version mismatch** | **yes** | the `Target: Bannerlord X` line (AGENTS.md, or CLAUDE.md) or a `(vX snapshot)` header in `docs/reference/taleworlds-api-snapshot/{gamemodel-bases,patch-targets}.md` disagreeing with `.claude/pinned-game-version.txt`. No `Target:` line in either file is itself a finding, so moving the line cannot switch the check off |
-| 7 | **Context budget** ([ADR-011](../adrs/011-knowledge-delivery-tiers.md)) | **yes** (except `size-warn`) | everything CLAUDE.md loads at launch (its `@`-imports, read from CLAUDE.md itself), the orientation.md trap index, and the rules without `paths:`. These load into every session and every custom agent spawn, so bytes here are a per-turn tax. An oversized path-scoped rule warns, and it gates only when a commit grows it past its copy at the base (`scoped-rule-size`) |
+| 7 | **Context budget** ([ADR-011](../adrs/011-knowledge-delivery-tiers.md)) | **yes** (except `size-warn`) | everything CLAUDE.md loads at launch (its `@`-imports, read from CLAUDE.md itself), the orientation.md trap index, and the rules without `paths:`. These load into every session and every custom agent spawn, so bytes here are a per-turn tax. An oversized path-scoped rule warns, and it gates only when a commit grows it past its copy at the base (`scoped-rule-size`); a SKILL.md over its cap is judged the same way (`skill-size`) |
 | 8 | **RCA FOLLOW-UP owner** ([#984](https://github.com/haterade22/TAOM/issues/984)) | **yes** | a newly written line of `docs/reviews/rca-*.md` with an uppercase `FOLLOW-UP` (or `FOLLOW-UPS`) and neither an issue reference (`#<number>` or an `/issues/<number>` URL) nor a stated reason (`no issue: <reason>`, `no issue filed, <reason>`, `none is filed because <reason>`). See "Check 8" below |
 | 9 | **Git diff failed** ([#987](https://github.com/haterade22/TAOM/issues/987)) | **yes** | the new-lines checks (dashes, check 8) could not diff because the diff failed on a resolvable base, which means repository damage (a broken index or a missing object; a mistyped `--dash-base` exits 2 instead). Reported once under its own heading and `git_diff_failed:` counter; it used to read as zero findings |
 | 10 | **Feature doc verify section** | **yes** | a new docs/features/*.md with no `## How to verify in game` section that has a body |
@@ -133,12 +133,13 @@ also what `bash tools/context_budget_scan.sh` reads, so the report and the gate 
 
 | Constant | Value | Covers |
 |---|---|---|
-| `ENTRY_DOCS_MAX_BYTES` / `ENTRY_DOCS_WARN_BYTES` | 22,528 / 20,480 B | CLAUDE.md plus every file it imports, together |
+| `ENTRY_DOCS_MAX_BYTES` / `ENTRY_DOCS_WARN_BYTES` | 20,000 / 19,500 B | CLAUDE.md plus every file it imports, together |
 | `ENTRY_DOC_MAX_LINES` | 200 | each entry doc (the Claude Code docs' adherence ceiling) |
 | `ENTRY_DOC_MAX_TABLE_ROW` / `ENTRY_DOC_MAX_PROSE_LINE` | 400 / 600 chars | each entry doc line; fenced code exempt |
 | `TRAP_INDEX_MAX_ROWS` / `TRAP_INDEX_MAX_ROW_CHARS` | 24 / 180 | the `## Trap index` table in orientation.md; the trap sheets in `.claude/rules/traps/` are path rules under `SCOPED_RULE_MAX_BYTES` |
-| `UNSCOPED_RULES_MAX_BYTES` / `UNSCOPED_RULES_WARN_BYTES` | 16,384 / 14,500 B | the rules without `paths:`, together |
+| `UNSCOPED_RULES_MAX_BYTES` / `UNSCOPED_RULES_WARN_BYTES` | 16,000 / 14,500 B | the rules without `paths:`, together |
 | `SCOPED_RULE_MAX_BYTES` | 12,288 B | each path-scoped rule; over it, `size-warn`, unless the rule is larger than its HEAD copy (the staged copy under `--staged`), which fails `--fail-on-drift` |
+| `SKILL_BODY_MAX_BYTES` | 20,480 B | each `.claude/skills/<name>/SKILL.md`, about the 5,000 tokens of an invoked skill that come back after a compaction; judged like a path rule (`size-warn`, or `skill-size` when larger than its HEAD copy). A reference file beside the SKILL.md is not measured: that is where the text over the cap goes |
 
 The entry docs are CLAUDE.md and its `@`-imports, followed four hops the way Claude Code follows
 them, with imports inside code ignored. Bytes are counted with CRLF folded to LF, so a Windows
@@ -283,6 +284,16 @@ may delete this one.
 
 ## Changelog
 
+- **2026-11-25**: check 7 measures each `SKILL.md` against `SKILL_BODY_MAX_BYTES` (20,480 B) and gates
+  only growth past the HEAD copy (`skill-size`). `--context-budget-json` lists the skills and the cap.
+  A run with no commit view (CI on a merge commit, `--dash-base HEAD^1` in `pr-checks.yml`) now measures
+  growth of an over-cap rule or skill against `--dash-base`; until then such a run compared the tree
+  with itself, so the two growth gates held only in the local commit hooks. A renamed skill folder
+  counts as a new one. No issue, a harness refactor (the second ADR-011 diet).
+- **2026-11-25**: lower caps, set to the sizes that diet reached plus about 5%: `ENTRY_DOCS_MAX_BYTES`
+  22,528 B to 20,000 B, its warn 20,480 B to 19,500 B, `UNSCOPED_RULES_MAX_BYTES` 16,384 B to 16,000 B
+  ([ADR-011](../adrs/011-knowledge-delivery-tiers.md), amendment of that date). The cap for one path rule
+  and the AGENTS.md cap in `tools/reviewctl.py` stay: the largest file plus 5% is over each.
 - **2026-10-26**: an unresolvable `--dash-base` now exits 2 before any check runs. `git-diff-failed`
   stays for a diff that fails on a resolvable base (repository damage).
 - **2026-10-26**: #987 review fixes. `>|` is no path; a directory path commit runs the gate only for

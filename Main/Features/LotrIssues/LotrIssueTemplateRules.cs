@@ -31,6 +31,13 @@ internal static class LotrIssueTemplateRules
         => def == null ? IssueBase.IssueFrequency.Common : MapFrequency(def.Frequency);
 
     /// <summary>
+    /// False once a definition moved to another template: an untaken offer of the old template then drops instead of
+    /// building a quest from a row whose text promises another mechanic. No definition counts as still used.
+    /// </summary>
+    internal static bool StillUses(LotrIssueDefinition? def, LotrIssueTemplate template)
+        => def == null || def.Template == template;
+
+    /// <summary>
     /// True when the relation is strictly below the definition's floor, or below -10 with no definition. The
     /// relation is a float because Hero.GetRelationWithPlayer returns one.
     /// </summary>

@@ -94,6 +94,7 @@ public class FactionConfigProvider : IFactionConfigProvider
                     Color = obj.Value<string>("color") ?? "",
                     Playable = obj.Value<bool?>("playable") ?? false,
                     GameFaction = obj.Value<string>("game_faction") ?? "",
+                    PowerCulture = obj.Value<string>("power_culture") ?? "",
                     Description = obj.Value<string>("description") ?? "",
                     Image = obj.Value<string>("image") ?? "",
                     Side = obj.Value<string>("side") ?? "neutral",
