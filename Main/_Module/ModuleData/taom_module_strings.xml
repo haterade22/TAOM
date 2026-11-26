@@ -7118,5 +7118,8 @@
 	<string id="taom_lotr_issue_training_timeout" text="{=taom_lotr_issue_training_timeout}You kept the retainers too long, and their master called them home." />
 	<string id="taom_lotr_issue_training_offer_accept" text="{=taom_lotr_issue_training_offer_accept}Good. I will send the lads to your company. Bring back as many as you can." />
 	<string id="taom_lotr_issue_training_returned" text="{=taom_lotr_issue_training_returned}{RETURNED} of the {LENT} retainers went home with you." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- FactionPower -->
+	<string id="taom_fp_realm_wage_relief" text="{=taom_fp_realm_wage_relief}Realm power wage relief" />
 
 </strings>

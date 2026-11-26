@@ -40,7 +40,7 @@ public sealed class FactionPowerService
 
     /// <summary>
     /// Lever 2b: scales the militia inflow of a fief that is not the player clan's, so its equilibrium scales by the multiplier.
-    /// A looted or burning village gets no change at all from the base (no Retired row), so nothing is added there.
+    /// A village not in its Normal state gets no change at all from the base (no Retired row), so nothing is added there.
     /// </summary>
     public void ScaleMilitiaChange(float multiplier, bool isPlayerClan, bool isInactiveVillage, float militia, ref ExplainedNumber change)
     {

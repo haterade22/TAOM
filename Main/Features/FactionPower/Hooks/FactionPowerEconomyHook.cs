@@ -43,8 +43,8 @@ public sealed class FactionPowerEconomyHook : IFactionPowerEconomyHook
     }
 
     /// <summary>
-    /// <c>MilitiasCampaignBehavior.OnAfterSiegeCompleted</c> adds this when a siege is won: by the attacker on land
-    /// (the owner already changed in the earlier <c>SiegeCompleted</c> event), by the defender at sea; either way the
+    /// <c>MilitiasCampaignBehavior.OnAfterSiegeCompleted</c> adds this only when an attacker wins a siege assault
+    /// (the owner already changed in the earlier <c>SiegeCompleted</c> event); a sally out or a sea blockade adds none. So the
     /// settlement's current owner is the realm that now holds it, and that realm is scaled.
     /// </summary>
     public int ScaleMilitiaAfterSiege(Settlement? settlement, int militia)
