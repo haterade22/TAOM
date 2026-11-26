@@ -53,9 +53,9 @@ CULTURE = "mordor"          # the Armory folder; the CAP is the line's (mordor_n
 ITEM_NAME_PREFIX = "Mordor"
 LINE_NAME = "Black Numenorean"
 
-# The live game install is the copy the engine actually loads. The assets repo
-# copy is versioned but has drifted (see the feature doc); both get the append
-# because appending cannot collide with the existing drift.
+# The live game install is the copy the engine actually loads, and the only
+# default target: sessions touch the assets repo copy only when it is named
+# (Mike, 2026-09-22). Appending to it cannot collide with its drift.
 LIVE_ARMORY = (
     r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
     r"\Modules\LOTRLOME_Armory\ModuleData\LOTRLOME_items\mordor"
@@ -515,11 +515,12 @@ def main():
     p.add_argument("--apply", action="store_true", help="Append to the XML files")
     p.add_argument("--armory-path", action="append", default=None,
                    help="LOTRLOME_items/mordor dir; repeat for multiple copies. "
-                        "Defaults to the live install plus the assets-repo copy.")
+                        f"Defaults to the live install only; name the assets-repo copy "
+                        f"({REPO_ARMORY}) to update it too.")
     args = p.parse_args()
 
     if args.apply:
-        targets = args.armory_path or [LIVE_ARMORY, REPO_ARMORY]
+        targets = args.armory_path or [LIVE_ARMORY]
         total_added = total_skipped = 0
         for t in targets:
             a, s = apply_to(t)
@@ -527,7 +528,7 @@ def main():
             total_skipped += s
         print(f"\nDone. Added {total_added}, skipped {total_skipped} already present.")
     else:
-        targets = args.armory_path or [LIVE_ARMORY, REPO_ARMORY]
+        targets = args.armory_path or [LIVE_ARMORY]
         dry_run(targets[0])
 
 

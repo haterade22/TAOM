@@ -48,7 +48,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from _gamedir import ASSET_REPO, ensure_exists, game_dir  # noqa: E402
+from _gamedir import ASSET_REPO, armory_trees, ensure_exists, game_dir  # noqa: E402
 from apply_dead_mesh_item_swaps import (  # noqa: E402
     _protect_comments, _restore_comments, read_xml, swap_item_refs, write_xml,
 )
@@ -56,7 +56,6 @@ from apply_dead_mesh_item_swaps import (  # noqa: E402
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_GAME = game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
 DEFAULT_ARMORY = Path(DEFAULT_GAME) / "Modules" / "LOTRLOME_Armory"
-DEFAULT_ASSET_REPO = ASSET_REPO
 DEFAULT_TROOPS = REPO_ROOT / "Main" / "_Module" / "ModuleData"
 
 # --------------------------------------------------------------------------- #
@@ -410,7 +409,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--armory", default=str(DEFAULT_ARMORY))
-    ap.add_argument("--asset-repo", default=str(DEFAULT_ASSET_REPO))
+    ap.add_argument("--asset-repo", default=None,
+                    help=f"also update this second Armory copy (e.g. {ASSET_REPO}); off by default")
     ap.add_argument("--troops", default=str(DEFAULT_TROOPS))
     ap.add_argument("--write", action="store_true", help="Commit the edits (default: preview)")
     args = ap.parse_args()
@@ -421,12 +421,7 @@ def main() -> int:
     print("WRITING\n" if args.write else "PREVIEW (pass --write to commit)\n")
 
     errors = 0
-    roots = [("live", armory / "ModuleData")]
-    asset_repo = Path(args.asset_repo)
-    if asset_repo.exists():
-        roots.append(("versioned", asset_repo / "ModuleData"))
-    else:
-        print(f"NOTE: asset repo not at {asset_repo}; the live edit will be unversioned.")
+    roots = armory_trees(armory / "ModuleData", args.asset_repo)
 
     for label, md in roots:
         print(f"--- Armory ({label}) ---")

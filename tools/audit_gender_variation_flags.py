@@ -50,7 +50,6 @@ from _gamedir import ASSET_REPO, ensure_exists, game_dir  # noqa: E402
 
 DEFAULT_GAME = game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
 DEFAULT_ARMORY = Path(DEFAULT_GAME) / "Modules" / "LOTRLOME_Armory"
-DEFAULT_ASSET_REPO = ASSET_REPO
 
 FEMALE_SUFFIXES = ("_female", "_converted", "_converted_slim")
 _COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
@@ -148,7 +147,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--armory", default=str(DEFAULT_ARMORY))
-    ap.add_argument("--asset-repo", default=str(DEFAULT_ASSET_REPO))
+    ap.add_argument("--asset-repo", default=None,
+                    help=f"also flip this second Armory copy (e.g. {ASSET_REPO}); off by default")
     ap.add_argument("--apply", action="store_true", help="commit the edits (default: report)")
     ap.add_argument("--include-omitted", action="store_true",
                     help="also report items that omit the attribute (engine default is true)")
@@ -184,7 +184,7 @@ def main() -> int:
     tag = "genderflag-" + datetime.now().strftime("%Y%m%d%H%M%S")
     ids = {r["item"] for r in explicit if not r["female_art"]}
     total = 0
-    for tree in (armory, Path(args.asset_repo)):
+    for tree in [armory] + ([Path(args.asset_repo)] if args.asset_repo else []):
         if not tree.exists():
             print(f"  skipped (absent): {tree}")
             continue
