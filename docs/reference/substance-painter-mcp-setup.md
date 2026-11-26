@@ -94,7 +94,7 @@ is the version the MCP server's local fixes were made against.
 | Export raises "padding algorithm could not be resolved" | `exportParameters` without `paddingAlgorithm` | Pass `"paddingAlgorithm": "infinite"` |
 | Triplanar hardness never changes | The field is `TriplanarProjectionParams.hardness`, not a nested `.triplanar` | Set `p.hardness` |
 
-### Traps on Painter 12.2.0 (two sessions, 2026-11-24)
+### Traps on Painter 12.2.0 (two sessions, 2026-11-24; the IPv6 row 2026-11-25)
 
 | Symptom | Cause | Fix |
 |---|---|---|
@@ -104,6 +104,7 @@ is the version the MCP server's local fixes were made against.
 | The wood's normal is tilted about 8 degrees everywhere | The downloaded `wood_wenge` material's normal output; its `normal_intensity` parameter does not change it | Keep only the high-pass detail of the layer normal and lay it on a bevel bake |
 | `list_available_color_spaces` fails on a source | A Substance procedural source has none | Set a colour space on bitmap sources only |
 | The texture set is named `<material>.001` | It takes the FBX material name, and Blender added the suffix because the name existed in the source file | Strip the suffix when the maps are composed, or rename the material before export |
+| A port check reads "closed" although Painter runs with remote scripting | Painter 12.2.0 listens on the IPv6 local address only (`[::1]:60041`); a check on `127.0.0.1` read "closed" (found 2026-11-25) | Connect to `localhost` or `::1`, or read the listener with `netstat -ano` |
 | Two sessions drive the one Painter instance | Nothing in Painter stops a second session from opening a project | The user of Painter holds the work claim key `painter-instance`; each session checks the key and runs a read-only project query before any call, and nobody closes a project he did not open |
 
 For the engine: export the DirectX normal (green down). The `_s` map is red metallic, green gloss (255 minus

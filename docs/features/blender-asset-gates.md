@@ -95,19 +95,20 @@ suffix does not change what a name is (`x.lod1.001` is still a LOD, `bo_x.001` s
 ## Art checks (the maintainer's standing corrections)
 
 Run this list on the renders of a built mesh before the maintainer sees it. Each line cost a rebuild pass on
-the Rhûn chariot work of 2026-11-24 and 2026-11-25, after he saw the fault in Blender. The words in quotes are his.
+the Rhûn chariot work of 2026-11-24 to 2026-11-26, after he saw the fault in Blender. The words in quotes are his.
 
 | Check | What fails it | How to hold it |
 |---|---|---|
 | Every strap, band and rope is attached at both ends | "The straps need to be attached to something": strap ends that stop in the air beside a post | The end wraps the rail, or lies under a plate with a rivet |
 | Every fitting and every separate piece connects | "They dont connect to anything": two hip discs with no strap between them; a chest piece alone on the chest; a small scale panel alone on a shoulder | A disc or buckle is a junction of at least two straps. A plate or a garment hangs from straps that go to another part |
-| A strap end is sewn on, and a crossing is joined | "Attach both ends with stiches and not on the button", "Straps again.", "Attach these reins or horse head armor straps better.", "1 should have a buckle here tying it all together": a strap that ends on a stud of a belt or of a metal plate; two strap ends in the air at the poll; bridle straps that cross on the cheek with nothing at the crossing | On leather the end laps 3 to 4 cm onto the part, between the studs, with a stitch box. On a metal plate it goes through a ring or buckle with a riveted tab and is sewn back onto itself. A stud sits only where two or more straps cross, and a crossing of bridle straps has a ring or buckle, the same on both sides. The small head straps are held to the same standard |
+| A strap end is sewn on, and a crossing is joined | "Attach both ends with stiches and not on the button", "Straps again.", "Attach these reins or horse head armor straps better.", "1 should have a buckle here tying it all together": a strap that ends on a stud of a belt or of a metal plate; two strap ends in the air at the poll; bridle straps that cross on the cheek with nothing at the crossing | On leather the end laps 3 to 4 cm onto the part, between the studs, with a stitch box. On a metal plate it goes through a ring or buckle with a riveted tab and is sewn back onto itself. A stud sits only where two or more straps cross, and a crossing of bridle straps has a ring or buckle, the same on both sides. The small head straps are held to the same standard. A strap end sewn onto leather (a belt, a binding band) takes the weight set of that leather, so the two move as one. An end pressed onto plates cuts through them when the neck turns: on horse armour 5 v18t four strap ends seated on plates gave 19 strap and plate face pairs in the two neck turns |
+| A strap that meets a helm or a rigid shell goes under it | "THis needs to go under the helm": a cheek strap that lies on top of a horse's head shell, with its stitch box on the plate | The strap comes out from under the shell's rim, the same on both sides, and no strap or stitching lies on the shell's outer face. Cut the hidden part off just inside the rim, so nothing clips. The strap is under the shell along its whole run: test the stretch between its path points too, and from below the strap ("Both sides the tab should be under...": a neck strap lay under the last neck band at each of its points and rose through the band between two of them) |
 | A joint looks made | "Connection needs to be way better", "Connection needs to be refined here (red)": a strap that ends in a small buckle sitting on a scale row; two studs that cut into each other; plate tips that poke above the strap that carries the panel | A panel has a clean top binding band that covers the tops of its plates, and the strap is sewn onto that band |
 | A hanging panel is carried | "Front armor just hanging and not tied to anything", "Also just hangs", "Very very cool but the front armor is still not connected to anything.": a chest panel or a front skirt with a top band and nothing above it | At least two suspension straps from the top band to a load-bearing part (neck guard, back plate, girth), with a made joint at both ends, visible from the side and the front |
 | A strap or band lies on the plates, never through them | "clipping", "clippings between the strap and scalemail", "on both sides": a strap that cuts the top edge of the first neck lame at the poll; a binding band and a diagonal strap that cut through the top scale row of a shoulder | The strap or band lies 2 mm or more above the highest plate rim. A gate counts face pairs between straps or bands and plates or fittings at rest and in the poses, on every LOD, target 0 (`rharm_strapplate.py`: horse armour 1 had 2,237 pairs at v28 and 0 at v29). Look at every place where a strap, band or belt meets a plate field, on both sides |
 | Armour covers what it sits on | "Pull out the neck just a bit so the horses neck is covered": skin that shows between the left and right neck lames along the crest | Look from above and behind, at rest and in the poses; no skin between parts that are meant to close |
 | No part clips the body | "Pull this out as it is clipping": a chest plate that cuts the neck | The skin test on the part, at rest and in the rig's poses |
-| A neck piece is a clean row of bands that stands off the neck | "This neck piec e needs to be cleaned up. It needs to be pulled back a bit from the neck and there is clipping.", "Black neck piece needs to be reworked. it is all off", "we do need to fix the horses neck armor as it isnt straight it is overlapping.": skin through the gold lames; lower edges with steps and notches; gold rims broken into offset pieces; lames that lie unevenly on their neighbours | Each lame is one continuous band with a smooth lower edge and one unbroken rim, the same left and right, with an even overlap. No skin through or between the lames from any direction: the skin-view gate looks from 64 directions (see "A viewer shows the exported pose" below), not from the five axis directions of the first skin gate |
+| A neck piece is a clean row of bands that stands off the neck | "This neck piec e needs to be cleaned up. It needs to be pulled back a bit from the neck and there is clipping.", "Black neck piece needs to be reworked. it is all off", "we do need to fix the horses neck armor as it isnt straight it is overlapping.": skin through the gold lames; lower edges with steps and notches; gold rims broken into offset pieces; lames that lie unevenly on their neighbours. "this is messed up and not straight": both ends of the lowest band as a gold spike with a notch beside it, seen from the front | Each lame is one continuous band with a smooth lower edge and one unbroken rim, the same left and right, with an even overlap. Every band ends in a clean rounded end in one line with the ends above it, and its lower edge runs straight to that end. A band is lifted only over parts it covers: a part that lies past its edge does not count. Look at the chest from the front at close range. No skin through or between the lames from any direction: the skin-view gate looks from 64 directions (see "A viewer shows the exported pose" below), not from the five axis directions of the first skin gate |
 | An opening is clean | "The eye armor needs to be cleaned up": loose flat faces inside the eye ring of a horse's head plate | One ring, a clean cut behind it, a short inward lip, nothing loose in the opening, both sides alike. Check it again at each LOD with face culling on |
 | A part on the centre line is symmetric and sits closed on its base | "Clean up the details, gaps and it should be symetrical? right?": air and a thin sliver between the foot of a crest fin and the head plate's rim; a blotchy fin face; two sides that differ | A closed socket, flush on its base with no gap. Symmetry proved by a number before he sees it (horse armour 1: the crest mirrors to 0.16 mm about the head's centre plane, lean 0.00 degrees). A close view of the foot of every new part from both sides |
 | Plates sit on a backing | "I would remove as they are not attached to anything": single plates hanging in front of bare horse with gaps between them | A leather or cloth garment under the plates that shows as a border; plates tight on it; no gap wider than a plate is thick |
@@ -124,6 +125,7 @@ the Rhûn chariot work of 2026-11-24 and 2026-11-25, after he saw the fault in B
 | A set is one palette | "if the horse armor is black, the cart must be the same color. Black, gold trim and wood": a black scale armour in front of a gold cart | Judge armour and vehicle of one item together; they share the main colour, the trim metal and the wood |
 | A set he praised changes only where he marked it | "Once we fix the issues this cart set up is AWESOME" (cart D with the lacquer horse armour 3) | Fix the marked joints and what the connection standard needs; the rest of the look stays as he saw it |
 | The build matches its approved concept, at the size he asks for | A build "plainer than the concept": a low flat crest, thin signature parts. "Instead of a feathered helmet, I would just replace with a golden fins", then "make fin bigger, but v24b raider is good": narrow fin blades built from a brief that gave no width | Measure each signature part in the picture against the head length, and build it at that size. When he names a shape, the brief gives a width and a height; when he draws an outline, build to the outline |
+| A build to a picture he approved takes its shape and its surface from that picture | "LOOKS AWESOME!" on the reference picture `01_black_neck_front.png` (in `out\concept_art\tripo_refs\` of the chariot work folder), a tile on a sheet beside the Tripo model made from it: his word was on the picture, not on the model. The horse armour 5 neck trial v17 differed from that picture in seven points. The models themselves were first measured a day later ([technique-library.md](../reference/technique-library.md), teardown T1) | The picture is the look target. Measure the shape on the picture (on 2026-11-25 a picture probe gave a gold bead of about 0.2 of the band pitch, so about 13 mm at the build's 65.6 mm pitch, the width he then approved on the build; that probe could not be repeated, and the two models measure 0.147 and 0.167: [technique-library.md](../reference/technique-library.md) L2 and L10) and set the surface from it (the session's pin from the picture's gold hue: gold `_d` median (170, 142, 88), gloss 215; black plates (16, 16, 17), gloss 200 on the bands and the head shell; his eye decides on the render). Show him the picture beside the build from the picture's own camera, at LOD0 and LOD2 (`rharmb_refsheet.py`) |
 | Every part has a purpose | "This serves no purpose and wont ever be used, waste of triangles and polys remove it.": a fan ornament on the inside of a cart's front wall | No ornament where a player does not look: the inside of walls, under a floor, behind other parts |
 | A part has a back where one can see it | "doesnt have a back like the front does": fan ribs with gaps one looks through from the rider's side | A closed, finished panel behind them |
 | A vehicle that carries fighters is open | A roof, a rack over the floor, walls with slits | Open above and behind; nothing over the floor |
@@ -143,7 +145,24 @@ can we close some?", "LEts also work on one blender item at a time to save memor
 one horse armor set, when that is perfect move onto the next one". At 13:07 that day two armour builders, a
 review of five carts and another session's work each ran their own Blender jobs: 49 Blender processes
 held 37.8 GB of the desktop's 61.6 GB, with 4.2 GB free. Work one set to his approval before the next starts,
-and run one Blender job at a time; fan out only work that needs no Blender.
+and run one Blender job at a time; fan out only work that needs no Blender. Since the log entry of 16:48 that
+day, every Blender job of the two builders starts through `blender_slot.py` in the root of the chariot work
+folder: it waits for a free slot, runs the command, and frees the slot when the command ends, also when it
+fails (tested at 16:47: a second command waited for the first, an exit code of 5 passed through, the slot was
+free after each). With it the cart run could start while the armour build went on. At 17:32 it gained fair
+turns: after one owner's turn, a waiting process of the other owner goes first, so one builder's chain of jobs
+cannot keep the other out (tested on a copy: cart, armour, cart, cart). In the evening he widened the rule:
+"You can use more blender, just watch out for the memory." The number of slots is a setting since 18:32
+(`out\_blender_slot_config.json`: 3 slots, 14 GB; tested on a copy at 18:32: three jobs ran together and a
+fourth waited, and with a floor it could not meet a job waited and gave up with exit 97), and at 18:32 a job
+started only while a slot was free and the free physical memory was at least 14 GB plus 3 GB for each of the
+folder's jobs that started in the last 90 s. When none of the folder's jobs ran, 6 GB free was enough, so
+another session's load could not hold the work for ever. At 19:24 the setting went to 6 slots and a floor of
+10 GB free (`out\_blender_slot_config.json`, read 2026-11-26: 6 slots, `min_free_gb` 10), after his words "We
+have a lot of room for CPU and Memory." The 3 GB for each job younger than 90 s and the 6 GB with
+none of the folder's jobs running are constants of the tool (`YOUNG_GB`, `ALONE_GB` in `blender_slot.py`), so
+they hold with the new setting too. The command must block until its Blender job has ended (the Store launcher
+does), and `run` exits 97 when no slot comes free within its wait (6 hours by default).
 
 **Near is not connected.** The link gate below measures distance only. Horse armours 2, 3 and 4 passed it with 0
 unlinked islands, and the maintainer still marked their joints: a strap that ends on a stud, a panel that
@@ -172,7 +191,13 @@ back cloth at LOD2 and LOD3, lames that pierce each other at LOD1 and LOD2, and 
 session sorts the findings into required ones (seen at normal distance or in motion, the LODs, close range) and
 an approved look that it reports to him as a list. The run did not cover LOD4 and LOD5 in pictures, the leg
 poses, the cart or the game's own shading. Since the memory incident above, the review runs one reviewer at a
-time.
+time. Since the weekly usage limit stopped every agent at about 20:30 on 2026-11-25, no reviewer agent has run:
+armour 5 `v18aq`, `v18av` and `v18ay`, in sets v23, v25, v26 and v27, were shown to him without this review (the
+work log of 2026-11-26: "No reviewer has looked at set v27"). On 2026-11-26 at 09:22 set v27 went into the
+Armory's `AssetSources` on his word ("put set 27 into the asset sources. This is amazing") with its gate table
+HELD on four rows (the count flag, the 2 hidden hub discs, the armour's class a faces, the cart's UV check at the
+far levels); he chose the import before the cart's far levels and hub discs are repaired, and imported the set
+in the Kit at 09:36 to 09:38 ("done, looks good!").
 
 **A viewer shows the exported pose.** The source armature of the horse armours carries a saved pose on three bones
 (`horseneck1`, `horseneck2`, `horserleg2`). The builds exported it, so every viewer showed the armour bent away
@@ -184,6 +209,57 @@ say so in their build report (`source_pose_reset`, `pose_reset_bones`). The skin
 casts rays from 64 directions in six cases: the saved pose against the horse at rest, rest, neck turns of 25
 degrees each way, head down 30 degrees and head up 15. It gave 4,252 skin samples on v27 and 0 on v28. A gate
 that changes the file's state before it measures also measures the file as exported.
+
+**Review prepared scripts before a long run.** For the repairs of cart F the cart builder first prepared script
+edits for 19 of the 21 review findings with no Blender job (Part 1); Part 2 was one runner, `run_f_review.sh`
+with steps 0 to 9, through the build, the bake, the Painter wood and the renders. Before Part 2 a read-only
+review read the scripts (workflow `wf_ce375cfc-246`, 8 agents, 0 lost, no Blender): four reviewers with one
+scope each (the yoke measure and weights; the see-through repairs and the new see gate; regressions in the
+scripts that also build carts A to E, the LOD change and the runner; the Painter wood pass, the three wood
+colours and the lining planks), and one checker per scope that confirmed each finding from the files or refuted
+it. It confirmed 29 findings (4 blockers, 9 majors, 16 minors), refuted 6, and found 4 of the reviewers'
+"verified ok" entries untrue. Three blockers would have stopped Part 2 with nothing to show: the swap step took
+its cart work files from a version folder that holds none of them; the wood compose read a density file that
+such a folder does not have; the mask proof demanded a share of exactly 1.0, which each of the pilot's four
+finished Painter runs misses by 2 to 12 texels. The fourth would have built a wrong rig: new yoke weights with no
+part filter moved the inner fork prongs from their necks to the pole. A second read-only run re-checked the
+fixes and traced every step of the runner: 23 of 24 rows fixed, one not (the control did not require each
+known slit), and new defects, among them an open sliver at the front of the outer floor boards (in v14 too), a
+wrapper timeout that could never fire, and a name check that could stop the run on a chance match in
+compressed bytes. The record is `out\rhun2\_work\f_review_check\CONFIRMED.md` and
+`out\rhun2\_work\yoke_design\RESULT.md` ("RE-CHECK of the fixes") in the chariot work folder.
+
+**Measure a rig change on the game's clips.** The first review of cart F saw the two yoke halves split at the
+centre in a synthetic neck turn of 20 degrees. Before any weight change, the yoke was measured on the game's
+own clips in plain Python with linear blend skinning: a scout wrote one shared harness
+(`out\rhun2\_work\yoke_design\facts\harness.py`: F's design vertices, the horse bodies' real meshes with their
+own skin weights, 39 clips and 1,784 frames), three designers each measured one scheme with it, and one checker
+per design recomputed it with its own code. Three points came out of it. The split on v14 is cart F's own: the
+nearest-neighbour weight transfer gave F's bar and seat neck weights (own neck 0.785 at |x| < 0.08), while cart
+A in the game carries its yoke centre on the pole bone (0.98 to 1.00). A metric can read 0 by construction: the
+builder's first scheme put every vertex at the centre on the pole bone alone, so its centre split, seat and
+lashing readings were exactly 0, while the inner prong sockets tore from the bar by 100 mm in the gallop; a
+tear reading says something only between parts on different bones. A bound needs a reference: the builder's
+own bounds failed every blend window it tried, and the asset that runs in the game gave the bound. The session
+chose scheme S* (the middle of the yoke with both inner prongs as one stiff piece on the pole bone, each inner
+prong 2.7 cm shorter at its top) because its bar flexes less than cart A's (gallop edge change 46.0 mm against
+cart A's 118.5 mm, the checker's estimate), and the gate's bound for the bar's arm root in the two gallop turns
+is 25 mm because cart A's own bar reads 18 to 25 mm there in the same measure (S* reads 21.2 mm). The limits
+left (the turn-in-place clips, the quick stop, the rear) go to the maintainer with their numbers when he sees
+the set.
+
+**A fresh builder for each block.** The armour 5 rework agent took the armour from v08 on at the night entry
+of 21:25 and built it through the v17 trials to v18t. At 17:11 on 2026-11-25 it reported that its working
+memory of the job was too long to finish v18 reliably, wrote the hand-over first (`out\armours\HANDOVER_agent2.md`:
+the state and gate tables, a section "v18: what the next builder does" with the session's decisions, seven
+blocks with the code place of each fix, the commands, the traps, and a "Dead ends" section), and started none
+of the blocks. Since then armour 5 is built by one fresh builder for each block, with a read-only checker after
+each block that opens every view, one retry for a block that fails its check, and the blocks one after
+another; the session reads the views of the first three blocks itself before blocks 4 to 7 start. Block 1 (the
+straps under the helm) ended in v18y with 0 strap and shell face pairs at LOD0 to LOD3 by the design's own
+report. This held until about 20:30 on 2026-11-25, when the weekly usage limit stopped every agent; armour 5
+`v18am` to `v18ay`, cart F v22 and v24 and the sets v21, v23, v25, v26 and v27 were built by the session alone,
+without block builders or checkers.
 
 ## The views
 
@@ -306,6 +382,10 @@ the check of its own workflow (for a prop: the last step of `/prep-tripo-prop` P
 ## Changelog
 
 - 2026-11-13: first version (#1153): the skill, both gates, the canary.
+- 2026-11-24 to 2026-11-26: the Rhûn chariot work added the "Art checks" table (the maintainer's standing
+  corrections; its neck piece row extended on 2026-11-26 after his picture 68 and the collar end rule of armour
+  5 v18ay) and the notes on the Blender slot, the independent review, the exported pose, prepared scripts, rig
+  measures on the game's clips and the fresh builder per block.
 
 ## GitHub Issue
 

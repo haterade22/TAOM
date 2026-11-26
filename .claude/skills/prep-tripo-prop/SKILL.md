@@ -37,6 +37,9 @@ are in each script's docstring; the scripts are listed in [tools/README.md](../.
 
 ## Phase 1: Analyze
 
+A Tripo result that is only a reference for a part we build ourselves is not this skill's work: run
+the teardown of `/blender-asset` section 7b.
+
 1. Probe every candidate and the asset it replaces:
    `blender-launcher -b -P tools/blender/probe_fbx.py -- <in.fbx> <out.json>`.
 2. Look at each `.fbm` texture. A Tripo atlas is noise: plan to retexture, not to paint on it.

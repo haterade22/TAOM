@@ -146,13 +146,45 @@ decides whether it looks right.
 1. Before any change, write the analysis (template in the gates doc): what the subject is, its
    main masses and their proportions, the camera angle, the materials, and the three to five
    features the result must have. For an existing file, add a table of what differs today.
+   A reference that an outside tool made: run section 7b first.
 2. Set the camera to the picture's angle first. A wrong frame makes every later comparison wrong.
 3. Build in three passes: silhouette and proportions, then the secondary forms that give depth
    (steps, recesses, ribs, belts), then small detail. No small detail on a wrong silhouette.
 4. After each pass, render from that camera and list at most five differences, largest first:
-   frame, silhouette, flatness, materials, missing features. Fix them and compare again.
+   frame, silhouette, flatness, materials, missing features. Fix them and compare again. With a
+   teardown (7b), compare its numbers with their limits too.
 5. Stop after three compare passes. Report what still differs; do not call a partial match done.
 6. Judge a direction (which way a part points) in an orthographic view, never from the picture.
+
+## 7b. Teardown of a reference tool's result
+
+An outside tool's result (an image to 3D model, a generated picture, a bought asset) is data, not only
+a picture to match. Run this when such a reference exists for a part we build ourselves, and when Mike
+rejected the same part twice: then get a reference first (he makes it, or you make it under that
+tool's rules for a run, with its cost). Do it before the next build round, without being asked (Mike,
+2026-11-26: "what did that tool do, that I didnt and why/how is it better"). The record, the property
+list and the first case are in
+[technique-library.md](../../../docs/reference/technique-library.md). When a tool's mesh is to become
+the asset itself, `/prep-tripo-prop` owns it; here the mesh is only measured.
+
+1. List what the eye sees in the reference (rhythm, edges, ends, outline, how it meets the body) and
+   name for each a property a script can measure. Start from the library's property list.
+2. Open the result itself (the model file), not its preview. Choose one section and one landmark that
+   exist on the reference and on our asset, and name them; ratios need no scale. For a picture,
+   measure on named views and log the pixel columns.
+3. Measure those properties with one script on three things: the tool's result, our last build before
+   the reference, our build now. The script writes its arguments into its output and stays beside it.
+4. Write three lists, each line with its number: the result has it and ours did not; the result has
+   it and ours still does not; ours has it and the result does not (triangle budget, LODs, skin
+   weights, clearances). For each line of the first two, name the mechanism (light, silhouette,
+   rhythm, cleanliness, fit).
+5. Make each line a default and say how it acts: code (a parameter or function of a shared module), a
+   gate with a limit, a number a build reports, or a line of the builder's brief. Take a limit from
+   the reference that matches the look he approved, and mark it as your target until he confirms it.
+   A line left out names its reason (a budget, his word on an approved asset).
+6. Add the technique rows and one teardown log row to the library, put the rows into the brief of any
+   builder you start (a subagent cannot invoke this skill), and tell Mike the three lists. A tool run
+   with no log row is not closed.
 
 ## 8. Hand-off and records
 
