@@ -1408,13 +1408,12 @@ enlistment. There is no save migration for that, deliberately.
 - The kit is keyed on the commander's culture, not the player's race, so a cross-race enlistment
   draws gear rigged for another skeleton, and cross-race armour clips or floats on a custom
   skeleton. That predates #525 for armour; weapons make it visible in-hand as well.
-- **Honourable discharge reclaims the issued kit by item id**, one per ledger entry, and the
-  ledger has held weapons and ammunition since #525. `IPartyItemRosterAdapter.RemoveItem` drains
-  the unmodified stack with no notion of provenance, so a player who drew an archer kit, shot it
-  dry and refilled from loot has one of *his* arrow stacks taken at discharge. Arrows are the most
-  common post-battle loot in the game, so this is not hypothetical. Desertion keeps the kit and is
-  unaffected. Tracked as a follow-up rather than fixed here: excluding ammunition from the ledger
-  needs an item-class surface `IItemPoolAdapter` does not currently expose.
+- **Honourable discharge reclaims the issued kit by item id**, one per ledger entry.
+  `IPartyItemRosterAdapter.RemoveItem` drains the unmodified stack with no notion of provenance.
+  Since #527 ammunition (arrows, bolts, bullets, per `IItemPoolAdapter.IsAmmunition`) is issued
+  but never written to the ledger, so a quiver refilled from loot is never taken. Weapons and
+  armour are still reclaimed by id, so a looted copy of an issued weapon can be the one taken.
+  Desertion keeps the kit and is unaffected.
 
 ## The field-test arc (2026-08-11), seven reports, one root cause
 
