@@ -189,7 +189,9 @@ class Judge:
             m = _REDIR.search(tok)
             if m:
                 rskip = tok[-1] in "<>"
-                tok = tok[:m.start()]
+                # The & of &> and &>> is the redirection's, never a word of its own (#1556).
+                cut = m.start() - 1 if tok[m.start()] == ">" and tok[:m.start()].endswith("&") else m.start()
+                tok = tok[:cut]
                 if not tok or _FD.fullmatch(tok) or tok == "*":
                     continue
             if tok.startswith("--"):

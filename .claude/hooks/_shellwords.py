@@ -323,9 +323,13 @@ def to_posix(cmd, tool):
     return bash_to_posix(cmd)
 
 
+# Every ; & | and newline: the split every gate reads.
+EVERY_SEPARATOR = re.compile(r"[;&|\n]")
 # A & or | that belongs to a redirection (2>&1, >&2, &>log, >|log, <&0, 2>&-) is not a command
 # separator: cutting there dropped every word after it from the line holding the push (#1556).
-# && , || and |& stay separators.
+# && , || and |& stay separators. It cannot see an escaped < or > (echo \>|git push ...), so
+# push_candidates reads it beside EVERY_SEPARATOR, never instead of it: a second set of lines can
+# only refuse more.
 SEPARATOR = re.compile(r"[;\n]|(?<![<>])&(?!>)|(?<!>)\|")
 
 
@@ -337,11 +341,12 @@ def _redirection_char(text, i):
     return c == "|" and i > 0 and text[i - 1] == ">"
 
 
-def segments(text, esc="\\"):
+def segments(text, esc="\\", redirections=False):
     """Text split at ; & | and newlines outside quotes, one segment per line. A newline inside
     quotes becomes a space, an escaped newline joins its lines, and a # that starts a word outside
     quotes drops the rest of its line. esc is the shell's escape: \\ for POSIX text, a backtick for
-    a raw PowerShell command."""
+    a raw PowerShell command. redirections=True keeps a redirection's & or | in its segment (the
+    push judge's extra reading, #1556)."""
     text = text.replace("\r", "")
     out, q, i, n = [], "", 0, len(text)
     while i < n:
@@ -362,7 +367,7 @@ def segments(text, esc="\\"):
             j = text.find("\n", i)
             i = n if j < 0 else j
             continue
-        elif c in ";&|\n" and not _redirection_char(text, i):
+        elif c in ";&|\n" and not (redirections and _redirection_char(text, i)):
             out.append("\n")
         else:
             out.append(c)
@@ -379,13 +384,14 @@ QUOTE = re.compile("['\"`\u2018-\u201e]")
 WORD_HASH = re.compile(r"(?:^|(?<=[ \t]))#")
 
 
-def _blind_pieces(text):
-    """text cut at every ; & | and newline whatever the quotes, a # that starts a word dropped with
-    the rest of its piece only when no quote occurs anywhere in text before it. Linear."""
+def _blind_pieces(text, separator=EVERY_SEPARATOR):
+    """text cut at every separator match (each a single character) whatever the quotes, a # that
+    starts a word dropped with the rest of its piece only when no quote occurs anywhere in text
+    before it. Linear."""
     q = QUOTE.search(text)
     limit = q.start() if q else len(text)
     out, start = [], 0
-    for piece in SEPARATOR.split(text):
+    for piece in separator.split(text):
         m = WORD_HASH.search(piece) if start < limit else None
         out.append(piece[:m.start()] if m and start + m.start() < limit else piece)
         start += len(piece) + 1
@@ -457,11 +463,12 @@ def push_candidates(cmd, tool):
     texts = [unfold(posix)]
     if unfold(cmd) != texts[0]:
         texts.append(unfold(cmd))
-    lines = [p for t in texts for p in _blind_pieces(t)]
-    quoted = segments(posix).split("\n")
+    lines = [p for t in texts for sep in (EVERY_SEPARATOR, SEPARATOR) for p in _blind_pieces(t, sep)]
+    quoted = segments(posix).split("\n") + segments(posix, redirections=True).split("\n")
     lines += quoted
     lines += [w for w in (_words_kept(q) for q in quoted if "push" in q) if w]
-    lines += segments(cmd, "`" if tool == "PowerShell" else "\\").split("\n")
+    esc = "`" if tool == "PowerShell" else "\\"
+    lines += segments(cmd, esc).split("\n") + segments(cmd, esc, redirections=True).split("\n")
     lines += [_quoted_redirs_marked(line) for line in lines if "push" in line]
     seen, keep = set(), []
     for line in lines:

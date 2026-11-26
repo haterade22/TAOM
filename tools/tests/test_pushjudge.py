@@ -483,6 +483,41 @@ ISSUE_691 = [
 ]
 
 
+# #1556 review (Codex, PR #1609): a split that keeps a redirection's & or | in its line let two
+# shapes through that trunk refused. &> left its & as a refspec, so the current branch and
+# push.default=matching went unjudged; an escaped < or > before a real | or & joined the next
+# command onto the echo. Bash text. (current branch, command, kind, target)
+ISSUE_1556 = [
+    ("bannerlord-1.5.x", "git push --force origin &>/dev/null", "block", T1),
+    ("bannerlord-1.5.x", "git push --force origin &> /dev/null", "block", T1),
+    ("bannerlord-1.5.x", "git push --force origin &>>log", "block", T1),
+    ("bannerlord-1.5.x", "git push --force origin&>/dev/null", "block", T1),
+    ("feature", "git -c push.default=matching push --force origin &>/dev/null", "block", MATCHING),
+    ("feature", "echo \\>|git push --force origin bannerlord-1.5.x", "block", T1),
+    ("feature", "echo \\>&git push --force origin bannerlord-1.5.x", "block", T1),
+    ("feature", "echo \\<&git push --force origin bannerlord-1.5.x", "block", T1),
+    ("feature", "echo x\\>|git push --force origin bannerlord-1.5.x", "block", T1),
+    ("feature", "git push --force origin feature &>/dev/null", "allow", ""),
+]
+
+
+class Issue1556Tests(unittest.TestCase):
+    def test_a_redirection_never_hides_a_protected_push(self):
+        for branch, cmd, kind, target in ISSUE_1556:
+            with self.subTest(branch=branch, cmd=cmd):
+                self.assertEqual(verdict(cmd, "Bash", branch), (kind, target))
+
+    def test_the_and_of_an_and_greater_redirection_is_no_refspec(self):
+        self.assertEqual(judge("git push --force origin &>/dev/null", T1), (T1, ""))
+        self.assertEqual(judge("git push --force origin feature&>log", "feature"), ("", ""))
+
+    def test_the_other_gates_still_split_after_an_escaped_redirection_character(self):
+        # segments() is also the confirm gates' split (_shellwords.py commands): the redirection
+        # reading is the push judge's extra candidate only, never their default.
+        self.assertIn("\ngit reset --hard", sw.segments("echo \\>|git reset --hard"))
+        self.assertIn("\ngit reset --hard", sw.segments("echo \\>&git reset --hard"))
+
+
 class SevenCTests(unittest.TestCase):
     def test_every_7c_command_gets_the_bash_verdict_and_target(self):
         self.assertGreater(len(SEVEN_C), 150)
