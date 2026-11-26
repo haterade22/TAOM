@@ -21,7 +21,7 @@ using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features.IncidentVoices;
 
-/// <summary>Wiring guard for Incident Voices (Patch175), the patch's fault handling, and the text handle on a real engine incident.</summary>
+/// <summary>Wiring guard for Incident Voices (Patch176), the patch's fault handling, and the text handle on a real engine incident.</summary>
 [TestClass]
 public class IncidentVoicesWiringTests
 {
@@ -51,14 +51,14 @@ public class IncidentVoicesWiringTests
     }
 
     [TestMethod]
-    public void TheModule_AppliesPatch175AtGameInit_AndOnlyThat()
+    public void TheModule_AppliesPatch176AtGameInit_AndOnlyThat()
     {
         var decls = new IncidentVoicesModule().PatchCategories.ToList();
 
         Assert.AreEqual(1, decls.Count);
-        Assert.AreEqual("Patch175_IncidentVoices", decls[0].Category);
+        Assert.AreEqual("Patch176_IncidentVoices", decls[0].Category);
         Assert.AreEqual(ApplyPhase.GameInit, decls[0].Phase);
-        Assert.AreEqual(1, FeatureModules.All.SelectMany(m => m.PatchCategories).Count(d => d.Category == "Patch175_IncidentVoices"));
+        Assert.AreEqual(1, FeatureModules.All.SelectMany(m => m.PatchCategories).Count(d => d.Category == "Patch176_IncidentVoices"));
     }
 
     [TestMethod]

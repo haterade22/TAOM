@@ -9,7 +9,7 @@ using TAOM.Features.IncidentVoices.Models;
 namespace TAOM.Features.IncidentVoices;
 
 /// <summary>
-/// The engine-free choices behind Incident Voices (Patch175, docs/features/incident-voices.md): after vanilla's own condition
+/// The engine-free choices behind Incident Voices (Patch176, docs/features/incident-voices.md): after vanilla's own condition
 /// said an incident may show, whether the player's people and side may see it, which voice reads it, which place of the
 /// player's own side it names, and which TAOM texts replace vanilla's. Every answer is "leave vanilla" for an incident the
 /// catalog does not list, a text that has no row, a dedicated server or a co-op session. It holds no per-campaign state.

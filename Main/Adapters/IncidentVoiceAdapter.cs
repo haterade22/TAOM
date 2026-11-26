@@ -15,7 +15,7 @@ using TAOM.Features.IncidentVoices.Models;
 namespace TAOM.Adapters;
 
 /// <summary>
-/// Incident Voices' window on the campaign (Patch175). Every read starts from <c>Campaign.Current</c>, so no call throws
+/// Incident Voices' window on the campaign (Patch176). Every read starts from <c>Campaign.Current</c>, so no call throws
 /// outside a campaign, and nothing engine-owned is kept between calls. The player's people come from
 /// <see cref="IEncounterLinesAdapter.Player"/> (culture and race of the main hero, side of the clan's realm).
 /// </summary>

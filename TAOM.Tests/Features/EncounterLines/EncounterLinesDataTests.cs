@@ -105,7 +105,8 @@ public class EncounterLinesDataTests
         var path = ModuleData(file);
         Assert.IsTrue(File.Exists(path), file + " is missing from ModuleData");
 
-        return XDocument.Load(path).Descendants("string").Select(e =>
+        // The Incident Voices block (str_taom_inc.*) shares this file; IncidentVoices tests own it.
+        return XDocument.Load(path).Descendants("string").Where(e => !((string?)e.Attribute("id") ?? "").StartsWith("str_taom_inc.", StringComparison.Ordinal)).Select(e =>
         {
             var m = Keyed.Match((string?)e.Attribute("text") ?? "");
             var tags = e.Elements("tags").Elements("tag")

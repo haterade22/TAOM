@@ -84,7 +84,7 @@ Vocabulary: `taom_inc_voc_<free|shadow>_<word>` for the words `GODS`, `POWER_OAT
 | `Main/Features/IncidentVoices/IncidentVoiceService.cs` | `Review`: gate, voice, places, texts |
 | `Main/Features/IncidentVoices/IncidentVersionPicker.cs`, `IncidentEligibility.cs`, `IncidentPlacePicker.cs`, `IncidentTextKeys.cs` | Pure rules |
 | `Main/Features/IncidentVoices/IncidentCatalogProvider.cs` | Validating loader |
-| `Main/Features/IncidentVoices/Hooks/IncidentCanBeInvokedPatch.cs` | The Patch175 postfix |
+| `Main/Features/IncidentVoices/Hooks/IncidentCanBeInvokedPatch.cs` | The Patch176 postfix |
 | `Main/Features/IncidentVoices/IncidentVoicesModule.cs`, `IncidentVoicesIoC.cs` | Module (listed in `FeatureModules`), registrations |
 | `Main/Adapters/IIncidentVoiceAdapter.cs`, `IncidentVoiceAdapter.cs`, `IncidentTextHandle.cs` | Engine access |
 | `Main/Features/DevConsole/Cheats/IncidentCheats.cs`, `IncidentVoices/IncidentCommands.cs` | `taom.incident` |

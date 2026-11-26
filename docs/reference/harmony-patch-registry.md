@@ -2035,9 +2035,9 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Co-op.** Postfixes that skip nothing and write only local conversation text variables and the stored sentence text, so `CoopVetoClassificationTests` needs no entry; the module declares no campaign behavior. It stands down on a dedicated server and while a messenger conversation is open, and rolls on TAOM's own `IRandomSource`. `EnableEncounterLines` is presentation in `CoopSettingsRelevance`. **Tests:** `EncounterLinesBindingTests` (target shapes, parameter names, the variables and sentence ids in vanilla's IL, the five lord text ids, `ProcessSentence`'s call to the seam target, the fields, the category attaching one postfix per target and a prefix on the two greetings, the JIT), `EncounterSentenceTextPatchTests` (the seam postfix run on a `ConversationManager` shell), `EncounterLinesPatchTests`, `EncounterLinesServiceTests`, `EncounterLinesWiringTests`. **ACTIVE**, not yet checked in game.
 
-## Patch175_IncidentVoices
+## Patch176_IncidentVoices
 
-**Target (v1.5.7, read on the installed DLLs 2026-11-26).** One patch class, `Main/Features/IncidentVoices/Hooks/IncidentCanBeInvokedPatch.cs`, category `Patch175_IncidentVoices` (GameInit, declared by `IncidentVoicesModule`). Feature: [incident-voices.md](../features/incident-voices.md).
+**Target (v1.5.7, read on the installed DLLs 2026-11-26).** One patch class, `Main/Features/IncidentVoices/Hooks/IncidentCanBeInvokedPatch.cs`, category `Patch176_IncidentVoices` (GameInit, declared by `IncidentVoicesModule`). Feature: [incident-voices.md](../features/incident-voices.md).
 
 | Class | Target | Shape |
 |---|---|---|

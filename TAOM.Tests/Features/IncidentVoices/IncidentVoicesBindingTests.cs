@@ -20,7 +20,7 @@ using static TAOM.Tests.Infrastructure.RepoPaths;
 namespace TAOM.Tests.Features.IncidentVoices;
 
 /// <summary>
-/// Pins the vanilla seams Incident Voices rides (Patch175) against the installed engine, with no campaign: the target keeps its shape
+/// Pins the vanilla seams Incident Voices rides (Patch176) against the installed engine, with no campaign: the target keeps its shape
 /// and is too big for the JIT to inline, the text objects are written through a public field, the 101 incident ids and each one's
 /// option count are still what <c>incidents_lotr.json</c> lists, and the category attaches one postfix.
 /// </summary>

@@ -7,13 +7,13 @@ using TAOM.Core.Logging;
 namespace TAOM.Features.IncidentVoices.Hooks;
 
 /// <summary>
-/// Patch175's seam: a postfix on public, non-virtual <c>Incident.CanIncidentBeInvoked()</c> (Incident.cs:120). Vanilla runs it for
+/// Patch176's seam: a postfix on public, non-virtual <c>Incident.CanIncidentBeInvoked()</c> (Incident.cs:120). Vanilla runs it for
 /// every incident of a trigger (<c>IncidentManager.GetOccurableEventsForTrigger</c>) and once more right before the popup
 /// (<c>Campaign.cs:1006</c>), so the last call before the player sees an incident passes through here, after vanilla's condition has
 /// set its text variables. When vanilla said false the postfix returns at once. For a true it lets
 /// <see cref="IncidentVoiceService"/> close the incident, swap in the places of the player's side and write TAOM's texts; any
 /// fault leaves vanilla's answer and warns once. Callers, thread and co-op: docs/reference/harmony-patch-registry.md
-/// "Patch175_IncidentVoices".
+/// "Patch176_IncidentVoices".
 /// </summary>
 [HarmonyPatch(typeof(Incident), nameof(Incident.CanIncidentBeInvoked))]
 [HarmonyPatchCategory(IncidentVoicesModule.PatchCategory)]

@@ -5,7 +5,7 @@ using TAOM.Features.IncidentVoices.Models;
 namespace TAOM.Adapters;
 
 /// <summary>
-/// What Incident Voices (Patch175) reads from the campaign, and the one console action it takes. Every answer is a plain value:
+/// What Incident Voices (Patch176) reads from the campaign, and the one console action it takes. Every answer is a plain value:
 /// an unreadable fact is null or empty, never a throw out of a missing campaign.
 /// </summary>
 public interface IIncidentVoiceAdapter
