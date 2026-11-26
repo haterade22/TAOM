@@ -1,8 +1,13 @@
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Core.Infrastructure;
 using TAOM.Features.LongDefeat.Domain;
+using TAOM.Features.StoryMissions.Domain;
 
-namespace TAOM.Tests.Features.LongDefeat.Domain;
+namespace TAOM.Tests.Features.StoryMissions;
 
 /// <summary>A mission hero is not fielded when the player is the person he stands for: the table of ids and the plan filter.</summary>
 [TestClass]
@@ -74,4 +79,29 @@ public class LoreHeroPersonsTests
         Assert.AreSame(plan, LoreHeroPersons.WithoutPlayed(plan, new[] { "lord_4_1" }));
         Assert.AreSame(plan, LoreHeroPersons.WithoutPlayed(plan, new string[0]));
     }
+
+    private static readonly string[] LiveMapLords = { "lord_1_75" };
+
+    [TestMethod]
+    public void ShippedData_EveryMissionHeroHasARow_AndEveryRowIdResolves()
+    {
+        var moduleData = RepoPaths.RepoPath("Main", "_Module", "ModuleData");
+        var heroes = Ids(Path.Combine(moduleData, "characters", "taom_mission_heroes.xml"));
+        var known = new HashSet<string>(heroes);
+        known.UnionWith(Ids(Path.Combine(moduleData, "named_companions", "named_companions.xml")));
+        var lords = Ids(Path.Combine(moduleData, "characters", "lords.xml"));
+        var rowIds = LoreHeroPersons.All.SelectMany(p => p).ToList();
+
+        foreach (var hero in heroes)
+            Assert.IsTrue(rowIds.Contains(hero), $"{hero} has no row in the persons table");
+
+        foreach (var id in rowIds.Where(i => i.StartsWith("lord_", System.StringComparison.Ordinal)))
+            Assert.IsTrue(lords.Contains(id) || LiveMapLords.Contains(id), $"lord {id} is not in lords.xml or listed as a live TAOM_Map lord");
+
+        foreach (var id in rowIds.Where(i => !i.StartsWith("lord_", System.StringComparison.Ordinal)))
+            Assert.IsTrue(known.Contains(id), $"{id} does not resolve in Main ModuleData");
+    }
+
+    private static HashSet<string> Ids(string path) =>
+        new(XDocument.Load(path).Descendants("NPCCharacter").Select(e => (string?)e.Attribute("id")).Where(i => i != null).Select(i => i!));
 }
