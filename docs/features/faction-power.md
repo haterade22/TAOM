@@ -45,7 +45,7 @@ player's clan in co-op) or the main party.
 | Lever | Where | Effect |
 |-------|-------|--------|
 | Militia | `TaomSettlementMilitiaModel.CalculateMilitiaChange` | Scales the daily inflow (change plus the 2.5 percent retired, read through the factors), so the militia equilibrium (40 x inflow) scales by the percent. Vanilla's 0.025 is line 98 of `DefaultSettlementMilitiaModel`. A looted or burning village is skipped, as the base returns nothing for it. |
-| Militia after a siege | `TaomSettlementMilitiaModel.MilitiaToSpawnAfterSiege` | The 90 to 108 militia a defended siege spawns, times the percent, rounded. |
+| Militia after a siege | `TaomSettlementMilitiaModel.MilitiaToSpawnAfterSiege` | The 90 to 108 militia a won siege spawns, times the percent, rounded. |
 | Volunteers | `VolunteerProductionService.Compute` | The probability times the percent, after the War of the Ring step, one clamp to 0..1. A hit on a filled slot also rolls the notable's small tier-up chance, so tier-ups speed up too. Castles go through the same call. |
 | Auto-resolve | `TaomCombatSimulationModel.SimulateHit` | Damage of the striker party's realm times the square root of the percent (k = 0.5, strength then moves by about m^2.1 with full rosters: roughly 4.3x at 200 percent and 0.23x at 50 percent, approximate because damage is truncated to an int and saturates at the target's hit points). |
 | Wages | `TaomPartyWageModel.GetTotalWage` | Above 100: AI lord parties and garrisons of the realm pay wages x 1/percent. At or below 100: normal wages. Applied after the AI wage relief and before free garrison upkeep. `GetTotalWage` also feeds `GetAvailableWageBudget`, so the relief widens AI recruiting, upgrade and garrison budgets as well; that is intended. |
@@ -142,7 +142,7 @@ A write clears the party size cache of every party (`PartySizeCacheInvalidator.I
 ## Known limits
 
 - A realm above 100 percent also gets faster volunteer tier-ups (a hit on a filled slot rolls the small tier-up chance).
-- `MilitiaToSpawnAfterSiege` is read by `MilitiasCampaignBehavior.OnAfterSiegeCompleted`, which fires when the defender wins a siege or sally out, so the settlement's realm is the defender's and is the one scaled.
+- `MilitiaToSpawnAfterSiege` is read by `MilitiasCampaignBehavior.OnAfterSiegeCompleted`, which adds it when a siege or sally out is won: on land by the attacker, after `ChangeOwnerOfSettlementAction.ApplyBySiege` ran in the earlier `SiegeCompleted` event; at sea by the defender. Either way the settlement's current owner is the realm that now holds it, and that realm is scaled.
 - Siege veto asymmetry: the militia and garrison of a stronger realm raise the strength an attacker must beat, so a
   100 percent realm attacking a 150 percent realm needs about 1.5x the force it needs today.
 

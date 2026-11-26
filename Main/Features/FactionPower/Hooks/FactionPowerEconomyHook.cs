@@ -43,8 +43,9 @@ public sealed class FactionPowerEconomyHook : IFactionPowerEconomyHook
     }
 
     /// <summary>
-    /// <c>MilitiasCampaignBehavior.OnAfterSiegeCompleted</c> adds this when the siege ends in a defender victory
-    /// (<c>_isSiegeWon</c> is set on <c>DefenderVictory</c>), so the settlement still belongs to the realm that defended it.
+    /// <c>MilitiasCampaignBehavior.OnAfterSiegeCompleted</c> adds this when a siege is won: by the attacker on land
+    /// (the owner already changed in the earlier <c>SiegeCompleted</c> event), by the defender at sea; either way the
+    /// settlement's current owner is the realm that now holds it, and that realm is scaled.
     /// </summary>
     public int ScaleMilitiaAfterSiege(Settlement? settlement, int militia)
     {

@@ -93,7 +93,7 @@ public static class FactionPowerMath
     public static float WageMultiplier(float multiplier) =>
         IsApplicable(multiplier) && multiplier > 1f ? 1f / multiplier : 1f;
 
-    /// <summary>A whole count (the militia spawned after a defended siege) times the multiplier, rounded. Unchanged for a multiplier of 1 or out of range.</summary>
+    /// <summary>A whole count (the militia spawned after a won siege) times the multiplier, rounded. Unchanged for a multiplier of 1 or out of range.</summary>
     public static int ScaleCount(int count, float multiplier) =>
         IsApplicable(multiplier) ? (int)Math.Round(count * multiplier) : count;
 }

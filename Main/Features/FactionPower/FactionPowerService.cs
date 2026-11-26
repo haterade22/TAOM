@@ -71,7 +71,7 @@ public sealed class FactionPowerService
             FactionPowerMath.MultiplyResult(ref wage, FactionPowerMath.WageMultiplier(multiplier), WageText);
     }
 
-    /// <summary>Lever 2b: the militia a defended siege spawns, scaled and rounded; never for a player clan's fief.</summary>
+    /// <summary>Lever 2b: the militia a won siege spawns, scaled and rounded; never for a player clan's fief.</summary>
     public int ScaleMilitiaAfterSiege(float multiplier, bool isPlayerClan, int militia)
         => multiplier == 1f || isPlayerClan ? militia : FactionPowerMath.ScaleCount(militia, multiplier);
 }
