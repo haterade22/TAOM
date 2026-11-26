@@ -1,6 +1,6 @@
 ---
 name: review-codex
-description: Auto-detect what was built, write a Codex adversarial prompt, dispatch Codex directly via `codex exec`, then verify results when complete
+description: Use when the maintainer asks for a Codex review, or /ship reaches its Codex phase with a go-ahead. Writes the adversarial prompt, dispatches `codex exec`, verifies each finding.
 argument-hint: "[optional: feature-name or path-to-review.md]"
 ---
 

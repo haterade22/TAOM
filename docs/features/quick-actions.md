@@ -116,7 +116,7 @@ Total: 50 QuickActions tests (counted 2026-11-16), plus the 2 shared panel refre
 2. Add the option in `OpenMenu()`'s inquiry-element list.
 3. Add a routing case in `QuickActionsService.DispatchSelected()`.
 4. Implement the service method (returns `QuickActionResult`). Iterate `_inventory.GetRightPaneItems()`, apply filters via `IInventoryItemAdapter` properties (do NOT cast `UnderlyingVm` back to `SPItemVM` — keeps ADR-007 intact).
-5. Write skip-guard tests for every filter exclusion (one positive, one negative per setting flag). See `csharp-architecture.md` "Skip-Guard Exhaustion" rule.
+5. Write skip-guard tests for every filter exclusion (one positive, one negative per setting flag). See `.claude/rules/tests.md` "Skip-Guard Exhaustion".
 
 ## How To: Change a Sound
 

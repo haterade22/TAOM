@@ -14,17 +14,15 @@ authorizes no `/ship`, no fixes and no extra paid reviewers.
 - **Always**, in every session, every custom or general-purpose subagent, and again after
   `/compact`: this file, its two imports, and the rules in `.claude/rules/` that have no `paths:`.
   The Explore and Plan agents get none of it.
-- **On access**, in a session or a subagent: a rule with `paths:` loads when a matching file in
-  this checkout is read, written or edited, and drops at `/compact` until the next matching access. No
-  rule fires outside this checkout (a sibling worktree, the live Armory, TAOM_Map, the Modding Kit); the skill for
-  that work carries its traps ([rules catalog](docs/reference/rules-catalog.md)).
+- **On access:** a rule with `paths:` loads when a matching file in this checkout is read, written
+  or edited, and drops at `/compact` until the next matching access. No rule fires outside this
+  checkout. In a sibling worktree a hook names the rule files a file matches: read them when it
+  does. For the live Armory, TAOM_Map and the Modding Kit, the skill for that work carries its traps.
 - **On invoke:** a skill's body. After `/compact` only its first ~5,000 tokens come back.
-- **Memory:** MEMORY.md loads on this machine only, in the main session and, against the docs, in
-  subagents too ([harness facts](.claude/rules/harness-loading.md)): keep it small.
-- **Hooks** reach you only as SessionStart output, a deny reason, exit-2 stderr, a Stop hook's
-  block reason or `additionalContext` beside a tool result (an ask reason goes to the user); follow
-  the instruction in the message
-  ([hooks catalog](docs/reference/hooks-catalog.md)).
+- **Hooks** reach you as SessionStart output, a deny or block reason, or `additionalContext` beside
+  a tool result (an ask reason goes to the user): follow the instruction in the message.
+- The sourced facts: [harness-loading.md](.claude/rules/harness-loading.md), the
+  [rules catalog](docs/reference/rules-catalog.md), the [hooks catalog](docs/reference/hooks-catalog.md).
 
 ## Where new knowledge goes
 
@@ -52,22 +50,19 @@ it, or gives its date.
 
 A SKILL.md is executable instructions: follow its phases in order. Each skill's description, listed
 in every session, states its trigger and its gate: when the trigger matches, invoke the skill before
-any other step. This table holds only what no description carries.
+any other step. What no description carries:
 
-**Reflex gates:** `/investigate` on any crash, exception or "why is this broken" (never debug ad
-hoc); `/deep-review` before every commit touching C# or XML/XSLT; `/verify` before claiming done;
-`/localize` for new player-facing text.
-
-| When | Use | Gate |
-|---|---|---|
-| `error CS####`, build won't compile | fix it within the retry budget in `docs/ai-includes/agent-operating-manual.md` | missing TaleWorlds type: `taom-src`; budget spent: `/investigate` |
-| New creature or mount; creature animation looks wrong | `creature-mount-authoring.md`; `creature-animation-blender-mcp-workflow.md` (`docs/ai-includes/`) | once told "do it", not while sketching |
-| Custom static prop (camp, landmark) without the Kit | `docs/reference/tpac-static-prop-authoring.md` | once told "do it" |
-| Culture, armor, weapons, lord skills | `new-culture-authoring.md`, `lord-skills-authoring.md`, `weapon-creation-workflow.md` (`docs/ai-includes/`); `docs/features/troop-tree-revamp.md` | |
-| Patch, model or reflection bindings after an engine or patch change | the binding gate: `docs/reference/taleworlds-api-snapshot/README.md` | |
-| An architectural decision | `docs/adrs/000-template.md` | |
-| Offer, don't auto-invoke | `/freeze`, `/unfreeze` | |
-| Never auto-invoke | `/review-codex` (paid), `/issue` (public), `/manage` (public, starts workers) | |
+- **Reflex gates:** `/investigate` on any crash, exception or "why is this broken" (never debug ad
+  hoc); `/deep-review` before every commit touching C# or XML/XSLT; `/verify` before claiming done;
+  `/localize` for new player-facing text.
+- **Build error** (`error CS####`): fix it within the retry budget in
+  `docs/ai-includes/agent-operating-manual.md`. Missing TaleWorlds type: `taom-src`. Budget spent:
+  `/investigate`.
+- **Authoring with no skill** (a creature or mount, a static prop, a culture, armor, weapons, lord
+  skills, engine bindings after a bump, an ADR): find the procedure in
+  [doc-lookup.md](docs/reference/doc-lookup.md) and follow it once told "do it", not while sketching.
+- **Offer, don't auto-invoke:** `/freeze`, `/unfreeze`. **Never auto-invoke:** `/review-codex`
+  (paid), `/issue` (public), `/manage` (public, starts workers).
 
 ## Subagents
 
@@ -76,11 +71,9 @@ hoc); `/deep-review` before every commit touching C# or XML/XSLT; `/verify` befo
   come from `pwsh tools/taom-src.ps1 path <Type>`; builds use
   `dotnet … -p:DisableModuleCopy=true -p:ModuleId=`, never `./build.ps1`. Explore and Plan also need
   the relevant rules in the prompt, or [agent-operating-manual.md](docs/ai-includes/agent-operating-manual.md).
-- Parallel builders that may touch single-owner files get a sibling worktree, made as `agent-teams.md`
-  says; a sub-problem shared by two briefs gets one pinned solution. Fan out at most four wide, with one checker.
-  Review ordering and spawn templates: [agent-teams.md](docs/ai-includes/agent-teams.md).
-- Models, effort and the tier agents: `.claude/rules/model-effort-selection.md`, loaded beside this
-  file. `deep-reviewer` runs the `/deep-review` lenses.
+- Fan out at most four wide, with one checker. A sibling worktree for each parallel builder that may
+  touch single-owner files, one pinned solution for a sub-problem two briefs share, review ordering
+  and spawn templates: [agent-teams.md](docs/ai-includes/agent-teams.md).
 - In the VS Code panel, Stop and Escape end only the turn; background subagents keep running until
   stopped from the agent map. A stopped subagent's progress is on disk, not in its report.
 

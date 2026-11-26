@@ -31,7 +31,7 @@ comparison rather than substring containment when deriving a target set from a r
 
 **Parse before writing.** Any script that transforms XML runs the result through `ElementTree` and refuses a document that no longer parses. Restore masked text by indexed token, never by recorded offset: a length-changing edit invalidates every offset.
 
-No lint: 92 of 124 XML-writing scripts trip a naive heuristic (rejected 2026-08-06). Backstop: the deep-review tooling lens.
+No lint: one was rejected on 2026-08-06 ([lesson](../../docs/reviews/lessons/build-tooling-workflow.md), "Data-mutating XML scripts must round-trip byte-faithfully"). Backstop: the deep-review tooling lens.
 
 ## Writing a gate, a `--check` or an exemption? Break each value it owns
 

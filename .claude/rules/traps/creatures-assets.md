@@ -33,11 +33,6 @@ paths:
 
 Mounts, creatures, race rigs, skeletons, animation clips, Modding Kit and Unreal imports.
 
-One line per trap: its trigger and what never to do. The linked doc holds the mechanism, the
-history and the gate. A new trap for this area is a new row here, never a row in the always-loaded
-[trap index](../../../docs/ai-includes/orientation.md)
-([ADR-011](../../../docs/adrs/011-knowledge-delivery-tiers.md)).
-
 | Trap | Rule | Doc |
 |---|---|---|
 | Horse-skeleton mounts | `act_horse_kick` is the engine's rear kick; own attack, own action; a HorseHarness per Horse slot (gated) | [war ram](../../../docs/features/war-ram.md) |

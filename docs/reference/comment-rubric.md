@@ -21,7 +21,7 @@ comment is not counted; `////` is. The count rule is `RepoPaths.CommentLineCount
   baseline uses the same rule, so the ratchet stays consistent.
 
 Test comments and XML or XSLT comments are outside the gate: test comments carry effect claims
-(`.claude/rules/tests.md`), and `.claude/rules/xslt.md` asks for classification comments.
+(`.claude/rules/test-workflow.md`), and `.claude/rules/xslt.md` asks for classification comments.
 
 ## Rubric
 

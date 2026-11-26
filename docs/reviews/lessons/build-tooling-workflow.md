@@ -5457,3 +5457,21 @@ of 33. One subagent read the rule by hand.
   counts it ("Rule delivery by checkout" in `tools/harness_retro.py`). The same day the
   review of P3 found the fault again, in a drift check that compared a pack's time with the catalogue's time
   on disk ([rca-armory-drift-fresh-checkout-2026-11-25.md](../rca-armory-drift-fresh-checkout-2026-11-25.md)).
+
+### Before a path rule's globs get narrower, find the files that only a neighbour's touch delivers it to (2026-11-25)
+
+Round 2 of the path rule diet proposed that `gui-ui.md` stop loading on ViewModel files, which would save
+about 7 KB on each of 75 files. The skeptic accepted it twice and the final checker once: they read
+ViewModel classes and found that none of the moved sections applies to one.
+- **Why missed:** the contract asked whether a file that loses the rule needs it. The moved section on
+  layer input is for the class that creates the `GauntletLayer`. 16 files in `Main` and `Client` do that
+  (`git grep -l "new GauntletLayer" -- Main Client`), and `gui-ui.md` loads for none of them: their names
+  share no pattern a glob could hold. So the section reaches a session that writes a screen only because
+  the session also touches the ViewModel or the prefab beside it. The proposal would have cut one of those
+  two routes, and no check looked at a file outside the set that loses the rule.
+- **Prevent:** for each section a glob change takes away from a set of files, grep the symbols the section
+  is about, and run the rule match on the files that hold them. When those files match no glob, the rule is
+  delivered by its neighbours: give it a trigger of its own first (a glob, a trap sheet row), and narrow
+  after that.
+- **Source:** [adopt-instruction-debloat-2026-11-25.md](../adopt-instruction-debloat-2026-11-25.md), "Path
+  rules, skills and caps". The split was not applied. The missing trigger for layer builders is owed there.

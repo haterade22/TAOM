@@ -18,11 +18,6 @@ paths:
 
 Mission logic, agents, formations, siege ladders, moving platforms and native calls.
 
-One line per trap: its trigger and what never to do. The linked doc holds the mechanism, the
-history and the gate. A new trap for this area is a new row here, never a row in the always-loaded
-[trap index](../../../docs/ai-includes/orientation.md)
-([ADR-011](../../../docs/adrs/011-knowledge-delivery-tiers.md)).
-
 | Trap | Rule | Doc |
 |---|---|---|
 | Moving platforms | Hold crew with `SetForceAttachedEntity` plus `SetTargetPosition` each tick; never a teleport, never `SetTargetZ` (NoPhysics mode: 0 shots measured); clear both on release. Navmesh and physics ride the entity. Crew stand inside the deck | [mumakil](../../../docs/features/mumakil.md) |

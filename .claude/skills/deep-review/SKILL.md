@@ -26,22 +26,10 @@ If triggered:
 1. Identify changed files (same logic as Step 1 below).
 2. **Dispatch Codex directly via Bash** -- Claude does this itself, no terminal hand-off:
    - Pre-flight: `codex login status` -- expect `Logged in using ChatGPT`. If not, surface the message and continue WITHOUT the Codex pre-review (don't block the Claude agents).
-   - Write a focused prompt to `docs/reviews/codex-prereview-{feature}-{date}.prompt.md` (short version of the `/review-codex` prompt -- focus on Known Suspects + architectural risks; skip the heavy vanilla-decompile block).
-   - Run via Bash:
-     ```
-     command: cd "<repo-root>" && mkdir -p docs/reviews/raw && codex exec -c model_reasoning_effort="<level>" -c project_doc_max_bytes=65536 - < "docs/reviews/codex-prereview-{feature}-{date}.prompt.md" > "docs/reviews/raw/codex-prereview-{feature}-{date}.md" 2>&1
-     run_in_background: true
-     timeout: 7200000  (an unattended run stops a background command at its timeout, 2 h at most)
-     ```
-   - `<level>` defaults to the one the Step 2 tier table gives; the session may lower it and says why in the dispatch line. The shorter prompt shortens the run, not the level.
-   - See `.claude/skills/review-codex/SKILL.md` "Codex CLI invocation contract" for full dispatch semantics.
+   - Then read `.claude/skills/deep-review/references/codex-dispatch.md` before you dispatch: follow it to write the focused prompt and run `codex exec` in the background with `timeout: 7200000`.
 3. Continue to Step 1 immediately; do NOT wait for Codex here. The Claude agents run in parallel with the Codex background job.
 4. After all Claude agents complete (Step 2), check if the Codex background job has notified. If yes, read `docs/reviews/raw/codex-prereview-{feature}-{date}.md`. If not yet (Claude agents finish faster on this kind of work), Codex result will arrive later -- proceed with Step 3 using just the Claude agent results and append Codex when it arrives.
-5. Include Codex findings in the Step 3 compiled report as its own section:
-   ```
-   CODEX REVIEW:  [PASS/ISSUES — N findings]
-   [Codex findings grouped by severity]
-   ```
+5. Include Codex findings in the Step 3 compiled report as its own section (the CODEX REVIEW block in `.claude/skills/deep-review/references/step3-template.md`).
 
 If Codex and any Claude agent disagree on a finding, flag the disagreement explicitly — it is valuable signal.
 
@@ -117,16 +105,7 @@ Add only what the lens cannot know. The agent definition already carries the ope
 
 After the core agents complete, assess whether the findings warrant additional focused agents. Every additional agent is a `deep-reviewer` too, launched in waves of four like the core set. Before spawning one, ask whether an existing gate script answers its question: a deterministic check run once beats an agent re-deriving it ([agent-teams.md](../../../docs/ai-includes/agent-teams.md) "Budget").
 
-**Launch additional agents when:**
-- Agent 5 (Data Flow) finds gaps → launch per-gap investigation agents to trace the full chain and propose fixes
-- Multiple XML config files changed → launch one agent per config file to cross-reference all consumers
-- Multiple Harmony patches changed → launch one agent per patch to verify target method signatures and side effects
-- Multiple GameModel overrides changed → launch one agent to verify all overrides are registered and don't conflict
-- Any agent reports >3 issues → launch a focused agent on just those files to determine root cause
-- Feature spans >3 features/ subdirectories → launch per-feature agents with full context of that feature
-- The change adds a mission type or a new agent spawn path → launch one agent (Lens 2 method) on every TAOM behavior and `[DefaultView]` that attaches to all missions, judged in the new context (no main agent, no team AI, late spawns, no campaign); per-file lenses cannot see this (Fords of War: a pre-existing warg formation bug became the normal path, `rca-fords-of-war-2026-10-31.md` D4)
-
-(Script tooling is no longer an expansion: the Tooling correctness lens in Step 2 covers every script under `tools/` or `.claude/hooks/`, read-only ones included.)
+**Launch additional agents when** the findings or the scope match a trigger in `.claude/skills/deep-review/references/expansions.md`; read it before you decide.
 
 **When a Claude agent and Codex disagree:** re-read the code first. Offer a focused Codex pass only if that leaves it open; it runs on Mike's word.
 
@@ -134,62 +113,7 @@ After the core agents complete, assess whether the findings warrant additional f
 
 ## Step 3: Compile Report
 
-After every launched agent completes, compile their results into a single report. Mark a lens that does not apply to the change as NOT IN SCOPE, and a lens the tier skipped as SKIPPED BY TIER. The three IMPROVEMENTS lists and the VERDICT are filled in by Step 4:
-
-```
-DEEP REVIEW REPORT
-===================
-Feature: [name or "uncommitted changes"]
-Date: [today]
-
-Scope:   [C#/C++, XML/XSLT, scripts, harness, docs; live files swept since <time>]
-Blast radius: [N types checked with graphify affected, M callers outside the diff / UNCHECKED (why) / NOT IN SCOPE (XML only)]
-Waves:   [which agents ran in which wave]
-
-STANDARDS:     [PASS/FAIL — N violations / NOT IN SCOPE / SKIPPED BY TIER]
-COMPATIBILITY: [PASS/FAIL — N incompatible, N unverified / NOT IN SCOPE / SKIPPED BY TIER]
-EFFICIENCY:    [PASS/FAIL — N issues (H high, M medium, L low) / NOT IN SCOPE / SKIPPED BY TIER]
-COMPLETENESS:  [COMPLETE/INCOMPLETE — list missing items / SKIPPED BY TIER]
-DATA FLOW:     [PASS/FAIL — N gaps, N inconsistencies / SKIPPED BY TIER]
-DESIGN:        [N KEEP proposals (A apply, F follow-up) / ALREADY OPTIMAL / SKIPPED BY TIER]
-XML:           [PASS/FAIL — G gates (F failed, X not run), N findings / NOT IN SCOPE / SKIPPED BY TIER]
-TOOLING:       [PASS/FAIL — N findings / NOT IN SCOPE / SKIPPED BY TIER]
-
-─────────────────────────
-DETAILS
-─────────────────────────
-
-[Agent 1 results — Standards]
-
-[Agent 2 results — Compatibility]
-
-[Agent 3 results — Efficiency]
-
-[Agent 4 results — Completeness]
-
-[Agent 5 results — Data Flow]
-
-[Agent 6 results — Design & Elegance]
-
-[Agent 7 results — XML & ModuleData Integrity, incl. OWED in-game checks]
-
-[Tooling correctness results]
-
-─────────────────────────
-ACTION ITEMS
-─────────────────────────
-1. [Most critical issue first]
-2. ...
-
-─────────────────────────
-IMPROVEMENTS (Step 4)
-─────────────────────────
-APPLIED:     [file:line, what changed, the test that proves it]
-NOT APPLIED: [file:line, one-line reason each]
-FOLLOW-UP:   [pre-existing code outside the change; its issue number, or why none is filed]
-
-VERDICT: READY FOR COMMIT / NEEDS FIXES
-```
+After every launched agent completes, compile their results into a single report. Mark a lens that does not apply to the change as NOT IN SCOPE, and a lens the tier skipped as SKIPPED BY TIER. Read `.claude/skills/deep-review/references/step3-template.md` before you compile, and write the report in its template.
 
 ## Step 3e: Root Cause Analysis (a blocking gate before commit, for the findings named here)
 
@@ -201,21 +125,11 @@ The recurring failure is patching a symptom and never extracting the systemic le
 
 **First, confirm it is actually confirmed.** Per `.claude/rules/evidence-over-claims.md`, a finding is "confirmed" only if you (or the agent) re-read the actual TAOM source / decompiled vanilla and verified the bug exists — not because an agent reported it confidently. If you took an agent's finding on faith, re-read the code now; an unverified finding is re-flagged for investigation, not entered into RCA.
 
-1. Write the finding text + severity.
-2. **Why missed:** what assumption, scope gap, or pattern blindness let it through? Be specific — name the rule that should have caught it, name the file/line that exhibits the pattern.
-3. **Preventive action:** generalizable rule, or scope extension to an existing rule? Or one-off?
-4. If the pattern has shipped before (grep `docs/reviews/rca-*.md` for it), call that out: repeat-offender bugs need stronger preventive action than first-time bugs.
+Then read `.claude/skills/deep-review/references/rca-format.md` before you write `docs/reviews/rca-<feature>-<YYYY-MM-DD>.md`, and follow it.
 
-**Write the result to `docs/reviews/rca-<feature>-<YYYY-MM-DD>.md`** following the format of `docs/reviews/rca-quickactions-2026-05-06.md` or `docs/reviews/rca-scene-scripts-cs-road-2026-05-13.md`:
-- Top-line summary
-- Findings table: # | Sev | Bug | Category | Why Missed | Preventive Action
-- Root-cause pattern section (if 2+ findings share a theme)
-- "Why each agent missed these" section: for each deep-review agent that ran and didn't catch the finding, state why their rule set didn't apply or why the agent's scope was too narrow
-- "Feedback memories to codify" section — only if there's a genuine systemic pattern; don't manufacture rules
+**Append the durable lesson to the master record.** For each systemic finding, also add an entry to the matching category file under `docs/reviews/lessons/`. Read `.claude/skills/deep-review/references/rca-format.md` "The lessons entry" before you write it.
 
-**Append the durable lesson to the master record.** For each systemic finding, also add an entry to the matching category file under `docs/reviews/lessons/` (e.g. `lessons/gamemodels-services.md`, `lessons/harmony-il.md`; index: `docs/reviews/LESSONS-LEARNED.md`), in the house shape (`### <imperative rule>` → `**Why missed:**` → `**Prevent:**` → `**Source:**`). The per-feature `rca-*.md` is the incident report; the lessons entry is the cross-feature rule that stops the *category* from recurring: it is the canonical, always-consulted record. Read the relevant category FILE before the next review of that subsystem (per-category files keep the read cheap). Only touch `MEMORY.md` if a new feature/topic memory file is involved.
-
-**A deferred finding needs an owner.** Every uppercase `FOLLOW-UP` line you write in an RCA cites an issue (`#<number>`) or says `no issue:` and why; `python tools/lint_docs.py --fail-on-drift` fails on a new line that does neither (#984), and the commit hook runs the same check on the staged RCA. To mention the marker in passing, put it in backticks (`` `FOLLOW-UP` ``); an issue number in backticks does not count as a citation.
+**A deferred finding needs an owner.** Every uppercase `FOLLOW-UP` line you write in an RCA cites an issue (`#<number>`) or says `no issue:` and why, or `python tools/lint_docs.py --fail-on-drift` and the commit hook fail (#984).
 
 **When an RCA file is required, it MUST exist BEFORE the closing commit.** The commit message should reference its path.
 
@@ -240,8 +154,6 @@ Then fill in the IMPROVEMENTS lists and the VERDICT in the Step 3 report. READY 
 - The review agents are READ-ONLY; they never edit. Code changes happen only in Step 4 (improvements) and the fix loop below (defects), both done by the orchestrator.
 - If any agent fails to launch (MCP issues, etc.), note it in the report and run the checks manually.
 - Engine signatures and behaviour come from the installed DLLs (`pwsh tools/taom-src.ps1 path <Type>` or ilspycmd). The dump at E:\Decompiled_Bannerlord\ can lag an engine bump; use it to browse, never as the authority.
-- Agent 5 (Data Flow) has historically been the most productive lens (no per-lens yield is measured yet).
-- If the verdict is NEEDS FIXES, list the fixes needed in priority order.
 
 ## HIGH findings: no silent deferrals
 

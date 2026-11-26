@@ -39,7 +39,7 @@ Create the following files under `Main/Features/$ARGUMENTS/`:
 - Only create if wrapping a new sealed TaleWorlds type not already adapted
 
 ### 5. Tests (MANDATORY — TDD)
-Follow .claude/rules/tests.md (it loads when you open a test).
+Follow .claude/rules/test-workflow.md and .claude/rules/tests.md (both load when you open a C# test).
 
 Create under `TAOM.Tests/Features/$ARGUMENTS/`:
 - `{FeatureName}ServiceTests.cs`: one test per behaviour and guard, judged by the two-edit test

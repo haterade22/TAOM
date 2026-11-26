@@ -171,7 +171,7 @@ Once root cause is confirmed:
 
 2. **Minimal diff.** Fewest files, fewest lines. Resist refactoring adjacent code while debugging — log it for a follow-up.
 
-3. **Write a regression test.** Per `tests.md` (TDD-mandatory):
+3. **Write a regression test.** Per `test-workflow.md` (TDD-mandatory) and `tests.md`:
    - **Fails** without the fix (proves the test is meaningful)
    - **Passes** with the fix (proves the fix works)
 

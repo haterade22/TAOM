@@ -23,11 +23,6 @@ paths:
 
 Campaign behaviors, ticks, menus, map events, capture, marriage, settings, console commands and parked features.
 
-One line per trap: its trigger and what never to do. The linked doc holds the mechanism, the
-history and the gate. A new trap for this area is a new row here, never a row in the always-loaded
-[trap index](../../../docs/ai-includes/orientation.md)
-([ADR-011](../../../docs/adrs/011-knowledge-delivery-tiers.md)).
-
 | Trap | Rule | Doc |
 |---|---|---|
 | Parked features | NavalTravel, ShaderPrecompilation: off in `SubModule.cs`; sweep every file the last toggle touched | [map](../../../docs/reference/feature-map.md) |

@@ -1,6 +1,6 @@
 ---
 name: issue
-description: Create a GitHub issue for a feature, bug fix, or crash with all required TAOM sections
+description: Use when the maintainer asks for a GitHub issue, or a standing word covers the one the work needs. Creating one is public. Writes the required TAOM sections.
 argument-hint: "[bug|feature|crash] [brief description]"
 ---
 

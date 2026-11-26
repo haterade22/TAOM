@@ -14,10 +14,9 @@ Full guide: `docs/ai-includes/architecture.md`
 | Rule | Detail |
 |------|--------|
 | Entry points <150 lines | ADR-002: delegate immediately to service. Gate: `EntryPointLineCountGateTests` |
-| No sealed types in services | ADR-007: `ICareerHeroAdapter` not `Hero`; the one exception is a protected-virtual boundary seam (ADR-007 "Exceptions"). Gate: `ServiceSignatureGateTests` |
-| Interfaces that earn their file | Every adapter has one (ADR-007); a service gets one only when a test fakes it or a second class implements it (ADR-002) |
+| No sealed types in services; convert at boundary | Services take adapters (`ICareerHeroAdapter`, not `Hero` or `Settlement`). The entry point converts sealed types at once, never deep in a service (AGENTS.md "Architecture"; ADR-007, whose "Exceptions" name the one protected-virtual seam). Gate: `ServiceSignatureGateTests` |
+| Interfaces that earn their file | Every adapter has one (ADR-007); a service or any other class gets one only when a test fakes it or a second class implements it (ADR-002); a hook when a patch needs a narrow seam over a wide service or a test fakes the hook (AGENTS.md "Architecture") |
 | Constructor injection only | No service locator in services. Gate: `ServiceLocatorGateTests` |
-| Convert at boundary | Adapt sealed types in the entry point, not deep in services |
 | `?.` for computed properties | TaleWorlds getters crash before your null check — see `adapters.md` |
 | Core names no client-only assembly | ADR-013: code that needs SandBox.View, Gauntlet, a ViewModelCollection or WinForms goes to TAOM.Client behind a core interface with a null; `ServerJitGateTests` fails a new core method that names one (unless its key is already in the baseline) |
 | Writers before gates | An engine flag, stat or total a plan or gate relies on lists every writer, vanilla first, with citations, and cites the line that builds it, not only its getter (`lessons/adapters-taleworlds-api.md`, Hammerhand; `ItemRoster.TotalFood` counts the herd's meat and `SellItemsAction` re-prices every unit: `docs/reviews/rca-provender-2026-10-23.md`) |
@@ -35,7 +34,7 @@ Full guide: `docs/ai-includes/architecture.md`
 
 ## Test Coverage
 
-Every decision path in a service or engine has a test, judged by the two-edit test. No coverage percentage is measured or claimed.
+Every decision path in a service or engine has a test, judged by the two-edit test (test-workflow.md). No coverage percentage is measured or claimed.
 
 ## Entity State Matrix (load-path mutations)
 
@@ -51,8 +50,7 @@ holes that SyncData does not cover:
 
 1. **A brand-new campaign never calls `LoadFrom`.** The engine calls a behavior's `SyncData` in
    loading mode only when a save record exists, so campaign B inherits campaign A's dictionaries, and
-   B's first save then PERSISTS A's state into B. (Shipped as 2 CRITICALs in the camps port, found
-   independently by two reviews.)
+   B's first save then PERSISTS A's state into B.
 2. **A loaded save has NEW engine objects under the old ids.** Any transient cache keyed by id but
    holding object references (MobileParty trackers, widget maps), and any absolute clock, latch or
    shown-flag, silently goes stale on load and drives ghosts or disables its mechanism.
@@ -69,16 +67,14 @@ before `OnSessionLaunched` may still reset there. `LoadFrom` additionally clears
 cache/clock/latch. Both paths get tests (`*SessionResetTests`). When reviewing, walk a second
 campaign in one process and a load-with-same-ids explicitly.
 
-**Why:** `docs/reviews/rca-yotthani-camps-2026-08-23.md` Class 1. The singleton-service precedent
-(config stores) made process lifetime look safe; campaign data is a different animal. The
-`OnSessionLaunched` reset this rule first prescribed ran after the momentum behavior had already
-read the stale War of the Ring phase (#764, `docs/reviews/rca-wotr-session-reset-2026-10-08.md`).
+**Why:** `docs/reviews/rca-yotthani-camps-2026-08-23.md` Class 1 and
+`docs/reviews/rca-wotr-session-reset-2026-10-08.md` (#764).
 
 ## Engine-Float Decision Gates: NaN Must FAIL the Gate (MANDATORY, the runtime sibling of the config rule in config-providers.md)
 
 Every NaN comparison is false, so a gate's polarity decides.
 
-1. **Config float:** reject non-finite at load with `FiniteFloatValidator`.
+1. **Config float:** reject non-finite at load with `FiniteFloatValidator` (config-providers.md item 4).
 2. **Engine float at a decision gate:** write a positive requirement, `if (!(x > 0f)) return`, and return null from a `bool?` service so vanilla decides.
 3. **Float-to-int cast:** check finiteness and range at the cast, because NaN and Infinity cast to `int.MinValue`, then gate the value, not arithmetic on it.
 4. **A new input into an old calculation:** re-audit every downstream gate and guard the service's exit. A moved gate is a new gate.
@@ -120,8 +116,12 @@ Two facts about `TaleWorlds.MountAndBlade.Agent` shape every mission-time featur
    the slot's NEW tenant, while `Monster`, `Name`, `Character`, `Health` and `Team` stay the dead agent's.
    So: never key mission state by `Agent.Index` without evicting in `OnAgentDeleted`; never hold an
    `Agent` or `IAgentAdapter` across frames and trust `IsActive()` alone; gate every held handle with
-   `AgentSlotIdentity.IsCurrentOccupant(agent)` before it touches native state. The adapter cache is
-   keyed by object and evicted for you; a restore closure, a shadow list, a machine's target agent are not.
+   `AgentSlotIdentity.IsCurrentOccupant(agent)` before it touches native state. `MissionAdapterFactory`
+   keys adapters by object reference and evicts on `OnAgentDeleted`, and `AgentAdapter.IsActive()`
+   requires `IsCurrentOccupant`: add no index-keyed cache beside it. A restore closure, a shadow list and
+   a machine's target agent are not evicted for you. Route every `SetActionChannel` through the
+   clip-exists guard, so a clip asked of the wrong monster gives a TAOM log line, not a native warning
+   (#592).
 2. **No engine callback is main-thread by contract.** Agent ticks, `Team.Tick`, `TeamAI`, AI `Formation.SetMovementOrder`, `Formation.GetOrderPositionOfUnit` (worker pool) and `AfterAsyncTickTick` run off the main thread and overlap views and UI. Blows, spawns and fades belong in `OnMissionTick`. A store reachable from a patch on any of those takes a lock. A collection an engine callback writes goes through `DeferredCallbackQueue.RunOrDefer`, or a lock when order does not matter. Wire `MissionThreadGuard.NoteCall` into a new native write. Table: [mission-frame-threads-and-native-costs.md](../../docs/reference/engine/mission-frame-threads-and-native-costs.md) "Which thread runs your target".
 3. **One behaviour tree per agent.** `BehaviorTreeMissionLogic.trees` holds one tree per agent, and every soldier whose race or culture has an ability profile already carries the race-ability tree, so a second `BehaviorTreeAgentComponent` takes its slot. A new per-agent tree for such soldiers runs from its feature's own mission tick, as `DwarfTreeHost` does ([dwarf-attacks.md](../../docs/features/dwarf-attacks.md)).
-4. **A nearby-agent query returns its own centre and every non-hostile team.** `Mission.GetNearbyAllyAgents` and its siblings never exclude the agent at the query point, and "ally" means any team not hostile to the one passed. Skip the source by reference, and filter by team only when the feature means one team ([lesson](../../docs/reviews/lessons/adapters-taleworlds-api.md) "Check whether a collection-returning API includes the caller"; shipped twice, the second in #1127).
+4. **A nearby-agent query returns its own centre and every non-hostile team.** `Mission.GetNearbyAllyAgents` and its siblings never exclude the agent at the query point, and "ally" means any team not hostile to the one passed. Skip the source by reference, and filter by team only when the feature means one team ([lesson](../../docs/reviews/lessons/adapters-taleworlds-api.md) "Check whether a collection-returning API includes the caller").
