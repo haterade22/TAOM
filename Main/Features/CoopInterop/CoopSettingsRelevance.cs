@@ -193,8 +193,8 @@ public static class CoopSettingsRelevance
         // view; the hero stands fast by a controller gate on this client, and in a session the policy gives the camera and the
         // kind's orders (SeatMissionPolicy.cs), with no hand-off, no mission time and no take of a soldier. The last two settings write the hero's
         // controller and the player team's order owner, but only where the policy allows FightOn and TakeSoldier, which a network session never
-        // does. SeatRiseWithPanel, the lift of the third-person view with the order panel open, writes only this peer's camera target offset. No campaign state is read from any of these settings.
-        "SeatEnabled", "BeginBattlesInSeat", "SeatCursorWithPanel", "SeatKeepPanelOpen", "SeatHeroFightsOn", "SeatTakeSoldierAfterFall", "SeatRiseWithPanel",
+        // does. SeatRiseWithPanel, the lift of the third-person view with the order panel open, writes only this peer's camera target offset. SeatEdgeScroll and SeatPanSpeed change only how fast this peer's own free camera flies. No campaign state is read from any of these settings.
+        "SeatEnabled", "BeginBattlesInSeat", "SeatCursorWithPanel", "SeatKeepPanelOpen", "SeatHeroFightsOn", "SeatTakeSoldierAfterFall", "SeatRiseWithPanel", "SeatEdgeScroll", "SeatPanSpeed",
         // Marshal's Word (M1 to M4): richer orders for YOUR companies in a single-player battle. The session is off whenever a network
         // session is active (MarshalView.MayRun asks the network fact, the engine's session or a live co-op session), so no value reaches a co-op simulation, and the
         // orders it issues go through the same OrderController a player's click does. MarshalSpacingRepair is read once at patch time and the patch stays off

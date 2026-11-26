@@ -700,6 +700,15 @@ claim = "in the Seat with the order panel open, a left click on the ground besid
 claim = "in the Seat with the order panel open, a right click over a panel button closes the open set or the panel, and Keep the order panel open does not open it again"
 
 [[human]]
+claim = "in the Seat, one wheel notch eases the view down over about a quarter of a second, several notches stack, and under a scene with a height limit the first notch back from the limit acts at once"
+
+[[human]]
+claim = "in the Seat with the order panel open, the pointer at a window edge flies the view that way (the top edge forward), and a windowed game with the pointer on a second monitor does not scroll"
+
+[[human]]
+claim = "in the Seat, holding the middle button turns the view around the ground point at the middle of the screen, letting go leaves no jump, and the cursor comes back where it was before the press"
+
+[[human]]
 claim = "each new default key (Insert, End) leaves the chat box shut, and Options > Keybindings > Action shows \"Keep to this soldier or company (TAOM)\" and \"Hide the interface (TAOM)\" with the keys Insert and End and no ERROR text"
 
 [[human]]

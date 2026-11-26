@@ -214,6 +214,41 @@ internal sealed partial class CommandTrialHost
             settings.HeroFightsOn = fightOn;
     }
 
+    // Camera feel: the three steps of the camera feel trial. The pointer, the middle button and the one-frame input are the adapter's and the view's
+    // trial fields, read in place of the mouse and the keys; nothing writes an agent or a formation.
+    public void SetEdgeScroll(bool on)
+    {
+        var settings = CommandTrialRun.TrialSettings;
+        if (settings != null)
+            settings.EdgeScroll = on;
+    }
+
+    public void SetPointer(float fractionX, float fractionY) => _adapter.TrialRanged = new Vec2(fractionX, fractionY);
+
+    public void SetMiddleHeld(bool held) => _adapter.TrialMiddleHeld = held;
+
+    public void SetInputOnce(SeatInput input) => _view.TrialInputOnce = input;
+
+    public void ReleaseCameraTrial()
+    {
+        _adapter.TrialRanged = null;
+        _adapter.TrialMiddleHeld = false;
+        _view.TrialInputOnce = null;
+        SetEdgeScroll(false);
+    }
+
+    // Two passes: the plane at the ground under the camera gives a first point, and the plane at the ground under that point gives the one read.
+    public Vec3f? ViewCentreOnGround()
+    {
+        if (!_adapter.TryReadCamera(out var camera, out _))
+            return null;
+        var first = SeatPivot.Find(camera, _adapter.GroundHeight(camera.X, camera.Y, camera.Z));
+        if (!first.Found)
+            return null;
+        var second = SeatPivot.Find(camera, _adapter.GroundHeight(first.X, first.Y, camera.Z));
+        return second.Found ? new Vec3f(second.X, second.Y, second.Z) : null;
+    }
+
     public bool FightGateUp => SeatPresence.HeroFightsOn;
 
     public bool HeroOnAi => _mission.MainAgent != null && _mission.MainAgent.IsActive() && _mission.MainAgent.Controller == AgentControllerType.AI;

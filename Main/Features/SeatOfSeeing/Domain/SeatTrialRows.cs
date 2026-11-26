@@ -33,6 +33,9 @@ internal static class SeatTrialRows
         new SeatTrialStep("sink_on_close", new[] { "rise_with_panel" }, 12f),
         new SeatTrialStep("panel_click_card", new[] { "enter" }, 20f),
         new SeatTrialStep("panel_click_order", new[] { "enter" }, 25f),
+        new SeatTrialStep("edge_pan", new[] { "enter" }, 15f),
+        new SeatTrialStep("rotate_pivot", new[] { "enter" }, 15f),
+        new SeatTrialStep("zoom_smooth", new[] { "enter" }, 12f),
         new SeatTrialStep("hero_falls", new[] { "enter" }, 30f),
         new SeatTrialStep("take_soldier", new[] { "hero_falls" }, 30f),
     };

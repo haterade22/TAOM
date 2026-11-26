@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -27,6 +28,8 @@ public class SeatSettingsProviderTests
         Assert.IsFalse(sut.HeroFightsOn, "the hand-off stays off until a run in the game proves it (build-spec section 8)");
         Assert.IsTrue(sut.TakeSoldierAfterFall, "it acts only after the fall, in a battle, on its own key");
         Assert.IsFalse(sut.RiseWithPanel, "section 1 promises vanilla behaviour to a player who never asks for the lift");
+        Assert.IsTrue(sut.EdgeScroll, "it acts only with the cursor shown");
+        Assert.AreEqual(1f, sut.PanSpeed);
     }
 
     [TestMethod]
@@ -41,6 +44,10 @@ public class SeatSettingsProviderTests
         Assert.AreEqual(SeatSettingsProvider.DefaultHeroFightsOn, settings.SeatHeroFightsOn);
         Assert.AreEqual(SeatSettingsProvider.DefaultTakeSoldierAfterFall, settings.SeatTakeSoldierAfterFall);
         Assert.AreEqual(SeatSettingsProvider.DefaultRiseWithPanel, settings.SeatRiseWithPanel);
+        Assert.AreEqual(SeatSettingsProvider.DefaultEdgeScroll, settings.SeatEdgeScroll);
+        Assert.AreEqual(SeatSettingsProvider.DefaultPanSpeed, settings.SeatPanSpeed);
+        Assert.IsTrue(SeatSettingsProvider.DefaultEdgeScroll);
+        Assert.AreEqual(1f, SeatSettingsProvider.DefaultPanSpeed, "1 is the speed the Seat always flew at");
         Assert.IsFalse(SeatSettingsProvider.DefaultRiseWithPanel, "a new setting whose default is off, so a player who never asks sees vanilla behaviour");
         Assert.IsFalse(SeatSettingsProvider.DefaultHeroFightsOn, "a default is never flipped under an unchanged name once it ships");
         Assert.IsTrue(SeatSettingsProvider.DefaultTakeSoldierAfterFall);
@@ -54,7 +61,7 @@ public class SeatSettingsProviderTests
     public void SavedValues_AreRead()
     {
         var settings = new TaomSettings { SeatEnabled = false, BeginBattlesInSeat = true, SeatCursorWithPanel = false, SeatKeepPanelOpen = true,
-            SeatHeroFightsOn = true, SeatTakeSoldierAfterFall = false, SeatRiseWithPanel = true };
+            SeatHeroFightsOn = true, SeatTakeSoldierAfterFall = false, SeatRiseWithPanel = true, SeatEdgeScroll = false, SeatPanSpeed = 2.5f };
 
         var sut = new SeatSettingsProvider(settings);
 
@@ -65,6 +72,32 @@ public class SeatSettingsProviderTests
         Assert.IsTrue(sut.HeroFightsOn);
         Assert.IsFalse(sut.TakeSoldierAfterFall);
         Assert.IsTrue(sut.RiseWithPanel);
+        Assert.IsFalse(sut.EdgeScroll);
+        Assert.AreEqual(2.5f, sut.PanSpeed);
+    }
+
+    [DataTestMethod]
+    [DataRow(float.NaN)]
+    [DataRow(float.PositiveInfinity)]
+    [DataRow(float.NegativeInfinity)]
+    [DataRow(0f)]
+    [DataRow(0.24f)]
+    [DataRow(4.01f)]
+    [DataRow(-1f)]
+    public void ASavedPanSpeed_ThatIsNotARealNumberInRange_ReadsAsTheDefault(float saved)
+    {
+        var sut = new SeatSettingsProvider(new TaomSettings { SeatPanSpeed = saved });
+
+        Assert.AreEqual(SeatSettingsProvider.DefaultPanSpeed, sut.PanSpeed, "a bad value never reaches the camera");
+    }
+
+    [DataTestMethod]
+    [DataRow(0.25f)]
+    [DataRow(1f)]
+    [DataRow(4f)]
+    public void ASavedPanSpeed_InTheSlidersRange_IsRead(float saved)
+    {
+        Assert.AreEqual(saved, new SeatSettingsProvider(new TaomSettings { SeatPanSpeed = saved }).PanSpeed);
     }
 
     [TestMethod]
@@ -110,6 +143,7 @@ public class SeatSettingsProviderTests
     [DataRow(nameof(TaomSettings.SeatHeroFightsOn))]
     [DataRow(nameof(TaomSettings.SeatTakeSoldierAfterFall))]
     [DataRow(nameof(TaomSettings.SeatRiseWithPanel))]
+    [DataRow(nameof(TaomSettings.SeatEdgeScroll))]
     public void EachSetting_SitsInTheSeatGroup_NeedsNoRestart_AndStatesItsDefault(string name)
     {
         var property = typeof(TaomSettings).GetProperty(name)!;
@@ -132,5 +166,32 @@ public class SeatSettingsProviderTests
         StringAssert.Contains(enabled, "mission time keys", "the contract has the hint say that the Seat off also stops keys 533 to 535");
         StringAssert.Contains(rise, "target lock", "a lift drops the target lock, and no new lock starts until the view has sunk");
         StringAssert.Contains(rise, "third person");
+    }
+
+    [TestMethod]
+    public void ThePanSpeedSlider_SitsInTheSeatGroup_RunsFromAQuarterToFour_AndStatesItsDefault()
+    {
+        var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.SeatPanSpeed))!;
+
+        Assert.AreEqual(Group, McmText.Plain(Read(Attribute(property, "SettingPropertyGroupAttribute")!, "GroupName") as string));
+        var slider = Attribute(property, "SettingPropertyFloatingIntegerAttribute")!;
+        Assert.AreEqual((double)SeatSettingsProvider.MinPanSpeed, Convert.ToDouble(Read(slider, "MinValue")), 1e-6);
+        Assert.AreEqual((double)SeatSettingsProvider.MaxPanSpeed, Convert.ToDouble(Read(slider, "MaxValue")), 1e-6);
+        Assert.AreEqual(false, Read(slider, "RequireRestart"));
+        var hint = (string)Read(slider, "HintText");
+        StringAssert.Contains(hint, "Default: 1");
+        StringAssert.StartsWith(hint, "{=taom_seat_mcm_pan_speed_hint}");
+        StringAssert.StartsWith(Read(slider, "DisplayName") as string, "{=taom_seat_mcm_pan_speed}");
+    }
+
+    [TestMethod]
+    public void TheTwoCameraFeelSettings_AreAfterTheSevenOlderOnes_InTheGroupsOrder()
+    {
+        int OrderOf(string name) => (int)Read(Attribute(typeof(TaomSettings).GetProperty(name)!, name == nameof(TaomSettings.SeatPanSpeed)
+            ? "SettingPropertyFloatingIntegerAttribute" : "SettingPropertyBoolAttribute")!, "Order");
+
+        Assert.AreEqual(7, OrderOf(nameof(TaomSettings.SeatEdgeScroll)));
+        Assert.AreEqual(8, OrderOf(nameof(TaomSettings.SeatPanSpeed)));
+        Assert.AreEqual(6, OrderOf(nameof(TaomSettings.SeatRiseWithPanel)));
     }
 }

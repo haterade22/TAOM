@@ -3239,6 +3239,16 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "{=taom_seat_mcm_rise_hint}With your view on your hero in third person and the order panel open, the view lifts (7 metres in a field battle, 3 in a siege or a sally out) so you can see over the ranks, and it sinks when the panel closes. The lift drops the target lock, and no new lock starts until the view has sunk. Under a roof the view rises through it. The Seat itself does not use this. It works with the Seat turned off too. Default: off.")]
     public bool SeatRiseWithPanel { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultRiseWithPanel;
 
+    [SettingPropertyGroup("{=taom_mcm_group_seat_of_seeing}Seat of Seeing")]
+    [SettingPropertyBool("{=taom_seat_mcm_edge}Edge scroll", Order = 7, RequireRestart = false,
+        HintText = "{=taom_seat_mcm_edge_hint}While you are in the Seat with the cursor shown, moving the pointer to the edge of the window flies the view that way, faster the nearer the edge. It stops while you hold the middle mouse button, and while a menu or a popup has the focus. Default: on.")]
+    public bool SeatEdgeScroll { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultEdgeScroll;
+
+    [SettingPropertyGroup("{=taom_mcm_group_seat_of_seeing}Seat of Seeing")]
+    [SettingPropertyFloatingInteger("{=taom_seat_mcm_pan_speed}Seat pan speed", 0.25f, 4f, "0.00", Order = 8, RequireRestart = false,
+        HintText = "{=taom_seat_mcm_pan_speed_hint}Multiplies how fast the view flies with the movement keys and the edge scroll in the Seat. 1 is the usual speed. Between 0.25 and 4. Default: 1.")]
+    public float SeatPanSpeed { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultPanSpeed;
+
     // --- Marshal's Word (docs/features/marshals-word.md) ---
 
     [SettingPropertyGroup("{=taom_mcm_group_marshal_s_word}Marshal's Word", GroupOrder = 83)]

@@ -153,6 +153,7 @@ internal sealed partial class CommandTrialScript
     private void ReleaseAfterFailure()
     {
         _host.SetInput(NoInput);
+        _host.ReleaseCameraTrial();
         _host.ReleaseTime();
         _host.StaminaReleaseForced();
         if (_host.PanelOpen)
