@@ -18,6 +18,7 @@ UTC and `--since` is a calendar date, so the window edge can be off by the hours
 """
 import argparse
 import json
+import os
 import re
 import sys
 import tempfile
@@ -1246,7 +1247,12 @@ def _worktree_of(folder):
     except OSError:
         return ""
     m = _GITDIR_RE.match(head.strip())
-    return edit_key(m.group(1)).rstrip("/") + "/" if m else ""
+    if not m:
+        return ""
+    main = m.group(1)
+    if not re.match(r"([A-Za-z]:)?[\\/]", main):   # a relative gitdir is read from the checkout root
+        main = os.path.normpath(os.path.join(str(folder), main))
+    return edit_key(main).rstrip("/") + "/"
 
 
 def set_repo(stats, repo):
@@ -1274,7 +1280,12 @@ def checkout_of(stats, target):
     key = edit_key(target)
     if key.startswith(stats.repo_key):
         nested = key[len(stats.repo_key):]
-        return "sibling" if nested.startswith(NESTED_WORKTREES) and "/" in nested[len(NESTED_WORKTREES):] else "main"
+        name, slash, _ = nested[len(NESTED_WORKTREES):].partition("/")
+        if not nested.startswith(NESTED_WORKTREES) or not slash:
+            return "main"
+        # A folder that is still there and has no .git entry is a plain folder of the main checkout.
+        folder = Path(raw[:len(stats.repo_key) + len(NESTED_WORKTREES) + len(name)])
+        return "sibling" if not folder.exists() or (folder / ".git").exists() else "main"
     m = stats.sibling_re.match(raw)
     if not m:
         return None

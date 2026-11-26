@@ -227,7 +227,9 @@ else
   elif [[ -n "$NEWER_TPAC" ]]; then
     # The banner prints once per drift state, not in every session: 33 sessions printed it in a week
     # and 3 ran the audit (harness retro 2026-11-25, P3), and /game-run now checks the drift itself
-    # before a battle. The stamp holds the pack the banner named. It prints again for another pack,
+    # before a battle. The stamp holds the pack the banner named, which is the first newer pack the
+    # scan finds. A second pack that changes behind the same first one prints nothing new: the drift
+    # is already told and the audit is still owed. It prints again when the first pack is another one,
     # once the stamp is seven days old (find -mtime +6 lists it then), and when the catalogue is newer
     # than the stamp, which is a rebuilt catalogue and so a new state.
     AD_NAME=${NEWER_TPAC#"$ARMORY_ASSETS"/}

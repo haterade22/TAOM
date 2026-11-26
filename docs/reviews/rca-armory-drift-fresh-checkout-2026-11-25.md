@@ -154,3 +154,34 @@ preconditions name. No issue: the banner is a hint since P3, and the exact check
 
 Extended, not new: "A gate that moves where the work happens moves it away from every trigger tied to the
 old place" in [build-tooling-workflow.md](lessons/build-tooling-workflow.md) now lists a file's time on disk.
+
+## Codex review after the merge (2026-11-26)
+
+Mike asked for it after the merge; no Codex pass ran before. `codex exec` at `xhigh` on the scripts and
+tests of `0e92a28f9`, prompt `codex-adversarial-harness-worktree-rules-2026-11-26.prompt.md`. Eleven
+findings, none P1. Each was read against the code. Two of its seven suspects were disputed by Codex
+itself: the glob matcher agrees with every glob form in the rule files, and the growth gates in
+`tools/lint_docs.py` hold for a rename, a new file, a missing base, `--staged` and a merge commit.
+
+| # | Codex | Finding | Verdict | What was done |
+|---|---|---|---|---|
+| F5 | P2 | `harness_retro.py` took a relative `gitdir:` line as it stood, so a worktree made with `worktree.useRelativePaths` was no sibling in the rule delivery table | Confirmed by a failing test | A relative gitdir is read from the checkout root, as the hook does |
+| F6 | P2 | The miner counted a plain folder under `.claude/worktrees/` as a worktree; the hook treats it as the main checkout | Confirmed by a failing test | A folder that is there with no `.git` entry is main checkout work |
+| F11 | P3 | The quiet rows of the Armory banner tests passed for a hook that died: `exit 17` in the quiet branch left 13 rows green | Confirmed in the code | Every row first requires exit 0 |
+| F4 | P2 | A second changed pack prints nothing while the first newer pack stays the same | Confirmed, and the comment and the feature doc claimed more ("again for another pack") | Wording corrected. The behaviour stays: the drift is told, the audit is owed, and `/game-run` runs the exact check. A stamp on the whole set needs a full scan at every session start |
+| F1 | P2 | A path with `..`, or through a junction into a sibling, is taken for the session's own checkout | Confirmed in the code, not applied | The tools send absolute paths with no `..`, and no junction between checkouts exists. No issue: a guard for a case nobody has shown |
+| F2 | P2 | With `CLAUDE_PROJECT_DIR` set to a subfolder of the checkout the hook stays silent | Confirmed in the code, not applied | The project folder is the one that holds `.claude/`. UNVERIFIED whether a session can start with another value |
+| F3 | P2 | No Python and a path with a `\u` escape: no note and no "unchecked" | Confirmed in the code, not applied | Both conditions at once; `session-start.sh` already reports a missing Python |
+| F7 | P3 | Six Reads that end together give six copies of the note | Confirmed by Codex's run, not applied | The cost is repeated text once per rule set and session. A lock on a hook that runs after every Read costs more than that |
+| F8 | P3 | Session ids `a.b` and `ab` share a ledger | Not applied | Session ids are UUIDs |
+| F9 | P3 | A file more than 40 folders below its checkout gets no note | Not applied | The deepest tracked path has 8 segments |
+| F10 | P3 | A 40 MB payload takes 5.3 s against a 5 s timeout | Not applied | UNVERIFIED that a payload of that size can arrive; a timeout is a missed note, and the hook never blocks |
+
+Not checked by Codex, in its own words: live delivery by Claude Code, UNC paths, and the full hook suite
+(it does not run git commands that write). The live delivery was proven by hand on 2026-11-26: a Read of
+`Main/IoC.cs` in a sibling worktree returned the note with both C# rules.
+
+Why the two miner defects were missed: the hook's rows for a relative gitdir and for a plain nested
+folder came from the Tooling lens (T8), and nobody carried them to the second consumer of the same
+question, the miner. The standing lesson in `build-tooling-workflow.md` covers it: "When two tools are said
+to share a rule, the shared symbol is not the claim: test the pair where the logic around it differs".

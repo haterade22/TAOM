@@ -1609,6 +1609,21 @@ class RuleReachTests(Base):
         self.assertEqual(self.rows(), {("main checkout only", "main sessions"): (1, 0, 0, 0),
                                        ("sibling worktree only", "subagents"): (1, 0, 0, 0)})
 
+    def test_a_linked_worktree_with_a_relative_gitdir_counts(self):
+        # git writes this form under worktree.useRelativePaths; the hook resolves it, so the miner must
+        # (Codex review 2026-11-26, F5).
+        wt = self._beside("rel", "gitdir: ../" + Path(self.main).name + "/.git/worktrees/rel")
+        self.env.write("s1.jsonl", [tool_use("t1", "Read", file_path=wt + "\\Main\\Foo.cs")])
+        self.assertEqual(self.rows(), {("sibling worktree only", "main sessions"): (1, 0, 0, 0)})
+
+    def test_a_plain_folder_under_dot_claude_worktrees_is_the_main_checkout(self):
+        # A folder that is there and holds no .git is no checkout of its own: the hook stays silent
+        # for it, so it is main checkout work (Codex review 2026-11-26, F6).
+        plain = Path(self.main) / ".claude" / "worktrees" / "plain"
+        plain.mkdir(parents=True)
+        self.env.write("s1.jsonl", [tool_use("t1", "Read", file_path=str(plain) + "\\notes\\a.md")])
+        self.assertEqual(self.rows(), {("main checkout only", "main sessions"): (1, 0, 0, 0)})
+
     def test_run_from_a_linked_worktree_the_main_checkout_is_the_one_its_git_file_names(self):
         main = self.env.root / "main"
         (main / ".git" / "worktrees" / "repo").mkdir(parents=True)

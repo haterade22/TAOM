@@ -4261,9 +4261,13 @@ ad_run() {  # stdout of session-start.sh at startup, in the sandbox project with
         bash "$REPO/.claude/hooks/session-start.sh" 2>/dev/null
 }
 ad_is() {  # $1 banner|quiet, $2 label, $3 the pack name a banner must hold
-    local out
+    local out rc
     out=$(ad_run)
-    if [[ "$1" == banner ]]; then
+    rc=$?
+    # A hook that dies prints no banner either, so a quiet row must see the hook end well.
+    if (( rc != 0 )); then
+        bad "session-start exited $rc $2"
+    elif [[ "$1" == banner ]]; then
         if grep -q 'ARMORY ART DRIFT' <<< "$out" && grep -qF "${3:-ARMORY ART DRIFT}" <<< "$out"; then
             ok "session-start prints the Armory drift banner $2"
         else

@@ -91,7 +91,7 @@ Unlike a generator, a companion that fails, exits 2 or prints SKIPPED keeps the 
   prints `ARMORY ART DRIFT` with the file and the command. Fail-open, never silent: an unresolvable
   install or an overrun prints "UNCHECKED". Since 2026-11-25 the banner prints once per drift state
   and per checkout: the stamp `.claude/logs/.armory-drift-printed` of that checkout holds the pack it
-  named, and it prints again for another pack, after seven days, or when the catalogue is newer than
+  named (the first newer pack the scan finds), and it prints again when that first pack is another one, after seven days, or when the catalogue is newer than
   the stamp. A session that finds no drift deletes the stamp. In the week before, 33 sessions printed
   the banner and 3 ran the audit ([retro](../reviews/harness-retro-2026-11-25.md), P3). The banner
   is a file-time hint. git writes the catalogue of a linked worktree with the time of the checkout,
