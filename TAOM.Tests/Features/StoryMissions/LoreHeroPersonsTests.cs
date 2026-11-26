@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Core.Infrastructure;
 using TAOM.Features.LongDefeat.Domain;
 using TAOM.Features.StoryMissions.Domain;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.StoryMissions;
 
