@@ -173,6 +173,28 @@ public class WandererTownSideServiceTests
         Assert.AreEqual(3, _sut.Choose("orc", FreeTown, options));
     }
 
+    [TestMethod]
+    public void Choose_MovesAFittingWandererToAnEmptyTown_WhenTheFittingDestinationIsTaken()
+    {
+        // The new-game fill gives each wanderer its own town from a shuffled list; a redirected one may have taken this slot.
+        var options = new[] { Option(FreeTown, hasWanderer: true), Option(EvilTown), Option(NeutralTown), Option(FreeTown) };
+        Assert.AreEqual(2, _sut.Choose("gondor", FreeTown, options, destinationHasWanderer: true));
+    }
+
+    [TestMethod]
+    public void Choose_KeepsATakenFittingDestination_WhenNoEmptyTownOfTheSideExists()
+    {
+        var options = new[] { Option(FreeTown, hasWanderer: true), Option(EvilTown), Option(FreeTown, hasWanderer: true), Option(FreeTown, usable: false) };
+        Assert.AreEqual(-1, _sut.Choose("gondor", FreeTown, options, destinationHasWanderer: true));
+    }
+
+    [TestMethod]
+    public void Choose_KeepsAFreeFittingDestination_WhenItHoldsNoOtherWanderer()
+    {
+        var options = new[] { Option(FreeTown), Option(FreeTown) };
+        Assert.AreEqual(-1, _sut.Choose("gondor", FreeTown, options, destinationHasWanderer: false));
+    }
+
     // ---- Applies -----------------------------------------------------------------------
 
     [TestMethod]

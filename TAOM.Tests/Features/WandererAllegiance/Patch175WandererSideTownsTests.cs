@@ -17,7 +17,7 @@ using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features.WandererAllegiance;
 
-/// <summary>Patch175: the scope counter, the module wiring, and the engine bindings of the three targets.</summary>
+/// <summary>Patch175: the scope counter, the module wiring, and the engine bindings of the five targets.</summary>
 [TestClass]
 public class Patch175WandererSideTownsTests
 {
@@ -147,14 +147,77 @@ public class Patch175WandererSideTownsTests
 
     [TestMethod]
     [TestCategory("BindingVerification")]
-    public void ScopeTargets_BothResolve_ToTheCompanionsBehaviorsPrivateMethods()
+    [TestCategory("RequiresGameIL")]
+    public void ScopeTargets_AreTooLargeForTheClrToInline()
+    {
+        // A scope prefix on a method the JIT inlined into its caller would never run (lessons/harmony-il.md, #1189).
+        var targets = new[]
+        {
+            EngineMethod("TaleWorlds.CampaignSystem.CampaignBehaviors.CompanionsCampaignBehavior", "CreateCompanionAndAddToSettlement", BindingFlags.Instance | BindingFlags.NonPublic),
+            EngineMethod("TaleWorlds.CampaignSystem.CampaignBehaviors.CompanionsCampaignBehavior", "SwapCompanions", BindingFlags.Instance | BindingFlags.NonPublic),
+            EngineMethod("TaleWorlds.CampaignSystem.CampaignBehaviors.HeroSpawnCampaignBehavior", "OnHeroDailyTick", BindingFlags.Instance | BindingFlags.NonPublic),
+        };
+        foreach (var target in targets)
+            Assert.IsTrue(target.GetMethodBody()!.GetILAsByteArray()!.Length > 100,
+                target.DeclaringType!.Name + "." + target.Name + " is small enough to inline now: scope a method the CLR cannot inline (lessons/harmony-il.md, #1189).");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void HeroSpawnScopeTargets_AreOnlyEverReachedThroughEventDelegates()
+    {
+        // OnCompanionRemoved is under 100 IL bytes, so no size pin: it has no direct caller (a delegate call is never inlined).
+        // RegisterEvents must take both methods with ldftn, and no other method of the type may call them.
+        var type = AccessTools.TypeByName("TaleWorlds.CampaignSystem.CampaignBehaviors.HeroSpawnCampaignBehavior");
+        Assert.IsNotNull(type);
+        var flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly;
+        foreach (var name in new[] { "OnHeroDailyTick", "OnCompanionRemoved" })
+        {
+            var target = EngineMethod(type!.FullName!, name, BindingFlags.Instance | BindingFlags.NonPublic);
+            var token = BitConverter.GetBytes(target.MetadataToken);
+            var ldftn = new byte[] { 0xFE, 0x06 }.Concat(token).ToArray();
+            var call = token;
+            var viaDelegate = false;
+            foreach (var other in type.GetMethods(flags))
+            {
+                var il = other.GetMethodBody()?.GetILAsByteArray();
+                if (il == null || other == target)
+                    continue;
+                viaDelegate |= Contains(il, ldftn);
+                Assert.IsFalse(Contains(il, new byte[] { 0x28 }.Concat(call).ToArray()) || Contains(il, new byte[] { 0x6F }.Concat(call).ToArray()),
+                    other.Name + " calls " + name + " directly: it may inline, so scope it with a size pin (lessons/harmony-il.md, #1189).");
+            }
+            Assert.IsTrue(viaDelegate, name + " is no longer registered as an event delegate: re-check how vanilla reaches it.");
+        }
+    }
+
+    private static bool Contains(byte[] haystack, byte[] needle)
+    {
+        for (var i = 0; i + needle.Length <= haystack.Length; i++)
+        {
+            var match = true;
+            for (var j = 0; j < needle.Length && match; j++)
+                match = haystack[i + j] == needle[j];
+            if (match)
+                return true;
+        }
+        return false;
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void ScopeTargets_AllResolve_ToThePrivateMethodsOfTheTwoBehaviors()
     {
         var create = EngineMethod("TaleWorlds.CampaignSystem.CampaignBehaviors.CompanionsCampaignBehavior",
             "CreateCompanionAndAddToSettlement", BindingFlags.Instance | BindingFlags.NonPublic);
         var swap = EngineMethod("TaleWorlds.CampaignSystem.CampaignBehaviors.CompanionsCampaignBehavior",
             "SwapCompanions", BindingFlags.Instance | BindingFlags.NonPublic);
+        var dailyTick = EngineMethod("TaleWorlds.CampaignSystem.CampaignBehaviors.HeroSpawnCampaignBehavior",
+            "OnHeroDailyTick", BindingFlags.Instance | BindingFlags.NonPublic);
+        var removed = EngineMethod("TaleWorlds.CampaignSystem.CampaignBehaviors.HeroSpawnCampaignBehavior",
+            "OnCompanionRemoved", BindingFlags.Instance | BindingFlags.NonPublic);
 
         var targets = Patch175_WandererSideScope.TargetMethods().ToArray();
-        CollectionAssert.AreEquivalent(new[] { create, swap }, targets);
+        CollectionAssert.AreEquivalent(new[] { create, swap, dailyTick, removed }, targets);
     }
 }

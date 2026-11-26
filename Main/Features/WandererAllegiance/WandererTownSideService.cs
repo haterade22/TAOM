@@ -54,11 +54,15 @@ public sealed class WandererTownSideService
 
     /// <summary>
     /// The index into <paramref name="options"/> of the town to use instead of <paramref name="destination"/>, or -1 to keep
-    /// the destination (it already fits, or no usable town fits). A fitting town with no wanderer in it is preferred.
+    /// the destination. A destination that fits and holds no other unhired wanderer is kept. A destination of the opposite side is
+    /// replaced by a fitting town, an empty one first. A fitting destination that already holds another wanderer
+    /// (<paramref name="destinationHasWanderer"/>: an earlier redirect took its slot) is replaced only by an empty fitting town,
+    /// so two wanderers do not share a tavern while another town has none.
     /// </summary>
-    public int Choose(string? wandererCultureId, SideIds destination, IReadOnlyList<WandererTownOption> options)
+    public int Choose(string? wandererCultureId, SideIds destination, IReadOnlyList<WandererTownOption> options, bool destinationHasWanderer = false)
     {
-        if (Fits(wandererCultureId, destination))
+        var fits = Fits(wandererCultureId, destination);
+        if (fits && !destinationHasWanderer)
             return -1;
 
         var empty = new List<int>();
@@ -71,7 +75,7 @@ public sealed class WandererTownSideService
             (option.HasWanderer ? occupied : empty).Add(i);
         }
 
-        var pool = empty.Count > 0 ? empty : occupied;
+        var pool = empty.Count > 0 || fits ? empty : occupied;
         return pool.Count == 0 ? -1 : pool[_random.Next(pool.Count)];
     }
 }

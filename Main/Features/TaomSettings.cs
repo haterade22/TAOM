@@ -1313,7 +1313,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_world}World/{=taom_mcm_group_wanderer_allegiance}Wanderer Allegiance")]
     [SettingPropertyBool("{=taom_mcm_EnableWandererSideTowns}Wanderers Stay On Their Side", Order = 2, RequireRestart = false,
-        HintText = "{=taom_mcm_EnableWandererSideTowns_hint}When ON (default), a new or relocated tavern wanderer stands only in a town whose owner is on their side: an orc never appears in a Free town and a Gondor ranger never in an Evil one. Neutral wanderers and Neutral towns mix with everyone. A wanderer already standing in a wrong-side town stays until vanilla's daily swap picks them. When OFF, vanilla picks any town.")]
+        HintText = "{=taom_mcm_EnableWandererSideTowns_hint}When ON (default), a new, dismissed or relocated wanderer stands only in a town whose owner is on their side: an orc never appears in a Free town and a Gondor ranger never in an Evil one. Neutral wanderers and Neutral towns mix with everyone. A wanderer already standing in a wrong-side town stays until vanilla's daily swap picks them. When OFF, vanilla picks any town.")]
     public bool EnableWandererSideTowns { get; set; } = true;
 
     // --- World / Hard Questions ---

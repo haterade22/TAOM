@@ -20,7 +20,8 @@ public sealed class WandererTownAdapter
 
     /// <summary>
     /// The town the wanderer should enter instead of <paramref name="destination"/>, or null to keep it: the destination already
-    /// suits the wanderer, the hero is not an unhired wanderer, or no usable town of the wanderer's side exists.
+    /// suits the wanderer and holds no other unhired wanderer (or no empty town of its side exists), the hero is not an unhired
+    /// wanderer, or no usable town of the wanderer's side exists.
     /// </summary>
     public Settlement? RedirectedTown(Hero? hero, Settlement? destination)
     {
@@ -28,11 +29,9 @@ public sealed class WandererTownAdapter
             return null;
 
         var culture = hero.Culture?.StringId;
-        if (_service.Fits(culture, FactionSides.OfSettlementOwner(destination)))
-            return null;
-
         var towns = new List<Settlement>();
         var options = new List<WandererTownOption>();
+        var destinationOccupied = false;
         var playerSettlement = Hero.MainHero?.CurrentSettlement;
         foreach (var town in Town.AllTowns)
         {
@@ -48,11 +47,13 @@ public sealed class WandererTownAdapter
                 }
             }
 
+            if (settlement == destination)
+                destinationOccupied = occupied;
             towns.Add(settlement);
             options.Add(new WandererTownOption(FactionSides.OfSettlementOwner(settlement), usable, occupied));
         }
 
-        var index = _service.Choose(culture, FactionSides.OfSettlementOwner(destination), options);
+        var index = _service.Choose(culture, FactionSides.OfSettlementOwner(destination), options, destinationOccupied);
         return index < 0 ? null : towns[index];
     }
 
