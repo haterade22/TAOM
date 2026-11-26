@@ -8,4 +8,7 @@ public interface IWandererAllegianceSettingsProvider
 {
     bool IsEnabled { get; }
     WandererAllegianceScope Scope { get; }
+
+    /// <summary>New and swapped wanderers stand only in towns of their own side (<see cref="WandererTownSideService"/>). MCM only; on when MCM is absent.</summary>
+    bool PlacesWanderersBySide { get; }
 }

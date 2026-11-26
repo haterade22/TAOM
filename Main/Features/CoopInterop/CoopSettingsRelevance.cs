@@ -125,6 +125,7 @@ public static class CoopSettingsRelevance
         // changes a running simulation.
         "EnableReserveSteps",
         "EnableBattleGearLoot", "BattleGearLootChancePercent",
+        "EnableWandererSideTowns",
         // Camp work (#860): the men hunt, fell timber or fish from a raised camp. A work starts only behind the single-player
         // predicate (CampActivityService.GlobalBlock), and one already running when a shared campaign begins is cleared at the wait's
         // next tick with nothing paid, so a peer holding a different value never changes a running simulation.
