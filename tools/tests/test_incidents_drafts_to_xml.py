@@ -90,6 +90,19 @@ class ValidateTests(unittest.TestCase):
         errors = conv.validate([row("taom_inc_voc_free_gods_x", "voc", "free", "gods", "the Valar")], CATALOG)
         self.assertTrue(any("should be taom_inc_voc_free_gods" in e for e in errors), errors)
 
+    def test_APeoplesVocabularyRow_IsAccepted_AndDoesNotReplaceTheSideRows(self):
+        for side in ("dwarves", "isengard", "orcs", "southrons_shadow", "elves_free"):
+            rows = [row(f"taom_inc_voc_{side}_gods", "voc", side, "gods", "Aule")]
+            self.assertEqual(conv.validate(rows, CATALOG), [], side)
+        errors = conv.validate([good("desc", "By {GODS}."), row("taom_inc_voc_dwarves_gods", "voc", "dwarves", "gods", "Aule")], CATALOG)
+        self.assertEqual(len([e for e in errors if "vocabulary row" in e]), 2, "a people row never stands in for the free and shadow rows")
+
+    def test_APeoplesVocabularyRow_WithAnUnknownPeopleOrAWrongKey_IsRefused(self):
+        errors = conv.validate([row("taom_inc_voc_hobbits_gods", "voc", "hobbits", "gods", "Yavanna")], CATALOG)
+        self.assertTrue(any("must be free, shadow or a people" in e for e in errors), errors)
+        errors = conv.validate([row("taom_inc_voc_dwarves_power_oath", "voc", "dwarves", "gods", "Aule")], CATALOG)
+        self.assertTrue(any("should be taom_inc_voc_dwarves_gods" in e for e in errors), errors)
+
     def test_AVocabularyTextMayNotHoldAVariable(self):
         errors = conv.validate([row("taom_inc_voc_free_gods", "voc", "free", "gods", "the {COIN}")], CATALOG)
         self.assertTrue(any("must not hold the variable" in e for e in errors), errors)

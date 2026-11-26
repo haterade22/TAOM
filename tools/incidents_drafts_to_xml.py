@@ -4,6 +4,10 @@
 Draft columns: key, incident_id, side, slot, text, notes. A row is one text:
   key       taom_inc_<incident id without incident_>_<all|free|shadow>_<title|desc|optN>
             taom_inc_voc_<free|shadow>_<word>          (side vocabulary, incident_id "voc")
+            taom_inc_voc_<people>[_<free|shadow>]_<word>   (a people's own word, tried before the side's; people:
+                                                       isengard, west, rohirrim, northmen, dunlendings, southrons,
+                                                       easterlings, elves, dwarves, orcs; side column = the part
+                                                       between voc_ and the word)
   side      all (one text for everyone), free or shadow; slot "-" is a note row (no text) and is skipped.
 
 Each text becomes  <string id="str_taom_inc.<variation>" text="{=<key>}<text>" />  inside one generated block of an
@@ -43,6 +47,8 @@ END = "<!-- INCIDENT-VOICES-END -->"
 COLUMNS = ["key", "incident_id", "side", "slot", "text", "notes"]
 SIDES = ("all", "free", "shadow")
 VOCAB_SIDES = ("free", "shadow")
+VOCAB_PEOPLES = ("isengard", "west", "rohirrim", "northmen", "dunlendings", "southrons", "easterlings", "elves", "dwarves", "orcs")
+VOCAB_SCOPE = re.compile(r"^(free|shadow|(" + "|".join(VOCAB_PEOPLES) + r")(_(free|shadow))?)$")
 FORBIDDEN_WORDS = ("calradia", "calradian", "calradic", "heaven", "empire", "imperial")
 VARIABLE = re.compile(r"\{([^{}]*)\}")
 SLOT = re.compile(r"^(title|desc|opt([1-9][0-9]*))$")
@@ -118,8 +124,8 @@ def validate(rows: list[dict], catalog: dict) -> list[str]:
                 errors.append(f"{where}: {key} uses the banned word '{word}'")
 
         if is_vocab:
-            if side not in VOCAB_SIDES or row["incident_id"].lower() not in ("voc", "vocabulary", ""):
-                errors.append(f"{where}: {key} is a vocabulary row, so its side must be free or shadow and its incident_id voc")
+            if not VOCAB_SCOPE.match(side) or row["incident_id"].lower() not in ("voc", "vocabulary", ""):
+                errors.append(f"{where}: {key} is a vocabulary row, so its side must be free, shadow or a people (optionally _free or _shadow) and its incident_id voc")
                 continue
             word = slot.upper()
             if word not in vocabulary:
@@ -128,7 +134,8 @@ def validate(rows: list[dict], catalog: dict) -> list[str]:
             expected = f"{KEY_PREFIX}voc_{side}_{slot.lower()}"
             if key != expected:
                 errors.append(f"{where}: key {key} should be {expected}")
-            vocab_have.add((side, word))
+            if side in VOCAB_SIDES:
+                vocab_have.add((side, word))
             for name in variables_in(text):
                 errors.append(f"{where}: {key} is a vocabulary text and must not hold the variable {{{name}}}")
             continue

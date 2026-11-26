@@ -218,6 +218,53 @@ public class IncidentVoiceServiceTests
         Assert.IsFalse(incident.Variables.ContainsKey("COIN"), "a vocabulary word with no row is not set");
     }
 
+    // Vocabulary by people
+
+    private string GodsFor(string culture, string race, string faction, string? realmCulture = null)
+    {
+        Add(IncidentRulesTests.Rule(options: 2));
+        Text("x_all_title", "{=taom_inc_x_all_title}Title");
+        Text("voc_free_gods", "free-side");
+        Text("voc_shadow_gods", "shadow-side");
+        Text("voc_west_gods", "west");
+        Text("voc_elves_gods", "elves");
+        Text("voc_dwarves_gods", "dwarves");
+        Text("voc_dunlendings_gods", "dunlendings");
+        Text("voc_orcs_gods", "orcs");
+        Text("voc_isengard_gods", "isengard");
+        Text("voc_southrons_shadow_gods", "southrons-shadow");
+        Text("voc_easterlings_shadow_gods", "easterlings-shadow");
+        _adapter.Player().Returns(new PlayerFacts(culture, race, new SideIds(faction, realmCulture ?? culture)));
+        var incident = Incident();
+        Assert.IsTrue(_sut.Review(incident, true));
+        return incident.Variables["GODS"];
+    }
+
+    [DataTestMethod]
+    [DataRow("gondor", "human", "empire_w", "west")]
+    [DataRow("rivendell", "elf", "empire_w", "elves")]
+    [DataRow("erebor", "dwarf", "empire_w", "dwarves")]
+    [DataRow("empire", "human", "khand", "dunlendings")]
+    [DataRow("gundabad", "orc", "empire_s", "orcs")]
+    [DataRow("mordor", "orc", "empire_s", "orcs")]
+    [DataRow("isengard", "uruk_hai", "empire_s", "isengard")]
+    [DataRow("aserai", "human", "empire_s", "southrons-shadow")]
+    [DataRow("khuzait", "human", "empire_s", "easterlings-shadow")]
+    public void Review_TheGodsFollowThePlayersPeople(string culture, string race, string faction, string expected)
+        => Assert.AreEqual(expected, GodsFor(culture, race, faction));
+
+    [DataTestMethod]
+    [DataRow("vlandia", "human", "empire_w", "free-side")]
+    [DataRow("sturgia", "human", "khand", "free-side")]
+    [DataRow("aserai", "human", "empire_w", "free-side")]
+    [DataRow("mordor", "human", "empire_s", "shadow-side")]
+    public void Review_APeopleWithNoRow_FallsBackToTheSideRow(string culture, string race, string faction, string expected)
+        => Assert.AreEqual(expected, GodsFor(culture, race, faction));
+
+    [TestMethod]
+    public void Review_AnIsengardRealm_ReadsTheWhiteHand_EvenForAPlayerOfAnotherCulture()
+        => Assert.AreEqual("isengard", GodsFor("gundabad", "orc", "empire_s", "isengard"));
+
     [TestMethod]
     public void Review_AMissingRow_PutsVanillasSlotBack()
     {

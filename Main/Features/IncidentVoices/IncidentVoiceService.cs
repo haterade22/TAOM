@@ -71,7 +71,7 @@ internal sealed class IncidentVoiceService
         }
 
         if (!rule.VanillaText)
-            WriteTexts(rule, version, incident);
+            WriteTexts(rule, version, incident, player.Side.CultureId == IncidentTextKeys.IsengardCulture ? player.Side.CultureId : player.CultureId, people.Group);
         return true;
     }
 
@@ -91,7 +91,7 @@ internal sealed class IncidentVoiceService
     /// <summary>The full id of an incident typed as <c>incident_x</c> or <c>x</c>, or null when the catalog does not list it.</summary>
     internal string? ResolveId(string typedId) => _catalog.GetCatalog().FindLoose(typedId)?.Id;
 
-    private void WriteTexts(IncidentRule rule, IncidentVersion version, IIncidentTexts incident)
+    private void WriteTexts(IncidentRule rule, IncidentVersion version, IIncidentTexts incident, string? cultureId, string? group)
     {
         var token = TokenFor(rule, version);
         var any = false;
@@ -106,10 +106,22 @@ internal sealed class IncidentVoiceService
 
         foreach (var word in _catalog.GetCatalog().Vocabulary)
         {
-            var raw = _adapter.Text(IncidentTextKeys.VocabVariation(version, word));
+            var raw = VocabText(word, cultureId, group, version);
             if (raw != null)
                 incident.SetVariable(word, raw);
         }
+    }
+
+    /// <summary>A vocabulary word in the player's own people's words when a row exists, else the voice's row, else null.</summary>
+    private string? VocabText(string word, string? cultureId, string? group, IncidentVersion version)
+    {
+        foreach (var scope in IncidentTextKeys.VocabScopes(cultureId, group, version))
+        {
+            var raw = _adapter.Text(IncidentTextKeys.VocabVariation(scope, word));
+            if (raw != null)
+                return raw;
+        }
+        return null;
     }
 
     /// <summary>

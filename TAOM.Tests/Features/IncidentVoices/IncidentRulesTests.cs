@@ -227,6 +227,15 @@ public class IncidentRulesTests
         Assert.AreEqual("taom_inc_rooster_theft_all_opt2", IncidentTextKeys.Key(variation));
         Assert.AreEqual("voc_shadow_holy_place", IncidentTextKeys.VocabVariation(IncidentVersion.Shadow, "HOLY_PLACE"));
         Assert.AreEqual("taom_inc_voc_free_gods", IncidentTextKeys.Key(IncidentTextKeys.VocabVariation(IncidentVersion.Free, "GODS")));
+        Assert.AreEqual("voc_dwarves_gods", IncidentTextKeys.VocabVariation("dwarves", "GODS"));
+    }
+
+    [TestMethod]
+    public void VocabScopes_GoFromTheMostSpecificToTheVoice()
+    {
+        CollectionAssert.AreEqual(new[] { "isengard", "orcs_shadow", "orcs", "shadow" }, IncidentTextKeys.VocabScopes("isengard", "orcs", IncidentVersion.Shadow).ToArray());
+        CollectionAssert.AreEqual(new[] { "dwarves_free", "dwarves", "free" }, IncidentTextKeys.VocabScopes("erebor", "dwarves", IncidentVersion.Free).ToArray());
+        CollectionAssert.AreEqual(new[] { "free" }, IncidentTextKeys.VocabScopes("nowhere", null, IncidentVersion.Free).ToArray());
     }
 
     [TestMethod]

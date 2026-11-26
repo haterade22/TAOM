@@ -71,11 +71,20 @@ One object with `vocabulary` (the side words) and `incidents` (one row per vanil
 
 A text is the game-text row `str_taom_inc.<variation>` whose text is `{=taom_inc_<variation>}English`, in the generated block of `taom_encounter_strings.xml` (a GameText source since Encounter Lines). Variation: `<id without incident_>_<all|free|shadow>_<title|desc|optN>`, key `taom_inc_` plus that; for example `taom_inc_camp_fever_all_desc`. A one-text incident uses `all`, a SPLIT one `free` and `shadow`. A Shadow set with no title falls back to the whole Free set (a half-written set never mixes in).
 
-Vocabulary: `taom_inc_voc_<free|shadow>_<word>` for the words `GODS`, `POWER_OATH`, `HOLY_PLACE`, `HOLY_PERSON`, `DARK_FORCE`, `LORD_TITLE`, `COIN` (lower-case in the key). Each is set as `{WORD}` on every text of the incident when at least one TAOM text was written, and only when its row exists.
+Vocabulary: `taom_inc_voc_<scope>_<word>` for the words `GODS`, `POWER_OATH`, `HOLY_PLACE`, `HOLY_PERSON`, `DARK_FORCE`, `LORD_TITLE`, `COIN` (lower-case in the key). Each is set as `{WORD}` on every text of the incident when at least one TAOM text was written, and only when a row exists.
+
+Vocabulary by people (Luiz, 2026-11-26: every line must fit whoever hears it). The scope is tried most specific first, and the first row that exists wins (`IncidentTextKeys.VocabScopes`):
+
+1. `isengard`, when the player's own culture or realm culture is `isengard` (the White Hand);
+2. `<group>_<free|shadow>`, the player's people on the voice they read (`southrons_shadow`, `easterlings_shadow`: the Dark Lord as god-king);
+3. `<group>`, the people alone: `west`, `rohirrim`, `northmen`, `dunlendings`, `southrons`, `easterlings`, `elves`, `dwarves`, `orcs` (from `encounter_groups.json`);
+4. `free` or `shadow`, the side row. It is the fallback for every people with no row of its own, so its words are neutral ("the Powers", "wayside shrine"; "the Dark Lord", "dark altar").
+
+Shipped people rows (the four god words each): west and elves (the Valar; elves swear by Elbereth), dwarves (Aulë, the Maker), dunlendings (the old powers, unnamed in lore), orcs (the Dark Lord), isengard (the White Hand), southrons and easterlings on the Shadow voice. Rohirrim, northmen and a Free-voice southron or easterling use the neutral side row. A holy-place value must read after "the local" (no leading "the"). A text that must fit several peoples names no god outright: it uses `{GODS}`, `{POWER_OATH}`, `{HOLY_PLACE}` or `{HOLY_PERSON}`, and wording that fits a singular and a plural god ("as {GODS} would wish").
 
 ### Drafts to rows
 
-`python tools/incidents_drafts_to_xml.py <drafts.tsv>...` checks the writers' drafts (columns key, incident_id, side, slot, text, notes) and `--apply` rewrites the generated block (between `INCIDENT-VOICES-BEGIN` and `INCIDENT-VOICES-END`) from them. It refuses a key that does not match, an unknown incident or side, an option vanilla does not have, a `{VARIABLE}` that is neither vanilla's for that incident nor a vocabulary word, a vocabulary word without both its rows, an em or en dash, and the banned words (Calradia, Heaven, Empire, imperial). The catalog lists variables per incident, not per slot, so the check is per incident. The 12 language files are the project lead's pass (`localize` skill): new keys leave `LanguageFileCoverageTests.EveryLanguage_DeclaresARowForEveryEnglishKey` red until then.
+`python tools/incidents_drafts_to_xml.py <drafts.tsv>...` (a people's vocabulary row has that people as its side, for example `dwarves` or `southrons_shadow`) checks the writers' drafts (columns key, incident_id, side, slot, text, notes) and `--apply` rewrites the generated block (between `INCIDENT-VOICES-BEGIN` and `INCIDENT-VOICES-END`) from them. It refuses a key that does not match, an unknown incident or side, an option vanilla does not have, a `{VARIABLE}` that is neither vanilla's for that incident nor a vocabulary word, a vocabulary word without both its rows, an em or en dash, and the banned words (Calradia, Heaven, Empire, imperial). The catalog lists variables per incident, not per slot, so the check is per incident. The 12 language files are the project lead's pass (`localize` skill): new keys leave `LanguageFileCoverageTests.EveryLanguage_DeclaresARowForEveryEnglishKey` red until then.
 
 ## Key Files
 
@@ -129,6 +138,7 @@ Only a person can confirm what the popup looks like (clipping of long texts, the
 
 ## Changelog
 
+- 2026-11-26: vocabulary by people (`VocabScopes`), the incident rows that named a god, a gender or a people's habit reworded (v2.0.43).
 - 2026-11-26: the seam, the catalog of 101 incidents, the voice and gate rules, the place fixes, `taom.incident`, the drafts converter (v2.0.43).
 
 ## GitHub Issue
