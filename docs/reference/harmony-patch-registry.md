@@ -2035,6 +2035,22 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Co-op.** Postfixes that skip nothing and write only local conversation text variables and the stored sentence text, so `CoopVetoClassificationTests` needs no entry; the module declares no campaign behavior. It stands down on a dedicated server and while a messenger conversation is open, and rolls on TAOM's own `IRandomSource`. `EnableEncounterLines` is presentation in `CoopSettingsRelevance`. **Tests:** `EncounterLinesBindingTests` (target shapes, parameter names, the variables and sentence ids in vanilla's IL, the five lord text ids, `ProcessSentence`'s call to the seam target, the fields, the category attaching one postfix per target and a prefix on the two greetings, the JIT), `EncounterSentenceTextPatchTests` (the seam postfix run on a `ConversationManager` shell), `EncounterLinesPatchTests`, `EncounterLinesServiceTests`, `EncounterLinesWiringTests`. **ACTIVE**, not yet checked in game.
 
+## Patch175_IncidentVoices
+
+**Target (v1.5.7, read on the installed DLLs 2026-11-26).** One patch class, `Main/Features/IncidentVoices/Hooks/IncidentCanBeInvokedPatch.cs`, category `Patch175_IncidentVoices` (GameInit, declared by `IncidentVoicesModule`). Feature: [incident-voices.md](../features/incident-voices.md).
+
+| Class | Target | Shape |
+|---|---|---|
+| `IncidentCanBeInvokedPatch` | `public bool Incident.CanIncidentBeInvoked()` (`Incident.cs:120`, not virtual) | Postfix `(Incident __instance, ref bool __result)` |
+
+**Why.** The method runs vanilla's condition on the description (it sets `{TOWN}`, `{PLACE}` and the like), then every option's and effect's condition. It is the last call before the popup (`Campaign.cs:1006`: `if (mapState2.NextIncident.CanIncidentBeInvoked()) { mapState2.StartIncident(...) }`), so a postfix sees the variables vanilla set and writes after them. When `__result` is false it returns at once. For a true it lets `IncidentVoiceService.Review` answer false (a disabled incident, a people the incident does not fit, no place of the player's side), set a place variable, and write TAOM texts into the incident's own `TextObject`s (`TextObject.Value`, a public field, then `CacheTokens()`).
+
+**Callers and thread.** `IncidentManager.GetOccurableEventsForTrigger` calls it for every incident of a trigger (about 100 times per roll, `IncidentManager.cs:130`), and the campaign tick calls it once more for `MapState.NextIncident`, on the main thread. Vanilla's own false is handled first, so the cost for an incident whose condition fails is one boolean test. The method has an IL body above 32 bytes (a loop and delegate calls), so the JIT does not inline it into a caller compiled first; `IncidentVoicesBindingTests.CanIncidentBeInvoked_IsTooLargeForTheClrToInline` pins that.
+
+**PatchShield.** The target is in `TaleWorlds.CampaignSystem.Incidents`, on neither exclusion list. The postfix catches everything itself and warns once, so a fault keeps vanilla's answer.
+
+**Co-op.** A postfix, not a `bool` prefix, so `CoopVetoClassificationTests` needs no entry. It still changes whether an incident may start, so the service stands down when `ICoopPresenceProvider.IsCoopActive` or on a dedicated server: every incident is vanilla's there. **Tests:** `IncidentVoicesBindingTests` (target shape and size, the public text seams, the 101 ids and their option counts read from `InitializeIncidents`, the place variables, the category attaching one postfix), `IncidentVoicesWiringTests` (module, fault handling, text handle), `IncidentVoiceServiceTests`, `IncidentRulesTests`, `IncidentVoicesDataTests`. **ACTIVE**, not yet checked in game.
+
 ## Patch132_ItemIconRacePosition
 
 **Target:** `ItemThumbnailCache.GetItemPoseAndCamera(ItemObject, Scene, ref Camera, ref MatrixFrame itemFrame, ref MatrixFrame, ref MatrixFrame)` (private, Postfix), v1.5.7 (`ItemThumbnailCache.cs:115`, signature unchanged). Code: `Main/Features/HeroRace/Hooks/ItemThumbnailCache_GetItemPoseAndCamera_RacePatch.cs`, matching rules in `Main/Features/HeroRace/ItemIconRaceMatcher.cs`. Category applied in the GameInit preview loop in `SubModule.cs` next to Patch72. `[ClientOnly]`.
