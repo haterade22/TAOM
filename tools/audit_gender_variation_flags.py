@@ -183,11 +183,12 @@ def main() -> int:
     print(f"\n{'WRITING' if args.apply else 'PREVIEW (pass --apply to commit)'}\n")
     tag = "genderflag-" + datetime.now().strftime("%Y%m%d%H%M%S")
     ids = {r["item"] for r in explicit if not r["female_art"]}
-    total = 0
+    total = trees = 0
     for tree in [armory] + ([Path(args.asset_repo)] if args.asset_repo else []):
         if not tree.exists():
             print(f"  skipped (absent): {tree}")
             continue
+        trees += 1
         for f in sorted((tree / "ModuleData" / "LOTRLOME_items").rglob("*.xml")):
             if ".bak" in f.name or "Languages" in f.parts:
                 continue
@@ -195,7 +196,7 @@ def main() -> int:
             if n:
                 total += n
                 print(f"  {n:3d}  {f.relative_to(tree)}")
-    print(f"\n{total} flag(s) set to false across both trees.")
+    print(f"\n{total} flag(s) set to false across {trees} tree(s).")
     return 0
 
 
