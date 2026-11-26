@@ -5437,3 +5437,23 @@ while the C# suite ran beside it. The measure that followed showed more: the cal
 - **Source:** issue #1566 (the comment of 2026-11-24 has the numbers); the Tooling lens and the Codex pre-review;
   `tools/tests/test_shellwords.py`. The hook is not changed: the Bash tool's 7,500 character cap keeps a real
   command near the smallest of those sizes.
+
+### A gate that moves where the work happens moves it away from every trigger tied to the old place (path rules in worktrees, 2026-11-25)
+The trunk edit gate of 2026-11-16 sent all edits to sibling worktrees. A path rule loads only for a file in the
+checkout the session started in, so from that day the area rules, the trap sheets and the lessons promoted into
+them stopped reaching most of the work. In the nine days after, 186 subagents and 14 main sessions touched C#
+only in a worktree, and `csharp-architecture.md` loaded in 2 of those 200; in the main checkout it loaded in 32
+of 33. One subagent read the rule by hand.
+- **Why missed:** the limit was written down three times (`harness-loading.md`, `agent-teams.md`, the trap
+  index), each time with an instruction to carry the rules by hand, and nothing counted whether anyone did. The
+  gate's review asked whether edits on trunk were refused, which they were. The retro's rule-load table counts
+  loads per rule, so it cannot show a rule that should have loaded and did not.
+- **Prevent:** when a change moves the work to another place, list the triggers keyed to the old place (path
+  rules, a skill's `paths`, a hook that reads `$CLAUDE_PROJECT_DIR`, a stamp at a relative path, a file's time
+  on disk, which `git worktree add` sets to the time of the checkout) and test one of each from the new place.
+  A check that compares file times gets a row in a real fresh checkout, not only rows that `touch` the times.
+  A written "do it by hand" is not a delivery channel until a count shows it happening.
+- **Source:** [harness-retro-2026-11-25.md](../harness-retro-2026-11-25.md), proposal P1. The retro miner now
+  counts it ("Rule delivery by checkout" in `tools/harness_retro.py`). The same day the
+  review of P3 found the fault again, in a drift check that compared a pack's time with the catalogue's time
+  on disk ([rca-armory-drift-fresh-checkout-2026-11-25.md](../rca-armory-drift-fresh-checkout-2026-11-25.md)).

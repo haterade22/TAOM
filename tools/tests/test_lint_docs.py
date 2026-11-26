@@ -252,6 +252,60 @@ class ContextBudgetTests(_TempRepo):
         with mock.patch.object(ld, "SCOPED_RULE_MAX_BYTES", 300):
             self.assertEqual(self._kinds(), ["size-warn"])
 
+    # After a compaction an invoked skill's body comes back capped at about 5,000 tokens, so a SKILL.md
+    # past the cap loses its tail in the middle of the work (harness-loading.md, "Context loading").
+    def _skill(self, name, size, newline="\n"):
+        text = f"---\nname: {name}\ndescription: Use when x.\n---\n" + ("x" * 49 + "\n") * (size // 50)
+        path = self.root / ".claude" / "skills" / name / "SKILL.md"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(text.replace("\n", newline).encode("utf-8"))
+
+    def test_a_skill_under_the_cap_passes(self):
+        self._entry()
+        self._skill("small", 200)
+        with mock.patch.object(ld, "SKILL_BODY_MAX_BYTES", 300):
+            self.assertEqual(ld.check_context_budget(), [])
+
+    def test_an_oversized_skill_only_warns_outside_a_git_tree(self):
+        self._entry()
+        self._skill("big", 500)
+        with mock.patch.object(ld, "SKILL_BODY_MAX_BYTES", 300):
+            found = ld.check_context_budget()
+        self.assertEqual([(f[0].name, f[0].parent.name, f[2]) for f in found], [("SKILL.md", "big", "size-warn")])
+
+    def test_a_skill_is_measured_with_crlf_folded_to_lf(self):
+        # The cap sits between the LF size and the CRLF size: under it as every checkout holds the file.
+        self._entry()
+        self._skill("crlf", 200, newline="\r\n")
+        raw = (self.root / ".claude/skills/crlf/SKILL.md").read_bytes()
+        folded = len(raw.replace(b"\r\n", b"\n"))
+        cap = (len(raw) + folded) // 2
+        self.assertTrue(folded < cap < len(raw), (folded, cap, len(raw)))
+        with mock.patch.object(ld, "SKILL_BODY_MAX_BYTES", cap):
+            self.assertEqual(ld.check_context_budget(), [])
+
+    def test_a_reference_file_beside_a_skill_is_not_measured(self):
+        # A reference file is read on demand: it is where the text over the cap goes.
+        self._entry()
+        self._skill("thin", 100)
+        _write(self.root / ".claude" / "skills" / "thin" / "references" / "detail.md", "x" * 5000 + "\n")
+        _write(self.root / ".claude" / "skills" / "thin" / "notes.md", "x" * 5000 + "\n")
+        # A file of the same name one folder further down is no skill either.
+        _write(self.root / ".claude" / "skills" / "thin" / "references" / "SKILL.md", "x" * 5000 + "\n")
+        with mock.patch.object(ld, "SKILL_BODY_MAX_BYTES", 300):
+            self.assertEqual(ld.check_context_budget(), [])
+
+    def test_the_snapshot_lists_each_skill_and_the_cap(self):
+        self._entry()
+        self._skill("b", 100)
+        self._skill("a", 50)
+        snap = ld.context_budget_snapshot()
+        self.assertEqual([s["path"] for s in snap["skills"]],
+                         [".claude/skills/a/SKILL.md", ".claude/skills/b/SKILL.md"])
+        # 41 B of frontmatter and one 50 B line.
+        self.assertEqual(snap["skills"][0]["bytes"], 91)
+        self.assertEqual(snap["caps"]["SKILL_BODY_MAX_BYTES"], 20_480)
+
     def test_a_dead_link_in_an_entry_doc_or_a_rule_is_found(self):
         self._entry(claude="# c\n\n[gone](docs/missing.md)\n")
         self._rule("a.md", "[also gone](../../nope.md)\n")
@@ -877,6 +931,12 @@ class ScopedRuleRatchetTests(_GitRepo):
         self.assertEqual(self._kinds(staged=True), ["size-warn"])
         self.assertEqual(self._kinds(staged=True, base="HEAD~1"), ["scoped-rule-size"])
 
+    def test_with_no_commit_view_growth_is_judged_against_the_named_base(self):
+        self._set_rule(600)
+        self._commit()
+        self.assertEqual([f[2] for f in ld.check_context_budget()], ["size-warn"])
+        self.assertEqual([f[2] for f in ld.check_context_budget(None, "HEAD~1")], ["scoped-rule-size"])
+
     def test_an_over_cap_rule_that_did_not_grow_only_warns(self):
         self.assertEqual(self._kinds(), ["size-warn"])
 
@@ -908,6 +968,125 @@ class ScopedRuleRatchetTests(_GitRepo):
         self._set_rule(500)
         self.assertEqual(self._kinds(staged=True), ["scoped-rule-size"])
         self.assertEqual(self._kinds(), ["size-warn"])
+
+
+class SkillSizeRatchetTests(_GitRepo):
+    """A SKILL.md over the cap gates only when it is larger than its HEAD copy, as a path rule does: the
+    cap stops growth without forcing a diet of the skills already over it."""
+
+    SKILL = ".claude/skills/big/SKILL.md"
+
+    def setUp(self):
+        super().setUp()
+        _write(self.root / "CLAUDE.md", ContextBudgetTests.IMPORTS)
+        _write(self.root / "AGENTS.md", "# a\n")
+        _write(self.root / "docs" / "ai-includes" / "orientation.md", ContextBudgetTests.TRAP_HEAD)
+        self._set_skill(500)
+        self._commit()
+        cap = mock.patch.object(ld, "SKILL_BODY_MAX_BYTES", 300)
+        cap.start()
+        self.addCleanup(cap.stop)
+
+    def _set_skill(self, size, rel=None):
+        _write(self.root / (rel or self.SKILL), "---\nname: big\ndescription: Use when x.\n---\n" + "x" * size + "\n")
+
+    def _kinds(self, staged=False, only_paths=None, base="HEAD"):
+        return [f[2] for f in ld.check_context_budget(ld.commit_view(staged, only_paths, base))]
+
+    def test_an_over_cap_skill_that_did_not_grow_only_warns(self):
+        self.assertEqual(self._kinds(), ["size-warn"])
+
+    def test_an_over_cap_skill_that_shrank_only_warns(self):
+        self._set_skill(400)
+        self.assertEqual(self._kinds(), ["size-warn"])
+
+    def test_an_over_cap_skill_that_grew_gates(self):
+        self._set_skill(600)
+        self.assertEqual(self._kinds(), ["skill-size"])
+
+    def test_a_new_over_cap_skill_gates(self):
+        self._set_skill(500, rel=".claude/skills/fresh/SKILL.md")
+        self.assertEqual(sorted(self._kinds()), ["size-warn", "skill-size"])
+
+    def test_growth_under_the_cap_is_silent(self):
+        self._set_skill(100)
+        self._commit()
+        self._set_skill(200)
+        self.assertEqual(self._kinds(), [])
+
+    def test_a_skill_that_came_under_the_cap_is_silent(self):
+        self._set_skill(100)
+        self.assertEqual(self._kinds(), [])
+
+    def test_staged_mode_reads_the_index_not_the_working_copy(self):
+        self._set_skill(600)
+        self._git("add", self.SKILL)
+        self._set_skill(500)
+        self.assertEqual(self._kinds(staged=True), ["skill-size"])
+        self.assertEqual(self._kinds(), ["size-warn"])
+
+    def test_staged_mode_ignores_an_unstaged_growth(self):
+        self._set_skill(600)
+        self.assertEqual(self._kinds(staged=True), ["size-warn"])
+
+    def test_a_path_commit_does_not_judge_a_skill_it_leaves_out(self):
+        self._set_skill(600)
+        self._git("add", self.SKILL)
+        self.assertEqual(self._kinds(staged=True, only_paths=["CLAUDE.md"]), ["size-warn"])
+
+    def test_an_amend_compares_with_the_base(self):
+        self._set_skill(600)
+        self._commit()
+        self.assertEqual(self._kinds(staged=True), ["size-warn"])
+        self.assertEqual(self._kinds(staged=True, base="HEAD~1"), ["skill-size"])
+
+    def test_a_skill_the_commit_deletes_is_no_finding(self):
+        (self.root / self.SKILL).unlink()
+        self._git("add", "-A")
+        self.assertEqual(self._kinds(staged=True), [])
+
+    # CI runs the linter on a checked-out merge commit with no commit view: the tree equals HEAD, so
+    # growth shows only against the base the run names (--dash-base HEAD^1 in pr-checks.yml).
+    def test_with_no_commit_view_growth_is_judged_against_the_named_base(self):
+        self._set_skill(600)
+        self._commit()
+        self.assertEqual([f[2] for f in ld.check_context_budget()], ["size-warn"])
+        found = ld.check_context_budget(None, "HEAD~1")
+        self.assertEqual([f[2] for f in found], ["skill-size"])
+        self.assertIn("larger than its copy at HEAD~1", found[0][3])
+
+    def test_a_same_named_file_deeper_in_a_skill_folder_is_no_skill_in_a_commit_either(self):
+        # Staged and then lost from the working tree: only the commit's own list of names can find it.
+        nested = ".claude/skills/big/references/SKILL.md"
+        self._set_skill(900, rel=nested)
+        self._git("add", nested)
+        (self.root / nested).unlink()
+        self.assertEqual(self._kinds(staged=True), ["size-warn"])
+
+    def test_the_drift_run_passes_its_base_to_the_budget(self):
+        self._set_skill(600)
+        self._commit()
+        runs = []
+        for base in ("HEAD", "HEAD~1"):
+            with mock.patch.object(ld, "DOC_ROOTS", [self.root / "docs"]), \
+                    mock.patch.object(ld, "check_version_consistency", return_value=[]), \
+                    mock.patch("sys.stdout", new_callable=io.StringIO):
+                runs.append(ld.main(["--fail-on-drift", "--dash-base", base]))
+        self.assertEqual(runs, [0, 1])
+
+    def test_staged_mode_ignores_an_untracked_skill(self):
+        # On disk and not in the index: the commit records no such file, so only the committed one is judged.
+        self._set_skill(900, rel=".claude/skills/fresh/SKILL.md")
+        self.assertEqual(self._kinds(staged=True), ["size-warn"])
+
+    def test_the_growth_gate_fails_the_drift_run(self):
+        self._set_skill(600)
+        with mock.patch.object(ld, "DOC_ROOTS", [self.root / "docs"]), \
+                mock.patch.object(ld, "check_version_consistency", return_value=[]), \
+                mock.patch("sys.stdout", new_callable=io.StringIO) as out:
+            code = ld.main(["--fail-on-drift"])
+        self.assertEqual(code, 1, out.getvalue())
+        self.assertIn("SKILL.md", out.getvalue())
 
 
 class CommitViewTests(_GitRepo):

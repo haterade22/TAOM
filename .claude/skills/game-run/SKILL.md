@@ -56,6 +56,27 @@ The maintainer's standing decision (2026-11-01): start without asking only when 
 no keyboard or mouse input for 10 minutes**. A co-op game run always goes first (Mike, 2026-11-13): when another session's co-op
 test needs the game, do not start or queue a run ahead of it.
 
+**Armory drift first** (harness retro 2026-11-25, P3). The session-start banner prints once per drift state and per checkout,
+so check before every run, from the checkout under test:
+
+```bash
+python tools/generate_armory_catalogue.py --check
+```
+
+It rebuilds the catalogue in memory from the live Armory and compares it with the catalogue file of this checkout, in about
+two seconds. It writes nothing and reads no file time, so it is right in a fresh worktree too. Read its output, not only its
+exit code:
+
+- `OK: catalogue.tsv reproduces exactly` (exit 0): go on.
+- A line that starts `DRIFT:` (exit 1): stop, run `/armory-audit` and repoint every MISSING_BODY row before any battle,
+  because a missing collision body is the #352 infinite load.
+- `UNCLASSIFIED:` with no `DRIFT:` line (exit 1): the meshes are the committed ones and some have no culture or category.
+  That does not block a run; name it in the report.
+- `ERROR:` (exit 2, no install found) or a `Traceback`: unchecked, not absent. Say so in the report and do not run a battle
+  on that basis.
+
+A `/manage` tick does not run the audit: on `DRIFT:` it skips the run and lists it as still owed.
+
 ```bash
 python tools/run_fords_autorun.py --dry-run
 ```

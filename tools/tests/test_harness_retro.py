@@ -1476,5 +1476,164 @@ class PostCompactionTests(Base):
         self.assertIn("post-compaction: 1 compaction", out)
 
 
+NOTE = "point-worktree-rules: E:/x/Main/Foo.cs is in E:/x, a checkout where path rules do not load by themselves."
+
+
+class RuleReachTests(Base):
+    """Where a transcript touched repository files, against how the path rules reached it (harness retro
+    2026-11-25, P1: of 200 transcripts that touched C# only in a sibling worktree, the C# rule loaded in 2)."""
+
+    def setUp(self):
+        super().setUp()
+        self.main = str(self.env.repo.resolve())
+        self.wt = self.main + "-feature"
+
+    def rows(self):
+        self.env.run()
+        return {(r["where"], r["kind"]): (r["transcripts"], r["rule_loaded"], r["hook_named"], r["read_rule"])
+                for r in self.env.signals()["rule_reach"]}
+
+    def test_a_worktree_only_subagent_that_no_rule_reached(self):
+        self.env.write("s1/subagents/agent-1.jsonl", [tool_use("t1", "Read", file_path=self.wt + "\\Main\\Foo.cs")])
+        self.assertEqual(self.rows(), {("sibling worktree only", "subagents"): (1, 0, 0, 0)})
+
+    def test_a_path_rule_loaded_in_the_main_checkout(self):
+        rule = self.main + "\\.claude\\rules\\csharp-architecture.md"
+        self.env.write("s1.jsonl", [
+            tool_use("t1", "Edit", file_path=self.main + "\\Main\\Foo.cs"),
+            attachment(type="nested_memory", path=rule, content={"path": rule, "content": "x"})])
+        self.assertEqual(self.rows(), {("main checkout only", "main sessions"): (1, 1, 0, 0)})
+
+    def test_the_launch_list_is_not_a_path_rule_load(self):
+        files = [{"path": self.main + "\\.claude\\rules\\output-style.md", "type": "Project"}]
+        self.env.write("s1.jsonl", [
+            attachment(type="instructions", files=files),
+            tool_use("t1", "Read", file_path=self.wt + "/Main/Foo.cs")])
+        self.assertEqual(self.rows(), {("sibling worktree only", "main sessions"): (1, 0, 0, 0)})
+
+    def test_the_worktree_hook_note_counts_and_another_hook_note_does_not(self):
+        self.env.write("s1/subagents/agent-1.jsonl", [
+            tool_use("t1", "Read", file_path=self.wt + "/Main/Foo.cs"),
+            attachment(type="hook_additional_context", hookName="PostToolUse:Read", hookEvent="PostToolUse",
+                       toolUseID="t1", content=[NOTE])])
+        self.env.write("s1/subagents/agent-2.jsonl", [
+            tool_use("t2", "Edit", file_path=self.wt + "/Main/Bar.cs"),
+            attachment(type="hook_additional_context", hookName="PostToolUse:Edit", hookEvent="PostToolUse",
+                       toolUseID="t2", content=["record-session-edit: another session edited it"])])
+        self.assertEqual(self.rows(), {("sibling worktree only", "subagents"): (2, 0, 1, 0)})
+
+    def test_the_hooks_unchecked_note_named_no_rule(self):
+        # The hook could not read the checkout's .git file: it looked up no rule, so it named none.
+        self.env.write("s1/subagents/agent-1.jsonl", [
+            tool_use("t1", "Read", file_path=self.wt + "/Main/Foo.cs"),
+            attachment(type="hook_additional_context", hookName="PostToolUse:Read", hookEvent="PostToolUse",
+                       toolUseID="t1", content=["point-worktree-rules: unchecked, not absent. E:/x/.git holds "
+                                                "no gitdir line, so this hook cannot tell"])])
+        self.assertEqual(self.rows(), {("sibling worktree only", "subagents"): (1, 0, 0, 0)})
+
+    def test_a_read_of_a_rule_file_counts_and_an_edit_of_one_does_not(self):
+        self.env.write("s1/subagents/agent-1.jsonl", [
+            tool_use("t1", "Read", file_path=self.wt + "/Main/Foo.cs"),
+            tool_use("t2", "Read", file_path=self.wt + "/.claude/rules/traps/mission.md")])
+        self.env.write("s1/subagents/agent-2.jsonl", [
+            tool_use("t3", "Edit", file_path=self.wt + "/.claude/rules/tests.md")])
+        self.assertEqual(self.rows(), {("sibling worktree only", "subagents"): (2, 0, 0, 1)})
+
+    def test_a_read_of_the_main_checkouts_rule_does_not_move_a_worktree_transcript(self):
+        # Before the hook, a careful agent read the main checkout's copy of a rule by hand. That read is
+        # rule delivery, not work in the main checkout: counted as work, it would move the transcript to
+        # "both" and empty the very column the hook is judged by (deep review 2026-11-25, second pass).
+        self.env.write("s1/subagents/agent-1.jsonl", [
+            tool_use("t1", "Edit", file_path=self.wt + "/Main/Foo.cs"),
+            tool_use("t2", "Read", file_path=self.main + "/.claude/rules/csharp-architecture.md")])
+        self.assertEqual(self.rows(), {("sibling worktree only", "subagents"): (1, 0, 0, 1)})
+
+    def test_a_transcript_that_only_read_a_rule_file_is_no_row(self):
+        self.env.write("s1/subagents/agent-1.jsonl", [
+            tool_use("t1", "Read", file_path=self.main + "/.claude/rules/tests.md")])
+        self.assertEqual(self.rows(), {})
+
+    def test_both_checkouts_is_its_own_row(self):
+        self.env.write("s1.jsonl", [
+            tool_use("t1", "Read", file_path=self.main + "/Main/Foo.cs"),
+            tool_use("t2", "Write", file_path=self.wt + "/Main/Foo.cs")])
+        self.assertEqual(self.rows(), {("both", "main sessions"): (1, 0, 0, 0)})
+
+    def test_a_folder_that_only_shares_the_name_prefix_is_no_sibling(self):
+        self.env.write("s1.jsonl", [
+            tool_use("t1", "Read", file_path=self.main + "sitory/Main/Foo.cs"),
+            tool_use("t2", "Read", file_path="C:/Users/someone/.claude/plans/x.md")])
+        self.assertEqual(self.rows(), {})
+
+    def test_a_record_before_the_window_does_not_count(self):
+        self.env.write("s1.jsonl", [
+            tool_use("t1", "Read", ts=OLD_TS, file_path=self.wt + "/Main/Foo.cs"),
+            human("hello")])
+        self.assertEqual(self.rows(), {})
+
+    # A folder named <repo>-... can be another repository or no repository at all. The hook stays
+    # silent there, so counting it would lower the share the hook is judged by (deep review 2026-11-25).
+    def _beside(self, name, git=None):
+        folder = Path(self.main + "-" + name)
+        folder.mkdir()
+        if git == "folder":
+            (folder / ".git").mkdir()
+        elif git is not None:
+            (folder / ".git").write_text(git + "\n", encoding="utf-8")
+        return str(folder)
+
+    def test_a_linked_worktree_that_is_there_counts(self):
+        wt = self._beside("wt", "gitdir: " + self.main.replace("\\", "/") + "/.git/worktrees/wt")
+        self.env.write("s1.jsonl", [tool_use("t1", "Read", file_path=wt + "\\Main\\Foo.cs")])
+        self.assertEqual(self.rows(), {("sibling worktree only", "main sessions"): (1, 0, 0, 0)})
+
+    def test_another_repository_beside_it_is_no_sibling(self):
+        bot = self._beside("bot", "folder")
+        self.env.write("s1.jsonl", [tool_use("t1", "Read", file_path=bot + "/src/x.py")])
+        self.assertEqual(self.rows(), {})
+
+    def test_a_plain_folder_beside_it_is_no_sibling(self):
+        notes = self._beside("notes")
+        self.env.write("s1.jsonl", [tool_use("t1", "Read", file_path=notes + "/a.md")])
+        self.assertEqual(self.rows(), {})
+
+    def test_a_worktree_of_another_repository_is_no_sibling(self):
+        other = self._beside("other", "gitdir: " + self.main.replace("\\", "/") + "-elsewhere/.git/worktrees/other")
+        self.env.write("s1.jsonl", [tool_use("t1", "Read", file_path=other + "/Main/Foo.cs")])
+        self.assertEqual(self.rows(), {})
+
+    def test_a_worktree_under_dot_claude_worktrees_is_a_sibling_not_the_main_checkout(self):
+        self.env.write("s1/subagents/agent-1.jsonl", [
+            tool_use("t1", "Edit", file_path=self.main + "/.claude/worktrees/iso/Main/Foo.cs")])
+        self.env.write("s1.jsonl", [tool_use("t2", "Read", file_path=self.main + "/.claude/worktrees/notes.md")])
+        self.assertEqual(self.rows(), {("main checkout only", "main sessions"): (1, 0, 0, 0),
+                                       ("sibling worktree only", "subagents"): (1, 0, 0, 0)})
+
+    def test_run_from_a_linked_worktree_the_main_checkout_is_the_one_its_git_file_names(self):
+        main = self.env.root / "main"
+        (main / ".git" / "worktrees" / "repo").mkdir(parents=True)
+        (self.env.repo / ".git").write_text(
+            "gitdir: " + str(main).replace("\\", "/") + "/.git/worktrees/repo\n", encoding="utf-8")
+        self.env.write("s1.jsonl", [tool_use("t1", "Read", file_path=str(main) + "\\Main\\Foo.cs")])
+        self.env.write("s2.jsonl", [tool_use("t2", "Read", session="s2", file_path=str(main) + "-x/Main/Foo.cs")])
+        self.assertEqual(self.rows(), {("main checkout only", "main sessions"): (1, 0, 0, 0),
+                                       ("sibling worktree only", "main sessions"): (1, 0, 0, 0)})
+
+    def test_a_rule_loaded_from_outside_the_repository_is_not_a_path_rule_load(self):
+        rule = "C:\\Users\\someone\\.claude\\rules\\mine.md"
+        self.env.write("s1.jsonl", [
+            tool_use("t1", "Read", file_path=self.wt + "/Main/Foo.cs"),
+            attachment(type="nested_memory", path=rule, content={"path": rule, "content": "x"})])
+        self.assertEqual(self.rows(), {("sibling worktree only", "main sessions"): (1, 0, 0, 0)})
+
+    def test_the_report_and_the_console_carry_it(self):
+        self.env.write("s1/subagents/agent-1.jsonl", [tool_use("t1", "Read", file_path=self.wt + "/Main/Foo.cs")])
+        _, out = self.env.run()
+        self.assertIn("### Rule delivery by checkout", self.env.report())
+        self.assertIn("| sibling worktree only | subagents | 1 | 0 | 0 | 0 |", self.env.report())
+        self.assertIn("rule reach: 1 transcript(s) worked only in a sibling worktree: a path rule loaded in 0, "
+                      "the hook named rules in 0, 0 read a rule file", out)
+
+
 if __name__ == "__main__":
     unittest.main()

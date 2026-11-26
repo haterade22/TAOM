@@ -71,6 +71,9 @@ RULES_DIR_REL = ".claude/rules"
 UNSCOPED_RULES_MAX_BYTES = 16_384  # hard cap on every rule without `paths:`, together
 UNSCOPED_RULES_WARN_BYTES = 14_500
 SCOPED_RULE_MAX_BYTES = 12_288     # per path-scoped rule; over it, only growth over HEAD gates
+SKILLS_DIR_REL = ".claude/skills"
+SKILL_BODY_MAX_BYTES = 20_480      # per SKILL.md, about the 5,000 tokens that return after a compaction;
+                                   # over it, only growth over HEAD gates
 # Budget findings that report without failing --fail-on-drift / --drift-only.
 REPORT_ONLY_BUDGET_KINDS = frozenset({"size-warn", "frontmatter-unchecked"})
 CONTEXT_BUDGET_ENFORCE = True
@@ -947,6 +950,18 @@ def _rule_files(commit: CommitView | None = None) -> list[Path]:
     return sorted(found)
 
 
+def _skill_files(commit: CommitView | None = None) -> list[Path]:
+    """Each skill's SKILL.md, one folder below .claude/skills. A reference file beside it is read on
+    demand and is not measured. With a commit in view, also those it records but the working tree has
+    lost."""
+    skills_dir = REPO_ROOT / SKILLS_DIR_REL
+    found = set(skills_dir.glob("*/SKILL.md")) if skills_dir.is_dir() else set()
+    if commit is not None:
+        found.update(REPO_ROOT / n for n in commit.names
+                     if n.startswith(SKILLS_DIR_REL + "/") and n.count("/") == 3 and n.endswith("/SKILL.md"))
+    return sorted(found)
+
+
 _IMPORT_RE = re.compile(r"(?:^|\s)@([^\s`]+)")
 _FENCE_LINE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
 # A code span: a backtick run, then the nearest run of the same length, never across a blank line
@@ -1038,11 +1053,15 @@ def context_budget_snapshot() -> dict:
         scope = _rule_scope(text)
         rules.append({"path": rel(r), "bytes": _loaded_bytes(text), "scoped": scope == "scoped",
                       "frontmatter_valid": scope != "invalid"})
+    skills = []
+    for s in _skill_files():
+        text = s.read_text(encoding="utf-8", errors="replace")
+        skills.append({"path": rel(s), "bytes": _loaded_bytes(text)})
     caps = {name: globals()[name] for name in (
         "ENTRY_DOCS_MAX_BYTES", "ENTRY_DOCS_WARN_BYTES", "ENTRY_DOC_MAX_LINES",
         "TRAP_INDEX_MAX_ROWS", "TRAP_INDEX_MAX_ROW_CHARS", "UNSCOPED_RULES_MAX_BYTES",
-        "UNSCOPED_RULES_WARN_BYTES", "SCOPED_RULE_MAX_BYTES")}
-    return {"entry_docs": entries, "rules": rules, "caps": caps,
+        "UNSCOPED_RULES_WARN_BYTES", "SCOPED_RULE_MAX_BYTES", "SKILL_BODY_MAX_BYTES")}
+    return {"entry_docs": entries, "rules": rules, "skills": skills, "caps": caps,
             "missing_imports": [{"file": rel(f), "line": n, "target": t} for f, n, t in missing]}
 
 
@@ -1081,9 +1100,9 @@ def _trap_index_rows(text: str) -> list[tuple[int, str]]:
 
 
 def _grew_past_base(rule: Path, size: int, base: str) -> bool:
-    """Whether a rule of this size is larger than its copy at `base`. A rule `base` lacks has grown
-    from nothing; a tree git cannot read never counts as grown (fail open, as the other git-reading
-    checks do)."""
+    """Whether a rule or skill file of this size is larger than its copy at `base`. A file `base` lacks
+    has grown from nothing; a tree git cannot read never counts as grown (fail open, as the other
+    git-reading checks do)."""
     inside = _git_run("rev-parse", "--is-inside-work-tree")
     if inside is None or inside.returncode != 0:
         return False
@@ -1095,13 +1114,17 @@ def _grew_past_base(rule: Path, size: int, base: str) -> bool:
     return size > _loaded_bytes(head.stdout.lstrip("\ufeff"))
 
 
-def check_context_budget(commit: CommitView | None = None) -> list[tuple[Path, int, str, str]]:
-    """ADR-011 context budgets, on what the commit records with one in view. Findings are (file,
+def check_context_budget(commit: CommitView | None = None, base: str = "HEAD") -> list[tuple[Path, int, str, str]]:
+    """ADR-011 context budgets, on what the commit records with one in view. With none, growth is
+    judged against `base`: a CI run on a checked-out merge commit names the commit before it, since
+    the tree it reads equals HEAD and would never show growth. Findings are (file,
     lineno, kind, message); lineno 0 means the whole file. Kind "size-warn" is report-only; every
     other kind gates --fail-on-drift. Fenced code blocks are exempt from the line caps. A path rule
     over its cap is "size-warn" unless this change grows it past its copy at the base, which is
-    "scoped-rule-size": the cap stops growth without forcing a diet of the rules already over it."""
+    "scoped-rule-size": the cap stops growth without forcing a diet of the rules already over it. A
+    SKILL.md over its cap is judged the same way, as "skill-size"."""
     findings: list[tuple[Path, int, str, str]] = []
+    growth_base = commit.base if commit else base
 
     total = 0
     claude_md = REPO_ROOT / ENTRY_DOC_ROOT
@@ -1178,11 +1201,11 @@ def check_context_budget(commit: CommitView | None = None) -> list[tuple[Path, i
             unscoped_total += size
         elif size > SCOPED_RULE_MAX_BYTES:
             in_commit = commit is None or commit.name_of(rule) in commit.names
-            grew = in_commit and _grew_past_base(rule, size, commit.base if commit else "HEAD")
+            grew = in_commit and _grew_past_base(rule, size, growth_base)
             kind = "scoped-rule-size" if grew else "size-warn"
             findings.append((rule, 0, kind,
                              f"path-scoped rule is {size:,} B (cap {SCOPED_RULE_MAX_BYTES:,} B)"
-                             + ("" if kind == "size-warn" else " and larger than its HEAD copy")
+                             + ("" if kind == "size-warn" else f" and larger than its copy at {growth_base}")
                              + "; move incident narratives to lessons or an RCA and keep the rule."))
     if _yaml is None and rules:
         findings.append((rules_dir, 0, "frontmatter-unchecked",
@@ -1196,6 +1219,24 @@ def check_context_budget(commit: CommitView | None = None) -> list[tuple[Path, i
         findings.append((rules_dir, 0, "size-warn",
                          f"rules without paths: total {unscoped_total:,} B, approaching the "
                          f"{UNSCOPED_RULES_MAX_BYTES:,} B budget."))
+
+    skills = _skill_files(commit)
+    if commit is not None:
+        commit.load(skills)
+    for skill in skills:
+        text = _commit_text(skill, commit)
+        if text is None:
+            continue
+        size = _loaded_bytes(text)
+        if size > SKILL_BODY_MAX_BYTES:
+            in_commit = commit is None or commit.name_of(skill) in commit.names
+            grew = in_commit and _grew_past_base(skill, size, growth_base)
+            kind = "skill-size" if grew else "size-warn"
+            findings.append((skill, 0, kind,
+                             f"SKILL.md is {size:,} B (cap {SKILL_BODY_MAX_BYTES:,} B)"
+                             + ("" if kind == "size-warn" else f" and larger than its copy at {growth_base}")
+                             + "; after a compaction only about its first 5,000 tokens come back. Keep the "
+                               "gates and the phases, and move branch-only detail to a reference file beside it."))
     return findings
 
 
@@ -1816,7 +1857,7 @@ def format_report(report: LintReport, quick: bool, drift_only: bool = False) -> 
     gating = [
         f"- Config-example drift (doc JSON != shipped ModuleData config): **{len(report.config_drift)}**",
         f"- Version mismatches (Target line / snapshot != pin): **{len(report.version_mismatches)}**",
-        f"- Context budget (entry docs, trap index, rules{'' if CONTEXT_BUDGET_ENFORCE else ', warn-only'}): **{len(report.budget)}**",
+        f"- Context budget (entry docs, trap index, rules, skills{'' if CONTEXT_BUDGET_ENFORCE else ', warn-only'}): **{len(report.budget)}**",
         f"- RCA FOLLOW-UP lines with no issue or reason (new lines only): **{len(report.rca_followups)}**",
         f"- New feature docs with no `{VERIFY_HEADING}` section: **{len(report.feature_verify)}**",
         f"- Git diff failed, so the new-lines checks could not run: **{len(report.git_diff_failures)}**",
@@ -2060,8 +2101,10 @@ def main(argv: list[str]) -> int:
                     help="Base ref for the new-lines-only checks (em/en dashes, RCA FOLLOW-UP "
                          "lines; default HEAD, i.e. uncommitted writing). Pass a branch point to "
                          "scan a whole branch; a tree id such as the empty tree "
-                         "counts every file as added. A ref git cannot resolve is an error: "
-                         "exit 2, no report.")
+                         "counts every file as added. In every mode it is also the base an "
+                         "over-cap path rule or SKILL.md is measured against for growth: the commit "
+                         "hook passes HEAD~1 for an amend, and CI passes HEAD^1 on a merge commit. "
+                         "A ref git cannot resolve is an error: exit 2, no report.")
     args = ap.parse_args(argv)
 
     if args.followups:
@@ -2103,7 +2146,7 @@ def main(argv: list[str]) -> int:
     if args.drift_only or not args.quick:
         report.config_drift = check_config_example_drift(files, commit)
         report.version_mismatches = check_version_consistency(commit)
-        report.budget = check_context_budget(commit)
+        report.budget = check_context_budget(commit, args.dash_base)
         report.rca_followups = check_rca_followups(
             args.dash_base, staged=args.staged, only_paths=args.only_paths,
             failures=report.git_diff_failures)

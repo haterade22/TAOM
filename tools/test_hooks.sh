@@ -4244,6 +4244,98 @@ grep -q 'MEMORY.md is' <<< "$(mb_sibling startup)" \
     || ok "session-start reads only the project named for the main checkout"
 rm -rf "$MB_P" "$MB_H" "$MB_M" "$MB_W"
 
+# The Armory drift banner prints once per drift state, not in every session (harness retro 2026-11-25,
+# P3: 33 sessions printed it in a week and 3 ran the audit; /game-run now checks the drift before a
+# battle). $AD_G is a game folder whose Armory holds one _geo pack newer than the catalogue of the
+# project $AD_P. The stamp .claude/logs/.armory-drift-printed holds the pack the banner named.
+AD_P="$SANDBOX/ad-proj"; AD_H="$SANDBOX/ad-home"; AD_G="$SANDBOX/ad-game"
+AD_A="$AD_G/Modules/LOTRLOME_Armory/Assets"
+AD_CAT="$AD_P/docs/reference/armory-catalogue/catalogue.tsv"
+AD_STAMP="$AD_P/.claude/logs/.armory-drift-printed"
+mkdir -p "$AD_P/docs/reference/armory-catalogue" "$AD_H" "$AD_G/bin/Win64_Shipping_Client" "$AD_A/a"
+printf '<Version><Singleplayer Value="v1.5.7.0"/></Version>\n' > "$AD_G/bin/Win64_Shipping_Client/Version.xml"
+printf 'id\tpack\n' > "$AD_CAT"; touch -d '30 days ago' "$AD_CAT"
+printf 'x' > "$AD_A/a/one_geo.tpac"; touch -d '20 days ago' "$AD_A/a/one_geo.tpac"
+ad_run() {  # stdout of session-start.sh at startup, in the sandbox project with the sandbox game folder
+    printf '{"source":"startup"}' | CLAUDE_PROJECT_DIR="$AD_P" HOME="$AD_H" BANNERLORD_GAME_DIR="$AD_G" timeout -k 2 10 \
+        bash "$REPO/.claude/hooks/session-start.sh" 2>/dev/null
+}
+ad_is() {  # $1 banner|quiet, $2 label, $3 the pack name a banner must hold
+    local out
+    out=$(ad_run)
+    if [[ "$1" == banner ]]; then
+        if grep -q 'ARMORY ART DRIFT' <<< "$out" && grep -qF "${3:-ARMORY ART DRIFT}" <<< "$out"; then
+            ok "session-start prints the Armory drift banner $2"
+        else
+            bad "session-start printed no Armory drift banner $2${3:+ naming $3}: $(grep -i -A1 'armory' <<< "$out" | head -c 200)"
+        fi
+    elif grep -q 'ARMORY ART DRIFT' <<< "$out"; then
+        bad "session-start printed the Armory drift banner $2"
+    else
+        ok "session-start holds the Armory drift banner back $2"
+    fi
+}
+ad_is banner "for a _geo pack newer than the catalogue" "a/one_geo.tpac"
+[[ "$(cat "$AD_STAMP" 2>/dev/null)" == "a/one_geo.tpac" ]] && ok "the Armory drift stamp holds the pack the banner named" \
+    || bad "the Armory drift stamp holds '$(head -c 80 "$AD_STAMP" 2>/dev/null)', expected a/one_geo.tpac"
+ad_is quiet "in the next session, for the same pack"
+rm -f "$AD_A/a/one_geo.tpac"; printf 'x' > "$AD_A/a/two_geo.tpac"; touch -d '20 days ago' "$AD_A/a/two_geo.tpac"
+ad_is banner "again for another pack" "a/two_geo.tpac"
+ad_is quiet "after that, for that pack"
+# The catalogue (30 days old) is older than the stamp here, so only the stamp's age can print it.
+touch -d '8 days ago' "$AD_STAMP"
+ad_is banner "again once the stamp is seven days old" "a/two_geo.tpac"
+# A catalogue rebuilt after the stamp is a new state: the same pack, saved again later, is told again.
+touch -d '10 minutes ago' "$AD_STAMP"; touch -d '5 minutes ago' "$AD_CAT"; touch -d '1 minute ago' "$AD_A/a/two_geo.tpac"
+ad_is banner "again when the catalogue was rebuilt after the stamp" "a/two_geo.tpac"
+touch "$AD_CAT"
+ad_is quiet "when no pack is newer than the catalogue"
+[[ ! -e "$AD_STAMP" ]] && ok "a session that finds no Armory drift deletes the stamp" \
+    || bad "the Armory drift stamp survived a session with no drift, so the next drift would be held back"
+# Never silent: without the Armory folder the session is told that the check did not run.
+rm -rf "$AD_G/Modules"
+grep -q 'Armory art drift UNCHECKED' <<< "$(ad_run)" && ok "session-start says the Armory drift is unchecked when the Armory folder is missing" \
+    || bad "session-start printed no UNCHECKED note for a missing Armory folder"
+rm -rf "$AD_P" "$AD_H" "$AD_G"
+
+# In a linked worktree git wrote the catalogue with the time of the checkout, so "no pack is newer"
+# proves nothing there: a new worktree said "no drift" while the main checkout showed it (deep review
+# 2026-11-25, F1). The banner is a file-time hint, so there it says unchecked and names the exact
+# check; a pack that IS newer than the catalogue file is drift in a worktree too. $AF_P is a checkout
+# whose .git is a file, as in a linked worktree. No git runs.
+AF_P="$SANDBOX/af-proj"; AF_H="$SANDBOX/af-home"; AF_G="$SANDBOX/af-game"
+AF_A="$AF_G/Modules/LOTRLOME_Armory/Assets"
+AF_CAT="$AF_P/docs/reference/armory-catalogue/catalogue.tsv"
+AF_STAMP="$AF_P/.claude/logs/.armory-drift-printed"
+mkdir -p "$AF_P/docs/reference/armory-catalogue" "$AF_P/.claude/logs" "$AF_H" "$AF_G/bin/Win64_Shipping_Client" "$AF_A/a"
+printf '<Version><Singleplayer Value="v1.5.7.0"/></Version>\n' > "$AF_G/bin/Win64_Shipping_Client/Version.xml"
+printf 'gitdir: /nowhere/.git/worktrees/af\n' > "$AF_P/.git"
+printf 'id\tpack\n' > "$AF_CAT"
+printf 'x' > "$AF_A/a/old_geo.tpac"; touch -d '20 days ago' "$AF_A/a/old_geo.tpac"
+af_out() {  # stdout of session-start.sh at startup in the linked-worktree sandbox
+    printf '{"source":"startup"}' | CLAUDE_PROJECT_DIR="$AF_P" HOME="$AF_H" BANNERLORD_GAME_DIR="$AF_G" timeout -k 2 10 \
+        bash "$REPO/.claude/hooks/session-start.sh" 2>/dev/null
+}
+printf 'a/earlier_geo.tpac\n' > "$AF_STAMP"
+AF_OUT=$(af_out)
+if grep -q 'Armory art drift UNCHECKED' <<< "$AF_OUT" && grep -qF 'generate_armory_catalogue.py --check' <<< "$AF_OUT" \
+        && ! grep -q 'ARMORY ART DRIFT' <<< "$AF_OUT"; then
+    ok "session-start says the Armory drift is unchecked in a linked worktree where no pack is newer than the catalogue file, and names the exact check"
+else
+    bad "session-start in a linked worktree with no newer pack: expected an UNCHECKED note that names the --check command and no banner, got: $(grep -i -A1 'armory' <<< "$AF_OUT" | head -c 240)"
+fi
+[[ "$(cat "$AF_STAMP" 2>/dev/null)" == "a/earlier_geo.tpac" ]] && ok "an unchecked session leaves the Armory drift stamp alone" \
+    || bad "an unchecked session in a linked worktree changed or deleted the Armory drift stamp, as if it had seen no drift"
+touch -d '2 days ago' "$AF_CAT"
+printf 'x' > "$AF_A/a/new_geo.tpac"; touch -d '1 day ago' "$AF_A/a/new_geo.tpac"
+AF_OUT=$(af_out)
+if grep -q 'ARMORY ART DRIFT' <<< "$AF_OUT" && grep -qF 'a/new_geo.tpac' <<< "$AF_OUT" && ! grep -q 'Armory art drift UNCHECKED' <<< "$AF_OUT"; then
+    ok "session-start prints the Armory drift banner in a linked worktree for a pack newer than the catalogue file"
+else
+    bad "session-start in a linked worktree printed no banner for a pack newer than the catalogue file: $(grep -i -A1 'armory' <<< "$AF_OUT" | head -c 240)"
+fi
+rm -rf "$AF_P" "$AF_H" "$AF_G"
+
 # ---------------------------------------------------------------------------
 head2 "7o. the verification reminder judges the session's own edits; a file two sessions edit is noted (#1138)"
 # check-verification-evidence.sh judged every dirty *.cs in the tree against one shared build marker,
@@ -4883,6 +4975,294 @@ sv_rec fresh-session '' "C:/proj/New.cs" >/dev/null
     && ok "a new ledger deletes agent files older than 7 days, and only those" \
     || bad "the 7-day cleanup did not delete only the 8-day-old agent files: $(ls -A "$SVL" | tr '\n' ' ')"
 rm -rf "$SV"
+
+# ---------------------------------------------------------------------------
+head2 "7r. point-worktree-rules names the path rules of a file in a sibling checkout, once per rule"
+# A path rule loads only for a file in the checkout the session started in. After the trunk edit gate
+# sent all edits to sibling worktrees, the C# rule loaded in 2 of 200 transcripts that touched C# only
+# there (docs/reviews/harness-retro-2026-11-25.md, P1). The hook reads the rules of the file's own
+# checkout and tells the session, and each subagent, once which rule files to read. $WR_MAIN is a main
+# checkout, $WR_WT a linked worktree of it, $WR_OTHER another repository, $WR_LOOSE no repository.
+WR_HOOK="$REPO/.claude/hooks/point-worktree-rules.sh"
+WR_MAIN="$SANDBOX/wr-main"; WR_WT="$SANDBOX/wr-wt"; WR_OTHER="$SANDBOX/wr-other"; WR_LOOSE="$SANDBOX/wr-loose"
+WR_BROKEN="$SANDBOX/wr-broken"
+mkdir -p "$WR_MAIN/.claude/rules/traps" "$WR_MAIN/Main/Mission/Sub" "$WR_MAIN/sub" "$WR_MAIN/docs" \
+    "$WR_OTHER/.claude/rules" "$WR_OTHER/Main" "$WR_LOOSE/Main" "$WR_BROKEN/Main"
+wr_rule() {  # $1 file under .claude/rules, then one glob per argument (none: a rule with no paths:)
+    local f="$WR_MAIN/.claude/rules/$1" g
+    shift
+    if (( $# == 0 )); then printf '# always\n\nNo frontmatter.\n' > "$f"; return; fi
+    { printf -- '---\npaths:\n'; for g in "$@"; do printf '  - "%s"\n' "$g"; done; printf -- '---\n\n# rule\n'; } > "$f"
+}
+wr_rule cs.md 'Main/**/*.cs' 'Client/**/*.cs'
+wr_rule patterns.md 'Main/**/*.cs'
+wr_rule entry.md 'CLAUDE.md' '.claude/rules/*.md'
+wr_rule traps/mission.md 'Main/Mission/*.cs'
+wr_rule always.md
+printf 'class Foo {}\n' > "$WR_MAIN/Main/Foo.cs"
+printf 'class Agent {}\n' > "$WR_MAIN/Main/Mission/Agent.cs"
+printf 'class Deep {}\n' > "$WR_MAIN/Main/Mission/Sub/Deep.cs"
+printf '# nested\n' > "$WR_MAIN/sub/CLAUDE.md"
+printf '# none\n' > "$WR_MAIN/docs/none.md"
+git -C "$WR_MAIN" init -q 2>/dev/null
+git -C "$WR_MAIN" add .claude Main sub docs 2>/dev/null
+git -C "$WR_MAIN" -c user.name=t -c user.email=t@example.invalid commit -qm init 2>/dev/null
+git -C "$WR_MAIN" worktree add -q --detach "$WR_WT" 2>/dev/null
+cp "$WR_MAIN/.claude/rules/cs.md" "$WR_OTHER/.claude/rules/cs.md"
+printf 'class Foo {}\n' > "$WR_OTHER/Main/Foo.cs"
+printf 'class Foo {}\n' > "$WR_LOOSE/Main/Foo.cs"
+printf 'class Foo {}\n' > "$WR_BROKEN/Main/Foo.cs"
+printf 'not a gitdir line\n' > "$WR_BROKEN/.git"
+git -C "$WR_OTHER" init -q 2>/dev/null
+wr_m() { cygpath -m "$1" 2>/dev/null || echo "$1"; }   # a path as the harness sends it on Windows
+WR_MAIN_M=$(wr_m "$WR_MAIN")
+WR_WT_M=$(wr_m "$WR_WT")
+WR_OTHER_M=$(wr_m "$WR_OTHER")
+WR_LOOSE_M=$(wr_m "$WR_LOOSE")
+WR_BROKEN_M=$(wr_m "$WR_BROKEN")
+WR_L="$WR_MAIN/.claude/logs/sessions"
+wr_pl() {  # $1 session id ("" for none), $2 tool, $3 file_path, $4 agent id or "": a PostToolUse payload
+    "$HPY" -c 'import json, sys
+d = {"hook_event_name": "PostToolUse", "tool_name": sys.argv[2], "tool_input": {"file_path": sys.argv[3]}}
+if sys.argv[1]: d["session_id"] = sys.argv[1]
+if sys.argv[4]: d["agent_id"] = sys.argv[4]
+print(json.dumps(d))' "$1" "$2" "$3" "${4:-}"
+}
+wr_run() {  # $1 payload, $2 project dir (default the main checkout). Sets WR_NOTE (the additionalContext,
+            # empty when the hook printed nothing) and WR_FAULT (a protocol defect, else empty).
+    local out rc
+    out=$(printf '%s' "$1" | CLAUDE_PROJECT_DIR="${2:-$WR_MAIN_M}" timeout -k 2 10 bash "$WR_HOOK" 2>"$SANDBOX/wr.err")
+    rc=$?
+    WR_FAULT=""; WR_NOTE=""
+    (( rc == 0 )) || WR_FAULT="rc $rc"
+    [[ -s "$SANDBOX/wr.err" ]] && WR_FAULT+=" stderr: $(head -c 120 "$SANDBOX/wr.err")"
+    [[ -z "$out" ]] && return 0
+    WR_NOTE=$(printf '%s' "$out" | "$HPY" -c 'import json, sys
+try:
+    d = json.loads(sys.stdin.read())["hookSpecificOutput"]
+    assert d["hookEventName"] == "PostToolUse"
+    sys.stdout.write(d["additionalContext"])
+except Exception as e:
+    sys.stdout.write("NOT-JSON " + repr(e))' 2>/dev/null)
+    [[ "$WR_NOTE" == NOT-JSON* ]] && WR_FAULT+=" not the PostToolUse additionalContext shape: ${out:0:120}"
+    return 0
+}
+wr_is() {  # $1 label, $2 "silent" or the rule names the note must hold, $3 the rule names it must not hold
+    local n
+    if [[ -n "$WR_FAULT" ]]; then bad "point-worktree-rules ($1): $WR_FAULT"; return; fi
+    if [[ "$2" == silent ]]; then
+        if [[ -z "$WR_NOTE" ]]; then ok "point-worktree-rules is silent: $1"
+        else bad "point-worktree-rules ($1): expected no note, got: ${WR_NOTE:0:200}"; fi
+        return
+    fi
+    [[ -n "$WR_NOTE" ]] || { bad "point-worktree-rules ($1): expected a note naming $2, got none"; return; }
+    for n in $2; do
+        [[ "$WR_NOTE" == *"/.claude/rules/$n"* ]] || { bad "point-worktree-rules ($1): the note does not name $n: ${WR_NOTE:0:240}"; return; }
+    done
+    for n in ${3:-}; do
+        [[ "$WR_NOTE" != *"/.claude/rules/$n"* ]] || { bad "point-worktree-rules ($1): the note names $n: ${WR_NOTE:0:240}"; return; }
+    done
+    ok "point-worktree-rules $1"
+}
+if [[ ! -f "$WR_HOOK" ]]; then
+    bad "point-worktree-rules.sh is missing from .claude/hooks/"
+else
+    wr_run "$(wr_pl s1 Read "$WR_WT_M/Main/Foo.cs")"
+    wr_is "names the rules a worktree C# file matches" "cs.md patterns.md" "traps/mission.md always.md entry.md"
+    [[ "$WR_NOTE" == *"$WR_WT_M/.claude/rules/cs.md"* ]] && ok "point-worktree-rules gives the rule file inside the file's own checkout" \
+        || bad "point-worktree-rules: the note does not give $WR_WT_M/.claude/rules/cs.md: ${WR_NOTE:0:240}"
+    # The retro miner finds this hook's note by its opening words (tools/harness_retro.py reach_note). The
+    # hook's real note goes through the miner here, so a reworded note cannot empty the miner's column.
+    wr_miner() {  # prints True or False: does the miner count $WR_NOTE as a note that named rules
+        printf '%s' "$WR_NOTE" | "$HPY" -c 'import sys
+sys.path.insert(0, sys.argv[1])
+import harness_retro
+print(harness_retro.reach_note([sys.stdin.read()]))' "$REPO/tools" 2>/dev/null
+    }
+    [[ "$(wr_miner)" == True ]] && ok "the retro miner counts the hook's real note as rules named" \
+        || bad "tools/harness_retro.py reach_note does not recognise the hook's note: ${WR_NOTE:0:120}"
+    wr_run "$(wr_pl s1 Read "$WR_WT_M/Main/Foo.cs")"
+    wr_is "the second matching access of one session" silent
+    wr_run "$(wr_pl s1 Edit "$WR_WT_M/Main/Mission/Agent.cs")"
+    wr_is "names only the rule not yet named, on an Edit" "traps/mission.md" "cs.md patterns.md"
+    wr_run "$(wr_pl s2 Write "$WR_WT_M/Main/Mission/Sub/Deep.cs")"
+    wr_is "keeps a single * inside one folder, on a Write" "cs.md patterns.md" "traps/mission.md"
+    wr_run "$(wr_pl s3 Read "$WR_WT_M/sub/CLAUDE.md")"
+    wr_is "matches a glob with no slash at any depth" "entry.md" "cs.md"
+    wr_run "$(wr_pl s4 Read "$WR_WT_M/.claude/rules/cs.md")"
+    wr_is "a Read of a rule file, which would call for the rule about rules" silent
+    wr_run "$(wr_pl s4 Edit "$WR_WT_M/.claude/rules/cs.md")"
+    wr_is "names the rule that covers rule files on an Edit of one" "entry.md"
+    wr_run "$(wr_pl s5 Edit "$WR_WT_M/.claude/rules/traps/mission.md")"
+    wr_is "a rule file one folder down, which .claude/rules/*.md does not reach" silent
+    wr_run "$(wr_pl s6 Read "$WR_MAIN_M/Main/Foo.cs")"
+    wr_is "a file in the session's own checkout, where the harness loads the rules" silent
+    wr_run "$(wr_pl s6 Read "$WR_OTHER_M/Main/Foo.cs")"
+    wr_is "a file in another repository" silent
+    wr_run "$(wr_pl s6 Read "$WR_LOOSE_M/Main/Foo.cs")"
+    wr_is "a file in no repository" silent
+    wr_run "$(wr_pl s6 Read "$WR_WT_M/docs/none.md")"
+    wr_is "a worktree file no rule matches" silent
+    # A subagent has its own context: what its session was told is not in it.
+    wr_run "$(wr_pl s1 Read "$WR_WT_M/Main/Foo.cs" ag1)"
+    wr_is "tells a subagent although its session was told" "cs.md patterns.md"
+    wr_run "$(wr_pl s1 Read "$WR_WT_M/Main/Foo.cs" ag1)"
+    wr_is "the second matching access of one subagent" silent
+    [[ -f "$WR_L/s1.rules" && -f "$WR_L/s1.ag1.arules" ]] && ok "point-worktree-rules keeps one state file for the session and one for the subagent" \
+        || bad "point-worktree-rules: expected s1.rules and s1.ag1.arules under $WR_L: $(ls -A "$WR_L" 2>/dev/null | tr '\n' ' ')"
+    # A session that started in the worktree gets no rule for a file in the main checkout either.
+    wr_run "$(wr_pl s7 Read "$WR_MAIN_M/Main/Foo.cs")" "$WR_WT_M"
+    wr_is "names the main checkout's rules for a session that started in a worktree" "cs.md patterns.md"
+    [[ "$WR_NOTE" == *"$WR_MAIN_M/.claude/rules/cs.md"* ]] && ok "point-worktree-rules gives the main checkout's own rule file there" \
+        || bad "point-worktree-rules: the note does not give $WR_MAIN_M/.claude/rules/cs.md: ${WR_NOTE:0:240}"
+    wr_run "$(wr_pl '' Read "$WR_WT_M/Main/Foo.cs")"
+    wr_is "a payload with no session id" silent
+    # A Windows path arrives with JSON-doubled backslashes, maybe in another case; NTFS ignores case.
+    WR_WT_W=$(cygpath -w "$WR_WT" 2>/dev/null || echo "$WR_WT")
+    if [[ -e "${WR_WT_M,,}/main/foo.cs" ]]; then
+        wr_run "$(wr_pl s8 Read "${WR_WT_W,,}\\main\\foo.cs")"
+        wr_is "matches a lower-case Windows backslash path" "cs.md patterns.md"
+    else
+        echo "  note: this file system is case-sensitive, so the case-folded path row is SKIPPED (not passed)"
+    fi
+    # After a compaction the session has lost the rule text, so SessionStart forgets what it was told.
+    printf '{"hook_event_name":"SessionStart","source":"compact","session_id":"s1"}' \
+        | CLAUDE_PROJECT_DIR="$WR_MAIN_M" timeout -k 2 10 bash "$WR_HOOK" >"$SANDBOX/wr.out" 2>"$SANDBOX/wr.err"
+    WR_RC=$?
+    [[ $WR_RC == 0 && ! -s "$SANDBOX/wr.out" && ! -s "$SANDBOX/wr.err" && ! -e "$WR_L/s1.rules" && -f "$WR_L/s1.ag1.arules" ]] \
+        && ok "point-worktree-rules forgets the session's notes at SessionStart without a word, and keeps a subagent's" \
+        || bad "point-worktree-rules at SessionStart: rc $WR_RC, stdout $(head -c 80 "$SANDBOX/wr.out"), stderr $(head -c 80 "$SANDBOX/wr.err"), left: $(ls -A "$WR_L" 2>/dev/null | tr '\n' ' ')"
+    wr_run "$(wr_pl s1 Read "$WR_WT_M/Main/Foo.cs")"
+    wr_is "names the rules again after a SessionStart" "cs.md patterns.md"
+    # Only a SessionStart forgets. A tool payload that carries no file path leaves the notes in place.
+    wr_run '{"hook_event_name":"PostToolUse","tool_name":"Read","session_id":"s1","tool_input":{}}'
+    if [[ -z "$WR_FAULT" && -z "$WR_NOTE" && -f "$WR_L/s1.rules" ]]; then
+        ok "point-worktree-rules keeps the session's notes on a tool payload with no file path"
+    else
+        bad "point-worktree-rules (a tool payload with no file path): fault '$WR_FAULT', note '${WR_NOTE:0:80}', left: $(ls -A "$WR_L" 2>/dev/null | tr '\n' ' ')"
+    fi
+    # A Write whose content spells the SessionStart key is still a Write: the key sits escaped in a string.
+    WR_TRAP=$("$HPY" -c 'import json, sys
+print(json.dumps({"hook_event_name": "PostToolUse", "tool_name": "Write", "session_id": "s12",
+                  "tool_input": {"file_path": sys.argv[1], "content": "\"hook_event_name\":\"SessionStart\""}}))' "$WR_WT_M/Main/Foo.cs")
+    wr_run "$WR_TRAP"
+    wr_is "reads a Write whose content spells the SessionStart key as a Write" "cs.md patterns.md"
+    # Silence would read as "no rule applies". A checkout whose .git file it cannot read gets a note.
+    wr_run "$(wr_pl s9 Read "$WR_BROKEN_M/Main/Foo.cs")"
+    if [[ -z "$WR_FAULT" && "$WR_NOTE" == *unchecked* && "$WR_NOTE" == *"$WR_BROKEN_M"* ]]; then
+        ok "point-worktree-rules says unchecked, not absent, when it cannot read a checkout's .git file"
+    else
+        bad "point-worktree-rules: expected an unchecked note naming $WR_BROKEN_M, got: ${WR_FAULT}${WR_NOTE:0:200}"
+    fi
+    [[ "$(wr_miner)" == False ]] && ok "the retro miner does not count the hook's unchecked note as rules named" \
+        || bad "tools/harness_retro.py reach_note counts the unchecked note, which names no rule: ${WR_NOTE:0:120}"
+    wr_run "$(wr_pl s9 Read "$WR_BROKEN_M/Main/Foo.cs")"
+    wr_is "the second access under a checkout it could not read" silent
+    # Housekeeping: a new session's first note deletes state older than 7 days, and only that.
+    printf 'x\n' > "$WR_L/old.rules"; touch -d '8 days ago' "$WR_L/old.rules"
+    printf 'x\n' > "$WR_L/old.ag.arules"; touch -d '8 days ago' "$WR_L/old.ag.arules"
+    printf 'x\n' > "$WR_L/two.rules"; touch -d '2 days ago' "$WR_L/two.rules"
+    wr_run "$(wr_pl s10 Read "$WR_WT_M/Main/Foo.cs")"
+    [[ ! -e "$WR_L/old.rules" && ! -e "$WR_L/old.ag.arules" && -e "$WR_L/two.rules" ]] \
+        && ok "point-worktree-rules deletes state files older than 7 days, and only those" \
+        || bad "point-worktree-rules: the 7-day cleanup left: $(ls -A "$WR_L" 2>/dev/null | tr '\n' ' ')"
+    # Checkouts of other shapes, built from hand-written .git files (deep review 2026-11-25, Tooling F1, F5, F8).
+    wr_tree() {  # $1 folder, $2 the text of its .git file: a checkout with the C# rule and one C# file
+        mkdir -p "$1/.claude/rules" "$1/Main"
+        cp "$WR_MAIN/.claude/rules/cs.md" "$1/.claude/rules/cs.md"
+        printf 'class Foo {}\n' > "$1/Main/Foo.cs"
+        printf '%s\n' "$2" > "$1/.git"
+    }
+    # A worktree under the project's own .claude/worktrees (EnterWorktree, isolation: "worktree") is inside
+    # $CLAUDE_PROJECT_DIR and is still a checkout of its own: Main/**/*.cs does not match a path under it.
+    wr_tree "$WR_MAIN/.claude/worktrees/iso" "gitdir: $WR_MAIN_M/.git/worktrees/iso"
+    wr_run "$(wr_pl s13 Read "$WR_MAIN_M/.claude/worktrees/iso/Main/Foo.cs")"
+    wr_is "names the rules of a worktree under the project's .claude/worktrees" "cs.md"
+    [[ "$WR_NOTE" == *"$WR_MAIN_M/.claude/worktrees/iso/.claude/rules/cs.md"* ]] && ok "point-worktree-rules gives that nested worktree's own rule file" \
+        || bad "point-worktree-rules: the note does not give the nested worktree's own cs.md: ${WR_NOTE:0:240}"
+    printf '# notes\n' > "$WR_MAIN/.claude/worktrees/notes.md"
+    wr_run "$(wr_pl s13 Read "$WR_MAIN_M/.claude/worktrees/notes.md")"
+    wr_is "a file of the session's own checkout that sits in .claude/worktrees itself" silent
+    # A plain folder there is no checkout: its files belong to the session's own checkout, where the
+    # harness loads the rules (CLAUDE.md matches a glob with no slash at any depth).
+    mkdir -p "$WR_MAIN/.claude/worktrees/plain"
+    printf '# c\n' > "$WR_MAIN/.claude/worktrees/plain/CLAUDE.md"
+    wr_run "$(wr_pl s13 Read "$WR_MAIN_M/.claude/worktrees/plain/CLAUDE.md")"
+    wr_is "a plain folder under .claude/worktrees, which is no checkout" silent
+    wr_tree "$SANDBOX/wr-rel" "gitdir: ../wr-main/.git/worktrees/rel"
+    wr_run "$(wr_pl s14 Read "$(wr_m "$SANDBOX/wr-rel")/Main/Foo.cs")"
+    wr_is "reads a relative gitdir from the checkout's own folder" "cs.md"
+    wr_tree "$SANDBOX/wr-sub" "gitdir: ../wr-main/.git/modules/sub"
+    wr_run "$(wr_pl s14 Read "$(wr_m "$SANDBOX/wr-sub")/Main/Foo.cs")"
+    wr_is "a submodule, whose .git file names no worktree" silent
+    wr_tree "$SANDBOX/wr-alien" "gitdir: $WR_OTHER_M/.git/worktrees/alien"
+    wr_run "$(wr_pl s14 Read "$(wr_m "$SANDBOX/wr-alien")/Main/Foo.cs")"
+    wr_is "a linked worktree of another repository" silent
+    wr_tree "$SANDBOX/wr-lost" "gitdir: ../wr-nowhere/.git/worktrees/lost"
+    wr_run "$(wr_pl s14 Read "$(wr_m "$SANDBOX/wr-lost")/Main/Foo.cs")"
+    if [[ -z "$WR_FAULT" && "$WR_NOTE" == *unchecked* && "$WR_NOTE" == *"wr-lost"* && "$WR_NOTE" != *"holds no gitdir line"* ]]; then
+        ok "point-worktree-rules says unchecked, with the true cause, when a relative gitdir names no folder"
+    else
+        bad "point-worktree-rules: expected an unchecked note for wr-lost that does not claim a missing gitdir line, got: ${WR_FAULT}${WR_NOTE:0:240}"
+    fi
+    if [[ "$WR_WT_M" =~ ^([A-Za-z]):/(.*)$ ]]; then
+        wr_run "$(wr_pl s15 Read "/${BASH_REMATCH[1],,}/${BASH_REMATCH[2]}/Main/Foo.cs")"
+        wr_is "matches a Git Bash /e/ path" "cs.md patterns.md"
+    else
+        echo "  note: no drive letter on this file system, so the Git Bash drive-path row is SKIPPED (not passed)"
+    fi
+    # The rule loader finds rules at any depth, so the hook must too.
+    mkdir -p "$WR_WT/.claude/rules/a/b"
+    printf -- '---\npaths:\n  - "Main/Mission/Sub/*.cs"\n---\n\n# deep\n' > "$WR_WT/.claude/rules/a/b/deep.md"
+    wr_run "$(wr_pl s16 Read "$WR_WT_M/Main/Mission/Sub/Deep.cs")"
+    wr_is "names a rule two folders down" "a/b/deep.md cs.md" "traps/mission.md"
+    rm -rf "$SANDBOX/wr-rel" "$SANDBOX/wr-sub" "$SANDBOX/wr-alien" "$SANDBOX/wr-lost"
+    # The slow path: every rule of the real repository read for one file, inside the 5 s registration.
+    cp -r "$REPO/.claude/rules/." "$WR_WT/.claude/rules/"
+    WR_T0=$(date +%s%N)
+    wr_run "$(wr_pl s11 Read "$WR_WT_M/Main/Features/X/Hooks/FooPatch.cs")"
+    WR_MS=$(( ($(date +%s%N) - WR_T0) / 1000000 ))
+    wr_is "names the repository's own C# and Harmony rules for a patch file" "csharp-architecture.md csharp-patterns.md harmony-patches.md" "xslt.md hook-authoring.md"
+    (( WR_MS < 4000 )) && ok "point-worktree-rules answers over every real rule in ${WR_MS} ms, inside its 5 s registration" \
+        || bad "point-worktree-rules took ${WR_MS} ms over the real rules; its registration is 5 s"
+fi
+# The matcher knows letters, digits and / . _ - * ? only. A glob with any other character matches
+# nothing, so a rule that gained one would go quiet in every worktree: fail here first.
+WR_ODD=$(cd "$REPO" && "$HPY" - <<'PY'
+import re
+from pathlib import Path
+odd = []
+for r in sorted(Path('.claude/rules').rglob('*.md')):
+    t = r.read_text(encoding='utf-8-sig').replace('\r\n', '\n')
+    if not t.startswith('---\n'):
+        continue
+    for line in t[4:t.find('\n---', 4)].split('\n'):
+        m = re.match(r'^\s+-\s+["\']?(.*?)["\']?\s*$', line)
+        if m and not re.fullmatch(r'[A-Za-z0-9/._*?-]+', m.group(1)):
+            odd.append(f'{r.name}: {m.group(1)}')
+        # The hook reads the block list only: an inline `paths: [..]` would match nothing.
+        m = re.match(r'^paths:\s*(\S.*)$', line)
+        if m:
+            odd.append(f'{r.name}: inline form `paths: {m.group(1)}`')
+print('; '.join(odd))
+PY
+)
+[[ -z "$WR_ODD" ]] && ok "every paths: glob in .claude/rules uses only characters point-worktree-rules can match" \
+    || bad "point-worktree-rules cannot match these globs, so their rules would never be named in a worktree: $WR_ODD"
+WR_REG=$(cd "$REPO" && "$HPY" - <<'PY'
+import json
+d = json.load(open('.claude/settings.json', encoding='utf-8'))
+post = [g.get('matcher', '') for g in d['hooks'].get('PostToolUse', []) for h in g['hooks']
+        if h['command'].endswith('/point-worktree-rules.sh')]
+start = [h['command'].rsplit('/', 1)[-1] for g in d['hooks'].get('SessionStart', []) for h in g['hooks']
+         if 'point-worktree-rules.sh' in h['command']]
+print('+'.join(post), ';', '+'.join(start))
+PY
+)
+[[ "$WR_REG" == 'Read|Edit|Write ; point-worktree-rules.sh' ]] \
+    && ok "point-worktree-rules is registered on PostToolUse Read|Edit|Write, and on SessionStart" \
+    || bad "point-worktree-rules registrations are '$WR_REG'; expected PostToolUse 'Read|Edit|Write' and SessionStart 'point-worktree-rules.sh'"
+rm -rf "$WR_MAIN" "$WR_WT" "$WR_OTHER" "$WR_LOOSE" "$WR_BROKEN"
 
 # ---------------------------------------------------------------------------
 head2 "8. tools/context_budget_scan.sh runs under set -u and measures the launch load"

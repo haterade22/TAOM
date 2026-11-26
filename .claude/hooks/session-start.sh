@@ -214,18 +214,45 @@ elif ! ss_probe_budget; then
   echo ""
   echo "NOTE: Armory art drift UNCHECKED this session (session-start time budget spent)."
 else
+  # A file-time hint, and no more: the exact check is tools/generate_armory_catalogue.py --check,
+  # which /game-run runs before every battle and which reads no file time. Keep git out of this
+  # block: a reference time taken from the catalogue's commit cannot be cleared by an audit that
+  # rewrites the same content (docs/reviews/rca-armory-drift-fresh-checkout-2026-11-25.md, S1).
   NEWER_TPAC=$(timeout -k 0.5 "$SS_PROBE_BUDGET" find "$ARMORY_ASSETS" -name '*_geo.tpac' -newer "$CATALOGUE" -print -quit 2>/dev/null)
   FIND_RC=$?
+  AD_STAMP=".claude/logs/.armory-drift-printed"
   if [[ $FIND_RC -eq 124 || $FIND_RC -eq 137 ]]; then
     echo ""
     echo "NOTE: Armory art drift UNCHECKED this session (the tpac scan overran ${SS_PROBE_BUDGET%????} s)."
   elif [[ -n "$NEWER_TPAC" ]]; then
+    # The banner prints once per drift state, not in every session: 33 sessions printed it in a week
+    # and 3 ran the audit (harness retro 2026-11-25, P3), and /game-run now checks the drift itself
+    # before a battle. The stamp holds the pack the banner named. It prints again for another pack,
+    # once the stamp is seven days old (find -mtime +6 lists it then), and when the catalogue is newer
+    # than the stamp, which is a rebuilt catalogue and so a new state.
+    AD_NAME=${NEWER_TPAC#"$ARMORY_ASSETS"/}
+    AD_TOLD=""
+    [[ -f "$AD_STAMP" ]] && { IFS= read -r AD_TOLD < "$AD_STAMP"; } 2>/dev/null
+    if [[ "$AD_TOLD" != "$AD_NAME" || -n "$(find "$AD_STAMP" -mtime +6 2>/dev/null)" || "$CATALOGUE" -nt "$AD_STAMP" ]]; then
+      echo ""
+      echo "!!! ARMORY ART DRIFT: a tpac is newer than the committed catalogue !!!"
+      echo "!!!   $AD_NAME"
+      echo "!!!   Run /armory-audit (python tools/audit_armory_refs.py --regen-catalogue) BEFORE any battle or"
+      echo "!!!   tournament smoke, and repoint every MISSING_BODY row it names. A missing collision body"
+      echo "!!!   is the #352 infinite load (#599)."
+      mkdir -p .claude/logs 2>/dev/null
+      { printf '%s\n' "$AD_NAME" > "$AD_STAMP"; } 2>/dev/null
+    fi
+  elif [[ -f .git ]]; then
+    # A linked worktree (its .git is a file): git wrote the catalogue with the time of the checkout, so
+    # a scan that finds no newer tpac proves nothing here (the same RCA, F1). The stamp of an earlier
+    # banner stays.
     echo ""
-    echo "!!! ARMORY ART DRIFT: a tpac is newer than the committed catalogue !!!"
-    echo "!!!   ${NEWER_TPAC#$ARMORY_ASSETS/}"
-    echo "!!!   Run /armory-audit (python tools/audit_armory_refs.py --regen-catalogue) BEFORE any battle or"
-    echo "!!!   tournament smoke, and repoint every MISSING_BODY row it names. A missing collision body"
-    echo "!!!   is the #352 infinite load (#599)."
+    echo "NOTE: Armory art drift UNCHECKED in this linked worktree (its catalogue file carries the time of the checkout,"
+    echo "      so a scan that finds no newer tpac proves nothing). The exact check: python tools/generate_armory_catalogue.py --check"
+  else
+    # No drift: forget the last banner, so the next drift is told at once.
+    [[ -e "$AD_STAMP" ]] && rm -f "$AD_STAMP" 2>/dev/null
   fi
 fi
 
