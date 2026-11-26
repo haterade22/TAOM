@@ -188,6 +188,7 @@ internal sealed partial class CommandTrialScript
     {
         IsDone = true;
         _host.SetInput(null);
+        _host.ReleaseCameraTrial();
         _host.StaminaReleaseForced();
         var name = _index < _steps.Count ? _steps[_index].Name : "none";
         _logger.LogError($"[SeatTrial] the script failed in step {name}: {ex}");

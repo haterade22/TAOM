@@ -181,10 +181,17 @@ internal sealed class SeatSession
             {
                 var read = input ?? _screen.ReadInput(dt);
                 var lookHeld = _screen.LookHeld();
-                if (input == null)
-                    read = WithEdgeScroll(read, lookHeld);
-                if (!TryOrbitPose(read, dt, out pose) && !TryRotatePose(read, lookHeld, dt, out pose))
+                read = WithEdgeScroll(read, lookHeld);
+                if (TryOrbitPose(read, dt, out pose))
+                {
+                    // The keep's orbit owns the frame: a middle button held across its start or end must not leave a stale turn.
+                    _rotating = false;
+                    _lookWasHeld = lookHeld;
+                }
+                else if (!TryRotatePose(read, lookHeld, dt, out pose))
+                {
                     pose = FlightPose(false, read, dt, out _);
+                }
             }
 
             _screen.ApplyFrame(pose, _viewAngle, SeatCameraMath.ListenerHeight(pose.Z, _ground));
@@ -722,16 +729,19 @@ internal sealed class SeatSession
     {
         var target = FiniteFloatValidator.IsFinite(_zoomTarget) ? _zoomTarget : _flight.Height;
         var zoom = SeatZoom.Step(_flight.Height, target, read.ZoomNotches, dt, SeatCameraMath.HeightCeiling(_heightLimit, _ground));
+        var ceiling = SeatCameraMath.HeightCeiling(_heightLimit, _ground);
         var next = Bounded(SeatCameraMath.Step(_flight with { Height = zoom.Height }, read with { ZoomNotches = 0f }, dt, _settings.PanSpeed), _flight);
-        _zoomTarget = read.Lift != 0f ? next.Height : zoom.Target;
+        // The lift moves the target by what it moved the height, so a notch during a lift still takes its full step.
+        var lifted = read.Lift != 0f ? next.Height - zoom.Height : 0f;
+        _zoomTarget = lifted == 0f ? zoom.Target : Math.Max(SeatCameraMath.MinHeight, Math.Min(zoom.Target + lifted, ceiling));
         return next;
     }
 
-    // The pointer at the window's edge adds to the keys' push, to at most 1 on each axis; only with the cursor shown, no middle look held
-    // and the setting on (the adapter adds the focus and the pointer-in-window tests).
+    // The pointer at the window's edge adds to the keys' push, to at most 1 on each axis; only with the cursor shown, no middle look held,
+    // the setting on and no keep (any push lets a keep go) (the adapter adds the focus, the panel-button and the pointer-in-window tests).
     private SeatInput WithEdgeScroll(SeatInput read, bool lookHeld)
     {
-        if (!_cursorShown || lookHeld || !_settings.EdgeScroll)
+        if (!_cursorShown || lookHeld || !_settings.EdgeScroll || _keep != SeatKeepKind.None)
             return read;
         var (right, forward) = _screen.ReadEdgeScroll();
         return read with { Right = Math.Max(-1f, Math.Min(1f, read.Right + right)), Forward = Math.Max(-1f, Math.Min(1f, read.Forward + forward)) };
@@ -760,7 +770,7 @@ internal sealed class SeatSession
 
         if (!_rotating)
             return false;
-        _pivot = SeatPivot.Step(_pivot, read.LookYaw, read.LookPitch);
+        _pivot = SeatPivot.Step(_pivot, read.LookYaw, read.LookPitch, SeatCameraMath.HeightCeiling(_heightLimit, _ground));
         pose = OrbitFrame(_pivot, dt);
         return true;
     }

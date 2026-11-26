@@ -276,7 +276,7 @@ public class SeatCameraFeelRulesTests
     [TestMethod]
     public void Pivot_Step_HoldsThePitchToTheOrbitsRange_AndBadLookCountsAsZero()
     {
-        var start = new SeatOrbitState(0f, 0f, 0f, 0f, 0.8f, 120f);
+        var start = new SeatOrbitState(0f, 0f, 0f, 0f, 0.8f, 100f);
 
         Assert.AreEqual(SeatOrbit.MaxPitch, SeatPivot.Step(start, 0f, 1e6f).Pitch, Eps);
         Assert.AreEqual(SeatOrbit.MinPitch, SeatPivot.Step(start, 0f, -1e6f).Pitch, Eps);

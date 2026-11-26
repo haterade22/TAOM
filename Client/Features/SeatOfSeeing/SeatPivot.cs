@@ -47,12 +47,16 @@ internal static class SeatPivot
 
     /// <summary>
     /// One frame: the look turns the orbit by the same units per step as the flight's look, the pitch held to the orbit's range, and the
-    /// pivot and the distance stay as they are (no ease, no wheel). A look value that is not a real number counts as zero.
+    /// pivot and the distance stay as they are (no ease, no wheel). A look value that is not a real number counts as zero. The pitch is also
+    /// held so the camera stays under <paramref name="ceiling"/> over the pivot (<c>distance * sin(pitch)</c>), the height the flight can
+    /// hold, so letting go does not drop the view.
     /// </summary>
-    internal static SeatOrbitState Step(SeatOrbitState state, float lookYaw, float lookPitch)
+    internal static SeatOrbitState Step(SeatOrbitState state, float lookYaw, float lookPitch, float ceiling = SeatCameraMath.MaxHeight)
     {
         var yaw = SeatOrbit.Wrap(state.Yaw + Finite(lookYaw) * SeatOrbit.LookPerUnit);
-        var pitch = Math.Max(SeatOrbit.MinPitch, Math.Min(state.Pitch + Finite(lookPitch) * SeatOrbit.LookPerUnit, SeatOrbit.MaxPitch));
+        var top = FiniteFloatValidator.IsFinite(ceiling) ? Math.Min(ceiling, SeatCameraMath.MaxHeight) : SeatCameraMath.MaxHeight;
+        var cap = state.Distance > 0f ? (float)Math.Asin(Math.Min(1f, Math.Max(0f, top) / state.Distance)) : SeatOrbit.MaxPitch;
+        var pitch = Math.Max(SeatOrbit.MinPitch, Math.Min(Math.Min(state.Pitch + Finite(lookPitch) * SeatOrbit.LookPerUnit, SeatOrbit.MaxPitch), cap));
         return state with { Yaw = yaw, Pitch = pitch };
     }
 

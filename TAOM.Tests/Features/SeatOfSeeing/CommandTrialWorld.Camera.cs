@@ -76,7 +76,7 @@ internal sealed partial class CommandTrialWorld
     private void CameraFeelFrame(float dt)
     {
         ZoomFrame(dt);
-        if (_pointer.HasValue && MouseVisible && (EdgeScrollOn || EdgeIgnoresTheSetting) && !EdgeDoesNothing && !_middle)
+        if (_pointer.HasValue && MouseVisible && (EdgeScrollOn || EdgeIgnoresTheSetting) && !EdgeDoesNothing && !_middle && Keeping == SeatKeepKind.None)
         {
             var (right, _) = SeatEdgeScroll.Axes(_pointer.Value.X, _pointer.Value.Y, SeatEdgeScroll.Margin);
             View = new Vec3f(View.X + (EdgeFliesLeft ? -right : right) * SeatCameraMath.PanSpeed(FlightHeight) * dt, View.Y, View.Z);

@@ -160,7 +160,7 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
     // trial's pointer stands in for it.
     public (float Right, float Forward) ReadEdgeScroll()
     {
-        if (!SceneOrShieldFocused() || (TrialRanged == null && !Input.IsMouseActive))
+        if (!SceneOrShieldFocused() || (TrialRanged == null && !Input.IsMouseActive) || _relay is { PointerOverTarget: true })
             return (0f, 0f);
 
         var at = TrialRanged ?? Input.MousePositionRanged;

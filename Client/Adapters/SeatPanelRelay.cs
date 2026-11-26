@@ -75,6 +75,9 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
     // button is false under it: the raw input is the one read both sides agree on.
     internal static bool LookHeld() => Input.IsKeyDown(InputKey.MiddleMouseButton);
 
+    /// <summary>The pointer is over a panel button as the shield last saw it: it is aiming at the button, not scrolling.</summary>
+    internal bool PointerOverTarget => _lastHit.Kind != SeatPanelKind.None;
+
     /// <summary>The cursor layer's hit test, run once a frame by <c>ScreenManager.EarlyUpdate</c> on the main thread.</summary>
     internal bool ShieldHolds()
     {

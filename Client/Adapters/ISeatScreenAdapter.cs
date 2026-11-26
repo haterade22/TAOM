@@ -61,7 +61,7 @@ internal interface ISeatScreenAdapter
     /// <summary>
     /// The push the pointer's place in the window gives the flight (camera feel): right and forward, each from -1 to 1. Zero while another
     /// layer than the scene's or the Seat's own holds the focus (a menu or a popup), while the mouse is not the active device, and with the
-    /// pointer outside the window. The caller asks only with the cursor shown, no middle look held and the setting on.
+    /// pointer outside the window, and while it is over an order panel button (the shield holds it). The caller asks only with the cursor shown, no middle look held and the setting on.
     /// </summary>
     (float Right, float Forward) ReadEdgeScroll();
 

@@ -278,16 +278,88 @@ public class SeatSessionFeelTests
     }
 
     [TestMethod]
-    public void EdgeScroll_WithAFieldTrialInput_IsNotAskedEither()
+    public void EdgeScroll_WithAFieldTrialInput_PushesToo()
     {
         Seated();
         ShowCursor();
+        _sut.OnFrame(Frame, default(SeatInput));
+        var from = Last;
         _screen.Edge = (1f, 0f);
 
-        for (var i = 0; i < 10; i++)
+        for (var i = 0; i < 30; i++)
             _sut.OnFrame(Frame, default(SeatInput));
 
-        Assert.AreEqual(0, _screen.EdgeReads, "a trial input replaces the whole flight input");
+        Assert.IsTrue(_screen.EdgeReads > 0, "the trial's empty input is still asked");
+        Assert.IsTrue(Math.Abs(Last.X - from.X) + Math.Abs(Last.Y - from.Y) > 1f, "the pointer at the edge flies the view in the trial");
+    }
+
+    [TestMethod]
+    public void EdgeScroll_WhileKeepingToACompany_DoesNotLetTheKeepGo()
+    {
+        Seated();
+        Frames(2);
+        _screen.PanelOpen = true;
+        _screen.KeepResult = SeatKeepKind.Company;
+        _sut.OnScreenTick(false);
+        _sut.PressKeep();
+        _sut.OnMissionTick();
+        Assert.AreEqual(SeatKeepKind.Company, _sut.Keep);
+        Assert.IsTrue(_screen.CursorWrites.Last(), "the cursor is shown with the panel open");
+
+        _screen.Edge = (1f, 1f);
+        Frames(30);
+
+        Assert.AreEqual(SeatKeepKind.Company, _sut.Keep, "the pointer at an edge is not a movement key");
+    }
+
+    [TestMethod]
+    public void Rotate_MiddleHeldAcrossAKeepStartAndEnd_LeavesNoStaleTurn()
+    {
+        Seated();
+        Frames(2);
+        _screen.Look = true;
+        _screen.Input = new SeatInput(0f, 0f, 0f, 0f, 4f, 0f, false);
+        Frames(20);
+        _screen.Input = default;
+        _sut.PressKeep();
+        _sut.OnMissionTick();
+        Assert.AreEqual(SeatKeepKind.Soldier, _sut.Keep);
+        Frames(5);
+        var kept = Last;
+
+        _screen.Input = new SeatInput(1f, 0f, 0f, 0f, 0f, 0f, false);
+        Frames(1);
+
+        Assert.AreEqual(SeatKeepKind.None, _sut.Keep, "a movement key lets the keep go");
+        Assert.AreEqual(kept.X, Last.X, 3f, "the view carries on from the keep's place, not from the old turn");
+        Assert.AreEqual(kept.Y, Last.Y, 3f);
+    }
+
+    [TestMethod]
+    public void Pivot_PitchDrivenUp_StaysUnderTheFlightsHeightCeiling_SoReleaseDoesNotDrop()
+    {
+        var orbit = SeatPivot.Begin(new SeatPose(0f, 0f, 150f, 0f, 0.6f), new SeatPivotFind(true, 0f, 200f, 0f, 250f));
+        for (var i = 0; i < 400; i++)
+            orbit = SeatPivot.Step(orbit, 0f, 40f);
+
+        var z = SeatOrbit.Pose(orbit).Z - orbit.PointZ;
+        Assert.IsTrue(z <= SeatCameraMath.MaxHeight + 0.01f, "the orbit's height over the pivot: " + z);
+        Assert.IsTrue(orbit.Pitch > 0.4f, "it still tilts: " + orbit.Pitch);
+    }
+
+    [TestMethod]
+    public void Wheel_ANotchDuringALift_StillMovesTheTargetByItsFullStep()
+    {
+        Seated();
+        Frames(60);
+        var start = HeightNow;
+
+        _screen.Input = new SeatInput(0f, 0f, 1f, 1f, 0f, 0f, false);
+        Frames(1);
+        _screen.Input = default;
+        Frames(120);
+
+        Assert.IsTrue(HeightNow < start * 0.95f, "the notch took effect though a lift key was held on its frame: " + start + " to " + HeightNow);
     }
 
     // ---- the middle button turns the view around a pivot ----

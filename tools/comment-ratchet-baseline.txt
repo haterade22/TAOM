@@ -132,7 +132,7 @@ Client/Features/SeatOfSeeing/Hooks/Patch140_FormationFocusPoint.cs	2
 Client/Features/SeatOfSeeing/Hooks/Patch140_OrderFlagGetCollidedEntity.cs	3
 Client/Features/SeatOfSeeing/SeatEdgeScroll.cs	1
 Client/Features/SeatOfSeeing/SeatKeys.cs	2
-Client/Features/SeatOfSeeing/SeatSession.cs	21
+Client/Features/SeatOfSeeing/SeatSession.cs	23
 Client/Features/SeatOfSeeing/SeatTimeControl.cs	2
 Client/Features/SeatOfSeeing/SeatView.cs	6
 Client/Features/SeatOfSeeing/Trial/CommandTrialAutostart.cs	1
