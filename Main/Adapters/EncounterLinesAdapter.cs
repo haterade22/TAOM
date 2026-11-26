@@ -70,6 +70,16 @@ public sealed class EncounterLinesAdapter : IEncounterLinesAdapter
     public LordFacts? ConversationLord() =>
         Campaign.Current == null ? null : DescribeLord(Hero.OneToOneConversationHero?.CharacterObject);
 
+    /// <summary><c>Hero.IsNotable</c> is the engine's own test (<c>Hero.cs</c>: artisan, gang leader, preacher, merchant, rural notable or headman).</summary>
+    public NotableFacts? ConversationNotable()
+    {
+        var hero = Campaign.Current == null ? null : Hero.OneToOneConversationHero;
+        if (hero == null)
+            return null;
+
+        return new NotableFacts(hero.IsNotable, RaceName(hero.CharacterObject?.Race ?? -1), hero.StringId ?? string.Empty);
+    }
+
     public bool TrySetMercenaryPitch(string variable, string textId, string variation)
     {
         var models = Campaign.Current?.Models;
