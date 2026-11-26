@@ -150,6 +150,19 @@ internal sealed class FakeSeatScreen : ISeatScreenAdapter
 
     public bool LookHeld() => Look;
 
+    // Marshal's Word stage M7: the panel's clicks, handed to the relay once a screen tick while the panel is open with the cursor shown.
+    internal int Relays;
+    internal SeatRelayResult RelayResult = SeatRelayResult.Idle;
+    internal Exception? RelayThrows;
+
+    public SeatRelayResult RelayPanelClicks()
+    {
+        Relays++;
+        if (RelayThrows != null)
+            throw RelayThrows;
+        return RelayResult;
+    }
+
     public void SetCursor(bool show)
     {
         CursorWrites.Add(show);

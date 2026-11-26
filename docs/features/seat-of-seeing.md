@@ -281,6 +281,32 @@ custom camera is a siege engine or a board game, and the message says the Seat c
 ended; no warg rage holds the hero. A battle that begins in the Seat (`Begin Battles in the Seat`) enters Seated with no blend at the
 current camera frame when Deployment gives way to Battle.
 
+### Order panel clicks (Marshal's Word stage M7)
+
+Vanilla's order panel has no mouse path. Both order movies wrap the panel in a widget with `DoNotAcceptEvents` and `DoNotPassEventsToChildren` (`OrderBar.xml:5`,
+`OrderRadial.xml:5`), the engine's hit walk never reaches a button, no card, set or order has a click command, and the order layer's mask stays `Invalid` while the panel
+shows. So a click on a button reached the ground behind it. Stage M7 gives the panel a click shield and a relay.
+
+- `SeatCursorLayer` (client adapter, a `GauntletLayer` with no movie) replaces the plain cursor layer. Its two hit tests answer `SeatPanelRelay.ShieldHolds` and
+  `ShieldHoldsAt`. While the cursor shows its mask is `Mouse` (the buttons and the wheel, never keys), so `ScreenManager.EarlyUpdate` gives both to it on a frame its
+  hit test is true (`ScreenManager.cs:656-675`); with the cursor hidden the mask is `Invalid`, as before. It is built once and only toggled.
+- `SeatPanelTarget` (pure) walks the order layer's widgets like the engine's own hit walk but ignores the two event flags: children last to first, a hidden widget hides
+  everything below it, a child may lie outside its parent's rectangle. It returns the kind of the topmost widget bound to a troop card, an order set or an order, and that
+  view model. `SeatPanelRelay` reads a widget's view model through `GauntletView._viewModel` (one reflection site, Category B), finds the order layer by its name
+  `MissionOrder` (`MissionGauntletSingleplayerOrderUIHandler.cs:127`; a binding test reads the installed handler's IL for the literal) and caches it per mission.
+- `SeatPanelYieldRule` (pure) says when the shield holds: cursor shown, panel open, no middle-button look, a target under the pointer, and no other active layer with a
+  mouse-buttons mask (not the scene, not the order layer, not the shield) hitting there. The relay also never holds in a transfer or a deployment.
+- `SeatPanelRelayRule` (pure) turns a press and a release on the same view model into one action: select a card, select an order set, run an order, deselect the set (the Return
+  order), or Escape for a right release. `SeatPanelRelay.Tick` runs once a screen tick from `SeatSession.PanelWork` and calls what the number keys already call
+  (`GauntletOrderUIHandler.TickInput`): `OrderTroopItemVM.ExecuteAction()` (Ctrl adds, read by vanilla itself), `MissionOrderVM.TrySelectOrderSet`, the order's `ExecuteAction`
+  with the order flag's position and no focused company and then `TryCloseToggleOrder` (a deselect while holding or deploying), `ExecuteDeSelect()` and `OnEscape()`. It writes
+  no agent and no formation by itself.
+- The look and the close signals read the raw input (`Input.IsKeyDown` of the middle button, `Input.IsKeyReleased` of the right button), because the scene layer reads a mouse
+  button only on a frame it holds the mouse buttons. A right release the relay turns into `OnEscape` is a release the raw read sees too, so it counts as the player's own
+  close and Keep the order panel open does not open the panel again.
+- `SeatSession.NoteRelay` writes the `taom.seat-of-seeing.panel-click` check: a pass line for the first relayed click of a mission, one fail line (`reason=site`) when the view
+  model of a widget cannot be read.
+
 ### Component Diagram
 
 ```
@@ -308,7 +334,7 @@ current camera frame when Deployment gives way to Battle.
 |---------|------|---------|-------------|
 | `SeatEnabled` | bool | on | The Seat key acts. Off, the key does nothing and a Seat that is up comes down, the mission time keys stop too, and the next press of one cancels any change they made. |
 | `BeginBattlesInSeat` | bool | off | When deployment ends, the view goes into the Seat at the camera in use, with no blend. |
-| `SeatCursorWithPanel` | bool | on | While in the Seat with the order panel open, a cursor shows and orders land where it points. A click on one of the panel's buttons does not press it yet: it gives a Move order on the ground behind it. |
+| `SeatCursorWithPanel` | bool | on | While in the Seat with the order panel open, a cursor shows and orders land where it points. A click on one of the panel's troop cards, order sets and orders presses it (stage M7). |
 | `SeatKeepPanelOpen` | bool | off | While in the Seat, the order panel opens again after an order. With the game option that slows time (on by default) while orders are given, the stay runs at quarter speed apart from one frame per order. |
 | `SeatHeroFightsOn` | bool | off | While in the Seat in a battle, the hero fights on with the company under the engine's AI and you get the controls back after the leave. It acts the next time you take the Seat. Off until a run in the game proves it. |
 | `SeatRiseWithPanel` | bool | off | With your hero's view in third person and the order panel open, the view lifts (7 metres in a field battle, 3 in a siege or a sally out) and sinks when the panel closes. The lift drops the target lock until the view has sunk, and under a roof the view rises through it. It works with the Seat turned off too, because it reads its own setting and never `SeatEnabled`. |
@@ -365,6 +391,8 @@ with `1 - exp(-6 dt)`, and the view never goes below the raw ground plus 0.5 m (
 | `Main/Features/SeatOfSeeing/Domain/SeatPanelRule.cs`, `SeatPointer.cs`, `SeatHideRule.cs`, `SeatKeepRule.cs`, `SeatOrbit.cs` | The pure rules of stages S2 and S3 |
 | `Client/Adapters/SeatScreenAdapter.cs` | `MissionScreen` and controller reads and writes, the cursor layer, the panel site and the kept target |
 | `Client/Adapters/ISeatScreenAdapter.cs` | The interface the session drives (a client type, with no null) |
+| `Main/Features/SeatOfSeeing/Domain/SeatPanelTarget.cs`, `SeatPanelRelayRule.cs`, `SeatTrialPanel.cs` | Marshal's Word stage M7, pure: the topmost panel target over a widget tree, the press and release rule, the yield rule, and the verdicts of the two panel click steps |
+| `Client/Adapters/SeatCursorLayer.cs`, `SeatPanelRelay.cs` | Marshal's Word stage M7: the cursor layer that is also the click shield, and the relay into the panel's view models (with the field trial's pointer entry) |
 | `Main/Adapters/ISeatHeroAdapter.cs`, `SeatHeroAdapter.cs` | Stand fast, the hand-off to the AI and the hand-back, the retreat stop |
 | `Main/Features/SeatOfSeeing/Domain/SeatFightRule.cs`, `SeatTakeRule.cs` | The pure rules of stages S4 and S5: what is wanted against what was done, the refusal of a hand-off, the retreat clock, who may be taken |
 | `Client/Features/SeatOfSeeing/Hooks/Patch140_OrderPanelCheck.cs`, `SeatOrderPanelGate.cs`, `Patch140_BoundaryCountdown.cs`, `Patch140_RangedSiegeInput.cs`, `Patch140_TakeControlOfAgent.cs` | The four patches of stages S4 and S5 |
@@ -426,6 +454,10 @@ with `1 - exp(-6 dt)`, and the view never goes below the raw ground plus 0.5 m (
   the floor on a 3 m ground jump at minimum height, the second ground read while rising, the height limit and its floor, a boundary
   position that is not finite, the warg rage rules, `Finish` twice, and a check line for every refusal and every leave reason). The
   fake log keeps the real log's `(id, result, key)` dedup in its lines and counts every call, because a frame pays for the call.
+- Marshal's Word stage M7: `SeatPanelTargetTests.cs` (the topmost target over a fake widget tree: kind, overlap, hidden nodes, children outside a parent, a pointer that is not a number),
+  `SeatPanelRelayRuleTests.cs` (press and release on the same view model, a Return order, a right release, and the yield rule's truth table), `SeatSessionPanelClickTests.cs` (when the screen
+  tick relays, and the one pass and one fail line), `SeatPanelRelayWiringTests.cs` (source pins, and the installed handler's `MissionOrder` literal), `SeatTrialPanelRulesTests.cs` and
+  `CommandTrialPanelClickStepsTests.cs` (the two trial steps against the stand-in). `SeatPanelWiringTests.cs` pins the cursor layer's mask and the raw reads.
 - `SeatSessionPanelTests.cs`, `SeatSessionKeepTests.cs` and `SeatPanelRulesTests.cs` also pin the second pass over S2 and S3: no hide or keep press in
   photo mode, a refused reopen as a skip, the cursor kept across a reopening edge, no close-signal read around a panel that never opened, the
   Transfer order not undone by a reopen, and a low orbit that lets go at the height the flight starts from. `SeatScreenPatchWiringTests.cs` pins the
@@ -536,7 +568,13 @@ NOT REACHED; `--issue 0 --sessions 2` over one session of each feature exits 0.
 20. Point at a soldier and press Insert: the view orbits the soldier (`keep result=pass ... kind=Soldier`); the mouse turns the orbit, the wheel changes the
     distance, any movement key lets go with no jump (`let-go ... reason=flight`). With the panel open and one company selected, Insert keeps to
     the company. A soldier behind a hill is not picked. Let the kept soldier die: one message, and the view stays where it was.
-21. A click on one of the panel's buttons does not press it yet: it gives a Move order on the ground behind it (contract 6.1 names this until Marshal's Word stage M7).
+21. Panel clicks (Marshal's Word stage M7; nobody has run this in the game, and the field trial's two steps use an injected pointer, so they prove the relay only): in the Seat with the
+    order panel open and the cursor shown, click a troop card with the left button: that company, and no other, is selected, and Ctrl and click adds one. Click an order set
+    (Movement, Facing): its orders open. Click an order: it runs, and the panel closes unless it was opened by the hold key. Click Return in an open set: the set closes. Click the
+    right button over any of these: an open set closes, else the panel closes, and Keep the order panel open does not open it again (`panel-click result=pass ... click=relayed`
+    is written on the first relayed click). Do this in the bar layout and in the radial layout (`Options > Gameplay > Order Type`), and at two UI scales (for example 100 and
+    70 percent). Then check the three things the shield must not change: a left click on the ground beside the panel still places a Move order there, a click on the battle
+    action bar (the CompanionTactics bar) still presses its button, and the wheel still zooms the Seat's view over a button.
 22. With Keep the order panel open on: in a town, an indoor scene, a village, an arena practice, a duel and an alley the Seat flies and returns and
     nothing faults; a Transfer order opens the transfer window and the panel stays closed after it; after an order given with the cursor the pointer
     stays where it was. Press Insert in the Seat: no screenshot is taken (the engine's debug category binds Insert to its screenshot hot key,
@@ -682,6 +720,8 @@ checks its own precondition and fails at once, so every step reports and nothing
 | `speed_cleared` | Reaches 10 and reads the flag, presses Stay time (the key that cancels fast time) and again; reaches 4 and reads the fixed step; steps down to 0.5 and reads the request; steps up to 1 | every control read true (the flag, the fixed step and the request existed), then after the pause no fast forward and no fixed step with the pause on, after the step down no fixed step, and at the end no request and nothing left on |
 | `rise_with_panel` | Presses the Seat key to leave and waits for the glide to rest, reads the camera's Z, opens the order panel from the mission tick, waits 1 real second | the state is Off, the view is third person, the panel opened, and the camera rose at least half the lift height (`before`, `after`, `rise`, `height`) |
 | `sink_on_close` | Closes the panel as the player does, waits 1 real second, reads the camera's Z and the offset, then takes the Seat again for the steps that follow | the state was Off, the panel is closed, the camera is within a metre of its value before opening, and the offset is exactly zero on all three axes (`offset_z` printed with every digit) |
+| `panel_click_card` | Opens the order panel, clears the selected companies, finds the first troop card a click acts on (a shown, valid, selectable card; the line prints the UI scale and the pixel), injects a left press and release at its centre through the relay's entry (a pointer, never an operating system click), and waits 0.3 s | the Seat is seated, the relay acted, and the card's company is the only selected company in `OrderController.SelectedFormations`; no card found fails with `reason=no-card` |
+| `panel_click_order` | Selects the largest company, opens the panel, injects a click on the first order set that opens a sub-menu, then on the first active order that is not Return, counting orders by the view model's own `OrderItemVM.OnExecuteOrder` event | both clicks acted, the panel's selected order set was set after the first, and the event fired at least once |
 | `hero_falls` | Leaves and enters with the fight value on, waits for the hand-off, refuses a hero who cannot die, keeps the view to the largest company (selects it, opens the panel, presses the keep key, closes the panel as the player does; `reason=not-kept` or `reason=no-company` otherwise), kills him through `Mission.KillAgentCheat` from the mission tick, then waits up to 3 real seconds (`SeatTrialRules.FallWaitSeconds`) for the Seat's reaction at its next mission tick: the gate down and a message said | no main agent, the gate down, the Seat still up, exactly one message and it is the one about the fall, and the hero owned at least one formation (`waited=` is how long the Seat took; `kept=Company` is the keep made before the kill) |
 | `take_soldier` | Requires the view to still keep to the company (`reason=no-kept-company`), presses the take key (`SeatSession.PressTake`) with no aim, waits for a main agent, opens the panel | the main agent belongs to the kept company, the order controller names him, he owns exactly the formations the hero owned and none is on the AI, and the panel opened |
 
@@ -765,9 +805,12 @@ PASS text names the build, the `[Session]` swallowed counts and `errors=` of the
 - A press under the hold time at the moment of entry acts once on return in three views the Seat does not clear: the equip and drop view's usage
   toggle (`MissionGauntletMainAgentEquipDropView.cs:159-164`), the walk mode control (`MissionGauntletMainAgentControlModeView.cs:257-262`) and the
   cheer view. It is mild and stays a named limit. The equipment view's own drop and equip gestures are cleared (Patch140).
-- A click on one of the panel's buttons does not press it yet, until Marshal's Word stage M7: the cursor layer's mask stays `Invalid`, so a left click passes through
-  the panel to the order placer and gives a Move order on the ground behind the button. `Show a cursor with the order panel` still defaults to
-  on, because the pointer is the stage's purpose, and a later flip would need a rename under the persisted MCM rule.
+- The panel's clicks (Marshal's Word stage M7) are built and not yet seen with a real mouse. The shield takes the left and right buttons only over a troop card, an order set or an
+  order, only while the cursor shows, and gives them up to any other overlay whose layer takes the mouse buttons. An order runs on a click whatever its look (the "active" look only says it is already in force),
+  as the number keys run it; a card that cannot be selected takes the click and does nothing, so no panel click turns into a ground order. The transfer popup and a deployment keep the order layer's own mouse path, because the shield never holds there. An order run from a click is
+  given the arguments a number key gives it, the handler's focused company included, so Charge with an enemy company under the pointer is the targeted charge. The middle button is never taken, so looking works over a button; the shield takes the wheel with the left and right buttons (so vanilla's own mouse reads stay off on a shielded click), and the Seat's zoom reads the raw wheel there, but only while the Seat or no other layer has the focus.
+  If the view model of a widget cannot be read (`GauntletView._viewModel`), the shield still stops a click reaching the ground behind a button, the relay is off, and one
+  `panel-click` fail line says `reason=site`.
 - A gamepad has no pointer path: the Seat's keyboard keys have no controller binding, so the cursor needs a player who mixes both.
 - `BannerlordConfig.SlowDownOnOrder` defaults to true, and an open panel then holds a 0.25 time request, so a player with Keep the order panel
   open runs the whole stay at quarter speed apart from one frame per order. The setting's hint says so.
@@ -860,6 +903,7 @@ ticks for the rest of the mission, and its cost is unmeasured (a frame capture i
 
 ## Changelog
 
+- 2026-11-26: Marshal's Word stage M7, the order panel's clicks from the Seat: `SeatCursorLayer` as a click shield, `SeatPanelRelay` into the panel's own view models (the pure rules `SeatPanelTarget`, `SeatPanelRelayRule` and `SeatPanelYieldRule`), the `panel-click` check, one reflection site (`GauntletView._viewModel`), the look and the close signals read from the raw input, and the field trial steps `panel_click_card` and `panel_click_order`. The English hint of `SeatCursorWithPanel` no longer says a click does not press a button (contract Deviations 138).
 - 2026-11-05: the second review round of S6 and S7 (contract Deviations 130 to 136): Stay time on a held pause resumes whatever the setting and the permission and, with the Seat off, also cancels what the Seat set; a cancel's debt no longer raises the stored level; a flag raised at level 1 is adopted like any other; the `fast` step judges fast forward at every level; the new `adopt_flag` step proves the Seat's answer to another writer's fast forward; pins for the two engine writes that answer rests on; the Performance section and the step counts corrected.
 - 2026-11-04: the review of S6 and S7 (contract Deviations 116 to 129): another writer's fast forward makes the Seat give up its request and fixed step, the flag is not read while another view owns the clock, a pause is resumed in any mode, the `fast` step sums each frame's capped step and reads the fixed-step state, the hint, key and pause texts, a lift that works with the Seat off, the cancel's wording, and the guard line in `enter.fail`.
 - 2026-11-04: stages S6 and S7 and their field trial steps: keys 533 to 535 and mission time (the six levels, the only legal write of the request, the per-frame rule, the ceiling of level 10, the pause, the Long Defeat refusal, both teardown paths and the debt), the lift of the third-person view with the order panel (`SeatRiseWithPanel`, exact zero), the `time` and `rise` check lines, six steps and a tie of every thread-guard site to the judge (contract Deviations 101 to 115).

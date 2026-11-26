@@ -11,6 +11,8 @@
 # stage S5 adds take (a soldier taken after the fall, with the number of formations the command was handed over for).
 # Stage S6 adds time (a level step, a pause and a resume of mission time, from SeatTimeControl) and stage S7 adds rise (the first lift of the hero's
 # third-person view with the order panel open, with its height).
+# Marshal's Word stage M7 adds panel-click (the first click on an order panel button that reached the panel's own view model, or the one fail line
+# when a widget's view model cannot be read and the relay is off).
 # A [PatchApply] line for a Patch140 class that failed or was skipped fails the enter check too: Harmony stops a category at its first failing
 # class, so one such line can leave every later Seat patch off, and some of them are proved only by a press.
 # Stage S1: enter and leave from the state changes (a refused key press writes an enter skip line,
@@ -201,6 +203,20 @@ pass = ['\[Check\] id=taom\.seat-of-seeing\.rise result=pass mission=[0-9]+ heig
 fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
 # One line a mission, at the first lift, with the height the mission gave (7 for a field battle, 3 for a siege or a sally out). A mission with no lift height, a
 # setting that is off, a first-person view and a panel opened in the Seat write nothing, and read NOT REACHED.
+absence = "not-reached"
+
+[[check]]
+id = "taom.seat-of-seeing.panel-click"
+needs = "in the Seat with the order panel open and the cursor shown, click a troop card, an order set or an order with the left button (or press the panel's own right button)"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.panel-click result=(pass|fail)']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.panel-click result=pass mission=[0-9]+ click=relayed$']
+fail = [
+  '\[Check\] id=taom\.seat-of-seeing\.panel-click result=fail',
+  '\[Check\] id=taom\.seat-of-seeing\.fault result=fail',
+]
+# One line a mission each way. result=fail with reason=site means GauntletView._viewModel was not found (reflection-sites.md Category B): the shield still
+# stops a click reaching the ground behind a button, and the relay is off, so no button acts. A pass says a click reached a view model method; whether a real
+# mouse click lands on the right button in the bar and the radial layout at two UI scales is for a person (the human rows).
 absence = "not-reached"
 
 # ---- Marshal's Word, stages M1 (orders in turn) and M2 (keep the array) ----
@@ -675,7 +691,13 @@ claim = "Keep the order panel open on, a Transfer order from the panel: the tran
 claim = "Keep the order panel open on, after an order given with the cursor: the pointer stays where it was, and it does not jump to the screen centre"
 
 [[human]]
-claim = "a click on one of the order panel's buttons in the Seat does not press it yet: it gives a Move order on the ground behind it (the panel's buttons take clicks only from Marshal's Word stage M7)"
+claim = "in the Seat with the order panel open, a real left click on a troop card selects that company (Ctrl adds it), on an order set opens its orders, and on an order runs it and closes the panel unless it is held open, in the bar layout and in the radial layout, at two UI scales"
+
+[[human]]
+claim = "in the Seat with the order panel open, a left click on the ground beside the panel still places a Move order there, and a click on the battle action bar still presses its button"
+
+[[human]]
+claim = "in the Seat with the order panel open, a right click over a panel button closes the open set or the panel, and Keep the order panel open does not open it again"
 
 [[human]]
 claim = "each new default key (Insert, End) leaves the chat box shut, and Options > Keybindings > Action shows \"Keep to this soldier or company (TAOM)\" and \"Hide the interface (TAOM)\" with the keys Insert and End and no ERROR text"
