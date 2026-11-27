@@ -143,7 +143,7 @@ MCM "World/Encounter Lines" (`GroupOrder = 89`), "Enable Encounter Lines" (`Enab
 | `Main/Features/EncounterLines/Hooks/` | `EncounterTagGate` and the four patches |
 | `Main/Adapters/IEncounterLinesAdapter.cs`, `EncounterLinesAdapter.cs` | campaign facts as plain records (`LordFacts`, `NotableFacts`, ...), the text variables |
 | `Main/_Module/ModuleData/taom_encounter_lord_strings.xml` | 303 tagged lord rows (60 for the dark lords) |
-| `Main/_Module/ModuleData/taom_encounter_strings.xml` | 735 keyed rows: caravans and villagers 108, robbery 240, bandit greetings 60, hideout 27 (nine clans), liege 300 (15 beats for 12 groups, 4 beats for 30 realms), notable introductions 27 (3 beats, 3 families, 3 variants) |
+| `Main/_Module/ModuleData/taom_encounter_strings.xml` | 762 keyed rows: caravans and villagers 108, robbery 240, bandit greetings 60, hideout 27 (nine clans), liege 300 (15 beats for 12 groups, 4 beats for 30 realms), notable introductions 27 (3 beats, 3 families, 3 variants) |
 
 ## Co-op
 
