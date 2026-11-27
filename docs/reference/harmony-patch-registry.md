@@ -2057,6 +2057,25 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Co-op.** A postfix, not a `bool` prefix, so `CoopVetoClassificationTests` needs no entry. It still changes whether an incident may start, so the service stands down when `ICoopPresenceProvider.IsCoopActive` or on a dedicated server: every incident is vanilla's there. **Tests:** `IncidentVoicesBindingTests` (target shape and size, the public text seams, the 101 ids and their option counts read from `InitializeIncidents`, the place variables, the category attaching one postfix), `IncidentVoicesWiringTests` (module, fault handling, text handle), `IncidentVoiceServiceTests`, `IncidentRulesTests`, `IncidentVoicesDataTests`. **ACTIVE**, not yet checked in game.
 
+## Patch177_LoreGreetings
+
+**Targets (v1.5.7, read in the installed decompile 2026-11-28).** Two classes in `Main/Features/LoreGreetings/Hooks/`, one category, declared by `LoreGreetingsModule` at `ApplyPhase.GameInit`. Feature: [lore-greetings.md](../features/lore-greetings.md).
+
+| Class | Target | Shape |
+|---|---|---|
+| `Patch177_LoreGreeting` | `private bool LordConversationsCampaignBehavior.conversation_lord_greets_over_24_hours_on_condition()` (`LordConversationsCampaignBehavior.cs:1897`) | Postfix `(bool __result)`, void |
+| `Patch177_LoreMeeting` | `private bool LordConversationsCampaignBehavior.ConversationUseMeetingDialogs()` (`:1212-1247`) | Prefix `()`, void, never skips |
+
+**Why these two.** The NPC's first line is the first `start` sentence whose condition is true, highest priority first (`ConversationManager.GetSentenceOptions(onlyPlayer: false, processAfterOneOption: false)` returns on the first true one, `ConversationManager.cs:515-575`). The greeting condition belongs to `start_default` (`{=!}{VOICED_LINE}`, `:225`) and sets `VOICED_LINE` through `conversations_set_voiced_line` (`:1258-1264`), so a true `__result` means this line is the one shown and the postfix writes after vanilla. No line is added and no other line is outranked. `ConversationUseMeetingDialogs` is the shared check of the stranger lines: for a hero with `HasMet` false it calls `SetHasMet()` and returns true, which starts the introduction. The prefix marks a speaker who knows the player's person met first, through `Hero.SetHasMet()` with `LastMeetingTimeWithPlayer` put back (`SetHasMet` stamps it, `Hero.cs:1379-1383`, and a stamp under 24 hours would hand the greeting to `start_default_under_24_hours`), so the original returns false and the conversation falls through to `start_default`. Vanilla does the same for close relatives (`conversations_automeet_close_relatives`, `:1249-1256`).
+
+**Callers and thread.** The greeting condition: only its dialog line delegate (`:225`), so it is never inlined. `ConversationUseMeetingDialogs`: four conditions, `conversation_attacking_lord_set_meeting_meet_on_condition` (`:1272`, line `start_attacking_unmet`), `conversation_wanderer_meet_on_condition` (`:1300`, `start_wanderer_unmet`), `conversation_unmet_lord_main_party_on_condition` (`:1334`, `unmet_in_main_mobile_party`) and `conversation_lord_meet_on_condition` (`:1345`, `start_lord_unmet`); each reaches the speaker through `Hero.OneToOneConversationHero`, the actor the service reads. Its body is over 100 IL bytes, so the CLR does not inline it into those callers (`LoreGreetingsBindingTests`). Both run on the campaign main thread while a conversation starts. No other TAOM patch is on either target; grep of `Main/` 2026-11-28.
+
+**PatchShield.** Both postfix and prefix catch everything and report through `Outcomes.Swallowed("LoreGreetings", ...)`; a fault leaves vanilla's greeting and vanilla's meeting.
+
+**Co-op.** Neither is a `bool` prefix, so `CoopVetoClassificationTests` needs no entry. The greeting writes a local text variable only. The meeting write is skipped on a co-op client (`ICoopSessionProvider.IsCoopClient`); on a host and in single player it is the write vanilla's own meeting makes. The Coop module's source was not on this machine, so whether it patches either target is not checked.
+
+**Binding.** `LoreGreetingsBindingTests` (`BindingVerification`). **Tests:** `LoreGreetingsServiceTests`, `LoreGreetingsConfigProviderTests`, `ShippedLoreGreetingsTests`, `LoreGreetingsWiringTests`. **Status:** ACTIVE, not yet checked in game.
+
 ## Patch132_ItemIconRacePosition
 
 **Target:** `ItemThumbnailCache.GetItemPoseAndCamera(ItemObject, Scene, ref Camera, ref MatrixFrame itemFrame, ref MatrixFrame, ref MatrixFrame)` (private, Postfix), v1.5.7 (`ItemThumbnailCache.cs:115`, signature unchanged). Code: `Main/Features/HeroRace/Hooks/ItemThumbnailCache_GetItemPoseAndCamera_RacePatch.cs`, matching rules in `Main/Features/HeroRace/ItemIconRaceMatcher.cs`. Category applied in the GameInit preview loop in `SubModule.cs` next to Patch72. `[ClientOnly]`.
