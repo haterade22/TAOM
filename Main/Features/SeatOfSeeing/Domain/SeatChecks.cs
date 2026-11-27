@@ -22,6 +22,7 @@ internal static class SeatChecks
     internal const string TakeId = "taom.seat-of-seeing.take";
     internal const string TimeId = "taom.seat-of-seeing.time";
     internal const string RiseId = "taom.seat-of-seeing.rise";
+    internal const string PanelClickId = "taom.seat-of-seeing.panel-click";
 
     /// <summary>The hot-path counter of owned frames: one increment a frame, no string and no I/O.</summary>
     internal const string FrameCounterId = "taom.seat-of-seeing.owned-frame";

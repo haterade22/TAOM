@@ -156,11 +156,15 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.CampaignSystem.CharacterObject", "CharacterObject", "set_UpgradeTargets", "Method", "TroopMountCatalogAdapter.cs:21")]
     [DataRow("TaleWorlds.Core.BasicCharacterObject", "BasicCharacterObject", "set_IsObsolete", "Method", "TroopMountCatalogAdapter.cs:24")]
     // --- Seat of Seeing (S1): the return glide reads CameraElevation, whose setter is private (SeatScreenAdapter.cs). Missing: CameraElevation keeps the mouse's integral from the stay (MissionScreen:3051-3053, 3249-3251), so the glide's vertical angle starts from an unrelated value (4569), a visible jump.
-    [DataRow("TaleWorlds.MountAndBlade.View.Screens.MissionScreen", "MissionScreen", "set_CameraElevation", "Method", "SeatScreenAdapter.cs:50")]
+    [DataRow("TaleWorlds.MountAndBlade.View.Screens.MissionScreen", "MissionScreen", "set_CameraElevation", "Method", "SeatScreenAdapter.cs:52")]
     // --- Seat of Seeing (S2): keep the order panel open reaches the panel's view model through the handler's protected _dataSource. Missing: the reopen cannot run, and the session writes a fail line on taom.seat-of-seeing.panel-reopened.
-    [DataRow("TaleWorlds.MountAndBlade.GauntletUI.GauntletOrderUIHandler", "GauntletOrderUIHandler", "_dataSource", "Field", "SeatScreenAdapter.cs:54")]
+    [DataRow("TaleWorlds.MountAndBlade.GauntletUI.GauntletOrderUIHandler", "GauntletOrderUIHandler", "_dataSource", "Field", "SeatScreenAdapter.cs:55")]
+    // --- Seat of Seeing, order panel clicks: a click runs an order with the handler's own execution parameters (its focused formation and the order flag), as a number key does. Missing: the relay reports site-missing and runs no order.
+    [DataRow("TaleWorlds.MountAndBlade.GauntletUI.GauntletOrderUIHandler", "GauntletOrderUIHandler", "GetVisualOrderExecutionParameters", "Method", "SeatScreenAdapter.cs:59")]
+    // --- Seat of Seeing, order panel clicks (Marshal's Word stage M7): the click shield and the relay read the view model a panel widget is bound to through GauntletView's private _viewModel. Missing: the shield falls back to the widget types, the relay is off, and the session writes a fail line on taom.seat-of-seeing.panel-click (reason=site).
+    [DataRow("TaleWorlds.GauntletUI.Data.GauntletView", "GauntletView", "_viewModel", "Field", "SeatPanelRelay.cs:36")]
     // --- Seat of Seeing (S2), the field trial only: the focus step reads the handler's reference point (MissionFormationTargetSelectionHandler.cs:36) to see that the pointer reached it. Missing: the step reads NaN and fails.
-    [DataRow("TaleWorlds.MountAndBlade.View.MissionViews.MissionFormationTargetSelectionHandler", "MissionFormationTargetSelectionHandler", "_centerOfScreen", "Field", "CommandTrialHost.Seat.cs:23, Patch140_FormationFocusPoint.cs:23")]
+    [DataRow("TaleWorlds.MountAndBlade.View.MissionViews.MissionFormationTargetSelectionHandler", "MissionFormationTargetSelectionHandler", "_centerOfScreen", "Field", "CommandTrialHost.Seat.cs:24, Patch140_FormationFocusPoint.cs:23")]
     // --- Seat of Seeing (S4): the order panel's transpiler finds the one read of Agent.IsPlayerControlled by its getter, and the classifier asks a view type whether it declares UpdateOverridenCamera. Each is a compile-checked nameof of a public member; a miss fails safe.
     [DataRow("TaleWorlds.MountAndBlade.Agent", "Agent", "get_IsPlayerControlled", "Method", "SeatOrderPanelGate.cs:21")]
     [DataRow("TaleWorlds.MountAndBlade.View.MissionViews.MissionView", "MissionView", "UpdateOverridenCamera", "Method", "SeatMissionClassifier.cs:72")]

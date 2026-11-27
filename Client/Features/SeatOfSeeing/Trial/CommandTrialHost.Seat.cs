@@ -7,6 +7,7 @@ using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.View.MissionViews;
+using TaleWorlds.MountAndBlade.ViewModelCollection.Order;
 using TaleWorlds.ScreenSystem;
 using TAOM.Client.Features.FordsOfWar;
 using TAOM.Features.AdvancedCombat;
@@ -311,6 +312,65 @@ internal sealed partial class CommandTrialHost
     public void ReleaseTime() => _session.ResetTime();
 
     public bool ThirdPerson => !_mission.CameraIsFirstPerson;
+
+    // Marshal's Word stage M7: the panel click steps. The order count comes from the view model's own static event, subscribed on the first
+    // look of an armed trial run (the host is built only then), so a count of the relay's own would prove nothing.
+    private Formation? _probedCompany;
+    private bool _watchingOrders;
+    private int _ordersSeen;
+
+    public int OrdersSeen => _ordersSeen;
+
+    // OnExecuteOrder is a static event: a host that subscribed and was dropped would stay reachable from it and keep counting, so the view's
+    // teardown calls this.
+    internal void StopWatchingOrders()
+    {
+        if (!_watchingOrders)
+            return;
+        _watchingOrders = false;
+        OrderItemVM.OnExecuteOrder -= CountOrder;
+    }
+
+    private void CountOrder(OrderItemVM _) => _ordersSeen++;
+
+    public bool OrderSetSelected => _adapter.PanelSelectedOrderSet != null;
+
+    public bool CardCompanyIsOnlySelected
+    {
+        get
+        {
+            var selected = _mission.PlayerTeam?.PlayerOrderController?.SelectedFormations;
+            return _probedCompany != null && selected != null && selected.Count == 1 && ReferenceEquals(selected[0], _probedCompany);
+        }
+    }
+
+    public SeatPanelProbe LocatePanelTarget(SeatPanelKind kind)
+    {
+        if (!_watchingOrders)
+        {
+            _watchingOrders = true;
+            OrderItemVM.OnExecuteOrder += CountOrder;
+        }
+
+        _probedCompany = null;
+        if (!_adapter.PanelRelay.TryLocate(kind, out var x, out var y, out var target, out var detail))
+            return new SeatPanelProbe(false, 0f, 0f, detail);
+        if (target is OrderTroopItemVM card)
+            _probedCompany = card.Formation;
+        return new SeatPanelProbe(true, x, y, detail);
+    }
+
+    public SeatRelayResult InjectPanelClick(float pixelX, float pixelY)
+    {
+        NoteWrite("CommandTrialHost.InjectPanelClick");
+        return _adapter.PanelRelay.InjectClick(pixelX, pixelY);
+    }
+
+    public void ClearSelectedCompanies()
+    {
+        NoteWrite("CommandTrialHost.ClearSelectedCompanies");
+        _mission.PlayerTeam?.PlayerOrderController?.ClearSelectedFormations();
+    }
 
     public float LiftHeight() => _adapter.LiftHeight();
 

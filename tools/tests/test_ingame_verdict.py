@@ -1857,12 +1857,14 @@ class SeatOfSeeingManifestTests(unittest.TestCase):
     TAKE = "taom.seat-of-seeing.take"
     TIME = "taom.seat-of-seeing.time"
     RISE = "taom.seat-of-seeing.rise"
+    PANEL_CLICK = "taom.seat-of-seeing.panel-click"
     STAGE_ONE = (ENTER, FRAMES, LEAVE, GLIDE)
     NEW = (CURSOR, FOCUS, REOPENED, HIDE, KEEP, LET_GO)
     STAGE_FOUR_FIVE = (FIGHT_ON, TAKE)
     STAGE_SIX_SEVEN = (TIME, RISE)
+    STAGE_M7 = (PANEL_CLICK,)
     EARLIER = STAGE_ONE + NEW
-    ALL = EARLIER + STAGE_FOUR_FIVE + STAGE_SIX_SEVEN
+    ALL = EARLIER + STAGE_FOUR_FIVE + STAGE_SIX_SEVEN + STAGE_M7
 
     def setUp(self):
         self.t = Tree(self)
@@ -1893,7 +1895,7 @@ class SeatOfSeeingManifestTests(unittest.TestCase):
         for check_id in self.STAGE_ONE:
             with self.subTest(check_id=check_id):
                 self.assertEqual(verdict_of(out, check_id), "PASS", out)
-        for check_id in self.NEW + self.STAGE_FOUR_FIVE + self.STAGE_SIX_SEVEN:
+        for check_id in self.NEW + self.STAGE_FOUR_FIVE + self.STAGE_SIX_SEVEN + self.STAGE_M7:
             with self.subTest(check_id=check_id):
                 self.assertEqual(verdict_of(out, check_id), "NOT REACHED", out)
         self.assertIn("the career ability key and the perspective toggle (game key 27) still act from the Seat", out)
@@ -1919,6 +1921,20 @@ class SeatOfSeeingManifestTests(unittest.TestCase):
         self.assertIn("reason=site", out)
         self.assertEqual(verdict_of(out, self.ENTER), "PASS", out)
         self.assertEqual(verdict_of(out, self.CURSOR), "NOT REACHED", out)
+
+    def test_a_panel_click_that_cannot_reach_the_view_model_fails_only_that_check(self):
+        code, out, _ = self.judge("seat_panel_click_site_missing.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.PANEL_CLICK), "FAIL", out)
+        self.assertIn("reason=site", out)
+        self.assertEqual(verdict_of(out, self.ENTER), "PASS", out)
+        self.assertEqual(verdict_of(out, self.REOPENED), "NOT REACHED", out)
+
+    def test_the_panel_click_pass_pattern_takes_only_a_relayed_click(self):
+        pattern = self.check(self.PANEL_CLICK).passes[0]
+        line = "[Check] id=taom.seat-of-seeing.panel-click result=pass mission=3 "
+        self.assertTrue(pattern.search(line + "click=relayed"))
+        self.assertFalse(pattern.search(line + "click=shielded"))
 
     def test_a_reopen_the_engine_refused_reads_not_reached_with_its_reason_and_is_not_a_pass(self):
         code, out, _ = self.judge("seat_panel_reopen_refused.txt")
@@ -2009,7 +2025,8 @@ class SeatOfSeeingManifestTests(unittest.TestCase):
         for fragment in ("in a town, an indoor scene, a village", "a Transfer order from the panel", "the pointer stays where it was",
                          "left pad down from the Seat opens no walk mode control", "a soldier behind a hill is not picked",
                          "Insert pressed in the Seat takes no screenshot", "the hero stands under real movement keys",
-                         "with the keys Insert and End", "also game key 77", "does not press it yet: it gives a Move order"):
+                         "with the keys Insert and End", "also game key 77", "a real left click on a troop card selects that company",
+                         "a left click on the ground beside the panel still places a Move order", "a right click over a panel button closes"):
             with self.subTest(fragment=fragment):
                 self.assertTrue(any(fragment in c for c in claims), fragment)
         self.assertFalse(any("the drop and equip key (game key 22), the career" in c for c in claims), "key 22 is closed by stage S2")

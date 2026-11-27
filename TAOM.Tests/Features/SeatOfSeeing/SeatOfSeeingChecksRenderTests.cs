@@ -79,7 +79,7 @@ public class SeatOfSeeingChecksRenderTests
     {
         foreach (var id in new[] { SeatChecks.EnterId, SeatChecks.LeaveId, SeatChecks.FramesId, SeatChecks.GlideId, SeatChecks.FaultId, SeatChecks.FrameCounterId,
                      SeatChecks.CursorId, SeatChecks.FocusId, SeatChecks.PanelReopenedId, SeatChecks.HideId, SeatChecks.KeepId, SeatChecks.LetGoId,
-                     SeatChecks.FightOnId, SeatChecks.TakeId })
+                     SeatChecks.FightOnId, SeatChecks.TakeId, SeatChecks.PanelClickId })
             Assert.IsTrue(OutcomeLog.IsValidId(id), id);
     }
 
@@ -91,6 +91,7 @@ public class SeatOfSeeingChecksRenderTests
         while (_sut.State != SeatState.Seated)
             _sut.OnFrame(0.1f);
 
+        _screen.RelayResult = SeatRelayResult.Acted;
         _screen.PanelOpen = true;
         _sut.OnScreenTick(false);
         SeatPresence.MarkFocusSet();
@@ -115,6 +116,7 @@ public class SeatOfSeeingChecksRenderTests
         {
             "[Check] id=taom.seat-of-seeing.enter result=pass mission=1 blend=1",
             "[Check] id=taom.seat-of-seeing.cursor result=pass mission=1 cursor=shown",
+            "[Check] id=taom.seat-of-seeing.panel-click result=pass mission=1 click=relayed",
             "[Check] id=taom.seat-of-seeing.focus result=pass mission=1 focus=cursor",
             "[Check] id=taom.seat-of-seeing.panel-reopened result=pass mission=1 panel=reopened",
             "[Check] id=taom.seat-of-seeing.hide result=pass mission=1 interface=hidden",
@@ -128,8 +130,25 @@ public class SeatOfSeeingChecksRenderTests
         CollectionAssert.AreEqual(visit, CheckLines());
         AssertInFixture("seat_panel_visit_pass.txt", visit);
         AssertInFixture("seat_panel_reopen_site_missing.txt", visit[0]);
-        AssertInFixture("seat_hide_stuck.txt", visit[0], visit[4]);
+        AssertInFixture("seat_hide_stuck.txt", visit[0], visit[5]);
         AssertInFixture("seat_keep_and_flight.txt", visit[0]);
+    }
+
+    [TestMethod]
+    public void RenderedLine_OfAPanelClickWhoseViewModelCannotBeRead_IsTheOneTheManifestAndFixtureRead()
+    {
+        Key();
+        while (_sut.State != SeatState.Seated)
+            _sut.OnFrame(0.1f);
+        _screen.RelayResult = SeatRelayResult.SiteMissing;
+        _screen.PanelOpen = true;
+        _sut.OnScreenTick(false);
+        _sut.OnScreenTick(false);
+
+        var line = "[Check] id=taom.seat-of-seeing.panel-click result=fail mission=1 reason=site";
+        CollectionAssert.Contains(CheckLines(), line);
+        Assert.AreEqual(1, CheckLines().Count(l => l == line), "one line a mission");
+        AssertInFixture("seat_panel_click_site_missing.txt", line);
     }
 
     [TestMethod]

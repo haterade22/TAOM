@@ -55,8 +55,15 @@ internal interface ISeatScreenAdapter
     /// <summary>The order panel is open: the engine's plain <c>Mission.IsOrderMenuOpen</c> (build-spec 6.1).</summary>
     bool IsPanelOpen();
 
-    /// <summary>The middle mouse button is down on the scene layer, which looks with the cursor hidden.</summary>
+    /// <summary>The middle mouse button is down, read from the raw input: the click shield can take the buttons from the scene layer, which looks with the cursor hidden.</summary>
     bool LookHeld();
+
+    /// <summary>
+    /// Hands this frame's clicks on the order panel to the panel's own view model methods (Marshal's Word stage M7, build-spec 6.1), once a
+    /// screen tick while the panel is open and the cursor is shown. Acted when a click reached a view model method, SiteMissing when the
+    /// view model of a widget cannot be read (the relay is off for the mission), else Idle.
+    /// </summary>
+    SeatRelayResult RelayPanelClicks();
 
     /// <summary>
     /// Shows or hides the cursor. The adapter builds one small layer on the first show (it asks the screen manager for a visible cursor and

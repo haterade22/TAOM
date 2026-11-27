@@ -52,6 +52,12 @@ public interface IEncounterLinesAdapter
     bool HasText(string textId, string variation);
 
     /// <summary>
+    /// The hero of the open one-to-one conversation described for a notable's introduction, with no lord gate: null with no
+    /// campaign or no conversation hero.
+    /// </summary>
+    NotableFacts? ConversationNotable();
+
+    /// <summary>
     /// Sets the conversation text variable <paramref name="variable"/> to the game text <paramref name="textId"/> under
     /// <paramref name="variation"/>; false, with nothing set, when that row does not exist.
     /// </summary>
