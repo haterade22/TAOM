@@ -39,7 +39,7 @@ internal static class LoreHeroPersons
     }
 
     /// <summary>
-    /// The plan without the shop offers and free heroes the player is. The slot stays empty; no other hero takes it. The must-live condition is dropped with
+    /// The plan without the free heroes the player is (a story run has no shop, StoryPlanBuilder). The slot stays empty; no other hero takes it. The must-live condition is dropped with
     /// the hero. The War Chronicle never offers Parth Galen to a Boromir player (ChronicleService.cs:631,638), so only the dev console reaches that case.
     /// </summary>
     public static RunPlan WithoutPlayed(RunPlan plan, IReadOnlyCollection<string> playerIds)
@@ -48,11 +48,10 @@ internal static class LoreHeroPersons
             return plan;
 
         var free = plan.FreeHeroes.Where(h => !IsPlayed(h.TroopId, playerIds)).ToList();
-        var offers = plan.Shop.Heroes.Where(h => !IsPlayed(h.TroopId, playerIds)).ToList();
-        if (free.Count == plan.FreeHeroes.Count && offers.Count == plan.Shop.Heroes.Count)
+        if (free.Count == plan.FreeHeroes.Count)
             return plan;
 
         var mustLive = plan.MustLive != null && free.All(h => h.Id != plan.MustLive) ? null : plan.MustLive;
-        return plan with { FreeHeroes = free, Shop = plan.Shop with { Heroes = offers }, MustLive = mustLive };
+        return plan with { FreeHeroes = free, MustLive = mustLive };
     }
 }

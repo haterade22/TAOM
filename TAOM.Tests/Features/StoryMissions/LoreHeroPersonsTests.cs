@@ -54,12 +54,11 @@ public class LoreHeroPersonsTests
     public void IsPlayed_NoPlayerIds_IsFalse() => Assert.IsFalse(LoreHeroPersons.IsPlayed("taom_hero_gimli", new string[0]));
 
     [TestMethod]
-    public void PlayerIsGimli_DropsGimliFromFreeHeroesAndShop_KeepsTheRest()
+    public void PlayerIsGimli_DropsGimliFromFreeHeroes_KeepsTheRest()
     {
         var plan = LoreHeroPersons.WithoutPlayed(Plan(), new[] { "named_companion_gimli" });
 
         CollectionAssert.AreEqual(new[] { "boromir", "aragorn", "legolas" }, plan.FreeHeroes.Select(h => h.Id).ToArray());
-        CollectionAssert.AreEqual(new[] { "aragorn" }, plan.Shop.Heroes.Select(h => h.Id).ToArray());
         Assert.AreEqual("boromir", plan.MustLive);
     }
 
