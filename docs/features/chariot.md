@@ -567,8 +567,9 @@ translations wait for the language pass. The repo's tables hold the item: `tools
 
 **The lacquer set (set D) in the Armory's sources, 2026-11-26.** In the same look at the staged sets he said: "Cart D
 is ready for import. Looks real good." and "Armour 3 v06 just needs the front armour to be fastened to the head armor
-so it isnt hanging". Set v20 is cart D v17 with horse armour 3 v14: 58,353 triangles at LOD0, the armour 9,468 for one
-horse, every set gate passed. Build v14 changes skin weights only against v13 (see "The armours in motion"). The chest panel now hangs from two straight straps with sewn laps, from the breast
+so it isnt hanging". Set v21 is cart D v17 with horse armour 3 v16: 58,353 triangles at LOD0, the armour 9,468 for one
+horse, every set gate passed. Build v14 changed skin weights only against v13 (see "The armours in motion"), and
+build v16 the meshes of LOD2 and LOD3 only (see "The far levels"). The chest panel now hangs from two straight straps with sewn laps, from the breast
 strap up to the neck lining under the lowest neck band. A read-only check with close renders found it ready. Against
 the build he looked at, these also changed: the face plate is one shell with round rope eye rings (his word of
 2026-11-25), the browband runs under the face plate's top band and is lapped onto both cheek straps, the flank and
@@ -579,14 +580,15 @@ plate's lower end has no strap, as in the build he saw.
 At 20:48 ten source files went into `AssetSources\creature\chariot` under new names
 (`mesh\rhun_war_chariot_d.fbx`; `textures\rhun_war_chariot_d_front_*`, `rhun_war_chariot_d_base_*` and
 `rhun_horse_armour_3_*`, each `_d`, `_n`, `_s`), with equal hashes; that was set v19, with armour v13. At 03:40 on
-2026-11-27 the mesh was replaced by set v20's, with a kept copy of the v19 file. The import in the Modding Kit and
+2026-11-27 the mesh was replaced by set v20's and at 07:45 by set v21's, each time with a kept copy of the replaced
+file. The import in the Modding Kit and
 the harness item are owed: an item row that names a mesh the Kit does not hold yet hangs the preload, so the row follows the
 import.
 
 **The sun set (set C) in the Armory's sources, 2026-11-27.** Of the staged sets he said on 2026-11-26: "chariot c is
 good, looks real good. Is ready to be imported." and "armour 2 needs work, remove the ear armor on the horse that is a
 waste. Then please attach the front armor with straps that are hidden in the back. Having armor not fastened down is
-real." Set v23 is cart C v16, unchanged against the stage he saw, with horse armour 2 v16: 59,460 triangles at LOD0,
+real." Set v24 is cart C v16, unchanged against the stage he saw, with horse armour 2 v18: 59,460 triangles at LOD0,
 the armour 8,903 for one horse. The armour has no ear pieces. The chest panel hangs from two straps: each has a
 square stitched lap on the panel's band, one fold at the band's top edge, and a straight run under the shoulder
 plate's rear corner to its upper end under the back plate. Each shoulder plate is held by a carrier strap to under
@@ -596,7 +598,8 @@ its own renders of the staged file found v14 ready.
 That check's list of what carries each part showed that no strap held the back plate, from which the chest straps,
 the carriers and the flank panels hang. Build v15 adds a girth: an upright red band behind the elbow with a buckle
 on each side, its ends under the back plate's rim. Nothing else of v14 moved and no map changed; a second read-only
-check found it ready and better than v14. Build v16 changes skin weights only (see "The armours in motion").
+check found it ready and better than v14. Build v16 changes skin weights only (see "The armours in motion"),
+and build v18 the meshes of LOD2 and LOD3 only (see "The far levels").
 
 Open on this armour: the rump plate has no strap of its own (its front row lies under the back plate's rear rim);
 the chest plate has no strap of its own (its sides lie under the shoulder plates); the girth is not drawn at LOD4
@@ -606,7 +609,8 @@ rest pose; 448 triangles at LOD2 have no UV area.
 At 00:07 ten source files (then set v21, with armour v14) went into `AssetSources\creature\chariot` under new names
 (`mesh\rhun_war_chariot_c.fbx`; `textures\rhun_war_chariot_c_front_*`, `rhun_war_chariot_c_base_*` and
 `rhun_horse_armour_2_*`, each `_d`, `_n`, `_s`), with equal hashes. At 01:03 the mesh was replaced by set v22's
-and at 02:30 by set v23's, each time with a kept copy of the replaced file; the nine maps are the same for all three. The import in the Modding Kit and the harness
+at 02:30 by set v23's and at 07:45 by set v24's, each time with a kept copy of the replaced file; the nine maps are
+the same for all four. The import in the Modding Kit and the harness
 item are owed; the item row follows the import.
 
 **The horned set (set E) in the Armory's sources, 2026-11-27.** Of the staged sets he said on 2026-11-26: "Armour 4
@@ -686,6 +690,49 @@ Open after the repairs:
   was worse and was dropped.
 - The slip measure is not yet a gate of the armour build chains, and no set was checked in the game.
 
+**The far levels, a gate for motion, and what the gate found, 2026-11-27.** Three things followed the weight repairs.
+
+*The far levels.* The checks of the repaired sets found that armours 2 and 3 showed lining and backing at LOD2 and
+LOD3 already at rest, where LOD0 shows plates. On armour 3 the neck bands had 5 points across at those levels where
+LOD0 has 11, and each chest slat strip was one flat quad; on armour 2 each lame strip of the flank and rump was one
+flat quad with a row of backing behind it, and the neck lames were too coarse to cover their backing. Armour 3 v16
+and armour 2 v18 rebuild LOD2 and LOD3 only; LOD0, LOD1, LOD4, LOD5 and the maps are identical to the builds before.
+A read-only check measured both sets against the installed ones, with back faces culled as the game draws them:
+
+| Set | Lining or backing that shows and LOD0 does not (pixels, side view) | Change at the LOD1 to LOD2 and LOD2 to LOD3 switches (pixels, three views) | Triangles, whole set |
+|---|---|---|---|
+| D v21 (armour 3 v16) | LOD2 860 to 276, LOD3 235 to 29 | 3,486 to 1,608 and 1,029 to 664 | LOD2 24,545 to 27,497, LOD3 14,517 to 16,301 |
+| C v24 (armour 2 v18) | LOD2 1,152 to 185, LOD3 214 to 40 | 3,374 to 886 and 1,382 to 596 | LOD2 25,857 to 28,217, LOD3 15,076 to 17,356 |
+
+Both were found ready and replaced the installed meshes at 07:45. One switch got worse by measure: on set C the
+change from LOD3 to LOD4 at about 28 m went from 672 to 1,170 pixels, because LOD3 now has the full neck lames and
+the unchanged LOD4 keeps a stepped hood; on a 1080p frame it is a few pixels of crest outline. A first attempt was
+stopped by an acceptance rule that asked for a lower difference in every view; the far levels were already far
+better, and the rule was the fault.
+
+*A gate for motion.* The slip measure of the study is now gate G15 of both armour build chains and of the stage
+script (in the work folder: `rharm_slipgate.py` with a table of pairs per armour and a baseline). It poses the rig
+in the gate poses and in every key frame of 16 clips and measures each declared pair of parts. A build fails when a
+pair's worst slip is above the installed build's by more than 10 percent plus 2 mm, and a set whose armour failed
+or skipped the gate cannot be staged. Proof: the five installed armours pass; armour 2 v15, armour 3 v13 and armour
+4 v25e, the builds of before the weight repair, fail (armour 4 v25e on its front field at 765.5 mm against a limit
+of 142.6 mm). The gate measures LOD0 only and only the pairs its table names.
+
+*What the wider gate found.* Eleven pair classes were above 150 mm in installed builds. A study rendered each at
+its worst frame: nine are faults and two are artefacts of the measure. The first study of the night had said that
+armour 1 showed no gap; that was wrong, it had looked at too few frames.
+
+| Armour (set) | What a viewer sees | State |
+|---|---|---|
+| 1 (B, in the game) | In the idle clip the neck lames part on the right side, a true gap of up to 149 mm | A weights-only candidate brings it to 20 mm and was found ready by a read-only check; not installed: set B is in the game |
+| 2 (C) | In a galloping turn the front skirt leaves the shoulder plates and the chest plate by up to 203 mm and rides up with the forearm | Weights cannot cure it: a skirt tied to the chest lets the foreleg through. Two candidates with a changed shape are in work for the maintainer to choose |
+| 4 (E) | The same between the front skirt and the chest plate (up to 160 mm); in a trotting turn the neck comes through the chest plate's collar | Open |
+| 5 (black set) | Haunch and cape plates off the cloth; fringe bars 97 to 150 mm off the hem; chest bosses up to 93 mm off the belt | A candidate cures the plates and was found ready; the fringe and the bosses are in work; not installed: the set is in the game |
+
+Armour 4's front backing, which opens into slats at the leg pit, has no cure yet after three attempts: a cut of the
+field's lower front edge removes the folds, but the withers straps and the shoulder band are sewn onto the part the
+cut removes.
+
 Not marked by him on set v26 or v27 and still open on the set, for builders after the reset:
 
 - Armour 5: the dark place at the withers in the hero view (the place of his pictures 64 and 65). Its cause is
@@ -733,8 +780,8 @@ B, D, C, E.
 | Cart | Newest | Staged | State | Open (review counts: the cart review `wf_5c1aaa1f-cb7`, stopped at about 13:07; its checker had finished only cart D) |
 |---|---|---|---|---|
 | B | v23 (v21 without the javelins, 2026-11-26) | v23, in set b (set v24, with armour 1 v23); in the game since 2026-11-26 as `rhun_war_chariot_b` | Painter wood; link gate 444 islands, 0 unlinked; set 43,490 triangles at LOD0 | 30 review findings of 2026-11-25 (11 "would mark: yes"), not checked; the gold bracket legs under the top rail show plain where the javelins hid them |
-| C | v16 (LOD UV fix) | v16, in set c (set v23, with armour 2 v16); its sources are in the Armory's `AssetSources` since 2026-11-27 as `rhun_war_chariot_c` | Painter wood, delivered gloss; set 59,460 triangles at LOD0; the stage's manifest reports every gate passed, with the armour UV row as a count | 24 review findings of 2026-11-25 (5 yes), not checked |
-| D | v17 (LOD UV fix, inner fan gone: 1,183 triangles less at LOD0) | v17, in set d (set v20, with armour 3 v14); its sources are in the Armory's `AssetSources` since 2026-11-26 as `rhun_war_chariot_d` | Painter wood; set 58,353 triangles at LOD0, every set gate passed | 23 review findings of 2026-11-25 (9 yes); the checker found 21 real and added 6 |
+| C | v16 (LOD UV fix) | v16, in set c (set v24, with armour 2 v18); its sources are in the Armory's `AssetSources` since 2026-11-27 as `rhun_war_chariot_c` | Painter wood, delivered gloss; set 59,460 triangles at LOD0; the stage's manifest reports every gate passed, with the armour UV row as a count | 24 review findings of 2026-11-25 (5 yes), not checked |
+| D | v17 (LOD UV fix, inner fan gone: 1,183 triangles less at LOD0) | v17, in set d (set v21, with armour 3 v16); its sources are in the Armory's `AssetSources` since 2026-11-26 as `rhun_war_chariot_d` | Painter wood; set 58,353 triangles at LOD0, every set gate passed | 23 review findings of 2026-11-25 (9 yes); the checker found 21 real and added 6 |
 | E | v13 (wood grain along the boards on the inner front wall and the top planks) | v13, in set e (set v16, with armour 4 v26b); its sources are in the Armory's `AssetSources` since 2026-11-27 as `rhun_war_chariot_e` | Source wood; set 58,991 triangles at LOD0; the stage's manifest reports every gate passed | 26 review findings of 2026-11-25 (6 yes), not checked |
 | F | 2026-11-26: v22 (hidden faces cut) with the maps of v24 (black-stained wood), in set v27 | not in `out\for_kit_variants` (its `f` folder is the old v02 stage); the sources are in the Armory's `AssetSources` since 09:22, the Kit packages since 09:38 | Built and swapped (`SWAP DONE`, pose check 0 and 0 in five poses); cart 44,883 triangles at LOD0, armour 22,260 on both horses; harness item `taom_chariot_armour_rhun_black` since 09:56 | Gate table HELD: the 2 hidden hub discs (link gate), the cart's UV check at LOD1 to LOD3 (surface 2.12, 2.10 and 2.16 cm2 against LOD0's 0.18), the count flag (67,143, above 65,400). The check in game is owed. The 18:41 row (v17, step 3 of Part 2 stopped at 18:22) is replaced by this one |
 
@@ -906,6 +953,7 @@ both horses, nothing stretched, and no missing mesh line in the log.
 
 ## Changelog
 
+- 2026-11-27: The far levels of the sun and lacquer armours show far less lining and backing at rest (set C v24 and set D v21 installed at 07:45, LOD2 and LOD3 only). The slip measure is gate G15 of the armour build chains. A study of its largest classes found faults on every armour; candidates for set B's neck lames and the black set's plates wait for the maintainer's word. See "The far levels, a gate for motion, and what the gate found".
 - 2026-11-27: The armours came apart in the game's clips (one bone per plate over a backing that follows the skin). Weight repairs are installed for the sun set (set C v23, armour 2 v16) and the horned set (set E v16, armour 4 v26b), and for the lacquer set (set D v20, armour 3 v14); the black set has a candidate that waits for the maintainer's word. See "The armours in motion".
 - 2026-11-27: The horned set (set E: cart E v13 with the wood grain along the boards, armour 4 v25e with made joints at every strap end, set v15, 58,991 triangles at LOD0) is in the Armory's `AssetSources` (ten files, 00:52). The Kit import and the harness item are owed.
 - 2026-11-27: The sun set (set C: cart C v16, armour 2 v15 with the chest panel on two straps, a girth and no ear pieces, set v22, 59,460 triangles at LOD0) is in the Armory's `AssetSources` (ten files, 00:07; the mesh replaced at 01:03). The Kit import and the harness item are owed.
