@@ -72,6 +72,7 @@ internal sealed partial class CommandTrialScript
         into["edge_pan"] = s => s.EdgePan();
         into["rotate_pivot"] = s => s.RotatePivot();
         into["zoom_smooth"] = s => s.ZoomSmooth();
+        MouseSteps(into);
     }
 
     private IEnumerable<Verdict> Refuse()

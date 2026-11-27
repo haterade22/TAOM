@@ -159,7 +159,7 @@ public class MarshalsWordWiringTests
         var screenTick = ViewMember("public override void OnMissionScreenTick(float dt)");
 
         StringAssert.Contains(screenTick, "if (session == null || !session.IsLive || _keys == null) return;");
-        StringAssert.Contains(screenTick, "var open = Mission.IsOrderMenuOpen;");
+        StringAssert.Contains(screenTick, "var open = Mission.IsOrderMenuOpen || SeatPresence.CommandMouse;");
         StringAssert.Contains(screenTick, "open && (_trialQueue || Down(_keys.Queue))");
         StringAssert.Contains(screenTick, "open && (_trialWidths || Down(_keys.KeepWidths))");
     }

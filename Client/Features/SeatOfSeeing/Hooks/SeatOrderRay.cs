@@ -44,12 +44,19 @@ internal static class SeatOrderRay
         screen.ScreenPointToWorldRay(point, out begin, out end);
     }
 
-    internal static WeakGameEntity Collide(MissionScreen screen, Mission mission, out Vec3 closestPoint)
-    {
-        PointerRay(screen, out var rayBegin, out var rayEnd);
-        var rayEndFar = rayBegin + (rayEnd - rayBegin).NormalizedCopy() * RayLength;
+    /// <summary>The far end of a pointer ray, <see cref="RayLength"/> from its start: the ray every command-mouse click and line uses, so far ground works for all of them.</summary>
+    internal static Vec3 Far(Vec3 rayBegin, Vec3 rayEnd) => rayBegin + (rayEnd - rayBegin).NormalizedCopy() * RayLength;
 
-        mission.Scene.RayCastForClosestEntityOrTerrain(rayBegin, rayEndFar, out _, out closestPoint, out var entity, RayThickness, RayFlags);
+    internal static WeakGameEntity Collide(MissionScreen screen, Mission mission, out Vec3 closestPoint) =>
+        CollideAt(screen, mission, screen.MouseVisible ? Input.MousePositionRanged : new Vec2(0.5f, 0.5f), out closestPoint, out _);
+
+    /// <summary>The same walk for a given point of the window, as a fraction of it: the command mouse's right click. <paramref name="hit"/> says the ray met terrain or an entity.</summary>
+    internal static WeakGameEntity CollideAt(MissionScreen screen, Mission mission, Vec2 ranged, out Vec3 closestPoint, out bool hit)
+    {
+        screen.ScreenPointToWorldRay(ranged, out var rayBegin, out var rayEnd);
+        var rayEndFar = Far(rayBegin, rayEnd);
+
+        hit = mission.Scene.RayCastForClosestEntityOrTerrain(rayBegin, rayEndFar, out _, out closestPoint, out var entity, RayThickness, RayFlags);
 
         while (entity.IsValid && !entity.GetScriptComponents().Any(sc => sc is IOrderable orderable && orderable.GetOrder(Mission.Current.PlayerTeam.Side) != OrderType.None))
             entity = entity.Parent;

@@ -21,6 +21,8 @@ internal sealed class SeatSession
     private readonly OutcomeCounter _frameCounter;
     private readonly SeatTimeControl _time;
     private readonly SeatRiseControl _rise;
+    private readonly SeatCommandControl? _command;
+    private readonly Func<bool> _networkSession;
 
     private SeatFlight _flight;
     private SeatFlight? _last;
@@ -56,13 +58,18 @@ internal sealed class SeatSession
     private bool _takeOwed;
     private bool _fallSaid;
     private bool _riseBroken;
+    private bool _commandLive;
+    private bool _commandOrdersAllowed;
+    private bool _commandNetwork;
+    private bool _finishing;
+    private float _commandCheckDue = float.NaN;
 
     // Set from the engine's callbacks (a mode change, a main agent change), which may not run on the thread that reads them.
     private volatile bool _deploymentEnded;
     private volatile bool _standFastOwed;
 
     internal SeatSession(ISeatScreenAdapter screen, ISeatHeroAdapter hero, ISeatSettingsProvider settings, Func<SeatPermissions> permissions,
-        IOutcomeLog outcomes, IModLogger logger, string missionKey)
+        IOutcomeLog outcomes, IModLogger logger, string missionKey, ISeatCommandAdapter? command = null, Func<bool>? networkSession = null)
     {
         _screen = screen;
         _hero = hero;
@@ -74,7 +81,13 @@ internal sealed class SeatSession
         _frameCounter = outcomes.Counter(SeatChecks.FrameCounterId);
         _time = new SeatTimeControl(screen, hero, settings, permissions, outcomes, missionKey);
         _rise = new SeatRiseControl(screen, settings, permissions, outcomes, missionKey);
+        _networkSession = networkSession ?? (() => false);
+        if (command != null)
+            _command = new SeatCommandControl(command, outcomes, missionKey);
     }
+
+    /// <summary>The command mouse is live now (<see cref="SeatCommandRule.IsLive"/>); the field trial reads it.</summary>
+    internal bool CommandLive => _commandLive;
 
     internal SeatState State { get; private set; }
 
@@ -242,6 +255,9 @@ internal sealed class SeatSession
                 if (State != SeatState.Off && !_screen.ReadFacts().PhotoMode)
                     TakePress();
             }
+
+            if (_commandLive && State == SeatState.Seated)
+                _command?.OnMissionTick();
         }
         catch (Exception ex)
         {
@@ -315,6 +331,7 @@ internal sealed class SeatSession
     /// <summary>The mission screen is going away: hands the hero back with no glide and no look. Safe to call twice, and from both teardown paths.</summary>
     internal void Finish()
     {
+        _finishing = true;
         try
         {
             if (State != SeatState.Off)
@@ -327,6 +344,7 @@ internal sealed class SeatSession
 
         // Fast forward is a process-global byte (Mission.cs:1268-1279), so the cancel sits outside the test of the state and after the try.
         _time.Cancel();
+        Swallow(() => _command?.Finish());
         _handBackOwed = false;
         Swallow(() => SeatPresence.SetHeroFightsOn(false));
     }
@@ -566,6 +584,11 @@ internal sealed class SeatSession
             Leave("key", facts.BattleMode);
         else if (!facts.PhotoMode && State == SeatState.Seated)
             PanelWork();
+        else if (facts.PhotoMode && _commandLive)
+        {
+            SetCommandLive(false);
+            ShowCursor(false);
+        }
     }
 
     private void PanelWork()
@@ -583,13 +606,16 @@ internal sealed class SeatSession
         _panelWasOpen = open;
         _previousSignals = signals;
 
-        var wanted = open && _settings.CursorWithPanel;
+        SetCommandLive(CommandWanted());
+        var wanted = (open && _settings.CursorWithPanel) || _commandLive;
         var look = wanted && _screen.LookHeld();
         if (look)
             _screen.HoldCursorPosition();
         ShowCursor(wanted && !look);
         if (_cursorShown && open)
             NoteRelay(_screen.RelayPanelClicks());
+        if (_cursorShown && _commandLive)
+            _command?.Capture(_screen.ReadPointer());
         if (_cursorShown && !_focusNoted && SeatPresence.TakeFocusSet())
         {
             _focusNoted = true;
@@ -602,6 +628,39 @@ internal sealed class SeatSession
             if (why != null)
                 RestoreHide(why);
         }
+    }
+
+    private bool CommandWanted()
+    {
+        if (_command == null || !_settings.CommandMouse)
+            return false;
+
+        var now = _screen.RealSeconds();
+        if (float.IsNaN(_commandCheckDue) || now >= _commandCheckDue)
+        {
+            _commandCheckDue = now + 1f;
+            _commandOrdersAllowed = _permissions().Orders;
+            _commandNetwork = _networkSession();
+        }
+
+        return SeatCommandRule.IsLive(true, State == SeatState.Seated, _commandOrdersAllowed, _commandNetwork);
+    }
+
+    private void SetCommandLive(bool live)
+    {
+        if (live == _commandLive)
+            return;
+        _commandLive = live;
+        _commandCheckDue = float.NaN;
+        SeatPresence.SetCommandMouse(live);
+        _screen.SetCommandMouse(live);
+        if (live)
+            return;
+
+        if (_finishing)
+            _command?.Finish();
+        else
+            _command?.Reset();
     }
 
     private void NoteRelay(SeatRelayResult result)
@@ -884,6 +943,7 @@ internal sealed class SeatSession
         if (_controllerShut)
             Step(latching, ReleaseController);
         Step(latching, () => ShowCursor(false));
+        Step(latching, () => SetCommandLive(false));
         if (_hideInForce)
             Step(latching, () => RestoreHide(latching ? "fault" : "leave"));
         Step(latching, () => LetGo("leave"));

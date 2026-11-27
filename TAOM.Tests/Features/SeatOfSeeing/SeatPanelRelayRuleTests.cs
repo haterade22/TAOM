@@ -104,6 +104,8 @@ public class SeatPanelRelayRuleTests
     {
         var rule = new SeatPanelRelayRule();
 
+        rule.Step(false, false, false, Over(SeatPanelKind.OrderSet, One), false, rightPressed: true);
+
         Assert.AreEqual(SeatPanelAction.Escape, rule.Step(false, false, true, Over(SeatPanelKind.OrderSet, One), false));
     }
 
@@ -166,5 +168,34 @@ public class SeatPanelRelayRuleTests
     public void WheelRule_UsesTheRawWheelOnlyWhileTheShieldIsUpAndTheSceneOrShieldHasFocus(float scene, float raw, bool shield, bool focus, float expected)
     {
         Assert.AreEqual(expected, SeatWheelRule.Read(scene, raw, shield, focus));
+    }
+
+    [TestMethod]
+    public void ARightPressOffThePanel_LetGoOverAButton_IsNotEscape_TheReleaseBelongsToThePressThatSawIt()
+    {
+        var rule = new SeatPanelRelayRule();
+
+        rule.Step(false, false, false, Nothing, false, rightPressed: true);
+
+        Assert.AreEqual(SeatPanelAction.None, rule.Step(false, false, true, Over(SeatPanelKind.Card, One), false));
+    }
+
+    [TestMethod]
+    public void ARightPressAndReleaseInOneFrameOverAButton_IsEscape()
+    {
+        var rule = new SeatPanelRelayRule();
+
+        Assert.AreEqual(SeatPanelAction.Escape, rule.Step(false, false, true, Over(SeatPanelKind.Card, One), false, rightPressed: true));
+    }
+
+    [TestMethod]
+    public void ARightReleaseTwice_IsEscapeOnlyOnce()
+    {
+        var rule = new SeatPanelRelayRule();
+
+        rule.Step(false, false, false, Over(SeatPanelKind.Card, One), false, rightPressed: true);
+        rule.Step(false, false, true, Over(SeatPanelKind.Card, One), false);
+
+        Assert.AreEqual(SeatPanelAction.None, rule.Step(false, false, true, Over(SeatPanelKind.Card, One), false));
     }
 }

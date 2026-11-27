@@ -37,15 +37,18 @@ internal enum SeatRelayResult
 internal sealed class SeatPanelRelayRule
 {
     private SeatPanelHit _pressed;
+    private bool _rightPressedOver;
 
     /// <summary>
     /// One frame's edges and the target under the pointer. A press is taken first, so a press and a release in one frame act. A target
     /// whose view model could not be read never acts. <paramref name="returnsToSet"/> is true when the target is the Return order of a set.
     /// </summary>
-    internal SeatPanelAction Step(bool leftPressed, bool leftReleased, bool rightReleased, SeatPanelHit over, bool returnsToSet)
+    internal SeatPanelAction Step(bool leftPressed, bool leftReleased, bool rightReleased, SeatPanelHit over, bool returnsToSet, bool rightPressed = false)
     {
         if (leftPressed)
             _pressed = over;
+        if (rightPressed)
+            _rightPressedOver = over.Kind != SeatPanelKind.None;
 
         if (leftReleased)
         {
@@ -56,10 +59,19 @@ internal sealed class SeatPanelRelayRule
                 return action;
         }
 
-        return rightReleased && over.Kind != SeatPanelKind.None ? SeatPanelAction.Escape : SeatPanelAction.None;
+        if (!rightReleased)
+            return SeatPanelAction.None;
+
+        var escape = _rightPressedOver && over.Kind != SeatPanelKind.None;
+        _rightPressedOver = false;
+        return escape ? SeatPanelAction.Escape : SeatPanelAction.None;
     }
 
-    internal void Reset() => _pressed = default;
+    internal void Reset()
+    {
+        _pressed = default;
+        _rightPressedOver = false;
+    }
 
     private static SeatPanelAction Act(SeatPanelHit pressed, SeatPanelHit released, bool returnsToSet)
     {

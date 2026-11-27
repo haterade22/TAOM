@@ -12,7 +12,10 @@ namespace TAOM.Client.Adapters;
 /// shows, so a click on a button reaches the ground behind it. This layer carries no movie: its two hit tests answer the shield rule, and
 /// <c>ScreenManager.EarlyUpdate</c> gives the mouse buttons to the first active layer whose hit test is true and whose mask names them
 /// (ScreenManager.cs:642-662). The adapter sets the mask to the mouse buttons and the wheel while the cursor shows, and to <c>Invalid</c> otherwise.
-/// The wheel goes with the buttons so the scene layer is not hit on a shielded frame (ScreenManager.cs:663-668) and vanilla's own mouse reads stay off.
+/// The wheel goes with the buttons so the scene layer is not hit on a shielded frame (ScreenManager.cs:663-668) and vanilla's down and release reads
+/// stay off. <c>IsKeyPressed(LeftMouseButton)</c> still reads true on the focused scene layer, because the left button is a click key the keys mask
+/// lets through (InputContext.cs:309-321): with the panel shut vanilla suspends the order placer (GauntletOrderUIHandler.cs:221-223); with it open
+/// the placer starts a drag and resets it the same frame (OrderTroopPlacer.cs:593, :643), but over a rotation marker it selects that company.
 /// </summary>
 internal sealed class SeatCursorLayer : GauntletLayer
 {

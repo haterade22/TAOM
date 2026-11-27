@@ -68,6 +68,7 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
     private GauntletOrderUIHandler? _orderHandler;
     private SeatCursorLayer? _cursorLayer;
     private SeatPanelRelay? _relay;
+    private readonly SeatPointerEdges _edges = new();
     private Agent? _keptAgent;
     private Formation? _keptFormation;
     private readonly FordsMissionSpeed _clock = new(null);
@@ -267,6 +268,39 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
     public bool LookHeld() => TrialMiddleHeld || SeatPanelRelay.LookHeld();
 
     public SeatRelayResult RelayPanelClicks() => Relay().Tick();
+
+    public void SetCommandMouse(bool live) => Relay().SetCommandLive(live);
+
+    /// <summary>The field trial's mouse: frames the next screen ticks read in place of the mouse, one a tick; empty in every player session.</summary>
+    internal Queue<SeatPointerFrame> TrialPointer { get; } = new();
+
+    // The scene layer reads a mouse button only on a frame it holds the mouse, so edges come from the shield layer's input. Control and Shift are read
+    // raw, as the panel's own Control test is (MissionOrderTroopControllerVM.cs:617).
+    public SeatPointerFrame ReadPointer()
+    {
+        if (TrialPointer.Count > 0)
+            return TrialPointer.Dequeue();
+
+        var shield = _cursorLayer?.Input;
+        if (shield == null || _relay is { } relay && relay.TransferActive())
+        {
+            _edges.Reset();
+            return default;
+        }
+
+        var overPanel = _relay is { PointerOverTarget: true };
+        var left = shield.IsKeyPressed(InputKey.LeftMouseButton);
+        var right = shield.IsKeyPressed(InputKey.RightMouseButton);
+        var edges = _edges.Take(left, shield.IsKeyReleased(InputKey.LeftMouseButton), right, shield.IsKeyReleased(InputKey.RightMouseButton), overPanel,
+            Input.IsKeyDown(InputKey.LeftMouseButton), Input.IsKeyDown(InputKey.RightMouseButton));
+        var pixel = Input.MousePositionPixel;
+        var ranged = Input.MousePositionRanged;
+        return new SeatPointerFrame(
+            edges.LeftPressed, edges.LeftReleased, edges.RightPressed, edges.RightReleased,
+            Input.IsKeyDown(InputKey.RightMouseButton), pixel.x, pixel.y, ranged.x, ranged.y,
+            Input.IsKeyDown(InputKey.LeftShift) || Input.IsKeyDown(InputKey.RightShift),
+            Input.IsKeyDown(InputKey.LeftControl) || Input.IsKeyDown(InputKey.RightControl), Time.ApplicationTime);
+    }
 
     private SeatPanelRelay Relay() => _relay ??= new SeatPanelRelay(_screen, _mission, OrderPanel, OrderParameters);
 

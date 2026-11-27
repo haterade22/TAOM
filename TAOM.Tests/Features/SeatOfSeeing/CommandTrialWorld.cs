@@ -76,6 +76,7 @@ internal sealed partial class CommandTrialWorld : ICommandTrialHost
         InMissionTick = true;
         try
         {
+            ApplyMouse();
             script.OnMissionTick();
         }
         finally

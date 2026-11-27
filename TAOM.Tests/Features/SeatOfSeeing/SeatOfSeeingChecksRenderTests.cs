@@ -79,7 +79,7 @@ public class SeatOfSeeingChecksRenderTests
     {
         foreach (var id in new[] { SeatChecks.EnterId, SeatChecks.LeaveId, SeatChecks.FramesId, SeatChecks.GlideId, SeatChecks.FaultId, SeatChecks.FrameCounterId,
                      SeatChecks.CursorId, SeatChecks.FocusId, SeatChecks.PanelReopenedId, SeatChecks.HideId, SeatChecks.KeepId, SeatChecks.LetGoId,
-                     SeatChecks.FightOnId, SeatChecks.TakeId, SeatChecks.PanelClickId })
+                     SeatChecks.FightOnId, SeatChecks.TakeId, SeatChecks.PanelClickId, SeatChecks.CommandId })
             Assert.IsTrue(OutcomeLog.IsValidId(id), id);
     }
 

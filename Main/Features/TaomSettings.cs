@@ -3254,6 +3254,11 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "{=taom_seat_mcm_pan_speed_hint}Multiplies how fast the view flies with the movement keys and the edge scroll in the Seat. 1 is the usual speed. Between 0.25 and 4. Default: 1.")]
     public float SeatPanSpeed { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultPanSpeed;
 
+    [SettingPropertyGroup("{=taom_mcm_group_seat_of_seeing}Seat of Seeing")]
+    [SettingPropertyBool("{=taom_seat_mcm_command_mouse}Command with the mouse", Order = 9, RequireRestart = false,
+        HintText = "{=taom_seat_mcm_command_mouse_hint}While you are in the Seat in a battle where you give orders, the mouse commands your companies: a left click on a soldier selects that soldier's company (Shift adds or removes one, a click on nothing clears), a right click on the ground moves the selected companies there, dragging with the right button draws their line, and a right click on an enemy sends them to charge it. The cursor shows all the time and the keyboard keeps every battle key. Default: on.")]
+    public bool SeatCommandMouse { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultCommandMouse;
+
     // --- Marshal's Word (docs/features/marshals-word.md) ---
 
     [SettingPropertyGroup("{=taom_mcm_group_marshal_s_word}Marshal's Word", GroupOrder = 83)]

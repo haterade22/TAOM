@@ -51,7 +51,7 @@ public class CommandTrialCameraStepsTests
     {
         var names = SeatTrialSteps.All.Select(s => s.Name).ToList();
 
-        CollectionAssert.AreEqual(new[] { "edge_pan", "rotate_pivot", "zoom_smooth", "hero_falls" }, names.Skip(names.IndexOf("panel_click_order") + 1).Take(4).ToArray());
+        CollectionAssert.AreEqual(new[] { "edge_pan", "rotate_pivot", "zoom_smooth", "select_click" }, names.Skip(names.IndexOf("panel_click_order") + 1).Take(4).ToArray());
         foreach (var name in new[] { "edge_pan", "rotate_pivot", "zoom_smooth" })
         {
             Assert.IsFalse(SeatTrialSteps.TryChoose(name, out _, out var error), name);

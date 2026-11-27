@@ -29,4 +29,7 @@ internal interface ISeatSettingsProvider
 
     /// <summary>The factor on the speed of key and edge panning, from 0.25 to 4; always a real number in that range.</summary>
     float PanSpeed { get; }
+
+    /// <summary>While seated the mouse commands the player's companies: left click selects, right click orders; the keyboard is unchanged.</summary>
+    bool CommandMouse { get; }
 }

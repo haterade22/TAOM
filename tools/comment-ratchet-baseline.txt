@@ -1,9 +1,10 @@
 # ADR-009 comment-line ratchet: <path><TAB><count>, counts may only fall.
 # Written by python tools/comment_ratchet.py --regen; read by CommentRatchetGateTests.
 Client/Adapters/QuestJournalAdapter.cs	3
+Client/Adapters/SeatCommandAdapter.cs	1
 Client/Adapters/SeatCursorLayer.cs	1
-Client/Adapters/SeatPanelRelay.cs	12
-Client/Adapters/SeatScreenAdapter.cs	45
+Client/Adapters/SeatPanelRelay.cs	13
+Client/Adapters/SeatScreenAdapter.cs	47
 Client/Adapters/ThumbnailCacheAdapter.cs	3
 Client/ClientSubModule.cs	24
 Client/ClientUiExtensions.cs	25

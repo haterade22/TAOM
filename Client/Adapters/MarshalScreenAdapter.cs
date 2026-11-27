@@ -9,17 +9,19 @@ using TAOM.Features.MarshalsWord.Domain;
 namespace TAOM.Client.Adapters;
 
 /// <summary>
-/// <see cref="IMarshalScreenAdapter"/> over the live mission. A flag is built as <c>OrderTroopPlacer.AddOrderPositionEntity</c> builds
-/// one (v1.5.6 OrderTroopPlacer.cs:507-511): an empty entity in the scene, not affected by the season, holding a copy of the
-/// <c>order_flag_small</c> metamesh (a metamesh, not a prefab), hidden until it is placed.
+/// <see cref="IMarshalScreenAdapter"/> over the live mission. Its flags come from an <see cref="OrderFlagPool"/>, built as
+/// <c>OrderTroopPlacer.AddOrderPositionEntity</c> builds one flag.
 /// </summary>
 internal sealed class MarshalScreenAdapter : IMarshalScreenAdapter
 {
     private readonly Mission _mission;
-    private readonly List<GameEntity> _pool = new();
-    private int _shown;
+    private readonly OrderFlagPool _flags;
 
-    internal MarshalScreenAdapter(Mission mission) => _mission = mission;
+    internal MarshalScreenAdapter(Mission mission)
+    {
+        _mission = mission;
+        _flags = new OrderFlagPool(mission);
+    }
 
     public bool PlayerTeamExists => _mission.PlayerTeam != null;
 
@@ -27,40 +29,15 @@ internal sealed class MarshalScreenAdapter : IMarshalScreenAdapter
 
     public void ShowFlags(IReadOnlyList<MarshalFlagPoint> points)
     {
-        for (var i = 0; i < points.Count; i++)
-        {
-            var entity = FlagAt(i);
-            var frame = new MatrixFrame(Mat3.Identity, new Vec3(points[i].X, points[i].Y, points[i].Z));
-            entity.SetFrame(ref frame);
-            entity.SetVisibilityExcludeParents(visible: true);
-        }
-
-        for (var i = points.Count; i < _shown; i++)
-            _pool[i].SetVisibilityExcludeParents(visible: false);
-        _shown = points.Count;
+        var at = new List<Vec3>(points.Count);
+        foreach (var point in points)
+            at.Add(new Vec3(point.X, point.Y, point.Z));
+        _flags.Show(at);
     }
 
-    public void HideFlags() => ShowFlags(System.Array.Empty<MarshalFlagPoint>());
+    public void HideFlags() => _flags.Hide();
 
-    public void DropFlags()
-    {
-        _pool.Clear();
-        _shown = 0;
-    }
-
-    private GameEntity FlagAt(int index)
-    {
-        while (_pool.Count <= index)
-        {
-            var entity = GameEntity.CreateEmpty(_mission.Scene);
-            entity.EntityFlags |= EntityFlags.NotAffectedBySeason;
-            entity.AddComponent(MetaMesh.GetCopy("order_flag_small"));
-            entity.SetVisibilityExcludeParents(visible: false);
-            _pool.Add(entity);
-        }
-
-        return _pool[index];
-    }
+    public void DropFlags() => _flags.Drop();
 
     private static TextObject TextFor(MarshalMessage message) => message switch
     {

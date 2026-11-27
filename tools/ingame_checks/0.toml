@@ -219,6 +219,17 @@ fail = [
 # mouse click lands on the right button in the bar and the radial layout at two UI scales is for a person (the human rows).
 absence = "not-reached"
 
+[[check]]
+id = "taom.seat-of-seeing.command"
+needs = "in the Seat with Command with the mouse on, click a soldier with the left button, then click the ground or an enemy with the right button"
+reached = ['\[Check\] id=taom\.seat-of-seeing\.command result=(pass|skip)']
+pass = ['\[Check\] id=taom\.seat-of-seeing\.command result=pass mission=[0-9]+ command=(select|move|charge|orderable|line)$']
+fail = ['\[Check\] id=taom\.seat-of-seeing\.fault result=fail']
+# One pass line a mission for each kind (select, move, charge, orderable, line). A skip line says why a click gave nothing: reason=hero-gone (after the
+# fall and before a take), not-controlled, no-troops, mission-ending, nothing-selected (an order with no company selected) or no-target (ground that takes
+# no company). Skip lines read NOT REACHED with the reason; whether the clicks feel right, and where they land at a UI scale other than 1, is for a person.
+absence = "not-reached"
+
 # ---- Marshal's Word, stages M1 (orders in turn) and M2 (keep the array) ----
 # [Check] lines come from Client/Features/MarshalsWord/MarshalSession.cs and Main/Features/MarshalsWord/MarshalQueueDriver.cs and
 # MarshalMarchDriver.cs through IOutcomeLog, with the ids in Main/Features/MarshalsWord/Domain/MarshalChecks.cs. The session's one fault
@@ -707,6 +718,18 @@ claim = "in the Seat with the order panel open, the pointer at a window edge fli
 
 [[human]]
 claim = "in the Seat, holding the middle button turns the view around the ground point at the middle of the screen, letting go leaves no jump, and the cursor comes back where it was before the press"
+
+[[human]]
+claim = "in the Seat with Command with the mouse on, the cursor shows all the time, a left click on a soldier selects his company (Shift adds or removes one, a click on nothing clears), and the number keys and the panel cards show and change the same selection"
+
+[[human]]
+claim = "in the Seat, a right click on the ground moves the selected companies there, a right drag draws a line with order flags and the companies take it on release (Control for the horizontal layout), and a right click on an enemy sends them to charge him; none of it moves the hero"
+
+[[human]]
+claim = "in the Seat, Shift with a right click queues the order (Marshal's Word), Control with a right click on an enemy marks it, and selected companies wear gold outlines while the view flies with the order panel shut"
+
+[[human]]
+claim = "in the Seat with the command mouse on, the battle action bar and the other overlays still take their clicks, and a click on a panel button still acts on the button and not on the ground behind it"
 
 [[human]]
 claim = "each new default key (Insert, End) leaves the chat box shut, and Options > Keybindings > Action shows \"Keep to this soldier or company (TAOM)\" and \"Hide the interface (TAOM)\" with the keys Insert and End and no ERROR text"

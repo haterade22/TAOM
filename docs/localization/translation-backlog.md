@@ -437,3 +437,17 @@ Record each pending feature's module, source file, exact keys and English text, 
 - Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
 - Context: the title, description and option buttons of the vanilla map incident popup, a fixed-size window. Keep a translation close to the English length.
 - Preserve every `{VARIABLE}` exactly. The vocabulary words (`{GODS}`, `{HOLY_PLACE}`, `{HOLY_PERSON}`, `{COIN}`) are filled from the `voc_` rows, so translate each `voc_` row to fit the sentences that use it: `{GODS}` follows a preposition, `{HOLY_PLACE}` and `{HOLY_PERSON}` carry their own article, `{COIN}` is a mass noun.
+
+## Seat of Seeing command with the mouse setting
+
+- Status: pending project-lead translation pass.
+- Source: [PR #1622](https://github.com/haterade22/TAOM/pull/1622).
+- Module: TAOM.
+- English source: `Main/_Module/ModuleData/taom_module_strings.xml`.
+- Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
+- No placeholders.
+
+| Key | English source | Context |
+| --- | --- | --- |
+| `taom_seat_mcm_command_mouse` | Command with the mouse | MCM setting name |
+| `taom_seat_mcm_command_mouse_hint` | While you are in the Seat in a battle where you give orders, the mouse commands your companies: a left click on a soldier selects that soldier's company (Shift adds or removes one, a click on nothing clears), a right click on the ground moves the selected companies there, dragging with the right button draws their line, and a right click on an enemy sends them to charge it. The cursor shows all the time and the keyboard keeps every battle key. Default: on. | MCM hint |
