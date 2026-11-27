@@ -10,7 +10,7 @@ namespace TAOM.Features.WandererAllegiance.Hooks;
 /// <see cref="Patch175_WandererSideEnter"/> acts only inside them. All are private (v1.5.7): on
 /// <c>CompanionsCampaignBehavior</c>, <c>CreateCompanionAndAddToSettlement</c> (:379-392, the daily spawn and the new-game fill)
 /// and <c>SwapCompanions</c> (:250-276, the daily swap); on <c>HeroSpawnCampaignBehavior</c>, <c>OnHeroDailyTick</c> (:120-142,
-/// teleports a fired or released wanderer) and <c>OnCompanionRemoved</c> (:94-100, the same teleport on dismissal). A void prefix
+/// teleports a fired or released wanderer) and <c>OnCompanionRemoved</c> (:94-100, teleports a removed companion that is not a fugitive). A void prefix
 /// and a finalizer, so vanilla always runs; a void finalizer closes the scope. The Enter prefix only redirects an unhired
 /// wanderer entering with no party, so lords, notables and prisoners pass through untouched. Every other caller of the same
 /// engine action is outside the scope and keeps its own placement.

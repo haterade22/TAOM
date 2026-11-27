@@ -7123,6 +7123,6 @@
 	<string id="taom_fp_realm_wage_relief" text="{=taom_fp_realm_wage_relief}Realm power wage relief" />
 	<!-- TaomSettings.cs -->
 	<string id="taom_mcm_EnableWandererSideTowns" text="{=taom_mcm_EnableWandererSideTowns}Wanderers Stay On Their Side" />
-	<string id="taom_mcm_EnableWandererSideTowns_hint" text="{=taom_mcm_EnableWandererSideTowns_hint}When ON (default), a new, dismissed or relocated wanderer stands only in a town whose owner is on their side: an orc never appears in a Free town and a Gondor ranger never in an Evil one. Neutral wanderers and Neutral towns mix with everyone. A wanderer already standing in a wrong-side town stays until vanilla's daily swap picks them. When OFF, vanilla picks any town." />
+	<string id="taom_mcm_EnableWandererSideTowns_hint" text="{=taom_mcm_EnableWandererSideTowns_hint}When ON (default), a new, dismissed or relocated wanderer goes to a town whose owner is on their side when such a town has room: an orc to an Evil town, a Gondor ranger to a Free one. Neutral wanderers and Neutral towns mix with everyone. A wanderer already standing in a wrong-side town stays until vanilla's daily swap picks them. When OFF, vanilla picks any town." />
 
 </strings>
