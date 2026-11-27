@@ -20,6 +20,8 @@ public sealed class WandererAllegianceSettingsProvider : IWandererAllegianceSett
 
     public bool IsEnabled => TaomSettings.Instance?.EnableWandererAllegiance ?? _defaults.Enabled;
 
+    public bool PlacesWanderersBySide => TaomSettings.Instance?.EnableWandererSideTowns ?? true;
+
     public WandererAllegianceScope Scope =>
         ResolveScope(TaomSettings.Instance?.WandererAllegianceScope?.SelectedIndex) ?? ParseScope(_defaults.Scope);
 

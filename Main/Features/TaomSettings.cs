@@ -1311,6 +1311,11 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public Dropdown<string> WandererAllegianceScope { get; set; } = new Dropdown<string>(
         new[] { "All wanderers (by culture)", "Named companions only" }, 0);
 
+    [SettingPropertyGroup("{=taom_mcm_group_world}World/{=taom_mcm_group_wanderer_allegiance}Wanderer Allegiance")]
+    [SettingPropertyBool("{=taom_mcm_EnableWandererSideTowns}Wanderers Stay On Their Side", Order = 2, RequireRestart = false,
+        HintText = "{=taom_mcm_EnableWandererSideTowns_hint}When ON (default), a new, dismissed or relocated wanderer stands only in a town whose owner is on their side: an orc never appears in a Free town and a Gondor ranger never in an Evil one. Neutral wanderers and Neutral towns mix with everyone. A wanderer already standing in a wrong-side town stays until vanilla's daily swap picks them. When OFF, vanilla picks any town.")]
+    public bool EnableWandererSideTowns { get; set; } = true;
+
     // --- World / Hard Questions ---
 
     // GroupOrder 57: 9, 10, 15, 19-56 and 100 were taken as of 2026-10-18.
