@@ -439,7 +439,7 @@ Record each pending feature's module, source file, exact keys and English text, 
 | Key | English source | Context |
 | --- | --- | --- |
 | `taom_seat_mcm_command_mouse` | Command with the mouse | MCM setting name |
-| `taom_seat_mcm_command_mouse_hint` | While you are in the Seat in a battle where you give orders, the mouse commands your companies: a left click on a soldier selects that soldier's company (Shift adds or removes one, a click on nothing clears), a right click on the ground moves the selected companies there, dragging with the right button draws their line, and a right click on an enemy sends them to charge it. The cursor shows all the time and the keyboard keeps every battle key. Default: on. | MCM hint |
+| `taom_seat_mcm_command_mouse_hint` | While you are in the Seat in a battle where you give orders, the mouse commands your companies: a left click on a soldier selects that soldier's company (Shift adds or removes one, a click on nothing clears), a right click on the ground moves the selected companies there, dragging with the right button draws their line, and a right click on an enemy sends them to charge it. A left drag selects the companies inside its box, and Ctrl and a number moves the selected companies' soldiers into that company. The cursor shows all the time, and every other battle key works as before. Default: on. | MCM hint |
 
 ## Seat of Seeing Ctrl and number transfer messages
 

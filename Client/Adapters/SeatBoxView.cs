@@ -115,7 +115,7 @@ internal sealed class SeatBoxView
 
         try
         {
-            // LoadMovie adds the movie's identifier before it looks the prefab up, so a missing prefab leaves a movie with no prefab, and
+            // LoadMovie keeps the movie even when the prefab lookup finds nothing, so a missing prefab leaves a movie with no prefab, and
             // releasing it at the screen's teardown throws (GauntletMovie.Release calls _moviePrefab.OnRelease()).
             if (UIResourceManager.WidgetFactory?.IsCustomType(PrefabName) != true)
             {
