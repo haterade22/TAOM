@@ -8,6 +8,10 @@ sends the input, waits, and writes the model, a preview picture and a task recor
 doc is the record of how TAOM uses it: the setup, the rules, the commands, what it is good for, and
 the lessons of each job. Add to "Jobs" and "Lessons learned" after every run.
 
+**Two routes since 2026-11-27.** The command-line tool spends the API credits. The Tripo Studio MCP server
+(section "Tripo Studio MCP" below) gives a session Tripo's tools as tool calls and spends the credits of the web
+studio. The rules of this doc hold for both routes; each row of "Jobs" names its route.
+
 Tracking issue: #1604. First job: the breach heap of the Rivendell siege set (#1600).
 
 ## Why this exists
@@ -57,6 +61,119 @@ whether the two are one balance. They say that the API balance is "usable only f
 related service fees", that "100 credits = $1.00 USD", and that a top-up starts at 1 dollar with
 presets of 50, 100 and 250 dollars. So the working rule is: the tool needs credits on the developer
 site, and the studio credits are spent in the studio. A top-up is a purchase and is Mike's step.
+
+## Tripo Studio MCP (tool calls in the session, on the studio's credits)
+
+Tripo published an official MCP server for the web studio on 2026-11-27 (its page: `https://studio.tripo3d.ai/mcp`).
+Mike ordered the install the same day ("Yes, install this so that we can use it!"). It is the answer to the open
+question of this doc: the studio's credits can now be spent by a session, without the API credits.
+
+### Setup on this machine (2026-11-27)
+
+| Part | State |
+|---|---|
+| MCP server | Name `tripo`, address `https://msapi.tripo3d.ai/mcp`, HTTP transport, OAuth with client ID `studio-claude-code` and callback port 3000, at user scope (every project). Added with `claude mcp add --transport http --scope user --client-id studio-claude-code --callback-port 3000 tripo https://msapi.tripo3d.ai/mcp` |
+| Sign-in | `claude mcp login tripo` in MIKE'S OWN terminal. A session's shell cannot do it: the command stops with "stdin isn't a terminal". After his sign-in, `claude mcp get tripo` showed `Connected` |
+| Skill | `tripo-studio-mcp`, at user scope in `~/.claude/skills/tripo-studio-mcp`, copied from `github.com/Tripo-Developer/Tripo-Studio-MCP` after a read of every file (text only: one `SKILL.md`, six reference notes, no hook, no script). `SOURCE_COMMIT.txt` in the folder names the commit |
+| Remove | `claude mcp remove tripo -s user`, and delete the skill folder |
+
+A session that was open before the install has no Tripo tools: reconnect the server with `/mcp`, or start a new
+session. No API key is used. Tripo's page says that a personal account works and a team account does not, and that
+free trial tries and free retries of the web page do not apply through the server.
+
+### Which route for which job
+
+| Need | Route | Why |
+|---|---|---|
+| One picture or one text to a model, repeated with other settings, with the files on disk at the end | The CLI (`tripo make`) | One blocking command writes the model, the preview and the task record; a dry run prints the plan and an estimate; the balance can be read (`tripo balance`) |
+| Work on a model that is already in the studio: new textures, a remesh, a split into parts, a low poly version, an export in another format | The Studio MCP | These tools exist only there. They work on the assets of the studio account, the ones that Mike made by hand too |
+| The API credits are used up and Mike does not want a top-up | The Studio MCP | It spends the studio's pool |
+| Several views of one subject to one model | Either | The CLI takes several pictures; the MCP has `tripo_multiview_to_model` (front and at least one of left, right, back) |
+| A job with a hard spending cap | The CLI | The MCP has no tool that reads the balance or quotes a price |
+
+### What the server offers
+
+The tool names below are from the skill's reference notes (commit in `SOURCE_COMMIT.txt`), NOT from the connected
+server: no session has listed the live tools yet. The live tool list and its input schemas are the contract.
+
+| Work | Tools |
+|---|---|
+| Make a model | `tripo_text_to_model`, `tripo_image_to_model`, `tripo_multiview_to_model`; then `tripo_get_model_task` and `tripo_get_model_asset` |
+| Pictures | `tripo_generate_multiview_images`, `tripo_upscale_image`, `tripo_split_image`; then `tripo_get_image_task` and `tripo_get_image_asset` |
+| Textures | `tripo_texture_model`, `tripo_texture_upscale`, `tripo_uv_unwrap`, `tripo_generate_pbr` |
+| Geometry | `tripo_remesh_model` (an explicit quad choice and a face limit of 500 to 50,000), `tripo_smart_low_poly_model`, `tripo_segment_model`, `tripo_complete_model`, `tripo_copy_model` |
+| Rig and motion | `tripo_rig_model`, `tripo_text_to_motion`, `tripo_list_motion_presets`, `tripo_retarget_model`, `tripo_get_motion_asset` |
+| Files in and out | `tripo_create_image_upload_grant`, `tripo_create_model_upload_grant`, `tripo_import_model`, `tripo_export_model`, `tripo_get_model_export`, `tripo_list_model_assets` |
+| Recovery | `tripo_get_model_task_by_idempotency_key`, `tripo_get_image_task_by_idempotency_key`, `tripo_cancel_model_task` |
+
+Model families, as the skill's notes give them: HD (releases such as `v3.1-20260211`; up to 50,000 quad faces, 1,000,000
+standard or 2,000,000 detailed triangle faces) and Smart Mesh (P1 is Nexus v1 with up to 20,000 triangle faces; P2 is
+Nexus v2 with up to 25,000 quad or 50,000 triangle faces, and it alone takes a symmetry flag).
+
+### Rules for a session (in addition to the rules below)
+
+1. **Load the skill `tripo-studio-mcp` before the first call**, and read the live schema of each tool that you call.
+2. **No generation without Mike's word for that job.** The credits are his studio pool, and the server cannot read
+   the balance. Before the call, state the reference cost from the table below. After it, add the row to "Jobs" with
+   the route `MCP`.
+3. **Prompts, pictures and file names stay generic**, as for the CLI. A picture goes to Tripo through an upload
+   grant: Mike's reference pictures are never uploaded. Use only a picture that was made for this job from a generic
+   prompt, and that Mike has seen.
+4. **Submit once.** Give each write a stable `idempotency_key`, and save the tool name, the key and the task id in the
+   job folder at once (`task.json`). If the answer is unclear, find the task by its key
+   (`tripo_get_model_task_by_idempotency_key`); never send the write again. A second write is a second charge.
+5. **Name `family`, `model_version`, `texture` and `face_limit` yourself.** With no face limit an HD job asks for
+   the largest mesh. A limit is a request, not a promise: measure the result.
+6. **Wait with a bound.** Poll `tripo_get_model_task` by id at intervals; a progress of 100 percent with the state
+   "pending" is not a success.
+7. **Keep signed links out of every file and message.** A download link and an upload link carry a credential in
+   their query. Write the asset id, not the link.
+8. **Files go where the CLI's files go** (section "Where files go"): one folder a job, with the model, a preview
+   that you looked at, and `task.json`.
+9. **A Tripo model is a source, not an asset.** The way into the game is unchanged: `/prep-tripo-prop`, the mesh
+   gates, the Kit import by Mike.
+
+### Reference costs (the skill's notes, read 2026-11-27; the studio's page is the authority)
+
+| Operation | Credits |
+|---|---|
+| Text or one picture to an HD model (v2.5, v3.0, v3.1) | 15 |
+| Text or one picture to a Smart Mesh P1 model | 35 |
+| Text, picture or several views to a Smart Mesh P2 model | 100 |
+| Texture at 2K (`standard`); 4K (`detailed`); 8K (`extreme`) | 10; 20; 30 |
+| HD with quads; HD with detailed geometry | 5 more; 15 |
+| PBR maps | 5 |
+| Triangle retopology; quad retopology | 5; 10 |
+| Smart low poly | 30 |
+| Split into parts (segmentation); part generation | 40; 30 |
+| Texture upscale; picture upscale | 10; 10 a picture |
+| Rig; motion | 20; 20 |
+| Export of an own model, import of a model, several views of a picture | No credits, with plan limits |
+
+Example: an HD model from one picture with a 2K texture is 15 + 10 = 25 credits by this table. A blank or missing
+price never means zero.
+
+### A first job, step by step (not run yet)
+
+1. Mike names the part and says yes to the cost.
+2. Make the picture with a generic prompt (the image connector), show it to Mike.
+3. `tripo_create_image_upload_grant` (the MIME type and the size in bytes), then PUT the bytes to the granted
+   address with the required headers.
+4. `tripo_image_to_model` with the grant's `object_key` as `image_key`, `family: hd`, the model version from the live
+   schema, `texture: true`, `texture_quality: standard`, a `face_limit`, and the `idempotency_key`.
+5. Poll `tripo_get_model_task`; on success read each `model_id` with `tripo_get_model_asset`.
+6. Download the model from its `model_url` into the job folder. If Blender cannot read the GLB (the skill's notes
+   name a Meshopt packed form), decode it first; the notes give the `gltf-transform` commands. Not tried here.
+7. Look at the preview, measure the mesh in Blender, add the row to "Jobs", then `/prep-tripo-prop`.
+
+### What it could change for the kits (ideas, none tried)
+
+- A source for carved wood and tree forms of the forest kingdoms, where a script gives boxes.
+- `tripo_segment_model` on a heap or a statue group, so that each block or figure becomes its own part.
+- `tripo_remesh_model` or `tripo_smart_low_poly_model` as a second reduction beside our own (compare both on one
+  model before a rule is made; our rule for retopology in Blender stays the quad toolkit).
+- `tripo_texture_model` with a text prompt on a mesh that we built, as a look study only: a kit piece keeps the
+  kit's tiling sets and trim sheet.
 
 ## The two bridges (the studio's own credits)
 
@@ -266,7 +383,9 @@ nor symmetric.
 ## Not checked
 
 - The cost of each `--then` step (the guide gives an estimate for the P2 generation only).
-- Whether the studio credits can be used by the tool (Tripo's pages do not say; the measured balance says no).
+- Whether the studio credits can be used by the CLI: the measured balance says no. The Studio MCP uses them (Tripo's page, 2026-11-27).
+- The Studio MCP in use: no session has listed its live tools or run a job through it. The tool names and costs in its section are from the skill's notes.
+- The Meshopt decode step for a model from the Studio MCP, and whether Blender 5.3 reads such a GLB directly.
 - Either bridge in use.
 
 ## How to verify in game
@@ -282,6 +401,8 @@ the `/prep-tripo-prop` steps and a Modding Kit import, and that asset's own doc 
 | `.claude/skills/prep-tripo-prop/SKILL.md` | The steps from a Tripo FBX to a prop or a map icon |
 | `tools/oneoff/blender_prep_tripo_prop.py` | Scale, reduce, new UVs, bakes and the `bo_` twin |
 | `tools/oneoff/convert_tripo_prop_textures.py` | Packs the maps into the engine's `_d`, `_n`, `_s` form |
+| `~/.claude/skills/tripo-studio-mcp/` | The Tripo Studio MCP skill (user scope, outside the repo): `SKILL.md` and six reference notes |
+| MCP server `tripo` (user config) | `https://msapi.tripo3d.ai/mcp`; state with `claude mcp get tripo` |
 
 ### A model file can be cut off on the server: check the header against the size
 
