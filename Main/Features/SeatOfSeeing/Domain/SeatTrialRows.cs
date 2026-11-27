@@ -42,6 +42,8 @@ internal static class SeatTrialRows
         new SeatTrialStep("drag_facing", new[] { "enter" }, 30f),
         new SeatTrialStep("charge_enemy", new[] { "enter" }, 40f),
         new SeatTrialStep("queue_with_mouse", new[] { "enter" }, 45f),
+        new SeatTrialStep("select_box", new[] { "enter" }, 30f),
+        new SeatTrialStep("transfer_ctrl_number", new[] { "enter" }, 40f),
         new SeatTrialStep("hero_falls", new[] { "enter" }, 30f),
         new SeatTrialStep("take_soldier", new[] { "hero_falls" }, 30f),
     };

@@ -5,6 +5,7 @@ using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TAOM.Client.Features.FordsOfWar;
 using TAOM.Features.AdvancedCombat;
+using TAOM.Features.SeatOfSeeing;
 using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Features.SeatOfSeeing.Domain;
 
@@ -172,6 +173,44 @@ internal sealed partial class CommandTrialHost
         _adapter.TrialPointer.Enqueue(new SeatPointerFrame(false, false, true, false, true, from.PixelX, from.PixelY, from.RangedX, from.RangedY, false, false, now));
         _adapter.TrialPointer.Enqueue(new SeatPointerFrame(false, false, false, false, true, to.PixelX, to.PixelY, to.RangedX, to.RangedY, false, false, held));
         _adapter.TrialPointer.Enqueue(new SeatPointerFrame(false, false, false, true, false, to.PixelX, to.PixelY, to.RangedX, to.RangedY, false, false, held + 0.1f));
+    }
+
+    public void MouseDragLeft(SeatMousePoint from, SeatMousePoint to)
+    {
+        var now = Time.ApplicationTime;
+        var held = now + SeatTrialMouse.DragSeconds;
+        _adapter.TrialPointer.Enqueue(new SeatPointerFrame(true, false, false, false, false, from.PixelX, from.PixelY, from.RangedX, from.RangedY, false, false, now, LeftDown: true));
+        _adapter.TrialPointer.Enqueue(new SeatPointerFrame(false, false, false, false, false, to.PixelX, to.PixelY, to.RangedX, to.RangedY, false, false, held, LeftDown: true));
+        _adapter.TrialPointer.Enqueue(new SeatPointerFrame(false, true, false, false, false, to.PixelX, to.PixelY, to.RangedX, to.RangedY, false, false, held + 0.1f));
+    }
+
+    public bool MouseBoxShown => _adapter.Box.Shown;
+
+    public bool MouseFirstSelected => _mouseFirst != null && Orders is { } controller && controller.SelectedFormations.Contains(_mouseFirst);
+
+    public int MouseFirstCount => _mouseFirst?.CountOfUnits ?? -1;
+
+    public int MouseSecondCount => _mouseSecond?.CountOfUnits ?? -1;
+
+    public void MouseRequestTransfer()
+    {
+        if (_mouseSecond != null)
+            SeatPresence.RequestTransfer((int)_mouseSecond.FormationIndex);
+    }
+
+    public void MouseTransferBack(int number)
+    {
+        NoteWrite("CommandTrialHost.MouseTransferBack");
+        var controller = Orders;
+        if (controller == null || _mouseFirst == null || _mouseSecond == null || number <= 0)
+            return;
+
+        controller.ClearSelectedFormations();
+        if (controller.IsFormationSelectable(_mouseSecond))
+            controller.SelectFormation(_mouseSecond);
+        if (controller.SelectedFormations.Count > 0)
+            controller.SetOrderWithFormationAndNumber(OrderType.Transfer, _mouseFirst, number);
+        controller.ClearSelectedFormations();
     }
 
     public int MouseSelectedCount => Orders?.SelectedFormations.Count ?? 0;

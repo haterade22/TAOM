@@ -23,6 +23,24 @@ internal interface ISeatCommandAdapter
     /// <summary>Writes the selection through the order controller, on the company <see cref="PickOwn"/> kept.</summary>
     void Select(SeatSelectAction action);
 
+    /// <summary>Counts the selectable companies with a soldier's chest inside the rectangle, and keeps them for <see cref="SelectBox"/>.</summary>
+    int PickBox(SeatRect box);
+
+    /// <summary>Writes the selection through the order controller, on the companies <see cref="PickBox"/> kept.</summary>
+    void SelectBox(SeatSelectAction action);
+
+    /// <summary>Shows the selection rectangle on the Seat's cursor layer, in real pixels.</summary>
+    void BoxShow(SeatRect box);
+
+    /// <summary>Hides the selection rectangle; a no-op when it is not shown.</summary>
+    void BoxHide();
+
+    /// <summary>What a transfer into the company at a number key's index reads: the target, and the selection with its soldier counts.</summary>
+    SeatTransferFacts ReadTransfer(int formationIndex);
+
+    /// <summary>Takes the target out of the selection if it is in it, and moves <paramref name="number"/> soldiers of the selected companies into it.</summary>
+    void Transfer(int formationIndex, int number);
+
     /// <summary>
     /// What a right click at a pixel names: the enemy soldier nearest the pointer (else the company the focus handler names), the object the
     /// pointer's ray hits that the side can order, and the ground it hits; keeps all three for the order that follows.

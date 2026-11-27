@@ -83,7 +83,7 @@ internal sealed class SeatSession
         _rise = new SeatRiseControl(screen, settings, permissions, outcomes, missionKey);
         _networkSession = networkSession ?? (() => false);
         if (command != null)
-            _command = new SeatCommandControl(command, outcomes, missionKey);
+            _command = new SeatCommandControl(command, outcomes, missionKey, message => _screen.Say(message));
     }
 
     /// <summary>The command mouse is live now (<see cref="SeatCommandRule.IsLive"/>); the field trial reads it.</summary>
@@ -257,7 +257,7 @@ internal sealed class SeatSession
             }
 
             if (_commandLive && State == SeatState.Seated)
-                _command?.OnMissionTick();
+                _command?.OnMissionTick(SeatPresence.TakeTransfer());
         }
         catch (Exception ex)
         {
@@ -610,7 +610,11 @@ internal sealed class SeatSession
         var wanted = (open && _settings.CursorWithPanel) || _commandLive;
         var look = wanted && _screen.LookHeld();
         if (look)
+        {
             _screen.HoldCursorPosition();
+            if (_commandLive)
+                _command?.LookStarted();
+        }
         ShowCursor(wanted && !look);
         if (_cursorShown && open)
             NoteRelay(_screen.RelayPanelClicks());

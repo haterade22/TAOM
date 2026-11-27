@@ -9,7 +9,8 @@ namespace TAOM.Client.Adapters;
 /// <summary>
 /// The Seat's cursor layer, which also stands as the click shield over the order panel's buttons (Marshal's Word stage M7, Seat
 /// build-spec 6.1). Vanilla wraps the panel in widgets that take no events, and the order layer's mask stays <c>Invalid</c> while the panel
-/// shows, so a click on a button reaches the ground behind it. This layer carries no movie: its two hit tests answer the shield rule, and
+/// shows, so a click on a button reaches the ground behind it. Its only movie is the selection rectangle (<c>SeatBoxView</c>); its two hit
+/// tests answer the shield rule, and
 /// <c>ScreenManager.EarlyUpdate</c> gives the mouse buttons to the first active layer whose hit test is true and whose mask names them
 /// (ScreenManager.cs:642-662). The adapter sets the mask to the mouse buttons and the wheel while the cursor shows, and to <c>Invalid</c> otherwise.
 /// The wheel goes with the buttons so the scene layer is not hit on a shielded frame (ScreenManager.cs:663-668) and vanilla's down and release reads

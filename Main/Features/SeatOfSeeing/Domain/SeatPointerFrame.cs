@@ -8,7 +8,7 @@ internal readonly record struct SeatPointerFrame(
     bool LeftPressed, bool LeftReleased, bool RightPressed, bool RightReleased, bool RightDown,
     float PixelX, float PixelY, float RangedX, float RangedY, bool Shift, bool Ctrl, float Seconds,
     float PressPixelX = 0f, float PressPixelY = 0f, float PressRangedX = 0f, float PressRangedY = 0f, float PressSeconds = 0f,
-    float LeftPressPixelX = 0f, float LeftPressPixelY = 0f, float LeftPressSeconds = 0f)
+    float LeftPressPixelX = 0f, float LeftPressPixelY = 0f, float LeftPressSeconds = 0f, bool LeftDown = false)
 {
     /// <summary>Any button edge: a click, a press or a release to act on.</summary>
     internal bool HasEdge => LeftPressed || LeftReleased || RightPressed || RightReleased;

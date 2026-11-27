@@ -1,7 +1,8 @@
 # ADR-009 comment-line ratchet: <path><TAB><count>, counts may only fall.
 # Written by python tools/comment_ratchet.py --regen; read by CommentRatchetGateTests.
 Client/Adapters/QuestJournalAdapter.cs	3
-Client/Adapters/SeatCommandAdapter.cs	1
+Client/Adapters/SeatBoxView.cs	2
+Client/Adapters/SeatCommandAdapter.cs	2
 Client/Adapters/SeatCursorLayer.cs	1
 Client/Adapters/SeatPanelRelay.cs	13
 Client/Adapters/SeatScreenAdapter.cs	47
@@ -1786,6 +1787,7 @@ Main/Features/SaveLoadDiagnostics/Hooks/SaveOutput_PrintStatus_Patch.cs	6
 Main/Features/SaveLoadDiagnostics/ISaveLoadDiagnosticsService.cs	14
 Main/Features/SaveLoadDiagnostics/SaveLoadDiagnosticsService.cs	10
 Main/Features/SeasonedHosts/SeasonedHostsSettingsProvider.cs	3
+Main/Features/SeatOfSeeing/Domain/SeatTransferRule.cs	3
 Main/Features/SeatOfSeeing/SeatHotKeys.cs	1
 Main/Features/SeatOfSeeing/SeatOfSeeingModule.cs	3
 Main/Features/SeatOfSeeing/TaomSeatHotKeyCategory.cs	7

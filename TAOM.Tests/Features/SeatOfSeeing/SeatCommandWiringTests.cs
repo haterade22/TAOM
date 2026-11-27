@@ -19,8 +19,8 @@ public class SeatCommandWiringTests
         var session = Source("Client/Features/SeatOfSeeing/SeatSession.cs");
 
         StringAssert.Contains(session, "_command?.Capture(_screen.ReadPointer());");
-        StringAssert.Contains(session, "if (_commandLive && State == SeatState.Seated) _command?.OnMissionTick();");
-        Assert.AreEqual(1, Regex.Matches(session, @"_command\?\.OnMissionTick\(\)").Count, "one acting call");
+        StringAssert.Contains(session, "if (_commandLive && State == SeatState.Seated) _command?.OnMissionTick(SeatPresence.TakeTransfer());");
+        Assert.AreEqual(1, Regex.Matches(session, @"_command\?\.OnMissionTick\(").Count, "one acting call");
         Assert.AreEqual(1, Regex.Matches(session, @"ReadPointer\(\)").Count, "the pointer is read in one place");
     }
 
@@ -94,7 +94,7 @@ public class SeatCommandWiringTests
     {
         var view = Source("Client/Features/SeatOfSeeing/SeatView.cs");
 
-        StringAssert.Contains(view, "new SeatCommandAdapter(MissionScreen, mission, logger), () => SeatMissionClassifier.NetworkSessionNow(coop));");
+        StringAssert.Contains(view, "new SeatCommandAdapter(MissionScreen, mission, logger, screen.Box), () => SeatMissionClassifier.NetworkSessionNow(coop));");
     }
 
     [TestMethod]

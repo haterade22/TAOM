@@ -83,7 +83,7 @@ public class CommandTrialTimeStepsTests
 
         CollectionAssert.AreEqual(new[] { "pause_flies", "slow", "fast", AdoptStep, "speed_cleared", "rise_with_panel", "sink_on_close", "panel_click_card", "panel_click_order", "edge_pan", "rotate_pivot", "zoom_smooth" }, names.Skip(16).Take(12).ToArray());
         Assert.AreEqual("back_to_stand", names[15], "the stage rows follow the hand-off steps, which need a living battle");
-        CollectionAssert.AreEqual(new[] { "hero_falls", "take_soldier" }, names.Skip(34).Take(2).ToArray(), "the kill steps still close the Seat's rows");
+        CollectionAssert.AreEqual(new[] { "hero_falls", "take_soldier" }, names.Skip(36).Take(2).ToArray(), "the kill steps still close the Seat's rows");
     }
 
     [TestMethod]

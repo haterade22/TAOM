@@ -260,6 +260,7 @@ public class CommandTrialWiringTests
         "SetCommandMouse", "CommandLive", "MouseChooseSoldier", "MouseChooseEnemy", "SetChosen", "MouseProjectChosen", "MouseGround", "Project", "MouseClick", "MouseDragRight",
         "MouseSelectedCount", "MouseOnlyFirstSelected", "MouseFirstAndSecondSelected", "OnlySelected", "FirstSelected", "Orders", "MouseOrderDistance", "MouseFacingError",
         "MouseChargesChosenEnemy", "ReleaseMouseTrial",
+        "MouseDragLeft", "MouseBoxShown", "MouseFirstSelected", "MouseFirstCount", "MouseSecondCount", "MouseRequestTransfer",
         // Stage S4 and S5: reads, the in-memory setting of the trial, and the take key, which stores a flag the mission tick acts on.
         "SetFightOn", "FightGateUp", "HeroOnAi", "HeroRetreating", "HeroPanicked", "HeroMorale", "HeroMortal", "FormationsOwnedByHero", "PressTake",
         "TookFromKeptCompany", "ReadHandOver",

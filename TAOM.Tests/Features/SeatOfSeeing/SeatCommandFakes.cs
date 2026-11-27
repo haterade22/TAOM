@@ -25,6 +25,11 @@ internal sealed class FakeSeatCommand : ISeatCommandAdapter
     internal (float X, float Y, bool Horizontal)? LastPreview;
     internal (float X, float Y, bool Horizontal)? LastCommit;
     internal bool? LastMoveHorizontal;
+    internal int BoxFound;
+    internal SeatTransferFacts TransferFacts = new(true, false, 2, 80, 0);
+    internal SeatRect? LastBoxPick;
+    internal SeatRect? LastBoxShown;
+    internal (int Index, int Number)? LastTransfer;
 
     public SeatCommandFacts ReadFacts()
     {
@@ -44,6 +49,42 @@ internal sealed class FakeSeatCommand : ISeatCommandAdapter
     }
 
     public void Select(SeatSelectAction action) => Calls.Add("select:" + action);
+
+    public int PickBox(SeatRect box)
+    {
+        LastBoxPick = box;
+        Calls.Add("pick-box");
+        return BoxFound;
+    }
+
+    public void SelectBox(SeatSelectAction action) => Calls.Add("select-box:" + action);
+
+    internal bool BoxShown { get; private set; }
+
+    public void BoxShow(SeatRect box)
+    {
+        BoxShown = true;
+        LastBoxShown = box;
+        Calls.Add("box-show");
+    }
+
+    public void BoxHide()
+    {
+        BoxShown = false;
+        Calls.Add("box-hide");
+    }
+
+    public SeatTransferFacts ReadTransfer(int formationIndex)
+    {
+        Calls.Add("read-transfer:" + formationIndex);
+        return TransferFacts;
+    }
+
+    public void Transfer(int formationIndex, int number)
+    {
+        LastTransfer = (formationIndex, number);
+        Calls.Add("transfer");
+    }
 
     public SeatRightProbe ProbeRight(float pixelX, float pixelY, float rangedX, float rangedY)
     {

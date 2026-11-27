@@ -57,7 +57,7 @@ public sealed class SeatView : MissionView
             var screen = new SeatScreenAdapter(MissionScreen, mission, logger);
             var session = _session = new SeatSession(screen, IoC.Resolve<ISeatHeroAdapter>(),
                 CommandTrialRun.Settings(IoC.Resolve<ISeatSettingsProvider>()), Permissions, IoC.Resolve<IOutcomeLog>(), logger, serial,
-                new SeatCommandAdapter(MissionScreen, mission, logger), () => SeatMissionClassifier.NetworkSessionNow(coop));
+                new SeatCommandAdapter(MissionScreen, mission, logger, screen.Box), () => SeatMissionClassifier.NetworkSessionNow(coop));
             _moreKeys = new SeatKeys(_keys, session);
             mission.OnMainAgentChanged += OnMainAgentChanged;
             _trial = CommandTrialRun.Script(() => _trialHost = new CommandTrialHost(this, session, screen, mission, MissionScreen, logger), logger);

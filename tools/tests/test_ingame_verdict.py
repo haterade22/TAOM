@@ -1931,13 +1931,20 @@ class SeatOfSeeingManifestTests(unittest.TestCase):
         self.assertEqual(verdict_of(out, self.ENTER), "PASS", out)
         self.assertEqual(verdict_of(out, self.REOPENED), "NOT REACHED", out)
 
-    def test_the_command_pass_pattern_takes_a_select_or_an_order_and_the_skip_reads_not_reached(self):
+    def test_the_command_pass_pattern_takes_a_select_a_box_a_transfer_or_an_order_and_never_a_skip(self):
         pattern = self.check(self.COMMAND).passes[0]
         line = "[Check] id=taom.seat-of-seeing.command result=pass mission=3 "
-        for word in ("select", "move", "charge", "orderable", "line"):
+        for word in ("select", "move", "charge", "orderable", "line", "select-box companies=2", "transfer company=2 soldiers=40"):
             self.assertTrue(pattern.search(line + "command=" + word), word)
-        self.assertFalse(pattern.search(line + "command=other"))
+        for word in ("other", "select-boxx", "select-box", "transfer", "transfer company=9 soldiers=40"):
+            self.assertFalse(pattern.search(line + "command=" + word), word)
         self.assertFalse(pattern.search("[Check] id=taom.seat-of-seeing.command result=skip mission=3 reason=hero-gone"))
+
+    def test_a_command_skip_alone_reads_not_reached_with_its_reason(self):
+        code, out, _ = self.judge("seat_command_skip_no_units.txt")
+        self.assertEqual(verdict_of(out, self.COMMAND), "NOT REACHED", out)
+        self.assertIn("reason=no-units", out)
+        self.assertEqual(verdict_of(out, self.ENTER), "PASS", out)
 
     def test_the_panel_click_pass_pattern_takes_only_a_relayed_click(self):
         pattern = self.check(self.PANEL_CLICK).passes[0]

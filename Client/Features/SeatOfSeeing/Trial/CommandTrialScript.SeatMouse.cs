@@ -4,10 +4,7 @@ using TAOM.Features.SeatOfSeeing.Domain;
 
 namespace TAOM.Client.Features.SeatOfSeeing.Trial;
 
-/// <summary>
-/// The six command mouse steps of the field trial (Seat build-spec 12): a click that selects, a Shift click that toggles, a right click that moves, a
-/// right drag that draws a line and a facing, a right click on an enemy that charges, and a Shift right click that queues.
-/// </summary>
+/// <summary>The eight command mouse steps of the field trial (Seat build-spec 12).</summary>
 internal sealed partial class CommandTrialScript
 {
     private const float MouseSettleSeconds = 0.5f;
@@ -239,6 +236,76 @@ internal sealed partial class CommandTrialScript
         yield return SeatTrialMouse.Queued(captured, queued, armed, _host.Faulted || _host.MarshalFaulted) ? Verdict.Passed(facts) : Verdict.Failed(facts);
     }
 
+    private IEnumerable<Verdict> SelectBox()
+    {
+        if (!Seated)
+            yield return NotSeated();
+        foreach (var verdict in MouseAimAtOwn(false, "soldier"))
+            yield return verdict;
+        foreach (var verdict in MouseLive())
+            yield return verdict;
+
+        yield return Verdict.InMissionTick;
+        _host.ClearSelectedCompanies();
+        var at = _host.MouseProjectChosen();
+        if (!at.Found)
+            yield return Verdict.Failed("reason=off-screen" + Standing());
+
+        var from = SeatBoxPoint(at, -SeatTrialMouse.BoxHalfPixels);
+        var to = SeatBoxPoint(at, SeatTrialMouse.BoxHalfPixels);
+        _host.MouseDragLeft(from, to);
+        var shown = false;
+        var startedAt = _now;
+        while (!_host.MouseFirstSelected && _now - startedAt < MouseSettleSeconds + SeatTrialMouse.DragSeconds + 1f)
+        {
+            shown |= _host.MouseBoxShown;
+            yield return Verdict.Waiting("mouse-box");
+        }
+
+        var selected = _host.MouseFirstSelected;
+        var hidden = !_host.MouseBoxShown;
+        var facts = "first_selected=" + Bit(selected) + " box_shown=" + Bit(shown) + " box_hidden_after=" + Bit(hidden) + " selected=" + Whole(_host.MouseSelectedCount)
+            + MousePointFacts(at) + Standing();
+        yield return SeatTrialMouse.BoxSelected(selected, shown, hidden, _host.Faulted) ? Verdict.Passed(facts) : Verdict.Failed(facts);
+    }
+
+    private static SeatMousePoint SeatBoxPoint(SeatMousePoint at, float offset)
+    {
+        var x = at.PixelX + offset;
+        var y = at.PixelY + offset;
+        return new SeatMousePoint(true, x, y, at.RangedX + offset / 1000f, at.RangedY + offset / 1000f, at.WorldX, at.WorldY);
+    }
+
+    private IEnumerable<Verdict> TransferCtrlNumber()
+    {
+        if (!Seated)
+            yield return NotSeated();
+        yield return Verdict.InMissionTick;
+        if (!_host.MouseChooseSoldier(false))
+            yield return Verdict.Failed("reason=no-soldier");
+        if (!_host.MouseChooseSoldier(true))
+            yield return Verdict.Failed("reason=no-second-company");
+        _host.MouseSelectFirstCompany();
+        foreach (var verdict in MouseLive())
+            yield return verdict;
+
+        yield return Verdict.InMissionTick;
+        var firstBefore = _host.MouseFirstCount;
+        var secondBefore = _host.MouseSecondCount;
+        _host.MouseRequestTransfer();
+        foreach (var verdict in MouseWait(() => _host.MouseFirstCount != firstBefore))
+            yield return verdict;
+
+        var firstAfter = _host.MouseFirstCount;
+        var secondAfter = _host.MouseSecondCount;
+        var facts = "first=" + Whole(firstBefore) + ">" + Whole(firstAfter) + " second=" + Whole(secondBefore) + ">" + Whole(secondAfter) + Standing();
+        var passed = SeatTrialMouse.Transferred(firstBefore, firstAfter, secondBefore, secondAfter, _host.Faulted);
+
+        yield return Verdict.InMissionTick;
+        _host.MouseTransferBack(secondAfter - secondBefore);
+        yield return passed ? Verdict.Passed(facts) : Verdict.Failed(facts);
+    }
+
     private static void MouseSteps(Dictionary<string, System.Func<CommandTrialScript, IEnumerable<Verdict>>> into)
     {
         into["select_click"] = s => s.SelectClick();
@@ -247,5 +314,7 @@ internal sealed partial class CommandTrialScript
         into["drag_facing"] = s => s.DragFacing();
         into["charge_enemy"] = s => s.ChargeEnemy();
         into["queue_with_mouse"] = s => s.QueueWithMouse();
+        into["select_box"] = s => s.SelectBox();
+        into["transfer_ctrl_number"] = s => s.TransferCtrlNumber();
     }
 }

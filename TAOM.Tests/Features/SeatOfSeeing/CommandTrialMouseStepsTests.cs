@@ -6,11 +6,12 @@ using TAOM.Features.SeatOfSeeing.Domain;
 
 namespace TAOM.Tests.Features.SeatOfSeeing;
 
-/// <summary>The field trial's six command mouse steps against the scripted stand-in, and the verdict rules they decide by.</summary>
+/// <summary>The field trial's eight command mouse steps against the scripted stand-in, and the verdict rules they decide by.</summary>
 [TestClass]
 public class CommandTrialMouseStepsTests
 {
-    private static readonly string[] Steps = { "select_click", "select_shift", "move_right_click", "drag_facing", "charge_enemy", "queue_with_mouse" };
+    private static readonly string[] Steps =
+        { "select_click", "select_shift", "move_right_click", "drag_facing", "charge_enemy", "queue_with_mouse", "select_box", "transfer_ctrl_number" };
 
     private CommandTrialWorld _world = null!;
     private ListLogger _log = null!;
@@ -42,7 +43,7 @@ public class CommandTrialMouseStepsTests
     {
         var names = SeatTrialSteps.All.Select(s => s.Name).ToList();
 
-        CollectionAssert.AreEqual(Steps.Concat(new[] { "hero_falls" }).ToArray(), names.Skip(names.IndexOf("zoom_smooth") + 1).Take(7).ToArray());
+        CollectionAssert.AreEqual(Steps.Concat(new[] { "hero_falls" }).ToArray(), names.Skip(names.IndexOf("zoom_smooth") + 1).Take(9).ToArray());
         foreach (var name in Steps)
         {
             Assert.IsFalse(SeatTrialSteps.TryChoose(name, out _, out var error), name);
@@ -280,6 +281,129 @@ public class CommandTrialMouseStepsTests
 
         AssertFails("queue_with_mouse");
         StringAssert.Contains(Line("queue_with_mouse"), "captured=0");
+    }
+
+    [TestMethod]
+    public void SelectBox_ADragRoundTheSoldier_ShowsTheRectangleHidesItAndSelectsTheCompany()
+    {
+        Run("select_box");
+
+        AssertPasses("select_box");
+        StringAssert.Contains(Line("select_box"), "first_selected=1");
+        StringAssert.Contains(Line("select_box"), "box_shown=1");
+        StringAssert.Contains(Line("select_box"), "box_hidden_after=1");
+    }
+
+    [TestMethod]
+    public void SelectBox_WhenTheRectangleNeverShows_Fails()
+    {
+        _world.BoxNeverShown = true;
+
+        Run("select_box");
+
+        AssertFails("select_box");
+        StringAssert.Contains(Line("select_box"), "box_shown=0");
+    }
+
+    [TestMethod]
+    public void SelectBox_WhenTheRectangleStaysAfterTheRelease_Fails()
+    {
+        _world.BoxStaysShown = true;
+
+        Run("select_box");
+
+        AssertFails("select_box");
+        StringAssert.Contains(Line("select_box"), "box_hidden_after=0");
+    }
+
+    [TestMethod]
+    public void SelectBox_WhenTheBoxSelectsNothing_Fails()
+    {
+        _world.BoxSelectsNothing = true;
+
+        Run("select_box");
+
+        AssertFails("select_box");
+        StringAssert.Contains(Line("select_box"), "first_selected=0");
+    }
+
+    [TestMethod]
+    public void SelectBox_WithTheCommandMouseNeverLive_FailsOnThat()
+    {
+        _world.CommandNeverLive = true;
+
+        Run("select_box");
+
+        AssertFails("select_box");
+        StringAssert.Contains(Line("select_box"), "reason=not-live");
+    }
+
+    [TestMethod]
+    public void TransferCtrlNumber_MovesTheFirstCompanyIntoTheSecond_AndPutsThemBack()
+    {
+        Run("transfer_ctrl_number");
+
+        AssertPasses("transfer_ctrl_number");
+        StringAssert.Contains(Line("transfer_ctrl_number"), "first=60>0 second=40>100");
+        Assert.AreEqual(60, _world.MouseFirstCount, "the soldiers were put back");
+        Assert.AreEqual(40, _world.MouseSecondCount);
+    }
+
+    [TestMethod]
+    public void TransferCtrlNumber_WhenTheHeroStaysInTheCompany_StillPasses()
+    {
+        _world.TransferLeftBehind = 1;
+
+        Run("transfer_ctrl_number");
+
+        AssertPasses("transfer_ctrl_number");
+        Assert.AreEqual(60, _world.MouseFirstCount);
+    }
+
+    [TestMethod]
+    public void TransferCtrlNumber_WhenNothingMoves_Fails()
+    {
+        _world.TransferDoesNothing = true;
+
+        Run("transfer_ctrl_number");
+
+        AssertFails("transfer_ctrl_number");
+        StringAssert.Contains(Line("transfer_ctrl_number"), "first=60>60");
+    }
+
+    [TestMethod]
+    public void TransferCtrlNumber_WhenSoldiersAreLostOnTheWay_Fails()
+    {
+        _world.TransferLosesSoldiers = true;
+
+        Run("transfer_ctrl_number");
+
+        AssertFails("transfer_ctrl_number");
+    }
+
+    [TestMethod]
+    public void TransferCtrlNumber_WithOnlyOneCompany_FailsOnThat()
+    {
+        _world.NoSecondCompany = true;
+
+        Run("transfer_ctrl_number");
+
+        AssertFails("transfer_ctrl_number");
+        StringAssert.Contains(Line("transfer_ctrl_number"), "reason=no-second-company");
+    }
+
+    [TestMethod]
+    public void TheNewVerdicts_NeverPassOnABrokenMeasure()
+    {
+        Assert.IsTrue(SeatTrialMouse.BoxSelected(true, true, true, false));
+        Assert.IsFalse(SeatTrialMouse.BoxSelected(true, true, true, true));
+        Assert.IsTrue(SeatTrialMouse.Transferred(60, 0, 40, 100, false));
+        Assert.IsTrue(SeatTrialMouse.Transferred(60, 1, 40, 99, false), "the hero may stay");
+        Assert.IsFalse(SeatTrialMouse.Transferred(60, 2, 40, 98, false), "more than the hero stayed");
+        Assert.IsFalse(SeatTrialMouse.Transferred(60, 60, 40, 40, false), "nothing moved");
+        Assert.IsFalse(SeatTrialMouse.Transferred(0, 0, 40, 40, false), "no source soldiers");
+        Assert.IsFalse(SeatTrialMouse.Transferred(60, 0, 40, 95, false), "soldiers lost");
+        Assert.IsFalse(SeatTrialMouse.Transferred(60, 0, 40, 100, true), "a faulted Seat never passes");
     }
 
     [TestMethod]

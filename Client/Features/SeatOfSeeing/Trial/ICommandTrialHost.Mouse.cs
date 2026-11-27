@@ -34,6 +34,30 @@ internal partial interface ICommandTrialHost
     /// <summary>A right drag from one point to another: a press, a held frame past a click's 0.3 s, and a release.</summary>
     void MouseDragRight(SeatMousePoint from, SeatMousePoint to);
 
+    /// <summary>A left drag from one point to another: a press, a held frame past a click's 0.3 s, and a release.</summary>
+    void MouseDragLeft(SeatMousePoint from, SeatMousePoint to);
+
+    /// <summary>The selection rectangle is on the screen now.</summary>
+    bool MouseBoxShown { get; }
+
+    /// <summary>The first chosen company is among the selected ones (a box may hold its neighbours too).</summary>
+    bool MouseFirstSelected { get; }
+
+    /// <summary>How many soldiers the first chosen company has; -1 when none was chosen.</summary>
+    int MouseFirstCount { get; }
+
+    /// <summary>How many soldiers the second chosen company has; -1 when none was chosen.</summary>
+    int MouseSecondCount { get; }
+
+    /// <summary>What Ctrl and the second chosen company's number key would ask for: the shared transfer request the patch stores.</summary>
+    void MouseRequestTransfer();
+
+    /// <summary>
+    /// Puts the soldiers back: selects the second chosen company alone and moves <paramref name="number"/> of them into the first.
+    /// A formation write: call it after the in-mission-tick marker.
+    /// </summary>
+    void MouseTransferBack(int number);
+
     /// <summary>How many companies the player's order controller has selected.</summary>
     int MouseSelectedCount { get; }
 
