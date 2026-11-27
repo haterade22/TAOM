@@ -1861,3 +1861,20 @@ that only faces 3 m away read.
 - **Source:** [chariot.md](../../features/chariot.md), "His look at the sets in the Kit from above"; the work
   folder's records of 2026-11-27 for the lacquer and horned sets and the top view study (not in the repo). No issue:
   the maintainer waived the public issue for the chariot work.
+
+### A check that classes what shows by geometry misses colour that an older bake left in the texture (2026-11-27)
+The sun armour's neck showed red through its lames. A build that lowered the lining measured 0 cm2 of lining
+through the lames from above, and thin red streaks still showed in every render. With the lining drawn green
+the streaks stayed red: they were red pixels in the lames' own texture, about 6 percent of the lame surface,
+mostly a red frame round each lame's tile that the lame edges reached. The maintainer would have read them as
+the cloth he had ordered gone.
+- **Why missed:** every measure asked which part's face a ray meets first. None asked what colour that face
+  shows. The maps had been baked when the lining still stood through the lames, and later builds kept them byte
+  equal on purpose.
+- **Prevent:** beside the geometry measure, count the pixels of a neighbour's colour on a part's faces, textured
+  with the staged maps, and test a doubt by drawing the neighbour in a flat colour. When a part moves out of
+  another, look at the part's texture tiles and their padding too. Keep "maps byte equal" as a proof of no side
+  effect, never as a proof that the maps are right.
+- **Source:** [chariot.md](../../features/chariot.md), "His look at the sets in the Kit from above", the sun set;
+  the work folder's checks of set C of 2026-11-27 and its texture colour study (not in the repo). No issue: the
+  maintainer waived the public issue for the chariot work.
