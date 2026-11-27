@@ -66,8 +66,8 @@ public class LoreGreetingsServiceTests
         });
 
     private static LoreSpeakerFacts Speaker(string id, bool female = false, bool hasMet = true, bool prisoner = false,
-        bool inPlayerParty = false, SideIds? side = null) =>
-        new(new[] { id }, female, hasMet, prisoner, inPlayerParty, side ?? Mirkwood);
+        bool inPlayerParty = false, SideIds? side = null, bool wanderer = false, bool usesLordConversations = true) =>
+        new(new[] { id }, female, hasMet, prisoner, inPlayerParty, side ?? Mirkwood, wanderer, usesLordConversations);
 
     private static LoreListenerFacts Player(string id, bool female = false, bool atWar = false, SideIds? side = null) =>
         new(new[] { id }, female, true, atWar, side ?? Mirkwood);
@@ -294,13 +294,96 @@ public class LoreGreetingsServiceTests
     }
 
     [TestMethod]
-    public void OnMeetingCheck_HostilePairWithNoHostileLine_StillMarksMet()
+    public void OnMeetingCheck_HostilePairWithNoHostileLine_DoesNotMarkMet()
     {
         _adapter.Describe().Returns(Talk(Speaker("lord_E1_1", hasMet: false), Player("taom_hero_gimli", atWar: true)));
 
         _sut.OnMeetingCheck();
 
+        _adapter.DidNotReceive().MeetSpeaker();
+    }
+
+    [TestMethod]
+    public void OnMeetingCheck_HostilePairWithAHostileLine_MarksMet()
+    {
+        _adapter.Describe().Returns(Talk(Speaker("lord_M1_1", hasMet: false), Player("lord_M1_11", atWar: true)));
+
+        _sut.OnMeetingCheck();
+
         _adapter.Received(1).MeetSpeaker();
+    }
+
+    [TestMethod]
+    public void OnMeetingCheck_PairWithOnlyAHostileLine_AtPeace_DoesNotMarkMet()
+    {
+        _adapter.Describe().Returns(Talk(Speaker("lord_M1_11", hasMet: false), Player("taom_hero_gimli")));
+
+        _sut.OnMeetingCheck();
+
+        _adapter.DidNotReceive().MeetSpeaker();
+    }
+
+    [DataTestMethod]
+    [DataRow(true, false, false)]
+    [DataRow(false, true, false)]
+    [DataRow(false, false, true)]
+    public void OnMeetingCheck_CaptiveContextOrAnAttackOrASiege_DoesNotMarkMet(bool captive, bool attack, bool siege)
+    {
+        _adapter.Describe().Returns(new LoreConversationFacts(Speaker("lord_M1_1", hasMet: false), new[] { Player("lord_M1_11") },
+            CaptiveContext: captive, LordWillAttack: attack, PlayerInSiege: siege));
+
+        _sut.OnMeetingCheck();
+
+        _adapter.DidNotReceive().MeetSpeaker();
+    }
+
+    [TestMethod]
+    public void OnMeetingCheck_SpeakerUsesNoLordConversations_DoesNotMarkMet()
+    {
+        _adapter.Describe().Returns(Talk(Speaker("lord_M1_1", hasMet: false, usesLordConversations: false), Player("lord_M1_11")));
+
+        _sut.OnMeetingCheck();
+
+        _adapter.DidNotReceive().MeetSpeaker();
+    }
+
+    [TestMethod]
+    public void OnMeetingCheck_SpeakerIsAWanderer_DoesNotMarkMet()
+    {
+        _adapter.Describe().Returns(Talk(Speaker("lord_M1_1", hasMet: false, wanderer: true), Player("lord_M1_11")));
+
+        _sut.OnMeetingCheck();
+
+        _adapter.DidNotReceive().MeetSpeaker();
+    }
+
+    [TestMethod]
+    public void OnMeetingCheck_ForAnotherHero_ClearsAFirstMeetingThatNeverReachedItsGreeting()
+    {
+        _adapter.Describe().Returns(Talk(Speaker("lord_M1_1", hasMet: false), Player("lord_M1_11")));
+        _adapter.MeetSpeaker().Returns(true);
+        _sut.OnMeetingCheck();
+        _adapter.Describe().Returns(Talk(Speaker("lord_E1_1"), Player("lord_M1_11")));
+        _sut.OnMeetingCheck();
+        _adapter.Describe().Returns(Talk(Speaker("lord_M1_1"), Player("lord_M1_11")));
+
+        _sut.OnGreeting();
+
+        _adapter.Received(1).SetGreeting("taom_loregreet_thranduil_legolas", "My son.");
+    }
+
+    [TestMethod]
+    public void OnMeetingCheck_CalledAgainForTheSameHero_KeepsItsFirstMeeting()
+    {
+        _adapter.Describe().Returns(Talk(Speaker("lord_M1_1", hasMet: false), Player("lord_M1_11")));
+        _adapter.MeetSpeaker().Returns(true);
+        _sut.OnMeetingCheck();
+        _adapter.Describe().Returns(Talk(Speaker("lord_M1_1"), Player("lord_M1_11")));
+        _sut.OnMeetingCheck();
+
+        _sut.OnGreeting();
+
+        _adapter.Received(1).SetGreeting("taom_loregreet_thranduil_legolas_first", "Legolas! Home at last.");
     }
 
     [TestMethod]
@@ -458,13 +541,13 @@ public class LoreGreetingsServiceTests
     }
 
     [TestMethod]
-    public void OnMeetingCheck_MarksMet_WritesAPassCheckForTheSpeaker()
+    public void OnMeetingCheck_MarksMet_WritesAPassCheckForTheLineItOpens()
     {
         _adapter.Describe().Returns(Talk(Speaker("lord_M1_1", hasMet: false), Player("lord_M1_11")));
         _adapter.MeetSpeaker().Returns(true);
 
         _sut.OnMeetingCheck();
 
-        _outcomes.Received(1).Pass(LoreGreetingsService.MeetingCheckId, "thranduil", Arg.Any<string>());
+        _outcomes.Received(1).Pass(LoreGreetingsService.MeetingCheckId, "taom_loregreet_thranduil_legolas_first", Arg.Any<string>());
     }
 }

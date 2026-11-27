@@ -16,7 +16,7 @@ Characters who know each other in the books greet each other by lore. When the p
 
 - The NPC's first line is the first `start` sentence whose condition is true, highest priority first (`ConversationManager.ProcessPartnerSentence` calls `GetSentenceOptions(onlyPlayer: false, processAfterOneOption: false)`, which returns on the first true condition). A new `start` line would have to repeat every condition of the attack, parley, surrender, quest and grievance lines it might outrank.
 - The met greeting is `start_default` (`{=!}{VOICED_LINE}`, priority 100). Its condition, `conversation_lord_greets_over_24_hours_on_condition`, sets `VOICED_LINE` through `conversations_set_voiced_line`, which is where Encounter Lines' rows land.
-- A hero with `HasMet` false never reaches it: `start_lord_unmet`, `unmet_in_main_mobile_party`, `start_wanderer_unmet` (110) and `start_attacking_unmet` (100) all end in private `ConversationUseMeetingDialogs()`, which calls `Hero.SetHasMet()` and starts the introduction. `SetHasMet` also sets `LastMeetingTimeWithPlayer = CampaignTime.Now` (`Hero.cs:1379-1383`), which would make the 24-hour salutation win.
+- A hero with `HasMet` false never reaches it: `start_lord_unmet`, `unmet_in_main_mobile_party`, `start_wanderer_unmet` (110) and `start_attacking_unmet` (100) all end in private `ConversationUseMeetingDialogs()`, which, past its context, null and `UsesLordConversations` guards, calls `Hero.SetHasMet()` and returns true in the `Default` or `PartyEncounter` context, which starts the introduction. `SetHasMet` also sets `LastMeetingTimeWithPlayer = CampaignTime.Now` (`Hero.cs:1379-1383`), which would make the 24-hour salutation win.
 - The Player Switcher keeps the hero object (`ChangePlayerCharacterAction.Apply`), so the player's hero id is the lore lord's id, and a lord the old player never met has `HasMet` false.
 
 ### Solution Approach
@@ -24,7 +24,7 @@ Characters who know each other in the books greet each other by lore. When the p
 Two patches in `Patch177_LoreGreetings`, applied at GameInit by `LoreGreetingsModule`:
 
 - **Greeting:** a postfix on `conversation_lord_greets_over_24_hours_on_condition`. When `__result` is true, that line is the one shown, and `LoreGreetingsService.OnGreeting` may set `VOICED_LINE` to a pair line. Which line the conversation opens with never changes.
-- **Meeting:** a void prefix on `ConversationUseMeetingDialogs`. When the speaker has not met the player and the speaker's person has a pair with the player's person, `OnMeetingCheck` marks him met and puts `LastMeetingTimeWithPlayer` back, so the original returns false and the conversation goes to the met greeting, which then shows the pair's first-meeting line. This is what vanilla does for close relatives (`conversations_automeet_close_relatives`).
+- **Meeting:** a void prefix on `ConversationUseMeetingDialogs`. Past its context, null and `UsesLordConversations` guards (`:1218-1229`), the original calls `SetHasMet` for an unmet hero and returns true in the `Default` or `PartyEncounter` context, which starts the stranger's introduction. When the speaker has not met the player and the line his first greeting to the player would show exists (hostile when hostile, first when first, else the ordinary line), `OnMeetingCheck` marks him met first and puts `LastMeetingTimeWithPlayer` back. The original then returns false, and the next true `start` line wins: in the cases the prefix allows, that is `start_default`, which shows the pair's first-meeting line. This is what vanilla does for close relatives (`conversations_automeet_close_relatives`). The prefix stands down, and vanilla's first meeting stays, in a captive context (`CapturedLord`, `FreeOrCapturePrisonerHero`), for a hero vanilla gives no lord conversations, for a wanderer (his own introduction and hire offer), when `HeroHelper.WillLordAttack()` is true, and while the player's party besieges or stands in a settlement under siege (the parley lines need vanilla's first-conversation flag).
 
 `LoreGreetingsService.Choose` is the whole rule, on plain facts from `ILoreGreetingsAdapter` (ADR-007).
 
@@ -46,6 +46,7 @@ Patch177_LoreGreeting --/        |                \
 - **Hostile:** the speaker's realm is at war with the listener's, or their sides are Free against Evil (`FactionSideRules.AreOpposed` on `IAlignmentService.ResolveSide`; Neutral is never opposed). A hostile pair shows only its `hostile` line; with none, the old greeting stands, as Encounter Lines' kin greetings give way at war.
 - **First meeting:** only for the player, only when the meeting prefix marked this speaker met in this conversation, and only at peace. With no `first` line the ordinary line shows.
 - **Never:** a prisoner speaker; no conversation hero; the meeting write on a co-op client (the guest does not mark the host's heroes met). Conversations do not run on a dedicated server.
+- **A first meeting left over:** when another `start` line wins over the met greeting after the prefix marked the speaker met, the next meeting check for another hero clears the flag, so it never makes a later greeting a first meeting.
 - **Unvoiced:** the vanilla greeting it replaces may be voiced; a lore line is not, as no TAOM line is.
 
 ## Priority against other lines
@@ -73,7 +74,7 @@ Patch177_LoreGreeting --/        |                \
 
 ### Localization
 
-Keys are composed: `taom_loregreet_<speaker>_<listener>`, plus `_hostile` and `_first`. The JSON holds the English, which English shows inline. The English rows for translators belong in `taom_module_strings.xml`, generated from the JSON; `LoreGreetingsRowsTests` pins that every line has its row with the same text and that no row is left without a line.
+Keys are composed: `taom_loregreet_<speaker>_<listener>`, plus `_hostile` and `_first`. The JSON holds the English, which English shows inline. The English rows for translators belong in `taom_module_strings.xml`, generated from the JSON. They are held out of the repo for now: `lore-greetings-rows.patch` in Luiz's for-haterade folder carries them, with `LoreGreetingsRowsTests.cs` beside it, which pins that every line has its row with the same text and that no row is left without a line. The test lands with the rows.
 
 ### Current Values
 
@@ -95,7 +96,7 @@ Keys are composed: `taom_loregreet_<speaker>_<listener>`, plus `_hostile` and `_
 
 - `IAlignmentService` (Execution): the sides of speaker and listener.
 - `ICoopSessionProvider` (CoopInterop): no meeting write on a co-op client.
-- `IOutcomeLog`: `[Check]` lines `loregreetings.greeting` (key: the line's key) and `loregreetings.meeting` (key: the speaker's person).
+- `IOutcomeLog`: `[Check]` lines `loregreetings.greeting` (key: the line's key) and `loregreetings.meeting` (key: the line the first greeting will show).
 
 ## Co-op
 
@@ -103,10 +104,10 @@ The greeting writes only a local text variable. The meeting write (`SetHasMet`) 
 
 ## Tests
 
-- `LoreGreetingsServiceTests`: matching by any id, the pair direction, peace, hostile by war and by side, Neutral, first meeting (player only, fallback, hostile wins), listener order, companions skipped when the speaker rides with the player, gender, prisoner, same person, the meeting flow (marks, skips met, companion-only, gender, co-op client, prisoner), the first-meeting flag used once and only for its speaker, the `[Check]` lines.
+- `LoreGreetingsServiceTests`: matching by any id, the pair direction, peace, hostile by war and by side, Neutral, first meeting (player only, fallback, hostile wins), listener order, companions skipped when the speaker rides with the player, gender, prisoner, same person, the meeting flow (marks only when the line it opens exists; skips met, companion-only, gender, co-op client, prisoner, captive context, no lord conversations, wanderer, an attacking lord, a siege), the first-meeting flag used once, only for its speaker, and cleared by the next meeting check for another hero, the `[Check]` lines.
 - `LoreGreetingsConfigProviderTests`: one test per validation rule, trimming, read once.
-- `ShippedLoreGreetingsTests`: the shipped file loads clean, every character id is a shipped hero with the person's gender, none of the Nine speaks, every person is in a pair, the writing rules (no em or en dash, no double quote, at most 160 characters, a full sentence).
-- `LoreGreetingsBindingTests` (`RequiresGame`): both targets' shapes, the greeting still sets `VOICED_LINE` through `conversations_set_voiced_line`, the meeting helper still calls `SetHasMet` and is over 100 IL bytes (not inlined into its four callers), `SetHasMet` still writes the meeting time, the category attaches one postfix and one prefix and the JIT accepts them.
+- `ShippedLoreGreetingsTests`: the shipped file loads clean, every line is said once, every character id is a shipped hero with the person's gender, none of the Nine speaks, every person is in a pair, the writing rules (no em or en dash, no double quote, at most 160 characters, a full sentence).
+- `LoreGreetingsBindingTests` (`RequiresGame`): both targets' shapes, the greeting still sets `VOICED_LINE` through `conversations_set_voiced_line`, the meeting helper still asks `UsesLordConversations` and reads the conversation context before `SetHasMet` and is over 100 IL bytes, `UsesLordConversations` and `HeroHelper.WillLordAttack` keep their public shapes (not inlined into its four callers), `SetHasMet` still writes the meeting time, the category attaches one postfix and one prefix and the JIT accepts them.
 - `LoreGreetingsWiringTests`: the module once, its category at GameInit, no behavior or model, the registrations, both patches initialised, nothing in `IoC.cs` or `SubModule.cs`.
 
 ## How to verify in game
@@ -121,10 +122,12 @@ In-game check owed; none of these has been run.
 4. As a lore lord at war with a lord who knows him (Éomer at war with Théoden's realm), talk to him. Check: the hostile line, or the usual war greeting for a pair with none.
 5. As Éowyn, talk to Théoden when he has not met the old player. Check: no "who are you" introduction, Théoden's first-meeting line, and `[Check] id=loregreetings.meeting`.
 6. Talk to your own companion Gimli with Legolas also in the party. Check: Gimli greets only the player (never Legolas).
-7. Log check: `LoreGreetingsConfigProvider: loaded 60 persons and 396 greetings`, and no other `LoreGreetingsConfigProvider:` warning.
+7. As Legolas, let an unmet lord who knows Legolas attack you, and meet another inside a besieged town. Check: vanilla's first meeting both times, and no `loregreetings.meeting` line for them.
+8. Log check: `LoreGreetingsConfigProvider: loaded 60 persons and 396 greetings`, and no other `LoreGreetingsConfigProvider:` warning.
 
 ## Changelog
 
+- 2026-11-28: review fixes: the meeting prefix stands down in a captive context, for heroes without lord conversations, for wanderers, for an attacking lord and in a siege, and marks met only when a line will show; a leftover first meeting is cleared; 48 lines rewritten for lore, for campaigns that start before the Council of Elrond, and so no line repeats.
 - 2026-11-28: first version (Patch177).
 
 ## GitHub Issue

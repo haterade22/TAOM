@@ -130,6 +130,16 @@ public class ShippedLoreGreetingsTests
     }
 
     [TestMethod]
+    public void EveryLine_IsUnique()
+    {
+        var repeated = Lines(Load().Table).GroupBy(l => l.Line, StringComparer.Ordinal).Where(g => g.Count() > 1)
+            .Select(g => string.Join(" and ", g.Select(l => l.Pair)) + ": " + g.Key)
+            .ToList();
+
+        Assert.AreEqual(0, repeated.Count, "lines said twice: " + string.Join("; ", repeated));
+    }
+
+    [TestMethod]
     public void EveryLine_KeepsTheWritingRules()
     {
         var bad = new List<string>();

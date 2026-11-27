@@ -95,6 +95,37 @@ public class LoreGreetingsBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void TheMeetingHelper_StillGuardsByContextAndLordConversations_BeforeItMarksMet()
+    {
+        var target = MeetingTarget();
+        var calls = PatchProcessor.GetOriginalInstructions(target)
+            .Where(ci => (ci.opcode == OpCodes.Call || ci.opcode == OpCodes.Callvirt) && ci.operand is MethodInfo)
+            .Select(ci => ((MethodInfo)ci.operand).Name)
+            .ToList();
+        var uses = calls.IndexOf(nameof(LordConversationsCampaignBehavior.UsesLordConversations));
+        var setHasMet = calls.IndexOf(nameof(Hero.SetHasMet));
+
+        Assert.IsTrue(uses >= 0 && setHasMet > uses, "the helper no longer asks UsesLordConversations before SetHasMet");
+        Assert.IsTrue(PatchProcessor.GetOriginalInstructions(target).Any(ci => ci.opcode == OpCodes.Ldfld && ci.operand is FieldInfo f
+            && f.Name == nameof(Campaign.CurrentConversationContext)), "the helper no longer reads the conversation context");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheMeetingStandDowns_BindToPublicEngineMembers()
+    {
+        var uses = Method(typeof(LordConversationsCampaignBehavior), nameof(LordConversationsCampaignBehavior.UsesLordConversations));
+        Assert.IsTrue(uses.IsPublic && !uses.IsStatic && uses.ReturnType == typeof(bool), "UsesLordConversations changed shape");
+        CollectionAssert.AreEqual(new[] { typeof(Hero) }, uses.GetParameters().Select(p => p.ParameterType).ToArray());
+
+        var attack = Method(typeof(Helpers.HeroHelper), nameof(Helpers.HeroHelper.WillLordAttack));
+        Assert.IsTrue(attack.IsPublic && attack.IsStatic && attack.ReturnType == typeof(bool) && attack.GetParameters().Length == 0,
+            "HeroHelper.WillLordAttack changed shape");
+    }
+
+    [TestMethod]
     [TestCategory("BindingVerification")]
     public void ThePatchMethods_DeclareTheNamesHarmonyInjectsBy()
     {

@@ -29,7 +29,8 @@ internal sealed class LoreGreetingsService
 
     /// <summary>
     /// The hero id the meeting prefix marked met, until the next greeting reads it. Not campaign state: it lives from one condition
-    /// call to the next in the same conversation, and a stale id only makes that hero's next greeting his first-meeting line.
+    /// call to the next in the same conversation. When another start line wins over the greeting, the next meeting check for another
+    /// hero clears it.
     /// </summary>
     private string? _metNow;
 
@@ -52,24 +53,30 @@ internal sealed class LoreGreetingsService
             _ => string.Empty,
         };
 
-    /// <summary>Before vanilla's meeting check: an unmet speaker who knows the player's person is marked met. Never on a co-op client.</summary>
+    /// <summary>
+    /// Before vanilla's meeting check: an unmet speaker is marked met when the line his first greeting to the player would show exists.
+    /// Vanilla's first meeting stays in a captive context, for a hero vanilla gives no lord conversations, for a wanderer (his own
+    /// introduction), when the lord is about to attack, while the player is in a siege, for a prisoner and on a co-op client. A first
+    /// meeting recorded for another hero that never reached its greeting is cleared first.
+    /// </summary>
     public void OnMeetingCheck()
     {
         var facts = _adapter.Describe();
-        if (facts == null || facts.Speaker.HasMet || facts.Speaker.IsPrisoner || _coop.IsCoopClient)
+        if (facts == null)
+            return;
+        if (_metNow != null && !facts.Speaker.Ids.Contains(_metNow, StringComparer.Ordinal))
+            _metNow = null;
+        var speaker = facts.Speaker;
+        if (speaker.HasMet || speaker.IsPrisoner || speaker.IsWanderer || !speaker.UsesLordConversations || facts.CaptiveContext
+            || facts.LordWillAttack || facts.PlayerInSiege || _coop.IsCoopClient)
             return;
 
-        var table = _config.GetTable();
-        var speaker = Person(table, facts.Speaker.Ids, facts.Speaker.IsFemale);
         var player = facts.Listeners.FirstOrDefault(l => l.IsPlayer);
-        var listener = player == null ? null : Person(table, player.Ids, player.IsFemale);
-        if (speaker == null || listener == null || listener.Id == speaker.Id || table.LinesFor(speaker.Id, listener.Id) == null)
+        var choice = player == null ? null : Choose(facts with { Listeners = new[] { player } }, firstMeeting: true);
+        if (choice == null || !_adapter.MeetSpeaker())
             return;
-
-        if (!_adapter.MeetSpeaker())
-            return;
-        _metNow = facts.Speaker.Ids[0];
-        _outcomes.Pass(MeetingCheckId, speaker.Id, "listener=" + listener.Id);
+        _metNow = speaker.Ids[0];
+        _outcomes.Pass(MeetingCheckId, choice.Key, "speaker=" + speaker.Ids[0]);
     }
 
     /// <summary>After vanilla set the met greeting: shows the pair's line when one applies.</summary>

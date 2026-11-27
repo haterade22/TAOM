@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Helpers;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
+using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Localization;
 using TAOM.Features.LoreGreetings.Domain;
 
@@ -39,10 +43,22 @@ internal sealed class LoreGreetingsAdapter : ILoreGreetingsAdapter
             }
         }
 
+        var lordConversations = campaign.GetCampaignBehavior<LordConversationsCampaignBehavior>();
         var facts = new LoreSpeakerFacts(Ids(speaker), speaker.IsFemale, speaker.HasMet, speaker.IsPrisoner,
-            mainParty != null && speaker.PartyBelongedTo == mainParty, FactionSides.OfHero(speaker));
-        return new LoreConversationFacts(facts, listeners);
+            mainParty != null && speaker.PartyBelongedTo == mainParty, FactionSides.OfHero(speaker), speaker.IsWanderer,
+            lordConversations != null && lordConversations.UsesLordConversations(speaker));
+        var context = campaign.CurrentConversationContext;
+        return new LoreConversationFacts(facts, listeners,
+            context is ConversationContext.CapturedLord or ConversationContext.FreeOrCapturePrisonerHero,
+            HeroHelper.WillLordAttack(), InSiege(mainParty));
     }
+
+    /// <summary>
+    /// The player's party besieges, or stands in a settlement under siege: vanilla's <c>PlayerIsBesieging</c> and <c>PlayerIsBesieged</c>
+    /// read <c>Settlement.CurrentSettlement.SiegeEvent</c> (LordConversationsCampaignBehavior.cs:137-153); a camp in the field reads the party's own.
+    /// </summary>
+    private static bool InSiege(MobileParty? mainParty) =>
+        Settlement.CurrentSettlement?.SiegeEvent != null || mainParty?.SiegeEvent != null || mainParty?.CurrentSettlement?.SiegeEvent != null;
 
     public bool MeetSpeaker()
     {
