@@ -465,6 +465,34 @@ ones before he looks. I closed that window and opened the current gatehouse `a` 
 | "Also extend this trim all the way around." | Gatehouse `a`: the braid band on the drum, which stopped before the wall beside the door | Built: the band runs from the door frame across the wing wall, round the drum, to the end section (seen by me in `b4_door_space_wide.png`) | It ends 0.08 m short of the end section's face (a checker's note): it must meet the wall's band at the joint |
 | "Remove this as it looks very bad and can be plain with the trim extended" | Tower `a`: the half rib arch and the single squeezed lancet with its short piece of band, on the short wall beside the tower | Plain since version 7: no rib and no arch on the short walls (the checker's measure and code reading; I did not see a close picture of it) | "The trim extended": the braid band across the plain short wall, with the continuous band of the towers |
 
+## Kit set 4 in the module (KS4-1 to KS4-4); house B2 checked (HB1 to HB6); the study's Tripo sculpts (2026-11-27, recorded 12:07)
+
+**Kit set 4** (`WORK\kit_full\kit_set_4`; check `check\CHECK_KIT_SET_4.md` of 11:20: safe when F1, a decision, and F3, a text line, close). The set brings the far levels and the bodies, `has_steps` on the stairs, and the new castle rounds. Seven files replace their kit set 3 builds (the README, the variants, the open kit, the village kit, the gatehouses, the stairs, the towers); four are equal and skipped; the wall's file is not touched. The prefab file has 254 entities and 8 `has_steps` placings, on stairs bodies only; the prefab count is 124,921 of 131,072 (NavalDLC not loaded).
+
+- **KS4-1.** A stair that comes with its railings keeps ONE body with `has_steps`. The effect of the flag on the rail solids is UNVERIFIED: an in-game check is owed.
+- **KS4-2.** Two phases. Phase 1 copies the kit files and the README, and the maintainer reimports them. Phase 2 copies the prefab file only after that import: a prefab that names a mesh which is not imported yet can crash the Kit.
+- **KS4-3.** The expect line of the copy plan is wrong; the lead reads the copy tool's own lines.
+- **KS4-4.** The PD53 gate must compare the flags for each placing: the next set.
+
+**Phase 1 is in the module** (11:24): the copy tool's dry run, then the copy, each with exit 0: 0 new files, 7 replaced after their backup, 4 equal; the md5 of each copied file, read back, equals its staged file. The undo list is `kit_set_4\copy_staging_undo_20261127_172435.txt`. The prefab file is NOT copied yet.
+
+**The maintainer's correction** (about 11:27, after the lead had asked him to close the Kit for that copy): "WE DO NOT HAVE TO CLOSE THE EDITOR TO UPDATE FILES!!!!" A copy of FBX or texture source files runs with the Kit open, and he rescans or reimports. The step list `KIT_SET_4_STEPS.md` is corrected. Still to correct, with the next kit set (the texts are in tested tools and in a generated README whose md5 is in the copy plan): the copy tool's "(Kit closed)" lines and the "Replacing a file" steps that `make_manifest.py` writes. Owed: his reimport of six files, the lead's `check_kit_set_after_import.py`, then one question to him (may the prefab file be replaced while the Kit runs) and phase 2.
+
+**House B2, round 8: the independent check** (`WORK\kit_full\house_b2\check\CHECK_HOUSE_B2.md` of 11:14): safe when two points close. The mesh is clean (0 back faces, 0 folded polygons; the levels and the body equal the report). HIGH: the FBX has three materials and 26,380 of 28,708 triangles sit on the stone trim sheet; the turret, the oriel and the link are 31.7 percent of the approved massing's volume and are not in the piece; the carving smears where the rake board meets the rib (64 faces under 0.8 of the density). MEDIUM: 70 percent of the rays from the loggia leave the house again; the gallery cannot be reached and its parapet has no body; five of eight mutants survive.
+
+- **HB1.** The turret, the oriel and the link belong to the piece. Its next round builds them, and the first import of B2 waits for them: a later change of the footprint breaks placed scenes.
+- **HB2.** Member materials before the import (the same owner step in `src_k` as HD3).
+- **HB3.** The leg is unwrapped as two strips, with a density gate.
+- **HB4.** A dark backing behind the openings and a shut door leaf.
+- **HB5.** One test for each surviving mutant.
+- **HB6.** The motif's level 3 is repaired in the motif.
+
+The maintainer's choices for B2: is the gallery walkable; is the room entered; wood set a or b for the web.
+
+**The study's Tripo sculpts** (`WORK\kit_full\hp_bake_b2\TRIPO_JOBS.md`; the Tripo Studio MCP, run by the lead; image to model, family hd, version v3.1-20260211, detailed geometry, no texture; each model exported as STL because the delivered GLB is Meshopt packed and Blender cannot read it). Set 1 (four parts, a face limit of 800,000): the inputs were renders of the builder's own code sculpts, and the models repeat those sculpts, so the gain is small. Set 2 (a face limit of 1,000,000): the inputs were concept pictures of carved oak parts from the image connector, made from generic words. By the lead's look at three renders of each: the post capital (969,874 triangles), the finial (957,702) and the door leaf (934,760; its first job failed at Tripo with no reason, the second worked) and the foot scroll (940,218) are rich carvings and are the study's high polys for those parts. The lead first called the foot scroll plain and submitted one more job for it (940,024 triangles, equal in carving): that look was wrong, because both renders showed the back of the relief board; renders from the other side show the carving. The second job was not needed.
+
+- **VB30.** A picture to model sculpt adds form only when its input adds form. For a hero part, the input is a concept picture of the carving (with our own render as the shape reference where the outline must hold), never a render of a code sculpt. The lead looks at a sculpt from both sides before a verdict: a relief board has a plain back.
+
 ## High poly and bake: the maintainer's question, a study on house B2; the scene's round 4 judged (SC24 to SC27) (2026-11-27, recorded 11:15)
 
 **His question** (about 10:55, with the scene blockout and house B2 open in Blender): "Where are the high poly's? and are they being baked? Or are you only doing low poly models?" The lead's answer: a high poly exists, and is baked, only for the two trim sheets and for the rubble heap; every building is a game mesh on tiling sets and trim sheets, and every single ornament (a foot scroll, a finial, a capital, a door leaf) is low poly geometry or absent. The lead's recommendation: the fields stay on tiling sets and trim sheets; the hero parts get a high poly and a bake on ornament sets of their own; bevels with face weighted normals on the structural members.
