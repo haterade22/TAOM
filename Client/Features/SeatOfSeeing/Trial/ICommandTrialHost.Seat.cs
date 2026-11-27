@@ -175,6 +175,24 @@ internal partial interface ICommandTrialHost
     /// <summary>The panel's view model has an order set selected, which is a sub-menu showing its orders.</summary>
     bool OrderSetSelected { get; }
 
+    /// <summary>Camera feel: sets the trial's own value of "Edge scroll", in memory only (a run starts with it off).</summary>
+    void SetEdgeScroll(bool on);
+
+    /// <summary>Camera feel: the pointer stands at a fraction of the window with no operating system input; the Seat reads it in place of the mouse.</summary>
+    void SetPointer(float fractionX, float fractionY);
+
+    /// <summary>Camera feel: the middle button reads as held (or not) with no operating system input.</summary>
+    void SetMiddleHeld(bool held);
+
+    /// <summary>Camera feel: a flight input that the next camera frame uses once, then the Seat is back on the input <see cref="SetInput"/> set.</summary>
+    void SetInputOnce(SeatInput input);
+
+    /// <summary>Camera feel: gives back the pointer, the middle button, the edge scroll value and any input left for one frame; safe to call at any time.</summary>
+    void ReleaseCameraTrial();
+
+    /// <summary>Camera feel: the point on the ground the centre of the view looks at, by the Seat's pivot arithmetic over the ground under it; null when the view is too flat or too far from it.</summary>
+    Vec3f? ViewCentreOnGround();
+
     /// <summary>How many orders the panel's view models have run since the first look (the engine's own <c>OrderItemVM.OnExecuteOrder</c> event).</summary>
     int OrdersSeen { get; }
 }

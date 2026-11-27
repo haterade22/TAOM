@@ -23,4 +23,10 @@ internal interface ISeatSettingsProvider
 
     /// <summary>With the hero's view in third person and the order panel open, the view lifts so the player can see over the ranks.</summary>
     bool RiseWithPanel { get; }
+
+    /// <summary>While seated with the cursor shown, a pointer at the window's edge flies the view that way.</summary>
+    bool EdgeScroll { get; }
+
+    /// <summary>The factor on the speed of key and edge panning, from 0.25 to 4; always a real number in that range.</summary>
+    float PanSpeed { get; }
 }

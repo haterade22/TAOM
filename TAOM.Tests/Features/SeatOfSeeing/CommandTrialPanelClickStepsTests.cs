@@ -53,7 +53,7 @@ public class CommandTrialPanelClickStepsTests
     {
         var names = SeatTrialSteps.All.Select(s => s.Name).ToList();
 
-        CollectionAssert.AreEqual(new[] { "panel_click_card", "panel_click_order", "hero_falls" }, names.Skip(names.IndexOf("sink_on_close") + 1).Take(3).ToArray());
+        CollectionAssert.AreEqual(new[] { "panel_click_card", "panel_click_order", "edge_pan" }, names.Skip(names.IndexOf("sink_on_close") + 1).Take(3).ToArray());
         foreach (var name in new[] { "panel_click_card", "panel_click_order" })
         {
             Assert.IsFalse(SeatTrialSteps.TryChoose(name, out _, out var error), name);

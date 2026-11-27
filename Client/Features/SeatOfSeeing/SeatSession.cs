@@ -38,6 +38,10 @@ internal sealed class SeatSession
     private bool _clickSiteNoted;
     private SeatKeepKind _keep;
     private SeatOrbitState _orbit;
+    private SeatOrbitState _pivot;
+    private bool _rotating;
+    private bool _lookWasHeld;
+    private float _zoomTarget = float.NaN;
     private bool _cursorShown;
     private bool _hideInForce;
     private bool _hideSaved;
@@ -176,8 +180,17 @@ internal sealed class SeatSession
             else
             {
                 var read = input ?? _screen.ReadInput(dt);
-                if (!TryOrbitPose(read, dt, out pose))
+                var lookHeld = _screen.LookHeld();
+                read = WithEdgeScroll(read, lookHeld);
+                if (TryOrbitPose(read, dt, out pose))
+                {
+                    _rotating = false;
+                    _lookWasHeld = lookHeld;
+                }
+                else if (!TryRotatePose(read, lookHeld, dt, out pose))
+                {
                     pose = FlightPose(false, read, dt, out _);
+                }
             }
 
             _screen.ApplyFrame(pose, _viewAngle, SeatCameraMath.ListenerHeight(pose.Z, _ground));
@@ -591,8 +604,6 @@ internal sealed class SeatSession
         }
     }
 
-    // One line a mission each way: the first click that reached the panel's view model, and the lookup of a widget's view model failing
-    // (the relay is then off and the shield only stops the click, build-spec 6.1).
     private void NoteRelay(SeatRelayResult result)
     {
         if (result == SeatRelayResult.Acted && !_clickNoted)
@@ -695,7 +706,7 @@ internal sealed class SeatSession
         }
         else
         {
-            _flight = Bounded(SeatCameraMath.Step(_flight, read, dt), _flight);
+            _flight = ZoomedStep(read, dt);
         }
 
         var flightGround = _screen.GroundHeight(_flight.X, _flight.Y, _applied.Z);
@@ -707,6 +718,51 @@ internal sealed class SeatSession
 
         var rawGroundUnderPose = rising ? _screen.GroundHeight(pose.X, pose.Y, pose.Z) : flightGround;
         return SeatCameraMath.AboveGround(pose, rawGroundUnderPose);
+    }
+
+    private SeatFlight ZoomedStep(SeatInput read, float dt)
+    {
+        var target = FiniteFloatValidator.IsFinite(_zoomTarget) ? _zoomTarget : _flight.Height;
+        var ceiling = SeatCameraMath.HeightCeiling(_heightLimit, _ground);
+        var zoom = SeatZoom.Step(_flight.Height, target, read.ZoomNotches, dt, ceiling);
+        var next = Bounded(SeatCameraMath.Step(_flight with { Height = zoom.Height }, read with { ZoomNotches = 0f }, dt, _settings.PanSpeed), _flight);
+        var lifted = read.Lift != 0f ? next.Height - zoom.Height : 0f;
+        _zoomTarget = lifted == 0f ? zoom.Target : Math.Max(SeatCameraMath.MinHeight, Math.Min(zoom.Target + lifted, ceiling));
+        return next;
+    }
+
+    private SeatInput WithEdgeScroll(SeatInput read, bool lookHeld)
+    {
+        if (!_cursorShown || lookHeld || !_settings.EdgeScroll || _keep != SeatKeepKind.None)
+            return read;
+        var (right, forward) = _screen.ReadEdgeScroll();
+        return read with { Right = Math.Max(-1f, Math.Min(1f, read.Right + right)), Forward = Math.Max(-1f, Math.Min(1f, read.Forward + forward)) };
+    }
+
+    private bool TryRotatePose(SeatInput read, bool held, float dt, out SeatPose pose)
+    {
+        pose = default;
+        var pressed = held && !_lookWasHeld;
+        _lookWasHeld = held;
+        if (!held)
+        {
+            _rotating = false;
+            return false;
+        }
+
+        if (pressed)
+        {
+            var found = SeatPivot.Find(_applied, _ground);
+            _rotating = found.Found;
+            if (found.Found)
+                _pivot = SeatPivot.Begin(_applied, found);
+        }
+
+        if (!_rotating)
+            return false;
+        _pivot = SeatPivot.Step(_pivot, read.LookYaw, read.LookPitch, SeatCameraMath.HeightCeiling(_heightLimit, _ground));
+        pose = OrbitFrame(_pivot, dt);
+        return true;
     }
 
     private bool TryOrbitPose(SeatInput read, float dt, out SeatPose pose)
@@ -728,15 +784,22 @@ internal sealed class SeatSession
         }
 
         _orbit = SeatOrbit.Step(_orbit, read, target.X, target.Y, target.Z, dt);
-        var raw = SeatOrbit.Pose(_orbit);
+        pose = OrbitFrame(_orbit, dt);
+        return true;
+    }
+
+    private SeatPose OrbitFrame(SeatOrbitState orbit, float dt)
+    {
+        var raw = SeatOrbit.Pose(orbit);
         var (x, y) = _screen.ClampToBoundary(raw.X, raw.Y);
         var inside = FiniteFloatValidator.IsFinite(x) && FiniteFloatValidator.IsFinite(y);
-        pose = SeatCameraMath.CapHeight(new SeatPose(inside ? x : _applied.X, inside ? y : _applied.Y, raw.Z, raw.Yaw, raw.Pitch), _heightLimit);
+        var pose = SeatCameraMath.CapHeight(new SeatPose(inside ? x : _applied.X, inside ? y : _applied.Y, raw.Z, raw.Yaw, raw.Pitch), _heightLimit);
         var rawGround = _screen.GroundHeight(pose.X, pose.Y, pose.Z);
         pose = SeatCameraMath.AboveGround(pose, rawGround, SeatCameraMath.MinHeight);
         _ground = SeatCameraMath.SmoothGround(_ground, rawGround, dt);
         _flight = SeatCameraMath.FlightOf(pose, _ground);
-        return true;
+        _zoomTarget = float.NaN;
+        return pose;
     }
 
     private void Enter(bool blend)
@@ -764,6 +827,9 @@ internal sealed class SeatSession
         _elapsed = 0f;
         _frames = 0;
         _panelWasOpen = false;
+        _rotating = false;
+        _lookWasHeld = false;
+        _zoomTarget = float.NaN;
 
         _rise.Zero();
         _controllerShut = true;
