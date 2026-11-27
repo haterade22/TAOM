@@ -1,5 +1,21 @@
 # Mirkwood kit: handover from the Rivendell kit sessions
 
+## Where to resume
+
+The [Mirkwood build record](mirkwood-kit.md) carries work completed after this handover,
+including Mike's material and single-block jamb revisions. The [Mirkwood catalog](mirkwood/README.md)
+links the current trim, siege, ravine, hall, settlement and distance studies.
+Issue #1620 tracks the separate Mirkwood siege work.
+
+Start the visual review at
+E:/LOTRAOMAssets/_auto_workspace/kingdom_kits/mirkwood/review_now.html.
+The [delivery record](mirkwood/delivery.md) identifies the Blender master,
+Asset Browser library, render proofs, and visual export stages.
+The [Mirkwood lessons](mirkwood/lessons.md) carry the checks to the next
+kit. [Game verification](../features/mirkwood-kit.md#how-to-verify-in-game)
+lists the work still tracked by #1620. The original
+Rivendell handover follows for background and installed-kit measurements.
+
 Written 2026-11-26 by the lead session of the Rivendell kit (kingdom kits job, issue #1600), on the maintainer's
 request. It shares its general sections with the Lothlórien handover of the same day, which three agents checked
 (paths, quotes and facts; a fresh session's first day; what was missing). Paste everything below the line into a
