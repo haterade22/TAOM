@@ -49,5 +49,5 @@ public interface ICastleRecruitmentService
     /// production model NREs for castles). The curve is then scaled by the War Chronicle's
     /// VolunteerRate multiplier of <paramref name="kingdomKey"/> (the owner clan's kingdom id, null
     /// for none), except for a castle of the player's own clan.</summary>
-    float GetSlotProductionProbability(int slotIndex, string? kingdomKey, bool ownerIsPlayerClan);
+    float GetSlotProductionProbability(int slotIndex, string? kingdomKey, bool ownerIsPlayerClan, string? realmKey = null);
 }

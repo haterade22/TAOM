@@ -4740,7 +4740,7 @@
 	<string id="taom_seat_keep_gone" text="{=taom_seat_keep_gone}The one you were keeping to is gone." />
 	<!-- TaomSettings.cs -->
 	<string id="taom_seat_mcm_cursor" text="{=taom_seat_mcm_cursor}Show a cursor with the order panel" />
-	<string id="taom_seat_mcm_cursor_hint" text="{=taom_seat_mcm_cursor_hint}While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons does not press it yet: it gives a Move order on the ground behind it. Default: on." />
+	<string id="taom_seat_mcm_cursor_hint" text="{=taom_seat_mcm_cursor_hint}While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons presses it, as its number key does. Default: on." />
 	<string id="taom_seat_mcm_keep_panel" text="{=taom_seat_mcm_keep_panel}Keep the order panel open" />
 	<string id="taom_seat_mcm_keep_panel_hint" text="{=taom_seat_mcm_keep_panel_hint}While you are in the Seat, the order panel opens again after an order. Closing it yourself (Escape, the right mouse button, or the panel key) keeps it closed. With the game option that slows time (on by default) while orders are given, the whole stay in the Seat runs at quarter speed apart from one frame per order. Default: off." />
 	<string id="TAOM_LD_Ability_Summon_Isengard" text="{=TAOM_LD_Ability_Summon_Isengard}Uruk-hai of Isengard" />
@@ -7118,5 +7118,15 @@
 	<string id="taom_lotr_issue_training_timeout" text="{=taom_lotr_issue_training_timeout}You kept the retainers too long, and their master called them home." />
 	<string id="taom_lotr_issue_training_offer_accept" text="{=taom_lotr_issue_training_offer_accept}Good. I will send the lads to your company. Bring back as many as you can." />
 	<string id="taom_lotr_issue_training_returned" text="{=taom_lotr_issue_training_returned}{RETURNED} of the {LENT} retainers went home with you." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- FactionPower -->
+	<string id="taom_fp_realm_wage_relief" text="{=taom_fp_realm_wage_relief}Realm power wage relief" />
+	<!-- TaomSettings.cs -->
+	<string id="taom_seat_mcm_edge" text="{=taom_seat_mcm_edge}Edge scroll" />
+	<string id="taom_seat_mcm_edge_hint" text="{=taom_seat_mcm_edge_hint}While you are in the Seat with the cursor shown, moving the pointer to the edge of the window flies the view that way, faster the nearer the edge. It stops while you hold the middle mouse button, and while a menu or a popup has the focus. Default: on." />
+	<string id="taom_seat_mcm_pan_speed" text="{=taom_seat_mcm_pan_speed}Seat pan speed" />
+	<string id="taom_seat_mcm_pan_speed_hint" text="{=taom_seat_mcm_pan_speed_hint}Multiplies how fast the view flies with the movement keys and the edge scroll in the Seat. 1 is the usual speed. Between 0.25 and 4. Default: 1." />
+	<string id="taom_mcm_EnableWandererSideTowns" text="{=taom_mcm_EnableWandererSideTowns}Wanderers Stay On Their Side" />
+	<string id="taom_mcm_EnableWandererSideTowns_hint" text="{=taom_mcm_EnableWandererSideTowns_hint}When ON (default), a new, dismissed or relocated wanderer goes to a town whose owner is on their side when such a town has room: an orc to an Evil town, a Gondor ranger to a Free one. Neutral wanderers and Neutral towns mix with everyone. A wanderer already standing in a wrong-side town stays until vanilla's daily swap picks them. When OFF, vanilla picks any town." />
 
 </strings>

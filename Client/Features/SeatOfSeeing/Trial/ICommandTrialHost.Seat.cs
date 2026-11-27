@@ -159,4 +159,40 @@ internal partial interface ICommandTrialHost
 
     /// <summary>The camera target's offset: <c>Mission.CustomCameraTargetLocalOffset</c>.</summary>
     Vec3f CameraTargetOffset();
+
+    /// <summary>The centre pixel of the first shown panel widget of a kind that a click acts on (a card, an order set that opens a sub-menu, or an order), read from the order layer's widgets, with the UI scale in its detail. Holds the card or order it found for the later reads.</summary>
+    SeatPanelProbe LocatePanelTarget(SeatPanelKind kind);
+
+    /// <summary>A left press and release at a pixel through the relay's own entry, with no operating system click. A formation write: call it after the in-mission-tick marker.</summary>
+    SeatRelayResult InjectPanelClick(float pixelX, float pixelY);
+
+    /// <summary>Clears the selected companies. A formation write: call it after the in-mission-tick marker.</summary>
+    void ClearSelectedCompanies();
+
+    /// <summary>The company of the card the last lookup found is the only selected company (<c>OrderController.SelectedFormations</c>).</summary>
+    bool CardCompanyIsOnlySelected { get; }
+
+    /// <summary>The panel's view model has an order set selected, which is a sub-menu showing its orders.</summary>
+    bool OrderSetSelected { get; }
+
+    /// <summary>Camera feel: sets the trial's own value of "Edge scroll", in memory only (a run starts with it off).</summary>
+    void SetEdgeScroll(bool on);
+
+    /// <summary>Camera feel: the pointer stands at a fraction of the window with no operating system input; the Seat reads it in place of the mouse.</summary>
+    void SetPointer(float fractionX, float fractionY);
+
+    /// <summary>Camera feel: the middle button reads as held (or not) with no operating system input.</summary>
+    void SetMiddleHeld(bool held);
+
+    /// <summary>Camera feel: a flight input that the next camera frame uses once, then the Seat is back on the input <see cref="SetInput"/> set.</summary>
+    void SetInputOnce(SeatInput input);
+
+    /// <summary>Camera feel: gives back the pointer, the middle button, the edge scroll value and any input left for one frame; safe to call at any time.</summary>
+    void ReleaseCameraTrial();
+
+    /// <summary>Camera feel: the point on the ground the centre of the view looks at, by the Seat's pivot arithmetic over the ground under it; null when the view is too flat or too far from it.</summary>
+    Vec3f? ViewCentreOnGround();
+
+    /// <summary>How many orders the panel's view models have run since the first look (the engine's own <c>OrderItemVM.OnExecuteOrder</c> event).</summary>
+    int OrdersSeen { get; }
 }

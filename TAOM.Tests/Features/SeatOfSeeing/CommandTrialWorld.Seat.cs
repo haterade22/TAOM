@@ -145,6 +145,8 @@ internal sealed partial class CommandTrialWorld
         else if (State == SeatState.Seated)
         {
             _framesOwned += FramesPerOwnedTick;
+            if (!ViewFrozen)
+                CameraFeelFrame(dt);
             if (!ViewFrozen && Input.HasValue)
             {
                 var speed = SeatCameraMath.PanSpeed(FlightHeight) * SpeedFactor;

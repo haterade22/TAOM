@@ -216,7 +216,7 @@ public class CommandTrialWiringTests
 
         foreach (var known in new[] { "KillChosenSoldier", "KillChosenCompany", "SelectChosenCompany", "OpenPanel", "ClosePanel", "ChargeHeroFormation", "StopHeroFormation", "WriteHeroMorale", "KillHero", "SetOtherFastForward",
             "ChargeAll", "MarshalSelect", "MarshalMoveTo", "MarshalDrag", "MarshalStandGround", "MarshalChargeEnemy", "MarshalSplitInfantry", "MarshalMoveOneRider", "MarshalOrderSquare", "MarshalKillOne",
-            "ForceStaminaGroup", "StaminaReleaseForced" })
+            "ForceStaminaGroup", "StaminaReleaseForced", "InjectPanelClick", "ClearSelectedCompanies" })
             CollectionAssert.Contains(writers, known);
         CollectionAssert.DoesNotContain(writers, "PressSeatKey", "a key press is not an agent write");
         foreach (var held in new[] { "MarshalHoldQueue", "MarshalHoldMark", "MarshalHoldWidths", "MarshalPressFire", "MarshalPressWord" })
@@ -261,6 +261,12 @@ public class CommandTrialWiringTests
         // Stages S6 and S7: a time key goes through the session method the real key calls from the screen tick (as vanilla's scoreboard key and the
         // order panel's time request do), the reads change nothing, and ReleaseTime is the same session call run after a failed step.
         "PressTime", "TimeLevel", "ReadTimeState", "OtherTimeRequest", "ReleaseTime", "ThirdPerson", "LiftHeight", "CameraTargetOffset",
+        // Marshal's Word stage M7, the panel click steps: reads of the order layer's widgets and of the panel's view models. LocatePanelTarget also stores the card's company and
+        // subscribes the engine's own order event once; InjectPanelClick and ClearSelectedCompanies are writers found by their verbs.
+        "LocatePanelTarget", "CardCompanyIsOnlySelected", "OrderSetSelected", "OrdersSeen", "StopWatchingOrders", "CountOrder",
+        // Camera feel, the edge_pan, rotate_pivot and zoom_smooth steps: the in-memory edge scroll value, the pointer and middle button of the trial and the one-frame input are fields of the
+        // Seat's own adapter and view, read in place of the mouse and the keys; ViewCentreOnGround is a read of the camera and the ground. None writes an agent or a formation.
+        "SetEdgeScroll", "SetPointer", "SetMiddleHeld", "SetInputOnce", "ReleaseCameraTrial", "ViewCentreOnGround",
         // The crew steps' reads (CommandTrialHost.Crew.cs): the machines, their seats and the archers on them. ChooseCrewArcher only stores the keep target in the Seat's adapter, a TAOM field the session reads; ChargeAll is a writer found by its verb.
         "ChooseCrew", "ChooseCrewArcher", "ReadCrew", "BeastOf", "KindOf", "ProbeOf", "ShotsOf", "IsLive", "ArcherOf", "SeatCount", "HasFullCrew",
         // The arms of the crew host's switch expressions (platform, howdah, mumakilSeat, howdahSeat, origin): the member pattern reads each arm as a member, and each arm only names a field of the machine, the seat or the origin.
@@ -413,7 +419,7 @@ public class CommandTrialWiringTests
     {
         var members = HostMembers(host);
 
-        const string Write = @"\.KillAgentCheat\(|\.TransferUnits\(|ClearSelectedFormations|\.SelectFormation\(|_adapter\.OpenPanel\(|_adapter\.ClosePanel\(|IsOrderMenuOpen\s*=|\.SetOrder\w*\(|\.SetTargetFormation\(|\.SetMovementOrder\(|\.SetMorale\(|\.SetFastForwardingFromUI\(|\.Forced\s*=(?!=)";
+        const string Write = @"\.KillAgentCheat\(|\.TransferUnits\(|ClearSelectedFormations|\.SelectFormation\(|_adapter\.OpenPanel\(|_adapter\.ClosePanel\(|IsOrderMenuOpen\s*=|\.SetOrder\w*\(|\.SetTargetFormation\(|\.SetMovementOrder\(|\.SetMorale\(|\.SetFastForwardingFromUI\(|\.InjectClick\(|\.Forced\s*=(?!=)";
         var writers = members.Where(kv => Regex.IsMatch(kv.Value, Write)).Select(kv => kv.Key).ToList();
         for (var changed = true; changed;)
         {

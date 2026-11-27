@@ -46,9 +46,10 @@ internal static class SeatCameraMath
     /// <summary>
     /// The flight one frame later: diagonal movement normalised, moved relative to the yaw at the speed of the height before this
     /// step, the height multiplied for zoom, lift added, then the height and pitch clamped and the yaw wrapped. A non-finite or
-    /// negative <paramref name="dt"/> returns <paramref name="state"/> as it is; a non-finite input field counts as zero.
+    /// negative <paramref name="dt"/> returns <paramref name="state"/> as it is; a non-finite input field counts as zero. The pan distance is
+    /// multiplied by <paramref name="panSpeed"/> (the Seat's pan speed setting; a value that is not a real number or not above 0 counts as 1).
     /// </summary>
-    internal static SeatFlight Step(SeatFlight state, SeatInput input, float dt)
+    internal static SeatFlight Step(SeatFlight state, SeatInput input, float dt, float panSpeed = 1f)
     {
         if (!FiniteFloatValidator.IsFinite(dt) || dt < 0f)
             return state;
@@ -57,7 +58,7 @@ internal static class SeatCameraMath
         var pitch = FordsCameraMath.Clamp(state.Pitch + Finite(input.LookPitch) * LookPerUnit, MinPitch, MaxPitch);
 
         var speedScale = input.Fast ? 2f : 1f;
-        var distance = PanSpeed(state.Height) * speedScale * dt;
+        var distance = PanSpeed(state.Height) * speedScale * dt * (FiniteFloatValidator.IsFinite(panSpeed) && panSpeed > 0f ? panSpeed : 1f);
         var (x, y) = FordsCameraMath.Pan(state.X, state.Y, yaw, Finite(input.Forward), Finite(input.Right), distance);
 
         var zoomed = state.Height * (float)Math.Pow(ZoomPerNotch, Finite(input.ZoomNotches));
@@ -162,6 +163,13 @@ internal static class SeatCameraMath
         var room = Math.Max(MinHeight, limit - ground);
         return flight.Height > room ? flight with { Height = room } : flight;
     }
+
+    /// <summary>
+    /// The highest height the view may hold over <paramref name="ground"/>: <see cref="MaxHeight"/>, or the room under the scene's height limit
+    /// (as <see cref="CapFlight"/> finds it) when that is lower. The wheel's target is held to it, so the target and the cap agree.
+    /// </summary>
+    internal static float HeightCeiling(float limit, float ground) =>
+        HasHeightLimit(limit) && FiniteFloatValidator.IsFinite(ground) ? Math.Min(MaxHeight, Math.Max(MinHeight, limit - ground)) : MaxHeight;
 
     /// <summary>The sound listener's height: the camera's, but no higher than <see cref="ListenerCeiling"/> above the ground.</summary>
     internal static float ListenerHeight(float cameraZ, float groundZ) => Math.Min(cameraZ, groundZ + ListenerCeiling);

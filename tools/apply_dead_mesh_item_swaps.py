@@ -78,16 +78,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from _gamedir import ensure_exists, game_dir  # noqa: E402
+from _gamedir import ASSET_REPO, armory_trees, ensure_exists, game_dir  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_GAME = game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
 DEFAULT_ARMORY = Path(DEFAULT_GAME) / "Modules" / "LOTRLOME_Armory"
 DEFAULT_CONSUMERS = REPO_ROOT / "Main" / "_Module" / "ModuleData"
-# The asset repo versions a copy of the Armory ModuleData. Keeping the two in
-# step is what stops a module reinstall silently reverting this (CLAUDE.md
-# Traps: "a fix in a dependency module").
-DEFAULT_ASSET_REPO = Path(r"E:\repos\lotraom-assets") / "v1.4" / "LOTRLOME_Armory"
 
 # --------------------------------------------------------------------------- #
 # The decision                                                                 #
@@ -552,8 +548,8 @@ def main() -> int:
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--armory", default=str(DEFAULT_ARMORY))
     ap.add_argument("--consumers", default=str(DEFAULT_CONSUMERS))
-    ap.add_argument("--asset-repo", default=str(DEFAULT_ASSET_REPO),
-                    help="Versioned copy of the Armory ModuleData to keep in step")
+    ap.add_argument("--asset-repo", default=None,
+                    help=f"also update this second Armory copy (e.g. {ASSET_REPO}); off by default")
     ap.add_argument("--write", action="store_true",
                     help="Commit the edits (default is a preview)")
     ap.add_argument("--skip-armory", action="store_true",
@@ -595,13 +591,7 @@ def main() -> int:
 
     # 2. The Armory: re-mesh the starter boots, delete the colour variants.
     if not args.skip_armory:
-        roots = [("live", armory / "ModuleData")]
-        asset_repo = Path(args.asset_repo)
-        if asset_repo.exists():
-            roots.append(("versioned", asset_repo / "ModuleData"))
-        else:
-            print(f"\nNOTE: asset repo not found at {asset_repo}; the live edit "
-                  f"will be unversioned.")
+        roots = armory_trees(armory / "ModuleData", args.asset_repo)
         for label, root in roots:
             print(f"\n--- Armory ({label}): {root} ---")
             for f in sorted(root.rglob("*.xml")):

@@ -27,6 +27,12 @@ public sealed record LordFacts(
     string HeroId,
     string RuledRealmId = "");
 
+/// <summary>The speaker of a one-to-one conversation, read for a notable's introduction; lords and wanderers are not notables.</summary>
+/// <param name="IsNotable">The hero is a notable (<c>Hero.IsNotable</c>: artisan, gang leader, preacher, merchant, rural notable or headman).</param>
+/// <param name="RaceName">The character's race name, empty for a race id the race table does not hold.</param>
+/// <param name="HeroId">The hero's StringId, which picks the variant of a line so a notable repeats it.</param>
+public sealed record NotableFacts(bool IsNotable, string RaceName, string HeroId);
+
 /// <summary>The player as Encounter Lines sees them.</summary>
 /// <param name="CultureId">The main hero's culture StringId, empty when it has none.</param>
 /// <param name="RaceName">The main hero's race name, empty for a race id the race table does not hold.</param>

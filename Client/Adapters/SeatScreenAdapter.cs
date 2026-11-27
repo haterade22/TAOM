@@ -16,6 +16,7 @@ using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View.Screens;
 using TaleWorlds.MountAndBlade.ViewModelCollection;
 using TaleWorlds.MountAndBlade.ViewModelCollection.Order;
+using TaleWorlds.MountAndBlade.ViewModelCollection.Order.Visual;
 using TaleWorlds.ScreenSystem;
 using TAOM.Adapters;
 using TAOM.Client.Features.FordsOfWar;
@@ -53,6 +54,10 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
     // GauntletOrderUIHandler._dataSource is protected (v1.5.6 GauntletOrderUIHandler.cs:41). Cached once, never per call.
     private static readonly FieldInfo? OrderDataSource = AccessTools.Field(typeof(GauntletOrderUIHandler), "_dataSource");
 
+    // GauntletOrderUIHandler.GetVisualOrderExecutionParameters is protected (v1.5.7 :117). The panel clicks run an order with the same
+    // arguments a number key does, the handler's focused formation included. Cached once.
+    private static readonly MethodInfo? OrderParametersGetter = AccessTools.Method(typeof(GauntletOrderUIHandler), "GetVisualOrderExecutionParameters");
+
     private const int CursorLayerOrder = 30;
 
     private readonly MissionScreen _screen;
@@ -61,7 +66,8 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
     private MissionMainAgentController? _controller;
     private IAutonomousMovementController? _rage;
     private GauntletOrderUIHandler? _orderHandler;
-    private GauntletLayer? _cursorLayer;
+    private SeatCursorLayer? _cursorLayer;
+    private SeatPanelRelay? _relay;
     private Agent? _keptAgent;
     private Formation? _keptFormation;
     private readonly FordsMissionSpeed _clock = new(null);
@@ -135,8 +141,37 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
         return new SeatInput(
             SeatCameraMath.DeadZone(input.GetGameKeyAxis("MovementAxisX")),
             SeatCameraMath.DeadZone(input.GetGameKeyAxis("MovementAxisY")),
-            lift, input.GetDeltaMouseScroll() / ScrollNotch, yaw, pitch, input.IsGameKeyDown((int)GameKeyDefinition.Zoom));
+            lift, ReadWheel(input) / ScrollNotch, yaw, pitch, input.IsGameKeyDown((int)GameKeyDefinition.Zoom));
     }
+
+    // While the shield holds the wheel over a panel button, the scene layer's own read is 0 (InputContext.cs:572-578, wheel not allowed). The
+    // raw delta stands in only when the scene layer or the shield has focus, so no zoom runs through an inquiry popup or a menu.
+    private float ReadWheel(InputContext sceneInput) =>
+        SeatWheelRule.Read(sceneInput.GetDeltaMouseScroll(), Input.DeltaMouseScroll, _cursorLayer is { IsActive: true }, SceneOrShieldFocused());
+
+    private bool SceneOrShieldFocused()
+    {
+        var focused = ScreenManager.FocusedLayer;
+        return focused == null || focused == _screen.SceneLayer || focused == _cursorLayer;
+    }
+
+    // The pointer's place across and down the window, 0 to 1 (Input.MousePositionRanged, the read the engine's own edge turn makes at
+    // MissionScreen.cs:1859-1873); a pointer outside the window reads below 0 or above 1, which the rule turns into no push. The field
+    // trial's pointer stands in for it.
+    public (float Right, float Forward) ReadEdgeScroll()
+    {
+        if (!SceneOrShieldFocused() || (TrialRanged == null && !Input.IsMouseActive) || _relay is { PointerOverTarget: true })
+            return (0f, 0f);
+
+        var at = TrialRanged ?? Input.MousePositionRanged;
+        return SeatEdgeScroll.Axes(at.x, at.y, SeatEdgeScroll.Margin);
+    }
+
+    /// <summary>The field trial's pointer, as a fraction of the window; null in every player session.</summary>
+    internal Vec2? TrialRanged { get; set; }
+
+    /// <summary>The field trial's middle button; false in every player session.</summary>
+    internal bool TrialMiddleHeld { get; set; }
 
     public float ReadHeightLimit()
     {
@@ -227,28 +262,54 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
 
     public bool IsPanelOpen() => _mission.IsOrderMenuOpen;
 
-    public bool LookHeld() => _screen.SceneLayer.Input.IsKeyDown(InputKey.MiddleMouseButton);
+    // The raw input, not the scene layer's: the click shield can hold the mouse buttons over the panel, and the scene layer reads a mouse
+    // button only on a frame it holds them (InputContext.cs:482-496).
+    public bool LookHeld() => TrialMiddleHeld || SeatPanelRelay.LookHeld();
+
+    public SeatRelayResult RelayPanelClicks() => Relay().Tick();
+
+    private SeatPanelRelay Relay() => _relay ??= new SeatPanelRelay(_screen, _mission, OrderPanel, OrderParameters);
+
+    private VisualOrderExecutionParameters? OrderParameters()
+    {
+        if (OrderParametersGetter == null)
+            return null;
+        _orderHandler ??= _mission.GetMissionBehavior<GauntletOrderUIHandler>();
+        return _orderHandler == null ? null : OrderParametersGetter.Invoke(_orderHandler, null) as VisualOrderExecutionParameters?;
+    }
+
+    /// <summary>The field trial's pointer: the relay's own entry, with a pixel in place of the mouse.</summary>
+    internal SeatPanelRelay PanelRelay => Relay();
+
+    /// <summary>The order set the panel has open as a sub-menu, or null; the field trial's check that a click on a set opened it.</summary>
+    internal object? PanelSelectedOrderSet => OrderPanel()?.SelectedOrderSet;
 
     // One layer for the mission, built on the first show and then only toggled, the way vanilla keeps a cursor layer (the banner editor and
-    // the face generator, in TaleWorlds.MountAndBlade.GauntletUI.dll). The layer takes no input (its mask stays Invalid) and only asks for
-    // a visible cursor, which ScreenManager.UpdateMouseVisibility grants while any active layer asks (ScreenManager.cs:763-774). It is never
+    // the face generator, in TaleWorlds.MountAndBlade.GauntletUI.dll). The layer asks for a visible cursor, which ScreenManager.UpdateMouseVisibility
+    // grants while any active layer asks (ScreenManager.cs:763-774). While it shows, its mask names the mouse buttons so the click shield can take
+    // them over a panel button (SeatCursorLayer), and the wheel with them, so the scene layer is not hit (ScreenManager.cs:677-698) and its MouseOnMe
+    // is false on a shielded frame; the mask is Invalid whenever the cursor is hidden. It is never
     // removed: RemoveLayer finalizes a layer and AddLayer refuses a finalized one (ScreenBase.cs:299-301, 327), and the screen finalizes
-    // its layers itself at teardown (ScreenBase.cs:60-63). SetMouseVisibility is a plain setter (InputRestrictions.cs:23-26), so hiding is
+    // its layers itself at teardown (ScreenBase.cs:60-63). SetInputRestrictions is a plain setter (InputRestrictions.cs:23-33), so hiding is
     // safe on any teardown path, with the layer live or already finalized.
     public void SetCursor(bool show)
     {
+        var relay = Relay();
         if (_cursorLayer == null)
         {
             if (!show)
                 return;
-            var layer = new GauntletLayer("SeatCursor", CursorLayerOrder);
-            layer.InputRestrictions.SetMouseVisibility(true);
+            var layer = new SeatCursorLayer("SeatCursor", CursorLayerOrder, relay.ShieldHolds, relay.ShieldHoldsAt);
+            layer.InputRestrictions.SetInputRestrictions(true, InputUsageMask.Mouse);
+            relay.Attach(layer);
             _screen.AddLayer(layer);
             _cursorLayer = layer;
+            relay.SetCursor(true);
             return;
         }
 
-        _cursorLayer.InputRestrictions.SetMouseVisibility(show);
+        _cursorLayer.InputRestrictions.SetInputRestrictions(show, show ? InputUsageMask.Mouse : InputUsageMask.Invalid);
+        relay.SetCursor(show);
     }
 
     public void HoldCursorPosition() => MBWindowManager.DontChangeCursorPos();
@@ -260,7 +321,7 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
         TrialPlayerClose = false;
         // Game key 77 (SelectOrderReturn) closes the panel at the root of a layout that has a Return order (GauntletOrderUIHandler.cs:449-452,
         // 484-492), so it shares the view-orders bit. A signal counts only on a closing edge, so a Return press in a sub-menu suppresses nothing.
-        return new SeatCloseSignals(input.IsHotKeyReleased("ToggleEscapeMenu"), input.IsKeyReleased(InputKey.RightMouseButton),
+        return new SeatCloseSignals(input.IsHotKeyReleased("ToggleEscapeMenu"), Input.IsKeyReleased(InputKey.RightMouseButton),
             input.IsGameKeyPressed((int)GameKeyDefinition.ViewOrders) || input.IsGameKeyPressed((int)GameKeyDefinition.SelectOrderReturn) || byTrial,
             input.IsGameKeyReleased((int)GameKeyDefinition.HoldOrder));
     }

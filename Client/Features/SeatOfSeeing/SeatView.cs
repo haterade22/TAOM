@@ -31,6 +31,7 @@ public sealed class SeatView : MissionView
     private SeatHotKeys? _keys;
     private SeatKeys? _moreKeys;
     private CommandTrialScript? _trial;
+    private CommandTrialHost? _trialHost;
     private bool _seatKeyPressed;
 
     public override void OnMissionScreenInitialize()
@@ -58,7 +59,7 @@ public sealed class SeatView : MissionView
                 CommandTrialRun.Settings(IoC.Resolve<ISeatSettingsProvider>()), Permissions, IoC.Resolve<IOutcomeLog>(), logger, serial);
             _moreKeys = new SeatKeys(_keys, session);
             mission.OnMainAgentChanged += OnMainAgentChanged;
-            _trial = CommandTrialRun.Script(() => new CommandTrialHost(this, session, screen, mission, MissionScreen, logger), logger);
+            _trial = CommandTrialRun.Script(() => _trialHost = new CommandTrialHost(this, session, screen, mission, MissionScreen, logger), logger);
         }
         catch (Exception ex)
         {
@@ -121,6 +122,8 @@ public sealed class SeatView : MissionView
     private void EndSession()
     {
         _trial = null;
+        _trialHost?.StopWatchingOrders();
+        _trialHost = null;
         _moreKeys = null;
         _session?.Finish();
         _session = null;
@@ -134,5 +137,27 @@ public sealed class SeatView : MissionView
 
     internal bool PressPending => _seatKeyPressed;
 
-    internal SeatInput? TrialInput { get; set; }
+    private SeatInput? _trialInput;
+    private SeatInput? _trialInputOnce;
+
+    /// <summary>
+    /// The flight input the field trial sets in place of the player's; null in every player session. A read returns the one-frame input first
+    /// (<see cref="TrialInputOnce"/>) and clears it, so the camera frame, which reads this once, takes the field trial's one wheel notch exactly once.
+    /// </summary>
+    internal SeatInput? TrialInput
+    {
+        get
+        {
+            var once = _trialInputOnce;
+            _trialInputOnce = null;
+            return once ?? _trialInput;
+        }
+        set => _trialInput = value;
+    }
+
+    /// <summary>A flight input for the next camera frame only (the field trial's one wheel notch).</summary>
+    internal SeatInput? TrialInputOnce
+    {
+        set => _trialInputOnce = value;
+    }
 }

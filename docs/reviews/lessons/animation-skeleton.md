@@ -1823,3 +1823,20 @@ the median speed of the planted keys does not see a seam.
 - **Why missed:** `tools/verify_mount_assets.py` tested a movement clip for `quad_movement` by searching the whole file of the package that holds it. That was right while every creature kept one clip per `_anm.tpac`. The war chariot's rig is one package with 75 clips, so any tagged clip made all 29 movement clips pass, and three untagged ones went unseen. `tools/audit_mount_parity.py` read the same clips one by one and said the opposite, and its rule was too strict the other way: it called every untagged movement clip a crash, while the vanilla horse binds untagged clips on six of its seven in-place rows. The first fix still searched the clip's metadata for the text `quad_movement`, so the same text in a source name would have passed, and the second searched everything after the usage count, so the text inside another record's numbers would have passed (Codex, twice, 2026-11-24).
 - **Prevent:** read the tag as a record of the usage list in the clip's own metadata (`verify_mount_assets.quad_tagged` over `clip_metas`, which the audit calls too), never as a text in the file or in the metadata: walk the fields to the list, then each record by its own size (`USAGE_PAYLOAD`), and require the walk to end at the last byte. On 2026-11-24 that walk ended exactly at the end of the metadata for all 534 creature clips of the Armory and all 6,177 vanilla clips, and agreed with the text search on every one, so the stricter read changed no result. A search narrowed twice is still a search: when a format has records, read the records. A rule about what the engine needs is measured on vanilla first: of the horse's 29 base locomotion clips, six of the seven bound on in-place rows (direction and turn `none`) carry no tag (`audit_mount_parity.VANILLA_UNTAGGED_MOVEMENT_ACTIONS`; the seventh, `horse_stand_for_movement_data`, is tagged), so a mount's clip on those rows may go without, and a clip on a row that moves may not. What the engine reads of an untagged in-place clip is not traced. Pins: `test_a_lost_tag_is_not_hidden_by_a_tagged_clip_in_the_same_package`, `test_the_tag_is_a_record_of_the_usage_list_and_not_a_text_inside_one`, `test_metadata_that_does_not_parse_counts_as_untagged`, `GaitTagTests`.
 - **Source:** the rig replacement of 2026-11-23, [chariot.md](../../features/chariot.md) "The rig since 2026-11-23".
+
+### Judge a skinned part against the part it lies on, at frames of the real clips; a pose render starts from the rest normals (2026-11-27)
+Four of the five Rhûn horse armours passed every pose gate and came apart in the game's clips. Each plate was rigid
+on one bone while its backing followed the skin, so neighbouring plates parted by up to 766 mm in the gallop. The
+pose gates tested a hind leg 30 degrees back; the gallop clip swings it 41.9 degrees.
+- **Why missed:** the gates counted armour inside the skin, contacts with the cart and strap crossings, each against
+  the body or at rest. None measured how far a part moves against the part under it, and none posed the rig with a
+  frame of a real clip. The first render script that did pose it read the loop normals it had set at the previous
+  pose and turned them again, so its pictures showed a black patch that was not in the mesh (3,269 dark pixels for
+  one frame inside a pose series, 550 for the same frame rendered alone), and a check failed a build on it.
+- **Prevent:** measure the slip of each plate against its backing and against the nearest plate, in the gate poses
+  and at the worst frames of the gallop, trot, walk and idle clips. A skinned plate takes the weights of the surface
+  it is fastened to. A pose render sets its normals from the rest pose at every pose, or renders each pose in a job
+  of its own.
+- **Source:** [chariot.md](../../features/chariot.md), "The armours in motion"; the work folder's records
+  `pose_scatter_study_2026-11-27.md` and `lane9_armour4_2026-11-27.md` (not in the repo). No issue: the maintainer
+  waived the public issue for the chariot work.

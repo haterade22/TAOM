@@ -44,6 +44,7 @@ This skill owns none of these procedures. Open the owner and follow it; come bac
 | Task | Owner |
 |---|---|
 | Tripo AI FBX to a prop or map icon; new UVs; Painter textures; rebuild from solids | `/prep-tripo-prop` |
+| A reference from an outside tool for a part we build ourselves; a part Mike rejected twice | `/teardown`, before the next build round |
 | Hair, beards, eyebrows, grooms | `/groom-hair` |
 | New creature or mount; replace a mount's FBX or tpac | [creature-mount-authoring.md](../../../docs/ai-includes/creature-mount-authoring.md) |
 | Creature or rider clips | [creature-animation-blender-mcp-workflow.md](../../../docs/ai-includes/creature-animation-blender-mcp-workflow.md) |
@@ -146,11 +147,13 @@ decides whether it looks right.
 1. Before any change, write the analysis (template in the gates doc): what the subject is, its
    main masses and their proportions, the camera angle, the materials, and the three to five
    features the result must have. For an existing file, add a table of what differs today.
+   A reference that an outside tool made: run `/teardown` first.
 2. Set the camera to the picture's angle first. A wrong frame makes every later comparison wrong.
 3. Build in three passes: silhouette and proportions, then the secondary forms that give depth
    (steps, recesses, ribs, belts), then small detail. No small detail on a wrong silhouette.
 4. After each pass, render from that camera and list at most five differences, largest first:
-   frame, silhouette, flatness, materials, missing features. Fix them and compare again.
+   frame, silhouette, flatness, materials, missing features. Fix them and compare again. With a
+   teardown record, compare its numbers with their limits too.
 5. Stop after three compare passes. Report what still differs; do not call a partial match done.
 6. Judge a direction (which way a part points) in an orthographic view, never from the picture.
 

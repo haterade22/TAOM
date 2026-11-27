@@ -360,24 +360,36 @@ the `Prefabs` / `Prefabs_Unused` split you see today
 ([editor-rglconcurrentqueue-assert-2026-07.md](../investigations/editor-rglconcurrentqueue-assert-2026-07.md)).
 
 `python tools/check_prefab_budget.py` counts `TAOM_Map/Prefabs` **only**, and the queue is global, so
-the tool reports a comfortable pass while the real total sits at the ceiling. Measured today:
+the tool can print `OK` while the real total sits near the ceiling. The queue takes the `Prefabs/`
+folders of the modules that the editor session loads, not of every module folder on disk. Read that
+set from the session's own log (`C:\ProgramData\Mount and Blade II Bannerlord\logs`) before you add
+anything up:
+
+```bash
+grep -o -E 'Modules/[A-Za-z_.]+/Prefabs' rgl_log_NNNN.txt | sort | uniq -c
+```
+
+On 2026-11-26 the editor sessions on the desktop named five folders (`rgl_log_3364.txt` and
+`rgl_log_48440.txt`; `rgl_log_3928.txt` named the same set without `TAOM_Map`). `NavalDLC` (9,927
+entities) and `TAOM` (1) were on disk and were not loaded, so they did not count:
 
 | Module | `<game_entity>` in `Prefabs/` |
 |---|---|
-| `TAOM_Map` | 93,830 |
+| `TAOM_Map` | 97,892 |
 | `Native` | 23,828 |
-| `NavalDLC` | 9,867 |
-| `SandBox` | 2,847 |
-| `LOTRLOME_Armory` | 48 |
+| `SandBox` | 2,889 |
 | `StoryMode` | 39 |
-| `TAOM` | 9 |
-| **Total** | **130,468 of 131,072, 604 spare** |
+| `LOTRLOME_Armory` | 19 |
+| **Total** | **124,667 of 131,072, 6,405 spare** |
 
-<!-- measured: for m in */; do grep -ho '<game_entity' "$m"Prefabs/*.xml 2>/dev/null | wc -l; done 2026-09-05 -->
+<!-- measured: for m in TAOM_Map Native SandBox StoryMode LOTRLOME_Armory; do grep -ho '<game_entity' "$m"/Prefabs/*.xml | wc -l; done 2026-11-26 -->
 
-The tool printed `TOTAL: 93830 entities in 141 files (cap 131072, warn 120000)` and `OK` on the same
-day. Sum every enabled module before believing it. `Prefabs_Unused/` holds another 91,023 entities
-that are parked, not deleted, so moving a file back into `Prefabs/` can cost you the entire margin.
+The tool printed `TOTAL: 97892 entities in 161 files (cap 131072, warn 120000)` and `OK` on the same
+day, while the sum of the loaded set was 4,667 over that warning line. The table of 2026-09-05 added
+`NavalDLC` and `TAOM` to these five and read 130,468, 604 spare; whether the editor loaded those two
+modules that day is not recorded. A module selection that loads the DLC adds its count, so sum the
+folders that the log names. `Prefabs_Unused/` holds parked entities (91,023 on 2026-09-05) that are
+not deleted, so moving a file back into `Prefabs/` can cost you the entire margin.
 
 A second load limit is per scene, not global: a scene's XML volume can crash the load with RAM to
 spare (a 32 MB native scratch arena, found by Kysaro). Two shipped TAOM_Map scenes sit past his line;

@@ -7,6 +7,7 @@ using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.View.MissionViews;
+using TaleWorlds.MountAndBlade.ViewModelCollection.Order;
 using TaleWorlds.ScreenSystem;
 using TAOM.Client.Features.FordsOfWar;
 using TAOM.Features.AdvancedCombat;
@@ -213,6 +214,38 @@ internal sealed partial class CommandTrialHost
             settings.HeroFightsOn = fightOn;
     }
 
+    public void SetEdgeScroll(bool on)
+    {
+        var settings = CommandTrialRun.TrialSettings;
+        if (settings != null)
+            settings.EdgeScroll = on;
+    }
+
+    public void SetPointer(float fractionX, float fractionY) => _adapter.TrialRanged = new Vec2(fractionX, fractionY);
+
+    public void SetMiddleHeld(bool held) => _adapter.TrialMiddleHeld = held;
+
+    public void SetInputOnce(SeatInput input) => _view.TrialInputOnce = input;
+
+    public void ReleaseCameraTrial()
+    {
+        _adapter.TrialRanged = null;
+        _adapter.TrialMiddleHeld = false;
+        _view.TrialInputOnce = null;
+        SetEdgeScroll(false);
+    }
+
+    public Vec3f? ViewCentreOnGround()
+    {
+        if (!_adapter.TryReadCamera(out var camera, out _))
+            return null;
+        var first = SeatPivot.Find(camera, _adapter.GroundHeight(camera.X, camera.Y, camera.Z));
+        if (!first.Found)
+            return null;
+        var second = SeatPivot.Find(camera, _adapter.GroundHeight(first.X, first.Y, camera.Z));
+        return second.Found ? new Vec3f(second.X, second.Y, second.Z) : null;
+    }
+
     public bool FightGateUp => SeatPresence.HeroFightsOn;
 
     public bool HeroOnAi => _mission.MainAgent != null && _mission.MainAgent.IsActive() && _mission.MainAgent.Controller == AgentControllerType.AI;
@@ -311,6 +344,63 @@ internal sealed partial class CommandTrialHost
     public void ReleaseTime() => _session.ResetTime();
 
     public bool ThirdPerson => !_mission.CameraIsFirstPerson;
+
+    private Formation? _probedCompany;
+    private bool _watchingOrders;
+    private int _ordersSeen;
+
+    public int OrdersSeen => _ordersSeen;
+
+    // OnExecuteOrder is a static event (OrderItemVM.cs:10): a host that subscribed and was dropped would stay reachable from it and keep counting, so the view's
+    // teardown calls this.
+    internal void StopWatchingOrders()
+    {
+        if (!_watchingOrders)
+            return;
+        _watchingOrders = false;
+        OrderItemVM.OnExecuteOrder -= CountOrder;
+    }
+
+    private void CountOrder(OrderItemVM _) => _ordersSeen++;
+
+    public bool OrderSetSelected => _adapter.PanelSelectedOrderSet != null;
+
+    public bool CardCompanyIsOnlySelected
+    {
+        get
+        {
+            var selected = _mission.PlayerTeam?.PlayerOrderController?.SelectedFormations;
+            return _probedCompany != null && selected != null && selected.Count == 1 && ReferenceEquals(selected[0], _probedCompany);
+        }
+    }
+
+    public SeatPanelProbe LocatePanelTarget(SeatPanelKind kind)
+    {
+        if (!_watchingOrders)
+        {
+            _watchingOrders = true;
+            OrderItemVM.OnExecuteOrder += CountOrder;
+        }
+
+        _probedCompany = null;
+        if (!_adapter.PanelRelay.TryLocate(kind, out var x, out var y, out var target, out var detail))
+            return new SeatPanelProbe(false, 0f, 0f, detail);
+        if (target is OrderTroopItemVM card)
+            _probedCompany = card.Formation;
+        return new SeatPanelProbe(true, x, y, detail);
+    }
+
+    public SeatRelayResult InjectPanelClick(float pixelX, float pixelY)
+    {
+        NoteWrite("CommandTrialHost.InjectPanelClick");
+        return _adapter.PanelRelay.InjectClick(pixelX, pixelY);
+    }
+
+    public void ClearSelectedCompanies()
+    {
+        NoteWrite("CommandTrialHost.ClearSelectedCompanies");
+        _mission.PlayerTeam?.PlayerOrderController?.ClearSelectedFormations();
+    }
 
     public float LiftHeight() => _adapter.LiftHeight();
 

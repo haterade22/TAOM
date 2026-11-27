@@ -1311,6 +1311,11 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public Dropdown<string> WandererAllegianceScope { get; set; } = new Dropdown<string>(
         new[] { "All wanderers (by culture)", "Named companions only" }, 0);
 
+    [SettingPropertyGroup("{=taom_mcm_group_world}World/{=taom_mcm_group_wanderer_allegiance}Wanderer Allegiance")]
+    [SettingPropertyBool("{=taom_mcm_EnableWandererSideTowns}Wanderers Stay On Their Side", Order = 2, RequireRestart = false,
+        HintText = "{=taom_mcm_EnableWandererSideTowns_hint}When ON (default), a new, dismissed or relocated wanderer goes to a town whose owner is on their side when such a town has room: an orc to an Evil town, a Gondor ranger to a Free one. Neutral wanderers and Neutral towns mix with everyone. A wanderer already standing in a wrong-side town stays until vanilla's daily swap picks them. When OFF, vanilla picks any town.")]
+    public bool EnableWandererSideTowns { get; set; } = true;
+
     // --- World / Hard Questions ---
 
     // GroupOrder 57: 9, 10, 15, 19-56 and 100 were taken as of 2026-10-18.
@@ -3216,7 +3221,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_seat_of_seeing}Seat of Seeing")]
     [SettingPropertyBool("{=taom_seat_mcm_cursor}Show a cursor with the order panel", Order = 2, RequireRestart = false,
-        HintText = "{=taom_seat_mcm_cursor_hint}While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons does not press it yet: it gives a Move order on the ground behind it. Default: on.")]
+        HintText = "{=taom_seat_mcm_cursor_hint}While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons presses it, as its number key does. Default: on.")]
     public bool SeatCursorWithPanel { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultCursorWithPanel;
 
     [SettingPropertyGroup("{=taom_mcm_group_seat_of_seeing}Seat of Seeing")]
@@ -3238,6 +3243,16 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("{=taom_seat_mcm_rise}Rise to give orders", Order = 6, RequireRestart = false,
         HintText = "{=taom_seat_mcm_rise_hint}With your view on your hero in third person and the order panel open, the view lifts (7 metres in a field battle, 3 in a siege or a sally out) so you can see over the ranks, and it sinks when the panel closes. The lift drops the target lock, and no new lock starts until the view has sunk. Under a roof the view rises through it. The Seat itself does not use this. It works with the Seat turned off too. Default: off.")]
     public bool SeatRiseWithPanel { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultRiseWithPanel;
+
+    [SettingPropertyGroup("{=taom_mcm_group_seat_of_seeing}Seat of Seeing")]
+    [SettingPropertyBool("{=taom_seat_mcm_edge}Edge scroll", Order = 7, RequireRestart = false,
+        HintText = "{=taom_seat_mcm_edge_hint}While you are in the Seat with the cursor shown, moving the pointer to the edge of the window flies the view that way, faster the nearer the edge. It stops while you hold the middle mouse button, and while a menu or a popup has the focus. Default: on.")]
+    public bool SeatEdgeScroll { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultEdgeScroll;
+
+    [SettingPropertyGroup("{=taom_mcm_group_seat_of_seeing}Seat of Seeing")]
+    [SettingPropertyFloatingInteger("{=taom_seat_mcm_pan_speed}Seat pan speed", 0.25f, 4f, "0.00", Order = 8, RequireRestart = false,
+        HintText = "{=taom_seat_mcm_pan_speed_hint}Multiplies how fast the view flies with the movement keys and the edge scroll in the Seat. 1 is the usual speed. Between 0.25 and 4. Default: 1.")]
+    public float SeatPanSpeed { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultPanSpeed;
 
     // --- Marshal's Word (docs/features/marshals-word.md) ---
 

@@ -150,6 +150,29 @@ internal sealed class FakeSeatScreen : ISeatScreenAdapter
 
     public bool LookHeld() => Look;
 
+    // Camera feel: the push the pointer at a window edge gives, set by the test, and how often it was asked.
+    internal (float Right, float Forward) Edge;
+    internal int EdgeReads;
+
+    public (float Right, float Forward) ReadEdgeScroll()
+    {
+        EdgeReads++;
+        return Edge;
+    }
+
+    // Marshal's Word stage M7: the panel's clicks, handed to the relay once a screen tick while the panel is open with the cursor shown.
+    internal int Relays;
+    internal SeatRelayResult RelayResult = SeatRelayResult.Idle;
+    internal Exception? RelayThrows;
+
+    public SeatRelayResult RelayPanelClicks()
+    {
+        Relays++;
+        if (RelayThrows != null)
+            throw RelayThrows;
+        return RelayResult;
+    }
+
     public void SetCursor(bool show)
     {
         CursorWrites.Add(show);
@@ -417,6 +440,11 @@ internal sealed class FakeSeatSettings : ISeatSettingsProvider
     private bool _heroFightsOn;
     private bool _takeSoldierAfterFall = true;
     private bool _riseWithPanel;
+
+    /// <summary>Camera feel: not counted in <see cref="Reads"/>, which pins the screen tick's reads; the flight reads these every frame.</summary>
+    public bool EdgeScroll { get; set; } = true;
+
+    public float PanSpeed { get; set; } = 1f;
 
     public bool Enabled
     {

@@ -8,7 +8,9 @@ stands in the cart. Vanilla cavalry spawn via a Horse-slot item — no spawn pat
 no mission behavior, **no C# at all** (a 100% data port). Issue #279.
 
 Erebor has a second chariot on the same rig, pulled by two war rams, with two Ironpass troops: see
-[Dwarven war chariot](#dwarven-war-chariot-erebor-2026-11-24).
+[Dwarven war chariot](#dwarven-war-chariot-erebor-2026-11-24). Five more Rhûn carts and five new horse armours
+are in work; the black set (cart F with armour 5) has its sources and its Kit packages in the Armory since 2026-11-26.
+No item draws it yet, so it is not in the game: see [the variants section](#rhûn-cart-variants-and-new-horse-armours-in-work-since-2026-11-24).
 
 ## The rig since 2026-11-23
 
@@ -66,7 +68,7 @@ upstream chariot pack, taken whole:
 files as they were on 2026-11-24: `action_sets.xml`, `action_types.xml`, `monster_usage_sets.xml`,
 `monster_usage_sets.xslt` and `project.mbproj`. The rig package, the Monster file, the rider rows of
 `action_sets.xslt`, the sounds with their wave files, the collision class, the cloth bodies, the voice file and the
-three Wainrider item rows are only in the Armory, which is not versioned, and no tool puts any of it back after a
+three Wainrider item rows and the black set's harness row (`taom_chariot_armour_rhun_black`, 2026-11-26; its text is kept in the variants section) are only in the Armory, which is not versioned, and no tool puts any of it back after a
 reinstall. Only the dwarven chariot's item rows have a tool (`tools/apply_dwarf_chariot_armory.py`). The gate
 `chariot-body` goes red when the rig or a clip is gone. The asset mirror still holds the first rig.
 
@@ -211,6 +213,8 @@ speed 70, charge 80 since #615, riding difficulty 120) and the Monster XML.
 | `tools/apply_dwarf_chariot_armory.py` | Holds the three dwarf chariot items and their names for the unversioned Armory: `--check`, `--apply`, `--remove`; gate `dwarf-chariot-armory` in `tools/data_gates.py` |
 | `tools/taom_schema.py` (`DWARF_MOUNT_IDS`) | The ram team is a mount a dwarf may ride |
 | `E:\LOTRAOMAssets\_auto_workspace\chariot\*.ps1` | The first rig's TpacTool-based generators (clips, skeleton wiring, inspection) |
+| `LOTRLOME_Armory/AssetSources/creature/chariot/mesh/rhun_war_chariot_f.fbx` and nine maps `rhun_war_chariot_f_front_*`, `rhun_war_chariot_f_base_*`, `rhun_horse_armour_5_*` (`_d`, `_n`, `_s`) in `.../chariot/textures` | Sources of the black set (cart F v22 with the maps of v24, armour 5 `v18ay`, set v27), copied 2026-11-26, 09:22, and imported by the maintainer in the Kit at 09:36 to 09:38 (packages `Assets/creature/chariot/mesh/rhun_war_chariot_f_geo.tpac` and twelve map and material packages in `.../chariot/textures`). The harness item `taom_chariot_armour_rhun_black` in `ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` draws the mesh |
+| The chariot work folder under `E:\LOTRAOMAssets\_auto_workspace`, `out\rhun2\variants\f` | Work, iterations and gate tables of cart F; the dated record is `NIGHT_LOG.md` at the work folder's root |
 
 ## Recruitment
 
@@ -271,6 +275,9 @@ guard, drift and removal, and the live install), two `MountedDwarfTests` cases i
 - ✅ **In-game verified 2026-06-13** — both horses render and animate in step, rider + cart + full gait set,
   IK intact (deep-review fixes + the single-mesh re-merge landed).
 - ✅ `/deep-review` complete (6 reviewers + adversarial verify; HIGH jump-clip typo + parity gaps fixed, RCA filed).
+- Black set (cart F with horse armour 5, 2026-11-26): sources, Kit packages and the harness item
+  `taom_chariot_armour_rhun_black` in the Armory; owed: the check in game, and a troop that wears it (see the
+  variants section).
 - Follow-ups: black/white horse variants + `wide_chariot` (drop-in: single merged mesh, items exist in the
   upstream pack), proper mount-death clips (currently `chariot_stand_1` freeze), localization pass for
   `{=taom_chariot_a}`, fix `tools/blender/creature_anim_ops.py` stale `primary_bone_axis='X'` (L13).
@@ -388,6 +395,573 @@ fitted to the unscaled rig.
 **Not yet checked in game** (the steps are in [How to verify in game](#how-to-verify-in-game)): where the dwarf stands on the cart, the collar and the reins in a gallop and in a
 turn, the far LODs, the team colour on the cloth, and the two troops in a battle.
 
+## Rhûn cart variants and new horse armours (in work since 2026-11-24)
+
+Five more carts for the harness slot of this rig (B to E in new designs, F in cart A's design in black) and five
+horse armours of our own for the chariot horses. One cart and one armour make one harness mesh; the swap step
+(`rhun2_armour_swap.add_armour`) puts the armour on both horses. Nothing of it is in the game. Since 2026-11-26, 09:22 the sources of the black set (cart F and armour 5, set v27) are in the Armory's `AssetSources/creature/chariot` (mesh `rhun_war_chariot_f.fbx` and nine maps, see the state paragraph), and the maintainer imported them in the Kit the same morning (13 packages). Since 09:56 the harness item `taom_chariot_armour_rhun_black` draws the mesh; no troop wears it yet. The
+record is the chariot work folder under `E:\LOTRAOMAssets\_auto_workspace`: its `NIGHT_LOG.md` (newest entries at
+the end) and the hand-overs `out\armours\HANDOVER_agent1.md` (armours 1 to 3), `out\armours\HANDOVER_agent2.md`
+(armours 4 and 5) and `out\rhun2\HANDOVER_carts.md` (carts). They are newer than this section when the two disagree.
+
+**Working rules of 2026-11-25 (the maintainer).**
+
+| Rule | His words | What follows |
+|---|---|---|
+| One set at a time | 13:10: "Lets work on one cart and one horse armor set, when that is perfect move onto the next one"; evening: "Are we still only working on one set?" | The black set keeps the priority. The session's reading, not his words: spare capacity goes to set B. Since 18:36 armour 1 v30 goes on by fresh builders (`armour1-v30-review-blocks`, `wf_ee65c8a5-a0f`: four blocks, a read-only checker and one retry each; slot owner `armour1`; limit 9,800 at LOD0; its approved surface stays). Armours 2 to 4, carts A to E stay untouched. The way back: stop that run. The usage limit of about 20:30 stopped this run (see the state paragraph) |
+| Blender and memory | 13:10: "We have like 36 blenders open, can we close some?", "LEts also work on one blender item at a time to save memory" (read at 13:07: 49 Blender processes with 37.8 GB, 4.2 GB of 61.6 GB free); evening (log entry 18:35): "You can use more blender, just watch out for the memory. I will not be using the computer for the most part." | The limit is free memory, not one job. Every Blender job of the builders starts through `blender_slot.py` (work folder root; slots and a memory floor since 18:32): 3 slots and a floor of 14 GB from 18:32, and since 19:24 6 slots and a floor of 10 GB (`out\_blender_slot_config.json`); a job starts only with the floor of physical memory free, plus 3 GB for each of these jobs started in the last 90 s (6 GB when none runs); the other owner goes first after an owner's turn; exit 97 when no slot comes free in time. A review runs one reviewer at a time |
+| Docs | Log entry 18:35: "Ensure you update all documentation as you go"; 2026-11-26, about 09:24: "ultracode is on. This set was amazingly done. Make sure to update all documentation!" | The docs run `chariot-docs-update-2` (`wf_299c3511-b06`, no Blender) finished at 18:46 on 2026-11-25 (this doc, the asset gates doc, seven lessons, current to 18:41). On 2026-11-26 a second run (`black-set-docs-sweep`, `wf_78b9db73-928`: an auditor, a writer and a checker for each of three doc areas, no Blender) brought the docs and the hand-overs to the state of the black set's install; the session corrected the 32 errors its checkers found. The edits stay uncommitted, as a commit on this branch needs his word |
+| Triangle count | 13:02: "I accept the triangle count for this. BEcause a we have two horses and a cart, that is like 3 troops." | The 60,000 gate on a set is closed as a blocker; the manifest flags a set above 65,400 (the session's rule). For the black set he accepted about 66,600 at the neck question |
+| Wood colour | 13:44: "The carts woods can also be different colors of brown, black, red, etc." | Cart F's round one: three Painter wood colours for his choice (dark brown, a black stain that still reads as wood, dark red-brown; fields black, trim gold) |
+| What he sees | 13:36 to 13:44 | A build only after the session's close review finds no fault; the three wood colour pictures are the exception. To "You have anything to show, or still doing work on one kit?" (log entry 17:03) the session opened one picture marked as in work and not reviewed (`out\status\img\armour5_v18_in_work.png`) |
+
+**The six carts.** The pairing of B to E is the session's proposal; he reviewed the sets as paired.
+
+| Cart | Design | Armour | Wood | The maintainer's verdict |
+|---|---|---|---|---|
+| A `rhun_war_chariot` (in the game) | Scale plates, fan panels, scythe wheels | its Armory armour, none of the new ones | as installed; he named no choice, so it does not change | "Cart A, we can remove the quiver and javelins and save on some triangles." (2026-11-26; build v06, sources replaced the same day, his update in the Kit owed) |
+| B `rhun_war_chariot_b` Reaver | Open lattice frame, red leather X straps, pierced spearhead standard | 1 raider | Painter | "Cart B - Painter wood"; "remove the javelins from cart B too" (waits for set B) |
+| C `rhun_war_chariot_c` Sun Car | Fan front wall, lamellar walls, gold disc wheels | 2 sun | Painter with the delivered gloss | "Cart C - Painter wood, delivered gloss" |
+| D `rhun_war_chariot_d` Lacquer Court | Red lacquer sun panels in gold frames, gold scale body | 3 lacquer | Painter | "Cart D - Painter wood"; "Once we fix the issues this cart set up is AWESOME"; of the inner fan: "This serves no purpose and wont ever be used, waste of triangles and polys remove it." (gone since D v17) |
+| E `rhun_war_chariot_e` Spear-prow | Plank walls, bossed shields, spears along the pole | 4 horned | source wood | "cart e - source wood" |
+| F `rhun_war_chariot_f` Black | Cart A's shapes as a variant build with its own slots and maps: black fields, bright polished gold trim, wood, steel blades; no javelins, arrows or cases | 5 black | Painter wood, black-stained (his choice of 2026-11-25: "Wood B Black Stained is the best for the black set"; cart F v24), made in Part 2 after the build (F's new UVs share 0 of 10,984 base triangles with cart A's, so cart A's Painter redo does not fit) | "My expectation is if the horse armor is black, the cart must be the same color. Black, gold trim and wood"; "The black cart looks good with the black horse armor (rhun set F)." On 2026-11-26: "the only problem is this is messed up and not straight and then the armor and cart are good after this fix."; "put set 27 into the asset sources. This is amazing"; "ultracode is on. This set was amazingly done. Make sure to update all documentation!"; after his Kit import: "done, looks good!" |
+
+**State on 2026-11-26, 09:40.** At about 20:30 on 2026-11-25 the weekly usage limit stopped every builder and
+reviewer agent (it resets on 2026-11-29); the maintainer's word after it: "proceed throughout the night without
+me". The session went on alone, with no review agent, so nothing below is reviewed. The black set stands as set
+v27: cart F v22 with the maps of v24 and armour 5 `v18ay`, 67,143 triangles at LOD0, 0 pairs with bodies and
+armours in the five neck poses. Three things in it are the maintainer's word. The newest, of the morning of
+2026-11-26, on set v26 in Blender with a circle round each end of the lowest neck band: "the only problem is this
+is messed up and not straight and then the armor and cart are good after this fix." Each end showed as a gold
+spike with a notch: a clearance rule had lifted the band's base field at the lower corner to 73 mm over the skin (the
+flare of 12 mm and the lip come on top). One vertex of the curtain's top band, 55 mm below the band's edge, had set
+a lift of about 71 mm there. In `v18ay` a part past the band's edge does not count at the band's
+ends, and each end is a rounded end in line with the ends above it; the gates equal `v18av` but for four
+counts (the work log, 08:40). The other two are of the evening of 2026-11-25. The wood: three Painter colours were shown
+(dark brown, black-stained, dark red-brown; sheets in `out\rhun2\_work\f_review\wood_preview\`), and he chose:
+"Wood B Black Stained is the best for the black set" (cart F v24, a texture-only version of v22). The neck strap:
+on set v23 he circled a strap piece that lay on top of the last neck band, "Both sides the tab should be
+under..."; in `v18av` the strap stays under the band along its whole run (4 crossing face pairs a side at LOD0,
+from 42 and 48), with every gate equal to `v18aq`. The look scene (`out\view\rhun_cart_F_black_VIEW.blend`) is
+set v27 and was opened for him as work in progress (08:39, in Blender).
+
+Shortly before 09:21 he said: "put set 27 into the asset sources. This is amazing". At about
+09:24 he said: "ultracode is on. This set was amazingly done. Make sure to update all documentation!" At 09:22:16 ten
+files of set v27 were copied into the Armory's `AssetSources` (record `out\rhun2\variants\f\_work\v27\assetsources_install.json`
+in the chariot work folder; no Kit or game process ran before the copy):
+
+- `creature\chariot\mesh\rhun_war_chariot_f.fbx` (7,619,660 bytes, SHA-256
+  `3bb65df21ba8d3d68f619f96525d6e92e4e4a934527a0f32000f15fdf6f3c19f`).
+- In `creature\chariot\textures`: `rhun_war_chariot_f_front_d.png`, `_front_n.png`, `_front_s.png`,
+  `rhun_war_chariot_f_base_d.png`, `_base_n.png`, `_base_s.png`, `rhun_horse_armour_5_d.png`, `_n.png`, `_s.png`
+  (2048 x 2048 RGB).
+- Nothing was overwritten (cart A's seven files keep their dates of 11-24), and each target's hash equals its
+  source. The copy wrote no package, no ModuleData row and nothing else in the game install.
+- The FBX has one armature `horse_skeleton_chariot` (60 bones, the same names in the same order as cart A's), six mesh
+  objects (LOD0 to LOD5: 67,143 / 54,120 / 31,268 / 26,003 / 7,976 / 4,449 triangles) and on every level the slots
+  `rhun_war_chariot_f_front`, `rhun_war_chariot_f_base` and `rhun_horse_armour_5`. Unlike cart A's file it has no
+  vertex colour layer. Cart A's file has one (its cart faces carry 0, its armour faces 1) and so do the two dwarf
+  carts (their cart faces carry 0); `dwarf_chariot_rams.fbx` has none. All of them were imported and ran in game on 11-24, so a
+  missing layer did not stop an import and colour 0 did not darken a cart. His import of 09:36 to 09:38 settled it
+  for the Kit: the file imported, and his picture of the Kit's viewer shows the set with its colours.
+
+The set's gate table (`variants\f\_work\v27\gate_table\MANIFEST.md`) is HELD on four rows: the count flag (67,143 at
+LOD0, above 65,400), the 2 hidden hub discs (link gate), the armour's class a faces (54 at LOD0 to LOD2: 22, 3, 29; the row also lists 7 at LOD3)
+and the cart's UV check at the far levels. He chose the import before the cart's far levels and hub discs are repaired. No reviewer has looked
+at set v27.
+
+He imported the set in the Modding Kit at 09:36 to 09:38: 13 new packages in the Armory
+(`Assets\creature\chariot\mesh\rhun_war_chariot_f_geo.tpac`, 14,048,332 bytes; nine map packages and three material
+packages in `Assets\creature\chariot\textures`). The mesh package has its entry in the runtime data cache
+(`tools/check_rdc_entries.py`, which checks mesh and clip packages only, because map and material packages render
+without one). Shortly before 09:40 he sent a picture of the set in the Kit's viewer: "done, looks good!"
+
+At 09:56, on his word ("add it into the XMLs, new item. We will make a special troop for Khamul's line in Rhun"),
+one harness item went into the live Armory's `ModuleData\LOTRLOME_items\LOTRAOM_horses.xml`, between
+`taom_chariot_armour_rhun` and `taom_chariot_armour_imperial`, with the values of the first. The Armory is not
+versioned and no tool puts this row back, so its text is kept here:
+
+```xml
+    <Item
+        id="taom_chariot_armour_rhun_black"
+        name="{=taom_chariot_armour_rhun_black}[Rhûn] Black Easterling Chariot Barding"
+        mesh="rhun_war_chariot_f"
+        culture="Culture.khuzait"
+        weight="50"
+        is_merchandise="false"
+        appearance="0.65"
+        Type="HorseHarness">
+        <ItemComponent>
+            <Armor
+                body_armor="50"
+                mane_cover_type="all"
+                family_type="4"
+                material_type="Chainmail" />
+        </ItemComponent>
+        <Flags Civilian="true" />
+    </Item>
+```
+
+The display name and the copied values (armour 50, weight 50) are the session's choice until he gives others.
+No troop wears the item yet; the two older Rhûn harness items still draw cart A's `rhun_war_chariot`. Its English
+name row is in the Armory's `Languages\loc_LOTRAOM_horses.xml` (`tools/register_armory_names.py`), and the twelve
+translations wait for the language pass. The repo's per-item tables hold it on this branch:
+`tools/armour_cover_flags.json`, `tools/data/armour_colour_families.json` (family black),
+`tools/external-loc-coverage-baseline.json` (one more untranslated name in each language) and the one changed line
+of `docs/reference/armory-catalogue/lod-audit.md` for the new source file. Until those reach trunk,
+`tools/check_external_loc_coverage.py` fails on trunk for every session, because the shared Armory already holds
+the new name. A reinstall of the Armory drops the row: `tools/apply_armour_cover_flags.py --check` then reports the
+id as missing, and once a troop names the item `tools/validate_moduledata.py` does too.
+
+The review of the row on 2026-11-26 (the data flow, engine, XML and tooling lenses, and a Codex pass) found no
+defect in it: every attribute is read for a horse harness on v1.5.7, and nothing sells it, gives it as a prize or
+as loot, or equips it by chance. `family_type` 4 is the war chariot's, so in the inventory the item also fits the
+dwarven ram chariot, as the two older Rhûn harness items do. Owed in game, by a person: add
+`taom_chariot_armour_rhun_black` and `taom_chariot_a` with the cheat console, equip both, and ride into a battle
+(cart F and the black armour on both horses, nothing stretched, no missing mesh line in the log).
+
+**The raider set (set B) in the game, 2026-11-26.** In the evening the maintainer looked at the staged sets B to E in
+one Blender scene and said of set B (cart B v19 with horse armour 1 v23): "chariot b and armour 1 look good enough to
+put into the game." The set that went in is set v24: armour 1 v23, the build he looked at, on cart B v23, which is
+cart v21 without its javelins and their lashings (his order of 2026-11-25; 3,556 triangles at LOD0). The set has
+43,490 triangles at LOD0 and passes every set gate. Later armour 1 builds (gold crest fins, sewn strap ends) are not
+in it: he had not seen the newest one, and its review lists faults. Known and approved with the set: strap ends on
+studs at the withers and on the lowest neck band, and the black feather crest.
+
+At 19:31 ten source files went into the Armory's `AssetSources\creature\chariot` under new names
+(`mesh\rhun_war_chariot_b.fbx`; `textures\rhun_war_chariot_b_front_*`, `rhun_war_chariot_b_base_*` and
+`rhun_horse_armour_1_*`, each `_d`, `_n`, `_s`), with equal hashes. He imported the set in the Modding Kit at 19:48 to
+19:50: `Assets\creature\chariot\mesh\rhun_war_chariot_b_geo.tpac` (8,459,713 bytes), nine map packages and three
+material packages. At 19:56 one harness item went into `LOTRAOM_horses.xml`, between `taom_chariot_armour_rhun_black`
+and `taom_chariot_armour_imperial`, with the values of `taom_chariot_armour_rhun`. No tool puts the row back, so
+its text is kept here:
+
+```xml
+    <Item
+        id="taom_chariot_armour_rhun_raider"
+        name="{=taom_chariot_armour_rhun_raider}[Rhûn] Raider Chariot Barding"
+        mesh="rhun_war_chariot_b"
+        culture="Culture.khuzait"
+        weight="50"
+        is_merchandise="false"
+        appearance="0.65"
+        Type="HorseHarness">
+        <ItemComponent>
+            <Armor
+                body_armor="50"
+                mane_cover_type="all"
+                family_type="4"
+                material_type="Chainmail" />
+        </ItemComponent>
+        <Flags Civilian="true" />
+    </Item>
+```
+
+The id, the display name and the copied values are the session's choice until he gives others: the set is a light
+cart with neck bands and a back cloth, so a lower armour value than the Wainrider barding's 50 may fit it better.
+No troop wears the item. Its English name row is in `Languages\loc_LOTRAOM_horses.xml`, and the twelve
+translations wait for the language pass. The repo's tables hold the item: `tools/armour_cover_flags.json`,
+`tools/data/armour_colour_families.json` (family bronze, measured on `rhun_war_chariot_b_front_d`) and
+`tools/external-loc-coverage-baseline.json`. Owed in game, by a person: add `taom_chariot_armour_rhun_raider` and
+`taom_chariot_a` with the cheat console, equip both, and ride into a battle.
+
+**The lacquer set (set D) in the Armory's sources, 2026-11-26.** In the same look at the staged sets he said: "Cart D
+is ready for import. Looks real good." and "Armour 3 v06 just needs the front armour to be fastened to the head armor
+so it isnt hanging". Set v21 is cart D v17 with horse armour 3 v16: 58,353 triangles at LOD0, the armour 9,468 for one
+horse, every set gate passed. Build v14 changed skin weights only against v13 (see "The armours in motion"), and
+build v16 the meshes of LOD2 and LOD3 only (see "The far levels"). The chest panel now hangs from two straight straps with sewn laps, from the breast
+strap up to the neck lining under the lowest neck band. A read-only check with close renders found it ready. Against
+the build he looked at, these also changed: the face plate is one shell with round rope eye rings (his word of
+2026-11-25), the browband runs under the face plate's top band and is lapped onto both cheek straps, the flank and
+rump panels have hangers that end under their plates, and the cart has no inner fan screen (his word of
+2026-11-25). Open and small: the browband's bend shades differently on the two sides at close range, and the face
+plate's lower end has no strap, as in the build he saw.
+
+At 20:48 ten source files went into `AssetSources\creature\chariot` under new names
+(`mesh\rhun_war_chariot_d.fbx`; `textures\rhun_war_chariot_d_front_*`, `rhun_war_chariot_d_base_*` and
+`rhun_horse_armour_3_*`, each `_d`, `_n`, `_s`), with equal hashes; that was set v19, with armour v13. At 03:40 on
+2026-11-27 the mesh was replaced by set v20's and at 07:45 by set v21's, each time with a kept copy of the replaced
+file. The import in the Modding Kit and
+the harness item are owed: an item row that names a mesh the Kit does not hold yet hangs the preload, so the row follows the
+import.
+
+**The sun set (set C) in the Armory's sources, 2026-11-27.** Of the staged sets he said on 2026-11-26: "chariot c is
+good, looks real good. Is ready to be imported." and "armour 2 needs work, remove the ear armor on the horse that is a
+waste. Then please attach the front armor with straps that are hidden in the back. Having armor not fastened down is
+real." Set v24 is cart C v16, unchanged against the stage he saw, with horse armour 2 v18: 59,460 triangles at LOD0,
+the armour 8,903 for one horse. The armour has no ear pieces. The chest panel hangs from two straps: each has a
+square stitched lap on the panel's band, one fold at the band's top edge, and a straight run under the shoulder
+plate's rear corner to its upper end under the back plate. Each shoulder plate is held by a carrier strap to under
+the back plate and by the neck band under its front corner. It took four builds (v11 to v14); a read-only check with
+its own renders of the staged file found v14 ready.
+
+That check's list of what carries each part showed that no strap held the back plate, from which the chest straps,
+the carriers and the flank panels hang. Build v15 adds a girth: an upright red band behind the elbow with a buckle
+on each side, its ends under the back plate's rim. Nothing else of v14 moved and no map changed; a second read-only
+check found it ready and better than v14. Build v16 changes skin weights only (see "The armours in motion"),
+and build v18 the meshes of LOD2 and LOD3 only (see "The far levels").
+
+Open on this armour: the rump plate has no strap of its own (its front row lies under the back plate's rear rim);
+the chest plate has no strap of its own (its sides lie under the shoulder plates); the girth is not drawn at LOD4
+and LOD5, and the chest straps and the carriers not from LOD3 on; the shoulder plate's front tab holds only near the
+rest pose; 448 triangles at LOD2 have no UV area.
+
+At 00:07 ten source files (then set v21, with armour v14) went into `AssetSources\creature\chariot` under new names
+(`mesh\rhun_war_chariot_c.fbx`; `textures\rhun_war_chariot_c_front_*`, `rhun_war_chariot_c_base_*` and
+`rhun_horse_armour_2_*`, each `_d`, `_n`, `_s`), with equal hashes. At 01:03 the mesh was replaced by set v22's
+at 02:30 by set v23's and at 07:45 by set v24's, each time with a kept copy of the replaced file; the nine maps are
+the same for all four. The import in the Modding Kit and the harness
+item are owed; the item row follows the import.
+
+**The horned set (set E) in the Armory's sources, 2026-11-27.** Of the staged sets he said on 2026-11-26: "Armour 4
+horse armor - details matter, fine tune this details!" and "Cart E - Looks good, the only thing I would change is the
+texture of the wood being the same direction if we can. Right now it is all over the place." Set v16 is cart E v13
+with horse armour 4 v26b: 58,991 triangles at LOD0, the armour 9,477 for one horse (cap 9,500).
+
+On the armour, every strap end that sat on a stud is now a made joint: the neck straps end under the lowest neck lame
+and on a ring on a riveted tab on the chest plate; the cheek straps end on ring tabs on the face plate and in sewn
+laps on the noseband; the withers, back and rump straps end in sewn laps; each shoulder scale field has a top band
+that two withers straps are sewn onto. The scale fields have even borders and no slits at the row ends, and the
+neck lames lap closed. A first check found two faults (neck strap tops in the air; eye rims and the poll that
+changed shape at the LOD switch); build v25e repaired both, and a second read-only check of the staged file found it
+ready. Build v26b changes skin weights only (see "The armours in motion"). On the cart, the wood grain now runs along the boards on the inner front wall and the top planks; the inner
+side wall slabs still have level grain under upright battens.
+
+Open on this set: the front field's backing opens into slats at the leg pit in the gallop (see "The armours in
+motion"). The eye openings at LOD1 and LOD2 have an angular edge close up. The shoulder band
+ends stand 10 to 30 mm off the backing in close views from above.
+
+At 00:52 ten source files went into `AssetSources\creature\chariot` under new names
+(`mesh\rhun_war_chariot_e.fbx`; `textures\rhun_war_chariot_e_front_*`, `rhun_war_chariot_e_base_*` and
+`rhun_horse_armour_4_*`, each `_d`, `_n`, `_s`), with equal hashes. At 02:24 the mesh was replaced by set v16's,
+with a kept copy of the v15 file; the nine maps are the same for both. The import in the Modding Kit and the harness
+item are owed; the item row follows the import.
+
+**The sun, lacquer and horned sets in the game's data, 2026-11-27.** In the morning he said: "We can import all
+carts and horse armors now and then update the fbxs when you get finished with them." and, after the import, "I have
+imported all that I had, please check the materials AND their flags and ensure we have it set up correctly". The
+three mesh packages carry the file time 09:05: `Assets\creature\chariot\mesh\rhun_war_chariot_c_geo.tpac`
+(12,206,552 bytes), `rhun_war_chariot_d_geo.tpac` (12,101,159) and `rhun_war_chariot_e_geo.tpac` (12,181,487).
+
+The check of the materials read the package bytes, not the Kit's screen. The 19 chariot materials in
+`Assets\creature\chariot\textures` (the five armours, the base and front material of carts A to F, the two dwarf
+materials) have equal settings apart from their map bindings: material flag `two_sided`, vertex layout `bumpmap`
+and `skinning`, blend `no_alpha_blend`, shader flags `use_specular` and `do_not_use_vertex_color_as_occlusion`, and
+the shader and number values that the Armory's other armour materials have (937 single material packages read;
+the elk, the direwolf and the Rohan noble armour are in the same settings group). Each material binds its own `_d`,
+`_n` and `_s` package in the diffuse, normal and specular slots. Of the 57 map packages every `_d` and `_s` is DXT1
+and every `_n` is BC5, all 2048 by 2048 with 12 mip levels. No source map has an alpha channel, so a material
+without `alpha_test` is right. Each of the five Rhûn set meshes holds its own three materials six times, once for
+each LOD, and `tools/check_rdc_entries.py` lists no chariot package without a cache entry. Nothing had to change.
+
+He then asked "Do we need two sided or no?". A probe of the row scene (LOD0, rest pose, the horse bodies in
+place) cast rays from behind each triangle into the directions a viewer can stand in, and counted a triangle when
+at least a tenth of them met nothing. Share of each material's area whose back a viewer can see: the older armour
+of cart A 13.2 percent on the body (1,368 triangles) and 0.4 percent on the head; armour 1 0.5 percent (95);
+armour 2 0.1 percent (10); armour 3 none; armour 4 0.1 percent (27); armour 5 0.5 percent (274); every cart
+material at most 0.1 percent (0 to 44 triangles). The clips, where plates part and show their inner side, and LOD1
+to LOD5 were not measured, and the flag's render cost in the engine was not read. His decision: "Keep two sided on
+for all".
+
+At 09:16 three harness items went into `LOTRAOM_horses.xml`, between `taom_chariot_armour_rhun_raider` and
+`taom_chariot_armour_imperial`, each with the values of `taom_chariot_armour_rhun` (the raider row above shows the
+form). No tool puts the rows back, so their ids, names and meshes are kept here:
+
+| Set | Item id | Name | Mesh | Triangles, LOD0 to LOD5 |
+|---|---|---|---|---|
+| C | `taom_chariot_armour_rhun_sun` | `[Rhûn] Sun Chariot Barding` | `rhun_war_chariot_c` | 59,460; 44,603; 28,217; 17,356; 7,198; 5,347 |
+| D | `taom_chariot_armour_rhun_lacquer` | `[Rhûn] Lacquer Chariot Barding` | `rhun_war_chariot_d` | 58,353; 44,359; 27,497; 16,301; 6,638; 4,456 |
+| E | `taom_chariot_armour_rhun_horned` | `[Rhûn] Horned Chariot Barding` | `rhun_war_chariot_e` | 58,991; 43,819; 26,333; 15,835; 7,444; 4,541 |
+
+The ids and the display names are the session's choice until he gives others. No troop wears the items. Their
+English name rows are in `Languages\loc_LOTRAOM_horses.xml`, and the twelve translations wait for the language
+pass. The repo's tables hold the items: `tools/armour_cover_flags.json` (mane cover `all`),
+`tools/data/armour_colour_families.json` (family bronze for each, measured on the set's front map; the lacquer
+set's red-orange lies in the scanner's bronze band, the scanner knows no red family, and the table has no
+override for it) and `tools/external-loc-coverage-baseline.json`.
+The triangle counts were read at 09:20 from the meshes in `AssetSources` (`tools/audit_fbx_lods.py --fbx`; the
+files carry the build times 07:17, 07:13 and 01:57); a later mesh update changes them. The data gates on the two live files gave 22 PASS, 2 FAIL and 1 NOT RUN; the two that fail
+(`armory-refs`, `armour-colours`) name no chariot row, and the one that did not run is the localization test run.
+
+**Cart A without its quiver and javelins, 2026-11-26.** Of the cart that is in the game he said: "Cart A, we can
+remove the quiver and javelins and save on some triangles. They dont really do anything." Build v06 of
+`rhun_war_chariot` has no javelin case and javelins on the right wall and no bow case and arrows on the left wall,
+with their straps, mounts and lashings. The wall faces and the right wall boss that those parts covered are built
+again; the right boss is a mirror of the left one at LOD0 to LOD3. The maps give back the light under the removed
+parts, and the two strap prints on the right top rail are gone. The horse armour did not change. The whole mesh went
+from 59,173 to 57,684 triangles at LOD0 and from 16,817 to 16,581 at LOD3.
+
+At 23:03 five source files in `AssetSources\creature\chariot` were replaced under their old names
+(`mesh\rhun_war_chariot.fbx`; `textures\rhun_war_chariot_front_d.png`, `_front_s.png`, `_base_d.png`, `_base_s.png`),
+each with a kept copy of the file it replaced and an equal hash after the copy. The two normal maps stay as
+installed. The items do not change: the mesh name is the same. The game shows the new cart only after the maintainer
+clicks update on the mesh and its maps in the Modding Kit; that step is owed.
+
+**The armours in motion, 2026-11-27.** A check of the horned set found that armour 4's haunch plates parted in one
+of the pose gate's own leg poses. A study then read the game's clips of the chariot horses. In the gallop the thigh
+bone swings back 41.9 degrees, where the pose gate tests 30, and armours 2, 3, 4 and 5 came apart in every gait and
+in the idle clip; armour 1 showed no gap. The cause was skin weights. Each plate, lame or neck band followed one
+bone, chosen at its centre, and the backing or cloth under it followed the skin over several bones, so a plate slid
+off its backing when a leg or the neck moved. No gate measured a part against the part it lies on, and no gate
+posed the rig with a frame of a real clip.
+
+The repair changes weights only: a plate takes the weights of the backing under it, and the neck lames take a blend
+along the neck. Positions at rest, UVs, triangle counts and maps stay as they were, with one exception on armour 4,
+where two neck lames moved 0.254 mm at LOD0 and 3.136 mm at LOD3. The build scripts are in the work folder; each new
+key is off unless an armour's design file asks for it, and a rebuild of every other armour that shares a script was
+compared with its existing build (positions, weights and UVs equal at six LODs).
+
+| Armour | Build | Worst slip between neighbours, before and after | State |
+|---|---|---|---|
+| 2 | v16, in set C v23 | front lames 555 mm to 42 mm, rump lames 323 mm to 14 mm (gallop) | installed at 02:30 after a read-only check found it ready |
+| 4 | v26b, in set E v16 | front field 765.5 mm to 127.8 mm, rear field 559.4 mm to 60.4 mm (gallop) | installed at 02:24: equal at rest and better in every motion measure than the build it replaced. Its check did not pass it (see below) |
+| 3 | v14, in set D v20 | neck bands 167.9 mm to 13.3 mm in the idle clip; the chest skirt's turned-over faces in the gallop 102 to 5 (the check's count) | installed at 03:40. A read-only check found it ready: nowhere worse than the build it replaced, at rest or in motion |
+| 5 | v19w2, a candidate | skirt 507.1 mm to 86.5 mm (gallop), cape 245.1 mm to 44.2 mm (idle) | not installed. The black set is approved and in the game, so its files change only on the maintainer's word. The candidate is one mesh file in the work folder; the nine maps are the installed ones |
+
+Open after the repairs:
+
+- Armour 4's front field: in the gallop the lattice backing ahead of the forelegs stretches up to 8.4 times and 13 to
+  17 faces turn over, so it opens into slats at the leg pit. Weights cannot close it: every variant that cut the
+  stretch pushed the foreleg through the field. It needs a change of the backing's shape, which changes the armour
+  at rest and is not started. The check of set E v16 counted a black patch there and did not pass the set; most of
+  that count came from the check's own render script, which turned the normals again at every pose (3,269 dark
+  pixels for one frame inside a pose series, 550 for the same frame rendered alone).
+- Armour 2: the front skirt folds over the forearm at two gallop frames, and its backing still slips 196 mm against
+  the shoulder plates and the chest plate.
+- Armour 3: a few faces of the chest skirt still turn over at one gallop frame (5 by the check's count), and a small
+  dark patch shows there at 8 m; the build it replaced tore there. The front tassels shorten to 0.881 of their
+  length in the gallop. At LOD2 the lining shows as large black areas on the neck and chest already at rest, as in
+  the build before.
+- Armour 5, as a candidate: the lowest haunch rows pull apart at five frames; a second attempt with smoother weights
+  was worse and was dropped.
+- The slip measure is not yet a gate of the armour build chains, and no set was checked in the game.
+
+**The far levels, a gate for motion, and what the gate found, 2026-11-27.** Three things followed the weight repairs.
+
+*The far levels.* The checks of the repaired sets found that armours 2 and 3 showed lining and backing at LOD2 and
+LOD3 already at rest, where LOD0 shows plates. On armour 3 the neck bands had 5 points across at those levels where
+LOD0 has 11, and each chest slat strip was one flat quad; on armour 2 each lame strip of the flank and rump was one
+flat quad with a row of backing behind it, and the neck lames were too coarse to cover their backing. Armour 3 v16
+and armour 2 v18 rebuild LOD2 and LOD3 only; LOD0, LOD1, LOD4, LOD5 and the maps are identical to the builds before.
+A read-only check measured both sets against the installed ones, with back faces culled as the game draws them:
+
+| Set | Lining or backing that shows and LOD0 does not (pixels, side view) | Change at the LOD1 to LOD2 and LOD2 to LOD3 switches (pixels, three views) | Triangles, whole set |
+|---|---|---|---|
+| D v21 (armour 3 v16) | LOD2 860 to 276, LOD3 235 to 29 | 3,486 to 1,608 and 1,029 to 664 | LOD2 24,545 to 27,497, LOD3 14,517 to 16,301 |
+| C v24 (armour 2 v18) | LOD2 1,152 to 185, LOD3 214 to 40 | 3,374 to 886 and 1,382 to 596 | LOD2 25,857 to 28,217, LOD3 15,076 to 17,356 |
+
+Both were found ready and replaced the installed meshes at 07:45. One switch got worse by measure: on set C the
+change from LOD3 to LOD4 at about 28 m went from 672 to 1,170 pixels, because LOD3 now has the full neck lames and
+the unchanged LOD4 keeps a stepped hood; on a 1080p frame it is a few pixels of crest outline. A first attempt was
+stopped by an acceptance rule that asked for a lower difference in every view; the far levels were already far
+better, and the rule was the fault.
+
+*A gate for motion.* The slip measure of the study is now gate G15 of both armour build chains and of the stage
+script (in the work folder: `rharm_slipgate.py` with a table of pairs per armour and a baseline). It poses the rig
+in the gate poses and in every key frame of 16 clips and measures each declared pair of parts. A build fails when a
+pair's worst slip is above the installed build's by more than 10 percent plus 2 mm, and a set whose armour failed
+or skipped the gate cannot be staged. Proof: the five installed armours pass; armour 2 v15, armour 3 v13 and armour
+4 v25e, the builds of before the weight repair, fail (armour 4 v25e on its front field at 765.5 mm against a limit
+of 142.6 mm). The gate measures LOD0 only and only the pairs its table names.
+
+*What the wider gate found.* Eleven pair classes were above 150 mm in installed builds. A study rendered each at
+its worst frame: nine are faults and two are artefacts of the measure. The first study of the night had said that
+armour 1 showed no gap; that was wrong, it had looked at too few frames.
+
+| Armour (set) | What a viewer sees | State |
+|---|---|---|
+| 1 (B, in the game) | In the idle clip the neck lames part on the right side, a true gap of up to 149 mm | A weights-only candidate brings it to 20 mm and was found ready by a read-only check; not installed: set B is in the game |
+| 2 (C) | In a galloping turn the front skirt leaves the shoulder plates and the chest plate by up to 203 mm and rides up with the forearm | Weights cannot cure it: a skirt tied to the chest lets the foreleg through. Two candidates with a changed shape are in work for the maintainer to choose |
+| 4 (E) | The same between the front skirt and the chest plate (up to 160 mm); in a trotting turn the neck comes through the chest plate's collar | Open |
+| 5 (black set) | Haunch and cape plates off the cloth; fringe bars 97 to 150 mm off the hem; chest bosses up to 93 mm off the belt | A candidate cures the plates and was found ready; the fringe and the bosses are in work; not installed: the set is in the game |
+
+Armour 4's front backing, which opens into slats at the leg pit, has no cure yet after three attempts: a cut of the
+field's lower front edge removes the folds, but the withers straps and the shoulder band are sewn onto the part the
+cut removes.
+
+Not marked by him on set v26 or v27 and still open on the set, for builders after the reset:
+
+- Armour 5: the dark place at the withers in the hero view (the place of his pictures 64 and 65). Its cause is
+  measured: at the rear end of the shoulder zone the curtain's two extra plate rows reach the height of the body's
+  top, and the zone's last plates stand straight up from the sloping top edge of the curtain's coarse backing, so
+  the back cover is lifted up to 130 mm over the body to pass them. Four repairs (`v18as`, `v18at`, `v18au` and `v18aw`, the last built 23:54 to 23:59 on 2026-11-25) each failed
+  a gate; `v18ar` was a test build. `v18aw` shortened the zone's upper curtain row by one plate: G9 0 and G11 0 pairs
+  in five poses, but G13 found 4 pairs at rest (the cover's backing through the last plate of that row at
+  (0.134, -0.424, 1.573) and its mirror), and the dark place stays, a little smaller. The zone's last two upper-row
+  plates and the cover's lift over them hold each other up, so a repair has to treat three things together (those
+  plates, the cover's backing under its first plates, the cover's lift), with G13 at rest, G11 in five poses and G9. The cart has 6 to 13 mm of room at this armour in
+  the neck poses, so a plate that moves at the neck base or by the forks meets it. The `v18aw` script is kept in
+  `iterations\v18aw\scripts`. The live scripts are `v18ay`'s (`iterations\v18ay\scripts`);
+  `iterations\v18av\scripts` is the way back. Also open: a skin triangle beside the chest cloth, seen from the front; the neck
+  strap at LOD1 to LOD3, where it still crosses the band's rim (25 and 25, 19 and 16, 32 and 30 face pairs a
+  side in `v18ay`); the liner against the neck bands (26 face pairs at rest, 155 with the head up, not yet looked
+  at; the probe `clothcollar.py` (chest cloth, liner and neck straps against the neck bands, by pose) found equal
+  numbers in `v18av` and `v18ay`: at rest 0, 26 and 8 pairs; neck turn +25 cloth 14 and 10, liner 33 and 31, straps
+  10 and 14; neck turn -25 0 and 0, 48 and 46, 14 and 14; the two cloth faces by the collar end that cross in the +25
+  turn cross in `v18av` too); 22, 3, 29 and 7 faces of class a at LOD0 to LOD3 in set v27 (set v26: 10, 5, 32, 7;
+  `v18ae`: 0, 2, 0, 0). On the armour's swap file the counts are 21, 3, 29, 7 (`v18av`: 10, 5, 32, 7): the 11 new
+  ones at LOD0 lie under the collar at x 0.155 to 0.167, z 1.34 to 1.45 and their mirror places, where the collar
+  now lies close over the cloth, and the culled part colour views from inside the throat show no new hole. All 21
+  listed at LOD0 on the swap file are chest cloth faces (18 by the nearest part vertex, 3 nearest a curtain vertex).
+  They are the cloth faces that the cull keeps since decision D2, so that the cloth stays one piece (the work log,
+  21:35 on 2026-11-25). Whether a camera sees their backs is not checked; 3 and 5 strap-to-plate
+  pairs in the two neck turns; the sheets. The belt loop of the third lane was taken out again.
+- Cart F: the far levels (LOD2 wall foot, LOD3 underside, a LOD3 of 26,003 in set v27; the UV check holds 100, 88 and 98 triangles at LOD1 to LOD3), the two hidden hub
+  discs (`hub_n` and `hub_p`, the flat base discs of the gold blade sockets) that fail the link gate, a cluster rule in the see gate.
+- Armour 1 `v30` failed its check against `v29` (five parts worse), so `v29` stays its last good build. Armour 3
+  `v08` is complete (9,460 triangles); `v09` with the panel hangers is half done.
+
+The tables below hold the state of 18:41 on 2026-11-25, except the rows for armour 5 and cart F, which hold the state
+of 2026-11-26, 09:40 (set v27). Order after F, by his word:
+B, D, C, E.
+
+| Armour | He last saw | In work | State | Open |
+|---|---|---|---|---|
+| 1 raider | v28: "Rest of armor looks good", with three marks ("clipping", "2 should be straight not bent", "1 should have a buckle here tying it all together") | v30, paused at 13:10; since 18:36 fresh builders, block by block (blocks A head, A body, B far levels, C close range; group D not touched) | v29 was built and not shown: with the head up, 988 skin-view samples on the bridle and the crest holder through the first lame. v30's last build has the poll fin on the first neck lame, one plain crown strap and new eye openings at LOD0 and LOD1, 9,732 triangles at LOD0 (the agent's count); `iterations\v30` is mixed and marked "in work, not for review" | Review groups A (body), B and C of v29; 97 skin-view samples "inside" at the tops of both eye openings |
+| 2 sun | v07: "Gaps and still not connected (front armor)." / "Texture issues? Or something" / "Clipping and front armor not attached?" / "Weird texturing on those" | v08, waits | First build only (09:49): 9,928 triangles at LOD0, 546 backing faces in front of plates | The connection standard, ties for the front skirt, the fringe sheet out, clean gold, eye openings and bridle |
+| 3 lacquer | v06: "Very very cool but the front armor is still not connected to anything." / "The eye armor needs to be cleaned up" / "Attach these reins or horse head armor straps better." | v07, waits | Not built: `rharm_design3.py` does not build yet | Chest suspension straps, the rump panel's joint, a clean eye opening, the poll strap ends |
+| 4 horned | v22, in set e; which version his pictures 44 and 45 show is not recorded | v23, not started | v22: 8,968 triangles at LOD0; link gate 426 islands, 0 unlinked | Strap ends on studs, two studs that cut each other, a buckle on a scale row, the neck piece to armour 5's standard |
+| 5 black | 2026-11-26: set v26 (`v18av`) in Blender, picture 68: "the only problem is this is messed up and not straight and then the armor and cart are good after this fix."; set v27 (`v18ay`) opened for him at 08:39, then "put set 27 into the asset sources. This is amazing"; after his Kit import: "done, looks good!" | none; its maps and the set F file are in the Armory's `AssetSources` since 09:22 (the armour is inside the set F FBX), imported in the Kit at 09:36 to 09:38 | `v18ay`, built 08:24 to 08:27: 11,130 / 9,229 / 4,763 / 2,604 / 1,103 / 564 triangles at LOD0 to LOD5 on one horse; collar ends clean; its gates equal `v18av` except G11 gaps (head down 22.2 mm, head up 5.9 mm), G14 faces seen from behind at LOD2 (10), G10 class a (21, 3, 29, 7 on the swap file at LOD0 to LOD3) and the neck strap pairs a side at LOD1 to LOD3 (25 and 25, 19 and 16, 32 and 30) | The dark place at the withers (four repairs failed), the neck strap at LOD1 to LOD3, the liner against the bands, the class a faces. The 18:41 row for `v18y` is replaced by this one |
+
+| Cart | Newest | Staged | State | Open (review counts: the cart review `wf_5c1aaa1f-cb7`, stopped at about 13:07; its checker had finished only cart D) |
+|---|---|---|---|---|
+| B | v23 (v21 without the javelins, 2026-11-26) | v23, in set b (set v24, with armour 1 v23); in the game since 2026-11-26 as `rhun_war_chariot_b` | Painter wood; link gate 444 islands, 0 unlinked; set 43,490 triangles at LOD0 | 30 review findings of 2026-11-25 (11 "would mark: yes"), not checked; the gold bracket legs under the top rail show plain where the javelins hid them |
+| C | v16 (LOD UV fix) | v16, in set c (set v24, with armour 2 v18); its sources are in the Armory's `AssetSources` since 2026-11-27 as `rhun_war_chariot_c` | Painter wood, delivered gloss; set 59,460 triangles at LOD0; the stage's manifest reports every gate passed, with the armour UV row as a count | 24 review findings of 2026-11-25 (5 yes), not checked |
+| D | v17 (LOD UV fix, inner fan gone: 1,183 triangles less at LOD0) | v17, in set d (set v21, with armour 3 v16); its sources are in the Armory's `AssetSources` since 2026-11-26 as `rhun_war_chariot_d` | Painter wood; set 58,353 triangles at LOD0, every set gate passed | 23 review findings of 2026-11-25 (9 yes); the checker found 21 real and added 6 |
+| E | v13 (wood grain along the boards on the inner front wall and the top planks) | v13, in set e (set v16, with armour 4 v26b); its sources are in the Armory's `AssetSources` since 2026-11-27 as `rhun_war_chariot_e` | Source wood; set 58,991 triangles at LOD0; the stage's manifest reports every gate passed | 26 review findings of 2026-11-25 (6 yes), not checked |
+| F | 2026-11-26: v22 (hidden faces cut) with the maps of v24 (black-stained wood), in set v27 | not in `out\for_kit_variants` (its `f` folder is the old v02 stage); the sources are in the Armory's `AssetSources` since 09:22, the Kit packages since 09:38 | Built and swapped (`SWAP DONE`, pose check 0 and 0 in five poses); cart 44,883 triangles at LOD0, armour 22,260 on both horses; harness item `taom_chariot_armour_rhun_black` since 09:56 | Gate table HELD: the 2 hidden hub discs (link gate), the cart's UV check at LOD1 to LOD3 (surface 2.12, 2.10 and 2.16 cm2 against LOD0's 0.18), the count flag (67,143, above 65,400). The check in game is owed. The 18:41 row (v17, step 3 of Part 2 stopped at 18:22) is replaced by this one |
+
+**Armour 5: the look target and his choices.**
+
+| Item | His word | What follows |
+|---|---|---|
+| Look target | About 14:10, on the upper left tile of the Tripo sheet: "LOOKS AWESOME!" | The tile is the reference picture `out\concept_art\tripo_refs\01_black_neck_front.png`, not the Tripo model (the two models were first measured on 2026-11-26: [technique-library.md](../reference/technique-library.md), teardown T1). It is the look target for neck and head: curved bands with rounded ends, a round gold bead along each free edge, an even overlap, a flared lowest band, a smooth black head shell with the same bead, round gold eye rings, no plume |
+| Neck bands | Log entry 15:01 (the hand-over says 15:05): "Rounded ends, rim in normal map" | Prototypes at LOD0 (the rework agent's counts): G, the bead as geometry (`v17pg`), neck piece 1,839 triangles, LOD0 12,320; N, the bead in the normal map (`v17pn`), neck piece 1,003, LOD0 10,759. v18 has G's rounded ends with N's bead |
+| Surface | About 14:40: "Armour and cart trim" | Glossy black and bright polished gold on armour 5, the same gold on cart F's trim. The session's pin: gold `_d` median (170, 142, 88), metal 255, gloss 215; black about (16, 16, 17), gloss 200 on bands and head shell, 185 on scales; cloth and leather matt. His eye decides on the render |
+| Plume, cloth | 13:36 to 13:44: "We dont need the plume when the armor is very appealing anyways." | Ten narrow bands, no plume, a thin black cloth layer on the skin at the chest and shoulder, under the forks |
+| Straps at the helm | Log entry 17:03 (the hand-over says 17:10), picture 67: "THis needs to go under the helm" | Every strap that meets the head shell comes out from under its rim, no strap or stitching on its outer face; it replaces the ring-or-tab standard at the head piece |
+| The session's rules on v18t | none | A strap end is sewn onto leather and takes its weights (G9 against G13: neither yields); no hidden-face cull where it splits the chest cloth; LOD0 normals onto the lower LODs; end caps with no fan of sliver triangles |
+| Builders | none | 17:11: the rework agent found its working memory too long and wrote the hand-over (`HANDOVER_agent2.md`, "v18: what the next builder does"). Now one fresh builder per block, a read-only checker after each that opens every view, one retry. Run 1 (`armour5-v18-blocks-1-3`, `wf_2e723947-d51`): the straps under the helm, the chest cloth, the withers and the seam of picture 65; blocks 4 to 7 after the session's own read of the views |
+
+**Cart F: the review, the yoke and Part 2.**
+
+| Step | Result |
+|---|---|
+| Review of the prepared scripts before any Blender run (`wf_ce375cfc-246`, 8 agents; `out\rhun2\_work\f_review_check\CONFIRMED.md`) | 29 findings confirmed (4 blockers, 9 majors, 16 minors), 6 refuted, 4 "verified ok" entries untrue. Three blockers would have stopped Part 2 with nothing to show (the swap's cart files, a density file an AO-fix folder lacks, a mask proof that wanted a share of exactly 1.0); the fourth moved the inner fork prongs onto the pole (no part filter). The re-check: 23 of 24 fixed; 2 new majors and 7 minors |
+| The game's clips | Cart F v14 splits at the yoke centre (the checker: walk 24.2 mm, trot 20.4, gallop 0.3, turns 206.5 to 365.2) from its own weight transfer. Correction: cart A's yoke centre is on the pole bone (0.98 to 1.00), so cart A does not split there; the session had told the maintainer otherwise, and the 14:52 entry corrects it to him. No bone moves with both horses; at the forks the necks move against the pole by 67, 126, 185 mm (walk, trot, gallop) |
+| Design "one stiff yoke" (`wf_61dc2737-1d9`, 9 agents, a checker per design; `out\rhun2\_work\yoke_design\RESULT.md`) | Rejected: the pole stretches up to 10 cm in the gallop; the forks float 6 to 11 cm off a neck in turns |
+| Design P70, weights only | Usable: the inner tip slides 13, 26, 49 mm against the bar's dip (walk, trot, gallop), into it up to 13 mm |
+| Design S*, chosen by the session | The yoke's middle and both inner prongs one stiff piece on the pole bone, each inner prong 2.7 cm shorter at its top, a blend to the necks from 0.145 to 0.28 m off the centre; no tear by construction; 0 into a body in walk, trot, gallop; the bar's edge change 46 mm in the gallop. Why: it holds every joint in the clips a player sees most, and its bar flexes less than cart A's. The session took the change of shape itself; it goes to him with the way back (W*, weights only) |
+| S* as built | `INNER_PRONG_OFFSET` 0.020 (each inner prong 20 mm further from its neck): 5.7 to 12.9 mm from the bodies, 56.5 mm or more from armour 5's neck bands and collar in every gated clip (the cart hand-over: 50 mm or more), tears 0.8 mm at most |
+| Known limits, for him with the set | The bar's arm root 21.2 mm into the left horse in `chariot_gallop_turn_right` (accepted, bound 25 mm; cart A's bar reads 18 to 25 mm in the gallop turns); the turn-in-place clips (the design check: inner prong 105 mm into a neck, cart A's bar 113 mm; the cart gate with the offset: 79 mm in `chariot_turn_right`); quick stop and rear push the arm root 106 and 85 mm into a neck; the bar against the collar in the straight gaits (14.4 mm at rest; walk 0.8, trot -2.2, gallop -1.0 mm) |
+| Part 2 (released 17:32, `out\rhun2\_work\f_review\run_f_review.sh`, owner `cart`) | Step 1's six jobs ended with exit 0 (build 8 s, bake 541 s, lods 8 s, export 45 s, gates 3 s, preflight 14 s). Cart F v16: 46,552 triangles at LOD0 (v14: 44,406; the strict hidden-face cut of 1,127 not applied); the yoke gate passed against the v18t dump; gold `_d` median (170, 142, 88), gloss 215. Step 2 made v17 (the AO fix) |
+| The see gate, first real run (step 3, 23 jobs, stopped at 18:22) | Three faults were in the gate (inside rays that started outside the crew space, the yoke's middle left in as an open piece, rays from inside an open piece passing); fixed, and the control on v14 still finds F1 to F4 from outside. v17 at LOD0 with the fixed gate: front wall from inside 4,836 back (grazing rays 2 to 20 mm above the boards), from outside 61 back; side walls from inside 130 and 136; floor 41. LOD2 and LOD3 floors have holes (1,281 and 1,536 rays miss); LOD2 to LOD4 show faces from behind (up to 8 a view at LOD2, 67 at LOD4) |
+| The session's decisions (18:41, the maintainer away) | The lowest inside ray starts 20 mm above the boards and a skirting strip closes the foot of the inner front and side walls; the corner, rim and floor-corner fails are repaired, each with a render from a failing ray's origin before and after; the floor stays closed at every LOD that shows it (0 misses at LOD1 to LOD3) and the back faces at LOD2 to LOD4 are repaired (0 at LOD1 to LOD3) |
+| The projection, told to him | Cart 46,552 with armour 5 v18t (22,186 on both horses) gives 68,738; after the hidden-face cut about 67,600 (an estimate), against the about 66,600 he accepted. Without a word from him the session goes on with about 67,600 |
+
+Staged sets in `out\for_kit_variants\<set>\`, each with a `MANIFEST.md` (hashes, triangles per LOD, slots, gates):
+
+| Set | Cart and armour (built as) | LOD0 | Manifest status |
+|---|---|---|---|
+| b | cart B v19, armour 1 v23 (v20) | 47,045 | all gates pass |
+| c | cart C v14, armour 2 v07 (v15) | 59,270 | all gates pass |
+| d | cart D v15, armour 3 v06 (v16) | 57,656 | all gates pass |
+| e | cart E v10, armour 4 v22 (v11) | 57,973 | all gates pass |
+| f | cart A's cart unchanged, armour 5 v15 (v02) | 64,625 | HELD: 3 gates fail, the 60,000 budget among them |
+
+Set f in this folder is the old stage. Set F v27 (cart F v22 with the maps of v24, armour 5 `v18ay`, 67,143 at LOD0) is
+not staged here; its gate table is `variants\f\_work\v27\gate_table\MANIFEST.md` (HELD on four rows), and its ten files
+were copied from that folder into the Armory's `AssetSources`.
+
+None is final: each folder holds the state of the look review, not a state for the Kit, and waits for a newer cart
+(B v21, C v16, D v17, E v12) and armour; set f is superseded by set F v27 (see above) and still counts the budget his word of 13:02 closed. Owed for sets b to e:
+his look, the Kit import, a check in game; for set F v27: the check in game. On cart D in a 20 degree neck turn the yoke comes within 7.9 mm of armour 3.
+
+**Limits every build keeps** (beside the art checks of [blender-asset-gates.md](blender-asset-gates.md)).
+
+- A cart is open at the top and the rear, no wall or rail above cart A's v03 (front 2.218 m, side 1.552 m).
+- An armour has 9,000 triangles at LOD0 on one horse; for joints 9,500 (armours 2, 3, 4) and 9,800 (armour 1);
+  armour 5 has the measured count of its v18 build, stop line 11,300. A set as in the rules above.
+- An armour keeps 0.060 m from the pole (armour 5: 0.050 m in its filled hip zone) and 0 face pairs with the cart at
+  rest and in five neck poses. The forks follow the neck bone at weight 0.89 and move up to 100 mm in a neck turn.
+  No saddle, no stirrups, nothing below z 0.55 m. A clearance is met with tight, thin plates, never with a hole.
+- Connections: no strap end on a stud or a plate (a sewn lap on leather; a ring or buckle with a riveted tab on
+  metal); a strap that meets a helm or a rigid shell goes under it; every hanging panel on at least two suspension
+  straps; a top binding band on every panel; tight rows. One palette a set.
+
+**Gates and reviews.**
+
+- G1 LOD audit (`tools/audit_fbx_lods.py`), G2 preflight (`tools/blender/mesh_preflight.py`), G4 FBX re-import, G7
+  three 2048 RGB maps, G5 0 armour vertices under the skin, G6 0 face pairs at rest and the pole gap.
+- G3 names (`rharm_names.py`, `rharmb_names.py`, `rhun2_name_check.py`): 0 hits of the upstream chariot pack's name.
+- G9 link gate (`rharm_links.py`, `rharmb_linkgate.py`, carts `rhun2_gate_links.py`): islands within 4 mm are linked,
+  each reaches an anchor, each strap is linked at both ends. It cannot tell a made joint from a touch.
+- G10 (`rhun2_invclass.py --classify-armour`): 0 armour faces seen only from behind, LOD0 to LOD5. G11
+  (`rhun2_posecheck.py`): 0 cart-to-armour and cart-to-body pairs in five neck poses. G12 skin view (`rharm_skinview.py`,
+  `rharmb_skinview.py`): 64 directions, six cases. G13 strap to plate (`rharm_strapplate.py`, `rharmb_strapclip.py`):
+  face pairs, target 0. G14 (`rharmb_lodcull.py`, culling on): 0 back faces, 0 plate through plate at LOD1 to LOD4.
+- Carts: coplanar twins (`rhun2_twins.py`), the collapsed UV area per LOD, the see gate (`rhun2_see_gate.py`: rays
+  every 3 mm through the walls and the floor at LOD0 to LOD3, the known slits F1 to F4 as control) and the yoke gate
+  (`rhun2_yoke_gate.py`, the game's clips: tears at most 1 mm, no part into a body, each prong 10 mm or more from the
+  armour's neck bands and collar in the straight gaits).
+
+The gates passed every version he rejected, so an independent review runs before he sees a version. First run, armour
+1 v29 (`wf_8d001b87-5ca`): four reviewers with one scope each, a checker each that tries to refute; 381 views, 60
+confirmed (26 at normal distance, 34 close up only), 3 refuted, 20 added. Groups A, B (LODs), C required; D to him.
+
+**Textures.**
+
+- Carts: wood from the modules' wood source textures, projected along each piece's grain and tone-mapped to the dark
+  Rhûn wood; steel blades at sRGB 91, 91, 93 (`rhun2_compose.py`). Armours 1 to 3: the paint step `rharm_paint.py`.
+- Substance Painter 12.2.0 is one instance, shared through the work claim `painter-instance`. It textures the first
+  UV layer: never install `out\painter_pilot\maps`, `maps_ao` or `gold\maps_final*` (made on `["dco", "UVMap"]`);
+  clean: `cart_a_redo\maps`, `gold_redo\maps_final`. B, C, E have Painter sets with `maps_delivered_gloss` variants;
+  2.2 to 3.2 percent of their wood texels are dark grey single texels, cause not confirmed.
+- Cart F: `rhun2_f_painter.sh` runs the pilot's Painter scripts into `rhun_f_painter/<run>` beside the work folder
+  (Painter keeps absolute paths, and the work folder's own path breaks the name rule), then `rhun2_f_pcompose.py` per
+  wood colour. The gold pin (`TONES["f"]["gold_pin"]`, `rhun2_compose.py`) sets the gold `_d` median and gloss.
+- `standart.rsh` multiplies the ambient occlusion by the `_s` blue under `use_specular`; carts write the occlusion
+  bake (`rhun2_spec_ao.py`); cart A and the two dwarven chariots keep the flat blue. Not checked in game.
+
+**Decided.**
+
+- 07:54 and 08:44: the wood per cart. 08:03: armour 5 goes on cart F (a black armour needs a black cart). 09:16: cart
+  D's inner fan goes. 09:58: cart F's javelins and arrows go ("They are not needed"). 13:10: cart B's javelins go.
+- Armour 1: "make fin bigger, but v24b raider is good" (08:36); "These should end with a fine point." (09:48).
+- 13:36 to 13:44: ten narrow bands, no plume, the cloth layer, Painter wood for cart F; cart A gets cart F's repairs
+  after the black set; the order after F; the two black neck pictures through Tripo.
+- About 14:10: picture 01 is the look target. About 14:40: glossy black and bright gold on armour 5 and cart F's trim.
+  15:01: the hybrid bands. 17:03: straps under the helm. Evening: more Blender within the memory floor; docs as you go.
+- Tripo (13:40 to 13:46): `01_black_neck_front`, `02_black_neck_rear`, image to model, `tripo-v3.1`, 50 credits each
+  (940 before, 840 after), in `out\tripo_in\<name>\tripo-out\`; the builders use them as a ratio reference only.
+- The session's own: scheme S* (16:48) and the arm root limit (17:32); the v18t rules for armour 5 (17:08); fresh
+  builders per block (17:11); set B beside the black set (18:35); cart F's see gate repairs (18:41); armour 1's poll fin on the first neck lame (12:24); armour 2's fringe sheet out (08:36).
+
+**Open decisions (the maintainer's).**
+
+- The black set's count: 67,143 at LOD0 (measured, set v27; the manifest flags it above 65,400), against the about
+  66,600 he accepted. He chose the import before the cart's far levels and hub discs are repaired; no source records
+  him accepting this number.
+- The yoke: S*'s change of shape (way back W*) and its known limits, when he sees the set.
+- The other carts' wood colours, the name `rhun_war_chariot_f` (the session's choice; the files carry it in the
+  Armory's `AssetSources` since 2026-11-26, and no source records him approving the name as such) and the pairing.
+  Cart F's wood is decided: Wood B, black-stained.
+- Cart A in the Armory (repairs after the black set): the flat blue, gold blades, a rear step 5.5 mm behind the frame,
+  one face the wrong way at LOD1, maybe cart F's wall slits and missing slab face (not checked); one Kit update can fix all.
+- Group D of the armour 1 review: strap ends under the junction discs, the fringe as flat tabs, the quilt's soft
+  colour, the matt trim gold, ten-sided discs, the fin tone, the girth buckles; and six broad neck bands against nine
+  to ten narrow ones in the reference pictures (the session keeps six).
+- Armour 4: the bare hip where the pole passes. Tripo: the other four pictures (`03` to `06` in
+  `out\concept_art\tripo_refs\`) wait for their sets.
+- A commit of the uncommitted doc edits and a push of the docs branch.
+- The black set (F, v27): in the Armory's `AssetSources` since 2026-11-26, 09:22 (his word), and imported by him in
+  the Kit at 09:36 to 09:38 ("done, looks good!"); its harness item `taom_chariot_armour_rhun_black` exists since
+  09:56 (his word). Owed: the check in game, the twelve translations of its name, the troop of Khamûl's line that
+  will wear it (his plan), and a commit that takes its repo entries to trunk.
+- Sets B to E, each on his word: a set into the Armory's `AssetSources`, the harness item rows and names, the checks
+  in game.
+- From before: the provenance register line, the `is_compressed` fault, stale comments in the live Armory.
+
 ## How to verify in game
 
 Owed for the dwarven war chariot (no issue: the maintainer waived the public issue for the chariot work). Close the
@@ -419,8 +993,37 @@ Owed for the rig (2026-11-23), with sound on:
     to stand or die beside it, and the battle to go on.
 12. Start the dedicated server with this Armory. Expect no new message about a voice definition or a chariot clip.
 
+Owed for the raider set (2026-11-26): in a campaign with cheat mode on, add `taom_chariot_a` and
+`taom_chariot_armour_rhun_raider`, equip both and enter a battle. Expect cart B without javelins and armour 1 on
+both horses, nothing stretched, and no missing mesh line in the log.
+
+Owed for the sun, lacquer and horned sets (2026-11-27): the same check with `taom_chariot_armour_rhun_sun`,
+`taom_chariot_armour_rhun_lacquer` and `taom_chariot_armour_rhun_horned`, one at a time. The hero needs a Riding
+skill of 120 or more, or the inventory refuses `taom_chariot_a` (its `difficulty`); this holds for the raider and
+black sets too. Expect the set's cart and armour on both horses, its own maps on every part, the mane hidden, and
+no missing mesh or material line in the log. Then, for each set, the two checks that no build tool can make:
+
+- Watch the chariot in a gallop and in a tight turn at a gallop. Expect no plate, lame or strap that leaves its
+  place, no cloth or horse skin through the armour, and no neck lame that parts from its neighbour. The open
+  faults by measure are named in "The armours in motion" and "The far levels" above; say which of them a player
+  sees.
+- Move the camera away from the chariot until it is small on the screen, and back. Expect no cloth through the
+  neck lames at any distance, no hole in a plate field and no sudden change of shape at a level switch.
+
 ## Changelog
 
+- 2026-11-27: The maintainer imported the sun, lacquer and horned sets in the Modding Kit (mesh packages of 09:05). A read of the package bytes found the 19 chariot materials, their 57 map packages and the mesh bindings set up alike and correctly. Three harness items are in the Armory since 09:16: `taom_chariot_armour_rhun_sun`, `taom_chariot_armour_rhun_lacquer` and `taom_chariot_armour_rhun_horned`, with their rows in the three item tables. The check in game is owed.
+- 2026-11-27: The far levels of the sun and lacquer armours show far less lining and backing at rest (set C v24 and set D v21 installed at 07:45, LOD2 and LOD3 only). The slip measure is gate G15 of the armour build chains. A study of its largest classes found faults on every armour; candidates for set B's neck lames and the black set's plates wait for the maintainer's word. See "The far levels, a gate for motion, and what the gate found".
+- 2026-11-27: The armours came apart in the game's clips (one bone per plate over a backing that follows the skin). Weight repairs are installed for the sun set (set C v23, armour 2 v16) and the horned set (set E v16, armour 4 v26b), and for the lacquer set (set D v20, armour 3 v14); the black set has a candidate that waits for the maintainer's word. See "The armours in motion".
+- 2026-11-27: The horned set (set E: cart E v13 with the wood grain along the boards, armour 4 v25e with made joints at every strap end, set v15, 58,991 triangles at LOD0) is in the Armory's `AssetSources` (ten files, 00:52). The Kit import and the harness item are owed.
+- 2026-11-27: The sun set (set C: cart C v16, armour 2 v15 with the chest panel on two straps, a girth and no ear pieces, set v22, 59,460 triangles at LOD0) is in the Armory's `AssetSources` (ten files, 00:07; the mesh replaced at 01:03). The Kit import and the harness item are owed.
+- 2026-11-26: Cart A (`rhun_war_chariot`) lost its quiver, javelin case, javelins and arrows (build v06: 57,684 triangles at LOD0, was 59,173). Five source files in the Armory's `AssetSources` were replaced at 23:03; the update in the Kit is owed.
+- 2026-11-26: The lacquer set (set D: cart D v17, armour 3 v13 with the chest panel on two hangers, set v19, 58,353 triangles at LOD0) is in the Armory's `AssetSources` (ten files, 20:48). The Kit import and the harness item are owed.
+- 2026-11-26: The raider set (set B: cart B v23 without javelins, armour 1 v23, set v24, 43,490 triangles at LOD0) is in the Armory's `AssetSources` (ten files, 19:31), imported by the maintainer in the Modding Kit (19:48 to 19:50), and has its harness item `taom_chariot_armour_rhun_raider` (19:56) with its rows in the three item tables. No issue: waived for the chariot work.
+- 2026-11-26: Recorded the black set (cart F v22 with the maps of v24, armour 5 `v18ay`, set v27, 67,143 triangles at LOD0) and its sources in the Armory's `AssetSources` (ten files, copied 09:22 on the maintainer's word) and his import in the Modding Kit (13 packages, 09:36 to 09:38; "done, looks good!"). Its harness item `taom_chariot_armour_rhun_black` is in the Armory's `LOTRAOM_horses.xml` (09:56, on his word, reviewed the same day). Owed: the check in game. No issue: waived by the maintainer.
+- 2026-11-26: New [technique-library.md](../reference/technique-library.md) with teardown T1 (the two image to 3D models of the neck and head against armour 5 `v16` and `v18ay`), and section 7b of the `/blender-asset` skill, on the maintainer's order to make what a reference tool did our default.
+- 2026-11-26: The technique table and the teardown log moved to the knowledge store ([knowledge-library.md](knowledge-library.md)); `technique-library.md` is a pointer with the old row ids, and the steps are the `/teardown` skill in place of section 7b.
+- 2026-11-24: Added the section on the Rhûn cart variants and the new horse armours (in work, not in the game), and the art checks that came from that work to [blender-asset-gates.md](blender-asset-gates.md). No issue: waived by the maintainer.
 - 2026-11-24: Recorded the rig that replaced the first one on 2026-11-23 (one package from the upstream chariot pack, TAOM's own Rhûn cart as the harness mesh), refreshed five snapshot files, made the two asset checks read each clip's usage list, added the gate `chariot-body` and rebuilt the server skeleton pack. Review: [rca-chariot-rig-2026-11-24.md](../reviews/rca-chariot-rig-2026-11-24.md). No issue: waived by the maintainer.
 - 2026-11-24: Added the dwarven war chariot for Erebor: a ram team (`taom_ram_chariot_a`), two harness meshes (chariot a in iron, chariot b in the ram barding style) and two Ironpass troops at levels 41 and 46. In-game checks are owed. No issue: waived by the maintainer.
 - 2026-06-13 — Tagged the 2 untagged gait clips (`chariot_gait_walkfast` + `chariot_gait_walkbackfast`) with `quad_movement` to fix a latent mount-crash; in-game mission test still pending.

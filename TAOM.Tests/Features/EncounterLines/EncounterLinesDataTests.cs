@@ -63,6 +63,16 @@ public class EncounterLinesDataTests
         ["merc_decline"] = new string[0],
     };
 
+    /// <summary>The notable introductions and the text variables of the vanilla line each replaces (<c>NotableIntroLines</c>).</summary>
+    internal static readonly Dictionary<string, string[]> NotableBeats = new()
+    {
+        ["artisan"] = new[] { "CONVERSATION_HERO.FIRSTNAME", "TOWN_NAME" },
+        ["headman"] = new[] { "CONVERSATION_HERO.FIRSTNAME", "VILLAGE_NAME" },
+        ["rural"] = new[] { "CONVERSATION_HERO.FIRSTNAME" },
+    };
+
+    internal static readonly string[] NotableFamilies = { "dwarf", "elf", "orc" };
+
     /// <summary>The beats a realm's ruler speaks in the realm's own words (<c>LiegeLines.RealmTexts</c>).</summary>
     internal static readonly string[] RealmBeats = { "leave_ask", "leave_granted", "vassal_accept", "merc_accept" };
 
@@ -78,6 +88,8 @@ public class EncounterLinesDataTests
     }
 
     private static bool IsLiege(Row row) => row.TextId.StartsWith("str_taom_liege_", StringComparison.Ordinal);
+
+    private static bool IsNotable(Row row) => row.TextId.StartsWith("str_taom_notable_", StringComparison.Ordinal);
 
     /// <summary>A lord row's text id and the short name its key uses.</summary>
     private static readonly Dictionary<string, string> LordShort = new()
@@ -181,17 +193,26 @@ public class EncounterLinesDataTests
                     Add("str_taom_liege_" + beat, "realm_" + realm, "liege_" + beat, "realm_" + realm);
             }
         }
+        foreach (var beat in NotableBeats.Keys)
+        {
+            foreach (var family in NotableFamilies)
+            {
+                for (var n = 1; n <= TAOM.Features.EncounterLines.NotableIntroLines.Variants; n++)
+                    Add("str_taom_notable_" + beat, $"{family}_{n}", "notable_" + beat, $"{family}_{n}");
+            }
+        }
         return ids;
     }
 
     [TestMethod]
-    public void TheSpecMatrix_Is1038Ids_303ForLords_435KeyedEncounterRows_And300LiegeRows()
+    public void TheSpecMatrix_Is1065Ids_303ForLords_435KeyedEncounterRows_300LiegeRows_And27NotableRows()
     {
         var ids = ExpectedIds();
 
         Assert.AreEqual(30, RealmIds().Count, "a kingdom was added or removed: give it its realm lines");
-        Assert.AreEqual(1038, ids.Count);
+        Assert.AreEqual(1065, ids.Count);
         Assert.AreEqual(300, ids.Keys.Count(k => k.StartsWith("str_taom_liege_", StringComparison.Ordinal)));
+        Assert.AreEqual(27, ids.Keys.Count(k => k.StartsWith("str_taom_notable_", StringComparison.Ordinal)));
         Assert.AreEqual(303, ids.Keys.Count(k => k.Contains(".taom_")));
         Assert.AreEqual(60, ids.Keys.Count(k => DarkGroups.Any(g => k.Contains(".taom_" + g + "_"))));
     }
@@ -206,9 +227,9 @@ public class EncounterLinesDataTests
         var extra = actual.Select(r => r.Id).Except(expected.Keys).ToList();
         Assert.AreEqual(0, missing.Count, "missing: " + string.Join(", ", missing.Take(20)));
         Assert.AreEqual(0, extra.Count, "extra: " + string.Join(", ", extra.Take(20)));
-        Assert.AreEqual(1038, actual.Count, "an id appears twice");
+        Assert.AreEqual(1065, actual.Count, "an id appears twice");
         Assert.AreEqual(303, LordRows.Value.Count);
-        Assert.AreEqual(735, KeyedRows.Value.Count);
+        Assert.AreEqual(762, KeyedRows.Value.Count);
         foreach (var row in actual)
             Assert.AreEqual(expected[row.Id], row.Key, row.Id + " key");
     }
@@ -286,7 +307,7 @@ public class EncounterLinesDataTests
         var gendered = new Regex(@"\b(lads?|boys?|sir|sirs|brothers?|gentlemen|fellows?|sons?|he|him|his|himself|woman|women|lady|ladies|she|her|hers|herself|sisters?|girls?|lass|lasses|maids?|(?!human)[\w-]*(?:man|men))\b", RegexOptions.IgnoreCase);
         foreach (var row in AllRows)
         {
-            var body = IsLiege(row) ? Variable.Replace(row.Body, "") : row.Body;
+            var body = IsLiege(row) || IsNotable(row) ? Variable.Replace(row.Body, "") : row.Body;
             Assert.IsFalse(gendered.IsMatch(body), row.Id + " names a gender: " + row.Body);
             Assert.IsFalse(body.IndexOfAny(new[] { '{', '}', '[', ']' }) >= 0, row.Id + " carries a placeholder or a tag: " + row.Body);
             Assert.IsFalse(row.Body.Contains('—') || row.Body.Contains('–'), row.Id + " has an em or en dash");
@@ -304,6 +325,36 @@ public class EncounterLinesDataTests
             var found = Variable.Matches(row.Body).Cast<Match>().Select(m => m.Groups["name"].Value).Distinct().ToList();
             CollectionAssert.AreEquivalent(LiegeBeats[beat], found, row.Id + ": " + row.Body);
         }
+    }
+
+    [TestMethod]
+    public void EveryNotableRow_CarriesExactlyTheTextVariablesOfTheVanillaLineItReplaces()
+    {
+        var notable = KeyedRows.Value.Where(IsNotable).ToList();
+        Assert.AreEqual(27, notable.Count);
+        foreach (var row in notable)
+        {
+            var beat = row.TextId.Substring("str_taom_notable_".Length);
+            var found = Variable.Matches(row.Body).Cast<Match>().Select(m => m.Groups["name"].Value).Distinct().ToList();
+            CollectionAssert.AreEquivalent(NotableBeats[beat], found, row.Id + ": " + row.Body);
+        }
+    }
+
+    [TestMethod]
+    public void NoNotableRow_KeepsTheWordsOfVanillasHumanLine()
+    {
+        var human = new Regex(@"working man|honest men|common farmers|work with their hands", RegexOptions.IgnoreCase);
+        foreach (var row in KeyedRows.Value.Where(IsNotable))
+            Assert.IsFalse(human.IsMatch(row.Body), row.Id + " keeps vanilla's human wording: " + row.Body);
+    }
+
+    [TestMethod]
+    public void TheNotableBeats_AreTheTextsTheServiceAsksFor()
+    {
+        CollectionAssert.AreEquivalent(
+            NotableBeats.Keys.Select(b => "str_taom_notable_" + b).ToList(),
+            TAOM.Features.EncounterLines.NotableIntroLines.TextOfSentence.Values.ToList());
+        CollectionAssert.AreEquivalent(NotableFamilies, TAOM.Features.EncounterLines.NotableIntroLines.Families.ToList());
     }
 
     [TestMethod]
