@@ -9,6 +9,7 @@ using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Source.Missions;
 using TaleWorlds.MountAndBlade.Source.Missions.Handlers.Logic;
 using TaleWorlds.ObjectSystem;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.LongDefeat;
 using TAOM.Features.LongDefeat.Domain;
@@ -56,7 +57,7 @@ internal sealed class StoryMissionLauncher
             var objects = MBObjectManager.Instance;
             var defenderCulture = objects?.GetObject<BasicCultureObject>(definition.DefenderCulture);
             var attackerCulture = objects?.GetObject<BasicCultureObject>(definition.AttackerCulture);
-            var plan = StoryPlanBuilder.Build(definition, RunOptions.Default with { Autoplay = autoplay }, _longDefeat.HeroLines);
+            var plan = LoreHeroPersons.WithoutPlayed(StoryPlanBuilder.Build(definition, RunOptions.Default with { Autoplay = autoplay }, _longDefeat.HeroLines), LorePlayerIds.Read());
             var missing = RunPlanTroops.AllTroopIds(plan).Where(id => objects?.GetObject<BasicCharacterObject>(id) == null).ToList();
             if (defenderCulture == null || attackerCulture == null || missing.Count > 0)
                 return Refuse($"cannot load '{definition.Id}': defender culture {defenderCulture != null}, attacker culture {attackerCulture != null}, missing troops [{string.Join(", ", missing)}]");
