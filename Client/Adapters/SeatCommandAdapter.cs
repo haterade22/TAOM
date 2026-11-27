@@ -31,6 +31,8 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
     private readonly Mission _mission;
     private readonly IModLogger _logger;
     private readonly OrderFlagPool _flags;
+    private readonly SeatBoxView _box;
+    private readonly List<Formation> _boxFormations = new();
     private readonly List<Agent> _agents = new();
     private readonly List<FordsControlCandidate> _units = new();
     private readonly List<Vec3> _flagPoints = new();
@@ -44,11 +46,12 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
     private WorldPosition _lineBegin;
     private bool _lineHasBegin;
 
-    internal SeatCommandAdapter(MissionScreen screen, Mission mission, IModLogger logger)
+    internal SeatCommandAdapter(MissionScreen screen, Mission mission, IModLogger logger, SeatBoxView box)
     {
         _screen = screen;
         _mission = mission;
         _logger = logger;
+        _box = box;
         _flags = new OrderFlagPool(mission);
     }
 
@@ -114,6 +117,100 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
                     controller.DeselectFormation(formation);
                 break;
         }
+    }
+
+    public int PickBox(SeatRect box)
+    {
+        _boxFormations.Clear();
+        var team = _mission.PlayerTeam;
+        var controller = Controller;
+        var camera = _screen.CombatCamera;
+        if (team == null || controller == null || camera == null)
+            return 0;
+
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        var seen = 0;
+        foreach (var agent in team.ActiveAgents)
+        {
+            var formation = agent.Formation;
+            if (!agent.IsHuman || !agent.IsActive() || formation == null || _boxFormations.Contains(formation) || !controller.IsFormationSelectable(formation))
+                continue;
+
+            seen++;
+            float x = 0f, y = 0f, w = 0f;
+            MBWindowManager.WorldToScreen(camera, agent.GetChestGlobalPosition(), ref x, ref y, ref w);
+            if (w > 0f && SeatBox.Contains(in box, x, y))
+                _boxFormations.Add(formation);
+        }
+
+        _logger.LogInfo($"[SeatOfSeeing][Mouse] box pixels=({box.Left:0},{box.Top:0})-({box.Right:0},{box.Bottom:0}) soldiers-read={seen} companies={_boxFormations.Count} ms={clock.Elapsed.TotalMilliseconds:0.0}");
+        return _boxFormations.Count;
+    }
+
+    // Replacing keeps the companies already selected that the box found, so the panel's list is never empty in between and a kept company
+    // does not play the gesture again.
+    public void SelectBox(SeatSelectAction action)
+    {
+        MissionThreadGuard.NoteCall("SeatCommandAdapter.SelectBox", _logger.LogError);
+        var controller = Controller;
+        if (controller == null)
+            return;
+
+        switch (action)
+        {
+            case SeatSelectAction.ClearAll:
+                controller.ClearSelectedFormations();
+                break;
+            case SeatSelectAction.ReplaceWith:
+                foreach (var kept in controller.SelectedFormations.ToList())
+                    if (!_boxFormations.Contains(kept))
+                        controller.DeselectFormation(kept);
+                AddBoxFormations(controller);
+                break;
+            case SeatSelectAction.Add:
+                AddBoxFormations(controller);
+                break;
+        }
+    }
+
+    private void AddBoxFormations(OrderController controller)
+    {
+        foreach (var formation in _boxFormations)
+            if (!controller.SelectedFormations.Contains(formation) && controller.IsFormationSelectable(formation))
+                controller.SelectFormation(formation);
+    }
+
+    public void BoxShow(SeatRect box) => _box.Show(in box);
+
+    public void BoxHide() => _box.Hide();
+
+    public SeatTransferFacts ReadTransfer(int formationIndex)
+    {
+        var team = _mission.PlayerTeam;
+        var controller = Controller;
+        if (team == null || controller == null || formationIndex < 0 || formationIndex >= team.FormationsIncludingEmpty.Count)
+            return default;
+
+        var target = team.FormationsIncludingEmpty[formationIndex];
+        var selected = controller.SelectedFormations;
+        return new SeatTransferFacts(true, selected.Contains(target), selected.Count, selected.Sum(formation => formation.CountOfUnits), target.CountOfUnits);
+    }
+
+    // The order of the transfer popup's confirm button (MissionOrderTroopControllerVM.ExecuteConfirmTransfer, v1.5.7 :492-498). The target is
+    // never one of its own sources: the engine would move soldiers into the company they stand in.
+    public void Transfer(int formationIndex, int number)
+    {
+        MissionThreadGuard.NoteCall("SeatCommandAdapter.Transfer", _logger.LogError);
+        var team = _mission.PlayerTeam;
+        var controller = Controller;
+        if (team == null || controller == null || formationIndex < 0 || formationIndex >= team.FormationsIncludingEmpty.Count)
+            return;
+
+        var target = team.FormationsIncludingEmpty[formationIndex];
+        if (controller.SelectedFormations.Contains(target))
+            controller.DeselectFormation(target);
+        if (controller.SelectedFormations.Count > 0 && number > 0)
+            controller.SetOrderWithFormationAndNumber(OrderType.Transfer, target, number);
     }
 
     public SeatRightProbe ProbeRight(float pixelX, float pixelY, float rangedX, float rangedY)
@@ -221,6 +318,7 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
     {
         _lineHasBegin = false;
         _flags.Drop();
+        _box.Drop();
         if (_focus != null)
             _focus.OnFormationFocused -= OnFocused;
         _focus = null;

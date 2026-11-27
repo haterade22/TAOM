@@ -1,0 +1,153 @@
+using System;
+using TaleWorlds.Engine.GauntletUI;
+using TaleWorlds.Library;
+using TAOM.Features.SeatOfSeeing.Domain;
+
+namespace TAOM.Client.Adapters;
+
+/// <summary>
+/// The view model of <c>SeatSelectBox.xml</c>: the selection rectangle, in real pixels. The prefab is a full-screen display-only widget whose
+/// rectangle child takes its place and size through <c>ScaledPositionXOffset</c>, <c>ScaledPositionYOffset</c>, <c>ScaledSuggestedWidth</c>
+/// and <c>ScaledSuggestedHeight</c> (the staged siege HUD's marker pattern), so the UI scale never enters the maths. The engine's own debug
+/// rectangle is a conditional call that compiles away in a shipping build, so a widget is the only way to draw one.
+/// </summary>
+public sealed class SeatSelectBoxVM : ViewModel
+{
+    private bool _isVisible;
+    private float _offsetX;
+    private float _offsetY;
+    private float _boxWidth;
+    private float _boxHeight;
+
+    [DataSourceProperty]
+    public bool IsVisible
+    {
+        get => _isVisible;
+        set
+        {
+            if (_isVisible == value)
+                return;
+            _isVisible = value;
+            OnPropertyChangedWithValue(value, nameof(IsVisible));
+        }
+    }
+
+    [DataSourceProperty]
+    public float OffsetX
+    {
+        get => _offsetX;
+        set
+        {
+            if (_offsetX == value)
+                return;
+            _offsetX = value;
+            OnPropertyChangedWithValue(value, nameof(OffsetX));
+        }
+    }
+
+    [DataSourceProperty]
+    public float OffsetY
+    {
+        get => _offsetY;
+        set
+        {
+            if (_offsetY == value)
+                return;
+            _offsetY = value;
+            OnPropertyChangedWithValue(value, nameof(OffsetY));
+        }
+    }
+
+    [DataSourceProperty]
+    public float BoxWidth
+    {
+        get => _boxWidth;
+        set
+        {
+            if (_boxWidth == value)
+                return;
+            _boxWidth = value;
+            OnPropertyChangedWithValue(value, nameof(BoxWidth));
+        }
+    }
+
+    [DataSourceProperty]
+    public float BoxHeight
+    {
+        get => _boxHeight;
+        set
+        {
+            if (_boxHeight == value)
+                return;
+            _boxHeight = value;
+            OnPropertyChangedWithValue(value, nameof(BoxHeight));
+        }
+    }
+
+    internal void Place(in SeatRect box)
+    {
+        OffsetX = box.Left;
+        OffsetY = box.Top;
+        BoxWidth = box.Width;
+        BoxHeight = box.Height;
+        IsVisible = true;
+    }
+}
+
+/// <summary>
+/// The selection rectangle on the Seat's cursor layer. It is loaded once, when that layer is built, shown only while a box drag runs, and
+/// hidden at every end of the drag. <see cref="Drop"/> forgets it with no call into the engine (the scene and the layer may be gone, and the
+/// screen finalizes its layers itself), as the order flags' <c>Drop</c> does. A prefab that fails to load leaves the box off for the mission and
+/// writes one error line; the drag still selects.
+/// </summary>
+internal sealed class SeatBoxView
+{
+    private readonly Action<string> _logError;
+    private SeatSelectBoxVM? _vm;
+    private bool _failed;
+
+    internal SeatBoxView(Action<string> logError) => _logError = logError;
+
+    /// <summary>Whether the rectangle is on the screen (the field trial reads it).</summary>
+    internal bool Shown => _vm is { IsVisible: true };
+
+    /// <summary>Loads the movie on the layer, once. LoadMovie does not throw for a missing prefab, so the loaded flag is read.</summary>
+    internal void Attach(GauntletLayer layer)
+    {
+        if (_vm != null || _failed)
+            return;
+
+        try
+        {
+            var vm = new SeatSelectBoxVM();
+            var movie = layer.LoadMovie("SeatSelectBox", vm);
+            if (movie.Movie?.IsLoaded != true)
+            {
+                _failed = true;
+                _logError("[SeatOfSeeing][Mouse] the selection rectangle prefab did not load: box select works with no rectangle");
+                return;
+            }
+
+            _vm = vm;
+        }
+        catch (Exception ex)
+        {
+            _failed = true;
+            _logError($"[SeatOfSeeing][Mouse] the selection rectangle failed to load: {ex.Message}");
+        }
+    }
+
+    internal void Show(in SeatRect box) => _vm?.Place(in box);
+
+    internal void Hide()
+    {
+        if (_vm is { IsVisible: true } vm)
+            vm.IsVisible = false;
+    }
+
+    internal void Drop()
+    {
+        _vm = null;
+        _failed = true;
+    }
+}

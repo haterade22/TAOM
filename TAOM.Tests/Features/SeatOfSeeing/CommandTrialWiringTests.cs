@@ -260,6 +260,9 @@ public class CommandTrialWiringTests
         "SetCommandMouse", "CommandLive", "MouseChooseSoldier", "MouseChooseEnemy", "SetChosen", "MouseProjectChosen", "MouseGround", "Project", "MouseClick", "MouseDragRight",
         "MouseSelectedCount", "MouseOnlyFirstSelected", "MouseFirstAndSecondSelected", "OnlySelected", "FirstSelected", "Orders", "MouseOrderDistance", "MouseFacingError",
         "MouseChargesChosenEnemy", "ReleaseMouseTrial",
+        // Box select and Ctrl and a number: a left drag queues pointer frames in the Seat's own adapter (no engine write), the rest read the rectangle's flag, the selection and the
+        // companies' soldier counts, and MouseRequestTransfer stores the request the Seat's mission tick takes, as the patch does for a real key. MouseTransferBack is a writer found by its verb.
+        "MouseDragLeft", "MouseBoxShown", "MouseFirstSelected", "MouseFirstCount", "MouseSecondCount", "MouseRequestTransfer",
         // Stage S4 and S5: reads, the in-memory setting of the trial, and the take key, which stores a flag the mission tick acts on.
         "SetFightOn", "FightGateUp", "HeroOnAi", "HeroRetreating", "HeroPanicked", "HeroMorale", "HeroMortal", "FormationsOwnedByHero", "PressTake",
         "TookFromKeptCompany", "ReadHandOver",

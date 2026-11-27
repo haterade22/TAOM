@@ -29,6 +29,12 @@ internal sealed partial class CommandTrialWorld
     internal bool DragFacesAlongTheLine;
     internal bool ChargeGoesNowhere;
     internal int MouseReleases;
+    internal bool BoxNeverShown;
+    internal bool BoxStaysShown;
+    internal bool BoxSelectsNothing;
+    internal bool TransferDoesNothing;
+    internal bool TransferLosesSoldiers;
+    internal int TransferLeftBehind;
 
     private bool _commandOn;
     private int _firstIdx = -1;
@@ -41,6 +47,11 @@ internal sealed partial class CommandTrialWorld
     private (float X, float Y)? _facing;
     private bool _charging;
     private bool _chargeTargetsEnemy;
+    private readonly Queue<(SeatMousePoint From, SeatMousePoint To)> _leftDrags = new();
+    private (SeatMousePoint From, SeatMousePoint To)? _boxDrag;
+    private bool _boxShown;
+    private bool _transferAsked;
+    private readonly int[] _companySoldiers = { 60, 40 };
 
     public bool CommandLive => _commandOn && !CommandNeverLive && State == SeatState.Seated;
 
@@ -104,6 +115,28 @@ internal sealed partial class CommandTrialWorld
 
     public void MouseDragRight(SeatMousePoint from, SeatMousePoint to) => _clicks.Enqueue((true, false, from, to));
 
+    public void MouseDragLeft(SeatMousePoint from, SeatMousePoint to) => _leftDrags.Enqueue((from, to));
+
+    public bool MouseBoxShown => _boxShown;
+
+    public bool MouseFirstSelected => _firstIdx >= 0 && _mouseSelected.Contains(_firstIdx);
+
+    public int MouseFirstCount => _firstIdx < 0 ? -1 : _companySoldiers[_firstIdx];
+
+    public int MouseSecondCount => _secondIdx < 0 ? -1 : _companySoldiers[_secondIdx];
+
+    public void MouseRequestTransfer() => _transferAsked = true;
+
+    public void MouseTransferBack(int number)
+    {
+        Note("mouse-transfer-back");
+        Faulted |= FaultMidStep;
+        if (_firstIdx < 0 || _secondIdx < 0 || number <= 0)
+            return;
+        _companySoldiers[_secondIdx] -= number;
+        _companySoldiers[_firstIdx] += number;
+    }
+
     public int MouseSelectedCount => _mouseSelected.Count;
 
     public bool MouseOnlyFirstSelected => _mouseSelected.Count == 1 && _mouseSelected.Contains(_firstIdx);
@@ -123,12 +156,61 @@ internal sealed partial class CommandTrialWorld
         MouseReleases++;
         _commandOn = false;
         _clicks.Clear();
+        _leftDrags.Clear();
+        _boxShown = false;
+        _boxDrag = null;
+        _transferAsked = false;
         MarshalReleaseKeys();
+    }
+
+    // A box drag takes two mission ticks, as the real one does: the held frame shows the rectangle, the release hides it and selects.
+    private void ApplyBox()
+    {
+        if (_boxDrag.HasValue)
+        {
+            var (from, to) = _boxDrag.Value;
+            _boxDrag = null;
+            _boxShown = BoxStaysShown;
+            if (BoxSelectsNothing)
+                return;
+            _mouseSelected.Clear();
+            var left = Math.Min(from.PixelX, to.PixelX);
+            var right = Math.Max(from.PixelX, to.PixelX);
+            var top = Math.Min(from.PixelY, to.PixelY);
+            var bottom = Math.Max(from.PixelY, to.PixelY);
+            for (var company = 0; company < _companySoldiers.Length; company++)
+                if (OwnPixelBase + company >= left && OwnPixelBase + company <= right && 200f >= top && 200f <= bottom)
+                    _mouseSelected.Add(company);
+        }
+        else if (_leftDrags.Count > 0)
+        {
+            _boxDrag = _leftDrags.Dequeue();
+            _boxShown = !BoxNeverShown;
+        }
+    }
+
+    private void ApplyTransfer()
+    {
+        if (!_transferAsked)
+            return;
+        _transferAsked = false;
+        if (TransferDoesNothing || _firstIdx < 0 || _secondIdx < 0 || !_mouseSelected.Contains(_firstIdx))
+            return;
+
+        var moved = _companySoldiers[_firstIdx] - TransferLeftBehind;
+        _companySoldiers[_firstIdx] = TransferLeftBehind;
+        _companySoldiers[_secondIdx] += TransferLosesSoldiers ? moved - 5 : moved;
     }
 
     // Called at the start of the mission tick, before the script: the pointer's clicks of the screen ticks since the last one.
     private void ApplyMouse()
     {
+        if (CommandLive)
+        {
+            ApplyBox();
+            ApplyTransfer();
+        }
+
         while (_clicks.Count > 0)
         {
             var (right, shift, at, to) = _clicks.Dequeue();

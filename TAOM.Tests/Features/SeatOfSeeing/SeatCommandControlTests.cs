@@ -23,8 +23,9 @@ public class SeatCommandControlTests
     }
 
     private static SeatPointerFrame Frame(float seconds = 1f, float x = 400f, float y = 300f, bool leftPressed = false, bool leftReleased = false,
-        bool rightPressed = false, bool rightReleased = false, bool rightDown = false, bool shift = false, bool ctrl = false) =>
-        new(leftPressed, leftReleased, rightPressed, rightReleased, rightDown, x, y, x / 1000f, y / 1000f, shift, ctrl, seconds);
+        bool rightPressed = false, bool rightReleased = false, bool rightDown = false, bool shift = false, bool ctrl = false, bool? leftDown = null) =>
+        new(leftPressed, leftReleased, rightPressed, rightReleased, rightDown, x, y, x / 1000f, y / 1000f, shift, ctrl, seconds,
+            LeftDown: leftDown ?? (leftPressed && !leftReleased));
 
     private void Tick(SeatPointerFrame frame)
     {
@@ -47,7 +48,7 @@ public class SeatCommandControlTests
         LeftClick(x: 412f, y: 305f);
 
         Assert.AreEqual((412f, 305f), _engine.LastOwnPick);
-        CollectionAssert.AreEqual(new[] { "pick-own", "select:ReplaceWith" }, _engine.Calls.Where(c => c != "line-cancel").ToArray());
+        CollectionAssert.AreEqual(new[] { "pick-own", "select:ReplaceWith" }, _engine.Calls.Where(c => c != "line-cancel" && c != "box-hide").ToArray());
         Assert.AreEqual(1, Lines("pass"));
     }
 
@@ -106,7 +107,7 @@ public class SeatCommandControlTests
     }
 
     [TestMethod]
-    public void LeftDrag_IsNotAClickAndSelectsNothing()
+    public void LeftDrag_IsNotAClick_ItIsABoxSelect()
     {
         Tick(Frame(leftPressed: true, seconds: 1f, x: 100f, y: 100f));
         _engine.Calls.Clear();
@@ -114,6 +115,7 @@ public class SeatCommandControlTests
         Tick(Frame(leftReleased: true, seconds: 2f, x: 400f, y: 400f));
 
         Assert.AreEqual(0, _engine.Calls.Count(c => c == "pick-own"));
+        Assert.AreEqual(1, _engine.Count("pick-box"));
     }
 
     [TestMethod]
@@ -348,7 +350,7 @@ public class SeatCommandControlTests
         Tick(Frame(rightPressed: true, rightReleased: true));
         LeftClick();
 
-        Assert.AreEqual(0, _engine.Calls.Count(c => c != "line-cancel"), "no pick, no selection, no order reached the engine");
+        Assert.AreEqual(0, _engine.Calls.Count(c => c != "line-cancel" && c != "box-hide"), "no pick, no selection, no order reached the engine");
         Assert.AreEqual(1, Lines("skip"));
         StringAssert.Contains(_log.Lines.Single(l => l.Result == "skip").Detail, "hero-gone");
     }

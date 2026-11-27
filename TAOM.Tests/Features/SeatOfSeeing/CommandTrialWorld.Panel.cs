@@ -68,5 +68,6 @@ internal sealed partial class CommandTrialWorld
     {
         Note("clear-selected");
         _cardOnlySelected = false;
+        _mouseSelected.Clear();
     }
 }

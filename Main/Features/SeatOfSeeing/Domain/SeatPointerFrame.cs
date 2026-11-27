@@ -2,14 +2,14 @@ namespace TAOM.Features.SeatOfSeeing.Domain;
 
 /// <summary>
 /// What the screen tick captures of the mouse: the button edges and levels, the pointer as a pixel and as a fraction of the window, and
-/// the two modifier keys. It holds no engine type, so the tick that captures it never projects, casts a ray or writes an order; the first mission
+/// the two modifier keys (and the left button's level, which a box drag follows). It holds no engine type, so the tick that captures it never projects, casts a ray or writes an order; the first mission
 /// tick of the frame does (as the Seat's keep and take do). The press fields name where and when each button last went down.
 /// </summary>
 internal readonly record struct SeatPointerFrame(
     bool LeftPressed, bool LeftReleased, bool RightPressed, bool RightReleased, bool RightDown,
     float PixelX, float PixelY, float RangedX, float RangedY, bool Shift, bool Ctrl, float Seconds,
     float PressPixelX = 0f, float PressPixelY = 0f, float PressRangedX = 0f, float PressRangedY = 0f, float PressSeconds = 0f,
-    float LeftPressPixelX = 0f, float LeftPressPixelY = 0f, float LeftPressSeconds = 0f)
+    float LeftPressPixelX = 0f, float LeftPressPixelY = 0f, float LeftPressSeconds = 0f, bool LeftDown = false)
 {
     /// <summary>Any button edge: a click, a press or a release to act on.</summary>
     internal bool HasEdge => LeftPressed || LeftReleased || RightPressed || RightReleased;

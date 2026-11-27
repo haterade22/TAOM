@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using TAOM.Client.Adapters;
 using TAOM.Core.Logging;
@@ -17,6 +18,7 @@ internal sealed class SeatCommandControl
     private readonly ISeatCommandAdapter _adapter;
     private readonly IOutcomeLog _outcomes;
     private readonly string _key;
+    private readonly Action<SeatMessage> _say;
     private readonly SeatPointerBuffer _buffer = new();
     private bool _leftArmed;
     private bool _rightDown;
@@ -24,11 +26,12 @@ internal sealed class SeatCommandControl
     private bool _refusalNoted;
     private bool _panelOpen;
 
-    internal SeatCommandControl(ISeatCommandAdapter adapter, IOutcomeLog outcomes, string missionKey)
+    internal SeatCommandControl(ISeatCommandAdapter adapter, IOutcomeLog outcomes, string missionKey, Action<SeatMessage>? say = null)
     {
         _adapter = adapter;
         _outcomes = outcomes;
         _key = missionKey;
+        _say = say ?? (_ => { });
     }
 
     /// <summary>
@@ -37,7 +40,7 @@ internal sealed class SeatCommandControl
     /// </summary>
     internal void Capture(in SeatPointerFrame frame)
     {
-        if (frame.HasEdge || frame.RightDown || _rightDown)
+        if (frame.HasEdge || frame.RightDown || _rightDown || _leftArmed)
             _buffer.Capture(in frame);
     }
 
@@ -50,6 +53,7 @@ internal sealed class SeatCommandControl
         _lineStarted = false;
         _refusalNoted = false;
         _adapter.LineCancel();
+        _adapter.BoxHide();
     }
 
     /// <summary>The Seat is finishing: forgets everything with no native call (the scene may be gone), unlike <see cref="Reset"/>, which hides the preview.</summary>
@@ -60,10 +64,14 @@ internal sealed class SeatCommandControl
         _adapter.Drop();
     }
 
-    /// <summary>From the mission tick, while live and seated. Acts on the captured frame once.</summary>
-    internal void OnMissionTick()
+    /// <summary>
+    /// From the mission tick, while live and seated. Acts on the captured frame once, and on a Ctrl and number transfer the prefix asked for
+    /// (<paramref name="transferTo"/>, the company index 0 to 7, or -1 for none), which needs no pointer frame.
+    /// </summary>
+    internal void OnMissionTick(int transferTo = -1)
     {
-        if (!_buffer.TryTake(out var frame))
+        var hasFrame = _buffer.TryTake(out var frame);
+        if (!hasFrame && transferTo < 0)
             return;
 
         var facts = _adapter.ReadFacts();
@@ -71,26 +79,28 @@ internal sealed class SeatCommandControl
         var refusal = SeatCommandRule.Refusal(facts);
         if (refusal != SeatCommandRefusal.None)
         {
-            Refuse(frame, refusal);
+            Refuse(frame, refusal, hasFrame);
             return;
         }
 
         _refusalNoted = false;
+        if (transferTo >= 0)
+            Transfer(transferTo);
+        if (!hasFrame)
+            return;
+
         if (frame.LeftPressed)
             _leftArmed = true;
-        if (frame.LeftReleased && _leftArmed)
-        {
-            _leftArmed = false;
-            Click(frame);
-        }
+        if (_leftArmed)
+            Left(frame);
 
         Right(frame);
     }
 
     // A refusal drops the edges of this frame and any line in the making: nothing is selected or ordered, and one skip line says why.
-    private void Refuse(in SeatPointerFrame frame, SeatCommandRefusal refusal)
+    private void Refuse(in SeatPointerFrame frame, SeatCommandRefusal refusal, bool hasFrame)
     {
-        var edge = frame.HasEdge;
+        var edge = hasFrame && frame.HasEdge;
         if (_rightDown || _lineStarted)
         {
             _rightDown = false;
@@ -99,6 +109,7 @@ internal sealed class SeatCommandControl
         }
 
         _leftArmed = false;
+        _adapter.BoxHide();
         if (!edge || _refusalNoted)
             return;
 
@@ -107,13 +118,70 @@ internal sealed class SeatCommandControl
         _outcomes.Skip(SeatChecks.CommandId, _key + ":" + reason, "mission=" + _key + " reason=" + reason);
     }
 
-    // Left button let go: a click selects. A drag is the box select of a later stage and does nothing here.
-    private void Click(in SeatPointerFrame frame)
+    // The left button is down since a press the command mouse took: past the click test a drag draws the rectangle, and its release selects the
+    // companies inside it; a release within the click test selects what is under the pointer. A button that went up with no release edge
+    // (another layer took it) selects nothing.
+    private void Left(in SeatPointerFrame frame)
     {
         var held = frame.Seconds - frame.LeftPressSeconds;
-        if (!SeatClickRule.IsClick(frame.LeftPressPixelX, frame.LeftPressPixelY, frame.PixelX, frame.PixelY, held))
+        var drag = SeatClickRule.IsDrag(frame.LeftPressPixelX, frame.LeftPressPixelY, frame.PixelX, frame.PixelY, held);
+        if (frame.LeftReleased)
+        {
+            _leftArmed = false;
+            _adapter.BoxHide();
+            if (drag)
+                BoxSelect(frame);
+            else
+                Click(frame);
+            return;
+        }
+
+        if (!frame.LeftDown)
+        {
+            _leftArmed = false;
+            _adapter.BoxHide();
+            return;
+        }
+
+        if (drag)
+            _adapter.BoxShow(Box(frame));
+        else
+            _adapter.BoxHide();
+    }
+
+    private static SeatRect Box(in SeatPointerFrame frame) =>
+        SeatBox.Normalise(frame.LeftPressPixelX, frame.LeftPressPixelY, frame.PixelX, frame.PixelY);
+
+    private void BoxSelect(in SeatPointerFrame frame)
+    {
+        var found = _adapter.PickBox(Box(frame));
+        var action = SeatBox.Decide(frame.Shift, found, _adapter.SelectedCount, _panelOpen);
+        if (action == SeatSelectAction.None)
             return;
 
+        _adapter.SelectBox(action);
+        _outcomes.Pass(SeatChecks.CommandId, _key + ":select-box", "mission=" + _key + " command=select-box companies=" + found.ToString(CultureInfo.InvariantCulture));
+    }
+
+    // Ctrl and a number: the selected companies, less the target, move into the target company. A refusal gives one message and one skip line.
+    private void Transfer(int formationIndex)
+    {
+        var plan = SeatTransferRule.Plan(_adapter.ReadTransfer(formationIndex));
+        if (plan.Refusal != SeatTransferRefusal.None)
+        {
+            _say(SeatMessage.TransferRefused);
+            Skip(SeatTransferRule.Reason(plan.Refusal));
+            return;
+        }
+
+        _adapter.Transfer(formationIndex, plan.Number);
+        _outcomes.Pass(SeatChecks.CommandId, _key + ":transfer",
+            "mission=" + _key + " command=transfer company=" + (formationIndex + 1).ToString(CultureInfo.InvariantCulture) + " soldiers=" + plan.Number.ToString(CultureInfo.InvariantCulture));
+    }
+
+    // A release within the click test: a click selects.
+    private void Click(in SeatPointerFrame frame)
+    {
         var picked = _adapter.PickOwn(frame.PixelX, frame.PixelY);
         var action = SeatSelectRule.Decide(frame.Shift, picked.Found, picked.Selected, _adapter.SelectedCount, _panelOpen);
         if (action == SeatSelectAction.None)

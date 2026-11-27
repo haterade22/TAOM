@@ -24,6 +24,9 @@ internal static class SeatTrialMouse
     /// <summary>The two ends of the dragged line must be at least this many pixels apart, or the drag is a click.</summary>
     internal const float DragMinPixels = 30f;
 
+    /// <summary>Half the side, in pixels, of the box the box step drags round a soldier's chest.</summary>
+    internal const float BoxHalfPixels = 60f;
+
     /// <summary>Real seconds the drag's held frame is said to have lasted: past the 0.3 s of a click.</summary>
     internal const float DragSeconds = 0.5f;
 
@@ -50,6 +53,23 @@ internal static class SeatTrialMouse
     /// <summary>The second order was taken by the queue (held key armed when it was given), and a step waits behind the first.</summary>
     internal static bool Queued(int captured, int queued, bool armedAtOrder, bool faulted) =>
         !faulted && armedAtOrder && captured >= 1 && queued >= 1;
+
+    /// <summary>A company the hero stands in may keep him after the transfer of its soldiers; no more than this many stay behind.</summary>
+    internal const int TransferLeftoverMax = 1;
+
+    /// <summary>A left drag showed the rectangle while it ran, hid it at the release, and selected the company the box held.</summary>
+    internal static bool BoxSelected(bool chosenCompanySelected, bool shownWhileDragging, bool hiddenAfter, bool faulted) =>
+        chosenCompanySelected && shownWhileDragging && hiddenAfter && !faulted;
+
+    /// <summary>
+    /// Ctrl and a number moved the selected company's soldiers into the target company: the target grew by exactly what the source lost, at least one
+    /// soldier moved, and no more than <see cref="TransferLeftoverMax"/> stayed behind.
+    /// </summary>
+    internal static bool Transferred(int sourceBefore, int sourceAfter, int targetBefore, int targetAfter, bool faulted)
+    {
+        var moved = sourceBefore - sourceAfter;
+        return !faulted && sourceBefore > 0 && sourceAfter >= 0 && moved >= 1 && targetAfter - targetBefore == moved && sourceAfter <= TransferLeftoverMax;
+    }
 
     /// <summary>
     /// The angle in degrees between a facing and the normal of a line from one point to another, taking either normal (a formation may face

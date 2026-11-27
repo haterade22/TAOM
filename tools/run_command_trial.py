@@ -101,6 +101,8 @@ SEAT_STEPS = (
     "drag_facing",
     "charge_enemy",
     "queue_with_mouse",
+    "select_box",
+    "transfer_ctrl_number",
     "hero_falls",
     "take_soldier",
 )

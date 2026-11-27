@@ -1,3 +1,5 @@
+using System.Threading;
+
 namespace TAOM.Features.SeatOfSeeing;
 
 /// <summary>
@@ -12,6 +14,7 @@ internal static class SeatPresence
     private static volatile bool _heroFightsOn;
     private static volatile bool _holdsBoundary;
     private static volatile bool _commandMouse;
+    private static int _transferTo = -1;
 
     internal static bool IsSeated => _seated;
 
@@ -38,7 +41,18 @@ internal static class SeatPresence
     /// </summary>
     internal static bool CommandMouse => _commandMouse;
 
-    internal static void SetCommandMouse(bool live) => _commandMouse = live;
+    internal static void SetCommandMouse(bool live)
+    {
+        _commandMouse = live;
+        if (!live)
+            Interlocked.Exchange(ref _transferTo, -1);
+    }
+
+    /// <summary>The Ctrl and number prefix stores the company (0 to 7) to move the selected companies into; the command mouse takes it on its next mission tick.</summary>
+    internal static void RequestTransfer(int formationIndex) => Interlocked.Exchange(ref _transferTo, formationIndex);
+
+    /// <summary>The stored transfer target, once; -1 when none was asked for.</summary>
+    internal static int TakeTransfer() => Interlocked.Exchange(ref _transferTo, -1);
 
     /// <summary>Sets the seated flag and the boundary hold, which only the entry's fight-on permission raises; leaving also clears the cursor and the focus mark.</summary>
     internal static void Set(bool seated, bool holdsBoundary = false)
@@ -50,6 +64,7 @@ internal static class SeatPresence
             _cursorShown = false;
             _focusSet = false;
             _commandMouse = false;
+            Interlocked.Exchange(ref _transferTo, -1);
         }
     }
 
