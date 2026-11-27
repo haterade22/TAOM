@@ -128,5 +128,6 @@ internal static class FeatureModules
         new Features.NavalTravel.NavalTravelModule(),
         new Features.TrainingGrounds.Teams.TeamPracticeModule(),
         new Features.TrainingGrounds.Waves.TrainingWavesModule(),
+        new Features.LoreGreetings.LoreGreetingsModule(),
     };
 }
