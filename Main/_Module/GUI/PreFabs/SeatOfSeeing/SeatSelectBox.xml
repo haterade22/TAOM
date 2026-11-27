@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Prefab>
+  <Window>
+    <!-- The Seat's selection rectangle (Seat of Seeing, box select). Display only: the root, the rectangle and every edge ignore events, so
+         the mouse keeps going to the Seat's own click shield. The rectangle is a fixed-size widget shifted to the drag's top left corner in
+         real pixels through ScaledPositionXOffset/YOffset and sized through ScaledSuggestedWidth/Height (the StagedSiegeHud and TaomRealmNames
+         pattern), so the UI scale never enters the maths. A translucent fill with a thin gold frame of four edge widgets. -->
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true">
+      <Children>
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" HorizontalAlignment="Left" VerticalAlignment="Top"
+                DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" IsVisible="@IsVisible"
+                ScaledPositionXOffset="@OffsetX" ScaledPositionYOffset="@OffsetY"
+                ScaledSuggestedWidth="@BoxWidth" ScaledSuggestedHeight="@BoxHeight"
+                Sprite="BlankWhiteSquare_9" Color="#FFD70022">
+          <Children>
+            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Top"
+                    DoNotAcceptEvents="true" Sprite="BlankWhiteSquare_9" Color="#FFD700CC" />
+            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Bottom"
+                    DoNotAcceptEvents="true" Sprite="BlankWhiteSquare_9" Color="#FFD700CC" />
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Left"
+                    DoNotAcceptEvents="true" Sprite="BlankWhiteSquare_9" Color="#FFD700CC" />
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Right"
+                    DoNotAcceptEvents="true" Sprite="BlankWhiteSquare_9" Color="#FFD700CC" />
+          </Children>
+        </Widget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

@@ -95,6 +95,14 @@ SEAT_STEPS = (
     "edge_pan",
     "rotate_pivot",
     "zoom_smooth",
+    "select_click",
+    "select_shift",
+    "move_right_click",
+    "drag_facing",
+    "charge_enemy",
+    "queue_with_mouse",
+    "select_box",
+    "transfer_ctrl_number",
     "hero_falls",
     "take_soldier",
 )
@@ -150,10 +158,10 @@ STAMINA_ERROR = re.compile(
     r"\] \[ERROR\] (?:\[Stamina\]|StaminaConfigProvider: |\[PatchApply\] (?:Patch171_Stamina|TAOM\.Features\.Stamina\.\S+) (?:FAILED|SKIPPED))")
 # An [ERROR] line of the Seat or its trial (stage S2 onward): a fault, a failed start or a script failure; a Seat patch that failed to apply
 # or was skipped (Harmony stops a category at its first failing class, so one line can leave every later patch of it off: Main/PatchCategoryApplier.cs); the
-# thread guard's line for a trial or Seat site (MissionThreadGuard.NoteCall, written at LogError by CommandTrialHost, SeatHeroAdapter and SeatScreenAdapter). The
+# thread guard's line for a trial or Seat site (MissionThreadGuard.NoteCall, written at LogError by CommandTrialHost, SeatHeroAdapter, SeatScreenAdapter and SeatCommandAdapter). The
 # hot key failure is logged at LogError for the same reason. Another feature's patch or guard line does not fail this run.
 SEAT_ERROR = re.compile(
-    r"\] \[ERROR\] (?:\[Seat(?:OfSeeing|Trial)\]|\[PatchApply\] \S*Patch140_|\[TAOM\] (?:CommandTrialHost|SeatHeroAdapter|SeatScreenAdapter)\.\w+ ran off the main mission thread)")
+    r"\] \[ERROR\] (?:\[Seat(?:OfSeeing|Trial)\]|\[PatchApply\] \S*Patch140_|\[TAOM\] (?:CommandTrialHost|SeatHeroAdapter|SeatScreenAdapter|SeatCommandAdapter)\.\w+ ran off the main mission thread)")
 # An [ERROR] line of Marshal's Word: its own tag (the hotkey registration that failed, which leaves every key unbound, a session that could not
 # start, the order panel's registration that failed, the spacing repair's transpiler that left a method as it was, and the thrower stand that failed); the category Patch141 or the
 # Patch_MissionTime_MarshalsWord (the two thrower patches) that failed to apply (the applier writes the category name, one line is the whole category off) or a class of its

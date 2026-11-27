@@ -46,6 +46,8 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
     private GauntletLayer? _orderLayer;
     private ScreenLayer? _shield;
     private bool _cursorOn;
+    private bool _commandLive;
+    private bool _lastHeld;
     private SeatPanelHit _lastHit;
     private bool _siteReported;
 
@@ -71,6 +73,9 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
         }
     }
 
+    /// <summary>The command mouse is live: the shield covers the whole screen, not only the panel's buttons.</summary>
+    internal void SetCommandLive(bool live) => _commandLive = live;
+
     // The middle button looks with the cursor hidden. The shield takes every mouse button, so the scene layer's own read of the middle
     // button is false under it: the raw input is the one read both sides agree on.
     internal static bool LookHeld() => Input.IsKeyDown(InputKey.MiddleMouseButton);
@@ -81,14 +86,35 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
     /// <summary>The cursor layer's hit test, run once a frame by <c>ScreenManager.EarlyUpdate</c> on the main thread.</summary>
     internal bool ShieldHolds()
     {
-        _lastHit = default;
-        if (!MayHold(out var root, out var pointer))
-            return false;
-
-        var hit = SeatPanelTarget.Topmost(this, root, pointer.X, pointer.Y);
-        _lastHit = hit;
-        return SeatPanelYieldRule.Holds(_cursorOn, true, false, hit.Kind != SeatPanelKind.None, hit.Kind != SeatPanelKind.None && AnotherLayerClaims());
+        var held = ShieldHoldsNow();
+        _lastHeld = held;
+        return held;
     }
+
+    private bool ShieldHoldsNow()
+    {
+        _lastHit = default;
+        var holdsPanel = false;
+        if (MayHold(out var root, out var pointer))
+        {
+            var hit = SeatPanelTarget.Topmost(this, root, pointer.X, pointer.Y);
+            _lastHit = hit;
+            holdsPanel = SeatPanelYieldRule.Holds(_cursorOn, true, false, hit.Kind != SeatPanelKind.None, hit.Kind != SeatPanelKind.None && AnotherLayerClaims());
+        }
+
+        return holdsPanel || (_commandLive && CommandHolds());
+    }
+
+    private bool CommandHolds()
+    {
+        OrderLayer();
+        return SeatCommandRule.ShieldHolds(_cursorOn, _commandLive, LookHeld(), AnotherLayerClaims(), TransferActive(), ButtonTaken());
+    }
+
+    // The troop transfer popup: vanilla gives the order layer the whole mouse then (GauntletOrderUIHandler.cs:215-217), so nothing of ours holds.
+    internal bool TransferActive() => _panel()?.TroopController.IsTransferActive ?? false;
+
+    private bool ButtonTaken() => _lastHeld && (Input.IsKeyDown(InputKey.LeftMouseButton) || Input.IsKeyDown(InputKey.RightMouseButton));
 
     /// <summary>The cursor layer's hit test at a given point, which the engine asks for other layers' gamepad cursors.</summary>
     internal bool ShieldHoldsAt(float x, float y)
@@ -105,7 +131,7 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
     {
         root = null!;
         pointer = default;
-        if (!_cursorOn || !_mission.IsOrderMenuOpen || _mission.Mode == MissionMode.Deployment || LookHeld())
+        if (!_cursorOn || !_mission.IsOrderMenuOpen || _mission.Mode == MissionMode.Deployment || (LookHeld() && !ButtonTaken()))
             return false;
 
         var panel = _panel();
@@ -197,16 +223,17 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
 
         var pressed = input.IsKeyPressed(InputKey.LeftMouseButton);
         var released = input.IsKeyReleased(InputKey.LeftMouseButton);
+        var rightPressed = input.IsKeyPressed(InputKey.RightMouseButton);
         var rightReleased = input.IsKeyReleased(InputKey.RightMouseButton);
-        if (!pressed && !released && !rightReleased)
+        if (!pressed && !released && !rightPressed && !rightReleased)
         {
-            if (!Input.IsKeyDown(InputKey.LeftMouseButton))
+            if (!Input.IsKeyDown(InputKey.LeftMouseButton) && !Input.IsKeyDown(InputKey.RightMouseButton))
                 _rule.Reset();
             return SeatRelayResult.Idle;
         }
 
         var hit = _lastHit;
-        var action = _rule.Step(pressed, released, rightReleased, hit, hit.Target is OrderItemVM { Order: ReturnVisualOrder });
+        var action = _rule.Step(pressed, released, rightReleased, hit, hit.Target is OrderItemVM { Order: ReturnVisualOrder }, rightPressed);
         return action == SeatPanelAction.None ? SeatRelayResult.Idle : Perform(action, hit.Target);
     }
 

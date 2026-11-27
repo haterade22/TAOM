@@ -293,11 +293,11 @@ internal sealed partial class CommandTrialWorld
         _widthsHeld = false;
     }
 
-    public bool MarshalQueueArmed => _queueHeld && QueueKeyArms && (PanelOpen || PanelShutsWhenTheKeyIsHeld);
+    public bool MarshalQueueArmed => _queueHeld && QueueKeyArms && (PanelOpen || PanelShutsWhenTheKeyIsHeld || CommandLive);
 
-    public bool MarshalMarkArmed => _markHeld && MarkKeyArms && (PanelOpen || PanelShutsWhenTheKeyIsHeld);
+    public bool MarshalMarkArmed => _markHeld && MarkKeyArms && (PanelOpen || PanelShutsWhenTheKeyIsHeld || CommandLive);
 
-    public bool MarshalWidthsArmed => _widthsHeld && WidthsKeyArms && PanelOpen;
+    public bool MarshalWidthsArmed => _widthsHeld && WidthsKeyArms && (PanelOpen || CommandLive);
 
     public bool MarshalPlanPoint(int slot, int company, float forward, float right)
     {

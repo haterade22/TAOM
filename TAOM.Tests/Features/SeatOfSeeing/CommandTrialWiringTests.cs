@@ -255,6 +255,12 @@ public class CommandTrialWiringTests
         "MarshalChooseThrowers", "MarshalThrowerRange", "MarshalThrowerRun", "MarshalThrowerWhy", "MarshalThrowerCostRead", "MarshalThrowerPublished", "MarshalThrowerFaulted",
         "MarshalThrowerCensus", "MarshalFrontGap", "MarshalCompanyAt", "MarshalThrowersOff", "WhyNotIfAdvanced",
         "MarshalHoldCensus", "MarshalStrikePassed", "MarshalStrikeBlows", "MarshalOrderGap", "MarshalSlotCloser", "MarshalSlotFarther", "MarshalSlotSteered", "MarshalSlotFailed", "MarshalSquareLaidOut", "MarshalClamps",
+        // Command mouse, the six mouse steps: the in-memory setting of the trial, reads of the order controller's selection and of a formation's order position and facing, the
+        // projection of a point, and a click, which only queues a pointer frame in the Seat's own adapter (no engine write). MouseSelectFirstCompany is a writer found by its verb.
+        "SetCommandMouse", "CommandLive", "MouseChooseSoldier", "MouseChooseEnemy", "SetChosen", "MouseProjectChosen", "MouseGround", "Project", "MouseClick", "MouseDragRight",
+        "MouseSelectedCount", "MouseOnlyFirstSelected", "MouseFirstAndSecondSelected", "OnlySelected", "FirstSelected", "Orders", "MouseOrderDistance", "MouseFacingError",
+        "MouseChargesChosenEnemy", "ReleaseMouseTrial",
+        "MouseDragLeft", "MouseBoxShown", "MouseFirstSelected", "MouseFirstCount", "MouseSecondCount", "MouseRequestTransfer",
         // Stage S4 and S5: reads, the in-memory setting of the trial, and the take key, which stores a flag the mission tick acts on.
         "SetFightOn", "FightGateUp", "HeroOnAi", "HeroRetreating", "HeroPanicked", "HeroMorale", "HeroMortal", "FormationsOwnedByHero", "PressTake",
         "TookFromKeptCompany", "ReadHandOver",

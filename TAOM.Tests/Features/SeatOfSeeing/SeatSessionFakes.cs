@@ -160,6 +160,18 @@ internal sealed class FakeSeatScreen : ISeatScreenAdapter
         return Edge;
     }
 
+    internal SeatPointerFrame Pointer;
+    internal int PointerReads;
+    internal readonly List<bool> CommandWrites = new();
+
+    public SeatPointerFrame ReadPointer()
+    {
+        PointerReads++;
+        return Pointer;
+    }
+
+    public void SetCommandMouse(bool live) => CommandWrites.Add(live);
+
     // Marshal's Word stage M7: the panel's clicks, handed to the relay once a screen tick while the panel is open with the cursor shown.
     internal int Relays;
     internal SeatRelayResult RelayResult = SeatRelayResult.Idle;
@@ -445,6 +457,9 @@ internal sealed class FakeSeatSettings : ISeatSettingsProvider
     public bool EdgeScroll { get; set; } = true;
 
     public float PanSpeed { get; set; } = 1f;
+
+    /// <summary>The command mouse: off here so every older test keeps its cursor and its reads; the command tests turn it on. Not counted in <see cref="Reads"/>.</summary>
+    public bool CommandMouse { get; set; }
 
     public bool Enabled
     {

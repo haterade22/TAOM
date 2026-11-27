@@ -138,6 +138,7 @@ internal sealed partial class CommandTrialScript
             return;
         // A step that ends, by a verdict or by a failure deep inside a wait, leaves no key held for the next one.
         _host.MarshalReleaseKeys();
+        _host.ReleaseMouseTrial();
         if (!verdict.Pass)
             ReleaseAfterFailure();
 

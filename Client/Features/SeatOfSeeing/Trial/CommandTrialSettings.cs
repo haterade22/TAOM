@@ -30,4 +30,6 @@ internal sealed class CommandTrialSettings : ISeatSettingsProvider
     public bool EdgeScroll { get; set; }
 
     public float PanSpeed => 1f;
+
+    public bool CommandMouse { get; set; }
 }

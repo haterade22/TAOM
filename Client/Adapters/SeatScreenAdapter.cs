@@ -67,7 +67,9 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
     private IAutonomousMovementController? _rage;
     private GauntletOrderUIHandler? _orderHandler;
     private SeatCursorLayer? _cursorLayer;
+    private SeatBoxView? _box;
     private SeatPanelRelay? _relay;
+    private readonly SeatPointerEdges _edges = new();
     private Agent? _keptAgent;
     private Formation? _keptFormation;
     private readonly FordsMissionSpeed _clock = new(null);
@@ -268,6 +270,43 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
 
     public SeatRelayResult RelayPanelClicks() => Relay().Tick();
 
+    public void SetCommandMouse(bool live) => Relay().SetCommandLive(live);
+
+    /// <summary>The field trial's mouse: frames the next screen ticks read in place of the mouse, one a tick; empty in every player session.</summary>
+    internal Queue<SeatPointerFrame> TrialPointer { get; } = new();
+
+    /// <summary>The selection rectangle; the command adapter shows and hides it.</summary>
+    internal SeatBoxView Box => _box ??= new SeatBoxView(_logger.LogError);
+
+    // The scene layer reads a mouse button only on a frame it holds the mouse, so edges come from the shield layer's input. Control and Shift are read
+    // raw, as the panel's own Control test is (MissionOrderTroopControllerVM.cs:617).
+    public SeatPointerFrame ReadPointer()
+    {
+        if (TrialPointer.Count > 0)
+            return TrialPointer.Dequeue();
+
+        var shield = _cursorLayer?.Input;
+        if (shield == null || _relay is { } relay && relay.TransferActive())
+        {
+            _edges.Reset();
+            return default;
+        }
+
+        var overPanel = _relay is { PointerOverTarget: true };
+        var left = shield.IsKeyPressed(InputKey.LeftMouseButton);
+        var right = shield.IsKeyPressed(InputKey.RightMouseButton);
+        var edges = _edges.Take(left, shield.IsKeyReleased(InputKey.LeftMouseButton), right, shield.IsKeyReleased(InputKey.RightMouseButton), overPanel,
+            Input.IsKeyDown(InputKey.LeftMouseButton), Input.IsKeyDown(InputKey.RightMouseButton));
+        var pixel = Input.MousePositionPixel;
+        var ranged = Input.MousePositionRanged;
+        return new SeatPointerFrame(
+            edges.LeftPressed, edges.LeftReleased, edges.RightPressed, edges.RightReleased,
+            Input.IsKeyDown(InputKey.RightMouseButton), pixel.x, pixel.y, ranged.x, ranged.y,
+            Input.IsKeyDown(InputKey.LeftShift) || Input.IsKeyDown(InputKey.RightShift),
+            Input.IsKeyDown(InputKey.LeftControl) || Input.IsKeyDown(InputKey.RightControl), Time.ApplicationTime,
+            LeftDown: Input.IsKeyDown(InputKey.LeftMouseButton));
+    }
+
     private SeatPanelRelay Relay() => _relay ??= new SeatPanelRelay(_screen, _mission, OrderPanel, OrderParameters);
 
     private VisualOrderExecutionParameters? OrderParameters()
@@ -304,6 +343,7 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
             relay.Attach(layer);
             _screen.AddLayer(layer);
             _cursorLayer = layer;
+            Box.Attach(layer);
             relay.SetCursor(true);
             return;
         }
@@ -598,6 +638,8 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
         SeatMessage.TimeStayed => new TextObject("{=taom_seat_time_stayed}The battle is paused. Press Stay time (Home unless rebound) again to go on."),
         SeatMessage.TimeResumed => new TextObject("{=taom_seat_time_resumed}The battle goes on."),
         SeatMessage.TimeOtherClock => new TextObject("{=taom_seat_time_other_clock}This battle has its own speed control."),
+        SeatMessage.TransferRefused => new TextObject("{=taom_seat_transfer_refused}Select the companies to move first. Ctrl and a number moves them into that company, which cannot be one of them."),
+        SeatMessage.TransferUnavailable => new TextObject("{=taom_seat_transfer_unavailable}Troops cannot be moved between companies now."),
         _ => new TextObject("{=taom_seat_fault}The Seat of Seeing failed and is off until this scene ends. Your own view is back."),
     };
 }

@@ -73,4 +73,7 @@ internal static class SeatMissionClassifier
             null, new[] { typeof(float) }, null)?.DeclaringType;
         return SeatForeignCameraRule.IsForeign(declaring?.Assembly.GetName().Name, view == typeof(SeatView));
     }
+
+    /// <summary>The same test, asked now of the engine's session: the command mouse asks it again each second.</summary>
+    internal static bool NetworkSessionNow(ICoopSessionProvider coop) => InNetworkSession(GameNetwork.IsSessionActive, coop);
 }

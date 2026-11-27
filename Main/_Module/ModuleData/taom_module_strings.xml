@@ -7128,5 +7128,13 @@
 	<string id="taom_seat_mcm_pan_speed_hint" text="{=taom_seat_mcm_pan_speed_hint}Multiplies how fast the view flies with the movement keys and the edge scroll in the Seat. 1 is the usual speed. Between 0.25 and 4. Default: 1." />
 	<string id="taom_mcm_EnableWandererSideTowns" text="{=taom_mcm_EnableWandererSideTowns}Wanderers Stay On Their Side" />
 	<string id="taom_mcm_EnableWandererSideTowns_hint" text="{=taom_mcm_EnableWandererSideTowns_hint}When ON (default), a new, dismissed or relocated wanderer goes to a town whose owner is on their side when such a town has room: an orc to an Evil town, a Gondor ranger to a Free one. Neutral wanderers and Neutral towns mix with everyone. A wanderer already standing in a wrong-side town stays until vanilla's daily swap picks them. When OFF, vanilla picks any town." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_seat_mcm_command_mouse" text="{=taom_seat_mcm_command_mouse}Command with the mouse" />
+	<string id="taom_seat_mcm_command_mouse_hint" text="{=taom_seat_mcm_command_mouse_hint}While you are in the Seat in a battle where you give orders, the mouse commands your companies: a left click on a soldier selects that soldier's company (Shift adds or removes one, a click on nothing clears), a right click on the ground moves the selected companies there, dragging with the right button draws their line, and a right click on an enemy sends them to charge it. A left drag selects the companies inside its box, and Ctrl and a number moves the selected companies' soldiers into that company. The cursor shows all the time, and every other battle key works as before. Default: on." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- SeatScreenAdapter -->
+	<string id="taom_seat_transfer_refused" text="{=taom_seat_transfer_refused}Select the companies to move first. Ctrl and a number moves them into that company, which cannot be one of them." />
+	<string id="taom_seat_transfer_unavailable" text="{=taom_seat_transfer_unavailable}Troops cannot be moved between companies now." />
 
 </strings>
