@@ -100,8 +100,7 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
         return hit.Kind != SeatPanelKind.None && !AnotherLayerClaims();
     }
 
-    // The cheap tests first: the cursor shows, the panel is open, no middle-button look, and it is not the transfer popup or a deployment,
-    // where the order layer takes the mouse itself (GauntletOrderUIHandler.cs:215-218).
+    // The order layer takes the mouse itself in the transfer popup and in a deployment (GauntletOrderUIHandler.cs:215-218).
     private bool MayHold(out Widget root, out Vector2 pointer)
     {
         root = null!;
@@ -156,8 +155,6 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
         return false;
     }
 
-    // ---- The widget tree, as the rule reads it ----
-
     public bool Shown(Widget node) => node.IsVisible;
 
     public bool Contains(Widget node, float x, float y) => node.IsPointInsideMeasuredArea(new Vector2(x, y));
@@ -184,8 +181,6 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
         };
     }
 
-    // ---- The relay ----
-
     /// <summary>
     /// One screen tick's clicks, taken from the cursor layer's own input: it has the mouse buttons only on a frame its hit test was true, so
     /// an edge it reports is a click the shield took. Idle with no edge. SiteMissing once the view model of a widget cannot be read, or the
@@ -205,7 +200,6 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
         var rightReleased = input.IsKeyReleased(InputKey.RightMouseButton);
         if (!pressed && !released && !rightReleased)
         {
-            // A press the shield took and a release it did not (the pointer left the panel first) leaves nothing to match a later release to.
             if (!Input.IsKeyDown(InputKey.LeftMouseButton))
                 _rule.Reset();
             return SeatRelayResult.Idle;
@@ -275,8 +269,6 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
         return SeatRelayResult.Acted;
     }
 
-    // ---- The field trial's entry: a pointer injected at a pixel, never an operating system click ----
-
     /// <summary>The centre of the first shown panel widget of a kind a click acts on, as a pixel the injected click can use; false when there is none. An order set is one that opens a sub-menu (a solo set would run its order at once).</summary>
     internal bool TryLocate(SeatPanelKind kind, out float x, out float y, out object? target, out string detail)
     {
@@ -288,7 +280,6 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
             return false;
 
         detail = "not-found";
-        // An order is picked among those not yet in force first: a click on one already in force would prove nothing about the missing gate.
         var widget = kind == SeatPanelKind.OrderItem ? FirstOfKind(root, kind, true, out target) : null;
         widget ??= FirstOfKind(root, kind, false, out target);
         if (widget == null)
@@ -332,7 +323,6 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
         return null;
     }
 
-    // The buttons a real click acts on: a valid, selectable card, an order that is not the Return order, and any set.
     private static bool Clickable(object? target) => target switch
     {
         OrderTroopItemVM card => card.IsValid && card.IsSelectable,

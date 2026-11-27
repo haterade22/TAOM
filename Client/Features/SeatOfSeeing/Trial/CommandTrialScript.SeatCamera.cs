@@ -49,7 +49,6 @@ internal sealed partial class CommandTrialScript
         var dx = end == null ? float.NaN : end.Value.X - start!.Value.X;
         var dy = end == null ? float.NaN : end.Value.Y - start!.Value.Y;
 
-        // The view's right is the heading turned a quarter clockwise (FordsCameraMath.Pan: right is (cos yaw, sin yaw), forward (-sin yaw, cos yaw)).
         var right = dx * along.Y - dy * along.X;
         var forward = dx * along.X + dy * along.Y;
         var facts = "opened=" + Bit(opened) + " cursor=" + Bit(cursor) + " right=" + Num(right) + " forward=" + Num(forward) + " seconds=" + Num(_now - startedAt) + Standing();

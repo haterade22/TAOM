@@ -59,7 +59,6 @@ internal sealed class SeatSettingsProvider : ISeatSettingsProvider
 
     public bool EdgeScroll => Settings?.SeatEdgeScroll ?? DefaultEdgeScroll;
 
-    // A saved value that is not a real number, or lies outside the slider's range, reads as the default and never reaches the camera.
     public float PanSpeed => Settings is { } settings && FiniteFloatValidator.IsFiniteInRange(settings.SeatPanSpeed, MinPanSpeed, MaxPanSpeed)
         ? settings.SeatPanSpeed
         : DefaultPanSpeed;

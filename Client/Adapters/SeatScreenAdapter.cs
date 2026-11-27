@@ -319,8 +319,6 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
         var input = _screen.SceneLayer.Input;
         var byTrial = TrialPlayerClose;
         TrialPlayerClose = false;
-        // The right button is read raw: a right release over a panel button belongs to the click shield, not to the scene layer, and the relay
-        // turns it into the panel's own Escape (SeatPanelRelay), which is a close of the player's.
         // Game key 77 (SelectOrderReturn) closes the panel at the root of a layout that has a Return order (GauntletOrderUIHandler.cs:449-452,
         // 484-492), so it shares the view-orders bit. A signal counts only on a closing edge, so a Return press in a sub-menu suppresses nothing.
         return new SeatCloseSignals(input.IsHotKeyReleased("ToggleEscapeMenu"), Input.IsKeyReleased(InputKey.RightMouseButton),
