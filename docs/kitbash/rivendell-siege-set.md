@@ -465,6 +465,19 @@ ones before he looks. I closed that window and opened the current gatehouse `a` 
 | "Also extend this trim all the way around." | Gatehouse `a`: the braid band on the drum, which stopped before the wall beside the door | Built: the band runs from the door frame across the wing wall, round the drum, to the end section (seen by me in `b4_door_space_wide.png`) | It ends 0.08 m short of the end section's face (a checker's note): it must meet the wall's band at the joint |
 | "Remove this as it looks very bad and can be plain with the trim extended" | Tower `a`: the half rib arch and the single squeezed lancet with its short piece of band, on the short wall beside the tower | Plain since version 7: no rib and no arch on the short walls (the checker's measure and code reading; I did not see a close picture of it) | "The trim extended": the braid band across the plain short wall, with the continuous band of the towers |
 
+## The broken wall, step 2c: the owner's result; an independent check runs (2026-11-27, recorded 08:20)
+
+**As the owner states it** (`WORK\build\v08\wall_broken\s6_step2c\s6_step2c_result.json`, sheet `S6_step2c.png`; the lead looked at the sheet: both flanks of seeds 5, 7 and 11 show a dark rubble core between toothed skins, and the rail and parapet ends stand on stone in the close pictures).
+
+- **LD34 met:** the body of a band tear is one convex prism for each row, 120 to 137 prisms a flank. On 16 flanks (seeds 5, 7, 11, 101, both flanks, the piece's relief and the fixture relief) the worst row mean is 0.348 m (aim under 0.35 m), and the deck walk ends at the visible deck edge.
+- **LD35 met:** by a ray probe on the cut mesh, every rail post and every parapet foot stands on stone on seeds 5, 7 and 11. The preview cuts the parapet piece by piece.
+- **LD36 not met:** the suite ran 953 tests with 3 failures (before step 2c: 947 tests, 12 failures, 3 errors). The three red tests say that the breach body must be smaller than the solid wall's body: the row prisms give about 1,700 to 1,860 triangles a stub, and the solid wall's whole body has 1,792. No test was deleted or skipped; the rewritten tests are listed with their old and new assertions.
+- **LD37 met in the preview only:** the end-on tone is 0.525 to 0.568 on the six flanks (window 0.52 to 0.57), and the town teeth take the core's tone. The built piece needs a change in the finish module, which was not the owner's file; a tested copy is prepared.
+- **LD38 met:** the four mutants are caught. One new mutant survives; the owner calls the function behind it needless.
+- Still wrong, by the owner: on the town side of the +x flank the deck walk has no rail for 1.6 to 2.1 m before the end post; stretched texture streaks on the +x core; the tone sits at the edge of its window; the block ends still read as squared blocks at 12 m. The mound and the V of the gap are step 3.
+
+**The lead decides the owner's four requests after the independent check** (it runs since 08:20: its own measures and renders, the piece built by the piece code, every rewritten test read against its old form, the four mutants and at least six new ones, an estimate of the body's size with merged rows).
+
 ## The tiling wood set checked and repaired: variant a had twin boards (2026-11-27, recorded 07:54)
 
 The lead built the tiling wood set itself, so an independent checker judged it (`WORK\kit_full\design_v2\pilot_details\wood_tiling\check\CHECK_WOOD_TILING.md`; its own gates with controls and plants, 15 mutants of the maker's code, lit renders of a floor and a door leaf). Variant b: ready. Variant a: ready with one change. **The high finding:** each board drew its own window of the grain field, and the windows overlapped, so boards 2 and 7 shared 127 of 128 rows and read as twins at 5 m and at 10 m. The maker's test compared only neighbour boards. Five lines of the maker's note were not true as written.
