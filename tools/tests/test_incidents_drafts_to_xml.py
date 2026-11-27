@@ -269,6 +269,18 @@ class ShippedCatalogTests(unittest.TestCase):
         self.assertEqual(conv.apply_block(shipped, conv.render_block(rows, newline)), shipped,
                          "the shipped block differs from the committed drafts: run the tool with --apply, never edit the block by hand")
 
+    def test_EveryReworded_Incident_HasEverySlotOfEveryVersion(self):
+        # A missing slot falls back to vanilla's text, so one popup would mix TAOM and vanilla wording.
+        keys = {r["key"] for r in conv.read_drafts(sorted(conv.DEFAULT_DRAFTS.glob("*.tsv")))}
+        catalog = conv.load_catalog(conv.DEFAULT_CATALOG)
+        missing = []
+        for short, entry in catalog["incidents"].items():
+            if entry.get("vanilla_text") or entry.get("verdict") == "DISABLE":
+                continue
+            slots = ["title", "desc"] + [f"opt{n}" for n in range(1, entry["options"] + 1)]
+            missing += [f"taom_inc_{short}_{v}_{s}" for v in entry["versions"] for s in slots if f"taom_inc_{short}_{v}_{s}" not in keys]
+        self.assertEqual(missing, [])
+
 
 class MainTests(unittest.TestCase):
     ROWS = ("taom_inc_rooster_theft_all_title\tincident_rooster_theft\tall\ttitle\tThe Rooster\t\n"

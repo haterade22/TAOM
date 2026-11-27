@@ -48,11 +48,11 @@ taom_inc_tempting_berries_all_opt1	incident_tempting_berries	all	opt1	Let your s
 taom_inc_tempting_berries_all_opt2	incident_tempting_berries	all	opt2	The bushes may belong to someone. Leave them to the local farmers.
 taom_inc_tempting_berries_all_opt3	incident_tempting_berries	all	opt3	If they are ripe, why have animals or villagers not already taken them? They might be poisonous. Avoid them.
 taom_inc_honor_the_slain_foe_free_title	incident_honor_the_slain_foe	free	title	Honor the Slain Foe
-taom_inc_honor_the_slain_foe_free_desc	incident_honor_the_slain_foe	free	desc	Your {CULTURE_NAME} troops ask to take charge of the {CULTURE_BURIAL_STYLE} of the {CULTURE_NAME} in the enemy's ranks, saying they owe a duty to their kin even if those kin fought in a bad cause.
+taom_inc_honor_the_slain_foe_free_desc	incident_honor_the_slain_foe	free	desc	Your {CULTURE_NAME} troops ask to take charge of the {CULTURE_BURIAL_STYLE} of the {CULTURE_NAME} warriors in the enemy's ranks, saying they owe a duty to their kin even if those kin fought in a bad cause.
 taom_inc_honor_the_slain_foe_free_opt1	incident_honor_the_slain_foe	free	opt1	Refuse, knowing that separate rites will breed suspicion among the different peoples in your ranks.
 taom_inc_honor_the_slain_foe_free_opt2	incident_honor_the_slain_foe	free	opt2	Grant their request, as there is no shame in honoring a valiant foe.
 taom_inc_honor_the_slain_foe_shadow_title	incident_honor_the_slain_foe	shadow	title	Respect for the Fallen
-taom_inc_honor_the_slain_foe_shadow_desc	incident_honor_the_slain_foe	shadow	desc	Your {CULTURE_NAME} warriors ask to see to the {CULTURE_BURIAL_STYLE} of the {CULTURE_NAME} in the enemy's ranks, saying they owe their kin that much even if those kin fought for the wrong side.
+taom_inc_honor_the_slain_foe_shadow_desc	incident_honor_the_slain_foe	shadow	desc	Your {CULTURE_NAME} warriors ask to see to the {CULTURE_BURIAL_STYLE} of the {CULTURE_NAME} warriors in the enemy's ranks, saying they owe their kin that much even if those kin fought for the wrong side.
 taom_inc_honor_the_slain_foe_shadow_opt1	incident_honor_the_slain_foe	shadow	opt1	Refuse; separate rites would breed suspicion among the different tribes in your ranks.
 taom_inc_honor_the_slain_foe_shadow_opt2	incident_honor_the_slain_foe	shadow	opt2	Grant their request; a valiant foe has earned it.
 taom_inc_ice_march_all_title	incident_ice_march	all	title	Ice March
@@ -91,13 +91,13 @@ taom_inc_fertility_festival_all_opt1	incident_fertility_festival	all	opt1	A vat 
 taom_inc_fertility_festival_all_opt2	incident_fertility_festival	all	opt2	Give the villagers a stern lecture on the importance of sound custom and lawful worship.
 taom_inc_fertility_festival_all_opt3	incident_fertility_festival	all	opt3	Tell the villagers to keep things discreet.
 taom_inc_educational_advancements_all_title	incident_educational_advancements	all	title	Educational Advancements
-taom_inc_educational_advancements_all_desc	incident_educational_advancements	all	desc	Villagers say that a wanderer has recently arrived and offered to teach their children to read. The stranger is well-educated and has a gift for holding the attention of restless ten-year-olds. However, they seem to have spent time with one of the rebel bands that were common around here ten years back, and occasionally speak of a coming reign of justice delivered by {GODS}, in a way that does not sound like an ironic joke.
+taom_inc_educational_advancements_all_desc	incident_educational_advancements	all	desc	Villagers say that a wanderer has recently arrived and offered to teach their children to read. The stranger is well-educated and has a gift for holding the attention of restless ten-year-olds. However, they seem to have spent time with one of the rebel bands that were common around here ten years back, and occasionally speak of a coming reign of justice, in a way that does not sound like an ironic joke.
 taom_inc_educational_advancements_all_opt1	incident_educational_advancements	all	opt1	Let the teacher stay. It is good for children to read, and it is not as if they take their elders seriously anyway.
 taom_inc_educational_advancements_all_opt2	incident_educational_advancements	all	opt2	Reading will not help a farmhand plough, but it might goad them into foolish things that get them killed.
 taom_inc_educational_advancements_all_opt3	incident_educational_advancements	all	opt3	Take the teacher aside and say the elder will pay a handsome stipend that will stop abruptly if they breathe a word about politics or worship.
 taom_inc_haunted_dreams_all_title	incident_haunted_dreams	all	title	Haunted Dreams
 taom_inc_haunted_dreams_all_desc	incident_haunted_dreams	all	desc	You lie down for a well-deserved nap, but slip into an uneasy dream. You are sailing on a wind-tossed sea. A wave crashes on your bow, sending spray across the decks. You look closely and see that it is not water but blood sloshing around your feet. You stare out over the sea, and the breakers take on the forms of those you have slain in battle.
-taom_inc_haunted_dreams_all_opt1	incident_haunted_dreams	all	opt1	Have I killed without good reason? I must repent before {GODS}! I shall choose the peaceful path. When there is one, that is...
+taom_inc_haunted_dreams_all_opt1	incident_haunted_dreams	all	opt1	Have I killed without good reason? I must repent! I shall choose the peaceful path. When there is one, that is...
 taom_inc_haunted_dreams_all_opt2	incident_haunted_dreams	all	opt2	To where do we sail on this sea of blood? To glory, that is where!
 taom_inc_haunted_dreams_all_opt3	incident_haunted_dreams	all	opt3	Dreams are but a passing madness. No power speaks to us in this way.
 taom_inc_besiegers_blues_all_title	incident_besiegers_blues	all	title	Besiegers' Blues
@@ -179,12 +179,12 @@ taom_inc_saint_of_the_woods_free_opt1	incident_saint_of_the_woods	free	opt1	Give
 taom_inc_saint_of_the_woods_free_opt2	incident_saint_of_the_woods	free	opt2	Declare that you owe your victory to no wanderer but to your soldiers, and give them the spoils.
 taom_inc_saint_of_the_woods_free_opt3	incident_saint_of_the_woods	free	opt3	Declare that you owe your victory to your own right arm, and keep the spoils.
 taom_inc_saint_of_the_woods_free_opt4	incident_saint_of_the_woods	free	opt4	Fall on your knees in tears, repent of your wrongs, and leave a huge gift.
-taom_inc_saint_of_the_woods_shadow_title	incident_saint_of_the_woods	shadow	title	The Hermit of the Woods
+taom_inc_saint_of_the_woods_shadow_title	incident_saint_of_the_woods	shadow	title	The Spirit of the Woods
 taom_inc_saint_of_the_woods_shadow_desc	incident_saint_of_the_woods	shadow	desc	As you depart the scene of your victory, a gaunt figure in black rags creeps out of a nearby wood. The figure says you owe your victory to the hunger of a war-spirit from a century ago, who still favors those who fight for {GODS}, and demands half the plunder for a blood altar in thanks, where it will be used to feed the faithful.
-taom_inc_saint_of_the_woods_shadow_opt1	incident_saint_of_the_woods	shadow	opt1	Give the plunder to the blood altar.
+taom_inc_saint_of_the_woods_shadow_opt1	incident_saint_of_the_woods	shadow	opt1	Give the plunder to the altar, to feed the starving camp followers who gather there.
 taom_inc_saint_of_the_woods_shadow_opt2	incident_saint_of_the_woods	shadow	opt2	Declare that you owe your victory to no spirit but to your warriors, and give them the plunder.
 taom_inc_saint_of_the_woods_shadow_opt3	incident_saint_of_the_woods	shadow	opt3	Declare that you owe your victory to your own strong arm, and keep the plunder.
-taom_inc_saint_of_the_woods_shadow_opt4	incident_saint_of_the_woods	shadow	opt4	Fall on your knees before the altar, swear fresh oaths, and leave a huge offering.
+taom_inc_saint_of_the_woods_shadow_opt4	incident_saint_of_the_woods	shadow	opt4	Fall on your knees before the altar, beg pardon for the lives you took, and leave a huge offering.
 taom_inc_vedmaks_treasure_all_title	incident_vedmaks_treasure	all	title	The Sorcerer's Hoard
 taom_inc_vedmaks_treasure_all_desc	incident_vedmaks_treasure	all	desc	As you prepare to leave, one of your soldiers says a villager approached them. There is a particularly ill-tempered sorcerer on the edge of the village who lives not by healing or love-potions but by black magic, and who threatens to curse villagers unless they pay. They asked your soldiers to drive the sorcerer away and burn the hut, and told them they can have the ill-gotten gains.
 taom_inc_vedmaks_treasure_all_opt1	incident_vedmaks_treasure	all	opt1	Convince your soldiers that those who anger sorcerers are likely to see their noses shrivel up or their fingers fall off.
@@ -210,7 +210,7 @@ taom_inc_sandstorm_warning_all_desc	incident_sandstorm_warning	all	desc	As you s
 taom_inc_sandstorm_warning_all_opt1	incident_sandstorm_warning	all	opt1	Wait briefly in the lee of a dune until the wind eases up, then press cautiously ahead.
 taom_inc_sandstorm_warning_all_opt2	incident_sandstorm_warning	all	opt2	Keep marching, even though there is a good chance some of your soldiers might be separated.
 taom_inc_misplaced_vengeance_all_title	incident_misplaced_vengeance	all	title	Misplaced Vengeance
-taom_inc_misplaced_vengeance_all_desc	incident_misplaced_vengeance	all	desc	Throughout your visit to {VILLAGE}, the villagers were worried that the enemy who sacked {LOOTED_VILLAGE} might be sending patrols their way. As you leave, you find out that their fears were not misplaced. The first thing you see is a flight of ravens in the sky. Your soldiers begin to mutter, but soon they come across a sight that silences them: a pile of burned corpses, stacked by a crossroad, left by the {ENEMY} as their calling card. You press on, but soon notice your soldiers eyeing your prisoners. The prisoners may not have been involved in what happened in {LOOTED_VILLAGE}, but you doubt your soldiers care much.
+taom_inc_misplaced_vengeance_all_desc	incident_misplaced_vengeance	all	desc	Throughout your visit to {VILLAGE}, the villagers were worried that the enemy who sacked {LOOTED_VILLAGE} might be sending patrols their way. As you leave, you find out that their fears were not misplaced. The first thing you see is a flight of ravens in the sky. Your soldiers begin to mutter, but soon they come across a sight that silences them: a pile of burned corpses, stacked by a crossroad, left by the forces of {ENEMY} as their calling card. You press on, but soon notice your soldiers eyeing your prisoners. The prisoners may not have been involved in what happened in {LOOTED_VILLAGE}, but you doubt your soldiers care much.
 taom_inc_misplaced_vengeance_all_opt1	incident_misplaced_vengeance	all	opt1	Take a brief walk to clear your head, and when you come back to find the prisoners gone, do not ask questions.
 taom_inc_misplaced_vengeance_all_opt2	incident_misplaced_vengeance	all	opt2	Tell your soldiers that the prisoners must be kept safe and that you will hold them responsible for anything that happens.
 taom_inc_love_marriage_all_title	incident_love_marriage	all	title	A Love Match
@@ -327,7 +327,7 @@ taom_inc_boar_in_a_thicket_all_desc	incident_boar_in_a_thicket	all	desc	As you s
 taom_inc_boar_in_a_thicket_all_opt1	incident_boar_in_a_thicket	all	opt1	The hunt is on! Ring the thicket with spearmen and drive the boar out.
 taom_inc_boar_in_a_thicket_all_opt2	incident_boar_in_a_thicket	all	opt2	Leave the beast be.
 taom_inc_false_money_all_title	incident_false_money	all	title	False Money
-taom_inc_false_money_all_desc	incident_false_money	all	desc	As you leave the village, a trader comes to you and says the coins some of your soldiers just paid with are only polished iron. You can indeed see some specks of rust. The trader demands full payment. Your soldiers may well have tried to pass off false coin, but the trader's evidence could as easily have come from the trader's own stock.
+taom_inc_false_money_all_desc	incident_false_money	all	desc	As you leave town, a trader comes to you and says the coins some of your soldiers just paid with are only polished iron. You can indeed see some specks of rust. The trader demands full payment. Your soldiers may well have tried to pass off false coin, but the trader's evidence could as easily have come from the trader's own stock.
 taom_inc_false_money_all_opt1	incident_false_money	all	opt1	Have your soldiers turn out their pockets. If any more false coins turn up, assume they are at fault.
 taom_inc_false_money_all_opt2	incident_false_money	all	opt2	Tell the trader that once a coin is accepted, it is the trader's fault and responsibility.
 taom_inc_vintage_of_victory_all_title	incident_vintage_of_victory	all	title	Vintage of Victory
@@ -355,7 +355,7 @@ taom_inc_turn_pike_all_desc	incident_turn_pike	all	desc	You notice a footpath le
 taom_inc_turn_pike_all_opt1	incident_turn_pike	all	opt1	Widen the road for wagons but charge tolls to use it.
 taom_inc_turn_pike_all_opt2	incident_turn_pike	all	opt2	Improve the road, but charge no tolls.
 taom_inc_turn_pike_all_opt3	incident_turn_pike	all	opt3	Let it be.
-taom_inc_conflict_over_commons_both_yours_all_title	incident_conflict_over_commons_both_yours	all	title	Conflict Over Commons
+taom_inc_conflict_over_commons_both_yours_all_title	incident_conflict_over_commons_both_yours	all	title	Conflict over Commons
 taom_inc_conflict_over_commons_both_yours_all_desc	incident_conflict_over_commons_both_yours	all	desc	Grazing land has grown scarce near {TOWN_OR_CASTLE_NAME}, and a heath between {POORER_VILLAGE} and {RICHER_VILLAGE}, covered with thistle and once of little value, has become a point of contention. {POORER_VILLAGE} claims that they have grazed goats there for generations, but {RICHER_VILLAGE} has produced a document showing rightful title.
 taom_inc_conflict_over_commons_both_yours_all_opt1	incident_conflict_over_commons_both_yours	all	opt1	The laws of the realm are clear: however many years go by, the first owner keeps the land unless it is lawfully sold or given away.
 taom_inc_conflict_over_commons_both_yours_all_opt2	incident_conflict_over_commons_both_yours	all	opt2	You hold to the old principle: the land belongs to the earth, not to any people, and goes to those who make the best use of it.
@@ -399,14 +399,14 @@ taom_inc_secession_of_the_plebs_all_opt1	incident_secession_of_the_plebs	all	opt
 taom_inc_secession_of_the_plebs_all_opt2	incident_secession_of_the_plebs	all	opt2	Sit down with them and negotiate a mutual understanding.
 taom_inc_secession_of_the_plebs_all_opt3	incident_secession_of_the_plebs	all	opt3	Dismiss the lot of them, hire new workers, and post some soldiers outside to protect your shop.
 taom_inc_respect_for_the_slain_all_title	incident_respect_for_the_slain	all	title	Respect for the Slain
-taom_inc_respect_for_the_slain_all_desc	incident_respect_for_the_slain	all	desc	Throughout your visit to {VILLAGE}, one of your older {TROOP_TYPE} seems moody and downcast. As you march out, the old soldier suddenly stops, stares at a roadside stall, then breaks from your column and starts shouting at the vendor. The story tumbles out. They fought in a battle here against {NEAREST_OTHER_CULTURE}, and the vendor is selling scraps of metal clearly looted from the graves of the dead.
+taom_inc_respect_for_the_slain_all_desc	incident_respect_for_the_slain	all	desc	Throughout your visit to {VILLAGE}, one of your older {TROOP_TYPE} seems moody and downcast. As you march out, the old soldier suddenly stops, stares at a roadside stall, then breaks from your column and starts shouting at the vendor. The story tumbles out. They fought in a battle here against a {NEAREST_OTHER_CULTURE} host, and the vendor is selling scraps of metal clearly looted from the graves of the dead.
 taom_inc_respect_for_the_slain_all_opt1	incident_respect_for_the_slain	all	opt1	Buy what old helmets and shield bosses you can and let your soldier build a small memorial on the battlefield, even though you know it will soon be looted afresh.
 taom_inc_respect_for_the_slain_all_opt2	incident_respect_for_the_slain	all	opt2	Do you not loot whatever you can from the dead after your victories? Tell your soldier to save that anger for wrongs done to the living.
 taom_inc_respect_for_the_slain_all_opt3	incident_respect_for_the_slain	all	opt3	Erupt in fury at the vendor and accuse them of grave robbing. The thefts will probably not stop, but your soldiers will be pleased.
 taom_inc_cries_in_the_mist_all_title	incident_cries_in_the_mist	all	title	Cries in the Mist
 taom_inc_cries_in_the_mist_all_desc	incident_cries_in_the_mist	all	desc	The people of {VILLAGE_NAME} warned you to take care outside their village. When the mist gathers, the woods are haunted by spirits whose shrieks foretell death. Now the gloom is gathering, and you hear mutterings from your soldiers. You are certain they will soon hear wailing and see apparitions, real or imagined. The mounts are growing twitchy too, picking up the mood, and accidents are likely.
 taom_inc_cries_in_the_mist_all_opt1	incident_cries_in_the_mist	all	opt1	Tell your soldiers to ignore the superstitions of villagers, and press on.
-taom_inc_cries_in_the_mist_all_opt2	incident_cries_in_the_mist	all	opt2	Drive off the spirits in the proper way, by loudly calling on {GODS} to ward off the ghosts of the dark.
+taom_inc_cries_in_the_mist_all_opt2	incident_cries_in_the_mist	all	opt2	Drive off the spirits in the old way, with loud prayers and charms against the ghosts of the dark.
 taom_inc_cries_in_the_mist_all_opt3	incident_cries_in_the_mist	all	opt3	Appease the spirits as the villagers advised, by slaughtering a black cockerel they sold to one of your soldiers.
 taom_inc_desperate_times_free_title	incident_desperate_times	free	title	Desperate Times
 taom_inc_desperate_times_free_desc	incident_desperate_times	free	desc	As you pass through the town gates, a crowd of refugees from the countryside throngs around you. They are gaunt, with sunken eyes. They say they could not sow their fields this year for fear of raiders, and were forced to eat their seed grain. They beg for any scraps you can spare.
@@ -445,7 +445,7 @@ taom_inc_right_of_pillage_shadow_desc	incident_right_of_pillage	shadow	desc	As y
 taom_inc_right_of_pillage_shadow_opt1	incident_right_of_pillage	shadow	opt1	Let your soldiers go back and sack the town while it is still defenseless
 taom_inc_right_of_pillage_shadow_opt2	incident_right_of_pillage	shadow	opt2	Pay them yourself
 taom_inc_right_of_pillage_shadow_opt3	incident_right_of_pillage	shadow	opt3	Punish the troublemakers for stirring up mutiny
-taom_inc_right_of_pillage_shadow_opt4	incident_right_of_pillage	shadow	opt4	Order your soldiers to spare the townsfolk: the living pay tribute, the dead pay nothing
+taom_inc_right_of_pillage_shadow_opt4	incident_right_of_pillage	shadow	opt4	Order your soldiers to spare the townsfolk: those who did not fight do not deserve the sword
 taom_inc_wedding_celebration_all_title	incident_wedding_celebration	all	title	Wedding Celebration
 taom_inc_wedding_celebration_all_desc	incident_wedding_celebration	all	desc	As you break camp, several of your veterans come forward, looking sheepish. They push one of their number forward and say that this one married a young lass in the last village you visited. They ask if they may share one of the casks of wine they have noticed you carrying, in celebration.
 taom_inc_wedding_celebration_all_opt1	incident_wedding_celebration	all	opt1	Indulge your soldiers, even though you have little doubt that the wedding is an invention
@@ -465,7 +465,7 @@ taom_inc_coin_clipping_all_title	incident_coin_clipping	all	title	Coin Clipping
 taom_inc_coin_clipping_all_desc	incident_coin_clipping	all	desc	Shortly after the loot is shared out, you find several of your soldiers rubbing the edges of the coins you paid them against a rock. You know what they are doing: clipping, shaving off a bit of the silver to melt down in the hope that no one notices.
 taom_inc_coin_clipping_all_opt1	incident_coin_clipping	all	opt1	Turn a blind eye, even though the practice is little better than counterfeiting
 taom_inc_coin_clipping_all_opt2	incident_coin_clipping	all	opt2	Order your soldiers to stop, and warn the merchants in the next town to look very carefully at any coins your soldiers give them.
-taom_inc_coin_clipping_all_opt3	incident_coin_clipping	all	opt3	Show them a few tricks from your own bag of dirty tricks
+taom_inc_coin_clipping_all_opt3	incident_coin_clipping	all	opt3	Show them a few dirty tricks of your own
 taom_inc_no_time_to_mourn_all_title	incident_no_time_to_mourn	all	title	No Time to Mourn
 taom_inc_no_time_to_mourn_all_desc	incident_no_time_to_mourn	all	desc	It is time to bury your dead, but the ground is frozen solid and the wood from nearby trees is too wet to make a proper pyre. You can give the bodies a hasty burial in a gully, even though wolves or other beasts may find them, or carry the bodies with you and bury them as soon as you can.
 taom_inc_no_time_to_mourn_all_opt1	incident_no_time_to_mourn	all	opt1	Carry the bodies with you until you find dry wood or softer ground
@@ -479,7 +479,7 @@ taom_inc_deadly_reputation_all_title	incident_deadly_reputation	all	title	A Dead
 taom_inc_deadly_reputation_all_desc	incident_deadly_reputation	all	desc	As you leave the village, a merchant who clearly wants your approval shouts out, "{LOCAL_KING} has slain thousands, but {PLAYER} tens of thousands!"
 taom_inc_deadly_reputation_all_opt1	incident_deadly_reputation	all	opt1	"I have, and it is but a taste before the main feast."
 taom_inc_deadly_reputation_all_opt2	incident_deadly_reputation	all	opt2	"All I have done has been in the service of {KING}. I am but their will made flesh."
-taom_inc_deadly_reputation_all_opt3	incident_deadly_reputation	all	opt3	"Any blood I have shed may have been necessary, but I pray to {GODS} for forgiveness."
+taom_inc_deadly_reputation_all_opt3	incident_deadly_reputation	all	opt3	"Any blood I have shed may have been necessary, but I hope it will be forgiven me."
 taom_inc_deadly_reputation_all_opt4	incident_deadly_reputation	all	opt4	Acknowledge the merchant by howling like a beast and swirling your weapon about, as mad behavior makes for good stories.
 taom_inc_abundance_of_troublemakers_all_title	incident_abundance_of_troublemakers	all	title	Abundance of Troublemakers
 taom_inc_abundance_of_troublemakers_all_desc	incident_abundance_of_troublemakers	all	desc	As you prepare to leave, the village elder approaches you. A gang of four youths keeps picking fights with the other villagers, the elder says. Even their own families do not want them around, for fear they will kill someone and start a blood feud. The elder begs you to take them into your ranks, where they can learn a bit of discipline.

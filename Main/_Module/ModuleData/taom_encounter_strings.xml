@@ -817,38 +817,26 @@
 	<string id="str_taom_inc.voc_dunlendings_gods" text="{=taom_inc_voc_dunlendings_gods}the old powers" />
 	<string id="str_taom_inc.voc_dunlendings_holy_person" text="{=taom_inc_voc_dunlendings_holy_person}a hill seer" />
 	<string id="str_taom_inc.voc_dunlendings_holy_place" text="{=taom_inc_voc_dunlendings_holy_place}a ring of standing stones" />
-	<string id="str_taom_inc.voc_dunlendings_power_oath" text="{=taom_inc_voc_dunlendings_power_oath}By the old powers" />
 	<string id="str_taom_inc.voc_dwarves_coin" text="{=taom_inc_voc_dwarves_coin}gold" />
 	<string id="str_taom_inc.voc_dwarves_gods" text="{=taom_inc_voc_dwarves_gods}Aulë the Maker" />
 	<string id="str_taom_inc.voc_dwarves_holy_person" text="{=taom_inc_voc_dwarves_holy_person}a rune keeper" />
 	<string id="str_taom_inc.voc_dwarves_holy_place" text="{=taom_inc_voc_dwarves_holy_place}a carved shrine of the Maker" />
-	<string id="str_taom_inc.voc_dwarves_power_oath" text="{=taom_inc_voc_dwarves_power_oath}By Durin's beard" />
 	<string id="str_taom_inc.voc_elves_gods" text="{=taom_inc_voc_elves_gods}the Valar" />
 	<string id="str_taom_inc.voc_elves_holy_person" text="{=taom_inc_voc_elves_holy_person}a loremaster" />
 	<string id="str_taom_inc.voc_elves_holy_place" text="{=taom_inc_voc_elves_holy_place}a hallowed glade" />
-	<string id="str_taom_inc.voc_elves_power_oath" text="{=taom_inc_voc_elves_power_oath}By Elbereth" />
 	<string id="str_taom_inc.voc_free_coin" text="{=taom_inc_voc_free_coin}silver" />
-	<string id="str_taom_inc.voc_free_dark_force" text="{=taom_inc_voc_free_dark_force}the Shadow" />
 	<string id="str_taom_inc.voc_free_gods" text="{=taom_inc_voc_free_gods}the powers above" />
 	<string id="str_taom_inc.voc_free_holy_person" text="{=taom_inc_voc_free_holy_person}a hermit healer" />
 	<string id="str_taom_inc.voc_free_holy_place" text="{=taom_inc_voc_free_holy_place}a wayside shrine" />
-	<string id="str_taom_inc.voc_free_lord_title" text="{=taom_inc_voc_free_lord_title}your liege" />
-	<string id="str_taom_inc.voc_free_power_oath" text="{=taom_inc_voc_free_power_oath}By all that is good" />
 	<string id="str_taom_inc.voc_isengard_gods" text="{=taom_inc_voc_isengard_gods}the White Hand" />
 	<string id="str_taom_inc.voc_isengard_holy_person" text="{=taom_inc_voc_isengard_holy_person}a servant of the Wizard" />
 	<string id="str_taom_inc.voc_isengard_holy_place" text="{=taom_inc_voc_isengard_holy_place}a post of the White Hand" />
-	<string id="str_taom_inc.voc_isengard_power_oath" text="{=taom_inc_voc_isengard_power_oath}By the White Hand" />
 	<string id="str_taom_inc.voc_orcs_holy_person" text="{=taom_inc_voc_orcs_holy_person}a bone reader" />
-	<string id="str_taom_inc.voc_orcs_lord_title" text="{=taom_inc_voc_orcs_lord_title}the big boss" />
 	<string id="str_taom_inc.voc_shadow_coin" text="{=taom_inc_voc_shadow_coin}coin" />
-	<string id="str_taom_inc.voc_shadow_dark_force" text="{=taom_inc_voc_shadow_dark_force}the witchery of the West" />
 	<string id="str_taom_inc.voc_shadow_gods" text="{=taom_inc_voc_shadow_gods}the Dark Lord" />
 	<string id="str_taom_inc.voc_shadow_holy_person" text="{=taom_inc_voc_shadow_holy_person}a dark priest" />
 	<string id="str_taom_inc.voc_shadow_holy_place" text="{=taom_inc_voc_shadow_holy_place}a blood altar" />
-	<string id="str_taom_inc.voc_shadow_lord_title" text="{=taom_inc_voc_shadow_lord_title}your overlord" />
-	<string id="str_taom_inc.voc_shadow_power_oath" text="{=taom_inc_voc_shadow_power_oath}By the Eye" />
 	<string id="str_taom_inc.voc_west_gods" text="{=taom_inc_voc_west_gods}the Valar" />
-	<string id="str_taom_inc.voc_west_power_oath" text="{=taom_inc_voc_west_power_oath}By the Valar" />
 	<string id="str_taom_inc.abundance_of_troublemakers_all_title" text="{=taom_inc_abundance_of_troublemakers_all_title}Abundance of Troublemakers" />
 	<string id="str_taom_inc.abundance_of_troublemakers_all_desc" text="{=taom_inc_abundance_of_troublemakers_all_desc}As you prepare to leave, the village elder approaches you. A gang of four youths keeps picking fights with the other villagers, the elder says. Even their own families do not want them around, for fear they will kill someone and start a blood feud. The elder begs you to take them into your ranks, where they can learn a bit of discipline." />
 	<string id="str_taom_inc.abundance_of_troublemakers_all_opt1" text="{=taom_inc_abundance_of_troublemakers_all_opt1}Accept the recruits. At the first chance, find fault with their gear and give them a sound thrashing, so they learn to mend their ways." />
@@ -914,7 +902,7 @@
 	<string id="str_taom_inc.coin_clipping_all_desc" text="{=taom_inc_coin_clipping_all_desc}Shortly after the loot is shared out, you find several of your soldiers rubbing the edges of the coins you paid them against a rock. You know what they are doing: clipping, shaving off a bit of the silver to melt down in the hope that no one notices." />
 	<string id="str_taom_inc.coin_clipping_all_opt1" text="{=taom_inc_coin_clipping_all_opt1}Turn a blind eye, even though the practice is little better than counterfeiting" />
 	<string id="str_taom_inc.coin_clipping_all_opt2" text="{=taom_inc_coin_clipping_all_opt2}Order your soldiers to stop, and warn the merchants in the next town to look very carefully at any coins your soldiers give them." />
-	<string id="str_taom_inc.coin_clipping_all_opt3" text="{=taom_inc_coin_clipping_all_opt3}Show them a few tricks from your own bag of dirty tricks" />
+	<string id="str_taom_inc.coin_clipping_all_opt3" text="{=taom_inc_coin_clipping_all_opt3}Show them a few dirty tricks of your own" />
 	<string id="str_taom_inc.colicky_horses_all_title" text="{=taom_inc_colicky_horses_all_title}Colicky Horses" />
 	<string id="str_taom_inc.colicky_horses_all_desc" text="{=taom_inc_colicky_horses_all_desc}As you leave town, one of your riders finds their mount lying on the ground, whining in pain and refusing to get up. You are sure the rider was careless and fed the animal too fast after you arrived, eager for a hot meal in town." />
 	<string id="str_taom_inc.colicky_horses_all_opt1" text="{=taom_inc_colicky_horses_all_opt1}Give what care you can, even though it will slow you down and success is far from sure." />
@@ -924,7 +912,7 @@
 	<string id="str_taom_inc.conflict_over_commons_all_desc" text="{=taom_inc_conflict_over_commons_all_desc}Villagers from your fief of {VILLAGE} have started going to a marsh on the road to {VILLAGE2} to gather reeds for baskets, adding to their earnings. Hunters from {VILLAGE2}, held by {LORD.NAME}, say the villagers have been disturbing the local waterfowl. Neither of you holds title to the marsh, but {VILLAGE2} says its people went there first. Your tenants say it is not their problem if they have found a better use for the land." />
 	<string id="str_taom_inc.conflict_over_commons_all_opt1" text="{=taom_inc_conflict_over_commons_all_opt1}Keep sending your reed gatherers there, and have them bring staves and slings to defend their rights" />
 	<string id="str_taom_inc.conflict_over_commons_all_opt2" text="{=taom_inc_conflict_over_commons_all_opt2}Tell {NOBLE.NAME} that your people will get their reeds elsewhere and stop frightening off the game." />
-	<string id="str_taom_inc.conflict_over_commons_both_yours_all_title" text="{=taom_inc_conflict_over_commons_both_yours_all_title}Conflict Over Commons" />
+	<string id="str_taom_inc.conflict_over_commons_both_yours_all_title" text="{=taom_inc_conflict_over_commons_both_yours_all_title}Conflict over Commons" />
 	<string id="str_taom_inc.conflict_over_commons_both_yours_all_desc" text="{=taom_inc_conflict_over_commons_both_yours_all_desc}Grazing land has grown scarce near {TOWN_OR_CASTLE_NAME}, and a heath between {POORER_VILLAGE} and {RICHER_VILLAGE}, covered with thistle and once of little value, has become a point of contention. {POORER_VILLAGE} claims that they have grazed goats there for generations, but {RICHER_VILLAGE} has produced a document showing rightful title." />
 	<string id="str_taom_inc.conflict_over_commons_both_yours_all_opt1" text="{=taom_inc_conflict_over_commons_both_yours_all_opt1}The laws of the realm are clear: however many years go by, the first owner keeps the land unless it is lawfully sold or given away." />
 	<string id="str_taom_inc.conflict_over_commons_both_yours_all_opt2" text="{=taom_inc_conflict_over_commons_both_yours_all_opt2}You hold to the old principle: the land belongs to the earth, not to any people, and goes to those who make the best use of it." />
@@ -933,13 +921,13 @@
 	<string id="str_taom_inc.cries_in_the_mist_all_title" text="{=taom_inc_cries_in_the_mist_all_title}Cries in the Mist" />
 	<string id="str_taom_inc.cries_in_the_mist_all_desc" text="{=taom_inc_cries_in_the_mist_all_desc}The people of {VILLAGE_NAME} warned you to take care outside their village. When the mist gathers, the woods are haunted by spirits whose shrieks foretell death. Now the gloom is gathering, and you hear mutterings from your soldiers. You are certain they will soon hear wailing and see apparitions, real or imagined. The mounts are growing twitchy too, picking up the mood, and accidents are likely." />
 	<string id="str_taom_inc.cries_in_the_mist_all_opt1" text="{=taom_inc_cries_in_the_mist_all_opt1}Tell your soldiers to ignore the superstitions of villagers, and press on." />
-	<string id="str_taom_inc.cries_in_the_mist_all_opt2" text="{=taom_inc_cries_in_the_mist_all_opt2}Drive off the spirits in the proper way, by loudly calling on {GODS} to ward off the ghosts of the dark." />
+	<string id="str_taom_inc.cries_in_the_mist_all_opt2" text="{=taom_inc_cries_in_the_mist_all_opt2}Drive off the spirits in the old way, with loud prayers and charms against the ghosts of the dark." />
 	<string id="str_taom_inc.cries_in_the_mist_all_opt3" text="{=taom_inc_cries_in_the_mist_all_opt3}Appease the spirits as the villagers advised, by slaughtering a black cockerel they sold to one of your soldiers." />
 	<string id="str_taom_inc.deadly_reputation_all_title" text="{=taom_inc_deadly_reputation_all_title}A Deadly Reputation" />
 	<string id="str_taom_inc.deadly_reputation_all_desc" text="{=taom_inc_deadly_reputation_all_desc}As you leave the village, a merchant who clearly wants your approval shouts out, &quot;{LOCAL_KING} has slain thousands, but {PLAYER} tens of thousands!&quot;" />
 	<string id="str_taom_inc.deadly_reputation_all_opt1" text="{=taom_inc_deadly_reputation_all_opt1}&quot;I have, and it is but a taste before the main feast.&quot;" />
 	<string id="str_taom_inc.deadly_reputation_all_opt2" text="{=taom_inc_deadly_reputation_all_opt2}&quot;All I have done has been in the service of {KING}. I am but their will made flesh.&quot;" />
-	<string id="str_taom_inc.deadly_reputation_all_opt3" text="{=taom_inc_deadly_reputation_all_opt3}&quot;Any blood I have shed may have been necessary, but I pray to {GODS} for forgiveness.&quot;" />
+	<string id="str_taom_inc.deadly_reputation_all_opt3" text="{=taom_inc_deadly_reputation_all_opt3}&quot;Any blood I have shed may have been necessary, but I hope it will be forgiven me.&quot;" />
 	<string id="str_taom_inc.deadly_reputation_all_opt4" text="{=taom_inc_deadly_reputation_all_opt4}Acknowledge the merchant by howling like a beast and swirling your weapon about, as mad behavior makes for good stories." />
 	<string id="str_taom_inc.desperate_times_free_title" text="{=taom_inc_desperate_times_free_title}Desperate Times" />
 	<string id="str_taom_inc.desperate_times_free_desc" text="{=taom_inc_desperate_times_free_desc}As you pass through the town gates, a crowd of refugees from the countryside throngs around you. They are gaunt, with sunken eyes. They say they could not sow their fields this year for fear of raiders, and were forced to eat their seed grain. They beg for any scraps you can spare." />
@@ -964,7 +952,7 @@
 	<string id="str_taom_inc.donative_demand_all_opt3" text="{=taom_inc_donative_demand_all_opt3}&quot;I am a river of wealth unto you, my brave warriors!&quot;" />
 	<string id="str_taom_inc.donative_demand_all_opt4" text="{=taom_inc_donative_demand_all_opt4}Erupt in a towering rage, so they will think twice about bothering you again." />
 	<string id="str_taom_inc.educational_advancements_all_title" text="{=taom_inc_educational_advancements_all_title}Educational Advancements" />
-	<string id="str_taom_inc.educational_advancements_all_desc" text="{=taom_inc_educational_advancements_all_desc}Villagers say that a wanderer has recently arrived and offered to teach their children to read. The stranger is well-educated and has a gift for holding the attention of restless ten-year-olds. However, they seem to have spent time with one of the rebel bands that were common around here ten years back, and occasionally speak of a coming reign of justice delivered by {GODS}, in a way that does not sound like an ironic joke." />
+	<string id="str_taom_inc.educational_advancements_all_desc" text="{=taom_inc_educational_advancements_all_desc}Villagers say that a wanderer has recently arrived and offered to teach their children to read. The stranger is well-educated and has a gift for holding the attention of restless ten-year-olds. However, they seem to have spent time with one of the rebel bands that were common around here ten years back, and occasionally speak of a coming reign of justice, in a way that does not sound like an ironic joke." />
 	<string id="str_taom_inc.educational_advancements_all_opt1" text="{=taom_inc_educational_advancements_all_opt1}Let the teacher stay. It is good for children to read, and it is not as if they take their elders seriously anyway." />
 	<string id="str_taom_inc.educational_advancements_all_opt2" text="{=taom_inc_educational_advancements_all_opt2}Reading will not help a farmhand plough, but it might goad them into foolish things that get them killed." />
 	<string id="str_taom_inc.educational_advancements_all_opt3" text="{=taom_inc_educational_advancements_all_opt3}Take the teacher aside and say the elder will pay a handsome stipend that will stop abruptly if they breathe a word about politics or worship." />
@@ -986,7 +974,7 @@
 	<string id="str_taom_inc.failed_inspection_all_opt3" text="{=taom_inc_failed_inspection_all_opt3}Buy them the best gear you can find to replace the worn kit." />
 	<string id="str_taom_inc.failed_inspection_all_opt4" text="{=taom_inc_failed_inspection_all_opt4}Pretend you saw nothing." />
 	<string id="str_taom_inc.false_money_all_title" text="{=taom_inc_false_money_all_title}False Money" />
-	<string id="str_taom_inc.false_money_all_desc" text="{=taom_inc_false_money_all_desc}As you leave the village, a trader comes to you and says the coins some of your soldiers just paid with are only polished iron. You can indeed see some specks of rust. The trader demands full payment. Your soldiers may well have tried to pass off false coin, but the trader's evidence could as easily have come from the trader's own stock." />
+	<string id="str_taom_inc.false_money_all_desc" text="{=taom_inc_false_money_all_desc}As you leave town, a trader comes to you and says the coins some of your soldiers just paid with are only polished iron. You can indeed see some specks of rust. The trader demands full payment. Your soldiers may well have tried to pass off false coin, but the trader's evidence could as easily have come from the trader's own stock." />
 	<string id="str_taom_inc.false_money_all_opt1" text="{=taom_inc_false_money_all_opt1}Have your soldiers turn out their pockets. If any more false coins turn up, assume they are at fault." />
 	<string id="str_taom_inc.false_money_all_opt2" text="{=taom_inc_false_money_all_opt2}Tell the trader that once a coin is accepted, it is the trader's fault and responsibility." />
 	<string id="str_taom_inc.family_claims_bandit_all_title" text="{=taom_inc_family_claims_bandit_all_title}A Bandit's Kin" />
@@ -1027,7 +1015,7 @@
 	<string id="str_taom_inc.hand_in_the_strongbox_all_opt4" text="{=taom_inc_hand_in_the_strongbox_all_opt4}Treat all your workers as potential thieves, and have them searched coming and going from the workshop." />
 	<string id="str_taom_inc.haunted_dreams_all_title" text="{=taom_inc_haunted_dreams_all_title}Haunted Dreams" />
 	<string id="str_taom_inc.haunted_dreams_all_desc" text="{=taom_inc_haunted_dreams_all_desc}You lie down for a well-deserved nap, but slip into an uneasy dream. You are sailing on a wind-tossed sea. A wave crashes on your bow, sending spray across the decks. You look closely and see that it is not water but blood sloshing around your feet. You stare out over the sea, and the breakers take on the forms of those you have slain in battle." />
-	<string id="str_taom_inc.haunted_dreams_all_opt1" text="{=taom_inc_haunted_dreams_all_opt1}Have I killed without good reason? I must repent before {GODS}! I shall choose the peaceful path. When there is one, that is..." />
+	<string id="str_taom_inc.haunted_dreams_all_opt1" text="{=taom_inc_haunted_dreams_all_opt1}Have I killed without good reason? I must repent! I shall choose the peaceful path. When there is one, that is..." />
 	<string id="str_taom_inc.haunted_dreams_all_opt2" text="{=taom_inc_haunted_dreams_all_opt2}To where do we sail on this sea of blood? To glory, that is where!" />
 	<string id="str_taom_inc.haunted_dreams_all_opt3" text="{=taom_inc_haunted_dreams_all_opt3}Dreams are but a passing madness. No power speaks to us in this way." />
 	<string id="str_taom_inc.heat_and_dust_all_title" text="{=taom_inc_heat_and_dust_all_title}Heat and Dust" />
@@ -1035,11 +1023,11 @@
 	<string id="str_taom_inc.heat_and_dust_all_opt1" text="{=taom_inc_heat_and_dust_all_opt1}Agree to buy the camels." />
 	<string id="str_taom_inc.heat_and_dust_all_opt2" text="{=taom_inc_heat_and_dust_all_opt2}Tell them that you need the money for other purposes." />
 	<string id="str_taom_inc.honor_the_slain_foe_free_title" text="{=taom_inc_honor_the_slain_foe_free_title}Honor the Slain Foe" />
-	<string id="str_taom_inc.honor_the_slain_foe_free_desc" text="{=taom_inc_honor_the_slain_foe_free_desc}Your {CULTURE_NAME} troops ask to take charge of the {CULTURE_BURIAL_STYLE} of the {CULTURE_NAME} in the enemy's ranks, saying they owe a duty to their kin even if those kin fought in a bad cause." />
+	<string id="str_taom_inc.honor_the_slain_foe_free_desc" text="{=taom_inc_honor_the_slain_foe_free_desc}Your {CULTURE_NAME} troops ask to take charge of the {CULTURE_BURIAL_STYLE} of the {CULTURE_NAME} warriors in the enemy's ranks, saying they owe a duty to their kin even if those kin fought in a bad cause." />
 	<string id="str_taom_inc.honor_the_slain_foe_free_opt1" text="{=taom_inc_honor_the_slain_foe_free_opt1}Refuse, knowing that separate rites will breed suspicion among the different peoples in your ranks." />
 	<string id="str_taom_inc.honor_the_slain_foe_free_opt2" text="{=taom_inc_honor_the_slain_foe_free_opt2}Grant their request, as there is no shame in honoring a valiant foe." />
 	<string id="str_taom_inc.honor_the_slain_foe_shadow_title" text="{=taom_inc_honor_the_slain_foe_shadow_title}Respect for the Fallen" />
-	<string id="str_taom_inc.honor_the_slain_foe_shadow_desc" text="{=taom_inc_honor_the_slain_foe_shadow_desc}Your {CULTURE_NAME} warriors ask to see to the {CULTURE_BURIAL_STYLE} of the {CULTURE_NAME} in the enemy's ranks, saying they owe their kin that much even if those kin fought for the wrong side." />
+	<string id="str_taom_inc.honor_the_slain_foe_shadow_desc" text="{=taom_inc_honor_the_slain_foe_shadow_desc}Your {CULTURE_NAME} warriors ask to see to the {CULTURE_BURIAL_STYLE} of the {CULTURE_NAME} warriors in the enemy's ranks, saying they owe their kin that much even if those kin fought for the wrong side." />
 	<string id="str_taom_inc.honor_the_slain_foe_shadow_opt1" text="{=taom_inc_honor_the_slain_foe_shadow_opt1}Refuse; separate rites would breed suspicion among the different tribes in your ranks." />
 	<string id="str_taom_inc.honor_the_slain_foe_shadow_opt2" text="{=taom_inc_honor_the_slain_foe_shadow_opt2}Grant their request; a valiant foe has earned it." />
 	<string id="str_taom_inc.horsefly_plague_all_title" text="{=taom_inc_horsefly_plague_all_title}Horsefly Plague" />
@@ -1124,7 +1112,7 @@
 	<string id="str_taom_inc.mining_all_opt2" text="{=taom_inc_mining_all_opt2}Tunnel quickly, threatening to execute anyone who refuses for insubordination." />
 	<string id="str_taom_inc.mining_all_opt3" text="{=taom_inc_mining_all_opt3}Rely on the usual methods." />
 	<string id="str_taom_inc.misplaced_vengeance_all_title" text="{=taom_inc_misplaced_vengeance_all_title}Misplaced Vengeance" />
-	<string id="str_taom_inc.misplaced_vengeance_all_desc" text="{=taom_inc_misplaced_vengeance_all_desc}Throughout your visit to {VILLAGE}, the villagers were worried that the enemy who sacked {LOOTED_VILLAGE} might be sending patrols their way. As you leave, you find out that their fears were not misplaced. The first thing you see is a flight of ravens in the sky. Your soldiers begin to mutter, but soon they come across a sight that silences them: a pile of burned corpses, stacked by a crossroad, left by the {ENEMY} as their calling card. You press on, but soon notice your soldiers eyeing your prisoners. The prisoners may not have been involved in what happened in {LOOTED_VILLAGE}, but you doubt your soldiers care much." />
+	<string id="str_taom_inc.misplaced_vengeance_all_desc" text="{=taom_inc_misplaced_vengeance_all_desc}Throughout your visit to {VILLAGE}, the villagers were worried that the enemy who sacked {LOOTED_VILLAGE} might be sending patrols their way. As you leave, you find out that their fears were not misplaced. The first thing you see is a flight of ravens in the sky. Your soldiers begin to mutter, but soon they come across a sight that silences them: a pile of burned corpses, stacked by a crossroad, left by the forces of {ENEMY} as their calling card. You press on, but soon notice your soldiers eyeing your prisoners. The prisoners may not have been involved in what happened in {LOOTED_VILLAGE}, but you doubt your soldiers care much." />
 	<string id="str_taom_inc.misplaced_vengeance_all_opt1" text="{=taom_inc_misplaced_vengeance_all_opt1}Take a brief walk to clear your head, and when you come back to find the prisoners gone, do not ask questions." />
 	<string id="str_taom_inc.misplaced_vengeance_all_opt2" text="{=taom_inc_misplaced_vengeance_all_opt2}Tell your soldiers that the prisoners must be kept safe and that you will hold them responsible for anything that happens." />
 	<string id="str_taom_inc.nearly_a_gift_horse_all_title" text="{=taom_inc_nearly_a_gift_horse_all_title}Nearly a Gift Horse" />
@@ -1180,7 +1168,7 @@
 	<string id="str_taom_inc.purebred_horse_all_opt2" text="{=taom_inc_purebred_horse_all_opt2}Your company could use a laugh. Let the rider show off the prize and take the humiliation, even if it is enough to drive them to desert." />
 	<string id="str_taom_inc.purebred_horse_all_opt3" text="{=taom_inc_purebred_horse_all_opt3}Tell the rider curtly what happened and that they must get the old mount back from the trader, even if it costs them some {COIN}." />
 	<string id="str_taom_inc.respect_for_the_slain_all_title" text="{=taom_inc_respect_for_the_slain_all_title}Respect for the Slain" />
-	<string id="str_taom_inc.respect_for_the_slain_all_desc" text="{=taom_inc_respect_for_the_slain_all_desc}Throughout your visit to {VILLAGE}, one of your older {TROOP_TYPE} seems moody and downcast. As you march out, the old soldier suddenly stops, stares at a roadside stall, then breaks from your column and starts shouting at the vendor. The story tumbles out. They fought in a battle here against {NEAREST_OTHER_CULTURE}, and the vendor is selling scraps of metal clearly looted from the graves of the dead." />
+	<string id="str_taom_inc.respect_for_the_slain_all_desc" text="{=taom_inc_respect_for_the_slain_all_desc}Throughout your visit to {VILLAGE}, one of your older {TROOP_TYPE} seems moody and downcast. As you march out, the old soldier suddenly stops, stares at a roadside stall, then breaks from your column and starts shouting at the vendor. The story tumbles out. They fought in a battle here against a {NEAREST_OTHER_CULTURE} host, and the vendor is selling scraps of metal clearly looted from the graves of the dead." />
 	<string id="str_taom_inc.respect_for_the_slain_all_opt1" text="{=taom_inc_respect_for_the_slain_all_opt1}Buy what old helmets and shield bosses you can and let your soldier build a small memorial on the battlefield, even though you know it will soon be looted afresh." />
 	<string id="str_taom_inc.respect_for_the_slain_all_opt2" text="{=taom_inc_respect_for_the_slain_all_opt2}Do you not loot whatever you can from the dead after your victories? Tell your soldier to save that anger for wrongs done to the living." />
 	<string id="str_taom_inc.respect_for_the_slain_all_opt3" text="{=taom_inc_respect_for_the_slain_all_opt3}Erupt in fury at the vendor and accuse them of grave robbing. The thefts will probably not stop, but your soldiers will be pleased." />
@@ -1201,7 +1189,7 @@
 	<string id="str_taom_inc.right_of_pillage_shadow_opt1" text="{=taom_inc_right_of_pillage_shadow_opt1}Let your soldiers go back and sack the town while it is still defenseless" />
 	<string id="str_taom_inc.right_of_pillage_shadow_opt2" text="{=taom_inc_right_of_pillage_shadow_opt2}Pay them yourself" />
 	<string id="str_taom_inc.right_of_pillage_shadow_opt3" text="{=taom_inc_right_of_pillage_shadow_opt3}Punish the troublemakers for stirring up mutiny" />
-	<string id="str_taom_inc.right_of_pillage_shadow_opt4" text="{=taom_inc_right_of_pillage_shadow_opt4}Order your soldiers to spare the townsfolk: the living pay tribute, the dead pay nothing" />
+	<string id="str_taom_inc.right_of_pillage_shadow_opt4" text="{=taom_inc_right_of_pillage_shadow_opt4}Order your soldiers to spare the townsfolk: those who did not fight do not deserve the sword" />
 	<string id="str_taom_inc.rooster_theft_all_title" text="{=taom_inc_rooster_theft_all_title}The Stolen Rooster" />
 	<string id="str_taom_inc.rooster_theft_all_desc" text="{=taom_inc_rooster_theft_all_desc}As you leave, a villager runs after you accusing one of your soldiers of stealing a rooster. A few squawks silence the culprit's attempt to deny the crime. Honor requires you to uphold the laws of the land, but your soldiers expect a generous {RANK} to value those who shed blood for {PRONOUN} over those who do not." />
 	<string id="str_taom_inc.rooster_theft_all_opt1" text="{=taom_inc_rooster_theft_all_opt1}Return the rooster and have the thief whipped." />
@@ -1213,12 +1201,12 @@
 	<string id="str_taom_inc.saint_of_the_woods_free_opt2" text="{=taom_inc_saint_of_the_woods_free_opt2}Declare that you owe your victory to no wanderer but to your soldiers, and give them the spoils." />
 	<string id="str_taom_inc.saint_of_the_woods_free_opt3" text="{=taom_inc_saint_of_the_woods_free_opt3}Declare that you owe your victory to your own right arm, and keep the spoils." />
 	<string id="str_taom_inc.saint_of_the_woods_free_opt4" text="{=taom_inc_saint_of_the_woods_free_opt4}Fall on your knees in tears, repent of your wrongs, and leave a huge gift." />
-	<string id="str_taom_inc.saint_of_the_woods_shadow_title" text="{=taom_inc_saint_of_the_woods_shadow_title}The Hermit of the Woods" />
+	<string id="str_taom_inc.saint_of_the_woods_shadow_title" text="{=taom_inc_saint_of_the_woods_shadow_title}The Spirit of the Woods" />
 	<string id="str_taom_inc.saint_of_the_woods_shadow_desc" text="{=taom_inc_saint_of_the_woods_shadow_desc}As you depart the scene of your victory, a gaunt figure in black rags creeps out of a nearby wood. The figure says you owe your victory to the hunger of a war-spirit from a century ago, who still favors those who fight for {GODS}, and demands half the plunder for a blood altar in thanks, where it will be used to feed the faithful." />
-	<string id="str_taom_inc.saint_of_the_woods_shadow_opt1" text="{=taom_inc_saint_of_the_woods_shadow_opt1}Give the plunder to the blood altar." />
+	<string id="str_taom_inc.saint_of_the_woods_shadow_opt1" text="{=taom_inc_saint_of_the_woods_shadow_opt1}Give the plunder to the altar, to feed the starving camp followers who gather there." />
 	<string id="str_taom_inc.saint_of_the_woods_shadow_opt2" text="{=taom_inc_saint_of_the_woods_shadow_opt2}Declare that you owe your victory to no spirit but to your warriors, and give them the plunder." />
 	<string id="str_taom_inc.saint_of_the_woods_shadow_opt3" text="{=taom_inc_saint_of_the_woods_shadow_opt3}Declare that you owe your victory to your own strong arm, and keep the plunder." />
-	<string id="str_taom_inc.saint_of_the_woods_shadow_opt4" text="{=taom_inc_saint_of_the_woods_shadow_opt4}Fall on your knees before the altar, swear fresh oaths, and leave a huge offering." />
+	<string id="str_taom_inc.saint_of_the_woods_shadow_opt4" text="{=taom_inc_saint_of_the_woods_shadow_opt4}Fall on your knees before the altar, beg pardon for the lives you took, and leave a huge offering." />
 	<string id="str_taom_inc.sandstorm_warning_all_title" text="{=taom_inc_sandstorm_warning_all_title}Sandstorm Warning" />
 	<string id="str_taom_inc.sandstorm_warning_all_desc" text="{=taom_inc_sandstorm_warning_all_desc}As you set out again after the battle, you feel a few scattered drops of rain. Then there is a rush of wind, and a wall of dust engulfs you. The blowing grains sting your face, and you can see but a few arms' lengths ahead. You know how easily soldiers get lost in the notorious sandstorms of the wastes, only to be found later dead of thirst or buried in a dune." />
 	<string id="str_taom_inc.sandstorm_warning_all_opt1" text="{=taom_inc_sandstorm_warning_all_opt1}Wait briefly in the lee of a dune until the wind eases up, then press cautiously ahead." />

@@ -80,7 +80,7 @@ Vocabulary by people (Luiz, 2026-11-26: every line must fit whoever hears it). T
 3. `<group>`, the people alone: `west`, `rohirrim`, `northmen`, `dunlendings`, `southrons`, `easterlings`, `elves`, `dwarves`, `orcs` (from `encounter_groups.json`);
 4. `free` or `shadow`, the side row. It is the fallback for every people with no row of its own, so its words are neutral ("the powers above", "a wayside shrine"; "the Dark Lord", "a blood altar").
 
-Shipped people rows: west (the Valar), elves (the Valar, Elbereth, a hallowed glade, a loremaster), dwarves (Aulë the Maker, Durin's beard, gold), dunlendings (the old powers, standing stones, a hill seer), isengard (the White Hand), and orcs (a bone reader, "the big boss" as the ruler). Every other people and word uses the side row, the Shadow side for southrons and easterlings on the Shadow voice. The rows are in the generated block of `taom_encounter_strings.xml` (`str_taom_inc.voc_*`). How a text uses each word: `{GODS}` only after a preposition ("pray to {GODS}"), because some values are plural and some singular; `{HOLY_PLACE}` and `{HOLY_PERSON}` carry their own article ("near {HOLY_PLACE}"); `{DARK_FORCE}` carries "the"; `{POWER_OATH}` starts a spoken sentence; `{LORD_TITLE}` is the player's ruler with "your"; `{COIN}` is a mass noun with no article. A text that must fit several peoples names no god outright: it uses these words.
+Shipped people rows: west (the Valar), elves (the Valar, a hallowed glade, a loremaster), dwarves (Aulë the Maker, a carved shrine, a rune keeper, gold), dunlendings (the old powers, standing stones, a hill seer), isengard (the White Hand), and orcs (a bone reader). Every other people and word uses the side row, the Shadow side for southrons and easterlings on the Shadow voice. The rows are in the generated block of `taom_encounter_strings.xml` (`str_taom_inc.voc_*`). How a text uses each word: `{GODS}` only after a preposition ("pray to {GODS}"), because some values are plural and some singular; `{HOLY_PLACE}` and `{HOLY_PERSON}` carry their own article ("near {HOLY_PLACE}"); `{COIN}` is a mass noun with no article. No text uses `{POWER_OATH}`, `{DARK_FORCE}` or `{LORD_TITLE}` yet, so they ship no rows: the first text that uses one adds its free and shadow rows (the converter refuses it otherwise). A text that must fit several peoples names no god outright: it uses these words.
 
 ### Drafts to rows
 
@@ -138,7 +138,7 @@ Only a person can confirm what the popup looks like (clipping of long texts, the
 
 ## Changelog
 
-- 2026-11-27: the English rows for the 98 reworded incidents and the vocabulary (583 rows, written in review); the tests that run engine code or read vanilla IL tagged for the stub-assembly CI (v2.0.43).
+- 2026-11-27: the English rows for the 98 reworded incidents and the vocabulary (571 rows, written in review); the tests that run engine code or read vanilla IL tagged for the stub-assembly CI (v2.0.43).
 - 2026-11-26: vocabulary by people (`VocabScopes`), the incident rows that named a god, a gender or a people's habit reworded (v2.0.43).
 - 2026-11-26: the seam, the catalog of 101 incidents, the voice and gate rules, the place fixes, `taom.incident`, the drafts converter (v2.0.43).
 
