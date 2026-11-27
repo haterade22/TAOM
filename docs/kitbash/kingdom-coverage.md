@@ -20,7 +20,7 @@ folder: `Get-ChildItem -LiteralPath $s -Directory`, then for each folder
 | `Decals` | 17 | 0 | 2026-09-13 | Decal textures |
 | `erebor` | 87 | 15 | 2026-10-15 | The Erebor kit ([catalog](erebor/)) |
 | `Gondor` | 410 | 112 | 2026-10-15 | The Gondor kit ([catalog](gondor/)); `walls\` holds the castle walls, towers and the gatehouse |
-| `Mirkwood` | 86 | 1 | 2026-04-08 | One FBX; not catalogued |
+| `Mirkwood` | 86 | 1 | 2026-04-08 | One FBX. The [Mirkwood catalog](mirkwood/) records the installed kit measured on 2026-11-26. |
 | `Mordor` | 104 | 25 | 2026-10-17 | Not catalogued |
 | `Nature` | 120 | 25 | 2026-10-05 | Rocks and cliffs shared by the kits |
 | `Rohan` | 134 | 7 | 2026-11-06 | Two landmarks, not a modular kit: the Golden Hall of Edoras (`edoras\sm_golden_hall_edoras_taom.fbx`) and Helm's Deep (`helms_deep\`, five FBX, and `helms_deep_wall_key_01.fbx`) |
@@ -91,6 +91,6 @@ pilot's records are approved (Gate 2 of the prompt).
 ## Still owed
 
 - The same review for Rohan, Rhûn, the Orcs, the Goblins, Harad, Khand and Dale.
-- A catalog of the Mirkwood and Mordor kits, as far as a kingdom needs them.
+- A catalog of the Mordor kit, as far as a kingdom needs it.
 - The use count of each kit piece in the scenes and prefabs (the Gondor catalog has it for Gondor).
 - The filterable picture page of donor pieces.

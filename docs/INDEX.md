@@ -154,6 +154,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [siege-forces](features/siege-forces.md): choose which troops fight a wall battle on vanilla's Manage Troops screen; trolls start unticked (Patch102, #734)
 - [postern-gate](features/postern-gate.md): a military building that cuts the troops lost breaking into or out of a siege at its fief, 50, 67 and 75 percent by level, named by culture (campaign model plus Patch108, #855)
 - [creature-siege-role](features/creature-siege-role.md): trolls skip ladders, towers and siege machines, break the gates and hold the ground behind them (no patch, #735)
+- [Mirkwood settlement kit](features/mirkwood-kit.md) covers the castle and town layouts, Blender kit and pending native siege checks.
 
 ### Economy, settlements, resources
 - [special-resources](features/special-resources.md) — 11 resources × 18 kingdoms, troop costs, save-compat (Patch26); earning is keyed on `MapEvent.PlayerSide == WinningSide` (participation, not command — the old leader-hero gate paid nothing to a player fighting inside another lord's army) and suppressed on a dedicated server

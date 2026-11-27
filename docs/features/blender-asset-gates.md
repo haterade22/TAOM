@@ -277,6 +277,13 @@ so a direction is judged from the axes.
 Not in these views: textures (`tools/blender/render_painter_preview.py`), wireframes and armatures
 (the live viewport, through the Blender MCP screenshot tool).
 
+## Saved scene checks
+
+When a project adds a copied scene in background Blender, keep a persistent
+user on the scene and reopen the actual saved file. Resolve all render
+scenes and cameras by name before a batch render. See the
+[Mirkwood save failure](../reviews/lessons/build-tooling-workflow.md#a-copied-scene-can-render-and-disappear-on-reopen-2026-11-27).
+
 ## Verdict
 
 Defect levels, from the source's QA gate: a **blocker** stops the asset, a **major** is fixed or

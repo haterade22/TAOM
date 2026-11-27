@@ -6138,3 +6138,14 @@ ViewModel classes and found that none of the moved sections applies to one.
   after that.
 - **Source:** [adopt-instruction-debloat-2026-11-25.md](../adopt-instruction-debloat-2026-11-25.md), "Path
   rules, skills and caps". The split was not applied. The missing trigger for layer builders is owed there.
+
+### A copied scene can render and disappear on reopen (2026-11-27)
+
+The first Mirkwood amber hall produced both in-memory previews. A later
+render loaded the saved blend and could not find the scene. The village
+slate and bridge runoff studies reproduced the same failure. The copied
+scenes had no persistent users. Giving each one a fake user kept it in
+the saved file. A separate reopen compared camera framing and verified
+packed dependencies. Preflight the queued views against the exact saved
+blend before starting a long render.
+[Mirkwood build record](../../kitbash/mirkwood-kit.md#updated-render-proof)
