@@ -637,6 +637,52 @@ At 00:52 ten source files went into `AssetSources\creature\chariot` under new na
 with a kept copy of the v15 file; the nine maps are the same for both. The import in the Modding Kit and the harness
 item are owed; the item row follows the import.
 
+**The sun, lacquer and horned sets in the game's data, 2026-11-27.** In the morning he said: "We can import all
+carts and horse armors now and then update the fbxs when you get finished with them." and, after the import, "I have
+imported all that I had, please check the materials AND their flags and ensure we have it set up correctly". The
+three mesh packages carry the file time 09:05: `Assets\creature\chariot\mesh\rhun_war_chariot_c_geo.tpac`
+(12,206,552 bytes), `rhun_war_chariot_d_geo.tpac` (12,101,159) and `rhun_war_chariot_e_geo.tpac` (12,181,487).
+
+The check of the materials read the package bytes, not the Kit's screen. The 19 chariot materials in
+`Assets\creature\chariot\textures` (the five armours, the base and front material of carts A to F, the two dwarf
+materials) have equal settings apart from their map bindings: material flag `two_sided`, vertex layout `bumpmap`
+and `skinning`, blend `no_alpha_blend`, shader flags `use_specular` and `do_not_use_vertex_color_as_occlusion`, and
+the shader and number values that the Armory's other armour materials have (937 single material packages read;
+the elk, the direwolf and the Rohan noble armour are in the same settings group). Each material binds its own `_d`,
+`_n` and `_s` package in the diffuse, normal and specular slots. Of the 57 map packages every `_d` and `_s` is DXT1
+and every `_n` is BC5, all 2048 by 2048 with 12 mip levels. No source map has an alpha channel, so a material
+without `alpha_test` is right. Each of the five Rhûn set meshes holds its own three materials six times, once for
+each LOD, and `tools/check_rdc_entries.py` lists no chariot package without a cache entry. Nothing had to change.
+
+He then asked "Do we need two sided or no?". A probe of the row scene (LOD0, rest pose, the horse bodies in
+place) cast rays from behind each triangle into the directions a viewer can stand in, and counted a triangle when
+at least a tenth of them met nothing. Share of each material's area whose back a viewer can see: the older armour
+of cart A 13.2 percent on the body (1,368 triangles) and 0.4 percent on the head; armour 1 0.5 percent (95);
+armour 2 0.1 percent (10); armour 3 none; armour 4 0.1 percent (27); armour 5 0.5 percent (274); every cart
+material at most 0.1 percent (0 to 44 triangles). The clips, where plates part and show their inner side, and LOD1
+to LOD5 were not measured, and the flag's render cost in the engine was not read. His decision: "Keep two sided on
+for all".
+
+At 09:16 three harness items went into `LOTRAOM_horses.xml`, between `taom_chariot_armour_rhun_raider` and
+`taom_chariot_armour_imperial`, each with the values of `taom_chariot_armour_rhun` (the raider row above shows the
+form). No tool puts the rows back, so their ids, names and meshes are kept here:
+
+| Set | Item id | Name | Mesh | Triangles, LOD0 to LOD5 |
+|---|---|---|---|---|
+| C | `taom_chariot_armour_rhun_sun` | `[Rhûn] Sun Chariot Barding` | `rhun_war_chariot_c` | 59,460; 44,603; 28,217; 17,356; 7,198; 5,347 |
+| D | `taom_chariot_armour_rhun_lacquer` | `[Rhûn] Lacquer Chariot Barding` | `rhun_war_chariot_d` | 58,353; 44,359; 27,497; 16,301; 6,638; 4,456 |
+| E | `taom_chariot_armour_rhun_horned` | `[Rhûn] Horned Chariot Barding` | `rhun_war_chariot_e` | 58,991; 43,819; 26,333; 15,835; 7,444; 4,541 |
+
+The ids and the display names are the session's choice until he gives others. No troop wears the items. Their
+English name rows are in `Languages\loc_LOTRAOM_horses.xml`, and the twelve translations wait for the language
+pass. The repo's tables hold the items: `tools/armour_cover_flags.json` (mane cover `all`),
+`tools/data/armour_colour_families.json` (family bronze for each, measured on the set's front map; the lacquer
+set's red-orange lies in the scanner's bronze band, the scanner knows no red family, and the table has no
+override for it) and `tools/external-loc-coverage-baseline.json`.
+The triangle counts were read at 09:20 from the meshes in `AssetSources` (`tools/audit_fbx_lods.py --fbx`; the
+files carry the build times 07:17, 07:13 and 01:57); a later mesh update changes them. The data gates on the two live files gave 22 PASS, 2 FAIL and 1 NOT RUN; the two that fail
+(`armory-refs`, `armour-colours`) name no chariot row, and the one that did not run is the localization test run.
+
 **Cart A without its quiver and javelins, 2026-11-26.** Of the cart that is in the game he said: "Cart A, we can
 remove the quiver and javelins and save on some triangles. They dont really do anything." Build v06 of
 `rhun_war_chariot` has no javelin case and javelins on the right wall and no bow case and arrows on the left wall,
@@ -951,8 +997,22 @@ Owed for the raider set (2026-11-26): in a campaign with cheat mode on, add `tao
 `taom_chariot_armour_rhun_raider`, equip both and enter a battle. Expect cart B without javelins and armour 1 on
 both horses, nothing stretched, and no missing mesh line in the log.
 
+Owed for the sun, lacquer and horned sets (2026-11-27): the same check with `taom_chariot_armour_rhun_sun`,
+`taom_chariot_armour_rhun_lacquer` and `taom_chariot_armour_rhun_horned`, one at a time. The hero needs a Riding
+skill of 120 or more, or the inventory refuses `taom_chariot_a` (its `difficulty`); this holds for the raider and
+black sets too. Expect the set's cart and armour on both horses, its own maps on every part, the mane hidden, and
+no missing mesh or material line in the log. Then, for each set, the two checks that no build tool can make:
+
+- Watch the chariot in a gallop and in a tight turn at a gallop. Expect no plate, lame or strap that leaves its
+  place, no cloth or horse skin through the armour, and no neck lame that parts from its neighbour. The open
+  faults by measure are named in "The armours in motion" and "The far levels" above; say which of them a player
+  sees.
+- Move the camera away from the chariot until it is small on the screen, and back. Expect no cloth through the
+  neck lames at any distance, no hole in a plate field and no sudden change of shape at a level switch.
+
 ## Changelog
 
+- 2026-11-27: The maintainer imported the sun, lacquer and horned sets in the Modding Kit (mesh packages of 09:05). A read of the package bytes found the 19 chariot materials, their 57 map packages and the mesh bindings set up alike and correctly. Three harness items are in the Armory since 09:16: `taom_chariot_armour_rhun_sun`, `taom_chariot_armour_rhun_lacquer` and `taom_chariot_armour_rhun_horned`, with their rows in the three item tables. The check in game is owed.
 - 2026-11-27: The far levels of the sun and lacquer armours show far less lining and backing at rest (set C v24 and set D v21 installed at 07:45, LOD2 and LOD3 only). The slip measure is gate G15 of the armour build chains. A study of its largest classes found faults on every armour; candidates for set B's neck lames and the black set's plates wait for the maintainer's word. See "The far levels, a gate for motion, and what the gate found".
 - 2026-11-27: The armours came apart in the game's clips (one bone per plate over a backing that follows the skin). Weight repairs are installed for the sun set (set C v23, armour 2 v16) and the horned set (set E v16, armour 4 v26b), and for the lacquer set (set D v20, armour 3 v14); the black set has a candidate that waits for the maintainer's word. See "The armours in motion".
 - 2026-11-27: The horned set (set E: cart E v13 with the wood grain along the boards, armour 4 v25e with made joints at every strap end, set v15, 58,991 triangles at LOD0) is in the Armory's `AssetSources` (ten files, 00:52). The Kit import and the harness item are owed.
