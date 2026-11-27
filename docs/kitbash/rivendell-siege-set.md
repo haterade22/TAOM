@@ -465,6 +465,59 @@ ones before he looks. I closed that window and opened the current gatehouse `a` 
 | "Also extend this trim all the way around." | Gatehouse `a`: the braid band on the drum, which stopped before the wall beside the door | Built: the band runs from the door frame across the wing wall, round the drum, to the end section (seen by me in `b4_door_space_wide.png`) | It ends 0.08 m short of the end section's face (a checker's note): it must meet the wall's band at the joint |
 | "Remove this as it looks very bad and can be plain with the trim extended" | Tower `a`: the half rib arch and the single squeezed lancet with its short piece of band, on the short wall beside the tower | Plain since version 7: no rib and no arch on the short walls (the checker's measure and code reading; I did not see a close picture of it) | "The trim extended": the braid band across the plain short wall, with the continuous band of the towers |
 
+## The night of 2026-11-26, second half: seven results, and the decisions PD46 to PD52, WB22 to WB27, LD34 to LD39, SC14, SC15 (2026-11-27, recorded 05:51)
+
+**A gap in the run.** The lead session did not run from about 21:50 on 2026-11-26 to 05:44 on 2026-11-27: its wakeup did not fire. The agents that ran at 21:50 ended their work, and their results waited. The lead read each result file again from disk at 05:50 before this record.
+
+**The kit tree, step 2j** (`WORK\kit_full\step2j`). The leftovers H19 to H22 are met and the five base method modules are in `src_k` with their tests. The suite: 2,697 tests with the same six known red tests. Level 0 of every piece is unchanged. A test porch built by the driver passes G4b, G6b and the probe. A note says what a piece module calls for a member's faces at levels 0, 3 and 6 (`DRIVER_INTERFACE_FOR_MEMBERS.md`).
+
+**Port step 5a** (`WORK\kit_full\port5\shared_result.json`): the shared export cuts every polygon that a fan folds and every bent polygon (PD28), with a gate; the castle gate passed with every wall object the same.
+
+**Port step 5b: three owners at one time** (`WORK\kit_full\port5`, each with a `REQUEST_TO_THE_LEAD.md`). An independent checker runs; no reference is accepted before its result.
+
+| Owner | Result as the owner states it |
+|---|---|
+| Towers: tower b round 2 | Built; the castle gate passed (walls the same: 24 of 24, 32 of 32, 40 of 40 objects; 2,706 tests; 0 folded and 0 bent polygons; seams 24 of 24). The band and the plinth cap run round each drum pier, the town face has the framed blind arches, 0 sliver faces (round 1: 4). 39,342 triangles, 1.63 times tower a (24,102): the 4 degree rule and the whole frieze cells cost most of it. The platform takes the mangonel footprint only turned (5.72 x 5.50 m, 0.035 m to spare) at a corbel of 0.3134 m |
+| Gatehouses: a round 6, b round 4 | The castle gate passed on the final code. Gatehouse a: the door jambs stand back to a half width of 2.45 m up to 0.80 m, and a quarter round roll of 0.10 m joins the jamb; the ram gap is 0.131 m, and 0.1106 m with roll; the deck takes a mangonel at 1,156 centres. Gatehouse b: seams 6 of 6, the wall's interlaced railing, the same gate room; over its own limits (main 12,478 of 12,000, asset 49,334 of 34,000, of which the railing is 24,256); its deck takes no mangonel in the field arc, only a ballista. On both: no eye beside the rock hole reaches a target under it by the 75 degree rule |
+| Levels and bodies: tower a, the corner tower | Levels 3 and 6 and collision bodies in files of their own. Level 0 equals the reference (19 of 19 and 20 of 20 objects). Every body is closed, with 0 points in front of the stone, 0 walk holes on the three floors and the platform. The stairs body carries `has_steps` as a custom property; whether the FBX carries it and the Kit reads it is UNVERIFIED. The main objects at level 6 are 54 percent (tower a) and 72 percent (corner) over the aim that was taken from the wall's shares, and the stub railings are over theirs |
+
+**Decisions on port step 5b (the lead; PD47 waits for the checker).**
+
+- **PD46.** Gatehouse b's limits become 13,000 triangles for the main object and 50,000 for the asset. Every addition was ordered, the railing is the wall's own, and gatehouse a's asset is 79,626.
+- **PD47.** The references move after the checker's result: tower b round 2, gatehouse a round 6, gatehouse b round 4 (b leaves the report-only list and gets its seams in the gate). `UV_TOLERANCE` and its test go.
+- **PD48.** The plinth course top of the outer door stays at 0.80 m (PD33 said under 0.70 m): at 0.70 m the gap over the ram's base is 0.031 m.
+- **PD49.** Gatehouse b is a ballista deck. The defenders' mangonels stand on the tower platforms and on gatehouse a. A bay for a mangonel on b is the maintainer's choice for a later round.
+- **PD50.** Tower b's next round raises the corbel so that the platform takes 5.50 x 5.72 m in both directions (the owner measured 0.4011 m as the least corbel). The look of the larger corbel is shown to the maintainer beside round 2.
+- **PD51.** A tower's level budget is its own, from these first built levels, as wall B's (WB20). The wall's shares are not the measure for a tower. The stub railings take the wall's railing rows in the shared level step.
+- **PD52.** The shared owner's next step: the castle gate calls the levels and the bodies, wall B's member model goes into `rivendell_lod.py` (WB23), and the FBX gates of the level step move into the tree. Then: the levels and bodies of gatehouse a, gatehouse b, tower b and the castle stair.
+
+**The broken wall, step 2b** (`WORK\build\v08\wall_broken\s6_step2b`; the independent check: `check\s6_step2b_check.json`). The check's verdict: NOT READY for step 3. LD28 is met for layout A (fracture seeds 1 to 60 and 101, both flanks, no raise). LD29 is not met: no slab fit with 12 points for seeds 5 and 11 on the left flank. LD30 is not met: the suite ran 866 tests with 65 failures and 17 errors. LD31 holds only on seed 7 (end-on tone 0.552 and 0.565; seeds 5 and 11 are outside 0.52 to 0.57), and from the field at 12 m the town teeth read as a light fringe past the dark core. LD32 is not met in the piece code: the rail and the parapet ends come from the stage 5 outline, so the innermost rail post stands 0.247 m over air (seed 7) and the parapet foot up to 0.717 m (seed 11, left); the owner's "met" rested on a step that only the preview has. Three mutants survive (a chip cutter of half depth, a smooth core, the deck back off), and one is masked by the red body tests. The owner changed `rivendell_breach_plan.py` outside its write list.
+
+**Decisions on the broken wall (the lead).**
+
+- **LD34.** A body of the band tear is a stack of convex prisms, one for each row of the tear, each from the solid side to that row's own tear line. The aim (under 0.35 m between body and stone) is measured for each row. The one slab fit with 12 points goes for the band.
+- **LD35.** The piece code cuts the rail and the parapet ends at the band's line at the deck: no post and no parapet foot stands over air on seeds 5, 7, 11 and 101, measured by a ray probe. The preview cuts piece by piece, so that it shows what the piece code makes.
+- **LD36.** The stage 5 suite is green. A test of the old outline is rewritten for the band, never deleted. The +x parapet end does not cross a part joint.
+- **LD37.** The end-on tone is in 0.52 to 0.57 on seeds 5, 7 and 11, and the broken faces of the town teeth take the core's tone, measured from the field at 12 m.
+- **LD38.** A test fails on each of the surviving mutants and on the masked one.
+- **LD39.** The change in `rivendell_breach_plan.py` stays, and the file joins the write list of step 2c.
+
+**The valley scene, blockout round 2: the independent critique** (`WORK\kit_full\design_v2\scene_valley\blockout_r2\critic\SCENE_R2_CRITIQUE.md`). The blockout stands where his picture puts it: every house apex within 4 px of the picture, the turret top within 10 px. It is ready to show only after its note is true. Faults in this round's own pieces: turned faces on the L2 cut, crossings at the podium stair and at the H12 core door, a podium stair that ends in a shut strip, a plinth step of 0.39 m with no tread under H9. In the tower group as received: a slot of 0.12 m at the door cuts the tower off its viaduct.
+
+- **SC14.** Round 3 closes every craft and walk fault of the critique, in this round's pieces and in the tower group (a craft repair there changes no outline that he approved).
+- **SC15.** Round 3 also closes the differences beside his picture that are not taste (the critique's section 1), and the same critic judges it again.
+
+**Wall type B, round 4: the independent critique** (`WORK\kit_full\design_v2\wall_b\r4\critic\WALL_B_R4_CRITIQUE.md`). The level 0 massing meshes pass every craft gate of the critic. Not ready for the finished build until six points close.
+
+- **WB22.** End E1 is the lead's pick; E2 stays in the file for his look.
+- **WB23.** Wall B's member model goes into `rivendell_lod.py` by the shared owner (PD52), with the R10 level decision made on B's first built levels (WB20).
+- **WB24.** A bounds gate and a cap on tagged edges, each seen to fail on a planted fault.
+- **WB25.** The strip rule for the rib sides and the trunks is written with the layout's strip table before the finished build maps them.
+- **WB26.** The tree's turn test keeps its limit of 4 degrees; B3 measures 3.84 degrees, and its number is printed on each sheet.
+- **WB27.** Until a Kit import trial of the sub-object and level names (his step), wall B follows wall A's names and A's `_m7` rail.
+
+**Started at 05:44 to 06:00 on 2026-11-27** (single agents): the independent checker of port step 5b; the builders of the whole houses B2 (`WORK\kit_full\house_b2`) and D (`WORK\kit_full\house_d`, on the massing's two leg posts, VB21); the valley scene's round 3; the broken wall's step 2c.
+
 ## The night of 2026-11-26, first half: the level step, a staged siege test, the scene's second blockout, wall B round 4 (recorded 21:31)
 
 **The level step 2i** (wf_d44afd3a-c84; `WORK\kit_full\step2i\CHECK.md`). Ready for a kit set, each with a driver build at levels 0, 3 and 6 with bodies, G4b with its reference, G6b, the probe, and a look at levels 3 and 6 with no hole and no lost outline: the terraces 20 m and 13 m, the terrace door 7 m, both terrace corners, the railings 7 m, corner and end, the open steps 1 m, the slabs, the castle stair 12 m A, the low walls, the gate arch 7 m. Not ready: the terrace end (its post's seat declares no depth), the open stair 4 m and the castle stair B (a zero-area triangle at a lower level, from the driver's collinear test), and bridge B (railing slivers). The suite: 2,291 tests, 6 red. Decisions: **H19** the terrace end declares its seat's depth; **H20** the driver's collinear rule goes by the sine of the corner; **H21** two triangles of one railing object that share an edge are neighbours of one surface, and their overlap does not count toward the limit; **H22** the whole suite is run to its end and every red test is listed by name.
