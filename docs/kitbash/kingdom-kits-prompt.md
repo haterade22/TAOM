@@ -170,6 +170,11 @@ to the brief before any build.
   concept after each pass: at most five differences, largest first, at most three compare passes.
 - Long Blender builds run well in a background agent with a full brief and one report per piece. You run the
   gates yourself and look at the renders yourself; an agent's "done" is a claim.
+- The Modding Kit stays open while source files are updated. Copy an FBX or a texture into `AssetSources` with the
+  Kit open, name the changed files, and the maintainer rescans or reimports them with the editor's option (the
+  maintainer, 2026-11-27: "WE DO NOT HAVE TO CLOSE THE EDITOR TO UPDATE FILES!!!!"). Never put "close the Kit" into
+  a step list for a source file. A prefab XML and a compiled package are other cases: ask him once before you
+  change one while the Kit runs.
 - An approved set of building forms goes into the Modding Kit at once, as a first kit file, and later builds
   replace each piece in place. The users of a kit are the scene builders, and they need many placeable buildings
   now more than a few finished ones later (the maintainer, 2026-11-27, on the Rivendell massing set: "people can just plop

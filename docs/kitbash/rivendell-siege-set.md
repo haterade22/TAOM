@@ -465,6 +465,45 @@ ones before he looks. I closed that window and opened the current gatehouse `a` 
 | "Also extend this trim all the way around." | Gatehouse `a`: the braid band on the drum, which stopped before the wall beside the door | Built: the band runs from the door frame across the wing wall, round the drum, to the end section (seen by me in `b4_door_space_wide.png`) | It ends 0.08 m short of the end section's face (a checker's note): it must meet the wall's band at the joint |
 | "Remove this as it looks very bad and can be plain with the trim extended" | Tower `a`: the half rib arch and the single squeezed lancet with its short piece of band, on the short wall beside the tower | Plain since version 7: no rib and no arch on the short walls (the checker's measure and code reading; I did not see a close picture of it) | "The trim extended": the braid band across the plain short wall, with the continuous band of the towers |
 
+## High poly and bake: the maintainer's question, a study on house B2; the scene's round 4 judged (SC24 to SC27) (2026-11-27, recorded 11:15)
+
+**His question** (about 10:55, with the scene blockout and house B2 open in Blender): "Where are the high poly's? and are they being baked? Or are you only doing low poly models?" The lead's answer: a high poly exists, and is baked, only for the two trim sheets and for the rubble heap; every building is a game mesh on tiling sets and trim sheets, and every single ornament (a foot scroll, a finial, a capital, a door leaf) is low poly geometry or absent. The lead's recommendation: the fields stay on tiling sets and trim sheets; the hero parts get a high poly and a bake on ornament sets of their own; bevels with face weighted normals on the structural members.
+
+**His order:** "Take one main building that you did, one of the houses or lords hall, etc. Run it through the full process that you recommendation with high poly bake, etc. I want to see the difference side by side". Then: "more textures at 1K are fine." and "Use tripo mcp, etc."
+
+- **VB28.** A kit may hold more texture sets than its tiling sets and its trim sheet: ornament sets with unique UVs for the hero parts of a piece. Every set stays 1024 px (his decision of 2026-11-24 on the size holds; his word of 2026-11-27 allows more sets).
+- **VB29.** The sculptural high polys come through the Tripo Studio MCP (his studio credits, at will). An agent has no MCP tools, so the lead runs those jobs from the input renders that a builder prepares; the command line tool is not used for them.
+
+**The study** (`WORK\kit_full\hp_bake_b2`; one builder, started at about 11:00): house B2 through that process, with the finial in front of the roof (VB27), a shut carved door leaf for each door, several 1024 px ornament sets, a Blender file with the house as built, the house after the process and the high poly sources side by side, a sheet of before and after pairs, and a note on what the process costs. No far levels and no body in the study.
+
+**The valley scene, round 4: the independent critique** (`WORK\kit_full\design_v2\scene_valley\blockout_r4\critic\SCENE_R4_CRITIQUE.md`). Verdict: READY TO SHOW when the note is corrected. Closed by the critic's own measures: the newel stair (82 risers of 0.17 m, a rail 0.905 m over the nosing line, head room of 2.14 m or more, a guard in each foot arch); six canopy arches (about 9 percent wider than in his picture); one walk with all 28 targets on kit pieces and 0 drops (4 more targets are terrain); 0 crossings in the scene's own pieces. The builder's changed inside test hid no real crossing of the scene's own pieces: the rows that it removed were miscounts, and 5 real rows are lantern posts in the tower group as received.
+
+Open: the door passage linings are open tubes whose outside is a back face, so a jamb vanishes when seen at an angle; 14 of the scene's own meshes are open or not manifold (round 3: none); the lantern's arcade is taller and its dome flatter than in his picture (the total height is equal: the builder's four lines on it were not true as written); the west link's rock proxy fills 22,945 px where his picture has rock and trees; 66 percent of the triangles are in pieces that are placed once.
+
+- **SC24.** Round 5 closes each door passage lining as a shell and welds each of the 14 open meshes into a closed shell in the generator.
+- **SC25.** Round 5 applies VB27 to every gable of the scene (the finials in front of the roofs).
+- **SC26.** The note's lantern lines are corrected from the critic's measures. The lantern's proportions (a taller arcade, a flatter dome) stay until the maintainer chooses: he approved the tower group.
+- **SC27.** The west link keeps its proxy; the scene plan names it as the scene builder's rock and trees. A designed retaining wall is the maintainer's choice.
+
+## House D checked: safe to import when four points close; decisions HD1 to HD7 (2026-11-27, recorded 10:56)
+
+**The independent check** (`WORK\kit_full\house_d\check\CHECK_HOUSE_D.md`; a snapshot of the tree of 09:43; its own gates, each with a control and a planted fault; twelve mutants). The mesh of round r7 is clean: the FBX reads back equal to the build report, 0 zero-area faces, 0 folded polygons, 0 back faces from outside and from inside every room, the body is 65 closed convex parts, the floors are flush, and the spire turns 3.71 degrees. The outline overlaps the approved massing by 0.96 from the front, the back and the sides, and by 0.99 from above.
+
+The four points before a first copy: (1) HIGH: the steps flag has no way into a prefab: the prefab table gives treads only to stair and tower pieces, and its word list does not match a name that ends in `_steps`. (2) HIGH: the name `rivendell_house_d_a` carries the letter of a massing round, and a first name is final. (3) MEDIUM: the FBX puts the eleven wood members and nine cream members on the stone trim sheet, so the front frame reads as cream stone with carved bands. (4) MEDIUM: nothing reaches the bow (floor at 3.6 m) or the turret stage (7.15 m); the bow door opens over a drop of 3.3 m into the hall; the back door opens on 0.8 m of plinth and a drop of 0.3 m with no step.
+
+Also found: above the petals the spire has about half the massing's width, which the builder's list of differences left out; the bow's head room is 1.851 m at its lowest; two mutants survive (a turret door of 0.5 m, a back door of 0.7 m: no test holds the door sizes); the board groove of the wood set makes a 0.4 m board read as two planks.
+
+**Decisions (the lead).**
+
+- **HD1.** The prefab table recognises a `<piece>_steps` object of any kind of piece and gives its body the steps flag; a test holds it.
+- **HD2.** The piece is named by kind and size, with no round letter: `rivendell_house_canopy_10m_a` (its front is 4.5 tiles, 10 m). House B2 gets its name with its check.
+- **HD3.** The kit tree's driver gives a member that names a set its own material (the wood set, a cream set). The cream tiling set is made first, in code, from the stone trim sheet's plain cream, as the wood set was made.
+- **HD4.** For the first import the bow and the turret stage are blind levels, and the piece's note says so; the back door gets a step. Whether a player enters them is the maintainer's choice.
+- **HD5.** The spire goes back to the massing's width: an approved outline is not changed.
+- **HD6.** A test holds each door's clear width and height, and fails on the two surviving mutants.
+- **HD7.** A wood member narrower than one board of the tiling set takes the variant with one grain (`t_rivendell_wood_plain_b`) or the trim sheet's plain strip, never the board variant.
+- The level shares of this piece are accepted for now (the check: the extra triangles change 29 pixels at 30 m). The finial follows VB27.
+
 ## The maintainer's correction on gable finials; decision VB27 (2026-11-27, recorded 10:47)
 
 The maintainer had two Blender windows open: the valley scene's blockout round 4 and the built house B2. He circled the finial at the apex of a gable in each: "THese need to be in FRONT of the roof, not going THROUGH the roof." In both, the finial and its base block stand on the ridge behind the gable frame and pass through the roof slab. He also asked where the "high poly" of the scene is: the scene is a blockout of forms, and a piece's detailed version is its level 0 build, which exists today for houses B2 and D and for the castle pieces only.

@@ -625,8 +625,11 @@ Tripo with pictures that were made for the job, or with renders of your own mode
   the maintainer's recorded word for that use.
 - No film, studio, maker or person is named in a file. A mark on a picture is never copied.
 - `TAOM_Map` and `LOTRLOME_Armory` are live and unversioned: no test, trial or mutation run names a live game path as
-  an output, a working folder or a target. A copy into the module is the lead's step, with the Kit closed when a file
-  is replaced, after an independent check.
+  an output, a working folder or a target. A copy into the module is the lead's step, after an independent check.
+  The Modding Kit does NOT have to be closed for a copy of source files (FBX, textures) into `AssetSources`: the
+  maintainer rescans or reimports them with the editor open (his word of 2026-11-27: "WE DO NOT HAVE TO CLOSE THE
+  EDITOR TO UPDATE FILES!!!!"). Never ask him to close it for that. Ask him once, in one line, before you change a
+  prefab XML or a compiled package while the Kit runs.
 - All work files on `E:`, in `E:/LOTRAOMAssets/_auto_workspace/kingdom_kits/<kingdom>`. Never write in another session's folder or docs.
 - Blender only through the lock tool `python E:/LOTRAOMAssets/_auto_workspace/kingdom_kits/rivendell/_tools/blender_one.py` (with `--wait-for`); it holds a job
   back when memory is short. Open a Blender window for the maintainer when a critic says "ready"; a window that he
