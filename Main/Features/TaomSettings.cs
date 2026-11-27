@@ -3216,7 +3216,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_seat_of_seeing}Seat of Seeing")]
     [SettingPropertyBool("{=taom_seat_mcm_cursor}Show a cursor with the order panel", Order = 2, RequireRestart = false,
-        HintText = "{=taom_seat_mcm_cursor_hint}While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons does not press it yet: it gives a Move order on the ground behind it. Default: on.")]
+        HintText = "{=taom_seat_mcm_cursor_hint}While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons presses it, as its number key does. Default: on.")]
     public bool SeatCursorWithPanel { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultCursorWithPanel;
 
     [SettingPropertyGroup("{=taom_mcm_group_seat_of_seeing}Seat of Seeing")]

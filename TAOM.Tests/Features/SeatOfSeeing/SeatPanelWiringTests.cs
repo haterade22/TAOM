@@ -109,12 +109,14 @@ public class SeatPanelWiringTests
     // ---- The adapter ----
 
     [TestMethod]
-    public void TheCursorLayer_AsksForAVisibleCursor_AndTakesNoInput()
+    public void TheCursorLayer_AsksForAVisibleCursor_AndTakesTheMouseButtonsAndTheWheel_NeverAKey()
     {
         var adapter = Flat(Source("Client/Adapters/SeatScreenAdapter.cs"));
 
-        StringAssert.Contains(adapter, "layer.InputRestrictions.SetMouseVisibility(true);");
-        Assert.IsFalse(adapter.Contains("SetInputRestrictions"), "the mask stays Invalid, so the layer takes no click or key");
+        StringAssert.Contains(adapter, "layer.InputRestrictions.SetInputRestrictions(true, InputUsageMask.Mouse);");
+        StringAssert.Contains(adapter, "SetInputRestrictions(show, show ? InputUsageMask.Mouse : InputUsageMask.Invalid);");
+        Assert.IsFalse(Regex.IsMatch(adapter, @"InputUsageMask\.(All|MouseWheels|Keyboardkeys|MouseButtons)"), "the keys stay with their views; the wheel goes with the buttons so the scene layer is not hit on a shielded click");
+        Assert.IsFalse(adapter.Contains("SetMouseVisibility"), "the mask and the cursor are written together");
         StringAssert.Contains(adapter, "MBWindowManager.DontChangeCursorPos()");
     }
 
@@ -125,11 +127,11 @@ public class SeatPanelWiringTests
 
         // Vanilla keeps one layer and toggles it (GauntletBannerBuilderScreen, BodyGeneratorView). RemoveLayer finalizes a layer, and
         // AddLayer refuses a finalized one (ScreenBase.cs:299-301, 327), so any removal would force a rebuild on the next show.
-        Assert.AreEqual(1, Regex.Matches(adapter, @"new GauntletLayer\(").Count, "one layer, built in one place");
+        Assert.AreEqual(1, Regex.Matches(adapter, @"new SeatCursorLayer\(").Count, "one layer, built in one place");
         Assert.IsFalse(adapter.Contains("RemoveLayer"), "the screen finalizes its layers at teardown (ScreenBase.cs:60-63)");
         Assert.IsFalse(adapter.Contains("ResetInputRestrictions"));
         StringAssert.Contains(adapter, "if (_cursorLayer == null) { if (!show) return;");
-        StringAssert.Contains(adapter, "_cursorLayer.InputRestrictions.SetMouseVisibility(show);");
+        StringAssert.Contains(adapter, "_cursorLayer.InputRestrictions.SetInputRestrictions(show, show ? InputUsageMask.Mouse : InputUsageMask.Invalid);");
         Assert.IsFalse(Regex.IsMatch(adapter, @"_cursorLayer = null"), "the reference is never dropped, so the layer is never rebuilt");
     }
 
@@ -155,8 +157,14 @@ public class SeatPanelWiringTests
     public void TheLook_IsOneReadOfTheMiddleButton_ForTheCursorAndForTheInput()
     {
         var adapter = Flat(Source("Client/Adapters/SeatScreenAdapter.cs"));
+        var relay = Flat(Source("Client/Adapters/SeatPanelRelay.cs"));
 
-        Assert.AreEqual(1, Regex.Matches(adapter, @"InputKey\.MiddleMouseButton").Count);
+        // The scene layer reads a mouse button only on a frame it holds the mouse buttons, and the click shield takes them over a panel button,
+        // so the look reads the raw input, once, in the relay (the shield's own yield test reads it too, through the same method).
+        Assert.AreEqual(0, Regex.Matches(adapter, @"InputKey\.MiddleMouseButton").Count);
+        Assert.AreEqual(1, Regex.Matches(relay, @"InputKey\.MiddleMouseButton").Count);
+        StringAssert.Contains(relay, "internal static bool LookHeld() => Input.IsKeyDown(InputKey.MiddleMouseButton);");
+        StringAssert.Contains(adapter, "public bool LookHeld() => SeatPanelRelay.LookHeld();");
         StringAssert.Contains(adapter, "var looksWithMouse = !_screen.MouseVisible || LookHeld();");
     }
 

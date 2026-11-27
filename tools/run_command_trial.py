@@ -90,6 +90,8 @@ SEAT_STEPS = (
     "speed_cleared",
     "rise_with_panel",
     "sink_on_close",
+    "panel_click_card",
+    "panel_click_order",
     "hero_falls",
     "take_soldier",
 )

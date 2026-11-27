@@ -34,6 +34,8 @@ internal sealed class SeatSession
     private bool _controllerShut;
     private bool _firstEntryShown;
     private bool _focusNoted;
+    private bool _clickNoted;
+    private bool _clickSiteNoted;
     private SeatKeepKind _keep;
     private SeatOrbitState _orbit;
     private bool _cursorShown;
@@ -573,6 +575,8 @@ internal sealed class SeatSession
         if (look)
             _screen.HoldCursorPosition();
         ShowCursor(wanted && !look);
+        if (_cursorShown && open)
+            NoteRelay(_screen.RelayPanelClicks());
         if (_cursorShown && !_focusNoted && SeatPresence.TakeFocusSet())
         {
             _focusNoted = true;
@@ -584,6 +588,22 @@ internal sealed class SeatSession
             var why = SeatHideRule.RestoreReason(open, _screen.DialogShown(), _screen.OtherLayerFocused());
             if (why != null)
                 RestoreHide(why);
+        }
+    }
+
+    // One line a mission each way: the first click that reached the panel's view model, and the lookup of a widget's view model failing
+    // (the relay is then off and the shield only stops the click, build-spec 6.1).
+    private void NoteRelay(SeatRelayResult result)
+    {
+        if (result == SeatRelayResult.Acted && !_clickNoted)
+        {
+            _clickNoted = true;
+            _outcomes.Pass(SeatChecks.PanelClickId, _key, "mission=" + _key + " click=relayed");
+        }
+        else if (result == SeatRelayResult.SiteMissing && !_clickSiteNoted)
+        {
+            _clickSiteNoted = true;
+            _outcomes.Fail(SeatChecks.PanelClickId, _key, "mission=" + _key + " reason=site");
         }
     }
 

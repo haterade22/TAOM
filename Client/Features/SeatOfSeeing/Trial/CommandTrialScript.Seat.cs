@@ -67,6 +67,8 @@ internal sealed partial class CommandTrialScript
         into["speed_cleared"] = s => s.SpeedCleared();
         into["rise_with_panel"] = s => s.RiseWithPanel();
         into["sink_on_close"] = s => s.SinkOnClose();
+        into["panel_click_card"] = s => s.PanelClickCard();
+        into["panel_click_order"] = s => s.PanelClickOrder();
     }
 
     private IEnumerable<Verdict> Refuse()

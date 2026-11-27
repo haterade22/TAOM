@@ -17,7 +17,8 @@ the base game, which keeps the side you drag and grows only when its soldiers no
 company: its shielded foot soldiers in a shield wall, circle or square, under an order that is not a charge, stop attacking and keep their places, a soldier
 wounded by a blow strikes back for four seconds, and a charge, the toggle or the hero's fall gives every soldier his attack flag and firing order back; and a
 company of foot soldiers with riders under a tenth of its soldiers keeps the foot soldiers' spacing limits. **M6, the panel:** the order panel gets one more set, Marshal's Word, with
-Archers' fire, Give the word and Hold the line. **Throwers on an advance (9.4):** on an Advance, a company of yours whose soldiers mostly carry javelins or other throwing weapons stops
+Archers' fire, Give the word and Hold the line. **M7, the panel's clicks (built 2026-11-26, not yet played):** in the Seat of Seeing, with the cursor shown, a left click on a troop card,
+an order set or an order of the panel presses it, so the three entries of M6 can be clicked there (`docs/features/seat-of-seeing.md`, "Order panel clicks"). **Throwers on an advance (9.4):** on an Advance, a company of yours whose soldiers mostly carry javelins or other throwing weapons stops
 short of the enemy at a gap its soldiers throw from (24 to 32 metres, 0.45 of their throwing range), throws, and then goes in to melee by the base game's own Advance, when most have thrown, when the
 enemy comes within 12 metres or after 40 seconds standing. It is built from the contract of Deviations row 51 and has run twice in the game (`20261105-214011` and `20261105-214249`, both PASS); what those runs proved and what they did not is under "what only the game can prove" below.
 
@@ -244,7 +245,7 @@ categories the mission's scene layer reads; they are vanilla's keys too, so they
 vanilla reader, `GauntletInformationView.cs:61`, which extends the on-screen message timer. A held key is the contract's accepted exception to the rule that a default key stays clear of every key the scene layer reads:
 Left Shift is also game key 24 (Zoom), so on the hero's camera holding it zooms; Left Alt is game key 5 (ShowIndicators), so it shows the
 banners and, with Outlines on, the outlines. Left Ctrl has three vanilla readers (a ground drag lays out horizontally, which also turns Keep
-the Array off for that drag; the number keys select no company; a click on a card adds it to the selection), so a player who selects with
+the Array off for that drag; the number keys act the same with Control held; a click on a card adds it to the selection), so a player who selects with
 Ctrl and still holds it on the release marks instead of charging. Period, like Comma and M, is in none of the eight categories the scene layer reads.
 
 ## Key Files
