@@ -465,6 +465,51 @@ ones before he looks. I closed that window and opened the current gatehouse `a` 
 | "Also extend this trim all the way around." | Gatehouse `a`: the braid band on the drum, which stopped before the wall beside the door | Built: the band runs from the door frame across the wing wall, round the drum, to the end section (seen by me in `b4_door_space_wide.png`) | It ends 0.08 m short of the end section's face (a checker's note): it must meet the wall's band at the joint |
 | "Remove this as it looks very bad and can be plain with the trim extended" | Tower `a`: the half rib arch and the single squeezed lancet with its short piece of band, on the short wall beside the tower | Plain since version 7: no rib and no arch on the short walls (the checker's measure and code reading; I did not see a close picture of it) | "The trim extended": the braid band across the plain short wall, with the continuous band of the towers |
 
+## The valley scene, blockout round 3: the builder's result; decisions SC16 to SC18; the landing of the night's records (2026-11-27, recorded 06:50)
+
+**The landing.** A proof on a clean checkout of merge 59547f3fc: build exit 0; C# 45,822 tests with 1 failed (`EveryLanguage_DeclaresARowForEveryEnglishKey`); Python 13,010 tests OK with 14 skipped; doc lint exit 0. The branch differed from trunk in seven `docs/kitbash` files only, so the red test is judged as trunk's own; trunk itself was not run. Trunk took 59547f3fc by fast-forward at 06:36.
+
+**Round 3, as the builder states it** (`WORK\kit_full\design_v2\scene_valley\blockout_r3`; the lead looked at the sheet: the model stands where his picture puts it, and the tower group's outline reads the same before and after). The builder ran the same gates on the round 2 file and on round 3, each gate with a control and a planted fault.
+
+- Closed with a before and after measure: the turned faces at the L2 cut (0 inward shells in the scene), the podium rail in the H6 back board, the H12 core door, the podium stair (it reaches the west ground now), the H9 plinth (steps of 0.169 and 0.171 m), the tower's door slot (a sill), the lantern stair well (a guard), the rail gap under the flying stair, the petal tower steps (risers 0.168 to 0.171 m with cheeks), the open tower foot wall (0 open edges), the rails and posts that were not manifold (0 objects).
+- Refuted by the builder: the crossing of the podium stair with its cheeks (faces within 0.02 mm of one plane; the round 2 critic's tolerance is under the number noise at 80 m from the origin); the low flight tops (exactly 0.900 m; the critic's ray grazed them); the head room under the flying stair (the samples lay inside a solid wall; the open passage has 2.14 m or more).
+- Beside his picture: the middle seat's pale wall fell from 11,543 px to 2,591 px. The tower stands at the picture's position; the cost is one viaduct bay (3.33 m) less. Proxy trees hide 785 of 1,347 px of the far stairs. H12 stands on arches under its frame.
+- A new finding, not repaired: the tower's own newel stair passes its foot openings 1.0 to 2.2 m over the ground with no guard, and two points have a 0.85 m guard over drops of 3 to 4.8 m.
+- Still open: no stair reaches the upper floors; the podium is reached only from the west ground; the lantern is 21 to 24 px above his picture. 333,328 triangles placed.
+
+**Decisions (the lead).**
+
+- **SC16.** The scene keeps the tower at his picture's position with one viaduct bay less. The count of bays is a choice of the scene; the tower and the bay as pieces do not change. Both are shown to him.
+- **SC17.** The far stairs stay, because the walk needs them. The scene plan marks the tree places that hide them, for the scene builder.
+- **SC18.** The tower's next round gets a low pierced guard panel in each foot opening of the newel stair, in the tower's own tracery, shown beside the approved tower. He picks.
+
+**Started at 06:50:** an independent critic of round 3 (its own gates; it judges the three refutations and the changed crossing rule), and the shared castle step 5c (the references by PD47, the levels and bodies in the gate, a body flag manifest for PD53, the rear arch bodies by PD56).
+
+## Port step 5b checked: four castle pieces ready, tower b a reference only; decisions PD53 to PD56; a tiling wood set (2026-11-27, recorded 06:32)
+
+**The independent check** (`WORK\kit_full\port5\CHECK_5B.md`, `check_5b.json`). The checker ran the castle gate from its own snapshot: PASS. Every wall object is the same as the approved wall (13 m 24 of 24, 20 m 32 of 32, 27 m 40 of 40), 2,778 tests with 0 failing, 0 folded and 0 bent polygons, seams 24 of 24, and every piece equals its proposed reference.
+
+| Piece | The check's verdict |
+|---|---|
+| Tower a and the corner tower (r10, with levels and bodies) | Ready, once the `has_steps` flag is in the prefab. Level 0 is the same, the levels fall, the level seams pass 36 of 36 at 0.5 mm, the bodies are closed, the doors are 1.375 m wide in mesh and body, the walk reaches 0, 6, 12 and 17 m with 1.8 m of head room |
+| Gatehouse a, round 6 | Ready. The ram has 0.131 m at roll 0 and 0.1106 m with roll; the four gate leaves clear the stone by 24.2 to 27 mm; the plinth course at 0.80 m is sound |
+| Gatehouse b, round 4 | Ready under PD46 (main 12,478 of 13,000, asset 49,334 of 50,000). Its seams are not in the gate yet; the checker's own sections pass 6 of 6 |
+| Tower b, round 2 | A reference, not a final build. 27 plan vertices turn more than 4 degrees (worst 7.45 degrees, at flat window panels 0.65 m wide). The platform takes 5.72 x 5.50 m at one position only, with no slack; the checker could not find the owner's 0.035 m |
+
+**The high finding: `has_steps` does not travel in the FBX.** No tower, stair or wall FBX holds the property; the owner's flag gate read only its job file. The engine reads the flag from the prefab: `<physics shape="bo_..."><body_flags><body_flag name="has_steps"/></body_flags>` (the scene reference, section 5.2). The lead checked the staged prefab file of kit set 3: it holds 48 physics entries and no `has_steps`. So no Rivendell stair in a prefab has the flag today.
+
+**Low findings.** The tower bodies stand 0.15 to 0.26 m in front of the stone in the rear arches (238 points on tower a, 195 on the corner; the approved wall has 0), so the owner's "0 points in front" was not true. The counts of shells that are not convex were wrong in the owner's report (no engine effect). The stairs at level 3 have 108 free edges inside the tower.
+
+**Decisions (the lead).**
+
+- **PD47 holds now:** the references are tower b round 2 (a reference only), gatehouse a round 6 and gatehouse b round 4; gatehouse b gets its seam rows in the gate.
+- **PD53.** The prefab generator writes the `has_steps` body flag on every stairs body (the tower stairs, the castle stairs, the open stairs), and a prefab gate fails on a stairs entity with no flag. The FBX property is no carrier: a report must not say that the flag travels in the FBX.
+- **PD54.** Tower b's next round has no turn over 4 degrees in plan that is not a declared corner. The edge of a flat window panel is a declared corner only where a frame jamb or a pier return covers it; any other panel is split. The gate lists each declared corner.
+- **PD55.** PD50's corbel gives both directions of the mangonel footprint at least 0.10 m of slack, measured on the render mesh by the checker's grid method.
+- **PD56.** The tower bodies follow the recess of the rear arches, so that no body point stands in front of the stone beyond the tree's bound. The free edges of the stairs at level 3 stay: no eye is inside the tower at 30 m or more.
+
+**A tiling wood set** (`WORK\kit_full\design_v2\pilot_details\wood_tiling`; made by the lead in pure code, no Painter). A wood face wider than the plain strip of the wood trim sheet (1.32 m) had no texture. The set is the trim sheet's own grain, tone weights and gloss, made to wrap along U and across V, at 1024 px with one tile of 2.2222 m. Two variants: `t_rivendell_wood_plain_a` (eight boards of 0.278 m with a V groove; a board starts at each eighth of V) and `t_rivendell_wood_plain_b` (one continuous grain). The colour is the mean of the trim sheet's plain strip over its two candidates: each candidate differs by at most 0.68 levels. 16 tests pass, with three planted faults (a ring count that is not whole, a filter with no wrapped border, a tone step across the tile). Looked at: the sheet `S_wood_tiling.png`; no seam shows at 1:1. Not checked: the Kit, the game, a render on a house. Variant b's normal map is flat (the grain relief is 0.15 mm).
+
 ## The night of 2026-11-26, second half: seven results, and the decisions PD46 to PD52, WB22 to WB27, LD34 to LD39, SC14, SC15 (2026-11-27, recorded 05:51)
 
 **A gap in the run.** The lead session did not run from about 21:50 on 2026-11-26 to 05:44 on 2026-11-27: its wakeup did not fire. The agents that ran at 21:50 ended their work, and their results waited. The lead read each result file again from disk at 05:50 before this record.
