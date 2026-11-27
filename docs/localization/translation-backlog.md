@@ -426,3 +426,14 @@ Record each pending feature's module, source file, exact keys and English text, 
 | Key | English source | Context |
 | --- | --- | --- |
 | `taom_seat_mcm_cursor_hint` | While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons presses it, as its number key does. Default: on. | MCM hint |
+
+## Incident Voices: the map incident texts
+
+- Status: pending project-lead translation pass.
+- Source: [PR #1618](https://github.com/haterade22/TAOM/pull/1618).
+- Module: TAOM.
+- English source: `Main/_Module/ModuleData/taom_encounter_strings.xml`, the generated block between `INCIDENT-VOICES-BEGIN` and `INCIDENT-VOICES-END`. Every row in it is pending; `grep -c 'str_taom_inc\.' Main/_Module/ModuleData/taom_encounter_strings.xml` prints the count (571 on 2026-11-27).
+- Keys: `taom_inc_<incident>_<all|free|shadow>_<title|desc|optN>` for the popup texts, and `taom_inc_voc_<scope>_<word>` for the vocabulary words the texts insert by people.
+- Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
+- Context: the title, description and option buttons of the vanilla map incident popup, a fixed-size window. Keep a translation close to the English length.
+- Preserve every `{VARIABLE}` exactly. The vocabulary words (`{GODS}`, `{HOLY_PLACE}`, `{HOLY_PERSON}`, `{COIN}`) are filled from the `voc_` rows, so translate each `voc_` row to fit the sentences that use it: `{GODS}` follows a preposition, `{HOLY_PLACE}` and `{HOLY_PERSON}` carry their own article, `{COIN}` is a mass noun.
