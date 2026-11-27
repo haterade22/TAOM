@@ -60,7 +60,6 @@ public class TaomPartyWageModel : DefaultPartyWageModel
         var partyInputs = ResolvePartyInputs(partyCulture);
         float rohanMountedWageBonus = ResolveRohanMountedWageBonus(partyCulture);
         float mountedWageShare = ComputeMountedWageShare(rohanMountedWageBonus, result.BaseNumber, troopRoster);
-
         _wageModifiers.ApplyWageModifiers(
             ref result, garrisonInputs, partyInputs, rohanMountedWageBonus, mountedWageShare, CultureText);
 
@@ -72,6 +71,7 @@ public class TaomPartyWageModel : DefaultPartyWageModel
         // GetCharacterWage, so Campaign.AverageWage — which the garrison-donation math divides by —
         // keeps reading true per-head cost.
         _aiPartySize.ApplyAiWageRelief(mobileParty, ref result);
+        TAOM.Features.FactionPower.Hooks.FactionPowerWageLine.Apply(mobileParty, ref result);
         return TAOM.Features.BattleBalance.Hooks.FreeGarrisonUpkeepLine.Wage(mobileParty, result, CultureText);
     }
 

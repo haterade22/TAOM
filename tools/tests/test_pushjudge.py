@@ -4,7 +4,8 @@ The bash judge the hook ran before #680 cost about 25 microseconds a word, so un
 force push carrying 250 KB of quoted text holding `push` outran the 5 s registration it then had
 (idle, 400 KB took 4.9 s) and ran unjudged. The port must give every verdict, and name every
 target, the bash judge did. SEVEN_C holds every tools/test_hooks.sh 7c command of 143f0fa8 with the
-verdict the bash judge gave it there, on a checkout of bannerlord-1.5.x or of a feature branch. PINS
+verdict the bash judge gave it there, on a checkout of bannerlord-1.5.x or of a feature branch, plus
+the #1556 redirection rows, whose verdicts are the issue's. PINS
 hold one line per place where a natural Python choice reads a line differently from bash; each
 verdict was read from the bash judge's own functions at 143f0fa8 with the current branch pinned.
 GLOB_OVERBLOCK is the one designed difference of the port: a refspec pattern holding any bracket, ?,
@@ -18,6 +19,7 @@ import sys
 import tempfile
 import time
 import unittest
+import unittest.mock
 
 HOOKS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".claude", "hooks")
 sys.path.insert(0, HOOKS)
@@ -70,6 +72,21 @@ SEVEN_C = [
     ('Bash', 'feature', 'git push --force origin bannerlord-1.5.0-port', 'allow', ''),
     ('PowerShell', 'feature', 'git push --force origin bannerlord-1.5.0-port', 'allow', ''),
     ('Bash', 'feature', 'git push --force origin improve/011-stop-reminders-and-trunk-guard', 'allow', ''),
+    ('Bash', 'feature', 'git push --force origin 2>&1 bannerlord-1.5.x', 'block', 'bannerlord-1.5.x'),
+    ('PowerShell', 'feature', 'git push --force origin 2>&1 bannerlord-1.5.x', 'block', 'bannerlord-1.5.x'),
+    ('Bash', 'feature', 'git push --force origin >&2 bannerlord-1.5.x', 'block', 'bannerlord-1.5.x'),
+    ('PowerShell', 'feature', 'git push --force origin >&2 bannerlord-1.5.x', 'block', 'bannerlord-1.5.x'),
+    ('Bash', 'feature', 'git push --force origin &>log bannerlord-1.5.x', 'block', 'bannerlord-1.5.x'),
+    ('PowerShell', 'feature', 'git push --force origin &>log bannerlord-1.5.x', 'block', 'bannerlord-1.5.x'),
+    ('Bash', 'feature', 'git push --force origin >|log bannerlord-1.5.x', 'block', 'bannerlord-1.5.x'),
+    ('PowerShell', 'feature', 'git push --force origin >|log bannerlord-1.5.x', 'block', 'bannerlord-1.5.x'),
+    ('Bash', 'feature', 'git push --force origin <&0 bannerlord-1.5.x', 'block', 'bannerlord-1.5.x'),
+    ('PowerShell', 'feature', 'git push --force origin <&0 bannerlord-1.5.x', 'block', 'bannerlord-1.5.x'),
+    ('Bash', 'feature', 'git push --force origin 2>&- bannerlord-1.5.x', 'block', 'bannerlord-1.5.x'),
+    ('PowerShell', 'feature', 'git push --force origin 2>&- bannerlord-1.5.x', 'block', 'bannerlord-1.5.x'),
+    ('Bash', 'feature', 'git push --force origin 2>&1 feature', 'allow', ''),
+    ('Bash', 'feature', 'x && git push --force origin bannerlord-1.5.x', 'block', 'bannerlord-1.5.x'),
+    ('Bash', 'feature', 'x 2>&1 | git push --force origin bannerlord-1.5.x', 'block', 'bannerlord-1.5.x'),
     ('PowerShell', 'feature', 'git push --force origin improve/011-stop-reminders-and-trunk-guard', 'allow', ''),
     ('Bash', 'feature', 'cd /x\ngit push --force origin improve/011-stop-reminders-and-trunk-guard', 'allow', ''),
     ('PowerShell', 'feature', 'cd /x\ngit push --force origin improve/011-stop-reminders-and-trunk-guard', 'allow', ''),
@@ -466,6 +483,58 @@ ISSUE_691 = [
     ("feature", 'git push origin feature; bash -c "git push --force -o \'>\' origin HEAD:bannerlord-1.5.x"', "block", T1),
     ("feature", 'echo "$(git push --force -o \'>\' origin HEAD:bannerlord-1.5.x)"', "block", T1),
 ]
+
+
+# #1556 review (Codex, PR #1609): a split that keeps a redirection's & or | in its line let two
+# shapes through that trunk refused. &> left its & as a refspec, so the current branch and
+# push.default=matching went unjudged; an escaped < or > before a real | or & joined the next
+# command onto the echo. Bash text. (current branch, command, kind, target)
+ISSUE_1556 = [
+    ("bannerlord-1.5.x", "git push --force origin &>/dev/null", "block", T1),
+    ("bannerlord-1.5.x", "git push --force origin &> /dev/null", "block", T1),
+    ("bannerlord-1.5.x", "git push --force origin &>>log", "block", T1),
+    ("bannerlord-1.5.x", "git push --force origin&>/dev/null", "block", T1),
+    ("feature", "git -c push.default=matching push --force origin &>/dev/null", "block", MATCHING),
+    ("feature", "echo \\>|git push --force origin bannerlord-1.5.x", "block", T1),
+    ("feature", "echo \\>&git push --force origin bannerlord-1.5.x", "block", T1),
+    ("feature", "echo \\<&git push --force origin bannerlord-1.5.x", "block", T1),
+    ("feature", "echo x\\>|git push --force origin bannerlord-1.5.x", "block", T1),
+    ("feature", "git push --force origin feature &>/dev/null", "allow", ""),
+]
+
+
+class Issue1556Tests(unittest.TestCase):
+    def test_a_redirection_never_hides_a_protected_push(self):
+        for branch, cmd, kind, target in ISSUE_1556:
+            with self.subTest(branch=branch, cmd=cmd):
+                self.assertEqual(verdict(cmd, "Bash", branch), (kind, target))
+
+    def test_the_and_of_an_and_greater_redirection_is_no_refspec(self):
+        self.assertEqual(judge("git push --force origin &>/dev/null", T1), (T1, ""))
+        self.assertEqual(judge("git push --force origin feature&>log", "feature"), ("", ""))
+
+    def test_the_other_gates_still_split_after_an_escaped_redirection_character(self):
+        # segments() is also the confirm gates' split (_shellwords.py commands): the redirection
+        # reading is the push judge's extra candidate only, never their default.
+        self.assertIn("\ngit reset --hard", sw.segments("echo \\>|git reset --hard"))
+        self.assertIn("\ngit reset --hard", sw.segments("echo \\>&git reset --hard"))
+        for cmd in ("echo a\\>&git reset --hard", "echo a\\>|git clean -fdx", "echo a\\<&git add -A"):
+            with self.subTest(cmd=cmd):
+                self.assertIn(cmd.split("&")[-1].split("|")[-1], sw.commands(cmd, "Bash", True).split("\n"))
+
+    def test_the_second_split_runs_only_where_a_redirection_pair_is(self):
+        # It can add a line only at <& >& &> >| (REDIRECTION_PAIR), so skipping it elsewhere keeps
+        # the candidate lines and the 7i deadline (#1556 review).
+        real, seps = sw.segments, []
+
+        def counting(text, esc="\\", separator=sw.EVERY_SEPARATOR):
+            seps.append(separator)
+            return real(text, esc, separator)
+        with unittest.mock.patch.object(sw, "segments", counting):
+            sw.push_candidates("git push --force origin a; git push origin b > log", "PowerShell")
+            self.assertNotIn(sw.COMMAND_SEPARATOR, seps)
+            sw.push_candidates("git push --force origin 2>&1 bannerlord-1.5.x", "Bash")
+            self.assertIn(sw.COMMAND_SEPARATOR, seps)
 
 
 class SevenCTests(unittest.TestCase):

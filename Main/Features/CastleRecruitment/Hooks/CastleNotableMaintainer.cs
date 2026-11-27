@@ -150,6 +150,7 @@ internal sealed class CastleNotableMaintainer
         int maxTier = Campaign.Current.Models.VolunteerModel.MaxVolunteerTier;
         string? kingdomKey = castle.OwnerClan?.Kingdom?.StringId;
         bool ownerIsPlayerClan = PlayerClanCheck.IsAPlayersClan(castle.OwnerClan, _players);
+        string? realmKey = FactionPowerRealm.KeyOf(castle.MapFaction);
         foreach (Hero notable in castle.Notables)
         {
             if (!notable.CanHaveRecruits || !notable.IsAlive)
@@ -162,7 +163,7 @@ internal sealed class CastleNotableMaintainer
 
             for (int i = 0; i < 6; i++)
             {
-                if (MBRandom.RandomFloat >= _service.GetSlotProductionProbability(i, kingdomKey, ownerIsPlayerClan))
+                if (MBRandom.RandomFloat >= _service.GetSlotProductionProbability(i, kingdomKey, ownerIsPlayerClan, realmKey))
                     continue;
                 CharacterObject current = notable.VolunteerTypes[i];
                 if (current == null)
