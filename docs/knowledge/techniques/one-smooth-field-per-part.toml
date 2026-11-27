@@ -1,0 +1,34 @@
+title = "Build each part on one smooth field and move no vertex afterwards"
+line = "Build the need once (skin, clearance, the lift over parts already built), make it mirror-symmetric, take a smooth upper envelope, place the geometry on it, and move no vertex afterwards."
+why = "One smooth cause gives parallel edges and equal widths. Pushing each grid vertex off the skin on its own gave the steps and notches that the maintainer rejected."
+area = "asset-craft"
+status = "active"
+ask = "Does any builder in this change move single vertices after the field was built? Name the function."
+next = "The envelope builder lives in tools/blender and the neck and head builders of every armour call it; a build reports its share of faces that meet a neighbour at more than 30 degrees. enforce_grid in the stock plate builders of armours 1 to 4 stands against it."
+
+[when]
+outside = ["*rharmb_crinet*.py", "*rharmb_shell*.py", "*rharm*design*.py", "*rharm*grid*.py"]
+tasks = ["neck armour", "horse head armour", "plate builder", "clearance field"]
+
+[[evidence]]
+grade = "measured"
+value = "Model 01: 4.3 percent of all faces meet a neighbour at more than 30 degrees. Ours: v16, with each vertex pushed on its own, 53.7 percent; v18ay 45.2 percent."
+method = "the teardown record docs/knowledge/teardowns/2026-11-26-horse-armour-neck-and-head.md; the probe td_probe.py and its crest scripts are kept with the asset job, outside the repo"
+date = 2026-11-26
+
+[[evidence]]
+grade = "maintainer"
+value = "Black neck piece needs to be reworked. it is all off"
+date = 2026-11-25
+
+[[acts]]
+state = "instance"
+where = "envelope in rharmb_crinet.py and the height field of rharmb_shell.py"
+scope = "called by armour 5 only: the stock plate builders (plate in rharmb_designs.py and rharm_designs.py) still call enforce_grid, so the old way is the default of armours 1 to 4"
+
+[[source]]
+teardown = "2026-11-26-horse-armour-neck-and-head"
+
+[[source]]
+maintainer = "2026-11-25"
+words = "Black neck piece needs to be reworked. it is all off"

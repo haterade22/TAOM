@@ -10,7 +10,9 @@
 A rule with `paths:` loads when Claude reads, writes or edits a matching file in the repo; a rule without it loads in
 every session and subagent. The details and their sources (never for a file outside the repo, the
 `/compact` behaviour, a frontmatter that fails to parse) are in `.claude/rules/harness-loading.md`
-"Rule loader (memory) semantics" and "Context loading".
+"Rule loader (memory) semantics" and "Context loading". In a sibling worktree no path rule loads by
+itself: `.claude/hooks/point-worktree-rules.sh` names the rule files a file matches, and the agent
+reads them ([hooks catalog](hooks-catalog.md)).
 
 ## Always-load rules (no `paths:`)
 
@@ -23,14 +25,14 @@ _(7 rules; `python tools/lint_docs.py --context-budget-json` gives their sizes. 
 | `model-effort-selection.md` | The main session does most work (Mike, 2026-11-02); a delegated task gets the cheapest model and effort that fits (the tiers, one-tier escalation, a one-line note before each spawn). Tier agents `fast-reader`, `implementer`, `architect`. |
 | `output-style.md` | Part 1 (chat): open with scrutiny, not agreement; tag every response `[Certain]`/`[Likely]`/`[Guessing]`; one step per message in a live session; lead a reply with the decision; STE wins in STE text. Part 2 (produced prose): no em or en dash, the tells in strength order, full list in `docs/reference/writing-tells.md`; boldface and tables stay. |
 | `simplicity-criterion.md` | Keep-or-reject matrix: a tiny gain with added complexity is rejected; a deletion that holds parity always wins. |
-| `think-before-coding.md` | State load-bearing assumptions before the first edit and ask when one is uncertain; don't ask on trivial work; make the goal testable; a pointer to the reuse ladder in `csharp-patterns.md`. |
+| `think-before-coding.md` | State load-bearing assumptions before the first edit and ask when one is uncertain; don't ask on trivial work; make the goal testable; a concise plan that ends with its unresolved questions; a pointer to the reuse ladder in `csharp-patterns.md`. |
 | `working-discipline.md` | Autonomous-loop stewardship (continue established work, never stop to ask permission) and edit-scope discipline, including during a review gate. |
 
 ## Path-scoped rules (load when a matching file is read, written or edited)
 
 | Rule | Content |
 |------|---------|
-| `adapters.md` | Adapter pattern, research-first |
+| `adapters.md` | Adapter pattern: interface and wrapper per sealed type, recursive wrapping, defensive validity |
 | `config-providers.md` | Config files, MCM settings and editor-visible fields validate semantics at load, not only syntax; NaN and range checks, both-surface MCM clamps, reload scope |
 | `csharp-architecture.md` | Non-negotiable rules, IoC lifetimes, entity state matrix, session reset, float gates, lookup fallbacks, mission-scope agent handles and threads |
 | `csharp-patterns.md` | The reuse-before-write ladder, lazy `IoC.Resolve` on a hot path; Hook, Strategy and GameModel patterns, quick reference |
@@ -46,7 +48,8 @@ _(7 rules; `python tools/lint_docs.py --context-budget-json` gives their sizes. 
 | `hook-authoring.md` | Hook conventions: sibling-mirroring, the two-stage git-commit matcher, amend handling, fail open but never silent, timeouts, prove a gate live, log rotation |
 | `moduledata-validation.md` | Run `python tools/validate_moduledata.py` before committing ModuleData; the gate per file kind; the codes are in [moduledata-validator-codes.md](moduledata-validator-codes.md) |
 | `native-cpp-ports.md` | The 6-point C++ port audit (hot-path logging, SEH specificity, offsets, atomics, SRWLock, C++ review) |
-| `tests.md` | TDD, naming, AAA pattern, coverage |
+| `test-workflow.md` | Every test file, Python tool tests included: the TDD workflow, the two-edit test, the gate rule, coverage (split from `tests.md`) |
+| `tests.md` | C# tests: naming, MSTest and NSubstitute, skip guards, transform output tests, test categories, layout |
 | `troops.md` | Troop checklist, races, party templates, save compatibility |
 | `vanilla-data-comparison.md` | Compare against the installed vanilla before modifying mirrored data; stale references crash |
 | `xml-data.md` | NPC naming, region codes, culture ids, equipment roster schema, formatting |

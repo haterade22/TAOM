@@ -16176,6 +16176,11 @@
    "how": "measured",
    "texture": "rhun_war_chariot_front_d"
   },
+  "taom_chariot_armour_rhun_black": {
+   "family": "black",
+   "how": "word black",
+   "texture": ""
+  },
   "taom_elk_saddle_a": {
    "family": "neutral",
    "how": "measured",

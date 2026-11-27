@@ -1481,3 +1481,13 @@ The spider's `IsSameSide` began to answer "does the bite spare this agent", whic
 **Prevent:** before a feature forbids an agent action by its input (a stun, a lock, a "cannot attack" state), grep `SetActionChannel(` and the `BehaviorTreeElements` folders in `Main` and `Client` for every starter of that action on a human agent, and give each starter's ready check a question to the locking feature's hook (`StaminaHooks.RefusesSpecialAttack`). A new feature that starts an attack from a tree asks the same hooks. Read the per-kind action counts of a first game run against what the AI can do: a count the AI cannot produce names a path the design did not know.
 
 **Source:** [rca-stamina-phases-1-2-2026-11-19.md](../rca-stamina-phases-1-2-2026-11-19.md), addendum 2.
+
+### Validate a user-editable config's semantics at load, not only its syntax
+
+Review #25 (RevoltTuning) found a HIGH bug where the provider logged "Loaded" success for any parseable file. A plausible user edit like a sign-flipped penalty `1.0` (should be `-1.0`) would silently flip the feature from "soften revolts" to "accelerate revolts" with no warning. Syntax-error tests (missing file, malformed JSON) did not cover this class of failure.
+
+**Why missed:** the provider treated user-editable JSON as trusted input, and the defaults table in the docs was mistaken for a validation contract (`docs/reviews/REVIEW-LOG.md`, review 25, root-cause row 1).
+
+**Prevent:** follow `.claude/rules/config-providers.md` "Config Providers MUST Validate": check ranges, ordering and sign after deserialization, fall back to the default with a warning, and test every value that parses and is still wrong.
+
+**Source:** moved from the "Why" paragraph of `.claude/rules/config-providers.md` (2026-11-25); `docs/reviews/REVIEW-LOG.md` review 25.

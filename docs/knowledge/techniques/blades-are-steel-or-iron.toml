@@ -1,0 +1,24 @@
+title = "Make blades of steel or iron"
+line = "A blade is steel or iron, never gold."
+why = "He gave the correction with no reason, on the wheel scythes of a cart. The session's reading: a blade is a working edge and not trim."
+area = "asset-craft"
+status = "active"
+next = "A check of the material of the parts that a build names as blades."
+
+[when]
+outside = ["*rhun2*blade*.py", "*rhun2_var*.py", "*rhun2_design*.py"]
+tasks = ["chariot blade", "scythe", "wheel scythe"]
+
+[[evidence]]
+grade = "maintainer"
+value = "The blades should be steel or iron"
+date = 2026-11-24
+
+[[acts]]
+state = "instance"
+where = "rhun2_a_blades.py: steel wheel blades for cart A, by texture"
+scope = "cart A"
+
+[[source]]
+maintainer = "2026-11-24"
+words = "The blades should be steel or iron"

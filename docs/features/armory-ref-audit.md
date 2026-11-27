@@ -89,7 +89,20 @@ Unlike a generator, a companion that fails, exits 2 or prints SKIPPED keeps the 
   `*_geo.tpac` newer than the committed catalogue (every catalogue row lives in a `_geo` pack;
   `_tex`, `_mtl` and `_anm` packs are re-saved constantly and never carry a mesh or body) and
   prints `ARMORY ART DRIFT` with the file and the command. Fail-open, never silent: an unresolvable
-  install or an overrun prints "UNCHECKED".
+  install or an overrun prints "UNCHECKED". Since 2026-11-25 the banner prints once per drift state
+  and per checkout: the stamp `.claude/logs/.armory-drift-printed` of that checkout holds the pack it
+  named (the first newer pack the scan finds), and it prints again when that first pack is another one, after seven days, or when the catalogue is newer than
+  the stamp. A session that finds no drift deletes the stamp. In the week before, 33 sessions printed
+  the banner and 3 ran the audit ([retro](../reviews/harness-retro-2026-11-25.md), P3). The banner
+  is a file-time hint. git writes the catalogue of a linked worktree with the time of the checkout,
+  so "no newer pack" proves nothing there: in a worktree with no newer pack the hook says UNCHECKED and
+  names the exact check ([RCA](../reviews/rca-armory-drift-fresh-checkout-2026-11-25.md)). A fresh
+  clone has the same blind spot and gets no note.
+- **The exact check, before every game run.** `python tools/generate_armory_catalogue.py --check`
+  rebuilds the catalogue in memory from the live Armory and compares it with the catalogue file of that
+  checkout (about two seconds, writes nothing, reads no file time). `/game-run` Phase 2 runs it and stops on drift, so
+  a session that never saw the banner still cannot start a battle on drifted art. The in-game check
+  preconditions in the feature docs name the same command.
 
 ### Component Diagram
 

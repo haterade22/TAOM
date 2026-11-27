@@ -1,0 +1,34 @@
+title = "End every band in a clean rounded cap, in one line with its neighbours"
+line = "Each band ends in a rounded cap built as a small grid with no fan, the same left and right, and an end is lifted only over parts that it covers. Look at every end from the front at close range."
+why = "The row of ends reads as one drawn line. Both ends of the lowest band, lifted by a part that lay past the band's edge, showed as a spike with a notch beside it."
+area = "asset-craft"
+status = "active"
+ask = "Which view shows every band end from the front at close range, and what is the largest step between two neighbouring ends?"
+next = "A check in the neck build that compares the height of each band's end with its neighbours and fails on a step."
+
+[when]
+outside = ["*rharmb_bands*.py", "*rharmb_crinet*.py", "*rharm*design*.py"]
+tasks = ["band end", "lames", "neck collar", "neck armour"]
+
+[[evidence]]
+grade = "measured"
+value = "Model 01: on seven mid bands the end narrows over about half a band width and the bead runs round it. Ours v18ay: 7 of 11 ends are a half disc, 3 measure square, the collar's is longer."
+method = "the teardown record docs/knowledge/teardowns/2026-11-26-horse-armour-neck-and-head.md; the probe td_probe.py and its crest scripts are kept with the asset job, outside the repo"
+date = 2026-11-26
+
+[[evidence]]
+grade = "maintainer"
+value = "the only problem is this is messed up and not straight and then the armor and cart are good after this fix."
+date = 2026-11-26
+
+[[acts]]
+state = "instance"
+where = "_cap_grid in rharmb_bands.py, and the end rule: end_lift in rharmb_design5.py with envelope(end_rule=) in rharmb_crinet.py"
+scope = "armour 5 only"
+
+[[source]]
+teardown = "2026-11-26-horse-armour-neck-and-head"
+
+[[source]]
+maintainer = "2026-11-26"
+words = "the only problem is this is messed up and not straight and then the armor and cart are good after this fix."

@@ -1,0 +1,30 @@
+title = "Take a better reference apart before the next round"
+line = "When an outside tool, a reference or a review did the work better than our own rounds, or the maintainer rejected one result twice, measure the result against ours before the next round and write one entry per default."
+why = "Matching a reference as a picture copies its look for one asset. The numbers behind the look are what the next asset needs."
+area = "asset-craft"
+status = "active"
+ask = "Which teardown record holds the measurements of this reference, and which entries came from it?"
+see = ".claude/skills/teardown/SKILL.md"
+next = "The run record of a reference tool names a teardown record or says none with a reason, and a lint check reads it."
+
+[when]
+outside = ["*/tripo_in/*", "*/tripo_refs/*"]
+tasks = ["reference model", "tripo", "image to 3d", "outside tool", "rejected twice", "teardown"]
+
+[[evidence]]
+grade = "maintainer"
+value = "what did that tool do, that I didnt and why/how is it better. Let me add it to my own workflow/processes/toolbox."
+date = 2026-11-26
+
+[[evidence]]
+grade = "inferred"
+value = "In the first case the teardown came a day late: the two reference models were opened and measured on 2026-11-26, after the build that followed their preview pictures and after the set was approved (the teardown record)."
+method = "the teardown record"
+date = 2026-11-26
+
+[[source]]
+maintainer = "2026-11-26"
+words = "At that point we should better our own workflow/processes with what the 3D tool did so that we do that by default moving forward."
+
+[[source]]
+teardown = "2026-11-26-horse-armour-neck-and-head"

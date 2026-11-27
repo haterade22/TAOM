@@ -106,7 +106,7 @@ The two halves take effect at different times. Turned on mid-session, broods lea
 
 ## How to verify in game
 
-**Preconditions:** the mode on in MCM, then a new game start or a load. Run `/armory-audit` first if the ARMORY ART DRIFT banner shows. The manifest is `tools/ingame_checks/1110.toml`.
+**Preconditions:** the mode on in MCM, then a new game start or a load. Run `python tools/generate_armory_catalogue.py --check` first, and `/armory-audit` if it reports drift. The manifest is `tools/ingame_checks/1110.toml`.
 
 The log writes each `[Check]` line once per process for each result and game type, so use a new process for each step that needs a line.
 

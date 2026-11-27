@@ -51,8 +51,8 @@ esac
 
 **MANDATORY for any hook that detects git commits:** grep the diff for `git commit` substring matches. One not using the two-stage pattern above is a regression.
 
-**Both shell tools (plan 027).** Register a git gate in the `Bash|PowerShell` matcher group and
-read its command with `COMMAND=$(taom_hook_command posix <gate>)` (`_pybin.sh`), never from
+**Both shell tools (plan 027).** Read a git gate's command with
+`COMMAND=$(taom_hook_command posix <gate>)` (`_pybin.sh`), never from
 `tool_input.command` alone: it hands PowerShell back as Bash text, so the forms above cover both
 shells, and it names git `git` when it is called by a path or in capitals. The PowerShell forms it
 resolves, and the forms it leaves unread, are listed in the docstring of `_shellwords.py` and pinned
@@ -79,7 +79,6 @@ Two correct patterns depending on what the hook checks:
 
 ## A detection hook must fail open, but NEVER fail silent (EMPIRICAL: TAOM 2026-08-10)
 
-`harness-facts.md` mandates that a hook's own bug must never block the user. That is about *gating*.
 For a hook whose job is to **detect and warn**, fail-open is only half the contract — because for
 those, **no output is itself a claim**. A drift check that prints nothing is read as "no drift", not
 as "never ran".
@@ -99,9 +98,8 @@ Still `exit 0`, but loud about not knowing.
 
 ## A timeout must be measured against the SLOW path (EMPIRICAL: TAOM 2026-08-31)
 
-A harness timeout is a **kill**, and a kill cannot speak: the harness discards a timed-out hook's
-output. For a gate, "killed" and "passed cleanly" are the same observable event, so a timeout sized
-against the fast path makes the gate **silently dead**.
+For a gate, a harness timeout kill (`harness-facts.md` "Hook lifecycle") and a clean pass are the
+same observable event, so a timeout sized against the fast path makes the gate **silently dead**.
 
 **The rules that follow from it** (lesson "A gate the harness kills is not a gate"):
 
@@ -112,7 +110,7 @@ against the fast path makes the gate **silently dead**.
 | **Handle rc 124 explicitly, and never as a pass.** Emit an `ask` decision under `hookSpecificOutput` (`harness-facts.md` "PreToolUse output contract"), or, for an advisory hook, use its event's visible channel (`harness-facts.md` "Visibility"; exit-0 stderr reaches no one) | An overrun is an infrastructure fault. Fail open (never hard-block on your own bug) but say so, per the fail-open-not-fail-silent rule above. |
 | **Use `-k`.** Bare `timeout N` sends SIGTERM and then WAITS | Against a process that ignores SIGTERM (exactly the Store-alias case) the guard itself hangs. |
 | **Count the bound from the script's first command** when the work before it varies (#680) | `validate-push.sh` reads `EPOCHREALTIME` in its first command and gives its judge what is left of 3.0 s, so an overrun asks after about 3.3 s and its 30 s registration is only a backstop; a slow `_pybin.sh` probe asks at once. |
-| **Check skill-frontmatter registrations too** | The 2026-08-31 pass covered all 27 in `settings.json` and missed all 5 in `freeze/SKILL.md` + `investigate/SKILL.md`, which inherit the **600 s** default. |
+| **Check skill-frontmatter registrations too** | The 2026-08-31 pass covered all 27 in `settings.json` and missed all 5 in `freeze/SKILL.md` + `investigate/SKILL.md`, which inherit the default timeout (`harness-facts.md` "Hook lifecycle"). |
 
 `bash tools/test_hooks.sh` enforces this: no registration without a timeout, no external tool
 without an inner bound below it, (4b) every PreToolUse gate answers a commit inside 80% of its

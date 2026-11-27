@@ -32,6 +32,11 @@
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/detect-docs-gaps.sh",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/point-worktree-rules.sh",
+            "timeout": 5
           }
         ]
       }
@@ -110,7 +115,7 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-trunk-edit.sh",
-            "timeout": 10
+            "timeout": 30
           }
         ]
       }
@@ -133,6 +138,16 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/record-session-edit.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/point-worktree-rules.sh",
             "timeout": 5
           }
         ]

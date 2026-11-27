@@ -25,6 +25,9 @@ report with batch answers (Mike, 2026-09-29, 2026-10-18).
 **Standing word (Mike, 2026-11-12):** do what you recommend, repo-required issues too; ask only where you
 have no recommendation. The git, review-gate, paid-AI and deletion limits above stay.
 
+**Plans** (plan mode, a plan file): keep the plan extremely concise, with its grammar intact, and
+end it with the list of unresolved questions, if any (Mike, 2026-11-25).
+
 **Never drop part of the request silently.** If something must be cut to fit, name it and offer a
 split (now, or a follow-up issue); dropping it is Mike's decision.
 

@@ -33,11 +33,6 @@ paths:
 
 Mounts, creatures, race rigs, skeletons, animation clips, Modding Kit and Unreal imports.
 
-One line per trap: its trigger and what never to do. The linked doc holds the mechanism, the
-history and the gate. A new trap for this area is a new row here, never a row in the always-loaded
-[trap index](../../../docs/ai-includes/orientation.md)
-([ADR-011](../../../docs/adrs/011-knowledge-delivery-tiers.md)).
-
 | Trap | Rule | Doc |
 |---|---|---|
 | Horse-skeleton mounts | `act_horse_kick` is the engine's rear kick; own attack, own action; a HorseHarness per Horse slot (gated) | [war ram](../../../docs/features/war-ram.md) |
@@ -58,4 +53,5 @@ history and the gate. A new trap for this area is a new row here, never a row in
 | New race rigs | LOD0 head/eye/mouth: 101 morphs, eyes following their sockets; release/blocked codes: vanilla or self-keyed clip. Else CTD | [troll](../../../docs/features/troll-race.md) |
 | UE clip export | The root node carries pelvis height above bind; keep root height, drop only travel and yaw | [pipeline](../../../docs/reference/ue-to-bannerlord-asset-pipeline.md) |
 | Kit FBX materials | Bound by name module-wide, reset on every re-import; a same-named older material wins silently | [troll](../../../docs/features/troll-race.md) |
+| Built mesh, before Mike sees it | Run the art checks: every strap and fitting attached, plates on a backing, clean gold, steel blades, real wood | [gates](../../../docs/features/blender-asset-gates.md) |
 | Override by name | A package that overrides an item by name needs new GUIDs: a registered GUID is silently ignored (yotthani, not checked by TAOM) | [props](../../../docs/reference/tpac-static-prop-authoring.md) |

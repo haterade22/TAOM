@@ -307,6 +307,53 @@ A second pass the same day took the three path rules that stood over the 12,288-
 - **`output-style.md`** Part 2 keeps the dash rule and the short list of tells; the exemptions and the
   house-style note it repeated are in `docs/reference/writing-tells.md` alone.
 
+### Amendment (2026-11-25): path rules in worktrees, a test for the always-loaded tier, skill bodies
+
+The [harness retro of 2026-11-25](../reviews/harness-retro-2026-11-25.md) measured where path rules load.
+A path rule loads only in the checkout the session started in. Since the trunk edit gate of 2026-11-16 the
+work happens in sibling worktrees, and of 200 transcripts that touched C# only in a worktree, the C# rules
+loaded in 2. A review of eight articles on instruction-file bloat ran the same day
+([record](../reviews/adopt-instruction-debloat-2026-11-25.md)). What changed:
+
+- **A hook carries path rules into a worktree.** `.claude/hooks/point-worktree-rules.sh` runs after a Read,
+  Edit or Write. For a file in another checkout of this repository it names the rule files whose globs
+  match, once per rule and session, and the agent reads them. So in a worktree a path rule costs one more
+  Read, and it arrives only if the agent follows the note. Until a retro shows that live, no rule leaves
+  the always-loaded tier for a path rule: the four C# rows of AGENTS.md stay.
+- **The test for an always-loaded line.** A line stays in AGENTS.md, CLAUDE.md, orientation.md or an
+  unscoped rule only if every task needs it; or a wrong act is irreversible or public and no gate stops
+  it; or no narrower trigger reaches the work (a sibling worktree, Codex, a path outside the repository)
+  and the retro shows the failure repeats.
+- **The CLAUDE.md Skills section.** The 2026-11-13 amendment says the Skills table keeps the rows that
+  route to a doc. Those rows are now rows of `docs/reference/doc-lookup.md`. CLAUDE.md keeps the reflex
+  gates, the build-error line, one pointer to that table and the two invocation policies.
+- **A cap for skill bodies.** After a compaction only about the first 5,000 tokens of an invoked skill
+  come back. `SKILL_BODY_MAX_BYTES` (20,480 B) is judged like `SCOPED_RULE_MAX_BYTES`: a file over it
+  warns, and growth past its base copy fails `--fail-on-drift`. A skill keeps its gates, steps and stop
+  conditions in `SKILL.md` and moves what one branch needs into a reference file beside it.
+  `deep-review` (26,123 B) and `engine-bump` (23,311 B) stood over it and are under it now, with five
+  reference files between them.
+- **Path rules: one home per line, and a split only where a glob reaches every reader.** Two rounds under
+  the contract "no reader loses an instruction" took the path rules from 167,610 B to 163,302 B: 36
+  duplicates across rules, incident stories that a lessons file or an RCA already tells, and one split
+  (`test-workflow.md` for every test file, `tests.md` for C# tests). The checkers declined a split of
+  `csharp-architecture.md` (session reset, agent handles), and the session that ran them declined a split
+  of `gui-ui.md` (layer input): in each case the readers of the section share no file name pattern. A
+  larger cut means moving sections behind a link, which is the maintainer's decision.
+- **No compression by notation.** One source proposed to strip markdown and collapse prose into key-value
+  notation. Its author then tested that in 1,188 runs: lower scores on Haiku and Sonnet, which TAOM's
+  subagents use, for 5 to 13% fewer tokens. Rule text keeps markdown structure and full sentences.
+
+| Constant | Before | After |
+|---|---|---|
+| `ENTRY_DOCS_MAX_BYTES` / `ENTRY_DOCS_WARN_BYTES` | 22,528 / 20,480 | 20,000 / 19,500 |
+| `UNSCOPED_RULES_MAX_BYTES` | 16,384 | 16,000 |
+| `SKILL_BODY_MAX_BYTES` | none | 20,480 |
+
+The two lowered caps are the sizes this pass reached plus about 5% (entry docs 19,941 B to 18,949 B,
+unscoped rules 15,220 B to 15,184 B). The cap for one path rule and the AGENTS.md cap in
+`tools/reviewctl.py` stay, because the largest file plus 5% is over each.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

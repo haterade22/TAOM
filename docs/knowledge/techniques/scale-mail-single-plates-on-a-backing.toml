@@ -1,0 +1,34 @@
+title = "Build scale mail from single plates on a backing"
+line = "Scale mail is rows of real overlapping plates at the near LODs, tight on a leather or cloth garment that shows as a border, full to that border, in straight rows. Never a sheet with a scale texture, never a hole."
+why = "A sheet with a printed scale pattern reads as paper, and a field with plates left out shows the bare backing. A clearance is met with tight, thin plates."
+area = "asset-craft"
+status = "active"
+ask = "Is every plate field full to its border? Name each place where a clearance was met, and how."
+next = "A check that counts the plates of a field against its rows and fails on a missing plate inside the border."
+
+[when]
+outside = ["*rharm*scales*.py", "*rharm*design*.py"]
+tasks = ["scale mail", "plate field", "lamellar"]
+
+[[evidence]]
+grade = "maintainer"
+value = "3 pieces of scalemail that looks like a sheet instead of individual scalemail put together"
+date = 2026-11-24
+
+[[evidence]]
+grade = "maintainer"
+value = "Fill these gaps and make the scalemail straightish so it doesnt deform"
+date = 2026-11-25
+
+[[acts]]
+state = "instance"
+where = "rharmb_scales.py: one plate for each scale at LOD0 and LOD1, in straight rows"
+scope = "armours 4 and 5; no check counts the plates of a field"
+
+[[source]]
+maintainer = "2026-11-24"
+words = "3 pieces of scalemail that looks like a sheet instead of individual scalemail put together"
+
+[[source]]
+maintainer = "2026-11-25"
+words = "Fill these gaps and make the scalemail straightish so it doesnt deform"

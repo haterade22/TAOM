@@ -15,7 +15,9 @@ thing to run after an Armory sync so that class is caught on the desk, not in a 
 
 ## When to invoke
 
-- `session-start.sh` printed `ARMORY ART DRIFT` (a `*_geo.tpac` newer than the committed catalogue).
+- `session-start.sh` printed `ARMORY ART DRIFT` (a `*_geo.tpac` newer than the committed catalogue). The banner prints once
+  per drift state and per checkout, so its absence proves nothing: `python tools/generate_armory_catalogue.py --check`
+  is the check, and `/game-run` runs it before every run.
 - After pulling or copying anything into `<game>/Modules/LOTRLOME_Armory` (KEYforce, Solus, a "TAOM Update" mirror commit, your own editor re-import).
 - Before any battle or tournament smoke that follows art changes, and before `/release`.
 

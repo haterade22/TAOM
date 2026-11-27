@@ -18,6 +18,7 @@ UTC and `--since` is a calendar date, so the window edge can be off by the hours
 """
 import argparse
 import json
+import os
 import re
 import sys
 import tempfile
@@ -344,6 +345,11 @@ class Stats:
         self.direct_sessions = defaultdict(set)              # banner -> sessions that ran its skill's command
         self.versions = defaultdict(set)                     # Claude Code version -> sessions
         self.rules_loaded = defaultdict(lambda: [set(), set()])   # rule file -> main sessions, subagent files
+        # Rule delivery by checkout (harness retro 2026-11-25, P1). set_repo fills the first three.
+        self.repo_key = ""                                   # the main checkout as an edit_key prefix
+        self.sibling_re = None                               # a folder beside it named <repo>-...
+        self.sibling_seen = {}                               # such a folder -> is a linked worktree of it
+        self.rule_reach = []                                 # (kind, marks of one transcript)
         self.edits = []                                      # (main session, path key, time)
         self.compact_measured = 0
         self.compact_sides = [0, 0, 0, 0]                    # results and errors before, then after
@@ -771,6 +777,7 @@ def scan_file(stats, path, since_str, agent=None):
     calls = {}        # request key -> ((in, out, read, create), skill, final), the max-output record wins
     details = {}      # request key -> what the cost section needs (note_request)
     skill = None      # the skill invoked most recently in this file, until a person types again
+    reach = set()     # this transcript's marks: "main", "sibling", "loaded", "named", "read"
     last_ts = None
     # [key, sid, set of assistant message ids]. A run grows by MESSAGES, not by results: parallel
     # calls sent in one message that fail alike are one batch, not a retry loop.
@@ -827,8 +834,10 @@ def scan_file(stats, path, since_str, agent=None):
                 for b in blocks if isinstance(blocks, list) else []:
                     if not isinstance(b, dict) or b.get("type") != "tool_use":
                         continue
+                    inp = b.get("input") if isinstance(b.get("input"), dict) else {}
+                    if b.get("name") in REACH_TOOLS:
+                        note_reach(stats, reach, b.get("name"), inp)
                     if b.get("name") == "Skill":
-                        inp = b.get("input") if isinstance(b.get("input"), dict) else {}
                         skill = str(inp["skill"]) if inp.get("skill") else skill
                     elif b.get("name") in EDIT_TOOLS:
                         note_edit(stats, b, sid, ts)
@@ -843,6 +852,14 @@ def scan_file(stats, path, since_str, agent=None):
                 handle_attachment(stats, att, sid, ts)
                 note_banners(stats, att, sid)
                 note_rules_loaded(stats, att, sid, agent, path.stem)
+                if isinstance(att, dict):
+                    # nested_memory is a path rule loaded on a matching access; the launch list is not.
+                    # A rule of the user's own folder is no rule of this repository.
+                    if (att.get("type") == "nested_memory" and rule_name(att.get("path"))
+                            and checkout_of(stats, att.get("path"))):
+                        reach.add("loaded")
+                    elif att.get("type") == "hook_additional_context" and reach_note(att.get("content")):
+                        reach.add("named")
                 if handle_human(stats, r, sid, ts):
                     flush()   # typed while the model worked: no twin user record, still a human turn
                     skill = None
@@ -876,6 +893,8 @@ def scan_file(stats, path, since_str, agent=None):
                         if key is not None:
                             run = [key, sid, {msg_id}]
     flush()
+    if reach & {"main", "sibling"}:
+        stats.rule_reach.append(("subagents" if agent else "main sessions", frozenset(reach)))
     measure_compactions(stats, results_seen, bounds)
     commit_cost(stats, calls, details, agent, path)
     commit_usage(stats, calls, agent, path.stem)
@@ -1211,6 +1230,118 @@ def version_rows(stats):
             for v, s in sorted(stats.versions.items(), key=lambda kv: (version_key(kv[0]), kv[0]))]
 
 
+REACH_TOOLS = ("Read", "Edit", "Write")   # the matcher point-worktree-rules.sh is registered on
+REACH_NOTE = "point-worktree-rules:"
+
+
+NESTED_WORKTREES = ".claude/worktrees/"
+_GITDIR_RE = re.compile(r"gitdir:\s*(.+?)[\\/]\.git[\\/]worktrees[\\/]")
+
+
+def _worktree_of(folder):
+    """The main checkout that a linked worktree's `.git` file names, as an edit_key with a trailing
+    slash; "" for a folder that is no linked worktree (a `.git` folder, no `.git`, an unreadable one)."""
+    try:
+        git = Path(folder) / ".git"
+        head = git.read_text(encoding="utf-8", errors="replace") if git.is_file() else ""
+    except OSError:
+        return ""
+    m = _GITDIR_RE.match(head.strip())
+    if not m:
+        return ""
+    main = m.group(1)
+    if not re.match(r"([A-Za-z]:)?[\\/]", main):   # a relative gitdir is read from the checkout root
+        main = os.path.normpath(os.path.join(str(folder), main))
+    return edit_key(main).rstrip("/") + "/"
+
+
+def set_repo(stats, repo):
+    """Tell the rule-delivery table which folder is the main checkout: `repo`, or, when `repo` is a
+    linked worktree, the checkout its `.git` file names. A sibling worktree is a folder beside the main
+    checkout named `<repo>-...` (E:/repos/TAOM and E:/repos/taom-x), or one under its
+    `.claude/worktrees/`."""
+    main = _worktree_of(repo) or edit_key(str(repo)).rstrip("/") + "/"
+    parent, _, name = main.rstrip("/").rpartition("/")
+    stats.repo_key = main
+    stats.sibling_re = re.compile("(" + re.escape(parent + "/" + name + "-") + "[^/]+)/", re.I)
+    stats.sibling_seen = {}
+
+
+def checkout_of(stats, target):
+    """Where a path sits: "main" (the main checkout), "sibling" (a linked worktree of it) or None.
+
+    A folder named `<repo>-...` that is still there must be a linked worktree of this repository: such a
+    name can also be another repository or a plain folder, where the worktree hook stays silent. A
+    folder that is gone counts by its name, because a past window's worktrees are removed after the
+    merge."""
+    if not isinstance(target, str) or not target or not stats.repo_key:
+        return None
+    raw = re.sub(r"^/([A-Za-z])/", r"\1:/", target.replace("\\", "/"))   # the folder's own spelling
+    key = edit_key(target)
+    if key.startswith(stats.repo_key):
+        nested = key[len(stats.repo_key):]
+        name, slash, _ = nested[len(NESTED_WORKTREES):].partition("/")
+        if not nested.startswith(NESTED_WORKTREES) or not slash:
+            return "main"
+        # A folder that is still there and has no .git entry is a plain folder of the main checkout.
+        folder = Path(raw[:len(stats.repo_key) + len(NESTED_WORKTREES) + len(name)])
+        return "sibling" if not folder.exists() or (folder / ".git").exists() else "main"
+    m = stats.sibling_re.match(raw)
+    if not m:
+        return None
+    folder = m.group(1)
+    known = stats.sibling_seen.get(folder.lower())
+    if known is None:
+        known = not Path(folder).exists() or _worktree_of(folder) == stats.repo_key
+        stats.sibling_seen[folder.lower()] = known
+    return "sibling" if known else None
+
+
+def note_reach(stats, reach, name, inp):
+    """Mark where one Read, Edit or Write landed, and a Read of a rule file by hand.
+
+    A Read of a rule file is rule delivery, not work in that checkout, so it marks only the "read a rule
+    file" column: before the worktree hook, a careful agent in a worktree read the main checkout's copy,
+    and counting that as work there would move its transcript out of the row the hook is judged by."""
+    target = inp.get("file_path")
+    where = checkout_of(stats, target)
+    if where is None:
+        return
+    if name == "Read" and rule_name(target):
+        reach.add("read")
+        return
+    reach.add(where)
+
+
+def reach_note(content):
+    """True when a hook_additional_context attachment is the worktree rule hook's note that names rule
+    files. Its "unchecked" note names none (the hook could not read the checkout), so it does not count.
+    tools/test_hooks.sh 7r runs both real notes through this function."""
+    parts = content if isinstance(content, list) else [content]
+    return any(isinstance(p, str) and p.startswith(REACH_NOTE) and not p.startswith(REACH_NOTE + " unchecked")
+               for p in parts)
+
+
+def reach_rows(stats):
+    """Rule delivery by checkout: the transcripts that touched a file of this repository, by where the
+    file was, with how many a path rule loaded in, how many the worktree hook named rules to, and how
+    many read a rule file. Only rows with a transcript are listed."""
+    count = defaultdict(lambda: [0, 0, 0, 0])
+    for kind, marks in stats.rule_reach:
+        where = ("both" if {"main", "sibling"} <= marks
+                 else "main checkout only" if "main" in marks else "sibling worktree only")
+        row = count[(where, kind)]
+        row[0] += 1
+        row[1] += "loaded" in marks
+        row[2] += "named" in marks
+        row[3] += "read" in marks
+    order = [(w, k) for w in ("main checkout only", "sibling worktree only", "both")
+             for k in ("main sessions", "subagents")]
+    return [{"where": w, "kind": k, "transcripts": count[(w, k)][0], "rule_loaded": count[(w, k)][1],
+             "hook_named": count[(w, k)][2], "read_rule": count[(w, k)][3]}
+            for w, k in order if (w, k) in count]
+
+
 def rule_rows(stats):
     """Rule files loaded: main sessions that listed the file, and subagent transcripts that did."""
     return [{"rule": name, "sessions": len(loaded[0]), "subagents": len(loaded[1])}
@@ -1291,6 +1422,7 @@ def build_signals(stats, args, since, today, main, sub):
         "versions": version_rows(stats),
         "banners": banner_rows(stats),
         "rules_loaded": rule_rows(stats),
+        "rule_reach": reach_rows(stats),
         "hook_denies": top_groups(stats.denies, n, ("hook", "event", "tool")),
         "hook_blocks": top_groups(stats.blocks, n, ("hook", "event")),
         "hook_broken": top_groups(stats.broken, n, ("script", "stderr_signature")),
@@ -1405,6 +1537,18 @@ def render(sig):
           "subagent transcripts that did. A path rule appears only after a matching read.", ""]
     L += table(["Rule", "Sessions", "Subagent transcripts"],
                [[r["rule"], r["sessions"], r["subagents"]] for r in sig["rules_loaded"]])
+    L += ["### Rule delivery by checkout", "",
+          "Transcripts that used Read, Edit or Write on a file of this repository, by where the "
+          "file was: the main checkout, or a sibling worktree (a folder beside it named `<repo>-...` whose "
+          "`.git` file names this repository, or that is gone by now; or one under `.claude/worktrees/`). A "
+          "path rule loads only in the checkout a session started in; in a sibling worktree "
+          "`point-worktree-rules.sh` names the rule files to read. The columns count the transcripts in which "
+          "a path rule of this repository loaded (a `nested_memory` attachment), the hook's note arrived, and "
+          "a rule file was read with Read. A file read through the shell is not seen, and a resumed session "
+          "counts once for each transcript file.", ""]
+    L += table(["Where", "Kind", "Transcripts", "A path rule loaded", "Hook named rules", "Read a rule file"],
+               [[r["where"], r["kind"], r["transcripts"], r["rule_loaded"], r["hook_named"], r["read_rule"]]
+                for r in sig["rule_reach"]])
     m = sig["memory"]
     L += ["", "## 8. Memory health", "",
           "MEMORY.md: %s bytes, %s lines (numbers only, no pass or fail)." % (
@@ -1600,6 +1744,7 @@ def main(argv=None):
     args.exclude_session = matched   # the report names only what was left out
 
     stats = Stats()
+    set_repo(stats, repo)
     main_files, sub_files = discover(args.transcripts, datetime.combine(since, datetime.min.time()),
                                      args.exclude_session)
     for path in main_files + sub_files:
@@ -1673,6 +1818,11 @@ def main(argv=None):
     print("post-compaction: %d compaction(s), %d errors in %d results before, %d in %d after" % (
         pc["compactions"], pc["before"]["errors"], pc["before"]["results"], pc["after"]["errors"],
         pc["after"]["results"]))
+    wt = [r for r in sig["rule_reach"] if r["where"] == "sibling worktree only"]
+    print("rule reach: %d transcript(s) worked only in a sibling worktree: a path rule loaded in %d, "
+          "the hook named rules in %d, %d read a rule file" % (
+              sum(r["transcripts"] for r in wt), sum(r["rule_loaded"] for r in wt),
+              sum(r["hook_named"] for r in wt), sum(r["read_rule"] for r in wt)))
     return 0
 
 

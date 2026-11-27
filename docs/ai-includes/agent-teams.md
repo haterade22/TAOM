@@ -69,7 +69,7 @@ You are a Feature Developer for the TAOM Bannerlord mod.
 
 Read these docs first:
 - docs/ai-includes/architecture.md (layer architecture)
-- .claude/rules/tests.md (TDD workflow; it loads when you open a test)
+- .claude/rules/test-workflow.md and .claude/rules/tests.md (TDD workflow, C# test rules; they load when you open a test)
 - docs/ai-includes/patterns.md (design patterns)
 
 Your scope: Main/Features/{FEATURE_NAME}/ only.
@@ -82,6 +82,8 @@ Rules:
 - Do NOT edit IoC.cs or SubModule.cs — report needed registrations to lead
 - Lessons: {LESSONS} (the lead names the lesson headings and their files that apply to this task);
   read each before the first edit, and list in your report what you did about each one
+- Knowledge: {KNOWLEDGE} (the lead pastes what `python tools/knowledge.py brief --paths <files> --task <phrases>`
+  prints); follow each entry, or say in your report why one does not apply
 - Docs move with the code: update the feature's docs/features/<feature-name>.md as you change it,
   and grep docs/ for every type or member you add, change, delete or rename
 - A value from config: validate its range, and compute anything derived from it in long and clamp it
@@ -138,7 +140,7 @@ On 2026-09-05 a 39-chapter doc build blew the 5-hour limit twice, first with 124
 
 ### Worktree isolation for parallel agent runs
 
-**Rule:** when several agents may edit overlapping single-owner files (`Main/TAOM.csproj`, `TAOM.Tests/TAOM.Tests.csproj`, `Main/IoC.cs`, `Main/SubModule.cs`, `Directory.Build.props`), give each parallel builder its own worktree: `git worktree add -b <branch> E:/repos/taom-<name> <commit>`. Pass the absolute path in the brief and `cd` into it in every Bash call. Put the area rules in the brief too, because path rules do not fire in a sibling worktree. The shared tree is then never touched in parallel, so the build-watcher cascade cannot fire.
+**Rule:** when several agents may edit overlapping single-owner files (`Main/TAOM.csproj`, `TAOM.Tests/TAOM.Tests.csproj`, `Main/IoC.cs`, `Main/SubModule.cs`, `Directory.Build.props`), give each parallel builder its own worktree: `git worktree add -b <branch> E:/repos/taom-<name> <commit>`. Pass the absolute path in the brief and `cd` into it in every Bash call. Path rules do not load in a sibling worktree; `point-worktree-rules.sh` names the matching rule files on the agent's first Read, Edit or Write there, so put in the brief only the rules the agent needs before it opens a file. The shared tree is then never touched in parallel, so the build-watcher cascade cannot fire.
 
 **`isolation: "worktree"`:** it refused on 2026-10-31 when the session cwd spelled `e:` while git reported `E:`. A refused run can leave locked worktrees under `.claude/worktrees`, so check there after a refusal.
 

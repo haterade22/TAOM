@@ -25,8 +25,10 @@
 #   <id>.<aid>.aedits     a subagent's edits, the same lines as <id>.edits
 #   <id>.<aid>.averified  touched when that subagent ran a build or test
 #   <id>.<aid>.areminded  the SubagentStop hook's streak marker for that subagent
+#   <id>.rules            point-worktree-rules.sh: the rule files this session was told to read
+#   <id>.<aid>.arules     the same for one subagent
 # The agent suffixes never match a *.edits, *.verified or *.reminded glob, so an agent's file is
-# never read as another session's claim.
+# never read as another session's claim. The two rules suffixes match none of them either.
 #
 # No Python here except the \u branch of taom_payload_file_path: the Stop and Bash hooks fire often,
 # and a regex on the raw payload is enough (the cwd regex in enter_payload_tree,

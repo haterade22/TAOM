@@ -1,0 +1,34 @@
+title = "Prove the symmetry of a centre-line part with a number"
+line = "A part on the centre line is symmetric by construction (the larger of both sides on a field, the mean on a found feature), and its build report prints the mirror error."
+why = "A part on the centre line reads as wrong when its halves differ, and a whole-view render does not show a few millimetres."
+area = "asset-craft"
+status = "active"
+ask = "Which number proves the mirror symmetry of each centre-line part in this build?"
+next = "Every centre-line part prints its mirror error and a gate holds a limit. The head shell's 12.65 mm at the 95th percentile has no known cause and is an open check."
+
+[when]
+outside = ["*rharmb_crinet*.py", "*rharmb_shell*.py", "*rharm*design*.py"]
+tasks = ["armour symmetry", "centre line", "neck crest", "crest fin", "horse head armour"]
+
+[[evidence]]
+grade = "measured"
+value = "Mirror error: model 01 neck 0.46 units at the median and 1.05 at the 95th percentile; v18ay neck 0.00 mm; v18ay head shell 0.92 mm at the median and 12.65 mm at the 95th percentile."
+method = "the teardown record docs/knowledge/teardowns/2026-11-26-horse-armour-neck-and-head.md; the probe td_probe.py and its crest scripts are kept with the asset job, outside the repo"
+date = 2026-11-26
+
+[[evidence]]
+grade = "maintainer"
+value = "Clean up the details, gaps and it should be symetrical? right?"
+date = 2026-11-25
+
+[[acts]]
+state = "instance"
+where = "mirror_mm, which rharmb_crinet.py writes into the neck build report"
+scope = "the neck lames of armour 5; the head shell prints none"
+
+[[source]]
+teardown = "2026-11-26-horse-armour-neck-and-head"
+
+[[source]]
+maintainer = "2026-11-25"
+words = "Clean up the details, gaps and it should be symetrical? right?"
