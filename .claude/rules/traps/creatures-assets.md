@@ -33,11 +33,6 @@ paths:
 
 Mounts, creatures, race rigs, skeletons, animation clips, Modding Kit and Unreal imports.
 
-One line per trap: its trigger and what never to do. The linked doc holds the mechanism, the
-history and the gate. A new trap for this area is a new row here, never a row in the always-loaded
-[trap index](../../../docs/ai-includes/orientation.md)
-([ADR-011](../../../docs/adrs/011-knowledge-delivery-tiers.md)).
-
 | Trap | Rule | Doc |
 |---|---|---|
 | Horse-skeleton mounts | `act_horse_kick` is the engine's rear kick; own attack, own action; a HorseHarness per Horse slot (gated) | [war ram](../../../docs/features/war-ram.md) |
@@ -52,10 +47,11 @@ history and the gate. A new trap for this area is a new row here, never a row in
 | Clip key times | A record's sources lie inside its master's key times; a loop ends on a key that repeats its first: `check_gait_stride.py`, `elephant_write_masters.py --rekey` | [lesson](../../../docs/reviews/lessons/animation-skeleton.md) |
 | Movement rows | A `none` direction or turn fills every key no earlier row holds: a pace's `none/none` row goes last (`bind_spider_clips.py` `hidden_rows`) | [lesson](../../../docs/reviews/lessons/animation-skeleton.md) |
 | Overlay rows | An upper-body row's clip and the gallop acceleration action play over the whole body: each pace's own gait, never an idle or a turn in place | [spider](../../../docs/features/spider.md) |
-| Warg, dire wolf gaits | A reinstall or art drop reverts the planned clip records and each walk's twin row; a record plays only after a Kit cook, and a twin is bound only after it: `repoint_anim_clip.py --plan tools/<warg or dire_wolf>_gait_plan.json --under creature/<warg or direwolf>/animations --check`, `bind_warg_clips.py --check`; the warg's paws against its travel: `check_gait_stride.py --creature warg`. A changed warg travel or loop time is a change for the wolf and the riders too | [ledger](../../../docs/reference/lotrlome-warg-gait-changes.md) |
+| Warg, dire wolf gaits | A reinstall or art drop reverts the planned clip records and each walk's twin row; a record plays only after a Kit cook, and a twin is bound only after it: `repoint_anim_clip.py --plan tools/<warg or dire_wolf>_gait_plan.json --under creature/<warg or direwolf>/animations --check`, `bind_warg_clips.py --check`; the paws against the travel: `check_gait_stride.py --creature warg`, `--creature dire_wolf`. A changed warg travel or loop time is a change for the wolf and the riders too | [ledger](../../../docs/reference/lotrlome-warg-gait-changes.md) |
 | Spider clips | Generated, never retargeted or typed: `spider_gait.py`, then `bind_spider_clips.py --check` and `check_gait_stride.py --creature spider`; keep the June `an_spi_*` gaits on disk and unbound as the rollback, never bind one as a fix | [spider](../../../docs/features/spider.md) |
 | Kit clip rename | Corrupts the clip: keep the name, close the Kit, `rename_anim_clip_tpac.py`. A rope-flagged copy lacking `{clip}_weapon` CTDs | [tools](../../../tools/README.md) |
 | New race rigs | LOD0 head/eye/mouth: 101 morphs, eyes following their sockets; release/blocked codes: vanilla or self-keyed clip. Else CTD | [troll](../../../docs/features/troll-race.md) |
 | UE clip export | The root node carries pelvis height above bind; keep root height, drop only travel and yaw | [pipeline](../../../docs/reference/ue-to-bannerlord-asset-pipeline.md) |
 | Kit FBX materials | Bound by name module-wide, reset on every re-import; a same-named older material wins silently | [troll](../../../docs/features/troll-race.md) |
+| Built mesh, before Mike sees it | Run the art checks: every strap and fitting attached, plates on a backing, clean gold, steel blades, real wood | [gates](../../../docs/features/blender-asset-gates.md) |
 | Override by name | A package that overrides an item by name needs new GUIDs: a registered GUID is silently ignored (yotthani, not checked by TAOM) | [props](../../../docs/reference/tpac-static-prop-authoring.md) |

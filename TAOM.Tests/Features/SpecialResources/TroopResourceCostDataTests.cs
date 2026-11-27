@@ -87,14 +87,15 @@ public class TroopResourceCostDataTests
     }
 
     [TestMethod]
-    public void EveryEmissaryPrice_ExceptWarDrums_IsAtLeastOneHundred()
+    public void EveryEmissaryPrice_EqualsItsMerchantCost()
     {
-        // Income pays about 50 for a full 100-man battle, so an elite troop must cost several battles (2026-11-12).
-        // War Drums keeps its own scale: its two creature rows were priced by hand at 70 and 2,800.
-        var cheap = EmissaryPrices().Where(p => p.Resource != "war_drums" && p.Price < 100)
-            .Select(p => $"{p.Troop} costs {p.Price}").ToList();
+        // The x20 multiplier of 2026-11-12 priced a Rohan rider at 360 Marks against about 25 Marks for a 50-man win.
+        // Mike removed it on 2026-11-25: the shipped resources set no emissary_price_multiplier.
+        var merchantCost = CostRows().ToDictionary(c => c.TroopId, c => c.MerchantCost);
+        var scaled = EmissaryPrices().Where(p => p.Price != merchantCost[p.Troop])
+            .Select(p => $"{p.Troop} costs {p.Price}, merchant_cost {merchantCost[p.Troop]}").ToList();
 
-        Assert.AreEqual(0, cheap.Count, "Emissary prices under 100: " + string.Join("; ", cheap));
+        Assert.AreEqual(0, scaled.Count, "Emissary prices scaled by a multiplier: " + string.Join("; ", scaled));
     }
 
     [TestMethod]

@@ -48,7 +48,9 @@ All modes fail when as_warg binds a clip $MAP does not plan, so a new warg bindi
 $WARG_ONLY names the bindings this script does not copy.
 Since #1565 tools/dire_wolf_gait_plan.json sets the Duration, the travel and the pace limits of the wolf's four forward
 gaits and their in-place twins (repoint_anim_clip.py; the pack's values claimed 26% to 57% less ground than the paws
-cover), and the canter's keys (0 to 16; the pack cut 1 to 16). This script still makes those records, with the
+cover), and the canter's keys (0 to 16; the pack cut 1 to 16). Since #1591 it also sets the two backward records:
+they play the walk's keys from 32 to 0, where $MAP gives them the forward walk 0 to 32 (the paws stepped forward
+while the wolf backed up). This script still makes those records, with the
 pack's values, and no longer holds their keys, Duration and travel: after a reinstall run -Apply here, then
 repoint_anim_clip.py --apply with that plan.
 #>

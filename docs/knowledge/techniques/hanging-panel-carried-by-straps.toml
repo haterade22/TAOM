@@ -1,0 +1,33 @@
+title = "Hang every separate panel from straps"
+line = "A hanging panel or a separate armour piece hangs from at least two suspension straps to a load-bearing part, with a made joint at both ends."
+why = "The session's reading of his corrections: a part must look made and mounted, and a piece that hangs from nothing does not."
+area = "asset-craft"
+status = "active"
+next = "A check that each separate armour island has at least two strap islands that end on it and on a load-bearing part in a made joint."
+
+[when]
+outside = ["*rharm*design*.py", "*rharm*strap*.py", "*rharm*link*.py"]
+tasks = ["hanging panel", "chest panel", "suspension strap"]
+
+[[evidence]]
+grade = "maintainer"
+value = "Front armor just hanging and not tied to anything"
+date = 2026-11-25
+
+[[evidence]]
+grade = "maintainer"
+value = "This probably need to connect"
+date = 2026-11-24
+
+[[acts]]
+state = "instance"
+where = "the suspension straps of the flank and rump panels in rharm_design3.py, with the strap helper in rharm_designs.py"
+scope = "armour 3 from build v09; no check counts the straps of a panel"
+
+[[source]]
+maintainer = "2026-11-25"
+words = "Front armor just hanging and not tied to anything"
+
+[[source]]
+maintainer = "2026-11-24"
+words = "This probably need to connect"

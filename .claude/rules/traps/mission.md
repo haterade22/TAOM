@@ -12,16 +12,13 @@ paths:
   - "Main/Features/StagedSiege/**"
   - "Main/Features/CombatMechanics/**"
   - "Main/Features/AdvancedCombat/**"
+  - "Client/Features/LongDefeat/**"
+  - "Client/Features/FordsOfWar/**"
 ---
 
 # Trap sheet: missions
 
 Mission logic, agents, formations, siege ladders, moving platforms and native calls.
-
-One line per trap: its trigger and what never to do. The linked doc holds the mechanism, the
-history and the gate. A new trap for this area is a new row here, never a row in the always-loaded
-[trap index](../../../docs/ai-includes/orientation.md)
-([ADR-011](../../../docs/adrs/011-knowledge-delivery-tiers.md)).
 
 | Trap | Rule | Doc |
 |---|---|---|
@@ -30,4 +27,5 @@ history and the gate. A new trap for this area is a new row here, never a row in
 | Stop order | `StandGround` never forms a line; shape a formation with a Move | [cavalry](../../../docs/features/smart-cavalry-ai.md) |
 | Ladder queue | No climb gate: exclude faces per agent, at most 6 ids per scene (bits 0, 7 reserved), fixed order, never removed | [siege](../../../docs/features/creature-siege-role.md) |
 | Agent slots, threads | Indices recycle and callbacks run off-thread: never key on `Agent.Index`, write via `RunOrDefer` | [rule](../csharp-architecture.md) |
+| Battle overlay layer | A `GauntletLayer` with widgets: `SetInputRestrictions(false, InputUsageMask.MouseButtons)`, reset before `RemoveLayer`, no `IsFocusLayer` | [rule](../gui-ui.md) |
 | Native branches | ILSpy hides them (`GetNearbyAgentsAux` past 15 m scans every agent): `native_decompile.py` first | [lesson](../../../docs/reviews/lessons/adapters-taleworlds-api.md) |

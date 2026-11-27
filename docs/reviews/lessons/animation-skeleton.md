@@ -1782,6 +1782,29 @@ moving pace's strafe record gives its travel as the divisor of the sideways blen
   measure. A record bound to two rows is read twice: list both readers before a value is proposed.
 - **Source:** issue #1565 item 2, follow-up #1591; the Engine lens of the second wave;
   [RCA](../rca-warg-stride-gate-2026-11-24.md) F10; `TaleWorlds.Native.dll` v1.5.7, 0x749C20 and 0x74E9C0.
+- **Since #1591:** the sideways input is read (0x5F75B0: the agent's speed across its own frame, divided by
+  agent scale), and so is the strafe clip's weight (0x74E9C0: min(1, sideways speed x loop time / travel)).
+  No one travel fits the feet at every sideways speed: inside the clamp with a `Duration` of 1 s or less it
+  is the sideways stride x `Duration`; under the clamp's speed band it is the stride. The stride gate prints
+  a standing strafe clip with both numbers, gives no verdict on them, and still judges its stance and slip.
+
+### A backward row's feet must step backward: a stride measure that takes its sign from the data passes any direction (#1591, 2026-11-24)
+The dire wolf's two backward records played the forward walk's keys 0 to 32, because the pack has no backward
+walk and the record generator mapped the role to the walk's master. The wolf's paws stepped forward while it
+backed up. #1565 corrected the travel of its four forward gaits and wrote the backward walk up as "a typed
+travel" (1.17 m against 2.08 m): the stride measure reads the travel's sign from the feet, so it called the
+forward-stepping loop a backward walk of 2.08 m. The warg, the elephant and the spider each have a backward
+clip whose planted feet move the other way.
+- **Why missed:** `measure` was made sign-blind on purpose, so that a backward walk measures like a forward
+  one, and nothing else compared the two rows. The measure of 2026-11-24 printed a stride and no direction.
+- **Prevent:** `tools/check_gait_stride.py` fails a backward row whose planted feet move the way the walk's
+  do. A creature with no backward master gets one from its walk: a record whose second source is under its
+  first plays its master backward (vanilla `camel_walk_backwards` plays 45 to 1 on the camel's backward rows;
+  `blocked_slashright_2h` is a one-shot case), so the wolf's two records play the walk
+  32 to 0 and no new master is needed.
+- **Source:** issue #1591; `tools/tests/test_gait_stride_creatures.py` (`BackwardDirectionTests`,
+  `ReversedRangeTests`), `tools/tests/test_dire_wolf_gait_plan.py`;
+  [animation system map](../../reference/bannerlord-animation-system-map.md), "Source 1, Source 2".
 
 ### A loop is its master's whole cycle: hold the first key to the last (#1565, 2026-11-24)
 The pack's dire wolf canter played keys 1 to 16 of a gallop master keyed 0 to 16. Keys 0 and 16 are one pose, so
@@ -1794,3 +1817,9 @@ the median speed of the planted keys does not see a seam.
   a pack cut is evidence of nothing.
 - **Source:** issue #1565; `tools/tests/test_dire_wolf_gait_plan.py`
   (`test_each_gaits_loop_closes_and_each_paw_is_planted_in_it`).
+
+### A flag read per package is blind when one package holds many clips
+
+- **Why missed:** `tools/verify_mount_assets.py` tested a movement clip for `quad_movement` by searching the whole file of the package that holds it. That was right while every creature kept one clip per `_anm.tpac`. The war chariot's rig is one package with 75 clips, so any tagged clip made all 29 movement clips pass, and three untagged ones went unseen. `tools/audit_mount_parity.py` read the same clips one by one and said the opposite, and its rule was too strict the other way: it called every untagged movement clip a crash, while the vanilla horse binds untagged clips on six of its seven in-place rows. The first fix still searched the clip's metadata for the text `quad_movement`, so the same text in a source name would have passed, and the second searched everything after the usage count, so the text inside another record's numbers would have passed (Codex, twice, 2026-11-24).
+- **Prevent:** read the tag as a record of the usage list in the clip's own metadata (`verify_mount_assets.quad_tagged` over `clip_metas`, which the audit calls too), never as a text in the file or in the metadata: walk the fields to the list, then each record by its own size (`USAGE_PAYLOAD`), and require the walk to end at the last byte. On 2026-11-24 that walk ended exactly at the end of the metadata for all 534 creature clips of the Armory and all 6,177 vanilla clips, and agreed with the text search on every one, so the stricter read changed no result. A search narrowed twice is still a search: when a format has records, read the records. A rule about what the engine needs is measured on vanilla first: of the horse's 29 base locomotion clips, six of the seven bound on in-place rows (direction and turn `none`) carry no tag (`audit_mount_parity.VANILLA_UNTAGGED_MOVEMENT_ACTIONS`; the seventh, `horse_stand_for_movement_data`, is tagged), so a mount's clip on those rows may go without, and a clip on a row that moves may not. What the engine reads of an untagged in-place clip is not traced. Pins: `test_a_lost_tag_is_not_hidden_by_a_tagged_clip_in_the_same_package`, `test_the_tag_is_a_record_of_the_usage_list_and_not_a_text_inside_one`, `test_metadata_that_does_not_parse_counts_as_untagged`, `GaitTagTests`.
+- **Source:** the rig replacement of 2026-11-23, [chariot.md](../../features/chariot.md) "The rig since 2026-11-23".

@@ -1,0 +1,45 @@
+title = "Close rigid armour onto the body with a liner and a skin view check"
+line = "Rigid parts that move apart over a bending body get a matt liner under them, and a skin view check looks at the part from many directions around it, not from five axes."
+why = "No skin may show between or through plates from any direction. A check from five axis directions passed while the viewer showed skin through the neck plates."
+area = "asset-craft"
+status = "active"
+ask = "From how many directions was the skin view checked, and how many skin samples show at rest and in each neck pose?"
+next = "The skin view check as a tool in tools/blender that any armour build can run."
+
+[when]
+outside = ["*rharmb_bands*.py", "*rharm*skinview*.py", "*rharm*design*.py"]
+tasks = ["neck armour", "armour liner", "skin view", "armour clipping"]
+
+[[evidence]]
+grade = "inferred"
+value = "The reference's bands are the surface, so no skin shows between them; ours are rigid bands over a neck that bends."
+method = "the teardown record docs/knowledge/teardowns/2026-11-26-horse-armour-neck-and-head.md; the probe td_probe.py and its crest scripts are kept with the asset job, outside the repo"
+date = 2026-11-26
+
+[[evidence]]
+grade = "measured"
+value = "The skin view check uses 85 directions for armours 4 and 5 and 64 for armours 1 to 3."
+method = "the skin view scripts rharmb_skinview.py and rharm_skinview.py of the armour builders"
+date = 2026-11-26
+
+[[evidence]]
+grade = "maintainer"
+value = "It needs to be pulled back a bit from the neck and there is clipping."
+date = 2026-11-25
+
+[[acts]]
+state = "instance"
+where = "build_liner in rharmb_bands.py"
+scope = "armour 5; armour 3 has a lining; open in armours 1, 2 and 4"
+
+[[acts]]
+state = "instance"
+where = "the skin view gates of the armour builders: rharmb_skinview.py for armours 4 and 5, rharm_skinview.py for armours 1 to 3"
+scope = "gates of that asset job, outside the repo"
+
+[[source]]
+teardown = "2026-11-26-horse-armour-neck-and-head"
+
+[[source]]
+maintainer = "2026-11-25"
+words = "It needs to be pulled back a bit from the neck and there is clipping."

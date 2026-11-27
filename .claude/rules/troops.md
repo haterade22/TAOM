@@ -15,7 +15,7 @@ Update ALL of the following (checklist):
 |------|---------|------------|
 | 1. Define troops | `Main/_Module/ModuleData/troops/troops_{culture}.xml` | Add NPCCharacter with skills, equipment, upgrade_targets, race, culture |
 | 2. Party templates | `Main/_Module/ModuleData/taom_partyTemplates.xml` | Add to ALL relevant templates for the culture (hero, patrol L1/L2/L3, rebels, vassal_reward, militia, villager, caravan, elite caravan). Ten, see the table below |
-| 3. Culture config | `Main/_Module/ModuleData/taom_spcultures.xml` **and** `spcultures.xslt` | Update `basic_troop` / `elite_basic_troop` if the entry point changed, and confirm every party template is BOUND. A retagged vanilla culture lives in the XSLT, not the XML, and inherits Calradia for anything its block does not name |
+| 3. Culture config | `Main/_Module/ModuleData/taom_spcultures.xml` **and** `spcultures.xslt` | Update `basic_troop` / `elite_basic_troop` if the entry point changed, and confirm every party template is BOUND: a retagged vanilla culture lives in the XSLT and inherits Calradia for anything its block does not name (xslt.md "Passthrough cuts both ways") |
 | 4. Recruitment code | `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` | Add/update settlement, clan, and culture fallback pools |
 | 5. Recruitment tests | `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` | TDD: write tests FIRST, then implement |
 | 6. NPC references | `Main/_Module/ModuleData/characters/npcs_{culture}.xml` | Check villager upgrade_targets, caravan guard references |
@@ -29,7 +29,7 @@ alternatives; they are a menu the engine orders one item from per slot. Write ev
 troop to be **interchangeable slot by slot with every other**, or the engine will assemble a
 combination you never authored.
 
-`Equipment.GetRandomEquipmentElements` (v1.5.6, `TaleWorlds.Core.Equipment.cs`) loops the 12 slots and
+`Equipment.GetRandomEquipmentElements` (v1.5.7, `TaleWorlds.Core.Equipment.cs`) loops the 12 slots and
 draws each from `list[weaponSetNo]`. There is **no set-count threshold** in the method, so this
 starts at **two** battle sets. A campaign battle always takes the seeded branch, which re-rolls the
 set index at the top of every iteration and so makes all 12 slots independent:
@@ -109,7 +109,7 @@ roster is the midpoint of its min and max sums; `PartySizeLimit` still governs r
 Read [docs/reference/party-template-sizing.md](../../docs/reference/party-template-sizing.md) before
 retuning these numbers, and use `tools/rebalance_party_template_maxes.py` rather than hand-editing.
 
-A template no culture, clan or hero binds is dead data, and a retagged culture inherits Calradia for what its block omits. Gate: `CulturePartyTemplateTests`. Contract: [culture-playability-wiring.md](../../docs/features/culture-playability-wiring.md).
+A template no culture, clan or hero binds is dead data. Gate: `CulturePartyTemplateTests`. Contract: [culture-playability-wiring.md](../../docs/features/culture-playability-wiring.md).
 
 ## Save Compatibility
 

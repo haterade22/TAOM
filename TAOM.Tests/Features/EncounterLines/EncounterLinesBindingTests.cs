@@ -153,9 +153,56 @@ public class EncounterLinesBindingTests
         }
         Assert.IsTrue(farewellLineAdded, "the hero_leave farewell line (id, input and output token) is no longer added by LordConversationsCampaignBehavior");
 
-        // Vanilla asks for these ids only by literal, so a rename would strand the 243 lord rows without any other failure.
+        // Vanilla asks for these ids only by literal, so a rename would strand every lord row without any other failure.
         foreach (var id in new[] { "hero_leave", "str_surrender_demand_hero", "str_context_line", "str_surrender_offer", "str_prisoner_released" })
             Assert.IsTrue(literals.Contains(id), id + " is no longer a literal in LordConversationsCampaignBehavior");
+    }
+
+    /// <summary>Each liege sentence id and the start of the vanilla text it is added with (the TAOM rows keep that text's variables).</summary>
+    private static readonly Dictionary<string, string> LiegeSentenceTexts = new()
+    {
+        ["1220"] = "{=roIaYqrx}",
+        ["1221"] = "{=231s4Fqi}",
+        ["1225"] = "{=CtEbTd47}",
+        ["player_leave_faction_accepted"] = "{=xCjCHRcS}",
+        ["player_leaves_faction"] = "{=ZMbvMK6K}",
+        ["player_want_to_end_mercenary_service_response"] = "{=EN9s6oZz}",
+        ["lord_ask_exit_service_confirm_final"] = "{=7Qr1yZhJ}",
+        ["player_want_to_join_faction_as_mercenary_or_vassal_answer"] = "{=MlTofjrU}",
+        ["vassalage_offer_player_has_low_relation"] = "{=r3pGLoKN}",
+        ["vassalage_offer_rejected"] = "{=!}{VASSALAGE_REJECTION}",
+        ["vassalage_offer_accepted"] = "{=2c7dIRla}",
+        ["player_is_accepted_as_a_vassal"] = "{=XqWloWK0}{PLAYER_ACCEPTED_AS_VASSAL}",
+        ["1210"] = "{=dT3cdDSg}",
+        ["player_want_to_join_faction_as_mercenary_lord_answer_3"] = "{=!}{MERCENARY_HIRING_PITCH}",
+        ["mercenary_player_accepts_lord_answer"] = "{=yUYNlQhU}",
+        ["mercenary_player_rejects_lord_answer"] = "{=wxK1bTZm}",
+    };
+
+    [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void TheLiegeSentences_AreStillAddedAsLordLines_WithTheirVanillaText_InInstalledEngine()
+    {
+        RequireGame();
+        CollectionAssert.AreEquivalent(LiegeSentenceTexts.Keys.ToList(), LiegeLines.TextOfSentence.Keys.ToList());
+
+        var lordTypes = new[] { typeof(LordConversationsCampaignBehavior) }
+            .Concat(typeof(LordConversationsCampaignBehavior).GetNestedTypes(BindingFlags.NonPublic | BindingFlags.Public));
+        var found = new HashSet<string>();
+        foreach (var method in lordTypes.SelectMany(t => AccessTools.GetDeclaredMethods(t)).Where(m => !m.IsAbstract))
+        {
+            var strings = Strings(method);
+            // AddDialogLine(id, input token, output token, text, ...): the text is the fourth literal after the id.
+            for (var i = 0; i + 3 < strings.Count; i++)
+            {
+                if (LiegeSentenceTexts.TryGetValue(strings[i], out var text) && strings[i + 3].StartsWith(text, StringComparison.Ordinal))
+                    found.Add(strings[i]);
+            }
+        }
+
+        var missing = LiegeSentenceTexts.Keys.Where(k => !found.Contains(k)).ToList();
+        Assert.AreEqual(0, missing.Count, "no longer added with their vanilla text: " + string.Join(", ", missing));
     }
 
     [TestMethod]

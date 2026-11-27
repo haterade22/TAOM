@@ -27,6 +27,9 @@ public class CampaignStartOptionsWiringTests
         container.RegisterInstance(Substitute.For<IPathService>());
         container.RegisterInstance(Substitute.For<TAOM.Features.CoopInterop.ICoopSessionProvider>());
         container.RegisterInstance(Substitute.For<TAOM.Adapters.IPartySizeCacheInvalidator>());
+        container.RegisterInstance(Substitute.For<TAOM.Features.FactionMap.IFactionConfigProvider>());
+        container.RegisterInstance(Substitute.For<TAOM.Features.CoopInterop.IPlayerControlQuery>());
+        TAOM.Features.FactionPower.FactionPowerIoC.RegisterFactionPowerFeature(container);
         CampaignStartOptionsIoC.RegisterCampaignStartOptionsFeature(container);
         container.Register<ITaomSettingsProvider, TaomSettingsProvider>(Reuse.Singleton);
         container.Register<IWarOfTheRingConfigProvider, WarOfTheRingConfigProvider>(Reuse.Singleton);

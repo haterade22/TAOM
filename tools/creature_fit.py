@@ -26,7 +26,7 @@ import sys
 import uuid
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import set_clip_balance_name as scb  # noqa: E402  (the engine's clip metadata order, 0x58C500)
+import set_clip_balance_name as scb  # noqa: E402  (the engine's clip metadata order: scb.parse)
 
 SKELETAL_ANIMATION = "07b0faba3f7e3f45bac6e7640043112b"
 

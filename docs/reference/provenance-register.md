@@ -122,6 +122,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Ruff | `Ruff` `astral-sh/ruff` | MIT | interop-only | `ruff.toml`, `tools/tests/test_python_lint_gate.py` (see detail) | cleared |
 | Headroom | `headroom` `headroomlabs-ai/headroom` `headroom-ai` | Apache-2.0 | comparison-only | (none: measured and not adopted; see detail) | cleared |
 | ponytail | `ponytail` `DietrichGebert/ponytail` | MIT | behavioural-port | `.claude/rules/think-before-coding.md` ("Reuse before writing", the ordered reuse ladder; see detail) | cleared |
+| Articles on instruction-file bloat | `aihero.dev` `techloom.it` `the-agent-daily.org` | UNKNOWN | comparison-only | (none; ideas only, written in TAOM's words: [adopt-instruction-debloat-2026-11-25.md](../reviews/adopt-instruction-debloat-2026-11-25.md)) | cleared |
 | mattpocock/skills | `mattpocock/skills` | MIT | behavioural-port | `.claude/skills/improve/references/audit-playbook.md` (the shallow-module bullet); a suggested-skills field for the since-removed `/context-save`; additions to `/deep-review` lens 4, `/investigate`, `/issue`, `external-skill-ports.md`, `agent-teams.md`, `000-template.md` and `session-phase-boundaries.md`; see detail | cleared |
 | pstack | `pstack` `backnotprop/pstack` | MIT | behavioural-port | `.claude/skills/deep-review/lenses/{1-standards,4-completeness}.md`, `tools/worktree_audit.py` (idea only), `docs/ai-includes/perf-method.md`, `.claude/rules/output-style.md` Part 2; see detail | cleared |
 | kepano (Steph Ango): kepano-obsidian, obsidian-skills, defuddle | `kepano/kepano-obsidian` `kepano/obsidian-skills` `kepano/defuddle` | MIT | comparison-only | (none) | cleared |
@@ -811,6 +812,14 @@ chariot's is a second source. Its name appears nowhere in the repo, which is the
 its purest form: the port is documented, the source is not identifiable, and no one can check the
 terms. `docs/features/chariot.md:15` records that "rights to the art confirmed by the maintainer",
 which covers the assets but says nothing about the code or who granted it.
+
+**2026-11-23, a second source.** The chariot's rig was replaced that day with one taken from another download,
+which `docs/features/chariot.md` calls "the upstream chariot pack" ("The rig since 2026-11-23"). The maintainer
+said that day that its rights are cleared and that the pack and its author stay unnamed in tracked text. What comes
+from it: the rig package in the unversioned Armory, the two skeletons `horse_skeleton_chariot` and
+`horse_chariot_rein` inside the shipped `Main/_Module/DsAssetPackages/taom_creature_skeletons.tpac`, and the reason
+`tools/tpac_slim_package.py` exists. `tools/check_provenance.py` scans binaries under `_Module/bin` only, so it does
+not see that package. The row's status and its file list are unchanged: both are the maintainer's decision.
 
 This row is deliberately left with the euphemism as its token rather than a guessed name.
 **To resolve:** the maintainer names the mod, and the pre-de-naming text is recoverable from history

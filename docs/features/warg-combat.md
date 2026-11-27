@@ -139,6 +139,9 @@ step 3 above never happens.
 
 - **Adapter cache (#592):** `TAOM.Tests/Adapters/AgentAdapterCacheTests.cs` (15) and `MissionAdapterFactoryTests.cs` (6, on bare uninitialized `Agent` objects): reference identity, eviction, index-reuse count and the once-per-mission reuse log.
 - **Current:** `TAOM.Tests/Features/Warg/WargAttackServiceTests.cs` has 26 tests (2026-11-08): the damage formula in `CalculateWargAttackDamage` (through a testable subclass that stubs the sealed armor lookup), the `HandleWargTargetHit` guards and branches, the `WargAttack` null and inactive guards, and the constructor. `IWargAttackService` takes `IAgentAdapter` throughout since #178.
+- **The stride gate (#1565, #1591):** `tools/tests/test_gait_stride_creatures.py`: the gate on a module the test
+  builds (a master found by GUID, the limits, the cook rule, `SideStepTests`, `BackwardDirectionTests`,
+  `GroundRuleTests`) and on the install (`InstalledWargTests`, `InstalledDireWolfTests`).
 - **The gait step and the gait plan (#1563):** `TAOM.Tests/Features/Warg/WargTrialRulesTests.cs` (the pass rule on both sides of 6 m/s, NaN, no rider, the facts line) and `CommandTrialWargStepsTests.cs` (the step against the stand-in: the orders, the mission-tick reads, the roster, the refusal beside another step); `tools/tests/test_warg_gait_plan.py` (the plan's relations, and the installed masters measured against its travel values).
 - **Coverage gap:** the two `WargAttack` dispatch tests (running or standing bite by speed) are `[Ignore]`d because `ActionIndexCache.Create` needs the engine's animation registry.
 - **Tick-cost tests (plan 015, #659):** `TAOM.Tests/Features/Warg/WargTickCostTests.cs` (17) pins, in the IL, that no per-tick node method reaches `IoC.Resolve` or `IoC.ResolveAll`, that the five warg nodes that scan or hold a service reach neither from any body (constructors and field initializers included) while `WargBehaviorTree.BuildTree` resolves each service exactly once, and that the grid scans use the buffer overload without constructing a list; it checks by reflection that no node keeps a service or buffer in a static field, and proves the IL checks against control fixtures; `TAOM.Tests/Features/AdvancedCombat/BoneCheckDuringAnimationTickTests.cs` (7) drives the bite's `Tick` with substitutes: a wind-up frame never touches the attacker's visuals, the window end and a missing skeleton or visuals in the window expire the bite, and a NaN progress keeps it without a hit test; one IL rule pins a single progress read per tick; `WargTreeNodeInjectionTests.cs` (3) drives `WargAttackTask` and `WargAiControlledIsNotFacingEnemy` with substitute services; `TAOM.Tests/Features/AdvancedCombat/SpatialGridQueryTests.cs` (9) checks the grid query against a brute-force sphere scan through its generic helpers, plus column order and a point that moved since the rebuild; `BoneCheckRangeGateTests.cs` (10) pins that a target's skeleton is fetched only inside the range gate, that a NaN frame fails the gate, and every per-target skip.
@@ -162,7 +165,7 @@ speed (#1563), then the walk and the trot got the travel their paws cover and a 
 for which the walk needed an in-place twin record of its own (#1565). The same work tied the rider's two gallop
 turn clips to the warg's stride and gave the dire wolf's gaits the same treatment
 ([dire wolf ledger](../reference/lotrlome-dire-wolf-changes.md)). The gates are the `warg-gaits`, `warg-stride`,
-`warg-clips` and `dire-wolf-gaits` rows of `tools/data_gates.py`. A reinstall of the Armory reverts the records and the twins'
+`warg-clips`, `dire-wolf-gaits` and `dire-wolf-stride` rows of `tools/data_gates.py`. A reinstall of the Armory reverts the records and the twins'
 rows.
 
 ### The warg gait step of the command trial
@@ -268,6 +271,13 @@ Checked on 2026-11-23 by the maintainer: step 3. Steps 4, 5, 6 and 7 are owed.
   stance limit and cook rule. The four forward gaits and the backward walk pass. The two side-step records do
   not (a travel of 1.60 m, paws that move 0.73 m and 1.00 m) and are listed with those numbers. The stride is not
   the node's measure for a standing side step, and their travel is open in #1591. No record and no C# changed.
+- 2026-11-24 (#1591): the stride gate prints the two side steps and gives no stride verdict on them (it still
+  judges their stance and slip); the list of known failures is gone. The node's sideways input is the warg's
+  speed across its own frame at model size (native 0x5F75B0), so at the standing pace, while the loop time is
+  inside its clamp, the body moves travel / `Duration` = 2.13 m in a loop where the paws move 0.73 m and
+  1.00 m. The two records are not changed: the right one also sets the rate of the turn in place, and a
+  travel that fits the paws would make it 1.6 to 2.1 times as fast
+  ([ledger](../reference/lotrlome-warg-gait-changes.md), "Known limitations"). No record and no C# changed.
 - 2026-11-23 (#1565): the walk and the trot. Both records claimed a travel their paws do not cover (1.6 m
   against 1.80 m, 2.9 m against 2.71 m) and kept one cadence at every speed; the walk could not do otherwise,
   because one record sat on both of its rows. Three records were rewritten, the walk got an in-place twin

@@ -43,8 +43,11 @@ ignores its template. A new record has no cache entry: never bind it in an actio
 (tools/bind_warg_clips.py holds the warg's binding to that).
 
 REFUSES a clip missing from the folder or carried by two packages there, a master whose package is missing or holds
-no single SkeletalAnimation, a range touching frame 0 (the rest frame of a Kit import, never played; allowed only on a
-master that a record of the folder already plays from frame 0, as the dire wolf's are), a package the
+no single SkeletalAnimation, a number field that is not a JSON number a 32-bit float holds (true, "820", NaN and
+1e39 are refused), a range touching frame 0 (the rest frame of a Kit
+import, never played; allowed only on a master that a record of the folder already plays from frame 0, as the dire
+wolf's are, and the record a row rewrites counts: a range that is played today is no new one), an --under that
+leaves the module's Assets folder, a package the
 parser refuses (set_clip_balance_name.parse), a row with a field this tool does not know or without one it needs
 (a misspelled field would be skipped and --check would pass with that value never compared), a clip named by
 two rows (the second would overwrite the first), a missing clip whose template is missing too, and a file of the new
@@ -58,7 +61,9 @@ folder, no xxhash, or --apply while the game or the Kit runs).
 The plan is a JSON list of {"clip", "master", "source1", "source2", optional "duration", "travel", "limits",
 "step_points", "flags", "template"}; a field not given keeps the clip's own value. --apply backs each package
 up to `<file>.bak-repoint-<stamp>` (not a .tpac, so no scanner reads it), writes, re-reads and verifies, and restores
-on any failure.
+on any failure. It stops at the first row that fails and says how many it wrote before: those stay written, and a
+second --apply writes the rest. When the restore fails too, the message names both errors and the backup to copy
+back by hand, because a broken package is one the next run cannot find.
 """
 import argparse
 import datetime as dt
@@ -80,13 +85,21 @@ class RepointError(Exception):
     pass
 
 
+class RestoreFailed(RepointError):
+    """A record's write failed and its old bytes could not be put back: the file is broken until its backup is
+    copied over it, and a second --apply cannot find the clip."""
+
+
 GAIT_USAGE = "quad_movement"
 
 
 def _travel_at(buf, c):
     """Where the travel float of the clip's quad_movement usage is, or None when the clip has no such usage. The
     usage is the record's last field: its name, an empty list, then travel and the two pace limits (the warg's
-    records, read 2026-11-23). Anything else there is not taken for one."""
+    records, read 2026-11-23). Anything else there is not taken for one. The engine's reader of a stored record
+    (0x58D980 on v1.5.7, read 2026-11-24) takes a usage the same way: after the name "quad_movement" it steps over
+    four bytes without reading them and takes three floats into the object the movement node reads (travel at +8,
+    the lower limit at +0xc, the upper at +0x10). Every record read here holds 0 in those four bytes."""
     if c.usages != 1:
         return None
     try:
@@ -114,13 +127,22 @@ def timing(buf):
             "limits": [float(gait[1]), float(gait[2])] if gait else None}
 
 
+F32_MAX = 3.4028234663852886e38        # the largest value a record's 32-bit float holds
+
+
 def _floats(what, values, count):
+    """`count` numbers a record can hold. A plan is JSON, so only its numbers count: float() takes true for 1.0 and
+    "820" for 820.0. Each must be finite and inside the 32-bit range, which struct refuses with a traceback."""
+    shown = repr(values)[:80]
+    if not isinstance(values, (list, tuple)) or len(values) != count or any(
+            isinstance(v, bool) or not isinstance(v, (int, float)) for v in values):
+        raise RepointError("%s must be %d number(s), got %s" % (what, count, shown))
     try:
         out = [float(v) for v in values]
-    except (TypeError, ValueError):
-        raise RepointError("%s must be %d number(s), got %r" % (what, count, values))
-    if len(out) != count or not all(math.isfinite(v) for v in out):
-        raise RepointError("%s must be %d finite number(s), got %r" % (what, count, values))
+    except OverflowError:               # an integer too long for a float
+        out = [math.inf]
+    if not all(abs(v) <= F32_MAX for v in out):            # false for a NaN and for an infinity too
+        raise RepointError("%s must be %d finite number(s) that a 32-bit float holds, got %s" % (what, count, shown))
     return out
 
 
@@ -145,6 +167,7 @@ def repoint(buf, master_guid, source1, source2, duration=None, travel=None, limi
     """New package bytes playing `master_guid` from source1 to source2 (either way round) over `duration`
     seconds, with the gait fields and the flag list a row gave; a field that is None keeps the clip's own value.
     `rest_frame_played`: a record already plays this master from frame 0, so frame 0 is a key of the loop. Pure."""
+    source1, source2 = _floats("source1 and source2", [source1, source2], 2)     # min(nan, x) < 1 is false
     if min(source1, source2) < 1 and not (rest_frame_played and min(source1, source2) == 0):
         raise RepointError("a range must not touch frame 0, the master's rest frame")
     before = scb.parse(buf)
@@ -310,24 +333,40 @@ def apply(rows, stamp=None):
     for r in todo:
         if r.buf is not None and os.path.exists(r.path + ".bak-repoint-" + stamp):
             raise RepointError("backup exists: %s.bak-repoint-%s" % (r.path, stamp))
-    for r in todo:
-        if r.buf is None:
-            _make(r)
-            continue
-        with open(r.path + ".bak-repoint-" + stamp, "wb") as fh:
-            fh.write(r.buf)
+    for done, r in enumerate(todo):
+        try:
+            if r.buf is None:
+                _make(r)
+            else:
+                _replace(r, stamp)
+        except (RepointError, OSError) as exc:
+            why = str(exc) if isinstance(exc, RepointError) else "%s: %s" % (r.clip, exc)
+            kind = RestoreFailed if isinstance(exc, RestoreFailed) else RepointError
+            raise kind("%s (%d of %d record(s) written before it)" % (why, done, len(todo)))
+    return len(todo)
+
+
+def _replace(r, stamp):
+    """Write a clip that is there: its backup first, then the new bytes, read back; the old bytes on any failure.
+    When the old bytes cannot be put back either, the error names both failures and the backup to copy by hand."""
+    backup = r.path + ".bak-repoint-" + stamp
+    with open(backup, "wb") as fh:
+        fh.write(r.buf)
+    try:
+        with open(r.path, "wb") as fh:
+            fh.write(r.new)
+        with open(r.path, "rb") as fh:
+            if fh.read() != r.new or not scb.checksum_ok(r.new):
+                raise RepointError("%s: read-back or checksum differs" % r.clip)
+    except Exception as exc:
         try:
             with open(r.path, "wb") as fh:
-                fh.write(r.new)
-            with open(r.path, "rb") as fh:
-                if fh.read() != r.new or not scb.checksum_ok(r.new):
-                    raise RepointError("%s: read-back or checksum differs" % r.clip)
-        except Exception:
-            with open(r.path, "wb") as fh:
                 fh.write(r.buf)
-            raise
-        print("written %s -> %s %s (backup .bak-repoint-%s)" % (r.clip, r.master, _range(r.new), stamp))
-    return len(todo)
+        except OSError as again:
+            raise RestoreFailed("%s: the write failed (%s) and the restore failed too (%s). The record is broken: "
+                                "copy %s over it by hand" % (r.clip, exc, again, backup))
+        raise
+    print("written %s -> %s %s (backup .bak-repoint-%s)" % (r.clip, r.master, _range(r.new), stamp))
 
 
 def _make(r):
@@ -383,7 +422,17 @@ def main(argv=None):
     ap.add_argument("--apply", action="store_true")
     ap.add_argument("--check", action="store_true")
     args = ap.parse_args(argv)
-    clips_dir = os.path.join(args.module, "Assets", *args.under.split("/")) if args.under else args.clips_dir
+    clips_dir = args.clips_dir
+    if args.under:
+        assets = os.path.realpath(os.path.join(args.module, "Assets"))
+        clips_dir = os.path.realpath(os.path.join(assets, *args.under.split("/")))
+        try:
+            inside = os.path.commonpath([assets, clips_dir]) == assets
+        except ValueError:                  # another drive
+            inside = False
+        if not inside:
+            print("refused: --under %s leaves the module's Assets folder (%s)" % (args.under, assets))
+            return 1
     # Exit 2 is NOT RUN, as tools/data_gates.py reads it: a machine without the module or without xxhash has no
     # finding to report. A plan the tool refuses is a finding: exit 1 and the reason, no traceback.
     if not os.path.isdir(clips_dir):
@@ -420,8 +469,9 @@ def main(argv=None):
                 "DONE" if done else "PENDING", r.clip, r.master, _range(r.buf), scb.checksum_ok(r.buf), fault is None,
                 " (%s)" % fault if done and fault else ""))
         if raw:
-            print("%d record(s) are not cooked as they are now: the game still plays their old keys. Start the "
-                  "Modding Kit once with the module loaded, close it, and run this check again" % raw)
+            print("%d record(s) are not cooked as they are now: the game plays what the Kit cooked before, and "
+                  "skips a record that has no entry. Start the Modding Kit once with the module loaded, close it, and "
+                  "run this check again" % raw)
         return 1 if bad or raw else 0
     for r in rows:
         print("%-8s %-60s -> %s %s" % ("MAKE" if r.buf is None else "CHANGE" if r.changed else "same", r.clip, r.master,
@@ -435,8 +485,9 @@ def main(argv=None):
     try:
         n = apply(rows)
     except RepointError as exc:
-        print("refused: %s. A record written before it stays written, with its backup beside it; --check shows "
-              "what is left, and --apply again writes it" % exc)
+        print("failed: %s.%s" % (exc, "" if isinstance(exc, RestoreFailed) else
+                                 " A record written before it stays written, with its backup beside it if it was "
+                                 "there before; --check shows what is left, and --apply again writes it"))
         return 1
     print("%d written. Next: open the Armory in the Modding Kit, save, close (the Kit re-cooks their RuntimeDataCache "
           "entries), then set_clip_balance_name.py --check and check_rdc_entries.py" % n)

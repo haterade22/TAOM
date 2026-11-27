@@ -119,6 +119,13 @@ public class LotrIssueConfigProvider : ILotrIssueConfigProvider
             return null;
         }
 
+        var troops = ParseInt(el, "troops", 0);
+        if ((template == LotrIssueTemplate.TrainRetainers || template == LotrIssueTemplate.HuntBand) && troops <= 0)
+        {
+            _logger.LogWarning($"LotrIssues: skipping issue '{id}' — {template} needs troops > 0 (was {troops}); a loan or band of none would soft-lock");
+            return null;
+        }
+
         var titleKey = el.Attribute("title_key")?.Value ?? "";
         var descKey = el.Attribute("description_key")?.Value ?? "";
         if (string.IsNullOrEmpty(titleKey) || string.IsNullOrEmpty(descKey))
@@ -129,6 +136,7 @@ public class LotrIssueConfigProvider : ILotrIssueConfigProvider
 
         var countPerDiff = CoerceNonNegFloat(el, "count_per_difficulty", id, ref coerced);
         var rewardGoldPerDiff = CoerceNonNegFloat(el, "reward_gold_per_difficulty", id, ref coerced);
+        var troopsPerDiff = CoerceNonNegFloat(el, "troops_per_difficulty", id, ref coerced);
         var rewardGoldBase = CoerceNonNegInt(el, "reward_gold_base", id, ref coerced);
         var rewardRenown = CoerceNonNegInt(el, "reward_renown", id, ref coerced);
 
@@ -196,7 +204,8 @@ public class LotrIssueConfigProvider : ILotrIssueConfigProvider
         return new LotrIssueDefinition(
             id, template, giver, frequency, cultures, count, countPerDiff,
             itemSource, troopSource, rewardGoldBase, rewardGoldPerDiff, rewardRenown,
-            el.Attribute("reward_item")?.Value ?? "", variant, relationMin, text, rewardItemCount, forPlayerCulture);
+            el.Attribute("reward_item")?.Value ?? "", variant, relationMin, text, rewardItemCount, forPlayerCulture,
+            troops, troopsPerDiff, el.Attribute("band_name_key")?.Value ?? "");
     }
 
     private static bool IsValidCombatVariant(string v)

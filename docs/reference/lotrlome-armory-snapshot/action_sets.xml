@@ -15112,33 +15112,138 @@
 		<action type="act_elephant_fall_slow_left_continue" animation="elephant_death" />
 		<action type="act_elephant_rider_fall_right" animation="elephant_rider_fall_right" />
 		<action type="act_elephant_rider_fall_left" animation="elephant_rider_fall_left" />
-		<action type="act_chariot_stand_for_movement_data" animation="chariot_rider_stand_1" />
-		<action type="act_chariot_stand_1" animation="chariot_rider_stand_1" />
-		<action type="act_chariot_idle_1" animation="chariot_rider_stand_1" />
-		<action type="act_chariot_forward_walk_stand" animation="chariot_rider_forward_walk_stand" />
-		<action type="act_chariot_forward_walk" animation="chariot_rider_forward_walk_stand" />
-		<action type="act_chariot_forward_walk_strafe_right" animation="chariot_rider_forward_walk_stand" />
-		<action type="act_chariot_forward_walk_strafe_left" animation="chariot_rider_forward_walk_stand" />
-		<action type="act_chariot_forward_trot_stand" animation="chariot_rider_forward_walk_stand" />
-		<action type="act_chariot_forward_trot" animation="chariot_rider_forward_walk_stand" />
-		<action type="act_chariot_forward_trot_strafe_right" animation="chariot_rider_forward_walk_stand" />
-		<action type="act_chariot_forward_trot_strafe_left" animation="chariot_rider_forward_walk_stand" />
-		<action type="act_chariot_forward_canter_stand" animation="chariot_rider_forward_canter_stand" />
-		<action type="act_chariot_forward_canter" animation="chariot_rider_forward_canter_stand" />
-		<action type="act_chariot_forward_canter_strafe_right" animation="chariot_rider_forward_walk_stand" />
-		<action type="act_chariot_forward_canter_strafe_left" animation="chariot_rider_forward_walk_stand" />
-		<action type="act_chariot_forward_gallop_right_foot_stand" animation="chariot_rider_forward_walk_stand" />
-		<action type="act_chariot_forward_gallop_right_foot" animation="chariot_rider_forward_walk_stand" />
-		<action type="act_chariot_forward_gallop_left_foot_stand" animation="chariot_rider_forward_walk_stand" />
-		<action type="act_chariot_forward_gallop_left_foot" animation="chariot_rider_forward_walk_stand" />
-		<action type="act_chariot_turn_right" animation="chariot_rider_forward_walk_stand" />
-		<action type="act_chariot_turn_left" animation="chariot_rider_forward_walk_stand" />
-		<action type="act_chariot_backward_walk_stand" animation="chariot_rider_backward_walk_stand" />
-		<action type="act_chariot_backward_walk" animation="chariot_rider_backward_walk_stand" />
-		<action type="act_mount_chariot_from_left" animation="chariot_mount_rider_from_right" />
-		<action type="act_mount_chariot_fast_from_left" animation="chariot_mount_rider_from_right" />
-		<action type="act_mount_chariot_from_right" animation="chariot_mount_rider_from_right" />
-		<action type="act_mount_chariot_fast_from_right" animation="chariot_mount_rider_from_right" />
+		<action type="act_chariot_stand_for_movement_data" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_stand_1" animation="chariot_rider_idle_1" alternative_group="chariot_stand_alternative_group" />
+		<action type="act_chariot_stand_2" animation="chariot_rider_idle_1" alternative_group="chariot_stand_alternative_group" />
+		<action type="act_chariot_stand_3" animation="chariot_rider_idle_1" alternative_group="chariot_stand_alternative_group" />
+		<action type="act_chariot_stand_4" animation="chariot_rider_idle_1" alternative_group="chariot_stand_alternative_group" />
+		<action type="act_chariot_riderless_idle_1" animation="chariot_rider_idle_1" />
+		<action type="act_chariot_idle_1" animation="chariot_rider_idle_1" alternative_group="idle_chariot" />
+		<action type="act_chariot_idle_2" animation="chariot_rider_idle_1" alternative_group="idle_chariot" />
+		<action type="act_chariot_idle_3" animation="chariot_rider_idle_1" alternative_group="idle_chariot" />
+		<action type="act_chariot_idle_4" animation="chariot_rider_idle_1" alternative_group="idle_chariot" />
+		<action type="act_chariot_forward_walk_stand" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_forward_walk" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_forward_walk_strafe_left" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_forward_walk_strafe_right" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_forward_trot_stand" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_forward_trot" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_forward_trot_strafe_right" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_forward_trot_strafe_left" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_forward_canter_stand" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_forward_canter" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_forward_canter_strafe_right" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_forward_canter_strafe_left" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_forward_gallop_right_foot_stand" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_forward_gallop_right_foot" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_forward_gallop_right_foot_strafe_right" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_forward_gallop_right_foot_strafe_left" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_forward_gallop_left_foot_stand" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_forward_gallop_left_foot" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_forward_gallop_left_foot_strafe_right" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_forward_gallop_left_foot_strafe_left" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_backward_walk_stand" animation="chariot_rider_idle_1" />
+		<action type="act_chariot_backward_walk" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_backward_walk_strafe_right" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_backward_walk_strafe_left" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_rear" animation="chariot_rider_rear" />
+		<action type="act_chariot_rear_damaged" animation="chariot_rider_rear" />
+		<action type="act_chariot_kick" animation="chariot_rider_idle_1" />
+		<action type="act_chariot_jump_start" animation="chariot_rider_horse_dash" />
+		<action type="act_chariot_dash" animation="chariot_rider_horse_dash" />
+		<action type="act_chariot_quick_stop" animation="chariot_rider_quick_stop" />
+		<action type="act_chariot_quick_stop_when_fast" animation="chariot_rider_quick_stop" />
+		<action type="act_chariot_hit_object" animation="chariot_rider_hit_object" />
+		<action type="act_chariot_hit_object_while_falling" animation="chariot_rider_hit_object" />
+		<action type="act_chariot_jump_high" animation="chariot_rider_jump_high" />
+		<action type="act_chariot_jump_high_loop" animation="chariot_rider_jump_high_loop" />
+		<action type="act_chariot_jump_high_end" animation="chariot_rider_jump_high_end" />
+		<action type="act_chariot_jump_high_end_hard" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_jump_forward" animation="chariot_rider_jump_forward" />
+		<action type="act_chariot_jump_forward_loop" animation="chariot_rider_jump_forward_loop" />
+		<action type="act_chariot_jump_forward_end" animation="chariot_rider_jump_forward_end" />
+		<action type="act_chariot_jump_forward_end_hard" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_turn_right" animation="chariot_rider_walk_turn_left" />
+		<action type="act_chariot_turn_left" animation="chariot_rider_walk_turn_right" />
+		<action type="act_chariot_strafe_right" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_strafe_left" animation="chariot_rider_forward_walk" />
+		<action type="act_mount_chariot_left" animation="chariot_rider_mount_left" />
+		<action type="act_dismount_chariot_left" animation="chariot_rider_dismount_left" />
+		<action type="act_mount_chariot_right" animation="chariot_rider_mount_right" />
+		<action type="act_dismount_chariot_right" animation="chariot_rider_dismount_right" />
+		<action type="act_chariot_turn_right_head" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_turn_left_head" animation="chariot_rider_forward_walk" />
+		<action type="act_chariot_walk_turn_right_head" animation="chariot_rider_walk_turn_left" />
+		<action type="act_chariot_walk_turn_left_head" animation="chariot_rider_walk_turn_right" />
+		<action type="act_chariot_trot_turn_right_head" animation="chariot_rider_trot_turn_right" />
+		<action type="act_chariot_trot_turn_left_head" animation="chariot_rider_trot_turn_left" />
+		<action type="act_chariot_canter_turn_right_head" animation="chariot_rider_gallop_right" />
+		<action type="act_chariot_canter_turn_left_head" animation="chariot_rider_gallop_left" />
+		<action type="act_chariot_gallop_turn_right_head" animation="chariot_rider_gallop_right" />
+		<action type="act_chariot_gallop_turn_left_head" animation="chariot_rider_gallop_left" />
+		<action type="act_chariot_gallop_acceleration_head" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_strike_back" animation="chariot_rider_idle_1" />
+		<action type="act_chariot_strike_front" animation="chariot_rider_idle_1" />
+		<action type="act_chariot_strike_back_while_moving" animation="chariot_rider_idle_1" />
+		<action type="act_chariot_strike_front_while_moving" animation="chariot_rider_idle_1" />
+		<action type="act_chariot_fall_right" animation="chariot_rider_fall_backwards" />
+		<action type="act_chariot_fall_left" animation="chariot_rider_fall_backwards" />
+		<action type="act_chariot_fall_right_continue" animation="rider_fall_backwards_continue" />
+		<action type="act_chariot_fall_left_continue" animation="rider_fall_backwards_continue" />
+		<action type="act_chariot_fall_roll" animation="chariot_rider_fall_backwards" />
+		<action type="act_chariot_fall_roll_continue" animation="rider_fall_backwards_continue" />
+		<action type="act_chariot_fall_backwards" animation="chariot_rider_fall_backwards" />
+		<action type="act_chariot_fall_slow_right" animation="chariot_rider_fall_backwards" />
+		<action type="act_chariot_fall_slow_right_continue" animation="rider_fall_backwards_continue" />
+		<action type="act_chariot_fall_slow_left" animation="chariot_rider_fall_backwards" />
+		<action type="act_chariot_fall_slow_left_continue" animation="rider_fall_backwards_continue" />
+		<action type="act_chariot_conversation_start" animation="chariot_rider_idle_1" />
+		<action type="act_chariot_rider_idle_bow_1" animation="rider_idle_bow_1" />
+		<action type="act_chariot_rider_stand_bow_pace_0" animation="chariot_rider_walk_bow" />
+		<action type="act_chariot_rider_stand_bow_pace_1" animation="chariot_rider_walk_bow" />
+		<action type="act_chariot_rider_stand_bow_pace_2" animation="chariot_rider_walk_bow" />
+		<action type="act_chariot_rider_stand_bow_pace_3" animation="chariot_rider_walk_bow" />
+		<action type="act_chariot_rider_stand_bow_pace_4" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_rider_stand_bow_pace_5" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_rider_stand_lance_pace_0" animation="chariot_rider_walk_pike" />
+		<action type="act_chariot_rider_stand_lance_pace_1" animation="chariot_rider_walk_pike" />
+		<action type="act_chariot_rider_stand_lance_pace_2" animation="chariot_rider_walk_pike" />
+		<action type="act_chariot_rider_stand_lance_pace_3" animation="chariot_rider_walk_pike" />
+		<action type="act_chariot_rider_stand_lance_pace_4" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_rider_stand_lance_pace_5" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_rider_stand_polearm_pace_0" animation="chariot_rider_walk_polearm" />
+		<action type="act_chariot_rider_stand_polearm_pace_1" animation="chariot_rider_walk_polearm" />
+		<action type="act_chariot_rider_stand_polearm_pace_2" animation="chariot_rider_walk_polearm" />
+		<action type="act_chariot_rider_stand_polearm_pace_3" animation="chariot_rider_walk_polearm" />
+		<action type="act_chariot_rider_stand_polearm_pace_4" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_rider_stand_polearm_pace_5" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_rider_stand_crossbow_pace_0" animation="chariot_rider_walk_crossbow" />
+		<action type="act_chariot_rider_stand_crossbow_pace_1" animation="chariot_rider_walk_crossbow" />
+		<action type="act_chariot_rider_stand_crossbow_pace_2" animation="chariot_rider_walk_crossbow" />
+		<action type="act_chariot_rider_stand_crossbow_pace_3" animation="chariot_rider_walk_crossbow" />
+		<action type="act_chariot_rider_stand_crossbow_pace_4" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_rider_stand_crossbow_pace_5" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_rider_stand_throw_pace_0" animation="chariot_rider_walk_throw" />
+		<action type="act_chariot_rider_stand_throw_pace_1" animation="chariot_rider_walk_throw" />
+		<action type="act_chariot_rider_stand_throw_pace_2" animation="chariot_rider_walk_throw" />
+		<action type="act_chariot_rider_stand_throw_pace_3" animation="chariot_rider_walk_throw" />
+		<action type="act_chariot_rider_stand_throw_pace_4" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_rider_stand_throw_pace_5" animation="chariot_rider_gallop_1h" />
+		<action type="act_chariot_rider_idle_spear_1" animation="rider_idle_lance_1" />
+		<action type="act_chariot_rider_idle_spear_2" animation="rider_idle_lance_2" />
+		<action type="act_chariot_rider_idle_spear_3" animation="rider_idle_lance_3" />
+		<action type="act_chariot_rider_idle_spear_4" animation="rider_idle_lance_3" />
+		<action type="act_chariot_rider_idle_lance_1" animation="rider_idle_lance_1" />
+		<action type="act_chariot_rider_idle_lance_2" animation="rider_idle_lance_2" />
+		<action type="act_chariot_rider_idle_lance_3" animation="rider_idle_lance_3" />
+		<action type="act_chariot_rider_idle_lance_4" animation="rider_idle_lance_3" />
+		<action type="act_chariot_rider_idle_bow_2" animation="rider_idle_bow_2" />
+		<action type="act_chariot_rider_idle_bow_3" animation="rider_idle_bow_3" />
+		<action type="act_chariot_rider_idle_bow_4" animation="rider_idle_bow_3" />
+		<action type="act_chariot_rider_idle_crossbow_1" animation="rider_idle_crossbow_1" />
+		<action type="act_chariot_rider_idle_crossbow_2" animation="rider_idle_crossbow_2" />
+		<action type="act_chariot_rider_idle_crossbow_3" animation="rider_idle_crossbow_3" />
+		<action type="act_chariot_rider_idle_crossbow_4" animation="rider_idle_crossbow_3" />
 	</action_set>
 	<action_set
 		id="as_dwarf_female_warrior"
@@ -67006,136 +67111,104 @@
 	     howdah_death_front / elephant_death_front_continue / elephant_rear — none exist in TAOM's packs
 	     (verified 2026-06-12: 0 hits in LOTRLOME_Armory AssetPackages; elephant_rear exists but is
 	     elephant-skeleton = no matching bones). All 10 → chariot_stand_1. Death-visual polish = follow-up. -->
-<action_set id="as_chariot" skeleton="chariot_skeleton" movement_system="quadrupedal">
-		<action type="act_chariot_stand_for_movement_data" animation="chariot_stand_for_movement_data" />
-		<action type="act_chariot_stand_1" animation="chariot_stand_1" alternative_group="horse_stand_alternative_group" />
-
-		<action type="act_chariot_idle_1" animation="chariot_stand_1" alternative_group="idle_horse" />
-
-		<action type="act_hero_mount_idle_horse" animation="hero_mount_idle_horse" />
-
+<!-- CHARIOT-RIG: the three chariot sets below come from the upstream chariot pack (as_horse_chariot). -->
+<action_set id="as_chariot" skeleton="horse_skeleton_chariot" movement_system="quadrupedal">
+		<action type="act_chariot_stand_for_movement_data" animation="chariot_idle_1" />
+		<action type="act_chariot_stand_1" animation="chariot_idle_1" alternative_group="chariot_stand_alternative_group" />
+		<action type="act_chariot_stand_2" animation="chariot_idle_1" alternative_group="chariot_stand_alternative_group" />
+		<action type="act_chariot_stand_3" animation="chariot_idle_1" alternative_group="chariot_stand_alternative_group" />
+		<action type="act_chariot_stand_4" animation="chariot_idle_1" alternative_group="chariot_stand_alternative_group" />
+		<action type="act_chariot_riderless_idle_1" animation="chariot_idle_1" />
+		<action type="act_chariot_idle_1" animation="chariot_idle_1" alternative_group="idle_chariot" />
+		<action type="act_chariot_idle_2" animation="chariot_idle_1" alternative_group="idle_chariot" />
+		<action type="act_chariot_idle_3" animation="chariot_idle_1" alternative_group="idle_chariot" />
+		<action type="act_chariot_idle_4" animation="chariot_idle_1" alternative_group="idle_chariot" />
 		<action type="act_chariot_forward_walk_stand" animation="chariot_gait_walkfast" />
-		<action type="act_chariot_forward_walk" animation="chariot_walkfast" />
-		<action type="act_chariot_forward_walk_strafe_right" animation="chariot_strafe_r_cross_fast" />
-		<action type="act_chariot_forward_walk_strafe_left" animation="chariot_strafe_l_cross_fast" />
-		<action type="act_chariot_forward_trot_stand" animation="chariot_gait_walkfast" />
-		<action type="act_chariot_forward_trot" animation="chariot_walkfast" />
-		<action type="act_chariot_forward_trot_strafe_right" animation="chariot_strafe_r_cross_fast" />
-		<action type="act_chariot_forward_trot_strafe_left" animation="chariot_strafe_l_cross_fast" />
-		<action type="act_chariot_forward_canter_stand" animation="chariot_gait_walkfast" />
-		<action type="act_chariot_forward_canter" animation="chariot_canterfast" />
-		<action type="act_chariot_forward_canter_strafe_right" animation="chariot_strafe_r_cross_fast" />
-		<action type="act_chariot_forward_canter_strafe_left" animation="chariot_strafe_l_cross_fast" />
-		<action type="act_chariot_forward_gallop_right_foot_stand" animation="chariot_gait_walkfast" />
-		<action type="act_chariot_forward_gallop_right_foot" animation="chariot_canterfast" />
-		<action type="act_horse_forward_gallop_right_foot_strafe_right" animation="chariot_strafe_r_cross_fast" />
-		<action type="act_horse_forward_gallop_right_foot_strafe_left" animation="chariot_strafe_l_cross_fast" />
-		<action type="act_chariot_forward_gallop_left_foot_stand" animation="chariot_gait_walkfast" />
-		<action type="act_chariot_forward_gallop_left_foot" animation="chariot_canterfast" />
-		<action type="act_horse_forward_gallop_left_foot_strafe_right" animation="chariot_strafe_r_cross_fast" />
-		<action type="act_horse_forward_gallop_left_foot_strafe_left" animation="chariot_strafe_l_cross_fast" />
-		<action type="act_chariot_backward_walk_stand" animation="chariot_gait_walkbackfast" />
-		<action type="act_chariot_backward_walk" animation="chariot_walkbackfast" />
-		<action type="act_horse_backward_walk_strafe_right" animation="chariot_walkbackfast" />
-		<action type="act_horse_backward_walk_strafe_left" animation="chariot_walkbackfast" />
-		<action type="act_horse_rear" animation="chariot_stand_1" />
-		<action type="act_horse_rear_damaged" animation="chariot_stand_1" />
-		<action type="act_horse_kick" animation="horse_kick" />
-		<action type="act_horse_jump_start" animation="horse_jump_start" />
-		<action type="act_horse_dash" animation="horse_dash" />
-		<action type="act_horse_quick_stop" animation="horse_quick_stop" />
-		<action type="act_horse_quick_stop_when_fast" animation="horse_quick_stop_when_fast" />
-		<action type="act_horse_hit_object" animation="horse_run_collide" />
-		<action type="act_horse_hit_object_while_falling" animation="horse_jump_collide" />
-		<action type="act_horse_jump_high" animation="horse_jump_high" />
-		<action type="act_horse_jump_high_loop" animation="horse_jump_loop" />
-		<action type="act_horse_jump_high_end" animation="horse_jump_high_end" />
-		<action type="act_horse_jump_high_end_hard" animation="horse_jump_high_end_hard" />
-		<!-- deep-review 2026-06-12: ROT shipped animation="horse_jump_forwards" (trailing s) — no such
-		     clip in vanilla packs (ROT's own packs carried it). 1.4.6 strict lookups crash on missing
-		     clip names (spider RCA class). Vanilla's clip is horse_jump_forward. -->
-		<action type="act_horse_jump_forward" animation="horse_jump_forward" />
-		<action type="act_horse_jump_forward_loop" animation="horse_jump_forward_loop" />
-		<action type="act_horse_jump_forward_end" animation="horse_jump_forward_end" />
-		<action type="act_horse_jump_forward_end_hard" animation="horse_jump_forward_end_hard" />
+		<action type="act_chariot_forward_walk" animation="chariot_walk" />
+		<action type="act_chariot_forward_walk_strafe_left" animation="chariot_walk" />
+		<action type="act_chariot_forward_walk_strafe_right" animation="chariot_walk" />
+		<action type="act_chariot_forward_trot_stand" animation="chariot_gait_trot" />
+		<action type="act_chariot_forward_trot" animation="chariot_trot" />
+		<action type="act_chariot_forward_trot_strafe_right" animation="chariot_trot" />
+		<action type="act_chariot_forward_trot_strafe_left" animation="chariot_trot" />
+		<action type="act_chariot_forward_canter_stand" animation="chariot_horse_gallop" />
+		<action type="act_chariot_forward_canter" animation="chariot_horse_gallop" />
+		<action type="act_chariot_forward_canter_strafe_right" animation="chariot_horse_gallop" />
+		<action type="act_chariot_forward_canter_strafe_left" animation="chariot_horse_gallop" />
+		<action type="act_chariot_forward_gallop_right_foot_stand" animation="chariot_horse_gallop" />
+		<action type="act_chariot_forward_gallop_right_foot" animation="chariot_horse_gallop" />
+		<action type="act_chariot_forward_gallop_right_foot_strafe_right" animation="chariot_horse_gallop" />
+		<action type="act_chariot_forward_gallop_right_foot_strafe_left" animation="chariot_horse_gallop" />
+		<action type="act_chariot_forward_gallop_left_foot_stand" animation="chariot_horse_gallop" />
+		<action type="act_chariot_forward_gallop_left_foot" animation="chariot_horse_gallop" />
+		<action type="act_chariot_forward_gallop_left_foot_strafe_right" animation="chariot_horse_gallop" />
+		<action type="act_chariot_forward_gallop_left_foot_strafe_left" animation="chariot_horse_gallop" />
+		<action type="act_chariot_backward_walk_stand" animation="chariot_gait_walk_backward" />
+		<action type="act_chariot_backward_walk" animation="chariot_walk_backward" />
+		<action type="act_chariot_backward_walk_strafe_right" animation="chariot_walk_backward" />
+		<action type="act_chariot_backward_walk_strafe_left" animation="chariot_walk_backward" />
+		<action type="act_chariot_rear" animation="chariot_rear" />
+		<action type="act_chariot_rear_damaged" animation="chariot_rear" />
+		<action type="act_chariot_kick" animation="chariot_idle_1" />
+		<action type="act_chariot_jump_start" animation="chariot_dash" />
+		<action type="act_chariot_dash" animation="chariot_dash" />
+		<action type="act_chariot_quick_stop" animation="chariot_quick_stop" />
+		<action type="act_chariot_quick_stop_when_fast" animation="chariot_quick_stop" />
+		<action type="act_chariot_hit_object" animation="chariot_run_collide" />
+		<action type="act_chariot_hit_object_while_falling" animation="chariot_run_collide" />
+		<action type="act_chariot_jump_high" animation="chariot_jump_high" />
+		<action type="act_chariot_jump_high_loop" animation="chariot_jump_loop" />
+		<action type="act_chariot_jump_high_end" animation="chariot_jump_high_end" />
+		<action type="act_chariot_jump_high_end_hard" animation="chariot_jump_high_end_hard" />
+		<action type="act_chariot_jump_forward" animation="chariot_jump_forward" />
+		<action type="act_chariot_jump_forward_loop" animation="chariot_jump_forward_loop" />
+		<action type="act_chariot_jump_forward_end" animation="chariot_jump_forward_end" />
+		<action type="act_chariot_jump_forward_end_hard" animation="chariot_jump_forward_end_hard" />
 		<action type="act_chariot_turn_right" animation="chariot_turn_right" />
 		<action type="act_chariot_turn_left" animation="chariot_turn_left" />
-		<action type="act_horse_strafe_right" animation="chariot_turn_right" />
-		<action type="act_horse_strafe_left" animation="chariot_turn_left" />
-
-		<action type="act_horse_turn_right_head" animation="chariot_turn_right_head" />
-		<action type="act_horse_turn_left_head" animation="chariot_turn_left_head" />
-		<action type="act_horse_walk_turn_right_head" animation="chariot_walk_turn_right_head" />
-		<action type="act_horse_walk_turn_left_head" animation="chariot_walk_turn_left_head" />
-		<action type="act_horse_trot_turn_right_head" animation="chariot_walk_turn_right_head" />
-		<action type="act_horse_trot_turn_left_head" animation="chariot_walk_turn_left_head" />
-		<action type="act_horse_canter_turn_right_head" animation="chariot_canter_turn_right_head" />
-		<action type="act_horse_canter_turn_left_head" animation="chariot_canter_turn_left_head" />
-		<action type="act_horse_gallop_turn_right_head" animation="chariot_canter_turn_right_head" />
-		<action type="act_horse_gallop_turn_left_head" animation="chariot_canter_turn_left_head" />
-
-		<action type="act_horse_gallop_acceleration_head" animation="horse_upperbody_gallop" />
-		<action type="act_horse_strike_back" animation="chariot_stand_1" />
-		<action type="act_horse_strike_front" animation="chariot_stand_1" />
-		<action type="act_mount_strike_back_while_moving" animation="chariot_stand_1" />
-		<action type="act_mount_strike_front_while_moving" animation="chariot_stand_1" />
-		<action type="act_horse_fall_right" animation="chariot_stand_1" />
-		<action type="act_horse_fall_left" animation="chariot_stand_1" />
-		<action type="act_horse_fall_roll" animation="chariot_stand_1" />
-		<action type="act_horse_fall_roll_continue" animation="chariot_stand_1" />
-		<!-- parity audit 2026-06-12: vanilla-horse death-path coverage the flat ROT set lacked — the
-		     engine chases each fall action's _continue, and the usage-set fall rows reference
-		     fall_backwards; unmapped death-path actions are the 1.4.6 strict-lookup crash class. -->
-		<action type="act_horse_fall_right_continue" animation="chariot_stand_1" />
-		<action type="act_horse_fall_left_continue" animation="chariot_stand_1" />
-		<action type="act_horse_fall_backwards" animation="chariot_stand_1" />
-		<action type="act_horse_fall_jump_roll" animation="chariot_stand_1" />
-		<action type="act_horse_fall_jump_roll_continue" animation="chariot_stand_1" />
-		<action type="act_horse_conversation_start" animation="horse_conversation_start" />
-		<action type="act_inventory_idle_start" animation="chariot_inventory_start" />
-		<action type="act_inventory_idle" animation="chariot_inventory_idle" />
-
-		<action type="act_horse_story_background_1" animation="anim_horse_story_background_1" />
-		<action type="act_horse_story_background_2" animation="anim_horse_story_background_2" />
-		<action type="act_horse_story_background_3" animation="anim_horse_story_background_3" />
-		<action type="act_horse_story_background_4" animation="anim_horse_story_background_4" />
-		<action type="act_horse_story_background_5" animation="anim_horse_story_background_5" />
-		<action type="act_horse_story_background_6" animation="anim_horse_story_background_6" />
-
-		<action type="act_pose_troop_cavalry_lance" animation="pose_troop_cavalry_lance_horse" />
-
-		<action type="act_aserai_mp_beduin_mount_idle" animation="aserai_mp_beduin_mount_idle" />
-		<action type="act_aserai_mp_mamluke_mount_idle" animation="aserai_mp_mamluke_mount_idle" />
-		<action type="act_battania_mp_mounted_warrior_mount_idle" animation="battania_mp_mounted_warrior_mount_idle" />
-		<action type="act_battania_mp_mounted_warrior_mount_idle_perks" animation="battania_mp_mounted_warrior_mount_idle" />
-		<action type="act_vlandia_mp_vanguard_mount_idle" animation="vlandia_mp_vanguard_mount_idle" />
-		<action type="act_vlandia_mp_vanguard_mount_idle_smallshieldperk" animation="vlandia_mp_vanguard_mount_idle" />
-		<action type="act_vlandia_mp_knight_mount_idle" animation="vlandia_mp_knight_mount_idle" />
-		<action type="act_empire_mp_courser_mount_idle" animation="empire_mp_courser_mount_idle" />
-		<action type="act_empire_mp_courser_mount_smallshieldperk_idle" animation="empire_mp_courser_mount_idle" />
-		<action type="act_empire_mp_cataphract_mount_idle" animation="empire_mp_cataphract_mount_idle" />
-		<action type="act_khuzait_mp_lancer_mount_idle" animation="khuzait_mp_lancer_mount_idle" />
-		<action type="act_khuzait_mp_lancer_mount_idle_shieldperk" animation="khuzait_mp_lancer_mount_idle" />
-		<action type="act_khuzait_mp_nomad_mount_idle" animation="khuzait_mp_nomad_mount_idle" />
-		<action type="act_khuzait_mp_nomad_mount_idle_maceperk" animation="khuzait_mp_nomad_mount_idle" />
-		<action type="act_khuzait_mp_mounted_archer_mount_idle" animation="khuzait_mp_mounted_archer_mount_idle" />
-		<action type="act_sturgia_mp_raider_mount_idle" animation="sturgia_mp_raider_mount_idle" />
-		<action type="act_sturgia_mp_raider_mount_shieldperk_idle" animation="sturgia_mp_raider_mount_shieldperk_idle" />
-		<action type="act_sturgia_mp_druzhina_mount_idle" animation="sturgia_mp_druzhina_mount_idle" />
-		<action type="act_sturgia_mp_druzhina_idle_largeshieldperk" animation="sturgia_mp_druzhina_mount_idle" />
+		<action type="act_chariot_strafe_right" animation="chariot_walk" />
+		<action type="act_chariot_strafe_left" animation="chariot_walk" />
+		<action type="act_chariot_turn_right_head" animation="chariot_turn_right" />
+		<action type="act_chariot_turn_left_head" animation="chariot_turn_left" />
+		<action type="act_chariot_walk_turn_right_head" animation="chariot_walk" />
+		<action type="act_chariot_walk_turn_left_head" animation="chariot_walk" />
+		<action type="act_chariot_trot_turn_right_head" animation="chariot_trot_turn_right" />
+		<action type="act_chariot_trot_turn_left_head" animation="chariot_trot_turn_left" />
+		<action type="act_chariot_canter_turn_right_head" animation="chariot_gallop_turn_right" />
+		<action type="act_chariot_canter_turn_left_head" animation="chariot_gallop_turn_left" />
+		<action type="act_chariot_gallop_turn_right_head" animation="chariot_gallop_turn_right" />
+		<action type="act_chariot_gallop_turn_left_head" animation="chariot_gallop_turn_left" />
+		<action type="act_chariot_gallop_acceleration_head" animation="chariot_upperbody_gallop" />
+		<action type="act_chariot_strike_back" animation="chariot_hit_from_back" />
+		<action type="act_chariot_strike_front" animation="chariot_hit_from_front" />
+		<action type="act_chariot_strike_back_while_moving" animation="chariot_hit_from_back_while_moving" />
+		<action type="act_chariot_strike_front_while_moving" animation="chariot_hit_from_front_while_moving" />
+		<action type="act_chariot_fall_right" animation="chariot_fall_right" />
+		<action type="act_chariot_fall_left" animation="chariot_fall_right" />
+		<action type="act_chariot_fall_right_continue" animation="chariot_fall_right_continue" />
+		<action type="act_chariot_fall_left_continue" animation="chariot_fall_right_continue" />
+		<action type="act_chariot_fall_roll" animation="chariot_fall_roll" />
+		<action type="act_chariot_fall_roll_continue" animation="chariot_fall_roll_continue" />
+		<action type="act_chariot_fall_backwards" animation="chariot_fall_right" />
+		<action type="act_chariot_fall_slow_right" animation="chariot_fall_right" />
+		<action type="act_chariot_fall_slow_right_continue" animation="chariot_fall_right_continue" />
+		<action type="act_chariot_fall_slow_left" animation="chariot_fall_right" />
+		<action type="act_chariot_fall_slow_left_continue" animation="chariot_fall_right_continue" />
+		<action type="act_chariot_conversation_start" animation="chariot_idle_1" />
+		<action type="act_inventory_idle_start" animation="chariot_idle_1" />
+		<action type="act_inventory_idle" animation="chariot_idle_1" />
 	</action_set>
-
-	<action_set id="as_chariot_town_and_village" skeleton="chariot_skeleton" base_set="as_chariot">
-		<action type="act_chariot_stand_1" animation="chariot_stand_1" />
-		<action type="act_horse_stand_2" animation="chariot_stand_1" />
-		<action type="act_horse_stand_3" animation="chariot_stand_1" />
-		<action type="act_horse_stand_4" animation="chariot_stand_1" />
+	<action_set id="as_chariot_town_and_village" skeleton="horse_skeleton_chariot" base_set="as_chariot">
+		<action type="act_chariot_stand_1" animation="chariot_idle_1" />
+		<action type="act_chariot_stand_2" animation="chariot_idle_1" />
+		<action type="act_chariot_stand_3" animation="chariot_idle_1" />
+		<action type="act_chariot_stand_4" animation="chariot_idle_1" />
 	</action_set>
-	<action_set id="as_chariot_map" skeleton="chariot_skeleton" base_set="as_chariot">
-		<action type="act_map_mount_attack_1h" animation="chariot_stand_1" />
-		<action type="act_map_mount_attack_spear" animation="chariot_stand_1" />
-		<action type="act_map_mount_attack_swing" animation="chariot_stand_1" />
-		<action type="act_map_mount_attack_unarmed" animation="chariot_stand_1" />
+	<action_set id="as_chariot_map" skeleton="horse_skeleton_chariot" base_set="as_chariot">
+		<action type="act_map_mount_attack_1h" animation="chariot_idle_1" />
+		<action type="act_map_mount_attack_spear" animation="chariot_idle_1" />
+		<action type="act_map_mount_attack_swing" animation="chariot_idle_1" />
+		<action type="act_map_mount_attack_unarmed" animation="chariot_idle_1" />
 	</action_set>
 	<!-- ============================== /WAR CHARIOT ============================== -->
 

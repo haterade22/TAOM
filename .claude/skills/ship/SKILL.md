@@ -1,6 +1,6 @@
 ---
 name: ship
-description: Orchestrate the mandatory completion sequence before merging a C# or XML feature (/verify, /deep-review, fix findings, /review-codex), then close the issue and update the docs.
+description: Use when a C# change (2+ files or a feature module) or any XML/XSLT change is ready to merge. Runs /verify, /deep-review, fixes, /review-codex on a go-ahead, close-out.
 argument-hint: [feature-name]
 ---
 

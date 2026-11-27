@@ -6020,3 +6020,17 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 | Tooling re-review 1 (HIGH) | Generators that the pre-commit validator runs or loads by a path string were not guarded | Other: port narrower than the mechanism | The closure followed imports only | String constants followed too; test with a subprocess and a load by path |
 
 - **In-game owed:** none (no game code). Owed: the first scheduled run on a real PR after registration, and a fork PR through the compare API.
+
+## Review (number assigned at merge): harness debloat tooling (the worktree rule hook, the Armory banner stamp, the skill size gate; no issue, waived), tier-2 deep review with every lens, Codex xhigh after the merge (2026-11-26)
+
+- **Scope:** `0e92a28f9` on trunk: `.claude/hooks/point-worktree-rules.sh`, the stamp in `.claude/hooks/session-start.sh`, the growth gates in `tools/lint_docs.py`, the rule delivery table in `tools/harness_retro.py`, and their tests.
+- **Lenses:** all, before the commit: one HIGH (the hook parsed a whole payload before the file path), fixed (`rca-armory-drift-fresh-checkout-2026-11-25.md`).
+- **Codex:** `codex-adversarial-harness-worktree-rules-2026-11-26.md` at `xhigh`, after the merge on Mike's word: six P2 and five P3, no P1. Four acted on (F5 and F6 fixed with tests, F11 a test made strict, F4 wording), seven confirmed in the code and not applied, each with its reason in the RCA. Live delivery by Claude Code stays UNVERIFIED in its report and was proven by hand.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| Codex F5 (P2) | The retro miner did not resolve a relative `gitdir:` line | Other: one question, two tools | The hook got the case from the Tooling lens; the miner was not read again | Test `test_a_linked_worktree_with_a_relative_gitdir_counts` |
+| Codex F6 (P2) | The miner counted a plain folder under `.claude/worktrees/` as a worktree | Other: one question, two tools | The same | Test `test_a_plain_folder_under_dot_claude_worktrees_is_the_main_checkout` |
+| Codex F11 (P3) | The Armory quiet rows passed for a hook that died | Logic error | A row that asserts absence never looked at the exit code | Every Armory row requires exit 0 |
+
+- **In-game owed:** none (no game code).

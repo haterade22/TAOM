@@ -1,0 +1,30 @@
+title = "Give a stack of bands one pitch and one tilt"
+line = "Build the bands of a stack with equal length on one smooth field, each lapping the next by the same step. Target on the crest: a pitch spread of 0.05 or less."
+why = "The eye reads equal spacing and an equal tilt as made, and a changing tilt as warped."
+area = "asset-craft"
+status = "active"
+ask = "Where does this change show the crest pitch spread and the tilt of the band stack (a build report, or the manual run of td_crest_ours.py), and are they at or under the target?"
+next = "The neck build's summary prints the crest pitch spread and the tilt, and a gate holds the limit. Today the spread comes from a manual run of td_crest_ours.py with the band island ids. The 0.05 target is the session's choice from the reference, not the maintainer's number."
+
+[when]
+outside = ["*rharmb_bands*.py", "*rharmb_crinet*.py", "*rharm*design*.py"]
+tasks = ["neck armour", "band stack", "lames"]
+
+[[evidence]]
+grade = "measured"
+value = "Reference model 01: ten crest beads 75.4 to 83.3 units apart, a pitch spread of 0.031; eight bands tilt a steady 2.0 to 4.2 degrees."
+method = "the teardown record docs/knowledge/teardowns/2026-11-26-horse-armour-neck-and-head.md; the probe td_probe.py and its crest scripts are kept with the asset job, outside the repo"
+date = 2026-11-26
+
+[[evidence]]
+grade = "measured"
+value = "Ours: v16 spread 0.068, tilt -7.4 to +3.8 degrees. v18ay with its collar: spread 0.104, tilt 8.7 to 23.5 degrees; without the collar 0.087. The approved v18ay misses the target and is less even on the crest than v16."
+method = "the teardown record docs/knowledge/teardowns/2026-11-26-horse-armour-neck-and-head.md; the probe td_probe.py and its crest scripts are kept with the asset job, outside the repo"
+date = 2026-11-26
+
+[[acts]]
+state = "instance"
+where = "build_lames in rharmb_crinet.py, a module of the horse armour builders in the asset work folder that only armour 5 calls"
+
+[[source]]
+teardown = "2026-11-26-horse-armour-neck-and-head"

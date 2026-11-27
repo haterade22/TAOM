@@ -69,7 +69,7 @@ Add `--no-tui` for a log-only run. A healthy boot reaches LOADED, then SERVING, 
 
 ## Creature skeleton package
 
-`Main/_Module/DsAssetPackages/taom_creature_skeletons.tpac` (40,259 bytes, 6 skeletons: `chariot_skeleton`, `dwarf_skeleton_a`, `elephant_skeleton`, `skeleton_warg`, `spider_skeleton`, `troll_skeleton_a`). The server engine loads `<module>/DsAssetPackages/*.tpac` for every loaded module; the game client never reads that folder. The server stages the Armory's ModuleData but not its art, so without the package every Monsters bone lookup asserts. With it, Monsters objects loaded in 11.32 ms instead of 479,705 ms and the boot logged 0 bone warnings; a control boot without it reproduced the warnings.
+`Main/_Module/DsAssetPackages/taom_creature_skeletons.tpac` (48,030 bytes and 8 skeletons on 2026-11-24: `adod_wolf_armature_unused`, `dwarf_skeleton_a`, `elephant_skeleton`, `horse_chariot_rein`, `horse_skeleton_chariot`, `skeleton_warg`, `spider_skeleton`, `troll_skeleton_a`; `python tools/build_ds_skeleton_pack.py` prints the current list). The server engine loads `<module>/DsAssetPackages/*.tpac` for every loaded module; the game client never reads that folder. The server stages the Armory's ModuleData but not its art, so without the package every Monsters bone lookup asserts. With it, Monsters objects loaded in 11.32 ms instead of 479,705 ms and the boot logged 0 bone warnings; a control boot without it reproduced the warnings.
 
 | Task | Command |
 |---|---|

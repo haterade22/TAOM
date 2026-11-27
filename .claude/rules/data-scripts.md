@@ -31,7 +31,7 @@ comparison rather than substring containment when deriving a target set from a r
 
 **Parse before writing.** Any script that transforms XML runs the result through `ElementTree` and refuses a document that no longer parses. Restore masked text by indexed token, never by recorded offset: a length-changing edit invalidates every offset.
 
-No lint: 92 of 124 XML-writing scripts trip a naive heuristic (rejected 2026-08-06). Backstop: the deep-review tooling lens.
+No lint: one was rejected on 2026-08-06 ([lesson](../../docs/reviews/lessons/build-tooling-workflow.md), "Data-mutating XML scripts must round-trip byte-faithfully"). Backstop: the deep-review tooling lens.
 
 ## Writing a gate, a `--check` or an exemption? Break each value it owns
 
@@ -41,8 +41,11 @@ pair moved to the place the exemption does not cover; the excluded clip bound wh
 excused item failing in a second way, with other numbers than the list names, or gone from every set that binds it. Write some
 expectations as literals, not from the tool's own tables. A tool that edits text byte-faithfully verifies its
 result as its READER reads it: parsed, and with what the reader merges or inherits (another block of the same id,
-a child set that overrides). A check that guards a write runs before the write, dry run included
-([lesson](../../docs/reviews/lessons/build-tooling-workflow.md), #1541; the gate RCAs of 2026-11-20 and 2026-11-22).
+a child set that overrides). A check that guards a write runs before the write, dry run included. A change that
+takes a verdict out of a gate names, for each test it deletes, the test that still holds what that test held, or
+the reason the check is dropped
+([lesson](../../docs/reviews/lessons/build-tooling-workflow.md), #1541; the gate RCAs of 2026-11-20, 2026-11-22
+and 2026-11-24).
 
 ## Hand edit or script
 

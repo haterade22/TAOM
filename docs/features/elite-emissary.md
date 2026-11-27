@@ -161,14 +161,17 @@ co-op refusal was added 2026-08-03 from field testing.
   `emissary_price_multiplier` of the resource the row's `resource_id` names, folded into the entry's `EmissaryPrice`
   at load. Cost band of `N`: L36 about 10 to 14, L41 about 18, L46 about 28, L51 about 45, creatures a premium.
 - `emissary_price_multiplier` is an optional whole number (1 to 1000, default 1) on each `<Resource>` in
-  `special_resources_config.xml`. Ten resources ship 20, so a L46 troop costs 560 and a L51 troop 900; War Drums
-  ships none (its two creature rows were priced by hand). The price follows the troop, not the settlement's owner:
+  `special_resources_config.xml`. No resource ships one since 2026-11-25, so the price is `merchant_cost`: a L46
+  troop costs 28 and a L51 troop 45. `TroopResourceCostDataTests.EveryEmissaryPrice_EqualsItsMerchantCost` pins
+  this. From 2026-11-12 to 2026-11-25 ten resources shipped 20, and players reported 360 Marks for a Rohan
+  rider against about 25 Marks for a 50-man win. The price follows the troop, not the settlement's owner:
   an owner whose kingdom resolves to another resource than its culture's troops (a defected clan) is charged the
   same number, in the owner's resource. It applies to the resource charge only. The gold-only price stays
   `merchant_cost` times `EmissaryGoldPerResource`, so changing the multiplier never moves it. The offer list, the
   charge and the encyclopedia badge all read `EmissaryPrice`. An invalid value reverts to 1 with one warning.
-  Upkeep is not affected. The multiplier exists because the battle payout (about 50 for a 100-man battle) made the
-  base prices a one-fight purchase (2026-11-12).
+  Upkeep is not affected. The multiplier came in on 2026-11-12, when the battle payout (about 50 for a 100-man
+  battle) made the base prices a one-fight purchase; Mike found 20 too harsh and removed it from the data on
+  2026-11-25. The code stays, so a resource can take a multiplier again.
 
 ### Current Values
 
@@ -187,7 +190,7 @@ co-op refusal was added 2026-08-03 from field testing.
 | lothlorien | Caras Galadhon (`town_L1`) | Elven Wine | gl_highblade, gl_mallorn_defender, gl_bowmaster (`merchant_cost` 28 each); mw_high_ranger, mw_dawnrider, mw_waystalker (`merchant_cost` 18 each) |
 | vlandia (Rohan) | Edoras (`town_V1`) | Marks | golden_hall_supreme_rider, kings_own_* |
 | khuzait (Rhun) | Mistrand (`town_RU1`) | War Banners | dragon_wrath_obsidian_*, warlord_chariot |
-| aserai (Harad) | Korb Taskral (`town_A1`) | War Drums | elephant_rider (`merchant_cost` 70), mumakil_rider (2800); War Drums has no multiplier, so these are the resource prices |
+| aserai (Harad) | Korb Taskral (`town_A1`) | War Drums | elephant_rider (`merchant_cost` 70), mumakil_rider (2800); these are the resource prices |
 
 Since 2026-10-15 the two Harad riders are Emissary-only: neither is in any volunteer pool, so this is the only way a player gets one. Their `recruit_cost` (50 and 2000) charges only a captured rider recruited from prisoners.
 
@@ -276,6 +279,7 @@ an offer scan. The config is `Reuse.Singleton`, loaded once per process (edits n
 
 ## Changelog
 
+- 2026-11-25: no resource ships an `emissary_price_multiplier`, so the emissary charges `merchant_cost` again (a Rohan rider 18 Marks, not 360). Battle pay stays scaled to enemy size. Owed in game.
 - 2026-11-15 (#1329): with `TAOM.CoopCompat`, a co-op guest buys through the host, which runs the purchase for the guest's hero. Credit: minimalcash63 (`TAOM.CoopEmissaryArmory`). `EliteEmissaryBehavior` and the presenter take `GuestTradeClient` in place of `ICoopSessionProvider`. Owed in game.
 - 2026-11-09 (#1108 follow-up): with the option on, the emissary sells no more than the party's free slots. Owed in game.
 - 2026-11-09 (#1108): with the MCM option Elite Troops Cost Gold Only on, the emissary sells for gold and serves only a buyer who holds the settlement owner's resource. Owed in game.

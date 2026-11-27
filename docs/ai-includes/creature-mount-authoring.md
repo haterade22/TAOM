@@ -264,6 +264,9 @@ plus **step points**, and gait sound needs the `make_walk_sound` Flag. An untagg
 builds a null native gait structure → AV (`+0x10`) on the FIRST `Skeleton.TickAnimations` in
 EVERY mount context: thumbnail, inventory tableau, mission. Detached (non-mount) spawns never
 trip it — which is why the bug hides until the creature becomes a mount.
+The one exception vanilla shows is a pace's in-place row (direction and turn `none`): the horse binds
+untagged clips on six of its seven such rows (`audit_mount_parity.VANILLA_UNTAGGED_MOVEMENT_ACTIONS`).
+A mount's clip there passes `tools/verify_mount_assets.py` only as a listed (action, clip) pair.
 
 - Run clips serving the gallop pace also need the **`cyclic`** flag (the spider's run regraft).
 - Non-gait clips (attacks, deaths, hits) must NOT carry `quad_movement`; their polish flags are

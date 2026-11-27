@@ -11,6 +11,16 @@ public interface IEncounterLinesAdapter
     /// <summary>The player's culture, race and side; null with no campaign or no main hero.</summary>
     PlayerFacts? Player();
 
+    /// <summary>The lord of the open one-to-one conversation, described as for a conversation tag; null for anyone else.</summary>
+    LordFacts? ConversationLord();
+
+    /// <summary>
+    /// Sets <paramref name="variable"/> to the mercenary offer <paramref name="textId"/> under <paramref name="variation"/>, with
+    /// <c>MERCENARY_AWARD</c> set on it as vanilla sets it on its own offer; false, with nothing set, when the row or the
+    /// conversation lord's kingdom is missing.
+    /// </summary>
+    bool TrySetMercenaryPitch(string variable, string textId, string variation);
+
     /// <summary>The caravan or villager party of the open conversation; null when there is none.</summary>
     PartyFacts? ConversationParty();
 

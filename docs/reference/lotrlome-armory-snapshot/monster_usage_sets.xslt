@@ -18,12 +18,13 @@
 			<monster_usage_mounting mount_id="elephant" is_mounted="True" is_fast="False" direction="right" action="act_dismount_elephant_to_right" />
 			<!-- War chariot (Rhûn Wainriders — ROT 8.0 port, issue #279). Mount = chariot-specific
 			     actt_mount actions (clip chariot_mount_rider_from_right); dismount = vanilla horse. -->
-			<monster_usage_mounting mount_id="chariot" is_mounted="False" is_fast="False" direction="left" action="act_mount_chariot_from_left" />
-			<monster_usage_mounting mount_id="chariot" is_mounted="False" is_fast="True" direction="left" action="act_mount_chariot_fast_from_left" />
-			<monster_usage_mounting mount_id="chariot" is_mounted="False" is_fast="False" direction="right" action="act_mount_chariot_from_right" />
-			<monster_usage_mounting mount_id="chariot" is_mounted="False" is_fast="True" direction="right" action="act_mount_chariot_fast_from_right" />
-			<monster_usage_mounting mount_id="chariot" is_mounted="True" is_fast="False" direction="left" action="act_dismount_horse_to_left" />
-			<monster_usage_mounting mount_id="chariot" is_mounted="True" is_fast="False" direction="right" action="act_dismount_horse_to_right" />
+			<!-- CHARIOT-RIG: chariot mount and dismount actions from the upstream chariot pack. -->
+			<monster_usage_mounting mount_id="chariot" is_mounted="False" is_fast="False" direction="left" action="act_mount_chariot_left" />
+			<monster_usage_mounting mount_id="chariot" is_mounted="False" is_fast="True" direction="left" action="act_mount_chariot_left" />
+			<monster_usage_mounting mount_id="chariot" is_mounted="False" is_fast="False" direction="right" action="act_mount_chariot_right" />
+			<monster_usage_mounting mount_id="chariot" is_mounted="False" is_fast="True" direction="right" action="act_mount_chariot_right" />
+			<monster_usage_mounting mount_id="chariot" is_mounted="True" is_fast="False" direction="left" action="act_dismount_chariot_left" />
+			<monster_usage_mounting mount_id="chariot" is_mounted="True" is_fast="False" direction="right" action="act_dismount_chariot_right" />
 			<!-- Warg (absorbed from Alliance.Wargs 2026-08-28, verbatim from lotr_monster_usage_warg.xslt). -->
 			<monster_usage_mounting mount_id="warg" is_mounted="False" is_fast="False" direction="left" action="act_mount_horse_from_left" />
 			<monster_usage_mounting mount_id="warg" is_mounted="False" is_fast="True" direction="left" action="act_mount_horse_fast_from_left" />

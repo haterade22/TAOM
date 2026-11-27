@@ -384,7 +384,7 @@ identity transform.
 
 ## Testing Rules (TDD Mandatory)
 
-The rules are in [tests.md](../.claude/rules/tests.md); the AAA structure is in
+The rules are in [test-workflow.md](../.claude/rules/test-workflow.md) and [tests.md](../.claude/rules/tests.md); the AAA structure is in
 [testing-guide.md](../docs/ai-includes/testing-guide.md).
 
 ---

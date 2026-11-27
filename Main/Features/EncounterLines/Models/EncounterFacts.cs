@@ -14,6 +14,7 @@ namespace TAOM.Features.EncounterLines.Models;
 /// <param name="AtWarWithPlayer">The hero's map faction is at war with the player's.</param>
 /// <param name="PlayerRulesRealm">The hero's map faction is a kingdom the player leads.</param>
 /// <param name="HeroId">The hero's StringId.</param>
+/// <param name="RuledRealmId">The StringId of the kingdom the hero leads, empty when the hero leads none.</param>
 public sealed record LordFacts(
     bool IsLord,
     bool InPlayerClan,
@@ -23,7 +24,8 @@ public sealed record LordFacts(
     SideIds Side,
     bool AtWarWithPlayer,
     bool PlayerRulesRealm,
-    string HeroId);
+    string HeroId,
+    string RuledRealmId = "");
 
 /// <summary>The player as Encounter Lines sees them.</summary>
 /// <param name="CultureId">The main hero's culture StringId, empty when it has none.</param>

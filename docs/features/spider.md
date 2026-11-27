@@ -409,14 +409,12 @@ pose in centimetres. Work folder of the first set: `E:\LOTRAOMAssets\Spider\gait
 
 **Still open.**
 
-- The turn records claim 0.873 (40 degrees in radians, divided by 0.8 s). The node advances a turn clip by turn
-  speed / (Duration x LoopDisplacement) of the turn-RIGHT record, for both directions (native read, 0x74E9C0), so
-  Duration x LoopDisplacement is the turn per loop in the unit of the turn-speed input. That unit is still not
-  read. It is radians a second by inference only: the vanilla horse's and the mumak's product is 1.8, which is
-  about one loop a second at a horse's turn rate, and fifty a second if the input were in degrees. Two ways to read
-  it failed on 2026-11-23: the vanilla `animation_clips.tpac` (6,177 items) is in a cooked form `parse_anim` cannot
-  read, and the trial cannot turn one spider on command (its input drives the view). A turn in place in a battle
-  shows a wrong factor as slipping feet.
+- Settled on 2026-11-24: the turn records' unit. They claim 0.873 (40 degrees in radians, divided by 0.8 s). The
+  node advances a turn clip by turn speed / (Duration x LoopDisplacement) of the turn-RIGHT record, for both
+  directions (0x74E9C0), and the turn speed is the mount's yaw rate in radians a second (0x66AAE0 writes it and
+  0x66A0A0 adds it x the tick time to the yaw: [elephant.md](elephant.md), "Speed at model size"). So in one
+  loop the body turns Duration x LoopDisplacement = 0.698 rad, the 40 degrees the clip turns: the records fit.
+  Nobody has watched a turn in place yet.
 - The quick stops play `spider_quick_stop` since 2026-11-23, 1.5 s, the warg's stop length. Nobody has watched a
   hard stop. Whether the engine holds the mount for the clip's length is still not known.
 - The spider in the party screen, the encyclopedia and a conversation plays `spider_idle`, which has no
@@ -576,6 +574,7 @@ turn in place were not held long enough to see, and a person's eye in a battle d
 | Rider non-lethal `CanDismount` hit | ✅ **Patch48 (2026-06-15) — confirmed in-game.** A surviving mounted rider taking a dismountable melee hit AV'd in native `HandleBlowAux` (`0x3`); the prefix strips `CanDismount` for spider riders. Sibling of Patch47 (death) on the same broken native dismount path. See "Damage + bite-collision tuning" / RCA |
 | `lotrtaom_iron_hills_01_forceatmo` | ❌ **SEPARATE BUG — not spider. The scene has NEVER loaded: 8/8 CTDs** (2026-06-10 20:53→2026-06-12 06:27), all dying at `scene.xscene` load, pre-agent-spawn — incl. runs with all-green spider probes. `taom_gondor_village_001_forceatmo` loads fine, so the forceatmo/Patch16 mechanism is exonerated — it's this scene's assets. Several 6/10 "spider mission CTDs" were this scene, conflated into the spider evidence. **Removed from `custom_battle_scenes.xml` 2026-06-12** so it stops eating test runs; restore once repaired. Own issue/investigation |
 | **Rein attributes on v1.4.8 (2026-08-10)** | ✅ **crash-free on v1.5.3 (2026-09-29), rein visual not inspected.** Ridden spiders died in numbers in the 2026-09-29 Custom Battles (one ended with 36 of 84 alive) and every battle ran to the end. Original note: `lotr_monster_spider.xml` declares **5 of the 12** rein attributes the engine reads (`rein_handle_bone`, both `rein_handle_*_local_pos`, `rein_collision_1/2_bone`); every vanilla `Mountable` monster carries all twelve. Warg parity holds: it declares the same five. v1.4.8 fixed a "horse rein visual bug when a mounted agent died", native with no managed diff, in a path that runs on **mounted-agent death** ([v1.4.8-impact.md](../migration/v1.4.8-impact.md) N7). No crash is predicted; the 1.4.6 river battle below covered rider and spider deaths but predates this change. `audit_mount_parity.py` has no rein check (zero occurrences of "rein"); it always exits 0. Kill a ridden spider and a mounted rider and watch. Contract: [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md) "The rein-attribute invariant" |
+| Side steps from a stand (2026-11-24, #1591) | Open in #1550. The two side-step records hold a travel of 1.20 m, the legs' stride, and a `Duration` of 0.80 s. While the loop time is inside its clamp (a sideways speed of 1.4 to 2.7 m/s at model size) the node moves the body travel / `Duration` = 1.50 m in a loop ([elephant.md](elephant.md), "Standing pace"), so the legs slip by a fifth of the way. Under that band the clip's weight falls with the speed and the legs fit. A travel of 0.96 m fits inside the band and not under it, and it also changes the side step's blend weight at every moving pace, whose strafe rows use the same two actions. The sideways speed of a real side step is not measured, so no value is set. `tools/check_gait_stride.py --creature spider` prints both records on a `side` line, gives no verdict on the two numbers, and holds the legs' stance and slip |
 | Walk gait skew | Replaced 2026-11-22 (#1541): the gait, turn, idle and stand clips are generated on the rig, see "Locomotion generated on its own rig". The rows above that name `an_spi_idle`, the turns and the walk describe the June clips |
 | Charge visual | 💡 unused 112KB `an_spi_charge` clip exists — possible upgrade over `an_spi_attack_charge` for the pounce; evaluate later |
 | Inventory equip | ❓ retest (was the second AV repro; same root cause, expected fixed) |

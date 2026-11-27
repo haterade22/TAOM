@@ -32,5 +32,11 @@ public enum LotrIssueTemplate
     SocialMisc,
 
     /// <summary>Forge a crafted (smithing) item and deliver it.</summary>
-    CraftItem
+    CraftItem,
+
+    /// <summary>The giver lends N troops of his culture; win battles with them alive, then they go home.</summary>
+    TrainRetainers,
+
+    /// <summary>A named bandit party spawns near the village; destroying it completes the quest.</summary>
+    HuntBand
 }

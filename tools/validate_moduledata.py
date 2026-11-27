@@ -217,7 +217,7 @@ def armour_acquisition_ref_issues(registries, moduledata: Path) -> list:
     Checked: every LotrIssue row's cultures, reward_item and item_source="item:X"; the armour
     config's NamedWeapons, upgrade Material ids, <LordsLadder> rung quests (against
     taom_career_quests.xml), <LordsMaterials>, <LadderWeapons> and <LadderPieces> items and cultures; the culture
-    marketplace config's <Culture id>, armour_from and <Stock> rows (a `from` culture that exists, a
+    marketplace config's <Culture id>, armour_from, <Routing> item ids and cultures (#639) and <Stock> rows (a `from` culture that exists, a
     `match` that compiles and finds at least one id: an empty row silently drops a culture's market
     stock, #755). A file that does not parse is reported, never
     passed. Callers skip the pass without the install: the registry is TAOM-only then, and every
@@ -307,6 +307,25 @@ def armour_acquisition_ref_issues(registries, moduledata: Path) -> list:
                 continue
             if not any(compiled.search(item) for item in items):
                 report(rel, cid, f"<Stock> match '{pattern}' finds no item id (an Armory rename empties the row)")
+    # <Routing> rows name items by bare id and cultures by a comma list; a typo in either never matches,
+    # so min_stock never injects and a player who needs a remount finds none (#639).
+    # The game reads only the first direct <Routing> child of the root and its direct <Item> rows, and
+    # keys the id untrimmed (CultureMarketplaceConfigProvider); a row with no id or no culture is skipped.
+    routed = root.find("Routing") if root is not None else None
+    for row in (routed.findall("Item") if routed is not None else ()):
+        raw_id = row.get("id") or ""
+        rid = raw_id.strip()
+        tokens = [t.strip() for t in (row.get("cultures") or "").split(",")]
+        if not raw_id:
+            report(rel, rid, "<Routing> item has no id; the game skips it")
+            continue
+        if raw_id != rid:
+            report(rel, rid, "<Routing> item id has spaces; the game does not trim it")
+        check(rel, rid, "<Routing> item", rid, items)
+        if not any(tokens):
+            report(rel, rid, "<Routing> item names no cultures; the game skips it")
+        for token in tokens:
+            check(rel, rid, "<Routing> culture", token, cultures)
     return issues
 
 

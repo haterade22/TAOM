@@ -183,7 +183,7 @@
     }
   ],
   "snapshot": {
-    "taken": "2026-11-24",
+    "taken": "2026-11-26",
     "files": {
       "LOTRLOME_items/LOTRAOM_horses.xml": {
         "dire_wolf_saddle": {"mane_cover_type": "none"},
@@ -229,6 +229,7 @@
         "taom_chariot_armour_dwarf_b": {"mane_cover_type": "all"},
         "taom_chariot_armour_imperial": {"mane_cover_type": "all"},
         "taom_chariot_armour_rhun": {"mane_cover_type": "all"},
+        "taom_chariot_armour_rhun_black": {"mane_cover_type": "all"},
         "taom_elk_saddle_a": {"mane_cover_type": "none"},
         "taom_ram_barding_elite_a": {"mane_cover_type": "all"},
         "taom_ram_barding_elite_b": {"mane_cover_type": "all"},

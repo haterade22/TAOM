@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """tools/check_gait_stride.py as a gate for a creature whose masters were bought, not made here (#1565 item 2: the
-warg): a master is found by the GUID its record names, the slip and stance limits are the creature's, a cache entry
-is held to its record's checksum where the files' dates are a copy's, and a record that is known to fail is measured
-on every run and may not start to pass unseen.
+warg): a master is found by the GUID its record names, the slip and stance limits are the creature's, and a cache
+entry is held to its record's checksum where the files' dates are a copy's. And for every creature (#1591): a clip
+that only the standing strafe rows bind is printed with what the node does with it, and not judged by its stride.
 
 Run:  python -m unittest tools.tests.test_gait_stride_creatures
 
@@ -28,6 +28,7 @@ import test_set_clip_balance_name as tsb  # noqa: E402
 from _gamedir import game_dir  # noqa: E402
 
 MASTER_GUID = bytes([7] * 16)       # the item GUID teg._master_tpac gives its animation
+BACK_GUID = bytes([6] * 16)         # the backward walk's own master: its planted foot moves the other way
 IDENT = (1.0, 0.0, 0.0, 0.0)
 BONES = [{"name": "root", "parent_idx": -1, "rest_frame": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]}]
 SETS = ('<action_sets><action_set id="as_x">'
@@ -41,26 +42,27 @@ CONFIG = {"module": "X", "clips": "clips", "skeleton": ("skel_geo.tpac", "s"),
           "stand_action": "act_stand"}
 
 
-def record(name, travel=None, limits=(0.2, 2.5), guid=MASTER_GUID, last=5.0):
-    """A clip record as far as the gate reads it: keys 1 to `last` of the master with `guid`, and a usage when it
-    has travel. Bytes 8 to 24, the package GUID, are zero: every record of the module shares one cache entry."""
-    raw = (bytes(0x48) + struct.pack("<i", len(name)) + name.encode() + bytes(12) + struct.pack("<3f", 1.0, 1.0, last)
+def record(name, travel=None, limits=(0.2, 2.5), guid=MASTER_GUID, last=5.0, duration=1.0, first=1.0):
+    """A clip record as far as the gate reads it: keys `first` to `last` of the master with `guid`, and a usage when
+    it has travel. Bytes 8 to 24, the package GUID, are zero: every record of the module shares one cache entry."""
+    raw = (bytes(0x48) + struct.pack("<i", len(name)) + name.encode() + bytes(12) + struct.pack("<3f", duration, first, last)
            + bytes(16) + guid + bytes(40))
     if travel is not None:
         raw += struct.pack("<i", 13) + b"quad_movement" + bytes(4) + struct.pack("<3f", travel, *limits)
     return raw
 
 
-def master(stride=2.0, guid=MASTER_GUID, keys=5, down=3, sideways=False, drift=0.0):
+def master(stride=2.0, guid=MASTER_GUID, keys=5, down=3, sideways=False, drift=0.0, lift=0.0):
     """One loop of `keys` keys, the last a copy of the first: the foot is on the ground for the first `down` keys,
     moves back `stride` / (keys - 1) a key (along X when `sideways`), and is in the air for the rest. `drift` moves
-    the third key that far across its travel: a slip."""
+    the third key that far across its travel: a slip. `lift` raises every key: a rig whose foot joint does not rest
+    at height 0."""
     step = stride / (keys - 1.0)
     root = []
     for i in range(keys - 1):
-        along, across, up = -step * i, drift if i == 2 else 0.0, 0.0 if i < down else 0.3
+        along, across, up = -step * i, drift if i == 2 else 0.0, lift + (0.0 if i < down else 0.3)
         root.append((along, across, up) if sideways else (across, along, up))
-    root.append((0.0, 0.0, 0.0))
+    root.append((0.0, 0.0, lift))
     raw = teg._master_tpac("all", teg._anim_payload("all", [[IDENT] * keys], root), 1, keys)
     assert raw.count(MASTER_GUID) == 1
     return raw.replace(MASTER_GUID, guid)
@@ -77,8 +79,9 @@ class Module(unittest.TestCase):
         os.makedirs(os.path.join(self.root, "RuntimeDataCache"))
         self.put("skel_geo.tpac", b"TPAC a skeleton, no animation", top=True)
         self.master = self.put("Bought_Name_geo.tpac", master())
+        self.put("Backward_geo.tpac", master(stride=-2.0, guid=BACK_GUID))
         self.walk = self.put("x_walk_anm.tpac", record("x_walk", 2.0))
-        self.put("x_back_anm.tpac", record("x_back", 2.0, (-1.25, -0.1)))
+        self.put("x_back_anm.tpac", record("x_back", 2.0, (-1.25, -0.1), guid=BACK_GUID))
         self.put("x_pose_anm.tpac", record("x_pose"))
         self.entry = os.path.join(self.root, "RuntimeDataCache", str(uuid.UUID(int=0)) + ".rdc")
         with open(self.entry, "wb") as fh:
@@ -153,19 +156,138 @@ class MasterByGuidTests(Module):
         code, text = self.report()
         self.assertEqual(code, 0, text)
 
-    def test_a_gait_listed_with_an_axis_is_measured_along_it(self):
-        self.put("Bought_Name_geo.tpac", master(sideways=True))
-        self.assertEqual(self.report()[0], 1)
-        code, text = self.report(axis={"x_walk": 0, "x_back": 0})
-        self.assertEqual(code, 0, text)
-        self.assertIn("feet cover 2.00 m", self.line(text, "x_walk"))
-
     def test_feet_that_do_not_cover_the_claim_fail(self):
         self.put("x_walk_anm.tpac", record("x_walk", 3.0))
         code, text = self.report()
         self.assertEqual(code, 1, text)
         self.assertTrue(self.line(text, "x_walk").startswith("FAIL"), text)
         self.assertIn("the clip claims 3.00 m", text)
+
+
+class BackwardDirectionTests(Module):
+    """#1591: the dire wolf's backward rows played the forward walk's keys, so its paws stepped forward while it
+    backed up. The stride measure takes the sign of the travel from the data, so it passed any direction."""
+
+    def test_a_backward_walk_whose_feet_move_against_the_walks_passes(self):
+        code, text = self.report()
+        self.assertEqual(code, 0, text)
+        self.assertNotIn("backs up", text)
+
+    def test_a_backward_row_on_the_walks_own_keys_is_a_finding(self):
+        self.put("x_back_anm.tpac", record("x_back", 2.0, (-1.25, -0.1)))
+        code, text = self.report()
+        self.assertEqual(code, 1, text)
+        self.assertTrue(self.line(text, "x_back").startswith("ok "), "the stride itself fits")
+        self.assertIn("FAIL pace: as_x binds act_b to x_back, whose planted feet move the way the walk's (x_walk) do",
+                      text)
+
+    def test_a_backward_clip_on_two_rows_is_one_finding(self):
+        """The wolf's front row and its "none" row bind one backward record."""
+        sets = SETS.replace('<action type="act_stand"', '<action type="act_b_none" animation="x_back"/><action type="act_stand"')
+        self.put("x_back_anm.tpac", record("x_back", 2.0, (-1.25, -0.1)))
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = c.report("x", CONFIG, self.root, BONES, sets)
+        self.assertEqual(code, 1, out.getvalue())
+        self.assertEqual(out.getvalue().count("backs up"), 1, out.getvalue())
+
+    def test_a_second_record_of_the_backward_pace_is_held_the_same_way(self):
+        """The backward pace's two strafe rows bind a record of their own (`dire_wolf_walkbackfast`,
+        `warg_walkbackfast`). The gate knows it by its negative pace limits, whatever action binds it."""
+        sets = SETS.replace('<action type="act_stand"', '<action type="act_bs" animation="x_back_side"/><action type="act_stand"')
+        self.put("x_back_side_anm.tpac", record("x_back_side", 2.0, (-1.25, -0.1), guid=BACK_GUID))
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = c.report("x", CONFIG, self.root, BONES, sets)
+        self.assertEqual(code, 0, out.getvalue())
+        self.put("x_back_side_anm.tpac", record("x_back_side", 2.0, (-1.25, -0.1)))      # the walk's own keys
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = c.report("x", CONFIG, self.root, BONES, sets)
+        text = out.getvalue()
+        self.assertEqual(code, 1, text)
+        self.assertIn("FAIL pace: as_x binds act_bs to x_back_side, whose planted feet move the way the walk's "
+                      "(x_walk) do", text)
+        self.assertEqual(text.count("backs up"), 1, text)
+
+    def test_a_record_that_plays_the_walks_keys_from_last_to_first_is_a_backward_walk(self):
+        """A record whose second source is under its first plays its master backward (vanilla
+        `camel_walk_backwards`, docs/reference/bannerlord-animation-system-map.md). The dire wolf has no backward
+        master, so its backward records play the walk's keys 32 to 0."""
+        self.put("x_back_anm.tpac", record("x_back", 2.0, (-1.25, -0.1), first=5.0, last=1.0))
+        code, text = self.report()
+        self.assertEqual(code, 0, text)
+        self.assertIn("feet cover 2.00 m in 4 frames", self.line(text, "x_back"))
+
+    def test_measure_reports_the_way_the_planted_feet_move(self):
+        self.assertEqual(c.measure(teg._treadmill(60, 2.0), 2.0)["direction"], -1.0)
+        back = {t: p * [1, -1, 1] for t, p in teg._treadmill(60, 2.0).items()}
+        self.assertEqual(c.measure(back, 2.0)["direction"], 1.0)
+
+
+class ReversedRangeTests(unittest.TestCase):
+    ANIM = {"rot": [{"t": [1.0, 2.0, 3.0, 4.0, 5.0], "v": [[i, 0, 0, 0] for i in range(1, 6)]}],
+            "root_pos": {"t": [1.0, 2.0, 3.0, 4.0, 5.0], "v": [[i, 0, 0, 0] for i in range(1, 6)]}}
+
+    def test_a_reversed_record_plays_from_its_first_source_down_to_the_key_after_its_last(self):
+        played = c.played_keys(self.ANIM, {"first": 5.0, "keys": -4.0})
+        self.assertEqual(list(played["rot"][0]["t"]), [5.0, 4.0, 3.0, 2.0])
+        self.assertEqual([float(v[0]) for v in played["rot"][0]["v"]], [5.0, 4.0, 3.0, 2.0])
+        self.assertEqual([float(v[0]) for v in played["root_pos"]["v"]], [5.0, 4.0, 3.0, 2.0])
+
+    def test_a_forward_record_is_read_as_before(self):
+        played = c.played_keys(self.ANIM, {"first": 1.0, "keys": 4.0})
+        self.assertEqual(list(played["rot"][0]["t"]), [1.0, 2.0, 3.0, 4.0])
+
+    def test_a_reversed_range_fits_keys_that_hold_both_its_ends(self):
+        self.assertIsNone(c.range_finding([1.0, 5.0], {"first": 5.0, "keys": -4.0}))
+        self.assertIn("plays keys 6 to 1", c.range_finding([1.0, 5.0], {"first": 6.0, "keys": -5.0}))
+        self.assertIn("plays keys 5 to 0", c.range_finding([1.0, 5.0], {"first": 5.0, "keys": -5.0}))
+
+
+class GroundRuleTests(Module):
+    """The dire wolf's paw joints do not rest at height 0: in its walk they stay 0.04 to 0.08 m above it, and in its
+    gallop they go 0.2 m under it. A creature that says ground "lowest" has each foot's height taken from that
+    foot's own lowest point in the loop."""
+
+    def setUp(self):
+        super().setUp()
+        self.put("Bought_Name_geo.tpac", master(lift=0.06))
+        self.put("x_pose_anm.tpac", record("x_pose", guid=BACK_GUID))       # the pose stands on a master at height 0
+
+    def test_a_foot_that_stays_above_the_contact_height_is_never_planted_by_the_fixed_rule(self):
+        code, text = self.report()
+        self.assertEqual(code, 1, text)
+        self.assertIn("is planted for only 0% of the loop", text)
+
+    def test_a_creature_that_says_lowest_measures_the_same_loop(self):
+        code, text = self.report(ground="lowest")
+        self.assertEqual(code, 0, text)
+        self.assertIn("feet cover 2.00 m", self.line(text, "x_walk"))
+
+    def test_a_ground_rule_the_gate_does_not_know_is_a_finding(self):
+        code, text = self.report(ground="lowset")
+        self.assertEqual(code, 1, text)
+        self.assertIn("FAIL table: ground", text)
+
+    def test_a_foot_that_stays_above_the_others_for_the_whole_loop_is_a_finding(self):
+        """The rule takes each foot's ground from that foot, so a leg that a retarget lifted would read as planted.
+        The feet's lowest points may be 2 x CONTACT apart: the wolf's are 0.04 m apart at most."""
+        feet = teg._treadmill(60, 2.0)
+        self.assertEqual(c.lifted_foot(feet), [])
+        self.assertEqual(c.lifted_foot({t: p + [0.0, 0.0, 0.2] for t, p in feet.items()}), [],
+                         "all four at one height, wherever it is: the wolf's walk is above 0, its gallop under it")
+        feet["FL"] = feet["FL"] + [0.0, 0.0, 0.2]
+        self.assertEqual(c.lifted_foot(feet),
+                         ["FL never comes within 0.06 m of the lowest foot's ground (it stays 0.20 m above it)"])
+        with mock.patch.object(c, "soles_of", return_value=feet):
+            code, text = self.report(ground="lowest")
+        self.assertEqual(code, 1, text)
+        self.assertTrue(self.line(text, "x_walk").startswith("FAIL"), text)
+        self.assertIn("FL never comes within", text)
+        with mock.patch.object(c, "soles_of", return_value=feet):
+            code, text = self.report()                           # the fixed rule says it its own way
+        self.assertNotIn("never comes within", text)
 
 
 class PendingTests(Module):
@@ -195,97 +317,162 @@ class PendingTests(Module):
         code, text = self.report(pending={"x_gone": "it was a side record once"})
         self.assertEqual(code, 1, text)
         self.assertIn("FAIL pending list: x_gone", text)
-        self.assertIn("x: 1 finding(s) in the record files, the lists and the 2 gait clips", text)
+        self.assertIn("x: 1 finding(s) in the record files, the lists, the 2 gait clips and the 0 side clips", text)
 
 
-class KnownFailureTests(Module):
-    """x_walk claims 3.0 m on feet that cover 2.0 m, and the list says exactly that: (claims, covers, why)."""
-    WHY = {"x_walk": (3.0, 2.0, "the pack's typed travel (#1591)")}
+SIDE_GUID = bytes([9] * 16)
+
+
+class SideStepTests(Module):
+    """The standing strafe rows bind x_side: 1.60 m of travel in a record of 0.1333 s (its four keys at 30 a second),
+    on a master whose foot moves 1.00 m sideways in a loop. The node plays one loop in travel / (Duration x the
+    sideways speed) seconds, so inside its clamp the body moves travel / Duration = 12.00 m in a loop. A stride
+    judged against the travel would fail it, and would be the wrong measure (0x749C20, 0x5F75B0)."""
+    SETS = SETS.replace('<action type="act_stand"', '<action type="act_sr" animation="x_side"/>'
+                        '<action type="act_sl" animation="x_side"/><action type="act_stand"')
+    PACES = dict(CONFIG["pace_actions"], strafe=("act_sr", "act_sl"))
 
     def setUp(self):
         super().setUp()
-        self.put("x_walk_anm.tpac", record("x_walk", 3.0))
+        self.side_master = self.put("Side_geo.tpac", master(stride=1.0, guid=SIDE_GUID, sideways=True))
+        self.put("x_side_anm.tpac", record("x_side", 1.6, (0.0, 0.0), guid=SIDE_GUID, duration=4 / 30.0))
 
-    def test_without_the_list_the_clip_fails(self):
-        self.assertEqual(self.report()[0], 1)
+    def side_report(self, sets=None, **config):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = c.report("x", dict(CONFIG, pace_actions=self.PACES, **config), self.root, BONES, sets or self.SETS)
+        return code, out.getvalue()
 
-    def test_a_listed_failure_is_measured_printed_with_its_reason_and_not_counted(self):
-        code, text = self.report(known=self.WHY)
+    def test_a_clip_on_the_standing_strafe_rows_is_printed_and_not_judged_by_stride(self):
+        code, text = self.side_report()
         self.assertEqual(code, 0, text)
-        self.assertTrue(self.line(text, "x_walk").startswith("KNOWN"), text)
-        self.assertIn("claims 3.00 m, feet cover 2.00 m", self.line(text, "x_walk"))
-        self.assertIn("the pack's typed travel (#1591)", text)
-        self.assertIn("1 of them held at the numbers the known list gives and not judged by stride", text)
+        line = self.line(text, "x_side")
+        self.assertTrue(line.startswith("side "), text)
+        self.assertIn("12.00 m in a loop", line)
+        self.assertIn("travel 1.60 m / Duration 0.13 s", line)
+        self.assertIn("the feet move 1.00 m sideways", line)
+        self.assertIn("x: all 2 gait clips cover the ground they claim", text)
 
-    def test_a_listed_record_that_lost_its_travel_fails(self):
-        self.put("x_walk_anm.tpac", record("x_walk", 0.0))
-        code, text = self.report(known=self.WHY)
-        self.assertEqual(code, 1, text)
-        self.assertTrue(self.line(text, "x_walk").startswith("FAIL"), text)
-        self.assertIn("carries no quad_movement travel", text)
+    def test_listing_it_as_a_gait_does_not_make_it_one(self):
+        code, text = self.side_report(gaits=["x_walk", "x_back", "x_side"])
+        self.assertEqual(code, 0, text)
+        self.assertEqual([ln[:5] for ln in text.splitlines() if " x_side " in ln], ["side "], text)
+        self.assertIn("x: all 2 gait clips cover the ground they claim", text)
 
-    def test_a_listed_record_that_passes_fails_the_gate_until_it_leaves_the_list(self):
-        self.put("x_walk_anm.tpac", record("x_walk", 2.0))
-        code, text = self.report(known={"x_walk": (2.0, 2.0, "why (#1)")})
+    def test_its_cache_entry_is_held_as_a_gaits_is(self):
+        self.put("x_side_anm.tpac", record("x_side", 1.6, (0.0, 0.0), guid=SIDE_GUID, duration=4 / 30.0), when=3_000_000)
+        code, text = self.side_report()
         self.assertEqual(code, 1, text)
-        self.assertTrue(self.line(text, "x_walk").startswith("FAIL"), text)
-        self.assertIn("remove it from the creature's known list", text)
-
-    def test_the_list_excuses_the_stride_alone_a_second_finding_still_fails(self):
-        """Codex P1 and the Data flow lens, 2026-11-24: the list excused every finding on its clip, so a listed
-        clip could gain a slip, or a paw that never plants, and pass."""
-        self.put("Bought_Name_geo.tpac", master(drift=0.3))
-        code, text = self.report(known=self.WHY)
-        self.assertEqual(code, 1, text)
-        self.assertTrue(self.line(text, "x_walk").startswith("FAIL"), text)
-        self.assertIn("slips", text)
-        self.assertIn("the known list covers the stride alone", text)
-
-    def test_a_record_whose_claim_changed_is_not_the_failure_the_list_names(self):
-        self.put("x_walk_anm.tpac", record("x_walk", 4.0))
-        code, text = self.report(known=self.WHY)
-        self.assertEqual(code, 1, text)
-        self.assertIn("the known list holds 3.00 m claimed and 2.00 m covered", text)
-
-    def test_a_master_whose_stride_changed_is_not_the_failure_the_list_names(self):
-        """The other half: the feet got worse and the claim stayed. x_back plays the same master and fails too."""
-        self.put("Bought_Name_geo.tpac", master(stride=1.0))
-        code, text = self.report(known=self.WHY)
-        self.assertEqual(code, 1, text)
-        self.assertTrue(self.line(text, "x_walk").startswith("FAIL"), text)
-        self.assertIn("the known list holds 3.00 m claimed and 2.00 m covered", text)
-
-    def test_the_list_does_not_cover_an_entry_the_kit_has_not_cooked(self):
-        self.put("x_walk_anm.tpac", record("x_walk", 3.0), when=3_000_000)
-        code, text = self.report(known=self.WHY)
-        self.assertEqual(code, 1, text)
+        self.assertTrue(self.line(text, "x_side").startswith("FAIL"), text)
         self.assertIn("older than its clip record", text)
 
-    def test_the_list_does_not_cover_an_entry_under_the_stamp_rule_either(self):
-        fault = "its cache entry does not carry its record's checksum"
-        with mock.patch.object(c, "stamp_state", side_effect=lambda root, anm: fault if "x_walk" in anm else None):
-            code, text = self.report(known=self.WHY, cooked="stamp")
+    def test_a_side_clip_with_no_master_or_two_fails(self):
+        self.put("Copy_geo.tpac", master(stride=1.0, guid=SIDE_GUID, sideways=True))
+        code, text = self.side_report()
+        self.assertEqual(code, 1, text)
+        self.assertIn("2 master files hold the animation its record names", text)
+        os.remove(os.path.join(self.root, "clips", "Copy_geo.tpac"))
+        os.remove(self.side_master)
+        code, text = self.side_report()
+        self.assertEqual(code, 1, text)
+        self.assertTrue(self.line(text, "x_side").startswith("FAIL"), text)
+
+    def test_a_side_clip_with_no_travel_fails(self):
+        """The node divides by the record's travel for the loop time: a strafe row on a record with no usage."""
+        self.put("x_side_anm.tpac", record("x_side", guid=SIDE_GUID, duration=4 / 30.0))
+        code, text = self.side_report()
+        self.assertEqual(code, 1, text)
+        self.assertTrue(self.line(text, "x_side").startswith("FAIL"), text)
+        self.assertIn("carries no quad_movement travel", text)
+
+    def test_a_side_clip_whose_foot_never_plants_fails(self):
+        """The stride verdict is gone for a side clip; the stance and the slip are not (trunk judged both)."""
+        self.put("Side_geo.tpac", master(stride=1.0, guid=SIDE_GUID, sideways=True, down=0))
+        code, text = self.side_report()
+        self.assertEqual(code, 1, text)
+        self.assertTrue(self.line(text, "x_side").startswith("FAIL"), text)
+        self.assertIn("is planted for only 0% of the loop", text)
+
+    def test_a_side_clip_whose_foot_slips_fails(self):
+        self.put("Side_geo.tpac", master(stride=1.0, guid=SIDE_GUID, sideways=True, drift=0.8))
+        code, text = self.side_report()
+        self.assertEqual(code, 1, text)
+        self.assertTrue(self.line(text, "x_side").startswith("FAIL"), text)
+        self.assertIn("slips", text)
+
+    def test_a_side_clip_listed_with_its_own_slip_limit_is_held_to_that_and_no_other_clip_is(self):
+        """The dire wolf's strafe rows play the pack's turn clips, whose paws go round a point. The limit is the
+        clip's, by name: a side step the wolf gets later is held to the gaits' limit."""
+        self.put("Side_geo.tpac", master(stride=1.0, guid=SIDE_GUID, sideways=True, drift=0.8))
+        code, text = self.side_report(side_slip={"x_side": 2.0})
+        self.assertEqual(code, 0, text)
+        code, text = self.side_report(side_slip={"x_side": 0.5})
+        self.assertEqual(code, 1, text)
+        self.assertIn("slips", text)
+        self.put("x_walk_anm.tpac", record("x_walk", 2.0))
+        self.put("Bought_Name_geo.tpac", master(drift=0.8))
+        code, text = self.side_report(side_slip={"x_side": 2.0})
         self.assertEqual(code, 1, text)
         self.assertTrue(self.line(text, "x_walk").startswith("FAIL"), text)
-        self.assertIn(fault, text)
 
-    def test_a_listed_clip_that_the_run_does_not_measure_is_a_finding(self):
-        code, text = self.report(known=dict(self.WHY, x_pose=(1.0, 0.5, "a pose has no travel (#1)")))
+    def test_a_clip_listed_with_a_side_slip_limit_that_is_not_a_side_clip_is_a_finding(self):
+        code, text = self.side_report(side_slip={"x_walk": 2.0, "x_gone": 2.0})
         self.assertEqual(code, 1, text)
-        self.assertIn("FAIL known list: x_pose", text)
+        for clip in ("x_walk", "x_gone"):
+            self.assertIn("FAIL side_slip list: %s is listed and is not a clip on the standing strafe rows" % clip, text)
 
-    def test_a_listed_gait_that_no_named_set_binds_is_a_finding(self):
-        """Codex P2: a name in `gaits` is not a measurement. An absent, unbound gait is only a note."""
-        code, text = self.report(gaits=["x_walk", "x_back", "x_gone"],
-                                 known=dict(self.WHY, x_gone=(1.0, 0.5, "it was bound once (#1)")))
-        self.assertEqual(code, 1, text)
-        self.assertIn("FAIL known list: x_gone", text)
-        self.assertIn("no named set binds it", text)
+    def test_the_side_line_gives_the_worst_slip(self):
+        self.assertIn("worst slip 0.000 m", self.line(self.side_report()[1], "x_side"))
+        self.put("Side_geo.tpac", master(stride=1.0, guid=SIDE_GUID, sideways=True, drift=0.8))
+        self.assertNotIn("worst slip 0.000 m", self.line(self.side_report()[1], "x_side"))
 
-    def test_a_clip_in_the_known_list_and_the_pending_list_is_a_finding(self):
-        code, text = self.report(known=self.WHY, pending={"x_walk": "why"})
+    def test_a_side_clip_on_forward_keys_is_held_along_the_way_its_feet_move(self):
+        """The elephant's strafe rows play its walk's keys: the feet step forward, and plant and slip are judged
+        along that travel."""
+        self.put("Side_geo.tpac", master(stride=1.0, guid=SIDE_GUID))
+        code, text = self.side_report()
+        self.assertEqual(code, 0, text)
+        self.assertIn("the feet move 0.00 m sideways and 1.00 m lengthways", self.line(text, "x_side"))
+        self.put("Side_geo.tpac", master(stride=1.0, guid=SIDE_GUID, drift=0.8))
+        code, text = self.side_report()
         self.assertEqual(code, 1, text)
-        self.assertIn("FAIL known list: x_walk is also in the pending list", text)
+        self.assertIn("slips", text)
+
+    def test_a_side_clip_with_no_duration_fails_on_its_own_line(self):
+        """The line prints travel / Duration, so a record with a Duration of 0 has no number to print."""
+        self.put("x_side_anm.tpac", record("x_side", 1.6, (0.0, 0.0), guid=SIDE_GUID, duration=0.0))
+        code, text = self.side_report()
+        self.assertEqual(code, 1, text)
+        self.assertTrue(self.line(text, "x_side").startswith("FAIL"), text)
+        self.assertIn("or no Duration", text)
+
+    def test_a_side_clip_played_backward_is_held_to_the_length_of_its_keys(self):
+        """Keys 5 down to 1: four keys at 30 a second, as the same record played forward."""
+        self.put("x_side_anm.tpac", record("x_side", 1.6, (0.0, 0.0), guid=SIDE_GUID, duration=4 / 30.0,
+                                           first=5.0, last=1.0))
+        code, text = self.side_report()
+        self.assertEqual(code, 0, text)
+        self.assertNotIn("whose Duration is", text)
+        self.assertIn("the feet move 1.00 m sideways", self.line(text, "x_side"))
+
+    def test_a_standing_pose_on_a_record_played_backward_is_measured(self):
+        self.put("x_pose_anm.tpac", record("x_pose", first=5.0, last=1.0))
+        code, text = self.side_report()
+        self.assertEqual(code, 0, text)
+        self.assertIn("1 standing pose(s)", text)
+        self.assertNotIn("its key range holds no key", text)
+
+    def test_a_clip_that_a_front_row_binds_too_is_judged_as_a_gait(self):
+        """The elephant's strafe rows played the walk's clip until 2026-11-19: a gait stays a gait."""
+        sets = self.SETS.replace('animation="x_side"', 'animation="x_walk"')
+        code, text = self.side_report(sets=sets)
+        self.assertEqual(code, 1, text)                       # the walk's 1.0 s for four keys: the strafe Duration rule
+        self.assertTrue(self.line(text, "x_walk").startswith("ok "), text)
+        self.assertNotIn("side ", "".join(ln[:5] for ln in text.splitlines()))
+        self.put("x_walk_anm.tpac", record("x_walk", 3.0))
+        code, text = self.side_report(sets=sets)
+        self.assertTrue(self.line(text, "x_walk").startswith("FAIL"), text)
+        self.assertIn("the clip claims 3.00 m", text)
 
 
 class CreatureLimitTests(unittest.TestCase):
@@ -322,7 +509,8 @@ class ReportLimitTests(Module):
         """The warg's trot: a fore paw is down for 3 of 16 keys. Here 3 of 12, which is 2 planted steps."""
         self.put("Bought_Name_geo.tpac", master(keys=13))
         self.put("x_walk_anm.tpac", record("x_walk", 2.0, last=13.0))
-        self.put("x_back_anm.tpac", record("x_back", 2.0, (-1.25, -0.1), last=13.0))
+        self.put("Backward_geo.tpac", master(stride=-2.0, guid=BACK_GUID, keys=13))
+        self.put("x_back_anm.tpac", record("x_back", 2.0, (-1.25, -0.1), guid=BACK_GUID, last=13.0))
         code, text = self.report()
         self.assertEqual(code, 1, text)
         self.assertIn("is planted for only 17% of the loop", text)
@@ -441,32 +629,76 @@ class WargEntryTests(unittest.TestCase):
                        "act_warg_forward_gallop_left_foot")})
         self.assertEqual(self.warg["stand_action"], "act_warg_stand_for_movement_data")
 
-    def test_its_gaits_are_the_four_forward_paces_the_backward_walk_and_the_side_steps(self):
+    def test_its_gaits_are_the_four_forward_paces_and_the_backward_walk(self):
         self.assertEqual(sorted(self.warg["gaits"]), [
-            "warg_canter", "warg_forward_gallop_left_foot", "warg_strafe_left_faster", "warg_strafe_right_faster",
-            "warg_trot", "warg_walkbackfast", "warg_walkbackfast_straight", "warg_walkfast"])
-        self.assertEqual(self.warg["axis"], {"warg_strafe_left_faster": 0, "warg_strafe_right_faster": 0})
+            "warg_canter", "warg_forward_gallop_left_foot", "warg_trot", "warg_walkbackfast",
+            "warg_walkbackfast_straight", "warg_walkfast"])
 
     def test_its_limits_are_its_own_and_its_entries_are_held_to_the_checksum(self):
         self.assertEqual(c.limits(self.warg), {"tolerance": 0.05, "max_slip": 1.0, "min_duty": 0.15})
         self.assertEqual(self.warg["cooked"], "stamp")
 
-    def test_the_known_list_is_the_two_side_steps_each_with_its_issue(self):
-        self.assertEqual({clip: entry[:2] for clip, entry in self.warg["known"].items()},
-                         {"warg_strafe_left_faster": (1.6, 0.73), "warg_strafe_right_faster": (1.6, 1.0)})
-        for entry in self.warg["known"].values():
-            self.assertIn("#1591", entry[2])
-
     def test_only_the_moving_paces_strafe_records_are_not_measured(self):
         self.assertEqual(sorted(self.warg["pending"]), [
             "warg_canter_strafe", "warg_forward_gallop_left_foot_strafe", "warg_trot_strafe", "warg_walk_strafe"])
-        self.assertFalse(set(self.warg["pending"]) & (set(self.warg["gaits"]) | set(self.warg["known"])))
+        self.assertFalse(set(self.warg["pending"]) & set(self.warg["gaits"]))
 
     def test_the_elephant_and_the_spider_keep_the_default_limits_and_the_date_rule(self):
         for name in ("elephant", "spider"):
             self.assertEqual(c.limits(c.CREATURES[name]), {"tolerance": 0.05, "max_slip": 0.08, "min_duty": 0.2}, name)
             self.assertNotIn("cooked", c.CREATURES[name], name)
+
+    def test_no_creature_lists_a_standing_strafe_clip_as_a_gait(self):
+        """Literals: the clips each creature's two standing strafe rows play on the install of 2026-11-24."""
+        side = {"elephant": {"war_elephant_strafe", "mumakil_strafe"},
+                "spider": {"spider_strafe_left", "spider_strafe_right"},
+                "warg": {"warg_strafe_left_faster", "warg_strafe_right_faster"},
+                "dire_wolf": {"dire_wolf_strafe_left_faster", "dire_wolf_strafe_right_faster"}}
+        for name, clips in side.items():
+            self.assertFalse(clips & set(c.CREATURES[name]["gaits"]), name)
+            self.assertNotIn("axis", c.CREATURES[name], name)
             self.assertNotIn("known", c.CREATURES[name], name)
+            self.assertEqual("side_slip" in c.CREATURES[name], name == "dire_wolf", name)
+
+
+class DireWolfEntryTests(unittest.TestCase):
+    """The dire wolf's entry (#1591), as literals."""
+
+    def setUp(self):
+        self.wolf = c.CREATURES["dire_wolf"]
+
+    def test_it_reads_as_dire_wolf_and_the_rig_the_plan_test_measures(self):
+        self.assertEqual(self.wolf["sets"], ("as_dire_wolf",))
+        self.assertEqual(self.wolf["skeleton"],
+                         ("Assets/creature/direwolf/mesh/dire_wolf_grey_geo.tpac", "adod_wolf_armature_unused"))
+        self.assertEqual(self.wolf["clips"], "Assets/creature/direwolf/animations")
+        self.assertEqual(self.wolf["feet"], {"FL": "L Finger0", "FR": "R Finger0", "BL": "L Foot", "BR": "R Foot"})
+
+    def test_its_sets_use_the_wargs_actions(self):
+        self.assertEqual(self.wolf["pace_actions"], c.CREATURES["warg"]["pace_actions"])
+        self.assertEqual(self.wolf["stand_action"], "act_warg_stand_for_movement_data")
+
+    def test_its_gaits_are_the_four_forward_paces_and_the_backward_walk(self):
+        self.assertEqual(sorted(self.wolf["gaits"]), [
+            "dire_wolf_canter", "dire_wolf_forward_gallop_left_foot", "dire_wolf_trot", "dire_wolf_walkbackfast",
+            "dire_wolf_walkbackfast_straight", "dire_wolf_walkfast"])
+
+    def test_its_ground_limits_and_cook_rule_are_its_own(self):
+        self.assertEqual(self.wolf["ground"], "lowest")
+        self.assertEqual(c.limits(self.wolf), {"tolerance": 0.05, "max_slip": 0.35, "min_duty": 0.1})
+        # its strafe rows play the pack's turn clips: a slip of 1.10 m and 1.09 m on 2026-11-24
+        self.assertEqual(self.wolf["side_slip"], {"dire_wolf_strafe_left_faster": 1.2, "dire_wolf_strafe_right_faster": 1.2})
+        self.assertEqual(self.wolf["cooked"], "stamp")
+
+    def test_only_the_moving_paces_strafe_records_are_not_measured(self):
+        self.assertEqual(sorted(self.wolf["pending"]), [
+            "dire_wolf_canter_strafe", "dire_wolf_forward_gallop_left_foot_strafe", "dire_wolf_trot_strafe",
+            "dire_wolf_walk_strafe"])
+        self.assertFalse(set(self.wolf["pending"]) & set(self.wolf["gaits"]))
+
+    def test_no_other_creature_takes_its_ground_from_the_feet(self):
+        for name in ("elephant", "spider", "warg"):
+            self.assertNotIn("ground", c.CREATURES[name], name)
 
 
 GAME = game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
@@ -477,7 +709,7 @@ INPUTS = [os.path.join(ARMORY, *rel.split("/")) for rel in (
 
 @unittest.skipUnless(all(os.path.exists(p) for p in INPUTS), "the Armory's warg is not installed here, or not whole")
 class InstalledWargTests(unittest.TestCase):
-    def test_the_installed_warg_passes_with_its_two_known_side_steps(self):
+    def test_the_installed_warg_passes_and_prints_its_two_side_steps(self):
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             code = c.main(["--creature", "warg"])
@@ -486,8 +718,37 @@ class InstalledWargTests(unittest.TestCase):
         for clip in ("warg_walkfast", "warg_trot", "warg_canter", "warg_forward_gallop_left_foot",
                      "warg_walkbackfast", "warg_walkbackfast_straight"):
             self.assertTrue([ln for ln in text.splitlines() if ln.startswith("ok ") and (" %s " % clip) in ln], clip)
-        self.assertEqual(len([ln for ln in text.splitlines() if ln.startswith("KNOWN")]), 2, text)
-        self.assertIn("0 finding(s)", text)
+        side = [ln for ln in text.splitlines() if ln.startswith("side ")]
+        self.assertEqual(len(side), 2, text)
+        for ln in side:
+            self.assertIn("2.13 m in a loop", ln)                # 1.60 m of travel in a record of 0.75 s
+        self.assertIn("warg: all 6 gait clips cover the ground they claim", text)
+        self.assertIn("clip(s): 0 finding(s)", text)
+
+
+WOLF_INPUTS = [os.path.join(ARMORY, *rel.split("/")) for rel in (
+    "Assets/creature/direwolf/animations", "Assets/creature/direwolf/mesh/dire_wolf_grey_geo.tpac",
+    "ModuleData/action_sets.xml")]
+
+
+@unittest.skipUnless(all(os.path.exists(p) for p in WOLF_INPUTS), "the Armory's dire wolf is not installed here, or not whole")
+class InstalledDireWolfTests(unittest.TestCase):
+    def test_the_installed_dire_wolf_passes_with_a_backward_walk_that_steps_backward(self):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = c.main(["--creature", "dire_wolf"])
+        text = out.getvalue()
+        self.assertEqual(code, 0, text)
+        for clip in ("dire_wolf_walkfast", "dire_wolf_trot", "dire_wolf_canter", "dire_wolf_forward_gallop_left_foot",
+                     "dire_wolf_walkbackfast", "dire_wolf_walkbackfast_straight"):
+            self.assertTrue([ln for ln in text.splitlines() if ln.startswith("ok ") and (" %s " % clip) in ln], clip)
+        side = [ln for ln in text.splitlines() if ln.startswith("side ")]
+        self.assertEqual(len(side), 2, text)
+        for ln in side:
+            self.assertIn("1.60 m in a loop", ln)                # 1.60 m of travel in a record of 1.00 s
+        self.assertNotIn("the legs step forward while the beast backs up", text)
+        self.assertIn("dire_wolf: all 6 gait clips cover the ground they claim", text)
+        self.assertIn("clip(s): 0 finding(s)", text)
 
 
 if __name__ == "__main__":

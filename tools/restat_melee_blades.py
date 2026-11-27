@@ -14,7 +14,8 @@ it names pieces, and the engine simulates the rest. So this writes `damage_facto
 `<CraftingPiece>` elements in `LOTRLOME_crafting_pieces.xml`, inside the **unversioned**
 LOTRLOME_Armory. There is no git backup there, so:
 
-  * dry-run is the default and `--apply` is explicit,
+  * dry-run is the default and `--apply` is explicit; `--check` is the dry run as a gate (exit 1 when
+    any blade would move),
   * every written file is backed up first to `<name>.bak-<tag>` (never `*.xml`: these folders
     are globbed by the engine and an `.xml` backup injects duplicate item ids),
   * the transformed text is parsed before anything is written,
@@ -75,8 +76,9 @@ the tier target and the ceiling, so older ladder drift does not ride along with 
 
 Usage:
     python tools/restat_melee_blades.py                  # report the plan
-    python tools/restat_melee_blades.py --culture gondor    # a craft row (ladder.craft_key), not an engine culture; skips blades another row wears
+    python tools/restat_melee_blades.py --culture gondor    # tier pass only, for a craft row (ladder.craft_key), not an engine culture; skips blades another row wears; the mixed, unworn and hero lowering still run
     python tools/restat_melee_blades.py --limits-only    # lower what breaks a limit, nothing else
+    python tools/restat_melee_blades.py --check          # write nothing; exit 1 if a blade would move or a weapon cannot be priced, 2 if it judged nothing
     python tools/restat_melee_blades.py --apply
 """
 
@@ -684,15 +686,22 @@ def main(argv=None) -> int:
     ap.add_argument("--culture", action="append",
                     help="limit the tier pass to these craft rows (repeatable): a blade is restatted "
                          "only when every troop that wears a weapon built on it is of these rows; "
-                         "a blade another row shares is listed and left alone. A troop's "
+                         "a blade another row shares is listed and left alone. The mixed-blade, "
+                         "unworn and hero-blade lowering passes ignore it and judge every blade. "
+                         "Cannot be combined with --limits-only. A troop's "
                          "ladder.craft_key, which is its culture except for Black Numenoreans "
                          "(mordor_numenorean). It is not the engine culture id; "
                          "fix_melee_ladder.py takes that")
+    ap.add_argument("--check", action="store_true",
+                    help="the report pass as a gate: exit 1 when any blade would move, 0 when none "
+                         "(writes nothing; cannot be combined with --apply)")
     ap.add_argument("--limits-only", action="store_true",
                     help="only lower weapons above a class or hero limit; raise nothing")
     ap.add_argument("--top", type=int, default=30)
     ap.add_argument("--pieces", default=str(PIECES_XML), help="crafting pieces XML to write")
     args = ap.parse_args(argv)
+    if args.check and args.apply:
+        ap.error("--check writes nothing; it cannot be combined with --apply")
     if args.limits_only and args.culture:
         ap.error("--limits-only judges every blade; it cannot be combined with --culture")
 
@@ -753,6 +762,23 @@ def main(argv=None) -> int:
               + (f"  [{p.clamped}]" if p.clamped else ""))
     if len(plans) > args.top:
         print(f"... and {len(plans) - args.top} more")
+
+    if args.check:
+        if not priced or not troops:
+            what = " and ".join(
+                [s for s, bad in (("priced 0 weapons", not priced), ("loaded 0 troops", not troops)) if bad])
+            print(f"SKIPPED: {what}; the check judged nothing", file=sys.stderr)
+            return 2
+        if failures:
+            print(f"\nCHECK FAILED: {len(failures)} weapon(s) could not be priced; "
+                  "the check cannot vouch for them")
+            return 1
+        if plans:
+            print(f"\nCHECK FAILED: {len(plans)} blade piece(s) would move; the Armory stats have "
+                  "drifted from the ladder (run without --check to read the plan)")
+            return 1
+        print("\nCHECK OK: no blade would move")
+        return 0
 
     if not args.apply:
         print("\n(dry run; pass --apply to write the Armory)")

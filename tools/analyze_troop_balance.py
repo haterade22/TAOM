@@ -1142,8 +1142,12 @@ def main():
             all_troops.append(t)
 
     # The reference is what the writer would put on disk, the clamp included.
-    analyze(all_troops, weights, args.outlier_threshold,
-            settled=settled_reference(item_classes, mounts, skill_sets) if item_classes else None)
+    try:
+        settled = settled_reference(item_classes, mounts, skill_sets) if item_classes else None
+    except RuntimeError as exc:
+        print(f'ERROR: {exc}', file=sys.stderr)
+        sys.exit(1)
+    analyze(all_troops, weights, args.outlier_threshold, settled=settled)
     all_ids = {t['id'] for t in all_troops}
     dq = data_quality(all_troops, file_cultures)
     dq['monotonicity'] = check_monotonicity(all_troops)

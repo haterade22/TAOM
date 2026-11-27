@@ -29,13 +29,10 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 - Method existence in the installed engine version (see `.claude/pinned-game-version.txt`)
 - Every caller of the target, with the actor each one supplies, whenever the patch infers an actor
   the signature does not carry (the player, the killer, the owner). Write that caller list into the
-  patch doc beside the claim. 2026-09-14: the blood-feud relation seam has no executor parameter;
-  the port arrived from the player-only caller, wrote "always the player", and the AI-executes-
-  player-kin caller ran the kinslaying multiplier against the bereaved (`lessons/harmony-il.md`).
+  patch doc beside the claim (`lessons/harmony-il.md` "A seam that lacks the actor has more than
+  one caller").
 
 ## Patch Types
-- **Prefix** — Runs before original method. Return `false` to skip original.
-- **Postfix** — Runs after original method. Can modify `__result`.
 - **Transpiler** — Modifies IL instructions. Most fragile — use sparingly.
 - **Finalizer**: runs after the original on every call, with a null `__exception` when nothing threw. `return null` swallows. Returning the exception makes Harmony `throw` it (whenever any finalizer on the method returns a value), which erases the throw site, so hand it back as `return RethrowStackPreserver.PreserveForRethrow(__exception, null);` (gate: `FinalizerRethrowGateTests`). An observe-only finalizer should be `void`, which keeps Harmony's `rethrow` and the trace. Why: `lessons/harmony-il.md` "A value-returning finalizer that hands back its exception erases the throw site". Before a finalizer or shield rethrows what it used to swallow, follow the exception to its next catcher: out of any `OnMissionTick` a rethrow hangs the next frame (`lessons/harmony-il.md`, co-op safety nets 2026-10-21).
 - **Prefix and finalizer pair**: the link between them is Harmony's `__state` (one zeroed local per call, set by the prefix before anything can throw or return early), never a static, a count or a thread-keyed flag. Harmony reruns every finalizer when a later one throws, and PatchShield strips prefixes but never finalizers, so a finalizer can run without its prefix. Test the pair through real Harmony. Why: `lessons/harmony-il.md` "a bracket must survive its prefix being stripped".
@@ -45,7 +42,7 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 - Patches are **thin entry points**: delegate ALL logic to a service, directly or through an `IOnXxx` hook interface when the patch needs a narrow seam or a test fake
 - Entry point files MUST be <150 lines (ADR-002)
 - Resolve services from IoC container, never instantiate directly
-- A prefix and finalizer on one method share `__state`. Patches on two different methods of one call chain share a `[ThreadStatic]`, cleared in a finalizer, never a Postfix
+- Patches on two different methods of one call chain share a `[ThreadStatic]`, cleared in a finalizer, never a Postfix
 
 ## Patch Organization
 - Place in `Main/Features/{FeatureName}/Hooks/`; a patch that names a TAOM.Client type goes in
@@ -59,19 +56,17 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 Any patch with `MovementOrder` in its postfix signature MUST go in its feature's own `Patch_MissionTime_<Feature>`
 category, applied at the first mission (`OnMissionBehaviorInitialize`) because `MovementOrder.cctor` reads `Mission.Current.CurrentTime`: null in
 `OnSubModuleLoad`/`OnGameInitializationFinished`. One category per feature, so a class that fails turns off only its own
-feature (split 2026-11-13). A feature module declares its category at `ApplyPhase.FirstMission`, as `MarshalsWordModule` does:
+feature. A feature module declares its category at `ApplyPhase.FirstMission`, as `MarshalsWordModule` does:
 that is the default route. `SubModule.cs` is single-owner and applies only the two existing ones, `Patch_MissionTime_SmartCavalryAI`
 and `Patch_MissionTime_CompanionTactics`. Document it under its own `## <category>` registry heading, or in the section `Patch_MissionTime_SetMovementOrder`
 plus a `NoRegistryHeading` row in `PatchCategoryNumberTests`; otherwise that test fails.
 
 ## Common Pitfalls
-- Collection modification during iteration — use `.ToList()` copy
 - Null handling — TaleWorlds often expects `TextObject.Empty` not `null`
-- Event timing — verify when events fire vs when state changes
 - Static state: avoid it; off the main thread it takes a lock or a concurrent collection ("Which thread runs your target").
 - Writing a TaleWorlds-owned ViewModel property from a patch or hook: read `.claude/rules/gui-vm-properties.md` first. A guarded setter makes a same-value write a no-op, and a reflected field write skips the change notification.
 - **No `ResetForUnload()` needed for a new patch.** Nothing reloads TAOM inside one process: the engine's only caller of `OnSubModuleUnloaded` is `Module.FinalizeModule` at shutdown (v1.5.3 `Module.cs:242-248,1296-1314`), and a rebuild means stopping the game and pressing Play again (Mike, 2026-09-24). A static service cache in a patch class therefore lives exactly as long as the process. The existing `ResetForUnload()` methods stay until their class is next touched, and `ResetForUnloadSweepTests` still requires every one that exists to be called from `OnSubModuleUnloaded`.
-- **Reflection in hot paths** — `AccessTools.Method` / `AccessTools.Field` lookups MUST be cached in a static field during `Initialize()`, never resolved inside `Prefix()`/`Postfix()`. Guard spawning calls the patch ~20x per settlement visit; uncached reflection means ~20 redundant lookups per entry.
+- **Reflection in hot paths:** `AccessTools.Method` / `AccessTools.Field` lookups MUST be cached in a static field during `Initialize()`, never resolved inside `Prefix()`/`Postfix()` ([settlement-guards.md](../../docs/features/settlement-guards.md) "Performance").
 
 ## Static State Machines: Sentinel-Collision Check
 
