@@ -102,6 +102,20 @@ the same native reset a rout does, which clears both.
   to the engine (`Mission.OnAgentRemoved` lists the removal states).
 - **Source:** [rca-dead-target-reset-2026-11-07.md](../rca-dead-target-reset-2026-11-07.md) findings 1 and 4.
 
+
+### A DLL that starts a thread pins itself and keeps CRT streams out of that thread (2026-11-27)
+A thread started from a DLL outlives what a template without one ever met. Pin the DLL
+(`GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_PIN | GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS)`) before `CreateThread`, or
+give the thread a stop protocol outside `DllMain`. Write its log with `CreateFileW` and `WriteFile`, never `fprintf`:
+`ExitProcess` ends the thread at any instruction, and a CRT stream lock it held hangs the `/MT` CRT's `_flushall` at
+teardown.
+- **Why missed:** the proxy added an endless thread to the ShaderCacheKeeper template, which logs only from the
+  loader's thread. The five-item port checklist has no thread or exit item, so both Claude lenses passed it; Codex
+  found both by reading the CRT sources.
+- **Prevent:** when a native change adds `CreateThread`, review the thread's whole life: unload, `ExitProcess`, and every
+  lock it takes.
+- **Source:** [rca-dinen-startup-proxy-2026-11-27.md](../rca-dinen-startup-proxy-2026-11-27.md) findings 1 and 2.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

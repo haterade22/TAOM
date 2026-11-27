@@ -18,4 +18,5 @@ Before you commit a C++ port, walk this checklist:
 3. **Inter-function offsets.** Any computation like `helperFunc = mainFunc - 0xF6A0` is fragile across engine versions and must be replaced with an independent signature scan. The original NativeSkinFixes had one such offset for `NotifyPhysics`; the port replaced it with a 7th pattern.
 4. **Atomic counters.** Any `static int counter` touched from a hook body is racy if the engine fires on multiple threads. Use `volatile LONG64` + `InterlockedIncrement64`.
 5. **SRWLock balance.** Reads use `AcquireSRWLockShared`; writes use `AcquireSRWLockExclusive`. Verify both sides — upstream mods routinely take the exclusive lock for reads ("just in case") and silently serialise everything.
-6. `/deep-review` adds its C++ checks when `.c`, `.cpp` or `.h` files are in the changeset.
+6. **Threads.** A DLL that starts a thread pins itself before `CreateThread` and keeps CRT streams out of that thread: `ExitProcess` ends it with any lock held ([lesson](../../docs/reviews/lessons/native-cpp-port.md)).
+7. `/deep-review` adds its C++ checks when `.c`, `.cpp` or `.h` files are in the changeset.

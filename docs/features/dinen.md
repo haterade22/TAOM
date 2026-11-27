@@ -6,10 +6,12 @@ Dinen ("silent" in Sindarin, as in Rath Dínen) answers the Modding Kit's assert
 editor process, from the moment the Kit constructs its modules. It lives in `TAOM.Dependencies` and runs only when
 that DLL loads from `bin/Win64_Shipping_wEditor`. The game and the dedicated server never run it. Issue: #1627.
 
-It does not reach the Kit's native start-up phase. On 2026-11-27 the Kit process started at 11:56:52, Dinen hooked at
-11:59:38 and then answered 267 boxes until the main menu; the boxes of the first three minutes (an `ASSERT` at
-`rglBuffer.cpp:899`, `RGL CONTENT WARNING` boxes for missing materials) came before any module existed. Run
-`tools/assert_auto_ignore.py` with the Kit for that phase. A native DLL loaded at process start is #1629.
+The managed part does not reach the Kit's native start-up phase. On 2026-11-27 the Kit process started at 11:56:52,
+Dinen hooked at 11:59:38 and then answered 267 boxes until the main menu; the boxes of the first three minutes (an
+`ASSERT` at `rglBuffer.cpp:899`, `RGL CONTENT WARNING` boxes for missing materials) came before any module existed.
+The start-up proxy (#1629, `Native/Dinen/`) covers that phase: a native `xinput9_1_0.dll` in
+`bin/Win64_Shipping_wEditor` that Windows loads with `TaleWorlds.Native.dll`, which gives the same answers from process
+start. Without the proxy, run `tools/assert_auto_ignore.py` with the Kit.
 
 ## Why This Exists
 
@@ -17,9 +19,11 @@ It does not reach the Kit's native start-up phase. On 2026-11-27 the Kit process
   `Safe Mode` box until someone clicks it.
 - **TAOM requirement:** Kit work (scenes, prefabs, tpac saves) needs an unattended load.
 - **Before Dinen:** `tools/assert_auto_ignore.py` (started by a desktop `.bat`) clicks each box from outside the
-  process after the box opens. It still runs and still covers what Dinen cannot: the game client
-  (`Bannerlord.exe`), the launcher and a `*_*` box that Watchdog shows from its own process (owned by `csrss.exe`).
-  Dinen answers the `*_*` upload question that `TaleWorlds.Native.dll` itself asks inside the Kit.
+  process after the box opens. It still covers what Dinen cannot: the game client (`Bannerlord.exe`), the launcher,
+  and a Kit without the start-up proxy. Dinen answers the `*_*` upload question that `TaleWorlds.Native.dll` itself
+  asks inside the Kit, and the proxy answers the `*_*` question that Watchdog shows from its own process (a system
+  box, owned by `csrss.exe`) while the Kit process runs. After a real crash the Kit process is gone, and its
+  Watchdog question waits for a click or the tool.
 
 An answered assert is not a pass. The causes stay; judge asset work with a game launch and read `rgl_log`.
 
@@ -55,6 +59,38 @@ it constructs any submodule) still opens; see the Overview. Once per process it 
 
 `Dinen.StopWarningDumps()` runs in `OnSubModuleLoad` and sends the engine command
 `debug.donot_create_dumps_for_warnings`, so warnings write no dump files.
+
+### Start-up proxy
+
+The wEditor `TaleWorlds.Native.dll` imports `XINPUT9_1_0.dll`, and that bin folder ships none, so Windows loads the
+proxy from the application folder when the engine DLL loads (checked 2026-11-27 with a PE read). `Native/Dinen/dinen_proxy.c`:
+
+1. In `DllMain` it reads `TaleWorlds.Native.dll`'s import table and, if the loader has bound the `MessageBoxA` slot,
+   points it at `answer_box`. If the slot is not bound yet, a thread that runs after the loader lock is released polls
+   for it every 10 ms, for at most 30 s. A fault in that read is caught (access violation and in-page error only) and
+   leaves the slot as it was.
+2. `answer_box` calls `DinenAnswerFor`, the C copy of `DinenPolicy.AnswerFor`, and passes every other box to the real
+   `MessageBoxA`. The managed hook later reads the slot as its original, so it chains to the proxy; both layers give
+   the same answers. The C copy trims what `string.Trim()` trims from a cp1252 caption (tab to carriage return, space,
+   no-break space). `test/host.c` checks it against the `DinenPolicyTests` cases, the trim set, a long caption and a
+   sweep of the 16 styles. Under another ANSI code page (cp932, for example) a caption padded with that page's own
+   space is shown, not answered. The proxy writes the slot with a compare-and-swap, so it never replaces a hook that
+   the managed layer wrote first, and it leaves the slot's page writable, so the managed write never meets a page the
+   proxy made read-only again.
+3. The same thread then looks for Watchdog's `*_*` question every 250 ms for the life of the process and posts No
+   to it (a `WM_COMMAND` for the No button, as the tool does). It answers a box that `Watchdog.exe` owns only when that
+   `Watchdog.exe` lies under the proxy's own bin folder. A `csrss.exe` box names no process, so the same title and
+   buttons raised by another program, such as a crashing game client, also get No. The DLL pins itself, so the thread
+   never outlives its code.
+4. The four XInput exports pass to Windows' own `xinput9_1_0.dll`, loaded on the first call (never in `DllMain`), as
+   ShaderCacheKeeper does.
+
+It writes `dinen_startup.log` beside itself with `WriteFile` (no CRT streams, which could hang at process exit): the
+hook result and one line for each answered box, line breaks in the box text replaced (at most 2000 entries in a
+process). If the hook comes from the wait thread rather than `DllMain`, a box the engine opens before it is not
+answered; the 2026-11-27 Kit run hooked in `DllMain`. A file named `dinen.off` beside the DLL turns it off. Install it with `python Native/Dinen/build.py
+--install` with the Kit closed; it refuses to replace an `xinput9_1_0.dll` that is not a Dinen build, such as a
+ShaderCacheKeeper copy. It is not part of `build.ps1` and never goes into `Win64_Shipping_Client`.
 
 ### Answers
 
@@ -94,19 +130,29 @@ are on the same tag.
 | `Dependencies/Foundation/Dinen.cs` | Editor check, import-table hook, the three Harmony prefixes, the dump command |
 | `Dependencies/Foundation/DinenPolicy.cs` | Pure decisions: the answer table, the import-slot search |
 | `Dependencies/SubModule.cs` | Calls `InstallIfEditor` in the constructor and `StopWarningDumps` in `OnSubModuleLoad` |
+| `Native/Dinen/dinen_proxy.c`, `.def`, `.rc`, `build.py` | The start-up proxy and its build and install script |
+| `Native/Dinen/test/` | Hermetic proxy test: a stand-in `TaleWorlds.Native.dll` and a host in `%TEMP%` |
 | `TAOM.Tests/Infrastructure/Dependencies/DinenPolicyTests.cs` | Answer table (with the engine's real styles), a synthetic PE image for the slot search, the parameter-name pins of the three prefixes, and a `BindingVerification` test of the action-code target |
 
 ## Testing
 
 - `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter FullyQualifiedName~DinenPolicyTests`
-- The native hook and the prefixes have no behaviour test: they need the Kit process.
+- `python Native/Dinen/build.py`, then `pwsh -File Native/Dinen/test/run_tests.ps1` (exit code = failed checks): the
+  proxy's exports, the hook in `DllMain` and from the wait thread, every answer, XInput reaching Windows, the log, the
+  Watchdog answer (a stand-in `Watchdog.exe` in the bin folder gets No; one elsewhere, and another program, keep their
+  box) and the off switch. The stand-in shows its own box, so the `csrss.exe` branch has no test; the Kit run checks it.
+- The managed hook and the prefixes have no behaviour test: they need the Kit process.
 
 ## How to verify in game
 
 1. Build with `./build.ps1`, so `TAOM.Dependencies.dll` reaches `Modules/TAOM.Dependencies/bin/Win64_Shipping_wEditor/`.
-2. Start the Modding Kit with TAOM enabled, and `tools/assert_auto_ignore.py` (or the desktop `.bat`) for the start-up
-   phase.
-3. Expect boxes to open, and the tool to click them, only before Dinen's first log line.
+2. Close the Kit, then run `python Native/Dinen/build.py --install`. Do not start `tools/assert_auto_ignore.py`.
+3. Start the Modding Kit with TAOM enabled. Expect no box to open from process start to the main menu. Open
+   `bin/Win64_Shipping_wEditor/dinen_startup.log`: expect a `MessageBoxA hooked` line at process start and an
+   `answered` line for each box of the start-up phase. Expect Watchdog's `*_*` question to close by itself, with a line
+   `answered '*_*' of csrss.exe: No`. Passed in part on 2026-11-27: the hook at 12:43:01 (in `DllMain`, 16 s after the
+   process started) and 92 answered boxes until the managed hook took over at 12:44:26. The Watchdog answer was not
+   yet installed in that run.
 4. Open `Modules/TAOM.Dependencies/diag.log`. Expect a `Dinen` line `MessageBoxA hooked in 1 import slot(s)`, a line for
    the dump command, and one `answered` line for each box the Kit did not show after that. Passed on 2026-11-27: the
    hook line at 11:59:38, `debug.donot_create_dumps_for_warnings: Done`, and 267 `answered` lines to the main menu.
