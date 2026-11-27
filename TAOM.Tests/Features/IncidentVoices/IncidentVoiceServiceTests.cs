@@ -431,6 +431,18 @@ public class IncidentVoiceServiceTests
     }
 
     [TestMethod]
+    public void ClosedReason_NamesAPlaceFixWithNoPlaceOnTheSide()
+    {
+        Add(IncidentRulesTests.Rule(options: 0, places: new PlaceFix("PLACE", "town")));
+        _places["town"] = new[] { new PlaceFacts("Barad-dur", new SideIds("empire_s", "mordor"), "mordor") };
+
+        var reason = _sut.ClosedReason("x");
+
+        Assert.IsNotNull(reason, "Review closes it, so the console must not blame vanilla's condition");
+        StringAssert.Contains(reason!, "town");
+    }
+
+    [TestMethod]
     public void ClosedReason_IsNullForAnOpenIncident_AndExplainsTheStandDown()
     {
         Add(IncidentRulesTests.Rule("incident_camp_fever", disease: true));

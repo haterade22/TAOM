@@ -64,7 +64,7 @@ internal sealed class IncidentVoiceService
 
         foreach (var fix in rule.Places)
         {
-            var place = IncidentPlacePicker.Pick(_adapter.Places(fix.Kind), p => PlaceRank(p, player, people, version), _adapter.IncidentSeed, rule.Id);
+            var place = PickPlace(fix, rule, player, people, version);
             if (place == null)
                 return false;
             incident.SetPlace(fix.Variable, place.Name);
@@ -85,8 +85,20 @@ internal sealed class IncidentVoiceService
         if (rule == null || player == null)
             return null;
         var people = PeopleOf(player);
-        return IncidentEligibility.ClosedReason(rule, IncidentVersionPicker.Pick(SideOf(player), people.Group), people);
+        var version = IncidentVersionPicker.Pick(SideOf(player), people.Group);
+        var reason = IncidentEligibility.ClosedReason(rule, version, people);
+        if (reason != null)
+            return reason;
+        foreach (var fix in rule.Places)
+        {
+            if (PickPlace(fix, rule, player, people, version) == null)
+                return "No " + fix.Kind + " on your side can fill {" + fix.Variable + "}, so Incident Voices keeps it closed.";
+        }
+        return null;
     }
+
+    private PlaceFacts? PickPlace(PlaceFix fix, IncidentRule rule, PlayerFacts player, PeopleFacts people, IncidentVersion version) =>
+        IncidentPlacePicker.Pick(_adapter.Places(fix.Kind), p => PlaceRank(p, player, people, version), _adapter.IncidentSeed, rule.Id);
 
     /// <summary>The full id of an incident typed as <c>incident_x</c> or <c>x</c>, or null when the catalog does not list it.</summary>
     internal string? ResolveId(string typedId) => _catalog.GetCatalog().FindLoose(typedId)?.Id;
