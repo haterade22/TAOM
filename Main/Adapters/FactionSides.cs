@@ -49,6 +49,12 @@ internal static class FactionSides
         return new SideIds(string.Empty, hero.Culture?.StringId ?? string.Empty);
     }
 
+    /// <summary>An entity with no faction of its own (a settlement of no realm) reads its culture alone; <see cref="SideIds.None"/> for null.</summary>
+    public static SideIds OfCulture(CultureObject? culture)
+    {
+        return culture == null ? SideIds.None : new SideIds(string.Empty, culture.StringId ?? string.Empty);
+    }
+
     /// <summary>A hero character reads <see cref="OfHero"/>; a troop has no faction and reads its own culture.</summary>
     public static SideIds OfCharacter(CharacterObject? character)
     {
