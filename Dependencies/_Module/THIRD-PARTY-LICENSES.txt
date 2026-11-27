@@ -100,6 +100,17 @@ under the License.
 
 ----
 
+QUIETEDITOR PORTIONS  --  inside TAOM.Dependencies.dll
+
+Dependencies/Foundation/Dinen.cs and DinenPolicy.cs (the Modding Kit assert silencer)
+are adapted from QuietEditor v1.2.0 by Urien586, with TAOM's changes.
+Source: https://github.com/Urien586/QuietEditor
+
+Copyright (c) 2026 Urien586
+Licensed under the MIT License (full text above).
+
+----
+
 All other code in this distribution (Dependencies/Foundation/*.cs,
 Dependencies/SubModule.cs, Dependencies/AliasStubSubModule.cs,
 Dependencies/EarlyLog.cs) is written by TAOM and MIT-licensed. The paragraph

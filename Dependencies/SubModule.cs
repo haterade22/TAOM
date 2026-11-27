@@ -39,6 +39,7 @@ public class SubModule : MBSubModuleBase
     public SubModule()
     {
         GameVersionNotice.ShowOnceIfMismatched();
+        Dinen.InstallIfEditor();
     }
 
     /// <summary>Client only. Holds every TaleWorlds.Engine.GauntletUI reference of the static constructor.</summary>
@@ -203,6 +204,8 @@ public class SubModule : MBSubModuleBase
             DiagLog.LogCaught("Dependencies", "OnSubModuleLoad/ApplyHarmonyGuards", ex);
             EarlyLog.Error($"[TAOM.Dependencies] Failed to apply Harmony guards: {ex.Message}");
         }
+
+        Dinen.StopWarningDumps();
 
         DiagLog.Log("Dependencies", "OnSubModuleLoad: checking for duplicate Harmony");
         CheckForDuplicateHarmony();
