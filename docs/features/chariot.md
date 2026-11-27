@@ -683,6 +683,62 @@ The triangle counts were read at 09:20 from the meshes in `AssetSources` (`tools
 files carry the build times 07:17, 07:13 and 01:57); a later mesh update changes them. The data gates on the two live files gave 22 PASS, 2 FAIL and 1 NOT RUN; the two that fail
 (`armory-refs`, `armour-colours`) name no chariot row, and the one that did not run is the localization test run.
 
+**His look at the sets in the Kit from above, 2026-11-27.** After the import he looked at each set in the Modding
+Kit from straight above, 6 to 8 m up, and sent pictures. Of the horned set's pole: "Remove javelins, just a waste of
+triangles, serves no purpose." Of the lacquer set's neck, where black cloth came through the red lames: "Pull the
+armor up until you cannot see the clipping of the cloth!" Of the sun set's neck, the same with red cloth: "Same, pull
+the neck armor UP until the clipping with the red cloth is gone." Earlier that morning, of the Blender row: the
+sun armour's straps over the top of the head "are probably not needed", one strap round the ears as on the lacquer
+armour is fine, and the horned armour's face plates "need a strap to hold the horse armor's face to the neck. Then I
+believe the carts and horse armors are done!" On the way to update: "All we have to do is update the fbx file in the
+asset sources, and everything will update in editor". So each repair went into `AssetSources` as it passed a
+read-only check, with a copy of the replaced files kept in the work folder, and he updated the mesh in the Kit.
+
+The Kit and the game pick a level of detail by distance, and his camera stood near the first switch. The faults
+were different at each level, and no gate had looked at a set from above at every level.
+
+- **Lacquer set (set D v23: cart D v17, armour 3 v18), installed 12:01, updated by him 12:03.** Cause: the neck
+  lames were placed on a line between the lining's corner points, and the lining's flat faces between those points
+  stand higher; at LOD1 the bands had no point on the crest. Lining seen through the lames from straight above at
+  rest, before and after, cm2 for one horse: LOD0 48.32 to 0; LOD1 123.87 to 0; LOD2 and LOD3 0.01 to 0; LOD4 99.0
+  to 0; LOD5 223.66 to 0; also 0 in the three neck poses at every level. At LOD0 to LOD3 the lames are lifted by
+  millimetres (median 2.05 mm at LOD0). At LOD4 and LOD5 the lames are the old ones and the cloth under them is
+  lowered: a first build that lifted the far lames by 35 mm (median) crossed the yoke and was refused. Changed
+  files: the mesh and the three armour 3 maps, whose lame band is 3 pixels taller. Triangles, LOD0 to LOD5: 58,353;
+  44,551; 27,497; 16,301; 6,982; 4,640. Left open: in the idle clip at LOD4 the left horse shows cloth in 42 of 88
+  measured frames (worst 25.75 cm2; the build before had 299.2); the lames stand 10 mm from the yoke at LOD1 with
+  no contact; the far lames cross the yoke in the neck turns at LOD5 as they did before.
+- **Horned set (set E v18: cart E v15, armour 4 v30), installed 12:29, updated by him 12:38.** One crown strap runs
+  from a gold ring on a riveted tab on the face plate's top edge, back over the poll between the ears, and ends
+  under the first neck lame. Two side straps were not possible, because the plate's top corners meet the lame's
+  edge. The four spears and their lashings are gone from the pole at every level (882 triangles at LOD0), and a
+  block of 12 triangles sits in the pole under the yoke post, where the spears had filled the place. Four cart maps
+  changed (`_front_d`, `_front_s`, `_base_d`, `_base_s`), to give back the light that the spears had taken. A first
+  build was refused twice over: the strap's front end had no fitting at LOD3 and stood 14 mm off its tab, and the
+  maps had changed in places up to 3.4 m from the spears, because the removal chose pixels by their bake point and
+  not by the faces that read them. In the installed build the strap's front end overlaps its fitting at LOD0 to
+  LOD3, its slip is at most 3.8 mm (head down 30 degrees), its rear end stays under the lame in every pose, and
+  no map pixel changed that only a far face reads. Armour against cart: 0 crossings at every level and pose (the
+  spears had made 18 to 40 in the neck turns). The shoulder spikes have 3 rings where they had 6 at LOD0, to stay
+  under the armour's triangle cap. Triangles, LOD0 to LOD5: 58,081; 43,459; 26,149; 15,816; 7,301; 4,398. Left
+  open: at LOD4 and LOD5 the block reads as a small square peg under the post; seen close from the side the
+  strap's front half bridges with air under it; a thin lighter sliver on the right wheel's blade, whose faces
+  read pixels beside the spears' own.
+- **Raider set and black set, weights only.** The raider set's neck lames (armour 1 `v24w1`) and the black set's
+  plates, fringe and bosses (armour 5 `v19w4`) take the weights of the surface they are fastened to. Both meshes
+  are equal to their earlier builds at rest. Installed 08:42 and 08:44; updated by him at 12:06 with cart A, whose
+  mesh without quiver and javelins had waited since 2026-11-26.
+- **Sun set: open.** A build with the headpiece ring and the browband removed, one strap round the ears, and the
+  lining lowered under the neck lames (the lames do not move) shows no cloth from above at LOD0 to LOD4, but for
+  0.04 cm2 at LOD2. It is not installed: one cheek strap lost its joint when the ear strap became a closed ring, and LOD5 showed more cloth in
+  the idle clip than the installed build.
+
+A study of the other installed sets from above at every level found no cloth through lames, and found faults of
+the same family farther out: the black set's cape leaves the croup bare at LOD4 and LOD5, carts A, B and E open a
+slit between the floor and the side walls at LOD1 and LOD2, and the raider armour's bridle stands over the first
+neck lame at LOD2 and LOD3. Their repairs are in work and are not installed. Nothing of this section was checked
+in the game.
+
 **Cart A without its quiver and javelins, 2026-11-26.** Of the cart that is in the game he said: "Cart A, we can
 remove the quiver and javelins and save on some triangles. They dont really do anything." Build v06 of
 `rhun_war_chariot` has no javelin case and javelins on the right wall and no bow case and arrows on the left wall,
@@ -1012,6 +1068,7 @@ no missing mesh or material line in the log. Then, for each set, the two checks 
 
 ## Changelog
 
+- 2026-11-27: The maintainer looked at the imported sets in the Kit from above. The lacquer set's neck lames no longer show cloth at any level (set D v23), the horned set has a strap from the face plate to the neck armour and a pole without spears (set E v18), and the raider and black sets hold together in motion (weights only). All four are in `AssetSources` and updated in the Kit, with cart A's mesh of 2026-11-26. The sun set's neck and head are open. The check in game is owed.
 - 2026-11-27: The maintainer imported the sun, lacquer and horned sets in the Modding Kit (mesh packages of 09:05). A read of the package bytes found the 19 chariot materials, their 57 map packages and the mesh bindings set up alike and correctly. Three harness items are in the Armory since 09:16: `taom_chariot_armour_rhun_sun`, `taom_chariot_armour_rhun_lacquer` and `taom_chariot_armour_rhun_horned`, with their rows in the three item tables. The check in game is owed.
 - 2026-11-27: The far levels of the sun and lacquer armours show far less lining and backing at rest (set C v24 and set D v21 installed at 07:45, LOD2 and LOD3 only). The slip measure is gate G15 of the armour build chains. A study of its largest classes found faults on every armour; candidates for set B's neck lames and the black set's plates wait for the maintainer's word. See "The far levels, a gate for motion, and what the gate found".
 - 2026-11-27: The armours came apart in the game's clips (one bone per plate over a backing that follows the skin). Weight repairs are installed for the sun set (set C v23, armour 2 v16) and the horned set (set E v16, armour 4 v26b), and for the lacquer set (set D v20, armour 3 v14); the black set has a candidate that waits for the maintainer's word. See "The armours in motion".

@@ -1840,3 +1840,24 @@ pose gates tested a hind leg 30 degrees back; the gallop clip swings it 41.9 deg
 - **Source:** [chariot.md](../../features/chariot.md), "The armours in motion"; the work folder's records
   `pose_scatter_study_2026-11-27.md` and `lane9_armour4_2026-11-27.md` (not in the repo). No issue: the maintainer
   waived the public issue for the chariot work.
+
+### A gate that reads LOD0 only passes a build whose far levels fail; a checker's clause names its levels and poses (2026-11-27)
+The maintainer looked at three imported chariot sets in the Modding Kit from straight above and found cloth through
+the neck lames of two. Every gate had passed. The fault was different at each level: one armour showed 48 cm2 of
+lining at LOD0, 124 at LOD1, none at LOD2 and LOD3, 99 at LOD4 and 224 at LOD5. The first repairs then failed for
+the same reason one level on: lames lifted by 2 mm at LOD0 were lifted by 35 mm at LOD5 and crossed the yoke; a new
+strap had its ring at LOD0 to LOD2 and none at LOD3, so its end stood 14 mm in the air; a map repair changed pixels
+that only faces 3 m away read.
+- **Why missed:** the cover, clearance, link and slip gates measured LOD0, and the far levels were judged by
+  triangle counts and back faces. No check looked from above, the view of a commander and of the Kit. The map tool
+  chose its pixels by where they were baked and not by the faces that read them. Two lanes edited shared build
+  scripts behind switches while a third built with them, before the proof that the default path was unchanged.
+- **Prevent:** measure what shows through an armour field from straight above at every level, at rest, in the neck
+  poses and in the idle clip. Count crossings with the cart at every level and pose against the installed build.
+  A strap's joint exists at every level that has the strap. A map change is accepted by the pixels that the faces
+  near the changed part read. An opt-in edit of a shared build file gets its default-path proof before another
+  lane builds with it. A checker's pass clause names its levels and poses: a clause on the distance to the yoke,
+  written for the far levels, refused a good build on a 5 mm change at LOD0 with no contact.
+- **Source:** [chariot.md](../../features/chariot.md), "His look at the sets in the Kit from above"; the work
+  folder's records of 2026-11-27 for the lacquer and horned sets and the top view study (not in the repo). No issue:
+  the maintainer waived the public issue for the chariot work.
