@@ -39,8 +39,6 @@ public class SeatBoxControlTests
 
     private int Lines(string result) => _log.Lines.Count(l => l.Id == SeatChecks.CommandId && l.Result == result);
 
-    // ---- the rectangle follows the drag ----
-
     [TestMethod]
     public void Drag_PastTheClickTest_ShowsTheRectangleFromThePressToThePointer()
     {
@@ -82,8 +80,6 @@ public class SeatBoxControlTests
 
         Assert.AreEqual(1, _engine.Count("box-show"));
     }
-
-    // ---- release ----
 
     [TestMethod]
     public void Release_AfterADrag_HidesTheRectangleAndSelectsTheCompaniesInside()
@@ -184,8 +180,6 @@ public class SeatBoxControlTests
         Assert.AreEqual(0, _engine.Count("pick-box"));
     }
 
-    // ---- hidden at every end ----
-
     [TestMethod]
     public void Reset_HidesTheRectangleAndForgetsTheDrag()
     {
@@ -222,8 +216,6 @@ public class SeatBoxControlTests
 
         Assert.IsFalse(_engine.BoxShown);
     }
-
-    // ---- Ctrl and a number ----
 
     [TestMethod]
     public void Transfer_WithCompaniesSelected_MovesTheirSoldiersIntoTheTarget()
@@ -327,8 +319,6 @@ public class SeatBoxControlTests
         Assert.IsNull(_engine.LastTransfer);
         CollectionAssert.AreEqual(new[] { SeatMessage.TransferRefused }, _said);
     }
-
-    // ---- looking mid-drag ----
 
     [TestMethod]
     public void LookStartedMidDrag_HidesTheRectangleAndDropsTheDrag()

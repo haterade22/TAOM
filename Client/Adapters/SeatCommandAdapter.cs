@@ -144,8 +144,6 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
         return _boxFormations.Count;
     }
 
-    // Replacing adds the box's companies first and then drops the others, so the panel's list is never empty in between, and a company that
-    // was selected and is in the box is kept, so it does not play the gesture again.
     public void SelectBox(SeatSelectAction action)
     {
         MissionThreadGuard.NoteCall("SeatCommandAdapter.SelectBox", _logger.LogError);
@@ -194,8 +192,7 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
             _mission.Mode == MissionMode.Deployment, selected.Any(formation => formation.IsPlayerTroopInFormation), target.IsPlayerTroopInFormation);
     }
 
-    // The order of the transfer popup's confirm button (MissionOrderTroopControllerVM.ExecuteConfirmTransfer, v1.5.7 :492-498). The target is
-    // never one of its own sources: the engine would move soldiers into the company they stand in.
+    // The order of the transfer popup's confirm button (MissionOrderTroopControllerVM.ExecuteConfirmTransfer, v1.5.7 :492-498).
     public void Transfer(int formationIndex, int number)
     {
         MissionThreadGuard.NoteCall("SeatCommandAdapter.Transfer", _logger.LogError);

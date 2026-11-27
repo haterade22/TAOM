@@ -23,10 +23,7 @@ internal interface ISeatCommandAdapter
     /// <summary>Writes the selection through the order controller, on the company <see cref="PickOwn"/> kept.</summary>
     void Select(SeatSelectAction action);
 
-    /// <summary>
-    /// Counts the selectable companies of the player's side with a soldier whose projected chest is inside the rectangle, and keeps them for
-    /// <see cref="SelectBox"/>. The ground never hides a soldier here, as in any box select.
-    /// </summary>
+    /// <summary>Counts the selectable companies with a soldier's chest inside the rectangle, and keeps them for <see cref="SelectBox"/>.</summary>
     int PickBox(SeatRect box);
 
     /// <summary>Writes the selection through the order controller, on the companies <see cref="PickBox"/> kept.</summary>

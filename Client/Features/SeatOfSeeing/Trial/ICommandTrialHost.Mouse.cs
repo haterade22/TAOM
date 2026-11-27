@@ -49,13 +49,13 @@ internal partial interface ICommandTrialHost
     /// <summary>How many soldiers the second chosen company has; -1 when none was chosen.</summary>
     int MouseSecondCount { get; }
 
-    /// <summary>
-    /// What Ctrl and the second chosen company's number key would ask for: the shared transfer request the patch stores. The trial cannot hold a real
-    /// Control key, so it calls the request itself; the mission tick that takes it is the Seat's own.
-    /// </summary>
+    /// <summary>What Ctrl and the second chosen company's number key would ask for: the shared transfer request the patch stores.</summary>
     void MouseRequestTransfer();
 
-    /// <summary>Puts the soldiers back: selects the second chosen company alone and moves <paramref name="number"/> of them into the first. A formation write: call it after the in-mission-tick marker.</summary>
+    /// <summary>
+    /// Puts the soldiers back: selects the second chosen company alone and moves <paramref name="number"/> of them into the first.
+    /// A formation write: call it after the in-mission-tick marker.
+    /// </summary>
     void MouseTransferBack(int number);
 
     /// <summary>How many companies the player's order controller has selected.</summary>

@@ -11,9 +11,8 @@ using TAOM.Tests.Migration;
 namespace TAOM.Tests.Features.SeatOfSeeing;
 
 /// <summary>
-/// Patch140_CtrlNumberTransfer (design section 3): the prefix on <c>MissionOrderVM.OnTroopFormationSelected(int formationTroopIndex)</c>. Harmony
-/// injects the prefix's parameter by NAME, so the engine's parameter name is pinned by the binding gate; with the command mouse off the prefix lets
-/// vanilla run and stores nothing.
+/// Patch140_CtrlNumberTransfer: Harmony injects the prefix's parameter by NAME, so the binding gate pins the engine's parameter name;
+/// with the command mouse off the prefix lets vanilla run and stores nothing.
 /// </summary>
 [TestClass]
 [TestCategory("RequiresGame")]

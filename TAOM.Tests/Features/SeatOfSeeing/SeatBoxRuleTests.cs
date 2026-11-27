@@ -7,8 +7,6 @@ namespace TAOM.Tests.Features.SeatOfSeeing;
 [TestClass]
 public class SeatBoxRuleTests
 {
-    // ---- the rectangle ----
-
     [TestMethod]
     public void Normalise_WhicheverWayTheDragWent_GivesTheSameRectangle()
     {
@@ -50,8 +48,6 @@ public class SeatBoxRuleTests
         Assert.IsFalse(SeatBox.Contains(in box, 50f, 220.1f));
     }
 
-    // ---- the decision ----
-
     [TestMethod]
     public void Decide_CompaniesInside_ReplacesTheSelection()
     {
@@ -90,8 +86,6 @@ public class SeatBoxRuleTests
         Assert.AreEqual(SeatSelectAction.None, SeatBox.Decide(false, 0, 2, true));
     }
 
-    // ---- Ctrl and a number: which presses the patch takes ----
-
     [TestMethod]
     public void Intercepts_LiveWithControlAndANumberKey_IsTrueForEachCompany()
     {
@@ -108,8 +102,6 @@ public class SeatBoxRuleTests
         Assert.IsFalse(SeatTransferRule.Intercepts(true, true, 8));
         Assert.IsFalse(SeatTransferRule.Intercepts(true, true, -1));
     }
-
-    // ---- Ctrl and a number: the plan ----
 
     [TestMethod]
     public void Plan_TargetNotSelected_MovesEverySelectedSoldier()

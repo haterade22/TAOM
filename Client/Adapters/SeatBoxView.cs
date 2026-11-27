@@ -6,12 +6,7 @@ using TAOM.Features.SeatOfSeeing.Domain;
 
 namespace TAOM.Client.Adapters;
 
-/// <summary>
-/// The view model of <c>SeatSelectBox.xml</c>: the selection rectangle, in real pixels. The prefab is a full-screen display-only widget whose
-/// rectangle child takes its place and size through <c>ScaledPositionXOffset</c>, <c>ScaledPositionYOffset</c>, <c>ScaledSuggestedWidth</c>
-/// and <c>ScaledSuggestedHeight</c> (the staged siege HUD's marker pattern), so the UI scale never enters the maths. The engine's own debug
-/// rectangle is a conditional call that compiles away in a shipping build, so a widget is the only way to draw one.
-/// </summary>
+/// <summary>The view model of <c>SeatSelectBox.xml</c>: the selection rectangle, in real pixels.</summary>
 public sealed class SeatSelectBoxVM : ViewModel
 {
     private bool _isVisible;
@@ -96,10 +91,8 @@ public sealed class SeatSelectBoxVM : ViewModel
 }
 
 /// <summary>
-/// The selection rectangle on the Seat's cursor layer. It is loaded once, when that layer is built, shown only while a box drag runs, and
-/// hidden at every end of the drag. <see cref="Drop"/> forgets it with no call into the engine (the scene and the layer may be gone, and the
-/// screen finalizes its layers itself), as the order flags' <c>Drop</c> does. A prefab that fails to load leaves the box off for the mission and
-/// writes one error line; the drag still selects.
+/// The selection rectangle on the Seat's cursor layer, loaded once when the layer is built and shown only while a box drag runs. A prefab that
+/// fails to load leaves the box off for the mission and writes one error line; the drag still selects.
 /// </summary>
 internal sealed class SeatBoxView
 {
@@ -111,10 +104,10 @@ internal sealed class SeatBoxView
 
     internal SeatBoxView(Action<string> logError) => _logError = logError;
 
-    /// <summary>Whether the rectangle is on the screen (the field trial reads it).</summary>
+    /// <summary>Whether the rectangle is on the screen.</summary>
     internal bool Shown => _vm is { IsVisible: true };
 
-    /// <summary>Loads the movie on the layer, once, and only when the prefab is registered: a missing prefab is logged and the box stays off.</summary>
+    /// <summary>Loads the movie on the layer, once; a missing prefab is logged and the box stays off.</summary>
     internal void Attach(GauntletLayer layer)
     {
         if (_vm != null || _failed)
@@ -122,8 +115,8 @@ internal sealed class SeatBoxView
 
         try
         {
-            // LoadMovie adds the movie's identifier before it looks the prefab up, and with the prefab missing the movie keeps no prefab, so
-            // releasing it at the screen's teardown throws (<c>GauntletMovie.Release</c> calls <c>_moviePrefab.OnRelease()</c>). The prefab is checked first and the load skipped.
+            // LoadMovie adds the movie's identifier before it looks the prefab up, so a missing prefab leaves a movie with no prefab, and
+            // releasing it at the screen's teardown throws (GauntletMovie.Release calls _moviePrefab.OnRelease()).
             if (UIResourceManager.WidgetFactory?.IsCustomType(PrefabName) != true)
             {
                 _failed = true;

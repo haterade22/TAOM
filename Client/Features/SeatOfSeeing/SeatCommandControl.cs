@@ -47,10 +47,7 @@ internal sealed class SeatCommandControl
         _adapter.BoxHide();
     }
 
-    /// <summary>
-    /// The middle button is looking: the cursor is hidden and nothing is captured, so a rectangle on the screen would hang there while the camera
-    /// turns. Hides it and drops the drag, so the release that follows selects nothing.
-    /// </summary>
+    /// <summary>The middle button is looking: hides the rectangle and drops the drag, so the release that follows selects nothing.</summary>
     internal void LookStarted()
     {
         _leftArmed = false;
@@ -66,8 +63,8 @@ internal sealed class SeatCommandControl
     }
 
     /// <summary>
-    /// From the mission tick, while live and seated. Acts on the captured frame once, and on a Ctrl and number transfer the prefix asked for
-    /// (<paramref name="transferTo"/>, the company index 0 to 7, or -1 for none), which needs no pointer frame.
+    /// From the mission tick, while live and seated: acts on the captured frame once, and on the transfer to company
+    /// <paramref name="transferTo"/> (0 to 7; -1 for none).
     /// </summary>
     internal void OnMissionTick(int transferTo = -1)
     {
@@ -162,7 +159,6 @@ internal sealed class SeatCommandControl
         _outcomes.Pass(SeatChecks.CommandId, _key + ":select-box", "mission=" + _key + " command=select-box companies=" + found.ToString(CultureInfo.InvariantCulture));
     }
 
-    // Ctrl and a number: the selected companies, less the target, move into the target company. A refusal gives one message and one skip line.
     private void Transfer(int formationIndex)
     {
         var plan = SeatTransferRule.Plan(_adapter.ReadTransfer(formationIndex));
@@ -178,7 +174,6 @@ internal sealed class SeatCommandControl
             "mission=" + _key + " command=transfer company=" + (formationIndex + 1).ToString(CultureInfo.InvariantCulture) + " soldiers=" + plan.Number.ToString(CultureInfo.InvariantCulture));
     }
 
-    // A release within the click test: a click selects.
     private void Click(in SeatPointerFrame frame)
     {
         var picked = _adapter.PickOwn(frame.PixelX, frame.PixelY);

@@ -2,7 +2,7 @@
 # Written by python tools/comment_ratchet.py --regen; read by CommentRatchetGateTests.
 Client/Adapters/QuestJournalAdapter.cs	3
 Client/Adapters/SeatBoxView.cs	2
-Client/Adapters/SeatCommandAdapter.cs	5
+Client/Adapters/SeatCommandAdapter.cs	2
 Client/Adapters/SeatCursorLayer.cs	1
 Client/Adapters/SeatPanelRelay.cs	13
 Client/Adapters/SeatScreenAdapter.cs	47
@@ -132,7 +132,6 @@ Client/Features/SeatOfSeeing/Hooks/Patch140_EquipmentViewDropTick.cs	1
 Client/Features/SeatOfSeeing/Hooks/Patch140_EquipmentViewEquipTick.cs	1
 Client/Features/SeatOfSeeing/Hooks/Patch140_FormationFocusPoint.cs	2
 Client/Features/SeatOfSeeing/Hooks/Patch140_OrderFlagGetCollidedEntity.cs	3
-Client/Features/SeatOfSeeing/SeatCommandControl.cs	2
 Client/Features/SeatOfSeeing/SeatKeys.cs	2
 Client/Features/SeatOfSeeing/SeatSession.cs	12
 Client/Features/SeatOfSeeing/SeatTimeControl.cs	2
@@ -142,7 +141,6 @@ Client/Features/SeatOfSeeing/Trial/CommandTrialGameHost.cs	2
 Client/Features/SeatOfSeeing/Trial/CommandTrialGameManager.cs	1
 Client/Features/SeatOfSeeing/Trial/CommandTrialHost.Seat.cs	5
 Client/Features/SeatOfSeeing/Trial/CommandTrialScript.Seat.cs	12
-Client/Features/SeatOfSeeing/Trial/CommandTrialScript.SeatMouse.cs	6
 Client/Features/SeatOfSeeing/Trial/CommandTrialScript.cs	4
 Client/Features/SeatOfSeeing/Trial/CommandTrialSettings.cs	3
 Client/Features/SettlementNameplateRelation/TaomSettlementPlateWidget.cs	1

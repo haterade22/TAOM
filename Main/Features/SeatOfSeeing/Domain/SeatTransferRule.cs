@@ -1,9 +1,7 @@
 namespace TAOM.Features.SeatOfSeeing.Domain;
 
 /// <summary>
-/// What the transfer reads of the player's order controller: the target company, and the selection with its soldier counts. The counts are
-/// <c>Formation.CountOfUnits</c>, which includes the player's own agent; <c>SelectedHasHero</c> and <c>TargetHasHero</c> say that a selected
-/// company, or the target, holds him, because the popup's cap leaves him out.
+/// What the transfer reads of the order controller: the target, and the selection with its soldier counts and whether it holds the hero.
 /// </summary>
 internal readonly record struct SeatTransferFacts(
     bool TargetExists, bool TargetSelected, int SelectedCompanies, int SelectedUnits, int TargetUnits,
@@ -23,11 +21,9 @@ internal enum SeatTransferRefusal
 internal readonly record struct SeatTransferPlan(SeatTransferRefusal Refusal, int Number);
 
 /// <summary>
-/// Ctrl and a number key moves the selected companies' soldiers into that company (owner decision, design section 3). The order is the one the
-/// troop transfer popup gives, <c>SetOrderWithFormationAndNumber(Transfer, target, n)</c> (<c>MissionOrderTroopControllerVM.ExecuteConfirmTransfer</c>,
-/// v1.5.7 :492-498), which splits the number across the selected companies by their size (<c>OrderController.cs:915-975</c>) and divides by their
-/// total, so a total of zero must never reach it. A target company with no soldiers is a valid target: the popup lists all eight companies and
-/// bars only those that are selected (<c>MissionOrderVM.OnTransferStarted</c> :1036-1040).
+/// Ctrl and a number key moves the selected companies' soldiers into that company, as the troop transfer popup's confirm does
+/// (<c>MissionOrderTroopControllerVM.ExecuteConfirmTransfer</c>, v1.5.7 :492-498). The order divides by the selected companies' total
+/// (<c>OrderController.cs:915-975</c>), so a total of zero must never reach it.
 /// </summary>
 internal static class SeatTransferRule
 {
@@ -35,8 +31,7 @@ internal static class SeatTransferRule
     internal const int Companies = 8;
 
     /// <summary>
-    /// The patch takes the key press instead of vanilla's when the command mouse is live, Left Control is down (the key vanilla's own toggle
-    /// reads, <c>MissionOrderTroopControllerVM.cs:617</c>) and the index names a company. Every other press runs vanilla.
+    /// Whether the patch takes the key press: the command mouse is live, Left Control is down and the index names a company.
     /// </summary>
     internal static bool Intercepts(bool commandLive, bool leftControlDown, int formationIndex) =>
         commandLive && leftControlDown && formationIndex >= 0 && formationIndex < Companies;

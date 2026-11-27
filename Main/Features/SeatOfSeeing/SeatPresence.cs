@@ -48,7 +48,7 @@ internal static class SeatPresence
             Interlocked.Exchange(ref _transferTo, -1);
     }
 
-    /// <summary>The Ctrl and number prefix stores the company (0 to 7) to move the selected companies into; the command mouse takes it on its next mission tick.</summary>
+    /// <summary>The Ctrl and number prefix stores the company (0 to 7) to move the selected companies into.</summary>
     internal static void RequestTransfer(int formationIndex) => Interlocked.Exchange(ref _transferTo, formationIndex);
 
     /// <summary>The stored transfer target, once; -1 when none was asked for.</summary>

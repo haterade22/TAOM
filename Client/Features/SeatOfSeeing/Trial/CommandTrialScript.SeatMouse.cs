@@ -4,11 +4,7 @@ using TAOM.Features.SeatOfSeeing.Domain;
 
 namespace TAOM.Client.Features.SeatOfSeeing.Trial;
 
-/// <summary>
-/// The eight command mouse steps of the field trial (Seat build-spec 12): a click that selects, a Shift click that toggles, a right click that moves, a
-/// right drag that draws a line and a facing, a right click on an enemy that charges, a Shift right click that queues, a left drag that box selects,
-/// and Ctrl and a number that moves the selected company's soldiers into another company.
-/// </summary>
+/// <summary>The eight command mouse steps of the field trial (Seat build-spec 12).</summary>
 internal sealed partial class CommandTrialScript
 {
     private const float MouseSettleSeconds = 0.5f;
@@ -240,8 +236,6 @@ internal sealed partial class CommandTrialScript
         yield return SeatTrialMouse.Queued(captured, queued, armed, _host.Faulted || _host.MarshalFaulted) ? Verdict.Passed(facts) : Verdict.Failed(facts);
     }
 
-    // A left drag round a soldier of the player's side: the rectangle shows while it runs and is gone at the release, and the soldier's company is
-    // selected. The box is 120 pixels square about his chest, so neighbouring companies may be inside it too; only the chosen one is required.
     private IEnumerable<Verdict> SelectBox()
     {
         if (!Seated)
@@ -282,9 +276,6 @@ internal sealed partial class CommandTrialScript
         return new SeatMousePoint(true, x, y, at.RangedX + offset / 1000f, at.RangedY + offset / 1000f, at.WorldX, at.WorldY);
     }
 
-    // Ctrl and the second company's number key, as the patch would store it: the first company's soldiers move into the second. The trial cannot hold a
-    // real Control key, so the shared request is called itself; the Seat's mission tick takes it. The soldiers are put back at the end, so the later steps
-    // find the companies they chose from.
     private IEnumerable<Verdict> TransferCtrlNumber()
     {
         if (!Seated)
@@ -310,7 +301,6 @@ internal sealed partial class CommandTrialScript
         var facts = "first=" + Whole(firstBefore) + ">" + Whole(firstAfter) + " second=" + Whole(secondBefore) + ">" + Whole(secondAfter) + Standing();
         var passed = SeatTrialMouse.Transferred(firstBefore, firstAfter, secondBefore, secondAfter, _host.Faulted);
 
-        // Back to where they were, whatever the verdict: what moved is what the second company gained.
         yield return Verdict.InMissionTick;
         _host.MouseTransferBack(secondAfter - secondBefore);
         yield return passed ? Verdict.Passed(facts) : Verdict.Failed(facts);

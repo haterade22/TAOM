@@ -58,8 +58,8 @@ internal static class SeatTrialMouse
         chosenCompanySelected && shownWhileDragging && hiddenAfter && !faulted;
 
     /// <summary>
-    /// Ctrl and a number moved the selected company's soldiers into the target company: the target grew by exactly what the source lost, at least one
-    /// soldier moved, and no more than <see cref="TransferLeftoverMax"/> stayed behind.
+    /// Ctrl and a number moved the selected company's soldiers into the target company: the target grew by what the source lost, and no more
+    /// than <see cref="TransferLeftoverMax"/> stayed behind.
     /// </summary>
     internal static bool Transferred(int sourceBefore, int sourceAfter, int targetBefore, int targetAfter, bool faulted)
     {

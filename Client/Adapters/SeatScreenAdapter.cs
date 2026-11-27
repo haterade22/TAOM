@@ -275,7 +275,7 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
     /// <summary>The field trial's mouse: frames the next screen ticks read in place of the mouse, one a tick; empty in every player session.</summary>
     internal Queue<SeatPointerFrame> TrialPointer { get; } = new();
 
-    /// <summary>The selection rectangle; the command adapter shows and hides it, and it loads on this adapter's cursor layer when that is built.</summary>
+    /// <summary>The selection rectangle; the command adapter shows and hides it.</summary>
     internal SeatBoxView Box => _box ??= new SeatBoxView(_logger.LogError);
 
     // The scene layer reads a mouse button only on a frame it holds the mouse, so edges come from the shield layer's input. Control and Shift are read
