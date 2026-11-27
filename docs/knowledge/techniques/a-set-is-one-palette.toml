@@ -1,0 +1,19 @@
+title = "Give the armour and the vehicle of one item one palette"
+line = "The armour and the vehicle of one item share one palette. Check the pairing as a whole before it is shown."
+why = "The session's reading: he expects one item to read as one design. The case: a black horse armour stood in front of a gold cart."
+area = "asset-craft"
+status = "active"
+next = "A set sheet that shows the armour and the vehicle together from one camera before any single part is shown. The asset job can render one staged set from one camera (rhun2_setscene.py, rhun2_setpreview.py): the order is what no build holds."
+
+[when]
+outside = ["*rharm*paint*.py", "*rharm*design*.py", "*rhun2_var*.py", "*rhun2_set*.py"]
+tasks = ["armour palette", "set palette", "cart armour colour"]
+
+[[evidence]]
+grade = "maintainer"
+value = "My expectation is if the horse armor is black, the cart must be the same color. Black, gold trim and wood"
+date = 2026-11-25
+
+[[source]]
+maintainer = "2026-11-25"
+words = "My expectation is if the horse armor is black, the cart must be the same color. Black, gold trim and wood"

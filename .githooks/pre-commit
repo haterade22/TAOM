@@ -120,4 +120,17 @@ if printf '%s\n' "$STAGED" | grep -qE '^Main/_Module/ModuleData/.*\.(xml|xslt)$'
     run_gate "generate_career_kits --verify" 15 tools/generate_career_kits.py --verify
 fi
 
+# The knowledge store (#1613, ADR-016). tools/knowledge.py reads what the commit stages and judges the
+# store only when the commit can change its verdict: a store file, the tool, a file an entry names, or
+# any deletion (a rename shows as one). It reads the git index only, names and text, so nothing that
+# just the work tree holds refuses the commit: not a new entry file, and not another session's
+# unfinished edit of an entry or of a file an entry names. It then judges the last commit the same
+# way and exits 1 only for a finding that the last commit did not have, so one old finding on trunk
+# does not refuse every later commit. Exit 1 refuses, 2 means it could not judge (the commit goes
+# through and the output says so). core.hooksPath is shared by every worktree, so a checkout whose
+# branch has no tools/knowledge.py yet skips this.
+if [ -f tools/knowledge.py ]; then
+    run_gate "knowledge check" 15 tools/knowledge.py check --staged
+fi
+
 exit $REFUSED

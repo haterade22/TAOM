@@ -12,8 +12,6 @@ public class SeatCommandRuleTests
     private static SeatCommandFacts Ready() => new(MainAgentExists: true, Deployment: false, EnginePlayerControlled: true, HeroFightsOn: false,
         HasBots: true, HasTroopsUnderThem: true, PlayerGeneralOrSergeant: true, MissionEnding: false, BattleInRetreat: false);
 
-    // ---- live ----
-
     [TestMethod]
     public void IsLive_WithEveryConditionMet_IsTrue() => Assert.IsTrue(SeatCommandRule.IsLive(true, true, true, false));
 
@@ -28,8 +26,6 @@ public class SeatCommandRuleTests
 
     [TestMethod]
     public void IsLive_InANetworkSession_IsFalse() => Assert.IsFalse(SeatCommandRule.IsLive(true, true, true, true));
-
-    // ---- the panel's own gate ----
 
     [TestMethod]
     public void Refusal_None_WhenTheHeroLivesAndTroopsStand_IsTrue() => Assert.AreEqual(SeatCommandRefusal.None, SeatCommandRule.Refusal(Ready()));
@@ -87,8 +83,6 @@ public class SeatCommandRuleTests
         Assert.AreEqual("mission-ending", SeatCommandRule.Reason(SeatCommandRefusal.MissionEnding));
     }
 
-    // ---- the shield ----
-
     [TestMethod]
     public void ShieldHolds_WithTheCursorShownAndTheCommandMouseLive_IsTrue() => Assert.IsTrue(SeatCommandRule.ShieldHolds(true, true, false, false));
 
@@ -103,8 +97,6 @@ public class SeatCommandRuleTests
 
     [TestMethod]
     public void ShieldHolds_WhenAnotherOverlayClaimsThePointer_YieldsToIt() => Assert.IsFalse(SeatCommandRule.ShieldHolds(true, true, false, true));
-
-    // ---- click against drag ----
 
     [TestMethod]
     public void IsClick_WithASmallMoveAndALongHold_IsAClick() => Assert.IsTrue(SeatClickRule.IsClick(100f, 100f, 105f, 95f, 2f));
@@ -133,8 +125,6 @@ public class SeatCommandRuleTests
         Assert.IsTrue(SeatClickRule.IsClick(0f, 0f, 50f, 50f, 0.299f));
         Assert.IsFalse(SeatClickRule.IsClick(0f, 0f, 50f, 50f, 0.3f));
     }
-
-    // ---- selection ----
 
     [TestMethod]
     public void Decide_PlainClickOnAnUnselectedCompany_ReplacesTheSelection() =>
@@ -168,8 +158,6 @@ public class SeatCommandRuleTests
     public void Decide_ShiftClickOnNothing_KeepsTheSelection() =>
         Assert.AreEqual(SeatSelectAction.None, SeatSelectRule.Decide(true, false, false, 2));
 
-    // ---- the order a right click gives ----
-
     [TestMethod]
     public void Decide_OnAnEnemyCompany_Charges() =>
         Assert.AreEqual(SeatOrderKind.Charge, SeatOrderRule.Decide(true, true, true, true));
@@ -193,8 +181,6 @@ public class SeatCommandRuleTests
         Assert.AreEqual("nothing-selected", SeatOrderRule.Reason(false));
         Assert.AreEqual("no-target", SeatOrderRule.Reason(true));
     }
-
-    // ---- the pick ----
 
     private static IReadOnlyList<FordsControlCandidate> Units(params (float X, float Y)[] at)
     {
@@ -252,8 +238,6 @@ public class SeatCommandRuleTests
         Assert.IsTrue(SeatKeepRule.AgentCounts(true, 29.9f, SeatPick.TestedDistance(30f)));
         Assert.IsTrue(SeatKeepRule.AgentCounts(false, float.NaN, SeatPick.TestedDistance(30f)));
     }
-
-    // ---- review fixes ----
 
     [TestMethod]
     public void ShieldHolds_DuringTheTroopTransferPopup_IsFalse() => Assert.IsFalse(SeatCommandRule.ShieldHolds(true, true, false, false, transferActive: true));

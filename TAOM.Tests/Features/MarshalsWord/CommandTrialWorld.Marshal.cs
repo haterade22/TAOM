@@ -293,7 +293,6 @@ internal sealed partial class CommandTrialWorld
         _widthsHeld = false;
     }
 
-    // The view arms the held keys with the order panel open or the Seat's command mouse live (MarshalView.OnScreenTick).
     public bool MarshalQueueArmed => _queueHeld && QueueKeyArms && (PanelOpen || PanelShutsWhenTheKeyIsHeld || CommandLive);
 
     public bool MarshalMarkArmed => _markHeld && MarkKeyArms && (PanelOpen || PanelShutsWhenTheKeyIsHeld || CommandLive);

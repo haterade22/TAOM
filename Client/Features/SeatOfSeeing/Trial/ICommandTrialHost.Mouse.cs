@@ -11,8 +11,8 @@ internal partial interface ICommandTrialHost
     bool CommandLive { get; }
 
     /// <summary>
-    /// Chooses the player's soldier nearest the view, on foot or mounted, with no hero. With <paramref name="otherCompany"/> true, the nearest one in
-    /// a company other than the first one chosen. False when there is none. The soldier is also the one <c>AimAtChosen</c> turns the view onto.
+    /// Chooses the player's soldier nearest the view, on foot or mounted, with no hero; with <paramref name="otherCompany"/> true, the nearest one in
+    /// a company other than the first chosen; false when there is none.
     /// </summary>
     bool MouseChooseSoldier(bool otherCompany);
 

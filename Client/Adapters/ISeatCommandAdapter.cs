@@ -8,12 +8,7 @@ internal readonly record struct SeatPicked(bool Found, bool Selected);
 /// <summary>What a right click's ray and pick found: an enemy company, an object the side can order, and whether the ground there takes a company.</summary>
 internal readonly record struct SeatRightProbe(bool Enemy, bool Orderable, bool ValidGround);
 
-/// <summary>
-/// Every engine read and write of the Seat's command mouse (Seat build-spec 6.4), so the control runs in a test. It reads the player's own
-/// companies and the enemy's, projects and casts rays, writes the order controller's selection and gives orders. A client type with no caller in
-/// core code; every member runs on the main thread, from <c>OnMissionTick</c>. The probe methods keep what they found for the one action that
-/// follows in the same tick.
-/// </summary>
+/// <summary>Every engine read and write of the Seat's command mouse (Seat build-spec 6.4), so the control runs in a test.</summary>
 internal interface ISeatCommandAdapter
 {
     /// <summary>The panel's own gate, read for <see cref="SeatCommandRule"/>.</summary>
@@ -51,7 +46,7 @@ internal interface ISeatCommandAdapter
 
     /// <summary>
     /// What a right click at a pixel names: the enemy soldier nearest the pointer (else the company the focus handler names), the object the
-    /// pointer's ray hits that the side can order, and the ground it hits. Keeps all three for the order that follows.
+    /// pointer's ray hits that the side can order, and the ground it hits; keeps all three for the order that follows.
     /// </summary>
     SeatRightProbe ProbeRight(float pixelX, float pixelY, float rangedX, float rangedY);
 
@@ -76,9 +71,6 @@ internal interface ISeatCommandAdapter
     /// <summary>Hides the preview and forgets the line.</summary>
     void LineCancel();
 
-    /// <summary>
-    /// The teardown: forgets the flags and the focus subscription with no native call, because the scene may be gone (as Marshal's
-    /// <c>DropFlags</c> does). Safe to call twice.
-    /// </summary>
+    /// <summary>The teardown: forgets the flags and the focus subscription with no native call, because the scene may be gone.</summary>
     void Drop();
 }

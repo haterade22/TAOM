@@ -1,0 +1,34 @@
+title = "End every strap in a made joint at both ends"
+line = "Every strap, band or rope ends in a made joint at both ends: a sewn lap on leather, a ring or buckle with a riveted tab on metal, under the rim at a helm or shell. No end in the air, and none on a stud."
+why = "The session's reading: a part must look made and mounted, and an end that stops in the air or sits on a stud reads as floating. It was the maintainer's most repeated correction, and a link check by distance passed the builds in six marked pictures that he rejected on 2026-11-25: near is not connected."
+area = "asset-craft"
+status = "active"
+ask = "Where does each strap end, at both ends? Name the joint for every end that this change adds or moves."
+next = "A check that classes each strap end by the joint it lands on (a sewn lap, a ring or a riveted tab passes; a stud or bare air fails), printed in the build report and then failing the build. A check by distance does not do it."
+
+[when]
+outside = ["*rharm*strap*.py", "*rharm*link*.py", "*rharm*design*.py", "*rharmb_shell*.py", "*rhun2*link*.py", "*rhun2_var*.py"]
+tasks = ["strap end", "strap joint", "bridle strap"]
+
+[[evidence]]
+grade = "maintainer"
+value = "The straps need to be attached to something"
+date = 2026-11-24
+
+[[evidence]]
+grade = "maintainer"
+value = "Attach both ends with stiches and not on the button"
+date = 2026-11-25
+
+[[acts]]
+state = "instance"
+where = "strap5_sewn in rharmb_design5.py: a sewn lap at a strap's end"
+scope = "armour 5; no check classes a strap end by the joint it lands on"
+
+[[source]]
+maintainer = "2026-11-24"
+words = "The straps need to be attached to something"
+
+[[source]]
+maintainer = "2026-11-25"
+words = "Attach both ends with stiches and not on the button"

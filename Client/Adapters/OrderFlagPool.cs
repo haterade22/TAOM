@@ -8,7 +8,7 @@ namespace TAOM.Client.Adapters;
 /// <summary>
 /// A pool of order flags, built as <c>OrderTroopPlacer.AddOrderPositionEntity</c> builds one (v1.5.7 OrderTroopPlacer.cs:507-511): an empty entity
 /// in the scene, not affected by the season, holding a copy of the <c>order_flag_small</c> metamesh (a metamesh, not a prefab), hidden until it is
-/// placed. Marshal's Word draws the road ahead of a queue with one, and the Seat's command mouse previews a dragged line with another.
+/// placed.
 /// </summary>
 internal sealed class OrderFlagPool
 {

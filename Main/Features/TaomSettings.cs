@@ -1311,6 +1311,11 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public Dropdown<string> WandererAllegianceScope { get; set; } = new Dropdown<string>(
         new[] { "All wanderers (by culture)", "Named companions only" }, 0);
 
+    [SettingPropertyGroup("{=taom_mcm_group_world}World/{=taom_mcm_group_wanderer_allegiance}Wanderer Allegiance")]
+    [SettingPropertyBool("{=taom_mcm_EnableWandererSideTowns}Wanderers Stay On Their Side", Order = 2, RequireRestart = false,
+        HintText = "{=taom_mcm_EnableWandererSideTowns_hint}When ON (default), a new, dismissed or relocated wanderer goes to a town whose owner is on their side when such a town has room: an orc to an Evil town, a Gondor ranger to a Free one. Neutral wanderers and Neutral towns mix with everyone. A wanderer already standing in a wrong-side town stays until vanilla's daily swap picks them. When OFF, vanilla picks any town.")]
+    public bool EnableWandererSideTowns { get; set; } = true;
+
     // --- World / Hard Questions ---
 
     // GroupOrder 57: 9, 10, 15, 19-56 and 100 were taken as of 2026-10-18.
@@ -3216,7 +3221,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_seat_of_seeing}Seat of Seeing")]
     [SettingPropertyBool("{=taom_seat_mcm_cursor}Show a cursor with the order panel", Order = 2, RequireRestart = false,
-        HintText = "{=taom_seat_mcm_cursor_hint}While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons does not press it yet: it gives a Move order on the ground behind it. Default: on.")]
+        HintText = "{=taom_seat_mcm_cursor_hint}While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons presses it, as its number key does. Default: on.")]
     public bool SeatCursorWithPanel { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultCursorWithPanel;
 
     [SettingPropertyGroup("{=taom_mcm_group_seat_of_seeing}Seat of Seeing")]
@@ -3251,7 +3256,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_mcm_group_seat_of_seeing}Seat of Seeing")]
     [SettingPropertyBool("{=taom_seat_mcm_command_mouse}Command with the mouse", Order = 9, RequireRestart = false,
-        HintText = "{=taom_seat_mcm_command_mouse_hint}While you are in the Seat in a battle where you give orders, the mouse commands your companies: a left click on a soldier selects his company (Shift adds or removes one, a click on nothing clears), a right click on the ground moves the selected companies there, dragging with the right button draws their line, and a right click on an enemy sends them to charge him. The cursor shows all the time and the keyboard keeps every battle key. Default: on.")]
+        HintText = "{=taom_seat_mcm_command_mouse_hint}While you are in the Seat in a battle where you give orders, the mouse commands your companies: a left click on a soldier selects that soldier's company (Shift adds or removes one, a click on nothing clears), a right click on the ground moves the selected companies there, dragging with the right button draws their line, and a right click on an enemy sends them to charge it. The cursor shows all the time and the keyboard keeps every battle key. Default: on.")]
     public bool SeatCommandMouse { get; set; } = TAOM.Features.SeatOfSeeing.SeatSettingsProvider.DefaultCommandMouse;
 
     // --- Marshal's Word (docs/features/marshals-word.md) ---

@@ -27,11 +27,9 @@ internal sealed class CommandTrialSettings : ISeatSettingsProvider
     // The lift of the hero's view is a setting that defaults off, and rise_with_panel cannot pass without it.
     public bool RiseWithPanel => true;
 
-    // Off in a run: an edge scroll would fly the view whenever the pointer rests at a window edge. edge_pan turns it on for its own steps and off again.
     public bool EdgeScroll { get; set; }
 
     public float PanSpeed => 1f;
 
-    // Off in a run: the cursor would show all the time and the shield would take every button. The mouse steps turn it on for themselves and off again.
     public bool CommandMouse { get; set; }
 }

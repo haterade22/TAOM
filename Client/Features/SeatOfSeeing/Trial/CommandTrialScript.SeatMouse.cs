@@ -7,16 +7,12 @@ namespace TAOM.Client.Features.SeatOfSeeing.Trial;
 /// <summary>
 /// The eight command mouse steps of the field trial (Seat build-spec 12): a click that selects, a Shift click that toggles, a right click that moves, a
 /// right drag that draws a line and a facing, a right click on an enemy that charges, a Shift right click that queues, a left drag that box selects,
-/// and Ctrl and a number that moves the selected company's soldiers into another company. The pointer is injected into the
-/// Seat's own pointer path (never an operating system click), so each step runs the screen tick's capture, the mission tick's pick and the real
-/// order controller. What the steps cannot prove is the feel of the real mouse, the pixels at a UI scale other than 1 and the look of the preview line:
-/// those stay with a person.
+/// and Ctrl and a number that moves the selected company's soldiers into another company.
 /// </summary>
 internal sealed partial class CommandTrialScript
 {
     private const float MouseSettleSeconds = 0.5f;
 
-    // The command mouse turned on for the step: the value is in memory only, and the step waits for the Seat to take it up and show its cursor.
     private IEnumerable<Verdict> MouseLive()
     {
         _host.SetCommandMouse(true);
@@ -34,7 +30,6 @@ internal sealed partial class CommandTrialScript
             yield return Verdict.Waiting("mouse-order");
     }
 
-    // A soldier of the player's side is chosen, the view turns onto him and he is found on the screen.
     private IEnumerable<Verdict> MouseAimAtOwn(bool otherCompany, string what)
     {
         yield return Verdict.InMissionTick;
@@ -219,7 +214,6 @@ internal sealed partial class CommandTrialScript
         if (!first.Found || !second.Found)
             yield return Verdict.Failed("reason=no-ground first=" + Bit(first.Found) + " second=" + Bit(second.Found) + Standing());
 
-        // The first right click goes through as a plain order: no key is held.
         _host.MouseClick(first, right: true, shift: false, ctrl: false);
         var firstAt = _now;
         while (_now - firstAt < MouseSettleSeconds)
@@ -240,7 +234,6 @@ internal sealed partial class CommandTrialScript
         var queued = _host.MarshalQueuedSteps(0);
         _host.MarshalHoldQueue(false);
 
-        // A direct order clears the queue the step made, so the company does not walk the legs after the step.
         yield return Verdict.InMissionTick;
         _host.MarshalStandGround();
         var facts = "captured=" + Whole(captured) + " queued=" + Whole(queued) + " armed_at_order=" + Bit(armed) + " panel=" + Bit(_host.PanelOpen) + Faulted() + Standing();

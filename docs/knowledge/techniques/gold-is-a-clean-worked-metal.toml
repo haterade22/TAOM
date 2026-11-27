@@ -1,0 +1,24 @@
+title = "Paint gold as a clean worked metal"
+line = "Gold has nearly smooth faces, a fine mark at most, and crisp bevelled edges. Match an approved asset's finish by measurement."
+why = "A coarse, lumpy noise in the normal map of gold reads as rough."
+area = "asset-craft"
+status = "active"
+next = "A shared report of the normal map's roughness on the gold parts of an asset against the approved asset's."
+
+[when]
+outside = ["*rharm*paint*.py", "*rhun2*compose*.py", "*rhun2*gold*.py"]
+tasks = ["gold texture", "gold trim", "metal finish"]
+
+[[evidence]]
+grade = "maintainer"
+value = "the gold texturing is very rough and looks bad"
+date = 2026-11-24
+
+[[acts]]
+state = "instance"
+where = "rhun2_gold_ref_a.py, the gold of the approved cart A as the reference of the compose step, and the probe rhun2_measure_gold.py"
+scope = "the cart variants"
+
+[[source]]
+maintainer = "2026-11-24"
+words = "the gold texturing is very rough and looks bad"

@@ -1,9 +1,6 @@
 namespace TAOM.Features.SeatOfSeeing.Domain;
 
-/// <summary>
-/// What the order panel's own gate reads (<c>MissionOrderVM.CheckCanBeOpened</c>, v1.5.7 :740-770), read once by the adapter. The command mouse
-/// gives an order only where the panel would open, so a click can never take delegated companies back from the AI of a hero who is gone.
-/// </summary>
+/// <summary>What the order panel's own gate reads (<c>MissionOrderVM.CheckCanBeOpened</c>, v1.5.7 :740-770), read once by the adapter.</summary>
 internal readonly record struct SeatCommandFacts(
     bool MainAgentExists, bool Deployment, bool EnginePlayerControlled, bool HeroFightsOn, bool HasBots, bool HasTroopsUnderThem,
     bool PlayerGeneralOrSergeant, bool MissionEnding, bool BattleInRetreat, bool OrderMenuOpen = false);
@@ -22,16 +19,15 @@ internal enum SeatCommandRefusal
 internal static class SeatCommandRule
 {
     /// <summary>
-    /// The mouse owns the Seat's buttons: the setting is on, the view is in the Seat, the mission kind lets the player order, and no network
-    /// session runs (co-op included). The cursor shows and the click shield covers the screen while this holds, even after the hero has fallen.
+    /// The mouse owns the Seat's buttons: the setting is on, the view is in the Seat, the mission kind lets the player order, and no network session
+    /// runs (co-op included).
     /// </summary>
     internal static bool IsLive(bool settingOn, bool seated, bool ordersPermitted, bool networkSession) =>
         settingOn && seated && ordersPermitted && !networkSession;
 
     /// <summary>
-    /// The panel's test, in its order: no main agent, a main agent the player does not control (the hero who fights on counts as controlled,
-    /// as <c>Patch140_OrderPanelCheck</c> counts him), no troops under the player, then an ending mission that is not a retreat. Deployment skips
-    /// the control test, as the panel does.
+    /// The panel's test, in its order: no main agent, a main agent the player does not control, no troops under the player, then an ending mission
+    /// that is not a retreat; deployment skips the control test, as the panel does.
     /// </summary>
     internal static SeatCommandRefusal Refusal(SeatCommandFacts facts)
     {
@@ -47,11 +43,9 @@ internal static class SeatCommandRule
     }
 
     /// <summary>
-    /// The click shield covers the whole screen: the cursor shows, the command mouse is live, the middle button is not looking, and no other
-    /// overlay that takes the mouse buttons has the pointer (the battle action bar and the other views keep their clicks). The troop transfer
-    /// popup is one such overlay whose layer mask the panel's check does not show (the order layer takes the mouse itself then), so it never
-    /// holds. A middle press while the shield already holds a left or right button does not drop it (<paramref name="buttonTaken"/>): the
-    /// scene layer would otherwise become the mouse-down layer and vanilla would see that button's release.
+    /// The click shield covers the whole screen: the cursor shows, the command mouse is live, the middle button is not looking, and no other overlay
+    /// that takes the mouse buttons has the pointer; a middle press while the shield already holds a left or right button (<paramref
+    /// name="buttonTaken"/>) does not drop it, or the scene layer would become the mouse-down layer and vanilla would see that button's release.
     /// </summary>
     internal static bool ShieldHolds(bool cursorShown, bool commandLive, bool lookHeld, bool anotherLayerClaims, bool transferActive = false, bool buttonTaken = false) =>
         cursorShown && commandLive && !transferActive && (!lookHeld || buttonTaken) && !anotherLayerClaims;

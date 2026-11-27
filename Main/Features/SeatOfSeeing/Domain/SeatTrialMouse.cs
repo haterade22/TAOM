@@ -6,9 +6,7 @@ namespace TAOM.Features.SeatOfSeeing.Domain;
 internal readonly record struct SeatMousePoint(bool Found, float PixelX, float PixelY, float RangedX, float RangedY, float WorldX, float WorldY);
 
 /// <summary>
-/// The verdicts of the command mouse steps of the field trial (select_click, select_shift, move_right_click, drag_facing, charge_enemy,
-/// queue_with_mouse), with no engine type. The client's script reads the engine and these decide. Every number must be a real one: a measure that
-/// is NaN never passes.
+/// The verdicts of the command mouse steps of the field trial, with no engine type; every number must be a real one, since a NaN never passes.
 /// </summary>
 internal static class SeatTrialMouse
 {
@@ -33,9 +31,7 @@ internal static class SeatTrialMouse
     /// <summary>A plain click on a soldier left his company, and only it, selected.</summary>
     internal static bool Selected(bool onlyChosenCompany, bool faulted) => onlyChosenCompany && !faulted;
 
-    /// <summary>
-    /// Shift added a second company to the first, and a second Shift click on it took it off again, leaving the first alone.
-    /// </summary>
+    /// <summary>Shift added a second company to the first, and a second Shift click on it took it off again, leaving the first alone.</summary>
     internal static bool Toggled(bool firstOnlyBefore, bool bothAfterAdd, bool firstOnlyAfterRemove, bool faulted) =>
         firstOnlyBefore && bothAfterAdd && firstOnlyAfterRemove && !faulted;
 
@@ -72,8 +68,8 @@ internal static class SeatTrialMouse
     }
 
     /// <summary>
-    /// The angle in degrees between a facing and the normal of a line from one point to another, taking either normal (a formation may face
-    /// either side of its line): 0 when it faces along the normal, 90 when it faces along the line. NaN when the line or the facing has no length.
+    /// The angle in degrees between a facing and the normal of a line from one point to another, taking either normal: 0 along the normal, 90 along
+    /// the line, NaN when either has no length.
     /// </summary>
     internal static float NormalError(float lineX, float lineY, float faceX, float faceY)
     {
@@ -82,7 +78,6 @@ internal static class SeatTrialMouse
         if (!(line > 1e-6) || !(face > 1e-6))
             return float.NaN;
 
-        // The cross product of the line and the facing, over both lengths, is the cosine of the angle between the facing and the line's normal.
         var cosine = Math.Abs((double)lineX * faceY - (double)lineY * faceX) / (line * face);
         return (float)(Math.Acos(Math.Min(1.0, cosine)) * 180.0 / Math.PI);
     }

@@ -278,9 +278,7 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
     /// <summary>The selection rectangle; the command adapter shows and hides it, and it loads on this adapter's cursor layer when that is built.</summary>
     internal SeatBoxView Box => _box ??= new SeatBoxView(_logger.LogError);
 
-    // Edges come from the shield layer's input (the scene layer reads a mouse button only on a frame it holds the mouse), the level and the
-    // pointer from the raw input. A press over a panel button is the relay's, so the command mouse never sees it, and a release belongs to
-    // whoever saw its press (SeatPointerEdges), so it never sees the release of the relay's press either. Control and Shift are read
+    // The scene layer reads a mouse button only on a frame it holds the mouse, so edges come from the shield layer's input. Control and Shift are read
     // raw, as the panel's own Control test is (MissionOrderTroopControllerVM.cs:617).
     public SeatPointerFrame ReadPointer()
     {
@@ -290,7 +288,6 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
         var shield = _cursorLayer?.Input;
         if (shield == null || _relay is { } relay && relay.TransferActive())
         {
-            // The troop transfer popup has the mouse: the command mouse captures nothing (its layer's own mask, not ours, takes the buttons).
             _edges.Reset();
             return default;
         }
@@ -362,8 +359,6 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
         var input = _screen.SceneLayer.Input;
         var byTrial = TrialPlayerClose;
         TrialPlayerClose = false;
-        // The right button is read raw: a right release over a panel button belongs to the click shield, not to the scene layer, and the relay
-        // turns it into the panel's own Escape (SeatPanelRelay), which is a close of the player's.
         // Game key 77 (SelectOrderReturn) closes the panel at the root of a layout that has a Return order (GauntletOrderUIHandler.cs:449-452,
         // 484-492), so it shares the view-orders bit. A signal counts only on a closing edge, so a Return press in a sub-menu suppresses nothing.
         return new SeatCloseSignals(input.IsHotKeyReleased("ToggleEscapeMenu"), Input.IsKeyReleased(InputKey.RightMouseButton),

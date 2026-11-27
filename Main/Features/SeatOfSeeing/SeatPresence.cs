@@ -37,7 +37,7 @@ internal static class SeatPresence
 
     /// <summary>
     /// The command mouse is live (<see cref="Domain.SeatCommandRule.IsLive"/>): Marshal's Word arms its held keys and outlines as it does for an open
-    /// order panel. Leaving the Seat clears it with the cursor.
+    /// order panel.
     /// </summary>
     internal static bool CommandMouse => _commandMouse;
 

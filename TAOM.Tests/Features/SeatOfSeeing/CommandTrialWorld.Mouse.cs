@@ -202,7 +202,6 @@ internal sealed partial class CommandTrialWorld
         _companySoldiers[_secondIdx] += TransferLosesSoldiers ? moved - 5 : moved;
     }
 
-    // Called at the start of the mission tick, before the script: the pointer's clicks of the screen ticks since the last one.
     private void ApplyMouse()
     {
         if (CommandLive)

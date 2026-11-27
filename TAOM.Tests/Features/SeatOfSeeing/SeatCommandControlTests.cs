@@ -38,8 +38,6 @@ public class SeatCommandControlTests
 
     private int Lines(string result) => _log.Lines.Count(l => l.Id == SeatChecks.CommandId && l.Result == result);
 
-    // ---- left click ----
-
     [TestMethod]
     public void LeftClick_OnAnUnselectedCompany_PicksAtThePointerAndReplacesTheSelection()
     {
@@ -129,8 +127,6 @@ public class SeatCommandControlTests
         CollectionAssert.Contains(_engine.Calls, "select:ReplaceWith");
     }
 
-    // ---- once per capture ----
-
     [TestMethod]
     public void MissionTick_RepeatedByFastTime_ActsOnTheCapturedClickOnce()
     {
@@ -162,8 +158,6 @@ public class SeatCommandControlTests
 
         Assert.AreEqual(0, _engine.FactsReads);
     }
-
-    // ---- right click ----
 
     [TestMethod]
     public void RightClick_OnAnEnemy_Charges()
@@ -259,8 +253,6 @@ public class SeatCommandControlTests
         CollectionAssert.Contains(_engine.Calls, "move");
     }
 
-    // ---- right drag ----
-
     [TestMethod]
     public void RightDrag_PreviewsEachFrameAndCommitsOnRelease()
     {
@@ -336,8 +328,6 @@ public class SeatCommandControlTests
         Assert.IsFalse(_engine.LineShown);
         Assert.AreEqual(0, _engine.Count("line-commit"));
     }
-
-    // ---- refusal ----
 
     [TestMethod]
     public void AfterTheHeroFell_AClickSelectsNothingOrdersNothingAndWritesOneSkip()
