@@ -419,7 +419,7 @@ the end) and the hand-overs `out\armours\HANDOVER_agent1.md` (armours 1 to 3), `
 
 | Cart | Design | Armour | Wood | The maintainer's verdict |
 |---|---|---|---|---|
-| A `rhun_war_chariot` (in the game) | Scale plates, fan panels, scythe wheels | its Armory armour, none of the new ones | as installed; he named no choice, so it does not change | none recorded in this work |
+| A `rhun_war_chariot` (in the game) | Scale plates, fan panels, scythe wheels | its Armory armour, none of the new ones | as installed; he named no choice, so it does not change | "Cart A, we can remove the quiver and javelins and save on some triangles." (2026-11-26; build v06, sources replaced the same day, his update in the Kit owed) |
 | B `rhun_war_chariot_b` Reaver | Open lattice frame, red leather X straps, pierced spearhead standard | 1 raider | Painter | "Cart B - Painter wood"; "remove the javelins from cart B too" (waits for set B) |
 | C `rhun_war_chariot_c` Sun Car | Fan front wall, lamellar walls, gold disc wheels | 2 sun | Painter with the delivered gloss | "Cart C - Painter wood, delivered gloss" |
 | D `rhun_war_chariot_d` Lacquer Court | Red lacquer sun panels in gold frames, gold scale body | 3 lacquer | Painter | "Cart D - Painter wood"; "Once we fix the issues this cart set up is AWESOME"; of the inner fan: "This serves no purpose and wont ever be used, waste of triangles and polys remove it." (gone since D v17) |
@@ -565,6 +565,87 @@ translations wait for the language pass. The repo's tables hold the item: `tools
 `tools/external-loc-coverage-baseline.json`. Owed in game, by a person: add `taom_chariot_armour_rhun_raider` and
 `taom_chariot_a` with the cheat console, equip both, and ride into a battle.
 
+**The lacquer set (set D) in the Armory's sources, 2026-11-26.** In the same look at the staged sets he said: "Cart D
+is ready for import. Looks real good." and "Armour 3 v06 just needs the front armour to be fastened to the head armor
+so it isnt hanging". Set v19 is cart D v17 with horse armour 3 v13: 58,353 triangles at LOD0, the armour 9,468 for one
+horse, every set gate passed. The chest panel now hangs from two straight straps with sewn laps, from the breast
+strap up to the neck lining under the lowest neck band. A read-only check with close renders found it ready. Against
+the build he looked at, these also changed: the face plate is one shell with round rope eye rings (his word of
+2026-11-25), the browband runs under the face plate's top band and is lapped onto both cheek straps, the flank and
+rump panels have hangers that end under their plates, and the cart has no inner fan screen (his word of
+2026-11-25). Open and small: the browband's bend shades differently on the two sides at close range, and the face
+plate's lower end has no strap, as in the build he saw.
+
+At 20:48 ten source files went into `AssetSources\creature\chariot` under new names
+(`mesh\rhun_war_chariot_d.fbx`; `textures\rhun_war_chariot_d_front_*`, `rhun_war_chariot_d_base_*` and
+`rhun_horse_armour_3_*`, each `_d`, `_n`, `_s`), with equal hashes. The import in the Modding Kit and the harness
+item are owed: an item row that names a mesh the Kit does not hold yet hangs the preload, so the row follows the
+import.
+
+**The sun set (set C) in the Armory's sources, 2026-11-27.** Of the staged sets he said on 2026-11-26: "chariot c is
+good, looks real good. Is ready to be imported." and "armour 2 needs work, remove the ear armor on the horse that is a
+waste. Then please attach the front armor with straps that are hidden in the back. Having armor not fastened down is
+real." Set v22 is cart C v16, unchanged against the stage he saw, with horse armour 2 v15: 59,460 triangles at LOD0,
+the armour 8,903 for one horse. The armour has no ear pieces. The chest panel hangs from two straps: each has a
+square stitched lap on the panel's band, one fold at the band's top edge, and a straight run under the shoulder
+plate's rear corner to its upper end under the back plate. Each shoulder plate is held by a carrier strap to under
+the back plate and by the neck band under its front corner. It took four builds (v11 to v14); a read-only check with
+its own renders of the staged file found v14 ready.
+
+That check's list of what carries each part showed that no strap held the back plate, from which the chest straps,
+the carriers and the flank panels hang. Build v15 adds a girth: an upright red band behind the elbow with a buckle
+on each side, its ends under the back plate's rim. Nothing else of v14 moved and no map changed; a second read-only
+check found it ready and better than v14.
+
+Open on this armour: the rump plate has no strap of its own (its front row lies under the back plate's rear rim);
+the chest plate has no strap of its own (its sides lie under the shoulder plates); the girth is not drawn at LOD4
+and LOD5, and the chest straps and the carriers not from LOD3 on; the shoulder plate's front tab holds only near the
+rest pose; 448 triangles at LOD2 have no UV area.
+
+At 00:07 ten source files (then set v21, with armour v14) went into `AssetSources\creature\chariot` under new names
+(`mesh\rhun_war_chariot_c.fbx`; `textures\rhun_war_chariot_c_front_*`, `rhun_war_chariot_c_base_*` and
+`rhun_horse_armour_2_*`, each `_d`, `_n`, `_s`), with equal hashes. At 01:03 the mesh was replaced by set v22's,
+with a kept copy of the v21 file; the nine maps are the same for both. The import in the Modding Kit and the harness
+item are owed; the item row follows the import.
+
+**The horned set (set E) in the Armory's sources, 2026-11-27.** Of the staged sets he said on 2026-11-26: "Armour 4
+horse armor - details matter, fine tune this details!" and "Cart E - Looks good, the only thing I would change is the
+texture of the wood being the same direction if we can. Right now it is all over the place." Set v15 is cart E v13
+with horse armour 4 v25e: 58,991 triangles at LOD0, the armour 9,477 for one horse (cap 9,500).
+
+On the armour, every strap end that sat on a stud is now a made joint: the neck straps end under the lowest neck lame
+and on a ring on a riveted tab on the chest plate; the cheek straps end on ring tabs on the face plate and in sewn
+laps on the noseband; the withers, back and rump straps end in sewn laps; each shoulder scale field has a top band
+that two withers straps are sewn onto. The scale fields have even borders and no slits at the row ends, and the
+neck lames lap closed. A first check found two faults (neck strap tops in the air; eye rims and the poll that
+changed shape at the LOD switch); build v25e repaired both, and a second read-only check of the staged file found it
+ready. On the cart, the wood grain now runs along the boards on the inner front wall and the top planks; the inner
+side wall slabs still have level grain under upright battens.
+
+Open on this set: in the pose gate's extreme poses (hind leg back 30 degrees, head down 30 degrees) the haunch scale
+plates part and the top neck lames lift, as in the build he saw; whether a gallop in the game shows it was not
+checked when this was written. The eye openings at LOD1 and LOD2 have an angular edge close up. The shoulder band
+ends stand 10 to 30 mm off the backing in close views from above.
+
+At 00:52 ten source files went into `AssetSources\creature\chariot` under new names
+(`mesh\rhun_war_chariot_e.fbx`; `textures\rhun_war_chariot_e_front_*`, `rhun_war_chariot_e_base_*` and
+`rhun_horse_armour_4_*`, each `_d`, `_n`, `_s`), with equal hashes. The import in the Modding Kit and the harness
+item are owed; the item row follows the import.
+
+**Cart A without its quiver and javelins, 2026-11-26.** Of the cart that is in the game he said: "Cart A, we can
+remove the quiver and javelins and save on some triangles. They dont really do anything." Build v06 of
+`rhun_war_chariot` has no javelin case and javelins on the right wall and no bow case and arrows on the left wall,
+with their straps, mounts and lashings. The wall faces and the right wall boss that those parts covered are built
+again; the right boss is a mirror of the left one at LOD0 to LOD3. The maps give back the light under the removed
+parts, and the two strap prints on the right top rail are gone. The horse armour did not change. The whole mesh went
+from 59,173 to 57,684 triangles at LOD0 and from 16,817 to 16,581 at LOD3.
+
+At 23:03 five source files in `AssetSources\creature\chariot` were replaced under their old names
+(`mesh\rhun_war_chariot.fbx`; `textures\rhun_war_chariot_front_d.png`, `_front_s.png`, `_base_d.png`, `_base_s.png`),
+each with a kept copy of the file it replaced and an equal hash after the copy. The two normal maps stay as
+installed. The items do not change: the mesh name is the same. The game shows the new cart only after the maintainer
+clicks update on the mesh and its maps in the Modding Kit; that step is owed.
+
 Not marked by him on set v26 or v27 and still open on the set, for builders after the reset:
 
 - Armour 5: the dark place at the withers in the hero view (the place of his pictures 64 and 65). Its cause is
@@ -612,9 +693,9 @@ B, D, C, E.
 | Cart | Newest | Staged | State | Open (review counts: the cart review `wf_5c1aaa1f-cb7`, stopped at about 13:07; its checker had finished only cart D) |
 |---|---|---|---|---|
 | B | v23 (v21 without the javelins, 2026-11-26) | v23, in set b (set v24, with armour 1 v23); in the game since 2026-11-26 as `rhun_war_chariot_b` | Painter wood; link gate 444 islands, 0 unlinked; set 43,490 triangles at LOD0 | 30 review findings of 2026-11-25 (11 "would mark: yes"), not checked; the gold bracket legs under the top rail show plain where the javelins hid them |
-| C | v16 (LOD UV fix) | v14, in set c | Painter wood, delivered gloss; link gate 1,291 | 24 findings (5 yes), not checked |
-| D | v17 (LOD UV fix, inner fan gone: 1,183 triangles less at LOD0) | v15, in set d | Painter wood; link gate 1,021, 0 unlinked | 23 findings (9 yes); the checker found 21 real and added 6 |
-| E | v12 (LOD UV fix) | v10, in set e | Source wood; link gate 845 | 26 findings (6 yes), not checked |
+| C | v16 (LOD UV fix) | v16, in set c (set v22, with armour 2 v15); its sources are in the Armory's `AssetSources` since 2026-11-27 as `rhun_war_chariot_c` | Painter wood, delivered gloss; set 59,460 triangles at LOD0; the stage's manifest reports every gate passed, with the armour UV row as a count | 24 review findings of 2026-11-25 (5 yes), not checked |
+| D | v17 (LOD UV fix, inner fan gone: 1,183 triangles less at LOD0) | v17, in set d (set v19, with armour 3 v13); its sources are in the Armory's `AssetSources` since 2026-11-26 as `rhun_war_chariot_d` | Painter wood; set 58,353 triangles at LOD0, every set gate passed | 23 review findings of 2026-11-25 (9 yes); the checker found 21 real and added 6 |
+| E | v13 (wood grain along the boards on the inner front wall and the top planks) | v13, in set e (set v15, with armour 4 v25e); its sources are in the Armory's `AssetSources` since 2026-11-27 as `rhun_war_chariot_e` | Source wood; set 58,991 triangles at LOD0; the stage's manifest reports every gate passed | 26 review findings of 2026-11-25 (6 yes), not checked |
 | F | 2026-11-26: v22 (hidden faces cut) with the maps of v24 (black-stained wood), in set v27 | not in `out\for_kit_variants` (its `f` folder is the old v02 stage); the sources are in the Armory's `AssetSources` since 09:22, the Kit packages since 09:38 | Built and swapped (`SWAP DONE`, pose check 0 and 0 in five poses); cart 44,883 triangles at LOD0, armour 22,260 on both horses; harness item `taom_chariot_armour_rhun_black` since 09:56 | Gate table HELD: the 2 hidden hub discs (link gate), the cart's UV check at LOD1 to LOD3 (surface 2.12, 2.10 and 2.16 cm2 against LOD0's 0.18), the count flag (67,143, above 65,400). The check in game is owed. The 18:41 row (v17, step 3 of Part 2 stopped at 18:22) is replaced by this one |
 
 **Armour 5: the look target and his choices.**
@@ -785,6 +866,10 @@ both horses, nothing stretched, and no missing mesh line in the log.
 
 ## Changelog
 
+- 2026-11-27: The horned set (set E: cart E v13 with the wood grain along the boards, armour 4 v25e with made joints at every strap end, set v15, 58,991 triangles at LOD0) is in the Armory's `AssetSources` (ten files, 00:52). The Kit import and the harness item are owed.
+- 2026-11-27: The sun set (set C: cart C v16, armour 2 v15 with the chest panel on two straps, a girth and no ear pieces, set v22, 59,460 triangles at LOD0) is in the Armory's `AssetSources` (ten files, 00:07; the mesh replaced at 01:03). The Kit import and the harness item are owed.
+- 2026-11-26: Cart A (`rhun_war_chariot`) lost its quiver, javelin case, javelins and arrows (build v06: 57,684 triangles at LOD0, was 59,173). Five source files in the Armory's `AssetSources` were replaced at 23:03; the update in the Kit is owed.
+- 2026-11-26: The lacquer set (set D: cart D v17, armour 3 v13 with the chest panel on two hangers, set v19, 58,353 triangles at LOD0) is in the Armory's `AssetSources` (ten files, 20:48). The Kit import and the harness item are owed.
 - 2026-11-26: The raider set (set B: cart B v23 without javelins, armour 1 v23, set v24, 43,490 triangles at LOD0) is in the Armory's `AssetSources` (ten files, 19:31), imported by the maintainer in the Modding Kit (19:48 to 19:50), and has its harness item `taom_chariot_armour_rhun_raider` (19:56) with its rows in the three item tables. No issue: waived for the chariot work.
 - 2026-11-26: Recorded the black set (cart F v22 with the maps of v24, armour 5 `v18ay`, set v27, 67,143 triangles at LOD0) and its sources in the Armory's `AssetSources` (ten files, copied 09:22 on the maintainer's word) and his import in the Modding Kit (13 packages, 09:36 to 09:38; "done, looks good!"). Its harness item `taom_chariot_armour_rhun_black` is in the Armory's `LOTRAOM_horses.xml` (09:56, on his word, reviewed the same day). Owed: the check in game. No issue: waived by the maintainer.
 - 2026-11-26: New [technique-library.md](../reference/technique-library.md) with teardown T1 (the two image to 3D models of the neck and head against armour 5 `v16` and `v18ay`), and section 7b of the `/blender-asset` skill, on the maintainer's order to make what a reference tool did our default.
