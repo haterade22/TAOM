@@ -520,6 +520,51 @@ dwarven ram chariot, as the two older Rhûn harness items do. Owed in game, by a
 `taom_chariot_armour_rhun_black` and `taom_chariot_a` with the cheat console, equip both, and ride into a battle
 (cart F and the black armour on both horses, nothing stretched, no missing mesh line in the log).
 
+**The raider set (set B) in the game, 2026-11-26.** In the evening the maintainer looked at the staged sets B to E in
+one Blender scene and said of set B (cart B v19 with horse armour 1 v23): "chariot b and armour 1 look good enough to
+put into the game." The set that went in is set v24: armour 1 v23, the build he looked at, on cart B v23, which is
+cart v21 without its javelins and their lashings (his order of 2026-11-25; 3,556 triangles at LOD0). The set has
+43,490 triangles at LOD0 and passes every set gate. Later armour 1 builds (gold crest fins, sewn strap ends) are not
+in it: he had not seen the newest one, and its review lists faults. Known and approved with the set: strap ends on
+studs at the withers and on the lowest neck band, and the black feather crest.
+
+At 19:31 ten source files went into the Armory's `AssetSources\creature\chariot` under new names
+(`mesh\rhun_war_chariot_b.fbx`; `textures\rhun_war_chariot_b_front_*`, `rhun_war_chariot_b_base_*` and
+`rhun_horse_armour_1_*`, each `_d`, `_n`, `_s`), with equal hashes. He imported the set in the Modding Kit at 19:48 to
+19:50: `Assets\creature\chariot\mesh\rhun_war_chariot_b_geo.tpac` (8,459,713 bytes), nine map packages and three
+material packages. At 19:56 one harness item went into `LOTRAOM_horses.xml`, between `taom_chariot_armour_rhun_black`
+and `taom_chariot_armour_imperial`, with the values of `taom_chariot_armour_rhun`. No tool puts the row back, so
+its text is kept here:
+
+```xml
+    <Item
+        id="taom_chariot_armour_rhun_raider"
+        name="{=taom_chariot_armour_rhun_raider}[Rhûn] Raider Chariot Barding"
+        mesh="rhun_war_chariot_b"
+        culture="Culture.khuzait"
+        weight="50"
+        is_merchandise="false"
+        appearance="0.65"
+        Type="HorseHarness">
+        <ItemComponent>
+            <Armor
+                body_armor="50"
+                mane_cover_type="all"
+                family_type="4"
+                material_type="Chainmail" />
+        </ItemComponent>
+        <Flags Civilian="true" />
+    </Item>
+```
+
+The id, the display name and the copied values are the session's choice until he gives others: the set is a light
+cart with neck bands and a back cloth, so a lower armour value than the Wainrider barding's 50 may fit it better.
+No troop wears the item. Its English name row is in `Languages\loc_LOTRAOM_horses.xml`, and the twelve
+translations wait for the language pass. The repo's tables hold the item: `tools/armour_cover_flags.json`,
+`tools/data/armour_colour_families.json` (family bronze, measured on `rhun_war_chariot_b_front_d`) and
+`tools/external-loc-coverage-baseline.json`. Owed in game, by a person: add `taom_chariot_armour_rhun_raider` and
+`taom_chariot_a` with the cheat console, equip both, and ride into a battle.
+
 Not marked by him on set v26 or v27 and still open on the set, for builders after the reset:
 
 - Armour 5: the dark place at the withers in the hero view (the place of his pictures 64 and 65). Its cause is
@@ -566,7 +611,7 @@ B, D, C, E.
 
 | Cart | Newest | Staged | State | Open (review counts: the cart review `wf_5c1aaa1f-cb7`, stopped at about 13:07; its checker had finished only cart D) |
 |---|---|---|---|---|
-| B | v21 (LOD UV fix) | v19, in set b | Painter wood; link gate 482 islands, 0 unlinked | Javelins off; 30 review findings (11 "would mark: yes"), not checked |
+| B | v23 (v21 without the javelins, 2026-11-26) | v23, in set b (set v24, with armour 1 v23); in the game since 2026-11-26 as `rhun_war_chariot_b` | Painter wood; link gate 444 islands, 0 unlinked; set 43,490 triangles at LOD0 | 30 review findings of 2026-11-25 (11 "would mark: yes"), not checked; the gold bracket legs under the top rail show plain where the javelins hid them |
 | C | v16 (LOD UV fix) | v14, in set c | Painter wood, delivered gloss; link gate 1,291 | 24 findings (5 yes), not checked |
 | D | v17 (LOD UV fix, inner fan gone: 1,183 triangles less at LOD0) | v15, in set d | Painter wood; link gate 1,021, 0 unlinked | 23 findings (9 yes); the checker found 21 real and added 6 |
 | E | v12 (LOD UV fix) | v10, in set e | Source wood; link gate 845 | 26 findings (6 yes), not checked |
@@ -734,8 +779,13 @@ Owed for the rig (2026-11-23), with sound on:
     to stand or die beside it, and the battle to go on.
 12. Start the dedicated server with this Armory. Expect no new message about a voice definition or a chariot clip.
 
+Owed for the raider set (2026-11-26): in a campaign with cheat mode on, add `taom_chariot_a` and
+`taom_chariot_armour_rhun_raider`, equip both and enter a battle. Expect cart B without javelins and armour 1 on
+both horses, nothing stretched, and no missing mesh line in the log.
+
 ## Changelog
 
+- 2026-11-26: The raider set (set B: cart B v23 without javelins, armour 1 v23, set v24, 43,490 triangles at LOD0) is in the Armory's `AssetSources` (ten files, 19:31), imported by the maintainer in the Modding Kit (19:48 to 19:50), and has its harness item `taom_chariot_armour_rhun_raider` (19:56) with its rows in the three item tables. No issue: waived for the chariot work.
 - 2026-11-26: Recorded the black set (cart F v22 with the maps of v24, armour 5 `v18ay`, set v27, 67,143 triangles at LOD0) and its sources in the Armory's `AssetSources` (ten files, copied 09:22 on the maintainer's word) and his import in the Modding Kit (13 packages, 09:36 to 09:38; "done, looks good!"). Its harness item `taom_chariot_armour_rhun_black` is in the Armory's `LOTRAOM_horses.xml` (09:56, on his word, reviewed the same day). Owed: the check in game. No issue: waived by the maintainer.
 - 2026-11-26: New [technique-library.md](../reference/technique-library.md) with teardown T1 (the two image to 3D models of the neck and head against armour 5 `v16` and `v18ay`), and section 7b of the `/blender-asset` skill, on the maintainer's order to make what a reference tool did our default.
 - 2026-11-26: The technique table and the teardown log moved to the knowledge store ([knowledge-library.md](knowledge-library.md)); `technique-library.md` is a pointer with the old row ids, and the steps are the `/teardown` skill in place of section 7b.
