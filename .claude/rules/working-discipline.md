@@ -11,6 +11,8 @@ With no fresh user prompt, continue established work; don't start new work.
 - A `/manage` run the maintainer started (ADR-015) is the exception to both lines above: selecting
   the next issue from `docs/goals.md` is its established work, and the ADR's stage is its authorization.
 - If the transcript doesn't make the next step obvious, stop and report rather than guess.
+- Write the record after each result, not at the end: the job's doc, the lessons file, the resume card and
+  the loop's state file. A run can stop at any moment (Mike, 2026-11-24).
 - Once the run is established, never stop to ask "should I keep going?"; the user may be away. End
   only when the work is done, blocked, or the no-progress breaker below trips. Out of obvious
   steps, re-read the transcript and recombine near-misses.

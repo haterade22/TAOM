@@ -5385,3 +5385,242 @@ listed gait that no set bound any more was only a note.
 - **Source:** issue #1565 item 2; Codex pre-review P1 and P2 3, the Data flow lens trace 2;
   [RCA](../rca-warg-stride-gate-2026-11-24.md) F1 and F3; `tools/tests/test_gait_stride_creatures.py`
   (`KnownFailureTests`).
+
+### Kit pieces that must join get one shared end section and a test of the joint (#1600, 2026-11-24)
+The first Rivendell wall and gatehouse were built by two scripts, each from its own concept picture. Set side
+by side they left an open slit: the gatehouse ended in a round drum and the wall in a flat face. Mike: "this
+isnt seamless". The seam test written afterwards measures that old pair at 110.34 m2 of mismatch between the
+two end sections.
+- **Why missed:** every check looked at one piece (bounds, triangle count, pictures of that piece). No check
+  set two pieces together, and no file owned the shape of the joint.
+- **Prevent:** the end section of a kit is defined once, in a module that every builder imports
+  (`tools/oneoff/rivendell_joint_profile.py`), with half a pier on each joint so that the pier hides the seam. A
+  piece whose shape cannot end in that section gets a stub of real wall at each side, made by the wall's own
+  functions. `tools/oneoff/blender_check_joint_profile.py` compares the end sections of two pieces and must
+  report 0 for each pair, in both orders, before a piece is shown.
+- **Source:** issue #1600; `WORK\build\v02\joint_check_trials\gatehouse_vs_wall` (FAIL, 110.34 m2),
+  `WORK\build\v02\wall_solid\joint_wall_wall` and `wall_broken\joint_solid_dest` (PASS, 0.0 m2), with `WORK` as
+  in [rivendell-siege-set.md](../../kitbash/rivendell-siege-set.md).
+
+### A tiling texture is judged on the piece at its real tile size, beside the control (#1600, 2026-11-24)
+Four stone sources failed before one worked: number noise ("Texturing is very very bad"), connector pictures
+made to tile (one stain on every tile), public-domain scans, and Painter's stock shelf. Each set had passed its
+checks: the wrap seam, the mean colour, the channel statistics of the control. On the wall the first good
+stone still read as brick, because one 1024 px tile covered 1.33 m and the courses were 0.33 m high.
+- **Why missed:** the checks measured what a script can count on a flat tile. Nobody put the tile on a 20 m
+  wall with a figure beside it before the UVs were built, and the tile size was fixed from the control's pixel
+  density alone.
+- **Prevent:** before a set is used, show it on the real piece at the real density, with a 1.8 m figure, and as
+  a flat sheet beside the control at the same pixels per metre
+  (`tools/oneoff/blender_view_textured.py`, `preview_painter_stone_sets.py`). Choose the tile size from that
+  picture; keep the density as one constant, so that a change is a rebuild and not a rewrite. A number check
+  of a texture proves its form, never its look.
+- **Source:** issue #1600; [tiling-texture-sets.md](../../kitbash/tiling-texture-sets.md) (the source table and
+  the tile size table); `WORK\build\v02\wall_solid\compare`.
+
+### Read the repo record and the shader before you take a texture convention from control statistics (#1600, 2026-11-24)
+The first specular maps of the Rivendell sets were fitted to the channel statistics of the Gondor control: red
+0, green and blue with the control's mean and spread, both driven by roughness. The fit passed its own check
+by construction. The repo already recorded the meaning (R metallic, G gloss, B occlusion,
+`docs/reference/ue-to-bannerlord-asset-pipeline.md`), and the game's shader sources say the same. So blue
+held roughness numbers where the engine reads occlusion. The normal map's green sense was left "for a Kit
+test", although 25 control normal maps on disk answer it: green down.
+- **Why missed:** the brief said "convention inferred from the control". Nobody searched the docs for `_s`, and
+  nobody knew that the shader sources lie in `<game>\Shaders\Sources` as plain text. A statistic that the
+  tool itself sets is read back from the layer that set it.
+- **Prevent:** for a texture or material question, search `docs/` for the suffix first, then read what the
+  shader does with each channel (`standart.rsh`, `pbr_metallic.rs`), then measure the control files for the
+  sign or the range. Write the convention with its shader line in the doc of the work
+  ([tiling-texture-sets.md](../../kitbash/tiling-texture-sets.md), "What the engine reads").
+- **Source:** issue #1600; `WORK\painter_lab\research\engine` (`spec_channel_stats.json`,
+  `normal_sense_controls.json`, `normal_sense_vanilla.json`); `tools/oneoff/convert_painter_stone_sets.py`
+  (the defect, corrected the same night: the converter writes R 0, G gloss, B occlusion).
+
+### A brief names the tools that exist in its area (#1600, 2026-11-24)
+Two workers wrote Painter scripts into a work folder (`lib.py`, `yexp.py`) while `tools/painter/` held
+`painter_run.py` and three proven Painter scripts, and `docs/reference/substance-painter-mcp-setup.md` held a
+table of Painter traps. The workers met two of those traps again.
+- **Why missed:** the main session wrote the briefs from memory of the task and did not list the tool folder
+  or search the docs for the program's name before it delegated. A worker reads what its brief names.
+- **Prevent:** before a brief in a tool area that the session has not used yet: `grep -rli <program> docs
+  tools`, read `tools/README.md` for the area, and name the files and the trap table in the brief.
+- **Source:** issue #1600; `WORK\textures\v02_painter\scripts`; the catalogue worker's scripts of the same
+  night, written into `tools/painter/painter_tile_*.py` after the brief named the folder.
+
+### A Painter layer source set before its channel is active is lost (#1600, 2026-11-25)
+A script-built joint layer showed pale, shiny joints in the first export, where the colour was set dark
+and the roughness high. The layer had its defaults (base colour grey 0.8, roughness 0.3).
+- **Why missed:** the script called `set_source(channel, value)` and then set `active_channels`. The sources
+  on channels that were not yet active were dropped without an error, and the call order looked harmless.
+- **Prevent:** set `active_channels` first, then the sources; after any new layer type, export once and read
+  the pixel values at the feature, not only the picture.
+- **Source:** `tools/painter/painter_tile_build.py`; the trap row is in
+  [tiling-texture-sets.md](../../kitbash/tiling-texture-sets.md), "Painter traps of this work" (the same row is in
+  `docs/reference/substance-painter-mcp-setup.md` on the branch `feat/rhun-chariot-variants` only).
+
+### AI judges are not the owner's eye: show him both readings of a look brief in round one (#1600, 2026-11-25)
+Five rounds of a night loop refined a smooth ashlar with drawn joints. Three AI judges scored every round,
+and their findings wrote the next brief. In the morning the maintainer looked at the result for a minute and
+said: "Remove the TILE look from this and make it smooth stone." A set with no joints existed since round 3 as
+a baseline; the judges had scored it 3 to 4 of 10 ("plaster, no masonry"), so it stayed in a score table. He
+also called the first roof slate "perfect"; the judges had called it "square pavers".
+- **Why missed:** his words were "a smooth stone look". I read them as smooth dressed blocks and never tested
+  that reading with him. The judges' prompts carried my reading as the target, so every round optimised it.
+- **Prevent:** when a look brief has two readings, build both in the first round and put them side by side on
+  the review page before a second round. Give a judge his words verbatim and no reading of mine as the goal.
+  A baseline that removes a feature goes on the page as an option, not only into a score table.
+- **Source:** issue #1600; [tiling-texture-sets.md](../../kitbash/tiling-texture-sets.md), "The owner's
+  direction"; `WORK\textures\v07\set_dressed` (the unshown baseline) and `WORK\textures\v10\set_smooth`.
+
+### A fan-out of Blender workers over every piece starves the machine and finishes nothing (#1600, 2026-11-25)
+
+- **What happened:** with six workflows at once (wall lengths, railing, tower check, gatehouse check, turret
+  concepts, collar study) about twenty headless Blender processes of one session held 16 GB beside another
+  session's renders; free memory fell to 14.3 GB of 61.6 GB. The owner saw "like 36 blenders" and had five pieces
+  to judge, none finished. His words: "work on one blender item at a time to save memory" and "Lets work on one
+  piece (wall, broken wall, gatehouse, etc) and when that is perfect move onto the next".
+- **Why missed:** each job was independent in its files (a private code copy each), so I treated them as free to
+  run together. Nothing counted Blender processes, and the owner's attention was not in the plan at all. Each new
+  point of his became one more parallel job in place of one more item for the piece in work.
+- **Prevent:** asset work goes one piece at a time, to the owner's approval, the checks, the detail levels and the
+  bodies, before the next piece starts. Points on other pieces go on a list. Every worker starts Blender through
+  one lock (for this job `WORK\_tools\blender_one.py`, a named mutex: a second call waits), and renders
+  its cameras in one Blender job. Before stopping processes, list them with their command lines and stop by
+  process id only those that name the job's folders: half of the processes belonged to the other session.
+- **Source:** issue #1600; [rivendell-siege-set.md](../../kitbash/rivendell-siege-set.md), "Mike's change of
+  method"; the lock tool was tested with two calls at once (the second started 3.1 s after the first had ended).
+
+### A lock for a heavy tool: slots with a memory floor, and a mark on each process (2026-11-25, kingdom kits)
+
+- **What happened:** the job's rule was one headless Blender at a time, held by one named lock. Mike then allowed one or two
+  more jobs, "Just be aware of memory usage". The first tool found its own Blender process by the script's name, which
+  cannot tell two jobs with the same script apart.
+- **What works:** three named locks as slots (a lock is freed when its holder dies, a counter is not); the first slot is
+  always open, and a later slot opens only while free memory is over a floor; each call puts a unique number on the
+  command line of its process (`--python-expr <number>`) and watches that process only. A live trial with three jobs of
+  the same script proved it.
+- **Rule:** when a worker limit changes, change the tool that holds it, not the briefs; and never find a process by a name
+  that another job can share.
+
+### A fix pass that follows checkers needs the lead's decisions before it starts (2026-11-25, kingdom kits)
+
+- **What happened:** the wall's workflow ran a builder, three independent checkers and a fix pass in one script. The
+  checkers found that the braid of the wall's band stepped 17 mm at each inner pier corner. The fix agent started at once
+  and chose the first repair that made its test pass: a whole pattern period on each pier side, which is 30 percent
+  denser than the pattern beside it. The owner had approved the build before the checks ran. I stopped the agent after
+  8 minutes; it had already patched the working copy.
+- **What works:** end the script at the checkers when the owner has approved the build, or when a finding has more than
+  one repair. The lead reads the findings and decides each one (the repair and its method, no change, or the owner's
+  decision), then gives the fix pass those decisions as a numbered list, with what must not change. A stopped agent's
+  patch scripts name what it applied, so the next agent keeps the good parts.
+- **Rule:** a finding with two possible repairs is a decision, not a task. The fix prompt names the method, or the
+  script stops before the fix.
+
+### A usage limit can stop new agent calls in the middle of a workflow (2026-11-25, kingdom kits)
+
+- **What happened:** at about 20:05 every new worker agent failed with a weekly limit message. Agents that already ran
+  ended their work; the calls after them (a builder, three checkers, a critic) returned nothing. The workflow reported
+  the stage as complete with failures. Half an hour later calls worked again.
+- **What works:** give each stage a result file on disk as its last action, and a rule for a worker that finds a
+  started stage: read what is there, continue, never copy over the safety copy. Stop the script when a stage returns
+  nothing (do not run checkers on a build that did not happen). Resume the run by its id: finished calls come from the
+  journal. Before a relaunch, probe each model tier with a one-word agent.
+- **Rule:** a long script is a chain of stages that each leave their result on disk; a stage that returns nothing ends
+  the script.
+
+### A memory floor before a job starts does not limit what the job takes later (2026-11-25, kingdom kits)
+
+- **What happened:** a checker agent started three Blender measure jobs through the job's lock tool. The tool let a
+  job start only with 12 GB free, and each job was small at the start. Five minutes later the three held 71 GB on a
+  62 GB machine (one alone 46 GB) and free memory was 5 GB. Another session saw it first.
+- **What works:** the tool that starts a job also watches it: read the job's private memory on every poll, stop the
+  job above a ceiling, and stop a big job when the machine runs out. The stop message says what to change and that
+  the job must not start again unchanged. Tell every worker in its brief: no full distance matrix between two point
+  sets, a KD tree or chunks, and few heavy jobs at one time.
+- **Rule:** a limit that is checked only at the start is no limit. Put the watch where the job is started.
+
+### Workers of one session share one scratch folder: name a folder for each (2026-11-26, kingdom kits)
+
+- **What happened:** five workers of one workflow wrote their throwaway scripts into the session's scratch folder
+  under plain names. One worker's `mutate.py` replaced another worker's file of the same name, and two workers then
+  ran the other's mutation script by mistake. As read, that script patched modules in memory only, so no file was
+  harmed.
+- **What works:** every brief names a folder of its own for scratch files and says that the session's scratch folder
+  is shared. A script that changes files gets a name with the worker's part in it.
+- **Rule:** a brief names the worker's own scratch folder; nothing of a worker goes into the shared one.
+
+### A test that names a live path as its target writes there when the guard is broken (2026-11-26, kingdom kits)
+
+- **What happened:** a test proved a guard ("an output folder inside a game module is refused") by passing the real
+  module folder as the output folder. An independent checker ran the tests on copies with planted faults; on the copy
+  with that guard removed, the test wrote three files into the live, unversioned map module while the Modding Kit was
+  open. The checker removed them after three minutes; a read of the module and of the editor log found no trace.
+- **What works:** the module case of a test is a fake tree in a temporary folder with the same folder names. A
+  mutation run works on copies whose every path argument lies in a temporary folder, and it ends with a proof that
+  the live folder is untouched (a file count and a search for the output names).
+- **Rule:** no test and no mutation run names a live path as an output, a working folder or a target. A brief for a
+  checker that plants faults says so in its first lines.
+
+### A check tool that was tested only on fake results gave two false failures on the first real import (2026-11-26, kingdom kits)
+
+- **What happened:** the after-import check passed 290 tests on a fake Kit result that I had written from one live
+  sample (a mesh with several materials). On the first real import it reported three railing meshes without their
+  level 0 and failed one texture for its flag. Both were faults of the tool: the Kit names the record of a level
+  with one material by the bare name, and it marks a map with an alpha channel `has_alpha` (48 of 48 such maps in the
+  module). The fake result had my assumption built in, so the tests agreed with the tool.
+- **What works:** before a reader is trusted, one live sample of EACH form goes into its tests: one material and
+  several, with and without alpha, a plain and a dot named mesh. Until then the tool's verdict on a new form is
+  reported as UNVERIFIED, and a FAIL is read in the package before the owner is told.
+- **Rule:** a FAIL of a check tool on its first real run is a hypothesis about the tool too: read the bytes.
+
+### A family of pieces derived from one rule set comes out rigid: concept variants first (2026-11-26, kingdom kits)
+
+- **What happened:** the approved castle wall gave a rule set (its members, one arch form, exact mirror pairs). I
+  derived fifty buildings and structures from it without a concept picture of their own, and my checkers judged each
+  piece by its likeness to the wall. Every pinned number held. The maintainer saw the pieces in the Modding Kit and
+  said: "very precise. 0 or 1. Black or white ... limiting your creativity", and showed three reference pictures
+  with open structure, mixed roof forms, curves and groups that are not symmetric.
+- **What works:** a building starts from references and several concept variants that the owner chooses from. The
+  brief says what is exact (joints, the grid, clean meshes, single members, texel density) and what is free (the
+  massing, the silhouette, the mix of members, the accent). A checker judges against the owner's references, and one
+  pilot goes to his approval before a family is built.
+- **Rule:** likeness to an approved piece is a gate for joints and materials, never the design brief of a new piece.
+
+### Five stages of checkers judged a piece against rules, never against the owner's chosen concept (2026-11-26, kingdom kits)
+
+- **What happened:** the maintainer chose a concept picture for the breach of the Rivendell wall on 2026-11-24. Five
+  stages of builders and checkers followed, each fed with the findings of the stage before. The fracture look passed
+  133 gate rows. When I set the stage 5 sheets beside the concept, three things of the picture were absent: stepped
+  block ends on the stone courses, a dark core that stands back behind them, and a mound of big blocks and carved
+  fragments. One eye finding that had repeated over two stages ("the field elevation is a V") contradicted the
+  picture, which shows a V. No brief of a checker had named the concept file.
+- **What works:** the chosen concept is an input file of every eye checker and of the builder's own look at its
+  pictures, and likeness to it is the first question. A finding that repeats over two stages stops the patching: the
+  lead reviews the whole result beside its inputs before the next round.
+- **Rule:** a checker's brief names the owner's chosen concept file, or it says that none exists.
+
+### A geometric check that samples on the model's own round coordinates reads float noise as a hole (2026-11-26, kingdom kits)
+
+- **What happened:** the seam tool reported an opening of 0.0036 m2 at one end of the approved 20 m wall, in one of
+  the two orders of the same check, and a builder reported it as a fault of the wall. The wall is closed: no open
+  edge at the end plane, and no ray from inside the section misses the end faces. The tool's 20 mm grid put cell
+  centres on y -2.05, the plane of a face. The float32 noise of the import and of a half turn (about 1e-8 m) put
+  nine centres inside the section, and the tool's one offset ray pointed into the air.
+- **What works:** the sample points of a geometric check lie off every round coordinate that the model uses (a phase
+  of 0.4 of a cell), a fallback ray is tried on both sides, and a planted hole must fail in both orders. A verdict
+  that changes with the order of its two inputs is a fault of the tool until the model is read directly.
+- **Rule:** before an approved piece is called faulty by one tool, read the model itself (open edges, a dense ray
+  test) and run the check in both orders.
+
+### Builders who work one piece each repeat the vocabulary's strongest move: a set needs its own critic (2026-11-26, kingdom kits)
+
+- **What happened:** eight builders each drew three massing variants of one building from the same design
+  language, each in its own folder, each with a checker's lessons in its brief. Every sheet looked bold alone. Two
+  critics who laid all 27 variants side by side found one focal move on most of them (a wood frame over a dark
+  field with a gallery band), one turret form in 8 of 27, one post form, and plain backs everywhere. They also
+  found forms that the language itself had brought in and that the maintainer's pictures do not show (a kicked
+  bell hip with horn curls). Several builder numbers did not repeat, because each builder chose its own region.
+- **What works:** a family of pieces gets a critic of the SET before the owner chooses, with one picture of every
+  variant side by side. The language names which building owns which move. A measure that a brief asks for names
+  its region and its script, so that a second worker can repeat it.
+- **Rule:** parallel builders need one owner of the set; a move that two pieces share is a decision, not a habit.
