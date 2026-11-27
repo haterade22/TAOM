@@ -612,7 +612,11 @@ internal sealed class SeatSession
         var wanted = (open && _settings.CursorWithPanel) || _commandLive;
         var look = wanted && _screen.LookHeld();
         if (look)
+        {
             _screen.HoldCursorPosition();
+            if (_commandLive)
+                _command?.LookStarted();
+        }
         ShowCursor(wanted && !look);
         if (_cursorShown && open)
             NoteRelay(_screen.RelayPanelClicks());

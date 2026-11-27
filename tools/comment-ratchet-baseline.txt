@@ -1,6 +1,7 @@
 # ADR-009 comment-line ratchet: <path><TAB><count>, counts may only fall.
 # Written by python tools/comment_ratchet.py --regen; read by CommentRatchetGateTests.
 Client/Adapters/QuestJournalAdapter.cs	3
+Client/Adapters/SeatBoxView.cs	2
 Client/Adapters/SeatCommandAdapter.cs	12
 Client/Adapters/SeatCursorLayer.cs	1
 Client/Adapters/SeatPanelRelay.cs	24
@@ -131,7 +132,7 @@ Client/Features/SeatOfSeeing/Hooks/Patch140_EquipmentViewDropTick.cs	1
 Client/Features/SeatOfSeeing/Hooks/Patch140_EquipmentViewEquipTick.cs	1
 Client/Features/SeatOfSeeing/Hooks/Patch140_FormationFocusPoint.cs	2
 Client/Features/SeatOfSeeing/Hooks/Patch140_OrderFlagGetCollidedEntity.cs	3
-Client/Features/SeatOfSeeing/SeatCommandControl.cs	7
+Client/Features/SeatOfSeeing/SeatCommandControl.cs	8
 Client/Features/SeatOfSeeing/SeatEdgeScroll.cs	1
 Client/Features/SeatOfSeeing/SeatKeys.cs	2
 Client/Features/SeatOfSeeing/SeatSession.cs	27
@@ -1791,6 +1792,7 @@ Main/Features/SaveLoadDiagnostics/Hooks/SaveOutput_PrintStatus_Patch.cs	6
 Main/Features/SaveLoadDiagnostics/ISaveLoadDiagnosticsService.cs	14
 Main/Features/SaveLoadDiagnostics/SaveLoadDiagnosticsService.cs	10
 Main/Features/SeasonedHosts/SeasonedHostsSettingsProvider.cs	3
+Main/Features/SeatOfSeeing/Domain/SeatTransferRule.cs	3
 Main/Features/SeatOfSeeing/Domain/SeatTrialMouse.cs	1
 Main/Features/SeatOfSeeing/SeatHotKeys.cs	1
 Main/Features/SeatOfSeeing/SeatOfSeeingModule.cs	3

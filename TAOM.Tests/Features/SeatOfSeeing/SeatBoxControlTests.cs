@@ -279,6 +279,70 @@ public class SeatBoxControlTests
 
         Assert.IsNull(_engine.LastTransfer);
         Assert.AreEqual(0, _engine.Count("read-transfer:1"));
+        CollectionAssert.AreEqual(new[] { SeatMessage.TransferUnavailable }, _said);
+        Assert.AreEqual(1, Lines("skip"));
+    }
+
+    [TestMethod]
+    public void Transfer_RefusedTwice_SaysTwiceButWritesOneSkipLine()
+    {
+        _engine.Facts = _engine.Facts with { MainAgentExists = false };
+
+        _sut.OnMissionTick(transferTo: 1);
+        _sut.OnMissionTick(transferTo: 2);
+
+        Assert.AreEqual(2, _said.Count);
+        Assert.AreEqual(1, Lines("skip"));
+    }
+
+    [TestMethod]
+    public void Transfer_InDeployment_IsRefusedWithTheUnavailableMessage()
+    {
+        _engine.TransferFacts = new SeatTransferFacts(true, false, 2, 90, 10, Deployment: true);
+
+        _sut.OnMissionTick(transferTo: 3);
+
+        Assert.IsNull(_engine.LastTransfer);
+        CollectionAssert.AreEqual(new[] { SeatMessage.TransferUnavailable }, _said);
+        Assert.AreEqual(1, Lines("skip"));
+    }
+
+    [TestMethod]
+    public void Transfer_WithTheHeroInASelectedCompany_MovesOneLess()
+    {
+        _engine.TransferFacts = new SeatTransferFacts(true, false, 2, 90, 10, SelectedHasHero: true);
+
+        _sut.OnMissionTick(transferTo: 3);
+
+        Assert.AreEqual((3, 89), _engine.LastTransfer);
+    }
+
+    [TestMethod]
+    public void Transfer_WithOnlyTheHerosCompany_IsRefused()
+    {
+        _engine.TransferFacts = new SeatTransferFacts(true, false, 1, 1, 10, SelectedHasHero: true);
+
+        _sut.OnMissionTick(transferTo: 3);
+
+        Assert.IsNull(_engine.LastTransfer);
+        CollectionAssert.AreEqual(new[] { SeatMessage.TransferRefused }, _said);
+    }
+
+    // ---- looking mid-drag ----
+
+    [TestMethod]
+    public void LookStartedMidDrag_HidesTheRectangleAndDropsTheDrag()
+    {
+        Press();
+        Tick(Frame(1.5f, 400f, 400f, leftDown: true));
+        Assert.IsTrue(_engine.BoxShown);
+
+        _sut.LookStarted();
+
+        Assert.IsFalse(_engine.BoxShown);
+        Tick(Frame(2f, 400f, 400f, leftReleased: true));
+        Assert.AreEqual(0, _engine.Count("pick-box"));
+        Assert.AreEqual(0, _engine.Count("select:ReplaceWith"));
     }
 
     [TestMethod]

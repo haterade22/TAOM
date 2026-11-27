@@ -174,6 +174,43 @@ public class SeatBoxRuleTests
     }
 
     [TestMethod]
+    public void Plan_InDeployment_IsRefused_AsTheTransferPopupDoesNotOpenThere()
+    {
+        var plan = SeatTransferRule.Plan(new SeatTransferFacts(true, false, 2, 90, 10, Deployment: true));
+
+        Assert.AreEqual(SeatTransferRefusal.Deployment, plan.Refusal);
+        Assert.AreEqual(0, plan.Number);
+        Assert.AreEqual("deployment", SeatTransferRule.Reason(plan.Refusal));
+    }
+
+    [TestMethod]
+    public void Plan_TheHeroInASelectedCompany_IsNotCounted()
+    {
+        var plan = SeatTransferRule.Plan(new SeatTransferFacts(true, false, 2, 90, 10, SelectedHasHero: true));
+
+        Assert.AreEqual(SeatTransferRefusal.None, plan.Refusal);
+        Assert.AreEqual(89, plan.Number);
+    }
+
+    [TestMethod]
+    public void Plan_TheHeroInTheSelectedTarget_LeavesWithTheTarget()
+    {
+        // 25 in the target of which one is the hero: the target's 24 leave the 100 selected, and the hero never counts: 100 - 1 - 24.
+        var plan = SeatTransferRule.Plan(new SeatTransferFacts(true, true, 3, 100, 25, SelectedHasHero: true, TargetHasHero: true));
+
+        Assert.AreEqual(75, plan.Number);
+    }
+
+    [TestMethod]
+    public void Plan_OnlyTheHerosOneManCompany_IsRefusedAsNoUnits()
+    {
+        var plan = SeatTransferRule.Plan(new SeatTransferFacts(true, false, 1, 1, 10, SelectedHasHero: true));
+
+        Assert.AreEqual(SeatTransferRefusal.NoUnits, plan.Refusal);
+        Assert.AreEqual(0, plan.Number);
+    }
+
+    [TestMethod]
     public void Plan_NoTargetCompany_IsRefused()
     {
         Assert.AreEqual(SeatTransferRefusal.NoTarget, SeatTransferRule.Plan(default).Refusal);

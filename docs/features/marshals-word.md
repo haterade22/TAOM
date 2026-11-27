@@ -245,7 +245,7 @@ categories the mission's scene layer reads; they are vanilla's keys too, so they
 vanilla reader, `GauntletInformationView.cs:61`, which extends the on-screen message timer. A held key is the contract's accepted exception to the rule that a default key stays clear of every key the scene layer reads:
 Left Shift is also game key 24 (Zoom), so on the hero's camera holding it zooms; Left Alt is game key 5 (ShowIndicators), so it shows the
 banners and, with Outlines on, the outlines. Left Ctrl has three vanilla readers (a ground drag lays out horizontally, which also turns Keep
-the Array off for that drag; the number keys act the same with Control held; a click on a card adds it to the selection), so a player who selects with
+the Array off for that drag; the number keys act the same with Control held (except while the Seat's command mouse is live, where Control and a number moves troops, see the Seat's S9 section); a click on a card adds it to the selection), so a player who selects with
 Ctrl and still holds it on the release marks instead of charging. Period, like Comma and M, is in none of the eight categories the scene layer reads.
 
 ## Key Files

@@ -1,6 +1,7 @@
 using System;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.Library;
+using TaleWorlds.TwoDimension;
 using TAOM.Features.SeatOfSeeing.Domain;
 
 namespace TAOM.Client.Adapters;
@@ -102,6 +103,8 @@ public sealed class SeatSelectBoxVM : ViewModel
 /// </summary>
 internal sealed class SeatBoxView
 {
+    private const string PrefabName = "SeatSelectBox";
+
     private readonly Action<string> _logError;
     private SeatSelectBoxVM? _vm;
     private bool _failed;
@@ -111,7 +114,7 @@ internal sealed class SeatBoxView
     /// <summary>Whether the rectangle is on the screen (the field trial reads it).</summary>
     internal bool Shown => _vm is { IsVisible: true };
 
-    /// <summary>Loads the movie on the layer, once. LoadMovie does not throw for a missing prefab, so the loaded flag is read.</summary>
+    /// <summary>Loads the movie on the layer, once, and only when the prefab is registered: a missing prefab is logged and the box stays off.</summary>
     internal void Attach(GauntletLayer layer)
     {
         if (_vm != null || _failed)
@@ -119,15 +122,17 @@ internal sealed class SeatBoxView
 
         try
         {
-            var vm = new SeatSelectBoxVM();
-            var movie = layer.LoadMovie("SeatSelectBox", vm);
-            if (movie.Movie?.IsLoaded != true)
+            // LoadMovie adds the movie's identifier before it looks the prefab up, and with the prefab missing the movie keeps no prefab, so
+            // releasing it at the screen's teardown throws (<c>GauntletMovie.Release</c> calls <c>_moviePrefab.OnRelease()</c>). The prefab is checked first and the load skipped.
+            if (UIResourceManager.WidgetFactory?.IsCustomType(PrefabName) != true)
             {
                 _failed = true;
-                _logError("[SeatOfSeeing][Mouse] the selection rectangle prefab did not load: box select works with no rectangle");
+                _logError("[SeatOfSeeing][Mouse] the selection rectangle prefab is missing: box select works with no rectangle");
                 return;
             }
 
+            var vm = new SeatSelectBoxVM();
+            layer.LoadMovie(PrefabName, vm);
             _vm = vm;
         }
         catch (Exception ex)

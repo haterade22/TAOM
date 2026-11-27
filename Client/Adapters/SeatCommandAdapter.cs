@@ -147,8 +147,8 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
         return _boxFormations.Count;
     }
 
-    // Replacing keeps the companies already selected that the box found, so the panel's list is never empty in between and a kept company
-    // does not play the gesture again.
+    // Replacing adds the box's companies first and then drops the others, so the panel's list is never empty in between, and a company that
+    // was selected and is in the box is kept, so it does not play the gesture again.
     public void SelectBox(SeatSelectAction action)
     {
         MissionThreadGuard.NoteCall("SeatCommandAdapter.SelectBox", _logger.LogError);
@@ -162,10 +162,10 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
                 controller.ClearSelectedFormations();
                 break;
             case SeatSelectAction.ReplaceWith:
+                AddBoxFormations(controller);
                 foreach (var kept in controller.SelectedFormations.ToList())
                     if (!_boxFormations.Contains(kept))
                         controller.DeselectFormation(kept);
-                AddBoxFormations(controller);
                 break;
             case SeatSelectAction.Add:
                 AddBoxFormations(controller);
@@ -193,7 +193,8 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
 
         var target = team.FormationsIncludingEmpty[formationIndex];
         var selected = controller.SelectedFormations;
-        return new SeatTransferFacts(true, selected.Contains(target), selected.Count, selected.Sum(formation => formation.CountOfUnits), target.CountOfUnits);
+        return new SeatTransferFacts(true, selected.Contains(target), selected.Count, selected.Sum(formation => formation.CountOfUnits), target.CountOfUnits,
+            _mission.Mode == MissionMode.Deployment, selected.Any(formation => formation.IsPlayerTroopInFormation), target.IsPlayerTroopInFormation);
     }
 
     // The order of the transfer popup's confirm button (MissionOrderTroopControllerVM.ExecuteConfirmTransfer, v1.5.7 :492-498). The target is

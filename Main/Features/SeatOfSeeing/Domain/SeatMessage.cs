@@ -18,4 +18,5 @@ internal enum SeatMessage
     TimeResumed,
     TimeOtherClock,
     TransferRefused,
+    TransferUnavailable,
 }

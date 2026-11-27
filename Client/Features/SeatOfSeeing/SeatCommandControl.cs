@@ -56,6 +56,16 @@ internal sealed class SeatCommandControl
         _adapter.BoxHide();
     }
 
+    /// <summary>
+    /// The middle button is looking: the cursor is hidden and nothing is captured, so a rectangle on the screen would hang there while the camera
+    /// turns. Hides it and drops the drag, so the release that follows selects nothing.
+    /// </summary>
+    internal void LookStarted()
+    {
+        _leftArmed = false;
+        _adapter.BoxHide();
+    }
+
     /// <summary>The Seat is finishing: forgets everything with no native call (the scene may be gone), unlike <see cref="Reset"/>, which hides the preview.</summary>
     internal void Finish()
     {
@@ -79,7 +89,7 @@ internal sealed class SeatCommandControl
         var refusal = SeatCommandRule.Refusal(facts);
         if (refusal != SeatCommandRefusal.None)
         {
-            Refuse(frame, refusal, hasFrame);
+            Refuse(frame, refusal, hasFrame, transferTo >= 0);
             return;
         }
 
@@ -97,10 +107,11 @@ internal sealed class SeatCommandControl
         Right(frame);
     }
 
-    // A refusal drops the edges of this frame and any line in the making: nothing is selected or ordered, and one skip line says why.
-    private void Refuse(in SeatPointerFrame frame, SeatCommandRefusal refusal, bool hasFrame)
+    // A refusal drops the edges of this frame and any line in the making: nothing is selected or ordered, and one skip line says why. A Ctrl and
+    // number transfer asked for is an edge too, with one message (vanilla shows the panel check's message), so the key is never silent.
+    private void Refuse(in SeatPointerFrame frame, SeatCommandRefusal refusal, bool hasFrame, bool transferAsked)
     {
-        var edge = hasFrame && frame.HasEdge;
+        var edge = (hasFrame && frame.HasEdge) || transferAsked;
         if (_rightDown || _lineStarted)
         {
             _rightDown = false;
@@ -110,6 +121,8 @@ internal sealed class SeatCommandControl
 
         _leftArmed = false;
         _adapter.BoxHide();
+        if (transferAsked)
+            _say(SeatMessage.TransferUnavailable);
         if (!edge || _refusalNoted)
             return;
 
@@ -169,7 +182,7 @@ internal sealed class SeatCommandControl
         var plan = SeatTransferRule.Plan(_adapter.ReadTransfer(formationIndex));
         if (plan.Refusal != SeatTransferRefusal.None)
         {
-            _say(SeatMessage.TransferRefused);
+            _say(plan.Refusal == SeatTransferRefusal.Deployment ? SeatMessage.TransferUnavailable : SeatMessage.TransferRefused);
             Skip(SeatTransferRule.Reason(plan.Refusal));
             return;
         }
