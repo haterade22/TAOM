@@ -1001,9 +1001,9 @@ to characterise. The existing try/catch around acceptance is containment, not co
 
 ## What is NOT done
 
-- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **580** settings across
+- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **581** settings across
   four MCM classes (the 284 here counted `[SettingPropertyGroup]` lines alongside the properties;
-  the split is 546 in `TaomSettings`, 21 in `BattleLoadDiagnosticsSettings`, 12 in
+  the split is 547 in `TaomSettings`, 21 in `BattleLoadDiagnosticsSettings`, 12 in
   `CrashReportSettings` and 1 in `BlowDiagnosticsSettings`).
   **372 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
   ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 372 are in
