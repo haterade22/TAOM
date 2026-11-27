@@ -26,6 +26,8 @@ outside the editor without re-learning the asset layout every time.
 | Kit layout standard | [kingdom-kit-layout.md](kingdom-kit-layout.md) | Where a kingdom's kit lives in the map module: the folders, the file names and the ten rules (one asset a piece is rule 10). |
 | Lothlorien kit handover | [lothlorien-kit-handover.md](lothlorien-kit-handover.md) | The brief for a session that starts the Lothlorien kit: the method, the owner's way of work, the tools to reuse, the first steps. |
 | Mirkwood kit handover | [mirkwood-kit-handover.md](mirkwood-kit-handover.md) | The brief for a session that improves the Mirkwood kit that exists: what is held, who depends on it, the first steps. |
+| Scene needs of a settlement | [settlement-scene-needs.md](settlement-scene-needs.md) | What each scene needs from a kit: the solid wall, the broken wall, the towers, a gatehouse for two gates, the gates, the siege placement of both sides, the other scenes a settlement loads; every number with its source. Every kit handover names it. |
+| Erebor gate handover | [erebor-gate-handover.md](erebor-gate-handover.md) | The brief for a session that builds the great gate of Erebor as one prefab with its mountain, siegeable, with carved detail: the engine's needs, what is held for Erebor, the maintainer's references, the first steps. |
 
 ## Naming conventions (shared across all TAOM kits)
 

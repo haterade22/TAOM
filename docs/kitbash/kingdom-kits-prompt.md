@@ -209,7 +209,7 @@ to the brief before any build.
    with the control and the new piece from the same cameras.
 4. The names are free, lower case, and follow the kit rules.
 5. Show Mike the piece in a Blender window he can orbit, with its textures on, not only as pictures. The
-   chariot session's helper is `E:\LOTRAOMAssets\_auto_workspace\chariot_artem\view_gui.py`, with
+   chariot session's helper is `view_gui.py` in the chariot work folder under `E:\LOTRAOMAssets\_auto_workspace`, with
    `capture_blender_windows.ps1` as the proof that the window shows what you think; copy what you need. A
    freshly loaded image reports no data until it is drawn, so do not remove an image node for that.
 

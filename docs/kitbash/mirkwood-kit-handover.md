@@ -73,6 +73,16 @@ grants you nothing: every permission of section 11 is yours to get from him.
    `feedback_long_term_structure.md`, `feedback_lean_review_page.md`, `feedback_show_meshes_in_blender.md`,
    `feedback_learn_from_reference_tools.md`, `feedback_one_piece_one_blender.md`, `feedback_update_docs_as_you_go.md`,
    `feedback_everything_on_e_drive.md`, and the card `features/kingdom-kits.md`.
+10. `docs/kitbash/settlement-scene-needs.md`: what each scene of a settlement needs from a kit (the solid wall, the
+   broken wall, the towers, a gatehouse for two gates, the gates, the siege placement of the defenders and the
+   attackers' side, the other scenes that a settlement loads), with the measured numbers, the entities, scripts and
+   tags, and what each kingdom loads today. It was written so that you look none of this up again: read it before
+   you size a wall, a tower or a gatehouse, and add what you measure to it. Its long tables are in
+   `E:\LOTRAOMAssets\_auto_workspace\kingdom_kits\_shared\scene_needs`.
+11. `E:\LOTRAOMAssets\_auto_workspace\kingdom_kits\rivendell\rivendell_reference.html`: the Rivendell kit as a worked example, on one page with the real pictures of each
+   step (his picture read as built things, the massing variants, his marks, the fine details, the siege pieces,
+   the broken wall, what an independent critic caught, the trim sheet). The maintainer called it a great
+   reference: open it before you plan.
 
 ## 2. What we hold for Mirkwood, and his references
 
@@ -240,7 +250,7 @@ uses those files); call in place only what this table marks so.
 | The texture method (Substance 3D materials in Painter, the converter, the trim sheet) | `docs/kitbash/tiling-texture-sets.md`; `rivendell\painter_lab` | Pale carved stone, rock, root and bark, the teal of the doors, and the lamps' metal (his pictures). Painter is one shared instance: claim `painter-instance` first |
 | The massing library and the sheet makers | `rivendell\kit_full\design_v2\massing\_scratch\mlib.py` and the `_scratch` folder of each massing round | COPY: the fastest way to a first sheet |
 | The review page maker | `kingdom_kits\_shared\review_page\page_maker.py <HH:MM> <content json> <your work folder>`, with an example content file | One page for him: what changed, what you need. It writes `review_now.html` into the work folder that you name |
-| A window for him | Copy the `.blend` to a `view` folder, start `blender-launcher.exe "<file>"` (under `%LOCALAPPDATA%\Microsoft\WindowsApps`), prove the window with `E:\LOTRAOMAssets\_auto_workspace\chariot_artem\capture_blender_windows.ps1 <folder>` | Tell him to press Home if the saved view is close. The window is his from then on |
+| A window for him | Copy the `.blend` to a `view` folder, start `blender-launcher.exe "<file>"` (under `%LOCALAPPDATA%\Microsoft\WindowsApps`), prove the window with `E:\LOTRAOMAssets\_auto_workspace\kingdom_kits\_shared\tools\capture_blender_windows.ps1 <folder>` | Tell him to press Home if the saved view is close. The window is his from then on |
 | The Tripo CLI (he calls it "tripoli") for carved, organic and broken parts | `docs/features/tripo-cli.md` | Section 6 says when and how |
 | How to take a reference result apart | `docs/kitbash/teardowns/` (four records); the procedure is the `/teardown` skill, on local trunk since 2026-11-26 (`E:\repos\TAOM\.claude\skills\teardown\SKILL.md`, not pushed). A session in this worktree does not list it until the branch has merged trunk: read the file | A part that a checker or he rejects twice gets a reference and a teardown before the next round |
 

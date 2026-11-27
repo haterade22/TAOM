@@ -465,6 +465,43 @@ ones before he looks. I closed that window and opened the current gatehouse `a` 
 | "Also extend this trim all the way around." | Gatehouse `a`: the braid band on the drum, which stopped before the wall beside the door | Built: the band runs from the door frame across the wing wall, round the drum, to the end section (seen by me in `b4_door_space_wide.png`) | It ends 0.08 m short of the end section's face (a checker's note): it must meet the wall's band at the joint |
 | "Remove this as it looks very bad and can be plain with the trim extended" | Tower `a`: the half rib arch and the single squeezed lancet with its short piece of band, on the short wall beside the tower | Plain since version 7: no rib and no arch on the short walls (the checker's measure and code reading; I did not see a close picture of it) | "The trim extended": the braid band across the plain short wall, with the continuous band of the towers |
 
+## Kit tree step 2h: ready for the level step; decisions H12 to H18 (2026-11-26, recorded 18:40)
+
+Run wf_7a81fa7c-833 (a gates owner and a pieces owner at one time, then an independent checker). Files: `WORK\kit_full\step2h`: `gates_result.json`, `pieces_result.json`, `CHECK.md`, `check.json`.
+
+**The check.** The one kit tree `src_k` (153 files) is ready for the level step on the K3 pieces, except the two terrace corners. The six blockers of step 2g are closed. 47 driver builds: level 0 is the same as the accepted build for all 47 (45 in order, 2 with the same polygons in another order). The suite: 2,227 tests, 14 red, none an error; all 14 were red before, and 12 of them measure pieces that the plan keeps at level 0 as if they had levels. The gates owner's 28 planted faults and the checker's nine of the new rules were all caught.
+
+**Decisions (the lead).**
+
+- **H12.** A member that is mapped along its own run may mirror about any U (the terrace corners' handrail: the geometry mirrors exactly, the U values of a pair sum to one constant). Level 0 does not change.
+- **H13.** A piece can declare that it has level 0 only, so that the level tests judge only levels that exist.
+- **H14.** A seat has a depth: a railing sunk 10 cm and a post lifted off its 4 cm sink both fail.
+- **H15.** The levels how-to gets the `--reference` argument of G4b and the new data keys.
+- **H16.** The piece faults, one builder a group: the terrace corners (the bodies lie 0.1 m behind the plinth steps); the open stair 4 m and the steps 1 m (cheek bodies, zero-area triangles, the plinth's map); the castle stair A and B (zero-area polygons, sheared maps); the gate arch (a tone jump at levels 3 and 6) with bridge B (its railing's seat).
+- **H17.** Accepted: G4b calls an open edge a butt by its two ends, so a hole between two members can pass; the probe's back face gate catches it, so the probe is required for every piece.
+- **H18.** A pin of a known fault names the fault text that it expects.
+
+**Step 2i runs:** wf_d44afd3a-c84, in `WORK\kit_full\step2i` (a shared pass, four piece builders, a checker with a look at levels 3 and 6). The base methods go into `src_k` only after it: one owner a file.
+
+## The base methods, round 3: ready for B2; decisions VB15 to VB20 (2026-11-26, recorded 18:37)
+
+Run wf_acb616c5-a65 (two owners, then a checker; the usage limit stopped the checker once, and the run was resumed after the account change). Files: `WORK\kit_full\v2_base`: `r3_k4_result.json`, `r3_k23_result.json`, `CHECK_R3.md`, `check_r3.json`, the sheet `check_r3\S_check_r3_proof.png`.
+
+**The check.** The suite: 298 tests, OK. VB7, VB9, VB11, VB13 and VB14 are met; VB10 and VB12 with small gaps; VB8 as worded. Of 25 faults that the checker planted at the new rules, 22 were caught and 3 survived; all 27 faults of round 2 that still apply were caught. Over 147 solid objects of the proof: 0 open edges, 0 edges against the winding. The porch's slot and V groove of round 2 are gone, and the band feet stand inside the post top at every level. Verdict: K1 to K4 and placement are ready for house B2 now.
+
+**Decisions (the lead), by the check's findings G1 to G8.**
+
+- **VB15 (G1).** K3 measures the front that a chamfer leaves on the inset loops and refuses a front under the least front (on the check's diamond a chamfer of 0.012 still built and left 1.03 mm).
+- **VB16 (G2).** The seat dict of a boss carries the span of its plumb neck, and a cage refuses a rib end outside it.
+- **VB17 (G5).** A value that a refusal names is rounded to the safe side, so that the named value builds.
+- **VB18 (G8, G7).** A test for each of the three rules that no test held; the last bare tolerances get names.
+- **VB19 (G6).** A cage ring keeps one radius at every level.
+- **VB20 (G3).** House D's gable frame runs its legs to the ground as one plate, as its approved massing shows; the check's proof had set the board ends on wide posts, which changes D's outline.
+- **The texture (G3).** A wood member that overruns the trim strip takes a tiling wood set. The kit has no such set yet: it is owed, at 1024 px.
+- **The cage (G4).** The approved cage has eight ribs. The tower's builder sizes the boss neck for eight ribs, or takes ribs 0.09 m deep.
+
+**Round 4 runs:** wf_bf527809-ffa (one owner of all files, then a checker): `r4_result.json`, `CHECK_R4.md`. After it and after step 2h: the methods go into the kit tree.
+
 ## The broken wall, stage 6, step 2: partial; decisions LD28 to LD33 (2026-11-26, recorded 18:22)
 
 Run wf_d659d152-ef3 (one owner, one independent checker). Files: `WORK\build\v08\wall_broken\s6_step2` (`s6_step2_result.json`, `S6_step2_flanks.png`) and its `check` folder (`s6_step2_check.json`).
