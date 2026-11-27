@@ -46,11 +46,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import validate_mesh_refs as vm  # noqa: E402
-from _gamedir import ensure_exists, game_dir  # noqa: E402
+from _gamedir import ASSET_REPO, ensure_exists, game_dir  # noqa: E402
 
 DEFAULT_GAME = game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
 DEFAULT_ARMORY = Path(DEFAULT_GAME) / "Modules" / "LOTRLOME_Armory"
-DEFAULT_ASSET_REPO = Path(r"E:\repos\lotraom-assets") / "v1.4" / "LOTRLOME_Armory"
 
 FEMALE_SUFFIXES = ("_female", "_converted", "_converted_slim")
 _COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
@@ -148,7 +147,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--armory", default=str(DEFAULT_ARMORY))
-    ap.add_argument("--asset-repo", default=str(DEFAULT_ASSET_REPO))
+    ap.add_argument("--asset-repo", default=None,
+                    help=f"also flip this second Armory copy (e.g. {ASSET_REPO}); off by default")
     ap.add_argument("--apply", action="store_true", help="commit the edits (default: report)")
     ap.add_argument("--include-omitted", action="store_true",
                     help="also report items that omit the attribute (engine default is true)")
@@ -183,11 +183,12 @@ def main() -> int:
     print(f"\n{'WRITING' if args.apply else 'PREVIEW (pass --apply to commit)'}\n")
     tag = "genderflag-" + datetime.now().strftime("%Y%m%d%H%M%S")
     ids = {r["item"] for r in explicit if not r["female_art"]}
-    total = 0
-    for tree in (armory, Path(args.asset_repo)):
+    total = trees = 0
+    for tree in [armory] + ([Path(args.asset_repo)] if args.asset_repo else []):
         if not tree.exists():
             print(f"  skipped (absent): {tree}")
             continue
+        trees += 1
         for f in sorted((tree / "ModuleData" / "LOTRLOME_items").rglob("*.xml")):
             if ".bak" in f.name or "Languages" in f.parts:
                 continue
@@ -195,7 +196,7 @@ def main() -> int:
             if n:
                 total += n
                 print(f"  {n:3d}  {f.relative_to(tree)}")
-    print(f"\n{total} flag(s) set to false across both trees.")
+    print(f"\n{total} flag(s) set to false across {trees} tree(s).")
     return 0
 
 

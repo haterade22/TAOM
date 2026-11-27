@@ -7119,6 +7119,8 @@
 	<string id="taom_lotr_issue_training_offer_accept" text="{=taom_lotr_issue_training_offer_accept}Good. I will send the lads to your company. Bring back as many as you can." />
 	<string id="taom_lotr_issue_training_returned" text="{=taom_lotr_issue_training_returned}{RETURNED} of the {LENT} retainers went home with you." />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- FactionPower -->
+	<string id="taom_fp_realm_wage_relief" text="{=taom_fp_realm_wage_relief}Realm power wage relief" />
 	<!-- TaomSettings.cs -->
 	<string id="taom_mcm_EnableWandererSideTowns" text="{=taom_mcm_EnableWandererSideTowns}Wanderers Stay On Their Side" />
 	<string id="taom_mcm_EnableWandererSideTowns_hint" text="{=taom_mcm_EnableWandererSideTowns_hint}When ON (default), a new, dismissed or relocated wanderer stands only in a town whose owner is on their side: an orc never appears in a Free town and a Gondor ranger never in an Evil one. Neutral wanderers and Neutral towns mix with everyone. A wanderer already standing in a wrong-side town stays until vanilla's daily swap picks them. When OFF, vanilla picks any town." />

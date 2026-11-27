@@ -346,6 +346,74 @@ class DocBudgetGate(RepoCase):
                 self.assertTrue(self.ran("lint_docs"), rel)
 
 
+class KnowledgeGate(RepoCase):
+    """Every commit in a checkout that has tools/knowledge.py runs `check --staged`. What the commit must stage
+    for the store to be judged is the tool's decision (tools/tests/test_knowledge.py, StagedTests)."""
+
+    def setUp(self):
+        super().setUp()
+        self.write("docs/old.md", "old\n")
+        self.git("add", "docs/old.md")
+        self.git("commit", "-q", "--no-verify", "-m", "old doc")
+
+    def stage_a_change(self):
+        self.write("README.txt", "changed\n")
+        self.git("add", "README.txt")
+
+    def test_a_commit_runs_the_check_in_its_commit_mode(self):
+        self.install_tools("knowledge")
+        self.stage_a_change()
+        self.assertEqual(self.commit().returncode, 0)
+        self.assertEqual((self.stubs / "knowledge.ran").read_text(), "check --staged")
+
+    def test_a_finding_refuses_the_commit(self):
+        self.install_tools("knowledge")
+        self.env["STUB_RC_KNOWLEDGE"] = "1"
+        self.stage_a_change()
+        result = self.commit()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("knowledge says broken", result.stderr)
+        self.assertIn("knowledge check found a problem", result.stderr)
+
+    def test_a_check_that_cannot_judge_allows_the_commit_and_says_so(self):
+        self.install_tools("knowledge")
+        self.env["STUB_RC_KNOWLEDGE"] = "2"
+        self.stage_a_change()
+        result = self.commit()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("knowledge check could not judge (exit 2)", result.stderr)
+        self.assertIn("NOT checked", result.stderr)
+
+    def test_a_tool_that_crashes_allows_the_commit_and_says_so(self):
+        self.install_tools("knowledge")
+        self.env["STUB_CRASH"] = "knowledge"
+        self.stage_a_change()
+        result = self.commit()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("knowledge check crashed", result.stderr)
+
+    def test_a_checkout_whose_branch_has_no_tool_yet_is_left_alone(self):
+        self.stage_a_change()
+        result = self.commit()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.ran("knowledge"))
+        self.assertNotIn("knowledge", result.stderr)
+
+    def test_a_merge_commit_runs_it_too(self):
+        self.install_tools("knowledge")
+        self.git("checkout", "-q", "-b", "side")
+        self.write("side.txt", "side\n")
+        self.git("add", "side.txt")
+        self.git("commit", "-q", "--no-verify", "-m", "side")
+        self.git("checkout", "-q", "-")
+        self.write("main.txt", "main\n")
+        self.git("add", "main.txt")
+        self.git("commit", "-q", "--no-verify", "-m", "main")
+        result = self.git("merge", "--no-ff", "-m", "merge", "side", check=False)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual((self.stubs / "knowledge.ran").read_text(), "check --staged")
+
+
 class IgnoredHarnessFile(RepoCase):
     def test_a_gitignored_file_under_claude_refuses_the_commit(self):
         self.write(".gitignore", "bin/\n")

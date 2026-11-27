@@ -14,6 +14,11 @@ Read root [AGENTS.md](../../AGENTS.md), the shared policy, and the applicable
 explain; do not turn it into a fix without authority. Use [docs/INDEX.md](../INDEX.md)
 to find the current feature and research references, not old review totals.
 
+Before the first edit, run `python tools/knowledge.py for <the files you will change>`. It prints the knowledge
+entries for those files, each marked with how it acts today
+([knowledge-library.md](../features/knowledge-library.md)); no Claude hook runs in Codex to print them for you.
+If `tools/knowledge.py` is not in the checkout, the branch predates the store: skip this step.
+
 Before choosing commands, check the actual workspace and available executables:
 
 ```powershell

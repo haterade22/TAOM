@@ -112,7 +112,7 @@ public class CastleRecruitmentService : ICastleRecruitmentService
         return dict;
     }
 
-    public float GetSlotProductionProbability(int slotIndex, string? kingdomKey, bool ownerIsPlayerClan)
+    public float GetSlotProductionProbability(int slotIndex, string? kingdomKey, bool ownerIsPlayerClan, string? realmKey = null)
     {
         if (slotIndex < 0)
             return 0f;
@@ -123,7 +123,7 @@ public class CastleRecruitmentService : ICastleRecruitmentService
         p = p < 0f ? 0f : p > 1f ? 1f : p;
         // The War Chronicle's VolunteerRate multiplier of the owner's kingdom (#765), as towns and
         // villages get it through TaomVolunteerModel. No culture: castles never had the respawn feats.
-        return _production.Compute(p, null, kingdomKey, ownerIsPlayerClan);
+        return _production.Compute(p, null, kingdomKey, ownerIsPlayerClan, realmKey);
     }
 
     private static string N(long value) => value.ToString(CultureInfo.InvariantCulture);
