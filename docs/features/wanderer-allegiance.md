@@ -9,8 +9,9 @@ Isengard, the orc kingdoms, Harad, Rhûn) refuses a player on the Free side. Neu
 (Khand, Umbar, Shaghana, Abanissa) serve anyone, and a Neutral player is refused by nobody. The
 refusal is spoken in the dialogue and the conversation returns to the wanderer's menu; no gold moves.
 
-Two dialogue lines and a pure rule. No Harmony patch, no GameModel. Issue #575, reported as
-"wanderers like Aragorn end up in evil clans".
+Two dialogue lines and a pure rule for the hire, no GameModel. Issue #575, reported as
+"wanderers like Aragorn end up in evil clans". Since 2026-11-26 a second rule keeps wanderers out of towns of
+the opposite side ("Where wanderers stand" below, Patch175).
 
 ## Why This Exists
 
@@ -163,6 +164,7 @@ JSON edit needs a full Bannerlord restart.
 |---|---|---|
 | Enable Wanderer Allegiance | on | Overrides `enabled`. `RequireRestart = false`, so flipping it applies to the next conversation. |
 | Who Refuses | All wanderers (by culture) | Overrides `scope`. Index 0 = all, 1 = named companions only; an unknown index falls back to the JSON value. |
+| Wanderers Stay On Their Side | on | `EnableWandererSideTowns`. New and swapped wanderers stand only in towns of their side. `RequireRestart = false`; no JSON twin, on when MCM is absent. Off = vanilla's random town. |
 
 MCM values win when MCM is loaded; the JSON values are the fallback when `TaomSettings.Instance` is
 null (early startup, or MCM failed to load).
@@ -184,14 +186,18 @@ the 18 named companions are classified in `alignment.json`;
 | `Main/Features/WandererAllegiance/WandererAllegianceConfig.cs`, `WandererAllegianceConfigProvider.cs` | JSON DTO and validating loader |
 | `Main/Features/WandererAllegiance/WandererAllegianceSettingsProvider.cs` | MCM over JSON |
 | `Main/Features/WandererAllegiance/WandererAllegianceIoC.cs` | DryIoc registration, called by `WandererAllegianceModule.RegisterServices` |
+| `Main/Features/WandererAllegiance/WandererTownSideService.cs`, `WandererTownOption.cs` | The pure placement rule: `Fits`, `Choose`, `Applies` |
+| `Main/Adapters/WandererTownAdapter.cs` | Reads the towns and the wanderer's culture, moves `StayingInSettlement`; engine access for the placement rule |
+| `Main/Features/WandererAllegiance/Hooks/Patch175_WandererSideScope.cs`, `Patch175_WandererSideEnter.cs` | The two patch classes of category `Patch175_WandererSideTowns` |
 | `Main/Features/WandererAllegiance/WandererAllegianceModule.cs` | The feature module, listed in `Main/Composition/FeatureModules.cs`: registers the services and declares the dialog behavior, which the module runner adds at campaign start after every hand-wired behavior |
-| `Main/Features/TaomSettings.cs` | The `World/Wanderer Allegiance` group (GroupOrder 51) |
+| `Main/Features/TaomSettings.cs` | The `World/Wanderer Allegiance` group (GroupOrder 51), including `EnableWandererSideTowns` |
 | `Main/_Module/ModuleData/wanderer_allegiance/wanderer_allegiance_config.json` | Shipped config |
-| `Main/_Module/ModuleData/taom_module_strings.xml` | `taom_wa_refuse_free`, `taom_wa_refuse_evil` |
+| `Main/_Module/ModuleData/taom_module_strings.xml` | `taom_wa_refuse_free`, `taom_wa_refuse_evil`, `taom_mcm_EnableWandererSideTowns` and its `_hint` |
 
 ## Dependencies
 
 - `IAlignmentService` (Features/Execution): the id-to-side table, `GetCultureSide` and `ResolveSide`.
+- `IRandomProvider` (Features/TroopProgression), `ICoopSessionProvider`, `IDedicatedServerProvider` (Features/CoopInterop): the placement rule's draw and its single-player predicate.
 - `INamedCompanionConfigProvider` (Features/NamedCompanions): the lore character ids for the narrow scope.
 - `IPathService`, `IModLogger` (Core).
 
@@ -203,6 +209,8 @@ the 18 named companions are classified in `alignment.json`;
 - `WandererAllegianceConfigProviderTests`: missing file, malformed JSON, empty object, JSON `null`, unknown and empty and null `scope`, case normalisation, caching, the shipped file.
 - `WandererAllegianceSettingsProviderTests`: MCM absent falls back to JSON for both fields, dropdown index mapping, the compiled dropdown default matches the shipped JSON.
 - `WandererCultureAlignmentCoverageTests`: every wanderer and named-companion culture is classified; gondor, mirkwood, erebor stay Free and isengard stays Evil.
+- `WandererTownSideServiceTests`: the nine wanderer-by-town side combinations (only Free against Evil does not fit), no culture, an owner with no kingdom (culture fallback), `ResolveSide` for the town and never `AreEnemyAlignments`, `Choose` keeping vanilla's pick when it fits or when no town of the side exists or is usable, moving an orc out of a Free town and a Free wanderer out of an Evil one, preferring a town with no wanderer, and `Applies` off for the switch, a co-op session, a host that decides and a dedicated server.
+- `Patch175WandererSideTownsTests`: the thread-static scope counter (open, close, finalizer without prefix, other thread), the module's category and services, and the three engine bindings (the `ApplyInternal` parameters, the two scope targets, `ApplyInternal` too large to inline while its wrapper is not).
 - `WandererAllegianceWiringTests`: the module is listed once in `FeatureModules.All`, `IoC.cs` no longer registers the feature by hand, the module's service graph resolves its behavior (still a container singleton), both lines sit on `companion_hire`, return to `lord_pretalk`, and pass a priority above 100, and both string ids are registered for translation. `FeatureModulesTests` checks that no module-declared type is also wired by hand in `SubModule.cs`.
 - `WandererAllegianceBindingTests` (`BindingVerification`): `AddHeroGeneralConversations` still emits `companion_hire` three times plus `lord_pretalk` and `main_option_faction_hire`; the three vanilla hire conditions still resolve as parameterless bool methods; `CampaignGameStarter.AddDialogLine` still takes an int `priority` defaulting to 100.
 
@@ -222,11 +230,13 @@ New campaigns, each a couple of minutes:
 6. Who Refuses = Named companions only: a Gondor character hires a generic Mordor wanderer, Maztog still refuses.
 7. A Free-culture player (Gondor-born) who is a vassal of Umbar, a Neutral realm, talks to an Evil wanderer (Maztog in Isengard): the hire goes through, because the player's side is the realm's, not the player's culture's (#957).
 7. Gondor character takes a mercenary contract with Mordor, then talks to a Gondor wanderer: refused (kingdom first).
+8. Placement: start a new campaign (any start) and walk the taverns of a few Free towns (Gondor, Rohan, Dale) and of a few Evil towns (Mordor, Isengard, an orc realm). Orc-family wanderers (names from `spc_wanderer_*` orc templates, or the encyclopedia page of a wanderer showing an orc culture) sit in Evil or Neutral towns only, and a Gondor or Rohan wanderer in Free or Neutral towns only. Let some days pass and look again: the daily swap keeps the rule.
+9. Mod Options, TAOM, World / Wanderer Allegiance, Wanderers Stay On Their Side off, new campaign: wanderers appear in any town again, as in vanilla.
 
 ## Where a wanderer stands: the daily swap, and bands under contract
 
-This feature gates the hire, not the wanderer's location. TAOM places no wanderer by side [Certain: no `TeleportHeroAction`
-or `EnterSettlementAction` in the wanderer feature at 0c5d81408]. yotthani's side-boundary report (`yotthani/bannerlord`,
+The hire rule gates the hire, not the wanderer's location. Until 2026-11-26 TAOM placed no wanderer by side [Certain: no `TeleportHeroAction`
+or `EnterSettlementAction` in the wanderer feature at 0c5d81408]; the next section is the rule added then. yotthani's side-boundary report (`yotthani/bannerlord`,
 `docs/taom/side-boundary-report.md`@6265f4a2, lines 46-58; the full report and TAOM's decision of 2026-10-29 are in
 [diplomacy.md](diplomacy.md) "Free/Shadow side boundary") names it as its third gap: a wanderer of one side can stand in a
 tavern of the other. Two engine facts decide how any fix must work.
@@ -254,6 +264,26 @@ same reading (`OfPlayer`, `:55`). A clanless wanderer is the other branch: no fa
 which is why the wanderer rule keys on culture. A future rule that wants a band's own side has to read the clan before the
 map faction.
 
+## Where wanderers stand (2026-11-26)
+
+**The report.** A named orc patron in a Free town's tavern (Luiz, local build 21). Vanilla places a wanderer in a random town whatever its culture, and TAOM has 72 orc-family wanderer templates of 321 in `taom_wanderers.xml`. The investigation is `output/taom-mod/orc-taverns/FINDINGS.md` (outside the repo); it ranked this cause first and left two others (culture conversion after a capture, orc lords in a hall) open.
+
+**The vanilla lines (v1.5.7 decompile).** `CompanionsCampaignBehavior.TrySpawnNewCompanion` (`:237-248`) picks `Town.AllTowns.GetRandomElementWithPredicate(...)`, which excludes the player's settlement, a besieged town and a town that holds an unhired wanderer, and no culture test. `CreateCompanionAndAddToSettlement` (`:379-392`) creates the hero born in a town of its own culture (`:383`) and then calls `EnterSettlementAction.ApplyForCharacterOnly(hero, settlement)` (`:392`) with that random town. `DefaultHeroAgentLocationModel` (`:97-106`) shows a partyless wanderer in the town's tavern. `SwapCompanions` (`:250-276`) swaps wanderers between the two halves of `Town.AllTowns` every day through the same call (`:268`, `:274`), and the new-game fill (`:289`) uses the creation routine. A fired wanderer is a fugitive with `CompanionOf` cleared (`RemoveCompanionAction.cs:18`, `:37-46`); `HeroSpawnCampaignBehavior.OnHeroDailyTick` (`:120-142`) and `OnCompanionRemoved` (`:94-100`) teleport such a hero (and a released one) into a fief of its map faction (`:409-415`) through `TeleportHeroAction`, which ends in `ApplyForCharacterOnly` (`TeleportHeroAction.cs:48`). Those routines are the only places vanilla moves an unhired wanderer.
+
+**The rule.** `WandererTownSideService.Fits(wandererCulture, townOwnerSide)`: a wanderer fits a town unless the two are Free against Evil (`FactionSideRules.AreOpposed`, the same reading as the hire rule: Neutral fits anywhere and every wanderer fits a Neutral town). The wanderer's side is its culture through `GetCultureSide`, as in "The rule" above. When the first pick does not fit, `Choose` takes a random usable town that does, preferring one with no unhired wanderer, and keeps vanilla's pick when none exists. A fitting first pick that already holds another unhired wanderer (an earlier redirect took its slot in the new-game fill or the daily swap) is also replaced, but only by an empty usable town of the wanderer's side, so two wanderers do not share a tavern while another town has none. A hero with no culture fits everywhere.
+
+**Town side: the owner's, not the town's culture.** The town's side is its owner clan's map faction id with that faction's culture through `IAlignmentService.ResolveSide`, the way `FactionSides.Of` builds it: the kingdom's side when the owner has a kingdom, the clan's culture when it has none, the settlement's own culture only when it has no owner clan. Reasons: every other TAOM side rule reads the realm (recruitment, marriage, desertion, the training grounds team fight reads the owner), the settlement's culture lags a capture by a day (Culture Conversion), and a Free town just taken by Mordor is Evil ground for a Gondor wanderer at once. Neutral realm towns take everyone.
+
+**The seam.** Two patch classes, one category: a scope on the four vanilla placing routines (spawn, daily swap and the two fired-wanderer teleports) and a void prefix on `EnterSettlementAction.ApplyInternal` that swaps the settlement argument and `hero.StayingInSettlement`, so the engine's own move runs with the corrected town. Why that method, why a scope, the callers and co-op: [harmony-patch-registry.md](../reference/harmony-patch-registry.md) "Patch175_WandererSideTowns". Every other `ApplyForCharacterOnly` caller, including TAOM's own `NamedCompanionAdapter` placement, is outside the scope and unchanged. A named companion is occupation Wanderer, so the vanilla swap, a dismissal or a fugitive teleport can move one and the patch then redirects it to a town of its side; those with `stay_at_home` are re-anchored to their home settlement by `HomeAnchorService.AnchorAll` every hour, so their lore home wins.
+
+**Single player only.** The rule needs `CoopSessionPolicy.IsSinglePlayerAuthority`; in a co-op session, for a client, when the host decides and on a dedicated server vanilla places every wanderer. The picks are random, so two peers would disagree. `EnableWandererSideTowns` is classified player-local in `CoopSettingsRelevance`.
+
+**Existing saves.** No migration. A wanderer already standing in a wrong-side town stays until vanilla's daily swap picks it (two wanderers a day at most) or he is fired and teleported; it then enters a town of its side. A wanderer who fits where he stands is never moved. The orc in a Free tavern of a save made before this change can therefore stay for days.
+
+**Not covered.** The other two causes in the report (a captured Free town's tavern staff and garrison converted to the owner's culture, and orc lords seated in a hall) are untouched.
+
+**Open question for haterade.** This changes where wanderers appear, which was vanilla's random pick. The switch `Wanderers Stay On Their Side` turns it off.
+
 ## Non-goals
 
 - Companions handed over by vanilla quests (`LordsNeedsTutorIssueBehavior`, `FamilyFeudIssueBehavior`) bypass the hire dialogue and are not gated.
@@ -264,6 +294,7 @@ map faction.
 
 ## Changelog
 
+- 2026-11-26: Wanderers stand only in towns of their side (Patch175, MCM `Wanderers Stay On Their Side`, on by default): a spawn, the new-game fill, the daily swap and a fired wanderer's teleport redirect an Evil wanderer out of a Free town and a Free wanderer out of an Evil one. This changes a rule haterade made (vanilla's random town); the switch turns it off.
 - 2026-10-29: Documented that vanilla swaps wanderers between towns every day, that a later `DailyTickEvent` listener runs before the swap, and that a band under contract resolves to its employer's side (from yotthani's side-boundary report).
 - 2026-10-19: Oaths of Service (#904) adds hire lines at priority 105 on the same token; the refusals at 110 still answer first by priority.
 - 2026-10-20 (#957, part 2): the player's side is one `SideIds` (the clan's map faction with that faction's culture) instead of the kingdom id with the player clan's or hero's culture; `Evaluate` takes it as its third argument.

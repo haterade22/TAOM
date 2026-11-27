@@ -1,4 +1,5 @@
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Settlements;
 using TAOM.Features.Execution;
 
 namespace TAOM.Adapters;
@@ -56,6 +57,20 @@ internal static class FactionSides
         if (character.IsHero)
             return OfHero(character.HeroObject);
         return new SideIds(string.Empty, character.Culture?.StringId ?? string.Empty);
+    }
+
+    /// <summary>
+    /// A settlement by its owner: the owner clan's map faction (the kingdom, or the clan itself) with that faction's culture.
+    /// A settlement with no owner clan reads its own culture and no faction id.
+    /// </summary>
+    public static SideIds OfSettlementOwner(Settlement? settlement)
+    {
+        if (settlement == null)
+            return SideIds.None;
+        var owner = Of(settlement.OwnerClan?.MapFaction);
+        return owner == SideIds.None
+            ? new SideIds(string.Empty, settlement.Culture?.StringId ?? string.Empty)
+            : owner;
     }
 
     /// <summary>
