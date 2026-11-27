@@ -331,3 +331,85 @@ Record each pending feature's module, source file, exact keys and English text, 
 - English source: `Main/_Module/ModuleData/taom_module_strings.xml` (MCM options read by the Realms settings).
 - Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
 - Keys: `taom_realms_mcm_rename_own`, `taom_realms_mcm_rename_own_hint`, `taom_realms_mcm_rename_ai`, `taom_realms_mcm_rename_ai_hint`, `taom_realms_mcm_own_banner`, `taom_realms_mcm_own_banner_hint`, `taom_realms_mcm_ai_banners`, `taom_realms_mcm_ai_banners_hint`. Read the English in the source file; the hints are long.
+
+## Faction power realm wage relief
+
+- Status: pending project-lead translation pass.
+- Source: [PR #1611](https://github.com/haterade22/TAOM/pull/1611).
+- Module: TAOM.
+- English source: `Main/_Module/ModuleData/taom_module_strings.xml`.
+- Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
+- No placeholders.
+
+| Key | English source | Context |
+| --- | --- | --- |
+| `taom_fp_realm_wage_relief` | Realm power wage relief | Wage explanation line |
+
+## Encounter Lines notable introductions
+
+- Status: pending project-lead translation pass.
+- Source: [PR #1615](https://github.com/haterade22/TAOM/pull/1615).
+- Module: TAOM.
+- English source: `Main/_Module/ModuleData/taom_encounter_strings.xml`.
+- Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
+- Each row keeps the variables of the vanilla line it replaces.
+
+| Key | English source | Context |
+| --- | --- | --- |
+| `taom_enc_notable_artisan_dwarf_1` | I am {CONVERSATION_HERO.FIRSTNAME}, a smith of the old guild. The stonecutters and metalworkers of {TOWN_NAME} bring their quarrels to my anvil, and I speak for them in the halls. | Notable introduction (artisan, dwarf); preserve {CONVERSATION_HERO.FIRSTNAME} and {TOWN_NAME} |
+| `taom_enc_notable_artisan_dwarf_2` | {CONVERSATION_HERO.FIRSTNAME}, at your service. I work the forge, as my kin have done since the first halls were hewn. The craft guilds of {TOWN_NAME} trust me to speak for them. | Notable introduction (artisan, dwarf); preserve {CONVERSATION_HERO.FIRSTNAME} and {TOWN_NAME} |
+| `taom_enc_notable_artisan_dwarf_3` | I am {CONVERSATION_HERO.FIRSTNAME}. Stone and steel are my trade. When the masons and jewellers of {TOWN_NAME} need a voice before the lords, it is mine they send. | Notable introduction (artisan, dwarf); preserve {CONVERSATION_HERO.FIRSTNAME} and {TOWN_NAME} |
+| `taom_enc_notable_artisan_elf_1` | I am {CONVERSATION_HERO.FIRSTNAME}. I am a maker, as the Eldar reckon it: wood, thread and silver take shape under my hands. The makers of {TOWN_NAME} ask me to give their counsel a voice. | Notable introduction (artisan, elf); preserve {CONVERSATION_HERO.FIRSTNAME} and {TOWN_NAME} |
+| `taom_enc_notable_artisan_elf_2` | I am {CONVERSATION_HERO.FIRSTNAME}. For many long years I have shaped bows and fine things in {TOWN_NAME}, and the weavers and carvers here let me speak for them. | Notable introduction (artisan, elf); preserve {CONVERSATION_HERO.FIRSTNAME} and {TOWN_NAME} |
+| `taom_enc_notable_artisan_elf_3` | I am {CONVERSATION_HERO.FIRSTNAME}. Some of us keep the old crafts alive, so that they are not lost as the years pass. Those who work with skill in {TOWN_NAME} have chosen me to speak for them. | Notable introduction (artisan, elf); preserve {CONVERSATION_HERO.FIRSTNAME} and {TOWN_NAME} |
+| `taom_enc_notable_artisan_orc_1` | I'm {CONVERSATION_HERO.FIRSTNAME}. I run the forges in {TOWN_NAME}. Every smith and driver in the work pits answers to me, so if you want something made, you talk to me. | Notable introduction (artisan, orc); preserve {CONVERSATION_HERO.FIRSTNAME} and {TOWN_NAME} |
+| `taom_enc_notable_artisan_orc_2` | {CONVERSATION_HERO.FIRSTNAME}. I'm boss of the pits here in {TOWN_NAME}. The hammer gangs do what I say, and they speak when I let them. | Notable introduction (artisan, orc); preserve {CONVERSATION_HERO.FIRSTNAME} and {TOWN_NAME} |
+| `taom_enc_notable_artisan_orc_3` | I'm {CONVERSATION_HERO.FIRSTNAME}. Iron, rope, arrows, whatever the war needs, my gangs in {TOWN_NAME} make it, and they make it fast or they answer to me. | Notable introduction (artisan, orc); preserve {CONVERSATION_HERO.FIRSTNAME} and {TOWN_NAME} |
+| `taom_enc_notable_headman_dwarf_1` | I'm {CONVERSATION_HERO.FIRSTNAME}. My kin have worked the mines and terraces of {VILLAGE_NAME} for more generations than the elders can count. The miners and herders here ask me to speak for them. | Notable introduction (headman, dwarf); preserve {CONVERSATION_HERO.FIRSTNAME} and {VILLAGE_NAME} |
+| `taom_enc_notable_headman_dwarf_2` | I'm {CONVERSATION_HERO.FIRSTNAME}. I keep the stores and the tally of {VILLAGE_NAME}, as my elders did before me. Every hearth here sends its word through me. | Notable introduction (headman, dwarf); preserve {CONVERSATION_HERO.FIRSTNAME} and {VILLAGE_NAME} |
+| `taom_enc_notable_headman_dwarf_3` | I'm {CONVERSATION_HERO.FIRSTNAME}. Ore and barley both come out of the ground at {VILLAGE_NAME}, and both need careful hands. The diggers and growers of this place, my kin among them, let me speak for them. | Notable introduction (headman, dwarf); preserve {CONVERSATION_HERO.FIRSTNAME} and {VILLAGE_NAME} |
+| `taom_enc_notable_headman_elf_1` | I am {CONVERSATION_HERO.FIRSTNAME}. I keep watch over the glades about {VILLAGE_NAME}, as my kindred have since the trees were young. Those who tend the woods here speak through me. | Notable introduction (headman, elf); preserve {CONVERSATION_HERO.FIRSTNAME} and {VILLAGE_NAME} |
+| `taom_enc_notable_headman_elf_2` | I am {CONVERSATION_HERO.FIRSTNAME}, warden of {VILLAGE_NAME}. We take from the land only what it gives freely, and the growers and gatherers here trust me to keep it so. | Notable introduction (headman, elf); preserve {CONVERSATION_HERO.FIRSTNAME} and {VILLAGE_NAME} |
+| `taom_enc_notable_headman_elf_3` | I am {CONVERSATION_HERO.FIRSTNAME}. Many seasons have I watched turn over {VILLAGE_NAME}. The gardeners and foresters of this place, my kindred among them, ask me to speak for them. | Notable introduction (headman, elf); preserve {CONVERSATION_HERO.FIRSTNAME} and {VILLAGE_NAME} |
+| `taom_enc_notable_headman_orc_1` | I'm {CONVERSATION_HERO.FIRSTNAME}, taskmaster of {VILLAGE_NAME}. The thralls work the fields because I keep them at it. Anything this place says, it says through me. | Notable introduction (headman, orc); preserve {CONVERSATION_HERO.FIRSTNAME} and {VILLAGE_NAME} |
+| `taom_enc_notable_headman_orc_2` | I'm {CONVERSATION_HERO.FIRSTNAME}. I keep the pens and the fields of {VILLAGE_NAME}, and the grubbers here do as I tell them, or they don't eat. | Notable introduction (headman, orc); preserve {CONVERSATION_HERO.FIRSTNAME} and {VILLAGE_NAME} |
+| `taom_enc_notable_headman_orc_3` | I'm {CONVERSATION_HERO.FIRSTNAME}. Somebody has to drive the thralls and fill the carts in {VILLAGE_NAME}. That somebody is me, so you talk to me. | Notable introduction (headman, orc); preserve {CONVERSATION_HERO.FIRSTNAME} and {VILLAGE_NAME} |
+| `taom_enc_notable_rural_dwarf_1` | I am {CONVERSATION_HERO.FIRSTNAME}. I hold the claim to the seams and pastures hereabouts, and many in this village answer to my word. | Notable introduction (rural, dwarf); preserve {CONVERSATION_HERO.FIRSTNAME} |
+| `taom_enc_notable_rural_dwarf_2` | I am {CONVERSATION_HERO.FIRSTNAME}. The quarry above this village is my family's by old right, and the workers here look to me. | Notable introduction (rural, dwarf); preserve {CONVERSATION_HERO.FIRSTNAME} |
+| `taom_enc_notable_rural_dwarf_3` | I am {CONVERSATION_HERO.FIRSTNAME}. These lands were granted to my house when the halls were young. I speak for many who dwell in this village. | Notable introduction (rural, dwarf); preserve {CONVERSATION_HERO.FIRSTNAME} |
+| `taom_enc_notable_rural_elf_1` | I am {CONVERSATION_HERO.FIRSTNAME}. The groves around this village are in my keeping, and many here heed my counsel. | Notable introduction (rural, elf); preserve {CONVERSATION_HERO.FIRSTNAME} |
+| `taom_enc_notable_rural_elf_2` | I am {CONVERSATION_HERO.FIRSTNAME}. My kindred were given the care of these lands long ago, and I speak for many who dwell in this village. | Notable introduction (rural, elf); preserve {CONVERSATION_HERO.FIRSTNAME} |
+| `taom_enc_notable_rural_elf_3` | I am {CONVERSATION_HERO.FIRSTNAME}. I hold the woods and meadows hereabouts in trust, and this village looks to me when it must be heard. | Notable introduction (rural, elf); preserve {CONVERSATION_HERO.FIRSTNAME} |
+| `taom_enc_notable_rural_orc_1` | I am {CONVERSATION_HERO.FIRSTNAME}. This land is mine because I took it and I hold it. The village does what I say. | Notable introduction (rural, orc); preserve {CONVERSATION_HERO.FIRSTNAME} |
+| `taom_enc_notable_rural_orc_2` | I am {CONVERSATION_HERO.FIRSTNAME}. Every field and pen around here pays its share to me, and the whole lot of this village answers to my word. | Notable introduction (rural, orc); preserve {CONVERSATION_HERO.FIRSTNAME} |
+| `taom_enc_notable_rural_orc_3` | I am {CONVERSATION_HERO.FIRSTNAME}. The big boss gave me these lands to squeeze. I speak for this village, whether it likes it or not. | Notable introduction (rural, orc); preserve {CONVERSATION_HERO.FIRSTNAME} |
+
+## Wanderers Stay On Their Side setting
+
+- Status: pending project-lead translation pass.
+- Source: [PR #1616](https://github.com/haterade22/TAOM/pull/1616).
+- Module: TAOM.
+- English source: `Main/_Module/ModuleData/taom_module_strings.xml`.
+- Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
+- No placeholders.
+
+| Key | English source | Context |
+| --- | --- | --- |
+| `taom_mcm_EnableWandererSideTowns` | Wanderers Stay On Their Side | MCM setting name |
+| `taom_mcm_EnableWandererSideTowns_hint` | When ON (default), a new, dismissed or relocated wanderer goes to a town whose owner is on their side when such a town has room: an orc to an Evil town, a Gondor ranger to a Free one. Neutral wanderers and Neutral towns mix with everyone. A wanderer already standing in a wrong-side town stays until vanilla's daily swap picks them. When OFF, vanilla picks any town. | MCM hint |
+
+## Seat of Seeing edge scroll and pan speed settings
+
+- Status: pending project-lead translation pass.
+- Source: [PR #1617](https://github.com/haterade22/TAOM/pull/1617).
+- Module: TAOM.
+- English source: `Main/_Module/ModuleData/taom_module_strings.xml`.
+- Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
+- No placeholders.
+
+| Key | English source | Context |
+| --- | --- | --- |
+| `taom_seat_mcm_edge` | Edge scroll | MCM setting name |
+| `taom_seat_mcm_edge_hint` | While you are in the Seat with the cursor shown, moving the pointer to the edge of the window flies the view that way, faster the nearer the edge. It stops while you hold the middle mouse button, and while a menu or a popup has the focus. Default: on. | MCM hint |
+| `taom_seat_mcm_pan_speed` | Seat pan speed | MCM setting name |
+| `taom_seat_mcm_pan_speed_hint` | Multiplies how fast the view flies with the movement keys and the edge scroll in the Seat. 1 is the usual speed. Between 0.25 and 4. Default: 1. | MCM hint |
