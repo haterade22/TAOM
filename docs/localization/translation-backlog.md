@@ -413,3 +413,16 @@ Record each pending feature's module, source file, exact keys and English text, 
 | `taom_seat_mcm_edge_hint` | While you are in the Seat with the cursor shown, moving the pointer to the edge of the window flies the view that way, faster the nearer the edge. It stops while you hold the middle mouse button, and while a menu or a popup has the focus. Default: on. | MCM hint |
 | `taom_seat_mcm_pan_speed` | Seat pan speed | MCM setting name |
 | `taom_seat_mcm_pan_speed_hint` | Multiplies how fast the view flies with the movement keys and the edge scroll in the Seat. 1 is the usual speed. Between 0.25 and 4. Default: 1. | MCM hint |
+
+## Seat of Seeing cursor hint, changed English
+
+- Status: pending project-lead translation pass.
+- Source: [PR #1614](https://github.com/haterade22/TAOM/pull/1614).
+- Module: TAOM.
+- English source: `Main/_Module/ModuleData/taom_module_strings.xml`.
+- Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
+- The English changed: a click on a panel button now presses it. All 12 language rows still say it gives a Move order (`check_stale_loc_rows.py --staged`); redo the rows and their cache entries.
+
+| Key | English source | Context |
+| --- | --- | --- |
+| `taom_seat_mcm_cursor_hint` | While you are in the Seat and the order panel is open, a cursor shows and orders land where it points. Hold the middle mouse button to look around with the cursor hidden. A click on one of the panel's buttons presses it, as its number key does. Default: on. | MCM hint |
