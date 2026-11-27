@@ -8,6 +8,7 @@ ARGS: lib (painter_tile_lib.py), build (painter_tile_build.py), spec_file (a spe
 Each export lands in <out>/set<S>_exp<E>.
 RESULT: per run, the export status, the files and the seconds taken.
 """
+# ruff: noqa: F821  (a Painter-side script: painter_run.py gives ARGS and RESULT, and the library that exec runs gives the other names)
 import json
 import time
 

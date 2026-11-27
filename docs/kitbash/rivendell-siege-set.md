@@ -465,6 +465,25 @@ ones before he looks. I closed that window and opened the current gatehouse `a` 
 | "Also extend this trim all the way around." | Gatehouse `a`: the braid band on the drum, which stopped before the wall beside the door | Built: the band runs from the door frame across the wing wall, round the drum, to the end section (seen by me in `b4_door_space_wide.png`) | It ends 0.08 m short of the end section's face (a checker's note): it must meet the wall's band at the joint |
 | "Remove this as it looks very bad and can be plain with the trim extended" | Tower `a`: the half rib arch and the single squeezed lancet with its short piece of band, on the short wall beside the tower | Plain since version 7: no rib and no arch on the short walls (the checker's measure and code reading; I did not see a close picture of it) | "The trim extended": the braid band across the plain short wall, with the continuous band of the towers |
 
+## The broken wall, stage 6, step 2: partial; decisions LD28 to LD33 (2026-11-26, recorded 18:22)
+
+Run wf_d659d152-ef3 (one owner, one independent checker). Files: `WORK\build\v08\wall_broken\s6_step2` (`s6_step2_result.json`, `S6_step2_flanks.png`) and its `check` folder (`s6_step2_check.json`).
+
+**What is in.** The tear module draws the toothed stair band, the darker core and the parapet end stair (LD27's mirror is right). The new band tests pass (38), and 15 of 15 planted faults of the owner were caught. The core's tone on the end-on views is 0.568 and 0.542 of the block ends by the owner, 0.576 and 0.529 by the checker (the aim is 0.52 to 0.57).
+
+**The checker's verdict: not ready for step 3.** The draw raises for seeds 22, 23, 24 and 28 of 1 to 40, because a fixed floor of 2.2 steps a metre binds on every seed. The slab fit of the bodies fails for band tears (means of 0.39 to 0.43 m against the aim of 0.35 m), so the plan, ramp and body builds stop. The stage 5 suite went from 854 tests OK to 649 run with 7 failures and 35 errors. By the eye the dark core is smaller than in the proof (dark pixels at 25 m: 5,773 against 12,826), and a rail fragment of stage 5 floats over the cut parapet. Two planted faults of the checker survived (the chips, the core rows).
+
+**Decisions (the lead).**
+
+- **LD28.** The count of steps follows the courses: the floor is what the visible courses of a skin allow, not a fixed number. LD21's 3.0 steps a metre stays a direction. Seeds 1 to 40 and 101 all draw, in at most 60 tries.
+- **LD29.** A band tear's slab fit may use up to 12 points. The aims stay; where 12 points do not reach an aim, the owner reports the means for 8 to 16 points and stops that part.
+- **LD30.** The stage 5 suite is green again; a test that the band truly changes states the new rule, and no assert is weakened.
+- **LD31.** The core stands behind each tooth as one broad dark mass, with at least the proof's dark pixel counts, and its tone is inside the aim on both flanks by the checker's camera.
+- **LD32.** No floating member: the rail and the loose members are cut again to the new ends.
+- **LD33.** The test gaps close (a test's isolation fault, the chips, the core rows), and the preview's see-through holes are closed or labelled.
+
+**Step 2b runs:** wf_59584848-33b, in `WORK\build\v08\wall_broken\s6_step2b`. Then the caps (LD26), the mound (LD24) and the panels (LD25).
+
 ## The centre house, round 2: his three marks answered in part; decisions CH5 to CH12 (2026-11-26, recorded 17:40)
 
 Run wf_cd2c064b-cdf (one builder, one independent critic). Files: `WORK\kit_full\design_v2\scene_valley\centre_house\r2` (`S_centre_house_r2.png`, `centre_house_r2.blend`, `centre_house_r2_result.json`, `FOR_THE_OWNER.md`) and `WORK\kit_full\design_v2\scene_valley\centre_house\r2\critic` (`CENTRE_HOUSE_R2_CRITIQUE.md`, `centre_house_r2_critique.json`, `S_centre_house_r2_critic.png`). I looked at the critic's pictures of his marks beside the model (`pics\c3_terrace_pair.png`, `pics\csheet_0.png`): its findings hold.

@@ -10,6 +10,7 @@ Variant: {"name", "source": "<png path>", "filters": [{"id": "blur/blur", "param
           "anchor": false, "reader_filters": [...] (filters on the reader layer when anchor is true)}
 RESULT: per variant the status and, for anchor variants, what the reader source reported.
 """
+# ruff: noqa: F821  (a Painter-side script: painter_run.py gives ARGS and RESULT, and the library that exec runs gives the other names)
 import json
 import os
 

@@ -838,18 +838,6 @@ class EndShellTests(unittest.TestCase):
         self.assertTrue(plan.wants_x_cuts(-plan.BODY_X, plan.BODY_X))
 
 
-class EndShellTests(unittest.TestCase):
-    def test_a_stub_shell_is_an_end_shell_and_the_body_and_the_platform_slab_are_not(self):
-        self.assertTrue(plan.is_end_shell(plan.BODY_X - 0.6, plan.PIECE_X1))
-        self.assertTrue(plan.is_end_shell(plan.PIECE_X0, -plan.stub_inner_x("b")))
-        self.assertFalse(plan.is_end_shell(-plan.BODY_X, plan.BODY_X))
-        self.assertFalse(plan.is_end_shell(-5.9, 5.9))  # the platform slab of variant b, with its corbel
-
-    def test_an_end_shell_is_cut_along_z_only(self):
-        self.assertFalse(plan.wants_x_cuts(plan.BODY_X - 0.6, plan.PIECE_X1))
-        self.assertTrue(plan.wants_x_cuts(-plan.BODY_X, plan.BODY_X))
-
-
 class RailCapTests(unittest.TestCase):
     """The cap of a rail is CAP_OVER wider than the rail. Where the rail across the foot of a hole meets a side rail,
     their caps would cross and share a plane over a 4 cm by 24 cm square, so the cap of the cross rail stops at the

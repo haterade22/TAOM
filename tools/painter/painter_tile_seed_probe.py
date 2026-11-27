@@ -7,6 +7,7 @@ so no other script can interleave with it. It refuses to start when the layer st
 (another script is building there): it raises and changes nothing. It leaves the stack empty.
 painter_tile_merge.py compares the exports with the default ones.
 """
+# ruff: noqa: F821  (a Painter-side script: painter_run.py gives ARGS and RESULT, and the library that exec runs gives the other names)
 exec(open(ARGS["lib"]).read())  # noqa: F821  (ARGS injected by painter_run.py)
 ensure_ao()
 if ls.get_root_layer_nodes(stack()):

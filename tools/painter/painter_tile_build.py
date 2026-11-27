@@ -17,6 +17,7 @@ Stack from the bottom: base material, tone, stain, joint colour, joint height, j
 bitmap is imported as a project texture and read as data (Raw colour space).
 RESULT: {"status", "layers", "files"}.
 """
+# ruff: noqa: F821  (a Painter-side script: painter_run.py gives ARGS and RESULT, and the library that exec runs gives the other names)
 exec(open(ARGS["lib"]).read())  # noqa: F821  (ARGS injected by painter_run.py)
 import substance_painter.resource as res
 

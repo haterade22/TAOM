@@ -4,6 +4,7 @@ ARGS: lib (painter_tile_lib.py), out (export folder), space ("default", "Raw", "
       resolution (set size, 2048), size (export size, 1024), opacity (1.0).
 Clears the stack, makes the fill, exports, RESULT: the status and the colour space read back.
 """
+# ruff: noqa: F821  (a Painter-side script: painter_run.py gives ARGS and RESULT, and the library that exec runs gives the other names)
 exec(open(ARGS["lib"]).read())  # noqa: F821
 NORMAL_MAP = "Normal_DirectX"
 tset = ts.all_texture_sets()[0]

@@ -7,6 +7,7 @@ ARGS: lib (painter_tile_lib.py), image (16-bit PNG height test), out (folder), h
       or a ChannelFormat name such as "L16F"), tag (names the sub folder), normal ("Normal_DirectX").
 RESULT: the channel formats before and after, the export status and files.
 """
+# ruff: noqa: F821  (a Painter-side script: painter_run.py gives ARGS and RESULT, and the library that exec runs gives the other names)
 import os
 
 exec(open(ARGS["lib"]).read())  # noqa: F821  (ARGS injected by painter_run.py)

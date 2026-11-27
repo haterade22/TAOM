@@ -6,6 +6,7 @@ document map "normal" beside the virtual maps Normal_OpenGL and Normal_DirectX; 
 ARGS: lib (painter_tile_lib.py), image (16-bit PNG whose height changes down the rows), out (folder).
 RESULT: export status and files. The fill is deleted again.
 """
+# ruff: noqa: F821  (a Painter-side script: painter_run.py gives ARGS and RESULT, and the library that exec runs gives the other names)
 import os
 
 exec(open(ARGS["lib"]).read())  # noqa: F821  (ARGS injected by painter_run.py)

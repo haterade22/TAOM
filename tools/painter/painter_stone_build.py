@@ -15,6 +15,7 @@ LINEAR light, with a Raw map read as a linear value (the lesson of round 2b), so
 are not the ones of the host preview.
 RESULT: {"status", "layers", "files"}.
 """
+# ruff: noqa: F821  (a Painter-side script: painter_run.py gives ARGS and RESULT, and the library that exec runs gives the other names)
 exec(open(ARGS["lib"]).read())  # noqa: F821  (ARGS injected by painter_run.py)
 import json
 import substance_painter.resource as res

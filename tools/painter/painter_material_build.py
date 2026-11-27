@@ -16,6 +16,7 @@ with an optional levels window. The uv keys of a material turn it (a quarter tur
 it (a whole number keeps it seamless) or move it. Every procedural mask starts from a Black background.
 RESULT: {"status", "layers", "files", "message", "mask_params"} (mask_params: the parameter names of each mask).
 """
+# ruff: noqa: F821  (a Painter-side script: painter_run.py gives ARGS and RESULT, and the library that exec runs gives the other names)
 exec(open(ARGS["lib"]).read())  # noqa: F821  (ARGS injected by painter_run.py)
 import json
 import substance_painter.resource as res

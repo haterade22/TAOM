@@ -7,6 +7,7 @@ size (default 1024), uvscale ({name: [sx, sy]}: the fill's UV scale), normal_for
 Each material goes onto an empty fill on the plane, is exported, and the fill is deleted.
 RESULT: {name: status}.
 """
+# ruff: noqa: F821  (a Painter-side script: painter_run.py gives ARGS and RESULT, and the library that exec runs gives the other names)
 exec(open(ARGS["lib"]).read())  # noqa: F821  (ARGS injected by painter_run.py)
 ensure_ao()
 res_out = {}

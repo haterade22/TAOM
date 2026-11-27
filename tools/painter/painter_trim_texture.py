@@ -23,6 +23,7 @@ cfg keys (all have defaults in DEFAULTS below):
   ao_channel         opacity of the baked AO multiplied into the AO channel (1.0, 0 for none)
 RESULT: {"status", "layers", "files", "message", "notes"}.
 """
+# ruff: noqa: F821  (a Painter-side script: painter_run.py gives ARGS and RESULT, and the library that exec runs gives the other names)
 import json
 
 exec(open(ARGS["lib"]).read())  # noqa: F821  (ARGS injected by painter_run.py)

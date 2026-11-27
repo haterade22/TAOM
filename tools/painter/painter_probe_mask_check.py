@@ -8,6 +8,7 @@ ARGS: lib (painter_tile_lib.py), build (painter_tile_build.py), spec_file (spec 
 RESULT: the layers (name, has_mask, visible) and, per masked layer, the export status. The real stack is
         restored (visibility, colour, opacity) at the end by building the candidate again.
 """
+# ruff: noqa: F821  (a Painter-side script: painter_run.py gives ARGS and RESULT, and the library that exec runs gives the other names)
 import json
 
 A = ARGS  # noqa: F821  (injected by painter_run.py)
