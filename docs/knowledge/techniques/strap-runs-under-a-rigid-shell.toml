@@ -1,0 +1,34 @@
+title = "Run a strap under a helm or shell along its whole length"
+line = "A strap that meets a helm or a rigid shell comes out from under its rim and stays under it along its whole run, on both sides. No strap or stitch box on the shell's outer face."
+why = "A test of the strap's points alone missed a strap that rose through the band between two points. The session's reading of his correction: a strap on top of a shell does not look mounted. The whole-run rule is the session's reading of his second message, which ends mid-sentence."
+area = "asset-craft"
+status = "active"
+next = "The build report prints a count of the strap stretches that cross a shell or a band, and a gate holds it at 0."
+
+[when]
+outside = ["*rharmb_shell*.py", "*rharm*strap*.py", "*rharm*design*.py"]
+tasks = ["helm strap", "head shell", "horse head armour"]
+
+[[evidence]]
+grade = "maintainer"
+value = "THis needs to go under the helm"
+date = 2026-11-25
+
+[[evidence]]
+grade = "maintainer"
+value = "Both sides the tab should be under..."
+method = "his second message, at 23:34 on 2026-11-25, with a circle round the neck straps at the end of the last neck band; the message ends there"
+date = 2026-11-25
+
+[[acts]]
+state = "instance"
+where = "the straps argument of the shell builder in rharmb_shell.py (STRAP_GAP): each bridle strap passes under the shell's rim"
+scope = "the head shell of armour 5; no build counts the strap stretches that cross a shell or a band"
+
+[[source]]
+maintainer = "2026-11-25"
+words = "THis needs to go under the helm"
+
+[[source]]
+maintainer = "2026-11-25"
+words = "Both sides the tab should be under..."

@@ -1,0 +1,37 @@
+title = "Put a round bead on every free edge of a rigid band or shell"
+line = "Every free edge of a rigid band or shell carries a round bead: in geometry where the triangle cap allows it, else one lifted lip row for the outline and the bead as height in the normal map."
+why = "A round section has normals over more than 180 degrees, so one bright line shows on every band from any view. At the outline and at grazing angles a bead that is only in the normal map goes flat."
+area = "asset-craft"
+status = "active"
+next = "A shared band builder in tools/blender that takes the bead as a parameter, and a report line for the bead's width against the pitch. The models' ratio of 0.147 to 0.167 is a note for a next piece: it is not the maintainer's word and not in code."
+
+[when]
+outside = ["*rharmb_bands*.py", "*rharmb_shell*.py", "*rharm*paint*.py", "*rharm*design*.py"]
+tasks = ["band edge", "edge bead", "lames", "armour rim"]
+
+[[evidence]]
+grade = "measured"
+value = "Model 01: bead radius 5.6 to 6.1 units over 230 to 300 degrees of arc, diameter 0.147 of the pitch; model 02: 0.167 of the pitch. Ours v18ay: a flat plate of 3.5 to 4.1 mm with a short lip, the bead as a height stripe in the map. Width in the build: bead_w 0.013 m, about 0.21 of v18ay's mean pitch, the width he approved on the build."
+method = "the teardown record docs/knowledge/teardowns/2026-11-26-horse-armour-neck-and-head.md; the probe td_probe.py and its crest scripts are kept with the asset job, outside the repo"
+date = 2026-11-26
+
+[[evidence]]
+grade = "measured"
+value = "Cost on the neck piece: 1,839 triangles with the bead in geometry, 1,003 with it in the map."
+method = "the prototype counts of the rework builder at LOD0, in the asset job's record"
+date = 2026-11-25
+
+[[evidence]]
+grade = "maintainer"
+value = "His choice in a dialog on 2026-11-25: the option \"Rounded ends, rim in normal map\". The label is the session's wording, not his."
+method = "the asset job's work log, entry of 15:01 on 2026-11-25"
+date = 2026-11-25
+
+[[acts]]
+state = "instance"
+where = "BAND_PROTO[\"H\"] in rharmb_design5.py, which builds mode N of rharmb_bands.py and is painted by paint_lacquer in rharmb_paint.py"
+scope = "armour 5 only, as the map version by the maintainer's choice of 2026-11-25"
+
+[[source]]
+teardown = "2026-11-26-horse-armour-neck-and-head"
+

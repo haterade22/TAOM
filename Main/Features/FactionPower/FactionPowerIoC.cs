@@ -13,5 +13,7 @@ public static class FactionPowerIoC
         container.Register<FactionPowerService>(Reuse.Singleton);
         container.Register<FactionPowerEditor>(Reuse.Singleton);
         container.Register<IFactionPowerPartyHook, FactionPowerPartyHook>(Reuse.Transient);
+        container.Register<IFactionPowerEconomyHook, FactionPowerEconomyHook>(Reuse.Transient);
+        container.Register<IFactionPowerStrikeHook, FactionPowerStrikeHook>(Reuse.Transient);
     }
 }

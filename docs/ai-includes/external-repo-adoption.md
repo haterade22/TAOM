@@ -8,6 +8,8 @@ The user shares a repo or article "to see what we can adopt into our own project
 
 A watched repo (listed in `docs/reviews/upstream-watch.json`, today yotthani's two) is reviewed with `/upstream-review`, which covers only the commits since its last reviewed SHA and advances that SHA when the review lands.
 
+**The same question for a tool's result** (the maintainer, 2026-11-26). When an outside tool or source solves a part we struggled with (a 3D generator's model, a generated picture, a bought asset), run step 3 of the cycle on its result: what it did, what we did, why its way is better. Put each technique in the owning doc and make it our default. The steps are the `/teardown` skill, and its record and entries go into the knowledge store ([knowledge-library.md](../features/knowledge-library.md)). No security pass is needed for a model or a picture; send nothing private to the service that makes it.
+
 ## Principles
 
 - **Port reviewed TEXT into TAOM-owned files. NEVER install the external plugin/package.** Installing eagerly loads its skill descriptions into every session (context tax we manage), its SessionStart bootstrap injects high-authority context (prompt-injection-by-design — a malicious or future-compromised fork could weaponize it), and it conflicts with our curated setup.

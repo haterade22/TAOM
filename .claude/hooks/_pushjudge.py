@@ -41,7 +41,8 @@ BLOCK_MATCHING = "every matching branch, both trunks included (a : refspec or pu
 _CLEAN = str.maketrans({c: " " for c in "\"'(){}`"})
 _IFS = re.compile(r"[ \t\n]+")
 _ASCII_LOWER = str.maketrans("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")
-_REDIR = re.compile(r"[<>]")
+# A redirection: < or >, with the & of &> and &>> (#1556).
+_REDIR = re.compile(r"&?>|<")
 _FD = re.compile(r"[0-9]+")
 _FORCE = ("--force", "--force-with-lease", "--force-if-includes")
 _EVERY = ("--all", "--branches")

@@ -1,0 +1,25 @@
+title = "Close the lap between two bands"
+line = "A band's lower edge lies on the next band: the target is a tilt of 5 degrees or less and an air gap no larger than the bead's radius. A stack that must slide over a bending neck keeps a gap and gets a liner."
+why = "An air gap under a band shows as a dark slot from a low or side view. A closed lap gives one thin shadow line under each bead."
+area = "asset-craft"
+status = "active"
+next = "The neck build prints the air gap and the tilt on the crest section. LAME_STEP in rharmb_design5.py stands against a closed lap: it holds each band of armour 5 12 mm over the next one so that the neck can bend. Open: whether a closer lap passes the pose gates."
+
+[when]
+outside = ["*rharmb_bands*.py", "*rharmb_crinet*.py", "*rharm*design*.py"]
+tasks = ["band stack", "lames", "neck armour", "band lap"]
+
+[[evidence]]
+grade = "measured"
+value = "Model 01: at most about 3 units of air under a band's edge, a step of 4.6 units between two bands at the median. Model 02 steps about 19 units. Ours: v16 a lap gap of -10.5 to +5.5 mm (edges cut into the next plate); v18ay 10.2 to 19.1 mm of air under each lower edge."
+method = "the teardown record docs/knowledge/teardowns/2026-11-26-horse-armour-neck-and-head.md; the probe td_probe.py and its crest scripts are kept with the asset job, outside the repo"
+date = 2026-11-26
+
+[[evidence]]
+grade = "inferred"
+value = "The target (a tilt of 5 degrees or less, an air gap no larger than the bead's radius) is the session's choice from model 01. It is not the maintainer's word."
+method = "the row of this entry in the teardown record"
+date = 2026-11-26
+
+[[source]]
+teardown = "2026-11-26-horse-armour-neck-and-head"

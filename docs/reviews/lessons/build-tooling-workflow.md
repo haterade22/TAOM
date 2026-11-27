@@ -5388,6 +5388,654 @@ listed gait that no set bound any more was only a note.
   for any other item. Three tests per list: the item fails in a second way; its listed numbers change; the
   item is gone or unbound.
 - **Source:** issue #1565 item 2; Codex pre-review P1 and P2 3, the Data flow lens trace 2;
+  [RCA](../rca-warg-stride-gate-2026-11-24.md) F1 and F3; `tools/tests/test_gait_stride_creatures.py`
+  (`KnownFailureTests`).
+
+### Kit pieces that must join get one shared end section and a test of the joint (#1600, 2026-11-24)
+The first Rivendell wall and gatehouse were built by two scripts, each from its own concept picture. Set side
+by side they left an open slit: the gatehouse ended in a round drum and the wall in a flat face. Mike: "this
+isnt seamless". The seam test written afterwards measures that old pair at 110.34 m2 of mismatch between the
+two end sections.
+- **Why missed:** every check looked at one piece (bounds, triangle count, pictures of that piece). No check
+  set two pieces together, and no file owned the shape of the joint.
+- **Prevent:** the end section of a kit is defined once, in a module that every builder imports
+  (`tools/oneoff/rivendell_joint_profile.py`), with half a pier on each joint so that the pier hides the seam. A
+  piece whose shape cannot end in that section gets a stub of real wall at each side, made by the wall's own
+  functions. `tools/oneoff/blender_check_joint_profile.py` compares the end sections of two pieces and must
+  report 0 for each pair, in both orders, before a piece is shown.
+- **Source:** issue #1600; `WORK\build\v02\joint_check_trials\gatehouse_vs_wall` (FAIL, 110.34 m2),
+  `WORK\build\v02\wall_solid\joint_wall_wall` and `wall_broken\joint_solid_dest` (PASS, 0.0 m2), with `WORK` as
+  in [rivendell-siege-set.md](../../kitbash/rivendell-siege-set.md).
+
+### A tiling texture is judged on the piece at its real tile size, beside the control (#1600, 2026-11-24)
+Four stone sources failed before one worked: number noise ("Texturing is very very bad"), connector pictures
+made to tile (one stain on every tile), public-domain scans, and Painter's stock shelf. Each set had passed its
+checks: the wrap seam, the mean colour, the channel statistics of the control. On the wall the first good
+stone still read as brick, because one 1024 px tile covered 1.33 m and the courses were 0.33 m high.
+- **Why missed:** the checks measured what a script can count on a flat tile. Nobody put the tile on a 20 m
+  wall with a figure beside it before the UVs were built, and the tile size was fixed from the control's pixel
+  density alone.
+- **Prevent:** before a set is used, show it on the real piece at the real density, with a 1.8 m figure, and as
+  a flat sheet beside the control at the same pixels per metre
+  (`tools/oneoff/blender_view_textured.py`, `preview_painter_stone_sets.py`). Choose the tile size from that
+  picture; keep the density as one constant, so that a change is a rebuild and not a rewrite. A number check
+  of a texture proves its form, never its look.
+- **Source:** issue #1600; [tiling-texture-sets.md](../../kitbash/tiling-texture-sets.md) (the source table and
+  the tile size table); `WORK\build\v02\wall_solid\compare`.
+
+### Read the repo record and the shader before you take a texture convention from control statistics (#1600, 2026-11-24)
+The first specular maps of the Rivendell sets were fitted to the channel statistics of the Gondor control: red
+0, green and blue with the control's mean and spread, both driven by roughness. The fit passed its own check
+by construction. The repo already recorded the meaning (R metallic, G gloss, B occlusion,
+`docs/reference/ue-to-bannerlord-asset-pipeline.md`), and the game's shader sources say the same. So blue
+held roughness numbers where the engine reads occlusion. The normal map's green sense was left "for a Kit
+test", although 25 control normal maps on disk answer it: green down.
+- **Why missed:** the brief said "convention inferred from the control". Nobody searched the docs for `_s`, and
+  nobody knew that the shader sources lie in `<game>\Shaders\Sources` as plain text. A statistic that the
+  tool itself sets is read back from the layer that set it.
+- **Prevent:** for a texture or material question, search `docs/` for the suffix first, then read what the
+  shader does with each channel (`standart.rsh`, `pbr_metallic.rs`), then measure the control files for the
+  sign or the range. Write the convention with its shader line in the doc of the work
+  ([tiling-texture-sets.md](../../kitbash/tiling-texture-sets.md), "What the engine reads").
+- **Source:** issue #1600; `WORK\painter_lab\research\engine` (`spec_channel_stats.json`,
+  `normal_sense_controls.json`, `normal_sense_vanilla.json`); `tools/oneoff/convert_painter_stone_sets.py`
+  (the defect, corrected the same night: the converter writes R 0, G gloss, B occlusion).
+
+### A brief names the tools that exist in its area (#1600, 2026-11-24)
+Two workers wrote Painter scripts into a work folder (`lib.py`, `yexp.py`) while `tools/painter/` held
+`painter_run.py` and three proven Painter scripts, and `docs/reference/substance-painter-mcp-setup.md` held a
+table of Painter traps. The workers met two of those traps again.
+- **Why missed:** the main session wrote the briefs from memory of the task and did not list the tool folder
+  or search the docs for the program's name before it delegated. A worker reads what its brief names.
+- **Prevent:** before a brief in a tool area that the session has not used yet: `grep -rli <program> docs
+  tools`, read `tools/README.md` for the area, and name the files and the trap table in the brief.
+- **Source:** issue #1600; `WORK\textures\v02_painter\scripts`; the catalogue worker's scripts of the same
+  night, written into `tools/painter/painter_tile_*.py` after the brief named the folder.
+
+### A Painter layer source set before its channel is active is lost (#1600, 2026-11-25)
+A script-built joint layer showed pale, shiny joints in the first export, where the colour was set dark
+and the roughness high. The layer had its defaults (base colour grey 0.8, roughness 0.3).
+- **Why missed:** the script called `set_source(channel, value)` and then set `active_channels`. The sources
+  on channels that were not yet active were dropped without an error, and the call order looked harmless.
+- **Prevent:** set `active_channels` first, then the sources; after any new layer type, export once and read
+  the pixel values at the feature, not only the picture.
+- **Source:** `tools/painter/painter_tile_build.py`; the trap row is in
+  [tiling-texture-sets.md](../../kitbash/tiling-texture-sets.md), "Painter traps of this work" (the same row is in
+  `docs/reference/substance-painter-mcp-setup.md` on the branch `feat/rhun-chariot-variants` only).
+
+### AI judges are not the owner's eye: show him both readings of a look brief in round one (#1600, 2026-11-25)
+Five rounds of a night loop refined a smooth ashlar with drawn joints. Three AI judges scored every round,
+and their findings wrote the next brief. In the morning the maintainer looked at the result for a minute and
+said: "Remove the TILE look from this and make it smooth stone." A set with no joints existed since round 3 as
+a baseline; the judges had scored it 3 to 4 of 10 ("plaster, no masonry"), so it stayed in a score table. He
+also called the first roof slate "perfect"; the judges had called it "square pavers".
+- **Why missed:** his words were "a smooth stone look". I read them as smooth dressed blocks and never tested
+  that reading with him. The judges' prompts carried my reading as the target, so every round optimised it.
+- **Prevent:** when a look brief has two readings, build both in the first round and put them side by side on
+  the review page before a second round. Give a judge his words verbatim and no reading of mine as the goal.
+  A baseline that removes a feature goes on the page as an option, not only into a score table.
+- **Source:** issue #1600; [tiling-texture-sets.md](../../kitbash/tiling-texture-sets.md), "The owner's
+  direction"; `WORK\textures\v07\set_dressed` (the unshown baseline) and `WORK\textures\v10\set_smooth`.
+
+### A fan-out of Blender workers over every piece starves the machine and finishes nothing (#1600, 2026-11-25)
+
+- **What happened:** with six workflows at once (wall lengths, railing, tower check, gatehouse check, turret
+  concepts, collar study) about twenty headless Blender processes of one session held 16 GB beside another
+  session's renders; free memory fell to 14.3 GB of 61.6 GB. The owner saw "like 36 blenders" and had five pieces
+  to judge, none finished. His words: "work on one blender item at a time to save memory" and "Lets work on one
+  piece (wall, broken wall, gatehouse, etc) and when that is perfect move onto the next".
+- **Why missed:** each job was independent in its files (a private code copy each), so I treated them as free to
+  run together. Nothing counted Blender processes, and the owner's attention was not in the plan at all. Each new
+  point of his became one more parallel job in place of one more item for the piece in work.
+- **Prevent:** asset work goes one piece at a time, to the owner's approval, the checks, the detail levels and the
+  bodies, before the next piece starts. Points on other pieces go on a list. Every worker starts Blender through
+  one lock (for this job `WORK\_tools\blender_one.py`, a named mutex: a second call waits), and renders
+  its cameras in one Blender job. Before stopping processes, list them with their command lines and stop by
+  process id only those that name the job's folders: half of the processes belonged to the other session.
+- **Source:** issue #1600; [rivendell-siege-set.md](../../kitbash/rivendell-siege-set.md), "Mike's change of
+  method"; the lock tool was tested with two calls at once (the second started 3.1 s after the first had ended).
+
+### A lock for a heavy tool: slots with a memory floor, and a mark on each process (2026-11-25, kingdom kits)
+
+- **What happened:** the job's rule was one headless Blender at a time, held by one named lock. Mike then allowed one or two
+  more jobs, "Just be aware of memory usage". The first tool found its own Blender process by the script's name, which
+  cannot tell two jobs with the same script apart.
+- **What works:** three named locks as slots (a lock is freed when its holder dies, a counter is not); the first slot is
+  always open, and a later slot opens only while free memory is over a floor; each call puts a unique number on the
+  command line of its process (`--python-expr <number>`) and watches that process only. A live trial with three jobs of
+  the same script proved it.
+- **Rule:** when a worker limit changes, change the tool that holds it, not the briefs; and never find a process by a name
+  that another job can share.
+
+### A fix pass that follows checkers needs the lead's decisions before it starts (2026-11-25, kingdom kits)
+
+- **What happened:** the wall's workflow ran a builder, three independent checkers and a fix pass in one script. The
+  checkers found that the braid of the wall's band stepped 17 mm at each inner pier corner. The fix agent started at once
+  and chose the first repair that made its test pass: a whole pattern period on each pier side, which is 30 percent
+  denser than the pattern beside it. The owner had approved the build before the checks ran. I stopped the agent after
+  8 minutes; it had already patched the working copy.
+- **What works:** end the script at the checkers when the owner has approved the build, or when a finding has more than
+  one repair. The lead reads the findings and decides each one (the repair and its method, no change, or the owner's
+  decision), then gives the fix pass those decisions as a numbered list, with what must not change. A stopped agent's
+  patch scripts name what it applied, so the next agent keeps the good parts.
+- **Rule:** a finding with two possible repairs is a decision, not a task. The fix prompt names the method, or the
+  script stops before the fix.
+
+### A usage limit can stop new agent calls in the middle of a workflow (2026-11-25, kingdom kits)
+
+- **What happened:** at about 20:05 every new worker agent failed with a weekly limit message. Agents that already ran
+  ended their work; the calls after them (a builder, three checkers, a critic) returned nothing. The workflow reported
+  the stage as complete with failures. Half an hour later calls worked again.
+- **What works:** give each stage a result file on disk as its last action, and a rule for a worker that finds a
+  started stage: read what is there, continue, never copy over the safety copy. Stop the script when a stage returns
+  nothing (do not run checkers on a build that did not happen). Resume the run by its id: finished calls come from the
+  journal. Before a relaunch, probe each model tier with a one-word agent.
+- **Rule:** a long script is a chain of stages that each leave their result on disk; a stage that returns nothing ends
+  the script.
+
+### A memory floor before a job starts does not limit what the job takes later (2026-11-25, kingdom kits)
+
+- **What happened:** a checker agent started three Blender measure jobs through the job's lock tool. The tool let a
+  job start only with 12 GB free, and each job was small at the start. Five minutes later the three held 71 GB on a
+  62 GB machine (one alone 46 GB) and free memory was 5 GB. Another session saw it first.
+- **What works:** the tool that starts a job also watches it: read the job's private memory on every poll, stop the
+  job above a ceiling, and stop a big job when the machine runs out. The stop message says what to change and that
+  the job must not start again unchanged. Tell every worker in its brief: no full distance matrix between two point
+  sets, a KD tree or chunks, and few heavy jobs at one time.
+- **Rule:** a limit that is checked only at the start is no limit. Put the watch where the job is started.
+
+### Workers of one session share one scratch folder: name a folder for each (2026-11-26, kingdom kits)
+
+- **What happened:** five workers of one workflow wrote their throwaway scripts into the session's scratch folder
+  under plain names. One worker's `mutate.py` replaced another worker's file of the same name, and two workers then
+  ran the other's mutation script by mistake. As read, that script patched modules in memory only, so no file was
+  harmed.
+- **What works:** every brief names a folder of its own for scratch files and says that the session's scratch folder
+  is shared. A script that changes files gets a name with the worker's part in it.
+- **Rule:** a brief names the worker's own scratch folder; nothing of a worker goes into the shared one.
+
+### A test that names a live path as its target writes there when the guard is broken (2026-11-26, kingdom kits)
+
+- **What happened:** a test proved a guard ("an output folder inside a game module is refused") by passing the real
+  module folder as the output folder. An independent checker ran the tests on copies with planted faults; on the copy
+  with that guard removed, the test wrote three files into the live, unversioned map module while the Modding Kit was
+  open. The checker removed them after three minutes; a read of the module and of the editor log found no trace.
+- **What works:** the module case of a test is a fake tree in a temporary folder with the same folder names. A
+  mutation run works on copies whose every path argument lies in a temporary folder, and it ends with a proof that
+  the live folder is untouched (a file count and a search for the output names).
+- **Rule:** no test and no mutation run names a live path as an output, a working folder or a target. A brief for a
+  checker that plants faults says so in its first lines.
+
+### A check tool that was tested only on fake results gave two false failures on the first real import (2026-11-26, kingdom kits)
+
+- **What happened:** the after-import check passed 290 tests on a fake Kit result that I had written from one live
+  sample (a mesh with several materials). On the first real import it reported three railing meshes without their
+  level 0 and failed one texture for its flag. Both were faults of the tool: the Kit names the record of a level
+  with one material by the bare name, and it marks a map with an alpha channel `has_alpha` (48 of 48 such maps in the
+  module). The fake result had my assumption built in, so the tests agreed with the tool.
+- **What works:** before a reader is trusted, one live sample of EACH form goes into its tests: one material and
+  several, with and without alpha, a plain and a dot named mesh. Until then the tool's verdict on a new form is
+  reported as UNVERIFIED, and a FAIL is read in the package before the owner is told.
+- **Rule:** a FAIL of a check tool on its first real run is a hypothesis about the tool too: read the bytes.
+
+### A family of pieces derived from one rule set comes out rigid: concept variants first (2026-11-26, kingdom kits)
+
+- **What happened:** the approved castle wall gave a rule set (its members, one arch form, exact mirror pairs). I
+  derived fifty buildings and structures from it without a concept picture of their own, and my checkers judged each
+  piece by its likeness to the wall. Every pinned number held. The maintainer saw the pieces in the Modding Kit and
+  said: "very precise. 0 or 1. Black or white ... limiting your creativity", and showed three reference pictures
+  with open structure, mixed roof forms, curves and groups that are not symmetric.
+- **What works:** a building starts from references and several concept variants that the owner chooses from. The
+  brief says what is exact (joints, the grid, clean meshes, single members, texel density) and what is free (the
+  massing, the silhouette, the mix of members, the accent). A checker judges against the owner's references, and one
+  pilot goes to his approval before a family is built.
+- **Rule:** likeness to an approved piece is a gate for joints and materials, never the design brief of a new piece.
+
+### Five stages of checkers judged a piece against rules, never against the owner's chosen concept (2026-11-26, kingdom kits)
+
+- **What happened:** the maintainer chose a concept picture for the breach of the Rivendell wall on 2026-11-24. Five
+  stages of builders and checkers followed, each fed with the findings of the stage before. The fracture look passed
+  133 gate rows. When I set the stage 5 sheets beside the concept, three things of the picture were absent: stepped
+  block ends on the stone courses, a dark core that stands back behind them, and a mound of big blocks and carved
+  fragments. One eye finding that had repeated over two stages ("the field elevation is a V") contradicted the
+  picture, which shows a V. No brief of a checker had named the concept file.
+- **What works:** the chosen concept is an input file of every eye checker and of the builder's own look at its
+  pictures, and likeness to it is the first question. A finding that repeats over two stages stops the patching: the
+  lead reviews the whole result beside its inputs before the next round.
+- **Rule:** a checker's brief names the owner's chosen concept file, or it says that none exists.
+
+### A geometric check that samples on the model's own round coordinates reads float noise as a hole (2026-11-26, kingdom kits)
+
+- **What happened:** the seam tool reported an opening of 0.0036 m2 at one end of the approved 20 m wall, in one of
+  the two orders of the same check, and a builder reported it as a fault of the wall. The wall is closed: no open
+  edge at the end plane, and no ray from inside the section misses the end faces. The tool's 20 mm grid put cell
+  centres on y -2.05, the plane of a face. The float32 noise of the import and of a half turn (about 1e-8 m) put
+  nine centres inside the section, and the tool's one offset ray pointed into the air.
+- **What works:** the sample points of a geometric check lie off every round coordinate that the model uses (a phase
+  of 0.4 of a cell), a fallback ray is tried on both sides, and a planted hole must fail in both orders. A verdict
+  that changes with the order of its two inputs is a fault of the tool until the model is read directly.
+- **Rule:** before an approved piece is called faulty by one tool, read the model itself (open edges, a dense ray
+  test) and run the check in both orders.
+
+### Builders who work one piece each repeat the vocabulary's strongest move: a set needs its own critic (2026-11-26, kingdom kits)
+
+- **What happened:** eight builders each drew three massing variants of one building from the same design
+  language, each in its own folder, each with a checker's lessons in its brief. Every sheet looked bold alone. Two
+  critics who laid all 27 variants side by side found one focal move on most of them (a wood frame over a dark
+  field with a gallery band), one turret form in 8 of 27, one post form, and plain backs everywhere. They also
+  found forms that the language itself had brought in and that the maintainer's pictures do not show (a kicked
+  bell hip with horn curls). Several builder numbers did not repeat, because each builder chose its own region.
+- **What works:** a family of pieces gets a critic of the SET before the owner chooses, with one picture of every
+  variant side by side. The language names which building owns which move. A measure that a brief asks for names
+  its region and its script, so that a second worker can repeat it.
+- **Rule:** parallel builders need one owner of the set; a move that two pieces share is a decision, not a habit.
+### A build that passes every gate still needs a review of what a viewer sees (2026-11-25)
+Horse armour 1 v29 of the Rhûn chariot work passed its builder's gates, as every armour version the maintainer
+rejected that day had. A read-only review (four reviewers with one scope each, one checker per scope) read 381
+views, confirmed 60 findings, refuted 3, and its checkers added 20: 80 faults a viewer can see, 26 of the 60 at
+normal distance. Among them: a crest holder with daylight under it, loose tabs inside the eye rings, rings with
+no strap through them, and at LOD1 to LOD3 with face culling on, lames through each other and eye openings gone.
+- **Why missed:** each gate measures one number (islands within 4 mm, vertices under the skin, a face class,
+  face pairs in the poses), and the session's own reads before a showing covered only the parts he had marked.
+- **Prevent:** the review runs on each armour version before the maintainer sees it, one reviewer at a time;
+  its findings are sorted into required fixes and an approved look reported to him
+  ([blender-asset-gates.md](../../features/blender-asset-gates.md), "An independent review before the
+  maintainer sees a build"). Added 2026-11-26: since the weekly usage limit stopped every agent at about 20:30
+  on 2026-11-25, no reviewer agent has run: armour 5 `v18aq`, `v18av` and `v18ay`, in sets v23, v25, v26 and v27,
+  were shown to him without this review (the work log, 20:34 on 2026-11-25 and 08:40 on 2026-11-26).
+- **Source:** the chariot work folder under `E:\LOTRAOMAssets\_auto_workspace`: `NIGHT_LOG.md` (11:42, 12:15)
+  and `out\review\armour_1_v29\review_result.json`.
+
+### A clearance gate met by leaving plates out passes on a build with holes (2026-11-25)
+Horse armour 5 had to keep a gap to the cart pole and 0.020 m off the sweep of the cart's forks in a neck turn.
+v14 left plates out at the hips for the pole, and v15 left more out at the shoulder fronts for the forks and
+cut backing cells, so the horse showed through. Every gate passed, the session accepted v15 with the holes
+listed as "open points", and the maintainer rejected it on sight: "Fill these gaps and make the scalemail
+straightish so it doesnt deform". v16 filled the zones in straight rows (410 plates, none left out) with a pole
+gap of 0.055 m.
+- **Why missed:** the gates measured the clearances, no gate measured the bare patches, and the session listed
+  a visible hole as an open point instead of a fault.
+- **Prevent:** a clearance is met with tight, thin plates, never a hole; a conflict between clearance and
+  coverage goes to the maintainer with its numbers before a build is called accepted
+  ([blender-asset-gates.md](../../features/blender-asset-gates.md), "A plate field has no gaps" and "A
+  clearance gate must not be met with a hole").
+- **Source:** `NIGHT_LOG.md` (07:58, 09:46) and `out\armours\HANDOVER_agent2.md` (v15, v16) in the chariot
+  work folder.
+
+### A saved pose in an exported armature bends the mesh in viewers; gates that reset it see nothing (2026-11-25)
+The source armature of the horse armours carries a saved pose on `horseneck1`, `horseneck2` and `horserleg2`.
+The builds exported it, so the maintainer's viewer showed skin through the neck lames while the skin gate,
+which resets the pose first, reported 0. On armour 1 v27, 955 of 10,500 neck-lame samples lay inside the skin
+(worst 8.61 mm) with the saved pose and 0 with it cleared; on armour 5 the neck guard was bent by up to 24.8 mm.
+- **Why missed:** the gates measured the rest state they had set up, never the file as exported.
+- **Prevent:** both armour builds reset every pose bone before the export and report it (`source_pose_reset`,
+  `pose_reset_bones`); the skin-view gate `rharm_skinview.py` counts a case with the saved pose beside five
+  poses (v27 4,252 skin samples, v28 0) ([blender-asset-gates.md](../../features/blender-asset-gates.md), "A
+  viewer shows the exported pose").
+- **Source:** `NIGHT_LOG.md` (09:46, 09:48, 10:36); `out\armours\HANDOVER_agent1.md` (state after the power
+  cut) and `HANDOVER_agent2.md` (v16, item 2) in the chariot work folder.
+
+### Faces that 89 cameras do not see are not hidden: 84 percent failed a strict test (2026-11-25)
+Cart F's build had a hidden-face cull. Removing the javelin case showed two of its faults: each side slab had
+lost a large outer triangle, so a slit showed its inner face at a slant, and a boss had lost its cap (82 faces
+restored). Those slab faces count as hidden by the rule of 89 cameras that the cart agent then used to list
+cuts. Of its 7,242 candidate triangles, 1,173 passed a strict test. A first strict try with 2,000 directions
+still cut two faces seen through thin slits (121 changed pixels); 20,000 directions and 16 samples per face gave
+back 46 faces, and 1,127 faces were cut at LOD0 with 0 of 3,240,000 pixels changed in grey renders at LOD0 to
+LOD2.
+- **Why missed:** a sparse camera set was taken as proof that no sight line exists; slits and slanting views
+  fall between the cameras.
+- **Prevent:** a face is cut as hidden only when a dense test finds no sight line from either side
+  (`rhun2_strict_hidden.py`) and a view diff shows 0 changed pixels and 0 new back-face hits; any other cut,
+  such as lighter meshes for rivets, needs the maintainer's word, because it can change the look
+  ([chariot.md](../../features/chariot.md), "Rhûn cart variants and new horse armours").
+- **Source:** `NIGHT_LOG.md` (11:08, 12:15) and `out\rhun2\HANDOVER_carts.md` ("F-HIDDEN") in the chariot work
+  folder.
+
+### Substance Painter textures the first UV layer of a mesh (2026-11-24)
+The cart meshes sent to Painter had the UV layers `dco` and `UVMap`, in that order, and Painter textured the
+first. In the cart A wood set 1,446,901 of 2,744,305 slot texels (52.72 percent) were export padding, 52.65
+percent of the texels a player sees; in the wheel gold set 621,594 of 716,285 wheel texels (86.78 percent).
+Cart D had taken the padded wood set, and its wood acceptance was withdrawn.
+- **Why missed:** the first sets were judged from their compare sheets, and no count of real Painter texels per
+  mask class ran until the pilot's first cart B try, where about 40 percent were Painter texture.
+- **Prevent:** send Painter a mesh with `UVMap` as its only UV layer and prove that each mask class covers 100
+  percent of its texels; the first-pass sets are never installed ([chariot.md](../../features/chariot.md),
+  "Rhûn cart variants and new horse armours", the "Textures" list).
+- **Source:** `NIGHT_LOG.md` (23:04, 23:14) and `out\painter_pilot\truth\truth.json` in the chariot work folder.
+
+### A stopped agent leaves its Blender jobs running, and a wide fan-out of Blender agents fills the memory (2026-11-25)
+At 13:07 two armour builders and a cart review run five wide each had headless Blender jobs, beside another
+session's work: 49 Blender processes held 37.8 GB of 61.6 GB, with 4.2 GB free. The maintainer: "We have like
+36 blenders open, can we close some?". TaskStop ended the review, and its 18 Blender processes ran on until the
+session stopped them by process id; free memory rose to 26.3 GB, and the other session's 22 were not touched.
+- **Why missed:** the session counted agents (seven in flight at 11:42, above its usual four), not Blender
+  processes or free memory, and TaskStop ends an agent, not the processes it started.
+- **Prevent:** one set in work until the maintainer approves it, one Blender job at a time, a review with one
+  reviewer at a time; count Blender processes and free memory before Blender work; after a TaskStop, stop by
+  process id only the leftover Blender jobs whose command line names the session's own folder
+  ([blender-asset-gates.md](../../features/blender-asset-gates.md), "One asset at a time, one Blender job at a
+  time").
+- **Source:** `NIGHT_LOG.md` (11:42, 12:16, 13:10) in the chariot work folder.
+
+### A clock time in a log is read from the clock, never written ahead of it (2026-11-24)
+The night log of the Rhûn chariot work says "Times are the desktop clock.", yet several of its entries carried
+times ahead of the clock. Each was corrected later from a clock read, and the morning report lists the fault
+among the session's own.
+- **Why missed:** no step made a clock read come before the time an entry states; the cause of each wrong time
+  is not recorded.
+- **Prevent:** a clock time is a fact like a count ([AGENTS.md](../../../AGENTS.md), "Evidence, never
+  invention"; [evidence-over-claims.md](../../../.claude/rules/evidence-over-claims.md)): read the clock in the
+  step that writes the time, and write "about" with the read time when the event itself was not timed, as the
+  later entries do ("clock read 23:40 to 23:43").
+- **Source:** `NIGHT_LOG.md` ("MORNING REPORT", "The session's own faults this night"; 23:43) in the chariot
+  work folder.
+
+### Prepared scripts for a run of hours held four blockers that a read-only review found (2026-11-25)
+Cart F's repairs were prepared as script edits with no Blender job, for one runner of ten steps through the
+build, the bake, the Painter wood and the renders. A read-only review of the scripts (8 agents, four scopes,
+one checker each) confirmed 29 findings: 4 blockers, 9 majors, 16 minors. Three blockers would have stopped the
+run with nothing to show: a step took its files from a version folder that has none of them, a density file was
+read from a folder that lacks it, and a mask proof demanded a share of exactly 1.0 where the pilot's four
+Painter runs miss 2 to 12 texels each. The fourth, yoke weights with no part filter, moved the inner fork prongs
+to the pole, so a neck would have come 125 mm toward its prong in the gallop against a clearance of 33 mm.
+- **Why missed:** no step of the runner had run, so a wrong folder, a missing file or a bound that real output
+  never meets could show only when the run reached that step.
+- **Prevent:** before a long run, a read-only review with one checker per scope reads the prepared scripts
+  against the folders and outputs they will meet; a second read-only run re-checks the fixes and traces every
+  step (on cart F: 23 of 24 rows fixed, new defects found), and the runner stops at the first failed step
+  ([blender-asset-gates.md](../../features/blender-asset-gates.md), "Review prepared scripts before a long
+  run").
+- **Source:** `NIGHT_LOG.md` (14:43, 14:52, 16:48), `out\rhun2\_work\f_review_check\CONFIRMED.md` and
+  `out\rhun2\_work\yoke_design\RESULT.md` in the chariot work folder.
+
+### A weight transfer gave the yoke's centre to the necks, and a claim about the asset in the game went out unmeasured (2026-11-25)
+Cart F's yoke split at its centre in the game's clips. The cause is F's own: the nearest-neighbour weight
+transfer gave its bar and seat neck weights (own neck 0.785 at |x| < 0.08), so v14's centre split by 49, 94 and
+184 mm in the walk, trot and gallop. The session told the maintainer that cart A in the game had the same split,
+since it has the same rig. A measure on cart A's own mesh disproved it: its yoke centre is on the pole bone
+(0.98 to 1.00), so it does not split there. The log entry of 14:52 calls the claim unsupported and says the
+session corrects it to him.
+- **Why missed:** the claim was reasoned from the shared rig, not read from cart A's weights, and no one had
+  read the transferred weights by zone.
+- **Prevent:** a claim about an asset that runs in the game is measured on that asset's own mesh before it goes
+  to the maintainer ([AGENTS.md](../../../AGENTS.md), "Evidence, never invention"); a rig change is measured on
+  the game's clips with the shared harness and gated by `rhun2_yoke_gate.py`
+  ([blender-asset-gates.md](../../features/blender-asset-gates.md), "Measure a rig change on the game's
+  clips").
+- **Source:** `NIGHT_LOG.md` (14:43, 14:52), `out\rhun2\HANDOVER_carts.md` ("F-REVIEW") and
+  `out\rhun2\_work\yoke_design\RESULT.md` (section 2) in the chariot work folder.
+
+### A gate whose bounds the builder chose with no reference stopped every scheme (2026-11-25)
+The cart builder's yoke check stopped the run at its own step 0 in every blend window it tried (49 bound fails in
+one run). Its bounds (centre split 5 mm, approach 33, socket gap 10, tip gap 33) were its own choice. With the
+forks on the necks, the 18 cm the necks move against the pole in the gallop must show somewhere between the
+bar's centre and the prongs, so no weights met all four. The bound came from cart A, which runs in the game: its
+own bar goes 18 to 25 mm into a horse in the gallop turns, so the gate allows 25 mm there, and scheme S* (21.2
+mm) passed.
+- **Why missed:** each bound was written as a target, with no measure of what an accepted asset does in the same
+  clips.
+- **Prevent:** a gate's bound comes from a measure of the asset that already runs in the game, or from the
+  maintainer, and the gate's report names it (`rhun2_yoke_gate.py`, `bar_into_body_gallop_turns_mm`); a limit
+  past it goes to the maintainer with its numbers
+  ([blender-asset-gates.md](../../features/blender-asset-gates.md), "Measure a rig change on the game's
+  clips").
+- **Source:** `NIGHT_LOG.md` (15:25, 16:48, 17:32), `out\rhun2\HANDOVER_carts.md` ("F-REVIEW" and round 3) and
+  `out\rhun2\_work\yoke_design\RESULT.md` (yoke-3) in the chariot work folder.
+
+### A timeout that can never fire: the launcher call blocks until Blender ends (2026-11-25)
+The cart runner's wrapper `rhun2_run_blender.sh` started Blender through the Store launcher and then polled for
+the report under a time limit, and `RHUN2_TIMEOUT_STOP=1` was to end a timed-out job by its pid. The launcher
+call blocks until Blender ends: all 1,250 "waited Ns" lines in the cart logs read "waited 0s", and the process
+list showed `blender-launcher.exe` as the parent of the running `blender.exe`. So the poll began after the job
+had ended. A job that died without a report would have made the wrapper wait its whole limit (14,400 s for
+the see gate of v17) before the run stopped, and a hung job would have hung the run with no log line.
+- **Why missed:** the code assumed, and one comment said, that "the launcher returns at once"; no test ran a
+  job that hangs or dies.
+- **Prevent:** with `RHUN2_SLOT_OWNER` set, every job goes through `blender_slot.py`, the time limit counts
+  from the slot's take and ends the job by its pids (exit 2), and a job that ended without a report exits 3
+  after 10 s. A wait around an external program is tested on a job that hangs and on one that dies
+  ([blender-asset-gates.md](../../features/blender-asset-gates.md), "Review prepared scripts before a long
+  run").
+- **Source:** `out\rhun2\_work\yoke_design\RESULT.md` ("RE-CHECK of the fixes", shared-4 and its new defect)
+  and `out\rhun2\HANDOVER_carts.md` (round 3) in the chariot work folder.
+
+### A name check that read compressed bytes matched the banned name by chance (2026-11-25)
+The cart runner's name check `rhun2_name_check.py` searched the raw bytes of every file, case-folded, and a hit
+had just been made to stop the run. A PNG of the cart F v14 review matched at byte 1,560,778, inside its IDAT
+image data; the file has no text chunk. The checker's estimate, not a measure: about a 5 % chance of a false
+stop over the about 1.9 GB that step 9 scans, and about 1.5 % at step 5.
+- **Why missed:** the check was made fatal without a count of the bytes it scans or of what a chance match in
+  packed data costs.
+- **Prevent:** the name check reads PNG chunks other than IDAT, npz and zip member names, text arrays, and
+  compressed blends after it inflates them (19 break cases pass). A search for a text reads the decoded data,
+  never the packed bytes, whether it reports a hit or an absence (the converse of
+  [the lesson on compressed payloads](#a-check-that-reports-a-text-absent-from-a-package-reads-the-compressed-payloads-too)
+  above; [blender-asset-gates.md](../../features/blender-asset-gates.md), "Review prepared scripts before a
+  long run").
+- **Source:** `out\rhun2\_work\yoke_design\RESULT.md` ("RE-CHECK of the fixes", shared-7 and its new defect),
+  `NIGHT_LOG.md` (16:48, 17:32) and `out\rhun2\HANDOVER_carts.md` (round 3) in the chariot work folder.
+
+### One Blender job at a time holds only through one tool that every builder starts its jobs through (2026-11-25)
+At 13:10 the maintainer asked for one Blender job at a time to save memory. The session kept it by handing
+Blender to one builder at a time by message ("Blender is yours"), so the cart run waited for the armour build.
+From the log entry of 16:48 every job of both builders starts through `blender_slot.py`; at 17:32 it gained fair
+turns, since one builder's chain of jobs could keep the other out; in the evening his "You can use more blender,
+just watch out for the memory." made the slot count a setting with a memory floor.
+- **Why missed:** a rule passed to each builder by message holds only while the session hands out every turn,
+  a slot with no turn order let one builder's chain of jobs keep the other out, and a fixed count of one does
+  not look at free memory.
+- **Prevent:** every Blender job of the work folder starts through `blender_slot.py run --owner <name>`, which
+  holds 3 slots by default, starts a job only while free physical memory is at least 14 GB plus 3 GB for each
+  of the folder's jobs started in the last 90 s (6 GB when none runs), and gives the other owner the next turn
+  ([blender-asset-gates.md](../../features/blender-asset-gates.md), "One asset at a time, one Blender job at a
+  time").
+- **Source:** `NIGHT_LOG.md` (13:10, 13:14, 16:48, 17:32), the header of `blender_slot.py` and
+  `out\armours\HANDOVER_agent2.md` (v18) in the chariot work folder.
+
+### A builder that runs for hours fills its working memory: one fresh builder per block (2026-11-25)
+The armour 5 rework agent took the armour from v08 on at the night entry of 21:25 and built it through the v17
+trials to v18t. At 17:11 it reported that its working memory of the job was too long to finish v18 reliably,
+wrote the hand-over, and started none of the seven blocks. Before that, a gate re-run it made on v17ay copied
+the scripts of that moment over `iterations\v17ay\scripts`. Agent 2, which built armour 5 before it, had been
+retired at 21:25 for a very long context.
+- **Why missed:** the session resumed the same builder with each new order (the log records resumptions at
+  22:25, about 23:43 and about 07:56, among others), and only the builder could tell that its working memory
+  was full.
+- **Prevent:** a long build is cut into blocks; one fresh builder per block starts from the hand-over, a
+  read-only checker that opens every view follows each block, and a block that fails its check gets one retry.
+  A builder whose memory runs long says so and writes the hand-over, with its dead ends, before it stops
+  ([blender-asset-gates.md](../../features/blender-asset-gates.md), "A fresh builder for each block"). Added
+  2026-11-26: this held until about 20:30 on 2026-11-25, when the weekly usage limit stopped every agent; armour 5
+  `v18am` to `v18ay`, cart F v22 and v24 and the sets v21, v23, v25, v26 and v27 were built by the session alone,
+  without block builders or checkers (the work log, 20:34 on 2026-11-25 to 08:40 on 2026-11-26).
+- **Source:** `NIGHT_LOG.md` (21:25, 17:08, 17:11) and `out\armours\HANDOVER_agent2.md` ("v18: what the next
+  builder does", "Block 1", "Dead ends") in the chariot work folder.
+
+### The usage limit stops every agent at once, and side-by-side lanes leave half work in one file (2026-11-25)
+At about 20:30 the weekly usage limit ended six builder lanes of the Rhûn chariot work within minutes. Three of
+them edited the same armour scripts side by side. Two had written no hand-over section. One lane's change (a
+belt loop over the horse's back) had made the build worse: gold buckle plates stood in the air and the loop met
+the cart in the neck turns (62 and 72 face pairs). The session found that only when it read the views of an
+integration build, and took the lane's code back to the last checked build.
+- **Why missed:** the session went from four lanes to six at 94 percent usage; a lane's hand-over section was
+  due at its end, not after each build; no build held all three lanes' changes until the agents were gone.
+- **Prevent:** a lane writes its hand-over section after its first build and keeps it current; lanes that edit
+  one file get an integration build, read by the session, before another lane starts; near the usage limit no
+  lane starts whose half work the others depend on
+  ([blender-asset-gates.md](../../features/blender-asset-gates.md), "A fresh builder for each block").
+- **Source:** the chariot work folder under `E:\LOTRAOMAssets\_auto_workspace`: `NIGHT_LOG.md` (the entries from
+  "THE WEEKLY USAGE LIMIT IS REACHED" on) and `out\armours\HANDOVER_agent2.md` ("The session alone").
+
+### A line along a chart's edge can sit in the height map alone (2026-11-25)
+A thin line ran from rivet to rivet across the rounded ends of the neck bands of horse armour 5. One builder
+rebuilt the end caps and took an edge shade out of the colour and the occlusion; the line stayed on one side of
+the horse, where the light showed it. A pixel probe found front faces on both sides, so no face was flipped. The
+cut of one band's chart from the three maps showed the cause: the paint step put a 2 mm edge bevel into the
+height on all four edges of the chart, also at the two ends where the band's body goes on into its end caps.
+- **Why missed:** the fault was judged from lit renders, and a render shows a normal-map step only under some
+  light; nobody had looked at the three maps of the chart side by side.
+- **Prevent:** for a line that follows a chart's edge, cut that chart from the `_d`, `_n` and `_s` maps and read
+  all three before the geometry changes; a part that goes on across a chart edge gets no edge treatment there
+  in any of the three.
+- **Source:** `NIGHT_LOG.md` (the entry "Armour 5 alone: v18am to v18ao") in the chariot work folder;
+  `rharmb_paint.paint_lacquer` (`e_bev`).
+
+### A before-and-after pixel diff is evidence only when both renders hold the same scene (2026-11-25)
+The strict hidden-face cut took 3,536 faces off LOD0 of cart F. Its ray diff (696 views of 10,000 rays at each
+level) found 0 new back hits and 0 new misses. Its grey pixel diff read 588,761 changed pixels at LOD0, and
+about the same at LOD1 and LOD2, which the cut does not touch. The before and the after render carried
+different horse armours: the views with horses in frame held nearly all changed pixels, and the two side views
+without horses differed by 10 and 11 pixels.
+- **Why missed:** the script took the armour of each version as it was; on its first run both versions had
+  carried the same armour.
+- **Prevent:** a pixel diff renders both sides with the same armour and scene; a diff that is as large at the
+  levels the change did not touch points at the scene, and the ray diff then decides
+  ([chariot.md](../../features/chariot.md), "Rhûn cart variants and new horse armours").
+- **Source:** `out\rhun2\_work\f_hidden\run_v22.log` and
+  `out\rhun2\variants\f\iterations\v22\hidden_cut_scale_walls_f_v22.png` in the chariot work folder.
+
+### A check that looks outward from a part cannot see that the part already stands outside (2026-11-25)
+
+The black horse armour's neck straps start under the last neck band. A build rule kept 2 mm of air between each
+strap and the band, and its report read "air 2.0 mm" on every build. The maintainer circled a strap piece that
+lay on top of the band: "Both sides the tab should be under...". Rays through the picture showed the strap's
+top faces 4 to 12 mm outside the band over 3 cm, and the same build report held 42 and 48 crossing face pairs
+between strap and band in another field.
+- **Why missed:** the rule cast its rays outward from the strap's own inner face, so a stretch that already
+  stood over the band met nothing and passed. It also tested the path points only, and the strap between two
+  points is a straight chord under a curved shell. The crossing count was written to the report and read by
+  nobody.
+- **Prevent:** a clearance test starts its rays behind both parts, so a wrong order gives a negative number, and
+  it samples along each segment as well as at the points. A count the build already writes (here the strap and
+  shell crossing pairs) is a gate row with a limit, or it is not written
+  ([blender-asset-gates.md](../../features/blender-asset-gates.md), the strap row of "Art checks").
+- **Source:** `rharmb_design5.py` (`under_parts`), the build reports of armour 5 `v18aq` and `v18av`
+  (`neck_strap_laps`), and `probes\pix_tab_v18aq.json` in the chariot work folder.
+
+### A repair that moves plates near a 6 mm clearance fails a gate somewhere else (2026-11-25)
+
+The dark place at the withers of the black horse armour had a measured cause (plate rows built by height where
+the body has no side at that height, and plates set straight up from the sloping top edge of a coarse backing).
+Three repairs each removed part of it and each failed a gate. The first added one cover plate, which the yoke
+fork met in a neck turn. The second kept two plate rows in step by changing the arc table of the whole field:
+plates 0.3 m away at the neck base moved, the lowest neck band took its lower edge from them and rose 2.4 mm,
+and the yoke met it with the head up. The third left the field alone and added one backing column a side: the
+plates of that column changed their stand at every height, and a belt end 0.4 m lower lost its link.
+- **Why missed:** the cart's room at this armour is 6 to 13 mm in the five neck poses, and the parts take
+  their places from each other (rows from the field's arc length, the neck band from the plates under it, a
+  strap end from the plates it is sewn to). A change in one place moved parts that the plan did not name.
+- **Prevent:** before a repair on a build with gates this tight, list what takes its place from the part that
+  will change, and compare every gate with the last good build after each single change (one table, old beside
+  new). Keep the last good scripts byte for byte, and go back to them when a repair costs a gate
+  ([chariot.md](../../features/chariot.md), "Rhûn cart variants and new horse armours").
+- **Source:** the work log entries of 23:02, 23:25 and 23:44 on 2026-11-25 and `probes\gates_cmp.py`,
+  `probes\section_withers_v18aq.png` to `_v18au.png` in the chariot work folder.
+
+### A job that waits for a report must wait where the job writes it (2026-11-25)
+
+A sheet of six views took one hour. The pictures were ready after 10 seconds. The view script renders a far
+level into its own folder when one environment variable is set, and still waited for the report in the folder
+of the near level, until its limit of 3,600 seconds ended the wait.
+- **Why missed:** the far-level option was added to the render script only; the two scripts that call it kept
+  the old report path, and the wait's exit code (3, no report) was printed as a line nobody read.
+- **Prevent:** the caller builds the report path with the same rule as the job, in one helper; a wait that ends
+  without a report fails the run loudly; a job that normally takes seconds gets a limit of minutes.
+- **Source:** `rharmb_corrshots.py`, `probes\shots.py` and `out\_blender_slot.log` (`FREE armour exit 3 after
+  3601 s`) in the chariot work folder.
+
+### A clearance rule that looks sideways past a part's edge lifts it over what it does not cover (2026-11-26)
+
+The collar of the black horse armour is its lowest neck band. From the front its two ends showed as gold
+spikes with a notch beside each, and the maintainer circled both: "this is messed up and not straight". The
+band's base field at the lower corner of each end stood 73 mm off the skin (without the flare and the lip),
+and at the rounded end beside it the field fell from 40 to 13 mm. The
+build's lift rule moves a band point out over every curtain vertex within 35 mm of the point's normal line.
+At the throat the neck's normal points down, so one vertex of the curtain's top band counted as a part under
+the collar, although it lay 55 mm below the collar's lower edge (28 to 35 mm from the normal line of the
+collar's edge points, 64 mm along that normal). That one vertex set a lift of about 71 mm on the last stretch of the collar's
+lower edge. An earlier trial (v18ap, `FLARE_END_CUT`) had cut the collar's flare at its ends and changed little:
+the flare adds 12 mm on top of that 73 mm base field.
+- **Why missed:** the rule tests a distance from a line and has no test of where the covering part ends, and
+  no report named the vertex behind a lift. The sharp gold point at the collar's end was seen at 20:37 on
+  2026-11-25 and stayed on the open list ("the chest from the front") until his picture 68; the one trial in
+  between went to the flare, which is small beside the lift.
+- **Prevent:** a lift over other parts counts a vertex only where the covering part reaches over it (here, in
+  the collar's end zone only: no more than 10 mm past the collar's lower edge along the tube, and a fade of
+  1.8 mm per degree past the last part), and the report names the largest lift that the rule cut (74.4 mm on
+  v18ay). Armour 4 passes no end rule, so by the code its build does not change. Before a repair of a shape fault, print
+  the field behind the shape along the faulty edge: a dump of the band fields of a diagnostic build (v18ax)
+  showed the lift along the lower edge and the vertex behind it. A preview that rebuilds the outline from that
+  dump gave the build's corner to the millimetre, so the trial rule (`probes\collar_end_trial.py`) needed no
+  build; the one full build that followed took 3 minutes, and its gates equal the build before it but for four
+  measures: the G11 gaps (tenths of a millimetre), the faces seen from behind at LOD2 (10, was 9), the class a
+  faces at LOD0 to LOD3 (21, 3, 29, 7; was 10, 5, 32, 7) and the neck strap pairs at LOD1 to LOD3 (worse at
+  LOD1 and LOD2, mixed at LOD3; LOD0 equal).
+- **Source:** `rharmb_crinet.py` (`envelope`, `end_rule`), `rharmb_design5.py` (`lift_fn_over`, the band
+  setting `end_lift`), `probes\collar_end_trial.py` and `probes\crinet_dump\trial_m10_k1.8.png` in the chariot
+  work folder; the build reports of armour 5 `v18av` and `v18ay`
+  ([blender-asset-gates.md](../../features/blender-asset-gates.md), the neck piece row of "Art checks").
+
+### A reference tool's result was matched as a picture and never taken apart (2026-11-26)
+
+The maintainer rejected the neck piece of the black horse armour four times on 2026-11-25, on two builds (`v15`
+once, `v16` three times: "Black neck piece needs to be reworked. it is all off"). He offered to run pictures through an image to 3D tool "so that you can
+see and learn". Six concept pictures and two models were made. The session read the models' preview pictures
+only, gave the builders the picture as the look target and the models "as a ratio reference only", and measured only
+the picture: its gold hue for the surface pin (the session) and a bead of 0.2 of the band pitch (the rework agent). The set built to the picture was approved on
+2026-11-26. Then he asked: "what did that tool do, that I didnt and why/how is it better". The first measure of
+the two models, that day, found seven properties the build before the reference lacked and eight that the
+approved build still lacks: among them a bead in real geometry, no air under a band's lower edge (ours has 10 to
+19 mm), and an even pitch (a spread of 0.031 on model 01 against our 0.104). The bead is 0.147 and 0.167 of the pitch on the
+two models; the 0.2 from the picture could not be measured again (its columns were not logged, and new runs gave
+uneven values).
+- **Why missed:** the skill's reference procedure treats a reference as a target to match and asks for no
+  measured comparison of the tool's result with our build. Nothing asked what became a default, so what was
+  learned stayed in one armour's scripts, a work log and a look-target rule in the gates doc; no doc said which
+  technique was now the default. Four of the five horse armours
+  still build their neck the old way.
+- **Prevent:** a reference made by an outside tool, and a part rejected twice, get a teardown before the next
+  build round: the model file itself, the same properties measured on it and on our builds with a kept script,
+  the mechanism of each difference, and a default with its home for each. A tool run is closed by its row in
+  the teardown log (`/blender-asset` section 7b;
+  [technique-library.md](../../reference/technique-library.md)).
+- **Source:** `out\tripo_in\_teardown\` (the probe, its reports and sections) and `NIGHT_LOG.md` (the entries of
+  10:23, 13:48 and 14:43 on 2026-11-25 and of 09:52 on 2026-11-26) in the chariot work folder.
+
+### A gate that is already red hides a new failure inside it (2026-11-26)
+
+The Armory reference gate was red before the black chariot set went in: 49 LOD gaps of older art. The session
+copied one new source FBX into the Armory's `AssetSources`, later added an item row, ran the data gates before
+and after the item row, saw the same red gate with the same text, and reported "failing before with the same
+content". Two review lenses regenerated the LOD audit report and compared it with the committed one: one line
+differed (1,323 files to 1,324). The copy of the FBX, made half an hour before the baseline run, had added a
+DRIFT failure to the gate, and both runs already held it.
+- **Why missed:** the baseline was taken before the last write of the change, not before the first, and a red
+  gate was compared by its colour and its last lines, not by its whole content.
+- **Prevent:** take the gate baseline before the first write of a change to a live module, the copy of a source
+  file included. After each write, compare the full text of every gate that was red before. A new FBX in
+  `AssetSources` changes the LOD audit report: run `python tools/audit_fbx_lods.py` and keep its one changed line
+  with the asset.
+- **Source:** `docs/reference/armory-catalogue/lod-audit.md` (line 5 of the diff on the branch
+  `feat/rhun-chariot-variants`), the tooling and XML lens reports of the item review of 2026-11-26, and
+  `NIGHT_LOG.md` (09:25 and the review entry of 2026-11-26) in the chariot work folder.
+
+### A row in the shared Armory turns a trunk gate red for every session until its repo entries are merged (2026-11-26)
+
+The new harness item of the black chariot set went into the live Armory with its English name row. The Armory
+is one install shared by every session and checkout. The repo side of the item (one more untranslated name in
+each of 12 languages in `tools/external-loc-coverage-baseline.json`, one colour family entry, one cover flag
+entry) was written in a sibling worktree and stayed uncommitted, as every commit of that branch needs the
+maintainer's word. From that minute `python tools/check_external_loc_coverage.py` failed on trunk ("external-module
+translations went backwards", +1 in each language), the colour scan listed one more row, and the cover flag check
+warned of an id outside its snapshot: red for every other session, with the cause in a worktree they do not see.
+- **Why missed:** the gates were run from the worktree that held the fix, where they pass. Nobody ran them from
+  trunk until the XML lens did.
+- **Prevent:** a row in the live Armory and its repo entries are one change. Ask for the commit word before the
+  live write, write the live row last, and run the item's gates from the trunk checkout as well. While the
+  entries wait for a commit, the hand-over and the work claim's note name the trunk gate that is red and why.
+- **Source:** the XML lens report of the item review of 2026-11-26 (finding 1), `git diff -- tools` on the branch
+  `feat/rhun-chariot-variants`, and a run of `check_external_loc_coverage.py` from the trunk checkout on 2026-11-26.
   [RCA](../rca-warg-stride-gate-2026-11-24.md) F1 and F3. The list and its tests were removed with #1591,
   when the standing strafe rows stopped being stride gaits; the rule stands for any list of this kind.
 
@@ -5438,6 +6086,21 @@ while the C# suite ran beside it. The measure that followed showed more: the cal
   `tools/tests/test_shellwords.py`. The hook is not changed: the Bash tool's 7,500 character cap keeps a real
   command near the smallest of those sizes.
 
+### A gate that may only refuse more is proved against the gate it replaces, over generated input (#1556, 2026-11-26)
+PR #1609 kept the words after a redirection (`2>&1`, `&>log`) on the push's line by making an `&` or `|` that
+follows `<` or `>` a non-separator in `segments()` and the quote-blind split. Its rows all passed, and two
+shapes that trunk refused got through: `&>/dev/null` with no refspec, and `echo \>|git push ...`, where the
+`>` is escaped and the `|` is real. The change also reached every confirm gate that calls `segments()`. The
+first fix kept trunk's split and read the new one beside it, which is safe by construction, but doubled the
+reader's work, and a 2 MB force push then overran the judge's 3 s budget and was asked instead of blocked.
+- **Why missed:** the tests held the cases the change was written for. Nothing compared the old and the new
+  verdicts on input the author did not choose, nobody listed the callers of the shared function, and the fix
+  was timed by no one.
+- **Prevent:** before changing a function several hooks share, list its callers and change only the reader the
+  issue names. Prove "only refuses more" by diffing the old and new verdicts over generated commands, and run
+  `tools/test_hooks.sh` 7i for any change to the push reader.
+- **Source:** issue #1556, PR #1609; Codex pre-review, Tooling, Efficiency, Completeness and Design lenses;
+  `docs/reviews/rca-push-judge-redirection-2026-11-26.md`; `tools/tests/test_pushjudge.py` (`Issue1556Tests`).
 ### A gate that moves where the work happens moves it away from every trigger tied to the old place (path rules in worktrees, 2026-11-25)
 The trunk edit gate of 2026-11-16 sent all edits to sibling worktrees. A path rule loads only for a file in the
 checkout the session started in, so from that day the area rules, the trap sheets and the lessons promoted into

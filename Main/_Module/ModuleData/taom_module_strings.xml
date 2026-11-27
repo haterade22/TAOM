@@ -7119,6 +7119,8 @@
 	<string id="taom_lotr_issue_training_offer_accept" text="{=taom_lotr_issue_training_offer_accept}Good. I will send the lads to your company. Bring back as many as you can." />
 	<string id="taom_lotr_issue_training_returned" text="{=taom_lotr_issue_training_returned}{RETURNED} of the {LENT} retainers went home with you." />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- FactionPower -->
+	<string id="taom_fp_realm_wage_relief" text="{=taom_fp_realm_wage_relief}Realm power wage relief" />
 	<!-- TaomSettings.cs -->
 	<string id="taom_seat_mcm_edge" text="{=taom_seat_mcm_edge}Edge scroll" />
 	<string id="taom_seat_mcm_edge_hint" text="{=taom_seat_mcm_edge_hint}While you are in the Seat with the cursor shown, moving the pointer to the edge of the window flies the view that way, faster the nearer the edge. It stops while you hold the middle mouse button, and while a menu or a popup has the focus. Default: on." />

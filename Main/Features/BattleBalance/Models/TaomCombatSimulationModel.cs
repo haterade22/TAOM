@@ -1,3 +1,4 @@
+using TAOM.Features.FactionPower.Hooks;
 using TAOM.Features.Refuge;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
@@ -12,6 +13,8 @@ public class TaomCombatSimulationModel : DefaultCombatSimulationModel
     private readonly IBattleBalanceSettingsProvider _settings;
     private readonly IRefugeDefenseService _refugeDefense;
     private readonly IBattleBalanceConfigProvider _configProvider;
+    private IFactionPowerStrikeHook _factionPower;
+    private IFactionPowerStrikeHook FactionPower => _factionPower ??= IoC.Resolve<IFactionPowerStrikeHook>();
 
     public TaomCombatSimulationModel(IBattleBalanceSettingsProvider settings, IRefugeDefenseService refugeDefense,
         IBattleBalanceConfigProvider configProvider)
@@ -45,6 +48,8 @@ public class TaomCombatSimulationModel : DefaultCombatSimulationModel
         // as the real-time path. A bare AddFactor(-r) here composed against the BASE and drifted
         // from real-time whenever vanilla factors were non-zero. NaN/out-of-range applies nothing.
         RefugeDamageReduction.Apply(ref result, reduction);
+
+        FactionPower.ApplyStrike(strikerParty, ref result);
 
         return result;
     }
