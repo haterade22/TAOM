@@ -214,6 +214,38 @@ internal sealed partial class CommandTrialHost
             settings.HeroFightsOn = fightOn;
     }
 
+    public void SetEdgeScroll(bool on)
+    {
+        var settings = CommandTrialRun.TrialSettings;
+        if (settings != null)
+            settings.EdgeScroll = on;
+    }
+
+    public void SetPointer(float fractionX, float fractionY) => _adapter.TrialRanged = new Vec2(fractionX, fractionY);
+
+    public void SetMiddleHeld(bool held) => _adapter.TrialMiddleHeld = held;
+
+    public void SetInputOnce(SeatInput input) => _view.TrialInputOnce = input;
+
+    public void ReleaseCameraTrial()
+    {
+        _adapter.TrialRanged = null;
+        _adapter.TrialMiddleHeld = false;
+        _view.TrialInputOnce = null;
+        SetEdgeScroll(false);
+    }
+
+    public Vec3f? ViewCentreOnGround()
+    {
+        if (!_adapter.TryReadCamera(out var camera, out _))
+            return null;
+        var first = SeatPivot.Find(camera, _adapter.GroundHeight(camera.X, camera.Y, camera.Z));
+        if (!first.Found)
+            return null;
+        var second = SeatPivot.Find(camera, _adapter.GroundHeight(first.X, first.Y, camera.Z));
+        return second.Found ? new Vec3f(second.X, second.Y, second.Z) : null;
+    }
+
     public bool FightGateUp => SeatPresence.HeroFightsOn;
 
     public bool HeroOnAi => _mission.MainAgent != null && _mission.MainAgent.IsActive() && _mission.MainAgent.Controller == AgentControllerType.AI;
@@ -313,15 +345,13 @@ internal sealed partial class CommandTrialHost
 
     public bool ThirdPerson => !_mission.CameraIsFirstPerson;
 
-    // Marshal's Word stage M7: the panel click steps. The order count comes from the view model's own static event, subscribed on the first
-    // look of an armed trial run (the host is built only then), so a count of the relay's own would prove nothing.
     private Formation? _probedCompany;
     private bool _watchingOrders;
     private int _ordersSeen;
 
     public int OrdersSeen => _ordersSeen;
 
-    // OnExecuteOrder is a static event: a host that subscribed and was dropped would stay reachable from it and keep counting, so the view's
+    // OnExecuteOrder is a static event (OrderItemVM.cs:10): a host that subscribed and was dropped would stay reachable from it and keep counting, so the view's
     // teardown calls this.
     internal void StopWatchingOrders()
     {

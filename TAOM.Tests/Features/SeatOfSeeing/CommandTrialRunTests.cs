@@ -63,6 +63,8 @@ public class CommandTrialRunTests
         Assert.IsFalse(given.BeginBattlesInSeat, "a saved Begin Battles in the Seat would turn the script's press into a leave");
         Assert.IsTrue(given.CursorWithPanel);
         Assert.IsTrue(given.KeepPanelOpen);
+        Assert.IsFalse(given.EdgeScroll, "a pointer resting at a window edge would fly the view through every other step");
+        Assert.AreEqual(1f, given.PanSpeed);
         Assert.AreEqual(0, plain.Reads, "nothing is read from, and nothing is written to, the saved values");
     }
 

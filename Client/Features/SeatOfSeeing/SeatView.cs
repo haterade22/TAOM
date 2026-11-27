@@ -137,5 +137,27 @@ public sealed class SeatView : MissionView
 
     internal bool PressPending => _seatKeyPressed;
 
-    internal SeatInput? TrialInput { get; set; }
+    private SeatInput? _trialInput;
+    private SeatInput? _trialInputOnce;
+
+    /// <summary>
+    /// The flight input the field trial sets in place of the player's; null in every player session. A read returns the one-frame input first
+    /// (<see cref="TrialInputOnce"/>) and clears it, so the camera frame, which reads this once, takes the field trial's one wheel notch exactly once.
+    /// </summary>
+    internal SeatInput? TrialInput
+    {
+        get
+        {
+            var once = _trialInputOnce;
+            _trialInputOnce = null;
+            return once ?? _trialInput;
+        }
+        set => _trialInput = value;
+    }
+
+    /// <summary>A flight input for the next camera frame only (the field trial's one wheel notch).</summary>
+    internal SeatInput? TrialInputOnce
+    {
+        set => _trialInputOnce = value;
+    }
 }

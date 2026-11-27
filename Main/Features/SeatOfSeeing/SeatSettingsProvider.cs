@@ -1,3 +1,5 @@
+using TAOM.Core.Validation;
+
 namespace TAOM.Features.SeatOfSeeing;
 
 /// <summary>
@@ -26,6 +28,13 @@ internal sealed class SeatSettingsProvider : ISeatSettingsProvider
     /// <summary>Off by default: a player who never asks sees vanilla behaviour (build-spec section 1).</summary>
     internal const bool DefaultRiseWithPanel = false;
 
+    /// <summary>On: it acts only with the cursor shown, so a player who never opens the panel in the Seat sees no change.</summary>
+    internal const bool DefaultEdgeScroll = true;
+
+    internal const float DefaultPanSpeed = 1f;
+    internal const float MinPanSpeed = 0.25f;
+    internal const float MaxPanSpeed = 4f;
+
     private TaomSettings? _settings;
 
     private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
@@ -47,4 +56,10 @@ internal sealed class SeatSettingsProvider : ISeatSettingsProvider
     public bool TakeSoldierAfterFall => Settings?.SeatTakeSoldierAfterFall ?? DefaultTakeSoldierAfterFall;
 
     public bool RiseWithPanel => Settings?.SeatRiseWithPanel ?? DefaultRiseWithPanel;
+
+    public bool EdgeScroll => Settings?.SeatEdgeScroll ?? DefaultEdgeScroll;
+
+    public float PanSpeed => Settings is { } settings && FiniteFloatValidator.IsFiniteInRange(settings.SeatPanSpeed, MinPanSpeed, MaxPanSpeed)
+        ? settings.SeatPanSpeed
+        : DefaultPanSpeed;
 }

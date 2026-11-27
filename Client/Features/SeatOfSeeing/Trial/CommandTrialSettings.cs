@@ -26,4 +26,8 @@ internal sealed class CommandTrialSettings : ISeatSettingsProvider
 
     // The lift of the hero's view is a setting that defaults off, and rise_with_panel cannot pass without it.
     public bool RiseWithPanel => true;
+
+    public bool EdgeScroll { get; set; }
+
+    public float PanSpeed => 1f;
 }

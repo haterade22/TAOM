@@ -69,6 +69,9 @@ internal sealed partial class CommandTrialScript
         into["sink_on_close"] = s => s.SinkOnClose();
         into["panel_click_card"] = s => s.PanelClickCard();
         into["panel_click_order"] = s => s.PanelClickOrder();
+        into["edge_pan"] = s => s.EdgePan();
+        into["rotate_pivot"] = s => s.RotatePivot();
+        into["zoom_smooth"] = s => s.ZoomSmooth();
     }
 
     private IEnumerable<Verdict> Refuse()

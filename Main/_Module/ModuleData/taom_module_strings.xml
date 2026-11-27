@@ -7122,6 +7122,10 @@
 	<!-- FactionPower -->
 	<string id="taom_fp_realm_wage_relief" text="{=taom_fp_realm_wage_relief}Realm power wage relief" />
 	<!-- TaomSettings.cs -->
+	<string id="taom_seat_mcm_edge" text="{=taom_seat_mcm_edge}Edge scroll" />
+	<string id="taom_seat_mcm_edge_hint" text="{=taom_seat_mcm_edge_hint}While you are in the Seat with the cursor shown, moving the pointer to the edge of the window flies the view that way, faster the nearer the edge. It stops while you hold the middle mouse button, and while a menu or a popup has the focus. Default: on." />
+	<string id="taom_seat_mcm_pan_speed" text="{=taom_seat_mcm_pan_speed}Seat pan speed" />
+	<string id="taom_seat_mcm_pan_speed_hint" text="{=taom_seat_mcm_pan_speed_hint}Multiplies how fast the view flies with the movement keys and the edge scroll in the Seat. 1 is the usual speed. Between 0.25 and 4. Default: 1." />
 	<string id="taom_mcm_EnableWandererSideTowns" text="{=taom_mcm_EnableWandererSideTowns}Wanderers Stay On Their Side" />
 	<string id="taom_mcm_EnableWandererSideTowns_hint" text="{=taom_mcm_EnableWandererSideTowns_hint}When ON (default), a new, dismissed or relocated wanderer goes to a town whose owner is on their side when such a town has room: an orc to an Evil town, a Gondor ranger to a Free one. Neutral wanderers and Neutral towns mix with everyone. A wanderer already standing in a wrong-side town stays until vanilla's daily swap picks them. When OFF, vanilla picks any town." />
 

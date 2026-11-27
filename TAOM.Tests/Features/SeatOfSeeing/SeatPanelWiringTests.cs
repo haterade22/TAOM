@@ -164,7 +164,7 @@ public class SeatPanelWiringTests
         Assert.AreEqual(0, Regex.Matches(adapter, @"InputKey\.MiddleMouseButton").Count);
         Assert.AreEqual(1, Regex.Matches(relay, @"InputKey\.MiddleMouseButton").Count);
         StringAssert.Contains(relay, "internal static bool LookHeld() => Input.IsKeyDown(InputKey.MiddleMouseButton);");
-        StringAssert.Contains(adapter, "public bool LookHeld() => SeatPanelRelay.LookHeld();");
+        StringAssert.Contains(adapter, "public bool LookHeld() => TrialMiddleHeld || SeatPanelRelay.LookHeld();");
         StringAssert.Contains(adapter, "var looksWithMouse = !_screen.MouseVisible || LookHeld();");
     }
 
