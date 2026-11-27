@@ -68,6 +68,7 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
     private GauntletOrderUIHandler? _orderHandler;
     private SeatCursorLayer? _cursorLayer;
     private SeatPanelRelay? _relay;
+    private readonly SeatPointerEdges _edges = new();
     private Agent? _keptAgent;
     private Formation? _keptFormation;
     private readonly FordsMissionSpeed _clock = new(null);
@@ -274,7 +275,8 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
     internal Queue<SeatPointerFrame> TrialPointer { get; } = new();
 
     // Edges come from the shield layer's input (the scene layer reads a mouse button only on a frame it holds the mouse), the level and the
-    // pointer from the raw input. A press over a panel button is the relay's, so the command mouse never sees it. Control and Shift are read
+    // pointer from the raw input. A press over a panel button is the relay's, so the command mouse never sees it, and a release belongs to
+    // whoever saw its press (SeatPointerEdges), so it never sees the release of the relay's press either. Control and Shift are read
     // raw, as the panel's own Control test is (MissionOrderTroopControllerVM.cs:617).
     public SeatPointerFrame ReadPointer()
     {
@@ -282,15 +284,22 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
             return TrialPointer.Dequeue();
 
         var shield = _cursorLayer?.Input;
-        if (shield == null)
+        if (shield == null || _relay is { } relay && relay.TransferActive())
+        {
+            // The troop transfer popup has the mouse: the command mouse captures nothing (its layer's own mask, not ours, takes the buttons).
+            _edges.Reset();
             return default;
+        }
 
         var overPanel = _relay is { PointerOverTarget: true };
+        var left = shield.IsKeyPressed(InputKey.LeftMouseButton);
+        var right = shield.IsKeyPressed(InputKey.RightMouseButton);
+        var edges = _edges.Take(left, shield.IsKeyReleased(InputKey.LeftMouseButton), right, shield.IsKeyReleased(InputKey.RightMouseButton), overPanel,
+            Input.IsKeyDown(InputKey.LeftMouseButton), Input.IsKeyDown(InputKey.RightMouseButton));
         var pixel = Input.MousePositionPixel;
         var ranged = Input.MousePositionRanged;
         return new SeatPointerFrame(
-            !overPanel && shield.IsKeyPressed(InputKey.LeftMouseButton), shield.IsKeyReleased(InputKey.LeftMouseButton),
-            !overPanel && shield.IsKeyPressed(InputKey.RightMouseButton), shield.IsKeyReleased(InputKey.RightMouseButton),
+            edges.LeftPressed, edges.LeftReleased, edges.RightPressed, edges.RightReleased,
             Input.IsKeyDown(InputKey.RightMouseButton), pixel.x, pixel.y, ranged.x, ranged.y,
             Input.IsKeyDown(InputKey.LeftShift) || Input.IsKeyDown(InputKey.RightShift),
             Input.IsKeyDown(InputKey.LeftControl) || Input.IsKeyDown(InputKey.RightControl), Time.ApplicationTime);

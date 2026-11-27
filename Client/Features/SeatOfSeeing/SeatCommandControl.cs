@@ -22,6 +22,7 @@ internal sealed class SeatCommandControl
     private bool _rightDown;
     private bool _lineStarted;
     private bool _refusalNoted;
+    private bool _panelOpen;
 
     internal SeatCommandControl(ISeatCommandAdapter adapter, IOutcomeLog outcomes, string missionKey)
     {
@@ -40,9 +41,6 @@ internal sealed class SeatCommandControl
             _buffer.Capture(in frame);
     }
 
-    /// <summary>A right button is down and a line may be drawn: the order flags are out.</summary>
-    internal bool Drawing => _rightDown;
-
     /// <summary>The command mouse stopped being live (or the Seat ended): forgets a waiting frame, a held button and a previewed line.</summary>
     internal void Reset()
     {
@@ -54,13 +52,23 @@ internal sealed class SeatCommandControl
         _adapter.LineCancel();
     }
 
+    /// <summary>The Seat is finishing: forgets everything with no native call (the scene may be gone), unlike <see cref="Reset"/>, which hides the preview.</summary>
+    internal void Finish()
+    {
+        _buffer.Clear();
+        _leftArmed = _rightDown = _lineStarted = _refusalNoted = false;
+        _adapter.Drop();
+    }
+
     /// <summary>From the mission tick, while live and seated. Acts on the captured frame once.</summary>
     internal void OnMissionTick()
     {
         if (!_buffer.TryTake(out var frame))
             return;
 
-        var refusal = SeatCommandRule.Refusal(_adapter.ReadFacts());
+        var facts = _adapter.ReadFacts();
+        _panelOpen = facts.OrderMenuOpen;
+        var refusal = SeatCommandRule.Refusal(facts);
         if (refusal != SeatCommandRefusal.None)
         {
             Refuse(frame, refusal);
@@ -107,7 +115,7 @@ internal sealed class SeatCommandControl
             return;
 
         var picked = _adapter.PickOwn(frame.PixelX, frame.PixelY);
-        var action = SeatSelectRule.Decide(frame.Shift, picked.Found, picked.Selected, _adapter.SelectedCount);
+        var action = SeatSelectRule.Decide(frame.Shift, picked.Found, picked.Selected, _adapter.SelectedCount, _panelOpen);
         if (action == SeatSelectAction.None)
             return;
 

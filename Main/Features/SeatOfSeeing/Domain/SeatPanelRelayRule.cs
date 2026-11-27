@@ -32,20 +32,24 @@ internal enum SeatRelayResult
 /// <summary>
 /// A button click is a press and a release on the same target (the view model, never the widget: a button's icon and label are widgets of
 /// the same view model). The rule remembers the press; the release acts only when the pointer is still over that view model. A right
-/// release over the panel is vanilla's Escape (<c>GauntletOrderUIHandler.cs:372-375</c>).
+/// release over the panel is vanilla's Escape (<c>GauntletOrderUIHandler.cs:372-375</c>), but only when the rule saw that press go down over
+/// the panel too: a release belongs to whoever saw its press, so a right press on the field that is let go over a button is the command mouse's alone.
 /// </summary>
 internal sealed class SeatPanelRelayRule
 {
     private SeatPanelHit _pressed;
+    private bool _rightPressedOver;
 
     /// <summary>
     /// One frame's edges and the target under the pointer. A press is taken first, so a press and a release in one frame act. A target
     /// whose view model could not be read never acts. <paramref name="returnsToSet"/> is true when the target is the Return order of a set.
     /// </summary>
-    internal SeatPanelAction Step(bool leftPressed, bool leftReleased, bool rightReleased, SeatPanelHit over, bool returnsToSet)
+    internal SeatPanelAction Step(bool leftPressed, bool leftReleased, bool rightReleased, SeatPanelHit over, bool returnsToSet, bool rightPressed = false)
     {
         if (leftPressed)
             _pressed = over;
+        if (rightPressed)
+            _rightPressedOver = over.Kind != SeatPanelKind.None;
 
         if (leftReleased)
         {
@@ -56,10 +60,19 @@ internal sealed class SeatPanelRelayRule
                 return action;
         }
 
-        return rightReleased && over.Kind != SeatPanelKind.None ? SeatPanelAction.Escape : SeatPanelAction.None;
+        if (!rightReleased)
+            return SeatPanelAction.None;
+
+        var escape = _rightPressedOver && over.Kind != SeatPanelKind.None;
+        _rightPressedOver = false;
+        return escape ? SeatPanelAction.Escape : SeatPanelAction.None;
     }
 
-    internal void Reset() => _pressed = default;
+    internal void Reset()
+    {
+        _pressed = default;
+        _rightPressedOver = false;
+    }
 
     private static SeatPanelAction Act(SeatPanelHit pressed, SeatPanelHit released, bool returnsToSet)
     {

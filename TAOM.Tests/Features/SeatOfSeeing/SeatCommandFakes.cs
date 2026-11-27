@@ -34,7 +34,7 @@ internal sealed class FakeSeatCommand : ISeatCommandAdapter
 
     public int SelectedCount => Selected;
 
-    public bool LineShown { get; private set; }
+    internal bool LineShown { get; private set; }
 
     public SeatPicked PickOwn(float pixelX, float pixelY)
     {
@@ -86,6 +86,12 @@ internal sealed class FakeSeatCommand : ISeatCommandAdapter
     {
         LineShown = false;
         Calls.Add("line-cancel");
+    }
+
+    public void Drop()
+    {
+        LineShown = false;
+        Calls.Add("drop");
     }
 
     internal int Count(string call)

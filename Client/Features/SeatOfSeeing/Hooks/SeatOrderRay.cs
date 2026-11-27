@@ -44,6 +44,9 @@ internal static class SeatOrderRay
         screen.ScreenPointToWorldRay(point, out begin, out end);
     }
 
+    /// <summary>The far end of a pointer ray, <see cref="RayLength"/> from its start: the ray every command-mouse click and line uses, so far ground works for all of them.</summary>
+    internal static Vec3 Far(Vec3 rayBegin, Vec3 rayEnd) => rayBegin + (rayEnd - rayBegin).NormalizedCopy() * RayLength;
+
     internal static WeakGameEntity Collide(MissionScreen screen, Mission mission, out Vec3 closestPoint) =>
         CollideAt(screen, mission, screen.MouseVisible ? Input.MousePositionRanged : new Vec2(0.5f, 0.5f), out closestPoint, out _);
 
@@ -51,7 +54,7 @@ internal static class SeatOrderRay
     internal static WeakGameEntity CollideAt(MissionScreen screen, Mission mission, Vec2 ranged, out Vec3 closestPoint, out bool hit)
     {
         screen.ScreenPointToWorldRay(ranged, out var rayBegin, out var rayEnd);
-        var rayEndFar = rayBegin + (rayEnd - rayBegin).NormalizedCopy() * RayLength;
+        var rayEndFar = Far(rayBegin, rayEnd);
 
         hit = mission.Scene.RayCastForClosestEntityOrTerrain(rayBegin, rayEndFar, out _, out closestPoint, out var entity, RayThickness, RayFlags);
 

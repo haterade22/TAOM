@@ -17,7 +17,6 @@ public class SeatPointerFrameTests
         var buffer = new SeatPointerBuffer();
 
         Assert.IsFalse(buffer.TryTake(out _));
-        Assert.IsFalse(buffer.Pending);
     }
 
     [TestMethod]
@@ -123,5 +122,85 @@ public class SeatPointerFrameTests
         Assert.IsTrue(Frame(leftReleased: true).HasEdge);
         Assert.IsTrue(Frame(rightPressed: true).HasEdge);
         Assert.IsTrue(Frame(rightReleased: true).HasEdge);
+    }
+
+    [TestMethod]
+    public void Edges_ARightPressOffThePanel_LetGoOverAButton_PassesTheReleaseToTheCommandMouseOnly()
+    {
+        var edges = new SeatPointerEdges();
+
+        var press = edges.Take(false, false, true, false, overPanel: false, leftDown: false, rightDown: true);
+        var release = edges.Take(false, false, false, true, overPanel: true, leftDown: false, rightDown: false);
+
+        Assert.IsTrue(press.RightPressed);
+        Assert.IsTrue(release.RightReleased, "the command mouse owns the whole press and release");
+    }
+
+    [TestMethod]
+    public void Edges_ARightPressOnAButton_LetGoOffThePanel_NeverReachesTheCommandMouse()
+    {
+        var edges = new SeatPointerEdges();
+
+        var press = edges.Take(false, false, true, false, overPanel: true, leftDown: false, rightDown: true);
+        var release = edges.Take(false, false, false, true, overPanel: false, leftDown: false, rightDown: false);
+
+        Assert.IsFalse(press.RightPressed);
+        Assert.IsFalse(release.RightReleased, "an order is not given for a press the panel had");
+    }
+
+    [TestMethod]
+    public void Edges_ALeftPressOnACard_IsDroppedWithItsRelease_SoNoStraySelectionFollows()
+    {
+        var edges = new SeatPointerEdges();
+
+        var press = edges.Take(true, false, false, false, overPanel: true, leftDown: true, rightDown: false);
+        var release = edges.Take(false, true, false, false, overPanel: true, leftDown: false, rightDown: false);
+
+        Assert.IsFalse(press.LeftPressed);
+        Assert.IsFalse(release.LeftReleased);
+    }
+
+    [TestMethod]
+    public void Edges_ALeftPressOffThePanel_LetGoOverACard_StillReleasesToTheCommandMouse_WhichArmedAtThePress()
+    {
+        var edges = new SeatPointerEdges();
+
+        edges.Take(true, false, false, false, overPanel: false, leftDown: true, rightDown: false);
+        var release = edges.Take(false, true, false, false, overPanel: true, leftDown: false, rightDown: false);
+
+        Assert.IsTrue(release.LeftReleased);
+    }
+
+    [TestMethod]
+    public void Edges_AReleaseWithNoPressSeen_IsDropped()
+    {
+        var edges = new SeatPointerEdges();
+
+        var release = edges.Take(false, true, false, true, overPanel: false, leftDown: false, rightDown: false);
+
+        Assert.IsFalse(release.LeftReleased);
+        Assert.IsFalse(release.RightReleased);
+    }
+
+    [TestMethod]
+    public void Edges_APressAndReleaseInOneFrameOffThePanel_BothPass()
+    {
+        var edges = new SeatPointerEdges();
+
+        var both = edges.Take(true, true, true, true, overPanel: false, leftDown: false, rightDown: false);
+
+        Assert.IsTrue(both.LeftPressed && both.LeftReleased && both.RightPressed && both.RightReleased);
+    }
+
+    [TestMethod]
+    public void Edges_AButtonThatWentUpWithNoReleaseEdge_ForgetsItsPress()
+    {
+        var edges = new SeatPointerEdges();
+
+        edges.Take(false, false, true, false, overPanel: false, leftDown: false, rightDown: true);
+        edges.Take(false, false, false, false, overPanel: false, leftDown: false, rightDown: false);
+        var release = edges.Take(false, false, false, true, overPanel: false, leftDown: false, rightDown: false);
+
+        Assert.IsFalse(release.RightReleased);
     }
 }

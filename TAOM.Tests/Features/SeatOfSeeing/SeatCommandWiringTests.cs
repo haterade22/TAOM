@@ -65,8 +65,10 @@ public class SeatCommandWiringTests
         var adapter = Source("Client/Adapters/SeatScreenAdapter.cs");
 
         StringAssert.Contains(adapter, "var shield = _cursorLayer?.Input;");
-        StringAssert.Contains(adapter, "!overPanel && shield.IsKeyPressed(InputKey.LeftMouseButton)");
-        StringAssert.Contains(adapter, "!overPanel && shield.IsKeyPressed(InputKey.RightMouseButton)");
+        StringAssert.Contains(adapter, "var left = shield.IsKeyPressed(InputKey.LeftMouseButton);");
+        StringAssert.Contains(adapter, "var right = shield.IsKeyPressed(InputKey.RightMouseButton);");
+        StringAssert.Contains(adapter, "_edges.Take(left,");
+        StringAssert.Contains(adapter, "relay.TransferActive()");
         StringAssert.Contains(adapter, "Input.IsKeyDown(InputKey.LeftControl) || Input.IsKeyDown(InputKey.RightControl)");
     }
 
@@ -76,7 +78,7 @@ public class SeatCommandWiringTests
         var relay = Source("Client/Adapters/SeatPanelRelay.cs");
 
         StringAssert.Contains(relay, "return holdsPanel || (_commandLive && CommandHolds());");
-        StringAssert.Contains(relay, "SeatCommandRule.ShieldHolds(_cursorOn, _commandLive, LookHeld(), AnotherLayerClaims())");
+        StringAssert.Contains(relay, "SeatCommandRule.ShieldHolds(_cursorOn, _commandLive, LookHeld(), AnotherLayerClaims(), TransferActive(), ButtonTaken())");
     }
 
     [TestMethod]

@@ -56,10 +56,9 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
 
     public int SelectedCount => Controller?.SelectedFormations.Count ?? 0;
 
-    public bool LineShown => _flags.Shown > 0;
-
     public SeatCommandFacts ReadFacts()
     {
+        SubscribeFocus();
         var main = _mission.MainAgent;
         var team = _mission.PlayerTeam;
         if (team == null)
@@ -68,7 +67,7 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
         var ending = _mission.IsMissionEnding;
         return new SeatCommandFacts(main != null, _mission.Mode == MissionMode.Deployment, main != null && main.IsPlayerControlled,
             SeatPresence.HeroFightsOn, team.HasBots, main != null && team.FormationsIncludingEmpty.Any(f => f.PlayerOwner == main && f.CountOfUnits > 0),
-            team.IsPlayerGeneral || team.IsPlayerSergeant, ending, ending && _mission.CheckIfBattleInRetreat());
+            team.IsPlayerGeneral || team.IsPlayerSergeant, ending, ending && _mission.CheckIfBattleInRetreat(), _mission.IsOrderMenuOpen);
     }
 
     public SeatPicked PickOwn(float pixelX, float pixelY)
@@ -133,7 +132,8 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
         if (hit)
         {
             _ground = new WorldPosition(_mission.Scene, UIntPtr.Zero, point, hasValidZ: false);
-            ground = _mission.IsFormationUnitPositionAvailable(ref _ground, team);
+            var probe = _ground;
+            ground = _mission.IsFormationUnitPositionAvailable(ref probe, team);
         }
 
         // The walk of SeatOrderRay stops at the first entity with a script the side may order, or at nothing.
@@ -172,7 +172,11 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
     {
         _lineHasBegin = false;
         var team = _mission.PlayerTeam;
-        if (team == null || !TryGround(rangedX, rangedY, out var ground) || !_mission.IsFormationUnitPositionAvailable(ref ground, team))
+        if (team == null || !TryGround(rangedX, rangedY, out var ground))
+            return false;
+
+        var probe = ground;
+        if (!_mission.IsFormationUnitPositionAvailable(ref probe, team))
             return false;
 
         _lineBegin = ground;
@@ -213,6 +217,19 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
             _flags.Hide();
     }
 
+    public void Drop()
+    {
+        _lineHasBegin = false;
+        _flags.Drop();
+        if (_focus != null)
+            _focus.OnFormationFocused -= OnFocused;
+        _focus = null;
+        _focused = null;
+        _pickedOwn = null;
+        _enemy = null;
+        _orderable = null;
+    }
+
     private static OrderType LineOrder(bool horizontal) =>
         horizontal ? OrderType.MoveToLineSegmentWithHorizontalLayout : OrderType.MoveToLineSegment;
 
@@ -220,6 +237,7 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
     private bool TryGround(float rangedX, float rangedY, out WorldPosition ground)
     {
         _screen.ScreenPointToWorldRay(new Vec2(rangedX, rangedY), out var begin, out var end);
+        end = SeatOrderRay.Far(begin, end);
         if (!_mission.Scene.RayCastForClosestEntityOrTerrain(begin, end, out var distance, out Vec3 _, 0.3f, SeatOrderRay.RayFlags))
         {
             ground = WorldPosition.Invalid;
@@ -232,32 +250,36 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
         return true;
     }
 
+    // The nearest enemy soldier across every enemy team, so the order of the teams never decides which of two companies under the pointer is charged.
     private Formation? EnemyAt(Team playerTeam, float pixelX, float pixelY)
     {
-        foreach (var team in _mission.Teams)
-        {
-            if (team == null || !team.IsEnemyOf(playerTeam))
-                continue;
-            var formation = Nearest(team.ActiveAgents, pixelX, pixelY, "enemy")?.Formation;
-            if (formation != null && formation.CountOfUnits > 0)
-                return formation;
-        }
+        var enemies = _mission.Teams.Where(team => team != null && team.IsEnemyOf(playerTeam)).SelectMany(team => team.ActiveAgents);
+        var formation = Nearest(enemies, pixelX, pixelY, "enemy")?.Formation;
+        if (formation != null && formation.CountOfUnits > 0)
+            return formation;
 
-        // The focus handler names a company near the pointer by its own reach (70 px at 1080p), which the Seat's patch points at the cursor.
+        // The focus handler names a company near the pointer by its own reach (70 px at 1080p, the placer's own), which the Seat's patch points at
+        // the cursor. So a right click within that reach of an enemy company charges it, even where the soldier pick found nobody.
         var focused = FocusedFormation();
         return focused != null && focused.CountOfUnits > 0 && focused.Team != null && focused.Team.IsEnemyOf(playerTeam) ? focused : null;
     }
 
+    // Once, at the first fact read of the mission, so the handler's event has been heard before the first right click needs it.
+    private void SubscribeFocus()
+    {
+        if (_focusSearched)
+            return;
+        _focusSearched = true;
+        _focus = _mission.GetMissionBehavior<MissionFormationTargetSelectionHandler>();
+        if (_focus != null)
+            _focus.OnFormationFocused += OnFocused;
+    }
+
+    private void OnFocused(Formation formation) => _focused = formation;
+
     private Formation? FocusedFormation()
     {
-        if (!_focusSearched)
-        {
-            _focusSearched = true;
-            _focus = _mission.GetMissionBehavior<MissionFormationTargetSelectionHandler>();
-            if (_focus != null)
-                _focus.OnFormationFocused += formation => _focused = formation;
-        }
-
+        SubscribeFocus();
         return _focused;
     }
 

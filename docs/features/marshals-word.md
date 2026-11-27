@@ -64,8 +64,8 @@ the mission tick, the shot callback and the mode change.
   their own: `ArraySolved`, `ArrayFault` and `MarchRequested` run inside the array prefix's try or catch, and the team-change and
   direct-order callbacks call only list work, the outcome log and a pace publication, none of which throws.
 - **Capture** (`MarshalOrderCapturePatch`, Patch141): a prefix on each of the six `OrderController` order methods. It returns true at its first
-  test unless the session is live, the queue key or the mark key is down with the panel open, and the instance is the player's own controller. Otherwise
-  `MarshalQueueDriver.Capture` stores the order as a step (reading only: the capture runs in the screen tick) or declines with a reason.
+  test unless the session is live, the queue key or the mark key is down with the panel open or the Seat's command mouse live, and the instance is the player's own controller. Otherwise
+  `MarshalQueueDriver.Capture` stores the order as a step (reading only: the capture runs in the screen tick for the panel and the keys, and in the first mission tick of a frame for a command mouse click) or declines with a reason.
   An order on the allow list ends at once, on arrival, when its target company is gone, or when an entity order is spent.
 - **The queue** (`MarshalOrderQueue`, pure, in `Domain/`): one FIFO per company, a step shared by several companies in each list. A step
   starts only when it heads every member's list. A company that left (no units, or under AI control) leaves every step. A direct player order

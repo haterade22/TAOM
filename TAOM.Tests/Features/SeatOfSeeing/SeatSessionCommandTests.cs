@@ -284,4 +284,28 @@ public class SeatSessionCommandTests
 
     [TestMethod]
     public void TheCheckId_IsValid() => Assert.IsTrue(TAOM.Core.Logging.OutcomeLog.IsValidId(SeatChecks.CommandId));
+
+    [TestMethod]
+    public void Finish_WhileLive_DropsTheAdapterAndHidesNoFlag()
+    {
+        Frame();
+        _engine.Calls.Clear();
+
+        _sut.Finish();
+
+        CollectionAssert.DoesNotContain(_engine.Calls, "line-cancel");
+        Assert.IsTrue(_engine.Count("drop") >= 1);
+    }
+
+    [TestMethod]
+    public void TurningTheSettingOff_WhileLive_StillHidesTheFlags()
+    {
+        Frame();
+        _engine.Calls.Clear();
+        _settings.CommandMouse = false;
+
+        Frame();
+
+        CollectionAssert.Contains(_engine.Calls, "line-cancel");
+    }
 }

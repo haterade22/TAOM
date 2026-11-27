@@ -32,7 +32,7 @@ public class SeatCommandRuleTests
     // ---- the panel's own gate ----
 
     [TestMethod]
-    public void MayCommand_WhenTheHeroLivesAndTroopsStand_IsTrue() => Assert.IsTrue(SeatCommandRule.MayCommand(Ready()));
+    public void Refusal_None_WhenTheHeroLivesAndTroopsStand_IsTrue() => Assert.AreEqual(SeatCommandRefusal.None, SeatCommandRule.Refusal(Ready()));
 
     [TestMethod]
     public void Refusal_WithNoMainAgent_IsHeroGone()
@@ -40,7 +40,6 @@ public class SeatCommandRuleTests
         var facts = Ready() with { MainAgentExists = false };
 
         Assert.AreEqual(SeatCommandRefusal.HeroGone, SeatCommandRule.Refusal(facts));
-        Assert.IsFalse(SeatCommandRule.MayCommand(facts));
     }
 
     [TestMethod]
@@ -48,12 +47,12 @@ public class SeatCommandRuleTests
         Assert.AreEqual(SeatCommandRefusal.NotPlayerControlled, SeatCommandRule.Refusal(Ready() with { EnginePlayerControlled = false }));
 
     [TestMethod]
-    public void MayCommand_WhenTheHeroFightsOnUnderTheAi_CountsHimAsControlled() =>
-        Assert.IsTrue(SeatCommandRule.MayCommand(Ready() with { EnginePlayerControlled = false, HeroFightsOn = true }));
+    public void Refusal_None_WhenTheHeroFightsOnUnderTheAi_CountsHimAsControlled() =>
+        Assert.AreEqual(SeatCommandRefusal.None, SeatCommandRule.Refusal(Ready() with { EnginePlayerControlled = false, HeroFightsOn = true }));
 
     [TestMethod]
-    public void MayCommand_InDeployment_SkipsTheControlTest() =>
-        Assert.IsTrue(SeatCommandRule.MayCommand(Ready() with { EnginePlayerControlled = false, Deployment = true }));
+    public void Refusal_None_InDeployment_SkipsTheControlTest() =>
+        Assert.AreEqual(SeatCommandRefusal.None, SeatCommandRule.Refusal(Ready() with { EnginePlayerControlled = false, Deployment = true }));
 
     [TestMethod]
     public void Refusal_AfterTheHeroFellAndBeforeATake_IsHeroGoneNotNoTroops() =>
@@ -76,8 +75,8 @@ public class SeatCommandRuleTests
         Assert.AreEqual(SeatCommandRefusal.MissionEnding, SeatCommandRule.Refusal(Ready() with { MissionEnding = true }));
 
     [TestMethod]
-    public void MayCommand_WhenTheMissionIsEndingInARetreat_IsTrue() =>
-        Assert.IsTrue(SeatCommandRule.MayCommand(Ready() with { MissionEnding = true, BattleInRetreat = true }));
+    public void Refusal_None_WhenTheMissionIsEndingInARetreat_IsTrue() =>
+        Assert.AreEqual(SeatCommandRefusal.None, SeatCommandRule.Refusal(Ready() with { MissionEnding = true, BattleInRetreat = true }));
 
     [TestMethod]
     public void Reason_NamesEveryRefusal()
@@ -253,4 +252,29 @@ public class SeatCommandRuleTests
         Assert.IsTrue(SeatKeepRule.AgentCounts(true, 29.9f, SeatPick.TestedDistance(30f)));
         Assert.IsTrue(SeatKeepRule.AgentCounts(false, float.NaN, SeatPick.TestedDistance(30f)));
     }
+
+    // ---- review fixes ----
+
+    [TestMethod]
+    public void ShieldHolds_DuringTheTroopTransferPopup_IsFalse() => Assert.IsFalse(SeatCommandRule.ShieldHolds(true, true, false, false, transferActive: true));
+
+    [TestMethod]
+    public void ShieldHolds_WhenAMiddlePressComesWhileAHeldButtonIsTaken_KeepsHolding() =>
+        Assert.IsTrue(SeatCommandRule.ShieldHolds(true, true, true, false, buttonTaken: true));
+
+    [TestMethod]
+    public void ShieldHolds_WhenAMiddlePressComesFirst_StaysOff() =>
+        Assert.IsFalse(SeatCommandRule.ShieldHolds(true, true, true, false, buttonTaken: false));
+
+    [TestMethod]
+    public void ShieldHolds_WhenATakenButtonIsHeldAndAnotherOverlayClaims_StillYields() =>
+        Assert.IsFalse(SeatCommandRule.ShieldHolds(true, true, true, true, buttonTaken: true));
+
+    [TestMethod]
+    public void Decide_AClickOnNothingWithThePanelOpen_KeepsTheSelection() =>
+        Assert.AreEqual(SeatSelectAction.None, SeatSelectRule.Decide(false, false, false, 2, panelOpen: true));
+
+    [TestMethod]
+    public void Decide_AClickOnACompanyWithThePanelOpen_StillReplacesTheSelection() =>
+        Assert.AreEqual(SeatSelectAction.ReplaceWith, SeatSelectRule.Decide(false, true, false, 2, panelOpen: true));
 }

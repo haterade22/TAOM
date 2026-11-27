@@ -27,9 +27,6 @@ internal sealed class SeatPointerBuffer
     private float _pressPixelX, _pressPixelY, _pressRangedX, _pressRangedY, _pressSeconds;
     private float _leftPixelX, _leftPixelY, _leftSeconds;
 
-    /// <summary>A capture waits to be taken.</summary>
-    internal bool Pending => _fresh;
-
     internal void Capture(in SeatPointerFrame captured)
     {
         if (captured.RightPressed)
@@ -86,4 +83,40 @@ internal sealed class SeatPointerBuffer
         _pressSeconds = 0f;
         _leftSeconds = 0f;
     }
+}
+
+/// <summary>
+/// A button release belongs to whoever saw its press. The command mouse takes a press only off the order panel's buttons (the relay owns
+/// those), so a release whose press it did not take is dropped: a right press on the field let go over a button is not also the panel's Escape
+/// and a left press on the field let go over a card is not a stray selection. A press and its release in one frame both pass.
+/// </summary>
+internal sealed class SeatPointerEdges
+{
+    private bool _leftOwned;
+    private bool _rightOwned;
+
+    /// <summary>
+    /// The edges the command mouse may see this frame, from the raw edges, whether the pointer is over a panel button, and the raw levels (a
+    /// button that is up with no release edge forgets its press).
+    /// </summary>
+    internal (bool LeftPressed, bool LeftReleased, bool RightPressed, bool RightReleased) Take(
+        bool leftPressed, bool leftReleased, bool rightPressed, bool rightReleased, bool overPanel, bool leftDown, bool rightDown)
+    {
+        var lp = leftPressed && !overPanel;
+        var rp = rightPressed && !overPanel;
+        if (lp)
+            _leftOwned = true;
+        if (rp)
+            _rightOwned = true;
+
+        var lr = leftReleased && _leftOwned;
+        var rr = rightReleased && _rightOwned;
+        if (leftReleased || (!leftDown && !lp))
+            _leftOwned = false;
+        if (rightReleased || (!rightDown && !rp))
+            _rightOwned = false;
+        return (lp, lr, rp, rr);
+    }
+
+    internal void Reset() => _leftOwned = _rightOwned = false;
 }

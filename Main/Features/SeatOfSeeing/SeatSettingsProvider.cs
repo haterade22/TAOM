@@ -28,7 +28,7 @@ internal sealed class SeatSettingsProvider : ISeatSettingsProvider
     /// <summary>Off by default: a player who never asks sees vanilla behaviour (build-spec section 1).</summary>
     internal const bool DefaultRiseWithPanel = false;
 
-    /// <summary>On: it acts only with the cursor shown, so a player who never opens the panel in the Seat sees no change.</summary>
+    /// <summary>On: it acts only with the cursor shown, which is with the order panel open, or all the time while the command mouse is on (turn this off for a windowed game).</summary>
     internal const bool DefaultEdgeScroll = true;
 
     /// <summary>On: it acts only in the Seat, and the setting off gives back the vanilla mouse exactly.</summary>

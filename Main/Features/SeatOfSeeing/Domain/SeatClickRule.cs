@@ -35,14 +35,15 @@ internal enum SeatSelectAction
 /// <summary>
 /// What a left click writes, through the order controller's own selection so the panel and the number keys share it. A plain click on a company
 /// selects only it, a click on nothing clears (an empty selection reads as all to the number keys, <c>MissionOrderVM.cs:711-714</c>); Shift toggles
-/// one company and never clears.
+/// one company and never clears. With the order panel open a click on nothing keeps the selection: vanilla never leaves the panel with none
+/// (<c>MissionOrderVM</c> selects all again, :997-999, :1017-1019) and the placer asserts on an empty list each tick.
 /// </summary>
 internal static class SeatSelectRule
 {
-    internal static SeatSelectAction Decide(bool shift, bool companyHit, bool alreadySelected, int selectedCount)
+    internal static SeatSelectAction Decide(bool shift, bool companyHit, bool alreadySelected, int selectedCount, bool panelOpen = false)
     {
         if (!companyHit)
-            return shift || selectedCount == 0 ? SeatSelectAction.None : SeatSelectAction.ClearAll;
+            return shift || selectedCount == 0 || panelOpen ? SeatSelectAction.None : SeatSelectAction.ClearAll;
         if (shift)
             return alreadySelected ? SeatSelectAction.Remove : SeatSelectAction.Add;
         return alreadySelected && selectedCount == 1 ? SeatSelectAction.None : SeatSelectAction.ReplaceWith;

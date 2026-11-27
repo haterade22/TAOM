@@ -333,7 +333,6 @@ public class SeatCommandControlTests
 
         Assert.IsFalse(_engine.LineShown);
         Assert.AreEqual(0, _engine.Count("line-commit"));
-        Assert.IsFalse(_sut.Drawing);
     }
 
     // ---- refusal ----
@@ -389,7 +388,6 @@ public class SeatCommandControlTests
         _sut.Reset();
 
         Assert.IsFalse(_engine.LineShown);
-        Assert.IsFalse(_sut.Drawing);
         _sut.OnMissionTick();
         Assert.AreEqual(0, _engine.Count("line-commit"));
     }
@@ -404,5 +402,29 @@ public class SeatCommandControlTests
 
         Assert.AreEqual(1, _engine.Count("charge"));
         Assert.AreEqual(0, _engine.Count("move"));
+    }
+
+    [TestMethod]
+    public void LeftClick_OnNothingWithThePanelOpen_KeepsTheSelection()
+    {
+        _engine.Facts = _engine.Facts with { OrderMenuOpen = true };
+        _engine.Own = default;
+        _engine.Selected = 2;
+
+        LeftClick();
+
+        CollectionAssert.DoesNotContain(_engine.Calls, "select:ClearAll");
+    }
+
+    [TestMethod]
+    public void Finish_ForgetsTheLineWithNoNativeCall_AndDropsTheAdapter()
+    {
+        _engine.LineStarts = true;
+        Tick(Frame(rightPressed: true, rightDown: true));
+        _engine.Calls.Clear();
+
+        _sut.Finish();
+
+        CollectionAssert.AreEqual(new[] { "drop" }, _engine.Calls);
     }
 }

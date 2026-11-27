@@ -60,6 +60,8 @@ internal sealed class SeatSession
     private bool _riseBroken;
     private bool _commandLive;
     private bool _commandOrdersAllowed;
+    private bool _commandNetwork;
+    private bool _finishing;
     private float _commandCheckDue = float.NaN;
 
     // Set from the engine's callbacks (a mode change, a main agent change), which may not run on the thread that reads them.
@@ -330,6 +332,7 @@ internal sealed class SeatSession
     /// <summary>The mission screen is going away: hands the hero back with no glide and no look. Safe to call twice, and from both teardown paths.</summary>
     internal void Finish()
     {
+        _finishing = true;
         try
         {
             if (State != SeatState.Off)
@@ -342,6 +345,7 @@ internal sealed class SeatSession
 
         // Fast forward is a process-global byte (Mission.cs:1268-1279), so the cancel sits outside the test of the state and after the try.
         _time.Cancel();
+        Swallow(() => _command?.Finish());
         _handBackOwed = false;
         Swallow(() => SeatPresence.SetHeroFightsOn(false));
     }
@@ -639,10 +643,11 @@ internal sealed class SeatSession
         if (float.IsNaN(_commandCheckDue) || now >= _commandCheckDue)
         {
             _commandCheckDue = now + 1f;
-            _commandOrdersAllowed = _permissions().Orders && !_networkSession();
+            _commandOrdersAllowed = _permissions().Orders;
+            _commandNetwork = _networkSession();
         }
 
-        return SeatCommandRule.IsLive(true, State == SeatState.Seated, _commandOrdersAllowed, false);
+        return SeatCommandRule.IsLive(true, State == SeatState.Seated, _commandOrdersAllowed, _commandNetwork);
     }
 
     private void SetCommandLive(bool live)
@@ -653,7 +658,13 @@ internal sealed class SeatSession
         _commandCheckDue = float.NaN;
         SeatPresence.SetCommandMouse(live);
         _screen.SetCommandMouse(live);
-        if (!live)
+        if (live)
+            return;
+
+        // A finish may come when the scene is already gone: it forgets the flags and makes no native call, as Marshal's teardown does.
+        if (_finishing)
+            _command?.Finish();
+        else
             _command?.Reset();
     }
 

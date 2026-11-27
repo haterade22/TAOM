@@ -55,6 +55,9 @@ internal interface ISeatCommandAdapter
     /// <summary>Hides the preview and forgets the line.</summary>
     void LineCancel();
 
-    /// <summary>A line is being previewed.</summary>
-    bool LineShown { get; }
+    /// <summary>
+    /// The teardown: forgets the flags and the focus subscription with no native call, because the scene may be gone (as Marshal's
+    /// <c>DropFlags</c> does). Safe to call twice.
+    /// </summary>
+    void Drop();
 }

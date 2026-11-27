@@ -6,7 +6,7 @@ namespace TAOM.Features.SeatOfSeeing.Domain;
 /// </summary>
 internal readonly record struct SeatCommandFacts(
     bool MainAgentExists, bool Deployment, bool EnginePlayerControlled, bool HeroFightsOn, bool HasBots, bool HasTroopsUnderThem,
-    bool PlayerGeneralOrSergeant, bool MissionEnding, bool BattleInRetreat);
+    bool PlayerGeneralOrSergeant, bool MissionEnding, bool BattleInRetreat, bool OrderMenuOpen = false);
 
 /// <summary>Why an order from the mouse is refused; <c>None</c> means it may be given.</summary>
 internal enum SeatCommandRefusal
@@ -48,12 +48,13 @@ internal static class SeatCommandRule
 
     /// <summary>
     /// The click shield covers the whole screen: the cursor shows, the command mouse is live, the middle button is not looking, and no other
-    /// overlay that takes the mouse buttons has the pointer (the battle action bar and the other views keep their clicks).
+    /// overlay that takes the mouse buttons has the pointer (the battle action bar and the other views keep their clicks). The troop transfer
+    /// popup is one such overlay whose layer mask the panel's check does not show (the order layer takes the mouse itself then), so it never
+    /// holds. A middle press while the shield already holds a left or right button does not drop it (<paramref name="buttonTaken"/>): the
+    /// scene layer would otherwise become the mouse-down layer and vanilla would see that button's release.
     /// </summary>
-    internal static bool ShieldHolds(bool cursorShown, bool commandLive, bool lookHeld, bool anotherLayerClaims) =>
-        cursorShown && commandLive && !lookHeld && !anotherLayerClaims;
-
-    internal static bool MayCommand(SeatCommandFacts facts) => Refusal(facts) == SeatCommandRefusal.None;
+    internal static bool ShieldHolds(bool cursorShown, bool commandLive, bool lookHeld, bool anotherLayerClaims, bool transferActive = false, bool buttonTaken = false) =>
+        cursorShown && commandLive && !transferActive && (!lookHeld || buttonTaken) && !anotherLayerClaims;
 
     /// <summary>The word of an outcome line for a refusal.</summary>
     internal static string Reason(SeatCommandRefusal refusal) => refusal switch
