@@ -62,6 +62,7 @@ public class IncidentVoicesBindingTests
 
     [TestMethod]
     [TestCategory("BindingVerification")]
+    [TestCategory("RequiresGameIL")]
     public void CanIncidentBeInvoked_IsTooLargeForTheClrToInline()
     {
         var body = Target().GetMethodBody()!;
@@ -93,6 +94,7 @@ public class IncidentVoicesBindingTests
 
     [TestMethod]
     [TestCategory("BindingVerification")]
+    [TestCategory("RequiresGameIL")]
     public void TheVanillaIncidentIds_AndTheirOptionCounts_EqualTheCatalog()
     {
         RequireGame();
@@ -123,6 +125,7 @@ public class IncidentVoicesBindingTests
 
     [TestMethod]
     [TestCategory("BindingVerification")]
+    [TestCategory("RequiresGameIL")]
     public void TheVariablesTheCatalogListsForPlaces_AreStillInVanillasIl()
     {
         RequireGame();
@@ -140,6 +143,7 @@ public class IncidentVoicesBindingTests
 
     [TestMethod]
     [TestCategory("BindingVerification")]
+    [TestCategory("RequiresGameIL")]
     public void TheVariablesVanillaSetsOnADescription_AreAllInTheCatalogsVars()
     {
         RequireGame();

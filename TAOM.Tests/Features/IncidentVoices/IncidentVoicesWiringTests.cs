@@ -129,6 +129,7 @@ public class IncidentVoicesWiringTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void Postfix_AFaultInTheService_KeepsVanillasAnswer_AndWarnsOnce()
     {
         RequireGame();
@@ -152,6 +153,7 @@ public class IncidentVoicesWiringTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void Postfix_VanillaSaidNo_DoesNotAskTheService()
     {
         RequireGame();
@@ -166,6 +168,7 @@ public class IncidentVoicesWiringTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void Postfix_ADisabledIncident_AnswersFalse()
     {
         RequireGame();
@@ -185,6 +188,7 @@ public class IncidentVoicesWiringTests
     // The text handle on a real engine incident
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void Handle_ReadsTheIdAndTheOptionCount_FromTheEngineIncident()
     {
         RequireGame();
@@ -195,6 +199,7 @@ public class IncidentVoicesWiringTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void Handle_SetThenNull_WritesTheNewValue_ThenPutsVanillasBack_KeepingTheVariables()
     {
         RequireGame();
@@ -215,6 +220,7 @@ public class IncidentVoicesWiringTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void Handle_ASlotTheIncidentDoesNotHave_IsIgnored()
     {
         RequireGame();

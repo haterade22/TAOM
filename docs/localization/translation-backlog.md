@@ -331,3 +331,14 @@ Record each pending feature's module, source file, exact keys and English text, 
 - English source: `Main/_Module/ModuleData/taom_module_strings.xml` (MCM options read by the Realms settings).
 - Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
 - Keys: `taom_realms_mcm_rename_own`, `taom_realms_mcm_rename_own_hint`, `taom_realms_mcm_rename_ai`, `taom_realms_mcm_rename_ai_hint`, `taom_realms_mcm_own_banner`, `taom_realms_mcm_own_banner_hint`, `taom_realms_mcm_ai_banners`, `taom_realms_mcm_ai_banners_hint`. Read the English in the source file; the hints are long.
+
+## Incident Voices: the map incident texts
+
+- Status: pending project-lead translation pass.
+- Source: [PR #1618](https://github.com/haterade22/TAOM/pull/1618).
+- Module: TAOM.
+- English source: `Main/_Module/ModuleData/taom_encounter_strings.xml`, the generated block between `INCIDENT-VOICES-BEGIN` and `INCIDENT-VOICES-END`. Every row in it is pending; `grep -c 'str_taom_inc\.' Main/_Module/ModuleData/taom_encounter_strings.xml` prints the count (583 on 2026-11-27).
+- Keys: `taom_inc_<incident>_<all|free|shadow>_<title|desc|optN>` for the popup texts, and `taom_inc_voc_<scope>_<word>` for the vocabulary words the texts insert by people.
+- Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
+- Context: the title, description and option buttons of the vanilla map incident popup, a fixed-size window. Keep a translation close to the English length.
+- Preserve every `{VARIABLE}` exactly. The vocabulary words (`{GODS}`, `{POWER_OATH}`, `{HOLY_PLACE}`, `{HOLY_PERSON}`, `{DARK_FORCE}`, `{LORD_TITLE}`, `{COIN}`) are filled from the `voc_` rows, so translate each `voc_` row to fit the sentences that use it: `{GODS}` follows a preposition, `{HOLY_PLACE}` and `{HOLY_PERSON}` carry their own article, `{COIN}` is a mass noun.

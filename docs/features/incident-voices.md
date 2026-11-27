@@ -78,9 +78,9 @@ Vocabulary by people (Luiz, 2026-11-26: every line must fit whoever hears it). T
 1. `isengard`, when the player's own culture or realm culture is `isengard` (the White Hand);
 2. `<group>_<free|shadow>`, the player's people on the voice they read (`southrons_shadow`, `easterlings_shadow`: the Dark Lord as god-king);
 3. `<group>`, the people alone: `west`, `rohirrim`, `northmen`, `dunlendings`, `southrons`, `easterlings`, `elves`, `dwarves`, `orcs` (from `encounter_groups.json`);
-4. `free` or `shadow`, the side row. It is the fallback for every people with no row of its own, so its words are neutral ("the Powers", "wayside shrine"; "the Dark Lord", "dark altar").
+4. `free` or `shadow`, the side row. It is the fallback for every people with no row of its own, so its words are neutral ("the powers above", "a wayside shrine"; "the Dark Lord", "a blood altar").
 
-Shipped people rows (the four god words each): west and elves (the Valar; elves swear by Elbereth), dwarves (Aulë, the Maker), dunlendings (the old powers, unnamed in lore), orcs (the Dark Lord), isengard (the White Hand), southrons and easterlings on the Shadow voice. Rohirrim, northmen and a Free-voice southron or easterling use the neutral side row. A holy-place value must read after "the local" (no leading "the"). A text that must fit several peoples names no god outright: it uses `{GODS}`, `{POWER_OATH}`, `{HOLY_PLACE}` or `{HOLY_PERSON}`, and wording that fits a singular and a plural god ("as {GODS} would wish").
+Shipped people rows: west (the Valar), elves (the Valar, Elbereth, a hallowed glade, a loremaster), dwarves (Aulë the Maker, Durin's beard, gold), dunlendings (the old powers, standing stones, a hill seer), isengard (the White Hand), and orcs (a bone reader, "the big boss" as the ruler). Every other people and word uses the side row, the Shadow side for southrons and easterlings on the Shadow voice. The rows are in the generated block of `taom_encounter_strings.xml` (`str_taom_inc.voc_*`). How a text uses each word: `{GODS}` only after a preposition ("pray to {GODS}"), because some values are plural and some singular; `{HOLY_PLACE}` and `{HOLY_PERSON}` carry their own article ("near {HOLY_PLACE}"); `{DARK_FORCE}` carries "the"; `{POWER_OATH}` starts a spoken sentence; `{LORD_TITLE}` is the player's ruler with "your"; `{COIN}` is a mass noun with no article. A text that must fit several peoples names no god outright: it uses these words.
 
 ### Drafts to rows
 
@@ -125,7 +125,7 @@ Not co-op safe by design, so it stands down: the postfix changes whether an inci
 
 1. `taom.incident camp_fever` as an Elf: the answer says Elves do not sicken. As a Man: queued, and the popup opens at the next tick (vanilla's own condition must hold where you stand).
 2. `taom.incident market_manipulation` in a town with Trade skill 20: the caravan comes from a town of your own side. Repeat a few times.
-3. `taom.incident gnostic_boys`: closed. `taom.incident desperate_times` as Gondor and as Mordor: two different texts (after the writers' rows land; before that, vanilla's).
+3. `taom.incident gnostic_boys`: closed. `taom.incident desperate_times` as Gondor and as Mordor: two different texts.
 4. Switch realm in one session, then step 3 again: the new side's text shows (the token cache).
 5. Save, resolve an incident, load: the cooldown still holds and the log has no "Null object reference".
 6. A language other than English shows the translated TAOM text once the lead's language pass is in.
@@ -138,6 +138,7 @@ Only a person can confirm what the popup looks like (clipping of long texts, the
 
 ## Changelog
 
+- 2026-11-27: the English rows for the 98 reworded incidents and the vocabulary (583 rows, written in review); the tests that run engine code or read vanilla IL tagged for the stub-assembly CI (v2.0.43).
 - 2026-11-26: vocabulary by people (`VocabScopes`), the incident rows that named a god, a gender or a people's habit reworded (v2.0.43).
 - 2026-11-26: the seam, the catalog of 101 incidents, the voice and gate rules, the place fixes, `taom.incident`, the drafts converter (v2.0.43).
 
