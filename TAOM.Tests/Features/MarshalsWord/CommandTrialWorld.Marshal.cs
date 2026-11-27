@@ -293,11 +293,12 @@ internal sealed partial class CommandTrialWorld
         _widthsHeld = false;
     }
 
-    public bool MarshalQueueArmed => _queueHeld && QueueKeyArms && (PanelOpen || PanelShutsWhenTheKeyIsHeld);
+    // The view arms the held keys with the order panel open or the Seat's command mouse live (MarshalView.OnScreenTick).
+    public bool MarshalQueueArmed => _queueHeld && QueueKeyArms && (PanelOpen || PanelShutsWhenTheKeyIsHeld || CommandLive);
 
-    public bool MarshalMarkArmed => _markHeld && MarkKeyArms && (PanelOpen || PanelShutsWhenTheKeyIsHeld);
+    public bool MarshalMarkArmed => _markHeld && MarkKeyArms && (PanelOpen || PanelShutsWhenTheKeyIsHeld || CommandLive);
 
-    public bool MarshalWidthsArmed => _widthsHeld && WidthsKeyArms && PanelOpen;
+    public bool MarshalWidthsArmed => _widthsHeld && WidthsKeyArms && (PanelOpen || CommandLive);
 
     public bool MarshalPlanPoint(int slot, int company, float forward, float right)
     {

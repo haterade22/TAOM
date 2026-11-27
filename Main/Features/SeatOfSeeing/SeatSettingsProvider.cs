@@ -31,6 +31,9 @@ internal sealed class SeatSettingsProvider : ISeatSettingsProvider
     /// <summary>On: it acts only with the cursor shown, so a player who never opens the panel in the Seat sees no change.</summary>
     internal const bool DefaultEdgeScroll = true;
 
+    /// <summary>On: it acts only in the Seat, and the setting off gives back the vanilla mouse exactly.</summary>
+    internal const bool DefaultCommandMouse = true;
+
     internal const float DefaultPanSpeed = 1f;
     internal const float MinPanSpeed = 0.25f;
     internal const float MaxPanSpeed = 4f;
@@ -58,6 +61,8 @@ internal sealed class SeatSettingsProvider : ISeatSettingsProvider
     public bool RiseWithPanel => Settings?.SeatRiseWithPanel ?? DefaultRiseWithPanel;
 
     public bool EdgeScroll => Settings?.SeatEdgeScroll ?? DefaultEdgeScroll;
+
+    public bool CommandMouse => Settings?.SeatCommandMouse ?? DefaultCommandMouse;
 
     // A saved value that is not a real number, or lies outside the slider's range, reads as the default and never reaches the camera.
     public float PanSpeed => Settings is { } settings && FiniteFloatValidator.IsFiniteInRange(settings.SeatPanSpeed, MinPanSpeed, MaxPanSpeed)

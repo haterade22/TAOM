@@ -46,6 +46,7 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
     private GauntletLayer? _orderLayer;
     private ScreenLayer? _shield;
     private bool _cursorOn;
+    private bool _commandLive;
     private SeatPanelHit _lastHit;
     private bool _siteReported;
 
@@ -71,6 +72,9 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
         }
     }
 
+    /// <summary>The command mouse is live: the shield covers the whole screen, not only the panel's buttons.</summary>
+    internal void SetCommandLive(bool live) => _commandLive = live;
+
     // The middle button looks with the cursor hidden. The shield takes every mouse button, so the scene layer's own read of the middle
     // button is false under it: the raw input is the one read both sides agree on.
     internal static bool LookHeld() => Input.IsKeyDown(InputKey.MiddleMouseButton);
@@ -82,12 +86,23 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
     internal bool ShieldHolds()
     {
         _lastHit = default;
-        if (!MayHold(out var root, out var pointer))
-            return false;
+        var holdsPanel = false;
+        if (MayHold(out var root, out var pointer))
+        {
+            var hit = SeatPanelTarget.Topmost(this, root, pointer.X, pointer.Y);
+            _lastHit = hit;
+            holdsPanel = SeatPanelYieldRule.Holds(_cursorOn, true, false, hit.Kind != SeatPanelKind.None, hit.Kind != SeatPanelKind.None && AnotherLayerClaims());
+        }
 
-        var hit = SeatPanelTarget.Topmost(this, root, pointer.X, pointer.Y);
-        _lastHit = hit;
-        return SeatPanelYieldRule.Holds(_cursorOn, true, false, hit.Kind != SeatPanelKind.None, hit.Kind != SeatPanelKind.None && AnotherLayerClaims());
+        // The command mouse takes every button wherever the pointer is, so neither the placer nor the panel's own tick sees one. The order layer
+        // is looked up first, so the yield test never counts it as another overlay.
+        return holdsPanel || (_commandLive && CommandHolds());
+    }
+
+    private bool CommandHolds()
+    {
+        OrderLayer();
+        return SeatCommandRule.ShieldHolds(_cursorOn, _commandLive, LookHeld(), AnotherLayerClaims());
     }
 
     /// <summary>The cursor layer's hit test at a given point, which the engine asks for other layers' gamepad cursors.</summary>

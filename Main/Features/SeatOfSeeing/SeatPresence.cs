@@ -11,6 +11,7 @@ internal static class SeatPresence
     private static volatile bool _focusSet;
     private static volatile bool _heroFightsOn;
     private static volatile bool _holdsBoundary;
+    private static volatile bool _commandMouse;
 
     internal static bool IsSeated => _seated;
 
@@ -31,6 +32,14 @@ internal static class SeatPresence
     /// <summary>The Seat shows a cursor for the order panel: the formation focus patch aims at it.</summary>
     internal static bool CursorShown => _cursorShown;
 
+    /// <summary>
+    /// The command mouse is live (<see cref="Domain.SeatCommandRule.IsLive"/>): Marshal's Word arms its held keys and outlines as it does for an open
+    /// order panel. Leaving the Seat clears it with the cursor.
+    /// </summary>
+    internal static bool CommandMouse => _commandMouse;
+
+    internal static void SetCommandMouse(bool live) => _commandMouse = live;
+
     /// <summary>Sets the seated flag and the boundary hold, which only the entry's fight-on permission raises; leaving also clears the cursor and the focus mark.</summary>
     internal static void Set(bool seated, bool holdsBoundary = false)
     {
@@ -40,6 +49,7 @@ internal static class SeatPresence
         {
             _cursorShown = false;
             _focusSet = false;
+            _commandMouse = false;
         }
     }
 

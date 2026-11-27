@@ -212,7 +212,7 @@ internal sealed partial class CommandTrialWorld
     // The cursor follows the panel the player asked to close, so a panel that stays open on a close request (PanelStaysOpenOnClose) hides the
     // cursor on its own, and the two facts of the close step can each be broken alone.
     public bool MouseVisible => State == SeatState.Seated
-        && ((CursorAlreadyShown && !_everOpened) || (CursorWorks && ((_panelIsOpen && !_closeRequested) || (CursorStaysOnClose && _everOpened))));
+        && (CommandLive || (CursorAlreadyShown && !_everOpened) || (CursorWorks && ((_panelIsOpen && !_closeRequested) || (CursorStaysOnClose && _everOpened))));
 
     public bool UiHidden => _uiHiddenSet ? _uiHidden : UiStartsHidden;
 

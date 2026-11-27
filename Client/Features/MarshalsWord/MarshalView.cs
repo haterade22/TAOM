@@ -12,6 +12,7 @@ using TAOM.Client.Features.SeatOfSeeing;
 using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.MarshalsWord;
+using TAOM.Features.SeatOfSeeing;
 using TAOM.Features.SeatOfSeeing.Domain;
 
 namespace TAOM.Client.Features.MarshalsWord;
@@ -23,7 +24,7 @@ namespace TAOM.Client.Features.MarshalsWord;
 /// again: a null session field is final, because the mission still calls <c>OnMissionTick</c> after <c>OnMissionScreenFinalize</c>
 /// (MissionScreen.cs:2918-2922 only unregisters from the screen; Mission.cs:3751-3754 walks the behaviours), and <c>RemoveMissionBehavior</c>
 /// leaves the view in the screen's list (Mission.cs:4708-4725). The keys are read in <c>OnMissionScreenTick</c> (once per real frame, never in
-/// <c>OnMissionTick</c>, which fast time repeats), only while the session is live: the three held keys only with the order panel open, and the three
+/// <c>OnMissionTick</c>, which fast time repeats), only while the session is live: the three held keys only with the order panel open (or the Seat's command mouse live), and the three
 /// pressed keys and the show-indicators key on every live frame.
 /// </summary>
 [DefaultView]
@@ -73,7 +74,9 @@ public sealed class MarshalView : MissionView
         if (session == null || !session.IsLive || _keys == null)
             return;
 
-        var open = Mission.IsOrderMenuOpen;
+        // The held keys and the outlines are armed by the order panel, or by the Seat's command mouse (Shift with a right click queues, Control with a
+        // right click on an enemy marks, Alt keeps the widths): the mouse commands with the panel shut.
+        var open = Mission.IsOrderMenuOpen || SeatPresence.CommandMouse;
         var fire = _trialFire || Pressed(_keys.FireMode);
         var word = _trialWord || Pressed(_keys.Word);
         var hold = _trialHold || Pressed(_keys.HoldLine);

@@ -4,7 +4,7 @@
 
 Marshal's Word gives the player richer orders for companies (formations) in a battle. This file covers the stages built so far, of
 the six in [marshals-word/build-spec.md](marshals-word/build-spec.md). **M1, Orders in turn:** hold the queue key (Give the order in turn,
-default Left Shift) while giving an order with the order panel open, and the company carries it out after its current orders. Flags on the
+default Left Shift) while giving an order with the order panel open (or with the Seat's command mouse live, where a Shift right click queues), and the company carries it out after its current orders. Flags on the
 ground show the road ahead. **M2, Keep the array:** several selected companies given one click or drag move as one body, keep their places
 relative to each other, and walk at paces that bring them in together. **M3, Loose on my word:** key 543 (Change the
 Archers' Fire, default Comma) cycles the selected companies through firing at will, holding a drawn bow until the word, and Massed fire, and key 544 (Give the Word,
@@ -49,7 +49,7 @@ session field is final, because the mission still calls `OnMissionTick` after `O
 unregisters from the screen; Mission.cs:3751-3754 walks the behaviours), and `RemoveMissionBehavior` leaves the view in the screen's list
 (Mission.cs:4708-4725). Both teardown paths (`OnMissionScreenFinalize` and
 `OnRemoveBehavior`) call one safe-to-repeat `Finish()` and drop the session. In the screen tick, and only while the session is live, the view
-reads the three held keys only with the order panel open, and the three pressed keys and the show-indicators key on every live frame; it forwards
+reads the three held keys only with the order panel open or the Seat's command mouse live (`Mission.IsOrderMenuOpen || SeatPresence.CommandMouse`), and the three pressed keys and the show-indicators key on every live frame; it forwards
 the mission tick, the shot callback and the mode change.
 
 - **Going live** (`MarshalSession`): at the first mission tick, and after each mode change until the answer is yes, it asks
@@ -239,7 +239,7 @@ excluded from the co-op fingerprint in `CoopSettingsRelevance`.
 Keys (Options > Keybindings > Action, category `TaomMarshalHotKeyCategory`, ids from 540): **540 Give the order in turn**, default Left Shift,
 held. **541 Mark, do not move**, default Left Ctrl, held. **542 Keep the widths**, default Left Alt, held: a drag turns the group without
 stretching it. **543 Change the archers' fire**, default Comma, pressed (free, on-word, Massed). **544 Give the word**, default M, pressed. **545 Hold the line**, default Period, pressed. The three held keys are
-read only while the order panel is open; the three pressed keys act on the selected companies whenever the player commands the team
+read only while the order panel is open, or while the Seat's command mouse is live (the mouse gives orders with the panel shut: Shift with a right click queues, Control with a right click on an enemy marks, Alt keeps the widths; Seat contract Deviations row 140, this contract's row 59); the three pressed keys act on the selected companies whenever the player commands the team
 (`IsPlayerGeneral || IsPlayerSergeant`, the question the panel asks before it opens), and their defaults are in none of the eight
 categories the mission's scene layer reads; they are vanilla's keys too, so they still act with the panel closed (zoom, banners), and Left Alt has one more
 vanilla reader, `GauntletInformationView.cs:61`, which extends the on-screen message timer. A held key is the contract's accepted exception to the rule that a default key stays clear of every key the scene layer reads:
@@ -333,7 +333,7 @@ Throwers on an advance: `MarshalThrowerRulesTests`, `ThrowerRunTests` and `Throw
    a second. The `mark-effect` check judges a ranged company on Stop: at least half of the soldiers with a target aim at the marked company. A mark on
    a melee company keeps its order and is harmless, and it writes its `mark` line, but its soldiers in hand to hand choose their own foe, so the
    check does not judge it. With Left Shift also held the mark waits its turn in the queue.
-8. Outlines: with the panel open the soldiers of the selected companies wear a gold outline and a marked enemy company a red one; closing the
+8. Outlines: with the panel open, or the Seat's command mouse live, the soldiers of the selected companies wear a gold outline and a marked enemy company a red one; closing the
    panel, or turning Outlines off, clears them at once. Holding the show-indicators key (Left Alt) shows them with the panel closed.
 9. The field trial's Marshal steps run as subsets, each in its own battle, and a builder never launches them. A battle runs out: the enemy
    reaches the line about 75 to 90 seconds in, and a step that follows a long walk finds its archers gone (the second run put every step in one

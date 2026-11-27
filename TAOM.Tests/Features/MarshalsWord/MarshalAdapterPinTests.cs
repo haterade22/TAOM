@@ -14,7 +14,8 @@ public class MarshalAdapterPinTests
     private const string OrderAdapter = "Main/Adapters/MarshalOrderAdapter.cs";
     private const string ArrayLayout = "Main/Features/MarshalsWord/Hooks/MarshalArrayLayout.cs";
     private const string Module = "Main/Features/MarshalsWord/MarshalsWordModule.cs";
-    private const string ScreenAdapter = "Client/Adapters/MarshalScreenAdapter.cs";
+    // The flag pool moved out of the Marshal's adapter so the Seat's command mouse shares it (docs/features/seat-of-seeing.md, command mouse).
+    private const string ScreenAdapter = "Client/Adapters/OrderFlagPool.cs";
     private const string Payload = "Main/Adapters/MarshalOrderPayload.cs";
 
     // Comments stripped and every run of white space made one space, so a pin survives a reformat but not a changed statement.

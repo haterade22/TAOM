@@ -3,6 +3,7 @@
 [2026-11-03 14:05:10] [INFO] [Check] id=taom.seat-of-seeing.enter result=pass mission=1 blend=1
 [2026-11-03 14:05:20] [INFO] [Check] id=taom.seat-of-seeing.cursor result=pass mission=1 cursor=shown
 [2026-11-03 14:05:20] [INFO] [Check] id=taom.seat-of-seeing.panel-click result=pass mission=1 click=relayed
+[2026-11-03 14:05:30] [INFO] [Check] id=taom.seat-of-seeing.command result=pass mission=1 command=select
 [2026-11-03 14:05:20] [INFO] [Check] id=taom.seat-of-seeing.focus result=pass mission=1 focus=cursor
 [2026-11-03 14:05:22] [INFO] [Check] id=taom.seat-of-seeing.panel-reopened result=pass mission=1 panel=reopened
 [2026-11-03 14:05:30] [INFO] [Check] id=taom.seat-of-seeing.hide result=pass mission=1 interface=hidden

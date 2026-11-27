@@ -533,7 +533,7 @@ class SourceTieTests(unittest.TestCase):
 
     def test_every_thread_guard_site_of_the_seat_is_one_the_judge_reads(self):
         """A site that the regex does not name would write its line and fail no run. The sites are read out of the code, and a known one proves the scan."""
-        files = [REPO / "Client" / "Adapters" / "SeatScreenAdapter.cs", REPO / "Main" / "Adapters" / "SeatHeroAdapter.cs", *sorted(TRIAL_SOURCE.glob("CommandTrialHost*.cs"))]
+        files = [REPO / "Client" / "Adapters" / "SeatScreenAdapter.cs", REPO / "Client" / "Adapters" / "SeatCommandAdapter.cs", REPO / "Main" / "Adapters" / "SeatHeroAdapter.cs", *sorted(TRIAL_SOURCE.glob("CommandTrialHost*.cs"))]
         sites = set()
         for path in files:
             source = path.read_text(encoding="utf-8")
@@ -544,6 +544,9 @@ class SourceTieTests(unittest.TestCase):
         for added in ("SeatScreenAdapter.ApplyFastTime", "SeatScreenAdapter.StopFastTime", "SeatScreenAdapter.AddSlowRequest",
                       "SeatScreenAdapter.RemoveSlowRequest", "SeatScreenAdapter.SetPanelLift"):
             self.assertIn(added, sites, "stages S6 and S7 guard each native write they make")
+        for added in ("SeatCommandAdapter.Select", "SeatCommandAdapter.Charge", "SeatCommandAdapter.UseOrderable", "SeatCommandAdapter.MoveToProbed",
+                      "SeatCommandAdapter.LineCommit", "CommandTrialHost.MouseSelectFirstCompany"):
+            self.assertIn(added, sites, "the command mouse guards each order and selection it writes")
         for site in sorted(sites):
             with self.subTest(site=site):
                 line = f"[2026-11-04 10:00:05] [ERROR] [TAOM] {site} ran off the main mission thread (thread 7, main 1). An engine callback here is parked"

@@ -31,4 +31,7 @@ internal sealed class CommandTrialSettings : ISeatSettingsProvider
     public bool EdgeScroll { get; set; }
 
     public float PanSpeed => 1f;
+
+    // Off in a run: the cursor would show all the time and the shield would take every button. The mouse steps turn it on for themselves and off again.
+    public bool CommandMouse { get; set; }
 }

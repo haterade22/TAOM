@@ -268,6 +268,34 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
 
     public SeatRelayResult RelayPanelClicks() => Relay().Tick();
 
+    public void SetCommandMouse(bool live) => Relay().SetCommandLive(live);
+
+    /// <summary>The field trial's mouse: frames the next screen ticks read in place of the mouse, one a tick; empty in every player session.</summary>
+    internal Queue<SeatPointerFrame> TrialPointer { get; } = new();
+
+    // Edges come from the shield layer's input (the scene layer reads a mouse button only on a frame it holds the mouse), the level and the
+    // pointer from the raw input. A press over a panel button is the relay's, so the command mouse never sees it. Control and Shift are read
+    // raw, as the panel's own Control test is (MissionOrderTroopControllerVM.cs:617).
+    public SeatPointerFrame ReadPointer()
+    {
+        if (TrialPointer.Count > 0)
+            return TrialPointer.Dequeue();
+
+        var shield = _cursorLayer?.Input;
+        if (shield == null)
+            return default;
+
+        var overPanel = _relay is { PointerOverTarget: true };
+        var pixel = Input.MousePositionPixel;
+        var ranged = Input.MousePositionRanged;
+        return new SeatPointerFrame(
+            !overPanel && shield.IsKeyPressed(InputKey.LeftMouseButton), shield.IsKeyReleased(InputKey.LeftMouseButton),
+            !overPanel && shield.IsKeyPressed(InputKey.RightMouseButton), shield.IsKeyReleased(InputKey.RightMouseButton),
+            Input.IsKeyDown(InputKey.RightMouseButton), pixel.x, pixel.y, ranged.x, ranged.y,
+            Input.IsKeyDown(InputKey.LeftShift) || Input.IsKeyDown(InputKey.RightShift),
+            Input.IsKeyDown(InputKey.LeftControl) || Input.IsKeyDown(InputKey.RightControl), Time.ApplicationTime);
+    }
+
     private SeatPanelRelay Relay() => _relay ??= new SeatPanelRelay(_screen, _mission, OrderPanel, OrderParameters);
 
     private VisualOrderExecutionParameters? OrderParameters()

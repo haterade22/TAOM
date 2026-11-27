@@ -66,6 +66,16 @@ internal interface ISeatScreenAdapter
     (float Right, float Forward) ReadEdgeScroll();
 
     /// <summary>
+    /// The mouse's buttons, pointer and the Shift and Control keys as this screen tick sees them, read from the click shield's own input (the
+    /// scene layer has no mouse buttons while the shield holds them). An edge on an order panel button is left out: the panel's relay owns it.
+    /// Called only while the command mouse is live.
+    /// </summary>
+    SeatPointerFrame ReadPointer();
+
+    /// <summary>Tells the click shield that the command mouse is live (<c>true</c>: it covers the whole screen) or not.</summary>
+    void SetCommandMouse(bool live);
+
+    /// <summary>
     /// Hands this frame's clicks on the order panel to the panel's own view model methods (Marshal's Word stage M7, build-spec 6.1), once a
     /// screen tick while the panel is open and the cursor is shown. Acted when a click reached a view model method, SiteMissing when the
     /// view model of a widget cannot be read (the relay is off for the mission), else Idle.

@@ -30,6 +30,7 @@ public class SeatSettingsProviderTests
         Assert.IsFalse(sut.RiseWithPanel, "section 1 promises vanilla behaviour to a player who never asks for the lift");
         Assert.IsTrue(sut.EdgeScroll, "it acts only with the cursor shown");
         Assert.AreEqual(1f, sut.PanSpeed);
+        Assert.IsTrue(sut.CommandMouse, "it acts only in the Seat, and off gives the vanilla mouse back");
     }
 
     [TestMethod]
@@ -46,6 +47,7 @@ public class SeatSettingsProviderTests
         Assert.AreEqual(SeatSettingsProvider.DefaultRiseWithPanel, settings.SeatRiseWithPanel);
         Assert.AreEqual(SeatSettingsProvider.DefaultEdgeScroll, settings.SeatEdgeScroll);
         Assert.AreEqual(SeatSettingsProvider.DefaultPanSpeed, settings.SeatPanSpeed);
+        Assert.AreEqual(SeatSettingsProvider.DefaultCommandMouse, settings.SeatCommandMouse);
         Assert.IsTrue(SeatSettingsProvider.DefaultEdgeScroll);
         Assert.AreEqual(1f, SeatSettingsProvider.DefaultPanSpeed, "1 is the speed the Seat always flew at");
         Assert.IsFalse(SeatSettingsProvider.DefaultRiseWithPanel, "a new setting whose default is off, so a player who never asks sees vanilla behaviour");
@@ -61,7 +63,7 @@ public class SeatSettingsProviderTests
     public void SavedValues_AreRead()
     {
         var settings = new TaomSettings { SeatEnabled = false, BeginBattlesInSeat = true, SeatCursorWithPanel = false, SeatKeepPanelOpen = true,
-            SeatHeroFightsOn = true, SeatTakeSoldierAfterFall = false, SeatRiseWithPanel = true, SeatEdgeScroll = false, SeatPanSpeed = 2.5f };
+            SeatHeroFightsOn = true, SeatTakeSoldierAfterFall = false, SeatRiseWithPanel = true, SeatEdgeScroll = false, SeatPanSpeed = 2.5f, SeatCommandMouse = false };
 
         var sut = new SeatSettingsProvider(settings);
 
@@ -74,6 +76,7 @@ public class SeatSettingsProviderTests
         Assert.IsTrue(sut.RiseWithPanel);
         Assert.IsFalse(sut.EdgeScroll);
         Assert.AreEqual(2.5f, sut.PanSpeed);
+        Assert.IsFalse(sut.CommandMouse);
     }
 
     [DataTestMethod]
@@ -144,6 +147,7 @@ public class SeatSettingsProviderTests
     [DataRow(nameof(TaomSettings.SeatTakeSoldierAfterFall))]
     [DataRow(nameof(TaomSettings.SeatRiseWithPanel))]
     [DataRow(nameof(TaomSettings.SeatEdgeScroll))]
+    [DataRow(nameof(TaomSettings.SeatCommandMouse))]
     public void EachSetting_SitsInTheSeatGroup_NeedsNoRestart_AndStatesItsDefault(string name)
     {
         var property = typeof(TaomSettings).GetProperty(name)!;
