@@ -274,9 +274,7 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
     /// <summary>The field trial's mouse: frames the next screen ticks read in place of the mouse, one a tick; empty in every player session.</summary>
     internal Queue<SeatPointerFrame> TrialPointer { get; } = new();
 
-    // Edges come from the shield layer's input (the scene layer reads a mouse button only on a frame it holds the mouse), the level and the
-    // pointer from the raw input. A press over a panel button is the relay's, so the command mouse never sees it, and a release belongs to
-    // whoever saw its press (SeatPointerEdges), so it never sees the release of the relay's press either. Control and Shift are read
+    // The scene layer reads a mouse button only on a frame it holds the mouse, so edges come from the shield layer's input. Control and Shift are read
     // raw, as the panel's own Control test is (MissionOrderTroopControllerVM.cs:617).
     public SeatPointerFrame ReadPointer()
     {
@@ -286,7 +284,6 @@ internal sealed class SeatScreenAdapter : ISeatScreenAdapter
         var shield = _cursorLayer?.Input;
         if (shield == null || _relay is { } relay && relay.TransferActive())
         {
-            // The troop transfer popup has the mouse: the command mouse captures nothing (its layer's own mask, not ours, takes the buttons).
             _edges.Reset();
             return default;
         }

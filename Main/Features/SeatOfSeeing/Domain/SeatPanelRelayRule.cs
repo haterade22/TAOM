@@ -32,8 +32,7 @@ internal enum SeatRelayResult
 /// <summary>
 /// A button click is a press and a release on the same target (the view model, never the widget: a button's icon and label are widgets of
 /// the same view model). The rule remembers the press; the release acts only when the pointer is still over that view model. A right
-/// release over the panel is vanilla's Escape (<c>GauntletOrderUIHandler.cs:372-375</c>), but only when the rule saw that press go down over
-/// the panel too: a release belongs to whoever saw its press, so a right press on the field that is let go over a button is the command mouse's alone.
+/// release over the panel is vanilla's Escape (<c>GauntletOrderUIHandler.cs:372-375</c>).
 /// </summary>
 internal sealed class SeatPanelRelayRule
 {

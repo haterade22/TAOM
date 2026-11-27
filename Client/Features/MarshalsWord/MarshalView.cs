@@ -74,8 +74,6 @@ public sealed class MarshalView : MissionView
         if (session == null || !session.IsLive || _keys == null)
             return;
 
-        // The held keys and the outlines are armed by the order panel, or by the Seat's command mouse (Shift with a right click queues, Control with a
-        // right click on an enemy marks, Alt keeps the widths): the mouse commands with the panel shut.
         var open = Mission.IsOrderMenuOpen || SeatPresence.CommandMouse;
         var fire = _trialFire || Pressed(_keys.FireMode);
         var word = _trialWord || Pressed(_keys.Word);

@@ -5,13 +5,7 @@ using TAOM.Features.SeatOfSeeing.Domain;
 
 namespace TAOM.Client.Features.SeatOfSeeing;
 
-/// <summary>
-/// The Seat's command mouse (Seat build-spec 6.4): a left click selects, a right click orders, a right drag draws a line. The screen tick only
-/// captures the pointer into <see cref="SeatPointerBuffer"/>; <see cref="OnMissionTick"/> takes it once and does every projection, ray, selection
-/// write and order, so fast time (which repeats the mission tick) acts once and a pause (a tick with a <c>dt</c> of 0) still acts. The decisions
-/// are <see cref="SeatCommandRule"/>, <see cref="SeatClickRule"/>, <see cref="SeatSelectRule"/> and <see cref="SeatOrderRule"/>; the engine
-/// is <see cref="ISeatCommandAdapter"/>. A button pressed over an order panel button never reaches it (the screen adapter takes that edge out).
-/// </summary>
+/// <summary>The Seat's command mouse (Seat build-spec 6.4): a left click selects, a right click orders, a right drag draws a line.</summary>
 internal sealed class SeatCommandControl
 {
     private readonly ISeatCommandAdapter _adapter;
@@ -31,10 +25,7 @@ internal sealed class SeatCommandControl
         _key = missionKey;
     }
 
-    /// <summary>
-    /// Called by the screen tick with what it read of the mouse. A frame with no button edge, no right button down and no line in the making
-    /// has nothing to act on, so it is not kept and the mission tick does no work.
-    /// </summary>
+    /// <summary>Called by the screen tick with what it read of the mouse; a frame with nothing to act on is not kept.</summary>
     internal void Capture(in SeatPointerFrame frame)
     {
         if (frame.HasEdge || frame.RightDown || _rightDown)
@@ -87,7 +78,6 @@ internal sealed class SeatCommandControl
         Right(frame);
     }
 
-    // A refusal drops the edges of this frame and any line in the making: nothing is selected or ordered, and one skip line says why.
     private void Refuse(in SeatPointerFrame frame, SeatCommandRefusal refusal)
     {
         var edge = frame.HasEdge;
@@ -107,7 +97,6 @@ internal sealed class SeatCommandControl
         _outcomes.Skip(SeatChecks.CommandId, _key + ":" + reason, "mission=" + _key + " reason=" + reason);
     }
 
-    // Left button let go: a click selects. A drag is the box select of a later stage and does nothing here.
     private void Click(in SeatPointerFrame frame)
     {
         var held = frame.Seconds - frame.LeftPressSeconds;
@@ -150,7 +139,6 @@ internal sealed class SeatCommandControl
 
         if (!frame.RightDown)
         {
-            // The button went up with no release edge (another layer took it): nothing was commanded.
             _rightDown = false;
             _lineStarted = false;
             _adapter.LineCancel();

@@ -160,7 +160,6 @@ internal sealed class FakeSeatScreen : ISeatScreenAdapter
         return Edge;
     }
 
-    // The command mouse: the pointer a test sets for the next screen ticks, how often it was read, and each write of the shield's live switch.
     internal SeatPointerFrame Pointer;
     internal int PointerReads;
     internal readonly List<bool> CommandWrites = new();

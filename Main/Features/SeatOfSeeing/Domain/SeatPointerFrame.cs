@@ -1,9 +1,8 @@
 namespace TAOM.Features.SeatOfSeeing.Domain;
 
 /// <summary>
-/// What the screen tick captures of the mouse: the button edges and levels, the pointer as a pixel and as a fraction of the window, and
-/// the two modifier keys. It holds no engine type, so the tick that captures it never projects, casts a ray or writes an order; the first mission
-/// tick of the frame does (as the Seat's keep and take do). The press fields name where and when each button last went down.
+/// What the screen tick captures of the mouse: the button edges and levels, the pointer as a pixel and as a fraction of the window, and the two
+/// modifier keys, with no engine type.
 /// </summary>
 internal readonly record struct SeatPointerFrame(
     bool LeftPressed, bool LeftReleased, bool RightPressed, bool RightReleased, bool RightDown,
@@ -16,9 +15,8 @@ internal readonly record struct SeatPointerFrame(
 }
 
 /// <summary>
-/// Frames captured by the screen tick, taken once by the next mission tick. Fast time repeats the mission tick several times a frame, and a pause
-/// still ticks it with a <c>dt</c> of 0, so the buffer answers a frame once per capture and never twice. Edges of several captures before one take
-/// are joined, so a press and its release are never lost; the levels and the pointer are the latest.
+/// Frames captured by the screen tick, taken once by the next mission tick, so fast time (which repeats the mission tick) and a pause (a <c>dt</c> of
+/// 0) answer a frame once per capture; edges of several captures before one take are joined.
 /// </summary>
 internal sealed class SeatPointerBuffer
 {
@@ -85,19 +83,14 @@ internal sealed class SeatPointerBuffer
     }
 }
 
-/// <summary>
-/// A button release belongs to whoever saw its press. The command mouse takes a press only off the order panel's buttons (the relay owns
-/// those), so a release whose press it did not take is dropped: a right press on the field let go over a button is not also the panel's Escape
-/// and a left press on the field let go over a card is not a stray selection. A press and its release in one frame both pass.
-/// </summary>
+/// <summary>A button release belongs to whoever saw its press: a release whose press the command mouse did not take is dropped.</summary>
 internal sealed class SeatPointerEdges
 {
     private bool _leftOwned;
     private bool _rightOwned;
 
     /// <summary>
-    /// The edges the command mouse may see this frame, from the raw edges, whether the pointer is over a panel button, and the raw levels (a
-    /// button that is up with no release edge forgets its press).
+    /// The edges the command mouse may see this frame, from the raw edges, whether the pointer is over a panel button, and the raw levels.
     /// </summary>
     internal (bool LeftPressed, bool LeftReleased, bool RightPressed, bool RightReleased) Take(
         bool leftPressed, bool leftReleased, bool rightPressed, bool rightReleased, bool overPanel, bool leftDown, bool rightDown)

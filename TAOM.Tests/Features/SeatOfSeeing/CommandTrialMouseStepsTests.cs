@@ -37,8 +37,6 @@ public class CommandTrialMouseStepsTests
 
     private void AssertFails(string step) => StringAssert.Contains(Line(step), "result=FAIL", Line(step));
 
-    // ---- the rows ----
-
     [TestMethod]
     public void TheRows_FollowTheCameraSteps_BeforeTheKillSteps_AndEachNeedsTheEnterStep()
     {
@@ -51,8 +49,6 @@ public class CommandTrialMouseStepsTests
             StringAssert.Contains(error, "enter");
         }
     }
-
-    // ---- select_click ----
 
     [TestMethod]
     public void SelectClick_SelectsTheClickedSoldiersCompanyAlone_AndGivesTheCommandMouseBack()
@@ -120,8 +116,6 @@ public class CommandTrialMouseStepsTests
         AssertFails("move_right_click");
     }
 
-    // ---- select_shift ----
-
     [TestMethod]
     public void SelectShift_AddsASecondCompany_AndATwiceShiftedOneComesOffAgain()
     {
@@ -153,8 +147,6 @@ public class CommandTrialMouseStepsTests
         AssertFails("select_shift");
         StringAssert.Contains(Line("select_shift"), "reason=no-second-company");
     }
-
-    // ---- move_right_click ----
 
     [TestMethod]
     public void MoveRightClick_SendsTheSelectedCompanyToTheClickedPoint()
@@ -197,8 +189,6 @@ public class CommandTrialMouseStepsTests
         StringAssert.Contains(Line("move_right_click"), "reason=no-ground");
     }
 
-    // ---- drag_facing ----
-
     [TestMethod]
     public void DragFacing_TurnsTheCompanyToTheLinesNormal()
     {
@@ -228,8 +218,6 @@ public class CommandTrialMouseStepsTests
         AssertFails("drag_facing");
         StringAssert.Contains(Line("drag_facing"), "error_deg=90");
     }
-
-    // ---- charge_enemy ----
 
     [TestMethod]
     public void ChargeEnemy_GivesTheChargeAgainstTheClickedEnemyCompany()
@@ -262,8 +250,6 @@ public class CommandTrialMouseStepsTests
         StringAssert.Contains(Line("charge_enemy"), "reason=no-enemy");
     }
 
-    // ---- queue_with_mouse ----
-
     [TestMethod]
     public void QueueWithMouse_TakesTheSecondShiftedClickIntoTheQueue_WithThePanelShut()
     {
@@ -295,8 +281,6 @@ public class CommandTrialMouseStepsTests
         AssertFails("queue_with_mouse");
         StringAssert.Contains(Line("queue_with_mouse"), "captured=0");
     }
-
-    // ---- the verdict rules ----
 
     [TestMethod]
     public void NormalError_IsZeroAlongTheNormal_AndNinetyAlongTheLine()

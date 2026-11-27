@@ -11,10 +11,8 @@ using TAOM.Features.SeatOfSeeing.Domain;
 namespace TAOM.Client.Features.SeatOfSeeing.Trial;
 
 /// <summary>
-/// The command mouse steps' window onto the engine. A click is a <see cref="SeatPointerFrame"/> queued in the Seat's own adapter, which reads it
-/// in place of the mouse, so the whole path from the screen tick to the order runs; no operating system input is sent. The pixel of a point is the
-/// engine's own projection (<c>MBWindowManager.WorldToScreen</c>), and its fraction of the window is the pixel over the resolution; the step's line
-/// prints both, which is the evidence if they ever disagree at another UI scale.
+/// The command mouse steps' window onto the engine: a click is a <see cref="SeatPointerFrame"/> queued in the Seat's own adapter, so the whole path
+/// from the screen tick to the order runs; the pixel of a point is the engine's own projection (<c>MBWindowManager.WorldToScreen</c>).
 /// </summary>
 internal sealed partial class CommandTrialHost
 {
@@ -139,7 +137,6 @@ internal sealed partial class CommandTrialHost
         if (centre == null || heading == null)
             return default;
 
-        // The view's right is the heading turned a quarter clockwise (the edge_pan step's own convention).
         var x = centre.Value.X + heading.Value.Y * rightMetres;
         var y = centre.Value.Y - heading.Value.X * rightMetres;
         var z = _adapter.GroundHeight(x, y, centre.Value.Z + 50f);

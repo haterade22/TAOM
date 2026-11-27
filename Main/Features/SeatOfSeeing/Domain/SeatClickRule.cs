@@ -33,10 +33,9 @@ internal enum SeatSelectAction
 }
 
 /// <summary>
-/// What a left click writes, through the order controller's own selection so the panel and the number keys share it. A plain click on a company
-/// selects only it, a click on nothing clears (an empty selection reads as all to the number keys, <c>MissionOrderVM.cs:711-714</c>); Shift toggles
-/// one company and never clears. With the order panel open a click on nothing keeps the selection: vanilla never leaves the panel with none
-/// (<c>MissionOrderVM</c> selects all again, :997-999, :1017-1019) and the placer asserts on an empty list each tick.
+/// What a left click writes, through the order controller's own selection: a click on nothing clears (an empty selection reads as all to the number
+/// keys, <c>MissionOrderVM.cs:711-714</c>), except with the order panel open, where it keeps the selection because vanilla never leaves the panel
+/// with none (<c>MissionOrderVM</c> selects all again, :997-999, :1017-1019) and the placer asserts on an empty list each tick.
 /// </summary>
 internal static class SeatSelectRule
 {
@@ -60,9 +59,9 @@ internal enum SeatOrderKind
 }
 
 /// <summary>
-/// The order a right click gives, in the order of the design: an enemy company is charged, a thing the side can order (a ladder, a machine, a
-/// gate) is used, else valid ground is moved to. Every order needs a selected company; the vanilla placer returns without one, and the orderable
-/// call reads the first selected company with no test (<c>OrderController.cs:1010</c>).
+/// The order a right click gives: an enemy company is charged, a thing the side can order is used, else valid ground is moved to; every order needs a
+/// selected company, as the vanilla placer returns without one and the orderable call reads the first selected company with no test
+/// (<c>OrderController.cs:1010</c>).
 /// </summary>
 internal static class SeatOrderRule
 {

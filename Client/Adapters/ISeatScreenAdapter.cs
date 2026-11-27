@@ -66,9 +66,8 @@ internal interface ISeatScreenAdapter
     (float Right, float Forward) ReadEdgeScroll();
 
     /// <summary>
-    /// The mouse's buttons, pointer and the Shift and Control keys as this screen tick sees them, read from the click shield's own input (the
-    /// scene layer has no mouse buttons while the shield holds them). An edge on an order panel button is left out: the panel's relay owns it.
-    /// Called only while the command mouse is live.
+    /// The mouse's buttons, pointer and the Shift and Control keys as this screen tick sees them, read from the click shield's own input (the scene
+    /// layer has no mouse buttons while the shield holds them).
     /// </summary>
     SeatPointerFrame ReadPointer();
 

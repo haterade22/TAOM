@@ -102,8 +102,6 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
             holdsPanel = SeatPanelYieldRule.Holds(_cursorOn, true, false, hit.Kind != SeatPanelKind.None, hit.Kind != SeatPanelKind.None && AnotherLayerClaims());
         }
 
-        // The command mouse takes every button wherever the pointer is, so neither the placer nor the panel's own tick sees one. The order layer
-        // is looked up first, so the yield test never counts it as another overlay.
         return holdsPanel || (_commandLive && CommandHolds());
     }
 
@@ -116,8 +114,6 @@ internal sealed class SeatPanelRelay : ISeatPanelTree<Widget>
     // The troop transfer popup: vanilla gives the order layer the whole mouse then (GauntletOrderUIHandler.cs:215-217), so nothing of ours holds.
     internal bool TransferActive() => _panel()?.TroopController.IsTransferActive ?? false;
 
-    // A left or right button the shield held on the last frame is still down: a middle press now must not hand the scene layer a release it
-    // never saw the press of.
     private bool ButtonTaken() => _lastHeld && (Input.IsKeyDown(InputKey.LeftMouseButton) || Input.IsKeyDown(InputKey.RightMouseButton));
 
     /// <summary>The cursor layer's hit test at a given point, which the engine asks for other layers' gamepad cursors.</summary>

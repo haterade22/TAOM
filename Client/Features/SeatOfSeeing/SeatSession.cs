@@ -586,7 +586,6 @@ internal sealed class SeatSession
             PanelWork();
         else if (facts.PhotoMode && _commandLive)
         {
-            // Photo mode has its own mouse: the command mouse and its cursor wait until it ends.
             SetCommandLive(false);
             ShowCursor(false);
         }
@@ -631,8 +630,6 @@ internal sealed class SeatSession
         }
     }
 
-    // The command mouse is wanted while the setting is on, the mission kind lets the player order and no network session runs. The setting is
-    // read each frame (it is a field), the other two once a second, and the permission walk and the session test not at all while it is off.
     private bool CommandWanted()
     {
         if (_command == null || !_settings.CommandMouse)
@@ -660,7 +657,6 @@ internal sealed class SeatSession
         if (live)
             return;
 
-        // A finish may come when the scene is already gone: it forgets the flags and makes no native call, as Marshal's teardown does.
         if (_finishing)
             _command?.Finish();
         else

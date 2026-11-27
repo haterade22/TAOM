@@ -18,12 +18,9 @@ using TAOM.Features.SeatOfSeeing.Hooks;
 namespace TAOM.Client.Adapters;
 
 /// <summary>
-/// <see cref="ISeatCommandAdapter"/> over the live mission (Seat build-spec 6.4). A pick is the screen-space nearest soldier, projected the way
-/// the commander's take projects one (<c>FordsPointerPick</c>), with one terrain ray on the winner. Selection goes through the player's
-/// <c>OrderController</c> (<c>SelectFormation</c>, <c>DeselectFormation</c>, <c>ClearSelectedFormations</c>), the same call the order panel and
-/// the number keys make, so all three share one selection. Orders are the ones the order placer gives (v1.5.7 OrderTroopPlacer.cs:403-424):
+/// <see cref="ISeatCommandAdapter"/> over the live mission, giving the orders the order placer gives (v1.5.7 OrderTroopPlacer.cs:403-424):
 /// <c>SetOrderWithTwoPositions</c> with the line orders, a line previewed by <c>SimulateNewOrderWithPositionAndDirection</c>, a charge by
-/// <c>SetOrderWithFormation</c>. Nothing here runs outside the first mission tick of a frame.
+/// <c>SetOrderWithFormation</c>.
 /// </summary>
 internal sealed class SeatCommandAdapter : ISeatCommandAdapter
 {
@@ -136,7 +133,6 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
             ground = _mission.IsFormationUnitPositionAvailable(ref probe, team);
         }
 
-        // The walk of SeatOrderRay stops at the first entity with a script the side may order, or at nothing.
         if (entity.IsValid)
         {
             var side = team.Side;
@@ -250,7 +246,6 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
         return true;
     }
 
-    // The nearest enemy soldier across every enemy team, so the order of the teams never decides which of two companies under the pointer is charged.
     private Formation? EnemyAt(Team playerTeam, float pixelX, float pixelY)
     {
         var enemies = _mission.Teams.Where(team => team != null && team.IsEnemyOf(playerTeam)).SelectMany(team => team.ActiveAgents);
@@ -258,13 +253,10 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
         if (formation != null && formation.CountOfUnits > 0)
             return formation;
 
-        // The focus handler names a company near the pointer by its own reach (70 px at 1080p, the placer's own), which the Seat's patch points at
-        // the cursor. So a right click within that reach of an enemy company charges it, even where the soldier pick found nobody.
         var focused = FocusedFormation();
         return focused != null && focused.CountOfUnits > 0 && focused.Team != null && focused.Team.IsEnemyOf(playerTeam) ? focused : null;
     }
 
-    // Once, at the first fact read of the mission, so the handler's event has been heard before the first right click needs it.
     private void SubscribeFocus()
     {
         if (_focusSearched)
@@ -283,8 +275,6 @@ internal sealed class SeatCommandAdapter : ISeatCommandAdapter
         return _focused;
     }
 
-    // The soldier whose chest is nearest the pointer, within reach, and not hidden by the ground, over a team's active agents. A mount is never
-    // named: the rider is the soldier, and a riderless mount is not one.
     private Agent? Nearest(IEnumerable<Agent> candidates, float pixelX, float pixelY, string side)
     {
         var camera = _screen.CombatCamera;

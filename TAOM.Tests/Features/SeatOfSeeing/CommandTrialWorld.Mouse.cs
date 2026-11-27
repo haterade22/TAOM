@@ -126,7 +126,6 @@ internal sealed partial class CommandTrialWorld
         MarshalReleaseKeys();
     }
 
-    // Called at the start of the mission tick, before the script: the pointer's clicks of the screen ticks since the last one.
     private void ApplyMouse()
     {
         while (_clicks.Count > 0)

@@ -50,8 +50,6 @@ public class SeatSessionCommandTests
     private static SeatPointerFrame Click(bool shift = false) =>
         new(true, true, false, false, false, 400f, 300f, 0.4f, 0.3f, shift, false, 1f);
 
-    // ---- live and the cursor ----
-
     [TestMethod]
     public void Seated_WithTheSettingOn_GoesLive_ShowsTheCursorAndRaisesTheShield()
     {
@@ -171,8 +169,6 @@ public class SeatSessionCommandTests
         Assert.AreEqual(false, _screen.CommandWrites.Last());
     }
 
-    // ---- clicks ----
-
     [TestMethod]
     public void ACapturedClick_IsActedOnByTheNextMissionTickOnly()
     {
@@ -239,8 +235,6 @@ public class SeatSessionCommandTests
         Assert.AreEqual(1, _screen.PointerReads);
     }
 
-    // ---- after the hero's fall ----
-
     [TestMethod]
     public void AfterTheHeroFell_TheCursorStays_AndAnOrderIsRefusedWithOneSkipLine()
     {
@@ -260,8 +254,6 @@ public class SeatSessionCommandTests
         Assert.AreEqual(1, _log.Lines.Count(l => l.Result == "skip" && l.Id == SeatChecks.CommandId));
         StringAssert.Contains(_log.Lines.Single(l => l.Result == "skip" && l.Id == SeatChecks.CommandId).Detail, "hero-gone");
     }
-
-    // ---- the checks ----
 
     [TestMethod]
     public void TheFirstSelectionAndTheFirstOrder_WriteOnePassLineEach()
