@@ -28,6 +28,7 @@ outside the editor without re-learning the asset layout every time.
 | Mirkwood kit handover | [mirkwood-kit-handover.md](mirkwood-kit-handover.md) | The brief for a session that improves the Mirkwood kit that exists: what is held, who depends on it, the first steps. |
 | Scene needs of a settlement | [settlement-scene-needs.md](settlement-scene-needs.md) | What each scene needs from a kit: the solid wall, the broken wall, the towers, a gatehouse for two gates, the gates, the siege placement of both sides, the other scenes a settlement loads; every number with its source. Every kit handover names it. |
 | Erebor gate handover | [erebor-gate-handover.md](erebor-gate-handover.md) | The brief for a session that builds the great gate of Erebor as one prefab with its mountain, siegeable, with carved detail: the engine's needs, what is held for Erebor, the maintainer's references, the first steps. |
+| Erebor gate build & design | [erebor-gate.md](erebor-gate.md), [erebor-gate-design-language.md](erebor-gate-design-language.md) | Research, design language, Round 1 massing, Hero v4.2 build and staged delivery verification (118 FBX meshes, 33 1K textures, 48-entity prefab XML), and the 2026-11-27 owner review pause handover (mountain, broken wall craft, and siege envelopes kept; dwarven statues, dual broken-wall preview, and exact 1:1 facade fidelity prioritized next). Nothing is imported into `TAOM_Map`. |
 
 ## Naming conventions (shared across all TAOM kits)
 
