@@ -728,16 +728,35 @@ were different at each level, and no gate had looked at a set from above at ever
   plates, fringe and bosses (armour 5 `v19w4`) take the weights of the surface they are fastened to. Both meshes
   are equal to their earlier builds at rest. Installed 08:42 and 08:44; updated by him at 12:06 with cart A, whose
   mesh without quiver and javelins had waited since 2026-11-26.
-- **Sun set: open.** A build with the headpiece ring and the browband removed, one strap round the ears, and the
-  lining lowered under the neck lames (the lames do not move) shows no cloth from above at LOD0 to LOD4, but for
-  0.04 cm2 at LOD2. It is not installed: one cheek strap lost its joint when the ear strap became a closed ring, and LOD5 showed more cloth in
-  the idle clip than the installed build.
+- **Sun set: open.** A build with the headpiece ring and the browband removed, one closed strap round the ears, and
+  the lining lowered under the neck lames (the lames do not move) shows no cloth from above at rest at any level
+  (the installed build shows 196, 63, 197, 175 and 283 cm2 at LOD0 to LOD4), and from the side no cloth comes
+  through a lame. It is not installed for two reasons that its check found. At LOD1 to LOD3 both cheek straps stop
+  11 to 17 mm short of the ear strap. And the thin red streaks that still show on the lames are not cloth: they are
+  red pixels in the lames' own texture, about 6 percent of the lame surface, left by a bake of an earlier build in
+  which the lining stood through the lames. Its repair changes the armour 2 maps in the lame band. The link gate
+  had called the closed ear strap loose: it takes a strap's two farthest points as its ends, and a closed loop has
+  none. `rharm_links.py` in the work folder now counts a closed loop as linked when two partner pieces hold it at
+  places at least a quarter of the loop apart; its reports for the kept builds of armours 1, 2 and 3 did not
+  change.
 
 A study of the other installed sets from above at every level found no cloth through lames, and found faults of
-the same family farther out: the black set's cape leaves the croup bare at LOD4 and LOD5, carts A, B and E open a
-slit between the floor and the side walls at LOD1 and LOD2, and the raider armour's bridle stands over the first
-neck lame at LOD2 and LOD3. Their repairs are in work and are not installed. Nothing of this section was checked
-in the game.
+the same family farther out. Four repairs went into `AssetSources` the same afternoon, each after a read-only
+check, each a mesh only (no map changed), each equal to the build before it at LOD0. His update of these four in
+the Kit is owed.
+
+| Mesh | Installed | Repair | Before and after (one horse or one cart, from above, cm2) | Triangles, LOD0 to LOD5 |
+|---|---|---|---|---|
+| `rhun_war_chariot` (cart A) | 15:09 | The slit between the floor and the side walls at LOD1 and LOD2. LOD3 is as before: closing its rear corners and front rail brought near-coplanar faces. | Slit 136.2 to 0.6 at LOD1, 206.9 to 2.9 at LOD2 | 57,684; 44,667; 29,592; 16,581; 7,832; 5,201 |
+| `rhun_war_chariot_e` (cart E) | 15:22 | The same slit at LOD1 and LOD2, and the side walls that broke into shards at LOD3 | Slit 181.1 to 0.8 and 203.8 to 3.9; open side wall at LOD3 736.8 to 121.9 | 58,081; 43,499; 26,289; 16,107; 7,301; 4,398 |
+| `rhun_war_chariot_f` (black set, armour 5) | 15:33 | The scale cape left the croup bare at LOD4 and LOD5, and the skirt came through the cape at LOD3 to LOD5 | Croup not covered 23.6 to 12.0 (LOD3), 1,251.6 to 29.5 (LOD4), 1,985.9 to 60.8 (LOD5); skirt over cape 175.4 to 0, 150.7 to 4.2, 282.3 to 2.1 | 67,143; 54,120; 31,268; 26,163; 7,986; 4,465 |
+| `rhun_war_chariot_b` (raider set, armour 1) | 15:39 | The bridle's crown strap stood over the first neck lame at LOD2 and LOD3 | Bridle over the lames 14.7 to 0.3 (LOD2), 14.8 to 0.7 (LOD3) | 43,490; 32,830; 18,673; 10,277; 5,804; 3,696 |
+
+What stays open on them: on the black set at LOD5 a thin wedge of skin at the withers seen from the side, a strip
+at the croup's rear edge, and the head at LOD4; on the raider armour about 2 cm2 of bridle over the first lame at
+LOD3 with the head down; on cart E at LOD3 about 110 cm2 more near-coplanar area than before (of about 3,000),
+which the engine may show as flicker and no check here can test. Cart B's slit repair and the horned armour's far
+levels and chest plate are in work. Nothing of this section was checked in the game.
 
 **Cart A without its quiver and javelins, 2026-11-26.** Of the cart that is in the game he said: "Cart A, we can
 remove the quiver and javelins and save on some triangles. They dont really do anything." Build v06 of
@@ -1068,6 +1087,7 @@ no missing mesh or material line in the log. Then, for each set, the two checks 
 
 ## Changelog
 
+- 2026-11-27: Four far level repairs are in `AssetSources`, meshes only: carts A and E no longer open a slit beside the floor at the middle levels, the black set's cape covers the croup at the two farthest levels, and the raider armour's bridle stays under the first neck lame. The sun set stays open: its neck is clean in geometry, but the lames' texture holds red pixels from an older bake, and two strap ends are short at three levels. The update in the Kit and the check in game are owed.
 - 2026-11-27: The maintainer looked at the imported sets in the Kit from above. The lacquer set's neck lames no longer show cloth at any level (set D v23), the horned set has a strap from the face plate to the neck armour and a pole without spears (set E v18), and the raider and black sets hold together in motion (weights only). All four are in `AssetSources` and updated in the Kit, with cart A's mesh of 2026-11-26. The sun set's neck and head are open. The check in game is owed.
 - 2026-11-27: The maintainer imported the sun, lacquer and horned sets in the Modding Kit (mesh packages of 09:05). A read of the package bytes found the 19 chariot materials, their 57 map packages and the mesh bindings set up alike and correctly. Three harness items are in the Armory since 09:16: `taom_chariot_armour_rhun_sun`, `taom_chariot_armour_rhun_lacquer` and `taom_chariot_armour_rhun_horned`, with their rows in the three item tables. The check in game is owed.
 - 2026-11-27: The far levels of the sun and lacquer armours show far less lining and backing at rest (set C v24 and set D v21 installed at 07:45, LOD2 and LOD3 only). The slip measure is gate G15 of the armour build chains. A study of its largest classes found faults on every armour; candidates for set B's neck lames and the black set's plates wait for the maintainer's word. See "The far levels, a gate for motion, and what the gate found".
