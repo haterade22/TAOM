@@ -37,12 +37,15 @@ import re
 import sys
 from datetime import date
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _gamedir import ASSET_REPO  # noqa: E402
+
 CULTURE = "Culture.mordor"
 LINE = "Black Numenorean"
 
 LIVE_MD = (r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
            r"\Modules\LOTRLOME_Armory\ModuleData")
-REPO_MD = r"E:\repos\lotraom-assets\v1.4\LOTRLOME_Armory\ModuleData"
+REPO_MD = os.path.join(str(ASSET_REPO), "ModuleData")
 
 MARKER = "Black Numenorean weapons"
 
@@ -576,9 +579,10 @@ def main():
     ap.add_argument("--dry-run", action="store_true", help="Report only (default)")
     ap.add_argument("--apply", action="store_true", help="Write the files")
     ap.add_argument("--module-data", action="append", default=None,
-                    help="LOTRLOME_Armory/ModuleData dir; repeat for multiple copies")
+                    help="LOTRLOME_Armory/ModuleData dir; repeat for multiple copies. Defaults "
+                         f"to the live install only; name the assets-repo copy ({REPO_MD}) to update it too.")
     args = ap.parse_args()
-    targets = args.module_data or [LIVE_MD, REPO_MD]
+    targets = args.module_data or [LIVE_MD]
     for t in targets:
         apply_to(t, dry=not args.apply)
     if not args.apply:
