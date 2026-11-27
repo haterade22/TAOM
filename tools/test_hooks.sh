@@ -1973,6 +1973,16 @@ VP_CASES=(
   # let a trunk force push through; and only the last refspec was judged. Each command of a
   # line is now judged on its own, a redirection is never a refspec, and every refspec counts.
   "2|git push --force origin bannerlord-1.5.x 2>&1"
+  "2|git push --force origin 2>&1 bannerlord-1.5.x"
+  "2|git push --force origin >&2 bannerlord-1.5.x"
+  "2|git push --force origin &>log bannerlord-1.5.x"
+  "2|git push --force origin >|log bannerlord-1.5.x"
+  "2|git push --force origin <&0 bannerlord-1.5.x"
+  "2|git push --force origin 2>&- bannerlord-1.5.x"
+  "0|git push --force origin 2>&1 feature"
+  "2|echo \\>|git push --force origin bannerlord-1.5.x"
+  "2|echo \\>&git push --force origin bannerlord-1.5.x"
+  "2|git -c push.default=matching push --force origin &>/dev/null"
   "2|git push --force origin bannerlord-1.5.x 2>&1 | tail -5"
   "2|git push --force origin bannerlord-1.5.x && echo done"
   "2|git push --force origin bannerlord-1.5.x; git status"
@@ -3324,14 +3334,15 @@ rm -rf "$SANDBOX/hw-proj" "$SANDBOX/hw-staged" "$SANDBOX/hw.json" "$SANDBOX/hw-i
 #     answer inside 4 s idle. A right answer that misses that bar runs once more, since load alone
 #     can cross it; rc 124 at the 10 s bound always fails. Shape A is that push; D adds two shorter
 #     commit lines holding `push` after it; E is D with a force-like word (self-fix) in the messages,
-#     which the reader sorted first until the push lines lost their order (#680). An overrun must
+#     which the reader sorted first until the push lines lost their order (#680). F is A with a 2>&1
+#     in every filler word, so the second, redirection-aware split runs on it (#1556). An overrun must
 #     ask: a judge that never answers, the same under a bash with no EPOCHREALTIME (the fixed bound)
 #     and under a clock that runs backwards (the budget is capped at 3.0 s), and a Python probe that
 #     spends the budget before the judge can start.
 # ---------------------------------------------------------------------------
 head2 "7i. validate-push refuses a long force push in time, and asks when it cannot judge in time (#680)"
 VPI_REG=$(hw_reg PreToolUse validate-push.sh)
-vpi_payload() {  # $1 shape A, D or E, $2 tool, $3 command length: writes $SANDBOX/vpi.json
+vpi_payload() {  # $1 shape A, D, E or F, $2 tool, $3 command length: writes $SANDBOX/vpi.json
     "$HPY" - "$1" "$2" "$3" > "$SANDBOX/vpi.json" <<'PY'
 import json, sys
 shape, tool, n = sys.argv[1], sys.argv[2], int(sys.argv[3])
@@ -3339,8 +3350,8 @@ def text(word, k):
     return (word * (k // len(word) + 1))[:k]
 push = 'git -c x="{}" push --force origin bannerlord-1.5.x'
 commit = 'git commit -m "{}"'
-if shape == "A":
-    cmd = push.format(text("push the thing ", n - len(push) + 2))
+if shape in ("A", "F"):
+    cmd = push.format(text("push the thing " if shape == "A" else "push 2>&1 the thing ", n - len(push) + 2))
 else:
     word = "push the self-fix " if shape == "E" else "push the thing "
     cmd = push.format(text("push the thing ", n // 2)) + "\n" + commit.format(text(word, n // 5)) + "\n"
@@ -3349,7 +3360,7 @@ assert len(cmd) == n
 sys.stdout.write(json.dumps({"tool_name": tool, "tool_input": {"command": cmd}, "hook_event_name": "PreToolUse"}))
 PY
 }
-for shape in A D E; do
+for shape in A D E F; do
     for size in 256000 409600 819200 2097152; do
         for tool in Bash PowerShell; do
             vpi_payload "$shape" "$tool" "$size"
