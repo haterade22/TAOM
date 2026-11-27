@@ -15,15 +15,15 @@ record.
 
 | Use | File | What to compare |
 | --- | --- | --- |
-| Layout authoring | `kit_full/site_01/view/mirkwood_compound_layouts.blend` | Castle and town compound scenes. `site_01/evidence/site_reopen.json` records 31 and 44 placements, 21 packed maps, and the 22 inherited scenes. |
+| Layout authoring | `kit_full/site_01/view/mirkwood_compound_layouts.blend` | Castle and town compound scenes. `kit_full/site_01/evidence/site_reopen.json` records 31 and 44 placements, 21 packed maps, and the 22 inherited scenes. |
 | Reusable pieces | `kit_full/library_01/mirkwood_asset_library.blend` | Register the `kit_full/library_01` directory in Blender. Keep `blender_assets.cats.txt` beside the blend. `README.md` explains placement and Append. `evidence/library_reopen.json` holds the master and library hashes and all 26 checked origins. |
 | Names and bounds | `kit_full/site_01/evidence/kit_manifest.json` | Named collections, measured bounds, source reports, and texture hashes. The name comparison is against the documented Mirkwood catalog. Check new names against the whole module before import. |
-| Stone and timber trim | `kit_full/trim_03/view/mirkwood_architectural_trim.blend` | Use `trim_03/maps` and the measured usable V bands. `trim_03/evidence/trim_reopen.json` and `trim_mip_01/trim_mip_proof.json` cover the saved map and UV checks and local filtering. |
+| Stone and timber trim | `kit_full/trim_03/view/mirkwood_architectural_trim.blend` | Use `kit_full/trim_03/maps` and the measured usable V bands. `kit_full/trim_03/evidence/trim_reopen.json` and `kit_full/trim_mip_01/trim_mip_proof.json` cover the saved map and UV checks and local filtering. |
 | Render coverage | `kit_full/morning_01/index.html` and `review_hall_light_01.html` | All 22 main Cycles stills and two amber comparison stills passed. The corrected amber blend is under `kit_full/lighting_02` and the renders under `kit_full/morning_lighting_02`. |
 
 The gate leaves, fitted hall joints, flagstone paving, bridge runoff, and village slate
 are editable study files. Open them through the section links in `review_now.html`.
-Their folders are `gate_leaf_01`, `hall_joint_01`, `court_paving_01`, `weather_01`,
+Under `kit_full` the folders are `gate_leaf_01`, `hall_joint_01`, `court_paving_01`, `weather_01`,
 and `village_roof_02`. For the reviewed town paving view in Blender, open
 `kit_full/court_paving_01/view/mirkwood_court_paving.blend` and select
 **Mirkwood | Town court limestone setts** and the **town_market_court** camera.
