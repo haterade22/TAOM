@@ -125,5 +125,6 @@ public class TaomVolunteerModel : DefaultVolunteerModel
             base.GetDailyVolunteerProductionProbability(hero, index, settlement),
             CultureFeatAdapter.FromOrNull(settlement?.OwnerClan?.Culture),
             settlement?.OwnerClan?.Kingdom?.StringId,
-            PlayerClanCheck.IsAPlayersClan(settlement?.OwnerClan, _players));
+            PlayerClanCheck.IsAPlayersClan(settlement?.OwnerClan, _players),
+            FactionPowerRealm.KeyOf(settlement?.MapFaction));
 }
