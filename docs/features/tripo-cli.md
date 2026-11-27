@@ -113,9 +113,10 @@ Nexus v2 with up to 25,000 quad or 50,000 triangle faces, and it alone takes a s
 ### Rules for a session (in addition to the rules below)
 
 1. **Load the skill `tripo-studio-mcp` before the first call**, and read the live schema of each tool that you call.
-2. **No generation without Mike's word for that job.** The credits are his studio pool, and the server cannot read
-   the balance. Before the call, state the reference cost from the table below. After it, add the row to "Jobs" with
-   the route `MCP`.
+2. **Use it freely; record each job.** Mike, 2026-11-27: "Just tripo MCP at will we have a ton of credits." So a
+   generation through the Studio MCP needs no question about credits. The server cannot read the balance, so state
+   the reference cost from the table below in the job's record, and add the row to "Jobs" with the route `MCP`.
+   A purchase or a top-up stays his step.
 3. **Prompts, pictures and file names stay generic**, as for the CLI. A picture goes to Tripo through an upload
    grant: Mike's reference pictures are never uploaded. Use only a picture that was made for this job from a generic
    prompt, and that Mike has seen.
@@ -155,7 +156,7 @@ price never means zero.
 
 ### A first job, step by step (not run yet)
 
-1. Mike names the part and says yes to the cost.
+1. Name the part and its use in the job's record (no question about credits is needed since 2026-11-27).
 2. Make the picture with a generic prompt (the image connector), show it to Mike.
 3. `tripo_create_image_upload_grant` (the MIME type and the size in bytes), then PUT the bytes to the granted
    address with the required headers.

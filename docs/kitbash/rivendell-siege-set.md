@@ -465,6 +465,68 @@ ones before he looks. I closed that window and opened the current gatehouse `a` 
 | "Also extend this trim all the way around." | Gatehouse `a`: the braid band on the drum, which stopped before the wall beside the door | Built: the band runs from the door frame across the wing wall, round the drum, to the end section (seen by me in `b4_door_space_wide.png`) | It ends 0.08 m short of the end section's face (a checker's note): it must meet the wall's band at the joint |
 | "Remove this as it looks very bad and can be plain with the trim extended" | Tower `a`: the half rib arch and the single squeezed lancet with its short piece of band, on the short wall beside the tower | Plain since version 7: no rib and no arch on the short walls (the checker's measure and code reading; I did not see a close picture of it) | "The trim extended": the braid band across the plain short wall, with the continuous band of the towers |
 
+## The maintainer's correction on gable finials; decision VB27 (2026-11-27, recorded 10:47)
+
+The maintainer had two Blender windows open: the valley scene's blockout round 4 and the built house B2. He circled the finial at the apex of a gable in each: "THese need to be in FRONT of the roof, not going THROUGH the roof." In both, the finial and its base block stand on the ridge behind the gable frame and pass through the roof slab. He also asked where the "high poly" of the scene is: the scene is a blockout of forms, and a piece's detailed version is its level 0 build, which exists today for houses B2 and D and for the castle pieces only.
+
+- **VB27.** A finial, a boss or any ornament at a gable's apex stands on the gable frame, wholly in front of the roof's front edge; no member of a gable frame crosses the roof slab. The kit tree gets a gate for it (the crossing count of each frame member with the roof is 0, proven on a planted finial on the ridge), and the base methods' placement note says it. It applies to: house B2 and house D (their next round, with the findings of their checks), the 18 forms of forms set 1 before their copy into the module, the scene's blockout pieces (round 5), and every later gable.
+
+## Castle step 5c done: the gate passes in every section; PD56 withdrawn; decisions PD57 and PD58; house B2; kit set 4 (2026-11-27, recorded 09:56)
+
+**Step 5c, as its owner states it** (`WORK\kit_full\port5\shared_5c_result.json`, `SHARED_INTERFACE_5C.md`). The final gate on the live castle tree passes in every section (run 09:30 to 09:53): every wall object the same as the approved wall (13 m 24 of 24, 20 m 32 of 32, 27 m 40 of 40), 2,845 tests with none failing and none skipped, seams 30 of 30, all five pieces equal to their references, the levels of both towers equal to round e7, the body flag files without a fault.
+
+- **The stair ramp at level 6** takes level 0's UV at its place now: its largest UV step fell from 2.19 to under 0.000001. Level 0 is the same as before (19 of 19 and 20 of 20 objects), and the bodies are unchanged.
+- **Pass flags.** A new report module writes every verdict as a real boolean; eight writers in seven files were corrected, and the gate reads a flag only through one function. A test fails on the text "False".
+- **The stairs flag (PD53)**: each castle build writes a body flag file beside its FBX, and a gate fails when a stairs body has no `has_steps`, or when the file and the FBX disagree. The prefab generator's new part is the cross-check of its `steps` lists against these files.
+- **Budgets (PD51)**: each tower has its own level budget, and both towers are inside it.
+- 53 of 53 planted faults are caught on the final tree. The owner strengthened two of its own tests that could not see their faults.
+
+**The dispute about the tower bodies, judged.** The checker of step 5b had measured 238 and 195 body points in front of the stone. The owner measured against the union of the closed visual objects with escape rays, with planted points 0.30 m and 0.02 m off the face that the measure caught: every one of those points lies inside stone. The lead looked at the section through tower a at x 4.73: the points lie in solid stone over the door's arch head. The checker's measure counted the hidden faces of an object that is embedded in another.
+
+- **PD56 is withdrawn.** The tower bodies are not in front of the stone. Eight points a tower on the stub railing bodies stand in the air; they follow the wall's railing body rule, which stays.
+- **PD57.** A measure of "a body in front of the stone" uses the union of the closed visual objects and rays from outside, and it is proven on a planted point. Every checker's brief says so.
+- **PD58.** A new writer of a report in the castle tree uses the report module; the kit tree gets the same rule at its next owner step.
+
+**The whole house B2, round r8** (`WORK\kit_full\house_b2`; the builder's result; its independent check runs; the lead has not looked at its sheet yet). 28,708, 18,500 and 9,504 triangles at the three levels, a body of 1,164 triangles; the gates pass and 29 planted faults are caught. It has the carved strip on the frame boards, the foot scroll and the pierced parapet. Not in the piece: the turret, the oriel and the link of the massing. The room reads see-through (no door leaves). The FBX holds three materials, because the driver gives every face its slot's material.
+
+**Started:** kit set 4 (`WORK\kit_full\kit_set_4`; a builder, then an independent checker): the castle pieces of step 5c, the open pieces with their levels and bodies, the prefab file with the stairs flag, a manifest and a copy plan. The approved wall's file is not replaced. Also started, on the maintainer's order: three handovers for new lead sessions (Mirkwood, Lothlorien, the Erebor gate).
+
+## The morning of 2026-11-27: forms go into the Kit at once; the whole house D; a review of two other kits (recorded 09:35)
+
+**The maintainer's direction** (shortly before 09:30, on the Blender view file of the 18 massing forms): "I think this is amazing. We are building a kit bash and an environmental level design set so that people can just plop down these buildings to make a scene. This is PERFECT for our sceners. Lets import it in. We can always update it as we go." He stopped the timed loop at 09:06. The rule that follows is in `kingdom-kits-prompt.md`: an approved set of forms goes into the Kit at once as a first kit file, and later builds replace each piece in place.
+
+**Forms set 1** (`WORK\kit_full\forms_set_1`; a builder, then an independent checker; runs): the 18 forms of massing round 2 as a first kit file: final names, one mesh a piece, the kit's materials and one new wood material, UVs, front faces outward, a body only where it is cheap and safe, no change of an outline.
+
+**The whole house D, round r7** (`WORK\kit_full\house_d`; the builder's result; the lead looked at the sheet: the build has the approved massing's form from every camera, with the two waisted, flared leg posts of VB21 and the turret). Piece `rivendell_house_d_a`: 29,020 triangles at level 0 (budget 36,000), 22,684 at level 3 and 14,694 at level 6, a body of 860 triangles, a steps object with its own body. The driver build, G4b, G6b, the probe and the preflight pass; 48 tests of its own pass; fifteen planted faults are caught. The tree's suite ran 2,789 tests with 8 failures: the six known ones and two of house B2, whose files changed while the suite ran. The spire's kink of 11.52 degrees is gone (a concave arc at the 4 degree limit).
+
+What the build does not have, by the builder's own word: the carving of the frame boards, of the leg posts and of the foot scroll (plain boards with grain); the tracery of the screen (plain lancet holes); the pierced cream parapet of the bow (an open balustrade stands there). These are the places of his marks. Levels 3 and 6 keep 0.78 and 0.51 of level 0, over the budget's shares. Eleven wood members take `t_rivendell_wood_plain_a`; eight cream members wait for a cream tiling set that does not exist yet.
+
+The lead's leaning, not started (the loop is stopped): an independent check of houses D and B2 together; then house D joins the import as its own piece; the level shares of this piece are accepted for now; the carving and the tracery are a detail round, where a sculpted foot scroll from the Tripo Studio MCP is one option that needs his word; the bow parapet (balustrade or pierced parapet) is his look choice.
+
+**A review of the Mirkwood and Lothlorien sessions** (asked by the maintainer; `kingdom_kits\_shared\reviews\2026-11-27`: two reviewers and one adversarial verifier a kit, review only). Mirkwood: 22 findings, 18 confirmed. Lothlorien: 21 findings, 16 confirmed. The lead checked the strongest claim of each against the sessions' own files. The pattern in both: the open questions are not put to the maintainer, the siege pieces were planned before `settlement-scene-needs.md` was read, and no independent critic judges a build. The feedback files hold the rest.
+
+## The broken wall, step 2c checked: ready for step 3 when two points close; decisions LD40 to LD47 (2026-11-27, recorded 09:32)
+
+**The independent check** (`WORK\build\v08\wall_broken\s6_step2c\check\CHECK_S6_STEP2C.md`, `s6_step2c_check.json`; its own measures with controls and planted faults, the four old mutants and nine new ones, its own renders). Verdict: ready for step 3 when points 1 and 2 close.
+
+1. **HIGH: three body budget tests are red** (the suite: 954 tests, 3 failures). The standing body has 3,818 triangles against a limit of 1,792. The owner wrote that a merge of rows gains little; the check's estimate refutes that: rows of one depth are often neighbours, and a merge takes a stub from 1,680 to 1,856 triangles down to 908 to 1,088, with the worst prism mean at 0.348 m. The tests stay red even then (about 2,216 against 1,792; about 4,078 against 3,584).
+2. **MEDIUM: the body stands in front of the CUT stone in thin slots at row joints** (up to 0.633 m on seed 7, 0.01 to 0.02 m tall), because the core cutters cut deeper than the stone model there. The owner's test samples 0.01 m off every joint, so it cannot see it.
+3. **MEDIUM: the end-on tone is one reading, not a robust result.** The six values are reproduced exactly, but 45 and 46 percent of the bootstrap draws of two flanks fall outside the window, and the preview does not paint the town teeth as the built piece will.
+4. **MEDIUM: the production builder fails on every band tear** (a type error at its cutter objects). So the rail, the parapet and the tone are proven in the preview and by the builder's own member functions, never on a built piece.
+
+Met by the check's own measure: the row prisms are closed and convex on 16 flanks (one prism reads 0.3548 m on a finer grid, over the 0.35 aim); the rail feet and the parapet feet stand on stone on fracture seeds 1 to 60 and 101; all thirteen mutants are caught, two of them only by a raise or by a pinned constant. The check lists six rewritten tests as weakened (two are close to a tautology) and names the honest ones. On the +x town side a defender meets 0.96 to 2.5 m of deck with no rail and a 12 m drop.
+
+**Decisions (the lead). The next step, 2d, waits for the maintainer's word: he stopped the loop at 09:06.**
+
+- **LD40 (replaces the row rule of LD34).** A body prism covers a run of neighbour rows of one depth, as long as the merged prism is convex and each row keeps its aim. Then the three tests get a band tear budget from the measured result, written as a limit with its reason. The broken wall may carry more body triangles than the solid wall: its two torn ends are where the fight is.
+- **LD41.** The core strips of the cutters end at the row joints, so that the cut stone equals the stone model. A test samples each row joint (0.005 m above and below) and fails where a cutter is deeper than the model.
+- **LD42.** The end-on tone is judged on the built piece, as the mean of the two flanks, with its bootstrap interval printed beside it. A unit gate holds the window.
+- **LD43.** The production builder is repaired for band tears in step 2d, not in step 4: LD35 and LD37 need a built piece as their proof.
+- **LD44.** The prepared finish change goes in (in a copy it passes 117 tests).
+- **LD45.** The post rule reads the band's member line first; then `layout_tear` goes, with its two tests changed.
+- **LD46.** The weakened tests get an expectation of their own (not the same call as the code), the clearance constant gets a stated reason or goes, and a prism's mean is measured exactly, not on a grid.
+- **LD47.** The open deck on the +x town side stays as it is: a ruin reads as broken. The scene's navigation mesh ends at the band line; that goes into the scene reference. A broken rail stub there is the maintainer's choice (look).
+
 ## The broken wall, step 2c: the owner's result; an independent check runs (2026-11-27, recorded 08:20)
 
 **As the owner states it** (`WORK\build\v08\wall_broken\s6_step2c\s6_step2c_result.json`, sheet `S6_step2c.png`; the lead looked at the sheet: both flanks of seeds 5, 7 and 11 show a dark rubble core between toothed skins, and the rail and parapet ends stand on stone in the close pictures).

@@ -170,6 +170,13 @@ to the brief before any build.
   concept after each pass: at most five differences, largest first, at most three compare passes.
 - Long Blender builds run well in a background agent with a full brief and one report per piece. You run the
   gates yourself and look at the renders yourself; an agent's "done" is a claim.
+- An approved set of building forms goes into the Modding Kit at once, as a first kit file, and later builds
+  replace each piece in place. The users of a kit are the scene builders, and they need many placeable buildings
+  now more than a few finished ones later (the maintainer, 2026-11-27, on the Rivendell massing set: "people can just plop
+  down these buildings to make a scene ... Lets import it in. We can always update it as we go."). The first
+  import has final piece names, one mesh a piece, the kit's own materials, UVs, front faces outward and an
+  independent check before the copy; its note says what it lacks (far levels, collision, detail). A siege piece
+  still needs its function before a scene uses it in a siege.
 - A handover for a kit session carries the scene research itself, not a pointer to a build record: what each
   scene needs (walls, the broken wall, towers, a gatehouse for two gates, the gates, the siege placement for the
   defenders) with the measured numbers. The reference is `docs/kitbash/settlement-scene-needs.md`; a handover names

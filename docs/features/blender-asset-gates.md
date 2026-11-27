@@ -132,6 +132,7 @@ the Rhûn chariot work of 2026-11-24 to 2026-11-26, after he saw the fault in Bl
 | A pointed part ends in one fine point | "These should end with a fine point.": crest fins that end blunt, with a thin needle on the blunt end | Width and thickness run out together toward the tip, so the outline narrows to one point |
 | Lines that should be straight are straight | "2 should be straight not bent": a neck strap with a kink and steps just before its buckle; strap and lining lines that wander | Level them by measurement; a check of every strap for a kink between its joints |
 | Rigid parts stay rigid in motion | A disc that doubles its length in a pose (found by the pose test, not by him) | One weight set per rigid island; edge lengths at 0.99 to 1.01 in every pose |
+| An ornament at a gable's apex stands in front of the roof, never through it | "THese need to be in FRONT of the roof, not going THROUGH the roof." (2026-11-27, on a valley scene blockout and on a built house of the Rivendell kit): a finial and its base block that stand on the ridge behind the gable frame and pass through the roof slab | The finial and its saddle stand on the gable frame, wholly in front of the roof's front edge; a gate counts the crossings of each frame member with the roof (0), proven on a planted finial on the ridge. It holds for a massing form too |
 
 **A clearance gate must not be met with a hole.** On horse armour 5 two gates (a gap to the cart pole, and no
 contact with the cart's forks in a neck turn) were met by leaving plates out. The session accepted v15 because
