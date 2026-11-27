@@ -174,8 +174,8 @@ internal sealed class EncounterLinesService : IEncounterBucketSource
     }
 
     /// <summary>
-    /// For the sentences the text seam handles (caravan and villager surrender, the hideout boss's challenge, and the liege
-    /// conversations in <see cref="LiegeLines"/>), sets <see cref="SentenceLineVariable"/> to the TAOM line and answers true;
+    /// For the sentences the text seam handles (caravan and villager surrender, the hideout boss's challenge, the notable
+    /// introductions in <see cref="NotableIntroLines"/> and the liege conversations in <see cref="LiegeLines"/>), sets <see cref="SentenceLineVariable"/> to the TAOM line and answers true;
     /// any other sentence, or a missing row, false.
     /// </summary>
     internal bool TrySetSentenceLine(string? sentenceId)
@@ -189,8 +189,33 @@ internal sealed class EncounterLinesService : IEncounterBucketSource
             case HideoutBossSentence:
                 return TryHideoutLine();
             default:
-                return sentenceId != null && LiegeLines.TextOfSentence.TryGetValue(sentenceId, out var textId) && TryLiegeLine(textId);
+                if (sentenceId == null)
+                    return false;
+                if (NotableIntroLines.TextOfSentence.TryGetValue(sentenceId, out var introText))
+                    return TryNotableIntroLine(introText);
+                return LiegeLines.TextOfSentence.TryGetValue(sentenceId, out var textId) && TryLiegeLine(textId);
         }
+    }
+
+    /// <summary>
+    /// A dwarf, elf or orc notable's introduction (<see cref="NotableIntroLines"/>), in the settlement where notables talk: the row of
+    /// the speaker's race family, one of <see cref="NotableIntroLines.Variants"/> picked by the notable's id so the same notable
+    /// repeats it. Men, trolls, an unmapped race, a speaker who is no notable or a missing row leave vanilla's line.
+    /// </summary>
+    private bool TryNotableIntroLine(string textId)
+    {
+        if (!Active)
+            return false;
+        var notable = _adapter.ConversationNotable();
+        if (notable == null || !notable.IsNotable)
+            return false;
+
+        var family = _groups.GetMap().FamilyOfRace(notable.RaceName);
+        if (family == null || !NotableIntroLines.Families.Contains(family))
+            return false;
+
+        var variant = EncounterBuckets.StableHash(notable.HeroId) % (uint)NotableIntroLines.Variants + 1;
+        return _adapter.TrySetVariable(SentenceLineVariable, textId, family + "_" + variant);
     }
 
     /// <summary>
