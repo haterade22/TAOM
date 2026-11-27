@@ -1,0 +1,36 @@
+key	incident_id	side	slot	text	notes
+taom_inc_voc_free_gods	voc	free	gods	the powers above	object of a preposition only; plural-neutral
+taom_inc_voc_shadow_gods	voc	shadow	gods	the Dark Lord
+taom_inc_voc_west_gods	voc	west	gods	the Valar
+taom_inc_voc_elves_gods	voc	elves	gods	the Valar
+taom_inc_voc_dwarves_gods	voc	dwarves	gods	Aulë the Maker
+taom_inc_voc_isengard_gods	voc	isengard	gods	the White Hand
+taom_inc_voc_dunlendings_gods	voc	dunlendings	gods	the old powers
+taom_inc_voc_free_power_oath	voc	free	power_oath	By all that is good	starts a sentence, then a comma or !
+taom_inc_voc_shadow_power_oath	voc	shadow	power_oath	By the Eye
+taom_inc_voc_west_power_oath	voc	west	power_oath	By the Valar
+taom_inc_voc_elves_power_oath	voc	elves	power_oath	By Elbereth
+taom_inc_voc_dwarves_power_oath	voc	dwarves	power_oath	By Durin's beard
+taom_inc_voc_isengard_power_oath	voc	isengard	power_oath	By the White Hand
+taom_inc_voc_dunlendings_power_oath	voc	dunlendings	power_oath	By the old powers
+taom_inc_voc_free_holy_place	voc	free	holy_place	a wayside shrine	article included
+taom_inc_voc_shadow_holy_place	voc	shadow	holy_place	a blood altar
+taom_inc_voc_elves_holy_place	voc	elves	holy_place	a hallowed glade
+taom_inc_voc_dwarves_holy_place	voc	dwarves	holy_place	a carved shrine of the Maker
+taom_inc_voc_isengard_holy_place	voc	isengard	holy_place	a post of the White Hand
+taom_inc_voc_dunlendings_holy_place	voc	dunlendings	holy_place	a ring of standing stones
+taom_inc_voc_free_holy_person	voc	free	holy_person	a hermit healer	article included
+taom_inc_voc_shadow_holy_person	voc	shadow	holy_person	a dark priest
+taom_inc_voc_elves_holy_person	voc	elves	holy_person	a loremaster
+taom_inc_voc_dwarves_holy_person	voc	dwarves	holy_person	a rune keeper
+taom_inc_voc_isengard_holy_person	voc	isengard	holy_person	a servant of the Wizard
+taom_inc_voc_dunlendings_holy_person	voc	dunlendings	holy_person	a hill seer
+taom_inc_voc_orcs_holy_person	voc	orcs	holy_person	a bone reader
+taom_inc_voc_free_dark_force	voc	free	dark_force	the Shadow	a noun phrase, the
+taom_inc_voc_shadow_dark_force	voc	shadow	dark_force	the witchery of the West
+taom_inc_voc_free_lord_title	voc	free	lord_title	your liege	the player's ruler, gender-neutral
+taom_inc_voc_shadow_lord_title	voc	shadow	lord_title	your overlord
+taom_inc_voc_orcs_lord_title	voc	orcs	lord_title	the big boss
+taom_inc_voc_free_coin	voc	free	coin	silver	mass noun, no article
+taom_inc_voc_shadow_coin	voc	shadow	coin	coin
+taom_inc_voc_dwarves_coin	voc	dwarves	coin	gold

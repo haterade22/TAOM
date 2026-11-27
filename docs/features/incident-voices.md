@@ -84,7 +84,7 @@ Shipped people rows: west (the Valar), elves (the Valar, Elbereth, a hallowed gl
 
 ### Drafts to rows
 
-`python tools/incidents_drafts_to_xml.py <drafts.tsv>...` (a people's vocabulary row has that people as its side, for example `dwarves` or `southrons_shadow`) checks the writers' drafts (columns key, incident_id, side, slot, text, notes) and `--apply` rewrites the generated block (between `INCIDENT-VOICES-BEGIN` and `INCIDENT-VOICES-END`) from them. It refuses a key that does not match, an unknown incident or side, an option vanilla does not have, a `{VARIABLE}` that is neither vanilla's for that incident nor a vocabulary word, a vocabulary word without both its rows, an em or en dash, and the banned words (Calradia, Heaven, Empire, imperial). The catalog lists variables per incident, not per slot, so the check is per incident. The 12 language files are the project lead's pass (`localize` skill): new keys leave `LanguageFileCoverageTests.EveryLanguage_DeclaresARowForEveryEnglishKey` red until then.
+The drafts are committed in `docs/features/incident-voices/drafts/` (`vocabulary.tsv`, `incidents.tsv`; columns key, incident_id, side, slot, text, notes; a people's vocabulary row has that people as its side, for example `dwarves` or `southrons_shadow`). `python tools/incidents_drafts_to_xml.py` checks every TSV there, and `--apply` rewrites the generated block (between `INCIDENT-VOICES-BEGIN` and `INCIDENT-VOICES-END`) from them. An `--apply` that would drop a shipped row stops unless `--allow-remove` is given, and the result must parse as XML before it is written. `test_TheCommittedDrafts_RenderTheShippedBlockExactly` fails when the block and the drafts differ, so never edit the block by hand. It refuses a key that does not match, an unknown incident or side, an option vanilla does not have, a `{VARIABLE}` that is neither vanilla's for that incident nor a vocabulary word, a vocabulary word without both its rows, an em or en dash, and the banned words (Calradia, Heaven, Empire, imperial). The catalog lists variables per incident, not per slot, so the check is per incident. The 12 language files are the project lead's pass (`localize` skill): new keys leave `LanguageFileCoverageTests.EveryLanguage_DeclaresARowForEveryEnglishKey` red until then.
 
 ## Key Files
 
@@ -117,7 +117,7 @@ Not co-op safe by design, so it stands down: the postfix changes whether an inci
 - `IncidentVoicesDataTests.cs`: loader rules and the shipped file (101 ids, 55/37/8/1 verdicts, restrict lists, the two place fixes, haterade's overrides untouched).
 - `IncidentVoicesBindingTests.cs` (RequiresGame): the target's shape and size, the public text seams, the 101 ids and option counts read from `InitializeIncidents`' IL equal the catalog, the place variables, the category attaches one postfix.
 - `IncidentVoicesWiringTests.cs`: module wiring, the patch's fault handling, the text handle on a real `Incident`.
-- `tools/tests/test_incidents_drafts_to_xml.py`: the converter.
+- `tools/tests/test_incidents_drafts_to_xml.py`: the converter, its marker and removal guards, and the committed drafts against the shipped block.
 
 ## How to verify in game
 
@@ -134,7 +134,7 @@ Only a person can confirm what the popup looks like (clipping of long texts, the
 
 ## How to add a text
 
-1. The writers add rows to a drafts TSV. 2. `python tools/incidents_drafts_to_xml.py --apply <drafts>`. 3. The lead runs the language pass. No code change.
+1. Add or change the row in `docs/features/incident-voices/drafts/incidents.tsv` (a vocabulary word: `vocabulary.tsv`). 2. `python tools/incidents_drafts_to_xml.py --apply`. 3. Commit the TSV and the XML together. 4. The lead runs the language pass. No code change.
 
 ## Changelog
 

@@ -162,6 +162,65 @@ class ApplyTests(unittest.TestCase):
         out = conv.apply_block(self.XML, conv.render_block([good()], "\r\n"))
         self.assertNotIn("\n", out.replace("\r\n", ""))
 
+    def test_ADoubledBlock_IsRefused(self):
+        once = conv.apply_block(self.XML, conv.render_block([good()], "\r\n"))
+        twice = once.replace("</strings>", conv.render_block([good()], "\r\n") + "\r\n</strings>")
+        with self.assertRaises(ValueError):
+            conv.apply_block(twice, conv.render_block([good()], "\r\n"))
+
+    def test_AnOrphanEndMarker_IsRefused(self):
+        orphan = self.XML.replace("</strings>", "\t" + conv.END + "\r\n</strings>")
+        with self.assertRaises(ValueError):
+            conv.apply_block(orphan, conv.render_block([good()], "\r\n"))
+
+    def test_AnEndMarkerBeforeTheBegin_IsRefused(self):
+        swapped = self.XML.replace("</strings>", "\t" + conv.END + "\r\n\t" + conv.BEGIN + "\r\n</strings>")
+        with self.assertRaises(ValueError):
+            conv.apply_block(swapped, conv.render_block([good()], "\r\n"))
+
+    def test_ARewordedBeginMarker_IsFoundByItsPrefix_AndReplaced(self):
+        first = conv.apply_block(self.XML, conv.render_block([good()], "\r\n"))
+        reworded = first.replace(conv.BEGIN, "<!-- INCIDENT-VOICES-BEGIN: an older wording -->")
+
+        out = conv.apply_block(reworded, conv.render_block([good()], "\r\n"))
+
+        self.assertEqual(out.count("INCIDENT-VOICES-BEGIN"), 1)
+        self.assertEqual(out, first)
+
+    def test_RowsOutsideAnyBlock_AreRefused(self):
+        stray = self.XML.replace("</strings>", '\t<string id="str_taom_inc.x_all_title" text="{=taom_inc_x_all_title}X" />\r\n</strings>')
+        with self.assertRaises(ValueError):
+            conv.apply_block(stray, conv.render_block([good()], "\r\n"))
+
+    def test_TheIdsOfTheShippedBlock_AreRead(self):
+        first = conv.apply_block(self.XML, conv.render_block([good(), good("desc")], "\r\n"))
+        self.assertEqual(conv.block_ids(first), {"str_taom_inc.rooster_theft_all_title", "str_taom_inc.rooster_theft_all_desc"})
+        self.assertEqual(conv.block_ids(self.XML), set())
+
+
+class ReadDraftsTests(unittest.TestCase):
+    HEADER = "key\tincident_id\tside\tslot\ttext\tnotes\n"
+
+    def read(self, body, prefix=""):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "d.tsv"
+            path.write_text(prefix + self.HEADER + body, encoding="utf-8")
+            return conv.read_drafts([path])
+
+    def test_ATabInsideTheText_IsRefused(self):
+        with self.assertRaises(ValueError):
+            self.read("taom_inc_rooster_theft_all_title\tincident_rooster_theft\tall\ttitle\tFirst half\tsecond half\ta note\n")
+
+    def test_AHeaderSavedWithABom_IsAccepted(self):
+        rows = self.read("taom_inc_rooster_theft_all_title\tincident_rooster_theft\tall\ttitle\tThe Rooster\t\n", prefix="﻿")
+        self.assertEqual(rows[0]["text"], "The Rooster")
+
+    def test_ARepeatedKeyAcrossTwoFiles_NamesBothPlaces(self):
+        errors = conv.validate([good(), {**good(), "where": "other.tsv:7"}], CATALOG)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("t.tsv:2", errors[0])
+        self.assertIn("other.tsv:7", errors[0])
+
 
 class ShippedCatalogTests(unittest.TestCase):
     def test_TheShippedCatalogLoads_With101Incidents_AndTheVocabulary(self):
@@ -198,6 +257,78 @@ class ShippedCatalogTests(unittest.TestCase):
 
             self.assertEqual(conv.main([str(drafts), "--xml", str(xml), "--apply"]), 1)
             self.assertEqual(xml.read_bytes().decode("utf-8"), ApplyTests.XML)
+
+    def test_TheCommittedDrafts_RenderTheShippedBlockExactly(self):
+        paths = sorted(conv.DEFAULT_DRAFTS.glob("*.tsv"))
+        self.assertTrue(paths, f"no drafts in {conv.DEFAULT_DRAFTS}")
+        rows = conv.read_drafts(paths)
+        self.assertEqual(conv.validate(rows, conv.load_catalog(conv.DEFAULT_CATALOG)), [])
+
+        shipped = conv.DEFAULT_XML.read_bytes().decode("utf-8")
+        newline = "\r\n" if "\r\n" in shipped else "\n"
+        self.assertEqual(conv.apply_block(shipped, conv.render_block(rows, newline)), shipped,
+                         "the shipped block differs from the committed drafts: run the tool with --apply, never edit the block by hand")
+
+
+class MainTests(unittest.TestCase):
+    ROWS = ("taom_inc_rooster_theft_all_title\tincident_rooster_theft\tall\ttitle\tThe Rooster\t\n"
+            "taom_inc_rooster_theft_all_desc\tincident_rooster_theft\tall\tdesc\tA {RANK} took a hen.\t\n")
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.tmp = Path(self._tmp.name)
+        self.xml = self.tmp / "strings.xml"
+        self.xml.write_bytes(ApplyTests.XML.encode("utf-8"))
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def drafts(self, body, name="d.tsv"):
+        path = self.tmp / name
+        path.write_text(ReadDraftsTests.HEADER + body, encoding="utf-8")
+        return path
+
+    def test_ARunThatDropsShippedRows_IsRefused_UnlessAllowed(self):
+        self.assertEqual(conv.main([str(self.drafts(self.ROWS)), "--xml", str(self.xml), "--apply"]), 0)
+        before = self.xml.read_bytes()
+        title_only = self.drafts(self.ROWS.splitlines(keepends=True)[0], "title.tsv")
+
+        self.assertEqual(conv.main([str(title_only), "--xml", str(self.xml), "--apply"]), 1)
+        self.assertEqual(self.xml.read_bytes(), before, "a refused removal writes nothing")
+
+        self.assertEqual(conv.main([str(title_only), "--xml", str(self.xml), "--apply", "--allow-remove"]), 0)
+        self.assertEqual(conv.block_ids(self.xml.read_bytes().decode("utf-8")), {"str_taom_inc.rooster_theft_all_title"})
+
+    def test_AResultThatDoesNotParse_IsNotWritten(self):
+        bad = self.drafts("taom_inc_rooster_theft_all_title\tincident_rooster_theft\tall\ttitle\tThe \x0bRooster\t\n")
+
+        self.assertEqual(conv.main([str(bad), "--xml", str(self.xml), "--apply"]), 1)
+        self.assertEqual(self.xml.read_bytes().decode("utf-8"), ApplyTests.XML)
+
+    def test_AMissingDraftFile_ExitsTwo(self):
+        self.assertEqual(conv.main([str(self.tmp / "missing.tsv"), "--xml", str(self.xml)]), 2)
+
+    def test_NoDraftsArgument_ReadsTheDraftsFolder(self):
+        folder = self.tmp / "drafts"
+        folder.mkdir()
+        (folder / "a.tsv").write_text(ReadDraftsTests.HEADER + self.ROWS, encoding="utf-8")
+        saved = conv.DEFAULT_DRAFTS
+        conv.DEFAULT_DRAFTS = folder
+        try:
+            self.assertEqual(conv.main(["--xml", str(self.xml), "--apply"]), 0)
+        finally:
+            conv.DEFAULT_DRAFTS = saved
+        self.assertEqual(len(conv.block_ids(self.xml.read_bytes().decode("utf-8"))), 2)
+
+    def test_AnEmptyDraftsFolder_ExitsTwo(self):
+        folder = self.tmp / "empty"
+        folder.mkdir()
+        saved = conv.DEFAULT_DRAFTS
+        conv.DEFAULT_DRAFTS = folder
+        try:
+            self.assertEqual(conv.main(["--xml", str(self.xml)]), 2)
+        finally:
+            conv.DEFAULT_DRAFTS = saved
 
 
 if __name__ == "__main__":
